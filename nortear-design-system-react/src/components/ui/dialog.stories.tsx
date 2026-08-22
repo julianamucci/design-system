@@ -212,11 +212,11 @@ export const Playground: Story = {
     await step("O Cancelar do rodapé fecha sem tocar na ação primária", async () => {
       const p = await abrir(canvasElement);
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const botoes = rodape.querySelectorAll<HTMLElement>("button");
+      const buttons = rodape.querySelectorAll<HTMLElement>("button");
       // A ação primária é a última do DOM — `column-reverse` a põe no topo da
       // pilha no estreito e à direita no largo, mas a ordem de leitura e de
       // foco continua sendo esta.
-      const cancelar = botoes[0];
+      const cancelar = buttons[0];
       await userEvent.click(cancelar);
       await waitForClosed();
       await waitFor(async () => {

@@ -25,7 +25,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const ROTULO = 'Redimensionar painéis — use setas para ajustar';
+const LABEL = 'Redimensionar painéis — use setas para ajustar';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 //
@@ -45,7 +45,7 @@ function grupo(opcoes: {
     disabled: opcoes.disabled,
     withHandle: opcoes.withHandle,
     onLayout: opcoes.onLayout,
-    'aria-label': ROTULO,
+    'aria-label': LABEL,
     panels: [
       {
         defaultSize: 50,
@@ -74,7 +74,7 @@ export const Dragging: Story = {
         transform: resizableSourceWith({
           withHandle: true,
           onLayout: '(sizes) => guardarLayout(sizes)',
-          'aria-label': ROTULO,
+          'aria-label': LABEL,
           panels: [
             { titulo: 'Painel A', defaultSize: 50 },
             { titulo: 'Painel B', defaultSize: 50 },
@@ -86,7 +86,7 @@ export const Dragging: Story = {
   render: () => grupo({ minA: 10, withHandle: true, onLayout: (s) => layoutsEmitidos.push(s) }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO });
+    const punho = canvas.getByRole('separator', { name: LABEL });
     layoutsEmitidos.length = 0;
 
     await step('Arrastar o divisor ajusta os painéis em tempo real', async () => {
@@ -111,8 +111,8 @@ export const Dragging: Story = {
       // O arrasto de um divisor move DOIS painéis; nunca empurra o layout
       // inteiro nem deixa a soma escorrer.
       const panels = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
-      const soma = panels.reduce((a, p) => a + Number(p.style.getPropertyValue('--panel-size')), 0);
-      await expect(soma).toBeCloseTo(100, 1);
+      const sum = panels.reduce((a, p) => a + Number(p.style.getPropertyValue('--panel-size')), 0);
+      await expect(sum).toBeCloseTo(100, 1);
     });
 
     await step('O tamanho anunciado acompanha o arrasto', async () => {
@@ -143,8 +143,8 @@ export const Dragging: Story = {
       };
       const ofHandle = luminancia(getComputedStyle(punho).backgroundColor);
       const ofBackground = luminancia(getComputedStyle(document.body).backgroundColor);
-      const [claro, escuro] = ofHandle > ofBackground ? [ofHandle, ofBackground] : [ofBackground, ofHandle];
-      await expect((claro + 0.05) / (escuro + 0.05)).toBeGreaterThanOrEqual(3);
+      const [light, escuro] = ofHandle > ofBackground ? [ofHandle, ofBackground] : [ofBackground, ofHandle];
+      await expect((light + 0.05) / (escuro + 0.05)).toBeGreaterThanOrEqual(3);
     });
   },
 };
@@ -157,7 +157,7 @@ export const Limits: Story = {
     docs: {
       source: {
         transform: resizableSourceWith({
-          'aria-label': ROTULO,
+          'aria-label': LABEL,
           panels: [
             { titulo: 'Painel A', defaultSize: 50, minSize: 30, maxSize: 60 },
             { titulo: 'Painel B', defaultSize: 50, minSize: 30 },
@@ -169,7 +169,7 @@ export const Limits: Story = {
   render: () => grupo({ minA: 30, maxA: 60 }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO });
+    const punho = canvas.getByRole('separator', { name: LABEL });
 
     // Cada passo leva o divisor a um EXTREMO absoluto antes de medir: assim a
     // rodada seguinte do painel Interactions parte de onde quiser e chega ao
@@ -214,7 +214,7 @@ export const Focus: Story = {
     docs: {
       source: {
         transform: resizableSourceWith({
-          'aria-label': ROTULO,
+          'aria-label': LABEL,
           panels: [
             { titulo: 'Painel A', defaultSize: 50, minSize: 20 },
             { titulo: 'Painel B', defaultSize: 50, minSize: 20 },
@@ -226,7 +226,7 @@ export const Focus: Story = {
   render: () => grupo({}),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO });
+    const punho = canvas.getByRole('separator', { name: LABEL });
     const primeiro = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-panel"]')!;
 
     await step('O Tab alcança o divisor', async () => {
@@ -261,7 +261,7 @@ export const Disabled: Story = {
       source: {
         transform: resizableSourceWith({
           disabled: true,
-          'aria-label': ROTULO,
+          'aria-label': LABEL,
           panels: [
             { titulo: 'Painel A', defaultSize: 50, minSize: 20 },
             { titulo: 'Painel B', defaultSize: 50, minSize: 20 },
@@ -273,7 +273,7 @@ export const Disabled: Story = {
   render: () => grupo({ disabled: true }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO });
+    const punho = canvas.getByRole('separator', { name: LABEL });
 
     await step('O divisor travado continua anunciado e alcançável', async () => {
       // `aria-disabled` em vez de sumir da ordem de tabulação: um controle que
@@ -317,7 +317,7 @@ export const ListenerCleanup: Story = {
       source: {
         transform: resizableSourceWith({
           destroy: true,
-          'aria-label': ROTULO,
+          'aria-label': LABEL,
           panels: [{ titulo: 'Esquerda' }, { titulo: 'Direita' }],
         }),
       },
@@ -330,10 +330,10 @@ export const ListenerCleanup: Story = {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ProbeResult;
+    let probe!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
-      sonda = await sondarOuvintes({
+      probe = await sondarOuvintes({
         host: host as HTMLElement,
         montar: () => {
           const painel = (texto: string) => {
@@ -347,15 +347,15 @@ export const ListenerCleanup: Story = {
           });
         },
         exercitar: (no) => {
-          const alca = no.querySelector<HTMLElement>('[data-slot="resizable-handle"]');
-          alca?.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientX: 100, clientY: 40 }));
+          const thumb = no.querySelector<HTMLElement>('[data-slot="resizable-handle"]');
+          thumb?.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientX: 100, clientY: 40 }));
           document.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: 140, clientY: 40 }));
         },
       });
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await checkLimpeza(sonda);
+      await checkLimpeza(probe);
     });
   },
 };

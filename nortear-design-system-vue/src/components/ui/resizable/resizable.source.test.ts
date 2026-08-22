@@ -163,10 +163,10 @@ describe('transforms das stories de composição', () => {
   it('três painéis pedem dois divisores, cada um com nome próprio', () => {
     const saida = resizableEditorSource();
     expect([...saida.matchAll(/<ResizablePanel /g)]).toHaveLength(3);
-    const nomes = [...saida.matchAll(/<ResizableHandle[^>]*aria-label="([^"]+)"/g)].map((m) => m[1]);
-    expect(nomes).toHaveLength(2);
+    const names = [...saida.matchAll(/<ResizableHandle[^>]*aria-label="([^"]+)"/g)].map((m) => m[1]);
+    expect(names).toHaveLength(2);
     // Rótulos repetidos deixariam três entradas iguais na lista de marcos.
-    expect(new Set(nomes).size).toBe(nomes.length);
+    expect(new Set(names).size).toBe(names.length);
   });
 
   it('as três faixas empilhadas somam 100 e dividem a altura', () => {

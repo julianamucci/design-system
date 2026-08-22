@@ -180,7 +180,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
   </ToggleGroupItem>
 </ToggleGroup>`;
 
-  const codeVertical = `<ToggleGroup type="single" orientation="vertical" defaultValue="grid" aria-label="Modo de visualização">
+  const verticalCode = `<ToggleGroup type="single" orientation="vertical" defaultValue="grid" aria-label="Modo de visualização">
   <ToggleGroupItem value="grid" aria-label="Grade">
     <LayoutGrid aria-hidden="true" />
   </ToggleGroupItem>
@@ -533,7 +533,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
           {
             name: tContent("variants.items.vertical"),
             description: stripHtml(tContent("variants.styles.vertical")),
-            code: codeVertical,
+            code: verticalCode,
             preview: (
               <ToggleGroup
                 type="single"

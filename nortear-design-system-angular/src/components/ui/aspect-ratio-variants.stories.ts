@@ -47,9 +47,9 @@ export const Ratios: Story = {
     await step('Cada caixa mede a proporção que declarou', async () => {
       // Uma story para as cinco: é o conjunto lado a lado que a regressão
       // visual compara, e é nele que uma proporção errada salta aos olhos.
-      const caixas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="aspect-ratio"]')];
-      await expect(caixas).toHaveLength(PROPORCOES.length);
-      for (const [i, caixa] of caixas.entries()) {
+      const boxes = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="aspect-ratio"]')];
+      await expect(boxes).toHaveLength(PROPORCOES.length);
+      for (const [i, caixa] of boxes.entries()) {
         const { width, height } = caixa.getBoundingClientRect();
         await expect(Math.abs(width / height - PROPORCOES[i].ratio)).toBeLessThan(0.1);
       }
@@ -58,8 +58,8 @@ export const Ratios: Story = {
     await step('Cada imagem preenche a caixa sem estourar', async () => {
       // Os filhos vão para `position: absolute; inset: 0`; se essa regra sair,
       // a img volta a ter dimensão intrínseca e vaza da caixa.
-      const caixas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="aspect-ratio"]')];
-      for (const caixa of caixas) {
+      const boxes = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="aspect-ratio"]')];
+      for (const caixa of boxes) {
         const img = caixa.querySelector<HTMLImageElement>('img')!;
         await expect(img.getBoundingClientRect().height)
           .toBeLessThanOrEqual(caixa.getBoundingClientRect().height + 1);

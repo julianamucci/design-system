@@ -52,7 +52,7 @@ export type IconNo = [string, Record<string, string>];
 export const CATALOGO_LUCIDE = catalogoBruto as unknown as Record<string, IconNo[]>;
 
 /** Nomes em ordem alfabética — a ordem em que o JSON foi gerado. */
-export const NOMES_DE_ICONE: string[] = Object.keys(CATALOGO_LUCIDE);
+export const ICON_NAMES: string[] = Object.keys(CATALOGO_LUCIDE);
 
 /**
  * Atributos do `<svg>` raiz de todo ícone lucide. Sem `width`/`height`: o
@@ -87,7 +87,7 @@ function serializar(atributos: Record<string, string>): string {
  * entrada externa neste caminho, que é o caso que a guideline 09 chama de "SVG
  * inline hardcoded".
  */
-export function montarSvgDoIcone(nos: IconNo[], classe: string): string {
+export function iconMountSvg(nos: IconNo[], classe: string): string {
   const interior = nos.map(([tag, atributos]) => `<${tag} ${serializar(atributos)}/>`).join('');
   return `<svg ${serializar(SVG_ATTRS)} class="${classe}" aria-hidden="true">${interior}</svg>`;
 }

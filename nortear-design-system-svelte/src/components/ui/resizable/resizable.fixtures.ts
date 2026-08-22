@@ -69,12 +69,12 @@ function resolvePanels(alvo: MeasurementTarget): HTMLElement[] {
  */
 export function fracoes(alvo: MeasurementTarget, eixo: Eixo = 'horizontal'): number[] {
   const panels = resolvePanels(alvo);
-  const medida = (p: HTMLElement) => {
+  const measurement = (p: HTMLElement) => {
     const r = p.getBoundingClientRect();
     return eixo === 'horizontal' ? r.width : r.height;
   };
-  const total = panels.reduce((a, p) => a + medida(p), 0);
-  return panels.map((p) => medida(p) / total);
+  const total = panels.reduce((a, p) => a + measurement(p), 0);
+  return panels.map((p) => measurement(p) / total);
 }
 
 /** A fatia do primeiro painel — o que `defaultSize` e `aria-valuenow` dizem. */

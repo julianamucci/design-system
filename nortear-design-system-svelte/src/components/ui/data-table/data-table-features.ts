@@ -102,7 +102,7 @@ export type DataTableFeatures = ReturnType<typeof recursosCompletos>;
  * (quem recorta é o virtualizador, não a paginação), ela precisa de um conjunto
  * que simplesmente não tenha o recurso.
  */
-export function criarRecursos(comPaginacao: boolean): DataTableFeatures {
+export function createRecursos(comPaginacao: boolean): DataTableFeatures {
   const reatividade = storeReactivityBindings();
   return comPaginacao
     ? recursosCompletos(reatividade)

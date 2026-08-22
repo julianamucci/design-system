@@ -36,7 +36,7 @@ const IMPORT_TABLE_WITH_LABELS = `import {
 const IMPORT_BADGE = `import { Badge } from '@/components/ui/badge'`;
 
 /** O tipo da linha vem do produto, não do componente. */
-const TIPO = `interface Invoice {
+const TYPE = `interface Invoice {
   id: string;
   customer: string;
   status: 'Pago' | 'Pendente' | 'Cancelado';
@@ -162,7 +162,7 @@ export const dataTableSource: SourceTransform<DataTableArgs> = (_gerado, ctx) =>
         enableRowSelection ? IMPORT_TABLE_WITH_LABELS : IMPORT_TABLE,
         IMPORT_BADGE,
       ),
-      TIPO,
+      TYPE,
       DATA,
       APRESENTACAO,
       COLUMNS,
@@ -208,7 +208,7 @@ export function dataTableNoResultsSource(): string {
   return vueSnippet(
     script(
       importing(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
-      TIPO,
+      TYPE,
       '// O recorte não devolveu nada — a grade continua montada.\nconst invoices: Invoice[] = []',
       APRESENTACAO,
       COLUMNS,
@@ -233,7 +233,7 @@ export function dataTablePaginadaSource(): string {
   return vueSnippet(
     script(
       importing(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
-      TIPO,
+      TYPE,
       DATA,
       APRESENTACAO,
       COLUMNS,
@@ -259,7 +259,7 @@ export function lineDataTableLabelSource(): string {
   return vueSnippet(
     script(
       importing(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
-      TIPO,
+      TYPE,
       DATA,
       APRESENTACAO,
       COLUMNS,
@@ -290,7 +290,7 @@ export function dataTableVirtualizadaSource(): string {
   return vueSnippet(
     script(
       importing(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
-      TIPO,
+      TYPE,
       `// Mil linhas: é o volume em que montar tudo de uma vez trava a rolagem.
 const invoices: Invoice[] = Array.from({ length: 1000 }, (_, i) => ({
   id: \`INV-\${String(i + 1).padStart(5, '0')}\`,
@@ -323,7 +323,7 @@ export function columnDataTableFiltersSource(): string {
   return vueSnippet(
     script(
       importing(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
-      TIPO,
+      TYPE,
       DATA,
       APRESENTACAO,
       `const columns: DataTableColumn<Invoice>[] = [
@@ -369,7 +369,7 @@ export function dataTableColumnsRedimensionaveisSource(): string {
   return vueSnippet(
     script(
       importing(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
-      TIPO,
+      TYPE,
       DATA,
       APRESENTACAO,
       COLUMNS,
@@ -386,7 +386,7 @@ export function dataTableReordenarEFixarSource(): string {
   return vueSnippet(
     script(
       importing(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
-      TIPO,
+      TYPE,
       DATA,
       APRESENTACAO,
       COLUMNS,
@@ -412,7 +412,7 @@ export function dataTableEditInlineSource(): string {
   return vueSnippet(
     script(
       importing(`import { h, ref } from 'vue'`, IMPORT_TABLE, IMPORT_BADGE),
-      TIPO,
+      TYPE,
       DATA,
       APRESENTACAO,
       `const columns: DataTableColumn<Invoice>[] = [

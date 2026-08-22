@@ -150,8 +150,8 @@ export const Vertical: Story = {
     });
 
     await step("ArrowUp incrementa no eixo vertical", async () => {
-      const alca = alcasDoSlider(canvasElement)[0];
-      const antes = handleValue(alca);
+      const thumb = alcasDoSlider(canvasElement)[0];
+      const antes = handleValue(thumb);
       canvas.getByRole("slider").focus();
       await userEvent.keyboard("{ArrowUp}");
       await expect(handleValue(alcasDoSlider(canvasElement)[0])).toBe(Math.min(100, antes + 1));

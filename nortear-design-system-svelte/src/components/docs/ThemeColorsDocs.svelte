@@ -95,8 +95,8 @@
   // Tema/modo ativos derivados das classes do <html>, para que os cards
   // de demonstração combinem `tema-X` + `dark` no mesmo elemento (o dark
   // variant só aplica com ambas as classes juntas).
-  let temaAtivo = $state<'tema-default' | 'tema-warm' | 'tema-cold'>('tema-default');
-  let paginaDark = $state(false);
+  let themeActive = $state<'tema-default' | 'tema-warm' | 'tema-cold'>('tema-default');
+  let darkPage = $state(false);
 
   function readTokens() {
     const styles = getComputedStyle(document.documentElement);
@@ -111,12 +111,12 @@
 
   function readHtmlState() {
     const cl = document.documentElement.classList;
-    temaAtivo = cl.contains('tema-warm')
+    themeActive = cl.contains('tema-warm')
       ? 'tema-warm'
       : cl.contains('tema-cold')
         ? 'tema-cold'
         : 'tema-default';
-    paginaDark = cl.contains('dark');
+    darkPage = cl.contains('dark');
   }
 
   onMount(() => {
@@ -240,7 +240,7 @@
       <div class="nds-theme-card-grid">
         {#each BRAND_THEMES as theme (theme.key)}
           <div class="nds-theme-card">
-            <div class={`nds-theme-card-scope ${theme.className}${paginaDark ? ' dark' : ''}`}>
+            <div class={`nds-theme-card-scope ${theme.className}${darkPage ? ' dark' : ''}`}>
               <span class="nds-theme-card-label">{$tStore(`brand.themes.${theme.key}`)}</span>
               <div class="nds-miniswatch-row">
                 {#each MINI_TOKENS as token (token)}
@@ -262,7 +262,7 @@
       <div class="nds-theme-card-grid">
         {#each MODES as mode (mode.key)}
           <div class="nds-theme-card">
-            <div class={`nds-theme-card-scope ${temaAtivo}${mode.className ? ` ${mode.className}` : ''}`}>
+            <div class={`nds-theme-card-scope ${themeActive}${mode.className ? ` ${mode.className}` : ''}`}>
               <span class="nds-theme-card-label">{$tStore(`modes.${mode.key}`)}</span>
               <div class="nds-miniswatch-row">
                 {#each MINI_TOKENS as token (token)}

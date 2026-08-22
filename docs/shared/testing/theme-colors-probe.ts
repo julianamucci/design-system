@@ -16,7 +16,7 @@
  * Nenhuma função afirma nada: todas devolvem valor. A asserção é da story.
  */
 
-import { compor, ratio, resolveColor, selectorsQueLeem, TEMAS, MODOS } from './cor';
+import { compor, ratio, resolveColor, selectorsQueLeem, THEMES, MODOS } from './cor';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -40,7 +40,7 @@ export interface PairMeasurement {
   modo: string;
   /** `primary` para o par `--primary` / `--primary-foreground`. */
   par: string;
-  fundo: string | null;
+  background: string | null;
   frente: string | null;
   /** `null` quando um dos dois tokens não existe — o achado. */
   ratio: number | null;
@@ -72,7 +72,7 @@ export async function documentByTheme<T>(
     .join(' ');
   const saida: T[] = [];
   try {
-    for (const tema of TEMAS) {
+    for (const tema of THEMES) {
       for (const modo of MODOS) {
         html.className = `${base} tema-${tema}${modo === 'escuro' ? ' dark' : ''}`.trim();
         void html.offsetHeight;
@@ -122,8 +122,8 @@ export async function measureSwatches(raiz: HTMLElement): Promise<SwatchMeasurem
 }
 
 /** Linhas legíveis das medidas que reprovam. `[]` quando tudo casa. */
-export function swatchFailures(medidas: SwatchMeasurement[]): string[] {
-  return medidas
+export function swatchFailures(measurements: SwatchMeasurement[]): string[] {
+  return measurements
     .filter((m) => !m.bate)
     .map((m) => {
       if (!m.rotulo) return `${m.tema}/${m.modo} · --${m.token}: sem valor exibido`;
@@ -165,17 +165,17 @@ export async function measurePairs(raiz: HTMLElement, pairs: string[]): Promise<
   return (
     await documentByTheme(raiz.ownerDocument, async (tema, modo) =>
       pairs.map((par): PairMeasurement => {
-        const fundo = resolveColor(raiz, `hsl(var(--${par}))`);
+        const background = resolveColor(raiz, `hsl(var(--${par}))`);
         const frente = resolveColor(raiz, `hsl(var(--${par}-foreground))`);
-        const r = fundo && frente ? ratio(frente, fundo) : null;
-        return { tema, modo, par, fundo, frente, ratio: r?.ratio ?? null };
+        const r = background && frente ? ratio(frente, background) : null;
+        return { tema, modo, par, background, frente, ratio: r?.ratio ?? null };
       }),
     )
   ).flat();
 }
 
-export function pairFailures(medidas: PairMeasurement[], minimum: number): string[] {
-  return medidas
+export function pairFailures(measurements: PairMeasurement[], minimum: number): string[] {
+  return measurements
     .filter((m) => m.ratio === null || m.ratio < minimum)
     .map((m) =>
       m.ratio === null
@@ -209,7 +209,7 @@ export interface PairSmoothMeasurement {
   par: string;
   alfa: number;
   /** Fundo suave JÁ COMPOSTO sobre `--background`. */
-  fundo: string | null;
+  background: string | null;
   frente: string | null;
   /** `null` quando um dos dois tokens não existe — o achado. */
   ratio: number | null;
@@ -242,22 +242,22 @@ export async function measurePairsSuaves(
         const frente = resolveColor(raiz, `hsl(var(--${par}-foreground))`);
         return alfas.map((alfa): PairSmoothMeasurement => {
           const tinta = resolveColor(raiz, `hsl(var(--${par}) / ${alfa})`);
-          const fundo = tinta && superficie ? compor(tinta, superficie) : null;
-          const r = fundo && frente ? ratio(frente, fundo) : null;
-          return { tema, modo, par, alfa, fundo, frente, ratio: r?.ratio ?? null };
+          const background = tinta && superficie ? compor(tinta, superficie) : null;
+          const r = background && frente ? ratio(frente, background) : null;
+          return { tema, modo, par, alfa, background, frente, ratio: r?.ratio ?? null };
         });
       });
     })
   ).flat();
 }
 
-export function pairSmoothFailures(medidas: PairSmoothMeasurement[], minimum: number): string[] {
-  return medidas
+export function pairSmoothFailures(measurements: PairSmoothMeasurement[], minimum: number): string[] {
+  return measurements
     .filter((m) => m.ratio === null || m.ratio < minimum)
     .map((m) =>
       m.ratio === null
         ? `${m.tema}/${m.modo} · --${m.par}-foreground sobre --${m.par}/${m.alfa}: token não resolve`
-        : `${m.tema}/${m.modo} · --${m.par}-foreground (${m.frente}) sobre --${m.par}/${m.alfa} (${m.fundo}): ${m.ratio}:1 (mínimo ${minimum})`,
+        : `${m.tema}/${m.modo} · --${m.par}-foreground (${m.frente}) sobre --${m.par}/${m.alfa} (${m.background}): ${m.ratio}:1 (mínimo ${minimum})`,
     );
 }
 
@@ -283,7 +283,7 @@ export async function report(stack: string, raiz: HTMLElement): Promise<never> {
   throw new Error(
     `SONDA::${stack}::` +
       JSON.stringify({
-        totalDeSwatches: swatches.length / (TEMAS.length * MODOS.length),
+        totalDeSwatches: swatches.length / (THEMES.length * MODOS.length),
         pairs,
         semConsumidor: pairsNoConsumidor(raiz.ownerDocument, pairs),
         swatchFailures: swatchFailures(swatches),

@@ -81,7 +81,7 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-const PAINEL_CLASSES =
+const PANEL_CLASSES =
   'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
 
 // A variante `angular` de `anatomy.structureCode` no conteúdo compartilhado
@@ -711,7 +711,7 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
   protected readonly importCode = IMPORT_CODE;
   protected readonly importCodeButton = IMPORT_CODE_BUTTON;
   protected readonly tokensCode = TOKENS_CODE;
-  protected readonly painelClasses = PAINEL_CLASSES;
+  protected readonly painelClasses = PANEL_CLASSES;
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
@@ -932,7 +932,7 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     return [
       {
         title: t('props.collapsibleTitle'),
@@ -942,14 +942,14 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
             name: 'open',
             type: 'model<boolean>',
             defaultValue: 'false',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.open')),
           },
           {
             name: 'defaultOpen',
             type: 'boolean',
             defaultValue: 'false',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.defaultOpen')),
           },
           {
@@ -959,7 +959,7 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
             name: 'openChange',
             type: 'output<boolean>',
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.onOpenChange')),
           },
         ],
@@ -973,7 +973,7 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
             name: 'disabled',
             type: 'boolean (NdsButton)',
             defaultValue: 'false',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.disabled')),
           },
         ],

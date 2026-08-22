@@ -67,8 +67,8 @@ export const Filling: Story = {
       // pelo colhedor compartilhado, não por olhômetro nem por nome de token.
       const slot = slotsDe(canvasElement)[0];
       const cs = getComputedStyle(slot);
-      const medida = ratio(cs.color, cs.backgroundColor);
-      await expect(medida?.ratio ?? 0).toBeGreaterThanOrEqual(4.5);
+      const measurement = ratio(cs.color, cs.backgroundColor);
+      await expect(measurement?.ratio ?? 0).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
@@ -133,13 +133,13 @@ export const Error: Story = {
     raiz.dataset.spacing = 'sm';
     raiz.style.width = 'fit-content';
 
-    const comErro = createInputOTP({
+    const withError = createInputOTP({
       length: 6,
       value: '482913',
       invalid: true,
       describedBy: 'est-erro-msg',
     });
-    comErro.dataset.testid = 'com-erro';
+    withError.dataset.testid = 'com-erro';
 
     const msg = document.createElement('p');
     msg.id = 'est-erro-msg';
@@ -150,23 +150,23 @@ export const Error: Story = {
     labelOk.className = 'nds-text-caption nds-text-muted-foreground';
     labelOk.textContent = 'Comparação — sem erro';
 
-    const semErro = createInputOTP({ length: 6, value: '482913' });
-    semErro.dataset.testid = 'sem-erro';
+    const noError = createInputOTP({ length: 6, value: '482913' });
+    noError.dataset.testid = 'sem-erro';
 
-    raiz.append(comErro, msg, labelOk, semErro);
+    raiz.append(withError, msg, labelOk, noError);
     return wrap(raiz);
   },
   play: async ({ canvasElement, step }) => {
-    const comErro = () => canvasElement.querySelector<HTMLElement>('[data-testid="com-erro"]')!;
+    const withError = () => canvasElement.querySelector<HTMLElement>('[data-testid="com-erro"]')!;
 
     await step('O erro é anunciado por ARIA, não só pela borda', async () => {
-      const slots = slotsDe(comErro());
+      const slots = slotsDe(withError());
       await expect(slots).toHaveLength(6);
       for (const slot of slots) await expect(slot).toHaveAttribute('aria-invalid', 'true');
     });
 
     await step('A mensagem de erro está ligada ao campo', async () => {
-      const slot = slotsDe(comErro())[0];
+      const slot = slotsDe(withError())[0];
       const id = slot.getAttribute('aria-describedby');
       await expect(id).toBe('est-erro-msg');
       await expect(canvasElement.querySelector(`#${id}`)).toBeTruthy();
@@ -176,7 +176,7 @@ export const Error: Story = {
       // Comparação contra uma SEGUNDA instância sem erro em vez de remover o
       // atributo da primeira: mexer no DOM renderizado deixaria a asserção
       // medindo o mesmo estado dos dois lados, e ela não poderia falhar.
-      const borderWithError = getComputedStyle(slotsDe(comErro())[0]).borderTopColor;
+      const borderWithError = getComputedStyle(slotsDe(withError())[0]).borderTopColor;
       const borderNoError = getComputedStyle(
         slotsDe(canvasElement.querySelector<HTMLElement>('[data-testid="sem-erro"]')!)[0],
       ).borderTopColor;

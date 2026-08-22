@@ -103,7 +103,7 @@ export const codeBlockSource: SourceTransform<CodeBlockArgs> = (_gerado, ctx) =>
   );
 };
 
-const TRECHOS_DA_PALETA = `const trechos = [
+const PALETTE_TRECHOS = `const trechos = [
   {
     language: 'ts',
     code: \`const total = Math.max(items.length, 10); // soma
@@ -126,7 +126,7 @@ export function codeBlockPaletteSource(): string {
   return vueSnippet(
     `${IMPORT}
 
-${TRECHOS_DA_PALETA}
+${PALETTE_TRECHOS}
 
 const destacado = \`const items = await load();
 const total = items.length;

@@ -99,22 +99,22 @@ export function tramasAplicadas(raiz: HTMLElement): Set<string> {
 export function corDoToken(token: string, perto: HTMLElement): string {
   const doc = perto.ownerDocument;
   const canais = getComputedStyle(doc.documentElement).getPropertyValue(`--${token}`).trim();
-  const sonda = doc.createElement('span');
-  sonda.style.color = `hsl(${canais})`;
+  const probe = doc.createElement('span');
+  probe.style.color = `hsl(${canais})`;
   // FORA DO FLUXO, e no <body>, não ao lado do gráfico.
   //
   // A primeira versão pendurava a sonda no irmão do gráfico. Dentro de um
   // `waitFor`, isso reflui o bloco a cada sondagem, o observador de tamanho
   // repinta os dois gráficos junto, e sessenta voltas disso derrubavam a aba —
   // a story de tema escuro fechava o navegador em vez de falhar.
-  sonda.style.position = 'absolute';
-  sonda.style.visibility = 'hidden';
-  sonda.style.pointerEvents = 'none';
-  doc.body.appendChild(sonda);
+  probe.style.position = 'absolute';
+  probe.style.visibility = 'hidden';
+  probe.style.pointerEvents = 'none';
+  doc.body.appendChild(probe);
   try {
-    return getComputedStyle(sonda).color;
+    return getComputedStyle(probe).color;
   } finally {
-    sonda.remove();
+    probe.remove();
   }
 }
 

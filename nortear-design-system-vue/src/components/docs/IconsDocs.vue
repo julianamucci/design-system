@@ -9,7 +9,7 @@ import { track } from '@/lib/analytics';
 import { mountDocsTracking } from '@/lib/docs-tracking';
 import DOMPurify from 'dompurify';
 import iconsTranslations from '@shared/content/icons/translations.json';
-import { CATALOGO_LUCIDE, NOMES_DE_ICONE } from '@shared/primitives/lucide-catalog';
+import { CATALOGO_LUCIDE, ICON_NAMES } from '@shared/primitives/lucide-catalog';
 
 // ─── Catálogo de ícones ──────────────────────────────────────────────────────
 //
@@ -21,7 +21,7 @@ import { CATALOGO_LUCIDE, NOMES_DE_ICONE } from '@shared/primitives/lucide-catal
 // O `lucide-vue-next` continua sendo a lib documentada para quem CONSOME o
 // design system — é dele que saem os dois ícones da própria página.
 
-const ALL_ICON_NAMES = NOMES_DE_ICONE;
+const ALL_ICON_NAMES = ICON_NAMES;
 const CATALOGO = CATALOGO_LUCIDE;
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────

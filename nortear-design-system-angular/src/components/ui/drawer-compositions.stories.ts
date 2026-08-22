@@ -41,7 +41,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const ROTULO = {
+const LABEL = {
   gatilho: () => t('usage.uxWriting.table.trigger.good'),
   titulo: () => t('usage.uxWriting.table.title.good'),
   descricao: () => t('usage.uxWriting.table.description.good'),
@@ -65,12 +65,12 @@ export const WithForm: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: ROTULO.gatilho(),
-      tituloPainel: ROTULO.titulo(),
-      descricaoPainel: ROTULO.descricao(),
-      rotuloCampo: ROTULO.campo(),
-      rotuloFechar: ROTULO.fechar(),
-      rotuloConfirmar: ROTULO.confirmar(),
+      rotuloGatilho: LABEL.gatilho(),
+      tituloPainel: LABEL.titulo(),
+      descricaoPainel: LABEL.descricao(),
+      rotuloCampo: LABEL.campo(),
+      rotuloFechar: LABEL.fechar(),
+      rotuloConfirmar: LABEL.confirmar(),
     },
     template: `
       <nds-drawer [defaultOpen]="true">
@@ -100,18 +100,18 @@ export const WithForm: Story = {
     const dentro = within(painel);
 
     await step('O painel carrega nome, descrição e o campo do formulário', async () => {
-      await expect(painel).toHaveAccessibleName(ROTULO.titulo());
-      await expect(painel).toHaveAccessibleDescription(ROTULO.descricao());
+      await expect(painel).toHaveAccessibleName(LABEL.titulo());
+      await expect(painel).toHaveAccessibleDescription(LABEL.descricao());
       // O campo é achado pelo RÓTULO: se o `for`/`id` não casassem, o input
       // ficaria sem nome acessível e esta busca falharia.
-      await expect(dentro.getByLabelText(ROTULO.campo())).toBeInTheDocument();
+      await expect(dentro.getByLabelText(LABEL.campo())).toBeInTheDocument();
     });
 
     await step('O rodapé oferece cancelar e confirmar, nessa ordem de leitura', async () => {
-      const botoes = dentro.getAllByRole('button');
-      const nomes = botoes.map((b) => b.textContent?.trim());
-      await expect(nomes).toContain(ROTULO.fechar());
-      await expect(nomes).toContain(ROTULO.confirmar());
+      const buttons = dentro.getAllByRole('button');
+      const names = buttons.map((b) => b.textContent?.trim());
+      await expect(names).toContain(LABEL.fechar());
+      await expect(names).toContain(LABEL.confirmar());
     });
 
     await step('O corpo do formulário é a região rolável do painel', async () => {
@@ -134,11 +134,11 @@ export const WithConfirmation: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: ROTULO.gatilho(),
+      rotuloGatilho: LABEL.gatilho(),
       tituloPainel: stripHtml(t('variants.compositions.withConfirmation.name')),
-      descricaoPainel: ROTULO.aviso(),
-      rotuloFechar: ROTULO.fechar(),
-      rotuloDestruir: ROTULO.destruir(),
+      descricaoPainel: LABEL.aviso(),
+      rotuloFechar: LABEL.fechar(),
+      rotuloDestruir: LABEL.destruir(),
     },
     template: `
       <nds-drawer [defaultOpen]="true">
@@ -163,18 +163,18 @@ export const WithConfirmation: Story = {
     const dentro = within(painel);
 
     await step('A consequência está escrita, não subentendida', async () => {
-      await expect(painel).toHaveAccessibleDescription(ROTULO.aviso());
+      await expect(painel).toHaveAccessibleDescription(LABEL.aviso());
     });
 
     await step('A ação principal carrega a variante destrutiva', async () => {
       // Afirma a CLASSE resultante: sob JIT o input `variant` seria ignorado e o
       // botão sairia com a variante default, sem erro nenhum (armadilha 1).
-      const destrutivo = dentro.getByRole('button', { name: ROTULO.destruir() });
+      const destrutivo = dentro.getByRole('button', { name: LABEL.destruir() });
       await expect(destrutivo).toHaveClass(/nds-button-destructive/);
     });
 
     await step('Cancelar continua sendo a saída de menor risco', async () => {
-      const cancelar = dentro.getByRole('button', { name: ROTULO.fechar() });
+      const cancelar = dentro.getByRole('button', { name: LABEL.fechar() });
       await expect(cancelar).toHaveClass(/nds-button-outline/);
     });
   },

@@ -64,21 +64,21 @@ export const Default: Story = {
     await step('O fundo do campo é opaco, não transparente', async () => {
       // A documentação afirmou "fundo transparente" por meses. O campo pinta
       // --background: medir é o que separa a afirmação do que se vê.
-      const fundo = getComputedStyle(fieldOf(canvasElement)!).backgroundColor;
-      await expect(fundo).not.toBe('rgba(0, 0, 0, 0)');
-      await expect(fundo).not.toBe('transparent');
+      const background = getComputedStyle(fieldOf(canvasElement)!).backgroundColor;
+      await expect(background).not.toBe('rgba(0, 0, 0, 0)');
+      await expect(background).not.toBe('transparent');
     });
 
     await step('Contraste nos DOIS modos (accessibility.item5)', async () => {
       // 4.5:1 no texto e no placeholder, 3:1 na borda, no claro e no escuro. O
       // axe do test-runner só mede a tela, e a tela está sempre no claro.
-      const medidas = contrastesNosDoisModos(canvasElement);
-      await expect(medidas).not.toBeNull();
-      await expect(medidas!.length).toBe(2);
-      for (const m of medidas!) {
+      const measurements = contrastesNosDoisModos(canvasElement);
+      await expect(measurements).not.toBeNull();
+      await expect(measurements!.length).toBe(2);
+      for (const m of measurements!) {
         await expect(m.texto ?? 0).toBeGreaterThanOrEqual(4.5);
         await expect(m.placeholder ?? 0).toBeGreaterThanOrEqual(4.5);
-        await expect(m.borda ?? 0).toBeGreaterThanOrEqual(3);
+        await expect(m.border ?? 0).toBeGreaterThanOrEqual(3);
       }
     });
 
@@ -120,18 +120,18 @@ export const Focus: Story = {
     await step('A borda de foco difere da borda em repouso', async () => {
       // Sem esta comparação, um foco que não mudasse nada passaria: as duas
       // cores viriam do mesmo token e ninguém veria a diferença na tela.
-      const bordas = stateBorders(input);
-      await expect(bordas.foco.cor).not.toBe(bordas.repouso.cor);
-      await expect(bordas.foco.casaFocusVisible).toBe(true);
+      const borders = stateBorders(input);
+      await expect(borders.focus.cor).not.toBe(borders.rest.cor);
+      await expect(borders.focus.casaFocusVisible).toBe(true);
     });
 
     await step('O hover é opaco, e não some sob o ponteiro', async () => {
       // O hover translúcido de antes APAGAVA a borda depois que o repouso
       // escureceu para 3:1. A declaração da folha é lida porque evento
       // sintético não acende `:hover`.
-      const bordas = stateBorders(input);
-      await expect(bordas.hover.declarado).toBeTruthy();
-      await expect(bordas.hover.declarado).not.toMatch(/\/\s*0?\.\d/);
+      const borders = stateBorders(input);
+      await expect(borders.hover.declarado).toBeTruthy();
+      await expect(borders.hover.declarado).not.toMatch(/\/\s*0?\.\d/);
     });
 
     // O foco fica posto de propósito: é o estado que esta story documenta.
@@ -238,8 +238,8 @@ export const Error: Story = {
       // Afirmar o token resolvido, não um rgb literal: a paleta muda por tema
       // de marca e um literal reprovaria em warm e cold sem defeito nenhum.
       const destrutivo = corDoToken(canvasElement, '--destructive');
-      const bordas = stateBorders(fieldOf(canvasElement)!);
-      await expect(bordas.repouso.cor).toBe(destrutivo);
+      const borders = stateBorders(fieldOf(canvasElement)!);
+      await expect(borders.rest.cor).toBe(destrutivo);
       await expect(focusHalo(fieldOf(canvasElement)!)!.cor).toContain(
         destrutivo!.replace(/rgba?\(|\)/g, '').split(',').slice(0, 3).map((n) => n.trim()).join(', '),
       );

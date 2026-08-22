@@ -78,21 +78,21 @@ export const Single: Story = {
     await step('Item 1 começa aberto via defaultValue', async () => {
       // Modo único guarda uma STRING — passar `['item-1']` aqui não abriria
       // nada, porque a comparação da raiz é direta.
-      const gatilhos = canvas.getAllByRole('button');
-      await waitFor(() => expect(gatilhos[0]).toHaveAttribute('aria-expanded', 'true'), {
+      const triggers = canvas.getAllByRole('button');
+      await waitFor(() => expect(triggers[0]).toHaveAttribute('aria-expanded', 'true'), {
         timeout: 500,
       });
     });
 
     await step('Abrir o item 2 fecha automaticamente o item 1', async () => {
-      const gatilhos = canvas.getAllByRole('button');
-      await abrir(gatilhos[1]);
-      await expect(gatilhos[0]).toHaveAttribute('aria-expanded', 'false');
+      const triggers = canvas.getAllByRole('button');
+      await abrir(triggers[1]);
+      await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('Clicar no item ativo o fecha', async () => {
-      const gatilhos = canvas.getAllByRole('button');
-      await fechar(gatilhos[1]);
+      const triggers = canvas.getAllByRole('button');
+      await fechar(triggers[1]);
     });
   },
 };
@@ -140,9 +140,9 @@ export const CloseOnSecondClick: Story = {
     const canvas = within(canvasElement);
 
     await step('Clicar de novo no item aberto o fecha', async () => {
-      const gatilhos = canvas.getAllByRole('button');
-      await abrir(gatilhos[0]);  // precondição própria: garantidamente aberto
-      await fechar(gatilhos[0]); // clique real nesta rodada + asserção de estado
+      const triggers = canvas.getAllByRole('button');
+      await abrir(triggers[0]);  // precondição própria: garantidamente aberto
+      await fechar(triggers[0]); // clique real nesta rodada + asserção de estado
     });
 
     await step('O painel recolhe de fato, não só o atributo', async () => {
@@ -192,16 +192,16 @@ export const Multiple: Story = {
     const canvas = within(canvasElement);
 
     await step('Dois itens abertos ao mesmo tempo', async () => {
-      const gatilhos = canvas.getAllByRole('button');
-      await abrir(gatilhos[0]);
-      await abrir(gatilhos[1]);
-      await expect(gatilhos[0]).toHaveAttribute('aria-expanded', 'true');
+      const triggers = canvas.getAllByRole('button');
+      await abrir(triggers[0]);
+      await abrir(triggers[1]);
+      await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Fechar um não mexe no outro', async () => {
-      const gatilhos = canvas.getAllByRole('button');
-      await fechar(gatilhos[0]);
-      await expect(gatilhos[1]).toHaveAttribute('aria-expanded', 'true');
+      const triggers = canvas.getAllByRole('button');
+      await fechar(triggers[0]);
+      await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
     });
   },
 };
@@ -245,15 +245,15 @@ export const Controlled: Story = {
     const canvas = within(canvasElement);
 
     await step('Item 1 começa aberto pelo valor inicial', async () => {
-      const gatilhos = canvas.getAllByRole('button');
-      await waitFor(() => expect(gatilhos[0]).toHaveAttribute('aria-expanded', 'true'), {
+      const triggers = canvas.getAllByRole('button');
+      await waitFor(() => expect(triggers[0]).toHaveAttribute('aria-expanded', 'true'), {
         timeout: 500,
       });
     });
 
     await step('Clicar no item 2 atualiza o estado externo', async () => {
-      const gatilhos = canvas.getAllByRole('button');
-      await abrir(gatilhos[1]);
+      const triggers = canvas.getAllByRole('button');
+      await abrir(triggers[1]);
       await waitFor(() => expect(canvasElement.textContent).toContain('item-2'));
     });
   },
@@ -291,11 +291,11 @@ export const DefaultOpen: Story = {
     const canvas = within(canvasElement);
 
     await step('Item 1 inicia expandido; item 2 não', async () => {
-      const gatilhos = canvas.getAllByRole('button');
-      await waitFor(() => expect(gatilhos[0]).toHaveAttribute('aria-expanded', 'true'), {
+      const triggers = canvas.getAllByRole('button');
+      await waitFor(() => expect(triggers[0]).toHaveAttribute('aria-expanded', 'true'), {
         timeout: 500,
       });
-      await expect(gatilhos[1]).toHaveAttribute('aria-expanded', 'false');
+      await expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
     });
   },
 };

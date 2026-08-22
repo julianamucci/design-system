@@ -15,7 +15,7 @@ import {
 import { buttonVariants } from "./button";
 import { cn } from "@/lib/utils";
 
-const PAINEL_CLASSES =
+const PANEL_CLASSES =
   "nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2";
 const TRIGGER_CLASSES = "nds-cluster nds-w-full nds-px-4";
 const CHEVRON_CLASSES = "nds-icon nds-shrink-0 nds-transition-transform nds-chevron";
@@ -68,7 +68,7 @@ export const WithCustomButton: Story = {
         <span>Exibir opções avançadas</span>
         <ChevronDown aria-hidden="true" className={CHEVRON_CLASSES} />
       </CollapsibleTrigger>
-      <CollapsibleContent className={PAINEL_CLASSES} data-spacing="sm">
+      <CollapsibleContent className={PANEL_CLASSES} data-spacing="sm">
         <p>Opção avançada 1</p>
         <p>Opção avançada 2</p>
         <p>Opção avançada 3</p>
@@ -124,7 +124,7 @@ export const WithIconInTrigger: Story = {
         </span>
         <ChevronDown aria-hidden="true" className={CHEVRON_CLASSES} />
       </CollapsibleTrigger>
-      <CollapsibleContent className={PAINEL_CLASSES} data-spacing="sm">
+      <CollapsibleContent className={PANEL_CLASSES} data-spacing="sm">
         <p className="nds-text-muted-foreground">Filtro avançado 1</p>
         <p className="nds-text-muted-foreground">Filtro avançado 2</p>
       </CollapsibleContent>
@@ -184,7 +184,7 @@ export const WithStructuredContent: Story = {
           <ChevronDown aria-hidden="true" className={CHEVRON_CLASSES} />
         </CollapsibleTrigger>
       </div>
-      <CollapsibleContent className={PAINEL_CLASSES} data-spacing="sm">
+      <CollapsibleContent className={PANEL_CLASSES} data-spacing="sm">
         <p className="nds-text-muted-foreground">Filtro avançado 1</p>
         <p className="nds-text-muted-foreground">Filtro avançado 2</p>
       </CollapsibleContent>

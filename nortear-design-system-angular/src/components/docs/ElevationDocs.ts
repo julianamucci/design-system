@@ -108,10 +108,10 @@ const ANINHAMENTOS: RaioNesting[] = [
         <div class="nds-stack" data-spacing="sm">
           <h3 class="nds-text-body nds-font-medium">{{ t('specimens.shadows') }}</h3>
           <div class="nds-grid nds-elevation-grid nds-p-6 nds-rounded-lg" data-spacing="lg">
-            @for (nivel of elevacoes; track nivel.rotulo) {
-              <div [class]="nivel.classes">
-                <div class="nds-font-medium nds-text-foreground nds-mb-1">{{ nivel.rotulo }}</div>
-                <code class="nds-specimen-token-code">{{ nivel.token }}</code>
+            @for (level of elevacoes; track level.rotulo) {
+              <div [class]="level.classes">
+                <div class="nds-font-medium nds-text-foreground nds-mb-1">{{ level.rotulo }}</div>
+                <code class="nds-specimen-token-code">{{ level.token }}</code>
               </div>
             }
           </div>

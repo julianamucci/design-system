@@ -2,7 +2,7 @@ import { createCard } from '@/components/ui/card';
 import { createBadge } from '@/components/ui/badge';
 import { createKbd } from '@/components/ui/kbd';
 import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
-import { varianteDaPrioridade } from '@shared/primitives/badge-priority';
+import { prioridadeVariant } from '@shared/primitives/badge-priority';
 
 export interface DocsTestItem { action: string; result: string; priority: string }
 export interface DocsA11yTestItem { criterion: string; level: string; how: string }
@@ -71,7 +71,7 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
     row.appendChild(createTableCell(item.action, 'nds-p-2'));
     row.appendChild(createTableCell(item.result, 'nds-p-2 nds-text-muted-foreground'));
     const priorityCell = createTableCell('', 'nds-p-2 nds-font-medium');
-    priorityCell.appendChild(createBadge({ text: item.priority, variant: varianteDaPrioridade(item.priority) }));
+    priorityCell.appendChild(createBadge({ text: item.priority, variant: prioridadeVariant(item.priority) }));
     row.appendChild(priorityCell);
     funcTbody.appendChild(row);
   });
@@ -144,7 +144,7 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
     const row = createTableRow('nds-border-b nds-hover-bg-muted-faint');
     row.appendChild(createTableCell(item.story, 'nds-p-2'));
     const priorityCell = createTableCell('', 'nds-p-2 nds-font-medium');
-    priorityCell.appendChild(createBadge({ text: item.priority, variant: varianteDaPrioridade(item.priority) }));
+    priorityCell.appendChild(createBadge({ text: item.priority, variant: prioridadeVariant(item.priority) }));
     row.appendChild(priorityCell);
     visualTbody.appendChild(row);
   });

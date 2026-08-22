@@ -95,10 +95,10 @@ export const Playground: Story = {
       let maior = -Infinity;
       slides().forEach((slide, i) => {
         const r = slide.getBoundingClientRect();
-        const visivel = eixo === "left"
+        const visible = eixo === "left"
           ? Math.min(r.right, v.right) - Math.max(r.left, v.left)
           : Math.min(r.bottom, v.bottom) - Math.max(r.top, v.top);
-        if (visivel > maior) { maior = visivel; melhor = i; }
+        if (visible > maior) { maior = visible; melhor = i; }
       });
       return melhor;
     };
@@ -123,9 +123,9 @@ export const Playground: Story = {
      */
     const startVoltar = async () => {
       for (let volta = 0; volta < slides().length; volta++) {
-        const botao = anterior();
-        if (botao.disabled) break;
-        await userEvent.click(botao);
+        const button = anterior();
+        if (button.disabled) break;
+        await userEvent.click(button);
       }
       await emSlide(0);
     };

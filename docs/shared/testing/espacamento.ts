@@ -25,7 +25,7 @@
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
 export const DENSIDADES = ['condensado', 'default', 'confortavel'] as const;
-export type Densidade = (typeof DENSIDADES)[number];
+export type Density = (typeof DENSIDADES)[number];
 
 export interface EspacoTarget {
   /** Nome que aparece no relatório de falha. */
@@ -38,7 +38,7 @@ export interface EspacoTarget {
    * coluna `default` prova que a correção NÃO mexeu no visual padrão, e as
    * outras duas provam que a densidade passou a alcançar o valor.
    */
-  esperado: Record<Densidade, number>;
+  esperado: Record<Density, number>;
   /**
    * Alvo de toque (WCAG 2.5.8): o menor lado não pode cair de 24px em nenhuma
    * densidade. Só marque onde o elemento medido É a área clicável.
@@ -49,7 +49,7 @@ export interface EspacoTarget {
 export interface EspacoMeasurement {
   alvo: string;
   prop: string;
-  densidade: Densidade;
+  densidade: Density;
   /** `false` quando o seletor não casou — isso É o achado, não falha da medição. */
   presente: boolean;
   px: number | null;
@@ -93,16 +93,16 @@ export function pxResolve(
   expressao: string,
   fator = 1,
 ): number | null {
-  const sonda = raiz.ownerDocument.createElement('div');
-  sonda.setAttribute('aria-hidden', 'true');
-  sonda.style.cssText =
+  const probe = raiz.ownerDocument.createElement('div');
+  probe.setAttribute('aria-hidden', 'true');
+  probe.style.cssText =
     `position:absolute;top:0;left:0;visibility:hidden;pointer-events:none;` +
     `padding:0;border:0;min-width:0;max-width:none;box-sizing:content-box;` +
     `width:${SENTINELA_PX}px`;
-  raiz.appendChild(sonda);
+  raiz.appendChild(probe);
   try {
-    sonda.style.setProperty('width', fator === 1 ? expressao : `calc((${expressao}) * ${fator})`);
-    const bruto = raiz.ownerDocument.defaultView!.getComputedStyle(sonda).width;
+    probe.style.setProperty('width', fator === 1 ? expressao : `calc((${expressao}) * ${fator})`);
+    const bruto = raiz.ownerDocument.defaultView!.getComputedStyle(probe).width;
     const px = parseFloat(bruto);
     if (!Number.isFinite(px)) return null;
     // Comparado ANTES de dividir: expressão inválida (token inexistente dentro
@@ -111,7 +111,7 @@ export function pxResolve(
     if (Math.abs(px - SENTINELA_PX) < 1e-6) return null;
     return px / fator;
   } finally {
-    sonda.remove();
+    probe.remove();
   }
 }
 
@@ -143,7 +143,7 @@ export const FATOR_DE_PRECISAO = 512;
  */
 export function byDensity<T>(
   raiz: HTMLElement,
-  fn: (densidade: Densidade) => T,
+  fn: (densidade: Density) => T,
 ): T[] {
   const html = raiz.ownerDocument.documentElement;
   const classNameOriginal = html.className;
@@ -243,9 +243,9 @@ export function describeMeasurement(m: EspacoMeasurement): string {
 }
 
 /** Agrupa as três medidas de um mesmo alvo+prop, na ordem de `DENSIDADES`. */
-export function byTarget(medidas: EspacoMeasurement[]): Map<string, EspacoMeasurement[]> {
+export function byTarget(measurements: EspacoMeasurement[]): Map<string, EspacoMeasurement[]> {
   const grupos = new Map<string, EspacoMeasurement[]>();
-  for (const m of medidas) {
+  for (const m of measurements) {
     const chave = `${m.alvo} · ${m.prop}`;
     if (!grupos.has(chave)) grupos.set(chave, []);
     grupos.get(chave)!.push(m);

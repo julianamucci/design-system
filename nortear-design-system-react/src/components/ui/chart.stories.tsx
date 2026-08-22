@@ -11,7 +11,7 @@ import { designEscreve, designPintado, exigirRoot } from '@shared/testing/chart-
 // como uma story quebrada.
 const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const series = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
-const ROTULO = 'Acessos mensais no desktop, de janeiro a junho';
+const LABEL = 'Acessos mensais no desktop, de janeiro a junho';
 
 const meta = {
   title: 'UI/Chart',
@@ -68,7 +68,7 @@ const meta = {
     height: 300,
     emptyLabel: CHART_EMPTY_LABEL,
     className: '',
-    'aria-label': ROTULO,
+    'aria-label': LABEL,
   },
 } satisfies Meta<typeof ChartContainer>;
 
@@ -107,7 +107,7 @@ export const Playground: Story = {
     await step('O eixo escreve todas as categorias do dado', async () => {
       await waitFor(
         () => {
-          for (const mes of meses) expect(designEscreve(raiz, mes)).toBe(true);
+          for (const month of meses) expect(designEscreve(raiz, month)).toBe(true);
         },
         { timeout: 3000 },
       );

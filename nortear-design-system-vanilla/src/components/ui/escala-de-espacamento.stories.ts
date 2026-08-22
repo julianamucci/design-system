@@ -200,15 +200,15 @@ export const LiteralConsumidoresNotResolvem: Story = {
   render: cenario,
   play: async ({ canvasElement }) => {
     const raiz = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
-    const medidas = densityMeasure(raiz, TARGETS);
+    const measurements = densityMeasure(raiz, TARGETS);
 
-    await expect(medidas).toHaveLength(TARGETS.length * DENSIDADES.length);
+    await expect(measurements).toHaveLength(TARGETS.length * DENSIDADES.length);
 
-    const ausentes = medidas.filter((m) => !m.presente || m.px === null);
+    const ausentes = measurements.filter((m) => !m.presente || m.px === null);
     await expect(ausentes.map(describeMeasurement)).toEqual([]);
 
     const congelados: string[] = [];
-    for (const [chave, lista] of byTarget(medidas)) {
+    for (const [chave, lista] of byTarget(measurements)) {
       const valores = lista.map((m) => m.px!);
       if (new Set(valores.map((v) => v.toFixed(2))).size === 1) {
         congelados.push(`${chave}: ${valores[0]}px idêntico nas três densidades — valor literal, não token da escala`);
@@ -216,7 +216,7 @@ export const LiteralConsumidoresNotResolvem: Story = {
     }
     await expect(congelados).toEqual([]);
 
-    const tableOutside = medidas.filter((m) => Math.abs(m.px! - m.esperado) > TOLERANCIA_PX);
+    const tableOutside = measurements.filter((m) => Math.abs(m.px! - m.esperado) > TOLERANCIA_PX);
     await expect(tableOutside.map(describeMeasurement)).toEqual([]);
   },
 };
@@ -235,9 +235,9 @@ export const TouchTargetSurvivesCondensed: Story = {
   play: async ({ canvasElement }) => {
     const raiz = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
     const touchTargets = TARGETS.filter((a) => a.alvoDeToque);
-    const medidas = densityMeasure(raiz, touchTargets);
+    const measurements = densityMeasure(raiz, touchTargets);
 
-    const pequenos = medidas.filter((m) => (m.px ?? 0) < TARGET_MINIMUM_PX);
+    const pequenos = measurements.filter((m) => (m.px ?? 0) < TARGET_MINIMUM_PX);
     await expect(
       pequenos.map((m) => `${m.alvo} em ${m.densidade}: ${m.px}px < ${TARGET_MINIMUM_PX}px (WCAG 2.5.8)`),
     ).toEqual([]);

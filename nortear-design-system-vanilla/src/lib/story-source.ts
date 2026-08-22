@@ -58,8 +58,8 @@ export function chamada(fabrica: string, linhas: string[]): string {
 }
 
 /** `import { a, b } from '@/components/ui/<slug>';` */
-export function importing(slug: string, ...nomes: string[]): string {
-  return `import { ${nomes.join(', ')} } from '@/components/ui/${slug}';`;
+export function importing(slug: string, ...names: string[]): string {
+  return `import { ${names.join(', ')} } from '@/components/ui/${slug}';`;
 }
 
 /** Junta os blocos do snippet com uma linha em branco entre eles. */

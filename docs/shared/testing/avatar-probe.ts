@@ -17,7 +17,7 @@ function texto(el: Element | null): string {
 }
 
 /** Visível de verdade: `display: none` e caixa zerada contam como ausente. */
-function visivel(el: HTMLElement | null): boolean {
+function visible(el: HTMLElement | null): boolean {
   if (!el) return false;
   const cs = getComputedStyle(el);
   if (cs.display === 'none' || cs.visibility === 'hidden') return false;
@@ -25,7 +25,7 @@ function visivel(el: HTMLElement | null): boolean {
   return r.width > 0 && r.height > 0;
 }
 
-function medida(el: HTMLElement | null) {
+function measurement(el: HTMLElement | null) {
   if (!el) return null;
   const cs = getComputedStyle(el);
   const r = el.getBoundingClientRect();
@@ -34,7 +34,7 @@ function medida(el: HTMLElement | null) {
     altura: Math.round(r.height),
     raio: cs.borderRadius,
     tamanhoDaFonte: cs.fontSize,
-    fundo: cs.backgroundColor,
+    background: cs.backgroundColor,
     cor: cs.color,
   };
 }
@@ -57,8 +57,8 @@ export function measureAvatar(raiz: HTMLElement) {
   const badge = avatar.querySelector<HTMLElement>('.nds-avatar-badge');
   const icone = fallback?.querySelector<HTMLElement>('svg') ?? null;
 
-  const imgVisible = visivel(img);
-  const fallbackVisible = visivel(fallback);
+  const imgVisible = visible(img);
+  const fallbackVisible = visible(fallback);
 
   return {
     finding: true as const,
@@ -100,8 +100,8 @@ export function measureAvatar(raiz: HTMLElement) {
       ].filter(Boolean),
     },
     geometria: {
-      raiz: medida(avatar),
-      fallback: medida(fallback),
+      raiz: measurement(avatar),
+      fallback: measurement(fallback),
       icone: icone
         ? {
             largura: Math.round(icone.getBoundingClientRect().width),

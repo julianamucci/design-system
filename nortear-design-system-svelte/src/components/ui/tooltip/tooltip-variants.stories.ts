@@ -19,8 +19,8 @@ function luminancia(cor: string): number {
 
 /** Razão de contraste WCAG entre duas cores computadas. */
 function contraste(a: string, b: string): number {
-  const [claro, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
-  return (claro + 0.05) / (escuro + 0.05);
+  const [light, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
+  return (light + 0.05) / (escuro + 0.05);
 }
 
 const meta: Meta = {
@@ -141,9 +141,9 @@ export const LongText: Story = {
       await expect(balao.textContent).toContain('link público');
       // O limite vem da folha compartilhada; medir a largura real prova que o
       // texto respeitou o teto em vez de esticar o balão pela viewport.
-      const limite = parseFloat(getComputedStyle(balao).maxWidth);
-      await expect(limite).toBeGreaterThan(0);
-      await expect(balao.getBoundingClientRect().width).toBeLessThanOrEqual(limite + 1);
+      const limit = parseFloat(getComputedStyle(balao).maxWidth);
+      await expect(limit).toBeGreaterThan(0);
+      await expect(balao.getBoundingClientRect().width).toBeLessThanOrEqual(limit + 1);
     });
   },
 };

@@ -48,7 +48,7 @@ import { Input } from "@/components/ui/input";`;
  */
 export const formSource: SourceTransform<FormArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const temErro = typeof args.error === 'string' && args.error.trim() !== '';
+  const hasError = typeof args.error === 'string' && args.error.trim() !== '';
 
   const campo = attrsMultilinha([
     propText('label', args.label) ?? 'label="Email"',
@@ -62,7 +62,7 @@ export const formSource: SourceTransform<FormArgs> = (_gerado, ctx) => {
     propBool('disabled', args.disabled),
     // `aria-invalid` acompanha a mensagem: cor no rótulo sozinha não alcança
     // quem não enxerga cor, e é o atributo que o leitor de tela anuncia.
-    args.ariaInvalid === true || temErro ? 'aria-invalid' : undefined,
+    args.ariaInvalid === true || hasError ? 'aria-invalid' : undefined,
   );
 
   return jsxSnippet(

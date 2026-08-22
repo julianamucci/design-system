@@ -97,9 +97,9 @@ export const Invalid: Story = {
       // O axe do test-runner mede só o que está na tela, e a tela está sempre no
       // tema claro — metade do produto ficava fora enquanto o contrato afirmava
       // "em todos os temas". A classe `.dark` sai no `finally` do colhedor.
-      const medidas = contrastesNosDoisModos(campo);
-      await expect(medidas).toHaveLength(2);
-      for (const m of medidas) {
+      const measurements = contrastesNosDoisModos(campo);
+      await expect(measurements).toHaveLength(2);
+      for (const m of measurements) {
         await expect(m.rotulo).toBeGreaterThanOrEqual(4.5);
         await expect(m.apoio).toBeGreaterThanOrEqual(4.5);
         await expect(m.erro).toBeGreaterThanOrEqual(4.5);

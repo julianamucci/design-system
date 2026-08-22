@@ -113,9 +113,9 @@ describe('transforms das stories de composição', () => {
   it('a ação vive dentro do cabeçalho, depois do título e da descrição', () => {
     const saida = headerCardWithActionSource();
     expect(saida).toContain('  CardAction,');
-    const cabecalho = saida.slice(saida.indexOf('<CardHeader>'), saida.indexOf('</CardHeader>'));
-    expect(cabecalho.indexOf('<CardTitle')).toBeLessThan(cabecalho.indexOf('<CardDescription'));
-    expect(cabecalho.indexOf('<CardDescription')).toBeLessThan(cabecalho.indexOf('<CardAction>'));
+    const header = saida.slice(saida.indexOf('<CardHeader>'), saida.indexOf('</CardHeader>'));
+    expect(header.indexOf('<CardTitle')).toBeLessThan(header.indexOf('<CardDescription'));
+    expect(header.indexOf('<CardDescription')).toBeLessThan(header.indexOf('<CardAction>'));
   });
 
   it('a imagem é o primeiro filho, e o canto vem do card, não de classe nela', () => {
@@ -132,8 +132,8 @@ describe('transforms das stories de composição', () => {
     for (const part of ['CardAction', 'CardContent', 'CardDescription', 'CardFooter', 'CardHeader', 'CardTitle']) {
       expect(saida).toContain(`  ${part},`);
     }
-    const cabecalho = saida.slice(saida.indexOf('<CardHeader>'), saida.indexOf('</CardHeader>'));
-    expect(cabecalho).toContain('<Badge variant="secondary">Em estoque</Badge>');
+    const header = saida.slice(saida.indexOf('<CardHeader>'), saida.indexOf('</CardHeader>'));
+    expect(header).toContain('<Badge variant="secondary">Em estoque</Badge>');
   });
 
   it('na métrica o título nomeia e o corpo carrega o valor', () => {

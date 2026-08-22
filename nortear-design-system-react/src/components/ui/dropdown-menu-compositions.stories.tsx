@@ -226,12 +226,12 @@ export const WithRadioGroup: Story = {
   play: async ({ step }) => {
     const menu = await waitForPortal("menu");
     const canvas = within(menu);
-    const claro = canvas.getByRole("menuitemradio", { name: "Claro" });
+    const light = canvas.getByRole("menuitemradio", { name: "Claro" });
     const escuro = canvas.getByRole("menuitemradio", { name: "Escuro" });
 
     await step("Um item por vez se anuncia escolhido", async () => {
       await expect(canvas.getAllByRole("menuitemradio")).toHaveLength(3);
-      await expect(claro).toHaveAttribute("aria-checked", "true");
+      await expect(light).toHaveAttribute("aria-checked", "true");
       await expect(escuro).toHaveAttribute("aria-checked", "false");
     });
 
@@ -241,7 +241,7 @@ export const WithRadioGroup: Story = {
 
       await waitFor(async () => {
         await expect(escuro).toHaveAttribute("aria-checked", "true");
-        await expect(claro).toHaveAttribute("aria-checked", "false");
+        await expect(light).toHaveAttribute("aria-checked", "false");
       });
     });
   },

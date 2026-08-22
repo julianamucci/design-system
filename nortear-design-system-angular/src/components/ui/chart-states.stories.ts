@@ -68,22 +68,22 @@ export const SingleSeries: Story = {
     const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
 
     await step('Com uma série a legenda some — não há o que comparar', async () => {
-      const textos = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
-      await expect(textos).not.toContain(SERIE_UNICA[0].name);
+      const texts = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
+      await expect(texts).not.toContain(SERIE_UNICA[0].name);
     });
 
     await step('Sem legenda ocupando espaço, o valor cabe junto do dado', async () => {
       // A contrapartida de esconder a legenda: com uma série só não há números
       // se sobrepondo, então o valor exato é escrito no desenho.
-      const textos = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
+      const texts = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
       for (const valor of SERIE_UNICA[0].data) {
-        await expect(textos).toContain(String(valor));
+        await expect(texts).toContain(String(valor));
       }
     });
 
     await step('A tabela tem duas colunas: categoria e a única série', async () => {
-      const cabecalho = [...chart.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
-      await expect(cabecalho).toEqual(['Categoria', SERIE_UNICA[0].name]);
+      const header = [...chart.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
+      await expect(header).toEqual(['Categoria', SERIE_UNICA[0].name]);
     });
   },
 };
@@ -108,9 +108,9 @@ export const MultiSeries: Story = {
     const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
 
     await step('Legenda automática com o nome de cada série', async () => {
-      const textos = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
+      const texts = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
       for (const serie of SERIES_MULTI) {
-        await expect(textos).toContain(serie.name);
+        await expect(texts).toContain(serie.name);
       }
     });
 
@@ -130,9 +130,9 @@ export const MultiSeries: Story = {
     });
 
     await step('A tabela ganha uma coluna por série', async () => {
-      const cabecalho = [...chart.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
-      await expect(cabecalho).toHaveLength(SERIES_MULTI.length + 1);
-      await expect(cabecalho.slice(1)).toEqual(SERIES_MULTI.map((s) => s.name));
+      const header = [...chart.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
+      await expect(header).toHaveLength(SERIES_MULTI.length + 1);
+      await expect(header.slice(1)).toEqual(SERIES_MULTI.map((s) => s.name));
     });
   },
 };
@@ -187,11 +187,11 @@ export const DarkTheme: Story = {
     await step('Trocar o tema recolore sem remontar', async () => {
       try {
         html.classList.remove('dark');
-        const claro = getComputedStyle(rotulo).fill;
+        const light = getComputedStyle(rotulo).fill;
         html.classList.add('dark');
         const escuro = getComputedStyle(rotulo).fill;
         // Mesmo nó no DOM: nada foi recriado, só a cascata resolveu outro token.
-        await expect(escuro).not.toBe(claro);
+        await expect(escuro).not.toBe(light);
         await expect(chart.querySelector('svg text')).toBe(rotulo);
         await expect(chart.querySelector('rect[data-series="0"]')).toBe(barra);
       } finally {
@@ -228,7 +228,7 @@ export const GraphicContrast: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
-    const fundo = rgbToken('--background')!;
+    const background = rgbToken('--background')!;
 
     await step('Toda forma de dado tem contorno', async () => {
       const contornos = [...chart.querySelectorAll<SVGRectElement>('svg > rect')]
@@ -244,13 +244,13 @@ export const GraphicContrast: Story = {
       const contorno = [...chart.querySelectorAll<SVGRectElement>('svg > rect')]
         .find((r) => r.getAttribute('fill')?.startsWith('url('))!;
       const cor = rgbColor(getComputedStyle(contorno).stroke)!;
-      await expect(contrastRatio(cor, fundo)).toBeGreaterThanOrEqual(3);
+      await expect(contrastRatio(cor, background)).toBeGreaterThanOrEqual(3);
     });
 
     await step('O texto dos eixos passa de 4.5:1', async () => {
       const rotulo = chart.querySelector<SVGTextElement>('svg text')!;
       const cor = rgbColor(getComputedStyle(rotulo).fill)!;
-      await expect(contrastRatio(cor, fundo)).toBeGreaterThanOrEqual(4.5);
+      await expect(contrastRatio(cor, background)).toBeGreaterThanOrEqual(4.5);
     });
   },
 };

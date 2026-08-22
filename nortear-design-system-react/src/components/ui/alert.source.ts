@@ -30,9 +30,9 @@ const PAPEIS = ['alert', 'status', 'note'] as const;
 const IMPORT = 'import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";';
 
 /** Import do design system somado ao do ícone, nesta ordem em todos os snippets. */
-function cabecalho(icones: string[], extra?: string): string {
+function header(icons: string[], extra?: string): string {
   const linhas = [extra ?? IMPORT];
-  if (icones.length) linhas.push(`import { ${icones.join(', ')} } from "lucide-react";`);
+  if (icons.length) linhas.push(`import { ${icons.join(', ')} } from "lucide-react";`);
   return linhas.join('\n');
 }
 
@@ -64,7 +64,7 @@ function variante(
   descricao: string,
 ): string {
   const atributos = nome === 'default' ? '' : ` variant="${nome}"`;
-  return jsxSnippet(cabecalho([icone]), alerta(atributos, corpo(icone, titulo, descricao)));
+  return jsxSnippet(header([icone]), alerta(atributos, corpo(icone, titulo, descricao)));
 }
 
 /**
@@ -85,7 +85,7 @@ export const alertSource: SourceTransform<AlertArgs> = (_gerado, ctx) => {
     propBool('dismissible', args.dismissible),
   ]);
   return jsxSnippet(
-    cabecalho(['Info']),
+    header(['Info']),
     alerta(
       atributos,
       corpo('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.'),
@@ -146,7 +146,7 @@ export function alertInfoSource(): string {
  */
 export function alertDispensavelSource(): string {
   return jsxSnippet(
-    `${cabecalho(['CheckCircle2'])}
+    `${header(['CheckCircle2'])}
 
 function aoFechar() {
   // Dispara uma vez só, depois que o alerta já saiu da tela.
@@ -168,7 +168,7 @@ function aoFechar() {
  * propósito — o que se mede aqui é texto sobre o fundo que a variante pinta.
  */
 export function alertContrastSource(): string {
-  const blocos = VARIANTES.map((nome) => {
+  const blocks = VARIANTES.map((nome) => {
     const atributos = nome === 'default' ? '' : ` variant="${nome}"`;
     return [
       `  <Alert${atributos}>`,
@@ -179,7 +179,7 @@ export function alertContrastSource(): string {
   }).join('\n');
   return jsxSnippet(
     IMPORT,
-    `<div className="nds-stack" data-spacing="sm">\n${blocos}\n</div>`,
+    `<div className="nds-stack" data-spacing="sm">\n${blocks}\n</div>`,
   );
 }
 
@@ -189,7 +189,7 @@ export function alertContrastSource(): string {
  */
 export function alertNoTitleSource(): string {
   return jsxSnippet(
-    cabecalho(['Info'], 'import { Alert, AlertDescription } from "@/components/ui/alert";'),
+    header(['Info'], 'import { Alert, AlertDescription } from "@/components/ui/alert";'),
     alerta('', corpo('Info', '', 'Suas alterações serão aplicadas na próxima sessão.')),
   );
 }
@@ -236,7 +236,7 @@ export function alertNoAnnouncementSource(): string {
     '  </Alert>',
   ].join('\n');
   return jsxSnippet(
-    cabecalho(['Info']),
+    header(['Info']),
     `<div className="nds-stack" data-spacing="sm">\n${nota}\n${padrao}\n</div>`,
   );
 }
@@ -248,7 +248,7 @@ export function alertNoAnnouncementSource(): string {
  */
 export function alertInsercaoDinamicaSource(): string {
   return jsxSnippet(
-    cabecalho(['Info']),
+    header(['Info']),
     `<div aria-live="polite">\n${[
       '  <Alert>',
       corpo('Info', 'Operação concluída', 'O relatório foi gerado com sucesso.', '    '),

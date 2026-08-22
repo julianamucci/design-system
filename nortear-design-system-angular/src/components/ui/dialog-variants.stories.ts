@@ -88,8 +88,8 @@ export const Default: Story = {
       // no estreito e à direita no largo. No DOM ela vem por último, que é a
       // ordem de leitura e de foco correta.
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const botoes = rodape.querySelectorAll('button');
-      await expect(botoes[botoes.length - 1]).toHaveTextContent(LABELS.action);
+      const buttons = rodape.querySelectorAll('button');
+      await expect(buttons[buttons.length - 1]).toHaveTextContent(LABELS.action);
     });
   },
 };
@@ -290,11 +290,11 @@ export const WithDestructiveAction: Story = {
 
     await step('A ação primária carrega a variante destrutiva', async () => {
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const botoes = rodape.querySelectorAll<HTMLElement>('button');
+      const buttons = rodape.querySelectorAll<HTMLElement>('button');
       // Esta é a asserção que prova o binding de input: sob JIT o botão
       // renderizaria no default e a classe destructive nunca apareceria
       // (armadilha 1 do CLAUDE.md deste stack).
-      await expect(botoes[botoes.length - 1]).toHaveClass(/nds-button-destructive/);
+      await expect(buttons[buttons.length - 1]).toHaveClass(/nds-button-destructive/);
     });
 
     await step('Ainda assim é um Dialog, não um AlertDialog', async () => {
@@ -385,8 +385,8 @@ export const ConfirmEmail: Story = {
 
     await step('A operação é reversível, então a ação primária é neutra', async () => {
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const botoes = rodape.querySelectorAll<HTMLElement>('button');
-      await expect(botoes[botoes.length - 1]).toHaveClass(/nds-button-default/);
+      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      await expect(buttons[buttons.length - 1]).toHaveClass(/nds-button-default/);
     });
 
     await step('Cancelar sai sem consequência', async () => {

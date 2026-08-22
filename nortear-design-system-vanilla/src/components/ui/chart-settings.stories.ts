@@ -22,7 +22,7 @@ const chartData = MONTHS.map((label, i) => ({ label, value: ACESSOS[i] }));
 const ROXO = '#7c3aed';
 const ROXO_RGB = 'rgb(124, 58, 237)';
 
-const ALTURA = 320;
+const HEIGHT = 320;
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -84,8 +84,8 @@ export const SeriesColor: Story = {
     });
 
     await step('Toda categoria continua escrita no eixo', async () => {
-      for (const mes of MONTHS) {
-        await expect(designEscreve(raiz, mes)).toBe(true);
+      for (const month of MONTHS) {
+        await expect(designEscreve(raiz, month)).toBe(true);
       }
     });
   },
@@ -99,7 +99,7 @@ export const CustomHeight: Story = {
       // Override de story: a altura é o assunto, e o valor dela é o da story.
       source: {
         transform: chartSourceWith({
-          height: ALTURA,
+          height: HEIGHT,
           'aria-label': 'Acessos mensais, em bloco mais alto',
         }),
       },
@@ -111,7 +111,7 @@ export const CustomHeight: Story = {
   render: () => createChart({
     data: chartData,
     type: 'bar',
-    height: ALTURA,
+    height: HEIGHT,
     class: 'nds-max-w-md',
     'aria-label': 'Acessos mensais, em bloco mais alto',
   }),
@@ -121,14 +121,14 @@ export const CustomHeight: Story = {
     await step('O container fica com a altura pedida', async () => {
       // Tolerância de 1px: o retângulo do layout é fracionário, e comparar
       // igualdade exata em pixel é o caminho curto para um teste intermitente.
-      await expect(Math.abs(raiz.getBoundingClientRect().height - ALTURA)).toBeLessThanOrEqual(1);
+      await expect(Math.abs(raiz.getBoundingClientRect().height - HEIGHT)).toBeLessThanOrEqual(1);
     });
 
     await step('E o desenho ocupa o bloco todo, não uma faixa do topo', async () => {
       await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
       const desenho = designRenderizado(raiz) as SVGElement;
       await waitFor(
-        () => expect(desenho.getBoundingClientRect().height).toBeGreaterThan(ALTURA * 0.9),
+        () => expect(desenho.getBoundingClientRect().height).toBeGreaterThan(HEIGHT * 0.9),
         { timeout: 3000 },
       );
     });

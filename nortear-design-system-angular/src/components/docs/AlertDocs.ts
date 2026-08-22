@@ -702,36 +702,36 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     return [
       {
         title: t('props.alertTitle'),
         cols,
         items: [
-          { name: 'variant',      type: 'AlertVariant',  defaultValue: "'default'",        required: nao, description: toPlainText(t('props.table.variant')) },
-          { name: 'role',         type: 'AlertRole',     defaultValue: "'alert'",          required: nao, description: toPlainText(t('props.table.role')) },
-          { name: 'dismissible',  type: 'boolean',       defaultValue: 'false',            required: nao, description: toPlainText(t('props.table.dismissible')) },
-          { name: 'dismissLabel', type: 'string',        defaultValue: "'Fechar alerta'",  required: nao, description: toPlainText(t('props.table.dismissLabel')) },
-          { name: '(dismiss)',    type: 'OutputRef<void>', defaultValue: '—',              required: nao, description: toPlainText(t('props.table.onDismiss')) },
-          { name: 'class',        type: 'string',        defaultValue: '—',                required: nao, description: toPlainText(t('props.table.className')) },
-          { name: '(conteúdo)',   type: 'HTML',          defaultValue: '—',                required: nao, description: toPlainText(t('props.table.children')) },
+          { name: 'variant',      type: 'AlertVariant',  defaultValue: "'default'",        required: not, description: toPlainText(t('props.table.variant')) },
+          { name: 'role',         type: 'AlertRole',     defaultValue: "'alert'",          required: not, description: toPlainText(t('props.table.role')) },
+          { name: 'dismissible',  type: 'boolean',       defaultValue: 'false',            required: not, description: toPlainText(t('props.table.dismissible')) },
+          { name: 'dismissLabel', type: 'string',        defaultValue: "'Fechar alerta'",  required: not, description: toPlainText(t('props.table.dismissLabel')) },
+          { name: '(dismiss)',    type: 'OutputRef<void>', defaultValue: '—',              required: not, description: toPlainText(t('props.table.onDismiss')) },
+          { name: 'class',        type: 'string',        defaultValue: '—',                required: not, description: toPlainText(t('props.table.className')) },
+          { name: '(conteúdo)',   type: 'HTML',          defaultValue: '—',                required: not, description: toPlainText(t('props.table.children')) },
         ],
       },
       {
         title: t('props.alertTitleTitle'),
         cols,
         items: [
-          { name: '(elemento)', type: 'h1 | h2 | h3 | h4 | h5 | h6', defaultValue: '—', required: nao, description: toPlainText(t('props.table.titleAs')) },
-          { name: 'class',      type: 'string', defaultValue: '—', required: nao, description: toPlainText(t('props.table.className')) },
-          { name: '(conteúdo)', type: 'HTML',   defaultValue: '—', required: nao, description: toPlainText(t('props.table.children')) },
+          { name: '(elemento)', type: 'h1 | h2 | h3 | h4 | h5 | h6', defaultValue: '—', required: not, description: toPlainText(t('props.table.titleAs')) },
+          { name: 'class',      type: 'string', defaultValue: '—', required: not, description: toPlainText(t('props.table.className')) },
+          { name: '(conteúdo)', type: 'HTML',   defaultValue: '—', required: not, description: toPlainText(t('props.table.children')) },
         ],
       },
       {
         title: t('props.alertDescTitle'),
         cols,
         items: [
-          { name: 'class',      type: 'string', defaultValue: '—', required: nao, description: toPlainText(t('props.table.className')) },
-          { name: '(conteúdo)', type: 'HTML',   defaultValue: '—', required: nao, description: toPlainText(t('props.table.children')) },
+          { name: 'class',      type: 'string', defaultValue: '—', required: not, description: toPlainText(t('props.table.className')) },
+          { name: '(conteúdo)', type: 'HTML',   defaultValue: '—', required: not, description: toPlainText(t('props.table.children')) },
         ],
       },
     ];

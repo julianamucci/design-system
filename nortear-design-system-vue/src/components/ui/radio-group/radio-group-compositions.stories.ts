@@ -32,7 +32,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /** Idempotente — ver a nota em `radio-group.stories.ts`. */
-const escolher = async (alvo: HTMLElement): Promise<void> => {
+const choose = async (alvo: HTMLElement): Promise<void> => {
   if (alvo.getAttribute('aria-checked') !== 'true') await userEvent.click(alvo);
   await waitFor(() => expect(alvo).toHaveAttribute('aria-checked', 'true'));
 };
@@ -179,7 +179,7 @@ export const InForm: Story = {
     });
 
     await step('Selecionar uma opção marca aria-checked', async () => {
-      await escolher(canvas.getByRole('radio', { name: 'Pix' }));
+      await choose(canvas.getByRole('radio', { name: 'Pix' }));
       await expect(canvas.getByRole('radio', { name: 'Cartão de crédito' })).toHaveAttribute(
         'aria-checked',
         'false',

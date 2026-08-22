@@ -11,7 +11,7 @@ import {
   selectSource,
 } from './select.source';
 
-const GRUPOS = [
+const GROUPS = [
   {
     label: 'Sudeste',
     options: [
@@ -100,7 +100,7 @@ export const WithGroups: Story = {
     Component: SelectStory,
     props: {
       variant: 'withGroups',
-      groups: GRUPOS,
+      groups: GROUPS,
       placeholder: 'Selecione...',
       ariaLabel: 'Selecionar região',
     },
@@ -127,15 +127,15 @@ export const WithGroups: Story = {
     await step('Cada categoria vira um grupo nomeado pelo cabeçalho', async () => {
       const listbox = await abrir();
       const grupos = within(listbox).getAllByRole('group');
-      await expect(grupos).toHaveLength(GRUPOS.length);
+      await expect(grupos).toHaveLength(GROUPS.length);
       for (const [i, grupo] of grupos.entries()) {
-        await expect(grupo).toHaveAccessibleName(GRUPOS[i].label);
+        await expect(grupo).toHaveAccessibleName(GROUPS[i].label);
       }
     });
 
     await step('As opções continuam todas na mesma lista', async () => {
       const listbox = await abrir();
-      const total = GRUPOS.reduce((soma, g) => soma + g.options.length, 0);
+      const total = GROUPS.reduce((sum, g) => sum + g.options.length, 0);
       await expect(within(listbox).getAllByRole('option')).toHaveLength(total);
     });
 
@@ -144,7 +144,7 @@ export const WithGroups: Story = {
       // semanticamente é o grupo.
       const listbox = await abrir();
       await expect(listbox.querySelectorAll('.nds-select-separator')).toHaveLength(
-        GRUPOS.length - 1,
+        GROUPS.length - 1,
       );
     });
   },

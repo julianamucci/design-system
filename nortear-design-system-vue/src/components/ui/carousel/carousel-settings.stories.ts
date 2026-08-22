@@ -194,9 +194,9 @@ export const MultiResponsive: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const viewport = viewportDe(canvasElement);
-    const janela = canvasElement.ownerDocument.defaultView!;
-    const grande = janela.matchMedia('(min-width: 1024px)').matches;
-    const medio = janela.matchMedia('(min-width: 768px)').matches;
+    const window = canvasElement.ownerDocument.defaultView!;
+    const grande = window.matchMedia('(min-width: 1024px)').matches;
+    const medio = window.matchMedia('(min-width: 768px)').matches;
 
     await step('A base do slide acompanha o breakpoint em vigor', async () => {
       // A classe é responsiva por definição: afirmar "metade" sem consultar a
@@ -328,11 +328,11 @@ export const Autoplay: Story = {
       const anterior = () => canvas.getByRole('button', { name: /item anterior/i }) as HTMLButtonElement;
       const total = canvas.getAllByRole('group').length;
       for (let passo = 0; passo < total; passo++) {
-        const botao = anterior();
+        const button = anterior();
         // `.nds-button:disabled` declara `pointer-events: none` — checar antes
         // de clicar, senão o userEvent recusa e a story quebra no replay.
-        if (botao.disabled) break;
-        await userEvent.click(botao);
+        if (button.disabled) break;
+        await userEvent.click(button);
       }
       await expect(anterior()).toBeDisabled();
 
@@ -418,14 +418,14 @@ export const DragGesture: Story = {
      */
     const settle = async () => {
       let estaveis = 0;
-      let ultimo = Number.NaN;
+      let last = Number.NaN;
       await waitFor(async () => {
         const agora = deslocamento();
-        estaveis = agora === ultimo ? estaveis + 1 : 0;
-        ultimo = agora;
+        estaveis = agora === last ? estaveis + 1 : 0;
+        last = agora;
         await expect(estaveis).toBeGreaterThanOrEqual(3);
       }, { timeout: 4000 });
-      return ultimo;
+      return last;
     };
 
     /** Espera a posição chegar a uma coordenada já conhecida. */
@@ -455,9 +455,9 @@ export const DragGesture: Story = {
       // ao primeiro slide é o que faz a segunda rodada valer tanto quanto a
       // primeira.
       for (let volta = 0; volta < slides().length; volta++) {
-        const botao = anterior();
-        if (botao.disabled) break;
-        await userEvent.click(botao);
+        const button = anterior();
+        if (button.disabled) break;
+        await userEvent.click(button);
       }
       posZero = await settle();
       await expect(anterior()).toBeDisabled();

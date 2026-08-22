@@ -105,8 +105,8 @@
   <span>Item B</span>
 </div>`;
 
-  const codeHorizontal = `<Separator orientation="horizontal" />`;
-  const codeVertical = `<div class="nds-cluster nds-docs-demo-row" data-spacing="md" data-align="center">
+  const horizontalCode = `<Separator orientation="horizontal" />`;
+  const verticalCode = `<div class="nds-cluster nds-docs-demo-row" data-spacing="md" data-align="center">
   <span>A</span>
   <Separator orientation="vertical" />
   <span>B</span>
@@ -314,8 +314,8 @@
   <DocsVariants
     title={$tStore('variants.title')}
     items={[
-      { name: $tStore('variants.items.horizontal'), description: stripHtml($tStore('variants.styles.horizontal')), code: codeHorizontal, preview: variantHorizontal },
-      { name: $tStore('variants.items.vertical'),   description: stripHtml($tStore('variants.styles.vertical')),   code: codeVertical,   preview: variantVertical   },
+      { name: $tStore('variants.items.horizontal'), description: stripHtml($tStore('variants.styles.horizontal')), code: horizontalCode, preview: variantHorizontal },
+      { name: $tStore('variants.items.vertical'),   description: stripHtml($tStore('variants.styles.vertical')),   code: verticalCode,   preview: variantVertical   },
     ]}
   />
 

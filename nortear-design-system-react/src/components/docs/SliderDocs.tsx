@@ -307,7 +307,7 @@ export function SliderDocs() {
   aria-label="Faixa de preço"
 />`;
 
-  const codeVertical = `<div className="nds-demo-box" data-size="sm">
+  const verticalCode = `<div className="nds-demo-box" data-size="sm">
   <Slider
     value={[60]}
     onValueChange={setValue}
@@ -560,7 +560,7 @@ interface SliderProps {
           {
             name: tContent("variants.items.vertical"),
             description: stripHtml(tContent("variants.styles.vertical")),
-            code: codeVertical,
+            code: verticalCode,
             preview: (
               <div className="nds-cluster nds-w-full nds-demo-box" data-justify="center" data-size="sm">
                 <Slider

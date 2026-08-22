@@ -55,7 +55,7 @@ ${IMPORT}`;
  * elemento perde a pele de botão e fica com o sublinhado pontilhado que sinaliza
  * "há algo a mais aqui".
  */
-const CLASSES_GATILHO_BOTAO =
+const CLASSES_TRIGGER_BUTTON =
   'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted ' +
   'nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 
@@ -81,7 +81,7 @@ function triggerLink(rotulo: string, href: string): string {
 /** Sem `type="button"` o mesmo gatilho dentro de um `<form>` enviaria o form. */
 function triggerButton(rotulo: string): string {
   return `<HoverCardTrigger asChild>
-  <button type="button" className="${CLASSES_GATILHO_BOTAO}">
+  <button type="button" className="${CLASSES_TRIGGER_BUTTON}">
     ${rotulo}
   </button>
 </HoverCardTrigger>`;
@@ -382,7 +382,7 @@ export function hoverCardLadosSource(): string {
       Abre{" "}
       <HoverCard>
         <HoverCardTrigger asChild>
-          <button type="button" className="${CLASSES_GATILHO_BOTAO}">
+          <button type="button" className="${CLASSES_TRIGGER_BUTTON}">
             {rotulo}
           </button>
         </HoverCardTrigger>

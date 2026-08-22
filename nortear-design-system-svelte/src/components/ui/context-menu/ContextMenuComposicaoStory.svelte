@@ -17,7 +17,7 @@
     composition = 'shortcut' as Composition,
   }: { composition?: Composition } = $props();
 
-  let mostrarGrade = $state(false);
+  let mostrarGrid = $state(false);
   let mostrarReguas = $state(true);
   let layout = $state('grid');
 </script>
@@ -58,7 +58,7 @@
     {@render area()}
     <ContextMenu.Content>
       <ContextMenu.Label>Visualização</ContextMenu.Label>
-      <ContextMenu.CheckboxItem bind:checked={mostrarGrade} data-testid="grade">
+      <ContextMenu.CheckboxItem bind:checked={mostrarGrid} data-testid="grade">
         Mostrar grade
       </ContextMenu.CheckboxItem>
       <ContextMenu.CheckboxItem bind:checked={mostrarReguas} data-testid="reguas">
@@ -123,7 +123,7 @@
       <ContextMenu.Separator />
       <ContextMenuGroup>
         <ContextMenuGroupHeading>Visualização</ContextMenuGroupHeading>
-        <ContextMenu.CheckboxItem bind:checked={mostrarGrade} data-testid="grade">
+        <ContextMenu.CheckboxItem bind:checked={mostrarGrid} data-testid="grade">
           Mostrar grade
         </ContextMenu.CheckboxItem>
       </ContextMenuGroup>

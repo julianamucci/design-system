@@ -36,7 +36,7 @@ const MENUS_FECHADOS = ["Arquivo", "Editar", "Exibir", "Ajuda"] as const
 // pelo `play`, e a aba Actions abriria vazia.
 const selectionSpy = fn()
 
-const ITENS_COM_BLOQUEIO = [
+const ITEMS_WITH_BLOCK = [
   { label: "Novo", disabled: false },
   { label: "Salvar", disabled: false },
   { label: "Enviar para revisão", disabled: true },
@@ -98,16 +98,16 @@ export const Closed: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     const barra = canvas.getByRole("menubar")
-    const gatilhos = within(barra).getAllByRole("menuitem")
+    const triggers = within(barra).getAllByRole("menuitem")
 
     await step("A barra publica o papel e a orientação", async () => {
       await expect(barra.getAttribute("data-slot")).toBe("menubar")
       await expect(barra.getAttribute("aria-orientation")).toBe("horizontal")
-      await expect(gatilhos).toHaveLength(MENUS_FECHADOS.length)
+      await expect(triggers).toHaveLength(MENUS_FECHADOS.length)
     })
 
     await step("Fechado é ausência: nenhum painel existe no DOM", async () => {
-      for (const gatilho of gatilhos) {
+      for (const gatilho of triggers) {
         await expect(gatilho.getAttribute("aria-expanded")).toBe("false")
       }
       // Portal desmontado, não escondido: um painel só oculto continuaria
@@ -190,7 +190,7 @@ export const ItemDisabled: Story = {
           <MenubarMenu defaultOpen>
             <MenubarTrigger>Arquivo</MenubarTrigger>
             <MenubarContent>
-              {ITENS_COM_BLOQUEIO.map((i) => (
+              {ITEMS_WITH_BLOCK.map((i) => (
                 <MenubarItem
                   key={i.label}
                   disabled={i.disabled}
@@ -207,10 +207,10 @@ export const ItemDisabled: Story = {
   play: async ({ step }) => {
     const menu = await waitForPortal("menu")
     const itens = within(menu).getAllByRole("menuitem")
-    const bloqueado = itens[ITENS_COM_BLOQUEIO.findIndex((i) => i.disabled)]
+    const bloqueado = itens[ITEMS_WITH_BLOCK.findIndex((i) => i.disabled)]
 
     await step("O item bloqueado se anuncia como tal", async () => {
-      await expect(itens).toHaveLength(ITENS_COM_BLOQUEIO.length)
+      await expect(itens).toHaveLength(ITEMS_WITH_BLOCK.length)
       await expect(bloqueado.getAttribute("aria-disabled")).toBe("true")
       // `aria-disabled`, e não o atributo `disabled`: o item continua
       // alcançável pela seta, para ser ANUNCIADO como indisponível em vez de

@@ -39,7 +39,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 const atributos = useAttrs()
 const contexto = inject(KEY_HOVER_CARD, null)
 
-const nomeAutomatico = computed(() => {
+const nameAutomatico = computed(() => {
   if (atributos['aria-label'] || atributos['aria-labelledby']) return undefined
   return contexto?.gatilho.value?.textContent?.trim() || 'Prévia'
 })
@@ -50,7 +50,7 @@ const nomeAutomatico = computed(() => {
     <HoverCardContent
       data-slot="hover-card-content"
       role="dialog"
-      :aria-label="nomeAutomatico"
+      :aria-label="nameAutomatico"
       v-bind="{ ...$attrs, ...forwardedProps }"
       :class="cn( 'nds-hover-card-content', props.class, )"
     >

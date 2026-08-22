@@ -73,10 +73,10 @@ function ownElementoEh(event?: Event) {
   return !event || event.target === root.value
 }
 
-function limparEntrada(event?: Event) {
+function clearEntry(event?: Event) {
   if (!ownElementoEh(event)) return
   window.clearTimeout(entryTimer)
-  root.value?.removeEventListener('animationend', limparEntrada)
+  root.value?.removeEventListener('animationend', clearEntry)
   if (animationClass.value === 'nds-animate-in') animationClass.value = null
 }
 
@@ -95,8 +95,8 @@ function finalizarOutput(event?: Event) {
 
 onMounted(() => {
   if (!props.dismissible || !root.value) return
-  root.value.addEventListener('animationend', limparEntrada)
-  entryTimer = window.setTimeout(limparEntrada, ENTER_FALLBACK_MS)
+  root.value.addEventListener('animationend', clearEntry)
+  entryTimer = window.setTimeout(clearEntry, ENTER_FALLBACK_MS)
 })
 
 onBeforeUnmount(() => {
@@ -109,7 +109,7 @@ function handleDismiss() {
   dismissed = true
 
   // Fechar antes da entrada terminar deixaria as duas classes no elemento.
-  limparEntrada()
+  clearEntry()
   animationClass.value = 'nds-animate-out'
 
   const el = root.value

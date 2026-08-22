@@ -119,12 +119,12 @@ export const WithTitle: Story = {
     });
 
     await step('O cabeçalho é uma peça, não uma div com classe escrita à mão', async () => {
-      const cabecalho = painel()!.querySelector('[data-slot="popover-header"]')!;
-      await expect(cabecalho).toHaveClass(/nds-popover-header/);
+      const header = painel()!.querySelector('[data-slot="popover-header"]')!;
+      await expect(header).toHaveClass(/nds-popover-header/);
       // Título e descrição moram DENTRO dele: é o cabeçalho que dá o respiro
       // entre os dois, e a folha compartilhada só o entrega nesse aninhamento.
-      await expect(cabecalho.querySelector('[data-slot="popover-title"]')).not.toBeNull();
-      await expect(cabecalho.querySelector('[data-slot="popover-description"]')).not.toBeNull();
+      await expect(header.querySelector('[data-slot="popover-title"]')).not.toBeNull();
+      await expect(header.querySelector('[data-slot="popover-description"]')).not.toBeNull();
     });
   },
 };

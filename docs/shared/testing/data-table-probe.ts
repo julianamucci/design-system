@@ -26,7 +26,7 @@
 export interface BoxMeasurement {
   largura: number;
   altura: number;
-  fundo: string;
+  background: string;
   cor: string;
   padding: string;
   gap: string;
@@ -53,7 +53,7 @@ function caixa(el: Element | null | undefined): BoxMeasurement | null {
   return {
     largura: Math.round(r.width),
     altura: Math.round(r.height),
-    fundo: cs.backgroundColor,
+    background: cs.backgroundColor,
     cor: cs.color,
     padding: cs.padding,
     gap: cs.gap,
@@ -72,7 +72,7 @@ function descreve(el: Element | null | undefined): string | null {
   return `${el.tagName.toLowerCase()}${classes.length ? '.' + classes.join('.') : ''}`;
 }
 
-function alcance(el: Element | null | undefined): ClickReach {
+function reach(el: Element | null | undefined): ClickReach {
   if (!el) return { finding: false, clickable: false, porCima: null };
   const r = el.getBoundingClientRect();
   if (r.width === 0 || r.height === 0) return { finding: true, clickable: false, porCima: 'sem-caixa' };
@@ -150,16 +150,16 @@ function luminancia(cor: string): number | null {
 }
 
 /** Razão WCAG entre o texto do elemento e o primeiro fundo opaco acima dele. */
-export function contraste(el: Element | null): { ratio: number; frente: string; fundo: string } | null {
+export function contraste(el: Element | null): { ratio: number; frente: string; background: string } | null {
   if (!el) return null;
   const frente = getComputedStyle(el).color;
-  const fundo = backgroundEffective(el);
-  if (!fundo) return null;
+  const background = backgroundEffective(el);
+  if (!background) return null;
   const a = luminancia(frente);
-  const b = luminancia(fundo);
+  const b = luminancia(background);
   if (a === null || b === null) return null;
   const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
-  return { ratio: Math.round(ratio * 100) / 100, frente, fundo };
+  return { ratio: Math.round(ratio * 100) / 100, frente, background };
 }
 
 // ─── Rolagem ──────────────────────────────────────────────────────────────────
@@ -234,7 +234,7 @@ export function measureTable(raiz: HTMLElement) {
   const conta = (sel: string) => raiz.querySelectorAll(sel).length;
 
   const tabela = um('table');
-  const busca = um('.nds-data-table-search-input') ?? um('input[type="search"]');
+  const search = um('.nds-data-table-search-input') ?? um('input[type="search"]');
   const ordenarButton = um('.nds-data-table-sort-btn');
   const thOrdenavel = ordenarButton?.closest('th') ?? null;
 
@@ -260,7 +260,7 @@ export function measureTable(raiz: HTMLElement) {
   const filterTh = textFilter?.closest('th') ?? selectFilter?.closest('th') ?? null;
 
   const editButton = um('.nds-data-table-edit-btn');
-  const campoDeEdicao = um('.nds-data-table-edit-input');
+  const editField = um('.nds-data-table-edit-input');
 
   const vazio = um('.nds-data-table-empty');
 
@@ -277,7 +277,7 @@ export function measureTable(raiz: HTMLElement) {
       slotDaTabela: tabela?.getAttribute('data-slot') ?? null,
       contagens: {
         toolbar: conta('.nds-data-table-toolbar'),
-        busca: conta('.nds-data-table-search'),
+        search: conta('.nds-data-table-search'),
         searchField: conta('.nds-data-table-search-input'),
         botaoDeColunas: conta('.nds-data-table-columns-btn'),
         scroll: conta('.nds-data-table-scroll'),
@@ -295,8 +295,8 @@ export function measureTable(raiz: HTMLElement) {
         vazio: conta('.nds-data-table-empty'),
         editavel: conta('.nds-data-table-editable'),
         editButton: conta('.nds-data-table-edit-btn'),
-        campoDeEdicao: conta('.nds-data-table-edit-input'),
-        paginacao: conta('.nds-data-table-pagination'),
+        editField: conta('.nds-data-table-edit-input'),
+        pagination: conta('.nds-data-table-pagination'),
         contagemDaPaginacao: conta('.nds-data-table-pagination-count'),
         sizeSelector: conta('.nds-data-table-page-size-select'),
         navigation: conta('.nds-data-table-pagination-nav'),
@@ -313,10 +313,10 @@ export function measureTable(raiz: HTMLElement) {
     },
     semantica: {
       tableName: tableName(tabela),
-      papelDaBusca: busca?.getAttribute('role') ?? (busca?.getAttribute('type') === 'search' ? 'searchbox' : null),
-      tipoDaBusca: busca?.getAttribute('type') ?? null,
-      nomeDaBusca: nomeAcessivel(busca),
-      placeholderDaBusca: busca?.getAttribute('placeholder') ?? null,
+      papelDaBusca: search?.getAttribute('role') ?? (search?.getAttribute('type') === 'search' ? 'searchbox' : null),
+      tipoDaBusca: search?.getAttribute('type') ?? null,
+      nomeDaBusca: nomeAcessivel(search),
+      placeholderDaBusca: search?.getAttribute('placeholder') ?? null,
       scopeDoTh: thOrdenavel?.getAttribute('scope') ?? null,
       ariaSortNaoOrdenada: thOrdenavel?.getAttribute('aria-sort') ?? null,
       ariaSortNoBotao: ordenarButton?.getAttribute('aria-sort') ?? null,
@@ -344,7 +344,7 @@ export function measureTable(raiz: HTMLElement) {
       nomesDaPaginacao: pageButtons.map((b) => nomeAcessivel(b)),
       estadoDaPaginacao: pageButtons.map((b) => (b as HTMLButtonElement).disabled),
       textoDoIndicador: texto(todos('.nds-data-table-pagination-count').slice(-1)[0]),
-      textoDaContagem: texto(todos('.nds-data-table-pagination-count')[0]),
+      contagemText: texto(todos('.nds-data-table-pagination-count')[0]),
       nomeDoSeletorDeTamanho: nomeAcessivel(sizeSelector),
       nomeDoFiltroDeTexto: nomeAcessivel(textFilter),
       nomeDoFiltroDeSelect: nomeAcessivel(selectFilter),
@@ -357,7 +357,7 @@ export function measureTable(raiz: HTMLElement) {
         return th ? texto(th.querySelector('.nds-sr-only')) ?? th.getAttribute('aria-label') : null;
       })(),
       nomeDoBotaoDeEdicao: nomeAcessivel(editButton),
-      nomeDoCampoDeEdicao: nomeAcessivel(campoDeEdicao),
+      nomeDoCampoDeEdicao: nomeAcessivel(editField),
       textoDoVazio: texto(vazio),
       pinadoNoTh: um('thead th.nds-data-table-th-pinned') ? 'th-pinned' : um('thead th.nds-data-table-td-pinned') ? 'td-pinned' : null,
       pinadoNoTd: um('tbody td.nds-data-table-td-pinned') ? 'td-pinned' : um('tbody td.nds-data-table-th-pinned') ? 'th-pinned' : null,
@@ -370,15 +370,15 @@ export function measureTable(raiz: HTMLElement) {
       filterTh: caixa(filterTh),
       filtersLine: caixa(filtersLine),
       editButton: caixa(editButton),
-      campoDeEdicao: caixa(campoDeEdicao),
+      editField: caixa(editField),
       celulaVazia: caixa(vazio),
       ordenarButton: caixa(ordenarButton),
     },
-    estados: {
+    states: {
       lineSelecionada: lineSelecionada
-        ? { dataState: lineSelecionada.getAttribute('data-state'), fundo: getComputedStyle(lineSelecionada).backgroundColor }
+        ? { dataState: lineSelecionada.getAttribute('data-state'), background: getComputedStyle(lineSelecionada).backgroundColor }
         : null,
-      lineNormal: lineNormal ? { fundo: getComputedStyle(lineNormal).backgroundColor } : null,
+      lineNormal: lineNormal ? { background: getComputedStyle(lineNormal).backgroundColor } : null,
       cellNumerica: caixa(cellNumerica),
       contentNumerico: caixa(contentNumerico),
       classeDoConteudoNumerico: contentNumerico?.getAttribute('class') ?? null,
@@ -387,13 +387,13 @@ export function measureTable(raiz: HTMLElement) {
     contraste: {
       celulaVazia: contraste(vazio),
       contagem: contraste(um('.nds-data-table-pagination-count')),
-      cabecalho: contraste(thOrdenavel),
+      header: contraste(thOrdenavel),
     },
     clickReach: {
-      checkboxDeTudo: alcance(allBox),
-      ordenarButton: alcance(ordenarButton),
-      primeiraPagina: alcance(pageButtons[0]),
-      editButton: alcance(editButton),
+      checkboxDeTudo: reach(allBox),
+      ordenarButton: reach(ordenarButton),
+      primeiraPagina: reach(pageButtons[0]),
+      editButton: reach(editButton),
     },
   };
 }

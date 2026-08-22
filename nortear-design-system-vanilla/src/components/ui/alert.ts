@@ -103,13 +103,13 @@ export function createAlert(options: AlertOptions = {}): HTMLElement {
     // roda e é removida em seguida — se ficasse, um ambiente que não avança
     // a animação (headless) manteria o alert preso em opacity: 0, invisível.
     el.classList.add('nds-animate-in');
-    const limparEntrada = (event?: Event) => {
+    const clearEntry = (event?: Event) => {
       if (event && event.target !== el) return; // animationend borbulha
       el.classList.remove('nds-animate-in');
-      el.removeEventListener('animationend', limparEntrada);
+      el.removeEventListener('animationend', clearEntry);
     };
-    el.addEventListener('animationend', limparEntrada);
-    window.setTimeout(limparEntrada, ENTER_FALLBACK_MS);
+    el.addEventListener('animationend', clearEntry);
+    window.setTimeout(clearEntry, ENTER_FALLBACK_MS);
 
     let dismissed = false;
     const dismissButton = createButton({

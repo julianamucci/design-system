@@ -149,17 +149,17 @@ export const Playground: Story = {
       ]);
 
       // Gateado na geometria da própria alça, não no valor recém-escrito.
-      const alca = canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
-      const centro = alca.getBoundingClientRect().left + alca.getBoundingClientRect().width / 2;
-      await expect(centro).toBeGreaterThan(caixa.left + caixa.width * 0.5);
+      const thumb = canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
+      const center = thumb.getBoundingClientRect().left + thumb.getBoundingClientRect().width / 2;
+      await expect(center).toBeGreaterThan(caixa.left + caixa.width * 0.5);
 
       await expect(spyCommit).toHaveBeenCalled();
     });
 
     await step('ArrowRight incrementa em step', async () => {
-      const alca = canvas.getByRole('slider');
-      const antes = handleValue(alca);
-      (alca as HTMLElement).focus();
+      const thumb = canvas.getByRole('slider');
+      const antes = handleValue(thumb);
+      (thumb as HTMLElement).focus();
       await userEvent.keyboard('{ArrowRight}');
       await expect(handleValue(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 1));
     });

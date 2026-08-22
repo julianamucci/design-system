@@ -109,7 +109,7 @@ export const WithIconInTrigger: Story = {
         transform: accordionWithTriggerRichSourceWith({
           value: 'info',
           rotulo: 'Informação',
-          comIcone: true,
+          withIcon: true,
         }),
       },
       description: {

@@ -436,13 +436,13 @@ export function createScrollAreaDocs(): HTMLElement {
         });
 
       case 'variantes': {
-        const codeVertical =
+        const verticalCode =
           `createScrollArea({\n` +
           `  size: 'lg',\n` +
           `  class: 'nds-w-full nds-rounded-md nds-border-default',\n` +
           `  children: list,\n` +
           `});`;
-        const codeHorizontal =
+        const horizontalCode =
           `createScrollArea({\n` +
           `  width: '100%',\n` +
           `  class: 'nds-rounded-md nds-border-default nds-whitespace-nowrap',\n` +
@@ -462,7 +462,7 @@ export function createScrollAreaDocs(): HTMLElement {
             {
               name: stripHtml(t('variants.items.vertical')),
               description: stripHtml(t('variants.styles.vertical')),
-              code: codeVertical,
+              code: verticalCode,
               previewFactory: () => createScrollArea({
                 size: 'md',
                 class: 'nds-w-full nds-rounded-md nds-border-default',
@@ -472,7 +472,7 @@ export function createScrollAreaDocs(): HTMLElement {
             {
               name: stripHtml(t('variants.items.horizontal')),
               description: stripHtml(t('variants.styles.horizontal')),
-              code: codeHorizontal,
+              code: horizontalCode,
               previewFactory: () => createScrollArea({
                 width: '100%',
                 class: 'nds-rounded-md nds-border-default nds-whitespace-nowrap',

@@ -217,11 +217,11 @@ export const ColorPicker: Story = {
       // ele o axe reprova por button-name.
       await waitForPortal('dialog');
       const amostras = within(painel()!).getAllByRole('button');
-      const nomes = amostras
+      const names = amostras
         .map((b) => b.getAttribute('aria-label'))
         .filter((n): n is string => n !== null);
-      await expect(nomes).toHaveLength(6);
-      await expect(new Set(nomes).size).toBe(6);
+      await expect(names).toHaveLength(6);
+      await expect(new Set(names).size).toBe(6);
     });
 
     await step('E o foco chega a cada uma por Tab', async () => {

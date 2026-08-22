@@ -38,10 +38,10 @@ function importing(parts: string[]): string {
 }
 
 const BUTTON = `import { Button } from '@/components/ui/button'`;
-const CAMPO = `import { Input } from '@/components/ui/input'\nimport { Label } from '@/components/ui/label'`;
+const FIELD = `import { Input } from '@/components/ui/input'\nimport { Label } from '@/components/ui/label'`;
 
 /** Cabeçalho: o título é o nome acessível do painel, a descrição é a descrição. */
-function cabecalho(titulo: string, descricao: string, recuo = 2): string {
+function header(titulo: string, descricao: string, recuo = 2): string {
   const p = ' '.repeat(recuo);
   return `${p}<SheetHeader>
 ${p}  <SheetTitle>${titulo}</SheetTitle>
@@ -53,18 +53,18 @@ ${p}</SheetHeader>`;
  * Rodapé canônico: a saída à esquerda, a confirmação à direita. `SheetClose`
  * com `as-child` empresta o fechamento ao botão em vez de embrulhá-lo.
  */
-function rodape(saida: string, confirmacao: string, recuo = 2): string {
+function rodape(saida: string, confirm: string, recuo = 2): string {
   const p = ' '.repeat(recuo);
   return `${p}<SheetFooter>
 ${p}  <SheetClose as-child>
 ${p}    <Button variant="outline">${saida}</Button>
 ${p}  </SheetClose>
-${p}  <Button>${confirmacao}</Button>
+${p}  <Button>${confirm}</Button>
 ${p}</SheetFooter>`;
 }
 
 /** Gatilho canônico: `as-child` faz o botão do design system ser o gatilho. */
-const GATILHO = (rotulo: string) => `  <SheetTrigger as-child>
+const TRIGGER = (rotulo: string) => `  <SheetTrigger as-child>
     <Button variant="outline">${rotulo}</Button>
   </SheetTrigger>`;
 
@@ -96,9 +96,9 @@ export const sheetPlaygroundSource: SourceTransform<SheetArgs> = (_gerado, ctx) 
       'SheetTrigger',
     ])}\n${BUTTON}`,
     `<Sheet${raiz}>
-${GATILHO(texto(args.triggerLabel, LABEL_TRIGGER))}
+${TRIGGER(texto(args.triggerLabel, LABEL_TRIGGER))}
   <SheetContent${conteudo}>
-${cabecalho('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
+${header('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
 ${rodape('Cancelar', 'Aplicar filtros', 4)}
   </SheetContent>
 </Sheet>`,
@@ -124,9 +124,9 @@ function lado(side: string, titulo: string): string {
       'SheetTrigger',
     ])}\n${BUTTON}`,
     `<Sheet default-open>
-${GATILHO(LABEL_TRIGGER)}
+${TRIGGER(LABEL_TRIGGER)}
   <SheetContent${attrs(attr('side', side, 'right'))}>
-${cabecalho(titulo, 'Configure os filtros para refinar os resultados.', 4)}
+${header(titulo, 'Configure os filtros para refinar os resultados.', 4)}
 ${rodape('Cancelar', 'Aplicar filtros', 4)}
   </SheetContent>
 </Sheet>`,
@@ -167,9 +167,9 @@ export function sheetClosedSource(): string {
       'SheetTrigger',
     ])}\n${BUTTON}`,
     `<Sheet>
-${GATILHO(LABEL_TRIGGER)}
+${TRIGGER(LABEL_TRIGGER)}
   <SheetContent>
-${cabecalho('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
+${header('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
   </SheetContent>
 </Sheet>`,
   );
@@ -188,9 +188,9 @@ export function sheetOpenSource(): string {
       'SheetTrigger',
     ])}\n${BUTTON}`,
     `<Sheet default-open>
-${GATILHO(LABEL_TRIGGER)}
+${TRIGGER(LABEL_TRIGGER)}
   <SheetContent>
-${cabecalho('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
+${header('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
 ${rodape('Cancelar', 'Aplicar filtros', 4)}
   </SheetContent>
 </Sheet>`,
@@ -213,7 +213,7 @@ export function sheetNoButtonCloseSource(): string {
     ])}\n${BUTTON}`,
     `<Sheet default-open>
   <SheetContent :show-close-button="false">
-${cabecalho('Aceitar atualização', 'Uma nova versão está disponível. Continue para atualizar.', 4)}
+${header('Aceitar atualização', 'Uma nova versão está disponível. Continue para atualizar.', 4)}
 ${rodape('Mais tarde', 'Atualizar agora', 4)}
   </SheetContent>
 </Sheet>`,
@@ -244,7 +244,7 @@ const aberto = ref(false)`,
 
   <Sheet :open="aberto" @update:open="(valor) => (aberto = valor)">
     <SheetContent>
-${cabecalho(
+${header(
   'Controlado pelo pai',
   'Este painel é comandado por estado externo, e devolve cada mudança a quem é dono dele.',
   6,
@@ -286,10 +286,10 @@ export function sheetFiltersAvancadosSource(): string {
       'SheetTitle',
     ])}
 ${BUTTON}
-${CAMPO}`,
+${FIELD}`,
     `<Sheet default-open>
   <SheetContent>
-${cabecalho('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
+${header('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
     <SheetBody>
       <div class="nds-grid" data-spacing="md">
 ${campo('cat', 'Categoria', 'Componentes', 8)}
@@ -319,10 +319,10 @@ export function sheetEditPerfilSource(): string {
       'SheetTitle',
     ])}
 ${BUTTON}
-${CAMPO}`,
+${FIELD}`,
     `<Sheet default-open>
   <SheetContent>
-${cabecalho(
+${header(
   'Editar perfil',
   'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
   4,
@@ -350,8 +350,8 @@ ${campo('profile-bio', 'Bio', 'Designer de sistemas em São Paulo', 8)}
  * ação. O `nav` leva nome próprio porque a página tem outra navegação.
  */
 export function sheetNavigationSecundariaSource(): string {
-  const secoes = ['Dashboard', 'Componentes', 'Tokens', 'Documentação', 'Configurações'];
-  const links = secoes
+  const sections = ['Dashboard', 'Componentes', 'Tokens', 'Documentação', 'Configurações'];
+  const links = sections
     .map(
       (secao) =>
         `        <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-muted-soft">${secao}</a>`,
@@ -367,7 +367,7 @@ export function sheetNavigationSecundariaSource(): string {
     ]),
     `<Sheet default-open>
   <SheetContent side="left">
-${cabecalho('Navegação', 'Acesse as seções principais da aplicação.', 4)}
+${header('Navegação', 'Acesse as seções principais da aplicação.', 4)}
     <SheetBody>
       <nav class="nds-stack" data-spacing="xs" aria-label="Seções">
 ${links}
@@ -395,10 +395,10 @@ export function sheetFormLongSource(): string {
       'SheetTitle',
     ])}
 ${BUTTON}
-${CAMPO}`,
+${FIELD}`,
     `<Sheet default-open>
   <SheetContent>
-${cabecalho('Preferências de notificação', 'Configure cada tipo de notificação individualmente.', 4)}
+${header('Preferências de notificação', 'Configure cada tipo de notificação individualmente.', 4)}
     <SheetBody>
       <div class="nds-grid" data-spacing="sm">
         <div v-for="i in 12" :key="i" class="nds-grid" data-spacing="xs">

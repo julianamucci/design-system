@@ -3,7 +3,7 @@ import { createInjectionState } from '@vueuse/core'
 import emblaCarouselVue from 'embla-carousel-vue'
 import { onMounted, ref } from 'vue'
 import { prefersReducedMotion } from '@/lib/motion'
-import { marcarSlideAtual } from '@shared/primitives/carousel-active-slide'
+import { marcarSlideCurrent } from '@shared/primitives/carousel-active-slide'
 
 const [useProvideCarousel, useInjectCarousel] = createInjectionState(
   ({
@@ -38,7 +38,7 @@ const [useProvideCarousel, useInjectCarousel] = createInjectionState(
       // Direto no DOM, e não por estado reativo: os slides vêm do `slot` de
       // quem consome o componente, então não há por onde passar uma prop até
       // eles. O motor já mantém a lista de nós, e é a mesma que ele move.
-      if (api) marcarSlideAtual(api.slideNodes(), api.selectedScrollSnap())
+      if (api) marcarSlideCurrent(api.slideNodes(), api.selectedScrollSnap())
     }
 
     onMounted(() => {

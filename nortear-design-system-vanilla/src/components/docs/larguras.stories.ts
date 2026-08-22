@@ -37,16 +37,16 @@ export const HorizontalNoScroll: StoryObj = {
     const moldura = document.createElement('div');
     moldura.dataset['moldura'] = '';
     moldura.className = 'nds-p-4 nds-border-default nds-rounded-lg';
-    const pilha = document.createElement('div');
-    pilha.className = 'nds-stack';
-    pilha.dataset['spacing'] = 'sm';
+    const stack = document.createElement('div');
+    stack.className = 'nds-stack';
+    stack.dataset['spacing'] = 'sm';
     for (const classe of LARGURAS) {
       const caixa = document.createElement('div');
       caixa.className = `${classe} nds-p-2 nds-bg-muted nds-text-caption`;
       caixa.textContent = classe;
-      pilha.appendChild(caixa);
+      stack.appendChild(caixa);
     }
-    moldura.appendChild(pilha);
+    moldura.appendChild(stack);
     return moldura;
   },
   play: async ({ canvasElement, step }) => {

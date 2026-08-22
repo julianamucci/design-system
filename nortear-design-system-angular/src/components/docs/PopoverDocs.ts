@@ -509,7 +509,7 @@ const COMPOSITION_CODE = {
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
           <div class="nds-cluster" data-spacing="md">
-            <div ndsPopover (onOpenChange)="aoMudar('basico', $event)">
+            <div ndsPopover (onOpenChange)="onChange('basico', $event)">
               <button ndsPopoverTrigger ndsButton variant="outline">
                 {{ t('demonstration.labels.trigger') }}
               </button>
@@ -540,7 +540,7 @@ const COMPOSITION_CODE = {
               </ng-template>
             </div>
 
-            <div ndsPopover (onOpenChange)="aoMudar('formulario', $event)">
+            <div ndsPopover (onOpenChange)="onChange('formulario', $event)">
               <button ndsPopoverTrigger ndsButton variant="outline">
                 {{ t('demonstration.labels.form.trigger') }}
               </button>
@@ -761,7 +761,7 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
    * é o que a regra `analytics_in_ui_primitive` proíbe. O rótulo é um id
    * estável e não o texto traduzido, que viraria três valores distintos no GA4.
    */
-  protected aoMudar(qual: string, evento: RdxPopoverOpenChange): void {
+  protected onChange(qual: string, evento: RdxPopoverOpenChange): void {
     if (evento.open) {
       track('popover_open', {
         component: 'popover',
@@ -925,7 +925,7 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     return [
       {
         // Título é o seletor, não texto de interface: identificador de API não
@@ -937,14 +937,14 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
             name: 'open',
             type: 'model<boolean>',
             defaultValue: 'false',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.open.description')),
           },
           {
             name: 'defaultOpen',
             type: 'boolean',
             defaultValue: toPlainText(t('props.table.defaultOpen.default')),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.defaultOpen.description')),
           },
           {
@@ -954,14 +954,14 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
             name: 'openChange',
             type: 'output<boolean>',
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.onOpenChange.description')),
           },
           {
             name: 'modal',
             type: `boolean | 'trap-focus'`,
             defaultValue: toPlainText(t('props.table.modal.default')),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.modal.description')),
           },
         ],
@@ -974,21 +974,21 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
             name: 'side',
             type: toPlainText(t('props.table.side.type')),
             defaultValue: toPlainText(t('props.table.side.default')),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.side.description')),
           },
           {
             name: 'align',
             type: toPlainText(t('props.table.align.type')),
             defaultValue: toPlainText(t('props.table.align.default')),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.align.description')),
           },
           {
             name: 'sideOffset',
             type: toPlainText(t('props.table.sideOffset.type')),
             defaultValue: toPlainText(t('props.table.sideOffset.default')),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.sideOffset.description')),
           },
         ],

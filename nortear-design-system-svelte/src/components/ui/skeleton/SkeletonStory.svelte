@@ -12,7 +12,7 @@
 
   let { shape = 'text', width = '3-4', loading = true }: Props = $props();
 
-  const larguraAplicada = $derived(shape === 'text' || shape === 'heading' ? width : undefined);
+  const widthAplicada = $derived(shape === 'text' || shape === 'heading' ? width : undefined);
   // `fill` preenche a caixa que o container estabelece; aqui quem estabelece é
   // a proporção de mídia, senão o bloco nasce com altura zero e o Playground
   // mostra um esqueleto invisível.
@@ -20,5 +20,5 @@
 </script>
 
 <div role="status" aria-busy={loading} aria-label="Carregando conteúdo">
-  <Skeleton data-shape={shape} data-width={larguraAplicada} class={classNameAplicada} />
+  <Skeleton data-shape={shape} data-width={widthAplicada} class={classNameAplicada} />
 </div>

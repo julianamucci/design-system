@@ -43,11 +43,11 @@ function panelLine(opcoes: {
   rotulo: string;
   descricao: string;
   atributos?: string;
-  borda?: string;
+  border?: string;
   largura?: string;
 }): string {
-  const { id, rotulo, descricao, atributos = '', borda = 'nds-border-default', largura } = opcoes;
-  const classes = ['nds-cluster', largura, 'nds-rounded-lg', borda, 'nds-p-4']
+  const { id, rotulo, descricao, atributos = '', border = 'nds-border-default', largura } = opcoes;
+  const classes = ['nds-cluster', largura, 'nds-rounded-lg', border, 'nds-p-4']
     .filter(Boolean)
     .join(' ');
   return `<div class="${classes}" data-align="center" data-justify="between">
@@ -159,7 +159,7 @@ ${indentar(
     rotulo: 'Aceitar termos',
     descricao: 'Você precisa aceitar para continuar.',
     atributos: 'aria-invalid="true" aria-describedby="aceitar-termos-erro"',
-    borda: 'nds-border-destructive',
+    border: 'nds-border-destructive',
   }),
 )}
   <p id="aceitar-termos-erro" class="nds-text-body nds-text-destructive">Este campo é obrigatório.</p>
@@ -211,8 +211,8 @@ export function preferenciasSwitchListSource(): string {
   ];
   const linhas = itens
     .map(({ id, rotulo, atributos }, i) => {
-      const borda = i === 0 ? '' : ' nds-border-t';
-      return `  <li class="nds-cluster nds-p-4${borda}" data-align="center" data-justify="between">
+      const border = i === 0 ? '' : ' nds-border-t';
+      return `  <li class="nds-cluster nds-p-4${border}" data-align="center" data-justify="between">
     <Label for="${id}">${rotulo}</Label>
     <Switch id="${id}"${attrs(atributos)} />
   </li>`;

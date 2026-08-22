@@ -109,7 +109,7 @@ function tableSnippet(partes: {
   extra?: string;
   markup: string;
 }): string {
-  const blocos = [
+  const blocks = [
     partes.imports ?? IMPORT_BASE,
     DATA,
     FORMATOS,
@@ -117,7 +117,7 @@ function tableSnippet(partes: {
     partes.extra ?? null,
     partes.markup,
   ].filter((bloco): bloco is string => Boolean(bloco));
-  return blocos.join('\n\n');
+  return blocks.join('\n\n');
 }
 
 /**

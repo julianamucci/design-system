@@ -19,7 +19,7 @@
 // compara. Este arquivo emitia só o primeiro.
 
 import { cn } from '@/lib/utils';
-import { ROTULOS_SIDEBAR_PADRAO } from '@shared/primitives/sidebar-a11y-labels';
+import { LABELS_SIDEBAR_DEFAULT } from '@shared/primitives/sidebar-a11y-labels';
 import { tornarDestruivel, type Destroyable } from '@/lib/destroy';
 import { createButton } from './button';
 import { createInput, type InputOptions } from './input';
@@ -157,8 +157,8 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
     // Padrão em português, vindo do conteúdo compartilhado: é texto que o
     // usuário final OUVE, e num produto em português a gaveta anunciava
     // "Sidebar / Displays the mobile sidebar." Continua trocável.
-    mobileTitle = ROTULOS_SIDEBAR_PADRAO.tituloMovel,
-    mobileDescription = ROTULOS_SIDEBAR_PADRAO.descricaoMovel,
+    mobileTitle = LABELS_SIDEBAR_DEFAULT.tituloMovel,
+    mobileDescription = LABELS_SIDEBAR_DEFAULT.descricaoMovel,
     onMobileOpenChange,
   } = options;
   let isOpen = defaultOpen;
@@ -214,7 +214,7 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
 
   const idGaveta = ++_sidebarCounter;
   const idTitle = `sidebar-mobile-title-${idGaveta}`;
-  const idDescricao = `sidebar-mobile-desc-${idGaveta}`;
+  const idDescription = `sidebar-mobile-desc-${idGaveta}`;
 
   const mql = window.matchMedia(mobileQuery);
   let movel = mql.matches;
@@ -241,21 +241,21 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
     gavetaEl.setAttribute('role', 'dialog');
     gavetaEl.setAttribute('aria-modal', 'true');
     gavetaEl.setAttribute('aria-labelledby', idTitle);
-    gavetaEl.setAttribute('aria-describedby', idDescricao);
+    gavetaEl.setAttribute('aria-describedby', idDescription);
 
-    const cabecalho = document.createElement('div');
-    cabecalho.className = 'nds-sheet-header nds-sr-only';
-    cabecalho.dataset.slot = 'sheet-header';
+    const header = document.createElement('div');
+    header.className = 'nds-sheet-header nds-sr-only';
+    header.dataset.slot = 'sheet-header';
     const titulo = document.createElement('h2');
     titulo.id = idTitle;
     titulo.className = 'nds-sheet-title';
     titulo.textContent = mobileTitle;
     const descricao = document.createElement('p');
-    descricao.id = idDescricao;
+    descricao.id = idDescription;
     descricao.className = 'nds-sheet-description';
     descricao.textContent = mobileDescription;
-    cabecalho.append(titulo, descricao);
-    gavetaEl.appendChild(cabecalho);
+    header.append(titulo, descricao);
+    gavetaEl.appendChild(header);
 
     // O conteúdo é MOVIDO, não copiado: quem compôs a barra guarda referências
     // para os próprios itens, e uma cópia deixaria os ouvintes do lado errado.
@@ -312,13 +312,13 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
       return;
     }
     const primeiro = lista[0];
-    const ultimo = lista[lista.length - 1];
+    const last = lista[lista.length - 1];
     if (e.shiftKey) {
       if (document.activeElement === primeiro) {
         e.preventDefault();
-        ultimo.focus();
+        last.focus();
       }
-    } else if (document.activeElement === ultimo) {
+    } else if (document.activeElement === last) {
       e.preventDefault();
       primeiro.focus();
     }
@@ -435,7 +435,7 @@ export function createSidebarTrigger(
   const btn = createButton({ variant: 'ghost', size: 'icon', class: options.class });
   btn.dataset.slot = 'sidebar-trigger';
   btn.setAttribute('data-sidebar', 'trigger');
-  btn.setAttribute('aria-label', nameAccessibleOf(options) ?? ROTULOS_SIDEBAR_PADRAO.alternar);
+  btn.setAttribute('aria-label', nameAccessibleOf(options) ?? LABELS_SIDEBAR_DEFAULT.alternar);
   btn.appendChild(panelLeftIcon());
   btn.addEventListener('click', toggleFn);
   return btn;
@@ -466,7 +466,7 @@ export function createSidebarRail(
   btn.setAttribute('data-sidebar', 'rail');
   btn.setAttribute('aria-hidden', 'true');
   btn.tabIndex = -1;
-  btn.title = options.title ?? ROTULOS_SIDEBAR_PADRAO.alternar;
+  btn.title = options.title ?? LABELS_SIDEBAR_DEFAULT.alternar;
   btn.addEventListener('click', toggleFn);
   return btn;
 }
@@ -605,8 +605,8 @@ export function createSidebarMenu(
   ul.className = cn('nds-sidebar-menu', options.class);
   ul.dataset.slot = 'sidebar-menu';
   ul.setAttribute('data-sidebar', 'menu');
-  const rotuladoPor = options['aria-labelledby'] ?? options.labelledBy;
-  if (rotuladoPor) ul.setAttribute('aria-labelledby', rotuladoPor);
+  const labelledBy = options['aria-labelledby'] ?? options.labelledBy;
+  if (labelledBy) ul.setAttribute('aria-labelledby', labelledBy);
   return ul;
 }
 

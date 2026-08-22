@@ -81,8 +81,8 @@ const FONT_ITEMS: Array<{ key: string; className: string }> = [
 export function ThemeColorsDocs() {
   const { t, locale } = useTranslation(themeColorsTranslations);
   const [tokenValues, setTokenValues] = useState<Record<string, string>>({});
-  const [temaAtivo, setTemaAtivo] = useState<string>('tema-default');
-  const [paginaDark, setPaginaDark] = useState<boolean>(false);
+  const [themeActive, setTemaAtivo] = useState<string>('tema-default');
+  const [darkPage, setPaginaDark] = useState<boolean>(false);
 
   // ─── SEO ────────────────────────────────────────────────────────────────
   useSeoEffect({
@@ -226,7 +226,7 @@ export function ThemeColorsDocs() {
           <div className="nds-theme-card-grid">
             {BRAND_THEMES.map((theme) => (
               <div key={theme.key} className="nds-theme-card">
-                <div className={`nds-theme-card-scope ${theme.className}${paginaDark ? ' dark' : ''}`}>
+                <div className={`nds-theme-card-scope ${theme.className}${darkPage ? ' dark' : ''}`}>
                   <span className="nds-theme-card-label">
                     {t(`brand.themes.${theme.key}`)}
                   </span>
@@ -246,7 +246,7 @@ export function ThemeColorsDocs() {
           <div className="nds-theme-card-grid">
             {MODES.map((mode) => (
               <div key={mode.key} className="nds-theme-card">
-                <div className={`nds-theme-card-scope ${temaAtivo}${mode.className ? ` ${mode.className}` : ''}`}>
+                <div className={`nds-theme-card-scope ${themeActive}${mode.className ? ` ${mode.className}` : ''}`}>
                   <span className="nds-theme-card-label">
                     {t(`modes.${mode.key}`)}
                   </span>

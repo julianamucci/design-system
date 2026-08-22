@@ -15,7 +15,7 @@ const { t } = useTranslation(drawerTranslations as Record<string, unknown>);
 // (o do Sheet tem). Os textos do painel saem da tabela de UX writing, que é
 // justamente onde o conteúdo diz como cada elemento deve ser escrito — o
 // exemplo "bom" de cada linha É o rótulo canônico, nos três idiomas.
-const ROTULO = {
+const LABEL = {
   gatilho: () => t('usage.uxWriting.table.trigger.good'),
   titulo: () => t('usage.uxWriting.table.title.good'),
   descricao: () => t('usage.uxWriting.table.description.good'),
@@ -40,7 +40,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<DrawerArgs> }):
     direction = 'bottom',
     modal = true,
     defaultOpen = false,
-    triggerLabel = ROTULO.gatilho(),
+    triggerLabel = LABEL.gatilho(),
   } = ctx.args ?? {};
 
   // Só o que difere do default entra no snippet: documentação que repete valor
@@ -65,12 +65,12 @@ import { NdsButton } from '@/components/ui/button';
 
       <ng-template ndsDrawerContent>
         <div ndsDrawerHeader>
-          <h2 ndsDrawerTitle>${ROTULO.titulo()}</h2>
-          <p ndsDrawerDescription>${ROTULO.descricao()}</p>
+          <h2 ndsDrawerTitle>${LABEL.titulo()}</h2>
+          <p ndsDrawerDescription>${LABEL.descricao()}</p>
         </div>
 
         <div ndsDrawerFooter>
-          <button ndsDrawerClose ndsButton variant="outline">${ROTULO.fechar()}</button>
+          <button ndsDrawerClose ndsButton variant="outline">${LABEL.fechar()}</button>
         </div>
       </ng-template>
     </nds-drawer>
@@ -120,7 +120,7 @@ const meta: Meta<DrawerArgs> = {
     direction: 'bottom',
     modal: true,
     defaultOpen: false,
-    triggerLabel: ROTULO.gatilho(),
+    triggerLabel: LABEL.gatilho(),
     onOpenChange: fn(),
   },
 };
@@ -163,9 +163,9 @@ export const Playground: Story = {
     // virariam controls falsos na aba API Reference.
     props: {
       ...args,
-      tituloPainel: ROTULO.titulo(),
-      descricaoPainel: ROTULO.descricao(),
-      rotuloFechar: ROTULO.fechar(),
+      tituloPainel: LABEL.titulo(),
+      descricaoPainel: LABEL.descricao(),
+      rotuloFechar: LABEL.fechar(),
     },
     template: `
       <nds-drawer
@@ -202,8 +202,8 @@ export const Playground: Story = {
       await expect(painel).toBeVisible();
       // O nome acessível vem do aria-labelledby que o primitivo liga ao id REAL
       // do ndsDrawerTitle — painel modal anônimo é o defeito silencioso aqui.
-      await expect(painel).toHaveAccessibleName(ROTULO.titulo());
-      await expect(painel).toHaveAccessibleDescription(ROTULO.descricao());
+      await expect(painel).toHaveAccessibleName(LABEL.titulo());
+      await expect(painel).toHaveAccessibleDescription(LABEL.descricao());
       await expect(painel).toHaveAttribute('aria-modal', 'true');
       await expect(painel).toHaveAttribute('data-slot', 'drawer-content');
       await expect(painel).toHaveAttribute('data-state', 'open');
@@ -226,12 +226,12 @@ export const Playground: Story = {
 
     await step('A alça é decorativa, não um caminho de interação', async () => {
       const painel = await waitForPortal('dialog');
-      const alca = painel.querySelector<HTMLElement>('.nds-drawer-handle');
-      await expect(alca).not.toBeNull();
+      const thumb = painel.querySelector<HTMLElement>('.nds-drawer-handle');
+      await expect(thumb).not.toBeNull();
       // Sem gesto atrás dela, anunciar a alça só somaria ruído ao leitor de
       // tela — e é o que garante que nenhuma ação dependa de arrastar (WCAG 2.5.7).
-      await expect(alca).toHaveAttribute('aria-hidden', 'true');
-      await expect(alca!.hasAttribute('tabindex')).toBe(false);
+      await expect(thumb).toHaveAttribute('aria-hidden', 'true');
+      await expect(thumb!.hasAttribute('tabindex')).toBe(false);
     });
 
     await step('O foco entra no painel ao abrir', async () => {
@@ -274,7 +274,7 @@ export const Playground: Story = {
       // Procura pelo NOME, não pelo `data-slot`: o botão é também um ndsButton,
       // e duas diretivas ligando o mesmo atributo não têm vencedor definido
       // (armadilha 11) — por isso o NdsDrawerClose não liga `data-slot`.
-      const closeBtn = within(painel).getByRole('button', { name: ROTULO.fechar() });
+      const closeBtn = within(painel).getByRole('button', { name: LABEL.fechar() });
       await userEvent.click(closeBtn);
       await waitForPortalVanish('dialog');
       await waitFor(() => {

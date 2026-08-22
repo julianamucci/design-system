@@ -89,9 +89,9 @@ export const OnAndOff: Story = {
       const knobOn = ligado.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
       const deslocamento =
         knobOn.getBoundingClientRect().left - ligado.getBoundingClientRect().left;
-      const repouso =
+      const rest =
         knobOff.getBoundingClientRect().left - desligado.getBoundingClientRect().left;
-      await expect(deslocamento).toBeGreaterThan(repouso);
+      await expect(deslocamento).toBeGreaterThan(rest);
     });
 
     await step('O trilho ligado tem pelo menos 3:1 contra o ambiente e contra o desligado', async () => {

@@ -148,7 +148,7 @@ export function RadioGroupDocs() {
   const codeImport = `import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";`;
 
-  const codeVertical = `<RadioGroup aria-label="Forma de pagamento">
+  const verticalCode = `<RadioGroup aria-label="Forma de pagamento">
   <div className="nds-cluster" data-spacing="xs">
     <RadioGroupItem value="cartao" id="v-cartao" />
     <Label htmlFor="v-cartao">Cartão de crédito</Label>
@@ -163,7 +163,7 @@ import { Label } from "@/components/ui/label";`;
   </div>
 </RadioGroup>`;
 
-  const codeHorizontal = `<RadioGroup className="nds-cluster" data-spacing="lg" aria-label="Forma de entrega">
+  const horizontalCode = `<RadioGroup className="nds-cluster" data-spacing="lg" aria-label="Forma de entrega">
   <div className="nds-cluster" data-spacing="xs">
     <RadioGroupItem value="padrao" id="h-padrao" />
     <Label htmlFor="h-padrao">Padrão</Label>
@@ -555,7 +555,7 @@ interface RadioGroupItemProps {
           {
             name: tContent("variants.items.vertical"),
             description: stripHtml(tContent("variants.styles.vertical")),
-            code: codeVertical,
+            code: verticalCode,
             preview: (
               <RadioGroup aria-label="Forma de pagamento">
                 <div className="nds-cluster" data-spacing="xs">
@@ -576,7 +576,7 @@ interface RadioGroupItemProps {
           {
             name: tContent("variants.items.horizontal"),
             description: stripHtml(tContent("variants.styles.horizontal")),
-            code: codeHorizontal,
+            code: horizontalCode,
             preview: (
               <RadioGroup
                 aria-orientation="horizontal"
@@ -645,7 +645,7 @@ interface RadioGroupItemProps {
             name: tContent("variants.compositions.inForm.name"),
             description: tContent("variants.compositions.inForm.description"),
             useWhen: tContent("variants.compositions.inForm.use"),
-            code: codeVertical,
+            code: verticalCode,
             preview: (
               <form
                 className="nds-stack nds-w-sm nds-p-4 nds-border-default nds-rounded-lg" data-spacing="md"

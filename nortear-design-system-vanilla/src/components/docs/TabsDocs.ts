@@ -393,7 +393,7 @@ export function createTabsDocs(): HTMLElement {
   variant: 'line',
   items: [...],
 });`;
-        const codeVertical =
+        const verticalCode =
 `createTabs({
   defaultValue: 'overview',
   orientation: 'vertical',
@@ -444,7 +444,7 @@ export function createTabsDocs(): HTMLElement {
             {
               name: t('variants.items.vertical'),
               description: stripHtml(t('variants.styles.vertical')),
-              code: codeVertical,
+              code: verticalCode,
               previewFactory: () => {
                 const r = createTabs({
                   defaultValue: 'overview',

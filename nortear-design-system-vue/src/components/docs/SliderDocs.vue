@@ -216,7 +216,7 @@ const value = ref<number[]>([100, 400]);
   </div>
 </template>`;
 
-const codeVertical = `<template>
+const verticalCode = `<template>
   <div class="nds-demo-box" data-size="sm">
     <Slider
       v-model="value"
@@ -257,7 +257,7 @@ const anatomyItems = computed(() => [
 const variantItems = computed(() => [
   { name: tContent('variants.items.single'),   description: stripHtml(tContent('variants.styles.single')),   code: codeSingle   },
   { name: tContent('variants.items.range'),    description: stripHtml(tContent('variants.styles.range')),    code: codeRange    },
-  { name: tContent('variants.items.vertical'), description: stripHtml(tContent('variants.styles.vertical')), code: codeVertical },
+  { name: tContent('variants.items.vertical'), description: stripHtml(tContent('variants.styles.vertical')), code: verticalCode },
   {
     name: tContent('variants.items.brightness.name'),
     description: tContent('variants.items.brightness.description'),

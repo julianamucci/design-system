@@ -18,7 +18,7 @@ const TRIGGER_DEFAULT = 'Exibir filtros avançados';
  * monta o dele com DOM curto e classes do design system, e não com o
  * `makeContent()` que só existe dentro do arquivo de story.
  */
-const PAINEL = [
+const PANEL = [
   'const painel = document.createElement(\'div\');',
   "painel.className = 'nds-stack nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4';",
   "painel.dataset.spacing = 'sm';",
@@ -57,7 +57,7 @@ function optionsComuns(o: CollapsibleSnippetOptions, gatilho: string): string[] 
 export function collapsibleSnippet(o: CollapsibleSnippetOptions = {}): string {
   return snippet(
     importing('collapsible', 'createCollapsible'),
-    PAINEL,
+    PANEL,
     `const colapsavel = ${chamada(
       'createCollapsible',
       optionsComuns(o, texto(o.trigger ?? TRIGGER_DEFAULT)),
@@ -95,7 +95,7 @@ export function collapsibleWithTriggerSnippet(
       ['label', texto(o.trigger ?? TRIGGER_DEFAULT)],
     ]))};`,
     chevron,
-    PAINEL,
+    PANEL,
     `const colapsavel = ${chamada('createCollapsible', optionsComuns(o, 'gatilho'))};`,
     montar('colapsavel'),
   );
@@ -119,7 +119,7 @@ export function collapsibleControlledSnippet(o: CollapsibleSnippetOptions = {}):
 
   return snippet(
     importing('collapsible', 'createCollapsible'),
-    PAINEL,
+    PANEL,
     '// A fonte da verdade mora aqui, fora do componente.\nlet aberto = false;',
     `const colapsavel = ${chamada('createCollapsible', linhas)};`,
     [

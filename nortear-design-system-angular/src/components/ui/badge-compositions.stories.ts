@@ -76,8 +76,8 @@ export const InLinkAndButton: Story = {
     await step('O botão tem nome acessível além do rótulo do badge', async () => {
       // "Frontend" sozinho não diz o que o botão faz; numa lista de filtros
       // vira uma fileira de botões sem verbo.
-      const botao = canvas.getByRole('button', { name: /Filtrar por categoria/ });
-      await expect(botao).toBeTruthy();
+      const button = canvas.getByRole('button', { name: /Filtrar por categoria/ });
+      await expect(button).toBeTruthy();
     });
   },
 };

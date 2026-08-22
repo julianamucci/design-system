@@ -174,13 +174,13 @@ function caminhoFatia(
   de: number, ate: number,
 ): string {
   // 2π quebra o arco (início e fim coincidem): corta um fio de ângulo.
-  const fim = ate - de >= Math.PI * 2 ? de + Math.PI * 2 - 0.0001 : ate;
-  const grande = fim - de > Math.PI ? 1 : 0;
+  const end = ate - de >= Math.PI * 2 ? de + Math.PI * 2 - 0.0001 : ate;
+  const grande = end - de > Math.PI ? 1 : 0;
   const p = (ang: number, r: number) => `${cx + r * Math.sin(ang)} ${cy - r * Math.cos(ang)}`;
   return [
     `M${p(de, raio)}`,
-    `A${raio} ${raio} 0 ${grande} 1 ${p(fim, raio)}`,
-    `L${p(fim, raioInterno)}`,
+    `A${raio} ${raio} 0 ${grande} 1 ${p(end, raio)}`,
+    `L${p(end, raioInterno)}`,
     `A${raioInterno} ${raioInterno} 0 ${grande} 0 ${p(de, raioInterno)}`,
     'Z',
   ].join(' ');
@@ -395,7 +395,7 @@ let sequencia = 0;
           <caption>{{ label() }}</caption>
           <thead>
             <tr>
-              @for (coluna of tabela().cabecalho; track coluna) {
+              @for (coluna of tabela().header; track coluna) {
                 <th scope="col">{{ coluna }}</th>
               }
             </tr>
@@ -471,9 +471,9 @@ export class NdsChart {
   protected readonly serieNorm = computed<ChartSeries[]>(() => {
     const multi = this.series();
     if (multi && multi.length > 0) return multi;
-    const simples = this.data();
-    if (simples && simples.length > 0) {
-      return [{ name: this.valueLabel(), data: simples.map((p) => p.value) }];
+    const simple = this.data();
+    if (simple && simple.length > 0) {
+      return [{ name: this.valueLabel(), data: simple.map((p) => p.value) }];
     }
     return [];
   });
@@ -481,8 +481,8 @@ export class NdsChart {
   protected readonly categorias = computed<string[]>(() => {
     const eixo = this.xAxis();
     if (eixo && eixo.length > 0) return eixo;
-    const simples = this.data();
-    if (simples && simples.length > 0) return simples.map((p) => p.label);
+    const simple = this.data();
+    if (simple && simple.length > 0) return simple.map((p) => p.label);
     const maior = this.serieNorm().reduce((max, s) => Math.max(max, s.data.length), 0);
     return Array.from({ length: maior }, (_, i) => String(i + 1));
   });
@@ -643,7 +643,7 @@ export class NdsChart {
   );
 
   private readonly totalPizza = computed(() =>
-    this.fatiasDados().reduce((soma, p) => soma + Math.max(0, p.value), 0),
+    this.fatiasDados().reduce((sum, p) => sum + Math.max(0, p.value), 0),
   );
 
   protected readonly fatias = computed<FatiaPizza[]>(() => {
@@ -698,19 +698,19 @@ export class NdsChart {
 
   protected readonly legenda = computed<ItemCaption[]>(() => {
     if (!this.legendaVisivel()) return [];
-    const nomes = this.cartesiano()
+    const names = this.cartesiano()
       ? this.serieNorm().map((s, i) => ({ texto: s.name, cor: serieColor(i, s.color), i }))
       : this.fatiasDados().map((p, i) => ({
         texto: `${p.label} — ${formatarValue(p.value)} (${this.percentual(p.value)})`,
         cor: serieColor(i, undefined),
         i,
       }));
-    if (nomes.length === 0) return [];
-    const vaga = Math.min(220, VB_L / nomes.length);
-    const inicio = (VB_L - vaga * nomes.length) / 2;
+    if (names.length === 0) return [];
+    const vaga = Math.min(220, VB_L / names.length);
+    const start = (VB_L - vaga * names.length) / 2;
     const y = this.vbA() - ALT_CAPTION + 8;
-    return nomes.map((n) => {
-      const x = inicio + n.i * vaga;
+    return names.map((n) => {
+      const x = start + n.i * vaga;
       return {
         x,
         y,
@@ -723,10 +723,10 @@ export class NdsChart {
     });
   });
 
-  protected readonly tabela = computed<{ cabecalho: string[]; linhas: string[][] }>(() => {
+  protected readonly tabela = computed<{ header: string[]; linhas: string[][] }>(() => {
     if (!this.cartesiano()) {
       return {
-        cabecalho: [this.categoryLabel(), this.valueLabel(), this.shareLabel()],
+        header: [this.categoryLabel(), this.valueLabel(), this.shareLabel()],
         linhas: this.fatiasDados().map((p) => [
           p.label,
           formatarValue(p.value),
@@ -736,7 +736,7 @@ export class NdsChart {
     }
     const series = this.serieNorm();
     return {
-      cabecalho: [this.categoryLabel(), ...series.map((s) => s.name)],
+      header: [this.categoryLabel(), ...series.map((s) => s.name)],
       linhas: this.categorias().map((categoria, iCat) => [
         categoria,
         ...series.map((s) => (s.data[iCat] === undefined ? '—' : formatarValue(s.data[iCat]))),

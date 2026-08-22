@@ -41,7 +41,7 @@ export interface BoxMeasurement {
   altura: number;
   raioTopoEsquerda: number;
   raioTopoDireita: number;
-  fundo: string;
+  background: string;
   cor: string;
   borderWidth: number;
   alinhamento: string;
@@ -73,7 +73,7 @@ export interface DayState {
   pointerEvents: string;
   opacidade: number;
   caixa: BoxMeasurement | null;
-  alcance: ClickReach;
+  reach: ClickReach;
   /** Data em ISO, seja qual for o atributo que a stack usa para carregá-la. */
   iso: string | null;
 }
@@ -85,7 +85,7 @@ export interface DayContrast {
   /** `false` quando o estado não existe na tela — isso É o achado. */
   presente: boolean;
   frente: string | null;
-  fundo: string | null;
+  background: string | null;
   ratio: number | null;
 }
 
@@ -109,7 +109,7 @@ function caixa(el: HTMLElement | null): BoxMeasurement | null {
     altura: Math.round(r.height),
     raioTopoEsquerda: Math.round(parseFloat(cs.borderTopLeftRadius) || 0),
     raioTopoDireita: Math.round(parseFloat(cs.borderTopRightRadius) || 0),
-    fundo: cs.backgroundColor,
+    background: cs.backgroundColor,
     cor: cs.color,
     borderWidth: Math.round(parseFloat(cs.borderTopWidth) || 0),
     alinhamento: cs.alignItems,
@@ -124,7 +124,7 @@ function descreve(el: Element | null): string | null {
   return `${el.tagName.toLowerCase()}${classes.length ? '.' + classes.slice(0, 2).join('.') : ''}`;
 }
 
-function alcance(el: HTMLElement | null): ClickReach {
+function reach(el: HTMLElement | null): ClickReach {
   if (!el) return { finding: false, clickable: false, porCima: null };
   const r = el.getBoundingClientRect();
   const noTopo = el.ownerDocument.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
@@ -191,7 +191,7 @@ function dayState(raiz: HTMLElement, seletores: string[]): DayState {
       pointerEvents: 'n/a',
       opacidade: 1,
       caixa: null,
-      alcance: { finding: false, clickable: false, porCima: null },
+      reach: { finding: false, clickable: false, porCima: null },
       iso: null,
     };
   }
@@ -211,7 +211,7 @@ function dayState(raiz: HTMLElement, seletores: string[]): DayState {
     pointerEvents: cs.pointerEvents,
     opacidade: parseFloat(cs.opacity) || 1,
     caixa: caixa(el),
-    alcance: alcance(el),
+    reach: reach(el),
     iso: dayIso(el),
   };
 }
@@ -237,7 +237,7 @@ const SELECTORS: Record<string, string[]> = {
     '.nds-calendar-day-btn[aria-current="date"]',
     '.nds-calendar-day[data-today="true"]',
   ],
-  foraDoMes: [
+  monthOutside: [
     '.nds-calendar-day-btn[data-outside-view]:not([data-outside-view="false"])',
     '.nds-calendar-day-btn[data-outside-month]:not([data-outside-month="false"])',
     '.nds-calendar-outside .nds-calendar-day-btn',
@@ -299,10 +299,10 @@ export function measureCalendar(raiz: HTMLElement) {
       : null;
 
   const cabecalhos = Array.from(raiz.querySelectorAll<HTMLElement>('thead th, thead td'));
-  const diasDaSemana = cabecalhos.map((th) => th.textContent?.trim() ?? '');
+  const weekDays = cabecalhos.map((th) => th.textContent?.trim() ?? '');
 
-  const estados: Record<string, DayState> = {};
-  for (const [nome, lista] of Object.entries(SELECTORS)) estados[nome] = dayState(raiz, lista);
+  const states: Record<string, DayState> = {};
+  for (const [nome, lista] of Object.entries(SELECTORS)) states[nome] = dayState(raiz, lista);
 
   const domDays = todos('.nds-calendar-day-btn, .nds-calendar-day');
   const tabulaveis = domDays.filter((d) => d.tabIndex >= 0);
@@ -321,8 +321,8 @@ export function measureCalendar(raiz: HTMLElement) {
       temCaptionDropdown: conta('.nds-calendar-caption-dropdown'),
       seletores: seletores.length,
       celulas: conta('.nds-calendar-day-cell'),
-      dias: domDays.length,
-      semanas: conta('.nds-calendar-week'),
+      days: domDays.length,
+      weeks: conta('.nds-calendar-week'),
       tabela: descreve(tabela),
     },
     semantica: {
@@ -339,7 +339,7 @@ export function measureCalendar(raiz: HTMLElement) {
         cabecalhos[0]?.getAttribute('aria-label') ??
         cabecalhos[0]?.getAttribute('title') ??
         null,
-      rotuloAnterior: buttonPrevious?.getAttribute('aria-label') ?? null,
+      labelPrevious: buttonPrevious?.getAttribute('aria-label') ?? null,
       rotuloProximo: buttonNext?.getAttribute('aria-label') ?? null,
       rotuloDoDia: dayButton?.getAttribute('aria-label') ?? null,
       // Onde mora o estado de seleção: a célula é quem tem papel de gridcell, e
@@ -351,10 +351,10 @@ export function measureCalendar(raiz: HTMLElement) {
         : um('.nds-calendar-day-btn[aria-selected]')
           ? 'botao'
           : null,
-      ariaCurrentDeHoje: estados.hoje.ariaCurrent,
+      ariaCurrentDeHoje: states.hoje.ariaCurrent,
       // Um grid é UMA parada de tabulação: só o dia corrente entra na ordem.
       diasTabulaveis: tabulaveis.length,
-      diasDaSemana,
+      weekDays,
       textoDaLegenda: legenda?.textContent?.trim().replace(/\s+/g, ' ') ?? null,
     },
     geometria: {
@@ -367,21 +367,21 @@ export function measureCalendar(raiz: HTMLElement) {
       navAnterior: caixa(buttonPrevious),
       seletor: caixa(seletores[0] ?? null),
     },
-    estados,
+    states,
     miolo: meio
       ? {
-          botao: descreve(meio),
+          button: descreve(meio),
           celula: descreve(meio.parentElement),
           fundoDaCelula: meio.parentElement ? getComputedStyle(meio.parentElement).backgroundColor : null,
           dataDoBotao: JSON.stringify({ ...meio.dataset }),
         }
       : null,
     clickReach: {
-      navAnterior: alcance(buttonPrevious),
-      navProximo: alcance(buttonNext),
-      monthSelector: alcance(seletores[0] ?? null),
-      yearSelector: alcance(seletores[1] ?? null),
-      dia: alcance(dayButton),
+      navAnterior: reach(buttonPrevious),
+      navProximo: reach(buttonNext),
+      monthSelector: reach(seletores[0] ?? null),
+      yearSelector: reach(seletores[1] ?? null),
+      dia: reach(dayButton),
     },
     listas: {
       opcoesDeMes: seletores[0] ? (seletores[0] as HTMLSelectElement).options.length : null,
@@ -418,7 +418,7 @@ export async function measureKeyboard(
   raiz: HTMLElement,
   apertar: (tecla: string) => Promise<void>,
   teclas: string[] = ['ArrowRight', 'ArrowDown', 'Home', 'End', 'PageDown', 'PageUp'],
-): Promise<{ inicial: KeyboardStep; passos: KeyboardStep[] }> {
+): Promise<{ inicial: KeyboardStep; steps: KeyboardStep[] }> {
   const doc = raiz.ownerDocument;
   const legenda = () =>
     raiz.querySelector('.nds-calendar-caption')?.textContent?.trim().replace(/\s+/g, ' ') ?? null;
@@ -430,12 +430,12 @@ export async function measureKeyboard(
   });
 
   const inicial = instantaneo('(inicial)');
-  const passos: KeyboardStep[] = [];
+  const steps: KeyboardStep[] = [];
   for (const tecla of teclas) {
     await apertar(`{${tecla}}`);
-    passos.push(instantaneo(tecla));
+    steps.push(instantaneo(tecla));
   }
-  return { inicial, passos };
+  return { inicial, steps };
 }
 
 // ─── Contraste ────────────────────────────────────────────────────────────────
@@ -495,16 +495,16 @@ export function calendarMeasureContrast(raiz: HTMLElement): DayContrast[] {
   try {
     return byTheme(raiz, (tema, modo) =>
       targets.map(({ estado, el }): DayContrast => {
-        if (!el) return { tema, modo, estado, presente: false, frente: null, fundo: null, ratio: null };
-        const fundo = backgroundEffective(el);
-        const r = ratio(frenteWithOpacity(el), fundo);
+        if (!el) return { tema, modo, estado, presente: false, frente: null, background: null, ratio: null };
+        const background = backgroundEffective(el);
+        const r = ratio(frenteWithOpacity(el), background);
         return {
           tema,
           modo,
           estado,
           presente: true,
           frente: r?.frente ?? null,
-          fundo,
+          background,
           ratio: r?.ratio ?? null,
         };
       }),
@@ -522,7 +522,7 @@ export function calendarMeasureContrast(raiz: HTMLElement): DayContrast[] {
 /** Linha legível de uma medida — o que a falha da story precisa mostrar. */
 export function describeContrast(m: DayContrast): string {
   if (!m.presente) return `${m.tema}/${m.modo} · ${m.estado}: estado ausente na tela`;
-  return `${m.tema}/${m.modo} · ${m.estado}: ${m.frente} sobre ${m.fundo} = ${m.ratio}:1`;
+  return `${m.tema}/${m.modo} · ${m.estado}: ${m.frente} sobre ${m.background} = ${m.ratio}:1`;
 }
 
 /**

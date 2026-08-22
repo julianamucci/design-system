@@ -3,7 +3,7 @@
   import { cn } from '@/lib/utils.js';
 
   interface Props {
-    /** `simples` é um grupo de dois painéis; `nested` põe um grupo dentro do segundo. */
+    /** `simple` é um grupo de dois painéis; `nested` põe um grupo dentro do segundo. */
     variant?: 'simples' | 'nested';
     direction?: 'horizontal' | 'vertical';
     withHandle?: boolean;

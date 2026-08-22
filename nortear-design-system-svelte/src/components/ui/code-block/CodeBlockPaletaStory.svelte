@@ -9,13 +9,13 @@
 	 * idênticos.
 	 */
 	import CodeBlock from "./code-block.svelte";
-	import { TRECHOS_DA_PALETA } from "@shared/testing/code-block-probe";
+	import { PALETTE_TRECHOS } from "@shared/testing/code-block-probe";
 
 	let { code }: { code: string } = $props();
 </script>
 
 <div class="nds-stack" data-spacing="md">
-	{#each TRECHOS_DA_PALETA as trecho (trecho.language)}
+	{#each PALETTE_TRECHOS as trecho (trecho.language)}
 		<CodeBlock code={trecho.code} language={trecho.language} showLineNumbers={false} />
 	{/each}
 	<CodeBlock {code} language="ts" highlightLines={[2]} />

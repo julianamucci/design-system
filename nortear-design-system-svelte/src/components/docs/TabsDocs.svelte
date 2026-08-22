@@ -160,7 +160,7 @@
   <TabsContent value="code">&lt;Button&gt;Click&lt;/Button&gt;</TabsContent>
 </Tabs>`;
 
-  const codeVertical = `<Tabs value="profile" orientation="vertical" class="nds-w-full" style="max-width: 36rem">
+  const verticalCode = `<Tabs value="profile" orientation="vertical" class="nds-w-full" style="max-width: 36rem">
   <TabsList aria-label="Configurações">
     <TabsTrigger value="profile">Perfil</TabsTrigger>
     <TabsTrigger value="account">Conta</TabsTrigger>
@@ -383,7 +383,7 @@ interface TabsContentProps {
     items={[
       { name: $tStore('variants.items.default'),  description: stripHtml($tStore('variants.styles.default')),  code: codeDefault,  preview: variantDefault  },
       { name: $tStore('variants.items.line'),     description: stripHtml($tStore('variants.styles.line')),     code: codeLine,     preview: variantLine     },
-      { name: $tStore('variants.items.vertical'), description: stripHtml($tStore('variants.styles.vertical')), code: codeVertical, preview: variantVertical },
+      { name: $tStore('variants.items.vertical'), description: stripHtml($tStore('variants.styles.vertical')), code: verticalCode, preview: variantVertical },
     ]}
   />
 

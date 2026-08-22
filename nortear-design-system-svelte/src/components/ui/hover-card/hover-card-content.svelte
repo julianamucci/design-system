@@ -17,7 +17,7 @@
 		// apagava o nome de todo painel sem rótulo explícito. O axe reprovava em
 		// `aria-dialog-name` e a causa não aparecia em lugar nenhum do markup.
 		"aria-label": rotulo,
-		"aria-labelledby": rotuladoPor,
+		"aria-labelledby": labelledBy,
 		...restProps
 	}: HoverCardPrimitive.ContentProps & {
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof HoverCardPortal>>;
@@ -37,8 +37,8 @@
 	// reprova em `aria-dialog-name`.
 	const contexto = usarContextoHoverCard();
 
-	const nomeAutomatico = $derived(
-		rotulo || rotuladoPor
+	const nameAutomatico = $derived(
+		rotulo || labelledBy
 			? rotulo
 			: contexto?.gatilho?.textContent?.trim() || "Prévia",
 	);
@@ -56,7 +56,7 @@
 		{sideOffset}
 		class={cn("nds-hover-card-content", className)}
 		{...restProps}
-		aria-label={nomeAutomatico}
-		aria-labelledby={rotuladoPor}
+		aria-label={nameAutomatico}
+		aria-labelledby={labelledBy}
 	/>
 </HoverCardPortal>

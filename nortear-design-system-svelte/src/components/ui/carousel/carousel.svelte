@@ -6,7 +6,7 @@
 		setEmblaContext,
 	} from "./context.js";
 	import { cn, type WithElementRef } from "@/lib/utils.js";
-	import { marcarSlideAtual } from "@shared/primitives/carousel-active-slide";
+	import { marcarSlideCurrent } from "@shared/primitives/carousel-active-slide";
 
 	let {
 		ref = $bindable(null),
@@ -58,7 +58,7 @@
 		// Direto no DOM, e não por estado reativo: os slides vêm do snippet de
 		// quem consome o componente, então não há por onde passar uma prop até
 		// eles. O motor já mantém a lista de nós, e é a mesma que ele move.
-		marcarSlideAtual(carouselState.api.slideNodes(), carouselState.selectedIndex);
+		marcarSlideCurrent(carouselState.api.slideNodes(), carouselState.selectedIndex);
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {

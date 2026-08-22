@@ -19,7 +19,7 @@ import { COLUMNS, INVOICES, TOTAL } from './table.fixtures';
 
 interface TableArgs {
   captionVisivel: boolean;
-  comRodape: boolean;
+  withFooter: boolean;
 }
 
 const meta: Meta<TableArgs> = {
@@ -41,14 +41,14 @@ const meta: Meta<TableArgs> = {
         'Legenda visível ou apenas para leitor de tela. Ela nunca sai do DOM — é o nome da tabela.',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
-    comRodape: {
+    withFooter: {
       control: 'boolean',
       description:
         'Renderiza o rodapé com o total. Rodapé é para sumário, nunca para mais um registro.',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
     },
   },
-  args: { captionVisivel: false, comRodape: true },
+  args: { captionVisivel: false, withFooter: true },
 };
 
 export default meta;
@@ -88,7 +88,7 @@ function buildPlaygroundTable(args: TableArgs): HTMLElement {
   }
   table.appendChild(tbody);
 
-  if (args.comRodape) {
+  if (args.withFooter) {
     const tfoot = createTableFooter();
     const footerRow = createTableRow();
     const totalLabel = createTableCell('Total');
@@ -181,7 +181,7 @@ export const Playground: Story = {
       // functional.item3 — tfoot é anunciado como rodapé; a mesma célula dentro
       // do tbody entraria na contagem de registros.
       const tfoot = canvasElement.querySelector<HTMLElement>('tfoot');
-      if (!args.comRodape) {
+      if (!args.withFooter) {
         await expect(tfoot).toBeNull();
         return;
       }

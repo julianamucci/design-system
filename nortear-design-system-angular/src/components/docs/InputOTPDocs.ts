@@ -820,9 +820,9 @@ function keysSheet(d: Record<string, string>, base: string): string[] {
   const out: string[] = [];
   for (const chave of Object.keys(d)) {
     if (!chave.startsWith(prefixo)) continue;
-    const resto = chave.slice(prefixo.length);
-    if (resto.includes('.')) continue;
-    out.push(resto);
+    const remainder = chave.slice(prefixo.length);
+    if (remainder.includes('.')) continue;
+    out.push(remainder);
   }
   return out;
 }

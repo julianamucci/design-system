@@ -785,13 +785,13 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     const sim = tNav('common.yes');
     const classe = {
       name: 'class',
       type: 'string',
       defaultValue: '—',
-      required: nao,
+      required: not,
       description: toPlainText(t('props.table.className')),
     };
     const conteudo = {
@@ -807,7 +807,7 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
         title: t('props.breadcrumbTitle'),
         cols,
         items: [
-          { name: 'label', type: 'string', defaultValue: "'breadcrumb'", required: nao, description: toPlainText(t('props.table.label')) },
+          { name: 'label', type: 'string', defaultValue: "'breadcrumb'", required: not, description: toPlainText(t('props.table.label')) },
           classe,
           conteudo,
         ],
@@ -833,7 +833,7 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
             name: '(conteúdo)',
             type: 'HTML',
             defaultValue: 'ChevronRight',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.children')),
           },
         ],
@@ -842,7 +842,7 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
         title: t('props.ellipsisTitle'),
         cols,
         items: [
-          { name: 'label', type: 'string', defaultValue: '—', required: nao, description: toPlainText(t('props.table.ellipsisLabel')) },
+          { name: 'label', type: 'string', defaultValue: '—', required: not, description: toPlainText(t('props.table.ellipsisLabel')) },
           classe,
         ],
       },

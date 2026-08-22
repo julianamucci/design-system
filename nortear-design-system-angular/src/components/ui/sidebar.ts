@@ -17,7 +17,7 @@ import {
   type OnInit,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { ROTULOS_SIDEBAR_PADRAO } from '@shared/primitives/sidebar-a11y-labels';
+import { LABELS_SIDEBAR_DEFAULT } from '@shared/primitives/sidebar-a11y-labels';
 import {
   NdsSheet,
   NdsSheetContent,
@@ -89,7 +89,7 @@ export class NdsSidebarStore {
   readonly state = computed<SidebarState>(() => (this._open() ? 'expanded' : 'collapsed'));
 
   /** Avisa quem controla de fora; o Provider liga isto ao próprio model. */
-  aoMudar: ((aberto: boolean) => void) | undefined;
+  onChange: ((aberto: boolean) => void) | undefined;
 
   constructor() {
     const destroyRef = inject(DestroyRef);
@@ -117,7 +117,7 @@ export class NdsSidebarStore {
 
   definir(aberto: boolean): void {
     this._open.set(aberto);
-    this.aoMudar?.(aberto);
+    this.onChange?.(aberto);
     // Persistência entre visitas. Falha em silêncio onde cookie não é gravável
     // (iframe de terceiro, modo restrito) — é preferência, não dado.
     try {
@@ -173,14 +173,14 @@ export class NdsSidebarProvider implements OnInit {
 
     // O store avisa quem controla; sem isto um `[(open)]` nunca receberia de
     // volta o efeito do atalho de teclado nem do clique no gatilho.
-    this.store.aoMudar = (aberto) => this.open.set(aberto);
+    this.store.onChange = (aberto) => this.open.set(aberto);
   }
 
   constructor() {
     effect(() => {
       const ofOutside = this.open();
       // A leitura de comparação vai em `untracked`: como dependência, ela
-      // faria o effect acordar da própria escrita do `aoMudar` acima.
+      // faria o effect acordar da própria escrita do `onChange` acima.
       if (ofOutside !== undefined && ofOutside !== untracked(this.store.open)) this.store.definir(ofOutside);
     });
   }
@@ -269,8 +269,8 @@ export class NdsSidebar {
    * stacks: era o inglês cravado no componente que fazia a gaveta ser anunciada
    * como "Sidebar / Displays the mobile sidebar." num produto em português.
    */
-  readonly mobileTitle = input(ROTULOS_SIDEBAR_PADRAO.tituloMovel);
-  readonly mobileDescription = input(ROTULOS_SIDEBAR_PADRAO.descricaoMovel);
+  readonly mobileTitle = input(LABELS_SIDEBAR_DEFAULT.tituloMovel);
+  readonly mobileDescription = input(LABELS_SIDEBAR_DEFAULT.descricaoMovel);
 
   protected readonly store = inject(NdsSidebarStore);
 
@@ -339,7 +339,7 @@ export class NdsSidebar {
   },
 })
 export class NdsSidebarTrigger {
-  readonly ariaLabel = input(ROTULOS_SIDEBAR_PADRAO.alternar, { alias: 'aria-label' });
+  readonly ariaLabel = input(LABELS_SIDEBAR_DEFAULT.alternar, { alias: 'aria-label' });
 
   protected readonly store = inject(NdsSidebarStore);
 }
@@ -372,7 +372,7 @@ export class NdsSidebarTrigger {
   },
 })
 export class NdsSidebarRail {
-  readonly title = input(ROTULOS_SIDEBAR_PADRAO.alternar);
+  readonly title = input(LABELS_SIDEBAR_DEFAULT.alternar);
 
   protected readonly store = inject(NdsSidebarStore);
 }

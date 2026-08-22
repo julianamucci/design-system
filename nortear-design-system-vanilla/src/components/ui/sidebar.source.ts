@@ -38,7 +38,7 @@ export type SidebarSnippetOptions = {
   navLabel?: string;
   grupos?: SidebarGroupSnippet[];
   /** Nome acessível do campo de busca no cabeçalho. Ausente = sem busca. */
-  busca?: string;
+  search?: string;
   /** Rótulo do item do rodapé. `false` monta a barra sem rodapé. */
   rodape?: string | false;
   /** `false` monta a página sem gatilho — a barra fica sempre visível. */
@@ -67,15 +67,15 @@ function expressao(valor: unknown, padrao: string): string | undefined {
 }
 
 function iconsOf(grupos: SidebarGroupSnippet[], extras: string[] = []): string[] {
-  const nomes = new Set<string>(extras);
-  for (const grupo of grupos) for (const item of grupo.items) if (item.icon) nomes.add(item.icon);
-  return [...nomes].sort();
+  const names = new Set<string>(extras);
+  for (const grupo of grupos) for (const item of grupo.items) if (item.icon) names.add(item.icon);
+  return [...names].sort();
 }
 
 /** `import { House, createElement } from 'lucide';` — só quando há ícone. */
-function importingIcons(nomes: string[]): string | undefined {
-  if (nomes.length === 0) return undefined;
-  return `import { ${[...nomes, 'createElement'].join(', ')} } from 'lucide';`;
+function importingIcons(names: string[]): string | undefined {
+  if (names.length === 0) return undefined;
+  return `import { ${[...names, 'createElement'].join(', ')} } from 'lucide';`;
 }
 
 // ─── Peças da página ─────────────────────────────────────────────────────────
@@ -105,13 +105,13 @@ const interno = barra.element.querySelector('[data-sidebar="sidebar"]')!;`;
 }
 
 function headerBlock(o: SidebarSnippetOptions): string {
-  const busca = o.busca
+  const search = o.search
     ? `
 
 // O nome acessível é obrigatório: o \`placeholder\` some no primeiro caractere
 // digitado, e um campo que perde o nome ao ser usado é um campo sem nome.
 cabecalho.appendChild(
-  createSidebarInput({ 'aria-label': ${texto(o.busca)}, placeholder: 'Buscar...' }),
+  createSidebarInput({ 'aria-label': ${texto(o.search)}, placeholder: 'Buscar...' }),
 );`
     : '';
 
@@ -119,7 +119,7 @@ cabecalho.appendChild(
 const marca = document.createElement('div');
 marca.className = 'nds-text-body nds-font-semibold nds-px-2 nds-py-1';
 marca.textContent = 'Design System';
-cabecalho.appendChild(marca);${busca}`;
+cabecalho.appendChild(marca);${search}`;
 }
 
 function literalDoItem(item: SidebarItemSnippet): string {
@@ -212,30 +212,30 @@ const IMPORTS_STRUCTURE = [
 /** A composição canônica: barra com cabeçalho, grupos de navegação e rodapé. */
 export function sidebarSnippet(o: SidebarSnippetOptions = {}): string {
   const grupos = o.grupos ?? GROUPS_DEFAULT;
-  const comRodape = o.rodape !== false;
+  const withFooter = o.rodape !== false;
   const footerLabel = typeof o.rodape === 'string' ? o.rodape : 'Perfil';
 
-  const nomes = [
+  const names = [
     ...IMPORTS_STRUCTURE,
     'createSidebarGroup',
     ...(grupos.length > 1 ? ['createSidebarSeparator'] : []),
-    ...(comRodape ? ['createSidebarFooter', 'createSidebarMenu', 'createSidebarMenuItem'] : []),
-    ...(o.busca ? ['createSidebarInput'] : []),
+    ...(withFooter ? ['createSidebarFooter', 'createSidebarMenu', 'createSidebarMenuItem'] : []),
+    ...(o.search ? ['createSidebarInput'] : []),
     ...(o.withTrigger === false ? [] : ['createSidebarTrigger']),
   ].sort();
 
   return snippet(
     [
-      importing('sidebar', ...nomes),
-      importingIcons(iconsOf(grupos, comRodape ? ['User'] : [])),
+      importing('sidebar', ...names),
+      importingIcons(iconsOf(grupos, withFooter ? ['User'] : [])),
     ]
       .filter(Boolean)
       .join('\n'),
     barBlock(o),
     headerBlock(o),
     contentBlock(grupos),
-    comRodape ? footerBlock(footerLabel) : undefined,
-    comRodape
+    withFooter ? footerBlock(footerLabel) : undefined,
+    withFooter
       ? `interno.append(cabecalho, conteudo, rodape);`
       : `interno.append(cabecalho, conteudo);`,
     pageBlock(o),
@@ -252,7 +252,7 @@ export function sidebarSnippet(o: SidebarSnippetOptions = {}): string {
  * `<li>`. O atalho `createSidebarGroup` esconderia todas elas.
  */
 export function sidebarWithActionsSnippet(o: SidebarSnippetOptions = {}): string {
-  const nomes = [
+  const names = [
     ...IMPORTS_STRUCTURE,
     'createSidebarGroupAction',
     'createSidebarGroupContent',
@@ -268,7 +268,7 @@ export function sidebarWithActionsSnippet(o: SidebarSnippetOptions = {}): string
 
   return snippet(
     [
-      importing('sidebar', ...nomes),
+      importing('sidebar', ...names),
       importingIcons(['Ellipsis', 'LayoutGrid', 'Plus']),
     ].join('\n'),
     barBlock(o),
@@ -335,7 +335,7 @@ interno.appendChild(createSidebarRail(barra.toggle));`,
  * dela. Um snippet com o atalho de grupo esconderia esse par.
  */
 export function sidebarWithSubmenuSnippet(o: SidebarSnippetOptions = {}): string {
-  const nomes = [
+  const names = [
     ...IMPORTS_STRUCTURE,
     'createSidebarGroupContent',
     'createSidebarGroupLabel',
@@ -349,7 +349,7 @@ export function sidebarWithSubmenuSnippet(o: SidebarSnippetOptions = {}): string
   ].sort();
 
   return snippet(
-    [importing('sidebar', ...nomes), importingIcons(['House', 'LayoutGrid'])].join('\n'),
+    [importing('sidebar', ...names), importingIcons(['House', 'LayoutGrid'])].join('\n'),
     barBlock(o),
     headerBlock({}),
     `const menu = createSidebarMenu({ 'aria-labelledby': 'grupo-componentes' });
@@ -413,7 +413,7 @@ interno.append(cabecalho, conteudo);`,
  * repetindo o mesmo aviso seria pior que nenhuma.
  */
 export function sidebarWithSkeletonSnippet(o: SidebarSnippetOptions = {}): string {
-  const nomes = [
+  const names = [
     ...IMPORTS_STRUCTURE,
     'createSidebarGroupContent',
     'createSidebarGroupLabel',
@@ -424,7 +424,7 @@ export function sidebarWithSkeletonSnippet(o: SidebarSnippetOptions = {}): strin
   ].sort();
 
   return snippet(
-    importing('sidebar', ...nomes),
+    importing('sidebar', ...names),
     barBlock(o),
     headerBlock({}),
     `const menu = createSidebarMenu({ 'aria-labelledby': 'grupo-carregando' });

@@ -116,19 +116,19 @@ const tokenValues = ref<Record<string, string>>({});
 
 // ─── Estado do <html> (tema × modo aplicados pela toolbar) ──────────────────────
 
-const temaAtivo = ref<'tema-default' | 'tema-warm' | 'tema-cold'>('tema-default');
-const paginaDark = ref(false);
+const themeActive = ref<'tema-default' | 'tema-warm' | 'tema-cold'>('tema-default');
+const darkPage = ref(false);
 
 let htmlObserver: MutationObserver | null = null;
 
 function syncHtmlState() {
   const list = document.documentElement.classList;
-  temaAtivo.value = list.contains('tema-warm')
+  themeActive.value = list.contains('tema-warm')
     ? 'tema-warm'
     : list.contains('tema-cold')
       ? 'tema-cold'
       : 'tema-default';
-  paginaDark.value = list.contains('dark');
+  darkPage.value = list.contains('dark');
 
   // Relê os valores HSL a cada mudança de classe do <html>.
   const styles = getComputedStyle(document.documentElement);
@@ -290,7 +290,7 @@ onUnmounted(() => {
             :key="theme.key"
             class="nds-theme-card"
           >
-            <div :class="['nds-theme-card-scope', theme.className, paginaDark ? 'dark' : '']">
+            <div :class="['nds-theme-card-scope', theme.className, darkPage ? 'dark' : '']">
               <span class="nds-theme-card-label">
                 {{ t(`brand.themes.${theme.key}`) }}
               </span>
@@ -329,7 +329,7 @@ onUnmounted(() => {
             :key="mode.key"
             class="nds-theme-card"
           >
-            <div :class="['nds-theme-card-scope', temaAtivo, mode.className]">
+            <div :class="['nds-theme-card-scope', themeActive, mode.className]">
               <span class="nds-theme-card-label">
                 {{ t(`modes.${mode.key}`) }}
               </span>

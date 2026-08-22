@@ -113,10 +113,10 @@ export const Active: Story = {
     });
     await step("O destaque acompanha a marcação", async () => {
       const ativo = canvas.getByRole("link", { name: "Ir para página 2" });
-      const inativo = canvas.getByRole("link", { name: "Ir para página 1" });
+      const inactive = canvas.getByRole("link", { name: "Ir para página 1" });
       await expect(ativo).toHaveAttribute("data-active", "true");
       await expect(ativo).toHaveClass("nds-button-outline");
-      await expect(inativo).toHaveClass("nds-button-ghost");
+      await expect(inactive).toHaveClass("nds-button-ghost");
     });
   },
 };

@@ -11,7 +11,7 @@ import { chartSource } from './chart.source';
 const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const SERIE_UNICA = [{ name: 'Vendas', data: [186, 305, 237, 73, 209, 214] }];
 
-const ROTULO = 'Acessos mensais no desktop, de janeiro a junho';
+const LABEL = 'Acessos mensais no desktop, de janeiro a junho';
 
 const meta: Meta = {
   title: 'UI/Chart',
@@ -77,7 +77,7 @@ const meta: Meta = {
     height: 300,
     emptyLabel: CHART_EMPTY_LABEL,
     class: 'nds-w-full',
-    'aria-label': ROTULO,
+    'aria-label': LABEL,
   },
 };
 
@@ -118,7 +118,7 @@ export const Playground: Story = {
     if (args.renderer === 'svg') {
       await step('O eixo escreve todas as categorias dos dados', async () => {
         await waitFor(() => {
-          for (const mes of MONTHS) expect(designEscreve(raiz, mes)).toBe(true);
+          for (const month of MONTHS) expect(designEscreve(raiz, month)).toBe(true);
         }, { timeout: 3000 });
       });
 

@@ -63,7 +63,7 @@ ${indentar(itens, '    ')}
 }
 
 /** Destino direto da barra — sem painel, navega no clique. */
-function destino(href: string, rotulo: string, atual = false): string {
+function destination(href: string, rotulo: string, atual = false): string {
   return `<NavigationMenuItem>
   <NavigationMenuLink href="${href}"${atual ? ' active' : ''}>${rotulo}</NavigationMenuLink>
 </NavigationMenuItem>`;
@@ -155,13 +155,13 @@ export const navigationMenuSource: SourceTransform<NavigationMenuArgs> = (_gerad
     barra(
       atributos,
       [
-        destino('#inicio', 'Início'),
+        destination('#inicio', 'Início'),
         withPanel(
           'produtos',
           'Produtos',
           panelList(filho('#inicial', 'Plano Inicial'), filho('#profissional', 'Plano Profissional')),
         ),
-        destino('#sobre', 'Sobre'),
+        destination('#sobre', 'Sobre'),
       ].join('\n'),
     ),
   );
@@ -179,13 +179,13 @@ export function navigationMenuVerticalSource(): string {
   <NavigationMenuList className="nds-stack nds-w-sm" data-spacing="xs">
 ${indentar(
   [
-    destino('#painel', 'Painel'),
+    destination('#painel', 'Painel'),
     withPanel(
       'relatorios',
       'Relatórios',
       panelList(filho('#vendas', 'Vendas'), filho('#assinaturas', 'Assinaturas')),
     ),
-    destino('#configuracoes', 'Configurações'),
+    destination('#configuracoes', 'Configurações'),
   ].join('\n'),
   '    ',
 )}
@@ -210,7 +210,7 @@ export function navigationMenuOpenSource(): string {
         'indicator',
       ]),
       [
-        destino('#inicio', 'Início'),
+        destination('#inicio', 'Início'),
         withPanel(
           'produtos',
           'Produtos',
@@ -238,9 +238,9 @@ export function navigationMenuActiveSource(): string {
     barra(
       ' aria-label="Navegação principal"',
       [
-        destino('#inicio', 'Início', true),
-        destino('#produtos', 'Produtos'),
-        destino('#sobre', 'Sobre'),
+        destination('#inicio', 'Início', true),
+        destination('#produtos', 'Produtos'),
+        destination('#sobre', 'Sobre'),
       ].join('\n'),
     ),
   );
@@ -257,9 +257,9 @@ export function navigationMenuSomenteTargetsSource(): string {
     barra(
       ' aria-label="Navegação institucional"',
       [
-        destino('#inicio', 'Início', true),
-        destino('#precos', 'Preços'),
-        destino('#contato', 'Contato'),
+        destination('#inicio', 'Início', true),
+        destination('#precos', 'Preços'),
+        destination('#contato', 'Contato'),
       ].join('\n'),
     ),
   );
@@ -296,7 +296,7 @@ ${indentar(
     importingNav(...PARTS_WITH_PANEL),
     barra(
       ' aria-label="Navegação de soluções"',
-      [destino('#inicio', 'Início'), withPanel('solucoes', 'Soluções', grade)].join('\n'),
+      [destination('#inicio', 'Início'), withPanel('solucoes', 'Soluções', grade)].join('\n'),
     ),
   );
 }
@@ -331,7 +331,7 @@ ${indentar(
     importingNav(...PARTS_WITH_PANEL),
     barra(
       ' aria-label="Navegação de recursos"',
-      [destino('#inicio', 'Início'), withPanel('recursos', 'Recursos', conteudo)].join('\n'),
+      [destination('#inicio', 'Início'), withPanel('recursos', 'Recursos', conteudo)].join('\n'),
     ),
   );
 }

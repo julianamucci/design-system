@@ -28,8 +28,8 @@ export type SourceTransform<A> = (gerado?: string, ctx?: SourceCtx<A>) => string
  * Um cabeçalho vazio devolve só a marcação — há exemplos que são HTML puro com
  * classes `.nds-*` e não importam nada.
  */
-export function jsxSnippet(cabecalho: string, markup: string): string {
-  const topo = cabecalho.trim();
+export function jsxSnippet(header: string, markup: string): string {
+  const topo = header.trim();
   const corpo = markup.trim();
   if (!topo) return corpo;
   return `${topo}\n\n${corpo}`;
@@ -50,18 +50,18 @@ export function attrs(...partes: Array<string | false | null | undefined>): stri
 
 /**
  * Mesma junção de `attrs`, mas quebrando uma linha por atributo quando a fila
- * passa de `limite` caracteres — atributo em linha única longa demais some na
+ * passa de `limit` caracteres — atributo em linha única longa demais some na
  * barra de rolagem do painel.
  */
 export function attrsMultilinha(
   partes: Array<string | false | null | undefined>,
   indentacao = '  ',
-  limite = 60,
+  limit = 60,
 ): string {
   const lista = partes.filter((parte): parte is string => Boolean(parte) && parte !== '');
   if (!lista.length) return '';
   const inLine = lista.join(' ');
-  if (inLine.length <= limite) return ` ${inLine}`;
+  if (inLine.length <= limit) return ` ${inLine}`;
   return `\n${lista.map((parte) => `${indentacao}${parte}`).join('\n')}\n`;
 }
 

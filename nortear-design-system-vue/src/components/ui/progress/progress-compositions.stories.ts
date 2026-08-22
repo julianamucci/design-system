@@ -127,9 +127,9 @@ export const ProgressList: Story = {
     });
 
     await step('Cada um com nome acessível próprio', async () => {
-      const nomes = barrasDeProgresso(canvasElement).map(nomeAcessivel);
-      await expect(nomes.every((n) => n !== '')).toBe(true);
-      await expect(new Set(nomes).size).toBe(3);
+      const names = barrasDeProgresso(canvasElement).map(nomeAcessivel);
+      await expect(names.every((n) => n !== '')).toBe(true);
+      await expect(new Set(names).size).toBe(3);
     });
 
     await step('aria-valuenow distintos (92, 64, 28)', async () => {

@@ -102,7 +102,7 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
   range.dataset.slot = 'slider-range';
   track.appendChild(range);
 
-  const nomes = Array.isArray(ariaLabel) ? ariaLabel : ariaLabel ? [ariaLabel] : [];
+  const names = Array.isArray(ariaLabel) ? ariaLabel : ariaLabel ? [ariaLabel] : [];
   const thumbs: HTMLElement[] = [];
   const inputs: HTMLInputElement[] = [];
 
@@ -123,18 +123,18 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
   function updateVisuals(): void {
     // Com uma alça o preenchimento nasce no mínimo; com duas, no primeiro
     // extremo — é o trecho ENTRE as alças que fica pintado.
-    const inicio = ehIntervalo ? pct(valores[0]) : 0;
-    const fim = ehIntervalo ? pct(valores[1]) : pct(valores[0]);
+    const start = ehIntervalo ? pct(valores[0]) : 0;
+    const end = ehIntervalo ? pct(valores[1]) : pct(valores[0]);
 
     if (vertical) {
       // Em pé o preenchimento cresce de baixo para cima, e a alça anda no
       // mesmo eixo — `left`/`width` posicionariam no eixo errado e deixariam a
       // alça parada no topo com o valor mudando.
-      range.style.bottom = `${inicio}%`;
-      range.style.height = `${fim - inicio}%`;
+      range.style.bottom = `${start}%`;
+      range.style.height = `${end - start}%`;
     } else {
-      range.style.left = `${inicio}%`;
-      range.style.width = `${fim - inicio}%`;
+      range.style.left = `${start}%`;
+      range.style.width = `${end - start}%`;
     }
 
     valores.forEach((v, i) => {
@@ -155,7 +155,7 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
     else (options as SliderSingleOptions).onValueCommitted?.(valores[0]);
   }
 
-  valores.forEach((valorInicial, indice) => {
+  valores.forEach((valueInitial, indice) => {
     const thumb = document.createElement('span');
     thumb.className = 'nds-slider-thumb';
     thumb.dataset.slot = 'slider-thumb';
@@ -168,9 +168,9 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
     nativeInput.min = String(min);
     nativeInput.max = String(max);
     nativeInput.step = String(step);
-    nativeInput.value = String(valorInicial);
+    nativeInput.value = String(valueInitial);
     nativeInput.disabled = disabled;
-    const nome = nomes[indice] ?? nomes[0];
+    const nome = names[indice] ?? names[0];
     if (nome) nativeInput.setAttribute('aria-label', nome);
     // `<input type="range">` é horizontal por definição na árvore de
     // acessibilidade; em pé, a orientação precisa ser dita.

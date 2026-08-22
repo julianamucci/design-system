@@ -133,7 +133,7 @@
 
 <Slider bind:value min={0} max={100} step={1} aria-label="Faixa de preço" />`;
 
-  const codeVertical = `<div class="nds-cluster nds-demo-box" data-justify="center" data-size="sm">
+  const verticalCode = `<div class="nds-cluster nds-demo-box" data-justify="center" data-size="sm">
   <Slider
     bind:value
     orientation="vertical"
@@ -420,7 +420,7 @@ interface SliderProps {
     items={[
       { name: $tStore('variants.items.single'),   description: stripHtml($tStore('variants.styles.single')),   code: codeSingle,   preview: variantSingle   },
       { name: $tStore('variants.items.range'),    description: stripHtml($tStore('variants.styles.range')),    code: codeRange,    preview: variantRange    },
-      { name: $tStore('variants.items.vertical'), description: stripHtml($tStore('variants.styles.vertical')), code: codeVertical, preview: variantVertical },
+      { name: $tStore('variants.items.vertical'), description: stripHtml($tStore('variants.styles.vertical')), code: verticalCode, preview: variantVertical },
       {
         name: $tStore('variants.items.brightness.name'),
         description: $tStore('variants.items.brightness.description'),

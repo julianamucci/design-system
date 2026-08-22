@@ -41,10 +41,10 @@ export function focusSlide(canvasElement: HTMLElement, eixo: 'x' | 'y' = 'x'): n
   let maior = -Infinity;
   slides.forEach((slide, i) => {
     const r = slide.getBoundingClientRect();
-    const visivel = eixo === 'y'
+    const visible = eixo === 'y'
       ? Math.min(r.bottom, v.bottom) - Math.max(r.top, v.top)
       : Math.min(r.right, v.right) - Math.max(r.left, v.left);
-    if (visivel > maior) { maior = visivel; melhor = i; }
+    if (visible > maior) { maior = visible; melhor = i; }
   });
   return melhor;
 }

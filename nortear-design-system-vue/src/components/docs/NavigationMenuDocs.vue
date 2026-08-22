@@ -148,7 +148,7 @@ const codeImportBasic = `import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";`;
 
-const codeHorizontal = `<NavigationMenu aria-label="Navegação principal">
+const horizontalCode = `<NavigationMenu aria-label="Navegação principal">
   <NavigationMenuList>
     <NavigationMenuItem>
       <NavigationMenuLink href="/">Início</NavigationMenuLink>
@@ -165,7 +165,7 @@ const codeHorizontal = `<NavigationMenu aria-label="Navegação principal">
   </NavigationMenuList>
 </NavigationMenu>`;
 
-const codeVertical = `<NavigationMenu orientation="vertical" aria-label="Navegação lateral">
+const verticalCode = `<NavigationMenu orientation="vertical" aria-label="Navegação lateral">
   <NavigationMenuList style="flex-direction: column; align-items: flex-start">
     <NavigationMenuItem>
       <NavigationMenuLink href="/">Início</NavigationMenuLink>
@@ -212,19 +212,19 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.items.horizontal'), description: stripHtml(tContent('variants.styles.horizontal')), code: codeHorizontal },
-  { name: tContent('variants.items.vertical'),   description: stripHtml(tContent('variants.styles.vertical')),   code: codeVertical   },
+  { name: tContent('variants.items.horizontal'), description: stripHtml(tContent('variants.styles.horizontal')), code: horizontalCode },
+  { name: tContent('variants.items.vertical'),   description: stripHtml(tContent('variants.styles.vertical')),   code: verticalCode   },
   {
     name: tContent('variants.items.linkSimples.name'),
     description: tContent('variants.items.linkSimples.description'),
     useWhen: tContent('variants.items.linkSimples.use'),
-    code: codeLinkSimples,
+    code: simpleCodeLink,
   },
   {
     name: tContent('variants.items.comDropdown.name'),
     description: tContent('variants.items.comDropdown.description'),
     useWhen: tContent('variants.items.comDropdown.use'),
-    code: codeComDropdown,
+    code: codeWithDropdown,
   },
   {
     name: tContent('variants.items.megaMenuGrid.name'),
@@ -236,13 +236,13 @@ const variantItems = computed(() => [
     name: tContent('variants.items.comCardDestacado.name'),
     description: tContent('variants.items.comCardDestacado.description'),
     useWhen: tContent('variants.items.comCardDestacado.use'),
-    code: codeComCardDestacado,
+    code: codeWithCardDestacado,
   },
 ]);
 
 // ─── Composições ──────────────────────────────────────────────────────────────
 
-const codeLinkSimples = `<NavigationMenu aria-label="Navegação principal">
+const simpleCodeLink = `<NavigationMenu aria-label="Navegação principal">
   <NavigationMenuList>
     <NavigationMenuItem>
       <NavigationMenuLink href="/">Início</NavigationMenuLink>
@@ -256,7 +256,7 @@ const codeLinkSimples = `<NavigationMenu aria-label="Navegação principal">
   </NavigationMenuList>
 </NavigationMenu>`;
 
-const codeComDropdown = `<NavigationMenu aria-label="Navegação principal">
+const codeWithDropdown = `<NavigationMenu aria-label="Navegação principal">
   <NavigationMenuList>
     <NavigationMenuItem>
       <NavigationMenuLink href="/">Início</NavigationMenuLink>
@@ -300,7 +300,7 @@ const codeMegaMenuGrid = `<NavigationMenu aria-label="Navegação principal">
   </NavigationMenuList>
 </NavigationMenu>`;
 
-const codeComCardDestacado = `<NavigationMenu aria-label="Navegação principal">
+const codeWithCardDestacado = `<NavigationMenu aria-label="Navegação principal">
   <NavigationMenuList>
     <NavigationMenuItem value="recursos">
       <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>

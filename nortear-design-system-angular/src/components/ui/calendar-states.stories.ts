@@ -99,7 +99,7 @@ export const DisabledDates: Story = {
   },
   render: () => ({
     props: {
-      mes: parseDate('2026-04-01'),
+      month: parseDate('2026-04-01'),
       valor: undefined as DateValue | undefined,
       // Corte fixo: com `new Date()` a fronteira andaria um dia por dia e a
       // asserção de "10 está bloqueado, 20 não" viraria falsa sozinha.
@@ -109,7 +109,7 @@ export const DisabledDates: Story = {
       <div
         ndsCalendar
         locale="pt-BR"
-        [defaultMonth]="mes"
+        [defaultMonth]="month"
         [(value)]="valor"
         [disabled]="bloqueia"
       ></div>
@@ -155,8 +155,8 @@ export const DisabledDates: Story = {
       // Abril de 2026 começa numa quarta: a primeira semana da grade traz o fim
       // de março. Sem esses dias a linha abriria com buracos, e a semana
       // deixaria de se ler como semana.
-      const vizinhos = raiz.querySelectorAll('.nds-calendar-day-btn[data-outside-view]');
-      await expect(vizinhos.length).toBeGreaterThan(0);
+      const neighbours = raiz.querySelectorAll('.nds-calendar-day-btn[data-outside-view]');
+      await expect(neighbours.length).toBeGreaterThan(0);
     });
 
     await step('Dia bloqueado e dia vizinho ficam fora da tabulação', async () => {
@@ -185,8 +185,8 @@ export const KeyboardNavigation: Story = {
     },
   },
   render: () => ({
-    props: { mes: parseDate('2026-04-01'), valor: parseDate('2026-04-15') },
-    template: `<div ndsCalendar locale="pt-BR" [defaultMonth]="mes" [value]="valor"></div>`,
+    props: { month: parseDate('2026-04-01'), valor: parseDate('2026-04-15') },
+    template: `<div ndsCalendar locale="pt-BR" [defaultMonth]="month" [value]="valor"></div>`,
   }),
   play: async ({ canvasElement, step }) => {
     const raiz = canvasElement.querySelector<HTMLElement>('.nds-calendar-root')!;
@@ -220,11 +220,11 @@ export const KeyboardNavigation: Story = {
       // O `outline: 0` da base mata o anel nativo, então este realce é a única
       // coisa que diz onde o teclado está (WCAG 2.4.7).
       const inFocus = dia(raiz, '2026-04-23');
-      const vizinho = dia(raiz, '2026-04-24');
+      const neighbour = dia(raiz, '2026-04-24');
       await expect(document.activeElement).toBe(inFocus);
 
       const focusRing = getComputedStyle(inFocus).boxShadow;
-      const neighbourRing = getComputedStyle(vizinho).boxShadow;
+      const neighbourRing = getComputedStyle(neighbour).boxShadow;
       await expect(focusRing).not.toBe('none');
       await expect(focusRing).not.toBe(neighbourRing);
     });

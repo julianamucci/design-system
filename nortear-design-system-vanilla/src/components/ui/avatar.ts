@@ -184,10 +184,10 @@ export function createAvatar(options: AvatarComposedOptions = {}): HTMLElement {
 
   if (src) {
     const img = createAvatarImage({ src, alt });
-    let espera: number | undefined;
+    let wait: number | undefined;
 
     const showImage = () => {
-      window.clearTimeout(espera);
+      window.clearTimeout(wait);
       img.style.display = '';
       fallback.style.display = 'none';
     };
@@ -196,7 +196,7 @@ export function createAvatar(options: AvatarComposedOptions = {}): HTMLElement {
       // Com atraso pendente, quem revela é o temporizador: um 404 rápido não
       // pode furar o prazo, senão o piscar que o atraso existe para evitar
       // volta pelo caminho do erro. É o que as libs das outras stacks fazem.
-      if (espera === undefined) fallback.style.display = '';
+      if (wait === undefined) fallback.style.display = '';
     };
 
     // Fallback visível por default para SR/tests verem conteúdo durante load.
@@ -206,7 +206,7 @@ export function createAvatar(options: AvatarComposedOptions = {}): HTMLElement {
     // do prazo. Sem ele, aparecem na hora — que é o comportamento de sempre.
     if (delayMs && delayMs > 0) {
       fallback.style.display = 'none';
-      espera = window.setTimeout(() => {
+      wait = window.setTimeout(() => {
         if (img.style.display === 'none') fallback.style.display = '';
       }, delayMs);
     }

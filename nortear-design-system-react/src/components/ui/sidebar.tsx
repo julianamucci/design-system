@@ -6,7 +6,7 @@ import { useRender } from "@base-ui/react/use-render"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { SIDEBAR_MOBILE_QUERY, useIsMobile } from "@/hooks/use-mobile"
-import { ROTULOS_SIDEBAR_PADRAO } from "@shared/primitives/sidebar-a11y-labels"
+import { LABELS_SIDEBAR_DEFAULT } from "@shared/primitives/sidebar-a11y-labels"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -168,8 +168,8 @@ function Sidebar({
   side = "left",
   variant = "sidebar",
   collapsible = "offcanvas",
-  mobileTitle = ROTULOS_SIDEBAR_PADRAO.tituloMovel,
-  mobileDescription = ROTULOS_SIDEBAR_PADRAO.descricaoMovel,
+  mobileTitle = LABELS_SIDEBAR_DEFAULT.tituloMovel,
+  mobileDescription = LABELS_SIDEBAR_DEFAULT.descricaoMovel,
   className,
   children,
   dir,
@@ -283,7 +283,7 @@ function Sidebar({
 function SidebarTrigger({
   className,
   onClick,
-  label = ROTULOS_SIDEBAR_PADRAO.alternar,
+  label = LABELS_SIDEBAR_DEFAULT.alternar,
   ...props
 }: React.ComponentProps<typeof Button> & { label?: string }) {
   const { toggleSidebar } = useSidebar()
@@ -329,7 +329,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
       aria-hidden="true"
       tabIndex={-1}
       onClick={toggleSidebar}
-      title={ROTULOS_SIDEBAR_PADRAO.alternar}
+      title={LABELS_SIDEBAR_DEFAULT.alternar}
       className={cn("nds-sidebar-rail", className)}
       {...props}
     />

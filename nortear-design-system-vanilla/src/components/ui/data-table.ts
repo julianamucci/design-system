@@ -129,7 +129,7 @@ export type DataTableFeatures = ReturnType<typeof recursosCompletos>;
  * (quem recorta é o virtualizador, não a paginação), ela precisa de um conjunto
  * que simplesmente não tenha o recurso.
  */
-function criarRecursos(comPaginacao: boolean): DataTableFeatures {
+function createRecursos(comPaginacao: boolean): DataTableFeatures {
   const reatividade = storeReactivityBindings();
   return comPaginacao
     ? recursosCompletos(reatividade)
@@ -453,7 +453,7 @@ export function createDataTable<TData extends RowData>(
 
   // ── TanStack table instance ──────────────────────────────────────────────
   const table = constructTable({
-    features: criarRecursos(enablePagination && !virtualized),
+    features: createRecursos(enablePagination && !virtualized),
     data,
     columns: allColumns,
     state: {
@@ -950,7 +950,7 @@ export function createDataTable<TData extends RowData>(
    * Nunca cai em "Selecionar linha" puro: nome repetido em dez controles é o
    * mesmo que nome nenhum (WCAG 4.1.2), e era exatamente o defeito daqui.
    */
-  function rotuloDaLinha(
+  function lineLabel(
     tanstackRow: ReturnType<typeof table.getRowModel>['rows'][number],
   ): string {
     if (rowLabel) return rowLabel(tanstackRow.original);
@@ -975,7 +975,7 @@ export function createDataTable<TData extends RowData>(
       if (col.id === '__select__') {
         const cb = createCheckbox({
           checked: tanstackRow.getIsSelected(),
-          'aria-label': L.selectRow(rotuloDaLinha(tanstackRow)),
+          'aria-label': L.selectRow(lineLabel(tanstackRow)),
           onCheckedChange: (v) => tanstackRow.toggleSelected(!!v),
         });
         td.appendChild(cb);

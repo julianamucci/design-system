@@ -68,7 +68,7 @@ export const Bar: Story = {
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
       await waitFor(
         () => {
-          for (const mes of MONTHS) expect(designEscreve(raiz, mes)).toBe(true);
+          for (const month of MONTHS) expect(designEscreve(raiz, month)).toBe(true);
         },
         { timeout: 3000 },
       );
@@ -113,8 +113,8 @@ export const Line: Story = {
       for (const serie of SERIES_MULTI) {
         await expect(designTexts(raiz)).toContain(serie.name);
       }
-      for (const mes of MONTHS) {
-        await expect(designEscreve(raiz, mes)).toBe(true);
+      for (const month of MONTHS) {
+        await expect(designEscreve(raiz, month)).toBe(true);
       }
     });
   },
@@ -150,7 +150,7 @@ export const Area: Story = {
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
       await waitFor(
         () => {
-          for (const mes of MONTHS) expect(designEscreve(raiz, mes)).toBe(true);
+          for (const month of MONTHS) expect(designEscreve(raiz, month)).toBe(true);
         },
         { timeout: 3000 },
       );

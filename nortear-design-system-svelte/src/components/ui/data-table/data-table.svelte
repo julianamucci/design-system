@@ -14,7 +14,7 @@
     type ColumnVisibilityState,
     type RowData,
   } from '@tanstack/table-core';
-  import { criarRecursos, type DataTableFeatures } from './data-table-features';
+  import { createRecursos, type DataTableFeatures } from './data-table-features';
   import { createVirtualizer } from '@tanstack/svelte-virtual';
   import ArrowDown from '@lucide/svelte/icons/arrow-down';
   import ArrowUp from '@lucide/svelte/icons/arrow-up';
@@ -50,7 +50,7 @@
   } from '@/components/ui/table';
   import DataTablePagination from './data-table-pagination.svelte';
   import EditableCell from './data-table-editable-cell.svelte';
-  import { DATA_TABLE_LABELS_PADRAO, type DataTableLabels } from './data-table-labels';
+  import { DATA_TABLE_LABELS_DEFAULT, type DataTableLabels } from './data-table-labels';
 
   type Column = ColumnDef<DataTableFeatures, TData, unknown>;
   type Row = ReturnType<TanstackTable<DataTableFeatures, TData>['getRowModel']>['rows'][number];
@@ -118,7 +118,7 @@
    * Padrão por baixo, o que veio por prop por cima — chave a chave. Mesclar o
    * objeto inteiro faria quem quer trocar um rótulo ter de repetir os vinte.
    */
-  const rotulos = $derived<DataTableLabels>({ ...DATA_TABLE_LABELS_PADRAO, ...(labels ?? {}) });
+  const rotulos = $derived<DataTableLabels>({ ...DATA_TABLE_LABELS_DEFAULT, ...(labels ?? {}) });
 
   // ── State (Svelte 5 runes) ───────────────────────────────────────────────
   let sorting = $state<SortingState>([]);
@@ -183,7 +183,7 @@
        * guarda já garante: nenhum caminho chama API de paginação quando o
        * recurso não está registrado.
        */
-      features: criarRecursos(enablePagination && !virtualized),
+      features: createRecursos(enablePagination && !virtualized),
       data,
       columns: allColumns,
       state: {
@@ -395,7 +395,7 @@
    * Nunca cai em "Selecionar linha" puro: nome repetido em dez controles é o
    * mesmo que nome nenhum (WCAG 4.1.2), e era exatamente o defeito daqui.
    */
-  function rotuloDaLinha(row: Row): string {
+  function lineLabel(row: Row): string {
     if (rowLabel) return rowLabel(row.original);
     const primeira = row.getAllCells().find((c) => c.column.id !== '__select__');
     const bruto = primeira?.getValue();
@@ -654,7 +654,7 @@
                   >
                     {#if colId === '__select__'}
                       <Checkbox
-                        aria-label={rotulos.selectRow(rotuloDaLinha(row))}
+                        aria-label={rotulos.selectRow(lineLabel(row))}
                         checked={row.getIsSelected()}
                         onCheckedChange={(v: boolean) => row.toggleSelected(!!v)}
                       />

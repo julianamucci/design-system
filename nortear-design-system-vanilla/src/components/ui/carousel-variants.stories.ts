@@ -162,7 +162,7 @@ export const Vertical: Story = {
     wrap.className = 'nds-w-xs';
     wrap.appendChild(
       createCarousel({
-        items: slidesDeExemplo(4, { medida: 'nds-h-full' }),
+        items: slidesDeExemplo(4, { measurement: 'nds-h-full' }),
         orientation: 'vertical',
         // A altura definida é o que a base `flex: 0 0 100%` do slide precisa
         // para resolver. Sem ela o carrossel vertical empilha e nada é

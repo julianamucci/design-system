@@ -1020,7 +1020,7 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const sim = tNav('common.yes');
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     // "—" e nunca a string "undefined": travessão é o vazio tipográfico, e é o
     // que as outras stacks mostram.
     const linha = (
@@ -1028,7 +1028,7 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
       chave: string,
       tipo: string,
       padrao: string,
-      obrigatorio = nao,
+      obrigatorio = not,
     ) => ({
       name,
       type: tipo,

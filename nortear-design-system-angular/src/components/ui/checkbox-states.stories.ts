@@ -13,7 +13,7 @@ const FERRAMENTAS = {
   // `pointerEventsCheck: 0`: a caixa desabilitada mantém `cursor: not-allowed`,
   // e a checagem do userEvent reprovaria antes de o clique chegar ao componente
   // — que é justamente o que se quer testar.
-  clicar: (el: HTMLElement) => userEvent.click(el, { pointerEventsCheck: 0 }),
+  click: (el: HTMLElement) => userEvent.click(el, { pointerEventsCheck: 0 }),
 };
 
 const meta: Meta = {

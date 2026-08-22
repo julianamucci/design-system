@@ -60,7 +60,7 @@ function presenca(el: Element | null, nome: string): boolean | null {
 
 // ─── Estado marcável ──────────────────────────────────────────────────────────
 
-export type Marcado = boolean | 'mixed' | null;
+export type Checked = boolean | 'mixed' | null;
 
 /**
  * Estado da caixa como o leitor de tela o entende.
@@ -70,7 +70,7 @@ export type Marcado = boolean | 'mixed' | null;
  * como reserva, para que a sonda ainda meça uma stack que não cumpra o contrato
  * ARIA — medir o descumprimento é justamente o objetivo.
  */
-export function stateChecked(el: Element | null): Marcado {
+export function stateChecked(el: Element | null): Checked {
   if (!el) return null;
   const aria = el.getAttribute('aria-checked');
   if (aria === 'mixed') return 'mixed';
@@ -111,9 +111,9 @@ function nomeAcessivel(caixa: Element | null) {
   if (!caixa) return { valor: null, origem: null } as const;
   const doc = caixa.ownerDocument;
 
-  const rotuladoPor = caixa.getAttribute('aria-labelledby');
-  if (rotuladoPor) {
-    const partes = rotuladoPor
+  const labelledBy = caixa.getAttribute('aria-labelledby');
+  if (labelledBy) {
+    const partes = labelledBy
       .split(/\s+/)
       .map((id) => texto(doc.getElementById(id)))
       .filter(Boolean);
@@ -318,7 +318,7 @@ export function measureBox(raiz: HTMLElement) {
       dataChecked: presenca(caixa, 'data-checked'),
       dataIndeterminate: presenca(caixa, 'data-indeterminate'),
       marcado: stateChecked(caixa),
-      fundo: cs.backgroundColor,
+      background: cs.backgroundColor,
     },
 
     // ── Desabilitado: atributo nativo × ARIA ─────────────────────────────────
@@ -379,15 +379,15 @@ export function measureBox(raiz: HTMLElement) {
         : indicador?.querySelector('polyline, path')
           ? 'marca'
           : null,
-      visivel: indicador ? getComputedStyle(indicador).display !== 'none' : null,
+      visible: indicador ? getComputedStyle(indicador).display !== 'none' : null,
     },
 
     // ── OS DOIS EIXOS ────────────────────────────────────────────────────────
     cliqueNoRotulo: labelAoClick(rotulo, caixa),
     cliqueNaCaixa: boxAoClick(caixa),
-    foco: focabilidade(caixa),
+    focus: focabilidade(caixa),
 
-    alcance: {
+    reach: {
       centroDaCaixa: quemRecebeOClique(caixa),
       centroDoRotulo: quemRecebeOClique(rotulo),
     },
@@ -427,7 +427,7 @@ export function measureBoxes(raiz: HTMLElement, cenarios: string[]) {
 export async function usuarioMeasureClick(
   raiz: HTMLElement,
   cenarios: string[],
-  clicar: (el: HTMLElement) => Promise<unknown>,
+  click: (el: HTMLElement) => Promise<unknown>,
 ) {
   const registro: Record<string, unknown> = {};
   for (const cenario of cenarios) {
@@ -442,7 +442,7 @@ export async function usuarioMeasureClick(
     const antes = stateChecked(caixa);
     let resultado: Record<string, unknown>;
     try {
-      await clicar(rotulo);
+      await click(rotulo);
       resultado = {
         focou: focusEstaIn(caixa),
         focusFoiTo: describeIn(doc.activeElement),
@@ -470,7 +470,7 @@ export type KeyboardFerramentas = {
   /** `userEvent.keyboard` da stack. */
   teclar: (sequencia: string) => Promise<unknown>;
   /** `userEvent.click` da stack — o caminho de ponteiro real, não `.click()`. */
-  clicar: (el: HTMLElement) => Promise<unknown>;
+  click: (el: HTMLElement) => Promise<unknown>;
 };
 
 /**
@@ -493,7 +493,7 @@ export type KeyboardFerramentas = {
 export async function keyboardMeasureReach(
   raiz: HTMLElement,
   cenarios: string[],
-  { tab, teclar, clicar }: KeyboardFerramentas,
+  { tab, teclar, click }: KeyboardFerramentas,
 ) {
   const registro: Record<string, unknown> = {};
 
@@ -544,7 +544,7 @@ export async function keyboardMeasureReach(
     {
       const antes = stateChecked(caixa);
       try {
-        await clicar(caixa);
+        await click(caixa);
         clickAlterna = antes === null ? null : stateChecked(caixa) !== antes;
       } catch (e) {
         clickError = e instanceof Error ? e.message : String(e);
@@ -603,7 +603,7 @@ export async function keyboardMeasureReach(
  */
 export async function disabledReprovas(
   caixa: HTMLElement,
-  { tab, teclar, clicar }: KeyboardFerramentas,
+  { tab, teclar, click }: KeyboardFerramentas,
 ): Promise<string[]> {
   const reprovas: string[] = [];
   const doc = caixa.ownerDocument;
@@ -645,7 +645,7 @@ export async function disabledReprovas(
   // reprova antes de clicar em parte das stacks.
   {
     const antes = stateChecked(caixa);
-    await clicar(caixa);
+    await click(caixa);
     if (stateChecked(caixa) !== antes) {
       reprovas.push(`o clique alternou o estado: ${String(antes)} → ${String(stateChecked(caixa))}`);
     }
@@ -669,7 +669,7 @@ export async function reportProbe(
 ) {
   const registro = {
     dom: measureBoxes(raiz, cenarios),
-    cliqueDoUsuario: await usuarioMeasureClick(raiz, cenarios, ferramentas.clicar),
+    cliqueDoUsuario: await usuarioMeasureClick(raiz, cenarios, ferramentas.click),
     teclado: await keyboardMeasureReach(raiz, cenarios, ferramentas),
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);

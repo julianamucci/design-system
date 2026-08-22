@@ -84,7 +84,7 @@ async function moveFocusInside(instancia: { $el?: unknown }) {
   // Cada quadro é uma condição só: sem elemento ainda, PULA; painel ainda não
   // aberto, PULA; foco já dentro, encerra; painel saiu do documento (alguém
   // fechou de propósito), encerra — nunca fica competindo com quem fechou.
-  for (let quadro = 0; quadro < 30; quadro++) {
+  for (let nextFrame = 0; nextFrame < 30; nextFrame++) {
     await new Promise((r) => requestAnimationFrame(r))
     // `$el` é lido A CADA quadro de propósito: ele começa como o nó de
     // COMENTÁRIO que marca o lugar do painel e só vira o elemento quando o

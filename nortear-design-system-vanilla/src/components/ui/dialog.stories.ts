@@ -192,11 +192,11 @@ export const Playground: Story = {
     await step('O Cancelar do rodapé fecha sem tocar na ação primária', async () => {
       const p = await abrir(canvasElement);
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const botoes = rodape.querySelectorAll<HTMLElement>('button');
+      const buttons = rodape.querySelectorAll<HTMLElement>('button');
       // As ações são filhas DIRETAS do rodapé: é o que o CSS do sistema espera.
-      await expect(botoes.length).toBe(2);
-      await expect(botoes[0].parentElement).toBe(rodape);
-      await userEvent.click(botoes[0]);
+      await expect(buttons.length).toBe(2);
+      await expect(buttons[0].parentElement).toBe(rodape);
+      await userEvent.click(buttons[0]);
       await waitForClosed();
     });
 

@@ -107,7 +107,7 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 const CLASSES_TRIGGER = 'nds-text-primary nds-font-medium nds-hover-underline';
 // Botão sem moldura para gatilhos que não navegam (termo, métrica): as classes
 // zeram o cromo nativo do `<button>` sem uma linha de CSS inline.
-const CLASSES_GATILHO_BOTAO =
+const CLASSES_TRIGGER_BUTTON =
   'nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 
 // A variante `angular` de `anatomy.structureCode` no conteúdo compartilhado
@@ -654,7 +654,7 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
   protected readonly importCodeAvatar = IMPORT_CODE_AVATAR;
   protected readonly tokensCode = TOKENS_CODE;
   protected readonly classesGatilho = CLASSES_TRIGGER;
-  protected readonly classesGatilhoBotao = CLASSES_GATILHO_BOTAO;
+  protected readonly classesGatilhoBotao = CLASSES_TRIGGER_BUTTON;
 
   /**
    * A menção é dado de exemplo, não texto de interface: um `@` mais um nome
@@ -868,7 +868,7 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     return [
       {
         title: 'NdsHoverCard',
@@ -878,14 +878,14 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
             name: 'open',
             type: 'model<boolean>',
             defaultValue: 'false',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.open.description')),
           },
           {
             name: 'defaultOpen',
             type: 'boolean',
             defaultValue: t('props.table.defaultOpen.default'),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.defaultOpen.description')),
           },
           {
@@ -895,7 +895,7 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
             name: 'openChange',
             type: 'output<boolean>',
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.onOpenChange.description')),
           },
         ],
@@ -911,14 +911,14 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
             name: 'openDelay',
             type: 'number',
             defaultValue: '600',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.openDelay.description')),
           },
           {
             name: 'closeDelay',
             type: 'number',
             defaultValue: t('props.table.closeDelay.default'),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.closeDelay.description')),
           },
         ],
@@ -931,28 +931,28 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
             name: 'side',
             type: t('props.table.side.type'),
             defaultValue: t('props.table.side.default'),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.side.description')),
           },
           {
             name: 'align',
             type: t('props.table.align.type'),
             defaultValue: t('props.table.align.default'),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.align.description')),
           },
           {
             name: 'label',
             type: 'string',
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: t('props.table.label.description'),
           },
           {
             name: 'contentClass',
             type: 'string',
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: t('props.table.contentClass.description'),
           },
         ],

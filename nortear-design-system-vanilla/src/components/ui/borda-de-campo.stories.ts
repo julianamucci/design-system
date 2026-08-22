@@ -82,7 +82,7 @@ function cenario(): HTMLElement {
   // medida é a do GATILHO — a lista só existe aberta, e não é ela que diz onde o
   // campo começa. O nome acessível vai por opção: `role="combobox"` não aceita
   // nome vindo do próprio conteúdo.
-  const escolha = createSelect({
+  const choice = createSelect({
     items: [
       { value: 'a', label: 'Opção A' },
       { value: 'b', label: 'Opção B' },
@@ -106,7 +106,7 @@ function cenario(): HTMLElement {
   interno.dataset.slot = 'input-group-control';
   grupo.append(addon, interno);
 
-  raiz.append(campo, area, escolha, marca, chave, grupo);
+  raiz.append(campo, area, choice, marca, chave, grupo);
   return raiz;
 }
 
@@ -131,14 +131,14 @@ export const RestAlcanca3a1: Story = {
   render: cenario,
   play: async ({ canvasElement }) => {
     const raiz = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
-    const medidas = themeMeasureColor(raiz, TARGETS);
+    const measurements = themeMeasureColor(raiz, TARGETS);
 
-    await expect(medidas).toHaveLength(TARGETS.length * 6);
+    await expect(measurements).toHaveLength(TARGETS.length * 6);
 
-    const ausentes = medidas.filter((m) => !m.presente || m.ratio === null);
+    const ausentes = measurements.filter((m) => !m.presente || m.ratio === null);
     await expect(ausentes.map(describeMeasurement)).toEqual([]);
 
-    const fracas = medidas.filter((m) => (m.ratio ?? 0) < MINIMO);
+    const fracas = measurements.filter((m) => (m.ratio ?? 0) < MINIMO);
     await expect(fracas.map(describeMeasurement)).toEqual([]);
   },
 };
@@ -174,15 +174,15 @@ export const RestHoverEFocoNotFicamBelow: Story = {
 
     campo.style.transition = 'none';
     const problemas = byTheme(raiz, (tema, modo) => {
-      const fundo = getComputedStyle(campo).backgroundColor;
-      const repouso = ratio(getComputedStyle(campo).borderTopColor, fundo)?.ratio ?? 0;
-      const hover = ratio(resolveColor(raiz, hoverColor!) ?? fundo, fundo)?.ratio ?? 0;
-      const foco = ratio(resolveColor(raiz, focusColor!) ?? fundo, fundo)?.ratio ?? 0;
+      const background = getComputedStyle(campo).backgroundColor;
+      const rest = ratio(getComputedStyle(campo).borderTopColor, background)?.ratio ?? 0;
+      const hover = ratio(resolveColor(raiz, hoverColor!) ?? background, background)?.ratio ?? 0;
+      const focus = ratio(resolveColor(raiz, focusColor!) ?? background, background)?.ratio ?? 0;
 
-      const linha = `${tema}/${modo} repouso ${repouso}:1 · hover ${hover}:1 · foco ${foco}:1`;
-      if (hover < repouso) return `hover ABAIXO do repouso — ${linha}`;
-      if (foco < repouso) return `foco ABAIXO do repouso — ${linha}`;
-      if (foco < MINIMO) return `foco abaixo de ${MINIMO}:1 — ${linha}`;
+      const linha = `${tema}/${modo} repouso ${rest}:1 · hover ${hover}:1 · foco ${focus}:1`;
+      if (hover < rest) return `hover ABAIXO do repouso — ${linha}`;
+      if (focus < rest) return `foco ABAIXO do repouso — ${linha}`;
+      if (focus < MINIMO) return `foco abaixo de ${MINIMO}:1 — ${linha}`;
       return null;
     });
     campo.style.removeProperty('transition');

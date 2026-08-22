@@ -5,7 +5,7 @@ import { Sheet, SheetContent } from '@/components/ui/sheet'
 import SheetDescription from '@/components/ui/sheet/SheetDescription.vue'
 import SheetHeader from '@/components/ui/sheet/SheetHeader.vue'
 import SheetTitle from '@/components/ui/sheet/SheetTitle.vue'
-import { ROTULOS_SIDEBAR_PADRAO } from '@shared/primitives/sidebar-a11y-labels'
+import { LABELS_SIDEBAR_DEFAULT } from '@shared/primitives/sidebar-a11y-labels'
 import { SIDEBAR_WIDTH_MOBILE, useSidebar } from './utils'
 
 defineOptions({
@@ -20,8 +20,8 @@ const props = withDefaults(defineProps<SidebarProps>(), {
   side: 'left',
   variant: 'sidebar',
   collapsible: 'offcanvas',
-  mobileTitle: () => ROTULOS_SIDEBAR_PADRAO.tituloMovel,
-  mobileDescription: () => ROTULOS_SIDEBAR_PADRAO.descricaoMovel,
+  mobileTitle: () => LABELS_SIDEBAR_DEFAULT.tituloMovel,
+  mobileDescription: () => LABELS_SIDEBAR_DEFAULT.descricaoMovel,
 })
 
 const { isMobile, state, openMobile, setOpenMobile } = useSidebar()

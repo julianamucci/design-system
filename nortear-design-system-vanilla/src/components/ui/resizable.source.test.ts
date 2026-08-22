@@ -117,7 +117,7 @@ describe('resizableAninhadoSnippet', () => {
           { titulo: 'Área principal', defaultSize: 70, minSize: 30 },
         ],
       },
-      vizinho: { titulo: 'Sidebar', defaultSize: 30, minSize: 15 },
+      neighbour: { titulo: 'Sidebar', defaultSize: 30, minSize: 15 },
     });
     expect(código.match(/createResizablePanel\(\{/g)).toHaveLength(2);
     expect(código).toContain("'aria-label': 'Redimensionar Editor e Console'");
@@ -158,7 +158,7 @@ describe('resizableSourceAninhado', () => {
     const transform = resizableSourceNested({
       interno: { direction: 'vertical', 'aria-label': 'Interno' },
       externo: { 'aria-label': 'Externo' },
-      vizinho: { titulo: 'Sidebar', defaultSize: 30 },
+      neighbour: { titulo: 'Sidebar', defaultSize: 30 },
     });
     const código = transform('', { args: { direction: 'horizontal' } });
     expect(código).toContain('content: interno');

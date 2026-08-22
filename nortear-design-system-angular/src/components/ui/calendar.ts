@@ -35,8 +35,8 @@ import {
   RdxCalendarPrevDirective,
   RdxCalendarRootDirective,
 } from '@radix-ng/primitives/calendar';
-import { rotulosDoCalendario } from '@shared/primitives/calendar-labels';
-import { destinoDaTecla, diaNaGrade, isoDoElemento } from '@shared/primitives/calendar-teclado';
+import { calendarLabels } from '@shared/primitives/calendar-labels';
+import { teclaTarget, gridDay, isoDoElemento } from '@shared/primitives/calendar-teclado';
 
 // ─── Calendar ─────────────────────────────────────────────────────────────────
 //
@@ -101,7 +101,7 @@ export type CalendarDateMatcher = (date: DateValue) => boolean;
 const WEEK_STARTS_ON = 0;
 
 /** Anos oferecidos para cada lado do ano em vista, no seletor da legenda. */
-const ANOS_PARA_CADA_LADO = 100;
+const EACH_SIDE_YEARS = 100;
 
 // ─── NdsCalendarMonths ────────────────────────────────────────────────────────
 
@@ -266,7 +266,7 @@ export class NdsCalendarDay {
       [numberOfMonths]="numberOfMonths()"
       [weekStartsOn]="semanaComecaEm"
       [isDateDisabled]="disabled()"
-      (keydown)="aoTeclarNaGrade($event)"
+      (keydown)="onGridKeyDown($event)"
     >
       <!-- A faixa de navegação é IRMÃ dos meses e fica por cima deles; cada mês
            traz a própria legenda no meio. Mesmo arranjo das outras stacks. -->
@@ -312,7 +312,7 @@ export class NdsCalendarDay {
         </button>
       </div>
 
-      @for (mes of meses(); track mes.value.toString()) {
+      @for (month of meses(); track month.value.toString()) {
         <div class="nds-calendar-month">
           <div class="nds-calendar-caption">
             @if (captionLayout() === 'dropdown') {
@@ -332,31 +332,31 @@ export class NdsCalendarDay {
                   [attr.aria-label]="rotulos().selecionarAno"
                   (change)="aoTrocarAno($event)"
                 >
-                  @for (ano of anosOferecidos(); track ano) {
-                    <option [value]="ano" [selected]="ano === anoEmVista()">{{ ano }}</option>
+                  @for (year of anosOferecidos(); track year) {
+                    <option [value]="year" [selected]="year === vistaYear()">{{ year }}</option>
                   }
                 </select>
               </div>
             } @else {
-              {{ legendaDoMes(mes) }}
+              {{ legendaDoMes(month) }}
             }
           </div>
 
-          <table rdxCalendarGrid class="nds-calendar-table" [attr.aria-label]="legendaDoMes(mes)">
+          <table rdxCalendarGrid class="nds-calendar-table" [attr.aria-label]="legendaDoMes(month)">
             <!-- A linha dos dias da semana fica fora da árvore de acessibilidade
                  (o primitivo põe aria-hidden no thead): cada dia já anuncia a
                  data por extenso, e repetir a coluna a cada célula só
                  encompridaria a leitura. -->
             <thead rdxCalendarGridHead>
               <tr rdxCalendarGridRow class="nds-calendar-weekdays">
-                @for (dia of diasDaSemana(); track $index) {
+                @for (dia of weekDays(); track $index) {
                   <th rdxCalendarHeadCell scope="col" class="nds-calendar-weekday">{{ dia }}</th>
                 }
               </tr>
             </thead>
 
             <tbody rdxCalendarGridBody>
-              @for (semana of mes.weeks; track semana[0].toString()) {
+              @for (semana of month.weeks; track semana[0].toString()) {
                 <tr rdxCalendarGridRow class="nds-calendar-week">
                   @for (dia of semana; track dia.toString()) {
                     <td rdxCalendarCell [date]="dia" class="nds-calendar-day-cell">
@@ -364,12 +364,12 @@ export class NdsCalendarDay {
                            dia escondido: é o que o Vanilla faz, e é o que a
                            opção promete. A célula continua sendo gridcell para
                            a linha não perder colunas. -->
-                      @if (mostraODia(dia, mes)) {
+                      @if (mostraODia(dia, month)) {
                         <button
                           type="button"
                           ndsCalendarDay
                           [day]="dia"
-                          [month]="mes.value"
+                          [month]="month.value"
                           class="nds-calendar-day-btn"
                           [attr.data-autofocus]="ehAlvoDeFocoInicial(dia) ? '' : null"
                         >{{ dia.day }}</button>
@@ -448,7 +448,7 @@ export class NdsCalendar implements OnInit {
 
   protected readonly ehMultiplo = computed(() => this.mode() === 'multiple');
 
-  protected readonly rotulos = computed(() => rotulosDoCalendario(this.locale()));
+  protected readonly rotulos = computed(() => calendarLabels(this.locale()));
 
   /**
    * A grade, montada aqui e não lida do primitivo.
@@ -476,7 +476,7 @@ export class NdsCalendar implements OnInit {
    * coluna de uma palavra só vira ruído. Mesma conta do Vanilla, para as cinco
    * stacks mostrarem a mesma abreviação.
    */
-  protected readonly diasDaSemana = computed(() => {
+  protected readonly weekDays = computed(() => {
     const fmt = new Intl.DateTimeFormat(this.locale(), { weekday: 'short' });
     // 2020-01-05 é um domingo — âncora para varrer a semana inteira.
     return Array.from({ length: 7 }, (_, i) =>
@@ -492,7 +492,7 @@ export class NdsCalendar implements OnInit {
   /** Índice 0-based, que é o que o `<option>` do seletor de mês carrega. */
   protected readonly mesEmVista = computed(() => this.vista().month - 1);
 
-  protected readonly anoEmVista = computed(() => this.vista().year);
+  protected readonly vistaYear = computed(() => this.vista().year);
 
   /**
    * Lista completa, e não uma janela em torno do ano em vista.
@@ -503,10 +503,10 @@ export class NdsCalendar implements OnInit {
    * mais. Quem limita o que aparece é a altura do painel (onze itens, no CSS).
    */
   protected readonly anosOferecidos = computed(() => {
-    const centro = this.anoEmVista();
+    const center = this.vistaYear();
     return Array.from(
-      { length: ANOS_PARA_CADA_LADO * 2 + 1 },
-      (_, i) => centro - ANOS_PARA_CADA_LADO + i,
+      { length: EACH_SIDE_YEARS * 2 + 1 },
+      (_, i) => center - EACH_SIDE_YEARS + i,
     );
   });
 
@@ -547,12 +547,12 @@ export class NdsCalendar implements OnInit {
     if (inicial) this.vista.set(inicial);
   }
 
-  protected legendaDoMes(mes: Month<DateValue>): string {
-    return `${this.nomesDosMeses()[mes.value.month - 1]} ${mes.value.year}`;
+  protected legendaDoMes(month: Month<DateValue>): string {
+    return `${this.nomesDosMeses()[month.value.month - 1]} ${month.value.year}`;
   }
 
-  protected mostraODia(dia: DateValue, mes: Month<DateValue>): boolean {
-    return this.showOutsideDays() || dia.month === mes.value.month;
+  protected mostraODia(dia: DateValue, month: Month<DateValue>): boolean {
+    return this.showOutsideDays() || dia.month === month.value.month;
   }
 
   /**
@@ -567,13 +567,13 @@ export class NdsCalendar implements OnInit {
   }
 
   protected aoTrocarMes(evento: Event): void {
-    const mes = Number((evento.target as HTMLSelectElement).value);
-    this.vista.set(this.vista().set({ month: mes + 1 }));
+    const month = Number((evento.target as HTMLSelectElement).value);
+    this.vista.set(this.vista().set({ month: month + 1 }));
   }
 
   protected aoTrocarAno(evento: Event): void {
-    const ano = Number((evento.target as HTMLSelectElement).value);
-    this.vista.set(this.vista().set({ year: ano }));
+    const year = Number((evento.target as HTMLSelectElement).value);
+    this.vista.set(this.vista().set({ year: year }));
   }
 
   /**
@@ -588,15 +588,15 @@ export class NdsCalendar implements OnInit {
    * a navegação por setas do primitivo move o foco sem mexer no placeholder,
    * então a visão está uma ou mais casas atrás do que a pessoa vê em foco.
    */
-  protected aoTeclarNaGrade(evento: KeyboardEvent): void {
-    const destino = destinoDaTecla(isoDoElemento(evento.target as Element | null), evento);
-    if (!destino) return;
+  protected onGridKeyDown(evento: KeyboardEvent): void {
+    const destination = teclaTarget(isoDoElemento(evento.target as Element | null), evento);
+    if (!destination) return;
 
     evento.preventDefault();
     // A visão acompanha o foco: um dia que sai do mês em vista precisa aparecer,
     // senão o foco iria para uma célula que não está na tela.
-    this.vista.set(parseDate(destino));
-    this.focarDia(destino);
+    this.vista.set(parseDate(destination));
+    this.focarDia(destination);
   }
 
   /**
@@ -612,7 +612,7 @@ export class NdsCalendar implements OnInit {
    */
   private focarDia(iso: string): void {
     afterNextRender(
-      () => diaNaGrade(this.elemento.nativeElement, iso)?.focus(),
+      () => gridDay(this.elemento.nativeElement, iso)?.focus(),
       { injector: this.injetor },
     );
   }

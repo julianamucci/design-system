@@ -27,7 +27,7 @@ import {
 const LONG_DELAY = 600;
 
 /** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
-function espera(ms: number): Promise<void> {
+function wait(ms: number): Promise<void> {
   return new Promise((resolver) => setTimeout(resolver, ms));
 }
 
@@ -305,7 +305,7 @@ export const PersistenceInBubble: Story = {
       // `pointer-events: none` — quem segura a abertura é a área de tolerância
       // entre gatilho e balão, calculada por coordenada, não por hover no nó.
       await userEvent.hover(balao, { pointerEventsCheck: 0 });
-      await espera(200);
+      await wait(200);
       await expect(balaoDe(gatilho)).not.toBeNull();
     });
   },

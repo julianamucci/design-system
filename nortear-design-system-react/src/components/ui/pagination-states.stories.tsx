@@ -259,9 +259,9 @@ export const Contrast: Story = {
     await step("Todo link passa dos 4.5:1 exigidos para texto", async () => {
       // accessibility.item2 — o texto da faixa tem 14px, tamanho normal pela
       // WCAG (grande é >=24px, ou >=18.66px em negrito), então o limite é 4.5.
-      const medidas = rangeContrastes(canvasElement);
-      await expect(medidas.length).toBe(7);
-      const reprovados = medidas.filter((m) => m.ratio < 4.5);
+      const measurements = rangeContrastes(canvasElement);
+      await expect(measurements.length).toBe(7);
+      const reprovados = measurements.filter((m) => m.ratio < 4.5);
       await expect(JSON.stringify(reprovados)).toBe("[]");
     });
 

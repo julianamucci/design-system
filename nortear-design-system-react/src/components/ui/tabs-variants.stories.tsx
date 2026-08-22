@@ -83,9 +83,9 @@ export const Default: Story = {
     await step("O trilho tem fundo próprio", async () => {
       // É o que distingue esta variante da `line`: um fundo sob a fileira
       // inteira, com a aba ativa em relevo por cima.
-      const fundo = getComputedStyle(l).backgroundColor;
-      await expect(fundo).not.toBe("rgba(0, 0, 0, 0)");
-      await expect(fundo).not.toBe("transparent");
+      const background = getComputedStyle(l).backgroundColor;
+      await expect(background).not.toBe("rgba(0, 0, 0, 0)");
+      await expect(background).not.toBe("transparent");
     });
 
     await step("A aba ativa se destaca por fundo, não só por cor de texto", async () => {

@@ -97,8 +97,8 @@ export const Bar: Story = {
     });
 
     await step('Toda categoria aparece escrita no eixo', async () => {
-      for (const mes of MONTHS) {
-        await expect(designEscreve(raiz, mes)).toBe(true);
+      for (const month of MONTHS) {
+        await expect(designEscreve(raiz, month)).toBe(true);
       }
     });
 
@@ -156,8 +156,8 @@ export const Line: Story = {
     });
 
     await step('Toda categoria aparece escrita no eixo', async () => {
-      for (const mes of MONTHS) {
-        await expect(designEscreve(raiz, mes)).toBe(true);
+      for (const month of MONTHS) {
+        await expect(designEscreve(raiz, month)).toBe(true);
       }
     });
   },
@@ -212,8 +212,8 @@ export const Area: Story = {
     });
 
     await step('Toda categoria aparece escrita no eixo', async () => {
-      for (const mes of MONTHS) {
-        await expect(designEscreve(raiz, mes)).toBe(true);
+      for (const month of MONTHS) {
+        await expect(designEscreve(raiz, month)).toBe(true);
       }
     });
   },

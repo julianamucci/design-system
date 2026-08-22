@@ -18,7 +18,7 @@ import { INVOICES, TOTAL } from './table.fixtures';
 
 type TableArgs = {
   captionVisivel: boolean;
-  comRodape: boolean;
+  withFooter: boolean;
 };
 
 /**
@@ -29,7 +29,7 @@ type TableArgs = {
  * Ver a nota em `separator.stories.ts`.
  */
 function playgroundSource(_gerado: string, ctx: { args?: Partial<TableArgs> }): string {
-  const { captionVisivel = false, comRodape = true } = ctx.args ?? {};
+  const { captionVisivel = false, withFooter = true } = ctx.args ?? {};
 
   // A legenda nunca some do DOM: é ela que dá nome à tabela para o leitor de
   // tela. O que muda é ficar ou não visível.
@@ -37,7 +37,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<TableArgs> }): 
     ? '<caption ndsTableCaption>Lista de faturas recentes</caption>'
     : '<caption ndsTableCaption class="nds-sr-only">Lista de faturas recentes</caption>';
 
-  const rodape = comRodape
+  const rodape = withFooter
     ? `
       <tfoot ndsTableFooter>
         <tr ndsTableRow>
@@ -119,12 +119,12 @@ const meta: Meta<TableArgs> = {
       description:
         'Legenda visível ou apenas para leitor de tela (nds-sr-only). Ela nunca sai do DOM — é o nome da tabela.',
     },
-    comRodape: {
+    withFooter: {
       control: 'boolean',
       description: 'Renderiza o tfoot com o total. Rodapé é para sumário, nunca para mais um registro.',
     },
   },
-  args: { captionVisivel: false, comRodape: true },
+  args: { captionVisivel: false, withFooter: true },
 };
 
 export default meta;
@@ -172,7 +172,7 @@ export const Playground: Story = {
               </tr>
             }
           </tbody>
-          @if (comRodape) {
+          @if (withFooter) {
             <tfoot ndsTableFooter>
               <tr ndsTableRow>
                 <td ndsTableCell colspan="3">Total</td>
@@ -240,7 +240,7 @@ export const Playground: Story = {
       // functional.item3 — tfoot é anunciado como rodapé; a mesma célula dentro
       // do tbody entraria na contagem de registros.
       const tfoot = canvasElement.querySelector<HTMLElement>('tfoot');
-      if (!args.comRodape) {
+      if (!args.withFooter) {
         await expect(tfoot).toBeNull();
         return;
       }

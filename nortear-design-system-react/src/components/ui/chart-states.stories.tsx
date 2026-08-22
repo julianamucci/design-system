@@ -279,7 +279,7 @@ export const GraphicContrast: Story = {
     const raiz = await designPronto(canvasElement);
     // Precondição da medida: ver o comentário de `settleTheme`.
     await settleTheme(document);
-    const fundo = backgroundOpacoAtras(raiz);
+    const background = backgroundOpacoAtras(raiz);
 
     await step('O contorno de toda forma de dado passa de 3:1 contra o fundo', async () => {
       const formas = datumFormas(raiz);
@@ -288,7 +288,7 @@ export const GraphicContrast: Story = {
       const fracos = formas
         .map((forma) => {
           const traco = getComputedStyle(forma).stroke;
-          return { traco, ratio: contraste(traco, fundo) };
+          return { traco, ratio: contraste(traco, background) };
         })
         .filter((m) => m.ratio < 3);
       await expect(fracos).toEqual([]);
@@ -297,7 +297,7 @@ export const GraphicContrast: Story = {
     await step('O texto dos eixos passa de 4.5:1 — é texto, não objeto gráfico', async () => {
       const rotulo = raiz.querySelector<SVGTextElement>('svg text');
       await expect(rotulo).not.toBeNull();
-      await expect(contraste(getComputedStyle(rotulo!).fill, fundo)).toBeGreaterThanOrEqual(4.5);
+      await expect(contraste(getComputedStyle(rotulo!).fill, background)).toBeGreaterThanOrEqual(4.5);
     });
   },
 };

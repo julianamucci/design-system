@@ -67,12 +67,12 @@ export const Simple: Story = {
   },
   render: () => ({
     components: sharedComponents,
-    setup: () => ({ paginas: [1, 2, 3, 4, 5] }),
+    setup: () => ({ pages: [1, 2, 3, 4, 5] }),
     template: `
       <Pagination :total="50" :items-per-page="10" :page="1" aria-label="Paginação simples">
         <PaginationContent>
           <PaginationItem><PaginationPrevious /></PaginationItem>
-          <PaginationItem v-for="n in paginas" :key="n">
+          <PaginationItem v-for="n in pages" :key="n">
             <PaginationLink href="#" :is-active="n === 1" :aria-label="\`Ir para página \${n}\`" @click.prevent>
               {{ n }}
             </PaginationLink>
@@ -185,12 +185,12 @@ export const LastPage: Story = {
   },
   render: () => ({
     components: sharedComponents,
-    setup: () => ({ paginas: [8, 9, 10], onPageChange }),
+    setup: () => ({ pages: [8, 9, 10], onPageChange }),
     template: `
       <Pagination :total="100" :items-per-page="10" :page="10" aria-label="Paginação na última página">
         <PaginationContent>
           <PaginationItem><PaginationPrevious /></PaginationItem>
-          <PaginationItem v-for="n in paginas" :key="n">
+          <PaginationItem v-for="n in pages" :key="n">
             <PaginationLink href="#" :is-active="n === 10" :aria-label="\`Ir para página \${n}\`" @click.prevent>
               {{ n }}
             </PaginationLink>
@@ -234,7 +234,7 @@ export const LastPage: Story = {
 export const Controlled: Story = {
   parameters: {
     docs: {
-      // A faixa ganha estado externo e um contador irmão: o `ref` e o `irPara`
+      // A faixa ganha estado externo e um contador irmão: o `ref` e o `irTo`
       // não existem em nenhuma outra story do arquivo.
       source: { transform: paginationControladaSource },
       description: {
@@ -248,10 +248,10 @@ export const Controlled: Story = {
     setup() {
       const atual = ref(1);
       const total = 4;
-      const irPara = (n: number) => {
+      const irTo = (n: number) => {
         if (n >= 1 && n <= total) atual.value = n;
       };
-      return { atual, total, paginas: [1, 2, 3, 4], irPara };
+      return { atual, total, pages: [1, 2, 3, 4], irTo };
     },
     template: `
       <div class="nds-stack" data-spacing="sm">
@@ -261,20 +261,20 @@ export const Controlled: Story = {
         <Pagination :total="40" :items-per-page="10" :page="atual" aria-label="Paginação controlada">
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious @click="irPara(atual - 1)" />
+              <PaginationPrevious @click="irTo(atual - 1)" />
             </PaginationItem>
-            <PaginationItem v-for="n in paginas" :key="n">
+            <PaginationItem v-for="n in pages" :key="n">
               <PaginationLink
                 href="#"
                 :is-active="atual === n"
                 :aria-label="\`Ir para página \${n}\`"
-                @click.prevent="irPara(n)"
+                @click.prevent="irTo(n)"
               >
                 {{ n }}
               </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationNext @click="irPara(atual + 1)" />
+              <PaginationNext @click="irTo(atual + 1)" />
             </PaginationItem>
           </PaginationContent>
         </Pagination>
@@ -283,7 +283,7 @@ export const Controlled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const irPara = async (n: number) => {
+    const irTo = async (n: number) => {
       // Par idempotente: só clica quando ainda não é a página atual. O painel
       // Interactions reexecuta a play no mesmo DOM, e um clique cego partiria
       // do estado que a rodada anterior deixou.
@@ -296,7 +296,7 @@ export const Controlled: Story = {
     };
 
     await step('Clicar numa página move o destaque e o contador', async () => {
-      await irPara(3);
+      await irTo(3);
       await expect(canvasElement.querySelector('[data-slot="pagina-atual"]')).toHaveTextContent(
         'Página 3 de 4',
       );
@@ -307,7 +307,7 @@ export const Controlled: Story = {
     });
 
     await step('O estado volta ao início para a próxima rodada', async () => {
-      await irPara(1);
+      await irTo(1);
       await expect(canvasElement.querySelector('[data-slot="pagina-atual"]')).toHaveTextContent(
         'Página 1 de 4',
       );

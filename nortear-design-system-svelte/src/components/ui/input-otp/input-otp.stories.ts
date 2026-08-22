@@ -92,15 +92,15 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const caixas = (raiz: HTMLElement): HTMLElement[] => [
+const boxes = (raiz: HTMLElement): HTMLElement[] => [
   ...raiz.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),
 ];
 
-const textos = (raiz: HTMLElement): string[] =>
-  caixas(raiz).map((c) => c.textContent?.trim() ?? '');
+const texts = (raiz: HTMLElement): string[] =>
+  boxes(raiz).map((c) => c.textContent?.trim() ?? '');
 
 const boxAtiva = (raiz: HTMLElement): number =>
-  caixas(raiz).findIndex(
+  boxes(raiz).findIndex(
     (c) => c.hasAttribute('data-active') && c.getAttribute('data-active') !== 'false',
   );
 
@@ -119,7 +119,7 @@ export const Playground: Story = {
     await step('O campo tem nome e uma caixa por dígito', async () => {
       const rotulo = canvasElement.querySelector<HTMLLabelElement>('label[for]')!;
       await expect(rotulo.htmlFor).toBe(input.id);
-      await expect(caixas(canvasElement)).toHaveLength(total);
+      await expect(boxes(canvasElement)).toHaveLength(total);
     });
 
     await step('O campo pede o código de uso único ao sistema', async () => {
@@ -133,7 +133,7 @@ export const Playground: Story = {
       input.focus();
       await userEvent.clear(input);
       await userEvent.type(input, '12');
-      await waitFor(() => expect(textos(canvasElement).slice(0, 2)).toEqual(['1', '2']));
+      await waitFor(() => expect(texts(canvasElement).slice(0, 2)).toEqual(['1', '2']));
       await expect(boxAtiva(canvasElement)).toBe(2);
     });
 
@@ -148,7 +148,7 @@ export const Playground: Story = {
     await step('Backspace apaga a última caixa preenchida', async () => {
       await userEvent.keyboard('{Backspace}');
       await waitFor(() => expect(input).toHaveValue('1'));
-      await expect(textos(canvasElement)[1]).toBe('');
+      await expect(texts(canvasElement)[1]).toBe('');
     });
 
     await step('Colar distribui o código inteiro e dispara onComplete', async () => {
@@ -156,7 +156,7 @@ export const Playground: Story = {
       input.focus();
       await userEvent.clear(input);
       await userEvent.paste(codigo);
-      await waitFor(() => expect(textos(canvasElement).join('')).toBe(codigo));
+      await waitFor(() => expect(texts(canvasElement).join('')).toBe(codigo));
       await expect(args.onComplete).toHaveBeenCalledWith(codigo);
     });
   },

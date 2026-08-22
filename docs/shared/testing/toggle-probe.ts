@@ -93,7 +93,7 @@ export function toggleContrast(btn: HTMLElement): number {
  * `[attr]:not([attr="false"])` e não `[attr]`: um seletor de presença casa
  * também o valor `"false"`, que algumas libs emitem em todos os elementos.
  */
-const ATIVO =
+const ACTIVE =
   '.nds-toggle[data-state="on"], .nds-toggle[aria-pressed="true"], ' +
   '.nds-toggle[data-pressed]:not([data-pressed="false"])';
 
@@ -110,7 +110,7 @@ function contrastFailures(
   // Medir o repouso aqui dava 1.1:1 no escuro — não porque o toggle esteja
   // errado, mas porque o harness não repinta o `body` ao trocar de tema: a cor
   // herdada continua a do claro enquanto `--background` já virou escuro.
-  for (const btn of raiz.querySelectorAll<HTMLElement>(ATIVO)) {
+  for (const btn of raiz.querySelectorAll<HTMLElement>(ACTIVE)) {
     // O desabilitado tem opacidade reduzida por contrato — a WCAG isenta
     // controle inativo (1.4.3), e medi-lo produziria falha que não é defeito.
     if (btn.hasAttribute('disabled')) continue;
@@ -132,10 +132,10 @@ export function toggleNosDoisThemesContrast(
   raiz: HTMLElement,
   minimum = 4.5,
 ): ContrastToggleFailure[] {
-  const claro = contrastFailures(raiz, minimum, 'claro');
+  const light = contrastFailures(raiz, minimum, 'claro');
   const desfazer = darkLigarTheme(raiz.ownerDocument);
   try {
-    return [...claro, ...contrastFailures(raiz, minimum, 'escuro')];
+    return [...light, ...contrastFailures(raiz, minimum, 'escuro')];
   } finally {
     desfazer();
   }

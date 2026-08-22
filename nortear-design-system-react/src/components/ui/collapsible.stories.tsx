@@ -17,7 +17,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 // painel `nds-p-4` sobre `nds-bg-muted-soft`. As classes utilitárias do
 // Tailwind que estavam aqui (`flex w-full items-center justify-between px-4`)
 // não existem mais no CSS e não pintavam nada.
-const PAINEL_CLASSES =
+const PANEL_CLASSES =
   "nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2";
 const TRIGGER_CLASSES = "nds-cluster nds-w-full nds-px-4";
 
@@ -116,7 +116,7 @@ export const Playground: Story = {
           className="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
         />
       </CollapsibleTrigger>
-      <CollapsibleContent className={PAINEL_CLASSES} data-spacing="sm">
+      <CollapsibleContent className={PANEL_CLASSES} data-spacing="sm">
         <p>Filtro avançado 1</p>
         <p>Filtro avançado 2</p>
       </CollapsibleContent>

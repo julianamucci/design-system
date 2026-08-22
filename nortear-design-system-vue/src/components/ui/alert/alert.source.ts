@@ -30,8 +30,8 @@ const IMPORT_WITH_ACTION = `import {
 } from '@/components/ui/alert'`;
 
 /** Import do ícone. Ele é decorativo; quem nomeia o alerta é o título. */
-function importIcon(...nomes: string[]): string {
-  return `import { ${nomes.join(', ')} } from 'lucide-vue-next'`;
+function importIcon(...names: string[]): string {
+  return `import { ${names.join(', ')} } from 'lucide-vue-next'`;
 }
 
 /** O ícone entra como filho comum: a posição é do CSS, não de uma prop. */
@@ -190,7 +190,7 @@ export function keyboardAlertDismissivelSource(): string {
  */
 export function alertContrastSource(): string {
   const variantes = ['default', 'destructive', 'success', 'warning', 'info'];
-  const blocos = variantes.map((v) =>
+  const blocks = variantes.map((v) =>
     alerta(
       [attr('variant', v, 'default')],
       corpo(null, `Título ${v}`, `Texto corrido da variante ${v}.`),
@@ -199,7 +199,7 @@ export function alertContrastSource(): string {
   return vueSnippet(
     IMPORT,
     `<div class="nds-stack" data-spacing="sm">
-${indentar(blocos.join('\n'))}
+${indentar(blocks.join('\n'))}
 </div>`,
   );
 }

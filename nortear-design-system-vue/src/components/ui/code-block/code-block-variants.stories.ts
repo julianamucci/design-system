@@ -3,7 +3,7 @@ import { expect } from 'storybook/test';
 import { CodeBlock } from './index';
 import {
   CONTRAST_MINIMUM,
-  TRECHOS_DA_PALETA,
+  PALETTE_TRECHOS,
   contrastLaudo,
 } from '@shared/testing/code-block-probe';
 import { codeBlockPaletteSource, codeBlockSource } from './code-block.source';
@@ -135,7 +135,7 @@ export const Text: Story = {
 const renderPalette = () => ({
   components: { CodeBlock },
   setup() {
-    return { trechos: TRECHOS_DA_PALETA, destacado: PALETTE_CODE, destaque: [2] };
+    return { trechos: PALETTE_TRECHOS, destacado: PALETTE_CODE, highlight: [2] };
   },
   template: `
     <div class="nds-stack" data-spacing="md">
@@ -146,7 +146,7 @@ const renderPalette = () => ({
         :language="t.language"
         :showLineNumbers="false"
       />
-      <CodeBlock :code="destacado" language="ts" :highlightLines="destaque" />
+      <CodeBlock :code="destacado" language="ts" :highlightLines="highlight" />
     </div>
   `,
 });

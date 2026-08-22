@@ -96,15 +96,15 @@
 		if (evento.key !== "PageUp" && evento.key !== "PageDown") return;
 		if (restProps.disabled) return;
 
-		const alca = (evento.target as HTMLElement | null)?.closest<HTMLElement>(
+		const thumb = (evento.target as HTMLElement | null)?.closest<HTMLElement>(
 			'[data-slot="slider-thumb"]'
 		);
-		if (!alca) return;
+		if (!thumb) return;
 
 		const alcas = [
 			...(ref?.querySelectorAll<HTMLElement>('[data-slot="slider-thumb"]') ?? []),
 		];
-		const indice = Math.max(0, alcas.indexOf(alca));
+		const indice = Math.max(0, alcas.indexOf(thumb));
 		const direcao = evento.key === "PageUp" ? 1 : -1;
 
 		const atual = Array.isArray(value) ? [...value] : [value ?? min];

@@ -720,7 +720,7 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     const linha = (nome: string, chave: string, tipo?: string, padrao?: string) => ({
       name: nome,
       type: tipo ?? toPlainText(t(`props.table.${chave}.type`)),
@@ -750,7 +750,7 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
             name: 'loopFocus',
             type: 'boolean',
             defaultValue: 'true',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.loopFocus.description')),
           },
           linha('class', 'className'),
@@ -771,7 +771,7 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
             name: 'disabled',
             type: 'boolean',
             defaultValue: 'false',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.triggerDisabled.description')),
           },
           linha('class', 'className'),
@@ -793,7 +793,7 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
       },
     ].map((tabela) => ({
       ...tabela,
-      items: tabela.items.map((item) => ({ ...item, required: item.required || nao })),
+      items: tabela.items.map((item) => ({ ...item, required: item.required || not })),
     }));
   });
 

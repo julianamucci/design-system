@@ -13,8 +13,8 @@ export type CardArgs = {
 
 /** Import do card com só as partes que o exemplo usa, em ordem alfabética. */
 function importCard(...partes: string[]): string {
-  const nomes = ['Card', ...partes].sort();
-  return `import {\n${nomes.map((nome) => `  ${nome},`).join('\n')}\n} from '@/components/ui/card'`;
+  const names = ['Card', ...partes].sort();
+  return `import {\n${names.map((nome) => `  ${nome},`).join('\n')}\n} from '@/components/ui/card'`;
 }
 
 const IMPORT_BUTTON = `import { Button } from '@/components/ui/button'`;
@@ -43,7 +43,7 @@ function card(partes: Array<string | ''>, ...filhos: string[]): string {
  * `as="h3"` porque o título nasce `div`: o CSS dá a aparência de título, e quem
  * dá a semântica é o elemento.
  */
-function cabecalho(titulo: string, descricao: string, acao = ''): string {
+function header(titulo: string, descricao: string, acao = ''): string {
   const corpo = [
     `  <CardTitle as="h3">${titulo}</CardTitle>`,
     `  <CardDescription>${descricao}</CardDescription>`,
@@ -64,9 +64,9 @@ const PRECO = `<CardContent>
  * lista de cards, "Excluir" sozinho vira uma fileira de botões idênticos para
  * quem navega por leitor de tela.
  */
-function rodape(...botoes: string[]): string {
+function rodape(...buttons: string[]): string {
   return `<CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
-${botoes.map((botao) => `  ${botao}`).join('\n')}
+${buttons.map((button) => `  ${button}`).join('\n')}
 </CardFooter>`;
 }
 
@@ -80,7 +80,7 @@ export const cardSource: SourceTransform<CardArgs> = (_gerado, ctx) => {
 ${IMPORT_BUTTON}`,
     card(
       [attr('size', ctx?.args?.size, 'default'), WIDTH_SM],
-      cabecalho(PRODUCT, DESCRIPTION_PRODUCT),
+      header(PRODUCT, DESCRIPTION_PRODUCT),
       PRECO,
       rodape(
         `<Button variant="outline" aria-label="Editar produto ${PRODUCT}">Editar</Button>`,
@@ -97,7 +97,7 @@ ${IMPORT_BUTTON}`,
 export function cardSimpleSource(): string {
   return vueSnippet(
     importCard('CardContent', 'CardDescription', 'CardHeader', 'CardTitle'),
-    card([WIDTH_SM], cabecalho(PRODUCT, DESCRIPTION_PRODUCT), PRECO),
+    card([WIDTH_SM], header(PRODUCT, DESCRIPTION_PRODUCT), PRECO),
   );
 }
 
@@ -111,7 +111,7 @@ export function cardCompactoSource(): string {
     importCard('CardContent', 'CardDescription', 'CardHeader', 'CardTitle'),
     card(
       ['size="sm"', WIDTH_XS],
-      cabecalho('Assinantes ativos', '+12% no mês'),
+      header('Assinantes ativos', '+12% no mês'),
       `<CardContent>
   <p class="nds-text-h4 nds-tabular-nums">8.742</p>
 </CardContent>`,
@@ -132,7 +132,7 @@ export function cardClickableSource(): string {
   aria-label="Abrir detalhes do produto ${PRODUCT}"
   class="nds-block nds-w-sm nds-text-left nds-focus-ring nds-rounded-xl"
 >
-${indentar(card([], cabecalho(PRODUCT, DESCRIPTION_PRODUCT), PRECO), 2)}
+${indentar(card([], header(PRODUCT, DESCRIPTION_PRODUCT), PRECO), 2)}
 </a>`,
   );
 }
@@ -148,7 +148,7 @@ export function cardWithFooterSource(): string {
 ${IMPORT_BUTTON}`,
     card(
       [WIDTH_SM],
-      cabecalho(PRODUCT, 'Produto atualizado em 12/04.'),
+      header(PRODUCT, 'Produto atualizado em 12/04.'),
       PRECO,
       rodape(
         `<Button variant="outline" aria-label="Cancelar edição de ${PRODUCT}">Cancelar</Button>`,
@@ -168,7 +168,7 @@ export function headerCardWithActionSource(): string {
 ${IMPORT_BUTTON}`,
     card(
       [WIDTH_SM],
-      cabecalho(
+      header(
         PRODUCT,
         'Em estoque',
         `<Button variant="ghost" size="sm" aria-label="Editar produto ${PRODUCT}">Editar</Button>`,
@@ -196,7 +196,7 @@ export function cardWithImageSource(): string {
   class="nds-w-full nds-aspect-16-9"
   style="object-fit: cover"
 />`,
-      cabecalho(PRODUCT, DESCRIPTION_PRODUCT),
+      header(PRODUCT, DESCRIPTION_PRODUCT),
       PRECO,
     ),
   );
@@ -219,7 +219,7 @@ import { Badge } from '@/components/ui/badge'`,
   class="nds-w-full nds-aspect-16-9"
   style="object-fit: cover"
 />`,
-      cabecalho(PRODUCT, DESCRIPTION_PRODUCT, `<Badge variant="secondary">Em estoque</Badge>`),
+      header(PRODUCT, DESCRIPTION_PRODUCT, `<Badge variant="secondary">Em estoque</Badge>`),
       PRECO,
       rodape(
         `<Button variant="outline" size="sm" aria-label="Editar produto ${PRODUCT}">Editar</Button>`,
@@ -239,7 +239,7 @@ export function cardDeMetricaSource(): string {
     importCard('CardContent', 'CardDescription', 'CardHeader', 'CardTitle'),
     card(
       ['size="sm"', WIDTH_XS],
-      cabecalho('Assinantes ativos', 'Últimos 30 dias'),
+      header('Assinantes ativos', 'Últimos 30 dias'),
       `<CardContent>
   <p class="nds-text-h4 nds-tabular-nums">8.742</p>
   <p class="nds-text-caption nds-text-success">+12% no mês</p>

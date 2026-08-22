@@ -1000,7 +1000,7 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     return [
       {
         title: 'NdsTooltipProvider',
@@ -1012,7 +1012,7 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
             // 600 e não 0: sem valor no provider, o primitivo cai na
             // configuração global do Radix NG, que é 600 ms.
             defaultValue: '600',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.delay.description')),
           },
         ],
@@ -1025,14 +1025,14 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
             name: 'open',
             type: 'model<boolean>',
             defaultValue: 'false',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.open.description')),
           },
           {
             name: 'defaultOpen',
             type: 'boolean',
             defaultValue: t('props.table.defaultOpen.default'),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.defaultOpen.description')),
           },
           {
@@ -1042,7 +1042,7 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
             name: 'openChange',
             type: 'output<boolean>',
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.onOpenChange.description')),
           },
         ],
@@ -1055,21 +1055,21 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
             name: 'side',
             type: t('props.table.side.type'),
             defaultValue: t('props.table.side.default'),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.side.description')),
           },
           {
             name: 'align',
             type: t('props.table.align.type'),
             defaultValue: t('props.table.align.default'),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.align.description')),
           },
           {
             name: 'sideOffset',
             type: 'number',
             defaultValue: t('props.table.sideOffset.default'),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.sideOffset.description')),
           },
         ],

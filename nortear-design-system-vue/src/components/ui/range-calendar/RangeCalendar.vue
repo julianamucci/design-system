@@ -7,8 +7,8 @@ import { RangeCalendarRoot, useDateFormatter, useForwardPropsEmits } from 'reka-
 import { toDate } from 'reka-ui/date'
 import { computed, nextTick } from 'vue'
 import { cn } from '@/lib/utils'
-import { rotulosDoCalendario } from '@shared/primitives/calendar-labels'
-import { destinoDaTecla, diaNaGrade, isoDoElemento } from '@shared/primitives/calendar-teclado'
+import { calendarLabels } from '@shared/primitives/calendar-labels'
+import { teclaTarget, gridDay, isoDoElemento } from '@shared/primitives/calendar-teclado'
 import { RangeCalendarCell, RangeCalendarCellTrigger, RangeCalendarGrid, RangeCalendarGridBody, RangeCalendarGridHead, RangeCalendarGridRow, RangeCalendarHeadCell, RangeCalendarHeader, RangeCalendarHeading, RangeCalendarNextButton, RangeCalendarPrevButton } from './index'
 
 const props = withDefaults(defineProps<RangeCalendarRootProps & { class?: HTMLAttributes['class'] }>(), {
@@ -37,7 +37,7 @@ const formatter = useDateFormatter(props.locale ?? 'en')
 
 // Os botões de mês só têm ícone: quem usa leitor de tela ouve o aria-label, e o
 // da lib vinha "Previous page" — em inglês e descrevendo página, não mês.
-const rotulos = computed(() => rotulosDoCalendario(props.locale))
+const rotulos = computed(() => calendarLabels(props.locale))
 
 /**
  * O resto do teclado da grade — `Home`, `End`, `PageUp`, `PageDown`.
@@ -46,13 +46,13 @@ const rotulos = computed(() => rotulosDoCalendario(props.locale))
  * trata seta, Enter e Espaço, e as outras quatro teclas não chegavam a lugar
  * nenhum apesar de o conteúdo compartilhado prometê-las.
  */
-function aoTeclarNaGrade(evento: KeyboardEvent) {
+function onGridKeyDown(evento: KeyboardEvent) {
   const raiz = evento.currentTarget as HTMLElement | null
-  const destino = destinoDaTecla(isoDoElemento(evento.target as Element | null), evento)
-  if (!destino || !raiz) return
+  const destination = teclaTarget(isoDoElemento(evento.target as Element | null), evento)
+  if (!destination || !raiz) return
   evento.preventDefault()
-  placeholder.value = parseDate(destino)
-  void nextTick(() => diaNaGrade(raiz, destino)?.focus())
+  placeholder.value = parseDate(destination)
+  void nextTick(() => gridDay(raiz, destination)?.focus())
 }
 </script>
 
@@ -63,7 +63,7 @@ function aoTeclarNaGrade(evento: KeyboardEvent) {
     data-slot="range-calendar"
     :class="cn('nds-calendar-root nds-calendar-range', props.class)"
     v-bind="forwarded"
-    @keydown="aoTeclarNaGrade"
+    @keydown="onGridKeyDown"
   >
     <!-- Mesma árvore do Vanilla: a faixa de navegação é irmã dos meses e fica
          por cima deles, e cada mês traz a própria legenda no meio. -->

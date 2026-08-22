@@ -49,12 +49,12 @@ export const Default: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const inativo = canvas.getByRole('button', { name: 'Ir para página 3' });
-    await expect(inativo).not.toHaveAttribute('aria-current');
+    const inactive = canvas.getByRole('button', { name: 'Ir para página 3' });
+    await expect(inactive).not.toHaveAttribute('aria-current');
     // `data-active` só existe quando é verdade — atributo presente com valor
     // "false" faria `[data-active]` casar o item errado.
-    await expect(inativo.hasAttribute('data-active')).toBe(false);
-    await expect(inativo).toHaveClass('nds-button-ghost');
+    await expect(inactive.hasAttribute('data-active')).toBe(false);
+    await expect(inactive).toHaveClass('nds-button-ghost');
   },
 };
 

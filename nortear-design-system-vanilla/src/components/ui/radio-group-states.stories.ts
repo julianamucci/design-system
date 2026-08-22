@@ -48,8 +48,8 @@ function ratioContrast(a: string, b: string): number {
       });
     return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
   };
-  const [claro, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
-  return (claro + 0.05) / (escuro + 0.05);
+  const [light, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
+  return (light + 0.05) / (escuro + 0.05);
 }
 
 // ─── Default ──────────────────────────────────────────────────────────────────
@@ -319,8 +319,8 @@ export const FocusVisible: Story = {
     await step('O item focado por teclado desenha anel visível', async () => {
       // Afirma o efeito, não a classe: a asserção sobrevive a qualquer troca de
       // vocabulário no CSS e reprova se o anel sumir.
-      const foco = canvas.getAllByRole('radio')[0] as HTMLElement;
-      const estilo = getComputedStyle(foco);
+      const focus = canvas.getAllByRole('radio')[0] as HTMLElement;
+      const estilo = getComputedStyle(focus);
       await expect(estilo.boxShadow !== 'none' || estilo.outlineStyle !== 'none').toBe(true);
     });
   },

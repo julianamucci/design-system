@@ -76,13 +76,13 @@ function contador(apoio: string): string {
  */
 export const textareaSource: SourceTransform<TextareaArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const limite = typeof args.maxlength === 'number' && args.maxlength > 0 ? args.maxlength : null;
+  const limit = typeof args.maxlength === 'number' && args.maxlength > 0 ? args.maxlength : null;
   const linhas = [
     rotulo('descricao', 'Descrição'),
     campo([
       'id="descricao"',
       'v-model="descricao"',
-      limite !== null && ':maxlength="maximo"',
+      limit !== null && ':maxlength="maximo"',
       attr('placeholder', args.placeholder),
       // `rows` só sobe a altura acima do piso da classe: abaixo dele não muda nada.
       attrNum('rows', args.rows, 2),
@@ -90,11 +90,11 @@ export const textareaSource: SourceTransform<TextareaArgs> = (_gerado, ctx) => {
       attrBool('disabled', args.disabled, false),
       `class="${FRAME}"`,
     ]),
-    limite !== null && contador('Descreva o produto com clareza.'),
+    limit !== null && contador('Descreva o produto com clareza.'),
   ].filter((linha): linha is string => Boolean(linha));
   const estado = [
     `const descricao = ref('')`,
-    limite !== null && `const maximo = ${limite}`,
+    limit !== null && `const maximo = ${limit}`,
   ]
     .filter(Boolean)
     .join('\n');

@@ -30,7 +30,7 @@ const ICON_SALVAR = `<svg
 const LONG_DELAY = 600;
 
 /** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
-function espera(ms: number): Promise<void> {
+function wait(ms: number): Promise<void> {
   return new Promise((resolver) => setTimeout(resolver, ms));
 }
 
@@ -124,9 +124,9 @@ export const Open: Story = {
 export const Hover: Story = {
   parameters: { covers: ['functional.item1'] },
   render: () => ({
-    props: { atraso: LONG_DELAY },
+    props: { delay: LONG_DELAY },
     template: `
-      <div ndsTooltipProvider [delay]="atraso" class="nds-p-8">
+      <div ndsTooltipProvider [delay]="delay" class="nds-p-8">
         <span ndsTooltip>
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
             ${ICON_SALVAR}
@@ -159,9 +159,9 @@ export const Hover: Story = {
 export const Focus: Story = {
   parameters: { covers: ['functional.item2'] },
   render: () => ({
-    props: { atraso: LONG_DELAY },
+    props: { delay: LONG_DELAY },
     template: `
-      <div ndsTooltipProvider [delay]="atraso" class="nds-p-8">
+      <div ndsTooltipProvider [delay]="delay" class="nds-p-8">
         <span ndsTooltip>
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
             ${ICON_SALVAR}
@@ -224,7 +224,7 @@ export const PersistenceInBubble: Story = {
       // entre gatilho e balão, calculada por coordenada, não por hover no
       // elemento.
       await userEvent.hover(balao, { pointerEventsCheck: 0 });
-      await espera(200);
+      await wait(200);
       await expect(balaoDe(gatilho)).not.toBeNull();
     });
   },

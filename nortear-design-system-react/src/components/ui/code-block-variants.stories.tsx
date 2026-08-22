@@ -4,7 +4,7 @@ import { CodeBlock } from "./code-block";
 import { codeBlockPaletteSource, codeBlockSource } from "./code-block.source";
 import {
   CONTRAST_MINIMUM,
-  TRECHOS_DA_PALETA,
+  PALETTE_TRECHOS,
   contrastLaudo,
 } from "@shared/testing/code-block-probe";
 
@@ -143,7 +143,7 @@ export const Text: Story = {
 
 const Paleta = () => (
   <div className="nds-stack" data-spacing="md">
-    {TRECHOS_DA_PALETA.map((t) => (
+    {PALETTE_TRECHOS.map((t) => (
       <CodeBlock key={t.language} code={t.code} language={t.language} showLineNumbers={false} />
     ))}
     <CodeBlock code={PALETTE_CODE} language="ts" highlightLines={[2]} />

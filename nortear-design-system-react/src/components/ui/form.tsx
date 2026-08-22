@@ -41,7 +41,7 @@ import { cn } from "@/lib/utils"
  * select desta stack renderizam um `<input>` escondido para participar do
  * formulário, e ele casaria com `input` antes do controle de verdade.
  */
-const SELETORES_CONTROLE = [
+const SELECTORS_CONTROL = [
   '[data-slot="input-group-control"]',
   '[data-slot="checkbox"]',
   '[data-slot="switch"]',
@@ -53,7 +53,7 @@ const SELETORES_CONTROLE = [
 ]
 
 function findControl(raiz: HTMLElement): HTMLElement | null {
-  for (const seletor of SELETORES_CONTROLE) {
+  for (const seletor of SELECTORS_CONTROL) {
     const finding = raiz.querySelector<HTMLElement>(seletor)
     if (finding) return finding
   }
@@ -84,8 +84,8 @@ function FormField({
 }: FormFieldProps) {
   const raiz = React.useRef<HTMLDivElement>(null)
   const base = React.useId()
-  const idDescricao = `${base}-description`
-  const idErro = `${base}-error`
+  const idDescription = `${base}-description`
+  const idError = `${base}-error`
 
   // Ids que quem compõe já tinha escrito no controle — preservados na junção.
   const describedbyEscrito = React.useRef<string[] | null>(null)
@@ -116,12 +116,12 @@ function FormField({
 
     const ids = [
       ...describedbyEscrito.current,
-      ...(description ? [idDescricao] : []),
-      ...(error ? [idErro] : []),
+      ...(description ? [idDescription] : []),
+      ...(error ? [idError] : []),
     ]
     if (ids.length) controle.setAttribute("aria-describedby", ids.join(" "))
     else controle.removeAttribute("aria-describedby")
-  }, [base, description, error, idDescricao, idErro, children])
+  }, [base, description, error, idDescription, idError, children])
 
   return (
     <div
@@ -146,7 +146,7 @@ function FormField({
       {children}
 
       {description ? (
-        <p id={idDescricao} data-slot="field-description" className="nds-form-description">
+        <p id={idDescription} data-slot="field-description" className="nds-form-description">
           {description}
         </p>
       ) : null}
@@ -155,7 +155,7 @@ function FormField({
         // `aria-live="polite"` e não `role="alert"`: em validação a cada tecla,
         // interromper a digitação a cada caractere é pior que esperar a pausa.
         <p
-          id={idErro}
+          id={idError}
           data-slot="field-error"
           aria-live="polite"
           className="nds-form-error"

@@ -278,21 +278,21 @@ export const CheckedItem: Story = {
     await userEvent.clear(campo);
     await expect(canvas.getAllByRole('option')).toHaveLength(3);
 
-    const claro = comando(canvasElement, 'claro');
+    const light = comando(canvasElement, 'claro');
     const escuro = comando(canvasElement, 'escuro');
     const sistema = comando(canvasElement, 'sistema');
     const marca = (item: HTMLElement) =>
       getComputedStyle(item.querySelector<HTMLElement>('.nds-command-item-check')!);
 
     await step('O estado chega ao markup', async () => {
-      await expect(claro).toHaveAttribute('data-checked', 'true');
+      await expect(light).toHaveAttribute('data-checked', 'true');
       await expect(escuro).toHaveAttribute('data-checked', 'false');
     });
 
     await step('A marca aparece só no comando marcado', async () => {
       // O ícone fica no DOM nos dois casos — é a opacidade que muda, para a
       // largura do item não pular a cada troca.
-      await expect(marca(claro).opacity).toBe('1');
+      await expect(marca(light).opacity).toBe('1');
       await expect(marca(escuro).opacity).toBe('0');
     });
 

@@ -223,8 +223,8 @@ export function inputPaletteDarkSource(): string {
  * Bloco de import do grupo com só as peças que o exemplo usa. Importar a lista
  * inteira ensinaria uma dependência que aquele snippet não tem.
  */
-function importGroup(...nomes: string[]): string {
-  const lista = [...nomes].sort();
+function importGroup(...names: string[]): string {
+  const lista = [...names].sort();
   if (lista.length === 1) return `import { ${lista[0]} } from "@/components/ui/input-group";`;
   return `import {
 ${lista.map((nome) => `  ${nome},`).join('\n')}
@@ -240,11 +240,11 @@ function groupLabelled(
   id: string,
   rotulo: string,
   miolo: string,
-  doGrupo: string,
+  ofGroup: string,
   deIcone = '',
 ): string {
   return jsxSnippet(
-    [doGrupo, IMPORT_LABEL, deIcone].filter(Boolean).join('\n'),
+    [ofGroup, IMPORT_LABEL, deIcone].filter(Boolean).join('\n'),
     `${COLUMN}
   <Label htmlFor="${id}">${rotulo}</Label>
   <InputGroup>

@@ -157,10 +157,10 @@ export const IDELayout: Story = {
         const panels = [
           ...grupo.querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]'),
         ];
-        const medida = (p: HTMLElement) =>
+        const measurement = (p: HTMLElement) =>
           horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height;
-        const total = panels.reduce((a, p) => a + medida(p), 0);
-        return medida(panels[0]) / total;
+        const total = panels.reduce((a, p) => a + measurement(p), 0);
+        return measurement(panels[0]) / total;
       };
       await expect(fatia(grupos[0], true)).toBeCloseTo(0.2, 1);
       await expect(fatia(grupos[1], false)).toBeCloseTo(0.7, 1);

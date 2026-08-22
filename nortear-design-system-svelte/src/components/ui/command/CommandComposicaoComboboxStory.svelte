@@ -20,7 +20,7 @@
 
   const rotulo = $derived(itens.find((i) => i.value === selecionado)?.label ?? 'Selecione um item...');
 
-  function escolher(value: string) {
+  function choose(value: string) {
     selecionado = value;
     // Fechar aqui é a guideline: sem isso o popover fica por cima do valor que
     // a pessoa acabou de escolher.
@@ -61,7 +61,7 @@
             <Command.Item
               value={item.value}
               checked={selecionado === item.value}
-              onSelect={() => escolher(item.value)}
+              onSelect={() => choose(item.value)}
             >
               {item.label}
             </Command.Item>

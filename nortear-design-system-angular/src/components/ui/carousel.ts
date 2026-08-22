@@ -173,13 +173,13 @@ export class NdsCarouselStore {
   navegar(alvo: number, origem: CarouselNavSource): void {
     const total = this.total();
     if (total === 0) return;
-    const destino = this.loop()
+    const destination = this.loop()
       ? ((alvo % total) + total) % total
       : Math.min(Math.max(alvo, 0), total - 1);
-    if (destino === this._index()) return;
-    this._index.set(destino);
-    this.rolarAte(destino);
-    this.aoNavegar?.(destino, origem);
+    if (destination === this._index()) return;
+    this._index.set(destination);
+    this.rolarAte(destination);
+    this.aoNavegar?.(destination, origem);
   }
 
   anterior(origem: CarouselNavSource): void {
@@ -230,10 +230,10 @@ export class NdsCarouselStore {
     const bruto = vertical
       ? alvo.offsetTop - primeiro.offsetTop
       : alvo.offsetLeft - primeiro.offsetLeft;
-    const limite = vertical
+    const limit = vertical
       ? vp.scrollHeight - vp.clientHeight
       : vp.scrollWidth - vp.clientWidth;
-    return Math.min(bruto, Math.max(limite, 0));
+    return Math.min(bruto, Math.max(limit, 0));
   }
 
   /** Índice do slide cujo início está mais perto da posição de rolagem atual. */
@@ -268,18 +268,18 @@ export class NdsCarouselStore {
     if (this.timerDeRolagem !== null) clearTimeout(this.timerDeRolagem);
     this.timerDeRolagem = setTimeout(() => {
       this.timerDeRolagem = null;
-      const destino = this.indiceMaisProximo();
-      if (destino === null || destino === this._index()) return;
-      this._index.set(destino);
-      this.aoNavegar?.(destino, 'swipe');
+      const destination = this.indiceMaisProximo();
+      if (destination === null || destination === this._index()) return;
+      this._index.set(destination);
+      this.aoNavegar?.(destination, 'swipe');
     }, ASSENTAMENTO_MS_WAIT);
   }
 
   /** Encosta no ponto de parada mais próximo — o fecho do arraste por mouse. */
   assentarNoMaisProximo(): void {
-    const destino = this.indiceMaisProximo();
-    if (destino === null) return;
-    this.rolarAte(destino);
+    const destination = this.indiceMaisProximo();
+    if (destination === null) return;
+    this.rolarAte(destination);
   }
 
   /** Posição de rolagem no eixo corrente. Usada pelo arraste por mouse. */
@@ -512,7 +512,7 @@ export class NdsCarousel implements OnInit {
   }
 
   /** Vai direto a um índice (base zero). */
-  irPara(index: number, origem: CarouselNavSource = 'api'): void {
+  irTo(index: number, origem: CarouselNavSource = 'api'): void {
     this.store.navegar(index, origem);
   }
 
@@ -539,9 +539,9 @@ export class NdsCarousel implements OnInit {
   }
 
   protected aoPerderFoco(evento: FocusEvent): void {
-    const destino = evento.relatedTarget;
+    const destination = evento.relatedTarget;
     // Foco andando entre os botões do próprio carrossel não é saída.
-    if (destino instanceof Node && this.hostRef.nativeElement.contains(destino)) return;
+    if (destination instanceof Node && this.hostRef.nativeElement.contains(destination)) return;
     this._suspenso.set(false);
   }
 
@@ -608,7 +608,7 @@ export class NdsCarouselContent implements OnDestroy {
   /** Ligado só durante um arraste por MOUSE — o toque nunca passa por aqui. */
   protected readonly arrastando = signal(false);
 
-  private ponteiro: number | null = null;
+  private pointer: number | null = null;
   private origemDoPonteiro = 0;
   private origemDaRolagem = 0;
 
@@ -649,7 +649,7 @@ export class NdsCarouselContent implements OnDestroy {
     // Impede a seleção de texto durante o arraste — sem isto o gesto pinta o
     // conteúdo do slide em vez de movê-lo.
     evento.preventDefault();
-    this.ponteiro = evento.pointerId;
+    this.pointer = evento.pointerId;
     this.origemDoPonteiro = this.vertical() ? evento.clientY : evento.clientX;
     this.origemDaRolagem = this.store.posicaoDeRolagem();
     this.arrastando.set(true);
@@ -665,14 +665,14 @@ export class NdsCarouselContent implements OnDestroy {
   }
 
   private readonly aoMover = (evento: PointerEvent): void => {
-    if (evento.pointerId !== this.ponteiro) return;
+    if (evento.pointerId !== this.pointer) return;
     const atual = this.vertical() ? evento.clientY : evento.clientX;
     this.store.rolarPara(this.origemDaRolagem - (atual - this.origemDoPonteiro));
   };
 
   private readonly aoSoltar = (evento: PointerEvent): void => {
-    if (evento.pointerId !== this.ponteiro) return;
-    this.ponteiro = null;
+    if (evento.pointerId !== this.pointer) return;
+    this.pointer = null;
     this.arrastando.set(false);
     this.soltarOuvintes();
     // O snap volta a valer agora, mas ele só age em rolagem do USUÁRIO — o

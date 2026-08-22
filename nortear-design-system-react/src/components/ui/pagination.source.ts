@@ -90,10 +90,10 @@ function direcional(part: 'PaginationPrevious' | 'PaginationNext', bloqueado = f
  */
 function windowWithEllipsis(total: number, atual: number): Array<number | 'reticencias'> {
   const trechos: Array<number | 'reticencias'> = [1];
-  const inicio = Math.max(2, atual - 1);
-  const fim = Math.min(total - 1, atual + 1);
+  const start = Math.max(2, atual - 1);
+  const end = Math.min(total - 1, atual + 1);
   if (atual > 3) trechos.push('reticencias');
-  for (let n = inicio; n <= fim; n++) trechos.push(n);
+  for (let n = start; n <= end; n++) trechos.push(n);
   if (atual < total - 2) trechos.push('reticencias');
   trechos.push(total);
   return trechos;
@@ -127,12 +127,12 @@ export const paginationSource: SourceTransform<PaginationArgs> = (_gerado, ctx) 
       : 1;
   const withEllipsis = args.withEllipsis === true && total > 7;
 
-  const rotuloAnterior = propText('text', texto(args.previousText) === TEXT_PREVIOUS ? undefined : args.previousText);
-  const rotuloProxima = propText('text', texto(args.nextText) === TEXT_NEXT ? undefined : args.nextText);
-  const attrPrevious = rotuloAnterior ? `\n        ${rotuloAnterior}` : '';
-  const attrNext = rotuloProxima ? `\n        ${rotuloProxima}` : '';
+  const labelPrevious = propText('text', texto(args.previousText) === TEXT_PREVIOUS ? undefined : args.previousText);
+  const labelNext = propText('text', texto(args.nextText) === TEXT_NEXT ? undefined : args.nextText);
+  const attrPrevious = labelPrevious ? `\n        ${labelPrevious}` : '';
+  const attrNext = labelNext ? `\n        ${labelNext}` : '';
 
-  const cabecalho = `import { useState } from "react";
+  const header = `import { useState } from "react";
 ${importingPagination(
   'Pagination',
   'PaginationContent',
@@ -193,7 +193,7 @@ const paginas = Array.from({ length: total }, (_, indice) => indice + 1);`;
     ))}`;
 
   return jsxSnippet(
-    `${cabecalho}\n\n${estado}`,
+    `${header}\n\n${estado}`,
     `<Pagination>
   <PaginationContent>
     <PaginationItem>

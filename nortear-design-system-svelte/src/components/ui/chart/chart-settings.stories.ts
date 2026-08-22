@@ -129,7 +129,7 @@ export const WithCaption: Story = {
     });
 
     await step('E o desenho continua completo, com uma forma por categoria', async () => {
-      for (const mes of MONTHS) await expect(designEscreve(raiz, mes)).toBe(true);
+      for (const month of MONTHS) await expect(designEscreve(raiz, month)).toBe(true);
       await expect(datumFormas(raiz).length).toBeGreaterThanOrEqual(MONTHS.length);
     });
   },

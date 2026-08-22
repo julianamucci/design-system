@@ -26,7 +26,7 @@ const seriesMulti = [
   { name: 'Mobile', data: [80, 200, 120, 190, 130, 140] },
 ];
 
-const dadosDispositivo = [
+const dataDispositivo = [
   { label: 'Desktop', value: 1224 },
   { label: 'Mobile', value: 860 },
   { label: 'Tablet', value: 320 },
@@ -86,7 +86,7 @@ export const Bar: Story = {
     const raiz = await designPronto(canvasElement);
 
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
-      for (const mes of meses) await expect(designEscreve(raiz, mes)).toBe(true);
+      for (const month of meses) await expect(designEscreve(raiz, month)).toBe(true);
     });
 
     await step('As barras existem e têm área — o desenho não é casca vazia', async () => {
@@ -135,7 +135,7 @@ export const Line: Story = {
     });
 
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
-      for (const mes of meses) await expect(designEscreve(raiz, mes)).toBe(true);
+      for (const month of meses) await expect(designEscreve(raiz, month)).toBe(true);
     });
   },
 };
@@ -175,7 +175,7 @@ export const Area: Story = {
     });
 
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
-      for (const mes of meses) await expect(designEscreve(raiz, mes)).toBe(true);
+      for (const month of meses) await expect(designEscreve(raiz, month)).toBe(true);
     });
   },
 };
@@ -192,7 +192,7 @@ export const Pie: Story = {
   },
   render: () => (
     <ChartContainer
-      option={buildPieOption({ data: dadosDispositivo })}
+      option={buildPieOption({ data: dataDispositivo })}
       className="nds-max-w-sm"
       height={280}
       aria-label="Distribuição de acessos por dispositivo"
@@ -202,16 +202,16 @@ export const Pie: Story = {
     const raiz = await designPronto(canvasElement);
 
     await step('A legenda escreve o nome de cada fatia', async () => {
-      for (const ponto of dadosDispositivo) {
+      for (const ponto of dataDispositivo) {
         await expect(designEscreve(raiz, ponto.label)).toBe(true);
       }
     });
 
     await step('Cada fatia tem preenchimento próprio — a cor não se repete', async () => {
       const formas = datumFormas(raiz);
-      await expect(formas.length).toBeGreaterThanOrEqual(dadosDispositivo.length);
+      await expect(formas.length).toBeGreaterThanOrEqual(dataDispositivo.length);
       const preenchimentos = new Set(formas.map((f) => getComputedStyle(f).fill));
-      await expect(preenchimentos.size).toBeGreaterThanOrEqual(dadosDispositivo.length);
+      await expect(preenchimentos.size).toBeGreaterThanOrEqual(dataDispositivo.length);
     });
   },
 };

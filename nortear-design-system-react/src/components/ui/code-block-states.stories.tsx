@@ -169,12 +169,12 @@ export const UnknownLanguage: Story = {
  * para copiar.
  */
 function BlockRemovivel({ code }: { code: string }) {
-  const [visivel, setVisivel] = React.useState(true);
+  const [visible, setVisivel] = React.useState(true);
   return (
     <div className="nds-stack" data-spacing="md">
-      {visivel && <CodeBlock code={code} language="ts" />}
+      {visible && <CodeBlock code={code} language="ts" />}
       <Button variant="outline" onClick={() => setVisivel((v) => !v)}>
-        {visivel ? "Remover o bloco" : "Restaurar o bloco"}
+        {visible ? "Remover o bloco" : "Restaurar o bloco"}
       </Button>
     </div>
   );

@@ -180,8 +180,8 @@ export const Controlled: Story = {
     await step('O Cancelar do rodapé passa pelo callback do pai', async () => {
       const p = painel()!;
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const botoes = rodape.querySelectorAll<HTMLElement>('button');
-      await userEvent.click(botoes[0]);
+      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      await userEvent.click(buttons[0]);
       await waitForClosed();
       await expect(spyCancelar).toHaveBeenCalled();
     });

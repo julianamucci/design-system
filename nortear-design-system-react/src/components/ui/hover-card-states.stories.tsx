@@ -228,7 +228,7 @@ export const Controlled: Story = {
           </p>
 
           <p className="nds-text-caption nds-text-muted-foreground" data-testid="estado-externo">
-            Estado externo: {aberto ? "aberto" : "fechado"}
+            State externo: {aberto ? "aberto" : "fechado"}
           </p>
         </div>
       );

@@ -20,7 +20,7 @@ type Story = StoryObj;
 const radios = (canvasElement: HTMLElement): HTMLElement[] =>
   Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-slot="radio-group-item"]'));
 
-const estados = (canvasElement: HTMLElement): (string | null)[] =>
+const states = (canvasElement: HTMLElement): (string | null)[] =>
   radios(canvasElement).map((el) => el.getAttribute('data-state'));
 
 const marcados = (canvasElement: HTMLElement): (string | null)[] =>
@@ -39,8 +39,8 @@ function ratioContrast(a: string, b: string): number {
       });
     return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
   };
-  const [claro, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
-  return (claro + 0.05) / (escuro + 0.05);
+  const [light, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
+  return (light + 0.05) / (escuro + 0.05);
 }
 
 export const Default: Story = {
@@ -132,7 +132,7 @@ export const Checked: Story = {
       // `data-state` é contrato de markup das outras stacks e é o seletor da
       // animação do dot no CSS compartilhado — o primitivo emite `data-checked`,
       // este componente emite os dois de propósito.
-      await expect(estados(canvasElement)).toEqual(['unchecked', 'checked', 'unchecked']);
+      await expect(states(canvasElement)).toEqual(['unchecked', 'checked', 'unchecked']);
     });
 
     await step('O dot da opção marcada fica visível', async () => {
@@ -194,7 +194,7 @@ export const Disabled: Story = {
     await step('A opção marcada continua legível quando desabilitada', async () => {
       // Desabilitado não é o mesmo que vazio: quem lê a tela precisa saber qual
       // opção está valendo, mesmo sem poder trocá-la.
-      await expect(estados(canvasElement)[1]).toBe('checked');
+      await expect(states(canvasElement)[1]).toBe('checked');
     });
   },
 };
@@ -333,8 +333,8 @@ export const FocusVisible: Story = {
     });
 
     await step('O foco por teclado deixa anel visível', async () => {
-      const foco = radios(canvasElement)[0];
-      const estilo = getComputedStyle(foco);
+      const focus = radios(canvasElement)[0];
+      const estilo = getComputedStyle(focus);
       await expect(estilo.outlineStyle !== 'none' || estilo.boxShadow !== 'none').toBe(true);
     });
   },

@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue'
 import { PanelLeftIcon } from 'lucide-vue-next'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { ROTULOS_SIDEBAR_PADRAO } from '@shared/primitives/sidebar-a11y-labels'
+import { LABELS_SIDEBAR_DEFAULT } from '@shared/primitives/sidebar-a11y-labels'
 import { useSidebar } from './utils'
 
 // `label` é o nome acessível: o botão carrega só um ícone, e o ícone é
@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<{
   class?: HTMLAttributes['class']
   label?: string
 }>(), {
-  label: () => ROTULOS_SIDEBAR_PADRAO.alternar,
+  label: () => LABELS_SIDEBAR_DEFAULT.alternar,
 })
 
 const { toggleSidebar } = useSidebar()

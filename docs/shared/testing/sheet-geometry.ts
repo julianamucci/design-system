@@ -52,7 +52,7 @@ export async function borderWaitForEncostar(
   side: SheetSide,
   timeout = 3000,
 ): Promise<DOMRect> {
-  const limite = Date.now() + timeout;
+  const limit = Date.now() + timeout;
   let lastFailure = 'o painel não foi medido';
 
   for (;;) {
@@ -66,7 +66,7 @@ export async function borderWaitForEncostar(
       ? `o painel encostou nas duas bordas do eixo de "${side}" — não dá para distinguir a direção`
       : `o painel parou a ${distanciaAteABorda(caixa, side).toFixed(1)}px da borda "${side}"`;
 
-    if (Date.now() > limite) throw new Error(lastFailure);
+    if (Date.now() > limit) throw new Error(lastFailure);
     await new Promise((resolve) => setTimeout(resolve, 50));
   }
 }

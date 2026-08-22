@@ -16,28 +16,28 @@
 export interface Contraste {
   ratio: number;
   frente: string;
-  fundo: string;
+  background: string;
 }
 
-export type Lado = 'borda' | 'preenchimento';
+export type Side = 'borda' | 'preenchimento';
 
 export interface ColorTarget {
   /** Nome que aparece no relatório de falha. */
   nome: string;
   seletor: string;
-  /** `borda` lê border-top-color; `preenchimento` lê background-color. */
-  lado?: Lado;
+  /** `border` lê border-top-color; `preenchimento` lê background-color. */
+  lado?: Side;
 }
 
 export interface ColorMeasurement {
   tema: string;
   modo: 'claro' | 'escuro';
   alvo: string;
-  lado: Lado;
+  lado: Side;
   /** `false` quando o seletor não casou — isso É o achado, não falha da medição. */
   presente: boolean;
   frente: string | null;
-  fundo: string | null;
+  background: string | null;
   ratio: number | null;
 }
 
@@ -61,7 +61,7 @@ export function luminancia(cor: string): number | null {
 }
 
 /**
- * Compõe `frente` sobre `fundo` quando a frente é translúcida.
+ * Compõe `frente` sobre `background` quando a frente é translúcida.
  *
  * Sem isto a medição mente para o alfa: `hsl(var(--ring) / 0.4)` sai do
  * `getComputedStyle` como `rgba(115,115,115,0.4)`, e ler a luminância desse
@@ -73,9 +73,9 @@ export function luminancia(cor: string): number | null {
  * texto contra esse rgba translúcido dá um número que ninguém vê na tela. Na
  * sonda do badge, medir sem compor deu razão ~1.0 em cinco variantes de seis.
  */
-export function compor(frente: string, fundo: string): string {
+export function compor(frente: string, background: string): string {
   const f = componentes(frente);
-  const b = componentes(fundo);
+  const b = componentes(background);
   if (!f || !b) return frente;
   if (f[3] >= 0.999) return frente;
   const mix = (i: number) => Math.round((f[i] * f[3] + b[i] * (1 - f[3])) * 255);
@@ -83,13 +83,13 @@ export function compor(frente: string, fundo: string): string {
 }
 
 /** Razão WCAG entre duas cores computadas. Compõe a frente translúcida antes. */
-export function ratio(frente: string, fundo: string): Contraste | null {
-  const opaca = compor(frente, fundo);
+export function ratio(frente: string, background: string): Contraste | null {
+  const opaca = compor(frente, background);
   const a = luminancia(opaca);
-  const b = luminancia(fundo);
+  const b = luminancia(background);
   if (a === null || b === null) return null;
-  const [claro, escuro] = a > b ? [a, b] : [b, a];
-  return { ratio: Math.round(((claro + 0.05) / (escuro + 0.05)) * 100) / 100, frente: opaca, fundo };
+  const [light, escuro] = a > b ? [a, b] : [b, a];
+  return { ratio: Math.round(((light + 0.05) / (escuro + 0.05)) * 100) / 100, frente: opaca, background };
 }
 
 /** Primeiro fundo OPACO acima do elemento — `backgroundColor` com alfa mente. */
@@ -142,22 +142,22 @@ export function darkLigarTheme(doc: Document): () => void {
 
 // ─── Varredura por tema ───────────────────────────────────────────────────────
 
-export const TEMAS = ['default', 'warm', 'cold'] as const;
+export const THEMES = ['default', 'warm', 'cold'] as const;
 export const MODOS = ['claro', 'escuro'] as const;
 
 /** Cor de frente do lado pedido, e o fundo contra o qual ela é vista. */
-function measureUm(el: HTMLElement, lado: Lado): { frente: string; fundo: string } | null {
+function measureUm(el: HTMLElement, lado: Side): { frente: string; background: string } | null {
   const cs = getComputedStyle(el);
   if (lado === 'preenchimento') {
-    const fundo = backgroundEffective(el.parentElement);
-    return fundo ? { frente: cs.backgroundColor, fundo } : null;
+    const background = backgroundEffective(el.parentElement);
+    return background ? { frente: cs.backgroundColor, background } : null;
   }
   // A borda do campo é vista contra DOIS vizinhos: o interior do campo e a
   // página. Nos três temas os dois são o mesmo token (--input-background ==
   // --background), então o interior opaco do próprio campo responde pelos dois.
   const own = backgroundEffective(el);
-  const fundo = own ?? backgroundEffective(el.parentElement);
-  return fundo ? { frente: cs.borderTopColor, fundo } : null;
+  const background = own ?? backgroundEffective(el.parentElement);
+  return background ? { frente: cs.borderTopColor, background } : null;
 }
 
 /**
@@ -175,12 +175,12 @@ function measureUm(el: HTMLElement, lado: Lado): { frente: string; fundo: string
  */
 export function byTheme<T>(
   raiz: HTMLElement,
-  fn: (tema: (typeof TEMAS)[number], modo: (typeof MODOS)[number]) => T,
+  fn: (tema: (typeof THEMES)[number], modo: (typeof MODOS)[number]) => T,
 ): T[] {
   const classNameOriginal = raiz.className;
   const saida: T[] = [];
   try {
-    for (const tema of TEMAS) {
+    for (const tema of THEMES) {
       for (const modo of MODOS) {
         raiz.className = `${classNameOriginal} tema-${tema}${modo === 'escuro' ? ' dark' : ''}`.trim();
         void raiz.offsetHeight;
@@ -207,10 +207,10 @@ export function themeMeasureColor(raiz: HTMLElement, targets: ColorTarget[]): Co
       elementos.map(({ alvo, el }): ColorMeasurement => {
         const lado = alvo.lado ?? 'borda';
         if (!el) {
-          return { tema, modo, alvo: alvo.nome, lado, presente: false, frente: null, fundo: null, ratio: null };
+          return { tema, modo, alvo: alvo.nome, lado, presente: false, frente: null, background: null, ratio: null };
         }
         const par = measureUm(el, lado);
-        const r = par ? ratio(par.frente, par.fundo) : null;
+        const r = par ? ratio(par.frente, par.background) : null;
         return {
           tema,
           modo,
@@ -218,7 +218,7 @@ export function themeMeasureColor(raiz: HTMLElement, targets: ColorTarget[]): Co
           lado,
           presente: true,
           frente: r?.frente ?? par?.frente ?? null,
-          fundo: par?.fundo ?? null,
+          background: par?.background ?? null,
           ratio: r?.ratio ?? null,
         };
       }),
@@ -243,17 +243,17 @@ export function themeMeasureColor(raiz: HTMLElement, targets: ColorTarget[]): Co
  * o `var` e compõe o alfa), sem depender de CDP.
  */
 export function resolveColor(raiz: HTMLElement, valor: string): string | null {
-  const sonda = raiz.ownerDocument.createElement('span');
-  sonda.style.color = valor;
-  sonda.style.position = 'absolute';
-  sonda.style.pointerEvents = 'none';
-  sonda.setAttribute('aria-hidden', 'true');
-  raiz.appendChild(sonda);
+  const probe = raiz.ownerDocument.createElement('span');
+  probe.style.color = valor;
+  probe.style.position = 'absolute';
+  probe.style.pointerEvents = 'none';
+  probe.setAttribute('aria-hidden', 'true');
+  raiz.appendChild(probe);
   try {
-    const cor = getComputedStyle(sonda).color;
+    const cor = getComputedStyle(probe).color;
     return cor || null;
   } finally {
-    sonda.remove();
+    probe.remove();
   }
 }
 
@@ -340,5 +340,5 @@ export function selectorsQueLeem(doc: Document, token: string): string[] {
 /** Linha legível de uma medida — o que a falha da story precisa mostrar. */
 export function describeMeasurement(m: ColorMeasurement): string {
   if (!m.presente) return `${m.tema}/${m.modo} · ${m.alvo}: seletor não casou`;
-  return `${m.tema}/${m.modo} · ${m.alvo} (${m.lado}) ${m.frente} sobre ${m.fundo} = ${m.ratio}:1`;
+  return `${m.tema}/${m.modo} · ${m.alvo} (${m.lado}) ${m.frente} sobre ${m.background} = ${m.ratio}:1`;
 }

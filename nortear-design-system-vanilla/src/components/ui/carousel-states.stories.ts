@@ -103,14 +103,14 @@ export const LastSlide: Story = {
       // quebraria só na segunda rodada.
       const total = slides().length;
       for (let passo = 0; passo < total; passo++) {
-        const botao = proximo();
-        if (botao.disabled) break;
-        await userEvent.click(botao);
+        const button = proximo();
+        if (button.disabled) break;
+        await userEvent.click(button);
       }
 
       // Assenta no último slide antes de medir qualquer estado.
-      const ultimo = slides().length - 1;
-      const alvo = ultimo * (slides()[1].offsetLeft - slides()[0].offsetLeft);
+      const last = slides().length - 1;
+      const alvo = last * (slides()[1].offsetLeft - slides()[0].offsetLeft);
       await waitFor(() => expect(Math.abs(deslocamento() - alvo)).toBeLessThan(2), { timeout: 4000 });
     });
 

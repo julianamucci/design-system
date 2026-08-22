@@ -140,7 +140,7 @@ export function createNavigationMenu(
   const vertical = orientation === 'vertical';
   const delayDuration = options?.delayDuration ?? 200;
   const skipDelayDuration = options?.skipDelayDuration ?? 300;
-  const controlado = options?.value !== undefined;
+  const controlled = options?.value !== undefined;
 
   const nav = document.createElement('nav');
   nav.dataset.slot = 'navigation-menu';
@@ -158,14 +158,14 @@ export function createNavigationMenu(
     : 'nds-navigation-menu-list';
   if (vertical) ul.dataset.spacing = 'xs';
 
-  type Painel = { content: HTMLElement; trigger: HTMLElement; value: string };
+  type Panel = { content: HTMLElement; trigger: HTMLElement; value: string };
 
-  let openItem: Painel | null = null;
+  let openItem: Panel | null = null;
   let timerAbertura: ReturnType<typeof setTimeout> | null = null;
   /** Quando o último painel saiu da tela — é o relógio do `skipDelayDuration`. */
   let closedIn = 0;
   /** Painéis por valor, para `setValue()` alcançar qualquer um pelo nome. */
-  const panels = new Map<string, Painel>();
+  const panels = new Map<string, Panel>();
 
   function cancelarAbertura(): void {
     if (timerAbertura !== null) {
@@ -208,7 +208,7 @@ export function createNavigationMenu(
     // mudança foi quem chama, e o aviso já saiu na intenção. Sem esta cerca, um
     // `onValueChange` que responde com `setValue()` receberia o mesmo evento
     // duas vezes.
-    if (!controlado) options?.onValueChange?.(openItem?.value ?? '');
+    if (!controlled) options?.onValueChange?.(openItem?.value ?? '');
   }
 
   /**
@@ -219,7 +219,7 @@ export function createNavigationMenu(
    */
   function pedirValue(valor: string): void {
     if ((openItem?.value ?? '') === valor) return;
-    if (controlado) {
+    if (controlled) {
       options?.onValueChange?.(valor);
       return;
     }
@@ -248,15 +248,15 @@ export function createNavigationMenu(
     const atual = itens.indexOf(document.activeElement as HTMLElement);
     if (atual === -1) return false;
 
-    let destino = -1;
-    if (e.key === proximo) destino = (atual + 1) % itens.length;
-    else if (e.key === anterior) destino = (atual - 1 + itens.length) % itens.length;
-    else if (e.key === 'Home') destino = 0;
-    else if (e.key === 'End') destino = itens.length - 1;
-    if (destino === -1) return false;
+    let destination = -1;
+    if (e.key === proximo) destination = (atual + 1) % itens.length;
+    else if (e.key === anterior) destination = (atual - 1 + itens.length) % itens.length;
+    else if (e.key === 'Home') destination = 0;
+    else if (e.key === 'End') destination = itens.length - 1;
+    if (destination === -1) return false;
 
     e.preventDefault();
-    itens[destino]?.focus();
+    itens[destination]?.focus();
     return true;
   }
 
@@ -448,8 +448,8 @@ export function createNavigationMenu(
   );
 
   // Estado inicial. Controlada, quem manda é `value`; fora disso, `defaultValue`.
-  const valorInicial = controlado ? options?.value ?? '' : options?.defaultValue ?? '';
-  if (valorInicial) applyValue(valorInicial);
+  const valueInitial = controlled ? options?.value ?? '' : options?.defaultValue ?? '';
+  if (valueInitial) applyValue(valueInitial);
 
   return instancia;
 }

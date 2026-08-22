@@ -51,9 +51,9 @@ export const WithShortcut: Story = {
 
     await step('O atalho vive dentro do item e é lido junto dele', async () => {
       const menu = await gestoOpen(area());
-      const atalhos = menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-shortcut"]');
-      await expect(atalhos.length).toBe(3);
-      for (const atalho of atalhos) {
+      const shortcuts = menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-shortcut"]');
+      await expect(shortcuts.length).toBe(3);
+      for (const atalho of shortcuts) {
         await expect(atalho.hasAttribute('aria-hidden')).toBe(false);
         await expect(atalho.closest('[data-slot="context-menu-item"]')).not.toBeNull();
       }
@@ -163,10 +163,10 @@ export const WithRadio: Story = {
       // Alterna entre dois valores conhecidos e afirma o PAR: assim o passo vale
       // igual em qualquer rodada, não importa de onde parta.
       const partiuDeGrid = item('grid').getAttribute('aria-checked') === 'true';
-      const clicar = partiuDeGrid ? 'columns' : 'grid';
+      const click = partiuDeGrid ? 'columns' : 'grid';
       const outro = partiuDeGrid ? 'grid' : 'columns';
-      await userEvent.click(item(clicar));
-      await waitFor(() => expect(item(clicar).getAttribute('aria-checked')).toBe('true'));
+      await userEvent.click(item(click));
+      await waitFor(() => expect(item(click).getAttribute('aria-checked')).toBe('true'));
       await expect(item(outro).getAttribute('aria-checked')).toBe('false');
     });
   },

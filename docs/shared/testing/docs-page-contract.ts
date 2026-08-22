@@ -70,8 +70,8 @@ function ondeEsta(el: Element): string {
   const secao = el.closest('section');
   const id = secao?.id ? `#${secao.id}` : secao ? 'section sem id' : 'fora de seção';
   const linha = el.closest('tr');
-  const vizinho = linha ? recorte(texto(linha), 50) : recorte(texto(el.parentElement ?? el), 50);
-  return vizinho ? `${id}, perto de "${vizinho}"` : id;
+  const neighbour = linha ? recorte(texto(linha), 50) : recorte(texto(el.parentElement ?? el), 50);
+  return neighbour ? `${id}, perto de "${neighbour}"` : id;
 }
 
 /**
@@ -84,8 +84,8 @@ function ondeEsta(el: Element): string {
  */
 function keysVazadas(raiz: HTMLElement): ProblemaDeContrato[] {
   const problemas: ProblemaDeContrato[] = [];
-  const alcance = raiz.querySelectorAll<HTMLElement>('p, h1, h2, h3, h4, li, td, th, span, dt, dd');
-  for (const el of alcance) {
+  const reach = raiz.querySelectorAll<HTMLElement>('p, h1, h2, h3, h4, li, td, th, span, dt, dd');
+  for (const el of reach) {
     // Só folhas: um <p> herda o texto dos filhos e reportaria o mesmo duas vezes.
     if (el.children.length > 0) continue;
     // Dentro de código, caminho com ponto é o assunto da página, não um vazamento.
@@ -182,14 +182,14 @@ function hierarquiaDeTitulos(raiz: HTMLElement): ProblemaDeContrato[] {
   const titulos = Array.from(raiz.querySelectorAll<HTMLElement>('h1, h2, h3, h4, h5, h6'));
   let anterior = 0;
   for (const t of titulos) {
-    const nivel = Number(t.tagName[1]);
-    if (anterior && nivel > anterior + 1) {
+    const level = Number(t.tagName[1]);
+    if (anterior && level > anterior + 1) {
       problemas.push({
         regra: 'titulo_pulado',
-        detalhe: `h${anterior} → h${nivel} em "${recorte(texto(t), 40)}"`,
+        detalhe: `h${anterior} → h${level} em "${recorte(texto(t), 40)}"`,
       });
     }
-    anterior = nivel;
+    anterior = level;
   }
   return problemas;
 }

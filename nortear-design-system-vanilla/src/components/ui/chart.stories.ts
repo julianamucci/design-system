@@ -176,8 +176,8 @@ export const Playground: Story = {
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
       // A marca de eixo é a alternativa textual do valor: categoria que o
       // desenho não escreve é dado que só existe como pixel.
-      for (const mes of MONTHS) {
-        await expect(designEscreve(raiz, mes)).toBe(true);
+      for (const month of MONTHS) {
+        await expect(designEscreve(raiz, month)).toBe(true);
       }
     });
   },

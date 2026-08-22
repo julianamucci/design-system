@@ -202,15 +202,15 @@ export const RemovedBeforeFeedback: Story = {
     const alternar = createButton({ variant: 'outline' });
 
     let bloco: HTMLElement | null = null;
-    const sincronizar = (visivel: boolean) => {
-      if (visivel && !bloco) {
+    const sincronizar = (visible: boolean) => {
+      if (visible && !bloco) {
         bloco = createCodeBlock({ code: COMPOSITION_CODE, language: 'ts' });
         slot.append(bloco);
-      } else if (!visivel && bloco) {
+      } else if (!visible && bloco) {
         bloco.remove();
         bloco = null;
       }
-      alternar.textContent = visivel ? 'Remover o bloco' : 'Restaurar o bloco';
+      alternar.textContent = visible ? 'Remover o bloco' : 'Restaurar o bloco';
     };
 
     alternar.addEventListener('click', () => sincronizar(!bloco));

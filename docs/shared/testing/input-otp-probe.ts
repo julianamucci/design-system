@@ -62,7 +62,7 @@ export interface SlotMeasurement {
   raio: string;
   borderWidth: string;
   corDaBorda: string;
-  fundo: string;
+  background: string;
   cor: string;
   opacidade: string;
   classesInertes: string[];
@@ -226,7 +226,7 @@ function measureSlot(el: HTMLElement, indice: number): SlotMeasurement {
     raio: `${cs.borderStartStartRadius} ${cs.borderStartEndRadius}`,
     borderWidth: `${cs.borderTopWidth} ${cs.borderInlineStartWidth} ${cs.borderInlineEndWidth}`,
     corDaBorda: cs.borderTopColor,
-    fundo: cs.backgroundColor,
+    background: cs.backgroundColor,
     cor: cs.color,
     opacidade: cs.opacity,
     classesInertes: classesDe(el).filter((c) => !c.startsWith('nds-')),
@@ -247,13 +247,13 @@ export function measureInputOtp(raiz: HTMLElement) {
   }
 
   const csContainer = container ? getComputedStyle(container) : null;
-  const descrito = campo?.getAttribute('aria-describedby') ?? null;
-  const targetsDescribed = descrito
-    ? descrito.split(/\s+/).map((id) => raiz.ownerDocument.getElementById(id))
+  const described = campo?.getAttribute('aria-describedby') ?? null;
+  const targetsDescribed = described
+    ? described.split(/\s+/).map((id) => raiz.ownerDocument.getElementById(id))
     : [];
 
-  const medidas = noTransicao(container ?? raiz, () => slots.map(measureSlot));
-  const fundo = backgroundEffective(slots[0] ?? container);
+  const measurements = noTransicao(container ?? raiz, () => slots.map(measureSlot));
+  const background = backgroundEffective(slots[0] ?? container);
 
   return {
     presente: true,
@@ -279,19 +279,19 @@ export function measureInputOtp(raiz: HTMLElement) {
       nomeDoConjunto: nomeAcessivel(container),
       nomeDoCampo: nomeAcessivel(campo),
       /** Quantas caixas o leitor consegue nomear. `0` na família composta. */
-      slotsComNome: medidas.filter((m) => m.nomeAcessivel).length,
-      slotsFocalizaveis: medidas.filter((m) => m.focalizavel).length,
-      nomesDosSlots: medidas.map((m) => m.nomeAcessivel),
+      slotsComNome: measurements.filter((m) => m.nomeAcessivel).length,
+      slotsFocalizaveis: measurements.filter((m) => m.focalizavel).length,
+      nomesDosSlots: measurements.map((m) => m.nomeAcessivel),
       autocompleteDoCampo: campo?.getAttribute('autocomplete') ?? null,
       inputmodeDoCampo: campo?.getAttribute('inputmode') ?? null,
-      autocompletePorSlot: medidas.map((m) => m.autocomplete),
+      autocompletePorSlot: measurements.map((m) => m.autocomplete),
       papelDoSeparador: separadores[0]?.getAttribute('role') ?? null,
       separadorEscondido: separadores[0]?.getAttribute('aria-hidden') ?? null,
       textoDoSeparador: texto(separadores[0]),
       ariaInvalidDoCampo: campo?.getAttribute('aria-invalid') ?? null,
-      ariaInvalidPorSlot: medidas.map((m) => m.ariaInvalid),
-      ariaDescribedby: descrito,
-      alvoDescribedbyExiste: descrito ? targetsDescribed.every(Boolean) : null,
+      ariaInvalidPorSlot: measurements.map((m) => m.ariaInvalid),
+      ariaDescribedby: described,
+      alvoDescribedbyExiste: described ? targetsDescribed.every(Boolean) : null,
       maxlengthDoCampo: campo && campo.maxLength > 0 ? campo.maxLength : null,
       campoDesabilitado: campo?.disabled ?? null,
     },
@@ -299,14 +299,14 @@ export function measureInputOtp(raiz: HTMLElement) {
       larguraDoConjunto: container ? Math.round(container.getBoundingClientRect().width) : null,
       displayDoContainer: csContainer?.display ?? null,
       gapDoContainer: csContainer?.gap ?? null,
-      slot: medidas[0]
-        ? { largura: medidas[0].largura, altura: medidas[0].altura, borda: medidas[0].borderWidth }
+      slot: measurements[0]
+        ? { largura: measurements[0].largura, altura: measurements[0].altura, border: measurements[0].borderWidth }
         : null,
-      raioPrimeiro: medidas[0]?.raio ?? null,
-      raioUltimo: medidas.at(-1)?.raio ?? null,
-      raioMiolo: medidas[1]?.raio ?? null,
+      raioPrimeiro: measurements[0]?.raio ?? null,
+      raioUltimo: measurements.at(-1)?.raio ?? null,
+      raioMiolo: measurements[1]?.raio ?? null,
       /** Slots colados: a borda esquerda do miolo é suprimida no desenho. */
-      bordaDoMiolo: medidas[1]?.borderWidth ?? null,
+      bordaDoMiolo: measurements[1]?.borderWidth ?? null,
       /**
        * Distância REAL entre dois slots vizinhos, em pixels.
        *
@@ -321,13 +321,13 @@ export function measureInputOtp(raiz: HTMLElement) {
     },
     estado: {
       caretEm: slotWithCaret(raiz),
-      caracteres: medidas.map((m) => m.caractere),
+      caracteres: measurements.map((m) => m.caractere),
       opacidadeDoContainer: csContainer?.opacity ?? null,
-      opacidadeDoSlot: medidas[0]?.opacidade ?? null,
-      corDaBordaEmRepouso: medidas[0]?.corDaBorda ?? null,
+      opacidadeDoSlot: measurements[0]?.opacidade ?? null,
+      corDaBordaEmRepouso: measurements[0]?.corDaBorda ?? null,
       corDaBordaNoHover: hoverColorDeclarada(raiz),
-      fundoDoSlot: medidas[0]?.fundo ?? null,
-      corDoTexto: medidas[0]?.cor ?? null,
+      fundoDoSlot: measurements[0]?.background ?? null,
+      corDoTexto: measurements[0]?.cor ?? null,
     },
     /**
      * As linhas da TABELA DE TOKENS, medidas em vez de lidas na folha.
@@ -346,7 +346,7 @@ export function measureInputOtp(raiz: HTMLElement) {
         slotSize: csFirst ? `${csFirst.width} × ${csFirst.height}` : null,
         slotFontSize: csFirst?.fontSize ?? null,
         border: csFirst ? `${csFirst.borderTopWidth} ${csFirst.borderTopColor}` : null,
-        rounded: medidas[0]?.raio ?? null,
+        rounded: measurements[0]?.raio ?? null,
         caretExiste: !!caret,
         caretCaixa: csCaret ? `${csCaret.width} × ${csCaret.height}` : null,
         caretCor: csCaret?.backgroundColor ?? null,
@@ -356,11 +356,11 @@ export function measureInputOtp(raiz: HTMLElement) {
       };
     })(),
     contraste: {
-      textoNoSlot: fundo && medidas[0] ? ratio(medidas[0].cor, fundo) : null,
-      bordaNoFundo: fundo && medidas[0] ? ratio(medidas[0].corDaBorda, fundo) : null,
-      hoverNoFundo: fundo && hoverColorDeclarada(raiz) ? ratio(hoverColorDeclarada(raiz)!, fundo) : null,
+      textoNoSlot: background && measurements[0] ? ratio(measurements[0].cor, background) : null,
+      bordaNoFundo: background && measurements[0] ? ratio(measurements[0].corDaBorda, background) : null,
+      hoverNoFundo: background && hoverColorDeclarada(raiz) ? ratio(hoverColorDeclarada(raiz)!, background) : null,
     },
-    slots: medidas,
+    slots: measurements,
   };
 }
 
@@ -387,9 +387,9 @@ export function darkMeasure(raiz: HTMLElement, cenario: string) {
   if (!alvo) return null;
   const desfazer = darkLigarTheme(raiz.ownerDocument);
   try {
-    const medida = measureInputOtp(alvo);
-    if (!medida.presente) return null;
-    return { estado: medida.estado, contraste: medida.contraste };
+    const measurement = measureInputOtp(alvo);
+    if (!measurement.presente) return null;
+    return { estado: measurement.estado, contraste: measurement.contraste };
   } finally {
     desfazer();
   }
@@ -403,7 +403,7 @@ export function darkMeasure(raiz: HTMLElement, cenario: string) {
  */
 export function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[], extra?: unknown) {
   const registro = {
-    claro: multipleMeasure(raiz, cenarios),
+    light: multipleMeasure(raiz, cenarios),
     escuro: darkMeasure(raiz, cenarios[0]),
     comportamento: extra ?? null,
   };

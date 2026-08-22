@@ -52,9 +52,9 @@
   );
 
   /** Bloqueia tudo antes de 10/04/2026 — limite fixo, como o mês. */
-  const limite = new CalendarDate(2026, 4, 10);
+  const limit = new CalendarDate(2026, 4, 10);
   function isPast(date: DateValue): boolean {
-    return date.compare(limite) < 0;
+    return date.compare(limit) < 0;
   }
 </script>
 

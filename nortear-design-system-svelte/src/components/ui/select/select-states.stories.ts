@@ -142,17 +142,17 @@ export const Open: Story = {
         within(listbox)
           .getAllByRole('option')
           .findIndex((o) => o.hasAttribute('data-highlighted'));
-      const ultimo = within(listbox).getAllByRole('option').length - 1;
+      const last = within(listbox).getAllByRole('option').length - 1;
 
       const partida = destacada();
       await userEvent.keyboard('{ArrowDown}');
-      const primeiro = Math.min(partida + 1, ultimo);
+      const primeiro = Math.min(partida + 1, last);
       await waitFor(async () => {
         await expect(destacada()).toBe(primeiro);
       });
 
       await userEvent.keyboard('{ArrowDown}');
-      const segundo = Math.min(primeiro + 1, ultimo);
+      const segundo = Math.min(primeiro + 1, last);
       await waitFor(async () => {
         await expect(destacada()).toBe(segundo);
       });

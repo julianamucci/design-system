@@ -489,11 +489,11 @@ const TARGETS_DEMO = [
                 data-cols="2"
                 data-spacing="sm"
               >
-                @for (destino of destinosDemo; track destino.id) {
+                @for (destination of destinosDemo; track destination.id) {
                   <li>
-                    <a ndsNavigationMenuChild [href]="destino.href">
+                    <a ndsNavigationMenuChild [href]="destination.href">
                       <div ndsNavigationMenuChildLabel>
-                        {{ t('usage.uxWriting.table.link.good') }} {{ destino.id }}
+                        {{ t('usage.uxWriting.table.link.good') }} {{ destination.id }}
                       </div>
                     </a>
                   </li>
@@ -539,11 +539,11 @@ const TARGETS_DEMO = [
             <button ndsNavigationMenuTrigger>{{ t('usage.uxWriting.table.trigger.good') }}</button>
             <ng-template ndsNavigationMenuContent>
               <ul ndsNavigationMenuPanel class="nds-stack nds-list-none nds-w-xs" data-spacing="xs">
-                @for (destino of destinosDemo; track destino.id) {
+                @for (destination of destinosDemo; track destination.id) {
                   <li>
-                    <a ndsNavigationMenuChild [href]="destino.href">
+                    <a ndsNavigationMenuChild [href]="destination.href">
                       <div ndsNavigationMenuChildLabel>
-                        {{ t('usage.uxWriting.table.link.good') }} {{ destino.id }}
+                        {{ t('usage.uxWriting.table.link.good') }} {{ destination.id }}
                       </div>
                     </a>
                   </li>
@@ -597,11 +597,11 @@ const TARGETS_DEMO = [
             <button ndsNavigationMenuTrigger>{{ t('usage.uxWriting.table.trigger.good') }}</button>
             <ng-template ndsNavigationMenuContent>
               <ul ndsNavigationMenuPanel class="nds-stack nds-list-none nds-w-xs" data-spacing="xs">
-                @for (destino of destinosDemo; track destino.id) {
+                @for (destination of destinosDemo; track destination.id) {
                   <li>
-                    <a ndsNavigationMenuChild [href]="destino.href">
+                    <a ndsNavigationMenuChild [href]="destination.href">
                       <div ndsNavigationMenuChildLabel>
-                        {{ t('usage.uxWriting.table.link.good') }} {{ destino.id }}
+                        {{ t('usage.uxWriting.table.link.good') }} {{ destination.id }}
                       </div>
                     </a>
                   </li>
@@ -625,11 +625,11 @@ const TARGETS_DEMO = [
                 data-cols="2"
                 data-spacing="sm"
               >
-                @for (destino of destinosDemo; track destino.id) {
+                @for (destination of destinosDemo; track destination.id) {
                   <li>
-                    <a ndsNavigationMenuChild [href]="destino.href">
+                    <a ndsNavigationMenuChild [href]="destination.href">
                       <div ndsNavigationMenuChildLabel>
-                        {{ t('usage.uxWriting.table.link.good') }} {{ destino.id }}
+                        {{ t('usage.uxWriting.table.link.good') }} {{ destination.id }}
                       </div>
                       <p ndsNavigationMenuChildDescription>
                         {{ t('variants.items.megaMenuGrid.use') }}
@@ -665,10 +665,10 @@ const TARGETS_DEMO = [
                   </p>
                 </a>
                 <ul class="nds-stack nds-list-none" data-spacing="xs">
-                  @for (destino of destinosDemo; track destino.id) {
+                  @for (destination of destinosDemo; track destination.id) {
                     <li>
-                      <a ndsNavigationMenuChild [href]="destino.href">
-                        <div ndsNavigationMenuChildLabel>{{ destino.id }}</div>
+                      <a ndsNavigationMenuChild [href]="destination.href">
+                        <div ndsNavigationMenuChildLabel>{{ destination.id }}</div>
                       </a>
                     </li>
                   }
@@ -729,15 +729,15 @@ const TARGETS_DEMO = [
                       class="nds-stack nds-list-none nds-w-xs"
                       data-spacing="xs"
                     >
-                      @for (destino of destinosDemo; track destino.id) {
+                      @for (destination of destinosDemo; track destination.id) {
                         <li>
                           <a
                             ndsNavigationMenuChild
-                            [href]="destino.href"
-                            (click)="onNavigate(destino.id, destino.href)"
+                            [href]="destination.href"
+                            (click)="onNavigate(destination.id, destination.href)"
                           >
                             <div ndsNavigationMenuChildLabel>
-                              {{ t('usage.uxWriting.table.link.good') }} {{ destino.id }}
+                              {{ t('usage.uxWriting.table.link.good') }} {{ destination.id }}
                             </div>
                           </a>
                         </li>
@@ -762,15 +762,15 @@ const TARGETS_DEMO = [
                       data-cols="2"
                       data-spacing="sm"
                     >
-                      @for (destino of destinosDemo; track destino.id) {
+                      @for (destination of destinosDemo; track destination.id) {
                         <li>
                           <a
                             ndsNavigationMenuChild
-                            [href]="destino.href"
-                            (click)="onNavigate(destino.id, destino.href)"
+                            [href]="destination.href"
+                            (click)="onNavigate(destination.id, destination.href)"
                           >
                             <div ndsNavigationMenuChildLabel>
-                              {{ t('usage.uxWriting.table.link.good') }} {{ destino.id }}
+                              {{ t('usage.uxWriting.table.link.good') }} {{ destination.id }}
                             </div>
                             <p ndsNavigationMenuChildDescription>
                               {{ t('variants.items.megaMenuGrid.use') }}
@@ -812,14 +812,14 @@ const TARGETS_DEMO = [
                         </p>
                       </a>
                       <ul class="nds-stack nds-list-none" data-spacing="xs">
-                        @for (destino of destinosDemo; track destino.id) {
+                        @for (destination of destinosDemo; track destination.id) {
                           <li>
                             <a
                               ndsNavigationMenuChild
-                              [href]="destino.href"
-                              (click)="onNavigate(destino.id, destino.href)"
+                              [href]="destination.href"
+                              (click)="onNavigate(destination.id, destination.href)"
                             >
-                              <div ndsNavigationMenuChildLabel>{{ destino.id }}</div>
+                              <div ndsNavigationMenuChildLabel>{{ destination.id }}</div>
                             </a>
                           </li>
                         }
@@ -972,10 +972,10 @@ export class NdsNavigationMenuDocs implements AfterViewInit, OnDestroy {
    * destino, nunca o rótulo traduzido — o rótulo partiria um evento em três no
    * GA4, um por idioma.
    */
-  protected onNavigate(destino: string, href: string): void {
+  protected onNavigate(destination: string, href: string): void {
     track('navigation_click', {
       component: 'navigation_menu',
-      label: destino,
+      label: destination,
       destination: href,
       location: 'docs-demonstration',
     });
@@ -1125,7 +1125,7 @@ export class NdsNavigationMenuDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
 
     /** Linha cujo tipo/padrão/descrição vêm da tabela do conteúdo compartilhado. */
     const ofContent = (nome: string, chave: string, tipo?: string) => ({
@@ -1141,7 +1141,7 @@ export class NdsNavigationMenuDocs implements AfterViewInit, OnDestroy {
       name: nome,
       type: tipo,
       defaultValue: padrao,
-      required: nao,
+      required: not,
       description: toPlainText(t(`props.${chave}.description`)),
     });
 

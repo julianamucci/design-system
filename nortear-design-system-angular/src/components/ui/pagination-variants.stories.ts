@@ -70,19 +70,19 @@ export const Simple: Story = {
     props: {
       atual: 1,
       // Derivado, não literal: a faixa e as asserções leem a mesma fonte.
-      paginas: [1, 2, 3, 4, 5],
+      pages: [1, 2, 3, 4, 5],
       rotuloPagina: LABEL_PAGE,
-      rotuloAnterior: LABEL_PREVIOUS,
-      rotuloProxima: LABEL_NEXT,
+      labelPrevious: LABEL_PREVIOUS,
+      labelNext: LABEL_NEXT,
       semNavegar: (evento: Event) => evento.preventDefault(),
     },
     template: `
       <nav ndsPagination label="Paginação simples">
         <ul ndsPaginationContent>
           <li ndsPaginationItem>
-            <a ndsPaginationPrevious href="#" text="Anterior" [label]="rotuloAnterior" [disabled]="true"></a>
+            <a ndsPaginationPrevious href="#" text="Anterior" [label]="labelPrevious" [disabled]="true"></a>
           </li>
-          @for (n of paginas; track n) {
+          @for (n of pages; track n) {
             <li ndsPaginationItem>
               <a
                 ndsPaginationLink
@@ -94,7 +94,7 @@ export const Simple: Story = {
             </li>
           }
           <li ndsPaginationItem>
-            <a ndsPaginationNext href="#" text="Próxima" [label]="rotuloProxima" (click)="semNavegar($event)"></a>
+            <a ndsPaginationNext href="#" text="Próxima" [label]="labelNext" (click)="semNavegar($event)"></a>
           </li>
         </ul>
       </nav>
@@ -143,15 +143,15 @@ export const WithEllipsis: Story = {
       trechos: [1, 'ellipsis', 5, 6, 7, 'ellipsis', 12] as (number | string)[],
       atual: 6,
       rotuloPagina: LABEL_PAGE,
-      rotuloAnterior: LABEL_PREVIOUS,
-      rotuloProxima: LABEL_NEXT,
+      labelPrevious: LABEL_PREVIOUS,
+      labelNext: LABEL_NEXT,
       semNavegar: (evento: Event) => evento.preventDefault(),
     },
     template: `
       <nav ndsPagination label="Paginação com reticências">
         <ul ndsPaginationContent>
           <li ndsPaginationItem>
-            <a ndsPaginationPrevious href="#" text="Anterior" [label]="rotuloAnterior" (click)="semNavegar($event)"></a>
+            <a ndsPaginationPrevious href="#" text="Anterior" [label]="labelPrevious" (click)="semNavegar($event)"></a>
           </li>
           @for (trecho of trechos; track $index) {
             <li ndsPaginationItem>
@@ -169,7 +169,7 @@ export const WithEllipsis: Story = {
             </li>
           }
           <li ndsPaginationItem>
-            <a ndsPaginationNext href="#" text="Próxima" [label]="rotuloProxima" (click)="semNavegar($event)"></a>
+            <a ndsPaginationNext href="#" text="Próxima" [label]="labelNext" (click)="semNavegar($event)"></a>
           </li>
         </ul>
       </nav>
@@ -217,18 +217,18 @@ export const Directional: Story = {
   },
   render: () => ({
     props: {
-      rotuloAnterior: LABEL_PREVIOUS,
-      rotuloProxima: LABEL_NEXT,
+      labelPrevious: LABEL_PREVIOUS,
+      labelNext: LABEL_NEXT,
       semNavegar: (evento: Event) => evento.preventDefault(),
     },
     template: `
       <nav ndsPagination label="Paginação direcional">
         <ul ndsPaginationContent>
           <li ndsPaginationItem>
-            <a ndsPaginationPrevious href="#" text="Anterior" [label]="rotuloAnterior" (click)="semNavegar($event)"></a>
+            <a ndsPaginationPrevious href="#" text="Anterior" [label]="labelPrevious" (click)="semNavegar($event)"></a>
           </li>
           <li ndsPaginationItem>
-            <a ndsPaginationNext href="#" text="Próxima" [label]="rotuloProxima" (click)="semNavegar($event)"></a>
+            <a ndsPaginationNext href="#" text="Próxima" [label]="labelNext" (click)="semNavegar($event)"></a>
           </li>
         </ul>
       </nav>
@@ -250,9 +250,9 @@ export const Directional: Story = {
     });
 
     await step('O ícone é decoração, não conteúdo', async () => {
-      const icones = canvasElement.querySelectorAll('svg');
-      await expect(icones.length).toBe(2);
-      for (const icone of icones) {
+      const icons = canvasElement.querySelectorAll('svg');
+      await expect(icons.length).toBe(2);
+      for (const icone of icons) {
         await expect(icone).toHaveAttribute('aria-hidden', 'true');
       }
     });
@@ -280,11 +280,11 @@ export const Interactive: Story = {
       props: {
         atual,
         total,
-        paginas: Array.from({ length: total }, (_, i) => i + 1),
+        pages: Array.from({ length: total }, (_, i) => i + 1),
         rotuloPagina: LABEL_PAGE,
-        rotuloAnterior: LABEL_PREVIOUS,
-        rotuloProxima: LABEL_NEXT,
-        irPara: (evento: Event, pagina: number) => {
+        labelPrevious: LABEL_PREVIOUS,
+        labelNext: LABEL_NEXT,
+        irTo: (evento: Event, pagina: number) => {
           evento.preventDefault();
           atual.set(pagina);
         },
@@ -298,19 +298,19 @@ export const Interactive: Story = {
                   ndsPaginationPrevious
                   href="#"
                   text="Anterior"
-                  [label]="rotuloAnterior"
+                  [label]="labelPrevious"
                   [disabled]="atual() === 1"
-                  (click)="irPara($event, atual() - 1)"
+                  (click)="irTo($event, atual() - 1)"
                 ></a>
               </li>
-              @for (n of paginas; track n) {
+              @for (n of pages; track n) {
                 <li ndsPaginationItem>
                   <a
                     ndsPaginationLink
                     href="#"
                     [isActive]="n === atual()"
                     [attr.aria-label]="rotuloPagina + ' ' + n"
-                    (click)="irPara($event, n)"
+                    (click)="irTo($event, n)"
                   >{{ n }}</a>
                 </li>
               }
@@ -319,9 +319,9 @@ export const Interactive: Story = {
                   ndsPaginationNext
                   href="#"
                   text="Próxima"
-                  [label]="rotuloProxima"
+                  [label]="labelNext"
                   [disabled]="atual() === total"
-                  (click)="irPara($event, atual() + 1)"
+                  (click)="irTo($event, atual() + 1)"
                 ></a>
               </li>
             </ul>

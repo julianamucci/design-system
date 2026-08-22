@@ -181,9 +181,9 @@ export const MultiResponsive: Story = {
       // A classe é responsiva por definição: afirmar "metade" sem consultar a
       // media query amarraria o teste à largura do runner, que nenhum
       // `parameters.viewport` controla aqui.
-      const janela = canvasElement.ownerDocument.defaultView!;
-      const grande = janela.matchMedia('(min-width: 1024px)').matches;
-      const medio = janela.matchMedia('(min-width: 768px)').matches;
+      const window = canvasElement.ownerDocument.defaultView!;
+      const grande = window.matchMedia('(min-width: 1024px)').matches;
+      const medio = window.matchMedia('(min-width: 768px)').matches;
       const esperado = grande ? 1 / 3 : medio ? 1 / 2 : 1;
 
       const slide = canvas.getAllByRole('group')[0];
@@ -238,8 +238,8 @@ export const Autoplay: Story = {
       let maior = -Infinity;
       canvas.getAllByRole('group').forEach((slide, i) => {
         const r = slide.getBoundingClientRect();
-        const visivel = Math.min(r.right, v.right) - Math.max(r.left, v.left);
-        if (visivel > maior) { maior = visivel; melhor = i; }
+        const visible = Math.min(r.right, v.right) - Math.max(r.left, v.left);
+        if (visible > maior) { maior = visible; melhor = i; }
       });
       return melhor;
     };
@@ -341,14 +341,14 @@ export const DragGesture: Story = {
      */
     const settle = async () => {
       let estaveis = 0;
-      let ultimo = Number.NaN;
+      let last = Number.NaN;
       await waitFor(async () => {
         const agora = deslocamento();
-        estaveis = agora === ultimo ? estaveis + 1 : 0;
-        ultimo = agora;
+        estaveis = agora === last ? estaveis + 1 : 0;
+        last = agora;
         await expect(estaveis).toBeGreaterThanOrEqual(3);
       }, { timeout: 4000 });
-      return ultimo;
+      return last;
     };
 
     /** Espera a posição chegar a uma coordenada já conhecida. */
@@ -378,9 +378,9 @@ export const DragGesture: Story = {
       // ao primeiro slide é o que faz a segunda rodada valer tanto quanto a
       // primeira.
       for (let volta = 0; volta < slides().length; volta++) {
-        const botao = anterior();
-        if (botao.disabled) break;
-        await userEvent.click(botao);
+        const button = anterior();
+        if (button.disabled) break;
+        await userEvent.click(button);
       }
       posZero = await settle();
       await expect(anterior()).toBeDisabled();

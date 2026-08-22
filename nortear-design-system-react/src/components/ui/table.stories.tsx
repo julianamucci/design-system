@@ -19,11 +19,11 @@ import { tableSource } from "./table.source";
 
 type TableArgs = {
   captionVisivel: boolean;
-  comRodape: boolean;
+  withFooter: boolean;
 };
 
 // A interseção com os props da `<table>` é o que deixa `component: Table`
-// conviver com os dois args próprios da story (`captionVisivel`, `comRodape`):
+// conviver com os dois args próprios da story (`captionVisivel`, `withFooter`):
 // sem ela o TS recusa o componente, porque `TableArgs` não tem propriedade
 // nenhuma em comum com os props do elemento.
 const meta: Meta<TableArgs & React.ComponentProps<typeof Table>> = {
@@ -44,14 +44,14 @@ const meta: Meta<TableArgs & React.ComponentProps<typeof Table>> = {
         "Legenda visível ou apenas para leitor de tela. Ela nunca sai do DOM — é o nome da tabela.",
       table: { type: { summary: "boolean" }, defaultValue: { summary: "false" } },
     },
-    comRodape: {
+    withFooter: {
       control: "boolean",
       description:
         "Renderiza o rodapé com o total. Rodapé é para sumário, nunca para mais um registro.",
       table: { type: { summary: "boolean" }, defaultValue: { summary: "true" } },
     },
   },
-  args: { captionVisivel: false, comRodape: true },
+  args: { captionVisivel: false, withFooter: true },
 };
 
 export default meta;
@@ -97,7 +97,7 @@ export const Playground: Story = {
           </TableRow>
         ))}
       </TableBody>
-      {args.comRodape && (
+      {args.withFooter && (
         <TableFooter>
           <TableRow>
             <TableCell colSpan={3}>Total</TableCell>
@@ -173,7 +173,7 @@ export const Playground: Story = {
       // functional.item3 — tfoot é anunciado como rodapé; a mesma célula dentro
       // do tbody entraria na contagem de registros.
       const tfoot = canvasElement.querySelector<HTMLElement>("tfoot");
-      if (!args.comRodape) {
+      if (!args.withFooter) {
         await expect(tfoot).toBeNull();
         return;
       }

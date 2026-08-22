@@ -103,7 +103,7 @@ export const SingleSeries: Story = {
 
     await step('O desenho saiu de verdade — controle da medição negativa abaixo', async () => {
       await waitFor(() => {
-        for (const mes of MONTHS) expect(designEscreve(raiz, mes)).toBe(true);
+        for (const month of MONTHS) expect(designEscreve(raiz, month)).toBe(true);
       }, { timeout: 3000 });
     });
 
@@ -249,14 +249,14 @@ export const GraphicContrast: Story = {
     await waitForDesign(raiz);
     // Precondição da medida: ver o comentário de `settleTheme`.
     await settleTheme(document);
-    const fundo = backgroundOpacoAtras(raiz);
+    const background = backgroundOpacoAtras(raiz);
 
     await step('Todo objeto gráfico passa de 3:1 pelo contorno', async () => {
       const formas = datumFormas(raiz);
       // Uma forma de cor e uma de trama por barra desenhada, mais as da legenda.
       await expect(formas.length).toBeGreaterThanOrEqual(MONTHS.length * SERIES_MULTI.length);
       for (const forma of formas) {
-        await expect(contraste(getComputedStyle(forma).stroke, fundo)).toBeGreaterThanOrEqual(3);
+        await expect(contraste(getComputedStyle(forma).stroke, background)).toBeGreaterThanOrEqual(3);
       }
     });
 
@@ -264,7 +264,7 @@ export const GraphicContrast: Story = {
       const rotulos = [...raiz.querySelectorAll<SVGTextElement>('svg text')];
       await expect(rotulos.length).toBeGreaterThan(0);
       for (const rotulo of rotulos) {
-        await expect(contraste(getComputedStyle(rotulo).fill, fundo)).toBeGreaterThanOrEqual(4.5);
+        await expect(contraste(getComputedStyle(rotulo).fill, background)).toBeGreaterThanOrEqual(4.5);
       }
     });
   },

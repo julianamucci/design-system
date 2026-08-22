@@ -201,12 +201,12 @@ export const WithRadioGroup: Story = {
   play: async ({ step }) => {
     const menu = await within(document.body).findByRole('menu');
     const canvas = within(menu);
-    const claro = canvas.getByRole('menuitemradio', { name: 'Claro' });
+    const light = canvas.getByRole('menuitemradio', { name: 'Claro' });
     const escuro = canvas.getByRole('menuitemradio', { name: 'Escuro' });
 
     await step('Um item por vez se anuncia escolhido', async () => {
       await expect(canvas.getAllByRole('menuitemradio')).toHaveLength(3);
-      await expect(claro.getAttribute('aria-checked')).toBe('true');
+      await expect(light.getAttribute('aria-checked')).toBe('true');
       await expect(escuro.getAttribute('aria-checked')).toBe('false');
     });
 
@@ -216,11 +216,11 @@ export const WithRadioGroup: Story = {
 
       await waitFor(async () => {
         await expect(escuro.getAttribute('aria-checked')).toBe('true');
-        await expect(claro.getAttribute('aria-checked')).toBe('false');
+        await expect(light.getAttribute('aria-checked')).toBe('false');
       });
       // O indicador acompanha a troca, senão o estado só existiria para o leitor.
       await expect(escuro.querySelector('.nds-dropdown-menu-item-indicator svg')).not.toBeNull();
-      await expect(claro.querySelector('.nds-dropdown-menu-item-indicator svg')).toBeNull();
+      await expect(light.querySelector('.nds-dropdown-menu-item-indicator svg')).toBeNull();
     });
 
     await step('Limpa via ESC', async () => {

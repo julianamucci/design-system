@@ -69,13 +69,13 @@ function buildLabeled(opts: {
     counter.className = 'nds-tabular-nums nds-shrink-0';
     counter.setAttribute('aria-live', 'polite');
 
-    const atualizar = () => {
+    const update = () => {
       const n = textarea.value.length;
       counter.textContent = `${n}/${max}`;
       counter.setAttribute('aria-label', `${n} de ${max} caracteres usados`);
     };
-    atualizar();
-    textarea.addEventListener('input', atualizar);
+    update();
+    textarea.addEventListener('input', update);
 
     row.append(hint, counter);
     wrapper.appendChild(row);

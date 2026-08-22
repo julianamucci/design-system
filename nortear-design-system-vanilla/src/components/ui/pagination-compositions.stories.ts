@@ -226,7 +226,7 @@ export const Interactive: Story = {
     const canvas = within(canvasElement);
     const status = () => canvasElement.querySelector('[data-slot="pagina-atual"]');
 
-    const irPara = async (n: number) => {
+    const irTo = async (n: number) => {
       // Par idempotente: só clica quando ainda não é a página atual. O painel
       // Interactions reexecuta a play no mesmo DOM, e um clique cego partiria
       // do estado que a rodada anterior deixou.
@@ -241,7 +241,7 @@ export const Interactive: Story = {
     };
 
     await step('Clicar numa página move o destaque e o contador', async () => {
-      await irPara(4);
+      await irTo(4);
       await expect(status()).toHaveTextContent('Página 4 de 8');
     });
 
@@ -250,7 +250,7 @@ export const Interactive: Story = {
     });
 
     await step('O estado volta ao início para a próxima rodada', async () => {
-      await irPara(3);
+      await irTo(3);
       await expect(status()).toHaveTextContent('Página 3 de 8');
     });
   },

@@ -70,7 +70,7 @@ function parts(menu: Menu, withTrigger: boolean): string[] {
 }
 
 /** Ícones de cada composição, também em ordem alfabética. */
-function icones(menu: Menu): string[] {
+function icons(menu: Menu): string[] {
   if (menu === 'esqueleto') return [];
   if (menu === 'grupos') {
     return ['Bell', 'Box', 'LayoutDashboard', 'MoreHorizontal', 'Palette', 'Plus', 'Settings', 'User'];
@@ -123,7 +123,7 @@ const itens = [
 }
 
 /** Cabeçalho da barra: marca, ou o campo de busca da composição com grupos. */
-function cabecalho(menu: Menu, collapsible: SidebarArgs['collapsible']): string {
+function header(menu: Menu, collapsible: SidebarArgs['collapsible']): string {
   if (menu === 'grupos') {
     return `    <SidebarHeader class="nds-py-2 nds-px-2 nds-border-b">
       <SidebarInput placeholder="Buscar..." aria-label="Buscar na navegação" />
@@ -316,7 +316,7 @@ function aplicacao(o: Options = {}): string {
   // Sem recolhimento não há o que alternar: o gatilho e a faixa saem junto.
   const withTrigger = collapsible !== 'none';
 
-  const iconImportes = icones(menu)
+  const iconImportes = icons(menu)
     .map((nome) => `import ${nome} from "@lucide/svelte/icons/${ICONS[nome]}";`)
     .join('\n');
   const importeDeTransicao = menu === 'submenu' ? `\nimport { slide } from "svelte/transition";` : '';
@@ -349,7 +349,7 @@ ${iconImportes}${importeDeTransicao}${stateInitial}${dados(menu)}`;
       mobileQuery === QUERY_DEFAULT ? '' : `mobileQuery="${mobileQuery}"`,
     )}>
   <Sidebar side="${side}" variant="${variant}" collapsible="${collapsible}">
-${cabecalho(menu, collapsible)}
+${header(menu, collapsible)}
     <SidebarContent>
       <nav aria-label="Navegação principal">
 ${grupos(menu, collapsible)}

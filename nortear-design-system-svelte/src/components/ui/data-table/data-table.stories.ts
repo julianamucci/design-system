@@ -164,10 +164,10 @@ export const Playground: Story = {
     const regiaoViva = () => canvasElement.querySelector<HTMLElement>("[role='status']")!;
 
     /** Estabelece a precondição do passo: sem ordem aplicada, venha de onde vier. */
-    const zerarOrdenacao = async (botao: HTMLElement) => {
-      const th = botao.closest('th')!;
+    const zerarOrdenacao = async (button: HTMLElement) => {
+      const th = button.closest('th')!;
       for (let i = 0; i < 3 && th.getAttribute('aria-sort') !== 'none'; i++) {
-        await userEvent.click(botao);
+        await userEvent.click(button);
       }
       await waitFor(() => expect(th).toHaveAttribute('aria-sort', 'none'));
     };
@@ -236,33 +236,33 @@ export const Playground: Story = {
     await step('Cabeçalho ordenável anuncia que ordena, e como', async () => {
       // accessibility.item2 — o aria-label carrega o NOME da coluna: "Ordenar
       // por" cinco vezes seria indistinguível na lista de controles do leitor.
-      const botao = canvas.getByRole('button', { name: 'Ordenar por Valor' });
-      await zerarOrdenacao(botao);
-      const cabecalho = botao.closest('th')!;
-      await expect(cabecalho).toHaveAttribute('scope', 'col');
+      const button = canvas.getByRole('button', { name: 'Ordenar por Valor' });
+      await zerarOrdenacao(button);
+      const header = button.closest('th')!;
+      await expect(header).toHaveAttribute('scope', 'col');
       // `none` explícito: ausência seria indistinguível de "não ordena".
-      await expect(cabecalho).toHaveAttribute('aria-sort', 'none');
+      await expect(header).toHaveAttribute('aria-sort', 'none');
     });
 
     await step('Ordenar percorre ascendente, descendente e nenhum', async () => {
       // functional.item3 — três estados. Sem o terceiro, quem ordenou por
       // engano não tem como voltar à ordem original dos dados.
-      const botao = canvas.getByRole('button', { name: 'Ordenar por Valor' });
-      await zerarOrdenacao(botao);
-      const cabecalho = botao.closest('th')!;
+      const button = canvas.getByRole('button', { name: 'Ordenar por Valor' });
+      await zerarOrdenacao(button);
+      const header = button.closest('th')!;
 
-      await userEvent.click(botao);
-      await waitFor(() => expect(cabecalho).toHaveAttribute('aria-sort', 'ascending'));
+      await userEvent.click(button);
+      await waitFor(() => expect(header).toHaveAttribute('aria-sort', 'ascending'));
       // O menor valor é 60 (INV-009). Se a ordenação comparasse o TEXTO
       // formatado, "R$ 1.200,00" viria antes de "R$ 60,00".
       await expect(firstCell()).toHaveTextContent('INV-009');
 
-      await userEvent.click(botao);
-      await waitFor(() => expect(cabecalho).toHaveAttribute('aria-sort', 'descending'));
+      await userEvent.click(button);
+      await waitFor(() => expect(header).toHaveAttribute('aria-sort', 'descending'));
       await expect(firstCell()).toHaveTextContent('INV-008');
 
-      await userEvent.click(botao);
-      await waitFor(() => expect(cabecalho).toHaveAttribute('aria-sort', 'none'));
+      await userEvent.click(button);
+      await waitFor(() => expect(header).toHaveAttribute('aria-sort', 'none'));
       await expect(firstCell()).toHaveTextContent('INV-001');
     });
 
@@ -277,13 +277,13 @@ export const Playground: Story = {
        * O prefixo "Selecionar fatura" prova de quebra que `labels` chegou ao
        * componente: o padrão diria "Selecionar linha".
        */
-      const caixas = [
+      const boxes = [
         ...canvasElement.querySelectorAll<HTMLElement>("tbody [role='checkbox']"),
       ];
-      await expect(caixas.length).toBe(linhas().length);
+      await expect(boxes.length).toBe(linhas().length);
 
-      const nomes = caixas.map((c) => c.getAttribute('aria-label') ?? '');
-      await expect(new Set(nomes).size).toBe(nomes.length);
+      const names = boxes.map((c) => c.getAttribute('aria-label') ?? '');
+      await expect(new Set(names).size).toBe(names.length);
 
       // Cada nome carrega o identificador da PRÓPRIA linha — o mesmo texto que
       // quem enxerga usaria para apontar a linha.
@@ -295,20 +295,20 @@ export const Playground: Story = {
       }
 
       const allName = allBox().getAttribute('aria-label') ?? '';
-      await expect(nomes).not.toContain(allName);
+      await expect(names).not.toContain(allName);
     });
 
     await step('A busca livre recorta as linhas', async () => {
       // functional.item1 — o filtro global casa em qualquer coluna.
-      const busca = canvas.getByRole('searchbox');
-      await userEvent.clear(busca);
-      await userEvent.type(busca, 'Karen');
+      const search = canvas.getByRole('searchbox');
+      await userEvent.clear(search);
+      await userEvent.type(search, 'Karen');
       await waitFor(() => expect(linhas().length).toBe(1));
       await expect(firstCell()).toHaveTextContent('INV-011');
       // A contagem acompanha o recorte, e não o total do dataset.
       await expect(regiaoViva()).toHaveTextContent('de 1 fatura(s) selecionada(s).');
 
-      await userEvent.clear(busca);
+      await userEvent.clear(search);
       await waitFor(() => expect(linhas().length).toBe(10));
     });
 
@@ -356,17 +356,17 @@ export const Playground: Story = {
        * identificador e reconferidas pelo identificador: comparar posições
        * passaria mesmo se a ordenação tivesse embaralhado a marcação junto.
        */
-      const botao = canvas.getByRole('button', { name: 'Ordenar por Valor' });
-      await zerarOrdenacao(botao);
+      const button = canvas.getByRole('button', { name: 'Ordenar por Valor' });
+      await zerarOrdenacao(button);
       await clearSelection();
 
       const targets = ['INV-002', 'INV-005'];
       for (const id of targets) await marcar(lineBox(lineOf(id)), 'true');
       await expect(regiaoViva()).toHaveTextContent('2 de 12 fatura(s) selecionada(s).');
 
-      const cabecalho = botao.closest('th')!;
-      await userEvent.click(botao);
-      await waitFor(() => expect(cabecalho).toHaveAttribute('aria-sort', 'ascending'));
+      const header = button.closest('th')!;
+      await userEvent.click(button);
+      await waitFor(() => expect(header).toHaveAttribute('aria-sort', 'ascending'));
       // A ordem mudou de verdade: sem isto o passo provaria a persistência em
       // cima de uma tabela que não reordenou nada.
       await expect(firstCell()).toHaveTextContent('INV-009');
@@ -378,7 +378,7 @@ export const Playground: Story = {
       await expect(regiaoViva()).toHaveTextContent('2 de 12 fatura(s) selecionada(s).');
 
       // Devolve o estado que o passo seguinte espera: sem ordem, sem marcação.
-      await zerarOrdenacao(botao);
+      await zerarOrdenacao(button);
       await clearSelection();
     });
 

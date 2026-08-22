@@ -6,7 +6,7 @@ import { createLanguageSwitcher } from '@/components/product/LanguageSwitcher';
 import { createBadge } from '@/components/ui/badge';
 import { DOCS_PAGE_TITLE_ID } from '@/components/docs/shared/sections/DocsHeader';
 import iconsTranslations from '@shared/content/icons/translations.json';
-import { CATALOGO_LUCIDE, NOMES_DE_ICONE, montarSvgDoIcone } from '@shared/primitives/lucide-catalog';
+import { CATALOGO_LUCIDE, ICON_NAMES, iconMountSvg } from '@shared/primitives/lucide-catalog';
 import DOMPurify from 'dompurify';
 
 // ─── Catálogo de ícones ──────────────────────────────────────────────────────
@@ -17,14 +17,14 @@ import DOMPurify from 'dompurify';
 // docblock do catálogo). O `lucide` segue sendo a lib documentada para quem
 // consome o design system em HTML puro.
 
-const ALL_ICON_NAMES: string[] = NOMES_DE_ICONE;
+const ALL_ICON_NAMES: string[] = ICON_NAMES;
 
 // Pré-constrói o SVG inteiro de cada ícone uma vez. A classe de tamanho é
 // obrigatória: <svg> com viewBox e sem largura cai no tamanho intrínseco de
 // 300×150 e estoura o tile — era o que acontecia aqui.
 const ICON_SVG: Record<string, string> = {};
 for (const name of ALL_ICON_NAMES) {
-  ICON_SVG[name] = montarSvgDoIcone(CATALOGO_LUCIDE[name], 'nds-icon-lg');
+  ICON_SVG[name] = iconMountSvg(CATALOGO_LUCIDE[name], 'nds-icon-lg');
 }
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
@@ -371,8 +371,8 @@ export function createIconsDocs(): HTMLElement {
     a11yRules.forEach((el, i) => { el.innerHTML = DOMPurify.sanitize(t(`accessibility.rule${i + 1}`)); });
     grid.querySelectorAll<HTMLSpanElement>('[data-tooltip-for]').forEach((tip) => {
       tip.textContent = t('copy.tooltip');
-      const botao = tip.closest('button');
-      if (botao) botao.setAttribute('aria-label', `${t('copy.tooltip')} ${tip.dataset.tooltipFor}`);
+      const button = tip.closest('button');
+      if (button) button.setAttribute('aria-label', `${t('copy.tooltip')} ${tip.dataset.tooltipFor}`);
     });
     updateSearch(searchInput.value);
   }

@@ -46,7 +46,7 @@ function itens(lista: Array<[valor: string, rotulo: string, icone: string, extra
     .join('\n');
 }
 
-const ALINHAMENTO: Array<[string, string, string]> = [
+const ALIGNMENT: Array<[string, string, string]> = [
   ['left', 'Alinhar à esquerda', 'AlignLeft'],
   ['center', 'Centralizar', 'AlignCenter'],
   ['right', 'Alinhar à direita', 'AlignRight'],
@@ -103,7 +103,7 @@ export const toggleGroupSource: SourceTransform<ToggleGroupArgs> = (_gerado, ctx
         propBool('disabled', args.disabled),
         rotulo,
       ],
-      itens(ALINHAMENTO),
+      itens(ALIGNMENT),
     ),
   );
 };
@@ -115,7 +115,7 @@ export const toggleGroupSource: SourceTransform<ToggleGroupArgs> = (_gerado, ctx
 export function toggleGroupExclusivoSource(): string {
   return jsxSnippet(
     `${IMPORT_GROUP}\n${ICONS_ALIGNMENT}`,
-    grupo(['defaultValue="center"', 'aria-label="Alinhamento do texto"'], itens(ALINHAMENTO)),
+    grupo(['defaultValue="center"', 'aria-label="Alinhamento do texto"'], itens(ALIGNMENT)),
   );
 }
 
@@ -152,7 +152,7 @@ export function toggleGroupVerticalSource(): string {
 export function toggleGroupEmptySource(): string {
   return jsxSnippet(
     `${IMPORT_GROUP}\n${ICONS_ALIGNMENT}`,
-    grupo(['aria-label="Alinhamento do texto"'], itens(ALINHAMENTO)),
+    grupo(['aria-label="Alinhamento do texto"'], itens(ALIGNMENT)),
   );
 }
 
@@ -162,7 +162,7 @@ export function toggleGroupDisabledSource(): string {
     `${IMPORT_GROUP}\n${ICONS_ALIGNMENT}`,
     grupo(
       ['disabled', 'defaultValue="center"', 'aria-label="Alinhamento do texto"'],
-      itens(ALINHAMENTO),
+      itens(ALIGNMENT),
     ),
   );
 }

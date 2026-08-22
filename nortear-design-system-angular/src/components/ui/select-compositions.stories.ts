@@ -82,7 +82,7 @@ export const InForm: Story = {
     const onSubmit = fn();
     return {
       props: {
-        estados: STATES,
+        states: STATES,
         onSubmit,
         aoEnviar: (evento: Event) => {
           evento.preventDefault();
@@ -100,7 +100,7 @@ export const InForm: Story = {
           </button>
 
           <ng-template ndsSelectContent>
-            @for (estado of estados; track estado.value) {
+            @for (estado of states; track estado.value) {
               <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
             }
           </ng-template>
@@ -172,7 +172,7 @@ export const WithReactiveForms: Story = {
       estado: new FormControl<string | null>(null, Validators.required),
     });
     return {
-      props: { estados: STATES, form, onSubmit: fn() },
+      props: { states: STATES, form, onSubmit: fn() },
       template: `
         <form class="nds-stack" data-spacing="sm" [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
           <label ndsLabel id="rotulo-estado-reativo">Estado</label>
@@ -183,7 +183,7 @@ export const WithReactiveForms: Story = {
             </button>
 
             <ng-template ndsSelectContent>
-              @for (estado of estados; track estado.value) {
+              @for (estado of states; track estado.value) {
                 <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
               }
             </ng-template>

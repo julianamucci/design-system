@@ -73,11 +73,11 @@ export const Focus: Story = {
 export const FocusableContent: Story = {
   parameters: { covers: ['accessibility.item4'] },
   render: () => ({
-    props: { acoes: ACTIONS },
+    props: { actions: ACTIONS },
     template: `
       <div ndsScrollArea size="md" label="Lista de ações" class="nds-w-sm nds-rounded-md nds-border-default">
         <div class="nds-stack nds-p-4" data-spacing="sm">
-          @for (acao of acoes; track acao) {
+          @for (acao of actions; track acao) {
             <button ndsButton variant="outline" size="sm">{{ acao }}</button>
           }
         </div>
@@ -88,7 +88,7 @@ export const FocusableContent: Story = {
     const viewport = canvasElement.querySelector<HTMLElement>(
       '[data-slot="scroll-area-viewport"]',
     )!;
-    const botoes = Array.from(canvasElement.querySelectorAll<HTMLButtonElement>('button'));
+    const buttons = Array.from(canvasElement.querySelectorAll<HTMLButtonElement>('button'));
 
     await step('O conteúdo focável continua na ordem natural do documento', async () => {
       // O componente não reordena nem remove nada da ordem de tabulação: depois
@@ -99,17 +99,17 @@ export const FocusableContent: Story = {
       await expect(document.activeElement).toBe(viewport);
 
       await userEvent.tab();
-      await expect(document.activeElement).toBe(botoes[0]);
+      await expect(document.activeElement).toBe(buttons[0]);
 
       await userEvent.tab();
-      await expect(document.activeElement).toBe(botoes[1]);
+      await expect(document.activeElement).toBe(buttons[1]);
     });
 
     await step('O foco por teclado traz o item para o campo visível', async () => {
       // Comportamento nativo do navegador ao focar um elemento fora da área
       // visível de um container rolável — só existe porque a rolagem é a nativa.
-      const ultimo = botoes[botoes.length - 1];
-      ultimo.focus();
+      const last = buttons[buttons.length - 1];
+      last.focus();
       await expect(viewport.scrollTop).toBeGreaterThan(0);
     });
   },

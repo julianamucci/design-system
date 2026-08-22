@@ -23,7 +23,7 @@ const LARGURAS = [
 
 // Montado como string porque a story não tem componente: `@for` exigiria um
 // contexto de template, e o que se mede aqui é a folha de estilo, não Angular.
-const CAIXAS = LARGURAS.map(
+const BOXES = LARGURAS.map(
   (classe) => `<div class="${classe} nds-p-2 nds-bg-muted nds-text-caption">${classe}</div>`,
 ).join('');
 
@@ -42,7 +42,7 @@ export const HorizontalNoScroll: StoryObj = {
   render: () => ({
     template: `
       <div data-moldura class="nds-p-4 nds-border-default nds-rounded-lg">
-        <div class="nds-stack" data-spacing="sm">${CAIXAS}</div>
+        <div class="nds-stack" data-spacing="sm">${BOXES}</div>
       </div>
     `,
   }),

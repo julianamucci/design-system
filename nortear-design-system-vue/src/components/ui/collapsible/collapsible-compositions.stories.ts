@@ -9,7 +9,7 @@ import {
 } from './collapsible.source';
 
 // Mesmo markup do Playground e do Vanilla (referência cross-stack).
-const PAINEL_CLASSES =
+const PANEL_CLASSES =
   'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
 const CHEVRON_CLASSES = 'nds-icon nds-shrink-0 nds-transition-transform nds-chevron';
 
@@ -59,7 +59,7 @@ export const WithCustomButton: Story = {
           <span>Exibir opções avançadas</span>
           <ChevronDown aria-hidden="true" class="${CHEVRON_CLASSES}" />
         </CollapsibleTrigger>
-        <CollapsibleContent class="${PAINEL_CLASSES}" data-spacing="sm">
+        <CollapsibleContent class="${PANEL_CLASSES}" data-spacing="sm">
           <p>Opção avançada 1</p>
           <p>Opção avançada 2</p>
           <p>Opção avançada 3</p>
@@ -116,7 +116,7 @@ export const WithIconInTrigger: Story = {
           </span>
           <ChevronDown aria-hidden="true" class="${CHEVRON_CLASSES}" />
         </CollapsibleTrigger>
-        <CollapsibleContent class="${PAINEL_CLASSES}" data-spacing="sm">
+        <CollapsibleContent class="${PANEL_CLASSES}" data-spacing="sm">
           <p class="nds-text-muted-foreground">Filtro avançado 1</p>
           <p class="nds-text-muted-foreground">Filtro avançado 2</p>
         </CollapsibleContent>
@@ -166,7 +166,7 @@ export const WithRotatingChevron: Story = {
           <span>Configurações avançadas</span>
           <ChevronDown aria-hidden="true" class="${CHEVRON_CLASSES}" />
         </CollapsibleTrigger>
-        <CollapsibleContent class="${PAINEL_CLASSES}" data-spacing="sm">
+        <CollapsibleContent class="${PANEL_CLASSES}" data-spacing="sm">
           <div class="nds-cluster" data-justify="between">
             <span class="nds-text-muted-foreground">Notificações</span>
             <span class="nds-font-medium">Ativadas</span>

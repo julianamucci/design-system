@@ -70,7 +70,7 @@ export const FocusVisible: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const handleOf = () => canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
-    const repouso = await restRing(handleOf());
+    const rest = await restRing(handleOf());
 
     await step('O foco por teclado pousa no input da alça', async () => {
       // O anel de foco sai de `.nds-slider-thumb:has(input:focus-visible)`: quem
@@ -85,8 +85,8 @@ export const FocusVisible: Story = {
     await step('O input está invisível, mas cobre a alça inteira', async () => {
       // Invisível e não `display:none`: escondê-lo de verdade tiraria o
       // controle da ordem de tabulação e do leitor de tela.
-      const alca = canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
-      const input = alca.querySelector<HTMLInputElement>('input')!;
+      const thumb = canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
+      const input = thumb.querySelector<HTMLInputElement>('input')!;
       await expect(getComputedStyle(input).opacity).toBe('0');
       // `clientWidth` e não `getBoundingClientRect` da alça: o input mede 100%
       // do bloco que o contém, que é a caixa de padding da alça. Hoje as duas
@@ -94,7 +94,7 @@ export const FocusVisible: Story = {
       // desenhado; a caixa da alça é o alvo de toque de 24px e não tem borda.
       // `clientWidth` continua sendo a leitura certa porque é a que acompanha
       // se a borda voltar.
-      await expect(Math.round(input.getBoundingClientRect().width)).toBe(alca.clientWidth);
+      await expect(Math.round(input.getBoundingClientRect().width)).toBe(thumb.clientWidth);
     });
 
     await step('A alça focada fica visivelmente diferente da alça em repouso', async () => {
@@ -104,8 +104,8 @@ export const FocusVisible: Story = {
       // A alça transiciona o anel em ~120ms: lido no instante seguinte ao Tab,
       // `getComputedStyle` devolve o valor de PARTIDA, igual ao repouso, e a
       // asserção reprovava um anel que existe. Espera assentar antes de ler.
-      const focada = await focusAssentadoRing(handleOf(), repouso);
-      await expect(focada.sombra !== repouso.sombra || focada.borda !== repouso.borda).toBe(true);
+      const focada = await focusAssentadoRing(handleOf(), rest);
+      await expect(focada.sombra !== rest.sombra || focada.border !== rest.border).toBe(true);
       await expect(focada.sombra).not.toBe('none');
     });
   },

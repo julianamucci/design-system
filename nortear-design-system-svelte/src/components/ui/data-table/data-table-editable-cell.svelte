@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Input } from '@/components/ui/input';
-  import { DATA_TABLE_LABELS_PADRAO, type DataTableLabels } from './data-table-labels';
+  import { DATA_TABLE_LABELS_DEFAULT, type DataTableLabels } from './data-table-labels';
 
   const {
     initial,
@@ -28,7 +28,7 @@
     onCommit: (value: unknown) => void;
   } = $props();
 
-  const rotulo = $derived((edit ?? DATA_TABLE_LABELS_PADRAO.edit)(label ?? columnId));
+  const rotulo = $derived((edit ?? DATA_TABLE_LABELS_DEFAULT.edit)(label ?? columnId));
 
   let value = $derived(initial == null ? '' : String(initial));
   let editing = $state(false);

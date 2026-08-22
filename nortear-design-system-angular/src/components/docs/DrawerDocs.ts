@@ -957,7 +957,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     return [
       {
         title: 'nds-drawer',
@@ -967,14 +967,14 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
             name: 'open',
             type: 'model<boolean>',
             defaultValue: 'false',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.open.description')),
           },
           {
             name: 'defaultOpen',
             type: t('props.table.defaultOpen.type'),
             defaultValue: t('props.table.defaultOpen.default'),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.defaultOpen.description')),
           },
           {
@@ -984,21 +984,21 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
             name: 'openChange',
             type: 'output<boolean>',
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.onOpenChange.description')),
           },
           {
             name: 'direction',
             type: t('props.table.direction.type'),
             defaultValue: t('props.table.direction.default'),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.direction.description')),
           },
           {
             name: 'modal',
             type: t('props.table.modal.type'),
             defaultValue: t('props.table.modal.default'),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.modal.description')),
           },
           {
@@ -1007,7 +1007,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
             name: 'disablePointerDismissal',
             type: t('props.table.dismissible.type'),
             defaultValue: 'false',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.dismissible.description')),
           },
         ],
@@ -1022,7 +1022,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
             name: 'panelClass',
             type: 'string',
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.panelClass.description')),
           },
         ],

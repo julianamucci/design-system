@@ -38,7 +38,7 @@ export type DropdownMenuArgs = {
 /** Miolo do `Content` de uma composição, com o que ele exige de import e de estado. */
 type Composition = {
   /** Peças além da tríade raiz + gatilho + conteúdo. */
-  nomes: string[];
+  names: string[];
   /** Linhas de `$state` que a composição precisa no bloco `<script>`. */
   estado?: string[];
   markup: string;
@@ -47,9 +47,9 @@ type Composition = {
 const PACOTE = '@/components/ui/dropdown-menu';
 
 /** Bloco de import com as peças usadas, em ordem alfabética. */
-function importing(nomes: string[]): string {
+function importing(names: string[]): string {
   const lista = [
-    ...new Set(['DropdownMenu', 'DropdownMenuTrigger', 'DropdownMenuContent', ...nomes]),
+    ...new Set(['DropdownMenu', 'DropdownMenuTrigger', 'DropdownMenuContent', ...names]),
   ].sort();
   return [
     `import {`,
@@ -60,8 +60,8 @@ function importing(nomes: string[]): string {
 }
 
 /** Empurra o miolo para dentro do `Content`. */
-function indentar(markup: string, nivel: number): string {
-  const espacos = ' '.repeat(nivel);
+function indentar(markup: string, level: number): string {
+  const espacos = ' '.repeat(level);
   return markup
     .split('\n')
     .map((linha) => (linha.trim() ? `${espacos}${linha}` : linha))
@@ -70,7 +70,7 @@ function indentar(markup: string, nivel: number): string {
 
 const COMPOSITIONS: Record<DropdownMenuVariant, Composition> = {
   default: {
-    nomes: ['DropdownMenuGroup', 'DropdownMenuItem'],
+    names: ['DropdownMenuGroup', 'DropdownMenuItem'],
     markup: `<DropdownMenuGroup>
   <DropdownMenuItem>Perfil</DropdownMenuItem>
   <DropdownMenuItem>Configurações</DropdownMenuItem>
@@ -79,14 +79,14 @@ const COMPOSITIONS: Record<DropdownMenuVariant, Composition> = {
   },
 
   destructive: {
-    nomes: ['DropdownMenuItem', 'DropdownMenuSeparator'],
+    names: ['DropdownMenuItem', 'DropdownMenuSeparator'],
     markup: `<DropdownMenuItem>Editar</DropdownMenuItem>
 <DropdownMenuSeparator />
 <DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>`,
   },
 
   withLabel: {
-    nomes: [
+    names: [
       'DropdownMenuGroup',
       'DropdownMenuGroupHeading',
       'DropdownMenuItem',
@@ -106,7 +106,7 @@ const COMPOSITIONS: Record<DropdownMenuVariant, Composition> = {
   },
 
   withCheckbox: {
-    nomes: ['DropdownMenuCheckboxItem', 'DropdownMenuLabel', 'DropdownMenuSeparator'],
+    names: ['DropdownMenuCheckboxItem', 'DropdownMenuLabel', 'DropdownMenuSeparator'],
     estado: [
       'let mostrarBarraDeStatus = $state(true);',
       'let mostrarBarraDeAtividade = $state(false);',
@@ -122,7 +122,7 @@ const COMPOSITIONS: Record<DropdownMenuVariant, Composition> = {
   },
 
   indeterminate: {
-    nomes: ['DropdownMenuCheckboxItem', 'DropdownMenuLabel', 'DropdownMenuSeparator'],
+    names: ['DropdownMenuCheckboxItem', 'DropdownMenuLabel', 'DropdownMenuSeparator'],
     markup: `<DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
 <DropdownMenuSeparator />
 <DropdownMenuCheckboxItem indeterminate>Nome</DropdownMenuCheckboxItem>
@@ -131,7 +131,7 @@ const COMPOSITIONS: Record<DropdownMenuVariant, Composition> = {
   },
 
   withRadio: {
-    nomes: [
+    names: [
       'DropdownMenuLabel',
       'DropdownMenuRadioGroup',
       'DropdownMenuRadioItem',
@@ -148,7 +148,7 @@ const COMPOSITIONS: Record<DropdownMenuVariant, Composition> = {
   },
 
   withSubmenu: {
-    nomes: [
+    names: [
       'DropdownMenuItem',
       'DropdownMenuSeparator',
       'DropdownMenuSub',
@@ -169,7 +169,7 @@ const COMPOSITIONS: Record<DropdownMenuVariant, Composition> = {
   },
 
   withShortcuts: {
-    nomes: ['DropdownMenuItem', 'DropdownMenuSeparator', 'DropdownMenuShortcut'],
+    names: ['DropdownMenuItem', 'DropdownMenuSeparator', 'DropdownMenuShortcut'],
     markup: `<DropdownMenuItem>
   Salvar
   <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
@@ -186,7 +186,7 @@ const COMPOSITIONS: Record<DropdownMenuVariant, Composition> = {
   },
 
   itemDisabled: {
-    nomes: ['DropdownMenuItem'],
+    names: ['DropdownMenuItem'],
     markup: `<DropdownMenuItem>Editar</DropdownMenuItem>
 <DropdownMenuItem disabled>Arquivar (indisponível)</DropdownMenuItem>
 <DropdownMenuItem>Duplicar</DropdownMenuItem>`,
@@ -229,7 +229,7 @@ export function dropdownMenuSource(
   ];
 
   return svelteSnippet(
-    [importing(composition.nomes), estado.join('\n')].filter(Boolean).join('\n\n'),
+    [importing(composition.names), estado.join('\n')].filter(Boolean).join('\n\n'),
     `<DropdownMenu${aberto ? ' bind:open={aberto}' : ''}>
   <DropdownMenuTrigger>
     {#snippet child({ props })}

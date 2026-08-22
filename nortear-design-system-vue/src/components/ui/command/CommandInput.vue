@@ -50,11 +50,11 @@ watch(
  * limpeza é feita no elemento, no tique seguinte.
  */
 const raiz = ref<HTMLElement | null>(null)
-const semResultados = computed(
+const noResults = computed(
   () => !!filterState.search && filterState.filtered.count === 0,
 )
 watch(
-  semResultados,
+  noResults,
   async (vazio) => {
     if (!vazio) return
     await nextTick()

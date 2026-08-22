@@ -29,12 +29,12 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const caixas = (raiz: HTMLElement): HTMLElement[] => [
+const boxes = (raiz: HTMLElement): HTMLElement[] => [
   ...raiz.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),
 ];
 
-const textos = (raiz: HTMLElement): string[] =>
-  caixas(raiz).map((c) => c.textContent?.trim() ?? '');
+const texts = (raiz: HTMLElement): string[] =>
+  boxes(raiz).map((c) => c.textContent?.trim() ?? '');
 
 export const Empty: Story = {
   parameters: { covers: ['visual.item1'] },
@@ -46,8 +46,8 @@ export const Empty: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('Nasce vazio com o campo pronto para receber', async () => {
-      await expect(caixas(canvasElement)).toHaveLength(6);
-      await expect(textos(canvasElement).join('')).toBe('');
+      await expect(boxes(canvasElement)).toHaveLength(6);
+      await expect(texts(canvasElement).join('')).toBe('');
       await expect(campo(canvasElement)).toHaveFocus();
     });
   },
@@ -63,16 +63,16 @@ export const Filling: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('O valor inicial se distribui da esquerda para a direita', async () => {
-      await expect(textos(canvasElement)).toEqual(['1', '2', '3', '', '', '']);
+      await expect(texts(canvasElement)).toEqual(['1', '2', '3', '', '', '']);
     });
 
     await step('O dígito tem contraste suficiente contra a caixa', async () => {
       // Uma caixa pequena com um caractere só: se o contraste cair, não há
       // palavra em volta para compensar pelo contexto. Conta WCAG do colhedor
       // compartilhado, não olhômetro nem nome de token.
-      const cs = getComputedStyle(caixas(canvasElement)[0]);
-      const medida = ratio(cs.color, cs.backgroundColor);
-      await expect(medida?.ratio ?? 0).toBeGreaterThanOrEqual(4.5);
+      const cs = getComputedStyle(boxes(canvasElement)[0]);
+      const measurement = ratio(cs.color, cs.backgroundColor);
+      await expect(measurement?.ratio ?? 0).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
@@ -87,7 +87,7 @@ export const Complete: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('Todas as caixas preenchidas, na ordem do código', async () => {
-      await expect(textos(canvasElement).join('')).toBe('482913');
+      await expect(texts(canvasElement).join('')).toBe('482913');
     });
   },
 };
@@ -106,7 +106,7 @@ export const Disabled: Story = {
       await expect(input).toBeDisabled();
       await userEvent.click(input);
       await expect(input).not.toHaveFocus();
-      await expect(textos(canvasElement).join('')).toBe('4829');
+      await expect(texts(canvasElement).join('')).toBe('4829');
     });
 
     await step('O bloqueio também se vê', async () => {
@@ -138,9 +138,9 @@ export const Error: Story = {
     });
 
     await step('A mensagem de erro está ligada ao campo', async () => {
-      const descrito = campo(canvasElement).getAttribute('aria-describedby');
-      await expect(descrito).toBeTruthy();
-      await expect(canvasElement.querySelector(`#${descrito}`)?.textContent).toContain(
+      const described = campo(canvasElement).getAttribute('aria-describedby');
+      await expect(described).toBeTruthy();
+      await expect(canvasElement.querySelector(`#${described}`)?.textContent).toContain(
         'tente novamente',
       );
     });
@@ -151,8 +151,8 @@ export const Error: Story = {
       // partir do token, dentro da mesma árvore, e comparada com a computada.
       // Continua podendo falhar — se a regra sumir, a borda volta a `--input`.
       const esperada = resolveColor(canvasElement, 'hsl(var(--destructive))');
-      const medida = getComputedStyle(caixas(canvasElement)[0]).borderTopColor;
-      await expect(medida).toBe(esperada);
+      const measurement = getComputedStyle(boxes(canvasElement)[0]).borderTopColor;
+      await expect(measurement).toBe(esperada);
     });
   },
 };

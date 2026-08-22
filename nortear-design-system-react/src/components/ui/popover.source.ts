@@ -61,7 +61,7 @@ function gatilho(rotulo: string): string {
  * Cabeçalho nomeado. Com `PopoverTitle` a lib monta o `aria-labelledby`
  * sozinha — e `role="dialog"` sem nome reprova na regra `aria-dialog-name`.
  */
-function cabecalho(titulo: string, descricao?: string): string {
+function header(titulo: string, descricao?: string): string {
   const lineDescription = descricao
     ? `\n      <PopoverDescription>\n        ${descricao}\n      </PopoverDescription>`
     : '';
@@ -119,7 +119,7 @@ ${IMPORT_BUTTON}`,
       raiz,
       'Abrir popover',
       painel,
-      `${cabecalho('Configurações de exibição', 'Ajuste a aparência do conteúdo da página.')}
+      `${header('Configurações de exibição', 'Ajuste a aparência do conteúdo da página.')}
 ${ACTIONS_DEFAULT}`,
     ),
   );
@@ -166,7 +166,7 @@ import { Label } from "@/components/ui/label";`,
       '',
       'Editar perfil',
       '',
-      `${cabecalho('Editar perfil')}
+      `${header('Editar perfil')}
     <form className="nds-stack" data-spacing="sm">
       <Label htmlFor="perfil-nome" className="nds-text-caption">Nome</Label>
       <Input id="perfil-nome" defaultValue="Joana" />
@@ -198,7 +198,7 @@ ${IMPORT_BUTTON}`,
       ' defaultOpen',
       'Abrir popover',
       '',
-      cabecalho('Configurações de exibição', 'Ajuste a aparência do conteúdo da página.'),
+      header('Configurações de exibição', 'Ajuste a aparência do conteúdo da página.'),
     ),
   );
 }
@@ -267,7 +267,7 @@ ${IMPORT_BUTTON}`,
       ' defaultOpen modal',
       'Abrir modal',
       '',
-      `${cabecalho('Popover modal', 'Interações fora do popover ficam bloqueadas.')}
+      `${header('Popover modal', 'Interações fora do popover ficam bloqueadas.')}
     <div className="nds-cluster" data-justify="end" data-spacing="sm">
       <Button size="sm">OK</Button>
     </div>`,
@@ -297,7 +297,7 @@ import { Label } from "@/components/ui/label";`,
       '',
       'Editar perfil',
       '',
-      `${cabecalho('Editar perfil', 'Altere o nome e o email da conta.')}
+      `${header('Editar perfil', 'Altere o nome e o email da conta.')}
     <form className="nds-stack" data-spacing="sm">
       <Label htmlFor="conta-nome" className="nds-text-caption">Nome</Label>
       <Input id="conta-nome" defaultValue="Ana Ribeiro" />
@@ -337,7 +337,7 @@ ${IMPORT_BUTTON}`,
       '',
       'Filtros',
       '',
-      `${cabecalho('Filtrar por status', 'Combine quantos status quiser na listagem.')}
+      `${header('Filtrar por status', 'Combine quantos status quiser na listagem.')}
     <div className="nds-stack nds-text-body" data-spacing="xs">
 ${opcao('Ativo', true)}
 ${opcao('Pendente')}
@@ -376,7 +376,7 @@ const AMOSTRA = "nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring";`,
       '',
       'Escolher cor da etiqueta',
       '',
-      `${cabecalho('Cor da etiqueta', 'Escolha uma cor da paleta do tema.')}
+      `${header('Cor da etiqueta', 'Escolha uma cor da paleta do tema.')}
     <div className="nds-cluster" data-spacing="sm">
 ${amostra('primary', 'Primária')}
 ${amostra('secondary', 'Secundária')}
@@ -418,7 +418,7 @@ ${IMPORT_BUTTON}`,
       '',
       'Configurações rápidas',
       '',
-      `${cabecalho('Preferências', 'Cada linha vale por si — nada aqui depende do resto.')}
+      `${header('Preferências', 'Cada linha vale por si — nada aqui depende do resto.')}
     <div className="nds-stack nds-text-body" data-spacing="sm">
 ${preferencia('Notificações', true)}
 ${preferencia('Modo escuro')}
@@ -448,7 +448,7 @@ ${IMPORT_BUTTON}`,
       '',
       'Abrir acima',
       ' side="top" sideOffset={12}',
-      cabecalho('Ancorado acima', 'Sem espaço acima, o painel vira para baixo sozinho.'),
+      header('Ancorado acima', 'Sem espaço acima, o painel vira para baixo sozinho.'),
     ),
   );
 }

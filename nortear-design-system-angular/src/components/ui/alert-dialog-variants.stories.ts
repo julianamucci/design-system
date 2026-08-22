@@ -248,16 +248,16 @@ export const StackedFooter: Story = {
       // móvel, onde o parâmetro vale.
       await waitForPortal('alertdialog');
       const rodape = document.querySelector<HTMLElement>('[data-testid="rodape"]')!;
-      const largo = window.matchMedia('(min-width: 40rem)').matches;
+      const wide = window.matchMedia('(min-width: 40rem)').matches;
 
       await expect(getComputedStyle(rodape).flexDirection).toBe(
-        largo ? 'row' : 'column-reverse',
+        wide ? 'row' : 'column-reverse',
       );
 
       const [cancelar, excluir] = [...rodape.querySelectorAll('button')].map((b) =>
         b.getBoundingClientRect(),
       );
-      if (largo) {
+      if (wide) {
         // Lado a lado, com a confirmação à direita.
         await expect(excluir.left).toBeGreaterThan(cancelar.left);
       } else {

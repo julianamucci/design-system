@@ -24,7 +24,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /** Retângulos do viewport e dos slides — a geometria é a prova de qual slide está à mostra. */
-function medidas(canvasElement: HTMLElement) {
+function measurements(canvasElement: HTMLElement) {
   const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
   const slides = Array.from(
     canvasElement.querySelectorAll<HTMLElement>('[data-slot="carousel-item"]'),
@@ -90,7 +90,7 @@ export const FirstSlide: Story = {
     await step('É o primeiro slide que está à mostra', async () => {
       // A prova de que o extremo é real e não só um sinalizador do componente:
       // o primeiro slide cobre o viewport e o segundo ainda não entrou nele.
-      const { v, s } = medidas(canvasElement);
+      const { v, s } = measurements(canvasElement);
       await expect(Math.abs(s[0].right - v.right)).toBeLessThan(2);
       await expect(s[1].left).toBeGreaterThan(v.right - 2);
     });
@@ -150,9 +150,9 @@ export const LastSlide: Story = {
       // Não sobrou trilho à frente: o último slide cobre o viewport e o
       // penúltimo já saiu por completo pela esquerda.
       await waitFor(async () => {
-        const { v, s } = medidas(canvasElement);
-        const ultimo = s[s.length - 1];
-        await expect(Math.abs(ultimo.right - v.right)).toBeLessThan(2);
+        const { v, s } = measurements(canvasElement);
+        const last = s[s.length - 1];
+        await expect(Math.abs(last.right - v.right)).toBeLessThan(2);
         await expect(s[s.length - 2].right).toBeLessThan(v.left + 2);
       }, { timeout: 4000 });
     });

@@ -114,7 +114,7 @@ describe('drawerSourceCom', () => {
 describe('drawerComFormularioSnippet', () => {
   it('constrói o corpo com a fábrica de campo, e não com rótulo e controle soltos', () => {
     const código = drawerWithFormSnippet({
-      campos: [{ label: 'E-mail', type: 'email', value: 'maria@exemplo.com' }],
+      fields: [{ label: 'E-mail', type: 'email', value: 'maria@exemplo.com' }],
     });
     expect(código).toContain("import { createFormField } from '@/components/ui/form';");
     expect(código).toContain("input: createInput({ type: 'email', value: 'maria@exemplo.com' })");

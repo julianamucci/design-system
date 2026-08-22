@@ -31,19 +31,19 @@ export type RetratoDoMenubar = {
     slot: string | null;
     ariaOrientation: string | null;
   } | null;
-  gatilhos: RetratoDeElemento[];
+  triggers: RetratoDeElemento[];
   /** Quantos gatilhos são alcançáveis pelo Tab — o menubar exige exatamente 1. */
   gatilhosTabulaveis: number;
   panels: Array<{
     role: string | null;
     slot: string | null;
     classes: string;
-    fundo: string;
+    background: string;
     ancoradoNoBody: boolean;
   }>;
   itens: RetratoDeElemento[];
   marcacoes: RetratoDeElemento[];
-  atalhos: { quantidade: number; classes: string | null };
+  shortcuts: { quantidade: number; classes: string | null };
 };
 
 const DATA_IGNORADOS = new Set(['data-slot', 'data-state', 'data-testid']);
@@ -74,7 +74,7 @@ function retratar(el: HTMLElement): RetratoDeElemento {
  * `document.body` porque quatro das cinco stacks os portalizam.
  */
 export function radiografarMenubar(barra: HTMLElement | null): RetratoDoMenubar {
-  const gatilhos = barra
+  const triggers = barra
     ? Array.from(barra.querySelectorAll<HTMLElement>('[aria-haspopup], button'))
     : [];
 
@@ -82,7 +82,7 @@ export function radiografarMenubar(barra: HTMLElement | null): RetratoDoMenubar 
 
   const itens: RetratoDeElemento[] = [];
   const marcacoes: RetratoDeElemento[] = [];
-  let atalhos: { quantidade: number; classes: string | null } = {
+  let shortcuts: { quantidade: number; classes: string | null } = {
     quantidade: 0,
     classes: null,
   };
@@ -100,8 +100,8 @@ export function radiografarMenubar(barra: HTMLElement | null): RetratoDoMenubar 
       '[data-slot$="shortcut"], .nds-dropdown-menu-shortcut, .nds-menubar-shortcut',
     );
     if (encontrados.length > 0) {
-      atalhos = {
-        quantidade: atalhos.quantidade + encontrados.length,
+      shortcuts = {
+        quantidade: shortcuts.quantidade + encontrados.length,
         classes: encontrados[0].getAttribute('class'),
       };
     }
@@ -117,18 +117,18 @@ export function radiografarMenubar(barra: HTMLElement | null): RetratoDoMenubar 
           ariaOrientation: barra.getAttribute('aria-orientation'),
         }
       : null,
-    gatilhos: gatilhos.map(retratar),
-    gatilhosTabulaveis: gatilhos.filter((g) => g.tabIndex === 0).length,
+    triggers: triggers.map(retratar),
+    gatilhosTabulaveis: triggers.filter((g) => g.tabIndex === 0).length,
     panels: panels.map((p) => ({
       role: p.getAttribute('role'),
       slot: p.getAttribute('data-slot'),
       classes: p.getAttribute('class') ?? '',
-      fundo: getComputedStyle(p).backgroundColor,
+      background: getComputedStyle(p).backgroundColor,
       ancoradoNoBody: !p.closest('#storybook-root'),
     })),
     itens,
     marcacoes,
-    atalhos,
+    shortcuts,
   };
 }
 

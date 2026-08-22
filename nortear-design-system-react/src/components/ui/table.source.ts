@@ -22,7 +22,7 @@ import type { SourceTransform } from '@/lib/story-source';
 
 export type TableArgs = {
   captionVisivel: boolean;
-  comRodape: boolean;
+  withFooter: boolean;
 };
 
 const CAPTION = 'Lista de faturas recentes';
@@ -90,14 +90,14 @@ const FOOTER = `  <TableFooter>
  * O que muda é ficar ou não visível, e `nds-sr-only` recorta a caixa sem tirar
  * da árvore de acessibilidade — `display: none` tiraria das duas.
  */
-function legenda(visivel: boolean, texto = CAPTION): string {
-  const classe = visivel ? '' : ' className="nds-sr-only"';
+function legenda(visible: boolean, texto = CAPTION): string {
+  const classe = visible ? '' : ' className="nds-sr-only"';
   return `  <TableCaption${classe}>${texto}</TableCaption>`;
 }
 
 /** Junta as seções dentro de uma `<Table>`, descartando as ausentes. */
-function tabela(...secoes: Array<string | false | null | undefined>): string {
-  const corpo = secoes.filter((secao): secao is string => Boolean(secao)).join('\n');
+function tabela(...sections: Array<string | false | null | undefined>): string {
+  const corpo = sections.filter((secao): secao is string => Boolean(secao)).join('\n');
   return `<Table>\n${corpo}\n</Table>`;
 }
 
@@ -134,12 +134,12 @@ const IMPORT_NO_FOOTER = importingTable(
  */
 export const tableSource: SourceTransform<TableArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const comRodape = args.comRodape !== false;
-  return `${comRodape ? IMPORT_COMPLETO : IMPORT_NO_FOOTER}
+  const withFooter = args.withFooter !== false;
+  return `${withFooter ? IMPORT_COMPLETO : IMPORT_NO_FOOTER}
 
 ${DATA}
 
-${tabela(legenda(args.captionVisivel === true), HEADER, BODY, comRodape && FOOTER)}`;
+${tabela(legenda(args.captionVisivel === true), HEADER, BODY, withFooter && FOOTER)}`;
 };
 
 /**

@@ -199,9 +199,9 @@ export const Playground: Story = {
       // chegada é absoluto e não tem esse ruído: o começo do trilho é zero.
       const total = canvas.getAllByRole('group').length;
       for (let passo = 0; passo < total; passo++) {
-        const botao = anterior();
-        if (botao.disabled) break;
-        await userEvent.click(botao);
+        const button = anterior();
+        if (button.disabled) break;
+        await userEvent.click(button);
       }
 
       await expect(anterior()).toBeDisabled();

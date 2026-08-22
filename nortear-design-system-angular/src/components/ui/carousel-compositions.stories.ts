@@ -115,7 +115,7 @@ export const WithDots: Story = {
               class="nds-carousel-dot"
               [attr.aria-current]="comDots.index() === i - 1 ? 'true' : null"
               [attr.aria-label]="nomeAcessivel(i, slides.length)"
-              (click)="comDots.irPara(i - 1)"
+              (click)="comDots.irTo(i - 1)"
             ><span class="nds-carousel-dot-label">{{ labelVisible(i) }}</span></button>
           }
         </div>

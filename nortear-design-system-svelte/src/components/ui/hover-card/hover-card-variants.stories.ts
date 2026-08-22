@@ -94,7 +94,7 @@ export const WithShortDelay: Story = {
 
     await step('O cartão abre depois da espera pedida na raiz', async () => {
       await expect(panelOpen()).toBeNull();
-      const inicio = performance.now();
+      const start = performance.now();
       await userEvent.hover(gatilho);
       const painel = await waitForOpen();
       await expect(painel).toBeVisible();
@@ -104,7 +104,7 @@ export const WithShortDelay: Story = {
       // binding perdido, o cartão usaria os 600ms padrão, muito acima deste
       // teto. A folga é larga de propósito — o que se mede é a diferença entre
       // 150 e 600, não a precisão do relógio.
-      await expect(performance.now() - inicio).toBeLessThan(550);
+      await expect(performance.now() - start).toBeLessThan(550);
     });
   },
 };

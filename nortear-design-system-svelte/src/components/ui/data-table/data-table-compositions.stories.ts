@@ -136,10 +136,10 @@ export const ResizableColumns: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const alca = () => canvas.getByRole('separator', { name: 'Redimensionar coluna Cliente' });
+    const thumb = () => canvas.getByRole('separator', { name: 'Redimensionar coluna Cliente' });
 
     await step('A alça se anuncia como separador, com o nome da coluna', async () => {
-      const el = alca();
+      const el = thumb();
       await expect(el).toHaveAttribute('aria-orientation', 'vertical');
       await expect(el.closest('th')).toHaveClass('nds-data-table-th');
     });
@@ -152,11 +152,11 @@ export const ResizableColumns: Story = {
       // `table-layout: fixed` o navegador redistribui o que sobra, então a
       // coluna vizinha encolhe na tela sem que ninguém tenha mexido no tamanho
       // dela.
-      const el = alca();
-      const cabecalho = el.closest('th') as HTMLElement;
-      const vizinho = cabecalho.nextElementSibling as HTMLElement;
-      const antes = parseFloat(cabecalho.style.width);
-      const neighbourDeclarada = vizinho.style.width;
+      const el = thumb();
+      const header = el.closest('th') as HTMLElement;
+      const neighbour = header.nextElementSibling as HTMLElement;
+      const antes = parseFloat(header.style.width);
+      const neighbourDeclarada = neighbour.style.width;
       const caixa = el.getBoundingClientRect();
 
       fireEvent.mouseDown(el, { clientX: caixa.left, clientY: caixa.top });
@@ -164,9 +164,9 @@ export const ResizableColumns: Story = {
       fireEvent.mouseUp(document, { clientX: caixa.left + 80, clientY: caixa.top });
 
       await waitFor(async () => {
-        await expect(parseFloat(cabecalho.style.width)).toBeGreaterThan(antes + 40);
+        await expect(parseFloat(header.style.width)).toBeGreaterThan(antes + 40);
       });
-      await expect(vizinho.style.width).toBe(neighbourDeclarada);
+      await expect(neighbour.style.width).toBe(neighbourDeclarada);
     });
   },
 };
@@ -199,12 +199,12 @@ export const ReorderableAndPinnable: Story = {
         .textContent!.trim();
 
       const origem = cabecalhos()[0];
-      const destino = cabecalhos()[1];
+      const destination = cabecalhos()[1];
       await expect(origem).toHaveAttribute('draggable', 'true');
 
       fireEvent.dragStart(origem);
-      fireEvent.dragOver(destino);
-      fireEvent.drop(destino);
+      fireEvent.dragOver(destination);
+      fireEvent.drop(destination);
 
       await waitFor(async () => {
         await expect(rotulos()[0]).toBe(antes[1]);
@@ -271,9 +271,9 @@ export const WithInlineEditing: Story = {
     const canvas = within(canvasElement);
 
     await step('A célula editável é um botão com nome, não um texto solto', async () => {
-      const botao = canvas.getAllByRole('button', { name: 'Editar Cliente' })[0];
-      await expect(botao).toHaveClass('nds-data-table-edit-btn');
-      await expect(botao.closest('td')).toHaveClass('nds-data-table-td');
+      const button = canvas.getAllByRole('button', { name: 'Editar Cliente' })[0];
+      await expect(button).toHaveClass('nds-data-table-edit-btn');
+      await expect(button.closest('td')).toHaveClass('nds-data-table-td');
     });
 
     await step('Enter confirma, avisa quem consome e o valor novo chega à célula', async () => {
@@ -281,9 +281,9 @@ export const WithInlineEditing: Story = {
       // value) é a chamada registrada MAIS o texto da célula mudar: quem
       // atualiza o array é o consumidor, com os três campos do payload.
       aoEditar.mockClear();
-      const botao = canvas.getAllByRole('button', { name: 'Editar Cliente' })[0];
-      const legacyValue = botao.textContent!.trim();
-      await userEvent.click(botao);
+      const button = canvas.getAllByRole('button', { name: 'Editar Cliente' })[0];
+      const legacyValue = button.textContent!.trim();
+      await userEvent.click(button);
 
       const campo = await waitFor(() => canvas.getByRole('textbox', { name: 'Editar Cliente' }));
       await expect(campo).toHaveFocus();
@@ -302,9 +302,9 @@ export const WithInlineEditing: Story = {
 
     await step('Escape descarta o rascunho e não avisa ninguém', async () => {
       aoEditar.mockClear();
-      const botao = canvas.getAllByRole('button', { name: 'Editar Valor' })[0];
-      const original = botao.textContent!.trim();
-      await userEvent.click(botao);
+      const button = canvas.getAllByRole('button', { name: 'Editar Valor' })[0];
+      const original = button.textContent!.trim();
+      await userEvent.click(button);
 
       const campo = await waitFor(() => canvas.getByRole('textbox', { name: 'Editar Valor' }));
       await userEvent.clear(campo);
@@ -321,8 +321,8 @@ export const WithInlineEditing: Story = {
     await step('A segunda célula editável fica em edição para a captura', async () => {
       // visual.item4 — a story termina COM um campo aberto: é esse o estado que
       // a regressão visual precisa guardar.
-      const botao = canvas.getAllByRole('button', { name: 'Editar Cliente' })[1];
-      await userEvent.click(botao);
+      const button = canvas.getAllByRole('button', { name: 'Editar Cliente' })[1];
+      await userEvent.click(button);
       await waitFor(async () => {
         await expect(canvasElement.querySelectorAll('.nds-data-table-edit-input').length).toBe(1);
       });

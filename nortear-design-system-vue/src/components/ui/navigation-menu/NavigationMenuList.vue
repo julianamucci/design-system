@@ -45,18 +45,18 @@ function aoTeclar(event: KeyboardEvent): void {
   const atual = itens.indexOf(document.activeElement as HTMLElement)
   if (atual === -1) return
 
-  let destino = -1
-  if (event.key === proximo) destino = (atual + 1) % itens.length
-  else if (event.key === anterior) destino = (atual - 1 + itens.length) % itens.length
-  else if (event.key === 'Home') destino = 0
-  else if (event.key === 'End') destino = itens.length - 1
-  if (destino === -1) return
+  let destination = -1
+  if (event.key === proximo) destination = (atual + 1) % itens.length
+  else if (event.key === anterior) destination = (atual - 1 + itens.length) % itens.length
+  else if (event.key === 'Home') destination = 0
+  else if (event.key === 'End') destination = itens.length - 1
+  if (destination === -1) return
 
   // A tecla de ENTRADA no painel (Seta-para-baixo numa barra horizontal) é da
   // lib e só vale com o painel aberto — por isso o eixo daqui é o da barra, e
   // os dois nunca disputam a mesma tecla.
   event.preventDefault()
-  itens[destino]?.focus()
+  itens[destination]?.focus()
 }
 </script>
 

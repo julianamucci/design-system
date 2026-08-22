@@ -259,20 +259,20 @@ export const GraphicContrast: Story = {
     await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
     // Precondição da medida: ver o comentário de `settleTheme`.
     await settleTheme(document);
-    const fundo = backgroundOpacoAtras(raiz);
+    const background = backgroundOpacoAtras(raiz);
 
     await step('Todo contorno de forma passa de 3:1 contra o fundo', async () => {
       const formas = datumFormas(raiz);
       await expect(formas.length).toBeGreaterThan(0);
       for (const forma of formas) {
-        await expect(contraste(getComputedStyle(forma).stroke, fundo)).toBeGreaterThanOrEqual(3);
+        await expect(contraste(getComputedStyle(forma).stroke, background)).toBeGreaterThanOrEqual(3);
       }
     });
 
     await step('O texto do eixo passa de 4.5:1 — é texto, não objeto', async () => {
       const rotulo = raiz.querySelector<SVGTextElement>('svg text');
       await expect(rotulo).not.toBeNull();
-      await expect(contraste(getComputedStyle(rotulo!).fill, fundo)).toBeGreaterThanOrEqual(4.5);
+      await expect(contraste(getComputedStyle(rotulo!).fill, background)).toBeGreaterThanOrEqual(4.5);
     });
   },
 };

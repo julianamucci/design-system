@@ -28,7 +28,7 @@ export type Rgba = [number, number, number, number];
  * é o `[data-slot="progress"]` — a busca voltava vazia numa lista de barras e
  * cheia quando o canvas inteiro era passado.
  */
-function achar(raiz: ParentNode, slot: string): HTMLElement | null {
+function find(raiz: ParentNode, slot: string): HTMLElement | null {
   const seletor = `[data-slot="${slot}"]`;
   if (raiz instanceof Element && raiz.matches(seletor)) return raiz as HTMLElement;
   return raiz.querySelector<HTMLElement>(seletor);
@@ -36,19 +36,19 @@ function achar(raiz: ParentNode, slot: string): HTMLElement | null {
 
 /** A raiz anunciada como barra de progresso. */
 export function progressoRoot(raiz: ParentNode): HTMLElement {
-  const el = achar(raiz, 'progress');
+  const el = find(raiz, 'progress');
   if (!el) throw new Error('SONDA::progress: nenhum [data-slot="progress"] no canvas');
   return el;
 }
 
 /** A caixa por onde o indicador corre — a trilha, ou a raiz quando ela acumula o papel. */
 export function progressoTrack(raiz: ParentNode): HTMLElement {
-  return achar(raiz, 'progress-track') ?? progressoRoot(raiz);
+  return find(raiz, 'progress-track') ?? progressoRoot(raiz);
 }
 
 /** A barra preenchida. */
 export function indicadorDoProgresso(raiz: ParentNode): HTMLElement {
-  const el = achar(raiz, 'progress-indicator');
+  const el = find(raiz, 'progress-indicator');
   if (!el) throw new Error('SONDA::progress: nenhum [data-slot="progress-indicator"] no canvas');
   return el;
 }
@@ -80,8 +80,8 @@ function parseRgba(cor: string): Rgba {
   return [Number(n[0] ?? 0), Number(n[1] ?? 0), Number(n[2] ?? 0), n[3] === undefined ? 1 : Number(n[3])];
 }
 
-function compor([r, g, b, a]: Rgba, fundo: Rgba): Rgba {
-  return [a * r + (1 - a) * fundo[0], a * g + (1 - a) * fundo[1], a * b + (1 - a) * fundo[2], 1];
+function compor([r, g, b, a]: Rgba, background: Rgba): Rgba {
+  return [a * r + (1 - a) * background[0], a * g + (1 - a) * background[1], a * b + (1 - a) * background[2], 1];
 }
 
 /** Primeira cor opaca subindo a árvore — o que de fato está atrás do elemento. */
@@ -104,8 +104,8 @@ function luminancia([r, g, b]: Rgba): number {
 }
 
 function contraste(a: Rgba, b: Rgba): number {
-  const [claro, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
-  return (claro + 0.05) / (escuro + 0.05);
+  const [light, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
+  return (light + 0.05) / (escuro + 0.05);
 }
 
 /**
@@ -143,11 +143,11 @@ export function indicadorAnimation(raiz: ParentNode): string {
  * herança, recebe a cor e devolve o valor computado.
  */
 export function corDoToken(contexto: HTMLElement, token: string): string {
-  const sonda = contexto.ownerDocument.createElement('div');
-  sonda.style.backgroundColor = `hsl(var(${token}))`;
-  contexto.appendChild(sonda);
-  const cor = getComputedStyle(sonda).backgroundColor;
-  sonda.remove();
+  const probe = contexto.ownerDocument.createElement('div');
+  probe.style.backgroundColor = `hsl(var(${token}))`;
+  contexto.appendChild(probe);
+  const cor = getComputedStyle(probe).backgroundColor;
+  probe.remove();
   return cor;
 }
 
@@ -165,11 +165,11 @@ export function barrasDeProgresso(raiz: ParentNode): HTMLElement[] {
 export function nomeAcessivel(el: HTMLElement): string {
   const labelledby = el.getAttribute('aria-labelledby');
   if (labelledby) {
-    const textos = labelledby
+    const texts = labelledby
       .split(/\s+/)
       .map((id) => el.ownerDocument.getElementById(id)?.textContent?.trim() ?? '')
       .filter(Boolean);
-    if (textos.length) return textos.join(' ');
+    if (texts.length) return texts.join(' ');
   }
   return el.getAttribute('aria-label')?.trim() ?? '';
 }

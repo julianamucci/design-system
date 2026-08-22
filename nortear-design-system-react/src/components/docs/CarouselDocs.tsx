@@ -246,7 +246,7 @@ export function CarouselDocs() {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";`;
 
-  const codeHorizontal = `<Carousel className="nds-w-full nds-max-w-md" aria-label="Galeria de exemplos">
+  const horizontalCode = `<Carousel className="nds-w-full nds-max-w-md" aria-label="Galeria de exemplos">
   <CarouselContent>
     {Array.from({ length: 5 }).map((_, i) => (
       <CarouselItem key={i}>
@@ -262,7 +262,7 @@ import Autoplay from "embla-carousel-autoplay";`;
   <CarouselNext aria-label="Próximo item" />
 </Carousel>`;
 
-  const codeVertical = `<Carousel
+  const verticalCode = `<Carousel
   orientation="vertical"
   className="nds-w-full nds-max-w-xs"
   aria-label="Galeria vertical"
@@ -568,7 +568,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
           {
             name: "horizontal",
             description: stripHtml(tContent("variants.items.horizontal")),
-            code: codeHorizontal,
+            code: horizontalCode,
             preview: (
               <Carousel className="nds-w-full nds-max-w-md" aria-label="horizontal">
                 <CarouselContent>
@@ -586,7 +586,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
           {
             name: "vertical",
             description: stripHtml(tContent("variants.items.vertical")),
-            code: codeVertical,
+            code: verticalCode,
             preview: (
               <Carousel
                 orientation="vertical"

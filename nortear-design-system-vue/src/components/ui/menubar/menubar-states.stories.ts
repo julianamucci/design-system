@@ -22,7 +22,7 @@ import {
 
 const MENUS_FECHADOS = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'];
 
-const ITENS_COM_BLOQUEIO = [
+const ITEMS_WITH_BLOCK = [
   { label: 'Novo', disabled: false },
   { label: 'Salvar', disabled: false },
   { label: 'Enviar para revisão', disabled: true },
@@ -92,15 +92,15 @@ export const Closed: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const barra = canvas.getByRole('menubar');
-    const gatilhos = within(barra).getAllByRole('menuitem');
+    const triggers = within(barra).getAllByRole('menuitem');
 
     await step('A barra publica o papel e o marcador de composição', async () => {
       await expect(barra.getAttribute('data-slot')).toBe('menubar');
-      await expect(gatilhos).toHaveLength(MENUS_FECHADOS.length);
+      await expect(triggers).toHaveLength(MENUS_FECHADOS.length);
     });
 
     await step('Fechado é ausência: nenhum painel existe no DOM', async () => {
-      for (const gatilho of gatilhos) {
+      for (const gatilho of triggers) {
         await expect(gatilho.getAttribute('data-state')).toBe('closed');
         await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
       }
@@ -188,7 +188,7 @@ export const ItemDisabled: Story = {
   },
   render: () => ({
     components: parts,
-    setup: () => ({ itens: ITENS_COM_BLOQUEIO, aoEscolher: selectionSpy }),
+    setup: () => ({ itens: ITEMS_WITH_BLOCK, onChoose: selectionSpy }),
     template: `
       <div style="contain: layout; min-height: 240px;">
         <Menubar default-value="file">
@@ -199,7 +199,7 @@ export const ItemDisabled: Story = {
                 v-for="i in itens"
                 :key="i.label"
                 :disabled="i.disabled"
-                @select="aoEscolher(i.label)"
+                @select="onChoose(i.label)"
               >{{ i.label }}</MenubarItem>
             </MenubarContent>
           </MenubarMenu>
@@ -210,10 +210,10 @@ export const ItemDisabled: Story = {
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const itens = within(menu).getAllByRole('menuitem');
-    const bloqueado = itens[ITENS_COM_BLOQUEIO.findIndex((i) => i.disabled)];
+    const bloqueado = itens[ITEMS_WITH_BLOCK.findIndex((i) => i.disabled)];
 
     await step('O item bloqueado se anuncia como tal', async () => {
-      await expect(itens).toHaveLength(ITENS_COM_BLOQUEIO.length);
+      await expect(itens).toHaveLength(ITEMS_WITH_BLOCK.length);
       await expect(bloqueado.getAttribute('aria-disabled')).toBe('true');
       // `aria-disabled`, e não o atributo `disabled`: o item continua
       // alcançável pela seta, para ser ANUNCIADO como indisponível em vez de

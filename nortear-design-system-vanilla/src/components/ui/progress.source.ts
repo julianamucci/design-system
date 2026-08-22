@@ -118,7 +118,7 @@ linha.append(nome, valor);`,
 
 /** Uma lista de barras — a forma das stories que mostram várias de uma vez. */
 export function progressListaSnippet(itens: ProgressSnippetItem[]): string {
-  const chamadas = itens.map(
+  const calls = itens.map(
     (i) =>
       `  ${recuar(
         chamada(
@@ -142,7 +142,7 @@ lista.dataset.spacing = 'md';
 // Um nome acessível DISTINTO por barra: quatro "Progresso do upload" numa
 // lista são quatro controles indistinguíveis para quem só ouve.
 lista.append(
-${chamadas.join('\n')}
+${calls.join('\n')}
 );`,
     montar('lista'),
   );

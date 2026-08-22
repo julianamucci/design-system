@@ -48,7 +48,7 @@ type Composition = {
 
 /** Import do design system, com só os subcomponentes que a composição usa. */
 function importDialog(c: Composition): string {
-  const nomes = [
+  const names = [
     'AlertDialog',
     'AlertDialogAction',
     'AlertDialogCancel',
@@ -57,11 +57,11 @@ function importDialog(c: Composition): string {
     'AlertDialogHeader',
     'AlertDialogTitle',
   ];
-  if (c.descricao) nomes.push('AlertDialogDescription');
-  if (c.midia) nomes.push('AlertDialogMedia');
-  if (c.gatilho) nomes.push('AlertDialogTrigger');
-  nomes.sort();
-  return `import {\n${nomes.map((n) => `  ${n},`).join('\n')}\n} from '@/components/ui/alert-dialog'`;
+  if (c.descricao) names.push('AlertDialogDescription');
+  if (c.midia) names.push('AlertDialogMedia');
+  if (c.gatilho) names.push('AlertDialogTrigger');
+  names.sort();
+  return `import {\n${names.map((n) => `  ${n},`).join('\n')}\n} from '@/components/ui/alert-dialog'`;
 }
 
 /** Texto de bloco quebra em linhas próprias; frase curta fica na mesma linha. */

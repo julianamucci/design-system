@@ -29,8 +29,8 @@ import { contraste, backgroundEffective } from './alert-probe';
  */
 export function grabberContrast(pegador: HTMLElement): number {
   const frente = getComputedStyle(pegador).backgroundColor;
-  const fundo = backgroundEffective(pegador.parentElement ?? pegador);
-  return contraste(frente, fundo);
+  const background = backgroundEffective(pegador.parentElement ?? pegador);
+  return contraste(frente, background);
 }
 
 export interface BarRatio {
@@ -63,7 +63,7 @@ export function measureRatio(
 
   const sizeTrack = vertical ? boxTrack.height : boxTrack.width;
   const sizeGrabber = vertical ? boxGrabber.height : boxGrabber.width;
-  const visivel = vertical ? viewport.clientHeight : viewport.clientWidth;
+  const visible = vertical ? viewport.clientHeight : viewport.clientWidth;
   const total = vertical ? viewport.scrollHeight : viewport.scrollWidth;
 
   const startTrack = vertical ? boxTrack.top : boxTrack.left;
@@ -71,7 +71,7 @@ export function measureRatio(
 
   return {
     fracaoDoPegador: sizeTrack > 0 ? sizeGrabber / sizeTrack : 0,
-    fracaoVisivel: total > 0 ? visivel / total : 0,
+    fracaoVisivel: total > 0 ? visible / total : 0,
     deslocamento: startGrabber - startTrack,
     deslocamentoMaximo: Math.max(0, sizeTrack - sizeGrabber),
   };

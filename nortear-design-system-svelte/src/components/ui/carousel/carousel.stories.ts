@@ -94,10 +94,10 @@ export const Playground: Story = {
       let maior = -Infinity;
       canvas.getAllByRole('group').forEach((slide, i) => {
         const r = slide.getBoundingClientRect();
-        const visivel = vertical
+        const visible = vertical
           ? Math.min(r.bottom, v.bottom) - Math.max(r.top, v.top)
           : Math.min(r.right, v.right) - Math.max(r.left, v.left);
-        if (visivel > maior) { maior = visivel; melhor = i; }
+        if (visible > maior) { maior = visible; melhor = i; }
       });
       return melhor;
     };
@@ -158,9 +158,9 @@ export const Playground: Story = {
       //
       // Volta ENQUANTO der, nunca um número fixo de cliques.
       for (let passo = 0; passo < TOTAL; passo++) {
-        const botao = anterior();
-        if (botao.disabled) break;
-        await userEvent.click(botao);
+        const button = anterior();
+        if (button.disabled) break;
+        await userEvent.click(button);
       }
 
       await emSlide(0);

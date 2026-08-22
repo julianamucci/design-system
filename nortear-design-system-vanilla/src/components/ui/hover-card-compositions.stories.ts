@@ -93,9 +93,9 @@ export const LinkPreview: Story = {
     conteudo.className = 'nds-stack';
     conteudo.dataset.spacing = 'sm';
 
-    const cabecalho = document.createElement('div');
-    cabecalho.className = 'nds-cluster nds-text-caption nds-text-muted-foreground';
-    cabecalho.dataset.spacing = 'xs';
+    const header = document.createElement('div');
+    header.className = 'nds-cluster nds-text-caption nds-text-muted-foreground';
+    header.dataset.spacing = 'xs';
 
     const favicon = document.createElement('span');
     favicon.className = 'nds-rounded-sm nds-bg-muted nds-px-1';
@@ -106,9 +106,9 @@ export const LinkPreview: Story = {
     url.className = 'nds-truncate';
     url.textContent = 'design-system.dev/overlays';
 
-    cabecalho.append(favicon, url);
+    header.append(favicon, url);
     conteudo.append(
-      cabecalho,
+      header,
       construirDuasLines(
         'Guia de overlays acessíveis',
         'Quando usar tooltip, popover e cartão de hover — e o que cada um exige de teclado.',
@@ -221,11 +221,11 @@ export const ExplainedMetric: Story = {
     conteudo.className = 'nds-stack';
     conteudo.dataset.spacing = 'xs';
 
-    const cabecalho = document.createElement('div');
-    cabecalho.className = 'nds-cluster';
-    cabecalho.dataset.justify = 'between';
-    cabecalho.dataset.align = 'baseline';
-    cabecalho.dataset.spacing = 'sm';
+    const header = document.createElement('div');
+    header.className = 'nds-cluster';
+    header.dataset.justify = 'between';
+    header.dataset.align = 'baseline';
+    header.dataset.spacing = 'sm';
 
     const nome = document.createElement('p');
     nome.className = 'nds-text-body nds-font-medium';
@@ -235,14 +235,14 @@ export const ExplainedMetric: Story = {
     valor.className = 'nds-text-caption nds-font-medium nds-text-success';
     valor.textContent = '1.8s';
 
-    cabecalho.append(nome, valor);
+    header.append(nome, valor);
 
     const descricao = document.createElement('p');
     descricao.className = 'nds-text-caption nds-text-muted-foreground';
     descricao.textContent =
       'Tempo até o maior elemento visível aparecer. Bom até 2,5s; ruim acima de 4s.';
 
-    conteudo.append(cabecalho, descricao);
+    conteudo.append(header, descricao);
 
     const gatilho = construirButton('LCP 1.8s');
     gatilho.setAttribute('aria-label', 'Explicação da métrica LCP');

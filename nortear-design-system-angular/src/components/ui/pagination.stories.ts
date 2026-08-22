@@ -176,11 +176,11 @@ export const Playground: Story = {
       ...args,
       // Derivado do arg, nunca escrito à mão: uma lista literal deixaria de
       // acompanhar o control `total` e a story mentiria em silêncio.
-      paginas: Array.from({ length: args.total }, (_, i) => i + 1),
-      rotuloAnterior: LABEL_PREVIOUS,
-      rotuloProxima: LABEL_NEXT,
+      pages: Array.from({ length: args.total }, (_, i) => i + 1),
+      labelPrevious: LABEL_PREVIOUS,
+      labelNext: LABEL_NEXT,
       rotuloPagina: LABEL_PAGE,
-      irPara: (evento: Event, pagina: number) => {
+      irTo: (evento: Event, pagina: number) => {
         evento.preventDefault();
         onPageChange(pagina);
       },
@@ -193,19 +193,19 @@ export const Playground: Story = {
               ndsPaginationPrevious
               href="#"
               [text]="textoAnterior"
-              [label]="rotuloAnterior"
+              [label]="labelPrevious"
               [disabled]="atual === 1"
-              (click)="irPara($event, atual - 1)"
+              (click)="irTo($event, atual - 1)"
             ></a>
           </li>
-          @for (n of paginas; track n) {
+          @for (n of pages; track n) {
             <li ndsPaginationItem>
               <a
                 ndsPaginationLink
                 href="#"
                 [isActive]="n === atual"
                 [attr.aria-label]="rotuloPagina + ' ' + n"
-                (click)="irPara($event, n)"
+                (click)="irTo($event, n)"
               >{{ n }}</a>
             </li>
           }
@@ -214,9 +214,9 @@ export const Playground: Story = {
               ndsPaginationNext
               href="#"
               [text]="textoProxima"
-              [label]="rotuloProxima"
+              [label]="labelNext"
               [disabled]="atual === total"
-              (click)="irPara($event, atual + 1)"
+              (click)="irTo($event, atual + 1)"
             ></a>
           </li>
         </ul>
@@ -271,9 +271,9 @@ export const Playground: Story = {
       await expect(ativo).toHaveAttribute('data-active', 'true');
       await expect(ativo).toHaveClass('nds-button-outline');
 
-      const inativo = canvas.getByRole('link', { name: `${LABEL_PAGE} ${args.atual + 1}` });
-      await expect(inativo.hasAttribute('aria-current')).toBe(false);
-      await expect(inativo).toHaveClass('nds-button-ghost');
+      const inactive = canvas.getByRole('link', { name: `${LABEL_PAGE} ${args.atual + 1}` });
+      await expect(inactive.hasAttribute('aria-current')).toBe(false);
+      await expect(inactive).toHaveClass('nds-button-ghost');
     });
 
     await step('O rótulo visível de Previous e Next vem do input', async () => {

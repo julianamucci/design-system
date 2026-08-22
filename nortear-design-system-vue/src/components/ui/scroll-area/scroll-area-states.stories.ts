@@ -144,9 +144,9 @@ export const Always: Story = {
       // trilha a mesma fração que o viewport ocupa do conteúdo.
       viewport.scrollTop = 0;
       const p = await waitFor(() => {
-        const medida = measureRatio(trilha, pegador, viewport, 'vertical');
-        if (medida.deslocamentoMaximo <= 0) throw new Error('pegador ainda não medido');
-        return medida;
+        const measurement = measureRatio(trilha, pegador, viewport, 'vertical');
+        if (measurement.deslocamentoMaximo <= 0) throw new Error('pegador ainda não medido');
+        return measurement;
       });
       await expect(p.fracaoDoPegador).toBeGreaterThan(0);
       // O defeito que esta linha guarda é o pegador do tamanho da TRILHA — foi o
@@ -165,20 +165,20 @@ export const Always: Story = {
       // de como cada lib define o curso útil da trilha (uma desconta o padding,
       // outra reserva o canto no pé da barra).
       const maximo = viewport.scrollHeight - viewport.clientHeight;
-      const medir = () => measureRatio(trilha, pegador, viewport, 'vertical');
+      const measure = () => measureRatio(trilha, pegador, viewport, 'vertical');
 
       viewport.scrollTop = 0;
-      await waitFor(() => expect(medir().deslocamento).toBeLessThan(4));
+      await waitFor(() => expect(measure().deslocamento).toBeLessThan(4));
 
       viewport.scrollTop = maximo;
       await waitFor(() => {
-        const p = medir();
+        const p = measure();
         expect(Math.abs(p.deslocamento - p.deslocamentoMaximo)).toBeLessThan(4);
       });
 
       viewport.scrollTop = Math.round(maximo / 2);
       await waitFor(() => {
-        const p = medir();
+        const p = measure();
         expect(Math.abs(p.deslocamento - p.deslocamentoMaximo / 2)).toBeLessThan(4);
       });
     });
@@ -192,7 +192,7 @@ export const Always: Story = {
       // Cada passo estabelece a própria precondição: no replay o viewport chega
       // rolado da rodada anterior e o arrasto partiria do fim da trilha.
       const maximo = viewport.scrollHeight - viewport.clientHeight;
-      const medir = () => measureRatio(trilha, pegador, viewport, 'vertical');
+      const measure = () => measureRatio(trilha, pegador, viewport, 'vertical');
 
       // Voltar ao topo E ESPERAR O PEGADOR CHEGAR LÁ. Ele é reposicionado num
       // quadro posterior ao evento de rolagem: medido antes disso, devolve a
@@ -202,7 +202,7 @@ export const Always: Story = {
       viewport.scrollTop = 0;
       await waitFor(() => {
         expect(viewport.scrollTop).toBe(0);
-        expect(medir().deslocamento).toBeLessThan(4);
+        expect(measure().deslocamento).toBeLessThan(4);
       });
 
       const caixa = pegador.getBoundingClientRect();
@@ -217,12 +217,12 @@ export const Always: Story = {
       // O pegador seguiu o dedo: andou os 60px do gesto, e não deu um salto
       // para o ponto clicado.
       await waitFor(() => {
-        expect(Math.abs(medir().deslocamento - 60)).toBeLessThan(12);
+        expect(Math.abs(measure().deslocamento - 60)).toBeLessThan(12);
       });
 
       // E a rolagem foi para o mesmo ponto: pegador e viewport param juntos, que
       // é o "proporcionalmente" do item, agora do lado do gesto.
-      const p = medir();
+      const p = measure();
       await expect(viewport.scrollTop).toBeGreaterThan(0);
       await expect(
         Math.abs(p.deslocamento / p.deslocamentoMaximo - viewport.scrollTop / maximo),
@@ -336,14 +336,14 @@ export const FocusableContent: Story = {
   render: () => ({
     components: { ScrollArea },
     setup() {
-      return { acoes: Array.from({ length: 20 }, (_, i) => `Ação ${i + 1}`) };
+      return { actions: Array.from({ length: 20 }, (_, i) => `Ação ${i + 1}`) };
     },
     template: `
       <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 280px">
         <ScrollArea size="lg" class="nds-w-full">
           <nav aria-label="Ações" class="nds-p-4">
             <ul class="nds-stack nds-list-none" data-spacing="xs" style="padding: 0; margin: 0">
-              <li v-for="acao in acoes" :key="acao">
+              <li v-for="acao in actions" :key="acao">
                 <a href="#" class="nds-block nds-rounded-sm nds-px-2 nds-text-body nds-hover-bg-muted-soft" style="padding-block: 0.375rem">
                   {{ acao }}
                 </a>

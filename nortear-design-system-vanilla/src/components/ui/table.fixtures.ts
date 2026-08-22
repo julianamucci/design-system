@@ -35,7 +35,7 @@ function formatar(total: number): string {
 
 /** Total das linhas passadas — o rodapé nunca traz número escrito à mão. */
 export function totalOf(rows: Invoice[]): string {
-  return formatar(rows.reduce((soma, i) => soma + centavos(i.amount), 0));
+  return formatar(rows.reduce((sum, i) => sum + centavos(i.amount), 0));
 }
 
 export const TOTAL = totalOf(INVOICES);
@@ -43,8 +43,8 @@ export const TOTAL = totalOf(INVOICES);
 export const COLUMNS = ['Fatura', 'Status', 'Método', 'Valor'];
 
 /** Doze meses de dois anos — a tabela larga da story de rolagem horizontal. */
-export const MONTHS: string[] = ['2025', '2026'].flatMap((ano) =>
+export const MONTHS: string[] = ['2025', '2026'].flatMap((year) =>
   ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'].map(
-    (mes) => `${mes}/${ano}`,
+    (month) => `${month}/${year}`,
   ),
 );

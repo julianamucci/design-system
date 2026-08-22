@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, waitFor, within, expect } from 'storybook/test';
 import { createCollapsible } from './collapsible';
-import { PAINEL_CLASSES, makeContent } from './collapsible.fixtures';
+import { PANEL_CLASSES, makeContent } from './collapsible.fixtures';
 import { collapsibleWithTriggerSource, collapsibleSource } from './collapsible.source';
 import { ChevronDown, Filter, Settings } from 'lucide';
 
@@ -20,7 +20,7 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-// `makeContent` e `PAINEL_CLASSES` vêm de `collapsible.fixtures.ts` — as duas
+// `makeContent` e `PANEL_CLASSES` vêm de `collapsible.fixtures.ts` — as duas
 // stories de conteúdo rico abaixo montam o painel na mão e reusam a constante.
 
 type LucideIconNode = [string, Record<string, string>];
@@ -191,7 +191,7 @@ export const WithRotatingChevron: Story = {
     btn.appendChild(contentTrigger);
 
     const content = document.createElement('div');
-    content.className = PAINEL_CLASSES;
+    content.className = PANEL_CLASSES;
     content.dataset.spacing = 'sm';
     [
       { key: 'Notificações', val: 'Ativadas' },
@@ -269,7 +269,7 @@ export const WithSettingsIcon: Story = {
     );
 
     const content = document.createElement('div');
-    content.className = PAINEL_CLASSES;
+    content.className = PANEL_CLASSES;
     content.dataset.spacing = 'sm';
 
     const note = document.createElement('p');

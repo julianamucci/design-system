@@ -77,12 +77,12 @@ function usada(nome: string, template: string): boolean {
  */
 function montar(template: string): string {
   const parts = PARTS.filter((part) => usada(part, template));
-  const icones = ICONS.filter((icone) => usada(icone, template));
-  const blocos = [
+  const icons = ICONS.filter((icone) => usada(icone, template));
+  const blocks = [
     `import {\n${parts.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/sidebar'`,
   ];
-  if (icones.length) blocos.push(`import { ${icones.join(', ')} } from 'lucide-vue-next'`);
-  return vueSnippet(blocos.join('\n'), template);
+  if (icons.length) blocks.push(`import { ${icons.join(', ')} } from 'lucide-vue-next'`);
+  return vueSnippet(blocks.join('\n'), template);
 }
 
 const MARCA = `<SidebarHeader class="nds-p-4 nds-font-semibold nds-text-muted-foreground">Design System</SidebarHeader>`;
@@ -103,7 +103,7 @@ type Item = {
 function menu(itens: Item[]): string {
   const corpo = itens
     .map((item) => {
-      const botao = attrs(
+      const button = attrs(
         item.ativo ? 'is-active' : '',
         item.tooltip === false ? '' : `tooltip="${item.rotulo}"`,
         item.expandido ? 'aria-expanded="true"' : '',
@@ -136,7 +136,7 @@ function menu(itens: Item[]): string {
         extras.push(`    <SidebarMenuSub>\n${filhos}\n    </SidebarMenuSub>`);
       }
       return `  <SidebarMenuItem>
-    <SidebarMenuButton${botao}>
+    <SidebarMenuButton${button}>
 ${icone}      <span>${item.rotulo}</span>${chevron}
     </SidebarMenuButton>${extras.length ? `\n${extras.join('\n')}` : ''}
   </SidebarMenuItem>`;
@@ -173,7 +173,7 @@ function grupo(opcoes: { rotulo?: string; acao?: string; miolo: string }): strin
 function moldura(opcoes: {
   provider?: string;
   barra?: string;
-  cabecalho?: string;
+  header?: string;
   conteudo: string;
   rodape?: string;
   faixa?: boolean;
@@ -185,7 +185,7 @@ function moldura(opcoes: {
     `<SidebarProvider${opcoes.provider ?? ''}>`,
     `  <nav aria-label="Navegação principal">`,
     `    <Sidebar${opcoes.barra ?? ''}>`,
-    opcoes.cabecalho && indentar(opcoes.cabecalho, 6),
+    opcoes.header && indentar(opcoes.header, 6),
     `      <SidebarContent>`,
     indentar(opcoes.conteudo, 8),
     `      </SidebarContent>`,
@@ -228,7 +228,7 @@ export const sidebarPlaygroundSource: SourceTransform<SidebarArgs> = (_gerado, c
         attr('variant', args.variant, 'sidebar'),
         attr('collapsible', args.collapsible, 'offcanvas'),
       ),
-      cabecalho: MARCA,
+      header: MARCA,
       conteudo: [
         grupo({ rotulo: 'Aplicação', miolo: menu(APLICACAO) }),
         '<SidebarSeparator />',
@@ -254,7 +254,7 @@ function variante(variant: 'sidebar' | 'floating' | 'inset'): string {
   return montar(
     moldura({
       barra: attrs(attr('variant', variant, 'sidebar')),
-      cabecalho: MARCA,
+      header: MARCA,
       conteudo: grupo({
         rotulo: 'Aplicação',
         miolo: menu([...APLICACAO, { icone: 'Settings', rotulo: 'Configurações' }]),
@@ -327,7 +327,7 @@ export function sidebarExpandidaSource(): string {
   return montar(
     moldura({
       provider: ' default-open',
-      cabecalho: MARCA,
+      header: MARCA,
       conteudo: grupo({ rotulo: 'Aplicação', miolo: menu(APLICACAO) }),
       legenda: 'Barra expandida',
       paragrafo: 'A barra ocupa a largura inteira, com ícone e rótulo lado a lado.',
@@ -345,7 +345,7 @@ export function sidebarRecolhidaIconSource(): string {
     moldura({
       provider: ' :default-open="false"',
       barra: ' collapsible="icon"',
-      cabecalho: `<SidebarHeader class="nds-p-2 nds-font-semibold nds-text-muted-foreground nds-overflow-hidden">
+      header: `<SidebarHeader class="nds-p-2 nds-font-semibold nds-text-muted-foreground nds-overflow-hidden">
   <span class="nds-sidebar-hide-collapsed">Design System</span>
 </SidebarHeader>`,
       conteudo: grupo({
@@ -366,7 +366,7 @@ export function sidebarFixaSource(): string {
   return montar(
     moldura({
       barra: ' collapsible="none"',
-      cabecalho: MARCA,
+      header: MARCA,
       conteudo: grupo({
         miolo: menu(APLICACAO.map((item) => ({ ...item, tooltip: false }))),
       }),
@@ -386,7 +386,7 @@ export function sidebarFixaSource(): string {
 export function sidebarLoadingSource(): string {
   return montar(
     moldura({
-      cabecalho: MARCA,
+      header: MARCA,
       conteudo: grupo({
         rotulo: 'Carregando',
         miolo: `<SidebarMenu>
@@ -415,7 +415,7 @@ export function sidebarGavetaMovelSource(): string {
   return montar(
     moldura({
       provider: ' mobile-query="(min-width: 0px)"',
-      cabecalho: MARCA,
+      header: MARCA,
       conteudo: grupo({
         miolo: menu(APLICACAO.map((item) => ({ ...item, tooltip: false }))),
       }),
@@ -438,7 +438,7 @@ export function sidebarGavetaMovelSource(): string {
 export function sidebarGroupsSource(): string {
   return montar(
     moldura({
-      cabecalho: MARCA,
+      header: MARCA,
       conteudo: [
         grupo({
           rotulo: 'Aplicação',
@@ -476,7 +476,7 @@ ${indentar(menu([{ icone: 'User', rotulo: 'Perfil do Usuário' }]), 2)}
 export function sidebarSubmenuSource(): string {
   return montar(
     moldura({
-      cabecalho: MARCA,
+      header: MARCA,
       conteudo: grupo({
         rotulo: 'Documentação',
         miolo: menu([
@@ -514,7 +514,7 @@ export function sidebarSubmenuSource(): string {
 export function sidebarSearchSource(): string {
   return montar(
     moldura({
-      cabecalho: `<SidebarHeader class="nds-p-2" data-spacing="sm">
+      header: `<SidebarHeader class="nds-p-2" data-spacing="sm">
   <span class="nds-px-2 nds-font-semibold nds-text-muted-foreground nds-sidebar-hide-collapsed">Design System</span>
   <SidebarInput placeholder="Buscar..." aria-label="Buscar na navegação" />
 </SidebarHeader>`,

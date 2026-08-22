@@ -165,7 +165,7 @@ const codeLine = `<Tabs default-value="overview" class="nds-w-full">
   <TabsContent value="examples">Exemplos de uso</TabsContent>
 </Tabs>`;
 
-const codeVertical = `<Tabs default-value="profile" orientation="vertical" class="nds-w-full">
+const verticalCode = `<Tabs default-value="profile" orientation="vertical" class="nds-w-full">
   <TabsList aria-label="Configurações da conta">
     <TabsTrigger value="profile">Perfil</TabsTrigger>
     <TabsTrigger value="account">Conta</TabsTrigger>
@@ -219,7 +219,7 @@ const anatomyItems = computed(() => [
 const variantItems = computed(() => [
   { name: tContent('variants.items.default'),  description: stripHtml(tContent('variants.styles.default')),  code: codeDefault  },
   { name: tContent('variants.items.line'),     description: stripHtml(tContent('variants.styles.line')),     code: codeLine     },
-  { name: tContent('variants.items.vertical'), description: stripHtml(tContent('variants.styles.vertical')), code: codeVertical },
+  { name: tContent('variants.items.vertical'), description: stripHtml(tContent('variants.styles.vertical')), code: verticalCode },
 ]);
 
 const codeIconTrigger = `<Tabs default-value="profile" class="nds-w-full" style="max-width: 36rem">

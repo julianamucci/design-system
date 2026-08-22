@@ -8,7 +8,7 @@ import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbo
 
 const MENUS_FECHADOS = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'] as const;
 
-const ITENS_COM_BLOQUEIO = [
+const ITEMS_WITH_BLOCK = [
   { label: 'Novo', disabled: false },
   { label: 'Salvar', disabled: false },
   { label: 'Enviar para revisão', disabled: true },
@@ -61,16 +61,16 @@ export const Closed: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const barra = canvas.getByRole('menubar');
-    const gatilhos = triggersOf(barra);
+    const triggers = triggersOf(barra);
 
     await step('A barra publica o papel e a orientação', async () => {
       await expect(barra.getAttribute('data-slot')).toBe('menubar');
       await expect(barra.getAttribute('aria-orientation')).toBe('horizontal');
-      await expect(gatilhos).toHaveLength(MENUS_FECHADOS.length);
+      await expect(triggers).toHaveLength(MENUS_FECHADOS.length);
     });
 
     await step('Fechado é ausência: nenhum painel visível e nenhum item alcançável', async () => {
-      for (const gatilho of gatilhos) {
+      for (const gatilho of triggers) {
         await expect(gatilho.getAttribute('data-state')).toBe('closed');
         await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
       }
@@ -157,7 +157,7 @@ export const ItemDisabled: Story = {
           menus: [
             {
               label: 'Arquivo',
-              items: ITENS_COM_BLOQUEIO.map((i) => ({
+              items: ITEMS_WITH_BLOCK.map((i) => ({
                 label: i.label,
                 disabled: i.disabled || undefined,
                 onClick: '() => executar()',
@@ -177,7 +177,7 @@ export const ItemDisabled: Story = {
         [
           {
             label: 'Arquivo',
-            items: ITENS_COM_BLOQUEIO.map((i) => ({
+            items: ITEMS_WITH_BLOCK.map((i) => ({
               label: i.label,
               disabled: i.disabled,
               onClick: () => (args as { onSelect: (l: string) => void }).onSelect(i.label),
@@ -194,10 +194,10 @@ export const ItemDisabled: Story = {
       return p;
     });
     const itens = within(painel).getAllByRole('menuitem');
-    const bloqueado = itens[ITENS_COM_BLOQUEIO.findIndex((i) => i.disabled)];
+    const bloqueado = itens[ITEMS_WITH_BLOCK.findIndex((i) => i.disabled)];
 
     await step('O item bloqueado se anuncia como tal', async () => {
-      await expect(itens).toHaveLength(ITENS_COM_BLOQUEIO.length);
+      await expect(itens).toHaveLength(ITEMS_WITH_BLOCK.length);
       await expect(bloqueado.getAttribute('aria-disabled')).toBe('true');
       // `aria-disabled`, e não o atributo `disabled`: o item continua
       // alcançável pela seta, para ser ANUNCIADO como indisponível em vez de
@@ -419,10 +419,10 @@ export const ListenerCleanup: Story = {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ProbeResult;
+    let probe!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
-      sonda = await sondarOuvintes({
+      probe = await sondarOuvintes({
         host: host as HTMLElement,
         montar: () => createMenubar([
           { label: 'Arquivo', items: [{ label: 'Novo' }, { label: 'Salvar' }] },
@@ -433,7 +433,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await checkLimpeza(sonda);
+      await checkLimpeza(probe);
     });
   },
 };

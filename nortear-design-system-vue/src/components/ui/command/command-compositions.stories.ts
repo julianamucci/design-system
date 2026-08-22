@@ -348,18 +348,18 @@ export const AsCombobox: Story = {
       const lista = dentro.getByRole('listbox');
       await expect(lista).toBeVisible();
       await expect(lista).toHaveClass(/nds-command-list/);
-      const busca = painel.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
+      const search = painel.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
       // O foco entra no campo de busca: um combobox que abre e deixa o foco no
       // gatilho obriga a pessoa a caçar o campo com Tab.
       await waitFor(async () => {
-        await expect(busca).toHaveFocus();
+        await expect(search).toHaveFocus();
       });
       // Dentro do popover o campo continua sendo uma combobox ligada à lista
       // real — o arranjo flutuante não desmonta o par de papéis.
-      await expect(busca).toHaveAttribute('aria-autocomplete', 'list');
-      await expect(document.getElementById(busca.getAttribute('aria-controls')!)).toBe(lista);
+      await expect(search).toHaveAttribute('aria-autocomplete', 'list');
+      await expect(document.getElementById(search.getAttribute('aria-controls')!)).toBe(lista);
 
-      await userEvent.clear(busca);
+      await userEvent.clear(search);
       await waitFor(async () => {
         // Com o campo vazio, os seis componentes aparecem.
         await expect(dentro.getAllByRole('option')).toHaveLength(6);
@@ -369,25 +369,25 @@ export const AsCombobox: Story = {
     await step('A busca filtra dentro do popover', async () => {
       const painel = await abrir();
       const dentro = within(painel);
-      const busca = painel.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
+      const search = painel.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
 
-      await userEvent.clear(busca);
-      await userEvent.type(busca, 'text');
+      await userEvent.clear(search);
+      await userEvent.type(search, 'text');
       // Buscando "text": só "Textarea" sobra.
       await waitFor(async () => {
         await expect(dentro.getAllByRole('option')).toHaveLength(1);
       });
       await expect(dentro.getByRole('option', { name: 'Textarea' })).toBeVisible();
 
-      await userEvent.clear(busca);
-      await userEvent.type(busca, 'zzz');
+      await userEvent.clear(search);
+      await userEvent.type(search, 'zzz');
       const vazio = painel.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
       await waitFor(async () => {
         await expect(vazio).toHaveAttribute('data-empty', '');
       });
       await expect(vazio).toHaveTextContent('Nenhum resultado encontrado.');
 
-      await userEvent.clear(busca);
+      await userEvent.clear(search);
       await waitFor(async () => {
         await expect(dentro.getAllByRole('option')).toHaveLength(6);
       });
@@ -420,7 +420,7 @@ export const CommandPalette: Story = {
     },
     setup() {
       const open = ref(false);
-      const ultimo = ref('');
+      const last = ref('');
 
       // O Cmd+K não é nativo de componente nenhum — é um listener de janela, e é
       // o consumidor que o registra. `onUnmounted` remove: sem isso o atalho de
@@ -435,11 +435,11 @@ export const CommandPalette: Story = {
       onUnmounted(() => window.removeEventListener('keydown', aoTeclar));
 
       function executar(value: string) {
-        ultimo.value = value;
+        last.value = value;
         open.value = false;
       }
 
-      return { open, ultimo, executar };
+      return { open, last, executar };
     },
     template: `
       <div class="nds-stack" data-align="center" data-spacing="md">
@@ -482,7 +482,7 @@ export const CommandPalette: Story = {
           <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
         </CommandDialog>
 
-        <p class="nds-text-body nds-text-muted-foreground" data-testid="executado">{{ ultimo }}</p>
+        <p class="nds-text-body nds-text-muted-foreground" data-testid="executado">{{ last }}</p>
       </div>
     `,
   }),
@@ -519,9 +519,9 @@ export const CommandPalette: Story = {
 
     await step('O foco vai direto para a busca', async () => {
       const painel = await buttonOpen();
-      const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
+      const search = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       await waitFor(async () => {
-        await expect(busca).toHaveFocus();
+        await expect(search).toHaveFocus();
       });
       await expect(within(painel).getAllByRole('option')).toHaveLength(3);
     });
@@ -541,9 +541,9 @@ export const CommandPalette: Story = {
       await userEvent.keyboard('{Meta>}k{/Meta}');
 
       const painel = await waitForPortal('dialog');
-      const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
+      const search = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       await waitFor(async () => {
-        await expect(busca).toHaveFocus();
+        await expect(search).toHaveFocus();
       });
       // Os atalhos de cada comando aparecem à direita, encostados na borda.
       const atalho = painel.querySelector<HTMLElement>(

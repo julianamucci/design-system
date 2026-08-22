@@ -95,9 +95,9 @@ export async function checkNameEDescricao(p: HTMLElement): Promise<void> {
   const titulo = document.getElementById(idTitle!);
   await expect(titulo).toHaveClass('nds-dialog-title');
 
-  const idDescricao = p.getAttribute('aria-describedby');
-  await expect(idDescricao).toBeTruthy();
-  await expect(document.getElementById(idDescricao!)).toHaveClass('nds-dialog-description');
+  const idDescription = p.getAttribute('aria-describedby');
+  await expect(idDescription).toBeTruthy();
+  await expect(document.getElementById(idDescription!)).toHaveClass('nds-dialog-description');
 
   await expect(p).toHaveAccessibleName(titulo!.textContent!.trim());
 }

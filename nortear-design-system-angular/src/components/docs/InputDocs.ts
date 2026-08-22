@@ -28,7 +28,7 @@ import inputTranslations from '@shared/content/input/translations.json';
 // customiza copia, e a versão anterior mandava sobrescrever `--height-default` e
 // `--radius-input`, dois tokens que `.nds-input` não lê. Não existe token de
 // ALTURA: ela nasce de `--spacing-2` mais `--text-control` (WCAG 1.4.4).
-const TOKENS_DO_CAMPO = [
+const FIELD_TOKENS = [
   ['--input', '.nds-input', 'border'],
   ['--ring', '.nds-input:hover', 'borderHover'],
   ['--ring', '.nds-input:focus-visible', 'borderFocus'],
@@ -499,7 +499,7 @@ export class NdsInputDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     // Nenhuma linha é input do componente — todas descrevem atributo nativo do
     // <input>. O tipo diz "atributo HTML" em vez de um tipo TypeScript que não
     // existe nesta stack.
@@ -508,12 +508,12 @@ export class NdsInputDocs implements AfterViewInit, OnDestroy {
         title: t('props.inputTitle'),
         cols,
         items: [
-          { name: 'type',          type: 'string',  defaultValue: "'text'", required: nao, description: toPlainText(t('props.table.type_prop')) },
-          { name: 'placeholder',   type: 'string',  defaultValue: '—',      required: nao, description: toPlainText(t('props.table.placeholder')) },
-          { name: 'disabled',      type: 'boolean', defaultValue: 'false',  required: nao, description: toPlainText(t('props.table.disabled')) },
-          { name: 'aria-invalid',  type: 'boolean', defaultValue: '—',      required: nao, description: toPlainText(t('props.table.ariaInvalid')) },
-          { name: 'autocomplete',  type: 'string',  defaultValue: '—',      required: nao, description: toPlainText(t('props.table.autoComplete')) },
-          { name: 'class',         type: 'string',  defaultValue: '—',      required: nao, description: toPlainText(t('props.table.className')) },
+          { name: 'type',          type: 'string',  defaultValue: "'text'", required: not, description: toPlainText(t('props.table.type_prop')) },
+          { name: 'placeholder',   type: 'string',  defaultValue: '—',      required: not, description: toPlainText(t('props.table.placeholder')) },
+          { name: 'disabled',      type: 'boolean', defaultValue: 'false',  required: not, description: toPlainText(t('props.table.disabled')) },
+          { name: 'aria-invalid',  type: 'boolean', defaultValue: '—',      required: not, description: toPlainText(t('props.table.ariaInvalid')) },
+          { name: 'autocomplete',  type: 'string',  defaultValue: '—',      required: not, description: toPlainText(t('props.table.autoComplete')) },
+          { name: 'class',         type: 'string',  defaultValue: '—',      required: not, description: toPlainText(t('props.table.className')) },
         ],
       },
       {
@@ -527,35 +527,35 @@ export class NdsInputDocs implements AfterViewInit, OnDestroy {
             name: 'ndsInputGroupAddon · align',
             type: `'inline-start' | 'inline-end' | 'block-start' | 'block-end'`,
             defaultValue: `'inline-start'`,
-            required: nao,
+            required: not,
             description: toPlainText(t('variants.items.inputGroup.subcomponents.inputGroupAddon')),
           },
           {
             name: 'ndsInputGroupButton · size',
             type: `'xs' | 'sm' | 'icon-xs' | 'icon-sm'`,
             defaultValue: `'xs'`,
-            required: nao,
+            required: not,
             description: toPlainText(t('variants.items.inputGroup.subcomponents.inputGroupButton')),
           },
           {
             name: 'ndsInputGroupInput',
             type: tNav('common.no'),
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: toPlainText(t('variants.items.inputGroup.subcomponents.inputGroupInput')),
           },
           {
             name: 'ndsInputGroupTextarea',
             type: tNav('common.no'),
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: toPlainText(t('variants.items.inputGroup.subcomponents.inputGroupTextarea')),
           },
           {
             name: 'ndsInputGroupText',
             type: tNav('common.no'),
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: toPlainText(t('variants.items.inputGroup.subcomponents.inputGroupText')),
           },
         ],
@@ -574,7 +574,7 @@ export class NdsInputDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
-    return TOKENS_DO_CAMPO.map(([token, seletor, chave]) => ({
+    return FIELD_TOKENS.map(([token, seletor, chave]) => ({
       token,
       value: seletor,
       description: toPlainText(t(`tokens.table.${chave}`)),

@@ -16,7 +16,7 @@ import {
 
 // Espião de escopo de MÓDULO: criado dentro do `render` ele seria inalcançável
 // pela play, e a aba Actions nasceria vazia.
-const aoEscolher = fn();
+const onChoose = fn();
 
 const meta: Meta = {
   title: 'UI/Command/States',
@@ -127,7 +127,7 @@ export const ItemDisabled: Story = {
   },
   render: () => ({
     Component: CommandEstadoDisabledStory,
-    props: { onItemSelect: aoEscolher },
+    props: { onItemSelect: onChoose },
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -155,9 +155,9 @@ export const ItemDisabled: Story = {
       // de estado em rodada nenhuma. `pointerEventsCheck: 0` porque a folha
       // bloqueia o ponteiro e o user-event recusaria o clique antes de o
       // componente ter chance de errar.
-      const antes = aoEscolher.mock.calls.length;
+      const antes = onChoose.mock.calls.length;
       await userEvent.click(arquivar, { pointerEventsCheck: 0 });
-      await expect(aoEscolher.mock.calls.length).toBe(antes);
+      await expect(onChoose.mock.calls.length).toBe(antes);
     });
 
     await step('As setas pulam o comando desabilitado', async () => {
@@ -197,21 +197,21 @@ export const CheckedItem: Story = {
       await expect(canvas.getAllByRole('option')).toHaveLength(3);
     });
 
-    const claro = canvas.getByRole('option', { name: 'Claro' });
+    const light = canvas.getByRole('option', { name: 'Claro' });
     const escuro = canvas.getByRole('option', { name: 'Escuro' });
     const sistema = canvas.getByRole('option', { name: /Sistema/ });
     const marca = (item: HTMLElement) =>
       getComputedStyle(item.querySelector<HTMLElement>('.nds-command-item-check')!);
 
     await step('O estado chega ao markup', async () => {
-      await expect(claro).toHaveAttribute('data-checked', 'true');
+      await expect(light).toHaveAttribute('data-checked', 'true');
       await expect(escuro).toHaveAttribute('data-checked', 'false');
     });
 
     await step('A marca aparece só no comando marcado', async () => {
       // O ícone fica no DOM nos dois casos — é a opacidade que muda, para a
       // largura do comando não pular a cada troca.
-      await expect(marca(claro).opacity).toBe('1');
+      await expect(marca(light).opacity).toBe('1');
       await expect(marca(escuro).opacity).toBe('0');
     });
 

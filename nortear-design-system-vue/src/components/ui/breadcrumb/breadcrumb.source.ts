@@ -45,8 +45,8 @@ ${corpo}
 }
 
 /** Nível anterior: navegável, e por isso link de verdade, com destino. */
-function link(rotulo: string, destino: string): string {
-  return `<BreadcrumbLink href="${destino}">${rotulo}</BreadcrumbLink>`;
+function link(rotulo: string, destination: string): string {
+  return `<BreadcrumbLink href="${destination}">${rotulo}</BreadcrumbLink>`;
 }
 
 /**

@@ -178,8 +178,8 @@ export const Playground: Story = {
       await expect(args.onValueChange).toHaveBeenCalled();
       // Gateado na geometria da própria alça, não no valor que acabamos de
       // escrever: a alça tem de ter andado para depois do meio do trilho.
-      const alca = canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
-      const handleCenter = alca.getBoundingClientRect().left + alca.getBoundingClientRect().width / 2;
+      const thumb = canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
+      const handleCenter = thumb.getBoundingClientRect().left + thumb.getBoundingClientRect().width / 2;
       await expect(handleCenter).toBeGreaterThan(caixa.left + caixa.width * 0.5);
     });
 
@@ -190,9 +190,9 @@ export const Playground: Story = {
     });
 
     await step("ArrowRight incrementa em step", async () => {
-      const alca = canvas.getByRole("slider");
-      const antes = handleValue(alca);
-      alca.focus();
+      const thumb = canvas.getByRole("slider");
+      const antes = handleValue(thumb);
+      thumb.focus();
       await userEvent.keyboard("{ArrowRight}");
       await expect(handleValue(canvas.getByRole("slider"))).toBe(
         Math.min(args.max ?? 100, antes + (args.step ?? 1)),
@@ -200,8 +200,8 @@ export const Playground: Story = {
     });
 
     await step("Home leva ao mínimo e End ao máximo", async () => {
-      const alca = canvas.getByRole("slider");
-      alca.focus();
+      const thumb = canvas.getByRole("slider");
+      thumb.focus();
       await userEvent.keyboard("{Home}");
       await expect(handleValue(canvas.getByRole("slider"))).toBe(0);
       await userEvent.keyboard("{End}");

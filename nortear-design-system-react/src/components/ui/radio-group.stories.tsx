@@ -53,7 +53,7 @@ type Story = StoryObj<typeof meta>;
  * exclusiva — no replay do painel Interactions o DOM não remonta, então um
  * clique cego partiria do estado que a rodada anterior deixou.
  */
-const escolher = async (alvo: HTMLElement) => {
+const choose = async (alvo: HTMLElement) => {
   if (alvo.getAttribute("aria-checked") !== "true") await userEvent.click(alvo);
   await expect(alvo).toHaveAttribute("aria-checked", "true");
 };
@@ -125,8 +125,8 @@ export const Playground: Story = {
     await step("Escolher Pix e depois Cartão prova o clique e a exclusão mútua", async () => {
       // O par garante um clique REAL nesta rodada, venha o DOM de onde vier — é
       // o que mantém a aba Actions honesta no replay.
-      await escolher(radios[1]);
-      await escolher(radios[0]);
+      await choose(radios[1]);
+      await choose(radios[0]);
       await expect(radios[1]).toHaveAttribute("aria-checked", "false");
       await expect(args.onValueChange).toHaveBeenCalled();
       // base-ui ≥1.6 passa (value, eventDetails) — asserta só no value

@@ -47,7 +47,7 @@
   let compacta = $state(true);
   let compactaFilter = $state(true);
   let disabledActive = $state(true);
-  let controlado = $state(false);
+  let controlled = $state(false);
 </script>
 
 {#if cenario === 'single'}
@@ -128,9 +128,9 @@
   </div>
 {:else if cenario === 'controlled'}
   <div class="nds-stack" data-spacing="sm">
-    <Toggle bind:pressed={controlado} aria-label="Negrito"><Bold aria-hidden="true" /></Toggle>
+    <Toggle bind:pressed={controlled} aria-label="Negrito"><Bold aria-hidden="true" /></Toggle>
     <p class="nds-text-caption nds-text-muted-foreground">
-      Estado atual: <code class="nds-font-mono">{String(controlado)}</code>
+      Estado atual: <code class="nds-font-mono">{String(controlled)}</code>
     </p>
   </div>
 {/if}

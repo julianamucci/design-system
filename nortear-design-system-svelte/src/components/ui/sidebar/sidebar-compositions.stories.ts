@@ -67,8 +67,8 @@ export const WithNavGroups: StoryObj<Record<string, never>> = {
     });
 
     await step('O Tab alcança busca, itens e ações — nenhuma parada sem nome', async () => {
-      const busca = canvas.getByLabelText('Buscar na navegação');
-      busca.focus();
+      const search = canvas.getByLabelText('Buscar na navegação');
+      search.focus();
       const alcancados: string[] = [];
       for (let i = 0; i < 6; i++) {
         await userEvent.tab();
@@ -81,7 +81,7 @@ export const WithNavGroups: StoryObj<Record<string, never>> = {
       await expect(alcancados).toContain('Adicionar atalho');
       await expect(alcancados).not.toContain('');
       // Devolve o foco ao ponto de partida para o replay.
-      busca.blur();
+      search.blur();
     });
   },
 };

@@ -21,9 +21,9 @@ import {
   stateEmptyVisible,
   gridEscondida,
   itemsVisiveis,
-  textoDaContagem,
+  contagemText,
 } from '@shared/testing/icons-gallery-contract';
-import { NOMES_DE_ICONE } from '@shared/primitives/lucide-catalog';
+import { ICON_NAMES } from '@shared/primitives/lucide-catalog';
 import iconsTranslations from '@shared/content/icons/translations.json';
 import { createIconsDocs } from './IconsDocs';
 
@@ -59,10 +59,10 @@ export const Gallery: Story = {
     // Cada passo estabelece a própria precondição: a busca começa limpa,
     // independentemente do que um replay deixou no campo.
     searchDigitar(canvasElement, '');
-    await waitFor(() => expect(itemsVisiveis(canvasElement)).toHaveLength(NOMES_DE_ICONE.length));
+    await waitFor(() => expect(itemsVisiveis(canvasElement)).toHaveLength(ICON_NAMES.length));
 
     await step('A grade nasce inteira, com nome acessível e estado vazio no DOM', async () => {
-      const problemas = galeriaAuditarStructure(canvasElement, NOMES_DE_ICONE.length);
+      const problemas = galeriaAuditarStructure(canvasElement, ICON_NAMES.length);
       await expect(problemas, problemas.join('\n')).toEqual([]);
     });
 
@@ -90,25 +90,25 @@ export const Search: Story = {
       await waitFor(() => {
         const visiveis = itemsVisiveis(canvasElement);
         expect(visiveis.length).toBeGreaterThan(0);
-        expect(visiveis.length).toBeLessThan(NOMES_DE_ICONE.length);
+        expect(visiveis.length).toBeLessThan(ICON_NAMES.length);
       });
 
       // A grade continua com todos os itens: o filtro é `is-hidden`, não remoção.
       await expect(canvasElement.querySelectorAll('.nds-icon-grid-item')).toHaveLength(
-        NOMES_DE_ICONE.length
+        ICON_NAMES.length
       );
 
       const visiveis = itemsVisiveis(canvasElement);
       for (const item of visiveis) {
         await expect(item.dataset.iconName?.toLowerCase()).toContain('chevron');
       }
-      await expect(textoDaContagem(canvasElement)).toContain(String(visiveis.length));
+      await expect(contagemText(canvasElement)).toContain(String(visiveis.length));
       await expect(stateEmptyVisible(canvasElement)).toBe(false);
     });
 
     await step('Campo limpo devolve o catálogo inteiro', async () => {
       searchDigitar(canvasElement, '');
-      await waitFor(() => expect(itemsVisiveis(canvasElement)).toHaveLength(NOMES_DE_ICONE.length));
+      await waitFor(() => expect(itemsVisiveis(canvasElement)).toHaveLength(ICON_NAMES.length));
     });
   },
 };
@@ -126,7 +126,7 @@ export const EmptyState: Story = {
       await waitFor(() => expect(stateEmptyVisible(canvasElement)).toBe(true));
       await expect(gridEscondida(canvasElement)).toBe(true);
       await expect(itemsVisiveis(canvasElement)).toHaveLength(0);
-      await expect(textoDaContagem(canvasElement)).toContain('0');
+      await expect(contagemText(canvasElement)).toContain('0');
     });
   },
 };

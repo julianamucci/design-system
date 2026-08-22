@@ -112,8 +112,8 @@ export const WithoutNumbering: Story = {
 export const WithHighlight: Story = {
   parameters: { covers: ['functional.item5', 'visual.item4'] },
   render: () => ({
-    props: { code: COMPOSITION_CODE, destaque: [2] },
-    template: `<nds-code-block [code]="code" language="ts" [highlightLines]="destaque" />`,
+    props: { code: COMPOSITION_CODE, highlight: [2] },
+    template: `<nds-code-block [code]="code" language="ts" [highlightLines]="highlight" />`,
   }),
   play: async ({ canvasElement, step }) => {
     await step('Só a linha pedida fica marcada, contando a partir de 1', async () => {

@@ -222,8 +222,8 @@ export const Playground: Story = {
       const p = await abrir(canvasElement);
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       // A ação primária é a última do DOM; o Cancelar é a primeira.
-      const botoes = rodape.querySelectorAll<HTMLElement>('button');
-      await userEvent.click(botoes[0]);
+      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      await userEvent.click(buttons[0]);
       await waitForClosed();
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);

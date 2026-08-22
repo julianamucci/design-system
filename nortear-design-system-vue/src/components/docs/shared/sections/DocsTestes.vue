@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Kbd } from '@/components/ui/kbd';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { varianteDaPrioridade } from '@shared/primitives/badge-priority';
+import { prioridadeVariant } from '@shared/primitives/badge-priority';
 
 interface DocsTestItem { action: string; result: string; priority: string }
 interface DocsA11yTestItem { criterion: string; level: string; how: string }
@@ -87,7 +87,7 @@ defineProps<{
                   {{ item.result }}
                 </TableCell>
                 <TableCell class="nds-p-2 nds-font-medium">
-                  <Badge :variant="varianteDaPrioridade(item.priority)">
+                  <Badge :variant="prioridadeVariant(item.priority)">
                     {{ item.priority }}
                   </Badge>
                 </TableCell>
@@ -173,7 +173,7 @@ defineProps<{
                   {{ item.story }}
                 </TableCell>
                 <TableCell class="nds-p-2 nds-font-medium">
-                  <Badge :variant="varianteDaPrioridade(item.priority)">
+                  <Badge :variant="prioridadeVariant(item.priority)">
                     {{ item.priority }}
                   </Badge>
                 </TableCell>

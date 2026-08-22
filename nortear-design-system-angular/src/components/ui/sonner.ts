@@ -54,7 +54,7 @@ export interface ToastPromiseMessages {
 /**
  * Uma torrada na fila.
  *
- * `visivel` é um signal por item, e não um campo comum: a entrada nasce
+ * `visible` é um signal por item, e não um campo comum: a entrada nasce
  * invisível e só vira visível no quadro seguinte, que é o que faz a transição
  * de opacidade acontecer de verdade (ver `create`). Um campo comum não avisaria
  * o template da virada.
@@ -66,7 +66,7 @@ interface Toast {
   description?: string;
   action?: ToastAction;
   closeButton?: boolean;
-  visivel: WritableSignal<boolean>;
+  visible: WritableSignal<boolean>;
 }
 
 // ─── Estado global ────────────────────────────────────────────────────────────
@@ -164,7 +164,7 @@ function create(type: ToastType, title: string, opts: ToastOptions = {}): number
     description: opts.description,
     action: opts.action,
     closeButton: opts.closeButton,
-    visivel: signal(false),
+    visible: signal(false),
   };
 
   queue.update((atual) => [...atual, enter]);
@@ -173,7 +173,7 @@ function create(type: ToastType, title: string, opts: ToastOptions = {}): number
   // que a virada para `true` seja uma TRANSIÇÃO, e não o estado inicial. Sem
   // isso a torrada aparece seca — e, pior, os testes que medem opacidade não
   // teriam como distinguir "ainda entrando" de "assentada".
-  requestAnimationFrame(() => enter.visivel.set(true));
+  requestAnimationFrame(() => enter.visible.set(true));
 
   schedule(id, duration);
   return id;
@@ -193,7 +193,7 @@ function dismiss(id: number): void {
 
   stopTimer(id);
   timers.delete(id);
-  alvo.visivel.set(false);
+  alvo.visible.set(false);
 
   exits.set(
     id,
@@ -385,7 +385,7 @@ export class NdsToastIcon {
         aria-live="polite"
         [attr.data-type]="t.type"
         [attr.data-rich-colors]="richColors()"
-        [attr.data-visible]="t.visivel()"
+        [attr.data-visible]="t.visible()"
       >
         @if (t.type !== 'default') {
           <span class="nds-toast-icon" [class.nds-toast-icon-spin]="t.type === 'loading'">

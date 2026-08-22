@@ -111,7 +111,7 @@ export class NdsResizableStore {
   }
 
   /** Painéis à esquerda e à direita de um punho — o punho i separa i de i+1. */
-  private vizinhos(h: NdsResizableHandle): [NdsResizablePanel, NdsResizablePanel] | undefined {
+  private neighbours(h: NdsResizableHandle): [NdsResizablePanel, NdsResizablePanel] | undefined {
     const i = this.indiceDoPunho(h);
     if (i < 0 || i + 1 >= this.panels.length) return undefined;
     return [this.panels[i], this.panels[i + 1]];
@@ -126,7 +126,7 @@ export class NdsResizableStore {
 
   /** Mínimo alcançável pelo painel anterior: o próprio `minSize`. */
   minimumOf(h: NdsResizableHandle): number | undefined {
-    return this.vizinhos(h)?.[0].minSize();
+    return this.neighbours(h)?.[0].minSize();
   }
 
   /**
@@ -134,13 +134,13 @@ export class NdsResizableStore {
    * também tem um mínimo, e é o menor dos dois tetos que o arrasto respeita.
    */
   maximoDe(h: NdsResizableHandle): number | undefined {
-    const v = this.vizinhos(h);
+    const v = this.neighbours(h);
     if (!v) return undefined;
     const [a, b] = v;
     const i = this.indiceDoPunho(h);
     const s = this._sizes();
-    const soma = (s[i] ?? 0) + (s[i + 1] ?? 0);
-    return Math.min(a.maxSize(), soma - b.minSize());
+    const sum = (s[i] ?? 0) + (s[i + 1] ?? 0);
+    return Math.min(a.maxSize(), sum - b.minSize());
   }
 
   /**
@@ -176,8 +176,8 @@ export class NdsResizableStore {
     const limitados = valores.map((s, i) =>
       limitar(s, this.panels[i].minSize(), this.panels[i].maxSize()),
     );
-    const soma = limitados.reduce((a, b) => a + b, 0);
-    return soma > 0 ? limitados.map((s) => (s / soma) * 100) : limitados;
+    const sum = limitados.reduce((a, b) => a + b, 0);
+    return sum > 0 ? limitados.map((s) => (s / sum) * 100) : limitados;
   }
 
   // ─── Arrasto ──────────────────────────────────────────────────────────────
@@ -206,18 +206,18 @@ export class NdsResizableStore {
 
   /** Home / End / Enter: leva o painel anterior direto a um extremo. */
   levarPara(h: NdsResizableHandle, alvo: 'min' | 'max' | 'default'): void {
-    const v = this.vizinhos(h);
+    const v = this.neighbours(h);
     if (!v) return;
     const [a] = v;
     const i = this.indiceDoPunho(h);
     const atual = this._sizes()[i] ?? 0;
-    const destino =
+    const destination =
       alvo === 'min'
         ? (this.minimumOf(h) ?? atual)
         : alvo === 'max'
           ? (this.maximoDe(h) ?? atual)
           : (a.defaultSize() ?? atual);
-    this.aplicar(h, destino - atual, this._sizes());
+    this.aplicar(h, destination - atual, this._sizes());
   }
 
   /**
@@ -226,20 +226,20 @@ export class NdsResizableStore {
    * empurrando o layout inteiro.
    */
   private aplicar(h: NdsResizableHandle, deltaPct: number, base: number[]): void {
-    const v = this.vizinhos(h);
+    const v = this.neighbours(h);
     if (!v) return;
     const [a, b] = v;
     const i = this.indiceDoPunho(h);
-    const soma = (base[i] ?? 0) + (base[i + 1] ?? 0);
+    const sum = (base[i] ?? 0) + (base[i + 1] ?? 0);
 
-    const tetoA = Math.min(a.maxSize(), soma - b.minSize());
-    const pisoA = Math.max(a.minSize(), soma - b.maxSize());
+    const tetoA = Math.min(a.maxSize(), sum - b.minSize());
+    const pisoA = Math.max(a.minSize(), sum - b.maxSize());
     if (pisoA > tetoA) return;
 
     const newA = limitar(base[i] + deltaPct, pisoA, tetoA);
     const atualizados = [...this._sizes()];
     atualizados[i] = newA;
-    atualizados[i + 1] = soma - newA;
+    atualizados[i + 1] = sum - newA;
     this._sizes.set(atualizados);
   }
 

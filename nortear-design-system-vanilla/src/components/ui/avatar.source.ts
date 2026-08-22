@@ -44,11 +44,11 @@ export function avatarSnippet(o: AvatarSnippetOptions = {}): string {
     ['className', o.className ? texto(o.className) : undefined],
   ]);
 
-  const nomes = ['createAvatar'];
-  if (o.status) nomes.push('createAvatarBadge');
+  const names = ['createAvatar'];
+  if (o.status) names.push('createAvatarBadge');
 
   return snippet(
-    importing('avatar', ...nomes),
+    importing('avatar', ...names),
     `const avatar = ${chamada('createAvatar', linhas)};`,
     o.status
       ? `avatar.appendChild(createAvatarBadge({ 'aria-label': ${texto(o.status)} }));`
@@ -87,12 +87,12 @@ export type AvatarGranularSnippetOptions = {
  * também o único caminho para um fallback que não é texto.
  */
 export function avatarGranularSnippet(o: AvatarGranularSnippetOptions = {}): string {
-  const nomes = ['createAvatarFallback', 'createAvatarRoot'];
+  const names = ['createAvatarFallback', 'createAvatarRoot'];
   const raiz = opcoes([['size', o.size && o.size !== 'md' ? texto(o.size) : undefined]]);
 
   if (o.iconLabel) {
     return snippet(
-      importing('avatar', ...nomes),
+      importing('avatar', ...names),
       `const avatar = ${raiz.length ? chamada('createAvatarRoot', raiz) : 'createAvatarRoot()'};`,
       `// \`icone\` é um SVG do seu conjunto, decorativo: aria-hidden="true".
 // O papel de imagem é o que deixa o fallback receber um nome acessível.
@@ -106,7 +106,7 @@ avatar.appendChild(fallback);`,
   }
 
   return snippet(
-    importing('avatar', ...nomes),
+    importing('avatar', ...names),
     `const avatar = ${raiz.length ? chamada('createAvatarRoot', raiz) : 'createAvatarRoot()'};`,
     `avatar.appendChild(createAvatarFallback({ text: ${texto(o.fallback ?? 'JP')} }));`,
     montar('avatar'),

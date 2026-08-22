@@ -53,7 +53,7 @@
   // ir, e o glossário continua sendo o caminho alternativo obrigatório.
   const triggerEhButton = $derived(variant === 'definition' || variant === 'metric');
 
-  const CLASSES_BOTAO =
+  const CLASSES_BUTTON =
     'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 </script>
 
@@ -64,7 +64,7 @@
       <HoverCardTrigger>
         {#snippet child({ props })}
           {#if triggerEhButton}
-            <button type="button" class={CLASSES_BOTAO} {...props}>{triggerLabel}</button>
+            <button type="button" class={CLASSES_BUTTON} {...props}>{triggerLabel}</button>
           {:else}
             <a
               {href}

@@ -153,7 +153,7 @@ export function NavigationMenuDocs() {
 
   const structureCode = tContent("anatomy.structureCode");
 
-  const codeHorizontal = `<NavigationMenu aria-label="Navegação principal">
+  const horizontalCode = `<NavigationMenu aria-label="Navegação principal">
   <NavigationMenuList>
     <NavigationMenuItem>
       <NavigationMenuLink href="/">Início</NavigationMenuLink>
@@ -161,7 +161,7 @@ export function NavigationMenuDocs() {
   </NavigationMenuList>
 </NavigationMenu>`;
 
-  const codeVertical = `<NavigationMenu orientation="vertical" aria-label="Navegação principal">
+  const verticalCode = `<NavigationMenu orientation="vertical" aria-label="Navegação principal">
   <NavigationMenuList>
     <NavigationMenuItem>
       <NavigationMenuLink href="/">Início</NavigationMenuLink>
@@ -536,7 +536,7 @@ interface NavigationMenuLinkProps
           {
             name: tContent("variants.items.horizontal"),
             description: stripHtml(tContent("variants.styles.horizontal")),
-            code: codeHorizontal,
+            code: horizontalCode,
             preview: (
               <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 orientation=&quot;horizontal&quot;
@@ -546,7 +546,7 @@ interface NavigationMenuLinkProps
           {
             name: tContent("variants.items.vertical"),
             description: stripHtml(tContent("variants.styles.vertical")),
-            code: codeVertical,
+            code: verticalCode,
             preview: (
               <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 orientation=&quot;vertical&quot;

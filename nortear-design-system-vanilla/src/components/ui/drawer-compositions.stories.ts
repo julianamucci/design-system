@@ -87,7 +87,7 @@ export const WithForm: Story = {
           triggerLabel: 'Editar perfil',
           title: 'Editar perfil',
           description: 'Atualize seu nome e e-mail.',
-          campos: [
+          fields: [
             { label: 'Nome', value: 'Maria Souza' },
             { label: 'E-mail', type: 'email', value: 'maria@exemplo.com' },
           ],
@@ -135,9 +135,9 @@ export const WithForm: Story = {
     await step('O rodapé oferece confirmar e cancelar', async () => {
       const rodape = painel.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
       await expect(rodape).not.toBeNull();
-      const nomes = within(rodape).getAllByRole('button').map((b) => b.textContent?.trim());
-      await expect(nomes).toContain('Confirmar');
-      await expect(nomes).toContain('Cancelar');
+      const names = within(rodape).getAllByRole('button').map((b) => b.textContent?.trim());
+      await expect(names).toContain('Confirmar');
+      await expect(names).toContain('Cancelar');
     });
   },
 };

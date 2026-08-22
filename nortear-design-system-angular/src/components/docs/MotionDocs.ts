@@ -66,11 +66,11 @@ const ESCADA: DurationDegrau[] = [
 /** Item da cascata, com o atraso já pronto como valor CSS. */
 interface ItemDaCascata {
   rotulo: string;
-  atraso: string;
+  delay: string;
 }
 
 const CASCATA_ITEMS: ItemDaCascata[] = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'].map(
-  (rotulo, i) => ({ rotulo, atraso: `${i * 60}ms` }),
+  (rotulo, i) => ({ rotulo, delay: `${i * 60}ms` }),
 );
 
 // ─── Parâmetros da mola ──────────────────────────────────────────────────────
@@ -211,7 +211,7 @@ const CODIGO_PRESENCE = `<!-- animate.enter / animate.leave são do próprio Ang
               @for (item of itensDaCascata; track execucaoDaCascata() + item.rotulo) {
                 <li
                   [class]="classeDoItemDaCascata()"
-                  [style.--nds-stagger-delay]="item.atraso"
+                  [style.--nds-stagger-delay]="item.delay"
                 >
                   {{ item.rotulo }}
                 </li>
@@ -337,7 +337,7 @@ export class NdsMotionDocs implements OnDestroy {
   private velocidadeX = 0;
   private velocidadeY = 0;
   private instanteAnterior = 0;
-  private quadro: number | undefined;
+  private nextFrame: number | undefined;
 
   protected aoPressionar(evento: PointerEvent): void {
     const alvo = evento.target as HTMLElement;
@@ -380,7 +380,7 @@ export class NdsMotionDocs implements OnDestroy {
       return;
     }
     this.instanteAnterior = performance.now();
-    this.quadro = requestAnimationFrame(this.passoDaMola);
+    this.nextFrame = requestAnimationFrame(this.passoDaMola);
   }
 
   /**
@@ -413,7 +413,7 @@ export class NdsMotionDocs implements OnDestroy {
 
     this.offsetX.set(nextX);
     this.offsetY.set(nextY);
-    this.quadro = requestAnimationFrame(this.passoDaMola);
+    this.nextFrame = requestAnimationFrame(this.passoDaMola);
   };
 
   /** Zera posição e velocidade — o elemento volta exatamente ao centro. */
@@ -422,13 +422,13 @@ export class NdsMotionDocs implements OnDestroy {
     this.offsetY.set(0);
     this.velocidadeX = 0;
     this.velocidadeY = 0;
-    this.quadro = undefined;
+    this.nextFrame = undefined;
   }
 
   private pararMola(): void {
-    if (this.quadro !== undefined) {
-      cancelAnimationFrame(this.quadro);
-      this.quadro = undefined;
+    if (this.nextFrame !== undefined) {
+      cancelAnimationFrame(this.nextFrame);
+      this.nextFrame = undefined;
     }
   }
 

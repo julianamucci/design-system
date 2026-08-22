@@ -631,12 +631,12 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     const linha = (name: string, chave: string, tipo: string, padrao: string) => ({
       name,
       type: tipo,
       defaultValue: padrao,
-      required: nao,
+      required: not,
       description: toPlainText(t(`props.table.${chave}`)),
     });
 

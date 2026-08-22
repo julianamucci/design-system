@@ -194,9 +194,9 @@ export const Playground: Story = {
     /** Estabelece a precondição do passo: sem ordem aplicada, venha de onde vier. */
     const zerarOrdenacao = async () => {
       for (let i = 0; i < 3; i++) {
-        const botao = canvas.getByRole('button', { name: 'Ordenar por Valor' });
-        if (botao.closest('th')!.getAttribute('aria-sort') === 'none') break;
-        await userEvent.click(botao);
+        const button = canvas.getByRole('button', { name: 'Ordenar por Valor' });
+        if (button.closest('th')!.getAttribute('aria-sort') === 'none') break;
+        await userEvent.click(button);
       }
       await waitFor(() =>
         expect(
@@ -209,9 +209,9 @@ export const Playground: Story = {
      * caixa é buscada de novo a cada chamada porque a factory REMONTA o corpo
      * a cada mudança de estado: o nó capturado antes do clique já morreu.
      */
-    const marcar = async (achar: () => HTMLElement, alvo: 'true' | 'false') => {
-      if (achar().getAttribute('aria-checked') !== alvo) await userEvent.click(achar());
-      await waitFor(() => expect(achar()).toHaveAttribute('aria-checked', alvo));
+    const marcar = async (find: () => HTMLElement, alvo: 'true' | 'false') => {
+      if (find().getAttribute('aria-checked') !== alvo) await userEvent.click(find());
+      await waitFor(() => expect(find()).toHaveAttribute('aria-checked', alvo));
     };
     const lineBox = (i: number) => () =>
       linhas()[i].querySelector<HTMLElement>("[role='checkbox']")!;
@@ -270,12 +270,12 @@ export const Playground: Story = {
       // accessibility.item2 — o aria-label carrega o NOME da coluna: "Ordenar
       // por" cinco vezes seria indistinguível na lista de controles do leitor.
       await zerarOrdenacao();
-      const cabecalho = canvas
+      const header = canvas
         .getByRole('button', { name: 'Ordenar por Valor' })
         .closest('th')!;
-      await expect(cabecalho).toHaveAttribute('scope', 'col');
+      await expect(header).toHaveAttribute('scope', 'col');
       // `none` explícito: ausência seria indistinguível de "não ordena".
-      await expect(cabecalho).toHaveAttribute('aria-sort', 'none');
+      await expect(header).toHaveAttribute('aria-sort', 'none');
     });
 
     await step('Ordenar percorre ascendente, descendente e nenhum', async () => {
@@ -283,20 +283,20 @@ export const Playground: Story = {
       // engano não tem como voltar à ordem original dos dados.
       await zerarOrdenacao();
       const ordenar = () => canvas.getByRole('button', { name: 'Ordenar por Valor' });
-      const cabecalho = () => ordenar().closest('th')!;
+      const header = () => ordenar().closest('th')!;
 
       await userEvent.click(ordenar());
-      await waitFor(() => expect(cabecalho()).toHaveAttribute('aria-sort', 'ascending'));
+      await waitFor(() => expect(header()).toHaveAttribute('aria-sort', 'ascending'));
       // O menor valor é 60 (INV-009). Se a ordenação comparasse o TEXTO
       // formatado, "R$ 1.200,00" viria antes de "R$ 60,00".
       await expect(firstCell()).toHaveTextContent('INV-009');
 
       await userEvent.click(ordenar());
-      await waitFor(() => expect(cabecalho()).toHaveAttribute('aria-sort', 'descending'));
+      await waitFor(() => expect(header()).toHaveAttribute('aria-sort', 'descending'));
       await expect(firstCell()).toHaveTextContent('INV-008');
 
       await userEvent.click(ordenar());
-      await waitFor(() => expect(cabecalho()).toHaveAttribute('aria-sort', 'none'));
+      await waitFor(() => expect(header()).toHaveAttribute('aria-sort', 'none'));
       await expect(firstCell()).toHaveTextContent('INV-001');
     });
 
@@ -305,36 +305,36 @@ export const Playground: Story = {
       // linha' e, com isso, GUARDAVA o defeito: dez controles homônimos passavam
       // por ela todo dia. Nome repetido em dez controles é o mesmo que nome
       // nenhum na lista do leitor (WCAG 4.1.2).
-      const nomes = linhas().map(
+      const names = linhas().map(
         (tr) => tr.querySelector<HTMLElement>("[role='checkbox']")!.getAttribute('aria-label')!,
       );
 
-      await expect(nomes.length).toBe(linhas().length);
+      await expect(names.length).toBe(linhas().length);
       // Distintos ENTRE SI — só verificar a presença deixaria os homônimos
       // passarem exatamente como antes.
-      await expect(new Set(nomes).size).toBe(nomes.length);
+      await expect(new Set(names).size).toBe(names.length);
       // E cada nome é o da PRÓPRIA linha: nomes distintos porém trocados seriam
       // igualmente inúteis para quem não vê a tabela. O identificador vem da
       // primeira coluna, que é o fallback em ação — a story não passa `rowLabel`.
       for (const [i, linha] of linhas().entries()) {
-        await expect(nomes[i]).toContain(identidadeCell(linha).textContent!.trim());
+        await expect(names[i]).toContain(identidadeCell(linha).textContent!.trim());
       }
-      await expect(nomes).not.toContain(allBox().getAttribute('aria-label'));
+      await expect(names).not.toContain(allBox().getAttribute('aria-label'));
     });
 
     await step('A busca livre recorta as linhas', async () => {
       // functional.item1 — o filtro global casa em qualquer coluna.
-      const busca = canvas.getByRole('searchbox') as HTMLInputElement;
-      await userEvent.click(busca);
-      await userEvent.tripleClick(busca);
+      const search = canvas.getByRole('searchbox') as HTMLInputElement;
+      await userEvent.click(search);
+      await userEvent.tripleClick(search);
       await userEvent.keyboard('{Delete}');
-      await userEvent.type(busca, 'Karen');
+      await userEvent.type(search, 'Karen');
       await waitFor(() => expect(linhas().length).toBe(1));
       await expect(firstCell()).toHaveTextContent('INV-011');
       // A contagem acompanha o recorte, e não o total do dataset.
       await expect(regiaoViva()).toHaveTextContent('de 1 fatura(s) selecionada(s).');
 
-      await userEvent.tripleClick(busca);
+      await userEvent.tripleClick(search);
       await userEvent.keyboard('{Delete}');
       await waitFor(() => expect(linhas().length).toBe(10));
     });

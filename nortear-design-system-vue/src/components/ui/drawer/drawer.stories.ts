@@ -17,7 +17,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { drawerSource } from './drawer.source';
 
-const ROTULO = {
+const LABEL = {
   gatilho: 'Abrir drawer',
   titulo: 'Editar perfil',
   descricao: 'Atualize seus dados pessoais e foto.',
@@ -125,26 +125,26 @@ export const Playground: Story = {
       Button,
     },
     setup() {
-      return { args, ROTULO };
+      return { args, LABEL };
     },
     template: `
       <div style="contain: layout">
         <Drawer :key="String(args.defaultOpen) + args.direction" v-bind="args">
           <DrawerTrigger as-child>
-            <Button variant="outline">{{ ROTULO.gatilho }}</Button>
+            <Button variant="outline">{{ LABEL.gatilho }}</Button>
           </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle>{{ ROTULO.titulo }}</DrawerTitle>
-              <DrawerDescription>{{ ROTULO.descricao }}</DrawerDescription>
+              <DrawerTitle>{{ LABEL.titulo }}</DrawerTitle>
+              <DrawerDescription>{{ LABEL.descricao }}</DrawerDescription>
             </DrawerHeader>
             <DrawerBody class="nds-text-body nds-text-muted-foreground">
               Conteúdo do drawer.
             </DrawerBody>
             <DrawerFooter>
-              <Button>{{ ROTULO.confirmar }}</Button>
+              <Button>{{ LABEL.confirmar }}</Button>
               <DrawerClose as-child>
-                <Button variant="outline">{{ ROTULO.cancelar }}</Button>
+                <Button variant="outline">{{ LABEL.cancelar }}</Button>
               </DrawerClose>
             </DrawerFooter>
           </DrawerContent>
@@ -154,7 +154,7 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: ROTULO.gatilho });
+    const trigger = canvas.getByRole('button', { name: LABEL.gatilho });
 
     await fechar();
 
@@ -169,8 +169,8 @@ export const Playground: Story = {
       // O nome sai do aria-labelledby ligado ao id REAL do DrawerTitle. Já houve
       // um aria-label fixo em inglês aqui, que vencia o título e deixava o
       // painel se anunciando "Drawer".
-      await expect(painel).toHaveAccessibleName(ROTULO.titulo);
-      await expect(painel).toHaveAccessibleDescription(ROTULO.descricao);
+      await expect(painel).toHaveAccessibleName(LABEL.titulo);
+      await expect(painel).toHaveAccessibleDescription(LABEL.descricao);
       await expect(painel).toHaveAttribute('data-vaul-drawer-direction', args.direction!);
       await expect(painel).toHaveClass(/nds-drawer-content/);
       await expect(spy.mock.calls.length).toBe(callsBefore + 1);
@@ -205,7 +205,7 @@ export const Playground: Story = {
 
     await step('5. O botão de fechar do rodapé fecha e devolve o foco ao gatilho', async () => {
       const painel = await abrir(trigger);
-      await userEvent.click(within(painel).getByRole('button', { name: ROTULO.cancelar }));
+      await userEvent.click(within(painel).getByRole('button', { name: LABEL.cancelar }));
       await waitForPortalGone('dialog');
       await waitFor(() => {
         if (document.activeElement !== trigger) {

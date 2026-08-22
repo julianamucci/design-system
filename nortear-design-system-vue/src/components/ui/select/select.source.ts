@@ -20,9 +20,9 @@ export type SelectArgs = {
 };
 
 /** Os nomes que a composição usa, um por linha, do design system. */
-function importing(...nomes: string[]): string {
+function importing(...names: string[]): string {
   return `import {
-${nomes.map((nome) => `  ${nome},`).join('\n')}
+${names.map((nome) => `  ${nome},`).join('\n')}
 } from '@/components/ui/select'`;
 }
 

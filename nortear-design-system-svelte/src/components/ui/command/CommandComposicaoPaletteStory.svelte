@@ -10,10 +10,10 @@
   let { onCommandRun }: { onCommandRun?: (value: string) => void } = $props();
 
   let open = $state(false);
-  let ultimo = $state('');
+  let last = $state('');
 
   function handleSelect(value: string) {
-    ultimo = value;
+    last = value;
     open = false;
     onCommandRun?.(value);
   }
@@ -81,4 +81,4 @@
   </Command.Dialog>
 </div>
 
-<p data-testid="palette-executado">{ultimo}</p>
+<p data-testid="palette-executado">{last}</p>

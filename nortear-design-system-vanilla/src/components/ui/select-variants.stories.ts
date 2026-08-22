@@ -165,7 +165,7 @@ export const WithGroups: Story = {
 
     await step('As opções continuam todas na mesma lista', async () => {
       const listbox = await waitForPortal('listbox');
-      const total = Object.values(REGIOES).reduce((soma, g) => soma + g.length, 0);
+      const total = Object.values(REGIOES).reduce((sum, g) => sum + g.length, 0);
       await expect(within(listbox).getAllByRole('option')).toHaveLength(total);
       // Linha para o olho, silêncio para o leitor de tela — quem separa
       // semanticamente é o grupo, e um `separator` dentro de `listbox` seria filho

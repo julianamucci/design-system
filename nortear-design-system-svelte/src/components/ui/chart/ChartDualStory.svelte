@@ -20,7 +20,7 @@
     height?: number;
   }
 
-  const PADRAO = {
+  const DEFAULT = {
     xAxis: ['Jan', 'Fev', 'Mar', 'Abr'],
     series: [
       { name: 'Desktop', data: [186, 305, 237, 73] },
@@ -29,8 +29,8 @@
   };
 
   let {
-    optionBar = buildBarOption(PADRAO),
-    optionLine = buildLineOption(PADRAO),
+    optionBar = buildBarOption(DEFAULT),
+    optionLine = buildLineOption(DEFAULT),
     labelBar = 'Acessos mensais por dispositivo, em barras',
     labelLine = 'Acessos mensais por dispositivo, em linhas',
     height = 260,

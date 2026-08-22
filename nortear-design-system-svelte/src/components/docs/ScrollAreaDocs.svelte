@@ -110,7 +110,7 @@
 
   const codeImportBasic = `import { ScrollArea } from "@/components/ui/scroll-area";`;
 
-  const codeVertical = `<div>
+  const verticalCode = `<div>
   <ScrollArea orientation="vertical" size="xl" class="nds-w-full nds-rounded-md nds-border-default">
     <div class="nds-stack nds-p-4" data-spacing="sm">
       {#each tags as tag}
@@ -120,7 +120,7 @@
   </ScrollArea>
 </div>`;
 
-  const codeHorizontal = `<div style="width: 500px">
+  const horizontalCode = `<div style="width: 500px">
   <ScrollArea orientation="horizontal" size="md" class="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default">
     <div class="nds-cluster nds-p-4" data-spacing="md" style="width: max-content">
       {#each items as item}
@@ -383,8 +383,8 @@ interface ScrollAreaRootProps {
   <DocsVariants
     title={$tStore('variants.title')}
     items={[
-      { name: $tStore('variants.items.vertical'),   description: stripHtml($tStore('variants.styles.vertical')),   code: codeVertical,   preview: variantVertical   },
-      { name: $tStore('variants.items.horizontal'), description: stripHtml($tStore('variants.styles.horizontal')), code: codeHorizontal, preview: variantHorizontal },
+      { name: $tStore('variants.items.vertical'),   description: stripHtml($tStore('variants.styles.vertical')),   code: verticalCode,   preview: variantVertical   },
+      { name: $tStore('variants.items.horizontal'), description: stripHtml($tStore('variants.styles.horizontal')), code: horizontalCode, preview: variantHorizontal },
       { name: $tStore('variants.items.both'),       description: stripHtml($tStore('variants.styles.both')),       code: codeBoth,       preview: variantBoth       },
     ]}
   />

@@ -69,25 +69,25 @@ function entriesLines(
   entries: ContextMenuEntrySnippet[],
   recuo: string,
 ): string[] {
-  return entries.flatMap((entrada) => {
+  return entries.flatMap((entry) => {
     const partes: string[] = [];
-    if (entrada.type && entrada.type !== 'item') partes.push(`type: ${texto(entrada.type)}`);
-    if (entrada.label !== undefined) partes.push(`label: ${texto(entrada.label)}`);
-    if (entrada.value !== undefined) partes.push(`value: ${texto(entrada.value)}`);
-    if (entrada.shortcut) partes.push(`shortcut: ${texto(entrada.shortcut)}`);
-    if (entrada.variant) partes.push(`variant: ${texto(entrada.variant)}`);
-    if (entrada.inset) partes.push('inset: true');
-    if (entrada.disabled) partes.push('disabled: true');
-    if (entrada.checked !== undefined) partes.push(`checked: ${String(entrada.checked)}`);
-    if (entrada.indeterminate) partes.push('indeterminate: true');
+    if (entry.type && entry.type !== 'item') partes.push(`type: ${texto(entry.type)}`);
+    if (entry.label !== undefined) partes.push(`label: ${texto(entry.label)}`);
+    if (entry.value !== undefined) partes.push(`value: ${texto(entry.value)}`);
+    if (entry.shortcut) partes.push(`shortcut: ${texto(entry.shortcut)}`);
+    if (entry.variant) partes.push(`variant: ${texto(entry.variant)}`);
+    if (entry.inset) partes.push('inset: true');
+    if (entry.disabled) partes.push('disabled: true');
+    if (entry.checked !== undefined) partes.push(`checked: ${String(entry.checked)}`);
+    if (entry.indeterminate) partes.push('indeterminate: true');
 
-    if (!entrada.items) return [`${recuo}{ ${partes.join(', ')} },`];
+    if (!entry.items) return [`${recuo}{ ${partes.join(', ')} },`];
 
     return [
       `${recuo}{`,
       ...partes.map((p) => `${recuo}  ${p},`),
       `${recuo}  items: [`,
-      ...entriesLines(entrada.items, `${recuo}    `),
+      ...entriesLines(entry.items, `${recuo}    `),
       `${recuo}  ],`,
       `${recuo}},`,
     ];

@@ -51,7 +51,7 @@ export const InPopover: Story = {
   },
   render: () => ({
     props: {
-      mes: parseDate('2026-04-01'),
+      month: parseDate('2026-04-01'),
       valor: undefined as DateValue | undefined,
       // O rótulo do gatilho sai do mesmo formatador que a grade usa, no mesmo
       // locale — escrever "15/04/2026" à mão aqui criaria uma segunda forma de
@@ -73,7 +73,7 @@ export const InPopover: Story = {
           <div
             ndsCalendar
             locale="pt-BR"
-            [defaultMonth]="mes"
+            [defaultMonth]="month"
             [(value)]="valor"
             [initialFocus]="true"
           ></div>

@@ -44,8 +44,8 @@ const IMPORT = `import {
 } from "@/components/ui/hover-card";`;
 
 /** Empurra o miolo para dentro do `Content`. */
-function indentar(markup: string, nivel: number): string {
-  const espacos = ' '.repeat(nivel);
+function indentar(markup: string, level: number): string {
+  const espacos = ' '.repeat(level);
   return markup
     .split('\n')
     .map((linha) => (linha.trim() ? `${espacos}${linha}` : linha))
@@ -154,12 +154,12 @@ export function hoverCardSource(_gerado?: string, ctx?: { args?: Partial<HoverCa
     variant = 'default',
   } = ctx?.args ?? {};
 
-  const controlado = open !== undefined;
+  const controlled = open !== undefined;
 
   // Estado de fora e abertura inicial não convivem: com `bind:open`, quem manda
   // é o estado, e escrever `defaultOpen` ao lado duplicaria a fonte da verdade.
   let abertura = '';
-  if (controlado) abertura = 'bind:open={aberto}';
+  if (controlled) abertura = 'bind:open={aberto}';
   else if (defaultOpen) abertura = 'defaultOpen';
 
   const rootProps = attrs(
@@ -181,7 +181,7 @@ export function hoverCardSource(_gerado?: string, ctx?: { args?: Partial<HoverCa
     : `<a href="${href}" {...props}>${triggerLabel}</a>`;
 
   return svelteSnippet(
-    controlado ? `${IMPORT}\n\nlet aberto = $state(${open ?? false});` : IMPORT,
+    controlled ? `${IMPORT}\n\nlet aberto = $state(${open ?? false});` : IMPORT,
     `<p class="nds-text-body nds-max-w-sm">
   Comentário de
   <HoverCard${rootProps}>

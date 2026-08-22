@@ -40,12 +40,12 @@ export function createCollapsible(options: CollapsibleOptions): CollapsibleEleme
     onOpenChange,
   } = options;
 
-  const controlado = options.open !== undefined;
+  const controlled = options.open !== undefined;
 
   const id = ++_collapsibleCounter;
   const contentId = `collapsible-content-${id}`;
 
-  let isOpen = controlado ? !!options.open : defaultOpen;
+  let isOpen = controlled ? !!options.open : defaultOpen;
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'collapsible';
@@ -101,7 +101,7 @@ export function createCollapsible(options: CollapsibleOptions): CollapsibleEleme
       const next = !isOpen;
       // No modo controlado o DOM não se move sozinho: o trigger apenas propõe o
       // novo valor, e quem é dono do estado decide se ele vale.
-      if (!controlado) aplicar(next);
+      if (!controlled) aplicar(next);
       onOpenChange?.(next);
     });
   }

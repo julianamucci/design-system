@@ -27,7 +27,7 @@
  * Nenhuma função afirma nada: todas devolvem dado. A asserção é da story.
  */
 
-import { MODOS, TEMAS, backgroundEffective, byTheme, ratio } from './cor';
+import { MODOS, THEMES, backgroundEffective, byTheme, ratio } from './cor';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -48,7 +48,7 @@ export interface PaletteMeasurement {
   backgroundHighlight: string | null;
   tokens: TokenMeasurement[];
   /** Menor razão da paleta inteira nesta combinação de tema e modo. */
-  pior: { token: string; ratio: number; fundo: 'superficie' | 'destaque' } | null;
+  pior: { token: string; ratio: number; background: 'superficie' | 'destaque' } | null;
 }
 
 // ─── Dados fixos ──────────────────────────────────────────────────────────────
@@ -62,7 +62,7 @@ export interface PaletteMeasurement {
  * (`number`, `tag`, `attr`, `property`, `function`, `builtin`) sem nunca terem
  * sido medidas contra fundo nenhum.
  */
-export const TRECHOS_DA_PALETA: ReadonlyArray<{ language: string; code: string }> = [
+export const PALETTE_TRECHOS: ReadonlyArray<{ language: string; code: string }> = [
   {
     language: 'ts',
     code: 'const total = Math.max(items.length, 10); // soma\nrender(items, total);',
@@ -99,8 +99,8 @@ function nomeAcessivel(el: Element | null | undefined): string | null {
   return texto(el);
 }
 
-/** Ancestrais de `el` (inclusive) até `limite` que rolam de fato. */
-function donosDeEixo(el: Element | null, limite: Element): Array<{
+/** Ancestrais de `el` (inclusive) até `limit` que rolam de fato. */
+function donosDeEixo(el: Element | null, limit: Element): Array<{
   seletor: string;
   overflowX: string;
   overflowY: string;
@@ -124,7 +124,7 @@ function donosDeEixo(el: Element | null, limite: Element): Array<{
         tabIndex: html.hasAttribute('tabindex') ? html.tabIndex : null,
       });
     }
-    if (atual === limite) break;
+    if (atual === limit) break;
     atual = atual.parentElement;
   }
   return saida;
@@ -139,19 +139,19 @@ export function measureCodeBlock(raiz: HTMLElement) {
 
   const header = root.querySelector<HTMLElement>('.nds-code-block-header');
   const titulo = root.querySelector<HTMLElement>('.nds-code-block-title');
-  const botao = root.querySelector<HTMLElement>('[data-slot="code-block-copy"]');
+  const button = root.querySelector<HTMLElement>('[data-slot="code-block-copy"]');
   const status = root.querySelector<HTMLElement>('[role="status"]');
   const scroll = root.querySelector<HTMLElement>('.nds-code-block-scroll');
   const pre = root.querySelector<HTMLElement>('pre');
   const code = root.querySelector<HTMLElement>('code');
   const linhas = [...root.querySelectorAll<HTMLElement>('.nds-code-block-line')];
   const gutters = [...root.querySelectorAll<HTMLElement>('.nds-code-block-gutter')];
-  const textos = [...root.querySelectorAll<HTMLElement>('.nds-code-block-text')];
+  const texts = [...root.querySelectorAll<HTMLElement>('.nds-code-block-text')];
   const rodape = root.querySelector<HTMLElement>('.nds-code-block-footer');
 
   const csRoot = getComputedStyle(root);
   const csScroll = scroll ? getComputedStyle(scroll) : null;
-  const csText = textos[0] ? getComputedStyle(textos[0]) : null;
+  const csText = texts[0] ? getComputedStyle(texts[0]) : null;
   const csGutter = gutters[0] ? getComputedStyle(gutters[0]) : null;
 
   // `:not([data-token="plain"])` — `plain` não vira elemento, mas o seletor
@@ -188,14 +188,14 @@ export function measureCodeBlock(raiz: HTMLElement) {
       /** `lang` no trecho: sem ele a voz em pt-BR pronuncia código como português. */
       langDoPre: pre?.getAttribute('lang') ?? null,
       langDoDocumento: root.ownerDocument.documentElement.getAttribute('lang'),
-      nomeDoBotaoCopiar: nomeAcessivel(botao),
-      tipoDoBotaoCopiar: botao?.getAttribute('type') ?? null,
-      iconesOcultos: botao
-        ? [...botao.querySelectorAll('svg')].map((s) => s.getAttribute('aria-hidden'))
+      nomeDoBotaoCopiar: nomeAcessivel(button),
+      tipoDoBotaoCopiar: button?.getAttribute('type') ?? null,
+      iconesOcultos: button
+        ? [...button.querySelectorAll('svg')].map((s) => s.getAttribute('aria-hidden'))
         : null,
       statusExiste: !!status,
       statusAriaLive: status?.getAttribute('aria-live') ?? null,
-      statusForaDoBotao: status && botao ? !botao.contains(status) : null,
+      statusForaDoBotao: status && button ? !button.contains(status) : null,
       statusTexto: texto(status),
       gutterAriaHidden: gutters.map((g) => g.getAttribute('aria-hidden')),
       gutterNumeros: gutters.map((g) => g.textContent?.trim() ?? null),
@@ -301,12 +301,12 @@ export function themeMeasurePalette(raiz: HTMLElement): PaletteMeasurement[] {
 
     let pior: PaletteMeasurement['pior'] = null;
     for (const t of tokens) {
-      for (const [fundo, r] of [
+      for (const [background, r] of [
         ['superficie', t.contraSuperficie],
         ['destaque', t.contraDestaque],
       ] as const) {
         if (r === null) continue;
-        if (!pior || r < pior.ratio) pior = { token: t.token, ratio: r, fundo };
+        if (!pior || r < pior.ratio) pior = { token: t.token, ratio: r, background };
       }
     }
 
@@ -322,26 +322,26 @@ export function themeMeasurePalette(raiz: HTMLElement): PaletteMeasurement[] {
  */
 export function palettePiorContrast(
   raiz: HTMLElement,
-  /** `claro` ou `escuro` recorta a varredura; omitido mede os dois. */
+  /** `light` ou `escuro` recorta a varredura; omitido mede os dois. */
   apenasModo?: (typeof MODOS)[number],
 ): {
   ratio: number;
   token: string;
   tema: string;
   modo: string;
-  fundo: string;
+  background: string;
 } | null {
   let pior: ReturnType<typeof palettePiorContrast> = null;
-  for (const medida of themeMeasurePalette(raiz)) {
-    if (apenasModo && medida.modo !== apenasModo) continue;
-    if (!medida.pior) continue;
-    if (!pior || medida.pior.ratio < pior.ratio) {
+  for (const measurement of themeMeasurePalette(raiz)) {
+    if (apenasModo && measurement.modo !== apenasModo) continue;
+    if (!measurement.pior) continue;
+    if (!pior || measurement.pior.ratio < pior.ratio) {
       pior = {
-        ratio: medida.pior.ratio,
-        token: medida.pior.token,
-        tema: medida.tema,
-        modo: medida.modo,
-        fundo: medida.pior.fundo,
+        ratio: measurement.pior.ratio,
+        token: measurement.pior.token,
+        tema: measurement.tema,
+        modo: measurement.modo,
+        background: measurement.pior.background,
       };
     }
   }
@@ -373,7 +373,7 @@ export function contrastLaudo(
   const pior = palettePiorContrast(raiz, modo);
   if (!pior) return `nenhum token classificado · abaixo de ${minimum}: true`;
   return (
-    `${pior.tema}/${pior.modo} · ${pior.token} sobre ${pior.fundo} = ${pior.ratio}:1` +
+    `${pior.tema}/${pior.modo} · ${pior.token} sobre ${pior.background} = ${pior.ratio}:1` +
     ` · abaixo de ${minimum}: ${pior.ratio < minimum}`
   );
 }
@@ -381,7 +381,7 @@ export function contrastLaudo(
 /** Linha legível de uma combinação — o que a falha da story precisa mostrar. */
 export function describePalette(m: PaletteMeasurement): string {
   if (!m.pior) return `${m.tema}/${m.modo}: nenhum token classificado`;
-  return `${m.tema}/${m.modo} · pior ${m.pior.token} sobre ${m.pior.fundo} = ${m.pior.ratio}:1`;
+  return `${m.tema}/${m.modo} · pior ${m.pior.token} sobre ${m.pior.background} = ${m.pior.ratio}:1`;
 }
 
 // ─── Copiar ───────────────────────────────────────────────────────────────────
@@ -415,12 +415,12 @@ export async function withClipboardSpy<T>(
 /** O que o bloco mostra e anuncia depois da cópia — medido, não presumido. */
 export function measureConfirm(raiz: HTMLElement) {
   const root = raiz.querySelector<HTMLElement>('[data-slot="code-block"]');
-  const botao = root?.querySelector<HTMLElement>('[data-slot="code-block-copy"]');
+  const button = root?.querySelector<HTMLElement>('[data-slot="code-block-copy"]');
   const status = root?.querySelector<HTMLElement>('[role="status"]');
   const rotulo = root?.querySelector<HTMLElement>('.nds-code-block-copy-label');
   return {
-    nomeDoBotao: nomeAcessivel(botao),
-    quantosIcones: botao ? botao.querySelectorAll('svg').length : null,
+    nomeDoBotao: nomeAcessivel(button),
+    quantosIcones: button ? button.querySelectorAll('svg').length : null,
     anuncio: texto(status),
     labelVisible: rotulo && !rotulo.hidden ? texto(rotulo) : null,
   };
@@ -438,4 +438,4 @@ export function reportProbe(stack: string, cenario: string, dados: unknown): nev
   throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(dados)}`);
 }
 
-export { MODOS, TEMAS };
+export { MODOS, THEMES };

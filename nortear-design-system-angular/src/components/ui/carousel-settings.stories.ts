@@ -50,11 +50,11 @@ function baseDoSlide(canvasElement: HTMLElement, slide: HTMLElement): number {
  * que o gesto continua vivo.
  */
 /** Um quadro de renderização — o intervalo que separa dois passos de um gesto real. */
-function quadro(): Promise<void> {
+function nextFrame(): Promise<void> {
   return new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 }
 
-function ponteiro(
+function pointer(
   alvo: HTMLElement,
   tipo: 'pointerdown' | 'pointermove' | 'pointerup',
   x: number,
@@ -145,9 +145,9 @@ export const MultiResponsive: Story = {
       // A classe é responsiva por definição: afirmar "metade" sem consultar a
       // media query amarraria o teste à largura do runner, que nenhum
       // `parameters.viewport` controla.
-      const janela = canvasElement.ownerDocument.defaultView!;
-      const grande = janela.matchMedia('(min-width: 1024px)').matches;
-      const medio = janela.matchMedia('(min-width: 768px)').matches;
+      const window = canvasElement.ownerDocument.defaultView!;
+      const grande = window.matchMedia('(min-width: 1024px)').matches;
+      const medio = window.matchMedia('(min-width: 768px)').matches;
       const esperado = grande ? 1 / 3 : medio ? 1 / 2 : 1;
       const slide = canvas.getAllByRole('group')[0];
       await expect(baseDoSlide(canvasElement, slide)).toBeCloseTo(esperado, 2);
@@ -334,14 +334,14 @@ export const DragGesture: Story = {
      */
     const settle = async () => {
       let estaveis = 0;
-      let ultimo = Number.NaN;
+      let last = Number.NaN;
       await waitFor(async () => {
         const agora = viewport.scrollLeft;
-        estaveis = Math.abs(agora - ultimo) < 0.5 ? estaveis + 1 : 0;
-        ultimo = agora;
+        estaveis = Math.abs(agora - last) < 0.5 ? estaveis + 1 : 0;
+        last = agora;
         await expect(estaveis).toBeGreaterThanOrEqual(3);
       }, { timeout: 4000 });
-      return ultimo;
+      return last;
     };
 
     /** Espera a rolagem chegar a uma coordenada já conhecida. */
@@ -384,9 +384,9 @@ export const DragGesture: Story = {
       // ao primeiro slide é o que faz a segunda rodada valer tanto quanto a
       // primeira.
       for (let volta = 0; volta < slides().length; volta++) {
-        const botao = anterior();
-        if (botao.disabled) break;
-        await userEvent.click(botao);
+        const button = anterior();
+        if (button.disabled) break;
+        await userEvent.click(button);
       }
       posZero = await settle();
       await expect(anterior()).toBeDisabled();
@@ -463,11 +463,11 @@ export const DragGesture: Story = {
       // renderização. Despachando tudo no mesmo instante, a marca ainda não
       // valia e cada posição escrita era puxada de volta ao ponto de parada —
       // a rolagem media zero, que foi o que reprovou este passo.
-      ponteiro(viewport, 'pointerdown', direita, y);
-      await quadro();
-      ponteiro(viewport, 'pointermove', direita - 40, y);
-      await quadro();
-      ponteiro(viewport, 'pointermove', direita - 80, y);
+      pointer(viewport, 'pointerdown', direita, y);
+      await nextFrame();
+      pointer(viewport, 'pointermove', direita - 40, y);
+      await nextFrame();
+      pointer(viewport, 'pointermove', direita - 80, y);
       // Medida com o gesto AINDA EM CURSO — é isto que separa "arrastou" de
       // "mudou de slide".
       await waitFor(async () => {
@@ -476,9 +476,9 @@ export const DragGesture: Story = {
     });
 
     await step('Ao soltar, para onde a seta pararia', async () => {
-      ponteiro(viewport, 'pointermove', esquerda, y);
-      await quadro();
-      ponteiro(viewport, 'pointerup', esquerda, y);
+      pointer(viewport, 'pointermove', esquerda, y);
+      await nextFrame();
+      pointer(viewport, 'pointerup', esquerda, y);
 
       // Assentou EM UM SLIDE, e no MESMO ponto que a seta alcança — não onde o
       // cursor largou. Um carrossel de rolagem livre pararia no meio.

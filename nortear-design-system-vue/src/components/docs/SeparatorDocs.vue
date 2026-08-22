@@ -127,9 +127,9 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 
 const codeImportBasic = `import { Separator } from "@/components/ui/separator";`;
 
-const codeHorizontal = `<Separator orientation="horizontal" />`;
+const horizontalCode = `<Separator orientation="horizontal" />`;
 
-const codeVertical = `<div class="nds-cluster nds-docs-demo-row" data-spacing="md" data-align="center">
+const verticalCode = `<div class="nds-cluster nds-docs-demo-row" data-spacing="md" data-align="center">
   <span>Início</span>
   <Separator orientation="vertical" />
   <span>Docs</span>
@@ -162,8 +162,8 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.items.horizontal'), description: stripHtml(tContent('variants.styles.horizontal')), code: codeHorizontal },
-  { name: tContent('variants.items.vertical'),   description: stripHtml(tContent('variants.styles.vertical')),   code: codeVertical   },
+  { name: tContent('variants.items.horizontal'), description: stripHtml(tContent('variants.styles.horizontal')), code: horizontalCode },
+  { name: tContent('variants.items.vertical'),   description: stripHtml(tContent('variants.styles.vertical')),   code: verticalCode   },
 ]);
 
 const stateItems = computed(() => [

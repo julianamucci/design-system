@@ -378,7 +378,7 @@ export function createResizableDocs(): HTMLElement {
         });
 
       case 'variantes': {
-        const codeHorizontal = `const root = createResizablePanel({
+        const horizontalCode = `const root = createResizablePanel({
   direction: 'horizontal',
   'aria-label': 'Sidebar / Conteúdo principal',
   panels: [
@@ -386,7 +386,7 @@ export function createResizableDocs(): HTMLElement {
     { defaultSize: 70, minSize: 30, content: contentEl },
   ],
 });`;
-        const codeVertical = `const root = createResizablePanel({
+        const verticalCode = `const root = createResizablePanel({
   direction: 'vertical',
   'aria-label': 'Topo / Rodapé',
   panels: [
@@ -419,13 +419,13 @@ const root = createResizablePanel({
             {
               name: t('variants.items.horizontal'),
               description: stripHtml(t('variants.styles.horizontal')),
-              code: codeHorizontal,
+              code: horizontalCode,
               previewFactory: () => buildHorizontalDemo(),
             },
             {
               name: t('variants.items.vertical'),
               description: stripHtml(t('variants.styles.vertical')),
-              code: codeVertical,
+              code: verticalCode,
               previewFactory: () => buildVerticalDemo(),
             },
             {

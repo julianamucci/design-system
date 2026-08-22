@@ -40,7 +40,7 @@
   // `untrack` porque a leitura é DE PROPÓSITO só a inicial: quem re-sincroniza
   // quando o control muda é o `{#key}` abaixo, que remonta o bloco inteiro.
   let currentPage = $state(untrack(() => initialPage));
-  const totalPaginas = $derived(Math.ceil(count / perPage));
+  const totalPages = $derived(Math.ceil(count / perPage));
 </script>
 
 {#key `${count}-${perPage}-${initialPage}-${siblingCount}-${demonstration}`}
@@ -58,7 +58,7 @@
   {:else if demonstration === 'controlada'}
     <div class="nds-stack" data-spacing="sm">
       <p class="nds-text-body nds-text-muted-foreground" data-slot="pagina-atual">
-        Página {currentPage} de {totalPaginas}
+        Página {currentPage} de {totalPages}
       </p>
       <Pagination {count} {perPage} bind:page={currentPage} {siblingCount} aria-label={rotulo}>
         {#snippet children({ pages })}
@@ -85,7 +85,7 @@
             {/each}
             <PaginationItem>
               <PaginationNext
-                onclick={() => (currentPage = Math.min(totalPaginas, currentPage + 1))}
+                onclick={() => (currentPage = Math.min(totalPages, currentPage + 1))}
               />
             </PaginationItem>
           </PaginationContent>

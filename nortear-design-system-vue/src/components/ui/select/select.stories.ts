@@ -93,7 +93,7 @@ export const Playground: Story = {
       SelectTrigger,
       SelectValue,
     },
-    setup() { return { args, estados: STATES }; },
+    setup() { return { args, states: STATES }; },
     // `:key` no valor inicial: `defaultValue` só age na MONTAGEM, então sem o
     // re-mount o control mudaria o arg e nada aconteceria na tela.
     template: `
@@ -103,7 +103,7 @@ export const Playground: Story = {
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem v-for="estado in estados" :key="estado.value" :value="estado.value">
+            <SelectItem v-for="estado in states" :key="estado.value" :value="estado.value">
               {{ estado.label }}
             </SelectItem>
           </SelectContent>

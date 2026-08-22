@@ -16,7 +16,7 @@
     { rotulo: 'direita', side: 'right' as const },
   ];
 
-  const CLASSES_BOTAO =
+  const CLASSES_BUTTON =
     'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 </script>
 
@@ -27,11 +27,11 @@
       <HoverCard open={true}>
         <HoverCardTrigger>
           {#snippet child({ props })}
-            <button type="button" class={CLASSES_BOTAO} {...props}>{lado.rotulo}</button>
+            <button type="button" class={CLASSES_BUTTON} {...props}>{lado.rotulo}</button>
           {/snippet}
         </HoverCardTrigger>
         <HoverCardContent side={lado.side} aria-label={`Cartão ${lado.rotulo} do gatilho`}>
-          <p class="nds-text-caption">Lado preferido: {lado.rotulo}.</p>
+          <p class="nds-text-caption">Side preferido: {lado.rotulo}.</p>
         </HoverCardContent>
       </HoverCard>
       do gatilho.

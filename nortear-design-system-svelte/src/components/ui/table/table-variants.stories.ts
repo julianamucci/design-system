@@ -176,21 +176,21 @@ export const WithRowActions: Story = {
     await step('Cada ação diz a qual fatura pertence', async () => {
       // accessibility.item3 — três botões chamados "Ações" seriam três
       // controles indistinguíveis na lista de elementos do leitor de tela.
-      const botoes = canvas.getAllByRole('button');
-      await expect(botoes.length).toBe(3);
-      for (const botao of botoes) {
-        await expect(botao.getAttribute('aria-label')).toMatch(/Ações para fatura #INV-\d{3}/);
+      const buttons = canvas.getAllByRole('button');
+      await expect(buttons.length).toBe(3);
+      for (const button of buttons) {
+        await expect(button.getAttribute('aria-label')).toMatch(/Ações para fatura #INV-\d{3}/);
         // O botão mora dentro da própria linha do registro que ele edita.
-        const id = botao.getAttribute('aria-label')!.replace('Ações para fatura ', '');
-        await expect(botao.closest('tr')).toHaveTextContent(id);
+        const id = button.getAttribute('aria-label')!.replace('Ações para fatura ', '');
+        await expect(button.closest('tr')).toHaveTextContent(id);
       }
     });
 
     await step('O botão de ação é discreto (variante ghost)', async () => {
       // visual.item4 — a coluna de ações não pode competir com o dado; o ghost
       // é o que o conteúdo compartilhado documenta para ação por linha.
-      const botao = canvas.getAllByRole('button')[0];
-      await expect(botao).toHaveClass('nds-button', 'nds-button-ghost');
+      const button = canvas.getAllByRole('button')[0];
+      await expect(button).toHaveClass('nds-button', 'nds-button-ghost');
     });
   },
 };

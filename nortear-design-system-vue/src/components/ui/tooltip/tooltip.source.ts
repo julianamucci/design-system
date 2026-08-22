@@ -37,17 +37,17 @@ const IMPORT_BUTTON = `import { Button } from '@/components/ui/button'`;
 const IMPORT_KBD = `import { Kbd } from '@/components/ui/kbd'`;
 
 /** Importa da biblioteca de ícones só o que a composição usa, sem repetir. */
-function importIcons(...nomes: string[]): string {
-  return `import { ${[...new Set(nomes)].join(', ')} } from 'lucide-vue-next'`;
+function importIcons(...names: string[]): string {
+  return `import { ${[...new Set(names)].join(', ')} } from 'lucide-vue-next'`;
 }
 
 /** Bloco `<script setup>`: os componentes da composição, os ícones e o estado. */
-function script(opcoes: { kbd?: boolean; icones?: string[]; estado?: string } = {}): string {
+function script(opcoes: { kbd?: boolean; icons?: string[]; estado?: string } = {}): string {
   const imports = [
     IMPORT_BUTTON,
     opcoes.kbd ? IMPORT_KBD : '',
     IMPORT_TOOLTIP,
-    opcoes.icones?.length ? importIcons(...opcoes.icones) : '',
+    opcoes.icons?.length ? importIcons(...opcoes.icons) : '',
     opcoes.estado ? `import { ref } from 'vue'` : '',
   ]
     .filter(Boolean)
@@ -126,7 +126,7 @@ function blockWith(tag: string, atributos: string[], miolo: string): string {
 export const tooltipSource: SourceTransform<TooltipArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   return vueSnippet(
-    script({ icones: ['Save'] }),
+    script({ icons: ['Save'] }),
     withProvider(
       balao({
         raiz: [attrBool('default-open', args.defaultOpen, false)],
@@ -141,7 +141,7 @@ export const tooltipSource: SourceTransform<TooltipArgs> = (_gerado, ctx) => {
 /** Texto curto: uma explicação de uma linha, que é o caso de uso do balão. */
 export function tooltipTextCurtoSource(): string {
   return vueSnippet(
-    script({ icones: ['Save'] }),
+    script({ icons: ['Save'] }),
     withProvider(
       balao({
         raiz: ['default-open'],
@@ -159,7 +159,7 @@ export function tooltipTextCurtoSource(): string {
  */
 export function tooltipWithShortcutSource(): string {
   return vueSnippet(
-    script({ kbd: true, icones: ['Save'] }),
+    script({ kbd: true, icons: ['Save'] }),
     withProvider(
       balao({
         raiz: ['default-open'],
@@ -194,7 +194,7 @@ export function tooltipTextLongSource(): string {
 /** Estado de partida: o balão nem existe no DOM até o gatilho pedir. */
 export function tooltipClosedSource(): string {
   return vueSnippet(
-    script({ icones: ['Save'] }),
+    script({ icons: ['Save'] }),
     withProvider(
       balao({
         gatilho: triggerIcon({ rotulo: 'Salvar', icone: 'Save' }),
@@ -207,7 +207,7 @@ export function tooltipClosedSource(): string {
 /** Aberto de saída: o estado inicial vem da raiz, sem interação nenhuma. */
 export function tooltipOpenSource(): string {
   return vueSnippet(
-    script({ icones: ['Save'] }),
+    script({ icons: ['Save'] }),
     withProvider(
       balao({
         raiz: ['default-open'],
@@ -228,7 +228,7 @@ export function tooltipOpenSource(): string {
  */
 export function tooltipWithWaitSource(): string {
   return vueSnippet(
-    script({ icones: ['Save'] }),
+    script({ icons: ['Save'] }),
     withProvider(
       balao({
         gatilho: triggerIcon({ rotulo: 'Salvar', icone: 'Save' }),
@@ -266,7 +266,7 @@ export function tooltipPersistenteSource(): string {
  */
 export function tooltipControlledSource(): string {
   return vueSnippet(
-    script({ icones: ['Save'], estado: 'const aberto = ref(false)' }),
+    script({ icons: ['Save'], estado: 'const aberto = ref(false)' }),
     withProvider(
       blockWith(
         'div',
@@ -301,7 +301,7 @@ export function tooltipButtonIconSource(): string {
  * reforço. Um Provider só serve a todos — a espera é compartilhada.
  */
 export function actionsTooltipBarSource(): string {
-  const acoes: Array<{ rotulo: string; icone: string }> = [
+  const actions: Array<{ rotulo: string; icone: string }> = [
     { rotulo: 'Salvar', icone: 'Save' },
     { rotulo: 'Copiar', icone: 'Copy' },
     { rotulo: 'Editar', icone: 'Pencil' },
@@ -309,7 +309,7 @@ export function actionsTooltipBarSource(): string {
     { rotulo: 'Excluir', icone: 'Trash2' },
   ];
   return vueSnippet(
-    script({ icones: acoes.map((acao) => acao.icone) }),
+    script({ icons: actions.map((acao) => acao.icone) }),
     withProvider(
       blockWith(
         'div',
@@ -320,7 +320,7 @@ export function actionsTooltipBarSource(): string {
           'data-align="center"',
           'data-spacing="xs"',
         ],
-        acoes
+        actions
           .map((acao) =>
             balao({
               gatilho: triggerIcon({ ...acao, variante: 'ghost' }),

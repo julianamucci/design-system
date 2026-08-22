@@ -80,9 +80,9 @@ export const ConfirmEmail: Story = {
 
     await step('A operação é reversível, então a ação primária é neutra', async () => {
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const botoes = rodape.querySelectorAll<HTMLElement>('button');
-      await expect(botoes.length).toBe(2);
-      await expect(botoes[botoes.length - 1]).toHaveClass('nds-button-default');
+      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      await expect(buttons.length).toBe(2);
+      await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-default');
     });
   },
 };
@@ -94,7 +94,7 @@ export const ProfileEdit: Story = {
     docs: {
       source: {
         transform: dialogWithFormSource({
-          campos: [
+          fields: [
             { label: 'Nome de exibição', value: 'Maria Souza' },
             { label: 'Função', value: 'Designer' },
           ],

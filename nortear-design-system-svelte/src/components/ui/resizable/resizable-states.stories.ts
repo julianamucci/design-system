@@ -36,9 +36,9 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const ROTULO = 'Redimensionar painéis — use setas para ajustar';
+const LABEL = 'Redimensionar painéis — use setas para ajustar';
 
-function contrastRatio(frente: string, fundo: string): number {
+function contrastRatio(frente: string, background: string): number {
   const luminancia = (cor: string): number => {
     const [r = 0, g = 0, b = 0] = cor.match(/[\d.]+/g)?.map(Number) ?? [];
     const canal = (c: number) => {
@@ -47,7 +47,7 @@ function contrastRatio(frente: string, fundo: string): number {
     };
     return 0.2126 * canal(r) + 0.7152 * canal(g) + 0.0722 * canal(b);
   };
-  const [a, b] = [luminancia(frente), luminancia(fundo)].sort((x, y) => y - x);
+  const [a, b] = [luminancia(frente), luminancia(background)].sort((x, y) => y - x);
   return (a + 0.05) / (b + 0.05);
 }
 
@@ -56,7 +56,7 @@ const base = {
   direction: 'horizontal' as const,
   labelA: 'Painel A',
   labelB: 'Painel B',
-  ariaLabel: ROTULO,
+  ariaLabel: LABEL,
   height: '220px',
 };
 
@@ -71,7 +71,7 @@ export const Dragging: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO });
+    const punho = canvas.getByRole('separator', { name: LABEL });
 
     await step('Arrastar o divisor ajusta os painéis em tempo real', async () => {
       // functional.item1. `userEvent.pointer` com a sequência completa, e não um
@@ -125,7 +125,7 @@ export const Limits: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO });
+    const punho = canvas.getByRole('separator', { name: LABEL });
 
     // Cada passo leva o divisor a um EXTREMO absoluto antes de medir: assim a
     // rodada seguinte do painel Interactions parte de onde quiser e chega ao
@@ -166,7 +166,7 @@ export const Focus: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO });
+    const punho = canvas.getByRole('separator', { name: LABEL });
 
     await step('O Tab alcança o divisor', async () => {
       // functional.item4. Um divisor fora da ordem de tabulação seria
@@ -203,7 +203,7 @@ export const Disabled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO });
+    const punho = canvas.getByRole('separator', { name: LABEL });
 
     await step('O divisor travado continua anunciado e alcançável', async () => {
       // `aria-disabled` em vez de sumir da ordem de tabulação: um controle que

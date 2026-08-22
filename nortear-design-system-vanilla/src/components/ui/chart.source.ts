@@ -48,7 +48,7 @@ export type ChartSnippetOptions = {
 const MONTHS = "const meses = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];";
 
 /** Uso canônico: uma série simples, descrita, num bloco de altura definida. */
-const PADRAO: ChartSnippetOptions = {
+const DEFAULT: ChartSnippetOptions = {
   dados: 'simples',
   'aria-label': 'Acessos mensais no desktop, de janeiro a junho',
   height: 240,
@@ -156,11 +156,11 @@ export function chartSnippet(o: ChartSnippetOptions = {}): string {
  * do Playground; nas stories sem args cai no gráfico canônico.
  */
 export const chartSource: SourceTransform<ChartSnippetOptions> = (_gerado, ctx) =>
-  chartSnippet({ ...PADRAO, ...ctx.args });
+  chartSnippet({ ...DEFAULT, ...ctx.args });
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
 export function chartSourceWith(fixas: ChartSnippetOptions): SourceTransform<ChartSnippetOptions> {
-  return (_gerado, ctx) => chartSnippet({ ...PADRAO, ...ctx.args, ...fixas });
+  return (_gerado, ctx) => chartSnippet({ ...DEFAULT, ...ctx.args, ...fixas });
 }
 
 // ─── Gráfico dentro de um Card ────────────────────────────────────────────────

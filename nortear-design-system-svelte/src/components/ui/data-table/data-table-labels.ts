@@ -35,7 +35,7 @@ export interface DataTableLabels {
   allOption: string;
 }
 
-export const DATA_TABLE_LABELS_PADRAO: DataTableLabels = {
+export const DATA_TABLE_LABELS_DEFAULT: DataTableLabels = {
   columns: 'Colunas',
   showColumns: 'Exibir colunas',
   selectAll: 'Selecionar todas as linhas',

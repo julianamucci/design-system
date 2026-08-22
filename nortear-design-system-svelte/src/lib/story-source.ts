@@ -55,17 +55,17 @@ export function attrs(...partes: Array<string | false | null | undefined>): stri
 
 /**
  * Mesma junção de `attrs`, mas quebrando uma linha por atributo quando a
- * lista passa de `limite` caracteres — atributo em fila única longa demais
+ * lista passa de `limit` caracteres — atributo em fila única longa demais
  * some na barra de rolagem do painel.
  */
 export function attrsMultilinha(
   partes: Array<string | false | null | undefined>,
   indentacao = '  ',
-  limite = 60,
+  limit = 60,
 ): string {
   const lista = partes.filter((parte): parte is string => Boolean(parte) && parte !== '');
   if (!lista.length) return '';
   const inLine = lista.join(' ');
-  if (inLine.length <= limite) return ` ${inLine}`;
+  if (inLine.length <= limit) return ` ${inLine}`;
   return `\n${lista.map((parte) => `${indentacao}${parte}`).join('\n')}\n`;
 }

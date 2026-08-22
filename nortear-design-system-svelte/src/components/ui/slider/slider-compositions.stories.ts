@@ -168,9 +168,9 @@ export const ThickStep: Story = {
     const canvas = within(canvasElement);
 
     await step('A faixa curta chega à árvore de acessibilidade', async () => {
-      const alca = canvas.getByRole('slider');
-      await expect(alca).toHaveAttribute('aria-valuemin', '1');
-      await expect(alca).toHaveAttribute('aria-valuemax', '5');
+      const thumb = canvas.getByRole('slider');
+      await expect(thumb).toHaveAttribute('aria-valuemin', '1');
+      await expect(thumb).toHaveAttribute('aria-valuemax', '5');
     });
 
     await step('ArrowRight anda um passo dentro da faixa curta', async () => {

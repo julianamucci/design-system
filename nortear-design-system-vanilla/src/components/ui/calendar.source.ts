@@ -42,7 +42,7 @@ export const DATA_DE_EXEMPLO = 'new Date(2026, 3, 12)';
  * snippet: uma story que abre sem nenhuma data — o destaque de hoje — a
  * sobrepõe com `value: undefined` e o snippet sai sem a opção.
  */
-const PADRAO: CalendarSnippetOptions = { locale: 'pt-BR', value: DATA_DE_EXEMPLO };
+const DEFAULT: CalendarSnippetOptions = { locale: 'pt-BR', value: DATA_DE_EXEMPLO };
 
 /** A chamada real de `createCalendar` com as opções da story. */
 export function calendarSnippet(o: CalendarSnippetOptions = {}): string {
@@ -70,13 +70,13 @@ export function calendarSnippet(o: CalendarSnippetOptions = {}): string {
  * tem control nenhum, então o que chega aqui é o padrão de partida.
  */
 export const calendarSource: SourceTransform<CalendarSnippetOptions> = (_gerado, ctx) =>
-  calendarSnippet({ ...PADRAO, ...ctx.args });
+  calendarSnippet({ ...DEFAULT, ...ctx.args });
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
 export function calendarSourceWith(
   fixas: CalendarSnippetOptions,
 ): SourceTransform<CalendarSnippetOptions> {
-  return (_gerado, ctx) => calendarSnippet({ ...PADRAO, ...ctx.args, ...fixas });
+  return (_gerado, ctx) => calendarSnippet({ ...DEFAULT, ...ctx.args, ...fixas });
 }
 
 // ─── Seletor de data ──────────────────────────────────────────────────────────

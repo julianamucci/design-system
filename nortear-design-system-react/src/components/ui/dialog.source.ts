@@ -60,7 +60,7 @@ const FOOTER = `    <DialogFooter>
       <Button>Salvar alterações</Button>
     </DialogFooter>`;
 
-const GATILHO = `  <DialogTrigger render={<Button variant="outline" />}>
+const TRIGGER = `  <DialogTrigger render={<Button variant="outline" />}>
     ${TITLE}
   </DialogTrigger>`;
 
@@ -68,11 +68,11 @@ function dialogSnippet(
   raizProps: string,
   contentProps: string,
   corpo: string,
-  cabecalho = IMPORT_BASE,
-  gatilho = GATILHO,
+  header = IMPORT_BASE,
+  gatilho = TRIGGER,
 ): string {
   return jsxSnippet(
-    cabecalho,
+    header,
     `<Dialog${raizProps}>
 ${gatilho}
   <DialogContent${contentProps}>
@@ -169,8 +169,8 @@ export function dialogNoFooterSource(): string {
 }
 
 /** Campos de formulário dentro do painel, com o rodapé DENTRO do `<form>`. */
-function formulario(campos: Array<{ id: string; rotulo: string; valor: string; tipo?: string }>): string {
-  const blocos = campos
+function formulario(fields: Array<{ id: string; rotulo: string; valor: string; tipo?: string }>): string {
+  const blocks = fields
     .map(
       ({ id, rotulo, valor, tipo }) => `      <div className="nds-stack" data-spacing="sm">
         <Label htmlFor="${id}">${rotulo}</Label>
@@ -184,7 +184,7 @@ function formulario(campos: Array<{ id: string; rotulo: string; valor: string; t
       data-spacing="md"
       onSubmit={(evento) => evento.preventDefault()}
     >
-${blocos}
+${blocks}
       <DialogFooter>
         <DialogClose render={<Button type="button" variant="outline" />}>
           Cancelar
@@ -210,7 +210,7 @@ export function dialogWithFormSource(): string {
   return jsxSnippet(
     IMPORT_FORM,
     `<Dialog defaultOpen>
-${GATILHO}
+${TRIGGER}
   <DialogContent>
 ${HEADER}
 ${formulario([
@@ -232,7 +232,7 @@ export function dialogPerfilSource(): string {
   return jsxSnippet(
     IMPORT_FORM,
     `<Dialog defaultOpen>
-${GATILHO}
+${TRIGGER}
   <DialogContent className="nds-sm-max-w-md">
 ${HEADER}
 ${formulario([

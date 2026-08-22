@@ -199,7 +199,7 @@ export function accordionClosedSource(): string {
  * outra que funciona — recorte que o snippet do `meta` não alcança.
  */
 export function accordionItemDisabledSource(): string {
-  const habilitado = item({
+  const enabled = item({
     value: 'item-1',
     pergunta: 'Item habilitado',
     resposta: 'Este item funciona normalmente.',
@@ -212,7 +212,7 @@ export function accordionItemDisabledSource(): string {
   ].join('\n');
   return jsxSnippet(
     IMPORT,
-    raiz(' className="nds-max-w-lg"', `${habilitado}\n${desabilitado}`),
+    raiz(' className="nds-max-w-lg"', `${enabled}\n${desabilitado}`),
   );
 }
 

@@ -48,7 +48,7 @@ const IMPORTS_BASE = [
  * linhas de dentro sairiam desalinhadas do array do rodapé — o botão aqui é
  * sempre um item de lista, nunca a chamada principal do snippet.
  */
-function botao(acao: DialogSnippetAction): string {
+function button(acao: DialogSnippetAction): string {
   const pairs = opcoes([
     ['variant', acao.variant && acao.variant !== 'default' ? texto(acao.variant) : undefined],
     ['label', texto(acao.label)],
@@ -59,9 +59,9 @@ function botao(acao: DialogSnippetAction): string {
 }
 
 /** Rodapé como lista: as ações são filhas DIRETAS de `.nds-dialog-footer`. */
-function rodape(acoes: DialogSnippetAction[]): string | undefined {
-  if (acoes.length === 0) return undefined;
-  return `[\n${acoes.map((a) => `    ${botao(a)},`).join('\n')}\n  ]`;
+function rodape(actions: DialogSnippetAction[]): string | undefined {
+  if (actions.length === 0) return undefined;
+  return `[\n${actions.map((a) => `    ${button(a)},`).join('\n')}\n  ]`;
 }
 
 function actionsOf(o: DialogSnippetOptions): DialogSnippetAction[] {
@@ -76,7 +76,7 @@ function actionsOf(o: DialogSnippetOptions): DialogSnippetAction[] {
 /** As opções comuns às três formas de snippet. `content` é o nome da variável. */
 function linesComuns(o: DialogSnippetOptions, content: string): string[] {
   return opcoes([
-    ['trigger', botao({ label: o.triggerLabel ?? 'Editar perfil', variant: 'outline' })],
+    ['trigger', button({ label: o.triggerLabel ?? 'Editar perfil', variant: 'outline' })],
     ['title', texto(o.title ?? 'Editar perfil')],
     [
       'description',
@@ -134,11 +134,11 @@ export type DialogField = {
 };
 
 export type DialogWithFormSnippetOptions = Omit<DialogSnippetOptions, 'bodyText'> & {
-  campos?: DialogField[];
+  fields?: DialogField[];
 };
 
 function campo(c: DialogField): string {
-  const entrada = opcoes([
+  const entry = opcoes([
     ['type', c.type && c.type !== 'text' ? texto(c.type) : undefined],
     ['value', c.value !== undefined ? texto(c.value) : undefined],
   ])
@@ -146,7 +146,7 @@ function campo(c: DialogField): string {
     .join(', ');
   return `  createFormField({
     label: ${texto(c.label)},
-    input: createInput({ ${entrada} }),
+    input: createInput({ ${entry} }),
   }),`;
 }
 
@@ -160,7 +160,7 @@ function campo(c: DialogField): string {
  * disso.
  */
 export function dialogWithFormSnippet(o: DialogWithFormSnippetOptions = {}): string {
-  const campos = o.campos ?? [
+  const fields = o.fields ?? [
     { label: 'Nome', value: 'Maria Souza' },
     { label: 'E-mail', type: 'email', value: 'maria@exemplo.com' },
   ];
@@ -175,7 +175,7 @@ export function dialogWithFormSnippet(o: DialogWithFormSnippetOptions = {}): str
 formulario.className = 'nds-stack';
 formulario.dataset.spacing = 'md';
 formulario.append(
-${campos.map(campo).join('\n')}
+${fields.map(campo).join('\n')}
 );`,
     `const dialogo = ${chamada('createDialog', linesComuns(o, 'formulario'))};`,
     montar('dialogo'),

@@ -59,7 +59,7 @@ function link(href: string, rotulo: string): string {
   return `<a href="${href}" class="${TRIGGER_LINK}">${rotulo}</a>`;
 }
 
-function botao(rotulo: string): string {
+function button(rotulo: string): string {
   // Sem `type="button"`, o mesmo gatilho dentro de um formulário o enviaria ao
   // ser ativado por Enter.
   return `<button type="button" class="${TRIGGER_BUTTON}">${rotulo}</button>`;
@@ -260,7 +260,7 @@ export function hoverCardDefinicaoSource(): string {
     frase({
       antes: 'Todo componente do sistema atende',
       depois: ', sem exceção.',
-      gatilho: botao('WCAG 2.2 AA'),
+      gatilho: button('WCAG 2.2 AA'),
       painel: 'aria-label="Definição de WCAG 2.2 AA"',
       conteudo: `<div class="nds-stack" data-spacing="xs">
   <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 nível AA</p>
@@ -284,7 +284,7 @@ export function hoverCardMetricaSource(): string {
     frase({
       antes: 'A página inicial fechou o mês em',
       depois: ', dentro da meta.',
-      gatilho: botao('LCP 1.8s'),
+      gatilho: button('LCP 1.8s'),
       painel: 'aria-label="Explicação da métrica LCP"',
       conteudo: `<div class="nds-stack" data-spacing="xs">
   <div class="nds-cluster" data-justify="between" data-align="baseline" data-spacing="sm">

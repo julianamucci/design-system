@@ -186,10 +186,10 @@ describe('transforms das stories de composição', () => {
 
   it('cada amostra de cor tem nome próprio, escrita uma a uma', () => {
     const saida = colorPopoverSelectorSource();
-    const nomes = [...saida.matchAll(/aria-label="([^"]+)"/g)].map((m) => m[1]);
-    expect(nomes).toHaveLength(6);
+    const names = [...saida.matchAll(/aria-label="([^"]+)"/g)].map((m) => m[1]);
+    expect(names).toHaveLength(6);
     // A cor não é o nome: repetir o mesmo rótulo equivale a não ter nenhum.
-    expect(new Set(nomes).size).toBe(6);
+    expect(new Set(names).size).toBe(6);
     // Classe montada por expressão não é auditável — o verificador de classe
     // morta leria a expressão como se fosse o nome da classe.
     expect(saida).not.toContain(':class=');

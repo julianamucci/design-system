@@ -58,15 +58,15 @@ export function localeDoNavegador(
 /**
  * A escada completa, para as cinco stacks chamarem em vez de repetir.
  *
- * `janela` é injetável para o teste não depender de `window` global.
+ * `window` é injetável para o teste não depender de `window` global.
  */
 export function negociarLocale(
-  janela?: { location?: { search?: string }; localStorage?: Pick<Storage, 'getItem'> },
+  window?: { location?: { search?: string }; localStorage?: Pick<Storage, 'getItem'> },
   idiomasDoNavegador?: readonly string[],
   chave = 'ds-locale',
   padrao: Locale = 'pt-BR',
 ): Locale {
-  const w = janela ?? (typeof window === 'undefined' ? undefined : window);
+  const w = window ?? (typeof window === 'undefined' ? undefined : window);
   if (!w) return padrao;
 
   const daUrl = new URLSearchParams(w.location?.search ?? '').get('lang');

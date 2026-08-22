@@ -58,7 +58,7 @@
     { valor: 'help', label: 'Ajuda', itens: ['Documentação', 'Atalhos de teclado'] },
   ];
 
-  const ATALHOS = [
+  const SHORTCUTS = [
     { label: 'Desfazer', atalho: '⌘Z' },
     { label: 'Refazer', atalho: '⇧⌘Z' },
     { label: 'Copiar', atalho: '⌘C' },
@@ -66,13 +66,13 @@
 
   const EXPORTACOES = ['PDF', 'CSV', 'PNG'];
 
-  const ITENS_COM_BLOQUEIO = [
+  const ITEMS_WITH_BLOCK = [
     { label: 'Novo', disabled: false },
     { label: 'Salvar', disabled: false },
     { label: 'Enviar para revisão', disabled: true },
   ];
 
-  const TEMAS = [
+  const THEMES = [
     { valor: 'light', label: 'Claro' },
     { valor: 'dark', label: 'Escuro' },
     { valor: 'system', label: 'Do sistema' },
@@ -91,7 +91,7 @@
         <MenubarMenu value="edit">
           <MenubarTrigger>Editar</MenubarTrigger>
           <MenubarContent>
-            {#each ATALHOS as a (a.label)}
+            {#each SHORTCUTS as a (a.label)}
               <MenubarItem>
                 {a.label}
                 <MenubarShortcut>{a.atalho}</MenubarShortcut>
@@ -151,7 +151,7 @@
           <MenubarContent>
             <MenubarRadioGroup bind:value={tema}>
               <MenubarGroupHeading>Tema</MenubarGroupHeading>
-              {#each TEMAS as t (t.valor)}
+              {#each THEMES as t (t.valor)}
                 <MenubarRadioItem value={t.valor}>{t.label}</MenubarRadioItem>
               {/each}
             </MenubarRadioGroup>
@@ -161,7 +161,7 @@
         <MenubarMenu value="file">
           <MenubarTrigger>Arquivo</MenubarTrigger>
           <MenubarContent>
-            {#each ITENS_COM_BLOQUEIO as i (i.label)}
+            {#each ITEMS_WITH_BLOCK as i (i.label)}
               <MenubarItem disabled={i.disabled} onSelect={() => onSelect(i.label)}>
                 {i.label}
               </MenubarItem>

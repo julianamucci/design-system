@@ -119,11 +119,11 @@ export const IconBarToolbar: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     await step("Todos os botões têm aria-label próprio", async () => {
-      const botoes = canvasElement.querySelectorAll("button[aria-label]");
-      await expect(botoes.length).toBe(3);
-      await expect(botoes[0]).toHaveAttribute("aria-label", "Salvar");
-      await expect(botoes[1]).toHaveAttribute("aria-label", "Compartilhar");
-      await expect(botoes[2]).toHaveAttribute("aria-label", "Excluir");
+      const buttons = canvasElement.querySelectorAll("button[aria-label]");
+      await expect(buttons.length).toBe(3);
+      await expect(buttons[0]).toHaveAttribute("aria-label", "Salvar");
+      await expect(buttons[1]).toHaveAttribute("aria-label", "Compartilhar");
+      await expect(buttons[2]).toHaveAttribute("aria-label", "Excluir");
     });
   },
 };

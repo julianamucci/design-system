@@ -48,18 +48,18 @@ const slugExportados = new Map<string, Set<string>>();
 for (const [caminho, fonte] of Object.entries(fontes)) {
   if (caminho.endsWith('.stories.tsx') || caminho.endsWith('.fixtures.tsx')) continue;
   const slug = caminho.replace(/^\.\//, '').replace(/\.tsx$/, '');
-  const nomes = new Set<string>();
+  const names = new Set<string>();
   for (const [, nome] of fonte.matchAll(/export\s+(?:async\s+)?(?:const|function|class|let)\s+([A-Za-z0-9_$]+)/g)) {
-    nomes.add(nome);
+    names.add(nome);
   }
-  for (const [, nome] of fonte.matchAll(/export\s+type\s+([A-Za-z0-9_$]+)/g)) nomes.add(nome);
+  for (const [, nome] of fonte.matchAll(/export\s+type\s+([A-Za-z0-9_$]+)/g)) names.add(nome);
   for (const [, bloco] of fonte.matchAll(/export\s*\{([^}]*)\}/g)) {
     for (const parte of bloco.split(',')) {
       const nome = parte.trim().split(/\s+as\s+/).pop()?.trim();
-      if (nome) nomes.add(nome.replace(/^type\s+/, ''));
+      if (nome) names.add(nome.replace(/^type\s+/, ''));
     }
   }
-  slugExportados.set(slug, nomes);
+  slugExportados.set(slug, names);
 }
 
 /** Pacotes que um snippet pode citar: só o que o projeto realmente instala. */
@@ -105,8 +105,8 @@ function argsWithSpies(): Record<string, unknown> {
 }
 
 /** Nomes que o snippet liga por `import`, e os módulos de onde vêm. */
-function importesDo(snippet: string): { nomes: Set<string>; modulos: string[] } {
-  const nomes = new Set<string>();
+function importesDo(snippet: string): { names: Set<string>; modulos: string[] } {
+  const names = new Set<string>();
   const modulos: string[] = [];
   const re = /import\s+(type\s+)?([\s\S]*?)\s+from\s+["']([^"']+)["']/g;
   for (const [, , clausula, modulo] of snippet.matchAll(re)) {
@@ -115,25 +115,25 @@ function importesDo(snippet: string): { nomes: Set<string>; modulos: string[] } 
     if (chaves) {
       for (const parte of chaves[1].split(',')) {
         const nome = parte.trim().split(/\s+as\s+/).pop()?.trim();
-        if (nome) nomes.add(nome.replace(/^type\s+/, ''));
+        if (nome) names.add(nome.replace(/^type\s+/, ''));
       }
     }
     const defaultOuNamespace = clausula.replace(/\{[\s\S]*\}/, '').replace(/^type\s+/, '');
     for (const parte of defaultOuNamespace.split(',')) {
       const nome = parte.trim().replace(/^\*\s+as\s+/, '');
-      if (nome && /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(nome)) nomes.add(nome);
+      if (nome && /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(nome)) names.add(nome);
     }
   }
-  return { nomes, modulos };
+  return { names, modulos };
 }
 
 /** Nomes que o próprio snippet declara — função, const, let, class, parâmetro de map. */
 function declaradosNo(snippet: string): Set<string> {
-  const nomes = new Set<string>();
+  const names = new Set<string>();
   for (const [, nome] of snippet.matchAll(/(?:function|const|let|var|class)\s+([A-Za-z0-9_$]+)/g)) {
-    nomes.add(nome);
+    names.add(nome);
   }
-  return nomes;
+  return names;
 }
 
 describe('transforms do painel Code', () => {
@@ -211,7 +211,7 @@ describe('transforms do painel Code', () => {
 
         it(`${nome} só usa peças com origem`, () => {
           const texto = fn() as string;
-          const { nomes, modulos: mods } = importesDo(texto);
+          const { names, modulos: mods } = importesDo(texto);
           const locais = declaradosNo(texto);
 
           for (const mod of mods) {
@@ -233,7 +233,7 @@ describe('transforms do painel Code', () => {
           );
           for (const tag of tags) {
             if (TAGS_LIVRES.has(tag)) continue;
-            const hasOrigem = nomes.has(tag) || locais.has(tag);
+            const hasOrigem = names.has(tag) || locais.has(tag);
             expect(hasOrigem, `${nome}: <${tag}> não é importado nem declarado no snippet`).toBe(true);
           }
         });

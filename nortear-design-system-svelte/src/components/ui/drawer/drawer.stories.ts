@@ -7,7 +7,7 @@ import DrawerDocs from '@/components/docs/DrawerDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { drawerSource } from './drawer.source';
 
-const ROTULO = {
+const LABEL = {
   gatilho: 'Abrir drawer',
   titulo: 'Editar perfil',
   descricao: 'Atualize seus dados pessoais e foto.',
@@ -91,11 +91,11 @@ const meta: Meta = {
     direction: 'bottom',
     defaultOpen: false,
     dismissible: true,
-    triggerLabel: ROTULO.gatilho,
-    title: ROTULO.titulo,
-    description: ROTULO.descricao,
-    actionLabel: ROTULO.confirmar,
-    cancelLabel: ROTULO.cancelar,
+    triggerLabel: LABEL.gatilho,
+    title: LABEL.titulo,
+    description: LABEL.descricao,
+    actionLabel: LABEL.confirmar,
+    cancelLabel: LABEL.cancelar,
     onAction: fn(),
     onCancel: fn(),
   },
@@ -134,7 +134,7 @@ export const Playground: Story = {
   },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: ROTULO.gatilho });
+    const trigger = canvas.getByRole('button', { name: LABEL.gatilho });
 
     await fechar();
 
@@ -144,8 +144,8 @@ export const Playground: Story = {
       await expect(painel).toBeVisible();
       await expect(painel).toHaveAttribute('role', 'dialog');
       await expect(painel).toHaveAttribute('aria-modal', 'true');
-      await expect(painel).toHaveAccessibleName(ROTULO.titulo);
-      await expect(painel).toHaveAccessibleDescription(ROTULO.descricao);
+      await expect(painel).toHaveAccessibleName(LABEL.titulo);
+      await expect(painel).toHaveAccessibleDescription(LABEL.descricao);
       await expect(painel).toHaveAttribute('data-vaul-drawer-direction', args.direction as string);
       await expect(painel).toHaveClass(/nds-drawer-content/);
     });
@@ -183,7 +183,7 @@ export const Playground: Story = {
       const painel = await abrir(trigger);
       const spy = args.onCancel as ReturnType<typeof fn>;
       const callsBefore = spy.mock.calls.length;
-      await userEvent.click(within(painel).getByRole('button', { name: ROTULO.cancelar }));
+      await userEvent.click(within(painel).getByRole('button', { name: LABEL.cancelar }));
       await waitForPortalGone('dialog');
       await expect(spy.mock.calls.length).toBe(callsBefore + 1);
       await waitFor(() => {

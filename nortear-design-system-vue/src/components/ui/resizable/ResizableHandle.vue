@@ -29,8 +29,8 @@ const punho = ref<{ $el?: HTMLElement } | null>(null)
 function sincronizarEixo(): void {
   const el = punho.value?.$el
   if (!el) return
-  const doGrupo = el.getAttribute('data-orientation')
-  if (doGrupo) el.setAttribute('aria-orientation', doGrupo === 'horizontal' ? 'vertical' : 'horizontal')
+  const ofGroup = el.getAttribute('data-orientation')
+  if (ofGroup) el.setAttribute('aria-orientation', ofGroup === 'horizontal' ? 'vertical' : 'horizontal')
 }
 
 onMounted(sincronizarEixo)

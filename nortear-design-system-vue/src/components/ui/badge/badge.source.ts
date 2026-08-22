@@ -14,8 +14,8 @@ export type BadgeArgs = {
 const IMPORT = `import { Badge } from '@/components/ui/badge'`;
 
 /** Import do ícone. Ele é reforço visual; quem nomeia o badge é o texto. */
-function importIcon(...nomes: string[]): string {
-  return `import { ${nomes.join(', ')} } from 'lucide-vue-next'`;
+function importIcon(...names: string[]): string {
+  return `import { ${names.join(', ')} } from 'lucide-vue-next'`;
 }
 
 /**

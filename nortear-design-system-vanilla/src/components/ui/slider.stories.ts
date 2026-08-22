@@ -210,8 +210,8 @@ export const Playground: Story = {
       // E o desenho acompanha o dado: a asserção é sobre a geometria da própria
       // alça, não sobre o valor que acabamos de escrever.
       const caixa = trilho.getBoundingClientRect();
-      const alca = canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
-      const boxHandle = alca.getBoundingClientRect();
+      const thumb = canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
+      const boxHandle = thumb.getBoundingClientRect();
       const centerHandle = boxHandle.left + boxHandle.width / 2;
       await expect(Math.abs(centerHandle - (caixa.left + caixa.width / 2))).toBeLessThan(2);
     });

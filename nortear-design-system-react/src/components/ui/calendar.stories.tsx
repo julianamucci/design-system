@@ -156,11 +156,11 @@ export const Playground: Story = {
       const respiro = semana.getBoundingClientRect().top - legenda.getBoundingClientRect().bottom;
       await expect(Math.round(respiro)).toBe(16);
 
-      const vizinho = canvasElement.querySelector<HTMLElement>(".nds-calendar-outside .nds-calendar-day-btn")!;
+      const neighbour = canvasElement.querySelector<HTMLElement>(".nds-calendar-outside .nds-calendar-day-btn")!;
       const ofMonth = canvasElement.querySelector<HTMLElement>(
         ".nds-calendar-day-cell:not(.nds-calendar-outside) .nds-calendar-day-btn",
       )!;
-      await expect(getComputedStyle(vizinho).color).not.toBe(getComputedStyle(ofMonth).color);
+      await expect(getComputedStyle(neighbour).color).not.toBe(getComputedStyle(ofMonth).color);
     });
 
     await step("O clique nos botões de mês chega neles", async () => {
@@ -212,11 +212,11 @@ export const Playground: Story = {
       const origem = focusIso(doc);
       await expect(origem).not.toBeNull();
       await userEvent.keyboard("{ArrowRight}");
-      const destino = focusIso(doc);
-      await expect(destino).not.toBe(origem);
+      const destination = focusIso(doc);
+      await expect(destination).not.toBe(origem);
       const umDay = 24 * 60 * 60 * 1000;
       await expect(
-        new Date(destino!).getTime() - new Date(origem!).getTime(),
+        new Date(destination!).getTime() - new Date(origem!).getTime(),
       ).toBe(umDay);
     });
 

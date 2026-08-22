@@ -67,13 +67,13 @@ const total = 'R$ 1.400,00'
   });
 
   it('a legenda visível perde a classe de leitor de tela, mas nunca a tag', () => {
-    const visivel = tableSource('', { args: { captionVisivel: true } });
-    expect(visivel).toContain('<TableCaption>Lista de faturas recentes</TableCaption>');
-    expect(visivel).not.toContain('nds-sr-only');
+    const visible = tableSource('', { args: { captionVisivel: true } });
+    expect(visible).toContain('<TableCaption>Lista de faturas recentes</TableCaption>');
+    expect(visible).not.toContain('nds-sr-only');
   });
 
   it('sem rodapé, some a seção, o total e o import da peça', () => {
-    const saida = tableSource('', { args: { comRodape: false } });
+    const saida = tableSource('', { args: { withFooter: false } });
     expect(saida).not.toContain('TableFooter');
     expect(saida).not.toContain('colspan');
     expect(saida).not.toContain('const total');

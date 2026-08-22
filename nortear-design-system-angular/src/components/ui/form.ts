@@ -191,7 +191,7 @@ export class NdsForm {}
  * stack renderizam um `<input>` escondido para participar do formulário, e ele
  * casaria com `input:not([type="hidden"])` antes do controle de verdade.
  */
-const SELETORES_CONTROLE = [
+const SELECTORS_CONTROL = [
   '[data-slot="input-group-control"]',
   '[data-slot="checkbox"]',
   '[data-slot="switch"]',
@@ -320,7 +320,7 @@ export class NdsFormField implements AfterContentInit {
 
   private findControl(): HTMLElement | null {
     const raiz = this.hostRef.nativeElement;
-    for (const seletor of SELETORES_CONTROLE) {
+    for (const seletor of SELECTORS_CONTROL) {
       const encontrado = raiz.querySelector<HTMLElement>(seletor);
       if (encontrado) return encontrado;
     }

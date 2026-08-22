@@ -19,7 +19,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const ALINHAMENTO = `
+const ALIGNMENT = `
   <button ndsToggle variant="outline" value="left" aria-label="Alinhar à esquerda">
     <svg ndsToggleGroupIcon kind="align-left"></svg>
   </button>
@@ -35,7 +35,7 @@ export const Default: Story = {
   render: () => ({
     template: `
       <div ndsToggleGroup variant="outline" aria-label="Alinhamento do texto">
-        ${ALINHAMENTO}
+        ${ALIGNMENT}
       </div>
     `,
   }),
@@ -43,9 +43,9 @@ export const Default: Story = {
     const canvas = within(canvasElement);
 
     await step('Sem seleção, nenhum item está pressionado', async () => {
-      for (const botao of canvas.getAllByRole('button')) {
-        await expect(botao).toHaveAttribute('aria-pressed', 'false');
-        await expect(botao).toHaveAttribute('data-state', 'off');
+      for (const button of canvas.getAllByRole('button')) {
+        await expect(button).toHaveAttribute('aria-pressed', 'false');
+        await expect(button).toHaveAttribute('data-state', 'off');
       }
     });
 
@@ -63,25 +63,25 @@ export const Selected: Story = {
   render: () => ({
     template: `
       <div ndsToggleGroup variant="outline" defaultValue="center" aria-label="Alinhamento do texto">
-        ${ALINHAMENTO}
+        ${ALIGNMENT}
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const centro = canvas.getByRole('button', { name: 'Centralizar' });
+    const center = canvas.getByRole('button', { name: 'Centralizar' });
     const esquerda = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
 
     await step('O item do defaultValue já nasce pressionado', async () => {
-      await expect(centro).toHaveAttribute('aria-pressed', 'true');
-      await expect(centro).toHaveAttribute('data-state', 'on');
+      await expect(center).toHaveAttribute('aria-pressed', 'true');
+      await expect(center).toHaveAttribute('data-state', 'on');
     });
 
     await step('accessibility.item2 — o item ativo tem fundo próprio, não só o atributo', async () => {
       // O contraste de 4.5:1 é medido pelo axe; aqui a garantia é mais rasa e
       // complementar: sem a regra de CSS, ativo e inativo pintariam igual e o
       // estado só existiria para quem lê o DOM.
-      const backgroundActive = getComputedStyle(centro).backgroundColor;
+      const backgroundActive = getComputedStyle(center).backgroundColor;
       const backgroundInactive = getComputedStyle(esquerda).backgroundColor;
       await expect(backgroundActive).not.toBe(backgroundInactive);
     });
@@ -92,7 +92,7 @@ export const Disabled: Story = {
   render: () => ({
     template: `
       <div ndsToggleGroup variant="outline" [disabled]="true" defaultValue="left" aria-label="Alinhamento do texto">
-        ${ALINHAMENTO}
+        ${ALIGNMENT}
       </div>
     `,
   }),
@@ -102,8 +102,8 @@ export const Disabled: Story = {
     await step('O grupo desabilitado se anuncia e desabilita cada item', async () => {
       const grupo = canvas.getByRole('toolbar');
       await expect(grupo).toHaveAttribute('data-disabled', '');
-      for (const botao of canvas.getAllByRole('button')) {
-        await expect(botao).toBeDisabled();
+      for (const button of canvas.getAllByRole('button')) {
+        await expect(button).toBeDisabled();
       }
     });
 
@@ -133,11 +133,11 @@ export const ItemDisabled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const esquerda = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
-    const centro = canvas.getByRole('button', { name: 'Centralizar (indisponível)' });
+    const center = canvas.getByRole('button', { name: 'Centralizar (indisponível)' });
     const direita = canvas.getByRole('button', { name: 'Alinhar à direita' });
 
     await step('Só o item marcado fica desabilitado', async () => {
-      await expect(centro).toBeDisabled();
+      await expect(center).toBeDisabled();
       await expect(esquerda).toBeEnabled();
       await expect(direita).toBeEnabled();
     });

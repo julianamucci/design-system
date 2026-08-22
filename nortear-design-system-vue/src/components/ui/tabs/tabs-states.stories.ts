@@ -207,7 +207,7 @@ export const Disabled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const abas = canvas.getAllByRole('tab') as HTMLElement[];
-    const [primeira, desabilitada, ultima] = abas;
+    const [primeira, desabilitada, last] = abas;
 
     // Precondição de CADA passo, e não herança do anterior: o painel Interactions
     // reexecuta a play no mesmo DOM.
@@ -263,7 +263,7 @@ export const Disabled: Story = {
       // pior que a exclusão que o alcance veio corrigir.
       desabilitada.focus();
       await userEvent.keyboard('{ArrowRight}');
-      await waitFor(() => expect(ultima).toHaveFocus());
+      await waitFor(() => expect(last).toHaveFocus());
       await startVoltar();
     });
   },

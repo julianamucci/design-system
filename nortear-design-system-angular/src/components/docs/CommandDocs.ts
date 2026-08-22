@@ -669,12 +669,12 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     const linha = (name: string, chave: string, tipo: string, padrao: string) => ({
       name,
       type: tipo,
       defaultValue: padrao,
-      required: nao,
+      required: not,
       description: toPlainText(t(`props.table.${chave}`)),
     });
 
@@ -690,7 +690,7 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
             name: 'itemSelect',
             type: 'output<CommandSelectDetails>',
             defaultValue: '—',
-            required: nao,
+            required: not,
             description:
               'Emitido a cada comando escolhido, por clique ou por Enter, com o valor e o rótulo.',
           },
@@ -698,7 +698,7 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
             name: 'loopFocus',
             type: 'boolean',
             defaultValue: 'true',
-            required: nao,
+            required: not,
             description:
               'A seta para baixo no último comando volta ao primeiro em vez de parar.',
           },
@@ -706,7 +706,7 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
             name: 'limit',
             type: 'number',
             defaultValue: '-1',
-            required: nao,
+            required: not,
             description: 'Teto de comandos exibidos. Negativo não limita.',
           },
         ],
@@ -720,7 +720,7 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
             name: 'label',
             type: 'string',
             defaultValue: 'placeholder',
-            required: nao,
+            required: not,
             description:
               'Nome acessível do campo e da lista. Vazio, o placeholder faz esse papel.',
           },
@@ -737,7 +737,7 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
             name: 'textValue',
             type: 'string',
             defaultValue: 'texto do elemento',
-            required: nao,
+            required: not,
             description:
               'Texto usado pelo filtro. Necessário quando o comando traz um atalho, que entraria na busca junto.',
           },
@@ -747,7 +747,7 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
             // '—' e não a string 'undefined': a coluna é lida por quem
             // consome, e o contrato de docs proíbe 'undefined' escrito na tela.
             defaultValue: '—',
-            required: nao,
+            required: not,
             description:
               'Indefinido, o comando não é marcável. Definido, vira data-checked e o comando ganha a marca de escolhido.',
           },

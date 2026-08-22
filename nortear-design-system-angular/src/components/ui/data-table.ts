@@ -180,7 +180,7 @@ export interface DataTableLabels {
   noFilter: string;
 }
 
-export const DATA_TABLE_LABELS_PADRAO: DataTableLabels = {
+export const DATA_TABLE_LABELS_DEFAULT: DataTableLabels = {
   columns: 'Colunas',
   showColumns: 'Exibir colunas',
   selectAll: 'Selecionar todas as linhas',
@@ -308,7 +308,7 @@ interface LineRenderizada {
   indice: number;
   rotulo: string;
   rotuloSelecao: string;
-  busca: string;
+  search: string;
   celulas: CellRenderizada[];
 }
 
@@ -568,7 +568,7 @@ interface LineRenderizada {
 
     @if (mostrarPaginacao()) {
       <div class="nds-data-table-pagination" data-slot="data-table-pagination">
-        <div class="nds-data-table-pagination-count">{{ textoDaContagem() }}</div>
+        <div class="nds-data-table-pagination-count">{{ contagemText() }}</div>
 
         <div class="nds-data-table-pagination-controls">
           <div class="nds-data-table-page-size">
@@ -681,14 +681,14 @@ export class NdsDataTable<TData> implements OnInit {
   protected readonly emEdicao = signal<string | null>(null);
   protected readonly rascunho = signal('');
 
-  private readonly campoDeEdicao = viewChild<ElementRef<HTMLInputElement>>('campoDeEdicao');
+  private readonly editField = viewChild<ElementRef<HTMLInputElement>>('campoDeEdicao');
 
   constructor() {
     // O foco vai para o campo assim que ele existe. Sem isso, abrir a edição
     // exigiria um segundo clique — e quem chegou pelo teclado ficaria com o
     // foco no botão que acabou de sumir do DOM.
     effect(() => {
-      const campo = this.campoDeEdicao();
+      const campo = this.editField();
       if (!campo) return;
       campo.nativeElement.focus();
       campo.nativeElement.select();
@@ -704,7 +704,7 @@ export class NdsDataTable<TData> implements OnInit {
   // ─── Rótulos ────────────────────────────────────────────────────────────────
 
   protected readonly rotulos = computed<DataTableLabels>(() => ({
-    ...DATA_TABLE_LABELS_PADRAO,
+    ...DATA_TABLE_LABELS_DEFAULT,
     ...this.labels(),
   }));
 
@@ -781,7 +781,7 @@ export class NdsDataTable<TData> implements OnInit {
         rotuloSelecao: preencher(modeloSelection, { row: rotulo }),
         // A busca livre casa em TODA coluna, inclusive nas escondidas pelo
         // menu: esconder uma coluna é decisão de leitura, não de escopo.
-        busca: todas.map((c) => this.texto(c, row)).join(' ').toLowerCase(),
+        search: todas.map((c) => this.texto(c, row)).join(' ').toLowerCase(),
         celulas: colunas.map((c) => ({
           colunaId: c.id,
           header: c.header,
@@ -803,13 +803,13 @@ export class NdsDataTable<TData> implements OnInit {
   });
 
   private readonly linhasFiltradas = computed(() => {
-    const busca = this.filtroGlobal().trim().toLowerCase();
+    const search = this.filtroGlobal().trim().toLowerCase();
     const byColumn = this.filtrosPorColuna();
     const colunas = this.columns();
     const dados = this.data();
 
     return this.linhasBrutas().filter((linha) => {
-      if (busca && !linha.busca.includes(busca)) return false;
+      if (search && !linha.search.includes(search)) return false;
       for (const [colunaId, valor] of byColumn) {
         if (!valor) continue;
         const coluna = colunas.find((c) => c.id === colunaId);
@@ -854,8 +854,8 @@ export class NdsDataTable<TData> implements OnInit {
     // encurta o resultado enquanto se está na última página deixaria o índice
     // apontando para o vazio, e a tabela pareceria não ter achado nada.
     const pagina = Math.min(this.paginaAtual(), this.totalDePaginas() - 1);
-    const inicio = pagina * this.tamanhoDePagina();
-    return linhas.slice(inicio, inicio + this.tamanhoDePagina());
+    const start = pagina * this.tamanhoDePagina();
+    return linhas.slice(start, start + this.tamanhoDePagina());
   });
 
   protected readonly mostrarPaginacao = computed(() => this.enablePagination());
@@ -926,9 +926,9 @@ export class NdsDataTable<TData> implements OnInit {
    * ocultaria a coluna — porque só `true` é verdadeiro numa comparação estrita,
    * e misto não quer dizer "escondida".
    */
-  protected alternarVisibilidade(id: string, visivel: CheckedState): void {
+  protected alternarVisibilidade(id: string, visible: CheckedState): void {
     const proximo = new Set(this.ocultas());
-    if (visivel !== false) proximo.delete(id);
+    if (visible !== false) proximo.delete(id);
     else proximo.add(id);
     this.ocultas.set(proximo);
   }
@@ -981,7 +981,7 @@ export class NdsDataTable<TData> implements OnInit {
     }),
   );
 
-  protected readonly textoDaContagem = computed(() =>
+  protected readonly contagemText = computed(() =>
     this.enableRowSelection()
       ? this.textoDaSelecao()
       : preencher(this.rotulos().rowsTotal, { n: this.linhasFiltradas().length }),

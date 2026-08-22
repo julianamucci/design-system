@@ -169,8 +169,8 @@ export const Playground: Story = {
       const callsBefore = spyCancelar.mock.calls.length;
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       // A ação primária é a última do DOM; o Cancelar é a primeira.
-      const botoes = rodape.querySelectorAll<HTMLElement>('button');
-      await userEvent.click(botoes[0]);
+      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      await userEvent.click(buttons[0]);
       await waitForClosed();
       await expect(spyCancelar.mock.calls.length).toBe(callsBefore + 1);
       await waitFor(async () => {

@@ -111,7 +111,7 @@ export const WithDots: Story = {
       onIndexChange: (index) => dots.forEach((d, i) => pintar(d, i === index)),
     });
 
-    // O dot leva direto ao slide. A factory não expõe um `irPara`, então o
+    // O dot leva direto ao slide. A factory não expõe um `irTo`, então o
     // salto é composto a partir da navegação que ela EXPÕE — os próprios
     // botões de seta, acionados na direção certa. Nada de evento sintético:
     // o caminho é o mesmo que o dedo de quem usa percorre.
@@ -126,8 +126,8 @@ export const WithDots: Story = {
     dots.forEach((dot, alvo) => {
       dot.addEventListener('click', () => {
         const atual = dots.findIndex((d) => d.getAttribute('aria-current') === 'true');
-        const botao = seta(alvo > atual ? 'next' : 'previous');
-        for (let passo = 0; passo < Math.abs(alvo - atual); passo++) botao.click();
+        const button = seta(alvo > atual ? 'next' : 'previous');
+        for (let passo = 0; passo < Math.abs(alvo - atual); passo++) button.click();
       });
     });
 
@@ -155,14 +155,14 @@ export const WithDots: Story = {
     // para o primeiro slide encostar na borda como nas outras quatro), então a
     // distância entre recorte e track NUNCA é zero em repouso. Medir em absoluto
     // dava 16.7 onde a conta esperava 0.
-    const repouso = recorte.getBoundingClientRect().left - track.getBoundingClientRect().left;
+    const rest = recorte.getBoundingClientRect().left - track.getBoundingClientRect().left;
     const deslocamento = () =>
-      recorte.getBoundingClientRect().left - track.getBoundingClientRect().left - repouso;
+      recorte.getBoundingClientRect().left - track.getBoundingClientRect().left - rest;
 
     // Par idempotente: só clica quando o dot ainda não é o atual. O painel
     // Interactions reexecuta a play no MESMO DOM, e um clique cego partiria do
     // estado que a rodada anterior deixou.
-    const irPara = async (n: number) => {
+    const irTo = async (n: number) => {
       const alvo = dot(n);
       if (alvo.getAttribute('aria-current') !== 'true') await userEvent.click(alvo);
       await waitFor(() => expect(dot(n)).toHaveAttribute('aria-current', 'true'), { timeout: 4000 });
@@ -180,7 +180,7 @@ export const WithDots: Story = {
       // Este é o padrão novo: a fileira não é de N peças iguais. Com o 2º slide
       // atual, ela é `• [Slide 2] • • •` — e a asserção mede exatamente isso,
       // na posição 2, sem nunca citar nome de classe.
-      await irPara(2);
+      await irTo(2);
 
       // `waitFor` porque a mudança de forma é ANIMADA: medida no primeiro
       // quadro, a pílula ainda está fechada e o ponto anterior ainda aberto.
@@ -225,7 +225,7 @@ export const WithDots: Story = {
       const slides = canvas.getAllByRole('group') as HTMLElement[];
       const esperado = slides[2].offsetLeft - slides[0].offsetLeft;
 
-      await irPara(3);
+      await irTo(3);
       await waitFor(() => expect(Math.abs(deslocamento() - esperado)).toBeLessThan(2), { timeout: 4000 });
       // A POSIÇÃO chega antes do ESTADO: quem desmarca o dot é a reconciliação
       // do índice, e ela espera o motor silenciar. Ver a irmã no Angular.
@@ -236,7 +236,7 @@ export const WithDots: Story = {
 
     await step('E a story termina no começo', async () => {
       // Estado limpo para a próxima rodada e para a captura do Chromatic.
-      await irPara(1);
+      await irTo(1);
       await waitFor(() => expect(deslocamento()).toBeLessThan(2), { timeout: 4000 });
       // A POSIÇÃO chega antes do ESTADO: a rolagem encostou no alvo, mas quem
       // muda o controle é a reconciliação do índice, adiada até o motor silenciar.

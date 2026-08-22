@@ -16,9 +16,9 @@ export type ButtonArgs = {
 const IMPORT = `import { Button } from '@/components/ui/button'`;
 
 /** Import do componente mais um ícone da biblioteca de ícones da stack. */
-function comIcone(...icones: string[]): string {
+function withIcon(...icons: string[]): string {
   return `${IMPORT}
-import { ${icones.join(', ')} } from 'lucide-vue-next'`;
+import { ${icons.join(', ')} } from 'lucide-vue-next'`;
 }
 
 /** Botão de texto: a forma que variantes, tamanhos e estados compartilham. */
@@ -33,7 +33,7 @@ function texto(rotulo: string, ...partes: Array<string | ''>): string {
  */
 function soIcon(icone: string, size: string, rotulo: string): string {
   return vueSnippet(
-    comIcone(icone),
+    withIcon(icone),
     `<Button size="${size}" aria-label="${rotulo}">
   <${icone} aria-hidden="true" />
 </Button>`,
@@ -145,7 +145,7 @@ export function buttonDisabledSource(): string {
  */
 export function buttonLoadingSource(): string {
   return vueSnippet(
-    comIcone('Loader2'),
+    withIcon('Loader2'),
     `<Button disabled aria-busy="true">
   <Loader2 aria-hidden="true" class="nds-button-icon-svg nds-spin" />
   Salvando…
@@ -168,7 +168,7 @@ export function buttonInvalidoSource(): string {
 /** Composição com ícone antes do rótulo. */
 export function buttonWithIconInitialSource(): string {
   return vueSnippet(
-    comIcone('Plus'),
+    withIcon('Plus'),
     `<Button>
   <Plus aria-hidden="true" />
   Adicionar item
@@ -179,7 +179,7 @@ export function buttonWithIconInitialSource(): string {
 /** Composição com ícone depois do rótulo: navegação progressiva. */
 export function buttonWithIconFinalSource(): string {
   return vueSnippet(
-    comIcone('ChevronRight'),
+    withIcon('ChevronRight'),
     `<Button variant="outline">
   Próximo
   <ChevronRight aria-hidden="true" />
@@ -190,7 +190,7 @@ export function buttonWithIconFinalSource(): string {
 /** Composição de variante destrutiva com ícone. */
 export function buttonDestructiveWithIconSource(): string {
   return vueSnippet(
-    comIcone('Trash2'),
+    withIcon('Trash2'),
     `<Button variant="destructive">
   <Trash2 aria-hidden="true" />
   Excluir

@@ -233,8 +233,8 @@ export const PositionBottomCenter: Story = {
       // de posicionamento apagada. O deslocamento exato é da lib, então a prova
       // é o hemisfério, não o pixel.
       const list = document.querySelector<HTMLElement>("[data-sonner-toaster]")!;
-      const quadro = list.offsetParent as HTMLElement | null;
-      const limit = (quadro ?? document.documentElement).getBoundingClientRect();
+      const nextFrame = list.offsetParent as HTMLElement | null;
+      const limit = (nextFrame ?? document.documentElement).getBoundingClientRect();
       const box = toastsOnScreen()[0].getBoundingClientRect();
       await expect(box.top).toBeGreaterThan(limit.top + limit.height / 2);
     });

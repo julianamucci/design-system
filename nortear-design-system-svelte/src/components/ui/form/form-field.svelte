@@ -33,7 +33,7 @@
 	 * select desta stack renderizam um `<input>` escondido para participar do
 	 * formulário, e ele casaria com `input` antes do controle de verdade.
 	 */
-	const SELETORES_CONTROLE = [
+	const SELECTORS_CONTROL = [
 		'[data-slot="input-group-control"]',
 		'[data-slot="checkbox"]',
 		'[data-slot="switch"]',
@@ -72,8 +72,8 @@
 
 	sequencia += 1;
 	const base = `nds-form-field-${sequencia}`;
-	const idDescricao = `${base}-description`;
-	const idErro = `${base}-error`;
+	const idDescription = `${base}-description`;
+	const idError = `${base}-error`;
 
 	let raiz = $state<HTMLDivElement | null>(null);
 	/** Ids que quem compõe já tinha escrito no controle — preservados na junção. */
@@ -81,13 +81,13 @@
 
 	$effect(() => {
 		// Lidos aqui para que o efeito re-rode quando as peças entram ou saem.
-		const temDescricao = Boolean(description);
-		const temErro = Boolean(error);
+		const hasDescription = Boolean(description);
+		const hasError = Boolean(error);
 		const el = raiz;
 		if (!el) return;
 
 		let controle: HTMLElement | null = null;
-		for (const seletor of SELETORES_CONTROLE) {
+		for (const seletor of SELECTORS_CONTROL) {
 			controle = el.querySelector<HTMLElement>(seletor);
 			if (controle) break;
 		}
@@ -110,8 +110,8 @@
 
 		const ids = [
 			...describedbyEscrito,
-			...(temDescricao ? [idDescricao] : []),
-			...(temErro ? [idErro] : []),
+			...(hasDescription ? [idDescription] : []),
+			...(hasError ? [idError] : []),
 		];
 		if (ids.length) controle.setAttribute("aria-describedby", ids.join(" "));
 		else controle.removeAttribute("aria-describedby");
@@ -142,7 +142,7 @@
 	{@render children()}
 
 	{#if description}
-		<p id={idDescricao} data-slot="field-description" class="nds-form-description">
+		<p id={idDescription} data-slot="field-description" class="nds-form-description">
 			{description}
 		</p>
 	{/if}
@@ -150,7 +150,7 @@
 	<!-- `aria-live="polite"` e não `role="alert"`: em validação a cada tecla,
 	     interromper a digitação a cada caractere é pior que esperar a pausa. -->
 	{#if error}
-		<p id={idErro} data-slot="field-error" aria-live="polite" class="nds-form-error">
+		<p id={idError} data-slot="field-error" aria-live="polite" class="nds-form-error">
 			{error}
 		</p>
 	{/if}

@@ -32,7 +32,7 @@ type Story = StoryObj;
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /** Idempotente — ver a nota em `radio-group.stories.ts`. */
-const escolher = async (alvo: HTMLElement): Promise<void> => {
+const choose = async (alvo: HTMLElement): Promise<void> => {
   if (alvo.getAttribute('aria-checked') !== 'true') await userEvent.click(alvo);
   await expect(alvo).toHaveAttribute('aria-checked', 'true');
 };
@@ -68,7 +68,7 @@ export const PaymentMethod: Story = {
     });
 
     await step('Selecionar "Pix" marca só ele', async () => {
-      await escolher(canvas.getByRole('radio', { name: 'Pix' }));
+      await choose(canvas.getByRole('radio', { name: 'Pix' }));
       await expect(radios[0]).toHaveAttribute('aria-checked', 'false');
       await expect(radios[2]).toHaveAttribute('aria-checked', 'false');
     });
@@ -279,7 +279,7 @@ export const InForm: Story = {
     // O caso "formulário sem escolha" é asserção de MONTAGEM — depois do
     // primeiro clique nenhum replay volta a ele. Ele mora em `States/Default`.
     await step('Selecionar "Pix" e submeter envia o valor escolhido', async () => {
-      await escolher(canvas.getByRole('radio', { name: 'Pix' }));
+      await choose(canvas.getByRole('radio', { name: 'Pix' }));
       await userEvent.click(submit);
       await expect(saida()).toContain('pix');
     });
@@ -287,7 +287,7 @@ export const InForm: Story = {
     await step('Trocar a escolha troca o que o formulário envia', async () => {
       // Segunda rodada com valor diferente: prova que o input escondido
       // acompanha a seleção, e não que ele foi preenchido uma vez.
-      await escolher(canvas.getByRole('radio', { name: 'Boleto bancário' }));
+      await choose(canvas.getByRole('radio', { name: 'Boleto bancário' }));
       await userEvent.click(submit);
       await expect(saida()).toContain('boleto');
     });

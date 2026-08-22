@@ -16,7 +16,7 @@ export type HoverCardSnippetOptions = {
   /** Texto do gatilho — conteúdo natural, nunca "passe o mouse aqui". */
   triggerLabel?: string;
   /**
-   * `link` quando há para onde navegar; `botao` quando não há (um termo, uma
+   * `link` quando há para onde navegar; `button` quando não há (um termo, uma
    * métrica). A escolha é do conteúdo: no toque não existe hover, e o caminho
    * alternativo tem de existir.
    */
@@ -49,7 +49,7 @@ export type HoverCardSnippetOptions = {
 };
 
 const CLASSES_LINK = 'nds-text-primary nds-font-medium nds-hover-underline';
-const CLASSES_BOTAO =
+const CLASSES_BUTTON =
   'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 
 /**
@@ -72,7 +72,7 @@ function triggerBlock(o: HoverCardSnippetOptions): string {
 // \`type="button"\`, dentro de um <form> ele enviaria o formulário.
 const gatilho = document.createElement('button');
 gatilho.type = 'button';
-gatilho.className = '${CLASSES_BOTAO}';
+gatilho.className = '${CLASSES_BUTTON}';
 gatilho.textContent = ${rotulo};${rotuloAcessivel}`;
   }
 

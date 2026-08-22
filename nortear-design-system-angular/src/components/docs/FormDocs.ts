@@ -616,7 +616,7 @@ export class NdsFormDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const sim = tNav('common.yes');
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     const semInput = tNav('common.no');
 
     // Nenhuma linha descreve opção de factory: aqui a peça é uma diretiva e o
@@ -627,21 +627,21 @@ export class NdsFormDocs implements AfterViewInit, OnDestroy {
         title: t('props.fieldTitle'),
         cols,
         items: [
-          { name: 'ndsForm',            type: semInput,              defaultValue: '—', required: nao, description: toPlainText(t('props.table.form')) },
-          { name: 'invalid',            type: 'boolean',             defaultValue: '—', required: nao, description: toPlainText(t('props.table.invalid')) },
-          { name: 'ndsFormLabel',       type: semInput,              defaultValue: '—', required: nao, description: toPlainText(t('props.table.label')) },
+          { name: 'ndsForm',            type: semInput,              defaultValue: '—', required: not, description: toPlainText(t('props.table.form')) },
+          { name: 'invalid',            type: 'boolean',             defaultValue: '—', required: not, description: toPlainText(t('props.table.invalid')) },
+          { name: 'ndsFormLabel',       type: semInput,              defaultValue: '—', required: not, description: toPlainText(t('props.table.label')) },
           { name: 'ndsInput · ndsTextarea', type: semInput,          defaultValue: '—', required: sim, description: toPlainText(t('props.table.input')) },
-          { name: 'ndsFormDescription', type: semInput,              defaultValue: '—', required: nao, description: toPlainText(t('props.table.description_prop')) },
-          { name: 'ndsFormMessage',     type: semInput,              defaultValue: '—', required: nao, description: toPlainText(t('props.table.error')) },
-          { name: 'class',              type: 'string',              defaultValue: '—', required: nao, description: toPlainText(t('props.table.className')) },
+          { name: 'ndsFormDescription', type: semInput,              defaultValue: '—', required: not, description: toPlainText(t('props.table.description_prop')) },
+          { name: 'ndsFormMessage',     type: semInput,              defaultValue: '—', required: not, description: toPlainText(t('props.table.error')) },
+          { name: 'class',              type: 'string',              defaultValue: '—', required: not, description: toPlainText(t('props.table.className')) },
         ],
       },
       {
         title: t('props.fieldsetTitle'),
         cols,
         items: [
-          { name: 'ndsFieldsetLegend', type: semInput, defaultValue: '—', required: nao, description: toPlainText(t('props.table.legend')) },
-          { name: 'ndsFormField',      type: semInput, defaultValue: '—', required: nao, description: toPlainText(t('props.table.children')) },
+          { name: 'ndsFieldsetLegend', type: semInput, defaultValue: '—', required: not, description: toPlainText(t('props.table.legend')) },
+          { name: 'ndsFormField',      type: semInput, defaultValue: '—', required: not, description: toPlainText(t('props.table.children')) },
         ],
       },
     ];

@@ -105,8 +105,8 @@ export const WithGroups: Story = {
       // O cabeçalho NÃO é uma opção — o erro clássico deste componente é
       // deixá-lo entrar na lista e virar destino de navegação.
       await expect(cabecalhos[0].getAttribute('role')).toBeNull();
-      const nomes = canvas.getAllByRole('option').map((o) => o.textContent);
-      await expect(nomes).not.toContain('Componentes');
+      const names = canvas.getAllByRole('option').map((o) => o.textContent);
+      await expect(names).not.toContain('Componentes');
     });
 
     await step('Um divisor separa os dois grupos, fora da árvore', async () => {
@@ -546,11 +546,11 @@ export const AsCombobox: Story = {
 
     await step('A busca dentro do popover filtra — buscando "inp" sobra 1', async () => {
       const panelPop = await abrir();
-      const busca = searchOf(panelPop);
-      await userEvent.clear(busca);
-      await userEvent.type(busca, 'inp');
+      const search = searchOf(panelPop);
+      await userEvent.clear(search);
+      await userEvent.type(search, 'inp');
       await expect(within(panelPop).getAllByRole('option')).toHaveLength(1);
-      await userEvent.clear(busca);
+      await userEvent.clear(search);
       await expect(within(panelPop).getAllByRole('option')).toHaveLength(3);
     });
 

@@ -157,7 +157,7 @@ export const Disabled: Story = {
     const canvas = within(canvasElement);
     const primeira = canvas.getByRole('tab', { name: 'Visão geral' });
     const bloqueada = canvas.getByRole('tab', { name: 'Propriedades' });
-    const ultima = canvas.getByRole('tab', { name: 'Exemplos' });
+    const last = canvas.getByRole('tab', { name: 'Exemplos' });
 
     await step('Anuncia-se desabilitada sem sair do alcance do foco', async () => {
       await expect(bloqueada).toHaveAttribute('aria-disabled', 'true');
@@ -204,7 +204,7 @@ export const Disabled: Story = {
       // pior que a exclusão que o alcance veio corrigir.
       bloqueada.focus();
       await userEvent.keyboard('{ArrowRight}');
-      await waitFor(() => expect(ultima).toHaveAttribute('aria-selected', 'true'));
+      await waitFor(() => expect(last).toHaveAttribute('aria-selected', 'true'));
       // Home devolve o conjunto ao estado de montagem para o próximo replay.
       await userEvent.keyboard('{Home}');
       await waitFor(() => expect(primeira).toHaveAttribute('aria-selected', 'true'));

@@ -28,12 +28,12 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const caixas = (raiz: HTMLElement): HTMLElement[] => [
+const boxes = (raiz: HTMLElement): HTMLElement[] => [
   ...raiz.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),
 ];
 
-const textos = (raiz: HTMLElement): string[] =>
-  caixas(raiz).map((c) => c.textContent?.trim() ?? '');
+const texts = (raiz: HTMLElement): string[] =>
+  boxes(raiz).map((c) => c.textContent?.trim() ?? '');
 
 export const SixDigits: Story = {
   name: 'Six digits (SMS)',
@@ -45,7 +45,7 @@ export const SixDigits: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('Seis caixas, teclado numérico', async () => {
-      await expect(caixas(canvasElement)).toHaveLength(6);
+      await expect(boxes(canvasElement)).toHaveLength(6);
       await expect(campo(canvasElement)).toHaveAttribute('inputmode', 'numeric');
     });
 
@@ -54,7 +54,7 @@ export const SixDigits: Story = {
       input.focus();
       await userEvent.clear(input);
       await userEvent.type(input, '123456');
-      await waitFor(() => expect(textos(canvasElement)).toEqual(['1', '2', '3', '4', '5', '6']));
+      await waitFor(() => expect(texts(canvasElement)).toEqual(['1', '2', '3', '4', '5', '6']));
     });
   },
 };
@@ -70,7 +70,7 @@ export const FourDigits: Story = {
   play: async ({ canvasElement, step }) => {
     await step('O comprimento pedido chega ao componente', async () => {
       // Quatro e não seis: renderizar com o default passaria despercebido.
-      await expect(caixas(canvasElement)).toHaveLength(4);
+      await expect(boxes(canvasElement)).toHaveLength(4);
     });
 
     await step('O quinto caractere não entra', async () => {
@@ -79,7 +79,7 @@ export const FourDigits: Story = {
       await userEvent.clear(input);
       await userEvent.type(input, '12345');
       await waitFor(() => expect(input).toHaveValue('1234'));
-      await expect(textos(canvasElement).join('')).toBe('1234');
+      await expect(texts(canvasElement).join('')).toBe('1234');
     });
   },
 };
@@ -108,7 +108,7 @@ export const WithSeparator: Story = {
 
     await step('O separador afasta os dois blocos, e só eles', async () => {
       // Efeito computado, não nome de classe: o respiro é margem do separador.
-      const todas = caixas(canvasElement);
+      const todas = boxes(canvasElement);
       const separador = canvasElement.querySelector<HTMLElement>(
         '[data-slot="input-otp-separator"]',
       )!;
@@ -124,7 +124,7 @@ export const WithSeparator: Story = {
       input.focus();
       await userEvent.clear(input);
       await userEvent.type(input, '123456');
-      await waitFor(() => expect(textos(canvasElement).join('')).toBe('123456'));
+      await waitFor(() => expect(texts(canvasElement).join('')).toBe('123456'));
     });
   },
 };
@@ -147,7 +147,7 @@ export const Alphanumeric: Story = {
       input.focus();
       await userEvent.clear(input);
       await userEvent.type(input, 'a9');
-      await waitFor(() => expect(textos(canvasElement).slice(0, 2)).toEqual(['a', '9']));
+      await waitFor(() => expect(texts(canvasElement).slice(0, 2)).toEqual(['a', '9']));
     });
   },
 };

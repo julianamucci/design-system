@@ -15,7 +15,7 @@ export type ScrollAreaArgs = {
 };
 
 /** Degrau da escada de janela (`--box-height-*`). Sem teto não há transbordo. */
-type Tamanho = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 const IMPORT = `import { ScrollArea } from "@/components/ui/scroll-area";`;
 
@@ -23,7 +23,7 @@ type Options = {
   type?: ScrollAreaArgs['type'];
   scrollHideDelay?: number;
   /** `undefined` reproduz o caso sem teto: o conteúdo expande e nada rola. */
-  size?: Tamanho;
+  size?: Size;
   itens?: number;
   classe?: string;
 };
@@ -141,7 +141,7 @@ export function scrollAreaSource(
   ctx?: { args?: Partial<ScrollAreaArgs> },
 ): string {
   const { orientation = 'vertical', type = 'always', scrollHideDelay = 600 } = ctx?.args ?? {};
-  const base = { type, scrollHideDelay, size: 'xl' as Tamanho };
+  const base = { type, scrollHideDelay, size: 'xl' as Size };
   if (orientation === 'horizontal') return horizontalRange({ ...base, size: 'md', itens: 10 });
   if (orientation === 'both') return tableBidirecional({ ...base, size: 'lg' });
   return verticalList(base);

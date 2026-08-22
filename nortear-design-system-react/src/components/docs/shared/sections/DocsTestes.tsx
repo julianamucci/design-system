@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { varianteDaPrioridade } from '@shared/primitives/badge-priority';
+import { prioridadeVariant } from '@shared/primitives/badge-priority';
 import {
   Table,
   TableHeader,
@@ -57,7 +57,7 @@ export interface DocsTestesProps {
 // existia no CSS era cor semântica com nome de uso — invisível para quem
 // procurava "warning", e fora da API do componente.
 function PriorityBadge({ priority }: { priority: string }) {
-  return <Badge variant={varianteDaPrioridade(priority)}>{priority}</Badge>;
+  return <Badge variant={prioridadeVariant(priority)}>{priority}</Badge>;
 }
 
 export function DocsTestes({ title, functional, accessibility, visual }: DocsTestesProps) {

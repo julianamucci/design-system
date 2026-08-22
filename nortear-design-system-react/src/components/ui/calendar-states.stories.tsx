@@ -79,8 +79,8 @@ export const Selected: Story = {
       // O nome acessível mora no botão, não na célula: é ele que recebe o foco
       // e é o nome dele que o leitor de tela anuncia ao chegar no dia.
       const celula = canvasElement.querySelector("[role=gridcell][data-selected]")!;
-      const botao = celula.querySelector("button")!;
-      await expect(botao.getAttribute("aria-label")).toMatch(/12 de abril de 2026/i);
+      const button = celula.querySelector("button")!;
+      await expect(button.getAttribute("aria-label")).toMatch(/12 de abril de 2026/i);
       await expect(celula).toHaveAttribute("aria-selected", "true");
     });
   },
@@ -273,10 +273,10 @@ export const RangeWithMiddle: Story = {
     await step("Os extremos são distinguíveis do miolo", async () => {
       // Sem essa marcação, o intervalo vira um bloco só e a pessoa não vê onde
       // ele começa nem onde termina.
-      const inicio = canvasElement.querySelector('[role=gridcell][data-day="2026-04-10"] button')!;
-      const fim = canvasElement.querySelector('[role=gridcell][data-day="2026-04-18"] button')!;
-      await expect(inicio).toHaveAttribute("data-range-start", "true");
-      await expect(fim).toHaveAttribute("data-range-end", "true");
+      const start = canvasElement.querySelector('[role=gridcell][data-day="2026-04-10"] button')!;
+      const end = canvasElement.querySelector('[role=gridcell][data-day="2026-04-18"] button')!;
+      await expect(start).toHaveAttribute("data-range-start", "true");
+      await expect(end).toHaveAttribute("data-range-end", "true");
     });
   },
 };

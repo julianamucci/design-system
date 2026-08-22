@@ -112,8 +112,8 @@ export const Simple: Story = {
       await userEvent.tab();
       await expect(link).toHaveFocus();
       await expect(link.matches(':focus-visible')).toBe(true);
-      const anel = getComputedStyle(link).outlineWidth;
-      await expect(anel).not.toBe('0px');
+      const ring = getComputedStyle(link).outlineWidth;
+      await expect(ring).not.toBe('0px');
     });
   },
 };

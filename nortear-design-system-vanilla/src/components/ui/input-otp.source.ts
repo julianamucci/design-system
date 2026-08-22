@@ -114,12 +114,12 @@ export type InputOtpCompositionOptions = InputOtpSnippetOptions & {
 export function inputOtpCompositionSnippet(o: InputOtpCompositionOptions = {}): string {
   const rotulo = o.rotulo ?? NAME_DEFAULT;
   const idAjuda = o.ajuda ? 'otp-ajuda' : undefined;
-  const idErro = o.erro ? 'otp-erro' : undefined;
+  const idError = o.erro ? 'otp-erro' : undefined;
   const idLabel = o.ligarRotulo ? 'otp-rotulo' : undefined;
 
   const linhas = otpLines({
     ...o,
-    describedBy: o.describedBy ?? idAjuda ?? idErro,
+    describedBy: o.describedBy ?? idAjuda ?? idError,
     invalid: o.invalid ?? Boolean(o.erro),
   });
 
@@ -153,7 +153,7 @@ apoio.textContent = ${texto(o.ajuda)};`
       : undefined,
     o.erro
       ? `const aviso = document.createElement('p');
-aviso.id = ${texto(idErro as string)};
+aviso.id = ${texto(idError as string)};
 aviso.className = 'nds-text-caption nds-text-destructive';
 aviso.textContent = ${texto(o.erro)};`
       : undefined,

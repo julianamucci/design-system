@@ -155,10 +155,10 @@ export const Playground: Story = {
 
     await step('O rodapé se separa do conteúdo por uma borda superior', async () => {
       const footer = card.querySelector<HTMLElement>('[data-slot="card-footer"]');
-      const borda = footer
+      const border = footer
         ? Number.parseFloat(getComputedStyle(footer).borderTopWidth)
         : Number.NaN;
-      await expect(args.showFooter ? borda > 0 : Number.isNaN(borda)).toBe(true);
+      await expect(args.showFooter ? border > 0 : Number.isNaN(border)).toBe(true);
     });
 
     await step('O título é um heading de verdade', async () => {
@@ -174,10 +174,10 @@ export const Playground: Story = {
       // "Excluir" sozinho vira uma fileira de botões idênticos numa lista de
       // cards para quem navega por leitor de tela.
       const footer = card.querySelector<HTMLElement>('[data-slot="card-footer"]');
-      const nomes = footer
+      const names = footer
         ? [...footer.querySelectorAll('button')].map((b) => b.getAttribute('aria-label'))
         : [];
-      await expect(nomes).toEqual(
+      await expect(names).toEqual(
         args.showFooter
           ? [`Editar produto ${args.title}`, `Excluir produto ${args.title}`]
           : [],

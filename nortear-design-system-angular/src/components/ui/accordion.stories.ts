@@ -118,7 +118,7 @@ export const Playground: Story = {
       ...args,
       // Modo único compara o valor da raiz com a string do item; modo múltiplo
       // compara com um array. Passar a forma errada abriria nada, em silêncio.
-      valorInicial: args.multiple ? ['item-1'] : 'item-1',
+      valueInitial: args.multiple ? ['item-1'] : 'item-1',
     },
     template: `
       <div
@@ -126,7 +126,7 @@ export const Playground: Story = {
         class="nds-max-w-lg"
         [multiple]="multiple"
         [disabled]="disabled"
-        [defaultValue]="valorInicial"
+        [defaultValue]="valueInitial"
         (valueChange)="onValueChange($event)"
       >
         <div ndsAccordionItem value="item-1">
@@ -179,10 +179,10 @@ export const Playground: Story = {
       const item = canvasElement.querySelector<HTMLElement>('[data-slot="accordion-item"]')!;
       await expect(item.classList.contains('nds-accordion-item')).toBe(true);
 
-      const cabecalho = item.querySelector<HTMLElement>('h3.nds-accordion-header')!;
-      await expect(cabecalho).not.toBeNull();
+      const header = item.querySelector<HTMLElement>('h3.nds-accordion-header')!;
+      await expect(header).not.toBeNull();
 
-      const gatilho = cabecalho.querySelector<HTMLButtonElement>('[data-slot="accordion-trigger"]')!;
+      const gatilho = header.querySelector<HTMLButtonElement>('[data-slot="accordion-trigger"]')!;
       await expect(gatilho.tagName).toBe('BUTTON');
       await expect(gatilho.type).toBe('button');
       await expect(gatilho.classList.contains('nds-accordion-trigger')).toBe(true);
@@ -212,16 +212,16 @@ export const Playground: Story = {
     });
 
     await step('Modo único mantém um item aberto por vez', async () => {
-      const gatilhos = canvas.getAllByRole('button');
-      await abrir(gatilhos[0]);
-      await expect(gatilhos[1]).toHaveAttribute('aria-expanded', 'false');
-      await expect(gatilhos[2]).toHaveAttribute('aria-expanded', 'false');
+      const triggers = canvas.getAllByRole('button');
+      await abrir(triggers[0]);
+      await expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
+      await expect(triggers[2]).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('Clicar no gatilho fechado abre o item', async () => {
-      const gatilhos = canvas.getAllByRole('button');
-      await fechar(gatilhos[1]);
-      await abrir(gatilhos[1]);
+      const triggers = canvas.getAllByRole('button');
+      await fechar(triggers[1]);
+      await abrir(triggers[1]);
       await expect(args.onValueChange).toHaveBeenCalled();
     });
 
@@ -269,55 +269,55 @@ export const Playground: Story = {
     });
 
     await step('Enter expande o item focado', async () => {
-      const gatilhos = canvas.getAllByRole('button');
-      await fechar(gatilhos[2]);
-      gatilhos[2].focus();
-      await expect(gatilhos[2]).toHaveFocus();
+      const triggers = canvas.getAllByRole('button');
+      await fechar(triggers[2]);
+      triggers[2].focus();
+      await expect(triggers[2]).toHaveFocus();
       await userEvent.keyboard('{Enter}');
-      await waitFor(() => expect(gatilhos[2]).toHaveAttribute('aria-expanded', 'true'));
+      await waitFor(() => expect(triggers[2]).toHaveAttribute('aria-expanded', 'true'));
     });
 
     await step('Space colapsa o item focado', async () => {
-      const gatilhos = canvas.getAllByRole('button');
-      await abrir(gatilhos[2]);
-      gatilhos[2].focus();
+      const triggers = canvas.getAllByRole('button');
+      await abrir(triggers[2]);
+      triggers[2].focus();
       await userEvent.keyboard(' ');
-      await waitFor(() => expect(gatilhos[2]).toHaveAttribute('aria-expanded', 'false'));
+      await waitFor(() => expect(triggers[2]).toHaveAttribute('aria-expanded', 'false'));
     });
 
     await step('Setas movem o foco com laço; Home e End vão às pontas', async () => {
       // O Radix NG deprecou o roving focus do accordion — sem o handler da raiz
       // as setas rolariam a página, divergindo das outras quatro stacks.
-      const gatilhos = canvas.getAllByRole('button');
-      gatilhos[0].focus();
+      const triggers = canvas.getAllByRole('button');
+      triggers[0].focus();
       await userEvent.keyboard('{ArrowDown}');
-      await expect(gatilhos[1]).toHaveFocus();
+      await expect(triggers[1]).toHaveFocus();
       await userEvent.keyboard('{ArrowUp}');
-      await expect(gatilhos[0]).toHaveFocus();
+      await expect(triggers[0]).toHaveFocus();
       await userEvent.keyboard('{ArrowUp}');
-      await expect(gatilhos[gatilhos.length - 1]).toHaveFocus();
+      await expect(triggers[triggers.length - 1]).toHaveFocus();
       await userEvent.keyboard('{Home}');
-      await expect(gatilhos[0]).toHaveFocus();
+      await expect(triggers[0]).toHaveFocus();
       await userEvent.keyboard('{End}');
-      await expect(gatilhos[gatilhos.length - 1]).toHaveFocus();
+      await expect(triggers[triggers.length - 1]).toHaveFocus();
     });
 
     await step('Tab e Shift+Tab movem o foco entre gatilhos', async () => {
-      const gatilhos = canvas.getAllByRole('button');
-      gatilhos[0].focus();
+      const triggers = canvas.getAllByRole('button');
+      triggers[0].focus();
       await userEvent.tab();
-      await expect(gatilhos[1]).toHaveFocus();
+      await expect(triggers[1]).toHaveFocus();
       await userEvent.tab({ shift: true });
-      await expect(gatilhos[0]).toHaveFocus();
+      await expect(triggers[0]).toHaveFocus();
     });
 
     if (!args.multiple) {
       await step('Abrir um item fecha o anterior (modo único)', async () => {
-        const gatilhos = canvas.getAllByRole('button');
-        await abrir(gatilhos[1]);
-        await abrir(gatilhos[2]);
-        await expect(gatilhos[1]).toHaveAttribute('aria-expanded', 'false');
-        await expect(gatilhos[0]).toHaveAttribute('aria-expanded', 'false');
+        const triggers = canvas.getAllByRole('button');
+        await abrir(triggers[1]);
+        await abrir(triggers[2]);
+        await expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
+        await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
       });
     }
   },

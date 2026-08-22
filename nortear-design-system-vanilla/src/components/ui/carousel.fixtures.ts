@@ -22,25 +22,25 @@ export interface SlideDeExemploOptions {
    * stacks usam; o eixo vertical passa altura cheia, porque ali quem manda na
    * medida é o recorte e não a proporção do slide.
    */
-  medida?: string;
+  measurement?: string;
   /** Realce do slide atual nas demonstrações da página. */
   tom?: TomDoSlide;
 }
 
-const FUNDO: Record<TomDoSlide, string> = {
+const BACKGROUND: Record<TomDoSlide, string> = {
   muted: 'nds-bg-muted-soft',
   primary: 'nds-bg-primary-soft',
 };
 
 /** Um slide, com o rótulo centralizado. */
 export function slideDeExemplo(rotulo: string, o: SlideDeExemploOptions = {}): HTMLElement {
-  const { medida = 'nds-aspect-16-9', tom = 'muted' } = o;
+  const { measurement = 'nds-aspect-16-9', tom = 'muted' } = o;
 
   const moldura = document.createElement('div');
-  moldura.className = medida;
+  moldura.className = measurement;
 
   const caixa = document.createElement('div');
-  caixa.className = `nds-cluster nds-h-full nds-rounded-lg ${FUNDO[tom]}`;
+  caixa.className = `nds-cluster nds-h-full nds-rounded-lg ${BACKGROUND[tom]}`;
   caixa.dataset.align = 'center';
   caixa.dataset.justify = 'center';
 
@@ -58,6 +58,6 @@ export function slidesDeExemplo(
   count: number,
   o: SlideDeExemploOptions & { prefixo?: string } = {},
 ): HTMLElement[] {
-  const { prefixo = 'Slide', ...resto } = o;
-  return Array.from({ length: count }, (_, i) => slideDeExemplo(`${prefixo} ${i + 1}`, resto));
+  const { prefixo = 'Slide', ...remainder } = o;
+  return Array.from({ length: count }, (_, i) => slideDeExemplo(`${prefixo} ${i + 1}`, remainder));
 }

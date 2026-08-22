@@ -6,7 +6,7 @@
   import ChevronRight from '@lucide/svelte/icons/chevron-right';
   import ChevronsLeft from '@lucide/svelte/icons/chevrons-left';
   import ChevronsRight from '@lucide/svelte/icons/chevrons-right';
-  import { DATA_TABLE_LABELS_PADRAO, type DataTableLabels } from './data-table-labels';
+  import { DATA_TABLE_LABELS_DEFAULT, type DataTableLabels } from './data-table-labels';
 
   const {
     table,
@@ -26,7 +26,7 @@
     labels?: DataTableLabels;
   } = $props();
 
-  const rotulos = $derived<DataTableLabels>(labels ?? DATA_TABLE_LABELS_PADRAO);
+  const rotulos = $derived<DataTableLabels>(labels ?? DATA_TABLE_LABELS_DEFAULT);
 
   /*
    * O estado da paginação sai de um ÁTOMO, não mais de `getState()`.
@@ -37,13 +37,13 @@
    * que registra a paginação; o padrão é a rede que a assinatura pede, não um
    * caso esperado.
    */
-  const paginacao = $derived(table.atoms.pagination?.get() ?? { pageIndex: 0, pageSize: 10 });
+  const pagination = $derived(table.atoms.pagination?.get() ?? { pageIndex: 0, pageSize: 10 });
 
-  const pageIndex = $derived(paginacao.pageIndex);
+  const pageIndex = $derived(pagination.pageIndex);
   const pageCount = $derived(table.getPageCount());
   const selected = $derived(table.getFilteredSelectedRowModel().rows.length);
   const total = $derived(table.getFilteredRowModel().rows.length);
-  const currentPageSize = $derived(paginacao.pageSize);
+  const currentPageSize = $derived(pagination.pageSize);
 </script>
 
 <div

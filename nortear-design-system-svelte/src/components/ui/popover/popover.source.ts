@@ -27,13 +27,13 @@ export type PopoverArgs = {
 };
 
 /** Monta o `import` do design system com uma peça por linha. */
-function importDoPopover(nomes: string[]): string {
-  return `import {\n${nomes.map((n) => `  ${n},`).join('\n')}\n} from "@/components/ui/popover";`;
+function importDoPopover(names: string[]): string {
+  return `import {\n${names.map((n) => `  ${n},`).join('\n')}\n} from "@/components/ui/popover";`;
 }
 
 const HEADER = ['PopoverHeader', 'PopoverTitle', 'PopoverDescription'];
 
-function cabecalho(title: string, description: string): string {
+function header(title: string, description: string): string {
   return `    <PopoverHeader>
       <PopoverTitle>${title}</PopoverTitle>
       <PopoverDescription>${description}</PopoverDescription>
@@ -51,7 +51,7 @@ ${indentacao}</PopoverClose>`;
 
 type Part = {
   /** Nomes vindos de `@/components/ui/popover`, além dos três da base. */
-  nomes: string[];
+  names: string[];
   /** Linhas de import de outros componentes do design system. */
   externos: string[];
   /** Estado local que a composição exige (`$state`, handlers). */
@@ -61,11 +61,11 @@ type Part = {
 };
 
 function part(a: PopoverArgs): Part {
-  const head = cabecalho(a.title, a.description);
+  const head = header(a.title, a.description);
 
   if (a.variant === 'default') {
     return {
-      nomes: [],
+      names: [],
       externos: [],
       estado: '',
       markup: `    <p class="nds-text-body">${a.description}</p>`,
@@ -74,7 +74,7 @@ function part(a: PopoverArgs): Part {
 
   if (a.variant === 'form') {
     return {
-      nomes: [...HEADER, 'PopoverClose'],
+      names: [...HEADER, 'PopoverClose'],
       externos: [
         `import { Button } from "@/components/ui/button";`,
         `import { Input } from "@/components/ui/input";`,
@@ -106,7 +106,7 @@ ${fechar(a.cancelLabel, 'ghost', '        ')}
 
   if (a.variant === 'tableFilter') {
     return {
-      nomes: HEADER,
+      names: HEADER,
       externos: [`import { Button } from "@/components/ui/button";`],
       estado: '',
       markup: `${head}
@@ -135,7 +135,7 @@ ${fechar(a.cancelLabel, 'ghost', '        ')}
     // Cada amostra escrita por extenso, com nome acessível próprio: a cor não é
     // o nome, e sem `aria-label` o botão fica sem nome nenhum.
     return {
-      nomes: HEADER,
+      names: HEADER,
       externos: [],
       estado: '',
       markup: `${head}
@@ -152,7 +152,7 @@ ${fechar(a.cancelLabel, 'ghost', '        ')}
 
   if (a.variant === 'quickSettings') {
     return {
-      nomes: HEADER,
+      names: HEADER,
       externos: [],
       estado: '',
       markup: `${head}
@@ -174,7 +174,7 @@ ${fechar(a.cancelLabel, 'ghost', '        ')}
   }
 
   return {
-    nomes: [...HEADER, 'PopoverClose'],
+    names: [...HEADER, 'PopoverClose'],
     externos: [`import { Button } from "@/components/ui/button";`],
     estado: '',
     markup: `${head}
@@ -208,11 +208,11 @@ export function popoverSource(_gerado?: string, ctx?: { args?: Partial<PopoverAr
     ...ctx?.args,
   };
 
-  const { nomes, externos, estado, markup } = part(a);
+  const { names, externos, estado, markup } = part(a);
   const aberto = Boolean(a.open || a.defaultOpen);
 
   const script = [
-    importDoPopover(['Popover', 'PopoverTrigger', 'PopoverContent', ...nomes]),
+    importDoPopover(['Popover', 'PopoverTrigger', 'PopoverContent', ...names]),
     ...(externos.length ? externos : [`import { Button } from "@/components/ui/button";`]),
     ...(aberto ? ['', 'let aberto = $state(true);'] : []),
     ...(estado ? ['', estado] : []),

@@ -54,10 +54,10 @@ const IMPORT = 'import { Button } from "@/components/ui/button";';
  * ícone (que vem quebrado) desce para o bloco indentado, que é como se escreve
  * de verdade.
  */
-function botao(
+function button(
   atributos: Array<string | false | null | undefined>,
   conteudo: string,
-  cabecalho: string = IMPORT,
+  header: string = IMPORT,
 ): string {
   const abertura = `<Button${attrs(...atributos)}>`;
   // Bloco quando há mais de uma linha ou quando o filho é um elemento: ícone
@@ -66,11 +66,11 @@ function botao(
   const corpo = inBlock
     ? `${abertura}\n${indentar(conteudo)}\n</Button>`
     : `${abertura}${conteudo}</Button>`;
-  return jsxSnippet(cabecalho, corpo);
+  return jsxSnippet(header, corpo);
 }
 
 /** Ícone + rótulo importam do mesmo lugar; muda só qual peça do lucide entra. */
-function comIcone(icone: string): string {
+function withIcon(icone: string): string {
   return `${IMPORT}\nimport { ${icone} } from "lucide-react";`;
 }
 
@@ -85,7 +85,7 @@ function comIcone(icone: string): string {
  */
 export const buttonSource: SourceTransform<ButtonArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  return botao(
+  return button(
     [
       propOption('variant', args.variant, VARIANTES, 'default'),
       propOption('size', args.size, SIZES, 'default'),
@@ -103,32 +103,32 @@ export const buttonSource: SourceTransform<ButtonArgs> = (_gerado, ctx) => {
 
 /** Ação principal da seção: o padrão, e por isso sem atributo nenhum. */
 export function buttonDefaultSource(): string {
-  return botao([], 'Salvar');
+  return button([], 'Salvar');
 }
 
 /** Reservada ao irreversível: a cor é o aviso, o rótulo diz o que se perde. */
 export function buttonDestructiveSource(): string {
-  return botao(['variant="destructive"'], 'Excluir conta');
+  return button(['variant="destructive"'], 'Excluir conta');
 }
 
 /** Contorno: acompanha a primária num par de ações sem competir com ela. */
 export function buttonOutlineSource(): string {
-  return botao(['variant="outline"'], 'Cancelar');
+  return button(['variant="outline"'], 'Cancelar');
 }
 
 /** Preenchida em outra cor: ação complementar de ênfase menor. */
 export function buttonSecundarioSource(): string {
-  return botao(['variant="secondary"'], 'Ver detalhes');
+  return button(['variant="secondary"'], 'Ver detalhes');
 }
 
 /** Sem moldura: para barras e menus, onde a borda de cada botão vira ruído. */
 export function buttonGhostSource(): string {
-  return botao(['variant="ghost"'], 'Fechar');
+  return button(['variant="ghost"'], 'Fechar');
 }
 
 /** Aparência de link para ação navegacional dentro de texto corrido. */
 export function buttonLinkSource(): string {
-  return botao(['variant="link"'], 'Saiba mais');
+  return button(['variant="link"'], 'Saiba mais');
 }
 
 /* ------------------------------------------------------------------- tamanhos
@@ -139,22 +139,22 @@ export function buttonLinkSource(): string {
 
 /** Referência da escala: formulários e diálogos. */
 export function buttonSizeDefaultSource(): string {
-  return botao([], 'Padrão');
+  return button([], 'Padrão');
 }
 
 /** Densidade máxima: chip de filtro, ação dentro de linha de tabela. */
 export function buttonSizeXsSource(): string {
-  return botao(['size="xs"'], 'Mínimo');
+  return button(['size="xs"'], 'Mínimo');
 }
 
 /** Barras de ferramentas e áreas densas. */
 export function buttonSizeSmSource(): string {
-  return botao(['size="sm"'], 'Pequeno');
+  return button(['size="sm"'], 'Pequeno');
 }
 
 /** Chamada de destaque no topo de uma página. */
 export function buttonSizeLgSource(): string {
-  return botao(['size="lg"'], 'Grande');
+  return button(['size="lg"'], 'Grande');
 }
 
 /**
@@ -163,10 +163,10 @@ export function buttonSizeLgSource(): string {
  * para não ser lido no lugar dele.
  */
 function iconButton(tamanho: string): string {
-  return botao(
+  return button(
     [`size="${tamanho}"`, 'aria-label="Adicionar item"'],
     '<Plus aria-hidden="true" />',
-    comIcone('Plus'),
+    withIcon('Plus'),
   );
 }
 
@@ -201,7 +201,7 @@ export function buttonIconLgSource(): string {
  * ordem de tabulação e impede o clique. Uma classe só o pintaria de cinza.
  */
 export function buttonDisabledSource(): string {
-  return botao(['disabled'], 'Salvar');
+  return button(['disabled'], 'Salvar');
 }
 
 /**
@@ -211,11 +211,11 @@ export function buttonDisabledSource(): string {
  * A animação usa `.nds-spin`, que tem guarda de `prefers-reduced-motion`.
  */
 export function buttonLoadingSource(): string {
-  return botao(
+  return button(
     ['disabled', 'aria-busy="true"'],
     `<Loader2 aria-hidden="true" className="nds-button-icon-svg nds-spin" />
 Salvando…`,
-    comIcone('Loader2'),
+    withIcon('Loader2'),
   );
 }
 
@@ -224,7 +224,7 @@ Salvando…`,
  * a borda de erro é consequência dele no CSS, e não uma variante à parte.
  */
 export function buttonInvalidoSource(): string {
-  return botao(['variant="outline"', 'aria-invalid="true"'], 'Formulário inválido');
+  return button(['variant="outline"', 'aria-invalid="true"'], 'Formulário inválido');
 }
 
 /* ----------------------------------------------------------------- composições
@@ -234,33 +234,33 @@ export function buttonInvalidoSource(): string {
 
 /** Ícone antes do rótulo: o gap é do botão, então o ícone não leva margem. */
 export function buttonIconEsquerdaSource(): string {
-  return botao([], '<Plus aria-hidden="true" />\nAdicionar item', comIcone('Plus'));
+  return button([], '<Plus aria-hidden="true" />\nAdicionar item', withIcon('Plus'));
 }
 
 /** Ícone depois do rótulo — a ordem é o que separa esta composição da anterior. */
 export function buttonIconDireitaSource(): string {
-  return botao(
+  return button(
     ['variant="outline"'],
     'Próximo\n<ChevronRight aria-hidden="true" />',
-    comIcone('ChevronRight'),
+    withIcon('ChevronRight'),
   );
 }
 
 /** Variante destrutiva com ícone: a cor avisa, o ícone reforça, o texto nomeia. */
 export function buttonDestructiveWithIconSource(): string {
-  return botao(
+  return button(
     ['variant="destructive"'],
     '<Trash2 aria-hidden="true" />\nExcluir',
-    comIcone('Trash2'),
+    withIcon('Trash2'),
   );
 }
 
 /** Sem texto dentro, o `aria-label` é obrigatório: é o único nome que sobra. */
 export function buttonSomenteIconSource(): string {
-  return botao(
+  return button(
     ['size="icon"', 'aria-label="Baixar arquivo"'],
     '<Download aria-hidden="true" />',
-    comIcone('Download'),
+    withIcon('Download'),
   );
 }
 

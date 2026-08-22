@@ -39,11 +39,11 @@ export type PanelRetrato = {
   classes: string;
   slot: string | null;
   /** Fundo composto; `rgba(0, 0, 0, 0)` denuncia painel translúcido. */
-  fundo: string;
+  background: string;
   cor: string;
   raio: string;
   sombra: string;
-  borda: string;
+  border: string;
   ancoradoNoBody: boolean;
 } | null;
 
@@ -73,7 +73,7 @@ export type RetratoDoDropdown = {
   marcacoes: RetratoDeElemento[];
   /** Indicador visual do item marcado — `display` computado por estado. */
   indicadores: Array<{ pai: string; display: string; classes: string }>;
-  atalhos: Array<{ texto: string; classes: string; ariaHidden: string | null; encostaNaDireita: boolean }>;
+  shortcuts: Array<{ texto: string; classes: string; ariaHidden: string | null; encostaNaDireita: boolean }>;
   teclado: KeyboardRetrato | null;
   submenu: {
     subTrigger: RetratoDeElemento | null;
@@ -129,11 +129,11 @@ function retratarPanel(painel: HTMLElement | null): PanelRetrato {
     role: painel.getAttribute('role'),
     classes: painel.getAttribute('class') ?? '',
     slot: painel.getAttribute('data-slot'),
-    fundo: s.backgroundColor,
+    background: s.backgroundColor,
     cor: s.color,
     raio: s.borderTopLeftRadius,
     sombra: s.boxShadow,
-    borda: `${s.borderTopWidth} ${s.borderTopStyle} ${s.borderTopColor}`,
+    border: `${s.borderTopWidth} ${s.borderTopStyle} ${s.borderTopColor}`,
     ancoradoNoBody: !painel.closest('#storybook-root'),
   };
 }
@@ -144,9 +144,9 @@ export function findPanel(): HTMLElement | null {
 }
 
 /** Espera a condição virar verdadeira; devolve o que ela valia no fim. */
-async function ate(cond: () => boolean, limite = 1200): Promise<boolean> {
-  const fim = Date.now() + limite;
-  while (Date.now() < fim) {
+async function ate(cond: () => boolean, limit = 1200): Promise<boolean> {
+  const end = Date.now() + limit;
+  while (Date.now() < end) {
     if (cond()) return true;
     await new Promise((r) => setTimeout(r, 25));
   }
@@ -217,7 +217,7 @@ export async function radiografarDropdown(
     classes: ind.getAttribute('class') ?? '',
   }));
 
-  const atalhos = dentro<HTMLElement>(
+  const shortcuts = dentro<HTMLElement>(
     '.nds-dropdown-menu-shortcut, [data-slot="dropdown-menu-shortcut"]',
   ).map((a) => {
     const item = a.closest<HTMLElement>('[role^="menuitem"]');
@@ -359,7 +359,7 @@ export async function radiografarDropdown(
     itens,
     marcacoes,
     indicadores,
-    atalhos,
+    shortcuts,
     teclado: keyboardRetrato,
     submenu,
     closeFocus,
@@ -391,7 +391,7 @@ export function lancarProbe(stack: string, cenario: string, dados: unknown): nev
  */
 export function itemContrast(item: HTMLElement): Contraste | null {
   const frente = getComputedStyle(item).color;
-  const fundo = backgroundEffective(item);
-  if (!fundo) return null;
-  return ratio(frente, fundo);
+  const background = backgroundEffective(item);
+  if (!background) return null;
+  return ratio(frente, background);
 }

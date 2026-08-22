@@ -51,7 +51,7 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { HoverCard, HoverCardContent, HoverCardTrigger };
 const STYLE_PARAGRAFO = 'contain: layout; min-height: 280px; max-width: 24rem;';
-const CLASSES_GATILHO_BOTAO =
+const CLASSES_TRIGGER_BUTTON =
   'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 
 export const UserProfile: Story = {
@@ -174,7 +174,7 @@ export const TermDefinition: Story = {
         Todo componente do sistema atende
         <HoverCard :default-open="true">
           <HoverCardTrigger as-child>
-            <button type="button" class="${CLASSES_GATILHO_BOTAO}">WCAG 2.2 AA</button>
+            <button type="button" class="${CLASSES_TRIGGER_BUTTON}">WCAG 2.2 AA</button>
           </HoverCardTrigger>
           <HoverCardContent aria-label="Definição de WCAG 2.2 AA">
             <div class="nds-stack" data-spacing="xs">
@@ -229,7 +229,7 @@ export const ExplainedMetric: Story = {
         A página inicial fechou o mês em
         <HoverCard :default-open="true">
           <HoverCardTrigger as-child>
-            <button type="button" class="${CLASSES_GATILHO_BOTAO}">LCP 1.8s</button>
+            <button type="button" class="${CLASSES_TRIGGER_BUTTON}">LCP 1.8s</button>
           </HoverCardTrigger>
           <HoverCardContent aria-label="Explicação da métrica LCP">
             <div class="nds-stack" data-spacing="xs">
@@ -289,7 +289,7 @@ export const Sides: Story = {
           Abre
           <HoverCard :default-open="true">
             <HoverCardTrigger as-child>
-              <button type="button" class="${CLASSES_GATILHO_BOTAO}">{{ l.rotulo }}</button>
+              <button type="button" class="${CLASSES_TRIGGER_BUTTON}">{{ l.rotulo }}</button>
             </HoverCardTrigger>
             <HoverCardContent :side="l.side" :aria-label="'Cartão ' + l.rotulo + ' do gatilho'">
               <p class="nds-text-caption">Lado preferido: {{ l.rotulo }}.</p>

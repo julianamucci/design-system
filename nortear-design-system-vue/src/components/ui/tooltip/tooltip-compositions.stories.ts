@@ -163,10 +163,10 @@ export const ActionBar: Story = {
     await step('A barra se anuncia como toolbar e cada botão tem nome próprio', async () => {
       const toolbar = canvas.getByRole('toolbar', { name: /Ações do documento/i });
       await expect(toolbar).toBeVisible();
-      const botoes = canvas.getAllByRole('button');
-      await expect(botoes.length).toBe(5);
-      for (const botao of botoes) {
-        await expect(botao).toHaveAttribute('aria-label');
+      const buttons = canvas.getAllByRole('button');
+      await expect(buttons.length).toBe(5);
+      for (const button of buttons) {
+        await expect(button).toHaveAttribute('aria-label');
       }
     });
   },

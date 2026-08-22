@@ -27,8 +27,8 @@
 		const el = ref;
 		if (!el) return;
 		if (!ariaOrientation) {
-			const doGrupo = el.getAttribute('data-direction');
-			if (doGrupo) el.setAttribute('aria-orientation', doGrupo === 'horizontal' ? 'vertical' : 'horizontal');
+			const ofGroup = el.getAttribute('data-direction');
+			if (ofGroup) el.setAttribute('aria-orientation', ofGroup === 'horizontal' ? 'vertical' : 'horizontal');
 		}
 		// O primitivo crava `cursor: ew-resize`/`ns-resize` em `style` inline,
 		// mesmo travado — e inline vence a folha compartilhada. Um divisor

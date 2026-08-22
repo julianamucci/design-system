@@ -77,7 +77,7 @@ const NUCLEO = [
 ];
 
 /** Indenta `conteudo` em `n` níveis de dois espaços. */
-function nivel(conteudo: string, n: number): string {
+function level(conteudo: string, n: number): string {
   const prefixo = '  '.repeat(n);
   return conteudo
     .split('\n')
@@ -94,8 +94,8 @@ ${lista.map((part) => `  ${part},`).join('\n')}
 }
 
 /** Import dos ícones usados, quando há algum. */
-function importingIcons(icones: string[]): string {
-  const lista = [...new Set(icones)].sort();
+function importingIcons(icons: string[]): string {
+  const lista = [...new Set(icons)].sort();
   return lista.length ? `import { ${lista.join(', ')} } from "lucide-react";` : '';
 }
 
@@ -104,7 +104,7 @@ function importingIcons(icones: string[]): string {
  * `data-active` que a prop escreve é para a folha pintar, e quem não vê a cor
  * precisa ouvir que aquele é o item da página aberta.
  */
-function destino(
+function destination(
   icone: string,
   rotulo: string,
   opcoes: { ativo?: boolean; depois?: string } = {},
@@ -114,7 +114,7 @@ function destino(
     `tooltip="${rotulo}"`,
     opcoes.ativo ? 'aria-current="page"' : undefined,
   );
-  const extra = opcoes.depois ? `\n${nivel(opcoes.depois, 1)}` : '';
+  const extra = opcoes.depois ? `\n${level(opcoes.depois, 1)}` : '';
   return `<SidebarMenuItem>
   <SidebarMenuButton${props}>
     <${icone} aria-hidden="true" />
@@ -125,12 +125,12 @@ function destino(
 
 /** Grupo nomeado. O rótulo nomeia o menu; a ação do grupo é opcional. */
 function grupo(rotulo: string, itens: string[], acao?: string): string {
-  const lineAction = acao ? `\n${nivel(acao, 1)}` : '';
+  const lineAction = acao ? `\n${level(acao, 1)}` : '';
   return `<SidebarGroup>
   <SidebarGroupLabel>${rotulo}</SidebarGroupLabel>${lineAction}
   <SidebarGroupContent>
     <SidebarMenu>
-${nivel(itens.join('\n'), 3)}
+${level(itens.join('\n'), 3)}
     </SidebarMenu>
   </SidebarGroupContent>
 </SidebarGroup>`;
@@ -139,16 +139,16 @@ ${nivel(itens.join('\n'), 3)}
 /** Os três destinos que servem de menu em quase todo snippet. */
 function menuDefault(): string[] {
   return [
-    destino('LayoutDashboard', 'Dashboard', { ativo: true }),
-    destino('Blocks', 'Componentes'),
-    destino('Coins', 'Tokens'),
+    destination('LayoutDashboard', 'Dashboard', { ativo: true }),
+    destination('Blocks', 'Componentes'),
+    destination('Coins', 'Tokens'),
   ];
 }
 
 /** Rodapé com o perfil — o item que fica no fim da coluna, longe do menu. */
 const FOOTER = `<SidebarFooter>
   <SidebarMenu>
-${nivel(destino('User', 'Perfil'), 2)}
+${level(destination('User', 'Perfil'), 2)}
   </SidebarMenu>
 </SidebarFooter>`;
 
@@ -164,15 +164,15 @@ type Composition = {
   /** Atributos da `Sidebar`. */
   barra?: string;
   /** Cabeçalho da barra, quando ele carrega mais que a marca. */
-  cabecalho?: string;
+  header?: string;
   /** Grupos já montados, na ordem em que aparecem. */
   grupos: string[];
   /** Peças além do núcleo (rodapé, faixa, separador, distintivo…). */
   parts?: string[];
-  icones?: string[];
+  icons?: string[];
   /** Linhas de estado antes da marcação — só o uso controlado precisa. */
   estado?: string;
-  comRodape?: boolean;
+  withFooter?: boolean;
   comFaixa?: boolean;
   /** O gatilho some quando não há o que alternar (`collapsible="none"`). */
   withTrigger?: boolean;
@@ -188,7 +188,7 @@ function pagina(c: Composition): string {
   const parts = [
     ...NUCLEO,
     ...(c.parts ?? []),
-    ...(c.comRodape !== false ? ['SidebarFooter'] : []),
+    ...(c.withFooter !== false ? ['SidebarFooter'] : []),
     ...(c.comFaixa ? ['SidebarRail'] : []),
     ...(withTrigger ? ['SidebarTrigger'] : []),
   ];
@@ -196,17 +196,17 @@ function pagina(c: Composition): string {
   const importHeader = [
     c.estado ? 'import { useState } from "react";' : '',
     importingSidebar(parts),
-    importingIcons(c.icones ?? ['LayoutDashboard', 'Blocks', 'Coins', 'User']),
+    importingIcons(c.icons ?? ['LayoutDashboard', 'Blocks', 'Coins', 'User']),
   ]
     .filter(Boolean)
     .join('\n');
 
   const barBody = [
-    c.cabecalho ?? BAR_HEADER,
+    c.header ?? BAR_HEADER,
     `<SidebarContent>
-${nivel(c.grupos.join('\n'), 1)}
+${level(c.grupos.join('\n'), 1)}
 </SidebarContent>`,
-    ...(c.comRodape !== false ? [FOOTER] : []),
+    ...(c.withFooter !== false ? [FOOTER] : []),
     ...(c.comFaixa ? ['<SidebarRail />'] : []),
   ].join('\n');
 
@@ -226,7 +226,7 @@ ${nivel(c.grupos.join('\n'), 1)}
     `<SidebarProvider${c.provider ?? ''}>
   <nav aria-label="Navegação principal">
     <Sidebar${c.barra ?? ''}>
-${nivel(barBody, 3)}
+${level(barBody, 3)}
     </Sidebar>
   </nav>
   ${conteudo}
@@ -271,10 +271,10 @@ export const sidebarSource: SourceTransform<SidebarArgs> = (_gerado, ctx) => {
     grupos: [
       grupo('Aplicação', menuDefault()),
       '<SidebarSeparator />',
-      grupo('Sistema', [destino('Bell', 'Notificações'), destino('Settings', 'Configurações')]),
+      grupo('Sistema', [destination('Bell', 'Notificações'), destination('Settings', 'Configurações')]),
     ],
     parts: ['SidebarSeparator'],
-    icones: ['LayoutDashboard', 'Blocks', 'Coins', 'Bell', 'Settings', 'User'],
+    icons: ['LayoutDashboard', 'Blocks', 'Coins', 'Bell', 'Settings', 'User'],
     comFaixa: true,
   });
 };
@@ -392,15 +392,15 @@ export function sidebarLoadingSource(): string {
   <SidebarGroupContent>
     <SidebarMenu>
       {[1, 2, 3, 4, 5].map((posicao) => (
-${nivel(item, 4)}
+${level(item, 4)}
       ))}
     </SidebarMenu>
   </SidebarGroupContent>
 </SidebarGroup>`,
     ],
     parts: ['SidebarMenuSkeleton'],
-    icones: [],
-    comRodape: false,
+    icons: [],
+    withFooter: false,
   });
 }
 
@@ -429,16 +429,16 @@ export function sidebarGroupsSource(): string {
   return pagina({
     grupos: [
       grupo('Aplicação', [
-        destino('LayoutDashboard', 'Dashboard', { ativo: true }),
-        destino('Blocks', 'Componentes', { depois: '<SidebarMenuBadge>12</SidebarMenuBadge>' }),
-        destino('Coins', 'Tokens'),
+        destination('LayoutDashboard', 'Dashboard', { ativo: true }),
+        destination('Blocks', 'Componentes', { depois: '<SidebarMenuBadge>12</SidebarMenuBadge>' }),
+        destination('Coins', 'Tokens'),
       ]),
       '<SidebarSeparator />',
       grupo(
         'Sistema',
         [
-          destino('Bell', 'Notificações', { depois: '<SidebarMenuBadge>3</SidebarMenuBadge>' }),
-          destino('Settings', 'Configurações'),
+          destination('Bell', 'Notificações', { depois: '<SidebarMenuBadge>3</SidebarMenuBadge>' }),
+          destination('Settings', 'Configurações'),
         ],
         `<SidebarGroupAction aria-label="Adicionar notificação">
   <Plus aria-hidden="true" />
@@ -446,7 +446,7 @@ export function sidebarGroupsSource(): string {
       ),
     ],
     parts: ['SidebarGroupAction', 'SidebarMenuBadge', 'SidebarSeparator'],
-    icones: ['LayoutDashboard', 'Blocks', 'Coins', 'Bell', 'Settings', 'User', 'Plus'],
+    icons: ['LayoutDashboard', 'Blocks', 'Coins', 'Bell', 'Settings', 'User', 'Plus'],
   });
 }
 
@@ -477,12 +477,12 @@ export function sidebarSubmenuSource(): string {
   </SidebarMenuButton>
   {componentesAbertos && (
     <SidebarMenuSub>
-${nivel([subitem('Button', true), subitem('Input'), subitem('Select')].join('\n'), 3)}
+${level([subitem('Button', true), subitem('Input'), subitem('Select')].join('\n'), 3)}
     </SidebarMenuSub>
   )}
 </SidebarMenuItem>`;
 
-  const withAction = destino('Settings', 'Configurações', {
+  const withAction = destination('Settings', 'Configurações', {
     depois: `<SidebarMenuAction showOnHover aria-label="Mais opções de configurações">
   <ChevronRight aria-hidden="true" />
 </SidebarMenuAction>`,
@@ -491,7 +491,7 @@ ${nivel([subitem('Button', true), subitem('Input'), subitem('Select')].join('\n'
   return pagina({
     barra: ' collapsible="icon"',
     grupos: [
-      grupo('Menu', [destino('LayoutDashboard', 'Dashboard', { ativo: true }), pai, withAction]),
+      grupo('Menu', [destination('LayoutDashboard', 'Dashboard', { ativo: true }), pai, withAction]),
     ],
     parts: [
       'SidebarMenuAction',
@@ -499,7 +499,7 @@ ${nivel([subitem('Button', true), subitem('Input'), subitem('Select')].join('\n'
       'SidebarMenuSubButton',
       'SidebarMenuSubItem',
     ],
-    icones: ['LayoutDashboard', 'Blocks', 'ChevronRight', 'Settings', 'User'],
+    icons: ['LayoutDashboard', 'Blocks', 'ChevronRight', 'Settings', 'User'],
     estado: `const [componentesAbertos, setComponentesAbertos] = useState(true);`,
   });
 }
@@ -524,7 +524,7 @@ export function sidebarSearchSource(): string {
 </SidebarMenu>`;
 
   return pagina({
-    cabecalho: `<SidebarHeader className="nds-p-2" data-spacing="sm">
+    header: `<SidebarHeader className="nds-p-2" data-spacing="sm">
   <span className="nds-font-semibold nds-text-body nds-text-muted-foreground">
     Design System
   </span>
@@ -542,13 +542,13 @@ export function sidebarSearchSource(): string {
     {busca ? \`Resultados (\${visiveis.length})\` : "Navegação"}
   </SidebarGroupLabel>
   <SidebarGroupContent>
-${nivel(menu, 2)}
+${level(menu, 2)}
   </SidebarGroupContent>
 </SidebarGroup>`,
     ],
     parts: ['SidebarInput'],
-    icones: [],
-    comRodape: false,
+    icons: [],
+    withFooter: false,
     estado: `const DESTINOS = ["Dashboard", "Componentes", "Tokens", "Notificações", "Perfil"];
 
 const [busca, setBusca] = useState("");

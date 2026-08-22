@@ -121,7 +121,7 @@ export function formSourceWith(fixas: FormSnippetOptions): SourceTransform<FormS
 
 export type FormWithFieldsetSnippetOptions = {
   legend?: string;
-  campos?: FormField[];
+  fields?: FormField[];
 };
 
 /**
@@ -133,14 +133,14 @@ export type FormWithFieldsetSnippetOptions = {
  * e não anuncia nada.
  */
 export function formWithFieldsetSnippet(o: FormWithFieldsetSnippetOptions = {}): string {
-  const campos = o.campos ?? [
+  const fields = o.fields ?? [
     { label: 'Rua', placeholder: 'ex: Av. Paulista, 1000' },
     { label: 'Cidade', placeholder: 'ex: São Paulo' },
   ];
 
   const linhas = opcoes([
     ['legend', texto(o.legend ?? 'Endereço de entrega')],
-    ['children', `[\n${campos.map((c) => fieldBlock(c, '    ')).join('\n')}\n  ]`],
+    ['children', `[\n${fields.map((c) => fieldBlock(c, '    ')).join('\n')}\n  ]`],
   ]);
 
   return snippet(
@@ -163,7 +163,7 @@ export function formWithFieldsetSource(
 // ─── Terceira forma: formulário com vários campos ────────────────────────────
 
 export type FormWithMultipleFieldsSnippetOptions = {
-  campos?: FormField[];
+  fields?: FormField[];
   /** Rótulo do botão de envio. Vazio = formulário sem envio. */
   submitLabel?: string;
 };
@@ -176,14 +176,14 @@ export type FormWithMultipleFieldsSnippetOptions = {
  * área de texto passa pelo mesmo campo e pela mesma associação de rótulo.
  */
 export function formWithMultipleFieldsSnippet(o: FormWithMultipleFieldsSnippetOptions = {}): string {
-  const campos = o.campos ?? [
+  const fields = o.fields ?? [
     { label: 'Nome completo', name: 'nome', placeholder: 'ex: João da Silva' },
     { label: 'Email', type: 'email', name: 'email', placeholder: 'ex: joao@empresa.com' },
   ];
   const submitLabel = o.submitLabel ?? 'Salvar';
-  const hasTextarea = campos.some((c) => c.controle === 'textarea');
+  const hasTextarea = fields.some((c) => c.controle === 'textarea');
 
-  const filhos = campos.map((c) => fieldBlock(c, '  '));
+  const filhos = fields.map((c) => fieldBlock(c, '  '));
   if (submitLabel) {
     filhos.push(`  createButton({ label: ${texto(submitLabel)}, type: 'submit' }),`);
   }

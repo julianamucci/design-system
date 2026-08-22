@@ -2,9 +2,9 @@
   import * as ContextMenu from '@/components/ui/context-menu';
   import { AREA_CLICK_DIREITO } from '@shared/testing/context-menu-area';
 
-  type Estado = 'disabled' | 'inset' | 'destructive' | 'dark' | 'indeterminate';
+  type State = 'disabled' | 'inset' | 'destructive' | 'dark' | 'indeterminate';
 
-  let { estado = 'disabled' as Estado }: { estado?: Estado } = $props();
+  let { estado = 'disabled' as State }: { estado?: State } = $props();
 </script>
 
 {#snippet area()}

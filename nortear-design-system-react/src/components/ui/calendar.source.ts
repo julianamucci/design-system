@@ -33,7 +33,7 @@ export type CalendarArgs = {
 const MODOS = ['single', 'multiple', 'range'] as const;
 const LEGENDAS = ['label', 'dropdown'] as const;
 
-type Modo = (typeof MODOS)[number];
+type Mode = (typeof MODOS)[number];
 
 /**
  * O estado que cada modo pede. Uma data, uma lista e um intervalo não são
@@ -46,8 +46,8 @@ type Modo = (typeof MODOS)[number];
  * cada tela decide se aceita ficar sem nada. Estes exemplos mantêm a escolha
  * anterior, que é o comportamento que um campo de data espera.
  */
-const ESTADO: Record<
-  Modo,
+const STATE: Record<
+  Mode,
   { declaration: string; valor: string; handler: string; precisaDeTipo?: boolean }
 > = {
   single: {
@@ -84,10 +84,10 @@ function calendarWithProps(props: Array<string | false | null | undefined>): str
  * o andaime do arquivo de story, que não existe fora dele.
  */
 function calendarControlled(
-  modo: Modo,
+  modo: Mode,
   extras: Array<string | false | null | undefined> = [],
 ): string {
-  const estado = ESTADO[modo];
+  const estado = STATE[modo];
   // O componente do design system vem primeiro, e as dependências depois: é a
   // ordem do Badge, que é o modelo destas transforms.
   const imports = [
@@ -100,10 +100,10 @@ function calendarControlled(
     .join('\n');
   // O estado entra no mesmo bloco do cabeçalho, separado por uma linha em
   // branco: é declaração de componente, e não marcação.
-  const cabecalho = `${imports}\n\n${estado.declaration}`;
+  const header = `${imports}\n\n${estado.declaration}`;
 
   return jsxSnippet(
-    cabecalho,
+    header,
     calendarWithProps([
       `mode="${modo}"`,
       ...extras,
@@ -125,8 +125,8 @@ function calendarControlled(
  */
 export const calendarSource: SourceTransform<CalendarArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const modo: Modo = (MODOS as readonly string[]).includes(args.mode as string)
-    ? (args.mode as Modo)
+  const modo: Mode = (MODOS as readonly string[]).includes(args.mode as string)
+    ? (args.mode as Mode)
     : 'single';
   const meses =
     typeof args.numberOfMonths === 'number' &&

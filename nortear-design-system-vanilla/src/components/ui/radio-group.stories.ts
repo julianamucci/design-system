@@ -61,7 +61,7 @@ type Story = StoryObj<RadioGroupArgs>;
  * exclusiva — no replay do painel Interactions o DOM não remonta, então um
  * clique cego partiria do estado que a rodada anterior deixou.
  */
-const escolher = async (alvo: HTMLElement): Promise<void> => {
+const choose = async (alvo: HTMLElement): Promise<void> => {
   if (alvo.getAttribute('aria-checked') !== 'true') await userEvent.click(alvo);
   await expect(alvo).toHaveAttribute('aria-checked', 'true');
 };
@@ -119,7 +119,7 @@ export const Playground: Story = {
     }
 
     await step('Clicar num item seleciona só ele', async () => {
-      await escolher(radios[1]);
+      await choose(radios[1]);
       await expect(radios[0]).toHaveAttribute('aria-checked', 'false');
       await expect(radios[2]).toHaveAttribute('aria-checked', 'false');
     });
@@ -127,7 +127,7 @@ export const Playground: Story = {
     await step('A escolha seguinte desmarca a anterior', async () => {
       // Exclusão mútua é a razão de existir do componente. O par (item 1 depois
       // item 0) garante um clique real nesta rodada, venha de onde vier.
-      await escolher(radios[0]);
+      await choose(radios[0]);
       await expect(radios[1]).toHaveAttribute('aria-checked', 'false');
     });
 

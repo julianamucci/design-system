@@ -10,7 +10,7 @@ export type TableSnippetOptions = {
   captionVisivel?: boolean;
   caption?: string;
   /** Rodapé com o total das linhas exibidas. */
-  comRodape?: boolean;
+  withFooter?: boolean;
   /** Coluna de ação por linha. */
   withActions?: boolean;
   /** Marca uma linha com `data-state="selected"`. */
@@ -36,8 +36,8 @@ const DATA = [
 ].join('\n');
 
 /** Nomes que a montagem importa do primitivo, em import de várias linhas. */
-function importingParts(...nomes: string[]): string {
-  return `import {\n${nomes.map((n) => `  ${n},`).join('\n')}\n} from '@/components/ui/table';`;
+function importingParts(...names: string[]): string {
+  return `import {\n${names.map((n) => `  ${n},`).join('\n')}\n} from '@/components/ui/table';`;
 }
 
 function legenda(o: TableSnippetOptions): string {
@@ -49,7 +49,7 @@ function legenda(o: TableSnippetOptions): string {
   ].join('\n');
 }
 
-function cabecalho(o: TableSnippetOptions = {}): string {
+function header(o: TableSnippetOptions = {}): string {
   const linhas = [
     'const cabecalho = createTableHeader();',
     'const linhaDeCabecalho = createTableRow();',
@@ -146,7 +146,7 @@ export function tableSnippet(o: TableSnippetOptions = {}): string {
     'createTableHeader',
     'createTableRow',
   ];
-  if (o.comRodape) parts.splice(4, 0, 'createTableFooter');
+  if (o.withFooter) parts.splice(4, 0, 'createTableFooter');
 
   const importacoes = o.withActions
     ? [importingParts(...parts), "import { createButton } from '@/components/ui/button';"].join('\n')
@@ -161,9 +161,9 @@ export function tableSnippet(o: TableSnippetOptions = {}): string {
       'const { wrapper, table } = createTable();',
     ].join('\n'),
     legenda(o),
-    cabecalho(o),
+    header(o),
     corpo(o),
-    o.comRodape ? rodape() : undefined,
+    o.withFooter ? rodape() : undefined,
     montar('wrapper'),
   );
 }
@@ -183,7 +183,7 @@ export function tableVaziaSnippet(o: TableSnippetOptions = {}): string {
     DATA.split('\n').slice(0, 1).join('\n'),
     'const { wrapper, table } = createTable();',
     legenda(o),
-    cabecalho(),
+    header(),
     [
       'const corpo = createTableBody();',
       'const linha = createTableRow();',
@@ -226,7 +226,7 @@ export function tableLoadingSnippet(o: TableSnippetOptions = {}): string {
     ].join('\n'),
     'const { wrapper, table } = createTable();',
     legenda(o),
-    cabecalho(),
+    header(),
     [
       'const corpo = createTableBody();',
       'for (let i = 0; i < 3; i++) {',

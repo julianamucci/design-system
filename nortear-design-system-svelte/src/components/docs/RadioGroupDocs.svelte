@@ -133,7 +133,7 @@
   const codeImport = `import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";`;
 
-  const codeVertical = `<RadioGroup aria-label="Forma de pagamento">
+  const verticalCode = `<RadioGroup aria-label="Forma de pagamento">
   <div class="nds-cluster" data-spacing="xs">
     <RadioGroupItem value="cartao" id="v-cartao" />
     <Label for="v-cartao">Cartão de crédito</Label>
@@ -148,7 +148,7 @@ import { Label } from "@/components/ui/label";`;
   </div>
 </RadioGroup>`;
 
-  const codeHorizontal = `<RadioGroup orientation="horizontal" class="nds-cluster" data-spacing="lg" aria-label="Forma de entrega">
+  const horizontalCode = `<RadioGroup orientation="horizontal" class="nds-cluster" data-spacing="lg" aria-label="Forma de entrega">
   <div class="nds-cluster" data-spacing="xs">
     <RadioGroupItem value="padrao" id="h-padrao" />
     <Label for="h-padrao">Padrão</Label>
@@ -505,13 +505,13 @@ interface RadioGroupItemProps {
       {
         name: $tStore('variants.items.vertical'),
         description: stripHtml($tStore('variants.styles.vertical')),
-        code: codeVertical,
+        code: verticalCode,
         preview: variantVertical,
       },
       {
         name: $tStore('variants.items.horizontal'),
         description: stripHtml($tStore('variants.styles.horizontal')),
-        code: codeHorizontal,
+        code: horizontalCode,
         preview: variantHorizontal,
       },
       {
@@ -590,7 +590,7 @@ interface RadioGroupItemProps {
         name: $tStore('variants.compositions.inForm.name'),
         description: $tStore('variants.compositions.inForm.description'),
         useWhen: $tStore('variants.compositions.inForm.use'),
-        code: codeVertical,
+        code: verticalCode,
         preview: compInForm,
       },
     ]}

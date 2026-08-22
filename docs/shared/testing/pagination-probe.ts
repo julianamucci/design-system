@@ -201,8 +201,8 @@ export function measurePagination(raizBusca: HTMLElement): PaginationMeasurement
  * `console.log` não chega ao terminal — o addon do Storybook instrumenta o
  * console dentro da `play`. A exceção chega.
  */
-export function reportProbe(stack: string, cenario: string, medida: unknown): never {
-  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(medida)}`);
+export function reportProbe(stack: string, cenario: string, measurement: unknown): never {
+  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(measurement)}`);
 }
 
 // ─── Contraste ───────────────────────────────────────────────────────────────
@@ -233,8 +233,8 @@ export function contrastRatio(
   a: [number, number, number],
   b: [number, number, number],
 ): number {
-  const [claro, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
-  return Math.round(((claro + 0.05) / (escuro + 0.05)) * 100) / 100;
+  const [light, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
+  return Math.round(((light + 0.05) / (escuro + 0.05)) * 100) / 100;
 }
 
 /**
@@ -270,18 +270,18 @@ export function rangeContrastes(raizBusca: HTMLElement): ContrastMeasurement[] {
     ),
   );
   const vistos = new Set<Element>();
-  const medidas: ContrastMeasurement[] = [];
+  const measurements: ContrastMeasurement[] = [];
   for (const controle of controles) {
     if (vistos.has(controle)) continue;
     vistos.add(controle);
     const cor = canais(getComputedStyle(controle).color);
     if (!cor) continue;
-    medidas.push({
+    measurements.push({
       nome: nomeAcessivel(controle) ?? '(sem nome)',
       ratio: contrastRatio(cor, backgroundEffective(controle)),
     });
   }
-  return medidas;
+  return measurements;
 }
 
 // ─── Alvo de toque ───────────────────────────────────────────────────────────

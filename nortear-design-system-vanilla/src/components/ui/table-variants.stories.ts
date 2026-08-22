@@ -121,7 +121,7 @@ export const WithFooter: Story = {
     covers: ['functional.item3', 'visual.item3'],
     docs: {
       source: {
-        transform: tableSourceWith({ caption: 'Faturas recentes com total', comRodape: true }),
+        transform: tableSourceWith({ caption: 'Faturas recentes com total', withFooter: true }),
       },
     },
   },
@@ -274,20 +274,20 @@ export const WithRowActions: Story = {
     await step('Cada ação diz a qual fatura pertence', async () => {
       // accessibility.item3 — três botões chamados "Ações" seriam três
       // controles indistinguíveis na lista de elementos do leitor de tela.
-      const botoes = canvas.getAllByRole('button');
-      await expect(botoes.length).toBe(LINES.length);
-      for (const [i, botao] of botoes.entries()) {
-        await expect(botao).toHaveAccessibleName(`Ações para fatura ${LINES[i].id}`);
+      const buttons = canvas.getAllByRole('button');
+      await expect(buttons.length).toBe(LINES.length);
+      for (const [i, button] of buttons.entries()) {
+        await expect(button).toHaveAccessibleName(`Ações para fatura ${LINES[i].id}`);
         // O botão mora dentro da própria linha do registro que ele opera.
-        await expect(botao.closest('tr')).toHaveTextContent(LINES[i].id);
+        await expect(button.closest('tr')).toHaveTextContent(LINES[i].id);
       }
     });
 
     await step('O botão de ação é discreto (variante ghost)', async () => {
       // visual.item4 — a coluna de ações não pode competir com o dado; o ghost
       // é o que o conteúdo compartilhado documenta para ação por linha.
-      const botao = canvas.getAllByRole('button')[0];
-      await expect(botao).toHaveClass('nds-button', 'nds-button-ghost');
+      const button = canvas.getAllByRole('button')[0];
+      await expect(button).toHaveClass('nds-button', 'nds-button-ghost');
     });
   },
 };
@@ -305,7 +305,7 @@ export const HorizontalScroll: Story = {
     const thead = createTableHeader();
     const headerRow = createTableRow();
     headerRow.appendChild(createTableHead('Fatura'));
-    for (const mes of MONTHS) headerRow.appendChild(createTableHead(mes));
+    for (const month of MONTHS) headerRow.appendChild(createTableHead(month));
     thead.appendChild(headerRow);
     table.appendChild(thead);
 

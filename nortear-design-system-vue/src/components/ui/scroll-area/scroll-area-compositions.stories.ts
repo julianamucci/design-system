@@ -65,7 +65,7 @@ const ROWS = Array.from({ length: 18 }, (_, i) => ({
   funcao: i % 2 === 0 ? 'Designer' : 'Engenheiro',
   depto: i % 3 === 0 ? 'Design System' : 'Produto',
   loc: i % 2 === 0 ? 'São Paulo' : 'Remoto',
-  inicio: `0${(i % 9) + 1}/2024`,
+  start: `0${(i % 9) + 1}/2024`,
   status: i % 4 === 0 ? 'Férias' : 'Ativo',
 }));
 
@@ -234,7 +234,7 @@ export const WideTable: Story = {
                 <td class="nds-border-b nds-py-2 nds-whitespace-nowrap" style="padding-inline: 0.75rem">{{ row.funcao }}</td>
                 <td class="nds-border-b nds-py-2 nds-whitespace-nowrap" style="padding-inline: 0.75rem">{{ row.depto }}</td>
                 <td class="nds-border-b nds-py-2 nds-whitespace-nowrap" style="padding-inline: 0.75rem">{{ row.loc }}</td>
-                <td class="nds-border-b nds-py-2 nds-whitespace-nowrap" style="padding-inline: 0.75rem">{{ row.inicio }}</td>
+                <td class="nds-border-b nds-py-2 nds-whitespace-nowrap" style="padding-inline: 0.75rem">{{ row.start }}</td>
                 <td class="nds-border-b nds-py-2 nds-whitespace-nowrap" style="padding-inline: 0.75rem">{{ row.status }}</td>
               </tr>
             </tbody>

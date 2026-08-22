@@ -30,7 +30,7 @@ import { cn } from '@/lib/utils';
 import { btnClass } from '@/components/ui/button';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 import { prefersReducedMotion } from '@/lib/motion';
-import { marcarSlideAtual } from '@shared/primitives/carousel-active-slide';
+import { marcarSlideCurrent } from '@shared/primitives/carousel-active-slide';
 import DOMPurify from 'dompurify';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -236,7 +236,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
     // O estado do slide atual anda junto com o das setas: os dois saem da mesma
     // pergunta ao motor, e separá-los abriria a janela em que a seta já sabe
     // que andou e a escala ainda não.
-    if (embla) marcarSlideAtual(embla.slideNodes(), embla.selectedScrollSnap());
+    if (embla) marcarSlideCurrent(embla.slideNodes(), embla.selectedScrollSnap());
   }
 
   // A origem é declarada por quem MANDA o motor andar, e lida quando ele avisa
@@ -282,7 +282,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
    * onde rolar e nasce travado, sem erro nenhum no console. Por isso a
    * inicialização espera a conexão em vez de acontecer no corpo da fábrica.
    */
-  let quadro: number | null = null;
+  let nextFrame: number | null = null;
 
   function startMotor(): void {
     if (embla || !root.isConnected) return;
@@ -314,7 +314,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
       startMotor();
       return;
     }
-    quadro = requestAnimationFrame(waitForConexao);
+    nextFrame = requestAnimationFrame(waitForConexao);
   }
 
   waitForConexao();
@@ -381,7 +381,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
   // animação — nada disso sai sozinho quando a raiz deixa a página. `destroy()`
   // é a forma única desta stack, e a raiz saindo do documento já o dispara.
   return tornarDestruivel(root, root, () => {
-    if (quadro !== null) cancelAnimationFrame(quadro);
+    if (nextFrame !== null) cancelAnimationFrame(nextFrame);
     suspenderAutoplay();
     embla?.destroy();
     embla = null;

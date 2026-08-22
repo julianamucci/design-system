@@ -162,8 +162,8 @@ export const Vertical: Story = {
     await expect(raiz).toHaveAttribute('data-orientation', 'vertical');
     await expect(lista).toHaveAttribute('aria-orientation', 'vertical');
     // Empilhadas: todas começam na mesma coluna.
-    const bordas = new Set(abas.map((a) => Math.round(a.getBoundingClientRect().left)));
-    await expect(bordas.size).toBe(1);
+    const borders = new Set(abas.map((a) => Math.round(a.getBoundingClientRect().left)));
+    await expect(borders.size).toBe(1);
     // O painel fica AO LADO da lista, não abaixo dela.
     await expect(painel.getBoundingClientRect().left)
       .toBeGreaterThanOrEqual(lista.getBoundingClientRect().right);

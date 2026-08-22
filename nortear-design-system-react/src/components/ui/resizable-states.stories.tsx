@@ -36,9 +36,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const boxStyle: React.CSSProperties = { width: 520, height: 240 };
-const ROTULO = "Redimensionar painéis — use setas para ajustar";
+const LABEL = "Redimensionar painéis — use setas para ajustar";
 
-function contrastRatio(frente: string, fundo: string): number {
+function contrastRatio(frente: string, background: string): number {
   const luminancia = (cor: string): number => {
     const [r = 0, g = 0, b = 0] = cor.match(/[\d.]+/g)?.map(Number) ?? [];
     const canal = (c: number) => {
@@ -47,7 +47,7 @@ function contrastRatio(frente: string, fundo: string): number {
     };
     return 0.2126 * canal(r) + 0.7152 * canal(g) + 0.0722 * canal(b);
   };
-  const [a, b] = [luminancia(frente), luminancia(fundo)].sort((x, y) => y - x);
+  const [a, b] = [luminancia(frente), luminancia(background)].sort((x, y) => y - x);
   return (a + 0.05) / (b + 0.05);
 }
 
@@ -71,7 +71,7 @@ export const Dragging: Story = {
             Esquerda
           </div>
         </ResizablePanel>
-        <ResizableHandle withHandle aria-label={ROTULO} />
+        <ResizableHandle withHandle aria-label={LABEL} />
         <ResizablePanel defaultSize={50} minSize={10}>
           <div className="nds-cluster nds-bg-muted nds-p-4 nds-text-body" data-justify="center">
             Direita
@@ -82,7 +82,7 @@ export const Dragging: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole("separator", { name: ROTULO });
+    const punho = canvas.getByRole("separator", { name: LABEL });
     aoLayout.mockClear();
 
     await step("Arrastar o divisor ajusta os painéis em tempo real", async () => {
@@ -151,7 +151,7 @@ export const Limits: Story = {
             Limitado
           </div>
         </ResizablePanel>
-        <ResizableHandle aria-label={ROTULO} />
+        <ResizableHandle aria-label={LABEL} />
         <ResizablePanel defaultSize={50} minSize={30}>
           <div className="nds-cluster nds-bg-muted nds-p-4 nds-text-body" data-justify="center">
             Livre
@@ -162,7 +162,7 @@ export const Limits: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole("separator", { name: ROTULO });
+    const punho = canvas.getByRole("separator", { name: LABEL });
 
     // Cada passo leva o divisor a um EXTREMO absoluto antes de medir: assim a
     // rodada seguinte do painel Interactions parte de onde quiser e chega ao
@@ -208,7 +208,7 @@ export const Focus: Story = {
             Um
           </div>
         </ResizablePanel>
-        <ResizableHandle aria-label={ROTULO} />
+        <ResizableHandle aria-label={LABEL} />
         <ResizablePanel defaultSize={50} minSize={20}>
           <div className="nds-cluster nds-bg-muted nds-p-4 nds-text-body" data-justify="center">
             Dois
@@ -219,7 +219,7 @@ export const Focus: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole("separator", { name: ROTULO });
+    const punho = canvas.getByRole("separator", { name: LABEL });
     const primeiro = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-panel"]')!;
 
     await step("O Tab alcança o divisor", async () => {
@@ -261,7 +261,7 @@ export const Disabled: Story = {
             Fixo
           </div>
         </ResizablePanel>
-        <ResizableHandle disabled withHandle aria-label={ROTULO} />
+        <ResizableHandle disabled withHandle aria-label={LABEL} />
         <ResizablePanel defaultSize={50} minSize={20}>
           <div className="nds-cluster nds-bg-muted nds-p-4 nds-text-body" data-justify="center">
             Fixo
@@ -272,7 +272,7 @@ export const Disabled: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole("separator", { name: ROTULO });
+    const punho = canvas.getByRole("separator", { name: LABEL });
 
     await step("O divisor travado continua anunciado", async () => {
       await expect(punho).toHaveAttribute("aria-disabled", "true");

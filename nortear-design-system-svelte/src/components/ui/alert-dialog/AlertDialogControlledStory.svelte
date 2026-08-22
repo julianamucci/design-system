@@ -42,7 +42,7 @@
 
   let open = $state(false);
 
-  function aoMudar(valor: boolean) {
+  function onChange(valor: boolean) {
     open = valor;
     onOpenChange?.(valor);
   }
@@ -51,7 +51,7 @@
 <div class="nds-stack" data-spacing="sm">
   <Button variant="destructive" onclick={() => (open = true)}>{triggerLabel}</Button>
 
-  <AlertDialog bind:open onOpenChange={aoMudar}>
+  <AlertDialog bind:open onOpenChange={onChange}>
     <AlertDialogContent>
       <AlertDialogHeader>
         <AlertDialogTitle>{title}</AlertDialogTitle>

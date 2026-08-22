@@ -55,10 +55,10 @@ describe('chartSnippet', () => {
   });
 
   it('escolhe a forma do dado que a story exercita', () => {
-    const simples = chartSnippet({ dados: 'simples' });
-    expect(simples).toContain('data: acessosMensais');
-    expect(simples).toContain("{ label: 'Jan', value: 186 },");
-    expect(simples).not.toContain('xAxis');
+    const simple = chartSnippet({ dados: 'simples' });
+    expect(simple).toContain('data: acessosMensais');
+    expect(simple).toContain("{ label: 'Jan', value: 186 },");
+    expect(simple).not.toContain('xAxis');
 
     const multi = chartSnippet({ dados: 'multi' });
     expect(multi).toContain('xAxis: meses');

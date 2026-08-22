@@ -140,10 +140,10 @@
   </NavigationMenuList>
 </NavigationMenuRoot>`;
 
-  const codeHorizontal = `<NavigationMenuRoot orientation="horizontal" aria-label="Navegação principal">
+  const horizontalCode = `<NavigationMenuRoot orientation="horizontal" aria-label="Navegação principal">
   <NavigationMenuList>...</NavigationMenuList>
 </NavigationMenuRoot>`;
-  const codeVertical = `<NavigationMenuRoot orientation="vertical" aria-label="Navegação lateral">
+  const verticalCode = `<NavigationMenuRoot orientation="vertical" aria-label="Navegação lateral">
   <NavigationMenuList>...</NavigationMenuList>
 </NavigationMenuRoot>`;
 
@@ -414,8 +414,8 @@ interface NavigationMenuLinkProps {
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="navigation-menu"
     items={[
-      { name: $tStore('variants.items.horizontal'), description: stripHtml($tStore('variants.styles.horizontal')), code: codeHorizontal, preview: variantHorizontal },
-      { name: $tStore('variants.items.vertical'),   description: stripHtml($tStore('variants.styles.vertical')),   code: codeVertical,   preview: variantVertical   },
+      { name: $tStore('variants.items.horizontal'), description: stripHtml($tStore('variants.styles.horizontal')), code: horizontalCode, preview: variantHorizontal },
+      { name: $tStore('variants.items.vertical'),   description: stripHtml($tStore('variants.styles.vertical')),   code: verticalCode,   preview: variantVertical   },
       {
         name: $tStore('variants.items.linkSimples.name'),
         description: $tStore('variants.items.linkSimples.description'),

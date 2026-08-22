@@ -186,10 +186,10 @@ export const Range: Story = {
     await step('O intervalo marca extremos e miolo, sem buracos', async () => {
       // functional.item3 — a story existe para mostrar o miolo. Verificar só os
       // extremos passaria com o intervalo inteiro vazio no meio.
-      const dias = marcadas(canvasElement);
-      await expect(dias[0]).toBe('2026-04-10');
-      await expect(dias[dias.length - 1]).toBe('2026-04-18');
-      await expect(dias.length).toBe(9);
+      const days = marcadas(canvasElement);
+      await expect(days[0]).toBe('2026-04-10');
+      await expect(days[days.length - 1]).toBe('2026-04-18');
+      await expect(days.length).toBe(9);
     });
 
     await step('A ponta pesa e o miolo é faixa', async () => {
@@ -208,9 +208,9 @@ export const Range: Story = {
       // Reto por dentro, redondo por fora: é o que fecha a faixa nas pontas.
       await expect(parseFloat(ponta.borderTopLeftRadius)).toBeGreaterThan(0);
       await expect(parseFloat(ponta.borderTopRightRadius)).toBe(0);
-      const fim = getComputedStyle(dia('2026-04-18'));
-      await expect(parseFloat(fim.borderTopRightRadius)).toBeGreaterThan(0);
-      await expect(parseFloat(fim.borderTopLeftRadius)).toBe(0);
+      const end = getComputedStyle(dia('2026-04-18'));
+      await expect(parseFloat(end.borderTopRightRadius)).toBeGreaterThan(0);
+      await expect(parseFloat(end.borderTopLeftRadius)).toBe(0);
       await expect(parseFloat(miolo.borderTopLeftRadius)).toBe(0);
     });
 
@@ -222,11 +222,11 @@ export const Range: Story = {
       // `aria-pressed`, e `.dark .nds-button-ghost[aria-pressed="true"]` vencia o
       // fundo `--primary` por especificidade. O número do dia sumia — no escuro,
       // que o axe não vê.
-      const medidas = calendarMeasureContrast(canvasElement).filter(
+      const measurements = calendarMeasureContrast(canvasElement).filter(
         (m) => m.presente && (STATES_WITH_TEXT_LEGIVEL as readonly string[]).includes(m.estado),
       );
-      await expect(medidas.length).toBeGreaterThan(0);
-      const reprovadas = medidas.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);
+      await expect(measurements.length).toBeGreaterThan(0);
+      const reprovadas = measurements.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);
       await expect(reprovadas).toEqual([]);
     });
   },

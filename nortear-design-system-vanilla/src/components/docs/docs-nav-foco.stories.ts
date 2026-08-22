@@ -169,7 +169,7 @@ export const NavEventReportsTarget: Story = {
     try {
       const btn = canvasElement.querySelector<HTMLButtonElement>('.nds-docs-nav-button');
       await expect(btn).not.toBeNull();
-      const destino = btn!.getAttribute('data-track-id')!.split(':')[2];
+      const destination = btn!.getAttribute('data-track-id')!.split(':')[2];
 
       await userEvent.click(btn!);
 
@@ -177,7 +177,7 @@ export const NavEventReportsTarget: Story = {
       await expect(navEvents).toHaveLength(1);
 
       const params = navEvents[0][2];
-      await expect(params.section_id).toBe(destino);
+      await expect(params.section_id).toBe(destination);
       await expect(params.section_id).not.toBe('nav');
       await expect(params.component).toBeTruthy();
     } finally {

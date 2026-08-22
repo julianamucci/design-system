@@ -51,13 +51,13 @@ export function probeHost(legenda: string): HTMLElement {
  * falha diz `apos-saida=[document:keydown, document:click]` em vez de
  * "esperava [] e veio [Object, Object]".
  */
-export async function checkLimpeza(sonda: ProbeResult): Promise<void> {
-  await expect(sonda.hasDestroy).toBe(true);
-  await expect(sonda.descricao).toBe(
+export async function checkLimpeza(probe: ProbeResult): Promise<void> {
+  await expect(probe.hasDestroy).toBe(true);
+  await expect(probe.descricao).toBe(
     'apos-saida=[nenhum] apos-reprise=[nenhum] orfaos=0/0',
   );
-  await expect(sonda.leaveReagiuAfter).toBe(false);
-  await expect(sonda.idempotenceError).toBe(null);
+  await expect(probe.leaveReagiuAfter).toBe(false);
+  await expect(probe.idempotenceError).toBe(null);
 }
 
 export type ProbeResult = {
@@ -101,11 +101,11 @@ function esperar(ms: number): Promise<void> {
  * a limpeza. Se nunca zerar, devolve o que sobrou — a espera dá prazo, não
  * perdão.
  */
-async function countOrfaos(seletor: string | undefined, limite = 1200): Promise<number> {
+async function countOrfaos(seletor: string | undefined, limit = 1200): Promise<number> {
   if (!seletor) return 0;
-  const fim = Date.now() + limite;
+  const end = Date.now() + limit;
   let n = document.querySelectorAll(seletor).length;
-  while (n > 0 && Date.now() < fim) {
+  while (n > 0 && Date.now() < end) {
     await esperar(30);
     n = document.querySelectorAll(seletor).length;
   }

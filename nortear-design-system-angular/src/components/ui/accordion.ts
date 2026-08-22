@@ -114,20 +114,20 @@ export class NdsAccordion {
     const focado = alvo?.closest<HTMLButtonElement>('[data-slot="accordion-trigger"]');
     if (!focado) return;
 
-    const gatilhos = Array.from(
+    const triggers = Array.from(
       this.hostRef.nativeElement.querySelectorAll<HTMLButtonElement>(SELECTOR_TRIGGERS),
     );
-    const indice = gatilhos.indexOf(focado);
+    const indice = triggers.indexOf(focado);
     if (indice < 0) return;
 
     event.preventDefault();
-    const ultimo = gatilhos.length - 1;
+    const last = triggers.length - 1;
     const proximo =
-      event.key === 'ArrowDown' ? (indice + 1) % gatilhos.length
-      : event.key === 'ArrowUp' ? (indice - 1 + gatilhos.length) % gatilhos.length
+      event.key === 'ArrowDown' ? (indice + 1) % triggers.length
+      : event.key === 'ArrowUp' ? (indice - 1 + triggers.length) % triggers.length
       : event.key === 'Home' ? 0
-      : ultimo;
-    gatilhos[proximo]?.focus();
+      : last;
+    triggers[proximo]?.focus();
   }
 }
 

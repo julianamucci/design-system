@@ -490,7 +490,7 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     // A descrição mora em `props.table.<prop>` como STRING SOLTA, e não num
     // objeto com campo `description` — a forma varia de componente para
     // componente no conteúdo compartilhado, e `t()` devolve a própria chave
@@ -500,7 +500,7 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
       name,
       type: tipo,
       defaultValue: padrao,
-      required: nao,
+      required: not,
       description: toPlainText(valueOuField(`props.table.${chave}`, 'description')),
     });
 

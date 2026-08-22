@@ -438,25 +438,25 @@ export const WithSearch: Story = {
   render: () => <SidebarWithSearch />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const busca = () => canvas.getByRole("searchbox", { name: "Buscar na navegação" });
+    const search = () => canvas.getByRole("searchbox", { name: "Buscar na navegação" });
 
     await step("O campo de busca tem nome — o placeholder some ao digitar", async () => {
-      await expect(busca()).toHaveAttribute("data-slot", "sidebar-input");
-      await expect(busca().closest("[data-slot='sidebar-header']")).not.toBeNull();
+      await expect(search()).toHaveAttribute("data-slot", "sidebar-input");
+      await expect(search().closest("[data-slot='sidebar-header']")).not.toBeNull();
     });
 
     await step("Digitar filtra os itens, e o rótulo do grupo conta quantos sobraram", async () => {
       // Par idempotente: digita, confere, limpa e confere o estado de entrada.
-      await userEvent.clear(busca());
+      await userEvent.clear(search());
       await expect(canvasElement.querySelectorAll("[data-slot='sidebar-menu-item']").length).toBe(6);
 
-      await userEvent.type(busca(), "tok");
+      await userEvent.type(search(), "tok");
       await waitFor(async () => {
         await expect(canvasElement.querySelectorAll("[data-slot='sidebar-menu-item']").length).toBe(1);
       });
       await expect(canvas.getByText("Resultados (1)")).toBeInTheDocument();
 
-      await userEvent.clear(busca());
+      await userEvent.clear(search());
       await waitFor(async () => {
         await expect(canvasElement.querySelectorAll("[data-slot='sidebar-menu-item']").length).toBe(6);
       });

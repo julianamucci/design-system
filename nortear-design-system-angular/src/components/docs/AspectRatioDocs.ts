@@ -450,16 +450,16 @@ export class NdsAspectRatioDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     return [
       {
         title: 'NdsAspectRatio',
         cols,
         items: [
-          { name: 'ratio',   type: 'number', defaultValue: '1', required: nao, description: toPlainText(t('props.table.ratio')) },
-          { name: 'class',   type: 'string', defaultValue: '—', required: nao, description: toPlainText(t('props.table.className')) },
-          { name: '(conteúdo)', type: 'HTML', defaultValue: '—', required: nao, description: toPlainText(t('props.table.children')) },
-          { name: 'asChild', type: '—',      defaultValue: '—', required: nao, description: toPlainText(t('props.table.asChild')) },
+          { name: 'ratio',   type: 'number', defaultValue: '1', required: not, description: toPlainText(t('props.table.ratio')) },
+          { name: 'class',   type: 'string', defaultValue: '—', required: not, description: toPlainText(t('props.table.className')) },
+          { name: '(conteúdo)', type: 'HTML', defaultValue: '—', required: not, description: toPlainText(t('props.table.children')) },
+          { name: 'asChild', type: '—',      defaultValue: '—', required: not, description: toPlainText(t('props.table.asChild')) },
         ],
       },
     ];

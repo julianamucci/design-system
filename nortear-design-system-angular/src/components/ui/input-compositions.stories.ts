@@ -76,15 +76,15 @@ export const Alignments: Story = {
     await step('O addon fica DO LADO que o nome promete', async () => {
       // Afirma o pixel, não o atributo: quem posiciona é a propriedade `order`
       // no CSS, e um data-align no elemento errado passaria despercebido.
-      const inicio = canvasElement.querySelector<HTMLElement>('[data-testid="addon-inicio"]')!;
+      const start = canvasElement.querySelector<HTMLElement>('[data-testid="addon-inicio"]')!;
       const fieldStart = canvasElement.querySelector<HTMLElement>('#ig-inicio')!;
-      await expect(inicio.getBoundingClientRect().left).toBeLessThan(
+      await expect(start.getBoundingClientRect().left).toBeLessThan(
         fieldStart.getBoundingClientRect().left,
       );
 
-      const fim = canvasElement.querySelector<HTMLElement>('[data-testid="addon-fim"]')!;
+      const end = canvasElement.querySelector<HTMLElement>('[data-testid="addon-fim"]')!;
       const fieldEnd = canvasElement.querySelector<HTMLElement>('#ig-fim')!;
-      await expect(fim.getBoundingClientRect().left).toBeGreaterThan(
+      await expect(end.getBoundingClientRect().left).toBeGreaterThan(
         fieldEnd.getBoundingClientRect().left,
       );
     });
@@ -148,8 +148,8 @@ export const AddonClick: Story = {
     await step('Clicar no BOTÃO dentro do addon não rouba o foco dele', async () => {
       // Sem esta distinção, apertar "Limpar" devolveria o foco ao campo no meio
       // da ação — e quem navega por teclado perderia o lugar.
-      const botao = canvas.getByRole('button', { name: 'Limpar' });
-      await userEvent.click(botao);
+      const button = canvas.getByRole('button', { name: 'Limpar' });
+      await userEvent.click(button);
       await expect(document.activeElement).not.toBe(campo());
     });
   },

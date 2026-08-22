@@ -63,7 +63,7 @@ export function alertDialogSnippet(o: AlertDialogSnippetOptions = {}): string {
     importing('button', 'createButton'),
   ];
 
-  const botoes = [
+  const buttons = [
     `const trigger = createButton({ variant: ${texto(triggerVariant)}, label: ${texto(o.triggerLabel ?? DEFAULTS.triggerLabel)} });`,
     `const cancelButton = createButton({ variant: 'outline', label: ${texto(o.cancelLabel ?? DEFAULTS.cancelLabel)} });`,
     `const actionButton = createButton({ variant: ${texto(actionVariant)}, label: ${texto(o.actionLabel ?? DEFAULTS.actionLabel)} });`,
@@ -97,7 +97,7 @@ media.appendChild(createAlertIcon('warning'));`
 
   return snippet(
     imports.join('\n'),
-    botoes,
+    buttons,
     media,
     `const dialog = ${chamada('createAlertDialog', linhas)};`,
     montar('dialog'),

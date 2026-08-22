@@ -46,7 +46,7 @@ type Story = StoryObj<typeof meta>;
 // não têm args próprios), então o espião não teria onde aparecer no painel.
 // Toda asserção sobre ele é relativa à contagem do início do passo, para
 // sobreviver ao replay, que reexecuta a play no mesmo DOM.
-const aoEscolher = fn();
+const onChoose = fn();
 
 // ─── Sem resultados ───────────────────────────────────────────────────────────
 
@@ -124,11 +124,11 @@ export const ItemDisabled: Story = {
         <CommandList>
           <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
           <CommandGroup heading="Arquivo">
-            <CommandItem value="novo" onSelect={aoEscolher}>Novo</CommandItem>
-            <CommandItem value="arquivar" disabled onSelect={aoEscolher}>
+            <CommandItem value="novo" onSelect={onChoose}>Novo</CommandItem>
+            <CommandItem value="arquivar" disabled onSelect={onChoose}>
               Arquivar
             </CommandItem>
-            <CommandItem value="renomear" onSelect={aoEscolher}>Renomear</CommandItem>
+            <CommandItem value="renomear" onSelect={onChoose}>Renomear</CommandItem>
           </CommandGroup>
         </CommandList>
       </Command>
@@ -161,11 +161,11 @@ export const ItemDisabled: Story = {
     });
 
     await step("Clicar não executa o comando", async () => {
-      const antes = aoEscolher.mock.calls.length;
+      const antes = onChoose.mock.calls.length;
       // `pointerEventsCheck: 0` porque a folha bloqueia o ponteiro: sem isso o
       // user-event recusa o clique antes de o componente ter chance de errar.
       await userEvent.click(arquivar, { pointerEventsCheck: 0 });
-      await expect(aoEscolher.mock.calls.length).toBe(antes);
+      await expect(onChoose.mock.calls.length).toBe(antes);
     });
 
     await step("As setas pulam o comando desabilitado", async () => {
@@ -186,12 +186,12 @@ export const ItemDisabled: Story = {
     });
 
     await step("Enter no comando seguinte executa normalmente", async () => {
-      const antes = aoEscolher.mock.calls.length;
+      const antes = onChoose.mock.calls.length;
       await userEvent.keyboard("{Enter}");
       await waitFor(async () => {
-        await expect(aoEscolher.mock.calls.length).toBe(antes + 1);
+        await expect(onChoose.mock.calls.length).toBe(antes + 1);
       });
-      await expect(aoEscolher.mock.calls[antes][0]).toBe("renomear");
+      await expect(onChoose.mock.calls[antes][0]).toBe("renomear");
     });
   },
 };

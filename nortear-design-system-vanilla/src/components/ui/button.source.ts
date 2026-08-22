@@ -66,8 +66,8 @@ export function buttonSnippet(o: ButtonSnippetOptions = {}): string {
     ['onClick', onClick],
   ]);
 
-  const nomes = ['createButton'];
-  if (o.icon) nomes.push('createButtonIcon');
+  const names = ['createButton'];
+  if (o.icon) names.push('createButtonIcon');
 
   const icone = o.icon
     ? `createButtonIcon(${texto(o.icon)}${o.iconSpin ? ', { spin: true }' : ''})`
@@ -92,7 +92,7 @@ rotulo.textContent = ${texto(o.label!)};`
       : undefined;
 
   return snippet(
-    importing('button', ...nomes),
+    importing('button', ...names),
     o.children
       ? '// Conteúdo em HTML é sanitizado antes de chegar ao DOM: a marcação\n// segura sobrevive e o vetor de execução é removido.'
       : undefined,
@@ -111,20 +111,20 @@ rotulo.textContent = ${texto(o.label!)};`
  * story só de ícone o sobrepõe com `label: undefined` e o snippet sai sem a
  * opção, como a fábrica a recebe.
  */
-const PADRAO: ButtonSnippetOptions = { label: 'Salvar' };
+const DEFAULT: ButtonSnippetOptions = { label: 'Salvar' };
 
 /**
  * Transform do `meta` — vale para todas as stories do arquivo. Lê os controls
  * do Playground; nas stories sem args cai no botão canônico.
  */
 export const buttonSource: SourceTransform<ButtonSnippetOptions> = (_gerado, ctx) =>
-  buttonSnippet({ ...PADRAO, ...ctx.args });
+  buttonSnippet({ ...DEFAULT, ...ctx.args });
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
 export function buttonSourceWith(
   fixas: ButtonSnippetOptions,
 ): SourceTransform<ButtonSnippetOptions> {
-  return (_gerado, ctx) => buttonSnippet({ ...PADRAO, ...ctx.args, ...fixas });
+  return (_gerado, ctx) => buttonSnippet({ ...DEFAULT, ...ctx.args, ...fixas });
 }
 
 /** Tamanhos em que o botão não tem texto: o ícone é o conteúdo inteiro. */
@@ -139,7 +139,7 @@ const ICON_SIZES: ReadonlySet<string> = new Set(['icon', 'icon-sm', 'icon-lg']);
  * visível — e é o `aria-label` que a fábrica exige ali.
  */
 export const buttonPlaygroundSource: SourceTransform<ButtonSnippetOptions> = (_gerado, ctx) => {
-  const args = { ...PADRAO, ...ctx.args };
+  const args = { ...DEFAULT, ...ctx.args };
   if (!ICON_SIZES.has(String(args.size))) return buttonSnippet(args);
   return buttonSnippet({
     ...args,

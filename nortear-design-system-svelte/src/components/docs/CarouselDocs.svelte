@@ -169,7 +169,7 @@
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";`;
 
-  const codeHorizontal = `<Carousel aria-label="Galeria de exemplos">
+  const horizontalCode = `<Carousel aria-label="Galeria de exemplos">
   <CarouselContent>
     <CarouselItem>...</CarouselItem>
     <CarouselItem>...</CarouselItem>
@@ -179,7 +179,7 @@ import Autoplay from "embla-carousel-autoplay";`;
   <CarouselNext aria-label="Próximo item" />
 </Carousel>`;
 
-  const codeVertical = `<Carousel orientation="vertical" class="nds-w-full nds-max-w-xs" aria-label="Galeria vertical">
+  const verticalCode = `<Carousel orientation="vertical" class="nds-w-full nds-max-w-xs" aria-label="Galeria vertical">
   <CarouselContent style="height: 200px">
     <CarouselItem>...</CarouselItem>
     <CarouselItem>...</CarouselItem>
@@ -563,8 +563,8 @@ interface CarouselNavProps extends ButtonProps {
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="carousel"
     items={[
-      { name: 'horizontal', description: stripHtml($tStore('variants.items.horizontal')), code: codeHorizontal, preview: variantHorizontal },
-      { name: 'vertical',   description: stripHtml($tStore('variants.items.vertical')),   code: codeVertical,   preview: variantVertical   },
+      { name: 'horizontal', description: stripHtml($tStore('variants.items.horizontal')), code: horizontalCode, preview: variantHorizontal },
+      { name: 'vertical',   description: stripHtml($tStore('variants.items.vertical')),   code: verticalCode,   preview: variantVertical   },
       { name: 'single',     description: stripHtml($tStore('variants.items.single')),     code: codeSingle,     preview: variantSingle     },
       { name: 'multi',      description: stripHtml($tStore('variants.items.multi')),      code: codeMulti,      preview: variantMulti      },
       {

@@ -60,9 +60,9 @@ export const WithHelpText: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('A ajuda é lida junto com o campo', async () => {
-      const descrito = campo(canvasElement).getAttribute('aria-describedby');
-      await expect(descrito).toBeTruthy();
-      await expect(canvasElement.querySelector(`#${descrito}`)?.textContent).toContain('SMS');
+      const described = campo(canvasElement).getAttribute('aria-describedby');
+      await expect(described).toBeTruthy();
+      await expect(canvasElement.querySelector(`#${described}`)?.textContent).toContain('SMS');
     });
   },
 };
@@ -81,8 +81,8 @@ export const WithErrorMessage: Story = {
     await step('Causa e ação corretiva chegam pelo mesmo caminho do erro', async () => {
       const input = campo(canvasElement);
       await expect(input).toHaveAttribute('aria-invalid', 'true');
-      const descrito = input.getAttribute('aria-describedby');
-      await expect(canvasElement.querySelector(`#${descrito}`)?.textContent).toContain(
+      const described = input.getAttribute('aria-describedby');
+      await expect(canvasElement.querySelector(`#${described}`)?.textContent).toContain(
         'tente novamente',
       );
     });

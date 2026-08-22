@@ -62,14 +62,14 @@ ${corpo}
  * "480/500" lido em voz alta não diz o que é — e sem a região viva quem não vê
  * a tela só descobre o limite quando o campo para de aceitar texto.
  */
-function contador(dica: string, limite: number): string {
+function contador(dica: string, limit: number): string {
   return `  <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
     <span>${dica}</span>
     <span
       aria-live="polite"
-      aria-label={\`\${valor.length} de ${limite} caracteres usados\`}
+      aria-label={\`\${valor.length} de ${limit} caracteres usados\`}
     >
-      {valor.length}/${limite}
+      {valor.length}/${limit}
     </span>
   </div>`;
 }
@@ -102,20 +102,20 @@ const IMPORTS_CONTROLLED = headerControlled();
  */
 export const textareaSource: SourceTransform<TextareaArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const limite = typeof args.maxLength === 'number' && args.maxLength > 0 ? args.maxLength : undefined;
+  const limit = typeof args.maxLength === 'number' && args.maxLength > 0 ? args.maxLength : undefined;
   const comuns = [
     propText('placeholder', args.placeholder) ??
       'placeholder="ex: Descreva o produto em até 500 caracteres..."',
     propBool('disabled', args.disabled),
     propBool('readOnly', args.readOnly),
-    limite === undefined ? undefined : propNumber('maxLength', limite),
+    limit === undefined ? undefined : propNumber('maxLength', limit),
     typeof args.rows === 'number' && args.rows !== LINES_DEFAULT
       ? propNumber('rows', args.rows)
       : undefined,
     CLASSES,
   ];
 
-  if (limite === undefined) {
+  if (limit === undefined) {
     return jsxSnippet(IMPORTS, bloco('Descrição', 'descricao', campo(['id="descricao"', ...comuns])));
   }
 
@@ -130,7 +130,7 @@ export const textareaSource: SourceTransform<TextareaArgs> = (_gerado, ctx) => {
         'onChange={(e) => setValor(e.target.value)}',
         ...comuns,
       ])}
-${contador('Descreva o produto com clareza.', limite)}`,
+${contador('Descreva o produto com clareza.', limit)}`,
     ),
   );
 };

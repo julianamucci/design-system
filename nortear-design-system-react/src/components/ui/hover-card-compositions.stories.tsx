@@ -54,7 +54,7 @@ const paragrafo: React.CSSProperties = {
   maxWidth: "24rem",
 };
 
-const CLASSES_GATILHO_BOTAO =
+const CLASSES_TRIGGER_BUTTON =
   "nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0";
 
 export const UserProfile: Story = {
@@ -187,7 +187,7 @@ export const TermDefinition: Story = {
       Todo componente do sistema atende{" "}
       <HoverCard defaultOpen>
         <HoverCardTrigger asChild>
-          <button type="button" className={CLASSES_GATILHO_BOTAO}>
+          <button type="button" className={CLASSES_TRIGGER_BUTTON}>
             WCAG 2.2 AA
           </button>
         </HoverCardTrigger>
@@ -241,7 +241,7 @@ export const ExplainedMetric: Story = {
       A página inicial fechou o mês em{" "}
       <HoverCard defaultOpen>
         <HoverCardTrigger asChild>
-          <button type="button" className={CLASSES_GATILHO_BOTAO}>
+          <button type="button" className={CLASSES_TRIGGER_BUTTON}>
             LCP 1.8s
           </button>
         </HoverCardTrigger>
@@ -303,12 +303,12 @@ export const Sides: Story = {
           Abre{" "}
           <HoverCard defaultOpen>
             <HoverCardTrigger asChild>
-              <button type="button" className={CLASSES_GATILHO_BOTAO}>
+              <button type="button" className={CLASSES_TRIGGER_BUTTON}>
                 {rotulo}
               </button>
             </HoverCardTrigger>
             <HoverCardContent side={lado} aria-label={`Cartão ${rotulo} do gatilho`}>
-              <p className="nds-text-caption">Lado preferido: {rotulo}.</p>
+              <p className="nds-text-caption">Side preferido: {rotulo}.</p>
             </HoverCardContent>
           </HoverCard>{" "}
           do gatilho.

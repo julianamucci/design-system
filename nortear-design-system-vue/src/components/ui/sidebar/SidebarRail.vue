@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
-import { ROTULOS_SIDEBAR_PADRAO } from '@shared/primitives/sidebar-a11y-labels'
+import { LABELS_SIDEBAR_DEFAULT } from '@shared/primitives/sidebar-a11y-labels'
 import { useSidebar } from './utils'
 
 const props = defineProps<{
   class?: HTMLAttributes['class']
 }>()
 
-const titleDefault = ROTULOS_SIDEBAR_PADRAO.alternar
+const titleDefault = LABELS_SIDEBAR_DEFAULT.alternar
 
 const { toggleSidebar } = useSidebar()
 </script>

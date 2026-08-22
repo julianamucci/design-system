@@ -97,9 +97,9 @@ export const Playground: Story = {
     await step("A altura nasce do respiro, não de um valor cravado", async () => {
       // WCAG 1.4.4: `height` fixa impede o campo de crescer com a fonte do
       // navegador. A tabela de tokens já ensinou `--height-default` por engano.
-      const medida = heightResultante(fieldOf(canvasElement)!);
-      await expect(medida.alturaCravada).toBe(false);
-      await expect(medida.heightCss).not.toBe("0px");
+      const measurement = heightResultante(fieldOf(canvasElement)!);
+      await expect(measurement.alturaCravada).toBe(false);
+      await expect(measurement.heightCss).not.toBe("0px");
     });
 
     await step("Digitar atualiza o valor (functional.item6)", async () => {

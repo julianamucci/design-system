@@ -424,7 +424,7 @@ export class NdsLabelDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     // Nenhuma linha é input: as três descrevem atributo nativo do <label>.
     // O tipo diz "atributo HTML" em vez de um tipo TypeScript que não existe.
     return [
@@ -435,9 +435,9 @@ export class NdsLabelDocs implements AfterViewInit, OnDestroy {
           // toPlainText mesmo com override: a célula é textNode e o VALOR
           // COMPARTILHADO destas chaves tem markup. Sem a guarda, remover o
           // override um dia faria a tag aparecer literal na tabela.
-          { name: 'for',        type: 'string', defaultValue: '—', required: nao, description: toPlainText(t('props.table.htmlFor')) },
-          { name: 'class',      type: 'string', defaultValue: '—', required: nao, description: toPlainText(t('props.table.className')) },
-          { name: '(conteúdo)', type: 'HTML',   defaultValue: '—', required: nao, description: toPlainText(t('props.table.children')) },
+          { name: 'for',        type: 'string', defaultValue: '—', required: not, description: toPlainText(t('props.table.htmlFor')) },
+          { name: 'class',      type: 'string', defaultValue: '—', required: not, description: toPlainText(t('props.table.className')) },
+          { name: '(conteúdo)', type: 'HTML',   defaultValue: '—', required: not, description: toPlainText(t('props.table.children')) },
         ],
       },
     ];

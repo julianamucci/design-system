@@ -249,10 +249,10 @@ export const Mobile: Story = {
       await expect(dialogo.getAttribute('aria-modal')).toBe('true');
       // Sem nome, o anúncio é "diálogo" e mais nada. O par título/descrição é
       // sr-only: existe para quem ouve, não para quem vê.
-      const rotuladoPor = dialogo.getAttribute('aria-labelledby');
-      await expect(rotuladoPor).toBeTruthy();
+      const labelledBy = dialogo.getAttribute('aria-labelledby');
+      await expect(labelledBy).toBeTruthy();
       // Nome em português por padrão: era "Sidebar", cravado no componente.
-      await expect(document.getElementById(rotuladoPor!)?.textContent?.trim()).toBe('Barra lateral');
+      await expect(document.getElementById(labelledBy!)?.textContent?.trim()).toBe('Barra lateral');
     });
 
     await step('A navegação inteira mudou de lugar junto com a gaveta', async () => {

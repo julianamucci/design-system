@@ -69,7 +69,7 @@ import { Button } from "@/components/ui/button";`;
  * `aria-labelledby`/`aria-describedby` aos ids deles, e é daí que sai o nome
  * acessível do painel modal. Sem eles o diálogo abre anônimo.
  */
-function cabecalho(titulo: string, descricao: string): string {
+function header(titulo: string, descricao: string): string {
   return `<DrawerHeader>
   <DrawerTitle>${titulo}</DrawerTitle>
   <DrawerDescription>${descricao}</DrawerDescription>
@@ -112,7 +112,7 @@ export const drawerSource: SourceTransform<DrawerArgs> = (_gerado, ctx) => {
   ]);
 
   const miolo = [
-    cabecalho('Editar perfil', 'Atualize seus dados pessoais e foto.'),
+    header('Editar perfil', 'Atualize seus dados pessoais e foto.'),
     `<DrawerBody className="nds-text-body nds-text-muted-foreground">
   Conteúdo do drawer.
 </DrawerBody>`,
@@ -134,7 +134,7 @@ function directionPanel(
   descricao: string,
 ): string {
   const miolo = [
-    cabecalho(titulo, descricao),
+    header(titulo, descricao),
     `<DrawerBody className="nds-text-body nds-text-muted-foreground">
   Conteúdo do painel.
 </DrawerBody>`,
@@ -175,7 +175,7 @@ export function drawerDireitaSource(): string {
  */
 export function drawerOpenSource(): string {
   const miolo = [
-    cabecalho('Editar perfil', 'Atualize seus dados.'),
+    header('Editar perfil', 'Atualize seus dados.'),
     `<DrawerFooter>
   <DrawerClose asChild>
     <Button variant="outline">Cancelar</Button>
@@ -245,7 +245,7 @@ import { Button } from "@/components/ui/button";`,
  */
 export function drawerNotDispensavelSource(): string {
   const miolo = [
-    cabecalho('Confirmação obrigatória', 'Use o botão Confirmar para prosseguir.'),
+    header('Confirmação obrigatória', 'Use o botão Confirmar para prosseguir.'),
     `<DrawerFooter>
   <DrawerClose asChild>
     <Button>Confirmar e fechar</Button>
@@ -263,7 +263,7 @@ export function drawerNotDispensavelSource(): string {
  */
 export function drawerWithFormSource(): string {
   const miolo = [
-    cabecalho('Editar perfil', 'Atualize seu nome e e-mail.'),
+    header('Editar perfil', 'Atualize seu nome e e-mail.'),
     `<DrawerBody>
   <form className="nds-grid" data-spacing="sm">
     <div className="nds-grid" data-spacing="xs">
@@ -299,7 +299,7 @@ import { Label } from "@/components/ui/label";`,
  */
 export function drawerWithConfirmSource(): string {
   const miolo = [
-    cabecalho(
+    header(
       'Remover anexo?',
       'O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.',
     ),
@@ -323,7 +323,7 @@ export function drawerWithConfirmSource(): string {
  */
 export function drawerWithScrollSource(): string {
   const miolo = [
-    cabecalho('Lista de itens', '30 itens — role o conteúdo para ver mais.'),
+    header('Lista de itens', '30 itens — role o conteúdo para ver mais.'),
     `<DrawerBody className="nds-text-body">
   <ul className="nds-stack" data-spacing="sm">
     {Array.from({ length: 30 }, (_, i) => (

@@ -69,8 +69,8 @@ export const Filling: Story = {
       // do colhedor compartilhado — a cópia local que morava aqui era o começo
       // de um segundo colhedor com as mesmas armadilhas para redescobrir.
       const cs = getComputedStyle(slotsDe(canvasElement)[0]);
-      const medida = ratio(cs.color, cs.backgroundColor);
-      await expect(medida?.ratio ?? 0).toBeGreaterThanOrEqual(4.5);
+      const measurement = ratio(cs.color, cs.backgroundColor);
+      await expect(measurement?.ratio ?? 0).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
@@ -165,16 +165,16 @@ export const Invalid: Story = {
   play: async ({ canvasElement, step }) => {
     // Escopado ao componente com erro: a story renderiza uma segunda instância
     // sem erro para a comparação de borda, e `canvasElement` pegaria as duas.
-    const comErro = () => canvasElement.querySelector<HTMLElement>('[data-testid="com-erro"]')!;
+    const withError = () => canvasElement.querySelector<HTMLElement>('[data-testid="com-erro"]')!;
 
     await step('O erro é anunciado por ARIA, não só pela borda', async () => {
-      const slots = slotsDe(comErro());
+      const slots = slotsDe(withError());
       await expect(slots.length).toBe(6);
       for (const slot of slots) await expect(slot).toHaveAttribute('aria-invalid', 'true');
     });
 
     await step('A mensagem de erro está ligada ao campo', async () => {
-      const slot = slotsDe(comErro())[0];
+      const slot = slotsDe(withError())[0];
       const id = slot.getAttribute('aria-describedby');
       await expect(id).toBe('est-erro-msg');
       await expect(canvasElement.querySelector(`#${id}`)).toBeTruthy();
@@ -186,7 +186,7 @@ export const Invalid: Story = {
       // componente Angular é desfeito na próxima detecção de mudanças, e a
       // comparação acabava lendo o mesmo estado dos dois lados — um teste que
       // não podia falhar.
-      const borderWithError = getComputedStyle(slotsDe(comErro())[0]).borderTopColor;
+      const borderWithError = getComputedStyle(slotsDe(withError())[0]).borderTopColor;
       const borderNoError = getComputedStyle(
         slotsDe(canvasElement.querySelector<HTMLElement>('[data-testid="sem-erro"]')!)[0],
       ).borderTopColor;

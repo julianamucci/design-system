@@ -42,14 +42,14 @@ type Item = {
   variante?: string;
 };
 
-const ALINHAMENTO: Item[] = [
+const ALIGNMENT: Item[] = [
   { valor: 'left', rotulo: 'Alinhar à esquerda', icone: 'AlignLeft' },
   { valor: 'center', rotulo: 'Centralizar', icone: 'AlignCenter' },
   { valor: 'right', rotulo: 'Alinhar à direita', icone: 'AlignRight' },
 ];
 
 const ALIGNMENT_WITH_JUSTIFICAR: Item[] = [
-  ...ALINHAMENTO,
+  ...ALIGNMENT,
   { valor: 'justify', rotulo: 'Justificar', icone: 'AlignJustify' },
 ];
 
@@ -75,8 +75,8 @@ function sizeAlignment(sufixo: string): Item[] {
 
 /** Importa da biblioteca de ícones só o que a composição usa, sem repetir. */
 function importIcons(...listas: Item[][]): string {
-  const nomes = [...new Set(listas.flat().map((item) => item.icone))];
-  return `import { ${nomes.join(', ')} } from 'lucide-vue-next'`;
+  const names = [...new Set(listas.flat().map((item) => item.icone))];
+  return `import { ${names.join(', ')} } from 'lucide-vue-next'`;
 }
 
 /** Bloco `<script setup>` completo: o componente e os ícones da composição. */
@@ -128,7 +128,7 @@ export const toggleGroupSource: SourceTransform<ToggleGroupArgs> = (_gerado, ctx
   const args = ctx?.args ?? {};
   const modo = asCode(args.type) === 'multiple' ? 'multiple' : 'single';
   return vueSnippet(
-    script(ALINHAMENTO),
+    script(ALIGNMENT),
     grupo({
       raiz: [
         `type="${modo}"`,
@@ -139,7 +139,7 @@ export const toggleGroupSource: SourceTransform<ToggleGroupArgs> = (_gerado, ctx
         attrBool('disabled', args.disabled, false),
         'aria-label="Alinhamento do texto"',
       ],
-      itens: ALINHAMENTO,
+      itens: ALIGNMENT,
     }),
   );
 };
@@ -147,10 +147,10 @@ export const toggleGroupSource: SourceTransform<ToggleGroupArgs> = (_gerado, ctx
 /** Escolha exclusiva: um valor só, e o item inicial vem de `default-value`. */
 export function toggleGroupSingleSource(): string {
   return vueSnippet(
-    script(ALINHAMENTO),
+    script(ALIGNMENT),
     grupo({
       raiz: ['type="single"', 'default-value="center"', 'aria-label="Alinhamento do texto"'],
-      itens: ALINHAMENTO,
+      itens: ALIGNMENT,
     }),
   );
 }
@@ -196,10 +196,10 @@ export function toggleGroupVerticalSource(): string {
 /** Estado de partida: nenhum item selecionado, nenhum valor inicial. */
 export function toggleGroupDefaultSource(): string {
   return vueSnippet(
-    script(ALINHAMENTO),
+    script(ALIGNMENT),
     grupo({
       raiz: ['type="single"', 'aria-label="Alinhamento do texto"'],
-      itens: ALINHAMENTO,
+      itens: ALIGNMENT,
     }),
   );
 }
@@ -215,10 +215,10 @@ export function toggleGroupSelectedSource(): string {
 /** Grupo inteiro desabilitado: a prop mora na raiz e desce para todos. */
 export function toggleGroupDisabledSource(): string {
   return vueSnippet(
-    script(ALINHAMENTO),
+    script(ALIGNMENT),
     grupo({
       raiz: ['type="single"', 'disabled', 'aria-label="Alinhamento do texto"'],
-      itens: ALINHAMENTO,
+      itens: ALIGNMENT,
     }),
   );
 }
@@ -226,10 +226,10 @@ export function toggleGroupDisabledSource(): string {
 /** Um item só fora de alcance: aqui a prop mora no ITEM, e o grupo segue vivo. */
 export function toggleGroupItemDisabledSource(): string {
   return vueSnippet(
-    script(ALINHAMENTO),
+    script(ALIGNMENT),
     grupo({
       raiz: ['type="single"', 'aria-label="Alinhamento do texto"'],
-      itens: ALINHAMENTO.map((item) =>
+      itens: ALIGNMENT.map((item) =>
         item.valor === 'center' ? { ...item, desabilitado: true } : item,
       ),
     }),
@@ -303,7 +303,7 @@ export function toggleGroupSizesSource(): string {
     )
     .join('\n');
   return vueSnippet(
-    script(ALINHAMENTO),
+    script(ALIGNMENT),
     `<div class="nds-stack" data-spacing="sm">
 ${grupos}
 </div>`,

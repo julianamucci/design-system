@@ -23,7 +23,7 @@ function caixa(el: HTMLElement | null) {
   return {
     altura: Math.round(r.height),
     padding: cs.padding,
-    fundo: cs.backgroundColor,
+    background: cs.backgroundColor,
     cor: cs.color,
     pesoDaFonte: cs.fontWeight,
     tamanhoDaFonte: cs.fontSize,
@@ -44,8 +44,8 @@ function backgroundEffective(el: HTMLElement): string {
 }
 
 export function measureAccordion(raiz: HTMLElement) {
-  const gatilhos = Array.from(raiz.querySelectorAll<HTMLElement>('.nds-accordion-trigger'));
-  const primeiro = gatilhos[0] ?? null;
+  const triggers = Array.from(raiz.querySelectorAll<HTMLElement>('.nds-accordion-trigger'));
+  const primeiro = triggers[0] ?? null;
   const conteudos = Array.from(raiz.querySelectorAll<HTMLElement>('.nds-accordion-content'));
   const itens = Array.from(raiz.querySelectorAll<HTMLElement>('.nds-accordion-item'));
   const chevron = primeiro?.querySelector<HTMLElement>('svg') ?? null;
@@ -54,14 +54,14 @@ export function measureAccordion(raiz: HTMLElement) {
   // promessa, altura é entrega.
   const abertos = conteudos.filter((c) => c.getBoundingClientRect().height > 0).length;
 
-  const fundo = primeiro ? backgroundEffective(primeiro) : 'rgb(255, 255, 255)';
+  const background = primeiro ? backgroundEffective(primeiro) : 'rgb(255, 255, 255)';
 
   return {
-    finding: gatilhos.length > 0,
+    finding: triggers.length > 0,
     estrutura: {
       raiz: raiz.querySelector('.nds-accordion') ? '.nds-accordion' : null,
       itens: itens.length,
-      gatilhos: gatilhos.length,
+      triggers: triggers.length,
       conteudos: conteudos.length,
       abertos,
       /**
@@ -85,7 +85,7 @@ export function measureAccordion(raiz: HTMLElement) {
       expandido: primeiro?.getAttribute('aria-expanded') ?? null,
       controla: primeiro?.getAttribute('aria-controls') ? 'sim' : 'não',
       /** O painel aponta de volta para o gatilho? */
-      rotuladoPor: conteudos[0]?.getAttribute('aria-labelledby') ? 'sim' : 'não',
+      labelledBy: conteudos[0]?.getAttribute('aria-labelledby') ? 'sim' : 'não',
       papelDoConteudo: conteudos[0]?.getAttribute('role') ?? null,
       /**
        * Estado do painel, agnóstico de lib: o base-ui marca `data-open` e
@@ -122,8 +122,8 @@ export function measureAccordion(raiz: HTMLElement) {
     },
     contraste: primeiro
       ? {
-          gatilho: contraste(getComputedStyle(primeiro).color, fundo),
-          chevron: chevron ? contraste(getComputedStyle(chevron).color, fundo) : null,
+          gatilho: contraste(getComputedStyle(primeiro).color, background),
+          chevron: chevron ? contraste(getComputedStyle(chevron).color, background) : null,
         }
       : null,
   };

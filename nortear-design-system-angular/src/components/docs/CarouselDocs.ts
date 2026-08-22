@@ -642,7 +642,7 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
               class="nds-carousel-dot"
               [attr.aria-current]="comDots.index() === i - 1 ? 'true' : null"
               [attr.aria-label]="rotuloDoDot(i, cincoSlides.length)"
-              (click)="comDots.irPara(i - 1)"
+              (click)="comDots.irTo(i - 1)"
             ><span class="nds-carousel-dot-label">{{ rotuloVisivelDoDot(i) }}</span></button>
           }
         </div>
@@ -1061,14 +1061,14 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     // "—" e nunca a string "undefined": travessão é o vazio tipográfico, e é o
     // que as outras stacks mostram.
     const linha = (name: string, chave: string, tipo: string, padrao: string) => ({
       name,
       type: tipo,
       defaultValue: padrao,
-      required: nao,
+      required: not,
       description: toPlainText(t(`props.table.${chave}`)),
     });
     const classe = linha('class', 'className', 'string', '—');

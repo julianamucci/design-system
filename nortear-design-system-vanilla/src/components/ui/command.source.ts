@@ -45,13 +45,13 @@ function itemsDefault(withGroups: boolean): CommandEntrySnippet[] {
   ];
 }
 
-function literalDoItem(entrada: CommandEntrySnippet): string {
-  if ('type' in entrada) return "{ type: 'separator' }";
-  const partes = [`value: ${texto(entrada.value)}`, `label: ${texto(entrada.label)}`];
-  if (entrada.group) partes.push(`group: ${texto(entrada.group)}`);
-  if (entrada.shortcut) partes.push(`shortcut: ${texto(entrada.shortcut)}`);
-  if (entrada.checked !== undefined) partes.push(`checked: ${String(entrada.checked)}`);
-  if (entrada.disabled) partes.push('disabled: true');
+function literalDoItem(entry: CommandEntrySnippet): string {
+  if ('type' in entry) return "{ type: 'separator' }";
+  const partes = [`value: ${texto(entry.value)}`, `label: ${texto(entry.label)}`];
+  if (entry.group) partes.push(`group: ${texto(entry.group)}`);
+  if (entry.shortcut) partes.push(`shortcut: ${texto(entry.shortcut)}`);
+  if (entry.checked !== undefined) partes.push(`checked: ${String(entry.checked)}`);
+  if (entry.disabled) partes.push('disabled: true');
   return `{ ${partes.join(', ')} }`;
 }
 

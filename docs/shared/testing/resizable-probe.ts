@@ -73,7 +73,7 @@ export interface HandleMeasurement {
   larguraPx: number;
   alturaPx: number;
   cursor: string;
-  fundo: string;
+  background: string;
   contrasteNoFundo: ReturnType<typeof ratio>;
   temGripDePontos: boolean;
   temGripBar: boolean;
@@ -144,7 +144,7 @@ function horizontalEh(grupo: HTMLElement): boolean {
   return getComputedStyle(grupo).flexDirection.startsWith('row');
 }
 
-function medida(el: HTMLElement, horizontal: boolean): number {
+function measurement(el: HTMLElement, horizontal: boolean): number {
   const r = el.getBoundingClientRect();
   return horizontal ? r.width : r.height;
 }
@@ -161,7 +161,7 @@ function measurePanel(p: HTMLElement, horizontal: boolean, total: number): Panel
     overflow: cs.overflow,
     larguraPx: num(r.width),
     alturaPx: num(r.height),
-    fraction: total > 0 ? num(medida(p, horizontal) / total) : null,
+    fraction: total > 0 ? num(measurement(p, horizontal) / total) : null,
     styleWidth: p.style.width,
     styleHeight: p.style.height,
     panelSizeVar: p.style.getPropertyValue('--panel-size') || null,
@@ -173,7 +173,7 @@ function measurePanel(p: HTMLElement, horizontal: boolean, total: number): Panel
 function measureHandle(h: HTMLElement): HandleMeasurement {
   const cs = getComputedStyle(h);
   const r = h.getBoundingClientRect();
-  const fundo = cs.backgroundColor;
+  const background = cs.backgroundColor;
   const atras = backgroundEffective(h.parentElement) ?? 'rgb(255, 255, 255)';
   const grip = h.querySelector('.nds-resizable-grip');
   return {
@@ -192,8 +192,8 @@ function measureHandle(h: HTMLElement): HandleMeasurement {
     larguraPx: num(r.width),
     alturaPx: num(r.height),
     cursor: cs.cursor,
-    fundo,
-    contrasteNoFundo: ratio(fundo, atras),
+    background,
+    contrasteNoFundo: ratio(background, atras),
     temGripDePontos: !!grip,
     temGripBar: !!h.querySelector('.nds-resizable-grip-bar'),
     gripAriaHidden: grip?.querySelector('svg')?.getAttribute('aria-hidden') ?? null,
@@ -229,7 +229,7 @@ function settle(): Promise<void> {
 }
 
 function fracoes(panels: HTMLElement[], horizontal: boolean, total: number): number[] {
-  return total > 0 ? panels.map((p) => medida(p, horizontal) / total) : [];
+  return total > 0 ? panels.map((p) => measurement(p, horizontal) / total) : [];
 }
 
 async function measureKeyboard(
@@ -239,7 +239,7 @@ async function measureKeyboard(
 ): Promise<KeyboardMeasurement | null> {
   if (panels.length < 2) return null;
   const horizontal = horizontalEh(grupo);
-  const total = medida(grupo, horizontal);
+  const total = measurement(grupo, horizontal);
   const cresce = horizontal ? 'ArrowRight' : 'ArrowDown';
   const encolhe = horizontal ? 'ArrowLeft' : 'ArrowUp';
   const otherEixo = horizontal ? 'ArrowDown' : 'ArrowRight';
@@ -255,7 +255,7 @@ async function measureKeyboard(
     const depois = fracoes(panels, horizontal, total);
     const valuenowAfter = punho.getAttribute('aria-valuenow');
 
-    const soma = depois.reduce((a, b) => a + b, 0);
+    const sum = depois.reduce((a, b) => a + b, 0);
     const sumBefore = antes.reduce((a, b) => a + b, 0);
 
     // Outro eixo: mede a partir do estado corrente, e não do inicial.
@@ -286,7 +286,7 @@ async function measureKeyboard(
       fracaoDepois: depois[0] !== undefined ? num(depois[0]) : null,
       valuenowBefore,
       valuenowAfter,
-      somaPreservada: Math.abs(soma - sumBefore) < 0.02,
+      somaPreservada: Math.abs(sum - sumBefore) < 0.02,
       ignoraOutroEixo: !mede(base, aposOtherEixo),
       fracaoNoPiso: noPiso[0] !== undefined ? num(noPiso[0]) : null,
       valuenowNoPiso,
@@ -323,7 +323,7 @@ export async function measureGroup(raiz: HTMLElement, comTeclado = true): Promis
   }
 
   const horizontal = horizontalEh(grupo);
-  const total = medida(grupo, horizontal);
+  const total = measurement(grupo, horizontal);
   const panels = childrenDiretos(grupo, SEL_PANEL);
   const punhos = childrenDiretos(grupo, SEL_HANDLE);
 
@@ -359,7 +359,7 @@ export function darkMeasure(raiz: HTMLElement) {
     return noTransicao(punho, () => {
       const cs = getComputedStyle(punho);
       const atras = backgroundEffective(punho.parentElement) ?? 'rgb(0, 0, 0)';
-      return { fundo: cs.backgroundColor, contrasteNoFundo: ratio(cs.backgroundColor, atras) };
+      return { background: cs.backgroundColor, contrasteNoFundo: ratio(cs.backgroundColor, atras) };
     });
   } finally {
     desfazer();
@@ -390,7 +390,7 @@ export function measureTokens(raiz: HTMLElement) {
 
   return {
     punho: {
-      fundo: cs.backgroundColor,
+      background: cs.backgroundColor,
       transicao: cs.transitionDuration,
       boxShadowComFoco: withFocus,
       focusVisible: punho.matches(':focus-visible'),
@@ -398,8 +398,8 @@ export function measureTokens(raiz: HTMLElement) {
     areaDeToque: { largura: lineAfter.width, altura: lineAfter.height },
     grip: grip
       ? {
-          fundo: getComputedStyle(grip).backgroundColor,
-          borda: getComputedStyle(grip).borderTopColor,
+          background: getComputedStyle(grip).backgroundColor,
+          border: getComputedStyle(grip).borderTopColor,
           raio: getComputedStyle(grip).borderTopLeftRadius,
           largura: getComputedStyle(grip).width,
           altura: getComputedStyle(grip).height,
@@ -407,7 +407,7 @@ export function measureTokens(raiz: HTMLElement) {
       : null,
     gripBar: bar
       ? {
-          fundo: getComputedStyle(bar).backgroundColor,
+          background: getComputedStyle(bar).backgroundColor,
           raio: getComputedStyle(bar).borderTopLeftRadius,
           largura: getComputedStyle(bar).width,
           altura: getComputedStyle(bar).height,
@@ -452,7 +452,7 @@ export async function measureCenarios(raiz: HTMLElement, cenarios: string[]) {
 export async function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[]) {
   const registro = {
     tokens: measureTokens(raiz),
-    claro: await measureCenarios(raiz, cenarios),
+    light: await measureCenarios(raiz, cenarios),
     escuro: darkMeasure(raiz),
     persistencia: Object.keys(localStorage).filter((k) => /resiz|panel|split|pane/i.test(k)),
   };

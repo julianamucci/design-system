@@ -136,8 +136,8 @@ export const ItemDisabled: Story = {
   render: () => ({
     components: { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList },
     setup() {
-      const ultimo = ref('');
-      return { ultimo };
+      const last = ref('');
+      return { last };
     },
     template: `
       <div class="nds-stack" data-spacing="sm">
@@ -147,9 +147,9 @@ export const ItemDisabled: Story = {
 
             <CommandList>
               <CommandGroup heading="Arquivo">
-                <CommandItem value="novo" @select="ultimo = 'novo'">Novo</CommandItem>
-                <CommandItem value="arquivar" :disabled="true" @select="ultimo = 'arquivar'">Arquivar</CommandItem>
-                <CommandItem value="renomear" @select="ultimo = 'renomear'">Renomear</CommandItem>
+                <CommandItem value="novo" @select="last = 'novo'">Novo</CommandItem>
+                <CommandItem value="arquivar" :disabled="true" @select="last = 'arquivar'">Arquivar</CommandItem>
+                <CommandItem value="renomear" @select="last = 'renomear'">Renomear</CommandItem>
               </CommandGroup>
             </CommandList>
 
@@ -157,7 +157,7 @@ export const ItemDisabled: Story = {
           </Command>
         </div>
 
-        <p class="nds-text-body nds-text-muted-foreground" data-testid="escolhido">{{ ultimo }}</p>
+        <p class="nds-text-body nds-text-muted-foreground" data-testid="escolhido">{{ last }}</p>
       </div>
     `,
   }),
@@ -259,21 +259,21 @@ export const CheckedItem: Story = {
       await expect(canvas.getAllByRole('option')).toHaveLength(3);
     });
 
-    const claro = canvas.getByRole('option', { name: 'Claro' });
+    const light = canvas.getByRole('option', { name: 'Claro' });
     const escuro = canvas.getByRole('option', { name: 'Escuro' });
     const sistema = canvas.getByRole('option', { name: 'Sistema ⌘S' });
     const marca = (item: HTMLElement) =>
       getComputedStyle(item.querySelector<HTMLElement>('.nds-command-item-check')!);
 
     await step('O estado chega ao markup', async () => {
-      await expect(claro).toHaveAttribute('data-checked', 'true');
+      await expect(light).toHaveAttribute('data-checked', 'true');
       await expect(escuro).toHaveAttribute('data-checked', 'false');
     });
 
     await step('A marca aparece só no comando marcado', async () => {
       // O ícone fica no DOM nos dois casos — é a opacidade que muda, para a
       // largura do item não pular a cada troca.
-      await expect(marca(claro).opacity).toBe('1');
+      await expect(marca(light).opacity).toBe('1');
       await expect(marca(escuro).opacity).toBe('0');
     });
 

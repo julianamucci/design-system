@@ -68,13 +68,13 @@ export const CaptionLabel: Story = {
       // functional.item6 — o idioma vale para a legenda E para o cabeçalho da
       // semana; verificar só um dos dois deixaria metade da tradução solta.
       await expect(legenda(canvasElement)).toHaveTextContent(/abril 2026/i);
-      const dias = Array.from(
+      const days = Array.from(
         canvasElement.querySelectorAll('[data-slot="calendar-head-cell"]'),
       ).map((el) => el.textContent?.trim().toLowerCase() ?? '');
       // A forma curta, e a mesma nas quatro: 'narrow' dá "D S T Q Q S S", com
       // duas quartas e duas quintas indistinguíveis, e o ponto de "dom." é
       // ruído numa coluna de uma palavra. Conferir só a inicial aceitava tudo.
-      await expect(dias).toEqual(['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb']);
+      await expect(days).toEqual(['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb']);
     });
 
     await step('A legenda é texto, e não controle', async () => {
@@ -155,10 +155,10 @@ export const CaptionDropdown: Story = {
     await step('Trocar o mês no seletor leva o grid junto', async () => {
       // Cada passo estabelece a própria precondição: volta para abril no fim,
       // porque o painel reexecuta a play no mesmo DOM.
-      const mes = canvas.getByRole('combobox', { name: 'Selecionar mês' });
-      await userEvent.selectOptions(mes, '6');
+      const month = canvas.getByRole('combobox', { name: 'Selecionar mês' });
+      await userEvent.selectOptions(month, '6');
       await expect(canvasElement.querySelector('[data-value^="2026-06-"]')).not.toBeNull();
-      await userEvent.selectOptions(mes, '4');
+      await userEvent.selectOptions(month, '4');
       await expect(canvasElement.querySelector('[data-value^="2026-04-"]')).not.toBeNull();
     });
 

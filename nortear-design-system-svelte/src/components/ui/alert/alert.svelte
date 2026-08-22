@@ -90,16 +90,16 @@
 		// `animationend` borbulha: a animação de qualquer descendente (o botão de
 		// fechar, um ícone) chegaria aqui e limparia a entrada antes da hora — e
 		// com `once` ainda consumiria o listener. Só o próprio elemento conta.
-		const limparEntrada = (event?: Event) => {
+		const clearEntry = (event?: Event) => {
 			if (event && event.target !== el) return;
 			if (classNameAnimation === "nds-animate-in") classNameAnimation = undefined;
 		};
-		el.addEventListener("animationend", limparEntrada);
-		const timer = window.setTimeout(limparEntrada, ENTER_FALLBACK_MS);
+		el.addEventListener("animationend", clearEntry);
+		const timer = window.setTimeout(clearEntry, ENTER_FALLBACK_MS);
 
 		return () => {
 			window.clearTimeout(timer);
-			el.removeEventListener("animationend", limparEntrada);
+			el.removeEventListener("animationend", clearEntry);
 		};
 	});
 

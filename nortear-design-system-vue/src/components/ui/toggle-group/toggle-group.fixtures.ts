@@ -20,8 +20,8 @@ import { userEvent } from 'storybook/test';
  * sua story — em grupo de escolha única o clique num item DESLIGA outro, e uma
  * asserção embutida aqui mediria o item errado.
  */
-export async function definir(botao: HTMLElement, ligado: boolean): Promise<void> {
-  if ((botao.getAttribute('aria-pressed') === 'true') !== ligado) {
-    await userEvent.click(botao);
+export async function definir(button: HTMLElement, ligado: boolean): Promise<void> {
+  if ((button.getAttribute('aria-pressed') === 'true') !== ligado) {
+    await userEvent.click(button);
   }
 }

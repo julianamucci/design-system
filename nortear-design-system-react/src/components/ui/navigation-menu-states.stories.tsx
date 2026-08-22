@@ -176,9 +176,9 @@ export const Open: Story = {
       // O contraste de 4.5:1 que o axe mede entre o texto do destino e o fundo
       // do painel só significa alguma coisa se o fundo for opaco: sobre um
       // painel translúcido a razão medida é a do que estiver por baixo.
-      const fundo = getComputedStyle(popup as HTMLElement).backgroundColor;
-      await expect(fundo).not.toBe("rgba(0, 0, 0, 0)");
-      await expect(fundo.startsWith("rgba(")).toBe(false);
+      const background = getComputedStyle(popup as HTMLElement).backgroundColor;
+      await expect(background).not.toBe("rgba(0, 0, 0, 0)");
+      await expect(background.startsWith("rgba(")).toBe(false);
     });
   },
 };

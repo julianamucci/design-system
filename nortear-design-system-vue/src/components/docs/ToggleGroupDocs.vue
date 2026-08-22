@@ -197,7 +197,7 @@ const codeMultiple = `<ToggleGroup
   </ToggleGroupItem>
 </ToggleGroup>`;
 
-const codeVertical = `<ToggleGroup
+const verticalCode = `<ToggleGroup
   type="single"
   orientation="vertical"
   default-value="grid"
@@ -244,7 +244,7 @@ const anatomyItems = computed(() => [
 const variantItems = computed(() => [
   { name: stripHtml(tContent('variants.items.single')),   description: stripHtml(tContent('variants.styles.single')),   code: codeSingle   },
   { name: stripHtml(tContent('variants.items.multiple')), description: stripHtml(tContent('variants.styles.multiple')), code: codeMultiple },
-  { name: stripHtml(tContent('variants.items.vertical')), description: stripHtml(tContent('variants.styles.vertical')), code: codeVertical },
+  { name: stripHtml(tContent('variants.items.vertical')), description: stripHtml(tContent('variants.styles.vertical')), code: verticalCode },
 ]);
 
 const codeAlignmentBar = `<ToggleGroup type="single" variant="outline" default-value="left" aria-label="Alinhamento do texto">

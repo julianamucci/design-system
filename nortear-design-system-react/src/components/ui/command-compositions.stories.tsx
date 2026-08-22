@@ -205,10 +205,10 @@ export const WithShortcuts: Story = {
     });
 
     await step("Cada comando exibe o próprio atalho", async () => {
-      const atalhos = raiz.querySelectorAll<HTMLElement>('[data-slot="command-shortcut"]');
-      await expect(atalhos).toHaveLength(3);
-      await expect(atalhos[0]).toHaveClass(/nds-command-shortcut/);
-      await expect(atalhos[0]).toHaveTextContent("⌘B");
+      const shortcuts = raiz.querySelectorAll<HTMLElement>('[data-slot="command-shortcut"]');
+      await expect(shortcuts).toHaveLength(3);
+      await expect(shortcuts[0]).toHaveClass(/nds-command-shortcut/);
+      await expect(shortcuts[0]).toHaveTextContent("⌘B");
     });
 
     await step("O atalho entra no nome acessível do comando", async () => {
@@ -354,16 +354,16 @@ export const AsCombobox: Story = {
       const dentro = within(painel);
 
       await expect(dentro.getAllByRole("option")).toHaveLength(5);
-      const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
+      const search = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       // Um combobox que abre e deixa o foco no gatilho obriga a pessoa a caçar
       // o campo com Tab.
       await waitFor(async () => {
-        await expect(busca).toHaveFocus();
+        await expect(search).toHaveFocus();
       });
       // `aria-controls` só aponta para algo enquanto há algo para apontar.
-      const controlado = gatilho.getAttribute("aria-controls");
-      await expect(controlado).toBeTruthy();
-      await expect(document.getElementById(controlado!)).toBe(painel);
+      const controlled = gatilho.getAttribute("aria-controls");
+      await expect(controlled).toBeTruthy();
+      await expect(document.getElementById(controlled!)).toBe(painel);
     });
 
     await step("Escolher fecha o popover e leva o valor para o gatilho", async () => {
@@ -519,9 +519,9 @@ export const CommandPalette: Story = {
 
     await step("O foco vai direto para a busca", async () => {
       const painel = await buttonOpen();
-      const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
+      const search = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       await waitFor(async () => {
-        await expect(busca).toHaveFocus();
+        await expect(search).toHaveFocus();
       });
       await expect(within(painel).getAllByRole("option")).toHaveLength(3);
       const atalho = painel.querySelector<HTMLElement>(
@@ -544,9 +544,9 @@ export const CommandPalette: Story = {
       await userEvent.keyboard("{Meta>}k{/Meta}");
 
       const painel = await waitForPortal("dialog");
-      const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
+      const search = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       await waitFor(async () => {
-        await expect(busca).toHaveFocus();
+        await expect(search).toHaveFocus();
       });
       // A story TERMINA com a paleta ABERTA: é o quadro que o Chromatic captura
       // e o estado que a documentação descreve.

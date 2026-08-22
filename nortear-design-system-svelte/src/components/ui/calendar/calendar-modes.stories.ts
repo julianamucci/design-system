@@ -164,9 +164,9 @@ export const Range: Story = {
       // Reto por dentro, redondo por fora: é o que fecha a faixa nas pontas.
       await expect(parseFloat(ponta.borderTopLeftRadius)).toBeGreaterThan(0);
       await expect(parseFloat(ponta.borderTopRightRadius)).toBe(0);
-      const fim = getComputedStyle(dia('2026-04-18'));
-      await expect(parseFloat(fim.borderTopRightRadius)).toBeGreaterThan(0);
-      await expect(parseFloat(fim.borderTopLeftRadius)).toBe(0);
+      const end = getComputedStyle(dia('2026-04-18'));
+      await expect(parseFloat(end.borderTopRightRadius)).toBeGreaterThan(0);
+      await expect(parseFloat(end.borderTopLeftRadius)).toBe(0);
       await expect(parseFloat(miolo.borderTopLeftRadius)).toBe(0);
     });
 
@@ -175,11 +175,11 @@ export const Range: Story = {
       // "axe-core / Lighthouse", que só enxerga o tema claro da marca default: um
       // sexto do produto. Medido no escuro, as pontas do intervalo de uma stack
       // marcavam 1.18:1 e o número do dia sumia. Aritmética, não olhômetro.
-      const medidas = calendarMeasureContrast(canvasElement).filter(
+      const measurements = calendarMeasureContrast(canvasElement).filter(
         (m) => m.presente && (STATES_WITH_TEXT_LEGIVEL as readonly string[]).includes(m.estado),
       );
-      await expect(medidas.length).toBeGreaterThan(0);
-      const reprovadas = medidas.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);
+      await expect(measurements.length).toBeGreaterThan(0);
+      const reprovadas = measurements.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);
       await expect(reprovadas).toEqual([]);
     });
 

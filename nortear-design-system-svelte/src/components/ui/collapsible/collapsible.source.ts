@@ -28,7 +28,7 @@ import ChevronDown from "@lucide/svelte/icons/chevron-down";`;
 const TRIGGER_FANTASMA = 'nds-button nds-button-ghost nds-cluster nds-w-full nds-px-4';
 /** Gatilho com contorno — o da composição que veste o gatilho de botão. */
 const TRIGGER_CONTORNO = 'nds-button nds-button-outline nds-cluster nds-w-full nds-px-4';
-const PAINEL =
+const PANEL =
   'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
 
 /**
@@ -54,7 +54,7 @@ function gatilho(rotulo: string, classe: string = TRIGGER_FANTASMA): string {
 /** O painel inteiro, indentado como filho do Collapsible. */
 function painel(corpo: string): string {
   return `  <CollapsibleContent
-    class="${PAINEL}"
+    class="${PANEL}"
     data-spacing="sm"
   >
 ${corpo}

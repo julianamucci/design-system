@@ -82,8 +82,8 @@ export const WithGroups: Story = {
       // fosse comando. Os 7 contados acima são exatamente os comandos.
       const cabecalhos = raiz.querySelectorAll('.nds-command-group-heading');
       await expect(cabecalhos).toHaveLength(2);
-      for (const cabecalho of cabecalhos) {
-        await expect(cabecalho.getAttribute('role')).not.toBe('option');
+      for (const header of cabecalhos) {
+        await expect(header.getAttribute('role')).not.toBe('option');
       }
     });
 
@@ -264,24 +264,24 @@ export const AsCombobox: Story = {
 
       const dentro = within(painel);
       await expect(dentro.getByRole('listbox')).toBeVisible();
-      const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
+      const search = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       // Um combobox que abre e deixa o foco no gatilho obriga a pessoa a caçar
       // o campo com Tab.
       await waitFor(async () => {
-        await expect(busca).toHaveFocus();
+        await expect(search).toHaveFocus();
       });
     });
 
     await step('A busca filtra dentro do popover', async () => {
       const painel = await abrir();
-      const busca = painel.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
-      await userEvent.clear(busca);
-      await userEvent.type(busca, 'text');
+      const search = painel.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
+      await userEvent.clear(search);
+      await userEvent.type(search, 'text');
       await waitFor(async () => {
         await expect(within(painel).getAllByRole('option')).toHaveLength(1);
       });
       await expect(within(painel).getByRole('option', { name: 'Textarea' })).toBeVisible();
-      await userEvent.clear(busca);
+      await userEvent.clear(search);
       await waitFor(async () => {
         await expect(within(painel).getAllByRole('option')).toHaveLength(5);
       });
@@ -363,18 +363,18 @@ export const CommandPalette: Story = {
       // DENTRO do painel: fora dele o título ficava no fluxo da página o tempo
       // todo, mesmo com a paleta fechada.
       await expect(painel.contains(titulo)).toBe(true);
-      const cabecalho = titulo.closest<HTMLElement>('[data-slot="dialog-header"]')!;
-      await expect(cabecalho).toHaveClass(/nds-sr-only/);
+      const header = titulo.closest<HTMLElement>('[data-slot="dialog-header"]')!;
+      await expect(header).toHaveClass(/nds-sr-only/);
       // Fora da tela, mas dentro da árvore de acessibilidade: `display: none`
       // apagaria o nome do diálogo.
-      await expect(cabecalho.getBoundingClientRect().width).toBeLessThan(4);
+      await expect(header.getBoundingClientRect().width).toBeLessThan(4);
     });
 
     await step('O foco vai direto para a busca', async () => {
       const painel = await buttonOpen();
-      const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
+      const search = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       await waitFor(async () => {
-        await expect(busca).toHaveFocus();
+        await expect(search).toHaveFocus();
       });
       await expect(within(painel).getAllByRole('option')).toHaveLength(4);
     });
@@ -400,9 +400,9 @@ export const CommandPalette: Story = {
       await userEvent.keyboard('{Meta>}k{/Meta}');
 
       const painel = await waitForPortal('dialog');
-      const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
+      const search = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       await waitFor(async () => {
-        await expect(busca).toHaveFocus();
+        await expect(search).toHaveFocus();
       });
       // Os atalhos de cada comando aparecem à direita, encostados na borda.
       const atalho = painel.querySelector<HTMLElement>(

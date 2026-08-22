@@ -110,8 +110,8 @@ describe('transforms das stories de composição', () => {
     const alts = saida.match(/alt: "/g);
     expect(alts).toHaveLength(3);
     // Repetir o mesmo alt em todas equivale a não ter nenhum.
-    const textos = [...saida.matchAll(/alt: "([^"]+)"/g)].map((m) => m[1]);
-    expect(new Set(textos).size).toBe(textos.length);
+    const texts = [...saida.matchAll(/alt: "([^"]+)"/g)].map((m) => m[1]);
+    expect(new Set(texts).size).toBe(texts.length);
   });
 
   it('os dots se montam sobre a instância que o componente expõe', () => {

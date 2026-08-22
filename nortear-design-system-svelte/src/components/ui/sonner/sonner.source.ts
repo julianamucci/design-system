@@ -41,7 +41,7 @@ function region(props: string): string {
 }
 
 /** Botão de disparo + região, na ordem em que a pessoa lê. */
-function quadro(script: string, label: string, gatilho: string, props: string): string {
+function nextFrame(script: string, label: string, gatilho: string, props: string): string {
   return svelteSnippet(
     script,
     `<Button variant="outline" onclick={${gatilho}}>
@@ -84,7 +84,7 @@ export function sonnerSource(_gerado?: string, ctx?: { args?: Partial<SonnerArgs
   // Chamada com opções vira função nomeada: um objeto dentro de `onclick` em
   // linha única rola para fora do painel e deixa de ser copiável.
   if (options.length) {
-    return quadro(
+    return nextFrame(
       `${IMPORTS}
 
 function avisar() {
@@ -98,7 +98,7 @@ ${options.join('\n')}
     );
   }
 
-  return quadro(IMPORTS, 'Disparar notificação', `() => ${call}("${title}")`, props);
+  return nextFrame(IMPORTS, 'Disparar notificação', `() => ${call}("${title}")`, props);
 }
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
@@ -107,17 +107,17 @@ const DEFAULT_REGION = ' position="top-right" richColors';
 
 /** Tipo Default: confirmação neutra — sem ícone e sem cor semântica. */
 export function sonnerDefaultSource(): string {
-  return quadro(IMPORTS, 'Copiar código', '() => toast("Código copiado.")', DEFAULT_REGION);
+  return nextFrame(IMPORTS, 'Copiar código', '() => toast("Código copiado.")', DEFAULT_REGION);
 }
 
 /** Tipo Success: a ação pedida foi concluída. */
 export function sonnerSuccessSource(): string {
-  return quadro(IMPORTS, 'Salvar', '() => toast.success("Alterações salvas.")', DEFAULT_REGION);
+  return nextFrame(IMPORTS, 'Salvar', '() => toast.success("Alterações salvas.")', DEFAULT_REGION);
 }
 
 /** Tipo Error: a operação falhou, e o texto diz o caminho de saída. */
 export function sonnerErrorSource(): string {
-  return quadro(
+  return nextFrame(
     IMPORTS,
     'Salvar',
     '() => toast.error("Não foi possível salvar. Tente novamente.")',
@@ -127,7 +127,7 @@ export function sonnerErrorSource(): string {
 
 /** Tipo Warning: aviso não crítico, que não exige decisão imediata. */
 export function sonnerWarningSource(): string {
-  return quadro(
+  return nextFrame(
     IMPORTS,
     'Renovar sessão',
     '() => toast.warning("Sua sessão expira em 5 minutos.")',
@@ -137,7 +137,7 @@ export function sonnerWarningSource(): string {
 
 /** Tipo Info: contexto ou novidade — nada deu certo nem errado. */
 export function sonnerInfoSource(): string {
-  return quadro(
+  return nextFrame(
     IMPORTS,
     'Procurar atualização',
     '() => toast.info("Nova versão disponível.")',
@@ -147,7 +147,7 @@ export function sonnerInfoSource(): string {
 
 /** Tipo Loading: operação em curso, sem prazo — quem a encerra é o fim dela. */
 export function sonnerLoadingSource(): string {
-  return quadro(
+  return nextFrame(
     IMPORTS,
     'Enviar arquivo',
     '() => toast.loading("Enviando arquivo...")',
@@ -162,7 +162,7 @@ export function sonnerLoadingSource(): string {
  * mantém o mesmo tempo de leitura em toda a aplicação.
  */
 export function sonnerDurationSource(): string {
-  return quadro(
+  return nextFrame(
     IMPORTS,
     'Salvar',
     '() => toast.error("Não foi possível salvar. Tente novamente.")',
@@ -175,7 +175,7 @@ export function sonnerDurationSource(): string {
  * a mensagem ainda não lida fica encoberta pela seguinte.
  */
 export function sonnerStackedSource(): string {
-  return quadro(
+  return nextFrame(
     `${IMPORTS}
 
 function avisarTudo() {
@@ -191,7 +191,7 @@ function avisarTudo() {
 
 /** Estado PositionBottomCenter: a posição vale para a aplicação inteira. */
 export function sonnerPositionSource(): string {
-  return quadro(
+  return nextFrame(
     IMPORTS,
     'Salvar',
     '() => toast.success("Alterações salvas.")',
@@ -219,7 +219,7 @@ import { Button } from "@/components/ui/button";`,
  * está aqui porque é justamente o assunto desta story.
  */
 export function sonnerDarkThemeSource(): string {
-  return quadro(
+  return nextFrame(
     `${IMPORTS}
 
 function avisarTudo() {
@@ -239,7 +239,7 @@ function avisarTudo() {
 
 /** Composição WithDescription: título mais uma frase completa de complemento. */
 export function sonnerWithDescriptionSource(): string {
-  return quadro(
+  return nextFrame(
     `${IMPORTS}
 
 function avisar() {
@@ -259,7 +259,7 @@ function avisar() {
  * de foco. Ela precisa existir em outro lugar também — a notificação some.
  */
 export function sonnerWithActionSource(): string {
-  return quadro(
+  return nextFrame(
     `${IMPORTS}
 
 function excluir() {
@@ -278,7 +278,7 @@ function excluir() {
  * operação inteira. O mesmo nó vira êxito ou falha, sem piscar duas caixas.
  */
 export function sonnerPromiseSource(): string {
-  return quadro(
+  return nextFrame(
     `${IMPORTS}
 
 function enviar() {
@@ -299,7 +299,7 @@ function enviar() {
  * botão de fechar — o que não sai sozinho e não pode ser fechado vira obstáculo.
  */
 export function sonnerPersistentSource(): string {
-  return quadro(
+  return nextFrame(
     `${IMPORTS}
 
 function falhar() {

@@ -74,8 +74,8 @@ export const ConfirmEmail: Story = {
 
     await step('A operação é reversível, então a ação primária é neutra', async () => {
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const botoes = rodape.querySelectorAll<HTMLElement>('button');
-      await expect(botoes[botoes.length - 1]).toHaveClass('nds-button-default');
+      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-default');
     });
   },
 };
@@ -113,9 +113,9 @@ export const ProfileEdit: Story = {
     await step('O rodapé fica dentro do formulário, e o envio não é o Cancelar', async () => {
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       await expect(rodape.closest('form')).not.toBeNull();
-      const botoes = rodape.querySelectorAll<HTMLButtonElement>('button');
-      await expect(botoes[0].type).toBe('button');
-      await expect(botoes[botoes.length - 1].type).toBe('submit');
+      const buttons = rodape.querySelectorAll<HTMLButtonElement>('button');
+      await expect(buttons[0].type).toBe('button');
+      await expect(buttons[buttons.length - 1].type).toBe('submit');
     });
   },
 };

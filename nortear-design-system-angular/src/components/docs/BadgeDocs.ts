@@ -470,15 +470,15 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     return [
       {
         title: t('props.badgeTitle'),
         cols,
         items: [
-          { name: 'variant', type: 'BadgeVariant', defaultValue: "'default'", required: nao, description: toPlainText(t('props.table.variant')) },
-          { name: 'class',   type: 'string',       defaultValue: '—',         required: nao, description: toPlainText(t('props.table.className')) },
-          { name: '(conteúdo)', type: 'HTML',      defaultValue: '—',         required: nao, description: toPlainText(t('props.table.children')) },
+          { name: 'variant', type: 'BadgeVariant', defaultValue: "'default'", required: not, description: toPlainText(t('props.table.variant')) },
+          { name: 'class',   type: 'string',       defaultValue: '—',         required: not, description: toPlainText(t('props.table.className')) },
+          { name: '(conteúdo)', type: 'HTML',      defaultValue: '—',         required: not, description: toPlainText(t('props.table.children')) },
         ],
       },
     ];

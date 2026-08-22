@@ -63,10 +63,10 @@ function designStyles(snippet: string): string[] {
   const findings: string[] = [];
   for (const m of snippet.matchAll(/(?<!:)style="([^"]*)"/g)) {
     for (const decl of m[1].split(';')) {
-      const [prop, ...resto] = decl.split(':');
-      if (!prop || !resto.length) continue;
+      const [prop, ...remainder] = decl.split(':');
+      if (!prop || !remainder.length) continue;
       const nome = prop.trim().toLowerCase();
-      const valor = resto.join(':').trim();
+      const valor = remainder.join(':').trim();
       if (!PROPS_DE_DESIGN.has(nome)) continue;
       if (VALUE_MECANICO.test(valor)) continue;
       if (valor.includes('var(')) continue; // token, não valor cravado

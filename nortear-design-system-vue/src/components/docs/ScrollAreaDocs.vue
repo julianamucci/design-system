@@ -141,7 +141,7 @@ const matrixRows = Array.from({ length: 12 }, (_, i) => `R${i + 1}`);
 
 const codeImportBasic = `import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";`;
 
-const codeVertical = `<div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="width: 280px">
+const verticalCode = `<div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="width: 280px">
   <ScrollArea size="xl" class="nds-w-full">
     <div class="nds-p-4">
       <div v-for="tag in tags" :key="tag" class="nds-text-body">{{ tag }}</div>
@@ -149,7 +149,7 @@ const codeVertical = `<div class="nds-overflow-hidden nds-rounded-md nds-border-
   </ScrollArea>
 </div>`;
 
-const codeHorizontal = `<div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="width: 500px">
+const horizontalCode = `<div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="width: 500px">
   <ScrollArea size="md" class="nds-w-full nds-whitespace-nowrap">
     <div class="nds-cluster nds-p-4" data-spacing="md" style="width: max-content">
       <figure v-for="card in cards" :key="card.id" class="nds-shrink-0 nds-rounded-md nds-border-default nds-p-4" style="width: 160px">
@@ -205,8 +205,8 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.items.vertical'),   description: stripHtml(tContent('variants.styles.vertical')),   code: codeVertical   },
-  { name: tContent('variants.items.horizontal'), description: stripHtml(tContent('variants.styles.horizontal')), code: codeHorizontal },
+  { name: tContent('variants.items.vertical'),   description: stripHtml(tContent('variants.styles.vertical')),   code: verticalCode   },
+  { name: tContent('variants.items.horizontal'), description: stripHtml(tContent('variants.styles.horizontal')), code: horizontalCode },
   { name: tContent('variants.items.both'),       description: stripHtml(tContent('variants.styles.both')),       code: codeBoth       },
 ]);
 

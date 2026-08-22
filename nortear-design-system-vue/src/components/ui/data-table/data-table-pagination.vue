@@ -33,7 +33,7 @@ const props = defineProps<{
  * deste rodapé é o que registra a paginação; o padrão é a rede de segurança que
  * a assinatura pede, não um caso esperado.
  */
-const paginacao = computed(
+const pagination = computed(
   () => props.table.atoms.pagination?.get() ?? { pageIndex: 0, pageSize: 10 },
 );
 </script>
@@ -56,7 +56,7 @@ const paginacao = computed(
         <span>{{ props.labels.rowsPerPage }}</span>
         <select
           :aria-label="props.labels.rowsPerPage"
-          :value="paginacao.pageSize"
+          :value="pagination.pageSize"
           class="nds-data-table-page-size-select"
           @change="(e) => props.table.setPageSize(Number((e.target as HTMLSelectElement).value))"
         >
@@ -70,7 +70,7 @@ const paginacao = computed(
         </select>
       </div>
       <div class="nds-data-table-pagination-count">
-        {{ props.labels.page }} {{ paginacao.pageIndex + 1 }} {{ props.labels.pageOf }}
+        {{ props.labels.page }} {{ pagination.pageIndex + 1 }} {{ props.labels.pageOf }}
         {{ Math.max(props.table.getPageCount(), 1) }}
       </div>
       <div class="nds-data-table-pagination-nav">

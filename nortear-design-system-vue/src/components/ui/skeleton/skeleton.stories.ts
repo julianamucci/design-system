@@ -67,9 +67,9 @@ export const Playground: Story = {
   render: (args) => ({
     components: { Skeleton },
     setup() {
-      const larguraAplicada = () =>
+      const widthAplicada = () =>
         args.shape === 'text' || args.shape === 'heading' ? args.width : null;
-      return { args, larguraAplicada };
+      return { args, widthAplicada };
     },
     // Dois ramos em vez de uma classe ligada: `fill` preenche a caixa que o
     // container estabelece, e aqui quem estabelece é a proporção de mídia —
@@ -78,7 +78,7 @@ export const Playground: Story = {
     template: `
       <div role="status" :aria-busy="String(args.loading)" aria-label="Carregando conteúdo">
         <Skeleton v-if="args.shape === 'fill'" data-shape="fill" class="nds-docs-skeleton-media" />
-        <Skeleton v-else :data-shape="args.shape" :data-width="larguraAplicada()" />
+        <Skeleton v-else :data-shape="args.shape" :data-width="widthAplicada()" />
       </div>
     `,
   }),

@@ -124,13 +124,13 @@ export const LastSlide: Story = {
       // story quebraria só na segunda rodada.
       const total = canvas.getAllByRole('group').length;
       for (let passo = 0; passo < total; passo++) {
-        const botao = proximo();
-        if (botao.disabled) break;
+        const button = proximo();
+        if (button.disabled) break;
         // A rolagem é suave: mede antes, clica, e espera o viewport passar do
         // ponto anterior. Sem a espera o passo seguinte partiria de um retângulo
         // que ainda está em movimento.
         const antes = viewport.scrollLeft;
-        await userEvent.click(botao);
+        await userEvent.click(button);
         await waitFor(() => expect(viewport.scrollLeft).toBeGreaterThan(antes), { timeout: 4000 });
       }
     });

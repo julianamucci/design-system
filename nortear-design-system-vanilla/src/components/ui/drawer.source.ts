@@ -54,7 +54,7 @@ const IMPORTS_BASE = [
 ].join('\n');
 
 /** Um botão em UMA linha — ele é sempre argumento, nunca a chamada principal. */
-function botao(acao: DrawerSnippetAction): string {
+function button(acao: DrawerSnippetAction): string {
   const pairs = opcoes([
     ['variant', acao.variant && acao.variant !== 'default' ? texto(acao.variant) : undefined],
     ['label', texto(acao.label)],
@@ -80,10 +80,10 @@ function actionsOf(o: DrawerSnippetOptions): DrawerSnippetAction[] {
  * saída ganha `data-slot="drawer-close"`: é por esse atributo que a fábrica liga
  * o clique ao fechamento — sem ele o "Cancelar" é um botão inerte.
  */
-function footerBlock(acoes: DrawerSnippetAction[]): string | undefined {
-  if (acoes.length === 0) return undefined;
+function footerBlock(actions: DrawerSnippetAction[]): string | undefined {
+  if (actions.length === 0) return undefined;
 
-  const declarados = acoes.map((acao, i) => ({ acao, nome: `acao${i + 1}` }));
+  const declarados = actions.map((acao, i) => ({ acao, nome: `acao${i + 1}` }));
   const fechadores = declarados.filter(({ acao }) => acao.close);
 
   const linhas: string[] = [];
@@ -94,13 +94,13 @@ function footerBlock(acoes: DrawerSnippetAction[]): string | undefined {
       '// estiver marcado assim dentro do painel fecha a gaveta ao ser acionado.',
     );
     for (const { acao, nome } of fechadores) {
-      linhas.push(`const ${nome} = ${botao(acao)};`, `${nome}.dataset.slot = 'drawer-close';`);
+      linhas.push(`const ${nome} = ${button(acao)};`, `${nome}.dataset.slot = 'drawer-close';`);
     }
     linhas.push('');
   }
 
   const argumentos = declarados
-    .map(({ acao, nome }) => (acao.close ? nome : botao(acao)))
+    .map(({ acao, nome }) => (acao.close ? nome : button(acao)))
     .join(', ');
 
   linhas.push(
@@ -117,7 +117,7 @@ function footerBlock(acoes: DrawerSnippetAction[]): string | undefined {
 /** As opções comuns às duas formas de snippet. `content` é o nome da variável. */
 function linesComuns(o: DrawerSnippetOptions, content: string, temRodape: boolean): string[] {
   return opcoes([
-    ['trigger', botao({ label: o.triggerLabel ?? 'Abrir drawer', variant: 'outline' })],
+    ['trigger', button({ label: o.triggerLabel ?? 'Abrir drawer', variant: 'outline' })],
     ['title', texto(o.title ?? 'Editar perfil')],
     [
       'description',
@@ -184,11 +184,11 @@ export type DrawerField = {
 };
 
 export type DrawerWithFormSnippetOptions = Omit<DrawerSnippetOptions, 'bodyText'> & {
-  campos?: DrawerField[];
+  fields?: DrawerField[];
 };
 
 function campo(c: DrawerField): string {
-  const entrada = opcoes([
+  const entry = opcoes([
     ['type', c.type && c.type !== 'text' ? texto(c.type) : undefined],
     ['value', c.value !== undefined ? texto(c.value) : undefined],
   ])
@@ -196,7 +196,7 @@ function campo(c: DrawerField): string {
     .join(', ');
   return `  createFormField({
     label: ${texto(c.label)},
-    input: createInput({ ${entrada} }),
+    input: createInput({ ${entry} }),
   }),`;
 }
 
@@ -208,7 +208,7 @@ function campo(c: DrawerField): string {
  * controle e gera o id que falta.
  */
 export function drawerWithFormSnippet(o: DrawerWithFormSnippetOptions = {}): string {
-  const campos = o.campos ?? [
+  const fields = o.fields ?? [
     { label: 'Nome', value: 'Maria Souza' },
     { label: 'E-mail', type: 'email', value: 'maria@exemplo.com' },
   ];
@@ -224,7 +224,7 @@ export function drawerWithFormSnippet(o: DrawerWithFormSnippetOptions = {}): str
 formulario.className = 'nds-stack';
 formulario.dataset.spacing = 'md';
 formulario.append(
-${campos.map(campo).join('\n')}
+${fields.map(campo).join('\n')}
 );`,
     rodape,
     `const gaveta = ${chamada('createDrawer', linesComuns(o, 'formulario', rodape !== undefined))};`,

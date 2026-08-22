@@ -71,11 +71,11 @@ export function toggleSnippet(o: ToggleSnippetOptions = {}): string {
  * `cluster()` que só existe dentro do arquivo de story.
  */
 export function toggleRowSnippet(variacoes: ToggleSnippetOptions[]): string {
-  const icones = new Set<string>(['createElement']);
-  const chamadas = variacoes.map((v) => {
+  const icons = new Set<string>(['createElement']);
+  const calls = variacoes.map((v) => {
     const withText = Boolean(v.label);
     const icone = v.icon ?? (withText ? 'Eye' : 'Bold');
-    icones.add(icone);
+    icons.add(icone);
     const linhas = opcoes([
       [
         'children',
@@ -92,17 +92,17 @@ export function toggleRowSnippet(variacoes: ToggleSnippetOptions[]): string {
     return `  ${chamada('createToggle', linhas)},`;
   });
 
-  const nomes = [...icones].filter((n) => n !== 'createElement').sort();
+  const names = [...icons].filter((n) => n !== 'createElement').sort();
   return snippet(
     [
       importing('toggle', 'createToggle'),
-      `import { ${[...nomes, 'createElement'].join(', ')} } from 'lucide';`,
+      `import { ${[...names, 'createElement'].join(', ')} } from 'lucide';`,
     ].join('\n'),
     `const fileira = document.createElement('div');
 fileira.className = 'nds-cluster';
 fileira.dataset.spacing = 'sm';
 fileira.append(
-${chamadas.join('\n')}
+${calls.join('\n')}
 );`,
     montar('fileira'),
   );
@@ -118,8 +118,8 @@ export function toggleSourceRow(variacoes: ToggleSnippetOptions[]): SourceTransf
  * nome próprio. Sem o nome, o leitor anuncia "grupo" e mais nada.
  */
 export function toggleBarSnippet(itens: ToggleSnippetOptions[], nomeDoGrupo: string): string {
-  const icones = itens.map((i) => i.icon ?? 'Bold');
-  const chamadas = itens.map((i) =>
+  const icons = itens.map((i) => i.icon ?? 'Bold');
+  const calls = itens.map((i) =>
     `  ${chamada(
       'createToggle',
       opcoes([
@@ -133,7 +133,7 @@ export function toggleBarSnippet(itens: ToggleSnippetOptions[], nomeDoGrupo: str
   return snippet(
     [
       importing('toggle', 'createToggle'),
-      `import { ${[...new Set(icones)].join(', ')}, createElement } from 'lucide';`,
+      `import { ${[...new Set(icons)].join(', ')}, createElement } from 'lucide';`,
     ].join('\n'),
     `const barra = document.createElement('div');
 barra.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-1';
@@ -142,7 +142,7 @@ barra.dataset.align = 'center';
 barra.setAttribute('role', 'group');
 barra.setAttribute('aria-label', ${texto(nomeDoGrupo)});
 barra.append(
-${chamadas.join('\n')}
+${calls.join('\n')}
 );`,
     montar('barra'),
   );

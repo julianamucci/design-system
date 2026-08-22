@@ -29,16 +29,16 @@ type Story = StoryObj;
 export const Sizes: Story = {
   parameters: { covers: ['visual.item3'] },
   render: () => ({
-    props: { textos: TEXTS, icones: ICONS },
+    props: { texts: TEXTS, icons: ICONS },
     template: `
       <div class="nds-stack" data-spacing="lg">
         <div class="nds-cluster" data-spacing="sm">
-          @for (b of textos; track b.size) {
+          @for (b of texts; track b.size) {
             <button ndsButton [size]="b.size">{{ b.label }}</button>
           }
         </div>
         <div class="nds-cluster" data-spacing="sm">
-          @for (b of icones; track b.size) {
+          @for (b of icons; track b.size) {
             <button ndsButton [size]="b.size" [attr.aria-label]="b.label">
               <svg ndsButtonIcon kind="plus"></svg>
             </button>

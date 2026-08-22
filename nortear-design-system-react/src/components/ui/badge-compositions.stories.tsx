@@ -148,12 +148,12 @@ export const AsButton: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const botao = canvas.getByRole("button", { name: /Filtrar por React/i });
+    const button = canvas.getByRole("button", { name: /Filtrar por React/i });
     // functional.item6 — o pai recebe o foco e o badge não compete por ele.
-    const badge = botao.querySelector('[data-slot="badge"]');
+    const badge = button.querySelector('[data-slot="badge"]');
     await expect(badge).not.toBeNull();
     await expect(badge!.hasAttribute("tabindex")).toBe(false);
-    botao.focus();
-    await expect(document.activeElement).toBe(botao);
+    button.focus();
+    await expect(document.activeElement).toBe(button);
   },
 };

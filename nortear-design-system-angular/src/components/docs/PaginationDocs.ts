@@ -349,7 +349,7 @@ const META_A11Y = [
               ndsPaginationLink
               href="#"
               [attr.aria-label]="rotuloPagina(2)"
-              (click)="irPara($event, 2, totalSimples)"
+              (click)="irTo($event, 2, totalSimples)"
             >2</a>
           </li>
         </ul>
@@ -365,7 +365,7 @@ const META_A11Y = [
               href="#"
               [text]="t('demonstration.labels.previous')"
               [label]="t('demonstration.labels.previous')"
-              (click)="irPara($event, 1, totalSimples)"
+              (click)="irTo($event, 1, totalSimples)"
             ></a>
           </li>
           <li ndsPaginationItem>
@@ -374,7 +374,7 @@ const META_A11Y = [
               href="#"
               [text]="t('demonstration.labels.next')"
               [label]="t('demonstration.labels.next')"
-              (click)="irPara($event, 2, totalSimples)"
+              (click)="irTo($event, 2, totalSimples)"
             ></a>
           </li>
         </ul>
@@ -400,7 +400,7 @@ const META_A11Y = [
                 href="#"
                 [isActive]="n === 1"
                 [attr.aria-label]="rotuloPagina(n)"
-                (click)="irPara($event, n, totalSimples)"
+                (click)="irTo($event, n, totalSimples)"
               >{{ n }}</a>
             </li>
           }
@@ -410,7 +410,7 @@ const META_A11Y = [
               href="#"
               [text]="t('demonstration.labels.next')"
               [label]="t('demonstration.labels.next')"
-              (click)="irPara($event, 2, totalSimples)"
+              (click)="irTo($event, 2, totalSimples)"
             ></a>
           </li>
         </ul>
@@ -426,7 +426,7 @@ const META_A11Y = [
               href="#"
               [text]="t('demonstration.labels.previous')"
               [label]="t('demonstration.labels.previous')"
-              (click)="irPara($event, 5, totalLongo)"
+              (click)="irTo($event, 5, totalLongo)"
             ></a>
           </li>
           @for (trecho of trechosLongos; track $index) {
@@ -439,7 +439,7 @@ const META_A11Y = [
                   href="#"
                   [isActive]="trecho === 6"
                   [attr.aria-label]="rotuloPagina(trecho)"
-                  (click)="irPara($event, trecho, totalLongo)"
+                  (click)="irTo($event, trecho, totalLongo)"
                 >{{ trecho }}</a>
               }
             </li>
@@ -450,7 +450,7 @@ const META_A11Y = [
               href="#"
               [text]="t('demonstration.labels.next')"
               [label]="t('demonstration.labels.next')"
-              (click)="irPara($event, 7, totalLongo)"
+              (click)="irTo($event, 7, totalLongo)"
             ></a>
           </li>
         </ul>
@@ -468,7 +468,7 @@ const META_A11Y = [
                 [text]="t('demonstration.labels.previous')"
                 [label]="t('demonstration.labels.previous')"
                 [disabled]="paginaInterativa() === 1"
-                (click)="irPara($event, paginaInterativa() - 1, totalInterativo)"
+                (click)="irTo($event, paginaInterativa() - 1, totalInterativo)"
               ></a>
             </li>
             @for (n of paginasInterativo; track n) {
@@ -478,7 +478,7 @@ const META_A11Y = [
                   href="#"
                   [isActive]="n === paginaInterativa()"
                   [attr.aria-label]="rotuloPagina(n)"
-                  (click)="irPara($event, n, totalInterativo)"
+                  (click)="irTo($event, n, totalInterativo)"
                 >{{ n }}</a>
               </li>
             }
@@ -489,7 +489,7 @@ const META_A11Y = [
                 [text]="t('demonstration.labels.next')"
                 [label]="t('demonstration.labels.next')"
                 [disabled]="paginaInterativa() === totalInterativo"
-                (click)="irPara($event, paginaInterativa() + 1, totalInterativo)"
+                (click)="irTo($event, paginaInterativa() + 1, totalInterativo)"
               ></a>
             </li>
           </ul>
@@ -513,7 +513,7 @@ const META_A11Y = [
                   href="#"
                   [isActive]="trecho === 6"
                   [attr.aria-label]="rotuloPagina(trecho)"
-                  (click)="irPara($event, trecho, totalLongo)"
+                  (click)="irTo($event, trecho, totalLongo)"
                 >{{ trecho }}</a>
               }
             </li>
@@ -533,7 +533,7 @@ const META_A11Y = [
                 href="#"
                 [isActive]="n === 6"
                 [attr.aria-label]="rotuloPagina(n)"
-                (click)="irPara($event, n, totalLongo)"
+                (click)="irTo($event, n, totalLongo)"
               >{{ n }}</a>
             </li>
           }
@@ -550,7 +550,7 @@ const META_A11Y = [
               href="#"
               [text]="t('demonstration.labels.previous')"
               [label]="t('demonstration.labels.previous')"
-              (click)="irPara($event, 1, totalSimples)"
+              (click)="irTo($event, 1, totalSimples)"
             ></a>
           </li>
           <li ndsPaginationItem>
@@ -559,7 +559,7 @@ const META_A11Y = [
               href="#"
               [text]="t('demonstration.labels.next')"
               [label]="t('demonstration.labels.next')"
-              (click)="irPara($event, 2, totalSimples)"
+              (click)="irTo($event, 2, totalSimples)"
             ></a>
           </li>
         </ul>
@@ -646,7 +646,7 @@ const META_A11Y = [
                       href="#"
                       [text]="t('demonstration.labels.previous')"
                       [label]="t('demonstration.labels.previous')"
-                      (click)="irPara($event, 5, totalLongo)"
+                      (click)="irTo($event, 5, totalLongo)"
                     ></a>
                   </li>
                   @for (trecho of trechosLongos; track $index) {
@@ -659,7 +659,7 @@ const META_A11Y = [
                           href="#"
                           [isActive]="trecho === 6"
                           [attr.aria-label]="rotuloPagina(trecho)"
-                          (click)="irPara($event, trecho, totalLongo)"
+                          (click)="irTo($event, trecho, totalLongo)"
                         >{{ trecho }}</a>
                       }
                     </li>
@@ -670,7 +670,7 @@ const META_A11Y = [
                       href="#"
                       [text]="t('demonstration.labels.next')"
                       [label]="t('demonstration.labels.next')"
-                      (click)="irPara($event, 7, totalLongo)"
+                      (click)="irTo($event, 7, totalLongo)"
                     ></a>
                   </li>
                 </ul>
@@ -689,7 +689,7 @@ const META_A11Y = [
                       href="#"
                       [text]="t('demonstration.labels.previous')"
                       [label]="t('demonstration.labels.previous')"
-                      (click)="irPara($event, 4, totalSimples)"
+                      (click)="irTo($event, 4, totalSimples)"
                     ></a>
                   </li>
                   @for (n of paginasSimples; track n) {
@@ -699,7 +699,7 @@ const META_A11Y = [
                         href="#"
                         [isActive]="n === totalSimples"
                         [attr.aria-label]="rotuloPagina(n)"
-                        (click)="irPara($event, n, totalSimples)"
+                        (click)="irTo($event, n, totalSimples)"
                       >{{ n }}</a>
                     </li>
                   }
@@ -858,7 +858,7 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
    * documentação. O payload leva números e o slug — nunca texto traduzido, que
    * partiria um evento em três no GA4.
    */
-  protected irPara(evento: Event, pagina: number | string, total: number): void {
+  protected irTo(evento: Event, pagina: number | string, total: number): void {
     evento.preventDefault();
     track('page_change', {
       component: SLUG,
@@ -871,7 +871,7 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
   /** A demonstração da seção guarda estado; as outras só emitem o evento. */
   protected irParaDemo(evento: Event, pagina: number): void {
     this.paginaDemo.set(pagina);
-    this.irPara(evento, pagina, SIMPLE_TOTAL);
+    this.irTo(evento, pagina, SIMPLE_TOTAL);
   }
 
   protected readonly navGroups = computed(() => {
@@ -1035,7 +1035,7 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
 
     const ofKey = (chave: string, nome: string) => ({
       name: nome,
@@ -1059,14 +1059,14 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
             name: 'disabled',
             type: 'boolean',
             defaultValue: 'false',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.disabled.description')),
           },
           {
             name: 'label',
             type: 'string',
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.label.description')),
           },
           ofKey('className', 'class'),

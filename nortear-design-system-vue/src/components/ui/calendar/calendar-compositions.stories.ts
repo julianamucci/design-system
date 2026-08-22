@@ -62,7 +62,7 @@ export const DatePicker: Story = {
           : 'Escolher data',
       );
 
-      function escolher(valor: DateValue | undefined) {
+      function choose(valor: DateValue | undefined) {
         selecionada.value = valor;
         onSelect(valor);
         // Escolhida a data, o popover não tem mais o que oferecer: mantê-lo
@@ -70,7 +70,7 @@ export const DatePicker: Story = {
         aberto.value = false;
       }
 
-      return { aberto, selecionada, placeholder, rotulo, escolher };
+      return { aberto, selecionada, placeholder, rotulo, choose };
     },
     template: `
       <Popover v-model:open="aberto">
@@ -82,7 +82,7 @@ export const DatePicker: Story = {
             :model-value="selecionada"
             :placeholder="placeholder"
             locale="pt-BR"
-            @update:model-value="escolher"
+            @update:model-value="choose"
           />
         </PopoverContent>
       </Popover>

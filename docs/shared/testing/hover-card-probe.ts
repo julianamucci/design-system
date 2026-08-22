@@ -89,7 +89,7 @@ export async function waitForClosed(contexto = '', timeout = 3000): Promise<void
 }
 
 /** Centro de um elemento em coordenadas de viewport. */
-function centro(el: HTMLElement): { clientX: number; clientY: number } {
+function center(el: HTMLElement): { clientX: number; clientY: number } {
   const r = el.getBoundingClientRect();
   return { clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 };
 }
@@ -113,7 +113,7 @@ export async function leaveWithPointer(gatilho: HTMLElement, painel: HTMLElement
   const r = painel.getBoundingClientRect();
   const y1 = Math.min(r.bottom + 40, window.innerHeight - 140);
   await userEvent.pointer([
-    { target: gatilho, coords: centro(gatilho) },
+    { target: gatilho, coords: center(gatilho) },
     { target: document.body, coords: { clientX: 2, clientY: y1 } },
     { target: document.body, coords: { clientX: 2, clientY: y1 + 120 } },
   ]);
@@ -128,8 +128,8 @@ export async function leaveWithPointer(gatilho: HTMLElement, painel: HTMLElement
  */
 export async function panelEntrar(gatilho: HTMLElement, painel: HTMLElement): Promise<void> {
   await userEvent.pointer([
-    { target: gatilho, coords: centro(gatilho) },
-    { target: painel, coords: centro(painel) },
+    { target: gatilho, coords: center(gatilho) },
+    { target: painel, coords: center(painel) },
   ]);
 }
 

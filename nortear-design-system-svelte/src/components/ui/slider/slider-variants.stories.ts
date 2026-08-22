@@ -60,9 +60,9 @@ export const Single: Story = {
     });
 
     await step('ArrowRight anda um passo', async () => {
-      const alca = canvas.getByRole('slider');
-      const antes = handleValue(alca);
-      (alca as HTMLElement).focus();
+      const thumb = canvas.getByRole('slider');
+      const antes = handleValue(thumb);
+      (thumb as HTMLElement).focus();
       await userEvent.keyboard('{ArrowRight}');
       await expect(handleValue(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 1));
     });

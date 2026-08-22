@@ -39,6 +39,6 @@ function normalizar(rotulo: string): string {
   return rotulo.trim().toLowerCase().normalize('NFD').replace(DIACRITICOS, '');
 }
 
-export function varianteDaPrioridade(rotulo: string): PrioridadeVariant {
+export function prioridadeVariant(rotulo: string): PrioridadeVariant {
   return LABEL_VARIANT[normalizar(rotulo)] ?? 'outline';
 }

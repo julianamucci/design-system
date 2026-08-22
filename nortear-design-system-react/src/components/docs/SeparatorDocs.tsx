@@ -132,13 +132,13 @@ export function SeparatorDocs() {
 
   const codeImport = `import { Separator } from "@/components/ui/separator";`;
 
-  const codeHorizontal = `<div className="nds-stack nds-w-xs" data-spacing="md">
+  const horizontalCode = `<div className="nds-stack nds-w-xs" data-spacing="md">
   <div>Item 1</div>
   <Separator orientation="horizontal" />
   <div>Item 2</div>
 </div>`;
 
-  const codeVertical = `<div className="nds-cluster nds-docs-demo-row" data-spacing="md" data-align="center">
+  const verticalCode = `<div className="nds-cluster nds-docs-demo-row" data-spacing="md" data-align="center">
   <span>Item 1</span>
   <Separator orientation="vertical" />
   <span>Item 2</span>
@@ -362,7 +362,7 @@ export function SeparatorDocs() {
           {
             name: tContent("variants.items.horizontal"),
             description: stripHtml(tContent("variants.styles.horizontal")),
-            code: codeHorizontal,
+            code: horizontalCode,
             preview: (
               <div className="nds-stack nds-w-xs nds-text-body" data-spacing="sm">
                 <div>Seção superior</div>
@@ -374,7 +374,7 @@ export function SeparatorDocs() {
           {
             name: tContent("variants.items.vertical"),
             description: stripHtml(tContent("variants.styles.vertical")),
-            code: codeVertical,
+            code: verticalCode,
             preview: (
               <div className="nds-cluster nds-docs-demo-row nds-text-body" data-spacing="md" data-align="center">
                 <span>Item 1</span>

@@ -151,7 +151,7 @@ export const WithDots: Story = {
      * painel Interactions roda no MESMO DOM, então um clique cego partiria do
      * estado que a rodada anterior deixou.
      */
-    const irPara = async (position: number) => {
+    const irTo = async (position: number) => {
       if (dot(position).getAttribute("aria-current") !== "true") await userEvent.click(dot(position));
       await waitFor(async () => {
         await expect(dot(position)).toHaveAttribute("aria-current", "true");
@@ -169,7 +169,7 @@ export const WithDots: Story = {
           slides.length,
         );
       }, { timeout: 4000 });
-      await irPara(1);
+      await irTo(1);
       await expect(dot(2).hasAttribute("aria-current")).toBe(false);
     });
 
@@ -177,7 +177,7 @@ export const WithDots: Story = {
       // Este é o padrão novo: a fileira não é de N peças iguais. Com o 2º slide
       // atual, ela é `• [Slide 2] • • •` — e a asserção mede exatamente isso,
       // na posição 2, sem nunca citar nome de classe.
-      await irPara(2);
+      await irTo(2);
 
       // `waitFor` porque a mudança de forma é ANIMADA: medida no primeiro
       // quadro, a pílula ainda está fechada e o ponto anterior ainda aberto.
@@ -217,7 +217,7 @@ export const WithDots: Story = {
 
     await step("Clicar num dot salta direto para aquele slide", async () => {
       const slides = canvas.getAllByRole("group");
-      await irPara(3);
+      await irTo(3);
       // Salto, não passo: a prova é o slide alvo entrar no enquadramento.
       await waitFor(async () => {
         await expect(viewportVisible(slides[2], viewport)).toBe(true);
@@ -228,7 +228,7 @@ export const WithDots: Story = {
 
     await step("E a story termina no começo, como na captura", async () => {
       const slides = canvas.getAllByRole("group");
-      await irPara(1);
+      await irTo(1);
       await waitFor(async () => {
         await expect(viewportVisible(slides[0], viewport)).toBe(true);
       }, { timeout: 4000 });

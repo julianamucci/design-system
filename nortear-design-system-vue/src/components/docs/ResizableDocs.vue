@@ -160,7 +160,7 @@ const codeImportBasic = `import {
   ResizableHandle,
 } from "@/components/ui/resizable";`;
 
-const codeHorizontal = `<ResizablePanelGroup direction="horizontal">
+const horizontalCode = `<ResizablePanelGroup direction="horizontal">
   <ResizablePanel :default-size="30" :min-size="20" :max-size="50">
     <Sidebar />
   </ResizablePanel>
@@ -170,7 +170,7 @@ const codeHorizontal = `<ResizablePanelGroup direction="horizontal">
   </ResizablePanel>
 </ResizablePanelGroup>`;
 
-const codeVertical = `<ResizablePanelGroup direction="vertical">
+const verticalCode = `<ResizablePanelGroup direction="vertical">
   <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
     <Topo />
   </ResizablePanel>
@@ -244,8 +244,8 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.items.horizontal'), description: stripHtml(tContent('variants.styles.horizontal')), code: codeHorizontal },
-  { name: tContent('variants.items.vertical'),   description: stripHtml(tContent('variants.styles.vertical')),   code: codeVertical   },
+  { name: tContent('variants.items.horizontal'), description: stripHtml(tContent('variants.styles.horizontal')), code: horizontalCode },
+  { name: tContent('variants.items.vertical'),   description: stripHtml(tContent('variants.styles.vertical')),   code: verticalCode   },
   { name: tContent('variants.items.nested'),     description: stripHtml(tContent('variants.styles.nested')),     code: codeNested     },
 ]);
 

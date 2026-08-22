@@ -231,10 +231,10 @@ export const RichContent: Story = {
     const canvas = within(canvasElement);
 
     await step('Os dois itens abrem juntos e o conteúdo rico aparece', async () => {
-      const gatilhos = canvas.getAllByRole('button');
-      await abrir(gatilhos[0]);
-      await abrir(gatilhos[1]);
-      await expect(gatilhos[0]).toHaveAttribute('aria-expanded', 'true');
+      const triggers = canvas.getAllByRole('button');
+      await abrir(triggers[0]);
+      await abrir(triggers[1]);
+      await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
       await expect(canvas.getByRole('table')).toBeVisible();
       await expect(canvas.getAllByRole('listitem').length).toBe(3);
     });
@@ -290,10 +290,10 @@ export const FAQ: Story = {
     });
 
     await step('Abrir uma pergunta fecha a anterior (modo único)', async () => {
-      const gatilhos = canvas.getAllByRole('button');
-      await abrir(gatilhos[0]);
-      await abrir(gatilhos[1]);
-      await expect(gatilhos[0]).toHaveAttribute('aria-expanded', 'false');
+      const triggers = canvas.getAllByRole('button');
+      await abrir(triggers[0]);
+      await abrir(triggers[1]);
+      await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
     });
   },
 };

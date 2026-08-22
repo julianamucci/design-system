@@ -38,7 +38,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const ROTULO = {
+const LABEL = {
   gatilho: () => t('usage.uxWriting.table.trigger.good'),
   descricao: () => t('usage.uxWriting.table.description.good'),
   fechar: () => t('usage.uxWriting.table.close.good'),
@@ -50,9 +50,9 @@ function painel(direction: DrawerDirection) {
     props: {
       direction,
       tituloPainel: stripHtml(t(`demonstration.labels.${direction}`)),
-      descricaoPainel: ROTULO.descricao(),
-      rotuloGatilho: ROTULO.gatilho(),
-      rotuloFechar: ROTULO.fechar(),
+      descricaoPainel: LABEL.descricao(),
+      rotuloGatilho: LABEL.gatilho(),
+      rotuloFechar: LABEL.fechar(),
     },
     template: `
       <nds-drawer [direction]="direction" [defaultOpen]="true">
@@ -101,8 +101,8 @@ export const Bottom: Story = {
 
       // A alça só é visível nesta direção — o CSS compartilhado a esconde nas
       // outras. Contraste e cor do painel são verificados pelo axe da story.
-      const alca = panelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
-      await expect(window.getComputedStyle(alca).display).toBe('block');
+      const thumb = panelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
+      await expect(window.getComputedStyle(thumb).display).toBe('block');
     });
   },
 };
@@ -126,8 +126,8 @@ export const Top: Story = {
       await expect(panelEl).toHaveClass(/nds-drawer-content/);
       await expect(panelEl).toHaveAccessibleName();
 
-      const alca = panelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
-      await expect(window.getComputedStyle(alca).display).toBe('none');
+      const thumb = panelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
+      await expect(window.getComputedStyle(thumb).display).toBe('none');
     });
   },
 };
@@ -193,9 +193,9 @@ export const WithScroll: Story = {
   render: () => ({
     props: {
       tituloPainel: t('variants.items.withScroll.name'),
-      descricaoPainel: ROTULO.descricao(),
-      rotuloGatilho: ROTULO.gatilho(),
-      rotuloFechar: ROTULO.fechar(),
+      descricaoPainel: LABEL.descricao(),
+      rotuloGatilho: LABEL.gatilho(),
+      rotuloFechar: LABEL.fechar(),
       paragrafos: Array.from({ length: 30 }, (_, i) => ({
         id: `p-${i}`,
         texto: `${i + 1}. ${stripHtml(t('variants.items.withScroll.use'))}`,

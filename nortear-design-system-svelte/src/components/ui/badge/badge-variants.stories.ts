@@ -45,9 +45,9 @@ type Story = StoryObj;
 const pintura = (el: HTMLElement) => {
   const s = getComputedStyle(el);
   return {
-    fundo: s.backgroundColor,
+    background: s.backgroundColor,
     texto: s.color,
-    borda: s.borderTopColor,
+    border: s.borderTopColor,
     larguraBorda: s.borderTopWidth,
   };
 };
@@ -61,10 +61,10 @@ export const Default: Story = {
     const badge = canvas.getByText('Novo');
     await expect(badge).toHaveAttribute('data-variant', 'default');
     // functional.item1 — fundo preenchido, texto contrastante, borda invisível.
-    const { fundo, texto, borda } = pintura(badge);
-    await expect(transparente(fundo)).toBe(false);
-    await expect(fundo).not.toBe(texto);
-    await expect(transparente(borda)).toBe(true);
+    const { background, texto, border } = pintura(badge);
+    await expect(transparente(background)).toBe(false);
+    await expect(background).not.toBe(texto);
+    await expect(transparente(border)).toBe(true);
   },
 };
 
@@ -80,16 +80,16 @@ export const Secondary: Story = {
     await expect(badge).toHaveAttribute('data-variant', 'secondary');
     // functional.item2 — preenchida como a default, mas em outra cor: é isso
     // que faz a hierarquia entre as duas existir.
-    const { fundo, borda } = pintura(badge);
-    await expect(transparente(fundo)).toBe(false);
-    await expect(transparente(borda)).toBe(true);
+    const { background, border } = pintura(badge);
+    await expect(transparente(background)).toBe(false);
+    await expect(transparente(border)).toBe(true);
 
     const referencia = document.createElement('span');
     referencia.className = 'nds-badge nds-badge-default';
     canvasElement.appendChild(referencia);
     const backgroundDefault = getComputedStyle(referencia).backgroundColor;
     referencia.remove();
-    await expect(fundo).not.toBe(backgroundDefault);
+    await expect(background).not.toBe(backgroundDefault);
   },
 };
 
@@ -106,9 +106,9 @@ export const Destructive: Story = {
     // functional.item3 — fundo suave E borda colorida, com o texto no
     // --foreground. É a combinação que sustenta os 4.5:1 documentados: cor
     // sinaliza, contraste vem do texto neutro.
-    const { fundo, texto, borda } = pintura(badge);
-    await expect(transparente(fundo)).toBe(false);
-    await expect(transparente(borda)).toBe(false);
+    const { background, texto, border } = pintura(badge);
+    await expect(transparente(background)).toBe(false);
+    await expect(transparente(border)).toBe(false);
 
     const referencia = document.createElement('span');
     referencia.className = 'nds-badge nds-badge-outline';
@@ -130,9 +130,9 @@ export const Outline: Story = {
     const badge = canvas.getByText('Rascunho');
     await expect(badge).toHaveAttribute('data-variant', 'outline');
     // functional.item4 — só borda: sem fundo é o que a diferencia das outras.
-    const { fundo, borda, larguraBorda } = pintura(badge);
-    await expect(transparente(fundo)).toBe(true);
-    await expect(transparente(borda)).toBe(false);
+    const { background, border, larguraBorda } = pintura(badge);
+    await expect(transparente(background)).toBe(true);
+    await expect(transparente(border)).toBe(false);
     await expect(parseFloat(larguraBorda)).toBeGreaterThan(0);
   },
 };
@@ -174,13 +174,13 @@ export const Semantics: Story = {
     const fundos: string[] = [];
     for (const [nome, badge] of Object.entries(badges)) {
       await expect(badge).toHaveAttribute('data-variant', nome);
-      const { fundo, texto, borda } = pintura(badge);
+      const { background, texto, border } = pintura(badge);
       // functional.item7 — cor vem do fundo e da borda; o texto fica neutro,
       // que é o que sustenta 4.5:1 sem depender da variante escolhida.
-      await expect(transparente(fundo)).toBe(false);
-      await expect(transparente(borda)).toBe(false);
+      await expect(transparente(background)).toBe(false);
+      await expect(transparente(border)).toBe(false);
       await expect(texto).toBe(neutralText);
-      fundos.push(fundo);
+      fundos.push(background);
     }
 
     // Três cores, e não três nomes para a mesma: sem isto, copiar o bloco do

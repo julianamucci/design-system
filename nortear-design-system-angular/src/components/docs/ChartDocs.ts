@@ -428,7 +428,7 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
       <div
         ndsChart
         type="pie"
-        [data]="dadosDispositivo"
+        [data]="dataDispositivo"
         [label]="rotulo(t('variants.items.pie.name'))"
         [categoryLabel]="t('demonstration.labels.dataLabel')"
         [valueLabel]="t('demonstration.labels.tooltipLabel')"
@@ -514,7 +514,7 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
               <div
                 ndsChart
                 type="pie"
-                [data]="dadosDispositivo"
+                [data]="dataDispositivo"
                 [showData]="true"
                 [categoryLabel]="t('demonstration.labels.dataLabel')"
                 [valueLabel]="t('demonstration.labels.tooltipLabel')"
@@ -642,11 +642,11 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
   protected readonly serieUnica = SERIE_UNICA;
   protected readonly seriesMulti = SERIES_MULTI;
   protected readonly seriesTrio = SERIES_TRIO;
-  protected readonly dadosDispositivo = DATA_DISPOSITIVO;
+  protected readonly dataDispositivo = DATA_DISPOSITIVO;
   protected readonly tendencia = TENDENCIA;
 
   /** Total do mini gráfico — derivado da série, nunca escrito à mão. */
-  protected readonly totalTendencia = TENDENCIA[0].data.reduce((soma, v) => soma + v, 0);
+  protected readonly totalTendencia = TENDENCIA[0].data.reduce((sum, v) => sum + v, 0);
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
@@ -813,7 +813,7 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const sim = tNav('common.yes');
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     // "—" e nunca a string "undefined": travessão é o vazio tipográfico, e é o
     // que as outras stacks mostram.
     const linha = (
@@ -821,7 +821,7 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
       chave: string,
       tipo: string,
       padrao: string,
-      obrigatorio = nao,
+      obrigatorio = not,
     ) => ({
       name,
       type: tipo,

@@ -434,10 +434,10 @@ export const Mobile: Story = {
       const dialogo = gaveta()!;
       await expect(dialogo).toHaveAttribute("role", "dialog");
       await expect(dialogo).toHaveAttribute("aria-modal", "true");
-      const rotuladoPor = dialogo.getAttribute("aria-labelledby");
-      await expect(rotuladoPor).toBeTruthy();
+      const labelledBy = dialogo.getAttribute("aria-labelledby");
+      await expect(labelledBy).toBeTruthy();
       // Nome em português por padrão: era "Sidebar", cravado no componente.
-      await expect(document.getElementById(rotuladoPor!)?.textContent?.trim()).toBe(
+      await expect(document.getElementById(labelledBy!)?.textContent?.trim()).toBe(
         "Barra lateral",
       );
     });

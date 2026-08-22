@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { varianteDaPrioridade } from '@shared/primitives/badge-priority';
+  import { prioridadeVariant } from '@shared/primitives/badge-priority';
   import { Card } from '@/components/ui/card';
   import { Badge } from '@/components/ui/badge';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
@@ -45,7 +45,7 @@
                   <TableCell class="nds-p-2">{item.action}</TableCell>
                   <TableCell class="nds-p-2 nds-text-muted-foreground">{item.result}</TableCell>
                   <TableCell class="nds-p-2 nds-font-medium">
-                    <Badge variant={varianteDaPrioridade(item.priority)}>{item.priority}</Badge>
+                    <Badge variant={prioridadeVariant(item.priority)}>{item.priority}</Badge>
                   </TableCell>
                 </TableRow>
               {/each}
@@ -92,7 +92,7 @@
                 <TableRow class="nds-border-b nds-hover-bg-muted-faint">
                   <TableCell class="nds-p-2">{item.story}</TableCell>
                   <TableCell class="nds-p-2 nds-font-medium">
-                    <Badge variant={varianteDaPrioridade(item.priority)}>{item.priority}</Badge>
+                    <Badge variant={prioridadeVariant(item.priority)}>{item.priority}</Badge>
                   </TableCell>
                 </TableRow>
               {/each}

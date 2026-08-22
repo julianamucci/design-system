@@ -214,11 +214,11 @@ export const MegaMenuGrid: Story = {
     const painel = await waitForPanel();
 
     await step('Quatro destinos em duas colunas', async () => {
-      const destinos = [...painel.querySelectorAll<HTMLElement>('a')];
-      await expect(destinos).toHaveLength(4);
+      const targets = [...painel.querySelectorAll<HTMLElement>('a')];
+      await expect(targets).toHaveLength(4);
       // Duas colunas de verdade: o segundo destino está à direita do primeiro,
       // na mesma linha; o terceiro desce.
-      const [a, b, c] = destinos.map((d) => d.getBoundingClientRect());
+      const [a, b, c] = targets.map((d) => d.getBoundingClientRect());
       await expect(b.left).toBeGreaterThan(a.left);
       await expect(Math.abs(b.top - a.top)).toBeLessThan(2);
       await expect(c.top).toBeGreaterThan(a.top);
@@ -227,8 +227,8 @@ export const MegaMenuGrid: Story = {
     await step('A descrição faz parte do nome do destino', async () => {
       // Critério 2.4.4 (Link Purpose): "Para Marketing" sozinho não diz o que
       // há do outro lado. Por isso a descrição NÃO recebe aria-hidden.
-      const destino = within(painel).getByRole('link', { name: /Para Marketing/ });
-      await expect(destino.textContent).toContain('Campanhas');
+      const destination = within(painel).getByRole('link', { name: /Para Marketing/ });
+      await expect(destination.textContent).toContain('Campanhas');
     });
 
     await step('O gatilho continua sendo o dono do painel', async () => {
@@ -300,24 +300,24 @@ export const WithHighlightedCard: Story = {
     const painel = await abrir(gatilho);
 
     await step('Um destino em destaque e três de apoio', async () => {
-      const destinos = [...painel.querySelectorAll<HTMLElement>('a')];
-      await expect(destinos).toHaveLength(4);
+      const targets = [...painel.querySelectorAll<HTMLElement>('a')];
+      await expect(targets).toHaveLength(4);
       // O destaque ocupa a coluna inteira: é mais alto que qualquer um dos
       // complementares, que é como a hierarquia aparece sem depender de cor.
-      const destaque = destinos[0].getBoundingClientRect();
-      const apoio = destinos[1].getBoundingClientRect();
-      await expect(destaque.height).toBeGreaterThan(apoio.height);
+      const highlight = targets[0].getBoundingClientRect();
+      const apoio = targets[1].getBoundingClientRect();
+      await expect(highlight.height).toBeGreaterThan(apoio.height);
     });
 
     await step('Tab alcança todo o painel portalizado', async () => {
       // O painel mora no <body>, fora do canvas — se os destinos não fossem
       // tabuláveis, o conteúdo ficaria inalcançável por teclado.
-      const destinos = [...painel.querySelectorAll<HTMLElement>('a')];
-      for (const destino of destinos) {
-        await expect(destino.getAttribute('tabindex')).not.toBe('-1');
+      const targets = [...painel.querySelectorAll<HTMLElement>('a')];
+      for (const destination of targets) {
+        await expect(destination.getAttribute('tabindex')).not.toBe('-1');
       }
-      destinos[0].focus();
-      await expect(document.activeElement).toBe(destinos[0]);
+      targets[0].focus();
+      await expect(document.activeElement).toBe(targets[0]);
       await userEvent.tab();
       await expect(painel.contains(document.activeElement)).toBe(true);
     });

@@ -474,7 +474,7 @@ export class NdsCheckboxDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     // As props vêm do RdxCheckboxRoot via hostDirectives — `checked` e
     // `indeterminate` são `model()`, então `[(checked)]` funciona. O conteúdo
     // compartilhado descreve as mesmas chaves para as outras stacks.
@@ -483,14 +483,14 @@ export class NdsCheckboxDocs implements AfterViewInit, OnDestroy {
         title: 'NdsCheckbox',
         cols,
         items: [
-          { name: 'checked',        type: 'model<boolean>',   defaultValue: 'false', required: nao, description: toPlainText(t('props.items.checked')) },
-          { name: 'indeterminate',  type: 'model<boolean>',   defaultValue: 'false', required: nao, description: toPlainText(t('props.items.indeterminate')) },
-          { name: 'checkedChange',  type: 'output<boolean>',  defaultValue: '—',     required: nao, description: toPlainText(t('props.items.onCheckedChange')) },
-          { name: 'disabled',       type: 'boolean',          defaultValue: 'false', required: nao, description: toPlainText(t('props.items.disabled')) },
-          { name: 'required',       type: 'boolean',          defaultValue: 'false', required: nao, description: toPlainText(t('props.items.required')) },
-          { name: 'name',           type: 'string',           defaultValue: '—',     required: nao, description: toPlainText(t('props.items.name')) },
-          { name: 'value',          type: 'string',           defaultValue: '—',     required: nao, description: toPlainText(t('props.items.value')) },
-          { name: 'class',          type: 'string',           defaultValue: '—',     required: nao, description: toPlainText(t('props.items.className')) },
+          { name: 'checked',        type: 'model<boolean>',   defaultValue: 'false', required: not, description: toPlainText(t('props.items.checked')) },
+          { name: 'indeterminate',  type: 'model<boolean>',   defaultValue: 'false', required: not, description: toPlainText(t('props.items.indeterminate')) },
+          { name: 'checkedChange',  type: 'output<boolean>',  defaultValue: '—',     required: not, description: toPlainText(t('props.items.onCheckedChange')) },
+          { name: 'disabled',       type: 'boolean',          defaultValue: 'false', required: not, description: toPlainText(t('props.items.disabled')) },
+          { name: 'required',       type: 'boolean',          defaultValue: 'false', required: not, description: toPlainText(t('props.items.required')) },
+          { name: 'name',           type: 'string',           defaultValue: '—',     required: not, description: toPlainText(t('props.items.name')) },
+          { name: 'value',          type: 'string',           defaultValue: '—',     required: not, description: toPlainText(t('props.items.value')) },
+          { name: 'class',          type: 'string',           defaultValue: '—',     required: not, description: toPlainText(t('props.items.className')) },
         ],
       },
     ];

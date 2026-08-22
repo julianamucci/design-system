@@ -53,7 +53,7 @@ function abas(
   itens: Aba[],
   rotuloDaLista = 'Seções do componente',
 ): string {
-  const gatilhos = itens
+  const triggers = itens
     .map(([valor, rotulo, , extra]) => {
       const abertura = extra
         ? `<TabsTrigger value="${valor}" ${extra}>`
@@ -67,7 +67,7 @@ function abas(
 
   return `<Tabs${raiz}>
   <TabsList aria-label="${rotuloDaLista}"${lista}>
-${gatilhos}
+${triggers}
   </TabsList>
 ${panels}
 </Tabs>`;
@@ -137,7 +137,7 @@ export function tabsWithIconsSource(): string {
     ['account', 'Conta', 'Configurações da conta.', 'Settings'],
     ['security', 'Segurança', 'Configurações de segurança.', 'Shield'],
   ];
-  const gatilhos = conta
+  const triggers = conta
     .map(
       ([valor, rotulo, , icone]) => `    <TabsTrigger value="${valor}">
       <${icone} aria-hidden="true" />
@@ -154,7 +154,7 @@ export function tabsWithIconsSource(): string {
 import { Settings, Shield, User } from "lucide-react";`,
     `<Tabs defaultValue="profile">
   <TabsList aria-label="Configurações da conta">
-${gatilhos}
+${triggers}
   </TabsList>
 ${panels}
 </Tabs>`,

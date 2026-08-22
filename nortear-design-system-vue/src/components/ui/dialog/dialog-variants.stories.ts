@@ -118,9 +118,9 @@ export const Default: Story = {
       // no estreito e à direita no largo. No DOM ela vem por último, que é a
       // ordem de leitura e de foco correta.
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const botoes = rodape.querySelectorAll<HTMLElement>('button');
-      await expect(botoes.length).toBe(2);
-      await expect(botoes[botoes.length - 1]).toHaveClass('nds-button-default');
+      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      await expect(buttons.length).toBe(2);
+      await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-default');
     });
   },
 };
@@ -341,8 +341,8 @@ export const WithDestructiveAction: Story = {
 
     await step('A ação primária carrega a variante destrutiva', async () => {
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const botoes = rodape.querySelectorAll<HTMLElement>('button');
-      await expect(botoes[botoes.length - 1]).toHaveClass('nds-button-destructive');
+      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-destructive');
     });
 
     await step('Ainda assim é um Dialog, não um AlertDialog', async () => {

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
 import { NdsCard } from '@/components/ui/card';
 import { NdsBadge, type BadgeVariant } from '@/components/ui/badge';
-import { varianteDaPrioridade } from '@shared/primitives/badge-priority';
+import { prioridadeVariant } from '@shared/primitives/badge-priority';
 
 export interface DocsTestItem { action: string; result: string; priority: string }
 export interface DocsA11yTestItem { criterion: string; level: string; how: string }
@@ -144,6 +144,6 @@ export class NdsDocsTestes {
    * os três idiomas: um mapa só pt/en fazia "Media"/"Baja" caírem no outline.
    */
   protected prioridade(valor: string): BadgeVariant {
-    return varianteDaPrioridade(valor) as BadgeVariant;
+    return prioridadeVariant(valor) as BadgeVariant;
   }
 }

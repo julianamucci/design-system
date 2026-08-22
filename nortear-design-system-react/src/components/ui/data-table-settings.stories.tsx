@@ -57,7 +57,7 @@ export const Paginated: Story = {
     const primeira = () => canvas.getByRole("button", { name: "Primeira página" }) as HTMLButtonElement
     const anterior = () => canvas.getByRole("button", { name: "Página anterior" }) as HTMLButtonElement
     const next = () => canvas.getByRole("button", { name: "Próxima página" }) as HTMLButtonElement
-    const ultima = () => canvas.getByRole("button", { name: "Última página" }) as HTMLButtonElement
+    const last = () => canvas.getByRole("button", { name: "Última página" }) as HTMLButtonElement
 
     // Precondição do passo, e não herança do anterior: o replay reexecuta a play
     // no MESMO DOM, e a última rodada pode ter parado em qualquer página. Na
@@ -76,7 +76,7 @@ export const Paginated: Story = {
       await expect(primeira()).toBeDisabled()
       await expect(anterior()).toBeDisabled()
       await expect(next()).toBeEnabled()
-      await expect(ultima()).toBeEnabled()
+      await expect(last()).toBeEnabled()
     })
 
     await step("Avançar uma página troca a fatia de linhas", async () => {
@@ -91,11 +91,11 @@ export const Paginated: Story = {
       // No meio do caminho os quatro estão vivos: há para onde ir dos dois lados.
       await expect(primeira()).toBeEnabled()
       await expect(anterior()).toBeEnabled()
-      await expect(ultima()).toBeEnabled()
+      await expect(last()).toBeEnabled()
     })
 
     await step("O salto para a última página respeita a fatia incompleta", async () => {
-      await userEvent.click(ultima())
+      await userEvent.click(last())
       await waitFor(async () => {
         await expect(firstInvoice()).toContain("INV-011")
       })
@@ -107,7 +107,7 @@ export const Paginated: Story = {
       ).toBeInTheDocument()
 
       await expect(next()).toBeDisabled()
-      await expect(ultima()).toBeDisabled()
+      await expect(last()).toBeDisabled()
       await expect(anterior()).toBeEnabled()
     })
 
@@ -188,11 +188,11 @@ export const ExplicitRowLabel: Story = {
     })
 
     await step("Nenhuma linha repete o nome de outra", async () => {
-      const nomes = linhas().map(
+      const names = linhas().map(
         (l) => lineBox(l).getAttribute("aria-label") ?? ""
       )
-      await expect(nomes.length).toBe(invoices.length)
-      await expect(new Set(nomes).size).toBe(nomes.length)
+      await expect(names.length).toBe(invoices.length)
+      await expect(new Set(names).size).toBe(names.length)
     })
   },
 }

@@ -55,7 +55,7 @@ export const Default: Story = {
   },
   render: () => ({
     components: sharedComponents,
-    setup() { return { estados: STATES }; },
+    setup() { return { states: STATES }; },
     template: `
       <div style="contain: layout">
         <Select>
@@ -63,7 +63,7 @@ export const Default: Story = {
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem v-for="e in estados" :key="e.value" :value="e.value">{{ e.label }}</SelectItem>
+            <SelectItem v-for="e in states" :key="e.value" :value="e.value">{{ e.label }}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -105,7 +105,7 @@ export const Selected: Story = {
   },
   render: () => ({
     components: sharedComponents,
-    setup() { return { estados: STATES, rotulos: VALUE_STATES }; },
+    setup() { return { states: STATES, rotulos: VALUE_STATES }; },
     template: `
       <div style="contain: layout">
         <Select default-value="rj">
@@ -117,7 +117,7 @@ export const Selected: Story = {
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem v-for="e in estados" :key="e.value" :value="e.value">{{ e.label }}</SelectItem>
+            <SelectItem v-for="e in states" :key="e.value" :value="e.value">{{ e.label }}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -164,7 +164,7 @@ export const Open: Story = {
   },
   render: () => ({
     components: sharedComponents,
-    setup() { return { estados: STATES }; },
+    setup() { return { states: STATES }; },
     template: `
       <div style="contain: layout; min-height: 280px;">
         <Select>
@@ -172,7 +172,7 @@ export const Open: Story = {
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem v-for="e in estados" :key="e.value" :value="e.value">{{ e.label }}</SelectItem>
+            <SelectItem v-for="e in states" :key="e.value" :value="e.value">{{ e.label }}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -204,17 +204,17 @@ export const Open: Story = {
         within(listbox)
           .getAllByRole('option')
           .findIndex((o) => o.hasAttribute('data-highlighted'));
-      const ultimo = within(listbox).getAllByRole('option').length - 1;
+      const last = within(listbox).getAllByRole('option').length - 1;
 
       const partida = destacada();
       await userEvent.keyboard('{ArrowDown}');
-      const primeiro = Math.min(partida + 1, ultimo);
+      const primeiro = Math.min(partida + 1, last);
       await waitFor(async () => {
         await expect(destacada()).toBe(primeiro);
       });
 
       await userEvent.keyboard('{ArrowDown}');
-      const segundo = Math.min(primeiro + 1, ultimo);
+      const segundo = Math.min(primeiro + 1, last);
       await waitFor(async () => {
         await expect(destacada()).toBe(segundo);
       });
@@ -238,7 +238,7 @@ export const Disabled: Story = {
   },
   render: () => ({
     components: sharedComponents,
-    setup() { return { estados: STATES }; },
+    setup() { return { states: STATES }; },
     template: `
       <div style="contain: layout">
         <Select disabled>
@@ -246,7 +246,7 @@ export const Disabled: Story = {
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem v-for="e in estados" :key="e.value" :value="e.value">{{ e.label }}</SelectItem>
+            <SelectItem v-for="e in states" :key="e.value" :value="e.value">{{ e.label }}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -284,7 +284,7 @@ export const Invalid: Story = {
   },
   render: () => ({
     components: sharedComponents,
-    setup() { return { estados: STATES }; },
+    setup() { return { states: STATES }; },
     template: `
       <div class="nds-stack" data-spacing="sm" style="contain: layout">
         <Select>
@@ -292,7 +292,7 @@ export const Invalid: Story = {
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem v-for="e in estados" :key="e.value" :value="e.value">{{ e.label }}</SelectItem>
+            <SelectItem v-for="e in states" :key="e.value" :value="e.value">{{ e.label }}</SelectItem>
           </SelectContent>
         </Select>
         <p class="nds-text-body nds-text-destructive">Selecione um estado para continuar.</p>
@@ -334,7 +334,7 @@ export const Sm: Story = {
   },
   render: () => ({
     components: sharedComponents,
-    setup() { return { estados: STATES }; },
+    setup() { return { states: STATES }; },
     template: `
       <div class="nds-stack" data-spacing="sm" style="contain: layout">
         <Select>
@@ -342,7 +342,7 @@ export const Sm: Story = {
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem v-for="e in estados" :key="e.value" :value="e.value">{{ e.label }}</SelectItem>
+            <SelectItem v-for="e in states" :key="e.value" :value="e.value">{{ e.label }}</SelectItem>
           </SelectContent>
         </Select>
 

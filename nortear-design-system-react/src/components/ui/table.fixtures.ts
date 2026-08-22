@@ -35,4 +35,4 @@ function formatar(total: number): string {
   return `R$ ${inteiros},${String(total % 100).padStart(2, "0")}`;
 }
 
-export const TOTAL = formatar(INVOICES.reduce((soma, i) => soma + centavos(i.amount), 0));
+export const TOTAL = formatar(INVOICES.reduce((sum, i) => sum + centavos(i.amount), 0));

@@ -48,7 +48,7 @@ function variantIcon(variant: AlertVariant): AlertIconType {
 
 type PartesDoAlerta = {
   /** Nomes importados de `@/components/ui/alert` para esta composição. */
-  nomes: string[];
+  names: string[];
   criacao: string;
   corpo: string[];
 };
@@ -71,13 +71,13 @@ function partesDoAlerta(o: AlertSnippetOptions): PartesDoAlerta {
     ['onDismiss', o.dismissible && typeof o.onDismiss === 'string' ? o.onDismiss : undefined],
   ]);
 
-  const nomes = ['createAlert'];
-  if (icone) nomes.push('createAlertIcon');
-  if (title) nomes.push('createAlertTitle');
-  if (description) nomes.push('createAlertDescription');
+  const names = ['createAlert'];
+  if (icone) names.push('createAlertIcon');
+  if (title) names.push('createAlertTitle');
+  if (description) names.push('createAlertDescription');
 
   return {
-    nomes,
+    names,
     // Sem nenhuma opção a chamada é `createAlert()`: a fábrica tem parâmetro
     // com valor padrão, e um `{}` vazio seria ruído.
     criacao: `const alerta = ${linhas.length ? chamada('createAlert', linhas) : 'createAlert()'};`,
@@ -93,8 +93,8 @@ function partesDoAlerta(o: AlertSnippetOptions): PartesDoAlerta {
 
 /** A chamada real de `createAlert` e a composição que a story monta em cima. */
 export function alertSnippet(o: AlertSnippetOptions = {}): string {
-  const { nomes, criacao, corpo } = partesDoAlerta(o);
-  return snippet(importing('alert', ...nomes), [criacao, ...corpo].join('\n'), montar('alerta'));
+  const { names, criacao, corpo } = partesDoAlerta(o);
+  return snippet(importing('alert', ...names), [criacao, ...corpo].join('\n'), montar('alerta'));
 }
 
 /**
@@ -123,10 +123,10 @@ export type AlertWithActionSnippetOptions = AlertSnippetOptions & {
  */
 export function alertWithActionSnippet(o: AlertWithActionSnippetOptions = {}): string {
   const acao = o.acao ?? 'Atualizar';
-  const { nomes, criacao, corpo } = partesDoAlerta(o);
+  const { names, criacao, corpo } = partesDoAlerta(o);
 
   return snippet(
-    [importing('alert', ...nomes, 'createAlertAction'), importing('button', 'createButton')].join(
+    [importing('alert', ...names, 'createAlertAction'), importing('button', 'createButton')].join(
       '\n',
     ),
     [criacao, ...corpo].join('\n'),
@@ -151,10 +151,10 @@ export function alertWithActionSourceWith(
  * na página ao carregar é anunciado na ordem do documento e nada mais.
  */
 export function alertEmRegiaoVivaSnippet(o: AlertSnippetOptions = {}): string {
-  const { nomes, criacao, corpo } = partesDoAlerta(o);
+  const { names, criacao, corpo } = partesDoAlerta(o);
 
   return snippet(
-    importing('alert', ...nomes),
+    importing('alert', ...names),
     `const regiao = document.createElement('div');
 regiao.setAttribute('aria-live', 'polite');
 document.querySelector('#app')?.append(regiao);`,

@@ -88,7 +88,7 @@
   });
 </script>
 
-{#snippet botoes()}
+{#snippet buttons()}
   {#each resolvedItems as item (item.value)}
     <ToggleGroupItem
       value={item.value}
@@ -126,7 +126,7 @@ escrito assim o repasse ao espião da story fica explícito.
     {spacing}
     aria-label={ariaLabel}
   >
-    {@render botoes()}
+    {@render buttons()}
   </ToggleGroup>
 {:else}
   <ToggleGroup
@@ -143,6 +143,6 @@ escrito assim o repasse ao espião da story fica explícito.
     {spacing}
     aria-label={ariaLabel}
   >
-    {@render botoes()}
+    {@render buttons()}
   </ToggleGroup>
 {/if}

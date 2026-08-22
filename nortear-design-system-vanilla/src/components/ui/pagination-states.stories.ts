@@ -52,10 +52,10 @@ export const Default: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('O link inativo está visível e não é a página atual', async () => {
-      const inativo = canvas.getByRole('link', { name: 'Ir para página 4' });
-      await expect(inativo).toBeVisible();
-      await expect(inativo).not.toHaveAttribute('aria-current');
-      await expect(getComputedStyle(inativo).pointerEvents).toBe('auto');
+      const inactive = canvas.getByRole('link', { name: 'Ir para página 4' });
+      await expect(inactive).toBeVisible();
+      await expect(inactive).not.toHaveAttribute('aria-current');
+      await expect(getComputedStyle(inactive).pointerEvents).toBe('auto');
     });
   },
 };
@@ -214,9 +214,9 @@ export const Contrast: Story = {
     await step('Todo link passa dos 4.5:1 exigidos para texto', async () => {
       // accessibility.item2 — o texto da faixa tem 14px, tamanho normal pela
       // WCAG (grande é >=24px, ou >=18.66px em negrito), então o limite é 4.5.
-      const medidas = rangeContrastes(canvasElement);
-      await expect(medidas.length).toBe(7);
-      await expect(JSON.stringify(medidas.filter((m) => m.ratio < 4.5))).toBe('[]');
+      const measurements = rangeContrastes(canvasElement);
+      await expect(measurements.length).toBe(7);
+      await expect(JSON.stringify(measurements.filter((m) => m.ratio < 4.5))).toBe('[]');
     });
 
     await step('Todo controle alcança o alvo de toque mínimo', async () => {

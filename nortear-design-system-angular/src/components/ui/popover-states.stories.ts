@@ -30,7 +30,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const PAINEL_SIMPLES = `
+const SIMPLE_PANEL = `
         <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
             <h3 ndsPopoverTitle>Configurações de exibição</h3>
@@ -48,7 +48,7 @@ export const Closed: Story = {
     template: `
       <div ndsPopover>
         <button ndsPopoverTrigger ndsButton variant="outline">Abrir popover</button>
-        ${PAINEL_SIMPLES}
+        ${SIMPLE_PANEL}
       </div>
     `,
   }),
@@ -83,7 +83,7 @@ export const Open: Story = {
     template: `
       <div ndsPopover [defaultOpen]="true">
         <button ndsPopoverTrigger ndsButton variant="outline">Abrir popover</button>
-        ${PAINEL_SIMPLES}
+        ${SIMPLE_PANEL}
       </div>
     `,
   }),
@@ -112,7 +112,7 @@ export const Controlled: Story = {
       <div class="nds-cluster" data-spacing="md">
         <div ndsPopover [open]="aberto" (openChange)="aberto = $event">
           <button ndsPopoverTrigger ndsButton variant="outline">Abrir popover</button>
-          ${PAINEL_SIMPLES}
+          ${SIMPLE_PANEL}
         </div>
 
         <button ndsButton variant="ghost" (click)="aberto = !aberto">
@@ -165,7 +165,7 @@ export const Focus: Story = {
     template: `
       <div ndsPopover>
         <button ndsPopoverTrigger ndsButton variant="outline">Abrir popover</button>
-        ${PAINEL_SIMPLES}
+        ${SIMPLE_PANEL}
       </div>
     `,
   }),

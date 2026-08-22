@@ -113,8 +113,8 @@ export const WithCaption: Story = {
     });
 
     await step('E o eixo continua escrevendo as categorias', async () => {
-      for (const mes of MONTHS) {
-        await expect(designEscreve(raiz, mes)).toBe(true);
+      for (const month of MONTHS) {
+        await expect(designEscreve(raiz, month)).toBe(true);
       }
     });
   },

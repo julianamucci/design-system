@@ -95,9 +95,9 @@ export const Playground: Story = {
     // para o primeiro slide encostar na borda como nas outras quatro), então a
     // distância entre recorte e track NUNCA é zero em repouso. Medir em absoluto
     // dava 16.7 onde a conta esperava 0.
-    const repouso = recorte.getBoundingClientRect().left - track.getBoundingClientRect().left;
+    const rest = recorte.getBoundingClientRect().left - track.getBoundingClientRect().left;
     const deslocamento = () =>
-      recorte.getBoundingClientRect().left - track.getBoundingClientRect().left - repouso;
+      recorte.getBoundingClientRect().left - track.getBoundingClientRect().left - rest;
 
     // Coordenada de LAYOUT: `offsetLeft` não é afetado pelo `transform`
     // corrente, então o passo esperado não muda enquanto o deslize corre.
@@ -154,9 +154,9 @@ export const Playground: Story = {
       // slide — e o replay do painel Interactions começaria de lá, invertendo o
       // passo "no primeiro slide só a seta de avanço está ativa".
       for (let volta = 0; volta < slides().length; volta++) {
-        const botao = anterior();
-        if (botao.disabled) break;
-        await userEvent.click(botao);
+        const button = anterior();
+        if (button.disabled) break;
+        await userEvent.click(button);
       }
       await emSlide(0);
       await expect(anterior()).toBeDisabled();

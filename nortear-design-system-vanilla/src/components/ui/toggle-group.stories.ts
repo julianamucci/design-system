@@ -117,7 +117,7 @@ export const Playground: Story = {
   },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const [esquerda, centro, direita] = LABELS.map((nome) =>
+    const [esquerda, center, direita] = LABELS.map((nome) =>
       canvas.getByRole('button', { name: nome }),
     );
 
@@ -141,12 +141,12 @@ export const Playground: Story = {
     });
 
     await step('accessibility.item4 — aria-pressed e data-state contam a mesma história', async () => {
-      for (const b of [esquerda, centro, direita]) {
+      for (const b of [esquerda, center, direita]) {
         const ligado = b.getAttribute('aria-pressed') === 'true';
         await expect(b).toHaveAttribute('data-state', ligado ? 'on' : 'off');
       }
       // O valor inicial do grupo chega ao item: exatamente um pressionado.
-      const pressionados = [esquerda, centro, direita].filter(
+      const pressionados = [esquerda, center, direita].filter(
         (b) => b.getAttribute('aria-pressed') === 'true',
       );
       await expect(pressionados).toHaveLength(1);
@@ -155,7 +155,7 @@ export const Playground: Story = {
     if (args.disabled) {
       await step('Grupo desabilitado propaga o estado a cada item', async () => {
         await expect(canvas.getByRole('toolbar')).toHaveAttribute('data-disabled', '');
-        for (const b of [esquerda, centro, direita]) await expect(b).toBeDisabled();
+        for (const b of [esquerda, center, direita]) await expect(b).toBeDisabled();
       });
       return;
     }
@@ -168,11 +168,11 @@ export const Playground: Story = {
     });
 
     await step('functional.item3 — a seta move o foco sem ativar nada', async () => {
-      const antes = [esquerda, centro, direita].map((b) => b.getAttribute('aria-pressed'));
+      const antes = [esquerda, center, direita].map((b) => b.getAttribute('aria-pressed'));
       esquerda.focus();
       await userEvent.keyboard(args.orientation === 'vertical' ? '{ArrowDown}' : '{ArrowRight}');
-      await expect(centro).toHaveFocus();
-      const depois = [esquerda, centro, direita].map((b) => b.getAttribute('aria-pressed'));
+      await expect(center).toHaveFocus();
+      const depois = [esquerda, center, direita].map((b) => b.getAttribute('aria-pressed'));
       await expect(depois).toEqual(antes);
     });
 
@@ -187,18 +187,18 @@ export const Playground: Story = {
       // Lido antes e comparado depois: reexecutar a play no painel Interactions
       // parte do estado que a rodada anterior deixou, e uma asserção absoluta
       // inverteria de rodada em rodada.
-      centro.focus();
-      const antes = centro.getAttribute('aria-pressed');
+      center.focus();
+      const antes = center.getAttribute('aria-pressed');
       await userEvent.keyboard(' ');
-      const depois = centro.getAttribute('aria-pressed');
+      const depois = center.getAttribute('aria-pressed');
       await expect(depois).not.toBe(antes);
-      await expect(centro.getAttribute('data-state')).toBe(depois === 'true' ? 'on' : 'off');
+      await expect(center.getAttribute('data-state')).toBe(depois === 'true' ? 'on' : 'off');
     });
 
     await step('Enter alterna, idêntico a Space', async () => {
-      const antes = centro.getAttribute('aria-pressed');
+      const antes = center.getAttribute('aria-pressed');
       await userEvent.keyboard('{Enter}');
-      await expect(centro.getAttribute('aria-pressed')).not.toBe(antes);
+      await expect(center.getAttribute('aria-pressed')).not.toBe(antes);
     });
 
     await step('Seleção devolvida ao estado inicial', async () => {

@@ -31,7 +31,7 @@ let editor: { root: HTMLElement; on: (e: string, f: () => void) => void; off: (e
 
 onMount(() => {
   let vivo = true;
-  let aoMudar: (() => void) | null = null;
+  let onChange: (() => void) | null = null;
 
   void (async () => {
     const { default: Quill } = await import('quill');
@@ -45,8 +45,8 @@ onMount(() => {
     });
 
     quill.root.innerHTML = value;
-    aoMudar = () => onchange(fieldKey, quill.root.innerHTML);
-    quill.on('text-change', aoMudar);
+    onChange = () => onchange(fieldKey, quill.root.innerHTML);
+    quill.on('text-change', onChange);
     editor = quill;
 
     // O reset de CSS do design system zera a altura mínima da área de edição,
@@ -56,7 +56,7 @@ onMount(() => {
 
   return () => {
     vivo = false;
-    if (aoMudar) editor?.off('text-change', aoMudar);
+    if (onChange) editor?.off('text-change', onChange);
     editor = null;
   };
 });

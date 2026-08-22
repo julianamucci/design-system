@@ -23,7 +23,7 @@ const CHEVRON = `<svg
             <path d="m6 9 6 6 6-6" />
           </svg>`;
 
-const PAINEL_CLASSES =
+const PANEL_CLASSES =
   'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
 
 const meta: Meta = {
@@ -62,7 +62,7 @@ export const Uncontrolled: Story = {
           ${CHEVRON}
         </button>
 
-        <div ndsCollapsiblePanel class="${PAINEL_CLASSES}" data-spacing="sm">
+        <div ndsCollapsiblePanel class="${PANEL_CLASSES}" data-spacing="sm">
           <p>Filtro avançado 1</p>
           <p>Filtro avançado 2</p>
         </div>
@@ -117,7 +117,7 @@ export const Controlled: Story = {
             ${CHEVRON}
           </button>
 
-          <div ndsCollapsiblePanel class="${PAINEL_CLASSES}" data-spacing="sm">
+          <div ndsCollapsiblePanel class="${PANEL_CLASSES}" data-spacing="sm">
             <p>Filtro avançado 1</p>
             <p>Filtro avançado 2</p>
           </div>
@@ -164,7 +164,7 @@ export const CustomButton: Story = {
           Exibir opções avançadas
         </button>
 
-        <div ndsCollapsiblePanel class="${PAINEL_CLASSES}" data-spacing="sm">
+        <div ndsCollapsiblePanel class="${PANEL_CLASSES}" data-spacing="sm">
           <p>Opção avançada 1</p>
           <p>Opção avançada 2</p>
           <p>Opção avançada 3</p>

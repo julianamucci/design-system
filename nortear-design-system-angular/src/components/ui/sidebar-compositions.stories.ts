@@ -108,8 +108,8 @@ export const WithGroupsAndSearch: Story = {
       const faixa = canvasElement.querySelector<HTMLElement>('[data-slot="sidebar-rail"]')!;
       await expect(faixa.tabIndex).toBe(-1);
 
-      const busca = canvas.getByLabelText('Buscar na navegação');
-      busca.focus();
+      const search = canvas.getByLabelText('Buscar na navegação');
+      search.focus();
       const alcancados: string[] = [];
       for (let i = 0; i < 6; i++) {
         await userEvent.tab();
@@ -166,11 +166,11 @@ export const Loading: Story = {
     });
 
     await step('showIcon monta o quadrado do ícone à esquerda do texto', async () => {
-      const comIcone = canvasElement.querySelector<HTMLElement>(
+      const withIcon = canvasElement.querySelector<HTMLElement>(
         '[data-slot="sidebar-menu-skeleton"]',
       )!;
-      const icone = comIcone.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-icon')!;
-      const texto = comIcone.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-text')!;
+      const icone = withIcon.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-icon')!;
+      const texto = withIcon.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-text')!;
       await expect(icone.getBoundingClientRect().left).toBeLessThan(
         texto.getBoundingClientRect().left,
       );
@@ -245,9 +245,9 @@ export const Mobile: Story = {
       // título/descrição é sr-only: aparece para quem ouve, não para quem vê.
       const dialogo = painel()!;
       await expect(dialogo.getAttribute('role')).toBe('dialog');
-      const rotuladoPor = dialogo.getAttribute('aria-labelledby');
-      await expect(rotuladoPor).toBeTruthy();
-      await expect(document.getElementById(rotuladoPor!)?.textContent?.trim()).toBe('Barra lateral');
+      const labelledBy = dialogo.getAttribute('aria-labelledby');
+      await expect(labelledBy).toBeTruthy();
+      await expect(document.getElementById(labelledBy!)?.textContent?.trim()).toBe('Barra lateral');
     });
 
     await step('A navegação inteira foi para dentro da gaveta', async () => {

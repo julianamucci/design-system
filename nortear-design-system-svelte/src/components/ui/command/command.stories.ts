@@ -110,11 +110,11 @@ export const Playground: Story = {
     await step('O campo é uma combobox ligada à lista REAL', async () => {
       await expect(campo).toHaveAttribute('aria-autocomplete', 'list');
       await expect(campo).toHaveAttribute('aria-expanded', 'true');
-      const controlado = campo.getAttribute('aria-controls');
-      await expect(controlado).toBeTruthy();
+      const controlled = campo.getAttribute('aria-controls');
+      await expect(controlled).toBeTruthy();
       // Id órfão o axe reprova, e era o que acontecia quando o `aria-controls`
       // vinha do wrapper da story em vez do componente.
-      await expect(document.getElementById(controlado!)).toBe(lista);
+      await expect(document.getElementById(controlled!)).toBe(lista);
       // Nome da lista em português: o default da lib é "Suggestions...".
       await expect(lista).toHaveAttribute('aria-label', 'Resultados da busca');
     });
@@ -122,17 +122,17 @@ export const Playground: Story = {
     await step('Cada comando é uma opção, e o divisor não é', async () => {
       // Por NOME e não por posição: o filtro reordena os grupos pelo melhor
       // resultado, e a ordem de DOM não volta sozinha depois de uma busca.
-      const botao = canvas.getByRole('option', { name: 'Button' });
-      await expect(botao).toHaveClass(/nds-command-item/);
-      await expect(botao).toHaveAttribute('data-slot', 'command-item');
-      await expect(botao).toHaveAttribute('data-value', 'button');
+      const button = canvas.getByRole('option', { name: 'Button' });
+      await expect(button).toHaveClass(/nds-command-item/);
+      await expect(button).toHaveAttribute('data-slot', 'command-item');
+      await expect(button).toHaveAttribute('data-value', 'button');
       const divisor = raiz.querySelector<HTMLElement>('[data-slot="command-separator"]')!;
       await expect(divisor).toHaveClass(/nds-command-separator/);
       // ARIA só admite `option` e `group` dentro de um listbox.
       await expect(divisor).toHaveAttribute('aria-hidden', 'true');
       await expect(canvas.queryAllByRole('separator')).toHaveLength(0);
       // Comando não marcável não carrega marca — ela roubaria 16px à direita.
-      await expect(botao.querySelector('.nds-command-item-check')).toBeNull();
+      await expect(button.querySelector('.nds-command-item-check')).toBeNull();
     });
 
     await step('Digitar filtra, e o que não casa sai da árvore', async () => {

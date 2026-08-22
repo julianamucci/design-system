@@ -29,7 +29,7 @@ import { mountDocsTracking } from '@/lib/docs-tracking';
 import { DOCS_PAGE_TITLE_ID } from './shared/sections/DocsHeader';
 import { NdsLucideGlyph } from './shared/LucideGlyph';
 import iconsTranslations from '@shared/content/icons/translations.json';
-import { CATALOGO_LUCIDE, NOMES_DE_ICONE } from '@shared/primitives/lucide-catalog';
+import { CATALOGO_LUCIDE, ICON_NAMES } from '@shared/primitives/lucide-catalog';
 
 /**
  * Icons — fundamento com LAYOUT PRÓPRIO.
@@ -55,7 +55,7 @@ interface CatalogoIcon {
   no: IconNode;
 }
 
-const CATALOGO: CatalogoIcon[] = NOMES_DE_ICONE.map((nome) => ({
+const CATALOGO: CatalogoIcon[] = ICON_NAMES.map((nome) => ({
   nome,
   // O JSON guarda `[tag, atributos][]`, a mesma forma do IconNode; o cast só
   // reaperta a tag de `string` para o union de tags SVG que o tipo declara.
@@ -217,14 +217,14 @@ const REGRAS_DE_ACESSIBILIDADE = [
             <input
               type="search"
               class="nds-input nds-icon-search-input"
-              [value]="busca()"
+              [value]="search()"
               [placeholder]="t('search.placeholder')"
               [attr.aria-label]="t('search.placeholder')"
               (input)="aoBuscar($event)"
             />
           </div>
           <p class="nds-text-body" aria-live="polite" aria-atomic="true">
-            {{ textoDaContagem() }}
+            {{ contagemText() }}
           </p>
         </section>
 
@@ -234,7 +234,7 @@ const REGRAS_DE_ACESSIBILIDADE = [
              role="status" chegava junto com o texto: leitor de tela só anuncia
              live region que já estava lá quando o conteúdo mudou.
              (Sem crase neste comentário: o template é template literal.) -->
-        <div class="nds-icon-empty-state" [class.is-visible]="semResultados()" role="status">
+        <div class="nds-icon-empty-state" [class.is-visible]="noResults()" role="status">
           <svg
             [ndsLucideGlyph]="glifoDaBusca"
             class="nds-icon-empty-state-svg"
@@ -245,7 +245,7 @@ const REGRAS_DE_ACESSIBILIDADE = [
 
         <ul
           class="nds-icon-grid"
-          [class.is-hidden]="semResultados()"
+          [class.is-hidden]="noResults()"
           [attr.aria-label]="textoDeDisponiveis()"
         >
           @for (icone of catalogo; track icone.nome) {
@@ -300,27 +300,27 @@ export class NdsIconsDocs implements OnInit, OnDestroy {
 
   // ─── Busca ────────────────────────────────────────────────────────────────
 
-  protected readonly busca = signal('');
+  protected readonly search = signal('');
   protected readonly copiado = signal<string | null>(null);
 
   /** Nomes que passam no filtro. Set, e não array: o template consulta 2000×. */
   protected readonly visiveis = computed(() => {
-    const consulta = normalizar(this.busca());
+    const consulta = normalizar(this.search());
     if (!consulta) return new Set(CATALOGO.map((i) => i.nome));
     return new Set(
       CATALOGO.filter((i) => normalizar(i.nome).includes(consulta)).map((i) => i.nome),
     );
   });
 
-  protected readonly semResultados = computed(() => this.visiveis().size === 0);
+  protected readonly noResults = computed(() => this.visiveis().size === 0);
 
   protected readonly textoDeDisponiveis = computed(() =>
     t('iconsAvailable').replace('{count}', String(CATALOGO.length)),
   );
 
-  protected readonly textoDaContagem = computed(() => {
+  protected readonly contagemText = computed(() => {
     const total = this.visiveis().size;
-    const consulta = this.busca().trim();
+    const consulta = this.search().trim();
     if (!consulta) return t('search.count').replace('{count}', String(total));
     return t('search.results')
       .replace('{count}', String(total))
@@ -329,7 +329,7 @@ export class NdsIconsDocs implements OnInit, OnDestroy {
   });
 
   protected aoBuscar(evento: Event): void {
-    this.busca.set((evento.target as HTMLInputElement).value);
+    this.search.set((evento.target as HTMLInputElement).value);
   }
 
   protected copiar(nome: string): void {

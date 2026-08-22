@@ -28,7 +28,7 @@ export interface Actions {
   /** Envia uma tecla ao elemento em foco. Ex.: `'{ArrowRight}'`. */
   apertar: (tecla: string) => Promise<void>;
   /** Clica ignorando `pointer-events: none` (senão o clique nem é tentado). */
-  clicar: (el: HTMLElement) => Promise<void>;
+  click: (el: HTMLElement) => Promise<void>;
 }
 
 // ─── Leitura do DOM ───────────────────────────────────────────────────────────
@@ -152,7 +152,7 @@ function abas(raiz: HTMLElement): HTMLElement[] {
 export async function measureAbaDesabilitada(
   raiz: HTMLElement,
   nomeDesabilitada: string,
-  acoes: Actions,
+  actions: Actions,
 ): Promise<AbaDesabilitadaMeasurement> {
   const todas = abas(raiz);
   const idx = todas.findIndex(
@@ -176,7 +176,7 @@ export async function measureAbaDesabilitada(
   // Parte SEMPRE da aba anterior, focada por script: o que se mede aqui é o
   // alcance da seta, não a ordem de tabulação (essa é medida à parte).
   anterior.focus();
-  await acoes.apertar('{ArrowRight}');
+  await actions.apertar('{ArrowRight}');
   const pousou = doc.activeElement as HTMLElement | null;
   const arrowAlcanca = pousou === alvo;
   const arrowPousouIn = pousou ? (pousou.getAttribute('aria-label') || pousou.textContent || '').trim() : null;
@@ -188,14 +188,14 @@ export async function measureAbaDesabilitada(
   const startVoltar = async () => {
     if (panelVisible(raiz) === origemPanel) return;
     anterior.focus();
-    await acoes.apertar('{ArrowLeft}');
+    await actions.apertar('{ArrowLeft}');
     // Se a seta não resolveu, o clique na aba anterior resolve.
-    if (panelVisible(raiz) !== origemPanel) await acoes.clicar(anterior);
+    if (panelVisible(raiz) !== origemPanel) await actions.click(anterior);
   };
   await startVoltar();
 
   // ── O clique ativa? ────────────────────────────────────────────────────────
-  await acoes.clicar(alvo);
+  await actions.click(alvo);
   const clickAtivou = panelVisible(raiz) !== origemPanel;
   await startVoltar();
 
@@ -204,12 +204,12 @@ export async function measureAbaDesabilitada(
   let espacoAtivou: boolean | null = null;
   alvo.focus();
   if (doc.activeElement === alvo) {
-    await acoes.apertar('{Enter}');
+    await actions.apertar('{Enter}');
     enterAtivou = panelVisible(raiz) !== origemPanel;
     await startVoltar();
 
     alvo.focus();
-    await acoes.apertar(' ');
+    await actions.apertar(' ');
     espacoAtivou = panelVisible(raiz) !== origemPanel;
     await startVoltar();
   }
@@ -221,7 +221,7 @@ export async function measureAbaDesabilitada(
   if (seguinte) {
     alvo.focus();
     if (doc.activeElement === alvo) {
-      await acoes.apertar('{ArrowRight}');
+      await actions.apertar('{ArrowRight}');
       const parou = doc.activeElement as HTMLElement | null;
       arrowSegueAdiante = parou === seguinte;
       seguiuTo = parou ? (parou.getAttribute('aria-label') || parou.textContent || '').trim() : null;
@@ -317,8 +317,8 @@ export function trackMeasureBox(raiz: HTMLElement): TrackBox {
   const lista = trackOf(raiz);
   const cs = getComputedStyle(lista);
   const respiro = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
-  const gatilhos = Array.from(lista.querySelectorAll<HTMLElement>('[role="tab"]'));
-  const gatilho = Math.max(...gatilhos.map((g) => g.getBoundingClientRect().height));
+  const triggers = Array.from(lista.querySelectorAll<HTMLElement>('[role="tab"]'));
+  const gatilho = Math.max(...triggers.map((g) => g.getBoundingClientRect().height));
   const trilho = lista.getBoundingClientRect().height;
   return {
     trilho: arred(trilho),

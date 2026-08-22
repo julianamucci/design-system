@@ -44,9 +44,9 @@ const forwardedProps = useForwardProps(delegatedProps)
 // O dia BLOQUEADO cai no mesmo `undefined` da lib, então entra na tabulação
 // junto. Nas outras quatro stacks ele fica fora — num mês com quinze datas
 // bloqueadas isso são quinze paradas para chegar ao primeiro dia escolhível.
-const foraDoMes = computed(() => props.day.month !== props.month.month)
+const monthOutside = computed(() => props.day.month !== props.month.month)
 const tabulacao = computed(() =>
-  foraDoMes.value || props.bloqueado ? { tabindex: -1 } : {},
+  monthOutside.value || props.bloqueado ? { tabindex: -1 } : {},
 )
 </script>
 

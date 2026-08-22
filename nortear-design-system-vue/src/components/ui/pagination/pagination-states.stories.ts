@@ -59,7 +59,7 @@ function faixa(rotulo: string, atual: number) {
     setup: () => ({
       rotulo,
       atual,
-      paginas: [1, 2, 3, 4, 5],
+      pages: [1, 2, 3, 4, 5],
       onPageChange,
     }),
     template: `
@@ -68,7 +68,7 @@ function faixa(rotulo: string, atual: number) {
           <PaginationItem>
             <PaginationPrevious @click="onPageChange(atual - 1)" />
           </PaginationItem>
-          <PaginationItem v-for="n in paginas" :key="n">
+          <PaginationItem v-for="n in pages" :key="n">
             <PaginationLink
               href="#"
               :is-active="n === atual"
@@ -253,9 +253,9 @@ export const Contrast: Story = {
     await step('Todo link passa dos 4.5:1 exigidos para texto', async () => {
       // accessibility.item2 — o texto da faixa tem 14px, tamanho normal pela
       // WCAG (grande é >=24px, ou >=18.66px em negrito), então o limite é 4.5.
-      const medidas = rangeContrastes(canvasElement);
-      await expect(medidas.length).toBe(7);
-      await expect(JSON.stringify(medidas.filter((m) => m.ratio < 4.5))).toBe('[]');
+      const measurements = rangeContrastes(canvasElement);
+      await expect(measurements.length).toBe(7);
+      await expect(JSON.stringify(measurements.filter((m) => m.ratio < 4.5))).toBe('[]');
     });
 
     await step('Todo controle alcança o alvo de toque mínimo', async () => {

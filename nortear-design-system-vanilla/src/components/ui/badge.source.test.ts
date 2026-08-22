@@ -37,7 +37,7 @@ describe('badgeSnippet', () => {
   });
 
   it('o ícone entra na MESMA lista de children, junto com o texto', () => {
-    const código = badgeSnippet({ comIcone: true, label: 'Ativo' });
+    const código = badgeSnippet({ withIcon: true, label: 'Ativo' });
     expect(código).toContain("children: [icone, 'Ativo']");
     expect(código).toContain('aria-hidden');
     // Não existe fábrica de ícone genérica nesta stack: inventá-la seria API falsa.

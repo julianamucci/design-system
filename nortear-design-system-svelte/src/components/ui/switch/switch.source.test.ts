@@ -69,10 +69,10 @@ describe('switchSource', () => {
   });
 
   it('quando a fila de props não cabe na linha, escreve uma por linha', () => {
-    const longo = switchSource('', {
+    const long = switchSource('', {
       args: { name: 'notificacoes', size: 'sm', disabled: true, ariaInvalid: true },
     });
-    expect(longo).toContain(`  <Switch
+    expect(long).toContain(`  <Switch
     id="opcao"
     bind:checked={ligado}
     name="notificacoes"

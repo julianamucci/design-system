@@ -92,9 +92,9 @@ export const Default: Story = {
       // ninguém rodava. A razão é aritmética, e é ela que responde. 14px em peso
       // normal é texto normal pela WCAG: o limite é 4.5, não 3.
       const inRest = itens.filter((i) => !i.hasAttribute('data-highlighted'));
-      const medida = itemContrast(inRest[0]);
-      await expect(medida).not.toBeNull();
-      await expect(medida!.ratio).toBeGreaterThanOrEqual(4.5);
+      const measurement = itemContrast(inRest[0]);
+      await expect(measurement).not.toBeNull();
+      await expect(measurement!.ratio).toBeGreaterThanOrEqual(4.5);
     });
   },
 };

@@ -33,11 +33,11 @@ function formatar(total: number): string {
   return `R$ ${inteiros},${String(total % 100).padStart(2, '0')}`
 }
 
-export const TOTAL = formatar(INVOICES.reduce((soma, i) => soma + centavos(i.amount), 0))
+export const TOTAL = formatar(INVOICES.reduce((sum, i) => sum + centavos(i.amount), 0))
 
 /** Doze meses de dois anos — a tabela larga da story de rolagem horizontal. */
-export const MONTHS: string[] = ['2025', '2026'].flatMap((ano) =>
+export const MONTHS: string[] = ['2025', '2026'].flatMap((year) =>
   ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'].map(
-    (mes) => `${mes}/${ano}`,
+    (month) => `${month}/${year}`,
   ),
 )

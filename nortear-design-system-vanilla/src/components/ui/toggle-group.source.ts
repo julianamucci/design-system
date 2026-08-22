@@ -53,10 +53,10 @@ function valueLiteral(v: string | string[]): string {
 export function toggleGroupSnippet(o: ToggleGroupSnippetOptions = {}): string {
   const itens = o.items ?? ITEMS_DEFAULT;
   const tipo = o.type ?? 'single';
-  const comIcone = itens.some((i) => i.icon);
+  const withIcon = itens.some((i) => i.icon);
 
   const linesItems = itens.map((i) => {
-    const campos = opcoes([
+    const fields = opcoes([
       ['value', texto(i.value)],
       // O item só de ícone não tem texto: `children` fica vazio e o nome
       // acessível é o que o leitor anuncia.
@@ -64,7 +64,7 @@ export function toggleGroupSnippet(o: ToggleGroupSnippetOptions = {}): string {
       ['aria-label', i['aria-label'] ? texto(i['aria-label']) : undefined],
       ['disabled', i.disabled ? 'true' : undefined],
     ]);
-    return `  { ${campos.map((c) => c.replace(/,$/, '')).join(', ')} },`;
+    return `  { ${fields.map((c) => c.replace(/,$/, '')).join(', ')} },`;
   });
 
   const padrao =
@@ -92,12 +92,12 @@ export function toggleGroupSnippet(o: ToggleGroupSnippetOptions = {}): string {
     ]),
   ];
 
-  const icones = itens.map((i) => i.icon).filter((n): n is string => Boolean(n));
+  const icons = itens.map((i) => i.icon).filter((n): n is string => Boolean(n));
 
   return snippet(
     [
       importing('toggle-group', 'createToggleGroup', 'type ToggleGroupItem'),
-      comIcone ? `import { ${[...new Set(icones)].join(', ')}, createElement } from 'lucide';` : undefined,
+      withIcon ? `import { ${[...new Set(icons)].join(', ')}, createElement } from 'lucide';` : undefined,
     ]
       .filter(Boolean)
       .join('\n'),
@@ -105,9 +105,9 @@ export function toggleGroupSnippet(o: ToggleGroupSnippetOptions = {}): string {
     `const grupo = ${chamada('createToggleGroup', linhas)};`,
     // `ToggleGroupItem.children` é `string`: o ícone não cabe na chamada, e
     // quem consome o coloca no botão do item depois de construir o grupo.
-    comIcone
+    withIcon
       ? `// \`children\` do item aceita só texto — o ícone entra no botão do item.
-const icones = [${[...icones].join(', ')}];
+const icones = [${[...icons].join(', ')}];
 grupo.querySelectorAll('[data-slot="toggle"]').forEach((botao, i) => {
   botao.append(createElement(icones[i]));
 });`

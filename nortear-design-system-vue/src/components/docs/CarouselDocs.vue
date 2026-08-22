@@ -144,7 +144,7 @@ const codeImportWithPlugin = `import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";`;
 
-const codeHorizontal = `<Carousel class="nds-w-full nds-max-w-sm">
+const horizontalCode = `<Carousel class="nds-w-full nds-max-w-sm">
   <CarouselContent>
     <CarouselItem v-for="(n, i) in 5" :key="i">Slide {{ n }}</CarouselItem>
   </CarouselContent>
@@ -152,7 +152,7 @@ const codeHorizontal = `<Carousel class="nds-w-full nds-max-w-sm">
   <CarouselNext aria-label="Próximo item" />
 </Carousel>`;
 
-const codeVertical = `<Carousel orientation="vertical" class="nds-w-full nds-max-w-xs">
+const verticalCode = `<Carousel orientation="vertical" class="nds-w-full nds-max-w-xs">
   <CarouselContent style="height: 200px">
     <CarouselItem v-for="(n, i) in 5" :key="i">Slide {{ n }}</CarouselItem>
   </CarouselContent>
@@ -218,8 +218,8 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: 'horizontal', description: stripHtml(tContent('variants.items.horizontal')), code: codeHorizontal },
-  { name: 'vertical',   description: stripHtml(tContent('variants.items.vertical')),   code: codeVertical   },
+  { name: 'horizontal', description: stripHtml(tContent('variants.items.horizontal')), code: horizontalCode },
+  { name: 'vertical',   description: stripHtml(tContent('variants.items.vertical')),   code: verticalCode   },
   { name: 'single',     description: stripHtml(tContent('variants.items.single')),     code: codeSingle     },
   { name: 'multi',      description: stripHtml(tContent('variants.items.multi')),      code: codeMulti      },
   {

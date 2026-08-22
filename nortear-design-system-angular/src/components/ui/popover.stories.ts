@@ -220,13 +220,13 @@ export const Playground: Story = {
     await step('O painel é nomeado pelo título e descrito pela descrição', async () => {
       const dialogo = screen.getByRole('dialog');
       const idTitle = dialogo.getAttribute('aria-labelledby');
-      const idDescricao = dialogo.getAttribute('aria-describedby');
+      const idDescription = dialogo.getAttribute('aria-describedby');
       await expect(idTitle).toBeTruthy();
       await expect(document.getElementById(idTitle!)).toHaveAttribute(
         'data-slot', 'popover-title',
       );
-      await expect(idDescricao).toBeTruthy();
-      await expect(document.getElementById(idDescricao!)).toHaveAttribute(
+      await expect(idDescription).toBeTruthy();
+      await expect(document.getElementById(idDescription!)).toHaveAttribute(
         'data-slot', 'popover-description',
       );
       // Com título não existe `aria-label`: dois contratos de nome no mesmo

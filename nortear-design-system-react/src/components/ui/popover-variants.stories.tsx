@@ -134,9 +134,9 @@ export const WithTitle: Story = {
 
     await step("A descrição entra por aria-describedby", async () => {
       const dialog = screen.getByRole("dialog");
-      const idDescricao = dialog.getAttribute("aria-describedby");
-      await expect(idDescricao).toBeTruthy();
-      await expect(document.getElementById(idDescricao!)).toHaveClass(
+      const idDescription = dialog.getAttribute("aria-describedby");
+      await expect(idDescription).toBeTruthy();
+      await expect(document.getElementById(idDescription!)).toHaveClass(
         /nds-popover-description/,
       );
     });

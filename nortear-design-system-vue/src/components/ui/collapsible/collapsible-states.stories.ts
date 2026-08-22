@@ -11,7 +11,7 @@ import {
 } from './collapsible.source';
 
 // Mesmo markup do Playground e do Vanilla (referência cross-stack).
-const PAINEL_CLASSES =
+const PANEL_CLASSES =
   'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
 const TRIGGER_CLASSES =
   'nds-button nds-button-ghost nds-cluster nds-w-full nds-px-4';
@@ -63,7 +63,7 @@ export const Uncontrolled: Story = {
           <span>Exibir filtros avançados</span>
           <ChevronDown aria-hidden="true" class="${CHEVRON_CLASSES}" />
         </CollapsibleTrigger>
-        <CollapsibleContent class="${PAINEL_CLASSES}" data-spacing="sm">
+        <CollapsibleContent class="${PANEL_CLASSES}" data-spacing="sm">
           <p>Filtro avançado 1</p>
           <p>Filtro avançado 2</p>
         </CollapsibleContent>
@@ -107,7 +107,7 @@ export const OpenByDefault: Story = {
           <span>Ocultar filtros avançados</span>
           <ChevronDown aria-hidden="true" class="${CHEVRON_CLASSES}" />
         </CollapsibleTrigger>
-        <CollapsibleContent class="${PAINEL_CLASSES}" data-spacing="sm">
+        <CollapsibleContent class="${PANEL_CLASSES}" data-spacing="sm">
           <p>Filtro avançado 1</p>
           <p>Filtro avançado 2</p>
         </CollapsibleContent>
@@ -169,7 +169,7 @@ export const Controlled: Story = {
             <span>{{ isOpen ? 'Ocultar filtros avançados' : 'Exibir filtros avançados' }}</span>
             <ChevronDown aria-hidden="true" class="${CHEVRON_CLASSES}" />
           </CollapsibleTrigger>
-          <CollapsibleContent class="${PAINEL_CLASSES}" data-spacing="sm">
+          <CollapsibleContent class="${PANEL_CLASSES}" data-spacing="sm">
             <p>Filtro avançado 1</p>
             <p>Filtro avançado 2</p>
           </CollapsibleContent>
@@ -225,7 +225,7 @@ export const Disabled: Story = {
           <span>Filtros avançados (desabilitado)</span>
           <ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0" />
         </CollapsibleTrigger>
-        <CollapsibleContent class="${PAINEL_CLASSES}" data-spacing="sm">
+        <CollapsibleContent class="${PANEL_CLASSES}" data-spacing="sm">
           <p>Filtro avançado 1</p>
           <p>Filtro avançado 2</p>
         </CollapsibleContent>

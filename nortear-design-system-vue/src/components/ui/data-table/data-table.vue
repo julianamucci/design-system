@@ -66,16 +66,16 @@ const RECURSOS_BASE = {
  * virtualizador, não a paginação), ela precisa de um conjunto que simplesmente
  * não tenha o recurso.
  */
-export const RECURSOS_COM_PAGINACAO = tableFeatures({
+export const RECURSOS_WITH_PAGINATION = tableFeatures({
   ...RECURSOS_BASE,
   rowPaginationFeature,
   paginatedRowModel: createPaginatedRowModel(),
 });
 
-export const RECURSOS_SEM_PAGINACAO = tableFeatures(RECURSOS_BASE);
+export const RECURSOS_NO_PAGINATION = tableFeatures(RECURSOS_BASE);
 
 /** O conjunto completo — é ele que tipa tudo que sai deste módulo. */
-export type DataTableFeatures = typeof RECURSOS_COM_PAGINACAO;
+export type DataTableFeatures = typeof RECURSOS_WITH_PAGINATION;
 
 export type DataTableColumn<TData extends RowData, TValue = unknown> = ColumnDef<
   DataTableFeatures,
@@ -123,7 +123,7 @@ export interface DataTableLabels {
  * O padrão é o texto que o componente já dizia — trocar de API não podia mudar
  * o que a tela mostra a quem nunca passou `labels`.
  */
-export const DATA_TABLE_LABELS_PADRAO: DataTableLabels = {
+export const DATA_TABLE_LABELS_DEFAULT: DataTableLabels = {
   columns: 'Colunas',
   showColumns: 'Exibir colunas',
   selectAll: 'Selecionar todas as linhas',
@@ -266,7 +266,7 @@ const pageSizeOptions = computed(() => props.pageSizeOptions ?? [10, 20, 50, 100
  * congelar no setup deixaria a tabela em português depois da troca de locale.
  */
 const rotulos = computed<DataTableLabels>(() => ({
-  ...DATA_TABLE_LABELS_PADRAO,
+  ...DATA_TABLE_LABELS_DEFAULT,
   ...(props.labels ?? {}),
 }));
 
@@ -283,7 +283,7 @@ const rotulos = computed<DataTableLabels>(() => ({
  * Nunca cai em "Selecionar linha" puro: nome repetido em dez controles é o
  * mesmo que nome nenhum (WCAG 4.1.2), e era exatamente o defeito daqui.
  */
-function rotuloDaLinha(row: Row<DataTableFeatures, TData>): string {
+function lineLabel(row: Row<DataTableFeatures, TData>): string {
   if (props.rowLabel) return props.rowLabel(row.original);
   const primeira = row.getAllCells().find((c) => c.column.id !== '__select__');
   const bruto = primeira?.getValue();
@@ -331,7 +331,7 @@ const allColumns = computed<DataTableColumn<TData>[]>(() => {
         // O identificador da linha entra no nome: dez caixas chamadas
         // "Selecionar linha" são dez controles indistinguíveis na lista do
         // leitor, e a marcação vira aposta.
-        'aria-label': rotulos.value.selectRow(rotuloDaLinha(row)),
+        'aria-label': rotulos.value.selectRow(lineLabel(row)),
         modelValue: row.getIsSelected(),
         'onUpdate:modelValue': (value: boolean | 'indeterminate') =>
           row.toggleSelected(!!value),
@@ -352,8 +352,8 @@ const table = useTable({
    * nenhum caminho chama API de paginação quando o recurso não está registrado.
    */
   features: (props.enablePagination && !props.virtualized
-    ? RECURSOS_COM_PAGINACAO
-    : RECURSOS_SEM_PAGINACAO) as DataTableFeatures,
+    ? RECURSOS_WITH_PAGINATION
+    : RECURSOS_NO_PAGINATION) as DataTableFeatures,
   get data() {
     return props.data;
   },

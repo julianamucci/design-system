@@ -27,7 +27,7 @@ const CHEVRON = `<svg
 // lucide `filter` e `settings`, desenhados no template: o mapa do NdsButtonIcon
 // não tem estes dois, e o ícone aqui é decorativo — quem nomeia a ação é o
 // texto ao lado.
-const FILTRO = `<svg
+const FILTER = `<svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="none"
@@ -56,7 +56,7 @@ const ENGRENAGEM = `<svg
             <circle cx="12" cy="12" r="3" />
           </svg>`;
 
-const PAINEL_CLASSES =
+const PANEL_CLASSES =
   'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
 
 const meta: Meta = {
@@ -86,11 +86,11 @@ export const IconInTrigger: Story = {
     template: `
       <div ndsCollapsible class="nds-w-sm">
         <button ndsCollapsibleTrigger ndsButton variant="outline">
-          ${FILTRO}
+          ${FILTER}
           Filtros avançados
         </button>
 
-        <div ndsCollapsiblePanel class="${PAINEL_CLASSES}" data-spacing="sm">
+        <div ndsCollapsiblePanel class="${PANEL_CLASSES}" data-spacing="sm">
           <p>Filtro por categoria</p>
           <p>Filtro por data</p>
           <p>Filtro por status</p>
@@ -134,7 +134,7 @@ export const RotatingChevron: Story = {
           ${CHEVRON}
         </button>
 
-        <div ndsCollapsiblePanel class="${PAINEL_CLASSES}" data-spacing="sm">
+        <div ndsCollapsiblePanel class="${PANEL_CLASSES}" data-spacing="sm">
           <div class="nds-cluster" data-justify="between">
             <span class="nds-text-muted-foreground">Notificações</span>
             <span class="nds-font-medium">Ativadas</span>
@@ -188,7 +188,7 @@ export const RichContent: Story = {
           Configurações do sistema
         </button>
 
-        <div ndsCollapsiblePanel class="${PAINEL_CLASSES}" data-spacing="sm">
+        <div ndsCollapsiblePanel class="${PANEL_CLASSES}" data-spacing="sm">
           <p class="nds-text-muted-foreground nds-text-caption">
             Altere as configurações abaixo com cuidado. As mudanças são aplicadas imediatamente.
           </p>

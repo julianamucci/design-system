@@ -161,7 +161,7 @@ export function ResizableDocs() {
   ResizableHandle,
 } from "@/components/ui/resizable";`;
 
-  const codeHorizontal = `<ResizablePanelGroup direction="horizontal">
+  const horizontalCode = `<ResizablePanelGroup direction="horizontal">
   <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
     <Sidebar />
   </ResizablePanel>
@@ -171,7 +171,7 @@ export function ResizableDocs() {
   </ResizablePanel>
 </ResizablePanelGroup>`;
 
-  const codeVertical = `<ResizablePanelGroup direction="vertical">
+  const verticalCode = `<ResizablePanelGroup direction="vertical">
   <ResizablePanel defaultSize={50} minSize={20} maxSize={80}>
     <Top />
   </ResizablePanel>
@@ -552,7 +552,7 @@ interface PanelResizeHandleProps {
           {
             name: tContent("variants.items.horizontal"),
             description: stripHtml(tContent("variants.styles.horizontal")),
-            code: codeHorizontal,
+            code: horizontalCode,
             preview: (
               <div
                 className="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
@@ -578,7 +578,7 @@ interface PanelResizeHandleProps {
           {
             name: tContent("variants.items.vertical"),
             description: stripHtml(tContent("variants.styles.vertical")),
-            code: codeVertical,
+            code: verticalCode,
             preview: (
               <div
                 className="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"

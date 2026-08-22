@@ -156,25 +156,25 @@ export const Disabled: Story = {
     const canvas = within(canvasElement);
 
     await step('O segundo gatilho está desabilitado', async () => {
-      const gatilhos = canvas.getAllByRole('button');
-      await expect(gatilhos[1]).toHaveAttribute('aria-disabled', 'true');
+      const triggers = canvas.getAllByRole('button');
+      await expect(triggers[1]).toHaveAttribute('aria-disabled', 'true');
     });
 
     await step('Clicar no desabilitado não abre o item', async () => {
       // `pointerEventsCheck: 0` porque o CSS aplica `pointer-events: none` — a
       // ausência de efeito é justamente o que se prova aqui.
-      const gatilhos = canvas.getAllByRole('button');
-      await userEvent.click(gatilhos[1], { pointerEventsCheck: 0 });
-      await expect(gatilhos[1]).toHaveAttribute('aria-expanded', 'false');
+      const triggers = canvas.getAllByRole('button');
+      await userEvent.click(triggers[1], { pointerEventsCheck: 0 });
+      await expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('As setas pulam o item desabilitado', async () => {
       // Item desabilitado fora da navegação: com um único item operável, a
       // seta faz laço nele mesmo.
-      const gatilhos = canvas.getAllByRole('button');
-      gatilhos[0].focus();
+      const triggers = canvas.getAllByRole('button');
+      triggers[0].focus();
       await userEvent.keyboard('{ArrowDown}');
-      await expect(gatilhos[0]).toHaveFocus();
+      await expect(triggers[0]).toHaveFocus();
     });
   },
 };
@@ -208,15 +208,15 @@ export const FocusVisible: Story = {
     const canvas = within(canvasElement);
 
     await step('O gatilho recebe foco', async () => {
-      const gatilhos = canvas.getAllByRole('button');
-      gatilhos[0].focus();
-      await expect(gatilhos[0]).toHaveFocus();
+      const triggers = canvas.getAllByRole('button');
+      triggers[0].focus();
+      await expect(triggers[0]).toHaveFocus();
     });
 
     await step('Tab move para o gatilho seguinte', async () => {
-      const gatilhos = canvas.getAllByRole('button');
+      const triggers = canvas.getAllByRole('button');
       await userEvent.tab();
-      await expect(gatilhos[1]).toHaveFocus();
+      await expect(triggers[1]).toHaveFocus();
     });
   },
 };

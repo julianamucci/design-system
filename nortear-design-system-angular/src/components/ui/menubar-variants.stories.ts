@@ -7,7 +7,7 @@ import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 // Itens de cada ficha em lista: as asserções contam a partir daqui, nunca de um
 // número escrito à mão no play.
 const ITEMS_NEUTROS = ['Novo', 'Abrir', 'Salvar'] as const;
-const ITENS_COM_PERIGO = ['Salvar', 'Descartar alterações'] as const;
+const ITEMS_WITH_PERIGO = ['Salvar', 'Descartar alterações'] as const;
 
 const meta: Meta = {
   title: 'UI/Menubar/Variants',
@@ -87,10 +87,10 @@ export const Default: Story = {
       // O contraste de 4.5:1 que o axe mede entre o texto do item e o fundo do
       // popup só significa alguma coisa se o fundo for opaco: sobre um painel
       // translúcido a razão medida é a do que estiver por baixo.
-      const fundo = getComputedStyle(menu).backgroundColor;
-      await expect(fundo).not.toBe('rgba(0, 0, 0, 0)');
-      await expect(fundo).not.toBe('transparent');
-      await expect(fundo.startsWith('rgba(')).toBe(false);
+      const background = getComputedStyle(menu).backgroundColor;
+      await expect(background).not.toBe('rgba(0, 0, 0, 0)');
+      await expect(background).not.toBe('transparent');
+      await expect(background.startsWith('rgba(')).toBe(false);
     });
   },
 };
@@ -106,9 +106,9 @@ export const Destructive: Story = {
           <button ndsMenubarTrigger>Arquivo</button>
 
           <ng-template ndsMenubarContent>
-            <div ndsMenubarItem>${ITENS_COM_PERIGO[0]}</div>
+            <div ndsMenubarItem>${ITEMS_WITH_PERIGO[0]}</div>
             <div ndsMenubarSeparator></div>
-            <div ndsMenubarItem variant="destructive">${ITENS_COM_PERIGO[1]}</div>
+            <div ndsMenubarItem variant="destructive">${ITEMS_WITH_PERIGO[1]}</div>
           </ng-template>
         </nds-menubar-menu>
       </nds-menubar>
@@ -117,8 +117,8 @@ export const Destructive: Story = {
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const canvas = within(menu);
-    const neutro = canvas.getByRole('menuitem', { name: ITENS_COM_PERIGO[0] });
-    const perigoso = canvas.getByRole('menuitem', { name: ITENS_COM_PERIGO[1] });
+    const neutro = canvas.getByRole('menuitem', { name: ITEMS_WITH_PERIGO[0] });
+    const perigoso = canvas.getByRole('menuitem', { name: ITEMS_WITH_PERIGO[1] });
 
     await step('A variante chega ao markup', async () => {
       await expect(perigoso.getAttribute('data-variant')).toBe('destructive');

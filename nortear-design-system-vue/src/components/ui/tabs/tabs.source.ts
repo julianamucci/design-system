@@ -55,7 +55,7 @@ function tabs(opcoes: {
   classePainel?: string;
 }): string {
   const { raiz = '', lista = '', rotuloLista, abas, classePainel = CLASSNAME_PANEL } = opcoes;
-  const gatilhos = abas
+  const triggers = abas
     .map((aba) =>
       bloco(
         'TabsTrigger',
@@ -75,7 +75,7 @@ function tabs(opcoes: {
     .join('\n');
   return `<Tabs${attrs(raiz)}>
   <TabsList${attrs(lista, `aria-label="${rotuloLista}"`)}>
-${gatilhos}
+${triggers}
   </TabsList>
 ${panels}
 </Tabs>`;

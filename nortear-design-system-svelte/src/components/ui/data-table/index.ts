@@ -4,7 +4,7 @@ import type { DataTableLabels } from './data-table-labels';
 import type { RowData, Table as TanstackTable } from '@tanstack/table-core';
 import type { DataTableColumn, DataTableFeatures } from './data-table-features';
 
-export { criarRecursos } from './data-table-features';
+export { createRecursos } from './data-table-features';
 export type { DataTableColumn, DataTableFeatures } from './data-table-features';
 
 export interface DataTableProps<TData extends RowData> {
@@ -39,7 +39,7 @@ export interface DataTableProps<TData extends RowData> {
 }
 
 export type { DataTableLabels };
-export { DATA_TABLE_LABELS_PADRAO } from './data-table-labels';
+export { DATA_TABLE_LABELS_DEFAULT } from './data-table-labels';
 
 export {
   DataTable,

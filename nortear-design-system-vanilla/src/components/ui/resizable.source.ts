@@ -174,15 +174,15 @@ export function resizableNestedSnippet(groupOptions: {
   externo: ResizableSnippetOptions;
   interno: ResizableSnippetOptions;
   /** Título do painel do grupo externo que fica ao lado do grupo de dentro. */
-  vizinho: ResizableSnippetPanel;
+  neighbour: ResizableSnippetPanel;
 }): string {
-  const { externo, interno, vizinho } = groupOptions;
+  const { externo, interno, neighbour } = groupOptions;
   const panelsInternos = panelsOf(interno);
 
   const neighbourPairs = opcoes([
-    ['defaultSize', vizinho.defaultSize !== undefined ? String(vizinho.defaultSize) : undefined],
-    ['minSize', vizinho.minSize !== undefined && vizinho.minSize !== 10 ? String(vizinho.minSize) : undefined],
-    ['content', `bloco(${texto(vizinho.titulo)})`],
+    ['defaultSize', neighbour.defaultSize !== undefined ? String(neighbour.defaultSize) : undefined],
+    ['minSize', neighbour.minSize !== undefined && neighbour.minSize !== 10 ? String(neighbour.minSize) : undefined],
+    ['content', `bloco(${texto(neighbour.titulo)})`],
   ]);
 
   const linesExternas = opcoes([
@@ -212,7 +212,7 @@ const interno = ${chamada('createResizablePanel', groupLines(interno, panelsInte
 export function resizableSourceNested(groupOptions: {
   externo: ResizableSnippetOptions;
   interno: ResizableSnippetOptions;
-  vizinho: ResizableSnippetPanel;
+  neighbour: ResizableSnippetPanel;
 }): SourceTransform<ResizableSnippetOptions> {
   return () => resizableNestedSnippet(groupOptions);
 }

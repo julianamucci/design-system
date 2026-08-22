@@ -20,7 +20,7 @@ const SERIE_UNICA = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
  * tamanho medido com ela — a prop `height` existe justamente porque a
  * documentação mandava escrever uma classe de altura que não existe mais.
  */
-const ALTURA = 300;
+const HEIGHT = 300;
 
 /**
  * O rótulo é o contrato de acessibilidade do componente: `role="img"` sem nome
@@ -28,7 +28,7 @@ const ALTURA = 300;
  * constante para a play poder comparar o VALOR — "tem o atributo" não prova que
  * o rótulo certo chegou.
  */
-const ROTULO = 'Acessos mensais no desktop, de janeiro a junho';
+const LABEL = 'Acessos mensais no desktop, de janeiro a junho';
 
 const meta = {
   title: 'UI/Chart',
@@ -85,7 +85,7 @@ const meta = {
   },
   args: {
     renderer: 'svg' as const,
-    height: ALTURA,
+    height: HEIGHT,
     emptyLabel: 'Nenhum dado disponível para o período selecionado.',
   },
 } satisfies Meta<typeof ChartContainer>;
@@ -106,7 +106,7 @@ export const Playground: Story = {
   args: {
     option: buildBarOption({ xAxis: MONTHS, series: SERIE_UNICA }),
   },
-  render: (args) => h(ChartContainer, { ...args, 'aria-label': ROTULO }),
+  render: (args) => h(ChartContainer, { ...args, 'aria-label': LABEL }),
   play: async ({ canvasElement, step }) => {
     // Procura pela classe compartilhada, não pelo data-slot: é o que o CSS das
     // cinco stacks define e o que não some se o wrapper mudar de forma.
@@ -115,7 +115,7 @@ export const Playground: Story = {
     await step('O desenho é anunciado como imagem, com descrição', async () => {
       await expect(raiz).toHaveAttribute('role', 'img');
       // O valor, não só a presença: rótulo errado passa em "tem o atributo".
-      await expect(raiz.getAttribute('aria-label')).toBe(ROTULO);
+      await expect(raiz.getAttribute('aria-label')).toBe(LABEL);
     });
 
     await step('O desenho sai, e não é casca vazia', async () => {
@@ -129,7 +129,7 @@ export const Playground: Story = {
     await step('O eixo escreve todas as categorias do dado', async () => {
       await waitFor(
         () => {
-          for (const mes of MONTHS) expect(designEscreve(raiz, mes)).toBe(true);
+          for (const month of MONTHS) expect(designEscreve(raiz, month)).toBe(true);
         },
         { timeout: 3000 },
       );
@@ -139,7 +139,7 @@ export const Playground: Story = {
       // Sem a prop, a única saída documentada era uma classe de altura que não
       // existe mais no CSS — e o bloco caía no piso de 200px calado.
       const altura = raiz.getBoundingClientRect().height;
-      await expect(Math.abs(altura - ALTURA)).toBeLessThanOrEqual(1);
+      await expect(Math.abs(altura - HEIGHT)).toBeLessThanOrEqual(1);
     });
   },
 };

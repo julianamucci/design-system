@@ -34,7 +34,7 @@
  * select desta stack renderizam um `<input>` escondido para participar do
  * formulário, e ele casaria com `input` antes do controle de verdade.
  */
-const SELETORES_CONTROLE = [
+const SELECTORS_CONTROL = [
   '[data-slot="input-group-control"]',
   '[data-slot="checkbox"]',
   '[data-slot="switch"]',
@@ -66,8 +66,8 @@ const props = defineProps<{
 
 sequencia += 1
 const base = `nds-form-field-${sequencia}`
-const idDescricao = `${base}-description`
-const idErro = `${base}-error`
+const idDescription = `${base}-description`
+const idError = `${base}-error`
 
 const raiz = ref<HTMLElement | null>(null)
 /** Ids que quem compõe já tinha escrito no controle — preservados na junção. */
@@ -78,7 +78,7 @@ function aplicar() {
   if (!el) return
 
   let controle: HTMLElement | null = null
-  for (const seletor of SELETORES_CONTROLE) {
+  for (const seletor of SELECTORS_CONTROL) {
     controle = el.querySelector<HTMLElement>(seletor)
     if (controle) break
   }
@@ -101,8 +101,8 @@ function aplicar() {
 
   const ids = [
     ...describedbyEscrito,
-    ...(props.description ? [idDescricao] : []),
-    ...(props.error ? [idErro] : []),
+    ...(props.description ? [idDescription] : []),
+    ...(props.error ? [idError] : []),
   ]
   if (ids.length) controle.setAttribute('aria-describedby', ids.join(' '))
   else controle.removeAttribute('aria-describedby')
@@ -134,7 +134,7 @@ onUpdated(aplicar)
 
     <p
       v-if="description"
-      :id="idDescricao"
+      :id="idDescription"
       data-slot="field-description"
       class="nds-form-description"
     >
@@ -145,7 +145,7 @@ onUpdated(aplicar)
          interromper a digitação a cada caractere é pior que esperar a pausa. -->
     <p
       v-if="error"
-      :id="idErro"
+      :id="idError"
       data-slot="field-error"
       aria-live="polite"
       class="nds-form-error"

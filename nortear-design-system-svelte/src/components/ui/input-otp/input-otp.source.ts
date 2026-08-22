@@ -60,8 +60,8 @@ ${opcoes.celulas ?? GROUP_UNICO}
 }
 
 /** Estado do código, que a raiz recebe por `bind:value`. */
-function estado(valorInicial = ''): string {
-  return `\n\nlet codigo = $state("${valorInicial}");`;
+function estado(valueInitial = ''): string {
+  return `\n\nlet codigo = $state("${valueInitial}");`;
 }
 
 /**

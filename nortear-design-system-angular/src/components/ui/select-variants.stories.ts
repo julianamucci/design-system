@@ -21,7 +21,7 @@ const SUL = [
   { value: 'pr', label: 'Paraná' },
 ] as const;
 
-const GRUPOS = [
+const GROUPS = [
   { label: 'Sudeste', itens: SUDESTE },
   { label: 'Sul', itens: SUL },
 ] as const;
@@ -64,7 +64,7 @@ export const Default: Story = {
     },
   },
   render: () => ({
-    props: { estados: SUDESTE },
+    props: { states: SUDESTE },
     template: `
       <nds-select [defaultOpen]="true" [modal]="false">
         <button ndsSelectTrigger aria-label="Estado">
@@ -72,7 +72,7 @@ export const Default: Story = {
         </button>
 
         <ng-template ndsSelectContent>
-          @for (estado of estados; track estado.value) {
+          @for (estado of states; track estado.value) {
             <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
           }
         </ng-template>
@@ -110,7 +110,7 @@ export const WithGroups: Story = {
     },
   },
   render: () => ({
-    props: { grupos: GRUPOS },
+    props: { grupos: GROUPS },
     template: `
       <nds-select [defaultOpen]="true" [modal]="false">
         <button ndsSelectTrigger aria-label="Estado">
@@ -118,14 +118,14 @@ export const WithGroups: Story = {
         </button>
 
         <ng-template ndsSelectContent>
-          @for (grupo of grupos; track grupo.label; let ultimo = $last) {
+          @for (grupo of grupos; track grupo.label; let last = $last) {
             <div ndsSelectGroup>
               <div ndsSelectLabel>{{ grupo.label }}</div>
               @for (estado of grupo.itens; track estado.value) {
                 <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
               }
             </div>
-            @if (!ultimo) {
+            @if (!last) {
               <div ndsSelectSeparator></div>
             }
           }
@@ -139,18 +139,18 @@ export const WithGroups: Story = {
 
     await step('Cada categoria vira um grupo nomeado pelo seu cabeçalho', async () => {
       const grupos = dentro.getAllByRole('group');
-      await expect(grupos).toHaveLength(GRUPOS.length);
+      await expect(grupos).toHaveLength(GROUPS.length);
       // O nome do grupo depende de o `aria-labelledby` apontar para um id que
       // EXISTE — o primitivo gera o id no grupo e não o escreve em lugar nenhum;
       // quem o põe no cabeçalho é o componente. Sem isso o grupo ficaria anônimo
       // e o `aria-labelledby` viraria referência quebrada.
       for (const [i, grupo] of grupos.entries()) {
-        await expect(grupo).toHaveAccessibleName(GRUPOS[i].label);
+        await expect(grupo).toHaveAccessibleName(GROUPS[i].label);
       }
     });
 
     await step('As opções continuam todas na mesma lista', async () => {
-      const total = GRUPOS.reduce((soma, g) => soma + g.itens.length, 0);
+      const total = GROUPS.reduce((sum, g) => sum + g.itens.length, 0);
       await expect(dentro.getAllByRole('option')).toHaveLength(total);
     });
 
@@ -158,7 +158,7 @@ export const WithGroups: Story = {
       // `role="separator"` com `aria-hidden`: linha para o olho, silêncio para o
       // leitor de tela — quem separa semanticamente é o grupo.
       const separadores = lista.querySelectorAll('.nds-select-separator');
-      await expect(separadores).toHaveLength(GRUPOS.length - 1);
+      await expect(separadores).toHaveLength(GROUPS.length - 1);
       await expect(separadores[0].getAttribute('aria-hidden')).toBe('true');
     });
   },
@@ -177,7 +177,7 @@ export const WithIcon: Story = {
     },
   },
   render: () => ({
-    props: { estados: SUDESTE },
+    props: { states: SUDESTE },
     template: `
       <nds-select [defaultOpen]="true" [modal]="false">
         <button ndsSelectTrigger aria-label="Estado">
@@ -185,7 +185,7 @@ export const WithIcon: Story = {
         </button>
 
         <ng-template ndsSelectContent>
-          @for (estado of estados; track estado.value) {
+          @for (estado of states; track estado.value) {
             <div ndsSelectItem [value]="estado.value">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

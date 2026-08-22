@@ -347,11 +347,11 @@ export const Playground: Story = {
     await step('Cada checkbox de linha tem um nome só dele', async () => {
       // accessibility.item3 — "Selecionar linha" repetido em doze checkboxes é o
       // mesmo que nenhum nome: o leitor lista doze controles idênticos.
-      const caixas = linhas().map(
+      const boxes = linhas().map(
         (linha) => linha.querySelector<HTMLElement>('button[role="checkbox"]')!,
       );
-      const nomes = caixas.map((caixa) => caixa.getAttribute('aria-label')!);
-      await expect(nomes).toEqual([
+      const names = boxes.map((caixa) => caixa.getAttribute('aria-label')!);
+      await expect(names).toEqual([
         'Selecionar fatura #INV-001',
         'Selecionar fatura #INV-002',
         'Selecionar fatura #INV-003',
@@ -362,18 +362,18 @@ export const Playground: Story = {
       // A lista literal sozinha não diz nada: trocar os cinco rótulos por um
       // mesmo valor repetido continuaria casando com uma lista escrita à mão.
       // O que o leitor precisa é de nomes DISTINTOS entre si.
-      await expect(new Set(nomes).size).toBe(nomes.length);
+      await expect(new Set(names).size).toBe(names.length);
 
       // E distintos pelo motivo certo: cada nome carrega o identificador da
       // PRÓPRIA linha — o mesmo texto que quem enxerga lê na primeira célula.
-      for (const [i, caixa] of caixas.entries()) {
+      for (const [i, caixa] of boxes.entries()) {
         const identificador = identidadeCell(linhas()[i]).textContent!.trim();
         await expect(caixa.getAttribute('aria-label')).toContain(identificador);
       }
 
       // O do cabeçalho age sobre a página inteira: confundi-lo com o de uma
       // linha custaria doze marcações de uma vez.
-      await expect(nomes).not.toContain(allBox().getAttribute('aria-label'));
+      await expect(names).not.toContain(allBox().getAttribute('aria-label'));
     });
 
     await step('Selecionar tudo marca a página e a contagem é anunciada', async () => {
@@ -418,11 +418,11 @@ export const Playground: Story = {
       // functional.item1 — o filtro global casa em qualquer coluna, e é a
       // contagem que prova que ele recortou o conjunto inteiro, não só a
       // página visível.
-      const busca = canvas.getByRole('searchbox');
+      const search = canvas.getByRole('searchbox');
       // `type` acrescenta ao que estiver no campo — limpar antes é o que faz o
       // passo valer o mesmo na segunda rodada.
-      await userEvent.clear(busca);
-      await userEvent.type(busca, 'Karina');
+      await userEvent.clear(search);
+      await userEvent.type(search, 'Karina');
 
       await expect(linhas().length).toBe(1);
       await expect(firstCell()).toHaveTextContent('#INV-011');
@@ -430,7 +430,7 @@ export const Playground: Story = {
       // dizendo "de 12" com uma linha na tela.
       await expect(regiaoViva()).toHaveTextContent('de 1 linha(s) selecionada(s).');
 
-      await userEvent.clear(busca);
+      await userEvent.clear(search);
       await expect(linhas().length).toBe(args.pageSize);
     });
 

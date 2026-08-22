@@ -181,14 +181,14 @@ export const RemovedBeforeFeedback: Story = {
   render: (args) => ({
     components: { CodeBlock, Button },
     setup() {
-      const visivel = ref(true);
-      return { args, visivel };
+      const visible = ref(true);
+      return { args, visible };
     },
     template: `
       <div class="nds-stack" data-spacing="md">
-        <CodeBlock v-if="visivel" :code="args.code" language="ts" />
-        <Button variant="outline" @click="visivel = !visivel">
-          {{ visivel ? 'Remover o bloco' : 'Restaurar o bloco' }}
+        <CodeBlock v-if="visible" :code="args.code" language="ts" />
+        <Button variant="outline" @click="visible = !visible">
+          {{ visible ? 'Remover o bloco' : 'Restaurar o bloco' }}
         </Button>
       </div>
     `,

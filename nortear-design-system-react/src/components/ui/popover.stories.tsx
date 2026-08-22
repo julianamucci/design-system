@@ -169,9 +169,9 @@ export const Playground: Story = {
       await expect(document.getElementById(idTitle!)).toHaveAttribute(
         "data-slot", "popover-title",
       );
-      const idDescricao = dialogo.getAttribute("aria-describedby");
-      await expect(idDescricao).toBeTruthy();
-      await expect(document.getElementById(idDescricao!)).toHaveAttribute(
+      const idDescription = dialogo.getAttribute("aria-describedby");
+      await expect(idDescription).toBeTruthy();
+      await expect(document.getElementById(idDescription!)).toHaveAttribute(
         "data-slot", "popover-description",
       );
     });

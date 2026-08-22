@@ -38,7 +38,7 @@ import { toPlainText } from '@/lib/strip-html';
 // customiza copia, e a versão anterior mandava sobrescrever `--height-default` e
 // `--radius-input`, dois tokens que `.nds-input` não lê. Não existe token de
 // ALTURA: ela nasce de `--spacing-2` mais `--text-control` (WCAG 1.4.4).
-const TOKENS_DO_CAMPO = [
+const FIELD_TOKENS = [
   ['--input', '.nds-input', 'border'],
   ['--ring', '.nds-input:hover', 'borderHover'],
   ['--ring', '.nds-input:focus-visible', 'borderFocus'],
@@ -309,7 +309,7 @@ const inputPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() =>
-  TOKENS_DO_CAMPO.map(([token, seletor, chave]) => ({
+  FIELD_TOKENS.map(([token, seletor, chave]) => ({
     token,
     value: seletor,
     description: tContent(`tokens.table.${chave}`),

@@ -378,18 +378,18 @@ export const Contrast: Story = {
     },
   },
   render: () => {
-    const pilha = document.createElement('div');
-    pilha.className = 'nds-stack';
-    pilha.dataset.spacing = 'sm';
+    const stack = document.createElement('div');
+    stack.className = 'nds-stack';
+    stack.dataset.spacing = 'sm';
     for (const v of ['default', 'destructive', 'success', 'warning', 'info'] as const) {
       const alerta = createAlert({ variant: v });
       alerta.append(
         createAlertTitle({ text: `Título ${v}` }),
         createAlertDescription({ text: `Texto corrido da variante ${v}.` }),
       );
-      pilha.appendChild(alerta);
+      stack.appendChild(alerta);
     }
-    return pilha;
+    return stack;
   },
   play: async ({ canvasElement }) => {
     // Contraste é aritmética, não olhômetro: a play calcula a razão entre a cor

@@ -183,8 +183,8 @@ export const WithColumnVisibility: Story = {
       await userEvent.keyboard('{Escape}');
       await waitForPortalVanish('menu');
 
-      const busca = canvas.getByRole('searchbox');
-      await userEvent.type(busca, 'Transferência');
+      const search = canvas.getByRole('searchbox');
+      await userEvent.type(search, 'Transferência');
       await waitFor(async () => {
         await expect(canvasElement.querySelectorAll('tbody tr').length).toBe(2);
       });
@@ -211,17 +211,17 @@ export const WithInlineEditing: Story = {
     const canvas = within(canvasElement);
 
     await step('A célula editável é um botão com nome, não um texto solto', async () => {
-      const botao = canvas.getAllByRole('button', { name: 'Editar Cliente' })[0];
-      await expect(botao).toHaveClass('nds-data-table-edit-btn');
-      await expect(botao).toHaveTextContent('Ana Prado');
+      const button = canvas.getAllByRole('button', { name: 'Editar Cliente' })[0];
+      await expect(button).toHaveClass('nds-data-table-edit-btn');
+      await expect(button).toHaveTextContent('Ana Prado');
     });
 
     await step('Enter confirma e o valor novo chega à célula', async () => {
       // functional.item5 — a prova de que o evento carregou (rowIndex, columnId,
       // value) é o texto da célula mudar: quem atualiza o array é o consumidor,
       // com os três campos do payload.
-      const botao = canvas.getAllByRole('button', { name: 'Editar Cliente' })[0];
-      await userEvent.click(botao);
+      const button = canvas.getAllByRole('button', { name: 'Editar Cliente' })[0];
+      await userEvent.click(button);
 
       const campo = await waitFor(() =>
         canvas.getByRole('textbox', { name: 'Editar Cliente' }),
@@ -238,8 +238,8 @@ export const WithInlineEditing: Story = {
     });
 
     await step('Escape descarta o rascunho e devolve o valor original', async () => {
-      const botao = canvas.getAllByRole('button', { name: 'Editar Valor' })[0];
-      await userEvent.click(botao);
+      const button = canvas.getAllByRole('button', { name: 'Editar Valor' })[0];
+      await userEvent.click(button);
 
       const campo = await waitFor(() => canvas.getByRole('textbox', { name: 'Editar Valor' }));
       await userEvent.clear(campo);
@@ -254,8 +254,8 @@ export const WithInlineEditing: Story = {
     await step('A segunda célula editável fica em edição para a captura', async () => {
       // visual.item4 — a story termina COM um campo aberto: é esse o estado que
       // a regressão visual precisa guardar.
-      const botao = canvas.getAllByRole('button', { name: 'Editar Cliente' })[1];
-      await userEvent.click(botao);
+      const button = canvas.getAllByRole('button', { name: 'Editar Cliente' })[1];
+      await userEvent.click(button);
       await waitFor(async () => {
         await expect(canvasElement.querySelectorAll('.nds-data-table-edit-input').length).toBe(1);
       });

@@ -137,7 +137,7 @@ export interface FoundationBlock {
 export interface FoundationGroup {
   titulo: string;
   corpo: string;
-  blocos: FoundationBlock[];
+  blocks: FoundationBlock[];
 }
 
 export interface FoundationSection {
@@ -146,7 +146,7 @@ export interface FoundationSection {
   subtitulo: string;
   corpo: string;
   audiencia: string;
-  blocos: FoundationBlock[];
+  blocks: FoundationBlock[];
   grupos: FoundationGroup[];
   nota: string;
 }
@@ -285,31 +285,31 @@ function mountSubgrupo(valor: Registro): FoundationGroup {
   const itens = valor['items'] ?? valor['rules'];
   const hasTable = valor['cols'] !== undefined && valor['rows'] !== undefined;
 
-  const blocos: FoundationBlock[] = [];
-  if (hasTable) blocos.push(tableBlock(valor['cols'], valor['rows']));
-  if (itens !== undefined) blocos.push(itemsBlock(itens));
+  const blocks: FoundationBlock[] = [];
+  if (hasTable) blocks.push(tableBlock(valor['cols'], valor['rows']));
+  if (itens !== undefined) blocks.push(itemsBlock(itens));
   // Mapa puro (sem título, sem itens, sem tabela): o próprio objeto é o conteúdo.
-  if (!titulo && itens === undefined && !hasTable) blocos.push(itemsBlock(valor));
+  if (!titulo && itens === undefined && !hasTable) blocks.push(itemsBlock(valor));
 
-  return { titulo, corpo, blocos };
+  return { titulo, corpo, blocks };
 }
 
 function mountSection(chave: string, dados: Registro): FoundationSection {
-  const blocos: FoundationBlock[] = [];
+  const blocks: FoundationBlock[] = [];
 
   // Strings soltas primeiro, na ordem em que aparecem no JSON: são os passos de
   // um roteiro (`cloneTitle` → `cloneCode` → `installNote`), e a ordem é o
   // conteúdo.
   for (const [k, v] of Object.entries(dados)) {
     if (typeof v !== 'string' || TEXT_KEYS.includes(k)) continue;
-    if (k.endsWith('Title')) blocos.push(bloco('subtitulo', { html: v }));
-    else if (k.endsWith('Code')) blocos.push(bloco('codigo', { html: v }));
-    else blocos.push(bloco('paragrafo', { html: v }));
+    if (k.endsWith('Title')) blocks.push(bloco('subtitulo', { html: v }));
+    else if (k.endsWith('Code')) blocks.push(bloco('codigo', { html: v }));
+    else blocks.push(bloco('paragrafo', { html: v }));
   }
 
   const hasTable = dados['cols'] !== undefined && dados['rows'] !== undefined;
-  if (hasTable) blocos.push(tableBlock(dados['cols'], dados['rows']));
-  if (dados['items'] !== undefined) blocos.push(itemsBlock(dados['items']));
+  if (hasTable) blocks.push(tableBlock(dados['cols'], dados['rows']));
+  if (dados['items'] !== undefined) blocks.push(itemsBlock(dados['items']));
 
   // Sem `items`/`cols`/`rows`, as folhas de cartão soltas na seção viram o grid
   // que o `items` teria dado — é como `testing` (automated/manual) chega.
@@ -319,11 +319,11 @@ function mountSection(chave: string, dados: Registro): FoundationSection {
     const folhas = Object.entries(dados).filter(
       ([k, v]) => !KEYS_RESERVADAS.includes(k) && ehObjeto(v) && cartaoEhSheet(v),
     );
-    if (folhas.length > 0) blocos.push(itemsBlock(Object.fromEntries(folhas)));
+    if (folhas.length > 0) blocks.push(itemsBlock(Object.fromEntries(folhas)));
   }
 
-  if (dados['keys'] !== undefined) blocos.push(itemsBlock(dados['keys']));
-  if (dados['rules'] !== undefined) blocos.push(itemsBlock(dados['rules']));
+  if (dados['keys'] !== undefined) blocks.push(itemsBlock(dados['keys']));
+  if (dados['rules'] !== undefined) blocks.push(itemsBlock(dados['rules']));
 
   const grupos = Object.entries(dados)
     .filter(([k, v]) => !KEYS_RESERVADAS.includes(k) && ehObjeto(v) && !cartaoEhSheet(v))
@@ -335,7 +335,7 @@ function mountSection(chave: string, dados: Registro): FoundationSection {
     subtitulo: texto(dados['subtitle']),
     corpo: texto(dados['body']),
     audiencia: texto(dados['audience']),
-    blocos,
+    blocks,
     grupos,
     nota: texto(dados['note']),
   };
@@ -498,7 +498,7 @@ const METADADO_KEYS = new Set([
              @if não entregariam o conteúdo a nenhuma das duas. -->
         <ng-content />
 
-        @for (secao of secoes(); track secao.chave) {
+        @for (secao of sections(); track secao.chave) {
           <section class="nds-stack nds-docs-section-divider" data-spacing="md">
             @if (secao.titulo || secao.subtitulo) {
               <div class="nds-stack" data-spacing="xs">
@@ -528,7 +528,7 @@ const METADADO_KEYS = new Set([
               ></p>
             }
 
-            @for (b of secao.blocos; track $index) {
+            @for (b of secao.blocks; track $index) {
               <ng-container
                 [ngTemplateOutlet]="tplBloco"
                 [ngTemplateOutletContext]="{ $implicit: b }"
@@ -549,7 +549,7 @@ const METADADO_KEYS = new Set([
                     [innerHTML]="DOMPurify.sanitize(grupo.corpo)"
                   ></p>
                 }
-                @for (b of grupo.blocos; track $index) {
+                @for (b of grupo.blocks; track $index) {
                   <ng-container
                     [ngTemplateOutlet]="tplBloco"
                     [ngTemplateOutletContext]="{ $implicit: b }"
@@ -602,7 +602,7 @@ export class NdsFoundationPage implements OnInit, OnDestroy {
   protected readonly categoria = computed(() => texto(this.dicionario()['category']));
   protected readonly tipo = computed(() => texto(this.dicionario()['type']));
 
-  protected readonly secoes = computed<FoundationSection[]>(() => {
+  protected readonly sections = computed<FoundationSection[]>(() => {
     const d = this.dicionario();
     return Object.keys(d)
       .filter((k) => !METADADO_KEYS.has(k) && ehObjeto(d[k]))

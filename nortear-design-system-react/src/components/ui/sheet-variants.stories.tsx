@@ -60,7 +60,7 @@ type Story = StoryObj<typeof meta>;
 type Side = "top" | "right" | "bottom" | "left";
 
 /** Mesmo painel nas quatro direções — o que muda é `side` e o rótulo do título. */
-function Painel({ side, tituloKey }: { side: Side; tituloKey: string }) {
+function Panel({ side, tituloKey }: { side: Side; tituloKey: string }) {
   const { t } = useTranslation(sheetTranslations);
   return (
     <Sheet defaultOpen>
@@ -100,7 +100,7 @@ export const Right: Story = {
       },
     },
   },
-  render: () => <Painel side="right" tituloKey="rightLabel" />,
+  render: () => <Panel side="right" tituloKey="rightLabel" />,
   play: async () => {
     const painel = await waitForPortal("dialog");
     await expect(painel).toHaveAttribute("data-side", "right");
@@ -124,7 +124,7 @@ export const Left: Story = {
       },
     },
   },
-  render: () => <Painel side="left" tituloKey="leftLabel" />,
+  render: () => <Panel side="left" tituloKey="leftLabel" />,
   play: async () => {
     const painel = await waitForPortal("dialog");
     await expect(painel).toHaveAttribute("data-side", "left");
@@ -146,7 +146,7 @@ export const Top: Story = {
       },
     },
   },
-  render: () => <Painel side="top" tituloKey="topLabel" />,
+  render: () => <Panel side="top" tituloKey="topLabel" />,
   play: async () => {
     const painel = await waitForPortal("dialog");
     await expect(painel).toHaveAttribute("data-side", "top");
@@ -169,7 +169,7 @@ export const Bottom: Story = {
       },
     },
   },
-  render: () => <Painel side="bottom" tituloKey="bottomLabel" />,
+  render: () => <Panel side="bottom" tituloKey="bottomLabel" />,
   play: async () => {
     const painel = await waitForPortal("dialog");
     await expect(painel).toHaveAttribute("data-side", "bottom");

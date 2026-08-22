@@ -240,12 +240,12 @@ export const CollapsedIcon: Story = {
           const anunciado = balao!.querySelector<HTMLElement>('[role="tooltip"]')!;
           await expect(anunciado).not.toBeNull();
           await expect(anunciado.textContent?.trim()).toBe('Dashboard');
-          const visivel = Array.from(balao!.childNodes)
+          const visible = Array.from(balao!.childNodes)
             .filter(no => no !== anunciado)
             .map(no => no.textContent ?? '')
             .join('')
             .trim();
-          await expect(visivel).toBe('Dashboard');
+          await expect(visible).toBe('Dashboard');
         },
         { timeout: 3000 },
       );

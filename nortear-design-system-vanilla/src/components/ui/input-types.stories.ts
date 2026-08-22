@@ -190,15 +190,15 @@ export const File: Story = {
       // `::file-selector-button` é a única parte do campo que o navegador
       // desenha sozinho; sem a regra do design system ele sai com o cinza do
       // sistema operacional e o exemplo mente sobre o resultado.
-      const botao = getComputedStyle(fieldOf(canvasElement)!, '::file-selector-button');
-      await expect(botao.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
-      await expect(parseFloat(botao.borderTopLeftRadius)).toBeGreaterThan(0);
+      const button = getComputedStyle(fieldOf(canvasElement)!, '::file-selector-button');
+      await expect(button.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+      await expect(parseFloat(button.borderTopLeftRadius)).toBeGreaterThan(0);
     });
 
     await step('A altura continua saindo do respiro, não de um valor cravado', async () => {
-      const medida = heightResultante(fieldOf(canvasElement)!);
-      await expect(medida.alturaCravada).toBe(false);
-      await expect(parseFloat(medida.paddingBloco[0])).toBeGreaterThan(0);
+      const measurement = heightResultante(fieldOf(canvasElement)!);
+      await expect(measurement.alturaCravada).toBe(false);
+      await expect(parseFloat(measurement.paddingBloco[0])).toBeGreaterThan(0);
     });
   },
 };

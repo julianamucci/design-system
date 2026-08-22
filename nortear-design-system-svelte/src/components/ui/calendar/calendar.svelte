@@ -3,10 +3,10 @@
 	import * as Calendar from "./index.js";
 	import { cn, type WithoutChildrenOrChild } from "@/lib/utils.js";
 	import type { ButtonVariant } from "../button/button.svelte";
-	import { rotulosDoCalendario } from "@shared/primitives/calendar-labels";
+	import { calendarLabels } from "@shared/primitives/calendar-labels";
 	import {
-		destinoDaTecla,
-		diaNaGrade,
+		teclaTarget,
+		gridDay,
 		isoDoElemento,
 	} from "@shared/primitives/calendar-teclado";
 	import { isEqualMonth, parseDate, type DateValue } from "@internationalized/date";
@@ -49,7 +49,7 @@
 
 	// Os botões de mês só têm ícone: quem usa leitor de tela ouve o aria-label,
 	// e o da lib vinha "Previous", em inglês e sem dizer do que é anterior.
-	const rotulos = $derived(rotulosDoCalendario(locale));
+	const rotulos = $derived(calendarLabels(locale));
 
 	/**
 	 * Anos oferecidos para cada lado do ano em vista.
@@ -63,7 +63,7 @@
 	 *
 	 * Simétrico, e não o padrão da lib (cem anos para trás, dez para frente).
 	 */
-	const ANOS_PARA_CADA_LADO = 100;
+	const EACH_SIDE_YEARS = 100;
 
 	/**
 	 * O resto do teclado da grade — `Home`, `End`, `PageUp`, `PageDown`.
@@ -78,14 +78,14 @@
 	 * O foco é devolvido depois do `tick` porque mudar o mês recria a grade — o
 	 * botão de destino ainda não existe no instante da tecla.
 	 */
-	async function aoTeclarNaGrade(evento: KeyboardEvent) {
+	async function onGridKeyDown(evento: KeyboardEvent) {
 		const raiz = evento.currentTarget as HTMLElement | null;
-		const destino = destinoDaTecla(isoDoElemento(evento.target as Element | null), evento);
-		if (!destino || !raiz) return;
+		const destination = teclaTarget(isoDoElemento(evento.target as Element | null), evento);
+		if (!destination || !raiz) return;
 		evento.preventDefault();
-		placeholder = parseDate(destino);
+		placeholder = parseDate(destination);
 		await tick();
-		diaNaGrade(raiz, destino)?.focus();
+		gridDay(raiz, destination)?.focus();
 	}
 
 	/** Nome do mês por extenso mais o ano — o rótulo acessível da grade. */
@@ -94,12 +94,12 @@
 			new Date(m.year, m.month - 1, 1),
 		)} ${m.year}`;
 
-	const anoEmVista = $derived(placeholder?.year ?? new Date().getFullYear());
+	const vistaYear = $derived(placeholder?.year ?? new Date().getFullYear());
 	const listYears = $derived(
 		years ??
 			Array.from(
-				{ length: ANOS_PARA_CADA_LADO * 2 + 1 },
-				(_, i) => anoEmVista - ANOS_PARA_CADA_LADO + i,
+				{ length: EACH_SIDE_YEARS * 2 + 1 },
+				(_, i) => vistaYear - EACH_SIDE_YEARS + i,
 			),
 	);
 </script>
@@ -121,7 +121,7 @@ get along, so we shut typescript up by casting `value` to `never`.
 	{locale}
 	{monthFormat}
 	{yearFormat}
-	onkeydown={aoTeclarNaGrade}
+	onkeydown={onGridKeyDown}
 	{...restProps}
 >
 	{#snippet children({ months, weekdays })}

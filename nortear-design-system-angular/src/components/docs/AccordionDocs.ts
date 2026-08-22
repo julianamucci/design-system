@@ -647,7 +647,7 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
         perguntasFrequentes: 'Perguntas frequentes',
         informacao: 'Informação',
         aviso: 'Aviso',
-        confirmacao: 'Confirmação',
+        confirm: 'Confirmação',
         informacaoTexto: 'Ícones facilitam a identificação rápida do tipo de conteúdo.',
         avisoTexto: 'Sinalize categorias distintas com ícones semânticos.',
         confirmacaoTexto: 'Use ícones consistentes entre itens do mesmo accordion.',
@@ -671,7 +671,7 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
         perguntasFrequentes: 'Frequently asked questions',
         informacao: 'Information',
         aviso: 'Warning',
-        confirmacao: 'Confirmation',
+        confirm: 'Confirmation',
         informacaoTexto: 'Icons speed up recognition of the content type.',
         avisoTexto: 'Use semantic icons to signal distinct categories.',
         confirmacaoTexto: 'Keep icons consistent across items of the same accordion.',
@@ -695,7 +695,7 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
         perguntasFrequentes: 'Preguntas frecuentes',
         informacao: 'Información',
         aviso: 'Aviso',
-        confirmacao: 'Confirmación',
+        confirm: 'Confirmación',
         informacaoTexto: 'Los íconos facilitan identificar el tipo de contenido.',
         avisoTexto: 'Señala categorías distintas con íconos semánticos.',
         confirmacaoTexto: 'Usa íconos consistentes entre ítems del mismo accordion.',
@@ -726,15 +726,15 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
     return [
       { value: 'comp-info',    label: r.informacao,   conteudo: r.informacaoTexto,   path: 'M12 16v-4M12 8h.01' },
       { value: 'comp-aviso',   label: r.aviso,        conteudo: r.avisoTexto,        path: 'M12 8v4M12 16h.01' },
-      { value: 'comp-sucesso', label: r.confirmacao,  conteudo: r.confirmacaoTexto,  path: 'm9 12 2 2 4-4' },
+      { value: 'comp-sucesso', label: r.confirm,  conteudo: r.confirmacaoTexto,  path: 'm9 12 2 2 4-4' },
     ];
   });
 
   protected readonly linhasDeEspecificacao = computed(() => {
     const r = this.rotulos();
     return r.cpu.split(', ').map((parte) => {
-      const [rotulo, ...resto] = parte.split(': ');
-      return { rotulo, valor: resto.join(': ') };
+      const [rotulo, ...remainder] = parte.split(': ');
+      return { rotulo, valor: remainder.join(': ') };
     });
   });
 
@@ -927,7 +927,7 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
       description: t('props.accordion.description'),
     };
     const sim = tNav('common.yes');
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     const desc = (chave: string) => toPlainText(t(chave));
 
     return [
@@ -942,35 +942,35 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
             name: 'multiple',
             type: 'boolean',
             defaultValue: 'false',
-            required: nao,
+            required: not,
             description: desc('props.accordion.items.type.description'),
           },
           {
             name: 'defaultValue',
             type: 'string | string[]',
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: desc('props.accordion.items.defaultValue.description'),
           },
           {
             name: 'value',
             type: 'model<string | string[]>',
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: desc('props.accordion.items.value.description'),
           },
           {
             name: 'valueChange',
             type: 'output<string | string[]>',
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: desc('props.accordion.items.onValueChange.description'),
           },
           {
             name: 'disabled',
             type: 'boolean',
             defaultValue: 'false',
-            required: nao,
+            required: not,
             description: desc('props.accordion.items.disabled.description'),
           },
         ],
@@ -990,14 +990,14 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
             name: 'disabled',
             type: 'boolean',
             defaultValue: 'false',
-            required: nao,
+            required: not,
             description: desc('props.item.items.disabled.description'),
           },
           {
             name: 'onOpenChange',
             type: 'output<{ open: boolean }>',
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: desc('props.item.items.onOpenChange.description'),
           },
         ],
@@ -1010,7 +1010,7 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
             name: '(click)',
             type: '(event: MouseEvent) => void',
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: desc('props.trigger.items.onClick.description'),
           },
         ],

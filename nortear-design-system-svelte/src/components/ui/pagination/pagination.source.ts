@@ -152,7 +152,7 @@ ${fila('        ', 'paginaAtual', 'onclick={() => (paginaAtual = p.value)}')}
 function markupTable(args: PaginationArgs): string {
   const props = rootProps(args, 'data-align="end"');
   const primeiro = (args.page - 1) * args.perPage + 1;
-  const ultimo = args.page * args.perPage;
+  const last = args.page * args.perPage;
 
   return `<div
   class="nds-cluster nds-w-prose nds-border-default nds-rounded-lg nds-p-4"
@@ -161,7 +161,7 @@ function markupTable(args: PaginationArgs): string {
   data-justify="between"
 >
   <span class="nds-text-body nds-text-muted-foreground">
-    Mostrando ${primeiro}–${ultimo} de ${args.count} resultados
+    Mostrando ${primeiro}–${last} de ${args.count} resultados
   </span>
   <Pagination${props}>
     {#snippet children({ pages, currentPage })}

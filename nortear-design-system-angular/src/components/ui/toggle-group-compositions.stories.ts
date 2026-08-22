@@ -59,11 +59,11 @@ export const AlignmentBar: Story = {
     });
 
     await step('Quatro itens icon-only, cada um com a sua função no nome', async () => {
-      const botoes = canvas.getAllByRole('button');
-      await expect(botoes).toHaveLength(4);
-      for (const botao of botoes) {
-        await expect(botao.getAttribute('aria-label')).toBeTruthy();
-        await expect(botao.textContent?.trim()).toBe('');
+      const buttons = canvas.getAllByRole('button');
+      await expect(buttons).toHaveLength(4);
+      for (const button of buttons) {
+        await expect(button.getAttribute('aria-label')).toBeTruthy();
+        await expect(button.textContent?.trim()).toBe('');
       }
     });
   },

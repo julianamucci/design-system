@@ -19,10 +19,10 @@ export type CollapsibleArgs = {
 
 /**
  * Cabeçalho parametrizado: `ofButton` cresce quando a composição também usa o
- * `<Button>`, e `icones` quando o gatilho leva mais de um ícone. Duas linhas de
+ * `<Button>`, e `icons` quando o gatilho leva mais de um ícone. Duas linhas de
  * import do mesmo módulo compilam, mas ninguém escreve assim.
  */
-function importes(ofButton = 'buttonVariants', icones = 'ChevronDown'): string {
+function importes(ofButton = 'buttonVariants', icons = 'ChevronDown'): string {
   return `import {
   Collapsible,
   CollapsibleTrigger,
@@ -30,7 +30,7 @@ function importes(ofButton = 'buttonVariants', icones = 'ChevronDown'): string {
 } from "@/components/ui/collapsible";
 import { ${ofButton} } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ${icones} } from "lucide-react";`;
+import { ${icons} } from "lucide-react";`;
 }
 
 const IMPORTS = importes();
@@ -38,7 +38,7 @@ const IMPORTS = importes();
 /** Markup alinhado ao Vanilla, a referência cross-stack deste design system. */
 const ROOT_CLASSES = 'nds-w-sm';
 const TRIGGER_CLASSES = 'nds-cluster nds-w-full nds-px-4';
-const PAINEL_CLASSES =
+const PANEL_CLASSES =
   'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
 /** `nds-chevron` é quem gira 180° a partir do estado escrito no gatilho. */
 const CHEVRON_CLASSES = 'nds-icon nds-shrink-0 nds-transition-transform nds-chevron';
@@ -65,7 +65,7 @@ function corpo(
     />
   </CollapsibleTrigger>
   <CollapsibleContent
-    className="${PAINEL_CLASSES}"
+    className="${PANEL_CLASSES}"
     data-spacing="sm"
   >
 ${itens.map((item) => `    <p>${item}</p>`).join('\n')}
@@ -141,7 +141,7 @@ ${importes('Button, buttonVariants')}`,
           />
         </CollapsibleTrigger>
         <CollapsibleContent
-          className="${PAINEL_CLASSES}"
+          className="${PANEL_CLASSES}"
           data-spacing="sm"
         >
           <p>Filtro avançado 1</p>
@@ -172,7 +172,7 @@ export function collapsibleDisabledSource(): string {
     <ChevronDown aria-hidden="true" className="nds-icon nds-shrink-0" />
   </CollapsibleTrigger>
   <CollapsibleContent
-    className="${PAINEL_CLASSES}"
+    className="${PANEL_CLASSES}"
     data-spacing="sm"
   >
     <p>Filtro avançado 1</p>
@@ -224,7 +224,7 @@ export function collapsibleWithIconSource(): string {
     />
   </CollapsibleTrigger>
   <CollapsibleContent
-    className="${PAINEL_CLASSES}"
+    className="${PANEL_CLASSES}"
     data-spacing="sm"
   >
     <p className="nds-text-muted-foreground">Filtro avançado 1</p>
@@ -260,7 +260,7 @@ export function collapsibleEstruturadoSource(): string {
     </CollapsibleTrigger>
   </div>
   <CollapsibleContent
-    className="${PAINEL_CLASSES}"
+    className="${PANEL_CLASSES}"
     data-spacing="sm"
   >
     <p className="nds-text-muted-foreground">Filtro avançado 1</p>

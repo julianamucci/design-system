@@ -262,8 +262,8 @@ export const RangeWithMiddle: Story = {
     await step('O intervalo é contínuo do início ao fim', async () => {
       // functional.item3 — verificar só os extremos passaria com o meio vazio,
       // que é exatamente o que esta story existe para mostrar.
-      const dias = valuesWith(canvasElement, '[data-selected]');
-      await expect(dias).toEqual([
+      const days = valuesWith(canvasElement, '[data-selected]');
+      await expect(days).toEqual([
         '2026-04-10', '2026-04-11', '2026-04-12', '2026-04-13', '2026-04-14',
         '2026-04-15', '2026-04-16', '2026-04-17', '2026-04-18',
       ]);
@@ -272,10 +272,10 @@ export const RangeWithMiddle: Story = {
     await step('Os extremos são distinguíveis do miolo', async () => {
       // Sem essa marcação o intervalo vira um bloco só, e a pessoa não vê onde
       // ele começa nem onde termina.
-      const inicio = canvasElement.querySelector('[data-value="2026-04-10"]')!;
-      const fim = canvasElement.querySelector('[data-value="2026-04-18"]')!;
-      await expect(inicio).toHaveAttribute('data-selection-start');
-      await expect(fim).toHaveAttribute('data-selection-end');
+      const start = canvasElement.querySelector('[data-value="2026-04-10"]')!;
+      const end = canvasElement.querySelector('[data-value="2026-04-18"]')!;
+      await expect(start).toHaveAttribute('data-selection-start');
+      await expect(end).toHaveAttribute('data-selection-end');
     });
   },
 };

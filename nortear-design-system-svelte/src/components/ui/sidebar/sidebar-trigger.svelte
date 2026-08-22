@@ -2,7 +2,7 @@
 	import { Button } from "@/components/ui/button/index.js";
 	import PanelLeftIcon from '@lucide/svelte/icons/panel-left';
 	import { cn } from "@/lib/utils.js";
-	import { ROTULOS_SIDEBAR_PADRAO } from "@shared/primitives/sidebar-a11y-labels";
+	import { LABELS_SIDEBAR_DEFAULT } from "@shared/primitives/sidebar-a11y-labels";
 	import type { ComponentProps } from "svelte";
 	import { useSidebar } from "./context.svelte.js";
 
@@ -12,7 +12,7 @@
 	let {
 		ref = $bindable(null),
 		class: className,
-		label = ROTULOS_SIDEBAR_PADRAO.alternar,
+		label = LABELS_SIDEBAR_DEFAULT.alternar,
 		onclick,
 		...restProps
 	}: ComponentProps<typeof Button> & {

@@ -5,10 +5,10 @@
 	import RangeCalendarDay from "./range-calendar-day.svelte";
 	import { cn, type WithoutChildrenOrChild } from "@/lib/utils.js";
 	import type { ButtonVariant } from "../button/button.svelte";
-	import { rotulosDoCalendario } from "@shared/primitives/calendar-labels";
+	import { calendarLabels } from "@shared/primitives/calendar-labels";
 	import {
-		destinoDaTecla,
-		diaNaGrade,
+		teclaTarget,
+		gridDay,
 		isoDoElemento,
 	} from "@shared/primitives/calendar-teclado";
 	import { parseDate, type DateValue } from "@internationalized/date";
@@ -37,21 +37,21 @@
 
 	// Os botões de mês só têm ícone: quem usa leitor de tela ouve o aria-label,
 	// e o da lib vinha "Previous", em inglês e sem dizer do que é anterior.
-	const rotulos = $derived(rotulosDoCalendario(locale));
+	const rotulos = $derived(calendarLabels(locale));
 
 	/**
 	 * O resto do teclado da grade — `Home`, `End`, `PageUp`, `PageDown`. Gêmeo do
 	 * que existe no calendário de data única, e pela mesma razão: a lib trata
 	 * seta, Enter e Espaço, e estas quatro não chegavam a lugar nenhum.
 	 */
-	async function aoTeclarNaGrade(evento: KeyboardEvent) {
+	async function onGridKeyDown(evento: KeyboardEvent) {
 		const raiz = evento.currentTarget as HTMLElement | null;
-		const destino = destinoDaTecla(isoDoElemento(evento.target as Element | null), evento);
-		if (!destino || !raiz) return;
+		const destination = teclaTarget(isoDoElemento(evento.target as Element | null), evento);
+		if (!destination || !raiz) return;
 		evento.preventDefault();
-		placeholder = parseDate(destino);
+		placeholder = parseDate(destination);
 		await tick();
-		diaNaGrade(raiz, destino)?.focus();
+		gridDay(raiz, destination)?.focus();
 	}
 
 	/** Nome do mês por extenso mais o ano — o rótulo acessível da grade. */
@@ -77,7 +77,7 @@ o miolo diferente sem despintar também a seleção simples.
 	{locale}
 	{monthFormat}
 	{yearFormat}
-	onkeydown={aoTeclarNaGrade}
+	onkeydown={onGridKeyDown}
 	{...restProps}
 >
 	{#snippet children({ months, weekdays })}

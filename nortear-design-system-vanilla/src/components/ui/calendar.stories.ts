@@ -92,10 +92,10 @@ export const Playground: Story = {
       // que centralizar, então o `justify-content: center` do contêiner das
       // docs pages não fazia efeito.
       const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="calendar"]')!;
-      const largo = document.createElement('div');
-      largo.style.width = '900px';
-      canvasElement.appendChild(largo);
-      largo.appendChild(raiz);
+      const wide = document.createElement('div');
+      wide.style.width = '900px';
+      canvasElement.appendChild(wide);
+      wide.appendChild(raiz);
 
       await expect(raiz.getBoundingClientRect().width).toBeLessThan(400);
       const nav = raiz.querySelector<HTMLElement>('.nds-calendar-nav-overlay')!;
@@ -128,9 +128,9 @@ export const Playground: Story = {
       const respiro = semana.getBoundingClientRect().top - legenda.getBoundingClientRect().bottom;
       await expect(Math.round(respiro)).toBe(16);
 
-      const vizinho = canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn[data-outside-month]')!;
+      const neighbour = canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn[data-outside-month]')!;
       const ofMonth = canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn:not([data-outside-month])')!;
-      await expect(getComputedStyle(vizinho).color).not.toBe(getComputedStyle(ofMonth).color);
+      await expect(getComputedStyle(neighbour).color).not.toBe(getComputedStyle(ofMonth).color);
     });
 
     await step('O clique nos botões de mês chega neles', async () => {

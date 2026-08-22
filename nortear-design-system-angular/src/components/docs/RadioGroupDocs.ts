@@ -709,7 +709,7 @@ export class NdsRadioGroupDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     const linha = (nome: string, chave: string, tipo?: string, padrao?: string) => ({
       name: nome,
       type: tipo ?? toPlainText(t(`props.table.${chave}.type`)),
@@ -749,7 +749,7 @@ export class NdsRadioGroupDocs implements AfterViewInit, OnDestroy {
       },
     ].map((tabela) => ({
       ...tabela,
-      items: tabela.items.map((item) => ({ ...item, required: item.required || nao })),
+      items: tabela.items.map((item) => ({ ...item, required: item.required || not })),
     }));
   });
 

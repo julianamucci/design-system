@@ -174,7 +174,7 @@ export const SidebarWithContentAndConsole: Story = {
               { titulo: 'Área principal', defaultSize: 75, minSize: 40 },
             ],
           },
-          vizinho: { titulo: 'Arquivos', defaultSize: 25, minSize: 15 },
+          neighbour: { titulo: 'Arquivos', defaultSize: 25, minSize: 15 },
         }),
       },
     },

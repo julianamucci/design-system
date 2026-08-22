@@ -155,9 +155,9 @@ export const Controlled: Story = {
     }
     pintar();
 
-    const botoes = document.createElement('div');
-    botoes.className = 'nds-cluster';
-    botoes.dataset.spacing = 'sm';
+    const buttons = document.createElement('div');
+    buttons.className = 'nds-cluster';
+    buttons.dataset.spacing = 'sm';
     // Nomes próprios, diferentes do trigger: dois botões com o mesmo nome
     // acessível são ambíguos na lista de controles do leitor de tela.
     for (const [rotulo, valor] of [
@@ -169,10 +169,10 @@ export const Controlled: Story = {
       b.className = 'nds-button nds-button-outline nds-button-sm';
       b.textContent = rotulo;
       b.addEventListener('click', () => definir(valor));
-      botoes.appendChild(b);
+      buttons.appendChild(b);
     }
 
-    wrapper.append(indicador, botoes, collapsible);
+    wrapper.append(indicador, buttons, collapsible);
     return wrapper;
   },
   parameters: {

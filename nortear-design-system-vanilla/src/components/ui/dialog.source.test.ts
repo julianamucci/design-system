@@ -113,7 +113,7 @@ describe('dialogComFormularioSnippet', () => {
     // `createFormField` é quem fecha o par rótulo ↔ controle e gera o id que
     // falta; um `<label>` cru pareceria igual e não faria nada disso.
     const código = dialogWithFormSnippet({
-      campos: [{ label: 'Nome', value: 'Maria Souza' }],
+      fields: [{ label: 'Nome', value: 'Maria Souza' }],
     });
     expect(código).toContain("import { createFormField } from '@/components/ui/form';");
     expect(código).toContain("label: 'Nome'");
@@ -124,11 +124,11 @@ describe('dialogComFormularioSnippet', () => {
   });
 
   it('omite o tipo quando ele já é o padrão do controle', () => {
-    expect(dialogWithFormSnippet({ campos: [{ label: 'Nome', type: 'text' }] })).not.toContain(
+    expect(dialogWithFormSnippet({ fields: [{ label: 'Nome', type: 'text' }] })).not.toContain(
       'type:',
     );
     expect(
-      dialogWithFormSnippet({ campos: [{ label: 'E-mail', type: 'email' }] }),
+      dialogWithFormSnippet({ fields: [{ label: 'E-mail', type: 'email' }] }),
     ).toContain("type: 'email'");
   });
 });

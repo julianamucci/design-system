@@ -196,12 +196,12 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const barra = canvas.getByRole('menubar');
-    const gatilhos = within(barra).getAllByRole('menuitem');
-    const [arquivo, editar] = gatilhos;
+    const triggers = within(barra).getAllByRole('menuitem');
+    const [arquivo, editar] = triggers;
 
     await step('A barra é um menubar, e cada gatilho anuncia o menu que abre', async () => {
-      await expect(gatilhos).toHaveLength(MENUS.length);
-      for (const [i, gatilho] of gatilhos.entries()) {
+      await expect(triggers).toHaveLength(MENUS.length);
+      for (const [i, gatilho] of triggers.entries()) {
         await expect(gatilho).toHaveAccessibleName(MENUS[i].label);
         await expect(gatilho.getAttribute('aria-haspopup')).toBe('menu');
         await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
@@ -218,7 +218,7 @@ export const Playground: Story = {
       // Roving tabindex: um só gatilho é alcançável pelo Tab, e é o primeiro.
       // Sem isto, atravessar uma barra de seis menus custaria seis Tabs.
       await expect(document.activeElement).toBe(arquivo);
-      await expect(gatilhos.filter((g) => g.tabIndex === 0)).toHaveLength(1);
+      await expect(triggers.filter((g) => g.tabIndex === 0)).toHaveLength(1);
     });
 
     await step('Enter no gatilho abre o menu com foco no primeiro item', async () => {

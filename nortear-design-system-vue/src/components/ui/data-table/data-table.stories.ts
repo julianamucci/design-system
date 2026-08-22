@@ -159,10 +159,10 @@ export const Playground: Story = {
     const regiaoViva = () => canvasElement.querySelector<HTMLElement>("[role='status']")!;
 
     /** Estabelece a precondição do passo: sem ordem aplicada, venha de onde vier. */
-    const zerarOrdenacao = async (botao: HTMLElement) => {
-      const th = botao.closest('th')!;
+    const zerarOrdenacao = async (button: HTMLElement) => {
+      const th = button.closest('th')!;
       for (let i = 0; i < 3 && th.getAttribute('aria-sort') !== 'none'; i++) {
-        await userEvent.click(botao);
+        await userEvent.click(button);
       }
       await waitFor(() => expect(th).toHaveAttribute('aria-sort', 'none'));
     };
@@ -225,33 +225,33 @@ export const Playground: Story = {
     await step('Cabeçalho ordenável anuncia que ordena, e como', async () => {
       // accessibility.item2 — o aria-label carrega o NOME da coluna: "Ordenar
       // por" cinco vezes seria indistinguível na lista de controles do leitor.
-      const botao = canvas.getByRole('button', { name: 'Ordenar por Valor' });
-      await zerarOrdenacao(botao);
-      const cabecalho = botao.closest('th')!;
-      await expect(cabecalho).toHaveAttribute('scope', 'col');
+      const button = canvas.getByRole('button', { name: 'Ordenar por Valor' });
+      await zerarOrdenacao(button);
+      const header = button.closest('th')!;
+      await expect(header).toHaveAttribute('scope', 'col');
       // `none` explícito: ausência seria indistinguível de "não ordena".
-      await expect(cabecalho).toHaveAttribute('aria-sort', 'none');
+      await expect(header).toHaveAttribute('aria-sort', 'none');
     });
 
     await step('Ordenar percorre ascendente, descendente e nenhum', async () => {
       // functional.item3 — três estados. Sem o terceiro, quem ordenou por
       // engano não tem como voltar à ordem original dos dados.
-      const botao = canvas.getByRole('button', { name: 'Ordenar por Valor' });
-      await zerarOrdenacao(botao);
-      const cabecalho = botao.closest('th')!;
+      const button = canvas.getByRole('button', { name: 'Ordenar por Valor' });
+      await zerarOrdenacao(button);
+      const header = button.closest('th')!;
 
-      await userEvent.click(botao);
-      await waitFor(() => expect(cabecalho).toHaveAttribute('aria-sort', 'ascending'));
+      await userEvent.click(button);
+      await waitFor(() => expect(header).toHaveAttribute('aria-sort', 'ascending'));
       // O menor valor é 60 (INV-009). Se a ordenação comparasse o TEXTO
       // formatado, "R$ 1.200,00" viria antes de "R$ 60,00".
       await expect(firstCell()).toHaveTextContent('INV-009');
 
-      await userEvent.click(botao);
-      await waitFor(() => expect(cabecalho).toHaveAttribute('aria-sort', 'descending'));
+      await userEvent.click(button);
+      await waitFor(() => expect(header).toHaveAttribute('aria-sort', 'descending'));
       await expect(firstCell()).toHaveTextContent('INV-008');
 
-      await userEvent.click(botao);
-      await waitFor(() => expect(cabecalho).toHaveAttribute('aria-sort', 'none'));
+      await userEvent.click(button);
+      await waitFor(() => expect(header).toHaveAttribute('aria-sort', 'none'));
       await expect(firstCell()).toHaveTextContent('INV-001');
     });
 
@@ -261,35 +261,35 @@ export const Playground: Story = {
       // marcar vira aposta. A asserção anterior exigia o literal "Selecionar
       // linha" em toda linha, ou seja, GUARDAVA o defeito: só passava enquanto
       // os nomes fossem indistinguíveis.
-      const caixas = [...canvasElement.querySelectorAll<HTMLElement>("tbody [role='checkbox']")];
-      await expect(caixas.length).toBe(linhas().length);
+      const boxes = [...canvasElement.querySelectorAll<HTMLElement>("tbody [role='checkbox']")];
+      await expect(boxes.length).toBe(linhas().length);
 
-      const nomes = caixas.map((c) => c.getAttribute('aria-label') ?? '');
-      await expect(new Set(nomes).size).toBe(nomes.length);
+      const names = boxes.map((c) => c.getAttribute('aria-label') ?? '');
+      await expect(new Set(names).size).toBe(names.length);
 
       // Cada nome carrega o identificador da PRÓPRIA linha. Como a story não
       // passa `rowLabel`, esse identificador só pode ter vindo da primeira
       // coluna — é o fallback sendo exercido, e não a prop.
       for (const [i, tr] of linhas().entries()) {
-        await expect(nomes[i]).toContain(lineId(tr));
+        await expect(names[i]).toContain(lineId(tr));
       }
 
       const headerName = allBox().getAttribute('aria-label');
       await expect(headerName).toBe('Selecionar todas as faturas');
-      await expect(nomes).not.toContain(headerName);
+      await expect(names).not.toContain(headerName);
     });
 
     await step('A busca livre recorta as linhas', async () => {
       // functional.item1 — o filtro global casa em qualquer coluna.
-      const busca = canvas.getByRole('searchbox');
-      await userEvent.clear(busca);
-      await userEvent.type(busca, 'Karen');
+      const search = canvas.getByRole('searchbox');
+      await userEvent.clear(search);
+      await userEvent.type(search, 'Karen');
       await waitFor(() => expect(linhas().length).toBe(1));
       await expect(firstCell()).toHaveTextContent('INV-011');
       // A contagem acompanha o recorte, e não o total do dataset.
       await expect(regiaoViva()).toHaveTextContent('de 1 linha(s) selecionada(s).');
 
-      await userEvent.clear(busca);
+      await userEvent.clear(search);
       await waitFor(() => expect(linhas().length).toBe(10));
     });
 
@@ -335,8 +335,8 @@ export const Playground: Story = {
       // `rowKey`, a identidade seria o índice: reordenar deixaria marcada a
       // terceira posição, com outra fatura dentro dela — e ninguém veria, já
       // que a contagem continuaria em dois.
-      const botao = canvas.getByRole('button', { name: 'Ordenar por Valor' });
-      await zerarOrdenacao(botao);
+      const button = canvas.getByRole('button', { name: 'Ordenar por Valor' });
+      await zerarOrdenacao(button);
       // Reconsulta a cada volta: a linha é reescrita entre um clique e o outro,
       // e uma referência colhida antes pode não ser mais a que está na tela.
       const clearMarkup = async () => {
@@ -353,9 +353,9 @@ export const Playground: Story = {
       const contagemBefore = regiaoViva().textContent!.trim();
       await expect(contagemBefore).toBe('2 de 12 linha(s) selecionada(s).');
 
-      await userEvent.click(botao);
+      await userEvent.click(button);
       await waitFor(() =>
-        expect(botao.closest('th')!).toHaveAttribute('aria-sort', 'ascending'),
+        expect(button.closest('th')!).toHaveAttribute('aria-sort', 'ascending'),
       );
       // INV-009 tem o menor valor: as linhas de fato trocaram de lugar.
       await expect(firstCell()).toHaveTextContent('INV-009');
@@ -369,7 +369,7 @@ export const Playground: Story = {
 
       // Devolve a tabela ao estado em que o passo a encontrou: o painel
       // Interactions reexecuta a play no MESMO DOM.
-      await zerarOrdenacao(botao);
+      await zerarOrdenacao(button);
       await clearMarkup();
     });
 

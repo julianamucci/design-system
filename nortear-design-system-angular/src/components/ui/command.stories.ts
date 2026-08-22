@@ -167,9 +167,9 @@ export const Playground: Story = {
       // id que a lista tem de verdade — id órfão o axe reprova.
       await expect(campo).toHaveAttribute('aria-autocomplete', 'list');
       await expect(campo).toHaveAttribute('aria-expanded', 'true');
-      const controlado = campo.getAttribute('aria-controls');
-      await expect(controlado).toBeTruthy();
-      await expect(document.getElementById(controlado!)).toBe(lista);
+      const controlled = campo.getAttribute('aria-controls');
+      await expect(controlled).toBeTruthy();
+      await expect(document.getElementById(controlled!)).toBe(lista);
       // Nome acessível herdado do placeholder, nos dois papéis.
       await expect(campo).toHaveAttribute('aria-label', args.placeholder);
       await expect(lista).toHaveAttribute('aria-label', args.placeholder);
@@ -245,9 +245,9 @@ export const Playground: Story = {
         await inHighlight(texto);
       }
 
-      const ultimo = document.getElementById(campo.getAttribute('aria-activedescendant')!)!;
-      await expect(ultimo).toHaveAttribute('role', 'option');
-      await expect(ultimo).toHaveAttribute('aria-selected', 'true');
+      const last = document.getElementById(campo.getAttribute('aria-activedescendant')!)!;
+      await expect(last).toHaveAttribute('role', 'option');
+      await expect(last).toHaveAttribute('aria-selected', 'true');
       // O foco NÃO se move: é o que separa a paleta de um menu, e é o que
       // permite continuar digitando enquanto se navega.
       await expect(campo).toHaveFocus();
@@ -260,7 +260,7 @@ export const Playground: Story = {
 
       // Um destaque por vez: quem estava marcado no fim da descida não está
       // mais.
-      await expect(ultimo).toHaveAttribute('aria-selected', 'false');
+      await expect(last).toHaveAttribute('aria-selected', 'false');
       await expect(canvas.getByRole('option', { name: 'Button' })).toHaveAttribute(
         'aria-selected',
         'true',

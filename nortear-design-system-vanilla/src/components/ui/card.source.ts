@@ -15,10 +15,10 @@ import type { CardSize } from './card';
  * `import` de muitos nomes, quebrado em linhas. O Card é uma família de sete
  * fábricas, e a linha única passaria de 150 colunas num painel estreito.
  */
-function multipleImporting(slug: string, nomes: string[]): string {
-  return nomes.length <= 3
-    ? importing(slug, ...nomes)
-    : `import {\n${nomes.map((n) => `  ${n},`).join('\n')}\n} from '@/components/ui/${slug}';`;
+function multipleImporting(slug: string, names: string[]): string {
+  return names.length <= 3
+    ? importing(slug, ...names)
+    : `import {\n${names.map((n) => `  ${n},`).join('\n')}\n} from '@/components/ui/${slug}';`;
 }
 
 /** O que as stories usam da família `Card*` e que o snippet precisa mostrar. */
@@ -51,20 +51,20 @@ const WIDTH_DEFAULT = 'nds-w-sm';
  * estes blocos dentro de um `<a>` — e duplicá-los faria as duas descrições do
  * mesmo componente envelhecerem em ritmos diferentes.
  */
-function partesDoCard(o: CardSnippetOptions): { nomes: string[]; blocos: string[] } {
+function partesDoCard(o: CardSnippetOptions): { names: string[]; blocks: string[] } {
   const titulo = o.title ?? TITLE_DEFAULT;
   const descricao = o.description ?? DESCRIPTION_DEFAULT;
   const preco = o.price ?? PRECO_DEFAULT;
 
-  const nomes = [
+  const names = [
     'createCard',
     'createCardHeader',
     'createCardTitle',
     'createCardDescription',
     'createCardContent',
   ];
-  if (o.action) nomes.push('createCardAction');
-  if (o.showFooter) nomes.push('createCardFooter');
+  if (o.action) names.push('createCardAction');
+  if (o.showFooter) names.push('createCardFooter');
 
   const raiz = chamada(
     'createCard',
@@ -74,10 +74,10 @@ function partesDoCard(o: CardSnippetOptions): { nomes: string[]; blocos: string[
     ]),
   );
 
-  const blocos: string[] = [`const card = ${raiz};`];
+  const blocks: string[] = [`const card = ${raiz};`];
 
   if (o.image) {
-    blocos.push(
+    blocks.push(
       `// Primeiro filho: o Card zera o próprio respiro de cima e arredonda o topo
 // da imagem por CSS — não é preciso classe nenhuma nela para isso.
 const foto = document.createElement('img');
@@ -90,7 +90,7 @@ foto.style.objectFit = 'cover';`,
     );
   }
 
-  const cabecalho = [
+  const header = [
     'const cabecalho = createCardHeader();',
     'cabecalho.append(',
     `  createCardTitle({ text: ${texto(titulo)} }),`,
@@ -98,7 +98,7 @@ foto.style.objectFit = 'cover';`,
     ');',
   ];
   if (o.action) {
-    cabecalho.push(
+    header.push(
       '',
       '// A ação vive DENTRO do cabeçalho: a posição à direita vem da grid dele,',
       '// e não de uma classe própria.',
@@ -114,9 +114,9 @@ foto.style.objectFit = 'cover';`,
       'cabecalho.appendChild(acao);',
     );
   }
-  blocos.push(cabecalho.join('\n'));
+  blocks.push(header.join('\n'));
 
-  blocos.push(
+  blocks.push(
     `const valor = document.createElement('p');
 valor.className = 'nds-text-h4';
 valor.textContent = ${texto(preco)};
@@ -126,7 +126,7 @@ conteudo.appendChild(valor);`,
   );
 
   if (o.showFooter) {
-    blocos.push(
+    blocks.push(
       `// O Card zera o próprio respiro de baixo quando o rodapé é filho DIRETO —
 // um wrapper no meio mataria a regra sem mudar nada visível.
 const rodape = createCardFooter({ class: 'nds-cluster' });
@@ -146,29 +146,29 @@ rodape.append(
     );
   }
 
-  const montagem = ['card.append('];
-  if (o.image) montagem.push('  foto,');
-  montagem.push('  cabecalho,', '  conteudo,');
-  if (o.showFooter) montagem.push('  rodape,');
-  montagem.push(');');
-  blocos.push(montagem.join('\n'));
+  const assembly = ['card.append('];
+  if (o.image) assembly.push('  foto,');
+  assembly.push('  cabecalho,', '  conteudo,');
+  if (o.showFooter) assembly.push('  rodape,');
+  assembly.push(');');
+  blocks.push(assembly.join('\n'));
 
-  return { nomes, blocos };
+  return { names, blocks };
 }
 
 /** A chamada real da família `createCard*` com as opções da story. */
 export function cardSnippet(o: CardSnippetOptions = {}): string {
-  const { nomes, blocos } = partesDoCard(o);
+  const { names, blocks } = partesDoCard(o);
   const usaButton = Boolean(o.showFooter || o.action);
 
   return snippet(
     [
-      multipleImporting('card', nomes),
+      multipleImporting('card', names),
       usaButton ? importing('button', 'createButton') : undefined,
     ]
       .filter(Boolean)
       .join('\n'),
-    ...blocos,
+    ...blocks,
     montar('card'),
   );
 }
@@ -197,16 +197,16 @@ export function cardSourceWith(fixas: CardSnippetOptions): SourceTransform<CardS
 export function cardClickableSnippet(o: CardSnippetOptions = {}): string {
   const titulo = o.title ?? TITLE_DEFAULT;
   // O `<a>` é quem recebe a largura; o Card dentro dele preenche o que sobrar.
-  const { nomes, blocos } = partesDoCard({ ...o, class: 'nds-w-full' });
+  const { names, blocks } = partesDoCard({ ...o, class: 'nds-w-full' });
 
   return snippet(
     [
-      multipleImporting('card', nomes),
+      multipleImporting('card', names),
       o.showFooter || o.action ? importing('button', 'createButton') : undefined,
     ]
       .filter(Boolean)
       .join('\n'),
-    ...blocos,
+    ...blocks,
     `const destino = document.createElement('a');
 destino.href = '/produtos/cadeira-gamer-pro';
 destino.className = 'nds-block nds-w-sm nds-text-left nds-focus-ring nds-rounded-xl';

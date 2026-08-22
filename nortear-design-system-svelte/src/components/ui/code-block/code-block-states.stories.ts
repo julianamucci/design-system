@@ -13,8 +13,8 @@ render(items, total);`;
 
 /** Longo nas duas direções: força barra horizontal e vertical ao mesmo tempo. */
 const LONG_CODE = Array.from({ length: 40 }, (_, i) => {
-  const campos = Array.from({ length: 12 }, (_, j) => `campoBastanteDescritivo${j}: true`).join(', ');
-  return `const registro${i} = await repositorio.buscarPorIdentificadorCompletoComRelacionamentos(${i}, { ${campos} });`;
+  const fields = Array.from({ length: 12 }, (_, j) => `campoBastanteDescritivo${j}: true`).join(', ');
+  return `const registro${i} = await repositorio.buscarPorIdentificadorCompletoComRelacionamentos(${i}, { ${fields} });`;
 }).join('\n');
 
 const rootOf = (canvasElement: HTMLElement) =>

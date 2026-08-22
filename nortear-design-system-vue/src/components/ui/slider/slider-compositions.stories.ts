@@ -56,9 +56,9 @@ export const VolumeWithValue: Story = {
 
     await step('O texto do valor acompanha a alça', async () => {
       const live = canvasElement.querySelector<HTMLElement>('[aria-live="polite"]')!;
-      const alca = canvas.getByRole('slider');
-      const antes = handleValue(alca);
-      (alca as HTMLElement).focus();
+      const thumb = canvas.getByRole('slider');
+      const antes = handleValue(thumb);
+      (thumb as HTMLElement).focus();
       await userEvent.keyboard('{ArrowRight}');
       await expect(live).toHaveTextContent(`${Math.min(100, antes + 1)}%`);
     });
@@ -212,15 +212,15 @@ export const ThickStep: Story = {
     const canvas = within(canvasElement);
 
     await step('A faixa curta chega à árvore de acessibilidade', async () => {
-      const alca = canvas.getByRole('slider');
-      await expect(alca).toHaveAttribute('aria-valuemin', '1');
-      await expect(alca).toHaveAttribute('aria-valuemax', '5');
+      const thumb = canvas.getByRole('slider');
+      await expect(thumb).toHaveAttribute('aria-valuemin', '1');
+      await expect(thumb).toHaveAttribute('aria-valuemax', '5');
     });
 
     await step('ArrowRight anda um passo dentro da faixa curta', async () => {
-      const alca = canvas.getByRole('slider');
-      const antes = handleValue(alca);
-      (alca as HTMLElement).focus();
+      const thumb = canvas.getByRole('slider');
+      const antes = handleValue(thumb);
+      (thumb as HTMLElement).focus();
       await userEvent.keyboard('{ArrowRight}');
       await expect(handleValue(canvas.getByRole('slider'))).toBe(Math.min(5, antes + 1));
     });

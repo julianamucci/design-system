@@ -6,7 +6,7 @@ import { root } from './code-block.fixtures';
 import { LANGUAGE_ITEMS, COMPOSITION_CODE } from '@/components/docs/CodeBlockDocs';
 import {
   CONTRAST_MINIMUM,
-  TRECHOS_DA_PALETA,
+  PALETTE_TRECHOS,
   contrastLaudo,
 } from '@shared/testing/code-block-probe';
 
@@ -67,13 +67,13 @@ function renderLanguage(key: string) {
  * contra fundo nenhum.
  */
 const renderPalette = () => ({
-  props: { trechos: TRECHOS_DA_PALETA, destacado: COMPOSITION_CODE, destaque: [2] },
+  props: { trechos: PALETTE_TRECHOS, destacado: COMPOSITION_CODE, highlight: [2] },
   template: `
     <div class="nds-stack" data-spacing="md">
       @for (t of trechos; track t.language) {
         <nds-code-block [code]="t.code" [language]="t.language" [showLineNumbers]="false" />
       }
-      <nds-code-block [code]="destacado" language="ts" [highlightLines]="destaque" />
+      <nds-code-block [code]="destacado" language="ts" [highlightLines]="highlight" />
     </div>
   `,
 });

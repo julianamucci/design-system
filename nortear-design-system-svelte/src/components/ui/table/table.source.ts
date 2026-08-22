@@ -26,9 +26,9 @@ function recuar(bloco: string, espacos = '  '): string {
     .join('\n');
 }
 
-function imports(nomes: string[]): string {
+function imports(names: string[]): string {
   return `import {
-${nomes.map((nome) => `  ${nome},`).join('\n')}
+${names.map((nome) => `  ${nome},`).join('\n')}
 } from "@/components/ui/table";`;
 }
 
@@ -86,8 +86,8 @@ const FOOTER = `  <TableFooter>
     </TableRow>
   </TableFooter>`;
 
-function legenda(texto: string, visivel: boolean): string {
-  return visivel
+function legenda(texto: string, visible: boolean): string {
+  return visible
     ? `  <TableCaption>${texto}</TableCaption>`
     : `  <TableCaption class="nds-sr-only">${texto}</TableCaption>`;
 }
@@ -207,7 +207,7 @@ export function tableScrollHorizontalSource(): string {
 
 const meses = ["2025", "2026"].flatMap((ano) =>
   ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"].map(
-    (mes) => \`\${mes}/\${ano}\`,
+    (mes) => \`\${month}/\${year}\`,
   ),
 );
 

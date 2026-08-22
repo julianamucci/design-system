@@ -33,7 +33,7 @@ const SIMPLE_FIELD = [
   inputPaletteDarkSource,
 ];
 
-const GRUPO = [
+const GROUP = [
   inputGroupSource,
   inputGroupIconEndSource,
   inputGroupPrefixoTextSource,
@@ -46,7 +46,7 @@ const GRUPO = [
   addonInputGroupClickSource,
 ];
 
-const TODAS = [...SIMPLE_FIELD, ...GRUPO];
+const TODAS = [...SIMPLE_FIELD, ...GROUP];
 
 describe('inputSource', () => {
   it('ensina a importação do design system, não a da lib headless', () => {
@@ -141,7 +141,7 @@ describe('InputGroup', () => {
   it('o campo interno é o InputGroupInput, e nunca o Input nu', () => {
     // Quem desenha a moldura é o grupo; um `Input` dentro traria a borda
     // própria e apareceria uma linha dupla no meio.
-    for (const fn of GRUPO) {
+    for (const fn of GROUP) {
       const saida = fn();
       expect(saida, `${fn.name} usa Input nu`).not.toMatch(/<Input\s/);
       expect(saida).toContain('<InputGroupInput');
@@ -152,7 +152,7 @@ describe('InputGroup', () => {
   it('todo ícone dentro do grupo é decorativo', () => {
     // O nome acessível vem do rótulo (ou do `aria-label` do botão); um ícone
     // anunciado duplicaria a leitura.
-    for (const fn of GRUPO) {
+    for (const fn of GROUP) {
       const saida = fn();
       for (const [, tag, atributos] of saida.matchAll(/<(Search|Mail|EyeOff|Eye|X)\b([^>]*)>/g)) {
         expect(atributos, `${fn.name}: <${tag}> sem aria-hidden`).toContain('aria-hidden="true"');

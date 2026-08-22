@@ -443,10 +443,10 @@ export function createSeparatorDocs(): HTMLElement {
         });
 
       case 'variantes': {
-        const codeHorizontal =
+        const horizontalCode =
           `const sep = createSeparator({ orientation: 'horizontal' });\n` +
           `container.append(top, sep, bottom);`;
-        const codeVertical =
+        const verticalCode =
           `// O contêiner precisa ser flex ou grade — a altura da linha vem dele:\n` +
           `const row = document.createElement('div');\n` +
           `row.className = 'nds-cluster';\nrow.dataset.spacing = 'sm';\nrow.dataset.align = 'center';\n` +
@@ -458,13 +458,13 @@ export function createSeparatorDocs(): HTMLElement {
             {
               name: t('variants.items.horizontal'),
               description: DOMPurify.sanitize(t('variants.styles.horizontal')),
-              code: codeHorizontal,
+              code: horizontalCode,
               previewFactory: () => buildHorizontalDemo(t('variants.items.horizontal')),
             },
             {
               name: t('variants.items.vertical'),
               description: DOMPurify.sanitize(t('variants.styles.vertical')),
-              code: codeVertical,
+              code: verticalCode,
               previewFactory: () => buildVerticalDemo(t('variants.items.vertical')),
             },
           ],

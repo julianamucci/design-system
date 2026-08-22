@@ -61,7 +61,7 @@ function sleep(ms: number): Promise<void> {
   return new Promise<void>((resolve) => setTimeout(resolve, ms));
 }
 
-const quadro = (tagAttrs: string, altura = 120) => ({
+const nextFrame = (tagAttrs: string, altura = 120) => ({
   components: { Toaster },
   template: `
     <div style="contain: layout; position: relative; min-height: ${altura}px;">
@@ -82,7 +82,7 @@ export const AutoDismiss: Story = {
       },
     },
   },
-  render: () => quadro('position="top-right" rich-colors :duration="1200"'),
+  render: () => nextFrame('position="top-right" rich-colors :duration="1200"'),
   play: async ({ step }) => {
     await clearToasts();
 
@@ -119,7 +119,7 @@ export const PauseOnHover: Story = {
       },
     },
   },
-  render: () => quadro('position="top-right" rich-colors :duration="1200"'),
+  render: () => nextFrame('position="top-right" rich-colors :duration="1200"'),
   play: async ({ step }) => {
     await clearToasts();
 
@@ -155,7 +155,7 @@ export const Stacked: Story = {
       },
     },
   },
-  render: () => quadro('position="top-right" rich-colors expand', 240),
+  render: () => nextFrame('position="top-right" rich-colors expand', 240),
   play: async ({ step }) => {
     await clearToasts();
 
@@ -202,7 +202,7 @@ export const PositionBottomCenter: Story = {
       },
     },
   },
-  render: () => quadro('position="bottom-center" rich-colors', 160),
+  render: () => nextFrame('position="bottom-center" rich-colors', 160),
   play: async ({ step }) => {
     await clearToasts();
 
@@ -285,7 +285,7 @@ export const DarkTheme: Story = {
     },
   },
   globals: { theme: 'dark' },
-  render: () => quadro('position="top-right" rich-colors expand theme="dark"', 320),
+  render: () => nextFrame('position="top-right" rich-colors expand theme="dark"', 320),
   play: async ({ step }) => {
     await clearToasts();
 

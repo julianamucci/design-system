@@ -154,13 +154,13 @@ export function createPagination(options: PaginationOptions): HTMLElement {
     rotulo: string,
     slot: string,
     desabilitado: boolean,
-    destino: number,
+    destination: number,
     aoClicar: () => void,
   ): HTMLAnchorElement {
     const a = document.createElement('a');
     // Nos extremos o controle não leva a lugar nenhum: `#` ali é honesto, e um
     // endereço válido convidaria a abrir em nova aba uma página que não existe.
-    a.href = desabilitado ? '#' : pageEndereco(destino);
+    a.href = desabilitado ? '#' : pageEndereco(destination);
     a.dataset.slot = slot;
     a.setAttribute('aria-label', rotulo);
     a.className = 'nds-pagination-link nds-pagination-icon';

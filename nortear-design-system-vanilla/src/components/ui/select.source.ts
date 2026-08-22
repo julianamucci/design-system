@@ -69,18 +69,18 @@ function optionLiteral(o: SelectOptionSnippet): string {
 }
 
 /** Uma entrada da lista, já indentada para caber dentro da chamada. */
-function entryLiteral(entrada: SelectEntrySnippet, recuo: string): string {
-  if ('type' in entrada && entrada.type === 'separator') return `${recuo}{ type: 'separator' },`;
-  if ('type' in entrada && entrada.type === 'group') {
+function entryLiteral(entry: SelectEntrySnippet, recuo: string): string {
+  if ('type' in entry && entry.type === 'separator') return `${recuo}{ type: 'separator' },`;
+  if ('type' in entry && entry.type === 'group') {
     return `${recuo}{
 ${recuo}  type: 'group',
-${recuo}  label: ${texto(entrada.label)},
+${recuo}  label: ${texto(entry.label)},
 ${recuo}  items: [
-${entrada.items.map((i) => `${recuo}    ${optionLiteral(i)},`).join('\n')}
+${entry.items.map((i) => `${recuo}    ${optionLiteral(i)},`).join('\n')}
 ${recuo}  ],
 ${recuo}},`;
   }
-  return `${recuo}${optionLiteral(entrada as SelectOptionSnippet)},`;
+  return `${recuo}${optionLiteral(entry as SelectOptionSnippet)},`;
 }
 
 function itemsLiteral(itens: SelectEntrySnippet[], recuo = '  '): string {

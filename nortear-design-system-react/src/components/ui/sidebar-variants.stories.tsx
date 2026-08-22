@@ -245,10 +245,10 @@ export const CollapsibleIcon: Story = {
       const raiz = rootOf(canvasElement);
       await expect(raiz).toHaveAttribute("data-state", "expanded");
       const painel = raiz.querySelector<HTMLElement>(".nds-sidebar-panel")!;
-      const cheia = parseFloat(getComputedStyle(raiz).getPropertyValue("--sidebar-width"));
+      const full = parseFloat(getComputedStyle(raiz).getPropertyValue("--sidebar-width"));
       const rootFonte = parseFloat(getComputedStyle(document.documentElement).fontSize);
       await expect(Math.round(parseFloat(getComputedStyle(painel).width))).toBe(
-        Math.round(cheia * rootFonte),
+        Math.round(full * rootFonte),
       );
     });
   },

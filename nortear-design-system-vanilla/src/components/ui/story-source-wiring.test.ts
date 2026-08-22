@@ -31,17 +31,17 @@ const UI = join(process.cwd(), 'src', 'components', 'ui');
  * vermelha sem que nada estivesse errado no `kbd`. Reconhecer o título fecha a
  * família inteira, inclusive a próxima story de portão.
  */
-const arquivos = readdirSync(UI).filter((f) => f.endsWith('.stories.ts'));
+const files = readdirSync(UI).filter((f) => f.endsWith('.stories.ts'));
 
 const ehGate = (arquivo: string) =>
   readFileSync(join(UI, arquivo), 'utf8').includes("title: 'QA/");
 
 describe('fiação do painel Code', () => {
   it('encontra os arquivos de story da stack', () => {
-    expect(arquivos.length).toBeGreaterThan(150);
+    expect(files.length).toBeGreaterThan(150);
   });
 
-  it.each(arquivos.filter((f) => !ehGate(f)))(
+  it.each(files.filter((f) => !ehGate(f)))(
     '%s declara docs.source.transform no meta',
     (arquivo) => {
       const conteudo = readFileSync(join(UI, arquivo), 'utf8');
@@ -52,7 +52,7 @@ describe('fiação do painel Code', () => {
     },
   );
 
-  it.each(arquivos)('%s importa a transform de um módulo `.source`', (arquivo) => {
+  it.each(files)('%s importa a transform de um módulo `.source`', (arquivo) => {
     if (ehGate(arquivo)) return;
     const conteudo = readFileSync(join(UI, arquivo), 'utf8');
     // Função exportada de `<slug>.source.ts`, nunca lambda inline: a saída do
@@ -62,7 +62,7 @@ describe('fiação do painel Code', () => {
   });
 
   it('nenhum arquivo de story define a transform como lambda inline', () => {
-    const culpados = arquivos.filter((f) => {
+    const culpados = files.filter((f) => {
       const conteudo = readFileSync(join(UI, f), 'utf8');
       return /transform:\s*\(/.test(conteudo) || /transform:\s*function/.test(conteudo);
     });

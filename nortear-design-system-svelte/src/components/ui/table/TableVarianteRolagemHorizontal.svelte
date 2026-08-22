@@ -11,9 +11,9 @@
 
   // Dois anos de competência, não um: com doze colunas a tabela ainda cabe num
   // canvas largo, e a story provaria a rolagem só nos viewports estreitos.
-  const meses = ['2025', '2026'].flatMap((ano) =>
+  const meses = ['2025', '2026'].flatMap((year) =>
     ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'].map(
-      (mes) => `${mes}/${ano}`,
+      (month) => `${month}/${year}`,
     ),
   );
 
@@ -29,8 +29,8 @@
   <TableHeader>
     <TableRow>
       <TableHead scope="col">Fatura</TableHead>
-      {#each meses as mes (mes)}
-        <TableHead scope="col">{mes}</TableHead>
+      {#each meses as month (month)}
+        <TableHead scope="col">{month}</TableHead>
       {/each}
     </TableRow>
   </TableHeader>
@@ -38,7 +38,7 @@
     {#each invoices as invoice (invoice.id)}
       <TableRow>
         <TableCell class="nds-font-medium">{invoice.id}</TableCell>
-        {#each meses as mes (mes)}
+        {#each meses as month (month)}
           <TableCell class="nds-text-right">{invoice.amount}</TableCell>
         {/each}
       </TableRow>

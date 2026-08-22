@@ -680,14 +680,14 @@ export class NdsScrollAreaDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     return [
       {
         title: 'NdsScrollArea',
         cols,
         items: [
-          { name: 'label', type: 'string', defaultValue: '—', required: nao, description: toPlainText(t('props.table.label')) },
-          { name: 'size', type: '"xs" | "sm" | "md" | "lg" | "xl"', defaultValue: '—', required: nao, description: toPlainText(t('props.table.size')) },
+          { name: 'label', type: 'string', defaultValue: '—', required: not, description: toPlainText(t('props.table.label')) },
+          { name: 'size', type: '"xs" | "sm" | "md" | "lg" | "xl"', defaultValue: '—', required: not, description: toPlainText(t('props.table.size')) },
           // `class` e o conteúdo continuam descritos pelo conteúdo compartilhado:
           // as chaves são objetos ({type, default, required, description}), então
           // o caminho é completo — `t('props.table.className')` devolveria a
@@ -706,9 +706,9 @@ export class NdsScrollAreaDocs implements AfterViewInit, OnDestroy {
             required: t('props.table.children.required'),
             description: toPlainText(t('props.table.children.description')),
           },
-          { name: 'type', type: '—', defaultValue: '—', required: nao, description: toPlainText(t('props.table.typeAbsent')) },
-          { name: 'scrollHideDelay', type: '—', defaultValue: '—', required: nao, description: toPlainText(t('props.table.scrollHideDelayAbsent')) },
-          { name: 'orientation', type: '—', defaultValue: '—', required: nao, description: toPlainText(t('props.table.orientationAbsent')) },
+          { name: 'type', type: '—', defaultValue: '—', required: not, description: toPlainText(t('props.table.typeAbsent')) },
+          { name: 'scrollHideDelay', type: '—', defaultValue: '—', required: not, description: toPlainText(t('props.table.scrollHideDelayAbsent')) },
+          { name: 'orientation', type: '—', defaultValue: '—', required: not, description: toPlainText(t('props.table.orientationAbsent')) },
         ],
       },
     ];

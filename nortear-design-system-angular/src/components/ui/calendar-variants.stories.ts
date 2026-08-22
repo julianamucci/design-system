@@ -88,11 +88,11 @@ export const Single: Story = {
       // accessibility.item6 — o item prometia 4.5:1 e a verificação declarada era
       // "axe-core / Lighthouse", que só enxerga o tema claro da marca default: um
       // sexto do produto. O escuro é a outra metade, e nunca era medido.
-      const medidas = calendarMeasureContrast(canvasElement).filter(
+      const measurements = calendarMeasureContrast(canvasElement).filter(
         (m) => m.presente && (STATES_WITH_TEXT_LEGIVEL as readonly string[]).includes(m.estado),
       );
-      await expect(medidas.length).toBeGreaterThan(0);
-      const reprovadas = medidas.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);
+      await expect(measurements.length).toBeGreaterThan(0);
+      const reprovadas = measurements.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);
       await expect(reprovadas).toEqual([]);
     });
   },
@@ -165,13 +165,13 @@ export const CaptionLabel: Story = {
         /abril 2026/i,
       );
 
-      const diasDaSemana = Array.from(canvasElement.querySelectorAll('th[scope="col"]')).map((th) =>
+      const weekDays = Array.from(canvasElement.querySelectorAll('th[scope="col"]')).map((th) =>
         th.textContent?.trim().toLowerCase(),
       );
       // A forma curta, e a mesma nas cinco: 'narrow' dá "D S T Q Q S S", com duas
       // quartas e duas quintas indistinguíveis, e o ponto de "dom." é ruído numa
       // coluna de uma palavra. Conferir só a inicial aceitaria tudo.
-      await expect(diasDaSemana).toEqual(['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb']);
+      await expect(weekDays).toEqual(['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb']);
     });
 
     await step('A semana começa no domingo, e não no que o locale mandar', async () => {

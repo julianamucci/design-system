@@ -110,14 +110,14 @@ export const Playground: Story = {
       // O estado da página vive aqui, como em qualquer consumidor: a faixa não
       // guarda página atual. `key` no root remonta quando os controls mudam.
       const atual = ref(args.defaultPage);
-      const totalPaginas = Math.ceil(args.total / args.itemsPerPage);
-      const paginas = Array.from({ length: totalPaginas }, (_, i) => i + 1);
-      const irPara = (n: number) => {
-        if (n < 1 || n > totalPaginas) return;
+      const totalPages = Math.ceil(args.total / args.itemsPerPage);
+      const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+      const irTo = (n: number) => {
+        if (n < 1 || n > totalPages) return;
         atual.value = n;
         args.onPageChange(n);
       };
-      return { args, atual, paginas, totalPaginas, irPara };
+      return { args, atual, pages, totalPages, irTo };
     },
     template: `
       <Pagination
@@ -129,20 +129,20 @@ export const Playground: Story = {
         <PaginationContent>
           <PaginationItem>
             <!-- O primitivo já desabilita nos extremos a partir de :page. -->
-            <PaginationPrevious :text="args.textoAnterior" @click="irPara(atual - 1)" />
+            <PaginationPrevious :text="args.textoAnterior" @click="irTo(atual - 1)" />
           </PaginationItem>
-          <PaginationItem v-for="n in paginas" :key="n">
+          <PaginationItem v-for="n in pages" :key="n">
             <PaginationLink
               href="#"
               :is-active="atual === n"
               :aria-label="\`Ir para página \${n}\`"
-              @click.prevent="irPara(n)"
+              @click.prevent="irTo(n)"
             >
               {{ n }}
             </PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationNext :text="args.textoProxima" @click="irPara(atual + 1)" />
+            <PaginationNext :text="args.textoProxima" @click="irTo(atual + 1)" />
           </PaginationItem>
         </PaginationContent>
       </Pagination>
@@ -150,7 +150,7 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const totalPaginas = Math.ceil(args.total / args.itemsPerPage);
+    const totalPages = Math.ceil(args.total / args.itemsPerPage);
 
     await step('A paginação é um landmark de navegação nomeado', async () => {
       // accessibility.item1 — sem nome o leitor de tela anuncia só "navegação",
@@ -163,7 +163,7 @@ export const Playground: Story = {
 
     await step('Todo controle tem rótulo com contexto', async () => {
       // accessibility.item5 — "3" sozinho não diz nada em voz alta.
-      for (let n = 1; n <= totalPaginas; n++) {
+      for (let n = 1; n <= totalPages; n++) {
         const link = canvas.getByRole('link', { name: `Ir para página ${n}` });
         await expect(link).toHaveAttribute('data-slot', 'pagination-link');
       }

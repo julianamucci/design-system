@@ -139,12 +139,12 @@ export const ColorPicker: Story = {
       // ele o axe reprova por button-name.
       const dialog = await waitForPortal('dialog', { timeout: 2000 });
       await waitForFocus(dialog);
-      const nomes = within(dialog)
+      const names = within(dialog)
         .getAllByRole('button')
         .map((b) => b.getAttribute('aria-label'))
         .filter((n): n is string => n !== null);
-      await expect(nomes).toHaveLength(6);
-      await expect(new Set(nomes).size).toBe(6);
+      await expect(names).toHaveLength(6);
+      await expect(new Set(names).size).toBe(6);
     });
 
     await step('E o foco chega a cada uma por Tab', async () => {

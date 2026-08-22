@@ -67,9 +67,9 @@ export const Bar: Story = {
     });
 
     await step('Com uma série só, o valor também fica escrito no desenho', async () => {
-      const textos = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
+      const texts = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
       for (const valor of SERIE_UNICA[0].data) {
-        await expect(textos).toContain(String(valor));
+        await expect(texts).toContain(String(valor));
       }
     });
   },
@@ -139,9 +139,9 @@ export const Line: Story = {
     });
 
     await step('A legenda nomeia cada série por escrito', async () => {
-      const textos = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
+      const texts = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
       for (const serie of SERIES_MULTI) {
-        await expect(textos).toContain(serie.name);
+        await expect(texts).toContain(serie.name);
       }
     });
   },
@@ -195,17 +195,17 @@ export const Pie: Story = {
     });
 
     await step('A legenda traz nome, valor e participação — não só a cor', async () => {
-      const textos = [...chart.querySelectorAll('svg text')].map((t) => t.textContent ?? '');
+      const texts = [...chart.querySelectorAll('svg text')].map((t) => t.textContent ?? '');
       for (const ponto of DATA_DISPOSITIVO) {
-        await expect(textos.some((texto) => texto.includes(ponto.label)
+        await expect(texts.some((texto) => texto.includes(ponto.label)
           && texto.includes(String(ponto.value))
           && texto.includes('%'))).toBe(true);
       }
     });
 
     await step('A tabela repete a participação em número', async () => {
-      const cabecalho = [...chart.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
-      await expect(cabecalho).toHaveLength(3);
+      const header = [...chart.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
+      await expect(header).toHaveLength(3);
       const primeira = [...chart.querySelectorAll('tbody tr')][0];
       await expect(primeira.textContent).toContain('%');
     });

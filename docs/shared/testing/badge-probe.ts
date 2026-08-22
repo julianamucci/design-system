@@ -44,13 +44,13 @@ export interface BadgeContrast {
   /** `null` quando o seletor não casou — isso É o achado, não falha da medição. */
   presente: boolean;
   texto: number | null;
-  borda: number | null;
+  border: number | null;
   corDoTexto: string | null;
-  fundo: string | null;
+  background: string | null;
 }
 
 /** Nome da variante: preferir o atributo, cair na classe, e nunca adivinhar. */
-function varianteDe(el: HTMLElement): string {
+function variantOf(el: HTMLElement): string {
   const attr = el.getAttribute('data-variant');
   if (attr) return attr;
   const m = el.className.match(
@@ -96,21 +96,21 @@ export function badgeMeasureContrast(raiz: HTMLElement): BadgeContrast[] {
     return byTheme(raiz, (tema, modo) =>
       badges.map((b): BadgeContrast => {
         const cs = getComputedStyle(b);
-        const fundo = backgroundEffective(b);
-        const rText = ratio(cs.color, fundo);
+        const background = backgroundEffective(b);
+        const rText = ratio(cs.color, background);
         // A borda é vista contra a PÁGINA, não contra o interior do badge.
-        const pageBackground = b.parentElement ? backgroundEffective(b.parentElement) : fundo;
+        const pageBackground = b.parentElement ? backgroundEffective(b.parentElement) : background;
         const rBorder =
           parseFloat(cs.borderTopWidth) > 0 ? ratio(cs.borderTopColor, pageBackground) : null;
         return {
           tema,
           modo,
-          variante: varianteDe(b),
+          variante: variantOf(b),
           presente: true,
           texto: rText?.ratio ?? null,
-          borda: rBorder?.ratio ?? null,
+          border: rBorder?.ratio ?? null,
           corDoTexto: rText?.frente ?? null,
-          fundo,
+          background,
         };
       }),
     ).flat();
@@ -153,7 +153,7 @@ export function badgeMeasureHeight(raiz: HTMLElement): BadgeHeight[] {
   const base = badges.map((b) => {
     const cs = getComputedStyle(b);
     return {
-      variante: varianteDe(b),
+      variante: variantOf(b),
       fonteBase: cs.fontSize,
       alturaBase: Math.round(b.getBoundingClientRect().height * 100) / 100,
       paddingBlock: `${cs.paddingTop} ${cs.paddingBottom}`,
@@ -185,7 +185,7 @@ export function badgeMeasureStructure(raiz: HTMLElement) {
   return Array.from(raiz.querySelectorAll<HTMLElement>('.nds-badge')).map((b) => {
     const icone = b.querySelector<SVGElement>('svg');
     return {
-      variante: varianteDe(b),
+      variante: variantOf(b),
       tag: b.tagName.toLowerCase(),
       slot: b.getAttribute('data-slot'),
       atributoDeVariante: b.getAttribute('data-variant'),
@@ -209,10 +209,10 @@ export function badgeMeasureStructure(raiz: HTMLElement) {
 
 /** Só o que reprova, para o relatório caber numa linha. */
 export function contrastFailures(
-  medidas: BadgeContrast[],
+  measurements: BadgeContrast[],
   minimum = 4.5,
 ): BadgeContrast[] {
-  return medidas.filter((m) => m.texto !== null && m.texto < minimum);
+  return measurements.filter((m) => m.texto !== null && m.texto < minimum);
 }
 
 export function describeContrast(ms: BadgeContrast[]): string {

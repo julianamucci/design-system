@@ -16,19 +16,19 @@
 import { negociarLocale, type Locale } from './locale-negotiation';
 import { sidebarLabel } from './sidebar-labels';
 
-const CHAVE = 'ds-locale';
+const KEY = 'ds-locale';
 
 type Listener = () => void;
 
 /** Store mínima: valor + assinatura, no formato que `useSyncExternalStore` pede. */
 function createLoja() {
-  let atual: Locale = negociarLocale(undefined, undefined, CHAVE);
+  let atual: Locale = negociarLocale(undefined, undefined, KEY);
   const ouvintes = new Set<Listener>();
 
   if (typeof window !== 'undefined') {
     window.addEventListener('storage', (e) => {
-      if (e.key !== CHAVE) return;
-      const novo = negociarLocale(undefined, undefined, CHAVE);
+      if (e.key !== KEY) return;
+      const novo = negociarLocale(undefined, undefined, KEY);
       if (novo === atual) return;
       atual = novo;
       ouvintes.forEach((o) => o());

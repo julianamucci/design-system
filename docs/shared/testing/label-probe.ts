@@ -155,9 +155,9 @@ export function clickFocaOControle(rotulo: HTMLElement, controle: Element | null
 
 /** Razão WCAG entre o texto do rótulo e o primeiro fundo opaco acima dele. */
 export function labelContrast(el: Element): number | null {
-  const fundo = backgroundEffective(el);
-  if (!fundo) return null;
-  return ratio(getComputedStyle(el).color, fundo)?.ratio ?? null;
+  const background = backgroundEffective(el);
+  if (!background) return null;
+  return ratio(getComputedStyle(el).color, background)?.ratio ?? null;
 }
 
 /**
@@ -168,14 +168,14 @@ export function labelContrast(el: Element): number | null {
  * A classe do escuro sai no `finally`: deixá-la posta envenena a story seguinte
  * e a foto do Chromatic.
  */
-export function themeContrast(el: HTMLElement): { claro: number | null; escuro: number | null } {
-  const claro = labelContrast(el);
+export function themeContrast(el: HTMLElement): { light: number | null; escuro: number | null } {
+  const light = labelContrast(el);
   const desfazer = darkLigarTheme(el.ownerDocument);
   try {
     // `color` está em transição na troca de tema: sem desligá-la a leitura
     // devolveria a cor do tema claro e o número não diria nada.
     const escuro = noTransicao(el, () => labelContrast(el));
-    return { claro, escuro };
+    return { light, escuro };
   } finally {
     desfazer();
   }
@@ -200,9 +200,9 @@ export function measureLabel(raiz: HTMLElement) {
   // ── Associação ──────────────────────────────────────────────────────────────
   const htmlFor = rotulo.getAttribute('for');
   const forTarget = htmlFor ? doc.getElementById(htmlFor) : null;
-  const aninhado = rotulo.querySelector(SELECTOR_CONTROL);
-  const controle = forTarget ?? aninhado ?? raiz.querySelector(SELECTOR_CONTROL);
-  const forma = forTarget ? 'for' : aninhado ? 'aninhado' : null;
+  const nested = rotulo.querySelector(SELECTOR_CONTROL);
+  const controle = forTarget ?? nested ?? raiz.querySelector(SELECTOR_CONTROL);
+  const forma = forTarget ? 'for' : nested ? 'aninhado' : null;
 
   // ── Marcador de obrigatório ─────────────────────────────────────────────────
   const marcador =
@@ -211,7 +211,7 @@ export function measureLabel(raiz: HTMLElement) {
   const csMarcador = marcador ? getComputedStyle(marcador) : null;
   const marcadorBackground = marcador ? backgroundEffective(marcador) : null;
 
-  const fundo = backgroundEffective(rotulo);
+  const background = backgroundEffective(rotulo);
 
   // ── Irmão desabilitado: qual vocabulário cada stack usa ─────────────────────
   const irmaos = [...(rotulo.parentElement?.children ?? [])].filter((el) => el !== rotulo);
@@ -274,10 +274,10 @@ export function measureLabel(raiz: HTMLElement) {
     },
     estado: {
       cor: cs.color,
-      backgroundEffective: fundo,
+      backgroundEffective: background,
       opacidade: Number(cs.opacity),
       cursor: cs.cursor,
-      ponteiro: cs.pointerEvents,
+      pointer: cs.pointerEvents,
     },
     obrigatorio: {
       existe: !!marcador,
@@ -294,10 +294,10 @@ export function measureLabel(raiz: HTMLElement) {
     },
     clique: {
       ...labelAoClick(rotulo, controle),
-      alcance: clickReach(rotulo),
+      reach: clickReach(rotulo),
     },
     contraste: {
-      textoNoFundo: fundo ? ratio(cs.color, fundo) : null,
+      textoNoFundo: background ? ratio(cs.color, background) : null,
     },
   };
 }
@@ -332,9 +332,9 @@ export function darkMeasure(raiz: HTMLElement, cenario: string) {
     // Trocar o tema troca `color`, que é propriedade em transição: sem desligá-la
     // a sonda leria a cor do tema CLARO e relataria um contraste que não existe.
     return noTransicao(rotulo, () => {
-      const medida = measureLabel(alvo);
-      if (!medida.presente) return null;
-      return { estado: medida.estado, contraste: medida.contraste, obrigatorio: medida.obrigatorio };
+      const measurement = measureLabel(alvo);
+      if (!measurement.presente) return null;
+      return { estado: measurement.estado, contraste: measurement.contraste, obrigatorio: measurement.obrigatorio };
     });
   } finally {
     desfazer();
@@ -349,7 +349,7 @@ export function darkMeasure(raiz: HTMLElement, cenario: string) {
  */
 export function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[]) {
   const registro = {
-    claro: measureLabels(raiz, cenarios),
+    light: measureLabels(raiz, cenarios),
     escuro: darkMeasure(raiz, cenarios[0]),
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);

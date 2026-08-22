@@ -26,10 +26,10 @@
 //     continua funcionando (o livro traduz), mas quem chamar
 //     `removeEventListener` DEPOIS de `parar()` não acha o embrulho.
 
-type Alvo = 'document' | 'window';
+type Target = 'document' | 'window';
 
-type Entrada = {
-  alvo: Alvo;
+type Entry = {
+  alvo: Target;
   type: string;
   fn: unknown;
   capture: boolean;
@@ -37,7 +37,7 @@ type Entrada = {
   embrulho?: EventListener;
 };
 
-export type ListenerVivo = { alvo: Alvo; type: string; origem: string };
+export type ListenerVivo = { alvo: Target; type: string; origem: string };
 
 /**
  * Arquivo:linha de quem chamou `addEventListener`.
@@ -46,8 +46,8 @@ export type ListenerVivo = { alvo: Alvo; type: string; origem: string };
  * catorze fábricas. O quadro é o primeiro fora deste arquivo.
  */
 function callOrigem(): string {
-  const pilha = new Error().stack ?? '';
-  for (const linha of pilha.split('\n').slice(1)) {
+  const stack = new Error().stack ?? '';
+  for (const linha of stack.split('\n').slice(1)) {
     if (linha.includes('listener-ledger')) continue;
     const m = linha.match(/([\w.-]+\.[jt]s)[?:][^)]*?(\d+):\d+/);
     if (m) return `${m[1]}:${m[2]}`;
@@ -67,14 +67,14 @@ function capturaDe(opts?: boolean | AddEventListenerOptions | EventListenerOptio
 }
 
 export function espiarOuvintes(): OuvintesSpy {
-  const entries: Entrada[] = [];
+  const entries: Entry[] = [];
   const restauradores: Array<() => void> = [];
 
-  const instalar = (nome: Alvo, obj: EventTarget): void => {
+  const instalar = (nome: Target, obj: EventTarget): void => {
     const addOriginal = EventTarget.prototype.addEventListener.bind(obj);
     const removeOriginal = EventTarget.prototype.removeEventListener.bind(obj);
 
-    const baixar = (type: string, fn: unknown, capture: boolean): Entrada | undefined => {
+    const baixar = (type: string, fn: unknown, capture: boolean): Entry | undefined => {
       const i = entries.findIndex(
         (e) => e.alvo === nome && e.type === type && e.fn === fn && e.capture === capture,
       );
@@ -111,10 +111,10 @@ export function espiarOuvintes(): OuvintesSpy {
       configurable: true,
       writable: true,
       value: (type: string, fn: unknown, opts?: boolean | EventListenerOptions): void => {
-        const entrada = baixar(type, fn, capturaDe(opts));
+        const entry = baixar(type, fn, capturaDe(opts));
         // Sem entrada no livro, o ouvinte é anterior à espionagem: repassa
         // direto, senão o espião viraria um bloqueador de limpeza alheia.
-        return removeOriginal(type, (entrada?.embrulho ?? fn) as EventListener, opts);
+        return removeOriginal(type, (entry?.embrulho ?? fn) as EventListener, opts);
       },
     });
 

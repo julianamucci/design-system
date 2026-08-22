@@ -162,8 +162,8 @@ describe('transforms das stories de composição', () => {
   it('o ícone do gatilho sai da árvore de acessibilidade', () => {
     const saida = accordionWithIconSource();
     expect(saida).toContain(`import { AlertTriangle, CheckCircle, Info } from 'lucide-vue-next'`);
-    const icones = [...saida.matchAll(/<(Info|AlertTriangle|CheckCircle) /g)];
-    expect(icones).toHaveLength(3);
+    const icons = [...saida.matchAll(/<(Info|AlertTriangle|CheckCircle) /g)];
+    expect(icons).toHaveLength(3);
     // O nome do gatilho já é o texto ao lado; um ícone anunciado repetiria a
     // categoria em toda leitura.
     expect(saida.match(/aria-hidden="true"/g)).toHaveLength(3);

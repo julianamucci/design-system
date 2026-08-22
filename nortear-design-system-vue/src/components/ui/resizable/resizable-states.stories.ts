@@ -40,9 +40,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const ROTULO = 'Redimensionar painéis — use setas para ajustar';
+const LABEL = 'Redimensionar painéis — use setas para ajustar';
 
-function contrastRatio(frente: string, fundo: string): number {
+function contrastRatio(frente: string, background: string): number {
   const luminancia = (cor: string): number => {
     const [r = 0, g = 0, b = 0] = cor.match(/[\d.]+/g)?.map(Number) ?? [];
     const canal = (c: number) => {
@@ -51,7 +51,7 @@ function contrastRatio(frente: string, fundo: string): number {
     };
     return 0.2126 * canal(r) + 0.7152 * canal(g) + 0.0722 * canal(b);
   };
-  const [a, b] = [luminancia(frente), luminancia(fundo)].sort((x, y) => y - x);
+  const [a, b] = [luminancia(frente), luminancia(background)].sort((x, y) => y - x);
   return (a + 0.05) / (b + 0.05);
 }
 
@@ -72,7 +72,7 @@ export const Dragging: Story = {
         <ResizablePanel :default-size="50" :min-size="10">
           <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Esquerda</div>
         </ResizablePanel>
-        <ResizableHandle with-handle aria-label="${ROTULO}" />
+        <ResizableHandle with-handle aria-label="${LABEL}" />
         <ResizablePanel :default-size="50" :min-size="10">
           <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Direita</div>
         </ResizablePanel>
@@ -81,7 +81,7 @@ export const Dragging: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO });
+    const punho = canvas.getByRole('separator', { name: LABEL });
 
     await step('Arrastar o divisor ajusta os painéis em tempo real', async () => {
       // functional.item1. `userEvent.pointer` com a sequência completa, e não um
@@ -139,7 +139,7 @@ export const Limits: Story = {
         <ResizablePanel :default-size="50" :min-size="30" :max-size="60">
           <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Limitado</div>
         </ResizablePanel>
-        <ResizableHandle aria-label="${ROTULO}" />
+        <ResizableHandle aria-label="${LABEL}" />
         <ResizablePanel :default-size="50" :min-size="30">
           <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Livre</div>
         </ResizablePanel>
@@ -148,7 +148,7 @@ export const Limits: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO });
+    const punho = canvas.getByRole('separator', { name: LABEL });
 
     // Cada passo leva o divisor a um EXTREMO absoluto antes de medir: assim a
     // rodada seguinte do painel Interactions parte de onde quiser e chega ao
@@ -192,7 +192,7 @@ export const Focus: Story = {
         <ResizablePanel :default-size="50" :min-size="20">
           <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Um</div>
         </ResizablePanel>
-        <ResizableHandle aria-label="${ROTULO}" />
+        <ResizableHandle aria-label="${LABEL}" />
         <ResizablePanel :default-size="50" :min-size="20">
           <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Dois</div>
         </ResizablePanel>
@@ -201,7 +201,7 @@ export const Focus: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO });
+    const punho = canvas.getByRole('separator', { name: LABEL });
 
     await step('O Tab alcança o divisor', async () => {
       // functional.item4. Um divisor fora da ordem de tabulação seria
@@ -240,7 +240,7 @@ export const Disabled: Story = {
         <ResizablePanel :default-size="50" :min-size="20">
           <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Fixo</div>
         </ResizablePanel>
-        <ResizableHandle disabled with-handle aria-label="${ROTULO}" />
+        <ResizableHandle disabled with-handle aria-label="${LABEL}" />
         <ResizablePanel :default-size="50" :min-size="20">
           <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Fixo</div>
         </ResizablePanel>
@@ -249,7 +249,7 @@ export const Disabled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO });
+    const punho = canvas.getByRole('separator', { name: LABEL });
 
     await step('O divisor travado continua anunciado e alcançável', async () => {
       // Marcado em vez de removido da ordem de tabulação: um controle que

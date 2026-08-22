@@ -104,7 +104,7 @@ describe('formComFieldsetSnippet', () => {
   it('usa a fábrica do grupo, que é outra', () => {
     const código = formWithFieldsetSnippet({
       legend: 'Endereço de entrega',
-      campos: [{ label: 'Rua', placeholder: 'ex: Av. Paulista, 1000' }],
+      fields: [{ label: 'Rua', placeholder: 'ex: Av. Paulista, 1000' }],
     });
     expect(código).toContain("import { createFieldset, createFormField } from '@/components/ui/form';");
     expect(código).toContain('createFieldset({');
@@ -117,7 +117,7 @@ describe('formComFieldsetSnippet', () => {
 describe('formComVariosCamposSnippet', () => {
   it('a área de texto passa pelo mesmo campo, com a fábrica dela', () => {
     const código = formWithMultipleFieldsSnippet({
-      campos: [
+      fields: [
         { label: 'Nome completo', name: 'nome' },
         { label: 'Biografia', controle: 'textarea', name: 'bio', rows: 3 },
       ],
@@ -131,7 +131,7 @@ describe('formComVariosCamposSnippet', () => {
   });
 
   it('não importa a fábrica de área de texto quando não há nenhuma', () => {
-    const código = formWithMultipleFieldsSnippet({ campos: [{ label: 'Email', type: 'email' }] });
+    const código = formWithMultipleFieldsSnippet({ fields: [{ label: 'Email', type: 'email' }] });
     expect(código).not.toContain('createTextarea');
     expect(código).toContain("type: 'email'");
   });

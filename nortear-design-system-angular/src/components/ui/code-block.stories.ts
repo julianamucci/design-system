@@ -243,9 +243,9 @@ export const Playground: Story = {
           await waitFor(() =>
             expect(canvas.getByRole('button', { name: /copiado/i })).toBeInTheDocument(),
           );
-          const botao = root.querySelector<HTMLElement>('[data-slot="code-block-copy"]')!;
-          await expect(botao.querySelectorAll('svg')).toHaveLength(1);
-          await expect(botao.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+          const button = root.querySelector<HTMLElement>('[data-slot="code-block-copy"]')!;
+          await expect(button.querySelectorAll('svg')).toHaveLength(1);
+          await expect(button.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
 
           // Selecionada pelo papel, não pela classe: `.nds-sr-only` é só o jeito
           // de esconder visualmente — trocar o `role` passaria despercebido.
@@ -255,7 +255,7 @@ export const Playground: Story = {
           // FORA do botão, que é a metade do critério que ninguém verificava:
           // uma live region DENTRO do botão faria o leitor reanunciar o rótulo
           // inteiro no meio da interação em vez de só a confirmação.
-          await expect(botao.contains(live)).toBe(false);
+          await expect(button.contains(live)).toBe(false);
 
           const rotulo = root.querySelector<HTMLElement>('.nds-code-block-copy-label')!;
           await expect(rotulo).toBeVisible();

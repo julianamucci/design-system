@@ -117,10 +117,10 @@ export const Sorted: Story = {
     const canvas = within(canvasElement);
 
     await step('Só a coluna ordenada anuncia direção', async () => {
-      const botao = canvas.getByRole('button', { name: 'Ordenar por Cliente' });
-      await userEvent.click(botao);
+      const button = canvas.getByRole('button', { name: 'Ordenar por Cliente' });
+      await userEvent.click(button);
 
-      const ordenada = botao.closest('th')!;
+      const ordenada = button.closest('th')!;
       await expect(ordenada).toHaveAttribute('aria-sort', 'ascending');
 
       const outra = canvas.getByRole('button', { name: 'Ordenar por Fatura' }).closest('th')!;
@@ -130,8 +130,8 @@ export const Sorted: Story = {
     await step('A ordem do dinheiro é numérica, não alfabética', async () => {
       // "R$ 50,00" depois de "R$ 450,00" é o defeito clássico de tabela de
       // valor: a coluna guarda número e só o texto é formatado.
-      const botao = canvas.getByRole('button', { name: 'Ordenar por Valor' });
-      await userEvent.click(botao);
+      const button = canvas.getByRole('button', { name: 'Ordenar por Valor' });
+      await userEvent.click(button);
 
       await waitFor(async () => {
         const valores = [

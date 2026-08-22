@@ -65,7 +65,7 @@ const LABELS: Record<string, SidebarLabels> = {
  * é do design system, e a regra do projeto é que o que o usuário lê ou ouve sai
  * em português comum.
  */
-export const ROTULOS_SIDEBAR_PADRAO: SidebarLabels = LABELS['pt-BR'];
+export const LABELS_SIDEBAR_DEFAULT: SidebarLabels = LABELS['pt-BR'];
 
 /**
  * Aceita a tag BCP-47 inteira ("pt-BR", "es-ES") e cai na língua base quando a
@@ -73,6 +73,6 @@ export const ROTULOS_SIDEBAR_PADRAO: SidebarLabels = LABELS['pt-BR'];
  * system, que é o português.
  */
 export function sidebarLabels(locale: string | undefined): SidebarLabels {
-  if (!locale) return ROTULOS_SIDEBAR_PADRAO;
-  return LABELS[locale] ?? LABELS[locale.split('-')[0]] ?? ROTULOS_SIDEBAR_PADRAO;
+  if (!locale) return LABELS_SIDEBAR_DEFAULT;
+  return LABELS[locale] ?? LABELS[locale.split('-')[0]] ?? LABELS_SIDEBAR_DEFAULT;
 }

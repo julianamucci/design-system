@@ -250,9 +250,9 @@ export const Invalid: Story = {
       const invalida = getComputedStyle(ta).borderTopColor;
       const referencia = createTextarea({});
       ta.parentElement!.appendChild(referencia);
-      const repouso = getComputedStyle(referencia).borderTopColor;
+      const rest = getComputedStyle(referencia).borderTopColor;
       referencia.remove();
-      await expect(invalida).not.toBe(repouso);
+      await expect(invalida).not.toBe(rest);
     });
   },
 };

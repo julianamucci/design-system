@@ -539,19 +539,19 @@ export class NdsCardDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     const classe = {
       name: 'class',
       type: 'string',
       defaultValue: '—',
-      required: nao,
+      required: not,
       description: toPlainText(t('props.table.className')),
     };
     const conteudo = {
       name: '(conteúdo)',
       type: 'HTML',
       defaultValue: '—',
-      required: nao,
+      required: not,
       description: toPlainText(t('props.table.children')),
     };
 
@@ -567,7 +567,7 @@ export class NdsCardDocs implements AfterViewInit, OnDestroy {
             name: 'size',
             type: "'default' | 'sm'",
             defaultValue: "'default'",
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.size')),
           },
           classe,

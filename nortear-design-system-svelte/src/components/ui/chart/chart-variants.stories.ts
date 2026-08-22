@@ -58,8 +58,8 @@ function categoriaAlturas(raiz: HTMLElement): number[] {
   const byCenter = new Map<number, number>();
   for (const forma of datumFormas(raiz)) {
     const r = forma.getBoundingClientRect();
-    const centro = Math.round(r.x + r.width / 2);
-    byCenter.set(centro, Math.max(byCenter.get(centro) ?? 0, r.height));
+    const center = Math.round(r.x + r.width / 2);
+    byCenter.set(center, Math.max(byCenter.get(center) ?? 0, r.height));
   }
   return [...byCenter.entries()].sort((a, b) => a[0] - b[0]).map(([, altura]) => altura);
 }
@@ -84,7 +84,7 @@ export const Bar: Story = {
 
     await step('Toda categoria aparece escrita no eixo', async () => {
       await waitFor(() => {
-        for (const mes of MONTHS) expect(designEscreve(raiz, mes)).toBe(true);
+        for (const month of MONTHS) expect(designEscreve(raiz, month)).toBe(true);
       }, { timeout: 3000 });
     });
 
@@ -140,7 +140,7 @@ export const Line: Story = {
       for (const serie of SERIES_MULTI) {
         await expect(designEscreve(raiz, serie.name)).toBe(true);
       }
-      for (const mes of MONTHS) await expect(designEscreve(raiz, mes)).toBe(true);
+      for (const month of MONTHS) await expect(designEscreve(raiz, month)).toBe(true);
     });
   },
 };
@@ -180,7 +180,7 @@ export const Area: Story = {
     });
 
     await step('As categorias continuam escritas no eixo', async () => {
-      for (const mes of MONTHS) await expect(designEscreve(raiz, mes)).toBe(true);
+      for (const month of MONTHS) await expect(designEscreve(raiz, month)).toBe(true);
     });
   },
 };

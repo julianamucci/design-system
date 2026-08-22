@@ -34,10 +34,10 @@ export type ToggleArgs = {
 const IMPORT = `import { Toggle } from "@/components/ui/toggle";`;
 
 /** Bloco de imports: o componente do design system mais os ícones do exemplo. */
-function importing(...icones: IconKey[]): string {
+function importing(...icons: IconKey[]): string {
   return [
     IMPORT,
-    ...icones.map((chave) => {
+    ...icons.map((chave) => {
       const [nome, caminho] = ICONS[chave];
       return `import ${nome} from "@lucide/svelte/icons/${caminho}";`;
     }),

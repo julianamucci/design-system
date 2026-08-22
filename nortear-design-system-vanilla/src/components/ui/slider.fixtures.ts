@@ -112,11 +112,11 @@ export function withLabel(opts: WithLabelOptions): HTMLElement {
   }
 
   if (vertical) {
-    const centro = document.createElement('div');
-    centro.className = 'nds-cluster';
-    centro.dataset.justify = 'center';
-    centro.append(slider);
-    wrap.append(row, centro);
+    const center = document.createElement('div');
+    center.className = 'nds-cluster';
+    center.dataset.justify = 'center';
+    center.append(slider);
+    wrap.append(row, center);
   } else {
     wrap.append(row, slider);
   }

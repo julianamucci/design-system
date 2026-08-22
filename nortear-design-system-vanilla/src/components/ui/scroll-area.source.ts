@@ -71,9 +71,9 @@ function areaLines(o: ScrollAreaSnippetOptions, filho: string): string[] {
 // abaixo é escrito com DOM curto ou com fábricas do design system, nunca com o
 // `buildList`/`buildMatrix` que só existe dentro do arquivo de story.
 
-type Conteudo = { imports: string[]; bloco: string; variavel: string };
+type Content = { imports: string[]; bloco: string; variavel: string };
 
-function contentList(total: number): Conteudo {
+function contentList(total: number): Content {
   return {
     imports: [],
     variavel: 'lista',
@@ -89,7 +89,7 @@ for (let i = 1; i <= ${total}; i++) {
   };
 }
 
-function contentRow(total: number): Conteudo {
+function contentRow(total: number): Content {
   return {
     imports: [importing('card', 'createCard', 'createCardContent')],
     variavel: 'fileira',
@@ -109,7 +109,7 @@ for (let i = 1; i <= ${total}; i++) {
   };
 }
 
-function contentMatriz(linhas: number, colunas: number): Conteudo {
+function contentMatriz(linhas: number, colunas: number): Content {
   return {
     imports: [],
     variavel: 'matriz',
@@ -130,7 +130,7 @@ for (let l = 1; l <= ${linhas}; l++) {
   };
 }
 
-function contentLinks(total: number): Conteudo {
+function contentLinks(total: number): Content {
   return {
     imports: [],
     variavel: 'navegacao',
@@ -155,7 +155,7 @@ navegacao.appendChild(lista);`,
   };
 }
 
-function contentBadges(total: number): Conteudo {
+function contentBadges(total: number): Content {
   return {
     imports: [importing('badge', 'createBadge')],
     variavel: 'versoes',
@@ -175,7 +175,7 @@ for (let i = 1; i <= ${total}; i++) {
   };
 }
 
-function contentOf(o: ScrollAreaSnippetOptions): Conteudo {
+function contentOf(o: ScrollAreaSnippetOptions): Content {
   const total = o.itemCount ?? 30;
   switch (o.conteudo) {
     case 'fileira':

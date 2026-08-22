@@ -173,10 +173,10 @@ export const WithSelection: Story = {
       // Mesmo motivo: alterna entre os dois valores a partir do estado corrente
       // e afirma o PAR, em vez de assumir de onde a rodada parte.
       const partiuDoEmail = alvo('radio-email').getAttribute('aria-checked') === 'true';
-      const clicar = partiuDoEmail ? 'radio-link' : 'radio-email';
+      const click = partiuDoEmail ? 'radio-link' : 'radio-email';
       const outro = partiuDoEmail ? 'radio-email' : 'radio-link';
-      await userEvent.click(alvo(clicar));
-      await waitFor(() => expect(alvo(clicar).getAttribute('aria-checked')).toBe('true'));
+      await userEvent.click(alvo(click));
+      await waitFor(() => expect(alvo(click).getAttribute('aria-checked')).toBe('true'));
       await expect(alvo(outro).getAttribute('aria-checked')).toBe('false');
     });
   },

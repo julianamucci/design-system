@@ -21,7 +21,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const ROTULO = 'Redimensionar painéis — use as setas';
+const LABEL = 'Redimensionar painéis — use as setas';
 
 export const Dragging: Story = {
   parameters: {
@@ -39,7 +39,7 @@ export const Dragging: Story = {
         <div ndsResizablePanel [defaultSize]="50" [minSize]="10">
           <div class="nds-p-4"><p class="nds-text-body nds-m-0">Esquerda</p></div>
         </div>
-        <div ndsResizableHandle [withHandle]="true" aria-label="${ROTULO}"></div>
+        <div ndsResizableHandle [withHandle]="true" aria-label="${LABEL}"></div>
         <div ndsResizablePanel [defaultSize]="50" [minSize]="10">
           <div class="nds-p-4"><p class="nds-text-body nds-m-0">Direita</p></div>
         </div>
@@ -48,7 +48,7 @@ export const Dragging: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO });
+    const punho = canvas.getByRole('separator', { name: LABEL });
     const panels = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
     layoutsEmitidos.length = 0;
 
@@ -122,8 +122,8 @@ export const Dragging: Story = {
 
       const ofHandle = luminancia(getComputedStyle(punho).backgroundColor);
       const ofBackground = luminancia(getComputedStyle(document.body).backgroundColor);
-      const [claro, escuro] = ofHandle > ofBackground ? [ofHandle, ofBackground] : [ofBackground, ofHandle];
-      const ratio = (claro + 0.05) / (escuro + 0.05);
+      const [light, escuro] = ofHandle > ofBackground ? [ofHandle, ofBackground] : [ofBackground, ofHandle];
+      const ratio = (light + 0.05) / (escuro + 0.05);
 
       await expect(ratio).toBeGreaterThanOrEqual(3);
     });
@@ -138,7 +138,7 @@ export const Limits: Story = {
         <div ndsResizablePanel [defaultSize]="50" [minSize]="30" [maxSize]="60">
           <div class="nds-p-4"><p class="nds-text-body nds-m-0">Limitado</p></div>
         </div>
-        <div ndsResizableHandle aria-label="${ROTULO}"></div>
+        <div ndsResizableHandle aria-label="${LABEL}"></div>
         <div ndsResizablePanel [defaultSize]="50" [minSize]="30">
           <div class="nds-p-4"><p class="nds-text-body nds-m-0">Livre</p></div>
         </div>
@@ -147,7 +147,7 @@ export const Limits: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO });
+    const punho = canvas.getByRole('separator', { name: LABEL });
 
     await step('O painel para no mínimo, e o valor anunciado para junto', async () => {
       // functional.item3. Sem o piso, insistir na seta faria o painel sumir —
@@ -189,7 +189,7 @@ export const Focus: Story = {
         <div ndsResizablePanel [defaultSize]="50" [minSize]="20">
           <div class="nds-p-4"><p class="nds-text-body nds-m-0">Um</p></div>
         </div>
-        <div ndsResizableHandle aria-label="${ROTULO}"></div>
+        <div ndsResizableHandle aria-label="${LABEL}"></div>
         <div ndsResizablePanel [defaultSize]="50" [minSize]="20">
           <div class="nds-p-4"><p class="nds-text-body nds-m-0">Dois</p></div>
         </div>
@@ -198,7 +198,7 @@ export const Focus: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO });
+    const punho = canvas.getByRole('separator', { name: LABEL });
     const primeiro = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-panel"]')!;
 
     await step('O Tab alcança o divisor', async () => {
@@ -227,7 +227,7 @@ export const Disabled: Story = {
         <div ndsResizablePanel [defaultSize]="50" [minSize]="20">
           <div class="nds-p-4"><p class="nds-text-body nds-m-0">Fixo</p></div>
         </div>
-        <div ndsResizableHandle [disabled]="true" aria-label="${ROTULO}"></div>
+        <div ndsResizableHandle [disabled]="true" aria-label="${LABEL}"></div>
         <div ndsResizablePanel [defaultSize]="50" [minSize]="20">
           <div class="nds-p-4"><p class="nds-text-body nds-m-0">Fixo</p></div>
         </div>
@@ -236,7 +236,7 @@ export const Disabled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO });
+    const punho = canvas.getByRole('separator', { name: LABEL });
 
     await step('O divisor travado continua anunciado e alcançável', async () => {
       // `aria-disabled` em vez de sumir da ordem de tabulação: um controle que

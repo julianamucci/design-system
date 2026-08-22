@@ -34,7 +34,7 @@ import { Label } from '@/components/ui/label'`;
  * justifica quando os índices precisam ser separados em grupos, que é o caso do
  * separador.
  */
-const CAIXAS = `<template #default="{ slots }">
+const BOXES = `<template #default="{ slots }">
   <InputOTPGroup>
     <InputOTPSlot v-for="(slot, index) in slots" :key="index" :index="index" />
   </InputOTPGroup>
@@ -61,7 +61,7 @@ function fieldOtp(opcoes: {
   teclado?: string;
   padraoAceito?: string;
   desabilitado?: boolean;
-  foco?: boolean;
+  focus?: boolean;
   invalido?: boolean;
   describedBy?: string;
   miolo?: string;
@@ -76,10 +76,10 @@ function fieldOtp(opcoes: {
     teclado = 'numeric',
     padraoAceito,
     desabilitado = false,
-    foco = false,
+    focus = false,
     invalido = false,
     describedBy,
-    miolo = CAIXAS,
+    miolo = BOXES,
     depois = [],
     espaco = 'sm',
   } = opcoes;
@@ -91,7 +91,7 @@ function fieldOtp(opcoes: {
       attrNum('max-length', comprimento),
       padraoAceito && `pattern="${padraoAceito}"`,
       attrBool('disabled', desabilitado, false),
-      attrBool('auto-focus', foco, false),
+      attrBool('auto-focus', focus, false),
       invalido && 'aria-invalid="true"',
       describedBy && `aria-describedby="${describedBy}"`,
       'autocomplete="one-time-code"',
@@ -141,7 +141,7 @@ export const inputOtpSource: SourceTransform<InputOTPArgs> = (_gerado, ctx) => {
       modelo: 'codigo',
       comprimento: typeof args.maxLength === 'number' ? args.maxLength : 6,
       desabilitado: args.disabled === true,
-      foco: args.autoFocus === true,
+      focus: args.autoFocus === true,
     }),
   );
 };
@@ -239,7 +239,7 @@ export function inputOtpEmptySource(): string {
       id: 'codigo-verificacao',
       rotulo: 'Código de verificação',
       modelo: 'codigo',
-      foco: true,
+      focus: true,
     }),
   );
 }

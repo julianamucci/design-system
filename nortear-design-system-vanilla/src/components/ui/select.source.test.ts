@@ -69,11 +69,11 @@ describe('selectSnippet', () => {
     });
     expect(bloqueada).toContain('disabled: true');
 
-    const comIcone = selectSnippet({
+    const withIcon = selectSnippet({
       items: [{ value: 'email', label: 'E-mail', icon: ['m22 7-8.99 5.72', 'M4 4h16'] }],
     });
-    expect(comIcone).toContain("icon: ['m22 7-8.99 5.72', 'M4 4h16']");
-    expect(comIcone).not.toContain('ICONES');
+    expect(withIcon).toContain("icon: ['m22 7-8.99 5.72', 'M4 4h16']");
+    expect(withIcon).not.toContain('ICONES');
   });
 
   it('liga a mensagem de erro ao campo pelos dois lados do par', () => {

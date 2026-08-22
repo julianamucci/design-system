@@ -5,7 +5,7 @@
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 import { cn } from '@/lib/utils';
-import { rotulosDoCalendario } from '@shared/primitives/calendar-labels';
+import { calendarLabels } from '@shared/primitives/calendar-labels';
 
 export type CalendarRange = { from?: Date; to?: Date };
 
@@ -70,7 +70,7 @@ function dayA(date: Date): number {
 }
 
 /** Anos oferecidos para cada lado do ano em vista, no seletor da legenda. */
-const ANOS_PARA_CADA_LADO = 100;
+const EACH_SIDE_YEARS = 100;
 
 // ─── createCalendar ───────────────────────────────────────────────────────────
 
@@ -87,21 +87,21 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
   const dayNames = getDayNames(locale);
   const monthNames = getMonthNames(locale);
-  const rotulos = rotulosDoCalendario(locale);
+  const rotulos = calendarLabels(locale);
   const dayButtonLabelFmt = new Intl.DateTimeFormat(locale, {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
   });
 
   const ehIntervalo = mode === 'range';
   const ehMultiplo = mode === 'multiple';
-  const valorInicial = options.value;
+  const valueInitial = options.value;
 
   let selected: Date | null =
-    mode === 'single' && valorInicial instanceof Date ? valorInicial : null;
-  let selecionadas: Date[] = ehMultiplo && Array.isArray(valorInicial) ? [...valorInicial] : [];
+    mode === 'single' && valueInitial instanceof Date ? valueInitial : null;
+  let selecionadas: Date[] = ehMultiplo && Array.isArray(valueInitial) ? [...valueInitial] : [];
   let intervalo: CalendarRange =
-    ehIntervalo && valorInicial && !(valorInicial instanceof Date) && !Array.isArray(valorInicial)
-      ? { ...valorInicial }
+    ehIntervalo && valueInitial && !(valueInitial instanceof Date) && !Array.isArray(valueInitial)
+      ? { ...valueInitial }
       : {};
 
   /** A data que ancora o mês exibido, seja qual for o modo. */
@@ -140,8 +140,8 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
   /** Move o dia focado e traz a visão junto quando ele cai em outro mês. */
-  function moverFocus(dias: number, meses = 0): void {
-    const alvo = new Date(focado.getFullYear(), focado.getMonth() + meses, focado.getDate() + dias);
+  function moverFocus(days: number, meses = 0): void {
+    const alvo = new Date(focado.getFullYear(), focado.getMonth() + meses, focado.getDate() + days);
     focado = alvo;
     viewYear = alvo.getFullYear();
     viewMonth = alvo.getMonth();
@@ -231,11 +231,11 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     // ao JS, então não há onde pendurar um "carregar mais ao chegar na ponta" —
     // e a janela obrigava a escolher o último ano e reabrir para andar mais.
     // Quem limita o que aparece é a altura do painel (onze itens, no CSS).
-    for (let ano = viewYear - ANOS_PARA_CADA_LADO; ano <= viewYear + ANOS_PARA_CADA_LADO; ano++) {
+    for (let year = viewYear - EACH_SIDE_YEARS; year <= viewYear + EACH_SIDE_YEARS; year++) {
       const opt = document.createElement('option');
-      opt.value = String(ano);
-      opt.textContent = String(ano);
-      if (ano === viewYear) opt.selected = true;
+      opt.value = String(year);
+      opt.textContent = String(year);
+      if (year === viewYear) opt.selected = true;
       selYear.appendChild(opt);
     }
     selYear.addEventListener('change', () => {
@@ -286,9 +286,9 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     const gridFirst = new Date(anoDaGrade, mesDaGrade, 1);
     gridFirst.setDate(1 - gridFirst.getDay());
     const monthDays = new Date(anoDaGrade, mesDaGrade + 1, 0).getDate();
-    const semanas = Math.ceil((new Date(anoDaGrade, mesDaGrade, 1).getDay() + monthDays) / 7);
+    const weeks = Math.ceil((new Date(anoDaGrade, mesDaGrade, 1).getDay() + monthDays) / 7);
 
-    for (let week = 0; week < semanas; week++) {
+    for (let week = 0; week < weeks; week++) {
       const row = document.createElement('tr');
       row.className = 'nds-calendar-week';
 
@@ -306,9 +306,9 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
           gridFirst.getMonth(),
           gridFirst.getDate() + week * 7 + col,
         );
-        const foraDoMes = date.getMonth() !== mesDaGrade;
+        const monthOutside = date.getMonth() !== mesDaGrade;
 
-        if (foraDoMes && !showOutsideDays) {
+        if (monthOutside && !showOutsideDays) {
           row.appendChild(td);
           continue;
         }
@@ -333,7 +333,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
         // precisava de uma regra própria para cada estado.
         if (isSelected) btn.dataset.selected = '';
         if (isTodayDate) btn.dataset.today = '';
-        if (foraDoMes) btn.dataset.outsideMonth = '';
+        if (monthOutside) btn.dataset.outsideMonth = '';
         if (intervaloPosition === 'start') btn.dataset.selectionStart = '';
         if (intervaloPosition === 'end') btn.dataset.selectionEnd = '';
         if (isDisabled) { btn.disabled = true; btn.dataset.disabled = ''; }
@@ -345,7 +345,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
           // foco ao fechar um popover. Aí `Home` calculava o deslocamento pelo
           // dia certo e o aplicava ao dia errado, e caía num sábado.
           focado = date;
-          const passos: Record<string, [number, number]> = {
+          const steps: Record<string, [number, number]> = {
             ArrowRight: [1, 0],
             ArrowLeft: [-1, 0],
             ArrowDown: [7, 0],
@@ -359,7 +359,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
             moverFocus(alvo);
             return;
           }
-          const passo = passos[e.key];
+          const passo = steps[e.key];
           if (!passo) return;
           e.preventDefault();
           moverFocus(passo[0], passo[1]);

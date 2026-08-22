@@ -14,7 +14,7 @@ export type HoverCardContexto = {
   set gatilho(el: HTMLElement | null);
 };
 
-const CHAVE = Symbol('nds-hover-card');
+const KEY = Symbol('nds-hover-card');
 
 export function createContextoHoverCard(): HoverCardContexto {
   let gatilho = $state<HTMLElement | null>(null);
@@ -26,10 +26,10 @@ export function createContextoHoverCard(): HoverCardContexto {
       gatilho = el;
     },
   };
-  setContext(CHAVE, contexto);
+  setContext(KEY, contexto);
   return contexto;
 }
 
 export function usarContextoHoverCard(): HoverCardContexto | undefined {
-  return getContext<HoverCardContexto | undefined>(CHAVE);
+  return getContext<HoverCardContexto | undefined>(KEY);
 }

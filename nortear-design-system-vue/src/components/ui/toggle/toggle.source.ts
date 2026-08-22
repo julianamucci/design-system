@@ -38,10 +38,10 @@ const IMPORT_TOGGLE = `import { Toggle } from '@/components/ui/toggle'`;
  * na primeira edição, e um ícone importado sem uso ensina import morto.
  */
 function importIcons(markup: string): string {
-  const nomes = [
+  const names = [
     ...new Set([...markup.matchAll(/<([A-Z][A-Za-z0-9]*) aria-hidden/g)].map((m) => m[1])),
   ].sort();
-  return nomes.length ? `import { ${nomes.join(', ')} } from 'lucide-vue-next'` : '';
+  return names.length ? `import { ${names.join(', ')} } from 'lucide-vue-next'` : '';
 }
 
 function snippet(markup: string, estado = '', extra = ''): string {
@@ -205,7 +205,7 @@ ${indentar(iconOnly('Bold', 'Negrito', 'aria-invalid="true" aria-describedby="fo
  * grupo de rádio.
  */
 export function formattingToggleBarSource(): string {
-  const botoes = [
+  const buttons = [
     ['Bold', 'Negrito'],
     ['Italic', 'Itálico'],
     ['Underline', 'Sublinhado'],
@@ -219,7 +219,7 @@ export function formattingToggleBarSource(): string {
   data-align="center"
   data-spacing="xs"
 >
-${botoes.map(([icone, rotulo]) => indentar(iconOnly(icone, rotulo, '', true))).join('\n')}
+${buttons.map(([icone, rotulo]) => indentar(iconOnly(icone, rotulo, '', true))).join('\n')}
 </div>`,
   );
 }

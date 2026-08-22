@@ -92,8 +92,8 @@ export const Focus: Story = {
     }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const alca = () => alcasDoSlider(canvasElement)[0];
-    const repouso = await restRing(alca());
+    const thumb = () => alcasDoSlider(canvasElement)[0];
+    const rest = await restRing(thumb());
 
     await step('A alça recebe foco por teclado', async () => {
       await userEvent.tab();
@@ -102,8 +102,8 @@ export const Focus: Story = {
 
     await step('A alça focada fica visivelmente diferente da alça em repouso', async () => {
       // Alça focada idêntica à alça parada é 2.4.7 reprovado com o teste verde.
-      const focada = await focusAssentadoRing(alca(), repouso);
-      await expect(focada.sombra !== repouso.sombra || focada.borda !== repouso.borda).toBe(true);
+      const focada = await focusAssentadoRing(thumb(), rest);
+      await expect(focada.sombra !== rest.sombra || focada.border !== rest.border).toBe(true);
       await expect(focada.sombra).not.toBe('none');
     });
   },

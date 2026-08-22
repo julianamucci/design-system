@@ -157,9 +157,9 @@ export const Playground: Story = {
       // a lista tem de verdade — id órfão o axe reprova.
       await expect(campo).toHaveAttribute('aria-autocomplete', 'list');
       await expect(campo).toHaveAttribute('aria-expanded', 'true');
-      const controlado = campo.getAttribute('aria-controls');
-      await expect(controlado).toBeTruthy();
-      await expect(document.getElementById(controlado!)).toBe(lista);
+      const controlled = campo.getAttribute('aria-controls');
+      await expect(controlled).toBeTruthy();
+      await expect(document.getElementById(controlled!)).toBe(lista);
       await expect(campo).toHaveAttribute('aria-label', args.placeholder);
     });
 

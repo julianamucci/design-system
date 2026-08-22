@@ -19,9 +19,9 @@ export type CommandArgs = {
 };
 
 /** Import do design system, com as peças que cada arranjo usa. */
-function importing(...nomes: string[]): string {
+function importing(...names: string[]): string {
   return `import {
-${nomes.map((nome) => `  ${nome},`).join('\n')}
+${names.map((nome) => `  ${nome},`).join('\n')}
 } from '@/components/ui/command'`;
 }
 
@@ -44,7 +44,7 @@ ${indentar(interior, 2)}
  * é filho permitido de `role="listbox"`, e dentro dela o axe reprova por
  * `aria-required-children`.
  */
-function paleta(opcoes: {
+function palette(opcoes: {
   raiz?: string;
   placeholder: string;
   lista: string;
@@ -88,7 +88,7 @@ function executar(valor: string) {
   // roda o comando escolhido e devolve o foco para onde ele age
 }`,
     moldura(
-      paleta({
+      palette({
         raiz: attrBool('highlight-on-hover', args.highlightOnHover, false),
         placeholder,
         vazio,
@@ -121,7 +121,7 @@ export function commandEmptySource(): string {
   return vueSnippet(
     importing(...PARTS_BASICAS),
     moldura(
-      paleta({
+      palette({
         placeholder: 'Buscar componente...',
         lista: `<CommandGroup heading="Componentes">
   <CommandItem value="button">Button</CommandItem>
@@ -146,7 +146,7 @@ const ultimo = ref('')`,
     `<div class="nds-stack" data-spacing="sm">
 ${indentar(
   moldura(
-    paleta({
+    palette({
       placeholder: 'Buscar comando...',
       lista: `<CommandGroup heading="Arquivo">
   <CommandItem value="novo" @select="ultimo = 'novo'">Novo</CommandItem>
@@ -175,7 +175,7 @@ export function commandItemCheckedSource(): string {
   return vueSnippet(
     importing(...PARTS_BASICAS, 'CommandShortcut'),
     moldura(
-      paleta({
+      palette({
         placeholder: 'Buscar tema...',
         lista: `<CommandGroup heading="Aparência">
   <CommandItem value="claro" :checked="true">Claro</CommandItem>
@@ -199,7 +199,7 @@ export function commandWithGroupsSource(): string {
   return vueSnippet(
     importing(...PARTS_BASICAS, 'CommandSeparator'),
     moldura(
-      paleta({
+      palette({
         placeholder: 'Buscar componente...',
         lista: `<CommandGroup heading="Componentes">
   <CommandItem value="button">Button</CommandItem>
@@ -227,7 +227,7 @@ export function commandWithShortcutsSource(): string {
   return vueSnippet(
     importing(...PARTS_BASICAS, 'CommandSeparator', 'CommandShortcut'),
     moldura(
-      paleta({
+      palette({
         placeholder: 'Buscar ação...',
         lista: `<CommandGroup heading="Ações">
   <CommandItem value="novo-arquivo">
@@ -315,7 +315,7 @@ function escolher(value: string) {
 
   <PopoverContent class="nds-p-0 nds-w-xs">
 ${indentar(
-  paleta({
+  palette({
     placeholder: 'Buscar item...',
     lista: `<CommandGroup heading="Componentes">
   <CommandItem

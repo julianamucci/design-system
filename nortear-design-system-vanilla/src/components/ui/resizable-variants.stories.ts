@@ -43,10 +43,10 @@ type Story = StoryObj;
  * inteiro, que juntaria os dois grupos numa conta só.
  */
 function fraction(panels: HTMLElement[], horizontal: boolean): number[] {
-  const medida = (p: HTMLElement) =>
+  const measurement = (p: HTMLElement) =>
     horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height;
-  const total = panels.reduce((acc, p) => acc + medida(p), 0);
-  return panels.map((p) => medida(p) / total);
+  const total = panels.reduce((acc, p) => acc + measurement(p), 0);
+  return panels.map((p) => measurement(p) / total);
 }
 
 function panelsOf(raiz: ParentNode, seletorGrupo = '[data-slot="resizable"]'): HTMLElement[] {
@@ -160,7 +160,7 @@ export const Nested: Story = {
               { titulo: 'Área principal', defaultSize: 70, minSize: 30 },
             ],
           },
-          vizinho: { titulo: 'Sidebar', defaultSize: 30, minSize: 15 },
+          neighbour: { titulo: 'Sidebar', defaultSize: 30, minSize: 15 },
         }),
       },
     },

@@ -317,7 +317,7 @@ export function accordionFocusVisibleSource(): string {
  * categoria em toda leitura.
  */
 export function accordionWithIconSource(): string {
-  const comIcone = (icone: string, cor: string, rotulo: string) =>
+  const withIcon = (icone: string, cor: string, rotulo: string) =>
     `<span class="nds-cluster" data-spacing="sm">
   <${icone} class="nds-icon ${cor} nds-shrink-0" aria-hidden="true" />
   ${rotulo}
@@ -330,17 +330,17 @@ import { AlertTriangle, CheckCircle, Info } from 'lucide-vue-next'`,
       [
         item(
           'info',
-          comIcone('Info', 'nds-text-info', 'Informação'),
+          withIcon('Info', 'nds-text-info', 'Informação'),
           'Ícones facilitam a identificação rápida do tipo de conteúdo.',
         ),
         item(
           'warning',
-          comIcone('AlertTriangle', 'nds-text-warning', 'Aviso'),
+          withIcon('AlertTriangle', 'nds-text-warning', 'Aviso'),
           'Sinalize categorias distintas com ícones semânticos.',
         ),
         item(
           'success',
-          comIcone('CheckCircle', 'nds-text-success', 'Confirmação'),
+          withIcon('CheckCircle', 'nds-text-success', 'Confirmação'),
           'Use ícones consistentes entre os itens do mesmo acordeão.',
         ),
       ],

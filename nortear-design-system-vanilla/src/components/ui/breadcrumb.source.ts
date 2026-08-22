@@ -17,10 +17,10 @@ import {
  * colunas dentro de um painel estreito. `importing` continua valendo para os
  * módulos de um nome só.
  */
-function multipleImporting(slug: string, nomes: string[]): string {
-  return nomes.length <= 3
-    ? importing(slug, ...nomes)
-    : `import {\n${nomes.map((n) => `  ${n},`).join('\n')}\n} from '@/components/ui/${slug}';`;
+function multipleImporting(slug: string, names: string[]): string {
+  return names.length <= 3
+    ? importing(slug, ...names)
+    : `import {\n${names.map((n) => `  ${n},`).join('\n')}\n} from '@/components/ui/${slug}';`;
 }
 
 /** O que as stories usam das opções do Breadcrumb e o snippet precisa mostrar. */
@@ -56,7 +56,7 @@ const CURRENT_DEFAULT = 'Breadcrumb';
 const DIACRITICOS = /[̀-ͯ]/g;
 
 /** `/`, `/componentes`, … — o destino que acompanha o rótulo do nível. */
-function destino(rotulo: string, indice: number): string {
+function destination(rotulo: string, indice: number): string {
   if (indice === 0) return '/';
   return `/${rotulo
     .toLowerCase()
@@ -84,7 +84,7 @@ export function breadcrumbSnippet(o: BreadcrumbSnippetOptions = {}): string {
   const levels = o.levels ?? LEVELS_DEFAULT;
   const atual = o.atual ?? CURRENT_DEFAULT;
 
-  const nomes = [
+  const names = [
     'createBreadcrumb',
     'createBreadcrumbList',
     'createBreadcrumbItem',
@@ -92,7 +92,7 @@ export function breadcrumbSnippet(o: BreadcrumbSnippetOptions = {}): string {
     'createBreadcrumbPage',
     'createBreadcrumbSeparator',
   ];
-  if (o.ellipsis) nomes.push('createBreadcrumbEllipsis');
+  if (o.ellipsis) names.push('createBreadcrumbEllipsis');
 
   const raiz = chamada(
     'createBreadcrumb',
@@ -118,7 +118,7 @@ export function breadcrumbSnippet(o: BreadcrumbSnippetOptions = {}): string {
 
   const parts: string[] = [];
   levels.forEach((rotulo, i) => {
-    parts.push(`  nivel(${texto(rotulo)}, ${texto(destino(rotulo, i))}),`);
+    parts.push(`  nivel(${texto(rotulo)}, ${texto(destination(rotulo, i))}),`);
     parts.push(`  ${separador(o)},`);
     if (o.ellipsis && i === 0) {
       parts.push('  oculto,');
@@ -136,7 +136,7 @@ oculto.appendChild(${chamada(
     : undefined;
 
   return snippet(
-    multipleImporting('breadcrumb', nomes),
+    multipleImporting('breadcrumb', names),
     `const trilha = ${raiz};
 const lista = createBreadcrumbList();`,
     `/** Um nível navegável da trilha. */

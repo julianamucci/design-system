@@ -163,9 +163,9 @@ export const Multiple: Story = {
       // Modo múltiplo devolve array; o modo único devolve string. É o contrato
       // documentado em props.accordion.items.value (string | string[]) e o
       // único lugar onde a forma do payload é verificada.
-      const ultimo = onMultipleChange.mock.calls.at(-1)?.[0];
-      await expect(Array.isArray(ultimo)).toBe(true);
-      await expect(ultimo).toEqual(['especificacoes', 'compatibilidade']);
+      const last = onMultipleChange.mock.calls.at(-1)?.[0];
+      await expect(Array.isArray(last)).toBe(true);
+      await expect(last).toEqual(['especificacoes', 'compatibilidade']);
     });
 
     await step('Clicar em trigger aberto fecha individualmente (modo múltiplo)', async () => {

@@ -62,15 +62,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const caixas = (canvasElement: HTMLElement): HTMLElement[] => [
+const boxes = (canvasElement: HTMLElement): HTMLElement[] => [
   ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),
 ];
 
-const textos = (canvasElement: HTMLElement): string[] =>
-  caixas(canvasElement).map((c) => c.textContent?.trim() ?? '');
+const texts = (canvasElement: HTMLElement): string[] =>
+  boxes(canvasElement).map((c) => c.textContent?.trim() ?? '');
 
 const boxAtiva = (canvasElement: HTMLElement): number =>
-  caixas(canvasElement).findIndex(
+  boxes(canvasElement).findIndex(
     (c) => c.hasAttribute('data-active') && c.getAttribute('data-active') !== 'false',
   );
 
@@ -118,7 +118,7 @@ export const Playground: Story = {
 
     await step('O campo tem nome e uma caixa por dígito', async () => {
       await expect(canvas.getByLabelText('Código de verificação')).toBe(input);
-      await expect(caixas(canvasElement)).toHaveLength(total);
+      await expect(boxes(canvasElement)).toHaveLength(total);
     });
 
     await step('O campo pede o código de uso único ao sistema', async () => {
@@ -132,7 +132,7 @@ export const Playground: Story = {
       input.focus();
       await userEvent.clear(input);
       await userEvent.type(input, '12');
-      await waitFor(() => expect(textos(canvasElement).slice(0, 2)).toEqual(['1', '2']));
+      await waitFor(() => expect(texts(canvasElement).slice(0, 2)).toEqual(['1', '2']));
       await expect(boxAtiva(canvasElement)).toBe(2);
     });
 
@@ -147,7 +147,7 @@ export const Playground: Story = {
     await step('Backspace apaga a última caixa preenchida', async () => {
       await userEvent.keyboard('{Backspace}');
       await waitFor(() => expect(input).toHaveValue('1'));
-      await expect(textos(canvasElement)[1]).toBe('');
+      await expect(texts(canvasElement)[1]).toBe('');
     });
 
     await step('Colar distribui o código inteiro e dispara o evento de conclusão', async () => {
@@ -155,7 +155,7 @@ export const Playground: Story = {
       input.focus();
       await userEvent.clear(input);
       await userEvent.paste(codigo);
-      await waitFor(() => expect(textos(canvasElement).join('')).toBe(codigo));
+      await waitFor(() => expect(texts(canvasElement).join('')).toBe(codigo));
       await expect(args.onComplete).toHaveBeenCalledWith(codigo);
     });
   },

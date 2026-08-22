@@ -144,9 +144,9 @@ export const Playground: Story = {
 
     await step('Título e descrição são o nome e a explicação do painel', async () => {
       const painel = await waitForPortal('alertdialog');
-      const rotuladoPor = painel.getAttribute('aria-labelledby');
+      const labelledBy = painel.getAttribute('aria-labelledby');
       const describedBy = painel.getAttribute('aria-describedby');
-      await expect(document.getElementById(rotuladoPor!)?.textContent?.trim()).toBe(args.title);
+      await expect(document.getElementById(labelledBy!)?.textContent?.trim()).toBe(args.title);
       await expect(document.getElementById(describedBy!)?.textContent?.trim()).toBe(
         args.description,
       );

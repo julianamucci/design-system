@@ -165,7 +165,7 @@ export const Playground: Story = {
     ],
   },
   render: (args) => ({
-    props: { ...args, estados: STATES },
+    props: { ...args, states: STATES },
     template: `
       <nds-select
         [disabled]="disabled"
@@ -178,7 +178,7 @@ export const Playground: Story = {
         </button>
 
         <ng-template ndsSelectContent [side]="side" [align]="align">
-          @for (estado of estados; track estado.value) {
+          @for (estado of states; track estado.value) {
             <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
           }
         </ng-template>

@@ -406,7 +406,7 @@ const CODE_IN_FORM = `<form [formGroup]="form">
           <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>
         </button>
         <ng-template ndsSelectContent>
-          @for (estado of estados(); track estado.value) {
+          @for (estado of states(); track estado.value) {
             <div ndsSelectItem [value]="estado.value">
               {{ estado.label }}
             </div>
@@ -432,7 +432,7 @@ const CODE_IN_FORM = `<form [formGroup]="form">
           <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>
         </button>
         <ng-template ndsSelectContent>
-          @for (grupo of grupos(); track grupo.label; let ultimo = $last) {
+          @for (grupo of grupos(); track grupo.label; let last = $last) {
             <div ndsSelectGroup>
               <div ndsSelectLabel>{{ grupo.label }}</div>
               @for (estado of grupo.itens; track estado.value) {
@@ -441,7 +441,7 @@ const CODE_IN_FORM = `<form [formGroup]="form">
                 </div>
               }
             </div>
-            @if (!ultimo) {
+            @if (!last) {
               <div ndsSelectSeparator></div>
             }
           }
@@ -472,7 +472,7 @@ const CODE_IN_FORM = `<form [formGroup]="form">
           <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>
         </button>
         <ng-template ndsSelectContent>
-          @for (estado of estados(); track estado.value) {
+          @for (estado of states(); track estado.value) {
             <div ndsSelectItem [value]="estado.value">
               {{ estado.label }}
             </div>
@@ -486,7 +486,7 @@ const CODE_IN_FORM = `<form [formGroup]="form">
           <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>
         </button>
         <ng-template ndsSelectContent>
-          @for (grupo of grupos(); track grupo.label; let ultimo = $last) {
+          @for (grupo of grupos(); track grupo.label; let last = $last) {
             <div ndsSelectGroup>
               <div ndsSelectLabel>{{ grupo.label }}</div>
               @for (estado of grupo.itens; track estado.value) {
@@ -495,7 +495,7 @@ const CODE_IN_FORM = `<form [formGroup]="form">
                 </div>
               }
             </div>
-            @if (!ultimo) {
+            @if (!last) {
               <div ndsSelectSeparator></div>
             }
           }
@@ -508,7 +508,7 @@ const CODE_IN_FORM = `<form [formGroup]="form">
           <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>
         </button>
         <ng-template ndsSelectContent>
-          @for (estado of estados(); track estado.value) {
+          @for (estado of states(); track estado.value) {
             <div ndsSelectItem [value]="estado.value">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -540,7 +540,7 @@ const CODE_IN_FORM = `<form [formGroup]="form">
             <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>
           </button>
           <ng-template ndsSelectContent>
-            @for (estado of estados(); track estado.value) {
+            @for (estado of states(); track estado.value) {
               <div ndsSelectItem [value]="estado.value">
                 {{ estado.label }}
               </div>
@@ -572,7 +572,7 @@ const CODE_IN_FORM = `<form [formGroup]="form">
                 <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>
               </button>
               <ng-template ndsSelectContent>
-                @for (estado of estados(); track estado.value) {
+                @for (estado of states(); track estado.value) {
                   <div ndsSelectItem [value]="estado.value">
                     {{ estado.label }}
                   </div>
@@ -585,7 +585,7 @@ const CODE_IN_FORM = `<form [formGroup]="form">
                 <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>
               </button>
               <ng-template ndsSelectContent>
-                @for (grupo of grupos(); track grupo.label; let ultimo = $last) {
+                @for (grupo of grupos(); track grupo.label; let last = $last) {
                   <div ndsSelectGroup>
                     <div ndsSelectLabel>{{ grupo.label }}</div>
                     @for (estado of grupo.itens; track estado.value) {
@@ -594,7 +594,7 @@ const CODE_IN_FORM = `<form [formGroup]="form">
                       </div>
                     }
                   </div>
-                  @if (!ultimo) {
+                  @if (!last) {
                     <div ndsSelectSeparator></div>
                   }
                 }
@@ -725,7 +725,7 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
    * O VALOR é sigla e o RÓTULO é o nome por extenso, de propósito: é o caso em
    * que o gatilho precisa do rótulo antes da primeira abertura da lista.
    */
-  protected readonly estados = computed(() => {
+  protected readonly states = computed(() => {
     dict();
     return [
       { value: 'sp', label: t('demonstration.labels.sp') },
@@ -919,7 +919,7 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     const sim = tNav('common.yes');
 
     /** Linha cujo tipo/padrão/descrição vêm da tabela do conteúdo compartilhado. */
@@ -936,7 +936,7 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
       name: nome,
       type: tipo,
       defaultValue: padrao,
-      required: nao,
+      required: not,
       description: toPlainText(t(`props.${chave}.description`)),
     });
 

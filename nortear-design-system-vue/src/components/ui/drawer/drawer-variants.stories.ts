@@ -108,8 +108,8 @@ export const Bottom: Story = {
       await expect(panelEl).toHaveAccessibleName('Detalhes do pedido');
       // A alça só é visível nesta direção — o CSS compartilhado a esconde nas
       // outras. Contraste e cor do painel são verificados pelo axe da story.
-      const alca = panelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
-      await expect(window.getComputedStyle(alca).display).toBe('block');
+      const thumb = panelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
+      await expect(window.getComputedStyle(thumb).display).toBe('block');
     });
   },
 };
@@ -134,8 +134,8 @@ export const Top: Story = {
       await expect(panelEl).toHaveAttribute('data-vaul-drawer-direction', 'top');
       await expect(panelEl).toHaveClass(/nds-drawer-content/);
       await expect(panelEl).toHaveAccessibleName('Nova versão disponível');
-      const alca = panelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
-      await expect(window.getComputedStyle(alca).display).toBe('none');
+      const thumb = panelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
+      await expect(window.getComputedStyle(thumb).display).toBe('none');
     });
   },
 };

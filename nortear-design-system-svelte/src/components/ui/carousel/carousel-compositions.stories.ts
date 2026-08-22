@@ -88,8 +88,8 @@ export const WithDots: Story = {
       let maior = -Infinity;
       canvas.getAllByRole('group').forEach((slide, i) => {
         const r = slide.getBoundingClientRect();
-        const visivel = Math.min(r.right, v.right) - Math.max(r.left, v.left);
-        if (visivel > maior) { maior = visivel; melhor = i; }
+        const visible = Math.min(r.right, v.right) - Math.max(r.left, v.left);
+        if (visible > maior) { maior = visible; melhor = i; }
       });
       return melhor;
     };
@@ -110,7 +110,7 @@ export const WithDots: Story = {
     // Par idempotente: o dot só é clicado quando ainda NÃO é o atual. O painel
     // Interactions reexecuta a play no MESMO DOM, e um clique cego partiria do
     // estado que a rodada anterior deixou.
-    const irPara = async (n: number) => {
+    const irTo = async (n: number) => {
       const alvo = dot(n);
       if (alvo.getAttribute('aria-current') !== 'true') await userEvent.click(alvo);
     };
@@ -134,7 +134,7 @@ export const WithDots: Story = {
       // Este é o padrão novo: a fileira não é de N peças iguais. Com o 2º slide
       // atual, ela é `• [Slide 2] • • •` — e a asserção mede exatamente isso,
       // na posição 2, sem nunca citar nome de classe.
-      await irPara(2);
+      await irTo(2);
       await waitFor(async () => {
         await expect(dot(2)).toHaveAttribute('aria-current', 'true');
       }, { timeout: 4000 });
@@ -176,7 +176,7 @@ export const WithDots: Story = {
     });
 
     await step('Clicar num dot salta direto para aquele slide', async () => {
-      await irPara(3);
+      await irTo(3);
       // Salto, não passo: o dot leva a um índice ABSOLUTO.
       await emSlide(2);
       await waitFor(async () => {
@@ -189,7 +189,7 @@ export const WithDots: Story = {
       // O painel Interactions reexecuta a play no MESMO DOM: sem voltar, a
       // segunda rodada encontraria o terceiro dot como atual e o primeiro passo
       // reprovaria. É também o quadro que o Chromatic fotografa.
-      await irPara(1);
+      await irTo(1);
       await emSlide(0);
       await expect(dot(1)).toHaveAttribute('aria-current', 'true');
     });

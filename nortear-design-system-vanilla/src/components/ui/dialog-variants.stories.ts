@@ -79,10 +79,10 @@ export const Default: Story = {
 
     await step('A ação primária é a última do rodapé, e é filha direta dele', async () => {
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const botoes = rodape.querySelectorAll<HTMLElement>('button');
-      await expect(botoes.length).toBe(2);
-      await expect(botoes[0].parentElement).toBe(rodape);
-      await expect(botoes[botoes.length - 1]).toHaveClass('nds-button-default');
+      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      await expect(buttons.length).toBe(2);
+      await expect(buttons[0].parentElement).toBe(rodape);
+      await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-default');
     });
   },
 };
@@ -96,7 +96,7 @@ export const WithForm: Story = {
     docs: {
       source: {
         transform: dialogWithFormSource({
-          campos: [
+          fields: [
             { label: 'Nome', value: 'Maria Souza' },
             { label: 'E-mail', type: 'email', value: 'maria@exemplo.com' },
           ],
@@ -302,8 +302,8 @@ export const WithDestructiveAction: Story = {
 
     await step('A ação primária carrega a variante destrutiva', async () => {
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const botoes = rodape.querySelectorAll<HTMLElement>('button');
-      await expect(botoes[botoes.length - 1]).toHaveClass('nds-button-destructive');
+      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-destructive');
     });
 
     await step('Ainda assim é um Dialog, não um AlertDialog', async () => {

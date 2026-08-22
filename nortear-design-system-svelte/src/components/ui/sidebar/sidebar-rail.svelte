@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { cn, type WithElementRef } from "@/lib/utils.js";
-	import { ROTULOS_SIDEBAR_PADRAO } from "@shared/primitives/sidebar-a11y-labels";
+	import { LABELS_SIDEBAR_DEFAULT } from "@shared/primitives/sidebar-a11y-labels";
 	import type { HTMLAttributes } from "svelte/elements";
 	import { useSidebar } from "./context.svelte.js";
 
@@ -32,7 +32,7 @@
 	aria-hidden="true"
 	tabindex={-1}
 	onclick={sidebar.toggle}
-	title={ROTULOS_SIDEBAR_PADRAO.alternar}
+	title={LABELS_SIDEBAR_DEFAULT.alternar}
 	class={cn("nds-sidebar-rail", className)}
 	{...restProps}
 >

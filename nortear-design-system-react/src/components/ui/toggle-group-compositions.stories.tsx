@@ -92,9 +92,9 @@ export const SingleAlignment: Story = {
     });
 
     await step("Quatro itens icon-only, cada um com a sua função no nome", async () => {
-      const botoes = canvas.getAllByRole("button");
-      await expect(botoes).toHaveLength(4);
-      for (const b of botoes) await expect(b.getAttribute("aria-label")).toBeTruthy();
+      const buttons = canvas.getAllByRole("button");
+      await expect(buttons).toHaveLength(4);
+      for (const b of buttons) await expect(b.getAttribute("aria-label")).toBeTruthy();
     });
 
     await step("Trocar a seleção desliga a anterior (exclusivo)", async () => {

@@ -35,9 +35,9 @@ function deIso(iso: string): Date | null {
 }
 
 function toIso(d: Date): string {
-  const mes = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const month = String(d.getUTCMonth() + 1).padStart(2, '0');
   const dia = String(d.getUTCDate()).padStart(2, '0');
-  return `${d.getUTCFullYear()}-${mes}-${dia}`;
+  return `${d.getUTCFullYear()}-${month}-${dia}`;
 }
 
 /**
@@ -46,10 +46,10 @@ function toIso(d: Date): string {
  * aritmética ingênua devolve e o que faria o foco pular uma casa a mais.
  */
 function somarMonths(d: Date, meses: number): Date {
-  const ano = d.getUTCFullYear();
-  const mes = d.getUTCMonth() + meses;
-  const lastDay = new Date(Date.UTC(ano, mes + 1, 0)).getUTCDate();
-  return new Date(Date.UTC(ano, mes, Math.min(d.getUTCDate(), lastDay)));
+  const year = d.getUTCFullYear();
+  const month = d.getUTCMonth() + meses;
+  const lastDay = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+  return new Date(Date.UTC(year, month, Math.min(d.getUTCDate(), lastDay)));
 }
 
 /**
@@ -59,7 +59,7 @@ function somarMonths(d: Date, meses: number): Date {
  * `Shift` em `PageUp`/`PageDown` anda um ANO, que é a convenção do padrão APG
  * para grade de datas.
  */
-export function destinoDaTecla(
+export function teclaTarget(
   isoAtual: string | null | undefined,
   evento: { key: string; shiftKey?: boolean },
 ): string | null {
@@ -98,7 +98,7 @@ export function isoDoElemento(el: Element | null | undefined): string | null {
 }
 
 /** O botão do dia com esta data, dentro da raiz — `null` se a grade não o traz. */
-export function diaNaGrade(raiz: ParentNode, iso: string): HTMLElement | null {
+export function gridDay(raiz: ParentNode, iso: string): HTMLElement | null {
   return raiz.querySelector<HTMLElement>(
     `.nds-calendar-day-btn[data-value="${iso}"], .nds-calendar-day-btn[data-day="${iso}"]`,
   );

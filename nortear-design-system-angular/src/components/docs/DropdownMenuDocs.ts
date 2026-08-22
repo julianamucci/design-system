@@ -871,7 +871,7 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     const sim = tNav('common.yes');
 
     /** Linha cujo tipo/padrão/descrição vêm da tabela do conteúdo compartilhado. */
@@ -888,7 +888,7 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
       name: nome,
       type: tipo,
       defaultValue: padrao,
-      required: nao,
+      required: not,
       description: toPlainText(t(`props.${chave}.description`)),
     });
 

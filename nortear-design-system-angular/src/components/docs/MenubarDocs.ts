@@ -367,7 +367,7 @@ const SHORTCUTS_EDIT = [
   { label: 'Refazer', atalho: 'Ctrl Y' },
 ] as const;
 const EXIBICOES = ['Régua', 'Grade'] as const;
-const TEMAS = [
+const THEMES = [
   { valor: 'light', label: 'Claro' },
   { valor: 'dark', label: 'Escuro' },
   { valor: 'system', label: 'Do sistema' },
@@ -740,7 +740,7 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
   protected readonly itensArquivo = ITEMS_FILE;
   protected readonly exportacoes = EXPORTACOES;
   protected readonly atalhosEdicao = SHORTCUTS_EDIT;
-  protected readonly temas = TEMAS;
+  protected readonly temas = THEMES;
   protected readonly exibicoes = EXIBICOES;
 
   /** Estado dos exemplos vivos — alternadores e escolha única. */
@@ -907,7 +907,7 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     const sim = tNav('common.yes');
 
     /** Linha cujo tipo/padrão/descrição vêm da tabela do conteúdo compartilhado. */
@@ -924,7 +924,7 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
       name: nome,
       type: tipo,
       defaultValue: padrao,
-      required: nao,
+      required: not,
       description: toPlainText(t(`props.${chave}.description`)),
     });
 

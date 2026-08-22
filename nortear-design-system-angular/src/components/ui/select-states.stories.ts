@@ -57,7 +57,7 @@ export const Default: Story = {
     },
   },
   render: () => ({
-    props: { estados: STATES },
+    props: { states: STATES },
     template: `
       <nds-select>
         <button ndsSelectTrigger aria-label="Estado">
@@ -65,7 +65,7 @@ export const Default: Story = {
         </button>
 
         <ng-template ndsSelectContent>
-          @for (estado of estados; track estado.value) {
+          @for (estado of states; track estado.value) {
             <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
           }
         </ng-template>
@@ -108,7 +108,7 @@ export const Selected: Story = {
     },
   },
   render: () => ({
-    props: { estados: STATES, stateLabel },
+    props: { states: STATES, stateLabel },
     template: `
       <nds-select defaultValue="rj" [itemToStringLabel]="stateLabel">
         <button ndsSelectTrigger aria-label="Estado">
@@ -116,7 +116,7 @@ export const Selected: Story = {
         </button>
 
         <ng-template ndsSelectContent>
-          @for (estado of estados; track estado.value) {
+          @for (estado of states; track estado.value) {
             <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
           }
         </ng-template>
@@ -174,7 +174,7 @@ export const Open: Story = {
     },
   },
   render: () => ({
-    props: { estados: STATES },
+    props: { states: STATES },
     template: `
       <nds-select [defaultOpen]="true" [modal]="false">
         <button ndsSelectTrigger aria-label="Estado">
@@ -182,7 +182,7 @@ export const Open: Story = {
         </button>
 
         <ng-template ndsSelectContent>
-          @for (estado of estados; track estado.value) {
+          @for (estado of states; track estado.value) {
             <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
           }
         </ng-template>
@@ -253,7 +253,7 @@ export const Disabled: Story = {
     },
   },
   render: () => ({
-    props: { estados: STATES, onValueChange: fn() },
+    props: { states: STATES, onValueChange: fn() },
     template: `
       <nds-select disabled (valueChange)="onValueChange($event)">
         <button ndsSelectTrigger aria-label="Estado">
@@ -261,7 +261,7 @@ export const Disabled: Story = {
         </button>
 
         <ng-template ndsSelectContent>
-          @for (estado of estados; track estado.value) {
+          @for (estado of states; track estado.value) {
             <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
           }
         </ng-template>
@@ -300,7 +300,7 @@ export const Invalid: Story = {
     },
   },
   render: () => ({
-    props: { estados: STATES },
+    props: { states: STATES },
     template: `
       <div class="nds-stack" data-spacing="sm">
         <nds-select invalid>
@@ -309,7 +309,7 @@ export const Invalid: Story = {
           </button>
 
           <ng-template ndsSelectContent>
-            @for (estado of estados; track estado.value) {
+            @for (estado of states; track estado.value) {
               <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
             }
           </ng-template>

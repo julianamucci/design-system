@@ -41,7 +41,7 @@ type Composition = {
   declaracoes?: string;
 };
 
-const PADRAO: Composition = {
+const DEFAULT: Composition = {
   open: false,
   tone: 'destructive',
   showMedia: false,
@@ -60,9 +60,9 @@ const PADRAO: Composition = {
  * num snippet copiável é erro de lint na casa de quem copiou.
  */
 function dialogo(parcial: Partial<Composition> = {}): string {
-  const c: Composition = { ...PADRAO, ...parcial };
+  const c: Composition = { ...DEFAULT, ...parcial };
 
-  const nomes = [
+  const names = [
     'AlertDialog',
     'AlertDialogAction',
     'AlertDialogCancel',
@@ -76,7 +76,7 @@ function dialogo(parcial: Partial<Composition> = {}): string {
   ].filter(Boolean);
 
   const script = `import {
-${nomes.map((nome) => `  ${nome},`).join('\n')}
+${names.map((nome) => `  ${nome},`).join('\n')}
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";${
     c.showMedia ? '\nimport TriangleAlert from "@lucide/svelte/icons/triangle-alert";' : ''
@@ -137,17 +137,17 @@ export function alertDialogSource(
   ctx?: { args?: Partial<AlertDialogArgs> },
 ): string {
   const a = ctx?.args ?? {};
-  const tone = a.tone ?? PADRAO.tone;
+  const tone = a.tone ?? DEFAULT.tone;
   return dialogo({
-    open: a.open ?? PADRAO.open,
+    open: a.open ?? DEFAULT.open,
     tone,
     triggerVariant: tone,
-    showMedia: a.showMedia ?? PADRAO.showMedia,
-    triggerLabel: a.triggerLabel ?? PADRAO.triggerLabel,
-    title: a.title ?? PADRAO.title,
-    description: a.description ?? PADRAO.description,
-    cancelLabel: a.cancelLabel ?? PADRAO.cancelLabel,
-    actionLabel: a.actionLabel ?? PADRAO.actionLabel,
+    showMedia: a.showMedia ?? DEFAULT.showMedia,
+    triggerLabel: a.triggerLabel ?? DEFAULT.triggerLabel,
+    title: a.title ?? DEFAULT.title,
+    description: a.description ?? DEFAULT.description,
+    cancelLabel: a.cancelLabel ?? DEFAULT.cancelLabel,
+    actionLabel: a.actionLabel ?? DEFAULT.actionLabel,
   });
 }
 

@@ -231,7 +231,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   let timerOutput: ReturnType<typeof setTimeout> | null = null;
   /** Painel ainda no DOM tocando a animação de saída. */
   let saindo: HTMLElement | null = null;
-  let busca = '';
+  let search = '';
 
   // ── Rótulos ────────────────────────────────────────────────────────────────
   //
@@ -240,13 +240,13 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   // as opções só existem enquanto a lista está montada. Sem este mapa o campo
   // mostraria o valor cru ("rj") no lugar do rótulo.
   const rotulos = new Map<string, string>();
-  for (const entrada of items) {
-    if (entrada.type === 'separator') continue;
-    if (entrada.type === 'group') {
-      for (const opcao of entrada.items) rotulos.set(opcao.value, opcao.label);
+  for (const entry of items) {
+    if (entry.type === 'separator') continue;
+    if (entry.type === 'group') {
+      for (const opcao of entry.items) rotulos.set(opcao.value, opcao.label);
       continue;
     }
-    rotulos.set(entrada.value, entrada.label);
+    rotulos.set(entry.value, entry.label);
   }
 
   // ── Raiz ───────────────────────────────────────────────────────────────────
@@ -372,7 +372,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     el.addEventListener('mousemove', () => {
       if (!def.disabled) destacar(indice);
     });
-    el.addEventListener('click', () => escolher(indice));
+    el.addEventListener('click', () => choose(indice));
 
     dentro.appendChild(el);
     opcoes.push({ el, value, label, disabled: def.disabled ?? false });
@@ -403,8 +403,8 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
 
     opcoes = [];
 
-    for (const entrada of items) {
-      if (entrada.type === 'separator') {
+    for (const entry of items) {
+      if (entry.type === 'separator') {
         const sep = document.createElement('div');
         sep.className = 'nds-select-separator';
         sep.dataset.slot = 'select-separator';
@@ -417,7 +417,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
         continue;
       }
 
-      if (entrada.type === 'group') {
+      if (entry.type === 'group') {
         const grupo = document.createElement('div');
         grupo.className = 'nds-select-group';
         grupo.dataset.slot = 'select-group';
@@ -427,20 +427,20 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
         rotulo.id = `${listId}-grupo-${painel.childElementCount}`;
         rotulo.className = 'nds-select-label';
         rotulo.dataset.slot = 'select-label';
-        rotulo.textContent = entrada.label;
+        rotulo.textContent = entry.label;
         // O cabeçalho NOMEIA o grupo — é o que faz o leitor de tela anunciar
         // "Sudeste" ao entrar nele, em vez de "grupo".
         grupo.setAttribute('aria-labelledby', rotulo.id);
 
         grupo.appendChild(rotulo);
-        for (const item of entrada.items) mountOption(item, grupo);
+        for (const item of entry.items) mountOption(item, grupo);
         painel.appendChild(grupo);
         continue;
       }
 
       // Lista plana: as opções são filhas diretas do `listbox`, sem grupo — um
       // grupo de um só existe para o olho e mente para o leitor de tela.
-      mountOption(entrada, painel);
+      mountOption(entry, painel);
     }
 
     return painel;
@@ -542,23 +542,23 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
       clearTimeout(timerSearch);
       timerSearch = null;
     }
-    busca = '';
+    search = '';
   }
 
   function procurar(letra: string): number {
-    busca += letra.toLowerCase();
+    search += letra.toLowerCase();
     if (timerSearch !== null) clearTimeout(timerSearch);
     timerSearch = setTimeout(clearSearch, SEARCH_MS_WINDOW);
 
     const lista = habilitadas();
     const partida = lista.indexOf(ativo);
     const ordem = lista.slice(partida + 1).concat(lista.slice(0, Math.max(partida + 1, 0)));
-    return ordem.find((i) => opcoes[i].label.toLowerCase().startsWith(busca)) ?? -1;
+    return ordem.find((i) => opcoes[i].label.toLowerCase().startsWith(search)) ?? -1;
   }
 
   /** Busca com a lista FECHADA: sem painel para destacar, ela escolhe direto. */
   function procurarClosed(letra: string): void {
-    busca += letra.toLowerCase();
+    search += letra.toLowerCase();
     if (timerSearch !== null) clearTimeout(timerSearch);
     timerSearch = setTimeout(clearSearch, SEARCH_MS_WINDOW);
 
@@ -567,7 +567,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     const ordem = candidatos
       .slice(partida + 1)
       .concat(candidatos.slice(0, Math.max(partida + 1, 0)));
-    const finding = ordem.find(([, rotulo]) => rotulo.toLowerCase().startsWith(busca));
+    const finding = ordem.find(([, rotulo]) => rotulo.toLowerCase().startsWith(search));
     if (finding && finding[0] !== valor) definirValue(finding[0]);
   }
 
@@ -693,7 +693,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     onOpenChange?.(false);
   }
 
-  function escolher(indice: number): void {
+  function choose(indice: number): void {
     const opcao = opcoes[indice];
     if (!opcao || opcao.disabled) return;
     definirValue(opcao.value);
@@ -754,7 +754,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
       case 'Enter':
       case ' ':
         e.preventDefault();
-        escolher(ativo);
+        choose(ativo);
         return;
       case 'ArrowDown':
         e.preventDefault();

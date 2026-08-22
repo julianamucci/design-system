@@ -15,7 +15,7 @@ import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './lea
 const HOVER_WAIT = 300;
 
 /** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
-function espera(ms: number): Promise<void> {
+function wait(ms: number): Promise<void> {
   return new Promise((resolver) => setTimeout(resolver, ms));
 }
 
@@ -221,9 +221,9 @@ export const PersistenceInBubble: Story = {
       // sobre um nó assim chega com clientX/clientY em 0,0 — mediria o ponteiro
       // no canto da tela, não sobre o balão. A área de tolerância da factory lê
       // COORDENADA, então é coordenada que o teste precisa fornecer.
-      const centro = mover(balaoDe(gatilho)!);
-      await expect(centro).toBeTruthy();
-      await espera(400);
+      const center = mover(balaoDe(gatilho)!);
+      await expect(center).toBeTruthy();
+      await wait(400);
       await expect(balaoDe(gatilho)).not.toBeNull();
     });
 
@@ -274,10 +274,10 @@ export const ListenerCleanup: Story = {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ProbeResult;
+    let probe!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
-      sonda = await sondarOuvintes({
+      probe = await sondarOuvintes({
         host: host as HTMLElement,
         montar: () => createTooltip({
           trigger: createButton({ variant: 'outline', label: 'Ajuda' }),
@@ -293,7 +293,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await checkLimpeza(sonda);
+      await checkLimpeza(probe);
     });
   },
 };

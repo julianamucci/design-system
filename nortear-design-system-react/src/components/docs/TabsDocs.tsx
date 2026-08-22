@@ -180,7 +180,7 @@ export function TabsDocs() {
   <TabsContent value="examples">Exemplos de uso</TabsContent>
 </Tabs>`;
 
-  const codeVertical = `<Tabs orientation="vertical" defaultValue="overview">
+  const verticalCode = `<Tabs orientation="vertical" defaultValue="overview">
   <TabsList aria-label="Seções do componente">
     <TabsTrigger value="overview">Visão geral</TabsTrigger>
     <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -538,7 +538,7 @@ interface TabsContentProps {
           {
             name: tContent("variants.items.vertical"),
             description: stripHtml(tContent("variants.styles.vertical")),
-            code: codeVertical,
+            code: verticalCode,
             preview: (
               <Tabs
                 orientation="vertical"

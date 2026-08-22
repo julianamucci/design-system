@@ -137,7 +137,7 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     onOpenChange,
   } = options;
 
-  const controlado = options.open !== undefined;
+  const controlled = options.open !== undefined;
 
   const id = ++_popoverCounter;
   const contentId = `popover-content-${id}`;
@@ -274,7 +274,7 @@ export function createPopover(options: PopoverOptions): PopoverElement {
    * `onOpenChange` que responde com `setOpen()` receberia o evento duas vezes.
    */
   function notificar(aberto: boolean): void {
-    if (!controlado) onOpenChange?.(aberto);
+    if (!controlled) onOpenChange?.(aberto);
   }
 
   /**
@@ -284,7 +284,7 @@ export function createPopover(options: PopoverOptions): PopoverElement {
    * controlado, ela é executada — e `open`/`close` anunciam por conta própria.
    */
   function pedirChange(proximo: boolean): void {
-    if (controlado) {
+    if (controlled) {
       onOpenChange?.(proximo);
       return;
     }
@@ -337,7 +337,7 @@ export function createPopover(options: PopoverOptions): PopoverElement {
   // `defaultOpen`. Adiado uma volta do laço de eventos, e não um microtique: a
   // raiz ainda não entrou no documento quando a fábrica retorna, e posicionar o
   // painel exige medir um gatilho já no layout.
-  const startsOpen = controlado ? options.open === true : options.defaultOpen === true;
+  const startsOpen = controlled ? options.open === true : options.defaultOpen === true;
   if (startsOpen) {
     setTimeout(() => {
       // A raiz pode ter sido descartada antes deste tique. Abrir aqui portaria

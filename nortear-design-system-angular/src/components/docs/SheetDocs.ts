@@ -430,8 +430,8 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
               class="nds-stack"
               data-spacing="xs"
             >
-              @for (destino of destinosDeNavegacao(); track destino.id) {
-                <a href="#" [class]="linkClasses">{{ destino.rotulo }}</a>
+              @for (destination of destinosDeNavegacao(); track destination.id) {
+                <a href="#" [class]="linkClasses">{{ destination.rotulo }}</a>
               }
             </nav>
           </div>
@@ -839,7 +839,7 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     return [
       {
         title: 'nds-sheet',
@@ -849,14 +849,14 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
             name: 'open',
             type: 'model<boolean>',
             defaultValue: 'false',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.open.description')),
           },
           {
             name: 'defaultOpen',
             type: t('props.table.defaultOpen.type'),
             defaultValue: t('props.table.defaultOpen.default'),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.defaultOpen.description')),
           },
           {
@@ -866,14 +866,14 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
             name: 'openChange',
             type: 'output<boolean>',
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.onOpenChange.description')),
           },
           {
             name: 'modal',
             type: 'boolean',
             defaultValue: 'true',
-            required: nao,
+            required: not,
             description: toPlainText(t('accessibility.aria.modal')),
           },
         ],
@@ -886,14 +886,14 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
             name: 'side',
             type: t('props.table.side.type'),
             defaultValue: t('props.table.side.default'),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.side.description')),
           },
           {
             name: 'showCloseButton',
             type: t('props.table.showCloseButton.type'),
             defaultValue: t('props.table.showCloseButton.default'),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.showCloseButton.description')),
           },
           {
@@ -903,7 +903,7 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
             name: 'panelClass',
             type: t('props.table.className.type'),
             defaultValue: t('props.table.className.default'),
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.className.description')),
           },
         ],

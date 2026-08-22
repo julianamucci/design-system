@@ -56,14 +56,14 @@ function bloco(opcoes: {
   extra?: string;
 }): string {
   const largura = opcoes.largura ?? 'nds-stack nds-w-sm';
-  const cabecalho = opcoes.saida
+  const header = opcoes.saida
     ? `  <div class="nds-cluster" data-justify="between">
     <Label>${opcoes.rotulo}</Label>
     <span aria-live="polite" class="nds-text-body nds-tabular-nums">${opcoes.saida}</span>
   </div>`
     : `  <Label>${opcoes.rotulo}</Label>`;
   return `<div class="${largura}" data-spacing="sm">
-${cabecalho}
+${header}
 ${indentar(opcoes.controle)}${opcoes.extra ? `\n${indentar(opcoes.extra)}` : ''}
 </div>`;
 }

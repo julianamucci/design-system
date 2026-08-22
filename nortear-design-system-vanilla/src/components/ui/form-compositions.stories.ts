@@ -38,7 +38,7 @@ export const Fieldset: Story = {
       source: {
         transform: formWithFieldsetSource({
           legend: 'Endereço de entrega',
-          campos: [
+          fields: [
             { label: 'Rua', placeholder: 'ex: Av. Paulista, 1000' },
             { label: 'Cidade', placeholder: 'ex: São Paulo' },
           ],
@@ -104,7 +104,7 @@ export const MultipleFields: Story = {
     docs: {
       source: {
         transform: formWithMultipleFieldsSource({
-          campos: [
+          fields: [
             {
               label: 'Nome completo',
               name: 'nome',

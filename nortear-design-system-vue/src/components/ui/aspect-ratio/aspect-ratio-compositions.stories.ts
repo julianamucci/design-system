@@ -210,13 +210,13 @@ export const InGrid: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const caixas = Array.from(
+    const boxes = Array.from(
       canvasElement.querySelectorAll('[data-slot="aspect-ratio"]'),
     );
-    await expect(caixas.length).toBeGreaterThan(1);
+    await expect(boxes.length).toBeGreaterThan(1);
     // functional.item4 — larguras diferentes, mesma proporção: é o que garante
     // que a altura é recalculada a partir da largura, e não fixada.
-    const proporcoes = caixas.map((c) => {
+    const proporcoes = boxes.map((c) => {
       const r = c.getBoundingClientRect();
       return r.width / r.height;
     });

@@ -131,9 +131,9 @@ export async function checkNameEDescricao(p: HTMLElement): Promise<void> {
   await expect(idTitle).toBeTruthy();
   await expect(document.getElementById(idTitle!)).toHaveAttribute('data-slot', 'dialog-title');
 
-  const idDescricao = p.getAttribute('aria-describedby');
-  await expect(idDescricao).toBeTruthy();
-  await expect(document.getElementById(idDescricao!)).toHaveAttribute(
+  const idDescription = p.getAttribute('aria-describedby');
+  await expect(idDescription).toBeTruthy();
+  await expect(document.getElementById(idDescription!)).toHaveAttribute(
     'data-slot',
     'dialog-description',
   );

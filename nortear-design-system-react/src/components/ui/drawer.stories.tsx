@@ -17,7 +17,7 @@ import { Button } from "./button";
 import { DrawerDocs } from "@/components/docs/DrawerDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
-const ROTULO = {
+const LABEL = {
   gatilho: "Abrir Drawer",
   titulo: "Editar perfil",
   descricao: "Atualize seus dados pessoais e foto.",
@@ -113,20 +113,20 @@ export const Playground: Story = {
     <div style={{ contain: "layout", minHeight: 400, position: "relative" }}>
       <Drawer {...args}>
         <DrawerTrigger asChild>
-          <Button variant="outline">{ROTULO.gatilho}</Button>
+          <Button variant="outline">{LABEL.gatilho}</Button>
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>{ROTULO.titulo}</DrawerTitle>
-            <DrawerDescription>{ROTULO.descricao}</DrawerDescription>
+            <DrawerTitle>{LABEL.titulo}</DrawerTitle>
+            <DrawerDescription>{LABEL.descricao}</DrawerDescription>
           </DrawerHeader>
           <DrawerBody className="nds-text-body nds-text-muted-foreground">
             Conteúdo do drawer.
           </DrawerBody>
           <DrawerFooter>
-            <Button>{ROTULO.confirmar}</Button>
+            <Button>{LABEL.confirmar}</Button>
             <DrawerClose asChild>
-              <Button variant="outline">{ROTULO.cancelar}</Button>
+              <Button variant="outline">{LABEL.cancelar}</Button>
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>
@@ -135,7 +135,7 @@ export const Playground: Story = {
   ),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole("button", { name: ROTULO.gatilho });
+    const trigger = canvas.getByRole("button", { name: LABEL.gatilho });
 
     await fechar();
 
@@ -149,8 +149,8 @@ export const Playground: Story = {
       // Nome e descrição saem do aria-labelledby/-describedby que o primitivo
       // liga aos ids REAIS do título e da descrição — painel modal anônimo é o
       // defeito silencioso aqui.
-      await expect(painel).toHaveAccessibleName(ROTULO.titulo);
-      await expect(painel).toHaveAccessibleDescription(ROTULO.descricao);
+      await expect(painel).toHaveAccessibleName(LABEL.titulo);
+      await expect(painel).toHaveAccessibleDescription(LABEL.descricao);
       await expect(painel).toHaveAttribute("data-vaul-drawer-direction", args.direction!);
       await expect(painel).toHaveClass(/nds-drawer-content/);
       await expect(
@@ -188,7 +188,7 @@ export const Playground: Story = {
 
     await step("5. O botão de fechar do rodapé fecha e devolve o foco ao gatilho", async () => {
       const painel = await abrir(trigger);
-      const closeBtn = within(painel).getByRole("button", { name: ROTULO.cancelar });
+      const closeBtn = within(painel).getByRole("button", { name: LABEL.cancelar });
       await userEvent.click(closeBtn);
       await waitForPortalGone("dialog");
       await waitFor(() => {

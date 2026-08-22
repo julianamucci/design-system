@@ -359,7 +359,7 @@ nav.getValue();   // painel aberto agora; vazio quer dizer fechado`,
         });
 
       case 'variantes': {
-        const codeHorizontal = `const nav = createNavigationMenu([
+        const horizontalCode = `const nav = createNavigationMenu([
   { label: 'Início', href: '/' },
   {
     label: 'Produtos',
@@ -372,7 +372,7 @@ nav.getValue();   // painel aberto agora; vazio quer dizer fechado`,
 ]);
 nav.setAttribute('aria-label', 'Navegação principal');`;
 
-        const codeVertical = `// A coluna é uma opção: \`orientation\` também vira o eixo das setas,
+        const verticalCode = `// A coluna é uma opção: \`orientation\` também vira o eixo das setas,
 // que numa barra em pé passam a ser ArrowUp e ArrowDown.
 const nav = createNavigationMenu(
   [
@@ -509,14 +509,14 @@ nav.setAttribute('aria-label', 'Navegação lateral');`;
           return wrap;
         }
 
-        const codeLinkSimples = `const nav = createNavigationMenu([
+        const simpleCodeLink = `const nav = createNavigationMenu([
   { label: 'Início',  href: '/' },
   { label: 'Preços',  href: '/precos' },
   { label: 'Contato', href: '/contato' },
 ]);
 nav.setAttribute('aria-label', 'Navegação principal');`;
 
-        const codeComDropdown = `const nav = createNavigationMenu([
+        const codeWithDropdown = `const nav = createNavigationMenu([
   { label: 'Início', href: '/' },
   {
     label: 'Produtos',
@@ -548,7 +548,7 @@ const content = nav.querySelector('[role="menu"]');
 content.style.minWidth = '560px';
 content.classList.add('nds-grid', 'nds-p-3'); content.dataset.cols = '2'; content.dataset.spacing = 'sm';`;
 
-        const codeComCardDestacado = `const nav = createNavigationMenu([
+        const codeWithCardDestacado = `const nav = createNavigationMenu([
   { label: 'Início', href: '/' },
   {
     label: 'Recursos',
@@ -586,7 +586,7 @@ content.insertBefore(card, content.firstChild);`;
             {
               name: t('variants.items.horizontal'),
               description: stripHtml(t('variants.styles.horizontal')),
-              code: codeHorizontal,
+              code: horizontalCode,
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
@@ -601,7 +601,7 @@ content.insertBefore(card, content.firstChild);`;
             {
               name: t('variants.items.vertical'),
               description: stripHtml(t('variants.styles.vertical')),
-              code: codeVertical,
+              code: verticalCode,
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
@@ -628,7 +628,7 @@ content.insertBefore(card, content.firstChild);`;
               trackId: 'linkSimples',
               description: stripHtml(t('variants.items.linkSimples.description')),
               useWhen: stripHtml(t('variants.items.linkSimples.use')),
-              code: codeLinkSimples,
+              code: simpleCodeLink,
               previewFactory: buildLinkSimples,
             },
             {
@@ -636,7 +636,7 @@ content.insertBefore(card, content.firstChild);`;
               trackId: 'comDropdown',
               description: stripHtml(t('variants.items.comDropdown.description')),
               useWhen: stripHtml(t('variants.items.comDropdown.use')),
-              code: codeComDropdown,
+              code: codeWithDropdown,
               previewFactory: buildComDropdown,
             },
             {
@@ -652,7 +652,7 @@ content.insertBefore(card, content.firstChild);`;
               trackId: 'comCardDestacado',
               description: stripHtml(t('variants.items.comCardDestacado.description')),
               useWhen: stripHtml(t('variants.items.comCardDestacado.use')),
-              code: codeComCardDestacado,
+              code: codeWithCardDestacado,
               previewFactory: buildComCardDestacado,
             },
           ],

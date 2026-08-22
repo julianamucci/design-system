@@ -46,8 +46,8 @@ const SIZES = ['sm', 'default', 'lg'] as const;
 const IMPORT_TOGGLE = 'import { Toggle } from "@/components/ui/toggle";';
 
 /** Import dos ícones, sempre em ordem alfabética como o lint do projeto pede. */
-function importingIcons(...icones: string[]): string {
-  return `import { ${[...new Set(icones)].sort().join(', ')} } from "lucide-react";`;
+function importingIcons(...icons: string[]): string {
+  return `import { ${[...new Set(icons)].sort().join(', ')} } from "lucide-react";`;
 }
 
 /**
@@ -153,11 +153,11 @@ ${insideOf(toggle(' variant="outline" size="lg" aria-label="Negrito grande"', 'B
  * composição de um grupo de escolha única.
  */
 export function toggleBarFormattingSource(): string {
-  const botoes = ['Bold', 'Italic', 'Underline', 'List'];
+  const buttons = ['Bold', 'Italic', 'Underline', 'List'];
   const rotulos = ['Negrito', 'Itálico', 'Sublinhado', 'Lista'];
 
   return jsxSnippet(
-    `${IMPORT_TOGGLE}\n${importingIcons(...botoes)}`,
+    `${IMPORT_TOGGLE}\n${importingIcons(...buttons)}`,
     `<div
   role="group"
   aria-label="Formatação de texto"
@@ -165,7 +165,7 @@ export function toggleBarFormattingSource(): string {
   data-align="center"
   data-spacing="xs"
 >
-${botoes.map((icone, i) => insideOf(toggle(` aria-label="${rotulos[i]}"`, icone))).join('\n')}
+${buttons.map((icone, i) => insideOf(toggle(` aria-label="${rotulos[i]}"`, icone))).join('\n')}
 </div>`,
   );
 }

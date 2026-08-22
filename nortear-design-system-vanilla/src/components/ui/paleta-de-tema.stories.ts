@@ -83,18 +83,18 @@ const BACKGROUND_SMOOTH_PAIRS = ['destructive', 'info', 'success', 'warning'] as
 export const TodoTokenDocumentadoExists: Story = {
   render: () => createThemeColorsDocs(),
   play: async ({ canvasElement }) => {
-    const medidas = await measureSwatches(canvasElement);
+    const measurements = await measureSwatches(canvasElement);
 
     // Sanidade da própria sonda: sem swatch na tela, a asserção seguinte
     // passaria com a lista vazia e o portão viraria enfeite.
-    await expect(medidas.length).toBeGreaterThan(0);
+    await expect(measurements.length).toBeGreaterThan(0);
 
     // Cada swatch é medido por DOIS caminhos independentes até a mesma cor: o
     // rótulo, escrito pela página a partir de `getComputedStyle` no <html>, e o
     // chip, pintado por herança de `hsl(var(--token))`. Token inexistente
     // apaga os dois de formas diferentes — rótulo vazio, chip transparente — e
     // reatividade quebrada faz o rótulo congelar no tema anterior.
-    await expect(swatchFailures(medidas)).toEqual([]);
+    await expect(swatchFailures(measurements)).toEqual([]);
   },
 };
 
@@ -110,8 +110,8 @@ export const PairConsumidoAlcanca4a5: Story = {
     // engolir a paleta, esta linha reprova em vez de aprovar o vazio.
     await expect(cobertos.length).toBeGreaterThan(5);
 
-    const medidas = await measurePairs(canvasElement, cobertos);
-    await expect(pairFailures(medidas, TEXT_MINIMUM)).toEqual([]);
+    const measurements = await measurePairs(canvasElement, cobertos);
+    await expect(pairFailures(measurements, TEXT_MINIMUM)).toEqual([]);
   },
 };
 
@@ -136,11 +136,11 @@ export const TextCorridoSobreBackgroundSmooth: Story = {
     await expect(pairs).toEqual([...BACKGROUND_SMOOTH_PAIRS]);
     await expect(BACKGROUND_SMOOTH_ALFAS.length).toBeGreaterThan(0);
 
-    const medidas = await measurePairsSuaves(canvasElement, pairs);
-    await expect(medidas.length).toBe(
+    const measurements = await measurePairsSuaves(canvasElement, pairs);
+    await expect(measurements.length).toBe(
       pairs.length * BACKGROUND_SMOOTH_ALFAS.length * 3 * 2, // 3 temas × 2 modos
     );
-    await expect(pairSmoothFailures(medidas, TEXT_MINIMUM)).toEqual([]);
+    await expect(pairSmoothFailures(measurements, TEXT_MINIMUM)).toEqual([]);
   },
 };
 

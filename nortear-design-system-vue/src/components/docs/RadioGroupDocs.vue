@@ -155,7 +155,7 @@ function handleDemoRadioChange(name: string, value: string) {
 const codeImportBasic = `import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";`;
 
-const codeVertical = `<RadioGroup aria-label="Forma de pagamento">
+const verticalCode = `<RadioGroup aria-label="Forma de pagamento">
   <div class="nds-cluster" data-spacing="xs">
     <RadioGroupItem value="cartao" id="v-cartao" />
     <Label :for="'v-cartao'">Cartão de crédito</Label>
@@ -170,7 +170,7 @@ const codeVertical = `<RadioGroup aria-label="Forma de pagamento">
   </div>
 </RadioGroup>`;
 
-const codeHorizontal = `<RadioGroup orientation="horizontal" class="nds-cluster" data-spacing="lg" aria-label="Forma de entrega">
+const horizontalCode = `<RadioGroup orientation="horizontal" class="nds-cluster" data-spacing="lg" aria-label="Forma de entrega">
   <div class="nds-cluster" data-spacing="xs">
     <RadioGroupItem value="standard" id="h-standard" />
     <Label :for="'h-standard'">Padrão (5 dias)</Label>
@@ -238,8 +238,8 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: 'vertical',        description: stripHtml(tContent('variants.styles.vertical')),        code: codeVertical        },
-  { name: 'horizontal',      description: stripHtml(tContent('variants.styles.horizontal')),      code: codeHorizontal      },
+  { name: 'vertical',        description: stripHtml(tContent('variants.styles.vertical')),        code: verticalCode        },
+  { name: 'horizontal',      description: stripHtml(tContent('variants.styles.horizontal')),      code: horizontalCode      },
   { name: 'withDescription', description: stripHtml(tContent('variants.styles.withDescription')), code: codeWithDescription },
 ]);
 

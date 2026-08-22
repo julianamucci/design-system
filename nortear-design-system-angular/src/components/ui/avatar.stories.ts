@@ -45,7 +45,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<AvatarArgs> }):
   // Só o que difere do default entra: snippet que repete valor padrão ensina
   // ruído. `size="md"` é o default do componente.
   const tamanho = size === 'md' ? '' : ` size="${size}"`;
-  const atraso = delayMs ? ` [delayMs]="${delayMs}"` : '';
+  const delay = delayMs ? ` [delayMs]="${delayMs}"` : '';
   return `import { NDS_AVATAR } from '@/components/ui/avatar';
 
 @Component({
@@ -55,7 +55,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<AvatarArgs> }):
       <img ndsAvatarImage src="/maria.jpg" alt="${alt}" />
       <!-- aria-hidden porque o alt acima já identifica a pessoa:
            sem isso o leitor de tela anuncia o nome duas vezes. -->
-      <span ndsAvatarFallback${atraso}>${fallback}</span>
+      <span ndsAvatarFallback${delay}>${fallback}</span>
     </span>
   \`,
 })

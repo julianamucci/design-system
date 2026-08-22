@@ -119,7 +119,7 @@ function aoFocar(ta: HTMLTextAreaElement) {
   return noTransicao(ta, () => {
     ta.focus();
     const cs = getComputedStyle(ta);
-    const medida = {
+    const measurement = {
       boxShadow: cs.boxShadow,
       corDaBorda: cs.borderTopColor,
       outlineWidth: cs.outlineWidth,
@@ -128,7 +128,7 @@ function aoFocar(ta: HTMLTextAreaElement) {
     };
     ta.blur();
     if (anterior && anterior !== doc.body) anterior.focus();
-    return medida;
+    return measurement;
   });
 }
 
@@ -165,9 +165,9 @@ export function focusAssentadoRing(el: HTMLElement): { boxShadow: string; corDaB
 
 /** Razão WCAG entre o texto do campo e o primeiro fundo opaco acima dele. */
 export function contrastTextBackground(el: Element): number | null {
-  const fundo = backgroundEffective(el);
-  if (!fundo) return null;
-  return ratio(getComputedStyle(el).color, fundo)?.ratio ?? null;
+  const background = backgroundEffective(el);
+  if (!background) return null;
+  return ratio(getComputedStyle(el).color, background)?.ratio ?? null;
 }
 
 /**
@@ -222,7 +222,7 @@ export function measureTextarea(raiz: HTMLElement) {
     ehRegiaoViva: counterEl?.getAttribute('aria-live') === 'polite' || counterEl?.getAttribute('role') === 'status',
   };
 
-  const fundo = backgroundEffective(ta);
+  const background = backgroundEffective(ta);
 
   return {
     presente: true,
@@ -283,8 +283,8 @@ export function measureTextarea(raiz: HTMLElement) {
       aoFocar: aoFocar(ta),
     },
     estado: {
-      fundo: cs.backgroundColor,
-      backgroundEffective: fundo,
+      background: cs.backgroundColor,
+      backgroundEffective: background,
       cor: cs.color,
       corDaBorda: cs.borderTopColor,
       corDoPlaceholder: csPlaceholder.color || null,
@@ -292,11 +292,11 @@ export function measureTextarea(raiz: HTMLElement) {
       cursor: cs.cursor,
     },
     contraste: {
-      textoNoFundo: fundo ? ratio(cs.color, fundo) : null,
-      placeholderNoFundo: fundo && csPlaceholder.color ? ratio(csPlaceholder.color, fundo) : null,
-      bordaNoFundo: fundo ? ratio(cs.borderTopColor, fundo) : null,
+      textoNoFundo: background ? ratio(cs.color, background) : null,
+      placeholderNoFundo: background && csPlaceholder.color ? ratio(csPlaceholder.color, background) : null,
+      bordaNoFundo: background ? ratio(cs.borderTopColor, background) : null,
       contadorNoFundo: counterEl
-        ? ratio(getComputedStyle(counterEl).color, backgroundEffective(counterEl) ?? fundo ?? 'rgb(255,255,255)')
+        ? ratio(getComputedStyle(counterEl).color, backgroundEffective(counterEl) ?? background ?? 'rgb(255,255,255)')
         : null,
     },
   };
@@ -333,9 +333,9 @@ export function darkMeasure(raiz: HTMLElement, cenario: string) {
     // sem desligá-la a sonda leria a cor do tema CLARO e relataria uma borda
     // que não escurece. Ver `noTransicao`.
     return noTransicao(campo, () => {
-      const medida = measureTextarea(alvo);
-      if (!medida.presente) return null;
-      return { estado: medida.estado, contraste: medida.contraste };
+      const measurement = measureTextarea(alvo);
+      if (!measurement.presente) return null;
+      return { estado: measurement.estado, contraste: measurement.contraste };
     });
   } finally {
     desfazer();
@@ -350,7 +350,7 @@ export function darkMeasure(raiz: HTMLElement, cenario: string) {
  */
 export function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[]) {
   const registro = {
-    claro: measureTextareas(raiz, cenarios),
+    light: measureTextareas(raiz, cenarios),
     escuro: darkMeasure(raiz, cenarios[0]),
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);

@@ -28,7 +28,7 @@ ${parts.map((part) => `  ${part},`).join('\n')}
 }
 
 /** Destino direto da barra: um `<a href>` de verdade, não um botão. */
-function destino(valor: string, href: string, rotulo: string, ativo: boolean): string {
+function destination(valor: string, href: string, rotulo: string, ativo: boolean): string {
   const props = attrs(`href="${href}"`, ativo ? 'active' : '');
   return `    <NavigationMenuItem value="${valor}">
       <NavigationMenuLink${props}>${rotulo}</NavigationMenuLink>
@@ -131,23 +131,23 @@ function itens(demonstration: NavigationMenuArgs['demonstration'], activeHref?: 
 
   if (demonstration === 'simpleLink') {
     return [
-      destino('inicio', '#inicio', 'Início', ativo('#inicio')),
-      destino('precos', '#precos', 'Preços', ativo('#precos')),
-      destino('contato', '#contato', 'Contato', ativo('#contato')),
+      destination('inicio', '#inicio', 'Início', ativo('#inicio')),
+      destination('precos', '#precos', 'Preços', ativo('#precos')),
+      destination('contato', '#contato', 'Contato', ativo('#contato')),
     ].join('\n');
   }
 
   if (demonstration === 'withDropdown') {
     return [
-      destino('inicio', '#inicio', 'Início', ativo('#inicio')),
+      destination('inicio', '#inicio', 'Início', ativo('#inicio')),
       withPanel('planos', 'Planos', targetsList(PLANOS)),
-      destino('contato', '#contato', 'Contato', ativo('#contato')),
+      destination('contato', '#contato', 'Contato', ativo('#contato')),
     ].join('\n');
   }
 
   if (demonstration === 'megaMenuGrid') {
     return [
-      destino('inicio', '#inicio', 'Início', ativo('#inicio')),
+      destination('inicio', '#inicio', 'Início', ativo('#inicio')),
       withPanel(
         'solucoes',
         'Soluções',
@@ -163,26 +163,26 @@ function itens(demonstration: NavigationMenuArgs['demonstration'], activeHref?: 
 
   if (demonstration === 'withFeatured') {
     return [
-      destino('inicio', '#inicio', 'Início', ativo('#inicio')),
+      destination('inicio', '#inicio', 'Início', ativo('#inicio')),
       withPanel('recursos', 'Recursos', HIGHLIGHT_PANEL),
     ].join('\n');
   }
 
   if (demonstration === 'bar') {
     return [
-      destino('inicio', '#inicio', 'Início', ativo('#inicio')),
+      destination('inicio', '#inicio', 'Início', ativo('#inicio')),
       withPanel('produtos', 'Produtos', targetsList(PLANOS.slice(0, 2))),
       withPanel('recursos', 'Recursos', targetsList(RECURSOS)),
-      destino('precos', '#precos', 'Preços', ativo('#precos')),
-      destino('sobre', '#sobre', 'Sobre', ativo('#sobre')),
+      destination('precos', '#precos', 'Preços', ativo('#precos')),
+      destination('sobre', '#sobre', 'Sobre', ativo('#sobre')),
     ].join('\n');
   }
 
   return [
-    destino('inicio', '#inicio', 'Início', ativo('#inicio')),
+    destination('inicio', '#inicio', 'Início', ativo('#inicio')),
     withPanel('produtos', 'Produtos', targetsList(PLANOS)),
     withPanel('solucoes', 'Soluções', targetsList(SOLUCOES)),
-    destino('sobre', '#sobre', 'Sobre', ativo('#sobre')),
+    destination('sobre', '#sobre', 'Sobre', ativo('#sobre')),
   ].join('\n');
 }
 

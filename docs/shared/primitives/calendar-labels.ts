@@ -48,7 +48,7 @@ const LABELS: Record<string, CalendarLabels> = {
  * região não tem entrada própria. Idioma desconhecido usa inglês, que é o
  * padrão das libs.
  */
-export function rotulosDoCalendario(locale: string | undefined): CalendarLabels {
+export function calendarLabels(locale: string | undefined): CalendarLabels {
   if (!locale) return LABELS.en;
   return LABELS[locale] ?? LABELS[locale.split('-')[0]] ?? LABELS.en;
 }

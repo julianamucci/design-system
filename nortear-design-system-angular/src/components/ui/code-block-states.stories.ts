@@ -107,8 +107,8 @@ export const Copied: Story = {
     await step('Um ícone por vez no botão', async () => {
       // A primeira versão mantinha os dois SVGs no DOM alternando `hidden`, que
       // não esconde elemento de outro namespace — e os dois apareciam juntos.
-      const botao = bloco.querySelector('[data-slot="code-block-copy"]')!;
-      await expect(botao.querySelectorAll('svg')).toHaveLength(1);
+      const button = bloco.querySelector('[data-slot="code-block-copy"]')!;
+      await expect(button.querySelectorAll('svg')).toHaveLength(1);
     });
   },
 };
@@ -162,18 +162,18 @@ export const RemovedBeforeFeedback: Story = {
   render: () => ({
     // Signal e não campo comum: em modo zoneless é o signal que garante a nova
     // detecção de mudança quando o bloco sai da tela.
-    props: { visivel: signal(true), code: COMPOSITION_CODE },
+    props: { visible: signal(true), code: COMPOSITION_CODE },
     // Alterna em vez de só remover: o painel Interactions reexecuta a play no
     // MESMO DOM, e um botão que só sabe remover deixa a segunda rodada sem
     // bloco nenhum para copiar. O rótulo acompanha o estado para que a play
     // consiga estabelecer a própria precondição.
     template: `
       <div class="nds-stack" data-spacing="md">
-        @if (visivel()) {
+        @if (visible()) {
           <nds-code-block [code]="code" language="ts" />
         }
-        <button ndsButton variant="outline" (click)="visivel.set(!visivel())">
-          {{ visivel() ? 'Remover o bloco' : 'Restaurar o bloco' }}
+        <button ndsButton variant="outline" (click)="visible.set(!visible())">
+          {{ visible() ? 'Remover o bloco' : 'Restaurar o bloco' }}
         </button>
       </div>
     `,

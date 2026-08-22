@@ -14,7 +14,7 @@ import { menubarItemDefaultSource, menubarItemDestructiveSource } from './menuba
 // Itens de cada ficha em lista: as asserções contam a partir daqui, nunca de um
 // número escrito à mão no play.
 const ITEMS_NEUTROS = ['Novo', 'Abrir', 'Salvar'];
-const ITENS_COM_PERIGO = ['Salvar', 'Descartar alterações'];
+const ITEMS_WITH_PERIGO = ['Salvar', 'Descartar alterações'];
 
 const meta = {
   title: 'UI/Menubar/Variants',
@@ -91,9 +91,9 @@ export const Default: Story = {
       // O contraste de 4.5:1 que o axe mede entre o texto do item e o fundo do
       // painel só significa alguma coisa se o fundo for opaco: sobre um painel
       // translúcido a razão medida é a do que estiver por baixo.
-      const fundo = getComputedStyle(menu).backgroundColor;
-      await expect(fundo).not.toBe('rgba(0, 0, 0, 0)');
-      await expect(fundo.startsWith('rgba(')).toBe(false);
+      const background = getComputedStyle(menu).backgroundColor;
+      await expect(background).not.toBe('rgba(0, 0, 0, 0)');
+      await expect(background.startsWith('rgba(')).toBe(false);
     });
   },
 };
@@ -111,7 +111,7 @@ export const Destructive: Story = {
   },
   render: () => ({
     components: parts,
-    setup: () => ({ perigo: ITENS_COM_PERIGO }),
+    setup: () => ({ perigo: ITEMS_WITH_PERIGO }),
     template: `
       <div style="contain: layout; min-height: 260px;">
         <Menubar default-value="file">
@@ -130,8 +130,8 @@ export const Destructive: Story = {
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const canvas = within(menu);
-    const neutro = canvas.getByRole('menuitem', { name: ITENS_COM_PERIGO[0] });
-    const perigoso = canvas.getByRole('menuitem', { name: ITENS_COM_PERIGO[1] });
+    const neutro = canvas.getByRole('menuitem', { name: ITEMS_WITH_PERIGO[0] });
+    const perigoso = canvas.getByRole('menuitem', { name: ITEMS_WITH_PERIGO[1] });
 
     await step('A variante chega ao markup', async () => {
       await expect(perigoso.getAttribute('data-variant')).toBe('destructive');

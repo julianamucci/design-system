@@ -51,7 +51,7 @@ const sharedComponents = {
   Button,
 };
 
-const PAINEL_SIMPLES = `
+const SIMPLE_PANEL = `
           <PopoverContent side="bottom" align="start">
             <PopoverHeader>
               <PopoverTitle>Configuracoes de exibição</PopoverTitle>
@@ -77,7 +77,7 @@ export const Closed: Story = {
           <PopoverTrigger as-child>
             <Button variant="outline">Abrir popover</Button>
           </PopoverTrigger>
-          ${PAINEL_SIMPLES}
+          ${SIMPLE_PANEL}
         </Popover>
       </div>
     `,
@@ -123,7 +123,7 @@ export const Open: Story = {
           <PopoverTrigger as-child>
             <Button variant="outline">Abrir popover</Button>
           </PopoverTrigger>
-          ${PAINEL_SIMPLES}
+          ${SIMPLE_PANEL}
         </Popover>
       </div>
     `,
@@ -236,7 +236,7 @@ export const Controlled: Story = {
           <PopoverTrigger as-child>
             <Button variant="outline">Trigger</Button>
           </PopoverTrigger>
-          ${PAINEL_SIMPLES}
+          ${SIMPLE_PANEL}
         </Popover>
       </div>
     `,
@@ -294,7 +294,7 @@ export const Modal: Story = {
           <PopoverTrigger as-child>
             <Button variant="outline">Abrir modal</Button>
           </PopoverTrigger>
-          ${PAINEL_SIMPLES}
+          ${SIMPLE_PANEL}
         </Popover>
       </div>
     `,

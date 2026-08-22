@@ -115,20 +115,20 @@ export function stateBorders(el: HTMLInputElement) {
   const anterior = doc.activeElement as HTMLElement | null;
 
   return noTransicao(el, () => {
-    const repouso = getComputedStyle(el);
+    const rest = getComputedStyle(el);
     const measurementRest = {
-      cor: repouso.borderTopColor,
-      espessura: repouso.borderTopWidth,
-      estilo: repouso.borderTopStyle,
-      sombra: repouso.boxShadow,
+      cor: rest.borderTopColor,
+      espessura: rest.borderTopWidth,
+      estilo: rest.borderTopStyle,
+      sombra: rest.boxShadow,
     };
 
     el.focus();
-    const foco = getComputedStyle(el);
+    const focus = getComputedStyle(el);
     const measurementFocus = {
-      cor: foco.borderTopColor,
-      sombra: foco.boxShadow,
-      contorno: `${foco.outlineWidth} ${foco.outlineStyle}`,
+      cor: focus.borderTopColor,
+      sombra: focus.boxShadow,
+      contorno: `${focus.outlineWidth} ${focus.outlineStyle}`,
       casaFocusVisible: el.matches(':focus-visible'),
     };
     el.blur();
@@ -146,8 +146,8 @@ export function stateBorders(el: HTMLInputElement) {
     const host = (el.parentElement ?? doc.body) as HTMLElement;
 
     return {
-      repouso: measurementRest,
-      foco: measurementFocus,
+      rest: measurementRest,
+      focus: measurementFocus,
       hover: {
         declarado: declaradoHover,
         resolvido: declaradoHover ? resolveColor(host, declaradoHover) : null,
@@ -169,7 +169,7 @@ export function stateBorders(el: HTMLInputElement) {
 export function focusHalo(
   el: HTMLInputElement,
 ): { espessura: number; alfa: number; cor: string } | null {
-  const sombra = stateBorders(el).foco.sombra;
+  const sombra = stateBorders(el).focus.sombra;
   if (!sombra || sombra === 'none') return null;
   const cor = /rgba?\([^)]+\)/.exec(sombra)?.[0];
   if (!cor) return null;
@@ -193,27 +193,27 @@ export function contrastesNosDoisModos(raiz: HTMLElement) {
   const campo = fieldOf(raiz);
   if (!campo) return null;
 
-  const medir = (modo: 'claro' | 'escuro') => {
+  const measure = (modo: 'claro' | 'escuro') => {
     const m = measureInput(raiz);
     if (!m.presente) return null;
     return {
       modo,
       texto: m.contraste.textoNoFundo?.ratio ?? null,
       placeholder: m.contraste.placeholderNoFundo?.ratio ?? null,
-      borda: m.contraste.bordaNoFundo?.ratio ?? null,
+      border: m.contraste.bordaNoFundo?.ratio ?? null,
     };
   };
 
-  const claro = medir('claro');
+  const light = measure('claro');
   const desfazer = darkLigarTheme(raiz.ownerDocument);
   let escuro;
   try {
-    escuro = noTransicao(campo, () => medir('escuro'));
+    escuro = noTransicao(campo, () => measure('escuro'));
   } finally {
     desfazer();
   }
-  return [claro, escuro].filter(Boolean) as {
-    modo: string; texto: number | null; placeholder: number | null; borda: number | null;
+  return [light, escuro].filter(Boolean) as {
+    modo: string; texto: number | null; placeholder: number | null; border: number | null;
   }[];
 }
 
@@ -232,9 +232,9 @@ export function corDoToken(raiz: HTMLElement, token: string): string | null {
 
 /** Razão WCAG entre a borda em repouso e o fundo — o alvo de 3:1 (1.4.11). */
 export function borderContrast(el: HTMLElement) {
-  const fundo = backgroundEffective(el);
-  if (!fundo) return null;
-  return noTransicao(el, () => ratio(getComputedStyle(el).borderTopColor, fundo));
+  const background = backgroundEffective(el);
+  if (!background) return null;
+  return noTransicao(el, () => ratio(getComputedStyle(el).borderTopColor, background));
 }
 
 // ─── Medição de um campo ──────────────────────────────────────────────────────
@@ -248,7 +248,7 @@ export function measureInput(raiz: HTMLElement) {
   const csPlaceholder = getComputedStyle(campo, '::placeholder');
   const fileCsButton = getComputedStyle(campo, '::file-selector-button');
   const caixa = campo.getBoundingClientRect();
-  const fundo = backgroundEffective(campo);
+  const background = backgroundEffective(campo);
 
   const describedby = campo.getAttribute('aria-describedby');
   const targetsDescribed = describedby
@@ -307,24 +307,24 @@ export function measureInput(raiz: HTMLElement) {
       boxSizing: cs.boxSizing,
     },
     estado: {
-      fundo: cs.backgroundColor,
-      backgroundEffective: fundo,
+      background: cs.backgroundColor,
+      backgroundEffective: background,
       cor: cs.color,
       opacidade: cs.opacity,
       cursor: cs.cursor,
       corDoPlaceholder: csPlaceholder.color || null,
       /** `::file-selector-button` só existe em `type="file"`; nos demais vem herdado. */
       botaoDeArquivo: {
-        fundo: fileCsButton.backgroundColor || null,
+        background: fileCsButton.backgroundColor || null,
         cor: fileCsButton.color || null,
         raio: fileCsButton.borderTopLeftRadius || null,
         espessuraDaBorda: fileCsButton.borderTopWidth || null,
       },
-      bordas: stateBorders(campo),
+      borders: stateBorders(campo),
     },
     contraste: {
-      textoNoFundo: fundo ? ratio(cs.color, fundo) : null,
-      placeholderNoFundo: fundo && csPlaceholder.color ? ratio(csPlaceholder.color, fundo) : null,
+      textoNoFundo: background ? ratio(cs.color, background) : null,
+      placeholderNoFundo: background && csPlaceholder.color ? ratio(csPlaceholder.color, background) : null,
       bordaNoFundo: borderContrast(campo),
     },
   };
@@ -361,9 +361,9 @@ export function darkMeasure(raiz: HTMLElement, cenario: string) {
     // desligá-la a sonda leria a cor do tema CLARO e relataria uma borda que
     // não escurece.
     return noTransicao(campo, () => {
-      const medida = measureInput(alvo);
-      if (!medida.presente) return null;
-      return { estado: medida.estado, contraste: medida.contraste };
+      const measurement = measureInput(alvo);
+      if (!measurement.presente) return null;
+      return { estado: measurement.estado, contraste: measurement.contraste };
     });
   } finally {
     desfazer();
@@ -378,7 +378,7 @@ export function darkMeasure(raiz: HTMLElement, cenario: string) {
  */
 export function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[]) {
   const registro = {
-    claro: measureInputs(raiz, cenarios),
+    light: measureInputs(raiz, cenarios),
     escuro: darkMeasure(raiz, cenarios[0]),
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);

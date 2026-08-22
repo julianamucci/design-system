@@ -18,8 +18,8 @@
  */
 export function firstFraction(canvasElement: HTMLElement, horizontal = true): number {
   const panels = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
-  const medidas = panels.map((p) =>
+  const measurements = panels.map((p) =>
     horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height,
   );
-  return medidas[0] / medidas.reduce((a, b) => a + b, 0);
+  return measurements[0] / measurements.reduce((a, b) => a + b, 0);
 }

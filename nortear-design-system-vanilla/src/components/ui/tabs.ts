@@ -211,7 +211,7 @@ export function createTabs(options: TabsOptions): HTMLElement {
     const currentIdx = idxFocado !== -1 ? idxFocado : items.findIndex(i => i.value === activeValue);
     if (currentIdx === -1) return;
 
-    const irPara = (idx: number) => {
+    const irTo = (idx: number) => {
       e.preventDefault();
       const item = items[idx];
       triggerMap.get(item.value)?.focus();
@@ -221,13 +221,13 @@ export function createTabs(options: TabsOptions): HTMLElement {
     };
 
     if (e.key === nextKey) {
-      irPara((currentIdx + 1) % items.length);
+      irTo((currentIdx + 1) % items.length);
     } else if (e.key === prevKey) {
-      irPara((currentIdx - 1 + items.length) % items.length);
+      irTo((currentIdx - 1 + items.length) % items.length);
     } else if (e.key === 'Home') {
-      irPara(0);
+      irTo(0);
     } else if (e.key === 'End') {
-      irPara(items.length - 1);
+      irTo(items.length - 1);
     }
   });
 

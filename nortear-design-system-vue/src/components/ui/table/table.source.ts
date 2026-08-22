@@ -13,7 +13,7 @@ import { indentar, vueSnippet, type SourceTransform } from '@/lib/story-source';
 
 export type TableArgs = {
   captionVisivel: boolean;
-  comRodape: boolean;
+  withFooter: boolean;
 };
 
 /**
@@ -86,13 +86,13 @@ const FOOTER = `<TableFooter>
 const TOTAL = `const total = 'R$ 1.400,00'`;
 
 /** A legenda nunca sai do DOM: é ela que dá nome à tabela para o leitor de tela. */
-function legenda(texto: string, visivel = false): string {
-  return `<TableCaption${visivel ? '' : ' class="nds-sr-only"'}>${texto}</TableCaption>`;
+function legenda(texto: string, visible = false): string {
+  return `<TableCaption${visible ? '' : ' class="nds-sr-only"'}>${texto}</TableCaption>`;
 }
 
 /** Envolve as seções na raiz, cada uma um nível para dentro. */
-function tabela(...secoes: string[]): string {
-  return `<Table>\n${secoes.map((secao) => indentar(secao)).join('\n')}\n</Table>`;
+function tabela(...sections: string[]): string {
+  return `<Table>\n${sections.map((secao) => indentar(secao)).join('\n')}\n</Table>`;
 }
 
 /** Monta o SFC já com o import derivado da marcação. */
@@ -107,14 +107,14 @@ function snippet(estado: string, markup: string, importsExtra = ''): string {
  */
 export const tableSource: SourceTransform<TableArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const comRodape = args.comRodape !== false;
-  const secoes = [
+  const withFooter = args.withFooter !== false;
+  const sections = [
     legenda('Lista de faturas recentes', args.captionVisivel === true),
     HEADER,
     BODY,
   ];
-  if (comRodape) secoes.push(FOOTER);
-  return snippet(comRodape ? `${INVOICES}\n${TOTAL}` : INVOICES, tabela(...secoes));
+  if (withFooter) sections.push(FOOTER);
+  return snippet(withFooter ? `${INVOICES}\n${TOTAL}` : INVOICES, tabela(...sections));
 };
 
 /**
@@ -142,7 +142,7 @@ export function tableWithFooterSource(): string {
  * `display: none` tiraria também da árvore de acessibilidade.
  */
 export function tableCaptionInvisivelSource(): string {
-  const cabecalho = `<TableHeader>
+  const header = `<TableHeader>
   <TableRow>
     <TableHead>Fatura</TableHead>
     <TableHead>Status</TableHead>
@@ -158,7 +158,7 @@ export function tableCaptionInvisivelSource(): string {
 </TableBody>`;
   const markup = `<div class="nds-stack" data-spacing="sm">
   <h2 class="nds-text-h3 nds-m-0">Faturas recentes</h2>
-${indentar(tabela(legenda('Lista de faturas recentes'), cabecalho, corpo))}
+${indentar(tabela(legenda('Lista de faturas recentes'), header, corpo))}
 </div>`;
   return snippet(INVOICES, markup);
 }
@@ -170,7 +170,7 @@ ${indentar(tabela(legenda('Lista de faturas recentes'), cabecalho, corpo))}
  * controles indistinguíveis na lista do leitor de tela.
  */
 export function tableWithActionsSource(): string {
-  const cabecalho = `<TableHeader>
+  const header = `<TableHeader>
   <TableRow>
     <TableHead>Fatura</TableHead>
     <TableHead>Status</TableHead>
@@ -194,7 +194,7 @@ export function tableWithActionsSource(): string {
 </TableBody>`;
   return snippet(
     INVOICES,
-    tabela(legenda('Faturas recentes com ações'), cabecalho, corpo),
+    tabela(legenda('Faturas recentes com ações'), header, corpo),
     `import { Button } from '@/components/ui/button'`,
   );
 }
@@ -205,7 +205,7 @@ export function tableWithActionsSource(): string {
  * rolagem também existe para quem navega sem mouse (WCAG 2.1.1).
  */
 export function tableScrollHorizontalSource(): string {
-  const cabecalho = `<TableHeader>
+  const header = `<TableHeader>
   <TableRow>
     <TableHead>Fatura</TableHead>
     <TableHead v-for="mes in meses" :key="mes">{{ mes }}</TableHead>
@@ -226,7 +226,7 @@ export function tableScrollHorizontalSource(): string {
 )`;
   return snippet(
     `${INVOICES}\n\n${meses}`,
-    tabela(legenda('Faturas por mês de competência'), cabecalho, corpo),
+    tabela(legenda('Faturas por mês de competência'), header, corpo),
   );
 }
 

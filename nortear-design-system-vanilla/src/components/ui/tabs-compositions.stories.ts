@@ -148,13 +148,13 @@ export const WithIconsInTrigger: Story = {
     });
 
     await step('Cada ícone é decorativo, desenhado e transparente ao ponteiro', async () => {
-      const icones = Array.from(canvasElement.querySelectorAll<SVGSVGElement>('[role="tab"] svg'));
-      await expect(icones).toHaveLength(3);
-      await expect(icones.map((s) => s.getAttribute('aria-hidden'))).toEqual(['true', 'true', 'true']);
+      const icons = Array.from(canvasElement.querySelectorAll<SVGSVGElement>('[role="tab"] svg'));
+      await expect(icons).toHaveLength(3);
+      await expect(icons.map((s) => s.getAttribute('aria-hidden'))).toEqual(['true', 'true', 'true']);
       // svg sem filho é ícone que não desenhou nada.
-      await expect(icones.every((s) => s.childElementCount > 0)).toBe(true);
+      await expect(icons.every((s) => s.childElementCount > 0)).toBe(true);
       // O ícone não pode interceptar o clique destinado à aba.
-      await expect(icones.map((s) => getComputedStyle(s).pointerEvents)).toEqual(['none', 'none', 'none']);
+      await expect(icons.map((s) => getComputedStyle(s).pointerEvents)).toEqual(['none', 'none', 'none']);
     });
   },
 };
@@ -222,7 +222,7 @@ export const WithBadgeInTrigger: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const abas = canvas.getAllByRole('tab');
-    const entrada = canvas.getByRole('tab', { name: /^Caixa de entrada/ });
+    const entry = canvas.getByRole('tab', { name: /^Caixa de entrada/ });
     const spam = canvas.getByRole('tab', { name: /^Spam/ });
 
     await step('O badge não vira um segundo alvo de foco', async () => {
@@ -238,8 +238,8 @@ export const WithBadgeInTrigger: Story = {
       await ativar(spam);
       await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', spam.id);
       // Devolve o conjunto ao estado de montagem para o próximo replay.
-      await ativar(entrada);
-      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', entrada.id);
+      await ativar(entry);
+      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', entry.id);
     });
   },
 };
@@ -284,8 +284,8 @@ export const Vertical: Story = {
     await step('O conjunto se declara vertical e se desenha empilhado', async () => {
       await expect(raiz).toHaveAttribute('data-orientation', 'vertical');
       await expect(lista).toHaveAttribute('aria-orientation', 'vertical');
-      const bordas = new Set(abas.map((a) => Math.round(a.getBoundingClientRect().left)));
-      await expect(bordas.size).toBe(1);
+      const borders = new Set(abas.map((a) => Math.round(a.getBoundingClientRect().left)));
+      await expect(borders.size).toBe(1);
       await expect(canvas.getByRole('tabpanel').getBoundingClientRect().left)
         .toBeGreaterThanOrEqual(lista.getBoundingClientRect().right);
     });

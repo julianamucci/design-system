@@ -7,8 +7,8 @@
   // estava 12 ícones atrás do pacote (1991 contra 2003).
   import {
     CATALOGO_LUCIDE,
-    NOMES_DE_ICONE,
-    montarSvgDoIcone,
+    ICON_NAMES,
+    iconMountSvg,
   } from '@shared/primitives/lucide-catalog';
   import { Badge } from '@/components/ui/badge';
   import LanguageSwitcher from '@/components/product/LanguageSwitcher.svelte';
@@ -21,7 +21,7 @@
 
   // ─── Catálogo de ícones ────────────────────────────────────────────────────
 
-  const ALL_ICON_NAMES: string[] = NOMES_DE_ICONE;
+  const ALL_ICON_NAMES: string[] = ICON_NAMES;
 
   // Pré-constrói o SVG INTEIRO de cada ícone uma vez — evita {#each} aninhado.
   //
@@ -32,7 +32,7 @@
   // reconhece o namespace e o desenho passa.
   const ICON_SVG: Record<string, string> = {};
   for (const name of ALL_ICON_NAMES) {
-    ICON_SVG[name] = montarSvgDoIcone(CATALOGO_LUCIDE[name], 'nds-icon-lg');
+    ICON_SVG[name] = iconMountSvg(CATALOGO_LUCIDE[name], 'nds-icon-lg');
   }
 
   // ─── i18n ──────────────────────────────────────────────────────────────────

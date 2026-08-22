@@ -154,9 +154,9 @@ export function createCommand(options: CommandOptions): HTMLElement {
   // Id estável por item (índice na lista ORIGINAL, não na filtrada): é o que o
   // `aria-activedescendant` aponta, e ele não pode mudar de dono a cada filtro.
   const idDoItem = new Map<CommandItem, string>();
-  items.forEach((entrada, i) => {
-    if (entrada.type === 'separator') return;
-    idDoItem.set(entrada, `${_cmdId}-opt-${i}`);
+  items.forEach((entry, i) => {
+    if (entry.type === 'separator') return;
+    idDoItem.set(entry, `${_cmdId}-opt-${i}`);
   });
 
   // Search input wrapper
@@ -268,14 +268,14 @@ export function createCommand(options: CommandOptions): HTMLElement {
     const q = query.toLowerCase();
     const filtrados: ItemFiltrado[] = [];
     let bloco = 0;
-    for (const entrada of items) {
-      if (entrada.type === 'separator') {
+    for (const entry of items) {
+      if (entry.type === 'separator') {
         bloco += 1;
         continue;
       }
       const casa =
-        !q || entrada.label.toLowerCase().includes(q) || entrada.value.toLowerCase().includes(q);
-      if (casa) filtrados.push({ item: entrada, bloco });
+        !q || entry.label.toLowerCase().includes(q) || entry.value.toLowerCase().includes(q);
+      if (casa) filtrados.push({ item: entry, bloco });
     }
 
     const noResult = filtrados.length === 0;

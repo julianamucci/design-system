@@ -24,9 +24,9 @@ type Story = StoryObj;
  * Interactions parte do estado que a rodada anterior deixou; um clique cego
  * inverteria o resultado a cada rodada.
  */
-async function definir(botao: HTMLElement, ligado: boolean): Promise<void> {
-  if ((botao.getAttribute('aria-pressed') === 'true') !== ligado) {
-    await userEvent.click(botao);
+async function definir(button: HTMLElement, ligado: boolean): Promise<void> {
+  if ((button.getAttribute('aria-pressed') === 'true') !== ligado) {
+    await userEvent.click(button);
   }
 }
 
@@ -55,7 +55,7 @@ export const Single: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const esquerda = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
-    const centro = canvas.getByRole('button', { name: 'Centralizar' });
+    const center = canvas.getByRole('button', { name: 'Centralizar' });
 
     await step('O modo exclusivo nasce com exatamente um item ativo', async () => {
       const pressionados = canvas
@@ -65,8 +65,8 @@ export const Single: Story = {
     });
 
     await step('functional.item1 — escolher um item desliga o anterior', async () => {
-      await definir(centro, true);
-      await expect(centro).toHaveAttribute('aria-pressed', 'true');
+      await definir(center, true);
+      await expect(center).toHaveAttribute('aria-pressed', 'true');
       await expect(esquerda).toHaveAttribute('aria-pressed', 'false');
       await expect(esquerda).toHaveAttribute('data-state', 'off');
       // Volta ao estado inicial para a próxima rodada começar igual a esta.
@@ -79,7 +79,7 @@ export const Single: Story = {
       const grupo = canvas.getByRole('toolbar');
       await expect(grupo).toHaveAttribute('data-variant', 'outline');
       await expect(parseFloat(getComputedStyle(grupo).borderTopWidth)).toBeGreaterThan(0);
-      await expect(parseFloat(getComputedStyle(centro).borderTopLeftRadius)).toBe(0);
+      await expect(parseFloat(getComputedStyle(center).borderTopLeftRadius)).toBe(0);
     });
   },
 };

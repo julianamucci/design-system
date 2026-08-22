@@ -91,26 +91,26 @@ export function measureSlides(raiz: HTMLElement): SlideMeasurement[] {
  * ele, um componente que marcasse sempre o primeiro passaria.
  */
 export function reprovasDeEscala(
-  medidas: SlideMeasurement[],
+  measurements: SlideMeasurement[],
   indiceEsperado: number,
 ): CarrosselFailure[] {
   const failures: CarrosselFailure[] = [];
 
-  if (medidas.length === 0) {
+  if (measurements.length === 0) {
     return [{ onde: 'trilho', motivo: 'nenhum slide encontrado — a medição não chegou ao componente' }];
   }
 
-  const noState = medidas.filter((m) => m.estado === null);
+  const noState = measurements.filter((m) => m.estado === null);
   if (noState.length > 0) {
     failures.push({
       onde: 'trilho',
-      motivo: `${noState.length} de ${medidas.length} slides sem estado ativo declarado — a escala não tem do que depender`,
+      motivo: `${noState.length} de ${measurements.length} slides sem estado ativo declarado — a escala não tem do que depender`,
     });
     // Sem estado não há o que comparar; as reprovas abaixo seriam ruído.
     return failures;
   }
 
-  const ativos = medidas.filter((m) => m.estado === 'true');
+  const ativos = measurements.filter((m) => m.estado === 'true');
   if (ativos.length !== 1) {
     failures.push({
       onde: 'trilho',
@@ -124,7 +124,7 @@ export function reprovasDeEscala(
     });
   }
 
-  for (const m of medidas) {
+  for (const m of measurements) {
     if (m.larguraDeLayout === 0) {
       failures.push({ onde: `slide ${m.indice}`, motivo: 'caixa de layout com largura zero' });
       continue;
@@ -168,19 +168,19 @@ export function pontoDeParadaIntacto(raiz: HTMLElement): CarrosselFailure[] {
   if (slides.length < 3) return [];
 
   const vertical = slides[0].getAttribute('data-orientation') === 'vertical';
-  const inicio = (el: HTMLElement) => (vertical ? el.offsetTop : el.offsetLeft);
+  const start = (el: HTMLElement) => (vertical ? el.offsetTop : el.offsetLeft);
 
-  const passos: number[] = [];
+  const steps: number[] = [];
   for (let i = 1; i < slides.length; i++) {
-    passos.push(inicio(slides[i]) - inicio(slides[i - 1]));
+    steps.push(start(slides[i]) - start(slides[i - 1]));
   }
 
-  const primeiro = passos[0];
-  const desiguais = passos.filter((p) => Math.abs(p - primeiro) > 1);
+  const primeiro = steps[0];
+  const desiguais = steps.filter((p) => Math.abs(p - primeiro) > 1);
   if (desiguais.length > 0) {
     return [{
       onde: 'trilho',
-      motivo: `passos de layout desiguais (${passos.join(', ')}) — a escala saiu da pintura e alcançou o layout, e o ponto de parada da rolagem foi junto`,
+      motivo: `passos de layout desiguais (${steps.join(', ')}) — a escala saiu da pintura e alcançou o layout, e o ponto de parada da rolagem foi junto`,
     }];
   }
   return [];
@@ -210,9 +210,9 @@ export async function escalaSobMovimentoReduzido(
   try {
     html.setAttribute('data-reduced-motion', 'true');
     await aguardar(() => {
-      const vizinhos = measureSlides(raiz).filter((m) => m.estado === 'false');
-      if (vizinhos.length === 0) throw new Error('nenhum vizinho para medir');
-      for (const v of vizinhos) {
+      const neighbours = measureSlides(raiz).filter((m) => m.estado === 'false');
+      if (neighbours.length === 0) throw new Error('nenhum vizinho para medir');
+      for (const v of neighbours) {
         if (Math.abs(v.escala - 1) > EPSILON) {
           throw new Error(`slide ${v.indice} ainda em ${v.escala.toFixed(3)}`);
         }
@@ -376,7 +376,7 @@ export async function feedbackDePointerReprovas(
 export function controlReach(el: HTMLElement): CarrosselFailure[] {
   const failures: CarrosselFailure[] = [];
   const doc = el.ownerDocument;
-  const janela = doc.defaultView;
+  const window = doc.defaultView;
   const raiz = el.closest('.nds-carousel') ?? doc.body;
   const controle = el.getBoundingClientRect();
 
@@ -386,16 +386,16 @@ export function controlReach(el: HTMLElement): CarrosselFailure[] {
   // atravessa a seta de avanço no papel — mas nada daquilo é pintado, porque o
   // recorte corta. O que pode encostar no controle é só o que está à vista.
   const recorte = raiz.querySelector<HTMLElement>('[data-slot="carousel-content"]');
-  const limite = (recorte ?? (raiz as HTMLElement)).getBoundingClientRect();
+  const limit = (recorte ?? (raiz as HTMLElement)).getBoundingClientRect();
 
   const slides = Array.from(raiz.querySelectorAll<HTMLElement>('[data-slot="carousel-item"]'));
   for (const [i, slide] of slides.entries()) {
     const conteudo = (slide.firstElementChild as HTMLElement | null) ?? slide;
     const caixa = conteudo.getBoundingClientRect();
-    const esquerda = Math.max(caixa.left, limite.left);
-    const direita = Math.min(caixa.right, limite.right);
-    const topo = Math.max(caixa.top, limite.top);
-    const base = Math.min(caixa.bottom, limite.bottom);
+    const esquerda = Math.max(caixa.left, limit.left);
+    const direita = Math.min(caixa.right, limit.right);
+    const topo = Math.max(caixa.top, limit.top);
+    const base = Math.min(caixa.bottom, limit.bottom);
     if (direita <= esquerda || base <= topo) continue; // inteiro fora do recorte
 
     const sobrepoeX = direita > controle.left + 0.5 && esquerda < controle.right - 0.5;
@@ -410,9 +410,9 @@ export function controlReach(el: HTMLElement): CarrosselFailure[] {
 
   const { centroX, centroY } = measureControl(el);
   const inWindow =
-    !!janela &&
+    !!window &&
     centroX >= 0 && centroY >= 0 &&
-    centroX <= janela.innerWidth && centroY <= janela.innerHeight;
+    centroX <= window.innerWidth && centroY <= window.innerHeight;
 
   if (inWindow) {
     const atingido = doc.elementFromPoint(centroX, centroY);

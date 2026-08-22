@@ -62,7 +62,7 @@ function limitar(valor: number, min: number, max: number): number {
 
 export function createResizablePanel(options: ResizablePanelOptions): DestroyableElement {
   const { direction = 'horizontal', panels, disabled = false, withHandle = false, onLayout } = options;
-  const isHorizontal = direction === 'horizontal';
+  const horizontalIs = direction === 'horizontal';
   const count = panels.length;
 
   /** Encerra o arraste em curso, se houver. `null` fora de arraste. */
@@ -111,12 +111,12 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
   function anunciar(i: number): void {
     const h = handleEls[i];
     if (!h) return;
-    const soma = (sizes[i] ?? 0) + (sizes[i + 1] ?? 0);
+    const sum = (sizes[i] ?? 0) + (sizes[i + 1] ?? 0);
     h.setAttribute('aria-valuenow', String(Math.round(sizes[i])));
     h.setAttribute('aria-valuemin', String(Math.round(minimumOf(i))));
     // O teto não é o `maxSize` do painel: o vizinho também tem um mínimo, e é o
     // menor dos dois que o gesto respeita.
-    h.setAttribute('aria-valuemax', String(Math.round(Math.min(maximoDe(i), soma - minimumOf(i + 1)))));
+    h.setAttribute('aria-valuemax', String(Math.round(Math.min(maximoDe(i), sum - minimumOf(i + 1)))));
   }
 
   /**
@@ -125,13 +125,13 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
    * layout inteiro.
    */
   function aplicar(i: number, deltaPct: number, base: number[]): void {
-    const soma = (base[i] ?? 0) + (base[i + 1] ?? 0);
-    const teto = Math.min(maximoDe(i), soma - minimumOf(i + 1));
-    const piso = Math.max(minimumOf(i), soma - maximoDe(i + 1));
+    const sum = (base[i] ?? 0) + (base[i + 1] ?? 0);
+    const teto = Math.min(maximoDe(i), sum - minimumOf(i + 1));
+    const piso = Math.max(minimumOf(i), sum - maximoDe(i + 1));
     if (piso > teto) return;
 
     sizes[i] = limitar(base[i] + deltaPct, piso, teto);
-    sizes[i + 1] = soma - sizes[i];
+    sizes[i + 1] = sum - sizes[i];
     applySize(i);
     applySize(i + 1);
     anunciar(i);
@@ -160,7 +160,7 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
       const handle = document.createElement('div');
       handle.dataset.slot = 'resizable-handle';
       handle.setAttribute('role', 'separator');
-      handle.setAttribute('aria-orientation', isHorizontal ? 'vertical' : 'horizontal');
+      handle.setAttribute('aria-orientation', horizontalIs ? 'vertical' : 'horizontal');
       handle.setAttribute('tabindex', '0');
       handle.className = 'nds-resizable-handle';
       const rotulo = labelOf(i);
@@ -202,7 +202,7 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
       handle.addEventListener('mousedown', (e) => {
         if (disabled) return;
         e.preventDefault();
-        const inicio = isHorizontal ? e.clientX : e.clientY;
+        const start = horizontalIs ? e.clientX : e.clientY;
         // A conta parte SEMPRE do tamanho do mousedown: somar incrementos a cada
         // mousemove acumula o erro e o divisor descola do cursor.
         const base = [...sizes];
@@ -210,10 +210,10 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
 
         const onMove = (ev: MouseEvent) => {
           if (!arrastando) return;
-          const totalPx = isHorizontal ? root.offsetWidth : root.offsetHeight;
+          const totalPx = horizontalIs ? root.offsetWidth : root.offsetHeight;
           if (!totalPx) return;
-          const pos = isHorizontal ? ev.clientX : ev.clientY;
-          aplicar(i, ((pos - inicio) / totalPx) * 100, base);
+          const pos = horizontalIs ? ev.clientX : ev.clientY;
+          aplicar(i, ((pos - start) / totalPx) * 100, base);
         };
 
         const onUp = () => {
@@ -243,15 +243,15 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
        */
       handle.addEventListener('keydown', (e) => {
         if (disabled) return;
-        const soma = (sizes[i] ?? 0) + (sizes[i + 1] ?? 0);
+        const sum = (sizes[i] ?? 0) + (sizes[i + 1] ?? 0);
         let delta = 0;
         switch (e.key) {
-          case 'ArrowRight': if (isHorizontal) delta = STEP_KEYBOARD; break;
-          case 'ArrowLeft':  if (isHorizontal) delta = -STEP_KEYBOARD; break;
-          case 'ArrowDown':  if (!isHorizontal) delta = STEP_KEYBOARD; break;
-          case 'ArrowUp':    if (!isHorizontal) delta = -STEP_KEYBOARD; break;
+          case 'ArrowRight': if (horizontalIs) delta = STEP_KEYBOARD; break;
+          case 'ArrowLeft':  if (horizontalIs) delta = -STEP_KEYBOARD; break;
+          case 'ArrowDown':  if (!horizontalIs) delta = STEP_KEYBOARD; break;
+          case 'ArrowUp':    if (!horizontalIs) delta = -STEP_KEYBOARD; break;
           case 'Home': delta = minimumOf(i) - sizes[i]; break;
-          case 'End':  delta = Math.min(maximoDe(i), soma - minimumOf(i + 1)) - sizes[i]; break;
+          case 'End':  delta = Math.min(maximoDe(i), sum - minimumOf(i + 1)) - sizes[i]; break;
           case 'Enter': delta = (panels[i].defaultSize ?? sizes[i]) - sizes[i]; break;
           default: return;
         }

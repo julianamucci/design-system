@@ -22,7 +22,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
  * painel (onze itens, no CSS): abre com o ano corrente no meio e rola livre
  * para os dois lados.
  */
-const ANOS_PARA_CADA_LADO = 100
+const EACH_SIDE_YEARS = 100
 
 // Um desenho só para os dois seletores da legenda. A lib envolve o <select> num
 // <span> e desenha ao lado um rótulo `aria-hidden` com chevron, deixando o
@@ -70,9 +70,9 @@ function Calendar({
   const yearHasSelector = captionLayout === "dropdown" || captionLayout === "dropdown-years"
   const hoje = new Date()
   const startDefault =
-    startMonth ?? (yearHasSelector ? new Date(hoje.getFullYear() - ANOS_PARA_CADA_LADO, 0, 1) : undefined)
+    startMonth ?? (yearHasSelector ? new Date(hoje.getFullYear() - EACH_SIDE_YEARS, 0, 1) : undefined)
   const endDefault =
-    endMonth ?? (yearHasSelector ? new Date(hoje.getFullYear() + ANOS_PARA_CADA_LADO, 11, 31) : undefined)
+    endMonth ?? (yearHasSelector ? new Date(hoje.getFullYear() + EACH_SIDE_YEARS, 11, 31) : undefined)
 
   return (
     <DayPicker

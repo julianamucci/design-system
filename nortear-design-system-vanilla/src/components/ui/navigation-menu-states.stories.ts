@@ -139,9 +139,9 @@ export const Open: Story = {
       // O contraste de 4.5:1 que o axe mede entre o texto do destino e o fundo
       // do painel só significa alguma coisa se o fundo for opaco: sobre um
       // painel translúcido a razão medida é a do que estiver por baixo.
-      const fundo = getComputedStyle(painel).backgroundColor;
-      await expect(fundo).not.toBe('rgba(0, 0, 0, 0)');
-      await expect(fundo.startsWith('rgba(')).toBe(false);
+      const background = getComputedStyle(painel).backgroundColor;
+      await expect(background).not.toBe('rgba(0, 0, 0, 0)');
+      await expect(background.startsWith('rgba(')).toBe(false);
     });
 
     await step('A barra continua aberta ao final', async () => {
@@ -330,10 +330,10 @@ export const ListenerCleanup: Story = {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ProbeResult;
+    let probe!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
-      sonda = await sondarOuvintes({
+      probe = await sondarOuvintes({
         host: host as HTMLElement,
         montar: () => createNavigationMenu([
           {
@@ -350,7 +350,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await checkLimpeza(sonda);
+      await checkLimpeza(probe);
     });
   },
 };

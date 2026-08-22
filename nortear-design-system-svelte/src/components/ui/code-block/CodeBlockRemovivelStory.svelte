@@ -9,14 +9,14 @@
 	import { Button } from "@/components/ui/button";
 
 	let { code }: { code: string } = $props();
-	let visivel = $state(true);
+	let visible = $state(true);
 </script>
 
 <div class="nds-stack" data-spacing="md">
-	{#if visivel}
+	{#if visible}
 		<CodeBlock {code} language="ts" />
 	{/if}
-	<Button variant="outline" onclick={() => (visivel = !visivel)}>
-		{visivel ? "Remover o bloco" : "Restaurar o bloco"}
+	<Button variant="outline" onclick={() => (visible = !visible)}>
+		{visible ? "Remover o bloco" : "Restaurar o bloco"}
 	</Button>
 </div>

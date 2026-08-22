@@ -155,7 +155,7 @@ export const Playground: Story = {
       rotulos: LABELS,
       // A forma do valor inicial acompanha o modo: string no exclusivo, lista
       // no combinado. É a mesma regra que o componente aplica ao emitir.
-      valorInicial: args.type === 'single' ? 'left' : ['left'],
+      valueInitial: args.type === 'single' ? 'left' : ['left'],
     },
     template: `
       <div
@@ -165,7 +165,7 @@ export const Playground: Story = {
         [orientation]="orientation"
         [spacing]="spacing"
         [disabled]="disabled"
-        [defaultValue]="valorInicial"
+        [defaultValue]="valueInitial"
         [attr.aria-label]="ariaLabel"
         (valueChange)="onValueChange($event)"
       >
@@ -185,7 +185,7 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
     const grupo = canvas.getByRole('toolbar');
     const esquerda = canvas.getByRole('button', { name: LABELS.left });
-    const centro = canvas.getByRole('button', { name: LABELS.center });
+    const center = canvas.getByRole('button', { name: LABELS.center });
     const direita = canvas.getByRole('button', { name: LABELS.right });
 
     await step('O grupo é uma barra de ferramentas nomeada', async () => {
@@ -208,25 +208,25 @@ export const Playground: Story = {
     });
 
     await step('Cada item tem nome próprio, e o ícone não é lido', async () => {
-      for (const [botao, nome] of [
+      for (const [button, nome] of [
         [esquerda, LABELS.left],
-        [centro, LABELS.center],
+        [center, LABELS.center],
         [direita, LABELS.right],
       ] as const) {
-        await expect(botao).toHaveAttribute('aria-label', nome);
-        await expect(botao.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+        await expect(button).toHaveAttribute('aria-label', nome);
+        await expect(button.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
       }
     });
 
     await step('accessibility.item4 — aria-pressed e data-state contam a mesma história', async () => {
       // `aria-pressed` vem do primitivo; `data-state` é o contrato de markup das
       // outras stacks. Ler o par junto é o que impede os dois de divergirem.
-      for (const botao of [esquerda, centro, direita]) {
-        const ligado = botao.getAttribute('aria-pressed') === 'true';
-        await expect(botao).toHaveAttribute('data-state', ligado ? 'on' : 'off');
+      for (const button of [esquerda, center, direita]) {
+        const ligado = button.getAttribute('aria-pressed') === 'true';
+        await expect(button).toHaveAttribute('data-state', ligado ? 'on' : 'off');
       }
       // O valor inicial do grupo chega ao item: exatamente um pressionado.
-      const pressionados = [esquerda, centro, direita].filter(
+      const pressionados = [esquerda, center, direita].filter(
         (b) => b.getAttribute('aria-pressed') === 'true',
       );
       await expect(pressionados).toHaveLength(1);
@@ -235,26 +235,26 @@ export const Playground: Story = {
     if (args.disabled) {
       await step('Grupo desabilitado propaga o estado a cada item', async () => {
         await expect(grupo).toHaveAttribute('data-disabled', '');
-        for (const botao of [esquerda, centro, direita]) {
-          await expect(botao).toBeDisabled();
+        for (const button of [esquerda, center, direita]) {
+          await expect(button).toBeDisabled();
         }
       });
       return;
     }
 
     await step('Um único item na ordem de tabulação (roving tabindex)', async () => {
-      const inOrder = [esquerda, centro, direita].filter((b) => b.tabIndex === 0);
+      const inOrder = [esquerda, center, direita].filter((b) => b.tabIndex === 0);
       await expect(inOrder).toHaveLength(1);
     });
 
     await step('functional.item3 — a seta move o foco sem ativar nada', async () => {
-      const antes = [esquerda, centro, direita].map((b) => b.getAttribute('aria-pressed'));
+      const antes = [esquerda, center, direita].map((b) => b.getAttribute('aria-pressed'));
       esquerda.focus();
       // Vertical navega por ↓/↑; horizontal por →/←. É a orientação que o
       // composite recebeu — testar a tecla errada passaria por acidente.
       await userEvent.keyboard(args.orientation === 'vertical' ? '{ArrowDown}' : '{ArrowRight}');
-      await expect(centro).toHaveFocus();
-      const depois = [esquerda, centro, direita].map((b) => b.getAttribute('aria-pressed'));
+      await expect(center).toHaveFocus();
+      const depois = [esquerda, center, direita].map((b) => b.getAttribute('aria-pressed'));
       await expect(depois).toEqual(antes);
     });
 
@@ -269,19 +269,19 @@ export const Playground: Story = {
       // Lido antes e comparado depois: reexecutar a play no painel Interactions
       // parte do estado que a rodada anterior deixou, e uma asserção absoluta
       // inverteria de rodada em rodada.
-      centro.focus();
-      const antes = centro.getAttribute('aria-pressed');
+      center.focus();
+      const antes = center.getAttribute('aria-pressed');
       await userEvent.keyboard(' ');
-      const depois = centro.getAttribute('aria-pressed');
+      const depois = center.getAttribute('aria-pressed');
       await expect(depois).not.toBe(antes);
-      await expect(centro.getAttribute('data-state')).toBe(depois === 'true' ? 'on' : 'off');
+      await expect(center.getAttribute('data-state')).toBe(depois === 'true' ? 'on' : 'off');
       await expect(args.onValueChange).toHaveBeenCalled();
     });
 
     await step('Enter alterna, idêntico a Space', async () => {
-      const antes = centro.getAttribute('aria-pressed');
+      const antes = center.getAttribute('aria-pressed');
       await userEvent.keyboard('{Enter}');
-      await expect(centro.getAttribute('aria-pressed')).not.toBe(antes);
+      await expect(center.getAttribute('aria-pressed')).not.toBe(antes);
     });
 
     await step('Seleção devolvida ao estado inicial', async () => {

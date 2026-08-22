@@ -47,7 +47,7 @@ const ITEMS_DEFAULT: readonly AccordionSnippetItem[] = [
 ];
 
 /** `'item-1'` ou `['item-1']` — a fábrica aceita as duas formas. */
-function valorInicial(valor: AccordionSnippetOptions['defaultValue']): string | undefined {
+function valueInitial(valor: AccordionSnippetOptions['defaultValue']): string | undefined {
   if (valor === undefined) return undefined;
   return Array.isArray(valor) ? `[${valor.map((v) => texto(v)).join(', ')}]` : texto(valor);
 }
@@ -65,7 +65,7 @@ function callLines(o: AccordionSnippetOptions): string[] {
   return opcoes([
     // `single` é o padrão da fábrica: só o modo múltiplo entra no snippet.
     ['type', o.type && o.type !== 'single' ? texto(o.type) : undefined],
-    ['defaultValue', valorInicial(o.defaultValue)],
+    ['defaultValue', valueInitial(o.defaultValue)],
     ['items', 'itens'],
     ['class', o.class ? texto(o.class) : undefined],
     // A story passa uma FUNÇÃO nos args; só um corpo escrito como texto vira
@@ -112,7 +112,7 @@ export type AccordionTriggerRichSnippetOptions = AccordionSnippetOptions & {
   badge?: string;
   badgeVariant?: BadgeVariant;
   /** Ícone decorativo antes do rótulo. */
-  comIcone?: boolean;
+  withIcon?: boolean;
 };
 
 /**
@@ -131,14 +131,14 @@ export function accordionWithTriggerRichSnippet(
   if (o.badge) imports.push(importing('badge', 'createBadge'));
 
   const composition = [
-    o.comIcone
+    o.withIcon
       ? '// `icone` é um SVG do seu conjunto, decorativo: aria-hidden="true".'
       : '',
     'const rotulo = document.createElement(\'span\');',
     'rotulo.className = \'nds-cluster\';',
     'rotulo.dataset.spacing = \'sm\';',
     `rotulo.textContent = ${texto(rotulo)};`,
-    o.comIcone ? 'rotulo.prepend(icone);' : '',
+    o.withIcon ? 'rotulo.prepend(icone);' : '',
     o.badge
       ? `rotulo.appendChild(createBadge({ variant: ${texto(o.badgeVariant ?? 'default')}, children: ${texto(o.badge)} }));`
       : '',

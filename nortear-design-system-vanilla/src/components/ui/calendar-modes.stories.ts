@@ -188,9 +188,9 @@ export const Range: Story = {
       await expect(marcados()).toEqual(['2026-04-18']);
       await userEvent.click(dia(10));
       await expect(marcados().length).toBe(9);
-      const dias = marcados();
-      await expect(dias[0]).toBe('2026-04-10');
-      await expect(dias[dias.length - 1]).toBe('2026-04-18');
+      const days = marcados();
+      await expect(days[0]).toBe('2026-04-10');
+      await expect(days[days.length - 1]).toBe('2026-04-18');
     });
 
     await step('As pontas do intervalo passam em contraste nos três temas e nos dois modos', async () => {
@@ -198,11 +198,11 @@ export const Range: Story = {
       // "axe-core / Lighthouse", que só enxerga o tema claro da marca default: um
       // sexto do produto. Medido no escuro, as pontas do intervalo de uma stack
       // marcavam 1.18:1 e o número do dia sumia. Aritmética, não olhômetro.
-      const medidas = calendarMeasureContrast(canvasElement).filter(
+      const measurements = calendarMeasureContrast(canvasElement).filter(
         (m) => m.presente && (STATES_WITH_TEXT_LEGIVEL as readonly string[]).includes(m.estado),
       );
-      await expect(medidas.length).toBeGreaterThan(0);
-      const reprovadas = medidas.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);
+      await expect(measurements.length).toBeGreaterThan(0);
+      const reprovadas = measurements.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);
       await expect(reprovadas).toEqual([]);
     });
   },

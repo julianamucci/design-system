@@ -46,8 +46,8 @@ function ratioContrast(a: string, b: string): number {
       });
     return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
   };
-  const [claro, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
-  return (claro + 0.05) / (escuro + 0.05);
+  const [light, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
+  return (light + 0.05) / (escuro + 0.05);
 }
 
 export const Default: Story = {

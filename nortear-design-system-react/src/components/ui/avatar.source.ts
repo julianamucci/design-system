@@ -41,12 +41,12 @@ function importingParts(parts: readonly string[]): string {
  * `data-size`, e o CSS deriva dele o círculo, a tipografia das iniciais e o
  * tamanho do indicador de status.
  */
-function avatarWithFoto(size: unknown, className: unknown, atraso = false): string {
+function avatarWithFoto(size: unknown, className: unknown, delay = false): string {
   const raiz = attrs(
     propOption('size', size, SIZES, 'md'),
     propText('className', className),
   );
-  const fallback = atraso ? '<AvatarFallback delayMs={600}>' : '<AvatarFallback>';
+  const fallback = delay ? '<AvatarFallback delayMs={600}>' : '<AvatarFallback>';
   return jsxSnippet(
     importingParts(['Avatar', 'AvatarImage', 'AvatarFallback']),
     `<Avatar${raiz}>

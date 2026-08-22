@@ -6,7 +6,7 @@ import { menubarSource } from './menubar.source';
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
 // à mão que a próxima edição do markup deixa mentindo.
-const ATALHOS = [
+const SHORTCUTS = [
   { label: 'Desfazer', atalho: '⌘Z' },
   { label: 'Refazer', atalho: '⇧⌘Z' },
   { label: 'Copiar', atalho: '⌘C' },
@@ -16,7 +16,7 @@ const EXPORTACOES = ['PDF', 'CSV', 'PNG'];
 
 const EXIBICOES = ['Régua', 'Barra lateral', 'Grade'];
 
-const TEMAS = [
+const THEMES = [
   { valor: 'light', label: 'Claro' },
   { valor: 'dark', label: 'Escuro' },
   { valor: 'system', label: 'Do sistema' },
@@ -59,16 +59,16 @@ export const WithShortcuts: Story = {
     const itens = within(menu).getAllByRole('menuitem');
 
     await step('Cada item leva o próprio atalho', async () => {
-      await expect(itens).toHaveLength(ATALHOS.length);
-      const atalhos = menu.querySelectorAll('[data-slot="menubar-shortcut"]');
-      await expect(atalhos).toHaveLength(ATALHOS.length);
+      await expect(itens).toHaveLength(SHORTCUTS.length);
+      const shortcuts = menu.querySelectorAll('[data-slot="menubar-shortcut"]');
+      await expect(shortcuts).toHaveLength(SHORTCUTS.length);
     });
 
     await step('O atalho entra no nome do item, e não fica escondido do leitor', async () => {
       // Sem `aria-hidden`: "Desfazer, ⌘Z" é o que dá serventia ao atalho para
       // quem não enxerga a tela. Escondê-lo devolveria só "Desfazer".
       for (const [i, item] of itens.entries()) {
-        await expect(item).toHaveAccessibleName(`${ATALHOS[i].label} ${ATALHOS[i].atalho}`);
+        await expect(item).toHaveAccessibleName(`${SHORTCUTS[i].label} ${SHORTCUTS[i].atalho}`);
       }
     });
 
@@ -141,11 +141,11 @@ export const WithCheckboxItems: Story = {
   parameters: { covers: ['functional.item7', 'visual.item3'] },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
-    const caixas = within(menu).getAllByRole('menuitemcheckbox');
+    const boxes = within(menu).getAllByRole('menuitemcheckbox');
 
     await step('Cada linha é uma caixa de seleção independente', async () => {
-      await expect(caixas).toHaveLength(EXIBICOES.length);
-      for (const caixa of caixas) {
+      await expect(boxes).toHaveLength(EXIBICOES.length);
+      for (const caixa of boxes) {
         await expect(caixa.getAttribute('data-slot')).toBe('menubar-checkbox-item');
         await expect(caixa.getAttribute('aria-checked')).toBeTruthy();
       }
@@ -155,9 +155,9 @@ export const WithCheckboxItems: Story = {
       // Nesta lib o cabeçalho vira o `aria-labelledby` do grupo — é o que faz o
       // leitor de tela anunciar "Mostrar na tela" antes das três caixas.
       const grupo = menu.querySelector<HTMLElement>('[data-slot="menubar-group"]')!;
-      const rotuladoPor = grupo.getAttribute('aria-labelledby');
-      await expect(rotuladoPor).toBeTruthy();
-      await expect(document.getElementById(rotuladoPor!)?.textContent).toContain(
+      const labelledBy = grupo.getAttribute('aria-labelledby');
+      await expect(labelledBy).toBeTruthy();
+      await expect(document.getElementById(labelledBy!)?.textContent).toContain(
         'Mostrar na tela'
       );
     });
@@ -166,7 +166,7 @@ export const WithCheckboxItems: Story = {
       // `data-slot` é o endereço de markup que as cinco stacks compartilham, e
       // o do indicador é por TIPO de item. Aqui ele não existia: o menubar era,
       // com o context-menu, o único indicador do sistema sem endereço próprio.
-      for (const caixa of caixas) {
+      for (const caixa of boxes) {
         await expect(
           caixa.querySelector('[data-slot="menubar-checkbox-item-indicator"]')
         ).not.toBeNull();
@@ -174,7 +174,7 @@ export const WithCheckboxItems: Story = {
     });
 
     await step('Alternar reflete no estado anunciado e no marcador visual', async () => {
-      const alvo = caixas[EXIBICOES.indexOf('Barra lateral')];
+      const alvo = boxes[EXIBICOES.indexOf('Barra lateral')];
       // Idempotente: o clique só acontece com a caixa desmarcada, então o
       // replay do painel Interactions parte do mesmo estado da primeira rodada.
       if (alvo.getAttribute('aria-checked') !== 'true') await userEvent.click(alvo);
@@ -192,7 +192,7 @@ export const WithCheckboxItems: Story = {
 
     await step('Marcar não fecha o menu — quem marca uma quer marcar a próxima', async () => {
       await expect(document.body.contains(menu)).toBe(true);
-      const outra = caixas[EXIBICOES.indexOf('Grade')];
+      const outra = boxes[EXIBICOES.indexOf('Grade')];
       await expect(outra.getAttribute('aria-checked')).toBe('false');
     });
   },
@@ -208,7 +208,7 @@ export const WithRadioGroup: Story = {
     const opcoes = within(menu).getAllByRole('menuitemradio');
 
     await step('O grupo publica escolha única, e só uma opção está marcada', async () => {
-      await expect(opcoes).toHaveLength(TEMAS.length);
+      await expect(opcoes).toHaveLength(THEMES.length);
       await expect(opcoes.filter((o) => o.getAttribute('aria-checked') === 'true')).toHaveLength(1);
     });
 
@@ -229,7 +229,7 @@ export const WithRadioGroup: Story = {
     });
 
     await step('Escolher outra opção transfere a marcação', async () => {
-      const escuro = opcoes[TEMAS.findIndex((t) => t.valor === 'dark')];
+      const escuro = opcoes[THEMES.findIndex((t) => t.valor === 'dark')];
       // Idempotente: o clique só acontece com a opção desmarcada — e escolher a
       // MESMA opção duas vezes deixaria o mesmo estado de qualquer forma, que é
       // o que distingue escolha única de alternador.
@@ -249,18 +249,18 @@ export const EditorCompleto: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const barra = canvas.getByRole('menubar');
-    const gatilhos = within(barra).getAllByRole('menuitem');
+    const triggers = within(barra).getAllByRole('menuitem');
 
     await step('As quatro categorias clássicas convivem na mesma barra', async () => {
-      await expect(gatilhos).toHaveLength(MENUS_EDITOR.length);
-      for (const [i, gatilho] of gatilhos.entries()) {
+      await expect(triggers).toHaveLength(MENUS_EDITOR.length);
+      for (const [i, gatilho] of triggers.entries()) {
         await expect(gatilho).toHaveAccessibleName(MENUS_EDITOR[i]);
       }
     });
 
     await step('A barra é uma só parada de tabulação, com todos os menus fechados', async () => {
-      await expect(gatilhos.filter((g) => g.tabIndex === 0)).toHaveLength(1);
-      for (const gatilho of gatilhos) {
+      await expect(triggers.filter((g) => g.tabIndex === 0)).toHaveLength(1);
+      for (const gatilho of triggers) {
         await expect(gatilho.getAttribute('data-state')).toBe('closed');
       }
     });

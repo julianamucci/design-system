@@ -49,13 +49,13 @@ export const CaptionLabel: Story = {
       // functional.item6 — o idioma vale para a legenda E para o cabeçalho da
       // semana; verificar só um dos dois deixaria metade da tradução solta.
       await expect(canvasElement).toHaveTextContent(/abril 2026/i);
-      const dias = Array.from(canvasElement.querySelectorAll('.nds-calendar-weekday')).map(
+      const days = Array.from(canvasElement.querySelectorAll('.nds-calendar-weekday')).map(
         (el) => el.textContent?.trim().toLowerCase() ?? '',
       );
       // A forma curta, e a mesma nas quatro: 'narrow' dá "D S T Q Q S S", com
       // duas quartas e duas quintas indistinguíveis, e o ponto de "dom." é
       // ruído numa coluna de uma palavra. Conferir só a inicial aceitava tudo.
-      await expect(dias).toEqual(['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb']);
+      await expect(days).toEqual(['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb']);
     });
 
     await step('A legenda é texto, e não controle', async () => {
@@ -161,9 +161,9 @@ export const CaptionDropdown: Story = {
       // lado: onde o navegador permite estilizar o select nativo, o rótulo
       // duplicado é escondido e quem aparece é o controle. Asserção sobre
       // elemento oculto não protege nada.
-      const [mes, ano] = canvas.getAllByRole('combobox') as HTMLSelectElement[];
-      await expect(mes.selectedOptions[0].textContent?.trim()).toMatch(/abr/i);
-      await expect(ano.selectedOptions[0].textContent?.trim()).toBe('2026');
+      const [month, year] = canvas.getAllByRole('combobox') as HTMLSelectElement[];
+      await expect(month.selectedOptions[0].textContent?.trim()).toMatch(/abr/i);
+      await expect(year.selectedOptions[0].textContent?.trim()).toBe('2026');
     });
   },
 };

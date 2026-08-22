@@ -32,12 +32,12 @@ const IMPORT = `import {
  */
 const LABEL_HANDLE = 'Redimensionar painéis — use setas para ajustar';
 
-type Painel = {
+type Panel = {
   tamanho: number;
   min?: number;
   max?: number;
   rotulo?: string;
-  destaque?: boolean;
+  highlight?: boolean;
 };
 
 /**
@@ -45,14 +45,14 @@ type Painel = {
  * a faixa inteira — sem ele o painel muda de tamanho e o conteúdo fica boiando
  * no topo, e a divisão deixa de ser visível.
  */
-function conteudo(rotulo: string, destaque = false): string {
-  const fundo = destaque ? ' nds-bg-muted' : '';
-  return `<div class="nds-cluster nds-h-full nds-p-4 nds-text-body${fundo}" data-align="center" data-justify="center">${rotulo}</div>`;
+function conteudo(rotulo: string, highlight = false): string {
+  const background = highlight ? ' nds-bg-muted' : '';
+  return `<div class="nds-cluster nds-h-full nds-p-4 nds-text-body${background}" data-align="center" data-justify="center">${rotulo}</div>`;
 }
 
 /** Um painel com o tamanho inicial e os limites que ele aceita. */
-function painel(p: Painel, dentro?: string): string {
-  const corpo = dentro ?? conteudo(p.rotulo ?? '', p.destaque);
+function painel(p: Panel, dentro?: string): string {
+  const corpo = dentro ?? conteudo(p.rotulo ?? '', p.highlight);
   return `<ResizablePanel${attrs(
     `:default-size="${p.tamanho}"`,
     p.min !== undefined && `:min-size="${p.min}"`,
@@ -145,7 +145,7 @@ export function resizableHorizontalSource(): string {
     IMPORT,
     moldura(
       grupo('horizontal', [
-        painel({ tamanho: 30, min: 20, max: 50, rotulo: 'Esquerda', destaque: true }),
+        painel({ tamanho: 30, min: 20, max: 50, rotulo: 'Esquerda', highlight: true }),
         punho('Redimensionar as colunas — use setas para ajustar'),
         painel({ tamanho: 70, min: 50, rotulo: 'Direita' }),
       ]),
@@ -161,7 +161,7 @@ export function resizableVerticalSource(): string {
       grupo('vertical', [
         painel({ tamanho: 40, min: 20, rotulo: 'Topo' }),
         punho('Redimensionar as faixas — use setas para ajustar'),
-        painel({ tamanho: 60, min: 20, rotulo: 'Rodapé', destaque: true }),
+        painel({ tamanho: 60, min: 20, rotulo: 'Rodapé', highlight: true }),
       ]),
       { largura: 'nds-w-xs', proporcao: 'nds-aspect-4-3' },
     ),
@@ -177,14 +177,14 @@ export function resizableNestedSource(): string {
     IMPORT,
     moldura(
       grupo('horizontal', [
-        painel({ tamanho: 30, min: 20, max: 50, rotulo: 'Sidebar', destaque: true }),
+        painel({ tamanho: 30, min: 20, max: 50, rotulo: 'Sidebar', highlight: true }),
         punho('Redimensionar sidebar e conteúdo — use setas'),
         painel(
           { tamanho: 70, min: 50 },
           grupo('vertical', [
             painel({ tamanho: 60, min: 20, rotulo: 'Editor' }),
             punho('Redimensionar editor e console — use setas'),
-            painel({ tamanho: 40, min: 20, rotulo: 'Console', destaque: true }),
+            painel({ tamanho: 40, min: 20, rotulo: 'Console', highlight: true }),
           ]),
         ),
       ]),
@@ -204,7 +204,7 @@ export function resizableWithGrabberSource(): string {
       grupo('horizontal', [
         painel({ tamanho: 50, min: 20, rotulo: 'Antes' }),
         punho('Redimensionar painéis — use setas', { pegador: true }),
-        painel({ tamanho: 50, min: 20, rotulo: 'Depois', destaque: true }),
+        painel({ tamanho: 50, min: 20, rotulo: 'Depois', highlight: true }),
       ]),
     ),
   );
@@ -218,7 +218,7 @@ export function resizableArrastandoSource(): string {
       grupo('horizontal', [
         painel({ tamanho: 50, min: 10, rotulo: 'Esquerda' }),
         punho(LABEL_HANDLE, { pegador: true }),
-        painel({ tamanho: 50, min: 10, rotulo: 'Direita', destaque: true }),
+        painel({ tamanho: 50, min: 10, rotulo: 'Direita', highlight: true }),
       ]),
     ),
   );
@@ -235,7 +235,7 @@ export function resizableLimitesSource(): string {
       grupo('horizontal', [
         painel({ tamanho: 50, min: 30, max: 60, rotulo: 'Limitado' }),
         punho(LABEL_HANDLE),
-        painel({ tamanho: 50, min: 30, rotulo: 'Livre', destaque: true }),
+        painel({ tamanho: 50, min: 30, rotulo: 'Livre', highlight: true }),
       ]),
     ),
   );
@@ -253,7 +253,7 @@ export function resizableFocusSource(): string {
       grupo('horizontal', [
         painel({ tamanho: 50, min: 20, rotulo: 'Um' }),
         punho(LABEL_HANDLE),
-        painel({ tamanho: 50, min: 20, rotulo: 'Dois', destaque: true }),
+        painel({ tamanho: 50, min: 20, rotulo: 'Dois', highlight: true }),
       ]),
     ),
   );
@@ -270,7 +270,7 @@ export function resizableTravadoSource(): string {
       grupo('horizontal', [
         painel({ tamanho: 50, min: 20, rotulo: 'Fixo' }),
         punho(LABEL_HANDLE, { pegador: true, travado: true }),
-        painel({ tamanho: 50, min: 20, rotulo: 'Fixo', destaque: true }),
+        painel({ tamanho: 50, min: 20, rotulo: 'Fixo', highlight: true }),
       ]),
     ),
   );
@@ -286,11 +286,11 @@ export function resizableEditorSource(): string {
     IMPORT,
     moldura(
       grupo('horizontal', [
-        painel({ tamanho: 25, min: 15, max: 40, rotulo: 'Arquivos', destaque: true }),
+        painel({ tamanho: 25, min: 15, max: 40, rotulo: 'Arquivos', highlight: true }),
         punho('Redimensionar lista de arquivos — use setas para ajustar', { pegador: true }),
         painel({ tamanho: 50, min: 30, rotulo: 'Editor' }),
         punho('Redimensionar editor e preview — use setas para ajustar', { pegador: true }),
-        painel({ tamanho: 25, min: 15, max: 40, rotulo: 'Preview', destaque: true }),
+        painel({ tamanho: 25, min: 15, max: 40, rotulo: 'Preview', highlight: true }),
       ]),
     ),
   );
@@ -302,11 +302,11 @@ export function resizableFaixasSource(): string {
     IMPORT,
     moldura(
       grupo('vertical', [
-        painel({ tamanho: 20, min: 10, max: 40, rotulo: 'Cabeçalho', destaque: true }),
+        painel({ tamanho: 20, min: 10, max: 40, rotulo: 'Cabeçalho', highlight: true }),
         punho('Redimensionar cabeçalho — use setas para ajustar', { pegador: true }),
         painel({ tamanho: 60, min: 30, rotulo: 'Conteúdo' }),
         punho('Redimensionar rodapé — use setas para ajustar', { pegador: true }),
-        painel({ tamanho: 20, min: 10, max: 40, rotulo: 'Rodapé', destaque: true }),
+        painel({ tamanho: 20, min: 10, max: 40, rotulo: 'Rodapé', highlight: true }),
       ]),
       { largura: 'nds-w-xs', proporcao: 'nds-aspect-square' },
     ),
@@ -319,14 +319,14 @@ export function resizableSidebarConsoleSource(): string {
     IMPORT,
     moldura(
       grupo('horizontal', [
-        painel({ tamanho: 30, min: 20, max: 50, rotulo: 'Sidebar', destaque: true }),
+        painel({ tamanho: 30, min: 20, max: 50, rotulo: 'Sidebar', highlight: true }),
         punho('Redimensionar sidebar e área principal — use setas', { pegador: true }),
         painel(
           { tamanho: 70, min: 50 },
           grupo('vertical', [
             painel({ tamanho: 65, min: 30, rotulo: 'Workspace' }),
             punho('Redimensionar workspace e console — use setas', { pegador: true }),
-            painel({ tamanho: 35, min: 15, max: 60, rotulo: 'Console', destaque: true }),
+            painel({ tamanho: 35, min: 15, max: 60, rotulo: 'Console', highlight: true }),
           ]),
         ),
       ]),

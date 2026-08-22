@@ -71,11 +71,11 @@ export const Playground: Story = {
     const startVoltar = async () => {
       const total = canvas.getAllByRole('group').length;
       for (let passo = 0; passo < total; passo++) {
-        const botao = anterior();
+        const button = anterior();
         // `.nds-button:disabled` declara `pointer-events: none`, e o userEvent
         // recusa clicar num alvo assim: nunca clicar sem checar antes.
-        if (botao.disabled) break;
-        await userEvent.click(botao);
+        if (button.disabled) break;
+        await userEvent.click(button);
       }
       await emSlide(0);
     };

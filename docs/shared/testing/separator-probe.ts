@@ -80,7 +80,7 @@ export interface SeparatorMeasurement {
   comprimentoDoPaiPx: number;
 
   // ── Cor ────────────────────────────────────────────────────────────────────
-  fundo: string;
+  background: string;
   fundoAtras: string | null;
   contraste: Contraste | null;
   /** Nome do token que CASA com a cor pintada. `desconhecido` é o achado. */
@@ -169,7 +169,7 @@ function measureSeparator(sep: HTMLElement, raiz: HTMLElement): SeparatorMeasure
   const decorativo = role === 'none' || role === 'presentation' || ariaHidden === 'true';
 
   const vertical = sep.getAttribute('data-orientation') === 'vertical';
-  const fundo = cs.backgroundColor;
+  const background = cs.backgroundColor;
   const atras = backgroundEffective(pai);
 
   // O foco é medido e desfeito: separador focável é defeito, mas deixar o foco
@@ -179,7 +179,7 @@ function measureSeparator(sep: HTMLElement, raiz: HTMLElement): SeparatorMeasure
   const recebeFocus = sep.ownerDocument.activeElement === sep;
   if (recebeFocus) anterior?.focus?.();
 
-  const centro = r.width > 0 && r.height > 0
+  const center = r.width > 0 && r.height > 0
     ? sep.ownerDocument.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)
     : null;
 
@@ -214,12 +214,12 @@ function measureSeparator(sep: HTMLElement, raiz: HTMLElement): SeparatorMeasure
     displayDoPai: csParent?.display ?? '',
     comprimentoDoPaiPx: rParent ? num(vertical ? rParent.height : rParent.width) : 0,
 
-    fundo,
+    background,
     fundoAtras: atras,
-    contraste: atras ? ratio(fundo, atras) : null,
-    tokenDeOrigem: identificarToken(raiz, fundo),
+    contraste: atras ? ratio(background, atras) : null,
+    tokenDeOrigem: identificarToken(raiz, background),
 
-    elementoNoCentro: descrever(centro),
+    elementoNoCentro: descrever(center),
   };
 }
 
@@ -298,7 +298,7 @@ export function darkMeasure(raiz: HTMLElement, cenarios: string[]) {
 export function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[]): never {
   const registro = {
     tokens: measureTokens(raiz),
-    claro: measureCenarios(raiz, cenarios),
+    light: measureCenarios(raiz, cenarios),
     escuro: darkMeasure(raiz, cenarios),
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);

@@ -38,7 +38,7 @@ import {
 import { Label } from "@/components/ui/label";`;
 
 /** Quantas caixas o exemplo mostra quando o control não diz outra coisa. */
-const PADRAO = 6;
+const DEFAULT = 6;
 
 /**
  * Um campo de código completo: coluna, rótulo, estado e uma caixa por dígito.
@@ -49,24 +49,24 @@ const PADRAO = 6;
 function otpSnippet({
   id,
   rotulo,
-  caixas,
+  boxes,
   atributos,
-  valorInicial = '',
+  valueInitial = '',
   imports = IMPORT_BASE,
   depois = '',
 }: {
   id: string;
   rotulo: string;
-  caixas: number;
+  boxes: number;
   atributos: string[];
-  valorInicial?: string;
+  valueInitial?: string;
   imports?: string;
   depois?: string;
 }): string {
   const linhas = atributos.map((atributo) => `    ${atributo}`).join('\n');
   return jsxSnippet(
     imports,
-    `const [codigo, setCodigo] = useState("${valorInicial}");
+    `const [codigo, setCodigo] = useState("${valueInitial}");
 
 <div className="nds-stack" data-spacing="sm">
   <Label htmlFor="${id}">${rotulo}</Label>
@@ -79,7 +79,7 @@ ${linhas}
     inputMode="numeric"
   >
     <InputOTPGroup>
-      {Array.from({ length: ${caixas} }).map((_, indice) => (
+      {Array.from({ length: ${boxes} }).map((_, indice) => (
         <InputOTPSlot key={indice} index={indice} />
       ))}
     </InputOTPGroup>
@@ -99,16 +99,16 @@ ${linhas}
  */
 export const inputOtpSource: SourceTransform<InputOtpArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const caixas =
+  const boxes =
     typeof args.maxLength === 'number' && Number.isFinite(args.maxLength)
       ? args.maxLength
-      : PADRAO;
+      : DEFAULT;
   return otpSnippet({
     id: 'codigo-verificacao',
     rotulo: 'Código de verificação',
-    caixas,
+    boxes,
     atributos: [
-      propNumber('maxLength', caixas) ?? `maxLength={${PADRAO}}`,
+      propNumber('maxLength', boxes) ?? `maxLength={${DEFAULT}}`,
       ...(args.disabled === true ? ['disabled'] : []),
       ...(args.autoFocus === true ? ['autoFocus'] : []),
       'onComplete={(valor) => verificarCodigo(valor)}',
@@ -126,7 +126,7 @@ export function inputOtpQuatroDigitosSource(): string {
   return otpSnippet({
     id: 'pin',
     rotulo: 'PIN do aplicativo',
-    caixas: 4,
+    boxes: 4,
     atributos: ['maxLength={4}'],
   });
 }
@@ -224,7 +224,7 @@ export function inputOtpEmptySource(): string {
   return otpSnippet({
     id: 'codigo-vazio',
     rotulo: 'Código de verificação',
-    caixas: PADRAO,
+    boxes: DEFAULT,
     atributos: ['maxLength={6}', 'autoFocus'],
   });
 }
@@ -237,9 +237,9 @@ export function inputOtpPreenchendoSource(): string {
   return otpSnippet({
     id: 'codigo-parcial',
     rotulo: 'Código de verificação',
-    caixas: PADRAO,
+    boxes: DEFAULT,
     atributos: ['maxLength={6}'],
-    valorInicial: '123',
+    valueInitial: '123',
   });
 }
 
@@ -248,9 +248,9 @@ export function inputOtpCompletoSource(): string {
   return otpSnippet({
     id: 'codigo-completo',
     rotulo: 'Código de verificação',
-    caixas: PADRAO,
+    boxes: DEFAULT,
     atributos: ['maxLength={6}', 'onComplete={(valor) => verificarCodigo(valor)}'],
-    valorInicial: '482913',
+    valueInitial: '482913',
   });
 }
 
@@ -259,9 +259,9 @@ export function inputOtpDisabledSource(): string {
   return otpSnippet({
     id: 'codigo-bloqueado',
     rotulo: 'Código de verificação',
-    caixas: PADRAO,
+    boxes: DEFAULT,
     atributos: ['maxLength={6}', 'disabled'],
-    valorInicial: '4829',
+    valueInitial: '4829',
   });
 }
 
@@ -276,13 +276,13 @@ export function inputOtpWithErrorSource(): string {
   return otpSnippet({
     id: 'codigo-erro',
     rotulo: 'Código de verificação',
-    caixas: PADRAO,
+    boxes: DEFAULT,
     atributos: [
       'maxLength={6}',
       'aria-invalid="true"',
       'aria-describedby="codigo-erro-msg"',
     ],
-    valorInicial: '482913',
+    valueInitial: '482913',
     depois: `
   <p id="codigo-erro-msg" className="nds-text-caption nds-text-destructive">
     Código incorreto. Verifique e tente novamente.
@@ -301,7 +301,7 @@ export function inputOtpWithTextAuxiliarSource(): string {
   return otpSnippet({
     id: 'codigo-ajuda',
     rotulo: 'Código de verificação',
-    caixas: PADRAO,
+    boxes: DEFAULT,
     atributos: ['maxLength={6}', 'aria-describedby="codigo-ajuda-texto"'],
     depois: `
   <p id="codigo-ajuda-texto" className="nds-text-caption nds-text-muted-foreground">

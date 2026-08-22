@@ -362,11 +362,11 @@ const el = createCarousel({
         });
 
       case 'variantes': {
-        const codeHorizontal = `const el = createCarousel({
+        const horizontalCode = `const el = createCarousel({
   items: [slide1, slide2, slide3, slide4, slide5],
 });`;
 
-        const codeVertical = `// A implementação Nortear usa orientação horizontal.
+        const verticalCode = `// A implementação Nortear usa orientação horizontal.
 // Para slides verticais, envolva cada item em um container de altura fixa
 // e use translateY customizado ou uma extensão do componente.
 const el = createCarousel({ items: slides });`;
@@ -408,7 +408,7 @@ const carousel = createCarousel({
             {
               name: 'horizontal',
               description: stripHtml(t('variants.items.horizontal')),
-              code: codeHorizontal,
+              code: horizontalCode,
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-md';
@@ -421,7 +421,7 @@ const carousel = createCarousel({
             {
               name: 'vertical',
               description: stripHtml(t('variants.items.vertical')),
-              code: codeVertical,
+              code: verticalCode,
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-md';

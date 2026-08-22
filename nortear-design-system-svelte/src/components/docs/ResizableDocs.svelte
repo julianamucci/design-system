@@ -110,7 +110,7 @@ import {
   ResizableHandle,
 } from "@/components/ui/resizable";`;
 
-  const codeHorizontal = `<PaneGroup direction="horizontal">
+  const horizontalCode = `<PaneGroup direction="horizontal">
   <Pane defaultSize={30} minSize={20} maxSize={50}>
     <!-- Sidebar -->
   </Pane>
@@ -120,7 +120,7 @@ import {
   </Pane>
 </PaneGroup>`;
 
-  const codeVertical = `<PaneGroup direction="vertical">
+  const verticalCode = `<PaneGroup direction="vertical">
   <Pane defaultSize={50} minSize={20}>
     <!-- Topo -->
   </Pane>
@@ -419,8 +419,8 @@ interface HandleProps {
   <DocsVariants
     title={$tStore('variants.title')}
     items={[
-      { name: $tStore('variants.items.horizontal'), description: stripHtml($tStore('variants.styles.horizontal')), code: codeHorizontal, preview: variantHorizontal },
-      { name: $tStore('variants.items.vertical'),   description: stripHtml($tStore('variants.styles.vertical')),   code: codeVertical,   preview: variantVertical   },
+      { name: $tStore('variants.items.horizontal'), description: stripHtml($tStore('variants.styles.horizontal')), code: horizontalCode, preview: variantHorizontal },
+      { name: $tStore('variants.items.vertical'),   description: stripHtml($tStore('variants.styles.vertical')),   code: verticalCode,   preview: variantVertical   },
       { name: $tStore('variants.items.nested'),     description: stripHtml($tStore('variants.styles.nested')),     code: codeNested,     preview: variantNested     },
     ]}
   />

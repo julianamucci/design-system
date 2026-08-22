@@ -92,9 +92,9 @@ const config: StorybookConfig = {
     viteConfig.build = viteConfig.build ?? {};
     const rollup = (viteConfig.build.rollupOptions = viteConfig.build.rollupOptions ?? {});
     const externoAnterior = rollup.external;
-    rollup.external = (id, ...resto) => {
+    rollup.external = (id, ...remainder) => {
       if (id === 'vitest/browser') return true;
-      if (typeof externoAnterior === 'function') return externoAnterior(id, ...resto);
+      if (typeof externoAnterior === 'function') return externoAnterior(id, ...remainder);
       if (Array.isArray(externoAnterior)) return externoAnterior.includes(id);
       return false;
     };

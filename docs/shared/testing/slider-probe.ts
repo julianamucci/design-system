@@ -31,7 +31,7 @@
 // ─── Peças ───────────────────────────────────────────────────────────────────
 
 /** Acha a peça pelo `data-slot`, considerando o próprio nó recebido. */
-function achar(raiz: ParentNode, slot: string): HTMLElement | null {
+function find(raiz: ParentNode, slot: string): HTMLElement | null {
   const seletor = `[data-slot="${slot}"]`;
   if (raiz instanceof Element && raiz.matches(seletor)) return raiz as HTMLElement;
   return raiz.querySelector<HTMLElement>(seletor);
@@ -39,14 +39,14 @@ function achar(raiz: ParentNode, slot: string): HTMLElement | null {
 
 /** O trilho — a caixa por onde o preenchimento corre. */
 export function sliderTrack(raiz: ParentNode): HTMLElement {
-  const el = achar(raiz, 'slider-track');
+  const el = find(raiz, 'slider-track');
   if (!el) throw new Error('SONDA::slider: nenhum [data-slot="slider-track"] no canvas');
   return el;
 }
 
 /** O segmento preenchido. */
 export function preenchimentoDoSlider(raiz: ParentNode): HTMLElement {
-  const el = achar(raiz, 'slider-range');
+  const el = find(raiz, 'slider-range');
   if (!el) throw new Error('SONDA::slider: nenhum [data-slot="slider-range"] no canvas');
   return el;
 }
@@ -67,12 +67,12 @@ export function alcasDoSlider(raiz: ParentNode): HTMLElement[] {
  * `max` e `value` saíam `NaN`, e `expect(NaN).toBe(NaN)` passa por
  * `Object.is` — a asserção existia e não podia reprovar.
  */
-export function handleControl(alca: HTMLElement): HTMLElement {
-  const dentro = alca.querySelector<HTMLInputElement>('input[type="range"]');
+export function handleControl(thumb: HTMLElement): HTMLElement {
+  const dentro = thumb.querySelector<HTMLInputElement>('input[type="range"]');
   if (dentro) return dentro;
-  if (alca instanceof HTMLInputElement && alca.type === 'range') return alca;
-  const raiz = alca.closest<HTMLElement>('[data-slot="slider"], .nds-slider');
-  return raiz?.querySelector<HTMLInputElement>('input[type="range"]') ?? alca;
+  if (thumb instanceof HTMLInputElement && thumb.type === 'range') return thumb;
+  const raiz = thumb.closest<HTMLElement>('[data-slot="slider"], .nds-slider');
+  return raiz?.querySelector<HTMLInputElement>('input[type="range"]') ?? thumb;
 }
 
 // ─── Valor e limites ─────────────────────────────────────────────────────────
@@ -123,8 +123,8 @@ export function handleValue(elemento: HTMLElement): number {
  * exigi-la reprovava, com o componente correto, as stacks cuja alça não é um
  * input.
  */
-export function handleDesabilitada(alca: HTMLElement): boolean {
-  const controle = handleControl(alca);
+export function handleDesabilitada(thumb: HTMLElement): boolean {
+  const controle = handleControl(thumb);
   const dataDisabled = (el: HTMLElement) => {
     const v = el.getAttribute('data-disabled');
     return v !== null && v !== 'false';
@@ -133,20 +133,20 @@ export function handleDesabilitada(alca: HTMLElement): boolean {
     (controle as HTMLInputElement).disabled === true ||
     controle.getAttribute('aria-disabled') === 'true' ||
     dataDisabled(controle) ||
-    dataDisabled(alca)
+    dataDisabled(thumb)
   );
 }
 
 // ─── Contraste (WCAG 1.4.11) ─────────────────────────────────────────────────
 
 /** Luminância relativa de uma cor computada, achatada sobre um fundo opaco. */
-function luminancia(cor: string, fundo: [number, number, number]): number {
+function luminancia(cor: string, background: [number, number, number]): number {
   const [r = 0, g = 0, b = 0, a = 1] = cor.match(/[\d.]+/g)?.map(Number) ?? [];
   const canal = (v: number, base: number) => {
     const misturado = (v * a + base * (1 - a)) / 255;
     return misturado <= 0.03928 ? misturado / 12.92 : ((misturado + 0.055) / 1.055) ** 2.4;
   };
-  return 0.2126 * canal(r, fundo[0]) + 0.7152 * canal(g, fundo[1]) + 0.0722 * canal(b, fundo[2]);
+  return 0.2126 * canal(r, background[0]) + 0.7152 * canal(g, background[1]) + 0.0722 * canal(b, background[2]);
 }
 
 /** Primeiro ancestral com fundo opaco — o que o olho realmente vê por baixo. */
@@ -169,15 +169,15 @@ function backgroundOpaco(el: HTMLElement): [number, number, number] {
  * conta. Sem isso o número sai errado e para o lado errado.
  */
 export function contrastHandleTrack(raiz: ParentNode): number {
-  const alca = alcasDoSlider(raiz)[0];
-  if (!alca) throw new Error('SONDA::slider: nenhuma [data-slot="slider-thumb"] no canvas');
+  const thumb = alcasDoSlider(raiz)[0];
+  if (!thumb) throw new Error('SONDA::slider: nenhuma [data-slot="slider-thumb"] no canvas');
   const trilho = sliderTrack(raiz);
   const base = backgroundOpaco(trilho.parentElement ?? trilho);
 
-  const a = luminancia(handleDisco(alca).borderTopColor, base);
+  const a = luminancia(handleDisco(thumb).borderTopColor, base);
   const b = luminancia(getComputedStyle(trilho).backgroundColor, base);
-  const [claro, escuro] = a >= b ? [a, b] : [b, a];
-  return (claro + 0.05) / (escuro + 0.05);
+  const [light, escuro] = a >= b ? [a, b] : [b, a];
+  return (light + 0.05) / (escuro + 0.05);
 }
 
 /**
@@ -190,11 +190,11 @@ export function contrastHandleTrack(raiz: ParentNode): number {
  * Passe o retorno como MENSAGEM da asserção: ele só é lido quando ela reprova.
  */
 export function contextoHandleTrack(raiz: ParentNode): string {
-  const alca = alcasDoSlider(raiz)[0];
-  if (!alca) return 'SONDA::slider: nenhuma alça';
+  const thumb = alcasDoSlider(raiz)[0];
+  if (!thumb) return 'SONDA::slider: nenhuma alça';
   const trilho = sliderTrack(raiz);
   const partes = [
-    `borda=${handleDisco(alca).borderTopColor}`,
+    `borda=${handleDisco(thumb).borderTopColor}`,
     `trilho=${getComputedStyle(trilho).backgroundColor}`,
     `base=rgb(${backgroundOpaco(trilho.parentElement ?? trilho).join(", ")})`,
     `html="${raiz.ownerDocument?.documentElement.className ?? '?'}"`,
@@ -211,8 +211,8 @@ export function contextoHandleTrack(raiz: ParentNode): string {
  * lidos no elemento voltariam `rgba(0, 0, 0, 0)` e `none`, e a conta de
  * contraste passaria a comparar transparente com transparente.
  */
-function handleDisco(alca: HTMLElement): CSSStyleDeclaration {
-  return getComputedStyle(alca, '::before');
+function handleDisco(thumb: HTMLElement): CSSStyleDeclaration {
+  return getComputedStyle(thumb, '::before');
 }
 
 // ─── Foco (WCAG 2.4.7) ───────────────────────────────────────────────────────
@@ -225,10 +225,10 @@ function handleDisco(alca: HTMLElement): CSSStyleDeclaration {
  * das duas mudar em relação ao repouso para o anel existir — o que a regra
  * proíbe é a alça focada ficar idêntica à alça em repouso.
  */
-export function focusAneis(alca: HTMLElement): { sombra: string; borda: string } {
+export function focusAneis(thumb: HTMLElement): { sombra: string; border: string } {
   // No `::before`, que é onde a borda e a sombra moram — ver `handleDisco`.
-  const estilo = handleDisco(alca);
-  return { sombra: estilo.boxShadow, borda: estilo.borderTopColor };
+  const estilo = handleDisco(thumb);
+  return { sombra: estilo.boxShadow, border: estilo.borderTopColor };
 }
 
 /**
@@ -241,16 +241,16 @@ export function focusAneis(alca: HTMLElement): { sombra: string; borda: string }
  * iguais antes de devolver.
  */
 export async function restRing(
-  alca: HTMLElement,
+  thumb: HTMLElement,
   tempoMax = 2000,
-): Promise<{ sombra: string; borda: string }> {
-  (alca.ownerDocument.activeElement as HTMLElement | null)?.blur();
-  const limite = Date.now() + tempoMax;
-  let anterior = focusAneis(alca);
-  while (Date.now() < limite) {
+): Promise<{ sombra: string; border: string }> {
+  (thumb.ownerDocument.activeElement as HTMLElement | null)?.blur();
+  const limit = Date.now() + tempoMax;
+  let anterior = focusAneis(thumb);
+  while (Date.now() < limit) {
     await new Promise((r) => setTimeout(r, 32));
-    const agora = focusAneis(alca);
-    if (agora.sombra === anterior.sombra && agora.borda === anterior.borda) return agora;
+    const agora = focusAneis(thumb);
+    if (agora.sombra === anterior.sombra && agora.border === anterior.border) return agora;
     anterior = agora;
   }
   return anterior;
@@ -268,20 +268,20 @@ export async function restRing(
  * alça parada. Só espera o desenho parar de se mexer antes de fotografá-lo.
  */
 export async function focusAssentadoRing(
-  alca: HTMLElement,
-  repouso: { sombra: string; borda: string },
+  thumb: HTMLElement,
+  rest: { sombra: string; border: string },
   tempoMax = 2000,
-): Promise<{ sombra: string; borda: string }> {
-  const limite = Date.now() + tempoMax;
-  let atual = focusAneis(alca);
-  while (Date.now() < limite) {
-    if (atual.sombra !== repouso.sombra || atual.borda !== repouso.borda) {
+): Promise<{ sombra: string; border: string }> {
+  const limit = Date.now() + tempoMax;
+  let atual = focusAneis(thumb);
+  while (Date.now() < limit) {
+    if (atual.sombra !== rest.sombra || atual.border !== rest.border) {
       // Mudou: deixa a transição terminar para não fotografar o meio dela.
       await new Promise((r) => setTimeout(r, 60));
-      return focusAneis(alca);
+      return focusAneis(thumb);
     }
     await new Promise((r) => setTimeout(r, 16));
-    atual = focusAneis(alca);
+    atual = focusAneis(thumb);
   }
   return atual;
 }
@@ -403,8 +403,8 @@ async function navegadorPointer(): Promise<((el: Element) => Promise<void>) | nu
     const mod = (await import('vitest/browser')) as {
       userEvent?: { click?: (el: Element) => Promise<void> };
     };
-    const clicar = mod.userEvent?.click;
-    if (clicar) return (el: Element) => clicar.call(mod.userEvent, el);
+    const click = mod.userEvent?.click;
+    if (click) return (el: Element) => click.call(mod.userEvent, el);
   } catch {
     // Sem modo browser: o chamador usa o caminho do DOM.
   }

@@ -357,7 +357,7 @@ function createToast(type: ToastType, message: string, opts: ToastOptions = {}):
  * Trocar o nó faria o leitor de tela anunciar duas notificações para um evento
  * só — que é exatamente o que `toast.promise` existe para evitar.
  */
-function atualizar(id: number, type: ToastType, message: string, duracao: number): void {
+function update(id: number, type: ToastType, message: string, duracao: number): void {
   const entry = activeToasts.find((t) => t.id === id);
   if (!entry) return;
 
@@ -412,8 +412,8 @@ export const toast = Object.assign(
       });
       const prazo = opts?.duration ?? DURATION_DEFAULT;
       void promise.then(
-        () => atualizar(id, 'success', msgs.success, prazo),
-        () => atualizar(id, 'error', msgs.error, prazo),
+        () => update(id, 'success', msgs.success, prazo),
+        () => update(id, 'error', msgs.error, prazo),
       );
     },
   },

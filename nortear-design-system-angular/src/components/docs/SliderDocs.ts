@@ -582,12 +582,12 @@ export class NdsSliderDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     const linha = (name: string, key: string, tipo: string, padrao: string) => ({
       name,
       type: tipo,
       defaultValue: padrao,
-      required: nao,
+      required: not,
       description: toPlainText(t(`props.table.${key}.description`)),
     });
     return [
@@ -606,7 +606,7 @@ export class NdsSliderDocs implements AfterViewInit, OnDestroy {
             name: 'aria-label',
             type: 'string',
             defaultValue: '—',
-            required: nao,
+            required: not,
             // Não vem do conteúdo compartilhado: é uma entrada deste stack, e a
             // razão de existir é a seção de acessibilidade acima.
             description: toPlainText(t('accessibility.aria.label')),
@@ -615,7 +615,7 @@ export class NdsSliderDocs implements AfterViewInit, OnDestroy {
             name: 'thumbLabels',
             type: 'string[]',
             defaultValue: '[]',
-            required: nao,
+            required: not,
             description: toPlainText(t('usage.uxWriting.table.range.format')),
           },
         ],

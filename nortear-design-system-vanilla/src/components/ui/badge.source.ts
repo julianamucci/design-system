@@ -17,7 +17,7 @@ export type BadgeSnippetOptions = {
   label?: string;
   className?: string;
   /** Ícone decorativo antes do texto, no mesmo `children`. */
-  comIcone?: boolean;
+  withIcon?: boolean;
 };
 
 /** A chamada real de `createBadge` com as opções da story. */
@@ -29,13 +29,13 @@ export function badgeSnippet(o: BadgeSnippetOptions = {}): string {
     ['variant', o.variant && o.variant !== 'default' ? texto(o.variant) : undefined],
     // `children` aceita texto, elemento ou a lista dos dois — é assim que ícone
     // e rótulo entram juntos, sem sub-fábrica nenhuma.
-    ['children', o.comIcone ? `[icone, ${texto(label)}]` : texto(label)],
+    ['children', o.withIcon ? `[icone, ${texto(label)}]` : texto(label)],
     ['className', o.className ? texto(o.className) : undefined],
   ]);
 
   return snippet(
     importing('badge', 'createBadge'),
-    o.comIcone
+    o.withIcon
       ? `// \`icone\` é um SVG do seu conjunto, decorativo: aria-hidden="true".
 // O tamanho vem de \`.nds-badge > svg\` e o respiro do gap da etiqueta —
 // margem escrita à mão somaria ao gap e dobraria o espaço.`
@@ -77,7 +77,7 @@ const GRUPO_PADRAO: readonly BadgeGrupoItem[] = [
  */
 export function badgeEmGrupoSnippet(o: BadgeGrupoSnippetOptions = {}): string {
   const itens = o.itens?.length ? o.itens : GRUPO_PADRAO;
-  const chamadas = itens
+  const calls = itens
     .map((i) => `  createBadge({ variant: ${texto(i.variant)}, children: ${texto(i.label)} }),`)
     .join('\n');
 
@@ -87,7 +87,7 @@ export function badgeEmGrupoSnippet(o: BadgeGrupoSnippetOptions = {}): string {
 grupo.className = 'nds-cluster';
 grupo.dataset.spacing = 'sm';
 grupo.append(
-${chamadas}
+${calls}
 );`,
     montar('grupo'),
   );
@@ -115,12 +115,12 @@ export type BadgeEmGatilhoSnippetOptions = BadgeSnippetOptions & {
  * nome acessível.
  */
 export function badgeEmGatilhoSnippet(o: BadgeEmGatilhoSnippetOptions = {}): string {
-  const botao = o.como === 'botao';
-  const label = o.label ?? (botao ? 'React' : 'Design');
-  const variant = o.variant ?? (botao ? 'outline' : 'secondary');
-  const nome = o.nomeAcessivel ?? (botao ? 'Filtrar por React' : 'Ver todos os itens da categoria Design');
+  const button = o.como === 'botao';
+  const label = o.label ?? (button ? 'React' : 'Design');
+  const variant = o.variant ?? (button ? 'outline' : 'secondary');
+  const nome = o.nomeAcessivel ?? (button ? 'Filtrar por React' : 'Ver todos os itens da categoria Design');
 
-  const alvo = botao
+  const alvo = button
     ? `const alvo = document.createElement('button');
 alvo.type = 'button';`
     : `const alvo = document.createElement('a');

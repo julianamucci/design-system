@@ -71,7 +71,7 @@ export const Paginated: Story = {
     const primeira = () => canvas.getByRole('button', { name: 'Primeira página' }) as HTMLButtonElement;
     const anterior = () => canvas.getByRole('button', { name: 'Página anterior' }) as HTMLButtonElement;
     const next = () => canvas.getByRole('button', { name: 'Próxima página' }) as HTMLButtonElement;
-    const ultima = () => canvas.getByRole('button', { name: 'Última página' }) as HTMLButtonElement;
+    const last = () => canvas.getByRole('button', { name: 'Última página' }) as HTMLButtonElement;
 
     await step('A tabela abre na primeira página, com os dois botões de volta apagados', async () => {
       // Clicar num botão desabilitado é impossível para quem usa — o CSS lhe
@@ -84,15 +84,15 @@ export const Paginated: Story = {
       await expect(primeira()).toBeDisabled();
       await expect(anterior()).toBeDisabled();
       await expect(next()).toBeEnabled();
-      await expect(ultima()).toBeEnabled();
+      await expect(last()).toBeEnabled();
     });
 
     await step('Avançar uma página troca a fatia de linhas', async () => {
       // functional.item8 — o número da página mudar não bastaria: um rodapé
       // pode contar errado e mostrar sempre as mesmas linhas. A prova é a
       // primeira fatura da página ser outra.
-      const botao = next();
-      await userEvent.click(botao);
+      const button = next();
+      await userEvent.click(button);
 
       await waitFor(async () => {
         await expect(firstInvoice()).toContain('#INV-006');
@@ -101,12 +101,12 @@ export const Paginated: Story = {
       // No meio do caminho os quatro estão vivos: há para onde ir dos dois lados.
       await expect(primeira()).toBeEnabled();
       await expect(anterior()).toBeEnabled();
-      await expect(ultima()).toBeEnabled();
+      await expect(last()).toBeEnabled();
     });
 
     await step('O salto para a última página respeita a fatia incompleta', async () => {
-      const botao = ultima();
-      await userEvent.click(botao);
+      const button = last();
+      await userEvent.click(button);
 
       await waitFor(async () => {
         await expect(firstInvoice()).toContain('#INV-011');
@@ -118,13 +118,13 @@ export const Paginated: Story = {
         .toBeInTheDocument();
 
       await expect(next()).toBeDisabled();
-      await expect(ultima()).toBeDisabled();
+      await expect(last()).toBeDisabled();
       await expect(anterior()).toBeEnabled();
     });
 
     await step('Retroceder uma página é o caminho inverso do avanço', async () => {
-      const botao = anterior();
-      await userEvent.click(botao);
+      const button = anterior();
+      await userEvent.click(button);
 
       await waitFor(async () => {
         await expect(firstInvoice()).toContain('#INV-006');
@@ -135,8 +135,8 @@ export const Paginated: Story = {
     await step('O salto para a primeira página devolve o estado de entrada', async () => {
       // Fecha o ciclo e deixa a tela como a encontrou: a rodada seguinte — e a
       // captura de regressão visual — partem da página 1.
-      const botao = primeira();
-      await userEvent.click(botao);
+      const button = primeira();
+      await userEvent.click(button);
 
       await waitFor(async () => {
         await expect(firstInvoice()).toContain('#INV-001');
@@ -207,9 +207,9 @@ export const ExplicitRowLabel: Story = {
     });
 
     await step('Nenhuma linha repete o nome de outra', async () => {
-      const nomes = linhas().map((l) => lineBox(l).getAttribute('aria-label') ?? '');
-      await expect(nomes.length).toBe(INVOICES_DT.length);
-      await expect(new Set(nomes).size).toBe(nomes.length);
+      const names = linhas().map((l) => lineBox(l).getAttribute('aria-label') ?? '');
+      await expect(names.length).toBe(INVOICES_DT.length);
+      await expect(new Set(names).size).toBe(names.length);
     });
   },
 };

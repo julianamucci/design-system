@@ -215,13 +215,13 @@ export const WithLongScrollContent: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
 
-    const longo = document.createElement('div');
-    longo.className = 'nds-stack nds-text-body nds-text-muted-foreground';
-    longo.dataset.spacing = 'sm';
+    const long = document.createElement('div');
+    long.className = 'nds-stack nds-text-body nds-text-muted-foreground';
+    long.dataset.spacing = 'sm';
     for (let i = 1; i <= 24; i++) {
       const p = document.createElement('p');
       p.textContent = `Parágrafo ${i}: termos longos o bastante para o corpo precisar rolar dentro do painel, sem empurrar o rodapé para fora da tela.`;
-      longo.appendChild(p);
+      long.appendChild(p);
     }
 
     const sheet = createSheet({
@@ -229,7 +229,7 @@ export const WithLongScrollContent: Story = {
       side: 'right',
       title: 'Termos de uso',
       description: 'Leia atentamente antes de aceitar.',
-      content: longo,
+      content: long,
       footer: makeFooter('Cancelar', 'Aceitar termos', true),
     });
     queueMicrotask(() => trigger.click());

@@ -20,7 +20,7 @@
 const GRID = '.nds-icon-grid';
 const ITEM = '.nds-icon-grid-item';
 const TILE = '.nds-icon-tile';
-const VAZIO = '.nds-icon-empty-state';
+const EMPTY = '.nds-icon-empty-state';
 const SEARCH = 'input[type="search"]';
 
 function texto(el: Element | null): string {
@@ -61,12 +61,12 @@ export function searchDigitar(raiz: HTMLElement, consulta: string): HTMLInputEle
 }
 
 /** Texto da região viva que anuncia quantos ícones estão à vista. */
-export function textoDaContagem(raiz: HTMLElement): string {
+export function contagemText(raiz: HTMLElement): string {
   return texto(raiz.querySelector('[aria-live="polite"]'));
 }
 
 export function stateEmptyVisible(raiz: HTMLElement): boolean {
-  const vazio = raiz.querySelector(VAZIO);
+  const vazio = raiz.querySelector(EMPTY);
   return !!vazio && vazio.classList.contains('is-visible');
 }
 
@@ -110,9 +110,9 @@ export function galeriaAuditarStructure(
     problemas.push(`${noName} itens sem data-icon-name — a sonda não consegue endereçá-los`);
   }
 
-  const vazio = raiz.querySelector(VAZIO);
+  const vazio = raiz.querySelector(EMPTY);
   if (!vazio) {
-    problemas.push(`sem ${VAZIO} no DOM — o estado vazio precisa existir antes de a busca falhar`);
+    problemas.push(`sem ${EMPTY} no DOM — o estado vazio precisa existir antes de a busca falhar`);
   } else if (vazio.getAttribute('role') !== 'status') {
     problemas.push('o estado vazio não é role="status"');
   }
@@ -140,23 +140,23 @@ export function auditarTile(raiz: HTMLElement, nomeDoIcone: string): string[] {
     return problemas;
   }
 
-  const botao = item.querySelector<HTMLButtonElement>(`button${TILE}`);
-  if (!botao) {
+  const button = item.querySelector<HTMLButtonElement>(`button${TILE}`);
+  if (!button) {
     problemas.push(`o item de ${nomeDoIcone} não tem <button class="nds-icon-tile">`);
     return problemas;
   }
-  if (botao.type !== 'button') {
-    problemas.push(`o tile de ${nomeDoIcone} é type="${botao.type}" — submete o formulário ao redor`);
+  if (button.type !== 'button') {
+    problemas.push(`o tile de ${nomeDoIcone} é type="${button.type}" — submete o formulário ao redor`);
   }
 
-  const rotulo = botao.getAttribute('aria-label') ?? '';
+  const rotulo = button.getAttribute('aria-label') ?? '';
   if (!rotulo.includes(nomeDoIcone)) {
     problemas.push(
       `o nome acessível do tile de ${nomeDoIcone} não contém o nome do ícone (veio "${rotulo}")`
     );
   }
 
-  const svg = botao.querySelector('svg');
+  const svg = button.querySelector('svg');
   if (!svg) {
     problemas.push(`o tile de ${nomeDoIcone} não desenhou <svg>`);
     return problemas;

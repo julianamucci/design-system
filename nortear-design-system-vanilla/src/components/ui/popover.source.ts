@@ -113,7 +113,7 @@ export function popoverSnippet(o: PopoverSnippetOptions = {}): string {
         importing('button', 'createButton'),
       ];
 
-  const cabecalho = `// Cabeçalho, título e descrição são peças do próprio Popover: são elas que
+  const header = `// Cabeçalho, título e descrição são peças do próprio Popover: são elas que
 // carregam a classe e o \`data-slot\` de cada parte, e é o título que dá nome
 // acessível ao painel.
 const conteudo = createPopoverHeader();
@@ -137,7 +137,7 @@ conteudo.append(
   return snippet(
     importes.join('\n'),
     blockTrigger(o),
-    soText ? undefined : cabecalho,
+    soText ? undefined : header,
     `const painel = ${chamada(
       'createPopover',
       panelLines(o, soText ? texto(o.text as string) : 'conteudo'),

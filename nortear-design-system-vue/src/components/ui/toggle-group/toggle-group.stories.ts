@@ -105,9 +105,9 @@ export const Playground: Story = {
 
     /** Só clica quando o estado atual não é o desejado — a play tem que
      *  sobreviver ao replay do painel Interactions, que roda no mesmo DOM. */
-    const definir = async (botao: HTMLElement, ligado: boolean) => {
-      if ((botao.getAttribute('aria-pressed') === 'true') !== ligado) {
-        await userEvent.click(botao);
+    const definir = async (button: HTMLElement, ligado: boolean) => {
+      if ((button.getAttribute('aria-pressed') === 'true') !== ligado) {
+        await userEvent.click(button);
       }
     };
 

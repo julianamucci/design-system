@@ -110,7 +110,7 @@ describe('accordionComGatilhoRicoSnippet', () => {
   });
 
   it('trata o ícone como conteúdo de quem consome, sem inventar fábrica', () => {
-    const código = accordionWithTriggerRichSnippet({ comIcone: true, rotulo: 'Informação' });
+    const código = accordionWithTriggerRichSnippet({ withIcon: true, rotulo: 'Informação' });
     expect(código).toContain('rotulo.prepend(icone);');
     expect(código).toContain('aria-hidden');
     // Não existe fábrica de ícone genérica nesta stack: inventá-la seria API falsa.

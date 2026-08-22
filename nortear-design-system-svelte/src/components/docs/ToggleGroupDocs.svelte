@@ -175,7 +175,7 @@
   </ToggleGroupItem>
 </ToggleGroup>`;
 
-  const codeVertical = `<ToggleGroup
+  const verticalCode = `<ToggleGroup
   type="single"
   orientation="vertical"
   variant="outline"
@@ -488,7 +488,7 @@ interface ToggleGroupItemProps {
       {
         name: $tStore('variants.items.vertical'),
         description: stripHtml($tStore('variants.styles.vertical')),
-        code: codeVertical,
+        code: verticalCode,
         preview: variantVertical,
       },
     ]}

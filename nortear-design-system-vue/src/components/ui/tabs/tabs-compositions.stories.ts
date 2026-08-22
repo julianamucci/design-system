@@ -156,9 +156,9 @@ export const WithIcons: Story = {
     });
 
     await step('Os ícones são decorativos, desenham algo e não interceptam o clique', async () => {
-      const icones = Array.from(canvasElement.querySelectorAll('[role="tab"] svg'));
-      await expect(icones).toHaveLength(3);
-      for (const icone of icones) {
+      const icons = Array.from(canvasElement.querySelectorAll('[role="tab"] svg'));
+      await expect(icons).toHaveLength(3);
+      for (const icone of icons) {
         await expect(icone).toHaveAttribute('aria-hidden', 'true');
         await expect(icone.childElementCount).toBeGreaterThan(0);
         await expect(getComputedStyle(icone).pointerEvents).toBe('none');
@@ -208,7 +208,7 @@ export const WithBadge: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const entrada = canvas.getByRole('tab', { name: 'Caixa de entrada 12' });
+    const entry = canvas.getByRole('tab', { name: 'Caixa de entrada 12' });
     const spam = canvas.getByRole('tab', { name: 'Spam 3' });
 
     await step('O contador entra no nome da aba sem criar outro alvo de foco', async () => {
@@ -224,7 +224,7 @@ export const WithBadge: Story = {
     await step('Clicar na aba com contador ativa o painel correspondente', async () => {
       await ativar(spam);
       await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', spam.id);
-      await ativar(entrada);
+      await ativar(entry);
       await expect(canvas.getByRole('tabpanel')).toHaveTextContent('Mensagens recebidas.');
     });
   },

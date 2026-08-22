@@ -178,8 +178,8 @@ export function measureCenarios(raiz: HTMLElement): RatioMeasurement[] {
 }
 
 /** Uma linha por cenário — a tabela para o diff campo a campo entre stacks. */
-export function resumirProporcoes(medidas: RatioMeasurement[]): string[] {
-  return medidas.map((m) => {
+export function resumirProporcoes(measurements: RatioMeasurement[]): string[] {
+  return measurements.map((m) => {
     const c = m.contrato;
     const s = m.slot;
     return [
@@ -210,12 +210,12 @@ export interface RatioFailure {
  * exata reprova por arredondamento do layout.
  */
 export function ratioReprovas(
-  medidas: RatioMeasurement[],
+  measurements: RatioMeasurement[],
   razaoEsperada: number,
   tolerancia = 0.02,
 ): RatioFailure[] {
   const failures: RatioFailure[] = [];
-  for (const m of medidas) {
+  for (const m of measurements) {
     if (!m.contrato.presente) {
       failures.push({ cenario: m.cenario, motivo: '.nds-aspect-ratio não existe — a folha compartilhada não governa esta caixa' });
       continue;

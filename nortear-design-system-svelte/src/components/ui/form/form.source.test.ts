@@ -47,13 +47,13 @@ describe('formSource', () => {
   });
 
   it('a mensagem de erro traz o aria-invalid junto, no controle', () => {
-    const semErro = formSource();
-    expect(semErro).not.toContain('error=');
-    expect(semErro).not.toContain('aria-invalid');
+    const noError = formSource();
+    expect(noError).not.toContain('error=');
+    expect(noError).not.toContain('aria-invalid');
 
-    const comErro = formSource('', { args: { error: 'Endereço incompleto.' } });
-    expect(comErro).toContain('error="Endereço incompleto."');
-    expect(comErro).toContain('aria-invalid="true"');
+    const withError = formSource('', { args: { error: 'Endereço incompleto.' } });
+    expect(withError).toContain('error="Endereço incompleto."');
+    expect(withError).toContain('aria-invalid="true"');
   });
 
   it('o control de aria-invalid vale sozinho, sem mensagem escrita', () => {

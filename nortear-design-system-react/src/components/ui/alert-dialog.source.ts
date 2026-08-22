@@ -87,7 +87,7 @@ const PARTS_BASE = [
  * Cancel vem antes de Action no DOM de propósito — é a ordem que põe a saída
  * segura primeiro na tabulação e, abaixo de 40rem, embaixo na pilha.
  */
-function confirmacao({
+function confirm({
   tone,
   defaultOpen,
   midia = false,
@@ -138,9 +138,9 @@ ${indentar(`${blockMidia}<AlertDialogTitle>${title}</AlertDialogTitle>${blockDes
   const imports = midia
     ? `${importingParts(parts)}\nimport { TriangleAlert } from "lucide-react";`
     : importingParts(parts);
-  const cabecalho = preambulo ? `${imports}\n\n${preambulo}` : imports;
+  const header = preambulo ? `${imports}\n\n${preambulo}` : imports;
 
-  return jsxSnippet(cabecalho, markup);
+  return jsxSnippet(header, markup);
 }
 
 /**
@@ -153,7 +153,7 @@ ${indentar(`${blockMidia}<AlertDialogTitle>${title}</AlertDialogTitle>${blockDes
  */
 export const alertDialogSource: SourceTransform<AlertDialogArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  return confirmacao({
+  return confirm({
     tone: typeof args.tone === 'string' ? (args.tone as AlertDialogArgs['tone']) : 'destructive',
     defaultOpen: typeof args.defaultOpen === 'boolean' ? args.defaultOpen : undefined,
     midia: args.showMedia === true,
@@ -177,7 +177,7 @@ export const alertDialogSource: SourceTransform<AlertDialogArgs> = (_gerado, ctx
  * andaime, não ensinamento: quem cola quer o diálogo comandado pelo gatilho.
  */
 export function alertDialogOpenSource(): string {
-  return confirmacao({
+  return confirm({
     tone: 'destructive',
     defaultOpen: true,
     triggerLabel: 'Excluir item',
@@ -192,7 +192,7 @@ export function alertDialogOpenSource(): string {
  * fechamento, então não existe um segundo handler para "fechar depois".
  */
 export function alertDialogConfirmadoSource(): string {
-  return confirmacao({
+  return confirm({
     tone: 'destructive',
     title: 'Confirmar exclusão',
     description: 'Esta ação é permanente e não poderá ser desfeita.',
@@ -206,7 +206,7 @@ export function alertDialogConfirmadoSource(): string {
  * destrutiva NÃO roda por esse caminho.
  */
 export function alertDialogCanceladoSource(): string {
-  return confirmacao({
+  return confirm({
     tone: 'destructive',
     title: 'Confirmar exclusão',
     description: 'Esta ação é permanente e não poderá ser desfeita.',
@@ -268,7 +268,7 @@ const [aberto, setAberto] = useState(false);`,
  * descrição. O ícone sai da árvore de acessibilidade; quem nomeia é o título.
  */
 export function alertDialogWithIconSource(): string {
-  return confirmacao({ tone: 'destructive', midia: true });
+  return confirm({ tone: 'destructive', midia: true });
 }
 
 /**
@@ -277,7 +277,7 @@ export function alertDialogWithIconSource(): string {
  * aqui — e o padrão dele é o destrutivo.
  */
 export function alertDialogNeutralSource(): string {
-  return confirmacao({
+  return confirm({
     tone: 'default',
     triggerLabel: 'Sair da conta',
     title: 'Sair da conta',
@@ -292,7 +292,7 @@ export function alertDialogNeutralSource(): string {
  * que apenas encurtasse o texto ensinaria o contrário.
  */
 export function alertDialogNoDescriptionSource(): string {
-  return confirmacao({
+  return confirm({
     tone: 'destructive',
     triggerLabel: 'Descartar rascunho',
     title: 'Descartar rascunho',
@@ -308,7 +308,7 @@ export function alertDialogNoDescriptionSource(): string {
  * perde para a regra do painel.
  */
 export function alertDialogClassNameExtraSource(): string {
-  return confirmacao({
+  return confirm({
     tone: 'destructive',
     midia: true,
     classeContent: 'nds-overflow-hidden',

@@ -15,7 +15,7 @@ type CollapsibleArgs = {
 
 // Não exportar: o indexer do Storybook publica todo export nomeado de um
 // .stories.* como story.
-const PAINEL_CLASSES =
+const PANEL_CLASSES =
   'nds-stack nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-mt-2';
 
 const meta: Meta<CollapsibleArgs> = {
@@ -83,7 +83,7 @@ export const Playground: Story = {
   },
   render: (args) => {
     const content = document.createElement('div');
-    content.className = PAINEL_CLASSES;
+    content.className = PANEL_CLASSES;
     content.dataset.spacing = 'sm';
     for (const texto of ['Filtro avançado 1', 'Filtro avançado 2']) {
       const p = document.createElement('p');

@@ -174,7 +174,7 @@ export function ScrollAreaDocs() {
 
   const codeImportBasic = `import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";`;
 
-  const codeVertical = `<div>
+  const verticalCode = `<div>
   <ScrollArea size="xl" className="nds-w-full nds-rounded-md nds-border-default">
     <div className="nds-stack nds-p-4" data-spacing="sm">
       {tags.map((tag) => (
@@ -184,7 +184,7 @@ export function ScrollAreaDocs() {
   </ScrollArea>
 </div>`;
 
-  const codeHorizontal = `<div style={{ width: "500px" }}>
+  const horizontalCode = `<div style={{ width: "500px" }}>
   <ScrollArea size="md" className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default">
     <div className="nds-cluster nds-p-4" data-spacing="md" style={{ width: "max-content" }}>
       {items.map((item) => (
@@ -479,7 +479,7 @@ interface ScrollBarProps {
           {
             name: tContent("variants.items.vertical"),
             description: stripHtml(tContent("variants.styles.vertical")),
-            code: codeVertical,
+            code: verticalCode,
             preview: (
               <div className="nds-w-full" style={{ maxWidth: "300px" }}>
                 <ScrollArea size="md" className="nds-w-full nds-rounded-md nds-border-default">
@@ -497,7 +497,7 @@ interface ScrollBarProps {
           {
             name: tContent("variants.items.horizontal"),
             description: stripHtml(tContent("variants.styles.horizontal")),
-            code: codeHorizontal,
+            code: horizontalCode,
             preview: (
               <div className="nds-w-full" style={{ maxWidth: "420px" }}>
                 <ScrollArea size="sm" className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default">

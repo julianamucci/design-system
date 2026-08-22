@@ -71,11 +71,11 @@ function faixa(rotulo: string, atual: number): Record<string, unknown> {
       atual,
       total: 5,
       // Derivado do total: uma lista literal deixaria de acompanhar a faixa.
-      paginas: Array.from({ length: 5 }, (_, i) => i + 1),
+      pages: Array.from({ length: 5 }, (_, i) => i + 1),
       rotulo,
       rotuloPagina: LABEL_PAGE,
-      rotuloAnterior: LABEL_PREVIOUS,
-      rotuloProxima: LABEL_NEXT,
+      labelPrevious: LABEL_PREVIOUS,
+      labelNext: LABEL_NEXT,
       aoNavegar,
     },
     template: `
@@ -86,12 +86,12 @@ function faixa(rotulo: string, atual: number): Record<string, unknown> {
               ndsPaginationPrevious
               href="#"
               text="Anterior"
-              [label]="rotuloAnterior"
+              [label]="labelPrevious"
               [disabled]="atual === 1"
               (click)="aoNavegar($event, atual - 1)"
             ></a>
           </li>
-          @for (n of paginas; track n) {
+          @for (n of pages; track n) {
             <li ndsPaginationItem>
               <a
                 ndsPaginationLink
@@ -107,7 +107,7 @@ function faixa(rotulo: string, atual: number): Record<string, unknown> {
               ndsPaginationNext
               href="#"
               text="Próxima"
-              [label]="rotuloProxima"
+              [label]="labelNext"
               [disabled]="atual === total"
               (click)="aoNavegar($event, atual + 1)"
             ></a>
@@ -265,9 +265,9 @@ export const Contrast: Story = {
       // WCAG (grande é >=24px, ou >=18.66px em negrito), então o limite é 4.5.
       // A página atual troca de variante (ghost → outline): medir TODOS é o que
       // impede um defeito que só apareceria na página selecionada.
-      const medidas = rangeContrastes(canvasElement);
-      await expect(medidas.length).toBe(7);
-      await expect(JSON.stringify(medidas.filter((m) => m.ratio < 4.5))).toBe('[]');
+      const measurements = rangeContrastes(canvasElement);
+      await expect(measurements.length).toBe(7);
+      await expect(JSON.stringify(measurements.filter((m) => m.ratio < 4.5))).toBe('[]');
     });
 
     await step('Todo controle alcança o alvo de toque mínimo', async () => {

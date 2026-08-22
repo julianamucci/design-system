@@ -109,10 +109,10 @@ export function tabsWithIconsSnippet(
   itens: Array<TabsSnippetItem & { icon: string }>,
   o: TabsSnippetOptions = {},
 ): string {
-  const icones = [...new Set(itens.map((i) => i.icon))].sort();
+  const icons = [...new Set(itens.map((i) => i.icon))].sort();
 
   return snippet(
-    [importing('tabs', 'createTabs'), `import { ${[...icones, 'createElement'].join(', ')} } from 'lucide';`].join('\n'),
+    [importing('tabs', 'createTabs'), `import { ${[...icons, 'createElement'].join(', ')} } from 'lucide';`].join('\n'),
     PANEL_FABRICA,
     `const abas = ${chamada('createTabs', conjuntoLines(o, itens))};`,
     `const icones = {

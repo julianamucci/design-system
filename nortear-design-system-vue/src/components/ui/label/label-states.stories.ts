@@ -60,8 +60,8 @@ export const Default: Story = {
     await step('O contraste do texto passa em AA nos dois temas', async () => {
       // O axe do test-runner só vê o tema claro. 4.5 porque o rótulo é texto
       // normal: 14px em peso 500 não alcança o limite de texto grande.
-      const { claro, escuro } = themeContrast(label);
-      await expect(claro).toBeGreaterThanOrEqual(4.5);
+      const { light, escuro } = themeContrast(label);
+      await expect(light).toBeGreaterThanOrEqual(4.5);
       await expect(escuro).toBeGreaterThanOrEqual(4.5);
     });
   },

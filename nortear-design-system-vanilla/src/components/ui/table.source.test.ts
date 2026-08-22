@@ -20,7 +20,7 @@ describe('tableSnippet', () => {
 
   it('não importa a peça que a story não usa', () => {
     expect(tableSnippet()).not.toContain('createTableFooter');
-    expect(tableSnippet({ comRodape: true })).toContain('createTableFooter');
+    expect(tableSnippet({ withFooter: true })).toContain('createTableFooter');
     expect(tableSnippet()).not.toContain('createButton');
     expect(tableSnippet({ withActions: true })).toContain(
       "import { createButton } from '@/components/ui/button';",
@@ -37,7 +37,7 @@ describe('tableSnippet', () => {
   });
 
   it('mostra o rodapé, a ação por linha e a linha marcada quando a story as usa', () => {
-    expect(tableSnippet({ comRodape: true })).toContain("createTableCell('Total')");
+    expect(tableSnippet({ withFooter: true })).toContain("createTableCell('Total')");
     const withActions = tableSnippet({ withActions: true });
     expect(withActions).toContain("variant: 'ghost'");
     expect(withActions).toContain("'aria-label': `Ações para fatura ${fatura.id}`");
@@ -88,7 +88,7 @@ describe('tableSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
     const noArgs = tableSource('<table data-slot="table">', {});
     const withArgs = tableSource('<table data-slot="table">', {
-      args: { captionVisivel: true, comRodape: true },
+      args: { captionVisivel: true, withFooter: true },
     });
     expect(noArgs).not.toBe(withArgs);
     expect(withArgs).toContain('createTableFooter');
@@ -105,8 +105,8 @@ describe('tableSource', () => {
 
 describe('tableSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = tableSourceWith({ comRodape: false, withActions: true });
-    const código = transform('', { args: { comRodape: true } });
+    const transform = tableSourceWith({ withFooter: false, withActions: true });
+    const código = transform('', { args: { withFooter: true } });
     expect(código).not.toContain('createTableFooter');
     expect(código).toContain('createButton');
   });

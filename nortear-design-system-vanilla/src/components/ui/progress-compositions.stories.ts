@@ -248,9 +248,9 @@ export const MultipleUploads: Story = {
     });
 
     await step('Nomes acessíveis distintos — a lista não confunde os arquivos', async () => {
-      const nomes = barrasDeProgresso(canvasElement).map(nomeAcessivel);
-      await expect(nomes.every((n) => n !== '')).toBe(true);
-      await expect(new Set(nomes).size).toBe(4);
+      const names = barrasDeProgresso(canvasElement).map(nomeAcessivel);
+      await expect(names.every((n) => n !== '')).toBe(true);
+      await expect(new Set(names).size).toBe(4);
     });
   },
 };

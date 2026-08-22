@@ -197,10 +197,10 @@ export const Range: Story = {
     await step("Os extremos são distinguíveis do miolo", async () => {
       // Sem essa marcação o intervalo vira um bloco só, e a pessoa não vê onde
       // ele começa nem onde termina.
-      const inicio = canvasElement.querySelector('[role=gridcell][data-day="2026-04-10"] button')!;
-      const fim = canvasElement.querySelector('[role=gridcell][data-day="2026-04-18"] button')!;
-      await expect(inicio).toHaveAttribute("data-range-start", "true");
-      await expect(fim).toHaveAttribute("data-range-end", "true");
+      const start = canvasElement.querySelector('[role=gridcell][data-day="2026-04-10"] button')!;
+      const end = canvasElement.querySelector('[role=gridcell][data-day="2026-04-18"] button')!;
+      await expect(start).toHaveAttribute("data-range-start", "true");
+      await expect(end).toHaveAttribute("data-range-end", "true");
     });
 
     await step("A faixa do miolo é pintada pela célula, não pelo botão", async () => {
@@ -222,11 +222,11 @@ export const Range: Story = {
       // sexto do produto. Medido no escuro, as pontas do intervalo de uma stack
       // marcavam 1.18:1, porque uma regra de botão mais específica vencia o fundo
       // `--primary` — o número do dia sumia. Aritmética, não olhômetro.
-      const medidas = calendarMeasureContrast(canvasElement).filter(
+      const measurements = calendarMeasureContrast(canvasElement).filter(
         (m) => m.presente && STATES_WITH_TEXT_LEGIVEL.includes(m.estado as never),
       );
-      await expect(medidas.length).toBeGreaterThan(0);
-      const reprovadas = medidas.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);
+      await expect(measurements.length).toBeGreaterThan(0);
+      const reprovadas = measurements.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);
       await expect(reprovadas).toEqual([]);
     });
   },

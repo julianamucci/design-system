@@ -39,7 +39,7 @@ type Item = {
   disabled?: boolean;
 };
 
-const ALINHAMENTO: readonly Item[] = [
+const ALIGNMENT: readonly Item[] = [
   { value: 'left', rotulo: 'Alinhar à esquerda', icone: 'alignLeft' },
   { value: 'center', rotulo: 'Centralizar', icone: 'alignCenter' },
   { value: 'right', rotulo: 'Alinhar à direita', icone: 'alignRight' },
@@ -130,7 +130,7 @@ export function toggleGroupSource(
     : `let alinhamento = $state("${typeof value === 'string' ? value : ''}");`;
 
   return mountGroup({
-    itens: ALINHAMENTO,
+    itens: ALIGNMENT,
     rotulo: 'Alinhamento do texto',
     estado: 'alinhamento',
     declaration,
@@ -196,7 +196,7 @@ export function toggleGroupVisualizacaoVerticalSource(): string {
 /** AlignmentBar (Compositions): a barra clássica, com a quarta opção. */
 export function alignmentToggleGroupBarSource(): string {
   return mountGroup({
-    itens: [...ALINHAMENTO, { value: 'justify', rotulo: 'Justificar', icone: 'alignJustify' }],
+    itens: [...ALIGNMENT, { value: 'justify', rotulo: 'Justificar', icone: 'alignJustify' }],
     rotulo: 'Alinhamento do texto',
     estado: 'alinhamento',
     declaration: 'let alinhamento = $state("");',
@@ -207,7 +207,7 @@ export function alignmentToggleGroupBarSource(): string {
 /** DisabledItem (States): uma opção fora de uso sem derrubar o grupo inteiro. */
 export function toggleGroupItemDisabledSource(): string {
   return mountGroup({
-    itens: [ALINHAMENTO[0], { ...ALINHAMENTO[1], disabled: true }, ALINHAMENTO[2]],
+    itens: [ALIGNMENT[0], { ...ALIGNMENT[1], disabled: true }, ALIGNMENT[2]],
     rotulo: 'Alinhamento do texto',
     estado: 'alinhamento',
     declaration: 'let alinhamento = $state("");',

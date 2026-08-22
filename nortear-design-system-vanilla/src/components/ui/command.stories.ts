@@ -137,9 +137,9 @@ export const Playground: Story = {
       // tem de verdade — id órfão o axe reprova por aria-valid-attr-value.
       await expect(campo).toHaveAttribute('aria-autocomplete', 'list');
       await expect(campo).toHaveAttribute('aria-expanded', 'true');
-      const controlado = campo.getAttribute('aria-controls');
-      await expect(controlado).toBeTruthy();
-      await expect(document.getElementById(controlado!)).toBe(lista);
+      const controlled = campo.getAttribute('aria-controls');
+      await expect(controlled).toBeTruthy();
+      await expect(document.getElementById(controlled!)).toBe(lista);
       // Nome acessível herdado do placeholder, nos dois papéis.
       await expect(campo).toHaveAttribute('aria-label', args.placeholder);
       await expect(lista).toHaveAttribute('aria-label', args.placeholder);

@@ -62,8 +62,8 @@ const LABEL_SIDEBAR = 'Redimensionar sidebar e conteúdo — use setas';
 const LABEL_CONSOLE = 'Redimensionar editor e console — use setas';
 
 /** Conteúdo centralizado de um painel — o painel é a caixa, não o texto. */
-function centralizado(texto: string, fundo = ''): string {
-  const classes = ['nds-cluster', 'nds-p-4', 'nds-text-body', 'nds-h-full', fundo]
+function centralizado(texto: string, background = ''): string {
+  const classes = ['nds-cluster', 'nds-p-4', 'nds-text-body', 'nds-h-full', background]
     .filter(Boolean)
     .join(' ');
   return `<div className="${classes}" data-align="center" data-justify="center">

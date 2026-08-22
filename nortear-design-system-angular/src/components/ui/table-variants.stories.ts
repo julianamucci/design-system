@@ -292,7 +292,7 @@ export const WithRowActions: Story = {
     },
   },
   render: () => ({
-    props: { faturas: INVOICES, varianteDe: STATUS_VARIANT },
+    props: { faturas: INVOICES, variantOf: STATUS_VARIANT },
     template: `
       <div ndsTableWrapper>
         <table ndsTable>
@@ -314,7 +314,7 @@ export const WithRowActions: Story = {
               <tr ndsTableRow>
                 <td ndsTableCell class="nds-font-medium">{{ fatura.id }}</td>
                 <td ndsTableCell>
-                  <span ndsBadge [variant]="varianteDe[fatura.status]">{{ fatura.status }}</span>
+                  <span ndsBadge [variant]="variantOf[fatura.status]">{{ fatura.status }}</span>
                 </td>
                 <td ndsTableCell class="nds-text-right">{{ fatura.valor }}</td>
                 <td ndsTableCell class="nds-text-right">
@@ -340,12 +340,12 @@ export const WithRowActions: Story = {
     await step('Cada ação diz a qual fatura pertence', async () => {
       // accessibility.item3 — cinco botões chamados "Editar" seriam cinco
       // controles indistinguíveis na lista de elementos do leitor de tela.
-      const botoes = canvas.getAllByRole('button');
-      await expect(botoes.length).toBe(INVOICES.length);
-      for (const [i, botao] of botoes.entries()) {
-        await expect(botao).toHaveAccessibleName(`Editar fatura ${INVOICES[i].id}`);
+      const buttons = canvas.getAllByRole('button');
+      await expect(buttons.length).toBe(INVOICES.length);
+      for (const [i, button] of buttons.entries()) {
+        await expect(button).toHaveAccessibleName(`Editar fatura ${INVOICES[i].id}`);
         // O botão mora dentro da própria linha do registro que ele edita.
-        await expect(botao.closest('tr')).toHaveTextContent(INVOICES[i].id);
+        await expect(button.closest('tr')).toHaveTextContent(INVOICES[i].id);
       }
     });
 
@@ -364,9 +364,9 @@ export const WithRowActions: Story = {
 
 // Dois anos de competência, não um: com doze colunas a tabela ainda cabe num
 // canvas largo, e a story provaria a rolagem só nos viewports estreitos.
-const MONTHS = ['2025', '2026'].flatMap((ano) =>
+const MONTHS = ['2025', '2026'].flatMap((year) =>
   ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'].map(
-    (mes) => `${mes}/${ano}`,
+    (month) => `${month}/${year}`,
   ),
 );
 
@@ -389,8 +389,8 @@ export const HorizontalScroll: Story = {
           <thead ndsTableHeader>
             <tr ndsTableRow>
               <th ndsTableHead>Fatura</th>
-              @for (mes of meses; track mes) {
-                <th ndsTableHead>{{ mes }}</th>
+              @for (month of meses; track month) {
+                <th ndsTableHead>{{ month }}</th>
               }
             </tr>
           </thead>
@@ -398,7 +398,7 @@ export const HorizontalScroll: Story = {
             @for (fatura of faturas; track fatura.id) {
               <tr ndsTableRow>
                 <td ndsTableCell class="nds-font-medium">{{ fatura.id }}</td>
-                @for (mes of meses; track mes) {
+                @for (month of meses; track month) {
                   <td ndsTableCell class="nds-text-right">{{ fatura.valor }}</td>
                 }
               </tr>

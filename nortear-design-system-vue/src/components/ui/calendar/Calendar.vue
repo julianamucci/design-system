@@ -8,8 +8,8 @@ import { CalendarRoot, useDateFormatter, useForwardPropsEmits } from 'reka-ui'
 import { createYear, createYearRange, toDate } from 'reka-ui/date'
 import { computed, nextTick } from 'vue'
 import { cn } from '@/lib/utils'
-import { rotulosDoCalendario } from '@shared/primitives/calendar-labels'
-import { destinoDaTecla, diaNaGrade, isoDoElemento } from '@shared/primitives/calendar-teclado'
+import { calendarLabels } from '@shared/primitives/calendar-labels'
+import { teclaTarget, gridDay, isoDoElemento } from '@shared/primitives/calendar-teclado'
 import { CalendarCell, CalendarCellTrigger, CalendarGrid, CalendarGridBody, CalendarGridHead, CalendarGridRow, CalendarHeadCell, CalendarHeader, CalendarHeading, CalendarNextButton, CalendarPrevButton } from './index'
 
 const props = withDefaults(defineProps<CalendarRootProps & { class?: HTMLAttributes['class'], layout?: LayoutTypes, yearRange?: DateValue[] }>(), {
@@ -35,7 +35,7 @@ const formatter = useDateFormatter(props.locale ?? 'en')
 
 // Os botões de mês só têm ícone: quem usa leitor de tela ouve o aria-label, e o
 // da lib vinha "Previous page" — em inglês e descrevendo página, não mês.
-const rotulos = computed(() => rotulosDoCalendario(props.locale))
+const rotulos = computed(() => calendarLabels(props.locale))
 
 /**
  * Anos oferecidos para cada lado do ano corrente.
@@ -47,7 +47,7 @@ const rotulos = computed(() => rotulosDoCalendario(props.locale))
  * aparece é a altura do painel (onze itens, no CSS): abre com o ano corrente no
  * meio e rola livre para os dois lados.
  */
-const ANOS_PARA_CADA_LADO = 100
+const EACH_SIDE_YEARS = 100
 
 const yearRange = computed(() => {
   // A âncora é o `placeholder` já resolvido, e não a cadeia
@@ -62,8 +62,8 @@ const yearRange = computed(() => {
   // para frente): a lista precisa correr para os dois lados, e não é para uma
   // data no ano que vem ficar fora do alcance.
   return props.yearRange ?? createYearRange({
-    start: props?.minValue ?? ancora.cycle('year', -ANOS_PARA_CADA_LADO),
-    end: props?.maxValue ?? ancora.cycle('year', ANOS_PARA_CADA_LADO),
+    start: props?.minValue ?? ancora.cycle('year', -EACH_SIDE_YEARS),
+    end: props?.maxValue ?? ancora.cycle('year', EACH_SIDE_YEARS),
   })
 })
 
@@ -82,13 +82,13 @@ const yearRange = computed(() => {
  * O foco é devolvido depois do `nextTick` porque mudar o mês recria a grade: o
  * botão de destino ainda não existe no instante da tecla.
  */
-function aoTeclarNaGrade(evento: KeyboardEvent) {
+function onGridKeyDown(evento: KeyboardEvent) {
   const raiz = evento.currentTarget as HTMLElement | null
-  const destino = destinoDaTecla(isoDoElemento(evento.target as Element | null), evento)
-  if (!destino || !raiz) return
+  const destination = teclaTarget(isoDoElemento(evento.target as Element | null), evento)
+  if (!destination || !raiz) return
   evento.preventDefault()
-  placeholder.value = parseDate(destino)
-  void nextTick(() => diaNaGrade(raiz, destino)?.focus())
+  placeholder.value = parseDate(destination)
+  void nextTick(() => gridDay(raiz, destination)?.focus())
 }
 
 const [DefineMonthTemplate, ReuseMonthTemplate] = createReusableTemplate<{ date: DateValue }>()
@@ -155,7 +155,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     v-model:placeholder="placeholder"
     data-slot="calendar"
     :class="cn('nds-calendar-root', props.class)"
-    @keydown="aoTeclarNaGrade"
+    @keydown="onGridKeyDown"
   >
     <!-- Mesma árvore do Vanilla, que é a referência de markup: a faixa de
          navegação é IRMÃ dos meses e fica por cima deles, e CADA mês traz a

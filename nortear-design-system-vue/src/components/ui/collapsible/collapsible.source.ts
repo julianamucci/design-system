@@ -16,8 +16,8 @@ export type CollapsibleArgs = {
 };
 
 /** Import do design system mais os ícones que o gatilho usa. */
-function importing(icones = 'ChevronDown'): string {
-  return `import { ${icones} } from 'lucide-vue-next'
+function importing(icons = 'ChevronDown'): string {
+  return `import { ${icons} } from 'lucide-vue-next'
 import {
   Collapsible,
   CollapsibleContent,
@@ -31,7 +31,7 @@ import {
  * para um filho, e é por isso que ele carrega `aria-expanded` e `aria-controls`
  * sem nenhuma linha de ligação.
  */
-const PAINEL =
+const PANEL =
   'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
 const TRIGGER_GHOST = 'nds-button nds-button-ghost nds-cluster nds-w-full nds-px-4';
 const TRIGGER_OUTLINE = 'nds-button nds-button-outline nds-cluster nds-w-full nds-px-4';
@@ -78,7 +78,7 @@ ${rotulo}
     <ChevronDown aria-hidden="true" class="${chevron}" />
   </CollapsibleTrigger>
   <CollapsibleContent
-    class="${PAINEL}"
+    class="${PANEL}"
     data-spacing="sm"
   >
 ${corpo}

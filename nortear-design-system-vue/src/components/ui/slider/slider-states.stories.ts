@@ -106,8 +106,8 @@ export const FocusVisible: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const alca = () => alcasDoSlider(canvasElement)[0];
-    const repouso = await restRing(alca());
+    const thumb = () => alcasDoSlider(canvasElement)[0];
+    const rest = await restRing(thumb());
 
     await step('A alça recebe foco por teclado', async () => {
       await userEvent.tab();
@@ -116,8 +116,8 @@ export const FocusVisible: Story = {
 
     await step('A alça focada fica visivelmente diferente da alça em repouso', async () => {
       // Alça focada idêntica à alça parada é 2.4.7 reprovado com o teste verde.
-      const focada = await focusAssentadoRing(alca(), repouso);
-      await expect(focada.sombra !== repouso.sombra || focada.borda !== repouso.borda).toBe(true);
+      const focada = await focusAssentadoRing(thumb(), rest);
+      await expect(focada.sombra !== rest.sombra || focada.border !== rest.border).toBe(true);
       await expect(focada.sombra).not.toBe('none');
     });
 
@@ -158,9 +158,9 @@ export const Disabled: Story = {
     });
 
     await step('ArrowRight não altera o valor', async () => {
-      const alca = canvas.getByRole('slider');
-      const antes = handleValue(alca);
-      (alca as HTMLElement).focus();
+      const thumb = canvas.getByRole('slider');
+      const antes = handleValue(thumb);
+      (thumb as HTMLElement).focus();
       await userEvent.keyboard('{ArrowRight}');
       await expect(handleValue(canvas.getByRole('slider'))).toBe(antes);
     });
@@ -194,8 +194,8 @@ export const NoMin: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('ArrowLeft não passa do mínimo', async () => {
-      const alca = canvas.getByRole('slider');
-      (alca as HTMLElement).focus();
+      const thumb = canvas.getByRole('slider');
+      (thumb as HTMLElement).focus();
       await userEvent.keyboard('{Home}');
       await userEvent.keyboard('{ArrowLeft}');
       await expect(handleValue(canvas.getByRole('slider'))).toBe(0);
@@ -229,8 +229,8 @@ export const NoMax: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('ArrowRight não passa do máximo', async () => {
-      const alca = canvas.getByRole('slider');
-      (alca as HTMLElement).focus();
+      const thumb = canvas.getByRole('slider');
+      (thumb as HTMLElement).focus();
       await userEvent.keyboard('{End}');
       await userEvent.keyboard('{ArrowRight}');
       await expect(handleValue(canvas.getByRole('slider'))).toBe(100);

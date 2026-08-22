@@ -110,10 +110,10 @@ export const ListenerCleanup: Story = {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ProbeResult;
+    let probe!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
-      sonda = await sondarOuvintes({
+      probe = await sondarOuvintes({
         host: host as HTMLElement,
         montar: () => createDataTable<Invoice>({
           columns: baseColumns,
@@ -131,7 +131,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await checkLimpeza(sonda);
+      await checkLimpeza(probe);
     });
   },
 };

@@ -14,7 +14,7 @@
 export const CLASSES_TRIGGER_LINK = 'nds-text-primary nds-font-medium nds-hover-underline';
 
 /** Gatilho que NÃO navega (termo, métrica): botão sem moldura e cursor de ajuda. */
-export const CLASSES_GATILHO_BOTAO =
+export const CLASSES_TRIGGER_BUTTON =
   'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 
 export function construirLink(rotulo: string, href = '/users/joana'): HTMLAnchorElement {
@@ -28,7 +28,7 @@ export function construirLink(rotulo: string, href = '/users/joana'): HTMLAnchor
 export function construirButton(rotulo: string): HTMLButtonElement {
   const b = document.createElement('button');
   b.type = 'button';
-  b.className = CLASSES_GATILHO_BOTAO;
+  b.className = CLASSES_TRIGGER_BUTTON;
   b.textContent = rotulo;
   return b;
 }

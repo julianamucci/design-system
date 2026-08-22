@@ -42,10 +42,10 @@ type Story = StoryObj<typeof meta>;
 
 /** Geometria real; `style.width` não decide nada num item de `flex-basis: 0`. */
 function fracoes(panels: HTMLElement[], horizontal: boolean): number[] {
-  const medida = (p: HTMLElement) =>
+  const measurement = (p: HTMLElement) =>
     horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height;
-  const total = panels.reduce((a, p) => a + medida(p), 0);
-  return panels.map((p) => medida(p) / total);
+  const total = panels.reduce((a, p) => a + measurement(p), 0);
+  return panels.map((p) => measurement(p) / total);
 }
 
 function panelsDiretos(grupo: Element): HTMLElement[] {

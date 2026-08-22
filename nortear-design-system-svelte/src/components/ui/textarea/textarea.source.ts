@@ -33,10 +33,10 @@ function tagTextarea(partes: Array<string | false | ''>): string {
 }
 
 /** Bloco `<script>` com os imports e o estado do campo. */
-function script(valorInicial = ''): string {
+function script(valueInitial = ''): string {
   return `${IMPORT}
 
-let value = $state(${JSON.stringify(valorInicial)});`;
+let value = $state(${JSON.stringify(valueInitial)});`;
 }
 
 /**

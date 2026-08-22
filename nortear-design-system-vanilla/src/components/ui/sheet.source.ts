@@ -150,7 +150,7 @@ function rodape(o: SheetSnippetOptions): { bloco?: string; referencia?: string }
   const aplicar = o.applyLabel === false ? undefined : (o.applyLabel ?? 'Aplicar filtros');
   if (!cancelar && !aplicar) return {};
 
-  const botoes = [
+  const buttons = [
     cancelar ? `createButton({ variant: 'outline', label: ${texto(cancelar)} })` : undefined,
     aplicar ? `createButton({ label: ${texto(aplicar)} })` : undefined,
   ].filter((b): b is string => Boolean(b));
@@ -161,7 +161,7 @@ function rodape(o: SheetSnippetOptions): { bloco?: string; referencia?: string }
 rodape.className = 'nds-cluster';
 rodape.dataset.spacing = 'sm';
 rodape.append(
-${botoes.map((b) => `  ${b},`).join('\n')}
+${buttons.map((b) => `  ${b},`).join('\n')}
 );
 // A fábrica não expõe um botão de fechar componível: quem fecha por fora é o
 // overlay, e é ele que os botões do rodapé acionam.

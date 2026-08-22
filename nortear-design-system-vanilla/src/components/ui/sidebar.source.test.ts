@@ -76,7 +76,7 @@ describe('sidebarSnippet', () => {
 
   it('acrescenta a busca com nome acessível obrigatório', () => {
     expect(sidebarSnippet()).not.toContain('createSidebarInput');
-    const código = sidebarSnippet({ busca: 'Buscar na navegação' });
+    const código = sidebarSnippet({ search: 'Buscar na navegação' });
     expect(código).toContain("createSidebarInput({ 'aria-label': 'Buscar na navegação'");
     expect(código).toContain('createSidebarInput,');
   });

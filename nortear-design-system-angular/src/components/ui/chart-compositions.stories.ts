@@ -107,8 +107,8 @@ export const InlineTitle: Story = {
     const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
 
     await step('O título aparece escrito no desenho', async () => {
-      const textos = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
-      await expect(textos).toContain('Vendas mensais');
+      const texts = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
+      await expect(texts).toContain('Vendas mensais');
     });
 
     await step('O título não rouba o lugar da descrição do gráfico', async () => {

@@ -132,8 +132,8 @@ export const SingleSeries: Story = {
     });
 
     await step('As categorias continuam escritas no eixo', async () => {
-      for (const mes of MONTHS) {
-        await expect(designEscreve(raiz, mes)).toBe(true);
+      for (const month of MONTHS) {
+        await expect(designEscreve(raiz, month)).toBe(true);
       }
     });
   },
@@ -349,18 +349,18 @@ export const GraphicContrast: Story = {
     await waitFor(() => expect(datumFormas(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
     // Precondição da medida: ver o comentário de `settleTheme`.
     await settleTheme(document);
-    const fundo = backgroundOpacoAtras(raiz);
+    const background = backgroundOpacoAtras(raiz);
 
     await step('Todo contorno de forma passa de 3:1 contra o fundo', async () => {
       for (const forma of datumFormas(raiz)) {
-        await expect(contraste(getComputedStyle(forma).stroke, fundo)).toBeGreaterThanOrEqual(3);
+        await expect(contraste(getComputedStyle(forma).stroke, background)).toBeGreaterThanOrEqual(3);
       }
     });
 
     await step('O texto dos eixos passa de 4.5:1 contra o mesmo fundo', async () => {
       // Marca de eixo é texto corrido pequeno: o piso é 4.5, não 3.
       const rotulo = raiz.querySelector<SVGTextElement>('svg text')!;
-      await expect(contraste(getComputedStyle(rotulo).fill, fundo)).toBeGreaterThanOrEqual(4.5);
+      await expect(contraste(getComputedStyle(rotulo).fill, background)).toBeGreaterThanOrEqual(4.5);
     });
   },
 };

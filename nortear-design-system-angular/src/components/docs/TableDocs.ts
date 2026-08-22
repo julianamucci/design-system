@@ -942,10 +942,10 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
   // mostra também o empty state quando a busca não acha nada.
   protected readonly termo = signal('');
   protected readonly linhasFiltradas = computed(() => {
-    const busca = this.termo().trim().toLowerCase();
+    const search = this.termo().trim().toLowerCase();
     const linhas = this.linhasDemo();
-    if (!busca) return linhas;
-    return linhas.filter((l) => `${l.id} ${l.metodo}`.toLowerCase().includes(busca));
+    if (!search) return linhas;
+    return linhas.filter((l) => `${l.id} ${l.metodo}`.toLowerCase().includes(search));
   });
 
   protected filtrar(evento: Event): void {
@@ -1138,19 +1138,19 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     const classe = {
       name: 'class',
       type: 'string',
       defaultValue: '—',
-      required: nao,
+      required: not,
       description: toPlainText(t('props.items.className')),
     };
     const conteudo = {
       name: '(conteúdo)',
       type: 'HTML',
       defaultValue: '—',
-      required: nao,
+      required: not,
       description: toPlainText(t('props.items.children')),
     };
 
@@ -1161,8 +1161,8 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
         title: 'TableWrapper',
         cols,
         items: [
-          { name: '(elemento)', type: 'div',    defaultValue: '—', required: nao, description: toPlainText(t('props.items.wrapper')) },
-          { name: 'tabindex',   type: '"0"',    defaultValue: '"0"', required: nao, description: toPlainText(t('props.items.tabindex')) },
+          { name: '(elemento)', type: 'div',    defaultValue: '—', required: not, description: toPlainText(t('props.items.wrapper')) },
+          { name: 'tabindex',   type: '"0"',    defaultValue: '"0"', required: not, description: toPlainText(t('props.items.tabindex')) },
           classe,
           conteudo,
         ],
@@ -1175,8 +1175,8 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
         title: t('props.tableRowTitle'),
         cols,
         items: [
-          { name: 'selected',   type: 'boolean',    defaultValue: 'false', required: nao, description: toPlainText(t('props.items.selected')) },
-          { name: 'data-state', type: '"selected"', defaultValue: '—',     required: nao, description: toPlainText(t('props.items.dataState')) },
+          { name: 'selected',   type: 'boolean',    defaultValue: 'false', required: not, description: toPlainText(t('props.items.selected')) },
+          { name: 'data-state', type: '"selected"', defaultValue: '—',     required: not, description: toPlainText(t('props.items.dataState')) },
           classe,
           conteudo,
         ],
@@ -1185,8 +1185,8 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
         title: t('props.tableHeadTitle'),
         cols,
         items: [
-          { name: 'scope', type: '"col" | "row" | "colgroup" | "rowgroup"', defaultValue: "'col'", required: nao, description: toPlainText(t('props.items.scope')) },
-          { name: 'sort',  type: 'TableSortDirection',                      defaultValue: '—',     required: nao, description: toPlainText(t('props.items.sort')) },
+          { name: 'scope', type: '"col" | "row" | "colgroup" | "rowgroup"', defaultValue: "'col'", required: not, description: toPlainText(t('props.items.scope')) },
+          { name: 'sort',  type: 'TableSortDirection',                      defaultValue: '—',     required: not, description: toPlainText(t('props.items.sort')) },
           classe,
           conteudo,
         ],
@@ -1195,8 +1195,8 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
         title: t('props.tableCellTitle'),
         cols,
         items: [
-          { name: 'colspan', type: 'number', defaultValue: '—', required: nao, description: toPlainText(t('props.items.colSpan')) },
-          { name: 'rowspan', type: 'number', defaultValue: '—', required: nao, description: toPlainText(t('props.items.rowSpan')) },
+          { name: 'colspan', type: 'number', defaultValue: '—', required: not, description: toPlainText(t('props.items.colSpan')) },
+          { name: 'rowspan', type: 'number', defaultValue: '—', required: not, description: toPlainText(t('props.items.rowSpan')) },
           classe,
           conteudo,
         ],

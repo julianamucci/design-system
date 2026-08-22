@@ -56,11 +56,11 @@ const IMPORT = 'import { Slider } from "@/components/ui/slider";';
 const IMPORT_LABEL = 'import { Label } from "@/components/ui/label";';
 
 /** Cabeçalho com o estado da(s) alça(s) declarado, que é o uso controlado. */
-function estado(nome: string, setter: string, valorInicial: string, extras = ''): string {
+function estado(nome: string, setter: string, valueInitial: string, extras = ''): string {
   return `${IMPORT_STATE}
 ${IMPORT}${extras ? `\n${extras}` : ''}
 
-const [${nome}, ${setter}] = useState(${valorInicial});`;
+const [${nome}, ${setter}] = useState(${valueInitial});`;
 }
 
 /**

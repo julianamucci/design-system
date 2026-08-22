@@ -5,7 +5,7 @@ import { codeBlockSource, codeBlockSourceWith } from './code-block.source';
 import { LANGUAGE_ITEMS } from '@/components/docs/CodeBlockDocs';
 import {
   CONTRAST_MINIMUM,
-  TRECHOS_DA_PALETA,
+  PALETTE_TRECHOS,
   contrastLaudo,
 } from '@shared/testing/code-block-probe';
 
@@ -185,7 +185,7 @@ function renderPalette(): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-stack';
   wrap.dataset.spacing = 'md';
-  for (const t of TRECHOS_DA_PALETA) {
+  for (const t of PALETTE_TRECHOS) {
     wrap.append(createCodeBlock({ code: t.code, language: t.language, showLineNumbers: false }));
   }
   wrap.append(createCodeBlock({ code: PALETTE_CODE, language: 'ts', highlightLines: [2] }));

@@ -37,7 +37,7 @@ function caixa(el: HTMLElement | null) {
     largura: Math.round(r.width),
     raio: cs.borderRadius,
     padding: cs.padding,
-    fundo: cs.backgroundColor,
+    background: cs.backgroundColor,
     zIndex: cs.zIndex,
   };
 }
@@ -66,7 +66,7 @@ export function measureAlertDialog(doc: Document) {
   const acao = painel.querySelector<HTMLElement>('[data-slot="alert-dialog-action"]');
 
   const labelled = painel.getAttribute('aria-labelledby');
-  const descrito = painel.getAttribute('aria-describedby');
+  const described = painel.getAttribute('aria-describedby');
 
   /** Ordem no DOM dos botões do rodapé — é ela que o Tab e o leitor seguem. */
   const footerOrder = rodape
@@ -81,8 +81,8 @@ export function measureAlertDialog(doc: Document) {
       papel: painel.getAttribute('role'),
       modal: painel.getAttribute('aria-modal'),
       /** Resolve? `sim` só quando o id existe no documento. */
-      rotuladoPor: labelled ? (doc.getElementById(labelled) ? 'resolve' : 'quebrado') : 'ausente',
-      describedBy: descrito ? (doc.getElementById(descrito) ? 'resolve' : 'quebrado') : 'ausente',
+      labelledBy: labelled ? (doc.getElementById(labelled) ? 'resolve' : 'quebrado') : 'ausente',
+      describedBy: described ? (doc.getElementById(described) ? 'resolve' : 'quebrado') : 'ausente',
       /**
        * Heading é PAPEL, não tag. O bits emite `<div role="heading" aria-level>`,
        * que o leitor anuncia igual a um `<h2>` — medir só a tag reportava
@@ -122,7 +122,7 @@ export function measureAlertDialog(doc: Document) {
     geometria: {
       painel: caixa(painel),
       overlay: overlay
-        ? { fundo: getComputedStyle(overlay).backgroundColor, zIndex: getComputedStyle(overlay).zIndex }
+        ? { background: getComputedStyle(overlay).backgroundColor, zIndex: getComputedStyle(overlay).zIndex }
         : null,
       /** Em coluna manda `align-items`; em linha, `justify-content`. */
       rodape: rodape
@@ -133,7 +133,7 @@ export function measureAlertDialog(doc: Document) {
           }
         : null,
     },
-    foco: describeFocus(doc),
+    focus: describeFocus(doc),
   };
 }
 
@@ -141,7 +141,7 @@ export function measureAlertDialog(doc: Document) {
 export function dialogoState(doc: Document) {
   return {
     aberto: panelOpen(doc) !== null,
-    foco: describeFocus(doc),
+    focus: describeFocus(doc),
   };
 }
 

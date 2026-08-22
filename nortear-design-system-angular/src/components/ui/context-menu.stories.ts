@@ -130,9 +130,9 @@ export const Playground: Story = {
       const menu = await gestoOpen(area());
       const boxArea = area().getBoundingClientRect();
       const boxMenu = menu.getBoundingClientRect();
-      const centro = { x: boxArea.left + boxArea.width / 2, y: boxArea.top + boxArea.height / 2 };
-      await expect(Math.abs(boxMenu.left - centro.x)).toBeLessThan(24);
-      await expect(Math.abs(boxMenu.top - centro.y)).toBeLessThan(24);
+      const center = { x: boxArea.left + boxArea.width / 2, y: boxArea.top + boxArea.height / 2 };
+      await expect(Math.abs(boxMenu.left - center.x)).toBeLessThan(24);
+      await expect(Math.abs(boxMenu.top - center.y)).toBeLessThan(24);
     });
 
     await step('Os itens são itens de menu de verdade', async () => {

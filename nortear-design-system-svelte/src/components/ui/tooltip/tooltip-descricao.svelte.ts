@@ -27,12 +27,12 @@ export type TooltipDescription = {
   marcarMontado(valor: boolean): void;
 };
 
-const CHAVE = Symbol('nds-tooltip-descricao');
+const KEY = Symbol('nds-tooltip-descricao');
 
 export function fornecerDescription(descricao: TooltipDescription): void {
-  setContext(CHAVE, descricao);
+  setContext(KEY, descricao);
 }
 
 export function usarDescription(): TooltipDescription | undefined {
-  return getContext<TooltipDescription | undefined>(CHAVE);
+  return getContext<TooltipDescription | undefined>(KEY);
 }

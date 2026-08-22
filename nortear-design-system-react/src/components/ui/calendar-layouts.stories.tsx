@@ -73,15 +73,15 @@ export const CaptionLabel: Story = {
       // acessibilidade: cada dia já anuncia a data inteira, e repetir a coluna
       // a cada célula só encompridaria a leitura. Por isso a asserção é sobre o
       // texto visível — pedir `columnheader` aqui reprovaria de propósito.
-      const cabecalho = canvasElement.querySelector("thead")!;
-      await expect(cabecalho).toHaveAttribute("aria-hidden", "true");
-      const dias = Array.from(cabecalho.querySelectorAll("th")).map(
+      const header = canvasElement.querySelector("thead")!;
+      await expect(header).toHaveAttribute("aria-hidden", "true");
+      const days = Array.from(header.querySelectorAll("th")).map(
         (th) => th.textContent?.trim().toLowerCase() ?? "",
       );
       // A forma curta, e a mesma nas quatro: "narrow" dá "D S T Q Q S S", com
       // duas quartas e duas quintas indistinguíveis, e o ponto de "dom." é
       // ruído numa coluna de uma palavra. Conferir só a inicial aceitava tudo.
-      await expect(dias).toEqual(["dom", "seg", "ter", "qua", "qui", "sex", "sáb"]);
+      await expect(days).toEqual(["dom", "seg", "ter", "qua", "qui", "sex", "sáb"]);
     });
 
     await step("A legenda é texto, e não controle", async () => {

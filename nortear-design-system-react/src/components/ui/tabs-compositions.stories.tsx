@@ -97,11 +97,11 @@ export const WithIcons: Story = {
     });
 
     await step("Cada ícone está marcado como decorativo", async () => {
-      const icones = canvasElement.querySelectorAll(
+      const icons = canvasElement.querySelectorAll(
         '[data-slot="tabs-trigger"] svg'
       );
-      await expect(icones).toHaveLength(3);
-      for (const icone of icones) {
+      await expect(icons).toHaveLength(3);
+      for (const icone of icons) {
         await expect(icone).toHaveAttribute("aria-hidden", "true");
         // Um svg vazio seria um ícone que não desenhou nada, e ninguém veria
         // falhar — o desenho tem que estar lá dentro.

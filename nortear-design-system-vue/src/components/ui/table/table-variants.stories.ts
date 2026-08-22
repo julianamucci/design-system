@@ -293,20 +293,20 @@ export const WithRowActions: Story = {
     await step('Cada ação diz a qual fatura pertence', async () => {
       // accessibility.item3 — cinco botões chamados "Ações" seriam cinco
       // controles indistinguíveis na lista de elementos do leitor de tela.
-      const botoes = canvas.getAllByRole('button');
-      await expect(botoes.length).toBe(INVOICES.length);
-      for (const [i, botao] of botoes.entries()) {
-        await expect(botao).toHaveAccessibleName(`Ações para fatura ${INVOICES[i].id}`);
+      const buttons = canvas.getAllByRole('button');
+      await expect(buttons.length).toBe(INVOICES.length);
+      for (const [i, button] of buttons.entries()) {
+        await expect(button).toHaveAccessibleName(`Ações para fatura ${INVOICES[i].id}`);
         // O botão mora dentro da própria linha do registro que ele opera.
-        await expect(botao.closest('tr')).toHaveTextContent(INVOICES[i].id);
+        await expect(button.closest('tr')).toHaveTextContent(INVOICES[i].id);
       }
     });
 
     await step('O botão de ação é discreto (variante ghost)', async () => {
       // visual.item4 — a coluna de ações não pode competir com o dado; o ghost
       // é o que o conteúdo compartilhado documenta para ação por linha.
-      const botao = canvas.getAllByRole('button')[0];
-      await expect(botao).toHaveAttribute('data-variant', 'ghost');
+      const button = canvas.getAllByRole('button')[0];
+      await expect(button).toHaveAttribute('data-variant', 'ghost');
     });
   },
 };
@@ -332,13 +332,13 @@ export const HorizontalScroll: Story = {
         <TableHeader>
           <TableRow>
             <TableHead>Fatura</TableHead>
-            <TableHead v-for="mes in meses" :key="mes">{{ mes }}</TableHead>
+            <TableHead v-for="month in meses" :key="month">{{ month }}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           <TableRow v-for="invoice in invoices" :key="invoice.id">
             <TableCell class="nds-font-medium">{{ invoice.id }}</TableCell>
-            <TableCell v-for="mes in meses" :key="mes" class="nds-text-right">
+            <TableCell v-for="month in meses" :key="month" class="nds-text-right">
               {{ invoice.amount }}
             </TableCell>
           </TableRow>

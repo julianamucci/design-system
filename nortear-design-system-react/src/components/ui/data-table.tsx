@@ -119,16 +119,16 @@ const RECURSOS_BASE = {
  * não tenha o recurso. Registrar e desligar por opção deixaria o código do
  * recurso no pacote de quem nunca pagina.
  */
-const RECURSOS_COM_PAGINACAO = tableFeatures({
+const RECURSOS_WITH_PAGINATION = tableFeatures({
   ...RECURSOS_BASE,
   rowPaginationFeature,
   paginatedRowModel: createPaginatedRowModel(),
 })
 
-const RECURSOS_SEM_PAGINACAO = tableFeatures(RECURSOS_BASE)
+const RECURSOS_NO_PAGINATION = tableFeatures(RECURSOS_BASE)
 
 /** O conjunto completo — é ele que tipa tudo que sai deste módulo. */
-export type DataTableFeatures = typeof RECURSOS_COM_PAGINACAO
+export type DataTableFeatures = typeof RECURSOS_WITH_PAGINATION
 
 export type DataTableColumn<TData extends RowData, TValue = unknown> = ColumnDef<
   DataTableFeatures,
@@ -178,7 +178,7 @@ export interface DataTableLabels {
 }
 
 /** Português do Brasil — o idioma em que o design system nasce. */
-export const DATA_TABLE_LABELS_PADRAO: DataTableLabels = {
+export const DATA_TABLE_LABELS_DEFAULT: DataTableLabels = {
   columns: "Colunas",
   showColumns: "Exibir colunas",
   selectAll: "Selecionar todas as linhas",
@@ -268,7 +268,7 @@ function DataTable<TData extends RowData>({
    * meio de um arraste.
    */
   const L = React.useMemo(
-    () => ({ ...DATA_TABLE_LABELS_PADRAO, ...labels }),
+    () => ({ ...DATA_TABLE_LABELS_DEFAULT, ...labels }),
     [labels]
   )
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -302,7 +302,7 @@ function DataTable<TData extends RowData>({
    * Nunca cai em "Selecionar linha" puro: nome repetido em dez controles é o
    * mesmo que nome nenhum (WCAG 4.1.2), e era exatamente o defeito daqui.
    */
-  const rotuloDaLinha = React.useCallback(
+  const lineLabel = React.useCallback(
     (row: Row<DataTableFeatures, TData>): string => {
       if (rowLabel) return rowLabel(row.original)
       const primeira = row.getAllCells().find((c) => c.column.id !== "__select__")
@@ -342,14 +342,14 @@ function DataTable<TData extends RowData>({
       ),
       cell: ({ row }) => (
         <Checkbox
-          aria-label={L.selectRow(rotuloDaLinha(row))}
+          aria-label={L.selectRow(lineLabel(row))}
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
         />
       ),
     }
     return [selectCol, ...enriched]
-  }, [columns, enableRowSelection, L, rotuloDaLinha])
+  }, [columns, enableRowSelection, L, lineLabel])
 
   const hasColumnFilters =
     enableColumnFilters &&
@@ -370,8 +370,8 @@ function DataTable<TData extends RowData>({
      * métodos continuavam tipados como presentes.
      */
     features: (enablePagination && !virtualized
-      ? RECURSOS_COM_PAGINACAO
-      : RECURSOS_SEM_PAGINACAO) as DataTableFeatures,
+      ? RECURSOS_WITH_PAGINATION
+      : RECURSOS_NO_PAGINATION) as DataTableFeatures,
     data,
     columns: allColumns,
     state: {
@@ -879,7 +879,7 @@ interface ColumnFilterProps<TData extends RowData, TValue> {
 function ColumnFilter<TData extends RowData, TValue>({
   column,
   meta,
-  labels = DATA_TABLE_LABELS_PADRAO,
+  labels = DATA_TABLE_LABELS_DEFAULT,
 }: ColumnFilterProps<TData, TValue>) {
   const value = (column.getFilterValue() ?? "") as string
   // O rótulo sai do CABEÇALHO, não do id. O id é chave de dados —
@@ -924,7 +924,7 @@ interface EditableCellProps<TData extends RowData, TValue> {
 
 function EditableCell<TData extends RowData, TValue>({
   context,
-  labels = DATA_TABLE_LABELS_PADRAO,
+  labels = DATA_TABLE_LABELS_DEFAULT,
 }: EditableCellProps<TData, TValue>) {
   // Mesmo rótulo no botão e no campo: quem abriu a edição precisa ouvir de que
   // coluna é o campo que acabou de receber foco. Sai do cabeçalho, não do id.
@@ -1016,7 +1016,7 @@ function DataTablePagination<TData extends RowData>({
   table,
   pageSizeOptions,
   enableRowSelection,
-  labels = DATA_TABLE_LABELS_PADRAO,
+  labels = DATA_TABLE_LABELS_DEFAULT,
 }: DataTablePaginationProps<TData>) {
   const pageIndex = table.state.pagination.pageIndex
   const pageCount = table.getPageCount()

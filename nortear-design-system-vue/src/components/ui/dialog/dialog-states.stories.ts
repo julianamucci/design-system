@@ -243,16 +243,16 @@ export const Controlled: Story = {
     components: sharedComponents,
     setup() {
       const open = ref(false);
-      const aoMudar = (v: boolean) => {
+      const onChange = (v: boolean) => {
         open.value = v;
         spyControlled(v);
       };
-      return { open, aoMudar };
+      return { open, onChange };
     },
     template: `
       <div class="nds-stack" data-spacing="sm">
-        <Button @click="aoMudar(true)">Abrir via estado externo</Button>
-        <Dialog :open="open" @update:open="aoMudar">
+        <Button @click="onChange(true)">Abrir via estado externo</Button>
+        <Dialog :open="open" @update:open="onChange">
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Controlado pelo pai</DialogTitle>
@@ -264,7 +264,7 @@ export const Controlled: Story = {
               <DialogClose as-child>
                 <Button variant="outline">Cancelar</Button>
               </DialogClose>
-              <Button @click="aoMudar(false)">Confirmar</Button>
+              <Button @click="onChange(false)">Confirmar</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

@@ -596,12 +596,12 @@ export class NdsAvatarDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const sim = tNav('common.yes');
-    const nao = tNav('common.no');
+    const not = tNav('common.no');
     const classe = {
       name: 'class',
       type: 'string',
       defaultValue: '—',
-      required: nao,
+      required: not,
       description: toPlainText(t('props.table.className')),
     };
 
@@ -614,7 +614,7 @@ export class NdsAvatarDocs implements AfterViewInit, OnDestroy {
             name: 'size',
             type: "'sm' | 'md' | 'lg' | 'xl' | '2xl'",
             defaultValue: "'md'",
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.size')),
           },
           classe,
@@ -649,7 +649,7 @@ export class NdsAvatarDocs implements AfterViewInit, OnDestroy {
             name: 'onLoadingStatusChange',
             type: "EventEmitter<'idle' | 'loading' | 'loaded' | 'error'>",
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.onLoadingStatusChange')),
           },
           classe,
@@ -663,7 +663,7 @@ export class NdsAvatarDocs implements AfterViewInit, OnDestroy {
             name: 'delayMs',
             type: 'number',
             defaultValue: '0',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.delayMs')),
           },
           classe,
@@ -671,7 +671,7 @@ export class NdsAvatarDocs implements AfterViewInit, OnDestroy {
             name: '(conteúdo)',
             type: 'HTML',
             defaultValue: '—',
-            required: nao,
+            required: not,
             description: toPlainText(t('props.table.children')),
           },
         ],

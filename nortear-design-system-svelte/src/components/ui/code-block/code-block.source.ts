@@ -25,7 +25,7 @@ const IMPORT = 'import { CodeBlock } from "@/components/ui/code-block";';
 const FONTE = 'const source = "…";';
 
 /** As duas formas aceitas de `highlightLines`: texto entre aspas, lista entre chaves. */
-function destaque(valor: string | Array<number | string>): string {
+function highlight(valor: string | Array<number | string>): string {
   if (Array.isArray(valor)) {
     const itens = valor.map((item) => (typeof item === 'number' ? String(item) : `'${item}'`));
     return `highlightLines={[${itens.join(', ')}]}`;
@@ -53,7 +53,7 @@ export function codeBlockSource(_gerado?: string, ctx?: { args?: Partial<CodeBlo
     `language="${a.language ?? 'text'}"`,
     a.title ? `title="${a.title}"` : '',
     a.showLineNumbers === false ? 'showLineNumbers={false}' : '',
-    marcadas && (!Array.isArray(marcadas) || marcadas.length > 0) ? destaque(marcadas) : '',
+    marcadas && (!Array.isArray(marcadas) || marcadas.length > 0) ? highlight(marcadas) : '',
     a.footer ? `footer="${a.footer}"` : '',
   ].filter((prop): prop is string => Boolean(prop));
 

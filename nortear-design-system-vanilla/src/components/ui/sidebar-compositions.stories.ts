@@ -303,7 +303,7 @@ export const WithGroupActions: Story = {
         'aria-label': 'Mais opções de Nortear',
         icon: makeIcon(ICON_MORE),
         showOnHover: true,
-        onClick: () => { actionsAbertas += 1; itemNortear.dataset.acoes = String(actionsAbertas); },
+        onClick: () => { actionsAbertas += 1; itemNortear.dataset.actions = String(actionsAbertas); },
       }),
     );
     menu.appendChild(itemNortear);
@@ -403,15 +403,15 @@ export const WithGroupActions: Story = {
       await expect(acao.classList.contains('nds-sidebar-menu-action-hover')).toBe(true);
       const item = acao.closest<HTMLElement>('[data-sidebar="menu-item"]')!;
       await expect(item.querySelector('[data-sidebar="menu-button"]')).not.toBeNull();
-      const antes = Number(item.dataset.acoes ?? 0);
+      const antes = Number(item.dataset.actions ?? 0);
       await userEvent.click(acao);
-      await expect(Number(item.dataset.acoes)).toBe(antes + 1);
+      await expect(Number(item.dataset.actions)).toBe(antes + 1);
     });
 
     await step('Os ícones dos controles são decorativos', async () => {
-      const icones = canvasElement.querySelectorAll<SVGElement>('[data-sidebar="group-action"] svg, [data-sidebar="menu-action"] svg');
-      await expect(icones.length).toBe(2);
-      for (const icone of icones) {
+      const icons = canvasElement.querySelectorAll<SVGElement>('[data-sidebar="group-action"] svg, [data-sidebar="menu-action"] svg');
+      await expect(icons.length).toBe(2);
+      for (const icone of icons) {
         await expect(icone.getAttribute('aria-hidden')).toBe('true');
       }
     });
@@ -576,8 +576,8 @@ export const WithSubmenu: Story = {
       await definir(true);
       await expect(getComputedStyle(sub()).display).not.toBe('none');
 
-      const botoes = sub().querySelectorAll<HTMLElement>('[data-sidebar="menu-sub-button"]');
-      await expect(botoes.length).toBe(4);
+      const buttons = sub().querySelectorAll<HTMLElement>('[data-sidebar="menu-sub-button"]');
+      await expect(buttons.length).toBe(4);
 
       await definir(false);
       await expect(getComputedStyle(sub()).display).toBe('none');
@@ -681,11 +681,11 @@ export const LoadingSkeleton: Story = {
       // A pulsação e o fundo moram em `.nds-skeleton`; as classes
       // `.nds-sidebar-menu-skeleton-*` só dão a medida. Sem a peça por baixo, o
       // placeholder fica invisível — e ninguém percebe olhando o markup.
-      const caixas = canvasElement.querySelectorAll<HTMLElement>(
+      const boxes = canvasElement.querySelectorAll<HTMLElement>(
         '.nds-sidebar-menu-skeleton-icon, .nds-sidebar-menu-skeleton-text',
       );
-      await expect(caixas.length).toBe(5);
-      for (const caixa of caixas) {
+      await expect(boxes.length).toBe(5);
+      for (const caixa of boxes) {
         await expect(caixa.classList.contains('nds-skeleton')).toBe(true);
         await expect(getComputedStyle(caixa).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
       }
@@ -781,7 +781,7 @@ export const WithSearch: Story = {
       // fábrica: o `placeholder` some no primeiro caractere digitado.
       source: {
         transform: sidebarSourceWith({
-          busca: 'Buscar na navegação',
+          search: 'Buscar na navegação',
           grupos: [
             {
               label: 'Navegação',
@@ -804,25 +804,25 @@ export const WithSearch: Story = {
     const canvas = within(canvasElement);
 
     await step('O campo de busca tem nome — o placeholder some ao digitar', async () => {
-      const busca = canvas.getByRole('searchbox', { name: 'Buscar na navegação' });
-      await expect(busca.closest('[data-sidebar="header"]')).not.toBeNull();
-      await expect(busca.getAttribute('data-sidebar')).toBe('input');
+      const search = canvas.getByRole('searchbox', { name: 'Buscar na navegação' });
+      await expect(search.closest('[data-sidebar="header"]')).not.toBeNull();
+      await expect(search.getAttribute('data-sidebar')).toBe('input');
     });
 
     await step('O campo herda o primitivo de entrada e só acrescenta o ajuste da barra', async () => {
-      const busca = canvas.getByRole('searchbox', { name: 'Buscar na navegação' });
-      await expect(busca.classList.contains('nds-input')).toBe(true);
-      await expect(busca.classList.contains('nds-sidebar-input')).toBe(true);
-      await expect(busca.getAttribute('data-slot')).toBe('sidebar-input');
+      const search = canvas.getByRole('searchbox', { name: 'Buscar na navegação' });
+      await expect(search.classList.contains('nds-input')).toBe(true);
+      await expect(search.classList.contains('nds-sidebar-input')).toBe(true);
+      await expect(search.getAttribute('data-slot')).toBe('sidebar-input');
     });
 
     await step('Digitar não apaga o nome do campo', async () => {
-      const busca = canvas.getByRole('searchbox', { name: 'Buscar na navegação' }) as HTMLInputElement;
-      busca.value = '';
-      await userEvent.type(busca, 'card');
-      await expect(busca.value).toBe('card');
-      await expect(canvas.getByRole('searchbox', { name: 'Buscar na navegação' })).toBe(busca);
-      busca.value = '';
+      const search = canvas.getByRole('searchbox', { name: 'Buscar na navegação' }) as HTMLInputElement;
+      search.value = '';
+      await userEvent.type(search, 'card');
+      await expect(search.value).toBe('card');
+      await expect(canvas.getByRole('searchbox', { name: 'Buscar na navegação' })).toBe(search);
+      search.value = '';
     });
 
     await step('O ícone de lupa é decorativo', async () => {

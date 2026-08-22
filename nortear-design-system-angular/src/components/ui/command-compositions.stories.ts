@@ -57,7 +57,7 @@ import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wai
       </button>
 
       <ng-template ndsPopoverContent>
-        <nds-command (itemSelect)="escolher($event)">
+        <nds-command (itemSelect)="choose($event)">
           <input ndsCommandInput placeholder="Buscar item..." />
 
           <div ndsCommandList>
@@ -78,7 +78,7 @@ class DemoCommandCombobox {
   protected readonly aberto = signal(false);
   protected readonly selecionado = signal('');
 
-  protected escolher(detalhe: CommandSelectDetails): void {
+  protected choose(detalhe: CommandSelectDetails): void {
     this.selecionado.set(detalhe.label);
     // Fechar aqui é a guideline: sem isso o popover fica aberto por cima do
     // valor que a pessoa acabou de escolher.
@@ -144,12 +144,12 @@ class DemoCommandCombobox {
       </ng-template>
     </div>
 
-    <p data-testid="executado">{{ ultimo() }}</p>
+    <p data-testid="executado">{{ last() }}</p>
   `,
 })
 class DemoCommandPalette {
   protected readonly aberto = signal(false);
-  protected readonly ultimo = signal('');
+  protected readonly last = signal('');
 
   protected aoTeclar(evento: KeyboardEvent): void {
     if (evento.key.toLowerCase() !== 'k' || !(evento.metaKey || evento.ctrlKey)) return;
@@ -159,7 +159,7 @@ class DemoCommandPalette {
   }
 
   protected executar(detalhe: CommandSelectDetails): void {
-    this.ultimo.set(detalhe.value);
+    this.last.set(detalhe.value);
     this.aberto.set(false);
   }
 }
@@ -228,11 +228,11 @@ export const AsCombobox: Story = {
 
       const dentro = within(painel);
       await expect(dentro.getByRole('listbox')).toBeVisible();
-      const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
+      const search = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       // O foco entra no campo de busca: um combobox que abre e deixa o foco no
       // gatilho obriga a pessoa a caçar o campo com Tab.
       await waitFor(async () => {
-        await expect(busca).toHaveFocus();
+        await expect(search).toHaveFocus();
       });
     });
 
@@ -309,9 +309,9 @@ export const CommandPalette: Story = {
 
     await step('O foco vai direto para a busca', async () => {
       const painel = await buttonOpen();
-      const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
+      const search = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       await waitFor(async () => {
-        await expect(busca).toHaveFocus();
+        await expect(search).toHaveFocus();
       });
       await expect(within(painel).getAllByRole('option')).toHaveLength(3);
     });
@@ -331,9 +331,9 @@ export const CommandPalette: Story = {
       await userEvent.keyboard('{Meta>}k{/Meta}');
 
       const painel = await waitForPortal('dialog');
-      const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
+      const search = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       await waitFor(async () => {
-        await expect(busca).toHaveFocus();
+        await expect(search).toHaveFocus();
       });
       // Os atalhos de cada comando aparecem à direita, encostados na borda.
       const atalho = painel.querySelector<HTMLElement>(

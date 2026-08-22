@@ -75,8 +75,8 @@ export const Variants: Story = {
       const interno = flutuante.querySelector<HTMLElement>('.nds-sidebar-inner')!;
       await expect(parseFloat(getComputedStyle(interno).borderTopLeftRadius)).toBeGreaterThan(0);
 
-      const simples = canvasElement.querySelector<HTMLElement>('[data-testid="var-sidebar"]')!;
-      const simpleInterno = simples.querySelector<HTMLElement>('.nds-sidebar-inner')!;
+      const simple = canvasElement.querySelector<HTMLElement>('[data-testid="var-sidebar"]')!;
+      const simpleInterno = simple.querySelector<HTMLElement>('.nds-sidebar-inner')!;
       await expect(parseFloat(getComputedStyle(simpleInterno).borderTopLeftRadius)).toBe(0);
     });
   },

@@ -44,7 +44,7 @@ function importa(...parts: string[]): string {
  * A descrição NÃO leva `aria-hidden`: "Para Marketing" sozinho não diz o que há
  * do outro lado, e é a descrição que completa o nome do destino (WCAG 2.4.4).
  */
-function destino(href: string, titulo: string, descricao?: string, recuo = 0): string {
+function destination(href: string, titulo: string, descricao?: string, recuo = 0): string {
   const p = ' '.repeat(recuo);
   const corpo = descricao
     ? `\n${p}  <p class="nds-navigation-menu-child-description">\n${p}    ${descricao}\n${p}  </p>`
@@ -62,7 +62,7 @@ function panelList(
 ): string {
   const p = ' '.repeat(recuo);
   const linhas = itens
-    .map((item) => `${p}  <li>\n${destino(item.href, item.titulo, undefined, recuo + 4)}\n${p}  </li>`)
+    .map((item) => `${p}  <li>\n${destination(item.href, item.titulo, undefined, recuo + 4)}\n${p}  </li>`)
     .join('\n');
   return `${p}<ul class="nds-stack nds-list-none ${largura}" data-spacing="xs">
 ${linhas}
@@ -374,7 +374,7 @@ export function navigationMenuMegaMenuSource(): string {
     { href: '#suporte', titulo: 'Para Suporte', desc: 'Fila de atendimento, base de conhecimento e métricas.' },
     { href: '#financeiro', titulo: 'Para Financeiro', desc: 'Cobrança recorrente, conciliação e relatórios fiscais.' },
   ]
-    .map((c) => `          <li>\n${destino(c.href, c.titulo, c.desc, 12)}\n          </li>`)
+    .map((c) => `          <li>\n${destination(c.href, c.titulo, c.desc, 12)}\n          </li>`)
     .join('\n');
 
   return vueSnippet(
@@ -415,7 +415,7 @@ export function navigationMenuWithHighlightSource(): string {
     { href: '#api', titulo: 'Referência da API' },
     { href: '#changelog', titulo: 'Novidades' },
   ]
-    .map((item) => `            <li>\n${destino(item.href, item.titulo, undefined, 14)}\n            </li>`)
+    .map((item) => `            <li>\n${destination(item.href, item.titulo, undefined, 14)}\n            </li>`)
     .join('\n');
 
   return vueSnippet(

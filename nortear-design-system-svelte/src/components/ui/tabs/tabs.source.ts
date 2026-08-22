@@ -70,7 +70,7 @@ function montar({
     `aria-label="${rotuloLista}"`,
   );
 
-  const gatilhos = abas
+  const triggers = abas
     .map(
       (aba) =>
         `    <TabsTrigger value="${aba.valor}"${aba.desabilitada ? ' disabled' : ''}>${aba.rotulo}</TabsTrigger>`,
@@ -87,7 +87,7 @@ function montar({
 let value = $state("${ativa}");`,
     `<Tabs${raiz}>
   <TabsList${lista}>
-${gatilhos}
+${triggers}
   </TabsList>
 ${panels}
 </Tabs>`,

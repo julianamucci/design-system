@@ -67,7 +67,7 @@ const DESCRIPTION = 'Configure os filtros para refinar os resultados.';
  * o `aria-labelledby` e o `aria-describedby` do painel, e um diálogo modal sem
  * nome chega ao leitor de tela como uma região anônima.
  */
-function cabecalho(titulo = TITLE, descricao = DESCRIPTION): string {
+function header(titulo = TITLE, descricao = DESCRIPTION): string {
   return `    <SheetHeader>
       <SheetTitle>${titulo}</SheetTitle>
       <SheetDescription>
@@ -124,7 +124,7 @@ export const sheetSource: SourceTransform<SheetArgs> = (_gerado, ctx) => {
     sheet(
       raiz,
       painel,
-      `${cabecalho()}\n${rodape()}`,
+      `${header()}\n${rodape()}`,
       childText(args.triggerLabel, 'Abrir filtros'),
     ),
   );
@@ -140,7 +140,7 @@ export const sheetSource: SourceTransform<SheetArgs> = (_gerado, ctx) => {
 function bySide(lado: string, titulo: string): string {
   return jsxSnippet(
     `${importingSheet(...PARTS_BASE)}\n${IMPORT_BUTTON}`,
-    sheet('', ` side="${lado}"`, `${cabecalho(titulo)}\n${rodape()}`, 'Abrir filtros'),
+    sheet('', ` side="${lado}"`, `${header(titulo)}\n${rodape()}`, 'Abrir filtros'),
   );
 }
 
@@ -175,7 +175,7 @@ export function sheetSideInferiorSource(): string {
 export function sheetOpenSource(): string {
   return jsxSnippet(
     `${importingSheet(...PARTS_BASE)}\n${IMPORT_BUTTON}`,
-    sheet(' defaultOpen', '', `${cabecalho()}\n${rodape()}`, 'Abrir filtros'),
+    sheet(' defaultOpen', '', `${header()}\n${rodape()}`, 'Abrir filtros'),
   );
 }
 
@@ -190,7 +190,7 @@ export function sheetNoButtonCloseSource(): string {
     sheet(
       '',
       ' showCloseButton={false}',
-      `${cabecalho()}
+      `${header()}
     <SheetFooter>
       <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
     </SheetFooter>`,
@@ -256,7 +256,7 @@ import { Label } from "@/components/ui/label";`,
     sheet(
       '',
       '',
-      `${cabecalho(TITLE, 'Refine os resultados por categoria, preço e disponibilidade.')}
+      `${header(TITLE, 'Refine os resultados por categoria, preço e disponibilidade.')}
     <SheetBody>
       <form
         className="nds-stack"
@@ -339,7 +339,7 @@ ${IMPORT_BUTTON}`,
     sheet(
       '',
       ' side="bottom"',
-      `${cabecalho('Ações rápidas', 'Escolha uma das ações disponíveis para este item.')}
+      `${header('Ações rápidas', 'Escolha uma das ações disponíveis para este item.')}
     <SheetBody>
       <div className="nds-cluster" data-spacing="sm">
         <Button variant="outline">Compartilhar</Button>
@@ -369,7 +369,7 @@ const PARAGRAFOS = Array.from({ length: 24 }, (_, i) => i + 1);`,
     sheet(
       '',
       '',
-      `${cabecalho('Termos de uso', 'Leia atentamente antes de aceitar.')}
+      `${header('Termos de uso', 'Leia atentamente antes de aceitar.')}
     <SheetBody className="nds-stack" data-spacing="sm">
       {PARAGRAFOS.map((n) => (
         <p key={n} className="nds-text-body">

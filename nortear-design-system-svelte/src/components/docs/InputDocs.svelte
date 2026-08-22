@@ -38,7 +38,7 @@
 // customiza copia, e a versão anterior mandava sobrescrever `--height-default` e
 // `--radius-input`, dois tokens que `.nds-input` não lê. Não existe token de
 // ALTURA: ela nasce de `--spacing-2` mais `--text-control` (WCAG 1.4.4).
-const TOKENS_DO_CAMPO = [
+const FIELD_TOKENS = [
   ['--input', '.nds-input', 'border'],
   ['--ring', '.nds-input:hover', 'borderHover'],
   ['--ring', '.nds-input:focus-visible', 'borderFocus'],
@@ -565,7 +565,7 @@ interface InputProps extends HTMLInputAttributes {
           value: $tStore('tokens.table.class'),
           description: $tStore('tokens.table.part'),
         }}
-        items={TOKENS_DO_CAMPO.map(([token, seletor, chave]) => ({
+        items={FIELD_TOKENS.map(([token, seletor, chave]) => ({
           token,
           value: seletor,
           description: $tStore(`tokens.table.${chave}`),

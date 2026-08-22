@@ -89,9 +89,9 @@ export const Playground: Story = {
     covers: ['functional.item1', 'functional.item3', 'accessibility.item1', 'accessibility.item5'],
   },
   render: (args) => ({
-    props: { ...args, isHorizontal: args.orientation === 'horizontal' },
+    props: { ...args, horizontalIs: args.orientation === 'horizontal' },
     template: `
-      @if (isHorizontal) {
+      @if (horizontalIs) {
         <div class="nds-stack nds-w-md" data-spacing="md">
           <p class="nds-text-body">Seção superior</p>
           <div ndsSeparator [orientation]="orientation" [decorative]="decorative" [emphasis]="emphasis"></div>

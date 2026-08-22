@@ -27,7 +27,7 @@ import {
 const LONG_DELAY = 600;
 
 /** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
-function espera(ms: number): Promise<void> {
+function wait(ms: number): Promise<void> {
   return new Promise((resolver) => setTimeout(resolver, ms));
 }
 
@@ -166,11 +166,11 @@ export const Hover: Story = {
   render: () => ({
     components: sharedComponents,
     setup() {
-      return { atraso: LONG_DELAY };
+      return { delay: LONG_DELAY };
     },
     // Provider próprio: o delay do decorator é 0, e sem espera não há o que medir.
     template: `
-      <TooltipProvider :delay-duration="atraso">
+      <TooltipProvider :delay-duration="delay">
         <div style="contain: layout" class="nds-cluster nds-min-h-40" data-align="center" data-justify="center">
           <Tooltip>
             <TooltipTrigger as-child>
@@ -220,12 +220,12 @@ export const WithFocus: Story = {
   render: () => ({
     components: sharedComponents,
     setup() {
-      return { atraso: LONG_DELAY };
+      return { delay: LONG_DELAY };
     },
     // Delay longo de propósito: quem chega por teclado não tem como "parar em
     // cima", então esperar aqui esconderia a informação de quem não usa mouse.
     template: `
-      <TooltipProvider :delay-duration="atraso">
+      <TooltipProvider :delay-duration="delay">
         <div style="contain: layout" class="nds-cluster nds-min-h-40" data-align="center" data-justify="center">
           <Tooltip>
             <TooltipTrigger as-child>
@@ -305,7 +305,7 @@ export const PersistenceInBubble: Story = {
       // `pointer-events: none` — quem segura a abertura é a área de tolerância
       // entre gatilho e balão, calculada por coordenada, não por hover no nó.
       await userEvent.hover(balao, { pointerEventsCheck: 0 });
-      await espera(200);
+      await wait(200);
       await expect(balaoDe(gatilho)).not.toBeNull();
     });
   },

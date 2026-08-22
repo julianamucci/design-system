@@ -207,13 +207,13 @@ function mountTooltip(options: TooltipOptions, grupo: GroupState): DestroyableEl
     if (panelEl || showTimer) return;
     // Dentro da janela do grupo a espera é dispensada: quem já parou uma vez
     // não precisa provar de novo no ícone vizinho.
-    const espera =
+    const wait =
       grupo.skipDelayDuration > 0 && Date.now() - grupo.closedIn < grupo.skipDelayDuration
         ? 0
         : delayDuration;
     // Arrow literal explícito — clarifica pro SAST que setTimeout recebe
     // função, não string evaluada. Comportamento idêntico a setTimeout(show, …).
-    showTimer = setTimeout(() => { showTimer = null; show(); }, espera);
+    showTimer = setTimeout(() => { showTimer = null; show(); }, wait);
   }
 
   function cancelarFechamento(): void {

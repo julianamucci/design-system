@@ -53,13 +53,13 @@ export const CaptionLabel: Story = {
       // functional.item6 — o idioma vale para a legenda E para o cabeçalho da
       // semana; verificar só um dos dois deixaria metade da tradução solta.
       await expect(legenda()).toHaveTextContent(/abril 2026/i);
-      const diasDaSemana = Array.from(canvasElement.querySelectorAll('th[scope="col"]')).map((th) =>
+      const weekDays = Array.from(canvasElement.querySelectorAll('th[scope="col"]')).map((th) =>
         th.textContent?.trim().toLowerCase(),
       );
       // A forma curta, e a mesma nas quatro: 'narrow' dá "D S T Q Q S S", com
       // duas quartas e duas quintas indistinguíveis, e o ponto de "dom." é
       // ruído numa coluna de uma palavra. Conferir só a inicial aceitava tudo.
-      await expect(diasDaSemana).toEqual(['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb']);
+      await expect(weekDays).toEqual(['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb']);
     });
 
     await step('Os botões de mês trocam a legenda', async () => {
@@ -123,8 +123,8 @@ export const Bordered: Story = {
       // Classe presente não é borda desenhada: a utilitária poderia ter sido
       // renomeada no CSS e a asserção de classe continuaria passando.
       const raiz = canvasElement.querySelector('[data-slot="calendar"]')!;
-      const borda = getComputedStyle(raiz).borderTopWidth;
-      await expect(parseFloat(borda)).toBeGreaterThan(0);
+      const border = getComputedStyle(raiz).borderTopWidth;
+      await expect(parseFloat(border)).toBeGreaterThan(0);
     });
   },
 };

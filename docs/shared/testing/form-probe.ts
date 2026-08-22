@@ -49,7 +49,7 @@ export const SELECTOR_CAPTION = '[data-slot="fieldset-legend"], .nds-form-legend
  * para participar do formulário, e ele casaria com `input` antes do controle
  * de verdade.
  */
-const SELETORES_CONTROLE = [
+const SELECTORS_CONTROL = [
   '[data-slot="input-group-control"]',
   '[data-slot="checkbox"]',
   '[data-slot="switch"]',
@@ -61,7 +61,7 @@ const SELETORES_CONTROLE = [
 ];
 
 export function controlOf(campo: HTMLElement): HTMLElement | null {
-  for (const seletor of SELETORES_CONTROLE) {
+  for (const seletor of SELECTORS_CONTROL) {
     const finding = campo.querySelector<HTMLElement>(seletor);
     if (finding) return finding;
   }
@@ -171,10 +171,10 @@ export function measureField(raiz: HTMLElement) {
   const erro = campo.querySelector<HTMLElement>(SELECTOR_ERROR);
 
   const cs = getComputedStyle(campo);
-  const fundo = backgroundEffective(campo);
+  const background = backgroundEffective(campo);
 
-  const descrito = descriptionResolvida(controle);
-  const idsDescribed = new Set(descrito.ids);
+  const described = descriptionResolvida(controle);
+  const idsDescribed = new Set(described.ids);
 
   return {
     presente: true,
@@ -189,8 +189,8 @@ export function measureField(raiz: HTMLElement) {
       ),
       hasLabel: Boolean(rotulo),
       temControle: Boolean(controle),
-      temDescricao: Boolean(descricao),
-      temErro: Boolean(erro),
+      hasDescription: Boolean(descricao),
+      hasError: Boolean(erro),
     },
     associacao: {
       /** `for` do rótulo e `id` do controle — os dois lados do mesmo fio. */
@@ -230,7 +230,7 @@ export function measureField(raiz: HTMLElement) {
           ariaRequired: controle.getAttribute('aria-required'),
           required: (controle as HTMLInputElement).required ?? null,
           desabilitado: (controle as HTMLInputElement).disabled ?? null,
-          describedby: descrito,
+          describedby: described,
         }
       : null,
     rotulo: rotulo
@@ -252,9 +252,9 @@ export function measureField(raiz: HTMLElement) {
       largura: Math.round(campo.getBoundingClientRect().width),
     },
     contraste: {
-      rotulo: rotulo && fundo ? ratio(getComputedStyle(rotulo).color, fundo) : null,
-      apoio: descricao && fundo ? ratio(getComputedStyle(descricao).color, fundo) : null,
-      erro: erro && fundo ? ratio(getComputedStyle(erro).color, fundo) : null,
+      rotulo: rotulo && background ? ratio(getComputedStyle(rotulo).color, background) : null,
+      apoio: descricao && background ? ratio(getComputedStyle(descricao).color, background) : null,
+      erro: erro && background ? ratio(getComputedStyle(erro).color, background) : null,
     },
   };
 }
@@ -269,7 +269,7 @@ export function measureFieldset(raiz: HTMLElement) {
 
   const legenda = grupo.querySelector<HTMLElement>(SELECTOR_CAPTION);
   const cs = getComputedStyle(grupo);
-  const fundo = backgroundEffective(grupo);
+  const background = backgroundEffective(grupo);
 
   return {
     presente: true,
@@ -284,7 +284,7 @@ export function measureFieldset(raiz: HTMLElement) {
       /** A legenda tem que ser o PRIMEIRO filho; senão não rotula o grupo. */
       legendaPrimeira: legenda ? grupo.firstElementChild === legenda : null,
       texto: texto(legenda),
-      campos: grupo.querySelectorAll(SELECTOR_FIELD).length,
+      fields: grupo.querySelectorAll(SELECTOR_FIELD).length,
     },
     semantica: {
       /** O que o leitor anuncia antes de cada campo do grupo. */
@@ -295,12 +295,12 @@ export function measureFieldset(raiz: HTMLElement) {
       /** 16px pelo contrato (`--spacing-4`). */
       espacoEntreCampos: Math.round(parseFloat(cs.rowGap || '0')),
       direcao: cs.flexDirection,
-      borda: cs.borderTopWidth,
+      border: cs.borderTopWidth,
       padding: cs.paddingTop,
       margem: cs.marginTop,
     },
     contraste: {
-      legenda: legenda && fundo ? ratio(getComputedStyle(legenda).color, fundo) : null,
+      legenda: legenda && background ? ratio(getComputedStyle(legenda).color, background) : null,
     },
   };
 }
@@ -348,7 +348,7 @@ export function firstInvalido(raiz: HTMLElement): HTMLElement | null {
  * a story seguinte e a foto do Chromatic.
  */
 export function contrastesNosDoisModos(raiz: HTMLElement) {
-  const medir = (modo: 'claro' | 'escuro') => {
+  const measure = (modo: 'claro' | 'escuro') => {
     const m = measureField(raiz);
     if (!m.presente) return null;
     return {
@@ -360,15 +360,15 @@ export function contrastesNosDoisModos(raiz: HTMLElement) {
   };
 
   const campo = raiz.matches(SELECTOR_FIELD) ? raiz : raiz.querySelector<HTMLElement>(SELECTOR_FIELD);
-  const claro = medir('claro');
+  const light = measure('claro');
   const desfazer = darkLigarTheme(raiz.ownerDocument);
-  let escuro: ReturnType<typeof medir> = null;
+  let escuro: ReturnType<typeof measure> = null;
   try {
-    escuro = campo ? noTransicao(campo, () => medir('escuro')) : medir('escuro');
+    escuro = campo ? noTransicao(campo, () => measure('escuro')) : measure('escuro');
   } finally {
     desfazer();
   }
-  return [claro, escuro].filter(Boolean) as {
+  return [light, escuro].filter(Boolean) as {
     modo: string; rotulo: number | null; apoio: number | null; erro: number | null;
   }[];
 }

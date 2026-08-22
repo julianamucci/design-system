@@ -107,9 +107,9 @@ export const WithTitle: Story = {
 
     await step('A descrição entra por aria-describedby', async () => {
       const dialogo = screen.getByRole('dialog');
-      const idDescricao = dialogo.getAttribute('aria-describedby');
-      await expect(idDescricao).toBeTruthy();
-      await expect(document.getElementById(idDescricao!)).toHaveClass(/nds-popover-description/);
+      const idDescription = dialogo.getAttribute('aria-describedby');
+      await expect(idDescription).toBeTruthy();
+      await expect(document.getElementById(idDescription!)).toHaveClass(/nds-popover-description/);
     });
 
     await step('O cabeçalho é um agrupador com classe própria', async () => {

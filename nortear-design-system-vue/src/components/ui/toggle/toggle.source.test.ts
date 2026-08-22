@@ -131,8 +131,8 @@ describe('transforms das stories de composição', () => {
     const saida = formattingToggleBarSource();
     expect(saida).toContain('role="group"');
     expect(saida).toContain('aria-label="Formatação de texto"');
-    const nomes = [...saida.matchAll(/<Toggle aria-label="([^"]+)"/g)].map((m) => m[1]);
-    expect(nomes).toEqual(['Negrito', 'Itálico', 'Sublinhado', 'Lista']);
+    const names = [...saida.matchAll(/<Toggle aria-label="([^"]+)"/g)].map((m) => m[1]);
+    expect(names).toEqual(['Negrito', 'Itálico', 'Sublinhado', 'Lista']);
     // Os ícones do exemplo vêm todos declarados, sem import morto e sem faltar.
     expect(saida).toContain(`import { Bold, Italic, List, Underline } from 'lucide-vue-next'`);
   });

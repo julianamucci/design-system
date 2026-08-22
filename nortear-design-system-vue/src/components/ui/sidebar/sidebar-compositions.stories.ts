@@ -369,9 +369,9 @@ export const WithSearch: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('O campo de busca tem nome — o placeholder some ao digitar', async () => {
-      const busca = canvas.getByRole('textbox', { name: 'Buscar na navegação' });
-      await expect(busca).toHaveAttribute('data-slot', 'sidebar-input');
-      await expect(busca.closest('[data-slot="sidebar-header"]')).not.toBeNull();
+      const search = canvas.getByRole('textbox', { name: 'Buscar na navegação' });
+      await expect(search).toHaveAttribute('data-slot', 'sidebar-input');
+      await expect(search.closest('[data-slot="sidebar-header"]')).not.toBeNull();
     });
 
     await step('A navegação continua com nome de marco', async () => {
