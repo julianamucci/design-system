@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { toggleSource, toggleSourceFileira, toggleSourceInvalido } from './toggle.source';
+import { toggleSource, toggleSourceRow, toggleSourceInvalido } from './toggle.source';
 import { within, expect, userEvent } from 'storybook/test';
 import { Bold, Italic } from 'lucide';
 import {
@@ -78,7 +78,7 @@ export const On: Story = {
     covers: ['visual.item2', 'accessibility.item2'],
     docs: {
       source: {
-        transform: toggleSourceFileira([
+        transform: toggleSourceRow([
           { icon: 'Bold', 'aria-label': 'Negrito inativo' },
           { icon: 'Bold', 'aria-label': 'Negrito ativo', pressed: true },
         ]),
@@ -126,7 +126,7 @@ export const FocusVisible: Story = {
     covers: ['accessibility.item3'],
     docs: {
       source: {
-        transform: toggleSourceFileira([
+        transform: toggleSourceRow([
           { icon: 'Bold', 'aria-label': 'Negrito' },
           { icon: 'Italic', 'aria-label': 'Itálico', variant: 'outline' },
         ]),
@@ -169,7 +169,7 @@ export const Disabled: Story = {
     covers: ['visual.item4', 'functional.item4'],
     docs: {
       source: {
-        transform: toggleSourceFileira([
+        transform: toggleSourceRow([
           { icon: 'Bold', 'aria-label': 'Negrito', disabled: true },
           { icon: 'Italic', 'aria-label': 'Itálico ativo e desabilitado', disabled: true, pressed: true },
         ]),

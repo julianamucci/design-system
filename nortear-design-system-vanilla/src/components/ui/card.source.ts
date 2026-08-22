@@ -15,7 +15,7 @@ import type { CardSize } from './card';
  * `import` de muitos nomes, quebrado em linhas. O Card é uma família de sete
  * fábricas, e a linha única passaria de 150 colunas num painel estreito.
  */
-function importarVarios(slug: string, nomes: string[]): string {
+function multipleImporting(slug: string, nomes: string[]): string {
   return nomes.length <= 3
     ? importar(slug, ...nomes)
     : `import {\n${nomes.map((n) => `  ${n},`).join('\n')}\n} from '@/components/ui/${slug}';`;
@@ -39,10 +39,10 @@ export type CardSnippetOptions = {
   class?: string;
 };
 
-const TITULO_PADRAO = 'Cadeira Gamer Pro';
+const TITLE_DEFAULT = 'Cadeira Gamer Pro';
 const DESCRICAO_PADRAO = 'Estrutura ergonômica com ajuste de altura e apoio lombar.';
-const PRECO_PADRAO = 'R$ 1.299,00';
-const LARGURA_PADRAO = 'nds-w-sm';
+const PRECO_DEFAULT = 'R$ 1.299,00';
+const WIDTH_DEFAULT = 'nds-w-sm';
 
 /**
  * Os blocos do Card, na ordem do DOM.
@@ -52,9 +52,9 @@ const LARGURA_PADRAO = 'nds-w-sm';
  * mesmo componente envelhecerem em ritmos diferentes.
  */
 function partesDoCard(o: CardSnippetOptions): { nomes: string[]; blocos: string[] } {
-  const titulo = o.title ?? TITULO_PADRAO;
+  const titulo = o.title ?? TITLE_DEFAULT;
   const descricao = o.description ?? DESCRICAO_PADRAO;
-  const preco = o.price ?? PRECO_PADRAO;
+  const preco = o.price ?? PRECO_DEFAULT;
 
   const nomes = [
     'createCard',
@@ -70,7 +70,7 @@ function partesDoCard(o: CardSnippetOptions): { nomes: string[]; blocos: string[
     'createCard',
     opcoes([
       ['size', o.size && o.size !== 'default' ? texto(o.size) : undefined],
-      ['class', texto(o.class ?? LARGURA_PADRAO)],
+      ['class', texto(o.class ?? WIDTH_DEFAULT)],
     ]),
   );
 
@@ -159,12 +159,12 @@ rodape.append(
 /** A chamada real da família `createCard*` com as opções da story. */
 export function cardSnippet(o: CardSnippetOptions = {}): string {
   const { nomes, blocos } = partesDoCard(o);
-  const usaBotao = Boolean(o.showFooter || o.action);
+  const usaButton = Boolean(o.showFooter || o.action);
 
   return snippet(
     [
-      importarVarios('card', nomes),
-      usaBotao ? importar('button', 'createButton') : undefined,
+      multipleImporting('card', nomes),
+      usaButton ? importar('button', 'createButton') : undefined,
     ]
       .filter(Boolean)
       .join('\n'),
@@ -181,7 +181,7 @@ export const cardSource: SourceTransform<CardSnippetOptions> = (_gerado, ctx) =>
   cardSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma família, opções fixas que os controls não cobrem. */
-export function cardSourceCom(fixas: CardSnippetOptions): SourceTransform<CardSnippetOptions> {
+export function cardSourceWith(fixas: CardSnippetOptions): SourceTransform<CardSnippetOptions> {
   return (_gerado, ctx) => cardSnippet({ ...ctx.args, ...fixas });
 }
 
@@ -194,14 +194,14 @@ export function cardSourceCom(fixas: CardSnippetOptions): SourceTransform<CardSn
  * por teclado — o Card raiz continua passivo. Handler de clique no Card daria
  * uma área clicável que o Tab não alcança e que o teclado não aciona.
  */
-export function cardClicavelSnippet(o: CardSnippetOptions = {}): string {
-  const titulo = o.title ?? TITULO_PADRAO;
+export function cardClickableSnippet(o: CardSnippetOptions = {}): string {
+  const titulo = o.title ?? TITLE_DEFAULT;
   // O `<a>` é quem recebe a largura; o Card dentro dele preenche o que sobrar.
   const { nomes, blocos } = partesDoCard({ ...o, class: 'nds-w-full' });
 
   return snippet(
     [
-      importarVarios('card', nomes),
+      multipleImporting('card', nomes),
       o.showFooter || o.action ? importar('button', 'createButton') : undefined,
     ]
       .filter(Boolean)
@@ -217,8 +217,8 @@ destino.appendChild(card);`,
 }
 
 /** Transform de story para o card clicável. */
-export function cardClicavelSourceCom(
+export function cardClickableSourceWith(
   fixas: CardSnippetOptions = {},
 ): SourceTransform<CardSnippetOptions> {
-  return (_gerado, ctx) => cardClicavelSnippet({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => cardClickableSnippet({ ...ctx.args, ...fixas });
 }

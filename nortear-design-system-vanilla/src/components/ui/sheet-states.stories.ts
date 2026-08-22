@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSheet } from './sheet';
-import { sheetSource, sheetSourceCom, sheetSourceControlado } from './sheet.source';
+import { sheetSource, sheetSourceWith, sheetSourceControlled } from './sheet.source';
 import { createButton } from './button';
-import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
+import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -141,7 +141,7 @@ export const Controlled: Story = {
     docs: {
       // A fábrica não expõe prop de estado: quem abre por código aciona o
       // gatilho interno. Um snippet com o gatilho visível esconderia isso.
-      source: { transform: sheetSourceControlado() },
+      source: { transform: sheetSourceControlled() },
       description: {
         story:
           'Abertura comandada de fora. A factory não expõe uma prop de estado — o pai ' +
@@ -243,7 +243,7 @@ export const ListenerCleanup: Story = {
     // da página precisa fazer.
     docs: {
       source: {
-        transform: sheetSourceCom({
+        transform: sheetSourceWith({
           triggerLabel: 'Abrir',
           title: 'Título',
           description: 'Descrição do painel.',
@@ -254,14 +254,14 @@ export const ListenerCleanup: Story = {
       },
     },
   },
-  render: () => hospedeiroDeSonda(
+  render: () => probeHost(
     'Sonda de limpeza: o painel lateral é montado, aberto e removido da página pela play.',
   ),
   play: async ({ canvasElement, step }) => {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ResultadoDaSonda;
+    let sonda!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       sonda = await sondarOuvintes({
@@ -282,7 +282,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await conferirLimpeza(sonda);
+      await checkLimpeza(sonda);
     });
   },
 };

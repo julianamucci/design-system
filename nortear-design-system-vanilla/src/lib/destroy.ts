@@ -47,7 +47,7 @@ export type DestroyableElement<T extends HTMLElement = HTMLElement> = T & Destro
  * mesmo quadro; este prazo é uma ordem de grandeza maior que isso e uma ordem
  * de grandeza menor que a vida de uma tela.
  */
-const GRACA_DE_MONTAGEM_MS = 600;
+const MOUNT_MS_GRACA = 600;
 
 type Registro = {
   raiz: HTMLElement;
@@ -67,7 +67,7 @@ function varrer(): void {
       registro.jaConectou = true;
       continue;
     }
-    if (!registro.jaConectou && Date.now() - registro.nascidoEm < GRACA_DE_MONTAGEM_MS) {
+    if (!registro.jaConectou && Date.now() - registro.nascidoEm < MOUNT_MS_GRACA) {
       continue;
     }
     registros.delete(registro);
@@ -90,7 +90,7 @@ function varrer(): void {
   }
 }
 
-function garantirObservador(): void {
+function ensureObservador(): void {
   /* v8 ignore next -- guarda de ambiente: o browser sempre tem
      MutationObserver, e a suíte roda em browser. Existe para render em ambiente
      sem DOM completo. */
@@ -133,13 +133,13 @@ export function tornarDestruivel<T extends object>(
   };
 
   registros.add(registro);
-  garantirObservador();
+  ensureObservador();
 
   // Uma varredura armada no fim da graça. Sem ela, a instância criada e
   // descartada só seria recolhida na PRÓXIMA mutação do body — que pode não
   // vir, e aí o painel que ela portalou fica na tela sem dono.
   if (typeof setTimeout !== 'undefined') {
-    setTimeout(varrer, GRACA_DE_MONTAGEM_MS + 50);
+    setTimeout(varrer, MOUNT_MS_GRACA + 50);
   }
 
   Object.defineProperty(alvo, 'destroy', {

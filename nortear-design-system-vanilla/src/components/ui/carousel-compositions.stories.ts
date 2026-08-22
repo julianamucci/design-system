@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createCarousel } from './carousel';
 import { slidesDeExemplo } from './carousel.fixtures';
-import { carouselSource, carouselSourceCom } from './carousel.source';
+import { carouselSource, carouselSourceWith } from './carousel.source';
 import { createCard, createCardHeader, createCardTitle, createCardDescription } from './card';
 import carouselTranslations from '@shared/content/carousel/translations.json';
 
@@ -55,7 +55,7 @@ export const WithDots: Story = {
     // liga ao carrossel é o callback — nenhum dos dois passa por control.
     docs: {
       source: {
-        transform: carouselSourceCom({
+        transform: carouselSourceWith({
           slides: TOTAL_DOTS,
           ariaLabel: 'Galeria com dots',
           onIndexChange: '(index) => marcarDotAtual(index)',
@@ -258,7 +258,7 @@ const FOTOS = [
 
 export const Gallery: Story = {
   parameters: {
-    docs: { source: { transform: carouselSourceCom({ slides: 4, ariaLabel: 'Galeria de fotos do produto' }) } },
+    docs: { source: { transform: carouselSourceWith({ slides: 4, ariaLabel: 'Galeria de fotos do produto' }) } },
   },
   render: () => {
     const wrap = document.createElement('div');

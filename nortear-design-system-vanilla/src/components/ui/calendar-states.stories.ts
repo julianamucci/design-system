@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { fn, userEvent, within, expect } from 'storybook/test';
 import { createCalendar } from './calendar';
-import { calendarSource, calendarSourceCom } from './calendar.source';
+import { calendarSource, calendarSourceWith } from './calendar.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -98,7 +98,7 @@ export const Disabled: Story = {
       // Override de story: a regra que bloqueia datas é o assunto, e o snippet
       // do meta mostraria um calendário sem restrição nenhuma.
       source: {
-        transform: calendarSourceCom({
+        transform: calendarSourceWith({
           value: 'new Date(2026, 3, 15)',
           disabled: '(data) => [0, 6].includes(data.getDay())',
           onSelect: '(data) => registrarEscolha(data)',
@@ -124,8 +124,8 @@ export const Disabled: Story = {
       await expect(bloqueados.length).toBe(8);
       for (const b of bloqueados) {
         const dia = Number(b.dataset.day!.slice(-2));
-        const diaDaSemana = new Date(2026, 3, dia).getDay();
-        await expect([0, 6]).toContain(diaDaSemana);
+        const weekDay = new Date(2026, 3, dia).getDay();
+        await expect([0, 6]).toContain(weekDay);
       }
     });
 
@@ -169,7 +169,7 @@ export const Today: Story = {
     docs: {
       // Override de story: a AUSÊNCIA de valor inicial é o assunto — é ela que
       // faz o calendário abrir no mês corrente com hoje só destacado.
-      source: { transform: calendarSourceCom({ value: undefined }) },
+      source: { transform: calendarSourceWith({ value: undefined }) },
       description: {
         story:
           'Sem data escolhida: o calendário abre no mês corrente e destaca o dia de hoje, sem marcá-lo como selecionado.',
@@ -319,13 +319,13 @@ export const WithOutsideDays: Story = {
     await step('Sem eles, a casa fica vazia em vez de emprestar um dia', async () => {
       // A alternativa é explícita na API, e é o que o grid fazia antes de
       // existirem: buraco no começo e no fim, sem dia nenhum.
-      const semVizinhos = createCalendar({
+      const noNeighbours = createCalendar({
         locale: 'pt-BR',
         value: new Date(2026, 3, 12),
         showOutsideDays: false,
       });
-      await expect(semVizinhos.querySelectorAll('.nds-calendar-day-btn').length).toBe(30);
-      await expect(semVizinhos.querySelectorAll('td:empty').length).toBeGreaterThan(0);
+      await expect(noNeighbours.querySelectorAll('.nds-calendar-day-btn').length).toBe(30);
+      await expect(noNeighbours.querySelectorAll('td:empty').length).toBeGreaterThan(0);
     });
   },
 };
@@ -341,7 +341,7 @@ export const RangeWithMiddle: Story = {
     docs: {
       // Override de story: modo intervalo, com o valor na forma de par.
       source: {
-        transform: calendarSourceCom({
+        transform: calendarSourceWith({
           mode: 'range',
           value: '{ from: new Date(2026, 3, 10), to: new Date(2026, 3, 18) }',
         }),

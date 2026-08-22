@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  switchFormularioSnippet,
+  switchFormSnippet,
   switchInvalidoSnippet,
-  switchPainelSnippet,
+  switchPanelSnippet,
   switchSnippet,
   switchSource,
-  switchSourceCom,
+  switchSourceWith,
 } from './switch.source';
 
 describe('switchSnippet', () => {
@@ -81,14 +81,14 @@ describe('switchSource', () => {
 
 describe('switchSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = switchSourceCom({ size: 'sm' })('', { args: { size: 'default' } });
+    const código = switchSourceWith({ size: 'sm' })('', { args: { size: 'default' } });
     expect(código).toContain("size: 'sm'");
   });
 });
 
 describe('switchPainelSnippet', () => {
   it('põe rótulo e descrição de um lado e o controle do outro', () => {
-    const código = switchPainelSnippet([
+    const código = switchPanelSnippet([
       { id: 'emails-marketing', label: 'Emails de marketing', description: 'Receba novidades.' },
     ]);
     expect(código).toContain('nds-cluster');
@@ -99,7 +99,7 @@ describe('switchPainelSnippet', () => {
   });
 
   it('com vários itens vira uma lista, sem repetir o painel à mão', () => {
-    const código = switchPainelSnippet([
+    const código = switchPanelSnippet([
       { id: 'pref-email', label: 'Email', description: 'Resumo semanal.', checked: true },
       { id: 'pref-push', label: 'Push', description: 'Alertas no dispositivo.' },
       { id: 'pref-sms', label: 'SMS', description: 'Eventos críticos.' },
@@ -112,7 +112,7 @@ describe('switchPainelSnippet', () => {
 
 describe('switchFormularioSnippet', () => {
   it('sincroniza o estado num campo oculto — a fábrica não emite um', () => {
-    const código = switchFormularioSnippet({ name: 'newsletter' });
+    const código = switchFormSnippet({ name: 'newsletter' });
     expect(código).toContain("oculto.type = 'hidden'");
     expect(código).toContain("oculto.name = 'newsletter'");
     expect(código).toContain("onCheckedChange: (ligado) => { oculto.value = ligado ? 'on' : 'off'; }");

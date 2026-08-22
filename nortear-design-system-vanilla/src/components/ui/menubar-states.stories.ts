@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
 import { embrulhar, gatilhosDe, painelAberto } from './menubar.fixtures';
-import { menubarSource, menubarSourceCom } from './menubar.source';
-import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
+import { menubarSource, menubarSourceWith } from './menubar.source';
+import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const MENUS_FECHADOS = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'] as const;
@@ -90,7 +90,7 @@ export const Open: Story = {
     // `defaultOpen` é o que faz o menu nascer aberto — é o assunto da story.
     docs: {
       source: {
-        transform: menubarSourceCom({
+        transform: menubarSourceWith({
           menus: [
             { label: 'Arquivo', items: [{ label: 'Novo' }, { label: 'Abrir' }] },
             { label: 'Editar', items: [{ label: 'Desfazer' }] },
@@ -153,7 +153,7 @@ export const ItemDisabled: Story = {
   parameters: {
     docs: {
       source: {
-        transform: menubarSourceCom({
+        transform: menubarSourceWith({
           menus: [
             {
               label: 'Arquivo',
@@ -225,7 +225,7 @@ export const CheckboxChecked: Story = {
     covers: ['functional.item7'],
     docs: {
       source: {
-        transform: menubarSourceCom({
+        transform: menubarSourceWith({
           menus: [
             {
               label: 'Exibir',
@@ -313,7 +313,7 @@ export const CheckboxIndeterminate: Story = {
     // juntos ensinaria um estado que a fábrica resolve por conta própria.
     docs: {
       source: {
-        transform: menubarSourceCom({
+        transform: menubarSourceWith({
           menus: [
             {
               label: 'Exibir',
@@ -402,7 +402,7 @@ export const ListenerCleanup: Story = {
     // que a story existe para mostrar.
     docs: {
       source: {
-        transform: menubarSourceCom({
+        transform: menubarSourceWith({
           menus: [
             { label: 'Arquivo', items: [{ label: 'Novo' }, { label: 'Salvar' }] },
             { label: 'Editar', items: [{ label: 'Desfazer' }] },
@@ -412,14 +412,14 @@ export const ListenerCleanup: Story = {
       },
     },
   },
-  render: () => hospedeiroDeSonda(
+  render: () => probeHost(
     'Sonda de limpeza: a barra é montada, um menu é aberto e a barra sai da página.',
   ),
   play: async ({ canvasElement, step }) => {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ResultadoDaSonda;
+    let sonda!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       sonda = await sondarOuvintes({
@@ -433,7 +433,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await conferirLimpeza(sonda);
+      await checkLimpeza(sonda);
     });
   },
 };

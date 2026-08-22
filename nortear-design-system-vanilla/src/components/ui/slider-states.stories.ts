@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { withLabel } from './slider.fixtures';
-import { sliderSource, sliderSourceCom } from './slider.source';
+import { sliderSource, sliderSourceWith } from './slider.source';
 import {
   alcaDesabilitada,
   alcasDoSlider,
@@ -165,7 +165,7 @@ export const Disabled: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
-      source: { transform: sliderSourceCom({ disabled: true, value: 50 }) },
+      source: { transform: sliderSourceWith({ disabled: true, value: 50 }) },
       description: {
         story: 'Estado desabilitado — opacidade reduzida, cursor `not-allowed`, sem pointer events nem teclado.',
       },
@@ -208,7 +208,7 @@ export const MaxValue: Story = {
     }),
   parameters: {
     docs: {
-      source: { transform: sliderSourceCom({ value: 100, 'aria-label': 'Brilho' }) },
+      source: { transform: sliderSourceWith({ value: 100, 'aria-label': 'Brilho' }) },
       description: {
         story: 'Slider no limite máximo — preenchimento completo, texto adjacente confirma o valor.',
       },

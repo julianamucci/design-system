@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  tableCarregandoSnippet,
+  tableLoadingSnippet,
   tableSnippet,
   tableSource,
-  tableSourceCom,
+  tableSourceWith,
   tableVaziaSnippet,
 } from './table.source';
 
@@ -22,7 +22,7 @@ describe('tableSnippet', () => {
     expect(tableSnippet()).not.toContain('createTableFooter');
     expect(tableSnippet({ comRodape: true })).toContain('createTableFooter');
     expect(tableSnippet()).not.toContain('createButton');
-    expect(tableSnippet({ comAcoes: true })).toContain(
+    expect(tableSnippet({ withActions: true })).toContain(
       "import { createButton } from '@/components/ui/button';",
     );
   });
@@ -38,9 +38,9 @@ describe('tableSnippet', () => {
 
   it('mostra o rodapé, a ação por linha e a linha marcada quando a story as usa', () => {
     expect(tableSnippet({ comRodape: true })).toContain("createTableCell('Total')");
-    const comAcoes = tableSnippet({ comAcoes: true });
-    expect(comAcoes).toContain("variant: 'ghost'");
-    expect(comAcoes).toContain("'aria-label': `Ações para fatura ${fatura.id}`");
+    const withActions = tableSnippet({ withActions: true });
+    expect(withActions).toContain("variant: 'ghost'");
+    expect(withActions).toContain("'aria-label': `Ações para fatura ${fatura.id}`");
     expect(tableSnippet({ linhaSelecionada: true })).toContain(
       "linha.setAttribute('data-state', 'selected')",
     );
@@ -48,7 +48,7 @@ describe('tableSnippet', () => {
   });
 
   it('usa o nome acessível canônico, nunca o apelido depreciado', () => {
-    const código = tableSnippet({ comAcoes: true });
+    const código = tableSnippet({ withActions: true });
     expect(código).toContain("'aria-label':");
     expect(código).not.toContain('ariaLabel');
   });
@@ -76,7 +76,7 @@ describe('tableVaziaSnippet', () => {
 
 describe('tableCarregandoSnippet', () => {
   it('põe o esqueleto na célula e o anúncio na região', () => {
-    const código = tableCarregandoSnippet();
+    const código = tableLoadingSnippet();
     expect(código).toContain("import { createSkeleton } from '@/components/ui/skeleton';");
     expect(código).toContain("createSkeleton({ shape: 'text', width: '3-4' })");
     expect(código).toContain("regiao.setAttribute('aria-busy', 'true');");
@@ -86,14 +86,14 @@ describe('tableCarregandoSnippet', () => {
 
 describe('tableSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = tableSource('<table data-slot="table">', {});
-    const comArgs = tableSource('<table data-slot="table">', {
+    const noArgs = tableSource('<table data-slot="table">', {});
+    const withArgs = tableSource('<table data-slot="table">', {
       args: { captionVisivel: true, comRodape: true },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain('createTableFooter');
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain('createTableFooter');
     // Legenda visível: a chamada fecha sem a classe que a tira da tela.
-    expect(comArgs).toContain("createTableCaption('Lista de faturas recentes'));");
+    expect(withArgs).toContain("createTableCaption('Lista de faturas recentes'));");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -105,7 +105,7 @@ describe('tableSource', () => {
 
 describe('tableSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = tableSourceCom({ comRodape: false, comAcoes: true });
+    const transform = tableSourceWith({ comRodape: false, withActions: true });
     const código = transform('', { args: { comRodape: true } });
     expect(código).not.toContain('createTableFooter');
     expect(código).toContain('createButton');

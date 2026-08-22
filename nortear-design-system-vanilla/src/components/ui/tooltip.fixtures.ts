@@ -4,7 +4,7 @@
  *
  * O módulo existe porque num `*.stories.ts` todo export nomeado vira story: a
  * função exportada de um deles apareceria como uma aba fantasma na barra
- * lateral. Sem lugar para morar, `balaoDe` e `limparPortal` foram copiadas nos
+ * lateral. Sem lugar para morar, `balaoDe` e `clearPortal` foram copiadas nos
  * quatro arquivos de story e `wrap` em três.
  *
  * O que variava: a altura mínima da moldura. Composições reservam 200px porque a
@@ -20,7 +20,7 @@ export function balaoDe(gatilho: HTMLElement): HTMLElement | null {
 }
 
 /** Tira do DOM qualquer balão que tenha sobrado antes do axe varrer a página. */
-export function limparPortal(): void {
+export function clearPortal(): void {
   document.querySelectorAll('[data-slot="tooltip-content"]').forEach((n) => n.remove());
 }
 

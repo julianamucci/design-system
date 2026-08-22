@@ -12,7 +12,7 @@ import {
 import type { SheetSide } from './sheet';
 
 /** O que ocupa o `content` do painel. Muda o CORPO, não a chamada. */
-export type SheetCorpo = 'texto' | 'paragrafos' | 'acoes' | 'navegacao' | 'formulario';
+export type SheetBody = 'texto' | 'paragrafos' | 'acoes' | 'navegacao' | 'formulario';
 
 /** O que as stories usam da `SheetOptions`, mais o corpo que cada uma monta. */
 export type SheetSnippetOptions = {
@@ -20,7 +20,7 @@ export type SheetSnippetOptions = {
   side?: SheetSide;
   title?: string;
   description?: string;
-  corpo?: SheetCorpo;
+  corpo?: SheetBody;
   /** Rótulos do rodapé. `false` monta o painel SEM rodapé. */
   cancelLabel?: string | false;
   applyLabel?: string | false;
@@ -50,7 +50,7 @@ function expressao(valor: unknown, padrao: string): string | undefined {
 
 type Corpo = { imports: string[]; bloco: string };
 
-function corpoTexto(): Corpo {
+function bodyText(): Corpo {
   return {
     imports: [],
     bloco: `const corpo = document.createElement('div');
@@ -59,7 +59,7 @@ corpo.textContent = 'Conteúdo do painel (formulário, lista, mensagem).';`,
   };
 }
 
-function corpoParagrafos(total: number): Corpo {
+function bodyParagrafos(total: number): Corpo {
   return {
     imports: [],
     // O corpo é quem rola: `.nds-sheet-body` já tem o teto de altura e o
@@ -75,7 +75,7 @@ for (let i = 1; i <= ${total}; i++) {
   };
 }
 
-function corpoAcoes(): Corpo {
+function bodyActions(): Corpo {
   return {
     imports: [importar('button', 'createButton')],
     bloco: `const corpo = document.createElement('div');
@@ -87,7 +87,7 @@ for (const rotulo of ['Compartilhar', 'Copiar link', 'Editar', 'Arquivar']) {
   };
 }
 
-function corpoNavegacao(): Corpo {
+function bodyNavigation(): Corpo {
   return {
     imports: [],
     // A lista de links é um marco: sem nome, o leitor de tela anuncia
@@ -106,7 +106,7 @@ for (const rotulo of ['Dashboard', 'Projetos', 'Equipe', 'Configurações']) {
   };
 }
 
-function corpoFormulario(): Corpo {
+function bodyForm(): Corpo {
   return {
     imports: [importar('form', 'createFormField'), importar('input', 'createInput')],
     // `createFormField` é quem fecha o par rótulo ↔ controle e gera o id que
@@ -123,18 +123,18 @@ corpo.append(
   };
 }
 
-function corpoDe(o: SheetSnippetOptions): Corpo {
+function bodyOf(o: SheetSnippetOptions): Corpo {
   switch (o.corpo) {
     case 'paragrafos':
-      return corpoParagrafos(o.paragrafos ?? 24);
+      return bodyParagrafos(o.paragrafos ?? 24);
     case 'acoes':
-      return corpoAcoes();
+      return bodyActions();
     case 'navegacao':
-      return corpoNavegacao();
+      return bodyNavigation();
     case 'formulario':
-      return corpoFormulario();
+      return bodyForm();
     default:
-      return corpoTexto();
+      return bodyText();
   }
 }
 
@@ -173,7 +173,7 @@ for (const botao of Array.from(rodape.children)) {
   };
 }
 
-function linhasDoPainel(o: SheetSnippetOptions, gatilho: string, rodapeRef?: string): string[] {
+function panelLines(o: SheetSnippetOptions, gatilho: string, rodapeRef?: string): string[] {
   return opcoes([
     ['trigger', gatilho],
     // `right` é o padrão da fábrica e não entra no snippet.
@@ -194,7 +194,7 @@ function linhasDoPainel(o: SheetSnippetOptions, gatilho: string, rodapeRef?: str
 
 /** A chamada real de `createSheet` com o gatilho, o corpo e o rodapé da story. */
 export function sheetSnippet(o: SheetSnippetOptions = {}): string {
-  const corpo = corpoDe(o);
+  const corpo = bodyOf(o);
   const pe = rodape(o);
   const gatilho = `createButton({ variant: 'outline', label: ${texto(o.triggerLabel ?? 'Abrir filtros')} })`;
 
@@ -204,7 +204,7 @@ export function sheetSnippet(o: SheetSnippetOptions = {}): string {
       .join('\n'),
     corpo.bloco,
     pe.bloco,
-    `const painel = ${chamada('createSheet', linhasDoPainel(o, gatilho, pe.referencia))};`,
+    `const painel = ${chamada('createSheet', panelLines(o, gatilho, pe.referencia))};`,
     montar('painel'),
     o.mostrarDestroy
       ? `// O painel mora no \`body\` e o ouvinte de teclado mora no \`document\`: quem
@@ -222,8 +222,8 @@ painel.destroy();`
  * código aciona o gatilho interno e acompanha o painel por `onOpenChange`. Um
  * snippet com o gatilho visível esconderia exatamente isso.
  */
-export function sheetControladoSnippet(o: SheetSnippetOptions = {}): string {
-  const corpo = corpoDe(o);
+export function sheetControlledSnippet(o: SheetSnippetOptions = {}): string {
+  const corpo = bodyOf(o);
 
   return snippet(
     [importar('sheet', 'createSheet'), importar('button', 'createButton'), ...corpo.imports]
@@ -238,7 +238,7 @@ gatilhoInterno.setAttribute('tabindex', '-1');
 gatilhoInterno.setAttribute('aria-hidden', 'true');`,
     `let aberto = false;
 const painel = ${chamada('createSheet', [
-      'trigger: gatilhoInterno,',
+      'trigger: triggerInterno,',
       `title: ${texto(o.title ?? 'Controlado pelo pai')},`,
       `description: ${texto(o.description ?? 'Abertura programática pelo gatilho interno.')},`,
       'content: corpo,',
@@ -261,13 +261,13 @@ export const sheetSource: SourceTransform<SheetSnippetOptions> = (_gerado, ctx) 
   sheetSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function sheetSourceCom(fixas: SheetSnippetOptions): SourceTransform<SheetSnippetOptions> {
+export function sheetSourceWith(fixas: SheetSnippetOptions): SourceTransform<SheetSnippetOptions> {
   return (_gerado, ctx) => sheetSnippet({ ...ctx.args, ...fixas });
 }
 
 /** Transform de story para a abertura comandada de fora. */
-export function sheetSourceControlado(
+export function sheetSourceControlled(
   fixas: SheetSnippetOptions = {},
 ): SourceTransform<SheetSnippetOptions> {
-  return (_gerado, ctx) => sheetControladoSnippet({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => sheetControlledSnippet({ ...ctx.args, ...fixas });
 }

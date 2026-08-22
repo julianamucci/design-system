@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createCodeBlock } from './code-block';
-import { codeBlockSource, codeBlockSourceCom } from './code-block.source';
+import { codeBlockSource, codeBlockSourceWith } from './code-block.source';
 import { LANGUAGE_ITEMS } from '@/components/docs/CodeBlockDocs';
 import {
   MINIMO_DE_CONTRASTE,
@@ -46,9 +46,9 @@ render(items, total);`;
  * aqui, e o snippet do meta — que cai no padrão da fábrica — esconderia
  * justamente a opção que a story existe para mostrar.
  */
-function sourceDaLinguagem(key: string) {
+function languageSource(key: string) {
   const item = LANGUAGE_ITEMS.find(i => i.key === key)!;
-  return codeBlockSourceCom({
+  return codeBlockSourceWith({
     code: item.code,
     language: item.language,
     showLineNumbers: false,
@@ -86,7 +86,7 @@ function root(canvasElement: HTMLElement): HTMLElement {
 export const Script: Story = {
   parameters: {
     covers: ['visual.item2'],
-    docs: { source: { transform: sourceDaLinguagem('script') } },
+    docs: { source: { transform: languageSource('script') } },
   },
   render: renderLanguage('script'),
   play: async ({ canvasElement, step }) => {
@@ -100,7 +100,7 @@ export const Script: Story = {
 export const Markup: Story = {
   parameters: {
     covers: ['visual.item2'],
-    docs: { source: { transform: sourceDaLinguagem('markup') } },
+    docs: { source: { transform: languageSource('markup') } },
   },
   render: renderLanguage('markup'),
   play: async ({ canvasElement, step }) => {
@@ -114,7 +114,7 @@ export const Markup: Story = {
 export const Styles: Story = {
   parameters: {
     covers: ['visual.item2'],
-    docs: { source: { transform: sourceDaLinguagem('styles') } },
+    docs: { source: { transform: languageSource('styles') } },
   },
   render: renderLanguage('styles'),
   play: async ({ canvasElement, step }) => {
@@ -128,7 +128,7 @@ export const Styles: Story = {
 export const Date: Story = {
   parameters: {
     covers: ['visual.item2'],
-    docs: { source: { transform: sourceDaLinguagem('data') } },
+    docs: { source: { transform: languageSource('data') } },
   },
   render: renderLanguage('data'),
   play: async ({ canvasElement, step }) => {
@@ -142,7 +142,7 @@ export const Date: Story = {
 export const Shell: Story = {
   parameters: {
     covers: ['visual.item2'],
-    docs: { source: { transform: sourceDaLinguagem('shell') } },
+    docs: { source: { transform: languageSource('shell') } },
   },
   render: renderLanguage('shell'),
   play: async ({ canvasElement, step }) => {
@@ -156,7 +156,7 @@ export const Shell: Story = {
 export const Text: Story = {
   parameters: {
     covers: ['visual.item2'],
-    docs: { source: { transform: sourceDaLinguagem('text') } },
+    docs: { source: { transform: languageSource('text') } },
   },
   render: renderLanguage('text'),
   play: async ({ canvasElement, step }) => {

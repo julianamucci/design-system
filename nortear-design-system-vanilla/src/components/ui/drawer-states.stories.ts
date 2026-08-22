@@ -2,10 +2,10 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createDrawer } from './drawer';
-import { drawerSource, drawerSourceCom } from './drawer.source';
+import { drawerSource, drawerSourceWith } from './drawer.source';
 import { createButton } from './button';
-import { limparPortaisDoDrawer } from './drawer-portal-cleanup';
-import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
+import { drawerClearPortais } from './drawer-portal-cleanup';
+import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
 const meta: Meta = {
   tags: ['disclosure'],
@@ -89,7 +89,7 @@ export const Closed: Story = {
   },
   render: () => buildBase({ triggerLabel: 'Abrir drawer', title: 'Editar perfil' }),
   play: async ({ canvasElement, step }) => {
-    limparPortaisDoDrawer();
+    drawerClearPortais();
     const canvas = within(canvasElement);
 
     await step('Fechado, o painel não existe no DOM', async () => {
@@ -123,7 +123,7 @@ export const Open: Story = {
       description: 'Atualize seus dados.',
     }),
   play: async ({ canvasElement, step }) => {
-    limparPortaisDoDrawer();
+    drawerClearPortais();
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: /abrir drawer/i });
     if (within(document.body).queryAllByRole('dialog').length === 0) {
@@ -158,7 +158,7 @@ export const Controlled: Story = {
     // é dono do estado, e ele não passa por control nenhum neste arquivo.
     docs: {
       source: {
-        transform: drawerSourceCom({
+        transform: drawerSourceWith({
           triggerLabel: 'Abrir',
           title: 'Controlado pelo pai',
           description: 'Abertura comandada de fora.',
@@ -177,16 +177,16 @@ export const Controlled: Story = {
     wrapper.className = 'nds-stack';
     wrapper.dataset.spacing = 'md';
 
-    const estadoExterno = { aberto: false };
+    const stateExterno = { aberto: false };
     const externo = createButton({ variant: 'default', label: 'Abrir via estado externo' });
 
     // Gatilho interno fora do fluxo visual e do fluxo de leitura: quem comanda é
     // o botão externo. `nds-sr-only` é a classe REAL do projeto — antes havia um
     // `sr-only` sem prefixo, que não esconde nada.
-    const gatilhoInterno = createButton({ variant: 'outline', label: 'gatilho interno' });
-    gatilhoInterno.classList.add('nds-sr-only');
-    gatilhoInterno.setAttribute('tabindex', '-1');
-    gatilhoInterno.setAttribute('aria-hidden', 'true');
+    const triggerInterno = createButton({ variant: 'outline', label: 'gatilho interno' });
+    triggerInterno.classList.add('nds-sr-only');
+    triggerInterno.setAttribute('tabindex', '-1');
+    triggerInterno.setAttribute('aria-hidden', 'true');
 
     const content = document.createElement('div');
     content.className = 'nds-text-body nds-text-muted-foreground';
@@ -201,26 +201,26 @@ export const Controlled: Story = {
     footer.append(cancel, createButton({ variant: 'default', label: 'Confirmar' }));
 
     const drawer = createDrawer({
-      trigger: gatilhoInterno,
+      trigger: triggerInterno,
       title: 'Controlado pelo pai',
       description: 'Abertura comandada de fora.',
       content,
       footer,
       onOpenChange: (aberto) => {
-        estadoExterno.aberto = aberto;
+        stateExterno.aberto = aberto;
         externo.dataset.open = String(aberto);
       },
     });
 
     externo.addEventListener('click', () => {
-      if (!estadoExterno.aberto) gatilhoInterno.click();
+      if (!stateExterno.aberto) triggerInterno.click();
     });
 
     wrapper.append(externo, drawer);
     return wrapper;
   },
   play: async ({ canvasElement, step }) => {
-    limparPortaisDoDrawer();
+    drawerClearPortais();
     const canvas = within(canvasElement);
     const externo = canvas.getByRole('button', { name: /abrir via estado externo/i });
 
@@ -259,7 +259,7 @@ export const NotDismissible: Story = {
     // mostraria a gaveta que Escape e overlay dispensam — o oposto.
     docs: {
       source: {
-        transform: drawerSourceCom({
+        transform: drawerSourceWith({
           triggerLabel: 'Abrir confirmação',
           title: 'Confirmação obrigatória',
           description: 'Use o botão do rodapé para sair deste painel.',
@@ -283,7 +283,7 @@ export const NotDismissible: Story = {
       dismissible: false,
     }),
   play: async ({ canvasElement, step }) => {
-    limparPortaisDoDrawer();
+    drawerClearPortais();
     const canvas = within(canvasElement);
     if (within(document.body).queryAllByRole('dialog').length === 0) {
       await userEvent.click(canvas.getByRole('button', { name: /abrir confirmação/i }));
@@ -329,14 +329,14 @@ export const ListenerCleanup: Story = {
     // sempre a mesma legenda.
     chromatic: { disable: true },
   },
-  render: () => hospedeiroDeSonda(
+  render: () => probeHost(
     'Sonda de limpeza: a gaveta é montada, aberta e removida da página pela play.',
   ),
   play: async ({ canvasElement, step }) => {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ResultadoDaSonda;
+    let sonda!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       sonda = await sondarOuvintes({
@@ -357,7 +357,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await conferirLimpeza(sonda);
+      await checkLimpeza(sonda);
     });
   },
 };

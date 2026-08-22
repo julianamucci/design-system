@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  formComFieldsetSnippet,
-  formComVariosCamposSnippet,
+  formWithFieldsetSnippet,
+  formWithMultipleFieldsSnippet,
   formSnippet,
   formSource,
-  formSourceCom,
+  formSourceWith,
 } from './form.source';
 
 describe('formSnippet', () => {
@@ -69,14 +69,14 @@ describe('formSnippet', () => {
 
 describe('formSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = formSource('<div data-slot="field">', {});
-    const comArgs = formSource('<div data-slot="field">', {
+    const noArgs = formSource('<div data-slot="field">', {});
+    const withArgs = formSource('<div data-slot="field">', {
       args: { label: 'CPF', description: 'Preenchido pelo cadastro da empresa.', disabled: true },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("label: 'CPF'");
-    expect(comArgs).toContain('disabled: true');
-    expect(comArgs).toContain("description: 'Preenchido pelo cadastro da empresa.'");
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("label: 'CPF'");
+    expect(withArgs).toContain('disabled: true');
+    expect(withArgs).toContain("description: 'Preenchido pelo cadastro da empresa.'");
   });
 
   it('descrição e erro vazios são ausência, e não string vazia no snippet', () => {
@@ -93,7 +93,7 @@ describe('formSource', () => {
 
 describe('formSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = formSourceCom({ label: 'Senha', inputType: 'password' });
+    const transform = formSourceWith({ label: 'Senha', inputType: 'password' });
     const código = transform('', { args: { label: 'Email' } });
     expect(código).toContain("label: 'Senha'");
     expect(código).toContain("type: 'password'");
@@ -102,7 +102,7 @@ describe('formSourceCom', () => {
 
 describe('formComFieldsetSnippet', () => {
   it('usa a fábrica do grupo, que é outra', () => {
-    const código = formComFieldsetSnippet({
+    const código = formWithFieldsetSnippet({
       legend: 'Endereço de entrega',
       campos: [{ label: 'Rua', placeholder: 'ex: Av. Paulista, 1000' }],
     });
@@ -116,7 +116,7 @@ describe('formComFieldsetSnippet', () => {
 
 describe('formComVariosCamposSnippet', () => {
   it('a área de texto passa pelo mesmo campo, com a fábrica dela', () => {
-    const código = formComVariosCamposSnippet({
+    const código = formWithMultipleFieldsSnippet({
       campos: [
         { label: 'Nome completo', name: 'nome' },
         { label: 'Biografia', controle: 'textarea', name: 'bio', rows: 3 },
@@ -131,7 +131,7 @@ describe('formComVariosCamposSnippet', () => {
   });
 
   it('não importa a fábrica de área de texto quando não há nenhuma', () => {
-    const código = formComVariosCamposSnippet({ campos: [{ label: 'Email', type: 'email' }] });
+    const código = formWithMultipleFieldsSnippet({ campos: [{ label: 'Email', type: 'email' }] });
     expect(código).not.toContain('createTextarea');
     expect(código).toContain("type: 'email'");
   });

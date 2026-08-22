@@ -61,7 +61,7 @@ export type MenubarSnippetOptions = {
  * Cada item leva o próprio `onClick`: um item de menu sem ação não faz nada, e
  * o callback não tem padrão nenhum para herdar.
  */
-const MENUS_PADRAO: MenubarMenuSnippet[] = [
+const MENUS_DEFAULT: MenubarMenuSnippet[] = [
   {
     label: 'Arquivo',
     items: [
@@ -105,13 +105,13 @@ function serializarItem(item: MenubarItemSnippet, recuo: string): string {
   ]);
 
   if (item.options) {
-    const opcoesDoGrupo = item.options
+    const groupOptions = item.options
       .map((op) => `${recuo}    { value: ${texto(op.value)}, label: ${texto(op.label)} },`)
       .join('\n');
     return `${recuo}{
 ${base.map((l) => `${recuo}  ${l}`).join('\n')}
 ${recuo}  options: [
-${opcoesDoGrupo}
+${groupOptions}
 ${recuo}  ],
 ${recuo}},`;
   }
@@ -146,7 +146,7 @@ ${menu.items.map((i) => serializarItem(i, '      ')).join('\n')}
 
 /** A chamada real de `createMenubar` com a estrutura e as opções da story. */
 export function menubarSnippet(o: MenubarSnippetOptions = {}): string {
-  const menus = o.menus ?? MENUS_PADRAO;
+  const menus = o.menus ?? MENUS_DEFAULT;
 
   const linhas = opcoes([
     // `loop` é ligado por padrão: só o desligamento merece uma linha.
@@ -177,7 +177,7 @@ export const menubarSource: SourceTransform<MenubarSnippetOptions> = (_gerado, c
   menubarSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, estrutura e opções que os controls não cobrem. */
-export function menubarSourceCom(
+export function menubarSourceWith(
   fixas: MenubarSnippetOptions,
 ): SourceTransform<MenubarSnippetOptions> {
   return (_gerado, ctx) => menubarSnippet({ ...ctx.args, ...fixas });

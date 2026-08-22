@@ -7,7 +7,7 @@ import {
   formasDeDado,
 } from '@shared/testing/chart-probe';
 import { createChart } from './chart';
-import { chartEmCardSourceCom, chartSource, chartSourceCom } from './chart.source';
+import { cardSourceWithChart, chartSource, chartSourceWith } from './chart.source';
 import {
   createCard,
   createCardHeader,
@@ -26,7 +26,7 @@ const chartData = MESES.map((label, i) => ({
 }));
 
 const TITULO_DO_CARD = 'Acessos mensais';
-const TITULO_INLINE = 'Vendas mensais';
+const TITLE_INLINE = 'Vendas mensais';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -51,7 +51,7 @@ export const WithCard: Story = {
       // Override de story: a forma do snippet é outra — o Card é uma família de
       // fábricas a mais, e o que se ensina é onde o desenho entra nela.
       source: {
-        transform: chartEmCardSourceCom({
+        transform: cardSourceWithChart({
           height: 220,
           'aria-label': 'Acessos mensais de janeiro a junho de 2024',
           cardTitle: TITULO_DO_CARD,
@@ -112,7 +112,7 @@ export const InlineTitle: Story = {
       // Override de story: o assunto é o título DESENHADO e a ausência de
       // descrição própria — é ela que faz o título virar a alternativa textual.
       source: {
-        transform: chartSourceCom({ title: TITULO_INLINE, height: 260, 'aria-label': undefined }),
+        transform: chartSourceWith({ title: TITLE_INLINE, height: 260, 'aria-label': undefined }),
       },
       description: {
         story: 'Título desenhado acima dos eixos, para quando o gráfico aparece solto, sem moldura que o nomeie. Na falta de descrição própria, o título vira a alternativa textual.',
@@ -122,7 +122,7 @@ export const InlineTitle: Story = {
   render: () => createChart({
     data: chartData,
     type: 'bar',
-    title: TITULO_INLINE,
+    title: TITLE_INLINE,
     height: 260,
     class: 'nds-max-w-md',
   }),
@@ -131,7 +131,7 @@ export const InlineTitle: Story = {
 
     await step('O título aparece escrito dentro do desenho', async () => {
       await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(desenhoEscreve(raiz, TITULO_INLINE)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(desenhoEscreve(raiz, TITLE_INLINE)).toBe(true), { timeout: 3000 });
     });
 
     await step('Sem descrição própria, o título é quem descreve o desenho', async () => {
@@ -139,7 +139,7 @@ export const InlineTitle: Story = {
       // vem o rótulo. Título escrito e rótulo divergentes anunciariam ao leitor
       // de tela uma coisa e mostrariam outra.
       await expect(raiz.getAttribute('role')).toBe('img');
-      await expect(raiz.getAttribute('aria-label')).toBe(TITULO_INLINE);
+      await expect(raiz.getAttribute('aria-label')).toBe(TITLE_INLINE);
     });
 
     await step('E o dado continua desenhado', async () => {

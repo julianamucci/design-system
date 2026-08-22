@@ -4,9 +4,9 @@ import { createTabs, type TabsItemDef } from './tabs';
 import { ativar, makePanel } from './tabs.fixtures';
 import {
   tabsSource,
-  tabsSourceCom,
-  tabsSourceComBadge,
-  tabsSourceComIcones,
+  tabsSourceWith,
+  tabsSourceWithBadge,
+  tabsSourceWithIcons,
 } from './tabs.source';
 import { createBadge } from './badge';
 import { User, Settings, Shield } from 'lucide';
@@ -84,7 +84,7 @@ export const WithIconsInTrigger: Story = {
       // `label` é texto: o ícone entra no gatilho depois de montado, e é isso
       // que o leitor precisa ver.
       source: {
-        transform: tabsSourceComIcones(
+        transform: tabsSourceWithIcons(
           [
             { value: 'profile', label: 'Perfil', content: 'Edite suas informações públicas.', icon: 'User' },
             { value: 'account', label: 'Conta', content: 'Email, idioma e preferências.', icon: 'Settings' },
@@ -166,7 +166,7 @@ export const WithBadgeInTrigger: Story = {
     covers: ['functional.item1'],
     docs: {
       source: {
-        transform: tabsSourceComBadge(
+        transform: tabsSourceWithBadge(
           [
             { value: 'inbox', label: 'Caixa de entrada', content: '12 mensagens não lidas.', badge: { text: '12' } },
             { value: 'spam', label: 'Spam', content: '3 mensagens marcadas como spam.', badge: { text: '3', variant: 'destructive' } },
@@ -250,7 +250,7 @@ export const Vertical: Story = {
   parameters: {
     docs: {
       source: {
-        transform: tabsSourceCom({
+        transform: tabsSourceWith({
           orientation: 'vertical',
           'aria-label': 'Configurações',
           itens: [
@@ -306,7 +306,7 @@ export const SubNavigationLine: Story = {
   parameters: {
     docs: {
       source: {
-        transform: tabsSourceCom({
+        transform: tabsSourceWith({
           variant: 'line',
           'aria-label': 'Filtros de listagem',
           itens: [

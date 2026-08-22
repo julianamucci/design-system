@@ -12,12 +12,12 @@ export type TableSnippetOptions = {
   /** Rodapé com o total das linhas exibidas. */
   comRodape?: boolean;
   /** Coluna de ação por linha. */
-  comAcoes?: boolean;
+  withActions?: boolean;
   /** Marca uma linha com `data-state="selected"`. */
   linhaSelecionada?: boolean;
 };
 
-const CAPTION_PADRAO = 'Lista de faturas recentes';
+const CAPTION_DEFAULT = 'Lista de faturas recentes';
 
 /**
  * Dados do snippet, e não a fixture das stories.
@@ -45,7 +45,7 @@ function legenda(o: TableSnippetOptions): string {
   return [
     '// A legenda é o NOME da tabela. `nds-sr-only` a tira da tela e nunca do',
     '// DOM: quem entra pela árvore de acessibilidade encontraria só "tabela".',
-    `table.appendChild(createTableCaption(${texto(o.caption ?? CAPTION_PADRAO)}${classe}));`,
+    `table.appendChild(createTableCaption(${texto(o.caption ?? CAPTION_DEFAULT)}${classe}));`,
   ].join('\n');
 }
 
@@ -62,7 +62,7 @@ function cabecalho(o: TableSnippetOptions = {}): string {
     '}',
   ];
 
-  if (o.comAcoes) {
+  if (o.withActions) {
     linhas.push(
       '',
       '// A coluna de ação também precisa de cabeçalho: sem ele a coluna existe',
@@ -99,7 +99,7 @@ function corpo(o: TableSnippetOptions): string {
     "  linha.appendChild(createTableCell(fatura.amount, 'nds-text-right'));",
   );
 
-  if (o.comAcoes) {
+  if (o.withActions) {
     linhas.push(
       '',
       "  const celulaDeAcao = createTableCell('', 'nds-text-right');",
@@ -148,7 +148,7 @@ export function tableSnippet(o: TableSnippetOptions = {}): string {
   ];
   if (o.comRodape) pecas.splice(4, 0, 'createTableFooter');
 
-  const importacoes = o.comAcoes
+  const importacoes = o.withActions
     ? [importarPecas(...pecas), "import { createButton } from '@/components/ui/button';"].join('\n')
     : importarPecas(...pecas);
 
@@ -200,7 +200,7 @@ export function tableVaziaSnippet(o: TableSnippetOptions = {}): string {
 }
 
 /** Carregando: esqueleto por célula, dentro de uma região que anuncia. */
-export function tableCarregandoSnippet(o: TableSnippetOptions = {}): string {
+export function tableLoadingSnippet(o: TableSnippetOptions = {}): string {
   return snippet(
     [
       importarPecas(
@@ -254,7 +254,7 @@ export const tableSource: SourceTransform<TableSnippetOptions> = (_gerado, ctx) 
   tableSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma montagem, opções fixas que os controls não cobrem. */
-export function tableSourceCom(fixas: TableSnippetOptions): SourceTransform<TableSnippetOptions> {
+export function tableSourceWith(fixas: TableSnippetOptions): SourceTransform<TableSnippetOptions> {
   return (_gerado, ctx) => tableSnippet({ ...ctx.args, ...fixas });
 }
 
@@ -269,5 +269,5 @@ export function tableVaziaSource(
 export function tableCarregandoSource(
   fixas: TableSnippetOptions = {},
 ): SourceTransform<TableSnippetOptions> {
-  return (_gerado, ctx) => tableCarregandoSnippet({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => tableLoadingSnippet({ ...ctx.args, ...fixas });
 }

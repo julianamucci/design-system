@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { createResizablePanel } from './resizable';
-import { frame, painelRotulado } from './resizable.fixtures';
+import { frame, panelLabelled } from './resizable.fixtures';
 import {
   resizableSource,
-  resizableSourceAninhado,
-  resizableSourceCom,
+  resizableSourceNested,
+  resizableSourceWith,
 } from './resizable.source';
 
 const meta: Meta = {
@@ -49,7 +49,7 @@ function fracao(paineis: HTMLElement[], horizontal: boolean): number[] {
   return paineis.map((p) => medida(p) / total);
 }
 
-function paineisDe(raiz: ParentNode, seletorGrupo = '[data-slot="resizable"]'): HTMLElement[] {
+function panelsOf(raiz: ParentNode, seletorGrupo = '[data-slot="resizable"]'): HTMLElement[] {
   const grupo = raiz.querySelector<HTMLElement>(seletorGrupo)!;
   return [...grupo.querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
 }
@@ -63,8 +63,8 @@ export const Horizontal: Story = {
       direction: 'horizontal',
       'aria-label': 'Redimensionar Sidebar e Conteúdo — use setas para ajustar',
       panels: [
-        { defaultSize: 30, minSize: 15, content: painelRotulado('Sidebar', 'nds-bg-muted nds-text-muted-foreground') },
-        { defaultSize: 70, minSize: 30, content: painelRotulado('Conteúdo principal') },
+        { defaultSize: 30, minSize: 15, content: panelLabelled('Sidebar', 'nds-bg-muted nds-text-muted-foreground') },
+        { defaultSize: 70, minSize: 30, content: panelLabelled('Conteúdo principal') },
       ],
     });
     return frame(root, '220px');
@@ -84,7 +84,7 @@ export const Horizontal: Story = {
     });
 
     await step('Os painéis dividem a LARGURA na proporção declarada', async () => {
-      const [a] = fracao(paineisDe(canvasElement), true);
+      const [a] = fracao(panelsOf(canvasElement), true);
       await expect(a).toBeCloseTo(0.3, 1);
     });
   },
@@ -97,7 +97,7 @@ export const Vertical: Story = {
     // control neste arquivo.
     docs: {
       source: {
-        transform: resizableSourceCom({
+        transform: resizableSourceWith({
           direction: 'vertical',
           'aria-label': 'Redimensionar Topo e Rodapé — use setas para ajustar',
           panels: [
@@ -113,8 +113,8 @@ export const Vertical: Story = {
       direction: 'vertical',
       'aria-label': 'Redimensionar Topo e Rodapé — use setas para ajustar',
       panels: [
-        { defaultSize: 40, minSize: 20, content: painelRotulado('Topo') },
-        { defaultSize: 60, minSize: 20, content: painelRotulado('Rodapé', 'nds-bg-muted nds-text-muted-foreground') },
+        { defaultSize: 40, minSize: 20, content: panelLabelled('Topo') },
+        { defaultSize: 60, minSize: 20, content: panelLabelled('Rodapé', 'nds-bg-muted nds-text-muted-foreground') },
       ],
     });
     return frame(root, '280px');
@@ -131,7 +131,7 @@ export const Vertical: Story = {
     await step('Os painéis dividem a ALTURA, e não a largura', async () => {
       // O eixo trocado é invisível numa foto quadrada: os dois painéis
       // apareceriam empilhados de qualquer jeito e só a proporção denunciaria.
-      const [a] = fracao(paineisDe(canvasElement), false);
+      const [a] = fracao(panelsOf(canvasElement), false);
       await expect(a).toBeCloseTo(0.4, 1);
     });
   },
@@ -144,7 +144,7 @@ export const Nested: Story = {
     // snippet — cada grupo nomeia o próprio divisor.
     docs: {
       source: {
-        transform: resizableSourceAninhado({
+        transform: resizableSourceNested({
           interno: {
             direction: 'vertical',
             'aria-label': 'Redimensionar Editor e Console — use setas para ajustar',
@@ -173,8 +173,8 @@ export const Nested: Story = {
       direction: 'vertical',
       'aria-label': 'Redimensionar Editor e Console — use setas para ajustar',
       panels: [
-        { defaultSize: 60, minSize: 20, content: painelRotulado('Editor') },
-        { defaultSize: 40, minSize: 20, content: painelRotulado('Console', 'nds-bg-muted nds-text-muted-foreground') },
+        { defaultSize: 60, minSize: 20, content: panelLabelled('Editor') },
+        { defaultSize: 40, minSize: 20, content: panelLabelled('Console', 'nds-bg-muted nds-text-muted-foreground') },
       ],
     });
     const innerWrap = document.createElement('div');
@@ -186,7 +186,7 @@ export const Nested: Story = {
       direction: 'horizontal',
       'aria-label': 'Redimensionar Sidebar e área principal — use setas para ajustar',
       panels: [
-        { defaultSize: 30, minSize: 15, content: painelRotulado('Sidebar', 'nds-bg-muted nds-text-muted-foreground') },
+        { defaultSize: 30, minSize: 15, content: panelLabelled('Sidebar', 'nds-bg-muted nds-text-muted-foreground') },
         { defaultSize: 70, minSize: 30, content: innerWrap },
       ],
     });
@@ -228,7 +228,7 @@ export const WithHandle: Story = {
     // fábrica — sem esta linha o snippet esconderia justamente a opção.
     docs: {
       source: {
-        transform: resizableSourceCom({
+        transform: resizableSourceWith({
           withHandle: true,
           'aria-label': 'Redimensionar painéis — use setas para ajustar',
           panels: [
@@ -245,8 +245,8 @@ export const WithHandle: Story = {
       withHandle: true,
       'aria-label': 'Redimensionar painéis — use setas para ajustar',
       panels: [
-        { defaultSize: 50, minSize: 20, content: painelRotulado('Antes') },
-        { defaultSize: 50, minSize: 20, content: painelRotulado('Depois', 'nds-bg-muted nds-text-muted-foreground') },
+        { defaultSize: 50, minSize: 20, content: panelLabelled('Antes') },
+        { defaultSize: 50, minSize: 20, content: panelLabelled('Depois', 'nds-bg-muted nds-text-muted-foreground') },
       ],
     });
     return frame(root, '220px');

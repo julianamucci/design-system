@@ -13,7 +13,7 @@ import {
   tramasAplicadas,
 } from '@shared/testing/chart-probe';
 import { createChart } from './chart';
-import { chartSource, chartSourceCom } from './chart.source';
+import { chartSource, chartSourceWith } from './chart.source';
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 
@@ -52,7 +52,7 @@ export const Empty: Story = {
       // Override de story: a AUSÊNCIA de dado é o assunto, e com ela some a
       // descrição do desenho — sem imagem não há o que narrar.
       source: {
-        transform: chartSourceCom({
+        transform: chartSourceWith({
           dados: 'vazio',
           'aria-label': undefined,
           height: undefined,
@@ -105,7 +105,7 @@ export const SingleSeries: Story = {
     docs: {
       // Override de story: uma série SÓ, na forma `xAxis` + `series` — é o que
       // faz a legenda desaparecer sozinha.
-      source: { transform: chartSourceCom({ dados: 'serieUnica' }) },
+      source: { transform: chartSourceWith({ dados: 'serieUnica' }) },
       description: {
         story: 'Com uma série só a legenda não aparece: não há o que comparar, e a linha extra só roubaria altura do desenho.',
       },
@@ -147,7 +147,7 @@ export const MultiSeries: Story = {
     docs: {
       // Override de story: são DUAS séries, e é a contagem que acende a legenda.
       source: {
-        transform: chartSourceCom({
+        transform: chartSourceWith({
           dados: 'multi',
           'aria-label': 'Acessos mensais por dispositivo: desktop e mobile',
         }),
@@ -212,7 +212,7 @@ export const OnePoint: Story = {
       // Override de story: o caso de borda é o dado, e é ele que o snippet
       // precisa mostrar — um ponto só.
       source: {
-        transform: chartSourceCom({ dados: 'umPonto', 'aria-label': 'Acessos de janeiro' }),
+        transform: chartSourceWith({ dados: 'umPonto', 'aria-label': 'Acessos de janeiro' }),
       },
       description: {
         story: 'Série com um único ponto. Caso de borda: o desenho continua com eixo, categoria escrita e uma forma de dado.',
@@ -267,7 +267,7 @@ export const ThemeTokens: Story = {
     docs: {
       // Override de story: duas séries, na forma `xAxis` + `series`.
       source: {
-        transform: chartSourceCom({
+        transform: chartSourceWith({
           dados: 'multi',
           'aria-label': 'Acessos mensais por dispositivo, no tema em vigor',
         }),
@@ -326,7 +326,7 @@ export const GraphicContrast: Story = {
     docs: {
       // Override de story: duas séries, na forma `xAxis` + `series`.
       source: {
-        transform: chartSourceCom({
+        transform: chartSourceWith({
           dados: 'multi',
           'aria-label': 'Acessos mensais por dispositivo: desktop e mobile',
         }),

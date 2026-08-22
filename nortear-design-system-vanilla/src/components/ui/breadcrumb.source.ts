@@ -17,7 +17,7 @@ import {
  * colunas dentro de um painel estreito. `importar` continua valendo para os
  * módulos de um nome só.
  */
-function importarVarios(slug: string, nomes: string[]): string {
+function multipleImporting(slug: string, nomes: string[]): string {
   return nomes.length <= 3
     ? importar(slug, ...nomes)
     : `import {\n${nomes.map((n) => `  ${n},`).join('\n')}\n} from '@/components/ui/${slug}';`;
@@ -49,8 +49,8 @@ export type BreadcrumbSnippetOptions = {
   linkSetup?: string;
 };
 
-const NIVEIS_PADRAO = ['Início', 'Componentes'];
-const ATUAL_PADRAO = 'Breadcrumb';
+const LEVELS_DEFAULT = ['Início', 'Componentes'];
+const CURRENT_DEFAULT = 'Breadcrumb';
 
 /** Acentos combinantes, para o destino sair sem eles. */
 const DIACRITICOS = /[̀-ͯ]/g;
@@ -81,8 +81,8 @@ function separador(o: BreadcrumbSnippetOptions): string {
  * repetição em vez do componente.
  */
 export function breadcrumbSnippet(o: BreadcrumbSnippetOptions = {}): string {
-  const niveis = o.niveis ?? NIVEIS_PADRAO;
-  const atual = o.atual ?? ATUAL_PADRAO;
+  const niveis = o.niveis ?? LEVELS_DEFAULT;
+  const atual = o.atual ?? CURRENT_DEFAULT;
 
   const nomes = [
     'createBreadcrumb',
@@ -99,7 +99,7 @@ export function breadcrumbSnippet(o: BreadcrumbSnippetOptions = {}): string {
     opcoes([['aria-label', o['aria-label'] ? texto(o['aria-label']) : undefined]]),
   );
 
-  const corpoDoNivel =
+  const levelBody =
     o.onNavigate || o.linkSetup
       ? [
           '  const link = createBreadcrumbLink({ href, text });',
@@ -127,7 +127,7 @@ export function breadcrumbSnippet(o: BreadcrumbSnippetOptions = {}): string {
   });
   pecas.push('  atual,');
 
-  const blocoDasReticencias = o.ellipsis
+  const ellipsisBlock = o.ellipsis
     ? `const oculto = createBreadcrumbItem();
 oculto.appendChild(${chamada(
         'createBreadcrumbEllipsis',
@@ -136,16 +136,16 @@ oculto.appendChild(${chamada(
     : undefined;
 
   return snippet(
-    importarVarios('breadcrumb', nomes),
+    multipleImporting('breadcrumb', nomes),
     `const trilha = ${raiz};
 const lista = createBreadcrumbList();`,
     `/** Um nível navegável da trilha. */
 const nivel = (text: string, href: string) => {
   const item = createBreadcrumbItem();
-${corpoDoNivel}
+${levelBody}
   return item;
 };`,
-    blocoDasReticencias,
+    ellipsisBlock,
     `const atual = createBreadcrumbItem();
 atual.appendChild(createBreadcrumbPage({ text: ${texto(atual)} }));`,
     `lista.append(\n${pecas.join('\n')}\n);\ntrilha.appendChild(lista);`,
@@ -161,7 +161,7 @@ export const breadcrumbSource: SourceTransform<BreadcrumbSnippetOptions> = (_ger
   breadcrumbSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma família, opções fixas que os controls não cobrem. */
-export function breadcrumbSourceCom(
+export function breadcrumbSourceWith(
   fixas: BreadcrumbSnippetOptions,
 ): SourceTransform<BreadcrumbSnippetOptions> {
   return (_gerado, ctx) => breadcrumbSnippet({ ...ctx.args, ...fixas });
@@ -170,7 +170,7 @@ export function breadcrumbSourceCom(
 // ─── Trilha responsiva, com os níveis ocultos num menu ────────────────────────
 
 /** O que a composição com menu precisa mostrar. */
-export type BreadcrumbComMenuSnippetOptions = {
+export type BreadcrumbWithMenuSnippetOptions = {
   /** Rótulos dos níveis que ficaram colapsados. */
   ocultos?: string[];
   /** Nome acessível do gatilho que abre os níveis ocultos. */
@@ -190,15 +190,15 @@ export type BreadcrumbComMenuSnippetOptions = {
  * decorativas — senão o controle teria dois nomes —, e a aparência sai do
  * design system em vez de sair de valores soltos.
  */
-export function breadcrumbComMenuSnippet(o: BreadcrumbComMenuSnippetOptions = {}): string {
+export function breadcrumbWithMenuSnippet(o: BreadcrumbWithMenuSnippetOptions = {}): string {
   const ocultos = o.ocultos ?? ['Documentação', 'Guia', 'Componentes'];
   const gatilho = o.gatilho ?? 'Expandir níveis ocultos';
   const primeiro = o.primeiro ?? 'Início';
-  const atual = o.atual ?? ATUAL_PADRAO;
+  const atual = o.atual ?? CURRENT_DEFAULT;
 
   return snippet(
     [
-      importarVarios('breadcrumb', [
+      multipleImporting('breadcrumb', [
         'createBreadcrumb',
         'createBreadcrumbEllipsis',
         'createBreadcrumbItem',
@@ -247,8 +247,8 @@ trilha.appendChild(lista);`,
 }
 
 /** Transform de story para a trilha responsiva. */
-export function breadcrumbComMenuSourceCom(
-  fixas: BreadcrumbComMenuSnippetOptions = {},
-): SourceTransform<BreadcrumbComMenuSnippetOptions> {
-  return (_gerado, ctx) => breadcrumbComMenuSnippet({ ...ctx.args, ...fixas });
+export function breadcrumbWithMenuSourceWith(
+  fixas: BreadcrumbWithMenuSnippetOptions = {},
+): SourceTransform<BreadcrumbWithMenuSnippetOptions> {
+  return (_gerado, ctx) => breadcrumbWithMenuSnippet({ ...ctx.args, ...fixas });
 }

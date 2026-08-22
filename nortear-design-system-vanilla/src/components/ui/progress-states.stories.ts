@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createProgress } from './progress';
-import { progressSource, progressSourceAnimado, progressSourceCom } from './progress.source';
+import { progressSource, progressSourceAnimado, progressSourceWith } from './progress.source';
 import {
   animacaoDoIndicador,
   indicadorDoProgresso,
@@ -36,7 +36,7 @@ export const Default: Story = {
     covers: ['functional.item1', 'visual.item1'],
     // Neste arquivo o VALOR é o assunto de cada story, e nenhum control o
     // cobre: cada uma declara o seu.
-    docs: { source: { transform: progressSourceCom({ value: 0 }) } },
+    docs: { source: { transform: progressSourceWith({ value: 0 }) } },
   },
   render: () => {
     const wrap = document.createElement('div');
@@ -69,7 +69,7 @@ export const Loading: Story = {
   parameters: {
     covers: ['functional.item2', 'visual.item2'],
     docs: {
-      source: { transform: progressSourceCom({ value: 50, 'aria-label': 'Carregando dados' }) },
+      source: { transform: progressSourceWith({ value: 50, 'aria-label': 'Carregando dados' }) },
     },
   },
   render: () => {
@@ -102,7 +102,7 @@ export const Loading: Story = {
 export const Complete: Story = {
   parameters: {
     covers: ['functional.item3', 'visual.item3'],
-    docs: { source: { transform: progressSourceCom({ value: 100, 'aria-label': 'Concluído' }) } },
+    docs: { source: { transform: progressSourceWith({ value: 100, 'aria-label': 'Concluído' }) } },
   },
   render: () => {
     const wrap = document.createElement('div');
@@ -136,7 +136,7 @@ export const Indeterminate: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item4'],
     docs: {
-      source: { transform: progressSourceCom({ value: null, 'aria-label': 'Processando…' }) },
+      source: { transform: progressSourceWith({ value: null, 'aria-label': 'Processando…' }) },
     },
   },
   render: () => {

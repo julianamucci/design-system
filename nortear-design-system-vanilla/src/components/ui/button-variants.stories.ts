@@ -1,7 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createButton } from './button';
-import { buttonSource, buttonSourceCom } from './button.source';
+import { buttonSource, buttonSourceWith } from './button.source';
 import { within, expect } from 'storybook/test';
 import { falhasDeContrasteDeTexto } from '@shared/testing/button-probe';
 
@@ -46,7 +46,7 @@ export const Destructive: Story = {
     // Override de story: a variante não passa por control neste arquivo, e o
     // snippet do meta mostraria a padrão onde a story renderiza a destrutiva.
     docs: {
-      source: { transform: buttonSourceCom({ variant: 'destructive', label: 'Excluir conta' }) },
+      source: { transform: buttonSourceWith({ variant: 'destructive', label: 'Excluir conta' }) },
       description: { story: 'Variante destrutiva. Use para ações irreversíveis como excluir ou remover.' },
     },
   },
@@ -70,7 +70,7 @@ export const Outline: Story = {
   parameters: {
     // Override de story: a variante não passa por control neste arquivo.
     docs: {
-      source: { transform: buttonSourceCom({ variant: 'outline', label: 'Cancelar' }) },
+      source: { transform: buttonSourceWith({ variant: 'outline', label: 'Cancelar' }) },
       description: { story: 'Variante secundária com borda. Use ao lado da ação primária em pares de ações.' },
     },
   },
@@ -94,7 +94,7 @@ export const Secondary: Story = {
   parameters: {
     // Override de story: a variante não passa por control neste arquivo.
     docs: {
-      source: { transform: buttonSourceCom({ variant: 'secondary', label: 'Ver detalhes' }) },
+      source: { transform: buttonSourceWith({ variant: 'secondary', label: 'Ver detalhes' }) },
       description: { story: 'Variante secundária sólida. Use para ações complementares de menor ênfase.' },
     },
   },
@@ -118,7 +118,7 @@ export const Ghost: Story = {
   parameters: {
     // Override de story: a variante não passa por control neste arquivo.
     docs: {
-      source: { transform: buttonSourceCom({ variant: 'ghost', label: 'Fechar' }) },
+      source: { transform: buttonSourceWith({ variant: 'ghost', label: 'Fechar' }) },
       description: { story: 'Variante sem borda ou fundo. Use em toolbars e menus para reduzir ruído visual.' },
     },
   },
@@ -142,7 +142,7 @@ export const Link: Story = {
   parameters: {
     // Override de story: a variante não passa por control neste arquivo.
     docs: {
-      source: { transform: buttonSourceCom({ variant: 'link', label: 'Saiba mais' }) },
+      source: { transform: buttonSourceWith({ variant: 'link', label: 'Saiba mais' }) },
       description: { story: 'Variante com aparência de link. Use quando a ação for navegacional em contexto textual.' },
     },
   },

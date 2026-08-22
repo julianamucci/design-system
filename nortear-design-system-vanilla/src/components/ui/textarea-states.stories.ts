@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createTextarea } from './textarea';
-import { textareaSource, textareaSourceCom } from './textarea.source';
+import { textareaSource, textareaSourceWith } from './textarea.source';
 import { createLabel } from './label';
 import {
   anelDeFocoAssentado,
@@ -100,7 +100,7 @@ export const Filled: Story = {
     covers: ['accessibility.item2', 'visual.item2'],
     docs: {
       source: {
-        transform: textareaSourceCom({
+        transform: textareaSourceWith({
           id: 'biografia',
           label: 'Biografia',
           placeholder: 'Conte um pouco sobre você...',
@@ -139,7 +139,7 @@ export const Disabled: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
-      source: { transform: textareaSourceCom({ disabled: true, placeholder: 'Não disponível' }) },
+      source: { transform: textareaSourceWith({ disabled: true, placeholder: 'Não disponível' }) },
     },
   },
   render: () => labeled(
@@ -172,7 +172,7 @@ export const ReadOnly: Story = {
     // `readOnly` não é opção da fábrica: vai pela API do DOM depois de criar.
     docs: {
       source: {
-        transform: textareaSourceCom({
+        transform: textareaSourceWith({
           id: 'observacoes',
           label: 'Observações',
           readOnly: true,
@@ -210,7 +210,7 @@ export const Invalid: Story = {
     covers: ['accessibility.item5', 'visual.item3'],
     docs: {
       source: {
-        transform: textareaSourceCom({
+        transform: textareaSourceWith({
           value: 'curto',
           ariaInvalid: true,
           erro: 'A descrição precisa de pelo menos 20 caracteres.',

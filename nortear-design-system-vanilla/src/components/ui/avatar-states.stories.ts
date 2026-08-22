@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createAvatar, createAvatarFallback, createAvatarRoot } from './avatar';
 import { IMG_MARIA } from './avatar.fixtures';
-import { avatarGranularSourceCom, avatarSource, avatarSourceCom } from './avatar.source';
+import { avatarGranularSourceWith, avatarSource, avatarSourceWith } from './avatar.source';
 
 // src garantidamente inválido para forçar o estado failed
 const IMG_BROKEN = 'https://example.invalid/broken-avatar.jpg';
@@ -71,7 +71,7 @@ export const Loading: Story = {
     // neste arquivo. O `src` quebrado fica de fora — ele existe para o teste
     // alcançar o prazo, não é recomendação.
     docs: {
-      source: { transform: avatarSourceCom({ delayMs: 600, src: IMG_MARIA }) },
+      source: { transform: avatarSourceWith({ delayMs: 600, src: IMG_MARIA }) },
       description: {
         story:
           'Com atraso configurado, as iniciais só entram se o carregamento passar do prazo — é o que evita o piscar em imagem rápida.',
@@ -144,7 +144,7 @@ export const NoImage: Story = {
     // Override de story: sem foto não há o que reconciliar, e a story monta o
     // avatar pelas fábricas granulares — outra FORMA, não outra opção.
     docs: {
-      source: { transform: avatarGranularSourceCom({ fallback: 'JP' }) },
+      source: { transform: avatarGranularSourceWith({ fallback: 'JP' }) },
       description: {
         story: 'Sem AvatarImage — apenas fallback, exibido imediatamente sem tentativa de carregamento.',
       },

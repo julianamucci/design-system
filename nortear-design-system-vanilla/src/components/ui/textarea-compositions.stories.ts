@@ -3,8 +3,8 @@ import { userEvent, within, expect } from 'storybook/test';
 import { createTextarea } from './textarea';
 import {
   textareaSource,
-  textareaSourceCom,
-  textareaSourceFormulario,
+  textareaSourceWith,
+  textareaSourceForm,
 } from './textarea.source';
 import { createButton } from './button';
 import { createLabel } from './label';
@@ -124,7 +124,7 @@ export const WithSupportText: Story = {
   parameters: {
     docs: {
       source: {
-        transform: textareaSourceCom({
+        transform: textareaSourceWith({
           hint: 'Descreva o produto com clareza, destacando os principais atributos.',
         }),
       },
@@ -155,7 +155,7 @@ export const WithAccessibleCounter: Story = {
   parameters: {
     docs: {
       source: {
-        transform: textareaSourceCom({
+        transform: textareaSourceWith({
           placeholder: 'ex: Descreva o produto em até 500 caracteres...',
           hint: 'Descreva o produto com clareza.',
           maxLength: 500,
@@ -196,7 +196,7 @@ export const WithErrorMessage: Story = {
   parameters: {
     docs: {
       source: {
-        transform: textareaSourceCom({
+        transform: textareaSourceWith({
           ariaInvalid: true,
           erro: 'A descrição é obrigatória e deve ter pelo menos 20 caracteres.',
         }),
@@ -233,7 +233,7 @@ export const InForm: Story = {
     // o formulário inteiro, e não o campo isolado.
     docs: {
       source: {
-        transform: textareaSourceFormulario({
+        transform: textareaSourceForm({
           id: 'feedback',
           name: 'feedback',
           label: 'Feedback',

@@ -3,7 +3,7 @@ import {
   tooltipLadosSnippet,
   tooltipSnippet,
   tooltipSource,
-  tooltipSourceCom,
+  tooltipSourceWith,
 } from './tooltip.source';
 
 describe('tooltipSnippet', () => {
@@ -82,7 +82,7 @@ describe('tooltipSource', () => {
 
 describe('tooltipSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = tooltipSourceCom({ side: 'bottom' })('', { args: { side: 'top' } });
+    const código = tooltipSourceWith({ side: 'bottom' })('', { args: { side: 'top' } });
     expect(código).toContain("side: 'bottom'");
   });
 });

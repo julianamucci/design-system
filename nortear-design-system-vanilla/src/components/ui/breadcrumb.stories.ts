@@ -140,22 +140,22 @@ export const Playground: Story = {
       // Aqui `label` nomeava DOIS alvos no mesmo arquivo — o landmark e as
       // reticências. Os dois ganharam o canônico e mantiveram o antigo como
       // apelido; sem esta asserção, a compatibilidade é promessa sem contrato.
-      const navAntigo = createBreadcrumb({ label: 'Trilha do produto' });
-      await expect(navAntigo).toHaveAttribute('aria-label', 'Trilha do produto');
+      const legacyNav = createBreadcrumb({ label: 'Trilha do produto' });
+      await expect(legacyNav).toHaveAttribute('aria-label', 'Trilha do produto');
 
-      const reticenciasAntigo = createBreadcrumbEllipsis({ label: 'Mais páginas' });
-      await expect(reticenciasAntigo).toHaveAttribute('aria-label', 'Mais páginas');
-      await expect(reticenciasAntigo).toHaveAttribute('role', 'img');
+      const legacyEllipsis = createBreadcrumbEllipsis({ label: 'Mais páginas' });
+      await expect(legacyEllipsis).toHaveAttribute('aria-label', 'Mais páginas');
+      await expect(legacyEllipsis).toHaveAttribute('role', 'img');
 
       // E o canônico vence quando os dois vierem.
-      const navAmbos = createBreadcrumb({ label: 'Antigo', 'aria-label': 'Canônico' });
-      await expect(navAmbos).toHaveAttribute('aria-label', 'Canônico');
+      const navBoth = createBreadcrumb({ label: 'Antigo', 'aria-label': 'Canônico' });
+      await expect(navBoth).toHaveAttribute('aria-label', 'Canônico');
 
-      const reticenciasAmbos = createBreadcrumbEllipsis({
+      const ellipsisBoth = createBreadcrumbEllipsis({
         label: 'Antigo',
         'aria-label': 'Canônico',
       });
-      await expect(reticenciasAmbos).toHaveAttribute('aria-label', 'Canônico');
+      await expect(ellipsisBoth).toHaveAttribute('aria-label', 'Canônico');
     });
   },
 };

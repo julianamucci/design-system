@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  textareaFormularioSnippet,
+  textareaFormSnippet,
   textareaSnippet,
   textareaSource,
-  textareaSourceCom,
+  textareaSourceWith,
 } from './textarea.source';
 
 describe('textareaSnippet', () => {
@@ -87,14 +87,14 @@ describe('textareaSnippet', () => {
 
 describe('textareaSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = textareaSource('<textarea data-slot="textarea">', {});
-    const comArgs = textareaSource('<textarea data-slot="textarea">', {
+    const noArgs = textareaSource('<textarea data-slot="textarea">', {});
+    const withArgs = textareaSource('<textarea data-slot="textarea">', {
       args: { rows: 6, maxLength: 280, resize: 'none' },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain('rows: 6');
-    expect(comArgs).toContain('campo.maxLength = 280;');
-    expect(comArgs).toContain('nds-resize-none');
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain('rows: 6');
+    expect(withArgs).toContain('campo.maxLength = 280;');
+    expect(withArgs).toContain('nds-resize-none');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -106,7 +106,7 @@ describe('textareaSource', () => {
 
 describe('textareaSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = textareaSourceCom({ resize: 'none' })('', { args: { resize: 'y' } });
+    const código = textareaSourceWith({ resize: 'none' })('', { args: { resize: 'y' } });
     expect(código).toContain('nds-resize-none');
     expect(código).not.toContain('nds-resize-y');
   });
@@ -114,7 +114,7 @@ describe('textareaSourceCom', () => {
 
 describe('textareaFormularioSnippet', () => {
   it('é o `name` que faz o valor chegar ao FormData', () => {
-    const código = textareaFormularioSnippet({ name: 'feedback', maxLength: 280 });
+    const código = textareaFormSnippet({ name: 'feedback', maxLength: 280 });
     expect(código).toContain("name: 'feedback'");
     expect(código).toContain('new FormData(formulario)');
     expect(código).toContain("dados.get('feedback')");

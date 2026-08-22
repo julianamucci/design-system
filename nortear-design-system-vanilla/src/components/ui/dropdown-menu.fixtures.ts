@@ -63,7 +63,7 @@ export function montar(
  * `body` e sobreviveria à story seguinte. Estava copiada nas composições e nas
  * variantes, idêntica nas duas.
  */
-export async function fecharNoFim(): Promise<void> {
+export async function endClose(): Promise<void> {
   const body = within(document.body);
   await userEvent.keyboard('{Escape}');
   await waitFor(() => {

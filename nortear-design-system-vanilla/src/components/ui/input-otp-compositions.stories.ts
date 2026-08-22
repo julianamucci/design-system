@@ -3,7 +3,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import { createInputOTP } from './input-otp';
 import { createButton } from './button';
 import { wrap } from './input-otp.fixtures';
-import { inputOtpSource, inputOtpSourceComposicao } from './input-otp.source';
+import { inputOtpSource, inputOtpSourceComposition } from './input-otp.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -32,7 +32,7 @@ type Story = StoryObj;
  * `nds-min-h-30`, que é a medida das outras stories. Não há utilitário nesta
  * altura, então ela vai por `style`, pela porta que `wrap` abre para isso.
  */
-const ALTURA_DA_MOLDURA = '180px';
+const FRAME_HEIGHT = '180px';
 
 function coluna(): HTMLElement {
   const root = document.createElement('div');
@@ -62,7 +62,7 @@ export const WithLabel: Story = {
   parameters: {
     docs: {
       source: {
-        transform: inputOtpSourceComposicao({
+        transform: inputOtpSourceComposition({
           rotulo: 'Código de verificação',
           ligarRotulo: true,
         }),
@@ -75,7 +75,7 @@ export const WithLabel: Story = {
     otp.removeAttribute('aria-label');
     otp.setAttribute('aria-labelledby', 'comp-label-texto');
     root.append(rotulo('Código de verificação', 'comp-label-texto'), otp);
-    return wrap(root, ALTURA_DA_MOLDURA);
+    return wrap(root, FRAME_HEIGHT);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -92,7 +92,7 @@ export const WithHelpText: Story = {
   parameters: {
     docs: {
       source: {
-        transform: inputOtpSourceComposicao({
+        transform: inputOtpSourceComposition({
           rotulo: 'Código de verificação',
           ajuda: 'Enviamos por SMS, expira em 5 min.',
         }),
@@ -107,7 +107,7 @@ export const WithHelpText: Story = {
     help.className = 'nds-text-caption nds-text-muted-foreground';
     help.textContent = 'Enviamos por SMS, expira em 5 min.';
     root.append(rotulo('Código de verificação'), otp, help);
-    return wrap(root, ALTURA_DA_MOLDURA);
+    return wrap(root, FRAME_HEIGHT);
   },
   play: async ({ canvasElement, step }) => {
     await step('A ajuda é lida junto com o campo', async () => {
@@ -123,7 +123,7 @@ export const WithErrorMessage: Story = {
   parameters: {
     docs: {
       source: {
-        transform: inputOtpSourceComposicao({
+        transform: inputOtpSourceComposition({
           rotulo: 'Código de verificação',
           value: '482913',
           invalid: true,
@@ -145,7 +145,7 @@ export const WithErrorMessage: Story = {
     err.className = 'nds-text-caption nds-text-destructive';
     err.textContent = 'Código incorreto. Verifique e tente novamente.';
     root.append(rotulo('Código de verificação'), otp, err);
-    return wrap(root, ALTURA_DA_MOLDURA);
+    return wrap(root, FRAME_HEIGHT);
   },
   play: async ({ canvasElement, step }) => {
     await step('Causa e ação corretiva chegam pelo mesmo caminho do erro', async () => {
@@ -166,7 +166,7 @@ export const WithResendButton: Story = {
   parameters: {
     docs: {
       source: {
-        transform: inputOtpSourceComposicao({
+        transform: inputOtpSourceComposition({
           rotulo: 'Código de verificação',
           reenvio: 'Reenviar código',
         }),
@@ -188,7 +188,7 @@ export const WithResendButton: Story = {
 
     row.append(note, createButton({ variant: 'link', size: 'sm', label: 'Reenviar código' }));
     root.append(rotulo('Código de verificação'), otp, row);
-    return wrap(root, ALTURA_DA_MOLDURA);
+    return wrap(root, FRAME_HEIGHT);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

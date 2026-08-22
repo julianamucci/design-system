@@ -41,20 +41,20 @@ export type TooltipSnippetOptions = {
 export function tooltipSnippet(o: TooltipSnippetOptions = {}): string {
   const rotulo = o.triggerLabel ?? 'Salvar';
   const conteudo = o.content ?? 'Salvar (Ctrl+S)';
-  const comProvedor = Boolean(o.provider);
+  const withProvider = Boolean(o.provider);
 
   const linhas = opcoes([
     ['trigger', 'gatilho'],
     ['content', o.contentComMarcacao ? 'conteudo' : texto(conteudo)],
     ['side', o.side && o.side !== 'top' ? texto(o.side) : undefined],
     // Sem provedor, a espera é por balão; com provedor, o padrão vem do grupo.
-    ['delayDuration', !comProvedor && o.delayDuration ? String(o.delayDuration) : undefined],
+    ['delayDuration', !withProvider && o.delayDuration ? String(o.delayDuration) : undefined],
     ['onShow', o.onShow],
   ]);
 
-  const fabrica = comProvedor ? 'grupo.createTooltip' : 'createTooltip';
+  const fabrica = withProvider ? 'grupo.createTooltip' : 'createTooltip';
 
-  const linhasProvedor = o.provider
+  const linesProvider = o.provider
     ? opcoes([
         ['delayDuration', o.provider.delayDuration ? String(o.provider.delayDuration) : undefined],
         ['skipDelayDuration', o.provider.skipDelayDuration !== undefined ? String(o.provider.skipDelayDuration) : undefined],
@@ -63,11 +63,11 @@ export function tooltipSnippet(o: TooltipSnippetOptions = {}): string {
 
   return snippet(
     [
-      importar('tooltip', comProvedor ? 'createTooltipProvider' : 'createTooltip'),
+      importar('tooltip', withProvider ? 'createTooltipProvider' : 'createTooltip'),
       importar('button', 'createButton'),
     ].join('\n'),
-    comProvedor
-      ? `// O provedor guarda a espera do grupo: o balão seguinte abre na hora\n// enquanto a janela de dispensa dura.\nconst grupo = ${chamada('createTooltipProvider', linhasProvedor)};`
+    withProvider
+      ? `// O provedor guarda a espera do grupo: o balão seguinte abre na hora\n// enquanto a janela de dispensa dura.\nconst grupo = ${chamada('createTooltipProvider', linesProvider)};`
       : undefined,
     `const gatilho = ${chamada('createButton', opcoes([
       ['variant', texto(o.triggerVariant ?? 'outline')],
@@ -93,7 +93,7 @@ export const tooltipSource: SourceTransform<TooltipSnippetOptions> = (_gerado, c
   tooltipSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function tooltipSourceCom(fixas: TooltipSnippetOptions): SourceTransform<TooltipSnippetOptions> {
+export function tooltipSourceWith(fixas: TooltipSnippetOptions): SourceTransform<TooltipSnippetOptions> {
   return (_gerado, ctx) => tooltipSnippet({ ...ctx.args, ...fixas });
 }
 

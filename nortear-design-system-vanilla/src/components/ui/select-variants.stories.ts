@@ -3,7 +3,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import type { SelectItem } from './select';
 import { abridor, comRotulo } from './select.fixtures';
-import { selectSource, selectSourceCom } from './select.source';
+import { selectSource, selectSourceWith } from './select.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -121,7 +121,7 @@ export const WithGroups: Story = {
       // O agrupamento é o assunto: a lista plana do meta esconderia o cabeçalho
       // de categoria e a linha entre os grupos.
       source: {
-        transform: selectSourceCom({
+        transform: selectSourceWith({
           id: 'regiao',
           labelText: 'Selecione a região',
           items: [
@@ -194,7 +194,7 @@ export const WithIcon: Story = {
       // O ícone é o assunto: ele entra na própria opção, como traçado, e é
       // decorativo — fica fora do nome acessível.
       source: {
-        transform: selectSourceCom({
+        transform: selectSourceWith({
           id: 'canal',
           labelText: 'Canal de contato',
           items: [

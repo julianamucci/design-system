@@ -2,7 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createAspectRatio } from './aspect-ratio';
 import { boxed, buildImage } from './aspect-ratio.fixtures';
-import { aspectRatioSource, aspectRatioSourceCom } from './aspect-ratio.source';
+import { aspectRatioSource, aspectRatioSourceWith } from './aspect-ratio.source';
 import { createCard, createCardContent, createCardHeader, createCardTitle, createCardDescription } from './card';
 import { expect } from 'storybook/test';
 
@@ -65,7 +65,7 @@ export const WithIframe: Story = {
     covers: ['accessibility.item3'],
     docs: {
       source: {
-        transform: aspectRatioSourceCom({
+        transform: aspectRatioSourceWith({
           content: 'iframe',
           alt: 'Mapa do escritório em São Paulo',
         }),
@@ -100,7 +100,7 @@ export const WithVideo: Story = {
     covers: ['accessibility.item4', 'accessibility.item5'],
     docs: {
       source: {
-        transform: aspectRatioSourceCom({
+        transform: aspectRatioSourceWith({
           content: 'video',
           alt: 'Vídeo demonstrativo com legendas',
           imageUrl: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=1200&q=80',
@@ -157,7 +157,7 @@ export const InGrid: Story = {
     covers: ['functional.item4'],
     docs: {
       source: {
-        transform: aspectRatioSourceCom({
+        transform: aspectRatioSourceWith({
           ratio: 4 / 3,
           imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80',
           alt: 'Relógio de pulso moderno',
@@ -246,7 +246,7 @@ export const EmptyPlaceholder: Story = {
     covers: ['functional.item5'],
     docs: {
       source: {
-        transform: aspectRatioSourceCom({
+        transform: aspectRatioSourceWith({
           content: 'none',
           className: 'nds-rounded-md nds-bg-muted',
         }),
@@ -283,7 +283,7 @@ export const WithDecorativeImage: Story = {
   // atributo — sem isso o leitor de tela anuncia o nome do arquivo.
   parameters: {
     covers: ['accessibility.item2'],
-    docs: { source: { transform: aspectRatioSourceCom({ alt: '' }) } },
+    docs: { source: { transform: aspectRatioSourceWith({ alt: '' }) } },
   },
   render: () =>
     boxed(

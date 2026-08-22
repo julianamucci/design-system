@@ -12,7 +12,7 @@ import {
 } from 'lucide';
 import { createToggleGroup, type ToggleGroupItem } from './toggle-group';
 import { definir, injectIcons } from './toggle-group.fixtures';
-import { toggleGroupSource, toggleGroupSourceCom } from './toggle-group.source';
+import { toggleGroupSource, toggleGroupSourceWith } from './toggle-group.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -119,7 +119,7 @@ export const Multiple: Story = {
   parameters: {
     covers: ['functional.item2', 'visual.item2'],
     docs: {
-      source: { transform: toggleGroupSourceCom({
+      source: { transform: toggleGroupSourceWith({
           type: 'multiple',
           'aria-label': 'Formatação',
           defaultValue: ['bold', 'italic'],
@@ -188,7 +188,7 @@ export const Vertical: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
-      source: { transform: toggleGroupSourceCom({
+      source: { transform: toggleGroupSourceWith({
           orientation: 'vertical',
           'aria-label': 'Modo de visualização',
           defaultValue: 'grid',

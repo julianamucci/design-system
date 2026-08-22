@@ -1,7 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createAlert, createAlertAction, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
-import { alertComAcaoSourceCom, alertSource, alertSourceCom } from './alert.source';
+import { alertWithActionSourceWith, alertSource, alertSourceWith } from './alert.source';
 import { createButton } from './button';
 import { within, expect, userEvent } from 'storybook/test';
 
@@ -45,7 +45,7 @@ export const WithAction: Story = {
   parameters: {
     docs: {
       source: {
-        transform: alertComAcaoSourceCom({
+        transform: alertWithActionSourceWith({
           acao: 'Atualizar',
           title: 'Atualização disponível',
           description: 'Uma nova versão está pronta para instalação.',
@@ -104,7 +104,7 @@ export const AdditionalClass: Story = {
   parameters: {
     docs: {
       source: {
-        transform: alertComAcaoSourceCom({
+        transform: alertWithActionSourceWith({
           className: 'nds-w-full',
           acao: 'Ação',
           title: 'Classe adicional',
@@ -154,7 +154,7 @@ export const WithoutIcon: Story = {
     covers: ['visual.item4'],
     docs: {
       source: {
-        transform: alertSourceCom({
+        transform: alertSourceWith({
           icon: false,
           title: 'Sem ícone',
           description: 'Alert sem ícone mantém layout de coluna única.',

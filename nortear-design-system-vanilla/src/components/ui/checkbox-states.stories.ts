@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, fn } from 'storybook/test';
 import { reprovasDoDesabilitado } from '@shared/testing/checkbox-probe';
 import { createCheckbox } from './checkbox';
-import { checkboxSource, checkboxSourceCom } from './checkbox.source';
+import { checkboxSource, checkboxSourceWith } from './checkbox.source';
 
 // Ferramentas de teclado/ponteiro entregues ao contrato compartilhado. Iguais
 // nas cinco stacks — o que muda entre elas é o componente, não a medição.
@@ -94,7 +94,7 @@ export const Checked: Story = {
     covers: ['visual.item2', 'functional.item6'],
     // Override de story: o estado marcado é o assunto, e não há control aqui.
     docs: {
-      source: { transform: checkboxSourceCom({ checked: true }) },
+      source: { transform: checkboxSourceWith({ checked: true }) },
       description: { story: 'Estado marcado, renderizado direto sem controle externo. Fundo `--primary`, CheckIcon visível, `aria-checked="true"`.' },
     },
   },
@@ -122,7 +122,7 @@ export const Indeterminate: Story = {
     // Override de story: o estado misto é o assunto.
     docs: {
       source: {
-        transform: checkboxSourceCom({ indeterminate: true, label: 'Selecionar todos os itens' }),
+        transform: checkboxSourceWith({ indeterminate: true, label: 'Selecionar todos os itens' }),
       },
       description: { story: 'Estado misto (seleção parcial de um grupo). Fundo `--primary`, `aria-checked="mixed"`, `data-state="indeterminate"`. O indicador desenha um traço, não a marca de seleção.' },
     },
@@ -162,7 +162,7 @@ export const DisabledUnchecked: Story = {
     // que envolve o par e a classe de cursor do rótulo.
     docs: {
       source: {
-        transform: checkboxSourceCom({ disabled: true, label: 'Manter sessão ativa' }),
+        transform: checkboxSourceWith({ disabled: true, label: 'Manter sessão ativa' }),
       },
       description: { story: 'Estado desabilitado desmarcado. Opacidade reduzida, cursor bloqueado. Continua alcançável pelo Tab e é anunciado como indisponível, mas não alterna.' },
     },
@@ -203,7 +203,7 @@ export const DisabledChecked: Story = {
     // Override de story: desabilitado E marcado — os dois estados juntos.
     docs: {
       source: {
-        transform: checkboxSourceCom({
+        transform: checkboxSourceWith({
           checked: true,
           disabled: true,
           label: 'Manter sessão ativa',
@@ -266,7 +266,7 @@ export const Error: Story = {
     // Override de story: o erro traz uma mensagem a mais e a ligação dela com a
     // caixa — a composição inteira muda, não só um atributo.
     docs: {
-      source: { transform: checkboxSourceCom({ invalid: true }) },
+      source: { transform: checkboxSourceWith({ invalid: true }) },
       description: { story: 'Estado de erro via `aria-invalid="true"`. Ring e borda `--destructive`. Mensagem de erro associada via `aria-describedby`.' },
     },
   },

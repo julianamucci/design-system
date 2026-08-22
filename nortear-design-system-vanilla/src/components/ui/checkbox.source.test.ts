@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  checkboxComDescricaoSnippet,
-  checkboxEmGrupoSnippet,
-  checkboxSelecionarTodosSnippet,
+  checkboxWithDescriptionSnippet,
+  groupSnippetCheckbox,
+  checkboxSelectAllSnippet,
   checkboxSnippet,
   checkboxSource,
-  checkboxSourceCom,
+  checkboxSourceWith,
 } from './checkbox.source';
 
 describe('checkboxSnippet', () => {
@@ -84,13 +84,13 @@ describe('checkboxSnippet', () => {
 
 describe('checkboxSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = checkboxSource('<button data-slot="checkbox">', {});
-    const comArgs = checkboxSource('<button data-slot="checkbox">', {
+    const noArgs = checkboxSource('<button data-slot="checkbox">', {});
+    const withArgs = checkboxSource('<button data-slot="checkbox">', {
       args: { checked: true, label: 'Manter sessão ativa' },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain('checked: true');
-    expect(comArgs).toContain("rotulo.textContent = 'Manter sessão ativa';");
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain('checked: true');
+    expect(withArgs).toContain("rotulo.textContent = 'Manter sessão ativa';");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -102,7 +102,7 @@ describe('checkboxSource', () => {
 
 describe('checkboxSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = checkboxSourceCom({ checked: true, disabled: true });
+    const transform = checkboxSourceWith({ checked: true, disabled: true });
     const código = transform('', { args: { checked: false, label: 'Manter sessão ativa' } });
     expect(código).toContain('checked: true');
     expect(código).toContain('disabled: true');
@@ -112,7 +112,7 @@ describe('checkboxSourceCom', () => {
 
 describe('checkboxComDescricaoSnippet', () => {
   it('o texto auxiliar fica FORA do rótulo', () => {
-    const código = checkboxComDescricaoSnippet();
+    const código = checkboxWithDescriptionSnippet();
     expect(código).toContain('auxiliar.textContent =');
     expect(código).toContain('textos.append(rotulo, auxiliar);');
     // Dentro do <label> a frase viraria parte do nome acessível.
@@ -122,13 +122,13 @@ describe('checkboxComDescricaoSnippet', () => {
 
   it('não ensina valor de design solto em atributo de estilo', () => {
     // A story empurra a caixa com um `marginTop` inline; o snippet não o repete.
-    expect(checkboxComDescricaoSnippet()).not.toContain('.style.');
+    expect(checkboxWithDescriptionSnippet()).not.toContain('.style.');
   });
 });
 
 describe('checkboxEmGrupoSnippet', () => {
   it('com fieldset, a legenda nomeia o conjunto', () => {
-    const código = checkboxEmGrupoSnippet({ fieldset: true });
+    const código = groupSnippetCheckbox({ fieldset: true });
     expect(código).toContain("document.createElement('fieldset')");
     expect(código).toContain("document.createElement('legend')");
     expect(código).toContain("legenda.textContent = 'Notificações';");
@@ -136,7 +136,7 @@ describe('checkboxEmGrupoSnippet', () => {
   });
 
   it('sem fieldset, as opções viram linhas com borda', () => {
-    const código = checkboxEmGrupoSnippet({
+    const código = groupSnippetCheckbox({
       legenda: 'Preferências de contato',
       itens: [
         { id: 'pref-email', label: 'Receber novidades por email', checked: true },
@@ -153,7 +153,7 @@ describe('checkboxEmGrupoSnippet', () => {
 
 describe('checkboxSelecionarTodosSnippet', () => {
   it('mostra a engrenagem do estado misto: o pai é recriado, não mutado', () => {
-    const código = checkboxSelecionarTodosSnippet();
+    const código = checkboxSelectAllSnippet();
     expect(código).toContain('function estadoDoPai()');
     expect(código).toContain("return 'indeterminate';");
     expect(código).toContain('pai.replaceWith(novo);');
@@ -163,7 +163,7 @@ describe('checkboxSelecionarTodosSnippet', () => {
   });
 
   it('não vaza helper de story', () => {
-    const código = checkboxSelecionarTodosSnippet();
+    const código = checkboxSelectAllSnippet();
     expect(código).not.toContain('computeParentState');
     expect(código).not.toContain('makeParentCheckbox');
     expect(código).not.toContain('childCheckboxes');

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
-import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
+import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import type { SidebarInstance } from './sidebar';
 import {
   createSidebarProvider,
@@ -13,7 +13,7 @@ import {
   createSidebarMenuItem,
 } from './sidebar';
 import { envolverEmNav, makeIcon } from './sidebar.fixtures';
-import { sidebarSource, sidebarSourceCom } from './sidebar.source';
+import { sidebarSource, sidebarSourceWith } from './sidebar.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -160,7 +160,7 @@ export const Collapsed: Story = {
   parameters: {
     docs: {
       // O estado inicial é o assunto, e `true` é o padrão da fábrica.
-      source: { transform: sidebarSourceCom({ defaultOpen: false }) },
+      source: { transform: sidebarSourceWith({ defaultOpen: false }) },
       description: {
         story: 'Estado recolhido via <code>collapsible="offcanvas"</code>: sidebar desliza para fora da viewport. <code>data-state="collapsed"</code>.',
       },
@@ -268,7 +268,7 @@ export const IconMode: Story = {
       // A fábrica não expõe modo de recolhimento: o que ela tem é a barra
       // recolhida, e é só isso que o snippet pode prometer. O esconde-rótulo da
       // story é andaime, não API.
-      source: { transform: sidebarSourceCom({ defaultOpen: false, rodape: false }) },
+      source: { transform: sidebarSourceWith({ defaultOpen: false, rodape: false }) },
       description: {
         story: 'Sidebar reduzida a 3rem no modo icon. Apenas ícones são exibidos; tooltips são mostrados ao hover de cada item. <code>data-state="collapsed"</code>.',
       },
@@ -306,7 +306,7 @@ export const WithoutToggle: Story = {
     docs: {
       // "Sem toggle" aqui é não montar o gatilho: é a única forma que a fábrica
       // oferece, e o snippet mostra exatamente ela.
-      source: { transform: sidebarSourceCom({ comGatilho: false }) },
+      source: { transform: sidebarSourceWith({ comGatilho: false }) },
       description: {
         story: 'Sidebar sempre visível com <code>collapsible="none"</code>. Sem botão de toggle. Usada em dashboards fixos.',
       },
@@ -336,11 +336,11 @@ export const WithoutToggle: Story = {
  * controla, e por isso o ramo da gaveta era código que nenhuma story alcançava.
  * Injetando a consulta, a virada passa a ser entrada do teste.
  */
-const SEMPRE_ESTREITO = '(min-width: 0px)';
+const SEMPRE_NARROW = '(min-width: 0px)';
 
 export const MobileOverlay: Story = {
   name: 'Mobile (gaveta sobreposta)',
-  render: () => buildBase(true, undefined, { mobileQuery: SEMPRE_ESTREITO }),
+  render: () => buildBase(true, undefined, { mobileQuery: SEMPRE_NARROW }),
   parameters: {
     viewport: {
       defaultViewport: 'mobile1',
@@ -351,7 +351,7 @@ export const MobileOverlay: Story = {
       // snippet. O que a gaveta oferece de API é o aviso de abertura e o ponto
       // de virada do produto — é isso que o painel Code mostra.
       source: {
-        transform: sidebarSourceCom({
+        transform: sidebarSourceWith({
           onMobileOpenChange: true,
           mobileQuery: '(max-width: 900px)',
         }),
@@ -505,16 +505,16 @@ export const ListenerCleanup: Story = {
     chromatic: { disable: true },
     // O assunto é a limpeza: o atalho de teclado é registrado na montagem, e o
     // snippet mostra a chamada que o desfaz.
-    docs: { source: { transform: sidebarSourceCom({ mostrarDestroy: true }) } },
+    docs: { source: { transform: sidebarSourceWith({ mostrarDestroy: true }) } },
   },
-  render: () => hospedeiroDeSonda(
+  render: () => probeHost(
     'Sonda de limpeza: a barra é montada, o atalho de teclado é registrado e a barra sai da página.',
   ),
   play: async ({ canvasElement, step }) => {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ResultadoDaSonda;
+    let sonda!: ProbeResult;
     let instancia: SidebarInstance | null = null;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
@@ -533,7 +533,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await conferirLimpeza(sonda);
+      await checkLimpeza(sonda);
     });
   },
 };

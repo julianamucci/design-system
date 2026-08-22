@@ -5,7 +5,7 @@ import {
   commandEmDialogSource,
   commandEmPopoverSource,
   commandSource,
-  commandSourceCom,
+  commandSourceWith,
 } from './command.source';
 import { createPopover } from './popover';
 import { createDialog } from './dialog';
@@ -41,7 +41,7 @@ type Story = StoryObj;
 
 const WRAPPER = 'nds-w-sm nds-border-default nds-rounded-md nds-shadow-md';
 
-const SEM_RESULTADO = 'Nenhum resultado encontrado.';
+const NO_RESULT = 'Nenhum resultado encontrado.';
 
 /** O item pelo `value`, e não pelo nome acessível: atalho e marca entram no nome. */
 const comando = (raiz: ParentNode, value: string): HTMLElement =>
@@ -50,7 +50,7 @@ const comando = (raiz: ParentNode, value: string): HTMLElement =>
 const separadores = (raiz: ParentNode): NodeListOf<HTMLElement> =>
   raiz.querySelectorAll<HTMLElement>('[data-slot="command-separator"]');
 
-const buscaDe = (raiz: ParentNode): HTMLInputElement =>
+const searchOf = (raiz: ParentNode): HTMLInputElement =>
   raiz.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
 
 /**
@@ -61,23 +61,23 @@ const buscaDe = (raiz: ParentNode): HTMLInputElement =>
  * reexecuta no mesmo DOM) o destaque da rodada anterior sobreviveria, e a
  * primeira seta partiria do meio da lista.
  */
-async function zerarBusca(campo: HTMLElement): Promise<void> {
+async function zerarSearch(campo: HTMLElement): Promise<void> {
   await userEvent.type(campo, 'zzz');
   await userEvent.clear(campo);
 }
 
-function montarInline(items: CommandEntry[], placeholder: string, onSelect?: (v: string) => void) {
+function mountInline(items: CommandEntry[], placeholder: string, onSelect?: (v: string) => void) {
   const wrap = document.createElement('div');
   wrap.className = WRAPPER;
   wrap.appendChild(
-    createCommand({ placeholder, emptyMessage: SEM_RESULTADO, items, onSelect })
+    createCommand({ placeholder, emptyMessage: NO_RESULT, items, onSelect })
   );
   return wrap;
 }
 
 // ─── Com grupos ───────────────────────────────────────────────────────────────
 
-const ITENS_AGRUPADOS: CommandItem[] = [
+const ITEMS_AGRUPADOS: CommandItem[] = [
   { value: 'button',    label: 'Button',    group: 'Componentes' },
   { value: 'input',     label: 'Input',     group: 'Componentes' },
   { value: 'badge',     label: 'Badge',     group: 'Componentes' },
@@ -89,7 +89,7 @@ const ITENS_AGRUPADOS: CommandItem[] = [
 
 export const WithGroups: Story = {
   parameters: { covers: ['visual.item1'] },
-  render: () => montarInline(ITENS_AGRUPADOS, 'Buscar componente...'),
+  render: () => mountInline(ITEMS_AGRUPADOS, 'Buscar componente...'),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const campo = canvas.getByRole('combobox');
@@ -149,7 +149,7 @@ export const WithGroups: Story = {
 // um nome de grupo para cada bloco. O traço agora é uma entrada da lista, na
 // mesma forma discriminada que o Select desta stack já usava.
 
-const ITENS_COM_TRACO: CommandEntry[] = [
+const ITEMS_WITH_TRACO: CommandEntry[] = [
   { value: 'novo', label: 'Novo arquivo' },
   { value: 'abrir', label: 'Abrir recente' },
   { type: 'separator' },
@@ -162,9 +162,9 @@ export const WithSeparator: Story = {
       // O traço declarado é uma ENTRADA da lista, e a lista canônica do meta
       // não o tem: sem override o snippet esconderia o assunto da story.
       source: {
-        transform: commandSourceCom({
+        transform: commandSourceWith({
           placeholder: 'Buscar comando...',
-          emptyMessage: SEM_RESULTADO,
+          emptyMessage: NO_RESULT,
           items: [
             { value: 'novo', label: 'Novo arquivo' },
             { value: 'abrir', label: 'Abrir recente' },
@@ -181,7 +181,7 @@ export const WithSeparator: Story = {
       },
     },
   },
-  render: () => montarInline(ITENS_COM_TRACO, 'Buscar comando...'),
+  render: () => mountInline(ITEMS_WITH_TRACO, 'Buscar comando...'),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const campo = canvas.getByRole('combobox');
@@ -219,9 +219,9 @@ export const WithShortcuts: Story = {
   parameters: {
     docs: {
       source: {
-        transform: commandSourceCom({
+        transform: commandSourceWith({
           placeholder: 'Buscar comando...',
-          emptyMessage: SEM_RESULTADO,
+          emptyMessage: NO_RESULT,
           items: [
             { value: 'novo', label: 'Novo arquivo', group: 'Arquivo', shortcut: '⌘N' },
             { value: 'salvar', label: 'Salvar', group: 'Arquivo', shortcut: '⌘S' },
@@ -232,7 +232,7 @@ export const WithShortcuts: Story = {
     },
   },
   render: () =>
-    montarInline(
+    mountInline(
       [
         { value: 'novo',     label: 'Novo arquivo', group: 'Arquivo', shortcut: '⌘N' },
         { value: 'abrir',    label: 'Abrir',        group: 'Arquivo', shortcut: '⌘O' },
@@ -292,15 +292,15 @@ export const WithShortcuts: Story = {
 
 // ─── Com itens desabilitados ──────────────────────────────────────────────────
 
-const aoEscolherNaLista = fn();
+const onListSelect = fn();
 
 export const WithDisabledItems: Story = {
   parameters: {
     docs: {
       source: {
-        transform: commandSourceCom({
+        transform: commandSourceWith({
           placeholder: 'Buscar...',
-          emptyMessage: SEM_RESULTADO,
+          emptyMessage: NO_RESULT,
           items: [
             { value: 'button', label: 'Button', group: 'Componentes' },
             { value: 'input', label: 'Input', group: 'Componentes', disabled: true },
@@ -311,7 +311,7 @@ export const WithDisabledItems: Story = {
     },
   },
   render: () =>
-    montarInline(
+    mountInline(
       [
         { value: 'button', label: 'Button',      group: 'Componentes' },
         { value: 'input',  label: 'Input',       group: 'Componentes', disabled: true },
@@ -321,7 +321,7 @@ export const WithDisabledItems: Story = {
         { value: 'clsx',   label: 'clsx()',      group: 'Utilitários', disabled: true },
       ],
       'Buscar...',
-      (value) => aoEscolherNaLista(value),
+      (value) => onListSelect(value),
     ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -340,7 +340,7 @@ export const WithDisabledItems: Story = {
     });
 
     await step('As setas percorrem só os 3 habilitados, em sequência', async () => {
-      await zerarBusca(campo);
+      await zerarSearch(campo);
       campo.focus();
       const emDestaque = () =>
         document.getElementById(campo.getAttribute('aria-activedescendant')!);
@@ -356,9 +356,9 @@ export const WithDisabledItems: Story = {
     });
 
     await step('Clicar num desabilitado não executa nada', async () => {
-      const antes = aoEscolherNaLista.mock.calls.length;
+      const antes = onListSelect.mock.calls.length;
       await userEvent.click(comando(canvasElement, 'select'), { pointerEventsCheck: 0 });
-      await expect(aoEscolherNaLista.mock.calls.length).toBe(antes);
+      await expect(onListSelect.mock.calls.length).toBe(antes);
     });
   },
 };
@@ -376,7 +376,7 @@ const COMPONENTES_LONGOS = [
 
 export const LongList: Story = {
   render: () =>
-    montarInline(
+    mountInline(
       COMPONENTES_LONGOS.map((label) => ({
         value: label.toLowerCase(),
         label,
@@ -416,14 +416,14 @@ export const LongList: Story = {
 
 // ─── Combobox (Command dentro de Popover) ─────────────────────────────────────
 
-const ITENS_COMBOBOX: CommandItem[] = [
+const ITEMS_COMBOBOX: CommandItem[] = [
   { value: 'button',    label: 'Button'    },
   { value: 'input',     label: 'Input'     },
   { value: 'separator', label: 'Separator' },
 ];
 
-const ROTULO_COMBOBOX = 'demo-combobox-rotulo';
-const VALOR_COMBOBOX = 'demo-combobox-valor';
+const LABEL_COMBOBOX = 'demo-combobox-rotulo';
+const VALUE_COMBOBOX = 'demo-combobox-valor';
 
 /**
  * Command dentro de um Popover — o substituto do Select quando a lista é longa
@@ -446,8 +446,8 @@ export const AsCombobox: Story = {
       source: {
         transform: commandEmPopoverSource({
           placeholder: 'Buscar item...',
-          emptyMessage: SEM_RESULTADO,
-          items: ITENS_COMBOBOX,
+          emptyMessage: NO_RESULT,
+          items: ITEMS_COMBOBOX,
         }),
       },
     },
@@ -458,24 +458,24 @@ export const AsCombobox: Story = {
     outer.dataset.spacing = 'xs';
 
     const rotulo = document.createElement('span');
-    rotulo.id = ROTULO_COMBOBOX;
+    rotulo.id = LABEL_COMBOBOX;
     rotulo.className = 'nds-sr-only';
     rotulo.textContent = 'Componente';
 
     const valor = document.createElement('span');
-    valor.id = VALOR_COMBOBOX;
+    valor.id = VALUE_COMBOBOX;
     valor.textContent = 'Selecione um item...';
 
     const trigger = createButton({ variant: 'outline', class: 'nds-w-xs', children: valor });
     trigger.setAttribute('role', 'combobox');
-    trigger.setAttribute('aria-labelledby', `${ROTULO_COMBOBOX} ${VALOR_COMBOBOX}`);
+    trigger.setAttribute('aria-labelledby', `${LABEL_COMBOBOX} ${VALUE_COMBOBOX}`);
 
     const cmd = createCommand({
       placeholder: 'Buscar item...',
-      emptyMessage: SEM_RESULTADO,
-      items: ITENS_COMBOBOX,
+      emptyMessage: NO_RESULT,
+      items: ITEMS_COMBOBOX,
       onSelect: (value) => {
-        valor.textContent = ITENS_COMBOBOX.find((i) => i.value === value)?.label ?? value;
+        valor.textContent = ITEMS_COMBOBOX.find((i) => i.value === value)?.label ?? value;
         // Fechar aqui é a guideline: sem isso o popover fica aberto por cima do
         // valor que a pessoa acabou de escolher. A factory de Popover alterna
         // pelo próprio gatilho — é o mesmo caminho do clique de quem usa.
@@ -491,7 +491,7 @@ export const AsCombobox: Story = {
       onOpenChange: (aberto) => {
         // Um combobox que abre e deixa o foco no gatilho obriga a pessoa a
         // caçar o campo com Tab.
-        if (aberto) buscaDe(cmd).focus();
+        if (aberto) searchOf(cmd).focus();
       },
     });
 
@@ -502,7 +502,7 @@ export const AsCombobox: Story = {
     const canvas = within(canvasElement);
     const gatilho = canvas.getByRole('combobox');
 
-    const painelDoPopover = () =>
+    const popoverPanel = () =>
       document.querySelector<HTMLElement>('[data-slot="popover-content"]');
 
     // Idempotente: a play REEXECUTA no mesmo DOM, e um clique cego alternaria o
@@ -510,15 +510,15 @@ export const AsCombobox: Story = {
     const abrir = async (): Promise<HTMLElement> => {
       if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
       await waitFor(() => {
-        if (!painelDoPopover()) throw new Error('popover ainda fechado');
+        if (!popoverPanel()) throw new Error('popover ainda fechado');
       });
-      return painelDoPopover()!;
+      return popoverPanel()!;
     };
 
     const fechar = async (): Promise<void> => {
       if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.click(gatilho);
       await waitFor(() => {
-        if (painelDoPopover()) throw new Error('popover ainda aberto');
+        if (popoverPanel()) throw new Error('popover ainda aberto');
       });
     };
 
@@ -532,34 +532,34 @@ export const AsCombobox: Story = {
     });
 
     await step('Abrir revela a paleta e o foco entra na busca', async () => {
-      const painelPop = await abrir();
+      const panelPop = await abrir();
       await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
       // `aria-controls` só existe enquanto há painel — id órfão o axe reprova.
       await expect(document.getElementById(gatilho.getAttribute('aria-controls')!))
-        .toBe(painelPop);
+        .toBe(panelPop);
 
-      const dentro = within(painelPop);
+      const dentro = within(panelPop);
       await expect(dentro.getByRole('listbox')).toBeVisible();
       await expect(dentro.getAllByRole('option')).toHaveLength(3);
-      await expect(buscaDe(painelPop)).toHaveFocus();
+      await expect(searchOf(panelPop)).toHaveFocus();
     });
 
     await step('A busca dentro do popover filtra — buscando "inp" sobra 1', async () => {
-      const painelPop = await abrir();
-      const busca = buscaDe(painelPop);
+      const panelPop = await abrir();
+      const busca = searchOf(panelPop);
       await userEvent.clear(busca);
       await userEvent.type(busca, 'inp');
-      await expect(within(painelPop).getAllByRole('option')).toHaveLength(1);
+      await expect(within(panelPop).getAllByRole('option')).toHaveLength(1);
       await userEvent.clear(busca);
-      await expect(within(painelPop).getAllByRole('option')).toHaveLength(3);
+      await expect(within(panelPop).getAllByRole('option')).toHaveLength(3);
     });
 
     await step('Escolher fecha o popover e leva o valor para o gatilho', async () => {
-      const painelPop = await abrir();
-      await userEvent.click(within(painelPop).getByRole('option', { name: 'Input' }));
+      const panelPop = await abrir();
+      await userEvent.click(within(panelPop).getByRole('option', { name: 'Input' }));
 
       await waitFor(() => {
-        if (painelDoPopover()) throw new Error('popover ainda aberto');
+        if (popoverPanel()) throw new Error('popover ainda aberto');
       });
       await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
       await expect(gatilho).toHaveTextContent('Input');
@@ -570,7 +570,7 @@ export const AsCombobox: Story = {
 
 // ─── Command Palette (Command dentro de Dialog) ───────────────────────────────
 
-const ITENS_PALETA: CommandItem[] = [
+const ITEMS_PALETTE: CommandItem[] = [
   { value: 'button', label: 'Button', group: 'Componentes', shortcut: '⌘B' },
   { value: 'input',  label: 'Input',  group: 'Componentes', shortcut: '⌘I' },
   { value: 'cn',     label: 'cn()',   group: 'Utilitários'  },
@@ -595,8 +595,8 @@ export const CommandPalette: Story = {
       source: {
         transform: commandEmDialogSource({
           placeholder: 'Buscar componente...',
-          emptyMessage: SEM_RESULTADO,
-          items: ITENS_PALETA,
+          emptyMessage: NO_RESULT,
+          items: ITEMS_PALETTE,
         }),
       },
     },
@@ -614,11 +614,11 @@ export const CommandPalette: Story = {
 
     const cmd = createCommand({
       placeholder: 'Buscar componente...',
-      emptyMessage: SEM_RESULTADO,
-      items: ITENS_PALETA,
+      emptyMessage: NO_RESULT,
+      items: ITEMS_PALETTE,
       onSelect: (value) => {
         aoExecutarComando(value);
-        fecharPaleta();
+        closePalette();
       },
     });
 
@@ -643,7 +643,7 @@ export const CommandPalette: Story = {
     // Fechar de fora é o mesmo caminho que a Playground do Dialog usa: a
     // factory não expõe `close()`, e o overlay é o controle de dispensa que já
     // existe no markup.
-    function fecharPaleta(): void {
+    function closePalette(): void {
       if (aberto) document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')?.click();
     }
 
@@ -698,7 +698,7 @@ export const CommandPalette: Story = {
     await step('O foco vai direto para a busca, com os 3 comandos na lista', async () => {
       const p = await abrirDialog(canvasElement);
       await waitFor(async () => {
-        await expect(buscaDe(p)).toHaveFocus();
+        await expect(searchOf(p)).toHaveFocus();
       });
       await expect(within(p).getAllByRole('option')).toHaveLength(3);
     });
@@ -719,7 +719,7 @@ export const CommandPalette: Story = {
       });
       const p = painel()!;
       await waitFor(async () => {
-        await expect(buscaDe(p)).toHaveFocus();
+        await expect(searchOf(p)).toHaveFocus();
       });
 
       // Os atalhos de cada comando aparecem à direita, encostados na borda.

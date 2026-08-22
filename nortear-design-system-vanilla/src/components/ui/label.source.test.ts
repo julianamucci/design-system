@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  labelBlocoDesabilitadoSnippet,
-  labelComCaixaSnippet,
+  labelBlockDisabledSnippet,
+  labelWithBoxSnippet,
   labelObrigatorioSnippet,
   labelSnippet,
   labelSource,
-  labelSourceCom,
+  labelSourceWith,
 } from './label.source';
 
 describe('labelSnippet', () => {
@@ -63,7 +63,7 @@ describe('labelObrigatorioSnippet', () => {
 
 describe('labelBlocoDesabilitadoSnippet', () => {
   it('desabilita pelo ancestral, e não peça por peça', () => {
-    const código = labelBlocoDesabilitadoSnippet();
+    const código = labelBlockDisabledSnippet();
     expect(código).toContain("bloco.dataset.disabled = 'true';");
     expect(código).toContain("createLabel({ text: 'Documento', htmlFor: 'documento' })");
     expect(código).toContain('append(bloco)');
@@ -72,7 +72,7 @@ describe('labelBlocoDesabilitadoSnippet', () => {
 
 describe('labelComCaixaSnippet', () => {
   it('usa a fábrica da caixa, e só o par for/id', () => {
-    const código = labelComCaixaSnippet();
+    const código = labelWithBoxSnippet();
     expect(código).toContain("import { createCheckbox } from '@/components/ui/checkbox';");
     expect(código).toContain("createCheckbox({ id: 'termos' })");
     expect(código).toContain("htmlFor: 'termos'");
@@ -100,7 +100,7 @@ describe('labelSource', () => {
 
 describe('labelSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = labelSourceCom({ text: 'CPF', disabled: true })('', { args: { text: 'Nome' } });
+    const código = labelSourceWith({ text: 'CPF', disabled: true })('', { args: { text: 'Nome' } });
     expect(código).toContain("text: 'CPF'");
     expect(código).toContain("class: 'nds-peer'");
   });

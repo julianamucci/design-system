@@ -257,13 +257,13 @@ export const Playground: Story = {
       // O texto vem MEDIDO antes, e não cravado: o que este passo promete é que
       // Escape não mexe na escolha, qualquer que ela seja — cravar o rótulo faria
       // a asserção depender da ordem dos passos anteriores.
-      const textoAntes = gatilho.textContent;
+      const textBefore = gatilho.textContent;
       await userEvent.keyboard('{Escape}');
       await waitForPortalGone('listbox');
       await expect(
         (args.onValueChange as unknown as { mock: { calls: unknown[] } }).mock.calls.length,
       ).toBe(chamadasAntes);
-      await expect(gatilho.textContent).toBe(textoAntes);
+      await expect(gatilho.textContent).toBe(textBefore);
       await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
       // Sem `waitFor`: a devolução do foco é síncrona, e envolvê-la mascararia
       // bug de foco real.
@@ -359,7 +359,7 @@ export const Playground: Story = {
     await step('Sem espaço embaixo, a lista abre para cima', async () => {
       await fechar();
       const bloco = gatilho.closest<HTMLElement>('.nds-stack')!;
-      const margemAntes = bloco.style.marginBlockStart;
+      const margemBefore = bloco.style.marginBlockStart;
       // A virada depende da GEOMETRIA real — nenhuma opção a força —, então o
       // passo empurra o campo para o pé da janela. O deslocamento é calculado a
       // partir da caixa medida para o campo continuar inteiro à vista: fora da
@@ -379,7 +379,7 @@ export const Playground: Story = {
       } finally {
         // Devolver a margem é obrigatório: deixá-la posta envenena a story
         // seguinte e a foto do Chromatic.
-        bloco.style.marginBlockStart = margemAntes;
+        bloco.style.marginBlockStart = margemBefore;
       }
     });
   },

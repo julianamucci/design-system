@@ -11,7 +11,7 @@ import {
 } from '@/lib/story-source';
 
 /** Classe do rótulo ao lado da caixa, conforme o estado. */
-function classeDoRotulo(disabled?: boolean): string {
+function labelClassName(disabled?: boolean): string {
   return `nds-label nds-text-body nds-font-medium nds-leading-none ${
     disabled ? 'nds-cursor-default' : 'nds-cursor-pointer'
   }`;
@@ -35,12 +35,12 @@ export type CheckboxSnippetOptions = {
   errorMessage?: string;
 };
 
-const LABEL_PADRAO = 'Aceito os termos e condições';
-const ID_PADRAO = 'aceite-termos';
-const ERRO_PADRAO = 'Você precisa aceitar os termos para continuar.';
+const LABEL_DEFAULT = 'Aceito os termos e condições';
+const ID_DEFAULT = 'aceite-termos';
+const ERROR_DEFAULT = 'Você precisa aceitar os termos para continuar.';
 
 /** As opções da chamada, na ordem em que o snippet as mostra. */
-function opcoesDaCaixa(o: CheckboxSnippetOptions, id?: string): string[] {
+function boxOptions(o: CheckboxSnippetOptions, id?: string): string[] {
   // O Playground registra um espião em `args.onCheckedChange`, e o que chega
   // aqui é uma FUNÇÃO, não um trecho de código. Interpolada, ela sairia como o
   // corpo do mock no painel Code. Só a string escrita por uma story entra.
@@ -65,21 +65,21 @@ function opcoesDaCaixa(o: CheckboxSnippetOptions, id?: string): string[] {
  * andaime compensando o componente.
  */
 export function checkboxSnippet(o: CheckboxSnippetOptions = {}): string {
-  const semRotuloVisivel = o.label === undefined && Boolean(o['aria-label']);
-  const label = o.label ?? LABEL_PADRAO;
-  const id = semRotuloVisivel ? undefined : ID_PADRAO;
-  const caixa = `const caixa = ${chamada('createCheckbox', opcoesDaCaixa(o, id))};`;
+  const noLabelVisible = o.label === undefined && Boolean(o['aria-label']);
+  const label = o.label ?? LABEL_DEFAULT;
+  const id = noLabelVisible ? undefined : ID_DEFAULT;
+  const caixa = `const caixa = ${chamada('createCheckbox', boxOptions(o, id))};`;
 
-  if (semRotuloVisivel) {
+  if (noLabelVisible) {
     return snippet(importar('checkbox', 'createCheckbox'), caixa, montar('caixa'));
   }
 
-  const marcaDeErro = o.invalid
+  const errorMarca = o.invalid
     ? `
 // O erro não é cor: o estado entra por atributo, e a mensagem se liga à caixa
 // para o leitor de tela ouvir os dois juntos.
 caixa.setAttribute('aria-invalid', 'true');
-caixa.setAttribute('aria-describedby', 'erro-${ID_PADRAO}');`
+caixa.setAttribute('aria-describedby', 'erro-${ID_DEFAULT}');`
     : '';
 
   const linha = `const linha = document.createElement('div');
@@ -89,9 +89,9 @@ linha.dataset.spacing = 'sm';${o.disabled ? "\nlinha.dataset.disabled = 'true';"
   const rotulo = `// Só \`for\`/\`id\`: a caixa é um controle rotulável, então o clique no texto
 // move o foco para ela E alterna o estado, sem nenhum ouvinte escrito à mão.
 const rotulo = document.createElement('label');
-rotulo.htmlFor = ${texto(ID_PADRAO)};
+rotulo.htmlFor = ${texto(ID_DEFAULT)};
 rotulo.textContent = ${texto(label)};
-rotulo.className = ${texto(classeDoRotulo(o.disabled))};
+rotulo.className = ${texto(labelClassName(o.disabled))};
 
 linha.append(caixa, rotulo);`;
 
@@ -99,7 +99,7 @@ linha.append(caixa, rotulo);`;
     return snippet(
       importar('checkbox', 'createCheckbox'),
       linha,
-      `${caixa}${marcaDeErro}`,
+      `${caixa}${errorMarca}`,
       rotulo,
       montar('linha'),
     );
@@ -108,12 +108,12 @@ linha.append(caixa, rotulo);`;
   return snippet(
     importar('checkbox', 'createCheckbox'),
     linha,
-    `${caixa}${marcaDeErro}`,
+    `${caixa}${errorMarca}`,
     rotulo,
     `const mensagem = document.createElement('p');
-mensagem.id = 'erro-${ID_PADRAO}';
+mensagem.id = 'erro-${ID_DEFAULT}';
 mensagem.className = 'nds-text-body nds-text-destructive';
-mensagem.textContent = ${texto(o.errorMessage ?? ERRO_PADRAO)};
+mensagem.textContent = ${texto(o.errorMessage ?? ERROR_DEFAULT)};
 
 const campo = document.createElement('div');
 campo.className = 'nds-stack';
@@ -131,7 +131,7 @@ export const checkboxSource: SourceTransform<CheckboxSnippetOptions> = (_gerado,
   checkboxSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function checkboxSourceCom(
+export function checkboxSourceWith(
   fixas: CheckboxSnippetOptions,
 ): SourceTransform<CheckboxSnippetOptions> {
   return (_gerado, ctx) => checkboxSnippet({ ...ctx.args, ...fixas });
@@ -140,7 +140,7 @@ export function checkboxSourceCom(
 // ─── Com texto auxiliar ───────────────────────────────────────────────────────
 
 /** O que a composição com texto auxiliar precisa mostrar. */
-export type CheckboxComDescricaoSnippetOptions = {
+export type CheckboxWithDescriptionSnippetOptions = {
   label?: string;
   description?: string;
 };
@@ -152,7 +152,7 @@ export type CheckboxComDescricaoSnippetOptions = {
  * e por isso mora fora do `<label>`: dentro dele, viraria parte do nome e o
  * leitor de tela leria a frase inteira a cada vez que a caixa recebesse foco.
  */
-export function checkboxComDescricaoSnippet(o: CheckboxComDescricaoSnippetOptions = {}): string {
+export function checkboxWithDescriptionSnippet(o: CheckboxWithDescriptionSnippetOptions = {}): string {
   const id = 'novidades-email';
 
   return snippet(
@@ -166,7 +166,7 @@ const caixa = createCheckbox({ id: ${texto(id)} });`,
     `const rotulo = document.createElement('label');
 rotulo.htmlFor = ${texto(id)};
 rotulo.textContent = ${texto(o.label ?? 'Receber novidades por email')};
-rotulo.className = ${texto(classeDoRotulo())};
+rotulo.className = ${texto(labelClassName())};
 
 // Fora do <label> de propósito: dentro dele a frase viraria parte do nome
 // acessível e seria lida a cada foco na caixa.
@@ -187,16 +187,16 @@ linha.append(caixa, textos);`,
 }
 
 /** Transform de story para a composição com texto auxiliar. */
-export function checkboxComDescricaoSourceCom(
-  fixas: CheckboxComDescricaoSnippetOptions = {},
-): SourceTransform<CheckboxComDescricaoSnippetOptions> {
-  return (_gerado, ctx) => checkboxComDescricaoSnippet({ ...ctx.args, ...fixas });
+export function checkboxWithDescriptionSourceWith(
+  fixas: CheckboxWithDescriptionSnippetOptions = {},
+): SourceTransform<CheckboxWithDescriptionSnippetOptions> {
+  return (_gerado, ctx) => checkboxWithDescriptionSnippet({ ...ctx.args, ...fixas });
 }
 
 // ─── Grupo de caixas ──────────────────────────────────────────────────────────
 
 /** O que um conjunto de caixas relacionadas precisa mostrar. */
-export type CheckboxEmGrupoSnippetOptions = {
+export type GroupSnippetOptionsCheckbox = {
   /**
    * Nome do conjunto. Com `fieldset`, ele vira a `<legend>` — que é o que liga
    * as caixas umas às outras para quem lê a tela (WCAG 1.3.1).
@@ -209,9 +209,9 @@ export type CheckboxEmGrupoSnippetOptions = {
 };
 
 // Anotado, e não inferido: sem o tipo, `checked` some da forma do padrão e o
-// destructuring de `checkboxEmGrupoSnippet` deixa de compilar quando ninguém
+// destructuring de `groupSnippetCheckbox` deixa de compilar quando ninguém
 // passa `itens`.
-const ITENS_PADRAO: NonNullable<CheckboxEmGrupoSnippetOptions['itens']> = [
+const ITEMS_DEFAULT: NonNullable<GroupSnippetOptionsCheckbox['itens']> = [
   { id: 'notif-email', label: 'Receber novidades por email' },
   { id: 'notif-push', label: 'Receber notificações push' },
   { id: 'notif-sms', label: 'Alertas por SMS' },
@@ -224,8 +224,8 @@ const ITENS_PADRAO: NonNullable<CheckboxEmGrupoSnippetOptions['itens']> = [
  * opções soltas na página — é o que a WCAG 1.3.1 pede quando a relação entre
  * elas só existe visualmente.
  */
-export function checkboxEmGrupoSnippet(o: CheckboxEmGrupoSnippetOptions = {}): string {
-  const itens = o.itens ?? ITENS_PADRAO;
+export function groupSnippetCheckbox(o: GroupSnippetOptionsCheckbox = {}): string {
+  const itens = o.itens ?? ITEMS_DEFAULT;
   const linhas = itens
     .map(
       ({ id, label, checked }) => `  { id: ${texto(id)}, label: ${texto(label)}${
@@ -254,7 +254,7 @@ titulo.className = 'nds-text-body nds-font-semibold';
 titulo.textContent = ${texto(o.legenda ?? 'Preferências de contato')};
 grupo.appendChild(titulo);`;
 
-  const classeDaLinha = o.fieldset
+  const lineClassName = o.fieldset
     ? "'nds-cluster'"
     : "'nds-cluster nds-border-default nds-rounded-md nds-p-2'";
 
@@ -264,13 +264,13 @@ grupo.appendChild(titulo);`;
     raiz,
     `for (const { id, label, checked } of opcoes) {
   const linha = document.createElement('div');
-  linha.className = ${classeDaLinha};
+  linha.className = ${lineClassName};
   linha.dataset.spacing = 'sm';
 
   const rotulo = document.createElement('label');
   rotulo.htmlFor = id;
   rotulo.textContent = label;
-  rotulo.className = ${texto(classeDoRotulo())};
+  rotulo.className = ${texto(labelClassName())};
 
   linha.append(createCheckbox({ id, checked }), rotulo);
   grupo.appendChild(linha);
@@ -280,10 +280,10 @@ grupo.appendChild(titulo);`;
 }
 
 /** Transform de story para o grupo de caixas. */
-export function checkboxEmGrupoSourceCom(
-  fixas: CheckboxEmGrupoSnippetOptions = {},
-): SourceTransform<CheckboxEmGrupoSnippetOptions> {
-  return (_gerado, ctx) => checkboxEmGrupoSnippet({ ...ctx.args, ...fixas });
+export function groupSourceWithCheckbox(
+  fixas: GroupSnippetOptionsCheckbox = {},
+): SourceTransform<GroupSnippetOptionsCheckbox> {
+  return (_gerado, ctx) => groupSnippetCheckbox({ ...ctx.args, ...fixas });
 }
 
 // ─── Selecionar todos ─────────────────────────────────────────────────────────
@@ -296,7 +296,7 @@ export function checkboxEmGrupoSourceCom(
  * o estado computado, e o clique no pai usa a própria resolução do misto do
  * componente: o primeiro clique numa caixa mista sempre marca.
  */
-export function checkboxSelecionarTodosSnippet(): string {
+export function checkboxSelectAllSnippet(): string {
   return snippet(
     importar('checkbox', 'createCheckbox'),
     `const opcoes = [
@@ -367,7 +367,7 @@ for (const { id, label } of opcoes) {
   const rotulo = document.createElement('label');
   rotulo.htmlFor = id;
   rotulo.textContent = label;
-  rotulo.className = ${texto(classeDoRotulo())};
+  rotulo.className = ${texto(labelClassName())};
 
   linha.append(filho, rotulo);
   sublista.appendChild(linha);
@@ -380,4 +380,4 @@ lista.append(cabecalho, sublista);`,
 
 /** Transform de story para o padrão "selecionar todos". */
 export const checkboxSelecionarTodosSource: SourceTransform = () =>
-  checkboxSelecionarTodosSnippet();
+  checkboxSelectAllSnippet();

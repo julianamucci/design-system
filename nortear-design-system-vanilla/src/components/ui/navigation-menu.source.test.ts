@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  navigationMenuControladoSnippet,
-  navigationMenuDestaqueSnippet,
+  navigationMenuControlledSnippet,
+  navigationMenuHighlightSnippet,
   navigationMenuMegaSnippet,
   navigationMenuSnippet,
   navigationMenuSource,
-  navigationMenuSourceCom,
+  navigationMenuSourceWith,
 } from './navigation-menu.source';
 
 describe('navigationMenuSnippet', () => {
@@ -118,7 +118,7 @@ describe('navigationMenuMegaSnippet', () => {
 
 describe('navigationMenuDestaqueSnippet', () => {
   it('põe o destaque na coluna inteira e empilha os complementares', () => {
-    const código = navigationMenuDestaqueSnippet();
+    const código = navigationMenuHighlightSnippet();
     expect(código).toContain("destaque.classList.add('nds-h-full');");
     expect(código).toContain("coluna.className = 'nds-stack';");
     expect(código).toContain('painel.appendChild(coluna);');
@@ -129,7 +129,7 @@ describe('navigationMenuControladoSnippet', () => {
   it('mostra as duas metades do modo controlado', () => {
     // Definir `value` é o que troca o modo; sem `setValue()` nada se move, e um
     // snippet que parasse na chamada esconderia justamente isso.
-    const código = navigationMenuControladoSnippet();
+    const código = navigationMenuControlledSnippet();
     expect(código).toContain("value: ''");
     expect(código).toContain('onValueChange: (valor) => registrarPedido(valor)');
     expect(código).toContain("barra.setValue('produtos');");
@@ -157,7 +157,7 @@ describe('navigationMenuSource', () => {
 
 describe('navigationMenuSourceCom', () => {
   it('sobrepõe os args da story com a estrutura fixa', () => {
-    const transform = navigationMenuSourceCom({
+    const transform = navigationMenuSourceWith({
       orientation: 'vertical',
       items: [{ label: 'Painel', href: '#painel' }],
     });

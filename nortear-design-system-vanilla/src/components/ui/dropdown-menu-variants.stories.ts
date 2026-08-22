@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createDropdownMenu } from './dropdown-menu';
-import { dropdownMenuSource, dropdownMenuSourceCom } from './dropdown-menu.source';
+import { dropdownMenuSource, dropdownMenuSourceWith } from './dropdown-menu.source';
 import { createButton } from './button';
-import { fecharNoFim, montar } from './dropdown-menu.fixtures';
+import { endClose, montar } from './dropdown-menu.fixtures';
 import { contrasteDoItem } from '@shared/testing/dropdown-menu-probe';
 
 const meta: Meta = {
@@ -70,7 +70,7 @@ export const Default: Story = {
     });
 
     await step('Limpa via ESC', async () => {
-      await fecharNoFim();
+      await endClose();
     });
   },
 };
@@ -85,7 +85,7 @@ export const Destructive: Story = {
     // irreversível.
     docs: {
       source: {
-        transform: dropdownMenuSourceCom({
+        transform: dropdownMenuSourceWith({
           triggerLabel: 'Mais ações',
           items: [
             { label: 'Editar', value: 'edit' },
@@ -130,7 +130,7 @@ export const Destructive: Story = {
     });
 
     await step('Limpa via ESC', async () => {
-      await fecharNoFim();
+      await endClose();
     });
   },
 };
@@ -150,7 +150,7 @@ export const Placement: Story = {
     // justamente o oposto do que a story renderiza.
     docs: {
       source: {
-        transform: dropdownMenuSourceCom({
+        transform: dropdownMenuSourceWith({
           triggerLabel: 'Abrir para cima',
           items: [
             { label: 'Renomear', value: 'rename' },
@@ -202,19 +202,19 @@ export const Placement: Story = {
     const menu = await within(document.body).findByRole('menu');
 
     await step('Com side="top" o menu fica ACIMA do gatilho', async () => {
-      const caixaDoMenu = menu.getBoundingClientRect();
-      const caixaDoGatilho = gatilho.getBoundingClientRect();
+      const menuBox = menu.getBoundingClientRect();
+      const triggerBox = gatilho.getBoundingClientRect();
       // Com o `bottom` cravado da versão anterior, o menu nascia ABAIXO e esta
       // asserção falharia por toda a altura do gatilho mais o vão.
-      await expect(caixaDoMenu.bottom).toBeLessThanOrEqual(caixaDoGatilho.top);
+      await expect(menuBox.bottom).toBeLessThanOrEqual(triggerBox.top);
     });
 
     await step('Com align="end" as bordas direitas coincidem', async () => {
-      const caixaDoMenu = menu.getBoundingClientRect();
-      const caixaDoGatilho = gatilho.getBoundingClientRect();
+      const menuBox = menu.getBoundingClientRect();
+      const triggerBox = gatilho.getBoundingClientRect();
       // Um pixel de folga porque a medida é fracionária; `start` juntaria as
       // bordas ESQUERDAS, e a diferença aqui seria a largura inteira do menu.
-      await expect(Math.abs(caixaDoMenu.right - caixaDoGatilho.right)).toBeLessThanOrEqual(1);
+      await expect(Math.abs(menuBox.right - triggerBox.right)).toBeLessThanOrEqual(1);
     });
 
     await step('O markup declara o que a medida mostrou', async () => {
@@ -223,7 +223,7 @@ export const Placement: Story = {
     });
 
     await step('Limpa via ESC', async () => {
-      await fecharNoFim();
+      await endClose();
     });
   },
 };

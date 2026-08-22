@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { createResizablePanel } from './resizable';
-import { fracaoDoPrimeiro, frame, painelComApoio } from './resizable.fixtures';
-import { resizableSourceCom } from './resizable.source';
+import { fracaoDoPrimeiro, frame, panelWithHelper } from './resizable.fixtures';
+import { resizableSourceWith } from './resizable.source';
 import { createResizableDocs } from '@/components/docs/ResizableDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -27,7 +27,7 @@ const meta: Meta<ResizableArgs> = {
       page: withAutoDocsTab(createResizableDocs),
       // Os três números dos controls viram os dois painéis do exemplo; o nome
       // dos divisores não passa por control nenhum e vem fixo daqui.
-      source: { transform: resizableSourceCom({ 'aria-label': ROTULO_PUNHO }) },
+      source: { transform: resizableSourceWith({ 'aria-label': ROTULO_PUNHO }) },
     },
   },
   argTypes: {
@@ -94,12 +94,12 @@ export const Playground: Story = {
           defaultSize: args.defaultSize,
           minSize: args.minSize,
           maxSize: args.maxSize,
-          content: painelComApoio('Sidebar', 'Navegação do projeto'),
+          content: panelWithHelper('Sidebar', 'Navegação do projeto'),
         },
         {
           defaultSize: 100 - args.defaultSize,
           minSize: args.minSize,
-          content: painelComApoio('Conteúdo principal', 'Arraste o divisor ou use as setas com ele focado.'),
+          content: panelWithHelper('Conteúdo principal', 'Arraste o divisor ou use as setas com ele focado.'),
         },
       ],
     });

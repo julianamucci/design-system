@@ -58,11 +58,11 @@ export type TooltipProvider = {
   createTooltip: (options: TooltipOptions) => DestroyableElement;
 };
 
-type EstadoDoGrupo = {
+type GroupState = {
   delayDuration: number;
   skipDelayDuration: number;
   /** Quando o último balão do grupo saiu da tela. */
-  fechadoEm: number;
+  closedIn: number;
 };
 
 let _tooltipCounter = 0;
@@ -95,27 +95,27 @@ const GAP = 6;
  * Sem Provider não há espera compartilhada: `skipDelayDuration` fica zerado,
  * porque dois balões sem grupo não têm por que saber um do outro.
  */
-function grupoAvulso(delayDuration: number): EstadoDoGrupo {
-  return { delayDuration, skipDelayDuration: 0, fechadoEm: 0 };
+function groupAvulso(delayDuration: number): GroupState {
+  return { delayDuration, skipDelayDuration: 0, closedIn: 0 };
 }
 
 export function createTooltipProvider(options: TooltipProviderOptions = {}): TooltipProvider {
-  const grupo: EstadoDoGrupo = {
+  const grupo: GroupState = {
     delayDuration: options.delayDuration ?? SHOW_DELAY,
     skipDelayDuration: options.skipDelayDuration ?? SKIP_DELAY,
-    fechadoEm: 0,
+    closedIn: 0,
   };
 
   return {
-    createTooltip: (opcoes: TooltipOptions) => montarTooltip(opcoes, grupo),
+    createTooltip: (opcoes: TooltipOptions) => mountTooltip(opcoes, grupo),
   };
 }
 
 export function createTooltip(options: TooltipOptions): DestroyableElement {
-  return montarTooltip(options, grupoAvulso(options.delayDuration ?? SHOW_DELAY));
+  return mountTooltip(options, groupAvulso(options.delayDuration ?? SHOW_DELAY));
 }
 
-function montarTooltip(options: TooltipOptions, grupo: EstadoDoGrupo): DestroyableElement {
+function mountTooltip(options: TooltipOptions, grupo: GroupState): DestroyableElement {
   const { trigger, content, side = 'top' } = options;
   const delayDuration = options.delayDuration ?? grupo.delayDuration;
 
@@ -125,7 +125,7 @@ function montarTooltip(options: TooltipOptions, grupo: EstadoDoGrupo): Destroyab
   let panelEl: HTMLElement | null = null;
   let showTimer: ReturnType<typeof setTimeout> | null = null;
   let hideTimer: ReturnType<typeof setTimeout> | null = null;
-  let ponteiroPressionado = false;
+  let pointerPressionado = false;
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'tooltip';
@@ -133,7 +133,7 @@ function montarTooltip(options: TooltipOptions, grupo: EstadoDoGrupo): Destroyab
   wrapper.appendChild(trigger);
 
   /** O ponteiro está dentro da caixa que une gatilho e balão? */
-  function dentroDaTolerancia(x: number, y: number): boolean {
+  function toleranciaInside(x: number, y: number): boolean {
     if (!panelEl) return false;
     const a = trigger.getBoundingClientRect();
     const b = panelEl.getBoundingClientRect();
@@ -148,8 +148,8 @@ function montarTooltip(options: TooltipOptions, grupo: EstadoDoGrupo): Destroyab
 
   function aoMover(event: MouseEvent): void {
     if (!panelEl) return;
-    if (dentroDaTolerancia(event.clientX, event.clientY)) cancelarFechamento();
-    else agendarFechamento();
+    if (toleranciaInside(event.clientX, event.clientY)) cancelarFechamento();
+    else scheduleFechamento();
   }
 
   function aoTeclar(event: KeyboardEvent): void {
@@ -196,7 +196,7 @@ function montarTooltip(options: TooltipOptions, grupo: EstadoDoGrupo): Destroyab
     // O grupo só é avisado quando havia mesmo um balão na tela: `hide()` também
     // é chamado por caminhos que nunca chegaram a exibir nada, e anotar ali
     // daria ao balão seguinte uma abertura instantânea que ninguém mereceu.
-    if (panelEl) grupo.fechadoEm = Date.now();
+    if (panelEl) grupo.closedIn = Date.now();
     panelEl?.remove();
     panelEl = null;
     trigger.removeAttribute('aria-describedby');
@@ -208,7 +208,7 @@ function montarTooltip(options: TooltipOptions, grupo: EstadoDoGrupo): Destroyab
     // Dentro da janela do grupo a espera é dispensada: quem já parou uma vez
     // não precisa provar de novo no ícone vizinho.
     const espera =
-      grupo.skipDelayDuration > 0 && Date.now() - grupo.fechadoEm < grupo.skipDelayDuration
+      grupo.skipDelayDuration > 0 && Date.now() - grupo.closedIn < grupo.skipDelayDuration
         ? 0
         : delayDuration;
     // Arrow literal explícito — clarifica pro SAST que setTimeout recebe
@@ -220,15 +220,15 @@ function montarTooltip(options: TooltipOptions, grupo: EstadoDoGrupo): Destroyab
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
   }
 
-  function agendarFechamento(): void {
+  function scheduleFechamento(): void {
     if (hideTimer) return;
     hideTimer = setTimeout(() => { hideTimer = null; hide(); }, GRACE_MS);
   }
 
   /** Saída pelo ponteiro respeita a tolerância; saída pelo foco fecha na hora. */
-  function aoSairDoPonteiro(): void {
+  function onPointerLeave(): void {
     if (showTimer) { clearTimeout(showTimer); showTimer = null; }
-    if (panelEl) agendarFechamento();
+    if (panelEl) scheduleFechamento();
   }
 
   /**
@@ -239,18 +239,18 @@ function montarTooltip(options: TooltipOptions, grupo: EstadoDoGrupo): Destroyab
    * As outras quatro stacks fazem o mesmo, e é o que o conteúdo compartilhado
    * documenta.
    *
-   * `ponteiroPressionado` evita que o foco vindo de um clique abra o balão duas
+   * `pointerPressionado` evita que o foco vindo de um clique abra o balão duas
    * vezes: nesse caminho quem manda é o hover, com a espera dele.
    */
   function aoFocar(): void {
-    if (ponteiroPressionado) return;
+    if (pointerPressionado) return;
     cancelarFechamento();
     if (showTimer) { clearTimeout(showTimer); showTimer = null; }
     show();
   }
 
   trigger.addEventListener('mouseenter', scheduleShow);
-  trigger.addEventListener('mouseleave', aoSairDoPonteiro);
+  trigger.addEventListener('mouseleave', onPointerLeave);
   /**
    * Solta o `pointerup` de `{ once: true }` que ainda não disparou.
    *
@@ -259,17 +259,17 @@ function montarTooltip(options: TooltipOptions, grupo: EstadoDoGrupo): Destroyab
    * fora, tela trocada por um clique) deixava o ouvinte esperando um evento que
    * podia nunca chegar.
    */
-  let soltarPonteiro: (() => void) | null = null;
+  let soltarPointer: (() => void) | null = null;
 
   trigger.addEventListener('pointerdown', () => {
-    ponteiroPressionado = true;
+    pointerPressionado = true;
     const aoSoltar = () => {
-      ponteiroPressionado = false;
-      soltarPonteiro = null;
+      pointerPressionado = false;
+      soltarPointer = null;
     };
-    soltarPonteiro = () => {
+    soltarPointer = () => {
       document.removeEventListener('pointerup', aoSoltar);
-      soltarPonteiro = null;
+      soltarPointer = null;
     };
     document.addEventListener('pointerup', aoSoltar, { once: true });
   });
@@ -285,6 +285,6 @@ function montarTooltip(options: TooltipOptions, grupo: EstadoDoGrupo): Destroyab
    */
   return tornarDestruivel(wrapper, wrapper, () => {
     hide();
-    soltarPonteiro?.();
+    soltarPointer?.();
   });
 }

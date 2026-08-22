@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  inputOtpComposicaoSnippet,
+  inputOtpCompositionSnippet,
   inputOtpSnippet,
   inputOtpSource,
-  inputOtpSourceCom,
-  inputOtpSourceComposicao,
+  inputOtpSourceWith,
+  inputOtpSourceComposition,
 } from './input-otp.source';
 
 describe('inputOtpSnippet', () => {
@@ -80,7 +80,7 @@ describe('inputOtpSnippet', () => {
 
 describe('inputOtpComposicaoSnippet', () => {
   it('liga o rótulo visível ao CONJUNTO, que label[for] não alcança', () => {
-    const código = inputOtpComposicaoSnippet({ rotulo: 'Código de verificação', ligarRotulo: true });
+    const código = inputOtpCompositionSnippet({ rotulo: 'Código de verificação', ligarRotulo: true });
     expect(código).toContain("titulo.id = 'otp-rotulo';");
     expect(código).toContain("codigo.removeAttribute('aria-label');");
     expect(código).toContain("codigo.setAttribute('aria-labelledby', 'otp-rotulo');");
@@ -88,20 +88,20 @@ describe('inputOtpComposicaoSnippet', () => {
   });
 
   it('aponta a ajuda pelo describedBy da própria fábrica', () => {
-    const código = inputOtpComposicaoSnippet({ ajuda: 'Enviamos por SMS, expira em 5 min.' });
+    const código = inputOtpCompositionSnippet({ ajuda: 'Enviamos por SMS, expira em 5 min.' });
     expect(código).toContain("describedBy: 'otp-ajuda'");
     expect(código).toContain("apoio.id = 'otp-ajuda';");
   });
 
   it('marca o erro e aponta a mensagem pelo mesmo caminho', () => {
-    const código = inputOtpComposicaoSnippet({ erro: 'Código incorreto.' });
+    const código = inputOtpCompositionSnippet({ erro: 'Código incorreto.' });
     expect(código).toContain('invalid: true');
     expect(código).toContain("describedBy: 'otp-erro'");
     expect(código).toContain("aviso.textContent = 'Código incorreto.';");
   });
 
   it('põe o reenvio DEPOIS do campo, com a fábrica de botão', () => {
-    const código = inputOtpComposicaoSnippet({ reenvio: 'Reenviar código' });
+    const código = inputOtpCompositionSnippet({ reenvio: 'Reenviar código' });
     expect(código).toContain("import { createButton } from '@/components/ui/button';");
     expect(código).toContain("createButton({ variant: 'link', size: 'sm', label: 'Reenviar código' })");
     expect(código.indexOf('createInputOTP')).toBeLessThan(código.indexOf('createButton({'));
@@ -129,7 +129,7 @@ describe('inputOtpSource', () => {
 
 describe('inputOtpSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = inputOtpSourceCom({ length: 4 })('', { args: { length: 6 } });
+    const código = inputOtpSourceWith({ length: 4 })('', { args: { length: 6 } });
     expect(código).toContain('length: 4');
     expect(código).not.toContain('length: 6');
   });
@@ -137,7 +137,7 @@ describe('inputOtpSourceCom', () => {
 
 describe('inputOtpSourceComposicao', () => {
   it('troca a forma do snippet, e não só as opções', () => {
-    const código = inputOtpSourceComposicao({ rotulo: 'Código', ajuda: 'Expira em 5 min.' })('', {});
+    const código = inputOtpSourceComposition({ rotulo: 'Código', ajuda: 'Expira em 5 min.' })('', {});
     expect(código).toContain("titulo.className = 'nds-text-label';");
     expect(código).toContain("titulo.textContent = 'Código';");
   });

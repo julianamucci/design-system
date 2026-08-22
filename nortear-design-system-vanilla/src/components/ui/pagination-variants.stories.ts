@@ -3,7 +3,7 @@ import { within, expect } from 'storybook/test';
 import { alvosAbaixoDoMinimo } from '@shared/testing/pagination-probe';
 import { createPagination } from './pagination';
 import { wrap } from './pagination.fixtures';
-import { paginationSource, paginationSourceCom } from './pagination.source';
+import { paginationSource, paginationSourceWith } from './pagination.source';
 
 const ROTULO_ANTERIOR = 'Ir para a página anterior';
 const ROTULO_PROXIMA = 'Ir para a próxima página';
@@ -36,7 +36,7 @@ export const Default: Story = {
     // `showPrevNext` não passa por control nenhum neste arquivo.
     docs: {
       source: {
-        transform: paginationSourceCom({
+        transform: paginationSourceWith({
           total: 5,
           current: 2,
           showPrevNext: false,
@@ -79,7 +79,7 @@ export const Active: Story = {
   parameters: {
     docs: {
       source: {
-        transform: paginationSourceCom({
+        transform: paginationSourceWith({
           total: 7,
           current: 4,
           showPrevNext: false,

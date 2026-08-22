@@ -87,7 +87,7 @@ function getPages(total: number, current: number): (number | 'ellipsis')[] {
 export function createPagination(options: PaginationOptions): HTMLElement {
   const { total, current, onPageChange, hrefForPage, showPrevNext = true, align } = options;
   // `label` continua aceito como apelido do nome acessível; o canônico vence.
-  const nomeDoLandmark = options['aria-label'] ?? options.label ?? ROTULOS.navegacao;
+  const landmarkName = options['aria-label'] ?? options.label ?? ROTULOS.navegacao;
 
   /**
    * Endereço do link e o que fazer com o clique.
@@ -96,14 +96,14 @@ export function createPagination(options: PaginationOptions): HTMLElement {
    * a rolagem ao topo sem trocar página nenhuma. Com rota, anular o clique
    * seria pior — apagaria o "abrir em nova aba" e o roteador de cliente junto.
    */
-  function enderecoDaPagina(page: number): string {
+  function pageEndereco(page: number): string {
     return hrefForPage ? hrefForPage(page) : '#';
   }
 
   const nav = document.createElement('nav');
   nav.dataset.slot = 'pagination';
   nav.setAttribute('role', 'navigation');
-  nav.setAttribute('aria-label', nomeDoLandmark);
+  nav.setAttribute('aria-label', landmarkName);
   if (align) nav.dataset.align = align;
   nav.className = cn('nds-pagination', options.class);
 
@@ -120,7 +120,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
 
   function makeLink(page: number, isCurrent: boolean): HTMLAnchorElement {
     const a = document.createElement('a');
-    a.href = enderecoDaPagina(page);
+    a.href = pageEndereco(page);
     a.dataset.slot = 'pagination-link';
     a.className = 'nds-pagination-link';
 
@@ -160,7 +160,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
     const a = document.createElement('a');
     // Nos extremos o controle não leva a lugar nenhum: `#` ali é honesto, e um
     // endereço válido convidaria a abrir em nova aba uma página que não existe.
-    a.href = desabilitado ? '#' : enderecoDaPagina(destino);
+    a.href = desabilitado ? '#' : pageEndereco(destino);
     a.dataset.slot = slot;
     a.setAttribute('aria-label', rotulo);
     a.className = 'nds-pagination-link nds-pagination-icon';

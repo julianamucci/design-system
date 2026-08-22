@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cardClicavelSnippet, cardSnippet, cardSource, cardSourceCom } from './card.source';
+import { cardClickableSnippet, cardSnippet, cardSource, cardSourceWith } from './card.source';
 
 describe('cardSnippet', () => {
   it('devolve a chamada das fábricas, e não o outerHTML do elemento', () => {
@@ -71,15 +71,15 @@ describe('cardSnippet', () => {
 
 describe('cardSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = cardSource('<div data-slot="card">', {});
-    const comArgs = cardSource('<div data-slot="card">', {
+    const noArgs = cardSource('<div data-slot="card">', {});
+    const withArgs = cardSource('<div data-slot="card">', {
       args: { size: 'sm', title: 'Assinantes ativos', price: '8.742', showFooter: true },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("size: 'sm'");
-    expect(comArgs).toContain("createCardTitle({ text: 'Assinantes ativos' })");
-    expect(comArgs).toContain("valor.textContent = '8.742';");
-    expect(comArgs).toContain('createCardFooter');
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("size: 'sm'");
+    expect(withArgs).toContain("createCardTitle({ text: 'Assinantes ativos' })");
+    expect(withArgs).toContain("valor.textContent = '8.742';");
+    expect(withArgs).toContain('createCardFooter');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -91,7 +91,7 @@ describe('cardSource', () => {
 
 describe('cardSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = cardSourceCom({ size: 'sm' });
+    const transform = cardSourceWith({ size: 'sm' });
     const código = transform('', { args: { size: 'default', title: 'Outro título' } });
     expect(código).toContain("size: 'sm'");
     expect(código).toContain("createCardTitle({ text: 'Outro título' })");
@@ -100,7 +100,7 @@ describe('cardSourceCom', () => {
 
 describe('cardClicavelSnippet', () => {
   it('o destino é o <a> de fora; o Card continua passivo', () => {
-    const código = cardClicavelSnippet();
+    const código = cardClickableSnippet();
     expect(código).toContain("document.createElement('a')");
     expect(código).toContain(
       "destino.setAttribute('aria-label', 'Abrir detalhes do produto Cadeira Gamer Pro');",
@@ -114,7 +114,7 @@ describe('cardClicavelSnippet', () => {
   });
 
   it('a largura fica no destino, não no Card de dentro', () => {
-    const código = cardClicavelSnippet();
+    const código = cardClickableSnippet();
     expect(código).toContain("createCard({ class: 'nds-w-full' })");
     expect(código).toContain('nds-w-sm');
   });

@@ -31,11 +31,11 @@ export function makeFooter(
   footer.append(cancel, action);
 
   if (fecharAoClicar) {
-    const fecharPorAcao = () => {
+    const actionClose = () => {
       document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]')?.click();
     };
-    cancel.addEventListener('click', fecharPorAcao);
-    action.addEventListener('click', fecharPorAcao);
+    cancel.addEventListener('click', actionClose);
+    action.addEventListener('click', actionClose);
   }
 
   return footer;

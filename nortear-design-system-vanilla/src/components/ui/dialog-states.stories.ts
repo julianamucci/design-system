@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createDialog } from './dialog';
-import { dialogSource, dialogSourceCom } from './dialog.source';
+import { dialogSource, dialogSourceWith } from './dialog.source';
 import { createButton } from './button';
-import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
+import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import {
   abrir,
   botaoFecharDoCanto,
@@ -146,7 +146,7 @@ export const WithCloseButtonHidden: Story = {
     // dele que esta configuração existe para mostrar.
     docs: {
       source: {
-        transform: dialogSourceCom({
+        transform: dialogSourceWith({
           triggerLabel: 'Visualizar guia',
           title: 'Próximos passos',
           description: 'Acompanhe o fluxo de onboarding.',
@@ -201,7 +201,7 @@ export const Controlled: Story = {
     // mostraria um diálogo que ninguém acompanha de fora.
     docs: {
       source: {
-        transform: dialogSourceCom({
+        transform: dialogSourceWith({
           triggerLabel: 'Abrir',
           title: 'Controlado pelo pai',
           description: 'Abertura programática via referência ao trigger.',
@@ -312,14 +312,14 @@ export const ListenerCleanup: Story = {
     // sempre a mesma legenda.
     chromatic: { disable: true },
   },
-  render: () => hospedeiroDeSonda(
+  render: () => probeHost(
     'Sonda de limpeza: o diálogo é montado, aberto e removido da página pela play.',
   ),
   play: async ({ canvasElement, step }) => {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ResultadoDaSonda;
+    let sonda!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       sonda = await sondarOuvintes({
@@ -340,7 +340,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await conferirLimpeza(sonda);
+      await checkLimpeza(sonda);
     });
   },
 };

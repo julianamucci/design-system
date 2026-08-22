@@ -10,7 +10,7 @@ import {
   createBreadcrumbSeparator,
   createBreadcrumbEllipsis,
 } from './breadcrumb';
-import { breadcrumbSource, breadcrumbSourceCom } from './breadcrumb.source';
+import { breadcrumbSource, breadcrumbSourceWith } from './breadcrumb.source';
 
 const meta: Meta = {
   tags: ['navigation'],
@@ -38,7 +38,7 @@ const onNavigate = fn();
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function criarSlashSvg(): SVGSVGElement {
+function createSlashSvg(): SVGSVGElement {
   const NS = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(NS, 'svg');
   svg.setAttribute('xmlns', NS);
@@ -64,7 +64,7 @@ export const Simple: Story = {
       // Override de story: um nível só, e o ouvinte de navegação — nem a
       // profundidade da trilha nem o callback passam por control.
       source: {
-        transform: breadcrumbSourceCom({
+        transform: breadcrumbSourceWith({
           niveis: ['Início'],
           atual: 'Componentes',
           onNavigate: 'registrarNavegacao(text);',
@@ -127,7 +127,7 @@ export const WithEllipsis: Story = {
       // Override de story: as reticências são o assunto, e a fábrica delas é
       // uma peça a mais na composição.
       source: {
-        transform: breadcrumbSourceCom({ ellipsis: true, ellipsisLabel: 'Mais páginas' }),
+        transform: breadcrumbSourceWith({ ellipsis: true, ellipsisLabel: 'Mais páginas' }),
       },
       description: {
         story:
@@ -191,7 +191,7 @@ export const CustomSeparator: Story = {
     docs: {
       // Override de story: o desenho do separador entra por `content`, e o
       // snippet do meta mostraria o chevron padrão.
-      source: { transform: breadcrumbSourceCom({ separator: '/' }) },
+      source: { transform: breadcrumbSourceWith({ separator: '/' }) },
       description: {
         story:
           'Separador customizado via content de createBreadcrumbSeparator — mantém aria-hidden automaticamente.',
@@ -213,9 +213,9 @@ export const CustomSeparator: Story = {
 
     list.append(
       home,
-      createBreadcrumbSeparator({ content: criarSlashSvg() as unknown as HTMLElement }),
+      createBreadcrumbSeparator({ content: createSlashSvg() as unknown as HTMLElement }),
       components,
-      createBreadcrumbSeparator({ content: criarSlashSvg() as unknown as HTMLElement }),
+      createBreadcrumbSeparator({ content: createSlashSvg() as unknown as HTMLElement }),
       current,
     );
     nav.appendChild(list);
@@ -251,7 +251,7 @@ export const AsChildLink: Story = {
       // Override de story: o assunto é o atributo do consumidor sobrevivendo no
       // <a> do componente, e o snippet do meta não mostraria atributo nenhum.
       source: {
-        transform: breadcrumbSourceCom({
+        transform: breadcrumbSourceWith({
           linkSetup: "link.setAttribute('data-router-link', 'true');",
         }),
       },
@@ -265,7 +265,7 @@ export const AsChildLink: Story = {
     const nav = createBreadcrumb();
     const list = createBreadcrumbList();
 
-    const criarNivel = (label: string) => {
+    const createLevel = (label: string) => {
       const item = createBreadcrumbItem();
       const link = createBreadcrumbLink({ href: '#', text: label });
       link.setAttribute('data-router-link', 'true');
@@ -277,9 +277,9 @@ export const AsChildLink: Story = {
     current.appendChild(createBreadcrumbPage({ text: 'Breadcrumb' }));
 
     list.append(
-      criarNivel('Início'),
+      createLevel('Início'),
       createBreadcrumbSeparator(),
-      criarNivel('Componentes'),
+      createLevel('Componentes'),
       createBreadcrumbSeparator(),
       current,
     );

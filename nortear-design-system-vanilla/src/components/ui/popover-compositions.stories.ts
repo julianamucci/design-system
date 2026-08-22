@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createPopover } from './popover';
 import { centralizar } from './popover.fixtures';
-import { popoverSource, popoverSourceFormulario } from './popover.source';
+import { popoverSource, popoverSourceForm } from './popover.source';
 import { createButton } from './button';
 import { createInput } from './input';
 import { createLabel } from './label';
@@ -41,7 +41,7 @@ export const EditProfile: Story = {
   parameters: {
     // Override de story: o formulário dentro do painel pede outra FORMA de
     // snippet — rótulo, campo e submit.
-    docs: { source: { transform: popoverSourceFormulario({ triggerLabel: 'Editar perfil' }) } },
+    docs: { source: { transform: popoverSourceForm({ triggerLabel: 'Editar perfil' }) } },
   },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });

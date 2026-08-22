@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  codeBlockComRemocaoSnippet,
+  codeBlockWithRemovalSnippet,
   codeBlockSnippet,
   codeBlockSource,
-  codeBlockSourceCom,
+  codeBlockSourceWith,
 } from './code-block.source';
 
 describe('codeBlockSnippet', () => {
@@ -74,7 +74,7 @@ describe('codeBlockSnippet', () => {
 
 describe('codeBlockComRemocaoSnippet', () => {
   it('acrescenta a saída da página à mesma chamada', () => {
-    const código = codeBlockComRemocaoSnippet({ language: 'ts' });
+    const código = codeBlockWithRemovalSnippet({ language: 'ts' });
     expect(código).toContain('createCodeBlock({');
     expect(código).toContain('bloco.remove();');
   });
@@ -82,12 +82,12 @@ describe('codeBlockComRemocaoSnippet', () => {
 
 describe('codeBlockSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = codeBlockSource('<div data-slot="code-block">', {});
-    const comArgs = codeBlockSource('<div data-slot="code-block">', {
+    const noArgs = codeBlockSource('<div data-slot="code-block">', {});
+    const withArgs = codeBlockSource('<div data-slot="code-block">', {
       args: { language: 'ts', title: 'exemplo.ts' },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("title: 'exemplo.ts'");
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("title: 'exemplo.ts'");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -99,7 +99,7 @@ describe('codeBlockSource', () => {
 
 describe('codeBlockSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = codeBlockSourceCom({ language: 'css', showLineNumbers: false });
+    const transform = codeBlockSourceWith({ language: 'css', showLineNumbers: false });
     const código = transform('', { args: { language: 'ts' } });
     expect(código).toContain("language: 'css'");
     expect(código).not.toContain("language: 'ts'");

@@ -43,7 +43,7 @@ export type ResizableSnippetOptions = {
   maxSize?: number;
 };
 
-const PAINEIS_PADRAO: ResizableSnippetPanel[] = [
+const PANELS_DEFAULT: ResizableSnippetPanel[] = [
   { titulo: 'Sidebar', defaultSize: 30, minSize: 15 },
   { titulo: 'Conteúdo principal', defaultSize: 70, minSize: 30 },
 ];
@@ -57,7 +57,7 @@ const ROTULO_PADRAO = 'Redimensionar Sidebar e Conteúdo — use setas para ajus
  * focável); um segundo contêiner rolável aqui dentro esconderia conteúdo de
  * quem não usa mouse.
  */
-const BLOCO_DE_CONTEUDO = `// Quem rola é o próprio painel, que é focável. Um segundo contêiner rolável
+const CONTENT_BLOCK = `// Quem rola é o próprio painel, que é focável. Um segundo contêiner rolável
 // aqui dentro deixaria o conteúdo alcançável só com mouse.
 function bloco(titulo) {
   const el = document.createElement('div');
@@ -67,14 +67,14 @@ function bloco(titulo) {
 }`;
 
 /** O valor de `aria-label`: uma string, ou um nome por divisor. */
-function valorDoRotulo(rotulo: string | string[] | undefined): string {
+function labelValue(rotulo: string | string[] | undefined): string {
   const valor = rotulo ?? ROTULO_PADRAO;
   if (!Array.isArray(valor)) return texto(valor);
   return `[\n${valor.map((r) => `    ${texto(r)},`).join('\n')}\n  ]`;
 }
 
 /** `panels: [ … ]`, um painel por linha, já recuado para dentro da chamada. */
-function blocoPaineis(paineis: ResizableSnippetPanel[]): string {
+function blockPanels(paineis: ResizableSnippetPanel[]): string {
   const linhas = paineis.map((p) => {
     const pares = opcoes([
       ['defaultSize', p.defaultSize !== undefined ? String(p.defaultSize) : undefined],
@@ -94,10 +94,10 @@ function blocoPaineis(paineis: ResizableSnippetPanel[]): string {
  * Sem `panels` declarado, os três números dos controls do Playground viram o
  * par sidebar + conteúdo, que é exatamente o que aquela story monta.
  */
-function paineisDe(o: ResizableSnippetOptions): ResizableSnippetPanel[] {
+function panelsOf(o: ResizableSnippetOptions): ResizableSnippetPanel[] {
   if (o.panels) return o.panels;
   if (o.defaultSize === undefined && o.minSize === undefined && o.maxSize === undefined) {
-    return PAINEIS_PADRAO;
+    return PANELS_DEFAULT;
   }
   const primeiro = o.defaultSize ?? 30;
   return [
@@ -107,7 +107,7 @@ function paineisDe(o: ResizableSnippetOptions): ResizableSnippetPanel[] {
 }
 
 /** As opções da fábrica. Só o que difere do padrão entra. */
-function linhasDoGrupo(o: ResizableSnippetOptions, paineis: ResizableSnippetPanel[]): string[] {
+function groupLines(o: ResizableSnippetOptions, paineis: ResizableSnippetPanel[]): string[] {
   return opcoes([
     // `horizontal` é o padrão da fábrica.
     ['direction', o.direction === 'vertical' ? texto('vertical') : undefined],
@@ -115,14 +115,14 @@ function linhasDoGrupo(o: ResizableSnippetOptions, paineis: ResizableSnippetPane
     ['disabled', o.disabled ? 'true' : undefined],
     // Um `role="separator"` focável sem nome é anunciado como "separador, 30":
     // não há como saber o que aquele número redimensiona.
-    ['aria-label', valorDoRotulo(o['aria-label'])],
+    ['aria-label', labelValue(o['aria-label'])],
     ['onLayout', o.onLayout],
-    ['panels', blocoPaineis(paineis)],
+    ['panels', blockPanels(paineis)],
   ]);
 }
 
 /** A linha final: o grupo entra na página, e a limpeza quando ela é o assunto. */
-function blocoFinal(o: ResizableSnippetOptions, variavel: string): string {
+function blockFinal(o: ResizableSnippetOptions, variavel: string): string {
   if (!o.destroy) return montar(variavel);
   return `${montar(variavel)}
 
@@ -138,18 +138,18 @@ ${variavel}.destroy();`;
  * há espaço a repartir e os painéis colapsam. A medida é de quem consome — por
  * isso a nota, e não um valor cravado no snippet.
  */
-const NOTA_DE_ALTURA = `// O grupo reparte o espaço do contêiner: ele precisa de altura definida, senão
+const HEIGHT_NOTA = `// O grupo reparte o espaço do contêiner: ele precisa de altura definida, senão
 // os painéis colapsam. Num grupo vertical isso vale sempre.
 `;
 
 /** A chamada real de `createResizablePanel` com as opções da story. */
 export function resizableSnippet(o: ResizableSnippetOptions = {}): string {
-  const paineis = paineisDe(o);
+  const paineis = panelsOf(o);
   return snippet(
     importar('resizable', 'createResizablePanel'),
-    BLOCO_DE_CONTEUDO,
-    `${NOTA_DE_ALTURA}const grupo = ${chamada('createResizablePanel', linhasDoGrupo(o, paineis))};`,
-    blocoFinal(o, 'grupo'),
+    CONTENT_BLOCK,
+    `${HEIGHT_NOTA}const grupo = ${chamada('createResizablePanel', groupLines(o, paineis))};`,
+    blockFinal(o, 'grupo'),
   );
 }
 
@@ -158,7 +158,7 @@ export const resizableSource: SourceTransform<ResizableSnippetOptions> = (_gerad
   resizableSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function resizableSourceCom(
+export function resizableSourceWith(
   fixas: ResizableSnippetOptions,
 ): SourceTransform<ResizableSnippetOptions> {
   return (_gerado, ctx) => resizableSnippet({ ...ctx.args, ...fixas });
@@ -170,28 +170,28 @@ export function resizableSourceCom(
  * Cada grupo nomeia o PRÓPRIO divisor e governa só os próprios painéis: o de
  * dentro entra no de fora como conteúdo, e um ajuste num não move o outro.
  */
-export function resizableAninhadoSnippet(opcoesDoGrupo: {
+export function resizableNestedSnippet(groupOptions: {
   externo: ResizableSnippetOptions;
   interno: ResizableSnippetOptions;
   /** Título do painel do grupo externo que fica ao lado do grupo de dentro. */
   vizinho: ResizableSnippetPanel;
 }): string {
-  const { externo, interno, vizinho } = opcoesDoGrupo;
-  const paineisInternos = paineisDe(interno);
+  const { externo, interno, vizinho } = groupOptions;
+  const panelsInternos = panelsOf(interno);
 
-  const paresDoVizinho = opcoes([
+  const neighbourPairs = opcoes([
     ['defaultSize', vizinho.defaultSize !== undefined ? String(vizinho.defaultSize) : undefined],
     ['minSize', vizinho.minSize !== undefined && vizinho.minSize !== 10 ? String(vizinho.minSize) : undefined],
     ['content', `bloco(${texto(vizinho.titulo)})`],
   ]);
 
-  const linhasExternas = opcoes([
+  const linesExternas = opcoes([
     ['direction', externo.direction === 'vertical' ? texto('vertical') : undefined],
     ['withHandle', externo.withHandle ? 'true' : undefined],
-    ['aria-label', valorDoRotulo(externo['aria-label'])],
+    ['aria-label', labelValue(externo['aria-label'])],
     [
       'panels',
-      `[\n    { ${paresDoVizinho.map((p) => p.replace(/,$/, '')).join(', ')} },\n    { defaultSize: ${
+      `[\n    { ${neighbourPairs.map((p) => p.replace(/,$/, '')).join(', ')} },\n    { defaultSize: ${
         externo.panels?.[1]?.defaultSize ?? 70
       }, minSize: ${externo.panels?.[1]?.minSize ?? 30}, content: interno },\n  ]`,
     ],
@@ -199,20 +199,20 @@ export function resizableAninhadoSnippet(opcoesDoGrupo: {
 
   return snippet(
     importar('resizable', 'createResizablePanel'),
-    BLOCO_DE_CONTEUDO,
+    CONTENT_BLOCK,
     `// O grupo de dentro é outro grupo, com nome de divisor próprio: percorrer os
 // divisores a partir da raiz do de fora alcançaria também os dele.
-const interno = ${chamada('createResizablePanel', linhasDoGrupo(interno, paineisInternos))};`,
-    `${NOTA_DE_ALTURA}const externo = ${chamada('createResizablePanel', linhasExternas)};`,
-    blocoFinal(externo, 'externo'),
+const interno = ${chamada('createResizablePanel', groupLines(interno, panelsInternos))};`,
+    `${HEIGHT_NOTA}const externo = ${chamada('createResizablePanel', linesExternas)};`,
+    blockFinal(externo, 'externo'),
   );
 }
 
 /** Transform de story para o grupo aninhado. */
-export function resizableSourceAninhado(opcoesDoGrupo: {
+export function resizableSourceNested(groupOptions: {
   externo: ResizableSnippetOptions;
   interno: ResizableSnippetOptions;
   vizinho: ResizableSnippetPanel;
 }): SourceTransform<ResizableSnippetOptions> {
-  return () => resizableAninhadoSnippet(opcoesDoGrupo);
+  return () => resizableNestedSnippet(groupOptions);
 }

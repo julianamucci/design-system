@@ -51,7 +51,7 @@ export type DropdownMenuSnippetOptions = {
 };
 
 /** A lista canônica: um grupo rotulado, um separador e a saída. */
-const ITENS_PADRAO: DropdownMenuSnippetItem[] = [
+const ITEMS_DEFAULT: DropdownMenuSnippetItem[] = [
   { type: 'label', label: 'Conta' },
   { label: 'Perfil', value: 'profile' },
   { label: 'Configurações', value: 'settings' },
@@ -84,7 +84,7 @@ function item(i: DropdownMenuSnippetItem): string {
  * descreve os itens, não os monta.
  */
 export function dropdownMenuSnippet(o: DropdownMenuSnippetOptions = {}): string {
-  const itens = o.items ?? ITENS_PADRAO;
+  const itens = o.items ?? ITEMS_DEFAULT;
   const gatilho = `createButton({ variant: 'outline', label: ${texto(o.triggerLabel ?? 'Abrir menu')} })`;
 
   const linhas = opcoes([
@@ -117,7 +117,7 @@ export const dropdownMenuSource: SourceTransform<DropdownMenuSnippetOptions> = (
   dropdownMenuSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function dropdownMenuSourceCom(
+export function dropdownMenuSourceWith(
   fixas: DropdownMenuSnippetOptions,
 ): SourceTransform<DropdownMenuSnippetOptions> {
   return (_gerado, ctx) => dropdownMenuSnippet({ ...ctx.args, ...fixas });

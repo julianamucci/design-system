@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, userEvent, waitFor, fireEvent, expect, fn } from 'storybook/test';
 import { createDataTable, type DataTableColumn } from './data-table';
-import { dataTableSource, dataTableSourceCom } from './data-table.source';
+import { dataTableSource, dataTableSourceWith } from './data-table.source';
 import { createBadge } from './badge';
 import { type Invoice, invoices, currency, statusVariant, baseColumns } from './data-table.fixtures';
 
@@ -84,7 +84,7 @@ export const WithColumnFilters: Story = {
     // colunas do meta esconderia a única coisa que esta story documenta.
     docs: {
       source: {
-        transform: dataTableSourceCom({
+        transform: dataTableSourceWith({
           colunas: 'filtro',
           enableColumnFilters: true,
           enablePagination: false,
@@ -156,7 +156,7 @@ export const ResizableColumns: Story = {
     covers: ['visual.item3'],
     controls: { disable: true },
     actions: { disable: true },
-    docs: { source: { transform: dataTableSourceCom({ enableColumnResizing: true }) } },
+    docs: { source: { transform: dataTableSourceWith({ enableColumnResizing: true }) } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -216,7 +216,7 @@ export const ReorderableAndPinnable: Story = {
     actions: { disable: true },
     docs: {
       source: {
-        transform: dataTableSourceCom({
+        transform: dataTableSourceWith({
           enableColumnOrdering: true,
           enableColumnPinning: true,
         }),
@@ -370,7 +370,7 @@ export const WithInlineEditing: Story = {
     // consome, e é isso que o snippet precisa mostrar.
     docs: {
       source: {
-        transform: dataTableSourceCom({
+        transform: dataTableSourceWith({
           colunas: 'editavel',
           enableGlobalFilter: false,
           enableColumnVisibility: false,

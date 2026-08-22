@@ -18,14 +18,14 @@ import {
  * `LANGUAGE_ITEMS` são andaime de teste e de docs page, e o painel Code ensina
  * o design system, não o andaime.
  */
-const TRECHO_PADRAO = [
+const TRECHO_DEFAULT = [
   'const items = await load();',
   'const total = items.length;',
   'render(items, total);',
 ].join('\n');
 
 /** Apelidos que a fábrica resolve para `text`, que é o padrão dela. */
-const LINGUAGEM_PADRAO = ['', 'text', 'txt', 'plain'];
+const LANGUAGE_DEFAULT = ['', 'text', 'txt', 'plain'];
 
 /** O que a story usa da `CodeBlockOptions` e que o snippet precisa mostrar. */
 export type CodeBlockSnippetOptions = {
@@ -68,7 +68,7 @@ export function codeBlockSnippet(o: CodeBlockSnippetOptions = {}): string {
   const linguagem = (o.language ?? '').toLowerCase();
   const linhas = opcoes([
     ['code', 'source'],
-    ['language', LINGUAGEM_PADRAO.includes(linguagem) ? undefined : texto(o.language!)],
+    ['language', LANGUAGE_DEFAULT.includes(linguagem) ? undefined : texto(o.language!)],
     ['title', o.title ? texto(o.title) : undefined],
     ['showLineNumbers', o.showLineNumbers === false ? 'false' : undefined],
     [
@@ -80,7 +80,7 @@ export function codeBlockSnippet(o: CodeBlockSnippetOptions = {}): string {
 
   return snippet(
     importar('code-block', 'createCodeBlock'),
-    `const source = ${literalDeCodigo(o.code ?? TRECHO_PADRAO)};`,
+    `const source = ${literalDeCodigo(o.code ?? TRECHO_DEFAULT)};`,
     `const bloco = ${chamada('createCodeBlock', linhas)};`,
     montar('bloco'),
   );
@@ -94,7 +94,7 @@ export function codeBlockSnippet(o: CodeBlockSnippetOptions = {}): string {
  * antes disso precisa cancelar o temporizador. A limpeza é da fábrica — quem
  * consome só remove o nó.
  */
-export function codeBlockComRemocaoSnippet(o: CodeBlockSnippetOptions = {}): string {
+export function codeBlockWithRemovalSnippet(o: CodeBlockSnippetOptions = {}): string {
   return snippet(
     codeBlockSnippet(o),
     [
@@ -115,15 +115,15 @@ export const codeBlockSource: SourceTransform<CodeBlockSnippetOptions> = (_gerad
   codeBlockSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function codeBlockSourceCom(
+export function codeBlockSourceWith(
   fixas: CodeBlockSnippetOptions,
 ): SourceTransform<CodeBlockSnippetOptions> {
   return (_gerado, ctx) => codeBlockSnippet({ ...ctx.args, ...fixas });
 }
 
 /** Transform de story para a forma com remoção. */
-export function codeBlockComRemocaoSource(
+export function codeBlockWithRemovalSource(
   fixas: CodeBlockSnippetOptions = {},
 ): SourceTransform<CodeBlockSnippetOptions> {
-  return (_gerado, ctx) => codeBlockComRemocaoSnippet({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => codeBlockWithRemovalSnippet({ ...ctx.args, ...fixas });
 }

@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  paginationComEstadoSnippet,
-  paginationComEstadoSourceCom,
+  paginationWithStateSnippet,
+  paginationWithStateSourceWith,
   paginationSnippet,
   paginationSource,
-  paginationSourceCom,
+  paginationSourceWith,
 } from './pagination.source';
 
 describe('paginationSnippet', () => {
@@ -63,7 +63,7 @@ describe('paginationSnippet', () => {
 
 describe('paginationComEstadoSnippet', () => {
   it('mostra o estado do lado de quem consome, que é o que a fábrica não guarda', () => {
-    const código = paginationComEstadoSnippet({ total: 8, current: 3 });
+    const código = paginationWithStateSnippet({ total: 8, current: 3 });
     expect(código).toContain('let paginaAtual = 3;');
     expect(código).toContain('current: paginaAtual');
     expect(código).toContain('faixa.replaceChildren(');
@@ -71,7 +71,7 @@ describe('paginationComEstadoSnippet', () => {
   });
 
   it('continua sendo a chamada da fábrica, e não o outerHTML', () => {
-    const código = paginationComEstadoSnippet();
+    const código = paginationWithStateSnippet();
     expect(código).toContain('createPagination({');
     expect(código).not.toContain('data-slot=');
   });
@@ -79,13 +79,13 @@ describe('paginationComEstadoSnippet', () => {
 
 describe('paginationSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = paginationSource('<nav data-slot="pagination">', {});
-    const comArgs = paginationSource('<nav data-slot="pagination">', {
+    const noArgs = paginationSource('<nav data-slot="pagination">', {});
+    const withArgs = paginationSource('<nav data-slot="pagination">', {
       args: { total: 20, current: 7 },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain('total: 20');
-    expect(comArgs).toContain('current: 7');
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain('total: 20');
+    expect(withArgs).toContain('current: 7');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -97,7 +97,7 @@ describe('paginationSource', () => {
 
 describe('paginationSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = paginationSourceCom({ total: 5, current: 5 });
+    const transform = paginationSourceWith({ total: 5, current: 5 });
     const código = transform('', { args: { total: 30, current: 1 } });
     expect(código).toContain('total: 5');
     expect(código).toContain('current: 5');
@@ -107,7 +107,7 @@ describe('paginationSourceCom', () => {
 
 describe('paginationComEstadoSourceCom', () => {
   it('sobrepõe os args e mantém a forma com estado', () => {
-    const transform = paginationComEstadoSourceCom({ current: 3, 'aria-label': 'Paginação interativa' });
+    const transform = paginationWithStateSourceWith({ current: 3, 'aria-label': 'Paginação interativa' });
     const código = transform('', { args: { current: 9 } });
     expect(código).toContain('let paginaAtual = 3;');
     expect(código).toContain("'aria-label': 'Paginação interativa'");

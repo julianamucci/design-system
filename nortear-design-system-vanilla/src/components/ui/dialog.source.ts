@@ -64,7 +64,7 @@ function rodape(acoes: DialogSnippetAction[]): string | undefined {
   return `[\n${acoes.map((a) => `    ${botao(a)},`).join('\n')}\n  ]`;
 }
 
-function acoesDe(o: DialogSnippetOptions): DialogSnippetAction[] {
+function actionsOf(o: DialogSnippetOptions): DialogSnippetAction[] {
   return (
     o.footer ?? [
       { label: o.cancelLabel ?? 'Cancelar', variant: 'outline' },
@@ -74,7 +74,7 @@ function acoesDe(o: DialogSnippetOptions): DialogSnippetAction[] {
 }
 
 /** As opções comuns às três formas de snippet. `content` é o nome da variável. */
-function linhasComuns(o: DialogSnippetOptions, content: string): string[] {
+function linesComuns(o: DialogSnippetOptions, content: string): string[] {
   return opcoes([
     ['trigger', botao({ label: o.triggerLabel ?? 'Editar perfil', variant: 'outline' })],
     ['title', texto(o.title ?? 'Editar perfil')],
@@ -83,7 +83,7 @@ function linhasComuns(o: DialogSnippetOptions, content: string): string[] {
       o.description === '' ? undefined : texto(o.description ?? 'Atualize suas informações pessoais.'),
     ],
     ['content', content],
-    ['footer', rodape(acoesDe(o))],
+    ['footer', rodape(actionsOf(o))],
     ['showCloseButton', o.showCloseButton === false ? 'false' : undefined],
     // Guarda de tipo, e não confiança no tipo declarado: `ctx.args` chega do
     // Storybook, e o control de callback do Playground é um espião de teste —
@@ -106,7 +106,7 @@ export function dialogSnippet(o: DialogSnippetOptions = {}): string {
     `const corpo = document.createElement('p');
 corpo.className = 'nds-text-body nds-text-muted-foreground';
 corpo.textContent = ${texto(o.bodyText ?? 'Conteúdo do corpo do diálogo (formulário, mensagem, mídia).')};`,
-    `const dialogo = ${chamada('createDialog', linhasComuns(o, 'corpo'))};`,
+    `const dialogo = ${chamada('createDialog', linesComuns(o, 'corpo'))};`,
     montar('dialogo'),
   );
 }
@@ -120,24 +120,24 @@ export const dialogSource: SourceTransform<DialogSnippetOptions> = (_gerado, ctx
   dialogSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function dialogSourceCom(fixas: DialogSnippetOptions): SourceTransform<DialogSnippetOptions> {
+export function dialogSourceWith(fixas: DialogSnippetOptions): SourceTransform<DialogSnippetOptions> {
   return (_gerado, ctx) => dialogSnippet({ ...ctx.args, ...fixas });
 }
 
 // ─── Segunda forma: corpo com formulário ─────────────────────────────────────
 
-export type DialogCampo = {
+export type DialogField = {
   label: string;
   /** Tipo do controle. `text` é o padrão do input e não entra no snippet. */
   type?: string;
   value?: string;
 };
 
-export type DialogComFormularioSnippetOptions = Omit<DialogSnippetOptions, 'bodyText'> & {
-  campos?: DialogCampo[];
+export type DialogWithFormSnippetOptions = Omit<DialogSnippetOptions, 'bodyText'> & {
+  campos?: DialogField[];
 };
 
-function campo(c: DialogCampo): string {
+function campo(c: DialogField): string {
   const entrada = opcoes([
     ['type', c.type && c.type !== 'text' ? texto(c.type) : undefined],
     ['value', c.value !== undefined ? texto(c.value) : undefined],
@@ -159,7 +159,7 @@ function campo(c: DialogCampo): string {
  * `<label>` cru com um `<input>` cru pareceria igual na tela e não faria nada
  * disso.
  */
-export function dialogComFormularioSnippet(o: DialogComFormularioSnippetOptions = {}): string {
+export function dialogWithFormSnippet(o: DialogWithFormSnippetOptions = {}): string {
   const campos = o.campos ?? [
     { label: 'Nome', value: 'Maria Souza' },
     { label: 'E-mail', type: 'email', value: 'maria@exemplo.com' },
@@ -177,21 +177,21 @@ formulario.dataset.spacing = 'md';
 formulario.append(
 ${campos.map(campo).join('\n')}
 );`,
-    `const dialogo = ${chamada('createDialog', linhasComuns(o, 'formulario'))};`,
+    `const dialogo = ${chamada('createDialog', linesComuns(o, 'formulario'))};`,
     montar('dialogo'),
   );
 }
 
 /** Transform de story para a forma com formulário. */
 export function dialogComFormularioSource(
-  fixas: DialogComFormularioSnippetOptions,
-): SourceTransform<DialogComFormularioSnippetOptions> {
-  return (_gerado, ctx) => dialogComFormularioSnippet({ ...ctx.args, ...fixas });
+  fixas: DialogWithFormSnippetOptions,
+): SourceTransform<DialogWithFormSnippetOptions> {
+  return (_gerado, ctx) => dialogWithFormSnippet({ ...ctx.args, ...fixas });
 }
 
 // ─── Terceira forma: corpo com rolagem própria ───────────────────────────────
 
-export type DialogComCorpoRolavelSnippetOptions = Omit<DialogSnippetOptions, 'bodyText'> & {
+export type DialogWithBodyScrollableSnippetOptions = Omit<DialogSnippetOptions, 'bodyText'> & {
   /** Quantos parágrafos o exemplo empilha para o corpo precisar rolar. */
   paragrafos?: number;
   /** Nome acessível da região rolável. */
@@ -207,7 +207,7 @@ export type DialogComCorpoRolavelSnippetOptions = Omit<DialogSnippetOptions, 'bo
  * tem ponteiro. Um snippet que mostrasse o parágrafo comum esconderia
  * exatamente o que esta composição ensina.
  */
-export function dialogComCorpoRolavelSnippet(o: DialogComCorpoRolavelSnippetOptions = {}): string {
+export function dialogWithBodyScrollableSnippet(o: DialogWithBodyScrollableSnippetOptions = {}): string {
   const total = o.paragrafos ?? 12;
 
   return snippet(
@@ -228,14 +228,14 @@ for (let i = 1; i <= ${total}; i++) {
   paragrafo.textContent = \`Parágrafo \${i} dos termos de uso.\`;
   corpo.appendChild(paragrafo);
 }`,
-    `const dialogo = ${chamada('createDialog', linhasComuns(o, 'corpo'))};`,
+    `const dialogo = ${chamada('createDialog', linesComuns(o, 'corpo'))};`,
     montar('dialogo'),
   );
 }
 
 /** Transform de story para a forma com corpo rolável. */
-export function dialogComCorpoRolavelSource(
-  fixas: DialogComCorpoRolavelSnippetOptions,
-): SourceTransform<DialogComCorpoRolavelSnippetOptions> {
-  return (_gerado, ctx) => dialogComCorpoRolavelSnippet({ ...ctx.args, ...fixas });
+export function dialogWithBodyScrollableSource(
+  fixas: DialogWithBodyScrollableSnippetOptions,
+): SourceTransform<DialogWithBodyScrollableSnippetOptions> {
+  return (_gerado, ctx) => dialogWithBodyScrollableSnippet({ ...ctx.args, ...fixas });
 }

@@ -83,12 +83,12 @@ export type SidebarOptions = {
 //
 // A união abaixo é o que preserva a obrigatoriedade nas peças em que o nome
 // nunca pode faltar: sem nenhuma das duas grafias, a chamada não compila.
-type NomeAcessivelObrigatorio =
+type NameAccessibleObrigatorio =
   | { 'aria-label': string; label?: string }
   | { 'aria-label'?: string; label: string };
 
 /** Resolve as duas grafias do nome acessível, com o canônico vencendo. */
-function nomeAcessivelDe(o: { 'aria-label'?: string; label?: string }): string | undefined {
+function nameAccessibleOf(o: { 'aria-label'?: string; label?: string }): string | undefined {
   return o['aria-label'] ?? o.label;
 }
 
@@ -223,11 +223,11 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
   let gavetaEl: HTMLElement | null = null;
   let focoAntesDaGaveta: HTMLElement | null = null;
 
-  function montarGaveta(): void {
+  function mountGaveta(): void {
     overlayEl = document.createElement('div');
     overlayEl.className = 'nds-sheet-overlay';
     overlayEl.dataset.slot = 'sheet-overlay';
-    overlayEl.addEventListener('click', () => fecharGaveta());
+    overlayEl.addEventListener('click', () => closeGaveta());
 
     gavetaEl = document.createElement('div');
     gavetaEl.className = cn('nds-sheet-content', 'nds-sidebar-mobile', options.class);
@@ -266,10 +266,10 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
     document.addEventListener('keydown', handleGavetaKeydown);
   }
 
-  function abrirGaveta(): void {
+  function openGaveta(): void {
     if (gavetaAberta) return;
     focoAntesDaGaveta = document.activeElement as HTMLElement | null;
-    montarGaveta();
+    mountGaveta();
     gavetaAberta = true;
     // O foco entra no painel; sem isto o teclado continua na página por baixo,
     // que está coberta por um modal.
@@ -277,7 +277,7 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
     onMobileOpenChange?.(true);
   }
 
-  function fecharGaveta(devolverFoco = true): void {
+  function closeGaveta(devolverFocus = true): void {
     if (!gavetaAberta) return;
     // O conteúdo volta para a coluna antes de o painel sair, senão ele sairia
     // do documento junto e a barra ficaria vazia ao voltar à largura cheia.
@@ -295,14 +295,14 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
     // da página.
     const alvo = focoAntesDaGaveta;
     focoAntesDaGaveta = null;
-    if (devolverFoco && alvo?.isConnected) alvo.focus();
+    if (devolverFocus && alvo?.isConnected) alvo.focus();
     onMobileOpenChange?.(false);
   }
 
   function handleGavetaKeydown(e: KeyboardEvent): void {
     if (e.key === 'Escape') {
       e.preventDefault();
-      fecharGaveta();
+      closeGaveta();
       return;
     }
     if (e.key !== 'Tab' || !gavetaEl) return;
@@ -332,7 +332,7 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
    * fechada, o conteúdo continua guardado na coluna escondida: é para lá que
    * quem compõe segue apontando (`[data-sidebar="sidebar"]`).
    */
-  function aplicarModo(): void {
+  function applyMode(): void {
     movel = mql.matches;
     if (movel) {
       if (!gavetaAberta) {
@@ -344,7 +344,7 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
       }
       return;
     }
-    fecharGaveta(false);
+    closeGaveta(false);
     root.hidden = false;
     root.dataset.slot = 'sidebar';
   }
@@ -358,16 +358,16 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
 
   function alternar(): void {
     if (movel) {
-      if (gavetaAberta) fecharGaveta();
-      else abrirGaveta();
+      if (gavetaAberta) closeGaveta();
+      else openGaveta();
       return;
     }
     setState(!isOpen);
   }
 
   document.addEventListener('keydown', handleKeydown);
-  mql.addEventListener('change', aplicarModo);
-  aplicarModo();
+  mql.addEventListener('change', applyMode);
+  applyMode();
 
   /*
    * Quem tira a barra do documento não chama `destroy`.
@@ -382,16 +382,16 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
     {
       element: root,
       toggle: alternar,
-      open: () => (movel ? abrirGaveta() : setState(true)),
-      close: () => (movel ? fecharGaveta() : setState(false)),
+      open: () => (movel ? openGaveta() : setState(true)),
+      close: () => (movel ? closeGaveta() : setState(false)),
       getState: () => (isOpen ? 'expanded' : 'collapsed') as SidebarState,
       isMobile: () => movel,
       isMobileOpen: () => gavetaAberta,
     },
     () => {
-      fecharGaveta(false);
+      closeGaveta(false);
       document.removeEventListener('keydown', handleKeydown);
-      mql.removeEventListener('change', aplicarModo);
+      mql.removeEventListener('change', applyMode);
     },
   );
 }
@@ -435,7 +435,7 @@ export function createSidebarTrigger(
   const btn = createButton({ variant: 'ghost', size: 'icon', class: options.class });
   btn.dataset.slot = 'sidebar-trigger';
   btn.setAttribute('data-sidebar', 'trigger');
-  btn.setAttribute('aria-label', nomeAcessivelDe(options) ?? ROTULOS_SIDEBAR_PADRAO.alternar);
+  btn.setAttribute('aria-label', nameAccessibleOf(options) ?? ROTULOS_SIDEBAR_PADRAO.alternar);
   btn.appendChild(panelLeftIcon());
   btn.addEventListener('click', toggleFn);
   return btn;
@@ -521,13 +521,13 @@ export function createSidebarFooter(options: { class?: string } = {}): HTMLEleme
  * de quem compõe, e por isso falta.
  */
 export function createSidebarInput(
-  options: InputOptions & NomeAcessivelObrigatorio
+  options: InputOptions & NameAccessibleObrigatorio
 ): HTMLInputElement {
   const { label: _label, 'aria-label': _ariaLabel, ...rest } = options;
   const input = createInput({ type: 'search', ...rest, class: cn('nds-sidebar-input', rest.class) });
   input.dataset.slot = 'sidebar-input';
   input.setAttribute('data-sidebar', 'input');
-  input.setAttribute('aria-label', nomeAcessivelDe(options)!);
+  input.setAttribute('aria-label', nameAccessibleOf(options)!);
   return input;
 }
 
@@ -571,14 +571,14 @@ export function createSidebarGroupContent(options: { class?: string } = {}): HTM
  * compõe.
  */
 export function createSidebarGroupAction(
-  options: NomeAcessivelObrigatorio & { icon?: SVGElement | HTMLElement; onClick?: () => void; class?: string }
+  options: NameAccessibleObrigatorio & { icon?: SVGElement | HTMLElement; onClick?: () => void; class?: string }
 ): HTMLButtonElement {
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.className = cn('nds-sidebar-group-action', options.class);
   btn.dataset.slot = 'sidebar-group-action';
   btn.setAttribute('data-sidebar', 'group-action');
-  btn.setAttribute('aria-label', nomeAcessivelDe(options)!);
+  btn.setAttribute('aria-label', nameAccessibleOf(options)!);
   if (options.icon) btn.appendChild(options.icon);
   if (options.onClick) btn.addEventListener('click', options.onClick);
   return btn;
@@ -700,7 +700,7 @@ export function createSidebarMenuButton(
  * item o traz de volta para quem chega por teclado.
  */
 export function createSidebarMenuAction(
-  options: NomeAcessivelObrigatorio & {
+  options: NameAccessibleObrigatorio & {
     icon?: SVGElement | HTMLElement;
     showOnHover?: boolean;
     onClick?: () => void;
@@ -716,7 +716,7 @@ export function createSidebarMenuAction(
   );
   btn.dataset.slot = 'sidebar-menu-action';
   btn.setAttribute('data-sidebar', 'menu-action');
-  btn.setAttribute('aria-label', nomeAcessivelDe(options)!);
+  btn.setAttribute('aria-label', nameAccessibleOf(options)!);
   if (options.icon) btn.appendChild(options.icon);
   if (options.onClick) btn.addEventListener('click', options.onClick);
   return btn;
@@ -771,7 +771,7 @@ export function createSidebarMenuSkeleton(
   el.dataset.slot = 'sidebar-menu-skeleton';
   el.setAttribute('data-sidebar', 'menu-skeleton');
 
-  const nome = nomeAcessivelDe(options);
+  const nome = nameAccessibleOf(options);
   if (nome) {
     el.setAttribute('role', 'status');
     el.setAttribute('aria-label', nome);

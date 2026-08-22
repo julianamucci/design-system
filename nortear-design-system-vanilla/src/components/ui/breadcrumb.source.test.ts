@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  breadcrumbComMenuSnippet,
+  breadcrumbWithMenuSnippet,
   breadcrumbSnippet,
   breadcrumbSource,
-  breadcrumbSourceCom,
+  breadcrumbSourceWith,
 } from './breadcrumb.source';
 
 describe('breadcrumbSnippet', () => {
@@ -88,13 +88,13 @@ describe('breadcrumbSnippet', () => {
 
 describe('breadcrumbSource', () => {
   it('acompanha os args em vez de congelar um snippet fixo', () => {
-    const semArgs = breadcrumbSource('<nav data-slot="breadcrumb">', {});
-    const comArgs = breadcrumbSource('<nav data-slot="breadcrumb">', {
+    const noArgs = breadcrumbSource('<nav data-slot="breadcrumb">', {});
+    const withArgs = breadcrumbSource('<nav data-slot="breadcrumb">', {
       args: { niveis: ['Início', 'Componentes', 'Navegação'], atual: 'Trilha' },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("nivel('Navegação', '/navegacao')");
-    expect(comArgs).toContain("createBreadcrumbPage({ text: 'Trilha' })");
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("nivel('Navegação', '/navegacao')");
+    expect(withArgs).toContain("createBreadcrumbPage({ text: 'Trilha' })");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -106,7 +106,7 @@ describe('breadcrumbSource', () => {
 
 describe('breadcrumbSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = breadcrumbSourceCom({ niveis: ['Início'], atual: 'Componentes' });
+    const transform = breadcrumbSourceWith({ niveis: ['Início'], atual: 'Componentes' });
     const código = transform('', { args: { niveis: ['A', 'B', 'C'], atual: 'Z' } });
     expect(código).toContain("nivel('Início', '/')");
     expect(código).not.toContain("nivel('B'");
@@ -116,7 +116,7 @@ describe('breadcrumbSourceCom', () => {
 
 describe('breadcrumbComMenuSnippet', () => {
   it('mostra as duas fábricas da composição, e o gatilho que nomeia o conjunto', () => {
-    const código = breadcrumbComMenuSnippet();
+    const código = breadcrumbWithMenuSnippet();
     expect(código).toContain('createDropdownMenu({');
     expect(código).toContain('trigger: gatilho');
     expect(código).toContain("'aria-label': 'Expandir níveis ocultos'");
@@ -126,7 +126,7 @@ describe('breadcrumbComMenuSnippet', () => {
   });
 
   it('o gatilho sai do design system, sem estilo escrito à mão', () => {
-    const código = breadcrumbComMenuSnippet();
+    const código = breadcrumbWithMenuSnippet();
     expect(código).toContain('createButton({');
     // A story monta o gatilho com `style.background`/`style.border`/`style.padding`
     // à mão; o snippet não ensina valor solto em atributo de estilo.

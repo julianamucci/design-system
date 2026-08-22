@@ -3,9 +3,9 @@ import { within, expect, waitFor } from 'storybook/test';
 import { createProgress } from './progress';
 import {
   progressSource,
-  progressSourceCom,
+  progressSourceWith,
   progressSourceLista,
-  progressSourceRotulo,
+  progressSourceLabel,
 } from './progress.source';
 import {
   barrasDeProgresso,
@@ -74,7 +74,7 @@ export const Indeterminate: Story = {
     // de um valor conhecido.
     docs: {
       source: {
-        transform: progressSourceCom({ value: null, 'aria-label': 'Processando…' }),
+        transform: progressSourceWith({ value: null, 'aria-label': 'Processando…' }),
       },
     },
   },
@@ -112,7 +112,7 @@ export const WithLabel: Story = {
     // outra FORMA de snippet, não outra opção da fábrica.
     docs: {
       source: {
-        transform: progressSourceRotulo({
+        transform: progressSourceLabel({
           value: 42,
           label: 'Enviando arquivo',
           'aria-label': 'Enviando arquivo',

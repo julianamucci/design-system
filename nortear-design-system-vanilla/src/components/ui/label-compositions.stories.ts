@@ -6,8 +6,8 @@ import { createCheckbox } from './checkbox';
 import { bloco } from './label.fixtures';
 import {
   labelSource,
-  labelSourceCaixa,
-  labelSourceCom,
+  labelSourceBox,
+  labelSourceWith,
   labelSourceObrigatorio,
 } from './label.source';
 
@@ -40,7 +40,7 @@ export const WithInput: Story = {
     covers: ['visual.item4'],
     docs: {
       source: {
-        transform: labelSourceCom({
+        transform: labelSourceWith({
           text: 'Telefone',
           htmlFor: 'telefone',
           type: 'tel',
@@ -84,7 +84,7 @@ export const WithCheckbox: Story = {
   parameters: {
     docs: {
       source: {
-        transform: labelSourceCaixa({
+        transform: labelSourceBox({
           text: 'Concordo com os termos de uso',
           htmlFor: 'termos',
         }),

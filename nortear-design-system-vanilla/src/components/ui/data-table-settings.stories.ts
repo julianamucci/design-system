@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, userEvent, waitFor, expect } from 'storybook/test';
 import { createDataTable } from './data-table';
-import { dataTableSource, dataTableSourceCom } from './data-table.source';
+import { dataTableSource, dataTableSourceWith } from './data-table.source';
 import { type Invoice, invoices, baseColumns } from './data-table.fixtures';
 
 // ─── Meta ──────────────────────────────────────────────────────────────────
@@ -46,7 +46,7 @@ export const Paginated: Story = {
     // diferentes do padrão da fábrica.
     docs: {
       source: {
-        transform: dataTableSourceCom({
+        transform: dataTableSourceWith({
           enableGlobalFilter: false,
           pageSize: TAMANHO_DE_PAGINA,
           pageSizeOptions: [TAMANHO_DE_PAGINA, 10],
@@ -171,7 +171,7 @@ export const ExplicitRowLabel: Story = {
     // fallback, que é o que o Playground já documenta.
     docs: {
       source: {
-        transform: dataTableSourceCom({
+        transform: dataTableSourceWith({
           enableRowSelection: true,
           enableGlobalFilter: false,
           enablePagination: false,
@@ -236,7 +236,7 @@ export const Virtualized1000Rows: Story = {
     docs: {
       canvas: { sourceState: 'none' },
       source: {
-        transform: dataTableSourceCom({
+        transform: dataTableSourceWith({
           virtualized: true,
           maxHeight: '400px',
           enableColumnVisibility: false,

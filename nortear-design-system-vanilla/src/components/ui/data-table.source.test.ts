@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dataTableSnippet, dataTableSource, dataTableSourceCom } from './data-table.source';
+import { dataTableSnippet, dataTableSource, dataTableSourceWith } from './data-table.source';
 
 describe('dataTableSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML da grade', () => {
@@ -118,13 +118,13 @@ describe('dataTableSnippet', () => {
 
 describe('dataTableSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = dataTableSource('<div data-slot="data-table">', {});
-    const comArgs = dataTableSource('<div data-slot="data-table">', {
+    const noArgs = dataTableSource('<div data-slot="data-table">', {});
+    const withArgs = dataTableSource('<div data-slot="data-table">', {
       args: { enableRowSelection: true, enablePagination: false },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain('enableRowSelection: true');
-    expect(comArgs).toContain('enablePagination: false');
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain('enableRowSelection: true');
+    expect(withArgs).toContain('enablePagination: false');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -136,7 +136,7 @@ describe('dataTableSource', () => {
 
 describe('dataTableSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = dataTableSourceCom({ virtualized: true, maxHeight: '400px' });
+    const transform = dataTableSourceWith({ virtualized: true, maxHeight: '400px' });
     const código = transform('', { args: { enablePagination: true, enableRowSelection: true } });
     expect(código).toContain('virtualized: true');
     expect(código).toContain("maxHeight: '400px'");

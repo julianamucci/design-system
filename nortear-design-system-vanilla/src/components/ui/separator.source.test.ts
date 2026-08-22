@@ -3,7 +3,7 @@ import {
   separatorEmCardSnippet,
   separatorSnippet,
   separatorSource,
-  separatorSourceCom,
+  separatorSourceWith,
 } from './separator.source';
 
 describe('separatorSnippet', () => {
@@ -74,7 +74,7 @@ describe('separatorSource', () => {
 
 describe('separatorSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = separatorSourceCom({ orientation: 'vertical' })('', {
+    const código = separatorSourceWith({ orientation: 'vertical' })('', {
       args: { orientation: 'horizontal' },
     });
     expect(código).toContain("orientation: 'vertical'");

@@ -12,7 +12,7 @@ import { createInput } from './input';
 // que fica é a de opções — a outra não sabia dizer nada sobre erro nem sobre
 // bloqueio, e corrigir uma nunca corrigia a outra.
 
-export interface CampoRotuladoOptions {
+export interface FieldLabelledOptions {
   /** id do campo — é o que liga o rótulo ao controle. */
   id: string;
   /** Texto do rótulo visível. Campo sem rótulo não é anunciado por ninguém. */
@@ -27,7 +27,7 @@ export interface CampoRotuladoOptions {
 }
 
 /** Rótulo e campo, ligados por `for`/`id`, com a mensagem de erro quando há. */
-export function campoRotulado(opts: CampoRotuladoOptions): HTMLElement {
+export function campoRotulado(opts: FieldLabelledOptions): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.className = 'nds-stack nds-w-xs';
   wrapper.dataset.spacing = 'xs';

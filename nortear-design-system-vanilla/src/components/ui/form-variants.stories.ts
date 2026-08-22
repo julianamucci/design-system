@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { createFormField } from './form';
-import { formSource, formSourceCom } from './form.source';
+import { formSource, formSourceWith } from './form.source';
 import { createInput } from './input';
 
 // O Form não tem variante por prop — o que muda é quais peças opcionais entram
@@ -59,7 +59,7 @@ export const WithDescription: Story = {
     // snippet mostraria o campo mínimo, que é a OUTRA story.
     docs: {
       source: {
-        transform: formSourceCom({
+        transform: formSourceWith({
           label: 'Senha',
           inputType: 'password',
           description: 'Use pelo menos 8 caracteres, com letras e números.',

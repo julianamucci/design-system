@@ -3,9 +3,9 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createCodeBlock } from './code-block';
 import { withClipboardStub } from './code-block.fixtures';
 import {
-  codeBlockComRemocaoSource,
+  codeBlockWithRemovalSource,
   codeBlockSource,
-  codeBlockSourceCom,
+  codeBlockSourceWith,
 } from './code-block.source';
 import { createButton } from './button';
 import type { DestroyableElement } from '@/lib/destroy';
@@ -65,7 +65,7 @@ export const WithoutNumbering: Story = {
     covers: ['functional.item6', 'visual.item3'],
     // A numeração desligada é o assunto: o snippet do meta a esconderia, porque
     // ligada é o padrão da fábrica.
-    docs: { source: { transform: codeBlockSourceCom({ language: 'ts', showLineNumbers: false }) } },
+    docs: { source: { transform: codeBlockSourceWith({ language: 'ts', showLineNumbers: false }) } },
   },
   render: () =>
     createCodeBlock({ code: COMPOSITION_CODE, language: 'ts', showLineNumbers: false }),
@@ -155,7 +155,7 @@ export const UnknownLanguage: Story = {
     covers: ['functional.item7'],
     // A linguagem que a classificação não conhece é o assunto: sem ela no
     // snippet, a story deixaria de mostrar o que documenta.
-    docs: { source: { transform: codeBlockSourceCom({ language: 'cobol' }) } },
+    docs: { source: { transform: codeBlockSourceWith({ language: 'cobol' }) } },
   },
   render: () => createCodeBlock({ code: COMPOSITION_CODE, language: 'cobol' }),
   play: async ({ canvasElement, step }) => {
@@ -191,7 +191,7 @@ export const RemovedBeforeFeedback: Story = {
     covers: ['functional.item8'],
     // Forma própria de snippet: o assunto desta story é o que acontece na
     // SAÍDA do bloco, e a chamada sozinha não mostraria isso.
-    docs: { source: { transform: codeBlockComRemocaoSource({ language: 'ts' }) } },
+    docs: { source: { transform: codeBlockWithRemovalSource({ language: 'ts' }) } },
   },
   render: () => {
     const wrap = document.createElement('div');

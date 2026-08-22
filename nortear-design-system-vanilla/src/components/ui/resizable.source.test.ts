@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  resizableAninhadoSnippet,
+  resizableNestedSnippet,
   resizableSnippet,
   resizableSource,
-  resizableSourceAninhado,
-  resizableSourceCom,
+  resizableSourceNested,
+  resizableSourceWith,
 } from './resizable.source';
 
 describe('resizableSnippet', () => {
@@ -101,7 +101,7 @@ describe('resizableSnippet', () => {
 
 describe('resizableAninhadoSnippet', () => {
   it('monta dois grupos, cada um com o nome do próprio divisor', () => {
-    const código = resizableAninhadoSnippet({
+    const código = resizableNestedSnippet({
       interno: {
         direction: 'vertical',
         'aria-label': 'Redimensionar Editor e Console',
@@ -129,13 +129,13 @@ describe('resizableAninhadoSnippet', () => {
 
 describe('resizableSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = resizableSource('<div data-slot="resizable">', {});
-    const comArgs = resizableSource('<div data-slot="resizable">', {
+    const noArgs = resizableSource('<div data-slot="resizable">', {});
+    const withArgs = resizableSource('<div data-slot="resizable">', {
       args: { direction: 'vertical', withHandle: true },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("direction: 'vertical'");
-    expect(comArgs).toContain('withHandle: true');
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("direction: 'vertical'");
+    expect(withArgs).toContain('withHandle: true');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -147,7 +147,7 @@ describe('resizableSource', () => {
 
 describe('resizableSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = resizableSourceCom({ direction: 'vertical' });
+    const transform = resizableSourceWith({ direction: 'vertical' });
     const código = transform('', { args: { direction: 'horizontal' } });
     expect(código).toContain("direction: 'vertical'");
   });
@@ -155,7 +155,7 @@ describe('resizableSourceCom', () => {
 
 describe('resizableSourceAninhado', () => {
   it('entrega a forma aninhada, ignorando os args', () => {
-    const transform = resizableSourceAninhado({
+    const transform = resizableSourceNested({
       interno: { direction: 'vertical', 'aria-label': 'Interno' },
       externo: { 'aria-label': 'Externo' },
       vizinho: { titulo: 'Sidebar', defaultSize: 30 },

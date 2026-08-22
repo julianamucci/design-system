@@ -4,9 +4,9 @@ import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { createAlertDialog } from './alert-dialog';
 import { buildDemo } from './alert-dialog.fixtures';
-import { alertDialogSource, alertDialogSourceCom } from './alert-dialog.source';
+import { alertDialogSource, alertDialogSourceWith } from './alert-dialog.source';
 import { createButton } from './button';
-import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
+import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -99,7 +99,7 @@ export const Open: Story = {
     // por control neste arquivo.
     docs: {
       source: {
-        transform: alertDialogSourceCom({
+        transform: alertDialogSourceWith({
           defaultOpen: true,
           triggerLabel: 'Excluir item',
           title: 'Excluir item permanentemente?',
@@ -153,7 +153,7 @@ export const Confirmed: Story = {
     // play verifica.
     docs: {
       source: {
-        transform: alertDialogSourceCom({
+        transform: alertDialogSourceWith({
           defaultOpen: true,
           triggerLabel: 'Excluir',
           title: 'Confirmar exclusão',
@@ -216,7 +216,7 @@ export const Cancelled: Story = {
     // Override de story: nasce aberto, como a Confirmed ao lado.
     docs: {
       source: {
-        transform: alertDialogSourceCom({
+        transform: alertDialogSourceWith({
           defaultOpen: true,
           triggerLabel: 'Excluir',
           title: 'Confirmar exclusão',
@@ -288,7 +288,7 @@ export const Controlled: Story = {
     // control neste arquivo.
     docs: {
       source: {
-        transform: alertDialogSourceCom({
+        transform: alertDialogSourceWith({
           triggerLabel: 'Abrir via estado externo',
           title: 'Controlado pelo pai',
           description: 'Este diálogo é comandado por estado externo.',
@@ -370,14 +370,14 @@ export const ListenerCleanup: Story = {
     // sempre a mesma legenda.
     chromatic: { disable: true },
   },
-  render: () => hospedeiroDeSonda(
+  render: () => probeHost(
     'Sonda de limpeza: o diálogo é montado, aberto e removido da página pela play.',
   ),
   play: async ({ canvasElement, step }) => {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ResultadoDaSonda;
+    let sonda!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       sonda = await sondarOuvintes({
@@ -398,7 +398,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await conferirLimpeza(sonda);
+      await checkLimpeza(sonda);
     });
   },
 };

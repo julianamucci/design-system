@@ -391,11 +391,11 @@ export function createTableDocs(): HTMLElement {
       case 'variantes': {
         const codeBasica = `const { wrapper, table } = createTable();\ntable.appendChild(createTableCaption('Lista de faturas recentes'));\n\nconst thead = createTableHeader();\nconst headerRow = createTableRow();\nfor (const col of ['Fatura', 'Status', 'Método', 'Valor']) {\n  const th = createTableHead(col);\n  th.setAttribute('scope', 'col');\n  headerRow.appendChild(th);\n}\nthead.appendChild(headerRow);\ntable.appendChild(thead);\n\nconst tbody = createTableBody();\nfor (const inv of invoices) {\n  const tr = createTableRow();\n  tr.appendChild(createTableCell(inv.id));\n  tr.appendChild(createTableCell(inv.status));\n  tr.appendChild(createTableCell(inv.method));\n  tr.appendChild(createTableCell(inv.amount));\n  tbody.appendChild(tr);\n}\ntable.appendChild(tbody);`;
 
-        const codeRodape = `const tfoot = createTableFooter();\nconst footerRow = createTableRow();\nconst totalLabel = createTableCell('Total');\ntotalLabel.setAttribute('colspan', '3');\nfooterRow.appendChild(totalLabel);\nfooterRow.appendChild(createTableCell('R$ 1.250,00'));\ntfoot.appendChild(footerRow);\ntable.appendChild(tfoot);`;
+        const codeFooter = `const tfoot = createTableFooter();\nconst footerRow = createTableRow();\nconst totalLabel = createTableCell('Total');\ntotalLabel.setAttribute('colspan', '3');\nfooterRow.appendChild(totalLabel);\nfooterRow.appendChild(createTableCell('R$ 1.250,00'));\ntfoot.appendChild(footerRow);\ntable.appendChild(tfoot);`;
 
         const codeSrOnly = `table.appendChild(createTableCaption('Lista de faturas recentes', 'nds-sr-only'));`;
 
-        const codeAcoes = `const actionCell = createTableCell('');\nconst btn = createButton({\n  variant: 'ghost',\n  label: '...',\n  'aria-label': \`Ações para fatura \${inv.id}\`,\n});\nactionCell.appendChild(btn);\ntr.appendChild(actionCell);`;
+        const codeActions = `const actionCell = createTableCell('');\nconst btn = createButton({\n  variant: 'ghost',\n  label: '...',\n  'aria-label': \`Ações para fatura \${inv.id}\`,\n});\nactionCell.appendChild(btn);\ntr.appendChild(actionCell);`;
 
         return createDocsVariants({
           title: t('variants.title'),
@@ -432,7 +432,7 @@ export function createTableDocs(): HTMLElement {
             {
               name: t('variants.items.withFooter.label'),
               description: DOMPurify.sanitize(t('variants.items.withFooter.description')),
-              code: codeRodape,
+              code: codeFooter,
               previewFactory: () => {
                 const { wrapper, table } = createTable();
                 table.appendChild(createTableCaption(t('demonstration.labels.caption')));
@@ -498,7 +498,7 @@ export function createTableDocs(): HTMLElement {
             {
               name: t('variants.items.withInlineActions.label'),
               description: DOMPurify.sanitize(t('variants.items.withInlineActions.description')),
-              code: codeAcoes,
+              code: codeActions,
               previewFactory: () => {
                 const { wrapper, table } = createTable();
                 table.appendChild(createTableCaption(t('demonstration.labels.caption')));

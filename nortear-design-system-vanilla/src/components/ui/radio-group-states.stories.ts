@@ -3,7 +3,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import { createRadioGroup } from './radio-group';
 import {
   radioGroupSource,
-  radioGroupSourceCom,
+  radioGroupSourceWith,
   radioGroupSourceInvalido,
 } from './radio-group.source';
 
@@ -116,7 +116,7 @@ export const Checked: Story = {
     covers: ['visual.item2'],
     // Override de story: `defaultValue` é o assunto.
     docs: {
-      source: { transform: radioGroupSourceCom({ name: 'pagamento', defaultValue: 'pix' }) },
+      source: { transform: radioGroupSourceWith({ name: 'pagamento', defaultValue: 'pix' }) },
       description: {
         story: 'Item "Pix" marcado via `defaultValue`. Indicador interno visível, `aria-checked="true"`.',
       },
@@ -140,7 +140,7 @@ export const Disabled: Story = {
     covers: ['functional.item4', 'visual.item3'],
     // Override de story: `disabled` no grupo é o assunto.
     docs: {
-      source: { transform: radioGroupSourceCom({ name: 'pagamento', disabled: true }) },
+      source: { transform: radioGroupSourceWith({ name: 'pagamento', disabled: true }) },
       description: {
         story:
           'Grupo inteiro bloqueado por `disabled: true` nas opções do factory — item e rótulo a 50% de opacidade, cursor bloqueado, sem foco e sem clique.',
@@ -196,7 +196,7 @@ export const DisabledItem: Story = {
     // `items` — nenhum control chega lá.
     docs: {
       source: {
-        transform: radioGroupSourceCom({
+        transform: radioGroupSourceWith({
           name: 'pagamento',
           items: [
             { value: 'card', label: 'Cartão de crédito' },

@@ -29,8 +29,8 @@
 //    documentados e aplicados por ninguém. Eram isentos POR CONSUMO, com o
 //    motivo escrito. Hoje têm consumidor — alert, badge e toast escrevem o par
 //    no texto corrido do contêiner colorido — e a isenção saiu: quem responde
-//    por eles é `TextoCorridoSobreFundoSuave`, que mede a combinação que a tela
-//    realmente forma, mais `TodoParDeFeedbackTemConsumidor`, que prova que
+//    por eles é `TextCorridoSobreBackgroundSmooth`, que mede a combinação que a tela
+//    realmente forma, mais `FeedbackHasConsumidorTodoPair`, que prova que
 //    alguma regra `.nds-*` os lê.
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
@@ -64,23 +64,23 @@ export default meta;
 type Story = StoryObj;
 
 /** WCAG 1.4.3 — texto normal sobre a superfície do próprio par. */
-const MINIMO_DE_TEXTO = 4.5;
+const TEXT_MINIMUM = 4.5;
 
 /**
  * Pares de FEEDBACK: a cor semântica pinta fundo suave, nunca superfície cheia.
  *
- * Ficam fora de `ParConsumidoAlcanca4a5` porque lá o cálculo é texto sobre a cor
+ * Ficam fora de `PairConsumidoAlcanca4a5` porque lá o cálculo é texto sobre a cor
  * CHEIA, e nenhuma regra do sistema escreve assim — `--destructive-foreground`
  * sobre `hsl(var(--destructive))` opaco dá 3.09:1 no claro do tema default, um
  * número de uma tela que não existe. A combinação real é o texto sobre o fundo
- * suave COMPOSTO, e é a story `TextoCorridoSobreFundoSuave` que a mede, nos
+ * suave COMPOSTO, e é a story `TextCorridoSobreBackgroundSmooth` que a mede, nos
  * mesmos três temas e dois modos e em todos os alfas que as folhas usam.
  *
  * Não é isenção: é a mesma exigência de 4.5:1, contra o fundo certo.
  */
-const PARES_DE_FUNDO_SUAVE = ['destructive', 'info', 'success', 'warning'] as const;
+const BACKGROUND_SMOOTH_PAIRS = ['destructive', 'info', 'success', 'warning'] as const;
 
-export const TodoTokenDocumentadoExiste: Story = {
+export const TodoTokenDocumentadoExists: Story = {
   render: () => createThemeColorsDocs(),
   play: async ({ canvasElement }) => {
     const medidas = await medirSwatches(canvasElement);
@@ -98,12 +98,12 @@ export const TodoTokenDocumentadoExiste: Story = {
   },
 };
 
-export const ParConsumidoAlcanca4a5: Story = {
+export const PairConsumidoAlcanca4a5: Story = {
   render: () => createThemeColorsDocs(),
   play: async ({ canvasElement }) => {
     const todos = paresDaPagina(canvasElement);
     const cobertos = todos.filter(
-      (p) => !(PARES_DE_FUNDO_SUAVE as readonly string[]).includes(p),
+      (p) => !(BACKGROUND_SMOOTH_PAIRS as readonly string[]).includes(p),
     );
 
     // O recorte tem de sobrar alguma coisa. Se um dia a lista de fundo suave
@@ -111,7 +111,7 @@ export const ParConsumidoAlcanca4a5: Story = {
     await expect(cobertos.length).toBeGreaterThan(5);
 
     const medidas = await medirPares(canvasElement, cobertos);
-    await expect(falhasDePar(medidas, MINIMO_DE_TEXTO)).toEqual([]);
+    await expect(falhasDePar(medidas, TEXT_MINIMUM)).toEqual([]);
   },
 };
 
@@ -125,22 +125,22 @@ export const ParConsumidoAlcanca4a5: Story = {
  * mensagem, e é assim que um projeto derivado descobre que trocou o token por
  * uma cor que não se lê.
  */
-export const TextoCorridoSobreFundoSuave: Story = {
+export const TextCorridoSobreBackgroundSmooth: Story = {
   render: () => createThemeColorsDocs(),
   play: async ({ canvasElement }) => {
-    const naPagina = paresDaPagina(canvasElement);
-    const pares = PARES_DE_FUNDO_SUAVE.filter((p) => naPagina.includes(p));
+    const inPage = paresDaPagina(canvasElement);
+    const pares = BACKGROUND_SMOOTH_PAIRS.filter((p) => inPage.includes(p));
 
     // Os quatro têm de estar na tabela da página. Se um sair da paleta, esta
     // linha reprova em vez de a story medir três e passar calada.
-    await expect(pares).toEqual([...PARES_DE_FUNDO_SUAVE]);
+    await expect(pares).toEqual([...BACKGROUND_SMOOTH_PAIRS]);
     await expect(ALFAS_DE_FUNDO_SUAVE.length).toBeGreaterThan(0);
 
     const medidas = await medirParesSuaves(canvasElement, pares);
     await expect(medidas.length).toBe(
       pares.length * ALFAS_DE_FUNDO_SUAVE.length * 3 * 2, // 3 temas × 2 modos
     );
-    await expect(falhasDeParSuave(medidas, MINIMO_DE_TEXTO)).toEqual([]);
+    await expect(falhasDeParSuave(medidas, TEXT_MINIMUM)).toEqual([]);
   },
 };
 
@@ -152,10 +152,10 @@ export const TextoCorridoSobreFundoSuave: Story = {
  * a falta dessa pergunta que deixou os quatro documentados e mortos por uma
  * rodada inteira.
  */
-export const TodoParDeFeedbackTemConsumidor: Story = {
+export const FeedbackHasConsumidorTodoPair: Story = {
   render: () => createThemeColorsDocs(),
   play: async ({ canvasElement }) => {
-    const orfaos = paresSemConsumidor(canvasElement.ownerDocument, [...PARES_DE_FUNDO_SUAVE]);
+    const orfaos = paresSemConsumidor(canvasElement.ownerDocument, [...BACKGROUND_SMOOTH_PAIRS]);
     await expect(orfaos).toEqual([]);
   },
 };

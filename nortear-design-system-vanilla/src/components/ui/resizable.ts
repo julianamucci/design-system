@@ -88,9 +88,9 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
   const somaDeclarada = declarados.reduce<number>((acc, d) => acc + (d ?? 0), 0);
   const fatia = semDeclaracao > 0 ? Math.max(0, 100 - somaDeclarada) / semDeclaracao : 0;
   const bruto = declarados.map((d, i) => limitar(d ?? fatia, minimoDe(i), maximoDe(i)));
-  const somaBruta = bruto.reduce((a, b) => a + b, 0);
+  const sumBruta = bruto.reduce((a, b) => a + b, 0);
   /** Sempre normalizado para somar 100 — é o que o `aria-valuenow` anuncia. */
-  const sizes = somaBruta > 0 ? bruto.map((s) => (s / somaBruta) * 100) : bruto.map(() => 100 / count);
+  const sizes = sumBruta > 0 ? bruto.map((s) => (s / sumBruta) * 100) : bruto.map(() => 100 / count);
 
   const panelEls: HTMLElement[] = [];
   const handleEls: HTMLElement[] = [];

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { Check, Bell } from 'lucide';
 import { createBadge } from './badge';
-import { badgeEmGatilhoSourceCom, badgeSource, badgeSourceCom } from './badge.source';
+import { triggerSourceWithBadge, badgeSource, badgeSourceCom } from './badge.source';
 
 const meta: Meta = {
   tags: ['feedback'],
@@ -137,7 +137,7 @@ export const AsLink: Story = {
     covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
     docs: {
       source: {
-        transform: badgeEmGatilhoSourceCom({
+        transform: triggerSourceWithBadge({
           como: 'link',
           href: '#design',
           variant: 'secondary',
@@ -176,7 +176,7 @@ export const AsButton: Story = {
     covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
     docs: {
       source: {
-        transform: badgeEmGatilhoSourceCom({
+        transform: triggerSourceWithBadge({
           como: 'botao',
           variant: 'outline',
           label: 'React',

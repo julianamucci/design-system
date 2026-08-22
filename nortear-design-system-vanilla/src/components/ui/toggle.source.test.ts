@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  toggleBarraSnippet,
-  toggleFileiraSnippet,
+  toggleBarSnippet,
+  toggleRowSnippet,
   toggleInvalidoSnippet,
   toggleSnippet,
   toggleSource,
-  toggleSourceCom,
+  toggleSourceWith,
 } from './toggle.source';
 
 describe('toggleSnippet', () => {
@@ -76,19 +76,19 @@ describe('toggleSource', () => {
 
 describe('toggleSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = toggleSourceCom({ variant: 'outline' })('', { args: { variant: 'default' } });
+    const código = toggleSourceWith({ variant: 'outline' })('', { args: { variant: 'default' } });
     expect(código).toContain("variant: 'outline'");
   });
 
   it('aceita uma expressão própria para o callback', () => {
-    const código = toggleSourceCom({ onClick: '(pressed) => salvar(pressed)' })('', {});
+    const código = toggleSourceWith({ onClick: '(pressed) => salvar(pressed)' })('', {});
     expect(código).toContain('onClick: (pressed) => salvar(pressed)');
   });
 });
 
 describe('toggleFileiraSnippet', () => {
   it('agrupa no nds-cluster do design system, não num helper de story', () => {
-    const código = toggleFileiraSnippet([
+    const código = toggleRowSnippet([
       { icon: 'Bold', 'aria-label': 'Negrito' },
       { icon: 'Italic', 'aria-label': 'Itálico', variant: 'outline' },
     ]);
@@ -101,7 +101,7 @@ describe('toggleFileiraSnippet', () => {
 
 describe('toggleBarraSnippet', () => {
   it('nomeia o grupo — role="group" sem nome não diz de que barra se trata', () => {
-    const código = toggleBarraSnippet(
+    const código = toggleBarSnippet(
       [{ icon: 'Bold', 'aria-label': 'Negrito' }, { icon: 'Italic', 'aria-label': 'Itálico' }],
       'Formatação de texto',
     );

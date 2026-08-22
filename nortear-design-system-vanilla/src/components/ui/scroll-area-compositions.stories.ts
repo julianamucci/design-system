@@ -4,7 +4,7 @@ import { transbordo } from '@shared/testing/scroll-area-probe';
 import { createScrollArea } from './scroll-area';
 import {
   scrollAreaSource,
-  scrollAreaSourceCom,
+  scrollAreaSourceWith,
   scrollAreaSourceEmCard,
 } from './scroll-area.source';
 import { createCard, createCardHeader, createCardTitle, createCardDescription, createCardContent } from './card';
@@ -54,7 +54,7 @@ export const TagList: Story = {
     // mostraria uma lista de textos e o Badge sumiria.
     docs: {
       source: {
-        transform: scrollAreaSourceCom({
+        transform: scrollAreaSourceWith({
           size: 'xl',
           'aria-label': 'Versões publicadas',
           conteudo: 'badges',
@@ -113,7 +113,7 @@ export const HorizontalCards: Story = {
   parameters: {
     docs: {
       source: {
-        transform: scrollAreaSourceCom({
+        transform: scrollAreaSourceWith({
           size: null,
           width: '100%',
           'aria-label': 'Carrossel de produtos',
@@ -192,7 +192,7 @@ export const WideTable: Story = {
   parameters: {
     docs: {
       source: {
-        transform: scrollAreaSourceCom({
+        transform: scrollAreaSourceWith({
           size: 'xl',
           width: '100%',
           'aria-label': 'Tabela ampla',
@@ -358,11 +358,11 @@ export const InsideCard: Story = {
 
     await step('Rolar a lista não muda a caixa do card', async () => {
       const cartao = canvasElement.querySelector<HTMLElement>('[data-slot="card"]')!;
-      const alturaCartao = cartao.getBoundingClientRect().height;
+      const heightCartao = cartao.getBoundingClientRect().height;
       viewport.scrollTop = 0;
       viewport.scrollTop = 100;
       await expect(viewport.scrollTop).toBe(100);
-      await expect(cartao.getBoundingClientRect().height).toBe(alturaCartao);
+      await expect(cartao.getBoundingClientRect().height).toBe(heightCartao);
     });
   },
 };
@@ -374,7 +374,7 @@ export const Sidebar: Story = {
     // marco, e é ele que precisa de nome próprio.
     docs: {
       source: {
-        transform: scrollAreaSourceCom({
+        transform: scrollAreaSourceWith({
           size: 'xl',
           'aria-label': 'Navegação lateral',
           class: 'nds-rounded-md nds-border-default',

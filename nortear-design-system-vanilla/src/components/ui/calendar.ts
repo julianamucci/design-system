@@ -37,11 +37,11 @@ function getDayNames(locale: string): string[] {
   const fmt = new Intl.DateTimeFormat(locale, { weekday: 'short' });
   // Sem o ponto: em pt-BR o formato curto sai 'dom.', e o ponto numa coluna de
   // uma palavra só vira ruído. As quatro stacks mostram a mesma abreviação.
-  const semPonto = (s: string) => s.replace(/\.$/, '');
+  const noPonto = (s: string) => s.replace(/\.$/, '');
   // Sunday = 2020-01-05 (known Sunday as anchor)
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(2020, 0, 5 + i);
-    return semPonto(fmt.format(d));
+    return noPonto(fmt.format(d));
   });
 }
 
@@ -65,7 +65,7 @@ function isToday(date: Date): boolean {
 }
 
 /** Compara só a data, ignorando hora — é o que interessa num calendário. */
-function diaA(date: Date): number {
+function dayA(date: Date): number {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
 }
 
@@ -108,14 +108,14 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
   const ancora = selected ?? selecionadas[0] ?? intervalo.from ?? null;
 
   /** No modo múltiplo, escolher de novo tira da lista — é o que o diferencia. */
-  function alternarNaLista(date: Date): void {
+  function listToggle(date: Date): void {
     const i = selecionadas.findIndex((d) => isSameDay(d, date));
-    if (i === -1) selecionadas = [...selecionadas, date].sort((a, b) => diaA(a) - diaA(b));
+    if (i === -1) selecionadas = [...selecionadas, date].sort((a, b) => dayA(a) - dayA(b));
     else selecionadas = selecionadas.filter((_, j) => j !== i);
   }
 
   const estaSelecionada = (date: Date): boolean => {
-    if (ehIntervalo) return estadoNoIntervalo(date) !== null;
+    if (ehIntervalo) return intervaloState(date) !== null;
     if (ehMultiplo) return selecionadas.some((d) => isSameDay(d, date));
     return selected ? isSameDay(date, selected) : false;
   };
@@ -134,18 +134,18 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
      verdadeiro sempre que `ancora` é nula. Fica como rede se a origem da visão
      deixar de ser o relógio. */
   let focado: Date = ancora ?? (hojeEstaNaVisao ? today : new Date(viewYear, viewMonth, 1));
-  let devolverFoco = false;
+  let devolverFocus = false;
 
   const isoDe = (d: Date): string =>
     `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
   /** Move o dia focado e traz a visão junto quando ele cai em outro mês. */
-  function moverFoco(dias: number, meses = 0): void {
+  function moverFocus(dias: number, meses = 0): void {
     const alvo = new Date(focado.getFullYear(), focado.getMonth() + meses, focado.getDate() + dias);
     focado = alvo;
     viewYear = alvo.getFullYear();
     viewMonth = alvo.getMonth();
-    devolverFoco = true;
+    devolverFocus = true;
     render();
   }
 
@@ -154,24 +154,24 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
    * fecha o que estava aberto ou recomeça. Datas fora de ordem são trocadas —
    * quem clica no fim antes do início quis o mesmo intervalo.
    */
-  function escolherNoIntervalo(date: Date): void {
+  function intervaloChoose(date: Date): void {
     if (!intervalo.from || intervalo.to) {
       intervalo = { from: date };
-    } else if (diaA(date) < diaA(intervalo.from)) {
+    } else if (dayA(date) < dayA(intervalo.from)) {
       intervalo = { from: date, to: intervalo.from };
     } else {
       intervalo = { from: intervalo.from, to: date };
     }
   }
 
-  const estadoNoIntervalo = (date: Date): 'start' | 'middle' | 'end' | null => {
+  const intervaloState = (date: Date): 'start' | 'middle' | 'end' | null => {
     const { from, to } = intervalo;
     if (!from) return null;
     if (!to) return isSameDay(date, from) ? 'start' : null;
-    const d = diaA(date);
-    if (d === diaA(from)) return 'start';
-    if (d === diaA(to)) return 'end';
-    return d > diaA(from) && d < diaA(to) ? 'middle' : null;
+    const d = dayA(date);
+    if (d === dayA(from)) return 'start';
+    if (d === dayA(to)) return 'end';
+    return d > dayA(from) && d < dayA(to) ? 'middle' : null;
   };
 
   const root = document.createElement('div');
@@ -208,24 +208,24 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     const wrap = document.createElement('div');
     wrap.className = 'nds-calendar-caption-dropdown';
 
-    const selMes = document.createElement('select');
-    selMes.className = 'nds-calendar-select';
-    selMes.setAttribute('aria-label', rotulos.selecionarMes);
+    const selMonth = document.createElement('select');
+    selMonth.className = 'nds-calendar-select';
+    selMonth.setAttribute('aria-label', rotulos.selecionarMes);
     monthNames.forEach((nome, i) => {
       const opt = document.createElement('option');
       opt.value = String(i);
       opt.textContent = nome;
       if (i === viewMonth) opt.selected = true;
-      selMes.appendChild(opt);
+      selMonth.appendChild(opt);
     });
-    selMes.addEventListener('change', () => {
-      viewMonth = Number(selMes.value);
+    selMonth.addEventListener('change', () => {
+      viewMonth = Number(selMonth.value);
       render();
     });
 
-    const selAno = document.createElement('select');
-    selAno.className = 'nds-calendar-select';
-    selAno.setAttribute('aria-label', rotulos.selecionarAno);
+    const selYear = document.createElement('select');
+    selYear.className = 'nds-calendar-select';
+    selYear.setAttribute('aria-label', rotulos.selecionarAno);
     // A lista é completa, e não uma janela em torno do ano em vista: o painel
     // de um <select> é desenhado pelo navegador e não entrega evento de rolagem
     // ao JS, então não há onde pendurar um "carregar mais ao chegar na ponta" —
@@ -236,14 +236,14 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
       opt.value = String(ano);
       opt.textContent = String(ano);
       if (ano === viewYear) opt.selected = true;
-      selAno.appendChild(opt);
+      selYear.appendChild(opt);
     }
-    selAno.addEventListener('change', () => {
-      viewYear = Number(selAno.value);
+    selYear.addEventListener('change', () => {
+      viewYear = Number(selYear.value);
       render();
     });
 
-    wrap.append(selMes, selAno);
+    wrap.append(selMonth, selYear);
     return wrap;
   }
 
@@ -283,10 +283,10 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     // datas reais de ponta a ponta. Os dias dos meses vizinhos ficam marcados
     // como externos; quando `showOutsideDays` é falso, a casa fica vazia.
     const tbody = document.createElement('tbody');
-    const primeiroDaGrade = new Date(anoDaGrade, mesDaGrade, 1);
-    primeiroDaGrade.setDate(1 - primeiroDaGrade.getDay());
-    const diasNoMes = new Date(anoDaGrade, mesDaGrade + 1, 0).getDate();
-    const semanas = Math.ceil((new Date(anoDaGrade, mesDaGrade, 1).getDay() + diasNoMes) / 7);
+    const gridFirst = new Date(anoDaGrade, mesDaGrade, 1);
+    gridFirst.setDate(1 - gridFirst.getDay());
+    const monthDays = new Date(anoDaGrade, mesDaGrade + 1, 0).getDate();
+    const semanas = Math.ceil((new Date(anoDaGrade, mesDaGrade, 1).getDay() + monthDays) / 7);
 
     for (let week = 0; week < semanas; week++) {
       const row = document.createElement('tr');
@@ -302,9 +302,9 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
         td.setAttribute('role', 'gridcell');
 
         const date = new Date(
-          primeiroDaGrade.getFullYear(),
-          primeiroDaGrade.getMonth(),
-          primeiroDaGrade.getDate() + week * 7 + col,
+          gridFirst.getFullYear(),
+          gridFirst.getMonth(),
+          gridFirst.getDate() + week * 7 + col,
         );
         const foraDoMes = date.getMonth() !== mesDaGrade;
 
@@ -314,7 +314,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
         }
 
         const isDisabled = disabled ? disabled(date) : false;
-        const posicaoNoIntervalo = ehIntervalo ? estadoNoIntervalo(date) : null;
+        const intervaloPosition = ehIntervalo ? intervaloState(date) : null;
         const isSelected = estaSelecionada(date);
         const isTodayDate = isToday(date);
 
@@ -334,12 +334,12 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
         if (isSelected) btn.dataset.selected = '';
         if (isTodayDate) btn.dataset.today = '';
         if (foraDoMes) btn.dataset.outsideMonth = '';
-        if (posicaoNoIntervalo === 'start') btn.dataset.selectionStart = '';
-        if (posicaoNoIntervalo === 'end') btn.dataset.selectionEnd = '';
+        if (intervaloPosition === 'start') btn.dataset.selectionStart = '';
+        if (intervaloPosition === 'end') btn.dataset.selectionEnd = '';
         if (isDisabled) { btn.disabled = true; btn.dataset.disabled = ''; }
 
         btn.addEventListener('keydown', (e) => {
-          // O passo parte SEMPRE do dia deste botão. `moverFoco` anda a partir de
+          // O passo parte SEMPRE do dia deste botão. `moverFocus` anda a partir de
           // `focado`, e os dois podem estar em dias diferentes quando o foco
           // chegou aqui por fora da navegação — foco programático, restauração de
           // foco ao fechar um popover. Aí `Home` calculava o deslocamento pelo
@@ -356,19 +356,19 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
           if (e.key === 'Home' || e.key === 'End') {
             e.preventDefault();
             const alvo = e.key === 'Home' ? -date.getDay() : 6 - date.getDay();
-            moverFoco(alvo);
+            moverFocus(alvo);
             return;
           }
           const passo = passos[e.key];
           if (!passo) return;
           e.preventDefault();
-          moverFoco(passo[0], passo[1]);
+          moverFocus(passo[0], passo[1]);
         });
 
         if (!isDisabled) {
           btn.addEventListener('click', () => {
-            if (ehIntervalo) escolherNoIntervalo(date);
-            else if (ehMultiplo) alternarNaLista(date);
+            if (ehIntervalo) intervaloChoose(date);
+            else if (ehMultiplo) listToggle(date);
             else selected = date;
 
             focado = date;
@@ -467,8 +467,8 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     // O render reconstrói o DOM inteiro, então o elemento que tinha o foco
     // deixou de existir: sem devolvê-lo, cada seta jogaria o foco no body e a
     // navegação pararia no primeiro passo.
-    if (devolverFoco) {
-      devolverFoco = false;
+    if (devolverFocus) {
+      devolverFocus = false;
       root.querySelector<HTMLButtonElement>(`.nds-calendar-day-btn[data-day="${isoDe(focado)}"]`)?.focus();
     }
   }

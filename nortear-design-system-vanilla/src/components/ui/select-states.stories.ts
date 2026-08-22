@@ -3,7 +3,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSelect, type SelectItem } from './select';
 import { abridor, comRotulo } from './select.fixtures';
-import { selectSource, selectSourceCom } from './select.source';
+import { selectSource, selectSourceWith } from './select.source';
 import { medirAnelDeFoco } from '@shared/testing/select-probe';
 
 const meta: Meta = {
@@ -96,7 +96,7 @@ export const Selected: Story = {
     covers: ['visual.item2'],
     docs: {
       // O valor inicial é o assunto, e nenhum control o cobre aqui.
-      source: { transform: selectSourceCom({ defaultValue: 'rj' }) },
+      source: { transform: selectSourceWith({ defaultValue: 'rj' }) },
       description: {
         story:
           'Valor inicial não-controlado — Rio de Janeiro escolhido de partida, placeholder oculto. (Pré-selecionar serve para ver o estado; em formulário real, evite.)',
@@ -165,13 +165,13 @@ export const Open: Story = {
       // no `auto` do fallback e o painel sairia com a largura do texto mais longo
       // — divergindo das outras stacks, que recebem a variável da lib headless.
       const listbox = await waitForPortal('listbox');
-      const larguraDoCampo = gatilho.getBoundingClientRect().width;
+      const fieldWidth = gatilho.getBoundingClientRect().width;
       const publicada = parseFloat(getComputedStyle(listbox).getPropertyValue('--anchor-width'));
-      await expect(Math.abs(publicada - larguraDoCampo)).toBeLessThan(2);
+      await expect(Math.abs(publicada - fieldWidth)).toBeLessThan(2);
       // E o painel nunca sai mais ESTREITO que o campo — a folha tem um mínimo
       // próprio, então o resultado é "pelo menos a largura do campo".
       await expect(listbox.getBoundingClientRect().width).toBeGreaterThanOrEqual(
-        larguraDoCampo - 1,
+        fieldWidth - 1,
       );
     });
 
@@ -229,7 +229,7 @@ export const Disabled: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
-      source: { transform: selectSourceCom({ disabled: true }) },
+      source: { transform: selectSourceWith({ disabled: true }) },
       description: {
         story:
           'Campo bloqueado — opacidade reduzida, cursor de bloqueio, fora do percurso do Tab, e a lista não abre.',
@@ -300,7 +300,7 @@ export const DisabledItem: Story = {
     docs: {
       // A opção bloqueada é o assunto: ela mora na própria entrada da lista.
       source: {
-        transform: selectSourceCom({
+        transform: selectSourceWith({
           items: [
             { value: 'sp', label: 'São Paulo' },
             { value: 'rj', label: 'Rio de Janeiro' },
@@ -367,12 +367,12 @@ export const DisabledItem: Story = {
 
     await step('E as setas e o Enter não têm o que fazer', async () => {
       const listbox = await waitForPortal('listbox');
-      const textoAntes = gatilhoVazio.textContent;
+      const textBefore = gatilhoVazio.textContent;
       await userEvent.keyboard('{ArrowDown}{ArrowUp}{Enter}');
       // A lista continua aberta: o Enter sem opção destacada não escolhe nem fecha.
       await expect(gatilhoVazio).toHaveAttribute('aria-expanded', 'true');
       await expect(listbox.querySelectorAll('[data-highlighted]')).toHaveLength(0);
-      await expect(gatilhoVazio.textContent).toBe(textoAntes);
+      await expect(gatilhoVazio.textContent).toBe(textBefore);
       await userEvent.keyboard('{Escape}');
       await waitForPortalGone('listbox');
     });
@@ -415,7 +415,7 @@ export const Invalid: Story = {
       // O erro é o assunto: o campo se anuncia inválido e aponta a mensagem que
       // explica o porquê — os dois lados do par entram no snippet.
       source: {
-        transform: selectSourceCom({
+        transform: selectSourceWith({
           id: 'estado-invalido',
           'aria-invalid': true,
           mensagemDeErro: 'Selecione um estado para continuar.',

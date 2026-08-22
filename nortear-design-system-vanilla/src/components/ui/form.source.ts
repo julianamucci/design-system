@@ -11,7 +11,7 @@ import {
 } from '@/lib/story-source';
 
 /** Um campo do grupo ou do formulário. */
-export type FormCampo = {
+export type FormField = {
   label: string;
   /** `text` é o padrão do input e não entra no snippet. */
   type?: string;
@@ -45,7 +45,7 @@ export type FormSnippetOptions = {
 };
 
 /** `createInput({ … })` / `createTextarea({ … })` em uma linha. */
-function controleDoCampo(c: FormCampo | FormSnippetOptions): string {
+function fieldControl(c: FormField | FormSnippetOptions): string {
   const ehTextarea = 'controle' in c && c.controle === 'textarea';
   const tipo = 'type' in c ? c.type : (c as FormSnippetOptions).inputType;
   const pares = opcoes([
@@ -64,8 +64,8 @@ function controleDoCampo(c: FormCampo | FormSnippetOptions): string {
 }
 
 /** Um `createFormField({ … })` recuado para entrar numa lista de filhos. */
-function blocoDeCampo(c: FormCampo, recuo: string): string {
-  const linhas = [`${recuo}  label: ${texto(c.label)},`, `${recuo}  input: ${controleDoCampo(c)},`];
+function fieldBlock(c: FormField, recuo: string): string {
+  const linhas = [`${recuo}  label: ${texto(c.label)},`, `${recuo}  input: ${fieldControl(c)},`];
   if (c.description !== undefined) {
     linhas.push(`${recuo}  description: ${texto(c.description)},`);
   }
@@ -82,7 +82,7 @@ function blocoDeCampo(c: FormCampo, recuo: string): string {
  */
 export function formSnippet(o: FormSnippetOptions = {}): string {
   const precisaDeVariavel = o.ariaInvalid === true;
-  const controle = controleDoCampo(o.inputType === undefined ? { ...o, inputType: 'email' } : o);
+  const controle = fieldControl(o.inputType === undefined ? { ...o, inputType: 'email' } : o);
 
   const linhas = opcoes([
     ['label', texto(o.label ?? 'Email')],
@@ -113,15 +113,15 @@ export const formSource: SourceTransform<FormSnippetOptions> = (_gerado, ctx) =>
   formSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function formSourceCom(fixas: FormSnippetOptions): SourceTransform<FormSnippetOptions> {
+export function formSourceWith(fixas: FormSnippetOptions): SourceTransform<FormSnippetOptions> {
   return (_gerado, ctx) => formSnippet({ ...ctx.args, ...fixas });
 }
 
 // ─── Segunda forma: grupo com legenda ────────────────────────────────────────
 
-export type FormComFieldsetSnippetOptions = {
+export type FormWithFieldsetSnippetOptions = {
   legend?: string;
-  campos?: FormCampo[];
+  campos?: FormField[];
 };
 
 /**
@@ -132,7 +132,7 @@ export type FormComFieldsetSnippetOptions = {
  * antes de cada rótulo. Um título por cima de uma pilha de campos parece igual
  * e não anuncia nada.
  */
-export function formComFieldsetSnippet(o: FormComFieldsetSnippetOptions = {}): string {
+export function formWithFieldsetSnippet(o: FormWithFieldsetSnippetOptions = {}): string {
   const campos = o.campos ?? [
     { label: 'Rua', placeholder: 'ex: Av. Paulista, 1000' },
     { label: 'Cidade', placeholder: 'ex: São Paulo' },
@@ -140,7 +140,7 @@ export function formComFieldsetSnippet(o: FormComFieldsetSnippetOptions = {}): s
 
   const linhas = opcoes([
     ['legend', texto(o.legend ?? 'Endereço de entrega')],
-    ['children', `[\n${campos.map((c) => blocoDeCampo(c, '    ')).join('\n')}\n  ]`],
+    ['children', `[\n${campos.map((c) => fieldBlock(c, '    ')).join('\n')}\n  ]`],
   ]);
 
   return snippet(
@@ -155,15 +155,15 @@ export function formComFieldsetSnippet(o: FormComFieldsetSnippetOptions = {}): s
 
 /** Transform de story para a forma com grupo. */
 export function formComFieldsetSource(
-  fixas: FormComFieldsetSnippetOptions,
-): SourceTransform<FormComFieldsetSnippetOptions> {
-  return (_gerado, ctx) => formComFieldsetSnippet({ ...ctx.args, ...fixas });
+  fixas: FormWithFieldsetSnippetOptions,
+): SourceTransform<FormWithFieldsetSnippetOptions> {
+  return (_gerado, ctx) => formWithFieldsetSnippet({ ...ctx.args, ...fixas });
 }
 
 // ─── Terceira forma: formulário com vários campos ────────────────────────────
 
-export type FormComVariosCamposSnippetOptions = {
-  campos?: FormCampo[];
+export type FormWithMultipleFieldsSnippetOptions = {
+  campos?: FormField[];
   /** Rótulo do botão de envio. Vazio = formulário sem envio. */
   submitLabel?: string;
 };
@@ -175,15 +175,15 @@ export type FormComVariosCamposSnippetOptions = {
  * que o teclado os visita, e porque o controle nem sempre é um `<input>` — a
  * área de texto passa pelo mesmo campo e pela mesma associação de rótulo.
  */
-export function formComVariosCamposSnippet(o: FormComVariosCamposSnippetOptions = {}): string {
+export function formWithMultipleFieldsSnippet(o: FormWithMultipleFieldsSnippetOptions = {}): string {
   const campos = o.campos ?? [
     { label: 'Nome completo', name: 'nome', placeholder: 'ex: João da Silva' },
     { label: 'Email', type: 'email', name: 'email', placeholder: 'ex: joao@empresa.com' },
   ];
   const submitLabel = o.submitLabel ?? 'Salvar';
-  const temTextarea = campos.some((c) => c.controle === 'textarea');
+  const hasTextarea = campos.some((c) => c.controle === 'textarea');
 
-  const filhos = campos.map((c) => blocoDeCampo(c, '  '));
+  const filhos = campos.map((c) => fieldBlock(c, '  '));
   if (submitLabel) {
     filhos.push(`  createButton({ label: ${texto(submitLabel)}, type: 'submit' }),`);
   }
@@ -192,7 +192,7 @@ export function formComVariosCamposSnippet(o: FormComVariosCamposSnippetOptions 
     [
       importar('form', 'createFormField'),
       importar('input', 'createInput'),
-      temTextarea ? importar('textarea', 'createTextarea') : undefined,
+      hasTextarea ? importar('textarea', 'createTextarea') : undefined,
       submitLabel ? importar('button', 'createButton') : undefined,
     ]
       .filter(Boolean)
@@ -208,7 +208,7 @@ ${filhos.join('\n')}
 
 /** Transform de story para a forma com vários campos. */
 export function formComVariosCamposSource(
-  fixas: FormComVariosCamposSnippetOptions,
-): SourceTransform<FormComVariosCamposSnippetOptions> {
-  return (_gerado, ctx) => formComVariosCamposSnippet({ ...ctx.args, ...fixas });
+  fixas: FormWithMultipleFieldsSnippetOptions,
+): SourceTransform<FormWithMultipleFieldsSnippetOptions> {
+  return (_gerado, ctx) => formWithMultipleFieldsSnippet({ ...ctx.args, ...fixas });
 }

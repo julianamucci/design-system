@@ -67,7 +67,7 @@ let _sheetCounter = 0;
  */
 const abertos = new Set<{ fechar: () => void }>();
 
-function fecharOutrosPaineis(atual: { fechar: () => void }): void {
+function closeOutrosPanels(atual: { fechar: () => void }): void {
   for (const registro of [...abertos]) {
     if (registro !== atual) registro.fechar();
   }
@@ -107,15 +107,15 @@ export function createSheet(options: SheetOptions): DestroyableElement {
 
   const registro = {
     fechar: () => {
-      const estavaAberto = panelEl !== null;
-      desmontarPainel();
-      if (estavaAberto) onOpenChange?.(false);
+      const estavaOpen = panelEl !== null;
+      desmontarPanel();
+      if (estavaOpen) onOpenChange?.(false);
     },
   };
 
   function open(): void {
     // Antes de pôr mais um painel na tela, tire da tela o que já estava lá.
-    fecharOutrosPaineis(registro);
+    closeOutrosPanels(registro);
 
     previousFocus = document.activeElement as HTMLElement;
 
@@ -201,7 +201,7 @@ export function createSheet(options: SheetOptions): DestroyableElement {
    * Separado do fechamento por vontade de quem usa: aqui não se devolve foco
    * (o elemento anterior pode ter saído do DOM junto) nem se anuncia motivo.
    */
-  function desmontarPainel(): void {
+  function desmontarPanel(): void {
     overlayEl?.remove();
     panelEl?.remove();
     overlayEl = null;
@@ -212,7 +212,7 @@ export function createSheet(options: SheetOptions): DestroyableElement {
 
   // PATCH: api — motivo do fechamento exposto para analytics (ver PATCHES.md#vanilla-sheet-onclose-reason)
   function closeWithReason(reason: SheetCloseReason): void {
-    desmontarPainel();
+    desmontarPanel();
     previousFocus?.focus();
     onClose?.(reason);
     onOpenChange?.(false);

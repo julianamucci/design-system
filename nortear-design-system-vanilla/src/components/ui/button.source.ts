@@ -48,7 +48,7 @@ export type ButtonSnippetOptions = {
  * no `append` — que é como as stories os compõem.
  */
 export function buttonSnippet(o: ButtonSnippetOptions = {}): string {
-  const comTextoEIcone = Boolean(o.icon && o.label);
+  const withTextEIcone = Boolean(o.icon && o.label);
   // O Playground registra um espião em `args.onClick`, e o que chega aqui é uma
   // FUNÇÃO, não um trecho de código. Interpolada, ela sairia como o corpo do
   // mock no painel Code. Só a string escrita por uma story entra no snippet.
@@ -57,7 +57,7 @@ export function buttonSnippet(o: ButtonSnippetOptions = {}): string {
   const linhas = opcoes([
     ['variant', o.variant && o.variant !== 'default' ? texto(o.variant) : undefined],
     ['size', o.size && o.size !== 'default' ? texto(o.size) : undefined],
-    ['label', o.label && !comTextoEIcone ? texto(o.label) : undefined],
+    ['label', o.label && !withTextEIcone ? texto(o.label) : undefined],
     ['aria-label', o.ariaLabel ? texto(o.ariaLabel) : undefined],
     ['aria-busy', o.ariaBusy ? 'true' : undefined],
     ['aria-invalid', o.ariaInvalid ? 'true' : undefined],
@@ -73,17 +73,17 @@ export function buttonSnippet(o: ButtonSnippetOptions = {}): string {
     ? `createButtonIcon(${texto(o.icon)}${o.iconSpin ? ', { spin: true }' : ''})`
     : undefined;
 
-  const blocoDoConteudo = o.childrenElement
+  const contentBlock = o.childrenElement
     ? `const conteudo = document.createElement('span');
 conteudo.textContent = ${texto(o.childrenElement)};`
     : undefined;
 
-  const blocoDoRotulo = comTextoEIcone
+  const labelBlock = withTextEIcone
     ? `const rotulo = document.createElement('span');
 rotulo.textContent = ${texto(o.label!)};`
     : undefined;
 
-  const composicao = comTextoEIcone
+  const composicao = withTextEIcone
     ? o.iconSide === 'right'
       ? `botao.append(rotulo, ${icone});`
       : `botao.append(${icone}, rotulo);`
@@ -96,8 +96,8 @@ rotulo.textContent = ${texto(o.label!)};`
     o.children
       ? '// Conteúdo em HTML é sanitizado antes de chegar ao DOM: a marcação\n// segura sobrevive e o vetor de execução é removido.'
       : undefined,
-    blocoDoConteudo,
-    blocoDoRotulo,
+    contentBlock,
+    labelBlock,
     `const botao = ${chamada('createButton', linhas)};`,
     composicao,
     montar('botao'),
@@ -121,14 +121,14 @@ export const buttonSource: SourceTransform<ButtonSnippetOptions> = (_gerado, ctx
   buttonSnippet({ ...PADRAO, ...ctx.args });
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function buttonSourceCom(
+export function buttonSourceWith(
   fixas: ButtonSnippetOptions,
 ): SourceTransform<ButtonSnippetOptions> {
   return (_gerado, ctx) => buttonSnippet({ ...PADRAO, ...ctx.args, ...fixas });
 }
 
 /** Tamanhos em que o botão não tem texto: o ícone é o conteúdo inteiro. */
-const TAMANHOS_DE_ICONE: ReadonlySet<string> = new Set(['icon', 'icon-sm', 'icon-lg']);
+const ICON_SIZES: ReadonlySet<string> = new Set(['icon', 'icon-sm', 'icon-lg']);
 
 /**
  * Transform do Playground.
@@ -140,7 +140,7 @@ const TAMANHOS_DE_ICONE: ReadonlySet<string> = new Set(['icon', 'icon-sm', 'icon
  */
 export const buttonPlaygroundSource: SourceTransform<ButtonSnippetOptions> = (_gerado, ctx) => {
   const args = { ...PADRAO, ...ctx.args };
-  if (!TAMANHOS_DE_ICONE.has(String(args.size))) return buttonSnippet(args);
+  if (!ICON_SIZES.has(String(args.size))) return buttonSnippet(args);
   return buttonSnippet({
     ...args,
     label: undefined,
@@ -152,7 +152,7 @@ export const buttonPlaygroundSource: SourceTransform<ButtonSnippetOptions> = (_g
 // ─── Par de ações ─────────────────────────────────────────────────────────────
 
 /** O que o par de ações precisa mostrar. */
-export type ButtonParDeAcoesSnippetOptions = {
+export type ActionsSnippetOptionsButtonPair = {
   /** Ação secundária, à esquerda. */
   cancelar?: string;
   /** Ação primária, à direita. */
@@ -165,7 +165,7 @@ export type ButtonParDeAcoesSnippetOptions = {
  * A ordem é o assunto — a primária fica à DIREITA em contexto ocidental —, e
  * por isso o snippet mostra o contêiner que as alinha, não dois botões soltos.
  */
-export function buttonParDeAcoesSnippet(o: ButtonParDeAcoesSnippetOptions = {}): string {
+export function actionsSnippetButtonPair(o: ActionsSnippetOptionsButtonPair = {}): string {
   return snippet(
     importar('button', 'createButton'),
     `const acoes = document.createElement('div');
@@ -182,16 +182,16 @@ acoes.append(
 }
 
 /** Transform de story para o par de ações. */
-export function buttonParDeAcoesSourceCom(
-  fixas: ButtonParDeAcoesSnippetOptions = {},
-): SourceTransform<ButtonParDeAcoesSnippetOptions> {
-  return (_gerado, ctx) => buttonParDeAcoesSnippet({ ...ctx.args, ...fixas });
+export function actionsSourceWithButtonPair(
+  fixas: ActionsSnippetOptionsButtonPair = {},
+): SourceTransform<ActionsSnippetOptionsButtonPair> {
+  return (_gerado, ctx) => actionsSnippetButtonPair({ ...ctx.args, ...fixas });
 }
 
 // ─── Link com aparência de botão ──────────────────────────────────────────────
 
 /** O que o link com aparência de botão precisa mostrar. */
-export type ButtonComoLinkSnippetOptions = {
+export type ButtonAsLinkSnippetOptions = {
   href?: string;
   label?: string;
   variant?: ButtonVariant;
@@ -205,7 +205,7 @@ export type ButtonComoLinkSnippetOptions = {
  * fazer é NAVEGAR, e a semântica de link é o que entrega destino, menu de
  * contexto e abertura em outra aba. A aparência é o que se empresta.
  */
-export function buttonComoLinkSnippet(o: ButtonComoLinkSnippetOptions = {}): string {
+export function buttonAsLinkSnippet(o: ButtonAsLinkSnippetOptions = {}): string {
   const argumentos = [texto(o.variant ?? 'link')];
   if (o.size && o.size !== 'default') argumentos.push(texto(o.size));
 
@@ -220,8 +220,8 @@ link.textContent = ${texto(o.label ?? 'Ver documentação')};`,
 }
 
 /** Transform de story para o link com aparência de botão. */
-export function buttonComoLinkSourceCom(
-  fixas: ButtonComoLinkSnippetOptions = {},
-): SourceTransform<ButtonComoLinkSnippetOptions> {
-  return (_gerado, ctx) => buttonComoLinkSnippet({ ...ctx.args, ...fixas });
+export function buttonAsLinkSourceWith(
+  fixas: ButtonAsLinkSnippetOptions = {},
+): SourceTransform<ButtonAsLinkSnippetOptions> {
+  return (_gerado, ctx) => buttonAsLinkSnippet({ ...ctx.args, ...fixas });
 }

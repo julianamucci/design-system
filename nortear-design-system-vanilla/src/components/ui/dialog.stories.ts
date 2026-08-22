@@ -88,11 +88,11 @@ function buildPlayground(args: DialogArgs): HTMLElement {
     onOpenChange: args.onOpenChange,
   });
 
-  const fecharPeloOverlay = () => {
+  const closePeloOverlay = () => {
     document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')?.click();
   };
-  cancel.addEventListener('click', fecharPeloOverlay);
-  action.addEventListener('click', fecharPeloOverlay);
+  cancel.addEventListener('click', closePeloOverlay);
+  action.addEventListener('click', closePeloOverlay);
 
   return dialog;
 }

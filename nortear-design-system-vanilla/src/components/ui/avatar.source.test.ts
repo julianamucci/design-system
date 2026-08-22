@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  avatarEmGrupoSnippet,
+  groupSnippetAvatar,
   avatarGranularSnippet,
   avatarSnippet,
   avatarSource,
-  avatarSourceCom,
+  avatarSourceWith,
 } from './avatar.source';
 
 describe('avatarSnippet', () => {
@@ -57,13 +57,13 @@ describe('avatarSnippet', () => {
 
 describe('avatarSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = avatarSource('<span data-slot="avatar">', {});
-    const comArgs = avatarSource('<span data-slot="avatar">', {
+    const noArgs = avatarSource('<span data-slot="avatar">', {});
+    const withArgs = avatarSource('<span data-slot="avatar">', {
       args: { size: 'lg', fallback: 'JP' },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("size: 'lg'");
-    expect(comArgs).toContain("fallbackText: 'JP'");
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("size: 'lg'");
+    expect(withArgs).toContain("fallbackText: 'JP'");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -75,7 +75,7 @@ describe('avatarSource', () => {
 
 describe('avatarSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = avatarSourceCom({ size: 'sm' });
+    const transform = avatarSourceWith({ size: 'sm' });
     const código = transform('', { args: { size: '2xl' } });
     expect(código).toContain("size: 'sm'");
     expect(código).not.toContain("size: '2xl'");
@@ -106,7 +106,7 @@ describe('avatarGranularSnippet', () => {
 
 describe('avatarEmGrupoSnippet', () => {
   it('compõe a fila com as três fábricas, e o contador fecha a lista', () => {
-    const código = avatarEmGrupoSnippet({ 'aria-label': 'Participantes', excedente: '+3' });
+    const código = groupSnippetAvatar({ 'aria-label': 'Participantes', excedente: '+3' });
     expect(código).toContain('createAvatarGroup');
     // O snippet ensina o nome canônico: o painel Code é onde alguém copia a
     // chamada, e um apelido depreciado ali vira o nome que o produto adota.

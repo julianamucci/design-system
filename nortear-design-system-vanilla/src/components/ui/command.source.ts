@@ -21,7 +21,7 @@ export type CommandItemSnippet = {
 };
 
 /** Traço entre dois blocos — união discriminada, como na fábrica. */
-export type CommandEntradaSnippet = CommandItemSnippet | { type: 'separator' };
+export type CommandEntrySnippet = CommandItemSnippet | { type: 'separator' };
 
 export type CommandSnippetOptions = {
   placeholder?: string;
@@ -29,13 +29,13 @@ export type CommandSnippetOptions = {
   /** Só afeta a lista padrão: com grupos, cada comando declara o seu. */
   showGroups?: boolean;
   /** Lista explícita, quando a story mostra uma opção que a padrão não tem. */
-  items?: CommandEntradaSnippet[];
+  items?: CommandEntrySnippet[];
   /** Corpo do callback de escolha, quando a story o exercita. */
   onSelect?: string;
 };
 
 /** Lista canônica: dois blocos nomeados, que é o arranjo mais comum da paleta. */
-function itensPadrao(comGrupos: boolean): CommandEntradaSnippet[] {
+function itemsDefault(comGrupos: boolean): CommandEntrySnippet[] {
   const componentes = comGrupos ? 'Componentes' : undefined;
   const utilitarios = comGrupos ? 'Utilitários' : undefined;
   return [
@@ -45,7 +45,7 @@ function itensPadrao(comGrupos: boolean): CommandEntradaSnippet[] {
   ];
 }
 
-function literalDoItem(entrada: CommandEntradaSnippet): string {
+function literalDoItem(entrada: CommandEntrySnippet): string {
   if ('type' in entrada) return "{ type: 'separator' }";
   const partes = [`value: ${texto(entrada.value)}`, `label: ${texto(entrada.label)}`];
   if (entrada.group) partes.push(`group: ${texto(entrada.group)}`);
@@ -60,21 +60,21 @@ function literalDoItem(entrada: CommandEntradaSnippet): string {
  * prefixa só a PRIMEIRA linha de cada opção, então as de dentro do array já
  * saem daqui no recuo final.
  */
-function literalDosItens(itens: CommandEntradaSnippet[]): string {
+function itemsLiteral(itens: CommandEntrySnippet[]): string {
   return `[\n${itens.map((i) => `    ${literalDoItem(i)},`).join('\n')}\n  ]`;
 }
 
 /** O texto do callback só entra quando é texto: nos args ele chega como função. */
-function corpoDoCallback(valor: unknown): string | undefined {
+function callbackBody(valor: unknown): string | undefined {
   return typeof valor === 'string' && valor.length > 0 ? valor : undefined;
 }
 
-function opcoesDaPaleta(o: CommandSnippetOptions): string[] {
+function paletteOptions(o: CommandSnippetOptions): string[] {
   return opcoes([
     ['placeholder', o.placeholder ? texto(o.placeholder) : undefined],
     ['emptyMessage', o.emptyMessage ? texto(o.emptyMessage) : undefined],
-    ['items', literalDosItens(o.items ?? itensPadrao(o.showGroups !== false))],
-    ['onSelect', corpoDoCallback(o.onSelect)],
+    ['items', itemsLiteral(o.items ?? itemsDefault(o.showGroups !== false))],
+    ['onSelect', callbackBody(o.onSelect)],
   ]);
 }
 
@@ -82,7 +82,7 @@ function opcoesDaPaleta(o: CommandSnippetOptions): string[] {
 export function commandSnippet(o: CommandSnippetOptions = {}): string {
   return snippet(
     importar('command', 'createCommand'),
-    `const paleta = ${chamada('createCommand', opcoesDaPaleta(o))};`,
+    `const paleta = ${chamada('createCommand', paletteOptions(o))};`,
     montar('paleta'),
   );
 }
@@ -95,7 +95,7 @@ export function commandSnippet(o: CommandSnippetOptions = {}): string {
  * um botão comum, e sem o papel o leitor de tela anuncia só "botão".
  */
 export function commandEmPopoverSnippet(o: CommandSnippetOptions = {}): string {
-  const linhas = opcoesDaPaleta({
+  const linhas = paletteOptions({
     ...o,
     onSelect: o.onSelect ??
       "(value) => {\n    valor.textContent = value;\n    // Escolher fecha o painel: senão ele fica por cima do que a pessoa\n    // acabou de escolher.\n    if (gatilho.getAttribute('aria-expanded') === 'true') gatilho.click();\n  }",
@@ -143,7 +143,7 @@ export function commandEmDialogSnippet(o: CommandSnippetOptions = {}): string {
       importar('dialog', 'createDialog'),
     ].join('\n'),
     "const gatilho = createButton({ variant: 'outline', label: 'Buscar' });",
-    `const paleta = ${chamada('createCommand', opcoesDaPaleta(o))};`,
+    `const paleta = ${chamada('createCommand', paletteOptions(o))};`,
     `const dialogo = ${chamada('createDialog', opcoes([
       ['trigger', 'gatilho'],
       ['title', texto('Command Palette')],
@@ -176,7 +176,7 @@ export const commandSource: SourceTransform<CommandSnippetOptions> = (_gerado, c
   commandSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function commandSourceCom(
+export function commandSourceWith(
   fixas: CommandSnippetOptions,
 ): SourceTransform<CommandSnippetOptions> {
   return (_gerado, ctx) => commandSnippet({ ...ctx.args, ...fixas });

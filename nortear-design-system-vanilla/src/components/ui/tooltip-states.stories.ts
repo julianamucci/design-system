@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createTooltip } from './tooltip';
-import { balaoDe, limparPortal, wrap } from './tooltip.fixtures';
-import { tooltipSource, tooltipSourceCom } from './tooltip.source';
+import { balaoDe, clearPortal, wrap } from './tooltip.fixtures';
+import { tooltipSource, tooltipSourceWith } from './tooltip.source';
 import { createButton } from './button';
-import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
+import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
 // Os estados que o conteúdo compartilhado descreve: fechado (o inicial), aberto,
 // aberto por hover (depois da espera interna) e aberto por foco (na hora). A
@@ -12,7 +12,7 @@ import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSon
 // pode depender do mouse.
 
 /** Espera interna da factory antes de abrir no hover, em ms. */
-const ESPERA_DO_HOVER = 300;
+const HOVER_WAIT = 300;
 
 /** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
 function espera(ms: number): Promise<void> {
@@ -104,7 +104,7 @@ export const Open: Story = {
     });
 
     await step('Cleanup antes do postVisit', async () => {
-      limparPortal();
+      clearPortal();
     });
   },
 };
@@ -130,13 +130,13 @@ export const Hover: Story = {
         async () => {
           await expect(balaoDe(gatilho)).not.toBeNull();
         },
-        { timeout: ESPERA_DO_HOVER * 8 },
+        { timeout: HOVER_WAIT * 8 },
       );
       await expect(balaoDe(gatilho)).toHaveAttribute('role', 'tooltip');
     });
 
     await step('Cleanup antes do postVisit', async () => {
-      limparPortal();
+      clearPortal();
     });
   },
 };
@@ -176,7 +176,7 @@ export const PersistenceInBubble: Story = {
     covers: ['functional.item4'],
     docs: {
       source: {
-        transform: tooltipSourceCom({
+        transform: tooltipSourceWith({
           triggerLabel: 'Compartilhar',
           content: 'Cria um link público de leitura',
           side: 'bottom',
@@ -241,7 +241,7 @@ export const PersistenceInBubble: Story = {
 
     await step('Cleanup antes do postVisit', async () => {
       gatilho.blur();
-      limparPortal();
+      clearPortal();
     });
   },
 };
@@ -260,21 +260,21 @@ export const ListenerCleanup: Story = {
     controls: { disable: true },
     docs: {
       source: {
-        transform: tooltipSourceCom({ triggerLabel: 'Ajuda', content: 'Texto de ajuda.' }),
+        transform: tooltipSourceWith({ triggerLabel: 'Ajuda', content: 'Texto de ajuda.' }),
       },
     },
     // A story existe para o que acontece DEPOIS da saída do nó: a foto seria
     // sempre a mesma legenda.
     chromatic: { disable: true },
   },
-  render: () => hospedeiroDeSonda(
+  render: () => probeHost(
     'Sonda de limpeza: o balão é montado, exibido por foco e removido da página pela play.',
   ),
   play: async ({ canvasElement, step }) => {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ResultadoDaSonda;
+    let sonda!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       sonda = await sondarOuvintes({
@@ -293,7 +293,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await conferirLimpeza(sonda);
+      await checkLimpeza(sonda);
     });
   },
 };

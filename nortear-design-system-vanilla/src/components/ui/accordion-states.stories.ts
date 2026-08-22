@@ -2,7 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createAccordion, type AccordionOptions } from './accordion';
-import { accordionSource, accordionSourceCom } from './accordion.source';
+import { accordionSource, accordionSourceWith } from './accordion.source';
 
 const meta: Meta = {
   tags: ['disclosure'],
@@ -101,7 +101,7 @@ export const Open: Story = {
     // por control nenhum.
     docs: {
       source: {
-        transform: accordionSourceCom({ defaultValue: 'item-1', items: OPEN_ITEM }),
+        transform: accordionSourceWith({ defaultValue: 'item-1', items: OPEN_ITEM }),
       },
       description: {
         story: 'Item expandido. O conteúdo é visível e o chevron rotaciona 180°.',
@@ -140,7 +140,7 @@ export const Disabled: Story = {
     // Override de story: a chave está no item, e o snippet do meta não mostraria
     // o `disabled` que é o assunto daqui.
     docs: {
-      source: { transform: accordionSourceCom({ items: DISABLED_ITEMS }) },
+      source: { transform: accordionSourceWith({ items: DISABLED_ITEMS }) },
       description: {
         story: 'Item desabilitado. Não responde a cliques e tem opacidade reduzida para sinalizar indisponibilidade.',
       },
@@ -168,7 +168,7 @@ export const FocusVisible: Story = {
     // Override de story: o valor inicial não passa por control nenhum.
     docs: {
       source: {
-        transform: accordionSourceCom({ defaultValue: 'item-1', items: FOCUS_ITEMS }),
+        transform: accordionSourceWith({ defaultValue: 'item-1', items: FOCUS_ITEMS }),
       },
       description: {
         story: 'Estado de foco via teclado. Use Tab para navegar entre triggers e verificar o focus ring visível.',

@@ -8,7 +8,7 @@ import {
   formasDeDado,
 } from '@shared/testing/chart-probe';
 import { createChart } from './chart';
-import { chartSource, chartSourceCom } from './chart.source';
+import { chartSource, chartSourceWith } from './chart.source';
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 
@@ -47,7 +47,7 @@ export const SeriesColor: Story = {
       // Override de story: a cor mora DENTRO do item de série, e é isso que o
       // snippet precisa mostrar — não uma opção de topo.
       source: {
-        transform: chartSourceCom({
+        transform: chartSourceWith({
           dados: 'serieUnica',
           color: ROXO,
           'aria-label': 'Acessos mensais no desktop, em cor autoral',
@@ -98,7 +98,7 @@ export const CustomHeight: Story = {
     docs: {
       // Override de story: a altura é o assunto, e o valor dela é o da story.
       source: {
-        transform: chartSourceCom({
+        transform: chartSourceWith({
           height: ALTURA,
           'aria-label': 'Acessos mensais, em bloco mais alto',
         }),

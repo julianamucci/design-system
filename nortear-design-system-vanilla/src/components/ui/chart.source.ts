@@ -24,7 +24,7 @@ import type { ChartType } from './chart';
  * `xAxis` + `series` (várias séries alinhadas ao eixo). Cada story exercita uma
  * delas, e o snippet precisa mostrar a que ela usa.
  */
-export type ChartSnippetDados = 'simples' | 'umPonto' | 'serieUnica' | 'multi' | 'rosca' | 'vazio';
+export type ChartSnippetData = 'simples' | 'umPonto' | 'serieUnica' | 'multi' | 'rosca' | 'vazio';
 
 /** O que as stories usam da `ChartOptions` e que o snippet precisa mostrar. */
 export type ChartSnippetOptions = {
@@ -38,7 +38,7 @@ export type ChartSnippetOptions = {
   renderer?: 'svg' | 'canvas';
   /** O arg do Playground se chama `className`; a opção da fábrica é `class`. */
   className?: string;
-  dados?: ChartSnippetDados;
+  dados?: ChartSnippetData;
   /** Cor autoral de série, fora da paleta de tokens. */
   color?: string;
   /** Frase mostrada no lugar do desenho quando não há dado. */
@@ -56,7 +56,7 @@ const PADRAO: ChartSnippetOptions = {
 };
 
 /** O bloco de dado e as opções que o entregam à fábrica. */
-function dadosDoSnippet(o: ChartSnippetOptions): {
+function snippetData(o: ChartSnippetOptions): {
   bloco?: string;
   pares: Array<[string, string | undefined]>;
 } {
@@ -129,7 +129,7 @@ ${serie('Mobile', '[120, 190, 165, 98, 174, 158]')}
 
 /** A chamada real de `createChart` com as opções da story. */
 export function chartSnippet(o: ChartSnippetOptions = {}): string {
-  const { bloco, pares } = dadosDoSnippet(o);
+  const { bloco, pares } = snippetData(o);
 
   const linhas = opcoes([
     ...pares,
@@ -159,7 +159,7 @@ export const chartSource: SourceTransform<ChartSnippetOptions> = (_gerado, ctx) 
   chartSnippet({ ...PADRAO, ...ctx.args });
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function chartSourceCom(fixas: ChartSnippetOptions): SourceTransform<ChartSnippetOptions> {
+export function chartSourceWith(fixas: ChartSnippetOptions): SourceTransform<ChartSnippetOptions> {
   return (_gerado, ctx) => chartSnippet({ ...PADRAO, ...ctx.args, ...fixas });
 }
 
@@ -182,7 +182,7 @@ export type ChartEmCardSnippetOptions = ChartSnippetOptions & {
  * continua sendo o `aria-label`.
  */
 export function chartEmCardSnippet(o: ChartEmCardSnippetOptions = {}): string {
-  const { bloco, pares } = dadosDoSnippet(o);
+  const { bloco, pares } = snippetData(o);
 
   const linhas = opcoes([
     ...pares,
@@ -213,7 +213,7 @@ card.append(cabecalho, conteudo);`,
 }
 
 /** Transform de story para o gráfico dentro de um Card. */
-export function chartEmCardSourceCom(
+export function cardSourceWithChart(
   fixas: ChartEmCardSnippetOptions = {},
 ): SourceTransform<ChartEmCardSnippetOptions> {
   return (_gerado, ctx) => chartEmCardSnippet({ ...ctx.args, ...fixas });

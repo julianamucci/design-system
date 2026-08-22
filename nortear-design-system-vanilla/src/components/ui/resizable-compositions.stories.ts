@@ -4,8 +4,8 @@ import { createResizablePanel } from './resizable';
 import { frame } from './resizable.fixtures';
 import {
   resizableSource,
-  resizableSourceAninhado,
-  resizableSourceCom,
+  resizableSourceNested,
+  resizableSourceWith,
 } from './resizable.source';
 
 const meta: Meta = {
@@ -98,7 +98,7 @@ export const EditorWithPreview: Story = {
   parameters: {
     docs: {
       source: {
-        transform: resizableSourceCom({
+        transform: resizableSourceWith({
           withHandle: true,
           'aria-label': 'Redimensionar Editor e Preview — use setas para ajustar',
           panels: [
@@ -156,7 +156,7 @@ export const SidebarWithContentAndConsole: Story = {
     // snippet — cada grupo nomeia o próprio divisor.
     docs: {
       source: {
-        transform: resizableSourceAninhado({
+        transform: resizableSourceNested({
           interno: {
             direction: 'vertical',
             withHandle: true,
@@ -233,7 +233,7 @@ export const ListDetail: Story = {
   parameters: {
     docs: {
       source: {
-        transform: resizableSourceCom({
+        transform: resizableSourceWith({
           withHandle: true,
           'aria-label': 'Redimensionar Lista e Detalhe — use setas para ajustar',
           panels: [
@@ -286,7 +286,7 @@ export const ThreeColumns: Story = {
     // por divisor — o array de `aria-label` — deixa de ser opcional.
     docs: {
       source: {
-        transform: resizableSourceCom({
+        transform: resizableSourceWith({
           withHandle: true,
           'aria-label': [
             'Redimensionar a coluna Navegação — use setas para ajustar',

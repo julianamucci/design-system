@@ -33,7 +33,7 @@ const UI = join(process.cwd(), 'src', 'components', 'ui');
  */
 const arquivos = readdirSync(UI).filter((f) => f.endsWith('.stories.ts'));
 
-const ehPortao = (arquivo: string) =>
+const ehGate = (arquivo: string) =>
   readFileSync(join(UI, arquivo), 'utf8').includes("title: 'QA/");
 
 describe('fiação do painel Code', () => {
@@ -41,7 +41,7 @@ describe('fiação do painel Code', () => {
     expect(arquivos.length).toBeGreaterThan(150);
   });
 
-  it.each(arquivos.filter((f) => !ehPortao(f)))(
+  it.each(arquivos.filter((f) => !ehGate(f)))(
     '%s declara docs.source.transform no meta',
     (arquivo) => {
       const conteudo = readFileSync(join(UI, arquivo), 'utf8');
@@ -53,7 +53,7 @@ describe('fiação do painel Code', () => {
   );
 
   it.each(arquivos)('%s importa a transform de um módulo `.source`', (arquivo) => {
-    if (ehPortao(arquivo)) return;
+    if (ehGate(arquivo)) return;
     const conteudo = readFileSync(join(UI, arquivo), 'utf8');
     // Função exportada de `<slug>.source.ts`, nunca lambda inline: a saída do
     // painel não aparece no DOM durante a `play`, então só a função exportada

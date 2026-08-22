@@ -4,7 +4,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { esperarEncostarNaBorda } from '@shared/testing/sheet-geometry';
 import { createSheet, type SheetSide } from './sheet';
 import { makeFooter } from './sheet.fixtures';
-import { sheetSource, sheetSourceCom } from './sheet.source';
+import { sheetSource, sheetSourceWith } from './sheet.source';
 import { createButton } from './button';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -97,7 +97,7 @@ export const Left: Story = {
     // override o painel Code mostraria a direção errada.
     docs: {
       source: {
-        transform: sheetSourceCom({
+        transform: sheetSourceWith({
           side: 'left',
           triggerLabel: 'Abrir painel esquerdo',
           title: 'Painel esquerdo',
@@ -125,7 +125,7 @@ export const Top: Story = {
   parameters: {
     docs: {
       source: {
-        transform: sheetSourceCom({
+        transform: sheetSourceWith({
           side: 'top',
           triggerLabel: 'Abrir painel superior',
           title: 'Painel superior',
@@ -154,7 +154,7 @@ export const Bottom: Story = {
     covers: ['visual.item3'],
     docs: {
       source: {
-        transform: sheetSourceCom({
+        transform: sheetSourceWith({
           side: 'bottom',
           triggerLabel: 'Abrir painel inferior',
           title: 'Painel inferior',

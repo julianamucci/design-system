@@ -11,7 +11,7 @@ import {
 } from '@/lib/story-source';
 
 /** Uma opção escolhível, na forma que a fábrica aceita. */
-export type SelectOpcaoSnippet = {
+export type SelectOptionSnippet = {
   value: string;
   label: string;
   disabled?: boolean;
@@ -20,9 +20,9 @@ export type SelectOpcaoSnippet = {
 };
 
 /** Entrada da lista — a mesma união discriminada da fábrica. */
-export type SelectEntradaSnippet =
-  | SelectOpcaoSnippet
-  | { type: 'group'; label: string; items: SelectOpcaoSnippet[] }
+export type SelectEntrySnippet =
+  | SelectOptionSnippet
+  | { type: 'group'; label: string; items: SelectOptionSnippet[] }
   | { type: 'separator' };
 
 export type SelectSnippetOptions = {
@@ -42,22 +42,22 @@ export type SelectSnippetOptions = {
   'aria-invalid'?: boolean;
   /** Mensagem de erro ligada ao campo por `aria-describedby`. */
   mensagemDeErro?: string;
-  items?: SelectEntradaSnippet[];
+  items?: SelectEntrySnippet[];
   /** Presença liga a linha do callback; string troca a expressão mostrada. */
   onValueChange?: unknown;
 };
 
-const CALLBACK_PADRAO = '(valor) => salvarEstado(valor)';
+const CALLBACK_DEFAULT = '(valor) => salvarEstado(valor)';
 
 /** Lista canônica: quatro opções planas, que é o arranjo mais comum do campo. */
-const ITENS_PADRAO: SelectEntradaSnippet[] = [
+const ITEMS_DEFAULT: SelectEntrySnippet[] = [
   { value: 'sp', label: 'São Paulo' },
   { value: 'rj', label: 'Rio de Janeiro' },
   { value: 'mg', label: 'Minas Gerais' },
   { value: 'rs', label: 'Rio Grande do Sul' },
 ];
 
-function literalDaOpcao(o: SelectOpcaoSnippet): string {
+function optionLiteral(o: SelectOptionSnippet): string {
   const partes = [`value: ${texto(o.value)}`, `label: ${texto(o.label)}`];
   if (o.icon) {
     partes.push(
@@ -69,22 +69,22 @@ function literalDaOpcao(o: SelectOpcaoSnippet): string {
 }
 
 /** Uma entrada da lista, já indentada para caber dentro da chamada. */
-function literalDaEntrada(entrada: SelectEntradaSnippet, recuo: string): string {
+function entryLiteral(entrada: SelectEntrySnippet, recuo: string): string {
   if ('type' in entrada && entrada.type === 'separator') return `${recuo}{ type: 'separator' },`;
   if ('type' in entrada && entrada.type === 'group') {
     return `${recuo}{
 ${recuo}  type: 'group',
 ${recuo}  label: ${texto(entrada.label)},
 ${recuo}  items: [
-${entrada.items.map((i) => `${recuo}    ${literalDaOpcao(i)},`).join('\n')}
+${entrada.items.map((i) => `${recuo}    ${optionLiteral(i)},`).join('\n')}
 ${recuo}  ],
 ${recuo}},`;
   }
-  return `${recuo}${literalDaOpcao(entrada as SelectOpcaoSnippet)},`;
+  return `${recuo}${optionLiteral(entrada as SelectOptionSnippet)},`;
 }
 
-function literalDosItens(itens: SelectEntradaSnippet[], recuo = '  '): string {
-  return `[\n${itens.map((i) => literalDaEntrada(i, `${recuo}  `)).join('\n')}\n${recuo}]`;
+function itemsLiteral(itens: SelectEntrySnippet[], recuo = '  '): string {
+  return `[\n${itens.map((i) => entryLiteral(i, `${recuo}  `)).join('\n')}\n${recuo}]`;
 }
 
 function idDoCampo(o: SelectSnippetOptions): string {
@@ -99,7 +99,7 @@ function idDoCampo(o: SelectSnippetOptions): string {
  * exibido. Quando existe rótulo visível, `aria-labelledby` aponta para ele — um
  * texto só, e quem enxerga e quem ouve leem a mesma coisa.
  */
-function linhasDoCampo(o: SelectSnippetOptions, recuo = '  '): string[] {
+function fieldLines(o: SelectSnippetOptions, recuo = '  '): string[] {
   const id = idDoCampo(o);
   const nome = o['aria-label'] ?? o.labelText ?? 'Estado';
   return opcoes([
@@ -115,13 +115,13 @@ function linhasDoCampo(o: SelectSnippetOptions, recuo = '  '): string[] {
     ['required', o.required ? 'true' : undefined],
     ['aria-invalid', o['aria-invalid'] ? 'true' : undefined],
     ['aria-describedby', o.mensagemDeErro ? texto(`${id}-erro`) : undefined],
-    ['items', literalDosItens(o.items ?? ITENS_PADRAO, recuo)],
+    ['items', itemsLiteral(o.items ?? ITEMS_DEFAULT, recuo)],
     [
       'onValueChange',
       o.onValueChange
         ? typeof o.onValueChange === 'string'
           ? o.onValueChange
-          : CALLBACK_PADRAO
+          : CALLBACK_DEFAULT
         : undefined,
     ],
   ]);
@@ -151,7 +151,7 @@ export function selectSnippet(o: SelectSnippetOptions = {}): string {
   return snippet(
     importar('select', 'createSelect'),
     rotulo(o),
-    `const campo = ${chamada('createSelect', linhasDoCampo(o))};`,
+    `const campo = ${chamada('createSelect', fieldLines(o))};`,
     erro,
     `document.querySelector('#app')?.append(rotulo, campo${erro ? ', erro' : ''});`,
   );
@@ -164,22 +164,22 @@ export function selectSnippet(o: SelectSnippetOptions = {}): string {
  * `<input type="hidden">` com o `name`, e é ele que o `FormData` nativo enxerga
  * — sem código de quem consome. Sem o formulário em volta, não há o que provar.
  */
-export function selectEmFormularioSnippet(o: SelectSnippetOptions = {}): string {
-  const comNome: SelectSnippetOptions = { name: 'state', required: true, ...o };
+export function formSnippetSelect(o: SelectSnippetOptions = {}): string {
+  const withName: SelectSnippetOptions = { name: 'state', required: true, ...o };
   return snippet(
     [importar('select', 'createSelect'), importar('button', 'createButton')].join('\n'),
     `const formulario = document.createElement('form');
 formulario.className = 'nds-stack nds-border-default nds-rounded-lg nds-w-sm nds-p-4';
 formulario.dataset.spacing = 'md';`,
-    rotulo(comNome),
-    `const campo = ${chamada('createSelect', linhasDoCampo(comNome))};`,
+    rotulo(withName),
+    `const campo = ${chamada('createSelect', fieldLines(withName))};`,
     `formulario.append(rotulo, campo, createButton({ type: 'submit', label: 'Continuar' }));`,
     `formulario.addEventListener('submit', (evento) => {
   evento.preventDefault();
   // O valor viaja pelo campo escondido que a fábrica mantém: é ele que a
   // serialização nativa enxerga.
   const dados = new FormData(formulario);
-  enviar(dados.get(${texto(comNome.name ?? 'state')}));
+  enviar(dados.get(${texto(withName.name ?? 'state')}));
 });`,
     montar('formulario'),
   );
@@ -194,13 +194,13 @@ export const selectSource: SourceTransform<SelectSnippetOptions> = (_gerado, ctx
   selectSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function selectSourceCom(fixas: SelectSnippetOptions): SourceTransform<SelectSnippetOptions> {
+export function selectSourceWith(fixas: SelectSnippetOptions): SourceTransform<SelectSnippetOptions> {
   return (_gerado, ctx) => selectSnippet({ ...ctx.args, ...fixas });
 }
 
 /** Transform de story para o campo dentro de um formulário. */
-export function selectSourceEmFormulario(
+export function formSelectSource(
   fixas: SelectSnippetOptions = {},
 ): SourceTransform<SelectSnippetOptions> {
-  return (_gerado, ctx) => selectEmFormularioSnippet({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => formSnippetSelect({ ...ctx.args, ...fixas });
 }

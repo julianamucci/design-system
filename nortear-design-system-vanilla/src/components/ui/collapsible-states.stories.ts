@@ -5,7 +5,7 @@ import { makeContent } from './collapsible.fixtures';
 import {
   collapsibleControladoSource,
   collapsibleSource,
-  collapsibleSourceCom,
+  collapsibleSourceWith,
 } from './collapsible.source';
 
 const meta: Meta = {
@@ -91,7 +91,7 @@ export const OpenByDefault: Story = {
       // `defaultOpen` é o assunto, e ele é o oposto do padrão da fábrica: sem
       // override o snippet do meta o esconderia.
       source: {
-        transform: collapsibleSourceCom({ trigger: 'Ocultar filtros avançados', defaultOpen: true }),
+        transform: collapsibleSourceWith({ trigger: 'Ocultar filtros avançados', defaultOpen: true }),
       },
       description: {
         story: 'Modo não-controlado com <code>defaultOpen: true</code>. O painel renderiza expandido na montagem sem controle externo de estado.',
@@ -232,7 +232,7 @@ export const Disabled: Story = {
     covers: ['functional.item6', 'visual.item5'],
     docs: {
       source: {
-        transform: collapsibleSourceCom({
+        transform: collapsibleSourceWith({
           trigger: 'Filtros avançados (desabilitado)',
           disabled: true,
         }),

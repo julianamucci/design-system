@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { menubarSnippet, menubarSource, menubarSourceCom } from './menubar.source';
+import { menubarSnippet, menubarSource, menubarSourceWith } from './menubar.source';
 
 describe('menubarSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML da barra', () => {
@@ -138,7 +138,7 @@ describe('menubarSource', () => {
 
 describe('menubarSourceCom', () => {
   it('sobrepõe os args da story com a estrutura fixa', () => {
-    const transform = menubarSourceCom({
+    const transform = menubarSourceWith({
       menus: [{ label: 'Exibir', items: [{ type: 'checkbox', label: 'Régua', checked: true }] }],
       defaultOpen: 0,
     });

@@ -2,15 +2,15 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { createDialog } from './dialog';
 import {
-  dialogComCorpoRolavelSource,
+  dialogWithBodyScrollableSource,
   dialogComFormularioSource,
   dialogSource,
-  dialogSourceCom,
+  dialogSourceWith,
 } from './dialog.source';
 import { createButton } from './button';
 import {
   abrir,
-  abrirNaMontagem,
+  mountOpen,
   botaoFecharDoCanto,
   buildField,
   conferirNomeEDescricao,
@@ -58,7 +58,7 @@ export const Default: Story = {
     docs: { description: { story: 'Title + Description + Footer com ação primária.' } },
   },
   render: () =>
-    abrirNaMontagem(
+    mountOpen(
       createDialog({
         trigger: createButton({ variant: 'outline', label: 'Editar perfil' }),
         title: 'Editar perfil',
@@ -113,7 +113,7 @@ export const WithForm: Story = {
       buildField('dialog-name', 'Nome', 'text', 'Maria Souza'),
       buildField('dialog-email', 'E-mail', 'email', 'maria@exemplo.com'),
     );
-    return abrirNaMontagem(
+    return mountOpen(
       createDialog({
         trigger: createButton({ variant: 'outline', label: 'Editar perfil' }),
         title: 'Editar perfil',
@@ -156,7 +156,7 @@ export const WithScrollContent: Story = {
     // esta composição ensina, e um corpo de parágrafo não mostraria nada disso.
     docs: {
       source: {
-        transform: dialogComCorpoRolavelSource({
+        transform: dialogWithBodyScrollableSource({
           triggerLabel: 'Ler termos',
           title: 'Termos de uso',
           description: 'Leia atentamente antes de aceitar.',
@@ -184,7 +184,7 @@ export const WithScrollContent: Story = {
       p.textContent = `Parágrafo ${i}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.`;
       longBody.appendChild(p);
     }
-    return abrirNaMontagem(
+    return mountOpen(
       createDialog({
         trigger: createButton({ variant: 'outline', label: 'Ler termos' }),
         title: 'Termos de uso',
@@ -223,7 +223,7 @@ export const NoFooter: Story = {
     // é exatamente o que esta composição existe para NÃO ter.
     docs: {
       source: {
-        transform: dialogSourceCom({
+        transform: dialogSourceWith({
           triggerLabel: 'Sobre este recurso',
           title: 'Sobre este recurso',
           description: 'Detalhes técnicos exibidos para fins informativos. Sem ações.',
@@ -235,7 +235,7 @@ export const NoFooter: Story = {
     },
   },
   render: () =>
-    abrirNaMontagem(
+    mountOpen(
       createDialog({
         trigger: createButton({ variant: 'outline', label: 'Sobre este recurso' }),
         title: 'Sobre este recurso',
@@ -270,7 +270,7 @@ export const WithDestructiveAction: Story = {
     // destrutiva — que é o único assunto desta composição.
     docs: {
       source: {
-        transform: dialogSourceCom({
+        transform: dialogSourceWith({
           triggerLabel: 'Remover item',
           title: 'Remover item da lista?',
           description: 'O item sai desta lista, mas continua disponível na biblioteca.',
@@ -288,7 +288,7 @@ export const WithDestructiveAction: Story = {
     },
   },
   render: () =>
-    abrirNaMontagem(
+    mountOpen(
       createDialog({
         trigger: createButton({ variant: 'outline', label: 'Remover item' }),
         title: 'Remover item da lista?',
@@ -323,7 +323,7 @@ export const CustomCloseInFooter: Story = {
     // composição demonstra.
     docs: {
       source: {
-        transform: dialogSourceCom({
+        transform: dialogSourceWith({
           triggerLabel: 'Abrir guia',
           title: 'Próximos passos',
           description: 'Continue o fluxo ou volte ao início.',
@@ -342,15 +342,15 @@ export const CustomCloseInFooter: Story = {
     },
   },
   render: () => {
-    const fecharNoRodape = createButton({ variant: 'ghost', label: 'Fechar' });
+    const footerClose = createButton({ variant: 'ghost', label: 'Fechar' });
     // O botão precisa FECHAR de verdade: a factory não liga um `DialogClose`
     // sozinha, e um "Fechar" que não fecha seria a story documentando o
     // contrário do que promete. O clique no overlay é o caminho público.
-    fecharNoRodape.addEventListener('click', () => {
+    footerClose.addEventListener('click', () => {
       document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')?.click();
     });
 
-    return abrirNaMontagem(
+    return mountOpen(
       createDialog({
         trigger: createButton({ variant: 'outline', label: 'Abrir guia' }),
         title: 'Próximos passos',
@@ -359,7 +359,7 @@ export const CustomCloseInFooter: Story = {
         footer: [
           createButton({ variant: 'outline', label: 'Voltar' }),
           createButton({ variant: 'default', label: 'Continuar' }),
-          fecharNoRodape,
+          footerClose,
         ],
         showCloseButton: false,
       }),

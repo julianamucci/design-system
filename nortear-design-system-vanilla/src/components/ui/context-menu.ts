@@ -151,10 +151,10 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
   let subTriggerEl: HTMLElement | null = null;
   let isOpen = false;
   let radioValue = options.radioValue;
-  let timerCliqueFora: ReturnType<typeof setTimeout> | null = null;
+  let timerClickOutside: ReturnType<typeof setTimeout> | null = null;
 
   /** Definição por sub-gatilho — procurar pelo texto do rótulo quebra na tradução. */
-  const defPorSubGatilho = new WeakMap<HTMLElement, ContextMenuItemDef>();
+  const subTriggerDef = new WeakMap<HTMLElement, ContextMenuItemDef>();
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'context-menu';
@@ -280,12 +280,12 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       if (item.inset) li.dataset.inset = 'true';
       fillItemContent(li, item);
       li.appendChild(createChevronIcon());
-      defPorSubGatilho.set(li, item);
+      subTriggerDef.set(li, item);
 
-      li.addEventListener('mouseenter', () => abrirSubmenu(li, item));
+      li.addEventListener('mouseenter', () => openSubmenu(li, item));
       li.addEventListener('click', (e) => {
         e.stopPropagation();
-        abrirSubmenu(li, item);
+        openSubmenu(li, item);
       });
 
       menu.appendChild(li);
@@ -347,9 +347,9 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
     return menu;
   }
 
-  function abrirSubmenu(gatilho: HTMLElement, def: ContextMenuItemDef): void {
+  function openSubmenu(gatilho: HTMLElement, def: ContextMenuItemDef): void {
     if (subTriggerEl === gatilho && subPanelEl) return;
-    fecharSubmenu();
+    closeSubmenu();
 
     subPanelEl = buildMenu(def.items ?? [], 'context-menu-sub-content');
     subPanelEl.style.position = 'absolute';
@@ -363,7 +363,7 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
     subTriggerEl = gatilho;
   }
 
-  function fecharSubmenu(): void {
+  function closeSubmenu(): void {
     subPanelEl?.remove();
     subPanelEl = null;
     subTriggerEl?.setAttribute('aria-expanded', 'false');
@@ -402,8 +402,8 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
     // Adiado para o clique que ABRIU não fechar em seguida. O timer é guardado
     // porque o fechamento pode chegar antes dele: sem cancelar, o ouvinte era
     // registrado DEPOIS da limpeza e ficava para sempre.
-    timerCliqueFora = setTimeout(() => {
-      timerCliqueFora = null;
+    timerClickOutside = setTimeout(() => {
+      timerClickOutside = null;
       document.addEventListener('click', handleOutsideClick);
     }, 0);
 
@@ -411,26 +411,26 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
   }
 
   /**
-   * `devolverFoco` distingue quem fechou. Escape e escolha de item devolvem o
+   * `devolverFocus` distingue quem fechou. Escape e escolha de item devolvem o
    * foco à área — sem isso ele cai no `<body>` e quem navega por teclado perde o
    * lugar (`testes.functional.item2`). Clique fora e Tab NÃO devolvem: ali a
    * pessoa já está indo para outro lugar, e roubar o foco de volta desfaria o
    * gesto.
    */
-  function close(devolverFoco = true): void {
-    fecharSubmenu();
+  function close(devolverFocus = true): void {
+    closeSubmenu();
     panelEl?.remove();
     panelEl = null;
     isOpen = false;
 
-    if (timerCliqueFora !== null) {
-      clearTimeout(timerCliqueFora);
-      timerCliqueFora = null;
+    if (timerClickOutside !== null) {
+      clearTimeout(timerClickOutside);
+      timerClickOutside = null;
     }
     document.removeEventListener('keydown', handleKeydown);
     document.removeEventListener('click', handleOutsideClick);
 
-    if (devolverFoco && trigger.isConnected) trigger.focus();
+    if (devolverFocus && trigger.isConnected) trigger.focus();
 
     onOpenChange?.(false);
   }
@@ -442,7 +442,7 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       e.preventDefault();
       if (subPanelEl) {
         const gatilho = subTriggerEl;
-        fecharSubmenu();
+        closeSubmenu();
         gatilho?.focus();
         return;
       }
@@ -454,10 +454,10 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
 
     if (e.key === 'ArrowRight') {
       const gatilho = ativo?.closest<HTMLElement>('[data-slot="context-menu-sub-trigger"]');
-      const def = gatilho ? defPorSubGatilho.get(gatilho) : undefined;
+      const def = gatilho ? subTriggerDef.get(gatilho) : undefined;
       if (gatilho && def) {
         e.preventDefault();
-        abrirSubmenu(gatilho, def);
+        openSubmenu(gatilho, def);
         if (subPanelEl) getMenuItems(subPanelEl)[0]?.focus();
         return;
       }
@@ -466,7 +466,7 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
     if (e.key === 'ArrowLeft' && subPanelEl?.contains(ativo)) {
       e.preventDefault();
       const gatilho = subTriggerEl;
-      fecharSubmenu();
+      closeSubmenu();
       gatilho?.focus();
       return;
     }

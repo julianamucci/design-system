@@ -27,7 +27,7 @@ export type SeparatorSnippetOptions = {
  * linhas sairia desalinhada da lista de irmãos. São no máximo quatro opções
  * curtas — cabem.
  */
-function chamadaDoSeparador(o: SeparatorSnippetOptions): string {
+function separatorCall(o: SeparatorSnippetOptions): string {
   const pares = opcoes([
     // Só o que difere do padrão entra: `horizontal`, `decorative: true` e
     // `emphasis: 'default'` são o que a fábrica já assume.
@@ -75,7 +75,7 @@ secao.dataset.spacing = 'md';`;
     container,
     bloco(primeiro, o.antes ?? (vertical ? 'Item A' : 'Seção superior')),
     bloco(segundo, o.depois ?? (vertical ? 'Item B' : 'Seção inferior')),
-    `secao.append(${primeiro}, ${chamadaDoSeparador(o)}, ${segundo});`,
+    `secao.append(${primeiro}, ${separatorCall(o)}, ${segundo});`,
     montar('secao'),
   );
 }
@@ -108,7 +108,7 @@ cabecalho.append(
     `const conteudo = createCardContent();
 conteudo.textContent = ${texto(o.depois ?? 'Total: R$ 249,90')};`,
     `const cartao = createCard({ class: 'nds-max-w-md' });
-cartao.append(cabecalho, ${chamadaDoSeparador(o)}, conteudo);`,
+cartao.append(cabecalho, ${separatorCall(o)}, conteudo);`,
     montar('cartao'),
   );
 }
@@ -122,7 +122,7 @@ export const separatorSource: SourceTransform<SeparatorSnippetOptions> = (_gerad
   separatorSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function separatorSourceCom(
+export function separatorSourceWith(
   fixas: SeparatorSnippetOptions,
 ): SourceTransform<SeparatorSnippetOptions> {
   return (_gerado, ctx) => separatorSnippet({ ...ctx.args, ...fixas });

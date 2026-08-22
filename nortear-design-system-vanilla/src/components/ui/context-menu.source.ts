@@ -11,7 +11,7 @@ import {
 } from '@/lib/story-source';
 
 /** Uma entrada do menu, na forma que a fábrica aceita. */
-export type ContextMenuEntradaSnippet = {
+export type ContextMenuEntrySnippet = {
   /** `item` é o padrão e por isso não entra no snippet. */
   type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio' | 'submenu';
   value?: string;
@@ -23,7 +23,7 @@ export type ContextMenuEntradaSnippet = {
   checked?: boolean;
   indeterminate?: boolean;
   /** Itens do submenu, quando `type: 'submenu'`. */
-  items?: ContextMenuEntradaSnippet[];
+  items?: ContextMenuEntrySnippet[];
 };
 
 export type ContextMenuSnippetOptions = {
@@ -33,23 +33,23 @@ export type ContextMenuSnippetOptions = {
   showSeparator?: boolean;
   showDestructive?: boolean;
   /** Lista explícita, quando a story mostra uma peça que a padrão não tem. */
-  items?: ContextMenuEntradaSnippet[];
+  items?: ContextMenuEntrySnippet[];
   /** Valor corrente do grupo de escolha única. */
   radioValue?: string;
   /** Corpo do callback de abertura, quando a story o exercita. */
   onOpenChange?: string;
 };
 
-const AREA_PADRAO = 'Clique com o botão direito aqui';
+const AREA_DEFAULT = 'Clique com o botão direito aqui';
 
 /**
  * Menu canônico: ação, ação, traço e a ação destrutiva. É o mesmo conjunto que
  * os controls do Playground ligam e desligam.
  */
-function itensPadrao(o: ContextMenuSnippetOptions): ContextMenuEntradaSnippet[] {
-  const comAtalho = o.showShortcuts !== false;
-  const itens: ContextMenuEntradaSnippet[] = [
-    { label: 'Editar', value: 'edit', shortcut: comAtalho ? '⌘E' : undefined },
+function itemsDefault(o: ContextMenuSnippetOptions): ContextMenuEntrySnippet[] {
+  const withShortcut = o.showShortcuts !== false;
+  const itens: ContextMenuEntrySnippet[] = [
+    { label: 'Editar', value: 'edit', shortcut: withShortcut ? '⌘E' : undefined },
     { label: 'Duplicar', value: 'duplicate' },
   ];
   if (o.showSeparator !== false) itens.push({ type: 'separator' });
@@ -58,15 +58,15 @@ function itensPadrao(o: ContextMenuSnippetOptions): ContextMenuEntradaSnippet[] 
       label: 'Excluir',
       value: 'delete',
       variant: 'destructive',
-      shortcut: comAtalho ? '⌫' : undefined,
+      shortcut: withShortcut ? '⌫' : undefined,
     });
   }
   return itens;
 }
 
 /** Uma entrada por linha, com o submenu recuado dentro da entrada que o abre. */
-function linhasDasEntradas(
-  entradas: ContextMenuEntradaSnippet[],
+function entriesLines(
+  entradas: ContextMenuEntrySnippet[],
   recuo: string,
 ): string[] {
   return entradas.flatMap((entrada) => {
@@ -87,7 +87,7 @@ function linhasDasEntradas(
       `${recuo}{`,
       ...partes.map((p) => `${recuo}  ${p},`),
       `${recuo}  items: [`,
-      ...linhasDasEntradas(entrada.items, `${recuo}    `),
+      ...entriesLines(entrada.items, `${recuo}    `),
       `${recuo}  ],`,
       `${recuo}},`,
     ];
@@ -95,12 +95,12 @@ function linhasDasEntradas(
 }
 
 /** O array já indentado para caber dentro da chamada. */
-function literalDasEntradas(entradas: ContextMenuEntradaSnippet[]): string {
-  return `[\n${linhasDasEntradas(entradas, '    ').join('\n')}\n  ]`;
+function entriesLiteral(entradas: ContextMenuEntrySnippet[]): string {
+  return `[\n${entriesLines(entradas, '    ').join('\n')}\n  ]`;
 }
 
 /** O texto do callback só entra quando é texto: nos args ele chega como função. */
-function corpoDoCallback(valor: unknown): string | undefined {
+function callbackBody(valor: unknown): string | undefined {
   return typeof valor === 'string' && valor.length > 0 ? valor : undefined;
 }
 
@@ -113,9 +113,9 @@ function corpoDoCallback(valor: unknown): string | undefined {
 export function contextMenuSnippet(o: ContextMenuSnippetOptions = {}): string {
   const linhas = opcoes([
     ['trigger', 'area'],
-    ['items', literalDasEntradas(o.items ?? itensPadrao(o))],
+    ['items', entriesLiteral(o.items ?? itemsDefault(o))],
     ['radioValue', o.radioValue ? texto(o.radioValue) : undefined],
-    ['onOpenChange', corpoDoCallback(o.onOpenChange)],
+    ['onOpenChange', callbackBody(o.onOpenChange)],
   ]);
 
   return snippet(
@@ -124,7 +124,7 @@ export function contextMenuSnippet(o: ContextMenuSnippetOptions = {}): string {
       '// A área é de quem consome. A fábrica só garante a parada de tabulação',
       '// nela, para que a tecla Menu abra o menu de quem não usa mouse.',
       "const area = document.createElement('div');",
-      `area.textContent = ${texto(o.triggerLabel ?? AREA_PADRAO)};`,
+      `area.textContent = ${texto(o.triggerLabel ?? AREA_DEFAULT)};`,
     ].join('\n'),
     `const menu = ${chamada('createContextMenu', linhas)};`,
     montar('menu'),
@@ -139,7 +139,7 @@ export const contextMenuSource: SourceTransform<ContextMenuSnippetOptions> = (_g
   contextMenuSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, entradas fixas que os controls não cobrem. */
-export function contextMenuSourceCom(
+export function contextMenuSourceWith(
   fixas: ContextMenuSnippetOptions,
 ): SourceTransform<ContextMenuSnippetOptions> {
   return (_gerado, ctx) => contextMenuSnippet({ ...ctx.args, ...fixas });

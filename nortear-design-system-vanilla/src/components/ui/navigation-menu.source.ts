@@ -52,9 +52,9 @@ export type NavigationMenuSnippetOptions = {
   destroy?: boolean;
 };
 
-const NOME_PADRAO = 'Navegação principal';
+const NAME_DEFAULT = 'Navegação principal';
 
-const ITENS_PADRAO: NavigationMenuItemSnippet[] = [
+const ITEMS_DEFAULT: NavigationMenuItemSnippet[] = [
   { label: 'Início', href: '#inicio' },
   {
     label: 'Produtos',
@@ -72,7 +72,7 @@ function objeto(linhas: string[]): string {
   return `{ ${linhas.map((l) => l.replace(/,$/, '')).join(', ')} }`;
 }
 
-function serializarDestino(filho: NavigationMenuChildSnippet, recuo: string): string {
+function serializarTarget(filho: NavigationMenuChildSnippet, recuo: string): string {
   const base = opcoes([
     ['label', texto(filho.label)],
     ['href', texto(filho.href)],
@@ -95,7 +95,7 @@ function serializarItem(item: NavigationMenuItemSnippet, recuo: string): string 
 
   if (!item.children?.length) return `${recuo}${objeto(base)},`;
 
-  const filhos = item.children.map((f) => serializarDestino(f, `${recuo}    `)).join('\n');
+  const filhos = item.children.map((f) => serializarTarget(f, `${recuo}    `)).join('\n');
   return `${recuo}{
 ${base.map((l) => `${recuo}  ${l}`).join('\n')}
 ${recuo}  children: [
@@ -104,12 +104,12 @@ ${recuo}  ],
 ${recuo}},`;
 }
 
-function serializarItens(itens: NavigationMenuItemSnippet[]): string {
+function serializarItems(itens: NavigationMenuItemSnippet[]): string {
   return `[\n${itens.map((i) => serializarItem(i, '  ')).join('\n')}\n]`;
 }
 
 /** As linhas do segundo argumento, compartilhadas pelas formas de snippet. */
-function linhasDeOpcao(o: NavigationMenuSnippetOptions): string[] {
+function optionLines(o: NavigationMenuSnippetOptions): string[] {
   return opcoes([
     ['orientation', o.orientation && o.orientation !== 'horizontal' ? texto(o.orientation) : undefined],
     ['delayDuration', o.delayDuration !== undefined && o.delayDuration !== 200 ? String(o.delayDuration) : undefined],
@@ -123,18 +123,18 @@ function linhasDeOpcao(o: NavigationMenuSnippetOptions): string[] {
 }
 
 /** O bloco que cria a barra e a nomeia — comum a todas as formas de snippet. */
-function blocoDaBarra(o: NavigationMenuSnippetOptions, itens: NavigationMenuItemSnippet[]): string {
-  const linhas = linhasDeOpcao(o);
+function barBlock(o: NavigationMenuSnippetOptions, itens: NavigationMenuItemSnippet[]): string {
+  const linhas = optionLines(o);
   const segundo = linhas.length ? `, ${objeto(linhas)}` : '';
-  return `const barra = createNavigationMenu(${serializarItens(itens)}${segundo});
-barra.setAttribute('aria-label', ${texto(o.ariaLabel ?? NOME_PADRAO)});`;
+  return `const barra = createNavigationMenu(${serializarItems(itens)}${segundo});
+barra.setAttribute('aria-label', ${texto(o.ariaLabel ?? NAME_DEFAULT)});`;
 }
 
 /** A chamada real de `createNavigationMenu` com a estrutura e as opções da story. */
 export function navigationMenuSnippet(o: NavigationMenuSnippetOptions = {}): string {
   return snippet(
     importar('navigation-menu', 'createNavigationMenu'),
-    blocoDaBarra(o, o.items ?? ITENS_PADRAO),
+    barBlock(o, o.items ?? ITEMS_DEFAULT),
     montar('barra'),
     // A barra registra ouvinte no documento. Sair da página dispara a limpeza
     // sozinha; `destroy()` é o caminho de quem desmonta antes disso.
@@ -152,7 +152,7 @@ export function navigationMenuSnippet(o: NavigationMenuSnippetOptions = {}): str
 export function navigationMenuMegaSnippet(o: NavigationMenuSnippetOptions = {}): string {
   return snippet(
     importar('navigation-menu', 'createNavigationMenu'),
-    blocoDaBarra(o, o.items ?? ITENS_PADRAO),
+    barBlock(o, o.items ?? ITEMS_DEFAULT),
     `const painel = barra.querySelector<HTMLElement>('.nds-navigation-menu-content');
 if (painel) {
   painel.classList.add('nds-grid', 'nds-w-lg');
@@ -170,10 +170,10 @@ if (painel) {
  * O destaque ocupa a coluna inteira e os demais empilham na outra — a hierarquia
  * aparece pelo tamanho, sem depender de cor.
  */
-export function navigationMenuDestaqueSnippet(o: NavigationMenuSnippetOptions = {}): string {
+export function navigationMenuHighlightSnippet(o: NavigationMenuSnippetOptions = {}): string {
   return snippet(
     importar('navigation-menu', 'createNavigationMenu'),
-    blocoDaBarra(o, o.items ?? ITENS_PADRAO),
+    barBlock(o, o.items ?? ITEMS_DEFAULT),
     `const painel = barra.querySelector<HTMLElement>('.nds-navigation-menu-content');
 if (painel) {
   painel.classList.add('nds-grid', 'nds-w-lg');
@@ -203,7 +203,7 @@ if (painel) {
  * passa a apenas ANUNCIAR por `onValueChange`. Nada abre até `setValue()` — é o
  * que permite manter a barra em sincronia com a rota ou com o resto da tela.
  */
-export function navigationMenuControladoSnippet(o: NavigationMenuSnippetOptions = {}): string {
+export function navigationMenuControlledSnippet(o: NavigationMenuSnippetOptions = {}): string {
   const itens = o.items ?? [
     { label: 'Início', href: '#inicio' },
     {
@@ -218,12 +218,12 @@ export function navigationMenuControladoSnippet(o: NavigationMenuSnippetOptions 
 
   return snippet(
     importar('navigation-menu', 'createNavigationMenu'),
-    `const barra = createNavigationMenu(${serializarItens(itens)}, {
+    `const barra = createNavigationMenu(${serializarItems(itens)}, {
   // Definir \`value\` é o que troca o modo. Vazio quer dizer "nenhum aberto".
   value: '',
   onValueChange: (valor) => registrarPedido(valor),
 });
-barra.setAttribute('aria-label', ${texto(o.ariaLabel ?? NOME_PADRAO)});`,
+barra.setAttribute('aria-label', ${texto(o.ariaLabel ?? NAME_DEFAULT)});`,
     montar('barra'),
     `// Nada se move enquanto quem controla não mandar.
 barra.setValue('produtos');
@@ -236,7 +236,7 @@ export const navigationMenuSource: SourceTransform<NavigationMenuSnippetOptions>
   navigationMenuSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, estrutura e opções que os controls não cobrem. */
-export function navigationMenuSourceCom(
+export function navigationMenuSourceWith(
   fixas: NavigationMenuSnippetOptions,
 ): SourceTransform<NavigationMenuSnippetOptions> {
   return (_gerado, ctx) => navigationMenuSnippet({ ...ctx.args, ...fixas });
@@ -250,15 +250,15 @@ export function navigationMenuSourceMega(
 }
 
 /** Transform de story para o painel com destino em destaque. */
-export function navigationMenuSourceDestaque(
+export function navigationMenuSourceHighlight(
   fixas: NavigationMenuSnippetOptions = {},
 ): SourceTransform<NavigationMenuSnippetOptions> {
-  return () => navigationMenuDestaqueSnippet(fixas);
+  return () => navigationMenuHighlightSnippet(fixas);
 }
 
 /** Transform de story para a barra em modo controlado. */
-export function navigationMenuSourceControlado(
+export function navigationMenuSourceControlled(
   fixas: NavigationMenuSnippetOptions = {},
 ): SourceTransform<NavigationMenuSnippetOptions> {
-  return () => navigationMenuControladoSnippet(fixas);
+  return () => navigationMenuControlledSnippet(fixas);
 }

@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  dialogComCorpoRolavelSnippet,
-  dialogComFormularioSnippet,
+  dialogWithBodyScrollableSnippet,
+  dialogWithFormSnippet,
   dialogSnippet,
   dialogSource,
-  dialogSourceCom,
+  dialogSourceWith,
 } from './dialog.source';
 
 describe('dialogSnippet', () => {
@@ -85,13 +85,13 @@ describe('dialogSnippet', () => {
 
 describe('dialogSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = dialogSource('<div data-slot="dialog-content">', {});
-    const comArgs = dialogSource('<div data-slot="dialog-content">', {
+    const noArgs = dialogSource('<div data-slot="dialog-content">', {});
+    const withArgs = dialogSource('<div data-slot="dialog-content">', {
       args: { triggerLabel: 'Remover item', showCloseButton: false },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("label: 'Remover item'");
-    expect(comArgs).toContain('showCloseButton: false');
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("label: 'Remover item'");
+    expect(withArgs).toContain('showCloseButton: false');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -101,7 +101,7 @@ describe('dialogSource', () => {
 
 describe('dialogSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = dialogSourceCom({ title: 'Remover item da lista?', footer: [] });
+    const transform = dialogSourceWith({ title: 'Remover item da lista?', footer: [] });
     const código = transform('', { args: { title: 'Editar perfil' } });
     expect(código).toContain("title: 'Remover item da lista?'");
     expect(código).not.toContain('footer');
@@ -112,7 +112,7 @@ describe('dialogComFormularioSnippet', () => {
   it('constrói o corpo com a fábrica de campo, e não com rótulo e controle soltos', () => {
     // `createFormField` é quem fecha o par rótulo ↔ controle e gera o id que
     // falta; um `<label>` cru pareceria igual e não faria nada disso.
-    const código = dialogComFormularioSnippet({
+    const código = dialogWithFormSnippet({
       campos: [{ label: 'Nome', value: 'Maria Souza' }],
     });
     expect(código).toContain("import { createFormField } from '@/components/ui/form';");
@@ -124,18 +124,18 @@ describe('dialogComFormularioSnippet', () => {
   });
 
   it('omite o tipo quando ele já é o padrão do controle', () => {
-    expect(dialogComFormularioSnippet({ campos: [{ label: 'Nome', type: 'text' }] })).not.toContain(
+    expect(dialogWithFormSnippet({ campos: [{ label: 'Nome', type: 'text' }] })).not.toContain(
       'type:',
     );
     expect(
-      dialogComFormularioSnippet({ campos: [{ label: 'E-mail', type: 'email' }] }),
+      dialogWithFormSnippet({ campos: [{ label: 'E-mail', type: 'email' }] }),
     ).toContain("type: 'email'");
   });
 });
 
 describe('dialogComCorpoRolavelSnippet', () => {
   it('mostra a classe de rolagem e a costura de teclado que ela exige', () => {
-    const código = dialogComCorpoRolavelSnippet({ paragrafos: 12 });
+    const código = dialogWithBodyScrollableSnippet({ paragrafos: 12 });
     expect(código).toContain('nds-dialog-body-scroll');
     expect(código).toContain("corpo.setAttribute('role', 'region')");
     expect(código).toContain('corpo.tabIndex = 0');
@@ -144,7 +144,7 @@ describe('dialogComCorpoRolavelSnippet', () => {
   });
 
   it('continua sendo a chamada da fábrica, e não o painel renderizado', () => {
-    const código = dialogComCorpoRolavelSnippet();
+    const código = dialogWithBodyScrollableSnippet();
     expect(código).toContain('createDialog({');
     expect(código).not.toContain('data-slot=');
   });

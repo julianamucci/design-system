@@ -94,14 +94,14 @@ function frame(child: HTMLElement, size: DemoBoxStep = 'md'): HTMLElement {
  * assim o nome do separator acompanha o idioma sem exigir uma chave de conteúdo
  * só para ele. É o nome que o leitor de tela lê antes do valor.
  */
-function nomeDoDivisor(a: string, b: string): string {
+function divisorName(a: string, b: string): string {
   return `${a} / ${b}`;
 }
 
 function buildHorizontalDemo(): HTMLElement {
   const root = createResizablePanel({
     direction: 'horizontal',
-    'aria-label': nomeDoDivisor(t('demonstration.labels.sidebar'), t('demonstration.labels.content')),
+    'aria-label': divisorName(t('demonstration.labels.sidebar'), t('demonstration.labels.content')),
     panels: [
       { defaultSize: 30, minSize: 15, content: panelContent(t('demonstration.labels.sidebar'), 'nds-bg-muted nds-text-muted-foreground') },
       { defaultSize: 70, minSize: 30, content: panelContent(t('demonstration.labels.content')) },
@@ -113,7 +113,7 @@ function buildHorizontalDemo(): HTMLElement {
 function buildVerticalDemo(): HTMLElement {
   const root = createResizablePanel({
     direction: 'vertical',
-    'aria-label': nomeDoDivisor(t('demonstration.labels.top'), t('demonstration.labels.bottom')),
+    'aria-label': divisorName(t('demonstration.labels.top'), t('demonstration.labels.bottom')),
     panels: [
       { defaultSize: 50, minSize: 20, content: panelContent(t('demonstration.labels.top')) },
       { defaultSize: 50, minSize: 20, content: panelContent(t('demonstration.labels.bottom'), 'nds-bg-muted nds-text-muted-foreground') },
@@ -125,7 +125,7 @@ function buildVerticalDemo(): HTMLElement {
 function buildNestedDemo(): HTMLElement {
   const inner = createResizablePanel({
     direction: 'vertical',
-    'aria-label': nomeDoDivisor(t('demonstration.labels.top'), t('demonstration.labels.bottom')),
+    'aria-label': divisorName(t('demonstration.labels.top'), t('demonstration.labels.bottom')),
     panels: [
       { defaultSize: 60, minSize: 20, content: panelContent(t('demonstration.labels.top')) },
       { defaultSize: 40, minSize: 20, content: panelContent(t('demonstration.labels.bottom'), 'nds-bg-muted nds-text-muted-foreground') },
@@ -138,7 +138,7 @@ function buildNestedDemo(): HTMLElement {
 
   const root = createResizablePanel({
     direction: 'horizontal',
-    'aria-label': nomeDoDivisor(t('demonstration.labels.sidebar'), t('demonstration.labels.content')),
+    'aria-label': divisorName(t('demonstration.labels.sidebar'), t('demonstration.labels.content')),
     panels: [
       { defaultSize: 30, minSize: 15, content: panelContent(t('demonstration.labels.sidebar'), 'nds-bg-muted nds-text-muted-foreground') },
       { defaultSize: 70, minSize: 30, content: innerWrap },
@@ -318,7 +318,7 @@ export function createResizableDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const el = createResizablePanel({
                   direction: 'horizontal',
-                  'aria-label': nomeDoDivisor('Sidebar', 'Editor'),
+                  'aria-label': divisorName('Sidebar', 'Editor'),
                   panels: [
                     { defaultSize: 30, minSize: 20, content: panelContent('Sidebar', 'nds-bg-muted nds-text-muted-foreground') },
                     { defaultSize: 70, minSize: 40, content: panelContent('Editor') },
@@ -330,7 +330,7 @@ export function createResizableDocs(): HTMLElement {
                 // Don't: sem minSize, painel pode colapsar.
                 const el = createResizablePanel({
                   direction: 'horizontal',
-                  'aria-label': nomeDoDivisor('?', 'Editor'),
+                  'aria-label': divisorName('?', 'Editor'),
                   panels: [
                     { defaultSize: 5,  content: panelContent('?', 'nds-bg-muted nds-text-muted-foreground nds-text-caption') },
                     { defaultSize: 95, content: panelContent('Editor') },

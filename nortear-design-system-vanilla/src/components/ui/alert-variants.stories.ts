@@ -1,7 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
-import { alertSource, alertSourceCom } from './alert.source';
+import { alertSource, alertSourceWith } from './alert.source';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { contrastePorTema, reprovasPorTema } from '@shared/testing/alert-probe';
 
@@ -45,7 +45,7 @@ export const Destructive: Story = {
     covers: ['functional.item2'],
     docs: {
       source: {
-        transform: alertSourceCom({
+        transform: alertSourceWith({
           variant: 'destructive',
           title: 'Erro ao salvar',
           description: 'Não foi possível salvar. Verifique sua conexão e tente novamente.',
@@ -75,7 +75,7 @@ export const Success: Story = {
     covers: ['functional.item5'],
     docs: {
       source: {
-        transform: alertSourceCom({
+        transform: alertSourceWith({
           variant: 'success',
           title: 'Perfil atualizado',
           description: 'Suas informações foram salvas com sucesso.',
@@ -104,7 +104,7 @@ export const Warning: Story = {
   parameters: {
     docs: {
       source: {
-        transform: alertSourceCom({
+        transform: alertSourceWith({
           variant: 'warning',
           title: 'Assinatura expirando',
           description: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.',
@@ -133,7 +133,7 @@ export const Info: Story = {
   parameters: {
     docs: {
       source: {
-        transform: alertSourceCom({
+        transform: alertSourceWith({
           variant: 'info',
           title: 'Dica',
           description: 'Você pode fixar os filtros mais usados para acessá-los mais rápido.',
@@ -191,7 +191,7 @@ export const Dismissible: Story = {
     covers: ['functional.item7', 'visual.item5'],
     docs: {
       source: {
-        transform: alertSourceCom({
+        transform: alertSourceWith({
           dismissible: true,
           onDismiss: "() => salvarPreferencia('aviso-fechado')",
           title: 'Preferências salvas',
@@ -298,7 +298,7 @@ export const DismissibleByKeyboard: Story = {
   parameters: {
     docs: {
       source: {
-        transform: alertSourceCom({
+        transform: alertSourceWith({
           variant: 'success',
           dismissible: true,
           dismissLabel: 'Fechar confirmação',
@@ -365,7 +365,7 @@ export const Contrast: Story = {
     // composição título + texto corrido que está sendo medida.
     docs: {
       source: {
-        transform: alertSourceCom({
+        transform: alertSourceWith({
           icon: false,
           title: 'Título da variante',
           description: 'Texto corrido da variante.',

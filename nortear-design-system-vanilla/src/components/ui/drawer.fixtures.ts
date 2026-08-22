@@ -1,6 +1,6 @@
 import { userEvent, within } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
-import { limparPortaisDoDrawer } from './drawer-portal-cleanup';
+import { drawerClearPortais } from './drawer-portal-cleanup';
 
 /**
  * Andaime de abertura do Drawer — um helper, dois arquivos de story.
@@ -20,15 +20,15 @@ import { limparPortaisDoDrawer } from './drawer-portal-cleanup';
 /**
  * Abre pelo gatilho, e só se ainda estiver fechado (a play é reexecutável).
  *
- * `limparPortaisDoDrawer` vem antes do clique porque o painel vive num portal
+ * `drawerClearPortais` vem antes do clique porque o painel vive num portal
  * no `body`: um resto da rodada anterior faria a espera casar com o painel
  * velho.
  */
-export async function abrirPeloGatilho(
+export async function openPeloTrigger(
   canvasElement: HTMLElement,
   nome: RegExp = /^abrir$/i,
 ): Promise<HTMLElement> {
-  limparPortaisDoDrawer();
+  drawerClearPortais();
   if (within(document.body).queryAllByRole('dialog').length === 0) {
     await userEvent.click(within(canvasElement).getByRole('button', { name: nome }));
   }

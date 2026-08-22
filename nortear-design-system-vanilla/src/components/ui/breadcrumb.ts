@@ -84,7 +84,7 @@ type LucideIconNode = [string, Record<string, string>];
  * versão do dia e some do radar quando o pacote muda o desenho. Construir nós é
  * imune a XSS: não há `innerHTML` no caminho.
  */
-function criarIconeLucide(nodes: LucideIconNode[]): SVGSVGElement {
+function createIconLucide(nodes: LucideIconNode[]): SVGSVGElement {
   const svg = document.createElementNS(SVG_NS, 'svg');
   svg.setAttribute('xmlns', SVG_NS);
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -184,7 +184,7 @@ export function createBreadcrumbSeparator(options: BreadcrumbSeparatorOptions = 
   // fotografava um separador diferente aqui. `content` continua trocando o
   // desenho para quem quer `/`.
   if (content === undefined) {
-    li.appendChild(criarIconeLucide(ChevronRight as unknown as LucideIconNode[]));
+    li.appendChild(createIconLucide(ChevronRight as unknown as LucideIconNode[]));
   } else if (typeof content === 'string') {
     li.textContent = content;
   } else {
@@ -217,7 +217,7 @@ export function createBreadcrumbEllipsis(options: BreadcrumbEllipsisOptions = {}
   }
   span.className = cn('nds-breadcrumb-ellipsis', classe);
 
-  span.appendChild(criarIconeLucide(MoreHorizontal as unknown as LucideIconNode[]));
+  span.appendChild(createIconLucide(MoreHorizontal as unknown as LucideIconNode[]));
 
   return span;
 }

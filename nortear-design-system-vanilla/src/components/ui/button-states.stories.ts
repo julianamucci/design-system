@@ -2,7 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { fn, userEvent, within, expect } from 'storybook/test';
 import { createButton, createButtonIcon } from './button';
-import { buttonSource, buttonSourceCom } from './button.source';
+import { buttonSource, buttonSourceWith } from './button.source';
 import { falhasDeAnel } from '@shared/testing/button-probe';
 
 type EstadosArgs = { onClick: (e: MouseEvent) => void };
@@ -35,7 +35,7 @@ export const Disabled: Story = {
     covers: ['functional.item2', 'visual.item4'],
     // Override de story: o estado desabilitado é o assunto, e não há control.
     docs: {
-      source: { transform: buttonSourceCom({ disabled: true }) },
+      source: { transform: buttonSourceWith({ disabled: true }) },
       description: { story: 'Estado desabilitado. Previne cliques e reduz opacidade para 50%.' },
     },
   },
@@ -75,7 +75,7 @@ export const Loading: Story = {
     // são o assunto, e o snippet do meta mostraria um botão comum.
     docs: {
       source: {
-        transform: buttonSourceCom({
+        transform: buttonSourceWith({
           label: 'Salvando…',
           disabled: true,
           ariaBusy: true,
@@ -137,7 +137,7 @@ export const Invalid: Story = {
     // Override de story: a marca de inválido e a variante não têm control.
     docs: {
       source: {
-        transform: buttonSourceCom({
+        transform: buttonSourceWith({
           variant: 'outline',
           label: 'Formulário inválido',
           ariaInvalid: true,

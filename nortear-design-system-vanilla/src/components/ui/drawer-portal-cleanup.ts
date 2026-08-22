@@ -10,7 +10,7 @@
 // no body é resíduo da story anterior, porque esta ainda não abriu nada. Assim
 // cada story pode terminar no estado que ela existe para demonstrar.
 
-export function limparPortaisDoDrawer(): void {
+export function drawerClearPortais(): void {
   document
     .querySelectorAll('[data-slot="drawer-content"], [data-slot="drawer-overlay"]')
     .forEach((el) => el.remove());

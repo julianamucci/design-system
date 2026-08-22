@@ -3,9 +3,9 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createPagination } from './pagination';
 import { wrap } from './pagination.fixtures';
 import {
-  paginationComEstadoSourceCom,
+  paginationWithStateSourceWith,
   paginationSource,
-  paginationSourceCom,
+  paginationSourceWith,
 } from './pagination.source';
 
 const ROTULO_ANTERIOR = 'Ir para a página anterior';
@@ -82,7 +82,7 @@ export const WithEllipsis: Story = {
     // snippet do meta, com 5, esconderia justamente o assunto.
     docs: {
       source: {
-        transform: paginationSourceCom({
+        transform: paginationSourceWith({
           total: 12,
           current: 6,
           'aria-label': 'Paginação com reticências',
@@ -137,7 +137,7 @@ export const LastPage: Story = {
   parameters: {
     docs: {
       source: {
-        transform: paginationSourceCom({
+        transform: paginationSourceWith({
           total: 10,
           current: 10,
           'aria-label': 'Paginação na última página',
@@ -180,7 +180,7 @@ export const Interactive: Story = {
     // ele pede outra FORMA de snippet — a fábrica não guarda a página.
     docs: {
       source: {
-        transform: paginationComEstadoSourceCom({
+        transform: paginationWithStateSourceWith({
           total: 8,
           current: 3,
           'aria-label': 'Paginação interativa',
@@ -271,7 +271,7 @@ export const WithRoute: Story = {
     // mostraria links que nascem `#`.
     docs: {
       source: {
-        transform: paginationSourceCom({
+        transform: paginationSourceWith({
           total: 8,
           current: 3,
           'aria-label': 'Paginação por rota',
@@ -346,7 +346,7 @@ export const CompleteTable: Story = {
     // não passa por control nenhum.
     docs: {
       source: {
-        transform: paginationSourceCom({
+        transform: paginationSourceWith({
           total: 12,
           current: 2,
           align: 'end',

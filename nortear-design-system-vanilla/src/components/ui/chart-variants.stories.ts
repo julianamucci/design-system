@@ -7,7 +7,7 @@ import {
   formasDeDado,
 } from '@shared/testing/chart-probe';
 import { createChart } from './chart';
-import { chartSource, chartSourceCom } from './chart.source';
+import { chartSource, chartSourceWith } from './chart.source';
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 
@@ -114,7 +114,7 @@ export const Line: Story = {
       // Override de story: muda o tipo E a FORMA do dado — aqui entram `xAxis`
       // e `series`, e não a lista simples de rótulo e valor.
       source: {
-        transform: chartSourceCom({
+        transform: chartSourceWith({
           type: 'line',
           dados: 'multi',
           'aria-label': 'Gráfico de linhas: acessos mensais por dispositivo, de janeiro a junho',
@@ -170,7 +170,7 @@ export const Area: Story = {
     docs: {
       // Override de story: tipo e forma do dado, como no traçado.
       source: {
-        transform: chartSourceCom({
+        transform: chartSourceWith({
           type: 'area',
           dados: 'multi',
           'aria-label': 'Gráfico de área: volume mensal de acessos por dispositivo',
@@ -228,7 +228,7 @@ export const Pie: Story = {
       // Override de story: a rosca não tem eixo, então o dado volta a ser a
       // lista de rótulo e valor — e são as fatias, não os meses.
       source: {
-        transform: chartSourceCom({
+        transform: chartSourceWith({
           type: 'pie',
           dados: 'rosca',
           height: 280,

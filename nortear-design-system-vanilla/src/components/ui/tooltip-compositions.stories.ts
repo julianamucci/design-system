@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createTooltip, createTooltipProvider } from './tooltip';
-import { balaoDe, limparPortal, wrap } from './tooltip.fixtures';
-import { tooltipSource, tooltipSourceCom, tooltipSourceLados } from './tooltip.source';
+import { balaoDe, clearPortal, wrap } from './tooltip.fixtures';
+import { tooltipSource, tooltipSourceWith, tooltipSourceLados } from './tooltip.source';
 import { createButton, createButtonIcon } from './button';
 
 // As composições que o conteúdo compartilhado documenta, mais os quatro lados de
@@ -11,7 +11,7 @@ import { createButton, createButtonIcon } from './button';
 //
 // A moldura destas composições reserva 200px: são maiores que as stories de
 // estados e variantes, que ficam no padrão de 180px do `wrap`.
-const ALTURA_DA_COMPOSICAO = '200px';
+const COMPOSITION_HEIGHT = '200px';
 
 const meta: Meta = {
   tags: ['overlay'],
@@ -37,7 +37,7 @@ export const IconButtonWithShortcut: Story = {
   parameters: {
     docs: {
       source: {
-        transform: tooltipSourceCom({
+        transform: tooltipSourceWith({
           triggerVariant: 'ghost',
           triggerSize: 'icon',
           triggerLabel: '',
@@ -62,7 +62,7 @@ export const IconButtonWithShortcut: Story = {
 
     const el = createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });
     queueMicrotask(() => trigger.focus());
-    return wrap(el, ALTURA_DA_COMPOSICAO);
+    return wrap(el, COMPOSITION_HEIGHT);
   },
   play: async ({ canvasElement, step }) => {
     const gatilho = within(canvasElement).getByRole('button', { name: /salvar/i });
@@ -79,7 +79,7 @@ export const IconButtonWithShortcut: Story = {
       await expect(balaoDe(gatilho)!.textContent).toMatch(/Ctrl\+S/);
     });
 
-    await step('Cleanup', async () => { limparPortal(); });
+    await step('Cleanup', async () => { clearPortal(); });
   },
 };
 
@@ -88,7 +88,7 @@ export const HelpInFormField: Story = {
   parameters: {
     docs: {
       source: {
-        transform: tooltipSourceCom({
+        transform: tooltipSourceWith({
           triggerVariant: 'ghost',
           triggerSize: 'icon-sm',
           triggerLabel: '?',
@@ -137,7 +137,7 @@ export const HelpInFormField: Story = {
 
     root.append(labelRow, input);
     queueMicrotask(() => help.focus());
-    return wrap(root, ALTURA_DA_COMPOSICAO);
+    return wrap(root, COMPOSITION_HEIGHT);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -160,7 +160,7 @@ export const HelpInFormField: Story = {
       await expect(balaoDe(gatilho)!.textContent).toContain('Tokens');
     });
 
-    await step('Cleanup', async () => { limparPortal(); });
+    await step('Cleanup', async () => { clearPortal(); });
   },
 };
 
@@ -168,7 +168,7 @@ export const MetricDescription: Story = {
   parameters: {
     docs: {
       source: {
-        transform: tooltipSourceCom({
+        transform: tooltipSourceWith({
           triggerVariant: 'ghost',
           triggerSize: 'icon-sm',
           triggerLabel: 'i',
@@ -213,7 +213,7 @@ export const MetricDescription: Story = {
 
     root.append(headerRow, value);
     queueMicrotask(() => help.focus());
-    return wrap(root, ALTURA_DA_COMPOSICAO);
+    return wrap(root, COMPOSITION_HEIGHT);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -229,7 +229,7 @@ export const MetricDescription: Story = {
       await expect(balaoDe(gatilho)!.textContent).toContain('Largest Contentful Paint');
     });
 
-    await step('Cleanup', async () => { limparPortal(); });
+    await step('Cleanup', async () => { clearPortal(); });
   },
 };
 
@@ -283,7 +283,7 @@ export const PlacementSides: Story = {
       }
     });
 
-    await step('Cleanup', async () => { limparPortal(); });
+    await step('Cleanup', async () => { clearPortal(); });
   },
 };
 
@@ -299,7 +299,7 @@ export const ProviderWithMarkup: Story = {
   parameters: {
     docs: {
       source: {
-        transform: tooltipSourceCom({
+        transform: tooltipSourceWith({
           provider: { delayDuration: 3000, skipDelayDuration: 5000 },
           triggerLabel: 'Copiar',
           content: 'Copiar',
@@ -338,7 +338,7 @@ export const ProviderWithMarkup: Story = {
       barra.appendChild(grupo.createTooltip({ trigger, content: conteudo, side: 'bottom' }));
     }
 
-    return wrap(barra, ALTURA_DA_COMPOSICAO);
+    return wrap(barra, COMPOSITION_HEIGHT);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -376,6 +376,6 @@ export const ProviderWithMarkup: Story = {
       await expect(balaoDe(colar)!.querySelector('kbd')?.textContent).toBe('Ctrl+V');
     });
 
-    await step('Cleanup', async () => { limparPortal(); });
+    await step('Cleanup', async () => { clearPortal(); });
   },
 };

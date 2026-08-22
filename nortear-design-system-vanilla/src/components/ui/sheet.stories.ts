@@ -96,11 +96,11 @@ function buildPlayground(args: SheetArgs): HTMLElement {
 
   // A factory não expõe SheetClose: quem fecha por fora é o overlay, e é ele
   // que os botões do rodapé acionam.
-  const fecharPorAcao = () => {
+  const actionClose = () => {
     document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]')?.click();
   };
-  cancel.addEventListener('click', fecharPorAcao);
-  apply.addEventListener('click', fecharPorAcao);
+  cancel.addEventListener('click', actionClose);
+  apply.addEventListener('click', actionClose);
 
   return createSheet({
     trigger,

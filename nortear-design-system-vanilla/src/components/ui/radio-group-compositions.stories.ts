@@ -3,9 +3,9 @@ import { userEvent, within, expect } from 'storybook/test';
 import { createRadioGroup } from './radio-group';
 import {
   radioGroupSource,
-  radioGroupSourceCom,
-  radioGroupSourceDescricao,
-  radioGroupSourceFormulario,
+  radioGroupSourceWith,
+  radioGroupSourceDescription,
+  radioGroupSourceForm,
 } from './radio-group.source';
 import { createButton } from './button';
 
@@ -104,7 +104,7 @@ export const DeliveryMethod: Story = {
     // Override de story: `orientation` é o assunto.
     docs: {
       source: {
-        transform: radioGroupSourceCom({
+        transform: radioGroupSourceWith({
           name: 'delivery',
           legend: 'Forma de entrega',
           orientation: 'horizontal',
@@ -180,7 +180,7 @@ export const WithDescription: Story = {
     // composição que a acrescenta é outra FORMA de snippet.
     docs: {
       source: {
-        transform: radioGroupSourceDescricao(
+        transform: radioGroupSourceDescription(
           [
             {
               value: 'standard',
@@ -264,7 +264,7 @@ export const InForm: Story = {
     // Override de story: o `<form>` e o `FormData` do submit são o assunto, e
     // o snippet do meta mostraria o grupo sozinho.
     docs: {
-      source: { transform: radioGroupSourceFormulario({ name: 'payment' }) },
+      source: { transform: radioGroupSourceForm({ name: 'payment' }) },
       description: {
         story:
           'RadioGroup dentro de `<form>` com `<fieldset>` + `<legend>` nativos. O `<input type="radio">` interno (com `name`) participa do `FormData` no submit.',

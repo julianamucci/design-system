@@ -85,14 +85,14 @@ export type DropdownMenuElement = DestroyableElement & {
 };
 
 /** Papel ARIA de cada tipo de item que se comporta como item de menu. */
-const PAPEL_POR_TIPO = {
+const TYPE_ROLE = {
   item: 'menuitem',
   checkbox: 'menuitemcheckbox',
   radio: 'menuitemradio',
 } as const;
 
 /** Classe `.nds-*` de cada tipo — o contrato visual que o CSS compartilhado define. */
-const CLASSE_POR_TIPO = {
+const TYPE_CLASSNAME = {
   item: 'nds-dropdown-menu-item',
   checkbox: 'nds-dropdown-menu-checkbox-item',
   radio: 'nds-dropdown-menu-radio-item',
@@ -104,7 +104,7 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
  * Estado de marcação de um item. É TRI-VALORADO: o misto ("alguns dos filhos
  * selecionados") não é marcado nem desmarcado, e tem símbolo próprio.
  */
-type EstadoDeMarcacao = 'checked' | 'unchecked' | 'indeterminate';
+type MarkupState = 'checked' | 'unchecked' | 'indeterminate';
 
 /**
  * Marca do item escolhido. Fica sempre no DOM; o que muda é o conteúdo.
@@ -118,7 +118,7 @@ type EstadoDeMarcacao = 'checked' | 'unchecked' | 'indeterminate';
  * "marcado", e misto não é isso — repetir o tique nos dois estados apagaria a
  * diferença justamente para quem depende do símbolo.
  */
-function criarIndicador(estado: EstadoDeMarcacao, slot: string): HTMLSpanElement {
+function createIndicador(estado: MarkupState, slot: string): HTMLSpanElement {
   const span = document.createElement('span');
   span.className = 'nds-dropdown-menu-item-indicator';
   // `data-slot` por TIPO de item, como nas outras quatro stacks
@@ -180,8 +180,8 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
 
   let panelEl: HTMLElement | null = null;
   let isOpen = false;
-  let timerCliqueFora: ReturnType<typeof setTimeout> | null = null;
-  let overflowAnterior = '';
+  let timerClickOutside: ReturnType<typeof setTimeout> | null = null;
+  let overflowPrevious = '';
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'dropdown-menu';
@@ -226,10 +226,10 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
 
       // 'item' | 'checkbox' | 'radio' — os três se comportam como item de menu;
       // o que muda é o papel ARIA, a classe e o que a ativação faz.
-      const tipo = type as keyof typeof PAPEL_POR_TIPO;
+      const tipo = type as keyof typeof TYPE_ROLE;
       const li = document.createElement('li');
-      li.setAttribute('role', PAPEL_POR_TIPO[tipo]);
-      li.className = CLASSE_POR_TIPO[tipo];
+      li.setAttribute('role', TYPE_ROLE[tipo]);
+      li.className = TYPE_CLASSNAME[tipo];
       li.dataset.slot = `dropdown-menu-${tipo === 'item' ? 'item' : `${tipo}-item`}`;
       if (tipo === 'item') li.dataset.variant = item.variant ?? 'default';
       if (item.disabled) li.setAttribute('aria-disabled', 'true');
@@ -244,11 +244,11 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       let misto = tipo === 'checkbox' && item.indeterminate === true;
       let marcado = item.checked ?? false;
 
-      function pintarMarcacao(): void {
+      function pintarMarkup(): void {
         // "mixed" é o que distingue "alguns selecionados" de "todos
         // selecionados"; um booleano aqui mentiria para quem lê a tela.
         li.setAttribute('aria-checked', misto ? 'mixed' : String(marcado));
-        const novo = criarIndicador(
+        const novo = createIndicador(
           misto ? 'indeterminate' : marcado ? 'checked' : 'unchecked',
           slotDoIndicador,
         );
@@ -256,7 +256,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
         else li.appendChild(novo);
       }
 
-      if (marcavel) pintarMarcacao();
+      if (marcavel) pintarMarkup();
 
       const texto = document.createElement('span');
       texto.textContent = item.label ?? '';
@@ -272,7 +272,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
         li.appendChild(atalho);
       }
 
-      function alternarMarcacao(): void {
+      function toggleMarkup(): void {
         if (tipo === 'checkbox') {
           if (misto) {
             // O primeiro clique RESOLVE o misto para marcado, como faz a
@@ -280,13 +280,13 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
             // misto a ninguém, porque "alguns" é conclusão de quem consome.
             misto = false;
             marcado = true;
-            pintarMarcacao();
+            pintarMarkup();
             item.onIndeterminateChange?.(false);
             item.onCheckedChange?.(true);
             return;
           }
           marcado = !marcado;
-          pintarMarcacao();
+          pintarMarkup();
           item.onCheckedChange?.(marcado);
           return;
         }
@@ -298,7 +298,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
           const escolhido = irmao === li;
           irmao.setAttribute('aria-checked', String(escolhido));
           irmao.replaceChild(
-            criarIndicador(
+            createIndicador(
               escolhido ? 'checked' : 'unchecked',
               'dropdown-menu-radio-item-indicator',
             ),
@@ -312,14 +312,14 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
         const ativar = (): void => {
           if (marcavel) {
             // Alternar não fecha: quem marca uma coluna costuma marcar a próxima.
-            alternarMarcacao();
+            toggleMarkup();
             item.onClick?.();
             return;
           }
           item.onClick?.();
           // Escolher fecha — mas quem fecha é o mesmo caminho de qualquer outra
           // interação: controlado, isto só anuncia a intenção.
-          pedirMudanca(false);
+          pedirChange(false);
         };
         li.addEventListener('click', ativar);
         li.addEventListener('keydown', (e) => {
@@ -352,14 +352,14 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
   // Numa lista de ações longa é o que evita percorrer item por item. As letras
   // se acumulam por 1s, como no padrão WAI-ARIA de menu: digitar "co" rápido
   // procura "co", e não "c" e depois "o".
-  let buscaTypeahead = '';
+  let searchTypeahead = '';
   let timerTypeahead: ReturnType<typeof setTimeout> | null = null;
 
   function typeahead(letra: string, menuItems: HTMLElement[]): void {
-    buscaTypeahead += letra.toLowerCase();
+    searchTypeahead += letra.toLowerCase();
     if (timerTypeahead !== null) clearTimeout(timerTypeahead);
     timerTypeahead = setTimeout(() => {
-      buscaTypeahead = '';
+      searchTypeahead = '';
       timerTypeahead = null;
     }, 1000);
 
@@ -370,7 +370,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       .slice(atual + 1)
       .concat(menuItems.slice(0, Math.max(atual + 1, 0)));
     const alvo = ordem.find((el) =>
-      (el.textContent ?? '').trim().toLowerCase().startsWith(buscaTypeahead),
+      (el.textContent ?? '').trim().toLowerCase().startsWith(searchTypeahead),
     );
     alvo?.focus();
   }
@@ -399,17 +399,17 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       //
       // Não há ouvinte de bolha aqui: quem dispensa é o próprio bloqueador, e
       // o gesto que ABRIU já passou pela captura antes deste registro.
-      document.addEventListener('pointerdown', bloquearForaModal, true);
-      document.addEventListener('mousedown', bloquearForaModal, true);
-      document.addEventListener('click', bloquearForaModal, true);
-      overflowAnterior = document.body.style.overflow;
+      document.addEventListener('pointerdown', bloquearOutsideModal, true);
+      document.addEventListener('mousedown', bloquearOutsideModal, true);
+      document.addEventListener('click', bloquearOutsideModal, true);
+      overflowPrevious = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
     } else {
       // Adiado para o clique que ABRIU não fechar em seguida. O timer é guardado
       // porque o fechamento pode chegar antes dele: sem cancelar, o ouvinte era
       // registrado DEPOIS da limpeza e ficava para sempre.
-      timerCliqueFora = setTimeout(() => {
-        timerCliqueFora = null;
+      timerClickOutside = setTimeout(() => {
+        timerClickOutside = null;
         document.addEventListener('click', handleOutsideClick);
       }, 0);
     }
@@ -425,21 +425,21 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     trigger.setAttribute('aria-expanded', 'false');
     isOpen = false;
 
-    if (timerCliqueFora !== null) {
-      clearTimeout(timerCliqueFora);
-      timerCliqueFora = null;
+    if (timerClickOutside !== null) {
+      clearTimeout(timerClickOutside);
+      timerClickOutside = null;
     }
     if (timerTypeahead !== null) {
       clearTimeout(timerTypeahead);
       timerTypeahead = null;
     }
-    buscaTypeahead = '';
+    searchTypeahead = '';
     document.removeEventListener('keydown', handleKeydown);
     document.removeEventListener('click', handleOutsideClick);
-    document.removeEventListener('pointerdown', bloquearForaModal, true);
-    document.removeEventListener('mousedown', bloquearForaModal, true);
-    document.removeEventListener('click', bloquearForaModal, true);
-    if (modal) document.body.style.overflow = overflowAnterior;
+    document.removeEventListener('pointerdown', bloquearOutsideModal, true);
+    document.removeEventListener('mousedown', bloquearOutsideModal, true);
+    document.removeEventListener('click', bloquearOutsideModal, true);
+    if (modal) document.body.style.overflow = overflowPrevious;
 
     notificar(false);
   }
@@ -466,7 +466,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
    * Controlada, ela só é anunciada — quem manda no estado é quem chama. Fora do
    * modo controlado, ela é executada, e `open`/`close` anunciam por conta.
    */
-  function pedirMudanca(proximo: boolean): void {
+  function pedirChange(proximo: boolean): void {
     if (controlado) {
       onOpenChange?.(proximo);
       return;
@@ -474,14 +474,14 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     setOpen(proximo);
   }
 
-  function bloquearForaModal(e: Event): void {
+  function bloquearOutsideModal(e: Event): void {
     const alvo = e.target as Node;
     if (panelEl?.contains(alvo) || wrapper.contains(alvo)) return;
     e.preventDefault();
     e.stopPropagation();
     // A dispensa sai no `click`, o último do gesto: dispensar antes desmontaria
     // os bloqueadores no meio da sequência e soltaria o resto dela na página.
-    if (e.type === 'click') pedirMudanca(false);
+    if (e.type === 'click') pedirChange(false);
   }
 
   function handleKeydown(e: KeyboardEvent): void {
@@ -489,7 +489,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
 
     if (e.key === 'Escape') {
       e.preventDefault();
-      pedirMudanca(false);
+      pedirChange(false);
       // O foco só volta se o menu de fato saiu: no modo controlado quem fecha é
       // quem chama, e devolver o foco antes disso o tiraria de dentro de um
       // menu que continua na tela.
@@ -515,7 +515,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       e.preventDefault();
       menuItems[menuItems.length - 1]?.focus();
     } else if (e.key === 'Tab') {
-      pedirMudanca(false);
+      pedirChange(false);
     } else if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey && /\S/.test(e.key)) {
       e.preventDefault();
       typeahead(e.key, menuItems);
@@ -525,13 +525,13 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
   function handleOutsideClick(e: MouseEvent): void {
     const target = e.target as Node;
     if (!panelEl?.contains(target) && !trigger.contains(target)) {
-      pedirMudanca(false);
+      pedirChange(false);
     }
   }
 
   trigger.addEventListener('click', (e) => {
     e.stopPropagation();
-    pedirMudanca(!isOpen);
+    pedirChange(!isOpen);
   });
 
   // O menu mora em portal no `body`, e os ouvintes de `keydown`/`click` vivem no
@@ -559,8 +559,8 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
   // Estado inicial. Adiado uma volta do laço de eventos, e não um microtique: a
   // raiz ainda não entrou no documento quando a fábrica retorna, e posicionar o
   // menu exige medir um gatilho já no layout.
-  const comecaAberto = controlado ? options.open === true : options.defaultOpen === true;
-  if (comecaAberto) {
+  const startsOpen = controlado ? options.open === true : options.defaultOpen === true;
+  if (startsOpen) {
     setTimeout(() => {
       // A raiz pode ter sido descartada antes deste tique. Abrir aqui portaria
       // um painel para o `body` sem ninguém com referência para fechá-lo.

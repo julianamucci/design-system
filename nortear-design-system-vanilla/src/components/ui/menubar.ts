@@ -92,7 +92,7 @@ let _menubarCounter = 0;
 const SVG_NS = 'http://www.w3.org/2000/svg';
 type LucideIconNode = [string, Record<string, string>];
 
-function criarIcone(nos: LucideIconNode[]): SVGSVGElement {
+function createIcon(nos: LucideIconNode[]): SVGSVGElement {
   const svg = document.createElementNS(SVG_NS, 'svg');
   svg.setAttribute('xmlns', SVG_NS);
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -110,20 +110,20 @@ function criarIcone(nos: LucideIconNode[]): SVGSVGElement {
   return svg;
 }
 
-const ICONE_MARCA = () => criarIcone(Check as unknown as LucideIconNode[]);
-const ICONE_SUBMENU = () => criarIcone(ChevronRight as unknown as LucideIconNode[]);
+const ICON_MARCA = () => createIcon(Check as unknown as LucideIconNode[]);
+const ICON_SUBMENU = () => createIcon(ChevronRight as unknown as LucideIconNode[]);
 /**
  * Traço do estado misto — o mesmo desenho da caixa de seleção avulsa desta
  * stack (`checkbox.ts`): um segmento horizontal de (5,12) a (19,12). Tique quer
  * dizer "marcado", e misto não é isso; repetir o tique nos dois estados apagaria
  * a diferença justamente para quem depende do símbolo.
  */
-const ICONE_TRACO = () => criarIcone(Minus as unknown as LucideIconNode[]);
+const ICON_TRACO = () => createIcon(Minus as unknown as LucideIconNode[]);
 
 // ─── Peças do painel ──────────────────────────────────────────────────────────
 
 /** Marcador à direita do item, presente em marcação e escolha única. */
-function criarIndicador(icone: SVGSVGElement | null, slot: string): HTMLSpanElement {
+function createIndicador(icone: SVGSVGElement | null, slot: string): HTMLSpanElement {
   const span = document.createElement('span');
   span.className = 'nds-dropdown-menu-item-indicator';
   // O `data-slot` é por TIPO de item, como nas outras quatro stacks
@@ -136,13 +136,13 @@ function criarIndicador(icone: SVGSVGElement | null, slot: string): HTMLSpanElem
   return span;
 }
 
-function aplicarComuns(el: HTMLElement, item: MenubarItem): void {
+function applyComuns(el: HTMLElement, item: MenubarItem): void {
   if (item.inset) el.setAttribute('data-inset', '');
   if (item.disabled) el.setAttribute('aria-disabled', 'true');
   el.setAttribute('tabindex', '-1');
 }
 
-function criarRotuloEAtalho(el: HTMLElement, item: MenubarItem): void {
+function createLabelEAtalho(el: HTMLElement, item: MenubarItem): void {
   const texto = document.createElement('span');
   texto.textContent = item.label ?? '';
   el.appendChild(texto);
@@ -184,16 +184,16 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     for (const g of gatilhos) g.tabIndex = g === alvo ? 0 : -1;
   }
 
-  function fecharTudo(): void {
+  function closeAll(): void {
     if (!aberto) return;
-    fecharSubmenus(aberto.panel);
+    closeSubmenus(aberto.panel);
     aberto.panel.hidden = true;
     aberto.trigger.dataset.state = 'closed';
     aberto.trigger.setAttribute('aria-expanded', 'false');
     aberto = null;
   }
 
-  function fecharSubmenus(escopo: HTMLElement): void {
+  function closeSubmenus(escopo: HTMLElement): void {
     for (const sub of escopo.querySelectorAll<HTMLElement>('[data-slot="menubar-sub-content"]')) {
       sub.hidden = true;
       const gatilho = sub.parentElement?.querySelector<HTMLElement>(
@@ -204,11 +204,11 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     }
   }
 
-  function abrirMenu(indice: number, foco: 'item' | 'gatilho' | 'nenhum'): void {
+  function openMenu(indice: number, foco: 'item' | 'gatilho' | 'nenhum'): void {
     const alvo = menusMontados[indice];
     if (!alvo) return;
     if (aberto?.trigger === alvo.trigger) return;
-    fecharTudo();
+    closeAll();
     alvo.panel.hidden = false;
     alvo.trigger.dataset.state = 'open';
     alvo.trigger.setAttribute('aria-expanded', 'true');
@@ -221,7 +221,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
   // ── Construção de um painel (menu de topo ou submenu) ──────────────────────
 
   /** Devolve o painel e a lista de elementos focáveis DESTE nível. */
-  function criarPainel(
+  function createPanel(
     itens: MenubarItem[],
     opcoes: { id: string; submenu: boolean },
   ): { panel: HTMLElement; focaveis: HTMLElement[] } {
@@ -263,14 +263,14 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         caixa.className = 'nds-dropdown-menu-checkbox-item';
         caixa.dataset.slot = 'menubar-checkbox-item';
         caixa.setAttribute('role', 'menuitemcheckbox');
-        aplicarComuns(caixa, item);
+        applyComuns(caixa, item);
 
         let marcado = item.checked ?? false;
         // O estado é TRI-VALORADO: marcado, desmarcado e misto. O misto vale
         // SOBRE o marcado enquanto durar — é ele quem manda no que se anuncia e
         // no que se desenha.
         let misto = item.indeterminate ?? false;
-        const indicador = criarIndicador(null, 'menubar-checkbox-item-indicator');
+        const indicador = createIndicador(null, 'menubar-checkbox-item-indicator');
 
         const pintar = (): void => {
           // "mixed" é o que distingue "alguns selecionados" de "todos
@@ -280,13 +280,13 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
           if (!misto && marcado) caixa.dataset.checked = '';
           else delete caixa.dataset.checked;
           indicador.replaceChildren();
-          if (misto) indicador.appendChild(ICONE_TRACO());
-          else if (marcado) indicador.appendChild(ICONE_MARCA());
+          if (misto) indicador.appendChild(ICON_TRACO());
+          else if (marcado) indicador.appendChild(ICON_MARCA());
         };
 
         pintar();
 
-        criarRotuloEAtalho(caixa, item);
+        createLabelEAtalho(caixa, item);
         caixa.appendChild(indicador);
 
         const alternar = (): void => {
@@ -336,15 +336,15 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
           escolha.dataset.slot = 'menubar-radio-item';
           escolha.setAttribute('role', 'menuitemradio');
           escolha.dataset.value = opcao.value;
-          aplicarComuns(escolha, { disabled: opcao.disabled });
+          applyComuns(escolha, { disabled: opcao.disabled });
 
           const marcado = escolhido === opcao.value;
           escolha.setAttribute('aria-checked', String(marcado));
           if (marcado) escolha.dataset.checked = '';
 
-          criarRotuloEAtalho(escolha, { label: opcao.label });
-          const indicador = criarIndicador(
-            marcado ? ICONE_MARCA() : null,
+          createLabelEAtalho(escolha, { label: opcao.label });
+          const indicador = createIndicador(
+            marcado ? ICON_MARCA() : null,
             'menubar-radio-item-indicator',
           );
           escolha.appendChild(indicador);
@@ -358,7 +358,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
               if (ativo) outro.el.dataset.checked = '';
               else delete outro.el.dataset.checked;
               outro.indicador.replaceChildren();
-              if (ativo) outro.indicador.appendChild(ICONE_MARCA());
+              if (ativo) outro.indicador.appendChild(ICON_MARCA());
             }
             item.onValueChange?.(escolhido);
           });
@@ -386,25 +386,25 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         subGatilho.setAttribute('aria-expanded', 'false');
         subGatilho.setAttribute('aria-controls', subId);
         subGatilho.dataset.state = 'closed';
-        aplicarComuns(subGatilho, item);
-        criarRotuloEAtalho(subGatilho, item);
-        const chevron = ICONE_SUBMENU();
+        applyComuns(subGatilho, item);
+        createLabelEAtalho(subGatilho, item);
+        const chevron = ICON_SUBMENU();
         chevron.setAttribute('class', 'nds-dropdown-menu-sub-trigger-chevron');
         subGatilho.appendChild(chevron);
 
-        const { panel: subPanel, focaveis: subFocaveis } = criarPainel(item.items ?? [], {
+        const { panel: subPanel, focaveis: subFocaveis } = createPanel(item.items ?? [], {
           id: subId,
           submenu: true,
         });
 
-        const abrirSub = (focar: boolean): void => {
+        const openSub = (focar: boolean): void => {
           if (item.disabled) return;
           subPanel.hidden = false;
           subGatilho.setAttribute('aria-expanded', 'true');
           subGatilho.dataset.state = 'open';
           if (focar) subFocaveis[0]?.focus();
         };
-        const fecharSub = (focarGatilho: boolean): void => {
+        const closeSub = (focarGatilho: boolean): void => {
           subPanel.hidden = true;
           subGatilho.setAttribute('aria-expanded', 'false');
           subGatilho.dataset.state = 'closed';
@@ -412,21 +412,21 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         };
 
         subGatilho.addEventListener('click', () => {
-          if (subGatilho.getAttribute('aria-expanded') === 'true') fecharSub(true);
-          else abrirSub(true);
+          if (subGatilho.getAttribute('aria-expanded') === 'true') closeSub(true);
+          else openSub(true);
         });
         subGatilho.addEventListener('keydown', (e) => {
           if (e.key === 'ArrowRight' || e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             e.stopPropagation();
-            abrirSub(true);
+            openSub(true);
           }
         });
         subPanel.addEventListener('keydown', (e) => {
           if (e.key === 'ArrowLeft') {
             e.preventDefault();
             e.stopPropagation();
-            fecharSub(true);
+            closeSub(true);
           }
         });
 
@@ -442,15 +442,15 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
       el.dataset.slot = 'menubar-item';
       el.dataset.variant = item.variant ?? 'default';
       el.setAttribute('role', 'menuitem');
-      aplicarComuns(el, item);
-      criarRotuloEAtalho(el, item);
+      applyComuns(el, item);
+      createLabelEAtalho(el, item);
 
       const acionar = (): void => {
         if (item.disabled) return;
-        const gatilhoDoMenu = aberto?.trigger ?? null;
+        const menuTrigger = aberto?.trigger ?? null;
         item.onClick?.();
-        fecharTudo();
-        gatilhoDoMenu?.focus();
+        closeAll();
+        menuTrigger?.focus();
       };
       el.addEventListener('click', acionar);
       el.addEventListener('keydown', (e) => {
@@ -533,21 +533,21 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     trigger.tabIndex = indice === 0 ? 0 : -1;
     trigger.textContent = menu.label;
 
-    const { panel, focaveis } = criarPainel(menu.items, { id: panelId, submenu: false });
+    const { panel, focaveis } = createPanel(menu.items, { id: panelId, submenu: false });
 
     trigger.addEventListener('click', () => {
-      const estavaAberto = trigger.dataset.state === 'open';
-      fecharTudo();
-      if (!estavaAberto) abrirMenu(indice, 'item');
+      const estavaOpen = trigger.dataset.state === 'open';
+      closeAll();
+      if (!estavaOpen) openMenu(indice, 'item');
       else moverTabulacao(trigger);
     });
 
     trigger.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        abrirMenu(indice, 'item');
+        openMenu(indice, 'item');
       } else if (e.key === 'Escape') {
-        fecharTudo();
+        closeAll();
         moverTabulacao(trigger);
       }
     });
@@ -567,11 +567,11 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft' && e.key !== 'Escape') return;
 
     if (e.key === 'Escape') {
-      const gatilhoDoAberto = aberto?.trigger ?? null;
-      fecharTudo();
-      if (gatilhoDoAberto) {
-        moverTabulacao(gatilhoDoAberto);
-        gatilhoDoAberto.focus();
+      const openTrigger = aberto?.trigger ?? null;
+      closeAll();
+      if (openTrigger) {
+        moverTabulacao(openTrigger);
+        openTrigger.focus();
       }
       return;
     }
@@ -589,7 +589,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
 
     e.preventDefault();
     if (aberto) {
-      abrirMenu(proximo, 'gatilho');
+      openMenu(proximo, 'gatilho');
     } else {
       moverTabulacao(gatilhos[proximo]);
       gatilhos[proximo].focus();
@@ -602,19 +602,19 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
    * referência à função. Cada barra criada somava mais um ouvinte de `click`
    * permanente no `document`, com a closure inteira da barra presa junto.
    */
-  function aoClicarFora(e: MouseEvent): void {
-    if (aberto && !root.contains(e.target as Node)) fecharTudo();
+  function onClickOutside(e: MouseEvent): void {
+    if (aberto && !root.contains(e.target as Node)) closeAll();
   }
 
-  document.addEventListener('click', aoClicarFora);
+  document.addEventListener('click', onClickOutside);
 
   if (options?.defaultOpen !== undefined) {
     // Depois da montagem: o painel precisa estar no DOM para receber o foco.
-    queueMicrotask(() => abrirMenu(options.defaultOpen!, 'nenhum'));
+    queueMicrotask(() => openMenu(options.defaultOpen!, 'nenhum'));
   }
 
   return tornarDestruivel(root, root, () => {
-    fecharTudo();
-    document.removeEventListener('click', aoClicarFora);
+    closeAll();
+    document.removeEventListener('click', onClickOutside);
   });
 }

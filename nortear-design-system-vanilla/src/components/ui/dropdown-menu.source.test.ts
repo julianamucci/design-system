@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   dropdownMenuSnippet,
   dropdownMenuSource,
-  dropdownMenuSourceCom,
+  dropdownMenuSourceWith,
 } from './dropdown-menu.source';
 
 describe('dropdownMenuSnippet', () => {
@@ -89,14 +89,14 @@ describe('dropdownMenuSnippet', () => {
 
 describe('dropdownMenuSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = dropdownMenuSource('<ul role="menu">', {});
-    const comArgs = dropdownMenuSource('<ul role="menu">', {
+    const noArgs = dropdownMenuSource('<ul role="menu">', {});
+    const withArgs = dropdownMenuSource('<ul role="menu">', {
       args: { side: 'top', align: 'end', triggerLabel: 'Abrir para cima' },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("side: 'top'");
-    expect(comArgs).toContain("align: 'end'");
-    expect(comArgs).toContain("label: 'Abrir para cima'");
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("side: 'top'");
+    expect(withArgs).toContain("align: 'end'");
+    expect(withArgs).toContain("label: 'Abrir para cima'");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -108,7 +108,7 @@ describe('dropdownMenuSource', () => {
 
 describe('dropdownMenuSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = dropdownMenuSourceCom({
+    const transform = dropdownMenuSourceWith({
       side: 'top',
       items: [{ label: 'Renomear', value: 'rename' }],
     });

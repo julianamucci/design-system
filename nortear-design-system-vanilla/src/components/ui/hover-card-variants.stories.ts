@@ -6,8 +6,8 @@ import {
   painelAberto,
 } from '@shared/testing/hover-card-probe';
 import { createHoverCard } from './hover-card';
-import { hoverCardSource, hoverCardSourceCom } from './hover-card.source';
-import { construirDuasLinhas, construirLink, emFrase } from './hover-card.fixtures';
+import { hoverCardSource, hoverCardSourceWith } from './hover-card.source';
+import { construirDuasLines, construirLink, emFrase } from './hover-card.fixtures';
 
 // O HoverCard não tem variante de cor nem de tamanho: o painel é um só. O que
 // varia é o TEMPO — quanto o cartão espera antes de aparecer e antes de sumir —
@@ -48,7 +48,7 @@ export const Default: Story = {
   render: () => {
     const cartao = createHoverCard({
       trigger: construirLink('@joana'),
-      content: construirDuasLinhas(
+      content: construirDuasLines(
         'Joana Silva',
         'Espera padrão: 600ms para abrir e 300ms para fechar.',
       ),
@@ -76,7 +76,7 @@ export const WithShortDelay: Story = {
     // que é a OUTRA story.
     docs: {
       source: {
-        transform: hoverCardSourceCom({
+        transform: hoverCardSourceWith({
           triggerLabel: 'design-system.dev',
           triggerHref: 'https://design-system.dev',
           contentTitle: 'Guia de overlays acessíveis',
@@ -96,7 +96,7 @@ export const WithShortDelay: Story = {
   render: () => {
     const cartao = createHoverCard({
       trigger: construirLink('design-system.dev', 'https://design-system.dev'),
-      content: construirDuasLinhas(
+      content: construirDuasLines(
         'Guia de overlays acessíveis',
         'Espera de 150ms para abrir e 100ms para fechar.',
       ),

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { createNavigationMenu } from './navigation-menu';
 import { abrir, fechar, wrap } from './navigation-menu.fixtures';
-import { navigationMenuSource, navigationMenuSourceCom } from './navigation-menu.source';
+import { navigationMenuSource, navigationMenuSourceWith } from './navigation-menu.source';
 
 const meta: Meta = {
   tags: ['navigation'],
@@ -94,7 +94,7 @@ export const Vertical: Story = {
     covers: ['visual.item5'],
     docs: {
       source: {
-        transform: navigationMenuSourceCom({
+        transform: navigationMenuSourceWith({
           orientation: 'vertical',
           class: 'nds-w-sm',
           ariaLabel: 'Navegação da conta',

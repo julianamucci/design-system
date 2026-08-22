@@ -11,9 +11,9 @@ import {
   createBreadcrumbEllipsis,
 } from './breadcrumb';
 import {
-  breadcrumbComMenuSourceCom,
+  breadcrumbWithMenuSourceWith,
   breadcrumbSource,
-  breadcrumbSourceCom,
+  breadcrumbSourceWith,
 } from './breadcrumb.source';
 import { createDropdownMenu } from './dropdown-menu';
 
@@ -48,7 +48,7 @@ export const Default: Story = {
       // Override de story: o ouvinte que reporta a navegação é o assunto aqui, e
       // control nenhum o alcança.
       source: {
-        transform: breadcrumbSourceCom({ onNavigate: 'registrarNavegacao(text);' }),
+        transform: breadcrumbSourceWith({ onNavigate: 'registrarNavegacao(text);' }),
       },
       description: {
         story:
@@ -60,7 +60,7 @@ export const Default: Story = {
     const nav = createBreadcrumb();
     const list = createBreadcrumbList();
 
-    const criarNivel = (label: string) => {
+    const createLevel = (label: string) => {
       const item = createBreadcrumbItem();
       const link = createBreadcrumbLink({ href: '#', text: label });
       link.addEventListener('click', (e) => {
@@ -75,9 +75,9 @@ export const Default: Story = {
     current.appendChild(createBreadcrumbPage({ text: 'Breadcrumb' }));
 
     list.append(
-      criarNivel('Início'),
+      createLevel('Início'),
       createBreadcrumbSeparator(),
-      criarNivel('Componentes'),
+      createLevel('Componentes'),
       createBreadcrumbSeparator(),
       current,
     );
@@ -117,7 +117,7 @@ export const Responsive: Story = {
     docs: {
       // Override de story: a forma do snippet é outra — o menu que expõe os
       // níveis ocultos é uma segunda fábrica, e é ela o assunto.
-      source: { transform: breadcrumbComMenuSourceCom() },
+      source: { transform: breadcrumbWithMenuSourceWith() },
       description: {
         story:
           'Composição responsiva: BreadcrumbEllipsis envolvido em DropdownMenu para expor níveis ocultos em mobile.',

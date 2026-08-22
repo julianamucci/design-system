@@ -188,12 +188,12 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
   // regras de posição do controle são seletores de atributo com valor, e sem o
   // valor escrito o controle ficaria sem posição nenhuma no eixo horizontal.
   const orientacao = vertical ? 'vertical' : 'horizontal';
-  const classeDaSeta = (direcao: 'prev' | 'next') =>
+  const arrowClassName = (direcao: 'prev' | 'next') =>
     cn(btnClass('outline', 'icon-sm'), 'nds-carousel-arrow', `nds-carousel-arrow-${direcao}`);
 
   const prevBtn = document.createElement('button');
   prevBtn.type = 'button';
-  prevBtn.className = classeDaSeta('prev');
+  prevBtn.className = arrowClassName('prev');
   prevBtn.dataset.slot = 'carousel-previous';
   prevBtn.dataset.orientation = orientacao;
   prevBtn.setAttribute('aria-label', previousLabel);
@@ -203,16 +203,16 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
 
   const nextBtn = document.createElement('button');
   nextBtn.type = 'button';
-  nextBtn.className = classeDaSeta('next');
+  nextBtn.className = arrowClassName('next');
   nextBtn.dataset.slot = 'carousel-next';
   nextBtn.dataset.orientation = orientacao;
   nextBtn.setAttribute('aria-label', nextLabel);
   // Nasce vivo quando há para onde ir. Estado SÍNCRONO: o motor só mede depois
   // que a raiz entra no documento, e sem isto a seta apareceria apagada no
   // primeiro quadro de toda story.
-  const podeAvancarNoInicio = items.length > 1;
-  nextBtn.setAttribute('aria-disabled', podeAvancarNoInicio ? 'false' : 'true');
-  nextBtn.disabled = !podeAvancarNoInicio;
+  const startPodeAvancar = items.length > 1;
+  nextBtn.setAttribute('aria-disabled', startPodeAvancar ? 'false' : 'true');
+  nextBtn.disabled = !startPodeAvancar;
   nextBtn.innerHTML = DOMPurify.sanitize(CHEVRON_RIGHT);
 
   root.appendChild(prevBtn);
@@ -226,9 +226,9 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
   // um segundo detector de arraste ao lado do que o motor já tem.
   let veioDeGesto = false;
 
-  function sincronizarSetas(): void {
+  function sincronizarArrows(): void {
     const podePrev = embla ? embla.canScrollPrev() : false;
-    const podeNext = embla ? embla.canScrollNext() : podeAvancarNoInicio;
+    const podeNext = embla ? embla.canScrollNext() : startPodeAvancar;
     prevBtn.setAttribute('aria-disabled', podePrev ? 'false' : 'true');
     prevBtn.toggleAttribute('disabled', !podePrev);
     nextBtn.setAttribute('aria-disabled', podeNext ? 'false' : 'true');
@@ -246,7 +246,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
   function aoSelecionar(): void {
     if (!embla) return;
     currentIndex = embla.selectedScrollSnap();
-    sincronizarSetas();
+    sincronizarArrows();
     onIndexChange?.(currentIndex, veioDeGesto ? 'swipe' : origemPendente);
     veioDeGesto = false;
     origemPendente = 'button';
@@ -260,7 +260,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
     // reprovação intermitente, com o carrossel parando um slide antes do fim
     // porque o primeiro clique se perdeu. Montar sob demanda fecha a janela:
     // se há um comando, a raiz já está na página.
-    if (!embla) iniciarMotor();
+    if (!embla) startMotor();
     if (!embla) return;
     if (alvo === 'next') {
       // O avanço automático dá a volta; a navegação de quem usa respeita os
@@ -284,7 +284,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
    */
   let quadro: number | null = null;
 
-  function iniciarMotor(): void {
+  function startMotor(): void {
     if (embla || !root.isConnected) return;
     embla = EmblaCarousel(overflow, {
       axis: vertical ? 'y' : 'x',
@@ -294,7 +294,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
       duration: prefersReducedMotion() ? 0 : 25,
     });
     embla.on('select', aoSelecionar);
-    embla.on('reInit', sincronizarSetas);
+    embla.on('reInit', sincronizarArrows);
     embla.on('pointerDown', () => {
       veioDeGesto = true;
     });
@@ -305,19 +305,19 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
     embla.on('settle', () => {
       veioDeGesto = false;
     });
-    sincronizarSetas();
+    sincronizarArrows();
   }
 
-  function aguardarConexao(): void {
+  function waitForConexao(): void {
     if (embla) return;
     if (root.isConnected) {
-      iniciarMotor();
+      startMotor();
       return;
     }
-    quadro = requestAnimationFrame(aguardarConexao);
+    quadro = requestAnimationFrame(waitForConexao);
   }
 
-  aguardarConexao();
+  waitForConexao();
 
   // ── Autoplay ────────────────────────────────────────────────────────────────
   //
@@ -332,7 +332,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
     autoplayTimer = null;
   }
 
-  function iniciarAutoplay(): void {
+  function startAutoplay(): void {
     if (!autoplayLigado || autoplayTimer) return;
     autoplayTimer = setInterval(() => mover('next', 'autoplay'), autoplayInterval);
   }
@@ -371,8 +371,8 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
     // `pointerDown` da área dos slides, não o clique das setas.
     root.addEventListener('pointerdown', pararAutoplay);
     root.addEventListener('mouseenter', suspenderAutoplay);
-    root.addEventListener('mouseleave', iniciarAutoplay);
-    iniciarAutoplay();
+    root.addEventListener('mouseleave', startAutoplay);
+    startAutoplay();
   }
 
   onIndexChange?.(0, 'init');

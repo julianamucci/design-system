@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createSeparator } from './separator';
-import { separatorEmCardSource, separatorSource, separatorSourceCom } from './separator.source';
+import { separatorEmCardSource, separatorSource, separatorSourceWith } from './separator.source';
 import {
   createCard,
   createCardContent,
@@ -87,7 +87,7 @@ export const InMenu: Story = {
     // o caso em que a linha deixa de ser decorativa, e o padrão da fábrica é o
     // contrário.
     docs: {
-      source: { transform: separatorSourceCom({ decorative: false, antes: 'Conta', depois: 'Sair' }) },
+      source: { transform: separatorSourceWith({ decorative: false, antes: 'Conta', depois: 'Sair' }) },
     },
   },
   render: () => {
@@ -138,7 +138,7 @@ export const EmphasisStrong: Story = {
     // docs page documenta em Extensibilidade.
     docs: {
       source: {
-        transform: separatorSourceCom({
+        transform: separatorSourceWith({
           emphasis: 'strong',
           className: 'nds-mt-4',
           antes: 'Continuação do mesmo assunto',
@@ -186,9 +186,9 @@ export const EmphasisStrong: Story = {
     await step('A ênfase forte troca o token de cor da linha', async () => {
       // Comparar com o separador padrão renderizado ao lado, e não com um valor
       // literal: o token muda por tema, a diferença entre os dois não.
-      const corPadrao = getComputedStyle(padrao).backgroundColor;
-      const corForte = getComputedStyle(forte).backgroundColor;
-      await expect(corForte).not.toBe(corPadrao);
+      const colorDefault = getComputedStyle(padrao).backgroundColor;
+      const colorForte = getComputedStyle(forte).backgroundColor;
+      await expect(colorForte).not.toBe(colorDefault);
     });
 
     await step('A classe extra convive com a classe base', async () => {

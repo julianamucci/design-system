@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
 import { embrulhar, esperarPainel } from './menubar.fixtures';
-import { menubarSource, menubarSourceCom } from './menubar.source';
+import { menubarSource, menubarSourceWith } from './menubar.source';
 
 // Itens de cada ficha em lista: as asserções contam a partir daqui, nunca de um
 // número escrito à mão no play.
@@ -42,7 +42,7 @@ export const Default: Story = {
     covers: ['accessibility.item7'],
     docs: {
       source: {
-        transform: menubarSourceCom({
+        transform: menubarSourceWith({
           menus: [
             { label: 'Arquivo', items: ITENS_NEUTROS.map((i) => ({ label: i })) },
             { label: 'Editar', items: [{ label: 'Desfazer' }] },
@@ -99,7 +99,7 @@ export const Destructive: Story = {
     covers: ['visual.item5'],
     docs: {
       source: {
-        transform: menubarSourceCom({
+        transform: menubarSourceWith({
           menus: [
             {
               label: 'Arquivo',

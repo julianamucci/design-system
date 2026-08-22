@@ -4,7 +4,7 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createDrawer, type DrawerDirection, type DrawerElement } from './drawer';
 import { drawerSource } from './drawer.source';
 import { createButton } from './button';
-import { limparPortaisDoDrawer } from './drawer-portal-cleanup';
+import { drawerClearPortais } from './drawer-portal-cleanup';
 import { createDrawerDocs } from '@/components/docs/DrawerDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -146,7 +146,7 @@ export const Playground: Story = {
     return container;
   },
   play: async ({ canvasElement, step, args }) => {
-    limparPortaisDoDrawer();
+    drawerClearPortais();
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: args.triggerLabel });
 

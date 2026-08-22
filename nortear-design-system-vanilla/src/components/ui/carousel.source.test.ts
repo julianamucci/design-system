@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { carouselSnippet, carouselSource, carouselSourceCom } from './carousel.source';
+import { carouselSnippet, carouselSource, carouselSourceWith } from './carousel.source';
 
 describe('carouselSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
@@ -53,13 +53,13 @@ describe('carouselSnippet', () => {
 
 describe('carouselSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = carouselSource('<div data-slot="carousel">', {});
-    const comArgs = carouselSource('<div data-slot="carousel">', {
+    const noArgs = carouselSource('<div data-slot="carousel">', {});
+    const withArgs = carouselSource('<div data-slot="carousel">', {
       args: { slides: 8, autoplay: true },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain('{ length: 8 }');
-    expect(comArgs).toContain('autoplay: true');
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain('{ length: 8 }');
+    expect(withArgs).toContain('autoplay: true');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -69,7 +69,7 @@ describe('carouselSource', () => {
 
 describe('carouselSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = carouselSourceCom({ orientation: 'vertical', slides: 4 });
+    const transform = carouselSourceWith({ orientation: 'vertical', slides: 4 });
     const código = transform('', { args: { slides: 9 } });
     expect(código).toContain("orientation: 'vertical'");
     expect(código).toContain('{ length: 4 }');

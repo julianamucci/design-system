@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createCalendar } from './calendar';
-import { calendarSource, calendarSourceCom } from './calendar.source';
+import { calendarSource, calendarSourceWith } from './calendar.source';
 import { userEvent, within, expect } from 'storybook/test';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -99,7 +99,7 @@ export const Bordered: Story = {
     docs: {
       // Override de story: a moldura é o assunto, e ela entra por `class`.
       source: {
-        transform: calendarSourceCom({
+        transform: calendarSourceWith({
           class: 'nds-rounded-md nds-border-default nds-shadow-sm',
         }),
       },
@@ -160,7 +160,7 @@ export const CaptionDropdown: Story = {
     covers: ['functional.item7'],
     docs: {
       // Override de story: a legenda com seletores é o assunto.
-      source: { transform: calendarSourceCom({ captionLayout: 'dropdown' }) },
+      source: { transform: calendarSourceWith({ captionLayout: 'dropdown' }) },
       description: {
         story: 'Mês e ano viram seletores, para saltar de período sem passar mês a mês.',
       },
@@ -242,7 +242,7 @@ export const TwoMonths: Story = {
     docs: {
       // Override de story: a janela de dois meses é o assunto.
       source: {
-        transform: calendarSourceCom({
+        transform: calendarSourceWith({
           numberOfMonths: 2,
           value: 'new Date(2026, 3, 28)',
         }),
@@ -290,14 +290,14 @@ export const TwoMonths: Story = {
       // nos DOIS grids — 28 de abril é dia real em abril e vizinho em maio.
       const bloco = (i: number) =>
         canvasElement.querySelectorAll<HTMLElement>('.nds-calendar-month')[i];
-      const diaNoBloco = (i: number, iso: string) =>
+      const blockDay = (i: number, iso: string) =>
         bloco(i).querySelector<HTMLButtonElement>(`.nds-calendar-day-btn[data-day="${iso}"]`)!;
 
-      await userEvent.click(diaNoBloco(1, '2026-05-05'));
+      await userEvent.click(blockDay(1, '2026-05-05'));
       await expect(rotulos()).toEqual(['abril 2026', 'maio 2026']);
-      await expect(diaNoBloco(1, '2026-05-05')).toHaveAttribute('data-selected');
+      await expect(blockDay(1, '2026-05-05')).toHaveAttribute('data-selected');
 
-      await userEvent.click(diaNoBloco(0, '2026-04-28'));
+      await userEvent.click(blockDay(0, '2026-04-28'));
       await expect(rotulos()).toEqual(['abril 2026', 'maio 2026']);
     });
   },

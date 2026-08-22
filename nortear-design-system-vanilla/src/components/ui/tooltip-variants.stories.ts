@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createTooltip } from './tooltip';
-import { balaoDe, limparPortal, wrap } from './tooltip.fixtures';
-import { tooltipSource, tooltipSourceCom } from './tooltip.source';
+import { balaoDe, clearPortal, wrap } from './tooltip.fixtures';
+import { tooltipSource, tooltipSourceWith } from './tooltip.source';
 import { createButton } from './button';
 
 // As três variantes que o conteúdo compartilhado descreve — texto curto, texto
@@ -47,7 +47,7 @@ type Story = StoryObj;
 export const Default: Story = {
   parameters: {
     covers: ['visual.item1', 'accessibility.item2'],
-    docs: { source: { transform: tooltipSourceCom({ content: 'Salvar' }) } },
+    docs: { source: { transform: tooltipSourceWith({ content: 'Salvar' }) } },
   },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Salvar', 'aria-label': 'Salvar' });
@@ -77,7 +77,7 @@ export const Default: Story = {
       await expect(contraste(estilo.color, estilo.backgroundColor)).toBeGreaterThanOrEqual(4.5);
     });
 
-    await step('Cleanup', async () => { limparPortal(); });
+    await step('Cleanup', async () => { clearPortal(); });
   },
 };
 
@@ -109,7 +109,7 @@ export const WithShortcut: Story = {
       await expect(gatilho).toHaveAttribute('aria-label', 'Salvar');
     });
 
-    await step('Cleanup', async () => { limparPortal(); });
+    await step('Cleanup', async () => { clearPortal(); });
   },
 };
 
@@ -118,7 +118,7 @@ export const LongText: Story = {
     covers: ['visual.item4'],
     docs: {
       source: {
-        transform: tooltipSourceCom({
+        transform: tooltipSourceWith({
           triggerLabel: 'Mais informação',
           content:
             'Esta ação salva todas as alterações localmente e sincroniza com o servidor quando houver conexão.',
@@ -159,6 +159,6 @@ export const LongText: Story = {
       await expect(balao.getBoundingClientRect().width).toBeLessThanOrEqual(limite + 1);
     });
 
-    await step('Cleanup', async () => { limparPortal(); });
+    await step('Cleanup', async () => { clearPortal(); });
   },
 };

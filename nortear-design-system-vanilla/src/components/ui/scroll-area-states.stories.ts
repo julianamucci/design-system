@@ -5,8 +5,8 @@ import { createScrollArea } from './scroll-area';
 import { buildList } from './scroll-area.fixtures';
 import {
   scrollAreaSource,
-  scrollAreaSourceCom,
-  scrollAreaSourceSemLimite,
+  scrollAreaSourceWith,
+  scrollAreaSourceNoLimit,
 } from './scroll-area.source';
 
 const meta: Meta = {
@@ -208,7 +208,7 @@ export const FocusableContent: Story = {
       // O conteúdo focável é o assunto: uma lista de textos não mostraria a
       // ordem de tabulação que a story documenta.
       source: {
-        transform: scrollAreaSourceCom({
+        transform: scrollAreaSourceWith({
           size: 'md',
           'aria-label': 'Lista de ações',
           conteudo: 'links',
@@ -264,7 +264,7 @@ export const NoLimit: Story = {
     docs: {
       // O assunto é a AUSÊNCIA da opção: o snippet do meta mostraria a chamada
       // certa e esconderia justamente o erro de uso que a story documenta.
-      source: { transform: scrollAreaSourceSemLimite({ size: 'sm' }) },
+      source: { transform: scrollAreaSourceNoLimit({ size: 'sm' }) },
       description: { story: 'Sem degrau de altura no root — o conteúdo expande e não há rolagem. É o erro de uso mais comum: o componente aparenta estar quebrado quando ninguém disse até onde ele pode ir.' } },
   },
   render: () => {

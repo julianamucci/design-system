@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  hoverCardComComandosSnippet,
+  hoverCardWithComandosSnippet,
   hoverCardSnippet,
   hoverCardSource,
-  hoverCardSourceCom,
+  hoverCardSourceWith,
 } from './hover-card.source';
 
 describe('hoverCardSnippet', () => {
@@ -86,14 +86,14 @@ describe('hoverCardSnippet', () => {
 
 describe('hoverCardSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = hoverCardSource('<div data-slot="hover-card-content">', {});
-    const comArgs = hoverCardSource('<div data-slot="hover-card-content">', {
+    const noArgs = hoverCardSource('<div data-slot="hover-card-content">', {});
+    const withArgs = hoverCardSource('<div data-slot="hover-card-content">', {
       args: { side: 'top', openDelay: 150, triggerLabel: '@maria' },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("side: 'top'");
-    expect(comArgs).toContain('openDelay: 150');
-    expect(comArgs).toContain("gatilho.textContent = '@maria';");
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("side: 'top'");
+    expect(withArgs).toContain('openDelay: 150');
+    expect(withArgs).toContain("gatilho.textContent = '@maria';");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -105,7 +105,7 @@ describe('hoverCardSource', () => {
 
 describe('hoverCardSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = hoverCardSourceCom({ side: 'left', class: 'nds-w-md nds-text-center' });
+    const transform = hoverCardSourceWith({ side: 'left', class: 'nds-w-md nds-text-center' });
     const código = transform('', { args: { side: 'bottom' } });
     expect(código).toContain("side: 'left'");
     expect(código).toContain("class: 'nds-w-md nds-text-center'");
@@ -114,7 +114,7 @@ describe('hoverCardSourceCom', () => {
 
 describe('hoverCardComComandosSnippet', () => {
   it('mostra os comandos da raiz, que são o modo controlado desta fábrica', () => {
-    const código = hoverCardComComandosSnippet({
+    const código = hoverCardWithComandosSnippet({
       onOpenChange: '(aberto) => registrar(aberto)',
     });
     expect(código).toContain('cartao.open()');
@@ -126,7 +126,7 @@ describe('hoverCardComComandosSnippet', () => {
   });
 
   it('os controles entram na página junto com a frase', () => {
-    expect(hoverCardComComandosSnippet()).toContain(
+    expect(hoverCardWithComandosSnippet()).toContain(
       "document.querySelector('#app')?.append(abrir, fechar, frase);",
     );
   });

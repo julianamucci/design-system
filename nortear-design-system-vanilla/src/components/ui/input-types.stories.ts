@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, userEvent, expect } from 'storybook/test';
 import { alturaResultante, campoDe } from '@shared/testing/input-probe';
 import { campoRotulado } from './input.fixtures';
-import { inputSource, inputSourceCom } from './input.source';
+import { inputSource, inputSourceWith } from './input.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -45,7 +45,7 @@ export const Email: Story = {
   parameters: {
     docs: {
       source: {
-        transform: inputSourceCom({
+        transform: inputSourceWith({
           type: 'email',
           id: 'email',
           label: 'Email',
@@ -74,7 +74,7 @@ export const Password: Story = {
   parameters: {
     docs: {
       source: {
-        transform: inputSourceCom({
+        transform: inputSourceWith({
           type: 'password',
           id: 'senha',
           label: 'Senha',
@@ -103,7 +103,7 @@ export const Number: Story = {
   parameters: {
     docs: {
       source: {
-        transform: inputSourceCom({
+        transform: inputSourceWith({
           type: 'number',
           id: 'quantidade',
           label: 'Quantidade',
@@ -132,7 +132,7 @@ export const Search: Story = {
     covers: ['visual.item3'],
     docs: {
       source: {
-        transform: inputSourceCom({
+        transform: inputSourceWith({
           type: 'search',
           id: 'busca',
           label: 'Buscar',
@@ -173,7 +173,7 @@ export const File: Story = {
     covers: ['functional.item5'],
     docs: {
       source: {
-        transform: inputSourceCom({ type: 'file', id: 'arquivo', label: 'Arquivo' }),
+        transform: inputSourceWith({ type: 'file', id: 'arquivo', label: 'Arquivo' }),
       },
     },
   },

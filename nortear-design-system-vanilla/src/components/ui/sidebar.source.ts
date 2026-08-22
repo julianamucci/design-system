@@ -19,7 +19,7 @@ export type SidebarItemSnippet = {
   icon?: string;
 };
 
-export type SidebarGrupoSnippet = {
+export type SidebarGroupSnippet = {
   label?: string;
   items: SidebarItemSnippet[];
 };
@@ -36,7 +36,7 @@ export type SidebarSnippetOptions = {
   onMobileOpenChange?: unknown;
   /** Nome do marco de navegação que envolve a barra. */
   navLabel?: string;
-  grupos?: SidebarGrupoSnippet[];
+  grupos?: SidebarGroupSnippet[];
   /** Nome acessível do campo de busca no cabeçalho. Ausente = sem busca. */
   busca?: string;
   /** Rótulo do item do rodapé. `false` monta a barra sem rodapé. */
@@ -47,10 +47,10 @@ export type SidebarSnippetOptions = {
   mostrarDestroy?: boolean;
 };
 
-const CALLBACK_COLUNA = '(aberta) => registrarBarra(aberta)';
+const CALLBACK_COLUMN = '(aberta) => registrarBarra(aberta)';
 const CALLBACK_GAVETA = '(aberta) => registrarGaveta(aberta)';
 
-const GRUPOS_PADRAO: SidebarGrupoSnippet[] = [
+const GROUPS_DEFAULT: SidebarGroupSnippet[] = [
   {
     label: 'Navegação',
     items: [
@@ -66,7 +66,7 @@ function expressao(valor: unknown, padrao: string): string | undefined {
   return typeof valor === 'string' ? valor : padrao;
 }
 
-function iconesDe(grupos: SidebarGrupoSnippet[], extras: string[] = []): string[] {
+function iconsOf(grupos: SidebarGroupSnippet[], extras: string[] = []): string[] {
   const nomes = new Set<string>(extras);
   for (const grupo of grupos) for (const item of grupo.items) if (item.icon) nomes.add(item.icon);
   return [...nomes].sort();
@@ -86,7 +86,7 @@ function importarIcones(nomes: string[]): string | undefined {
  * `barra.element` é a raiz; o que recebe cabeçalho, conteúdo e rodapé é o painel
  * interno, que é onde a folha compartilhada desenha a coluna.
  */
-function blocoDaBarra(o: SidebarSnippetOptions): string {
+function barBlock(o: SidebarSnippetOptions): string {
   const linhas = opcoes([
     // `true`, `left` e `sidebar` são os padrões da fábrica: nenhum entra.
     ['defaultOpen', o.defaultOpen === false ? 'false' : undefined],
@@ -96,7 +96,7 @@ function blocoDaBarra(o: SidebarSnippetOptions): string {
       'mobileQuery',
       o.mobileQuery && o.mobileQuery !== SIDEBAR_MOBILE_QUERY ? texto(o.mobileQuery) : undefined,
     ],
-    ['onOpenChange', expressao(o.onOpenChange, CALLBACK_COLUNA)],
+    ['onOpenChange', expressao(o.onOpenChange, CALLBACK_COLUMN)],
     ['onMobileOpenChange', expressao(o.onMobileOpenChange, CALLBACK_GAVETA)],
   ]);
 
@@ -104,7 +104,7 @@ function blocoDaBarra(o: SidebarSnippetOptions): string {
 const interno = barra.element.querySelector('[data-sidebar="sidebar"]')!;`;
 }
 
-function blocoDoCabecalho(o: SidebarSnippetOptions): string {
+function headerBlock(o: SidebarSnippetOptions): string {
   const busca = o.busca
     ? `
 
@@ -131,7 +131,7 @@ function literalDoItem(item: SidebarItemSnippet): string {
   return `{ ${partes.join(', ')} }`;
 }
 
-function literalDoGrupo(grupo: SidebarGrupoSnippet, recuo: string): string {
+function groupLiteral(grupo: SidebarGroupSnippet, recuo: string): string {
   const rotulo = grupo.label ? `${recuo}  label: ${texto(grupo.label)},\n` : '';
   return `${recuo}createSidebarGroup({
 ${rotulo}${recuo}  items: [
@@ -140,11 +140,11 @@ ${recuo}  ],
 ${recuo}}),`;
 }
 
-function blocoDoConteudo(grupos: SidebarGrupoSnippet[]): string {
+function contentBlock(grupos: SidebarGroupSnippet[]): string {
   // Entre grupos entra a linha do próprio componente: é ela que separa dois
   // conjuntos de navegação, e ela se anuncia como divisor.
   const corpo = grupos
-    .flatMap((grupo, i) => (i === 0 ? [] : ['  createSidebarSeparator(),']).concat(literalDoGrupo(grupo, '  ')))
+    .flatMap((grupo, i) => (i === 0 ? [] : ['  createSidebarSeparator(),']).concat(groupLiteral(grupo, '  ')))
     .join('\n');
 
   return `const conteudo = createSidebarContent();
@@ -153,7 +153,7 @@ ${corpo}
 );`;
 }
 
-function blocoDoRodape(rotulo: string): string {
+function footerBlock(rotulo: string): string {
   return `const rodape = createSidebarFooter();
 const menuDoRodape = createSidebarMenu();
 menuDoRodape.appendChild(
@@ -170,7 +170,7 @@ rodape.appendChild(menuDoRodape);`;
  * de tela não lista a barra como região, e quem navega por marcos não chega até
  * ela. Dois marcos com o mesmo nome também não servem — daí o nome próprio.
  */
-function blocoDaPagina(o: SidebarSnippetOptions): string {
+function pageBlock(o: SidebarSnippetOptions): string {
   const gatilho =
     o.comGatilho === false
       ? `// Sem gatilho: a barra fica sempre visível, como num painel fixo.`
@@ -188,7 +188,7 @@ const pagina = createSidebarProvider();
 pagina.append(nav, principal);`;
 }
 
-function blocoFinal(o: SidebarSnippetOptions): string {
+function blockFinal(o: SidebarSnippetOptions): string {
   const destroy = o.mostrarDestroy
     ? `
 
@@ -199,7 +199,7 @@ barra.destroy();`
   return `document.querySelector('#app')?.append(pagina);${destroy}`;
 }
 
-const IMPORTS_ESTRUTURA = [
+const IMPORTS_STRUCTURE = [
   'createSidebar',
   'createSidebarContent',
   'createSidebarHeader',
@@ -211,12 +211,12 @@ const IMPORTS_ESTRUTURA = [
 
 /** A composição canônica: barra com cabeçalho, grupos de navegação e rodapé. */
 export function sidebarSnippet(o: SidebarSnippetOptions = {}): string {
-  const grupos = o.grupos ?? GRUPOS_PADRAO;
+  const grupos = o.grupos ?? GROUPS_DEFAULT;
   const comRodape = o.rodape !== false;
-  const rotuloDoRodape = typeof o.rodape === 'string' ? o.rodape : 'Perfil';
+  const footerLabel = typeof o.rodape === 'string' ? o.rodape : 'Perfil';
 
   const nomes = [
-    ...IMPORTS_ESTRUTURA,
+    ...IMPORTS_STRUCTURE,
     'createSidebarGroup',
     ...(grupos.length > 1 ? ['createSidebarSeparator'] : []),
     ...(comRodape ? ['createSidebarFooter', 'createSidebarMenu', 'createSidebarMenuItem'] : []),
@@ -227,19 +227,19 @@ export function sidebarSnippet(o: SidebarSnippetOptions = {}): string {
   return snippet(
     [
       importar('sidebar', ...nomes),
-      importarIcones(iconesDe(grupos, comRodape ? ['User'] : [])),
+      importarIcones(iconsOf(grupos, comRodape ? ['User'] : [])),
     ]
       .filter(Boolean)
       .join('\n'),
-    blocoDaBarra(o),
-    blocoDoCabecalho(o),
-    blocoDoConteudo(grupos),
-    comRodape ? blocoDoRodape(rotuloDoRodape) : undefined,
+    barBlock(o),
+    headerBlock(o),
+    contentBlock(grupos),
+    comRodape ? footerBlock(footerLabel) : undefined,
     comRodape
       ? `interno.append(cabecalho, conteudo, rodape);`
       : `interno.append(cabecalho, conteudo);`,
-    blocoDaPagina(o),
-    blocoFinal(o),
+    pageBlock(o),
+    blockFinal(o),
   );
 }
 
@@ -251,9 +251,9 @@ export function sidebarSnippet(o: SidebarSnippetOptions = {}): string {
  * botão, contador ancorado e ação flutuante como três irmãos dentro do mesmo
  * `<li>`. O atalho `createSidebarGroup` esconderia todas elas.
  */
-export function sidebarComAcoesSnippet(o: SidebarSnippetOptions = {}): string {
+export function sidebarWithActionsSnippet(o: SidebarSnippetOptions = {}): string {
   const nomes = [
-    ...IMPORTS_ESTRUTURA,
+    ...IMPORTS_STRUCTURE,
     'createSidebarGroupAction',
     'createSidebarGroupContent',
     'createSidebarGroupLabel',
@@ -271,8 +271,8 @@ export function sidebarComAcoesSnippet(o: SidebarSnippetOptions = {}): string {
       importar('sidebar', ...nomes),
       importarIcones(['Ellipsis', 'LayoutGrid', 'Plus']),
     ].join('\n'),
-    blocoDaBarra(o),
-    blocoDoCabecalho({}),
+    barBlock(o),
+    headerBlock({}),
     `const grupo = document.createElement('div');
 grupo.className = 'nds-sidebar-group';
 grupo.setAttribute('data-sidebar', 'group');
@@ -322,8 +322,8 @@ interno.append(cabecalho, conteudo);
 // A faixa é irmã do conteúdo, dentro do painel: ela faz o mesmo que o gatilho e
 // por isso fica fora da ordem de tabulação.
 interno.appendChild(createSidebarRail(barra.toggle));`,
-    blocoDaPagina(o),
-    blocoFinal(o),
+    pageBlock(o),
+    blockFinal(o),
   );
 }
 
@@ -334,9 +334,9 @@ interno.appendChild(createSidebarRail(barra.toggle));`,
  * lista aninhada e quem compõe liga `aria-expanded` do item pai à visibilidade
  * dela. Um snippet com o atalho de grupo esconderia esse par.
  */
-export function sidebarComSubmenuSnippet(o: SidebarSnippetOptions = {}): string {
+export function sidebarWithSubmenuSnippet(o: SidebarSnippetOptions = {}): string {
   const nomes = [
-    ...IMPORTS_ESTRUTURA,
+    ...IMPORTS_STRUCTURE,
     'createSidebarGroupContent',
     'createSidebarGroupLabel',
     'createSidebarMenu',
@@ -350,8 +350,8 @@ export function sidebarComSubmenuSnippet(o: SidebarSnippetOptions = {}): string 
 
   return snippet(
     [importar('sidebar', ...nomes), importarIcones(['House', 'LayoutGrid'])].join('\n'),
-    blocoDaBarra(o),
-    blocoDoCabecalho({}),
+    barBlock(o),
+    headerBlock({}),
     `const menu = createSidebarMenu({ 'aria-labelledby': 'grupo-componentes' });
 menu.appendChild(
   createSidebarMenuItem({ label: 'Dashboard', icon: createElement(House), href: '#', active: true }),
@@ -400,8 +400,8 @@ grupo.appendChild(conteudoDoGrupo);
 const conteudo = createSidebarContent();
 conteudo.appendChild(grupo);
 interno.append(cabecalho, conteudo);`,
-    blocoDaPagina(o),
-    blocoFinal(o),
+    pageBlock(o),
+    blockFinal(o),
   );
 }
 
@@ -412,9 +412,9 @@ interno.append(cabecalho, conteudo);`,
  * nome e vira `role="status"`; as demais ficam `aria-hidden`. Três regiões vivas
  * repetindo o mesmo aviso seria pior que nenhuma.
  */
-export function sidebarComEsqueletoSnippet(o: SidebarSnippetOptions = {}): string {
+export function sidebarWithSkeletonSnippet(o: SidebarSnippetOptions = {}): string {
   const nomes = [
-    ...IMPORTS_ESTRUTURA,
+    ...IMPORTS_STRUCTURE,
     'createSidebarGroupContent',
     'createSidebarGroupLabel',
     'createSidebarMenu',
@@ -425,8 +425,8 @@ export function sidebarComEsqueletoSnippet(o: SidebarSnippetOptions = {}): strin
 
   return snippet(
     importar('sidebar', ...nomes),
-    blocoDaBarra(o),
-    blocoDoCabecalho({}),
+    barBlock(o),
+    headerBlock({}),
     `const menu = createSidebarMenu({ 'aria-labelledby': 'grupo-carregando' });
 
 // Só a primeira linha se anuncia: com nome ela vira \`role="status"\`, e sem nome
@@ -452,8 +452,8 @@ grupo.appendChild(conteudoDoGrupo);
 const conteudo = createSidebarContent();
 conteudo.appendChild(grupo);
 interno.append(cabecalho, conteudo);`,
-    blocoDaPagina(o),
-    blocoFinal(o),
+    pageBlock(o),
+    blockFinal(o),
   );
 }
 
@@ -466,29 +466,29 @@ export const sidebarSource: SourceTransform<SidebarSnippetOptions> = (_gerado, c
   sidebarSnippet(ctx.args ?? {});
 
 /** Transform de story: mesmas fábricas, opções fixas que os controls não cobrem. */
-export function sidebarSourceCom(
+export function sidebarSourceWith(
   fixas: SidebarSnippetOptions,
 ): SourceTransform<SidebarSnippetOptions> {
   return (_gerado, ctx) => sidebarSnippet({ ...ctx.args, ...fixas });
 }
 
 /** Transform de story para o grupo montado peça a peça. */
-export function sidebarSourceComAcoes(
+export function sidebarSourceWithActions(
   fixas: SidebarSnippetOptions = {},
 ): SourceTransform<SidebarSnippetOptions> {
-  return (_gerado, ctx) => sidebarComAcoesSnippet({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => sidebarWithActionsSnippet({ ...ctx.args, ...fixas });
 }
 
 /** Transform de story para o item com sub-menu. */
-export function sidebarSourceComSubmenu(
+export function sidebarSourceWithSubmenu(
   fixas: SidebarSnippetOptions = {},
 ): SourceTransform<SidebarSnippetOptions> {
-  return (_gerado, ctx) => sidebarComSubmenuSnippet({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => sidebarWithSubmenuSnippet({ ...ctx.args, ...fixas });
 }
 
 /** Transform de story para o esqueleto de carregamento. */
-export function sidebarSourceComEsqueleto(
+export function sidebarSourceWithSkeleton(
   fixas: SidebarSnippetOptions = {},
 ): SourceTransform<SidebarSnippetOptions> {
-  return (_gerado, ctx) => sidebarComEsqueletoSnippet({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => sidebarWithSkeletonSnippet({ ...ctx.args, ...fixas });
 }

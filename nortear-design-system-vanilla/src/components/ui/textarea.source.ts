@@ -39,15 +39,15 @@ export type TextareaSnippetOptions = {
   erro?: string;
 };
 
-const CLASSE_DE_RESIZE: Record<NonNullable<TextareaSnippetOptions['resize']>, string> = {
+const RESIZE_CLASSNAME: Record<NonNullable<TextareaSnippetOptions['resize']>, string> = {
   y: 'nds-resize-y',
   none: 'nds-resize-none',
   free: 'nds-resize',
 };
 
-const ID_PADRAO = 'descricao';
+const ID_DEFAULT = 'descricao';
 const ROTULO_PADRAO = 'Descrição';
-const PLACEHOLDER_PADRAO = 'ex: Descreva o produto...';
+const PLACEHOLDER_DEFAULT = 'ex: Descreva o produto...';
 
 /**
  * A altura mínima e a direção do redimensionamento vêm de utilitário `.nds-*`,
@@ -55,7 +55,7 @@ const PLACEHOLDER_PADRAO = 'ex: Descreva o produto...';
  * e da escala de tipo.
  */
 function classe(o: TextareaSnippetOptions): string {
-  return `${CLASSE_DE_RESIZE[o.resize ?? 'y']} nds-min-h-30`;
+  return `${RESIZE_CLASSNAME[o.resize ?? 'y']} nds-min-h-30`;
 }
 
 /** Linhas escritas pela API do DOM — o que a fábrica não recebe como opção. */
@@ -122,20 +122,20 @@ grupo.append(rodape);`,
 export function textareaSnippet(o: TextareaSnippetOptions = {}): string {
   return snippet(
     [importar('textarea', 'createTextarea'), importar('label', 'createLabel')].join('\n'),
-    ...blocosDoCampo(o),
+    ...fieldBlocks(o),
     montar('grupo'),
   );
 }
 
 /** Os blocos do campo, sem import nem montagem — reaproveitados no formulário. */
-function blocosDoCampo(o: TextareaSnippetOptions): string[] {
-  const id = o.id ?? ID_PADRAO;
+function fieldBlocks(o: TextareaSnippetOptions): string[] {
+  const id = o.id ?? ID_DEFAULT;
   const rotulo = o.label ?? ROTULO_PADRAO;
 
   const linhas = opcoes([
     ['id', texto(id)],
     ['name', o.name ? texto(o.name) : undefined],
-    ['placeholder', texto(o.placeholder ?? PLACEHOLDER_PADRAO)],
+    ['placeholder', texto(o.placeholder ?? PLACEHOLDER_DEFAULT)],
     ['value', o.value ? texto(o.value) : undefined],
     ['rows', o.rows && o.rows > 0 ? String(o.rows) : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
@@ -167,7 +167,7 @@ grupo.append(mensagem);`
  * O `name` é opção da fábrica, e é ele que faz o campo aparecer no `FormData` —
  * sem nome, o valor digitado não chega ao servidor.
  */
-export function textareaFormularioSnippet(o: TextareaSnippetOptions = {}): string {
+export function textareaFormSnippet(o: TextareaSnippetOptions = {}): string {
   const id = o.id ?? 'feedback';
   const name = o.name ?? 'feedback';
   const rotulo = o.label ?? 'Feedback';
@@ -179,7 +179,7 @@ export function textareaFormularioSnippet(o: TextareaSnippetOptions = {}): strin
       importar('button', 'createButton'),
     ].join('\n'),
     // O grupo do campo entra no formulário, e não direto na página.
-    ...blocosDoCampo({
+    ...fieldBlocks({
       ...o,
       id,
       name,
@@ -202,10 +202,10 @@ formulario.addEventListener('submit', (evento) => {
 }
 
 /** Transform de story para o envio em formulário. */
-export function textareaSourceFormulario(
+export function textareaSourceForm(
   o: TextareaSnippetOptions = {},
 ): SourceTransform<TextareaSnippetOptions> {
-  return () => textareaFormularioSnippet(o);
+  return () => textareaFormSnippet(o);
 }
 
 /** Transform do `meta` — vale para todas as stories do arquivo. */
@@ -213,7 +213,7 @@ export const textareaSource: SourceTransform<TextareaSnippetOptions> = (_gerado,
   textareaSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function textareaSourceCom(
+export function textareaSourceWith(
   fixas: TextareaSnippetOptions,
 ): SourceTransform<TextareaSnippetOptions> {
   return (_gerado, ctx) => textareaSnippet({ ...ctx.args, ...fixas });

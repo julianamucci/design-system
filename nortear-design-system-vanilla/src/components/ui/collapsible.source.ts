@@ -11,7 +11,7 @@ import {
 } from '@/lib/story-source';
 
 /** Rótulo padrão do gatilho nas stories deste componente. */
-const GATILHO_PADRAO = 'Exibir filtros avançados';
+const TRIGGER_DEFAULT = 'Exibir filtros avançados';
 
 /**
  * O painel é conteúdo de quem consome — a fábrica não o inventa. O snippet
@@ -38,17 +38,17 @@ export type CollapsibleSnippetOptions = {
 };
 
 /** O texto do callback só entra quando é texto: nos args ele chega como função. */
-function corpoDoCallback(valor: unknown): string | undefined {
+function callbackBody(valor: unknown): string | undefined {
   return typeof valor === 'string' && valor.length > 0 ? valor : undefined;
 }
 
-function opcoesComuns(o: CollapsibleSnippetOptions, gatilho: string): string[] {
+function optionsComuns(o: CollapsibleSnippetOptions, gatilho: string): string[] {
   return opcoes([
     ['trigger', gatilho],
     ['content', 'painel'],
     ['defaultOpen', o.defaultOpen ? 'true' : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
-    ['onOpenChange', corpoDoCallback(o.onOpenChange)],
+    ['onOpenChange', callbackBody(o.onOpenChange)],
     ['class', o.class ? texto(o.class) : undefined],
   ]);
 }
@@ -60,7 +60,7 @@ export function collapsibleSnippet(o: CollapsibleSnippetOptions = {}): string {
     PAINEL,
     `const colapsavel = ${chamada(
       'createCollapsible',
-      opcoesComuns(o, texto(o.trigger ?? GATILHO_PADRAO)),
+      optionsComuns(o, texto(o.trigger ?? TRIGGER_DEFAULT)),
     )};`,
     montar('colapsavel'),
   );
@@ -74,7 +74,7 @@ export function collapsibleSnippet(o: CollapsibleSnippetOptions = {}): string {
  * NELE, sem embrulhar em outro botão. É o que permite o botão do design system
  * ser o gatilho.
  */
-export function collapsibleComGatilhoSnippet(
+export function collapsibleWithTriggerSnippet(
   o: CollapsibleSnippetOptions & { chevron?: boolean } = {},
 ): string {
   const chevron = o.chevron
@@ -92,11 +92,11 @@ export function collapsibleComGatilhoSnippet(
     [importar('button', 'createButton'), importar('collapsible', 'createCollapsible')].join('\n'),
     `const gatilho = ${chamada('createButton', opcoes([
       ['variant', texto('outline')],
-      ['label', texto(o.trigger ?? GATILHO_PADRAO)],
+      ['label', texto(o.trigger ?? TRIGGER_DEFAULT)],
     ]))};`,
     chevron,
     PAINEL,
-    `const colapsavel = ${chamada('createCollapsible', opcoesComuns(o, 'gatilho'))};`,
+    `const colapsavel = ${chamada('createCollapsible', optionsComuns(o, 'gatilho'))};`,
     montar('colapsavel'),
   );
 }
@@ -108,9 +108,9 @@ export function collapsibleComGatilhoSnippet(
  * clique no gatilho apenas PROPOR o novo valor, e quem escreve no DOM é quem
  * chama, por `setOpen`.
  */
-export function collapsibleControladoSnippet(o: CollapsibleSnippetOptions = {}): string {
+export function collapsibleControlledSnippet(o: CollapsibleSnippetOptions = {}): string {
   const linhas = opcoes([
-    ['trigger', texto(o.trigger ?? GATILHO_PADRAO)],
+    ['trigger', texto(o.trigger ?? TRIGGER_DEFAULT)],
     ['content', 'painel'],
     ['open', 'aberto'],
     ['onOpenChange', 'definir'],
@@ -140,22 +140,22 @@ export const collapsibleSource: SourceTransform<CollapsibleSnippetOptions> = (_g
   collapsibleSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function collapsibleSourceCom(
+export function collapsibleSourceWith(
   fixas: CollapsibleSnippetOptions,
 ): SourceTransform<CollapsibleSnippetOptions> {
   return (_gerado, ctx) => collapsibleSnippet({ ...ctx.args, ...fixas });
 }
 
 /** Transform de story para o gatilho como elemento. */
-export function collapsibleComGatilhoSource(
+export function collapsibleWithTriggerSource(
   fixas: CollapsibleSnippetOptions & { chevron?: boolean },
 ): SourceTransform<CollapsibleSnippetOptions> {
-  return (_gerado, ctx) => collapsibleComGatilhoSnippet({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => collapsibleWithTriggerSnippet({ ...ctx.args, ...fixas });
 }
 
 /** Transform de story para o modo controlado. */
 export function collapsibleControladoSource(
   fixas: CollapsibleSnippetOptions = {},
 ): SourceTransform<CollapsibleSnippetOptions> {
-  return (_gerado, ctx) => collapsibleControladoSnippet({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => collapsibleControlledSnippet({ ...ctx.args, ...fixas });
 }

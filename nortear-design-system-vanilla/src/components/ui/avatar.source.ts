@@ -25,18 +25,18 @@ export type AvatarSnippetOptions = {
   status?: string;
 };
 
-const FOTO_PADRAO = 'https://i.pravatar.cc/128?img=47';
-const ALT_PADRAO = 'Foto de perfil de Maria Rodrigues';
+const FOTO_DEFAULT = 'https://i.pravatar.cc/128?img=47';
+const ALT_DEFAULT = 'Foto de perfil de Maria Rodrigues';
 
 /** A chamada real de `createAvatar` com as opções da story. */
 export function avatarSnippet(o: AvatarSnippetOptions = {}): string {
-  const src = o.src === undefined ? FOTO_PADRAO : o.src;
+  const src = o.src === undefined ? FOTO_DEFAULT : o.src;
   const fallback = o.fallback ?? 'MR';
 
   const linhas = opcoes([
     ['src', src ? texto(src) : undefined],
     // Sem foto não há o que descrever: o alt acompanha a imagem.
-    ['alt', src ? texto(o.alt ?? ALT_PADRAO) : undefined],
+    ['alt', src ? texto(o.alt ?? ALT_DEFAULT) : undefined],
     ['fallbackText', fallback ? texto(fallback) : undefined],
     // `md` é o padrão da fábrica: só os outros presets entram.
     ['size', o.size && o.size !== 'md' ? texto(o.size) : undefined],
@@ -65,7 +65,7 @@ export const avatarSource: SourceTransform<AvatarSnippetOptions> = (_gerado, ctx
   avatarSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function avatarSourceCom(
+export function avatarSourceWith(
   fixas: AvatarSnippetOptions,
 ): SourceTransform<AvatarSnippetOptions> {
   return (_gerado, ctx) => avatarSnippet({ ...ctx.args, ...fixas });
@@ -113,7 +113,7 @@ avatar.appendChild(fallback);`,
   );
 }
 
-export function avatarGranularSourceCom(
+export function avatarGranularSourceWith(
   fixas: AvatarGranularSnippetOptions,
 ): SourceTransform<AvatarGranularSnippetOptions> {
   return (_gerado, ctx) => avatarGranularSnippet({ ...ctx.args, ...fixas });
@@ -121,7 +121,7 @@ export function avatarGranularSourceCom(
 
 // ─── Fila de avatares ────────────────────────────────────────────────────────
 
-export type AvatarGrupoSnippetOptions = {
+export type AvatarGroupSnippetOptions = {
   /**
    * Nome acessível da fila. A opção da fábrica chama-se `'aria-label'` — é ela
    * que emite `role="group"` e `aria-label` juntos; sem ela a fila é anônima.
@@ -134,7 +134,7 @@ export type AvatarGrupoSnippetOptions = {
 /**
  * FORMA diferente: três fábricas compõem a fila, e o contador é o último item.
  */
-export function avatarEmGrupoSnippet(o: AvatarGrupoSnippetOptions = {}): string {
+export function groupSnippetAvatar(o: AvatarGroupSnippetOptions = {}): string {
   return snippet(
     importar('avatar', 'createAvatar', 'createAvatarGroup', 'createAvatarGroupCount'),
     `const fotos = ['/equipe/maria.jpg', '/equipe/joao.jpg', '/equipe/ana.jpg'];
@@ -152,8 +152,8 @@ grupo.appendChild(contador);`,
   );
 }
 
-export function avatarEmGrupoSourceCom(
-  fixas: AvatarGrupoSnippetOptions,
-): SourceTransform<AvatarGrupoSnippetOptions> {
-  return (_gerado, ctx) => avatarEmGrupoSnippet({ ...ctx.args, ...fixas });
+export function groupSourceWithAvatar(
+  fixas: AvatarGroupSnippetOptions,
+): SourceTransform<AvatarGroupSnippetOptions> {
+  return (_gerado, ctx) => groupSnippetAvatar({ ...ctx.args, ...fixas });
 }

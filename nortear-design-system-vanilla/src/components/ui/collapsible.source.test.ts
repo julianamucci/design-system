@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  collapsibleComGatilhoSnippet,
-  collapsibleComGatilhoSource,
-  collapsibleControladoSnippet,
+  collapsibleWithTriggerSnippet,
+  collapsibleWithTriggerSource,
+  collapsibleControlledSnippet,
   collapsibleSnippet,
   collapsibleSource,
-  collapsibleSourceCom,
+  collapsibleSourceWith,
 } from './collapsible.source';
 
 describe('collapsibleSnippet', () => {
@@ -57,15 +57,15 @@ describe('collapsibleSnippet', () => {
 
 describe('collapsibleComGatilhoSnippet', () => {
   it('usa o botão do design system como gatilho', () => {
-    const código = collapsibleComGatilhoSnippet({ trigger: 'Exibir opções avançadas' });
+    const código = collapsibleWithTriggerSnippet({ trigger: 'Exibir opções avançadas' });
     expect(código).toContain("import { createButton } from '@/components/ui/button';");
     expect(código).toContain("label: 'Exibir opções avançadas'");
     expect(código).toContain('trigger: gatilho');
   });
 
   it('só menciona a classe do chevron quando a story a exercita', () => {
-    expect(collapsibleComGatilhoSnippet({})).not.toContain('nds-chevron');
-    expect(collapsibleComGatilhoSnippet({ chevron: true })).toContain(
+    expect(collapsibleWithTriggerSnippet({})).not.toContain('nds-chevron');
+    expect(collapsibleWithTriggerSnippet({ chevron: true })).toContain(
       "chevron.classList.add('nds-icon', 'nds-chevron');",
     );
   });
@@ -73,7 +73,7 @@ describe('collapsibleComGatilhoSnippet', () => {
 
 describe('collapsibleControladoSnippet', () => {
   it('mostra a posse do estado do lado de fora', () => {
-    const código = collapsibleControladoSnippet();
+    const código = collapsibleControlledSnippet();
     expect(código).toContain('let aberto = false;');
     expect(código).toContain('open: aberto');
     expect(código).toContain('onOpenChange: definir');
@@ -83,12 +83,12 @@ describe('collapsibleControladoSnippet', () => {
 
 describe('collapsibleSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = collapsibleSource('<div data-slot="collapsible">', {});
-    const comArgs = collapsibleSource('<div data-slot="collapsible">', {
+    const noArgs = collapsibleSource('<div data-slot="collapsible">', {});
+    const withArgs = collapsibleSource('<div data-slot="collapsible">', {
       args: { defaultOpen: true },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain('defaultOpen: true');
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain('defaultOpen: true');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -100,14 +100,14 @@ describe('collapsibleSource', () => {
 
 describe('collapsibleSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = collapsibleSourceCom({ disabled: true });
+    const transform = collapsibleSourceWith({ disabled: true });
     const código = transform('', { args: { defaultOpen: true } });
     expect(código).toContain('disabled: true');
     expect(código).toContain('defaultOpen: true');
   });
 
   it('vale também para a forma com gatilho de elemento', () => {
-    const código = collapsibleComGatilhoSource({ trigger: 'Configurações avançadas' })('', {
+    const código = collapsibleWithTriggerSource({ trigger: 'Configurações avançadas' })('', {
       args: { trigger: 'outro' },
     });
     expect(código).toContain("label: 'Configurações avançadas'");

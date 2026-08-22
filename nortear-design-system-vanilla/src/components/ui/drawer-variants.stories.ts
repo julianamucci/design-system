@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createDrawer, type DrawerDirection } from './drawer';
-import { drawerSource, drawerSourceCom } from './drawer.source';
+import { drawerSource, drawerSourceWith } from './drawer.source';
 import { createButton } from './button';
-import { abrirPeloGatilho } from './drawer.fixtures';
+import { openPeloTrigger } from './drawer.fixtures';
 
 const meta: Meta = {
   tags: ['disclosure'],
@@ -77,7 +77,7 @@ export const Bottom: Story = {
   },
   render: () => buildVariant('bottom', 'Detalhes do pedido', 'Pedido #4287 confirmado em 15 de março.'),
   play: async ({ canvasElement, step }) => {
-    const painel = await abrirPeloGatilho(canvasElement);
+    const painel = await openPeloTrigger(canvasElement);
     await step('O painel encosta na base e mostra a alça', async () => {
       await expect(painel).toHaveAttribute('data-vaul-drawer-direction', 'bottom');
       await expect(painel).toHaveClass(/nds-drawer-content/);
@@ -98,7 +98,7 @@ export const Top: Story = {
     // renderiza a de cima.
     docs: {
       source: {
-        transform: drawerSourceCom({
+        transform: drawerSourceWith({
           direction: 'top',
           triggerLabel: 'Abrir',
           title: 'Nova versão disponível',
@@ -115,7 +115,7 @@ export const Top: Story = {
   },
   render: () => buildVariant('top', 'Nova versão disponível', 'Atualize agora para acessar as novidades.'),
   play: async ({ canvasElement, step }) => {
-    const painel = await abrirPeloGatilho(canvasElement);
+    const painel = await openPeloTrigger(canvasElement);
     await step('O painel encosta no topo e esconde a alça', async () => {
       await expect(painel).toHaveAttribute('data-vaul-drawer-direction', 'top');
       await expect(painel).toHaveClass(/nds-drawer-content/);
@@ -133,7 +133,7 @@ export const Left: Story = {
     // control que a carregue.
     docs: {
       source: {
-        transform: drawerSourceCom({
+        transform: drawerSourceWith({
           direction: 'left',
           triggerLabel: 'Abrir',
           title: 'Menu',
@@ -150,7 +150,7 @@ export const Left: Story = {
   },
   render: () => buildVariant('left', 'Menu', 'Navegue pelas seções do app.'),
   play: async ({ canvasElement, step }) => {
-    const painel = await abrirPeloGatilho(canvasElement);
+    const painel = await openPeloTrigger(canvasElement);
     await step('O painel encosta na borda esquerda', async () => {
       await expect(painel).toHaveAttribute('data-vaul-drawer-direction', 'left');
       await expect(painel).toHaveClass(/nds-drawer-content/);
@@ -168,7 +168,7 @@ export const Right: Story = {
     // control que a carregue.
     docs: {
       source: {
-        transform: drawerSourceCom({
+        transform: drawerSourceWith({
           direction: 'right',
           triggerLabel: 'Abrir',
           title: 'Filtros',
@@ -185,7 +185,7 @@ export const Right: Story = {
   },
   render: () => buildVariant('right', 'Filtros', 'Refine sua busca por categoria, preço e disponibilidade.'),
   play: async ({ canvasElement, step }) => {
-    const painel = await abrirPeloGatilho(canvasElement);
+    const painel = await openPeloTrigger(canvasElement);
     await step('O painel encosta na borda direita', async () => {
       await expect(painel).toHaveAttribute('data-vaul-drawer-direction', 'right');
       await expect(painel).toHaveClass(/nds-drawer-content/);

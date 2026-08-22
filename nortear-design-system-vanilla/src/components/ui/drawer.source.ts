@@ -64,7 +64,7 @@ function botao(acao: DrawerSnippetAction): string {
   return `createButton({ ${pares} })`;
 }
 
-function acoesDe(o: DrawerSnippetOptions): DrawerSnippetAction[] {
+function actionsOf(o: DrawerSnippetOptions): DrawerSnippetAction[] {
   return (
     o.footer ?? [
       { label: o.cancelLabel ?? 'Cancelar', variant: 'outline', close: true },
@@ -80,7 +80,7 @@ function acoesDe(o: DrawerSnippetOptions): DrawerSnippetAction[] {
  * saída ganha `data-slot="drawer-close"`: é por esse atributo que a fábrica liga
  * o clique ao fechamento — sem ele o "Cancelar" é um botão inerte.
  */
-function blocoDoRodape(acoes: DrawerSnippetAction[]): string | undefined {
+function footerBlock(acoes: DrawerSnippetAction[]): string | undefined {
   if (acoes.length === 0) return undefined;
 
   const declarados = acoes.map((acao, i) => ({ acao, nome: `acao${i + 1}` }));
@@ -115,7 +115,7 @@ function blocoDoRodape(acoes: DrawerSnippetAction[]): string | undefined {
 }
 
 /** As opções comuns às duas formas de snippet. `content` é o nome da variável. */
-function linhasComuns(o: DrawerSnippetOptions, content: string, temRodape: boolean): string[] {
+function linesComuns(o: DrawerSnippetOptions, content: string, temRodape: boolean): string[] {
   return opcoes([
     ['trigger', botao({ label: o.triggerLabel ?? 'Abrir drawer', variant: 'outline' })],
     ['title', texto(o.title ?? 'Editar perfil')],
@@ -136,7 +136,7 @@ function linhasComuns(o: DrawerSnippetOptions, content: string, temRodape: boole
 }
 
 /** Abrir sem clique é comando, não opção — os verbos são os do Sidebar. */
-function aberturaPorCodigo(o: DrawerSnippetOptions): string | undefined {
+function codeAbertura(o: DrawerSnippetOptions): string | undefined {
   return o.defaultOpen ? 'gaveta.open();' : undefined;
 }
 
@@ -147,7 +147,7 @@ function aberturaPorCodigo(o: DrawerSnippetOptions): string | undefined {
  * inventa. O rodapé é UM elemento, e é ele quem arruma as ações.
  */
 export function drawerSnippet(o: DrawerSnippetOptions = {}): string {
-  const rodape = blocoDoRodape(acoesDe(o));
+  const rodape = footerBlock(actionsOf(o));
 
   return snippet(
     IMPORTS_BASE,
@@ -155,9 +155,9 @@ export function drawerSnippet(o: DrawerSnippetOptions = {}): string {
 corpo.className = 'nds-text-body nds-text-muted-foreground';
 corpo.textContent = ${texto(o.bodyText ?? 'Conteúdo do painel (formulário, mensagem, mídia).')};`,
     rodape,
-    `const gaveta = ${chamada('createDrawer', linhasComuns(o, 'corpo', rodape !== undefined))};`,
+    `const gaveta = ${chamada('createDrawer', linesComuns(o, 'corpo', rodape !== undefined))};`,
     montar('gaveta'),
-    aberturaPorCodigo(o),
+    codeAbertura(o),
   );
 }
 
@@ -170,24 +170,24 @@ export const drawerSource: SourceTransform<DrawerSnippetOptions> = (_gerado, ctx
   drawerSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function drawerSourceCom(fixas: DrawerSnippetOptions): SourceTransform<DrawerSnippetOptions> {
+export function drawerSourceWith(fixas: DrawerSnippetOptions): SourceTransform<DrawerSnippetOptions> {
   return (_gerado, ctx) => drawerSnippet({ ...ctx.args, ...fixas });
 }
 
 // ─── Segunda forma: corpo com formulário ─────────────────────────────────────
 
-export type DrawerCampo = {
+export type DrawerField = {
   label: string;
   /** Tipo do controle. `text` é o padrão do input e não entra no snippet. */
   type?: string;
   value?: string;
 };
 
-export type DrawerComFormularioSnippetOptions = Omit<DrawerSnippetOptions, 'bodyText'> & {
-  campos?: DrawerCampo[];
+export type DrawerWithFormSnippetOptions = Omit<DrawerSnippetOptions, 'bodyText'> & {
+  campos?: DrawerField[];
 };
 
-function campo(c: DrawerCampo): string {
+function campo(c: DrawerField): string {
   const entrada = opcoes([
     ['type', c.type && c.type !== 'text' ? texto(c.type) : undefined],
     ['value', c.value !== undefined ? texto(c.value) : undefined],
@@ -207,12 +207,12 @@ function campo(c: DrawerCampo): string {
  * composição de sub-fábricas: `createFormField` é quem fecha o par rótulo ↔
  * controle e gera o id que falta.
  */
-export function drawerComFormularioSnippet(o: DrawerComFormularioSnippetOptions = {}): string {
+export function drawerWithFormSnippet(o: DrawerWithFormSnippetOptions = {}): string {
   const campos = o.campos ?? [
     { label: 'Nome', value: 'Maria Souza' },
     { label: 'E-mail', type: 'email', value: 'maria@exemplo.com' },
   ];
-  const rodape = blocoDoRodape(acoesDe(o));
+  const rodape = footerBlock(actionsOf(o));
 
   return snippet(
     [
@@ -227,15 +227,15 @@ formulario.append(
 ${campos.map(campo).join('\n')}
 );`,
     rodape,
-    `const gaveta = ${chamada('createDrawer', linhasComuns(o, 'formulario', rodape !== undefined))};`,
+    `const gaveta = ${chamada('createDrawer', linesComuns(o, 'formulario', rodape !== undefined))};`,
     montar('gaveta'),
-    aberturaPorCodigo(o),
+    codeAbertura(o),
   );
 }
 
 /** Transform de story para a forma com formulário. */
 export function drawerComFormularioSource(
-  fixas: DrawerComFormularioSnippetOptions,
-): SourceTransform<DrawerComFormularioSnippetOptions> {
-  return (_gerado, ctx) => drawerComFormularioSnippet({ ...ctx.args, ...fixas });
+  fixas: DrawerWithFormSnippetOptions,
+): SourceTransform<DrawerWithFormSnippetOptions> {
+  return (_gerado, ctx) => drawerWithFormSnippet({ ...ctx.args, ...fixas });
 }

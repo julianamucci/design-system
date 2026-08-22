@@ -4,7 +4,7 @@ import {
   commandEmPopoverSnippet,
   commandSnippet,
   commandSource,
-  commandSourceCom,
+  commandSourceWith,
 } from './command.source';
 
 describe('commandSnippet', () => {
@@ -92,13 +92,13 @@ describe('commandEmDialogSnippet', () => {
 
 describe('commandSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = commandSource('<div data-slot="command">', {});
-    const comArgs = commandSource('<div data-slot="command">', {
+    const noArgs = commandSource('<div data-slot="command">', {});
+    const withArgs = commandSource('<div data-slot="command">', {
       args: { placeholder: 'Buscar comando...', showGroups: false },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("placeholder: 'Buscar comando...'");
-    expect(comArgs).not.toContain('group:');
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("placeholder: 'Buscar comando...'");
+    expect(withArgs).not.toContain('group:');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -110,7 +110,7 @@ describe('commandSource', () => {
 
 describe('commandSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = commandSourceCom({
+    const transform = commandSourceWith({
       items: [{ value: 'sair', label: 'Sair' }],
     });
     const código = transform('', { args: { placeholder: 'Buscar comando...' } });

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createSkeleton } from './skeleton';
-import { skeletonSourceCom } from './skeleton.source';
+import { skeletonSourceWith } from './skeleton.source';
 import {
   animacaoAtiva,
   distincaoDoFundo,
@@ -19,7 +19,7 @@ const meta: Meta = {
       // As duas stories montam a MESMA região de duas linhas: o que muda entre
       // elas é a preferência do sistema, que opção nenhuma da fábrica controla.
       source: {
-        transform: skeletonSourceCom({
+        transform: skeletonSourceWith({
           linhas: [
             { shape: 'text', width: 'full' },
             { shape: 'text', width: '3-4' },
@@ -37,7 +37,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-function regiaoComLinhas(): HTMLElement {
+function regiaoWithLines(): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-stack nds-w-sm';
   wrap.dataset.spacing = 'sm';
@@ -61,7 +61,7 @@ export const Pulsing: Story = {
       },
     },
   },
-  render: () => regiaoComLinhas(),
+  render: () => regiaoWithLines(),
   play: async ({ canvasElement, step }) => {
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
 
@@ -90,7 +90,7 @@ export const ReducedMotion: Story = {
       },
     },
   },
-  render: () => regiaoComLinhas(),
+  render: () => regiaoWithLines(),
   play: async ({ canvasElement, step }) => {
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
     // Cada passo estabelece a própria precondição: o desfazer roda no finally

@@ -6,7 +6,7 @@ import {
 } from '@shared/testing/tabs-probe';
 import { createTabs, type TabsItemDef } from './tabs';
 import { makePanel } from './tabs.fixtures';
-import { tabsSource, tabsSourceCom } from './tabs.source';
+import { tabsSource, tabsSourceWith } from './tabs.source';
 
 const meta: Meta = {
   tags: ['navigation'],
@@ -94,7 +94,7 @@ export const Line: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
-      source: { transform: tabsSourceCom({ variant: 'line' }) },
+      source: { transform: tabsSourceWith({ variant: 'line' }) },
       description: {
         story:
           'Variante line: sem trilho, o ativo é marcado por um traço fino desenhado em `::after`. ' +
@@ -134,7 +134,7 @@ export const Vertical: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
-      source: { transform: tabsSourceCom({ orientation: 'vertical' }) },
+      source: { transform: tabsSourceWith({ orientation: 'vertical' }) },
       description: {
         story:
           'Orientação vertical: lista empilhada à esquerda, painel ao lado. ' +

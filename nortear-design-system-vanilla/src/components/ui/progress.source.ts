@@ -219,14 +219,14 @@ export const progressSource: SourceTransform<ProgressSnippetOptions> = (_gerado,
   progressSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function progressSourceCom(
+export function progressSourceWith(
   fixas: ProgressSnippetOptions,
 ): SourceTransform<ProgressSnippetOptions> {
   return (_gerado, ctx) => progressSnippet({ ...ctx.args, ...fixas });
 }
 
 /** Transform de story para a barra com rótulo e valor visíveis. */
-export function progressSourceRotulo(
+export function progressSourceLabel(
   fixas: ProgressSnippetOptions,
 ): SourceTransform<ProgressSnippetOptions> {
   return (_gerado, ctx) => progressComRotuloSnippet({ ...ctx.args, ...fixas });

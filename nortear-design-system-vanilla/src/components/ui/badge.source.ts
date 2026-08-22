@@ -136,7 +136,7 @@ alvo.appendChild(createBadge({ variant: ${texto(variant)}, children: ${texto(lab
   );
 }
 
-export function badgeEmGatilhoSourceCom(
+export function triggerSourceWithBadge(
   fixas: BadgeEmGatilhoSnippetOptions,
 ): SourceTransform<BadgeEmGatilhoSnippetOptions> {
   return (_gerado, ctx) => badgeEmGatilhoSnippet({ ...ctx.args, ...fixas });

@@ -4,10 +4,10 @@ import { userEvent, within, expect , waitFor } from 'storybook/test';
 import DOMPurify from 'dompurify';
 import { createAccordion, type AccordionOptions } from './accordion';
 import {
-  accordionComConteudoRicoSourceCom,
-  accordionComGatilhoRicoSourceCom,
+  accordionWithContentRichSourceWith,
+  accordionWithTriggerRichSourceWith,
   accordionSource,
-  accordionSourceCom,
+  accordionSourceWith,
 } from './accordion.source';
 import { createBadge } from './badge';
 import { Info, AlertTriangle, CheckCircle2 } from 'lucide';
@@ -106,7 +106,7 @@ export const WithIconInTrigger: Story = {
     // entra depois da montagem — forma que o snippet do meta não tem como ter.
     docs: {
       source: {
-        transform: accordionComGatilhoRicoSourceCom({
+        transform: accordionWithTriggerRichSourceWith({
           value: 'info',
           rotulo: 'Informação',
           comIcone: true,
@@ -175,7 +175,7 @@ export const WithBadgeInTrigger: Story = {
     // etiqueta depois da montagem, porque `trigger` é texto na assinatura.
     docs: {
       source: {
-        transform: accordionComGatilhoRicoSourceCom({
+        transform: accordionWithTriggerRichSourceWith({
           value: 'novo',
           rotulo: 'Novidades da versão 3.0',
           badge: 'Novo',
@@ -251,7 +251,7 @@ export const RichContent: Story = {
     // entram no corpo do painel depois da montagem — e passam pelo sanitizador.
     docs: {
       source: {
-        transform: accordionComConteudoRicoSourceCom({
+        transform: accordionWithContentRichSourceWith({
           type: 'multiple',
           value: 'specs',
           items: [
@@ -309,7 +309,7 @@ export const FAQ: Story = {
     // Override de story: são quatro perguntas, e o snippet do meta mostraria as
     // três da demonstração.
     docs: {
-      source: { transform: accordionSourceCom({ items: FAQ_ITEMS }) },
+      source: { transform: accordionSourceWith({ items: FAQ_ITEMS }) },
       description: {
         story: 'Padrão FAQ canônico. Perguntas interrogativas completas no trigger. Respostas objetivas em 2–3 linhas no content.',
       },

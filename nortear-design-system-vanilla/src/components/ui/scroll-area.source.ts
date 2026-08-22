@@ -12,7 +12,7 @@ import {
 import type { ScrollAreaSize } from './scroll-area';
 
 /** Qual demonstração ocupa a área rolável. Muda o CONTEÚDO, não a chamada. */
-export type ScrollAreaConteudo = 'lista' | 'fileira' | 'matriz' | 'links' | 'badges';
+export type ScrollAreaContent = 'lista' | 'fileira' | 'matriz' | 'links' | 'badges';
 
 /**
  * O que as stories usam da `ScrollAreaOptions`.
@@ -33,10 +33,10 @@ export type ScrollAreaSnippetOptions = {
   /** @deprecated Apelido de `class` — chave dos args da story. */
   className?: string;
   itemCount?: number;
-  conteudo?: ScrollAreaConteudo;
+  conteudo?: ScrollAreaContent;
 };
 
-const CLASSE_PADRAO = 'nds-w-full nds-rounded-md nds-border-default';
+const CLASSNAME_DEFAULT = 'nds-w-full nds-rounded-md nds-border-default';
 
 function nomeAcessivel(o: ScrollAreaSnippetOptions): string | undefined {
   const nome = o['aria-label'] ?? o.label;
@@ -44,7 +44,7 @@ function nomeAcessivel(o: ScrollAreaSnippetOptions): string | undefined {
 }
 
 function classe(o: ScrollAreaSnippetOptions): string {
-  return o.class ?? o.className ?? CLASSE_PADRAO;
+  return o.class ?? o.className ?? CLASSNAME_DEFAULT;
 }
 
 /**
@@ -54,7 +54,7 @@ function classe(o: ScrollAreaSnippetOptions): string {
  * padrão, e sem teto de altura não há transbordo — logo não há rolagem. Omiti-lo
  * ensinaria o erro de uso mais comum do componente, que é a story `NoLimit`.
  */
-function linhasDaArea(o: ScrollAreaSnippetOptions, filho: string): string[] {
+function areaLines(o: ScrollAreaSnippetOptions, filho: string): string[] {
   const degrau = o.size === null ? undefined : (o.size ?? 'lg');
   return opcoes([
     ['size', degrau ? texto(degrau) : undefined],
@@ -73,7 +73,7 @@ function linhasDaArea(o: ScrollAreaSnippetOptions, filho: string): string[] {
 
 type Conteudo = { imports: string[]; bloco: string; variavel: string };
 
-function conteudoLista(total: number): Conteudo {
+function contentList(total: number): Conteudo {
   return {
     imports: [],
     variavel: 'lista',
@@ -89,7 +89,7 @@ for (let i = 1; i <= ${total}; i++) {
   };
 }
 
-function conteudoFileira(total: number): Conteudo {
+function contentRow(total: number): Conteudo {
   return {
     imports: [importar('card', 'createCard', 'createCardContent')],
     variavel: 'fileira',
@@ -109,7 +109,7 @@ for (let i = 1; i <= ${total}; i++) {
   };
 }
 
-function conteudoMatriz(linhas: number, colunas: number): Conteudo {
+function contentMatriz(linhas: number, colunas: number): Conteudo {
   return {
     imports: [],
     variavel: 'matriz',
@@ -130,7 +130,7 @@ for (let l = 1; l <= ${linhas}; l++) {
   };
 }
 
-function conteudoLinks(total: number): Conteudo {
+function contentLinks(total: number): Conteudo {
   return {
     imports: [],
     variavel: 'navegacao',
@@ -155,7 +155,7 @@ navegacao.appendChild(lista);`,
   };
 }
 
-function conteudoBadges(total: number): Conteudo {
+function contentBadges(total: number): Conteudo {
   return {
     imports: [importar('badge', 'createBadge')],
     variavel: 'versoes',
@@ -175,19 +175,19 @@ for (let i = 1; i <= ${total}; i++) {
   };
 }
 
-function conteudoDe(o: ScrollAreaSnippetOptions): Conteudo {
+function contentOf(o: ScrollAreaSnippetOptions): Conteudo {
   const total = o.itemCount ?? 30;
   switch (o.conteudo) {
     case 'fileira':
-      return conteudoFileira(o.itemCount ?? 15);
+      return contentRow(o.itemCount ?? 15);
     case 'matriz':
-      return conteudoMatriz(o.itemCount ?? 15, 12);
+      return contentMatriz(o.itemCount ?? 15, 12);
     case 'links':
-      return conteudoLinks(o.itemCount ?? 20);
+      return contentLinks(o.itemCount ?? 20);
     case 'badges':
-      return conteudoBadges(o.itemCount ?? 20);
+      return contentBadges(o.itemCount ?? 20);
     default:
-      return conteudoLista(total);
+      return contentList(total);
   }
 }
 
@@ -195,11 +195,11 @@ function conteudoDe(o: ScrollAreaSnippetOptions): Conteudo {
 
 /** A chamada real de `createScrollArea` com o conteúdo que a story mostra. */
 export function scrollAreaSnippet(o: ScrollAreaSnippetOptions = {}): string {
-  const conteudo = conteudoDe(o);
+  const conteudo = contentOf(o);
   return snippet(
     [importar('scroll-area', 'createScrollArea'), ...conteudo.imports].join('\n'),
     conteudo.bloco,
-    `const area = ${chamada('createScrollArea', linhasDaArea(o, conteudo.variavel))};`,
+    `const area = ${chamada('createScrollArea', areaLines(o, conteudo.variavel))};`,
     montar('area'),
   );
 }
@@ -210,8 +210,8 @@ export function scrollAreaSnippet(o: ScrollAreaSnippetOptions = {}): string {
  * Forma própria porque o assunto da story é a AUSÊNCIA da opção: um snippet que
  * mostrasse só a chamada certa esconderia o erro de uso que ela documenta.
  */
-export function scrollAreaSemLimiteSnippet(o: ScrollAreaSnippetOptions = {}): string {
-  const conteudo = conteudoDe(o);
+export function scrollAreaNoLimitSnippet(o: ScrollAreaSnippetOptions = {}): string {
+  const conteudo = contentOf(o);
   return snippet(
     importar('scroll-area', 'createScrollArea'),
     conteudo.bloco,
@@ -222,7 +222,7 @@ const semTeto = ${chamada('createScrollArea', [
       `class: ${texto(classe(o))},`,
       `children: ${conteudo.variavel},`,
     ])};`,
-    `const comTeto = ${chamada('createScrollArea', linhasDaArea({ ...o, size: o.size ?? 'sm' }, conteudo.variavel))};`,
+    `const comTeto = ${chamada('createScrollArea', areaLines({ ...o, size: o.size ?? 'sm' }, conteudo.variavel))};`,
     `document.querySelector('#app')?.append(semTeto, comTeto);`,
   );
 }
@@ -234,7 +234,7 @@ const semTeto = ${chamada('createScrollArea', [
  * senão o título rola junto e quem lê perde a referência do que está vendo.
  */
 export function scrollAreaEmCardSnippet(o: ScrollAreaSnippetOptions = {}): string {
-  const conteudo = conteudoDe(o);
+  const conteudo = contentOf(o);
   return snippet(
     [
       importar('scroll-area', 'createScrollArea'),
@@ -249,7 +249,7 @@ export function scrollAreaEmCardSnippet(o: ScrollAreaSnippetOptions = {}): strin
       ...conteudo.imports,
     ].join('\n'),
     conteudo.bloco,
-    `const area = ${chamada('createScrollArea', linhasDaArea(o, conteudo.variavel))};`,
+    `const area = ${chamada('createScrollArea', areaLines(o, conteudo.variavel))};`,
     `const cabecalho = createCardHeader();
 cabecalho.append(
   createCardTitle({ text: 'Histórico de atividades' }),
@@ -273,17 +273,17 @@ export const scrollAreaSource: SourceTransform<ScrollAreaSnippetOptions> = (_ger
   scrollAreaSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function scrollAreaSourceCom(
+export function scrollAreaSourceWith(
   fixas: ScrollAreaSnippetOptions,
 ): SourceTransform<ScrollAreaSnippetOptions> {
   return (_gerado, ctx) => scrollAreaSnippet({ ...ctx.args, ...fixas });
 }
 
 /** Transform de story para o par sem teto × com teto. */
-export function scrollAreaSourceSemLimite(
+export function scrollAreaSourceNoLimit(
   fixas: ScrollAreaSnippetOptions = {},
 ): SourceTransform<ScrollAreaSnippetOptions> {
-  return (_gerado, ctx) => scrollAreaSemLimiteSnippet({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => scrollAreaNoLimitSnippet({ ...ctx.args, ...fixas });
 }
 
 /** Transform de story para a área dentro de um Card. */

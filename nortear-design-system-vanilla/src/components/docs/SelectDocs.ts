@@ -90,7 +90,7 @@ function canaisDeContato(): SelectItem[] {
 }
 
 /** Nome acessível do campo de canal — não há rótulo visível neste exemplo. */
-function rotuloDeCanal(): string {
+function channelLabel(): string {
   const locale = getLocale();
   if (locale === 'en') return 'Select contact channel';
   if (locale === 'es') return 'Selecciona canal de contacto';
@@ -599,7 +599,7 @@ campo.destroy();`,
                 wrap.appendChild(
                   createSelect({
                     placeholder: t('demonstration.labels.placeholder'),
-                    'aria-label': rotuloDeCanal(),
+                    'aria-label': channelLabel(),
                     items: canaisDeContato(),
                   }),
                 );

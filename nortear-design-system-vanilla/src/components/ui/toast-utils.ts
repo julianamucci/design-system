@@ -57,10 +57,10 @@ interface ToastEntry {
 }
 
 /** Padrão do projeto, e o mesmo que o conteúdo compartilhado documenta. */
-const DURACAO_PADRAO = 4000;
+const DURATION_DEFAULT = 4000;
 
 /** Espelha a transição de saída de `.nds-toast` — encurtar aqui corta o fade. */
-const DURACAO_SAIDA = 200;
+const DURATION_OUTPUT = 200;
 
 let toastId = 0;
 const activeToasts: ToastEntry[] = [];
@@ -71,7 +71,7 @@ let currentPosition: ToastPosition = 'bottom-right';
 let regiaoDoConsumidor = false;
 
 /** Ponteiro ou foco dentro da região congela todos os cronômetros (WCAG 2.2.1). */
-let pausado = false;
+let paused = false;
 
 /** Rótulos em português — o design system é escrito em pt-BR. */
 export const REGION_LABEL = 'Notificações';
@@ -81,16 +81,16 @@ export const CLOSE_LABEL = 'Fechar notificação';
  * Defaults em vigor — a região montada manda, como o input `duration` do
  * Toaster nas outras stacks. Sem região montada valem os do design system.
  */
-type Padroes = Required<Pick<ToasterOptions, 'richColors' | 'duration' | 'closeButton' | 'closeLabel'>>;
+type Defaults = Required<Pick<ToasterOptions, 'richColors' | 'duration' | 'closeButton' | 'closeLabel'>>;
 
-const padroesDoSistema = (): Padroes => ({
+const sistemaDefaults = (): Defaults => ({
   richColors: false,
-  duration: DURACAO_PADRAO,
+  duration: DURATION_DEFAULT,
   closeButton: false,
   closeLabel: CLOSE_LABEL,
 });
 
-let padroes: Padroes = padroesDoSistema();
+let defaults: Defaults = sistemaDefaults();
 
 const ICONS: Record<ToastType, string> = {
   default: '',
@@ -108,26 +108,26 @@ const CLOSE_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" s
 
 // ─── Cronômetros ──────────────────────────────────────────────────────────────
 
-function pararCronometro(entry: ToastEntry): void {
+function stopCronometro(entry: ToastEntry): void {
   if (entry.timer === undefined) return;
   clearTimeout(entry.timer);
   entry.timer = undefined;
   entry.restante -= performance.now() - entry.retomadoEm;
 }
 
-function iniciarCronometro(entry: ToastEntry): void {
+function startCronometro(entry: ToastEntry): void {
   // `setTimeout(fn, Infinity)` NÃO é "nunca": o delay é convertido para inteiro
   // de 32 bits e vira 0, então a notificação persistente sumia no quadro
   // seguinte. O guarda é o que faz `duration: Infinity` valer de verdade.
-  if (pausado || !Number.isFinite(entry.restante)) return;
+  if (paused || !Number.isFinite(entry.restante)) return;
   entry.retomadoEm = performance.now();
   entry.timer = setTimeout(() => removeToast(entry.id), entry.restante);
 }
 
 function agendar(entry: ToastEntry, duracao: number): void {
-  pararCronometro(entry);
+  stopCronometro(entry);
   entry.restante = duracao;
-  iniciarCronometro(entry);
+  startCronometro(entry);
 }
 
 /**
@@ -137,16 +137,16 @@ function agendar(entry: ToastEntry, duracao: number): void {
  * ser consumido — e quem lê devagar, ou navega por teclado, é justamente quem
  * mais perde (WCAG 2.2.1).
  */
-function pausarCronometros(): void {
-  if (pausado) return;
-  pausado = true;
-  for (const entry of activeToasts) pararCronometro(entry);
+function pauseCronometros(): void {
+  if (paused) return;
+  paused = true;
+  for (const entry of activeToasts) stopCronometro(entry);
 }
 
-function retomarCronometros(): void {
-  if (!pausado) return;
-  pausado = false;
-  for (const entry of activeToasts) iniciarCronometro(entry);
+function resumeCronometros(): void {
+  if (!paused) return;
+  paused = false;
+  for (const entry of activeToasts) startCronometro(entry);
 }
 
 // ─── Região ───────────────────────────────────────────────────────────────────
@@ -160,18 +160,18 @@ function retomarCronometros(): void {
  * regiões com o mesmo nome, e as opções escritas pela pessoa sem efeito nenhum.
  */
 export function createSonnerToaster(options: ToasterOptions = {}): HTMLElement {
-  const el = montarRegiao(options);
+  const el = mountRegiao(options);
   regiaoDoConsumidor = true;
-  padroes = {
+  defaults = {
     richColors: options.richColors ?? false,
-    duration: options.duration ?? DURACAO_PADRAO,
+    duration: options.duration ?? DURATION_DEFAULT,
     closeButton: options.closeButton ?? false,
     closeLabel: options.closeLabel ?? CLOSE_LABEL,
   };
   return el;
 }
 
-function montarRegiao(options: ToasterOptions): HTMLElement {
+function mountRegiao(options: ToasterOptions): HTMLElement {
   const { position = 'bottom-right', richColors = false, expand = false } = options;
 
   if (containerEl) containerEl.remove();
@@ -188,10 +188,10 @@ function montarRegiao(options: ToasterOptions): HTMLElement {
   el.dataset.expand = String(expand);
 
   // Ponteiro ou foco dentro da região congela todos os cronômetros.
-  el.addEventListener('mouseenter', pausarCronometros);
-  el.addEventListener('mouseleave', retomarCronometros);
-  el.addEventListener('focusin', pausarCronometros);
-  el.addEventListener('focusout', retomarCronometros);
+  el.addEventListener('mouseenter', pauseCronometros);
+  el.addEventListener('mouseleave', resumeCronometros);
+  el.addEventListener('focusin', pauseCronometros);
+  el.addEventListener('focusout', resumeCronometros);
 
   // Escape fecha a notificação que está com o foco dentro. Quem chegou até o
   // botão de ação por teclado precisa de uma saída que não seja o mouse — e
@@ -225,7 +225,7 @@ function ensureContainer(position: ToastPosition | undefined): HTMLElement {
     return containerEl;
   }
 
-  const el = montarRegiao({ position: position ?? 'bottom-right', richColors: padroes.richColors });
+  const el = mountRegiao({ position: position ?? 'bottom-right', richColors: defaults.richColors });
   document.body.appendChild(el);
   return el;
 }
@@ -234,7 +234,7 @@ function removeToast(id: number): void {
   const idx = activeToasts.findIndex((t) => t.id === id);
   if (idx === -1) return;
   const entry = activeToasts[idx];
-  pararCronometro(entry);
+  stopCronometro(entry);
   activeToasts.splice(idx, 1);
   entry.el.dataset.visible = 'false';
 
@@ -246,14 +246,14 @@ function removeToast(id: number): void {
     if (activeToasts.length === 0 && containerEl && !regiaoDoConsumidor) {
       containerEl.remove();
       containerEl = null;
-      padroes = padroesDoSistema();
+      defaults = sistemaDefaults();
     }
-  }, DURACAO_SAIDA);
+  }, DURATION_OUTPUT);
 }
 
 // ─── Criação ──────────────────────────────────────────────────────────────────
 
-function montarIcone(type: ToastType): HTMLElement | null {
+function mountIcon(type: ToastType): HTMLElement | null {
   if (!ICONS[type]) return null;
   const iconWrap = document.createElement('span');
   iconWrap.className = 'nds-toast-icon';
@@ -268,10 +268,10 @@ function montarIcone(type: ToastType): HTMLElement | null {
 function createToast(type: ToastType, message: string, opts: ToastOptions = {}): number {
   const id = ++toastId;
   const container = ensureContainer(opts.position);
-  const richColors = opts.richColors ?? padroes.richColors;
+  const richColors = opts.richColors ?? defaults.richColors;
   // `loading` não tem prazo: quem o encerra é a operação que o originou.
-  const duration = opts.duration ?? (type === 'loading' ? Number.POSITIVE_INFINITY : padroes.duration);
-  const closeButton = opts.closeButton ?? padroes.closeButton;
+  const duration = opts.duration ?? (type === 'loading' ? Number.POSITIVE_INFINITY : defaults.duration);
+  const closeButton = opts.closeButton ?? defaults.closeButton;
 
   const toast = document.createElement('div');
   toast.setAttribute('data-sonner-toast', '');
@@ -282,7 +282,7 @@ function createToast(type: ToastType, message: string, opts: ToastOptions = {}):
   toast.dataset.richColors = String(richColors);
   toast.dataset.visible = 'false';
 
-  const iconWrap = montarIcone(type);
+  const iconWrap = mountIcon(type);
   if (iconWrap) toast.appendChild(iconWrap);
 
   const content = document.createElement('div');
@@ -320,7 +320,7 @@ function createToast(type: ToastType, message: string, opts: ToastOptions = {}):
     const closeBtn = document.createElement('button');
     closeBtn.type = 'button';
     closeBtn.setAttribute('data-close-button', '');
-    closeBtn.setAttribute('aria-label', padroes.closeLabel);
+    closeBtn.setAttribute('aria-label', defaults.closeLabel);
     closeBtn.className = 'nds-toast-close';
     closeBtn.innerHTML = DOMPurify.sanitize(CLOSE_SVG);
     closeBtn.addEventListener('click', () => removeToast(id));
@@ -346,7 +346,7 @@ function createToast(type: ToastType, message: string, opts: ToastOptions = {}):
     retomadoEm: performance.now(),
   };
   activeToasts.push(entry);
-  iniciarCronometro(entry);
+  startCronometro(entry);
 
   return id;
 }
@@ -365,9 +365,9 @@ function atualizar(id: number, type: ToastType, message: string, duracao: number
   entry.titleEl.textContent = message;
 
   entry.iconWrap?.remove();
-  const novoIcone = montarIcone(type);
-  entry.iconWrap = novoIcone;
-  if (novoIcone) entry.el.insertBefore(novoIcone, entry.el.firstChild);
+  const newIcon = mountIcon(type);
+  entry.iconWrap = newIcon;
+  if (newIcon) entry.el.insertBefore(newIcon, entry.el.firstChild);
 
   agendar(entry, duracao);
 }
@@ -410,7 +410,7 @@ export const toast = Object.assign(
         ...opts,
         duration: Number.POSITIVE_INFINITY,
       });
-      const prazo = opts?.duration ?? DURACAO_PADRAO;
+      const prazo = opts?.duration ?? DURATION_DEFAULT;
       void promise.then(
         () => atualizar(id, 'success', msgs.success, prazo),
         () => atualizar(id, 'error', msgs.error, prazo),

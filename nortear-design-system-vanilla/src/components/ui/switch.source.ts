@@ -29,17 +29,17 @@ export type SwitchSnippetOptions = {
   class?: string;
 };
 
-const CALLBACK_PADRAO = '(ligado) => salvarPreferencia(ligado)';
+const CALLBACK_DEFAULT = '(ligado) => salvarPreferencia(ligado)';
 
-const ID_PADRAO = 'notificacoes-email';
+const ID_DEFAULT = 'notificacoes-email';
 const ROTULO_PADRAO = 'Receber notificações por email';
 
 function expressao(valor: unknown): string | undefined {
   if (!valor) return undefined;
-  return typeof valor === 'string' ? valor : CALLBACK_PADRAO;
+  return typeof valor === 'string' ? valor : CALLBACK_DEFAULT;
 }
 
-function linhasDoControle(o: SwitchSnippetOptions, id: string, comRotulo: boolean): string[] {
+function controlLines(o: SwitchSnippetOptions, id: string, comRotulo: boolean): string[] {
   return opcoes([
     ['id', comRotulo ? texto(id) : undefined],
     // Sem rótulo visível o nome acessível é obrigatório: `aria-checked` sozinho
@@ -64,8 +64,8 @@ function linhasDoControle(o: SwitchSnippetOptions, id: string, comRotulo: boolea
 export function switchSnippet(o: SwitchSnippetOptions = {}): string {
   const rotulo = o.label === undefined ? ROTULO_PADRAO : o.label;
   const comRotulo = Boolean(rotulo);
-  const id = o.id ?? ID_PADRAO;
-  const linhas = linhasDoControle(o, id, comRotulo);
+  const id = o.id ?? ID_DEFAULT;
+  const linhas = controlLines(o, id, comRotulo);
 
   if (!comRotulo) {
     return snippet(
@@ -88,7 +88,7 @@ linha.append(controle, rotulo);`,
 }
 
 /** Um item da lista de preferências: rótulo, texto auxiliar e o controle. */
-export type SwitchPainelItem = {
+export type SwitchPanelItem = {
   id: string;
   label: string;
   description: string;
@@ -102,10 +102,10 @@ export type SwitchPainelItem = {
  * nome acessível. É a forma das listas de preferências, e o agrupador é o
  * `nds-cluster` do design system.
  */
-export function switchPainelSnippet(itens: SwitchPainelItem[]): string {
+export function switchPanelSnippet(itens: SwitchPanelItem[]): string {
   const corpo =
     itens.length === 1
-      ? corpoDeUmPainel(itens[0])
+      ? umPanelBody(itens[0])
       : `const preferencias = [
 ${itens
   .map(
@@ -148,7 +148,7 @@ preferencias.forEach(({ id, label, description, checked }) => {
   );
 }
 
-function corpoDeUmPainel(item: SwitchPainelItem): string {
+function umPanelBody(item: SwitchPanelItem): string {
   return `const painel = document.createElement('div');
 painel.className = 'nds-cluster nds-w-sm nds-rounded-lg nds-border-default nds-p-4';
 painel.dataset.align = 'center';
@@ -167,8 +167,8 @@ painel.append(textos, ${chamada('createSwitch', opcoes([['id', texto(item.id)], 
 }
 
 /** Transform de story para o painel com descrição / lista de preferências. */
-export function switchSourcePainel(itens: SwitchPainelItem[]): SourceTransform<SwitchSnippetOptions> {
-  return () => switchPainelSnippet(itens);
+export function switchSourcePanel(itens: SwitchPanelItem[]): SourceTransform<SwitchSnippetOptions> {
+  return () => switchPanelSnippet(itens);
 }
 
 /**
@@ -178,7 +178,7 @@ export function switchSourcePainel(itens: SwitchPainelItem[]): SourceTransform<S
  * campo de formulário. O estado vai para um `<input type="hidden">` pelo
  * callback de mudança, que é o caminho documentado desta stack.
  */
-export function switchFormularioSnippet(
+export function switchFormSnippet(
   o: { id?: string; label?: string; name?: string; checked?: boolean } = {},
 ): string {
   const id = o.id ?? 'newsletter';
@@ -218,10 +218,10 @@ formulario.append(linha, oculto, createButton({ type: 'submit', label: 'Salvar p
 }
 
 /** Transform de story para o envio em formulário. */
-export function switchSourceFormulario(
+export function switchSourceForm(
   o: { id?: string; label?: string; name?: string; checked?: boolean } = {},
 ): SourceTransform<SwitchSnippetOptions> {
-  return () => switchFormularioSnippet(o);
+  return () => switchFormSnippet(o);
 }
 
 /**
@@ -270,6 +270,6 @@ export const switchSource: SourceTransform<SwitchSnippetOptions> = (_gerado, ctx
   switchSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function switchSourceCom(fixas: SwitchSnippetOptions): SourceTransform<SwitchSnippetOptions> {
+export function switchSourceWith(fixas: SwitchSnippetOptions): SourceTransform<SwitchSnippetOptions> {
   return (_gerado, ctx) => switchSnippet({ ...ctx.args, ...fixas });
 }

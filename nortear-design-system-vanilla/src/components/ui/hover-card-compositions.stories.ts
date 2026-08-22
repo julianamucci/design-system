@@ -7,11 +7,11 @@ import {
   paineisAbertos,
 } from '@shared/testing/hover-card-probe';
 import { createHoverCard } from './hover-card';
-import { hoverCardSource, hoverCardSourceCom } from './hover-card.source';
+import { hoverCardSource, hoverCardSourceWith } from './hover-card.source';
 import {
-  construirBotao,
+  construirButton,
   construirCartaoPerfil,
-  construirDuasLinhas,
+  construirDuasLines,
   construirLink,
   emFrase,
 } from './hover-card.fixtures';
@@ -109,7 +109,7 @@ export const LinkPreview: Story = {
     cabecalho.append(favicon, url);
     conteudo.append(
       cabecalho,
-      construirDuasLinhas(
+      construirDuasLines(
         'Guia de overlays acessíveis',
         'Quando usar tooltip, popover e cartão de hover — e o que cada um exige de teclado.',
       ),
@@ -143,7 +143,7 @@ export const TermDefinition: Story = {
     // painel. O snippet do meta mostraria o link, que aqui seria errado.
     docs: {
       source: {
-        transform: hoverCardSourceCom({
+        transform: hoverCardSourceWith({
           triggerTipo: 'botao',
           triggerLabel: 'WCAG 2.2 AA',
           triggerAriaLabel: 'Definição de WCAG 2.2 AA',
@@ -161,11 +161,11 @@ export const TermDefinition: Story = {
     },
   },
   render: () => {
-    const gatilho = construirBotao('WCAG 2.2 AA');
+    const gatilho = construirButton('WCAG 2.2 AA');
     gatilho.setAttribute('aria-label', 'Definição de WCAG 2.2 AA');
     const cartao = createHoverCard({
       trigger: gatilho,
-      content: construirDuasLinhas(
+      content: construirDuasLines(
         'WCAG 2.2 nível AA',
         'Diretrizes de acessibilidade para conteúdo web — contraste mínimo de 4.5:1, operação por teclado e alvo de toque de 24px.',
       ),
@@ -199,7 +199,7 @@ export const ExplainedMetric: Story = {
     // próprio, porque uma métrica não navega para lugar nenhum.
     docs: {
       source: {
-        transform: hoverCardSourceCom({
+        transform: hoverCardSourceWith({
           triggerTipo: 'botao',
           triggerLabel: 'LCP 1.8s',
           triggerAriaLabel: 'Explicação da métrica LCP',
@@ -244,7 +244,7 @@ export const ExplainedMetric: Story = {
 
     conteudo.append(cabecalho, descricao);
 
-    const gatilho = construirBotao('LCP 1.8s');
+    const gatilho = construirButton('LCP 1.8s');
     gatilho.setAttribute('aria-label', 'Explicação da métrica LCP');
     const cartao = createHoverCard({ trigger: gatilho, content: conteudo, defaultOpen: true });
     return emFrase(cartao, 'A página inicial fechou o mês em', ', dentro da meta.');
@@ -268,7 +268,7 @@ export const Sides: Story = {
     // quatro é o andaime da comparação, não o que se copia.
     docs: {
       source: {
-        transform: hoverCardSourceCom({
+        transform: hoverCardSourceWith({
           triggerTipo: 'botao',
           triggerLabel: 'acima',
           triggerAriaLabel: 'Cartão acima do gatilho',
@@ -300,7 +300,7 @@ export const Sides: Story = {
     ];
 
     for (const { rotulo, side } of lados) {
-      const gatilho = construirBotao(rotulo);
+      const gatilho = construirButton(rotulo);
       gatilho.setAttribute('aria-label', `Cartão ${rotulo} do gatilho`);
       const conteudo = document.createElement('p');
       conteudo.className = 'nds-text-caption';
@@ -347,7 +347,7 @@ export const ExtraPanelClass: Story = {
     // control que a carregue — sem isto o snippet mostraria o painel padrão.
     docs: {
       source: {
-        transform: hoverCardSourceCom({
+        transform: hoverCardSourceWith({
           class: 'nds-w-md nds-text-center',
           contentTitle: 'Joana Silva',
           contentApoio: 'Fechou 14 tarefas nesta sprint, 9 delas em revisão de acessibilidade.',
@@ -364,7 +364,7 @@ export const ExtraPanelClass: Story = {
   render: () => {
     const cartao = createHoverCard({
       trigger: construirLink('@joana'),
-      content: construirDuasLinhas(
+      content: construirDuasLines(
         'Joana Silva',
         'Fechou 14 tarefas nesta sprint, 9 delas em revisão de acessibilidade.',
       ),

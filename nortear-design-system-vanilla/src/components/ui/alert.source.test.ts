@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  alertComAcaoSnippet,
+  alertWithActionSnippet,
   alertEmRegiaoVivaSnippet,
   alertSnippet,
   alertSource,
-  alertSourceCom,
+  alertSourceWith,
 } from './alert.source';
 
 describe('alertSnippet', () => {
@@ -38,13 +38,13 @@ describe('alertSnippet', () => {
   });
 
   it('mostra as composições sem ícone e sem título como a story as monta', () => {
-    const semIcone = alertSnippet({ icon: false });
-    expect(semIcone).not.toContain('createAlertIcon');
-    expect(semIcone).not.toContain('createAlertIcon,');
+    const noIcon = alertSnippet({ icon: false });
+    expect(noIcon).not.toContain('createAlertIcon');
+    expect(noIcon).not.toContain('createAlertIcon,');
 
-    const semTitulo = alertSnippet({ title: '' });
-    expect(semTitulo).not.toContain('createAlertTitle');
-    expect(semTitulo).toContain('createAlertDescription({');
+    const noTitle = alertSnippet({ title: '' });
+    expect(noTitle).not.toContain('createAlertTitle');
+    expect(noTitle).toContain('createAlertDescription({');
   });
 
   it('o botão de fechar traz o rótulo acessível e o callback, e só quando existe', () => {
@@ -73,13 +73,13 @@ describe('alertSnippet', () => {
 
 describe('alertSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = alertSource('<div data-slot="alert">', {});
-    const comArgs = alertSource('<div data-slot="alert">', {
+    const noArgs = alertSource('<div data-slot="alert">', {});
+    const withArgs = alertSource('<div data-slot="alert">', {
       args: { variant: 'success', title: 'Perfil atualizado' },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("variant: 'success'");
-    expect(comArgs).toContain("createAlertTitle({ text: 'Perfil atualizado' })");
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("variant: 'success'");
+    expect(withArgs).toContain("createAlertTitle({ text: 'Perfil atualizado' })");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -91,7 +91,7 @@ describe('alertSource', () => {
 
 describe('alertSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = alertSourceCom({ variant: 'warning' });
+    const transform = alertSourceWith({ variant: 'warning' });
     const código = transform('', { args: { variant: 'destructive' } });
     expect(código).toContain("variant: 'warning'");
     expect(código).not.toContain("variant: 'destructive'");
@@ -100,7 +100,7 @@ describe('alertSourceCom', () => {
 
 describe('alertComAcaoSnippet', () => {
   it('mostra a sub-fábrica do slot de ação, com o botão do design system', () => {
-    const código = alertComAcaoSnippet({ acao: 'Atualizar' });
+    const código = alertWithActionSnippet({ acao: 'Atualizar' });
     expect(código).toContain("import { createButton } from '@/components/ui/button';");
     expect(código).toContain('createAlertAction()');
     expect(código).toContain("createButton({ label: 'Atualizar', variant: 'outline', size: 'sm' })");
@@ -108,7 +108,7 @@ describe('alertComAcaoSnippet', () => {
   });
 
   it('leva a classe do consumidor para a raiz', () => {
-    expect(alertComAcaoSnippet({ className: 'nds-w-full' })).toContain("className: 'nds-w-full'");
+    expect(alertWithActionSnippet({ className: 'nds-w-full' })).toContain("className: 'nds-w-full'");
   });
 });
 

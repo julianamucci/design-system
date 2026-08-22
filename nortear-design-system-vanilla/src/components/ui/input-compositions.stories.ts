@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, userEvent, expect } from 'storybook/test';
 import { createInput } from './input';
-import { inputSource, inputSourceCom, inputSourcePrefixo } from './input.source';
+import { inputSource, inputSourceWith, inputSourcePrefixo } from './input.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -129,7 +129,7 @@ export const WithSupportText: Story = {
   parameters: {
     docs: {
       source: {
-        transform: inputSourceCom({
+        transform: inputSourceWith({
           type: 'email',
           id: 'email',
           label: 'Email',
@@ -166,7 +166,7 @@ export const ErrorMessage: Story = {
   parameters: {
     docs: {
       source: {
-        transform: inputSourceCom({
+        transform: inputSourceWith({
           type: 'email',
           id: 'email',
           label: 'Email',

@@ -36,7 +36,7 @@ export type PopoverSnippetOptions = {
   destroy?: boolean;
 };
 
-const CALLBACK_PADRAO = '(aberto) => registrar(aberto)';
+const CALLBACK_DEFAULT = '(aberto) => registrar(aberto)';
 
 /**
  * Reindenta as linhas seguintes de um bloco já montado.
@@ -52,11 +52,11 @@ function recuar(bloco: string, espacos: string): string {
     .join('\n');
 }
 
-const TITULO_PADRAO = 'Configurações de exibição';
+const TITLE_DEFAULT = 'Configurações de exibição';
 const DESCRICAO_PADRAO = 'Ajuste a aparência do conteúdo da página.';
 
 /** O botão que abre o painel. Todas as formas de snippet começam por ele. */
-function blocoGatilho(o: PopoverSnippetOptions): string {
+function blockTrigger(o: PopoverSnippetOptions): string {
   return `const gatilho = ${chamada(
     'createButton',
     opcoes([
@@ -67,7 +67,7 @@ function blocoGatilho(o: PopoverSnippetOptions): string {
 }
 
 /** As opções do painel que não dependem da forma do conteúdo. */
-function linhasDoPainel(o: PopoverSnippetOptions, conteudo: string): string[] {
+function panelLines(o: PopoverSnippetOptions, conteudo: string): string[] {
   return opcoes([
     ['trigger', 'gatilho'],
     ['content', conteudo],
@@ -80,14 +80,14 @@ function linhasDoPainel(o: PopoverSnippetOptions, conteudo: string): string[] {
       o.onOpenChange
         ? typeof o.onOpenChange === 'string'
           ? o.onOpenChange
-          : CALLBACK_PADRAO
+          : CALLBACK_DEFAULT
         : undefined,
     ],
   ]);
 }
 
 /** A linha final: o painel entra na página, e a limpeza quando ela é o assunto. */
-function blocoFinal(o: PopoverSnippetOptions): string {
+function blockFinal(o: PopoverSnippetOptions): string {
   if (!o.destroy) return montar('painel');
   return `${montar('painel')}
 
@@ -122,7 +122,7 @@ conteudo.append(
     chamada(
       'createPopoverTitle',
       opcoes([
-        ['text', texto(o.title ?? TITULO_PADRAO)],
+        ['text', texto(o.title ?? TITLE_DEFAULT)],
         ['level', o.titleLevel && o.titleLevel !== 4 ? String(o.titleLevel) : undefined],
       ]),
     ),
@@ -136,13 +136,13 @@ conteudo.append(
 
   return snippet(
     importes.join('\n'),
-    blocoGatilho(o),
+    blockTrigger(o),
     soTexto ? undefined : cabecalho,
     `const painel = ${chamada(
       'createPopover',
-      linhasDoPainel(o, soTexto ? texto(o.text as string) : 'conteudo'),
+      panelLines(o, soTexto ? texto(o.text as string) : 'conteudo'),
     )};`,
-    blocoFinal(o),
+    blockFinal(o),
   );
 }
 
@@ -151,7 +151,7 @@ export const popoverSource: SourceTransform<PopoverSnippetOptions> = (_gerado, c
   popoverSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function popoverSourceCom(
+export function popoverSourceWith(
   fixas: PopoverSnippetOptions,
 ): SourceTransform<PopoverSnippetOptions> {
   return (_gerado, ctx) => popoverSnippet({ ...ctx.args, ...fixas });
@@ -163,7 +163,7 @@ export function popoverSourceCom(
  * É a composição que separa o Popover do Tooltip: o conteúdo é interativo, o
  * foco entra nele ao abrir e a pessoa digita ali dentro.
  */
-export function popoverComFormularioSnippet(o: PopoverSnippetOptions = {}): string {
+export function popoverWithFormSnippet(o: PopoverSnippetOptions = {}): string {
   return snippet(
     [
       importar('popover', 'createPopover', 'createPopoverTitle'),
@@ -171,7 +171,7 @@ export function popoverComFormularioSnippet(o: PopoverSnippetOptions = {}): stri
       importar('input', 'createInput'),
       importar('label', 'createLabel'),
     ].join('\n'),
-    blocoGatilho({ ...o, triggerLabel: o.triggerLabel ?? 'Editar perfil' }),
+    blockTrigger({ ...o, triggerLabel: o.triggerLabel ?? 'Editar perfil' }),
     `const formulario = document.createElement('form');
 formulario.className = 'nds-stack';
 formulario.dataset.spacing = 'sm';
@@ -193,16 +193,16 @@ formulario.append(
   campo('perfil-email', 'Email', 'ana@nortear.com.br'),
   createButton({ size: 'sm', label: 'Atualizar', type: 'submit' }),
 );`,
-    `const painel = ${chamada('createPopover', linhasDoPainel(o, 'formulario'))};`,
-    blocoFinal(o),
+    `const painel = ${chamada('createPopover', panelLines(o, 'formulario'))};`,
+    blockFinal(o),
   );
 }
 
 /** Transform de story para o painel com formulário. */
-export function popoverSourceFormulario(
+export function popoverSourceForm(
   fixas: PopoverSnippetOptions = {},
 ): SourceTransform<PopoverSnippetOptions> {
-  return (_gerado, ctx) => popoverComFormularioSnippet({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => popoverWithFormSnippet({ ...ctx.args, ...fixas });
 }
 
 /**
@@ -212,10 +212,10 @@ export function popoverSourceFormulario(
  * política que faz quem navega por teclado alcançar as ações sem atravessar o
  * resto da página.
  */
-export function popoverComAcoesSnippet(o: PopoverSnippetOptions = {}): string {
+export function popoverWithActionsSnippet(o: PopoverSnippetOptions = {}): string {
   return snippet(
     [importar('popover', 'createPopover', 'createPopoverTitle'), importar('button', 'createButton')].join('\n'),
-    blocoGatilho(o),
+    blockTrigger(o),
     `const conteudo = document.createElement('div');
 conteudo.className = 'nds-stack';
 conteudo.dataset.spacing = 'sm';
@@ -233,14 +233,14 @@ conteudo.append(${recuar(
       chamada('createPopoverTitle', opcoes([['text', texto(o.title ?? 'Confirmar alteração')]])),
       '  ',
     )}, acoes);`,
-    `const painel = ${chamada('createPopover', linhasDoPainel(o, 'conteudo'))};`,
-    blocoFinal(o),
+    `const painel = ${chamada('createPopover', panelLines(o, 'conteudo'))};`,
+    blockFinal(o),
   );
 }
 
 /** Transform de story para o painel com ações. */
-export function popoverSourceAcoes(
+export function popoverSourceActions(
   fixas: PopoverSnippetOptions = {},
 ): SourceTransform<PopoverSnippetOptions> {
-  return (_gerado, ctx) => popoverComAcoesSnippet({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => popoverWithActionsSnippet({ ...ctx.args, ...fixas });
 }

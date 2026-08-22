@@ -93,7 +93,7 @@ function buildDemoCommand(placeholder: string, withGroups = true): HTMLElement {
  * Do & Don't compara. `emptyMessage: ''` é o lado errado: a região viva
  * continua lá, sem nada para anunciar nem para ler.
  */
-function buildDemoVazio(emptyMessage: string): HTMLElement {
+function emptyBuildDemo(emptyMessage: string): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-w-full nds-max-w-sm nds-border-default nds-rounded-md';
   wrap.appendChild(
@@ -285,8 +285,8 @@ export function createCommandDocs(): HTMLElement {
               // muda é haver ou não uma frase para ler. Antes o lado errado
               // exibia a mensagem padrão da factory e desmentia a própria
               // legenda ("omitir CommandEmpty").
-              doPreviewFactory: () => buildDemoVazio(t('demonstration.labels.emptyMessage')),
-              dontPreviewFactory: () => buildDemoVazio(''),
+              doPreviewFactory: () => emptyBuildDemo(t('demonstration.labels.emptyMessage')),
+              dontPreviewFactory: () => emptyBuildDemo(''),
             },
             {
               doLabel: tNav('common.do'),

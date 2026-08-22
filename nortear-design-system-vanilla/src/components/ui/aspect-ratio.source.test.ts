@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   aspectRatioSnippet,
   aspectRatioSource,
-  aspectRatioSourceCom,
+  aspectRatioSourceWith,
   expressaoDeProporcao,
 } from './aspect-ratio.source';
 
@@ -86,13 +86,13 @@ describe('aspectRatioSnippet', () => {
 
 describe('aspectRatioSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = aspectRatioSource('<div data-slot="aspect-ratio">', {});
-    const comArgs = aspectRatioSource('<div data-slot="aspect-ratio">', {
+    const noArgs = aspectRatioSource('<div data-slot="aspect-ratio">', {});
+    const withArgs = aspectRatioSource('<div data-slot="aspect-ratio">', {
       args: { ratio: 4 / 3, alt: 'Imagem de produto' },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain('ratio: 4 / 3');
-    expect(comArgs).toContain("imagem.alt = 'Imagem de produto';");
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain('ratio: 4 / 3');
+    expect(withArgs).toContain("imagem.alt = 'Imagem de produto';");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -104,7 +104,7 @@ describe('aspectRatioSource', () => {
 
 describe('aspectRatioSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = aspectRatioSourceCom({ ratio: 21 / 9, content: 'none' });
+    const transform = aspectRatioSourceWith({ ratio: 21 / 9, content: 'none' });
     const código = transform('', { args: { ratio: 16 / 9 } });
     expect(código).toContain('ratio: 21 / 9');
     expect(código).not.toContain('16 / 9');

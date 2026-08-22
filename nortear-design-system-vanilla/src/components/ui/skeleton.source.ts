@@ -12,24 +12,24 @@ import {
 import type { SkeletonShape, SkeletonSize, SkeletonWidth } from './skeleton';
 
 /** Uma peça de esqueleto — as chaves são as da `SkeletonOptions`. */
-export type SkeletonPeca = {
+export type SkeletonPart = {
   shape?: SkeletonShape;
   width?: SkeletonWidth;
   size?: SkeletonSize;
   className?: string;
 };
 
-export type SkeletonSnippetOptions = SkeletonPeca & {
+export type SkeletonSnippetOptions = SkeletonPart & {
   /** Nome da região que anuncia o carregamento. */
   regionLabel?: string;
   /** Estado da região. `false` mostra o carregamento já concluído. */
   loading?: boolean;
   /** Várias peças empilhadas. Sem isto, a região leva uma só. */
-  linhas?: SkeletonPeca[];
+  linhas?: SkeletonPart[];
 };
 
 /** `createSkeleton(…)` em uma linha — a peça é sempre item de uma lista. */
-function chamadaDaPeca(p: SkeletonPeca): string {
+function partCall(p: SkeletonPart): string {
   const pares = opcoes([
     // A fábrica não assume forma nem largura: sem atributo, a folha aplica a
     // caixa base. Só entra o que a story declara.
@@ -64,7 +64,7 @@ export function skeletonSnippet(o: SkeletonSnippetOptions = {}): string {
   // `fill` preenche a caixa que o CONTAINER estabelece: sozinho ele nasce com
   // altura zero, e um snippet que o mostrasse solto ensinaria um esqueleto
   // invisível. Quem dá a caixa é a proporção.
-  if (!o.linhas && o.shape === 'fill') return skeletonEmProporcaoSnippet(o);
+  if (!o.linhas && o.shape === 'fill') return ratioSnippetSkeleton(o);
 
   const pecas = o.linhas ?? [
     {
@@ -82,8 +82,8 @@ export function skeletonSnippet(o: SkeletonSnippetOptions = {}): string {
     importar('skeleton', 'createSkeleton'),
     regiao(o, empilhado ? 'nds-stack nds-w-sm' : undefined, empilhado ? 'sm' : undefined),
     pecas.length === 1
-      ? `regiao.appendChild(${chamadaDaPeca(pecas[0])});`
-      : `regiao.append(\n${pecas.map((p) => `  ${chamadaDaPeca(p)},`).join('\n')}\n);`,
+      ? `regiao.appendChild(${partCall(pecas[0])});`
+      : `regiao.append(\n${pecas.map((p) => `  ${partCall(p)},`).join('\n')}\n);`,
     montar('regiao'),
   );
 }
@@ -108,10 +108,10 @@ export function skeletonPerfilSnippet(o: SkeletonSnippetOptions = {}): string {
 linhas.className = 'nds-stack nds-flex-1';
 linhas.dataset.spacing = 'sm';
 linhas.append(
-  ${chamadaDaPeca({ shape: 'text', width: '2-3' })},
-  ${chamadaDaPeca({ shape: 'text', width: '1-2' })},
+  ${partCall({ shape: 'text', width: '2-3' })},
+  ${partCall({ shape: 'text', width: '1-2' })},
 );`,
-    `regiao.append(${chamadaDaPeca({ shape: 'avatar' })}, linhas);`,
+    `regiao.append(${partCall({ shape: 'avatar' })}, linhas);`,
     montar('regiao'),
   );
 }
@@ -122,7 +122,7 @@ linhas.append(
  * Forma própria porque a região é a LISTA inteira: uma região viva por item
  * repetiria o mesmo aviso a cada linha.
  */
-export function skeletonListaSnippet(o: SkeletonSnippetOptions = {}): string {
+export function skeletonListSnippet(o: SkeletonSnippetOptions = {}): string {
   const total = o.linhas?.length ?? 5;
   return snippet(
     importar('skeleton', 'createSkeleton'),
@@ -143,11 +143,11 @@ lista.setAttribute('aria-label', ${texto(o.regionLabel ?? 'Carregando lista de p
   linhas.className = 'nds-stack nds-flex-1';
   linhas.dataset.spacing = 'xs';
   linhas.append(
-    ${chamadaDaPeca({ shape: 'text', width: '2-3' })},
-    ${chamadaDaPeca({ shape: 'text', width: '1-3' })},
+    ${partCall({ shape: 'text', width: '2-3' })},
+    ${partCall({ shape: 'text', width: '1-3' })},
   );
 
-  item.append(${chamadaDaPeca({ shape: 'avatar', size: 'sm' })}, linhas);
+  item.append(${partCall({ shape: 'avatar', size: 'sm' })}, linhas);
   lista.appendChild(item);
 }`,
     montar('lista'),
@@ -161,14 +161,14 @@ lista.setAttribute('aria-label', ${texto(o.regionLabel ?? 'Carregando lista de p
  * estabelece — sozinho ele nasce com altura zero. Quem dá a caixa aqui é o
  * AspectRatio, e é isso que a composição ensina.
  */
-export function skeletonEmProporcaoSnippet(o: SkeletonSnippetOptions = {}): string {
+export function ratioSnippetSkeleton(o: SkeletonSnippetOptions = {}): string {
   return snippet(
     [importar('skeleton', 'createSkeleton'), importar('aspect-ratio', 'createAspectRatio')].join('\n'),
     regiao({ ...o, regionLabel: o.regionLabel ?? 'Carregando imagem' }, 'nds-w-sm'),
     `regiao.appendChild(
   ${chamada('createAspectRatio', opcoes([
     ['ratio', '16 / 9'],
-    ['content', chamadaDaPeca({ shape: 'fill' })],
+    ['content', partCall({ shape: 'fill' })],
   ]))},
 );`,
     montar('regiao'),
@@ -183,7 +183,7 @@ export const skeletonSource: SourceTransform<SkeletonSnippetOptions> = (_gerado,
   skeletonSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function skeletonSourceCom(
+export function skeletonSourceWith(
   fixas: SkeletonSnippetOptions,
 ): SourceTransform<SkeletonSnippetOptions> {
   return (_gerado, ctx) => skeletonSnippet({ ...ctx.args, ...fixas });
@@ -197,15 +197,15 @@ export function skeletonSourcePerfil(
 }
 
 /** Transform de story para a lista de itens. */
-export function skeletonSourceLista(
+export function skeletonSourceList(
   fixas: SkeletonSnippetOptions = {},
 ): SourceTransform<SkeletonSnippetOptions> {
-  return (_gerado, ctx) => skeletonListaSnippet({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => skeletonListSnippet({ ...ctx.args, ...fixas });
 }
 
 /** Transform de story para o placeholder de mídia em proporção. */
-export function skeletonSourceEmProporcao(
+export function ratioSkeletonSource(
   fixas: SkeletonSnippetOptions = {},
 ): SourceTransform<SkeletonSnippetOptions> {
-  return (_gerado, ctx) => skeletonEmProporcaoSnippet({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => ratioSnippetSkeleton({ ...ctx.args, ...fixas });
 }

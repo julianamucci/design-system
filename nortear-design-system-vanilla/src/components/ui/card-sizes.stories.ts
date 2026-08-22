@@ -7,7 +7,7 @@ import {
   createCardDescription,
   createCardContent,
 } from './card';
-import { cardSource, cardSourceCom } from './card.source';
+import { cardSource, cardSourceWith } from './card.source';
 
 const meta: Meta = {
   tags: ['layout'],
@@ -106,7 +106,7 @@ export const Small: Story = {
     covers: ['functional.item2'],
     docs: {
       // Override de story: o tamanho é o assunto e não passa por control aqui.
-      source: { transform: cardSourceCom({ size: 'sm' }) },
+      source: { transform: cardSourceWith({ size: 'sm' }) },
       description: {
         story:
           'Card compacto: o tamanho sm propaga por data-size, reduz padding e diminui o título. Ideal para listas densas e dashboards.',

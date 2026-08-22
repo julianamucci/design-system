@@ -13,7 +13,7 @@ import {
 } from 'lucide';
 import { createToggleGroup, type ToggleGroupItem } from './toggle-group';
 import { buildLucideSvg, definir, injectIcons } from './toggle-group.fixtures';
-import { toggleGroupSource, toggleGroupSourceCom } from './toggle-group.source';
+import { toggleGroupSource, toggleGroupSourceWith } from './toggle-group.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -80,7 +80,7 @@ export const AlignmentBar: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
-      source: { transform: toggleGroupSourceCom({
+      source: { transform: toggleGroupSourceWith({
           items: [
             { value: 'left', icon: 'AlignLeft', 'aria-label': 'Alinhar à esquerda' },
             { value: 'center', icon: 'AlignCenter', 'aria-label': 'Centralizar' },
@@ -143,7 +143,7 @@ export const FormattingBar: Story = {
   },
   parameters: {
     docs: {
-      source: { transform: toggleGroupSourceCom({
+      source: { transform: toggleGroupSourceWith({
           type: 'multiple',
           'aria-label': 'Formatação',
           defaultValue: ['bold'],
@@ -207,7 +207,7 @@ export const ViewMode: Story = {
   },
   parameters: {
     docs: {
-      source: { transform: toggleGroupSourceCom({
+      source: { transform: toggleGroupSourceWith({
           orientation: 'vertical',
           'aria-label': 'Modo de visualização',
           defaultValue: 'grid',
@@ -268,7 +268,7 @@ export const WithDisabledItem: Story = {
   },
   parameters: {
     docs: {
-      source: { transform: toggleGroupSourceCom({
+      source: { transform: toggleGroupSourceWith({
           items: [
             { value: 'left', icon: 'AlignLeft', 'aria-label': 'Alinhar à esquerda' },
             { value: 'center', icon: 'AlignCenter', 'aria-label': 'Centralizar (indisponível)', disabled: true },
@@ -333,7 +333,7 @@ export const WithVisibleFilter: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
-      source: { transform: toggleGroupSourceCom({
+      source: { transform: toggleGroupSourceWith({
           type: 'multiple',
           spacing: 1,
           'aria-label': 'Filtros de exibição',

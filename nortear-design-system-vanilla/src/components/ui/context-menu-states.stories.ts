@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { createContextMenu } from './context-menu';
-import { contextMenuSource, contextMenuSourceCom } from './context-menu.source';
-import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
+import { contextMenuSource, contextMenuSourceWith } from './context-menu.source';
+import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import {
   abrirPorGesto,
   brilho,
@@ -44,7 +44,7 @@ export const ItemDisabled: Story = {
     // `disabled` é o assunto, e o menu canônico do meta não o tem.
     docs: {
       source: {
-        transform: contextMenuSourceCom({
+        transform: contextMenuSourceWith({
           items: [
             { label: 'Editar', value: 'edit' },
             { label: 'Duplicar', value: 'off', disabled: true },
@@ -106,7 +106,7 @@ export const ItemInset: Story = {
     // menu canônico do meta.
     docs: {
       source: {
-        transform: contextMenuSourceCom({
+        transform: contextMenuSourceWith({
           items: [
             { type: 'label', label: 'Arquivo', inset: true },
             { label: 'Editar', value: 'normal' },
@@ -247,7 +247,7 @@ export const CheckboxIndeterminate: Story = {
     // meta só tem itens de ação.
     docs: {
       source: {
-        transform: contextMenuSourceCom({
+        transform: contextMenuSourceWith({
           items: [
             { type: 'label', label: 'Mostrar na tela' },
             { type: 'checkbox', label: 'Colunas', value: 'colunas', indeterminate: true },
@@ -317,14 +317,14 @@ export const ListenerCleanup: Story = {
     // sempre a mesma legenda.
     chromatic: { disable: true },
   },
-  render: () => hospedeiroDeSonda(
+  render: () => probeHost(
     'Sonda de limpeza: o menu de contexto é montado, aberto e removido da página pela play.',
   ),
   play: async ({ canvasElement, step }) => {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ResultadoDaSonda;
+    let sonda!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       sonda = await sondarOuvintes({
@@ -349,7 +349,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await conferirLimpeza(sonda);
+      await checkLimpeza(sonda);
     });
   },
 };

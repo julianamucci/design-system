@@ -10,10 +10,10 @@ import {
 } from '@/lib/story-source';
 
 /** Qual desenho de colunas a story usa. */
-export type DataTableColunas = 'base' | 'filtro' | 'editavel';
+export type DataTableColumns = 'base' | 'filtro' | 'editavel';
 
 export type DataTableSnippetOptions = {
-  colunas?: DataTableColunas;
+  colunas?: DataTableColumns;
   /** Estado sem resultado: a grade continua montada, só os dados somem. */
   semDados?: boolean;
   enableRowSelection?: boolean;
@@ -39,10 +39,10 @@ export type DataTableSnippetOptions = {
   labels?: unknown;
 };
 
-const CAPTION_PADRAO = 'Faturas recentes';
+const CAPTION_DEFAULT = 'Faturas recentes';
 /** Padrões da fábrica — documentação não ensina a repetir o que já vale. */
-const BUSCA_PADRAO = 'Buscar...';
-const VAZIO_PADRAO = 'Sem resultados.';
+const SEARCH_DEFAULT = 'Buscar...';
+const EMPTY_DEFAULT = 'Sem resultados.';
 
 /**
  * Dados do snippet, e não a fixture das stories.
@@ -69,8 +69,8 @@ const DADOS = [
 const IMPORTACAO = "import { createDataTable, type DataTableColumn } from '@/components/ui/data-table';";
 
 /** Uma linha de coluna, com o `meta` que aquele desenho pede. */
-function colunas(tipo: DataTableColunas): string {
-  const linhas: Record<DataTableColunas, string[]> = {
+function colunas(tipo: DataTableColumns): string {
+  const linhas: Record<DataTableColumns, string[]> = {
     base: [
       "  { accessorKey: 'id', header: 'Fatura', size: 110, meta: { headerLabel: 'Fatura' } },",
       "  { accessorKey: 'customer', header: 'Cliente', size: 200, meta: { headerLabel: 'Cliente' } },",
@@ -122,7 +122,7 @@ const LABELS = [
 ].join('\n');
 
 /** O texto do callback só entra quando é texto: nos args ele chega como função. */
-function corpoDoCallback(valor: unknown): string | undefined {
+function callbackBody(valor: unknown): string | undefined {
   return typeof valor === 'string' && valor.length > 0 ? valor : undefined;
 }
 
@@ -148,24 +148,24 @@ export function dataTableSnippet(o: DataTableSnippetOptions = {}): string {
     ],
     [
       'globalFilterPlaceholder',
-      o.globalFilterPlaceholder && o.globalFilterPlaceholder !== BUSCA_PADRAO
+      o.globalFilterPlaceholder && o.globalFilterPlaceholder !== SEARCH_DEFAULT
         ? texto(o.globalFilterPlaceholder)
         : undefined,
     ],
     [
       'emptyMessage',
-      o.emptyMessage && o.emptyMessage !== VAZIO_PADRAO ? texto(o.emptyMessage) : undefined,
+      o.emptyMessage && o.emptyMessage !== EMPTY_DEFAULT ? texto(o.emptyMessage) : undefined,
     ],
-    ['caption', texto(o.caption ?? CAPTION_PADRAO)],
+    ['caption', texto(o.caption ?? CAPTION_DEFAULT)],
     ['rowKey', '(fatura) => fatura.id'],
-    ['rowLabel', corpoDoCallback(o.rowLabel)],
+    ['rowLabel', callbackBody(o.rowLabel)],
     ['labels', o.labels ? LABELS : undefined],
-    ['onCellEdit', corpoDoCallback(o.onCellEdit)],
+    ['onCellEdit', callbackBody(o.onCellEdit)],
   ]);
 
   // A constante e a opção têm o mesmo nome, e é assim que se escreve de
   // verdade: `columns: columns` é ruído que ninguém digita.
-  const chamadaDaTabela = chamada('createDataTable<Invoice>', linhas).replace(
+  const tableCall = chamada('createDataTable<Invoice>', linhas).replace(
     '\n  columns: columns,',
     '\n  columns,',
   );
@@ -179,7 +179,7 @@ export function dataTableSnippet(o: DataTableSnippetOptions = {}): string {
       '// uma legenda fora da tela — não ocupa espaço e não some da árvore.',
       '// `rowKey` é a identidade da linha; sem ele a identidade é a POSIÇÃO, e',
       '// ordenar levaria a marcação para quem ocupou o lugar.',
-      `const tabela = ${chamadaDaTabela};`,
+      `const tabela = ${tableCall};`,
     ].join('\n'),
     montar('tabela'),
   );
@@ -193,7 +193,7 @@ export const dataTableSource: SourceTransform<DataTableSnippetOptions> = (_gerad
   dataTableSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function dataTableSourceCom(
+export function dataTableSourceWith(
   fixas: DataTableSnippetOptions,
 ): SourceTransform<DataTableSnippetOptions> {
   return (_gerado, ctx) => dataTableSnippet({ ...ctx.args, ...fixas });

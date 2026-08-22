@@ -68,7 +68,7 @@ type Story = StoryObj<CommandArgs>;
  * reexecuta no mesmo DOM) o destaque da rodada anterior sobreviveria, e a
  * primeira seta partiria do meio da lista.
  */
-async function zerarBusca(campo: HTMLElement): Promise<void> {
+async function zerarSearch(campo: HTMLElement): Promise<void> {
   await userEvent.type(campo, 'zzz');
   await userEvent.clear(campo);
 }
@@ -206,7 +206,7 @@ export const Playground: Story = {
     });
 
     await step('As setas percorrem a lista sem tirar o foco do campo', async () => {
-      await zerarBusca(campo);
+      await zerarSearch(campo);
       campo.focus();
       await userEvent.keyboard('{ArrowDown}');
 
@@ -232,7 +232,7 @@ export const Playground: Story = {
     await step('Enter escolhe o comando em destaque e zera a busca', async () => {
       // O passo estabelece a própria precondição: nada de herdar o destaque que
       // o passo anterior deixou.
-      await zerarBusca(campo);
+      await zerarSearch(campo);
       campo.focus();
       await userEvent.keyboard('{ArrowDown}');
 

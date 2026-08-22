@@ -3,7 +3,7 @@ import { fireEvent, fn, userEvent, within, expect } from 'storybook/test';
 import { alvosAbaixoDoMinimo, contrastesDaFaixa } from '@shared/testing/pagination-probe';
 import { createPagination } from './pagination';
 import { wrap } from './pagination.fixtures';
-import { paginationSource, paginationSourceCom } from './pagination.source';
+import { paginationSource, paginationSourceWith } from './pagination.source';
 
 const ROTULO_ANTERIOR = 'Ir para a página anterior';
 const ROTULO_PROXIMA = 'Ir para a próxima página';
@@ -144,7 +144,7 @@ export const DisabledLast: Story = {
     covers: ['functional.item3'],
     // Override de story: estar na ÚLTIMA página é o assunto, e o snippet do
     // meta parte da primeira.
-    docs: { source: { transform: paginationSourceCom({ total: 5, current: 5 }) } },
+    docs: { source: { transform: paginationSourceWith({ total: 5, current: 5 }) } },
   },
   render: faixa('Paginação na última página', 5),
   play: async ({ canvasElement, step }) => {

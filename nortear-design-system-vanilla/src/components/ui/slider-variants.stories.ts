@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createSlider } from './slider';
 import { withLabel } from './slider.fixtures';
-import { sliderSource, sliderSourceCom } from './slider.source';
+import { sliderSource, sliderSourceWith } from './slider.source';
 import { apertarTecla, trilhoDoSlider, valorDaAlca } from '@shared/testing/slider-probe';
 
 const meta: Meta = {
@@ -69,7 +69,7 @@ export const Range: Story = {
       // O assunto é o PAR de valores: é ele que pede as duas alças, e o snippet
       // do meta mostraria uma alça só.
       source: {
-        transform: sliderSourceCom({
+        transform: sliderSourceWith({
           value: [20, 80],
           'aria-label': ['Faixa de preço — mínimo', 'Faixa de preço — máximo'],
           onValueChange: '([minimo, maximo]) => mostrarFaixa(minimo, maximo)',
@@ -164,7 +164,7 @@ export const Vertical: Story = {
     covers: ['visual.item3'],
     docs: {
       source: {
-        transform: sliderSourceCom({ orientation: 'vertical', value: 60, 'aria-label': 'Brilho' }),
+        transform: sliderSourceWith({ orientation: 'vertical', value: 60, 'aria-label': 'Brilho' }),
       },
       description: {
         story:

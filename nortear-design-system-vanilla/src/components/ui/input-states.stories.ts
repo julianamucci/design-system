@@ -8,7 +8,7 @@ import {
   haloDeFoco,
 } from '@shared/testing/input-probe';
 import { campoRotulado } from './input.fixtures';
-import { inputSource, inputSourceCom } from './input.source';
+import { inputSource, inputSourceWith } from './input.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -129,7 +129,7 @@ export const WithPlaceholder: Story = {
   parameters: {
     docs: {
       source: {
-        transform: inputSourceCom({
+        transform: inputSourceWith({
           type: 'email',
           id: 'email',
           label: 'Email',
@@ -162,7 +162,7 @@ export const Disabled: Story = {
     covers: ['functional.item3'],
     docs: {
       source: {
-        transform: inputSourceCom({
+        transform: inputSourceWith({
           disabled: true,
           id: 'bloqueado',
           label: 'Campo desabilitado',
@@ -204,7 +204,7 @@ export const Error: Story = {
     // próprio. Sem override o painel esconderia justamente o assunto da story.
     docs: {
       source: {
-        transform: inputSourceCom({
+        transform: inputSourceWith({
           type: 'email',
           id: 'email',
           label: 'Email',
@@ -271,7 +271,7 @@ export const DarkPalette: Story = {
     themes: { themeOverride: 'dark' },
     // O campo é o mesmo dos demais estados; o que muda é a classe de tema no
     // documento. É isso que o snippet precisa mostrar, e não um quarto campo.
-    docs: { source: { transform: inputSourceCom({ temaEscuro: true }) } },
+    docs: { source: { transform: inputSourceWith({ temaEscuro: true }) } },
   },
   render: () => {
     const raiz = document.createElement('div');

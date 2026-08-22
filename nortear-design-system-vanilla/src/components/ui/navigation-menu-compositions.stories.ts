@@ -10,8 +10,8 @@ import {
 } from './navigation-menu.fixtures';
 import {
   navigationMenuSource,
-  navigationMenuSourceCom,
-  navigationMenuSourceDestaque,
+  navigationMenuSourceWith,
+  navigationMenuSourceHighlight,
   navigationMenuSourceMega,
 } from './navigation-menu.source';
 
@@ -50,7 +50,7 @@ type Story = StoryObj;
  * o destino fecha a barra de qualquer jeito, justamente porque quem usa roteador
  * chama `preventDefault` e continua querendo o painel fechado.
  */
-function impedirNavegacao(nav: HTMLElement): void {
+function impedirNavigation(nav: HTMLElement): void {
   for (const a of nav.querySelectorAll('a')) {
     a.addEventListener('click', (e) => e.preventDefault());
   }
@@ -64,7 +64,7 @@ export const SimpleLink: Story = {
   parameters: {
     docs: {
       source: {
-        transform: navigationMenuSourceCom({
+        transform: navigationMenuSourceWith({
           ariaLabel: 'Navegação institucional',
           items: [
             { label: 'Início', href: '#inicio', active: true },
@@ -82,7 +82,7 @@ export const SimpleLink: Story = {
       { label: 'Contato', href: '#contato' },
     ]);
     nav.setAttribute('aria-label', 'Navegação institucional');
-    impedirNavegacao(nav);
+    impedirNavigation(nav);
     return wrap(nav, 160);
   },
   play: async ({ canvasElement, step }) => {
@@ -109,7 +109,7 @@ export const WithDropdown: Story = {
     covers: ['functional.item5'],
     docs: {
       source: {
-        transform: navigationMenuSourceCom({
+        transform: navigationMenuSourceWith({
           items: [
             { label: 'Início', href: '#inicio' },
             {
@@ -140,7 +140,7 @@ export const WithDropdown: Story = {
       { label: 'Contato', href: '#contato' },
     ]);
     nav.setAttribute('aria-label', 'Navegação principal');
-    impedirNavegacao(nav);
+    impedirNavigation(nav);
     return wrap(nav, 300);
   },
   play: async ({ canvasElement, step }) => {
@@ -207,7 +207,7 @@ export const MegaMenuGrid: Story = {
       },
     ]);
     nav.setAttribute('aria-label', 'Navegação de soluções');
-    impedirNavegacao(nav);
+    impedirNavigation(nav);
 
     // O painel padrão é uma coluna; duas colunas são composição de quem usa, e
     // saem das utilities compartilhadas — nada de largura em `style` inline,
@@ -257,7 +257,7 @@ export const WithHighlightedCard: Story = {
   parameters: {
     docs: {
       source: {
-        transform: navigationMenuSourceDestaque({
+        transform: navigationMenuSourceHighlight({
           ariaLabel: 'Navegação de recursos',
           items: [
             { label: 'Início', href: '#inicio' },
@@ -289,7 +289,7 @@ export const WithHighlightedCard: Story = {
       },
     ]);
     nav.setAttribute('aria-label', 'Navegação de recursos');
-    impedirNavegacao(nav);
+    impedirNavigation(nav);
 
     const painel = nav.querySelector<HTMLElement>('.nds-navigation-menu-content');
     if (painel) {

@@ -36,9 +36,9 @@ export type TabsSnippetOptions = {
   onValueChange?: unknown;
 };
 
-const CALLBACK_PADRAO = '(valor) => registrarAba(valor)';
+const CALLBACK_DEFAULT = '(valor) => registrarAba(valor)';
 
-const ITENS_PADRAO: TabsSnippetItem[] = [
+const ITEMS_DEFAULT: TabsSnippetItem[] = [
   { value: 'overview', label: 'Visão geral', content: 'Conteúdo da visão geral.' },
   { value: 'properties', label: 'Propriedades', content: 'Lista de propriedades.' },
   { value: 'examples', label: 'Exemplos', content: 'Exemplos de uso.' },
@@ -49,14 +49,14 @@ const ITENS_PADRAO: TabsSnippetItem[] = [
  * é escrito aqui, à vista do leitor, e não num `makePanel()` que só existe
  * dentro do arquivo de story.
  */
-const FABRICA_DE_PAINEL = `const painel = (texto) => {
+const PANEL_FABRICA = `const painel = (texto) => {
   const el = document.createElement('div');
   el.className = 'nds-text-body nds-p-4 nds-rounded-md nds-border-default nds-bg-card';
   el.textContent = texto;
   return el;
 };`;
 
-function itensLiterais(itens: TabsSnippetItem[]): string {
+function itemsLiterais(itens: TabsSnippetItem[]): string {
   const linhas = itens.map((i) => {
     const partes = [
       `value: ${texto(i.value)}`,
@@ -71,13 +71,13 @@ function itensLiterais(itens: TabsSnippetItem[]): string {
 
 function expressao(valor: unknown): string | undefined {
   if (!valor) return undefined;
-  return typeof valor === 'string' ? valor : CALLBACK_PADRAO;
+  return typeof valor === 'string' ? valor : CALLBACK_DEFAULT;
 }
 
-function linhasDoConjunto(o: TabsSnippetOptions, itens: TabsSnippetItem[]): string[] {
+function conjuntoLines(o: TabsSnippetOptions, itens: TabsSnippetItem[]): string[] {
   return opcoes([
     ['defaultValue', texto(o.defaultValue ?? itens[0].value)],
-    ['items', itensLiterais(itens)],
+    ['items', itemsLiterais(itens)],
     ['aria-label', texto(o['aria-label'] || 'Seções do componente')],
     ['variant', o.variant && o.variant !== 'default' ? texto(o.variant) : undefined],
     ['orientation', o.orientation === 'vertical' ? texto('vertical') : undefined],
@@ -88,12 +88,12 @@ function linhasDoConjunto(o: TabsSnippetOptions, itens: TabsSnippetItem[]): stri
 
 /** A chamada real de `createTabs` com as opções da story. */
 export function tabsSnippet(o: TabsSnippetOptions = {}): string {
-  const itens = o.itens ?? ITENS_PADRAO;
+  const itens = o.itens ?? ITEMS_DEFAULT;
 
   return snippet(
     importar('tabs', 'createTabs'),
-    FABRICA_DE_PAINEL,
-    `const abas = ${chamada('createTabs', linhasDoConjunto(o, itens))};`,
+    PANEL_FABRICA,
+    `const abas = ${chamada('createTabs', conjuntoLines(o, itens))};`,
     montar('abas'),
   );
 }
@@ -105,7 +105,7 @@ export function tabsSnippet(o: TabsSnippetOptions = {}): string {
  * DEPOIS de montado, e é sempre decorativo — o rótulo já descreve a aba, e um
  * ícone anunciado só alongaria o nome sem acrescentar informação.
  */
-export function tabsComIconesSnippet(
+export function tabsWithIconsSnippet(
   itens: Array<TabsSnippetItem & { icon: string }>,
   o: TabsSnippetOptions = {},
 ): string {
@@ -113,8 +113,8 @@ export function tabsComIconesSnippet(
 
   return snippet(
     [importar('tabs', 'createTabs'), `import { ${[...icones, 'createElement'].join(', ')} } from 'lucide';`].join('\n'),
-    FABRICA_DE_PAINEL,
-    `const abas = ${chamada('createTabs', linhasDoConjunto(o, itens))};`,
+    PANEL_FABRICA,
+    `const abas = ${chamada('createTabs', conjuntoLines(o, itens))};`,
     `const icones = {
 ${itens.map((i) => `  ${i.value}: ${i.icon},`).join('\n')}
 };
@@ -147,7 +147,7 @@ Object.entries(icones).forEach(([valor, icone]) => {
  * O badge é conteúdo do gatilho, não um par dele: entra no nome da aba e não
  * vira um segundo alvo de foco. O rótulo continua autoexplicativo sem ele.
  */
-export function tabsComBadgeSnippet(
+export function tabsWithBadgeSnippet(
   itens: Array<TabsSnippetItem & { badge?: { text: string; variant?: string } }>,
   o: TabsSnippetOptions = {},
 ): string {
@@ -155,8 +155,8 @@ export function tabsComBadgeSnippet(
 
   return snippet(
     [importar('tabs', 'createTabs'), importar('badge', 'createBadge')].join('\n'),
-    FABRICA_DE_PAINEL,
-    `const abas = ${chamada('createTabs', linhasDoConjunto(o, itens))};`,
+    PANEL_FABRICA,
+    `const abas = ${chamada('createTabs', conjuntoLines(o, itens))};`,
     `const contadores = [
 ${comBadge
   .map(
@@ -186,19 +186,19 @@ contadores.forEach(({ value, text, variant }) => {
 }
 
 /** Transform de story para o gatilho com ícone. */
-export function tabsSourceComIcones(
+export function tabsSourceWithIcons(
   itens: Array<TabsSnippetItem & { icon: string }>,
   o: TabsSnippetOptions = {},
 ): SourceTransform<TabsSnippetOptions> {
-  return () => tabsComIconesSnippet(itens, o);
+  return () => tabsWithIconsSnippet(itens, o);
 }
 
 /** Transform de story para o gatilho com badge. */
-export function tabsSourceComBadge(
+export function tabsSourceWithBadge(
   itens: Array<TabsSnippetItem & { badge?: { text: string; variant?: string } }>,
   o: TabsSnippetOptions = {},
 ): SourceTransform<TabsSnippetOptions> {
-  return () => tabsComBadgeSnippet(itens, o);
+  return () => tabsWithBadgeSnippet(itens, o);
 }
 
 /** Transform do `meta` — vale para todas as stories do arquivo. */
@@ -206,6 +206,6 @@ export const tabsSource: SourceTransform<TabsSnippetOptions> = (_gerado, ctx) =>
   tabsSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function tabsSourceCom(fixas: TabsSnippetOptions): SourceTransform<TabsSnippetOptions> {
+export function tabsSourceWith(fixas: TabsSnippetOptions): SourceTransform<TabsSnippetOptions> {
   return (_gerado, ctx) => tabsSnippet({ ...ctx.args, ...fixas });
 }

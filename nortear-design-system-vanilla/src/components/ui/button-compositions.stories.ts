@@ -3,10 +3,10 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createButton, createButtonIcon, btnClass } from './button';
 import {
-  buttonComoLinkSourceCom,
-  buttonParDeAcoesSourceCom,
+  buttonAsLinkSourceWith,
+  actionsSourceWithButtonPair,
   buttonSource,
-  buttonSourceCom,
+  buttonSourceWith,
 } from './button.source';
 
 const meta: Meta = {
@@ -38,7 +38,7 @@ export const WithIconLeft: Story = {
     // — a fábrica o escreve antes de qualquer filho, e a ordem se decide no
     // `append`. O snippet do meta esconderia isso.
     docs: {
-      source: { transform: buttonSourceCom({ icon: 'plus', label: 'Adicionar item' }) },
+      source: { transform: buttonSourceWith({ icon: 'plus', label: 'Adicionar item' }) },
       description: { story: 'Ícone à esquerda do label. O SVG tem aria-hidden="true" para não poluir leitores de tela.' },
     },
   },
@@ -65,7 +65,7 @@ export const WithIconRight: Story = {
     // que o decide.
     docs: {
       source: {
-        transform: buttonSourceCom({
+        transform: buttonSourceWith({
           variant: 'outline',
           icon: 'chevron-right',
           iconSide: 'right',
@@ -98,7 +98,7 @@ export const DestructiveIcon: Story = {
     // Override de story: variante e ícone, nenhum dos dois com control.
     docs: {
       source: {
-        transform: buttonSourceCom({ variant: 'destructive', icon: 'trash', label: 'Excluir' }),
+        transform: buttonSourceWith({ variant: 'destructive', icon: 'trash', label: 'Excluir' }),
       },
       description: { story: 'Combinação de variante destrutiva com ícone. Use para ações irreversíveis como excluir.' },
     },
@@ -121,7 +121,7 @@ export const IconOnly: Story = {
     // Override de story: sem texto visível, o nome acessível é obrigatório.
     docs: {
       source: {
-        transform: buttonSourceCom({
+        transform: buttonSourceWith({
           size: 'icon',
           label: undefined,
           ariaLabel: 'Baixar arquivo',
@@ -156,7 +156,7 @@ export const ActionPair: Story = {
     // Override de story: a forma do snippet é outra — são DOIS botões e o
     // contêiner que fixa a ordem, que é justamente o assunto.
     docs: {
-      source: { transform: buttonParDeAcoesSourceCom() },
+      source: { transform: actionsSourceWithButtonPair() },
       description: { story: 'Par de ações canônico: outline (cancelar) + default (confirmar). Primária sempre à direita em contexto ocidental.' },
     },
   },
@@ -187,7 +187,7 @@ export const AsLink: Story = {
     // Override de story: aqui não há chamada de fábrica nenhuma — o que se usa
     // é `btnClass` num `<a>` de verdade, e é essa a forma que o snippet mostra.
     docs: {
-      source: { transform: buttonComoLinkSourceCom() },
+      source: { transform: buttonAsLinkSourceWith() },
       description: { story: 'Link estilizado como botão. Aplique as classes do botão em um <a> real para preservar a semântica de link.' },
     },
   },
@@ -235,7 +235,7 @@ export const SanitizedHtmlContent: Story = {
     // snippet de propósito — valor de teste não vira recomendação.
     docs: {
       source: {
-        transform: buttonSourceCom({ label: undefined, children: '<strong>Salvar</strong>' }),
+        transform: buttonSourceWith({ label: undefined, children: '<strong>Salvar</strong>' }),
       },
       description: { story: 'Conteúdo em HTML passa por sanitização antes de ir para o DOM: a marcação segura é preservada e vetores de execução são removidos.' },
     },
@@ -272,7 +272,7 @@ export const ContentAsElement: Story = {
     // Override de story: o ramo irmão do anterior — `children` como ELEMENTO,
     // que vai direto no append.
     docs: {
-      source: { transform: buttonSourceCom({ label: undefined, childrenElement: 'Salvar' }) },
+      source: { transform: buttonSourceWith({ label: undefined, childrenElement: 'Salvar' }) },
       description: { story: 'Conteúdo como elemento é anexado direto, sem passar por sanitização — não há string para sanitizar.' },
     },
   },

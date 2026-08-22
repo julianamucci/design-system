@@ -29,10 +29,10 @@ import {
 import { makeIcon } from './sidebar.fixtures';
 import {
   sidebarSource,
-  sidebarSourceCom,
-  sidebarSourceComAcoes,
-  sidebarSourceComEsqueleto,
-  sidebarSourceComSubmenu,
+  sidebarSourceWith,
+  sidebarSourceWithActions,
+  sidebarSourceWithSkeleton,
+  sidebarSourceWithSubmenu,
 } from './sidebar.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -170,7 +170,7 @@ export const WithGroups: Story = {
     docs: {
       // Dois grupos e a linha entre eles: é a separação que a story documenta.
       source: {
-        transform: sidebarSourceCom({
+        transform: sidebarSourceWith({
           grupos: [
             {
               label: 'Principal',
@@ -297,22 +297,22 @@ export const WithGroupActions: Story = {
       }),
     );
     itemNortear.appendChild(createSidebarMenuBadge({ text: '12' }));
-    let acoesAbertas = 0;
+    let actionsAbertas = 0;
     itemNortear.appendChild(
       createSidebarMenuAction({
         'aria-label': 'Mais opções de Nortear',
         icon: makeIcon(ICON_MORE),
         showOnHover: true,
-        onClick: () => { acoesAbertas += 1; itemNortear.dataset.acoes = String(acoesAbertas); },
+        onClick: () => { actionsAbertas += 1; itemNortear.dataset.acoes = String(actionsAbertas); },
       }),
     );
     menu.appendChild(itemNortear);
 
-    const itemArquivo = createSidebarMenuItem();
-    itemArquivo.appendChild(
+    const itemFile = createSidebarMenuItem();
+    itemFile.appendChild(
       createSidebarMenuButton({ label: 'Arquivados', icon: makeIcon(ICON_LAYERS), href: '#' }),
     );
-    menu.appendChild(itemArquivo);
+    menu.appendChild(itemFile);
 
     const itemRascunho = createSidebarMenuItem();
     itemRascunho.appendChild(
@@ -349,7 +349,7 @@ export const WithGroupActions: Story = {
     docs: {
       // As sub-fábricas são o assunto: o atalho `createSidebarGroup` esconderia
       // o rótulo com id, a ação do grupo, o contador ancorado e a faixa.
-      source: { transform: sidebarSourceComAcoes() },
+      source: { transform: sidebarSourceWithActions() },
       description: {
         story:
           'Grupo montado peça a peça: <code>SidebarGroupLabel</code> nomeia a lista via <code>aria-labelledby</code>, ' +
@@ -543,7 +543,7 @@ export const WithSubmenu: Story = {
     docs: {
       // O recolhimento não é do componente: a fábrica entrega a lista aninhada e
       // quem compõe liga `aria-expanded` à visibilidade dela.
-      source: { transform: sidebarSourceComSubmenu() },
+      source: { transform: sidebarSourceWithSubmenu() },
       description: {
         story: 'Sidebar com item expandível mostrando sub-menu aninhado. Clicar em "Componentes" revela os subitens com linha de referência visual.',
       },
@@ -654,7 +654,7 @@ export const LoadingSkeleton: Story = {
     covers: ['functional.item9'],
     docs: {
       // A regra de anúncio é o assunto: só a primeira linha vira `role="status"`.
-      source: { transform: sidebarSourceComEsqueleto() },
+      source: { transform: sidebarSourceWithSkeleton() },
       description: {
         story:
           'Espaço reservado enquanto o menu carrega. <code>SidebarMenuSkeleton</code> com <code>showIcon</code> desenha a caixa do ícone à esquerda da caixa do texto.',
@@ -780,7 +780,7 @@ export const WithSearch: Story = {
       // O campo de busca é o assunto, e o nome acessível dele é obrigatório na
       // fábrica: o `placeholder` some no primeiro caractere digitado.
       source: {
-        transform: sidebarSourceCom({
+        transform: sidebarSourceWith({
           busca: 'Buscar na navegação',
           grupos: [
             {
@@ -873,7 +873,7 @@ export const WithBadges: Story = {
     docs: {
       // O contador é o assunto: ele entra no próprio item, dentro do botão.
       source: {
-        transform: sidebarSourceCom({
+        transform: sidebarSourceWith({
           rodape: false,
           grupos: [
             {

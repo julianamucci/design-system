@@ -108,20 +108,20 @@ export const Playground: Story = {
       // chave que no button é TEXTO VISÍVEL. A unificação trouxe o canônico e
       // manteve o antigo como apelido, porque apagá-lo quebraria chamador em
       // silêncio. Compatibilidade sem asserção é promessa, não contrato.
-      const grupoAntigo = createAvatarGroup({ label: 'Participantes' });
-      await expect(grupoAntigo).toHaveAttribute('aria-label', 'Participantes');
-      await expect(grupoAntigo).toHaveAttribute('role', 'group');
+      const legacyGroup = createAvatarGroup({ label: 'Participantes' });
+      await expect(legacyGroup).toHaveAttribute('aria-label', 'Participantes');
+      await expect(legacyGroup).toHaveAttribute('role', 'group');
 
-      const badgeAntigo = createAvatarBadge({ label: 'Online' });
-      await expect(badgeAntigo).toHaveAttribute('aria-label', 'Online');
+      const legacyBadge = createAvatarBadge({ label: 'Online' });
+      await expect(legacyBadge).toHaveAttribute('aria-label', 'Online');
 
       // E o canônico vence quando os dois vierem — dois nomes disputando um
       // atributo é o defeito que a unificação existe para fechar.
-      const grupoAmbos = createAvatarGroup({ label: 'Antigo', 'aria-label': 'Canônico' });
-      await expect(grupoAmbos).toHaveAttribute('aria-label', 'Canônico');
+      const groupBoth = createAvatarGroup({ label: 'Antigo', 'aria-label': 'Canônico' });
+      await expect(groupBoth).toHaveAttribute('aria-label', 'Canônico');
 
-      const badgeAmbos = createAvatarBadge({ label: 'Antigo', 'aria-label': 'Canônico' });
-      await expect(badgeAmbos).toHaveAttribute('aria-label', 'Canônico');
+      const badgeBoth = createAvatarBadge({ label: 'Antigo', 'aria-label': 'Canônico' });
+      await expect(badgeBoth).toHaveAttribute('aria-label', 'Canônico');
     });
   },
 };

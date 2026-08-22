@@ -4,8 +4,8 @@ import { createSkeleton } from './skeleton';
 import { regiaoDeCarregamento } from './skeleton.fixtures';
 import {
   skeletonSource,
-  skeletonSourceCom,
-  skeletonSourceEmProporcao,
+  skeletonSourceWith,
+  ratioSkeletonSource,
 } from './skeleton.source';
 import { caixaDesenhada } from '@shared/testing/skeleton-probe';
 
@@ -37,7 +37,7 @@ export const Rectangle: Story = {
     docs: {
       // `fill` preenche a caixa que o container estabelece — sem container ele
       // nasce com altura zero, e o snippet mostra quem dá a caixa.
-      source: { transform: skeletonSourceEmProporcao({ regionLabel: 'Carregando bloco' }) },
+      source: { transform: ratioSkeletonSource({ regionLabel: 'Carregando bloco' }) },
       description: {
         story:
           '`data-shape="fill"` preenche a caixa que o container estabelece — aqui, uma proporção de mídia 16/9.',
@@ -69,7 +69,7 @@ export const Circle: Story = {
     covers: ['visual.item2'],
     docs: {
       source: {
-        transform: skeletonSourceCom({ shape: 'avatar', regionLabel: 'Carregando avatar' }),
+        transform: skeletonSourceWith({ shape: 'avatar', regionLabel: 'Carregando avatar' }),
       },
       description: {
         story:
@@ -106,7 +106,7 @@ export const TextLine: Story = {
       // Três linhas de larguras diferentes: uma peça só não mostraria o que faz
       // o bloco parecer parágrafo.
       source: {
-        transform: skeletonSourceCom({
+        transform: skeletonSourceWith({
           regionLabel: 'Carregando linhas de texto',
           linhas: [
             { shape: 'text', width: 'full' },

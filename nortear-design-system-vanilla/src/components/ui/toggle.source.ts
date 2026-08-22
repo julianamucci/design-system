@@ -31,7 +31,7 @@ export type ToggleSnippetOptions = {
   class?: string;
 };
 
-const CALLBACK_PADRAO = '(pressed) => alternar(pressed)';
+const CALLBACK_DEFAULT = '(pressed) => alternar(pressed)';
 
 /** A chamada real de `createToggle` com as opções da story. */
 export function toggleSnippet(o: ToggleSnippetOptions = {}): string {
@@ -55,7 +55,7 @@ export function toggleSnippet(o: ToggleSnippetOptions = {}): string {
     ['pressed', o.pressed ? 'true' : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
     ['class', o.class ? texto(o.class) : undefined],
-    ['onClick', o.onClick ? (typeof o.onClick === 'string' ? o.onClick : CALLBACK_PADRAO) : undefined],
+    ['onClick', o.onClick ? (typeof o.onClick === 'string' ? o.onClick : CALLBACK_DEFAULT) : undefined],
   ]);
 
   return snippet(
@@ -70,7 +70,7 @@ export function toggleSnippet(o: ToggleSnippetOptions = {}): string {
  * variações lado a lado. O agrupador é o `nds-cluster` do design system, não um
  * `cluster()` que só existe dentro do arquivo de story.
  */
-export function toggleFileiraSnippet(variacoes: ToggleSnippetOptions[]): string {
+export function toggleRowSnippet(variacoes: ToggleSnippetOptions[]): string {
   const icones = new Set<string>(['createElement']);
   const chamadas = variacoes.map((v) => {
     const comTexto = Boolean(v.label);
@@ -109,15 +109,15 @@ ${chamadas.join('\n')}
 }
 
 /** Transform de story para uma fileira de variações. */
-export function toggleSourceFileira(variacoes: ToggleSnippetOptions[]): SourceTransform<ToggleSnippetOptions> {
-  return () => toggleFileiraSnippet(variacoes);
+export function toggleSourceRow(variacoes: ToggleSnippetOptions[]): SourceTransform<ToggleSnippetOptions> {
+  return () => toggleRowSnippet(variacoes);
 }
 
 /**
  * Barra de formatação: toggles independentes dentro de um `role="group"` com
  * nome próprio. Sem o nome, o leitor anuncia "grupo" e mais nada.
  */
-export function toggleBarraSnippet(itens: ToggleSnippetOptions[], nomeDoGrupo: string): string {
+export function toggleBarSnippet(itens: ToggleSnippetOptions[], nomeDoGrupo: string): string {
   const icones = itens.map((i) => i.icon ?? 'Bold');
   const chamadas = itens.map((i) =>
     `  ${chamada(
@@ -149,11 +149,11 @@ ${chamadas.join('\n')}
 }
 
 /** Transform de story para a barra de formatação. */
-export function toggleSourceBarra(
+export function toggleSourceBar(
   itens: ToggleSnippetOptions[],
   nomeDoGrupo: string,
 ): SourceTransform<ToggleSnippetOptions> {
-  return () => toggleBarraSnippet(itens, nomeDoGrupo);
+  return () => toggleBarSnippet(itens, nomeDoGrupo);
 }
 
 /**
@@ -187,6 +187,6 @@ export const toggleSource: SourceTransform<ToggleSnippetOptions> = (_gerado, ctx
   toggleSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function toggleSourceCom(fixas: ToggleSnippetOptions): SourceTransform<ToggleSnippetOptions> {
+export function toggleSourceWith(fixas: ToggleSnippetOptions): SourceTransform<ToggleSnippetOptions> {
   return (_gerado, ctx) => toggleSnippet({ ...ctx.args, ...fixas });
 }

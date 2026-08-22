@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createTooltip } from './tooltip';
-import { balaoDe, limparPortal } from './tooltip.fixtures';
+import { balaoDe, clearPortal } from './tooltip.fixtures';
 import { createButton } from './button';
 import { tooltipSource } from './tooltip.source';
 import { createTooltipDocs } from '@/components/docs/TooltipDocs';
@@ -153,7 +153,7 @@ export const Playground: Story = {
     });
 
     await step('Cleanup do portal', async () => {
-      limparPortal();
+      clearPortal();
     });
   },
 };

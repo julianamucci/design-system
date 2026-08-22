@@ -3,7 +3,7 @@ import { userEvent, expect } from 'storybook/test';
 import { razao } from '@shared/testing/cor';
 import { createInputOTP } from './input-otp';
 import { wrap } from './input-otp.fixtures';
-import { inputOtpSource, inputOtpSourceCom, inputOtpSourceComposicao } from './input-otp.source';
+import { inputOtpSource, inputOtpSourceWith, inputOtpSourceComposition } from './input-otp.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -36,7 +36,7 @@ const slotsDe = (raiz: HTMLElement): HTMLInputElement[] => [
 export const Empty: Story = {
   parameters: {
     covers: ['visual.item1'],
-    docs: { source: { transform: inputOtpSourceCom({ autoFocus: true }) } },
+    docs: { source: { transform: inputOtpSourceWith({ autoFocus: true }) } },
   },
   render: () => wrap(createInputOTP({ length: 6, autoFocus: true })),
   play: async ({ canvasElement, step }) => {
@@ -52,7 +52,7 @@ export const Filling: Story = {
   name: 'Filling (3 of 6)',
   parameters: {
     covers: ['visual.item2', 'accessibility.item6'],
-    docs: { source: { transform: inputOtpSourceCom({ value: '123' }) } },
+    docs: { source: { transform: inputOtpSourceWith({ value: '123' }) } },
   },
   render: () => wrap(createInputOTP({ length: 6, value: '123' })),
   play: async ({ canvasElement, step }) => {
@@ -76,7 +76,7 @@ export const Filling: Story = {
 export const Complete: Story = {
   parameters: {
     covers: ['visual.item3'],
-    docs: { source: { transform: inputOtpSourceCom({ value: '482913' }) } },
+    docs: { source: { transform: inputOtpSourceWith({ value: '482913' }) } },
   },
   render: () => wrap(createInputOTP({ length: 6, value: '482913' })),
   play: async ({ canvasElement, step }) => {
@@ -90,7 +90,7 @@ export const Complete: Story = {
 export const Disabled: Story = {
   parameters: {
     covers: ['functional.item6'],
-    docs: { source: { transform: inputOtpSourceCom({ value: '4829', disabled: true }) } },
+    docs: { source: { transform: inputOtpSourceWith({ value: '4829', disabled: true }) } },
   },
   render: () => wrap(createInputOTP({ length: 6, value: '4829', disabled: true })),
   play: async ({ canvasElement, step }) => {
@@ -119,7 +119,7 @@ export const Error: Story = {
     // vermelho sem dizer o que houve.
     docs: {
       source: {
-        transform: inputOtpSourceComposicao({
+        transform: inputOtpSourceComposition({
           value: '482913',
           invalid: true,
           erro: 'Código incorreto. Verifique e tente novamente.',
@@ -146,14 +146,14 @@ export const Error: Story = {
     msg.className = 'nds-text-caption nds-text-destructive';
     msg.textContent = 'Código incorreto. Verifique e tente novamente.';
 
-    const rotuloOk = document.createElement('p');
-    rotuloOk.className = 'nds-text-caption nds-text-muted-foreground';
-    rotuloOk.textContent = 'Comparação — sem erro';
+    const labelOk = document.createElement('p');
+    labelOk.className = 'nds-text-caption nds-text-muted-foreground';
+    labelOk.textContent = 'Comparação — sem erro';
 
     const semErro = createInputOTP({ length: 6, value: '482913' });
     semErro.dataset.testid = 'sem-erro';
 
-    raiz.append(comErro, msg, rotuloOk, semErro);
+    raiz.append(comErro, msg, labelOk, semErro);
     return wrap(raiz);
   },
   play: async ({ canvasElement, step }) => {

@@ -3,7 +3,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSelect, type SelectItem } from './select';
 import { abridor, comRotulo } from './select.fixtures';
-import { selectSource, selectSourceCom, selectSourceEmFormulario } from './select.source';
+import { selectSource, selectSourceWith, formSelectSource } from './select.source';
 import { createButton } from './button';
 
 const meta: Meta = {
@@ -134,7 +134,7 @@ export const RegionWithGroups: Story = {
       // Aqui o nome do campo vem do rótulo VISÍVEL, por `aria-labelledby`: um
       // texto só, e quem enxerga e quem ouve leem a mesma coisa.
       source: {
-        transform: selectSourceCom({
+        transform: selectSourceWith({
           id: 'regiao',
           name: 'region',
           labelText: 'Selecione a região',
@@ -266,7 +266,7 @@ export const InForm: Story = {
       // A serialização é o assunto: sem o formulário em volta não há o que
       // provar, e é o campo escondido da fábrica que o `FormData` enxerga.
       source: {
-        transform: selectSourceEmFormulario({
+        transform: formSelectSource({
           id: 'estado-do-formulario',
           items: [
             { value: 'sp', label: 'São Paulo' },

@@ -65,7 +65,7 @@ export type PopoverPartOptions = {
   class?: string;
 };
 
-function criarParte(
+function createParte(
   tag: keyof HTMLElementTagNameMap,
   slot: string,
   classe: string,
@@ -79,7 +79,7 @@ function criarParte(
 }
 
 export function createPopoverHeader(options: PopoverPartOptions = {}): HTMLElement {
-  return criarParte('div', 'popover-header', 'nds-popover-header', options);
+  return createParte('div', 'popover-header', 'nds-popover-header', options);
 }
 
 /**
@@ -94,11 +94,11 @@ export type PopoverTitleOptions = PopoverPartOptions & { level?: 1 | 2 | 3 | 4 |
 
 export function createPopoverTitle(options: PopoverTitleOptions = {}): HTMLElement {
   const { level = 4 } = options;
-  return criarParte(`h${level}` as keyof HTMLElementTagNameMap, 'popover-title', 'nds-popover-title', options);
+  return createParte(`h${level}` as keyof HTMLElementTagNameMap, 'popover-title', 'nds-popover-title', options);
 }
 
 export function createPopoverDescription(options: PopoverPartOptions = {}): HTMLElement {
-  return criarParte('p', 'popover-description', 'nds-popover-description', options);
+  return createParte('p', 'popover-description', 'nds-popover-description', options);
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -144,7 +144,7 @@ export function createPopover(options: PopoverOptions): PopoverElement {
 
   let panelEl: HTMLElement | null = null;
   let isOpen = false;
-  let timerCliqueFora: ReturnType<typeof setTimeout> | null = null;
+  let timerClickOutside: ReturnType<typeof setTimeout> | null = null;
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'popover';
@@ -222,8 +222,8 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     // Adiado para o clique que ABRIU não fechar em seguida. O timer é guardado
     // porque o fechamento pode chegar antes dele: sem cancelar, o ouvinte era
     // registrado DEPOIS da limpeza e ficava para sempre.
-    timerCliqueFora = setTimeout(() => {
-      timerCliqueFora = null;
+    timerClickOutside = setTimeout(() => {
+      timerClickOutside = null;
       document.addEventListener('click', handleOutsideClick);
     }, 0);
 
@@ -238,7 +238,7 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     // manda quem navega por teclado de volta ao início da página (WCAG 2.4.3).
     // Quando a dispensa levou o foco a OUTRO controle da página, o foco fica
     // onde a pessoa o pôs: puxá-lo de volta seria roubá-lo.
-    const focoEstavaDentro =
+    const focusEstavaInside =
       !!panelEl &&
       (panelEl.contains(document.activeElement) || document.activeElement === document.body);
 
@@ -249,14 +249,14 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     trigger.dataset.state = 'closed';
     isOpen = false;
 
-    if (timerCliqueFora !== null) {
-      clearTimeout(timerCliqueFora);
-      timerCliqueFora = null;
+    if (timerClickOutside !== null) {
+      clearTimeout(timerClickOutside);
+      timerClickOutside = null;
     }
     document.removeEventListener('keydown', handleKeydown);
     document.removeEventListener('click', handleOutsideClick);
 
-    if (focoEstavaDentro) trigger.focus();
+    if (focusEstavaInside) trigger.focus();
 
     notificar(false);
   }
@@ -283,7 +283,7 @@ export function createPopover(options: PopoverOptions): PopoverElement {
    * Controlado, ela só é anunciada: quem manda no estado é quem chama. Não
    * controlado, ela é executada — e `open`/`close` anunciam por conta própria.
    */
-  function pedirMudanca(proximo: boolean): void {
+  function pedirChange(proximo: boolean): void {
     if (controlado) {
       onOpenChange?.(proximo);
       return;
@@ -296,20 +296,20 @@ export function createPopover(options: PopoverOptions): PopoverElement {
       e.preventDefault();
       // `close()` já devolve o foco ao gatilho quando ele estava dentro do
       // painel, que é sempre o caso vindo do Escape.
-      pedirMudanca(false);
+      pedirChange(false);
     }
   }
 
   function handleOutsideClick(e: MouseEvent): void {
     const target = e.target as Node;
     if (!panelEl?.contains(target) && !trigger.contains(target)) {
-      pedirMudanca(false);
+      pedirChange(false);
     }
   }
 
   trigger.addEventListener('click', (e) => {
     e.stopPropagation();
-    pedirMudanca(!isOpen);
+    pedirChange(!isOpen);
   });
 
   // O painel mora em portal no body: quando o wrapper sai do DOM — troca de
@@ -337,8 +337,8 @@ export function createPopover(options: PopoverOptions): PopoverElement {
   // `defaultOpen`. Adiado uma volta do laço de eventos, e não um microtique: a
   // raiz ainda não entrou no documento quando a fábrica retorna, e posicionar o
   // painel exige medir um gatilho já no layout.
-  const comecaAberto = controlado ? options.open === true : options.defaultOpen === true;
-  if (comecaAberto) {
+  const startsOpen = controlado ? options.open === true : options.defaultOpen === true;
+  if (startsOpen) {
     setTimeout(() => {
       // A raiz pode ter sido descartada antes deste tique. Abrir aqui portaria
       // um painel para o `body` sem ninguém com referência para fechá-lo.

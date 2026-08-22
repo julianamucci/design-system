@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { createContextMenu } from './context-menu';
-import { contextMenuSource, contextMenuSourceCom } from './context-menu.source';
+import { contextMenuSource, contextMenuSourceWith } from './context-menu.source';
 import {
   abrirPorGesto,
   criarAreaDeClique,
@@ -78,7 +78,7 @@ export const WithCheckbox: Story = {
     covers: ['functional.item7', 'accessibility.item4'],
     docs: {
       source: {
-        transform: contextMenuSourceCom({
+        transform: contextMenuSourceWith({
           items: [
             { type: 'label', label: 'Visualização' },
             { type: 'checkbox', label: 'Mostrar grade', value: 'grade', checked: false },
@@ -127,7 +127,7 @@ export const WithRadio: Story = {
     // `radioValue` que diz qual deles vale.
     docs: {
       source: {
-        transform: contextMenuSourceCom({
+        transform: contextMenuSourceWith({
           radioValue: 'grid',
           items: [
             { type: 'label', label: 'Layout' },
@@ -179,7 +179,7 @@ export const WithSubmenu: Story = {
     covers: ['functional.item5', 'functional.item6', 'visual.item3'],
     docs: {
       source: {
-        transform: contextMenuSourceCom({
+        transform: contextMenuSourceWith({
           items: [
             { label: 'Editar', value: 'edit' },
             { label: 'Duplicar', value: 'duplicate' },
@@ -266,7 +266,7 @@ export const CompleteComposition: Story = {
     covers: ['visual.item4'],
     docs: {
       source: {
-        transform: contextMenuSourceCom({
+        transform: contextMenuSourceWith({
           radioValue: 'grid',
           items: [
             { type: 'label', label: 'Ações' },

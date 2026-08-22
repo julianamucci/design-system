@@ -134,7 +134,7 @@ export async function conferirFocusTrap(p: HTMLElement): Promise<void> {
 // ─── Fixtures de montagem ─────────────────────────────────────────────────────
 //
 // O que as stories MONTAM, e não o que elas conferem. As três estavam copiadas
-// em `dialog-variantes` e `dialog-composicoes`; `buildField` e `abrirNaMontagem`
+// em `dialog-variantes` e `dialog-composicoes`; `buildField` e `mountOpen`
 // eram idênticas, e `makeFooter` divergia só na ação destrutiva — que agora
 // entra por parâmetro, com o padrão neutro que as composições usam.
 
@@ -177,7 +177,7 @@ export function makeFooter(
 }
 
 /** Abre pelo gatilho depois da montagem — a factory não tem `defaultOpen`. */
-export function abrirNaMontagem(dialog: HTMLElement): HTMLElement {
+export function mountOpen(dialog: HTMLElement): HTMLElement {
   queueMicrotask(() => dialog.querySelector<HTMLElement>('button')?.click());
   return dialog;
 }

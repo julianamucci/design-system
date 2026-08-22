@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { sliderSnippet, sliderSource, sliderSourceCom } from './slider.source';
+import { sliderSnippet, sliderSource, sliderSourceWith } from './slider.source';
 
 describe('sliderSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
@@ -78,13 +78,13 @@ describe('sliderSnippet', () => {
 
 describe('sliderSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = sliderSource('<div data-slot="slider">', {});
-    const comArgs = sliderSource('<div data-slot="slider">', {
+    const noArgs = sliderSource('<div data-slot="slider">', {});
+    const withArgs = sliderSource('<div data-slot="slider">', {
       args: { value: 75, step: 5, disabled: true },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain('value: 75');
-    expect(comArgs).toContain('step: 5');
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain('value: 75');
+    expect(withArgs).toContain('step: 5');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -96,7 +96,7 @@ describe('sliderSource', () => {
 
 describe('sliderSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = sliderSourceCom({ orientation: 'vertical', value: 60 })('', {
+    const código = sliderSourceWith({ orientation: 'vertical', value: 60 })('', {
       args: { value: 10, orientation: 'horizontal' },
     });
     expect(código).toContain("orientation: 'vertical'");
@@ -104,7 +104,7 @@ describe('sliderSourceCom', () => {
   });
 
   it('aceita uma expressão própria para o callback', () => {
-    const código = sliderSourceCom({
+    const código = sliderSourceWith({
       onValueChange: '([minimo, maximo]) => mostrarFaixa(minimo, maximo)',
     })('', {});
     expect(código).toContain('onValueChange: ([minimo, maximo]) => mostrarFaixa(minimo, maximo)');

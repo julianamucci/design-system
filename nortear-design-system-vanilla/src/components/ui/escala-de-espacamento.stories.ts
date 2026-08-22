@@ -112,7 +112,7 @@ function cenario(): HTMLElement {
  * densidade passou a alcançar: `n × 3.2px` no condensado e `n × 5px` no
  * confortável, contra `n × 4px` no padrão.
  */
-const ALVOS: AlvoDeEspaco[] = [
+const TARGETS: AlvoDeEspaco[] = [
   // ── Controle: degrau que já existia e já seguia a densidade ──────────────
   { nome: 'input · degrau 2 (controle)', seletor: '.nds-input', prop: 'padding-block-start',
     esperado: { condensado: 6.4, default: 8, confortavel: 10 } },
@@ -159,7 +159,7 @@ const ALVOS: AlvoDeEspaco[] = [
  * recria exatamente o valor congelado que esta rodada removeu, e some da
  * revisão porque o CSS continua parecendo certo.
  */
-export const CadaDegrauEhMultiploDaBase: Story = {
+export const BaseEachDegrauEhMultiplo: Story = {
   render: cenario,
   play: async ({ canvasElement }) => {
     const raiz = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
@@ -196,13 +196,13 @@ export const CadaDegrauEhMultiploDaBase: Story = {
  * abaixo nomeia o defeito pelo que ele é em vez de deixar o leitor deduzir de
  * dois números errados.
  */
-export const ConsumidoresNaoResolvemParaLiteral: Story = {
+export const LiteralConsumidoresNotResolvem: Story = {
   render: cenario,
   play: async ({ canvasElement }) => {
     const raiz = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
-    const medidas = medirPorDensidade(raiz, ALVOS);
+    const medidas = medirPorDensidade(raiz, TARGETS);
 
-    await expect(medidas).toHaveLength(ALVOS.length * DENSIDADES.length);
+    await expect(medidas).toHaveLength(TARGETS.length * DENSIDADES.length);
 
     const ausentes = medidas.filter((m) => !m.presente || m.px === null);
     await expect(ausentes.map(descreverMedida)).toEqual([]);
@@ -216,8 +216,8 @@ export const ConsumidoresNaoResolvemParaLiteral: Story = {
     }
     await expect(congelados).toEqual([]);
 
-    const foraDaTabela = medidas.filter((m) => Math.abs(m.px! - m.esperado) > TOLERANCIA_PX);
-    await expect(foraDaTabela.map(descreverMedida)).toEqual([]);
+    const tableOutside = medidas.filter((m) => Math.abs(m.px! - m.esperado) > TOLERANCIA_PX);
+    await expect(tableOutside.map(descreverMedida)).toEqual([]);
   },
 };
 
@@ -230,12 +230,12 @@ export const ConsumidoresNaoResolvemParaLiteral: Story = {
  * 36px foram para a escada de CAIXA e não para um `--spacing-9` novo, que teria
  * dado 28.8px sem ninguém ter escolhido esse número.
  */
-export const AlvoDeToqueSobreviveAoCondensado: Story = {
+export const TouchTargetSurvivesCondensed: Story = {
   render: cenario,
   play: async ({ canvasElement }) => {
     const raiz = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
-    const alvosDeToque = ALVOS.filter((a) => a.alvoDeToque);
-    const medidas = medirPorDensidade(raiz, alvosDeToque);
+    const touchTargets = TARGETS.filter((a) => a.alvoDeToque);
+    const medidas = medirPorDensidade(raiz, touchTargets);
 
     const pequenos = medidas.filter((m) => (m.px ?? 0) < ALVO_MINIMO_PX);
     await expect(

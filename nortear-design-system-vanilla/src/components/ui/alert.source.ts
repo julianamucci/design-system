@@ -32,7 +32,7 @@ export type AlertSnippetOptions = {
   className?: string;
 };
 
-const TITULO_PADRAO = 'Atenção';
+const TITLE_DEFAULT = 'Atenção';
 const DESCRICAO_PADRAO = 'Suas alterações serão aplicadas na próxima sessão.';
 
 /**
@@ -40,7 +40,7 @@ const DESCRICAO_PADRAO = 'Suas alterações serão aplicadas na próxima sessão
  * recebe o informativo; `destructive` é a única cujo nome de variante e nome de
  * ícone não coincidem.
  */
-function iconePorVariante(variant: AlertVariant): AlertIconType {
+function variantIcon(variant: AlertVariant): AlertIconType {
   if (variant === 'destructive') return 'error';
   if (variant === 'default') return 'info';
   return variant;
@@ -55,9 +55,9 @@ type PartesDoAlerta = {
 
 function partesDoAlerta(o: AlertSnippetOptions): PartesDoAlerta {
   const variant = o.variant ?? 'default';
-  const title = o.title ?? TITULO_PADRAO;
+  const title = o.title ?? TITLE_DEFAULT;
   const description = o.description ?? DESCRICAO_PADRAO;
-  const icone = o.icon === undefined ? iconePorVariante(variant) : o.icon;
+  const icone = o.icon === undefined ? variantIcon(variant) : o.icon;
 
   const linhas = opcoes([
     ['variant', variant !== 'default' ? texto(variant) : undefined],
@@ -105,13 +105,13 @@ export const alertSource: SourceTransform<AlertSnippetOptions> = (_gerado, ctx) 
   alertSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function alertSourceCom(fixas: AlertSnippetOptions): SourceTransform<AlertSnippetOptions> {
+export function alertSourceWith(fixas: AlertSnippetOptions): SourceTransform<AlertSnippetOptions> {
   return (_gerado, ctx) => alertSnippet({ ...ctx.args, ...fixas });
 }
 
 // ─── Com botão de ação ───────────────────────────────────────────────────────
 
-export type AlertComAcaoSnippetOptions = AlertSnippetOptions & {
+export type AlertWithActionSnippetOptions = AlertSnippetOptions & {
   /** Rótulo do botão que entra no slot de ação. */
   acao?: string;
 };
@@ -121,7 +121,7 @@ export type AlertComAcaoSnippetOptions = AlertSnippetOptions & {
  * nasce vazia — quem consome injeta o botão. Espremer isso numa opção do
  * snippet padrão esconderia justamente a peça que a story documenta.
  */
-export function alertComAcaoSnippet(o: AlertComAcaoSnippetOptions = {}): string {
+export function alertWithActionSnippet(o: AlertWithActionSnippetOptions = {}): string {
   const acao = o.acao ?? 'Atualizar';
   const { nomes, criacao, corpo } = partesDoAlerta(o);
 
@@ -137,10 +137,10 @@ alerta.appendChild(acao);`,
   );
 }
 
-export function alertComAcaoSourceCom(
-  fixas: AlertComAcaoSnippetOptions,
-): SourceTransform<AlertComAcaoSnippetOptions> {
-  return (_gerado, ctx) => alertComAcaoSnippet({ ...ctx.args, ...fixas });
+export function alertWithActionSourceWith(
+  fixas: AlertWithActionSnippetOptions,
+): SourceTransform<AlertWithActionSnippetOptions> {
+  return (_gerado, ctx) => alertWithActionSnippet({ ...ctx.args, ...fixas });
 }
 
 // ─── Inserido em tempo de execução ───────────────────────────────────────────
@@ -163,7 +163,7 @@ document.querySelector('#app')?.append(regiao);`,
   );
 }
 
-export function alertEmRegiaoVivaSourceCom(
+export function regiaoVivaSourceWithAlert(
   fixas: AlertSnippetOptions,
 ): SourceTransform<AlertSnippetOptions> {
   return (_gerado, ctx) => alertEmRegiaoVivaSnippet({ ...ctx.args, ...fixas });

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createTextarea } from './textarea';
-import { textareaSource, textareaSourceCom } from './textarea.source';
+import { textareaSource, textareaSourceWith } from './textarea.source';
 import { createLabel } from './label';
 import {
   alturaMinimaPx,
@@ -116,7 +116,7 @@ export const WithCounter: Story = {
     // API do DOM e o número precisa ser anunciado a quem não o vê.
     docs: {
       source: {
-        transform: textareaSourceCom({
+        transform: textareaSourceWith({
           id: 'descricao',
           label: 'Descrição',
           placeholder: 'ex: Camiseta de algodão, gola redonda...',
@@ -164,7 +164,7 @@ export const NoResize: Story = {
   parameters: {
     docs: {
       source: {
-        transform: textareaSourceCom({
+        transform: textareaSourceWith({
           resize: 'none',
           id: 'feedback',
           label: 'Feedback',

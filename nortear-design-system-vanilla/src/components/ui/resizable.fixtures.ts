@@ -11,13 +11,13 @@
  *  · `panelContent` era o caso grave: mesmo nome, DUAS árvores diferentes. Uma
  *    montava um cluster centralizado com um rótulo só; a outra, uma pilha com
  *    título e linha de apoio. Vieram para cá separadas por PROPÓSITO —
- *    `painelRotulado` e `painelComApoio`;
+ *    `panelLabelled` e `panelWithHelper`;
  *  · `fracaoDoPrimeiro` divergia COM MOTIVO: uma media só a largura, a outra
  *    recebia o eixo. Ficou o eixo em parâmetro, com o padrão horizontal.
  */
 
 /** Conteúdo de painel com um rótulo só, centralizado na altura cheia. */
-export function painelRotulado(label: string, extraClass = ''): HTMLElement {
+export function panelLabelled(label: string, extraClass = ''): HTMLElement {
   const el = document.createElement('div');
   el.className = `nds-cluster nds-w-full nds-p-4 nds-text-body nds-font-medium ${extraClass}`.trim();
   el.dataset.justify = 'center';
@@ -29,7 +29,7 @@ export function painelRotulado(label: string, extraClass = ''): HTMLElement {
 }
 
 /** Conteúdo de painel com título e uma linha de apoio abaixo dele. */
-export function painelComApoio(titulo: string, apoio: string): HTMLElement {
+export function panelWithHelper(titulo: string, apoio: string): HTMLElement {
   const el = document.createElement('div');
   el.className = 'nds-stack nds-p-4';
   el.dataset.spacing = 'xs';

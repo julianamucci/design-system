@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  calendarComPopoverSnippet,
+  calendarWithPopoverSnippet,
   calendarSnippet,
   calendarSource,
-  calendarSourceCom,
+  calendarSourceWith,
 } from './calendar.source';
 
 describe('calendarSnippet', () => {
@@ -76,9 +76,9 @@ describe('calendarSource', () => {
     expect(padrao).toContain("locale: 'pt-BR'");
     expect(padrao).toContain('value: new Date(2026, 3, 12)');
 
-    const comArgs = calendarSource('', { args: { numberOfMonths: 2 } });
-    expect(padrao).not.toBe(comArgs);
-    expect(comArgs).toContain('numberOfMonths: 2');
+    const withArgs = calendarSource('', { args: { numberOfMonths: 2 } });
+    expect(padrao).not.toBe(withArgs);
+    expect(withArgs).toContain('numberOfMonths: 2');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -90,7 +90,7 @@ describe('calendarSource', () => {
 
 describe('calendarSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = calendarSourceCom({ mode: 'range', value: '{ from: new Date(2026, 3, 10) }' });
+    const transform = calendarSourceWith({ mode: 'range', value: '{ from: new Date(2026, 3, 10) }' });
     const código = transform('', { args: { mode: 'multiple', numberOfMonths: 3 } });
     expect(código).toContain("mode: 'range'");
     expect(código).toContain('{ from: new Date(2026, 3, 10) }');
@@ -100,7 +100,7 @@ describe('calendarSourceCom', () => {
 
   it('`value: undefined` apaga o padrão em vez de reintroduzi-lo', () => {
     // É o calendário que abre sem data escolhida — o destaque de hoje.
-    const código = calendarSourceCom({ value: undefined })('', {});
+    const código = calendarSourceWith({ value: undefined })('', {});
     expect(código).not.toContain('value');
     expect(código).toContain("createCalendar({ locale: 'pt-BR' })");
   });
@@ -108,7 +108,7 @@ describe('calendarSourceCom', () => {
 
 describe('calendarComPopoverSnippet', () => {
   it('mostra as três fábricas e a ligação entre elas', () => {
-    const código = calendarComPopoverSnippet();
+    const código = calendarWithPopoverSnippet();
     expect(código).toContain("import { createButton } from '@/components/ui/button';");
     expect(código).toContain("import { createPopover } from '@/components/ui/popover';");
     expect(código).toContain('createPopover({ trigger: gatilho, content: calendario })');
@@ -117,7 +117,7 @@ describe('calendarComPopoverSnippet', () => {
   });
 
   it('não vaza o andaime de espera da story', () => {
-    const código = calendarComPopoverSnippet();
+    const código = calendarWithPopoverSnippet();
     expect(código).not.toContain('waitForPortal');
     expect(código).not.toContain('onSelect(valor)');
   });

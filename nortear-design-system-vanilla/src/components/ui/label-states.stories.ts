@@ -8,7 +8,7 @@ import {
 import { createLabel } from './label';
 import { createInput } from './input';
 import { bloco } from './label.fixtures';
-import { labelSource, labelSourceBloco, labelSourceCom, labelSourceObrigatorio } from './label.source';
+import { labelSource, labelSourceBlock, labelSourceWith, labelSourceObrigatorio } from './label.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -77,7 +77,7 @@ export const Disabled: Story = {
     // faz parte da regra: sem override o snippet mostraria um par comum.
     docs: {
       source: {
-        transform: labelSourceCom({
+        transform: labelSourceWith({
           text: 'CPF',
           htmlFor: 'cpf',
           placeholder: '000.000.000-00',
@@ -121,7 +121,7 @@ export const DisabledViaGroup: Story = {
     covers: ['functional.item4'],
     docs: {
       source: {
-        transform: labelSourceBloco({
+        transform: labelSourceBlock({
           text: 'Documento',
           htmlFor: 'documento',
           placeholder: 'ex: 000.000.000-00',

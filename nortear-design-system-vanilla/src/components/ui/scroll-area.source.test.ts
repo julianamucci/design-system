@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
   scrollAreaEmCardSnippet,
-  scrollAreaSemLimiteSnippet,
+  scrollAreaNoLimitSnippet,
   scrollAreaSnippet,
   scrollAreaSource,
-  scrollAreaSourceCom,
+  scrollAreaSourceWith,
 } from './scroll-area.source';
 
 describe('scrollAreaSnippet', () => {
@@ -68,14 +68,14 @@ describe('scrollAreaSnippet', () => {
 
 describe('scrollAreaSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = scrollAreaSource('<div data-slot="scroll-area">', {});
-    const comArgs = scrollAreaSource('<div data-slot="scroll-area">', {
+    const noArgs = scrollAreaSource('<div data-slot="scroll-area">', {});
+    const withArgs = scrollAreaSource('<div data-slot="scroll-area">', {
       args: { size: 'xs', itemCount: 5, label: 'Outra lista' },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("size: 'xs'");
-    expect(comArgs).toContain('i <= 5');
-    expect(comArgs).toContain("'aria-label': 'Outra lista'");
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("size: 'xs'");
+    expect(withArgs).toContain('i <= 5');
+    expect(withArgs).toContain("'aria-label': 'Outra lista'");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -87,7 +87,7 @@ describe('scrollAreaSource', () => {
 
 describe('scrollAreaSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = scrollAreaSourceCom({ conteudo: 'matriz', size: 'xl' })('', {
+    const código = scrollAreaSourceWith({ conteudo: 'matriz', size: 'xl' })('', {
       args: { size: 'sm' },
     });
     expect(código).toContain("size: 'xl'");
@@ -97,7 +97,7 @@ describe('scrollAreaSourceCom', () => {
 
 describe('scrollAreaSemLimiteSnippet', () => {
   it('mostra o par sem teto × com teto, que é o assunto da story', () => {
-    const código = scrollAreaSemLimiteSnippet({ size: 'sm' });
+    const código = scrollAreaNoLimitSnippet({ size: 'sm' });
     expect(código).toContain('const semTeto = createScrollArea({');
     expect(código).toContain('const comTeto = createScrollArea({');
     expect(código).toContain("size: 'sm'");

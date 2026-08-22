@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { createDialog } from './dialog';
-import { dialogComFormularioSource, dialogSource, dialogSourceCom } from './dialog.source';
+import { dialogComFormularioSource, dialogSource, dialogSourceWith } from './dialog.source';
 import { createButton } from './button';
 import {
   abrir,
-  abrirNaMontagem,
+  mountOpen,
   botaoFecharDoCanto,
   buildField,
   conferirNomeEDescricao,
@@ -54,7 +54,7 @@ export const ConfirmEmail: Story = {
     body.className = 'nds-text-body nds-text-muted-foreground';
     body.textContent =
       'Vamos enviar um link para maria@exemplo.com. Confirme o endereço antes de prosseguir.';
-    return abrirNaMontagem(
+    return mountOpen(
       createDialog({
         trigger: createButton({ variant: 'outline', label: 'Confirmar e-mail' }),
         title: 'Confirmar e-mail',
@@ -114,7 +114,7 @@ export const ProfileEdit: Story = {
       buildField('profile-name', 'Nome de exibição', 'text', 'Maria Souza'),
       buildField('profile-role', 'Função', 'text', 'Designer'),
     );
-    return abrirNaMontagem(
+    return mountOpen(
       createDialog({
         trigger: createButton({ variant: 'outline', label: 'Editar perfil' }),
         title: 'Editar perfil',
@@ -154,7 +154,7 @@ export const MediaPreview: Story = {
     // recomenda.
     docs: {
       source: {
-        transform: dialogSourceCom({
+        transform: dialogSourceWith({
           triggerLabel: 'Pré-visualizar',
           title: 'Capa do post',
           description: 'Pré-visualização em tamanho real.',
@@ -180,7 +180,7 @@ export const MediaPreview: Story = {
     wrap.setAttribute('aria-label', 'Pré-visualização da capa do post');
     wrap.textContent = 'Pré-visualização da mídia';
 
-    return abrirNaMontagem(
+    return mountOpen(
       createDialog({
         trigger: createButton({ variant: 'outline', label: 'Pré-visualizar' }),
         title: 'Capa do post',

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { createResizablePanel } from './resizable';
-import { fracaoDoPrimeiro, frame, painelRotulado } from './resizable.fixtures';
-import { resizableSource, resizableSourceCom } from './resizable.source';
-import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
+import { fracaoDoPrimeiro, frame, panelLabelled } from './resizable.fixtures';
+import { resizableSource, resizableSourceWith } from './resizable.source';
+import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
 const meta: Meta = {
   tags: ['layout'],
@@ -51,9 +51,9 @@ function grupo(opcoes: {
         defaultSize: 50,
         minSize: opcoes.minA ?? 20,
         maxSize: opcoes.maxA,
-        content: painelRotulado('Painel A', 'nds-bg-muted nds-text-muted-foreground'),
+        content: panelLabelled('Painel A', 'nds-bg-muted nds-text-muted-foreground'),
       },
-      { defaultSize: 50, minSize: opcoes.minA ?? 20, content: painelRotulado('Painel B') },
+      { defaultSize: 50, minSize: opcoes.minA ?? 20, content: panelLabelled('Painel B') },
     ],
   });
   return frame(root);
@@ -71,7 +71,7 @@ export const Dragging: Story = {
     // control deste arquivo os cobre.
     docs: {
       source: {
-        transform: resizableSourceCom({
+        transform: resizableSourceWith({
           withHandle: true,
           onLayout: '(sizes) => guardarLayout(sizes)',
           'aria-label': ROTULO,
@@ -156,7 +156,7 @@ export const Limits: Story = {
     // `panels`.
     docs: {
       source: {
-        transform: resizableSourceCom({
+        transform: resizableSourceWith({
           'aria-label': ROTULO,
           panels: [
             { titulo: 'Painel A', defaultSize: 50, minSize: 30, maxSize: 60 },
@@ -213,7 +213,7 @@ export const Focus: Story = {
     covers: ['functional.item4', 'accessibility.item3'],
     docs: {
       source: {
-        transform: resizableSourceCom({
+        transform: resizableSourceWith({
           'aria-label': ROTULO,
           panels: [
             { titulo: 'Painel A', defaultSize: 50, minSize: 20 },
@@ -259,7 +259,7 @@ export const Disabled: Story = {
     // Override de story: `disabled` é o assunto, e `false` é o padrão.
     docs: {
       source: {
-        transform: resizableSourceCom({
+        transform: resizableSourceWith({
           disabled: true,
           'aria-label': ROTULO,
           panels: [
@@ -315,7 +315,7 @@ export const ListenerCleanup: Story = {
     // justamente o que o snippet do meta não mostra.
     docs: {
       source: {
-        transform: resizableSourceCom({
+        transform: resizableSourceWith({
           destroy: true,
           'aria-label': ROTULO,
           panels: [{ titulo: 'Esquerda' }, { titulo: 'Direita' }],
@@ -323,14 +323,14 @@ export const ListenerCleanup: Story = {
       },
     },
   },
-  render: () => hospedeiroDeSonda(
+  render: () => probeHost(
     'Sonda de limpeza: o arraste começa e a página é trocada com o botão ainda pressionado.',
   ),
   play: async ({ canvasElement, step }) => {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ResultadoDaSonda;
+    let sonda!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       sonda = await sondarOuvintes({
@@ -355,7 +355,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await conferirLimpeza(sonda);
+      await checkLimpeza(sonda);
     });
   },
 };

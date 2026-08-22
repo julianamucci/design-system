@@ -4,7 +4,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { createAlertDialog, createAlertDialogMedia } from './alert-dialog';
 import { buildDemo } from './alert-dialog.fixtures';
-import { alertDialogSource, alertDialogSourceCom } from './alert-dialog.source';
+import { alertDialogSource, alertDialogSourceWith } from './alert-dialog.source';
 import { createAlertIcon } from './alert';
 import { createButton } from './button';
 
@@ -44,7 +44,7 @@ export const Destructive: Story = {
     // Override de story: todas as composições deste arquivo nascem abertas, e
     // `defaultOpen` não passa por control nenhum aqui.
     docs: {
-      source: { transform: alertDialogSourceCom({ defaultOpen: true }) },
+      source: { transform: alertDialogSourceWith({ defaultOpen: true }) },
       description: {
         story:
           'Action e trigger usam a variante destructive do Button. Use para ações irreversíveis.',
@@ -98,7 +98,7 @@ export const WithIcon: Story = {
     // Override de story: o bloco de mídia É o assunto, e ele é uma sub-fábrica
     // que o snippet do meta não mostraria.
     docs: {
-      source: { transform: alertDialogSourceCom({ defaultOpen: true, showMedia: true }) },
+      source: { transform: alertDialogSourceWith({ defaultOpen: true, showMedia: true }) },
       description: {
         story:
           'Bloco de mídia no topo do header. O CSS centraliza header e texto quando ele existe.',
@@ -149,7 +149,7 @@ export const Neutral: Story = {
     // — é o oposto do que o snippet do meta mostraria.
     docs: {
       source: {
-        transform: alertDialogSourceCom({
+        transform: alertDialogSourceWith({
           defaultOpen: true,
           tone: 'default',
           triggerVariant: 'outline',
@@ -195,7 +195,7 @@ export const LongDescription: Story = {
     covers: ['visual.item4'],
     // Override de story: nasce aberta, como as demais composições.
     docs: {
-      source: { transform: alertDialogSourceCom({ defaultOpen: true }) },
+      source: { transform: alertDialogSourceWith({ defaultOpen: true }) },
       description: {
         story:
           'Descrição com duas frases completas. O painel cresce em altura e a descrição continua sendo a fonte do aria-describedby.',
@@ -242,7 +242,7 @@ export const WithoutDescription: Story = {
     // se o painel declara `aria-describedby`.
     docs: {
       source: {
-        transform: alertDialogSourceCom({
+        transform: alertDialogSourceWith({
           defaultOpen: true,
           description: '',
           triggerLabel: 'Descartar rascunho',
@@ -306,7 +306,7 @@ export const Responsive: Story = {
     // Override de story: nasce aberta, como as demais composições. O
     // empilhamento é media query — não há opção da fábrica para mostrar.
     docs: {
-      source: { transform: alertDialogSourceCom({ defaultOpen: true }) },
+      source: { transform: alertDialogSourceWith({ defaultOpen: true }) },
       description: {
         story:
           'Abaixo de 40rem o footer empilha os botões em column-reverse e o header centraliza. Acima disso os botões ficam lado a lado, alinhados à direita.',
@@ -357,7 +357,7 @@ export const ExtraClass: Story = {
     // na chamada da fábrica.
     docs: {
       source: {
-        transform: alertDialogSourceCom({
+        transform: alertDialogSourceWith({
           defaultOpen: true,
           showMedia: true,
           class: 'nds-overflow-hidden',

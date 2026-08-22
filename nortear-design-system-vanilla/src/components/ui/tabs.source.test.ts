@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  tabsComBadgeSnippet,
-  tabsComIconesSnippet,
+  tabsWithBadgeSnippet,
+  tabsWithIconsSnippet,
   tabsSnippet,
   tabsSource,
-  tabsSourceCom,
+  tabsSourceWith,
 } from './tabs.source';
 
 describe('tabsSnippet', () => {
@@ -78,14 +78,14 @@ describe('tabsSource', () => {
 
 describe('tabsSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = tabsSourceCom({ variant: 'line' })('', { args: { variant: 'default' } });
+    const código = tabsSourceWith({ variant: 'line' })('', { args: { variant: 'default' } });
     expect(código).toContain("variant: 'line'");
   });
 });
 
 describe('tabsComIconesSnippet', () => {
   it('põe o ícone no gatilho depois de montado — `label` é texto', () => {
-    const código = tabsComIconesSnippet([
+    const código = tabsWithIconsSnippet([
       { value: 'profile', label: 'Perfil', content: 'Informações públicas.', icon: 'User' },
       { value: 'security', label: 'Segurança', content: 'Senha e 2FA.', icon: 'Shield' },
     ]);
@@ -100,7 +100,7 @@ describe('tabsComIconesSnippet', () => {
 
 describe('tabsComBadgeSnippet', () => {
   it('usa o badge do design system e só nos itens que o têm', () => {
-    const código = tabsComBadgeSnippet([
+    const código = tabsWithBadgeSnippet([
       { value: 'inbox', label: 'Caixa de entrada', content: '12 não lidas.', badge: { text: '12' } },
       { value: 'spam', label: 'Spam', content: '3 marcadas.', badge: { text: '3', variant: 'destructive' } },
       { value: 'trash', label: 'Lixeira', content: 'Excluídos.' },

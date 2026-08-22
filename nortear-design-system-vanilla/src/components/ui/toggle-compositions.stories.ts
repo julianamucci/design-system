@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { toggleSource, toggleSourceBarra, toggleSourceCom, toggleSourceFileira } from './toggle.source';
+import { toggleSource, toggleSourceBar, toggleSourceWith, toggleSourceRow } from './toggle.source';
 import { within, expect, userEvent } from 'storybook/test';
 import { Bold, Italic, Underline, List, Eye } from 'lucide';
 import { createToggle, type ToggleOptions } from './toggle';
@@ -67,7 +67,7 @@ export const FormattingToolbar: Story = {
     // que a story documenta.
     docs: {
       source: {
-        transform: toggleSourceBarra(
+        transform: toggleSourceBar(
           [
             { icon: 'Bold', 'aria-label': 'Negrito' },
             { icon: 'Italic', 'aria-label': 'Itálico' },
@@ -132,7 +132,7 @@ export const FilterList: Story = {
   parameters: {
     docs: {
       source: {
-        transform: toggleSourceFileira([
+        transform: toggleSourceRow([
           { icon: 'Eye', label: 'Mostrar ocultos', variant: 'outline' },
           { icon: 'List', label: 'Visão compacta', variant: 'outline', pressed: true },
         ]),
@@ -195,7 +195,7 @@ export const Controlled: Story = {
   parameters: {
     docs: {
       source: {
-        transform: toggleSourceCom({
+        transform: toggleSourceWith({
           icon: 'Bold',
           'aria-label': 'Negrito',
           onClick: '(pressed) => { saida.textContent = String(pressed); }',

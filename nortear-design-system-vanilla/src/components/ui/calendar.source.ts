@@ -73,7 +73,7 @@ export const calendarSource: SourceTransform<CalendarSnippetOptions> = (_gerado,
   calendarSnippet({ ...PADRAO, ...ctx.args });
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function calendarSourceCom(
+export function calendarSourceWith(
   fixas: CalendarSnippetOptions,
 ): SourceTransform<CalendarSnippetOptions> {
   return (_gerado, ctx) => calendarSnippet({ ...PADRAO, ...ctx.args, ...fixas });
@@ -82,7 +82,7 @@ export function calendarSourceCom(
 // ─── Seletor de data ──────────────────────────────────────────────────────────
 
 /** O que o seletor de data precisa mostrar. */
-export type CalendarComPopoverSnippetOptions = {
+export type CalendarWithPopoverSnippetOptions = {
   /** Texto do gatilho antes de haver data escolhida. */
   gatilho?: string;
   locale?: string;
@@ -93,7 +93,7 @@ export type CalendarComPopoverSnippetOptions = {
  * A composição canônica: o calendário quase nunca aparece solto na página. Mora
  * num popover, atrás de um botão que mostra a data escolhida.
  */
-export function calendarComPopoverSnippet(o: CalendarComPopoverSnippetOptions = {}): string {
+export function calendarWithPopoverSnippet(o: CalendarWithPopoverSnippetOptions = {}): string {
   const locale = o.locale ?? 'pt-BR';
 
   return snippet(
@@ -126,8 +126,8 @@ const gatilho = createButton({ variant: 'outline', label: ${texto(o.gatilho ?? '
 }
 
 /** Transform de story para o seletor de data. */
-export function calendarComPopoverSourceCom(
-  fixas: CalendarComPopoverSnippetOptions = {},
-): SourceTransform<CalendarComPopoverSnippetOptions> {
-  return (_gerado, ctx) => calendarComPopoverSnippet({ ...ctx.args, ...fixas });
+export function calendarWithPopoverSourceWith(
+  fixas: CalendarWithPopoverSnippetOptions = {},
+): SourceTransform<CalendarWithPopoverSnippetOptions> {
+  return (_gerado, ctx) => calendarWithPopoverSnippet({ ...ctx.args, ...fixas });
 }

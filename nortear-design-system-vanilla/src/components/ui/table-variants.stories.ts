@@ -11,7 +11,7 @@ import {
   createTableCaption,
 } from './table';
 import { createButton } from '@/components/ui/button';
-import { tableSource, tableSourceCom } from './table.source';
+import { tableSource, tableSourceWith } from './table.source';
 import { COLUNAS, INVOICES, MESES, totalDe, type Invoice } from './table.fixtures';
 
 const meta: Meta = {
@@ -69,7 +69,7 @@ export const Basic: Story = {
     covers: ['functional.item1', 'visual.item1'],
     // Legenda VISÍVEL: o snippet do meta a deixa fora da tela, que é o oposto
     // do que esta story mostra.
-    docs: { source: { transform: tableSourceCom({ captionVisivel: true }) } },
+    docs: { source: { transform: tableSourceWith({ captionVisivel: true }) } },
   },
   render: () => {
     const { wrapper, table } = createTable();
@@ -121,7 +121,7 @@ export const WithFooter: Story = {
     covers: ['functional.item3', 'visual.item3'],
     docs: {
       source: {
-        transform: tableSourceCom({ caption: 'Faturas recentes com total', comRodape: true }),
+        transform: tableSourceWith({ caption: 'Faturas recentes com total', comRodape: true }),
       },
     },
   },
@@ -226,7 +226,7 @@ export const WithRowActions: Story = {
     // por linha, com o nome do botão dizendo de qual fatura ele é.
     docs: {
       source: {
-        transform: tableSourceCom({ caption: 'Faturas recentes com ações', comAcoes: true }),
+        transform: tableSourceWith({ caption: 'Faturas recentes com ações', withActions: true }),
       },
     },
   },
@@ -243,12 +243,12 @@ export const WithRowActions: Story = {
     // para quem vê e some para quem navega por cabeçalhos. Quem sai da tela é o
     // RÓTULO, num span — `nds-sr-only` no próprio `th` tiraria a célula do fluxo
     // da tabela e desmontaria a grade.
-    const thAcoes = createTableHead('');
-    const rotuloAcoes = document.createElement('span');
-    rotuloAcoes.className = 'nds-sr-only';
-    rotuloAcoes.textContent = 'Ações';
-    thAcoes.appendChild(rotuloAcoes);
-    headerRow.appendChild(thAcoes);
+    const thActions = createTableHead('');
+    const labelActions = document.createElement('span');
+    labelActions.className = 'nds-sr-only';
+    labelActions.textContent = 'Ações';
+    thActions.appendChild(labelActions);
+    headerRow.appendChild(thActions);
     thead.appendChild(headerRow);
     table.appendChild(thead);
 

@@ -41,7 +41,7 @@ export type InputSnippetOptions = {
 
 /** Nome acessível e id padrão do exemplo — o par canônico rótulo + campo. */
 const ROTULO_PADRAO = 'Nome completo';
-const ID_PADRAO = 'campo';
+const ID_DEFAULT = 'campo';
 
 /**
  * A chamada real de `createInput` com as opções da story, dentro do par que o
@@ -51,7 +51,7 @@ const ID_PADRAO = 'campo';
  * `campoRotulado()` que só existe dentro do arquivo de story.
  */
 export function inputSnippet(o: InputSnippetOptions = {}): string {
-  const id = o.id ?? ID_PADRAO;
+  const id = o.id ?? ID_DEFAULT;
   const rotulo = o.label ?? ROTULO_PADRAO;
 
   const descritores = [
@@ -110,7 +110,7 @@ erro.textContent = ${texto(o.mensagem)};`
  * atribuição direta: substituir a classe apagaria a base `.nds-input` e o campo
  * sairia sem respiro, sem borda e sem tipografia.
  */
-export function inputComPrefixoSnippet(o: InputSnippetOptions & { prefixo?: string } = {}): string {
+export function inputWithPrefixoSnippet(o: InputSnippetOptions & { prefixo?: string } = {}): string {
   const id = o.id ?? 'site';
   const rotulo = o.label ?? 'URL do site';
   const prefixo = o.prefixo ?? 'https://';
@@ -148,7 +148,7 @@ export const inputSource: SourceTransform<InputSnippetOptions> = (_gerado, ctx) 
   inputSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function inputSourceCom(fixas: InputSnippetOptions): SourceTransform<InputSnippetOptions> {
+export function inputSourceWith(fixas: InputSnippetOptions): SourceTransform<InputSnippetOptions> {
   return (_gerado, ctx) => inputSnippet({ ...ctx.args, ...fixas });
 }
 
@@ -156,5 +156,5 @@ export function inputSourceCom(fixas: InputSnippetOptions): SourceTransform<Inpu
 export function inputSourcePrefixo(
   fixas: InputSnippetOptions & { prefixo?: string } = {},
 ): SourceTransform<InputSnippetOptions> {
-  return () => inputComPrefixoSnippet(fixas);
+  return () => inputWithPrefixoSnippet(fixas);
 }

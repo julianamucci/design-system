@@ -27,10 +27,10 @@
 // de medir, para a story sobreviver ao REPLAY do painel Interactions.
 
 import { expect } from 'storybook/test';
-import { espiarOuvintes, descreverVivos, type OuvinteVivo } from '@/lib/listener-ledger';
+import { espiarOuvintes, describeVivos, type ListenerVivo } from '@/lib/listener-ledger';
 
 /** Caixa de montagem da sonda, com legenda para a story nunca ficar em branco. */
-export function hospedeiroDeSonda(legenda: string): HTMLElement {
+export function probeHost(legenda: string): HTMLElement {
   const raiz = document.createElement('div');
 
   const texto = document.createElement('p');
@@ -51,30 +51,30 @@ export function hospedeiroDeSonda(legenda: string): HTMLElement {
  * falha diz `apos-saida=[document:keydown, document:click]` em vez de
  * "esperava [] e veio [Object, Object]".
  */
-export async function conferirLimpeza(sonda: ResultadoDaSonda): Promise<void> {
-  await expect(sonda.temDestroy).toBe(true);
+export async function checkLimpeza(sonda: ProbeResult): Promise<void> {
+  await expect(sonda.hasDestroy).toBe(true);
   await expect(sonda.descricao).toBe(
     'apos-saida=[nenhum] apos-reprise=[nenhum] orfaos=0/0',
   );
-  await expect(sonda.reagiuDepoisDeSair).toBe(false);
-  await expect(sonda.erroDeIdempotencia).toBe(null);
+  await expect(sonda.leaveReagiuAfter).toBe(false);
+  await expect(sonda.idempotenceError).toBe(null);
 }
 
-export type ResultadoDaSonda = {
+export type ProbeResult = {
   /** Ouvintes de `document`/`window` vivos depois de a raiz sair da página. */
-  vivosAposSaida: OuvinteVivo[];
+  vivosAposOutput: ListenerVivo[];
   /** Idem, depois de dois `destroy()` extras e da bateria de eventos. */
-  vivosAposReprise: OuvinteVivo[];
+  vivosAposReprise: ListenerVivo[];
   /** Mensagem do erro lançado por um `destroy()` repetido, se algum lançou. */
-  erroDeIdempotencia: string | null;
+  idempotenceError: string | null;
   /** Nós portalados que sobraram no `body` com a limpeza AUTOMÁTICA (observador). */
-  orfaosAposSaida: number;
+  orfaosAposOutput: number;
   /** Idem, depois do `destroy()` chamado à mão. Separa as duas vias. */
   orfaosAposDestroy: number;
   /** Se o nó desanexado reagiu à bateria de eventos disparada no documento. */
-  reagiuDepoisDeSair: boolean;
+  leaveReagiuAfter: boolean;
   /** A fábrica devolveu algo com `destroy()`? */
-  temDestroy: boolean;
+  hasDestroy: boolean;
   /** Texto para a mensagem de falha dizer O QUE sobrou. */
   descricao: string;
 };
@@ -101,7 +101,7 @@ function esperar(ms: number): Promise<void> {
  * a limpeza. Se nunca zerar, devolve o que sobrou — a espera dá prazo, não
  * perdão.
  */
-async function contarOrfaos(seletor: string | undefined, limite = 1200): Promise<number> {
+async function countOrfaos(seletor: string | undefined, limite = 1200): Promise<number> {
   if (!seletor) return 0;
   const fim = Date.now() + limite;
   let n = document.querySelectorAll(seletor).length;
@@ -136,7 +136,7 @@ export async function sondarOuvintes(opts: {
   destruirAlvo?: () => void;
   /** Nós que a fábrica pendura no `body`, para contar órfãos. */
   seletorDePortal?: string;
-}): Promise<ResultadoDaSonda> {
+}): Promise<ProbeResult> {
   const { host, montar, exercitar, destruirAlvo, seletorDePortal } = opts;
 
   // Precondição do REPLAY: o que estiver aqui é resíduo da execução anterior.
@@ -161,8 +161,8 @@ export async function sondarOuvintes(opts: {
     // virar espera cega longa.
     await esperar(200);
 
-    const vivosAposSaida = espiao.vivos();
-    const orfaosAposSaida = await contarOrfaos(seletorDePortal);
+    const vivosAposOutput = espiao.vivos();
+    const orfaosAposOutput = await countOrfaos(seletorDePortal);
 
     // A referência do teste de comportamento é o estado JÁ LIMPO, não o estado
     // aberto de antes da saída: a limpeza legítima muda o nó (fecha o painel,
@@ -172,41 +172,41 @@ export async function sondarOuvintes(opts: {
 
     for (const fazer of BATERIA) document.dispatchEvent(fazer());
     await esperar(80);
-    const reagiuDepoisDeSair = assinatura(no, seletorDePortal) !== aposLimpeza;
+    const leaveReagiuAfter = assinatura(no, seletorDePortal) !== aposLimpeza;
 
-    const comDestroy = no as HTMLElement & { destroy?: () => void };
-    const destruir = destruirAlvo ?? comDestroy.destroy?.bind(comDestroy);
-    const temDestroy = typeof destruir === 'function';
+    const withDestroy = no as HTMLElement & { destroy?: () => void };
+    const destruir = destruirAlvo ?? withDestroy.destroy?.bind(withDestroy);
+    const hasDestroy = typeof destruir === 'function';
 
     // Idempotência: uma chamada depois de o observador já ter disparado, e
     // outra logo em seguida. Nenhuma das duas pode explodir nem ressuscitar
     // ouvinte.
-    let erroDeIdempotencia: string | null = null;
+    let idempotenceError: string | null = null;
     try {
       destruir?.();
       destruir?.();
     } catch (e) {
-      erroDeIdempotencia = e instanceof Error ? e.message : String(e);
+      idempotenceError = e instanceof Error ? e.message : String(e);
     }
 
-    const orfaosAposDestroy = await contarOrfaos(seletorDePortal, 400);
+    const orfaosAposDestroy = await countOrfaos(seletorDePortal, 400);
 
     for (const fazer of BATERIA) document.dispatchEvent(fazer());
     await esperar(80);
     const vivosAposReprise = espiao.vivos();
 
     return {
-      vivosAposSaida,
+      vivosAposOutput,
       vivosAposReprise,
-      erroDeIdempotencia,
-      orfaosAposSaida,
+      idempotenceError,
+      orfaosAposOutput,
       orfaosAposDestroy,
-      reagiuDepoisDeSair,
-      temDestroy,
+      leaveReagiuAfter,
+      hasDestroy,
       descricao:
-        `apos-saida=[${descreverVivos(vivosAposSaida)}]` +
-        ` apos-reprise=[${descreverVivos(vivosAposReprise)}]` +
-        ` orfaos=${orfaosAposSaida}/${orfaosAposDestroy}`,
+        `apos-saida=[${describeVivos(vivosAposOutput)}]` +
+        ` apos-reprise=[${describeVivos(vivosAposReprise)}]` +
+        ` orfaos=${orfaosAposOutput}/${orfaosAposDestroy}`,
     };
   } finally {
     espiao.parar();

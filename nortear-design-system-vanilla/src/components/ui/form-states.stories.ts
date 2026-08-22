@@ -3,7 +3,7 @@ import { expect, userEvent, within } from 'storybook/test';
 import { resolverCor } from '@shared/testing/cor';
 import { contrastesNosDoisModos } from '@shared/testing/form-probe';
 import { createFormField, createFieldset } from './form';
-import { formSource, formSourceCom } from './form.source';
+import { formSource, formSourceWith } from './form.source';
 import { createInput } from './input';
 
 const meta: Meta = {
@@ -38,7 +38,7 @@ export const Invalid: Story = {
     // anunciar como inválido.
     docs: {
       source: {
-        transform: formSourceCom({
+        transform: formSourceWith({
           label: 'Senha',
           inputType: 'password',
           value: '123',
@@ -116,7 +116,7 @@ export const Disabled: Story = {
     // que não recebe foco.
     docs: {
       source: {
-        transform: formSourceCom({
+        transform: formSourceWith({
           label: 'CPF',
           inputType: 'text',
           value: '000.000.000-00',

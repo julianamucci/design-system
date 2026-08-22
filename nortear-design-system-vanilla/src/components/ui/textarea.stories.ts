@@ -84,7 +84,7 @@ const meta: Meta<TextareaArgs> = {
 export default meta;
 type Story = StoryObj<TextareaArgs>;
 
-const CLASSE_DE_RESIZE: Record<TextareaArgs['resize'], string> = {
+const RESIZE_CLASSNAME: Record<TextareaArgs['resize'], string> = {
   none: 'nds-resize-none',
   free: 'nds-resize',
   y: 'nds-resize-y',
@@ -112,7 +112,7 @@ export const Playground: Story = {
       rows: args.rows > 0 ? args.rows : undefined,
       // Altura mínima vem do utilitário, não de `style` inline: inline vence a
       // folha e sairia do tema, da densidade e da escala.
-      class: `${CLASSE_DE_RESIZE[args.resize]} nds-min-h-30`,
+      class: `${RESIZE_CLASSNAME[args.resize]} nds-min-h-30`,
     });
 
     if (args.readOnly) textarea.readOnly = true;

@@ -33,7 +33,7 @@ export type PaginationSnippetOptions = {
 const ROTULO_PADRAO = 'Paginação';
 
 /** Callback mostrado quando a story não exercita um específico. */
-const CALLBACK_PADRAO = '(page) => irPara(page)';
+const CALLBACK_DEFAULT = '(page) => irPara(page)';
 
 /**
  * Reindenta as linhas seguintes de um bloco já montado.
@@ -50,7 +50,7 @@ function recuar(bloco: string, espacos: string): string {
 }
 
 /** As opções comuns às duas formas de snippet. */
-function linhasComuns(o: PaginationSnippetOptions, current: string): Array<[string, string | undefined]> {
+function linesComuns(o: PaginationSnippetOptions, current: string): Array<[string, string | undefined]> {
   return [
     ['total', String(o.total ?? 5)],
     ['current', current],
@@ -68,8 +68,8 @@ function linhasComuns(o: PaginationSnippetOptions, current: string): Array<[stri
 /** A chamada real de `createPagination` com as opções da story. */
 export function paginationSnippet(o: PaginationSnippetOptions = {}): string {
   const linhas = opcoes([
-    ...linhasComuns(o, String(o.current ?? 1)),
-    ['onPageChange', o.onPageChange ?? CALLBACK_PADRAO],
+    ...linesComuns(o, String(o.current ?? 1)),
+    ['onPageChange', o.onPageChange ?? CALLBACK_DEFAULT],
   ]);
 
   return snippet(
@@ -86,9 +86,9 @@ export function paginationSnippet(o: PaginationSnippetOptions = {}): string {
  * pedida. Quem consome guarda o número e remonta — e um snippet que omitisse
  * isso ensinaria uma paginação que não pagina.
  */
-export function paginationComEstadoSnippet(o: PaginationSnippetOptions = {}): string {
+export function paginationWithStateSnippet(o: PaginationSnippetOptions = {}): string {
   const linhas = opcoes([
-    ...linhasComuns(o, 'paginaAtual'),
+    ...linesComuns(o, 'paginaAtual'),
     ['onPageChange', '(page) => { paginaAtual = page; remontar(); }'],
   ]);
 
@@ -113,19 +113,19 @@ export const paginationSource: SourceTransform<PaginationSnippetOptions> = (_ger
   paginationSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function paginationSourceCom(
+export function paginationSourceWith(
   fixas: PaginationSnippetOptions,
 ): SourceTransform<PaginationSnippetOptions> {
   return (_gerado, ctx) => paginationSnippet({ ...ctx.args, ...fixas });
 }
 
 /** Transform do `meta` do Playground, que mantém a página do lado de fora. */
-export const paginationComEstadoSource: SourceTransform<PaginationSnippetOptions> = (_gerado, ctx) =>
-  paginationComEstadoSnippet(ctx.args ?? {});
+export const paginationWithStateSource: SourceTransform<PaginationSnippetOptions> = (_gerado, ctx) =>
+  paginationWithStateSnippet(ctx.args ?? {});
 
 /** Transform de story para a faixa com estado, com opções fixas. */
-export function paginationComEstadoSourceCom(
+export function paginationWithStateSourceWith(
   fixas: PaginationSnippetOptions,
 ): SourceTransform<PaginationSnippetOptions> {
-  return (_gerado, ctx) => paginationComEstadoSnippet({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => paginationWithStateSnippet({ ...ctx.args, ...fixas });
 }

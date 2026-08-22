@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createSeparator } from './separator';
-import { separatorSource, separatorSourceCom } from './separator.source';
+import { separatorSource, separatorSourceWith } from './separator.source';
 
 const meta: Meta = {
   tags: ['layout'],
@@ -81,7 +81,7 @@ export const Semantic: Story = {
     // decorativo, que é o padrão da fábrica.
     docs: {
       source: {
-        transform: separatorSourceCom({
+        transform: separatorSourceWith({
           decorative: false,
           antes: 'Categoria: Layout',
           depois: 'Categoria: Formulários',

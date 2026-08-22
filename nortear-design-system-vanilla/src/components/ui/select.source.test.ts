@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  selectEmFormularioSnippet,
+  formSnippetSelect,
   selectSnippet,
   selectSource,
-  selectSourceCom,
+  selectSourceWith,
 } from './select.source';
 
 describe('selectSnippet', () => {
@@ -115,14 +115,14 @@ describe('selectSource', () => {
 
 describe('selectSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = selectSourceCom({ disabled: true })('', { args: { disabled: false } });
+    const código = selectSourceWith({ disabled: true })('', { args: { disabled: false } });
     expect(código).toContain('disabled: true');
   });
 });
 
 describe('selectEmFormularioSnippet', () => {
   it('mostra a serialização nativa, que é o assunto da composição', () => {
-    const código = selectEmFormularioSnippet();
+    const código = formSnippetSelect();
     expect(código).toContain("import { createButton } from '@/components/ui/button';");
     expect(código).toContain("name: 'state'");
     expect(código).toContain('required: true');

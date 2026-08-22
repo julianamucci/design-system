@@ -165,12 +165,12 @@ export const Playground: Story = {
 
       // E `title` não disputa o nome acessível: ele é o ÚLTIMO recurso, não um
       // sinônimo — quem descreve o desenho ganha dele.
-      const comTitulo = createChart({
+      const withTitle = createChart({
         data: chartData,
         title: 'Título visível',
         'aria-label': 'Descrição do desenho',
       });
-      await expect(comTitulo.getAttribute('aria-label')).toBe('Descrição do desenho');
+      await expect(withTitle.getAttribute('aria-label')).toBe('Descrição do desenho');
     });
 
     await step('Toda categoria do dado aparece escrita no eixo', async () => {

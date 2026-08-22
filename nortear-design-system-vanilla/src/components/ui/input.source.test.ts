@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  inputComPrefixoSnippet,
+  inputWithPrefixoSnippet,
   inputSnippet,
   inputSource,
-  inputSourceCom,
+  inputSourceWith,
   inputSourcePrefixo,
 } from './input.source';
 
@@ -75,7 +75,7 @@ describe('inputComPrefixoSnippet', () => {
   it('acrescenta a classe do grupo em vez de substituir a base do campo', () => {
     // A regressão que esta forma existe para não ensinar: atribuir a classe
     // apagava `.nds-input` e o campo virava um input cru do navegador.
-    const código = inputComPrefixoSnippet();
+    const código = inputWithPrefixoSnippet();
     expect(código).toContain("campo.classList.add('nds-input-group-control');");
     expect(código).not.toContain('campo.className =');
     expect(código).toContain("grupo.className = 'nds-input-group';");
@@ -104,7 +104,7 @@ describe('inputSource', () => {
 
 describe('inputSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = inputSourceCom({ type: 'search' })('', { args: { type: 'text' } });
+    const código = inputSourceWith({ type: 'search' })('', { args: { type: 'text' } });
     expect(código).toContain("type: 'search'");
   });
 });

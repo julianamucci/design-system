@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  sheetControladoSnippet,
+  sheetControlledSnippet,
   sheetSnippet,
   sheetSource,
-  sheetSourceCom,
+  sheetSourceWith,
 } from './sheet.source';
 
 describe('sheetSnippet', () => {
@@ -97,14 +97,14 @@ describe('sheetSource', () => {
 
 describe('sheetSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = sheetSourceCom({ side: 'bottom' })('', { args: { side: 'right' } });
+    const código = sheetSourceWith({ side: 'bottom' })('', { args: { side: 'right' } });
     expect(código).toContain("side: 'bottom'");
   });
 });
 
 describe('sheetControladoSnippet', () => {
   it('abre pelo gatilho interno — a fábrica não expõe prop de estado', () => {
-    const código = sheetControladoSnippet();
+    const código = sheetControlledSnippet();
     expect(código).toContain("gatilhoInterno.classList.add('nds-sr-only');");
     expect(código).toContain('gatilhoInterno.click();');
     expect(código).toContain('onOpenChange: (estado) => { aberto = estado; }');

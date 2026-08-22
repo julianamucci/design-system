@@ -39,23 +39,23 @@ export type ToggleGroupSnippetOptions = {
 };
 
 /** O grupo canônico do componente: a barra de alinhamento de texto. */
-const ITENS_PADRAO: ToggleGroupSnippetItem[] = [
+const ITEMS_DEFAULT: ToggleGroupSnippetItem[] = [
   { value: 'left', icon: 'AlignLeft', 'aria-label': 'Alinhar à esquerda' },
   { value: 'center', icon: 'AlignCenter', 'aria-label': 'Centralizar' },
   { value: 'right', icon: 'AlignRight', 'aria-label': 'Alinhar à direita' },
 ];
 
-function literalDeValor(v: string | string[]): string {
+function valueLiteral(v: string | string[]): string {
   return Array.isArray(v) ? `[${v.map(texto).join(', ')}]` : texto(v);
 }
 
 /** A chamada real de `createToggleGroup` com as opções da story. */
 export function toggleGroupSnippet(o: ToggleGroupSnippetOptions = {}): string {
-  const itens = o.items ?? ITENS_PADRAO;
+  const itens = o.items ?? ITEMS_DEFAULT;
   const tipo = o.type ?? 'single';
   const comIcone = itens.some((i) => i.icon);
 
-  const linhasItens = itens.map((i) => {
+  const linesItems = itens.map((i) => {
     const campos = opcoes([
       ['value', texto(i.value)],
       // O item só de ícone não tem texto: `children` fica vazio e o nome
@@ -87,7 +87,7 @@ export function toggleGroupSnippet(o: ToggleGroupSnippetOptions = {}): string {
       ['orientation', o.orientation && o.orientation !== 'horizontal' ? texto(o.orientation) : undefined],
       ['spacing', o.spacing ? String(o.spacing) : undefined],
       ['disabled', o.disabled ? 'true' : undefined],
-      ['defaultValue', padrao === undefined ? undefined : literalDeValor(padrao)],
+      ['defaultValue', padrao === undefined ? undefined : valueLiteral(padrao)],
       ['onValueChange', o.onValueChange],
     ]),
   ];
@@ -101,7 +101,7 @@ export function toggleGroupSnippet(o: ToggleGroupSnippetOptions = {}): string {
     ]
       .filter(Boolean)
       .join('\n'),
-    `const items: ToggleGroupItem[] = [\n${linhasItens.join('\n')}\n];`,
+    `const items: ToggleGroupItem[] = [\n${linesItems.join('\n')}\n];`,
     `const grupo = ${chamada('createToggleGroup', linhas)};`,
     // `ToggleGroupItem.children` é `string`: o ícone não cabe na chamada, e
     // quem consome o coloca no botão do item depois de construir o grupo.
@@ -121,7 +121,7 @@ export const toggleGroupSource: SourceTransform<ToggleGroupSnippetOptions> = (_g
   toggleGroupSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function toggleGroupSourceCom(
+export function toggleGroupSourceWith(
   fixas: ToggleGroupSnippetOptions,
 ): SourceTransform<ToggleGroupSnippetOptions> {
   return (_gerado, ctx) => toggleGroupSnippet({ ...ctx.args, ...fixas });

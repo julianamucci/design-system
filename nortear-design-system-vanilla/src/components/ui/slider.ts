@@ -145,7 +145,7 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
     });
   }
 
-  function emitirMudanca(): void {
+  function emitirChange(): void {
     if (ehIntervalo) (options as SliderRangeOptions).onValueChange?.([...valores]);
     else (options as SliderSingleOptions).onValueChange?.(valores[0]);
   }
@@ -191,7 +191,7 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
       if (preso !== bruto) nativeInput.value = String(preso);
       valores[indice] = preso;
       updateVisuals();
-      emitirMudanca();
+      emitirChange();
     });
 
     nativeInput.addEventListener('change', () => {
@@ -209,7 +209,7 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
      * `pointerdown` já é tarde, porque o evento foi despachado para o alvo que
      * estava por cima naquele instante.
      */
-    const escolherAlca = (e: PointerEvent): void => {
+    const chooseHandle = (e: PointerEvent): void => {
       const caixa = track.getBoundingClientRect();
       const razao = vertical
         ? caixa.height === 0 ? 0 : (caixa.bottom - e.clientY) / caixa.height
@@ -219,7 +219,7 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
       inputs[perto].style.zIndex = '2';
       inputs[perto === 0 ? 1 : 0].style.zIndex = '1';
     };
-    track.addEventListener('pointermove', escolherAlca);
+    track.addEventListener('pointermove', chooseHandle);
   }
 
   updateVisuals();

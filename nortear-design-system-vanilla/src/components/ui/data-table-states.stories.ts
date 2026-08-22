@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createDataTable } from './data-table';
-import { dataTableSource, dataTableSourceCom } from './data-table.source';
+import { dataTableSource, dataTableSourceWith } from './data-table.source';
 import { type Invoice, baseColumns, invoices } from './data-table.fixtures';
-import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
+import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
 // ─── Meta ──────────────────────────────────────────────────────────────────
 
@@ -39,7 +39,7 @@ export const NoResults: Story = {
     // difere do padrão da fábrica.
     docs: {
       source: {
-        transform: dataTableSourceCom({
+        transform: dataTableSourceWith({
           semDados: true,
           enableRowSelection: true,
           emptyMessage: 'Nenhuma fatura encontrada.',
@@ -103,14 +103,14 @@ export const ListenerCleanup: Story = {
     // sempre a mesma legenda.
     chromatic: { disable: true },
   },
-  render: () => hospedeiroDeSonda(
+  render: () => probeHost(
     'Sonda de limpeza: a tabela é montada, o menu de colunas é aberto, o estado muda duas vezes e a tabela sai da página.',
   ),
   play: async ({ canvasElement, step }) => {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ResultadoDaSonda;
+    let sonda!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       sonda = await sondarOuvintes({
@@ -131,7 +131,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await conferirLimpeza(sonda);
+      await checkLimpeza(sonda);
     });
   },
 };

@@ -8,11 +8,11 @@ import {
   painelAberto,
   wrap,
 } from './navigation-menu.fixtures';
-import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
+import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import {
   navigationMenuSource,
-  navigationMenuSourceCom,
-  navigationMenuSourceControlado,
+  navigationMenuSourceWith,
+  navigationMenuSourceControlled,
 } from './navigation-menu.source';
 
 const meta: Meta = {
@@ -85,7 +85,7 @@ export const Open: Story = {
     // é opção do item — o snippet do meta mostraria destinos sem descrição.
     docs: {
       source: {
-        transform: navigationMenuSourceCom({
+        transform: navigationMenuSourceWith({
           items: [
             { label: 'Início', href: '#inicio' },
             {
@@ -157,7 +157,7 @@ export const Active: Story = {
     // override o snippet mostraria uma barra sem destino atual nenhum.
     docs: {
       source: {
-        transform: navigationMenuSourceCom({
+        transform: navigationMenuSourceWith({
           items: [
             { label: 'Início', href: '#inicio', active: true },
             { label: 'Produtos', href: '#produtos' },
@@ -211,7 +211,7 @@ export const ControlledValue: Story = {
     docs: {
       // Forma diferente de snippet: o modo controlado troca quem manda na
       // barra, e isso aparece na chamada E nas duas linhas que vêm depois dela.
-      source: { transform: navigationMenuSourceControlado() },
+      source: { transform: navigationMenuSourceControlled() },
       description: {
         story:
           'A barra não decide nada sozinha: o clique só avisa qual painel foi pedido, e o ' +
@@ -307,7 +307,7 @@ export const ListenerCleanup: Story = {
     chromatic: { disable: true },
     docs: {
       source: {
-        transform: navigationMenuSourceCom({
+        transform: navigationMenuSourceWith({
           destroy: true,
           items: [
             {
@@ -323,14 +323,14 @@ export const ListenerCleanup: Story = {
       },
     },
   },
-  render: () => hospedeiroDeSonda(
+  render: () => probeHost(
     'Sonda de limpeza: a barra é montada, um painel é aberto e a barra sai da página.',
   ),
   play: async ({ canvasElement, step }) => {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ResultadoDaSonda;
+    let sonda!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       sonda = await sondarOuvintes({
@@ -350,7 +350,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await conferirLimpeza(sonda);
+      await checkLimpeza(sonda);
     });
   },
 };

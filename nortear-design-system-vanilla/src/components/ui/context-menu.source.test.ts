@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   contextMenuSnippet,
   contextMenuSource,
-  contextMenuSourceCom,
+  contextMenuSourceWith,
 } from './context-menu.source';
 
 describe('contextMenuSnippet', () => {
@@ -96,13 +96,13 @@ describe('contextMenuSnippet', () => {
 
 describe('contextMenuSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = contextMenuSource('<div data-slot="context-menu">', {});
-    const comArgs = contextMenuSource('<div data-slot="context-menu">', {
+    const noArgs = contextMenuSource('<div data-slot="context-menu">', {});
+    const withArgs = contextMenuSource('<div data-slot="context-menu">', {
       args: { triggerLabel: 'Área do documento', showDestructive: false },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("area.textContent = 'Área do documento';");
-    expect(comArgs).not.toContain('destructive');
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("area.textContent = 'Área do documento';");
+    expect(withArgs).not.toContain('destructive');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -114,7 +114,7 @@ describe('contextMenuSource', () => {
 
 describe('contextMenuSourceCom', () => {
   it('sobrepõe os args da story com as entradas fixas', () => {
-    const transform = contextMenuSourceCom({
+    const transform = contextMenuSourceWith({
       items: [{ type: 'checkbox', label: 'Mostrar grade', value: 'grade', checked: false }],
     });
     const código = transform('', { args: { triggerLabel: 'Área do documento' } });

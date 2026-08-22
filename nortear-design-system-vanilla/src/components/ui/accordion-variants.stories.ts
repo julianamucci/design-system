@@ -2,7 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { createAccordion, type AccordionOptions } from './accordion';
-import { accordionSource, accordionSourceCom } from './accordion.source';
+import { accordionSource, accordionSourceWith } from './accordion.source';
 import DOMPurify from 'dompurify';
 
 const meta: Meta = {
@@ -59,7 +59,7 @@ export const Single: Story = {
     // Override de story: o valor inicial não passa por control nenhum, e sem os
     // itens desta story ele apontaria para um `value` que o snippet não tem.
     docs: {
-      source: { transform: accordionSourceCom({ defaultValue: 'senha', items: FAQ_ITEMS }) },
+      source: { transform: accordionSourceWith({ defaultValue: 'senha', items: FAQ_ITEMS }) },
       description: {
         story: 'Apenas um item pode estar aberto por vez. Abrir um novo fecha o anterior automaticamente.',
       },
@@ -139,7 +139,7 @@ export const Multiple: Story = {
     // nenhum dos dois passa por control.
     docs: {
       source: {
-        transform: accordionSourceCom({
+        transform: accordionSourceWith({
           type: 'multiple',
           items: SPEC_ITEMS,
           onValueChange: '(abertos) => registrar(abertos)',
@@ -209,7 +209,7 @@ export const Controlled: Story = {
     // externo são o assunto, e nenhum dos dois passa por control.
     docs: {
       source: {
-        transform: accordionSourceCom({
+        transform: accordionSourceWith({
           defaultValue: 'item-1',
           items: [
             { value: 'item-1', trigger: 'Item 1 — controlado' },
@@ -255,7 +255,7 @@ export const DefaultOpen: Story = {
     // Override de story: o valor inicial É o assunto, e não passa por control.
     docs: {
       source: {
-        transform: accordionSourceCom({ defaultValue: 'item-1', items: DEFAULT_OPEN_ITEMS }),
+        transform: accordionSourceWith({ defaultValue: 'item-1', items: DEFAULT_OPEN_ITEMS }),
       },
       description: {
         story: 'Item aberto por padrão via defaultValue. Use para destacar a pergunta mais frequente ou o passo atual de um fluxo.',

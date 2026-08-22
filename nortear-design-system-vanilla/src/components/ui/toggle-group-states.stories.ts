@@ -3,7 +3,7 @@ import { within, expect, userEvent } from 'storybook/test';
 import { AlignLeft, AlignCenter, AlignRight } from 'lucide';
 import { createToggleGroup, type ToggleGroupItem } from './toggle-group';
 import { injectIcons } from './toggle-group.fixtures';
-import { toggleGroupSource, toggleGroupSourceCom } from './toggle-group.source';
+import { toggleGroupSource, toggleGroupSourceWith } from './toggle-group.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -55,7 +55,7 @@ export const Default: Story = {
   render: () => makeAlignmentGroup({}),
   parameters: {
     docs: {
-      source: { transform: toggleGroupSourceCom({ defaultValue: null, items: [
+      source: { transform: toggleGroupSourceWith({ defaultValue: null, items: [
             { value: 'left', icon: 'AlignLeft', 'aria-label': 'Alinhar à esquerda' },
             { value: 'center', icon: 'AlignCenter', 'aria-label': 'Centralizar' },
             { value: 'right', icon: 'AlignRight', 'aria-label': 'Alinhar à direita' },
@@ -86,7 +86,7 @@ export const Selected: Story = {
   parameters: {
     covers: ['accessibility.item2'],
     docs: {
-      source: { transform: toggleGroupSourceCom({ defaultValue: 'center', items: [
+      source: { transform: toggleGroupSourceWith({ defaultValue: 'center', items: [
             { value: 'left', icon: 'AlignLeft', 'aria-label': 'Alinhar à esquerda' },
             { value: 'center', icon: 'AlignCenter', 'aria-label': 'Centralizar' },
             { value: 'right', icon: 'AlignRight', 'aria-label': 'Alinhar à direita' },
@@ -120,7 +120,7 @@ export const Disabled: Story = {
   render: () => makeAlignmentGroup({ defaultValue: 'left', disabledAll: true }),
   parameters: {
     docs: {
-      source: { transform: toggleGroupSourceCom({ disabled: true, items: [
+      source: { transform: toggleGroupSourceWith({ disabled: true, items: [
             { value: 'left', icon: 'AlignLeft', 'aria-label': 'Alinhar à esquerda' },
             { value: 'center', icon: 'AlignCenter', 'aria-label': 'Centralizar' },
             { value: 'right', icon: 'AlignRight', 'aria-label': 'Alinhar à direita' },
@@ -155,7 +155,7 @@ export const DisabledItem: Story = {
   render: () => makeAlignmentGroup({ defaultValue: 'left', disabledIndex: 1 }),
   parameters: {
     docs: {
-      source: { transform: toggleGroupSourceCom({
+      source: { transform: toggleGroupSourceWith({
           items: [
             { value: 'left', icon: 'AlignLeft', 'aria-label': 'Alinhar à esquerda' },
             { value: 'center', icon: 'AlignCenter', 'aria-label': 'Centralizar', disabled: true },

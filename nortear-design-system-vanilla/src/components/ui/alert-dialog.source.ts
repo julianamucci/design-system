@@ -39,7 +39,7 @@ export type AlertDialogSnippetOptions = {
   onOpenChange?: string;
 };
 
-const PADROES = {
+const DEFAULTS = {
   triggerLabel: 'Excluir conta',
   title: 'Excluir conta',
   description:
@@ -51,9 +51,9 @@ const PADROES = {
 /** A composição real: três botões, o bloco opcional de mídia e a fábrica. */
 export function alertDialogSnippet(o: AlertDialogSnippetOptions = {}): string {
   const tone: AlertDialogTom = o.tone ?? 'destructive';
-  const acaoVariant = tone === 'destructive' ? 'destructive' : 'default';
-  const gatilhoVariant = o.triggerVariant ?? acaoVariant;
-  const description = o.description ?? PADROES.description;
+  const actionVariant = tone === 'destructive' ? 'destructive' : 'default';
+  const triggerVariant = o.triggerVariant ?? actionVariant;
+  const description = o.description ?? DEFAULTS.description;
 
   const imports = [
     o.showMedia
@@ -64,9 +64,9 @@ export function alertDialogSnippet(o: AlertDialogSnippetOptions = {}): string {
   ];
 
   const botoes = [
-    `const trigger = createButton({ variant: ${texto(gatilhoVariant)}, label: ${texto(o.triggerLabel ?? PADROES.triggerLabel)} });`,
-    `const cancelButton = createButton({ variant: 'outline', label: ${texto(o.cancelLabel ?? PADROES.cancelLabel)} });`,
-    `const actionButton = createButton({ variant: ${texto(acaoVariant)}, label: ${texto(o.actionLabel ?? PADROES.actionLabel)} });`,
+    `const trigger = createButton({ variant: ${texto(triggerVariant)}, label: ${texto(o.triggerLabel ?? DEFAULTS.triggerLabel)} });`,
+    `const cancelButton = createButton({ variant: 'outline', label: ${texto(o.cancelLabel ?? DEFAULTS.cancelLabel)} });`,
+    `const actionButton = createButton({ variant: ${texto(actionVariant)}, label: ${texto(o.actionLabel ?? DEFAULTS.actionLabel)} });`,
   ].join('\n');
 
   const media = o.showMedia
@@ -80,7 +80,7 @@ media.appendChild(createAlertIcon('warning'));`
   const linhas = [
     'trigger,',
     ...opcoes([
-      ['title', texto(o.title ?? PADROES.title)],
+      ['title', texto(o.title ?? DEFAULTS.title)],
       ['description', description ? texto(description) : undefined],
     ]),
     ...(o.showMedia ? ['media,'] : []),
@@ -113,7 +113,7 @@ export const alertDialogSource: SourceTransform<AlertDialogSnippetOptions> = (_g
   alertDialogSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma composição, opções fixas que os controls não cobrem. */
-export function alertDialogSourceCom(
+export function alertDialogSourceWith(
   fixas: AlertDialogSnippetOptions,
 ): SourceTransform<AlertDialogSnippetOptions> {
   return (_gerado, ctx) => alertDialogSnippet({ ...ctx.args, ...fixas });

@@ -48,13 +48,13 @@ describe('badgeSnippet', () => {
 
 describe('badgeSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = badgeSource('<span data-slot="badge">', {});
-    const comArgs = badgeSource('<span data-slot="badge">', {
+    const noArgs = badgeSource('<span data-slot="badge">', {});
+    const withArgs = badgeSource('<span data-slot="badge">', {
       args: { variant: 'outline', label: 'Rascunho' },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("variant: 'outline'");
-    expect(comArgs).toContain("children: 'Rascunho'");
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("variant: 'outline'");
+    expect(withArgs).toContain("children: 'Rascunho'");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {

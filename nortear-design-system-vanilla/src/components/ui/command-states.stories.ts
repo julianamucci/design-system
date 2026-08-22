@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
 import { createCommand } from './command';
-import { commandSource, commandSourceCom } from './command.source';
+import { commandSource, commandSourceWith } from './command.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -45,7 +45,7 @@ const regiaoVazia = (raiz: ParentNode): HTMLElement =>
  * reexecuta no mesmo DOM) o destaque da rodada anterior sobreviveria, e a
  * primeira seta partiria do meio da lista.
  */
-async function zerarBusca(campo: HTMLElement): Promise<void> {
+async function zerarSearch(campo: HTMLElement): Promise<void> {
   await userEvent.type(campo, 'zzz');
   await userEvent.clear(campo);
 }
@@ -57,7 +57,7 @@ export const EmptyState: Story = {
     covers: ['visual.item2'],
     docs: {
       source: {
-        transform: commandSourceCom({
+        transform: commandSourceWith({
           placeholder: 'Buscar componente...',
           emptyMessage: 'Nenhum resultado encontrado.',
           items: [
@@ -140,7 +140,7 @@ export const EmptyState: Story = {
 
 // ─── Comando desabilitado ─────────────────────────────────────────────────────
 
-const aoEscolherComDesabilitado = fn();
+const onChooseWithDisabled = fn();
 
 export const ItemDisabled: Story = {
   parameters: {
@@ -148,7 +148,7 @@ export const ItemDisabled: Story = {
     // `disabled` no item é o assunto: a lista canônica do meta não o tem.
     docs: {
       source: {
-        transform: commandSourceCom({
+        transform: commandSourceWith({
           placeholder: 'Buscar comando...',
           emptyMessage: 'Nenhum resultado encontrado.',
           items: [
@@ -172,7 +172,7 @@ export const ItemDisabled: Story = {
           { value: 'arquivar', label: 'Arquivar', disabled: true },
           { value: 'renomear', label: 'Renomear'  },
         ],
-        onSelect: (value) => aoEscolherComDesabilitado(value),
+        onSelect: (value) => onChooseWithDisabled(value),
       })
     );
     return wrap;
@@ -195,15 +195,15 @@ export const ItemDisabled: Story = {
     });
 
     await step('Clicar não executa o comando', async () => {
-      const antes = aoEscolherComDesabilitado.mock.calls.length;
+      const antes = onChooseWithDisabled.mock.calls.length;
       // `pointerEventsCheck: 0` porque a folha bloqueia o ponteiro: sem isso o
       // user-event recusa o clique antes de a factory ter chance de errar.
       await userEvent.click(arquivar(), { pointerEventsCheck: 0 });
-      await expect(aoEscolherComDesabilitado.mock.calls.length).toBe(antes);
+      await expect(onChooseWithDisabled.mock.calls.length).toBe(antes);
     });
 
     await step('As setas pulam o comando desabilitado', async () => {
-      await zerarBusca(campo);
+      await zerarSearch(campo);
       campo.focus();
       await userEvent.keyboard('{ArrowDown}');
       await expect(
@@ -220,10 +220,10 @@ export const ItemDisabled: Story = {
     });
 
     await step('Enter no comando habilitado seguinte executa normalmente', async () => {
-      const antes = aoEscolherComDesabilitado.mock.calls.length;
+      const antes = onChooseWithDisabled.mock.calls.length;
       await userEvent.keyboard('{Enter}');
-      await expect(aoEscolherComDesabilitado.mock.calls.length).toBe(antes + 1);
-      await expect(aoEscolherComDesabilitado.mock.calls[antes][0]).toBe('renomear');
+      await expect(onChooseWithDisabled.mock.calls.length).toBe(antes + 1);
+      await expect(onChooseWithDisabled.mock.calls[antes][0]).toBe('renomear');
     });
   },
 };
@@ -237,7 +237,7 @@ export const CheckedItem: Story = {
     // canônica do meta.
     docs: {
       source: {
-        transform: commandSourceCom({
+        transform: commandSourceWith({
           placeholder: 'Buscar tema...',
           emptyMessage: 'Nenhum resultado encontrado.',
           items: [

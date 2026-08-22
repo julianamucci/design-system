@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
-  popoverComAcoesSnippet,
-  popoverComFormularioSnippet,
+  popoverWithActionsSnippet,
+  popoverWithFormSnippet,
   popoverSnippet,
   popoverSource,
-  popoverSourceAcoes,
-  popoverSourceCom,
-  popoverSourceFormulario,
+  popoverSourceActions,
+  popoverSourceWith,
+  popoverSourceForm,
 } from './popover.source';
 
 describe('popoverSnippet', () => {
@@ -81,7 +81,7 @@ describe('popoverSnippet', () => {
 
 describe('popoverComFormularioSnippet', () => {
   it('compõe o painel com as fábricas do design system', () => {
-    const código = popoverComFormularioSnippet();
+    const código = popoverWithFormSnippet();
     expect(código).toContain('createLabel({');
     expect(código).toContain('createInput({');
     expect(código).toContain("type: 'submit'");
@@ -92,7 +92,7 @@ describe('popoverComFormularioSnippet', () => {
 
 describe('popoverComAcoesSnippet', () => {
   it('mostra os dois botões que a política de foco alcança', () => {
-    const código = popoverComAcoesSnippet({ title: 'Confirmar alteração' });
+    const código = popoverWithActionsSnippet({ title: 'Confirmar alteração' });
     expect(código).toContain("label: 'Cancelar'");
     expect(código).toContain("label: 'Confirmar'");
     expect(código).toContain("createPopoverTitle({ text: 'Confirmar alteração' })");
@@ -101,13 +101,13 @@ describe('popoverComAcoesSnippet', () => {
 
 describe('popoverSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = popoverSource('<div data-slot="popover-content">', {});
-    const comArgs = popoverSource('<div data-slot="popover-content">', {
+    const noArgs = popoverSource('<div data-slot="popover-content">', {});
+    const withArgs = popoverSource('<div data-slot="popover-content">', {
       args: { side: 'right', triggerLabel: 'Abrir filtros' },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("side: 'right'");
-    expect(comArgs).toContain("label: 'Abrir filtros'");
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("side: 'right'");
+    expect(withArgs).toContain("label: 'Abrir filtros'");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -119,7 +119,7 @@ describe('popoverSource', () => {
 
 describe('popoverSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = popoverSourceCom({ side: 'top' });
+    const transform = popoverSourceWith({ side: 'top' });
     const código = transform('', { args: { side: 'bottom' } });
     expect(código).toContain("side: 'top'");
   });
@@ -127,7 +127,7 @@ describe('popoverSourceCom', () => {
 
 describe('as transforms das formas alternativas', () => {
   it('entregam a forma que a story pede', () => {
-    expect(popoverSourceFormulario()('', {})).toContain('createInput({');
-    expect(popoverSourceAcoes()('', {})).toContain("label: 'Cancelar'");
+    expect(popoverSourceForm()('', {})).toContain('createInput({');
+    expect(popoverSourceActions()('', {})).toContain("label: 'Cancelar'");
   });
 });

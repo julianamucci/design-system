@@ -9,10 +9,10 @@ import {
   razaoDeContraste,
 } from '@shared/testing/hover-card-probe';
 import { createHoverCard, type HoverCardElement } from './hover-card';
-import { hoverCardComComandosSource, hoverCardSource } from './hover-card.source';
+import { hoverCardWithComandosSource, hoverCardSource } from './hover-card.source';
 import { construirCartaoPerfil, construirLink, emFrase } from './hover-card.fixtures';
 import { createButton } from './button';
-import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
+import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
 // Os três estados que o conteúdo compartilhado descreve: fechado (só o
 // gatilho), aberto (painel no portal) e controlado (quem manda é o estado de
@@ -143,7 +143,7 @@ export const Controlled: Story = {
     // snippet só com a chamada esconderia os três.
     docs: {
       source: {
-        transform: hoverCardComComandosSource({
+        transform: hoverCardWithComandosSource({
           onOpenChange: '(aberto) => sincronizarEstadoExterno(aberto)',
         }),
       },
@@ -254,14 +254,14 @@ export const ListenerCleanup: Story = {
     // sempre a mesma legenda.
     chromatic: { disable: true },
   },
-  render: () => hospedeiroDeSonda(
+  render: () => probeHost(
     'Sonda de limpeza: o cartão é montado, exibido e removido da página pela play.',
   ),
   play: async ({ canvasElement, step }) => {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ResultadoDaSonda;
+    let sonda!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       sonda = await sondarOuvintes({
@@ -278,7 +278,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await conferirLimpeza(sonda);
+      await checkLimpeza(sonda);
     });
   },
 };

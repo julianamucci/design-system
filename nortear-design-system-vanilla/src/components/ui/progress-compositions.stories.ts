@@ -5,7 +5,7 @@ import {
   progressSource,
   progressSourceLista,
   progressSourceOcupado,
-  progressSourceRotulo,
+  progressSourceLabel,
 } from './progress.source';
 import {
   barrasDeProgresso,
@@ -78,7 +78,7 @@ export const FileUpload: Story = {
     // Override de story: rótulo e valor visíveis pedem outra FORMA de snippet.
     docs: {
       source: {
-        transform: progressSourceRotulo({
+        transform: progressSourceLabel({
           value: 48,
           label: 'Enviando arquivo',
           'aria-label': 'Progresso do upload de documento-final.pdf',
@@ -137,7 +137,7 @@ export const WizardSteps: Story = {
     // a porcentagem.
     docs: {
       source: {
-        transform: progressSourceRotulo({
+        transform: progressSourceLabel({
           value: 60,
           label: 'Etapa 3 de 5',
           valueText: 'Endereço',

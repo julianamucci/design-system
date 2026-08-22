@@ -11,7 +11,7 @@ import {
   type SidebarVariant,
 } from './sidebar';
 import { envolverEmNav } from './sidebar.fixtures';
-import { sidebarSource, sidebarSourceCom } from './sidebar.source';
+import { sidebarSource, sidebarSourceWith } from './sidebar.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -142,7 +142,7 @@ export const VariantFloating: Story = {
     covers: ['functional.item8', 'visual.item3'],
     docs: {
       // A variante é o assunto, e `sidebar` é o padrão da fábrica.
-      source: { transform: sidebarSourceCom({ variant: 'floating' }) },
+      source: { transform: sidebarSourceWith({ variant: 'floating' }) },
       description: {
         story: 'Sidebar com borda arredondada e sombra, flutuando sobre um pequeno padding. Não empurra o conteúdo.',
       },
@@ -169,7 +169,7 @@ export const VariantInset: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
-      source: { transform: sidebarSourceCom({ variant: 'inset' }) },
+      source: { transform: sidebarSourceWith({ variant: 'inset' }) },
       description: {
         story: 'Sidebar integrada ao layout com o conteúdo em container arredondado adjacente.',
       },
@@ -267,7 +267,7 @@ export const SideRight: Story = {
       // O lado é o assunto, e o marco ganha nome próprio: dois marcos de
       // navegação com o mesmo nome são indistinguíveis para quem os lista.
       source: {
-        transform: sidebarSourceCom({
+        transform: sidebarSourceWith({
           side: 'right',
           navLabel: 'Detalhes',
           rodape: false,

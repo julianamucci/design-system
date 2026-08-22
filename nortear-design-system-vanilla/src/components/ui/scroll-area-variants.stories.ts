@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { transbordo } from '@shared/testing/scroll-area-probe';
 import { createScrollArea } from './scroll-area';
-import { scrollAreaSource, scrollAreaSourceCom } from './scroll-area.source';
+import { scrollAreaSource, scrollAreaSourceWith } from './scroll-area.source';
 
 const meta: Meta = {
   tags: ['layout'],
@@ -135,7 +135,7 @@ export const Horizontal: Story = {
     // e quem transborda é a fileira de cartões que não encolhem.
     docs: {
       source: {
-        transform: scrollAreaSourceCom({
+        transform: scrollAreaSourceWith({
           size: null,
           width: '100%',
           'aria-label': 'Fila horizontal de cards',
@@ -189,7 +189,7 @@ export const Both: Story = {
       // Os dois eixos vêm de uma matriz cujas células não quebram linha: é ela
       // que passa da caixa nas duas dimensões.
       source: {
-        transform: scrollAreaSourceCom({
+        transform: scrollAreaSourceWith({
           size: 'lg',
           width: '100%',
           'aria-label': 'Matriz com rolagem nos dois eixos',

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { createSwitch } from './switch';
-import { switchSource, switchSourceCom, switchSourceInvalido } from './switch.source';
+import { switchSource, switchSourceWith, switchSourceInvalido } from './switch.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -116,7 +116,7 @@ export const Checked: Story = {
   parameters: {
     covers: ['visual.item2', 'accessibility.item2'],
     docs: {
-      source: { transform: switchSourceCom({ checked: true }) },
+      source: { transform: switchSourceWith({ checked: true }) },
       description: { story: 'Estado ligado: trilho na cor primária, thumb à direita, `aria-checked="true"`.' },
     },
   },
@@ -153,7 +153,7 @@ export const Disabled: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item3'],
     docs: {
-      source: { transform: switchSourceCom({ disabled: true, label: 'Modo escuro', id: 'modo-escuro' }) },
+      source: { transform: switchSourceWith({ disabled: true, label: 'Modo escuro', id: 'modo-escuro' }) },
       description: { story: 'Switch desabilitado e desligado. Opacidade reduzida, cursor bloqueado, não responde a interações.' },
     },
   },
@@ -190,7 +190,7 @@ export const DisabledChecked: Story = {
   parameters: {
     docs: {
       source: {
-        transform: switchSourceCom({
+        transform: switchSourceWith({
           checked: true,
           disabled: true,
           label: 'Modo escuro',

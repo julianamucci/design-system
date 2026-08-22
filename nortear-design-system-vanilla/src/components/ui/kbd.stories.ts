@@ -28,7 +28,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const NomeAcessivel: Story = {
+export const NameAccessible: Story = {
   render: () => {
     const grupo = createKbdGroup();
     grupo.appendChild(createKbd({ text: 'Ctrl', 'aria-label': 'Control' }));

@@ -7,7 +7,7 @@ import {
   createPopoverTitle,
 } from './popover';
 import { abrir, centralizar, painel } from './popover.fixtures';
-import { popoverSource, popoverSourceCom, popoverSourceFormulario } from './popover.source';
+import { popoverSource, popoverSourceWith, popoverSourceForm } from './popover.source';
 import { createButton } from './button';
 import { createInput } from './input';
 import { createLabel } from './label';
@@ -43,7 +43,7 @@ export const Default: Story = {
     // mostraria as sub-fábricas de cabeçalho que esta story não usa.
     docs: {
       source: {
-        transform: popoverSourceCom({
+        transform: popoverSourceWith({
           triggerLabel: 'Ver atalhos',
           text: 'Use Ctrl + K para abrir a busca em qualquer tela.',
         }),
@@ -134,7 +134,7 @@ export const Form: Story = {
     covers: ['visual.item3'],
     // Override de story: o conteúdo interativo pede outra FORMA de snippet —
     // rótulo, campo e submit dentro do painel.
-    docs: { source: { transform: popoverSourceFormulario({ triggerLabel: 'Editar perfil' }) } },
+    docs: { source: { transform: popoverSourceForm({ triggerLabel: 'Editar perfil' }) } },
   },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });

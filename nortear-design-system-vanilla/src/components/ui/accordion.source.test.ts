@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  accordionComConteudoRicoSnippet,
-  accordionComGatilhoRicoSnippet,
+  accordionWithContentRichSnippet,
+  accordionWithTriggerRichSnippet,
   accordionSnippet,
   accordionSource,
-  accordionSourceCom,
+  accordionSourceWith,
 } from './accordion.source';
 
 describe('accordionSnippet', () => {
@@ -55,8 +55,8 @@ describe('accordionSnippet', () => {
   it('ignora o callback que a story passa como função de verdade', () => {
     // `args.onValueChange` é um espião do Storybook: impresso, sairia como o
     // corpo compilado da função.
-    const comEspiao = accordionSnippet({ onValueChange: (() => {}) as unknown as string });
-    expect(comEspiao).not.toContain('onValueChange');
+    const withSpy = accordionSnippet({ onValueChange: (() => {}) as unknown as string });
+    expect(withSpy).not.toContain('onValueChange');
     expect(accordionSnippet({ onValueChange: '(v) => registrar(v)' })).toContain(
       'onValueChange: (v) => registrar(v)',
     );
@@ -71,12 +71,12 @@ describe('accordionSnippet', () => {
 
 describe('accordionSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = accordionSource('<div data-slot="accordion">', {});
-    const comArgs = accordionSource('<div data-slot="accordion">', {
+    const noArgs = accordionSource('<div data-slot="accordion">', {});
+    const withArgs = accordionSource('<div data-slot="accordion">', {
       args: { type: 'multiple' },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("type: 'multiple'");
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("type: 'multiple'");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -88,7 +88,7 @@ describe('accordionSource', () => {
 
 describe('accordionSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = accordionSourceCom({ type: 'single', defaultValue: 'item-1' });
+    const transform = accordionSourceWith({ type: 'single', defaultValue: 'item-1' });
     const código = transform('', { args: { type: 'multiple' } });
     expect(código).not.toContain("type: 'multiple'");
     expect(código).toContain("defaultValue: 'item-1'");
@@ -97,7 +97,7 @@ describe('accordionSourceCom', () => {
 
 describe('accordionComGatilhoRicoSnippet', () => {
   it('monta o rótulo com fábrica do design system, sem helper de story', () => {
-    const código = accordionComGatilhoRicoSnippet({
+    const código = accordionWithTriggerRichSnippet({
       value: 'novo',
       rotulo: 'Novidades da versão 3.0',
       badge: 'Novo',
@@ -110,7 +110,7 @@ describe('accordionComGatilhoRicoSnippet', () => {
   });
 
   it('trata o ícone como conteúdo de quem consome, sem inventar fábrica', () => {
-    const código = accordionComGatilhoRicoSnippet({ comIcone: true, rotulo: 'Informação' });
+    const código = accordionWithTriggerRichSnippet({ comIcone: true, rotulo: 'Informação' });
     expect(código).toContain('rotulo.prepend(icone);');
     expect(código).toContain('aria-hidden');
     // Não existe fábrica de ícone genérica nesta stack: inventá-la seria API falsa.
@@ -121,7 +121,7 @@ describe('accordionComGatilhoRicoSnippet', () => {
 
 describe('accordionComConteudoRicoSnippet', () => {
   it('sanitiza no call site, como a guideline 09 exige', () => {
-    const código = accordionComConteudoRicoSnippet({ type: 'multiple', value: 'specs' });
+    const código = accordionWithContentRichSnippet({ type: 'multiple', value: 'specs' });
     expect(código).toContain("import DOMPurify from 'dompurify';");
     expect(código).toContain('DOMPurify.sanitize(');
     expect(código).toContain('.nds-accordion-content-body');

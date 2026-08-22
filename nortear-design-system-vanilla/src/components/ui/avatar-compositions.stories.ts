@@ -12,10 +12,10 @@ import {
 } from './avatar';
 import { IMG_MARIA } from './avatar.fixtures';
 import {
-  avatarEmGrupoSourceCom,
-  avatarGranularSourceCom,
+  groupSourceWithAvatar,
+  avatarGranularSourceWith,
   avatarSource,
-  avatarSourceCom,
+  avatarSourceWith,
 } from './avatar.source';
 
 const IMG_SECOND = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&h=160&fit=crop&crop=faces';
@@ -110,7 +110,7 @@ export const WithInitials: Story = {
     // Override de story: sem `src` o composto monta só o fallback, e com ele
     // saem também o `alt` — não há imagem para descrever.
     docs: {
-      source: { transform: avatarSourceCom({ src: '', fallback: 'JP' }) },
+      source: { transform: avatarSourceWith({ src: '', fallback: 'JP' }) },
       description: {
         story: 'Avatar sem imagem — o fallback com iniciais é exibido imediatamente.',
       },
@@ -134,7 +134,7 @@ export const WithIcon: Story = {
     // Override de story: fallback que não é texto só existe pelas fábricas
     // granulares — o composto recebe iniciais, não elementos.
     docs: {
-      source: { transform: avatarGranularSourceCom({ iconLabel: 'Usuário genérico' }) },
+      source: { transform: avatarGranularSourceWith({ iconLabel: 'Usuário genérico' }) },
       description: {
         story: 'Fallback com ícone genérico (User) para usuário anônimo ou placeholder.',
       },
@@ -168,7 +168,7 @@ export const Group: Story = {
     // Override de story: a fila é composta por três fábricas, e o contador é o
     // último item dela — outra FORMA de snippet.
     docs: {
-      source: { transform: avatarEmGrupoSourceCom({ 'aria-label': 'Participantes', excedente: '+3' }) },
+      source: { transform: groupSourceWithAvatar({ 'aria-label': 'Participantes', excedente: '+3' }) },
       description: {
         story:
           'Avatares sobrepostos com o contador do excedente fechando a fila. O recuo e a borda saem de <code>.nds-avatar-group</code>.',
@@ -217,7 +217,7 @@ export const WithStatus: Story = {
     // Override de story: o ponto de status é uma sub-fábrica que entra como
     // filho do root, e é ela o assunto.
     docs: {
-      source: { transform: avatarSourceCom({ status: 'Online', src: IMG_MARIA }) },
+      source: { transform: avatarSourceWith({ status: 'Online', src: IMG_MARIA }) },
       description: {
         story:
           'Avatar com indicador de status. O ponto é filho do root — <code>.nds-avatar-badge</code> o posiciona no canto e acompanha o tamanho do avatar.',

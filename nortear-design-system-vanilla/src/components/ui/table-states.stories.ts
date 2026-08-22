@@ -13,7 +13,7 @@ import { createSkeleton } from '@/components/ui/skeleton';
 import {
   tableCarregandoSource,
   tableSource,
-  tableSourceCom,
+  tableSourceWith,
   tableVaziaSource,
 } from './table.source';
 import { COLUNAS, INVOICES } from './table.fixtures';
@@ -108,7 +108,7 @@ export const Empty: Story = {
 export const SelectedRow: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item5'],
-    docs: { source: { transform: tableSourceCom({ linhaSelecionada: true }) } },
+    docs: { source: { transform: tableSourceWith({ linhaSelecionada: true }) } },
   },
   render: () => {
     const { wrapper, table } = createTable();
@@ -182,7 +182,7 @@ export const Loading: Story = {
     const tbody = createTableBody();
     for (const _linha of LINHAS_ESQUELETO) {
       const tr = createTableRow();
-      for (const _coluna of COLUNAS) {
+      for (const _column of COLUNAS) {
         const td = createTableCell('');
         // A factory do Skeleton, e não um `div` montado à mão com `style`: a
         // caixa vem de `data-shape`/`data-width`, e o `aria-hidden` sai de

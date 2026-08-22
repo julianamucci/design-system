@@ -2,7 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { AVATAR_EXEMPLO, IMG_MARIA, buildAvatar } from './avatar.fixtures';
-import { avatarSource, avatarSourceCom } from './avatar.source';
+import { avatarSource, avatarSourceWith } from './avatar.source';
 
 const meta: Meta = {
   tags: ['display'],
@@ -50,7 +50,7 @@ export const Sm: Story = {
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
     docs: {
-      source: { transform: avatarSourceCom({ size: 'sm', src: IMG_MARIA }) },
+      source: { transform: avatarSourceWith({ size: 'sm', src: IMG_MARIA }) },
       description: { story: 'Tamanho compacto (24px) — listas densas.' },
     },
   },
@@ -73,7 +73,7 @@ export const Md: Story = {
     // `md` é o padrão da fábrica: a opção some do snippet, como a story a omite
     // na chamada.
     docs: {
-      source: { transform: avatarSourceCom({ src: IMG_MARIA }) },
+      source: { transform: avatarSourceWith({ src: IMG_MARIA }) },
       description: { story: 'Tamanho padrão do componente (32px) — comentários e chips.' },
     },
   },
@@ -91,7 +91,7 @@ export const Lg: Story = {
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
     docs: {
-      source: { transform: avatarSourceCom({ size: 'lg', src: IMG_MARIA }) },
+      source: { transform: avatarSourceWith({ size: 'lg', src: IMG_MARIA }) },
       description: { story: 'Tamanho médio-grande (40px).' },
     },
   },
@@ -108,7 +108,7 @@ export const Xl: Story = {
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
     docs: {
-      source: { transform: avatarSourceCom({ size: 'xl', src: IMG_MARIA }) },
+      source: { transform: avatarSourceWith({ size: 'xl', src: IMG_MARIA }) },
       description: { story: 'Tamanho grande (48px) — headers de perfil.' },
     },
   },
@@ -125,7 +125,7 @@ export const TwoXl: Story = {
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
     docs: {
-      source: { transform: avatarSourceCom({ size: '2xl', src: IMG_MARIA }) },
+      source: { transform: avatarSourceWith({ size: '2xl', src: IMG_MARIA }) },
       description: { story: 'Maior preset (64px) — página de perfil.' },
     },
   },

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createCodeBlock } from './code-block';
-import { codeBlockSource, codeBlockSourceCom } from './code-block.source';
+import { codeBlockSource, codeBlockSourceWith } from './code-block.source';
 import { COMPOSITION_CODE } from '@/components/docs/CodeBlockDocs';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -59,7 +59,7 @@ export const WithLabel: Story = {
   // Cada arranjo desta seção É uma opção da fábrica: sem override, o snippet do
   // meta mostraria a mesma chamada nas seis stories.
   parameters: {
-    docs: { source: { transform: codeBlockSourceCom({ language: 'ts', title: 'lista.ts' }) } },
+    docs: { source: { transform: codeBlockSourceWith({ language: 'ts', title: 'lista.ts' }) } },
   },
   render: () =>
     createCodeBlock({ code: COMPOSITION_CODE, language: 'ts', title: 'lista.ts' }),
@@ -89,7 +89,7 @@ export const WithLabel: Story = {
 export const WithoutNumbering: Story = {
   parameters: {
     docs: {
-      source: { transform: codeBlockSourceCom({ language: 'ts', showLineNumbers: false }) },
+      source: { transform: codeBlockSourceWith({ language: 'ts', showLineNumbers: false }) },
     },
   },
   render: () =>
@@ -108,7 +108,7 @@ export const WithHighlight: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item4'],
     docs: {
-      source: { transform: codeBlockSourceCom({ language: 'ts', highlightLines: [2] }) },
+      source: { transform: codeBlockSourceWith({ language: 'ts', highlightLines: [2] }) },
     },
   },
   render: () =>
@@ -137,7 +137,7 @@ export const WithHighlightedRange: Story = {
     covers: ['functional.item5', 'visual.item4'],
     docs: {
       source: {
-        transform: codeBlockSourceCom({
+        transform: codeBlockSourceWith({
           code: RANGE_CODE,
           language: 'ts',
           highlightLines: '1, 4-5',
@@ -172,7 +172,7 @@ export const WithHighlightedRange: Story = {
 export const WithFooter: Story = {
   parameters: {
     docs: {
-      source: { transform: codeBlockSourceCom({ language: 'ts', footer: FOOTER_NOTE }) },
+      source: { transform: codeBlockSourceWith({ language: 'ts', footer: FOOTER_NOTE }) },
     },
   },
   render: () =>
@@ -195,7 +195,7 @@ export const WithFooter: Story = {
 
 export const WithoutFooter: Story = {
   parameters: {
-    docs: { source: { transform: codeBlockSourceCom({ language: 'ts' }) } },
+    docs: { source: { transform: codeBlockSourceWith({ language: 'ts' }) } },
   },
   render: () => createCodeBlock({ code: COMPOSITION_CODE, language: 'ts' }),
   play: async ({ canvasElement, step }) => {

@@ -2,7 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createButton, createButtonIcon } from './button';
-import { buttonSource, buttonSourceCom } from './button.source';
+import { buttonSource, buttonSourceWith } from './button.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -39,7 +39,7 @@ export const ExtraSmall: Story = {
   parameters: {
     // Override de story: o tamanho não passa por control neste arquivo.
     docs: {
-      source: { transform: buttonSourceCom({ size: 'xs', label: 'Mínimo' }) },
+      source: { transform: buttonSourceWith({ size: 'xs', label: 'Mínimo' }) },
       description: { story: 'Tamanho mínimo. Use em densidades máximas: chips de filtro e ações dentro de linha de tabela.' },
     },
   },
@@ -54,7 +54,7 @@ export const Small: Story = {
   parameters: {
     // Override de story: o tamanho não passa por control neste arquivo.
     docs: {
-      source: { transform: buttonSourceCom({ size: 'sm', label: 'Pequeno' }) },
+      source: { transform: buttonSourceWith({ size: 'sm', label: 'Pequeno' }) },
       description: { story: 'Tamanho pequeno. Use em toolbars e áreas densas.' },
     },
   },
@@ -70,7 +70,7 @@ export const Large: Story = {
   parameters: {
     // Override de story: o tamanho não passa por control neste arquivo.
     docs: {
-      source: { transform: buttonSourceCom({ size: 'lg', label: 'Grande' }) },
+      source: { transform: buttonSourceWith({ size: 'lg', label: 'Grande' }) },
       description: { story: 'Tamanho grande. Use em CTAs de destaque e hero sections.' },
     },
   },
@@ -97,7 +97,7 @@ export const Icon: Story = {
     // `aria-label` — e o conteúdo do botão passa a ser o ícone.
     docs: {
       source: {
-        transform: buttonSourceCom({
+        transform: buttonSourceWith({
           size: 'icon',
           label: undefined,
           ariaLabel: 'Adicionar item',
@@ -131,7 +131,7 @@ export const IconExtraSmall: Story = {
     // Override de story: sem texto visível, o rótulo é o `aria-label`.
     docs: {
       source: {
-        transform: buttonSourceCom({
+        transform: buttonSourceWith({
           size: 'icon-xs',
           label: undefined,
           ariaLabel: 'Adicionar item',
@@ -165,7 +165,7 @@ export const IconSmall: Story = {
     // Override de story: sem texto visível, o rótulo é o `aria-label`.
     docs: {
       source: {
-        transform: buttonSourceCom({
+        transform: buttonSourceWith({
           size: 'icon-sm',
           label: undefined,
           ariaLabel: 'Adicionar item',
@@ -199,7 +199,7 @@ export const IconLarge: Story = {
     // Override de story: sem texto visível, o rótulo é o `aria-label`.
     docs: {
       source: {
-        transform: buttonSourceCom({
+        transform: buttonSourceWith({
           size: 'icon-lg',
           label: undefined,
           ariaLabel: 'Adicionar item',

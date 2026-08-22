@@ -211,9 +211,9 @@ export const Playground: Story = {
       // alça, não sobre o valor que acabamos de escrever.
       const caixa = trilho.getBoundingClientRect();
       const alca = canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
-      const caixaAlca = alca.getBoundingClientRect();
-      const centroAlca = caixaAlca.left + caixaAlca.width / 2;
-      await expect(Math.abs(centroAlca - (caixa.left + caixa.width / 2))).toBeLessThan(2);
+      const boxHandle = alca.getBoundingClientRect();
+      const centerHandle = boxHandle.left + boxHandle.width / 2;
+      await expect(Math.abs(centerHandle - (caixa.left + caixa.width / 2))).toBeLessThan(2);
     });
 
     await step('Soltar dispara o callback de commit', async () => {

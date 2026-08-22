@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createDropdownMenu } from './dropdown-menu';
-import { dropdownMenuSource, dropdownMenuSourceCom } from './dropdown-menu.source';
+import { dropdownMenuSource, dropdownMenuSourceWith } from './dropdown-menu.source';
 import { createButton } from './button';
 import { wrap } from './dropdown-menu.fixtures';
-import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
+import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const meta: Meta = {
@@ -154,7 +154,7 @@ export const Controlled: Story = {
     // acompanha de fora.
     docs: {
       source: {
-        transform: dropdownMenuSourceCom({
+        transform: dropdownMenuSourceWith({
           triggerLabel: 'Abrir menu',
           items: [
             { label: 'Comando A', value: 'a' },
@@ -203,23 +203,23 @@ export const Controlled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
-    const botaoExterno = canvas.getByRole('button', { name: /open programmatically/i });
+    const buttonExterno = canvas.getByRole('button', { name: /open programmatically/i });
 
     await step('O botão externo abre o menu', async () => {
       // Idempotente: só clica quando o estado atual não é o desejado, então o
       // replay do painel Interactions chega ao mesmo lugar.
-      if (botaoExterno.dataset.open !== 'true') await userEvent.click(botaoExterno);
+      if (buttonExterno.dataset.open !== 'true') await userEvent.click(buttonExterno);
       const menu = await body.findByRole('menu');
       await expect(menu).toBeVisible();
       // O `data-open` do botão de fora é escrito pelo `onOpenChange`: se o
       // callback não tivesse voltado, o estado externo ficaria dessincronizado
       // do menu e um segundo clique não abriria nada.
-      await expect(botaoExterno.dataset.open).toBe('true');
+      await expect(buttonExterno.dataset.open).toBe('true');
     });
 
     await step('ESC fecha e o estado de fora acompanha', async () => {
       await closeAfter();
-      await expect(botaoExterno.dataset.open).toBe('false');
+      await expect(buttonExterno.dataset.open).toBe('false');
       await expect(body.queryAllByRole('menu')).toHaveLength(0);
     });
   },
@@ -231,7 +231,7 @@ export const ItemDisabled: Story = {
     // chave da lista — o snippet do meta traria a lista canônica, sem nenhum.
     docs: {
       source: {
-        transform: dropdownMenuSourceCom({
+        transform: dropdownMenuSourceWith({
           triggerLabel: 'Mais ações',
           items: [
             { label: 'Editar', value: 'edit' },
@@ -295,7 +295,7 @@ export const CheckboxIndeterminate: Story = {
     // sem `checkbox` nenhum.
     docs: {
       source: {
-        transform: dropdownMenuSourceCom({
+        transform: dropdownMenuSourceWith({
           triggerLabel: 'Colunas',
           items: [
             { type: 'label', label: 'Colunas visíveis' },
@@ -372,14 +372,14 @@ export const ListenerCleanup: Story = {
     // sempre a mesma legenda.
     chromatic: { disable: true },
   },
-  render: () => hospedeiroDeSonda(
+  render: () => probeHost(
     'Sonda de limpeza: o menu é montado, aberto e removido da página pela play.',
   ),
   play: async ({ canvasElement, step }) => {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ResultadoDaSonda;
+    let sonda!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       sonda = await sondarOuvintes({
@@ -397,7 +397,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await conferirLimpeza(sonda);
+      await checkLimpeza(sonda);
     });
   },
 };

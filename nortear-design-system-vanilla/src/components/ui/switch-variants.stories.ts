@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createSwitch } from './switch';
-import { switchSource, switchSourceCom, switchSourcePainel } from './switch.source';
+import { switchSource, switchSourceWith, switchSourcePanel } from './switch.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -113,7 +113,7 @@ export const WithDescription: Story = {
       // Composição estruturalmente diferente: o painel põe rótulo e descrição de
       // um lado e o controle do outro, e é isso que a story mostra.
       source: {
-        transform: switchSourcePainel([
+        transform: switchSourcePanel([
           {
             id: 'emails-marketing',
             label: 'Emails de marketing',
@@ -165,7 +165,7 @@ export const Sm: Story = {
     docs: {
       // O assunto é o degrau: sem o override o snippet mostraria o padrão, que é
       // justamente o que a story usa só como referência de comparação.
-      source: { transform: switchSourceCom({ size: 'sm', label: 'Tamanho compacto', id: 'tamanho-compacto' }) },
+      source: { transform: switchSourceWith({ size: 'sm', label: 'Tamanho compacto', id: 'tamanho-compacto' }) },
       description: {
         story:
           'Degrau compacto — trilho de 24×16px com thumb de 12px, ao lado do padrão para comparação. Indicado para listas densas e menus.',

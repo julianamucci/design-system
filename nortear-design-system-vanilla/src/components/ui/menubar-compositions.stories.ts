@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
 import { embrulhar, esperarPainel, gatilhosDe } from './menubar.fixtures';
-import { menubarSource, menubarSourceCom } from './menubar.source';
+import { menubarSource, menubarSourceWith } from './menubar.source';
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
 // à mão que a próxima edição do markup deixa mentindo.
@@ -60,7 +60,7 @@ export const WithShortcuts: Story = {
     covers: ['visual.item2'],
     docs: {
       source: {
-        transform: menubarSourceCom({
+        transform: menubarSourceWith({
           menus: [
             {
               label: 'Editar',
@@ -115,7 +115,7 @@ export const WithSubmenu: Story = {
     covers: ['functional.item5', 'visual.item4'],
     docs: {
       source: {
-        transform: menubarSourceCom({
+        transform: menubarSourceWith({
           menus: [
             {
               label: 'Arquivo',
@@ -204,7 +204,7 @@ export const WithCheckboxItems: Story = {
     covers: ['functional.item7', 'visual.item3'],
     docs: {
       source: {
-        transform: menubarSourceCom({
+        transform: menubarSourceWith({
           menus: [
             {
               label: 'Exibir',
@@ -283,7 +283,7 @@ export const WithRadioGroup: Story = {
     covers: ['accessibility.item5'],
     docs: {
       source: {
-        transform: menubarSourceCom({
+        transform: menubarSourceWith({
           menus: [
             {
               label: 'Aparência',
@@ -354,7 +354,7 @@ export const EditorCompleto: Story = {
   parameters: {
     docs: {
       source: {
-        transform: menubarSourceCom({
+        transform: menubarSourceWith({
           menus: [
             {
               label: 'Arquivo',

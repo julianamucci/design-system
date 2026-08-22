@@ -40,7 +40,7 @@ export type AccordionSnippetOptions = {
 };
 
 /** Os itens da seção Demonstração, iguais nas cinco stacks. */
-const ITENS_PADRAO: readonly AccordionSnippetItem[] = [
+const ITEMS_DEFAULT: readonly AccordionSnippetItem[] = [
   { value: 'item-1', trigger: 'Como faço para redefinir minha senha?' },
   { value: 'item-2', trigger: 'Quais formas de pagamento são aceitas?' },
   { value: 'item-3', trigger: 'Como cancelo minha assinatura?' },
@@ -61,7 +61,7 @@ function blocoDeItens(itens: readonly AccordionSnippetItem[]): string {
   return `const itens = [\n${linhas.join('\n')}\n];`;
 }
 
-function linhasDaChamada(o: AccordionSnippetOptions): string[] {
+function callLines(o: AccordionSnippetOptions): string[] {
   return opcoes([
     // `single` é o padrão da fábrica: só o modo múltiplo entra no snippet.
     ['type', o.type && o.type !== 'single' ? texto(o.type) : undefined],
@@ -76,12 +76,12 @@ function linhasDaChamada(o: AccordionSnippetOptions): string[] {
 
 /** A chamada real de `createAccordion` com as opções da story. */
 export function accordionSnippet(o: AccordionSnippetOptions = {}): string {
-  const itens = o.items?.length ? o.items : ITENS_PADRAO;
+  const itens = o.items?.length ? o.items : ITEMS_DEFAULT;
 
   return snippet(
     importar('accordion', 'createAccordion'),
     blocoDeItens(itens),
-    `const acordeao = ${chamada('createAccordion', linhasDaChamada(o))};`,
+    `const acordeao = ${chamada('createAccordion', callLines(o))};`,
     montar('acordeao'),
   );
 }
@@ -95,7 +95,7 @@ export const accordionSource: SourceTransform<AccordionSnippetOptions> = (_gerad
   accordionSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function accordionSourceCom(
+export function accordionSourceWith(
   fixas: AccordionSnippetOptions,
 ): SourceTransform<AccordionSnippetOptions> {
   return (_gerado, ctx) => accordionSnippet({ ...ctx.args, ...fixas });
@@ -103,7 +103,7 @@ export function accordionSourceCom(
 
 // ─── Gatilho com conteúdo além do texto ──────────────────────────────────────
 
-export type AccordionGatilhoRicoSnippetOptions = AccordionSnippetOptions & {
+export type AccordionTriggerRichSnippetOptions = AccordionSnippetOptions & {
   /** Item cujo rótulo é trocado — o `value` é o que liga um ao outro. */
   value?: string;
   /** Texto que fica no rótulo depois da troca. */
@@ -120,8 +120,8 @@ export type AccordionGatilhoRicoSnippetOptions = AccordionSnippetOptions & {
  * como STRING, então conteúdo rico (ícone, etiqueta) é montado por quem consome
  * e entra no lugar do rótulo depois da montagem.
  */
-export function accordionComGatilhoRicoSnippet(
-  o: AccordionGatilhoRicoSnippetOptions = {},
+export function accordionWithTriggerRichSnippet(
+  o: AccordionTriggerRichSnippetOptions = {},
 ): string {
   const value = o.value ?? 'novo';
   const rotulo = o.rotulo ?? 'Novidades da versão 3.0';
@@ -149,22 +149,22 @@ export function accordionComGatilhoRicoSnippet(
   return snippet(
     imports.join('\n'),
     blocoDeItens(itens),
-    `const acordeao = ${chamada('createAccordion', linhasDaChamada({ ...o, items: itens }))};`,
+    `const acordeao = ${chamada('createAccordion', callLines({ ...o, items: itens }))};`,
     composicao,
     `acordeao.querySelector('[data-value="${value}"] span')?.replaceWith(rotulo);`,
     montar('acordeao'),
   );
 }
 
-export function accordionComGatilhoRicoSourceCom(
-  fixas: AccordionGatilhoRicoSnippetOptions,
-): SourceTransform<AccordionGatilhoRicoSnippetOptions> {
-  return (_gerado, ctx) => accordionComGatilhoRicoSnippet({ ...ctx.args, ...fixas });
+export function accordionWithTriggerRichSourceWith(
+  fixas: AccordionTriggerRichSnippetOptions,
+): SourceTransform<AccordionTriggerRichSnippetOptions> {
+  return (_gerado, ctx) => accordionWithTriggerRichSnippet({ ...ctx.args, ...fixas });
 }
 
 // ─── Painel com conteúdo rico ────────────────────────────────────────────────
 
-export type AccordionConteudoRicoSnippetOptions = AccordionSnippetOptions & {
+export type AccordionContentRichSnippetOptions = AccordionSnippetOptions & {
   /** Item cujo painel recebe o HTML. */
   value?: string;
 };
@@ -174,8 +174,8 @@ export type AccordionConteudoRicoSnippetOptions = AccordionSnippetOptions & {
  * parágrafo entram no corpo do painel depois da montagem — e passam pelo
  * sanitizador no próprio call site (guideline 09).
  */
-export function accordionComConteudoRicoSnippet(
-  o: AccordionConteudoRicoSnippetOptions = {},
+export function accordionWithContentRichSnippet(
+  o: AccordionContentRichSnippetOptions = {},
 ): string {
   const value = o.value ?? 'specs';
   const itens = o.items?.length ? o.items : [{ value, trigger: 'Especificações técnicas' }];
@@ -183,7 +183,7 @@ export function accordionComConteudoRicoSnippet(
   return snippet(
     [importar('accordion', 'createAccordion'), "import DOMPurify from 'dompurify';"].join('\n'),
     blocoDeItens(itens),
-    `const acordeao = ${chamada('createAccordion', linhasDaChamada({ ...o, items: itens }))};`,
+    `const acordeao = ${chamada('createAccordion', callLines({ ...o, items: itens }))};`,
     `const corpo = acordeao.querySelector(
   '[data-content-for="${value}"] .nds-accordion-content-body',
 );
@@ -198,8 +198,8 @@ if (corpo) {
   );
 }
 
-export function accordionComConteudoRicoSourceCom(
-  fixas: AccordionConteudoRicoSnippetOptions,
-): SourceTransform<AccordionConteudoRicoSnippetOptions> {
-  return (_gerado, ctx) => accordionComConteudoRicoSnippet({ ...ctx.args, ...fixas });
+export function accordionWithContentRichSourceWith(
+  fixas: AccordionContentRichSnippetOptions,
+): SourceTransform<AccordionContentRichSnippetOptions> {
+  return (_gerado, ctx) => accordionWithContentRichSnippet({ ...ctx.args, ...fixas });
 }

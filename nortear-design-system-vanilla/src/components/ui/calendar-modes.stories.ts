@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createCalendar } from './calendar';
-import { calendarSource, calendarSourceCom } from './calendar.source';
+import { calendarSource, calendarSourceWith } from './calendar.source';
 import { fn, userEvent, within, expect } from 'storybook/test';
 import {
   ESTADOS_COM_TEXTO_LEGIVEL,
@@ -49,7 +49,7 @@ export const Single: Story = {
     docs: {
       // Override de story: o callback que reporta a escolha é metade do assunto
       // aqui, e o Calendar não tem control nenhum.
-      source: { transform: calendarSourceCom({ onSelect: '(data) => registrarEscolha(data)' }) },
+      source: { transform: calendarSourceWith({ onSelect: '(data) => registrarEscolha(data)' }) },
       description: {
         story:
           'Seleção de uma única data. O valor inicial marca a célula; cada clique numa célula habilitada troca a marcação e reporta a data escolhida.',
@@ -95,7 +95,7 @@ export const Range: Story = {
       // Override de story: o modo e a FORMA do valor mudam juntos — no
       // intervalo ele é um par de datas, não uma data.
       source: {
-        transform: calendarSourceCom({
+        transform: calendarSourceWith({
           mode: 'range',
           value: '{ from: new Date(2026, 3, 10), to: new Date(2026, 3, 18) }',
           onSelect: '(intervalo) => registrarEscolha(intervalo)',
@@ -220,7 +220,7 @@ export const Multiple: Story = {
     docs: {
       // Override de story: no modo múltiplo o valor é uma LISTA de datas.
       source: {
-        transform: calendarSourceCom({
+        transform: calendarSourceWith({
           mode: 'multiple',
           value: '[new Date(2026, 3, 8), new Date(2026, 3, 12), new Date(2026, 3, 16)]',
           onSelect: '(datas) => registrarEscolha(datas)',

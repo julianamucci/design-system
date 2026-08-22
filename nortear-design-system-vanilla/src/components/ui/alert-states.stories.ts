@@ -2,7 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
-import { alertEmRegiaoVivaSourceCom, alertSource, alertSourceCom } from './alert.source';
+import { regiaoVivaSourceWithAlert, alertSource, alertSourceWith } from './alert.source';
 
 const meta: Meta = {
   tags: ['feedback'],
@@ -45,7 +45,7 @@ export const WithoutTitle: Story = {
   // mostraria a composição completa.
   parameters: {
     covers: ['functional.item4', 'visual.item3'],
-    docs: { source: { transform: alertSourceCom({ title: '' }) } },
+    docs: { source: { transform: alertSourceWith({ title: '' }) } },
   },
   render: () => {
     const alert = createAlert();
@@ -71,7 +71,7 @@ export const WithoutTitle: Story = {
 export const WithoutIcon: Story = {
   // Override de story: a ausência do ícone É o assunto.
   parameters: {
-    docs: { source: { transform: alertSourceCom({ icon: false }) } },
+    docs: { source: { transform: alertSourceWith({ icon: false }) } },
   },
   render: () => {
     const alert = createAlert();
@@ -101,7 +101,7 @@ export const WithoutAnnouncement: Story = {
   parameters: {
     docs: {
       source: {
-        transform: alertSourceCom({
+        transform: alertSourceWith({
           role: 'note',
           title: 'Nota de implementação',
           description:
@@ -159,7 +159,7 @@ export const DynamicInsertion: Story = {
     covers: ['functional.item6'],
     docs: {
       source: {
-        transform: alertEmRegiaoVivaSourceCom({
+        transform: regiaoVivaSourceWithAlert({
           icon: 'success',
           title: 'Operação concluída',
           description: 'O relatório foi gerado com sucesso.',

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createSlider } from './slider';
 import { withLabel } from './slider.fixtures';
-import { sliderSource, sliderSourceCom } from './slider.source';
+import { sliderSource, sliderSourceWith } from './slider.source';
 import { createButton } from './button';
 import { createInput } from './input';
 import { apertarTecla, valorDaAlca } from '@shared/testing/slider-probe';
@@ -74,7 +74,7 @@ export const Glow: Story = {
   parameters: {
     docs: {
       // O assunto é o passo: com o padrão de 1 o snippet não mostraria nada.
-      source: { transform: sliderSourceCom({ step: 5, value: 75, 'aria-label': 'Brilho' }) },
+      source: { transform: sliderSourceWith({ step: 5, value: 75, 'aria-label': 'Brilho' }) },
       description: {
         story: 'Controle de brilho com `step=5` — granularidade discreta para evitar movimentos minúsculos quando o ajuste fino não importa.',
       },
@@ -134,7 +134,7 @@ export const PriceRange: Story = {
   parameters: {
     docs: {
       source: {
-        transform: sliderSourceCom({
+        transform: sliderSourceWith({
           min: 0,
           max: 1000,
           step: 10,
@@ -178,32 +178,32 @@ export const InForm: Story = {
     form.dataset.spacing = 'md';
     form.setAttribute('aria-label', 'Configurações de áudio');
 
-    let ultimoCommit = 60;
+    let lastCommit = 60;
 
     const status = document.createElement('p');
     status.className = 'nds-text-caption nds-text-muted-foreground';
     status.setAttribute('aria-live', 'polite');
     status.textContent = 'Aguardando alteração…';
 
-    const nomeWrap = document.createElement('div');
-    nomeWrap.className = 'nds-stack';
-    nomeWrap.dataset.spacing = 'sm';
-    const nomeLabel = document.createElement('label');
-    nomeLabel.className = 'nds-text-body nds-font-medium';
-    nomeLabel.htmlFor = 'form-preset';
-    nomeLabel.textContent = 'Nome do preset';
-    nomeWrap.append(nomeLabel, createInput({ id: 'form-preset', placeholder: 'Meu preset' }));
+    const nameWrap = document.createElement('div');
+    nameWrap.className = 'nds-stack';
+    nameWrap.dataset.spacing = 'sm';
+    const nameLabel = document.createElement('label');
+    nameLabel.className = 'nds-text-body nds-font-medium';
+    nameLabel.htmlFor = 'form-preset';
+    nameLabel.textContent = 'Nome do preset';
+    nameWrap.append(nameLabel, createInput({ id: 'form-preset', placeholder: 'Meu preset' }));
 
     const volume = withLabel({
       idPrefix: 'form-volume',
       labelText: 'Volume',
       'aria-label': 'Volume',
-      value: ultimoCommit,
+      value: lastCommit,
       unit: '%',
       // O commit é o `change` do input nativo — um evento por interação, e não
       // um por pixel arrastado. É ele que alimenta o analytics.
       onValueCommitted: (v) => {
-        ultimoCommit = v;
+        lastCommit = v;
         status.textContent = `Commitado: ${v}%`;
       },
     });
@@ -212,10 +212,10 @@ export const InForm: Story = {
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      status.textContent = `Enviado: volume=${ultimoCommit}%`;
+      status.textContent = `Enviado: volume=${lastCommit}%`;
     });
 
-    form.append(nomeWrap, volume, submit, status);
+    form.append(nameWrap, volume, submit, status);
     return form;
   },
   parameters: {
@@ -223,7 +223,7 @@ export const InForm: Story = {
       // O assunto é o callback de commit — um evento por interação, e não um
       // por pixel arrastado.
       source: {
-        transform: sliderSourceCom({
+        transform: sliderSourceWith({
           value: 60,
           'aria-label': 'Volume',
           onValueCommitted: '(valor) => registrarAjuste(valor)',

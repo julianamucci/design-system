@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, waitFor, within, expect } from 'storybook/test';
 import { createCollapsible } from './collapsible';
 import { PAINEL_CLASSES, makeContent } from './collapsible.fixtures';
-import { collapsibleComGatilhoSource, collapsibleSource } from './collapsible.source';
+import { collapsibleWithTriggerSource, collapsibleSource } from './collapsible.source';
 import { ChevronDown, Filter, Settings } from 'lucide';
 
 const meta: Meta = {
@@ -27,7 +27,7 @@ type LucideIconNode = [string, Record<string, string>];
 
 // `nds-icon` (16px) e não `nds-icon-sm` (14px): é a medida que as outras quatro
 // stacks renderizam neste componente.
-const ICONE_CLASSES = 'nds-icon nds-shrink-0';
+const ICON_CLASSES = 'nds-icon nds-shrink-0';
 
 function createIcon(nodes: LucideIconNode[], extraClass = ''): SVGSVGElement {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -38,7 +38,7 @@ function createIcon(nodes: LucideIconNode[], extraClass = ''): SVGSVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', `${ICONE_CLASSES}${extraClass ? ' ' + extraClass : ''}`);
+  svg.setAttribute('class', `${ICON_CLASSES}${extraClass ? ' ' + extraClass : ''}`);
   for (const [tag, attrs] of nodes) {
     const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
     for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
@@ -93,7 +93,7 @@ export const WithCustomButton: Story = {
       // O gatilho como ELEMENTO é o assunto: com o snippet do meta, que passa
       // texto, a story deixaria de mostrar o que documenta.
       source: {
-        transform: collapsibleComGatilhoSource({ trigger: 'Exibir opções avançadas' }),
+        transform: collapsibleWithTriggerSource({ trigger: 'Exibir opções avançadas' }),
       },
       description: {
         story: 'Trigger customizado passando um <code>HTMLButtonElement</code> diretamente. O Collapsible mantém o ARIA (aria-expanded, aria-controls) no elemento passado.',
@@ -140,7 +140,7 @@ export const WithIconInTrigger: Story = {
   parameters: {
     covers: ['accessibility.item4'],
     docs: {
-      source: { transform: collapsibleComGatilhoSource({ trigger: 'Filtros avançados' }) },
+      source: { transform: collapsibleWithTriggerSource({ trigger: 'Filtros avançados' }) },
       description: {
         story: 'Ícone no trigger. O ícone tem <code>aria-hidden="true"</code> — o texto do trigger descreve a ação para leitores de tela.',
       },
@@ -177,18 +177,18 @@ export const WithRotatingChevron: Story = {
       'nds-transition-transform nds-chevron',
     );
 
-    const conteudoTrigger = document.createElement('span');
-    conteudoTrigger.className = 'nds-cluster nds-w-full';
-    conteudoTrigger.dataset.justify = 'between';
+    const contentTrigger = document.createElement('span');
+    contentTrigger.className = 'nds-cluster nds-w-full';
+    contentTrigger.dataset.justify = 'between';
     const label = document.createElement('span');
     label.textContent = 'Configurações avançadas';
-    conteudoTrigger.appendChild(label);
-    conteudoTrigger.appendChild(chevron);
+    contentTrigger.appendChild(label);
+    contentTrigger.appendChild(chevron);
 
     const btn = document.createElement('button');
     btn.className = 'nds-button nds-button-outline nds-cluster nds-w-full nds-px-4';
     btn.dataset.justify = 'between';
-    btn.appendChild(conteudoTrigger);
+    btn.appendChild(contentTrigger);
 
     const content = document.createElement('div');
     content.className = PAINEL_CLASSES;
@@ -221,7 +221,7 @@ export const WithRotatingChevron: Story = {
     covers: ['visual.item4'],
     docs: {
       source: {
-        transform: collapsibleComGatilhoSource({
+        transform: collapsibleWithTriggerSource({
           trigger: 'Configurações avançadas',
           chevron: true,
         }),
@@ -306,7 +306,7 @@ export const WithSettingsIcon: Story = {
   parameters: {
     docs: {
       source: {
-        transform: collapsibleComGatilhoSource({ trigger: 'Configurações do sistema' }),
+        transform: collapsibleWithTriggerSource({ trigger: 'Configurações do sistema' }),
       },
       description: {
         story: 'Ícone Settings com conteúdo rico (checkboxes). O CollapsibleContent aceita qualquer HTML — ideal para formulários de configuração raramente acessados.',

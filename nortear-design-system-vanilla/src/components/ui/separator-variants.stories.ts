@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createSeparator } from './separator';
-import { separatorSource, separatorSourceCom } from './separator.source';
+import { separatorSource, separatorSourceWith } from './separator.source';
 
 const meta: Meta = {
   tags: ['layout'],
@@ -81,7 +81,7 @@ export const Vertical: Story = {
     covers: ['functional.item2', 'visual.item2'],
     // A orientação é o assunto da story, e nenhum control a cobre aqui: sem o
     // override o painel Code mostraria a horizontal, que é o padrão da fábrica.
-    docs: { source: { transform: separatorSourceCom({ orientation: 'vertical', antes: 'Blog', depois: 'Documentação' }) } },
+    docs: { source: { transform: separatorSourceWith({ orientation: 'vertical', antes: 'Blog', depois: 'Documentação' }) } },
   },
   render: () => {
     const wrap = document.createElement('div');

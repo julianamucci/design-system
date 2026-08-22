@@ -44,11 +44,11 @@ export function slideDeExemplo(rotulo: string, o: SlideDeExemploOptions = {}): H
   caixa.dataset.align = 'center';
   caixa.dataset.justify = 'center';
 
-  const rotuloEl = document.createElement('span');
-  rotuloEl.className = 'nds-text-h3 nds-font-semibold nds-text-muted-foreground';
-  rotuloEl.textContent = rotulo;
+  const labelEl = document.createElement('span');
+  labelEl.className = 'nds-text-h3 nds-font-semibold nds-text-muted-foreground';
+  labelEl.textContent = rotulo;
 
-  caixa.appendChild(rotuloEl);
+  caixa.appendChild(labelEl);
   moldura.appendChild(caixa);
   return moldura;
 }

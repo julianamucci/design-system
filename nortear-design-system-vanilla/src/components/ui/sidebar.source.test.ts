@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  sidebarComAcoesSnippet,
-  sidebarComEsqueletoSnippet,
-  sidebarComSubmenuSnippet,
+  sidebarWithActionsSnippet,
+  sidebarWithSkeletonSnippet,
+  sidebarWithSubmenuSnippet,
   sidebarSnippet,
   sidebarSource,
-  sidebarSourceCom,
+  sidebarSourceWith,
 } from './sidebar.source';
 
 describe('sidebarSnippet', () => {
@@ -118,14 +118,14 @@ describe('sidebarSource', () => {
 
 describe('sidebarSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = sidebarSourceCom({ variant: 'inset' })('', { args: { variant: 'sidebar' } });
+    const código = sidebarSourceWith({ variant: 'inset' })('', { args: { variant: 'sidebar' } });
     expect(código).toContain("variant: 'inset'");
   });
 });
 
 describe('sidebarComAcoesSnippet', () => {
   it('mostra as sub-fábricas que o atalho de grupo esconderia', () => {
-    const código = sidebarComAcoesSnippet();
+    const código = sidebarWithActionsSnippet();
     expect(código).toContain("createSidebarGroupLabel({ text: 'Projetos', id: 'grupo-projetos' })");
     expect(código).toContain("createSidebarMenu({ 'aria-labelledby': 'grupo-projetos' })");
     expect(código).toContain('createSidebarGroupAction({');
@@ -136,13 +136,13 @@ describe('sidebarComAcoesSnippet', () => {
   });
 
   it('põe a contagem no nome do item, porque o contador é oculto', () => {
-    expect(sidebarComAcoesSnippet()).toContain("'aria-label': 'Nortear, 12 pendências'");
+    expect(sidebarWithActionsSnippet()).toContain("'aria-label': 'Nortear, 12 pendências'");
   });
 });
 
 describe('sidebarComSubmenuSnippet', () => {
   it('deixa o recolhimento com quem compõe, ligado ao aria-expanded', () => {
-    const código = sidebarComSubmenuSnippet();
+    const código = sidebarWithSubmenuSnippet();
     expect(código).toContain("botaoPai.setAttribute('aria-expanded', 'false');");
     expect(código).toContain('createSidebarMenuSub()');
     expect(código).toContain('createSidebarMenuSubButton({ ...sub, size: \'sm\' })');
@@ -153,7 +153,7 @@ describe('sidebarComSubmenuSnippet', () => {
 
 describe('sidebarComEsqueletoSnippet', () => {
   it('anuncia uma linha só — as outras ficam mudas', () => {
-    const código = sidebarComEsqueletoSnippet();
+    const código = sidebarWithSkeletonSnippet();
     expect(código).toContain("{ showIcon: true, 'aria-label': 'Carregando navegação', width: '70%' }");
     expect(código).toContain('{ showIcon: true, width: \'55%\' }');
     expect(código).toContain('createSidebarMenuSkeleton(linha)');

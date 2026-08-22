@@ -2,7 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createAspectRatio } from './aspect-ratio';
 import { boxed, buildImage } from './aspect-ratio.fixtures';
-import { aspectRatioSource, aspectRatioSourceCom } from './aspect-ratio.source';
+import { aspectRatioSource, aspectRatioSourceWith } from './aspect-ratio.source';
 import { expect } from 'storybook/test';
 
 const meta: Meta = {
@@ -39,7 +39,7 @@ export const SixteenNine: Story = {
     covers: ['functional.item1', 'visual.item1'],
     docs: {
       source: {
-        transform: aspectRatioSourceCom({
+        transform: aspectRatioSourceWith({
           ratio: 16 / 9,
           alt: 'Paisagem montanhosa — proporção 16/9',
         }),
@@ -74,7 +74,7 @@ export const FourThree: Story = {
     covers: ['visual.item2'],
     docs: {
       source: {
-        transform: aspectRatioSourceCom({
+        transform: aspectRatioSourceWith({
           ratio: 4 / 3,
           imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&q=80',
           alt: 'Imagem de produto — proporção 4/3',
@@ -112,7 +112,7 @@ export const Square: Story = {
     covers: ['functional.item2', 'visual.item3'],
     docs: {
       source: {
-        transform: aspectRatioSourceCom({
+        transform: aspectRatioSourceWith({
           ratio: 1,
           imageUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=800&q=80',
           alt: 'Avatar quadrado — proporção 1/1',
@@ -149,7 +149,7 @@ export const ThreeFour: Story = {
     covers: ['visual.item4'],
     docs: {
       source: {
-        transform: aspectRatioSourceCom({
+        transform: aspectRatioSourceWith({
           ratio: 3 / 4,
           imageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&q=80',
           alt: 'Retrato vertical — proporção 3/4',
@@ -186,7 +186,7 @@ export const UltraWide: Story = {
     covers: ['visual.item5'],
     docs: {
       source: {
-        transform: aspectRatioSourceCom({
+        transform: aspectRatioSourceWith({
           ratio: 21 / 9,
           imageUrl: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=1600&q=80',
           alt: 'Hero cinematográfico — proporção 21/9',

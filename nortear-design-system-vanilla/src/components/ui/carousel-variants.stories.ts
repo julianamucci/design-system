@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { createCarousel } from './carousel';
-import { carouselSource, carouselSourceCom } from './carousel.source';
+import { carouselSource, carouselSourceWith } from './carousel.source';
 import { slidesDeExemplo } from './carousel.fixtures';
 import {
   medirSlides,
@@ -148,7 +148,7 @@ export const Vertical: Story = {
     // control nenhum, então a transform do meta não teria como saber deles.
     docs: {
       source: {
-        transform: carouselSourceCom({
+        transform: carouselSourceWith({
           slides: 4,
           orientation: 'vertical',
           contentClass: 'nds-aspect-4-3',

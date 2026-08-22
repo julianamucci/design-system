@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   toggleGroupSnippet,
   toggleGroupSource,
-  toggleGroupSourceCom,
+  toggleGroupSourceWith,
 } from './toggle-group.source';
 
 describe('toggleGroupSnippet', () => {
@@ -100,7 +100,7 @@ describe('toggleGroupSource', () => {
 
 describe('toggleGroupSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = toggleGroupSourceCom({ orientation: 'vertical' })('', {
+    const código = toggleGroupSourceWith({ orientation: 'vertical' })('', {
       args: { orientation: 'horizontal' },
     });
     expect(código).toContain("orientation: 'vertical'");

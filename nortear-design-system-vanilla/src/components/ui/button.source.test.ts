@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  buttonComoLinkSnippet,
-  buttonParDeAcoesSnippet,
+  buttonAsLinkSnippet,
+  actionsSnippetButtonPair,
   buttonPlaygroundSource,
   buttonSnippet,
   buttonSource,
-  buttonSourceCom,
+  buttonSourceWith,
 } from './button.source';
 
 describe('buttonSnippet', () => {
@@ -108,14 +108,14 @@ describe('buttonSnippet', () => {
 
 describe('buttonSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = buttonSource('<button data-slot="button">', {});
-    const comArgs = buttonSource('<button data-slot="button">', {
+    const noArgs = buttonSource('<button data-slot="button">', {});
+    const withArgs = buttonSource('<button data-slot="button">', {
       args: { variant: 'outline', label: 'Cancelar' },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(semArgs).toContain("label: 'Salvar'");
-    expect(comArgs).toContain("variant: 'outline'");
-    expect(comArgs).toContain("label: 'Cancelar'");
+    expect(noArgs).not.toBe(withArgs);
+    expect(noArgs).toContain("label: 'Salvar'");
+    expect(withArgs).toContain("variant: 'outline'");
+    expect(withArgs).toContain("label: 'Cancelar'");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -140,7 +140,7 @@ describe('buttonPlaygroundSource', () => {
 
 describe('buttonSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = buttonSourceCom({ variant: 'ghost', label: 'Fechar' });
+    const transform = buttonSourceWith({ variant: 'ghost', label: 'Fechar' });
     const código = transform('', { args: { variant: 'destructive', label: 'Excluir' } });
     expect(código).toContain("variant: 'ghost'");
     expect(código).toContain("label: 'Fechar'");
@@ -148,7 +148,7 @@ describe('buttonSourceCom', () => {
   });
 
   it('`label: undefined` apaga o padrão em vez de reintroduzi-lo', () => {
-    const transform = buttonSourceCom({ label: undefined, ariaLabel: 'Baixar', size: 'icon' });
+    const transform = buttonSourceWith({ label: undefined, ariaLabel: 'Baixar', size: 'icon' });
     const código = transform('', {});
     expect(código).not.toContain("label: 'Salvar'");
     expect(código).toContain("'aria-label': 'Baixar'");
@@ -157,7 +157,7 @@ describe('buttonSourceCom', () => {
 
 describe('buttonParDeAcoesSnippet', () => {
   it('mostra os dois botões e o contêiner que fixa a ordem', () => {
-    const código = buttonParDeAcoesSnippet();
+    const código = actionsSnippetButtonPair();
     expect(código).toContain("variant: 'outline', label: 'Cancelar'");
     expect(código).toContain("createButton({ label: 'Confirmar' })");
     expect(código).toContain("acoes.className = 'nds-cluster';");
@@ -169,7 +169,7 @@ describe('buttonParDeAcoesSnippet', () => {
 
 describe('buttonComoLinkSnippet', () => {
   it('empresta a aparência sem trocar a semântica', () => {
-    const código = buttonComoLinkSnippet();
+    const código = buttonAsLinkSnippet();
     expect(código).toContain("import { btnClass } from '@/components/ui/button';");
     expect(código).toContain("document.createElement('a')");
     expect(código).toContain("btnClass('link')");

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   alertDialogSnippet,
   alertDialogSource,
-  alertDialogSourceCom,
+  alertDialogSourceWith,
 } from './alert-dialog.source';
 
 describe('alertDialogSnippet', () => {
@@ -86,13 +86,13 @@ describe('alertDialogSnippet', () => {
 
 describe('alertDialogSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = alertDialogSource('<div data-slot="alert-dialog">', {});
-    const comArgs = alertDialogSource('<div data-slot="alert-dialog">', {
+    const noArgs = alertDialogSource('<div data-slot="alert-dialog">', {});
+    const withArgs = alertDialogSource('<div data-slot="alert-dialog">', {
       args: { defaultOpen: true, showMedia: true },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain('defaultOpen: true');
-    expect(comArgs).toContain('createAlertDialogMedia');
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain('defaultOpen: true');
+    expect(withArgs).toContain('createAlertDialogMedia');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -104,7 +104,7 @@ describe('alertDialogSource', () => {
 
 describe('alertDialogSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = alertDialogSourceCom({ defaultOpen: true, tone: 'default' });
+    const transform = alertDialogSourceWith({ defaultOpen: true, tone: 'default' });
     const código = transform('', { args: { defaultOpen: false, tone: 'destructive' } });
     expect(código).toContain('defaultOpen: true');
     expect(código).toContain("const actionButton = createButton({ variant: 'default'");

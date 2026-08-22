@@ -35,11 +35,11 @@ export type LabelSnippetOptions = {
   disabled?: boolean;
 };
 
-const TEXTO_PADRAO = 'Nome completo';
-const ID_PADRAO = 'campo';
+const TEXT_DEFAULT = 'Nome completo';
+const ID_DEFAULT = 'campo';
 
 /** Linhas de `createLabel`, com o canônico `class` no lugar do apelido. */
-function linhasDoRotulo(o: LabelSnippetOptions, id: string, conteudo?: string): string[] {
+function labelLines(o: LabelSnippetOptions, id: string, conteudo?: string): string[] {
   const classe = o.class ?? o.className;
   return opcoes([
     ['text', conteudo ? texto(conteudo) : undefined],
@@ -55,7 +55,7 @@ function linhasDoRotulo(o: LabelSnippetOptions, id: string, conteudo?: string): 
  * associação, e ela precisa dos dois lados para existir.
  */
 export function labelSnippet(o: LabelSnippetOptions = {}): string {
-  const id = o.htmlFor ?? ID_PADRAO;
+  const id = o.htmlFor ?? ID_DEFAULT;
   const campo = opcoes([
     ['id', texto(id)],
     ['type', o.type && o.type !== 'text' ? texto(o.type) : undefined],
@@ -66,7 +66,7 @@ export function labelSnippet(o: LabelSnippetOptions = {}): string {
 
   return snippet(
     [importar('label', 'createLabel'), importar('input', 'createInput')].join('\n'),
-    `const rotulo = ${chamada('createLabel', linhasDoRotulo(o, id, o.text ?? TEXTO_PADRAO))};`,
+    `const rotulo = ${chamada('createLabel', labelLines(o, id, o.text ?? TEXT_DEFAULT))};`,
     `const campo = ${chamada('createInput', campo)};`,
     // Com o controle desabilitado, a ORDEM importa: a folha casa no irmão
     // marcado com `nds-peer`, e é o controle que carrega a marca.
@@ -87,7 +87,7 @@ export function labelObrigatorioSnippet(o: LabelSnippetOptions = {}): string {
 
   return snippet(
     [importar('label', 'createLabel'), importar('input', 'createInput')].join('\n'),
-    `const rotulo = ${chamada('createLabel', linhasDoRotulo(o, id))};
+    `const rotulo = ${chamada('createLabel', labelLines(o, id))};
 
 const marcador = document.createElement('span');
 marcador.className = 'nds-text-destructive';
@@ -113,7 +113,7 @@ campo.setAttribute('aria-required', 'true');`,
  * `data-disabled="true"` no ancestral: a folha esmaece o rótulo por herança, e
  * quem consome não precisa marcar cada peça uma a uma.
  */
-export function labelBlocoDesabilitadoSnippet(o: LabelSnippetOptions = {}): string {
+export function labelBlockDisabledSnippet(o: LabelSnippetOptions = {}): string {
   const id = o.htmlFor ?? 'documento';
 
   return snippet(
@@ -123,7 +123,7 @@ bloco.className = 'nds-stack';
 bloco.dataset.spacing = 'xs';
 bloco.dataset.disabled = 'true';`,
     `bloco.append(
-  ${chamada('createLabel', linhasDoRotulo(o, id, o.text ?? 'Documento'))},
+  ${chamada('createLabel', labelLines(o, id, o.text ?? 'Documento'))},
   ${chamada(
     'createInput',
     opcoes([
@@ -144,7 +144,7 @@ bloco.dataset.disabled = 'true';`,
  * por isso a associação nativa basta — nem `aria-labelledby` de reserva, nem
  * ouvinte de clique reenviando o evento à mão.
  */
-export function labelComCaixaSnippet(o: LabelSnippetOptions = {}): string {
+export function labelWithBoxSnippet(o: LabelSnippetOptions = {}): string {
   const id = o.htmlFor ?? 'termos';
 
   return snippet(
@@ -152,7 +152,7 @@ export function labelComCaixaSnippet(o: LabelSnippetOptions = {}): string {
     `const caixa = ${chamada('createCheckbox', opcoes([['id', texto(id)]]))};`,
     `const rotulo = ${chamada(
       'createLabel',
-      linhasDoRotulo(o, id, o.text ?? 'Concordo com os termos de uso'),
+      labelLines(o, id, o.text ?? 'Concordo com os termos de uso'),
     )};`,
     montar('caixa, rotulo'),
   );
@@ -163,7 +163,7 @@ export const labelSource: SourceTransform<LabelSnippetOptions> = (_gerado, ctx) 
   labelSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function labelSourceCom(fixas: LabelSnippetOptions): SourceTransform<LabelSnippetOptions> {
+export function labelSourceWith(fixas: LabelSnippetOptions): SourceTransform<LabelSnippetOptions> {
   return (_gerado, ctx) => labelSnippet({ ...ctx.args, ...fixas });
 }
 
@@ -175,15 +175,15 @@ export function labelSourceObrigatorio(
 }
 
 /** Transform de story para o bloco inteiro desabilitado. */
-export function labelSourceBloco(
+export function labelSourceBlock(
   fixas: LabelSnippetOptions = {},
 ): SourceTransform<LabelSnippetOptions> {
-  return () => labelBlocoDesabilitadoSnippet(fixas);
+  return () => labelBlockDisabledSnippet(fixas);
 }
 
 /** Transform de story para o par com caixa de seleção. */
-export function labelSourceCaixa(
+export function labelSourceBox(
   fixas: LabelSnippetOptions = {},
 ): SourceTransform<LabelSnippetOptions> {
-  return () => labelComCaixaSnippet(fixas);
+  return () => labelWithBoxSnippet(fixas);
 }

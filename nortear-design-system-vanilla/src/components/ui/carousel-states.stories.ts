@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createCarousel } from './carousel';
 import { slidesDeExemplo } from './carousel.fixtures';
-import { carouselSource, carouselSourceCom } from './carousel.source';
+import { carouselSource, carouselSourceWith } from './carousel.source';
 
 // ─── Slide helpers ────────────────────────────────────────────────────────────
 
@@ -43,7 +43,7 @@ function montar(total: number, label: string): HTMLElement {
 export const FirstSlide: Story = {
   parameters: {
     covers: ['visual.item4'],
-    docs: { source: { transform: carouselSourceCom({ slides: 4, ariaLabel: 'Slides no primeiro item' }) } },
+    docs: { source: { transform: carouselSourceWith({ slides: 4, ariaLabel: 'Slides no primeiro item' }) } },
   },
   render: () => montar(4, 'Slides no primeiro item'),
   play: async ({ canvasElement, step }) => {
@@ -79,7 +79,7 @@ export const FirstSlide: Story = {
 export const LastSlide: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item4'],
-    docs: { source: { transform: carouselSourceCom({ slides: 3, ariaLabel: 'Slides no último item' }) } },
+    docs: { source: { transform: carouselSourceWith({ slides: 3, ariaLabel: 'Slides no último item' }) } },
   },
   render: () => montar(3, 'Slides no último item'),
   play: async ({ canvasElement, step }) => {

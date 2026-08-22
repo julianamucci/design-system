@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { fn, userEvent, within, expect } from 'storybook/test';
 import { createPagination } from './pagination';
-import { paginationComEstadoSource } from './pagination.source';
+import { paginationWithStateSource } from './pagination.source';
 import { createPaginationDocs } from '@/components/docs/PaginationDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -27,7 +27,7 @@ const meta: Meta<PaginationArgs> = {
     layout: 'padded',
     docs: {
       page: withAutoDocsTab(createPaginationDocs),
-      source: { transform: paginationComEstadoSource },
+      source: { transform: paginationWithStateSource },
     },
   },
   argTypes: {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { chartEmCardSnippet, chartSnippet, chartSource, chartSourceCom } from './chart.source';
+import { chartEmCardSnippet, chartSnippet, chartSource, chartSourceWith } from './chart.source';
 
 describe('chartSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
@@ -104,14 +104,14 @@ describe('chartSnippet', () => {
 
 describe('chartSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = chartSource('<div data-slot="chart">', {});
-    const comArgs = chartSource('<div data-slot="chart">', {
+    const noArgs = chartSource('<div data-slot="chart">', {});
+    const withArgs = chartSource('<div data-slot="chart">', {
       args: { type: 'pie', height: 280 },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(semArgs).toContain('height: 240');
-    expect(comArgs).toContain("type: 'pie'");
-    expect(comArgs).toContain('height: 280');
+    expect(noArgs).not.toBe(withArgs);
+    expect(noArgs).toContain('height: 240');
+    expect(withArgs).toContain("type: 'pie'");
+    expect(withArgs).toContain('height: 280');
   });
 
   it('preserva o que a playgroundSource local já fazia certo', () => {
@@ -137,7 +137,7 @@ describe('chartSource', () => {
 
 describe('chartSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = chartSourceCom({ type: 'line', dados: 'multi' });
+    const transform = chartSourceWith({ type: 'line', dados: 'multi' });
     const código = transform('', { args: { type: 'pie', height: 300 } });
     expect(código).toContain("type: 'line'");
     expect(código).toContain('series: acessosPorDispositivo');
@@ -145,7 +145,7 @@ describe('chartSourceCom', () => {
   });
 
   it("`'aria-label': undefined` apaga o padrão em vez de reintroduzi-lo", () => {
-    const código = chartSourceCom({ title: 'Vendas mensais', 'aria-label': undefined })('', {});
+    const código = chartSourceWith({ title: 'Vendas mensais', 'aria-label': undefined })('', {});
     expect(código).toContain("title: 'Vendas mensais'");
     // A OPÇÃO da chamada, não o `label` de cada ponto do dado: o `{ label: 'Jan',
     // value: 186 }` do bloco de dados é outra coisa, e proibir a palavra

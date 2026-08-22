@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
-import { dropdownMenuSource, dropdownMenuSourceCom } from './dropdown-menu.source';
-import { fecharNoFim, montar } from './dropdown-menu.fixtures';
+import { dropdownMenuSource, dropdownMenuSourceWith } from './dropdown-menu.source';
+import { endClose, montar } from './dropdown-menu.fixtures';
 
 const meta: Meta = {
   tags: ['overlay'],
@@ -29,7 +29,7 @@ type Story = StoryObj;
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /** As listas daqui são as mais longas do componente — a moldura acompanha. */
-const ALTURA_DA_MOLDURA = '220px';
+const FRAME_HEIGHT = '220px';
 
 // ─── Com Label ────────────────────────────────────────────────────────────────
 
@@ -40,7 +40,7 @@ export const WithLabel: Story = {
     // assunto — o snippet do meta traria um só.
     docs: {
       source: {
-        transform: dropdownMenuSourceCom({
+        transform: dropdownMenuSourceWith({
           triggerLabel: 'Conta',
           items: [
             { type: 'label', label: 'Conta' },
@@ -67,7 +67,7 @@ export const WithLabel: Story = {
         { type: 'item', label: 'Documentação', value: 'docs' },
         { type: 'item', label: 'Sair', value: 'logout' },
       ],
-      ALTURA_DA_MOLDURA,
+      FRAME_HEIGHT,
     ),
   play: async ({ step }) => {
     const menu = await within(document.body).findByRole('menu');
@@ -87,7 +87,7 @@ export const WithLabel: Story = {
     });
 
     await step('Limpa via ESC', async () => {
-      await fecharNoFim();
+      await endClose();
     });
   },
 };
@@ -101,7 +101,7 @@ export const WithCheckboxItems: Story = {
     // e o snippet do meta mostraria itens de ação simples.
     docs: {
       source: {
-        transform: dropdownMenuSourceCom({
+        transform: dropdownMenuSourceWith({
           triggerLabel: 'Colunas',
           items: [
             { type: 'label', label: 'Colunas visíveis' },
@@ -122,7 +122,7 @@ export const WithCheckboxItems: Story = {
         { type: 'checkbox', label: 'E-mail', value: 'email', checked: false },
         { type: 'checkbox', label: 'Função', value: 'funcao', checked: false },
       ],
-      ALTURA_DA_MOLDURA,
+      FRAME_HEIGHT,
     ),
   play: async ({ step }) => {
     const menu = await within(document.body).findByRole('menu');
@@ -160,7 +160,7 @@ export const WithCheckboxItems: Story = {
     });
 
     await step('Limpa via ESC', async () => {
-      await fecharNoFim();
+      await endClose();
     });
   },
 };
@@ -175,7 +175,7 @@ export const WithRadioGroup: Story = {
     // alternadores independentes.
     docs: {
       source: {
-        transform: dropdownMenuSourceCom({
+        transform: dropdownMenuSourceWith({
           triggerLabel: 'Tema',
           items: [
             { type: 'label', label: 'Aparência' },
@@ -196,7 +196,7 @@ export const WithRadioGroup: Story = {
         { type: 'radio', label: 'Escuro', value: 'dark', group: 'tema' },
         { type: 'radio', label: 'Sistema', value: 'system', group: 'tema' },
       ],
-      ALTURA_DA_MOLDURA,
+      FRAME_HEIGHT,
     ),
   play: async ({ step }) => {
     const menu = await within(document.body).findByRole('menu');
@@ -224,7 +224,7 @@ export const WithRadioGroup: Story = {
     });
 
     await step('Limpa via ESC', async () => {
-      await fecharNoFim();
+      await endClose();
     });
   },
 };
@@ -237,7 +237,7 @@ export const WithShortcuts: Story = {
     // acessível — o snippet do meta mostraria itens sem tecla nenhuma.
     docs: {
       source: {
-        transform: dropdownMenuSourceCom({
+        transform: dropdownMenuSourceWith({
           triggerLabel: 'Editar',
           items: [
             { label: 'Desfazer', value: 'undo', shortcut: 'Ctrl Z' },
@@ -258,7 +258,7 @@ export const WithShortcuts: Story = {
         { type: 'separator' },
         { type: 'item', label: 'Colar', value: 'paste', shortcut: 'Ctrl V' },
       ],
-      ALTURA_DA_MOLDURA,
+      FRAME_HEIGHT,
     ),
   play: async ({ step }) => {
     const menu = await within(document.body).findByRole('menu');
@@ -288,7 +288,7 @@ export const WithShortcuts: Story = {
     });
 
     await step('Limpa via ESC', async () => {
-      await fecharNoFim();
+      await endClose();
     });
   },
 };

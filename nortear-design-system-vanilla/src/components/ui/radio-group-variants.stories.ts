@@ -3,8 +3,8 @@ import { within, expect } from 'storybook/test';
 import { createRadioGroup } from './radio-group';
 import {
   radioGroupSource,
-  radioGroupSourceCom,
-  radioGroupSourceDescricao,
+  radioGroupSourceWith,
+  radioGroupSourceDescription,
 } from './radio-group.source';
 
 const meta: Meta = {
@@ -92,7 +92,7 @@ export const Horizontal: Story = {
     // empilhado, que é como o grupo já nasce.
     docs: {
       source: {
-        transform: radioGroupSourceCom({
+        transform: radioGroupSourceWith({
           name: 'delivery',
           legend: 'Forma de entrega',
           orientation: 'horizontal',
@@ -202,7 +202,7 @@ export const WithDescription: Story = {
     // que a acrescenta é outra FORMA de snippet.
     docs: {
       source: {
-        transform: radioGroupSourceDescricao(
+        transform: radioGroupSourceDescription(
           [
             {
               value: 'standard',

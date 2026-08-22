@@ -110,7 +110,7 @@ function cenario(): HTMLElement {
   return raiz;
 }
 
-const ALVOS: AlvoDeCor[] = [
+const TARGETS: AlvoDeCor[] = [
   { nome: 'input', seletor: 'input.nds-input:not(.nds-input-group-control)' },
   { nome: 'textarea', seletor: '.nds-textarea' },
   { nome: 'select (gatilho)', seletor: '.nds-select-trigger' },
@@ -127,13 +127,13 @@ const ALVOS: AlvoDeCor[] = [
  * `hsl(var(--border))` num campo, o valor volta a 1.25:1 e esta story fica
  * vermelha mesmo que o CSS continue "parecendo" certo.
  */
-export const RepousoAlcanca3a1: Story = {
+export const RestAlcanca3a1: Story = {
   render: cenario,
   play: async ({ canvasElement }) => {
     const raiz = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
-    const medidas = medirCorPorTema(raiz, ALVOS);
+    const medidas = medirCorPorTema(raiz, TARGETS);
 
-    await expect(medidas).toHaveLength(ALVOS.length * 6);
+    await expect(medidas).toHaveLength(TARGETS.length * 6);
 
     const ausentes = medidas.filter((m) => !m.presente || m.razao === null);
     await expect(ausentes.map(descreverMedida)).toEqual([]);
@@ -152,32 +152,32 @@ export const RepousoAlcanca3a1: Story = {
  * `hsl(var(--ring) / 0.4)` compunha em ~1.7:1 e passaria a APAGAR a borda no
  * hover, invertendo o sinal do estado.
  */
-export const HoverEFocoNaoFicamAbaixoDoRepouso: Story = {
+export const RestHoverEFocoNotFicamBelow: Story = {
   render: cenario,
   play: async ({ canvasElement }) => {
     const raiz = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
     const campo = raiz.querySelector<HTMLElement>('input.nds-input:not(.nds-input-group-control)')!;
     const doc = canvasElement.ownerDocument;
 
-    const corDeHover = declaracaoDaRegra(
+    const hoverColor = declaracaoDaRegra(
       doc,
       (sel) => sel.startsWith('.nds-input:hover'),
       'border-color',
     );
-    const corDeFoco = declaracaoDaRegra(
+    const focusColor = declaracaoDaRegra(
       doc,
       (sel) => sel.startsWith('.nds-input:focus-visible'),
       'border-color',
     );
-    await expect(corDeHover, 'regra de hover do .nds-input sumiu da folha').not.toBeNull();
-    await expect(corDeFoco, 'regra de foco do .nds-input sumiu da folha').not.toBeNull();
+    await expect(hoverColor, 'regra de hover do .nds-input sumiu da folha').not.toBeNull();
+    await expect(focusColor, 'regra de foco do .nds-input sumiu da folha').not.toBeNull();
 
     campo.style.transition = 'none';
     const problemas = porTema(raiz, (tema, modo) => {
       const fundo = getComputedStyle(campo).backgroundColor;
       const repouso = razao(getComputedStyle(campo).borderTopColor, fundo)?.razao ?? 0;
-      const hover = razao(resolverCor(raiz, corDeHover!) ?? fundo, fundo)?.razao ?? 0;
-      const foco = razao(resolverCor(raiz, corDeFoco!) ?? fundo, fundo)?.razao ?? 0;
+      const hover = razao(resolverCor(raiz, hoverColor!) ?? fundo, fundo)?.razao ?? 0;
+      const foco = razao(resolverCor(raiz, focusColor!) ?? fundo, fundo)?.razao ?? 0;
 
       const linha = `${tema}/${modo} repouso ${repouso}:1 · hover ${hover}:1 · foco ${foco}:1`;
       if (hover < repouso) return `hover ABAIXO do repouso — ${linha}`;

@@ -80,6 +80,6 @@ export const carouselSource: SourceTransform<CarouselSnippetOptions> = (_gerado,
   carouselSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function carouselSourceCom(fixas: CarouselSnippetOptions): SourceTransform<CarouselSnippetOptions> {
+export function carouselSourceWith(fixas: CarouselSnippetOptions): SourceTransform<CarouselSnippetOptions> {
   return (_gerado, ctx) => carouselSnippet({ ...ctx.args, ...fixas });
 }

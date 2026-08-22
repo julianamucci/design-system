@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { createCheckbox } from './checkbox';
 import {
-  checkboxComDescricaoSourceCom,
-  checkboxEmGrupoSourceCom,
+  checkboxWithDescriptionSourceWith,
+  groupSourceWithCheckbox,
   checkboxSelecionarTodosSource,
   checkboxSource,
 } from './checkbox.source';
@@ -99,7 +99,7 @@ export const WithDescription: Story = {
     docs: {
       // Override de story: o texto auxiliar é uma peça a mais, e o lugar dele —
       // fora do <label> — é justamente o que a story ensina.
-      source: { transform: checkboxComDescricaoSourceCom() },
+      source: { transform: checkboxWithDescriptionSourceWith() },
       description: {
         story: 'Checkbox + Label + texto auxiliar abaixo. Para contexto adicional sobre a opção selecionada.',
       },
@@ -157,7 +157,7 @@ export const InFieldsetGroup: Story = {
     docs: {
       // Override de story: são VÁRIAS caixas dentro de um fieldset nomeado, e o
       // snippet do meta mostraria uma só, solta.
-      source: { transform: checkboxEmGrupoSourceCom({ fieldset: true }) },
+      source: { transform: groupSourceWithCheckbox({ fieldset: true }) },
       description: {
         story: 'Grupo de checkboxes relacionados em `<fieldset>` + `<legend>`. Obrigatório para WCAG 1.3.1 (informação em estrutura).',
       },
@@ -396,7 +396,7 @@ export const InItemList: Story = {
       // Override de story: são quatro caixas em linhas com borda, e duas já
       // nascem marcadas — o snippet do meta mostraria uma só, sem borda.
       source: {
-        transform: checkboxEmGrupoSourceCom({
+        transform: groupSourceWithCheckbox({
           legenda: 'Preferências de contato',
           itens: [
             { id: 'pref-email', label: 'Receber novidades por email', checked: true },

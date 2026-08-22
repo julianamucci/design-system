@@ -3,7 +3,7 @@ import { within, expect, userEvent } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { createSheet } from './sheet';
 import { makeFooter } from './sheet.fixtures';
-import { sheetSource, sheetSourceCom } from './sheet.source';
+import { sheetSource, sheetSourceWith } from './sheet.source';
 import { createButton } from './button';
 import { createInput } from './input';
 import { createLabel } from './label';
@@ -53,7 +53,7 @@ export const AdvancedFilters: Story = {
     docs: {
       // O corpo é um formulário: `createFormField` é quem fecha o par rótulo ↔
       // controle, e é ele que a composição ensina.
-      source: { transform: sheetSourceCom({ corpo: 'formulario' }) },
+      source: { transform: sheetSourceWith({ corpo: 'formulario' }) },
       description: {
         story: 'Filtros avançados no painel direito — caso de uso canônico do Sheet em desktop.',
       },
@@ -92,7 +92,7 @@ export const SecondaryNavigation: Story = {
   parameters: {
     docs: {
       source: {
-        transform: sheetSourceCom({
+        transform: sheetSourceWith({
           side: 'left',
           corpo: 'navegacao',
           triggerLabel: 'Abrir menu',
@@ -145,7 +145,7 @@ export const MobileBottomPanel: Story = {
   parameters: {
     docs: {
       source: {
-        transform: sheetSourceCom({
+        transform: sheetSourceWith({
           side: 'bottom',
           corpo: 'acoes',
           triggerLabel: 'Mais opções',
@@ -197,7 +197,7 @@ export const WithLongScrollContent: Story = {
       // O corpo alto é o assunto: quem rola é `.nds-sheet-body`, e o rodapé fica
       // onde está sem nenhuma opção extra.
       source: {
-        transform: sheetSourceCom({
+        transform: sheetSourceWith({
           corpo: 'paragrafos',
           triggerLabel: 'Ler termos',
           title: 'Termos de uso',

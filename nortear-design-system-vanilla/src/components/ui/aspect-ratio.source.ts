@@ -11,11 +11,11 @@ import {
 } from '@/lib/story-source';
 
 /** O filho que a story coloca dentro da caixa. */
-export type AspectRatioConteudo = 'image' | 'iframe' | 'video' | 'none';
+export type AspectRatioContent = 'image' | 'iframe' | 'video' | 'none';
 
 export type AspectRatioSnippetOptions = {
   ratio?: number;
-  content?: AspectRatioConteudo;
+  content?: AspectRatioContent;
   imageUrl?: string;
   /**
    * Nome acessível do filho: `alt` na imagem, `title` no iframe, `aria-label` no
@@ -49,8 +49,8 @@ export function expressaoDeProporcao(ratio: number): string {
   return fracao ? fracao[1] : String(ratio);
 }
 
-const IMAGEM_PADRAO = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80';
-const ALT_PADRAO = 'Paisagem montanhosa ao entardecer';
+const IMAGE_DEFAULT = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80';
+const ALT_DEFAULT = 'Paisagem montanhosa ao entardecer';
 
 /**
  * O filho, montado com DOM cru curto.
@@ -59,8 +59,8 @@ const ALT_PADRAO = 'Paisagem montanhosa ao entardecer';
  * altura e posição saem da folha. O que sobra para quem consome é o recorte
  * (`object-fit`, que não tem utilitária) e o arredondamento, por classe.
  */
-function blocoDoConteudo(o: AspectRatioSnippetOptions): { nome: string; codigo: string } | null {
-  const alt = o.alt ?? ALT_PADRAO;
+function contentBlock(o: AspectRatioSnippetOptions): { nome: string; codigo: string } | null {
+  const alt = o.alt ?? ALT_DEFAULT;
 
   if (o.content === 'iframe') {
     return {
@@ -78,7 +78,7 @@ mapa.className = 'nds-rounded-md';`,
       nome: 'video',
       codigo: `const video = document.createElement('video');
 video.controls = true;
-video.poster = ${texto(o.imageUrl ?? IMAGEM_PADRAO)};
+video.poster = ${texto(o.imageUrl ?? IMAGE_DEFAULT)};
 video.setAttribute('aria-label', ${texto(alt)});
 video.className = 'nds-rounded-md';
 video.style.objectFit = 'cover';
@@ -98,7 +98,7 @@ video.appendChild(legenda);`,
   return {
     nome: 'imagem',
     codigo: `const imagem = document.createElement('img');
-imagem.src = ${texto(o.imageUrl ?? IMAGEM_PADRAO)};
+imagem.src = ${texto(o.imageUrl ?? IMAGE_DEFAULT)};
 imagem.alt = ${texto(alt)};
 imagem.loading = 'lazy';
 imagem.className = 'nds-rounded-md';
@@ -109,7 +109,7 @@ imagem.style.objectFit = 'cover';`,
 /** A chamada real de `createAspectRatio` com o filho que a story mostra. */
 export function aspectRatioSnippet(o: AspectRatioSnippetOptions = {}): string {
   const ratio = o.ratio ?? 16 / 9;
-  const conteudo = blocoDoConteudo(o);
+  const conteudo = contentBlock(o);
 
   const linhas = opcoes([
     // `1` é o padrão da fábrica (quadrado): só a proporção diferente entra.
@@ -134,7 +134,7 @@ export const aspectRatioSource: SourceTransform<AspectRatioSnippetOptions> = (_g
   aspectRatioSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function aspectRatioSourceCom(
+export function aspectRatioSourceWith(
   fixas: AspectRatioSnippetOptions,
 ): SourceTransform<AspectRatioSnippetOptions> {
   return (_gerado, ctx) => aspectRatioSnippet({ ...ctx.args, ...fixas });

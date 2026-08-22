@@ -4,9 +4,9 @@ import { createSkeleton } from './skeleton';
 import { regiaoDeCarregamento } from './skeleton.fixtures';
 import {
   skeletonSource,
-  skeletonSourceCom,
-  skeletonSourceEmProporcao,
-  skeletonSourceLista,
+  skeletonSourceWith,
+  ratioSkeletonSource,
+  skeletonSourceList,
   skeletonSourcePerfil,
 } from './skeleton.source';
 import { createAspectRatio } from './aspect-ratio';
@@ -97,7 +97,7 @@ export const ListWithAvatar: Story = {
     covers: ['visual.item4'],
     docs: {
       // A região é a LISTA inteira: uma por item repetiria o aviso cinco vezes.
-      source: { transform: skeletonSourceLista() },
+      source: { transform: skeletonSourceList() },
       description: {
         story: 'Cinco itens com avatar pequeno e duas linhas — padrão de carregamento de lista.',
       },
@@ -157,7 +157,7 @@ export const ImageInAspectRatio: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
-      source: { transform: skeletonSourceEmProporcao() },
+      source: { transform: ratioSkeletonSource() },
       description: {
         story:
           'Placeholder de imagem dentro de uma proporção 16/9 — quem define a caixa é o container.',
@@ -197,7 +197,7 @@ export const Paragraph: Story = {
   parameters: {
     docs: {
       source: {
-        transform: skeletonSourceCom({
+        transform: skeletonSourceWith({
           regionLabel: 'Carregando parágrafo',
           linhas: [
             { shape: 'text', width: 'full' },

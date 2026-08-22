@@ -3,8 +3,8 @@ import { within, expect } from 'storybook/test';
 import { createSwitch } from './switch';
 import {
   switchSource,
-  switchSourceFormulario,
-  switchSourcePainel,
+  switchSourceForm,
+  switchSourcePanel,
 } from './switch.source';
 import { createButton } from './button';
 import { definir } from './switch.fixtures';
@@ -108,7 +108,7 @@ export const WithDescription: Story = {
   parameters: {
     docs: {
       source: {
-        transform: switchSourcePainel([
+        transform: switchSourcePanel([
           {
             id: 'emails-marketing',
             label: 'Emails de marketing',
@@ -183,7 +183,7 @@ export const SettingsList: Story = {
   parameters: {
     docs: {
       source: {
-        transform: switchSourcePainel([
+        transform: switchSourcePanel([
           { id: 'pref-email', label: 'Receber novidades por email', description: 'Resumo semanal sobre o produto.', checked: true },
           { id: 'pref-push', label: 'Receber notificações push', description: 'Alertas no dispositivo em tempo real.' },
           { id: 'pref-sms', label: 'Alertas por SMS', description: 'Eventos críticos via mensagem de texto.' },
@@ -208,9 +208,9 @@ export const SettingsList: Story = {
     await step('Alternar um item não arrasta os vizinhos', async () => {
       const push = canvas.getByRole('switch', { name: /Receber notificações push/i });
       const email = canvas.getByRole('switch', { name: /Receber novidades por email/i });
-      const antesEmail = email.getAttribute('aria-checked');
+      const beforeEmail = email.getAttribute('aria-checked');
       await definir(push, true);
-      await expect(email.getAttribute('aria-checked')).toBe(antesEmail);
+      await expect(email.getAttribute('aria-checked')).toBe(beforeEmail);
       await definir(push, false);
     });
   },
@@ -252,7 +252,7 @@ export const InFormWithHidden: Story = {
     docs: {
       // A fábrica não emite campo oculto: o formulário inteiro é o assunto.
       source: {
-        transform: switchSourceFormulario({
+        transform: switchSourceForm({
           id: 'newsletter',
           name: 'newsletter',
           label: 'Aceitar newsletter semanal',

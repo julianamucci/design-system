@@ -6,9 +6,9 @@ import {
   progressOcupadoSnippet,
   progressSnippet,
   progressSource,
-  progressSourceCom,
+  progressSourceWith,
   progressSourceLista,
-  progressSourceRotulo,
+  progressSourceLabel,
 } from './progress.source';
 
 describe('progressSnippet', () => {
@@ -119,13 +119,13 @@ describe('progressOcupadoSnippet', () => {
 
 describe('progressSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = progressSource('<div data-slot="progress">', {});
-    const comArgs = progressSource('<div data-slot="progress">', {
+    const noArgs = progressSource('<div data-slot="progress">', {});
+    const withArgs = progressSource('<div data-slot="progress">', {
       args: { value: 75, 'aria-label': 'Carregando dados' },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain('value: 75');
-    expect(comArgs).toContain("'aria-label': 'Carregando dados'");
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain('value: 75');
+    expect(withArgs).toContain("'aria-label': 'Carregando dados'");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -137,7 +137,7 @@ describe('progressSource', () => {
 
 describe('progressSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = progressSourceCom({ value: null });
+    const transform = progressSourceWith({ value: null });
     const código = transform('', { args: { value: 42 } });
     expect(código).toContain('value: null');
     expect(código).not.toContain('value: 42');
@@ -146,7 +146,7 @@ describe('progressSourceCom', () => {
 
 describe('as transforms das formas alternativas', () => {
   it('entregam a forma que a story pede', () => {
-    expect(progressSourceRotulo({ value: 48 })('', {})).toContain("aria-live', 'polite'");
+    expect(progressSourceLabel({ value: 48 })('', {})).toContain("aria-live', 'polite'");
     expect(
       progressSourceLista([{ value: 10, 'aria-label': 'Uma barra' }])('', {}),
     ).toContain("'aria-label': 'Uma barra'");

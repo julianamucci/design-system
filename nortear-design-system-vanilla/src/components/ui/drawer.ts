@@ -232,7 +232,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
    * nem se anuncia motivo, porque não houve motivo nenhum: a gaveta não foi
    * fechada, ela deixou de existir.
    */
-  function desmontarPainel(): void {
+  function desmontarPanel(): void {
     overlayEl?.remove();
     panelEl?.remove();
     overlayEl = null;
@@ -244,7 +244,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
   function closeWithReason(reason: DrawerCloseReason): void {
     if (!isOpen()) return;
 
-    desmontarPainel();
+    desmontarPanel();
     previousFocus?.focus();
     onClose?.(reason);
     onOpenChange?.(false);
@@ -309,7 +309,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
     }),
     () => {
       const estavaAberta = isOpen();
-      desmontarPainel();
+      desmontarPanel();
       if (estavaAberta) onOpenChange?.(false);
     },
   );

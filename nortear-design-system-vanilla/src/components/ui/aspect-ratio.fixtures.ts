@@ -26,7 +26,7 @@
  * Um `string` aceitava as duas coisas. Este tipo só aceita a que funciona, e o
  * erro passa a ser de compilação em vez de pixel.
  */
-export type MedidaCSS = `${number}rem` | `${number}px` | `${number}%` | `${number}ch`;
+export type MeasurementCSS = `${number}rem` | `${number}px` | `${number}%` | `${number}ch`;
 
 /**
  * Embrulho que limita a largura da demonstração.
@@ -34,7 +34,7 @@ export type MedidaCSS = `${number}rem` | `${number}px` | `${number}%` | `${numbe
  * A caixa cresce com o container, então sem um teto a proporção 21/9 ocuparia
  * a viewport inteira e a captura visual não caberia na página.
  */
-export function boxed(el: HTMLElement, maxWidth: MedidaCSS = '36rem'): HTMLElement {
+export function boxed(el: HTMLElement, maxWidth: MeasurementCSS = '36rem'): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-w-full';
   wrap.style.maxWidth = maxWidth;

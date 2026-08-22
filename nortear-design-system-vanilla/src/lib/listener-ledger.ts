@@ -37,7 +37,7 @@ type Entrada = {
   embrulho?: EventListener;
 };
 
-export type OuvinteVivo = { alvo: Alvo; type: string; origem: string };
+export type ListenerVivo = { alvo: Alvo; type: string; origem: string };
 
 /**
  * Arquivo:linha de quem chamou `addEventListener`.
@@ -45,7 +45,7 @@ export type OuvinteVivo = { alvo: Alvo; type: string; origem: string };
  * Sem isto, "sobrou um `document:keydown`" manda quem lê para uma caçada em
  * catorze fábricas. O quadro é o primeiro fora deste arquivo.
  */
-function origemDaChamada(): string {
+function callOrigem(): string {
   const pilha = new Error().stack ?? '';
   for (const linha of pilha.split('\n').slice(1)) {
     if (linha.includes('listener-ledger')) continue;
@@ -55,9 +55,9 @@ function origemDaChamada(): string {
   return 'desconhecido';
 }
 
-export type EspiaoDeOuvintes = {
+export type OuvintesSpy = {
   /** Ouvintes registrados durante a espionagem e ainda não removidos. */
-  vivos: () => OuvinteVivo[];
+  vivos: () => ListenerVivo[];
   /** Devolve `addEventListener` / `removeEventListener` ao original. */
   parar: () => void;
 };
@@ -66,7 +66,7 @@ function capturaDe(opts?: boolean | AddEventListenerOptions | EventListenerOptio
   return typeof opts === 'boolean' ? opts : Boolean(opts?.capture);
 }
 
-export function espiarOuvintes(): EspiaoDeOuvintes {
+export function espiarOuvintes(): OuvintesSpy {
   const entradas: Entrada[] = [];
   const restauradores: Array<() => void> = [];
 
@@ -91,7 +91,7 @@ export function espiarOuvintes(): EspiaoDeOuvintes {
 
         const umaVez = typeof opts === 'object' && opts !== null && Boolean(opts.once);
         if (!umaVez) {
-          entradas.push({ alvo: nome, type, fn, capture, origem: origemDaChamada() });
+          entradas.push({ alvo: nome, type, fn, capture, origem: callOrigem() });
           return addOriginal(type, fn as EventListener, opts);
         }
 
@@ -102,7 +102,7 @@ export function espiarOuvintes(): EspiaoDeOuvintes {
           baixar(type, fn, capture);
           (fn as EventListener).call(obj, evento);
         };
-        entradas.push({ alvo: nome, type, fn, capture, embrulho, origem: origemDaChamada() });
+        entradas.push({ alvo: nome, type, fn, capture, embrulho, origem: callOrigem() });
         return addOriginal(type, embrulho, opts);
       },
     });
@@ -137,7 +137,7 @@ export function espiarOuvintes(): EspiaoDeOuvintes {
  * Descrição legível do livro, para a mensagem de falha dizer O QUE sobrou em vez
  * de só "esperava 0, veio 2".
  */
-export function descreverVivos(vivos: OuvinteVivo[]): string {
+export function describeVivos(vivos: ListenerVivo[]): string {
   if (vivos.length === 0) return 'nenhum';
   return vivos.map((v) => `${v.alvo}:${v.type}@${v.origem}`).join(', ');
 }

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createCarousel } from './carousel';
 import { slidesDeExemplo } from './carousel.fixtures';
-import { carouselSource, carouselSourceCom } from './carousel.source';
+import { carouselSource, carouselSourceWith } from './carousel.source';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 
 // ─── Slide helpers ────────────────────────────────────────────────────────────
@@ -56,7 +56,7 @@ function baseDoSlide(canvasElement: HTMLElement, slide: HTMLElement): number {
 export const Single: Story = {
   parameters: {
     covers: ['visual.item3'],
-    docs: { source: { transform: carouselSourceCom({ slides: 4, ariaLabel: 'Um item por vez' }) } },
+    docs: { source: { transform: carouselSourceWith({ slides: 4, ariaLabel: 'Um item por vez' }) } },
   },
   render: () => {
     const wrap = document.createElement('div');
@@ -82,13 +82,13 @@ export const Single: Story = {
 // ─── Conjunto longo ───────────────────────────────────────────────────────────
 
 /** Ver a nota em carousel-estados: o motor move o trilho, não o `scrollLeft`. */
-function visivelNoRecorte(slide: Element, recorte: Element): boolean {
+function clipVisible(slide: Element, recorte: Element): boolean {
   const s = slide.getBoundingClientRect();
   const v = recorte.getBoundingClientRect();
   return s.right > v.left + 1 && s.left < v.right - 1 && s.bottom > v.top + 1 && s.top < v.bottom - 1;
 }
 
-function recorteDe(canvasElement: HTMLElement): HTMLElement {
+function clipOf(canvasElement: HTMLElement): HTMLElement {
   return canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
 }
 
@@ -168,7 +168,7 @@ export const MultiResponsive: Story = {
     // quem consome pendura a classe.
     docs: {
       source: {
-        transform: carouselSourceCom({
+        transform: carouselSourceWith({
           slides: 6,
           ariaLabel: 'Conjunto longo de slides',
           slideClass: 'nds-md-basis-half nds-lg-basis-third',
@@ -194,7 +194,7 @@ export const MultiResponsive: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const recorte = recorteDe(canvasElement);
+    const recorte = clipOf(canvasElement);
     // A classe é responsiva por definição: afirmar "um terço" sem consultar a
     // media query amarraria o teste à largura do runner, que nenhum
     // `parameters.viewport` controla aqui.
@@ -211,7 +211,7 @@ export const MultiResponsive: Story = {
     await step('Vários slides ficam enquadrados ao mesmo tempo', async () => {
       const slides = canvas.getAllByRole('group');
       await expect(slides.length).toBe(6);
-      const visiveis = slides.filter((s) => visivelNoRecorte(s, recorte)).length;
+      const visiveis = slides.filter((s) => clipVisible(s, recorte)).length;
       await expect(visiveis).toBe(porTela);
     });
 
@@ -249,7 +249,7 @@ export const Autoplay: Story = {
     covers: ['functional.item7', 'visual.item3'],
     docs: {
       source: {
-        transform: carouselSourceCom({
+        transform: carouselSourceWith({
           slides: 4,
           ariaLabel: 'Destaques',
           autoplay: true,
@@ -278,7 +278,7 @@ export const Autoplay: Story = {
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    const recorte = recorteDe(canvasElement);
+    const recorte = clipOf(canvasElement);
 
     await step('O carrossel avança sozinho', async () => {
       await waitFor(
@@ -332,7 +332,7 @@ export const Autoplay: Story = {
 export const DragGesture: Story = {
   parameters: {
     covers: ['functional.item9'],
-    docs: { source: { transform: carouselSourceCom({ slides: 4, ariaLabel: 'Galeria com gesto de arrastar' }) } },
+    docs: { source: { transform: carouselSourceWith({ slides: 4, ariaLabel: 'Galeria com gesto de arrastar' }) } },
   },
   render: () => {
     const wrap = document.createElement('div');
@@ -344,7 +344,7 @@ export const DragGesture: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const recorte = recorteDe(canvasElement);
+    const recorte = clipOf(canvasElement);
     const track = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
     const anterior = () => canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
     const proximo = () => canvas.getByRole('button', { name: 'Próximo item' });

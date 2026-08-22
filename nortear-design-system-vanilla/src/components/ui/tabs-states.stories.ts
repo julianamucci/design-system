@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createTabs, type TabsItemDef } from './tabs';
 import { ativar, makePanel } from './tabs.fixtures';
-import { tabsSource, tabsSourceCom } from './tabs.source';
+import { tabsSource, tabsSourceWith } from './tabs.source';
 
 const meta: Meta = {
   tags: ['navigation'],
@@ -35,7 +35,7 @@ function withDisabled(): TabsItemDef[] {
   ];
 }
 
-const ROTULO_LISTA = 'Seções do componente';
+const LABEL_LIST = 'Seções do componente';
 
 /** O nome da lista de abas vem da opção da factory, não de um retoque no DOM. */
 function grupo(defaultValue: string, items: TabsItemDef[]): HTMLElement {
@@ -43,7 +43,7 @@ function grupo(defaultValue: string, items: TabsItemDef[]): HTMLElement {
     defaultValue,
     class: 'nds-w-md',
     items,
-    'aria-label': ROTULO_LISTA,
+    'aria-label': LABEL_LIST,
   });
 }
 
@@ -77,7 +77,7 @@ export const Active: Story = {
   render: () => grupo('properties', baseItems()),
   parameters: {
     docs: {
-      source: { transform: tabsSourceCom({ defaultValue: 'properties' }) },
+      source: { transform: tabsSourceWith({ defaultValue: 'properties' }) },
       description: { story: 'Aba ativa escolhida na montagem. O painel visível é o dela, e a seleção não depende de clique.' },
     },
   },
@@ -137,7 +137,7 @@ export const Disabled: Story = {
       // A aba bloqueada é o assunto: sem o override o snippet mostraria três
       // abas iguais.
       source: {
-        transform: tabsSourceCom({
+        transform: tabsSourceWith({
           itens: [
             { value: 'overview', label: 'Visão geral', content: 'Conteúdo ativo.' },
             { value: 'properties', label: 'Propriedades', content: 'Conteúdo bloqueado.', disabled: true },

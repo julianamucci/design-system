@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  skeletonEmProporcaoSnippet,
-  skeletonListaSnippet,
+  ratioSnippetSkeleton,
+  skeletonListSnippet,
   skeletonPerfilSnippet,
   skeletonSnippet,
   skeletonSource,
-  skeletonSourceCom,
+  skeletonSourceWith,
 } from './skeleton.source';
 
 describe('skeletonSnippet', () => {
@@ -89,7 +89,7 @@ describe('skeletonSource', () => {
 
 describe('skeletonSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = skeletonSourceCom({ shape: 'avatar' })('', { args: { shape: 'text' } });
+    const código = skeletonSourceWith({ shape: 'avatar' })('', { args: { shape: 'text' } });
     expect(código).toContain("shape: 'avatar'");
     expect(código).not.toContain("shape: 'text'");
   });
@@ -107,7 +107,7 @@ describe('skeletonPerfilSnippet', () => {
 
 describe('skeletonListaSnippet', () => {
   it('faz da lista inteira UMA região ocupada', () => {
-    const código = skeletonListaSnippet();
+    const código = skeletonListSnippet();
     expect(código).toContain("lista.setAttribute('aria-busy', 'true');");
     expect(código).toContain("lista.setAttribute('aria-label', 'Carregando lista de pedidos');");
     expect(código).toContain("createSkeleton({ shape: 'avatar', size: 'sm' })");
@@ -117,7 +117,7 @@ describe('skeletonListaSnippet', () => {
 
 describe('skeletonEmProporcaoSnippet', () => {
   it('deixa a caixa por conta do container da proporção', () => {
-    const código = skeletonEmProporcaoSnippet();
+    const código = ratioSnippetSkeleton();
     expect(código).toContain("import { createAspectRatio } from '@/components/ui/aspect-ratio';");
     expect(código).toContain('ratio: 16 / 9');
     expect(código).toContain("content: createSkeleton({ shape: 'fill' })");

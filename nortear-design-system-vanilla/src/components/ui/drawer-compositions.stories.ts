@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createDrawer } from './drawer';
-import { drawerComFormularioSource, drawerSource, drawerSourceCom } from './drawer.source';
+import { drawerComFormularioSource, drawerSource, drawerSourceWith } from './drawer.source';
 import { createButton } from './button';
-import { abrirPeloGatilho } from './drawer.fixtures';
+import { openPeloTrigger } from './drawer.fixtures';
 
 const meta: Meta = {
   tags: ['disclosure'],
@@ -120,7 +120,7 @@ export const WithForm: Story = {
     return buildWrapper(drawer);
   },
   play: async ({ canvasElement, step }) => {
-    const painel = await abrirPeloGatilho(canvasElement, /editar perfil/i);
+    const painel = await openPeloTrigger(canvasElement, /editar perfil/i);
     const dentro = within(painel);
 
     await step('O painel carrega nome, descrição e os campos do formulário', async () => {
@@ -149,7 +149,7 @@ export const WithConfirmation: Story = {
     // variante destrutiva.
     docs: {
       source: {
-        transform: drawerSourceCom({
+        transform: drawerSourceWith({
           triggerLabel: 'Remover anexo',
           title: 'Remover anexo?',
           description: 'O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.',
@@ -183,7 +183,7 @@ export const WithConfirmation: Story = {
     return buildWrapper(drawer);
   },
   play: async ({ canvasElement, step }) => {
-    const painel = await abrirPeloGatilho(canvasElement, /remover anexo/i);
+    const painel = await openPeloTrigger(canvasElement, /remover anexo/i);
     const dentro = within(painel);
 
     await step('A consequência está escrita, não subentendida', async () => {
@@ -231,7 +231,7 @@ export const WithScroll: Story = {
     return buildWrapper(drawer);
   },
   play: async ({ canvasElement, step }) => {
-    const painel = await abrirPeloGatilho(canvasElement, /ler termos/i);
+    const painel = await openPeloTrigger(canvasElement, /ler termos/i);
     const corpo = painel.querySelector<HTMLElement>('[data-slot="drawer-body"]')!;
     const rodape = painel.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
 

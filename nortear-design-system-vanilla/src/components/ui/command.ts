@@ -204,7 +204,7 @@ export function createCommand(options: CommandOptions): HTMLElement {
   /** Um item já filtrado, com o bloco a que ele pertence. */
   type ItemFiltrado = { item: CommandItem; bloco: number };
   /** O que vira uma caixa `.nds-command-group` na tela. */
-  type GrupoRenderizado = { titulo: string; itens: CommandItem[] };
+  type GroupRenderizado = { titulo: string; itens: CommandItem[] };
 
   /**
    * Junta os itens em grupos, na ordem em que eles aparecem na tela.
@@ -218,21 +218,21 @@ export function createCommand(options: CommandOptions): HTMLElement {
    * nome do grupo é texto de quem consome, e qualquer junta que se escolhesse
    * seria um caractere que alguém um dia pode digitar.
    */
-  function agrupar(filtrados: ItemFiltrado[]): GrupoRenderizado[] {
-    const porBloco = new Map<number, Map<string, GrupoRenderizado>>();
-    const ordem: GrupoRenderizado[] = [];
+  function agrupar(filtrados: ItemFiltrado[]): GroupRenderizado[] {
+    const byBlock = new Map<number, Map<string, GroupRenderizado>>();
+    const ordem: GroupRenderizado[] = [];
 
     for (const { item, bloco } of filtrados) {
-      let doBloco = porBloco.get(bloco);
-      if (!doBloco) {
-        doBloco = new Map<string, GrupoRenderizado>();
-        porBloco.set(bloco, doBloco);
+      let ofBlock = byBlock.get(bloco);
+      if (!ofBlock) {
+        ofBlock = new Map<string, GroupRenderizado>();
+        byBlock.set(bloco, ofBlock);
       }
       const titulo = item.group ?? '';
-      let grupo = doBloco.get(titulo);
+      let grupo = ofBlock.get(titulo);
       if (!grupo) {
         grupo = { titulo, itens: [] };
-        doBloco.set(titulo, grupo);
+        ofBlock.set(titulo, grupo);
         ordem.push(grupo);
       }
       grupo.itens.push(item);
@@ -248,7 +248,7 @@ export function createCommand(options: CommandOptions): HTMLElement {
    * é filho permitido pela ARIA (só `option` e `group` são), e o que separa os
    * blocos para quem não vê a tela é o rótulo de cada grupo, não o traço.
    */
-  function criarSeparador(): HTMLElement {
+  function createSeparator(): HTMLElement {
     const sep = document.createElement('div');
     sep.className = 'nds-command-separator';
     sep.dataset.slot = 'command-separator';
@@ -291,10 +291,10 @@ export function createCommand(options: CommandOptions): HTMLElement {
 
     const grupos = agrupar(filtrados);
     let primeiro = true;
-    let indiceDoGrupo = 0;
+    let groupIndex = 0;
 
     grupos.forEach(({ titulo: nomeDoGrupo, itens: itensDoGrupo }) => {
-      if (!primeiro) list.appendChild(criarSeparador());
+      if (!primeiro) list.appendChild(createSeparator());
       primeiro = false;
 
       const groupEl = document.createElement('div');
@@ -304,7 +304,7 @@ export function createCommand(options: CommandOptions): HTMLElement {
       if (nomeDoGrupo) {
         const heading = document.createElement('div');
         heading.className = 'nds-command-group-heading';
-        heading.id = `${_cmdId}-group-${indiceDoGrupo}`;
+        heading.id = `${_cmdId}-group-${groupIndex}`;
         heading.textContent = nomeDoGrupo;
         groupEl.appendChild(heading);
         // O grupo é nomeado pelo próprio cabeçalho — e o cabeçalho não vira
@@ -321,7 +321,7 @@ export function createCommand(options: CommandOptions): HTMLElement {
       }
 
       list.appendChild(groupEl);
-      indiceDoGrupo += 1;
+      groupIndex += 1;
     });
   }
 

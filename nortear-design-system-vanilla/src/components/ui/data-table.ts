@@ -486,23 +486,23 @@ export function createDataTable<TData extends RowData>(
     sortDescFirst: false,
     columnResizeMode: 'onChange',
     onSortingChange: (u: Updater<SortingState>) => { sorting = resolveUpdater(sorting, u); sync(); rerender(); },
-    onColumnFiltersChange: (u: Updater<ColumnFiltersState>) => { columnFilters = resolveUpdater(columnFilters, u); sync(); rerenderSemCabecalho(); },
+    onColumnFiltersChange: (u: Updater<ColumnFiltersState>) => { columnFilters = resolveUpdater(columnFilters, u); sync(); rerenderNoHeader(); },
     onColumnVisibilityChange: (u: Updater<ColumnVisibilityState>) => { columnVisibility = resolveUpdater(columnVisibility, u); sync(); rerender(); },
     onRowSelectionChange: (u: Updater<RowSelectionState>) => { rowSelection = resolveUpdater(rowSelection, u); sync(); rerender(); },
-    onGlobalFilterChange: (u: Updater<string>) => { globalFilter = resolveUpdater(globalFilter, u); sync(); rerenderSemCabecalho(); },
+    onGlobalFilterChange: (u: Updater<string>) => { globalFilter = resolveUpdater(globalFilter, u); sync(); rerenderNoHeader(); },
     onColumnOrderChange: (u: Updater<ColumnOrderState>) => { columnOrder = resolveUpdater(columnOrder, u); sync(); rerender(); },
     onColumnPinningChange: (u: Updater<ColumnPinningState>) => { columnPinning = resolveUpdater(columnPinning, u); sync(); rerender(); },
     // Redimensionar NÃO reconstrói a grade: a alça que está sendo arrastada é
     // filha do `th`, e reconstruir o cabeçalho a cada pixel destruía o elemento
     // sob o cursor — o arrasto parava no primeiro movimento. Só as larguras
     // mudam, e é só elas que este caminho escreve.
-    onColumnSizingChange: (u: Updater<ColumnSizingState>) => { columnSizing = resolveUpdater(columnSizing, u); sync(); atualizarLarguras(); },
+    onColumnSizingChange: (u: Updater<ColumnSizingState>) => { columnSizing = resolveUpdater(columnSizing, u); sync(); updateLarguras(); },
     onColumnResizingChange: (u: Updater<columnResizingState>) => { columnResizing = resolveUpdater(columnResizing, u); sync(); },
     // Trocar de página também NÃO reconstrói o cabeçalho. E não é só economia:
     // filtrar zera a página automaticamente (`autoResetPageIndex`), então cada
     // tecla digitada num filtro por coluna passava por aqui e reconstruía o
     // `thead` — o campo com foco saía do DOM e a segunda letra caía fora dele.
-    onPaginationChange: (u: Updater<{ pageIndex: number; pageSize: number }>) => { pagination = resolveUpdater(pagination, u); sync(); rerenderSemCabecalho(); },
+    onPaginationChange: (u: Updater<{ pageIndex: number; pageSize: number }>) => { pagination = resolveUpdater(pagination, u); sync(); rerenderNoHeader(); },
     meta: {
       updateData: onCellEdit,
     },
@@ -517,7 +517,7 @@ export function createDataTable<TData extends RowData>(
    * dele. Aqui ela existe sempre que a paginação está registrada; o padrão é a
    * rede que a assinatura pede, não um caso esperado.
    */
-  function paginacaoAtual() {
+  function paginationCurrent() {
     return table.atoms.pagination?.get() ?? pagination;
   }
 
@@ -575,13 +575,13 @@ export function createDataTable<TData extends RowData>(
   }
 
   /** Campos de filtro por coluna, criados uma vez e reaproveitados. */
-  const controlesDeFiltro = new Map<string, HTMLInputElement | HTMLSelectElement>();
+  const filterControls = new Map<string, HTMLInputElement | HTMLSelectElement>();
 
   /**
    * Só as larguras, sem reconstruir a grade. É o caminho do redimensionamento,
    * que roda a cada pixel do arrasto.
    */
-  function atualizarLarguras(): void {
+  function updateLarguras(): void {
     if (!enableColumnResizing) return;
     const colunas = table.getVisibleLeafColumns();
     const aplicar = (celulas: ArrayLike<HTMLElement>) => {
@@ -590,8 +590,8 @@ export function createDataTable<TData extends RowData>(
         if (col) celulas[i].style.width = `${col.getSize()}px`;
       }
     };
-    const primeiraLinha = thead.querySelector('tr');
-    if (primeiraLinha) aplicar(primeiraLinha.querySelectorAll<HTMLElement>('th'));
+    const firstLine = thead.querySelector('tr');
+    if (firstLine) aplicar(firstLine.querySelectorAll<HTMLElement>('th'));
     for (const tr of tbody.querySelectorAll('tr')) {
       aplicar(tr.querySelectorAll<HTMLElement>('td'));
     }
@@ -614,7 +614,7 @@ export function createDataTable<TData extends RowData>(
   // depende do estado da tabela — o menu de colunas se reconstrói ao abrir.
   let toolbarMontada = false;
   /** Solta o ouvinte de clique fora do menu de colunas do render anterior. */
-  let soltarCliqueForaDoMenu: (() => void) | null = null;
+  let menuSoltarClickOutside: (() => void) | null = null;
 
   function renderToolbar() {
     if (toolbarMontada) return;
@@ -730,16 +730,16 @@ export function createDataTable<TData extends RowData>(
        *
        * Agora a barra solta o ouvinte anterior antes de pendurar o seu.
        */
-      soltarCliqueForaDoMenu?.();
-      const fecharMenuDeColunas = (e: MouseEvent): void => {
+      menuSoltarClickOutside?.();
+      const columnsCloseMenu = (e: MouseEvent): void => {
         if (!menu.contains(e.target as Node) && e.target !== visBtn) {
           menu.hidden = true;
         }
       };
-      document.addEventListener('click', fecharMenuDeColunas);
-      soltarCliqueForaDoMenu = () => {
-        document.removeEventListener('click', fecharMenuDeColunas);
-        soltarCliqueForaDoMenu = null;
+      document.addEventListener('click', columnsCloseMenu);
+      menuSoltarClickOutside = () => {
+        document.removeEventListener('click', columnsCloseMenu);
+        menuSoltarClickOutside = null;
       };
 
       const wrap = document.createElement('div');
@@ -888,7 +888,7 @@ export function createDataTable<TData extends RowData>(
           // O controle é criado UMA vez por coluna e reaproveitado a cada
           // render. Recriá-lo trocava o nó com foco a cada tecla: só a primeira
           // letra entrava no filtro e o resto caía fora do campo.
-          let controle = controlesDeFiltro.get(col.id);
+          let controle = filterControls.get(col.id);
           if (!controle) {
             if (meta.type === 'select') {
               const select = document.createElement('select');
@@ -919,7 +919,7 @@ export function createDataTable<TData extends RowData>(
               });
               controle = input;
             }
-            controlesDeFiltro.set(col.id, controle);
+            filterControls.set(col.id, controle);
           }
           // Só sincroniza quando o campo NÃO está com o foco: escrever nele
           // durante a digitação moveria o cursor.
@@ -1129,7 +1129,7 @@ export function createDataTable<TData extends RowData>(
     }
     pagFooter.style.display = '';
 
-    const pageIndex = paginacaoAtual().pageIndex;
+    const pageIndex = paginationCurrent().pageIndex;
     const pageCount = table.getPageCount();
     const totalRows = table.getFilteredRowModel().rows.length;
     const selected = table.getFilteredSelectedRowModel().rows.length;
@@ -1155,7 +1155,7 @@ export function createDataTable<TData extends RowData>(
       const o = document.createElement('option');
       o.value = String(opt);
       o.textContent = String(opt);
-      if (opt === paginacaoAtual().pageSize) o.selected = true;
+      if (opt === paginationCurrent().pageSize) o.selected = true;
       psSelect.appendChild(o);
     }
     psSelect.addEventListener('change', () => {
@@ -1203,13 +1203,13 @@ export function createDataTable<TData extends RowData>(
   // Filtrar NÃO reconstrói o cabeçalho: tirar do DOM o campo que está com o
   // foco o desfoca, e da segunda letra em diante a digitação caía fora do
   // campo. Só o corpo, o rodapé e a contagem mudam quando o recorte muda.
-  function rerenderSemCabecalho() {
+  function rerenderNoHeader() {
     rerenderBody();
     renderPagination();
-    atualizarRegiaoViva();
+    updateRegiaoViva();
   }
 
-  function atualizarRegiaoViva() {
+  function updateRegiaoViva() {
     if (!enableRowSelection) return;
     regiaoViva.textContent = L.rowsSelected(
       table.getFilteredSelectedRowModel().rows.length,
@@ -1252,6 +1252,6 @@ export function createDataTable<TData extends RowData>(
   (root as HTMLElement & { __table?: TanstackTable<DataTableFeatures, TData> }).__table = table;
 
   return tornarDestruivel(root, root, () => {
-    soltarCliqueForaDoMenu?.();
+    menuSoltarClickOutside?.();
   });
 }

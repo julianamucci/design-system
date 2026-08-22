@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  drawerComFormularioSnippet,
+  drawerWithFormSnippet,
   drawerSnippet,
   drawerSource,
-  drawerSourceCom,
+  drawerSourceWith,
 } from './drawer.source';
 
 describe('drawerSnippet', () => {
@@ -86,13 +86,13 @@ describe('drawerSnippet', () => {
 
 describe('drawerSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = drawerSource('<div data-slot="drawer-content">', {});
-    const comArgs = drawerSource('<div data-slot="drawer-content">', {
+    const noArgs = drawerSource('<div data-slot="drawer-content">', {});
+    const withArgs = drawerSource('<div data-slot="drawer-content">', {
       args: { direction: 'left', triggerLabel: 'Abrir menu' },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("direction: 'left'");
-    expect(comArgs).toContain("label: 'Abrir menu'");
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("direction: 'left'");
+    expect(withArgs).toContain("label: 'Abrir menu'");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -104,7 +104,7 @@ describe('drawerSource', () => {
 
 describe('drawerSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = drawerSourceCom({ direction: 'top', dismissible: false });
+    const transform = drawerSourceWith({ direction: 'top', dismissible: false });
     const código = transform('', { args: { direction: 'left' } });
     expect(código).toContain("direction: 'top'");
     expect(código).toContain('dismissible: false');
@@ -113,7 +113,7 @@ describe('drawerSourceCom', () => {
 
 describe('drawerComFormularioSnippet', () => {
   it('constrói o corpo com a fábrica de campo, e não com rótulo e controle soltos', () => {
-    const código = drawerComFormularioSnippet({
+    const código = drawerWithFormSnippet({
       campos: [{ label: 'E-mail', type: 'email', value: 'maria@exemplo.com' }],
     });
     expect(código).toContain("import { createFormField } from '@/components/ui/form';");
@@ -123,6 +123,6 @@ describe('drawerComFormularioSnippet', () => {
   });
 
   it('mantém o fechador do rodapé, que a gaveta precisa para fechar por dentro', () => {
-    expect(drawerComFormularioSnippet()).toContain("acao1.dataset.slot = 'drawer-close';");
+    expect(drawerWithFormSnippet()).toContain("acao1.dataset.slot = 'drawer-close';");
   });
 });

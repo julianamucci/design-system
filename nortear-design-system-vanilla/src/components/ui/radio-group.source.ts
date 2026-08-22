@@ -38,16 +38,16 @@ export type RadioGroupSnippetOptions = {
 /** O control do Playground chama a legenda de `groupLabel`. */
 type RadioGroupArgsDaStory = RadioGroupSnippetOptions & { groupLabel?: string };
 
-const CALLBACK_PADRAO = '(value) => registrar(value)';
+const CALLBACK_DEFAULT = '(value) => registrar(value)';
 
-const ITENS_PADRAO: RadioGroupSnippetItem[] = [
+const ITEMS_DEFAULT: RadioGroupSnippetItem[] = [
   { value: 'card', label: 'Cartão de crédito' },
   { value: 'pix', label: 'Pix' },
   { value: 'boleto', label: 'Boleto bancário' },
 ];
 
 /** `items: [ … ]`, um item por linha, já recuado para dentro da chamada. */
-function blocoItens(itens: RadioGroupSnippetItem[]): string {
+function blockItems(itens: RadioGroupSnippetItem[]): string {
   const linhas = itens.map((item) => {
     const pares = opcoes([
       ['value', texto(item.value)],
@@ -65,7 +65,7 @@ function blocoItens(itens: RadioGroupSnippetItem[]): string {
  * A legenda visível ganha do rótulo invisível quando as duas são passadas: dois
  * nomes concorrentes no mesmo elemento é o defeito, não a solução.
  */
-function linhasDoNome(o: RadioGroupSnippetOptions): Array<[string, string | undefined]> {
+function nameLines(o: RadioGroupSnippetOptions): Array<[string, string | undefined]> {
   if (!o.legend && o['aria-label']) {
     return [['aria-label', texto(o['aria-label'])]];
   }
@@ -73,16 +73,16 @@ function linhasDoNome(o: RadioGroupSnippetOptions): Array<[string, string | unde
 }
 
 /** As opções da fábrica. Só o que difere do padrão entra. */
-function linhasDoGrupo(o: RadioGroupSnippetOptions): string[] {
+function groupLines(o: RadioGroupSnippetOptions): string[] {
   return opcoes([
     ['name', texto(o.name ?? 'payment')],
-    ...linhasDoNome(o),
+    ...nameLines(o),
     ['defaultValue', o.defaultValue ? texto(o.defaultValue) : undefined],
     // Vertical é como o grupo já nasce: só a linha entra no snippet.
     ['orientation', o.orientation === 'horizontal' ? texto('horizontal') : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
-    ['items', blocoItens(o.items ?? ITENS_PADRAO)],
-    ['onValueChange', o.onValueChange === false ? undefined : (o.onValueChange ?? CALLBACK_PADRAO)],
+    ['items', blockItems(o.items ?? ITEMS_DEFAULT)],
+    ['onValueChange', o.onValueChange === false ? undefined : (o.onValueChange ?? CALLBACK_DEFAULT)],
   ]);
 }
 
@@ -90,7 +90,7 @@ function linhasDoGrupo(o: RadioGroupSnippetOptions): string[] {
 export function radioGroupSnippet(o: RadioGroupSnippetOptions = {}): string {
   return snippet(
     importar('radio-group', 'createRadioGroup'),
-    `const grupo = ${chamada('createRadioGroup', linhasDoGrupo(o))};`,
+    `const grupo = ${chamada('createRadioGroup', groupLines(o))};`,
     montar('grupo'),
   );
 }
@@ -102,7 +102,7 @@ export const radioGroupSource: SourceTransform<RadioGroupArgsDaStory> = (_gerado
 };
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function radioGroupSourceCom(
+export function radioGroupSourceWith(
   fixas: RadioGroupSnippetOptions,
 ): SourceTransform<RadioGroupArgsDaStory> {
   return (_gerado, ctx) => {
@@ -118,7 +118,7 @@ export function radioGroupSourceCom(
  * parágrafo e o amarra ao controle por `aria-describedby`. Sem esse vínculo o
  * texto fica solto ao lado, e quem usa leitor de tela nunca o ouve.
  */
-export function radioGroupComDescricaoSnippet(
+export function radioGroupWithDescriptionSnippet(
   itens: Array<RadioGroupSnippetItem & { description: string }>,
   o: RadioGroupSnippetOptions = {},
 ): string {
@@ -141,7 +141,7 @@ ${dados}
         ['name', texto(nome)],
         ['legend', texto(o.legend ?? 'Forma de entrega')],
         ['items', 'escolhas.map(({ value, label }) => ({ value, label }))'],
-        ['onValueChange', o.onValueChange === false ? undefined : (o.onValueChange ?? CALLBACK_PADRAO)],
+        ['onValueChange', o.onValueChange === false ? undefined : (o.onValueChange ?? CALLBACK_DEFAULT)],
       ]),
     )};`,
     `// A fábrica não tem campo de descrição: o parágrafo entra na linha do item e
@@ -168,11 +168,11 @@ grupo.querySelectorAll('.nds-radio-row').forEach((linha, i) => {
 }
 
 /** Transform de story para o grupo com descrição por item. */
-export function radioGroupSourceDescricao(
+export function radioGroupSourceDescription(
   itens: Array<RadioGroupSnippetItem & { description: string }>,
   o: RadioGroupSnippetOptions = {},
 ): SourceTransform<RadioGroupArgsDaStory> {
-  return () => radioGroupComDescricaoSnippet(itens, o);
+  return () => radioGroupWithDescriptionSnippet(itens, o);
 }
 
 /**
@@ -187,7 +187,7 @@ export function radioGroupInvalidoSnippet(o: RadioGroupSnippetOptions = {}): str
 
   return snippet(
     importar('radio-group', 'createRadioGroup'),
-    `const grupo = ${chamada('createRadioGroup', linhasDoGrupo({ ...o, name: nome }))};
+    `const grupo = ${chamada('createRadioGroup', groupLines({ ...o, name: nome }))};
 
 grupo.setAttribute('aria-invalid', 'true');
 grupo.setAttribute('aria-describedby', '${nome}-erro');
@@ -217,11 +217,11 @@ export function radioGroupSourceInvalido(
  * Cada item leva um `<input type="radio">` nativo com o `name` do grupo: é ele
  * que faz a escolha aparecer no `FormData` do submit, sem código de leitura.
  */
-export function radioGroupEmFormularioSnippet(o: RadioGroupSnippetOptions = {}): string {
+export function formSnippetRadioGroup(o: RadioGroupSnippetOptions = {}): string {
   const nome = o.name ?? 'payment';
   // Dentro do formulário quem recolhe a escolha é o submit, não um callback por
   // clique — a linha do `onValueChange` sairia sobrando no snippet.
-  const grupo = chamada('createRadioGroup', linhasDoGrupo({ ...o, name: nome, onValueChange: false }))
+  const grupo = chamada('createRadioGroup', groupLines({ ...o, name: nome, onValueChange: false }))
     .split('\n')
     .map((linha, i) => (i === 0 ? linha : `  ${linha}`))
     .join('\n');
@@ -247,8 +247,8 @@ formulario.addEventListener('submit', (e) => {
 }
 
 /** Transform de story para o grupo dentro de um formulário. */
-export function radioGroupSourceFormulario(
+export function radioGroupSourceForm(
   fixas: RadioGroupSnippetOptions = {},
 ): SourceTransform<RadioGroupArgsDaStory> {
-  return () => radioGroupEmFormularioSnippet(fixas);
+  return () => formSnippetRadioGroup(fixas);
 }

@@ -251,16 +251,16 @@ export function createChart(opts: ChartOptions = {}): HTMLElement {
     // volta a mais. Com a troca de tema — que repinta cada gráfico da tela — o
     // laço deixava de fechar, e a suíte de estados passava de dez minutos sem
     // terminar.
-    let ultimaLargura = -1;
-    let ultimaAltura = -1;
+    let lastWidth = -1;
+    let lastHeight = -1;
     const ro = new ResizeObserver((entradas) => {
       const caixa = entradas[0]?.contentRect;
       if (!caixa) return;
       const largura = Math.round(caixa.width);
       const altura = Math.round(caixa.height);
-      if (largura === ultimaLargura && altura === ultimaAltura) return;
-      ultimaLargura = largura;
-      ultimaAltura = altura;
+      if (largura === lastWidth && altura === lastHeight) return;
+      lastWidth = largura;
+      lastHeight = altura;
       chart.resize();
     });
     ro.observe(el);

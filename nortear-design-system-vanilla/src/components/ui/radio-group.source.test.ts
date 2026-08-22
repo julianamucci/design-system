@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
-  radioGroupComDescricaoSnippet,
-  radioGroupEmFormularioSnippet,
+  radioGroupWithDescriptionSnippet,
+  formSnippetRadioGroup,
   radioGroupInvalidoSnippet,
   radioGroupSnippet,
   radioGroupSource,
-  radioGroupSourceCom,
-  radioGroupSourceDescricao,
-  radioGroupSourceFormulario,
+  radioGroupSourceWith,
+  radioGroupSourceDescription,
+  radioGroupSourceForm,
   radioGroupSourceInvalido,
 } from './radio-group.source';
 
@@ -34,12 +34,12 @@ describe('radioGroupSnippet', () => {
     expect(código).not.toContain('legend:');
     expect(código).not.toContain('ariaLabel');
 
-    const comAsDuas = radioGroupSnippet({
+    const withAsDuas = radioGroupSnippet({
       legend: 'Forma de pagamento',
       'aria-label': 'Forma de pagamento',
     });
-    expect(comAsDuas).toContain('legend:');
-    expect(comAsDuas).not.toContain("'aria-label'");
+    expect(withAsDuas).toContain('legend:');
+    expect(withAsDuas).not.toContain("'aria-label'");
   });
 
   it('omite o que já é padrão da fábrica', () => {
@@ -76,7 +76,7 @@ describe('radioGroupSnippet', () => {
 
 describe('radioGroupComDescricaoSnippet', () => {
   it('amarra a descrição ao controle, que é o que a fábrica não faz', () => {
-    const código = radioGroupComDescricaoSnippet(
+    const código = radioGroupWithDescriptionSnippet(
       [{ value: 'standard', label: 'Padrão', description: 'Entrega em 5 dias úteis.' }],
       { name: 'delivery', legend: 'Forma de entrega' },
     );
@@ -101,7 +101,7 @@ describe('radioGroupInvalidoSnippet', () => {
 
 describe('radioGroupEmFormularioSnippet', () => {
   it('recolhe a escolha pelo FormData do submit, não por um callback por clique', () => {
-    const código = radioGroupEmFormularioSnippet({ name: 'payment' });
+    const código = formSnippetRadioGroup({ name: 'payment' });
     expect(código).toContain('new FormData(formulario)');
     expect(código).toContain("get('payment')");
     expect(código).toContain("type: 'submit'");
@@ -111,13 +111,13 @@ describe('radioGroupEmFormularioSnippet', () => {
 
 describe('radioGroupSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const semArgs = radioGroupSource('<fieldset data-slot="radio-group">', {});
-    const comArgs = radioGroupSource('<fieldset data-slot="radio-group">', {
+    const noArgs = radioGroupSource('<fieldset data-slot="radio-group">', {});
+    const withArgs = radioGroupSource('<fieldset data-slot="radio-group">', {
       args: { name: 'entrega', orientation: 'horizontal' },
     });
-    expect(semArgs).not.toBe(comArgs);
-    expect(comArgs).toContain("name: 'entrega'");
-    expect(comArgs).toContain("orientation: 'horizontal'");
+    expect(noArgs).not.toBe(withArgs);
+    expect(withArgs).toContain("name: 'entrega'");
+    expect(withArgs).toContain("orientation: 'horizontal'");
   });
 
   it('traduz o nome do control para o da opção da fábrica', () => {
@@ -136,7 +136,7 @@ describe('radioGroupSource', () => {
 
 describe('radioGroupSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = radioGroupSourceCom({ disabled: true });
+    const transform = radioGroupSourceWith({ disabled: true });
     const código = transform('', { args: { disabled: false, name: 'payment' } });
     expect(código).toContain('disabled: true');
   });
@@ -145,9 +145,9 @@ describe('radioGroupSourceCom', () => {
 describe('as transforms das formas alternativas', () => {
   it('entregam a forma que a story pede', () => {
     expect(
-      radioGroupSourceDescricao([{ value: 'a', label: 'A', description: 'Texto auxiliar.' }])('', {}),
+      radioGroupSourceDescription([{ value: 'a', label: 'A', description: 'Texto auxiliar.' }])('', {}),
     ).toContain('aria-describedby');
     expect(radioGroupSourceInvalido()('', {})).toContain("setAttribute('aria-invalid', 'true')");
-    expect(radioGroupSourceFormulario()('', {})).toContain('new FormData(formulario)');
+    expect(radioGroupSourceForm()('', {})).toContain('new FormData(formulario)');
   });
 });

@@ -60,7 +60,7 @@ const CLASSES_BOTAO =
  * classes — e o fato de o gatilho continuar sendo um alvo de verdade, com
  * destino no clique ou com nome no rótulo.
  */
-function blocoDoGatilho(o: HoverCardSnippetOptions): string {
+function triggerBlock(o: HoverCardSnippetOptions): string {
   const rotulo = texto(o.triggerLabel ?? '@joana');
   const rotuloAcessivel =
     o.triggerAriaLabel !== undefined
@@ -85,7 +85,7 @@ gatilho.textContent = ${rotulo};${rotuloAcessivel}`;
 }
 
 /** Conteúdo do painel: uma linha em destaque e uma de apoio. */
-function blocoDoConteudo(o: HoverCardSnippetOptions): string {
+function contentBlock(o: HoverCardSnippetOptions): string {
   return `const conteudo = document.createElement('div');
 conteudo.className = 'nds-stack';
 conteudo.dataset.spacing = 'xs';
@@ -101,7 +101,7 @@ apoio.textContent = ${texto(o.contentApoio ?? 'Designer · 142 seguidores')};
 conteudo.append(titulo, apoio);`;
 }
 
-function linhasDaChamada(o: HoverCardSnippetOptions): string[] {
+function callLines(o: HoverCardSnippetOptions): string[] {
   return opcoes([
     ['trigger', 'gatilho'],
     ['content', 'conteudo'],
@@ -125,7 +125,7 @@ function linhasDaChamada(o: HoverCardSnippetOptions): string[] {
  * da WCAG 2.5.8 porque está dentro de um bloco de texto. Um gatilho solto seria
  * violação.
  */
-function blocoDaFrase(o: HoverCardSnippetOptions): string {
+function fraseBlock(o: HoverCardSnippetOptions): string {
   const antes = texto(`${o.fraseAntes ?? 'Comentário de'} `);
   const depois = texto(` ${o.fraseDepois ?? 'há 2 horas.'}`);
   return `// O gatilho mora DENTRO de uma frase: é o uso real, e é o cerco de texto que
@@ -139,10 +139,10 @@ frase.append(${antes}, cartao, ${depois});`;
 export function hoverCardSnippet(o: HoverCardSnippetOptions = {}): string {
   return snippet(
     importar('hover-card', 'createHoverCard'),
-    blocoDoGatilho(o),
-    blocoDoConteudo(o),
-    `const cartao = ${chamada('createHoverCard', linhasDaChamada(o))};`,
-    blocoDaFrase(o),
+    triggerBlock(o),
+    contentBlock(o),
+    `const cartao = ${chamada('createHoverCard', callLines(o))};`,
+    fraseBlock(o),
     montar('frase'),
   );
 }
@@ -156,7 +156,7 @@ export const hoverCardSource: SourceTransform<HoverCardSnippetOptions> = (_gerad
   hoverCardSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
-export function hoverCardSourceCom(
+export function hoverCardSourceWith(
   fixas: HoverCardSnippetOptions,
 ): SourceTransform<HoverCardSnippetOptions> {
   return (_gerado, ctx) => hoverCardSnippet({ ...ctx.args, ...fixas });
@@ -164,9 +164,9 @@ export function hoverCardSourceCom(
 
 // ─── Segunda forma: comandado por fora ───────────────────────────────────────
 
-export type HoverCardComComandosSnippetOptions = HoverCardSnippetOptions & {
-  abrirLabel?: string;
-  fecharLabel?: string;
+export type HoverCardWithComandosSnippetOptions = HoverCardSnippetOptions & {
+  openLabel?: string;
+  closeLabel?: string;
 };
 
 /**
@@ -177,29 +177,29 @@ export type HoverCardComComandosSnippetOptions = HoverCardSnippetOptions & {
  * chama `open()`/`close()` no elemento e recebe cada mudança de volta pelo
  * callback. Um snippet só com a chamada esconderia os dois comandos.
  */
-export function hoverCardComComandosSnippet(o: HoverCardComComandosSnippetOptions = {}): string {
-  const abrirLabel = texto(o.abrirLabel ?? 'Abrir pelo estado externo');
-  const fecharLabel = texto(o.fecharLabel ?? 'Fechar pelo estado externo');
+export function hoverCardWithComandosSnippet(o: HoverCardWithComandosSnippetOptions = {}): string {
+  const openLabel = texto(o.openLabel ?? 'Abrir pelo estado externo');
+  const closeLabel = texto(o.closeLabel ?? 'Fechar pelo estado externo');
 
   return snippet(
     [importar('hover-card', 'createHoverCard'), importar('button', 'createButton')].join('\n'),
-    blocoDoGatilho(o),
-    blocoDoConteudo(o),
-    `const cartao = ${chamada('createHoverCard', linhasDaChamada(o))};`,
+    triggerBlock(o),
+    contentBlock(o),
+    `const cartao = ${chamada('createHoverCard', callLines(o))};`,
     `// Nomes próprios, e não os do gatilho: dois controles com o mesmo nome
 // acessível são ambíguos em leitor de tela.
-const abrir = createButton({ variant: 'outline', size: 'sm', label: ${abrirLabel} });
-const fechar = createButton({ variant: 'outline', size: 'sm', label: ${fecharLabel} });
+const abrir = createButton({ variant: 'outline', size: 'sm', label: ${openLabel} });
+const fechar = createButton({ variant: 'outline', size: 'sm', label: ${closeLabel} });
 abrir.addEventListener('click', () => cartao.open());
 fechar.addEventListener('click', () => cartao.close());`,
-    blocoDaFrase(o),
+    fraseBlock(o),
     montar('abrir, fechar, frase'),
   );
 }
 
 /** Transform de story para a forma comandada por fora. */
-export function hoverCardComComandosSource(
-  fixas: HoverCardComComandosSnippetOptions,
-): SourceTransform<HoverCardComComandosSnippetOptions> {
-  return (_gerado, ctx) => hoverCardComComandosSnippet({ ...ctx.args, ...fixas });
+export function hoverCardWithComandosSource(
+  fixas: HoverCardWithComandosSnippetOptions,
+): SourceTransform<HoverCardWithComandosSnippetOptions> {
+  return (_gerado, ctx) => hoverCardWithComandosSnippet({ ...ctx.args, ...fixas });
 }

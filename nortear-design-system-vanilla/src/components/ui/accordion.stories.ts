@@ -2,7 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { createAccordion, type AccordionOptions } from './accordion';
-import { accordionSource, accordionSourceCom } from './accordion.source';
+import { accordionSource, accordionSourceWith } from './accordion.source';
 import { createAccordionDocs } from '@/components/docs/AccordionDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -97,7 +97,7 @@ export const Playground: Story = {
     ],
     docs: {
       source: {
-        transform: accordionSourceCom({
+        transform: accordionSourceWith({
           defaultValue: ['item-1'],
           class: 'nds-max-w-lg',
           items: DEMO_ITEMS,

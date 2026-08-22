@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createPopover } from './popover';
 import { abrir, empilharCentrado, painel } from './popover.fixtures';
-import { popoverSource, popoverSourceAcoes, popoverSourceCom } from './popover.source';
+import { popoverSource, popoverSourceActions, popoverSourceWith } from './popover.source';
 import { createButton } from './button';
-import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
+import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
 const meta: Meta = {
   tags: ['overlay'],
@@ -115,7 +115,7 @@ export const SideTop: Story = {
     // Override de story: o lado é o assunto, e `side` não passa por control
     // neste arquivo.
     docs: {
-      source: { transform: popoverSourceCom({ side: 'top', triggerLabel: 'Abrir acima' }) },
+      source: { transform: popoverSourceWith({ side: 'top', triggerLabel: 'Abrir acima' }) },
     },
   },
   render: () => {
@@ -146,9 +146,9 @@ export const SideTop: Story = {
     await step('E continua alinhado ao gatilho no outro eixo', async () => {
       const rg = gatilho.getBoundingClientRect();
       const rp = painel()!.getBoundingClientRect();
-      const centroGatilho = rg.left + rg.width / 2;
-      const centroPainel = rp.left + rp.width / 2;
-      await expect(Math.abs(centroGatilho - centroPainel)).toBeLessThanOrEqual(2);
+      const centerTrigger = rg.left + rg.width / 2;
+      const centerPanel = rp.left + rp.width / 2;
+      await expect(Math.abs(centerTrigger - centerPanel)).toBeLessThanOrEqual(2);
     });
   },
 };
@@ -159,7 +159,7 @@ export const Controlled: Story = {
     // Override de story: quem observa o estado por fora é `onOpenChange`, e é
     // essa linha que o snippet do meta não teria como adivinhar.
     docs: {
-      source: { transform: popoverSourceCom({ onOpenChange: '(aberto) => mostrarEstado(aberto)' }) },
+      source: { transform: popoverSourceWith({ onOpenChange: '(aberto) => mostrarEstado(aberto)' }) },
     },
   },
   render: () => {
@@ -227,7 +227,7 @@ export const Focused: Story = {
     covers: ['functional.item4', 'accessibility.item3'],
     // Override de story: o assunto é o foco entrar no primeiro focável, e o
     // snippet do meta mostra um painel só de texto, sem nenhum.
-    docs: { source: { transform: popoverSourceAcoes({ title: 'Confirmar alteração' }) } },
+    docs: { source: { transform: popoverSourceActions({ title: 'Confirmar alteração' }) } },
   },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Abrir popover' });
@@ -312,7 +312,7 @@ export const ListenerCleanup: Story = {
     // justamente o que o snippet do meta não mostra.
     docs: {
       source: {
-        transform: popoverSourceCom({
+        transform: popoverSourceWith({
           triggerLabel: 'Abrir',
           text: 'Conteúdo do popover.',
           destroy: true,
@@ -320,14 +320,14 @@ export const ListenerCleanup: Story = {
       },
     },
   },
-  render: () => hospedeiroDeSonda(
+  render: () => probeHost(
     'Sonda de limpeza: o popover é montado, aberto e removido da página pela play.',
   ),
   play: async ({ canvasElement, step }) => {
     const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
     await expect(host).not.toBeNull();
 
-    let sonda!: ResultadoDaSonda;
+    let sonda!: ProbeResult;
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       sonda = await sondarOuvintes({
@@ -346,7 +346,7 @@ export const ListenerCleanup: Story = {
     });
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
-      await conferirLimpeza(sonda);
+      await checkLimpeza(sonda);
     });
   },
 };
