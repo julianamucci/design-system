@@ -68,7 +68,7 @@ function indentar(markup: string, nivel: number): string {
     .join('\n');
 }
 
-const COMPOSICOES: Record<DropdownMenuVariant, Composicao> = {
+const COMPOSITIONS: Record<DropdownMenuVariant, Composicao> = {
   default: {
     nomes: ['DropdownMenuGroup', 'DropdownMenuItem'],
     markup: `<DropdownMenuGroup>
@@ -214,10 +214,10 @@ export function dropdownMenuSource(
     variant = 'default',
   } = ctx?.args ?? {};
 
-  const composicao = COMPOSICOES[variant] ?? COMPOSICOES.default;
+  const composicao = COMPOSITIONS[variant] ?? COMPOSITIONS.default;
   const aberto = open ?? defaultOpen;
 
-  const propsDoConteudo = attrs(
+  const contentProps = attrs(
     side === 'bottom' ? '' : `side="${side}"`,
     align === 'start' ? '' : `align="${align}"`,
     sideOffset === 4 ? '' : `sideOffset={${sideOffset}}`,
@@ -236,7 +236,7 @@ export function dropdownMenuSource(
       <Button variant="outline" {...props}>${triggerLabel}</Button>
     {/snippet}
   </DropdownMenuTrigger>
-  <DropdownMenuContent${propsDoConteudo}>
+  <DropdownMenuContent${contentProps}>
 ${indentar(composicao.markup, 4)}
   </DropdownMenuContent>
 </DropdownMenu>`,

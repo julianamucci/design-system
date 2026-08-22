@@ -4,7 +4,7 @@
 	import TooltipPortal from "./tooltip-portal.svelte";
 	import type { ComponentProps } from "svelte";
 	import type { WithoutChildrenOrChild } from "@/lib/utils.js";
-	import { usarDescricao } from "./tooltip-descricao.svelte";
+	import { usarDescription } from "./tooltip-descricao.svelte";
 
 	let {
 		ref = $bindable(null),
@@ -21,7 +21,7 @@
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof TooltipPortal>>;
 	} = $props();
 
-	const descricao = usarDescricao();
+	const descricao = usarDescription();
 
 	// Carimbado no nó, e não passado por prop: `PopperLayer` e `PopperLayerInner`
 	// tiram `id` das props antes de chegarem ao elemento, então um `id` por prop

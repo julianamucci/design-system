@@ -9,7 +9,7 @@ import {
   checkboxEmFormularioSource,
   checkboxManterSessaoSource,
   checkboxSelecionarTodosSource,
-  checkboxSemRotuloSource,
+  checkboxNoLabelSource,
   checkboxSource,
 } from './checkbox.source';
 
@@ -38,7 +38,7 @@ type Story = StoryObj;
 
 export const Default: Story = {
   parameters: {
-    docs: { source: { transform: checkboxSemRotuloSource } },
+    docs: { source: { transform: checkboxNoLabelSource } },
   },
   render: () => ({
     Component: CheckboxStory,

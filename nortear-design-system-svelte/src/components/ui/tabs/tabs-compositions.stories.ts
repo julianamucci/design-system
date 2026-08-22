@@ -4,9 +4,9 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TabsStory from './TabsStory.svelte';
 import {
   tabsAtivacaoManualSource,
-  tabsConfiguracoesSource,
-  tabsNavegacaoVerticalSource,
-  tabsPreviewCodigoSource,
+  tabsConfigSource,
+  tabsNavigationVerticalSource,
+  tabsPreviewCodeSource,
   tabsSource,
 } from './tabs.source';
 
@@ -62,7 +62,7 @@ export const SettingsPanel: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: tabsConfiguracoesSource },
+      source: { transform: tabsConfigSource },
       description: {
         story:
           'Painel de configurações com 3 seções paralelas: Perfil, Conta e Segurança. Rótulos ' +
@@ -120,7 +120,7 @@ export const CodePreviewLine: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: tabsPreviewCodigoSource },
+      source: { transform: tabsPreviewCodeSource },
       description: {
         story:
           'Alternância Preview/Código com a variante `line`. Padrão comum em documentação ' +
@@ -179,7 +179,7 @@ export const VerticalNavigation: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: tabsNavegacaoVerticalSource },
+      source: { transform: tabsNavigationVerticalSource },
       description: {
         story:
           'Layout vertical para navegação lateral em painéis amplos. As setas de cima e de baixo ' +

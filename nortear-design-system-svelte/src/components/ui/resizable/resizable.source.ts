@@ -67,7 +67,7 @@ function punho(o: Grupo, rotulo: string, indentacao: string): string {
 }
 
 /** Dois painéis e um divisor: a forma canônica do componente. */
-function grupoSimples(o: Grupo = {}): string {
+function simpleGroup(o: Grupo = {}): string {
   const direction = o.direction ?? 'horizontal';
   const primeiro = o.defaultSize ?? 30;
   const minSize = o.minSize ?? 20;
@@ -106,7 +106,7 @@ type Aninhado = Grupo & {
  * Um grupo dentro do segundo painel do outro. Cada grupo governa só os
  * próprios painéis, e o de dentro corre no eixo oposto.
  */
-function grupoAninhado(o: Aninhado = {}): string {
+function groupNested(o: Aninhado = {}): string {
   const direction = o.direction ?? 'horizontal';
   const interno = direction === 'horizontal' ? 'vertical' : 'horizontal';
   const primeiro = o.defaultSize ?? 30;
@@ -140,7 +140,7 @@ ${conteudo(o.innerBottom ?? 'Console', '          ', true)}
 /** Forma canônica: split lateral com divisor operável por arrasto e por setas. */
 export function resizableSource(_gerado?: string, ctx?: { args?: Partial<ResizableArgs> }): string {
   const a = ctx?.args ?? {};
-  return grupoSimples({
+  return simpleGroup({
     direction: a.direction ?? 'horizontal',
     withHandle: a.withHandle ?? true,
     defaultSize: a.defaultSize ?? 30,
@@ -154,7 +154,7 @@ export function resizableSource(_gerado?: string, ctx?: { args?: Partial<Resizab
 
 /** Variante Horizontal: o divisor de um grupo em linha é uma linha vertical. */
 export function resizableHorizontalSource(): string {
-  return grupoSimples({
+  return simpleGroup({
     direction: 'horizontal',
     defaultSize: 30,
     ariaLabel: 'Redimensionar as colunas — use setas para ajustar',
@@ -163,7 +163,7 @@ export function resizableHorizontalSource(): string {
 
 /** Variante Vertical: painéis empilhados repartem a ALTURA do invólucro. */
 export function resizableVerticalSource(): string {
-  return grupoSimples({
+  return simpleGroup({
     direction: 'vertical',
     defaultSize: 40,
     labelA: 'Topo',
@@ -175,12 +175,12 @@ export function resizableVerticalSource(): string {
 
 /** Variante Nested: um grupo dentro de um painel, no eixo oposto. */
 export function resizableAninhadoSource(): string {
-  return grupoAninhado({ direction: 'horizontal', defaultSize: 30 });
+  return groupNested({ direction: 'horizontal', defaultSize: 30 });
 }
 
 /** Variante WithHandle: o pegador que anuncia que ali existe um controle. */
 export function resizableComPegadorSource(): string {
-  return grupoSimples({
+  return simpleGroup({
     withHandle: true,
     defaultSize: 50,
     labelA: 'Antes',
@@ -193,7 +193,7 @@ export function resizableComPegadorSource(): string {
 
 /** Estado Dragging: o divisor arrastável, sem piso apertado. */
 export function resizableArrastoSource(): string {
-  return grupoSimples({
+  return simpleGroup({
     withHandle: true,
     defaultSize: 50,
     minSize: 10,
@@ -205,7 +205,7 @@ export function resizableArrastoSource(): string {
 
 /** Estado Limits: piso e teto declarados param o painel antes do colapso. */
 export function resizableLimitesSource(): string {
-  return grupoSimples({
+  return simpleGroup({
     defaultSize: 50,
     minSize: 30,
     maxSize: 60,
@@ -217,7 +217,7 @@ export function resizableLimitesSource(): string {
 
 /** Estado Focus: mesma marcação; o anel é comportamento, não markup. */
 export function resizableFocoSource(): string {
-  return grupoSimples({
+  return simpleGroup({
     withHandle: true,
     defaultSize: 50,
     labelA: 'Um',
@@ -227,8 +227,8 @@ export function resizableFocoSource(): string {
 }
 
 /** Estado Disabled: o divisor trava, mas continua anunciado e alcançável. */
-export function resizableDesabilitadoSource(): string {
-  return grupoSimples({
+export function resizableDisabledSource(): string {
+  return simpleGroup({
     withHandle: true,
     disabled: true,
     defaultSize: 50,
@@ -242,7 +242,7 @@ export function resizableDesabilitadoSource(): string {
 
 /** Composição SidebarLayout: navegação ajustável ao lado do conteúdo. */
 export function resizableSidebarSource(): string {
-  return grupoSimples({
+  return simpleGroup({
     withHandle: true,
     defaultSize: 30,
     labelA: 'Navegação',
@@ -254,7 +254,7 @@ export function resizableSidebarSource(): string {
 
 /** Composição EditorPreview: dois painéis de mesmo peso. */
 export function resizableEditorPreviewSource(): string {
-  return grupoSimples({
+  return simpleGroup({
     withHandle: true,
     defaultSize: 50,
     labelA: 'Editor',
@@ -266,7 +266,7 @@ export function resizableEditorPreviewSource(): string {
 
 /** Composição VerticalSplit: lista e detalhe empilhados, 40/60 da altura. */
 export function resizableDivisaoVerticalSource(): string {
-  return grupoSimples({
+  return simpleGroup({
     direction: 'vertical',
     withHandle: true,
     defaultSize: 40,
@@ -279,7 +279,7 @@ export function resizableDivisaoVerticalSource(): string {
 
 /** Composição IDELayout: arquivos à esquerda, editor sobre o console. */
 export function resizableIdeSource(): string {
-  return grupoAninhado({
+  return groupNested({
     withHandle: true,
     defaultSize: 30,
     labelA: 'Arquivos',

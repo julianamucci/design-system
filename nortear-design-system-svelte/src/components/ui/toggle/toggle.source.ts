@@ -17,7 +17,7 @@ const ICONES = {
   layout: ['LayoutGrid', 'layout-grid'],
 } as const;
 
-type IconeChave = keyof typeof ICONES;
+type IconKey = keyof typeof ICONES;
 
 export type ToggleArgs = {
   pressed: boolean;
@@ -25,7 +25,7 @@ export type ToggleArgs = {
   ariaInvalid: boolean;
   variant: 'default' | 'outline';
   size: 'default' | 'sm' | 'lg';
-  icon: IconeChave;
+  icon: IconKey;
   label: string;
   ariaLabel: string;
   withLabel: boolean;
@@ -34,7 +34,7 @@ export type ToggleArgs = {
 const IMPORT = `import { Toggle } from "@/components/ui/toggle";`;
 
 /** Bloco de imports: o componente do design system mais os ícones do exemplo. */
-function importar(...icones: IconeChave[]): string {
+function importar(...icones: IconKey[]): string {
   return [
     IMPORT,
     ...icones.map((chave) => {
@@ -45,7 +45,7 @@ function importar(...icones: IconeChave[]): string {
 }
 
 /** Um toggle só de ícone, numa linha — a forma que as comparações repetem. */
-function toggleLinha(icone: IconeChave, ...props: string[]): string {
+function toggleLine(icone: IconKey, ...props: string[]): string {
   return `<Toggle${attrs(...props)}><${ICONES[icone][0]} aria-hidden="true" /></Toggle>`;
 }
 
@@ -85,12 +85,12 @@ export function toggleSource(_gerado?: string, ctx?: { args?: Partial<ToggleArgs
  * Serve a Outline (Variants) e a FocusVisible (States): o mesmo par de
  * variantes lado a lado. O foco é estado de execução, não muda a marcação.
  */
-export function toggleParDeVariantesSource(): string {
+export function variantsSourceTogglePair(): string {
   return svelteSnippet(
     importar('bold', 'italic'),
     `<div class="nds-cluster" data-spacing="sm">
-  ${toggleLinha('bold', 'aria-label="Negrito"')}
-  ${toggleLinha('italic', 'variant="outline"', 'aria-label="Itálico"')}
+  ${toggleLine('bold', 'aria-label="Negrito"')}
+  ${toggleLine('italic', 'variant="outline"', 'aria-label="Itálico"')}
 </div>`,
   );
 }
@@ -100,9 +100,9 @@ export function toggleTamanhosSource(): string {
   return svelteSnippet(
     importar('bold'),
     `<div class="nds-cluster" data-spacing="sm">
-  ${toggleLinha('bold', 'variant="outline"', 'size="sm"', 'aria-label="Negrito pequeno"')}
-  ${toggleLinha('bold', 'variant="outline"', 'aria-label="Negrito padrão"')}
-  ${toggleLinha('bold', 'variant="outline"', 'size="lg"', 'aria-label="Negrito grande"')}
+  ${toggleLine('bold', 'variant="outline"', 'size="sm"', 'aria-label="Negrito pequeno"')}
+  ${toggleLine('bold', 'variant="outline"', 'aria-label="Negrito padrão"')}
+  ${toggleLine('bold', 'variant="outline"', 'size="lg"', 'aria-label="Negrito grande"')}
 </div>`,
   );
 }
@@ -133,8 +133,8 @@ export function toggleAtivoSource(): string {
 
 let ativo = $state(true);`,
     `<div class="nds-cluster" data-spacing="sm">
-  ${toggleLinha('bold', 'aria-label="Negrito inativo"')}
-  ${toggleLinha('bold', 'bind:pressed={ativo}', 'aria-label="Negrito ativo"')}
+  ${toggleLine('bold', 'aria-label="Negrito inativo"')}
+  ${toggleLine('bold', 'bind:pressed={ativo}', 'aria-label="Negrito ativo"')}
 </div>`,
   );
 }
@@ -146,8 +146,8 @@ export function toggleDesabilitadoSource(): string {
 
 let ativo = $state(true);`,
     `<div class="nds-cluster" data-spacing="sm">
-  ${toggleLinha('bold', 'disabled', 'aria-label="Negrito"')}
-  ${toggleLinha('italic', 'disabled', 'bind:pressed={ativo}', 'aria-label="Itálico ativo e desabilitado"')}
+  ${toggleLine('bold', 'disabled', 'aria-label="Negrito"')}
+  ${toggleLine('italic', 'disabled', 'bind:pressed={ativo}', 'aria-label="Itálico ativo e desabilitado"')}
 </div>`,
   );
 }
@@ -178,10 +178,10 @@ export function toggleBarraDeFormatacaoSource(): string {
   data-align="center"
   data-spacing="xs"
 >
-  ${toggleLinha('bold', 'aria-label="Negrito"')}
-  ${toggleLinha('italic', 'aria-label="Itálico"')}
-  ${toggleLinha('underline', 'aria-label="Sublinhado"')}
-  ${toggleLinha('list', 'aria-label="Lista"')}
+  ${toggleLine('bold', 'aria-label="Negrito"')}
+  ${toggleLine('italic', 'aria-label="Itálico"')}
+  ${toggleLine('underline', 'aria-label="Sublinhado"')}
+  ${toggleLine('list', 'aria-label="Lista"')}
 </div>`,
   );
 }
@@ -215,7 +215,7 @@ export function toggleControladoSource(): string {
 
 let ativo = $state(false);`,
     `<div class="nds-stack" data-spacing="sm">
-  ${toggleLinha('bold', 'bind:pressed={ativo}', 'aria-label="Negrito"')}
+  ${toggleLine('bold', 'bind:pressed={ativo}', 'aria-label="Negrito"')}
   <p class="nds-text-caption nds-text-muted-foreground">
     Estado atual: <code class="nds-font-mono">{String(ativo)}</code>
   </p>

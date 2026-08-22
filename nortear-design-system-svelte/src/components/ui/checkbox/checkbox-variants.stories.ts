@@ -7,7 +7,7 @@ import {
   checkboxComDescricaoSource,
   checkboxIndeterminadoSource,
   checkboxMarcadoSource,
-  checkboxSemRotuloSource,
+  checkboxNoLabelSource,
   checkboxSource,
 } from './checkbox.source';
 
@@ -45,7 +45,7 @@ export const Default: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: checkboxSemRotuloSource },
+      source: { transform: checkboxNoLabelSource },
       description: {
         story: 'Estado desmarcado padrão. Borda `--input`, fundo transparente. Pronto para interação.',
       },

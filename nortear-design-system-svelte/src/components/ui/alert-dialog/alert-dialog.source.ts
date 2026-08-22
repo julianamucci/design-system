@@ -242,7 +242,7 @@ let open = $state(false);`,
  * Bloco de mídia no topo do header. Ele é o PRIMEIRO filho: é dessa ordem que
  * dependem a centralização do CSS e a leitura ícone → título → descrição.
  */
-export function alertDialogComMidiaSource(): string {
+export function alertDialogWithMidiaSource(): string {
   return dialogo({ open: true, showMedia: true });
 }
 

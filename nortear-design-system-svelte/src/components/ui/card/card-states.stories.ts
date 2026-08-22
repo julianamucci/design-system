@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, fn, userEvent } from 'storybook/test';
 import { Card } from './index';
 import CardStory from './CardStory.svelte';
-import { cardClicavelSource, cardComRodapeSource, cardPadraoSource } from './card.source';
+import { cardClicavelSource, cardComRodapeSource, cardDefaultSource } from './card.source';
 
 /**
  * Espiões em escopo de MÓDULO: criados dentro do `render` seriam inalcançáveis
@@ -24,7 +24,7 @@ const meta: Meta = {
     docs: {
       // Cascateia para todas as stories do arquivo; as que mudam a composição
       // sobrescrevem com a sua logo abaixo.
-      source: { transform: cardPadraoSource },
+      source: { transform: cardDefaultSource },
       description: {
         component:
           'Configurações do Card: padrão (container passivo), clicável (envolvido em <a> com aria-label descritivo) e com footer de ações. O Card raiz nunca recebe foco — a semântica de ativação vive no wrapper ou nos controles internos.',

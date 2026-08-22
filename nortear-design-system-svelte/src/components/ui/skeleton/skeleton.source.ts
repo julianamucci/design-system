@@ -60,7 +60,7 @@ export function skeletonCirculoSource(): string {
 }
 
 /** Variante TextLine: larguras diferentes entre linhas é o que sugere texto. */
-export function skeletonLinhasDeTextoSource(): string {
+export function textSourceSkeletonLines(): string {
   return svelteSnippet(
     IMPORT,
     `<div
@@ -82,7 +82,7 @@ export function skeletonLinhasDeTextoSource(): string {
  * seu desligamento sob movimento reduzido vivem na folha do design system, não
  * em prop nenhuma — não há o que escrever aqui além do placeholder.
  */
-export function skeletonEstadoSource(): string {
+export function skeletonStateSource(): string {
   return svelteSnippet(
     IMPORT,
     `<div
@@ -123,7 +123,7 @@ export function skeletonCardDePerfilSource(): string {
  * Composição ListWithAvatar: a lista inteira é UMA região ocupada, e não cinco.
  * O avatar compacto vem de `data-size`.
  */
-export function skeletonListaComAvatarSource(): string {
+export function skeletonListWithAvatarSource(): string {
   return svelteSnippet(
     IMPORT,
     `<ul

@@ -14,7 +14,7 @@ const ICONES = {
   compartilhar: ['Share2', 'share-2'],
 } as const;
 
-type IconeChave = keyof typeof ICONES;
+type IconKey = keyof typeof ICONES;
 
 export type TooltipArgs = {
   side: 'top' | 'right' | 'bottom' | 'left';
@@ -36,7 +36,7 @@ const IMPORT = `import {
 import { Button } from "@/components/ui/button";`;
 
 /** O ícone do gatilho sai da ação que ele representa, como nas demonstrações. */
-function iconeDoGatilho(variant: string, triggerLabel: string): IconeChave {
+function triggerIcon(variant: string, triggerLabel: string): IconKey {
   if (variant === 'longText') return 'compartilhar';
   return /excluir|delete|eliminar/i.test(triggerLabel) ? 'excluir' : 'salvar';
 }
@@ -45,7 +45,7 @@ function iconeDoGatilho(variant: string, triggerLabel: string): IconeChave {
  * O conteúdo do balão. Texto curto cabe na mesma linha da tag; texto longo e
  * atalho de teclado ganham corpo próprio.
  */
-function corpoDoBalao(variant: string, contentText: string): string {
+function balaoBody(variant: string, contentText: string): string {
   if (variant === 'withShortcut') {
     // O atalho sai do texto e vira tecla: `.nds-tooltip-content:has([data-slot="kbd"])`
     // é o que encurta o respiro à direita do balão.
@@ -61,7 +61,7 @@ function corpoDoBalao(variant: string, contentText: string): string {
 
 /** Monta a composição inteira: Provider, raiz, gatilho e balão. */
 function montar(opcoes: {
-  icone: IconeChave;
+  icone: IconKey;
   ariaLabel: string;
   provider: string;
   raiz: string;
@@ -116,7 +116,7 @@ export function tooltipSource(_gerado?: string, ctx?: { args?: Partial<TooltipAr
   } = ctx?.args ?? {};
 
   return montar({
-    icone: iconeDoGatilho(variant, triggerLabel),
+    icone: triggerIcon(variant, triggerLabel),
     ariaLabel,
     // A espera é decisão do Provider, que a compartilha entre os vizinhos.
     provider: attrs(delayDuration ? `delayDuration={${delayDuration}}` : ''),
@@ -126,7 +126,7 @@ export function tooltipSource(_gerado?: string, ctx?: { args?: Partial<TooltipAr
       align === 'center' ? '' : `align="${align}"`,
       sideOffset ? `sideOffset={${sideOffset}}` : '',
     ),
-    corpo: corpoDoBalao(variant, contentText),
+    corpo: balaoBody(variant, contentText),
   });
 }
 

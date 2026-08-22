@@ -216,14 +216,14 @@ export const Playground: Story = {
 
     await step('Enter escolhe o comando em destaque', async () => {
       const emDestaque = canvas.getAllByRole('option')[0];
-      const valorEsperado = emDestaque.getAttribute('data-value');
+      const valueEsperado = emDestaque.getAttribute('data-value');
       const antes = espiao.mock.calls.length;
       await userEvent.keyboard('{Enter}');
 
       await waitFor(async () => {
         await expect(espiao.mock.calls.length).toBe(antes + 1);
       });
-      await expect(espiao.mock.calls[antes][0]).toBe(valorEsperado);
+      await expect(espiao.mock.calls[antes][0]).toBe(valueEsperado);
       // A lista continua aberta: a paleta inline não tem estado fechado.
       await expect(campo).toHaveAttribute('aria-expanded', 'true');
     });

@@ -7,10 +7,10 @@ import CommandEstadoLoadingStory from './CommandEstadoLoadingStory.svelte';
 import CommandEstadoDisabledStory from './CommandEstadoDisabledStory.svelte';
 import CommandEstadoCheckedStory from './CommandEstadoCheckedStory.svelte';
 import {
-  commandCarregandoSource,
+  commandLoadingSource,
   commandItemDesabilitadoSource,
   commandItemMarcadoSource,
-  commandSemResultadosSource,
+  commandNoResultsSource,
   commandSource,
 } from './command.source';
 
@@ -47,7 +47,7 @@ type Story = StoryObj;
 export const EmptyState: Story = {
   parameters: {
     covers: ['visual.item2'],
-    docs: { source: { transform: commandSemResultadosSource } },
+    docs: { source: { transform: commandNoResultsSource } },
   },
   render: () => ({
     Component: CommandEstadoEmptyStory,
@@ -92,7 +92,7 @@ export const EmptyState: Story = {
 export const LoadingState: Story = {
   name: 'Loading (CommandLoading)',
   parameters: {
-    docs: { source: { transform: commandCarregandoSource } },
+    docs: { source: { transform: commandLoadingSource } },
   },
   render: () => ({
     Component: CommandEstadoLoadingStory,

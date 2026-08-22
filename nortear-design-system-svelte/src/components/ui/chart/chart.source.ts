@@ -21,19 +21,19 @@ const FRASE_VAZIA_PADRAO = 'Sem dados para exibir';
 
 const ROTULO_PADRAO = 'Acessos mensais no desktop, de janeiro a junho';
 
-const DADOS_SEMESTRE = `const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
+const DATA_SEMESTER = `const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const series = [{ name: 'Vendas', data: [186, 305, 237, 73, 209, 214] }];`;
 
-const DADOS_SERIE_UNICA = `const meses = ['Jan', 'Fev', 'Mar', 'Abr'];
+const DATA_SERIE_UNICA = `const meses = ['Jan', 'Fev', 'Mar', 'Abr'];
 const series = [{ name: 'Vendas', data: [186, 305, 237, 73] }];`;
 
-const DADOS_DOIS_APARELHOS = `const meses = ['Jan', 'Fev', 'Mar', 'Abr'];
+const DATA_DOIS_APARELHOS = `const meses = ['Jan', 'Fev', 'Mar', 'Abr'];
 const series = [
   { name: 'Desktop', data: [186, 305, 237, 73] },
   { name: 'Mobile', data: [80, 200, 120, 190] },
 ];`;
 
-const DADOS_TRES_APARELHOS = `const meses = ['Jan', 'Fev', 'Mar', 'Abr'];
+const DATA_TRES_APARELHOS = `const meses = ['Jan', 'Fev', 'Mar', 'Abr'];
 const series = [
   { name: 'Desktop', data: [186, 305, 237, 73] },
   { name: 'Mobile', data: [80, 200, 120, 190] },
@@ -61,7 +61,7 @@ export function chartSource(_gerado?: string, ctx?: { args?: Partial<ChartArgs> 
   const a = ctx?.args ?? {};
 
   return svelteSnippet(
-    script(['buildBarOption'], DADOS_SEMESTRE),
+    script(['buildBarOption'], DATA_SEMESTER),
     grafico([
       'option={buildBarOption({ xAxis: meses, series })}',
       a.height !== undefined ? `height={${a.height}}` : '',
@@ -81,7 +81,7 @@ export function chartSource(_gerado?: string, ctx?: { args?: Partial<ChartArgs> 
  */
 export function chartBarrasSource(): string {
   return svelteSnippet(
-    script(['buildBarOption'], DADOS_SERIE_UNICA),
+    script(['buildBarOption'], DATA_SERIE_UNICA),
     grafico([
       'option={buildBarOption({ xAxis: meses, series })}',
       'height={240}',
@@ -92,9 +92,9 @@ export function chartBarrasSource(): string {
 }
 
 /** Variação `Line`: tendência ao longo de uma sequência, uma linha por série. */
-export function chartLinhasSource(): string {
+export function chartLinesSource(): string {
   return svelteSnippet(
-    script(['buildLineOption'], DADOS_DOIS_APARELHOS),
+    script(['buildLineOption'], DATA_DOIS_APARELHOS),
     grafico([
       'option={buildLineOption({ xAxis: meses, series })}',
       'height={240}',
@@ -107,7 +107,7 @@ export function chartLinhasSource(): string {
 /** Variação `Area`: a linha com a região sob ela preenchida. */
 export function chartAreaSource(): string {
   return svelteSnippet(
-    script(['buildAreaOption'], DADOS_DOIS_APARELHOS),
+    script(['buildAreaOption'], DATA_DOIS_APARELHOS),
     grafico([
       'option={buildAreaOption({ xAxis: meses, series })}',
       'height={240}',
@@ -161,7 +161,7 @@ export function chartVazioSource(): string {
  */
 export function chartMultiSerieSource(): string {
   return svelteSnippet(
-    script(['buildBarOption'], DADOS_TRES_APARELHOS),
+    script(['buildBarOption'], DATA_TRES_APARELHOS),
     grafico([
       'option={buildBarOption({ xAxis: meses, series })}',
       'height={280}',
@@ -174,7 +174,7 @@ export function chartMultiSerieSource(): string {
 /** Configuração `WithCaption`: a legenda forçada mesmo com uma série só. */
 export function chartComLegendaSource(): string {
   return svelteSnippet(
-    script(['buildBarOption'], DADOS_SERIE_UNICA),
+    script(['buildBarOption'], DATA_SERIE_UNICA),
     grafico([
       'option={buildBarOption({ xAxis: meses, series, showLegend: true })}',
       'height={260}',
@@ -187,7 +187,7 @@ export function chartComLegendaSource(): string {
 /** Configuração `MultipleSeries`: várias séries com título no próprio desenho. */
 export function chartComTituloSource(): string {
   return svelteSnippet(
-    script(['buildBarOption'], DADOS_TRES_APARELHOS),
+    script(['buildBarOption'], DATA_TRES_APARELHOS),
     grafico([
       "option={buildBarOption({ xAxis: meses, series, title: 'Acessos por dispositivo' })}",
       'height={300}',
@@ -203,7 +203,7 @@ export function chartComTituloSource(): string {
  */
 export function chartTituloNoDesenhoSource(): string {
   return svelteSnippet(
-    script(['buildBarOption'], DADOS_SERIE_UNICA),
+    script(['buildBarOption'], DATA_SERIE_UNICA),
     grafico([
       "option={buildBarOption({ xAxis: meses, series, title: 'Vendas mensais' })}",
       'height={260}',
@@ -222,7 +222,7 @@ export function chartEmCardSource(): string {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-${script(['buildBarOption'], DADOS_SERIE_UNICA)}`,
+${script(['buildBarOption'], DATA_SERIE_UNICA)}`,
     `<Card class="nds-w-sm">
   <CardHeader>
     <CardTitle>Acessos mensais</CardTitle>
@@ -247,9 +247,9 @@ ${script(['buildBarOption'], DADOS_SERIE_UNICA)}`,
  * Estado `ThemeTokens`: dois tipos empilhados sobre a mesma série, que é o que
  * a foto de tema precisa cobrir.
  */
-export function chartDoisTiposSource(): string {
+export function chartDoisTypesSource(): string {
   return svelteSnippet(
-    script(['buildBarOption', 'buildLineOption'], DADOS_TRES_APARELHOS),
+    script(['buildBarOption', 'buildLineOption'], DATA_TRES_APARELHOS),
     `<div class="nds-stack nds-w-full">
   ${grafico(
     [

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import { Card } from './index';
 import CardStory from './CardStory.svelte';
-import { cardPadraoSource, cardPequenoSource } from './card.source';
+import { cardDefaultSource, cardPequenoSource } from './card.source';
 
 const meta: Meta = {
   title: 'UI/Card/Sizes',
@@ -16,7 +16,7 @@ const meta: Meta = {
     docs: {
       // Cascateia para todas as stories do arquivo; a que muda a composição
       // sobrescreve com a sua logo abaixo.
-      source: { transform: cardPadraoSource },
+      source: { transform: cardDefaultSource },
       description: {
         component:
           'Tamanhos do Card: "default" para uso geral e "sm" para listas densas e dashboards. O tamanho propaga via data-size e ajusta padding e tamanho do título das partes internas.',

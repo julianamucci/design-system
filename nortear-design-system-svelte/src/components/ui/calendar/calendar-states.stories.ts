@@ -6,7 +6,7 @@ import CalendarStory from './CalendarStory.svelte';
 import {
   calendarBloqueadoSource,
   calendarHojeSource,
-  calendarSemanasFixasSource,
+  calendarWeeksFixasSource,
   calendarSource,
 } from './calendar.source';
 
@@ -155,7 +155,7 @@ export const WithOutsideDays: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: calendarSemanasFixasSource },
+      source: { transform: calendarWeeksFixasSource },
       description: {
         story:
           'Seis linhas de semana sempre, completadas com os dias do mês vizinho — a altura do bloco não muda ao virar o mês.',

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TabsStory from './TabsStory.svelte';
 import {
-  tabsAbaInicialSource,
+  tabsAbaInitialSource,
   tabsDesabilitadaSource,
   tabsSource,
 } from './tabs.source';
@@ -45,7 +45,7 @@ export const Default: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: tabsAbaInicialSource },
+      source: { transform: tabsAbaInitialSource },
       description: {
         story:
           'Aba inativa: texto em tom apagado, sem fundo próprio e fora da ordem de tabulação. ' +

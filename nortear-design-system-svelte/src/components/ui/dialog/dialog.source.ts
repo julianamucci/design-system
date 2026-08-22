@@ -29,7 +29,7 @@ const IMPORT_BASE = `import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";`;
 
-const IMPORT_COM_CAMPOS = `${IMPORT_BASE}
+const IMPORT_WITH_FIELDS = `${IMPORT_BASE}
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";`;
 
@@ -74,7 +74,7 @@ function dialogo({
   corpo = '',
   rodape = '',
 }: Moldura): string {
-  const propsDoPainel = attrs(
+  const panelProps = attrs(
     contentClass ? `class="${contentClass}"` : '',
     showCloseButton ? '' : 'showCloseButton={false}',
   );
@@ -93,7 +93,7 @@ let open = $state(${aberto});`,
       <Button variant="outline" {...props}>${triggerLabel}</Button>
     {/snippet}
   </DialogTrigger>
-  <DialogContent${propsDoPainel}>
+  <DialogContent${panelProps}>
     <DialogHeader>
       <DialogTitle>${title}</DialogTitle>
       <DialogDescription>${description}</DialogDescription>
@@ -105,14 +105,14 @@ let open = $state(${aberto});`,
 
 /** Rodapé canônico: a saída à esquerda, a ação primária por último no DOM. */
 function rodapePadrao(cancelLabel: string, actionLabel: string, destrutiva = false): string {
-  const varianteDaAcao = destrutiva ? ' variant="destructive"' : '';
+  const actionVariant = destrutiva ? ' variant="destructive"' : '';
   return `    <DialogFooter>
       <DialogClose>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>${cancelLabel}</Button>
         {/snippet}
       </DialogClose>
-      <Button${varianteDaAcao}>${actionLabel}</Button>
+      <Button${actionVariant}>${actionLabel}</Button>
     </DialogFooter>`;
 }
 
@@ -141,7 +141,7 @@ export function dialogSource(_gerado?: string, ctx?: { args?: Partial<DialogArgs
 /** Composição com formulário no corpo: o envio dispara a ação primária. */
 export function dialogComFormularioSource(): string {
   return svelteSnippet(
-    `${IMPORT_COM_CAMPOS}
+    `${IMPORT_WITH_FIELDS}
 
 let open = $state(true);
 
@@ -225,7 +225,7 @@ export function dialogAcaoDestrutivaSource(): string {
 /** Composição de produto: confirmar a troca de e-mail, com um campo no corpo. */
 export function dialogConfirmarEmailSource(): string {
   return svelteSnippet(
-    `${IMPORT_COM_CAMPOS}
+    `${IMPORT_WITH_FIELDS}
 
 let open = $state(true);`,
     `<Dialog bind:open>
@@ -259,7 +259,7 @@ ${rodapePadrao('Cancelar', 'Enviar confirmação')}
  */
 export function dialogEditarPerfilSource(): string {
   return svelteSnippet(
-    `${IMPORT_COM_CAMPOS}
+    `${IMPORT_WITH_FIELDS}
 
 let open = $state(true);
 

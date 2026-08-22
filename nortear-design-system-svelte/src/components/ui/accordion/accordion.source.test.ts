@@ -6,7 +6,7 @@ import {
   accordionConteudoRicoSource,
   accordionControladoSource,
   accordionFaqSource,
-  accordionFechaNoSegundoCliqueSource,
+  segundoClickSourceAccordionFecha,
   accordionFechadoSource,
   accordionItemDesabilitadoSource,
   accordionMultiploSource,
@@ -66,7 +66,7 @@ describe('accordionSource', () => {
 
 describe('transforms das stories de modo', () => {
   it('o fechar-no-segundo-clique nasce sem valor inicial e sem chave extra', () => {
-    const saida = accordionFechaNoSegundoCliqueSource();
+    const saida = segundoClickSourceAccordionFecha();
     expect(saida).toContain('<Accordion type="single" class="nds-max-w-lg">');
     expect(saida).not.toContain('bind:value');
     expect(saida).not.toContain('$state');

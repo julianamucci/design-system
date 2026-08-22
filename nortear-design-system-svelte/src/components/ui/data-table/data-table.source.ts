@@ -23,7 +23,7 @@ export type DataTableArgs = {
 
 const IMPORT = `import { DataTable, type DataTableColumn } from '@/components/ui/data-table';`;
 
-const IMPORT_COM_ROTULOS = `import {
+const IMPORT_WITH_LABELS = `import {
   DataTable,
   type DataTableColumn,
   type DataTableLabels,
@@ -108,7 +108,7 @@ export function dataTableSource(
 
   return svelteSnippet(
     script(
-      enableRowSelection ? IMPORT_COM_ROTULOS : IMPORT,
+      enableRowSelection ? IMPORT_WITH_LABELS : IMPORT,
       DADOS,
       APRESENTACAO,
       COLUNAS,

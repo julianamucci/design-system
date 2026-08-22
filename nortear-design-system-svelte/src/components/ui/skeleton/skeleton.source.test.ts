@@ -2,10 +2,10 @@ import { describe, expect, it } from 'vitest';
 import {
   skeletonCardDePerfilSource,
   skeletonCirculoSource,
-  skeletonEstadoSource,
+  skeletonStateSource,
   skeletonImagemEmProporcaoSource,
-  skeletonLinhasDeTextoSource,
-  skeletonListaComAvatarSource,
+  textSourceSkeletonLines,
+  skeletonListWithAvatarSource,
   skeletonParagrafoSource,
   skeletonRetanguloSource,
   skeletonSource,
@@ -63,14 +63,14 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('as linhas de texto decrescem — é o que faz o bloco parecer parágrafo', () => {
-    const saida = skeletonLinhasDeTextoSource();
+    const saida = textSourceSkeletonLines();
     expect(saida).toContain('data-width="full"');
     expect(saida).toContain('data-width="3-4"');
     expect(saida).toContain('data-width="1-2"');
   });
 
   it('as duas stories de estado compartilham a mesma marcação de duas linhas', () => {
-    const saida = skeletonEstadoSource();
+    const saida = skeletonStateSource();
     expect(saida.match(/<Skeleton /g)).toHaveLength(2);
     expect(saida).toContain('aria-busy="true"');
   });
@@ -83,7 +83,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a lista é UMA região ocupada, com o avatar no degrau compacto', () => {
-    const saida = skeletonListaComAvatarSource();
+    const saida = skeletonListWithAvatarSource();
     expect(saida).toContain('<ul');
     expect(saida).toContain('data-size="sm"');
     expect(saida).toContain('{#each Array.from({ length: 5 }) as _, i (i)}');

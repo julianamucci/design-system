@@ -221,7 +221,7 @@ export function textareaContadorAcessivelSource(): string {
 }
 
 /** Composição com erro: a mensagem existe no DOM e é apontada pelo campo. */
-export function textareaComErroSource(): string {
+export function textareaWithErrorSource(): string {
   return svelteSnippet(
     script(),
     `<div class="nds-stack nds-max-w-md" data-spacing="sm">

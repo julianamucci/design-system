@@ -5,8 +5,8 @@ import {
   buttonComIconeInicialSource,
   buttonComoLinkSource,
   buttonDesabilitadoSource,
-  buttonDestinoInseguroSource,
-  buttonDestinoMalformadoSource,
+  buttonTargetInseguroSource,
+  buttonTargetMalformadoSource,
   buttonDestrutivoComIconeSource,
   buttonDestrutivoSource,
   buttonFocoVisivelSource,
@@ -16,7 +16,7 @@ import {
   buttonIconeSource,
   buttonIconeXsSource,
   buttonInvalidoSource,
-  buttonLinkDesabilitadoSource,
+  buttonLinkDisabledSource,
   buttonLinkSource,
   buttonOutlineSource,
   buttonPadraoSource,
@@ -159,18 +159,18 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o link desabilitado soma o estado ao destino', () => {
-    expect(buttonLinkDesabilitadoSource()).toContain(
+    expect(buttonLinkDisabledSource()).toContain(
       '<Button variant="link" href="#docs" disabled>',
     );
   });
 
   it('os destinos recusados chegam por variável, com o motivo da recusa junto', () => {
-    const inseguro = buttonDestinoInseguroSource();
+    const inseguro = buttonTargetInseguroSource();
     expect(inseguro).toContain('const destino = ');
     expect(inseguro).toContain('<Button variant="link" href={destino}>');
     expect(inseguro).toContain('mailto, tel');
 
-    const malformado = buttonDestinoMalformadoSource();
+    const malformado = buttonTargetMalformadoSource();
     expect(malformado).toContain('const destino = "http://[";');
     expect(malformado).toContain('<Button variant="link" href={destino}>');
   });

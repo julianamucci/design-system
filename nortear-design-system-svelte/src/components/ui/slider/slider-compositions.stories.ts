@@ -7,7 +7,7 @@ import { valorDaAlca } from '@shared/testing/slider-probe';
 import {
   sliderEmFormularioSource,
   sliderEscalaCurtaSource,
-  sliderFaixaDePrecoSource,
+  precoSourceSliderRange,
   sliderSource,
 } from './slider.source';
 
@@ -84,7 +84,7 @@ export const PriceRange: Story = {
   },
   parameters: {
     docs: {
-      source: { transform: sliderFaixaDePrecoSource },
+      source: { transform: precoSourceSliderRange },
       description: {
         story:
           'Range slider para min/max — dois thumbs com valor textual no formato "R$ 100 — R$ 400".',

@@ -5,8 +5,8 @@ import SidebarNavGroupsStory from './SidebarNavGroupsStory.svelte';
 import SidebarSubMenuStory from './SidebarSubMenuStory.svelte';
 import SidebarSkeletonStory from './SidebarSkeletonStory.svelte';
 import {
-  sidebarEsqueletoSource,
-  sidebarGruposDeNavegacaoSource,
+  sidebarSkeletonSource,
+  navigationSourceSidebarGroups,
   sidebarSource,
   sidebarSubmenuSource,
 } from './sidebar.source';
@@ -38,7 +38,7 @@ export const WithNavGroups: StoryObj<Record<string, never>> = {
   name: 'With nav groups',
   parameters: {
     covers: ['accessibility.item6'],
-    docs: { source: { transform: sidebarGruposDeNavegacaoSource } },
+    docs: { source: { transform: navigationSourceSidebarGroups } },
   },
   render: () => ({
     Component: SidebarNavGroupsStory,
@@ -171,7 +171,7 @@ export const WithSkeleton: StoryObj<Record<string, never>> = {
   name: 'Loading state (Skeleton)',
   parameters: {
     covers: ['functional.item9'],
-    docs: { source: { transform: sidebarEsqueletoSource } },
+    docs: { source: { transform: sidebarSkeletonSource } },
   },
   render: () => ({
     Component: SidebarSkeletonStory,

@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  labelComCaixaSource,
+  labelWithBoxSource,
   labelComCampoSource,
-  labelDesabilitadoIrmaoSource,
-  labelDesabilitadoNoBlocoSource,
+  labelDisabledSiblingSource,
+  blockSourceLabelDisabled,
   labelObrigatorioSource,
   labelSource,
 } from './label.source';
@@ -53,14 +53,14 @@ describe('transforms das stories de estado e composição', () => {
   });
 
   it('o desabilitado por irmão marca o CONTROLE e põe o rótulo depois dele', () => {
-    const saida = labelDesabilitadoIrmaoSource();
+    const saida = labelDisabledSiblingSource();
     expect(saida).toContain('class="nds-peer"');
     // Ordem é a lição: o seletor de irmão só alcança o que vem depois.
     expect(saida.indexOf('<Input')).toBeLessThan(saida.indexOf('<Label'));
   });
 
   it('o desabilitado por bloco marca o ancestral, não o rótulo', () => {
-    const saida = labelDesabilitadoNoBlocoSource();
+    const saida = blockSourceLabelDisabled();
     expect(saida).toContain('data-disabled="true"');
     expect(saida).toContain('<Label for="documento">Documento</Label>');
   });
@@ -70,7 +70,7 @@ describe('transforms das stories de estado e composição', () => {
   });
 
   it('a composição com caixa de seleção importa o controle certo', () => {
-    const saida = labelComCaixaSource();
+    const saida = labelWithBoxSource();
     expect(saida).toContain('from "@/components/ui/checkbox"');
     expect(saida).toContain('<Label for="termos">Concordo com os termos de uso</Label>');
   });

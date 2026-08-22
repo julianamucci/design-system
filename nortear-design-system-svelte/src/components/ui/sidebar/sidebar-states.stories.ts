@@ -9,7 +9,7 @@ import {
   sidebarExpandidaSource,
   sidebarFixaSource,
   sidebarGavetaSource,
-  sidebarModoIconeSource,
+  sidebarModeIconSource,
   sidebarOffcanvasFechadaSource,
   sidebarSource,
 } from './sidebar.source';
@@ -73,7 +73,7 @@ export const IconMode: StoryObj<Record<string, never>> = {
   name: 'Icon mode (collapsed)',
   parameters: {
     covers: ['functional.item4', 'functional.item7', 'visual.item2'],
-    docs: { source: { transform: sidebarModoIconeSource } },
+    docs: { source: { transform: sidebarModeIconSource } },
   },
   render: () => ({
     Component: SidebarIconStory,

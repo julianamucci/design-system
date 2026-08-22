@@ -77,7 +77,7 @@
    * O tipo do parâmetro do snippet chega como `{}`; o `as` declara o que a lib
    * de fato põe lá dentro.
    */
-  function fecharECancelar(propsDoClose: unknown, event: MouseEvent): void {
+  function closeECancelar(propsDoClose: unknown, event: MouseEvent): void {
     (propsDoClose as { onclick?: (e: MouseEvent) => void }).onclick?.(event);
     onCancel?.();
   }
@@ -128,7 +128,7 @@
                       variant="ghost"
                       size="sm"
                       {...props}
-                      onclick={(event: MouseEvent) => fecharECancelar(props, event)}
+                      onclick={(event: MouseEvent) => closeECancelar(props, event)}
                     >{cancelLabel}</Button>
                   {/snippet}
                 </PopoverClose>
@@ -143,13 +143,13 @@
             <div class="nds-cluster" data-justify="end" data-spacing="sm">
               <PopoverClose>
                 {#snippet child({ props })}
-                  <!-- `fecharECancelar` encadeia o handler da lib: ver o
+                  <!-- `closeECancelar` encadeia o handler da lib: ver o
                        porquê no bloco de documentação da função, acima. -->
                   <Button
                     variant="outline"
                     size="sm"
                     {...props}
-                    onclick={(event: MouseEvent) => fecharECancelar(props, event)}
+                    onclick={(event: MouseEvent) => closeECancelar(props, event)}
                   >{cancelLabel}</Button>
                 {/snippet}
               </PopoverClose>

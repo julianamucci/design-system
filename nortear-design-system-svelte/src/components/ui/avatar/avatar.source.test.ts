@@ -3,13 +3,13 @@ import {
   avatarCarregandoSource,
   avatarComStatusSource,
   avatarGrupoSource,
-  avatarIconeSource,
+  avatarIconSource,
   avatarIniciaisSource,
   avatarSource,
   avatarTamanho2xlSource,
-  avatarTamanhoLgSource,
-  avatarTamanhoSmSource,
-  avatarTamanhoXlSource,
+  avatarSizeLgSource,
+  avatarSizeSmSource,
+  avatarSizeXlSource,
 } from './avatar.source';
 
 describe('avatarSource', () => {
@@ -43,9 +43,9 @@ describe('avatarSource', () => {
 
 describe('transforms das stories de tamanho', () => {
   it('cada preset diferente do padrão aparece explícito', () => {
-    expect(avatarTamanhoSmSource()).toContain('<Avatar size="sm">');
-    expect(avatarTamanhoLgSource()).toContain('<Avatar size="lg">');
-    expect(avatarTamanhoXlSource()).toContain('<Avatar size="xl">');
+    expect(avatarSizeSmSource()).toContain('<Avatar size="sm">');
+    expect(avatarSizeLgSource()).toContain('<Avatar size="lg">');
+    expect(avatarSizeXlSource()).toContain('<Avatar size="xl">');
     expect(avatarTamanho2xlSource()).toContain('<Avatar size="2xl">');
   });
 });
@@ -62,7 +62,7 @@ describe('transforms das stories de estado e composição', () => {
   });
 
   it('o ícone é decorativo e quem nomeia é o rótulo do fallback', () => {
-    const saida = avatarIconeSource();
+    const saida = avatarIconSource();
     expect(saida).toContain('role="img" aria-label="Usuário genérico"');
     expect(saida).toContain('aria-hidden="true"');
     expect(saida).toContain('@lucide/svelte/icons/user');

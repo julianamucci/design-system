@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import {
-  commandCarregandoSource,
+  commandLoadingSource,
   commandComAtalhosSource,
   commandComGruposSource,
-  commandComLinkItemSource,
+  commandWithLinkItemSource,
   commandComoComboboxSource,
   commandItemDesabilitadoSource,
   commandItemMarcadoSource,
   commandPaletaSource,
-  commandSemResultadosSource,
+  commandNoResultsSource,
   commandSource,
 } from './command.source';
 
@@ -75,19 +75,19 @@ describe('commandSource', () => {
 
 describe('transforms das stories de estado', () => {
   it('sem resultados mostra a frase de vazio dentro da lista', () => {
-    const saida = commandSemResultadosSource();
+    const saida = commandNoResultsSource();
     expect(saida).toContain('<CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>');
     // Um grupo só: o que a story ensina é o vazio, não o agrupamento.
     expect(saida.match(/<CommandGroup/g)).toHaveLength(1);
   });
 
   it('o carregando fica FORA da lista', () => {
-    const saida = commandCarregandoSource();
+    const saida = commandLoadingSource();
     const posLoading = saida.indexOf('<CommandLoading>');
-    const posLista = saida.indexOf('<CommandList>');
+    const posList = saida.indexOf('<CommandList>');
     expect(posLoading).toBeGreaterThan(-1);
     // Progresso não é filho permitido de uma lista de opções.
-    expect(posLoading).toBeLessThan(posLista);
+    expect(posLoading).toBeLessThan(posList);
     expect(saida).toContain('</CommandLoading>');
   });
 
@@ -121,7 +121,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o comando de link é âncora, e o externo não entrega a janela', () => {
-    const saida = commandComLinkItemSource();
+    const saida = commandWithLinkItemSource();
     expect(saida).toContain('<CommandLinkItem href="/docs/button" value="docs-button">');
     expect(saida).toContain('rel="noopener noreferrer"');
   });

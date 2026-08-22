@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  toggleGroupBarraDeAlinhamentoSource,
-  toggleGroupFormatacaoSource,
+  alignmentSourceToggleGroupBar,
+  toggleGroupFormattingSource,
   toggleGroupItemDesabilitadoSource,
-  toggleGroupSelecaoMultiplaSource,
+  toggleGroupSelectionMultiplaSource,
   toggleGroupSource,
   toggleGroupVerticalSource,
   toggleGroupVisualizacaoVerticalSource,
@@ -78,14 +78,14 @@ describe('toggleGroupSource', () => {
 
 describe('transforms das stories de variação, estado e composição', () => {
   it('a formatação é o modo combinado, com o valor em lista', () => {
-    const saida = toggleGroupFormatacaoSource();
+    const saida = toggleGroupFormattingSource();
     expect(saida).toContain('type="multiple"');
     expect(saida).toContain('aria-label="Formatação"');
     expect(saida).toContain('let formatacao: string[] = $state([]);');
   });
 
   it('a seleção múltipla nasce com duas opções combinadas', () => {
-    expect(toggleGroupSelecaoMultiplaSource()).toContain(
+    expect(toggleGroupSelectionMultiplaSource()).toContain(
       'let formatacao = $state(["bold", "italic"]);',
     );
   });
@@ -98,7 +98,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a barra de alinhamento completa tem a quarta opção', () => {
-    const saida = toggleGroupBarraDeAlinhamentoSource();
+    const saida = alignmentSourceToggleGroupBar();
     expect(saida.match(/<ToggleGroupItem /g)).toHaveLength(4);
     expect(saida).toContain('aria-label="Justificar"');
   });

@@ -20,7 +20,7 @@ const IMPORT_BASE = `import {
   CardTitle,
 } from "@/components/ui/card";`;
 
-const IMPORT_COM_RODAPE = `import {
+const IMPORT_WITH_FOOTER = `import {
   Card,
   CardContent,
   CardDescription,
@@ -42,7 +42,7 @@ export function cardSource(_gerado?: string, ctx?: { args?: Partial<CardArgs> })
   const props = attrs(LARGURA, size === 'sm' ? 'size="sm"' : '');
 
   return svelteSnippet(
-    IMPORT_COM_RODAPE,
+    IMPORT_WITH_FOOTER,
     `<Card${props}>
   <CardHeader>
     <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
@@ -64,7 +64,7 @@ export function cardSource(_gerado?: string, ctx?: { args?: Partial<CardArgs> })
  * de reserva dos arquivos de tamanhos, estados e composições — cada story de lá
  * declara o seu, e quem cair aqui vê o card mínimo, não o de ações.
  */
-export function cardPadraoSource(): string {
+export function cardDefaultSource(): string {
   return svelteSnippet(
     IMPORT_BASE,
     `<Card ${LARGURA}>
@@ -127,7 +127,7 @@ export function cardClicavelSource(): string {
  */
 export function cardComRodapeSource(): string {
   return svelteSnippet(
-    IMPORT_COM_RODAPE,
+    IMPORT_WITH_FOOTER,
     `<Card ${LARGURA}>
   <CardHeader>
     <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>

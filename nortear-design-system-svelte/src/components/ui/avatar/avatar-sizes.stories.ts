@@ -7,9 +7,9 @@ import AvatarStory from './AvatarStory.svelte';
 import {
   avatarSource,
   avatarTamanho2xlSource,
-  avatarTamanhoLgSource,
-  avatarTamanhoSmSource,
-  avatarTamanhoXlSource,
+  avatarSizeLgSource,
+  avatarSizeSmSource,
+  avatarSizeXlSource,
 } from './avatar.source';
 
 const meta: Meta = {
@@ -59,7 +59,7 @@ export const Sm: Story = {
   name: 'sm (24px)',
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
-    docs: { source: { transform: avatarTamanhoSmSource } },
+    docs: { source: { transform: avatarSizeSmSource } },
   },
   render: () => ({ Component: AvatarStory, props: { ...baseProps, size: 'sm' } }),
   play: async ({ canvasElement }) => {
@@ -94,7 +94,7 @@ export const Lg: Story = {
   name: 'lg (40px)',
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
-    docs: { source: { transform: avatarTamanhoLgSource } },
+    docs: { source: { transform: avatarSizeLgSource } },
   },
   render: () => ({ Component: AvatarStory, props: { ...baseProps, size: 'lg' } }),
   play: async ({ canvasElement }) => {
@@ -108,7 +108,7 @@ export const Xl: Story = {
   name: 'xl (48px)',
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
-    docs: { source: { transform: avatarTamanhoXlSource } },
+    docs: { source: { transform: avatarSizeXlSource } },
   },
   render: () => ({ Component: AvatarStory, props: { ...baseProps, size: 'xl' } }),
   play: async ({ canvasElement }) => {

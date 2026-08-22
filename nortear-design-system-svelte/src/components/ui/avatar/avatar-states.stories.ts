@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { Avatar } from './index';
 import AvatarStory from './AvatarStory.svelte';
-import { avatarCarregandoSource, avatarIconeSource, avatarSource } from './avatar.source';
+import { avatarCarregandoSource, avatarIconSource, avatarSource } from './avatar.source';
 
 const IMG_MARIA =
   'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
@@ -133,7 +133,7 @@ export const Failed: Story = {
 export const NoImage: Story = {
   parameters: {
     covers: ['functional.item3'],
-    docs: { source: { transform: avatarIconeSource } },
+    docs: { source: { transform: avatarIconSource } },
   },
   render: () => ({
     Component: AvatarStory,

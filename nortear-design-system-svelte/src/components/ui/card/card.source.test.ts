@@ -7,7 +7,7 @@ import {
   cardDeMetricaSource,
   cardDePerfilSource,
   cardDeProdutoSource,
-  cardPadraoSource,
+  cardDefaultSource,
   cardPequenoSource,
   cardSource,
 } from './card.source';
@@ -59,7 +59,7 @@ describe('cardSource', () => {
 
 describe('transforms das stories de tamanho, estado e composição', () => {
   it('o card padrão não traz rodapé nem botão', () => {
-    const saida = cardPadraoSource();
+    const saida = cardDefaultSource();
     expect(saida).toContain('<CardHeader>');
     expect(saida).not.toContain('CardFooter');
     expect(saida).not.toContain('Button');

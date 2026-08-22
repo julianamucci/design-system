@@ -7,7 +7,7 @@ import {
   formPaletaEscuraSource,
   formRotuloEControleSource,
   formSource,
-  formVariosCamposSource,
+  formMultipleFieldsSource,
 } from './form.source';
 
 describe('formSource', () => {
@@ -124,7 +124,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o formulário inteiro passa por três controles diferentes', () => {
-    const saida = formVariosCamposSource();
+    const saida = formMultipleFieldsSource();
     expect(saida).toContain('<form class="nds-stack">');
     expect(saida).toContain('<Textarea name="bio" rows={3} />');
     expect(saida).toContain('<Button type="submit">Salvar</Button>');

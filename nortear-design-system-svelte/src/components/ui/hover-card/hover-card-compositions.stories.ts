@@ -49,13 +49,13 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const abertoNaMontagem = {
+const mountOpen = {
   defaultOpen: true,
 } as const;
 
 export const UserProfile: Story = {
   name: 'Profile preview',
-  args: { ...abertoNaMontagem, variant: 'userProfile', triggerLabel: '@joana' },
+  args: { ...mountOpen, variant: 'userProfile', triggerLabel: '@joana' },
   parameters: {
     covers: ['visual.item1'],
     docs: {
@@ -85,7 +85,7 @@ export const UserProfile: Story = {
 export const LinkPreview: Story = {
   name: 'External link preview',
   args: {
-    ...abertoNaMontagem,
+    ...mountOpen,
     variant: 'linkPreview',
     triggerLabel: 'design-system.dev',
     href: 'https://design-system.dev',
@@ -116,7 +116,7 @@ export const LinkPreview: Story = {
 export const TermDefinition: Story = {
   name: 'Contextual definition',
   args: {
-    ...abertoNaMontagem,
+    ...mountOpen,
     variant: 'definition',
     triggerLabel: 'WCAG 2.2 AA',
     label: 'Definição de WCAG 2.2 AA',
@@ -153,7 +153,7 @@ export const TermDefinition: Story = {
 
 export const ExplainedMetric: Story = {
   args: {
-    ...abertoNaMontagem,
+    ...mountOpen,
     variant: 'metric',
     triggerLabel: 'LCP 1.8s',
     label: 'Explicação da métrica LCP',
@@ -214,7 +214,7 @@ export const Sides: Story = {
 };
 
 export const ExtraPanelClass: Story = {
-  args: { ...abertoNaMontagem, variant: 'extraClass', triggerLabel: '@joana' },
+  args: { ...mountOpen, variant: 'extraClass', triggerLabel: '@joana' },
   parameters: {
     covers: ['visual.item5'],
     docs: {

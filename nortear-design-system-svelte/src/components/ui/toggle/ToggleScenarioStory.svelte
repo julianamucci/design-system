@@ -45,8 +45,8 @@
   // literal, o toggle mutaria uma prop que ninguém observa.
   let ativo = $state(true);
   let compacta = $state(true);
-  let compactaFiltro = $state(true);
-  let desabilitadoAtivo = $state(true);
+  let compactaFilter = $state(true);
+  let disabledActive = $state(true);
   let controlado = $state(false);
 </script>
 
@@ -86,7 +86,7 @@
 {:else if cenario === 'disabled'}
   <div class="nds-cluster" data-spacing="sm">
     <Toggle disabled aria-label="Negrito"><Bold aria-hidden="true" /></Toggle>
-    <Toggle disabled bind:pressed={desabilitadoAtivo} aria-label="Itálico ativo e desabilitado">
+    <Toggle disabled bind:pressed={disabledActive} aria-label="Itálico ativo e desabilitado">
       <Italic aria-hidden="true" />
     </Toggle>
   </div>
@@ -120,7 +120,7 @@
         <Eye aria-hidden="true" />
         Mostrar ocultos
       </Toggle>
-      <Toggle variant="outline" bind:pressed={compactaFiltro}>
+      <Toggle variant="outline" bind:pressed={compactaFilter}>
         <List aria-hidden="true" />
         Visão compacta
       </Toggle>

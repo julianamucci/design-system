@@ -10,8 +10,8 @@ import LabelStory from './LabelStory.svelte';
 import LabelDisabledPeerStory from './LabelDisabledPeerStory.svelte';
 import LabelDisabledGroupStory from './LabelDisabledGroupStory.svelte';
 import {
-  labelDesabilitadoIrmaoSource,
-  labelDesabilitadoNoBlocoSource,
+  labelDisabledSiblingSource,
+  blockSourceLabelDisabled,
   labelObrigatorioSource,
   labelSource,
 } from './label.source';
@@ -76,7 +76,7 @@ export const Default: Story = {
 export const Disabled: Story = {
   parameters: {
     covers: ['functional.item2', 'visual.item3'],
-    docs: { source: { transform: labelDesabilitadoIrmaoSource } },
+    docs: { source: { transform: labelDisabledSiblingSource } },
   },
   render: () => ({ Component: LabelDisabledPeerStory, props: {} }),
   play: async ({ canvasElement, step }) => {
@@ -98,7 +98,7 @@ export const Disabled: Story = {
 export const DisabledViaGroup: Story = {
   parameters: {
     covers: ['functional.item4'],
-    docs: { source: { transform: labelDesabilitadoNoBlocoSource } },
+    docs: { source: { transform: blockSourceLabelDisabled } },
   },
   render: () => ({ Component: LabelDisabledGroupStory, props: {} }),
   play: async ({ canvasElement, step }) => {

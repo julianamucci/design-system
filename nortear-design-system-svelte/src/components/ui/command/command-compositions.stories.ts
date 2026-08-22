@@ -11,7 +11,7 @@ import CommandComposicaoPaletteStory from './CommandComposicaoPaletteStory.svelt
 import {
   commandComAtalhosSource,
   commandComGruposSource,
-  commandComLinkItemSource,
+  commandWithLinkItemSource,
   commandComoComboboxSource,
   commandPaletaSource,
   commandSource,
@@ -19,7 +19,7 @@ import {
 
 // Espiões de escopo de MÓDULO: dentro do `render` seriam inalcançáveis pela
 // play, e a aba Actions nasceria vazia.
-const aoEscolherNoCombobox = fn();
+const onComboboxSelect = fn();
 const aoRodarComando = fn();
 
 const meta: Meta = {
@@ -173,7 +173,7 @@ export const WithShortcuts: Story = {
 export const WithLinkItem: Story = {
   name: 'With CommandLinkItem',
   parameters: {
-    docs: { source: { transform: commandComLinkItemSource } },
+    docs: { source: { transform: commandWithLinkItemSource } },
   },
   render: () => ({
     Component: CommandComposicaoLinkItemStory,
@@ -217,9 +217,9 @@ export const WithLinkItem: Story = {
       const docs = canvas.getByRole('option', { name: /Button — Docs/ });
       const saida = docs.querySelector<HTMLElement>('.nds-spacer-start')!;
       const caixaItem = docs.getBoundingClientRect();
-      const caixaSaida = saida.getBoundingClientRect();
-      await expect(caixaItem.right - caixaSaida.right).toBeLessThan(
-        caixaSaida.left - caixaItem.left,
+      const boxOutput = saida.getBoundingClientRect();
+      await expect(caixaItem.right - boxOutput.right).toBeLessThan(
+        boxOutput.left - caixaItem.left,
       );
     });
   },
@@ -234,7 +234,7 @@ export const AsCombobox: Story = {
   },
   render: () => ({
     Component: CommandComposicaoComboboxStory,
-    props: { onValueChange: aoEscolherNoCombobox },
+    props: { onValueChange: onComboboxSelect },
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -289,12 +289,12 @@ export const AsCombobox: Story = {
 
     await step('Escolher fecha o popover e leva o valor para o gatilho', async () => {
       const painel = await abrir();
-      const antes = aoEscolherNoCombobox.mock.calls.length;
+      const antes = onComboboxSelect.mock.calls.length;
       await userEvent.click(within(painel).getByRole('option', { name: 'Input' }));
 
       await waitForPortalGone('dialog');
-      await expect(aoEscolherNoCombobox.mock.calls.length).toBe(antes + 1);
-      await expect(aoEscolherNoCombobox.mock.calls[antes][0]).toBe('input');
+      await expect(onComboboxSelect.mock.calls.length).toBe(antes + 1);
+      await expect(onComboboxSelect.mock.calls[antes][0]).toBe('input');
       await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
       await expect(gatilho).toHaveTextContent('Input');
       // O nome acessível acompanha o valor visível (WCAG 2.5.3).
@@ -318,9 +318,9 @@ export const CommandPalette: Story = {
     const canvas = within(canvasElement);
     // O gatilho da paleta é um botão comum (o CommandDialog não expõe trigger),
     // então a idempotência se apoia na presença do painel, não em aria-expanded.
-    const painelNoDom = () => document.querySelector('[data-slot="dialog-content"]');
+    const domPanel = () => document.querySelector('[data-slot="dialog-content"]');
     const fechar = async (): Promise<void> => {
-      if (painelNoDom()) await userEvent.keyboard('{Escape}');
+      if (domPanel()) await userEvent.keyboard('{Escape}');
       await waitForPortalGone('dialog');
       // O portal sumir não basta: enquanto o diálogo é modal, a lib põe
       // `pointer-events: none` no `body` para tornar o resto da página inerte, e
@@ -341,7 +341,7 @@ export const CommandPalette: Story = {
 
     const gatilho = canvas.getByRole('button', { name: /Buscar/ });
     const abrirPorBotao = async (): Promise<HTMLElement> => {
-      if (!painelNoDom()) await userEvent.click(gatilho);
+      if (!domPanel()) await userEvent.click(gatilho);
       return await waitForPortal('dialog');
     };
 

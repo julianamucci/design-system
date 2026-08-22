@@ -4,7 +4,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import { RadioGroup } from './index';
 import RadioGroupStory from './RadioGroupStory.svelte';
 import {
-  radioGroupEntregaComDescricaoSource,
+  radioGroupEntregaWithDescriptionSource,
   radioGroupEntregaHorizontalSource,
   radioGroupSource,
   radioGroupVerticalSource,
@@ -72,7 +72,7 @@ export const PaymentMethod: Story = {
   },
 };
 
-export const DeliveryMethodHorizontal: Story = {
+export const HorizontalDeliveryMethod: Story = {
   parameters: {
     docs: { source: { transform: radioGroupEntregaHorizontalSource } },
   },
@@ -106,7 +106,7 @@ export const DeliveryMethodHorizontal: Story = {
 
 export const WithDescription: Story = {
   parameters: {
-    docs: { source: { transform: radioGroupEntregaComDescricaoSource } },
+    docs: { source: { transform: radioGroupEntregaWithDescriptionSource } },
   },
   render: () => ({
     Component: RadioGroupStory,

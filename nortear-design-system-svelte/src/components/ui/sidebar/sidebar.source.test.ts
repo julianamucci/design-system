@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
-  sidebarEsqueletoSource,
+  sidebarSkeletonSource,
   sidebarExpandidaSource,
   sidebarFixaSource,
   sidebarGavetaSource,
-  sidebarGruposDeNavegacaoSource,
+  navigationSourceSidebarGroups,
   sidebarLadoDireitoSource,
-  sidebarModoIconeSource,
+  sidebarModeIconSource,
   sidebarOffcanvasFechadaSource,
   sidebarSource,
   sidebarSubmenuSource,
@@ -148,7 +148,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o modo ícone nomeia o item, porque o rótulo visível some', () => {
-    const saida = sidebarModoIconeSource();
+    const saida = sidebarModeIconSource();
     expect(saida).toContain('collapsible="icon"');
     expect(saida).toContain('aria-label={item.label}');
     expect(saida).toContain('nds-sidebar-hide-collapsed');
@@ -160,7 +160,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a composição de grupos traz busca, separador, contador e ações nomeadas', () => {
-    const saida = sidebarGruposDeNavegacaoSource();
+    const saida = navigationSourceSidebarGroups();
     expect(saida).toContain('<SidebarInput placeholder="Buscar..." aria-label="Buscar na navegação" />');
     expect(saida).toContain('<SidebarSeparator />');
     expect(saida).toContain('<SidebarMenuBadge>{item.badge}</SidebarMenuBadge>');
@@ -176,7 +176,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o carregamento troca cada item por um espaço reservado com ícone', () => {
-    const saida = sidebarEsqueletoSource();
+    const saida = sidebarSkeletonSource();
     expect(saida).toContain('<SidebarMenuSkeleton showIcon />');
     expect(saida).not.toContain('<SidebarMenuButton');
   });

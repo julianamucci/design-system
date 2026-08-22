@@ -6,10 +6,10 @@ import InputWithLabelStory from './InputWithLabelStory.svelte';
 import InputGroupStory from './InputGroupStory.svelte';
 import {
   inputComErroSource,
-  inputComTextoDeApoioSource,
-  inputEmGrupoComBotaoSource,
-  inputEmGrupoSource,
-  inputSenhaComApoioSource,
+  helperSourceInputWithText,
+  groupWithButtonSourceInput,
+  groupSourceInput,
+  inputSenhaWithHelperSource,
   inputSource,
 } from './input.source';
 
@@ -69,7 +69,7 @@ export const WithLabel: Story = {
 };
 
 export const WithLabelAndHint: Story = {
-  parameters: { docs: { source: { transform: inputComTextoDeApoioSource } } },
+  parameters: { docs: { source: { transform: helperSourceInputWithText } } },
   render: () => ({
     Component: InputWithLabelStory,
     props: {
@@ -130,7 +130,7 @@ export const ErrorMessage: Story = {
 };
 
 export const Password: Story = {
-  parameters: { docs: { source: { transform: inputSenhaComApoioSource } } },
+  parameters: { docs: { source: { transform: inputSenhaWithHelperSource } } },
   render: () => ({
     Component: InputWithLabelStory,
     props: {
@@ -162,7 +162,7 @@ export const Password: Story = {
 export const Alignments: Story = {
   parameters: {
     covers: ['functional.item7', 'visual.item4'],
-    docs: { source: { transform: inputEmGrupoSource } },
+    docs: { source: { transform: groupSourceInput } },
   },
   render: () => ({ Component: InputGroupStory, props: { cenario: 'alinhamentos' } }),
   play: async ({ canvasElement, step }) => {
@@ -208,7 +208,7 @@ export const Alignments: Story = {
 export const AddonClick: Story = {
   parameters: {
     covers: ['functional.item8'],
-    docs: { source: { transform: inputEmGrupoComBotaoSource } },
+    docs: { source: { transform: groupWithButtonSourceInput } },
   },
   render: () => ({ Component: InputGroupStory, props: { cenario: 'clique' } }),
   play: async ({ canvasElement, step }) => {

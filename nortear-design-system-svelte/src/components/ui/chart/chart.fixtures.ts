@@ -18,6 +18,6 @@ import { desenhoPintado } from '@shared/testing/chart-probe';
  * É a precondição de qualquer medida, e cada story a repõe por conta própria —
  * o painel Interactions reexecuta a play no MESMO DOM.
  */
-export async function aguardarDesenho(raiz: HTMLElement): Promise<void> {
+export async function waitForDesign(raiz: HTMLElement): Promise<void> {
   await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
 }

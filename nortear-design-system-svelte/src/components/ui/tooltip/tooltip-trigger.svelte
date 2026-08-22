@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Tooltip as TooltipPrimitive } from "bits-ui";
-	import { usarDescricao } from "./tooltip-descricao.svelte";
+	import { usarDescription } from "./tooltip-descricao.svelte";
 
 	let { ref = $bindable(null), ...restProps }: TooltipPrimitive.TriggerProps = $props();
 
-	const descricao = usarDescricao();
+	const descricao = usarDescription();
 
 	// Escrito no nó, e não em prop: o `mergeProps` da lib põe as props DELA
 	// depois das nossas, então um `aria-describedby` passado por prop seria

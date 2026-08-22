@@ -8,10 +8,10 @@ import {
   corDoToken, desenhoEscreve, desenhoPintado, exigirRaiz, formasDeDado,
   fundoOpacoAtras, textosDoDesenho, tramasAplicadas,
 } from '@shared/testing/chart-probe';
-import { aguardarDesenho } from './chart.fixtures';
+import { waitForDesign } from './chart.fixtures';
 import {
   chartBarrasSource,
-  chartDoisTiposSource,
+  chartDoisTypesSource,
   chartMultiSerieSource,
   chartSource,
   chartVazioSource,
@@ -99,7 +99,7 @@ export const SingleSeries: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
-    await aguardarDesenho(raiz);
+    await waitForDesign(raiz);
 
     await step('O desenho saiu de verdade — controle da medição negativa abaixo', async () => {
       await waitFor(() => {
@@ -131,7 +131,7 @@ export const MultiSeries: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
-    await aguardarDesenho(raiz);
+    await waitForDesign(raiz);
 
     await step('A legenda escreve o nome de cada série', async () => {
       await waitFor(() => {
@@ -175,7 +175,7 @@ export const ThemeTokens: Story = {
       'visual.item4': 'a foto no tema escuro depende do mesmo caminho — verificação em aberto',
     },
     docs: {
-      source: { transform: chartDoisTiposSource },
+      source: { transform: chartDoisTypesSource },
       description: { story: 'Cor e tipografia do desenho saem dos tokens do tema em vigor, não de valores cravados.' },
     },
   },
@@ -246,7 +246,7 @@ export const GraphicContrast: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
-    await aguardarDesenho(raiz);
+    await waitForDesign(raiz);
     // Precondição da medida: ver o comentário de `assentarTema`.
     await assentarTema(document);
     const fundo = fundoOpacoAtras(raiz);

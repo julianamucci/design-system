@@ -22,7 +22,7 @@ const ESTADOS: Opcao[] = [
   { value: 'mg', label: 'Minas Gerais' },
 ];
 
-const ESTADOS_COM_ES: Opcao[] = [...ESTADOS, { value: 'es', label: 'Espírito Santo' }];
+const STATES_WITH_ES: Opcao[] = [...ESTADOS, { value: 'es', label: 'Espírito Santo' }];
 
 const REGIOES: Grupo[] = [
   { label: 'Sudeste', opcoes: ESTADOS },
@@ -39,7 +39,7 @@ const REGIOES: Grupo[] = [
 const PLACEHOLDER = 'Selecione...';
 
 /** Literal de opções indentado para dentro do bloco `<script>`. */
-function literalDeOpcoes(opcoes: Opcao[], recuo = '  '): string {
+function optionsLiteral(opcoes: Opcao[], recuo = '  '): string {
   return opcoes
     .map((o) => `${recuo}{ value: "${o.value}", label: "${o.label}" },`)
     .join('\n');
@@ -55,7 +55,7 @@ type Opcoes = {
 };
 
 /** Atributos da raiz. `type` é obrigatório; o resto só quando difere do padrão. */
-function propsDaRaiz(o: Opcoes): string {
+function rootProps(o: Opcoes): string {
   return attrs(
     'type="single"',
     'bind:value',
@@ -65,7 +65,7 @@ function propsDaRaiz(o: Opcoes): string {
 }
 
 /** Atributos do gatilho, na ordem em que a composição real os escreve. */
-function propsDoGatilho(o: Opcoes): string {
+function triggerProps(o: Opcoes): string {
   return attrs(
     o.size ? `size="${o.size}"` : '',
     `aria-label="${o.rotuloAcessivel ?? 'Selecionar estado'}"`,
@@ -75,7 +75,7 @@ function propsDoGatilho(o: Opcoes): string {
 
 /** Gatilho: rótulo do valor escolhido, ou o texto de espera em tom apagado. */
 function gatilho(o: Opcoes): string {
-  return `  <SelectTrigger${propsDoGatilho(o)}>
+  return `  <SelectTrigger${triggerProps(o)}>
     {#if rotulo}
       <span>{rotulo}</span>
     {:else}
@@ -90,7 +90,7 @@ function gatilho(o: Opcoes): string {
  * O rótulo do campo fechado sai da lista que a composição já tem em mãos: a
  * lista é desmontada ao fechar, e não haveria de onde tirá-lo depois.
  */
-function listaPlana(opcoes: Opcao[], o: Opcoes = {}): string {
+function listPlana(opcoes: Opcao[], o: Opcoes = {}): string {
   return svelteSnippet(
     `import {
   Select,
@@ -102,11 +102,11 @@ function listaPlana(opcoes: Opcao[], o: Opcoes = {}): string {
 let value = $state("${o.valor ?? ''}");
 
 const estados = [
-${literalDeOpcoes(opcoes)}
+${optionsLiteral(opcoes)}
 ];
 
 const rotulo = $derived(estados.find((estado) => estado.value === value)?.label ?? "");`,
-    `<Select${propsDaRaiz(o)}>
+    `<Select${rootProps(o)}>
 ${gatilho(o)}
   <SelectContent>
     {#each estados as estado (estado.value)}
@@ -118,12 +118,12 @@ ${gatilho(o)}
 }
 
 /** Lista agrupada por categoria, com divisão decorativa entre os grupos. */
-function listaAgrupada(o: Opcoes = {}): string {
+function listAgrupada(o: Opcoes = {}): string {
   const grupos = REGIOES.map(
     (g) => `  {
     label: "${g.label}",
     opcoes: [
-${literalDeOpcoes(g.opcoes, '      ')}
+${optionsLiteral(g.opcoes, '      ')}
     ],
   },`,
   ).join('\n');
@@ -148,7 +148,7 @@ ${grupos}
 const rotulo = $derived(
   regioes.flatMap((regiao) => regiao.opcoes).find((opcao) => opcao.value === value)?.label ?? "",
 );`,
-    `<Select${propsDaRaiz(o)}>
+    `<Select${rootProps(o)}>
 ${gatilho(o)}
   <SelectContent>
     {#each regioes as regiao, i (regiao.label)}
@@ -168,7 +168,7 @@ ${gatilho(o)}
 }
 
 /** Lista com ícone decorativo antes do texto de cada opção. */
-function listaComIcone(o: Opcoes = {}): string {
+function listWithIcon(o: Opcoes = {}): string {
   return svelteSnippet(
     `import {
   Select,
@@ -181,11 +181,11 @@ import MapPinIcon from "@lucide/svelte/icons/map-pin";
 let value = $state("");
 
 const estados = [
-${literalDeOpcoes(ESTADOS_COM_ES)}
+${optionsLiteral(STATES_WITH_ES)}
 ];
 
 const rotulo = $derived(estados.find((estado) => estado.value === value)?.label ?? "");`,
-    `<Select${propsDaRaiz(o)}>
+    `<Select${rootProps(o)}>
 ${gatilho(o)}
   <SelectContent>
     {#each estados as estado (estado.value)}
@@ -206,12 +206,12 @@ ${gatilho(o)}
  */
 export function selectSource(_gerado?: string, ctx?: { args?: Partial<SelectArgs> }): string {
   const { value = '', disabled = false, name } = ctx?.args ?? {};
-  return listaPlana(ESTADOS, { valor: value, disabled, name });
+  return listPlana(ESTADOS, { valor: value, disabled, name });
 }
 
 /** Variante de lista plana: só opções, sem cabeçalho nem divisão. */
 export function selectListaPlanaSource(): string {
-  return listaPlana(ESTADOS_COM_ES);
+  return listPlana(STATES_WITH_ES);
 }
 
 /**
@@ -219,30 +219,30 @@ export function selectListaPlanaSource(): string {
  * nomeia o grupo, e a linha entre grupos é só para o olho.
  */
 export function selectComGruposSource(): string {
-  return listaAgrupada({ rotuloAcessivel: 'Selecionar região' });
+  return listAgrupada({ rotuloAcessivel: 'Selecionar região' });
 }
 
 /** Variante com ícone inline antes do rótulo de cada opção. */
 export function selectComIconeSource(): string {
-  return listaComIcone();
+  return listWithIcon();
 }
 
 /** Estado preenchido: um valor já escolhido antes da primeira abertura. */
 export function selectSelecionadoSource(): string {
-  return listaPlana(ESTADOS, { valor: 'rj' });
+  return listPlana(ESTADOS, { valor: 'rj' });
 }
 
 /** Estado bloqueado: o campo não abre e sai do percurso do Tab. */
 export function selectBloqueadoSource(): string {
-  return listaPlana(ESTADOS, { disabled: true });
+  return listPlana(ESTADOS, { disabled: true });
 }
 
 /** Estado inválido: o campo reprovado se anuncia, e a borda de perigo reforça. */
 export function selectInvalidoSource(): string {
-  return listaPlana(ESTADOS, { invalido: true });
+  return listPlana(ESTADOS, { invalido: true });
 }
 
 /** Composição compacta: densidade menor pelo `padding-block`, sem altura cravada. */
 export function selectCompactoSource(): string {
-  return listaPlana(ESTADOS_COM_ES, { size: 'sm' });
+  return listPlana(STATES_WITH_ES, { size: 'sm' });
 }

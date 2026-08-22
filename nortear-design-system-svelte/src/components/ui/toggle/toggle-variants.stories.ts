@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import ToggleScenarioStory from './ToggleScenarioStory.svelte';
 import {
   toggleComRotuloSource,
-  toggleParDeVariantesSource,
+  variantsSourceTogglePair,
   toggleSource,
   toggleTamanhosSource,
 } from './toggle.source';
@@ -64,7 +64,7 @@ export const Default: Story = {
 export const Outline: Story = {
   parameters: {
     covers: ['visual.item3'],
-    docs: { source: { transform: toggleParDeVariantesSource } },
+    docs: { source: { transform: variantsSourceTogglePair } },
   },
   args: { cenario: 'variants' },
   play: async ({ canvasElement, step }) => {

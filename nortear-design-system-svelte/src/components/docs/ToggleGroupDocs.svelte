@@ -118,7 +118,7 @@
   // Variants previews
   let varSingle = $state<string>('left');
   let varMultiple = $state<string[]>([]);
-  let varVertical = $state<string>('grid');
+  let verticalVar = $state<string>('grid');
 
   // Compositions previews
   let compAlign = $state<string>('left');
@@ -523,7 +523,7 @@ interface ToggleGroupItemProps {
   {/snippet}
 
   {#snippet variantVertical()}
-    <ToggleGroup type="single" orientation="vertical" variant="outline" bind:value={varVertical} aria-label="Modo de visualização">
+    <ToggleGroup type="single" orientation="vertical" variant="outline" bind:value={verticalVar} aria-label="Modo de visualização">
       <ToggleGroupItem value="grid" aria-label="Grade">
         <LayoutGrid aria-hidden="true" />
       </ToggleGroupItem>

@@ -10,10 +10,10 @@ import {
 import ScrollAreaStory from './ScrollAreaStory.svelte';
 import {
   scrollAreaConteudoFocavelSource,
-  scrollAreaDuranteRolagemSource,
+  scrollAreaDuranteScrollSource,
   scrollAreaOciosoSource,
-  scrollAreaSemTetoSource,
-  scrollAreaSempreVisivelSource,
+  scrollAreaNoTetoSource,
+  scrollAreaSempreVisibleSource,
   scrollAreaSource,
 } from './scroll-area.source';
 
@@ -99,7 +99,7 @@ export const Idle: Story = {
 export const Always: Story = {
   parameters: {
     covers: ['functional.item2', 'accessibility.item2'],
-    docs: { source: { transform: scrollAreaSempreVisivelSource } },
+    docs: { source: { transform: scrollAreaSempreVisibleSource } },
   },
   render: () => ({
     Component: ScrollAreaStory,
@@ -222,7 +222,7 @@ export const Always: Story = {
 
 export const ScrollOnly: Story = {
   parameters: {
-    docs: { source: { transform: scrollAreaDuranteRolagemSource } },
+    docs: { source: { transform: scrollAreaDuranteScrollSource } },
   },
   render: () => ({
     Component: ScrollAreaStory,
@@ -263,7 +263,7 @@ export const Focus: Story = {
     covers: ['accessibility.item3', 'visual.item4'],
     // Mesma composição da Always: o viewport entra na ordem de tabulação por
     // conta do componente, sem nenhuma prop no ponto de uso.
-    docs: { source: { transform: scrollAreaSempreVisivelSource } },
+    docs: { source: { transform: scrollAreaSempreVisibleSource } },
   },
   render: () => ({
     Component: ScrollAreaStory,
@@ -348,7 +348,7 @@ export const FocusableContent: Story = {
 export const NoLimit: Story = {
   parameters: {
     covers: ['functional.item4'],
-    docs: { source: { transform: scrollAreaSemTetoSource } },
+    docs: { source: { transform: scrollAreaNoTetoSource } },
   },
   render: () => ({
     Component: ScrollAreaStory,
@@ -378,9 +378,9 @@ export const NoLimit: Story = {
       // junto. É o que explica o sintoma — nada some, nada rola, a página é que
       // fica comprida.
       const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
-      const alturaRaiz = raiz.getBoundingClientRect().height;
-      const alturaViewport = viewport.getBoundingClientRect().height;
-      await expect(Math.abs(alturaRaiz - alturaViewport)).toBeLessThan(2);
+      const heightRoot = raiz.getBoundingClientRect().height;
+      const heightViewport = viewport.getBoundingClientRect().height;
+      await expect(Math.abs(heightRoot - heightViewport)).toBeLessThan(2);
     });
   },
 };

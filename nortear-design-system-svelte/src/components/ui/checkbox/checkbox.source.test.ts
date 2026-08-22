@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import {
   checkboxComDescricaoSource,
-  checkboxComErroSource,
+  checkboxWithErrorSource,
   checkboxDesabilitadoMarcadoSource,
   checkboxDesabilitadoSource,
   checkboxEmFormularioSource,
   checkboxIndeterminadoSource,
   checkboxManterSessaoSource,
-  checkboxMarcadoComRotuloSource,
+  checkboxCheckedWithLabelSource,
   checkboxMarcadoSource,
   checkboxSelecionarTodosSource,
-  checkboxSemRotuloSource,
+  checkboxNoLabelSource,
   checkboxSource,
 } from './checkbox.source';
 
@@ -68,7 +68,7 @@ describe('checkboxSource', () => {
 
 describe('transforms das stories de variação, estado e composição', () => {
   it('a caixa sozinha não abre a linha de rótulo', () => {
-    expect(checkboxSemRotuloSource()).not.toContain('nds-cluster');
+    expect(checkboxNoLabelSource()).not.toContain('nds-cluster');
   });
 
   it('a caixa sozinha marcada parte de true', () => {
@@ -86,7 +86,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o par marcado guarda o rótulo padrão, e a sessão guarda o próprio', () => {
-    expect(checkboxMarcadoComRotuloSource()).toContain('Aceito os termos e condições');
+    expect(checkboxCheckedWithLabelSource()).toContain('Aceito os termos e condições');
     expect(checkboxManterSessaoSource()).toContain('Manter sessão ativa');
   });
 
@@ -100,7 +100,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o erro aparece pelo canal ARIA, sem desabilitar a caixa', () => {
-    const saida = checkboxComErroSource();
+    const saida = checkboxWithErrorSource();
     expect(saida).toContain('aria-invalid="true"');
     expect(saida).not.toContain('data-disabled');
   });

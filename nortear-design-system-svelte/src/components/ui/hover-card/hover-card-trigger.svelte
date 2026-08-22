@@ -39,7 +39,7 @@
 	// interceptar o snippet `child`, que é onde os props passam antes de chegar
 	// ao elemento — e é também onde `data-slot` entra, para sobreviver ao
 	// mesmo merge.
-	function semEstadoDeMenu(props: Record<string, unknown>): Record<string, unknown> {
+	function menuNoState(props: Record<string, unknown>): Record<string, unknown> {
 		const limpos: Record<string, unknown> = {
 			...props,
 			"data-slot": "hover-card-trigger",
@@ -54,7 +54,7 @@
 
 <HoverCardPrimitive.Trigger bind:ref {...restProps}>
 	{#snippet child({ props })}
-		{@const limpos = semEstadoDeMenu(props as Record<string, unknown>)}
+		{@const limpos = menuNoState(props as Record<string, unknown>)}
 		{#if child}
 			{@render child({ props: limpos })}
 		{:else}

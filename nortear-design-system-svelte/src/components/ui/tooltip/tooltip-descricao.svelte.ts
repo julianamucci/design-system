@@ -20,7 +20,7 @@ import { getContext, setContext } from 'svelte';
  * flush, e efeitos de usuário rodam depois dos de render — é o que faz a nossa
  * ser a última palavra.
  */
-export type TooltipDescricao = {
+export type TooltipDescription = {
   readonly id: string;
   readonly aberto: boolean;
   readonly montado: boolean;
@@ -29,10 +29,10 @@ export type TooltipDescricao = {
 
 const CHAVE = Symbol('nds-tooltip-descricao');
 
-export function fornecerDescricao(descricao: TooltipDescricao): void {
+export function fornecerDescription(descricao: TooltipDescription): void {
   setContext(CHAVE, descricao);
 }
 
-export function usarDescricao(): TooltipDescricao | undefined {
-  return getContext<TooltipDescricao | undefined>(CHAVE);
+export function usarDescription(): TooltipDescription | undefined {
+  return getContext<TooltipDescription | undefined>(CHAVE);
 }

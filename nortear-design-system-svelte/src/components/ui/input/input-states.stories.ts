@@ -13,7 +13,7 @@ import InputWithLabelStory from './InputWithLabelStory.svelte';
 import InputDarkPaletteStory from './InputDarkPaletteStory.svelte';
 import {
   inputComErroSource,
-  inputComPlaceholderSource,
+  inputWithPlaceholderSource,
   inputDesabilitadoSource,
   inputPaletaEscuraSource,
   inputSource,
@@ -141,7 +141,7 @@ export const Focus: Story = {
 };
 
 export const WithPlaceholder: Story = {
-  parameters: { docs: { source: { transform: inputComPlaceholderSource } } },
+  parameters: { docs: { source: { transform: inputWithPlaceholderSource } } },
   render: () => ({
     Component: InputWithLabelStory,
     props: { labelText: 'Email', id: 'estado-placeholder', type: 'email', placeholder: 'ex: joao@empresa.com' },

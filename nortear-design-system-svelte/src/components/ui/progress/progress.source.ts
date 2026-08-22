@@ -27,7 +27,7 @@ export type ProgressArgs = {
 const IMPORT = `import { Progress } from "@/components/ui/progress";`;
 
 /** O relógio que faz a barra andar na composição de upload. */
-function estadoAnimado(intervalMs: number, passo: number, max: number): string {
+function stateAnimado(intervalMs: number, passo: number, max: number): string {
   return `let valor = $state(0);
 
 $effect(() => {
@@ -70,7 +70,7 @@ export function progressSource(_gerado?: string, ctx?: { args?: Partial<Progress
   const barra = `<Progress${props} />`;
 
   const script = a.animated
-    ? `${IMPORT}\n\n${estadoAnimado(a.intervalMs, a.step, a.max)}`
+    ? `${IMPORT}\n\n${stateAnimado(a.intervalMs, a.step, a.max)}`
     : IMPORT;
 
   // Sem rótulo nem porcentagem a barra é o exemplo inteiro; a linha de cima só
@@ -81,7 +81,7 @@ export function progressSource(_gerado?: string, ctx?: { args?: Partial<Progress
     ? '{valor}%'
     : `${a.value === null ? '' : Math.round((100 * a.value) / (a.max || 1))}%`;
 
-  const linhaDeTexto = [
+  const textLine = [
     a.showLabel ? `    <span class="nds-font-medium nds-text-foreground">${a.label}</span>` : '',
     // `polite` e não `assertive`: a cada passo do upload o leitor seria
     // interrompido no meio da frase anterior.
@@ -94,7 +94,7 @@ export function progressSource(_gerado?: string, ctx?: { args?: Partial<Progress
     script,
     `<div class="nds-stack" data-spacing="sm">
   <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
-${linhaDeTexto.join('\n')}
+${textLine.join('\n')}
   </div>
   ${barra}
 </div>`,

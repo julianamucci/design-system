@@ -3,7 +3,7 @@ import { expect, userEvent, within } from 'storybook/test';
 import { ordemDeTabulacao } from '@shared/testing/form-probe';
 import FormGroupStory from './FormGroupStory.svelte';
 import FormMultipleStory from './FormMultipleStory.svelte';
-import { formFieldsetSource, formVariosCamposSource } from './form.source';
+import { formFieldsetSource, formMultipleFieldsSource } from './form.source';
 
 const meta: Meta = {
   title: 'UI/Form/Compositions',
@@ -69,7 +69,7 @@ export const Fieldset: Story = {
 export const MultipleFields: Story = {
   parameters: {
     covers: ['functional.item6', 'functional.item8'],
-    docs: { source: { transform: formVariosCamposSource } },
+    docs: { source: { transform: formMultipleFieldsSource } },
   },
   render: () => ({ Component: FormMultipleStory }),
   play: async ({ canvasElement, step }) => {

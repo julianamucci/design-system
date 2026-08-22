@@ -82,7 +82,7 @@ const cards = Array.from({ length: ${itens} }, (_, i) => \`Card \${i + 1}\`);`,
 }
 
 /** Matriz que transborda nos dois eixos — o caso de tabela ampla. */
-function tabelaBidirecional(o: Opcoes & { linhas?: number; colunas?: number }): string {
+function tableBidirecional(o: Opcoes & { linhas?: number; colunas?: number }): string {
   const linhas = o.linhas ?? 12;
   const colunas = o.colunas ?? 12;
   return svelteSnippet(
@@ -109,7 +109,7 @@ const colunas = Array.from({ length: ${colunas} }, (_, i) => i + 1);`,
 }
 
 /** Lista de links dentro da área rolável — navegação de sidebar. */
-function listaDeLinks(o: Opcoes & { rotulo: string; nav: string }): string {
+function linksList(o: Opcoes & { rotulo: string; nav: string }): string {
   const itens = o.itens ?? 40;
   return svelteSnippet(
     `${IMPORT}
@@ -143,7 +143,7 @@ export function scrollAreaSource(
   const { orientation = 'vertical', type = 'always', scrollHideDelay = 600 } = ctx?.args ?? {};
   const base = { type, scrollHideDelay, size: 'xl' as Tamanho };
   if (orientation === 'horizontal') return faixaHorizontal({ ...base, size: 'md', itens: 10 });
-  if (orientation === 'both') return tabelaBidirecional({ ...base, size: 'lg' });
+  if (orientation === 'both') return tableBidirecional({ ...base, size: 'lg' });
   return listaVertical(base);
 }
 
@@ -159,7 +159,7 @@ export function scrollAreaHorizontalSource(): string {
 
 /** Variante bidirecional: matriz que transborda na largura e na altura. */
 export function scrollAreaBothSource(): string {
-  return tabelaBidirecional({ type: 'always', size: 'lg' });
+  return tableBidirecional({ type: 'always', size: 'lg' });
 }
 
 /** Estado ocioso: com o padrão de `type`, a barra só aparece sob o ponteiro. */
@@ -171,18 +171,18 @@ export function scrollAreaOciosoSource(): string {
  * Barra sempre montada — também o estado de foco, cuja lição (o viewport entra
  * na ordem de tabulação) já vem do componente, sem prop nenhuma.
  */
-export function scrollAreaSempreVisivelSource(): string {
+export function scrollAreaSempreVisibleSource(): string {
   return listaVertical({ type: 'always', size: 'lg', itens: 20 });
 }
 
 /** Barra durante a rolagem, com atraso próprio para ela sumir depois. */
-export function scrollAreaDuranteRolagemSource(): string {
+export function scrollAreaDuranteScrollSource(): string {
   return listaVertical({ type: 'scroll', scrollHideDelay: 1000, size: 'lg', itens: 20 });
 }
 
 /** Conteúdo focável dentro da área: rolar por teclado e agir por teclado convivem. */
 export function scrollAreaConteudoFocavelSource(): string {
-  return listaDeLinks({
+  return linksList({
     type: 'always',
     size: 'lg',
     itens: 20,
@@ -195,13 +195,13 @@ export function scrollAreaConteudoFocavelSource(): string {
  * Erro de uso: sem degrau de altura não há teto, sem teto não há transbordo e
  * sem transbordo não há rolagem — o componente aparenta estar quebrado.
  */
-export function scrollAreaSemTetoSource(): string {
+export function scrollAreaNoTetoSource(): string {
   return listaVertical({ type: 'always', itens: 20 });
 }
 
 /** Composição: lista de navegação numa barra lateral. */
-export function scrollAreaListaEmSidebarSource(): string {
-  return listaDeLinks({
+export function sidebarSourceScrollAreaList(): string {
+  return linksList({
     size: 'xl',
     itens: 40,
     rotulo: 'Item',
@@ -210,6 +210,6 @@ export function scrollAreaListaEmSidebarSource(): string {
 }
 
 /** Composição: tabela ampla, com as duas barras e a janela mais alta. */
-export function scrollAreaTabelaAmplaSource(): string {
-  return tabelaBidirecional({ type: 'always', size: 'xl', linhas: 15, colunas: 15 });
+export function scrollAreaTableAmplaSource(): string {
+  return tableBidirecional({ type: 'always', size: 'xl', linhas: 15, colunas: 15 });
 }

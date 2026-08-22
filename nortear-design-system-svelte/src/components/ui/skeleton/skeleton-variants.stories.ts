@@ -5,7 +5,7 @@ import SkeletonVarianteStory from './SkeletonVarianteStory.svelte';
 import { caixaDesenhada } from '@shared/testing/skeleton-probe';
 import {
   skeletonCirculoSource,
-  skeletonLinhasDeTextoSource,
+  textSourceSkeletonLines,
   skeletonRetanguloSource,
   skeletonSource,
 } from './skeleton.source';
@@ -94,7 +94,7 @@ export const TextLine: Story = {
   args: { variant: 'textLine' },
   parameters: {
     docs: {
-      source: { transform: skeletonLinhasDeTextoSource },
+      source: { transform: textSourceSkeletonLines },
       description: {
         story:
           'Altura derivada da escada de texto e largura em fração do container. Variar a largura entre linhas é o que faz o bloco parecer parágrafo.',

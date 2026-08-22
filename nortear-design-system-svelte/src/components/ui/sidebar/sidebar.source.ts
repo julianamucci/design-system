@@ -140,7 +140,7 @@ function cabecalho(menu: Menu, collapsible: SidebarArgs['collapsible']): string 
 }
 
 /** Botão de item de menu, com o que cada modo de recolhimento exige. */
-function botaoDoItem(collapsible: SidebarArgs['collapsible']): string {
+function itemButton(collapsible: SidebarArgs['collapsible']): string {
   // `tooltip` só faz sentido onde a barra encolhe; em modo ícone o rótulo
   // visível some, e o `aria-label` é o que garante o nome em qualquer entrada —
   // o balão não aparece para quem navega por teclado.
@@ -191,7 +191,7 @@ function grupos(menu: Menu, collapsible: SidebarArgs['collapsible']): string {
             <SidebarMenu>
               {#each itensPrincipais as item (item.label)}
                 <SidebarMenuItem>
-${botaoDoItem(collapsible)}
+${itemButton(collapsible)}
                   {#if item.badge}
                     <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
                   {/if}
@@ -293,7 +293,7 @@ ${botaoDoItem(collapsible)}
             <SidebarMenu>
               {#each itens as item (item.label)}
                 <SidebarMenuItem>
-${botaoDoItem(collapsible)}
+${itemButton(collapsible)}
                 </SidebarMenuItem>
               {/each}
             </SidebarMenu>
@@ -316,7 +316,7 @@ function aplicacao(o: Opcoes = {}): string {
   // Sem recolhimento não há o que alternar: o gatilho e a faixa saem junto.
   const comGatilho = collapsible !== 'none';
 
-  const importesDeIcone = icones(menu)
+  const iconImportes = icones(menu)
     .map((nome) => `import ${nome} from "@lucide/svelte/icons/${ICONES[nome]}";`)
     .join('\n');
   const importeDeTransicao = menu === 'submenu' ? `\nimport { slide } from "svelte/transition";` : '';
@@ -329,15 +329,15 @@ function aplicacao(o: Opcoes = {}): string {
   //
   // Aqui o valor inicial vira estado ligado ao provider, que é a única forma
   // de "começar fechado" que esta API oferece.
-  const estadoInicial = defaultOpen ? '' : '\nlet aberta = $state(false);';
+  const stateInitial = defaultOpen ? '' : '\nlet aberta = $state(false);';
 
   const script = `import {
 ${pecas(menu, comGatilho).map((p) => `  ${p},`).join('\n')}
 } from "@/components/ui/sidebar";
-${importesDeIcone}${importeDeTransicao}${estadoInicial}${dados(menu)}`;
+${iconImportes}${importeDeTransicao}${stateInitial}${dados(menu)}`;
 
   const rodape = menu === 'grupos' ? 'Design System v1.0' : 'v1.0.0';
-  const classeDoRodape =
+  const footerClassName =
     collapsible === 'icon'
       ? 'nds-text-caption nds-text-muted-foreground nds-sidebar-hide-collapsed'
       : 'nds-text-caption nds-text-muted-foreground';
@@ -356,7 +356,7 @@ ${grupos(menu, collapsible)}
       </nav>
     </SidebarContent>
     <SidebarFooter class="nds-px-4 nds-py-2 nds-border-t">
-      <span class="${classeDoRodape}">${rodape}</span>
+      <span class="${footerClassName}">${rodape}</span>
     </SidebarFooter>${comGatilho ? '\n    <SidebarRail />' : ''}
   </Sidebar>
   <SidebarInset class="nds-stack nds-flex-1 nds-min-w-0">
@@ -405,7 +405,7 @@ export function sidebarExpandidaSource(): string {
 }
 
 /** Recolhida em ícones: o rótulo some da tela, o nome acessível fica. */
-export function sidebarModoIconeSource(): string {
+export function sidebarModeIconSource(): string {
   return aplicacao({ collapsible: 'icon', defaultOpen: false, titulo: 'Modo ícone recolhido' });
 }
 
@@ -428,7 +428,7 @@ export function sidebarGavetaSource(): string {
 }
 
 /** Composição: dois grupos, busca no cabeçalho, contadores e ações nomeadas. */
-export function sidebarGruposDeNavegacaoSource(): string {
+export function navigationSourceSidebarGroups(): string {
   return aplicacao({ menu: 'grupos', titulo: 'Com grupos de navegação' });
 }
 
@@ -438,6 +438,6 @@ export function sidebarSubmenuSource(): string {
 }
 
 /** Composição: carregamento — cada item vira um espaço reservado. */
-export function sidebarEsqueletoSource(): string {
+export function sidebarSkeletonSource(): string {
   return aplicacao({ menu: 'esqueleto', titulo: 'Estado de carregamento' });
 }

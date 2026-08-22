@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Tooltip as TooltipPrimitive } from "bits-ui";
-	import { fornecerDescricao } from "./tooltip-descricao.svelte";
+	import { fornecerDescription } from "./tooltip-descricao.svelte";
 
 	const uid = $props.id();
 
@@ -25,7 +25,7 @@
 	const id = `nds-tooltip-${uid}`;
 	let montado = $state(false);
 
-	fornecerDescricao({
+	fornecerDescription({
 		get id() {
 			return id;
 		},

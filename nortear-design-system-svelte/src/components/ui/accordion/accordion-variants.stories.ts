@@ -7,7 +7,7 @@ import AccordionStory from './AccordionStory.svelte';
 import AccordionControlledStory from './AccordionControlledStory.svelte';
 import {
   accordionControladoSource,
-  accordionFechaNoSegundoCliqueSource,
+  segundoClickSourceAccordionFecha,
   accordionMultiploSource,
   accordionSource,
 } from './accordion.source';
@@ -120,7 +120,7 @@ export const CloseOnSecondClick: Story = {
   parameters: {
     covers: ['functional.item2'],
     docs: {
-      source: { transform: accordionFechaNoSegundoCliqueSource },
+      source: { transform: segundoClickSourceAccordionFecha },
       description: {
         story: 'Modo único sem nenhuma configuração extra: clicar de novo no item aberto o fecha.',
       },

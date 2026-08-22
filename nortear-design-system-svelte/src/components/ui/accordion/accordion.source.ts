@@ -60,7 +60,7 @@ let value = $state(${inicial});`,
  * Fechar clicando de novo no item aberto, sem nenhuma configuração extra: a
  * raiz nasce só com o modo, sem valor inicial e sem mais nenhuma chave.
  */
-export function accordionFechaNoSegundoCliqueSource(): string {
+export function segundoClickSourceAccordionFecha(): string {
   return svelteSnippet(
     IMPORT,
     `<Accordion type="single" class="nds-max-w-lg">

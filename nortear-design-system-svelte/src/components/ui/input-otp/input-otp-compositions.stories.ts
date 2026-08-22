@@ -6,7 +6,7 @@ import { campo } from './input-otp.fixtures';
 import {
   inputOtpComErroSource,
   inputOtpComReenvioSource,
-  inputOtpComTextoDeApoioSource,
+  helperSourceInputOtpWithText,
   inputOtpSource,
 } from './input-otp.source';
 
@@ -51,7 +51,7 @@ export const WithLabel: Story = {
 };
 
 export const WithHelpText: Story = {
-  parameters: { docs: { source: { transform: inputOtpComTextoDeApoioSource } } },
+  parameters: { docs: { source: { transform: helperSourceInputOtpWithText } } },
   args: {
     maxLength: 6,
     label: 'Código de verificação',

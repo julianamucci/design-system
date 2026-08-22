@@ -22,7 +22,7 @@ export type CheckboxArgs = {
 const ID = 'opcao';
 
 const ROTULO_PADRAO = 'Aceito os termos e condições';
-const APOIO_PADRAO = 'Ao marcar esta opção, você concorda com os termos de uso.';
+const HELPER_DEFAULT = 'Ao marcar esta opção, você concorda com os termos de uso.';
 
 /**
  * Uma linha por atributo quando a fila passa da largura útil do painel — fila
@@ -49,7 +49,7 @@ export function checkboxSource(_gerado?: string, ctx?: { args?: Partial<Checkbox
     withLabel = true,
     withDescription = false,
     labelText = ROTULO_PADRAO,
-    descriptionText = APOIO_PADRAO,
+    descriptionText = HELPER_DEFAULT,
   } = ctx?.args ?? {};
 
   const comRotulo = withLabel || withDescription;
@@ -115,7 +115,7 @@ export function checkboxSource(_gerado?: string, ctx?: { args?: Partial<Checkbox
 }
 
 /** Stories `Default` (variações e composições): a caixa sozinha, rotulada por ARIA. */
-export function checkboxSemRotuloSource(): string {
+export function checkboxNoLabelSource(): string {
   return checkboxSource('', { args: { withLabel: false } });
 }
 
@@ -143,7 +143,7 @@ export function checkboxComDescricaoSource(): string {
 }
 
 /** Estado `Checked`: o par completo já marcado ao montar. */
-export function checkboxMarcadoComRotuloSource(): string {
+export function checkboxCheckedWithLabelSource(): string {
   return checkboxSource('', { args: { checked: true } });
 }
 
@@ -170,7 +170,7 @@ export function checkboxDesabilitadoMarcadoSource(): string {
 }
 
 /** Estado `Error`: inválido pelo canal ARIA, e ainda operável. */
-export function checkboxComErroSource(): string {
+export function checkboxWithErrorSource(): string {
   return checkboxSource('', { args: { ariaInvalid: true } });
 }
 

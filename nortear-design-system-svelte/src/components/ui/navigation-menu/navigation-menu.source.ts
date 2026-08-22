@@ -46,7 +46,7 @@ ${corpo}
 }
 
 /** Lista vertical de destinos dentro do painel. */
-function listaDeDestinos(itens: Array<[string, string]>): string {
+function targetsList(itens: Array<[string, string]>): string {
   const linhas = itens
     .map(
       ([href, rotulo]) => `          <li>
@@ -63,7 +63,7 @@ ${linhas}
 }
 
 /** Duas colunas com uma linha de contexto por destino. */
-function gradeDeDestinos(itens: Array<[string, string, string]>): string {
+function targetsGrid(itens: Array<[string, string, string]>): string {
   const linhas = itens
     .map(
       ([href, rotulo, descricao]) => `          <li>
@@ -98,7 +98,7 @@ const SOLUCOES: Array<[string, string]> = [
   ['#vendas', 'Para Vendas'],
 ];
 
-const PAINEL_EM_DESTAQUE = `        <div class="nds-grid nds-w-lg" data-fixed data-cols="2" data-spacing="sm">
+const HIGHLIGHT_PANEL = `        <div class="nds-grid nds-w-lg" data-fixed data-cols="2" data-spacing="sm">
           <NavigationMenuChild href="#comece" class="nds-h-full">
             <div class="nds-navigation-menu-child-label">Comece agora</div>
             <p class="nds-navigation-menu-child-description">
@@ -140,7 +140,7 @@ function itens(demonstration: NavigationMenuArgs['demonstration'], activeHref?: 
   if (demonstration === 'withDropdown') {
     return [
       destino('inicio', '#inicio', 'Início', ativo('#inicio')),
-      comPainel('planos', 'Planos', listaDeDestinos(PLANOS)),
+      comPainel('planos', 'Planos', targetsList(PLANOS)),
       destino('contato', '#contato', 'Contato', ativo('#contato')),
     ].join('\n');
   }
@@ -151,7 +151,7 @@ function itens(demonstration: NavigationMenuArgs['demonstration'], activeHref?: 
       comPainel(
         'solucoes',
         'Soluções',
-        gradeDeDestinos([
+        targetsGrid([
           ['#marketing', 'Para Marketing', 'Campanhas, automação e atribuição num lugar só.'],
           ['#vendas', 'Para Vendas', 'Funil, previsão e histórico de cada negociação.'],
           ['#suporte', 'Para Suporte', 'Fila de atendimento, base de conhecimento e métricas.'],
@@ -164,15 +164,15 @@ function itens(demonstration: NavigationMenuArgs['demonstration'], activeHref?: 
   if (demonstration === 'withFeatured') {
     return [
       destino('inicio', '#inicio', 'Início', ativo('#inicio')),
-      comPainel('recursos', 'Recursos', PAINEL_EM_DESTAQUE),
+      comPainel('recursos', 'Recursos', HIGHLIGHT_PANEL),
     ].join('\n');
   }
 
   if (demonstration === 'bar') {
     return [
       destino('inicio', '#inicio', 'Início', ativo('#inicio')),
-      comPainel('produtos', 'Produtos', listaDeDestinos(PLANOS.slice(0, 2))),
-      comPainel('recursos', 'Recursos', listaDeDestinos(RECURSOS)),
+      comPainel('produtos', 'Produtos', targetsList(PLANOS.slice(0, 2))),
+      comPainel('recursos', 'Recursos', targetsList(RECURSOS)),
       destino('precos', '#precos', 'Preços', ativo('#precos')),
       destino('sobre', '#sobre', 'Sobre', ativo('#sobre')),
     ].join('\n');
@@ -180,8 +180,8 @@ function itens(demonstration: NavigationMenuArgs['demonstration'], activeHref?: 
 
   return [
     destino('inicio', '#inicio', 'Início', ativo('#inicio')),
-    comPainel('produtos', 'Produtos', listaDeDestinos(PLANOS)),
-    comPainel('solucoes', 'Soluções', listaDeDestinos(SOLUCOES)),
+    comPainel('produtos', 'Produtos', targetsList(PLANOS)),
+    comPainel('solucoes', 'Soluções', targetsList(SOLUCOES)),
     destino('sobre', '#sobre', 'Sobre', ativo('#sobre')),
   ].join('\n');
 }
@@ -206,14 +206,14 @@ export function navigationMenuSource(
     indicator = false,
   } = ctx?.args ?? {};
 
-  const temPainel = demonstration !== 'simpleLink';
+  const hasPanel = demonstration !== 'simpleLink';
   const pecas = [
     'NavigationMenuRoot',
     'NavigationMenuList',
     'NavigationMenuItem',
-    ...(temPainel ? ['NavigationMenuTrigger', 'NavigationMenuContent'] : []),
+    ...(hasPanel ? ['NavigationMenuTrigger', 'NavigationMenuContent'] : []),
     'NavigationMenuLink',
-    ...(temPainel ? ['NavigationMenuChild'] : []),
+    ...(hasPanel ? ['NavigationMenuChild'] : []),
     ...(indicator ? ['NavigationMenuIndicator'] : []),
   ];
 
@@ -228,7 +228,7 @@ export function navigationMenuSource(
     `aria-label="${ariaLabel}"`,
   ]);
 
-  const propsDaLista =
+  const listProps =
     orientation === 'vertical' ? ' class="nds-stack nds-w-sm" data-spacing="xs"' : '';
 
   const seta = indicator ? '\n    <NavigationMenuIndicator />' : '';
@@ -240,7 +240,7 @@ export function navigationMenuSource(
 let aberto = $state("${defaultValue}");`
       : importar(pecas),
     `<NavigationMenuRoot${props}>
-  <NavigationMenuList${propsDaLista}>
+  <NavigationMenuList${listProps}>
 ${itens(demonstration, activeHref)}${seta}
   </NavigationMenuList>
 </NavigationMenuRoot>`,

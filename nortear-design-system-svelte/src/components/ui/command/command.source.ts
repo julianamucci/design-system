@@ -78,7 +78,7 @@ ${EXECUTAR}`,
 }
 
 /** Estado EmptyState: a frase de vazio ocupa o lugar da lista quando nada casa. */
-export function commandSemResultadosSource(): string {
+export function commandNoResultsSource(): string {
   return svelteSnippet(
     importar(
       'Command',
@@ -107,7 +107,7 @@ export function commandSemResultadosSource(): string {
  * Ele se anuncia como progresso, e progresso não é filho permitido de uma
  * lista de opções — dentro dela a estrutura de acessibilidade fica inválida.
  */
-export function commandCarregandoSource(): string {
+export function commandLoadingSource(): string {
   return svelteSnippet(
     `${importar('Command', 'CommandInput', 'CommandList', 'CommandEmpty', 'CommandLoading')}
 import LoaderCircle from '@lucide/svelte/icons/loader-circle';`,
@@ -285,7 +285,7 @@ export function commandComAtalhosSource(): string {
 }
 
 /** Composição WithLinkItem: o comando que navega é uma âncora de verdade. */
-export function commandComLinkItemSource(): string {
+export function commandWithLinkItemSource(): string {
   return svelteSnippet(
     `${importar(
       'Command',

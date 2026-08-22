@@ -31,10 +31,10 @@ anterior. Com o `child` o elemento é nosso, e o rótulo traduzido chega.
 		<!-- `props` é um saco de chaves desconhecidas, então o rótulo da lib chega
 		     como `unknown`. A checagem de tipo em runtime é o que o transforma em
 		     texto sem fingir que ele já era. -->
-		{@const rotuloDaLib = typeof props["aria-label"] === "string" ? props["aria-label"] : undefined}
+		{@const libLabel = typeof props["aria-label"] === "string" ? props["aria-label"] : undefined}
 		<button
 			{...props}
-			aria-label={ariaLabel ?? rotuloDaLib}
+			aria-label={ariaLabel ?? libLabel}
 			class={cn(buttonVariants({ variant }), "nds-calendar-nav-btn", className)}
 		>
 			{#if children}

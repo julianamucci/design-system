@@ -14,7 +14,7 @@
 	 *     espalhados por docs page, stories e andaimes, todos dizendo a mesma
 	 *     coisa: o contrato declarado não é o contrato usado.
 	 *  2. Sem o discriminante, o TypeScript não conseguia estreitar a união, e
-	 *     `min`/`step` chegavam ao `saltoLargo` sem tipo numérico — daí os dois
+	 *     `min`/`step` chegavam ao `saltoWide` sem tipo numérico — daí os dois
 	 *     erros de "arithmetic operation" na conta do PageUp/PageDown. Erro de
 	 *     tipo em cima de aritmética de valor não é ruído: era a conta do salto
 	 *     rodando sem garantia nenhuma de que os operandos eram números.
@@ -25,7 +25,7 @@
 	 * aqui transforma esse acidente em contrato — o `type` sai da superfície de
 	 * quem consome e passa a ser decidido pelo wrapper.
 	 */
-	type PropsDaFaixa = Extract<SliderPrimitive.RootProps, { type: "multiple" }>;
+	type RangeProps = Extract<SliderPrimitive.RootProps, { type: "multiple" }>;
 
 	let {
 		ref = $bindable(null),
@@ -40,7 +40,7 @@
 		thumbAriaLabel = "Valor",
 		"aria-label": ariaLabel,
 		...restProps
-	}: Omit<WithoutChildrenOrChild<PropsDaFaixa>, "type" | "step"> & {
+	}: Omit<WithoutChildrenOrChild<RangeProps>, "type" | "step"> & {
 		/**
 		 * Incremento de cada passo. NÚMERO, não lista.
 		 *
@@ -78,7 +78,7 @@
 	 * `thumbAriaLabels` continua acima na ordem: é o único jeito de dar nomes
 	 * DIFERENTES às duas alças de uma faixa ("mínimo" e "máximo").
 	 */
-	const nomeDaAlca = (indice: number): string =>
+	const handleName = (indice: number): string =>
 		thumbAriaLabels?.[indice] ?? ariaLabel ?? thumbAriaLabel;
 
 	/**
@@ -92,7 +92,7 @@
 	 * `preventDefault` porque, sem ele, PageUp/PageDown rolam a página inteira
 	 * enquanto a pessoa mexe no controle.
 	 */
-	function saltoLargo(evento: KeyboardEvent) {
+	function saltoWide(evento: KeyboardEvent) {
 		if (evento.key !== "PageUp" && evento.key !== "PageDown") return;
 		if (restProps.disabled) return;
 
@@ -111,8 +111,8 @@
 		const bruto = (atual[indice] ?? min) + largeStep * direcao;
 		// Arredonda ao passo antes de prender na faixa: um salto que caísse entre
 		// dois passos deixaria o controle num valor que as setas não alcançam.
-		const noPasso = min + Math.round((bruto - min) / step) * step;
-		atual[indice] = Math.min(max, Math.max(min, noPasso));
+		const inStep = min + Math.round((bruto - min) / step) * step;
+		atual[indice] = Math.min(max, Math.max(min, inStep));
 
 		evento.preventDefault();
 		value = (Array.isArray(value) ? atual : atual[0]) as never;
@@ -146,7 +146,7 @@ desenho — não é remendo.
 	{max}
 	{step}
 	thumbPositioning="exact"
-	onkeydown={saltoLargo}
+	onkeydown={saltoWide}
 	class={cn(
 		"nds-slider",
 		className
@@ -188,7 +188,7 @@ desenho — não é remendo.
 			<SliderPrimitive.Thumb
 				data-slot="slider-thumb"
 				index={thumb.index}
-				aria-label={nomeDaAlca(thumb.index)}
+				aria-label={handleName(thumb.index)}
 				class="nds-slider-thumb"
 			/>
 		{/each}

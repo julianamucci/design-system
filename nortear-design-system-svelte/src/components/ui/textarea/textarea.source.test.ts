@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   textareaComApoioSource,
   textareaComContadorSource,
-  textareaComErroSource,
+  textareaWithErrorSource,
   textareaContadorAcessivelSource,
   textareaDesabilitadoSource,
   textareaEmModalSource,
@@ -129,7 +129,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a composição com erro cruza describedby e id da mensagem', () => {
-    const saida = textareaComErroSource();
+    const saida = textareaWithErrorSource();
     expect(saida).toContain('aria-describedby="feedback-erro"');
     expect(saida).toContain('<p id="feedback-erro"');
   });

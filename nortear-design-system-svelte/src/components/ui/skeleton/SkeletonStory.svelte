@@ -16,9 +16,9 @@
   // `fill` preenche a caixa que o container estabelece; aqui quem estabelece é
   // a proporção de mídia, senão o bloco nasce com altura zero e o Playground
   // mostra um esqueleto invisível.
-  const classeAplicada = $derived(shape === 'fill' ? 'nds-docs-skeleton-media' : undefined);
+  const classNameAplicada = $derived(shape === 'fill' ? 'nds-docs-skeleton-media' : undefined);
 </script>
 
 <div role="status" aria-busy={loading} aria-label="Carregando conteúdo">
-  <Skeleton data-shape={shape} data-width={larguraAplicada} class={classeAplicada} />
+  <Skeleton data-shape={shape} data-width={larguraAplicada} class={classNameAplicada} />
 </div>

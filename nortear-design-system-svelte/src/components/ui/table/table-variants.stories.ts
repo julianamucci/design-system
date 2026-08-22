@@ -74,9 +74,9 @@ export const Basic: Story = {
       // seletor de `th` do CSS compartilhado vencia a utilitária e a classe era
       // inerte — verde no markup, torto na tela.
       const ths = [...canvasElement.querySelectorAll<HTMLElement>('thead th')];
-      const valorTh = ths[ths.length - 1];
-      await expect(valorTh).toHaveTextContent('Valor');
-      await expect(getComputedStyle(valorTh).textAlign).toBe('right');
+      const valueTh = ths[ths.length - 1];
+      await expect(valueTh).toHaveTextContent('Valor');
+      await expect(getComputedStyle(valueTh).textAlign).toBe('right');
       const valorTd = canvasElement.querySelector<HTMLElement>('tbody tr td:last-child')!;
       await expect(getComputedStyle(valorTd).textAlign).toBe('right');
       // A coluna descritiva continua à esquerda: o alinhamento é escolha por

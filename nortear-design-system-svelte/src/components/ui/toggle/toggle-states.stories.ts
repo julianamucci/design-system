@@ -11,7 +11,7 @@ import {
   toggleAtivoSource,
   toggleDesabilitadoSource,
   toggleInvalidoSource,
-  toggleParDeVariantesSource,
+  variantsSourceTogglePair,
   toggleSource,
 } from './toggle.source';
 
@@ -98,7 +98,7 @@ export const FocusVisible: Story = {
   parameters: {
     covers: ['accessibility.item3'],
     // O foco é estado de execução: a marcação é a mesma do par de variantes.
-    docs: { source: { transform: toggleParDeVariantesSource } },
+    docs: { source: { transform: variantsSourceTogglePair } },
   },
   args: { cenario: 'focus' },
   play: async ({ canvasElement, step }) => {

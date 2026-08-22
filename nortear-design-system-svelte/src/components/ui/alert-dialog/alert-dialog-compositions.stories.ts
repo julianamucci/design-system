@@ -7,7 +7,7 @@ import AlertDialogStory from './AlertDialogStory.svelte';
 import AlertDialogSemDescricaoStory from './AlertDialogSemDescricaoStory.svelte';
 import {
   alertDialogClasseExtraSource,
-  alertDialogComMidiaSource,
+  alertDialogWithMidiaSource,
   alertDialogDescricaoLongaSource,
   alertDialogNeutroSource,
   alertDialogSemDescricaoSource,
@@ -43,7 +43,7 @@ export const WithIcon: Story = {
   parameters: {
     covers: ['visual.item6'],
     docs: {
-      source: { transform: alertDialogComMidiaSource },
+      source: { transform: alertDialogWithMidiaSource },
       description: {
         story:
           'Bloco de mídia no topo do header. O CSS centraliza header e texto quando ele existe.',

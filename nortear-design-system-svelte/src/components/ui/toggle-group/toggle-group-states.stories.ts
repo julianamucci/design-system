@@ -4,7 +4,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import ToggleGroupStory from './ToggleGroupStory.svelte';
 import {
   toggleGroupItemDesabilitadoSource,
-  toggleGroupSelecaoMultiplaSource,
+  toggleGroupSelectionMultiplaSource,
   toggleGroupSource,
 } from './toggle-group.source';
 
@@ -134,7 +134,7 @@ export const MultipleSelected: Story = {
     ariaLabel: 'Formatação',
   },
   parameters: {
-    docs: { source: { transform: toggleGroupSelecaoMultiplaSource } },
+    docs: { source: { transform: toggleGroupSelectionMultiplaSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

@@ -53,7 +53,7 @@
    * padding mede a imagem REAL, e uma URL remota faria o resultado depender da
    * rede.
    */
-  const imagemProduto =
+  const imageProduct =
     "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='160'%3E%3Crect width='400' height='160' fill='%23cbd5e1'/%3E%3C/svg%3E";
 
   function navegar(event: MouseEvent) {
@@ -128,7 +128,7 @@
 {:else if variant === 'withImage'}
   <Card class={className} {size}>
     <img
-      src={imagemProduto}
+      src={imageProduct}
       alt={`${title} vista de frente, em fundo neutro`}
       class="nds-w-full nds-aspect-16-9"
       style="object-fit: cover"
@@ -161,7 +161,7 @@
 {:else if variant === 'product'}
   <Card class={className} {size}>
     <img
-      src={imagemProduto}
+      src={imageProduct}
       alt={`${title} vista de frente, em fundo neutro`}
       class="nds-w-full nds-aspect-16-9"
       style="object-fit: cover"

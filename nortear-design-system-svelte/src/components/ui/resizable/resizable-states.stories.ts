@@ -7,7 +7,7 @@ import ResizableStory from './ResizableStory.svelte';
 import { fracaoDoPrimeiro } from './resizable.fixtures';
 import {
   resizableArrastoSource,
-  resizableDesabilitadoSource,
+  resizableDisabledSource,
   resizableFocoSource,
   resizableLimitesSource,
   resizableSource,
@@ -195,7 +195,7 @@ export const Focus: Story = {
 
 export const Disabled: Story = {
   parameters: {
-    docs: { source: { transform: resizableDesabilitadoSource } },
+    docs: { source: { transform: resizableDisabledSource } },
   },
   render: () => ({
     Component: ResizableStory,

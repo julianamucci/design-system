@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { LinkPreview as HoverCardPrimitive } from "bits-ui";
-	import { criarContextoHoverCard } from "./context.svelte.js";
+	import { createContextoHoverCard } from "./context.svelte.js";
 
 	// PATCH: api — `defaultOpen` não existe no LinkPreview do bits-ui, mas é a
 	// API documentada do HoverCard nas 5 stacks (ver PATCHES.md#svelte-hovercard-defaultopen).
@@ -19,7 +19,7 @@
 		...restProps
 	}: HoverCardPrimitive.RootProps & { defaultOpen?: boolean } = $props();
 
-	criarContextoHoverCard();
+	createContextoHoverCard();
 </script>
 
 <HoverCardPrimitive.Root bind:open {openDelay} {closeDelay} {...restProps} />

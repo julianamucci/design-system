@@ -2,14 +2,14 @@ import { describe, expect, it } from 'vitest';
 import {
   radioGroupComDescricaoSource,
   radioGroupDesabilitadoSource,
-  radioGroupEntregaComDescricaoSource,
+  radioGroupEntregaWithDescriptionSource,
   radioGroupEntregaHorizontalSource,
-  radioGroupFocoSource,
+  radioGroupFocusSource,
   radioGroupHorizontalSource,
   radioGroupInvalidoSource,
   radioGroupItemDesabilitadoSource,
   radioGroupPadraoSource,
-  radioGroupSelecionadoSource,
+  radioGroupSelectedSource,
   radioGroupSource,
   radioGroupVerticalSource,
 } from './radio-group.source';
@@ -86,11 +86,11 @@ describe('transforms das stories de variação, estado e composição', () => {
 
   it('o estado padrão nasce sem escolha, e o foco não muda a marcação', () => {
     expect(radioGroupPadraoSource()).toContain('let forma = $state("");');
-    expect(radioGroupFocoSource()).toBe(radioGroupPadraoSource());
+    expect(radioGroupFocusSource()).toBe(radioGroupPadraoSource());
   });
 
   it('o estado escolhido parte da opção marcada', () => {
-    expect(radioGroupSelecionadoSource()).toContain('let forma = $state("pix");');
+    expect(radioGroupSelectedSource()).toContain('let forma = $state("pix");');
   });
 
   it('o grupo desabilitado leva a prop na raiz, não em cada item', () => {
@@ -116,7 +116,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a composição de entrega com descrição move o prazo para o texto auxiliar', () => {
-    const saida = radioGroupEntregaComDescricaoSource();
+    const saida = radioGroupEntregaWithDescriptionSource();
     expect(saida).toContain('aria-describedby="standard-desc"');
     expect(saida).toContain('Entrega em até 5 dias úteis.');
   });

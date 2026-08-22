@@ -79,7 +79,7 @@
   ];
 
   let regua = $state(true);
-  let barraLateral = $state(false);
+  let barLateral = $state(false);
   let grade = $state(false);
   let tema = $state('light');
 </script>
@@ -126,7 +126,7 @@
             <MenubarGroup>
               <MenubarGroupHeading>Mostrar na tela</MenubarGroupHeading>
               <MenubarCheckboxItem bind:checked={regua}>Régua</MenubarCheckboxItem>
-              <MenubarCheckboxItem bind:checked={barraLateral}>Barra lateral</MenubarCheckboxItem>
+              <MenubarCheckboxItem bind:checked={barLateral}>Barra lateral</MenubarCheckboxItem>
               <MenubarCheckboxItem bind:checked={grade}>Grade</MenubarCheckboxItem>
             </MenubarGroup>
           </MenubarContent>

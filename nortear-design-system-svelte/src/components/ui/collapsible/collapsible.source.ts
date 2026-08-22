@@ -25,9 +25,9 @@ const IMPORT = `import {
 import ChevronDown from "@lucide/svelte/icons/chevron-down";`;
 
 /** Gatilho fantasma — o do exemplo canônico. */
-const GATILHO_FANTASMA = 'nds-button nds-button-ghost nds-cluster nds-w-full nds-px-4';
+const TRIGGER_FANTASMA = 'nds-button nds-button-ghost nds-cluster nds-w-full nds-px-4';
 /** Gatilho com contorno — o da composição que veste o gatilho de botão. */
-const GATILHO_CONTORNO = 'nds-button nds-button-outline nds-cluster nds-w-full nds-px-4';
+const TRIGGER_CONTORNO = 'nds-button nds-button-outline nds-cluster nds-w-full nds-px-4';
 const PAINEL =
   'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
 
@@ -38,7 +38,7 @@ const PAINEL =
  * `aria-expanded` e `aria-controls`, e um botão aninhado dentro dele seria um
  * segundo elemento interativo sem estado nenhum.
  */
-function gatilho(rotulo: string, classe: string = GATILHO_FANTASMA): string {
+function gatilho(rotulo: string, classe: string = TRIGGER_FANTASMA): string {
   return `  <CollapsibleTrigger
     class="${classe}"
     data-justify="between"
@@ -126,7 +126,7 @@ export function collapsibleComBotaoSource(): string {
   return svelteSnippet(
     IMPORT,
     `<Collapsible class="nds-w-sm">
-${gatilho('Exibir opções avançadas', GATILHO_CONTORNO)}
+${gatilho('Exibir opções avançadas', TRIGGER_CONTORNO)}
 ${painel(`    <p>Opção avançada 1</p>
     <p>Opção avançada 2</p>
     <p>Opção avançada 3</p>`)}
@@ -144,7 +144,7 @@ export function collapsibleComChevronSource(): string {
   return svelteSnippet(
     IMPORT,
     `<Collapsible class="nds-w-sm">
-${gatilho('Configurações avançadas', GATILHO_CONTORNO)}
+${gatilho('Configurações avançadas', TRIGGER_CONTORNO)}
 ${painel(`    <div class="nds-cluster" data-justify="between">
       <span class="nds-text-muted-foreground">Notificações</span>
       <span class="nds-font-medium">Ativadas</span>

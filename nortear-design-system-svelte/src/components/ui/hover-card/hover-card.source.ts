@@ -56,7 +56,7 @@ function indentar(markup: string, nivel: number): string {
  * Os gatilhos que não navegam são BOTÃO: não há para onde ir, e o glossário
  * continua sendo o caminho alternativo obrigatório.
  */
-const GATILHOS_BOTAO: HoverCardVariant[] = ['definition', 'metric'];
+const TRIGGERS_BUTTON: HoverCardVariant[] = ['definition', 'metric'];
 
 const MIOLOS: Record<HoverCardVariant, string> = {
   default: `<div class="nds-stack" data-spacing="xs">
@@ -162,13 +162,13 @@ export function hoverCardSource(_gerado?: string, ctx?: { args?: Partial<HoverCa
   if (controlado) abertura = 'bind:open={aberto}';
   else if (defaultOpen) abertura = 'defaultOpen';
 
-  const propsDaRaiz = attrs(
+  const rootProps = attrs(
     openDelay === 600 ? '' : `openDelay={${openDelay}}`,
     closeDelay === 300 ? '' : `closeDelay={${closeDelay}}`,
     abertura,
   );
 
-  const propsDoConteudo = attrs(
+  const contentProps = attrs(
     side === 'bottom' ? '' : `side="${side}"`,
     align === 'center' ? '' : `align="${align}"`,
     sideOffset === 4 ? '' : `sideOffset={${sideOffset}}`,
@@ -176,7 +176,7 @@ export function hoverCardSource(_gerado?: string, ctx?: { args?: Partial<HoverCa
     label ? `aria-label="${label}"` : '',
   );
 
-  const gatilho = GATILHOS_BOTAO.includes(variant)
+  const gatilho = TRIGGERS_BUTTON.includes(variant)
     ? `<button type="button" {...props}>${triggerLabel}</button>`
     : `<a href="${href}" {...props}>${triggerLabel}</a>`;
 
@@ -184,13 +184,13 @@ export function hoverCardSource(_gerado?: string, ctx?: { args?: Partial<HoverCa
     controlado ? `${IMPORT}\n\nlet aberto = $state(${open ?? false});` : IMPORT,
     `<p class="nds-text-body nds-max-w-sm">
   Comentário de
-  <HoverCard${propsDaRaiz}>
+  <HoverCard${rootProps}>
     <HoverCardTrigger>
       {#snippet child({ props })}
         ${gatilho}
       {/snippet}
     </HoverCardTrigger>
-    <HoverCardContent${propsDoConteudo}>
+    <HoverCardContent${contentProps}>
 ${indentar(MIOLOS[variant] ?? MIOLOS.default, 6)}
     </HoverCardContent>
   </HoverCard>

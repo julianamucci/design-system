@@ -4,7 +4,7 @@ import { ChartContainer, buildBarOption } from './index';
 import {
   desenhoEscreve, exigirRaiz, formasDeDado,
 } from '@shared/testing/chart-probe';
-import { aguardarDesenho } from './chart.fixtures';
+import { waitForDesign } from './chart.fixtures';
 import {
   chartBarrasSource,
   chartComLegendaSource,
@@ -13,10 +13,10 @@ import {
 } from './chart.source';
 
 const MESES = ['Jan', 'Fev', 'Mar', 'Abr'];
-const VALORES = [186, 305, 237, 73];
-const SERIE_UNICA = [{ name: 'Vendas', data: VALORES }];
+const VALUES = [186, 305, 237, 73];
+const SERIE_UNICA = [{ name: 'Vendas', data: VALUES }];
 const SERIES_MULTI = [
-  { name: 'Desktop', data: VALORES },
+  { name: 'Desktop', data: VALUES },
   { name: 'Mobile', data: [80, 200, 120, 190] },
   { name: 'Tablet', data: [40, 90, 60, 100] },
 ];
@@ -45,14 +45,14 @@ type Story = StoryObj;
  * trama) com a mesma geometria, então o agrupamento por centro devolve um
  * ponto por categoria.
  */
-function centrosPorCategoria(raiz: HTMLElement): Array<{ x: number; y: number }> {
-  const porCentro = new Map<number, { x: number; y: number }>();
+function categoriaCentros(raiz: HTMLElement): Array<{ x: number; y: number }> {
+  const byCenter = new Map<number, { x: number; y: number }>();
   for (const forma of formasDeDado(raiz)) {
     const r = forma.getBoundingClientRect();
     const x = Math.round(r.x + r.width / 2);
-    porCentro.set(x, { x, y: r.y + r.height / 2 });
+    byCenter.set(x, { x, y: r.y + r.height / 2 });
   }
-  return [...porCentro.values()].sort((a, b) => a.x - b.x);
+  return [...byCenter.values()].sort((a, b) => a.x - b.x);
 }
 
 export const WithTooltip: Story = {
@@ -71,21 +71,21 @@ export const WithTooltip: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
-    await aguardarDesenho(raiz);
+    await waitForDesign(raiz);
     const svg = raiz.querySelector('svg')!;
-    const centros = centrosPorCategoria(raiz);
+    const centros = categoriaCentros(raiz);
     await expect(centros).toHaveLength(MESES.length);
 
     // `userEvent.hover` não serve aqui: ele não leva coordenada, e a lib faz o
     // teste de acerto por posição — o ponteiro cairia em (0,0), fora da área do
     // desenho. `fireEvent.mouseMove` com clientX/clientY leva o ponto exato.
-    const apontarPara = (i: number) =>
+    const apontarTo = (i: number) =>
       fireEvent.mouseMove(svg, { clientX: centros[i].x, clientY: centros[i].y, bubbles: true });
 
     await step('A dica traz a categoria e o valor da coluna apontada', async () => {
       // 305 e 73 não aparecem em marca de eixo nenhuma (as marcas vão de 50 em
       // 50): achar o número no container é prova de que a dica escreveu.
-      await apontarPara(1);
+      await apontarTo(1);
       await waitFor(() => {
         expect(raiz.textContent).toContain('Fev');
         expect(raiz.textContent).toContain('305');
@@ -93,7 +93,7 @@ export const WithTooltip: Story = {
     });
 
     await step('E acompanha o ponteiro — a dica é do ponto apontado, não a primeira que abriu', async () => {
-      await apontarPara(3);
+      await apontarTo(3);
       await waitFor(() => {
         expect(raiz.textContent).toContain('73');
         expect(raiz.textContent).not.toContain('305');
@@ -117,7 +117,7 @@ export const WithCaption: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
-    await aguardarDesenho(raiz);
+    await waitForDesign(raiz);
 
     await step('Com a legenda ligada, o nome da série é escrito mesmo havendo uma só', async () => {
       // Sem a configuração, este mesmo desenho não escreve "Vendas" — é o que a
@@ -154,7 +154,7 @@ export const MultipleSeries: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
-    await aguardarDesenho(raiz);
+    await waitForDesign(raiz);
 
     await step('O título do desenho aparece escrito', async () => {
       await waitFor(

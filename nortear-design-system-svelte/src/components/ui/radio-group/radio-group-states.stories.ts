@@ -5,11 +5,11 @@ import { RadioGroup } from './index';
 import RadioGroupStory from './RadioGroupStory.svelte';
 import {
   radioGroupDesabilitadoSource,
-  radioGroupFocoSource,
+  radioGroupFocusSource,
   radioGroupInvalidoSource,
   radioGroupItemDesabilitadoSource,
   radioGroupPadraoSource,
-  radioGroupSelecionadoSource,
+  radioGroupSelectedSource,
   radioGroupSource,
 } from './radio-group.source';
 
@@ -100,7 +100,7 @@ export const Default: Story = {
 export const Checked: Story = {
   parameters: {
     covers: ['visual.item2'],
-    docs: { source: { transform: radioGroupSelecionadoSource } },
+    docs: { source: { transform: radioGroupSelectedSource } },
   },
   render: () => ({
     Component: RadioGroupStory,
@@ -132,7 +132,7 @@ export const FocusVisible: Story = {
   parameters: {
     covers: ['accessibility.item3'],
     docs: {
-      source: { transform: radioGroupFocoSource },
+      source: { transform: radioGroupFocusSource },
       description: {
         story:
           'Foco por teclado: Tab entra no grupo e as setas movem entre os itens, com a seleção acompanhando o foco no desktop. O anel sai de `:focus-visible`.',

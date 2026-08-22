@@ -40,7 +40,7 @@ type Story = StoryObj;
  * aparecer. Mexer no foco antes disso disputa com o próprio componente: a
  * chamada da play é desfeita e a ordem de tabulação medida sai errada.
  */
-async function aguardarFoco(dialog: HTMLElement): Promise<void> {
+async function waitForFocus(dialog: HTMLElement): Promise<void> {
   await waitFor(() => {
     if (!dialog.contains(document.activeElement)) {
       throw new Error('foco ainda não entrou no painel');
@@ -138,7 +138,7 @@ export const ColorPicker: Story = {
       // A cor não é o nome: quem não distingue a cor precisa do rótulo, e sem
       // ele o axe reprova por button-name.
       const dialog = await waitForPortal('dialog', { timeout: 2000 });
-      await aguardarFoco(dialog);
+      await waitForFocus(dialog);
       const nomes = within(dialog)
         .getAllByRole('button')
         .map((b) => b.getAttribute('aria-label'))

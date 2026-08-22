@@ -86,7 +86,7 @@ export const Playground: Story = {
     // resto da página fica inerte, e uma consulta por papel depende de como a
     // biblioteca de teste trata `inert`.
     const trigger = gatilho(canvasElement)!;
-    const espiaoCancelar = args.onCancel as unknown as ReturnType<typeof fn>;
+    const spyCancelar = args.onCancel as unknown as ReturnType<typeof fn>;
 
     await step('O markup é o mesmo das outras stacks', async () => {
       // O Vanilla é a referência: o gatilho é um `<button>` de verdade, e
@@ -166,13 +166,13 @@ export const Playground: Story = {
 
     await step('O Cancelar do rodapé fecha e avisa o callback', async () => {
       const p = await abrir(canvasElement);
-      const chamadasAntes = espiaoCancelar.mock.calls.length;
+      const chamadasAntes = spyCancelar.mock.calls.length;
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       // A ação primária é a última do DOM; o Cancelar é a primeira.
       const botoes = rodape.querySelectorAll<HTMLElement>('button');
       await userEvent.click(botoes[0]);
       await esperarFechado();
-      await expect(espiaoCancelar.mock.calls.length).toBe(chamadasAntes + 1);
+      await expect(spyCancelar.mock.calls.length).toBe(chamadasAntes + 1);
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });

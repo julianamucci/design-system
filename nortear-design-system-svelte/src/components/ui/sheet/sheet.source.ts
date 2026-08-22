@@ -62,7 +62,7 @@ ${extras.join('\n')}`;
 }
 
 /** Corpo rolável ou formulário, indentado para dentro do conteúdo. */
-function corpoDoPainel(corpo: Corpo): string {
+function panelBody(corpo: Corpo): string {
   if (corpo === 'formulario') {
     return `
     <SheetBody>
@@ -112,7 +112,7 @@ function painel(o: Opcoes): string {
   // monta o painel — e continua voltando para lá a cada fechamento.
   const controlado = open !== undefined;
   const estado = controlado ? `\n\nlet open = $state(${open});` : '';
-  const listaDeParagrafos =
+  const paragrafosList =
     corpo === 'rolagem'
       ? `\n\nconst paragrafos = Array.from(
   { length: 14 },
@@ -121,7 +121,7 @@ function painel(o: Opcoes): string {
       : '';
 
   return svelteSnippet(
-    `${imports(corpo)}${estado}${listaDeParagrafos}`,
+    `${imports(corpo)}${estado}${paragrafosList}`,
     `<Sheet${attrs(controlado ? 'bind:open' : '')}>
   <SheetTrigger>
     {#snippet child({ props })}
@@ -133,7 +133,7 @@ function painel(o: Opcoes): string {
       <SheetTitle>${title}</SheetTitle>
       <SheetDescription>${description}</SheetDescription>
     </SheetHeader>
-${corpoDoPainel(corpo)}    <SheetFooter>
+${panelBody(corpo)}    <SheetFooter>
       <SheetClose>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>${cancelLabel}</Button>
@@ -167,7 +167,7 @@ export function sheetFiltrosAvancadosSource(): string {
 }
 
 /** Composição: edição de perfil — mesmo formulário, outra decisão no rodapé. */
-export function sheetEdicaoDePerfilSource(): string {
+export function perfilSourceSheetEdit(): string {
   return painel({
     open: true,
     corpo: 'formulario',
@@ -179,7 +179,7 @@ export function sheetEdicaoDePerfilSource(): string {
 }
 
 /** Composição: texto mais alto que o painel — o corpo rola, o rodapé fica. */
-export function sheetTermosComRolagemSource(): string {
+export function sheetTermosWithScrollSource(): string {
   return painel({
     open: true,
     corpo: 'rolagem',

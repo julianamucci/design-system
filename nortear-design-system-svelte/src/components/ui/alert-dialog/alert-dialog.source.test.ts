@@ -3,7 +3,7 @@ import {
   alertDialogAbertoSource,
   alertDialogCanceladoSource,
   alertDialogClasseExtraSource,
-  alertDialogComMidiaSource,
+  alertDialogWithMidiaSource,
   alertDialogConfirmadoSource,
   alertDialogControladoSource,
   alertDialogDescricaoLongaSource,
@@ -125,7 +125,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('a composição com mídia traz o bloco de ícone no topo do header', () => {
-    const saida = alertDialogComMidiaSource();
+    const saida = alertDialogWithMidiaSource();
     expect(saida).toContain('<AlertDialogMedia>');
     expect(saida).toContain('<TriangleAlert aria-hidden="true" />');
   });

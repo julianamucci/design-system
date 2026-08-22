@@ -50,7 +50,7 @@ const FATURAS = `const faturas = [
   { id: "#INV-005", status: "Pendente",  metodo: "Transferência",     valor: "R$ 200,00" },
 ];`;
 
-const FATURAS_CURTAS = `const faturas = [
+const INVOICES_CURTAS = `const faturas = [
   { id: "#INV-001", status: "Pago",      metodo: "Cartão de crédito", valor: "R$ 250,00" },
   { id: "#INV-002", status: "Pendente",  metodo: "Boleto bancário",   valor: "R$ 150,00" },
   { id: "#INV-003", status: "Cancelado", metodo: "Pix",               valor: "R$ 350,00" },
@@ -151,7 +151,7 @@ export function tableLegendaOcultaSource(): string {
   return svelteSnippet(
     `${imports(PECAS_BASE)}
 
-${FATURAS_CURTAS}`,
+${INVOICES_CURTAS}`,
     `<div>
   <h3 class="nds-text-body nds-font-medium nds-mb-2">Faturas recentes</h3>
 ${recuar(`<Table>
@@ -169,7 +169,7 @@ export function tableComAcoesSource(): string {
     `${imports(PECAS_BASE)}
 import { Button } from "@/components/ui/button";
 
-${FATURAS_CURTAS}`,
+${INVOICES_CURTAS}`,
     `<Table>
 ${legenda('Lista de faturas recentes', true)}
   <TableHeader>

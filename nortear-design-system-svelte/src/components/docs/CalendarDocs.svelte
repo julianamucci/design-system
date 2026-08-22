@@ -219,16 +219,16 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
 
   let demoMultiplo = $state<DateValue[]>([dv(8), dv(15), dv(22)]);
   let demoDropdown = $state<DateValue | undefined>(todayDV);
-  let demoComBorda = $state<DateValue | undefined>(todayDV);
-  let demoSemPassado = $state<DateValue | undefined>(todayDV);
+  let demoWithBorder = $state<DateValue | undefined>(todayDV);
+  let demoNoPassado = $state<DateValue | undefined>(todayDV);
   let demoIntervalo = $state<DateRange>({ start: dv(10), end: dv(18) });
-  let demoDoisMeses = $state<DateRange>({ start: dv(10), end: dv(18) });
+  let demoDoisMonths = $state<DateRange>({ start: dv(10), end: dv(18) });
 
   // Do & Don't: o par 1 compara o idioma, o par 2 compara o bloqueio de datas.
   let demoDoLocale = $state<DateValue | undefined>(todayDV);
   let demoDontLocale = $state<DateValue | undefined>(todayDV);
-  let demoDoBloqueio = $state<DateValue | undefined>(todayDV);
-  let demoDontBloqueio = $state<DateValue | undefined>(todayDV);
+  let blockDemo = $state<DateValue | undefined>(todayDV);
+  let demoDontBlock = $state<DateValue | undefined>(todayDV);
 
   const bloquearPassado = (d: DateValue) => d.compare(todayDV) < 0;
 </script>
@@ -377,13 +377,13 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
   {#snippet doPair2()}
     <Calendar
       type="single"
-      bind:value={demoDoBloqueio}
+      bind:value={blockDemo}
       locale={previewLocale}
       isDateDisabled={bloquearPassado}
     />
   {/snippet}
   {#snippet dontPair2()}
-    <Calendar type="single" bind:value={demoDontBloqueio} locale={previewLocale} />
+    <Calendar type="single" bind:value={demoDontBlock} locale={previewLocale} />
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
@@ -453,17 +453,17 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
          lado em range", e dois meses só ganham sentido quando a escolha
          atravessa a virada do mês. Três das quatro stacks mostravam seleção
          simples aqui, contrariando a própria legenda. -->
-    <RangeCalendar bind:value={demoDoisMeses} locale={previewLocale} numberOfMonths={2} />
+    <RangeCalendar bind:value={demoDoisMonths} locale={previewLocale} numberOfMonths={2} />
   {/snippet}
   {#snippet variantInlineBordered()}
     <div class="nds-rounded-md nds-border-default">
-      <Calendar type="single" bind:value={demoComBorda} locale={previewLocale} />
+      <Calendar type="single" bind:value={demoWithBorder} locale={previewLocale} />
     </div>
   {/snippet}
   {#snippet variantDisabledPast()}
     <Calendar
       type="single"
-      bind:value={demoSemPassado}
+      bind:value={demoNoPassado}
       locale={previewLocale}
       isDateDisabled={bloquearPassado}
     />

@@ -5,10 +5,10 @@ import { reprovasDoDesabilitado } from '@shared/testing/checkbox-probe';
 import { Checkbox } from './index';
 import CheckboxStory from './CheckboxStory.svelte';
 import {
-  checkboxComErroSource,
+  checkboxWithErrorSource,
   checkboxDesabilitadoMarcadoSource,
   checkboxDesabilitadoSource,
-  checkboxMarcadoComRotuloSource,
+  checkboxCheckedWithLabelSource,
   checkboxSelecionarTodosSource,
   checkboxSource,
 } from './checkbox.source';
@@ -77,7 +77,7 @@ export const Unchecked: Story = {
 export const Checked: Story = {
   parameters: {
     covers: ['visual.item2', 'functional.item6'],
-    docs: { source: { transform: checkboxMarcadoComRotuloSource } },
+    docs: { source: { transform: checkboxCheckedWithLabelSource } },
   },
   render: () => ({
     Component: CheckboxStory,
@@ -240,7 +240,7 @@ export const FocusVisible: Story = {
 export const Error: Story = {
   parameters: {
     covers: ['visual.item5'],
-    docs: { source: { transform: checkboxComErroSource } },
+    docs: { source: { transform: checkboxWithErrorSource } },
   },
   render: () => ({
     Component: CheckboxStory,

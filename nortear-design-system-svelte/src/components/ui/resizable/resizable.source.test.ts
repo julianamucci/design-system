@@ -3,7 +3,7 @@ import {
   resizableAninhadoSource,
   resizableArrastoSource,
   resizableComPegadorSource,
-  resizableDesabilitadoSource,
+  resizableDisabledSource,
   resizableDivisaoVerticalSource,
   resizableEditorPreviewSource,
   resizableFocoSource,
@@ -114,7 +114,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o divisor travado escreve a prop, e continua nomeado', () => {
-    const saida = resizableDesabilitadoSource();
+    const saida = resizableDisabledSource();
     expect(saida).toContain('<ResizableHandle withHandle disabled aria-label=');
   });
 

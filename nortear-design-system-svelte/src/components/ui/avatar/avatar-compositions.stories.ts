@@ -7,7 +7,7 @@ import AvatarStory from './AvatarStory.svelte';
 import {
   avatarComStatusSource,
   avatarGrupoSource,
-  avatarIconeSource,
+  avatarIconSource,
   avatarIniciaisSource,
   avatarSource,
 } from './avatar.source';
@@ -101,7 +101,7 @@ export const WithInitials: Story = {
 export const WithIcon: Story = {
   parameters: {
     covers: ['visual.item2'],
-    docs: { source: { transform: avatarIconeSource } },
+    docs: { source: { transform: avatarIconSource } },
   },
   render: () => ({
     Component: AvatarStory,

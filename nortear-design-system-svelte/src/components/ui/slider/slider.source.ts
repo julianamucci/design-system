@@ -23,7 +23,7 @@ const IMPORT = `import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";`;
 
 /** O texto do valor ao lado do rótulo — `aria-live` para quem não vê a alça. */
-const VALOR_VIVO = 'class="nds-text-body nds-tabular-nums" aria-live="polite"';
+const VALUE_VIVO = 'class="nds-text-body nds-tabular-nums" aria-live="polite"';
 
 /**
  * Forma canônica: rótulo, valor textual ao lado e a faixa embaixo.
@@ -63,7 +63,7 @@ ${estado}`,
       `<div class="nds-stack" data-spacing="sm">
   <div class="nds-cluster" data-align="center" data-justify="between">
     <Label>Volume</Label>
-    <span ${VALOR_VIVO}>{valor[0]}%</span>
+    <span ${VALUE_VIVO}>{valor[0]}%</span>
   </div>
   <div class="nds-cluster" data-justify="center">
     <Slider${props} />
@@ -79,7 +79,7 @@ ${estado}`,
     `<div class="nds-stack nds-w-sm" data-spacing="sm">
   <div class="nds-cluster" data-justify="between">
     <Label>Volume</Label>
-    <span ${VALOR_VIVO}>{valor[0]}%</span>
+    <span ${VALUE_VIVO}>{valor[0]}%</span>
   </div>
   <Slider${props} />
 </div>`,
@@ -95,7 +95,7 @@ let volume = $state([50]);`,
     `<div class="nds-stack nds-w-sm" data-spacing="sm">
   <div class="nds-cluster" data-justify="between">
     <Label>Volume</Label>
-    <span ${VALOR_VIVO}>{volume[0]}%</span>
+    <span ${VALUE_VIVO}>{volume[0]}%</span>
   </div>
   <Slider bind:value={volume} aria-label="Volume" />
 </div>`,
@@ -114,7 +114,7 @@ let faixa = $state([20, 80]);`,
     `<div class="nds-stack nds-w-sm" data-spacing="sm">
   <div class="nds-cluster" data-justify="between">
     <Label>Faixa de preço</Label>
-    <span ${VALOR_VIVO}>R$ {faixa[0]} — R$ {faixa[1]}</span>
+    <span ${VALUE_VIVO}>R$ {faixa[0]} — R$ {faixa[1]}</span>
   </div>
   <Slider
     bind:value={faixa}
@@ -134,7 +134,7 @@ let brilho = $state([60]);`,
     `<div class="nds-stack" data-spacing="sm">
   <div class="nds-cluster" data-align="center" data-justify="between">
     <Label>Brilho</Label>
-    <span ${VALOR_VIVO}>{brilho[0]}%</span>
+    <span ${VALUE_VIVO}>{brilho[0]}%</span>
   </div>
   <div class="nds-cluster" data-justify="center">
     <Slider bind:value={brilho} orientation="vertical" aria-label="Brilho" />
@@ -144,7 +144,7 @@ let brilho = $state([60]);`,
 }
 
 /** Composição PriceRange: faixa de preço com passo grosso e prefixo de moeda. */
-export function sliderFaixaDePrecoSource(): string {
+export function precoSourceSliderRange(): string {
   return svelteSnippet(
     `${IMPORT}
 
@@ -152,7 +152,7 @@ let preco = $state([100, 400]);`,
     `<div class="nds-stack nds-w-sm" data-spacing="sm">
   <div class="nds-cluster" data-justify="between">
     <Label>Faixa de preço</Label>
-    <span ${VALOR_VIVO}>R$ {preco[0]} — R$ {preco[1]}</span>
+    <span ${VALUE_VIVO}>R$ {preco[0]} — R$ {preco[1]}</span>
   </div>
   <Slider
     bind:value={preco}
@@ -188,7 +188,7 @@ let opacidade = $state([100]);`,
   <div class="nds-stack" data-spacing="sm">
     <div class="nds-cluster" data-justify="between">
       <Label>Brilho</Label>
-      <span ${VALOR_VIVO}>{brilho[0]}%</span>
+      <span ${VALUE_VIVO}>{brilho[0]}%</span>
     </div>
     <Slider bind:value={brilho} aria-label="Brilho" />
   </div>
@@ -196,7 +196,7 @@ let opacidade = $state([100]);`,
   <div class="nds-stack" data-spacing="sm">
     <div class="nds-cluster" data-justify="between">
       <Label>Opacidade</Label>
-      <span ${VALOR_VIVO}>{opacidade[0]}%</span>
+      <span ${VALUE_VIVO}>{opacidade[0]}%</span>
     </div>
     <Slider bind:value={opacidade} aria-label="Opacidade" />
   </div>
@@ -215,7 +215,7 @@ let avaliacao = $state([3]);`,
     `<div class="nds-stack nds-w-sm" data-spacing="sm">
   <div class="nds-cluster" data-justify="between">
     <Label>Avaliação</Label>
-    <span ${VALOR_VIVO}>{avaliacao[0]} / 5</span>
+    <span ${VALUE_VIVO}>{avaliacao[0]} / 5</span>
   </div>
   <Slider bind:value={avaliacao} min={1} max={5} aria-label="Avaliação" />
 </div>`,

@@ -34,14 +34,14 @@ function elemento(
 /** Forma canônica: rótulo associado ao campo por `for`/`id`. Serve o Playground. */
 export function labelSource(_gerado?: string, ctx?: { args?: Partial<LabelArgs> }): string {
   const { class: classe = '', required = false } = ctx?.args ?? {};
-  const aberturaRotulo = `<Label for="nome"${classe ? ` class="${classe}"` : ''}>`;
+  const aberturaLabel = `<Label for="nome"${classe ? ` class="${classe}"` : ''}>`;
 
   const rotulo = required
-    ? `  ${aberturaRotulo}
+    ? `  ${aberturaLabel}
     Nome completo
     <span class="nds-text-destructive" aria-hidden="true">*</span>
   </Label>`
-    : `  ${aberturaRotulo}Nome completo</Label>`;
+    : `  ${aberturaLabel}Nome completo</Label>`;
 
   const campo = elemento(
     'Input',
@@ -86,7 +86,7 @@ export function labelObrigatorioSource(): string {
 }
 
 /** Desabilitado pelo controle irmão: o rótulo não recebe prop nenhuma. */
-export function labelDesabilitadoIrmaoSource(): string {
+export function labelDisabledSiblingSource(): string {
   return svelteSnippet(
     IMPORT,
     `<!-- A marca nds-peer vai no CONTROLE e o rótulo vem depois dele: o
@@ -99,7 +99,7 @@ export function labelDesabilitadoIrmaoSource(): string {
 }
 
 /** Desabilitado pelo bloco: um ancestral marcado esmaece rótulo e campo juntos. */
-export function labelDesabilitadoNoBlocoSource(): string {
+export function blockSourceLabelDisabled(): string {
   return svelteSnippet(
     IMPORT,
     `<div class="nds-stack" data-spacing="xs" data-disabled="true">
@@ -121,7 +121,7 @@ export function labelComCampoSource(): string {
 }
 
 /** Composição com caixa de seleção: o rótulo vira alvo de clique e nome acessível. */
-export function labelComCaixaSource(): string {
+export function labelWithBoxSource(): string {
   return svelteSnippet(
     `import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";`,

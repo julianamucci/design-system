@@ -4,8 +4,8 @@ import { userEvent, within, expect } from 'storybook/test';
 import ToggleGroupStory from './ToggleGroupStory.svelte';
 import { ligado } from './toggle-group.fixtures';
 import {
-  toggleGroupBarraDeAlinhamentoSource,
-  toggleGroupFormatacaoSource,
+  alignmentSourceToggleGroupBar,
+  toggleGroupFormattingSource,
   toggleGroupSource,
   toggleGroupVisualizacaoVerticalSource,
 } from './toggle-group.source';
@@ -52,7 +52,7 @@ export const AlignmentBar: Story = {
   },
   parameters: {
     docs: {
-      source: { transform: toggleGroupBarraDeAlinhamentoSource },
+      source: { transform: alignmentSourceToggleGroupBar },
       description: {
         story: 'Barra de alinhamento clássica — 4 opções mutuamente exclusivas (type=single).',
       },
@@ -86,7 +86,7 @@ export const FormattingToolbar: Story = {
   },
   parameters: {
     docs: {
-      source: { transform: toggleGroupFormatacaoSource },
+      source: { transform: toggleGroupFormattingSource },
       description: {
         story: 'Barra de formatação Bold/Italic/Underline — combinações independentes (type=multiple).',
       },

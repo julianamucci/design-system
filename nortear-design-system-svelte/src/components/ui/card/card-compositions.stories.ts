@@ -10,7 +10,7 @@ import {
   cardDeMetricaSource,
   cardDePerfilSource,
   cardDeProdutoSource,
-  cardPadraoSource,
+  cardDefaultSource,
 } from './card.source';
 
 const meta: Meta = {
@@ -24,7 +24,7 @@ const meta: Meta = {
     docs: {
       // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
       // sua própria composição logo abaixo.
-      source: { transform: cardPadraoSource },
+      source: { transform: cardDefaultSource },
       description: {
         component:
           'Composições canônicas do Card: com footer, com action, com imagem e exemplos reais (ProductCard, MetricCard, ProfileCard) para catálogo, dashboard e listas de perfil.',

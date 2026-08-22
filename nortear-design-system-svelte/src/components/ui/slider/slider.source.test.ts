@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   sliderEmFormularioSource,
   sliderEscalaCurtaSource,
-  sliderFaixaDePrecoSource,
+  precoSourceSliderRange,
   sliderFaixaSource,
   sliderSource,
   sliderUnicoSource,
@@ -86,7 +86,7 @@ describe('transforms das stories de variação e composição', () => {
   });
 
   it('a faixa de preço carrega o passo grosso e a escala maior', () => {
-    const saida = sliderFaixaDePrecoSource();
+    const saida = precoSourceSliderRange();
     expect(saida).toContain('max={500}');
     expect(saida).toContain('step={10}');
     expect(saida).toContain('$state([100, 400])');

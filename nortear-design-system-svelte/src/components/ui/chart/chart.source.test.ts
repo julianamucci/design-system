@@ -4,9 +4,9 @@ import {
   chartBarrasSource,
   chartComLegendaSource,
   chartComTituloSource,
-  chartDoisTiposSource,
+  chartDoisTypesSource,
   chartEmCardSource,
-  chartLinhasSource,
+  chartLinesSource,
   chartMultiSerieSource,
   chartPizzaSource,
   chartSource,
@@ -61,7 +61,7 @@ describe('chartSource', () => {
 describe('transforms das stories de variação, estado e composição', () => {
   it('cada tipo de desenho importa e chama o próprio montador', () => {
     expect(chartBarrasSource()).toContain('option={buildBarOption({ xAxis: meses, series })}');
-    expect(chartLinhasSource()).toContain('option={buildLineOption({ xAxis: meses, series })}');
+    expect(chartLinesSource()).toContain('option={buildLineOption({ xAxis: meses, series })}');
     expect(chartAreaSource()).toContain('option={buildAreaOption({ xAxis: meses, series })}');
     expect(chartPizzaSource()).toContain('option={buildPieOption({ data: dispositivos })}');
   });
@@ -100,7 +100,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a story de tema empilha os dois tipos com um só conjunto de dados', () => {
-    const saida = chartDoisTiposSource();
+    const saida = chartDoisTypesSource();
     expect(saida).toContain('import { ChartContainer, buildBarOption, buildLineOption }');
     expect(saida.match(/<ChartContainer/g)).toHaveLength(2);
     expect(saida).toContain('<div class="nds-stack nds-w-full">');

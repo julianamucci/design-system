@@ -40,7 +40,7 @@ const IMPORT = `import {
   TabsTrigger,
 } from "@/components/ui/tabs";`;
 
-const ABAS_PADRAO: Aba[] = [
+const ABAS_DEFAULT: Aba[] = [
   { valor: 'overview', rotulo: 'Visão geral', conteudo: 'Conteúdo da visão geral' },
   { valor: 'properties', rotulo: 'Propriedades', conteudo: 'Lista de propriedades' },
   { valor: 'examples', rotulo: 'Exemplos', conteudo: 'Exemplos de uso' },
@@ -106,7 +106,7 @@ export function tabsSource(_gerado?: string, ctx?: { args?: Partial<TabsArgs> })
   const { orientation = 'horizontal', activationMode = 'automatic' } = ctx?.args ?? {};
 
   return montar({
-    abas: ABAS_PADRAO,
+    abas: ABAS_DEFAULT,
     ativa: 'overview',
     rotuloLista: 'Seções do componente',
     orientacao: orientation === 'vertical' ? 'vertical' : undefined,
@@ -143,7 +143,7 @@ export function tabsVerticalSource(): string {
 }
 
 /** Estado inativo: quem decide a aba ativa na montagem é o valor inicial. */
-export function tabsAbaInicialSource(): string {
+export function tabsAbaInitialSource(): string {
   return montar({
     abas: [
       { valor: 'overview', rotulo: 'Visão geral', conteudo: 'Conteúdo da visão geral.' },
@@ -174,7 +174,7 @@ export function tabsDesabilitadaSource(): string {
 }
 
 /** Composição de configurações: seções paralelas com nome próprio na fileira. */
-export function tabsConfiguracoesSource(): string {
+export function tabsConfigSource(): string {
   return montar({
     abas: [
       {
@@ -199,7 +199,7 @@ export function tabsConfiguracoesSource(): string {
 }
 
 /** Composição preview/código: duas abas na variante sem trilho. */
-export function tabsPreviewCodigoSource(): string {
+export function tabsPreviewCodeSource(): string {
   return montar({
     abas: [
       {
@@ -218,7 +218,7 @@ export function tabsPreviewCodigoSource(): string {
 }
 
 /** Composição de navegação lateral: quatro seções no eixo vertical. */
-export function tabsNavegacaoVerticalSource(): string {
+export function tabsNavigationVerticalSource(): string {
   return montar({
     abas: [
       { valor: 'overview', rotulo: 'Visão geral', conteudo: 'Resumo executivo do projeto.' },

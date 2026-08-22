@@ -16,7 +16,7 @@ export type HoverCardContexto = {
 
 const CHAVE = Symbol('nds-hover-card');
 
-export function criarContextoHoverCard(): HoverCardContexto {
+export function createContextoHoverCard(): HoverCardContexto {
   let gatilho = $state<HTMLElement | null>(null);
   const contexto: HoverCardContexto = {
     get gatilho() {

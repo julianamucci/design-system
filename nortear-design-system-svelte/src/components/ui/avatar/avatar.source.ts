@@ -12,7 +12,7 @@ export type AvatarArgs = {
   class?: string;
 };
 
-const IMPORT_IMAGEM = `import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";`;
+const IMPORT_IMAGE = `import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";`;
 
 const FOTO = `<AvatarImage src="/equipe/maria.jpg" alt="Foto de perfil de Maria Rodrigues" />`;
 
@@ -29,7 +29,7 @@ export function avatarSource(_gerado?: string, ctx?: { args?: Partial<AvatarArgs
   const { size = 'md', class: classe } = ctx?.args ?? {};
 
   return svelteSnippet(
-    IMPORT_IMAGEM,
+    IMPORT_IMAGE,
     `<Avatar${raiz(size, classe)}>
   ${FOTO}
   <AvatarFallback>MR</AvatarFallback>
@@ -38,34 +38,34 @@ export function avatarSource(_gerado?: string, ctx?: { args?: Partial<AvatarArgs
 }
 
 /** A mesma composição num preset fixo — cada story de tamanho ensina o seu. */
-function noTamanho(size: AvatarArgs['size']): string {
+function inSize(size: AvatarArgs['size']): string {
   return avatarSource('', { args: { size } });
 }
 
 /** Tamanho sm (24px). */
-export function avatarTamanhoSmSource(): string {
-  return noTamanho('sm');
+export function avatarSizeSmSource(): string {
+  return inSize('sm');
 }
 
 /** Tamanho lg (40px). */
-export function avatarTamanhoLgSource(): string {
-  return noTamanho('lg');
+export function avatarSizeLgSource(): string {
+  return inSize('lg');
 }
 
 /** Tamanho xl (48px). */
-export function avatarTamanhoXlSource(): string {
-  return noTamanho('xl');
+export function avatarSizeXlSource(): string {
+  return inSize('xl');
 }
 
 /** Tamanho 2xl (64px). */
 export function avatarTamanho2xlSource(): string {
-  return noTamanho('2xl');
+  return inSize('2xl');
 }
 
 /** Estado de carregamento: o atraso segura a troca do fallback pela foto. */
 export function avatarCarregandoSource(): string {
   return svelteSnippet(
-    IMPORT_IMAGEM,
+    IMPORT_IMAGE,
     `<Avatar delayMs={600}>
   ${FOTO}
   <AvatarFallback>MR</AvatarFallback>
@@ -88,7 +88,7 @@ export function avatarIniciaisSource(): string {
  * de ausência de imagem dos estados. Quem nomeia é o rótulo do fallback: o
  * desenho é decorativo.
  */
-export function avatarIconeSource(): string {
+export function avatarIconSource(): string {
   return svelteSnippet(
     `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import User from "@lucide/svelte/icons/user";`,

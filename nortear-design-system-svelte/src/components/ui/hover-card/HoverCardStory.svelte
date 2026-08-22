@@ -51,7 +51,7 @@
 
   // Os gatilhos que não navegam (termo, métrica) são BOTÃO: não há para onde
   // ir, e o glossário continua sendo o caminho alternativo obrigatório.
-  const gatilhoEhBotao = $derived(variant === 'definition' || variant === 'metric');
+  const triggerEhButton = $derived(variant === 'definition' || variant === 'metric');
 
   const CLASSES_BOTAO =
     'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
@@ -63,7 +63,7 @@
     <HoverCard bind:open {openDelay} {closeDelay}>
       <HoverCardTrigger>
         {#snippet child({ props })}
-          {#if gatilhoEhBotao}
+          {#if triggerEhButton}
             <button type="button" class={CLASSES_BOTAO} {...props}>{triggerLabel}</button>
           {:else}
             <a

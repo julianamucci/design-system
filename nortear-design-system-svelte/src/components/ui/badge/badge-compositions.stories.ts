@@ -7,7 +7,7 @@ import BadgeStory from './BadgeStory.svelte';
 import {
   badgeComIconeSource,
   badgeContadorSource,
-  badgeEmBotaoSource,
+  buttonSourceBadge,
   badgeEmLinkSource,
   badgeSource,
 } from './badge.source';
@@ -130,7 +130,7 @@ export const AsLink: Story = {
 export const AsButton: Story = {
   parameters: {
     covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
-    docs: { source: { transform: badgeEmBotaoSource } },
+    docs: { source: { transform: buttonSourceBadge } },
   },
   render: () => ({
     Component: BadgeStory,

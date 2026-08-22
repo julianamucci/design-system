@@ -114,7 +114,7 @@ export function inputTipoArquivoSource(): string {
  * Estado com texto de exemplo: o placeholder mostra o formato e nunca substitui
  * o rótulo. A marcação é a mesma do tipo email — o assunto aqui é o atributo.
  */
-export function inputComPlaceholderSource(): string {
+export function inputWithPlaceholderSource(): string {
   return inputTipoEmailSource();
 }
 
@@ -151,7 +151,7 @@ export function inputComErroSource(): string {
 }
 
 /** Estado com texto de apoio: a instrução é lida junto com o campo, não só vista. */
-export function inputComTextoDeApoioSource(): string {
+export function helperSourceInputWithText(): string {
   return svelteSnippet(
     IMPORT,
     `<div class="nds-stack" data-spacing="xs">
@@ -168,7 +168,7 @@ export function inputComTextoDeApoioSource(): string {
 }
 
 /** Composição de senha: a política de senha vira apoio ligado ao campo. */
-export function inputSenhaComApoioSource(): string {
+export function inputSenhaWithHelperSource(): string {
   return svelteSnippet(
     IMPORT,
     `<div class="nds-stack" data-spacing="xs">
@@ -217,7 +217,7 @@ import {
 } from "@/components/ui/input-group";`;
 
 /** Composição em grupo: os três alinhamentos do acessório em volta do mesmo campo. */
-export function inputEmGrupoSource(): string {
+export function groupSourceInput(): string {
   return svelteSnippet(
     IMPORT_GRUPO,
     `<div class="nds-stack" data-spacing="lg">
@@ -255,7 +255,7 @@ export function inputEmGrupoSource(): string {
 }
 
 /** Composição em grupo com ação: o acessório leva o foco ao campo, o botão não. */
-export function inputEmGrupoComBotaoSource(): string {
+export function groupWithButtonSourceInput(): string {
   return svelteSnippet(
     `import X from "@lucide/svelte/icons/x";
 import { Label } from "@/components/ui/label";

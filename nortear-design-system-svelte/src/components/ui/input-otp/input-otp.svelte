@@ -8,13 +8,13 @@
 	// documentava "apenas dígitos" como padrão, e as stacks sem lib filtram —
 	// aqui o default passa a cumprir o que está escrito. Quem quer alfanumérico
 	// continua passando o próprio `pattern`.
-	const APENAS_DIGITOS = "^\\d+$";
+	const ONLY_DIGITOS = "^\\d+$";
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		value = $bindable(""),
-		pattern = APENAS_DIGITOS,
+		pattern = ONLY_DIGITOS,
 		...restProps
 	}: InputOTPPrimitive.RootProps & { pattern?: string } = $props();
 </script>

@@ -5,7 +5,7 @@ import TextareaStory from './TextareaStory.svelte';
 import { resizeComputado } from '@shared/testing/textarea-probe';
 import {
   textareaComApoioSource,
-  textareaComErroSource,
+  textareaWithErrorSource,
   textareaContadorAcessivelSource,
   textareaEmModalSource,
   textareaSource,
@@ -101,7 +101,7 @@ export const WithAccessibleCounter: Story = {
 
 export const WithError: Story = {
   parameters: {
-    docs: { source: { transform: textareaComErroSource } },
+    docs: { source: { transform: textareaWithErrorSource } },
   },
   render: () => ({
     Component: TextareaStory,

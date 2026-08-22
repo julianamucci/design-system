@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
-  tabsAbaInicialSource,
+  tabsAbaInitialSource,
   tabsAtivacaoManualSource,
-  tabsConfiguracoesSource,
+  tabsConfigSource,
   tabsDesabilitadaSource,
   tabsLineSource,
-  tabsNavegacaoVerticalSource,
-  tabsPreviewCodigoSource,
+  tabsNavigationVerticalSource,
+  tabsPreviewCodeSource,
   tabsSource,
   tabsVerticalSource,
 } from './tabs.source';
@@ -71,7 +71,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o estado inicial escolhe qual aba nasce ativa', () => {
-    expect(tabsAbaInicialSource()).toContain('let value = $state("properties");');
+    expect(tabsAbaInitialSource()).toContain('let value = $state("properties");');
   });
 
   it('a aba desabilitada é a única com a prop', () => {
@@ -81,19 +81,19 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a composição de configurações nomeia a fileira pelo assunto', () => {
-    const saida = tabsConfiguracoesSource();
+    const saida = tabsConfigSource();
     expect(saida).toContain('aria-label="Configurações"');
     expect(saida).toContain('let value = $state("profile");');
   });
 
   it('a composição preview/código usa a variante sem trilho e duas abas', () => {
-    const saida = tabsPreviewCodigoSource();
+    const saida = tabsPreviewCodeSource();
     expect(saida).toContain('variant="line"');
     expect(saida.match(/<TabsTrigger /g)).toHaveLength(2);
   });
 
   it('a navegação vertical tem quatro seções no eixo vertical', () => {
-    const saida = tabsNavegacaoVerticalSource();
+    const saida = tabsNavigationVerticalSource();
     expect(saida).toContain('orientation="vertical"');
     expect(saida.match(/<TabsContent /g)).toHaveLength(4);
   });

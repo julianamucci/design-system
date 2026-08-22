@@ -32,7 +32,7 @@ const IMPORT_BASE = `import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";`;
 
-const IMPORT_COM_CORPO = `import {
+const IMPORT_WITH_BODY = `import {
   Drawer,
   DrawerBody,
   DrawerClose,
@@ -45,7 +45,7 @@ const IMPORT_COM_CORPO = `import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";`;
 
-const IMPORT_COM_CAMPOS = `${IMPORT_COM_CORPO}
+const IMPORT_WITH_FIELDS = `${IMPORT_WITH_BODY}
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";`;
 
@@ -79,7 +79,7 @@ function painel({
   actionLabel,
   cancelLabel,
 }: Moldura): string {
-  const propsDaRaiz = attrs(
+  const rootProps = attrs(
     direction === 'bottom' ? '' : `direction="${direction}"`,
     dismissible ? '' : 'dismissible={false}',
   );
@@ -89,7 +89,7 @@ function painel({
     `${imports}
 
 let open = $state(${aberto});`,
-    `<Drawer bind:open${propsDaRaiz}>
+    `<Drawer bind:open${rootProps}>
   <DrawerTrigger>
     {#snippet child({ props })}
       <Button variant="outline" {...props}>${triggerLabel}</Button>
@@ -142,7 +142,7 @@ export function drawerSource(_gerado?: string, ctx?: { args?: Partial<DrawerArgs
 /** Composição com formulário curto no corpo, em painel lateral. */
 export function drawerComFormularioSource(): string {
   return painel({
-    imports: IMPORT_COM_CAMPOS,
+    imports: IMPORT_WITH_FIELDS,
     aberto: true,
     direction: 'right',
     triggerLabel: 'Editar dados',
@@ -168,7 +168,7 @@ export function drawerComFormularioSource(): string {
 /** Composição de confirmação reversível: mensagem curta e par de ações. */
 export function drawerComConfirmacaoSource(): string {
   return painel({
-    imports: IMPORT_COM_CORPO,
+    imports: IMPORT_WITH_BODY,
     aberto: true,
     triggerLabel: 'Remover anexo',
     title: 'Remover anexo?',
@@ -189,7 +189,7 @@ export function drawerComConfirmacaoSource(): string {
  */
 export function drawerComRolagemSource(): string {
   return painel({
-    imports: IMPORT_COM_CORPO,
+    imports: IMPORT_WITH_BODY,
     aberto: true,
     triggerLabel: 'Ler termos',
     title: 'Termos de uso',

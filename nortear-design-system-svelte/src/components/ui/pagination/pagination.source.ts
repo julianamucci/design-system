@@ -21,7 +21,7 @@ export type PaginationArgs = {
   demonstration: 'simples' | 'directional' | 'controlada' | 'tabela';
 };
 
-const IMPORT_FAIXA = `import {
+const IMPORT_RANGE = `import {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
@@ -44,7 +44,7 @@ const IMPORT_DIRECIONAL = `import {
  * `perPage` é 10, `page` é 1 e `siblingCount` é 1 sem que ninguém escreva.
  * `count` fica sempre: o padrão dele é 0, que não pagina nada.
  */
-function propsDaRaiz(
+function rootProps(
   args: Pick<PaginationArgs, 'count' | 'perPage' | 'page' | 'siblingCount'>,
   ...extras: string[]
 ): string {
@@ -85,7 +85,7 @@ ${i}{/each}`;
 }
 
 /** Faixa completa: direcionais nas pontas e os números no meio. */
-function marcacaoSimples(props: string): string {
+function simpleMarkup(props: string): string {
   return `<Pagination${props}>
   {#snippet children({ pages, currentPage })}
     <PaginationContent>
@@ -102,7 +102,7 @@ ${fila('      ', 'currentPage')}
 }
 
 /** Só os controles de direção: sem números, o snippet dispensa o snippet `children`. */
-function marcacaoDirecional(props: string): string {
+function markupDirecional(props: string): string {
   return `<Pagination${props}>
   <PaginationContent>
     <PaginationItem>
@@ -116,7 +116,7 @@ function marcacaoDirecional(props: string): string {
 }
 
 /** Estado da página atual do lado de quem consome, por `bind:page`. */
-function marcacaoControlada(args: PaginationArgs): string {
+function markupControlada(args: PaginationArgs): string {
   const props = attrs(
     'count={TOTAL}',
     'perPage={POR_PAGINA}',
@@ -149,8 +149,8 @@ ${fila('        ', 'paginaAtual', 'onclick={() => (paginaAtual = p.value)}')}
 }
 
 /** Rodapé de tabela: contador à esquerda e a faixa encostada à direita. */
-function marcacaoTabela(args: PaginationArgs): string {
-  const props = propsDaRaiz(args, 'data-align="end"');
+function markupTable(args: PaginationArgs): string {
+  const props = rootProps(args, 'data-align="end"');
   const primeiro = (args.page - 1) * args.perPage + 1;
   const ultimo = args.page * args.perPage;
 
@@ -199,25 +199,25 @@ export function paginationSource(
   const args: PaginationArgs = { count, perPage, page, siblingCount, demonstration };
 
   if (demonstration === 'directional') {
-    return svelteSnippet(IMPORT_DIRECIONAL, marcacaoDirecional(propsDaRaiz(args)));
+    return svelteSnippet(IMPORT_DIRECIONAL, markupDirecional(rootProps(args)));
   }
 
   if (demonstration === 'controlada') {
     return svelteSnippet(
-      `${IMPORT_FAIXA}
+      `${IMPORT_RANGE}
 
 const TOTAL = ${count};
 const POR_PAGINA = ${perPage};
 const totalPaginas = Math.ceil(TOTAL / POR_PAGINA);
 
 let paginaAtual = $state(${page});`,
-      marcacaoControlada(args),
+      markupControlada(args),
     );
   }
 
   if (demonstration === 'tabela') {
-    return svelteSnippet(IMPORT_FAIXA, marcacaoTabela(args));
+    return svelteSnippet(IMPORT_RANGE, markupTable(args));
   }
 
-  return svelteSnippet(IMPORT_FAIXA, marcacaoSimples(propsDaRaiz(args)));
+  return svelteSnippet(IMPORT_RANGE, simpleMarkup(rootProps(args)));
 }

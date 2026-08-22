@@ -161,12 +161,12 @@ export function radioGroupPadraoSource(): string {
 }
 
 /** Estado FocusVisible: mesma marcação; o anel é comportamento, não markup. */
-export function radioGroupFocoSource(): string {
+export function radioGroupFocusSource(): string {
   return grupo({ options: DUAS });
 }
 
 /** Estado Checked: o valor inicial já escolhe uma das opções. */
-export function radioGroupSelecionadoSource(): string {
+export function radioGroupSelectedSource(): string {
   return grupo({ value: 'pix', options: DUAS });
 }
 
@@ -207,7 +207,7 @@ export function radioGroupEntregaHorizontalSource(): string {
 }
 
 /** Composição WithDescription da entrega: prazo como texto auxiliar. */
-export function radioGroupEntregaComDescricaoSource(): string {
+export function radioGroupEntregaWithDescriptionSource(): string {
   return grupo({
     ariaLabel: 'Forma de entrega',
     options: [

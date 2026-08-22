@@ -7,20 +7,20 @@ import {
 import {
   desenhoEscreve, exigirRaiz, formasDeDado,
 } from '@shared/testing/chart-probe';
-import { aguardarDesenho } from './chart.fixtures';
+import { waitForDesign } from './chart.fixtures';
 import {
   chartAreaSource,
   chartBarrasSource,
-  chartLinhasSource,
+  chartLinesSource,
   chartPizzaSource,
   chartSource,
 } from './chart.source';
 
 const MESES = ['Jan', 'Fev', 'Mar', 'Abr'];
-const VALORES = [186, 305, 237, 73];
-const SERIE_UNICA = [{ name: 'Vendas', data: VALORES }];
+const VALUES = [186, 305, 237, 73];
+const SERIE_UNICA = [{ name: 'Vendas', data: VALUES }];
 const SERIES_MULTI = [
-  { name: 'Desktop', data: VALORES },
+  { name: 'Desktop', data: VALUES },
   { name: 'Mobile', data: [80, 200, 120, 190] },
 ];
 const DADOS_DISPOSITIVO = [
@@ -54,14 +54,14 @@ type Story = StoryObj;
  * a mesma geometria. Agrupar pelo centro em x junta o par e devolve uma medida
  * por categoria, sem depender da ordem em que a lib emite os nós.
  */
-function alturasPorCategoria(raiz: HTMLElement): number[] {
-  const porCentro = new Map<number, number>();
+function categoriaAlturas(raiz: HTMLElement): number[] {
+  const byCenter = new Map<number, number>();
   for (const forma of formasDeDado(raiz)) {
     const r = forma.getBoundingClientRect();
     const centro = Math.round(r.x + r.width / 2);
-    porCentro.set(centro, Math.max(porCentro.get(centro) ?? 0, r.height));
+    byCenter.set(centro, Math.max(byCenter.get(centro) ?? 0, r.height));
   }
-  return [...porCentro.entries()].sort((a, b) => a[0] - b[0]).map(([, altura]) => altura);
+  return [...byCenter.entries()].sort((a, b) => a[0] - b[0]).map(([, altura]) => altura);
 }
 
 export const Bar: Story = {
@@ -80,7 +80,7 @@ export const Bar: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
-    await aguardarDesenho(raiz);
+    await waitForDesign(raiz);
 
     await step('Toda categoria aparece escrita no eixo', async () => {
       await waitFor(() => {
@@ -93,13 +93,13 @@ export const Bar: Story = {
       // partir da linha de base, e enquanto a animação corre a ordem medida
       // ainda não é a ordem final. Compara ORDEM, não pixel — o desenho é
       // responsivo e o número absoluto muda com a largura do container.
-      const maiorValor = VALORES.indexOf(Math.max(...VALORES));
-      const menorValor = VALORES.indexOf(Math.min(...VALORES));
+      const maiorValor = VALUES.indexOf(Math.max(...VALUES));
+      const menorValue = VALUES.indexOf(Math.min(...VALUES));
       await waitFor(() => {
-        const alturas = alturasPorCategoria(raiz);
+        const alturas = categoriaAlturas(raiz);
         expect(alturas).toHaveLength(MESES.length);
         expect(alturas.indexOf(Math.max(...alturas))).toBe(maiorValor);
-        expect(alturas.indexOf(Math.min(...alturas))).toBe(menorValor);
+        expect(alturas.indexOf(Math.min(...alturas))).toBe(menorValue);
       }, { timeout: 3000 });
     });
   },
@@ -109,7 +109,7 @@ export const Line: Story = {
   parameters: {
     covers: ['functional.item3', 'visual.item2'],
     docs: {
-      source: { transform: chartLinhasSource },
+      source: { transform: chartLinesSource },
       description: { story: 'Linhas — tendência ao longo de uma sequência contínua.' },
     },
   },
@@ -121,7 +121,7 @@ export const Line: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
-    await aguardarDesenho(raiz);
+    await waitForDesign(raiz);
 
     await step('Uma linha traçada por série', async () => {
       // O traçado é o caminho SEM preenchimento; o `C` no comando separa a
@@ -160,7 +160,7 @@ export const Area: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
-    await aguardarDesenho(raiz);
+    await waitForDesign(raiz);
 
     await step('Cada série tem traçado E região preenchida', async () => {
       const caminhos = [...raiz.querySelectorAll<SVGPathElement>('svg path')];
@@ -201,7 +201,7 @@ export const Pie: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
-    await aguardarDesenho(raiz);
+    await waitForDesign(raiz);
 
     await step('A legenda escreve o nome de cada fatia — a cor não é o único sinal', async () => {
       await waitFor(() => {

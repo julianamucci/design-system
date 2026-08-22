@@ -589,7 +589,7 @@
               {#each headerGroups[0]?.headers ?? [] as header (header.id)}
                 {@const filterMeta = header.column.columnDef.meta?.filter}
                 {@const canFilter = header.column.getCanFilter()}
-                {@const filtroLabel = headerLabel(header.column)}
+                {@const filterLabel = headerLabel(header.column)}
                 <TableHead
                   style={pinStyle(header.column)}
                   class={cn('', header.column.getIsPinned() && 'nds-data-table-th-pinned')}
@@ -602,7 +602,7 @@
                       <select
                         value={(header.column.getFilterValue() as string) ?? ''}
                         onchange={(e: Event) => header.column.setFilterValue((e.currentTarget as HTMLSelectElement).value || undefined)}
-                        aria-label={rotulos.filter(filtroLabel)}
+                        aria-label={rotulos.filter(filterLabel)}
                         class="nds-data-table-filter-select"
                       >
                         <option value="">{rotulos.allOption}</option>
@@ -615,7 +615,7 @@
                         value={(header.column.getFilterValue() as string) ?? ''}
                         oninput={(e: Event) => header.column.setFilterValue((e.currentTarget as HTMLInputElement).value)}
                         placeholder={filterMeta.placeholder ?? 'Filtrar...'}
-                        aria-label={rotulos.filter(filtroLabel)}
+                        aria-label={rotulos.filter(filterLabel)}
                         class="nds-data-table-filter-input"
                       />
                     {/if}
@@ -625,7 +625,7 @@
                          chegaria ao leitor de tela como cabeçalho vazio. O nome
                          da coluna entra no texto porque "Sem filtro" repetido em
                          três células é o mesmo que célula vazia. -->
-                    <span class="nds-sr-only">{rotulos.noFilter(filtroLabel)}</span>
+                    <span class="nds-sr-only">{rotulos.noFilter(filterLabel)}</span>
                   {/if}
                 </TableHead>
               {/each}

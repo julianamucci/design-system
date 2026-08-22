@@ -7,7 +7,7 @@ import {
   toggleDesabilitadoSource,
   toggleFiltrosSource,
   toggleInvalidoSource,
-  toggleParDeVariantesSource,
+  variantsSourceTogglePair,
   toggleSource,
   toggleTamanhosSource,
 } from './toggle.source';
@@ -65,7 +65,7 @@ describe('toggleSource', () => {
 
 describe('transforms das stories de variação, estado e composição', () => {
   it('o par de variantes mostra a padrão ao lado da outline', () => {
-    const saida = toggleParDeVariantesSource();
+    const saida = variantsSourceTogglePair();
     expect(saida).toContain('<Toggle aria-label="Negrito">');
     expect(saida).toContain('variant="outline"');
     expect(saida).toContain('nds-cluster');

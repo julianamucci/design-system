@@ -80,7 +80,7 @@
 	// estar no primeiro render (aplicá-la depois da montagem faria o alert
 	// piscar em opacidade cheia antes de voltar a zero).
 	// svelte-ignore state_referenced_locally
-	let classeAnimacao = $state<string | undefined>(dismissible ? "nds-animate-in" : undefined);
+	let classNameAnimation = $state<string | undefined>(dismissible ? "nds-animate-in" : undefined);
 	let fechando = false;
 
 	$effect(() => {
@@ -92,7 +92,7 @@
 		// com `once` ainda consumiria o listener. Só o próprio elemento conta.
 		const limparEntrada = (event?: Event) => {
 			if (event && event.target !== el) return;
-			if (classeAnimacao === "nds-animate-in") classeAnimacao = undefined;
+			if (classNameAnimation === "nds-animate-in") classNameAnimation = undefined;
 		};
 		el.addEventListener("animationend", limparEntrada);
 		const timer = window.setTimeout(limparEntrada, ENTER_FALLBACK_MS);
@@ -126,7 +126,7 @@
 
 		// Trocar a classe já remove `nds-animate-in` — fechar antes da entrada
 		// terminar não deixa as duas no elemento.
-		classeAnimacao = "nds-animate-out";
+		classNameAnimation = "nds-animate-out";
 
 		// Corrida entre `animationend` e o timeout: quem vencer remove o nó e
 		// chama `onDismiss` (uma vez só). NUNCA depender só de `animationend` —
@@ -141,7 +141,7 @@
 		bind:this={ref}
 		data-slot="alert"
 		{role}
-		class={cn(alertVariants({ variant }), classeAnimacao, className)}
+		class={cn(alertVariants({ variant }), classNameAnimation, className)}
 		{...restProps}
 	>
 		{@render children?.()}

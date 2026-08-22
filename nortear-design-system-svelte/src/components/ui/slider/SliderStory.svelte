@@ -45,11 +45,11 @@
   // untrack: a leitura no inicializador e proposital — captura so o valor
   // inicial. Sem ele o Svelte avisa que a referencia nao e reativa.
   let current = $state(untrack(() => [...initialValue]));
-  let ultimoRecebido = $state(untrack(() => initialValue.join(',')));
+  let lastRecebido = $state(untrack(() => initialValue.join(',')));
   $effect(() => {
     const assinatura = initialValue.join(',');
-    if (assinatura !== ultimoRecebido) {
-      ultimoRecebido = assinatura;
+    if (assinatura !== lastRecebido) {
+      lastRecebido = assinatura;
       current = [...initialValue];
     }
   });

@@ -32,12 +32,12 @@
 	}: NavigationMenuPrimitive.LinkProps = $props();
 
 	/** Evento de dispensa do conteúdo, o mesmo que a própria lib despacha. */
-	const DISPENSAR = "bitsRootContentDismiss";
+	const DISMISS = "bitsRootContentDismiss";
 
 	function aoClicar(event: MouseEvent & { currentTarget: EventTarget & HTMLAnchorElement }): void {
 		onclick?.(event);
 		event.currentTarget.dispatchEvent(
-			new CustomEvent(DISPENSAR, { bubbles: true, cancelable: true }),
+			new CustomEvent(DISMISS, { bubbles: true, cancelable: true }),
 		);
 	}
 </script>

@@ -50,13 +50,13 @@ export function formSource(_gerado?: string, ctx?: { args?: Partial<FormArgs> })
   // separa o que a pessoa vê do que ela ouve.
   const invalido = ariaInvalid || Boolean(error);
 
-  const propsDoCampo = attrsMultilinha([
+  const fieldProps = attrsMultilinha([
     `label="${label}"`,
     description ? `description="${description}"` : '',
     error ? `error="${error}"` : '',
   ]);
 
-  const propsDoControle = attrs(
+  const controlProps = attrs(
     `type="${type}"`,
     placeholder ? `placeholder="${placeholder}"` : '',
     value ? `value="${value}"` : '',
@@ -67,8 +67,8 @@ export function formSource(_gerado?: string, ctx?: { args?: Partial<FormArgs> })
 
   return svelteSnippet(
     IMPORT_CAMPO,
-    `<FormField${propsDoCampo}>
-  <Input${propsDoControle} />
+    `<FormField${fieldProps}>
+  <Input${controlProps} />
 </FormField>`,
   );
 }
@@ -167,7 +167,7 @@ export function formFieldsetSource(): string {
 }
 
 /** Compositions/MultipleFields — o formulário inteiro, com três controles diferentes. */
-export function formVariosCamposSource(): string {
+export function formMultipleFieldsSource(): string {
   return svelteSnippet(
     `import { FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";

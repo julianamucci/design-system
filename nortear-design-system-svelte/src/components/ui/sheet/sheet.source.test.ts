@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  sheetEdicaoDePerfilSource,
+  perfilSourceSheetEdit,
   sheetFiltrosAvancadosSource,
   sheetSource,
-  sheetTermosComRolagemSource,
+  sheetTermosWithScrollSource,
 } from './sheet.source';
 
 describe('sheetSource', () => {
@@ -98,13 +98,13 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a edição de perfil muda a decisão do rodapé, não a estrutura', () => {
-    const saida = sheetEdicaoDePerfilSource();
+    const saida = perfilSourceSheetEdit();
     expect(saida).toContain('<SheetTitle>Editar perfil</SheetTitle>');
     expect(saida).toContain('<Button>Salvar alterações</Button>');
   });
 
   it('os termos com rolagem deixam o corpo rolar, e o rodapé fica', () => {
-    const saida = sheetTermosComRolagemSource();
+    const saida = sheetTermosWithScrollSource();
     // O corpo é peça do componente: quem traz o overflow e o tabindex da região
     // rolável é o SheetBody, não um contêiner improvisado na página.
     expect(saida).toContain('<SheetBody class="nds-stack');

@@ -4,7 +4,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import ToggleGroupStory from './ToggleGroupStory.svelte';
 import { ligado } from './toggle-group.fixtures';
 import {
-  toggleGroupFormatacaoSource,
+  toggleGroupFormattingSource,
   toggleGroupSource,
   toggleGroupVerticalSource,
 } from './toggle-group.source';
@@ -87,7 +87,7 @@ export const Multiple: Story = {
   parameters: {
     covers: ['functional.item2', 'visual.item2', 'accessibility.item4'],
     docs: {
-      source: { transform: toggleGroupFormatacaoSource },
+      source: { transform: toggleGroupFormattingSource },
       description: {
         story:
           'Seleção combinada — o valor é um array de strings. Ideal para formatação Bold/Italic/Underline. No modo combinado cada item é um botão com aria-pressed.',

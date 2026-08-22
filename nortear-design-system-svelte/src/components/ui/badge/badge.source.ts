@@ -103,7 +103,7 @@ export function badgeEmLinkSource(): string {
 }
 
 /** Composição clicável: quem recebe o foco é o botão que envolve a etiqueta. */
-export function badgeEmBotaoSource(): string {
+export function buttonSourceBadge(): string {
   const props = attrsMultilinha([
     'type="button"',
     'aria-label="Filtrar por acessibilidade"',

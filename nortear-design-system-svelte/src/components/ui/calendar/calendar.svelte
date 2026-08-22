@@ -89,13 +89,13 @@
 	}
 
 	/** Nome do mês por extenso mais o ano — o rótulo acessível da grade. */
-	const rotuloDoMes = (m: DateValue) =>
+	const monthLabel = (m: DateValue) =>
 		`${new Intl.DateTimeFormat(locale, { month: "long" }).format(
 			new Date(m.year, m.month - 1, 1),
 		)} ${m.year}`;
 
 	const anoEmVista = $derived(placeholder?.year ?? new Date().getFullYear());
-	const anosDaLista = $derived(
+	const listYears = $derived(
 		years ??
 			Array.from(
 				{ length: ANOS_PARA_CADA_LADO * 2 + 1 },
@@ -137,7 +137,7 @@ get along, so we shut typescript up by casting `value` to `never`.
 							{captionLayout}
 							months={monthsProp}
 							{monthFormat}
-							years={anosDaLista}
+							years={listYears}
 							{yearFormat}
 							month={month.value}
 							bind:placeholder
@@ -148,7 +148,7 @@ get along, so we shut typescript up by casting `value` to `never`.
 					<!-- A tabela se nomeia: sem `aria-label` o grid é anunciado como
 					     "tabela" e nada mais, e com dois meses na tela as duas soam
 					     iguais. -->
-					<Calendar.Grid aria-label={rotuloDoMes(month.value)}>
+					<Calendar.Grid aria-label={monthLabel(month.value)}>
 						<Calendar.GridHead>
 							<Calendar.GridRow class="nds-calendar-row">
 								{#each weekdays as weekday, i (i)}

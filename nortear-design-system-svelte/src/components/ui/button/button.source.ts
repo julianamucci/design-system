@@ -217,7 +217,7 @@ export function buttonComoLinkSource(): string {
  * Link desabilitado: perde o destino para não navegar e sai da ordem de foco,
  * sem deixar de ser link para o leitor de tela.
  */
-export function buttonLinkDesabilitadoSource(): string {
+export function buttonLinkDisabledSource(): string {
   return texto('Ver documentação', 'variant="link"', 'href="#docs"', 'disabled');
 }
 
@@ -225,7 +225,7 @@ export function buttonLinkDesabilitadoSource(): string {
  * Destino de protocolo não permitido: o componente descarta em vez de deixar
  * virar vetor de execução.
  */
-export function buttonDestinoInseguroSource(): string {
+export function buttonTargetInseguroSource(): string {
   return svelteSnippet(
     `${IMPORT}
 
@@ -240,7 +240,7 @@ const destino = "javascript:alert(1)";`,
  * Destino que a validação não consegue nem interpretar: também é descartado,
  * em vez de ir para o DOM na dúvida.
  */
-export function buttonDestinoMalformadoSource(): string {
+export function buttonTargetMalformadoSource(): string {
   return svelteSnippet(
     `${IMPORT}
 

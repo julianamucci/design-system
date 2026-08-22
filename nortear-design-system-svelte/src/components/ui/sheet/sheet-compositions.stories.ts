@@ -4,10 +4,10 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { expect, within } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
 import {
-  sheetEdicaoDePerfilSource,
+  perfilSourceSheetEdit,
   sheetFiltrosAvancadosSource,
   sheetSource,
-  sheetTermosComRolagemSource,
+  sheetTermosWithScrollSource,
 } from './sheet.source';
 
 const meta: Meta = {
@@ -78,7 +78,7 @@ export const ProfileEdit: Story = {
   },
   parameters: {
     docs: {
-      source: { transform: sheetEdicaoDePerfilSource },
+      source: { transform: perfilSourceSheetEdit },
       description: {
         story:
           'Edição de perfil em painel lateral. Os campos participam do foco preso; Escape ' +
@@ -108,7 +108,7 @@ export const TermsWithScroll: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
-      source: { transform: sheetTermosComRolagemSource },
+      source: { transform: sheetTermosWithScrollSource },
       description: {
         story:
           'Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — ' +

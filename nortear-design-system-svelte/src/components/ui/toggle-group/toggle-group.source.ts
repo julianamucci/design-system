@@ -20,7 +20,7 @@ const ICONES = {
   list: ['List', 'list'],
 } as const;
 
-type IconeChave = keyof typeof ICONES;
+type IconKey = keyof typeof ICONES;
 
 export type ToggleGroupArgs = {
   type: 'single' | 'multiple';
@@ -35,7 +35,7 @@ export type ToggleGroupArgs = {
 type Item = {
   value: string;
   rotulo: string;
-  icone: IconeChave;
+  icone: IconKey;
   disabled?: boolean;
 };
 
@@ -70,7 +70,7 @@ function importar(itens: readonly Item[]): string {
 }
 
 /** Os itens do grupo, um bloco por opção. */
-function marcarItens(itens: readonly Item[]): string {
+function marcarItems(itens: readonly Item[]): string {
   return itens
     .map((item) => {
       const props = attrs(
@@ -85,7 +85,7 @@ function marcarItens(itens: readonly Item[]): string {
 }
 
 /** Monta o grupo inteiro: script com estado e a lista de itens. */
-function montarGrupo(opcoes: {
+function mountGroup(opcoes: {
   itens: readonly Item[];
   rotulo: string;
   estado: string;
@@ -102,7 +102,7 @@ function montarGrupo(opcoes: {
 
   return svelteSnippet(
     `${importar(itens)}\n\n${declaracao}`,
-    `<ToggleGroup${abertura}>\n${marcarItens(itens)}\n</ToggleGroup>`,
+    `<ToggleGroup${abertura}>\n${marcarItems(itens)}\n</ToggleGroup>`,
   );
 }
 
@@ -129,7 +129,7 @@ export function toggleGroupSource(
       : 'let alinhamento: string[] = $state([]);'
     : `let alinhamento = $state("${typeof value === 'string' ? value : ''}");`;
 
-  return montarGrupo({
+  return mountGroup({
     itens: ALINHAMENTO,
     rotulo: 'Alinhamento do texto',
     estado: 'alinhamento',
@@ -150,8 +150,8 @@ export function toggleGroupSource(
  * Serve a Multiple (Variants) e a FormattingToolbar (Compositions): no modo
  * combinado o valor é uma lista e as opções somam em vez de se excluírem.
  */
-export function toggleGroupFormatacaoSource(): string {
-  return montarGrupo({
+export function toggleGroupFormattingSource(): string {
+  return mountGroup({
     itens: FORMATACAO,
     rotulo: 'Formatação',
     estado: 'formatacao',
@@ -161,8 +161,8 @@ export function toggleGroupFormatacaoSource(): string {
 }
 
 /** MultipleSelected (States): duas opções já combinadas na montagem. */
-export function toggleGroupSelecaoMultiplaSource(): string {
-  return montarGrupo({
+export function toggleGroupSelectionMultiplaSource(): string {
+  return mountGroup({
     itens: FORMATACAO,
     rotulo: 'Formatação',
     estado: 'formatacao',
@@ -173,7 +173,7 @@ export function toggleGroupSelecaoMultiplaSource(): string {
 
 /** Vertical (Variants): itens empilhados, navegados por ArrowUp/ArrowDown. */
 export function toggleGroupVerticalSource(): string {
-  return montarGrupo({
+  return mountGroup({
     itens: VISUALIZACAO,
     rotulo: 'Modo de visualização',
     estado: 'visualizacao',
@@ -184,7 +184,7 @@ export function toggleGroupVerticalSource(): string {
 
 /** VerticalViewMode (Compositions): o mesmo empilhado, com a borda única. */
 export function toggleGroupVisualizacaoVerticalSource(): string {
-  return montarGrupo({
+  return mountGroup({
     itens: VISUALIZACAO,
     rotulo: 'Modo de visualização',
     estado: 'visualizacao',
@@ -194,8 +194,8 @@ export function toggleGroupVisualizacaoVerticalSource(): string {
 }
 
 /** AlignmentBar (Compositions): a barra clássica, com a quarta opção. */
-export function toggleGroupBarraDeAlinhamentoSource(): string {
-  return montarGrupo({
+export function alignmentSourceToggleGroupBar(): string {
+  return mountGroup({
     itens: [...ALINHAMENTO, { value: 'justify', rotulo: 'Justificar', icone: 'alignJustify' }],
     rotulo: 'Alinhamento do texto',
     estado: 'alinhamento',
@@ -206,7 +206,7 @@ export function toggleGroupBarraDeAlinhamentoSource(): string {
 
 /** DisabledItem (States): uma opção fora de uso sem derrubar o grupo inteiro. */
 export function toggleGroupItemDesabilitadoSource(): string {
-  return montarGrupo({
+  return mountGroup({
     itens: [ALINHAMENTO[0], { ...ALINHAMENTO[1], disabled: true }, ALINHAMENTO[2]],
     rotulo: 'Alinhamento do texto',
     estado: 'alinhamento',

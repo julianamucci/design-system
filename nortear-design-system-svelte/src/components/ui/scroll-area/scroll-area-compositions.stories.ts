@@ -5,9 +5,9 @@ import { transbordo } from '@shared/testing/scroll-area-probe';
 import ScrollAreaStory from './ScrollAreaStory.svelte';
 import {
   scrollAreaHorizontalSource,
-  scrollAreaListaEmSidebarSource,
+  sidebarSourceScrollAreaList,
   scrollAreaSource,
-  scrollAreaTabelaAmplaSource,
+  scrollAreaTableAmplaSource,
 } from './scroll-area.source';
 
 const meta: Meta = {
@@ -35,7 +35,7 @@ type Story = StoryObj;
 
 export const SidebarList: Story = {
   parameters: {
-    docs: { source: { transform: scrollAreaListaEmSidebarSource } },
+    docs: { source: { transform: sidebarSourceScrollAreaList } },
   },
   render: () => ({
     Component: ScrollAreaStory,
@@ -119,7 +119,7 @@ export const HorizontalGallery: Story = {
 
 export const WideTable: Story = {
   parameters: {
-    docs: { source: { transform: scrollAreaTabelaAmplaSource } },
+    docs: { source: { transform: scrollAreaTableAmplaSource } },
   },
   render: () => ({
     Component: ScrollAreaStory,

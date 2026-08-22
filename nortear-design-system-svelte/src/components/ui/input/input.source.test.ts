@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
   inputComErroSource,
-  inputComPlaceholderSource,
-  inputComTextoDeApoioSource,
+  inputWithPlaceholderSource,
+  helperSourceInputWithText,
   inputDesabilitadoSource,
-  inputEmGrupoComBotaoSource,
-  inputEmGrupoSource,
+  groupWithButtonSourceInput,
+  groupSourceInput,
   inputPaletaEscuraSource,
-  inputSenhaComApoioSource,
+  inputSenhaWithHelperSource,
   inputSource,
   inputTipoArquivoSource,
   inputTipoBuscaSource,
@@ -75,7 +75,7 @@ describe('transforms das stories de tipo', () => {
   });
 
   it('o estado com placeholder reaproveita a marcação do tipo email', () => {
-    expect(inputComPlaceholderSource()).toBe(inputTipoEmailSource());
+    expect(inputWithPlaceholderSource()).toBe(inputTipoEmailSource());
   });
 });
 
@@ -94,14 +94,14 @@ describe('transforms das stories de estado e composição', () => {
   });
 
   it('o texto de apoio chega pelo mesmo caminho da descrição', () => {
-    const saida = inputComTextoDeApoioSource();
+    const saida = helperSourceInputWithText();
     expect(saida).toContain('aria-describedby="email-apoio"');
     expect(saida).toContain('<p id="email-apoio"');
     expect(saida).not.toContain('aria-invalid');
   });
 
   it('a senha com apoio traz a política ligada ao campo', () => {
-    const saida = inputSenhaComApoioSource();
+    const saida = inputSenhaWithHelperSource();
     expect(saida).toContain('type="password"');
     expect(saida).toContain('aria-describedby="senha-apoio"');
   });
@@ -114,7 +114,7 @@ describe('transforms das stories de estado e composição', () => {
   });
 
   it('o grupo traz os três alinhamentos do acessório', () => {
-    const saida = inputEmGrupoSource();
+    const saida = groupSourceInput();
     expect(saida).toContain('from "@/components/ui/input-group"');
     expect(saida).toContain('align="inline-start"');
     expect(saida).toContain('align="inline-end"');
@@ -122,7 +122,7 @@ describe('transforms das stories de estado e composição', () => {
   });
 
   it('o grupo com ação traz o botão dentro do acessório final', () => {
-    const saida = inputEmGrupoComBotaoSource();
+    const saida = groupWithButtonSourceInput();
     expect(saida).toContain('<InputGroupButton type="button" size="icon-sm" aria-label="Limpar">');
     expect(saida).toContain('aria-hidden="true"');
   });

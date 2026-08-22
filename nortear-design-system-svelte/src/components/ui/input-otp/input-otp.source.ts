@@ -29,7 +29,7 @@ const IMPORT = `import {
 import { Label } from "@/components/ui/label";`;
 
 /** Um grupo só, com uma caixa por caractere do código. */
-const GRUPO_UNICO = `      <InputOTPGroup>
+const GROUP_UNICO = `      <InputOTPGroup>
         {#each cells as cell, i (i)}
           <InputOTPSlot {cell} />
         {/each}
@@ -53,7 +53,7 @@ function campoOtp(opcoes: {
   <Label for="codigo">${opcoes.label}</Label>
   ${abertura}
     {#snippet children({ cells })}
-${opcoes.celulas ?? GRUPO_UNICO}
+${opcoes.celulas ?? GROUP_UNICO}
     {/snippet}
   </InputOTP>${opcoes.apoio ? `\n${opcoes.apoio}` : ''}
 </div>`;
@@ -141,7 +141,7 @@ import { Label } from "@/components/ui/label";${estado()}`,
  * Texto de apoio: a origem e a validade do código são lidas junto com o campo,
  * por `aria-describedby`.
  */
-export function inputOtpComTextoDeApoioSource(): string {
+export function helperSourceInputOtpWithText(): string {
   return svelteSnippet(
     `${IMPORT}${estado()}`,
     campoOtp({

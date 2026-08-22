@@ -3,7 +3,7 @@ import {
   inputOtpComErroSource,
   inputOtpComReenvioSource,
   inputOtpComSeparadorSource,
-  inputOtpComTextoDeApoioSource,
+  helperSourceInputOtpWithText,
   inputOtpSource,
 } from './input-otp.source';
 
@@ -87,7 +87,7 @@ describe('transforms das stories de variação e composição', () => {
   });
 
   it('o texto de apoio é lido junto com o campo', () => {
-    const saida = inputOtpComTextoDeApoioSource();
+    const saida = helperSourceInputOtpWithText();
     expect(saida).toContain('aria-describedby="codigo-apoio"');
     expect(saida).toContain('<p id="codigo-apoio"');
     expect(saida).not.toContain('aria-invalid');

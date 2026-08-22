@@ -145,7 +145,7 @@ export const WithCloseButtonHidden: Story = {
 // Espião do modo controlado. Vive fora do `render` para que a play alcance as
 // chamadas — spy criado dentro do render é inalcançável e deixa a aba Actions
 // vazia. `mockClear()` no início da play zera o que a execução anterior deixou.
-const espiaoCancelar = fn();
+const spyCancelar = fn();
 
 export const Controlled: Story = {
   parameters: {
@@ -161,11 +161,11 @@ export const Controlled: Story = {
     description: 'Este diálogo é comandado por estado externo via bind:open.',
     actionLabel: 'Confirmar',
     cancelLabel: 'Cancelar',
-    onCancel: espiaoCancelar,
+    onCancel: spyCancelar,
   },
   play: async ({ canvasElement, step }) => {
     const trigger = gatilho(canvasElement)!;
-    espiaoCancelar.mockClear();
+    spyCancelar.mockClear();
 
     await step('Nasce fechado, porque o valor externo diz que sim', async () => {
       await expect(painel()).toBeNull();
@@ -183,7 +183,7 @@ export const Controlled: Story = {
       const botoes = rodape.querySelectorAll<HTMLElement>('button');
       await userEvent.click(botoes[0]);
       await esperarFechado();
-      await expect(espiaoCancelar).toHaveBeenCalled();
+      await expect(spyCancelar).toHaveBeenCalled();
     });
 
     await step('Escape também fecha, e o estado externo acompanha', async () => {

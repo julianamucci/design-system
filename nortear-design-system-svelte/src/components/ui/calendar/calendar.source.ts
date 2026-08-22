@@ -15,7 +15,7 @@ const IMPORT = `import { Calendar } from "@/components/ui/calendar";
 import { CalendarDate } from "@internationalized/date";`;
 
 /** A data de abertura das stories é fixa para a foto não mudar todo dia. */
-const DATA_INICIAL = `let data = $state(new CalendarDate(2026, 4, 12));`;
+const DATA_INITIAL = `let data = $state(new CalendarDate(2026, 4, 12));`;
 
 /**
  * Forma canônica: uma data por vez, com os rótulos no idioma pedido. O
@@ -24,7 +24,7 @@ const DATA_INICIAL = `let data = $state(new CalendarDate(2026, 4, 12));`;
  */
 export function calendarSource(): string {
   return svelteSnippet(
-    `${IMPORT}\n\n${DATA_INICIAL}`,
+    `${IMPORT}\n\n${DATA_INITIAL}`,
     `<Calendar type="single" bind:value={data} locale="pt-BR" />`,
   );
 }
@@ -66,7 +66,7 @@ export function calendarBloqueadoSource(): string {
     `import { Calendar } from "@/components/ui/calendar";
 import { CalendarDate, type DateValue } from "@internationalized/date";
 
-${DATA_INICIAL}
+${DATA_INITIAL}
 
 const limite = new CalendarDate(2026, 4, 10);
 const antesDoLimite = (dia: DateValue) => dia.compare(limite) < 0;`,
@@ -97,9 +97,9 @@ let data = $state<DateValue>();`,
  * Seis linhas de semana sempre, completadas com os dias do mês vizinho: a
  * altura do bloco para de pular quando o mês vira.
  */
-export function calendarSemanasFixasSource(): string {
+export function calendarWeeksFixasSource(): string {
   return svelteSnippet(
-    `${IMPORT}\n\n${DATA_INICIAL}`,
+    `${IMPORT}\n\n${DATA_INITIAL}`,
     `<Calendar type="single" bind:value={data} locale="pt-BR" fixedWeeks />`,
   );
 }
@@ -107,7 +107,7 @@ export function calendarSemanasFixasSource(): string {
 /** Legenda em texto (padrão): mês e ano escritos, sem nada para operar. */
 export function calendarLegendaTextoSource(): string {
   return svelteSnippet(
-    `${IMPORT}\n\n${DATA_INICIAL}`,
+    `${IMPORT}\n\n${DATA_INITIAL}`,
     `<Calendar
   type="single"
   bind:value={data}
@@ -120,7 +120,7 @@ export function calendarLegendaTextoSource(): string {
 /** Legenda em seletores: mês e ano viram controles, para saltar de período. */
 export function calendarLegendaSeletoresSource(): string {
   return svelteSnippet(
-    `${IMPORT}\n\n${DATA_INICIAL}`,
+    `${IMPORT}\n\n${DATA_INITIAL}`,
     `<Calendar
   type="single"
   bind:value={data}
@@ -133,7 +133,7 @@ export function calendarLegendaSeletoresSource(): string {
 /** Dois meses lado a lado, para escolher datas que atravessam a virada. */
 export function calendarDoisMesesSource(): string {
   return svelteSnippet(
-    `${IMPORT}\n\n${DATA_INICIAL}`,
+    `${IMPORT}\n\n${DATA_INITIAL}`,
     `<Calendar
   type="single"
   bind:value={data}
@@ -162,7 +162,7 @@ const formatador = new Intl.DateTimeFormat("pt-BR", {
 });
 
 let aberto = $state(false);
-${DATA_INICIAL}
+${DATA_INITIAL}
 
 // Fuso local, e não UTC: converter em UTC e formatar no fuso de quem lê devolve
 // o dia anterior em qualquer fuso a oeste de Greenwich.

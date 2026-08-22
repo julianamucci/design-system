@@ -8,7 +8,7 @@ import {
   calendarLegendaSeletoresSource,
   calendarLegendaTextoSource,
   calendarMultiploSource,
-  calendarSemanasFixasSource,
+  calendarWeeksFixasSource,
   calendarSource,
 } from './calendar.source';
 
@@ -68,7 +68,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('as semanas fixas entram como flag, sem valor', () => {
-    expect(calendarSemanasFixasSource()).toContain(
+    expect(calendarWeeksFixasSource()).toContain(
       '<Calendar type="single" bind:value={data} locale="pt-BR" fixedWeeks />',
     );
   });

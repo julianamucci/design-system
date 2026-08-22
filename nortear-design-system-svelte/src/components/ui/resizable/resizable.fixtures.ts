@@ -49,9 +49,9 @@ export function paineisDiretos(grupo: Element): HTMLElement[] {
  * A lista explícita existe para o layout aninhado, onde há mais de um grupo na
  * tela e a story diz qual delas está sendo demonstrada.
  */
-export type AlvoDaMedida = HTMLElement | HTMLElement[];
+export type MeasurementTarget = HTMLElement | HTMLElement[];
 
-function resolverPaineis(alvo: AlvoDaMedida): HTMLElement[] {
+function resolvePanels(alvo: MeasurementTarget): HTMLElement[] {
   if (Array.isArray(alvo)) return alvo;
   const grupo = alvo.matches(SEL_GRUPO) ? alvo : alvo.querySelector(SEL_GRUPO);
   if (!grupo) throw new Error('grupo de painéis não encontrado');
@@ -67,8 +67,8 @@ function resolverPaineis(alvo: AlvoDaMedida): HTMLElement[] {
  * `canvasElement.firstElementChild` ser truthy — passava com a tela vazia, com
  * o eixo trocado e com os dois painéis do mesmo tamanho.
  */
-export function fracoes(alvo: AlvoDaMedida, eixo: Eixo = 'horizontal'): number[] {
-  const paineis = resolverPaineis(alvo);
+export function fracoes(alvo: MeasurementTarget, eixo: Eixo = 'horizontal'): number[] {
+  const paineis = resolvePanels(alvo);
   const medida = (p: HTMLElement) => {
     const r = p.getBoundingClientRect();
     return eixo === 'horizontal' ? r.width : r.height;
@@ -78,6 +78,6 @@ export function fracoes(alvo: AlvoDaMedida, eixo: Eixo = 'horizontal'): number[]
 }
 
 /** A fatia do primeiro painel — o que `defaultSize` e `aria-valuenow` dizem. */
-export function fracaoDoPrimeiro(alvo: AlvoDaMedida, eixo: Eixo = 'horizontal'): number {
+export function fracaoDoPrimeiro(alvo: MeasurementTarget, eixo: Eixo = 'horizontal'): number {
   return fracoes(alvo, eixo)[0];
 }

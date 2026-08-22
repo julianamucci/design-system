@@ -2,14 +2,14 @@ import { describe, expect, it } from 'vitest';
 import {
   scrollAreaBothSource,
   scrollAreaConteudoFocavelSource,
-  scrollAreaDuranteRolagemSource,
+  scrollAreaDuranteScrollSource,
   scrollAreaHorizontalSource,
-  scrollAreaListaEmSidebarSource,
+  sidebarSourceScrollAreaList,
   scrollAreaOciosoSource,
-  scrollAreaSemTetoSource,
-  scrollAreaSempreVisivelSource,
+  scrollAreaNoTetoSource,
+  scrollAreaSempreVisibleSource,
   scrollAreaSource,
-  scrollAreaTabelaAmplaSource,
+  scrollAreaTableAmplaSource,
   scrollAreaVerticalSource,
 } from './scroll-area.source';
 
@@ -72,11 +72,11 @@ describe('transforms das stories de variação, estado e composição', () => {
 
   it('o estado ocioso fica no padrão de type, e o sempre visível o declara', () => {
     expect(scrollAreaOciosoSource()).not.toContain('type=');
-    expect(scrollAreaSempreVisivelSource()).toContain('type="always"');
+    expect(scrollAreaSempreVisibleSource()).toContain('type="always"');
   });
 
   it('a barra durante a rolagem traz o atraso próprio para sumir', () => {
-    const saida = scrollAreaDuranteRolagemSource();
+    const saida = scrollAreaDuranteScrollSource();
     expect(saida).toContain('type="scroll"');
     expect(saida).toContain('scrollHideDelay={1000}');
   });
@@ -88,17 +88,17 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('sem teto de altura o snippet não declara size — é o erro que a story mostra', () => {
-    expect(scrollAreaSemTetoSource()).not.toContain('size=');
+    expect(scrollAreaNoTetoSource()).not.toContain('size=');
   });
 
   it('a lista em barra lateral nomeia a navegação da documentação', () => {
-    const saida = scrollAreaListaEmSidebarSource();
+    const saida = sidebarSourceScrollAreaList();
     expect(saida).toContain('aria-label="Seções da documentação"');
     expect(saida).toContain('size="xl"');
   });
 
   it('a tabela ampla usa a janela mais alta da escada', () => {
-    const saida = scrollAreaTabelaAmplaSource();
+    const saida = scrollAreaTableAmplaSource();
     expect(saida).toContain('orientation="both"');
     expect(saida).toContain('size="xl"');
     expect(saida).toContain('{ length: 15 }');

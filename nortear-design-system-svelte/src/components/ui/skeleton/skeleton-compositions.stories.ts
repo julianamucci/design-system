@@ -6,7 +6,7 @@ import { caixaDesenhada } from '@shared/testing/skeleton-probe';
 import {
   skeletonCardDePerfilSource,
   skeletonImagemEmProporcaoSource,
-  skeletonListaComAvatarSource,
+  skeletonListWithAvatarSource,
   skeletonParagrafoSource,
   skeletonSource,
 } from './skeleton.source';
@@ -73,7 +73,7 @@ export const ListWithAvatar: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
-      source: { transform: skeletonListaComAvatarSource },
+      source: { transform: skeletonListWithAvatarSource },
       description: {
         story: 'Cinco itens com avatar pequeno e duas linhas — padrão de carregamento de lista.',
       },

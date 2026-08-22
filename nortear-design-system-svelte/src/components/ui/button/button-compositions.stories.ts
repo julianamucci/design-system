@@ -9,10 +9,10 @@ import {
   buttonComIconeFinalSource,
   buttonComIconeInicialSource,
   buttonComoLinkSource,
-  buttonDestinoInseguroSource,
-  buttonDestinoMalformadoSource,
+  buttonTargetInseguroSource,
+  buttonTargetMalformadoSource,
   buttonDestrutivoComIconeSource,
-  buttonLinkDesabilitadoSource,
+  buttonLinkDisabledSource,
   buttonParDeAcoesSource,
   buttonSoIconeSource,
   buttonSource,
@@ -189,7 +189,7 @@ export const DisabledLink: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: buttonLinkDesabilitadoSource },
+      source: { transform: buttonLinkDisabledSource },
       description: { story: 'Link desabilitado: perde o href para não navegar, e ganha role e tabindex que o tiram da ordem de foco — um <a> sem href deixaria de ser link para o leitor de tela.' } },
   },
   play: async ({ canvasElement, step }) => {
@@ -215,7 +215,7 @@ export const HrefWithUnsafeProtocol: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: buttonDestinoInseguroSource },
+      source: { transform: buttonTargetInseguroSource },
       description: { story: 'Protocolo fora da lista permitida (http, https, mailto, tel, âncora e caminho relativo) é descartado: o elemento renderiza sem href em vez de virar um vetor de execução.' } },
   },
   play: async ({ canvasElement, step }) => {
@@ -243,7 +243,7 @@ export const MalformedHref: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: buttonDestinoMalformadoSource },
+      source: { transform: buttonTargetMalformadoSource },
       description: { story: 'URL malformada não vira href: quando a validação não consegue nem interpretar o valor, ele é descartado em vez de ir para o DOM na dúvida.' } },
   },
   play: async ({ canvasElement }) => {

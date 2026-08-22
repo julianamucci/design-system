@@ -33,7 +33,7 @@
 	 *
 	 * `tick()` espera o commit pendente do Svelte — é ele que traz o rodapé.
 	 */
-	async function focarSaidaSegura(event: Event) {
+	async function focarOutputSegura(event: Event) {
 		onOpenAutoFocus?.(event as never);
 		if (event.defaultPrevented) return;
 		event.preventDefault();
@@ -56,7 +56,7 @@
 		bind:ref
 		data-slot="alert-dialog-content"
 		class={cn("nds-alert-dialog-content", className)}
-		onOpenAutoFocus={focarSaidaSegura}
+		onOpenAutoFocus={focarOutputSegura}
 		{...restProps}
 	/>
 </AlertDialogPortal>

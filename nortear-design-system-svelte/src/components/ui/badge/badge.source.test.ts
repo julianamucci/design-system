@@ -3,7 +3,7 @@ import {
   badgeComIconeSource,
   badgeContadorSource,
   badgeDestrutivoSource,
-  badgeEmBotaoSource,
+  buttonSourceBadge,
   badgeEmLinkSource,
   badgeOutlineSource,
   badgeSecundarioSource,
@@ -70,7 +70,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('no clique, quem recebe o foco é o botão que envolve a etiqueta', () => {
-    const saida = badgeEmBotaoSource();
+    const saida = buttonSourceBadge();
     expect(saida).toContain('type="button"');
     expect(saida).toContain('<Badge variant="outline">Acessibilidade</Badge>');
   });
