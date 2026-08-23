@@ -33,7 +33,7 @@ export function avatarSnippet(o: AvatarSnippetOptions = {}): string {
   const src = o.src === undefined ? FOTO_DEFAULT : o.src;
   const fallback = o.fallback ?? 'MR';
 
-  const linhas = opcoes([
+  const lines = opcoes([
     ['src', src ? texto(src) : undefined],
     // Sem foto não há o que descrever: o alt acompanha a imagem.
     ['alt', src ? texto(o.alt ?? ALT_DEFAULT) : undefined],
@@ -49,7 +49,7 @@ export function avatarSnippet(o: AvatarSnippetOptions = {}): string {
 
   return snippet(
     importing('avatar', ...names),
-    `const avatar = ${chamada('createAvatar', linhas)};`,
+    `const avatar = ${chamada('createAvatar', lines)};`,
     o.status
       ? `avatar.appendChild(createAvatarBadge({ 'aria-label': ${texto(o.status)} }));`
       : undefined,

@@ -215,9 +215,9 @@ export const WithBadge: Story = {
       await expect(canvas.getAllByRole('tab')).toHaveLength(3);
       const contadores = Array.from(canvasElement.querySelectorAll('[role="tab"] [data-slot="badge"]'));
       await expect(contadores).toHaveLength(2);
-      for (const contador of contadores) {
-        await expect(contador.getAttribute('tabindex')).toBeNull();
-        await expect(contador.getAttribute('role')).toBeNull();
+      for (const counter of contadores) {
+        await expect(counter.getAttribute('tabindex')).toBeNull();
+        await expect(counter.getAttribute('role')).toBeNull();
       }
     });
 

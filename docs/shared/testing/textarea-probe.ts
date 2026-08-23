@@ -32,7 +32,7 @@
 // re-exportadas aqui porque as stories das cinco stacks já importam daqui.
 import { backgroundEffective, darkLigarTheme, ratio, noTransicao } from './cor';
 
-export type { Contraste } from './cor';
+export type { Contrast } from './cor';
 export { darkLigarTheme };
 
 export interface CounterMeasurement {
@@ -214,7 +214,7 @@ export function measureTextarea(raiz: HTMLElement) {
 
   const counterEl =
     raiz.querySelector<HTMLElement>('[aria-live]') ?? raiz.querySelector<HTMLElement>('[role="status"]');
-  const contador: CounterMeasurement = {
+  const counter: CounterMeasurement = {
     existe: !!counterEl,
     ariaLive: counterEl?.getAttribute('aria-live') ?? null,
     ariaLabel: counterEl?.getAttribute('aria-label') ?? null,
@@ -258,7 +258,7 @@ export function measureTextarea(raiz: HTMLElement) {
       ariaDescribedby: describedby,
       alvoDescribedbyExiste: describedby ? targetDescribed.length === describedby.split(/\s+/).length : null,
       textoDescrito: targetDescribed.map((el) => texto(el)),
-      contador,
+      counter,
     },
     geometria: {
       largura: Math.round(caixa.width),
@@ -282,7 +282,7 @@ export function measureTextarea(raiz: HTMLElement) {
       crescimento: crescimento(ta),
       aoFocar: aoFocar(ta),
     },
-    estado: {
+    state: {
       background: cs.backgroundColor,
       backgroundEffective: background,
       cor: cs.color,
@@ -335,7 +335,7 @@ export function darkMeasure(raiz: HTMLElement, cenario: string) {
     return noTransicao(campo, () => {
       const measurement = measureTextarea(alvo);
       if (!measurement.presente) return null;
-      return { estado: measurement.estado, contraste: measurement.contraste };
+      return { state: measurement.state, contraste: measurement.contraste };
     });
   } finally {
     desfazer();

@@ -145,7 +145,7 @@ export class NdsPopoverContent {
     // encolhe até o gatilho e chega no mesmo resultado visual sem CSS novo.
     class: 'nds-inline-block',
     '[attr.data-slot]': '"popover"',
-    '[attr.data-state]': 'estado()',
+    '[attr.data-state]': 'state()',
   },
   // Uma `<ng-content>` só, e o painel instanciado por `ngTemplateOutlet`: duas
   // `<ng-content>` em ramos de `@if` não entregariam conteúdo a nenhum dos dois.
@@ -168,7 +168,7 @@ export class NdsPopoverContent {
             rdxPopoverPopup
             class="nds-popover-content"
             data-slot="popover-content"
-            [attr.data-state]="estado()"
+            [attr.data-state]="state()"
             [attr.aria-label]="rotuloDeReserva()"
             (openAutoFocus)="aoAutoFocar($event)"
           >
@@ -192,7 +192,7 @@ export class NdsPopover {
    */
   protected readonly conteudo = contentChild(NdsPopoverContent, { descendants: true });
 
-  protected readonly estado = computed(() => (this.raiz.isOpen() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.raiz.isOpen() ? 'open' : 'closed'));
 
   /**
    * Nome acessível de reserva para o painel.
@@ -307,7 +307,7 @@ const FOCAVEIS = [
   hostDirectives: [RdxPopoverTrigger],
   host: {
     '[attr.data-slot]': '"popover-trigger"',
-    '[attr.data-state]': 'estado()',
+    '[attr.data-state]': 'state()',
   },
 })
 export class NdsPopoverTrigger {
@@ -315,7 +315,7 @@ export class NdsPopoverTrigger {
   // elemento (o wrapper), então a injeção por diretiva não a alcança.
   private readonly raiz = injectRdxPopoverRootContext();
 
-  protected readonly estado = computed(() => (this.raiz.isOpen() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.raiz.isOpen() ? 'open' : 'closed'));
 }
 
 // ─── NdsPopoverHeader ─────────────────────────────────────────────────────────

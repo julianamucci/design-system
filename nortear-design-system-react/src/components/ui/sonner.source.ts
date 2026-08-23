@@ -155,7 +155,7 @@ export const sonnerSource: SourceTransform<SonnerArgs> = (_gerado, ctx) => {
   onClick={() => {
 ${fired
   .split('\n')
-  .map((linha) => `    ${linha}`)
+  .map((line) => `    ${line}`)
   .join('\n')}
   }}
 >

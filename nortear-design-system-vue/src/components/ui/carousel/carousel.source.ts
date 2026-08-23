@@ -42,7 +42,7 @@ ${p}</div>`;
 /** Corpo comum: a raiz nomeada, o trilho, um item por slide e as duas setas. */
 function carrossel(opcoes: {
   raiz?: string;
-  trilho?: string;
+  track?: string;
   item?: string;
   vertical?: boolean;
   rotulo: string;
@@ -51,7 +51,7 @@ function carrossel(opcoes: {
 }): string {
   const {
     raiz = '',
-    trilho = '',
+    track = '',
     item = '',
     vertical = false,
     rotulo,
@@ -59,7 +59,7 @@ function carrossel(opcoes: {
   } = opcoes;
   const largura = vertical ? 'nds-w-xs' : WIDTH_SM;
   return `<Carousel${attrs(raiz, `class="${largura}"`, `aria-label="${rotulo}"`)}>
-  <CarouselContent${attrs(trilho)}>
+  <CarouselContent${attrs(track)}>
     <CarouselItem ${attrs(laco, item).trim()}>
 ${opcoes.miolo ?? miolo(vertical)}
     </CarouselItem>
@@ -83,7 +83,7 @@ export const carouselSource: SourceTransform<CarouselArgs> = (_gerado, ctx) => {
     `${IMPORT}\n\n${SLIDES}`,
     carrossel({
       raiz: vertical ? 'orientation="vertical"' : '',
-      trilho: vertical ? 'class="nds-aspect-4-3"' : '',
+      track: vertical ? 'class="nds-aspect-4-3"' : '',
       vertical,
       rotulo: 'Galeria de exemplos',
     }),
@@ -104,7 +104,7 @@ export function carouselVerticalSource(): string {
     `${IMPORT}\n\n${SLIDES}`,
     carrossel({
       raiz: 'orientation="vertical"',
-      trilho: 'class="nds-aspect-4-3"',
+      track: 'class="nds-aspect-4-3"',
       vertical: true,
       rotulo: 'Slides na vertical',
     }),

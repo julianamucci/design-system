@@ -393,7 +393,7 @@ export const DragGesture: Story = {
     const viewport = viewportDe(canvasElement);
     const track = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
     const previous = () => canvas.getByRole('button', { name: /item anterior/i }) as HTMLButtonElement;
-    const proximo = () => canvas.getByRole('button', { name: /próximo item/i });
+    const next = () => canvas.getByRole('button', { name: /próximo item/i });
 
     // Quanto o trilho já saiu do recorte. O motor move o trilho por
     // `transform`, então `scrollLeft` fica em zero o tempo todo.
@@ -437,7 +437,7 @@ export const DragGesture: Story = {
 
     // O motor só mede depois que a raiz entra no documento: esperar a seta de
     // avanço acordar é o portão de montagem, não uma folga arbitrária.
-    await waitFor(() => expect(proximo()).toBeEnabled(), { timeout: 4000 });
+    await waitFor(() => expect(next()).toBeEnabled(), { timeout: 4000 });
 
     // ── A RÉGUA ───────────────────────────────────────────────────────────────
     //
@@ -462,7 +462,7 @@ export const DragGesture: Story = {
       posZero = await settle();
       await expect(previous()).toBeDisabled();
 
-      await userEvent.click(proximo());
+      await userEvent.click(next());
       posUm = await settle();
       await expect(posUm).toBeGreaterThan(posZero);
 

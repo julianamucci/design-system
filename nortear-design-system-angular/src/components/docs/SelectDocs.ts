@@ -406,9 +406,9 @@ const CODE_IN_FORM = `<form [formGroup]="form">
           <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>
         </button>
         <ng-template ndsSelectContent>
-          @for (estado of states(); track estado.value) {
-            <div ndsSelectItem [value]="estado.value">
-              {{ estado.label }}
+          @for (state of states(); track state.value) {
+            <div ndsSelectItem [value]="state.value">
+              {{ state.label }}
             </div>
           }
         </ng-template>
@@ -435,9 +435,9 @@ const CODE_IN_FORM = `<form [formGroup]="form">
           @for (grupo of grupos(); track grupo.label; let last = $last) {
             <div ndsSelectGroup>
               <div ndsSelectLabel>{{ grupo.label }}</div>
-              @for (estado of grupo.itens; track estado.value) {
-                <div ndsSelectItem [value]="estado.value">
-                  {{ estado.label }}
+              @for (state of grupo.itens; track state.value) {
+                <div ndsSelectItem [value]="state.value">
+                  {{ state.label }}
                 </div>
               }
             </div>
@@ -472,9 +472,9 @@ const CODE_IN_FORM = `<form [formGroup]="form">
           <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>
         </button>
         <ng-template ndsSelectContent>
-          @for (estado of states(); track estado.value) {
-            <div ndsSelectItem [value]="estado.value">
-              {{ estado.label }}
+          @for (state of states(); track state.value) {
+            <div ndsSelectItem [value]="state.value">
+              {{ state.label }}
             </div>
           }
         </ng-template>
@@ -489,9 +489,9 @@ const CODE_IN_FORM = `<form [formGroup]="form">
           @for (grupo of grupos(); track grupo.label; let last = $last) {
             <div ndsSelectGroup>
               <div ndsSelectLabel>{{ grupo.label }}</div>
-              @for (estado of grupo.itens; track estado.value) {
-                <div ndsSelectItem [value]="estado.value">
-                  {{ estado.label }}
+              @for (state of grupo.itens; track state.value) {
+                <div ndsSelectItem [value]="state.value">
+                  {{ state.label }}
                 </div>
               }
             </div>
@@ -508,8 +508,8 @@ const CODE_IN_FORM = `<form [formGroup]="form">
           <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>
         </button>
         <ng-template ndsSelectContent>
-          @for (estado of states(); track estado.value) {
-            <div ndsSelectItem [value]="estado.value">
+          @for (state of states(); track state.value) {
+            <div ndsSelectItem [value]="state.value">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -523,7 +523,7 @@ const CODE_IN_FORM = `<form [formGroup]="form">
                 <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
                 <circle cx="12" cy="10" r="3" />
               </svg>
-              {{ estado.label }}
+              {{ state.label }}
             </div>
           }
         </ng-template>
@@ -540,9 +540,9 @@ const CODE_IN_FORM = `<form [formGroup]="form">
             <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>
           </button>
           <ng-template ndsSelectContent>
-            @for (estado of states(); track estado.value) {
-              <div ndsSelectItem [value]="estado.value">
-                {{ estado.label }}
+            @for (state of states(); track state.value) {
+              <div ndsSelectItem [value]="state.value">
+                {{ state.label }}
               </div>
             }
           </ng-template>
@@ -572,9 +572,9 @@ const CODE_IN_FORM = `<form [formGroup]="form">
                 <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>
               </button>
               <ng-template ndsSelectContent>
-                @for (estado of states(); track estado.value) {
-                  <div ndsSelectItem [value]="estado.value">
-                    {{ estado.label }}
+                @for (state of states(); track state.value) {
+                  <div ndsSelectItem [value]="state.value">
+                    {{ state.label }}
                   </div>
                 }
               </ng-template>
@@ -588,9 +588,9 @@ const CODE_IN_FORM = `<form [formGroup]="form">
                 @for (grupo of grupos(); track grupo.label; let last = $last) {
                   <div ndsSelectGroup>
                     <div ndsSelectLabel>{{ grupo.label }}</div>
-                    @for (estado of grupo.itens; track estado.value) {
-                      <div ndsSelectItem [value]="estado.value">
-                        {{ estado.label }}
+                    @for (state of grupo.itens; track state.value) {
+                      <div ndsSelectItem [value]="state.value">
+                        {{ state.label }}
                       </div>
                     }
                   </div>
@@ -940,7 +940,7 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
       description: toPlainText(t(`props.${chave}.description`)),
     });
 
-    const classe = local('class', 'string', '—', 'class');
+    const className = local('class', 'string', '—', 'class');
 
     return [
       {
@@ -961,7 +961,7 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
           local('form', 'string', '—', 'form'),
           local('modal', 'boolean', 'true', 'modal'),
           local('itemToStringLabel', '(value: T) => string', '—', 'itemToStringLabel'),
-          classe,
+          className,
         ],
       },
       {
@@ -971,13 +971,13 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
           ofContent('size', 'size'),
           ofContent('disabled', 'disabled'),
           local('id', 'string', 'gerado', 'triggerId'),
-          classe,
+          className,
         ],
       },
       {
         title: 'NdsSelectValue',
         cols,
-        items: [ofContent('placeholder', 'placeholder'), classe],
+        items: [ofContent('placeholder', 'placeholder'), className],
       },
       {
         title: 'NdsSelectContent',
@@ -1002,7 +1002,7 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
           },
           local('textValue', 'string', '—', 'textValue'),
           local('disabled', 'boolean', 'false', 'itemDisabled'),
-          classe,
+          className,
         ],
       },
     ];

@@ -14,7 +14,7 @@ type InputOTPArgs = {
   invalid: boolean;
   withSeparator: boolean;
   'aria-label': string;
-  onComplete: (codigo: string) => void;
+  onComplete: (code: string) => void;
 };
 
 const meta: Meta<InputOTPArgs> = {
@@ -93,7 +93,7 @@ export const Playground: Story = {
       invalid: args.invalid,
       'aria-label': args['aria-label'],
       separatorAt: args.withSeparator ? [Math.floor(args.length / 2)] : [],
-      onComplete: (codigo) => args.onComplete(codigo),
+      onComplete: (code) => args.onComplete(code),
     });
     return wrap(el);
   },
@@ -144,11 +144,11 @@ export const Playground: Story = {
     });
 
     await step('Colar distribui o código inteiro e dispara onComplete', async () => {
-      const codigo = '123456'.slice(0, args.length);
+      const code = '123456'.slice(0, args.length);
       slots()[0].focus();
-      await userEvent.paste(codigo);
-      await expect(slots().map((s) => s.value).join('')).toBe(codigo);
-      await expect(args.onComplete).toHaveBeenCalledWith(codigo);
+      await userEvent.paste(code);
+      await expect(slots().map((s) => s.value).join('')).toBe(code);
+      await expect(args.onComplete).toHaveBeenCalledWith(code);
     });
   },
 };

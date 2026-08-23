@@ -133,12 +133,12 @@ export const Single: Story = {
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const proximo = () =>
+    const next = () =>
       canvas.getByRole('button', { name: 'Próximo item' }) as HTMLButtonElement;
 
     // `canScrollNext` nasce falso: esperar por ele é o portão de montagem do
     // Embla, e não uma folga arbitrária.
-    await waitFor(() => expect(proximo()).toBeEnabled(), { timeout: 4000 });
+    await waitFor(() => expect(next()).toBeEnabled(), { timeout: 4000 });
 
     await step('O slide ocupa a largura inteira do viewport', async () => {
       const slide = canvas.getAllByRole('group')[0];
@@ -147,7 +147,7 @@ export const Single: Story = {
 
     await step('Há mais slides do que cabem, e a seta de avanço está viva', async () => {
       await expect(canvas.getAllByRole('group').length).toBeGreaterThan(1);
-      await expect(proximo()).toBeEnabled();
+      await expect(next()).toBeEnabled();
     });
   },
 };
@@ -316,7 +316,7 @@ export const DragGesture: Story = {
     const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
     const track = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
     const previous = () => canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
-    const proximo = () => canvas.getByRole('button', { name: 'Próximo item' });
+    const next = () => canvas.getByRole('button', { name: 'Próximo item' });
 
     // Quanto o trilho já saiu do recorte. O motor move o trilho por
     // `transform`, então `scrollLeft` fica em zero o tempo todo.
@@ -360,7 +360,7 @@ export const DragGesture: Story = {
 
     // O motor só mede depois que a raiz entra no documento: esperar a seta de
     // avanço acordar é o portão de montagem, não uma folga arbitrária.
-    await waitFor(() => expect(proximo()).toBeEnabled(), { timeout: 4000 });
+    await waitFor(() => expect(next()).toBeEnabled(), { timeout: 4000 });
 
     // ── A RÉGUA ───────────────────────────────────────────────────────────────
     //
@@ -385,7 +385,7 @@ export const DragGesture: Story = {
       posZero = await settle();
       await expect(previous()).toBeDisabled();
 
-      await userEvent.click(proximo());
+      await userEvent.click(next());
       posUm = await settle();
       await expect(posUm).toBeGreaterThan(posZero);
 

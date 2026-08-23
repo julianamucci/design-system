@@ -25,7 +25,7 @@ export type SkeletonSnippetOptions = SkeletonPart & {
   /** Estado da região. `false` mostra o carregamento já concluído. */
   loading?: boolean;
   /** Várias peças empilhadas. Sem isto, a região leva uma só. */
-  linhas?: SkeletonPart[];
+  lines?: SkeletonPart[];
 };
 
 /** `createSkeleton(…)` em uma linha — a peça é sempre item de uma lista. */
@@ -38,7 +38,7 @@ function partCall(p: SkeletonPart): string {
     ['size', p.size ? texto(p.size) : undefined],
     ['className', p.className ? texto(p.className) : undefined],
   ])
-    .map((linha) => linha.replace(/,$/, ''))
+    .map((line) => line.replace(/,$/, ''))
     .join(', ');
   return pairs ? `createSkeleton({ ${pairs} })` : 'createSkeleton()';
 }
@@ -52,9 +52,9 @@ function partCall(p: SkeletonPart): string {
  * não é anunciado, e `aria-label` em `div` sem papel é atributo proibido: o par
  * papel + nome é o que faz o leitor dizer "carregando".
  */
-function regiao(o: SkeletonSnippetOptions, classe?: string, spacing?: string): string {
+function regiao(o: SkeletonSnippetOptions, className?: string, spacing?: string): string {
   return `const regiao = document.createElement('div');
-${classe ? `regiao.className = ${texto(classe)};\n` : ''}${spacing ? `regiao.dataset.spacing = ${texto(spacing)};\n` : ''}regiao.setAttribute('role', 'status');
+${className ? `regiao.className = ${texto(className)};\n` : ''}${spacing ? `regiao.dataset.spacing = ${texto(spacing)};\n` : ''}regiao.setAttribute('role', 'status');
 regiao.setAttribute('aria-busy', ${texto(String(o.loading ?? true))});
 regiao.setAttribute('aria-label', ${texto(o.regionLabel ?? 'Carregando conteúdo')});`;
 }
@@ -64,9 +64,9 @@ export function skeletonSnippet(o: SkeletonSnippetOptions = {}): string {
   // `fill` preenche a caixa que o CONTAINER estabelece: sozinho ele nasce com
   // altura zero, e um snippet que o mostrasse solto ensinaria um esqueleto
   // invisível. Quem dá a caixa é a proporção.
-  if (!o.linhas && o.shape === 'fill') return ratioSkeletonSnippet(o);
+  if (!o.lines && o.shape === 'fill') return ratioSkeletonSnippet(o);
 
-  const parts = o.linhas ?? [
+  const parts = o.lines ?? [
     {
       shape: o.shape,
       // A fração de largura só vale para as formas de texto — nas outras a caixa
@@ -123,7 +123,7 @@ linhas.append(
  * repetiria o mesmo aviso a cada linha.
  */
 export function skeletonListSnippet(o: SkeletonSnippetOptions = {}): string {
-  const total = o.linhas?.length ?? 5;
+  const total = o.lines?.length ?? 5;
   return snippet(
     importing('skeleton', 'createSkeleton'),
     `const lista = document.createElement('ul');

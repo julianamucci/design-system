@@ -68,7 +68,7 @@ export const Playground: Story = {
     const eixo = args.orientation === "vertical" ? "top" : "left";
     const previous = () =>
       canvas.getByRole("button", { name: /item anterior/i }) as HTMLButtonElement;
-    const proximo = () =>
+    const next = () =>
       canvas.getByRole("button", { name: /próximo item/i }) as HTMLButtonElement;
 
     const slides = () => canvas.getAllByRole("group") as HTMLElement[];
@@ -159,12 +159,12 @@ export const Playground: Story = {
       // A POSIÇÃO chega antes do ESTADO: a rolagem encostou no alvo, mas quem
       // muda o controle é a reconciliação do índice, adiada até o motor silenciar.
       await waitFor(async () => {
-        await expect(proximo()).toBeEnabled();
+        await expect(next()).toBeEnabled();
       }, { timeout: 4000 });
     });
 
     await step("Clicar em avançar leva ao segundo slide e acorda a seta de voltar", async () => {
-      await userEvent.click(proximo());
+      await userEvent.click(next());
       await emSlide(1);
       await expect(previous()).toBeEnabled();
     });
@@ -173,8 +173,8 @@ export const Playground: Story = {
       // O caminho que um carrossel só-arrasto não tem: WCAG 2.1.1 exige
       // equivalente de teclado para toda navegação. O `onKeyDownCapture` mora
       // na região, então basta o foco estar dentro dela.
-      proximo().focus();
-      await expect(proximo()).toHaveFocus();
+      next().focus();
+      await expect(next()).toHaveFocus();
       await userEvent.keyboard(eixo === "top" ? "{ArrowDown}" : "{ArrowRight}");
       await emSlide(2);
     });

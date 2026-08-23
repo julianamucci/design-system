@@ -70,7 +70,7 @@ const IMPORTACAO = "import { createDataTable, type DataTableColumn } from '@/com
 
 /** Uma linha de coluna, com o `meta` que aquele desenho pede. */
 function colunas(tipo: DataTableColumns): string {
-  const linhas: Record<DataTableColumns, string[]> = {
+  const lines: Record<DataTableColumns, string[]> = {
     base: [
       "  { accessorKey: 'id', header: 'Fatura', size: 110, meta: { headerLabel: 'Fatura' } },",
       "  { accessorKey: 'customer', header: 'Cliente', size: 200, meta: { headerLabel: 'Cliente' } },",
@@ -106,7 +106,7 @@ function colunas(tipo: DataTableColumns): string {
     '// Definidas UMA vez, em escopo estável: recriar o array a cada render',
     '// zeraria ordenação, filtros e seleção.',
     'const columns: DataTableColumn<Invoice>[] = [',
-    ...linhas[tipo],
+    ...lines[tipo],
     '];',
   ].join('\n');
 }
@@ -128,7 +128,7 @@ function callbackBody(valor: unknown): string | undefined {
 
 /** A chamada real de `createDataTable` com as opções da story. */
 export function dataTableSnippet(o: DataTableSnippetOptions = {}): string {
-  const linhas = opcoes([
+  const lines = opcoes([
     ['columns', 'columns'],
     ['data', o.semDados ? '[]' : 'invoices'],
     ['enableRowSelection', o.enableRowSelection ? 'true' : undefined],
@@ -165,7 +165,7 @@ export function dataTableSnippet(o: DataTableSnippetOptions = {}): string {
 
   // A constante e a opção têm o mesmo nome, e é assim que se escreve de
   // verdade: `columns: columns` é ruído que ninguém digita.
-  const tableCall = chamada('createDataTable<Invoice>', linhas).replace(
+  const tableCall = chamada('createDataTable<Invoice>', lines).replace(
     '\n  columns: columns,',
     '\n  columns,',
   );

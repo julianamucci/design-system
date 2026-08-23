@@ -230,7 +230,7 @@ export function measureScroll(raiz: HTMLElement): ScrollMeasurement {
  */
 export function measureTable(raiz: HTMLElement) {
   const um = (sel: string) => raiz.querySelector(sel);
-  const todos = (sel: string) => Array.from(raiz.querySelectorAll(sel));
+  const all = (sel: string) => Array.from(raiz.querySelectorAll(sel));
   const conta = (sel: string) => raiz.querySelectorAll(sel).length;
 
   const tabela = um('table');
@@ -238,19 +238,19 @@ export function measureTable(raiz: HTMLElement) {
   const ordenarButton = um('.nds-data-table-sort-btn');
   const thOrdenavel = ordenarButton?.closest('th') ?? null;
 
-  const selectionBoxes = todos('[role="checkbox"], input[type="checkbox"]');
+  const selectionBoxes = all('[role="checkbox"], input[type="checkbox"]');
   const allBox = raiz.querySelector('thead')?.querySelector('[role="checkbox"], input[type="checkbox"]') ?? null;
   const lineBoxes = Array.from(
     raiz.querySelector('tbody')?.querySelectorAll('[role="checkbox"], input[type="checkbox"]') ?? [],
   );
 
-  const linhas = todos('tbody tr').filter((tr) => !tr.hasAttribute('aria-hidden'));
+  const lines = all('tbody tr').filter((tr) => !tr.hasAttribute('aria-hidden'));
   const lineSelecionada = um('tbody tr[data-state="selected"]');
-  const lineNormal = linhas.find((tr) => tr.getAttribute('data-state') !== 'selected') ?? null;
+  const lineNormal = lines.find((tr) => tr.getAttribute('data-state') !== 'selected') ?? null;
 
   const regiaoViva = um('[role="status"], [aria-live]');
 
-  const pageButtons = todos('.nds-data-table-pagination-nav button');
+  const pageButtons = all('.nds-data-table-pagination-nav button');
   const sizeSelector = um('.nds-data-table-page-size-select');
 
   const textFilter = um('.nds-data-table-filter-input');
@@ -265,9 +265,9 @@ export function measureTable(raiz: HTMLElement) {
   const vazio = um('.nds-data-table-empty');
 
   // Última célula da primeira linha: é a coluna de dinheiro nas cinco stacks.
-  const cellNumerica = linhas[0]?.querySelector('td:last-child') ?? null;
+  const cellNumerica = lines[0]?.querySelector('td:last-child') ?? null;
   const contentNumerico = (cellNumerica?.firstElementChild as HTMLElement | null) ?? cellNumerica;
-  const thNumerico = todos('thead tr:first-child th').slice(-1)[0] ?? null;
+  const thNumerico = all('thead tr:first-child th').slice(-1)[0] ?? null;
 
   return {
     estrutura: {
@@ -307,7 +307,7 @@ export function measureTable(raiz: HTMLElement) {
           raiz.querySelectorAll('.nds-data-table-columns-menu-row'),
         ).filter((el) => !!el.closest('thead')).length,
       },
-      linhasNoCorpo: linhas.length,
+      linhasNoCorpo: lines.length,
       colunasNoCabecalho: conta('thead tr:first-child th'),
       colspanDoVazio: vazio?.getAttribute('colspan') ?? null,
     },
@@ -323,7 +323,7 @@ export function measureTable(raiz: HTMLElement) {
       nomeDoBotaoDeOrdenar: accessibleName(ordenarButton),
       // Coluna não ordenável: promete ordenação que não existe?
       ariaSortEmColunaFixa: (() => {
-        const th = todos('thead tr:first-child th').find((c) => !c.querySelector('.nds-data-table-sort-btn'));
+        const th = all('thead tr:first-child th').find((c) => !c.querySelector('.nds-data-table-sort-btn'));
         return th ? (th.hasAttribute('aria-sort') ? th.getAttribute('aria-sort') : 'ausente') : null;
       })(),
       tagDoCheckbox: selectionBoxes[0]?.tagName.toLowerCase() ?? null,
@@ -337,14 +337,14 @@ export function measureTable(raiz: HTMLElement) {
         ? {
             papel: regiaoViva.getAttribute('role'),
             ariaLive: regiaoViva.getAttribute('aria-live'),
-            classe: regiaoViva.getAttribute('class'),
+            className: regiaoViva.getAttribute('class'),
             texto: texto(regiaoViva),
           }
         : null,
       nomesDaPaginacao: pageButtons.map((b) => accessibleName(b)),
       estadoDaPaginacao: pageButtons.map((b) => (b as HTMLButtonElement).disabled),
-      textoDoIndicador: texto(todos('.nds-data-table-pagination-count').slice(-1)[0]),
-      contagemText: texto(todos('.nds-data-table-pagination-count')[0]),
+      textoDoIndicador: texto(all('.nds-data-table-pagination-count').slice(-1)[0]),
+      contagemText: texto(all('.nds-data-table-pagination-count')[0]),
       nomeDoSeletorDeTamanho: accessibleName(sizeSelector),
       nomeDoFiltroDeTexto: accessibleName(textFilter),
       nomeDoFiltroDeSelect: accessibleName(selectFilter),
@@ -366,7 +366,7 @@ export function measureTable(raiz: HTMLElement) {
       larguraDaRaiz: Math.round(raiz.getBoundingClientRect().width),
       th: caixa(thOrdenavel),
       thInner: caixa(um('.nds-data-table-th-inner') ?? ordenarButton?.parentElement),
-      td: caixa(linhas[0]?.querySelector('td:nth-child(2)')),
+      td: caixa(lines[0]?.querySelector('td:nth-child(2)')),
       filterTh: caixa(filterTh),
       filtersLine: caixa(filtersLine),
       editButton: caixa(editButton),

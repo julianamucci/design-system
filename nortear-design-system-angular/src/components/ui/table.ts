@@ -118,7 +118,7 @@ export class NdsTableFooter {}
   standalone: true,
   host: {
     '[attr.data-slot]': '"table-row"',
-    '[attr.data-state]': 'estado()',
+    '[attr.data-state]': 'state()',
   },
 })
 export class NdsTableRow {
@@ -132,7 +132,7 @@ export class NdsTableRow {
     ElementRef,
   ).nativeElement.getAttribute('data-state');
 
-  protected readonly estado = computed(() =>
+  protected readonly state = computed(() =>
     this.selected() ? 'selected' : this.estadoEscrito,
   );
 }

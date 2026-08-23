@@ -37,7 +37,7 @@ export const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', curr
  */
 export const labelsInvoice: Partial<DataTableLabels> = {
   selectAll: 'Selecionar todas as faturas',
-  selectRow: (fatura) => `Selecionar fatura ${fatura}`,
+  selectRow: (invoice) => `Selecionar fatura ${invoice}`,
   rowsSelected: (s, n) => `${s} de ${n} fatura(s) selecionada(s).`,
 };
 

@@ -45,7 +45,7 @@ const CALLBACK_DEFAULT = '(page) => irPara(page)';
 function recuar(bloco: string, espacos: string): string {
   return bloco
     .split('\n')
-    .map((linha, i) => (i === 0 ? linha : `${espacos}${linha}`))
+    .map((line, i) => (i === 0 ? line : `${espacos}${line}`))
     .join('\n');
 }
 
@@ -67,14 +67,14 @@ function linesComuns(o: PaginationSnippetOptions, current: string): Array<[strin
 
 /** A chamada real de `createPagination` com as opções da story. */
 export function paginationSnippet(o: PaginationSnippetOptions = {}): string {
-  const linhas = opcoes([
+  const lines = opcoes([
     ...linesComuns(o, String(o.current ?? 1)),
     ['onPageChange', o.onPageChange ?? CALLBACK_DEFAULT],
   ]);
 
   return snippet(
     importing('pagination', 'createPagination'),
-    `const faixa = ${chamada('createPagination', linhas)};`,
+    `const faixa = ${chamada('createPagination', lines)};`,
     montar('faixa'),
   );
 }
@@ -87,7 +87,7 @@ export function paginationSnippet(o: PaginationSnippetOptions = {}): string {
  * isso ensinaria uma paginação que não pagina.
  */
 export function paginationWithStateSnippet(o: PaginationSnippetOptions = {}): string {
-  const linhas = opcoes([
+  const lines = opcoes([
     ...linesComuns(o, 'paginaAtual'),
     ['onPageChange', '(page) => { paginaAtual = page; remontar(); }'],
   ]);
@@ -100,7 +100,7 @@ const faixa = document.createElement('div');
 let paginaAtual = ${o.current ?? 1};
 
 function remontar() {
-  faixa.replaceChildren(${recuar(chamada('createPagination', linhas), '  ')});
+  faixa.replaceChildren(${recuar(chamada('createPagination', lines), '  ')});
 }
 
 remontar();`,

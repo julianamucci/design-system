@@ -721,7 +721,7 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const linha = (nome: string, chave: string, tipo?: string, padrao?: string) => ({
+    const line = (nome: string, chave: string, tipo?: string, padrao?: string) => ({
       name: nome,
       type: tipo ?? toPlainText(t(`props.table.${chave}.type`)),
       defaultValue: padrao ?? toPlainText(t(`props.table.${chave}.default`)),
@@ -733,19 +733,19 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
         title: 'NdsTabs',
         cols,
         items: [
-          linha('value', 'value', 'model<string>'),
-          linha('defaultValue', 'defaultValue'),
-          linha('valueChange', 'onValueChange', 'output<string>'),
-          linha('orientation', 'orientation'),
-          linha('class', 'className'),
+          line('value', 'value', 'model<string>'),
+          line('defaultValue', 'defaultValue'),
+          line('valueChange', 'onValueChange', 'output<string>'),
+          line('orientation', 'orientation'),
+          line('class', 'className'),
         ],
       },
       {
         title: 'NdsTabsList',
         cols,
         items: [
-          linha('variant', 'variant'),
-          linha('activationMode', 'activationMode'),
+          line('variant', 'variant'),
+          line('activationMode', 'activationMode'),
           {
             name: 'loopFocus',
             type: 'boolean',
@@ -753,7 +753,7 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
             required: not,
             description: toPlainText(t('props.loopFocus.description')),
           },
-          linha('class', 'className'),
+          line('class', 'className'),
         ],
       },
       {
@@ -774,7 +774,7 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
             required: not,
             description: toPlainText(t('props.triggerDisabled.description')),
           },
-          linha('class', 'className'),
+          line('class', 'className'),
         ],
       },
       {
@@ -788,7 +788,7 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
             required: tNav('common.yes'),
             description: toPlainText(t('props.contentValue.description')),
           },
-          linha('class', 'className'),
+          line('class', 'className'),
         ],
       },
     ].map((tabela) => ({
@@ -811,15 +811,15 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
     // A coluna do meio mostra a classe `.nds-*` real, não a classe utilitária
     // que o conteúdo compartilhado guarda — é o que existe no CSS deste sistema.
     return [
-      { token: '--muted',            k: 'muted',            classe: '.nds-tabs-list'    },
-      { token: '--muted-foreground', k: 'mutedForeground',  classe: '.nds-tabs-list'    },
-      { token: '--background',       k: 'background',       classe: '.nds-tabs-trigger' },
-      { token: '--foreground',       k: 'foreground',       classe: '.nds-tabs-trigger' },
-      { token: '--ring',             k: 'ring',             classe: '.nds-tabs-trigger' },
-      { token: '--radius',           k: 'radius',           classe: '.nds-tabs-list'    },
-    ].map(({ token, k, classe }) => ({
+      { token: '--muted',            k: 'muted',            className: '.nds-tabs-list'    },
+      { token: '--muted-foreground', k: 'mutedForeground',  className: '.nds-tabs-list'    },
+      { token: '--background',       k: 'background',       className: '.nds-tabs-trigger' },
+      { token: '--foreground',       k: 'foreground',       className: '.nds-tabs-trigger' },
+      { token: '--ring',             k: 'ring',             className: '.nds-tabs-trigger' },
+      { token: '--radius',           k: 'radius',           className: '.nds-tabs-list'    },
+    ].map(({ token, k, className }) => ({
       token,
-      value: classe,
+      value: className,
       description: toPlainText(t(`tokens.table.${k}.part`)),
     }));
   });

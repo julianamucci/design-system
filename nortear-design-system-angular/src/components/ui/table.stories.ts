@@ -163,12 +163,12 @@ export const Playground: Story = {
             </tr>
           </thead>
           <tbody ndsTableBody>
-            @for (fatura of faturas; track fatura.id) {
+            @for (invoice of faturas; track invoice.id) {
               <tr ndsTableRow>
-                <td ndsTableCell class="nds-font-medium">{{ fatura.id }}</td>
-                <td ndsTableCell>{{ fatura.status }}</td>
-                <td ndsTableCell>{{ fatura.metodo }}</td>
-                <td ndsTableCell class="nds-text-right">{{ fatura.valor }}</td>
+                <td ndsTableCell class="nds-font-medium">{{ invoice.id }}</td>
+                <td ndsTableCell>{{ invoice.status }}</td>
+                <td ndsTableCell>{{ invoice.metodo }}</td>
+                <td ndsTableCell class="nds-text-right">{{ invoice.valor }}</td>
               </tr>
             }
           </tbody>

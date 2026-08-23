@@ -40,7 +40,7 @@ type Story = StoryObj<typeof meta>;
 // de setup() para evitar criar CalendarDate no import do módulo.
 
 /** Datas marcadas, na ordem em que aparecem no grid. */
-function marcadas(canvasElement: HTMLElement): string[] {
+function checked(canvasElement: HTMLElement): string[] {
   return Array.from(canvasElement.querySelectorAll('[data-selected]')).map(
     (el) => el.getAttribute('data-value') ?? '',
   );
@@ -83,14 +83,14 @@ export const Single: Story = {
 
     await step('A data inicial chega marcada, e só ela', async () => {
       // accessibility.item3
-      await expect(marcadas(canvasElement)).toEqual(['2026-04-12']);
+      await expect(checked(canvasElement)).toEqual(['2026-04-12']);
     });
 
     await step('Escolher outra data substitui a marcação', async () => {
       // functional.item2 — o modo único quebra justamente aqui: se a marcação
       // antiga sobrevivesse, a tela mostraria duas datas escolhidas.
       await userEvent.click(canvas.getByRole('button', { name: /20 de abril de 2026/i }));
-      await expect(marcadas(canvasElement)).toEqual(['2026-04-20']);
+      await expect(checked(canvasElement)).toEqual(['2026-04-20']);
     });
   },
 };
@@ -131,7 +131,7 @@ export const Multiple: Story = {
     const canvas = within(canvasElement);
 
     await step('As três datas iniciais chegam marcadas', async () => {
-      await expect(marcadas(canvasElement)).toEqual(['2026-04-08', '2026-04-15', '2026-04-22']);
+      await expect(checked(canvasElement)).toEqual(['2026-04-08', '2026-04-15', '2026-04-22']);
     });
 
     await step('Uma nova escolha soma em vez de substituir', async () => {
@@ -139,14 +139,14 @@ export const Multiple: Story = {
       // Cada passo estabelece a própria precondição: o clique final devolve o
       // grid ao estado inicial, para o replay no painel medir o mesmo.
       await userEvent.click(canvas.getByRole('button', { name: /29 de abril de 2026/i }));
-      await expect(marcadas(canvasElement)).toEqual([
+      await expect(checked(canvasElement)).toEqual([
         '2026-04-08',
         '2026-04-15',
         '2026-04-22',
         '2026-04-29',
       ]);
       await userEvent.click(canvas.getByRole('button', { name: /29 de abril de 2026/i }));
-      await expect(marcadas(canvasElement)).toEqual(['2026-04-08', '2026-04-15', '2026-04-22']);
+      await expect(checked(canvasElement)).toEqual(['2026-04-08', '2026-04-15', '2026-04-22']);
     });
   },
 };
@@ -186,7 +186,7 @@ export const Range: Story = {
     await step('O intervalo marca extremos e miolo, sem buracos', async () => {
       // functional.item3 — a story existe para mostrar o miolo. Verificar só os
       // extremos passaria com o intervalo inteiro vazio no meio.
-      const days = marcadas(canvasElement);
+      const days = checked(canvasElement);
       await expect(days[0]).toBe('2026-04-10');
       await expect(days[days.length - 1]).toBe('2026-04-18');
       await expect(days.length).toBe(9);
@@ -223,7 +223,7 @@ export const Range: Story = {
       // fundo `--primary` por especificidade. O número do dia sumia — no escuro,
       // que o axe não vê.
       const measurements = calendarMeasureContrast(canvasElement).filter(
-        (m) => m.presente && (STATES_WITH_TEXT_LEGIVEL as readonly string[]).includes(m.estado),
+        (m) => m.presente && (STATES_WITH_TEXT_LEGIVEL as readonly string[]).includes(m.state),
       );
       await expect(measurements.length).toBeGreaterThan(0);
       const reprovadas = measurements.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);

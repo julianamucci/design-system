@@ -98,10 +98,10 @@ export const LongDescription: Story = {
     await step('A descrição longa quebra em várias linhas dentro do painel', async () => {
       const painel = await waitForPortal('alertdialog');
       const descricao = document.querySelector<HTMLElement>('[data-testid="descricao"]')!;
-      const linhas =
+      const lines =
         descricao.getBoundingClientRect().height /
         Number.parseFloat(getComputedStyle(descricao).lineHeight);
-      await expect(linhas).toBeGreaterThan(1);
+      await expect(lines).toBeGreaterThan(1);
       // E não vaza do painel: o texto é o que dimensiona a caixa, não o
       // contrário — não há altura cravada aqui.
       await expect(descricao.getBoundingClientRect().bottom).toBeLessThanOrEqual(
@@ -272,14 +272,14 @@ export const StackedFooter: Story = {
 export const Controlled: Story = {
   parameters: { covers: ['functional.item7'] },
   render: () => ({
-    props: { aberto: false },
+    props: { isOpen: false },
     template: `
       <div class="nds-cluster" data-spacing="sm">
-        <button ndsButton variant="outline" (click)="aberto = true" data-testid="abrir">
+        <button ndsButton variant="outline" (click)="isOpen = true" data-testid="abrir">
           Abrir de fora
         </button>
 
-        <nds-alert-dialog [open]="aberto" (openChange)="aberto = $event">
+        <nds-alert-dialog [open]="isOpen" (openChange)="isOpen = $event">
           <button ndsAlertDialogTrigger ndsButton variant="destructive">Excluir conta</button>
 
           <ng-template ndsAlertDialogContent>

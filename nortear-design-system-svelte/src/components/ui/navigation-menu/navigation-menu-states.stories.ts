@@ -137,11 +137,11 @@ export const Active: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const atual = canvas.getByRole('link', { name: 'Início' });
-    const outro = canvas.getByRole('link', { name: 'Sobre' });
+    const other = canvas.getByRole('link', { name: 'Sobre' });
 
     await step('A página atual é anunciada como tal', async () => {
       await expect(atual).toHaveAttribute('aria-current', 'page');
-      await expect(outro.hasAttribute('aria-current')).toBe(false);
+      await expect(other.hasAttribute('aria-current')).toBe(false);
     });
 
     await step('O destaque não depende só do texto: o fundo muda', async () => {
@@ -149,7 +149,7 @@ export const Active: Story = {
       // `.nds-navigation-menu-link[aria-current="page"]` — se o atributo não
       // chegasse, esta asserção pegaria o mesmo fundo do destino vizinho.
       await expect(getComputedStyle(atual).backgroundColor).not.toBe(
-        getComputedStyle(outro).backgroundColor,
+        getComputedStyle(other).backgroundColor,
       );
     });
   },

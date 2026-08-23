@@ -86,7 +86,7 @@ export class NdsRadioGroup {}
       rdxRadioIndicator
       class="nds-radio-indicator"
       data-slot="radio-group-indicator"
-      [attr.data-state]="estado()"
+      [attr.data-state]="state()"
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <circle cx="12" cy="12" r="6" />
@@ -105,7 +105,7 @@ export class NdsRadioGroup {}
   host: {
     class: 'nds-radio-item',
     '[attr.data-slot]': '"radio-group-item"',
-    '[attr.data-state]': 'estado()',
+    '[attr.data-state]': 'state()',
   },
 })
 export class NdsRadioGroupItem {
@@ -118,5 +118,5 @@ export class NdsRadioGroupItem {
    * escreve `display: none` no style do span. É style inline — do PRIMITIVO,
    * não deste componente: quem compõe não é dono do que o primitivo liga.
    */
-  protected readonly estado = computed(() => (this.item.checkedState() ? 'checked' : 'unchecked'));
+  protected readonly state = computed(() => (this.item.checkedState() ? 'checked' : 'unchecked'));
 }

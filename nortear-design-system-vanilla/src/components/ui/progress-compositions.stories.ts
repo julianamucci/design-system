@@ -230,10 +230,10 @@ export const MultipleUploads: Story = {
     const canvas = within(canvasElement);
 
     await step('4 progressbars, cada uma com o próprio valor', async () => {
-      const valores = canvas
+      const values = canvas
         .getAllByRole('progressbar')
         .map((b) => b.getAttribute('aria-valuenow'));
-      await expect(valores).toEqual(['100', '74', '32', '0']);
+      await expect(values).toEqual(['100', '74', '32', '0']);
     });
 
     await step('Cada barra desenha o próprio valor', async () => {

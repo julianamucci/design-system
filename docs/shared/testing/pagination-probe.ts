@@ -213,9 +213,9 @@ export function reportProbe(stack: string, cenario: string, measurement: unknown
 
 /** `rgb(...)`/`rgba(...)` → canais; `null` quando o valor é transparente. */
 function canais(valor: string): [number, number, number] | null {
-  const bruto = valor.match(/rgba?\(([^)]+)\)/);
-  if (!bruto) return null;
-  const partes = bruto[1].split(/[,/]/).map((p) => Number.parseFloat(p));
+  const raw = valor.match(/rgba?\(([^)]+)\)/);
+  if (!raw) return null;
+  const partes = raw[1].split(/[,/]/).map((p) => Number.parseFloat(p));
   if (partes.length >= 4 && partes[3] === 0) return null;
   return [partes[0], partes[1], partes[2]];
 }

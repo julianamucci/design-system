@@ -7,7 +7,7 @@ import {
   labelSource,
 } from './label.source';
 
-const TODAS = [
+const ALL = [
   labelSource,
   labelDisabledSource,
   blockLabelDisabledSource,
@@ -48,7 +48,7 @@ describe('labelSource', () => {
 
 describe('o par htmlFor ↔ id', () => {
   it('todo snippet mostra o rótulo ligado a um controle real', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       const alvo = saida.match(/<Label htmlFor="([a-z-]+)"/)?.[1];
       expect(alvo, `${fn.name} não tem htmlFor`).toBeDefined();
@@ -59,7 +59,7 @@ describe('o par htmlFor ↔ id', () => {
   });
 
   it('nenhum snippet deixa o placeholder fazer as vezes do rótulo', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       if (!saida.includes('placeholder=')) continue;
       expect(saida, `${fn.name} usa placeholder sem rótulo`).toContain('<Label htmlFor=');
@@ -102,14 +102,14 @@ describe('composições', () => {
   it('nenhum snippet crava altura nem valor de design em style', () => {
     // A altura do rótulo e do campo é resultado de padding + line-height
     // (WCAG 1.4.4), e valor de design mora em classe `.nds-*`, nunca inline.
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       expect(fn()).not.toContain('style=');
       expect(fn()).not.toMatch(/\bheight\b/);
     }
   });
 
   it('nenhum snippet ensina o andaime da story', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       expect(fn()).not.toContain('fixtures');
       expect(fn()).not.toContain('{...args}');
     }

@@ -24,7 +24,7 @@ export type BadgeSnippetOptions = {
 export function badgeSnippet(o: BadgeSnippetOptions = {}): string {
   const label = o.label ?? 'Novo';
 
-  const linhas = opcoes([
+  const lines = opcoes([
     // `default` é o padrão da fábrica: só as outras variantes entram.
     ['variant', o.variant && o.variant !== 'default' ? texto(o.variant) : undefined],
     // `children` aceita texto, elemento ou a lista dos dois — é assim que ícone
@@ -40,7 +40,7 @@ export function badgeSnippet(o: BadgeSnippetOptions = {}): string {
 // O tamanho vem de \`.nds-badge > svg\` e o respiro do gap da etiqueta —
 // margem escrita à mão somaria ao gap e dobraria o espaço.`
       : undefined,
-    `const etiqueta = ${chamada('createBadge', linhas)};`,
+    `const etiqueta = ${chamada('createBadge', lines)};`,
     montar('etiqueta'),
   );
 }

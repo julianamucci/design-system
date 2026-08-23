@@ -950,9 +950,9 @@ export class NdsNavigationMenuDocs implements AfterViewInit, OnDestroy {
    * duas. Foi exatamente esse par que reprovou aqui — dois "Com card destacado"
    * na mesma página.
    */
-  protected rotulo(secao: string, exemplo: string): string {
+  protected rotulo(section: string, exemplo: string): string {
     const base = toPlainText(t('usage.uxWriting.table.ariaLabel.good'));
-    return `${base} — ${toPlainText(secao)} — ${toPlainText(exemplo)}`;
+    return `${base} — ${toPlainText(section)} — ${toPlainText(exemplo)}`;
   }
 
   private readonly tplDoDont1Do = viewChild.required<TemplateRef<unknown>>('tplDoDont1Do');
@@ -1145,7 +1145,7 @@ export class NdsNavigationMenuDocs implements AfterViewInit, OnDestroy {
       description: toPlainText(t(`props.${chave}.description`)),
     });
 
-    const classe = local('class', 'string', '—', 'class');
+    const className = local('class', 'string', '—', 'class');
 
     return [
       {
@@ -1166,13 +1166,13 @@ export class NdsNavigationMenuDocs implements AfterViewInit, OnDestroy {
           local('indicator', 'boolean', 'false', 'indicator'),
           local('dir', "'ltr' | 'rtl'", '—', 'dir'),
           local('onOpenChange', 'output<RdxNavigationMenuOpenChange>', '—', 'onOpenChange'),
-          classe,
+          className,
         ],
       },
       {
         title: 'NdsNavigationMenuItem',
         cols,
-        items: [local('value', 'string', '—', 'itemValue'), classe],
+        items: [local('value', 'string', '—', 'itemValue'), className],
       },
       {
         title: 'NdsNavigationMenuTrigger',

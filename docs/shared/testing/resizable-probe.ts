@@ -32,7 +32,7 @@
 
 import { backgroundEffective, darkLigarTheme, ratio, noTransicao } from './cor';
 
-export type { Contraste } from './cor';
+export type { Contrast } from './cor';
 export { darkLigarTheme };
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────

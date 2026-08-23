@@ -72,8 +72,8 @@ export const Default: Story = {
         </button>
 
         <ng-template ndsSelectContent>
-          @for (estado of states; track estado.value) {
-            <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
+          @for (state of states; track state.value) {
+            <div ndsSelectItem [value]="state.value">{{ state.label }}</div>
           }
         </ng-template>
       </nds-select>
@@ -121,8 +121,8 @@ export const WithGroups: Story = {
           @for (grupo of grupos; track grupo.label; let last = $last) {
             <div ndsSelectGroup>
               <div ndsSelectLabel>{{ grupo.label }}</div>
-              @for (estado of grupo.itens; track estado.value) {
-                <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
+              @for (state of grupo.itens; track state.value) {
+                <div ndsSelectItem [value]="state.value">{{ state.label }}</div>
               }
             </div>
             @if (!last) {
@@ -185,8 +185,8 @@ export const WithIcon: Story = {
         </button>
 
         <ng-template ndsSelectContent>
-          @for (estado of states; track estado.value) {
-            <div ndsSelectItem [value]="estado.value">
+          @for (state of states; track state.value) {
+            <div ndsSelectItem [value]="state.value">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -200,7 +200,7 @@ export const WithIcon: Story = {
                 <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
                 <circle cx="12" cy="10" r="3" />
               </svg>
-              {{ estado.label }}
+              {{ state.label }}
             </div>
           }
         </ng-template>

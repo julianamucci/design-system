@@ -47,7 +47,7 @@ ${corpo}
 
 /** Lista vertical de destinos dentro do painel. */
 function targetsList(itens: Array<[string, string]>): string {
-  const linhas = itens
+  const lines = itens
     .map(
       ([href, rotulo]) => `          <li>
             <NavigationMenuChild href="${href}">
@@ -58,13 +58,13 @@ function targetsList(itens: Array<[string, string]>): string {
     .join('\n');
 
   return `        <ul class="nds-stack nds-list-none nds-w-xs" data-spacing="xs">
-${linhas}
+${lines}
         </ul>`;
 }
 
 /** Duas colunas com uma linha de contexto por destino. */
 function targetsGrid(itens: Array<[string, string, string]>): string {
-  const linhas = itens
+  const lines = itens
     .map(
       ([href, rotulo, descricao]) => `          <li>
             <NavigationMenuChild href="${href}">
@@ -78,7 +78,7 @@ function targetsGrid(itens: Array<[string, string, string]>): string {
     .join('\n');
 
   return `        <ul class="nds-grid nds-list-none nds-w-lg" data-fixed data-cols="2" data-spacing="sm">
-${linhas}
+${lines}
         </ul>`;
 }
 

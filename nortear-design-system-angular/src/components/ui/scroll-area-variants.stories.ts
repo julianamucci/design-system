@@ -125,14 +125,14 @@ export const Horizontal: Story = {
 export const Bidirectional: Story = {
   parameters: { covers: ['visual.item3'] },
   render: () => ({
-    props: { linhas: LINES, colunas: COLUMNS },
+    props: { lines: LINES, colunas: COLUMNS },
     template: `
       <div ndsScrollArea size="lg" label="Matriz com rolagem nos dois eixos" class="${ROOT_LARGA}">
         <div class="nds-stack nds-p-4" data-spacing="sm">
-          @for (linha of linhas; track linha) {
+          @for (line of lines; track line) {
             <div class="nds-row nds-whitespace-nowrap" data-spacing="md">
               @for (coluna of colunas; track coluna) {
-                <span class="nds-text-body nds-shrink-0">{{ linha }} · {{ coluna }}</span>
+                <span class="nds-text-body nds-shrink-0">{{ line }} · {{ coluna }}</span>
               }
             </div>
           }

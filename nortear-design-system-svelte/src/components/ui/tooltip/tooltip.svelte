@@ -29,7 +29,7 @@
 		get id() {
 			return id;
 		},
-		get aberto() {
+		get isOpen() {
 			return open;
 		},
 		get montado() {

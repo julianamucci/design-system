@@ -224,7 +224,7 @@ export function accordionItemDisabledSource(): string {
  * respiro entre os dois é do `.nds-cluster`, nunca uma margem no ícone.
  */
 export function accordionWithIconSource(): string {
-  const linhas = [
+  const lines = [
     { value: 'info', icone: 'Info', cor: 'nds-text-info', rotulo: 'Informação',
       resposta: 'Ícones facilitam a identificação rápida do tipo de conteúdo.' },
     { value: 'warning', icone: 'AlertTriangle', cor: 'nds-text-warning', rotulo: 'Aviso',
@@ -232,7 +232,7 @@ export function accordionWithIconSource(): string {
     { value: 'success', icone: 'CheckCircle', cor: 'nds-text-success', rotulo: 'Confirmação',
       resposta: 'Use ícones consistentes entre itens do mesmo accordion.' },
   ];
-  const corpo = linhas
+  const corpo = lines
     .map(({ value, icone, cor, rotulo, resposta }) =>
       [
         `  <AccordionItem value="${value}">`,

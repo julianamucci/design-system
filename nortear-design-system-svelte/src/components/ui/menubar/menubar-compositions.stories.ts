@@ -192,8 +192,8 @@ export const WithCheckboxItems: Story = {
 
     await step('Marcar não fecha o menu — quem marca uma quer marcar a próxima', async () => {
       await expect(document.body.contains(menu)).toBe(true);
-      const outra = boxes[EXIBICOES.indexOf('Grade')];
-      await expect(outra.getAttribute('aria-checked')).toBe('false');
+      const other = boxes[EXIBICOES.indexOf('Grade')];
+      await expect(other.getAttribute('aria-checked')).toBe('false');
     });
   },
 };

@@ -95,7 +95,7 @@ export function commandSnippet(o: CommandSnippetOptions = {}): string {
  * um botão comum, e sem o papel o leitor de tela anuncia só "botão".
  */
 export function commandEmPopoverSnippet(o: CommandSnippetOptions = {}): string {
-  const linhas = paletteOptions({
+  const lines = paletteOptions({
     ...o,
     onSelect: o.onSelect ??
       "(value) => {\n    valor.textContent = value;\n    // Escolher fecha o painel: senão ele fica por cima do que a pessoa\n    // acabou de escolher.\n    if (gatilho.getAttribute('aria-expanded') === 'true') gatilho.click();\n  }",
@@ -117,7 +117,7 @@ export function commandEmPopoverSnippet(o: CommandSnippetOptions = {}): string {
       '// comum, e sem ele ninguém descobre que há uma lista para escolher.',
       "gatilho.setAttribute('role', 'combobox');",
     ].join('\n'),
-    `const paleta = ${chamada('createCommand', linhas)};`,
+    `const paleta = ${chamada('createCommand', lines)};`,
     `const popover = ${chamada('createPopover', opcoes([
       ['trigger', 'gatilho'],
       ['content', 'paleta'],

@@ -103,8 +103,8 @@ export const Playground: Story = {
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem v-for="estado in states" :key="estado.value" :value="estado.value">
-              {{ estado.label }}
+            <SelectItem v-for="state in states" :key="state.value" :value="state.value">
+              {{ state.label }}
             </SelectItem>
           </SelectContent>
         </Select>

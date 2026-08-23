@@ -176,7 +176,7 @@ export type BreadcrumbWithMenuSnippetOptions = {
   /** Nome acessível do gatilho que abre os níveis ocultos. */
   gatilho?: string;
   /** Primeiro nível, o único que continua visível ao lado das reticências. */
-  primeiro?: string;
+  first?: string;
   /** Texto da página atual. */
   atual?: string;
 };
@@ -193,7 +193,7 @@ export type BreadcrumbWithMenuSnippetOptions = {
 export function breadcrumbWithMenuSnippet(o: BreadcrumbWithMenuSnippetOptions = {}): string {
   const ocultos = o.ocultos ?? ['Documentação', 'Guia', 'Componentes'];
   const gatilho = o.gatilho ?? 'Expandir níveis ocultos';
-  const primeiro = o.primeiro ?? 'Início';
+  const first = o.first ?? 'Início';
   const atual = o.atual ?? CURRENT_DEFAULT;
 
   return snippet(
@@ -228,7 +228,7 @@ ${ocultos.map((rotulo) => `      { label: ${texto(rotulo)} },`).join('\n')}
   }),
 );`,
     `const primeiro = createBreadcrumbItem();
-primeiro.appendChild(createBreadcrumbLink({ href: '/', text: ${texto(primeiro)} }));
+primeiro.appendChild(createBreadcrumbLink({ href: '/', text: ${texto(first)} }));
 
 const atual = createBreadcrumbItem();
 atual.appendChild(createBreadcrumbPage({ text: ${texto(atual)} }));`,

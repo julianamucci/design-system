@@ -161,7 +161,7 @@ export const Controlled: Story = {
   },
   render: () => ({
     props: {
-      aberto: false,
+      isOpen: false,
       rotuloExterno: TRIGGER_EXTERNO,
       tituloPainel: LABEL.titulo(),
       descricaoPainel: LABEL.descricao(),
@@ -169,9 +169,9 @@ export const Controlled: Story = {
     },
     template: `
       <div class="nds-stack" data-spacing="sm">
-        <button ndsButton variant="outline" (click)="aberto = true">{{ rotuloExterno }}</button>
+        <button ndsButton variant="outline" (click)="isOpen = true">{{ rotuloExterno }}</button>
 
-        <nds-drawer [open]="aberto" (openChange)="aberto = $event">
+        <nds-drawer [open]="isOpen" (openChange)="isOpen = $event">
           <ng-template ndsDrawerContent>
             <div ndsDrawerHeader>
               <h2 ndsDrawerTitle>{{ tituloPainel }}</h2>
@@ -208,7 +208,7 @@ export const Controlled: Story = {
       const painel = await waitForPortal('dialog');
       await userEvent.click(within(painel).getByRole('button', { name: LABEL.fechar() }));
       await waitForPortalVanish('dialog');
-      // Se o output não tivesse chegado, `aberto` continuaria true e o painel
+      // Se o output não tivesse chegado, `isOpen` continuaria true e o painel
       // reabriria no próximo ciclo de detecção.
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
     });

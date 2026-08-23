@@ -81,7 +81,7 @@ export const Playground: Story = {
     const clip = canvasElement.querySelector<HTMLElement>('.nds-carousel-overflow')!;
     const previous = () =>
       canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
-    const proximo = () =>
+    const next = () =>
       canvas.getByRole('button', { name: 'Próximo item' }) as HTMLButtonElement;
 
     // O track é movido por `transform`, então `scrollLeft` fica em zero o tempo
@@ -129,12 +129,12 @@ export const Playground: Story = {
     await step('No primeiro slide só a seta de avanço está ativa', async () => {
       await expect(previous()).toBeDisabled();
       await expect(previous()).toHaveAttribute('aria-disabled', 'true');
-      await expect(proximo()).toBeEnabled();
-      await expect(proximo()).toHaveAttribute('aria-disabled', 'false');
+      await expect(next()).toBeEnabled();
+      await expect(next()).toHaveAttribute('aria-disabled', 'false');
     });
 
     await step('Clicar em avançar leva ao segundo slide e libera a seta de voltar', async () => {
-      await userEvent.click(proximo());
+      await userEvent.click(next());
       await emSlide(1);
       await expect(previous()).toBeEnabled();
     });

@@ -50,8 +50,8 @@ describe('cardSource', () => {
 
   it('o rodapé é filho DIRETO do Card — é o que aciona a borda superior', () => {
     const saida = cardSource();
-    const linhas = saida.split('\n');
-    const rodape = linhas.find((linha) => linha.includes('<CardFooter'))!;
+    const lines = saida.split('\n');
+    const rodape = lines.find((line) => line.includes('<CardFooter'))!;
     // Dois espaços de indentação: um nível abaixo do <Card>, sem invólucro no meio.
     expect(rodape.match(/^ */)![0]).toBe('  ');
   });

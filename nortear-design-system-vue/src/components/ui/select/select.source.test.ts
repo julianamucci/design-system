@@ -15,7 +15,7 @@ import {
   selectEmptySource,
 } from './select.source';
 
-const TODAS = [
+const ALL = [
   selectSource(),
   selectListPlanaSource(),
   selectAgrupadoSource(),
@@ -98,7 +98,7 @@ const estados = [
   // O `:key="String(args.defaultValue)"` e o `<div style="contain: layout">`
   // existem para o canvas do Storybook, não para quem consome.
   it('não leva o enquadramento da story', () => {
-    for (const saida of TODAS) {
+    for (const saida of ALL) {
       expect(saida).not.toContain(':key="String');
       expect(saida).not.toContain('contain: layout');
       expect(saida).not.toContain('min-height');
@@ -107,13 +107,13 @@ const estados = [
   });
 
   it('o campo sempre se nomeia — combobox não tira nome do próprio conteúdo', () => {
-    for (const saida of TODAS) {
+    for (const saida of ALL) {
       expect(saida).toMatch(/<SelectTrigger[^>]*aria-(label|labelledby)=/);
     }
   });
 
   it('o gatilho recebe largura — ele nasce com fit-content e sanfonaria', () => {
-    for (const saida of TODAS) {
+    for (const saida of ALL) {
       expect(saida).toMatch(/<SelectTrigger[^>]*class="nds-w-(xs|full)"/);
     }
   });
@@ -214,7 +214,7 @@ describe('transforms das stories de composição', () => {
 
 describe('o andaime das stories não entra no snippet', () => {
   it('nenhuma transform cita a sonda nem os utilitários de portal', () => {
-    for (const saida of TODAS) {
+    for (const saida of ALL) {
       expect(saida).not.toContain('select-probe');
       expect(saida).not.toContain('ESTADOS_POR_VALOR');
       expect(saida).not.toContain('waitForPortal');

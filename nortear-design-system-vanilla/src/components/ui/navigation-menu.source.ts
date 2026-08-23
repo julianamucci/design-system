@@ -67,9 +67,9 @@ const ITEMS_DEFAULT: NavigationMenuItemSnippet[] = [
 ];
 
 /** `{ a: 1, b: 2 }` numa linha só. */
-function objeto(linhas: string[]): string {
-  if (linhas.length === 0) return '{}';
-  return `{ ${linhas.map((l) => l.replace(/,$/, '')).join(', ')} }`;
+function objeto(lines: string[]): string {
+  if (lines.length === 0) return '{}';
+  return `{ ${lines.map((l) => l.replace(/,$/, '')).join(', ')} }`;
 }
 
 function serializarTarget(filho: NavigationMenuChildSnippet, recuo: string): string {
@@ -124,8 +124,8 @@ function optionLines(o: NavigationMenuSnippetOptions): string[] {
 
 /** O bloco que cria a barra e a nomeia — comum a todas as formas de snippet. */
 function barBlock(o: NavigationMenuSnippetOptions, itens: NavigationMenuItemSnippet[]): string {
-  const linhas = optionLines(o);
-  const segundo = linhas.length ? `, ${objeto(linhas)}` : '';
+  const lines = optionLines(o);
+  const segundo = lines.length ? `, ${objeto(lines)}` : '';
   return `const barra = createNavigationMenu(${serializarItems(itens)}${segundo});
 barra.setAttribute('aria-label', ${texto(o.ariaLabel ?? NAME_DEFAULT)});`;
 }

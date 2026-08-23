@@ -69,7 +69,7 @@ import {
     <span
       class="nds-checkbox-indicator"
       data-slot="checkbox-indicator"
-      [attr.data-state]="estado()"
+      [attr.data-state]="state()"
     >
       @if (checked() || indeterminate()) {
         <svg
@@ -109,7 +109,7 @@ import {
     class: 'nds-checkbox',
     type: 'button',
     '[attr.data-slot]': '"checkbox"',
-    '[attr.data-state]': 'estado()',
+    '[attr.data-state]': 'state()',
   },
 })
 export class NdsCheckbox {
@@ -119,7 +119,7 @@ export class NdsCheckbox {
   protected readonly checked = computed(() => this.raiz.checked());
   protected readonly indeterminate = computed(() => this.raiz.indeterminate());
 
-  protected readonly estado = computed(() =>
+  protected readonly state = computed(() =>
     this.indeterminate() ? 'indeterminate' : this.checked() ? 'checked' : 'unchecked',
   );
 }

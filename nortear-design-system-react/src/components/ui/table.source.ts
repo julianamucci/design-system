@@ -91,13 +91,13 @@ const FOOTER = `  <TableFooter>
  * da árvore de acessibilidade — `display: none` tiraria das duas.
  */
 function legenda(visible: boolean, texto = CAPTION): string {
-  const classe = visible ? '' : ' className="nds-sr-only"';
-  return `  <TableCaption${classe}>${texto}</TableCaption>`;
+  const className = visible ? '' : ' className="nds-sr-only"';
+  return `  <TableCaption${className}>${texto}</TableCaption>`;
 }
 
 /** Junta as seções dentro de uma `<Table>`, descartando as ausentes. */
 function tabela(...sections: Array<string | false | null | undefined>): string {
-  const corpo = sections.filter((secao): secao is string => Boolean(secao)).join('\n');
+  const corpo = sections.filter((section): section is string => Boolean(section)).join('\n');
   return `<Table>\n${corpo}\n</Table>`;
 }
 

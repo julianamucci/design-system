@@ -232,7 +232,7 @@ export const KeyboardNavigation: Story = {
     await step('Os botões de navegação também recebem anel', async () => {
       // Mesma comparação, agora entre os dois botões de mês: o que tem foco
       // contra o que não tem.
-      const [previous, proximo] = Array.from(
+      const [previous, next] = Array.from(
         raiz.querySelectorAll<HTMLElement>('.nds-calendar-nav-btn'),
       );
       // Chega ao botão por teclado, não por `.focus()`: `:focus-visible` depende
@@ -242,7 +242,7 @@ export const KeyboardNavigation: Story = {
       previous!.focus();
 
       await expect(getComputedStyle(previous!).boxShadow).not.toBe(
-        getComputedStyle(proximo!).boxShadow,
+        getComputedStyle(next!).boxShadow,
       );
     });
   },

@@ -259,11 +259,11 @@ export const WithRadio: Story = {
       // igual em qualquer rodada, não importa de onde parta.
       const partiuDe75 = alvo("z75").getAttribute("aria-checked") === "true";
       const click = partiuDe75 ? "z150" : "z75";
-      const outro = partiuDe75 ? "z75" : "z150";
+      const other = partiuDe75 ? "z75" : "z150";
       await userEvent.click(alvo(click));
       await gestoOpen(area());
       await waitFor(() => expect(alvo(click).getAttribute("aria-checked")).toBe("true"));
-      await expect(alvo(outro).getAttribute("aria-checked")).toBe("false");
+      await expect(alvo(other).getAttribute("aria-checked")).toBe("false");
     });
   },
 };

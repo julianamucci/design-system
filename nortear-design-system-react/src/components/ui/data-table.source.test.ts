@@ -11,7 +11,7 @@ import {
   dataTableVirtualizadaSource,
 } from './data-table.source';
 
-const TODAS = [
+const ALL = [
   dataTableSource,
   columnDataTableWithFiltersSource,
   dataTableRedimensionavelSource,
@@ -58,7 +58,7 @@ describe('dataTableSource', () => {
   });
 
   it('nenhum snippet ensina o módulo de fixtures', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       expect(fn()).not.toContain('fixtures');
       expect(fn()).not.toContain('baseColumns');
       expect(fn()).not.toContain('rotulosFatura');

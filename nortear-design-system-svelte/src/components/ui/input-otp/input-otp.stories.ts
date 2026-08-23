@@ -152,12 +152,12 @@ export const Playground: Story = {
     });
 
     await step('Colar distribui o código inteiro e dispara onComplete', async () => {
-      const codigo = '123456'.slice(0, total);
+      const code = '123456'.slice(0, total);
       input.focus();
       await userEvent.clear(input);
-      await userEvent.paste(codigo);
-      await waitFor(() => expect(texts(canvasElement).join('')).toBe(codigo));
-      await expect(args.onComplete).toHaveBeenCalledWith(codigo);
+      await userEvent.paste(code);
+      await waitFor(() => expect(texts(canvasElement).join('')).toBe(code));
+      await expect(args.onComplete).toHaveBeenCalledWith(code);
     });
   },
 };

@@ -93,9 +93,9 @@ export const Playground: Story = {
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
-            {STATES.map((estado) => (
-              <SelectItem key={estado.value} value={estado.value}>
-                {estado.label}
+            {STATES.map((state) => (
+              <SelectItem key={state.value} value={state.value}>
+                {state.label}
               </SelectItem>
             ))}
           </SelectContent>

@@ -666,7 +666,7 @@ export class NdsResizableDocs implements AfterViewInit, OnDestroy {
     };
     // `—` e nunca a string "undefined": travessão é o que a tabela usa quando
     // não há valor padrão, e é o que o conteúdo compartilhado já traz.
-    const linha = (name: string, chave: string) => ({
+    const line = (name: string, chave: string) => ({
       name,
       type: t(`props.table.${chave}.type`),
       defaultValue: t(`props.table.${chave}.default`) || '—',
@@ -678,13 +678,13 @@ export class NdsResizableDocs implements AfterViewInit, OnDestroy {
       {
         cols,
         items: [
-          linha('direction', 'direction'),
-          linha('defaultSize', 'defaultSize'),
-          linha('minSize', 'minSize'),
-          linha('maxSize', 'maxSize'),
-          linha('id', 'id'),
-          linha('withHandle', 'withHandle'),
-          linha('layout', 'onLayout'),
+          line('direction', 'direction'),
+          line('defaultSize', 'defaultSize'),
+          line('minSize', 'minSize'),
+          line('maxSize', 'maxSize'),
+          line('id', 'id'),
+          line('withHandle', 'withHandle'),
+          line('layout', 'onLayout'),
         ],
       },
     ];

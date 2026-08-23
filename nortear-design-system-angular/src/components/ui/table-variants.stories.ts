@@ -92,12 +92,12 @@ export const Basic: Story = {
             </tr>
           </thead>
           <tbody ndsTableBody>
-            @for (fatura of faturas; track fatura.id) {
+            @for (invoice of faturas; track invoice.id) {
               <tr ndsTableRow>
-                <td ndsTableCell class="nds-font-medium">{{ fatura.id }}</td>
-                <td ndsTableCell>{{ fatura.status }}</td>
-                <td ndsTableCell>{{ fatura.metodo }}</td>
-                <td ndsTableCell class="nds-text-right">{{ fatura.valor }}</td>
+                <td ndsTableCell class="nds-font-medium">{{ invoice.id }}</td>
+                <td ndsTableCell>{{ invoice.status }}</td>
+                <td ndsTableCell>{{ invoice.metodo }}</td>
+                <td ndsTableCell class="nds-text-right">{{ invoice.valor }}</td>
               </tr>
             }
           </tbody>
@@ -111,12 +111,12 @@ export const Basic: Story = {
     await step('Uma linha por registro, quatro colunas por linha', async () => {
       // functional.item1 — a conta sai da fixture, nunca de um número escrito à
       // mão: um dado a menos deixaria a asserção verde e a tabela errada.
-      const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-      await expect(linhas.length).toBe(INVOICES.length);
-      for (const [i, linha] of linhas.entries()) {
-        await expect(linha).toHaveAttribute('data-slot', 'table-row');
-        await expect(linha.querySelectorAll('td').length).toBe(4);
-        await expect(linha).toHaveTextContent(INVOICES[i].id);
+      const lines = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+      await expect(lines.length).toBe(INVOICES.length);
+      for (const [i, line] of lines.entries()) {
+        await expect(line).toHaveAttribute('data-slot', 'table-row');
+        await expect(line.querySelectorAll('td').length).toBe(4);
+        await expect(line).toHaveTextContent(INVOICES[i].id);
       }
     });
 
@@ -171,12 +171,12 @@ export const WithFooter: Story = {
             </tr>
           </thead>
           <tbody ndsTableBody>
-            @for (fatura of faturas; track fatura.id) {
+            @for (invoice of faturas; track invoice.id) {
               <tr ndsTableRow>
-                <td ndsTableCell class="nds-font-medium">{{ fatura.id }}</td>
-                <td ndsTableCell>{{ fatura.status }}</td>
-                <td ndsTableCell>{{ fatura.metodo }}</td>
-                <td ndsTableCell class="nds-text-right">{{ fatura.valor }}</td>
+                <td ndsTableCell class="nds-font-medium">{{ invoice.id }}</td>
+                <td ndsTableCell>{{ invoice.status }}</td>
+                <td ndsTableCell>{{ invoice.metodo }}</td>
+                <td ndsTableCell class="nds-text-right">{{ invoice.valor }}</td>
               </tr>
             }
           </tbody>
@@ -245,11 +245,11 @@ export const CaptionSrOnly: Story = {
               </tr>
             </thead>
             <tbody ndsTableBody>
-              @for (fatura of faturas; track fatura.id) {
+              @for (invoice of faturas; track invoice.id) {
                 <tr ndsTableRow>
-                  <td ndsTableCell class="nds-font-medium">{{ fatura.id }}</td>
-                  <td ndsTableCell>{{ fatura.status }}</td>
-                  <td ndsTableCell class="nds-text-right">{{ fatura.valor }}</td>
+                  <td ndsTableCell class="nds-font-medium">{{ invoice.id }}</td>
+                  <td ndsTableCell>{{ invoice.status }}</td>
+                  <td ndsTableCell class="nds-text-right">{{ invoice.valor }}</td>
                 </tr>
               }
             </tbody>
@@ -310,19 +310,19 @@ export const WithRowActions: Story = {
             </tr>
           </thead>
           <tbody ndsTableBody>
-            @for (fatura of faturas; track fatura.id) {
+            @for (invoice of faturas; track invoice.id) {
               <tr ndsTableRow>
-                <td ndsTableCell class="nds-font-medium">{{ fatura.id }}</td>
+                <td ndsTableCell class="nds-font-medium">{{ invoice.id }}</td>
                 <td ndsTableCell>
-                  <span ndsBadge [variant]="variantOf[fatura.status]">{{ fatura.status }}</span>
+                  <span ndsBadge [variant]="variantOf[invoice.status]">{{ invoice.status }}</span>
                 </td>
-                <td ndsTableCell class="nds-text-right">{{ fatura.valor }}</td>
+                <td ndsTableCell class="nds-text-right">{{ invoice.valor }}</td>
                 <td ndsTableCell class="nds-text-right">
                   <button
                     ndsButton
                     variant="ghost"
                     size="icon-sm"
-                    [attr.aria-label]="'Editar fatura ' + fatura.id"
+                    [attr.aria-label]="'Editar fatura ' + invoice.id"
                   >
                     <svg ndsButtonIcon kind="pencil" class="nds-icon"></svg>
                   </button>
@@ -395,11 +395,11 @@ export const HorizontalScroll: Story = {
             </tr>
           </thead>
           <tbody ndsTableBody>
-            @for (fatura of faturas; track fatura.id) {
+            @for (invoice of faturas; track invoice.id) {
               <tr ndsTableRow>
-                <td ndsTableCell class="nds-font-medium">{{ fatura.id }}</td>
+                <td ndsTableCell class="nds-font-medium">{{ invoice.id }}</td>
                 @for (month of meses; track month) {
-                  <td ndsTableCell class="nds-text-right">{{ fatura.valor }}</td>
+                  <td ndsTableCell class="nds-text-right">{{ invoice.valor }}</td>
                 }
               </tr>
             }

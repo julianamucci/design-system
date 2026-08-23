@@ -65,8 +65,8 @@ export const Default: Story = {
         </button>
 
         <ng-template ndsSelectContent>
-          @for (estado of states; track estado.value) {
-            <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
+          @for (state of states; track state.value) {
+            <div ndsSelectItem [value]="state.value">{{ state.label }}</div>
           }
         </ng-template>
       </nds-select>
@@ -116,8 +116,8 @@ export const Selected: Story = {
         </button>
 
         <ng-template ndsSelectContent>
-          @for (estado of states; track estado.value) {
-            <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
+          @for (state of states; track state.value) {
+            <div ndsSelectItem [value]="state.value">{{ state.label }}</div>
           }
         </ng-template>
       </nds-select>
@@ -182,8 +182,8 @@ export const Open: Story = {
         </button>
 
         <ng-template ndsSelectContent>
-          @for (estado of states; track estado.value) {
-            <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
+          @for (state of states; track state.value) {
+            <div ndsSelectItem [value]="state.value">{{ state.label }}</div>
           }
         </ng-template>
       </nds-select>
@@ -261,8 +261,8 @@ export const Disabled: Story = {
         </button>
 
         <ng-template ndsSelectContent>
-          @for (estado of states; track estado.value) {
-            <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
+          @for (state of states; track state.value) {
+            <div ndsSelectItem [value]="state.value">{{ state.label }}</div>
           }
         </ng-template>
       </nds-select>
@@ -309,8 +309,8 @@ export const Invalid: Story = {
           </button>
 
           <ng-template ndsSelectContent>
-            @for (estado of states; track estado.value) {
-              <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
+            @for (state of states; track state.value) {
+              <div ndsSelectItem [value]="state.value">{{ state.label }}</div>
             }
           </ng-template>
         </nds-select>

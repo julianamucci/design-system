@@ -199,7 +199,7 @@ export class NdsTooltipTrigger {}
             rdxTooltipPopup
             class="nds-tooltip-content"
             data-slot="tooltip-content"
-            [attr.data-state]="estado()"
+            [attr.data-state]="state()"
           >
             <ng-container [ngTemplateOutlet]="c.template" />
           </div>
@@ -221,7 +221,7 @@ export class NdsTooltip {
   protected readonly conteudo = contentChild(NdsTooltipContent, { descendants: true });
 
   /** Espelha o estado para o `data-state` que Vue e Svelte também emitem. */
-  protected readonly estado = computed(() => (this.raiz.open() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.raiz.open() ? 'open' : 'closed'));
 }
 
 // ─── Sobre a Arrow ────────────────────────────────────────────────────────────

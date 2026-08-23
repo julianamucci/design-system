@@ -44,9 +44,9 @@ function campo(atributos: Array<string | false | undefined>, recuo = 2): string 
 }
 
 /** Moldura do formulário: rótulo, campo e o que mais a composição pedir. */
-function grupo(...linhas: string[]): string {
+function grupo(...lines: string[]): string {
   return `<div class="nds-stack nds-w-md" data-spacing="sm">
-${linhas.join('\n')}
+${lines.join('\n')}
 </div>`;
 }
 
@@ -58,7 +58,7 @@ function rotulo(id: string, texto: string): string {
  * Bloco de contador. Ele é `aria-live="polite"` e carrega um `aria-label` por
  * extenso: lido cru, "123/500" vira "cento e vinte e três barra quinhentos".
  */
-function contador(helper: string): string {
+function counter(helper: string): string {
   return `  <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
     <span>${helper}</span>
     <span
@@ -77,7 +77,7 @@ function contador(helper: string): string {
 export const textareaSource: SourceTransform<TextareaArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const limit = typeof args.maxlength === 'number' && args.maxlength > 0 ? args.maxlength : null;
-  const linhas = [
+  const lines = [
     rotulo('descricao', 'Descrição'),
     campo([
       'id="descricao"',
@@ -90,15 +90,15 @@ export const textareaSource: SourceTransform<TextareaArgs> = (_gerado, ctx) => {
       attrBool('disabled', args.disabled, false),
       `class="${FRAME}"`,
     ]),
-    limit !== null && contador('Descreva o produto com clareza.'),
-  ].filter((linha): linha is string => Boolean(linha));
-  const estado = [
+    limit !== null && counter('Descreva o produto com clareza.'),
+  ].filter((line): line is string => Boolean(line));
+  const state = [
     `const descricao = ref('')`,
     limit !== null && `const maximo = ${limit}`,
   ]
     .filter(Boolean)
     .join('\n');
-  return vueSnippet(`${IMPORT_PAIR}\nimport { ref } from 'vue'\n\n${estado}`, grupo(...linhas));
+  return vueSnippet(`${IMPORT_PAIR}\nimport { ref } from 'vue'\n\n${state}`, grupo(...lines));
 };
 
 /**
@@ -146,7 +146,7 @@ const maximo = 500`,
         'placeholder="ex: Descreva o produto..."',
         `class="${FRAME}"`,
       ]),
-      contador('Descreva com clareza.'),
+      counter('Descreva com clareza.'),
     ),
   );
 }

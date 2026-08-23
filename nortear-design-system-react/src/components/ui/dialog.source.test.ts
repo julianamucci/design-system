@@ -13,7 +13,7 @@ import {
   dialogSource,
 } from './dialog.source';
 
-const TODAS = [
+const ALL = [
   dialogSource,
   dialogOpenSource,
   dialogNoButtonCloseSource,
@@ -35,7 +35,7 @@ describe('dialogSource', () => {
   it('nenhum snippet ensina o mecanismo de tradução das stories', () => {
     // O `render` chama `useTranslation`; o painel imprimia
     // `t("demonstration.labels.title")` como se fosse a API do componente.
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       expect(fn()).not.toContain('useTranslation');
       expect(fn()).not.toContain('demonstration.labels');
     }

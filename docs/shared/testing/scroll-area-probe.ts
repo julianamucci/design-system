@@ -101,21 +101,21 @@ export function transbordo(viewport: HTMLElement): { x: boolean; y: boolean } {
  */
 export function focusDeclaradoRing(doc: Document = document): boolean {
   const varre = (folha: CSSStyleSheet): boolean => {
-    let regras: CSSRuleList;
+    let rules: CSSRuleList;
     try {
-      regras = folha.cssRules;
+      rules = folha.cssRules;
     } catch {
       return false; // folha de outra origem — não é do design system
     }
-    for (const regra of Array.from(regras)) {
+    for (const rule of Array.from(rules)) {
       // A folha compartilhada é montada por @import; se o empacotador não tiver
       // embutido as partes, elas continuam alcançáveis como sub-folhas.
-      if (regra instanceof CSSImportRule && regra.styleSheet && varre(regra.styleSheet)) {
+      if (rule instanceof CSSImportRule && rule.styleSheet && varre(rule.styleSheet)) {
         return true;
       }
-      if (!(regra instanceof CSSStyleRule)) continue;
-      if (!regra.selectorText.includes('.nds-scroll-area-viewport:focus-visible')) continue;
-      if (regra.style.boxShadow && regra.style.boxShadow !== 'none') return true;
+      if (!(rule instanceof CSSStyleRule)) continue;
+      if (!rule.selectorText.includes('.nds-scroll-area-viewport:focus-visible')) continue;
+      if (rule.style.boxShadow && rule.style.boxShadow !== 'none') return true;
     }
     return false;
   };

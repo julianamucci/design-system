@@ -36,7 +36,7 @@
 
 import { ruleDeclaration, backgroundEffective, darkLigarTheme, ratio, resolveColor, noTransicao } from './cor';
 
-export type { Contraste } from './cor';
+export type { Contrast } from './cor';
 export { darkLigarTheme };
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
@@ -156,17 +156,17 @@ export function slotWithCaret(raiz: HTMLElement): number {
 }
 
 /**
- * Cola `codigo` no elemento em foco, como o navegador faria.
+ * Cola `code` no elemento em foco, como o navegador faria.
  *
  * `userEvent.paste` existe, mas depende do clipboard do runner e cada stack o
  * importa do seu próprio pacote. Um `ClipboardEvent` real medido no mesmo lugar
  * nas cinco é o que torna a coluna comparável.
  */
-export function colar(raiz: HTMLElement, codigo: string): boolean {
+export function colar(raiz: HTMLElement, code: string): boolean {
   const alvo = (raiz.ownerDocument.activeElement as HTMLElement | null) ?? entryField(raiz);
   if (!alvo) return false;
   const dados = new DataTransfer();
-  dados.setData('text', codigo);
+  dados.setData('text', code);
   return alvo.dispatchEvent(
     new ClipboardEvent('paste', { bubbles: true, cancelable: true, clipboardData: dados }),
   );
@@ -319,7 +319,7 @@ export function measureInputOtp(raiz: HTMLElement) {
       folgaAntesDoSeparador: folgaEntre(separadores[0]?.previousElementSibling, separadores[0]),
       folgaDepoisDoSeparador: folgaEntre(separadores[0], separadores[0]?.nextElementSibling),
     },
-    estado: {
+    state: {
       caretEm: slotWithCaret(raiz),
       caracteres: measurements.map((m) => m.caractere),
       opacidadeDoContainer: csContainer?.opacity ?? null,
@@ -389,7 +389,7 @@ export function darkMeasure(raiz: HTMLElement, cenario: string) {
   try {
     const measurement = measureInputOtp(alvo);
     if (!measurement.presente) return null;
-    return { estado: measurement.estado, contraste: measurement.contraste };
+    return { state: measurement.state, contraste: measurement.contraste };
   } finally {
     desfazer();
   }

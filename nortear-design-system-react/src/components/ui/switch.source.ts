@@ -196,7 +196,7 @@ export function switchPanelSource(): string {
  * importa é a FORMA de cada linha, e um `map` esconderia justamente ela.
  */
 export function switchPreferenciasSource(): string {
-  const linha = (id: string, rotulo: string, descricao: string) => `    <div className="nds-cluster" data-align="center" data-justify="between">
+  const line = (id: string, rotulo: string, descricao: string) => `    <div className="nds-cluster" data-align="center" data-justify="between">
       <div className="nds-stack nds-pr-4" data-spacing="xs">
         <Label htmlFor="${id}">${rotulo}</Label>
         <p className="nds-text-caption nds-text-muted-foreground">${descricao}</p>
@@ -209,9 +209,9 @@ export function switchPreferenciasSource(): string {
     `<fieldset className="nds-border-none nds-p-0 nds-m-0 nds-w-sm">
   <legend className="nds-text-body nds-font-semibold nds-mb-2">Notificações</legend>
   <div className="nds-stack" data-spacing="sm">
-${linha('pref-email', 'Receber emails', 'Resumos diários por email.')}
-${linha('pref-push', 'Notificações push', 'Alertas no navegador em tempo real.')}
-${linha('pref-sms', 'SMS de segurança', 'Códigos de verificação por SMS.')}
+${line('pref-email', 'Receber emails', 'Resumos diários por email.')}
+${line('pref-push', 'Notificações push', 'Alertas no navegador em tempo real.')}
+${line('pref-sms', 'SMS de segurança', 'Códigos de verificação por SMS.')}
   </div>
 </fieldset>`,
   );
@@ -247,7 +247,7 @@ const [ativo, setAtivo] = useState(false);`,
  * olhada só.
  */
 export function switchListCompactaSource(): string {
-  const linha = (id: string, rotulo: string) => `  <div className="nds-cluster" data-align="center" data-justify="between">
+  const line = (id: string, rotulo: string) => `  <div className="nds-cluster" data-align="center" data-justify="between">
     <Label htmlFor="${id}" className="nds-text-body">${rotulo}</Label>
     <Switch id="${id}" size="sm" />
   </div>`;
@@ -255,9 +255,9 @@ export function switchListCompactaSource(): string {
   return jsxSnippet(
     IMPORTS,
     `<div className="nds-stack nds-w-xs" data-spacing="sm">
-${linha('rede-wifi', 'Wi-Fi')}
-${linha('rede-bluetooth', 'Bluetooth')}
-${linha('modo-aviao', 'Modo avião')}
+${line('rede-wifi', 'Wi-Fi')}
+${line('rede-bluetooth', 'Bluetooth')}
+${line('modo-aviao', 'Modo avião')}
 </div>`,
   );
 }

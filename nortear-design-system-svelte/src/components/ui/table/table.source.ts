@@ -22,7 +22,7 @@ export type TableArgs = {
 function recuar(bloco: string, espacos = '  '): string {
   return bloco
     .split('\n')
-    .map((linha) => (linha.trim() ? `${espacos}${linha}` : linha))
+    .map((line) => (line.trim() ? `${espacos}${line}` : line))
     .join('\n');
 }
 

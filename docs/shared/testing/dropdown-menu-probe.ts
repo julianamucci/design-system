@@ -14,7 +14,7 @@
 //    campo vir `null`; os seletores aceitam as formas conhecidas e o retrato
 //    registra QUAL casou (`classes`).
 
-import { ratio, backgroundEffective, type Contraste } from './cor';
+import { ratio, backgroundEffective, type Contrast } from './cor';
 
 export type RetratoDeElemento = {
   texto: string;
@@ -93,7 +93,7 @@ const DATA_IGNORADOS = new Set(['data-slot', 'data-testid']);
 /** Presença de atributo SEM casar o valor "false", que algumas libs emitem. */
 const PRESENTE = (attr: string) => `[${attr}]:not([${attr}="false"])`;
 
-function descrever(el: Element | null | undefined): string | null {
+function describe(el: Element | null | undefined): string | null {
   if (!el) return null;
   const html = el as HTMLElement;
   const texto = (html.textContent ?? '').replace(/\s+/g, ' ').trim().slice(0, 40);
@@ -212,7 +212,7 @@ export async function radiografarDropdown(
   const indicadores = inside<HTMLElement>(
     '.nds-dropdown-menu-item-indicator, [data-slot$="item-indicator"]',
   ).map((ind) => ({
-    parent: descrever(ind.closest('[role^="menuitem"]')) ?? '—',
+    parent: describe(ind.closest('[role^="menuitem"]')) ?? '—',
     display: getComputedStyle(ind).display,
     classes: ind.getAttribute('class') ?? '',
   }));
@@ -239,25 +239,25 @@ export async function radiografarDropdown(
         '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
       ),
     ];
-    const openFocus = descrever(document.activeElement);
+    const openFocus = describe(document.activeElement);
     const itemsTabulaveis = navegaveis.filter((i) => i.tabIndex === 0).length;
 
     // A medição parte do primeiro item, e não de onde a abertura deixou o foco:
     // sem isso o resultado depende do estado inicial de cada lib.
     navegaveis[0]?.focus();
     await teclado.keyboard('{ArrowDown}');
-    const arrowBaixoAfter = descrever(document.activeElement);
+    const arrowBaixoAfter = describe(document.activeElement);
     await teclado.keyboard('{ArrowUp}');
-    const arrowCimaAfter = descrever(document.activeElement);
+    const arrowCimaAfter = describe(document.activeElement);
     await teclado.keyboard('{End}');
-    const endAfter = descrever(document.activeElement);
+    const endAfter = describe(document.activeElement);
     await teclado.keyboard('{Home}');
-    const homeAfter = descrever(document.activeElement);
+    const homeAfter = describe(document.activeElement);
 
     let digitarAfter: string | null = null;
     if (opts.letraDeBusca) {
       await teclado.keyboard(opts.letraDeBusca);
-      digitarAfter = descrever(document.activeElement);
+      digitarAfter = describe(document.activeElement);
     }
 
     const desabilitado = painel.querySelector<HTMLElement>(
@@ -347,7 +347,7 @@ export async function radiografarDropdown(
     await ate(() => document.querySelector('[role="menu"]') === null);
     await ate(() => document.activeElement === gatilho);
     closeFocus =
-      document.activeElement === gatilho ? 'gatilho' : descrever(document.activeElement);
+      document.activeElement === gatilho ? 'gatilho' : describe(document.activeElement);
   }
 
   return {
@@ -389,7 +389,7 @@ export function lancarProbe(stack: string, cenario: string, dados: unknown): nev
  * texto normal pela WCAG — 3:1 só valeria a partir de 24px, ou 18.66px em
  * negrito.
  */
-export function itemContrast(item: HTMLElement): Contraste | null {
+export function itemContrast(item: HTMLElement): Contrast | null {
   const frente = getComputedStyle(item).color;
   const background = backgroundEffective(item);
   if (!background) return null;

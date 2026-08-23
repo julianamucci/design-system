@@ -64,7 +64,7 @@ export const WithHelpText: Story = {
 
 export const WithErrorMessage: Story = {
   render: () => ({
-    props: { codigo: '482913' },
+    props: { code: '482913' },
     template: `
       <div class="nds-stack" data-spacing="sm">
         <span id="comp-erro-label" class="nds-text-label">Código de verificação</span>
@@ -72,7 +72,7 @@ export const WithErrorMessage: Story = {
           aria-labelledby="comp-erro-label"
           describedBy="comp-erro-texto"
           [maxLength]="6"
-          [value]="codigo"
+          [value]="code"
           [invalid]="true"
         ></nds-input-otp>
         <p id="comp-erro-texto" class="nds-text-caption nds-text-destructive">

@@ -36,17 +36,17 @@ const ORDER = [
 /** Bloco de import: as peças do drawer, depois o Button, que é gatilho e ação. */
 function importing(parts: string[], comCampos = false): string {
   const usadas = ORDER.filter((part) => parts.includes(part));
-  const linhas = [
+  const lines = [
     `import {`,
     ...usadas.map((part) => `  ${part},`),
     `} from '@/components/ui/drawer'`,
     `import { Button } from '@/components/ui/button'`,
   ];
   if (comCampos) {
-    linhas.push(`import { Input } from '@/components/ui/input'`);
-    linhas.push(`import { Label } from '@/components/ui/label'`);
+    lines.push(`import { Input } from '@/components/ui/input'`);
+    lines.push(`import { Label } from '@/components/ui/label'`);
   }
-  return linhas.join('\n');
+  return lines.join('\n');
 }
 
 type Frame = {

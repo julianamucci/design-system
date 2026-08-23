@@ -13,7 +13,7 @@ import {
   checkboxSource,
 } from './checkbox.source';
 
-const TODAS = [
+const ALL = [
   checkboxSource,
   checkboxCheckedSource,
   checkboxIndeterminadoSource,
@@ -162,7 +162,7 @@ describe('composições', () => {
 
 describe('regras do repositório', () => {
   it('toda caixa tem rótulo associado, e nenhum snippet leva estilo inline', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).toContain('htmlFor=');
       expect(saida).not.toContain('style={{');

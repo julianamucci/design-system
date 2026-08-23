@@ -9,7 +9,7 @@ import {
   labelSource,
 } from './label.source';
 
-const TODAS = [
+const ALL = [
   labelSource,
   labelDefaultSource,
   labelDisabledSource,
@@ -69,11 +69,11 @@ describe('contrato comum a todo snippet de rótulo', () => {
   it('o rótulo nunca aparece sozinho — ele é metade de um par', () => {
     // Isolado, o `<Label>` é a única forma em que ele não produz nada: sem
     // controle não há nome acessível, nem clique que leve o foco.
-    for (const fn of TODAS) expect(fn()).toMatch(/<(Input|Checkbox)\b/);
+    for (const fn of ALL) expect(fn()).toMatch(/<(Input|Checkbox)\b/);
   });
 
   it('o for do rótulo e o id do controle carregam o mesmo valor', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       const alvo = /<Label for="([^"]+)"/.exec(saida)?.[1];
       expect(alvo).toBeTruthy();

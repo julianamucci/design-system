@@ -232,8 +232,8 @@ export const WithDots: Story = {
       await userEvent.click(pause);
       await expect(canvas.getByRole('button', { name: 'Iniciar apresentação' })).toBeInTheDocument();
 
-      const primeiro = dot(1);
-      await userEvent.click(primeiro);
+      const first = dot(1);
+      await userEvent.click(first);
       await waitFor(() => expect(viewport.scrollLeft).toBe(0), { timeout: 4000 });
       // A POSIÇÃO chega antes do ESTADO: a rolagem encostou em zero, mas quem
       // marca o dot é a reconciliação do índice, adiada até o motor silenciar.

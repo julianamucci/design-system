@@ -177,7 +177,7 @@ export const Controlled: Story = {
     wrapper.className = 'nds-stack';
     wrapper.dataset.spacing = 'md';
 
-    const stateExterno = { aberto: false };
+    const stateExterno = { isOpen: false };
     const externo = createButton({ variant: 'default', label: 'Abrir via estado externo' });
 
     // Gatilho interno fora do fluxo visual e do fluxo de leitura: quem comanda é
@@ -206,14 +206,14 @@ export const Controlled: Story = {
       description: 'Abertura comandada de fora.',
       content,
       footer,
-      onOpenChange: (aberto) => {
-        stateExterno.aberto = aberto;
-        externo.dataset.open = String(aberto);
+      onOpenChange: (isOpen) => {
+        stateExterno.isOpen = isOpen;
+        externo.dataset.open = String(isOpen);
       },
     });
 
     externo.addEventListener('click', () => {
-      if (!stateExterno.aberto) triggerInterno.click();
+      if (!stateExterno.isOpen) triggerInterno.click();
     });
 
     wrapper.append(externo, drawer);

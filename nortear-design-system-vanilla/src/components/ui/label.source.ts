@@ -40,11 +40,11 @@ const ID_DEFAULT = 'campo';
 
 /** Linhas de `createLabel`, com o canônico `class` no lugar do apelido. */
 function labelLines(o: LabelSnippetOptions, id: string, conteudo?: string): string[] {
-  const classe = o.class ?? o.className;
+  const className = o.class ?? o.className;
   return opcoes([
     ['text', conteudo ? texto(conteudo) : undefined],
     ['htmlFor', texto(id)],
-    ['class', classe ? texto(classe) : undefined],
+    ['class', className ? texto(className) : undefined],
   ]);
 }
 

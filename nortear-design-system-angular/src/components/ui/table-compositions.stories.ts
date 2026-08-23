@@ -17,7 +17,7 @@ import { NdsButton, NdsButtonIcon } from './button';
 import { NdsCheckbox } from './checkbox';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
-import { INVOICES, type Fatura } from './table.fixtures';
+import { INVOICES, type Invoice } from './table.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -67,8 +67,8 @@ type Story = StoryObj;
 
 /** "R$ 250,00" → 250. A ordenação é numérica; comparar as strings colocaria
  * "R$ 50,00" depois de "R$ 450,00". */
-function valueNumerico(fatura: Fatura): number {
-  return Number(fatura.valor.replace(/[^\d,]/g, '').replace(',', '.'));
+function valueNumerico(invoice: Invoice): number {
+  return Number(invoice.valor.replace(/[^\d,]/g, '').replace(',', '.'));
 }
 
 // ─── Toolbar de filtros ───────────────────────────────────────────────────────
@@ -125,12 +125,12 @@ export const FilterToolbar: Story = {
                 </tr>
               </thead>
               <tbody ndsTableBody>
-                @for (fatura of filtradas(); track fatura.id) {
+                @for (invoice of filtradas(); track invoice.id) {
                   <tr ndsTableRow>
-                    <td ndsTableCell class="nds-font-medium">{{ fatura.id }}</td>
-                    <td ndsTableCell>{{ fatura.status }}</td>
-                    <td ndsTableCell>{{ fatura.metodo }}</td>
-                    <td ndsTableCell class="nds-text-right">{{ fatura.valor }}</td>
+                    <td ndsTableCell class="nds-font-medium">{{ invoice.id }}</td>
+                    <td ndsTableCell>{{ invoice.status }}</td>
+                    <td ndsTableCell>{{ invoice.metodo }}</td>
+                    <td ndsTableCell class="nds-text-right">{{ invoice.valor }}</td>
                   </tr>
                 } @empty {
                   <tr ndsTableRow>
@@ -160,9 +160,9 @@ export const FilterToolbar: Story = {
 
     await step('O filtro reduz as linhas sem tocar no cabeçalho', async () => {
       await userEvent.type(campo, 'Pix');
-      const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-      await expect(linhas.length).toBe(INVOICES.filter((f) => f.metodo === 'Pix').length);
-      for (const linha of linhas) await expect(linha).toHaveTextContent('Pix');
+      const lines = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+      await expect(lines.length).toBe(INVOICES.filter((f) => f.metodo === 'Pix').length);
+      for (const line of lines) await expect(line).toHaveTextContent('Pix');
       // As colunas continuam declaradas: o filtro mexe nos dados, não na grade.
       await expect(canvasElement.querySelectorAll('th').length).toBe(4);
     });
@@ -221,11 +221,11 @@ export const SortableHeaders: Story = {
               </tr>
             </thead>
             <tbody ndsTableBody>
-              @for (fatura of ordenadas(); track fatura.id) {
+              @for (invoice of ordenadas(); track invoice.id) {
                 <tr ndsTableRow>
-                  <td ndsTableCell class="nds-font-medium">{{ fatura.id }}</td>
-                  <td ndsTableCell>{{ fatura.status }}</td>
-                  <td ndsTableCell class="nds-text-right">{{ fatura.valor }}</td>
+                  <td ndsTableCell class="nds-font-medium">{{ invoice.id }}</td>
+                  <td ndsTableCell>{{ invoice.status }}</td>
+                  <td ndsTableCell class="nds-text-right">{{ invoice.valor }}</td>
                 </tr>
               }
             </tbody>
@@ -276,20 +276,20 @@ export const RowSelection: Story = {
   },
   render: () => {
     const selecionadas = signal<ReadonlySet<string>>(new Set());
-    const todas = computed(() => selecionadas().size === INVOICES.length);
-    const algumas = computed(() => selecionadas().size > 0 && !todas());
+    const all = computed(() => selecionadas().size === INVOICES.length);
+    const algumas = computed(() => selecionadas().size > 0 && !all());
 
     return {
       props: {
         faturas: INVOICES,
         selecionadas,
-        todas,
+        all,
         algumas,
         alternar: (id: string, marcado: boolean) => {
-          const proximo = new Set(selecionadas());
-          if (marcado) proximo.add(id);
-          else proximo.delete(id);
-          selecionadas.set(proximo);
+          const next = new Set(selecionadas());
+          if (marcado) next.add(id);
+          else next.delete(id);
+          selecionadas.set(next);
         },
         alternarTodas: (marcado: boolean) =>
           selecionadas.set(marcado ? new Set(INVOICES.map((f) => f.id)) : new Set()),
@@ -304,7 +304,7 @@ export const RowSelection: Story = {
                   <button
                     ndsCheckbox
                     aria-label="Selecionar todas as faturas"
-                    [checked]="todas()"
+                    [checked]="all()"
                     [indeterminate]="algumas()"
                     (checkedChange)="alternarTodas($event)"
                   ></button>
@@ -315,19 +315,19 @@ export const RowSelection: Story = {
               </tr>
             </thead>
             <tbody ndsTableBody>
-              @for (fatura of faturas; track fatura.id) {
-                <tr ndsTableRow [selected]="selecionadas().has(fatura.id)">
+              @for (invoice of faturas; track invoice.id) {
+                <tr ndsTableRow [selected]="selecionadas().has(invoice.id)">
                   <td ndsTableCell>
                     <button
                       ndsCheckbox
-                      [attr.aria-label]="'Selecionar fatura ' + fatura.id"
-                      [checked]="selecionadas().has(fatura.id)"
-                      (checkedChange)="alternar(fatura.id, $event)"
+                      [attr.aria-label]="'Selecionar fatura ' + invoice.id"
+                      [checked]="selecionadas().has(invoice.id)"
+                      (checkedChange)="alternar(invoice.id, $event)"
                     ></button>
                   </td>
-                  <td ndsTableCell class="nds-font-medium">{{ fatura.id }}</td>
-                  <td ndsTableCell>{{ fatura.status }}</td>
-                  <td ndsTableCell class="nds-text-right">{{ fatura.valor }}</td>
+                  <td ndsTableCell class="nds-font-medium">{{ invoice.id }}</td>
+                  <td ndsTableCell>{{ invoice.status }}</td>
+                  <td ndsTableCell class="nds-text-right">{{ invoice.valor }}</td>
                 </tr>
               }
             </tbody>
@@ -338,14 +338,14 @@ export const RowSelection: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-    const selecionadas = () => linhas().filter((l) => l.getAttribute('data-state') === 'selected');
+    const lines = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+    const selecionadas = () => lines().filter((l) => l.getAttribute('data-state') === 'selected');
 
     await step('Cada checkbox diz qual fatura marca', async () => {
       // "Selecionar" sozinho, repetido cinco vezes, é indistinguível na lista de
       // controles do leitor de tela.
-      for (const fatura of INVOICES) {
-        await expect(canvas.getByLabelText(`Selecionar fatura ${fatura.id}`)).toBeTruthy();
+      for (const invoice of INVOICES) {
+        await expect(canvas.getByLabelText(`Selecionar fatura ${invoice.id}`)).toBeTruthy();
       }
       await expect(selecionadas().length).toBe(0);
     });
@@ -353,7 +353,7 @@ export const RowSelection: Story = {
     await step('Marcar uma linha destaca só ela, e deixa o mestre misto', async () => {
       await userEvent.click(canvas.getByLabelText(`Selecionar fatura ${INVOICES[0].id}`));
       await expect(selecionadas().length).toBe(1);
-      await expect(linhas()[0]).toHaveAttribute('data-state', 'selected');
+      await expect(lines()[0]).toHaveAttribute('data-state', 'selected');
       const mestre = canvas.getByLabelText('Selecionar todas as faturas');
       await expect(mestre).toHaveAttribute('aria-checked', 'mixed');
     });

@@ -42,17 +42,17 @@ function importIcons(...names: string[]): string {
 }
 
 /** Bloco `<script setup>`: os componentes da composição, os ícones e o estado. */
-function script(opcoes: { kbd?: boolean; icons?: string[]; estado?: string } = {}): string {
+function script(opcoes: { kbd?: boolean; icons?: string[]; state?: string } = {}): string {
   const imports = [
     IMPORT_BUTTON,
     opcoes.kbd ? IMPORT_KBD : '',
     IMPORT_TOOLTIP,
     opcoes.icons?.length ? importIcons(...opcoes.icons) : '',
-    opcoes.estado ? `import { ref } from 'vue'` : '',
+    opcoes.state ? `import { ref } from 'vue'` : '',
   ]
     .filter(Boolean)
     .join('\n');
-  return opcoes.estado ? `${imports}\n\n${opcoes.estado}` : imports;
+  return opcoes.state ? `${imports}\n\n${opcoes.state}` : imports;
 }
 
 /**
@@ -266,7 +266,7 @@ export function tooltipPersistenteSource(): string {
  */
 export function tooltipControlledSource(): string {
   return vueSnippet(
-    script({ icons: ['Save'], estado: 'const aberto = ref(false)' }),
+    script({ icons: ['Save'], state: 'const aberto = ref(false)' }),
     withProvider(
       blockWith(
         'div',

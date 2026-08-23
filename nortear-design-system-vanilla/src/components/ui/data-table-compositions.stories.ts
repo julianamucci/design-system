@@ -94,7 +94,7 @@ export const WithColumnFilters: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const linhas = () => datumLines(canvasElement);
+    const lines = () => datumLines(canvasElement);
 
     await step('A linha de filtros existe e cada célula dela tem nome', async () => {
       // Sem texto no `th`, a célula chega ao axe como cabeçalho vazio: o VALOR
@@ -113,7 +113,7 @@ export const WithColumnFilters: Story = {
     await step('O select por coluna recorta pelo valor exato', async () => {
       const select = canvas.getByRole('combobox', { name: 'Filtrar Status' });
       await userEvent.selectOptions(select, 'Cancelado');
-      await waitFor(() => expect(linhas().length).toBe(2));
+      await waitFor(() => expect(lines().length).toBe(2));
     });
 
     await step('O filtro de texto soma ao anterior, não o substitui', async () => {
@@ -124,16 +124,16 @@ export const WithColumnFilters: Story = {
       await userEvent.click(cliente);
       await userEvent.type(cliente, 'Carla');
       await waitFor(() => expect((cliente as HTMLInputElement).value).toBe('Carla'));
-      await waitFor(() => expect(linhas().length).toBe(1));
-      await expect(linhas()[0]).toHaveTextContent('INV-003');
+      await waitFor(() => expect(lines().length).toBe(1));
+      await expect(lines()[0]).toHaveTextContent('INV-003');
 
       // O TERCEIRO filtro entra sem apagar os dois anteriores: "008" sozinho
       // devolveria uma linha. Zero é a prova de que os três se somam — a fatura
       // 008 é Cancelada, mas não é da Carla.
-      const fatura = canvas.getByRole('textbox', { name: 'Filtrar Fatura' });
-      await userEvent.click(fatura);
-      await userEvent.type(fatura, '008');
-      await waitFor(() => expect(linhas().length).toBe(0));
+      const invoice = canvas.getByRole('textbox', { name: 'Filtrar Fatura' });
+      await userEvent.click(invoice);
+      await userEvent.type(invoice, '008');
+      await waitFor(() => expect(lines().length).toBe(0));
       // visual.item2 — a story termina com os dois filtros preenchidos e o
       // estado vazio na tela, que é o que a captura do Chromatic guarda.
       await expect(canvasElement.querySelector('.nds-data-table-empty')).toHaveTextContent(

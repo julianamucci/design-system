@@ -16,7 +16,7 @@ import {
 } from './calendar.source';
 
 /** Toda transform é chamável sem argumento — é o que a guarda transversal exige. */
-const TODOS: Array<() => string> = [
+const ALL: Array<() => string> = [
   calendarSource,
   calendarMultiplasSource,
   calendarIntervaloSource,
@@ -197,7 +197,7 @@ describe('composição com popover', () => {
 
 describe('regras que valem para todo snippet de calendário', () => {
   it('nenhum ensina o andaime do arquivo de story', () => {
-    for (const fn of TODOS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).not.toContain('fixtures');
       expect(saida).not.toContain('{...args}');
@@ -210,7 +210,7 @@ describe('regras que valem para todo snippet de calendário', () => {
   });
 
   it('todo snippet com seleção é controlado de ponta a ponta', () => {
-    const controlados = TODOS.filter((fn) => fn !== calendarHojeSource);
+    const controlados = ALL.filter((fn) => fn !== calendarHojeSource);
     for (const fn of controlados) {
       const saida = fn();
       expect(saida).toContain('import { useState } from "react";');

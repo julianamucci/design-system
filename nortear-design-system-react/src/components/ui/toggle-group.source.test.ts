@@ -12,7 +12,7 @@ import {
   toggleGroupVerticalSource,
 } from './toggle-group.source';
 
-const TODAS = [
+const ALL = [
   toggleGroupSource,
   toggleGroupExclusivoSource,
   toggleGroupCombinadoSource,
@@ -90,13 +90,13 @@ describe('toggleGroupSource', () => {
 
 describe('nome acessível', () => {
   it('o grupo sempre tem o seu — três ícones lado a lado não dizem de que categoria são', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       expect(fn(), `${fn.name}`).toMatch(/<ToggleGroup[\s\S]*?aria-label="/);
     }
   });
 
   it('e cada item só-ícone também, com o ícone fora da árvore de acessibilidade', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).toMatch(/<ToggleGroupItem[^>]*aria-label="/);
       expect(saida).toContain('aria-hidden="true"');
@@ -169,7 +169,7 @@ describe('contorno com respiro', () => {
 
 describe('nenhum snippet ensina o andaime da story', () => {
   it('não há fixture, invólucro nem largura de captura', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida, `${fn.name}`).not.toContain('fixtures');
       expect(saida).not.toContain('definir');

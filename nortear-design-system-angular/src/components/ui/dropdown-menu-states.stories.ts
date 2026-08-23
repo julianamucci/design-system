@@ -126,14 +126,14 @@ export const Open: Story = {
  */
 export const Controlled: Story = {
   render: () => ({
-    props: { aberto: false },
+    props: { isOpen: false },
     template: `
       <div class="nds-cluster" data-gap="sm">
-        <button ndsButton variant="secondary" (click)="aberto = !aberto">
-          {{ aberto ? 'Fechar pelo estado' : 'Abrir pelo estado' }}
+        <button ndsButton variant="secondary" (click)="isOpen = !isOpen">
+          {{ isOpen ? 'Fechar pelo estado' : 'Abrir pelo estado' }}
         </button>
 
-        <nds-dropdown-menu [open]="aberto" [modal]="false" (openChange)="aberto = $event">
+        <nds-dropdown-menu [open]="isOpen" [modal]="false" (openChange)="isOpen = $event">
           <button ndsDropdownMenuTrigger ndsButton variant="outline">Ações</button>
 
           <ng-template ndsDropdownMenuContent>

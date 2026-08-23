@@ -322,7 +322,7 @@ export const DragGesture: Story = {
     const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
     const previous = () =>
       canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
-    const proximo = () =>
+    const next = () =>
       canvas.getByRole('button', { name: 'Próximo item' }) as HTMLButtonElement;
     const slides = () => canvas.getAllByRole('group') as HTMLElement[];
 
@@ -364,7 +364,7 @@ export const DragGesture: Story = {
       await waitFor(async () => {
         await expect(
           Math.abs(viewport.scrollLeft - alvo),
-          `${onde}: posição=${viewport.scrollLeft} alvo=${alvo} setas=[ant:${desligada(previous())} prox:${desligada(proximo())}]`,
+          `${onde}: posição=${viewport.scrollLeft} alvo=${alvo} setas=[ant:${desligada(previous())} prox:${desligada(next())}]`,
         ).toBeLessThan(2);
       }, { timeout: 4000 });
     };
@@ -391,7 +391,7 @@ export const DragGesture: Story = {
       posZero = await settle();
       await expect(previous()).toBeDisabled();
 
-      await userEvent.click(proximo());
+      await userEvent.click(next());
       posUm = await settle();
       await expect(posUm).toBeGreaterThan(posZero);
 

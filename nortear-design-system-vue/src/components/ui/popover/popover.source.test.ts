@@ -206,7 +206,7 @@ describe('transforms das stories de composição', () => {
 });
 
 describe('o snippet ensina o design system, não o andaime da story', () => {
-  const todas = [
+  const all = [
     popoverSource,
     popoverContentLivreSource,
     popoverWithTitleSource,
@@ -223,7 +223,7 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
   ];
 
   it('nenhuma traz a moldura de contenção, o alvo inerte nem a sonda de markup', () => {
-    for (const fn of todas) {
+    for (const fn of all) {
       const saida = fn();
       expect(saida).not.toContain('contain: layout');
       expect(saida).not.toContain('min-height');
@@ -234,14 +234,14 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
   });
 
   it('todo gatilho adota o botão do design system', () => {
-    for (const fn of todas) {
+    for (const fn of all) {
       expect(fn()).toContain('<PopoverTrigger as-child>');
       expect(fn()).toContain(`import { Button } from '@/components/ui/button'`);
     }
   });
 
   it('todas importam do design system, nunca de um caminho interno', () => {
-    for (const fn of todas) {
+    for (const fn of all) {
       expect(fn()).toContain(`from '@/components/ui/popover'`);
     }
   });

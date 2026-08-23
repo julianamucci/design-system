@@ -15,7 +15,7 @@ import {
   sliderVolumeSource,
 } from './slider.source';
 
-const TODAS = [
+const ALL = [
   sliderPlaygroundSource,
   sliderUnicoSource,
   sliderRangeSource,
@@ -103,7 +103,7 @@ const volume = ref([50])
 
 describe('o que vale para todas as transforms do componente', () => {
   it('o valor é sempre um array, e sempre por v-model', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).toMatch(/const \w+ = ref\(\[/);
       expect(saida).toContain('<Slider v-model="');
@@ -111,7 +111,7 @@ describe('o que vale para todas as transforms do componente', () => {
   });
 
   it('todo controle leva nome acessível — a alça sozinha não tem texto', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       for (const tag of fn().match(/<Slider [^>]*\/>/g) ?? []) {
         expect(tag).toMatch(/aria-label="[^"]+"/);
       }

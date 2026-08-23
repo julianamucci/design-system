@@ -65,19 +65,19 @@ export function switchSnippet(o: SwitchSnippetOptions = {}): string {
   const rotulo = o.label === undefined ? LABEL_DEFAULT : o.label;
   const comRotulo = Boolean(rotulo);
   const id = o.id ?? ID_DEFAULT;
-  const linhas = controlLines(o, id, comRotulo);
+  const lines = controlLines(o, id, comRotulo);
 
   if (!comRotulo) {
     return snippet(
       importing('switch', 'createSwitch'),
-      `const controle = ${chamada('createSwitch', linhas)};`,
+      `const controle = ${chamada('createSwitch', lines)};`,
       montar('controle'),
     );
   }
 
   return snippet(
     [importing('switch', 'createSwitch'), importing('label', 'createLabel')].join('\n'),
-    `const controle = ${chamada('createSwitch', linhas)};
+    `const controle = ${chamada('createSwitch', lines)};
 const rotulo = createLabel({ htmlFor: ${texto(id)}, text: ${texto(rotulo)} });`,
     `const linha = document.createElement('div');
 linha.className = 'nds-cluster';

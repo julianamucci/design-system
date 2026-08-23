@@ -62,10 +62,10 @@ export const ProfileCard: Story = {
 
     wrap.appendChild(createSkeleton({ shape: 'avatar' }));
 
-    const linhas = bloco('nds-stack nds-flex-1', 'sm');
-    linhas.appendChild(createSkeleton({ shape: 'text', width: '2-3' }));
-    linhas.appendChild(createSkeleton({ shape: 'text', width: '1-2' }));
-    wrap.appendChild(linhas);
+    const lines = bloco('nds-stack nds-flex-1', 'sm');
+    lines.appendChild(createSkeleton({ shape: 'text', width: '2-3' }));
+    lines.appendChild(createSkeleton({ shape: 'text', width: '1-2' }));
+    wrap.appendChild(lines);
 
     return wrap;
   },
@@ -199,7 +199,7 @@ export const Paragraph: Story = {
       source: {
         transform: skeletonSourceWith({
           regionLabel: 'Carregando parágrafo',
-          linhas: [
+          lines: [
             { shape: 'text', width: 'full' },
             { shape: 'text', width: '3-4' },
             { shape: 'text', width: '1-2' },
@@ -221,7 +221,7 @@ export const Paragraph: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
-    const linhas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
+    const lines = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
     await step('A região tem estado e nome', async () => {
       await expect(regiao).toHaveAttribute('aria-busy', 'true');
@@ -229,12 +229,12 @@ export const Paragraph: Story = {
     });
 
     await step('Três linhas, ocultas ao leitor de tela', async () => {
-      await expect(linhas).toHaveLength(3);
-      for (const l of linhas) await expect(l).toHaveAttribute('aria-hidden', 'true');
+      await expect(lines).toHaveLength(3);
+      for (const l of lines) await expect(l).toHaveAttribute('aria-hidden', 'true');
     });
 
     await step('As larguras decrescem — é o que faz o bloco parecer parágrafo', async () => {
-      const larguras = linhas.map((l) => l.getBoundingClientRect().width);
+      const larguras = lines.map((l) => l.getBoundingClientRect().width);
       await expect(larguras[0]).toBeGreaterThan(larguras[1]);
       await expect(larguras[1]).toBeGreaterThan(larguras[2]);
     });

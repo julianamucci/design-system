@@ -207,13 +207,13 @@ export const Disabled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const abas = canvas.getAllByRole('tab') as HTMLElement[];
-    const [primeira, desabilitada, last] = abas;
+    const [first, desabilitada, last] = abas;
 
     // Precondição de CADA passo, e não herança do anterior: o painel Interactions
     // reexecuta a play no mesmo DOM.
     const startVoltar = async () => {
-      if (primeira.getAttribute('aria-selected') !== 'true') await userEvent.click(primeira);
-      await waitFor(() => expect(primeira).toHaveAttribute('aria-selected', 'true'));
+      if (first.getAttribute('aria-selected') !== 'true') await userEvent.click(first);
+      await waitFor(() => expect(first).toHaveAttribute('aria-selected', 'true'));
     };
 
     await step('Anuncia-se desabilitada sem sair do alcance do foco', async () => {
@@ -231,13 +231,13 @@ export const Disabled: Story = {
 
     await step('A seta ALCANÇA a aba desabilitada, e não a ativa', async () => {
       await startVoltar();
-      primeira.focus();
+      first.focus();
       await userEvent.keyboard('{ArrowRight}');
       await waitFor(() => expect(desabilitada).toHaveFocus());
       // Alcançar não é ativar: com ativação automática, focar uma aba habilitada
       // já trocaria o painel. Nesta, o painel tem de continuar o mesmo.
       await expect(desabilitada).toHaveAttribute('aria-selected', 'false');
-      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', primeira.id);
+      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', first.id);
     });
 
     await step('Enter e Espaço com ela em foco não trocam o painel', async () => {
@@ -246,7 +246,7 @@ export const Disabled: Story = {
       await userEvent.keyboard('{Enter}');
       await userEvent.keyboard(' ');
       await expect(desabilitada).toHaveAttribute('aria-selected', 'false');
-      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', primeira.id);
+      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', first.id);
     });
 
     await step('O clique também não', async () => {
@@ -255,7 +255,7 @@ export const Disabled: Story = {
       // userEvent RECUSA o clique e o teste passaria sem exercitar nada.
       await userEvent.click(desabilitada, { pointerEventsCheck: 0 });
       await expect(desabilitada).toHaveAttribute('aria-selected', 'false');
-      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', primeira.id);
+      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', first.id);
     });
 
     await step('A seta segue adiante a partir dela', async () => {

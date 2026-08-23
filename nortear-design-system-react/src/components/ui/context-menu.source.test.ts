@@ -9,7 +9,7 @@ import {
   contextMenuSource,
 } from './context-menu.source';
 
-const TODAS = [
+const ALL = [
   contextMenuSource,
   contextMenuWithMarkupSource,
   contextMenuWithChoiceUnicaSource,
@@ -44,7 +44,7 @@ describe('contextMenuSource', () => {
   it('o quadro nasce do padding, nunca de altura fixa', () => {
     // WCAG 1.4.4: com `height` cravado o quadro não cresce quando a pessoa
     // aumenta a fonte do navegador.
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       expect(fn()).toContain('nds-p-8');
       expect(fn()).not.toMatch(/\bheight\b/);
     }

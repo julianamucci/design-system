@@ -22,7 +22,7 @@ export const END_SCRIPT = '</' + 'script>';
 function indentar(texto: string): string {
   return texto
     .split('\n')
-    .map((linha) => (linha.trim() ? `  ${linha}` : linha))
+    .map((line) => (line.trim() ? `  ${line}` : line))
     .join('\n');
 }
 

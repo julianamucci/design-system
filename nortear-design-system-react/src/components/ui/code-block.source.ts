@@ -34,18 +34,18 @@ render(items, total);`;
  * escapados — sem isso o snippet publicado abre uma interpolação que quem copia
  * não escreveu.
  */
-function literalDeTemplate(codigo: string): string {
-  return codigo
+function literalDeTemplate(code: string): string {
+  return code
     .replace(/\\/g, '\\\\')
     .replace(/`/g, '\\`')
     .replace(/\$\{/g, '\\${');
 }
 
 /** Cabeçalho: import mais a declaração do trecho que a prop `code` recebe. */
-function cabecalhoCom(codigo: string): string {
+function cabecalhoCom(code: string): string {
   return `${IMPORT}
 
-const source = \`${literalDeTemplate(codigo)}\`;`;
+const source = \`${literalDeTemplate(code)}\`;`;
 }
 
 /**

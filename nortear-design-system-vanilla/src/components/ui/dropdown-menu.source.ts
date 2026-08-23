@@ -71,7 +71,7 @@ function item(i: DropdownMenuSnippetItem): string {
     ['indeterminate', i.indeterminate ? 'true' : undefined],
     ['disabled', i.disabled ? 'true' : undefined],
   ])
-    .map((linha) => linha.replace(/,$/, ''))
+    .map((line) => line.replace(/,$/, ''))
     .join(', ');
   return `{ ${pairs} }`;
 }
@@ -87,7 +87,7 @@ export function dropdownMenuSnippet(o: DropdownMenuSnippetOptions = {}): string 
   const itens = o.items ?? ITEMS_DEFAULT;
   const gatilho = `createButton({ variant: 'outline', label: ${texto(o.triggerLabel ?? 'Abrir menu')} })`;
 
-  const linhas = opcoes([
+  const lines = opcoes([
     ['trigger', gatilho],
     ['items', `[\n${itens.map((i) => `    ${item(i)},`).join('\n')}\n  ]`],
     ['side', o.side && o.side !== 'bottom' ? texto(o.side) : undefined],
@@ -103,7 +103,7 @@ export function dropdownMenuSnippet(o: DropdownMenuSnippetOptions = {}): string 
 
   return snippet(
     [importing('dropdown-menu', 'createDropdownMenu'), importing('button', 'createButton')].join('\n'),
-    `const menu = ${chamada('createDropdownMenu', linhas)};`,
+    `const menu = ${chamada('createDropdownMenu', lines)};`,
     montar('menu'),
   );
 }

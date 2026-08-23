@@ -12,7 +12,7 @@ import {
   drawerTopoSource,
 } from './drawer.source';
 
-const TODAS = [
+const ALL = [
   drawerSource,
   drawerTopoSource,
   drawerEsquerdaSource,
@@ -37,7 +37,7 @@ describe('drawerSource', () => {
   });
 
   it('título e descrição estão sempre lá — é deles que sai o nome acessível', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).toContain('<DrawerTitle>');
       expect(saida).toContain('<DrawerDescription>');
@@ -146,7 +146,7 @@ describe('composições', () => {
 
 describe('guardas do painel', () => {
   it('nenhum snippet carrega o andaime do canvas da story', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).not.toContain('fixtures');
       expect(saida).not.toContain('{...args}');

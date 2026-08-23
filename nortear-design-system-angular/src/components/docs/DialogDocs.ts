@@ -549,8 +549,8 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
               <p ndsDialogDescription>{{ t('demonstration.labels.description') }}</p>
             </div>
             <div ndsDialogBody class="nds-stack" data-spacing="sm">
-              @for (linha of conteudoLongo(); track linha) {
-                <p>{{ linha }}</p>
+              @for (line of conteudoLongo(); track line) {
+                <p>{{ line }}</p>
               }
             </div>
             <div ndsDialogFooter>
@@ -1225,17 +1225,17 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
     // ainda descreve `z-index 50` e `--radius`, medidas da era Tailwind — a
     // folha usa `--z-modal-backdrop` / `--z-modal` e o raio do Card.
     return [
-      { token: '--popover',            classe: 'nds-dialog-content',  k: 'popover'           },
-      { token: '--popover-foreground', classe: 'nds-dialog-content',  k: 'popoverForeground' },
-      { token: '--foreground',         classe: 'nds-dialog-content',  k: 'foreground'        },
-      { token: '--muted',              classe: 'nds-dialog-footer',   k: 'muted'             },
-      { token: '--border',             classe: 'nds-dialog-footer',   k: 'border'            },
-      { token: '--radius-card',        classe: 'nds-dialog-content',  k: 'radius'            },
-      { token: '--z-modal',            classe: 'nds-dialog-overlay',  k: 'zIndex'            },
-      { token: '--duration-base',      classe: 'nds-dialog-content',  k: 'duration'          },
-    ].map(({ token, classe, k }) => ({
+      { token: '--popover',            className: 'nds-dialog-content',  k: 'popover'           },
+      { token: '--popover-foreground', className: 'nds-dialog-content',  k: 'popoverForeground' },
+      { token: '--foreground',         className: 'nds-dialog-content',  k: 'foreground'        },
+      { token: '--muted',              className: 'nds-dialog-footer',   k: 'muted'             },
+      { token: '--border',             className: 'nds-dialog-footer',   k: 'border'            },
+      { token: '--radius-card',        className: 'nds-dialog-content',  k: 'radius'            },
+      { token: '--z-modal',            className: 'nds-dialog-overlay',  k: 'zIndex'            },
+      { token: '--duration-base',      className: 'nds-dialog-content',  k: 'duration'          },
+    ].map(({ token, className, k }) => ({
       token,
-      value: classe,
+      value: className,
       description: toPlainText(t(`tokens.table.${k}`)),
     }));
   });
@@ -1421,8 +1421,8 @@ function priorityLabel(raw: string): string {
  * O conteúdo guarda os exemplos de UX writing assim, e o "don't" da página
  * precisa de UM deles. Derivar mantém a página trilíngue sem literal aqui.
  */
-function firstExemplo(bruto: string): string {
-  const limpo = toPlainText(bruto);
+function firstExemplo(raw: string): string {
+  const limpo = toPlainText(raw);
   const entreAspas = limpo.match(/"([^"]+)"/);
   return entreAspas ? entreAspas[1] : limpo;
 }

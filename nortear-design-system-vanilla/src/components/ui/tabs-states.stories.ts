@@ -155,7 +155,7 @@ export const Disabled: Story = {
   render: () => grupo('overview', withDisabled()),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const primeira = canvas.getByRole('tab', { name: 'Visão geral' });
+    const first = canvas.getByRole('tab', { name: 'Visão geral' });
     const bloqueada = canvas.getByRole('tab', { name: 'Propriedades' });
     const last = canvas.getByRole('tab', { name: 'Exemplos' });
 
@@ -171,32 +171,32 @@ export const Disabled: Story = {
     });
 
     await step('A seta ALCANÇA a aba desabilitada, e não a ativa', async () => {
-      await ativar(primeira);
-      primeira.focus();
+      await ativar(first);
+      first.focus();
       await userEvent.keyboard('{ArrowRight}');
       await waitFor(() => expect(bloqueada).toHaveFocus());
       // Alcançar não é ativar: com ativação automática, focar uma aba habilitada
       // já trocaria o painel. Nesta, a seleção tem de continuar onde estava.
       await expect(bloqueada).toHaveAttribute('aria-selected', 'false');
-      await expect(primeira).toHaveAttribute('aria-selected', 'true');
+      await expect(first).toHaveAttribute('aria-selected', 'true');
     });
 
     await step('Enter e Espaço com ela em foco não mudam a seleção', async () => {
-      await ativar(primeira);
+      await ativar(first);
       bloqueada.focus();
       await userEvent.keyboard('{Enter}');
       await userEvent.keyboard(' ');
       await expect(bloqueada).toHaveAttribute('aria-selected', 'false');
-      await expect(primeira).toHaveAttribute('aria-selected', 'true');
+      await expect(first).toHaveAttribute('aria-selected', 'true');
     });
 
     await step('Clicar nela também não', async () => {
-      await ativar(primeira);
+      await ativar(first);
       // `pointerEventsCheck: 0` é obrigatório: com pointer-events none o
       // userEvent RECUSA o clique, e o teste passaria sem exercitar nada.
       await userEvent.click(bloqueada, { pointerEventsCheck: 0 });
       await expect(bloqueada).toHaveAttribute('aria-selected', 'false');
-      await expect(primeira).toHaveAttribute('aria-selected', 'true');
+      await expect(first).toHaveAttribute('aria-selected', 'true');
     });
 
     await step('A seta segue adiante a partir dela', async () => {
@@ -207,7 +207,7 @@ export const Disabled: Story = {
       await waitFor(() => expect(last).toHaveAttribute('aria-selected', 'true'));
       // Home devolve o conjunto ao estado de montagem para o próximo replay.
       await userEvent.keyboard('{Home}');
-      await waitFor(() => expect(primeira).toHaveAttribute('aria-selected', 'true'));
+      await waitFor(() => expect(first).toHaveAttribute('aria-selected', 'true'));
     });
   },
 };

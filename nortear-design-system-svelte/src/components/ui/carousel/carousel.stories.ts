@@ -67,13 +67,13 @@ export const Playground: Story = {
     // nos dois eixos sem depender do eixo escolhido no control.
     const previous = () =>
       canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
-    const proximo = () =>
+    const next = () =>
       canvas.getByRole('button', { name: 'Próximo item' }) as HTMLButtonElement;
 
     // Portão de montagem: `canScrollNext` nasce falso e só vira verdadeiro
     // quando o Embla inicializa e o primeiro `select` roda. Medir antes disso
     // leria um carrossel que ainda não existe.
-    await waitFor(() => expect(proximo()).toBeEnabled(), { timeout: 4000 });
+    await waitFor(() => expect(next()).toBeEnabled(), { timeout: 4000 });
 
     /**
      * Índice do slide que ocupa a maior parte do viewport.
@@ -129,12 +129,12 @@ export const Playground: Story = {
       // `aria-disabled` acompanha o `disabled` nativo: o leitor de tela anuncia
       // o primeiro, o segundo é o que tira o botão da ordem de foco.
       await expect(previous()).toHaveAttribute('aria-disabled', 'true');
-      await expect(proximo()).toBeEnabled();
-      await expect(proximo()).not.toHaveAttribute('aria-disabled', 'true');
+      await expect(next()).toBeEnabled();
+      await expect(next()).not.toHaveAttribute('aria-disabled', 'true');
     });
 
     await step('Clicar em avançar leva ao segundo slide e acorda a seta de voltar', async () => {
-      await userEvent.click(proximo());
+      await userEvent.click(next());
       await emSlide(1);
       await expect(previous()).toBeEnabled();
     });
@@ -143,8 +143,8 @@ export const Playground: Story = {
       // É o caminho que um carrossel só-arrasto não tem: a WCAG 2.1.1 exige
       // equivalente de teclado para toda navegação. O `keydown` mora nos botões
       // de navegação, então é de lá que a tecla parte.
-      proximo().focus();
-      await expect(proximo()).toHaveFocus();
+      next().focus();
+      await expect(next()).toHaveFocus();
       await userEvent.keyboard(vertical ? '{ArrowDown}' : '{ArrowRight}');
       await emSlide(2);
     });

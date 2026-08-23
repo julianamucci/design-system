@@ -140,7 +140,7 @@ export function measureAlertDialog(doc: Document) {
 /** Instantâneo curto para os passos de comportamento (fora, Escape, fechar). */
 export function dialogoState(doc: Document) {
   return {
-    aberto: panelOpen(doc) !== null,
+    isOpen: panelOpen(doc) !== null,
     focus: describeFocus(doc),
   };
 }

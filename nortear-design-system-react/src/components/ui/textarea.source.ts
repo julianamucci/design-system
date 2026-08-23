@@ -62,7 +62,7 @@ ${corpo}
  * "480/500" lido em voz alta não diz o que é — e sem a região viva quem não vê
  * a tela só descobre o limite quando o campo para de aceitar texto.
  */
-function contador(dica: string, limit: number): string {
+function counter(dica: string, limit: number): string {
   return `  <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
     <span>${dica}</span>
     <span
@@ -130,7 +130,7 @@ export const textareaSource: SourceTransform<TextareaArgs> = (_gerado, ctx) => {
         'onChange={(e) => setValor(e.target.value)}',
         ...comuns,
       ])}
-${contador('Descreva o produto com clareza.', limit)}`,
+${counter('Descreva o produto com clareza.', limit)}`,
     ),
   );
 };
@@ -173,7 +173,7 @@ export function textareaWithCounterSource(): string {
         'maxLength={500}',
         CLASSES,
       ])}
-${contador('Descreva com clareza.', 500)}`,
+${counter('Descreva com clareza.', 500)}`,
     ),
   );
 }
@@ -301,7 +301,7 @@ export function textareaCounterAccessibleSource(): string {
         'maxLength={280}',
         CLASSES,
       ])}
-${contador('Limite: 280 caracteres.', 280)}`,
+${counter('Limite: 280 caracteres.', 280)}`,
     ),
   );
 }
@@ -334,9 +334,9 @@ ${campo(
   ],
   '    ',
 )}
-${contador('Aparece no seu perfil público.', 500)
+${counter('Aparece no seu perfil público.', 500)
   .split('\n')
-  .map((linha) => (linha.trim() ? `  ${linha}` : linha))
+  .map((line) => (line.trim() ? `  ${line}` : line))
   .join('\n')}
   </div>
   <Button type="submit">Salvar</Button>

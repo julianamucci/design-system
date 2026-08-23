@@ -158,11 +158,11 @@ export const Loading: Story = {
     await step('O carregamento é anunciado, não só desenhado', async () => {
       // Um bloco cinza pulsando não diz nada para quem não o vê. `role="status"`
       // porque `aria-label` num elemento sem papel é atributo proibido.
-      const primeiro = canvasElement.querySelector<HTMLElement>(
+      const first = canvasElement.querySelector<HTMLElement>(
         '[data-slot="sidebar-menu-skeleton"]',
       )!;
-      await expect(primeiro.getAttribute('role')).toBe('status');
-      await expect(primeiro.getAttribute('aria-label')).toBe('Carregando navegação');
+      await expect(first.getAttribute('role')).toBe('status');
+      await expect(first.getAttribute('aria-label')).toBe('Carregando navegação');
     });
 
     await step('showIcon monta o quadrado do ícone à esquerda do texto', async () => {

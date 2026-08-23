@@ -68,7 +68,7 @@ export type ToggleGroupValue = string | string[];
         disabled: grupo.disabled,
         orientation: grupo.orientation,
         isValueInitialized: grupo.valorInicializado,
-        toggle: (valor: string, proximo: boolean) => grupo.alternar(valor, proximo),
+        toggle: (valor: string, next: boolean) => grupo.alternar(valor, next),
       };
     }),
   ],
@@ -136,10 +136,10 @@ export class NdsToggleGroup {
    * documentada; a conversão mora aqui, num lugar só.
    */
   readonly valoresSelecionados = computed<string[]>(() => {
-    const bruto = this.value() ?? this.defaultValue();
-    if (bruto === undefined) return [];
-    if (Array.isArray(bruto)) return [...bruto];
-    return bruto === '' ? [] : [bruto];
+    const raw = this.value() ?? this.defaultValue();
+    if (raw === undefined) return [];
+    if (Array.isArray(raw)) return [...raw];
+    return raw === '' ? [] : [raw];
   });
 
   /**
@@ -199,13 +199,13 @@ export class NdsToggleGroup {
    * pressionado é o `RdxToggle` (paridade com o Base UI); aqui só se mapeia
    * esse booleano para a seleção, respeitando a forma do modo.
    */
-  alternar(valor: string, proximo: boolean): void {
+  alternar(valor: string, next: boolean): void {
     if (this.disabled()) return;
 
     const atual = this.valoresSelecionados();
 
     if (this.type() === 'multiple') {
-      const lista = proximo
+      const lista = next
         ? atual.includes(valor)
           ? atual
           : [...atual, valor]
@@ -214,7 +214,7 @@ export class NdsToggleGroup {
       return;
     }
 
-    this.value.set(proximo ? valor : '');
+    this.value.set(next ? valor : '');
   }
 }
 

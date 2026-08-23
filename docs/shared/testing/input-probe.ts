@@ -37,7 +37,7 @@ import {
   noTransicao,
 } from './cor';
 
-export type { Contraste } from './cor';
+export type { Contrast } from './cor';
 export { darkLigarTheme, noTransicao };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -306,7 +306,7 @@ export function measureInput(raiz: HTMLElement) {
       displayCss: cs.display,
       boxSizing: cs.boxSizing,
     },
-    estado: {
+    state: {
       background: cs.backgroundColor,
       backgroundEffective: background,
       cor: cs.color,
@@ -363,7 +363,7 @@ export function darkMeasure(raiz: HTMLElement, cenario: string) {
     return noTransicao(campo, () => {
       const measurement = measureInput(alvo);
       if (!measurement.presente) return null;
-      return { estado: measurement.estado, contraste: measurement.contraste };
+      return { state: measurement.state, contraste: measurement.contraste };
     });
   } finally {
     desfazer();

@@ -134,8 +134,8 @@ export const Drag: Story = {
   args: { onValueChange: fn(), onValueCommitted: fn() },
   play: async ({ canvasElement, step, args }) => {
     const control = canvasElement.querySelector<HTMLElement>('[data-slot="slider-control"]')!;
-    const trilho = control.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
-    const caixa = trilho.getBoundingClientRect();
+    const track = control.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
+    const caixa = track.getBoundingClientRect();
     const y = caixa.top + caixa.height / 2;
     const spyChange = args.onValueChange as unknown as ReturnType<typeof fn>;
     const spyCommit = args.onValueCommitted as unknown as ReturnType<typeof fn>;

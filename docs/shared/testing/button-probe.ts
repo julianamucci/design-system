@@ -318,13 +318,13 @@ export function themeMeasureVariants(raiz: HTMLElement): VariantMeasurement[] {
  * dentro da árvore que carrega o tema.
  */
 export function themeMeasureRing(raiz: HTMLElement) {
-  const regras: [string, string][] = [
+  const rules: [string, string][] = [
     ['foco', '.nds-button:focus-visible'],
     ['foco-destructive', '.nds-button-destructive:focus-visible'],
     ['invalido', '.nds-button[aria-invalid="true"]'],
   ];
 
-  const declaradas = regras.map(([nome, selector]) => [
+  const declaradas = rules.map(([nome, selector]) => [
     nome,
     ruleDeclaration(raiz.ownerDocument, (s) => s.includes(selector), 'box-shadow') ?? '',
   ] as const);
@@ -530,8 +530,8 @@ export function contrastDeTextFailures(raiz: HTMLElement, minimum: number): stri
  */
 export function ringFailures(raiz: HTMLElement, minimum: number): string[] {
   const saida: string[] = [];
-  for (const linha of themeMeasureRing(raiz)) {
-    for (const [nome, valor] of Object.entries(linha)) {
+  for (const line of themeMeasureRing(raiz)) {
+    for (const [nome, valor] of Object.entries(line)) {
       if (nome === 'tema' || nome === 'modo') continue;
       // `tema` e `modo` saíram no `continue` acima, então o que resta é razão
       // ou `null`. A guarda por tipo é o que o `Object.entries` exige — o cast
@@ -539,8 +539,8 @@ export function ringFailures(raiz: HTMLElement, minimum: number): string[] {
       // outro tipo no dia em que a linha crescer.
       const r = typeof valor === 'number' ? valor : null;
       // `null` quer dizer que a REGRA sumiu da folha — achado, não aprovação.
-      if (r === null) saida.push(`${linha.tema}/${linha.modo} · ${nome}: regra ausente na folha`);
-      else if (r < minimum) saida.push(`${linha.tema}/${linha.modo} · ${nome}: ${r}:1 (mínimo ${minimum})`);
+      if (r === null) saida.push(`${line.tema}/${line.modo} · ${nome}: regra ausente na folha`);
+      else if (r < minimum) saida.push(`${line.tema}/${line.modo} · ${nome}: ${r}:1 (mínimo ${minimum})`);
     }
   }
   return saida;

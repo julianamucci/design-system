@@ -87,7 +87,7 @@ export const WithColumnFilters: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const linhas = () => datumLines(canvasElement)
+    const lines = () => datumLines(canvasElement)
 
     await step("A linha de filtros existe e cada célula dela tem nome", async () => {
       // Sem texto no `th`, a célula chega ao axe como cabeçalho vazio: o VALOR
@@ -107,7 +107,7 @@ export const WithColumnFilters: Story = {
     await step("O select por coluna recorta pelo valor exato", async () => {
       const select = canvas.getByRole("combobox", { name: "Filtrar Status" })
       await userEvent.selectOptions(select, "Cancelado")
-      await waitFor(() => expect(linhas().length).toBe(2))
+      await waitFor(() => expect(lines().length).toBe(2))
     })
 
     await step("O filtro de texto soma ao anterior, não o substitui", async () => {
@@ -117,12 +117,12 @@ export const WithColumnFilters: Story = {
       const campo = canvas.getByRole("textbox", { name: "Filtrar Cliente" })
       await userEvent.clear(campo)
       await userEvent.type(campo, "Carla")
-      await waitFor(() => expect(linhas().length).toBe(1))
-      await expect(linhas()[0]).toHaveTextContent("INV-003")
+      await waitFor(() => expect(lines().length).toBe(1))
+      await expect(lines()[0]).toHaveTextContent("INV-003")
 
       await userEvent.clear(campo)
       await userEvent.type(campo, "Ana")
-      await waitFor(() => expect(linhas().length).toBe(0))
+      await waitFor(() => expect(lines().length).toBe(0))
       // visual.item2 — a story termina com os dois filtros preenchidos e o
       // estado vazio na tela, que é o que a captura do Chromatic guarda.
       await expect(canvasElement.querySelector(".nds-data-table-empty")).toHaveTextContent(

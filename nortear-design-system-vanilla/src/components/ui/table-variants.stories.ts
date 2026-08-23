@@ -84,11 +84,11 @@ export const Basic: Story = {
     await step('Uma linha por registro, quatro colunas por linha', async () => {
       // functional.item1 — a conta sai da fixture, nunca de um número escrito à
       // mão: um dado a menos deixaria a asserção verde e a tabela errada.
-      const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-      await expect(linhas.length).toBe(INVOICES.length);
-      for (const [i, linha] of linhas.entries()) {
-        await expect(linha.querySelectorAll('td').length).toBe(4);
-        await expect(linha).toHaveTextContent(INVOICES[i].id);
+      const lines = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+      await expect(lines.length).toBe(INVOICES.length);
+      for (const [i, line] of lines.entries()) {
+        await expect(line.querySelectorAll('td').length).toBe(4);
+        await expect(line).toHaveTextContent(INVOICES[i].id);
       }
       await expect(canvasElement.querySelector('tfoot')).toBeNull();
     });

@@ -13,7 +13,7 @@ import {
   inputOtpEmptySource,
 } from './input-otp.source';
 
-const TODAS = [
+const ALL = [
   inputOtpSource,
   inputOtpQuatroDigitosSource,
   inputOtpWithSeparatorSource,
@@ -37,7 +37,7 @@ describe('inputOtpSource', () => {
   it('nunca imprime a fixture que as stories usam para achar o campo', () => {
     // Era o defeito literal: o painel imprimia `campo(canvasElement)`, que só
     // existe no módulo de fixtures, e o snippet não compilava colado.
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       expect(fn(), `${fn.name} vaza a fixture`).not.toContain('campo(');
       expect(fn()).not.toContain('fixtures');
     }
@@ -74,7 +74,7 @@ describe('inputOtpSource', () => {
 
 describe('o contrato que faz o componente funcionar', () => {
   it('todo snippet é controlado: sem value/onChange as caixas ficam vazias', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida, `${fn.name} sem estado`).toContain('import { useState } from "react";');
       expect(saida).toContain('value={codigo}');
@@ -85,7 +85,7 @@ describe('o contrato que faz o componente funcionar', () => {
   it('todo snippet pede o código de uso único e escolhe o teclado', () => {
     // São os dois atributos que fazem o sistema oferecer o código que acabou de
     // chegar por SMS — o motivo de existir do componente.
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida, `${fn.name} sem autoComplete`).toContain('autoComplete="one-time-code"');
       expect(saida).toMatch(/inputMode="(numeric|text)"/);
@@ -95,7 +95,7 @@ describe('o contrato que faz o componente funcionar', () => {
   it('todo snippet dá nome acessível pelo par htmlFor ↔ id', () => {
     // O `<input>` real fica recortado atrás das caixas: sem rótulo ligado, o
     // campo não tem nome nenhum para quem usa leitor de tela.
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       const alvo = saida.match(/<Label htmlFor="([a-z0-9-]+)"/)?.[1];
       expect(alvo, `${fn.name} sem rótulo`).toBeDefined();
@@ -178,7 +178,7 @@ describe('composições', () => {
   });
 
   it('nenhum snippet crava altura nem valor de design em style', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       expect(fn(), `${fn.name} usa style inline`).not.toContain('style=');
       expect(fn(), `${fn.name} crava altura`).not.toMatch(/\bheight\b/);
     }

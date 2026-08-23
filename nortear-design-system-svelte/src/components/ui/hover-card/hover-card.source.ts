@@ -48,7 +48,7 @@ function indentar(markup: string, level: number): string {
   const espacos = ' '.repeat(level);
   return markup
     .split('\n')
-    .map((linha) => (linha.trim() ? `${espacos}${linha}` : linha))
+    .map((line) => (line.trim() ? `${espacos}${line}` : line))
     .join('\n');
 }
 

@@ -146,7 +146,7 @@ const TRACO_CHECK = 'M20 6 9 17l-5-5';
  * `.nds-select-item svg:not([class*="size-"])`, e uma classe dessas desligaria a
  * regra e devolveria o SVG no tamanho intrínseco.
  */
-function createIcon(tracos: string | string[], classe?: string): SVGElement {
+function createIcon(tracos: string | string[], className?: string): SVGElement {
   const svg = document.createElementNS(SVG_NS, 'svg');
   svg.setAttribute('viewBox', '0 0 24 24');
   svg.setAttribute('fill', 'none');
@@ -155,7 +155,7 @@ function createIcon(tracos: string | string[], classe?: string): SVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  if (classe) svg.setAttribute('class', classe);
+  if (className) svg.setAttribute('class', className);
   for (const traco of Array.isArray(tracos) ? tracos : [tracos]) {
     const path = document.createElementNS(SVG_NS, 'path');
     path.setAttribute('d', traco);
@@ -220,7 +220,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   type Option = { el: HTMLElement; value: string; label: string; disabled: boolean };
 
   let valor = defaultValue ?? '';
-  let aberto = false;
+  let isOpen = false;
   let posicionador: HTMLElement | null = null;
   let conteudo: HTMLElement | null = null;
   let opcoes: Option[] = [];
@@ -526,8 +526,8 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
       destacar(passo > 0 ? lista[0] : lista[lista.length - 1]);
       return;
     }
-    const proximo = Math.min(Math.max(atual + passo, 0), lista.length - 1);
-    destacar(lista[proximo]);
+    const next = Math.min(Math.max(atual + passo, 0), lista.length - 1);
+    destacar(lista[next]);
   }
 
   // ── Busca por digitação ────────────────────────────────────────────────────
@@ -588,7 +588,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
        dispara em botão desabilitado, e o `keydown` sai antes por `gatilho.disabled`
        e só chama isto com a lista fechada. A guarda existe para quem chamar a
        fábrica de outro lugar amanhã. */
-    if (aberto || gatilho.disabled) return;
+    if (isOpen || gatilho.disabled) return;
     // Reabrir enquanto o painel anterior ainda desaparece deixaria DOIS
     // `role="listbox"` no documento, e o segundo com `data-state="closed"` —
     // exatamente o estado que faz a espera do teste travar.
@@ -604,7 +604,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     document.body.appendChild(posicionador);
     posicionar();
 
-    aberto = true;
+    isOpen = true;
     gatilho.setAttribute('aria-expanded', 'true');
     gatilho.setAttribute('aria-controls', listId);
     gatilho.dataset.state = 'open';
@@ -637,11 +637,11 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
        Escape e Tab dentro do ramo de lista aberta, `onClickOutside` só existe
        enquanto ela está aberta, e `destroy()` pergunta antes. A guarda torna
        `fechar()` idempotente para quem chamar de fora amanhã. */
-    if (!aberto) return;
+    if (!isOpen) return;
 
     const painel = conteudo;
     const portal = posicionador;
-    aberto = false;
+    isOpen = false;
     conteudo = null;
     posicionador = null;
     opcoes = [];
@@ -712,7 +712,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
        quem trocar `disabled` por `aria-disabled` amanhã, que continua focável. */
     if (gatilho.disabled) return;
 
-    if (!aberto) {
+    if (!isOpen) {
       if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
         e.preventDefault();
         abrir();
@@ -789,7 +789,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
 
   gatilho.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (aberto) fechar();
+    if (isOpen) fechar();
     else abrir();
   });
 
@@ -803,7 +803,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   }
 
   return tornarDestruivel(raiz, raiz, () => {
-    if (aberto) fechar({ devolverFocus: false });
+    if (isOpen) fechar({ devolverFocus: false });
     // O painel pode estar tocando a saída no instante em que a raiz sai do
     // documento: sem isto ele sobreviveria por cima do conteúdo seguinte, que é
     // exatamente o vazamento que a forma compartilhada de limpeza fechou.

@@ -32,7 +32,7 @@ export const Paginated: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      return { columns: baseColumns, data: invoices, tamanho: PAGE_SIZE, tamanhos: [PAGE_SIZE, 10] };
+      return { columns: baseColumns, data: invoices, tamanho: PAGE_SIZE, sizes: [PAGE_SIZE, 10] };
     },
     // O tamanho inicial precisa existir entre as opções do seletor: fora da
     // lista, o `select` não tem opção marcada e passa a exibir a primeira,
@@ -42,7 +42,7 @@ export const Paginated: Story = {
       :data="data"
       :enable-global-filter="false"
       :page-size="tamanho"
-      :page-size-options="tamanhos"
+      :page-size-options="sizes"
     />`,
   }),
   parameters: {
@@ -52,11 +52,11 @@ export const Paginated: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+    const lines = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
     /** Identificador da primeira linha — o que prova qual fatia está na tela. */
-    const firstInvoice = () => linhas()[0].textContent!.trim();
+    const firstInvoice = () => lines()[0].textContent!.trim();
 
-    const primeira = () => canvas.getByRole('button', { name: 'Primeira página' }) as HTMLButtonElement;
+    const first = () => canvas.getByRole('button', { name: 'Primeira página' }) as HTMLButtonElement;
     const previous = () => canvas.getByRole('button', { name: 'Página anterior' }) as HTMLButtonElement;
     const next = () => canvas.getByRole('button', { name: 'Próxima página' }) as HTMLButtonElement;
     const last = () => canvas.getByRole('button', { name: 'Última página' }) as HTMLButtonElement;
@@ -66,14 +66,14 @@ export const Paginated: Story = {
     // primeira montagem o botão nasce desabilitado — e clicar em botão
     // desabilitado é impossível para quem usa, então nem o teste tenta.
     await step('Voltar ao começo deixa os dois botões de volta apagados', async () => {
-      if (!primeira().disabled) await userEvent.click(primeira());
+      if (!first().disabled) await userEvent.click(first());
       await waitFor(async () => {
         await expect(firstInvoice()).toContain('INV-001');
       });
-      await expect(linhas().length).toBe(PAGE_SIZE);
+      await expect(lines().length).toBe(PAGE_SIZE);
       await expect(canvas.getByText(`Página 1 de ${TOTAL_PAGES}`)).toBeInTheDocument();
 
-      await expect(primeira()).toBeDisabled();
+      await expect(first()).toBeDisabled();
       await expect(previous()).toBeDisabled();
       await expect(next()).toBeEnabled();
       await expect(last()).toBeEnabled();
@@ -88,7 +88,7 @@ export const Paginated: Story = {
         await expect(firstInvoice()).toContain('INV-006');
       });
       await expect(canvas.getByText(`Página 2 de ${TOTAL_PAGES}`)).toBeInTheDocument();
-      await expect(primeira()).toBeEnabled();
+      await expect(first()).toBeEnabled();
       await expect(previous()).toBeEnabled();
       await expect(last()).toBeEnabled();
     });
@@ -100,7 +100,7 @@ export const Paginated: Story = {
       });
       // Doze faturas em páginas de cinco deixam duas na última — número
       // derivado da fixture, nunca escrito à mão.
-      await expect(linhas().length).toBe(invoices.length % PAGE_SIZE);
+      await expect(lines().length).toBe(invoices.length % PAGE_SIZE);
       await expect(
         canvas.getByText(`Página ${TOTAL_PAGES} de ${TOTAL_PAGES}`),
       ).toBeInTheDocument();
@@ -122,7 +122,7 @@ export const Paginated: Story = {
       const selector = canvas.getByRole('combobox', { name: 'Linhas por página' });
       await userEvent.selectOptions(selector, '10');
       await waitFor(async () => {
-        await expect(linhas().length).toBe(10);
+        await expect(lines().length).toBe(10);
       });
       // Trocar o tamanho da página não pode deixar o leitor numa página que
       // deixou de existir.
@@ -132,9 +132,9 @@ export const Paginated: Story = {
       // partem da fatia de cinco, na página 1.
       await userEvent.selectOptions(selector, String(PAGE_SIZE));
       await waitFor(async () => {
-        await expect(linhas().length).toBe(PAGE_SIZE);
+        await expect(lines().length).toBe(PAGE_SIZE);
       });
-      if (!primeira().disabled) await userEvent.click(primeira());
+      if (!first().disabled) await userEvent.click(first());
       await waitFor(async () => {
         await expect(firstInvoice()).toContain('INV-001');
       });
@@ -178,27 +178,27 @@ export const ExplicitRowLabel: Story = {
     docs: { source: { transform: lineDataTableLabelSource } },
   },
   play: async ({ canvasElement, step }) => {
-    const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-    const lineBox = (linha: HTMLElement) =>
-      linha.querySelector<HTMLElement>("[role='checkbox']")!;
+    const lines = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+    const lineBox = (line: HTMLElement) =>
+      line.querySelector<HTMLElement>("[role='checkbox']")!;
     /** Terceira célula: a coluna "Cliente", de onde `rowLabel` tira o texto. */
-    const cliente = (linha: HTMLElement) =>
-      linha.querySelectorAll('td')[2]!.textContent!.trim();
+    const cliente = (line: HTMLElement) =>
+      line.querySelectorAll('td')[2]!.textContent!.trim();
 
     await step('O nome do controle sai de rowLabel, e não da primeira coluna', async () => {
       // A prova precisa do CONTRASTE: se `rowLabel` fosse ignorado, o nome
       // cairia no identificador da primeira coluna ("INV-001") e a asserção
       // seguinte reprovaria.
-      for (const linha of linhas()) {
-        await expect(lineBox(linha)).toHaveAttribute(
+      for (const line of lines()) {
+        await expect(lineBox(line)).toHaveAttribute(
           'aria-label',
-          `Selecionar linha ${cliente(linha)}`,
+          `Selecionar linha ${cliente(line)}`,
         );
       }
     });
 
     await step('Nenhuma linha repete o nome de outra', async () => {
-      const names = linhas().map((l) => lineBox(l).getAttribute('aria-label') ?? '');
+      const names = lines().map((l) => lineBox(l).getAttribute('aria-label') ?? '');
       await expect(names.length).toBe(invoices.length);
       await expect(new Set(names).size).toBe(names.length);
     });

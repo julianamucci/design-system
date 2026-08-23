@@ -121,12 +121,12 @@ describe('menubarSnippet', () => {
 describe('menubarSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
     const padrão = menubarSource('<div data-slot="menubar">', {});
-    const aberto = menubarSource('<div data-slot="menubar">', {
+    const isOpen = menubarSource('<div data-slot="menubar">', {
       args: { defaultOpen: true, side: 'top' },
     });
-    expect(padrão).not.toBe(aberto);
-    expect(aberto).toContain('defaultOpen: 0');
-    expect(aberto).toContain("side: 'top'");
+    expect(padrão).not.toBe(isOpen);
+    expect(isOpen).toContain('defaultOpen: 0');
+    expect(isOpen).toContain("side: 'top'");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {

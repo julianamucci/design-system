@@ -103,46 +103,46 @@ function createIconLucide(nodes: LucideIconNode[]): SVGSVGElement {
 }
 
 export function createBreadcrumb(options: BreadcrumbOptions = {}): HTMLElement {
-  const classe = options.class ?? options.className;
+  const className = options.class ?? options.className;
   // `label` continua aceito como apelido do nome acessível; o canônico vence.
   const label = options['aria-label'] ?? options.label ?? 'breadcrumb';
 
   const nav = document.createElement('nav');
   nav.dataset.slot = 'breadcrumb';
   nav.setAttribute('aria-label', label);
-  nav.className = cn('nds-breadcrumb', classe);
+  nav.className = cn('nds-breadcrumb', className);
 
   return nav;
 }
 
 export function createBreadcrumbList(options: BreadcrumbListOptions = {}): HTMLElement {
-  const classe = options.class ?? options.className;
+  const className = options.class ?? options.className;
 
   const ol = document.createElement('ol');
   ol.dataset.slot = 'breadcrumb-list';
-  ol.className = cn('nds-breadcrumb-list', classe);
+  ol.className = cn('nds-breadcrumb-list', className);
 
   return ol;
 }
 
 export function createBreadcrumbItem(options: BreadcrumbItemOptions = {}): HTMLElement {
-  const classe = options.class ?? options.className;
+  const className = options.class ?? options.className;
 
   const li = document.createElement('li');
   li.dataset.slot = 'breadcrumb-item';
-  li.className = cn('nds-breadcrumb-item', classe);
+  li.className = cn('nds-breadcrumb-item', className);
 
   return li;
 }
 
 export function createBreadcrumbLink(options: BreadcrumbLinkOptions): HTMLAnchorElement {
   const { href, text = '' } = options;
-  const classe = options.class ?? options.className;
+  const className = options.class ?? options.className;
 
   const a = document.createElement('a');
   a.dataset.slot = 'breadcrumb-link';
   a.href = href;
-  a.className = cn('nds-breadcrumb-link', classe);
+  a.className = cn('nds-breadcrumb-link', className);
   if (text) a.textContent = text;
 
   return a;
@@ -150,7 +150,7 @@ export function createBreadcrumbLink(options: BreadcrumbLinkOptions): HTMLAnchor
 
 export function createBreadcrumbPage(options: BreadcrumbPageOptions = {}): HTMLElement {
   const { text = '' } = options;
-  const classe = options.class ?? options.className;
+  const className = options.class ?? options.className;
 
   const span = document.createElement('span');
   span.dataset.slot = 'breadcrumb-page';
@@ -160,7 +160,7 @@ export function createBreadcrumbPage(options: BreadcrumbPageOptions = {}): HTMLE
   // navegável. Quem marca a página atual é o aria-current, e ele vale em
   // qualquer elemento.
   span.setAttribute('aria-current', 'page');
-  span.className = cn('nds-breadcrumb-page', classe);
+  span.className = cn('nds-breadcrumb-page', className);
   if (text) span.textContent = text;
 
   return span;
@@ -168,13 +168,13 @@ export function createBreadcrumbPage(options: BreadcrumbPageOptions = {}): HTMLE
 
 export function createBreadcrumbSeparator(options: BreadcrumbSeparatorOptions = {}): HTMLElement {
   const { content } = options;
-  const classe = options.class ?? options.className;
+  const className = options.class ?? options.className;
 
   const li = document.createElement('li');
   li.dataset.slot = 'breadcrumb-separator';
   li.setAttribute('role', 'presentation');
   li.setAttribute('aria-hidden', 'true');
-  li.className = cn('nds-breadcrumb-separator', classe);
+  li.className = cn('nds-breadcrumb-separator', className);
 
   // O default era o caractere `›`, e era o único dos cinco. A anatomia
   // compartilhada diz "padrão é ChevronRight", o CSS dimensiona
@@ -199,7 +199,7 @@ export function createBreadcrumbSeparator(options: BreadcrumbSeparatorOptions = 
  * o consumidor liga um click handler externo pra expandir.
  */
 export function createBreadcrumbEllipsis(options: BreadcrumbEllipsisOptions = {}): HTMLElement {
-  const classe = options.class ?? options.className;
+  const className = options.class ?? options.className;
   // `label` continua aceito como apelido do nome acessível; o canônico vence.
   const label = options['aria-label'] ?? options.label;
 
@@ -215,7 +215,7 @@ export function createBreadcrumbEllipsis(options: BreadcrumbEllipsisOptions = {}
   } else {
     span.setAttribute('aria-hidden', 'true');
   }
-  span.className = cn('nds-breadcrumb-ellipsis', classe);
+  span.className = cn('nds-breadcrumb-ellipsis', className);
 
   span.appendChild(createIconLucide(MoreHorizontal as unknown as LucideIconNode[]));
 

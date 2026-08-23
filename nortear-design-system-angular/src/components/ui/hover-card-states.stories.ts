@@ -171,23 +171,23 @@ export const Controlled: Story = {
     },
   },
   render: () => ({
-    props: { aberto: false },
+    props: { isOpen: false },
     template: `
       <div class="nds-stack nds-max-w-sm" data-spacing="md">
         <div class="nds-cluster" data-spacing="xs">
           <!-- Nomes próprios, e não os mesmos do gatilho: dois controles com o
                mesmo nome acessível são ambíguos em leitor de tela. -->
-          <button ndsButton size="sm" variant="outline" (click)="aberto = true">
+          <button ndsButton size="sm" variant="outline" (click)="isOpen = true">
             Abrir pelo estado externo
           </button>
-          <button ndsButton size="sm" variant="outline" (click)="aberto = false">
+          <button ndsButton size="sm" variant="outline" (click)="isOpen = false">
             Fechar pelo estado externo
           </button>
         </div>
 
         <p class="nds-text-body">
           Comentário de
-          <span ndsHoverCard [open]="aberto" (openChange)="aberto = $event">
+          <span ndsHoverCard [open]="isOpen" (openChange)="isOpen = $event">
             <a ndsHoverCardTrigger href="/users/joana" class="nds-text-primary nds-font-medium">@joana</a>
 
             <ng-template ndsHoverCardContent>
@@ -198,7 +198,7 @@ export const Controlled: Story = {
         </p>
 
         <p class="nds-text-caption nds-text-muted-foreground" data-testid="estado-externo">
-          Estado externo: {{ aberto ? 'aberto' : 'fechado' }}
+          Estado externo: {{ isOpen ? 'aberto' : 'fechado' }}
         </p>
       </div>
     `,

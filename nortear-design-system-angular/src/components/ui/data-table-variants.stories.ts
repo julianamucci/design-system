@@ -67,7 +67,7 @@ export const WithColumnFilters: Story = {
     const canvas = within(canvasElement);
     // A linha de "sem resultados" também é um `tr` do tbody. Contá-la como dado
     // faria "zero linhas" e "uma linha" darem o mesmo número.
-    const linhas = () =>
+    const lines = () =>
       [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')].filter(
         (tr) => !tr.querySelector('.nds-data-table-empty'),
       );
@@ -91,7 +91,7 @@ export const WithColumnFilters: Story = {
       const select = canvas.getByRole('combobox', { name: 'Filtrar Status' });
       await userEvent.selectOptions(select, 'Cancelado');
       await waitFor(async () => {
-        await expect(linhas().length).toBe(3);
+        await expect(lines().length).toBe(3);
       });
     });
 
@@ -102,14 +102,14 @@ export const WithColumnFilters: Story = {
       const campo = canvas.getByRole('textbox', { name: 'Filtrar Cliente' });
       await userEvent.type(campo, 'Carla');
       await waitFor(async () => {
-        await expect(linhas().length).toBe(1);
+        await expect(lines().length).toBe(1);
       });
-      await expect(linhas()[0]).toHaveTextContent('#INV-003');
+      await expect(lines()[0]).toHaveTextContent('#INV-003');
 
       await userEvent.clear(campo);
       await userEvent.type(campo, 'Ana');
       await waitFor(async () => {
-        await expect(linhas().length).toBe(0);
+        await expect(lines().length).toBe(0);
       });
       // visual.item2 — a story termina com os dois filtros preenchidos e o
       // estado vazio na tela, que é o que a captura do Chromatic guarda.

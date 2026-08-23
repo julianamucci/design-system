@@ -59,7 +59,7 @@ function partesDoAlerta(o: AlertSnippetOptions): PartesDoAlerta {
   const description = o.description ?? DESCRIPTION_DEFAULT;
   const icone = o.icon === undefined ? variantIcon(variant) : o.icon;
 
-  const linhas = opcoes([
+  const lines = opcoes([
     ['variant', variant !== 'default' ? texto(variant) : undefined],
     // `alert` é o padrão da fábrica: só a semântica diferente entra.
     ['role', o.role && o.role !== 'alert' ? texto(o.role) : undefined],
@@ -80,7 +80,7 @@ function partesDoAlerta(o: AlertSnippetOptions): PartesDoAlerta {
     names,
     // Sem nenhuma opção a chamada é `createAlert()`: a fábrica tem parâmetro
     // com valor padrão, e um `{}` vazio seria ruído.
-    criacao: `const alerta = ${linhas.length ? chamada('createAlert', linhas) : 'createAlert()'};`,
+    criacao: `const alerta = ${lines.length ? chamada('createAlert', lines) : 'createAlert()'};`,
     corpo: [
       icone ? `alerta.appendChild(createAlertIcon(${texto(icone)}));` : '',
       title ? `alerta.appendChild(createAlertTitle({ text: ${texto(title)} }));` : '',

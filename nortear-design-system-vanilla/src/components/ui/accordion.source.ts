@@ -53,12 +53,12 @@ function valueInitial(valor: AccordionSnippetOptions['defaultValue']): string | 
 }
 
 function itemsBlock(itens: readonly AccordionSnippetItem[]): string {
-  const linhas = itens.map(
+  const lines = itens.map(
     (item) =>
       `  { value: ${texto(item.value)}, trigger: ${texto(item.trigger)}, content: '…'` +
       `${item.disabled ? ', disabled: true' : ''} },`,
   );
-  return `const itens = [\n${linhas.join('\n')}\n];`;
+  return `const itens = [\n${lines.join('\n')}\n];`;
 }
 
 function callLines(o: AccordionSnippetOptions): string[] {

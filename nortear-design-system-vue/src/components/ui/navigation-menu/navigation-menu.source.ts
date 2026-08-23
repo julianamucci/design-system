@@ -61,11 +61,11 @@ function panelList(
   largura = 'nds-w-xs',
 ): string {
   const p = ' '.repeat(recuo);
-  const linhas = itens
+  const lines = itens
     .map((item) => `${p}  <li>\n${destination(item.href, item.titulo, undefined, recuo + 4)}\n${p}  </li>`)
     .join('\n');
   return `${p}<ul class="nds-stack nds-list-none ${largura}" data-spacing="xs">
-${linhas}
+${lines}
 ${p}</ul>`;
 }
 

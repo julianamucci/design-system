@@ -9,7 +9,7 @@ import {
   collapsibleSource,
 } from './collapsible.source';
 
-const TODAS = [
+const ALL = [
   collapsibleSource,
   defaultCollapsibleOpenSource,
   collapsibleControlledSource,
@@ -52,7 +52,7 @@ describe('collapsibleSource', () => {
   it('disabled vai no gatilho, não na raiz', () => {
     const saida = collapsibleSource(undefined, { args: { disabled: true } });
     expect(saida).toContain('data-justify="between"\n    disabled');
-    const raiz = saida.split('\n').find((linha) => linha.startsWith('<Collapsible '))!;
+    const raiz = saida.split('\n').find((line) => line.startsWith('<Collapsible '))!;
     expect(raiz).not.toContain('disabled');
   });
 
@@ -116,7 +116,7 @@ describe('composições', () => {
 
 describe('regras do repositório', () => {
   it('a seta é sempre decorativa e nenhum snippet leva estilo inline', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).toContain('<ChevronDown');
       expect(saida).toContain('aria-hidden="true"');

@@ -1099,7 +1099,7 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
     // Aqui os itens são frases soltas (e não objetos com critério/nível/como),
     // então o nível WCAG e a ferramenta de verificação vêm desta lista — sem
     // texto solto em português: são nomes de critério e de ferramenta.
-    const linhas: { level: string; how: string }[] = [
+    const lines: { level: string; how: string }[] = [
       { level: 'AA',     how: 'axe-core' },
       { level: '4.1.2',  how: 'Storybook Test' },
       { level: '1.4.13', how: 'Storybook Test' },
@@ -1111,10 +1111,10 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
       title: t('testes.accessibility.title'),
       description: t('testes.accessibility.description'),
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-      items: linhas.map((linha, i) => ({
+      items: lines.map((line, i) => ({
         criterion: toPlainText(t(`testes.accessibility.item${i + 1}`)),
-        level: linha.level,
-        how: linha.how,
+        level: line.level,
+        how: line.how,
       })),
     };
   });

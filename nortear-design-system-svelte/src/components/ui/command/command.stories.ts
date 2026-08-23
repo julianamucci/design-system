@@ -190,7 +190,7 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(opcoes()[0]).toHaveAttribute('aria-selected', 'true');
       });
-      const primeiro = opcoes()[0];
+      const first = opcoes()[0];
       const segundo = opcoes()[1];
 
       await userEvent.keyboard('{ArrowDown}');
@@ -206,11 +206,11 @@ export const Playground: Story = {
       await expect(active).toBe(segundo);
       await expect(active).toHaveAttribute('role', 'option');
       // Um destaque por vez.
-      await expect(primeiro).toHaveAttribute('aria-selected', 'false');
+      await expect(first).toHaveAttribute('aria-selected', 'false');
 
       await userEvent.keyboard('{ArrowUp}');
       await waitFor(async () => {
-        await expect(primeiro).toHaveAttribute('aria-selected', 'true');
+        await expect(first).toHaveAttribute('aria-selected', 'true');
       });
     });
 

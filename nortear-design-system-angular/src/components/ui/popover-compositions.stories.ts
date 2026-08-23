@@ -227,9 +227,9 @@ export const ColorPicker: Story = {
     });
 
     await step('E o foco chega a cada uma por Tab', async () => {
-      const primeira = screen.getByRole('button', { name: 'Primária' });
+      const first = screen.getByRole('button', { name: 'Primária' });
       const segunda = screen.getByRole('button', { name: 'Secundária' });
-      primeira.focus();
+      first.focus();
       await userEvent.tab();
       await expect(segunda).toHaveFocus();
       await expect(segunda.matches(':focus-visible')).toBe(true);

@@ -69,7 +69,7 @@ function loadingWrap(label: string, extraClass = '', stackSpacing?: 'xs' | 'sm' 
 }
 
 /** Linha de texto na fração pedida do container. */
-function linha(width: SkeletonWidth): HTMLElement {
+function line(width: SkeletonWidth): HTMLElement {
   return createSkeleton({ shape: 'text', width });
 }
 
@@ -92,8 +92,8 @@ function buildCardDemo(label: string): HTMLElement {
   const lines = document.createElement('div');
   lines.className = 'nds-stack nds-flex-1';
   lines.dataset.spacing = 'sm';
-  lines.appendChild(linha('2-3'));
-  lines.appendChild(linha('1-2'));
+  lines.appendChild(line('2-3'));
+  lines.appendChild(line('1-2'));
   row.appendChild(lines);
   inner.appendChild(row);
 
@@ -120,8 +120,8 @@ function buildListDemo(label: string): HTMLElement {
     const text = document.createElement('div');
     text.className = 'nds-stack nds-flex-1';
     text.dataset.spacing = 'xs';
-    text.appendChild(linha('2-3'));
-    text.appendChild(linha('1-3'));
+    text.appendChild(line('2-3'));
+    text.appendChild(line('1-3'));
     row.appendChild(text);
     list.appendChild(row);
   }
@@ -158,7 +158,7 @@ function buildParagraphDemo(label: string): HTMLElement {
   caption.textContent = label;
 
   const inner = loadingWrap('Carregando parágrafo', '', 'sm');
-  (['full', '3-4', '1-2'] as const).forEach((w) => inner.appendChild(linha(w)));
+  (['full', '3-4', '1-2'] as const).forEach((w) => inner.appendChild(line(w)));
 
   wrap.append(caption, inner);
   return wrap;
@@ -178,7 +178,7 @@ function buildCircleVariant(): HTMLElement {
 
 function buildLineVariant(): HTMLElement {
   const wrap = loadingWrap('Carregando linhas', 'nds-max-w-sm', 'sm');
-  (['full', '3-4', '1-2'] as const).forEach((w) => wrap.appendChild(linha(w)));
+  (['full', '3-4', '1-2'] as const).forEach((w) => wrap.appendChild(line(w)));
   return wrap;
 }
 
@@ -364,13 +364,13 @@ export function createSkeletonDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const wrap = loadingWrap('Carregando artigo', 'nds-max-w-sm', 'sm');
                 wrap.appendChild(createSkeleton({ shape: 'heading', width: '1-2' }));
-                wrap.appendChild(linha('full'));
-                wrap.appendChild(linha('3-4'));
+                wrap.appendChild(line('full'));
+                wrap.appendChild(line('3-4'));
                 return wrap;
               },
               dontPreviewFactory: () => {
                 const wrap = loadingWrap('Carregando', 'nds-max-w-sm', 'sm');
-                wrap.appendChild(linha('1-3'));
+                wrap.appendChild(line('1-3'));
                 return wrap;
               },
             },
@@ -388,8 +388,8 @@ export function createSkeletonDocs(): HTMLElement {
                 const lines = document.createElement('div');
                 lines.className = 'nds-stack nds-flex-1';
                 lines.dataset.spacing = 'xs';
-                lines.appendChild(linha('1-2'));
-                lines.appendChild(linha('1-3'));
+                lines.appendChild(line('1-2'));
+                lines.appendChild(line('1-3'));
                 wrap.appendChild(lines);
                 return wrap;
               },
@@ -404,8 +404,8 @@ export function createSkeletonDocs(): HTMLElement {
                 const lines = document.createElement('div');
                 lines.className = 'nds-stack nds-flex-1';
                 lines.dataset.spacing = 'xs';
-                lines.appendChild(linha('1-2'));
-                lines.appendChild(linha('1-3'));
+                lines.appendChild(line('1-2'));
+                lines.appendChild(line('1-3'));
                 wrap.appendChild(lines);
                 return wrap;
               },

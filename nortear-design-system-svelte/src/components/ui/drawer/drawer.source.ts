@@ -51,7 +51,7 @@ import { Label } from "@/components/ui/label";`;
 
 type Frame = {
   imports?: string;
-  aberto?: boolean;
+  isOpen?: boolean;
   direction?: DrawerArgs['direction'];
   dismissible?: boolean;
   triggerLabel: string;
@@ -69,7 +69,7 @@ type Frame = {
  */
 function painel({
   imports = IMPORT_BASE,
-  aberto = false,
+  isOpen = false,
   direction = 'bottom',
   dismissible = true,
   triggerLabel,
@@ -88,7 +88,7 @@ function painel({
   return svelteSnippet(
     `${imports}
 
-let open = $state(${aberto});`,
+let open = $state(${isOpen});`,
     `<Drawer bind:open${rootProps}>
   <DrawerTrigger>
     {#snippet child({ props })}
@@ -128,7 +128,7 @@ export function drawerSource(_gerado?: string, ctx?: { args?: Partial<DrawerArgs
   } = ctx?.args ?? {};
 
   return painel({
-    aberto: open ?? defaultOpen,
+    isOpen: open ?? defaultOpen,
     direction,
     dismissible,
     triggerLabel,
@@ -143,7 +143,7 @@ export function drawerSource(_gerado?: string, ctx?: { args?: Partial<DrawerArgs
 export function drawerWithFormSource(): string {
   return painel({
     imports: IMPORT_WITH_FIELDS,
-    aberto: true,
+    isOpen: true,
     direction: 'right',
     triggerLabel: 'Editar dados',
     title: 'Editar dados pessoais',
@@ -169,7 +169,7 @@ export function drawerWithFormSource(): string {
 export function drawerWithConfirmSource(): string {
   return painel({
     imports: IMPORT_WITH_BODY,
-    aberto: true,
+    isOpen: true,
     triggerLabel: 'Remover anexo',
     title: 'Remover anexo?',
     description: 'O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.',
@@ -190,7 +190,7 @@ export function drawerWithConfirmSource(): string {
 export function drawerWithScrollSource(): string {
   return painel({
     imports: IMPORT_WITH_BODY,
-    aberto: true,
+    isOpen: true,
     triggerLabel: 'Ler termos',
     title: 'Termos de uso',
     description: 'Leia atentamente antes de aceitar.',

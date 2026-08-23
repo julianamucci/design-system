@@ -78,7 +78,7 @@ function serializar(atributos: Record<string, string>): string {
  * O `<svg>` inteiro como string, para quem monta o DOM à mão.
  *
  * SEMPRE a raiz junto, nunca só o interior. Dois motivos, os dois medidos:
- * `classe` é o que dá tamanho ao ícone (um `<svg>` com `viewBox` e sem largura
+ * `className` é o que dá tamanho ao ícone (um `<svg>` com `viewBox` e sem largura
  * cai no tamanho intrínseco de 300×150 e estoura o tile); e o DOMPurify valida
  * namespace — `<path>` sem um `<svg>` por pai é descartado em silêncio, que era
  * o motivo de uma das stacks desenhar 2003 ícones vazios.
@@ -87,7 +87,7 @@ function serializar(atributos: Record<string, string>): string {
  * entrada externa neste caminho, que é o caso que a guideline 09 chama de "SVG
  * inline hardcoded".
  */
-export function iconMountSvg(nos: IconNo[], classe: string): string {
+export function iconMountSvg(nos: IconNo[], className: string): string {
   const interior = nos.map(([tag, atributos]) => `<${tag} ${serializar(atributos)}/>`).join('');
-  return `<svg ${serializar(SVG_ATTRS)} class="${classe}" aria-hidden="true">${interior}</svg>`;
+  return `<svg ${serializar(SVG_ATTRS)} class="${className}" aria-hidden="true">${interior}</svg>`;
 }

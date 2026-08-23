@@ -353,8 +353,8 @@ export function sheetNavigationSecundariaSource(): string {
   const sections = ['Dashboard', 'Componentes', 'Tokens', 'Documentação', 'Configurações'];
   const links = sections
     .map(
-      (secao) =>
-        `        <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-muted-soft">${secao}</a>`,
+      (section) =>
+        `        <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-muted-soft">${section}</a>`,
     )
     .join('\n');
   return vueSnippet(

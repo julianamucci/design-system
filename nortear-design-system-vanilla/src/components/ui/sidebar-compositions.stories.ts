@@ -217,8 +217,8 @@ export const WithGroups: Story = {
     });
 
     await step('O Tab alcança todos os itens — nenhuma parada sem nome', async () => {
-      const primeiro = canvasElement.querySelector<HTMLElement>('[data-active="true"]')!;
-      primeiro.focus();
+      const first = canvasElement.querySelector<HTMLElement>('[data-active="true"]')!;
+      first.focus();
       const alcancados: string[] = [];
       for (let i = 0; i < 5; i++) {
         await userEvent.tab();
@@ -232,7 +232,7 @@ export const WithGroups: Story = {
       await expect(alcancados).toContain('Configuracoes');
       await expect(alcancados).not.toContain('');
       // Devolve o foco ao ponto de partida para o replay.
-      primeiro.blur();
+      first.blur();
     });
 
     await step('A navegação tem nome de marco', async () => {
@@ -384,11 +384,11 @@ export const WithGroupActions: Story = {
     });
 
     await step('O contador ancorado não é lido solto — a contagem está no nome do item', async () => {
-      const contador = canvasElement.querySelector<HTMLElement>('[data-sidebar="menu-badge"]')!;
-      await expect(contador.textContent).toBe('12');
-      await expect(contador.getAttribute('aria-hidden')).toBe('true');
+      const counter = canvasElement.querySelector<HTMLElement>('[data-sidebar="menu-badge"]')!;
+      await expect(counter.textContent).toBe('12');
+      await expect(counter.getAttribute('aria-hidden')).toBe('true');
       // Irmão do botão, não filho: é o que o posicionamento absoluto do CSS pede.
-      await expect(contador.parentElement?.getAttribute('data-sidebar')).toBe('menu-item');
+      await expect(counter.parentElement?.getAttribute('data-sidebar')).toBe('menu-item');
       await expect(canvas.getByRole('link', { name: 'Nortear, 12 pendências' })).toBeInTheDocument();
     });
 
@@ -513,9 +513,9 @@ export const WithSubmenu: Story = {
     });
 
     parentBtn.addEventListener('click', () => {
-      const aberto = parentBtn.getAttribute('aria-expanded') === 'true';
-      subList.style.display = aberto ? 'none' : '';
-      parentBtn.setAttribute('aria-expanded', aberto ? 'false' : 'true');
+      const isOpen = parentBtn.getAttribute('aria-expanded') === 'true';
+      subList.style.display = isOpen ? 'none' : '';
+      parentBtn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
     });
 
     parentLi.appendChild(parentBtn);
@@ -555,10 +555,10 @@ export const WithSubmenu: Story = {
 
     // Par idempotente: só clica quando o estado atual não é o desejado, então o
     // replay do painel Interactions (que roda no MESMO DOM) chega ao mesmo fim.
-    const definir = async (aberto: boolean) => {
+    const definir = async (isOpen: boolean) => {
       const alvo = parent();
-      if (alvo.getAttribute('aria-expanded') !== String(aberto)) await userEvent.click(alvo);
-      await expect(parent().getAttribute('aria-expanded')).toBe(String(aberto));
+      if (alvo.getAttribute('aria-expanded') !== String(isOpen)) await userEvent.click(alvo);
+      await expect(parent().getAttribute('aria-expanded')).toBe(String(isOpen));
     };
 
     await step('O submenu nasce fechado, e o botão pai diz isso', async () => {
@@ -629,14 +629,14 @@ export const LoadingSkeleton: Story = {
 
     // A primeira linha se anuncia (`role="status"`); as demais são decoração
     // muda. Três regiões vivas repetindo o mesmo aviso seria pior que nenhuma.
-    const linhas = [
+    const lines = [
       { showIcon: true,  'aria-label': 'Carregando navegação', width: '70%' },
       { showIcon: true,  width: '55%' },
       { showIcon: false, width: '85%' },
     ];
-    linhas.forEach((linha) => {
+    lines.forEach((line) => {
       const li = createSidebarMenuItem();
-      li.appendChild(createSidebarMenuSkeleton(linha));
+      li.appendChild(createSidebarMenuSkeleton(line));
       menu.appendChild(li);
     });
 
@@ -663,16 +663,16 @@ export const LoadingSkeleton: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const linhas = () => canvasElement.querySelectorAll<HTMLElement>('[data-sidebar="menu-skeleton"]');
+    const lines = () => canvasElement.querySelectorAll<HTMLElement>('[data-sidebar="menu-skeleton"]');
 
     await step('Com showIcon, a caixa do ícone vem antes da caixa do texto', async () => {
-      const primeira = linhas()[0];
-      const filhos = Array.from(primeira.children).map((f) => f.getAttribute('data-sidebar'));
+      const first = lines()[0];
+      const filhos = Array.from(first.children).map((f) => f.getAttribute('data-sidebar'));
       await expect(filhos).toEqual(['menu-skeleton-icon', 'menu-skeleton-text']);
     });
 
     await step('Sem showIcon, só a caixa do texto é desenhada', async () => {
-      const terceira = linhas()[2];
+      const terceira = lines()[2];
       const filhos = Array.from(terceira.children).map((f) => f.getAttribute('data-sidebar'));
       await expect(filhos).toEqual(['menu-skeleton-text']);
     });
@@ -692,18 +692,18 @@ export const LoadingSkeleton: Story = {
     });
 
     await step('A largura declarada chega à folha pela custom property', async () => {
-      const texto = linhas()[1].querySelector<HTMLElement>('[data-sidebar="menu-skeleton-text"]')!;
+      const texto = lines()[1].querySelector<HTMLElement>('[data-sidebar="menu-skeleton-text"]')!;
       await expect(texto.style.getPropertyValue('--skeleton-width')).toBe('55%');
     });
 
     await step('Uma linha anuncia o carregamento; as outras são mudas', async () => {
-      const [primeira, segunda, terceira] = Array.from(linhas());
-      await expect(canvas.getByRole('status', { name: 'Carregando navegação' })).toBe(primeira);
+      const [first, segunda, terceira] = Array.from(lines());
+      await expect(canvas.getByRole('status', { name: 'Carregando navegação' })).toBe(first);
       await expect(segunda.getAttribute('aria-hidden')).toBe('true');
       await expect(terceira.getAttribute('aria-hidden')).toBe('true');
       // Um bloco cinza pulsando não é conteúdo: nenhuma linha entra na ordem de
       // tabulação nem carrega texto para o leitor.
-      await expect(primeira.textContent).toBe('');
+      await expect(first.textContent).toBe('');
     });
   },
 };

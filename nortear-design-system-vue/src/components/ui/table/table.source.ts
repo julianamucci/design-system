@@ -92,13 +92,13 @@ function legenda(texto: string, visible = false): string {
 
 /** Envolve as seções na raiz, cada uma um nível para dentro. */
 function tabela(...sections: string[]): string {
-  return `<Table>\n${sections.map((secao) => indentar(secao)).join('\n')}\n</Table>`;
+  return `<Table>\n${sections.map((section) => indentar(section)).join('\n')}\n</Table>`;
 }
 
 /** Monta o SFC já com o import derivado da marcação. */
-function snippet(estado: string, markup: string, importsExtra = ''): string {
+function snippet(state: string, markup: string, importsExtra = ''): string {
   const imports = [importTable(markup), importsExtra].filter(Boolean).join('\n');
-  return vueSnippet(estado ? `${imports}\n\n${estado}` : imports, markup);
+  return vueSnippet(state ? `${imports}\n\n${state}` : imports, markup);
 }
 
 /**

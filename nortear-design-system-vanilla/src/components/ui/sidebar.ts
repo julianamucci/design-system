@@ -311,16 +311,16 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
       e.preventDefault();
       return;
     }
-    const primeiro = lista[0];
+    const first = lista[0];
     const last = lista[lista.length - 1];
     if (e.shiftKey) {
-      if (document.activeElement === primeiro) {
+      if (document.activeElement === first) {
         e.preventDefault();
         last.focus();
       }
     } else if (document.activeElement === last) {
       e.preventDefault();
-      primeiro.focus();
+      first.focus();
     }
   }
 

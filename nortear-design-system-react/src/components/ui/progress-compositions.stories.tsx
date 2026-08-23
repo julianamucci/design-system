@@ -65,10 +65,10 @@ export const MultipleLevels: Story = {
     });
 
     await step("Cada barra anuncia o próprio valor", async () => {
-      const valores = canvas
+      const values = canvas
         .getAllByRole("progressbar")
         .map((b) => b.getAttribute("aria-valuenow"));
-      await expect(valores).toEqual(["0", "50", "100"]);
+      await expect(values).toEqual(["0", "50", "100"]);
     });
 
     await step("Cada barra desenha o próprio valor", async () => {

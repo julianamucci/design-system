@@ -226,8 +226,8 @@ export const WithDots: Story = {
     await step('E a story termina no começo', async () => {
       // Estado limpo para a próxima rodada e para a captura do Chromatic, que
       // fotografa o último quadro.
-      const primeiro = dot(1);
-      await userEvent.click(primeiro);
+      const first = dot(1);
+      await userEvent.click(first);
       await emSlide(0);
       await expect(dot(1)).toHaveAttribute('aria-current', 'true');
     });

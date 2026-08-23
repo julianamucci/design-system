@@ -111,7 +111,7 @@ function callbackBody(valor: unknown): string | undefined {
  * `criarAreaDeClique()`, que é sonda de teste e não faz parte do sistema.
  */
 export function contextMenuSnippet(o: ContextMenuSnippetOptions = {}): string {
-  const linhas = opcoes([
+  const lines = opcoes([
     ['trigger', 'area'],
     ['items', entriesLiteral(o.items ?? itemsDefault(o))],
     ['radioValue', o.radioValue ? texto(o.radioValue) : undefined],
@@ -126,7 +126,7 @@ export function contextMenuSnippet(o: ContextMenuSnippetOptions = {}): string {
       "const area = document.createElement('div');",
       `area.textContent = ${texto(o.triggerLabel ?? AREA_DEFAULT)};`,
     ].join('\n'),
-    `const menu = ${chamada('createContextMenu', linhas)};`,
+    `const menu = ${chamada('createContextMenu', lines)};`,
     montar('menu'),
   );
 }

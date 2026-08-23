@@ -13,7 +13,7 @@ import {
   tooltipTextLongSource,
 } from './tooltip.source';
 
-const TODAS = [
+const ALL = [
   tooltipSource,
   tooltipCurtoSource,
   tooltipWithShortcutSource,
@@ -77,7 +77,7 @@ describe('tooltipSource', () => {
 
 describe('o gatilho é o botão de verdade', () => {
   it('usa render para emprestar as props do gatilho ao elemento existente', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       expect(fn(), `${fn.name} deve montar o gatilho por render`).toContain('<TooltipTrigger');
       expect(fn()).toContain('render={(props) =>');
     }
@@ -154,7 +154,7 @@ describe('composições', () => {
 
 describe('nenhum snippet ensina o andaime da story', () => {
   it('não há fixture, invólucro nem estilo de captura', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida, `${fn.name}`).not.toContain('fixtures');
       expect(saida).not.toContain('balaoDe');

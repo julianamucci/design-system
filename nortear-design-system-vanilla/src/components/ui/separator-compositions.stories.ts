@@ -30,9 +30,9 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-function texto(txt: string, classe = 'nds-text-body'): HTMLElement {
+function texto(txt: string, className = 'nds-text-body'): HTMLElement {
   const el = document.createElement('p');
-  el.className = classe;
+  el.className = className;
   el.textContent = txt;
   return el;
 }

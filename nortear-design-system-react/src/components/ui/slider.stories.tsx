@@ -149,8 +149,8 @@ export const Playground: Story = {
 
     await step("Arrastar move o valor e avisa a cada movimento", async () => {
       const control = canvasElement.querySelector<HTMLElement>(".nds-slider")!;
-      const trilho = canvasElement.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
-      const caixa = trilho.getBoundingClientRect();
+      const track = canvasElement.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
+      const caixa = track.getBoundingClientRect();
       const y = caixa.top + caixa.height / 2;
 
       // Limpa antes de medir: no replay o espião chega com as chamadas da

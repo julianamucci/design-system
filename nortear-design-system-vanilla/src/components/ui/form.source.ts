@@ -57,7 +57,7 @@ function fieldControl(c: FormField | FormSnippetOptions): string {
     ['value', c.value !== undefined ? texto(c.value) : undefined],
     ['disabled', c.disabled ? 'true' : undefined],
   ])
-    .map((linha) => linha.replace(/,$/, ''))
+    .map((line) => line.replace(/,$/, ''))
     .join(', ');
   const fabrica = ehTextarea ? 'createTextarea' : 'createInput';
   return pairs.length > 0 ? `${fabrica}({ ${pairs} })` : `${fabrica}()`;
@@ -65,11 +65,11 @@ function fieldControl(c: FormField | FormSnippetOptions): string {
 
 /** Um `createFormField({ … })` recuado para entrar numa lista de filhos. */
 function fieldBlock(c: FormField, recuo: string): string {
-  const linhas = [`${recuo}  label: ${texto(c.label)},`, `${recuo}  input: ${fieldControl(c)},`];
+  const lines = [`${recuo}  label: ${texto(c.label)},`, `${recuo}  input: ${fieldControl(c)},`];
   if (c.description !== undefined) {
-    linhas.push(`${recuo}  description: ${texto(c.description)},`);
+    lines.push(`${recuo}  description: ${texto(c.description)},`);
   }
-  return `${recuo}createFormField({\n${linhas.join('\n')}\n${recuo}}),`;
+  return `${recuo}createFormField({\n${lines.join('\n')}\n${recuo}}),`;
 }
 
 /**
@@ -84,7 +84,7 @@ export function formSnippet(o: FormSnippetOptions = {}): string {
   const precisaDeVariavel = o.ariaInvalid === true;
   const controle = fieldControl(o.inputType === undefined ? { ...o, inputType: 'email' } : o);
 
-  const linhas = opcoes([
+  const lines = opcoes([
     ['label', texto(o.label ?? 'Email')],
     ['input', precisaDeVariavel ? 'controle' : controle],
     ['description', o.description ? texto(o.description) : undefined],
@@ -99,7 +99,7 @@ export function formSnippet(o: FormSnippetOptions = {}): string {
 const controle = ${controle};
 controle.setAttribute('aria-invalid', 'true');`
       : undefined,
-    `const campo = ${chamada('createFormField', linhas)};`,
+    `const campo = ${chamada('createFormField', lines)};`,
     montar('campo'),
   );
 }
@@ -138,7 +138,7 @@ export function formWithFieldsetSnippet(o: FormWithFieldsetSnippetOptions = {}):
     { label: 'Cidade', placeholder: 'ex: São Paulo' },
   ];
 
-  const linhas = opcoes([
+  const lines = opcoes([
     ['legend', texto(o.legend ?? 'Endereço de entrega')],
     ['children', `[\n${fields.map((c) => fieldBlock(c, '    ')).join('\n')}\n  ]`],
   ]);
@@ -148,7 +148,7 @@ export function formWithFieldsetSnippet(o: FormWithFieldsetSnippetOptions = {}):
       importing('form', 'createFieldset', 'createFormField'),
       importing('input', 'createInput'),
     ].join('\n'),
-    `const grupo = ${chamada('createFieldset', linhas)};`,
+    `const grupo = ${chamada('createFieldset', lines)};`,
     montar('grupo'),
   );
 }

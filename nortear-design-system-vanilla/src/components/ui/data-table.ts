@@ -954,9 +954,9 @@ export function createDataTable<TData extends RowData>(
     tanstackRow: ReturnType<typeof table.getRowModel>['rows'][number],
   ): string {
     if (rowLabel) return rowLabel(tanstackRow.original);
-    const primeira = tanstackRow.getAllCells().find((c) => c.column.id !== '__select__');
-    const bruto = primeira?.getValue();
-    return bruto == null || bruto === '' ? tanstackRow.id : String(bruto);
+    const first = tanstackRow.getAllCells().find((c) => c.column.id !== '__select__');
+    const raw = first?.getValue();
+    return raw == null || raw === '' ? tanstackRow.id : String(raw);
   }
 
   function buildRow(rowIdx: number, tanstackRow: ReturnType<typeof table.getRowModel>['rows'][number]): HTMLTableRowElement {

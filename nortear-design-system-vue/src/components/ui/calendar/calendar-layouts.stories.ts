@@ -237,8 +237,8 @@ export const WithFixedWeeks: Story = {
     await step('O mês é desenhado em seis linhas, qualquer que seja o tamanho dele', async () => {
       // Abril de 2026 cabe em cinco linhas — são seis por causa do recurso.
       // Sem esta contagem, a story não se distinguiria do layout padrão.
-      const linhas = canvasElement.querySelectorAll('[data-slot="calendar-grid-body"] tr');
-      await expect(linhas.length).toBe(6);
+      const lines = canvasElement.querySelectorAll('[data-slot="calendar-grid-body"] tr');
+      await expect(lines.length).toBe(6);
     });
   },
 };

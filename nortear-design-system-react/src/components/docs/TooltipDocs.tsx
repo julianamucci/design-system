@@ -410,7 +410,7 @@ interface TooltipContentProps {
               ),
               dontPreview: (
                 <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
-                  &lt;Button&gt; (sem aria-label)
+                  &lt;Button&gt; (without aria-label)
                   <br />
                   + Tooltip "Salvar"
                 </div>

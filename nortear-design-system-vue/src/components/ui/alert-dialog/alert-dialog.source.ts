@@ -39,7 +39,7 @@ type Composition = {
   raiz?: Array<string | false>;
   gatilho?: { rotulo: string; variante?: string };
   painel?: string;
-  midia?: { classe?: string };
+  midia?: { className?: string };
   titulo: string;
   descricao?: string;
   cancelar: { rotulo: string; evento?: string };
@@ -74,34 +74,34 @@ function withText(tag: string, atributos: string, conteudo: string, recuo: numbe
 }
 
 function dialogo(c: Composition): string {
-  const linhas: string[] = [`<AlertDialog${attrs(...(c.raiz ?? []))}>`];
+  const lines: string[] = [`<AlertDialog${attrs(...(c.raiz ?? []))}>`];
 
   if (c.gatilho) {
     // `as-child` faz o gatilho VESTIR o botão em vez de embrulhá-lo: um botão
     // dentro de outro não é marcação válida, e o foco iria para o de fora.
-    linhas.push(
+    lines.push(
       '  <AlertDialogTrigger as-child>',
       `    <Button${attrs(attr('variant', c.gatilho.variante, 'default'))}>${c.gatilho.rotulo}</Button>`,
       '  </AlertDialogTrigger>',
     );
   }
 
-  linhas.push(`  <AlertDialogContent${attrs(c.painel)}>`, '    <AlertDialogHeader>');
+  lines.push(`  <AlertDialogContent${attrs(c.painel)}>`, '    <AlertDialogHeader>');
 
   if (c.midia) {
     // A mídia é o PRIMEIRO filho do cabeçalho: dessa ordem dependem tanto a
     // centralização do CSS quanto a leitura ícone → título → descrição.
-    linhas.push(
-      `      <AlertDialogMedia${attrs(c.midia.classe)}>`,
+    lines.push(
+      `      <AlertDialogMedia${attrs(c.midia.className)}>`,
       '        <TriangleAlert aria-hidden="true" />',
       '      </AlertDialogMedia>',
     );
   }
 
-  linhas.push(withText('AlertDialogTitle', '', c.titulo, 6));
-  if (c.descricao) linhas.push(withText('AlertDialogDescription', '', c.descricao, 6));
+  lines.push(withText('AlertDialogTitle', '', c.titulo, 6));
+  if (c.descricao) lines.push(withText('AlertDialogDescription', '', c.descricao, 6));
 
-  linhas.push(
+  lines.push(
     '    </AlertDialogHeader>',
     '    <AlertDialogFooter>',
     `      <AlertDialogCancel${attrs(c.cancelar.evento)}>${c.cancelar.rotulo}</AlertDialogCancel>`,
@@ -111,16 +111,16 @@ function dialogo(c: Composition): string {
     '</AlertDialog>',
   );
 
-  return linhas.join('\n');
+  return lines.join('\n');
 }
 
 /** Monta o SFC a partir da composição, somando os imports de fora do módulo. */
-function snippet(c: Composition, extras: string[] = [], estado = ''): string {
+function snippet(c: Composition, extras: string[] = [], state = ''): string {
   const imports = [importDialog(c)];
   if (c.gatilho) imports.push(`import { Button } from '@/components/ui/button'`);
   if (c.midia) imports.push(`import { TriangleAlert } from 'lucide-vue-next'`);
   imports.push(...extras);
-  const script = estado ? `${imports.join('\n')}\n\n${estado}` : imports.join('\n');
+  const script = state ? `${imports.join('\n')}\n\n${state}` : imports.join('\n');
   return vueSnippet(script, dialogo(c));
 }
 
@@ -348,7 +348,7 @@ export function alertDialogClassNameExtraSource(): string {
     raiz: ['default-open'],
     gatilho: { rotulo: 'Excluir conta', variante: 'destructive' },
     painel: 'class="nds-overflow-hidden"',
-    midia: { classe: 'class="nds-shrink-0"' },
+    midia: { className: 'class="nds-shrink-0"' },
     titulo: 'Excluir conta',
     descricao: DESCRIPTION_DEFAULT,
     cancelar: { rotulo: 'Cancelar' },

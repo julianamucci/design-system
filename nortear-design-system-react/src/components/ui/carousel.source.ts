@@ -85,13 +85,13 @@ export const carouselSource: SourceTransform<CarouselArgs> = (_gerado, ctx) => {
   // No eixo vertical o trilho precisa de altura DEFINIDA: sem ela a base
   // `flex: 0 0 100%` do slide não tem contra o que resolver, e o carrossel
   // cresce em vez de recortar. A altura vem de uma classe de proporção.
-  const trilho = vertical ? ' className="nds-aspect-4-3"' : '';
+  const track = vertical ? ' className="nds-aspect-4-3"' : '';
   const item = vertical ? ' className="nds-basis-full"' : '';
 
   return jsxSnippet(
     `${IMPORT}\n\n${SLIDES}`,
     `<Carousel${raiz}>
-  <CarouselContent${trilho}>
+  <CarouselContent${track}>
     {slides.map((numero) => (
       <CarouselItem key={numero}${item}>
 ${miolo(vertical)}

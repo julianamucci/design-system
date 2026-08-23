@@ -94,14 +94,14 @@ export const InForm: Story = {
       <form class="nds-stack" data-spacing="sm" (submit)="aoEnviar($event)">
         <label ndsLabel id="rotulo-estado">Estado</label>
 
-        <nds-select name="estado" required>
+        <nds-select name="state" required>
           <button ndsSelectTrigger aria-labelledby="rotulo-estado">
             <span ndsSelectValue placeholder="Selecione..."></span>
           </button>
 
           <ng-template ndsSelectContent>
-            @for (estado of states; track estado.value) {
-              <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
+            @for (state of states; track state.value) {
+              <div ndsSelectItem [value]="state.value">{{ state.label }}</div>
             }
           </ng-template>
         </nds-select>
@@ -144,7 +144,7 @@ export const InForm: Story = {
       await userEvent.click(canvas.getByRole('button', { name: 'Salvar' }));
 
       await waitFor(async () => {
-        await expect(Object.fromEntries(new FormData(form).entries())).toEqual({ estado: 'mg' });
+        await expect(Object.fromEntries(new FormData(form).entries())).toEqual({ state: 'mg' });
       });
     });
   },
@@ -169,7 +169,7 @@ export const WithReactiveForms: Story = {
   },
   render: () => {
     const form = new FormGroup({
-      estado: new FormControl<string | null>(null, Validators.required),
+      state: new FormControl<string | null>(null, Validators.required),
     });
     return {
       props: { states: STATES, form, onSubmit: fn() },
@@ -177,14 +177,14 @@ export const WithReactiveForms: Story = {
         <form class="nds-stack" data-spacing="sm" [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
           <label ndsLabel id="rotulo-estado-reativo">Estado</label>
 
-          <nds-select formControlName="estado" [invalid]="form.controls.estado.invalid">
+          <nds-select formControlName="state" [invalid]="form.controls.state.invalid">
             <button ndsSelectTrigger aria-labelledby="rotulo-estado-reativo">
               <span ndsSelectValue placeholder="Selecione..."></span>
             </button>
 
             <ng-template ndsSelectContent>
-              @for (estado of states; track estado.value) {
-                <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
+              @for (state of states; track state.value) {
+                <div ndsSelectItem [value]="state.value">{{ state.label }}</div>
               }
             </ng-template>
           </nds-select>

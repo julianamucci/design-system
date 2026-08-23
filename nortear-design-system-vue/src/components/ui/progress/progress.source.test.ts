@@ -170,7 +170,7 @@ describe('transforms das stories de composição', () => {
 });
 
 describe('o snippet ensina o design system, não o andaime da story', () => {
-  const todas = [
+  const all = [
     progressSource,
     progressDeterminadoSource,
     progressIndeterminadoSource,
@@ -191,7 +191,7 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
     // tamanho. Copiado para o snippet, o valor sai do alcance do tema, da
     // densidade e da escala tipográfica — e o snippet é o markup que alguém
     // COPIA.
-    for (const fn of todas) {
+    for (const fn of all) {
       const saida = fn();
       expect(saida).not.toContain('style=');
       expect(saida).not.toContain('360px');
@@ -200,13 +200,13 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
   });
 
   it('toda barra tem nome acessível — o papel sozinho não diz de quê', () => {
-    for (const fn of todas) {
+    for (const fn of all) {
       expect(fn()).toMatch(/<Progress[\s\S]*?:?aria-label="/);
     }
   });
 
   it('todas importam do design system, nunca de um caminho interno', () => {
-    for (const fn of todas) {
+    for (const fn of all) {
       expect(fn()).toContain(`import { Progress } from '@/components/ui/progress'`);
     }
   });

@@ -213,20 +213,20 @@ export const Playground: Story = {
       // O foco NÃO se move: é o que permite continuar digitando enquanto se
       // navega, e é por isso que o destaque precisa de aria-activedescendant.
       await expect(campo).toHaveFocus();
-      const primeiro = document.getElementById(campo.getAttribute('aria-activedescendant')!)!;
-      await expect(primeiro).toHaveAttribute('role', 'option');
-      await expect(primeiro).toHaveAttribute('aria-selected', 'true');
-      await expect(primeiro).toHaveTextContent('Button');
+      const first = document.getElementById(campo.getAttribute('aria-activedescendant')!)!;
+      await expect(first).toHaveAttribute('role', 'option');
+      await expect(first).toHaveAttribute('aria-selected', 'true');
+      await expect(first).toHaveTextContent('Button');
 
       await userEvent.keyboard('{ArrowDown}');
       const segundo = document.getElementById(campo.getAttribute('aria-activedescendant')!)!;
       await expect(segundo).toHaveTextContent('Input');
       // Um destaque por vez.
-      await expect(primeiro).toHaveAttribute('aria-selected', 'false');
+      await expect(first).toHaveAttribute('aria-selected', 'false');
 
       await userEvent.keyboard('{ArrowUp}');
-      await expect(campo.getAttribute('aria-activedescendant')).toBe(primeiro.id);
-      await expect(primeiro).toHaveAttribute('aria-selected', 'true');
+      await expect(campo.getAttribute('aria-activedescendant')).toBe(first.id);
+      await expect(first).toHaveAttribute('aria-selected', 'true');
     });
 
     await step('Enter escolhe o comando em destaque e zera a busca', async () => {

@@ -45,7 +45,7 @@ export function toggleSnippet(o: ToggleSnippetOptions = {}): string {
     ? `[createElement(${icone}), ${texto(o.label as string)}]`
     : `createElement(${icone})`;
 
-  const linhas = opcoes([
+  const lines = opcoes([
     ['children', children],
     // Sem texto visível o nome acessível é obrigatório: `aria-pressed` sozinho
     // faz o leitor anunciar "pressionado" sem dizer o quê.
@@ -60,7 +60,7 @@ export function toggleSnippet(o: ToggleSnippetOptions = {}): string {
 
   return snippet(
     [importing('toggle', 'createToggle'), `import { ${icone}, createElement } from 'lucide';`].join('\n'),
-    `const alternador = ${chamada('createToggle', linhas)};`,
+    `const alternador = ${chamada('createToggle', lines)};`,
     montar('alternador'),
   );
 }
@@ -76,7 +76,7 @@ export function toggleRowSnippet(variacoes: ToggleSnippetOptions[]): string {
     const withText = Boolean(v.label);
     const icone = v.icon ?? (withText ? 'Eye' : 'Bold');
     icons.add(icone);
-    const linhas = opcoes([
+    const lines = opcoes([
       [
         'children',
         withText
@@ -89,7 +89,7 @@ export function toggleRowSnippet(variacoes: ToggleSnippetOptions[]): string {
       ['pressed', v.pressed ? 'true' : undefined],
       ['disabled', v.disabled ? 'true' : undefined],
     ]);
-    return `  ${chamada('createToggle', linhas)},`;
+    return `  ${chamada('createToggle', lines)},`;
   });
 
   const names = [...icons].filter((n) => n !== 'createElement').sort();

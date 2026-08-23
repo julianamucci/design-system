@@ -265,13 +265,13 @@ export class NdsMenubarMenu {
   host: {
     class: 'nds-menubar-trigger',
     '[attr.data-slot]': '"menubar-trigger"',
-    '[attr.data-state]': 'estado()',
+    '[attr.data-state]': 'state()',
   },
 })
 export class NdsMenubarTrigger {
   private readonly menu = injectRdxMenuRootContext();
 
-  readonly estado = computed(() => (this.menu.isOpen() ? 'open' : 'closed'));
+  readonly state = computed(() => (this.menu.isOpen() ? 'open' : 'closed'));
 }
 
 // ─── Group + Label ────────────────────────────────────────────────────────────

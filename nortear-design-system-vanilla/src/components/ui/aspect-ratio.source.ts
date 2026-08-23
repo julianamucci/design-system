@@ -59,13 +59,13 @@ const ALT_DEFAULT = 'Paisagem montanhosa ao entardecer';
  * altura e posição saem da folha. O que sobra para quem consome é o recorte
  * (`object-fit`, que não tem utilitária) e o arredondamento, por classe.
  */
-function contentBlock(o: AspectRatioSnippetOptions): { nome: string; codigo: string } | null {
+function contentBlock(o: AspectRatioSnippetOptions): { nome: string; code: string } | null {
   const alt = o.alt ?? ALT_DEFAULT;
 
   if (o.content === 'iframe') {
     return {
       nome: 'mapa',
-      codigo: `const mapa = document.createElement('iframe');
+      code: `const mapa = document.createElement('iframe');
 mapa.src = 'https://www.openstreetmap.org/export/embed.html';
 mapa.title = ${texto(alt)};
 mapa.loading = 'lazy';
@@ -76,7 +76,7 @@ mapa.className = 'nds-rounded-md';`,
   if (o.content === 'video') {
     return {
       nome: 'video',
-      codigo: `const video = document.createElement('video');
+      code: `const video = document.createElement('video');
 video.controls = true;
 video.poster = ${texto(o.imageUrl ?? IMAGE_DEFAULT)};
 video.setAttribute('aria-label', ${texto(alt)});
@@ -97,7 +97,7 @@ video.appendChild(legenda);`,
 
   return {
     nome: 'imagem',
-    codigo: `const imagem = document.createElement('img');
+    code: `const imagem = document.createElement('img');
 imagem.src = ${texto(o.imageUrl ?? IMAGE_DEFAULT)};
 imagem.alt = ${texto(alt)};
 imagem.loading = 'lazy';
@@ -111,7 +111,7 @@ export function aspectRatioSnippet(o: AspectRatioSnippetOptions = {}): string {
   const ratio = o.ratio ?? 16 / 9;
   const conteudo = contentBlock(o);
 
-  const linhas = opcoes([
+  const lines = opcoes([
     // `1` é o padrão da fábrica (quadrado): só a proporção diferente entra.
     ['ratio', ratio === 1 ? undefined : ratioExpressao(ratio)],
     ['content', conteudo?.nome],
@@ -120,8 +120,8 @@ export function aspectRatioSnippet(o: AspectRatioSnippetOptions = {}): string {
 
   return snippet(
     importing('aspect-ratio', 'createAspectRatio'),
-    conteudo?.codigo,
-    `const caixa = ${chamada('createAspectRatio', linhas)};`,
+    conteudo?.code,
+    `const caixa = ${chamada('createAspectRatio', lines)};`,
     montar('caixa'),
   );
 }

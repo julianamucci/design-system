@@ -36,7 +36,7 @@ function separatorCall(o: SeparatorSnippetOptions): string {
     ['emphasis', o.emphasis === 'strong' ? texto('strong') : undefined],
     ['className', o.className ? texto(o.className) : undefined],
   ])
-    .map((linha) => linha.replace(/,$/, ''))
+    .map((line) => line.replace(/,$/, ''))
     .join(', ');
   return pairs ? `createSeparator({ ${pairs} })` : 'createSeparator()';
 }
@@ -58,7 +58,7 @@ ${variavel}.textContent = ${texto(conteudo)};`;
  */
 export function separatorSnippet(o: SeparatorSnippetOptions = {}): string {
   const vertical = o.orientation === 'vertical';
-  const primeiro = vertical ? 'esquerda' : 'topo';
+  const first = vertical ? 'esquerda' : 'topo';
   const segundo = vertical ? 'direita' : 'base';
 
   const container = vertical
@@ -73,9 +73,9 @@ secao.dataset.spacing = 'md';`;
   return snippet(
     importing('separator', 'createSeparator'),
     container,
-    bloco(primeiro, o.antes ?? (vertical ? 'Item A' : 'Seção superior')),
+    bloco(first, o.antes ?? (vertical ? 'Item A' : 'Seção superior')),
     bloco(segundo, o.depois ?? (vertical ? 'Item B' : 'Seção inferior')),
-    `secao.append(${primeiro}, ${separatorCall(o)}, ${segundo});`,
+    `secao.append(${first}, ${separatorCall(o)}, ${segundo});`,
     montar('secao'),
   );
 }

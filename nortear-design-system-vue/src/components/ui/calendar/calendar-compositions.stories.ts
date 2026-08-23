@@ -51,7 +51,7 @@ export const DatePicker: Story = {
   render: () => ({
     components: { Calendar, Popover, PopoverContent, PopoverTrigger, Button },
     setup() {
-      const aberto = ref(false);
+      const isOpen = ref(false);
       const selecionada = ref<DateValue | undefined>(new CalendarDate(2026, 4, 12));
       const placeholder = ref<DateValue>(new CalendarDate(2026, 4, 15));
       const rotulo = computed(() =>
@@ -67,13 +67,13 @@ export const DatePicker: Story = {
         onSelect(valor);
         // Escolhida a data, o popover não tem mais o que oferecer: mantê-lo
         // aberto obrigaria a fechá-lo à mão para ver o resultado.
-        aberto.value = false;
+        isOpen.value = false;
       }
 
-      return { aberto, selecionada, placeholder, rotulo, choose };
+      return { isOpen, selecionada, placeholder, rotulo, choose };
     },
     template: `
-      <Popover v-model:open="aberto">
+      <Popover v-model:open="isOpen">
         <PopoverTrigger as-child>
           <Button variant="outline">{{ rotulo }}</Button>
         </PopoverTrigger>

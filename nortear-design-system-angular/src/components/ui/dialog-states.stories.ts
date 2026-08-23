@@ -182,9 +182,9 @@ const spyControlled = fn();
 export const Controlled: Story = {
   parameters: { covers: ['functional.item7'] },
   render: () => ({
-    props: { labels: LABELS, aberto: false, onOpenChange: spyControlled },
+    props: { labels: LABELS, isOpen: false, onOpenChange: spyControlled },
     template: `
-      <div ndsDialog [open]="aberto" (openChange)="aberto = $event; onOpenChange($event)">
+      <div ndsDialog [open]="isOpen" (openChange)="isOpen = $event; onOpenChange($event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ labels.trigger }}</button>
 
         <ng-template ndsDialogPortal>

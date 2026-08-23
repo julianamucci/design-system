@@ -50,19 +50,19 @@ function Tooltip({
   // Espelho local do estado: o base-ui não expõe contexto público de leitura, e
   // o gatilho precisa saber se o balão existe para decidir o describedby.
   const [openInterno, setOpenInterno] = React.useState(defaultOpen ?? false)
-  const aberto = open ?? openInterno
+  const isOpen = open ?? openInterno
 
   const handleOpenChange = React.useCallback<
     NonNullable<TooltipPrimitive.Root.Props["onOpenChange"]>
   >(
-    (proximo, detalhes) => {
-      setOpenInterno(proximo)
-      onOpenChange?.(proximo, detalhes)
+    (next, detalhes) => {
+      setOpenInterno(next)
+      onOpenChange?.(next, detalhes)
     },
     [onOpenChange]
   )
 
-  const valor = React.useMemo(() => ({ id, open: aberto }), [id, aberto])
+  const valor = React.useMemo(() => ({ id, open: isOpen }), [id, isOpen])
 
   return (
     <TooltipDescriptionContext.Provider value={valor}>

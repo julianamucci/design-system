@@ -205,9 +205,9 @@ export const DATA_TABLE_LABELS_DEFAULT: DataTableLabels = {
 /** Vazio tipográfico: o que uma célula sem valor mostra nas cinco stacks. */
 const CELL_VAZIA = '—';
 
-function preencher(modelo: string, valores: Record<string, string | number>): string {
+function preencher(modelo: string, values: Record<string, string | number>): string {
   let saida = modelo;
-  for (const [chave, valor] of Object.entries(valores)) {
+  for (const [chave, valor] of Object.entries(values)) {
     saida = saida.split(`{${chave}}`).join(String(valor));
   }
   return saida;
@@ -295,7 +295,7 @@ interface CellRenderizada {
   header: string;
   texto: string;
   /** Valor sem formatação — é ele que entra no campo de edição. */
-  bruto: string;
+  raw: string;
   numeric: boolean;
   editable: boolean;
   rotuloEdicao: string;
@@ -498,23 +498,23 @@ interface LineRenderizada {
           </thead>
 
           <tbody ndsTableBody>
-            @for (linha of linhasDaPagina(); track linha.chave) {
+            @for (line of linhasDaPagina(); track line.chave) {
               <tr
                 ndsTableRow
                 class="nds-data-table-tr"
-                [selected]="selecionadas().has(linha.chave)"
+                [selected]="selecionadas().has(line.chave)"
               >
                 @if (enableRowSelection()) {
                   <td ndsTableCell class="nds-data-table-td">
                     <button
                       ndsCheckbox
-                      [attr.aria-label]="linha.rotuloSelecao"
-                      [checked]="selecionadas().has(linha.chave)"
-                      (checkedChange)="alternarSelecao(linha.chave, $event)"
+                      [attr.aria-label]="line.rotuloSelecao"
+                      [checked]="selecionadas().has(line.chave)"
+                      (checkedChange)="alternarSelecao(line.chave, $event)"
                     ></button>
                   </td>
                 }
-                @for (celula of linha.celulas; track celula.colunaId) {
+                @for (celula of line.celulas; track celula.colunaId) {
                   <td
                     ndsTableCell
                     class="nds-data-table-td"
@@ -531,8 +531,8 @@ interface LineRenderizada {
                             [value]="rascunho()"
                             [attr.aria-label]="celula.rotuloEdicao"
                             (input)="aoDigitarEdicao($event)"
-                            (blur)="confirmarEdicao(linha, celula)"
-                            (keydown)="aoTeclarNaEdicao($event, linha, celula)"
+                            (blur)="confirmarEdicao(line, celula)"
+                            (keydown)="aoTeclarNaEdicao($event, line, celula)"
                           />
                         } @else {
                           <button
@@ -756,7 +756,7 @@ export class NdsDataTable<TData> implements OnInit {
 
   private readonly linhasBrutas = computed<LineRenderizada[]>(() => {
     const colunas = this.colunasVisiveis();
-    const todas = this.columns();
+    const all = this.columns();
     const keyOf = this.rowKey();
     const labelOf = this.rowLabel();
     const modeloSelection = this.rotulos().selectRow;
@@ -771,7 +771,7 @@ export class NdsDataTable<TData> implements OnInit {
       //  3. a chave da linha, quando a primeira coluna vem vazia.
       // Nunca cai em "Selecionar linha" puro: nome repetido em doze controles é o
       // mesmo que nome nenhum (WCAG 4.1.2).
-      const ofFirstColumn = todas.length > 0 ? this.texto(todas[0], row) : CELL_VAZIA;
+      const ofFirstColumn = all.length > 0 ? this.texto(all[0], row) : CELL_VAZIA;
       const rotulo =
         labelOf?.(row) || (ofFirstColumn === CELL_VAZIA ? chave : ofFirstColumn);
       return {
@@ -781,7 +781,7 @@ export class NdsDataTable<TData> implements OnInit {
         rotuloSelecao: preencher(modeloSelection, { row: rotulo }),
         // A busca livre casa em TODA coluna, inclusive nas escondidas pelo
         // menu: esconder uma coluna é decisão de leitura, não de escopo.
-        search: todas.map((c) => this.texto(c, row)).join(' ').toLowerCase(),
+        search: all.map((c) => this.texto(c, row)).join(' ').toLowerCase(),
         celulas: colunas.map((c) => ({
           colunaId: c.id,
           header: c.header,
@@ -789,7 +789,7 @@ export class NdsDataTable<TData> implements OnInit {
           // O rascunho da edição parte do valor CRU: abrir o campo com
           // "R$ 250,00" faria a pessoa editar a formatação, e o commit
           // devolveria NaN para uma coluna que é número.
-          bruto: (() => {
+          raw: (() => {
             const v = c.accessor(row);
             return v === null || v === undefined ? '' : String(v);
           })(),
@@ -808,13 +808,13 @@ export class NdsDataTable<TData> implements OnInit {
     const colunas = this.columns();
     const dados = this.data();
 
-    return this.linhasBrutas().filter((linha) => {
-      if (search && !linha.search.includes(search)) return false;
+    return this.linhasBrutas().filter((line) => {
+      if (search && !line.search.includes(search)) return false;
       for (const [colunaId, valor] of byColumn) {
         if (!valor) continue;
         const coluna = colunas.find((c) => c.id === colunaId);
         if (!coluna) continue;
-        const texto = this.texto(coluna, dados[linha.indice]);
+        const texto = this.texto(coluna, dados[line.indice]);
         const casa = coluna.filter?.type === 'select'
           ? texto === valor
           : texto.toLowerCase().includes(valor.toLowerCase());
@@ -826,15 +826,15 @@ export class NdsDataTable<TData> implements OnInit {
 
   private readonly linhasOrdenadas = computed(() => {
     const order = this.ordenacao();
-    const linhas = this.linhasFiltradas();
-    if (!order) return linhas;
+    const lines = this.linhasFiltradas();
+    if (!order) return lines;
 
     const coluna = this.columns().find((c) => c.id === order.id);
-    if (!coluna) return linhas;
+    if (!coluna) return lines;
 
     const dados = this.data();
     const sinal = order.dir === 'asc' ? 1 : -1;
-    return [...linhas].sort((a, b) => {
+    return [...lines].sort((a, b) => {
       const va = coluna.accessor(dados[a.indice]);
       const vb = coluna.accessor(dados[b.indice]);
       if (typeof va === 'number' && typeof vb === 'number') return (va - vb) * sinal;
@@ -848,14 +848,14 @@ export class NdsDataTable<TData> implements OnInit {
   });
 
   protected readonly linhasDaPagina = computed(() => {
-    const linhas = this.linhasOrdenadas();
-    if (!this.mostrarPaginacao()) return linhas;
+    const lines = this.linhasOrdenadas();
+    if (!this.mostrarPaginacao()) return lines;
     // A página é limitada aqui, e não por efeito colateral: um filtro que
     // encurta o resultado enquanto se está na última página deixaria o índice
     // apontando para o vazio, e a tabela pareceria não ter achado nada.
     const pagina = Math.min(this.paginaAtual(), this.totalDePaginas() - 1);
     const start = pagina * this.tamanhoDePagina();
-    return linhas.slice(start, start + this.tamanhoDePagina());
+    return lines.slice(start, start + this.tamanhoDePagina());
   });
 
   protected readonly mostrarPaginacao = computed(() => this.enablePagination());
@@ -910,10 +910,10 @@ export class NdsDataTable<TData> implements OnInit {
   }
 
   private definirFiltro(id: string, valor: string): void {
-    const proximo = new Map(this.filtrosPorColuna());
-    if (valor) proximo.set(id, valor);
-    else proximo.delete(id);
-    this.filtrosPorColuna.set(proximo);
+    const next = new Map(this.filtrosPorColuna());
+    if (valor) next.set(id, valor);
+    else next.delete(id);
+    this.filtrosPorColuna.set(next);
     this.paginaAtual.set(0);
   }
 
@@ -927,10 +927,10 @@ export class NdsDataTable<TData> implements OnInit {
    * e misto não quer dizer "escondida".
    */
   protected alternarVisibilidade(id: string, visible: CheckedState): void {
-    const proximo = new Set(this.ocultas());
-    if (visible !== false) proximo.delete(id);
-    else proximo.add(id);
-    this.ocultas.set(proximo);
+    const next = new Set(this.ocultas());
+    if (visible !== false) next.delete(id);
+    else next.add(id);
+    this.ocultas.set(next);
   }
 
   // ─── Seleção ────────────────────────────────────────────────────────────────
@@ -938,33 +938,33 @@ export class NdsDataTable<TData> implements OnInit {
   protected readonly todasDaPaginaSelecionadas = computed(() => {
     const pagina = this.linhasDaPagina();
     if (pagina.length === 0) return false;
-    const marcadas = this.selecionadas();
-    return pagina.every((l) => marcadas.has(l.chave));
+    const checked = this.selecionadas();
+    return pagina.every((l) => checked.has(l.chave));
   });
 
   protected readonly algumasDaPaginaSelecionadas = computed(() => {
     const pagina = this.linhasDaPagina();
-    const marcadas = this.selecionadas();
-    const quantas = pagina.filter((l) => marcadas.has(l.chave)).length;
+    const checked = this.selecionadas();
+    const quantas = pagina.filter((l) => checked.has(l.chave)).length;
     return quantas > 0 && quantas < pagina.length;
   });
 
   protected alternarSelecao(chave: string, marcada: boolean): void {
-    const proximo = new Set(this.selecionadas());
-    if (marcada) proximo.add(chave);
-    else proximo.delete(chave);
-    this.selecionadas.set(proximo);
-    this.emitirSelecao(proximo);
+    const next = new Set(this.selecionadas());
+    if (marcada) next.add(chave);
+    else next.delete(chave);
+    this.selecionadas.set(next);
+    this.emitirSelecao(next);
   }
 
   protected alternarTodasDaPagina(marcada: boolean): void {
-    const proximo = new Set(this.selecionadas());
-    for (const linha of this.linhasDaPagina()) {
-      if (marcada) proximo.add(linha.chave);
-      else proximo.delete(linha.chave);
+    const next = new Set(this.selecionadas());
+    for (const line of this.linhasDaPagina()) {
+      if (marcada) next.add(line.chave);
+      else next.delete(line.chave);
     }
-    this.selecionadas.set(proximo);
-    this.emitirSelecao(proximo);
+    this.selecionadas.set(next);
+    this.emitirSelecao(next);
   }
 
   private emitirSelecao(chaves: ReadonlySet<string>): void {
@@ -1001,7 +1001,7 @@ export class NdsDataTable<TData> implements OnInit {
   // ─── Edição inline ──────────────────────────────────────────────────────────
 
   protected abrirEdicao(celula: CellRenderizada): void {
-    this.rascunho.set(celula.bruto);
+    this.rascunho.set(celula.raw);
     this.emEdicao.set(celula.chave);
   }
 
@@ -1009,28 +1009,28 @@ export class NdsDataTable<TData> implements OnInit {
     this.rascunho.set((evento.target as HTMLInputElement).value);
   }
 
-  protected confirmarEdicao(linha: LineRenderizada, celula: CellRenderizada): void {
+  protected confirmarEdicao(line: LineRenderizada, celula: CellRenderizada): void {
     if (this.emEdicao() !== celula.chave) return;
     this.emEdicao.set(null);
 
     const coluna = this.columns().find((c) => c.id === celula.colunaId);
-    const previous = coluna?.accessor(this.data()[linha.indice]);
-    const bruto = this.rascunho();
+    const previous = coluna?.accessor(this.data()[line.indice]);
+    const raw = this.rascunho();
     // O tipo do valor anterior manda: uma coluna numérica que voltasse como
     // string reordenaria por texto na próxima ordenação, sem erro nenhum.
-    const valor = typeof previous === 'number' ? Number(bruto) : bruto;
+    const valor = typeof previous === 'number' ? Number(raw) : raw;
 
-    this.cellEdit.emit({ rowIndex: linha.indice, columnId: celula.colunaId, value: valor });
+    this.cellEdit.emit({ rowIndex: line.indice, columnId: celula.colunaId, value: valor });
   }
 
   protected aoTeclarNaEdicao(
     evento: KeyboardEvent,
-    linha: LineRenderizada,
+    line: LineRenderizada,
     celula: CellRenderizada,
   ): void {
     if (evento.key === 'Enter') {
       evento.preventDefault();
-      this.confirmarEdicao(linha, celula);
+      this.confirmarEdicao(line, celula);
     } else if (evento.key === 'Escape') {
       // Cancela ANTES do blur: fechar o campo dispara `blur`, e sem zerar o
       // estado o handler de confirmação salvaria o rascunho descartado.

@@ -92,10 +92,10 @@ export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
    * habilitado. É o que faz o Tab sair do grupo em vez de percorrê-lo.
    */
   function updateTabStops(): void {
-    const todos = Array.from(
+    const all = Array.from(
       fieldset.querySelectorAll<HTMLButtonElement>('[data-slot="radio-group-item"]'),
     );
-    const habilitados = todos.filter((b) => !b.disabled);
+    const habilitados = all.filter((b) => !b.disabled);
     const marcado = habilitados.find((b) => b.getAttribute('aria-checked') === 'true');
     const parada = marcado ?? habilitados[0];
     // Todos saem da ordem de tabulação e só a parada volta. O item bloqueado é
@@ -103,7 +103,7 @@ export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
     // `tabindex="0"` implícito do <button> faz o markup dizer o contrário do
     // comportamento — e é o markup que as outras stacks emitem e a auditoria
     // cross-stack compara.
-    todos.forEach((b) => {
+    all.forEach((b) => {
       b.tabIndex = b === parada ? 0 : -1;
     });
   }

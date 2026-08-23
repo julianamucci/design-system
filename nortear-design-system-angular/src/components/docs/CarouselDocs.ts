@@ -1064,47 +1064,47 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
     const not = tNav('common.no');
     // "—" e nunca a string "undefined": travessão é o vazio tipográfico, e é o
     // que as outras stacks mostram.
-    const linha = (name: string, chave: string, tipo: string, padrao: string) => ({
+    const line = (name: string, chave: string, tipo: string, padrao: string) => ({
       name,
       type: tipo,
       defaultValue: padrao,
       required: not,
       description: toPlainText(t(`props.table.${chave}`)),
     });
-    const classe = linha('class', 'className', 'string', '—');
-    const conteudo = linha('(conteúdo)', 'children', 'HTML', '—');
+    const className = line('class', 'className', 'string', '—');
+    const conteudo = line('(conteúdo)', 'children', 'HTML', '—');
 
     return [
       {
         title: t('props.carouselTitle'),
         cols,
         items: [
-          linha('orientation', 'orientation', `'horizontal' | 'vertical'`, `'horizontal'`),
-          linha('loop', 'loop', 'boolean', 'false'),
-          linha('autoplay', 'autoplay', 'boolean', 'false'),
-          linha('autoplayDelay', 'autoplayDelay', 'number', '4000'),
-          linha('slideLabel', 'slideLabel', 'string', `'{index} / {total}'`),
-          linha('label', 'label', 'string', '—'),
-          linha('slideChange', 'slideChange', 'output<CarouselSlideChange>', '—'),
-          linha('autoplayPause', 'autoplayPause', 'output<{ index: number }>', '—'),
-          classe,
+          line('orientation', 'orientation', `'horizontal' | 'vertical'`, `'horizontal'`),
+          line('loop', 'loop', 'boolean', 'false'),
+          line('autoplay', 'autoplay', 'boolean', 'false'),
+          line('autoplayDelay', 'autoplayDelay', 'number', '4000'),
+          line('slideLabel', 'slideLabel', 'string', `'{index} / {total}'`),
+          line('label', 'label', 'string', '—'),
+          line('slideChange', 'slideChange', 'output<CarouselSlideChange>', '—'),
+          line('autoplayPause', 'autoplayPause', 'output<{ index: number }>', '—'),
+          className,
           conteudo,
         ],
       },
-      { title: t('props.contentTitle'), cols, items: [classe, conteudo] },
+      { title: t('props.contentTitle'), cols, items: [className, conteudo] },
       {
         title: t('props.itemTitle'),
         cols,
-        items: [linha('label', 'itemLabel', 'string', '—'), classe, conteudo],
+        items: [line('label', 'itemLabel', 'string', '—'), className, conteudo],
       },
       {
         title: t('props.navTitle'),
         cols,
         items: [
-          linha('variant', 'variant', 'ButtonVariant', `'outline'`),
-          linha('size', 'size', 'ButtonSize', `'icon-sm'`),
-          linha('label', 'navLabel', 'string', '—'),
-          classe,
+          line('variant', 'variant', 'ButtonVariant', `'outline'`),
+          line('size', 'size', 'ButtonSize', `'icon-sm'`),
+          line('label', 'navLabel', 'string', '—'),
+          className,
         ],
       },
     ];

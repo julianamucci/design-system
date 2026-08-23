@@ -25,7 +25,7 @@ export function indentar(texto: string, n = 2): string {
   const espacos = ' '.repeat(n);
   return texto
     .split('\n')
-    .map((linha) => (linha.trim() ? `${espacos}${linha}` : linha))
+    .map((line) => (line.trim() ? `${espacos}${line}` : line))
     .join('\n');
 }
 
@@ -98,8 +98,8 @@ export function asCode(valor: unknown): string | undefined {
  * que o leitor vê renderizado.
  */
 export function texto(valor: unknown, padrao = ''): string {
-  const bruto = typeof valor === 'string' ? valor : padrao;
-  return bruto.replace(/"/g, '&quot;');
+  const raw = typeof valor === 'string' ? valor : padrao;
+  return raw.replace(/"/g, '&quot;');
 }
 
 /**
@@ -107,10 +107,10 @@ export function texto(valor: unknown, padrao = ''): string {
  * igual ao padrão do componente.
  */
 export function attr(nome: string, valor: unknown, padrao?: string): string {
-  const bruto = asCode(valor);
-  if (bruto === undefined) return '';
-  if (padrao !== undefined && bruto === padrao) return '';
-  return `${nome}="${texto(bruto)}"`;
+  const raw = asCode(valor);
+  if (raw === undefined) return '';
+  if (padrao !== undefined && raw === padrao) return '';
+  return `${nome}="${texto(raw)}"`;
 }
 
 /**

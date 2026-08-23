@@ -169,8 +169,8 @@ export const Controlled: Story = {
     const cartao = createHoverCard({
       trigger: construirLink('@joana'),
       content: construirCartaoPerfil(),
-      onOpenChange: (aberto) => {
-        espelho.textContent = `Estado externo: ${aberto ? 'aberto' : 'fechado'}`;
+      onOpenChange: (isOpen) => {
+        espelho.textContent = `Estado externo: ${isOpen ? 'aberto' : 'fechado'}`;
       },
     }) as HoverCardElement;
 

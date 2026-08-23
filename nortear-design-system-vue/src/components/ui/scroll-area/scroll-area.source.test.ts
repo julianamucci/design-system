@@ -14,7 +14,7 @@ import {
   scrollAreaVerticalSource,
 } from './scroll-area.source';
 
-const TODAS = [
+const ALL = [
   scrollAreaSource(),
   scrollAreaVerticalSource(),
   scrollAreaHorizontalSource(),
@@ -92,12 +92,12 @@ const tags = Array.from({ length: 40 }, (_, i) => \`Tag \${i + 1}\`)
 describe('a altura é a lição do componente', () => {
   it('toda transform que promete rolagem declara o tamanho da janela', () => {
     // Sem limite não há transbordo, e sem transbordo não há rolagem.
-    const withScroll = TODAS.filter((s) => s !== scrollAreaNoLimitSource());
+    const withScroll = ALL.filter((s) => s !== scrollAreaNoLimitSource());
     for (const saida of withScroll) expect(saida).toMatch(/<ScrollArea[^>]*size="/);
   });
 
   it('nenhuma transform crava medida em style inline', () => {
-    for (const saida of TODAS) expect(saida).not.toContain('style=');
+    for (const saida of ALL) expect(saida).not.toContain('style=');
   });
 
   it('a story do erro de uso mostra as duas áreas, uma sem tamanho', () => {
@@ -181,7 +181,7 @@ describe('transforms das stories de composição', () => {
 
 describe('o andaime das stories não entra no snippet', () => {
   it('nenhuma transform cita a sonda de transbordo nem o molde da story', () => {
-    for (const saida of TODAS) {
+    for (const saida of ALL) {
       expect(saida).not.toContain('transbordo');
       expect(saida).not.toContain('scroll-area-probe');
       expect(saida).not.toContain('wrapTemplate');

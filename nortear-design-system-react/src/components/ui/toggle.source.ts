@@ -66,7 +66,7 @@ function toggle(atributos: string, icone: string, labelVisible?: string): string
 function insideOf(conteudo: string): string {
   return conteudo
     .split('\n')
-    .map((linha) => (linha.trim() ? `  ${linha}` : linha))
+    .map((line) => (line.trim() ? `  ${line}` : line))
     .join('\n');
 }
 

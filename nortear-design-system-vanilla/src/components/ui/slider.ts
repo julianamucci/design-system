@@ -83,7 +83,7 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
   const ariaLabel = options['aria-label'] ?? options.ariaLabel;
 
   const ehIntervalo = Array.isArray(options.value);
-  const valores: number[] = ehIntervalo
+  const values: number[] = ehIntervalo
     ? [...(options.value as number[])]
     : [(options.value as number | undefined) ?? min];
   const vertical = orientation === 'vertical';
@@ -123,8 +123,8 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
   function updateVisuals(): void {
     // Com uma alça o preenchimento nasce no mínimo; com duas, no primeiro
     // extremo — é o trecho ENTRE as alças que fica pintado.
-    const start = ehIntervalo ? pct(valores[0]) : 0;
-    const end = ehIntervalo ? pct(valores[1]) : pct(valores[0]);
+    const start = ehIntervalo ? pct(values[0]) : 0;
+    const end = ehIntervalo ? pct(values[1]) : pct(values[0]);
 
     if (vertical) {
       // Em pé o preenchimento cresce de baixo para cima, e a alça anda no
@@ -137,7 +137,7 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
       range.style.width = `${end - start}%`;
     }
 
-    valores.forEach((v, i) => {
+    values.forEach((v, i) => {
       const thumb = thumbs[i];
       if (!thumb) return;
       if (vertical) thumb.style.bottom = `calc(${pct(v)}% - 0.75rem)`;
@@ -146,16 +146,16 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
   }
 
   function emitirChange(): void {
-    if (ehIntervalo) (options as SliderRangeOptions).onValueChange?.([...valores]);
-    else (options as SliderSingleOptions).onValueChange?.(valores[0]);
+    if (ehIntervalo) (options as SliderRangeOptions).onValueChange?.([...values]);
+    else (options as SliderSingleOptions).onValueChange?.(values[0]);
   }
 
   function emitirCommit(): void {
-    if (ehIntervalo) (options as SliderRangeOptions).onValueCommitted?.([...valores]);
-    else (options as SliderSingleOptions).onValueCommitted?.(valores[0]);
+    if (ehIntervalo) (options as SliderRangeOptions).onValueCommitted?.([...values]);
+    else (options as SliderSingleOptions).onValueCommitted?.(values[0]);
   }
 
-  valores.forEach((valueInitial, indice) => {
+  values.forEach((valueInitial, indice) => {
     const thumb = document.createElement('span');
     thumb.className = 'nds-slider-thumb';
     thumb.dataset.slot = 'slider-thumb';
@@ -179,17 +179,17 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
     track.appendChild(nativeInput);
 
     nativeInput.addEventListener('input', () => {
-      const bruto = Number(nativeInput.value);
+      const raw = Number(nativeInput.value);
       // Os extremos não se cruzam: o mínimo para no máximo e vice-versa. Sem
       // isto o arrasto passa por cima do irmão e o intervalo sai invertido —
       // e ninguém que lê `[80, 20]` sabe o que fazer com ele.
       const preso = ehIntervalo
         ? indice === 0
-          ? Math.min(bruto, valores[1])
-          : Math.max(bruto, valores[0])
-        : bruto;
-      if (preso !== bruto) nativeInput.value = String(preso);
-      valores[indice] = preso;
+          ? Math.min(raw, values[1])
+          : Math.max(raw, values[0])
+        : raw;
+      if (preso !== raw) nativeInput.value = String(preso);
+      values[indice] = preso;
       updateVisuals();
       emitirChange();
     });
@@ -215,7 +215,7 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
         ? caixa.height === 0 ? 0 : (caixa.bottom - e.clientY) / caixa.height
         : caixa.width === 0 ? 0 : (e.clientX - caixa.left) / caixa.width;
       const alvo = min + ratio * (max - min);
-      const perto = Math.abs(alvo - valores[0]) <= Math.abs(alvo - valores[1]) ? 0 : 1;
+      const perto = Math.abs(alvo - values[0]) <= Math.abs(alvo - values[1]) ? 0 : 1;
       inputs[perto].style.zIndex = '2';
       inputs[perto === 0 ? 1 : 0].style.zIndex = '1';
     };

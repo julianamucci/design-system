@@ -364,7 +364,7 @@ const COMPOSITION_CODE = {
     </ng-template>
     <ng-template #tplDoDont2Dont>
       <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
-        @for (secao of secoesRepetidas(); track secao.id) {
+        @for (section of secoesRepetidas(); track section.id) {
           <div ndsCollapsible class="nds-w-full">
             <button
               ndsCollapsibleTrigger
@@ -373,7 +373,7 @@ const COMPOSITION_CODE = {
               class="nds-cluster nds-w-full nds-px-4"
               data-justify="between"
             >
-              <span>{{ secao.rotulo }}</span>
+              <span>{{ section.rotulo }}</span>
               <ng-container [ngTemplateOutlet]="tplChevron" />
             </button>
             <div ndsCollapsiblePanel [class]="painelClasses" data-spacing="sm">
@@ -742,8 +742,8 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
    * `String(...)` e afins não existem numa expressão de template Angular, então
    * a escolha mora aqui e o template só chama o método.
    */
-  protected rotuloAlternado(aberto: boolean): string {
-    return aberto
+  protected rotuloAlternado(isOpen: boolean): string {
+    return isOpen
       ? t('demonstration.labels.triggerOpen')
       : t('demonstration.labels.triggerClosed');
   }
@@ -776,19 +776,19 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
     ];
   });
 
-  protected aoAlternar(qual: string, aberto: boolean): void {
+  protected aoAlternar(qual: string, isOpen: boolean): void {
     track('collapsible_toggle', {
       // Valor estável, nunca o texto traduzido: o mesmo evento viraria três
       // valores no GA4, um por idioma.
       label: qual,
-      value: aberto ? 'open' : 'closed',
+      value: isOpen ? 'open' : 'closed',
       location: 'docs_demo',
     });
   }
 
-  protected aoAlternarControlado(aberto: boolean): void {
-    this.demoControlado.set(aberto);
-    this.aoAlternar('controlado', aberto);
+  protected aoAlternarControlado(isOpen: boolean): void {
+    this.demoControlado.set(isOpen);
+    this.aoAlternar('controlado', isOpen);
   }
 
   protected readonly navGroups = computed(() => {
@@ -993,15 +993,15 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '--border',  classe: 'nds-border-default', k: 'border'       },
-      { token: '--muted',   classe: 'nds-bg-muted-soft',  k: 'background'   },
-      { token: '--radius',  classe: 'nds-rounded-md',     k: 'radius'       },
-      { token: '--accent',  classe: 'nds-button-ghost',   k: 'triggerHover' },
-      { token: '--ring',    classe: 'nds-focus-ring',     k: 'triggerFocus' },
-      { token: '--duration-base', classe: 'nds-collapsible', k: 'transition' },
-    ].map(({ token, classe, k }) => ({
+      { token: '--border',  className: 'nds-border-default', k: 'border'       },
+      { token: '--muted',   className: 'nds-bg-muted-soft',  k: 'background'   },
+      { token: '--radius',  className: 'nds-rounded-md',     k: 'radius'       },
+      { token: '--accent',  className: 'nds-button-ghost',   k: 'triggerHover' },
+      { token: '--ring',    className: 'nds-focus-ring',     k: 'triggerFocus' },
+      { token: '--duration-base', className: 'nds-collapsible', k: 'transition' },
+    ].map(({ token, className, k }) => ({
       token,
-      value: classe,
+      value: className,
       description: toPlainText(t(`tokens.table.${k}`)),
     }));
   });

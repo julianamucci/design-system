@@ -108,7 +108,7 @@ export const TextLine: Story = {
       source: {
         transform: skeletonSourceWith({
           regionLabel: 'Carregando linhas de texto',
-          linhas: [
+          lines: [
             { shape: 'text', width: 'full' },
             { shape: 'text', width: '3-4' },
             { shape: 'text', width: '1-2' },
@@ -130,17 +130,17 @@ export const TextLine: Story = {
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    const linhas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
+    const lines = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
     await step('Três linhas, todas com altura desenhada', async () => {
-      await expect(linhas).toHaveLength(3);
-      for (const l of linhas) await expect(l.getBoundingClientRect().height).toBeGreaterThan(0);
+      await expect(lines).toHaveLength(3);
+      for (const l of lines) await expect(l.getBoundingClientRect().height).toBeGreaterThan(0);
     });
 
     await step('As larguras decrescem na ordem declarada', async () => {
       // É a asserção que faltava: o tradutor de classe utilitária descartava
       // `w-[60%]` em silêncio e as três linhas saíam do mesmo tamanho.
-      const larguras = linhas.map((l) => l.getBoundingClientRect().width);
+      const larguras = lines.map((l) => l.getBoundingClientRect().width);
       await expect(larguras[0]).toBeGreaterThan(larguras[1]);
       await expect(larguras[1]).toBeGreaterThan(larguras[2]);
     });

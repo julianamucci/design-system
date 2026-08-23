@@ -81,7 +81,7 @@ function level(conteudo: string, n: number): string {
   const prefixo = '  '.repeat(n);
   return conteudo
     .split('\n')
-    .map((linha) => (linha.trim() ? `${prefixo}${linha}` : linha))
+    .map((line) => (line.trim() ? `${prefixo}${line}` : line))
     .join('\n');
 }
 
@@ -171,7 +171,7 @@ type Composition = {
   parts?: string[];
   icons?: string[];
   /** Linhas de estado antes da marcação — só o uso controlado precisa. */
-  estado?: string;
+  state?: string;
   withFooter?: boolean;
   comFaixa?: boolean;
   /** O gatilho some quando não há o que alternar (`collapsible="none"`). */
@@ -194,7 +194,7 @@ function pagina(c: Composition): string {
   ];
 
   const importHeader = [
-    c.estado ? 'import { useState } from "react";' : '',
+    c.state ? 'import { useState } from "react";' : '',
     importingSidebar(parts),
     importingIcons(c.icons ?? ['LayoutDashboard', 'Blocks', 'Coins', 'User']),
   ]
@@ -222,7 +222,7 @@ ${level(c.grupos.join('\n'), 1)}
     : '<SidebarInset />';
 
   return jsxSnippet(
-    c.estado ? `${importHeader}\n\n${c.estado}` : importHeader,
+    c.state ? `${importHeader}\n\n${c.state}` : importHeader,
     `<SidebarProvider${c.provider ?? ''}>
   <nav aria-label="Navegação principal">
     <Sidebar${c.barra ?? ''}>
@@ -500,7 +500,7 @@ ${level([subitem('Button', true), subitem('Input'), subitem('Select')].join('\n'
       'SidebarMenuSubItem',
     ],
     icons: ['LayoutDashboard', 'Blocks', 'ChevronRight', 'Settings', 'User'],
-    estado: `const [componentesAbertos, setComponentesAbertos] = useState(true);`,
+    state: `const [componentesAbertos, setComponentesAbertos] = useState(true);`,
   });
 }
 
@@ -549,7 +549,7 @@ ${level(menu, 2)}
     parts: ['SidebarInput'],
     icons: [],
     withFooter: false,
-    estado: `const DESTINOS = ["Dashboard", "Componentes", "Tokens", "Notificações", "Perfil"];
+    state: `const DESTINOS = ["Dashboard", "Componentes", "Tokens", "Notificações", "Perfil"];
 
 const [busca, setBusca] = useState("");
 const visiveis = DESTINOS.filter((rotulo) =>

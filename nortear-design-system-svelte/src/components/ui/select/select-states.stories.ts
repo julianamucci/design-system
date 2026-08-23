@@ -146,13 +146,13 @@ export const Open: Story = {
 
       const partida = destacada();
       await userEvent.keyboard('{ArrowDown}');
-      const primeiro = Math.min(partida + 1, last);
+      const first = Math.min(partida + 1, last);
       await waitFor(async () => {
-        await expect(destacada()).toBe(primeiro);
+        await expect(destacada()).toBe(first);
       });
 
       await userEvent.keyboard('{ArrowDown}');
-      const segundo = Math.min(primeiro + 1, last);
+      const segundo = Math.min(first + 1, last);
       await waitFor(async () => {
         await expect(destacada()).toBe(segundo);
       });

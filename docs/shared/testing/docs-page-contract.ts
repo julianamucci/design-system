@@ -17,7 +17,7 @@
  */
 
 export interface ProblemaDeContrato {
-  regra: string;
+  rule: string;
   detalhe: string;
 }
 
@@ -67,10 +67,10 @@ function clip(s: string, n = 60): string {
  * vizinho reduzem a busca a um bloco.
  */
 function ondeEsta(el: Element): string {
-  const secao = el.closest('section');
-  const id = secao?.id ? `#${secao.id}` : secao ? 'section sem id' : 'fora de seção';
-  const linha = el.closest('tr');
-  const neighbour = linha ? clip(texto(linha), 50) : clip(texto(el.parentElement ?? el), 50);
+  const section = el.closest('section');
+  const id = section?.id ? `#${section.id}` : section ? 'section sem id' : 'fora de seção';
+  const line = el.closest('tr');
+  const neighbour = line ? clip(texto(line), 50) : clip(texto(el.parentElement ?? el), 50);
   return neighbour ? `${id}, perto de "${neighbour}"` : id;
 }
 
@@ -93,7 +93,7 @@ function keysVazadas(raiz: HTMLElement): ProblemaDeContrato[] {
     const t = texto(el);
     if (!t || !RE_KEY_I18N.test(t)) continue;
     if (!CONTENT_NAMESPACES.has(t.split('.')[0])) continue;
-    problemas.push({ regra: 'chave_i18n_visivel', detalhe: `"${t}" como texto — ${ondeEsta(el)}` });
+    problemas.push({ rule: 'chave_i18n_visivel', detalhe: `"${t}" como texto — ${ondeEsta(el)}` });
   }
   return problemas;
 }
@@ -105,7 +105,7 @@ function lixoVisible(raiz: HTMLElement): ProblemaDeContrato[] {
     if (el.children.length > 0) continue;
     const t = texto(el);
     if (LIXO.includes(t)) {
-      problemas.push({ regra: 'valor_indefinido_visivel', detalhe: `renderiza "${t}" — ${ondeEsta(el)}` });
+      problemas.push({ rule: 'valor_indefinido_visivel', detalhe: `renderiza "${t}" — ${ondeEsta(el)}` });
     }
   }
   return problemas;
@@ -122,7 +122,7 @@ function emptyCode(raiz: HTMLElement): ProblemaDeContrato[] {
   const problemas: ProblemaDeContrato[] = [];
   raiz.querySelectorAll<HTMLElement>('pre').forEach((pre, i) => {
     if (!texto(pre)) {
-      problemas.push({ regra: 'bloco_de_codigo_vazio', detalhe: `o bloco #${i + 1} não tem código` });
+      problemas.push({ rule: 'bloco_de_codigo_vazio', detalhe: `o bloco #${i + 1} não tem código` });
     }
   });
   return problemas;
@@ -142,13 +142,13 @@ function previews(raiz: HTMLElement): ProblemaDeContrato[] {
   for (const c of raiz.querySelectorAll<HTMLElement>('[data-docs-preview]')) {
     const qual = c.dataset.docsPreview ?? '?';
     if (c.childElementCount === 0 && !texto(c)) {
-      problemas.push({ regra: 'preview_vazio', detalhe: `contêiner "${qual}" vazio — ${ondeEsta(c)}` });
+      problemas.push({ rule: 'preview_vazio', detalhe: `contêiner "${qual}" vazio — ${ondeEsta(c)}` });
       continue;
     }
     const cs = getComputedStyle(c);
     if (!cs.display.includes('flex')) {
       problemas.push({
-        regra: 'preview_sem_layout',
+        rule: 'preview_sem_layout',
         detalhe: `contêiner "${qual}" com display ${cs.display} — não centraliza nada`,
       });
       continue;
@@ -161,7 +161,7 @@ function previews(raiz: HTMLElement): ProblemaDeContrato[] {
     const centralizador = inColumn ? cs.alignItems : cs.justifyContent;
     if (centralizador !== 'center') {
       problemas.push({
-        regra: 'preview_fora_do_centro',
+        rule: 'preview_fora_do_centro',
         detalhe: `contêiner "${qual}" em ${inColumn ? 'coluna' : 'linha'} com ${
           inColumn ? 'align-items' : 'justify-content'
         }: ${centralizador}`,
@@ -185,7 +185,7 @@ function hierarquiaDeTitulos(raiz: HTMLElement): ProblemaDeContrato[] {
     const level = Number(t.tagName[1]);
     if (previous && level > previous + 1) {
       problemas.push({
-        regra: 'titulo_pulado',
+        rule: 'titulo_pulado',
         detalhe: `h${previous} → h${level} em "${clip(texto(t), 40)}"`,
       });
     }
@@ -211,14 +211,14 @@ const CONTRATO_SECTIONS = ['propriedades', 'tokens', 'testes', 'estados', 'analy
 function tabelasVazias(raiz: HTMLElement): ProblemaDeContrato[] {
   const problemas: ProblemaDeContrato[] = [];
   for (const id of CONTRATO_SECTIONS) {
-    const secao = raiz.querySelector<HTMLElement>(`section#${id}`);
-    if (!secao) continue;
-    secao.querySelectorAll<HTMLTableElement>('table').forEach((tabela) => {
+    const section = raiz.querySelector<HTMLElement>(`section#${id}`);
+    if (!section) continue;
+    section.querySelectorAll<HTMLTableElement>('table').forEach((tabela) => {
       if (tabela.closest('.nds-docs-demo, [data-track-container]')) return;
       if (tabela.querySelectorAll('tbody tr').length > 0) return;
-      const titulo = secao.querySelector('h2, h3');
+      const titulo = section.querySelector('h2, h3');
       problemas.push({
-        regra: 'tabela_sem_linhas',
+        rule: 'tabela_sem_linhas',
         detalhe: `tabela vazia em "${clip(texto(titulo ?? tabela), 40)}"`,
       });
     });
@@ -241,10 +241,10 @@ export function docsAuditarPage(
   opcoes: ContratoOptions = {},
 ): ProblemaDeContrato[] {
   const ignorar = opcoes.ignorar ?? {};
-  return VERIFICACOES.flatMap((v) => v(raiz)).filter((p) => !(p.regra in ignorar));
+  return VERIFICACOES.flatMap((v) => v(raiz)).filter((p) => !(p.rule in ignorar));
 }
 
 /** Mensagem de falha legível: uma linha por problema, com o culpado. */
 export function describeProblemas(problemas: ProblemaDeContrato[]): string {
-  return problemas.map((p) => `  · [${p.regra}] ${p.detalhe}`).join('\n');
+  return problemas.map((p) => `  · [${p.rule}] ${p.detalhe}`).join('\n');
 }

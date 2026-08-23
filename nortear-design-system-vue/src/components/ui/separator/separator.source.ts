@@ -27,12 +27,12 @@ const IMPORT = `import { Separator } from '@/components/ui/separator'`;
  * `horizontal`, `decorative` verdadeiro e ênfase `default` são o que o
  * componente já assume — escrevê-los ensinaria ruído a quem copia.
  */
-function linha(o: SeparatorArgs & { classe?: string } = {}): string {
+function line(o: SeparatorArgs & { className?: string } = {}): string {
   return `<Separator${attrs(
     attr('orientation', o.orientation, 'horizontal'),
     attrBool('decorative', o.decorative, true),
     attr('emphasis', o.emphasis, 'default'),
-    o.classe && `class="${o.classe}"`,
+    o.className && `class="${o.className}"`,
   )} />`;
 }
 
@@ -42,7 +42,7 @@ function linha(o: SeparatorArgs & { classe?: string } = {}): string {
  * A largura máxima faz parte da lição da horizontal — a linha ocupa 100% do
  * pai, e sem um pai medido não há como ver onde ela começa e termina.
  */
-function secao(vertical: boolean, filhos: string): string {
+function section(vertical: boolean, filhos: string): string {
   const eixo = vertical ? 'nds-cluster' : 'nds-stack';
   return `<div class="${eixo} nds-w-md" data-spacing="md">
 ${indentar(filhos)}
@@ -64,10 +64,10 @@ export const separatorSource: SourceTransform<SeparatorArgs> = (_gerado, ctx) =>
   const depois = vertical ? 'Item B' : 'Seção inferior';
   return vueSnippet(
     IMPORT,
-    secao(
+    section(
       vertical,
       `<p class="nds-text-body">${antes}</p>
-${linha({ orientation: vertical ? 'vertical' : 'horizontal', decorative: args.decorative, emphasis: args.emphasis })}
+${line({ orientation: vertical ? 'vertical' : 'horizontal', decorative: args.decorative, emphasis: args.emphasis })}
 <p class="nds-text-body">${depois}</p>`,
     ),
   );
@@ -80,13 +80,13 @@ ${linha({ orientation: vertical ? 'vertical' : 'horizontal', decorative: args.de
 export function separatorHorizontalSource(): string {
   return vueSnippet(
     IMPORT,
-    secao(
+    section(
       false,
       `<div class="nds-text-body">
   <p class="nds-font-medium">Configurações da conta</p>
   <p class="nds-text-muted-foreground">Gerencie seu nome e e-mail.</p>
 </div>
-${linha()}
+${line()}
 <div class="nds-text-body">
   <p class="nds-font-medium">Preferências</p>
   <p class="nds-text-muted-foreground">Tema, idioma e notificações.</p>
@@ -103,12 +103,12 @@ ${linha()}
 export function separatorVerticalSource(): string {
   return vueSnippet(
     IMPORT,
-    secao(
+    section(
       true,
       `<span class="nds-text-body">Blog</span>
-${linha({ orientation: 'vertical' })}
+${line({ orientation: 'vertical' })}
 <span class="nds-text-body">Documentação</span>
-${linha({ orientation: 'vertical' })}
+${line({ orientation: 'vertical' })}
 <span class="nds-text-body">Contato</span>`,
     ),
   );
@@ -124,7 +124,7 @@ export function separatorDecorativoSource(): string {
     IMPORT,
     `<div class="nds-stack nds-w-md" data-spacing="sm">
   <p class="nds-text-body">Conteúdo antes do separador.</p>
-${indentar(linha())}
+${indentar(line())}
   <p class="nds-text-body">Conteúdo depois do separador.</p>
 </div>`,
   );
@@ -140,7 +140,7 @@ export function separatorSemanticoSource(): string {
     IMPORT,
     `<div class="nds-stack nds-w-md" data-spacing="sm">
   <p class="nds-text-body">Categoria: Layout</p>
-${indentar(linha({ decorative: false }))}
+${indentar(line({ decorative: false }))}
   <p class="nds-text-body">Categoria: Formulários</p>
 </div>`,
   );
@@ -166,7 +166,7 @@ ${IMPORT}`,
     <CardTitle>Resumo do pedido</CardTitle>
     <CardDescription>3 itens, entrega em 5 dias úteis.</CardDescription>
   </CardHeader>
-${indentar(linha())}
+${indentar(line())}
   <CardContent>
     <p class="nds-text-body">Total: R$ 249,90</p>
   </CardContent>
@@ -185,7 +185,7 @@ export function separatorEmMenuSource(): string {
     `<div class="nds-stack nds-max-w-xs nds-rounded-md nds-border-default nds-bg-background nds-p-1" data-spacing="xs">
   <div class="nds-rounded-sm nds-hover-bg-accent nds-px-2 nds-py-1 nds-text-body">Perfil</div>
   <div class="nds-rounded-sm nds-hover-bg-accent nds-px-2 nds-py-1 nds-text-body">Conta</div>
-${indentar(linha({ decorative: false }))}
+${indentar(line({ decorative: false }))}
   <div class="nds-rounded-sm nds-hover-bg-accent nds-px-2 nds-py-1 nds-text-body">Sair</div>
 </div>`,
   );
@@ -199,12 +199,12 @@ ${indentar(linha({ decorative: false }))}
 export function separatorEnfaseForteSource(): string {
   return vueSnippet(
     IMPORT,
-    secao(
+    section(
       false,
       `<p class="nds-text-body nds-text-muted-foreground">Fim da seção</p>
-${linha()}
+${line()}
 <p class="nds-text-body nds-text-muted-foreground">Continuação do mesmo assunto</p>
-${linha({ emphasis: 'strong', classe: 'nds-mt-4' })}
+${line({ emphasis: 'strong', className: 'nds-mt-4' })}
 <p class="nds-text-body nds-font-medium">Troca de assunto</p>`,
     ),
   );

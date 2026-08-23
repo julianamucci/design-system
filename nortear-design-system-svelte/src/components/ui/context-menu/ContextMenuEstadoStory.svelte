@@ -4,7 +4,7 @@
 
   type State = 'disabled' | 'inset' | 'destructive' | 'dark' | 'indeterminate';
 
-  let { estado = 'disabled' as State }: { estado?: State } = $props();
+  let { state = 'disabled' as State }: { state?: State } = $props();
 </script>
 
 {#snippet area()}
@@ -18,7 +18,7 @@
   </ContextMenu.Trigger>
 {/snippet}
 
-{#if estado === 'disabled'}
+{#if state === 'disabled'}
   <ContextMenu.Root>
     {@render area()}
     <ContextMenu.Content>
@@ -34,7 +34,7 @@
     </ContextMenu.Content>
   </ContextMenu.Root>
 
-{:else if estado === 'inset'}
+{:else if state === 'inset'}
   <ContextMenu.Root>
     {@render area()}
     <ContextMenu.Content>
@@ -46,7 +46,7 @@
     </ContextMenu.Content>
   </ContextMenu.Root>
 
-{:else if estado === 'destructive'}
+{:else if state === 'destructive'}
   <ContextMenu.Root>
     {@render area()}
     <ContextMenu.Content>
@@ -63,7 +63,7 @@
     </ContextMenu.Content>
   </ContextMenu.Root>
 
-{:else if estado === 'indeterminate'}
+{:else if state === 'indeterminate'}
   <ContextMenu.Root>
     {@render area()}
     <ContextMenu.Content>
@@ -74,7 +74,7 @@
     </ContextMenu.Content>
   </ContextMenu.Root>
 
-{:else if estado === 'dark'}
+{:else if state === 'dark'}
   <ContextMenu.Root>
     {@render area()}
     <ContextMenu.Content>

@@ -200,7 +200,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
               <CardContent>
                 <p className="text-sm nds-text-muted-foreground">
                   Preste atenção às seções &#34;Guidelines Obrigatórias&#34; e &#34;Quando e Como Usar&#34;.
-                  Elas contêm regras importantes para usar os componentes corretamente.
+                  Elas contêm rules importantes para usar os componentes corretamente.
                 </p>
               </CardContent>
             </Card>

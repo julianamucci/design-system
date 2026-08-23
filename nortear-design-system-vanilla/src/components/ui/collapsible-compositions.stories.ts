@@ -327,10 +327,10 @@ export const WithSettingsIcon: Story = {
       // O painel fechado usa `hidden`, que retira o conteúdo do fluxo E da
       // árvore de acessibilidade: se ele estivesse inerte quando aberto, o
       // clique abaixo não mudaria nada.
-      const primeiro = canvas.getAllByRole('checkbox')[0] as HTMLInputElement;
-      const antes = primeiro.checked;
-      await userEvent.click(primeiro);
-      await expect(primeiro.checked).not.toBe(antes);
+      const first = canvas.getAllByRole('checkbox')[0] as HTMLInputElement;
+      const antes = first.checked;
+      await userEvent.click(first);
+      await expect(first.checked).not.toBe(antes);
     });
 
     await step('Cada checkbox é rotulado pelo texto ao lado', async () => {

@@ -187,14 +187,14 @@ export const Active: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const atual = canvas.getByRole('link', { name: 'Início' });
-    const outro = canvas.getByRole('link', { name: 'Sobre' });
+    const other = canvas.getByRole('link', { name: 'Sobre' });
 
     await step('A página atual é anunciada como tal', async () => {
       // `aria-current="page"` é o que faz o leitor de tela dizer "página
       // atual". Sem o input `active` chegando ao componente, o atributo não
       // existiria — e o defeito seria invisível na tela.
       await expect(atual.getAttribute('aria-current')).toBe('page');
-      await expect(outro.hasAttribute('aria-current')).toBe(false);
+      await expect(other.hasAttribute('aria-current')).toBe(false);
     });
 
     await step('O destaque não depende só do texto: o fundo muda', async () => {
@@ -203,7 +203,7 @@ export const Active: Story = {
       // esta asserção pegaria o mesmo fundo do link vizinho.
       await expect(atual.hasAttribute('data-active')).toBe(true);
       await expect(getComputedStyle(atual).backgroundColor).not.toBe(
-        getComputedStyle(outro).backgroundColor,
+        getComputedStyle(other).backgroundColor,
       );
     });
   },

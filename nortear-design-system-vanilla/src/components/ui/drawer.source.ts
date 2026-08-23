@@ -59,7 +59,7 @@ function button(acao: DrawerSnippetAction): string {
     ['variant', acao.variant && acao.variant !== 'default' ? texto(acao.variant) : undefined],
     ['label', texto(acao.label)],
   ])
-    .map((linha) => linha.replace(/,$/, ''))
+    .map((line) => line.replace(/,$/, ''))
     .join(', ');
   return `createButton({ ${pairs} })`;
 }
@@ -86,24 +86,24 @@ function footerBlock(actions: DrawerSnippetAction[]): string | undefined {
   const declarados = actions.map((acao, i) => ({ acao, nome: `acao${i + 1}` }));
   const fechadores = declarados.filter(({ acao }) => acao.close);
 
-  const linhas: string[] = [];
+  const lines: string[] = [];
 
   if (fechadores.length > 0) {
-    linhas.push(
+    lines.push(
       '// `data-slot="drawer-close"` é o fechador explícito desta fábrica: o que',
       '// estiver marcado assim dentro do painel fecha a gaveta ao ser acionado.',
     );
     for (const { acao, nome } of fechadores) {
-      linhas.push(`const ${nome} = ${button(acao)};`, `${nome}.dataset.slot = 'drawer-close';`);
+      lines.push(`const ${nome} = ${button(acao)};`, `${nome}.dataset.slot = 'drawer-close';`);
     }
-    linhas.push('');
+    lines.push('');
   }
 
   const argumentos = declarados
     .map(({ acao, nome }) => (acao.close ? nome : button(acao)))
     .join(', ');
 
-  linhas.push(
+  lines.push(
     `const rodape = document.createElement('div');`,
     `rodape.className = 'nds-cluster';`,
     `rodape.dataset.justify = 'end';`,
@@ -111,7 +111,7 @@ function footerBlock(actions: DrawerSnippetAction[]): string | undefined {
     `rodape.append(${argumentos});`,
   );
 
-  return linhas.join('\n');
+  return lines.join('\n');
 }
 
 /** As opções comuns às duas formas de snippet. `content` é o nome da variável. */
@@ -192,7 +192,7 @@ function campo(c: DrawerField): string {
     ['type', c.type && c.type !== 'text' ? texto(c.type) : undefined],
     ['value', c.value !== undefined ? texto(c.value) : undefined],
   ])
-    .map((linha) => linha.replace(/,$/, ''))
+    .map((line) => line.replace(/,$/, ''))
     .join(', ');
   return `  createFormField({
     label: ${texto(c.label)},

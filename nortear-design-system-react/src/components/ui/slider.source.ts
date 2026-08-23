@@ -56,7 +56,7 @@ const IMPORT = 'import { Slider } from "@/components/ui/slider";';
 const IMPORT_LABEL = 'import { Label } from "@/components/ui/label";';
 
 /** Cabeçalho com o estado da(s) alça(s) declarado, que é o uso controlado. */
-function estado(nome: string, setter: string, valueInitial: string, extras = ''): string {
+function state(nome: string, setter: string, valueInitial: string, extras = ''): string {
   return `${IMPORT_STATE}
 ${IMPORT}${extras ? `\n${extras}` : ''}
 
@@ -153,7 +153,7 @@ ${controle}`,
       )
     : deitado(`${valueLine(rotulo, '{volume[0]}')}\n${controle}`);
 
-  return jsxSnippet(estado('volume', 'setVolume', '[50]'), corpo);
+  return jsxSnippet(state('volume', 'setVolume', '[50]'), corpo);
 };
 
 /**
@@ -164,7 +164,7 @@ ${controle}`,
  */
 export function sliderRangeSource(): string {
   return jsxSnippet(
-    estado('faixaDePreco', 'setFaixaDePreco', '[20, 80]'),
+    state('faixaDePreco', 'setFaixaDePreco', '[20, 80]'),
     deitado(
       `${valueLine('Faixa de preço', '{`R$ ${faixaDePreco[0]} — R$ ${faixaDePreco[1]}`}')}
   <Slider
@@ -183,7 +183,7 @@ export function sliderRangeSource(): string {
  */
 export function sliderVerticalSource(): string {
   return jsxSnippet(
-    estado('brilho', 'setBrilho', '[50]'),
+    state('brilho', 'setBrilho', '[50]'),
     emPe(
       `  <span aria-live="polite" className="nds-text-body nds-tabular-nums">
     {brilho[0]}%
@@ -233,7 +233,7 @@ export function sliderDisabledSource(): string {
  */
 export function sliderWithLabelSource(): string {
   return jsxSnippet(
-    estado('volume', 'setVolume', '[75]', IMPORT_LABEL),
+    state('volume', 'setVolume', '[75]', IMPORT_LABEL),
     deitado(
       `${valueLine('Volume', '{`${volume[0]}%`}', true)}
   <Slider value={volume} onValueChange={setVolume} aria-label="Volume" />`,
@@ -248,7 +248,7 @@ export function sliderWithLabelSource(): string {
  */
 export function sliderPrecoSource(): string {
   return jsxSnippet(
-    estado('preco', 'setPreco', '[100, 400]', IMPORT_LABEL),
+    state('preco', 'setPreco', '[100, 400]', IMPORT_LABEL),
     deitado(
       `${valueLine('Faixa de preço', '{`R$ ${preco[0]} — R$ ${preco[1]}`}', true)}
   <Slider
@@ -269,7 +269,7 @@ export function sliderPrecoSource(): string {
  */
 export function sliderStepSource(): string {
   return jsxSnippet(
-    estado('nivel', 'setNivel', '[50]', IMPORT_LABEL),
+    state('nivel', 'setNivel', '[50]', IMPORT_LABEL),
     deitado(
       `${valueLine('Nível', '{nivel[0]}', true)}
   <Slider value={nivel} onValueChange={setNivel} step={10} aria-label="Nível" />`,

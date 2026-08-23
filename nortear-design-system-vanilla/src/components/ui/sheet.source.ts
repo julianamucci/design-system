@@ -200,7 +200,7 @@ export function sheetSnippet(o: SheetSnippetOptions = {}): string {
 
   return snippet(
     [importing('sheet', 'createSheet'), importing('button', 'createButton'), ...corpo.imports]
-      .filter((linha, i, todas) => todas.indexOf(linha) === i)
+      .filter((line, i, all) => all.indexOf(line) === i)
       .join('\n'),
     corpo.bloco,
     pe.bloco,
@@ -227,7 +227,7 @@ export function sheetControlledSnippet(o: SheetSnippetOptions = {}): string {
 
   return snippet(
     [importing('sheet', 'createSheet'), importing('button', 'createButton'), ...corpo.imports]
-      .filter((linha, i, todas) => todas.indexOf(linha) === i)
+      .filter((line, i, all) => all.indexOf(line) === i)
       .join('\n'),
     corpo.bloco,
     `// O gatilho da fábrica continua existindo, fora da tela e fora do percurso do

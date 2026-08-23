@@ -88,7 +88,7 @@ export const progressSource: SourceTransform<ProgressArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const valor =
     args.value === null ? 'null' : String(typeof args.value === 'number' ? args.value : VALUE_DEFAULT);
-  const linha = attrs(
+  const line = attrs(
     `value={${valor}}`,
     typeof args.min === 'number' && args.min !== 0 ? propNumber('min', args.min) : undefined,
     typeof args.max === 'number' && args.max !== 100 ? propNumber('max', args.max) : undefined,
@@ -96,7 +96,7 @@ export const progressSource: SourceTransform<ProgressArgs> = (_gerado, ctx) => {
     propText('className', args.className),
   );
 
-  return jsxSnippet(IMPORT, inWidth(`<Progress${linha} />`));
+  return jsxSnippet(IMPORT, inWidth(`<Progress${line} />`));
 };
 
 /**

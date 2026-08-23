@@ -928,7 +928,7 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
       description: toPlainText(t(`props.${chave}.description`)),
     });
 
-    const classe = local('class', 'string', '—', 'class');
+    const className = local('class', 'string', '—', 'class');
 
     return [
       {
@@ -939,7 +939,7 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
           ofContent('loopFocus', 'loop'),
           local('modal', 'boolean', 'true', 'modal'),
           local('disabled', 'boolean', 'false', 'barDisabled'),
-          classe,
+          className,
         ],
       },
       {
@@ -1014,17 +1014,17 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
     // A coluna do meio mostra a classe `.nds-*` real, não a classe utilitária
     // que o conteúdo compartilhado guarda — é o que existe no CSS deste sistema.
     return [
-      { token: '--background',   k: 'menubarBg',     classe: '.nds-menubar'                 },
-      { token: '--border',       k: 'menubarBorder', classe: '.nds-menubar'                 },
-      { token: '--accent',       k: 'triggerHover',  classe: '.nds-menubar-trigger'         },
-      { token: '--popover',      k: 'contentBg',     classe: '.nds-dropdown-menu-content'   },
-      { token: '--border',       k: 'contentBorder', classe: '.nds-dropdown-menu-content'   },
-      { token: '--radius',       k: 'rounded',       classe: '.nds-dropdown-menu-content'   },
-      { token: '--accent',       k: 'itemHover',     classe: '.nds-dropdown-menu-item'      },
-      { token: '--destructive',  k: 'destructive',   classe: '.nds-dropdown-menu-item'      },
-    ].map(({ token, k, classe }) => ({
+      { token: '--background',   k: 'menubarBg',     className: '.nds-menubar'                 },
+      { token: '--border',       k: 'menubarBorder', className: '.nds-menubar'                 },
+      { token: '--accent',       k: 'triggerHover',  className: '.nds-menubar-trigger'         },
+      { token: '--popover',      k: 'contentBg',     className: '.nds-dropdown-menu-content'   },
+      { token: '--border',       k: 'contentBorder', className: '.nds-dropdown-menu-content'   },
+      { token: '--radius',       k: 'rounded',       className: '.nds-dropdown-menu-content'   },
+      { token: '--accent',       k: 'itemHover',     className: '.nds-dropdown-menu-item'      },
+      { token: '--destructive',  k: 'destructive',   className: '.nds-dropdown-menu-item'      },
+    ].map(({ token, k, className }) => ({
       token,
-      value: classe,
+      value: className,
       description: toPlainText(t(`tokens.table.${k}.part`)),
     }));
   });

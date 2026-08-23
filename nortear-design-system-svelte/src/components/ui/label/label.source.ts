@@ -33,8 +33,8 @@ function elemento(
 
 /** Forma canônica: rótulo associado ao campo por `for`/`id`. Serve o Playground. */
 export function labelSource(_gerado?: string, ctx?: { args?: Partial<LabelArgs> }): string {
-  const { class: classe = '', required = false } = ctx?.args ?? {};
-  const aberturaLabel = `<Label for="nome"${classe ? ` class="${classe}"` : ''}>`;
+  const { class: className = '', required = false } = ctx?.args ?? {};
+  const aberturaLabel = `<Label for="nome"${className ? ` class="${className}"` : ''}>`;
 
   const rotulo = required
     ? `  ${aberturaLabel}

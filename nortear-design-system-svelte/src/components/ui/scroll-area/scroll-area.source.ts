@@ -25,7 +25,7 @@ type Options = {
   /** `undefined` reproduz o caso sem teto: o conteúdo expande e nada rola. */
   size?: Size;
   itens?: number;
-  classe?: string;
+  className?: string;
 };
 
 /**
@@ -34,13 +34,13 @@ type Options = {
  * `scrollHideDelay` = 600).
  */
 function props(orientation: ScrollAreaArgs['orientation'], o: Options): string {
-  const { type = 'hover', scrollHideDelay = 600, size, classe } = o;
+  const { type = 'hover', scrollHideDelay = 600, size, className } = o;
   return attrs(
     `orientation="${orientation}"`,
     type === 'hover' ? '' : `type="${type}"`,
     scrollHideDelay === 600 ? '' : `scrollHideDelay={${scrollHideDelay}}`,
     size ? `size="${size}"` : '',
-    classe ? `class="${classe}"` : '',
+    className ? `class="${className}"` : '',
   );
 }
 
@@ -68,7 +68,7 @@ function horizontalRange(o: Options): string {
     `${IMPORT}
 
 const cards = Array.from({ length: ${itens} }, (_, i) => \`Card \${i + 1}\`);`,
-    `<ScrollArea${props('horizontal', { ...o, classe: 'nds-whitespace-nowrap' })}>
+    `<ScrollArea${props('horizontal', { ...o, className: 'nds-whitespace-nowrap' })}>
   <!-- A faixa precisa ser mais larga que a janela: sem transbordo não há barra. -->
   <div class="nds-row nds-p-4" data-spacing="md" style="width: max-content">
     {#each cards as card (card)}
@@ -82,13 +82,13 @@ const cards = Array.from({ length: ${itens} }, (_, i) => \`Card \${i + 1}\`);`,
 }
 
 /** Matriz que transborda nos dois eixos — o caso de tabela ampla. */
-function tableBidirecional(o: Options & { linhas?: number; colunas?: number }): string {
-  const linhas = o.linhas ?? 12;
+function tableBidirecional(o: Options & { lines?: number; colunas?: number }): string {
+  const lines = o.lines ?? 12;
   const colunas = o.colunas ?? 12;
   return svelteSnippet(
     `${IMPORT}
 
-const linhas = Array.from({ length: ${linhas} }, (_, i) => i + 1);
+const linhas = Array.from({ length: ${lines} }, (_, i) => i + 1);
 const colunas = Array.from({ length: ${colunas} }, (_, i) => i + 1);`,
     `<ScrollArea${props('both', o)}>
   <table class="nds-border-collapse nds-text-caption" style="width: max-content">
@@ -211,5 +211,5 @@ export function sidebarScrollAreaListSource(): string {
 
 /** Composição: tabela ampla, com as duas barras e a janela mais alta. */
 export function scrollAreaTableAmplaSource(): string {
-  return tableBidirecional({ type: 'always', size: 'xl', linhas: 15, colunas: 15 });
+  return tableBidirecional({ type: 'always', size: 'xl', lines: 15, colunas: 15 });
 }

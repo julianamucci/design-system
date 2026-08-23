@@ -111,7 +111,7 @@ function painel(o: Options): string {
   // é a forma mais curta de usar o componente. Presente, o estado é de quem
   // monta o painel — e continua voltando para lá a cada fechamento.
   const controlled = open !== undefined;
-  const estado = controlled ? `\n\nlet open = $state(${open});` : '';
+  const state = controlled ? `\n\nlet open = $state(${open});` : '';
   const paragrafosList =
     corpo === 'rolagem'
       ? `\n\nconst paragrafos = Array.from(
@@ -121,7 +121,7 @@ function painel(o: Options): string {
       : '';
 
   return svelteSnippet(
-    `${imports(corpo)}${estado}${paragrafosList}`,
+    `${imports(corpo)}${state}${paragrafosList}`,
     `<Sheet${attrs(controlled ? 'bind:open' : '')}>
   <SheetTrigger>
     {#snippet child({ props })}

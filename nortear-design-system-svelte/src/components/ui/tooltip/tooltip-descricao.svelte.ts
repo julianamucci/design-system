@@ -22,7 +22,7 @@ import { getContext, setContext } from 'svelte';
  */
 export type TooltipDescription = {
   readonly id: string;
-  readonly aberto: boolean;
+  readonly isOpen: boolean;
   readonly montado: boolean;
   marcarMontado(valor: boolean): void;
 };

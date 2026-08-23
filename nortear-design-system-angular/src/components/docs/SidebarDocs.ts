@@ -700,7 +700,7 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const linha = (name: string, chave: string, tipo: string, padrao: string) => ({
+    const line = (name: string, chave: string, tipo: string, padrao: string) => ({
       name,
       type: tipo,
       defaultValue: padrao,
@@ -713,12 +713,12 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
         title: 'NdsSidebarProvider',
         cols,
         items: [
-          linha('defaultOpen', 'props.provider.defaultOpen', 'boolean', 'true'),
-          linha('open', 'props.provider.open', 'model<boolean | undefined>', '—'),
-          linha('openChange', 'props.provider.onOpenChange', 'output<boolean>', '—'),
+          line('defaultOpen', 'props.provider.defaultOpen', 'boolean', 'true'),
+          line('open', 'props.provider.open', 'model<boolean | undefined>', '—'),
+          line('openChange', 'props.provider.onOpenChange', 'output<boolean>', '—'),
           // Não é input: é token de injeção, e o nome vem do conteúdo
           // compartilhado justamente para poder divergir aqui.
-          linha(
+          line(
             t('props.provider.mobileQueryName'),
             'props.provider.mobileQuery',
             'InjectionToken<string>',
@@ -730,16 +730,16 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
         title: 'NdsSidebar',
         cols,
         items: [
-          linha('side', 'props.sidebar.side', `'left' | 'right'`, `'left'`),
-          linha('variant', 'props.sidebar.variant', `'sidebar' | 'floating' | 'inset'`, `'sidebar'`),
-          linha(
+          line('side', 'props.sidebar.side', `'left' | 'right'`, `'left'`),
+          line('variant', 'props.sidebar.variant', `'sidebar' | 'floating' | 'inset'`, `'sidebar'`),
+          line(
             'collapsible',
             'props.sidebar.collapsible',
             `'offcanvas' | 'icon' | 'none'`,
             `'offcanvas'`,
           ),
-          linha('mobileTitle', 'props.sidebar.mobileTitle', 'string', `'Barra lateral'`),
-          linha(
+          line('mobileTitle', 'props.sidebar.mobileTitle', 'string', `'Barra lateral'`),
+          line(
             'mobileDescription',
             'props.sidebar.mobileDescription',
             'string',
@@ -751,23 +751,23 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
         title: 'NdsSidebarMenuButton',
         cols,
         items: [
-          linha('active', 'props.menuButton.isActive', 'boolean', 'false'),
-          linha('variant', 'props.menuButton.variant', `'default' | 'outline'`, `'default'`),
-          linha('size', 'props.menuButton.size', `'default' | 'sm' | 'lg'`, `'default'`),
+          line('active', 'props.menuButton.isActive', 'boolean', 'false'),
+          line('variant', 'props.menuButton.variant', `'default' | 'outline'`, `'default'`),
+          line('size', 'props.menuButton.size', `'default' | 'sm' | 'lg'`, `'default'`),
         ],
       },
       {
         title: 'NdsSidebarMenuSubButton',
         cols,
         items: [
-          linha('active', 'props.menuSubButton.isActive', 'boolean', 'false'),
-          linha('size', 'props.menuSubButton.size', `'default' | 'sm' | 'lg'`, `'default'`),
+          line('active', 'props.menuSubButton.isActive', 'boolean', 'false'),
+          line('size', 'props.menuSubButton.size', `'default' | 'sm' | 'lg'`, `'default'`),
         ],
       },
       {
         title: 'NdsSidebarMenuSkeleton',
         cols,
-        items: [linha('showIcon', 'props.menuSkeleton.showIcon', 'boolean', 'false')],
+        items: [line('showIcon', 'props.menuSkeleton.showIcon', 'boolean', 'false')],
       },
     ];
   });

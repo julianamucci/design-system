@@ -40,7 +40,7 @@ type Composition = {
   /** Peças além da tríade raiz + gatilho + conteúdo. */
   names: string[];
   /** Linhas de `$state` que a composição precisa no bloco `<script>`. */
-  estado?: string[];
+  state?: string[];
   markup: string;
 };
 
@@ -64,7 +64,7 @@ function indentar(markup: string, level: number): string {
   const espacos = ' '.repeat(level);
   return markup
     .split('\n')
-    .map((linha) => (linha.trim() ? `${espacos}${linha}` : linha))
+    .map((line) => (line.trim() ? `${espacos}${line}` : line))
     .join('\n');
 }
 
@@ -107,7 +107,7 @@ const COMPOSITIONS: Record<DropdownMenuVariant, Composition> = {
 
   withCheckbox: {
     names: ['DropdownMenuCheckboxItem', 'DropdownMenuLabel', 'DropdownMenuSeparator'],
-    estado: [
+    state: [
       'let mostrarBarraDeStatus = $state(true);',
       'let mostrarBarraDeAtividade = $state(false);',
     ],
@@ -137,7 +137,7 @@ const COMPOSITIONS: Record<DropdownMenuVariant, Composition> = {
       'DropdownMenuRadioItem',
       'DropdownMenuSeparator',
     ],
-    estado: ['let posicao = $state("bottom");'],
+    state: ['let posicao = $state("bottom");'],
     markup: `<DropdownMenuLabel>Posição</DropdownMenuLabel>
 <DropdownMenuSeparator />
 <DropdownMenuRadioGroup bind:value={posicao}>
@@ -215,7 +215,7 @@ export function dropdownMenuSource(
   } = ctx?.args ?? {};
 
   const composition = COMPOSITIONS[variant] ?? COMPOSITIONS.default;
-  const aberto = open ?? defaultOpen;
+  const isOpen = open ?? defaultOpen;
 
   const contentProps = attrs(
     side === 'bottom' ? '' : `side="${side}"`,
@@ -223,14 +223,14 @@ export function dropdownMenuSource(
     sideOffset === 4 ? '' : `sideOffset={${sideOffset}}`,
   );
 
-  const estado = [
-    ...(aberto ? ['let aberto = $state(true);'] : []),
-    ...(composition.estado ?? []),
+  const state = [
+    ...(isOpen ? ['let aberto = $state(true);'] : []),
+    ...(composition.state ?? []),
   ];
 
   return svelteSnippet(
-    [importing(composition.names), estado.join('\n')].filter(Boolean).join('\n\n'),
-    `<DropdownMenu${aberto ? ' bind:open={aberto}' : ''}>
+    [importing(composition.names), state.join('\n')].filter(Boolean).join('\n\n'),
+    `<DropdownMenu${isOpen ? ' bind:open={aberto}' : ''}>
   <DropdownMenuTrigger>
     {#snippet child({ props })}
       <Button variant="outline" {...props}>${triggerLabel}</Button>

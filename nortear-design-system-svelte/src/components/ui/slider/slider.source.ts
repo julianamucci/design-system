@@ -53,13 +53,13 @@ export function sliderSource(_gerado?: string, ctx?: { args?: Partial<SliderArgs
     'aria-label="Volume"',
   );
 
-  const estado = `let valor = $state([${value.join(', ')}]);`;
+  const state = `let valor = $state([${value.join(', ')}]);`;
 
   if (orientation === 'vertical') {
     return svelteSnippet(
       `${IMPORT}
 
-${estado}`,
+${state}`,
       `<div class="nds-stack" data-spacing="sm">
   <div class="nds-cluster" data-align="center" data-justify="between">
     <Label>Volume</Label>
@@ -75,7 +75,7 @@ ${estado}`,
   return svelteSnippet(
     `${IMPORT}
 
-${estado}`,
+${state}`,
     `<div class="nds-stack nds-w-sm" data-spacing="sm">
   <div class="nds-cluster" data-justify="between">
     <Label>Volume</Label>

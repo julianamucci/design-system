@@ -166,15 +166,15 @@ export const DisabledTab: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const primeira = canvas.getByRole('tab', { name: 'Visão geral' });
+    const first = canvas.getByRole('tab', { name: 'Visão geral' });
     const desabilitada = canvas.getByRole('tab', { name: 'Propriedades' });
     const last = canvas.getByRole('tab', { name: 'Exemplos' });
 
     // Precondição de CADA passo, e não herança do anterior: o painel Interactions
     // reexecuta a play no mesmo DOM.
     const startVoltar = async () => {
-      if (primeira.getAttribute('aria-selected') !== 'true') await userEvent.click(primeira);
-      await waitFor(() => expect(primeira.getAttribute('aria-selected')).toBe('true'));
+      if (first.getAttribute('aria-selected') !== 'true') await userEvent.click(first);
+      await waitFor(() => expect(first.getAttribute('aria-selected')).toBe('true'));
     };
 
     await step('Anuncia-se desabilitada sem sair do alcance do foco', async () => {
@@ -193,7 +193,7 @@ export const DisabledTab: Story = {
 
     await step('A seta ALCANÇA a aba desabilitada, e não a ativa', async () => {
       await startVoltar();
-      primeira.focus();
+      first.focus();
       await userEvent.keyboard('{ArrowRight}');
       await waitFor(() => expect(desabilitada).toHaveFocus());
       // Alcançar não é ativar: com ativação automática, focar uma aba habilitada

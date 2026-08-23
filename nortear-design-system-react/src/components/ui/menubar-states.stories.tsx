@@ -87,7 +87,7 @@ export const Closed: Story = {
           <MenubarMenu key={m}>
             <MenubarTrigger>{m}</MenubarTrigger>
             <MenubarContent>
-              <MenubarItem>{m} — primeira ação</MenubarItem>
+              <MenubarItem>{m} — first ação</MenubarItem>
               <MenubarItem>{m} — segunda ação</MenubarItem>
             </MenubarContent>
           </MenubarMenu>

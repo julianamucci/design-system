@@ -43,10 +43,10 @@ describe('scrollAreaSnippet', () => {
     expect(lista).not.toContain('buildList');
     expect(lista).not.toContain('buildVerticalList');
 
-    const fileira = scrollAreaSnippet({ conteudo: 'fileira' });
-    expect(fileira).toContain("import { createCard, createCardContent } from '@/components/ui/card';");
-    expect(fileira).toContain('nds-shrink-0');
-    expect(fileira).not.toContain('buildHorizontalRow');
+    const row = scrollAreaSnippet({ conteudo: 'fileira' });
+    expect(row).toContain("import { createCard, createCardContent } from '@/components/ui/card';");
+    expect(row).toContain('nds-shrink-0');
+    expect(row).not.toContain('buildHorizontalRow');
 
     const badges = scrollAreaSnippet({ conteudo: 'badges' });
     expect(badges).toContain("import { createBadge } from '@/components/ui/badge';");

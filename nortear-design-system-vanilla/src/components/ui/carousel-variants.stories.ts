@@ -87,12 +87,12 @@ export const Horizontal: Story = {
       const previous = canvas
         .getByRole('button', { name: 'Item anterior' })
         .getBoundingClientRect();
-      const proximo = canvas
+      const next = canvas
         .getByRole('button', { name: 'Próximo item' })
         .getBoundingClientRect();
-      await expect(previous.left).toBeLessThan(proximo.left);
+      await expect(previous.left).toBeLessThan(next.left);
       // Mesma faixa vertical: em horizontal elas se alinham pelo meio.
-      await expect(Math.abs(previous.top - proximo.top)).toBeLessThan(2);
+      await expect(Math.abs(previous.top - next.top)).toBeLessThan(2);
     });
 
     await step('O slide atual fica em tamanho cheio e os vizinhos recuam', async () => {
@@ -123,7 +123,7 @@ export const Horizontal: Story = {
     });
 
     await step('A seta responde ao ponteiro sem sair do lugar', async () => {
-      const proximo = canvas.getByRole('button', { name: 'Próximo item' });
+      const next = canvas.getByRole('button', { name: 'Próximo item' });
 
       // A escrita direta do `transform` faz as vezes do ponteiro. Não é atalho:
       // `userEvent.hover` despacha eventos, e o `:hover` do CSS responde ao
@@ -131,8 +131,8 @@ export const Horizontal: Story = {
       // importa aqui é a COLISÃO de duas regras na propriedade `transform`, e
       // escrevê-la à mão reproduz a colisão inteira.
       const failures = [
-        ...(await feedbackDePointerReprovas(proximo, waitFor)),
-        ...controlReach(proximo),
+        ...(await feedbackDePointerReprovas(next, waitFor)),
+        ...controlReach(next),
       ];
       await expect(describeFailures(failures)).toBe('');
     });
@@ -202,12 +202,12 @@ export const Vertical: Story = {
       const previous = canvas
         .getByRole('button', { name: 'Item anterior' })
         .getBoundingClientRect();
-      const proximo = canvas
+      const next = canvas
         .getByRole('button', { name: 'Próximo item' })
         .getBoundingClientRect();
-      await expect(previous.top).toBeLessThan(proximo.top);
+      await expect(previous.top).toBeLessThan(next.top);
       // Mesma coluna: em vertical elas se alinham pelo centro horizontal.
-      await expect(Math.abs(previous.left - proximo.left)).toBeLessThan(2);
+      await expect(Math.abs(previous.left - next.left)).toBeLessThan(2);
     });
 
     await step('A seta para baixo avança, e a pilha volta ao topo', async () => {
@@ -233,8 +233,8 @@ export const Vertical: Story = {
       // centralização quando o `scale` do hover chegava — o chevron voltava a
       // apontar para o lado errado no mesmo quadro em que o botão despencava.
       // Escrita em `translate` + `rotate`, as duas convivem com o `scale`.
-      const proximo = canvas.getByRole('button', { name: 'Próximo item' });
-      const failures = await feedbackDePointerReprovas(proximo, waitFor);
+      const next = canvas.getByRole('button', { name: 'Próximo item' });
+      const failures = await feedbackDePointerReprovas(next, waitFor);
       await expect(describeFailures(failures)).toBe('');
     });
   },

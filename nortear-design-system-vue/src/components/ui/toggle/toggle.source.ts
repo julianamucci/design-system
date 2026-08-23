@@ -44,9 +44,9 @@ function importIcons(markup: string): string {
   return names.length ? `import { ${names.join(', ')} } from 'lucide-vue-next'` : '';
 }
 
-function snippet(markup: string, estado = '', extra = ''): string {
+function snippet(markup: string, state = '', extra = ''): string {
   const imports = [IMPORT_TOGGLE, extra, importIcons(markup)].filter(Boolean).join('\n');
-  return vueSnippet(estado ? `${imports}\n\n${estado}` : imports, markup);
+  return vueSnippet(state ? `${imports}\n\n${state}` : imports, markup);
 }
 
 /**

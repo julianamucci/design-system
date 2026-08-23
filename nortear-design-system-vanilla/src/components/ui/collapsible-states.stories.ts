@@ -135,9 +135,9 @@ export const Controlled: Story = {
     // A fonte da verdade mora AQUI, fora do componente — é isso que distingue o
     // modo controlado. O clique no trigger só propõe o novo valor; quem escreve
     // é este bloco, via `setOpen`.
-    let aberto = false;
+    let isOpen = false;
     const pintar = () => {
-      indicador.textContent = `Estado externo: ${aberto ? 'aberto' : 'fechado'}`;
+      indicador.textContent = `Estado externo: ${isOpen ? 'aberto' : 'fechado'}`;
     };
 
     const collapsible = createCollapsible({
@@ -149,7 +149,7 @@ export const Controlled: Story = {
     });
 
     function definir(valor: boolean) {
-      aberto = valor;
+      isOpen = valor;
       collapsible.setOpen(valor);
       pintar();
     }

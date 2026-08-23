@@ -632,7 +632,7 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const linha = (name: string, chave: string, tipo: string, padrao: string) => ({
+    const line = (name: string, chave: string, tipo: string, padrao: string) => ({
       name,
       type: tipo,
       defaultValue: padrao,
@@ -645,13 +645,13 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
         title: t('props.toasterTitle'),
         cols,
         items: [
-          linha('position', 'position', 'ToastPosition', `'bottom-right'`),
-          linha('richColors', 'richColors', 'boolean', 'false'),
-          linha('expand', 'expand', 'boolean', 'false'),
-          linha('duration', 'duration', 'number', '4000'),
-          linha('closeButton', 'closeButton', 'boolean', 'false'),
-          linha('label', 'label', 'string', `'Notificações'`),
-          linha('closeLabel', 'closeLabel', 'string', `'Fechar notificação'`),
+          line('position', 'position', 'ToastPosition', `'bottom-right'`),
+          line('richColors', 'richColors', 'boolean', 'false'),
+          line('expand', 'expand', 'boolean', 'false'),
+          line('duration', 'duration', 'number', '4000'),
+          line('closeButton', 'closeButton', 'boolean', 'false'),
+          line('label', 'label', 'string', `'Notificações'`),
+          line('closeLabel', 'closeLabel', 'string', `'Fechar notificação'`),
         ],
       },
     ];

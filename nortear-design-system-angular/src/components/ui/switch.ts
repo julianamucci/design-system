@@ -55,7 +55,7 @@ export type SwitchSize = 'default' | 'sm';
     <span
       class="nds-switch-thumb"
       data-slot="switch-thumb"
-      [attr.data-state]="estado()"
+      [attr.data-state]="state()"
     ></span>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -82,7 +82,7 @@ export type SwitchSize = 'default' | 'sm';
     class: 'nds-switch',
     type: 'button',
     '[attr.data-slot]': '"switch"',
-    '[attr.data-state]': 'estado()',
+    '[attr.data-state]': 'state()',
     '[attr.data-size]': 'size()',
   },
 })
@@ -103,7 +103,7 @@ export class NdsSwitch {
    * o `aria-checked` do primitivo. Ler o model deixaria os dois atributos
    * podendo divergir — e o que a tela mostra sairia do que o leitor anuncia.
    */
-  protected readonly estado = computed(() =>
+  protected readonly state = computed(() =>
     this.raiz.checkedState() ? 'checked' : 'unchecked',
   );
 }

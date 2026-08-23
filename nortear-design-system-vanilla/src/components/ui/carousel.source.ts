@@ -38,7 +38,7 @@ export type CarouselSnippetOptions = {
  */
 export function carouselSnippet(o: CarouselSnippetOptions = {}): string {
   const total = o.slides ?? 5;
-  const linhas = opcoes([
+  const lines = opcoes([
     ['items', 'slides'],
     ['aria-label', texto(o.ariaLabel ?? 'Galeria de exemplos')],
     ['orientation', o.orientation && o.orientation !== 'horizontal' ? texto(o.orientation) : undefined],
@@ -66,7 +66,7 @@ export function carouselSnippet(o: CarouselSnippetOptions = {}): string {
   moldura.appendChild(caixa);
   return moldura;
 });`,
-    `const carrossel = ${chamada('createCarousel', linhas)};`,
+    `const carrossel = ${chamada('createCarousel', lines)};`,
     montar('carrossel'),
   );
 }

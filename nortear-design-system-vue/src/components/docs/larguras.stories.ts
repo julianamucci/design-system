@@ -39,10 +39,10 @@ export const HorizontalNoScroll: StoryObj = {
       <div data-moldura class="nds-p-4 nds-border-default nds-rounded-lg">
         <div class="nds-stack" data-spacing="sm">
           <div
-            v-for="classe in larguras"
-            :key="classe"
-            :class="[classe, 'nds-p-2', 'nds-bg-muted', 'nds-text-caption']"
-          >{{ classe }}</div>
+            v-for="className in larguras"
+            :key="className"
+            :class="[className, 'nds-p-2', 'nds-bg-muted', 'nds-text-caption']"
+          >{{ className }}</div>
         </div>
       </div>
     `,

@@ -109,7 +109,7 @@ export function collapsibleWithTriggerSnippet(
  * chama, por `setOpen`.
  */
 export function collapsibleControlledSnippet(o: CollapsibleSnippetOptions = {}): string {
-  const linhas = opcoes([
+  const lines = opcoes([
     ['trigger', texto(o.trigger ?? TRIGGER_DEFAULT)],
     ['content', 'painel'],
     ['open', 'aberto'],
@@ -121,7 +121,7 @@ export function collapsibleControlledSnippet(o: CollapsibleSnippetOptions = {}):
     importing('collapsible', 'createCollapsible'),
     PANEL,
     '// A fonte da verdade mora aqui, fora do componente.\nlet aberto = false;',
-    `const colapsavel = ${chamada('createCollapsible', linhas)};`,
+    `const colapsavel = ${chamada('createCollapsible', lines)};`,
     [
       'function definir(valor: boolean): void {',
       '  aberto = valor;',

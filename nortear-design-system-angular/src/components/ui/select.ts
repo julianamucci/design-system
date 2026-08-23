@@ -311,7 +311,7 @@ export class NdsSelectOutlet implements OnInit {
     // existe no CSS compartilhado — mesma saída do Popover.
     class: 'nds-inline-block',
     '[attr.data-slot]': '"select"',
-    '[attr.data-state]': 'estado()',
+    '[attr.data-state]': 'state()',
   },
   template: `
     <!--
@@ -341,7 +341,7 @@ export class NdsSelectOutlet implements OnInit {
             data-slot="select-content"
             data-align-trigger="false"
             [finalFocus]="gatilho()"
-            [attr.data-state]="estado()"
+            [attr.data-state]="state()"
             [attr.aria-label]="rotuloDaLista()"
           >
             <div
@@ -382,7 +382,7 @@ export class NdsSelect {
    */
   protected readonly conteudo = contentChild(NdsSelectContent, { descendants: true });
 
-  protected readonly estado = computed(() => (this.raiz.open() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.raiz.open() ? 'open' : 'closed'));
 
   /**
    * Para onde o foco volta quando a lista fecha.
@@ -490,7 +490,7 @@ export class NdsSelect {
     class: 'nds-select-trigger',
     '[attr.data-slot]': '"select-trigger"',
     '[attr.data-size]': 'size()',
-    '[attr.data-state]': 'estado()',
+    '[attr.data-state]': 'state()',
     // Os dois que faltam no primitivo. `role="combobox"` sem `aria-expanded`
     // reprova em `aria-required-attr` e deixa quem usa leitor de tela sem saber
     // se a lista está aberta.
@@ -508,7 +508,7 @@ export class NdsSelectTrigger {
 
   protected readonly raiz = injectSelectRootContext();
 
-  protected readonly estado = computed(() => (this.raiz.open() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.raiz.open() ? 'open' : 'closed'));
 }
 
 // ─── Value ────────────────────────────────────────────────────────────────────

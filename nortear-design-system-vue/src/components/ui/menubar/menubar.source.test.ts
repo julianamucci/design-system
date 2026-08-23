@@ -215,7 +215,7 @@ describe('transforms das stories de composição', () => {
 });
 
 describe('o snippet ensina o design system, não o andaime da story', () => {
-  const todas = [
+  const all = [
     menubarSource,
     menubarItemDefaultSource,
     menubarItemDestructiveSource,
@@ -232,7 +232,7 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
   ];
 
   it('nenhuma traz a moldura de contenção que existe só para a foto do Chromatic', () => {
-    for (const fn of todas) {
+    for (const fn of all) {
       const saida = fn();
       expect(saida).not.toContain('contain: layout');
       expect(saida).not.toContain('min-height');
@@ -240,7 +240,7 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
   });
 
   it('todas importam do design system, nunca de um caminho interno', () => {
-    for (const fn of todas) {
+    for (const fn of all) {
       expect(fn()).toContain(`from '@/components/ui/menubar'`);
     }
   });

@@ -1031,7 +1031,7 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
    */
   protected readonly testesAccessibility = computed(() => {
     dict();
-    const linhas: { i: number; level: string; how: string }[] = [
+    const lines: { i: number; level: string; how: string }[] = [
       { i: 1, level: '4.1.2', how: 'axe-core (addon-a11y)' },
       { i: 2, level: '1.4.3', how: 'axe-core (color-contrast)' },
       { i: 3, level: '4.1.2', how: 'Storybook Test' },
@@ -1042,7 +1042,7 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
       title: t('testes.accessibility.title'),
       description: t('testes.accessibility.description'),
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-      items: linhas.map(({ i, level, how }) => ({
+      items: lines.map(({ i, level, how }) => ({
         criterion: toPlainText(t(`testes.accessibility.item${i}`)),
         level,
         how,

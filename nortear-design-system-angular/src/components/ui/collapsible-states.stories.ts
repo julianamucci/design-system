@@ -91,9 +91,9 @@ export const Closed: Story = {
 export const Open: Story = {
   parameters: { covers: ['accessibility.item5'] },
   render: () => ({
-    props: { aberto: true },
+    props: { isOpen: true },
     template: `
-      <div ndsCollapsible class="nds-w-sm" [open]="aberto" (openChange)="aberto = $event">
+      <div ndsCollapsible class="nds-w-sm" [open]="isOpen" (openChange)="isOpen = $event">
         <button
           ndsCollapsibleTrigger
           ndsButton

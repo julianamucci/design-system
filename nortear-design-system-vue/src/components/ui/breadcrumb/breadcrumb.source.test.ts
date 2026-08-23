@@ -44,8 +44,8 @@ import {
 
   it('o separador vai entre os níveis, nunca depois do último', () => {
     const saida = breadcrumbSource();
-    const linhas = saida.split('\n').map((l) => l.trim());
-    expect(linhas.filter((l) => l === '<BreadcrumbSeparator />').length).toBe(2);
+    const lines = saida.split('\n').map((l) => l.trim());
+    expect(lines.filter((l) => l === '<BreadcrumbSeparator />').length).toBe(2);
     // O último item fecha o caminho: um separador depois dele apontaria para
     // um nível que não existe.
     expect(saida.trimEnd().endsWith('</template>')).toBe(true);

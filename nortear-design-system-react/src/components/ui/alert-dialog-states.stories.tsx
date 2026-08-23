@@ -386,7 +386,7 @@ export const Controlled: Story = {
               <AlertDialogHeader>
                 <AlertDialogTitle>Controlado pelo pai</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Este diálogo é comandado por estado externo via `open` e
+                  Este diálogo é comandado por state externo via `open` e
                   `onOpenChange`.
                 </AlertDialogDescription>
               </AlertDialogHeader>

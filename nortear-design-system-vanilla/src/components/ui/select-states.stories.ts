@@ -64,10 +64,10 @@ export const Default: Story = {
     });
 
     await step('Nenhum valor viaja no formulário', async () => {
-      const oculto = canvasElement.querySelector<HTMLInputElement>(
+      const hidden = canvasElement.querySelector<HTMLInputElement>(
         '[data-slot="select-hidden-input"]',
       );
-      await expect(oculto?.value).toBe('');
+      await expect(hidden?.value).toBe('');
     });
 
     await step('A lista não existe enquanto está fechada', async () => {
@@ -120,10 +120,10 @@ export const Selected: Story = {
     });
 
     await step('O valor inicial já viaja no formulário', async () => {
-      const oculto = canvasElement.querySelector<HTMLInputElement>(
+      const hidden = canvasElement.querySelector<HTMLInputElement>(
         '[data-slot="select-hidden-input"]',
       );
-      await expect(oculto?.value).toBe('rj');
+      await expect(hidden?.value).toBe('rj');
     });
   },
 };
@@ -185,13 +185,13 @@ export const Open: Story = {
 
       const partida = destacada();
       await userEvent.keyboard('{ArrowDown}');
-      const primeiro = Math.min(partida + 1, last);
+      const first = Math.min(partida + 1, last);
       await waitFor(async () => {
-        await expect(destacada()).toBe(primeiro);
+        await expect(destacada()).toBe(first);
       });
 
       await userEvent.keyboard('{ArrowDown}');
-      const segundo = Math.min(primeiro + 1, last);
+      const segundo = Math.min(first + 1, last);
       await waitFor(async () => {
         await expect(destacada()).toBe(segundo);
       });

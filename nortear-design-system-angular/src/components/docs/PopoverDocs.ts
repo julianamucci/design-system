@@ -456,10 +456,10 @@ const COMPOSITION_CODE = {
           </div>
 
           <div class="nds-cluster" data-spacing="sm">
-            @for (cor of amostrasDeCor; track cor.classe) {
+            @for (cor of amostrasDeCor; track cor.className) {
               <button
                 type="button"
-                [class]="swatchClasses + ' ' + cor.classe"
+                [class]="swatchClasses + ' ' + cor.className"
                 [attr.aria-label]="cor.rotulo"
               ></button>
             }
@@ -746,12 +746,12 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
    * traduzi-los desligaria o rótulo do que a pessoa encontra no CSS.
    */
   protected readonly amostrasDeCor = [
-    { classe: 'nds-bg-primary',     rotulo: 'primary'     },
-    { classe: 'nds-bg-secondary',   rotulo: 'secondary'   },
-    { classe: 'nds-bg-success',     rotulo: 'success'     },
-    { classe: 'nds-bg-warning',     rotulo: 'warning'     },
-    { classe: 'nds-bg-info',        rotulo: 'info'        },
-    { classe: 'nds-bg-destructive', rotulo: 'destructive' },
+    { className: 'nds-bg-primary',     rotulo: 'primary'     },
+    { className: 'nds-bg-secondary',   rotulo: 'secondary'   },
+    { className: 'nds-bg-success',     rotulo: 'success'     },
+    { className: 'nds-bg-warning',     rotulo: 'warning'     },
+    { className: 'nds-bg-info',        rotulo: 'info'        },
+    { className: 'nds-bg-destructive', rotulo: 'destructive' },
   ];
 
   /**

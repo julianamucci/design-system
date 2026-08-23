@@ -89,31 +89,31 @@ export const Uncontrolled: Story = {
 export const Controlled: Story = {
   parameters: { covers: ['functional.item4', 'visual.item3'] },
   render: () => ({
-    props: { aberto: false },
+    props: { isOpen: false },
     template: `
       <div class="nds-stack nds-w-sm" data-spacing="sm">
         <div class="nds-cluster" data-spacing="xs">
           <!-- Nomes próprios, e não os mesmos do trigger: dois botões com o
                mesmo nome acessível na tela são ambíguos para quem navega por
                lista de controles no leitor de tela. -->
-          <button ndsButton size="sm" variant="outline" (click)="aberto = true">
+          <button ndsButton size="sm" variant="outline" (click)="isOpen = true">
             Abrir pelo estado externo
           </button>
-          <button ndsButton size="sm" variant="outline" (click)="aberto = false">
+          <button ndsButton size="sm" variant="outline" (click)="isOpen = false">
             Fechar pelo estado externo
           </button>
         </div>
 
-        <div ndsCollapsible class="nds-w-full" [open]="aberto" (openChange)="aberto = $event">
+        <div ndsCollapsible class="nds-w-full" [open]="isOpen" (openChange)="isOpen = $event">
           <button
             ndsCollapsibleTrigger
             ndsButton
             variant="ghost"
             class="nds-cluster nds-w-full nds-px-4"
             data-justify="between"
-            [attr.aria-label]="aberto ? 'Ocultar filtros avançados' : 'Exibir filtros avançados'"
+            [attr.aria-label]="isOpen ? 'Ocultar filtros avançados' : 'Exibir filtros avançados'"
           >
-            <span>{{ aberto ? 'Ocultar filtros avançados' : 'Exibir filtros avançados' }}</span>
+            <span>{{ isOpen ? 'Ocultar filtros avançados' : 'Exibir filtros avançados' }}</span>
             ${CHEVRON}
           </button>
 
@@ -144,7 +144,7 @@ export const Controlled: Story = {
 
     await step('O trigger devolve a mudança para o estado externo', async () => {
       // Clicar no trigger emite o novo valor; o exemplo grava de volta em
-      // `aberto`, e o rótulo alternado prova que a volta chegou.
+      // `isOpen`, e o rótulo alternado prova que a volta chegou.
       if (trigger.getAttribute('aria-expanded') !== 'false') await userEvent.click(trigger);
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
       await expect(trigger.textContent?.trim()).toBe('Exibir filtros avançados');

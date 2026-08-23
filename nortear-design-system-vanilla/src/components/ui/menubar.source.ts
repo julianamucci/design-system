@@ -80,9 +80,9 @@ const MENUS_DEFAULT: MenubarMenuSnippet[] = [
 ];
 
 /** `{ a: 1, b: 2 }` numa linha só. */
-function objeto(linhas: string[]): string {
-  if (linhas.length === 0) return '{}';
-  return `{ ${linhas.map((l) => l.replace(/,$/, '')).join(', ')} }`;
+function objeto(lines: string[]): string {
+  if (lines.length === 0) return '{}';
+  return `{ ${lines.map((l) => l.replace(/,$/, '')).join(', ')} }`;
 }
 
 /** Um item serializado, já recuado. Submenu e escolha única abrem em bloco. */
@@ -148,7 +148,7 @@ ${menu.items.map((i) => serializarItem(i, '      ')).join('\n')}
 export function menubarSnippet(o: MenubarSnippetOptions = {}): string {
   const menus = o.menus ?? MENUS_DEFAULT;
 
-  const linhas = opcoes([
+  const lines = opcoes([
     // `loop` é ligado por padrão: só o desligamento merece uma linha.
     ['loop', o.loop === false ? 'false' : undefined],
     [
@@ -160,7 +160,7 @@ export function menubarSnippet(o: MenubarSnippetOptions = {}): string {
     ['class', o.class ? texto(o.class) : undefined],
   ]);
 
-  const segundo = linhas.length ? `, ${objeto(linhas)}` : '';
+  const segundo = lines.length ? `, ${objeto(lines)}` : '';
 
   return snippet(
     importing('menubar', 'createMenubar'),

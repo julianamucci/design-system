@@ -36,9 +36,9 @@ export const HorizontalNoScroll: StoryObj = {
   render: () => (
     <div data-moldura className="nds-p-4 nds-border-default nds-rounded-lg">
       <div className="nds-stack" data-spacing="sm">
-        {LARGURAS.map((classe) => (
-          <div key={classe} className={`${classe} nds-p-2 nds-bg-muted nds-text-caption`}>
-            {classe}
+        {LARGURAS.map((className) => (
+          <div key={className} className={`${className} nds-p-2 nds-bg-muted nds-text-caption`}>
+            {className}
           </div>
         ))}
       </div>

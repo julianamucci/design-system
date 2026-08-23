@@ -13,7 +13,7 @@
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export interface Contraste {
+export interface Contrast {
   ratio: number;
   frente: string;
   background: string;
@@ -83,7 +83,7 @@ export function compor(frente: string, background: string): string {
 }
 
 /** Razão WCAG entre duas cores computadas. Compõe a frente translúcida antes. */
-export function ratio(frente: string, background: string): Contraste | null {
+export function ratio(frente: string, background: string): Contrast | null {
   const opaca = compor(frente, background);
   const a = luminancia(opaca);
   const b = luminancia(background);
@@ -268,13 +268,13 @@ export function ruleDeclaration(
   filtro: (selector: string) => boolean,
   prop: string,
 ): string | null {
-  const visitar = (regras: CSSRuleList): string | null => {
-    for (const regra of Array.from(regras)) {
-      if (regra instanceof CSSStyleRule && filtro(regra.selectorText)) {
-        const v = regra.style.getPropertyValue(prop);
+  const visitar = (rules: CSSRuleList): string | null => {
+    for (const rule of Array.from(rules)) {
+      if (rule instanceof CSSStyleRule && filtro(rule.selectorText)) {
+        const v = rule.style.getPropertyValue(prop);
         if (v) return v.trim();
       }
-      const aninhadas = (regra as CSSGroupingRule).cssRules;
+      const aninhadas = (rule as CSSGroupingRule).cssRules;
       if (aninhadas) {
         const finding = visitar(aninhadas);
         if (finding) return finding;
@@ -316,12 +316,12 @@ export function selectorsQueLeem(doc: Document, token: string): string[] {
   const alvo = `var(--${token})`;
   const findings: string[] = [];
 
-  const visitar = (regras: CSSRuleList) => {
-    for (const regra of Array.from(regras)) {
-      if (regra instanceof CSSStyleRule) {
-        if (regra.cssText.includes(alvo)) findings.push(regra.selectorText);
+  const visitar = (rules: CSSRuleList) => {
+    for (const rule of Array.from(rules)) {
+      if (rule instanceof CSSStyleRule) {
+        if (rule.cssText.includes(alvo)) findings.push(rule.selectorText);
       }
-      const aninhadas = (regra as CSSGroupingRule).cssRules;
+      const aninhadas = (rule as CSSGroupingRule).cssRules;
       if (aninhadas) visitar(aninhadas);
     }
   };

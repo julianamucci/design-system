@@ -540,7 +540,7 @@ export class NdsCardDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const classe = {
+    const className = {
       name: 'class',
       type: 'string',
       defaultValue: '—',
@@ -570,16 +570,16 @@ export class NdsCardDocs implements AfterViewInit, OnDestroy {
             required: not,
             description: toPlainText(t('props.table.size')),
           },
-          classe,
+          className,
           conteudo,
         ],
       },
-      { title: t('props.headerTitle'),      cols, items: [classe, conteudo] },
-      { title: t('props.cardTitleTitle'),   cols, items: [classe, conteudo] },
-      { title: t('props.descriptionTitle'), cols, items: [classe, conteudo] },
-      { title: t('props.actionTitle'),      cols, items: [classe, conteudo] },
-      { title: t('props.contentTitle'),     cols, items: [classe, conteudo] },
-      { title: t('props.footerTitle'),      cols, items: [classe, conteudo] },
+      { title: t('props.headerTitle'),      cols, items: [className, conteudo] },
+      { title: t('props.cardTitleTitle'),   cols, items: [className, conteudo] },
+      { title: t('props.descriptionTitle'), cols, items: [className, conteudo] },
+      { title: t('props.actionTitle'),      cols, items: [className, conteudo] },
+      { title: t('props.contentTitle'),     cols, items: [className, conteudo] },
+      { title: t('props.footerTitle'),      cols, items: [className, conteudo] },
     ];
   });
 

@@ -209,9 +209,9 @@ export const LiteralConsumidoresNotResolvem: Story = {
 
     const congelados: string[] = [];
     for (const [chave, lista] of byTarget(measurements)) {
-      const valores = lista.map((m) => m.px!);
-      if (new Set(valores.map((v) => v.toFixed(2))).size === 1) {
-        congelados.push(`${chave}: ${valores[0]}px idêntico nas três densidades — valor literal, não token da escala`);
+      const values = lista.map((m) => m.px!);
+      if (new Set(values.map((v) => v.toFixed(2))).size === 1) {
+        congelados.push(`${chave}: ${values[0]}px idêntico nas três densidades — valor literal, não token da escala`);
       }
     }
     await expect(congelados).toEqual([]);

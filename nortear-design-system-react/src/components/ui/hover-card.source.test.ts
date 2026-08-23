@@ -12,7 +12,7 @@ import {
   hoverCardSource,
 } from './hover-card.source';
 
-const TODAS = [
+const ALL = [
   hoverCardSource,
   hoverCardWaitDefaultSource,
   hoverCardWaitCurtaSource,
@@ -158,7 +158,7 @@ describe('composições', () => {
 
 describe('guardas do painel', () => {
   it('nenhum snippet ensina o andaime do arquivo de story', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).not.toContain('HoverCardForArgs');
       expect(saida).not.toContain('fixtures');

@@ -13,7 +13,7 @@ type AlertDialogArgs = {
   description: string;
   cancel: string;
   action: string;
-  onOpenChange: (aberto: boolean) => void;
+  onOpenChange: (isOpen: boolean) => void;
   onConfirm: () => void;
 };
 

@@ -50,11 +50,11 @@ export function opcoes(pairs: Array<[string, string | undefined]>): string[] {
  * O limite é de leitura, não de lint: o painel Code é estreito e a quebra
  * acontece de qualquer jeito — melhor onde a gente escolhe.
  */
-export function chamada(fabrica: string, linhas: string[]): string {
-  if (linhas.length === 0) return `${fabrica}({})`;
-  const umaLine = `${fabrica}({ ${linhas.map((l) => l.replace(/,$/, '')).join(', ')} })`;
+export function chamada(fabrica: string, lines: string[]): string {
+  if (lines.length === 0) return `${fabrica}({})`;
+  const umaLine = `${fabrica}({ ${lines.map((l) => l.replace(/,$/, '')).join(', ')} })`;
   if (umaLine.length <= 72 && !umaLine.includes('\n')) return umaLine;
-  return `${fabrica}({\n${linhas.map((l) => `  ${l}`).join('\n')}\n})`;
+  return `${fabrica}({\n${lines.map((l) => `  ${l}`).join('\n')}\n})`;
 }
 
 /** `import { a, b } from '@/components/ui/<slug>';` */

@@ -108,10 +108,10 @@
 		const direcao = evento.key === "PageUp" ? 1 : -1;
 
 		const atual = Array.isArray(value) ? [...value] : [value ?? min];
-		const bruto = (atual[indice] ?? min) + largeStep * direcao;
+		const raw = (atual[indice] ?? min) + largeStep * direcao;
 		// Arredonda ao passo antes de prender na faixa: um salto que caísse entre
 		// dois passos deixaria o controle num valor que as setas não alcançam.
-		const inStep = min + Math.round((bruto - min) / step) * step;
+		const inStep = min + Math.round((raw - min) / step) * step;
 		atual[indice] = Math.min(max, Math.max(min, inStep));
 
 		evento.preventDefault();

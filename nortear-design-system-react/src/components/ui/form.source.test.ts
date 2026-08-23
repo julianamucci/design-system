@@ -10,7 +10,7 @@ import {
   formSource,
 } from './form.source';
 
-const TODAS = [
+const ALL = [
   formSource,
   formLabelEControleSource,
   formWithDescriptionSource,
@@ -138,7 +138,7 @@ describe('composições', () => {
   });
 
   it('a ordem de tabulação é a do DOM — nenhum snippet escreve tabIndex', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       expect(fn()).not.toContain('tabIndex');
     }
   });
@@ -148,7 +148,7 @@ describe('guardas do painel', () => {
   it('nenhum snippet escreve à mão a costura que o campo faz sozinho', () => {
     // `for`/`id` e `aria-describedby` são o produto do componente: mostrá-los
     // ensinaria a duplicar exatamente o que ele existe para resolver.
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).not.toContain('htmlFor');
       expect(saida).not.toContain('aria-describedby');
@@ -157,7 +157,7 @@ describe('guardas do painel', () => {
   });
 
   it('nenhum snippet carrega o andaime do canvas da story', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).not.toContain('fixtures');
       expect(saida).not.toContain('{...args}');

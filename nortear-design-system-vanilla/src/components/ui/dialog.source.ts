@@ -53,7 +53,7 @@ function button(acao: DialogSnippetAction): string {
     ['variant', acao.variant && acao.variant !== 'default' ? texto(acao.variant) : undefined],
     ['label', texto(acao.label)],
   ])
-    .map((linha) => linha.replace(/,$/, ''))
+    .map((line) => line.replace(/,$/, ''))
     .join(', ');
   return `createButton({ ${pairs} })`;
 }
@@ -142,7 +142,7 @@ function campo(c: DialogField): string {
     ['type', c.type && c.type !== 'text' ? texto(c.type) : undefined],
     ['value', c.value !== undefined ? texto(c.value) : undefined],
   ])
-    .map((linha) => linha.replace(/,$/, ''))
+    .map((line) => line.replace(/,$/, ''))
     .join(', ');
   return `  createFormField({
     label: ${texto(c.label)},

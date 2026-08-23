@@ -76,33 +76,33 @@ export interface CardFooterOptions {
 
 export function createCard(options: CardOptions = {}): HTMLElement {
   const { size = 'default' } = options;
-  const classe = options.class ?? options.className;
+  const className = options.class ?? options.className;
 
   const el = document.createElement('div');
   el.setAttribute('data-slot', 'card');
   el.setAttribute('data-size', size);
-  el.className = cn('nds-card', classe);
+  el.className = cn('nds-card', className);
 
   return el;
 }
 
 export function createCardHeader(options: CardHeaderOptions = {}): HTMLElement {
-  const classe = options.class ?? options.className;
+  const className = options.class ?? options.className;
 
   const el = document.createElement('div');
   el.setAttribute('data-slot', 'card-header');
-  el.className = cn('nds-card-header', classe);
+  el.className = cn('nds-card-header', className);
 
   return el;
 }
 
 export function createCardTitle(options: CardTitleOptions = {}): HTMLElement {
   const { text = '', level = 3 } = options;
-  const classe = options.class ?? options.className;
+  const className = options.class ?? options.className;
 
   const el = document.createElement(`h${level}`);
   el.setAttribute('data-slot', 'card-title');
-  el.className = cn('nds-card-title', classe);
+  el.className = cn('nds-card-title', className);
   if (text) el.textContent = text;
 
   return el;
@@ -110,42 +110,42 @@ export function createCardTitle(options: CardTitleOptions = {}): HTMLElement {
 
 export function createCardDescription(options: CardDescriptionOptions = {}): HTMLElement {
   const { text = '' } = options;
-  const classe = options.class ?? options.className;
+  const className = options.class ?? options.className;
 
   const el = document.createElement('div');
   el.setAttribute('data-slot', 'card-description');
-  el.className = cn('nds-card-description', classe);
+  el.className = cn('nds-card-description', className);
   if (text) el.textContent = text;
 
   return el;
 }
 
 export function createCardAction(options: CardActionOptions = {}): HTMLElement {
-  const classe = options.class ?? options.className;
+  const className = options.class ?? options.className;
 
   const el = document.createElement('div');
   el.setAttribute('data-slot', 'card-action');
-  el.className = cn('nds-card-action', classe);
+  el.className = cn('nds-card-action', className);
 
   return el;
 }
 
 export function createCardContent(options: CardContentOptions = {}): HTMLElement {
-  const classe = options.class ?? options.className;
+  const className = options.class ?? options.className;
 
   const el = document.createElement('div');
   el.setAttribute('data-slot', 'card-content');
-  el.className = cn('nds-card-content', classe);
+  el.className = cn('nds-card-content', className);
 
   return el;
 }
 
 export function createCardFooter(options: CardFooterOptions = {}): HTMLElement {
-  const classe = options.class ?? options.className;
+  const className = options.class ?? options.className;
 
   const el = document.createElement('div');
   el.setAttribute('data-slot', 'card-footer');
-  el.className = cn('nds-card-footer', classe);
+  el.className = cn('nds-card-footer', className);
 
   return el;
 }

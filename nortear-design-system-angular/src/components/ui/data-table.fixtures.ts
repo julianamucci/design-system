@@ -147,8 +147,8 @@ export const COLUMNS_EDITAVEIS: DataTableColumn<InvoiceDT>[] = COLUMNS_INVOICES.
 export class NdsDataTableDemo {
   readonly colunas = COLUMNS_EDITAVEIS;
   readonly rotulos = LABELS_DT;
-  readonly chaveDaFatura = (fatura: InvoiceDT) => fatura.id;
-  readonly rotuloDaFatura = (fatura: InvoiceDT) => fatura.id;
+  readonly chaveDaFatura = (invoice: InvoiceDT) => invoice.id;
+  readonly rotuloDaFatura = (invoice: InvoiceDT) => invoice.id;
 
   readonly enableRowSelection = input(false, { transform: booleanAttribute });
   readonly enablePagination = input(true, { transform: booleanAttribute });
@@ -168,10 +168,10 @@ export class NdsDataTableDemo {
 
   aplicarEdicao(edicao: DataTableCellEdit): void {
     this.faturas.update((atual) =>
-      atual.map((fatura, indice) =>
+      atual.map((invoice, indice) =>
         indice === edicao.rowIndex
-          ? { ...fatura, [edicao.columnId]: edicao.value }
-          : fatura,
+          ? { ...invoice, [edicao.columnId]: edicao.value }
+          : invoice,
       ),
     );
   }

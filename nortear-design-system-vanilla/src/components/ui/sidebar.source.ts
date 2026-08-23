@@ -87,7 +87,7 @@ function importingIcons(names: string[]): string | undefined {
  * interno, que é onde a folha compartilhada desenha a coluna.
  */
 function barBlock(o: SidebarSnippetOptions): string {
-  const linhas = opcoes([
+  const lines = opcoes([
     // `true`, `left` e `sidebar` são os padrões da fábrica: nenhum entra.
     ['defaultOpen', o.defaultOpen === false ? 'false' : undefined],
     ['side', o.side === 'right' ? texto('right') : undefined],
@@ -100,7 +100,7 @@ function barBlock(o: SidebarSnippetOptions): string {
     ['onMobileOpenChange', expressao(o.onMobileOpenChange, CALLBACK_GAVETA)],
   ]);
 
-  return `const barra = ${chamada('createSidebar', linhas)};
+  return `const barra = ${chamada('createSidebar', lines)};
 const interno = barra.element.querySelector('[data-sidebar="sidebar"]')!;`;
 }
 

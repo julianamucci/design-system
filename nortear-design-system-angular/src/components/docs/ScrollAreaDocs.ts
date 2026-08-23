@@ -336,10 +336,10 @@ const CAMINHOS: Record<string, string> = {
     <ng-template #tplVarBoth>
       <div ndsScrollArea size="md" [label]="rotulos().both" class="nds-max-w-md nds-rounded-md nds-border-default">
         <div class="nds-stack nds-p-4" data-spacing="sm">
-          @for (linha of linhasDemo(); track linha) {
+          @for (line of linhasDemo(); track line) {
             <div class="nds-row nds-whitespace-nowrap" data-spacing="md">
               @for (coluna of colunasDemo(); track coluna) {
-                <span class="nds-text-body nds-shrink-0">{{ linha }} · {{ coluna }}</span>
+                <span class="nds-text-body nds-shrink-0">{{ line }} · {{ coluna }}</span>
               }
             </div>
           }
@@ -398,10 +398,10 @@ const CAMINHOS: Record<string, string> = {
               </p>
               <div ndsScrollArea size="lg" [label]="t('demonstration.labels.bothTitle')" class="nds-rounded-md nds-border-default">
                 <div class="nds-stack nds-p-4" data-spacing="sm">
-                  @for (linha of linhasDemo(); track linha) {
+                  @for (line of linhasDemo(); track line) {
                     <div class="nds-row nds-whitespace-nowrap" data-spacing="md">
                       @for (coluna of colunasDemo(); track coluna) {
-                        <span class="nds-text-body nds-shrink-0">{{ linha }} · {{ coluna }}</span>
+                        <span class="nds-text-body nds-shrink-0">{{ line }} · {{ coluna }}</span>
                       }
                     </div>
                   }

@@ -128,8 +128,8 @@ export const WithBadge: Story = {
       // Idempotente: repetir o clique mantém a mesma aba ativa.
       const aba = canvas.getByRole('tab', { name: /Propriedades/ });
       await userEvent.click(aba);
-      const estado = aba.getAttribute('data-state');
-      await expect(estado).toBe('active');
+      const state = aba.getAttribute('data-state');
+      await expect(state).toBe('active');
       await expect(canvas.getByRole('tabpanel').textContent).toContain('Lista de propriedades');
     });
   },

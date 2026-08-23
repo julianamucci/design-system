@@ -422,10 +422,10 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
                  accordion. -->
             <table class="nds-w-full nds-text-body nds-border-collapse">
               <tbody>
-                @for (linha of linhasDeEspecificacao(); track linha.rotulo) {
+                @for (line of linhasDeEspecificacao(); track line.rotulo) {
                   <tr class="nds-border-b">
-                    <td class="nds-py-1 nds-pr-4">{{ linha.rotulo }}</td>
-                    <td class="nds-py-1">{{ linha.valor }}</td>
+                    <td class="nds-py-1 nds-pr-4">{{ line.rotulo }}</td>
+                    <td class="nds-py-1">{{ line.valor }}</td>
                   </tr>
                 }
               </tbody>
@@ -436,8 +436,8 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
           <button ndsAccordionTrigger>{{ rotulos().incluso }}</button>
           <div ndsAccordionContent>
             <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="xs">
-              @for (linha of itensInclusos(); track linha) {
-                <li>{{ linha }}</li>
+              @for (line of itensInclusos(); track line) {
+                <li>{{ line }}</li>
               }
             </ul>
           </div>

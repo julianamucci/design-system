@@ -16,7 +16,7 @@ import {
 } from './sidebar.source';
 
 /** Todas as transforms deste componente, para as regras que valem para o conjunto. */
-const TODAS = [
+const ALL = [
   sidebarPlaygroundSource,
   sidebarVariantSidebarSource,
   sidebarVariantFloatingSource,
@@ -173,7 +173,7 @@ describe('a divisão de props entre provider e barra', () => {
   const abreBar = /<Sidebar(?:\s[^>]*)?>/;
 
   it('default-open, open e mobile-query só aparecem no provider', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const barra = fn().match(abreBar)?.[0] ?? '';
       expect(barra).not.toContain('default-open');
       expect(barra).not.toContain(':open');
@@ -182,7 +182,7 @@ describe('a divisão de props entre provider e barra', () => {
   });
 
   it('side, variant e collapsible só aparecem na barra', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const provider = fn().match(abreProvider)?.[0] ?? '';
       expect(provider).not.toContain('side=');
       expect(provider).not.toContain('variant=');
@@ -191,7 +191,7 @@ describe('a divisão de props entre provider e barra', () => {
   });
 
   it('a barra mora dentro de um marco de navegação nomeado', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       expect(fn()).toContain('<nav aria-label="Navegação principal">');
     }
   });

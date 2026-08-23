@@ -48,7 +48,7 @@ const ITEMS_DEFAULT: RadioGroupSnippetItem[] = [
 
 /** `items: [ … ]`, um item por linha, já recuado para dentro da chamada. */
 function blockItems(itens: RadioGroupSnippetItem[]): string {
-  const linhas = itens.map((item) => {
+  const lines = itens.map((item) => {
     const pairs = opcoes([
       ['value', texto(item.value)],
       ['label', texto(item.label)],
@@ -56,7 +56,7 @@ function blockItems(itens: RadioGroupSnippetItem[]): string {
     ]);
     return `    { ${pairs.map((p) => p.replace(/,$/, '')).join(', ')} },`;
   });
-  return `[\n${linhas.join('\n')}\n  ]`;
+  return `[\n${lines.join('\n')}\n  ]`;
 }
 
 /**
@@ -223,7 +223,7 @@ export function formRadioGroupSnippet(o: RadioGroupSnippetOptions = {}): string 
   // clique — a linha do `onValueChange` sairia sobrando no snippet.
   const grupo = chamada('createRadioGroup', groupLines({ ...o, name: nome, onValueChange: false }))
     .split('\n')
-    .map((linha, i) => (i === 0 ? linha : `  ${linha}`))
+    .map((line, i) => (i === 0 ? line : `  ${line}`))
     .join('\n');
 
   return snippet(

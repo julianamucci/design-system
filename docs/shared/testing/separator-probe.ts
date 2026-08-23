@@ -31,9 +31,9 @@
  */
 
 import { backgroundEffective, darkLigarTheme, ratio, resolveColor, noTransicao } from './cor';
-import type { Contraste } from './cor';
+import type { Contrast } from './cor';
 
-export type { Contraste } from './cor';
+export type { Contrast } from './cor';
 export { darkLigarTheme };
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
@@ -82,7 +82,7 @@ export interface SeparatorMeasurement {
   // ── Cor ────────────────────────────────────────────────────────────────────
   background: string;
   fundoAtras: string | null;
-  contraste: Contraste | null;
+  contraste: Contrast | null;
   /** Nome do token que CASA com a cor pintada. `desconhecido` é o achado. */
   tokenDeOrigem: string;
 
@@ -148,7 +148,7 @@ function identificarToken(raiz: HTMLElement, cor: string): string {
   return casados.length ? casados.join(' | ') : 'desconhecido';
 }
 
-function descrever(el: Element | null): string | null {
+function describe(el: Element | null): string | null {
   if (!el) return null;
   const cls = [...el.classList].filter((c) => c.startsWith('nds-')).join('.');
   return cls ? `${el.tagName.toLowerCase()}.${cls}` : el.tagName.toLowerCase();
@@ -219,7 +219,7 @@ function measureSeparator(sep: HTMLElement, raiz: HTMLElement): SeparatorMeasure
     contraste: atras ? ratio(background, atras) : null,
     tokenDeOrigem: identificarToken(raiz, background),
 
-    elementoNoCentro: descrever(center),
+    elementoNoCentro: describe(center),
   };
 }
 

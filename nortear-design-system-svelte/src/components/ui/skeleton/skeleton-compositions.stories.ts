@@ -150,7 +150,7 @@ export const Paragraph: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const regiao = canvasElement.querySelector('[role="status"]') as HTMLElement;
-    const linhas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
+    const lines = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
     await step('A região tem estado e nome', async () => {
       await expect(regiao).toHaveAttribute('aria-busy', 'true');
@@ -158,12 +158,12 @@ export const Paragraph: Story = {
     });
 
     await step('Três linhas, ocultas ao leitor de tela', async () => {
-      await expect(linhas).toHaveLength(3);
-      for (const l of linhas) await expect(l).toHaveAttribute('aria-hidden', 'true');
+      await expect(lines).toHaveLength(3);
+      for (const l of lines) await expect(l).toHaveAttribute('aria-hidden', 'true');
     });
 
     await step('As larguras decrescem — é o que faz o bloco parecer parágrafo', async () => {
-      const larguras = linhas.map((l) => l.getBoundingClientRect().width);
+      const larguras = lines.map((l) => l.getBoundingClientRect().width);
       await expect(larguras[0]).toBeGreaterThan(larguras[1]);
       await expect(larguras[1]).toBeGreaterThan(larguras[2]);
     });

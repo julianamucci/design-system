@@ -52,9 +52,9 @@ ${conteudo}
 
 /** Conteúdo centralizado de um painel — o painel em si não posiciona nada. */
 function conteudo(rotulo: string, indentacao: string, esmaecido = false): string {
-  const classe = esmaecido ? 'nds-text-body nds-text-muted-foreground' : 'nds-text-body';
+  const className = esmaecido ? 'nds-text-body nds-text-muted-foreground' : 'nds-text-body';
   return `${indentacao}<div class="nds-cluster nds-h-full" data-align="center" data-justify="center">
-${indentacao}  <span class="${classe}">${rotulo}</span>
+${indentacao}  <span class="${className}">${rotulo}</span>
 ${indentacao}</div>`;
 }
 
@@ -69,12 +69,12 @@ function punho(o: Grupo, rotulo: string, indentacao: string): string {
 /** Dois painéis e um divisor: a forma canônica do componente. */
 function simpleGroup(o: Grupo = {}): string {
   const direction = o.direction ?? 'horizontal';
-  const primeiro = o.defaultSize ?? 30;
+  const first = o.defaultSize ?? 30;
   const minSize = o.minSize ?? 20;
   const rotulo = o.ariaLabel ?? 'Redimensionar painéis — use setas para ajustar';
 
   const panelA = attrs(
-    `defaultSize={${primeiro}}`,
+    `defaultSize={${first}}`,
     `minSize={${minSize}}`,
     o.maxSize === undefined ? '' : `maxSize={${o.maxSize}}`,
   );
@@ -88,7 +88,7 @@ function simpleGroup(o: Grupo = {}): string {
 ${conteudo(o.labelA ?? 'Sidebar', '      ', true)}
     </ResizablePane>
 ${punho(o, rotulo, '    ')}
-    <ResizablePane defaultSize={${100 - primeiro}} minSize={${minSize}}>
+    <ResizablePane defaultSize={${100 - first}} minSize={${minSize}}>
 ${conteudo(o.labelB ?? 'Conteúdo principal', '      ')}
     </ResizablePane>
   </ResizablePaneGroup>`,
@@ -109,7 +109,7 @@ type Nested = Grupo & {
 function groupNested(o: Nested = {}): string {
   const direction = o.direction ?? 'horizontal';
   const interno = direction === 'horizontal' ? 'vertical' : 'horizontal';
-  const primeiro = o.defaultSize ?? 30;
+  const first = o.defaultSize ?? 30;
   const minSize = o.minSize ?? 20;
 
   return svelteSnippet(
@@ -117,11 +117,11 @@ function groupNested(o: Nested = {}): string {
     envolver(
       o.height ?? '320px',
       `  <ResizablePaneGroup direction="${direction}">
-    <ResizablePane defaultSize={${primeiro}} minSize={${minSize}}>
+    <ResizablePane defaultSize={${first}} minSize={${minSize}}>
 ${conteudo(o.labelA ?? 'Sidebar', '      ', true)}
     </ResizablePane>
 ${punho(o, o.ariaLabel ?? 'Redimensionar sidebar e conteúdo — use setas', '    ')}
-    <ResizablePane defaultSize={${100 - primeiro}} minSize={${minSize}}>
+    <ResizablePane defaultSize={${100 - first}} minSize={${minSize}}>
       <ResizablePaneGroup direction="${interno}">
         <ResizablePane defaultSize={60} minSize={20}>
 ${conteudo(o.innerTop ?? 'Editor', '          ')}

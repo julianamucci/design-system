@@ -37,11 +37,11 @@ type Story = StoryObj;
  */
 function otherSizeMeasure(
   card: HTMLElement,
-  outro: 'default' | 'sm',
+  other: 'default' | 'sm',
   ler: () => number,
 ): number {
   const original = card.getAttribute('data-size')!;
-  card.setAttribute('data-size', outro);
+  card.setAttribute('data-size', other);
   const valor = ler();
   card.setAttribute('data-size', original);
   return valor;

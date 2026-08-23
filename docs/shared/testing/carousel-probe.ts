@@ -33,7 +33,7 @@ export interface SlideMeasurement {
   /** Posição no trilho, para a mensagem de falha dizer QUAL slide. */
   indice: number;
   /** `null` quando a stack não declarou o estado — e isso É o achado. */
-  estado: string | null;
+  state: string | null;
   /** Caixa RENDERIZADA (com `transform` aplicado). */
   larguraVisivel: number;
   /** Caixa de LAYOUT (sem `transform`). É ela que o `scroll-snap` enxerga. */
@@ -63,7 +63,7 @@ function measureSlide(el: HTMLElement, indice: number): SlideMeasurement {
   const layout = alvo.offsetWidth;
   return {
     indice,
-    estado: el.getAttribute('data-active'),
+    state: el.getAttribute('data-active'),
     larguraVisivel: rect.width,
     larguraDeLayout: layout,
     escala: layout > 0 ? rect.width / layout : 0,
@@ -100,7 +100,7 @@ export function reprovasDeEscala(
     return [{ onde: 'trilho', motivo: 'nenhum slide encontrado — a medição não chegou ao componente' }];
   }
 
-  const noState = measurements.filter((m) => m.estado === null);
+  const noState = measurements.filter((m) => m.state === null);
   if (noState.length > 0) {
     failures.push({
       onde: 'trilho',
@@ -110,7 +110,7 @@ export function reprovasDeEscala(
     return failures;
   }
 
-  const ativos = measurements.filter((m) => m.estado === 'true');
+  const ativos = measurements.filter((m) => m.state === 'true');
   if (ativos.length !== 1) {
     failures.push({
       onde: 'trilho',
@@ -129,19 +129,19 @@ export function reprovasDeEscala(
       failures.push({ onde: `slide ${m.indice}`, motivo: 'caixa de layout com largura zero' });
       continue;
     }
-    if (m.estado === 'true' && Math.abs(m.escala - 1) > EPSILON) {
+    if (m.state === 'true' && Math.abs(m.escala - 1) > EPSILON) {
       failures.push({
         onde: `slide ${m.indice}`,
         motivo: `é o atual e deveria estar em tamanho cheio, mas está em ${m.escala.toFixed(3)}`,
       });
     }
-    if (m.estado === 'false' && m.escala >= 1 - EPSILON) {
+    if (m.state === 'false' && m.escala >= 1 - EPSILON) {
       failures.push({
         onde: `slide ${m.indice}`,
         motivo: `é vizinho e deveria estar recuado, mas está em ${m.escala.toFixed(3)}`,
       });
     }
-    if (m.estado === 'false' && m.escala > 1) {
+    if (m.state === 'false' && m.escala > 1) {
       failures.push({
         onde: `slide ${m.indice}`,
         motivo: `vizinho AUMENTADO (${m.escala.toFixed(3)}) — escala acima de 1 transborda o recorte`,
@@ -175,8 +175,8 @@ export function pontoDeParadaIntacto(raiz: HTMLElement): CarrosselFailure[] {
     steps.push(start(slides[i]) - start(slides[i - 1]));
   }
 
-  const primeiro = steps[0];
-  const desiguais = steps.filter((p) => Math.abs(p - primeiro) > 1);
+  const first = steps[0];
+  const desiguais = steps.filter((p) => Math.abs(p - first) > 1);
   if (desiguais.length > 0) {
     return [{
       onde: 'trilho',
@@ -210,7 +210,7 @@ export async function escalaSobMovimentoReduzido(
   try {
     html.setAttribute('data-reduced-motion', 'true');
     await aguardar(() => {
-      const neighbours = measureSlides(raiz).filter((m) => m.estado === 'false');
+      const neighbours = measureSlides(raiz).filter((m) => m.state === 'false');
       if (neighbours.length === 0) throw new Error('nenhum vizinho para medir');
       for (const v of neighbours) {
         if (Math.abs(v.escala - 1) > EPSILON) {

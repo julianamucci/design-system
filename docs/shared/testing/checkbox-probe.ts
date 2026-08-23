@@ -75,9 +75,9 @@ export function stateChecked(el: Element | null): Checked {
   const aria = el.getAttribute('aria-checked');
   if (aria === 'mixed') return 'mixed';
   if (aria === 'true' || aria === 'false') return aria === 'true';
-  const estado = el.getAttribute('data-state');
-  if (estado === 'indeterminate') return 'mixed';
-  if (estado === 'checked' || estado === 'unchecked') return estado === 'checked';
+  const state = el.getAttribute('data-state');
+  if (state === 'indeterminate') return 'mixed';
+  if (state === 'checked' || state === 'unchecked') return state === 'checked';
   if (el instanceof HTMLInputElement && el.type === 'checkbox') {
     return el.indeterminate ? 'mixed' : el.checked;
   }
@@ -312,7 +312,7 @@ export function measureBox(raiz: HTMLElement) {
     },
 
     // ── Estado tri-valorado ──────────────────────────────────────────────────
-    estado: {
+    state: {
       ariaChecked: caixa.getAttribute('aria-checked'),
       dataState: caixa.getAttribute('data-state'),
       dataChecked: presenca(caixa, 'data-checked'),

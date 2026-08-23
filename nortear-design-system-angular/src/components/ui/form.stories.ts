@@ -50,7 +50,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<FormArgs> }): s
     '</div>',
   ]
     .filter(Boolean)
-    .map((linha) => `      ${linha}`)
+    .map((line) => `      ${line}`)
     .join('\n');
 
   return `import { NDS_FORM } from '@/components/ui/form';

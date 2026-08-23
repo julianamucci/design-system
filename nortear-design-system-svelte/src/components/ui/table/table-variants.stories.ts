@@ -59,11 +59,11 @@ export const Basic: Story = {
     });
 
     await step('Uma linha por registro, quatro colunas por linha', async () => {
-      const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-      await expect(linhas.length).toBe(5);
-      for (const linha of linhas) {
-        await expect(linha).toHaveAttribute('data-slot', 'table-row');
-        await expect(linha.querySelectorAll('td').length).toBe(4);
+      const lines = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+      await expect(lines.length).toBe(5);
+      for (const line of lines) {
+        await expect(line).toHaveAttribute('data-slot', 'table-row');
+        await expect(line.querySelectorAll('td').length).toBe(4);
       }
     });
 

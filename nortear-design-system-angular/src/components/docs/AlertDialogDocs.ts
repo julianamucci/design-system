@@ -579,7 +579,7 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const linha = (name: string, chave: string, tipo: string, padrao: string) => ({
+    const line = (name: string, chave: string, tipo: string, padrao: string) => ({
       name,
       type: tipo,
       defaultValue: padrao,
@@ -592,9 +592,9 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
         title: t('props.rootTitle'),
         cols,
         items: [
-          linha('open', 'open', 'model<boolean>', '—'),
-          linha('defaultOpen', 'defaultOpen', 'boolean', 'false'),
-          linha('openChange', 'onOpenChange', 'output<boolean>', '—'),
+          line('open', 'open', 'model<boolean>', '—'),
+          line('defaultOpen', 'defaultOpen', 'boolean', 'false'),
+          line('openChange', 'onOpenChange', 'output<boolean>', '—'),
           {
             name: 'modal',
             type: '—',
@@ -611,24 +611,24 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
         title: t('props.triggerTitle'),
         cols,
         items: [
-          linha('disabled', 'asChild', 'boolean', 'false'),
-          linha('class', 'className', 'string', '—'),
+          line('disabled', 'asChild', 'boolean', 'false'),
+          line('class', 'className', 'string', '—'),
         ],
       },
       {
         title: t('props.contentTitle'),
         cols,
-        items: [linha('(conteúdo)', 'children', 'ng-template', '—')],
+        items: [line('(conteúdo)', 'children', 'ng-template', '—')],
       },
       {
         title: t('props.actionTitle'),
         cols,
-        items: [linha('(click)', 'onClick', 'output', '—')],
+        items: [line('(click)', 'onClick', 'output', '—')],
       },
       {
         title: t('props.cancelTitle'),
         cols,
-        items: [linha('(click)', 'onClick', 'output', '—')],
+        items: [line('(click)', 'onClick', 'output', '—')],
       },
     ];
   });

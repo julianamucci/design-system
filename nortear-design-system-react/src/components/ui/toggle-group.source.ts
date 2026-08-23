@@ -211,7 +211,7 @@ ${itens([
   ['justify', 'Justificar', 'AlignJustify'],
 ])
   .split('\n')
-  .map((linha) => (linha.trim() ? `  ${linha}` : linha))
+  .map((line) => (line.trim() ? `  ${line}` : line))
   .join('\n')}
   </ToggleGroup>
 
@@ -242,7 +242,7 @@ ${ICONS_FORMATTING}`,
   >
 ${itens(FORMATTING)
   .split('\n')
-  .map((linha) => (linha.trim() ? `  ${linha}` : linha))
+  .map((line) => (line.trim() ? `  ${line}` : line))
   .join('\n')}
   </ToggleGroup>
 

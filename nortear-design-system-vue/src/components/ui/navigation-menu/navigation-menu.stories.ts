@@ -184,11 +184,11 @@ export const Playground: Story = {
       const conteudo = await waitForPanel();
       await expect(produtos).toHaveAttribute('aria-expanded', 'true');
 
-      const primeiro = within(conteudo).getByRole('link', { name: 'Plano Inicial' });
+      const first = within(conteudo).getByRole('link', { name: 'Plano Inicial' });
       // Alcançável por teclado: nenhum destino do painel sai da ordem de foco.
-      await expect(primeiro).not.toHaveAttribute('tabindex', '-1');
-      primeiro.focus();
-      await expect(document.activeElement).toBe(primeiro);
+      await expect(first).not.toHaveAttribute('tabindex', '-1');
+      first.focus();
+      await expect(document.activeElement).toBe(first);
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {

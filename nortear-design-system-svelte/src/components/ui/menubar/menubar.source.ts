@@ -64,7 +64,7 @@ ${corpo}
   </MenubarMenu>`;
 }
 
-type Composition = { parts: string[]; estado: string[]; menus: string };
+type Composition = { parts: string[]; state: string[]; menus: string };
 
 const BASE = ['Menubar', 'MenubarMenu', 'MenubarTrigger', 'MenubarContent'];
 
@@ -88,7 +88,7 @@ function composition(
 
     return {
       parts: [...BASE, 'MenubarItem', 'MenubarShortcut'],
-      estado: [],
+      state: [],
       menus: menu('edit', 'Editar', itens),
     };
   }
@@ -96,7 +96,7 @@ function composition(
   if (demonstration === 'submenu') {
     return {
       parts: [...BASE, 'MenubarItem', 'MenubarSub', 'MenubarSubTrigger', 'MenubarSubContent'],
-      estado: [],
+      state: [],
       menus: menu(
         'file',
         'Arquivo',
@@ -116,7 +116,7 @@ function composition(
   if (demonstration === 'checkbox') {
     return {
       parts: [...BASE, 'MenubarGroup', 'MenubarGroupHeading', 'MenubarCheckboxItem'],
-      estado: [
+      state: [
         'let regua = $state(true);',
         'let barraLateral = $state(false);',
         'let grade = $state(false);',
@@ -139,7 +139,7 @@ function composition(
   if (demonstration === 'indeterminate') {
     return {
       parts: [...BASE, 'MenubarLabel', 'MenubarCheckboxItem'],
-      estado: [],
+      state: [],
       menus: menu(
         'view',
         'Exibir',
@@ -154,7 +154,7 @@ function composition(
   if (demonstration === 'radio') {
     return {
       parts: [...BASE, 'MenubarGroupHeading', 'MenubarRadioGroup', 'MenubarRadioItem'],
-      estado: ['let tema = $state("light");'],
+      state: ['let tema = $state("light");'],
       menus: menu(
         'theme',
         'Aparência',
@@ -171,7 +171,7 @@ function composition(
   if (demonstration === 'itemDisabled') {
     return {
       parts: [...BASE, 'MenubarItem'],
-      estado: [],
+      state: [],
       menus: menu(
         'file',
         'Arquivo',
@@ -185,7 +185,7 @@ function composition(
   if (demonstration === 'destructive') {
     return {
       parts: [...BASE, 'MenubarItem', 'MenubarSeparator'],
-      estado: [],
+      state: [],
       menus: menu(
         'file',
         'Arquivo',
@@ -207,7 +207,7 @@ function composition(
         'MenubarShortcut',
         'MenubarCheckboxItem',
       ],
-      estado: ['let regua = $state(true);', 'let grade = $state(false);'],
+      state: ['let regua = $state(true);', 'let grade = $state(false);'],
       menus: [
         menu(
           'file',
@@ -256,7 +256,7 @@ function composition(
 
   return {
     parts: [...BASE, 'MenubarItem'],
-    estado: [],
+    state: [],
     menus: categorias
       .map(([valor, rotulo, itens]) =>
         menu(
@@ -283,7 +283,7 @@ export function menubarSource(_gerado?: string, ctx?: { args?: Partial<MenubarAr
     demonstration = 'default',
   } = ctx?.args ?? {};
 
-  const { parts, estado, menus } = composition(demonstration, variant);
+  const { parts, state, menus } = composition(demonstration, variant);
 
   // Nesta stack o menu aberto é o `value` da raiz, vinculável: a mesma prop
   // serve de valor inicial e de leitura do estado.
@@ -294,7 +294,7 @@ export function menubarSource(_gerado?: string, ctx?: { args?: Partial<MenubarAr
 
   const declaracoes = [
     ...(defaultValue ? [`let menuAberto = $state("${defaultValue}");`] : []),
-    ...estado,
+    ...state,
   ];
 
   return svelteSnippet(

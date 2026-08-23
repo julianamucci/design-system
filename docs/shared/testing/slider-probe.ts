@@ -171,11 +171,11 @@ function backgroundOpaco(el: HTMLElement): [number, number, number] {
 export function contrastHandleTrack(raiz: ParentNode): number {
   const thumb = alcasDoSlider(raiz)[0];
   if (!thumb) throw new Error('SONDA::slider: nenhuma [data-slot="slider-thumb"] no canvas');
-  const trilho = sliderTrack(raiz);
-  const base = backgroundOpaco(trilho.parentElement ?? trilho);
+  const track = sliderTrack(raiz);
+  const base = backgroundOpaco(track.parentElement ?? track);
 
   const a = luminancia(handleDisco(thumb).borderTopColor, base);
-  const b = luminancia(getComputedStyle(trilho).backgroundColor, base);
+  const b = luminancia(getComputedStyle(track).backgroundColor, base);
   const [light, escuro] = a >= b ? [a, b] : [b, a];
   return (light + 0.05) / (escuro + 0.05);
 }
@@ -192,11 +192,11 @@ export function contrastHandleTrack(raiz: ParentNode): number {
 export function contextoHandleTrack(raiz: ParentNode): string {
   const thumb = alcasDoSlider(raiz)[0];
   if (!thumb) return 'SONDA::slider: nenhuma alça';
-  const trilho = sliderTrack(raiz);
+  const track = sliderTrack(raiz);
   const partes = [
     `borda=${handleDisco(thumb).borderTopColor}`,
-    `trilho=${getComputedStyle(trilho).backgroundColor}`,
-    `base=rgb(${backgroundOpaco(trilho.parentElement ?? trilho).join(", ")})`,
+    `trilho=${getComputedStyle(track).backgroundColor}`,
+    `base=rgb(${backgroundOpaco(track.parentElement ?? track).join(", ")})`,
     `html="${raiz.ownerDocument?.documentElement.className ?? '?'}"`,
   ];
   return partes.join(' ');

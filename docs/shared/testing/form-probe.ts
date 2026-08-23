@@ -27,9 +27,9 @@
  *     alfa. `ratio`/`backgroundEffective` de `cor.ts` fazem a composição.
  */
 
-import { backgroundEffective, darkLigarTheme, ratio, noTransicao, type Contraste } from './cor';
+import { backgroundEffective, darkLigarTheme, ratio, noTransicao, type Contrast } from './cor';
 
-export type { Contraste };
+export type { Contrast };
 export { darkLigarTheme, noTransicao };
 
 // ─── Seletores do contrato ────────────────────────────────────────────────────
@@ -120,11 +120,11 @@ export function accessibleName(el: Element | null | undefined): string | null {
  * que passa por qualquer asserção de atributo: id escrito, alvo inexistente.
  */
 export function descriptionResolvida(controle: HTMLElement | null) {
-  const bruto = controle?.getAttribute('aria-describedby') ?? null;
-  if (!controle || !bruto) {
-    return { atributo: bruto, ids: [] as string[], presentes: [] as string[], orfaos: [] as string[] };
+  const raw = controle?.getAttribute('aria-describedby') ?? null;
+  if (!controle || !raw) {
+    return { atributo: raw, ids: [] as string[], presentes: [] as string[], orfaos: [] as string[] };
   }
-  const ids = bruto.split(/\s+/).filter(Boolean);
+  const ids = raw.split(/\s+/).filter(Boolean);
   const presentes: string[] = [];
   const orfaos: string[] = [];
   for (const id of ids) {
@@ -132,7 +132,7 @@ export function descriptionResolvida(controle: HTMLElement | null) {
     if (alvo) presentes.push(texto(alvo) ?? '');
     else orfaos.push(id);
   }
-  return { atributo: bruto, ids, presentes, orfaos };
+  return { atributo: raw, ids, presentes, orfaos };
 }
 
 /**

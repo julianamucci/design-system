@@ -64,7 +64,7 @@ export function textareaSource(_gerado?: string, ctx?: { args?: Partial<Textarea
   ]);
 
   // O contador é o par do `maxlength`: sem o limite não há o que contar.
-  const contador = maxLength
+  const counter = maxLength
     ? `
   <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
     <span>Descreva o produto com clareza.</span>
@@ -78,7 +78,7 @@ export function textareaSource(_gerado?: string, ctx?: { args?: Partial<Textarea
     script(),
     `<div class="nds-stack nds-max-w-md" data-spacing="sm">
   <Label for="descricao">Descrição</Label>
-  ${campo}${contador}
+  ${campo}${counter}
 </div>`,
   );
 }

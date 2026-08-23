@@ -107,15 +107,15 @@ export const Open: Story = {
 export const Controlled: Story = {
   parameters: { covers: ['functional.item3'] },
   render: () => ({
-    props: { aberto: false },
+    props: { isOpen: false },
     template: `
       <div class="nds-cluster" data-spacing="md">
-        <div ndsPopover [open]="aberto" (openChange)="aberto = $event">
+        <div ndsPopover [open]="isOpen" (openChange)="isOpen = $event">
           <button ndsPopoverTrigger ndsButton variant="outline">Abrir popover</button>
           ${SIMPLE_PANEL}
         </div>
 
-        <button ndsButton variant="ghost" (click)="aberto = !aberto">
+        <button ndsButton variant="ghost" (click)="isOpen = !isOpen">
           Alternar por fora
         </button>
 

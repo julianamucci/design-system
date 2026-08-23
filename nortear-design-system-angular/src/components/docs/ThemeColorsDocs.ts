@@ -121,13 +121,13 @@ const ALL_OS_TOKENS = PALETTE_GROUPS.flatMap((g) => g.tokens);
 interface ItemDeEixo {
   chave: string;
   rotulo: string;
-  classe: string;
+  className: string;
 }
 
 const MARCA_THEMES: ItemDeEixo[] = [
-  { chave: 'default', rotulo: 'brand.themes.default', classe: 'tema-default' },
-  { chave: 'warm', rotulo: 'brand.themes.warm', classe: 'tema-warm' },
-  { chave: 'cold', rotulo: 'brand.themes.cold', classe: 'tema-cold' },
+  { chave: 'default', rotulo: 'brand.themes.default', className: 'tema-default' },
+  { chave: 'warm', rotulo: 'brand.themes.warm', className: 'tema-warm' },
+  { chave: 'cold', rotulo: 'brand.themes.cold', className: 'tema-cold' },
 ];
 
 const MODOS: Array<{ chave: string; rotulo: string; escuro: boolean }> = [
@@ -139,24 +139,24 @@ const DENSIDADES: ItemDeEixo[] = [
   {
     chave: 'condensado',
     rotulo: 'axes.density.items.condensado',
-    classe: 'densidade-condensado',
+    className: 'densidade-condensado',
   },
-  { chave: 'default', rotulo: 'axes.density.items.default', classe: 'densidade-default' },
+  { chave: 'default', rotulo: 'axes.density.items.default', className: 'densidade-default' },
   {
     chave: 'confortavel',
     rotulo: 'axes.density.items.confortavel',
-    classe: 'densidade-confortavel',
+    className: 'densidade-confortavel',
   },
 ];
 
 const FONTES: ItemDeEixo[] = [
-  { chave: 'default', rotulo: 'axes.fonts.items.default', classe: 'fonte-default' },
-  { chave: 'lexend', rotulo: 'axes.fonts.items.lexend', classe: 'fonte-lexend' },
-  { chave: 'pt-serif', rotulo: 'axes.fonts.items.pt-serif', classe: 'fonte-pt-serif' },
+  { chave: 'default', rotulo: 'axes.fonts.items.default', className: 'fonte-default' },
+  { chave: 'lexend', rotulo: 'axes.fonts.items.lexend', className: 'fonte-lexend' },
+  { chave: 'pt-serif', rotulo: 'axes.fonts.items.pt-serif', className: 'fonte-pt-serif' },
   {
     chave: 'lxgw-wenkai',
     rotulo: 'axes.fonts.items.lxgw-wenkai',
-    classe: 'fonte-lxgw-wenkai',
+    className: 'fonte-lxgw-wenkai',
   },
 ];
 
@@ -330,9 +330,9 @@ interface DensityTable {
                           </tr>
                         </thead>
                         <tbody ndsTableBody>
-                          @for (linha of tabelaDeDensidade().tableRows; track $index) {
+                          @for (line of tabelaDeDensidade().tableRows; track $index) {
                             <tr ndsTableRow>
-                              @for (celula of linha; track $index) {
+                              @for (celula of line; track $index) {
                                 <td ndsTableCell>{{ celula }}</td>
                               }
                             </tr>
@@ -358,7 +358,7 @@ interface DensityTable {
                   <span class="nds-axis-sample-label">{{
                     t(fonte.rotulo)
                   }}</span>
-                  <div [class]="fonte.classe">
+                  <div [class]="fonte.className">
                     <span class="nds-font-sample">Aa Bb Cc 123</span>
                   </div>
                 </div>
@@ -416,7 +416,7 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
     return Object.fromEntries(
       MARCA_THEMES.map((tema) => [
         tema.chave,
-        `nds-theme-card-scope ${tema.classe}${sufixo}`,
+        `nds-theme-card-scope ${tema.className}${sufixo}`,
       ]),
     );
   });
@@ -435,7 +435,7 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
   /** Classe de cada amostra de densidade — estática, mas no mesmo formato. */
   protected readonly escopoDeDensidade = computed<Record<string, string>>(() =>
     Object.fromEntries(
-      DENSIDADES.map((item) => [item.chave, `nds-axis-scope ${item.classe}`]),
+      DENSIDADES.map((item) => [item.chave, `nds-axis-scope ${item.className}`]),
     ),
   );
 
@@ -446,8 +446,8 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
    * o `t()` devolve a PRÓPRIA CHAVE quando ela não aponta para uma string.
    */
   protected readonly tabelaDeDensidade = computed<DensityTable>(() => {
-    const todos = themeColorsTranslations as Record<string, unknown>;
-    const dicionario = (todos[localeSignal()] ?? todos['pt-BR']) as {
+    const all = themeColorsTranslations as Record<string, unknown>;
+    const dicionario = (all[localeSignal()] ?? all['pt-BR']) as {
       axes: { density: DensityTable };
     };
     return dicionario.axes.density;
@@ -502,15 +502,15 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
   /** Lê marca, modo e valores HSL resolvidos no `<html>`. */
   private lerTema(): void {
     const classes = document.documentElement.classList;
-    const marca = MARCA_THEMES.find((tema) => classes.contains(tema.classe));
-    this.marcaAtiva.set(marca ? marca.classe : 'tema-default');
+    const marca = MARCA_THEMES.find((tema) => classes.contains(tema.className));
+    this.marcaAtiva.set(marca ? marca.className : 'tema-default');
     this.paginaEscura.set(classes.contains('dark'));
 
     const estilo = getComputedStyle(document.documentElement);
-    const valores: Record<string, string> = {};
+    const values: Record<string, string> = {};
     for (const token of ALL_OS_TOKENS) {
-      valores[token] = estilo.getPropertyValue(`--${token}`).trim();
+      values[token] = estilo.getPropertyValue(`--${token}`).trim();
     }
-    this.valoresDosTokens.set(valores);
+    this.valoresDosTokens.set(values);
   }
 }

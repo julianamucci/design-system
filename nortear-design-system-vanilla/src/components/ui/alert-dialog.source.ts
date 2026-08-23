@@ -77,7 +77,7 @@ media.appendChild(createAlertIcon('warning'));`
   // Propriedade abreviada onde a fábrica recebe o elemento pronto: é assim que
   // se escreve, e `trigger: trigger` seria ruído. `chamada` só junta as linhas,
   // então a abreviação convive com o que `opcoes` monta.
-  const linhas = [
+  const lines = [
     'trigger,',
     ...opcoes([
       ['title', texto(o.title ?? DEFAULTS.title)],
@@ -99,7 +99,7 @@ media.appendChild(createAlertIcon('warning'));`
     imports.join('\n'),
     buttons,
     media,
-    `const dialog = ${chamada('createAlertDialog', linhas)};`,
+    `const dialog = ${chamada('createAlertDialog', lines)};`,
     montar('dialog'),
   );
 }

@@ -178,8 +178,8 @@ export const Playground: Story = {
         </button>
 
         <ng-template ndsSelectContent [side]="side" [align]="align">
-          @for (estado of states; track estado.value) {
-            <div ndsSelectItem [value]="estado.value">{{ estado.label }}</div>
+          @for (state of states; track state.value) {
+            <div ndsSelectItem [value]="state.value">{{ state.label }}</div>
           }
         </ng-template>
       </nds-select>

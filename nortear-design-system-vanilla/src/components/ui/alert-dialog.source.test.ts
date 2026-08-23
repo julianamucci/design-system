@@ -56,9 +56,9 @@ describe('alertDialogSnippet', () => {
     expect(com).toContain("media.appendChild(createAlertIcon('warning'));");
     expect(com).toContain('media,');
 
-    const sem = alertDialogSnippet();
-    expect(sem).not.toContain('createAlertDialogMedia');
-    expect(sem).not.toContain('createAlertIcon');
+    const without = alertDialogSnippet();
+    expect(without).not.toContain('createAlertDialogMedia');
+    expect(without).not.toContain('createAlertIcon');
   });
 
   it('a descrição é opcional, e sem ela a opção some da chamada', () => {

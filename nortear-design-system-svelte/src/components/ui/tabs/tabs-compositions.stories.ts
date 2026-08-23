@@ -132,7 +132,7 @@ export const CodePreviewLine: Story = {
     const canvas = within(canvasElement);
     const l = lista(canvasElement);
     const preview = canvas.getByRole('tab', { name: 'Preview' });
-    const codigo = canvas.getByRole('tab', { name: 'Código' });
+    const code = canvas.getByRole('tab', { name: 'Código' });
 
     await step('A composição usa a variante sem trilho', async () => {
       await waitFor(() => expect(l).toHaveAttribute('data-variant', 'line'));
@@ -144,11 +144,11 @@ export const CodePreviewLine: Story = {
       // A linha é um `::after` com `opacity`: procurar um nó no DOM não acharia
       // nada. O `waitFor` existe porque a opacidade tem transição.
       await waitFor(() => expect(getComputedStyle(preview, '::after').opacity).toBe('1'));
-      await expect(getComputedStyle(codigo, '::after').opacity).toBe('0');
+      await expect(getComputedStyle(code, '::after').opacity).toBe('0');
     });
 
     await step('Trocar para Código troca o painel', async () => {
-      await ativar(codigo);
+      await ativar(code);
       await expect(canvas.getByRole('tabpanel')).toHaveTextContent('<Button>Click me</Button>');
       await expect(preview).toHaveAttribute('aria-selected', 'false');
     });

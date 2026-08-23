@@ -144,7 +144,7 @@ export function measureCodeBlock(raiz: HTMLElement) {
   const scroll = root.querySelector<HTMLElement>('.nds-code-block-scroll');
   const pre = root.querySelector<HTMLElement>('pre');
   const code = root.querySelector<HTMLElement>('code');
-  const linhas = [...root.querySelectorAll<HTMLElement>('.nds-code-block-line')];
+  const lines = [...root.querySelectorAll<HTMLElement>('.nds-code-block-line')];
   const gutters = [...root.querySelectorAll<HTMLElement>('.nds-code-block-gutter')];
   const texts = [...root.querySelectorAll<HTMLElement>('.nds-code-block-text')];
   const rodape = root.querySelector<HTMLElement>('.nds-code-block-footer');
@@ -177,9 +177,9 @@ export function measureCodeBlock(raiz: HTMLElement) {
       temHeader: !!header,
       tituloVisivel: texto(titulo),
       temRodape: !!rodape,
-      totalDeLinhas: linhas.length,
+      totalDeLinhas: lines.length,
       totalDeGutters: gutters.length,
-      linhasDestacadas: destacadas.map((el) => linhas.indexOf(el) + 1),
+      linhasDestacadas: destacadas.map((el) => lines.indexOf(el) + 1),
     },
     semantica: {
       /** `<pre>` + `<code>` é o par que o leitor de tela anuncia como pré-formatado. */

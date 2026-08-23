@@ -225,9 +225,9 @@ export const ColorPicker: Story = {
 
     await step("E o foco chega a cada uma por Tab", async () => {
       const ctx = within(painel());
-      const primeira = ctx.getByRole("button", { name: "Primária" });
+      const first = ctx.getByRole("button", { name: "Primária" });
       const segunda = ctx.getByRole("button", { name: "Secundária" });
-      primeira.focus();
+      first.focus();
       await userEvent.tab();
       await expect(segunda).toHaveFocus();
     });

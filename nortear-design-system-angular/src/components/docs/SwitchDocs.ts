@@ -647,7 +647,7 @@ export class NdsSwitchDocs implements AfterViewInit, OnDestroy {
     // A linha `onCheckedChange` do conteúdo compartilhado descreve o callback de
     // mudança; aqui ele é o output `checkedChange`, o que também habilita a
     // forma de duas vias `[(checked)]`.
-    const linha = (chave: string, nome: string, tipo?: string) => ({
+    const line = (chave: string, nome: string, tipo?: string) => ({
       name: nome,
       type: tipo ?? t(`props.table.${chave}.type`),
       defaultValue: t(`props.table.${chave}.default`),
@@ -659,13 +659,13 @@ export class NdsSwitchDocs implements AfterViewInit, OnDestroy {
         title: 'NdsSwitch',
         cols,
         items: [
-          linha('checked', 'checked', 'model<boolean>'),
-          linha('defaultChecked', 'defaultChecked'),
-          linha('onCheckedChange', 'checkedChange', 'output<boolean>'),
-          linha('disabled', 'disabled'),
-          linha('name', 'name'),
-          linha('size', 'size'),
-          linha('id', 'id'),
+          line('checked', 'checked', 'model<boolean>'),
+          line('defaultChecked', 'defaultChecked'),
+          line('onCheckedChange', 'checkedChange', 'output<boolean>'),
+          line('disabled', 'disabled'),
+          line('name', 'name'),
+          line('size', 'size'),
+          line('id', 'id'),
         ],
       },
     ];
@@ -792,16 +792,16 @@ export class NdsSwitchDocs implements AfterViewInit, OnDestroy {
     // Neste conteúdo `testes.accessibility.itemN` é uma STRING solta, não a
     // trinca criterion/level/how de outros componentes. As colunas restantes
     // ficam com o nível do resumo (AA) e sem procedimento próprio.
-    const linhas: string[] = [];
+    const lines: string[] = [];
     for (let i = 1; d[`testes.accessibility.item${i}`] !== undefined; i++) {
-      linhas.push(d[`testes.accessibility.item${i}`]);
+      lines.push(d[`testes.accessibility.item${i}`]);
     }
     return {
       title: t('testes.accessibility.title'),
       description: t('testes.accessibility.description'),
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-      items: linhas.map((linha) => ({
-        criterion: toPlainText(linha),
+      items: lines.map((line) => ({
+        criterion: toPlainText(line),
         level: 'AA',
         how: '—',
       })),

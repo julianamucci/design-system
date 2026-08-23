@@ -43,7 +43,7 @@ function accessibleName(o: ScrollAreaSnippetOptions): string | undefined {
   return nome ? texto(nome) : undefined;
 }
 
-function classe(o: ScrollAreaSnippetOptions): string {
+function className(o: ScrollAreaSnippetOptions): string {
   return o.class ?? o.className ?? CLASSNAME_DEFAULT;
 }
 
@@ -60,7 +60,7 @@ function areaLines(o: ScrollAreaSnippetOptions, filho: string): string[] {
     ['size', degrau ? texto(degrau) : undefined],
     ['width', o.width ? texto(o.width) : undefined],
     ['aria-label', accessibleName(o)],
-    ['class', texto(classe(o))],
+    ['class', texto(className(o))],
     ['children', filho],
   ]);
 }
@@ -109,13 +109,13 @@ for (let i = 1; i <= ${total}; i++) {
   };
 }
 
-function contentMatriz(linhas: number, colunas: number): Content {
+function contentMatriz(lines: number, colunas: number): Content {
   return {
     imports: [],
     variavel: 'matriz',
     bloco: `const matriz = document.createElement('table');
 matriz.className = 'nds-text-caption nds-border-collapse';
-for (let l = 1; l <= ${linhas}; l++) {
+for (let l = 1; l <= ${lines}; l++) {
   const tr = document.createElement('tr');
   for (let c = 1; c <= ${colunas}; c++) {
     const td = document.createElement('td');
@@ -219,7 +219,7 @@ export function scrollAreaNoLimitSnippet(o: ScrollAreaSnippetOptions = {}): stri
 // transbordo. Sem nome também não há papel — região anônima não vira marco, e
 // \`aria-label\` em elemento sem papel é atributo proibido.
 const semTeto = ${chamada('createScrollArea', [
-      `class: ${texto(classe(o))},`,
+      `class: ${texto(className(o))},`,
       `children: ${conteudo.variavel},`,
     ])};`,
     `const comTeto = ${chamada('createScrollArea', areaLines({ ...o, size: o.size ?? 'sm' }, conteudo.variavel))};`,

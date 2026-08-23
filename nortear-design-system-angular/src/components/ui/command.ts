@@ -262,9 +262,9 @@ export class NdsCommand {
 
     if (!escolhido) return;
 
-    const bruto = escolhido.value();
+    const raw = escolhido.value();
     const carga: CommandSelectDetails = {
-      value: bruto === null || bruto === undefined ? '' : String(bruto),
+      value: raw === null || raw === undefined ? '' : String(raw),
       label: escolhido.textValue(),
     };
 
@@ -527,8 +527,8 @@ export class NdsCommandItem implements OnDestroy {
   protected readonly destacado = computed(() => (this.ref.isHighlighted() ? 'true' : 'false'));
 
   protected readonly valorTexto = computed(() => {
-    const bruto = this.ref.value();
-    return bruto === null || bruto === undefined ? null : String(bruto);
+    const raw = this.ref.value();
+    return raw === null || raw === undefined ? null : String(raw);
   });
 
   protected readonly marcavel = computed(() => this.checked() !== undefined);

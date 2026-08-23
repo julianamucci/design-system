@@ -81,8 +81,8 @@ export const CaptionLabel: Story = {
       await expect(legenda()).toHaveTextContent(/dezembro 2025/i);
 
       // Cada passo estabelece a própria precondição: volta para abril de 2026.
-      const proximo = canvas.getByRole('button', { name: 'Ir para o próximo mês' });
-      for (let i = 0; i < 4; i += 1) await userEvent.click(proximo);
+      const next = canvas.getByRole('button', { name: 'Ir para o próximo mês' });
+      for (let i = 0; i < 4; i += 1) await userEvent.click(next);
       await expect(legenda()).toHaveTextContent(/abril 2026/i);
     });
   },

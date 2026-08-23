@@ -185,7 +185,7 @@ export class NdsTabsList {
   host: {
     class: 'nds-tabs-trigger',
     '[attr.data-slot]': '"tabs-trigger"',
-    '[attr.data-state]': 'estado()',
+    '[attr.data-state]': 'state()',
   },
 })
 export class NdsTabsTrigger {
@@ -193,7 +193,7 @@ export class NdsTabsTrigger {
   private readonly raiz = injectTabsRootContext();
 
   /** Espelha o estado do primitivo para o `data-state` das outras stacks. */
-  protected readonly estado = computed(() =>
+  protected readonly state = computed(() =>
     this.raiz.value() === this.aba.value() ? 'active' : 'inactive',
   );
 }

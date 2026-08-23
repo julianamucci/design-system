@@ -47,9 +47,9 @@ export type ListenerVivo = { alvo: Target; type: string; origem: string };
  */
 function callOrigem(): string {
   const stack = new Error().stack ?? '';
-  for (const linha of stack.split('\n').slice(1)) {
-    if (linha.includes('listener-ledger')) continue;
-    const m = linha.match(/([\w.-]+\.[jt]s)[?:][^)]*?(\d+):\d+/);
+  for (const line of stack.split('\n').slice(1)) {
+    if (line.includes('listener-ledger')) continue;
+    const m = line.match(/([\w.-]+\.[jt]s)[?:][^)]*?(\d+):\d+/);
     if (m) return `${m[1]}:${m[2]}`;
   }
   return 'desconhecido';

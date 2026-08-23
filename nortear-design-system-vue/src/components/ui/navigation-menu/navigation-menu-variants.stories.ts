@@ -121,10 +121,10 @@ export const Horizontal: Story = {
 
     await step('Os itens ficam lado a lado, na mesma linha', async () => {
       const itens = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="navigation-menu-item"]')];
-      const primeiro = itens[0].getBoundingClientRect();
+      const first = itens[0].getBoundingClientRect();
       const segundo = itens[1].getBoundingClientRect();
-      await expect(segundo.left).toBeGreaterThan(primeiro.left);
-      await expect(Math.abs(segundo.top - primeiro.top)).toBeLessThan(2);
+      await expect(segundo.left).toBeGreaterThan(first.left);
+      await expect(Math.abs(segundo.top - first.top)).toBeLessThan(2);
     });
 
     await step('O painel abre abaixo da barra', async () => {
@@ -177,9 +177,9 @@ export const Vertical: Story = {
     await step('Os itens empilham em coluna', async () => {
       const itens = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="navigation-menu-item"]')];
       await expect(itens).toHaveLength(3);
-      const primeiro = itens[0].getBoundingClientRect();
+      const first = itens[0].getBoundingClientRect();
       const segundo = itens[1].getBoundingClientRect();
-      await expect(segundo.top).toBeGreaterThan(primeiro.top);
+      await expect(segundo.top).toBeGreaterThan(first.top);
     });
 
     await step('As setas do eixo vertical percorrem a barra', async () => {

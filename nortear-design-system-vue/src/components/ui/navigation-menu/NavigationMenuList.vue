@@ -29,7 +29,7 @@ function onKeyDown(event: KeyboardEvent): void {
 
   const vertical = lista.getAttribute('data-orientation') === 'vertical'
   const previous = vertical ? 'ArrowUp' : 'ArrowLeft'
-  const proximo = vertical ? 'ArrowDown' : 'ArrowRight'
+  const next = vertical ? 'ArrowDown' : 'ArrowRight'
 
   // Um controle por item da barra: o primeiro gatilho ou destino DENTRO de cada
   // `<li>`. Os destinos do painel não entram — no modo viewport eles vivem fora
@@ -46,7 +46,7 @@ function onKeyDown(event: KeyboardEvent): void {
   if (atual === -1) return
 
   let destination = -1
-  if (event.key === proximo) destination = (atual + 1) % itens.length
+  if (event.key === next) destination = (atual + 1) % itens.length
   else if (event.key === previous) destination = (atual - 1 + itens.length) % itens.length
   else if (event.key === 'Home') destination = 0
   else if (event.key === 'End') destination = itens.length - 1

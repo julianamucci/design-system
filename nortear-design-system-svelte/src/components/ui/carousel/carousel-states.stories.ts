@@ -57,19 +57,19 @@ export const FirstSlide: Story = {
 
     const previous = () =>
       canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
-    const proximo = () =>
+    const next = () =>
       canvas.getByRole('button', { name: 'Próximo item' }) as HTMLButtonElement;
 
     // `canScrollNext` nasce falso e só vira verdadeiro quando o Embla
     // inicializa: sem este portão os passos abaixo mediriam a montagem.
-    await waitFor(() => expect(proximo()).toBeEnabled(), { timeout: 4000 });
+    await waitFor(() => expect(next()).toBeEnabled(), { timeout: 4000 });
 
     await step('No começo só a seta de avanço leva a algum lugar', async () => {
       await expect(previous()).toBeDisabled();
       // `aria-disabled` acompanha o `disabled` nativo: o leitor de tela anuncia
       // o primeiro, o segundo é o que tira o botão da ordem de foco.
       await expect(previous()).toHaveAttribute('aria-disabled', 'true');
-      await expect(proximo()).not.toHaveAttribute('aria-disabled', 'true');
+      await expect(next()).not.toHaveAttribute('aria-disabled', 'true');
     });
 
     await step('O extremo é visível, não só programático', async () => {
@@ -85,7 +85,7 @@ export const FirstSlide: Story = {
       // contraste ~1.0 em elemento a meio da transição.
       await waitFor(async () => {
         const apagada = Number(getComputedStyle(previous()).opacity);
-        const viva = Number(getComputedStyle(proximo()).opacity);
+        const viva = Number(getComputedStyle(next()).opacity);
         await expect(apagada).toBeLessThan(viva);
       }, { timeout: 4000 });
     });
@@ -125,7 +125,7 @@ export const LastSlide: Story = {
 
     const previous = () =>
       canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
-    const proximo = () =>
+    const next = () =>
       canvas.getByRole('button', { name: 'Próximo item' }) as HTMLButtonElement;
 
     // A story monta JÁ no último slide (`startIndex`), sem navegar: o portão de
@@ -135,8 +135,8 @@ export const LastSlide: Story = {
     await step('No fim a seta de avanço desabilita e a de voltar acorda', async () => {
       // O par importa: só "avançar desabilitado" também seria verdade num
       // carrossel de um slide só, onde nada nunca avançou.
-      await expect(proximo()).toBeDisabled();
-      await expect(proximo()).toHaveAttribute('aria-disabled', 'true');
+      await expect(next()).toBeDisabled();
+      await expect(next()).toHaveAttribute('aria-disabled', 'true');
       await expect(previous()).not.toHaveAttribute('aria-disabled', 'true');
     });
 
@@ -146,7 +146,7 @@ export const LastSlide: Story = {
       // depois da montagem. Ler no primeiro quadro pega o valor de PARTIDA —
       // 1 contra 1 — e a story reprovaria por corrida, não por defeito.
       await waitFor(async () => {
-        const apagada = Number(getComputedStyle(proximo()).opacity);
+        const apagada = Number(getComputedStyle(next()).opacity);
         const viva = Number(getComputedStyle(previous()).opacity);
         await expect(apagada).toBeLessThan(viva);
       }, { timeout: 4000 });

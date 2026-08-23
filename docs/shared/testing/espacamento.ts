@@ -102,8 +102,8 @@ export function pxResolve(
   raiz.appendChild(probe);
   try {
     probe.style.setProperty('width', fator === 1 ? expressao : `calc((${expressao}) * ${fator})`);
-    const bruto = raiz.ownerDocument.defaultView!.getComputedStyle(probe).width;
-    const px = parseFloat(bruto);
+    const raw = raiz.ownerDocument.defaultView!.getComputedStyle(probe).width;
+    const px = parseFloat(raw);
     if (!Number.isFinite(px)) return null;
     // Comparado ANTES de dividir: expressão inválida (token inexistente dentro
     // de calc) faz o navegador rejeitar a declaração inteira, e a sonda fica com
@@ -180,10 +180,10 @@ export function baseEmPx(raiz: HTMLElement): number | null {
 export function degrausDeclarados(doc: Document): DegrauDaEscala[] {
   const findings = new Map<string, number>();
 
-  const visitar = (regras: CSSRuleList): void => {
-    for (const regra of Array.from(regras)) {
-      if (regra instanceof CSSStyleRule && /(^|,)\s*:root\s*$/.test(regra.selectorText)) {
-        for (const prop of Array.from(regra.style)) {
+  const visitar = (rules: CSSRuleList): void => {
+    for (const rule of Array.from(rules)) {
+      if (rule instanceof CSSStyleRule && /(^|,)\s*:root\s*$/.test(rule.selectorText)) {
+        for (const prop of Array.from(rule.style)) {
           if (!prop.startsWith('--spacing-')) continue;
           const sufixo = prop.slice('--spacing-'.length);
           if (sufixo === 'base' || sufixo === 'px' || sufixo === '0') continue;
@@ -192,7 +192,7 @@ export function degrausDeclarados(doc: Document): DegrauDaEscala[] {
           findings.set(prop, mult);
         }
       }
-      const aninhadas = (regra as CSSGroupingRule).cssRules;
+      const aninhadas = (rule as CSSGroupingRule).cssRules;
       if (aninhadas) visitar(aninhadas);
     }
   };
@@ -225,8 +225,8 @@ export function densityMeasure(
           presente: false, px: null, esperado: alvo.esperado[densidade],
         };
       }
-      const bruto = raiz.ownerDocument.defaultView!.getComputedStyle(el).getPropertyValue(alvo.prop);
-      const px = parseFloat(bruto);
+      const raw = raiz.ownerDocument.defaultView!.getComputedStyle(el).getPropertyValue(alvo.prop);
+      const px = parseFloat(raw);
       return {
         alvo: alvo.nome, prop: alvo.prop, densidade,
         presente: true,

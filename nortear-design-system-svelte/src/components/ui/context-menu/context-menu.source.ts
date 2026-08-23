@@ -102,7 +102,7 @@ export function contextMenuSource(
     showShortcuts = true,
   } = ctx?.args ?? {};
 
-  const linhas = [
+  const lines = [
     '    <ContextMenuGroup>',
     item('Editar', { atalho: showShortcuts ? '⌘E' : undefined, indent: '      ' }),
     item('Duplicar', { indent: '      ' }),
@@ -110,8 +110,8 @@ export function contextMenuSource(
   ];
 
   if (showDestructive) {
-    linhas.push('    <ContextMenuSeparator />');
-    linhas.push(
+    lines.push('    <ContextMenuSeparator />');
+    lines.push(
       item('Excluir', {
         atalho: showShortcuts ? '⌫' : undefined,
         props: ' variant="destructive"',
@@ -129,7 +129,7 @@ export function contextMenuSource(
     ...(showShortcuts ? ['ContextMenuShortcut'] : []),
   ];
 
-  return svelteSnippet(importing(parts), menu(linhas.join('\n'), triggerLabel));
+  return svelteSnippet(importing(parts), menu(lines.join('\n'), triggerLabel));
 }
 
 /** Estado ItemDisabled: o item indisponível não recebe ponteiro nem Enter. */

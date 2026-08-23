@@ -488,10 +488,10 @@ export const AsCombobox: Story = {
       content: cmd,
       side: 'bottom',
       align: 'start',
-      onOpenChange: (aberto) => {
+      onOpenChange: (isOpen) => {
         // Um combobox que abre e deixa o foco no gatilho obriga a pessoa a
         // caçar o campo com Tab.
-        if (aberto) searchOf(cmd).focus();
+        if (isOpen) searchOf(cmd).focus();
       },
     });
 
@@ -622,7 +622,7 @@ export const CommandPalette: Story = {
       },
     });
 
-    let aberto = false;
+    let isOpen = false;
 
     const dialog = createDialog({
       trigger,
@@ -635,8 +635,8 @@ export const CommandPalette: Story = {
       showCloseButton: false,
       class: 'nds-command-dialog-content',
       content: cmd,
-      onOpenChange: (estado) => {
-        aberto = estado;
+      onOpenChange: (state) => {
+        isOpen = state;
       },
     });
 
@@ -644,14 +644,14 @@ export const CommandPalette: Story = {
     // factory não expõe `close()`, e o overlay é o controle de dispensa que já
     // existe no markup.
     function closePalette(): void {
-      if (aberto) document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')?.click();
+      if (isOpen) document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')?.click();
     }
 
     const onKeyDown = (e: KeyboardEvent): void => {
       if (e.key.toLowerCase() !== 'k' || !(e.metaKey || e.ctrlKey)) return;
       // Sem isto o navegador leva o Cmd+K para a barra de endereço.
       e.preventDefault();
-      if (!aberto) trigger.click();
+      if (!isOpen) trigger.click();
     };
     window.addEventListener('keydown', onKeyDown);
 

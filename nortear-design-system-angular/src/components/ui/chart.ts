@@ -133,9 +133,9 @@ export interface ItemCaption {
 /** Escada "redonda" para o eixo Y: 0, passo, 2·passo… até cobrir o máximo. */
 function escalaY(maximo: number): { topo: number; passo: number } {
   if (!(maximo > 0)) return { topo: 1, passo: 1 / DIVISOES_Y };
-  const bruto = maximo / DIVISOES_Y;
-  const magnitude = Math.pow(10, Math.floor(Math.log10(bruto)));
-  const normalizado = bruto / magnitude;
+  const raw = maximo / DIVISOES_Y;
+  const magnitude = Math.pow(10, Math.floor(Math.log10(raw)));
+  const normalizado = raw / magnitude;
   const fator = normalizado <= 1 ? 1 : normalizado <= 2 ? 2 : normalizado <= 5 ? 5 : 10;
   const passo = fator * magnitude;
   return { topo: Math.ceil(maximo / passo) * passo, passo };
@@ -236,22 +236,22 @@ let sequencia = 0;
         @if (cartesiano()) {
           <!-- Grade + rótulos do eixo Y. As linhas são decorativas; o número
                ao lado é que carrega a informação. -->
-          @for (linha of gradeY(); track linha.y) {
+          @for (line of gradeY(); track line.y) {
             <line
               [attr.x1]="plot().x"
-              [attr.y1]="linha.y"
+              [attr.y1]="line.y"
               [attr.x2]="plot().x + plot().w"
-              [attr.y2]="linha.y"
+              [attr.y2]="line.y"
               stroke="hsl(var(--border))"
               stroke-width="1"
             />
             <text
               [attr.x]="plot().x - 10"
-              [attr.y]="linha.y"
+              [attr.y]="line.y"
               text-anchor="end"
               dominant-baseline="middle"
               fill="hsl(var(--muted-foreground))"
-            >{{ linha.rotulo }}</text>
+            >{{ line.rotulo }}</text>
           }
 
           @for (marca of marcasX(); track marca.rotulo) {
@@ -289,13 +289,13 @@ let sequencia = 0;
           />
         }
 
-        @for (linha of linhas(); track $index) {
+        @for (line of lines(); track $index) {
           <path
-            [attr.d]="linha.d"
+            [attr.d]="line.d"
             fill="none"
-            [attr.stroke]="linha.cor"
-            [attr.stroke-dasharray]="linha.traco"
-            [attr.data-series]="linha.serie"
+            [attr.stroke]="line.cor"
+            [attr.stroke-dasharray]="line.traco"
+            [attr.data-series]="line.serie"
             stroke-width="2.5"
             stroke-linejoin="round"
             stroke-linecap="round"
@@ -401,10 +401,10 @@ let sequencia = 0;
             </tr>
           </thead>
           <tbody>
-            @for (linha of tabela().linhas; track $index) {
+            @for (line of tabela().lines; track $index) {
               <tr>
-                <th scope="row">{{ linha[0] }}</th>
-                @for (celula of linha.slice(1); track $index) {
+                <th scope="row">{{ line[0] }}</th>
+                @for (celula of line.slice(1); track $index) {
                   <td>{{ celula }}</td>
                 }
               </tr>
@@ -602,7 +602,7 @@ export class NdsChart {
     }));
   });
 
-  protected readonly linhas = computed<TracadoLine[]>(() =>
+  protected readonly lines = computed<TracadoLine[]>(() =>
     this.pontos()
       .filter((s) => s.coords.length > 0)
       .map((s) => ({
@@ -675,18 +675,18 @@ export class NdsChart {
     // já entrega o valor exato.
     const series = this.serieNorm();
     if (!this.cartesiano() || this.compact() || series.length !== 1) return [];
-    const valores = series[0].data;
+    const values = series[0].data;
     if (this.type() === 'bar') {
       return this.barras().map((barra, i) => ({
         x: barra.x + barra.w / 2,
         y: barra.y - 6,
-        texto: formatarValue(valores[i] ?? 0),
+        texto: formatarValue(values[i] ?? 0),
       }));
     }
     const banda = this.banda();
     const { x } = this.plot();
     return this.categorias().flatMap((_, i) => {
-      const valor = valores[i];
+      const valor = values[i];
       if (valor === undefined) return [];
       return [{
         x: x + (i + 0.5) * banda,
@@ -723,11 +723,11 @@ export class NdsChart {
     });
   });
 
-  protected readonly tabela = computed<{ header: string[]; linhas: string[][] }>(() => {
+  protected readonly tabela = computed<{ header: string[]; lines: string[][] }>(() => {
     if (!this.cartesiano()) {
       return {
         header: [this.categoryLabel(), this.valueLabel(), this.shareLabel()],
-        linhas: this.fatiasDados().map((p) => [
+        lines: this.fatiasDados().map((p) => [
           p.label,
           formatarValue(p.value),
           this.percentual(p.value),
@@ -737,7 +737,7 @@ export class NdsChart {
     const series = this.serieNorm();
     return {
       header: [this.categoryLabel(), ...series.map((s) => s.name)],
-      linhas: this.categorias().map((categoria, iCat) => [
+      lines: this.categorias().map((categoria, iCat) => [
         categoria,
         ...series.map((s) => (s.data[iCat] === undefined ? '—' : formatarValue(s.data[iCat]))),
       ]),

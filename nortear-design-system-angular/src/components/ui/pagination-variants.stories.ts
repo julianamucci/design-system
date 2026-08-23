@@ -118,8 +118,8 @@ export const Simple: Story = {
       // accessibility.item6 — o link numerado usa o tamanho `icon`: quadrado,
       // sem padding lateral. WCAG 2.5.8 pede 24×24 CSS px, e o colhedor
       // compartilhado mede TODO controle da faixa, não só o primeiro.
-      const primeiro = canvas.getByRole('link', { name: `${LABEL_PAGE} 1` });
-      await expect(primeiro).toHaveClass('nds-button-icon');
+      const first = canvas.getByRole('link', { name: `${LABEL_PAGE} 1` });
+      await expect(first).toHaveClass('nds-button-icon');
       await expect(JSON.stringify(minimumTargetsBelow(canvasElement))).toBe('[]');
     });
   },

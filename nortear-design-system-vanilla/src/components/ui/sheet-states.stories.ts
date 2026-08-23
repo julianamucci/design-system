@@ -172,7 +172,7 @@ export const Controlled: Story = {
     footer.dataset.spacing = 'sm';
     footer.append(cancel, action);
 
-    let aberto = false;
+    let isOpen = false;
     const sheet = createSheet({
       trigger: hiddenTrigger,
       side: 'right',
@@ -181,14 +181,14 @@ export const Controlled: Story = {
       content: body,
       footer,
       onOpenChange: (open) => {
-        aberto = open;
+        isOpen = open;
         externalBtn.dataset.open = String(open);
       },
     });
 
     const externalBtn = createButton({ variant: 'default', label: 'Abrir pelo estado externo' });
     externalBtn.addEventListener('click', () => {
-      if (!aberto) hiddenTrigger.click();
+      if (!isOpen) hiddenTrigger.click();
     });
 
     wrapper.appendChild(externalBtn);

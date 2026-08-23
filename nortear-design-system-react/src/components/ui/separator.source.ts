@@ -70,8 +70,8 @@ function inLine(attrsDaLinha: string): string {
  */
 export const separatorSource: SourceTransform<SeparatorArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const linha = atributos(args);
-  return jsxSnippet(IMPORT, args.orientation === 'vertical' ? inLine(linha) : empilhado(linha));
+  const line = atributos(args);
+  return jsxSnippet(IMPORT, args.orientation === 'vertical' ? inLine(line) : empilhado(line));
 };
 
 /**

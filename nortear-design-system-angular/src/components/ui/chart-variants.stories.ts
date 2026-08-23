@@ -43,11 +43,11 @@ export const Bar: Story = {
       const barras = [...chart.querySelectorAll<SVGRectElement>('rect[data-series]')];
       await expect(barras).toHaveLength(MONTHS.length);
       const alturas = barras.map((b) => b.getBoundingClientRect().height);
-      const valores = SERIE_UNICA[0].data;
+      const values = SERIE_UNICA[0].data;
       // Maior valor → maior barra. Compara ordem, não pixel: o desenho é
       // responsivo e o número absoluto muda com a largura do container.
       const maiorHeight = alturas.indexOf(Math.max(...alturas));
-      const maiorValue = valores.indexOf(Math.max(...valores));
+      const maiorValue = values.indexOf(Math.max(...values));
       await expect(maiorHeight).toBe(maiorValue);
     });
 
@@ -106,9 +106,9 @@ export const Line: Story = {
       // A segunda metade do item de contrato: não basta existir traçado, ele
       // tem de sair em --chart-1. Comparar o token RESOLVIDO, e não o texto
       // "hsl(var(--chart-1))", é o que prova que a cascata chegou ao desenho.
-      const primeiro = [...chart.querySelectorAll<SVGPathElement>('path[data-series="0"]')]
+      const first = [...chart.querySelectorAll<SVGPathElement>('path[data-series="0"]')]
         .find((p) => p.getAttribute('fill') === 'none')!;
-      const desenhada = rgbColor(getComputedStyle(primeiro).stroke)!;
+      const desenhada = rgbColor(getComputedStyle(first).stroke)!;
       const esperada = rgbToken('--chart-1')!;
       for (const canal of [0, 1, 2]) {
         await expect(Math.abs(desenhada[canal] - esperada[canal])).toBeLessThan(0.01);
@@ -206,8 +206,8 @@ export const Pie: Story = {
     await step('A tabela repete a participação em número', async () => {
       const header = [...chart.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
       await expect(header).toHaveLength(3);
-      const primeira = [...chart.querySelectorAll('tbody tr')][0];
-      await expect(primeira.textContent).toContain('%');
+      const first = [...chart.querySelectorAll('tbody tr')][0];
+      await expect(first.textContent).toContain('%');
     });
   },
 };

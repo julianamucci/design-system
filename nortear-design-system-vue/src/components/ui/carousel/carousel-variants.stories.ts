@@ -74,9 +74,9 @@ export const Horizontal: Story = {
       // primeiro slide sem nenhum erro visível no console.
       const area = regiao.getBoundingClientRect();
       const previous = canvas.getByRole('button', { name: /item anterior/i }).getBoundingClientRect();
-      const proximo = canvas.getByRole('button', { name: /próximo item/i }).getBoundingClientRect();
+      const next = canvas.getByRole('button', { name: /próximo item/i }).getBoundingClientRect();
       await expect(previous.right).toBeLessThan(area.left);
-      await expect(proximo.left).toBeGreaterThan(area.right);
+      await expect(next.left).toBeGreaterThan(area.right);
     });
 
     await step('O slide atual fica em tamanho cheio e os vizinhos recuam', async () => {
@@ -107,7 +107,7 @@ export const Horizontal: Story = {
     });
 
     await step('A seta responde ao ponteiro sem sair do lugar', async () => {
-      const proximo = canvas.getByRole('button', { name: /próximo item/i });
+      const next = canvas.getByRole('button', { name: /próximo item/i });
 
       // A escrita direta do `transform` faz as vezes do ponteiro. Não é atalho:
       // `userEvent.hover` despacha eventos, e o `:hover` do CSS responde ao
@@ -115,8 +115,8 @@ export const Horizontal: Story = {
       // importa aqui é a COLISÃO de duas regras na propriedade `transform`, e
       // escrevê-la à mão reproduz a colisão inteira.
       const failures = [
-        ...(await feedbackDePointerReprovas(proximo, waitFor)),
-        ...controlReach(proximo),
+        ...(await feedbackDePointerReprovas(next, waitFor)),
+        ...controlReach(next),
       ];
       await expect(describeFailures(failures)).toBe('');
     });
@@ -181,9 +181,9 @@ export const Vertical: Story = {
     await step('As setas ficam acima e abaixo do viewport', async () => {
       const area = regiao.getBoundingClientRect();
       const previous = canvas.getByRole('button', { name: /item anterior/i }).getBoundingClientRect();
-      const proximo = canvas.getByRole('button', { name: /próximo item/i }).getBoundingClientRect();
+      const next = canvas.getByRole('button', { name: /próximo item/i }).getBoundingClientRect();
       await expect(previous.bottom).toBeLessThan(area.top);
-      await expect(proximo.top).toBeGreaterThan(area.bottom);
+      await expect(next.top).toBeGreaterThan(area.bottom);
     });
 
     await step('A seta girada também não sai do lugar sob o ponteiro', async () => {
@@ -192,8 +192,8 @@ export const Vertical: Story = {
       // centralização quando o `scale` do hover chegava — o chevron voltava a
       // apontar para o lado errado no mesmo quadro em que o botão despencava.
       // Escrita em `translate` + `rotate`, as duas convivem com o `scale`.
-      const proximo = canvas.getByRole('button', { name: /próximo item/i });
-      const failures = await feedbackDePointerReprovas(proximo, waitFor);
+      const next = canvas.getByRole('button', { name: /próximo item/i });
+      const failures = await feedbackDePointerReprovas(next, waitFor);
       await expect(describeFailures(failures)).toBe('');
     });
   },

@@ -54,7 +54,7 @@ export function buttonSnippet(o: ButtonSnippetOptions = {}): string {
   // mock no painel Code. Só a string escrita por uma story entra no snippet.
   const onClick = typeof o.onClick === 'string' ? o.onClick : undefined;
 
-  const linhas = opcoes([
+  const lines = opcoes([
     ['variant', o.variant && o.variant !== 'default' ? texto(o.variant) : undefined],
     ['size', o.size && o.size !== 'default' ? texto(o.size) : undefined],
     ['label', o.label && !withTextEIcone ? texto(o.label) : undefined],
@@ -98,7 +98,7 @@ rotulo.textContent = ${texto(o.label!)};`
       : undefined,
     contentBlock,
     labelBlock,
-    `const botao = ${chamada('createButton', linhas)};`,
+    `const botao = ${chamada('createButton', lines)};`,
     composition,
     montar('botao'),
   );

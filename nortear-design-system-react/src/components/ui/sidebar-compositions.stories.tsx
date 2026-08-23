@@ -361,8 +361,8 @@ export const WithNavGroups: Story = {
     });
 
     await step("O Tab alcança os itens e as ações — nenhuma parada sem nome", async () => {
-      const primeiro = canvas.getByRole("button", { current: "page" });
-      primeiro.focus();
+      const first = canvas.getByRole("button", { current: "page" });
+      first.focus();
       const alcancados: string[] = [];
       for (let i = 0; i < 5; i++) {
         await userEvent.tab();
@@ -375,7 +375,7 @@ export const WithNavGroups: Story = {
       await expect(alcancados).toContain("Adicionar notificação");
       await expect(alcancados).not.toContain("");
       // Devolve o foco ao ponto de partida para o replay.
-      primeiro.blur();
+      first.blur();
     });
   },
 };
@@ -396,10 +396,10 @@ export const WithSubmenu: Story = {
 
     // Par idempotente: só clica quando o estado atual não é o desejado, então o
     // replay do painel Interactions (que roda no MESMO DOM) chega ao mesmo fim.
-    const definir = async (aberto: boolean) => {
+    const definir = async (isOpen: boolean) => {
       const alvo = parent();
-      if (alvo.getAttribute("aria-expanded") !== String(aberto)) await userEvent.click(alvo);
-      await waitFor(() => expect(parent()).toHaveAttribute("aria-expanded", String(aberto)));
+      if (alvo.getAttribute("aria-expanded") !== String(isOpen)) await userEvent.click(alvo);
+      await waitFor(() => expect(parent()).toHaveAttribute("aria-expanded", String(isOpen)));
     };
 
     await step("O submenu é uma lista aninhada de verdade", async () => {

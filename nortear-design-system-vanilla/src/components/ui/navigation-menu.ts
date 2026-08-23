@@ -243,13 +243,13 @@ export function createNavigationMenu(
    */
   function navegarPelaBar(e: KeyboardEvent): boolean {
     const previous = vertical ? 'ArrowUp' : 'ArrowLeft';
-    const proximo = vertical ? 'ArrowDown' : 'ArrowRight';
+    const next = vertical ? 'ArrowDown' : 'ArrowRight';
     const itens = barItems();
     const atual = itens.indexOf(document.activeElement as HTMLElement);
     if (atual === -1) return false;
 
     let destination = -1;
-    if (e.key === proximo) destination = (atual + 1) % itens.length;
+    if (e.key === next) destination = (atual + 1) % itens.length;
     else if (e.key === previous) destination = (atual - 1 + itens.length) % itens.length;
     else if (e.key === 'Home') destination = 0;
     else if (e.key === 'End') destination = itens.length - 1;

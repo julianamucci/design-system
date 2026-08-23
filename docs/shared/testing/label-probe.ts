@@ -28,7 +28,7 @@
 
 import { backgroundEffective, darkLigarTheme, ratio, noTransicao } from './cor';
 
-export type { Contraste } from './cor';
+export type { Contrast } from './cor';
 export { darkLigarTheme };
 
 // ─── Vocabulário ──────────────────────────────────────────────────────────────
@@ -69,8 +69,8 @@ function marcado(el: Element | null): boolean | null {
   if (el instanceof HTMLInputElement && (el.type === 'checkbox' || el.type === 'radio')) {
     return el.checked;
   }
-  const estado = el.getAttribute('data-state');
-  if (estado === 'checked' || estado === 'unchecked') return estado === 'checked';
+  const state = el.getAttribute('data-state');
+  if (state === 'checked' || state === 'unchecked') return state === 'checked';
   return null;
 }
 
@@ -272,7 +272,7 @@ export function measureLabel(raiz: HTMLElement) {
       /** Altura fixa em primitivo com texto é defeito de WCAG 1.4.4. */
       alturaCss: cs.height === 'auto' ? 'auto' : cs.height,
     },
-    estado: {
+    state: {
       cor: cs.color,
       backgroundEffective: background,
       opacidade: Number(cs.opacity),
@@ -334,7 +334,7 @@ export function darkMeasure(raiz: HTMLElement, cenario: string) {
     return noTransicao(rotulo, () => {
       const measurement = measureLabel(alvo);
       if (!measurement.presente) return null;
-      return { estado: measurement.estado, contraste: measurement.contraste, obrigatorio: measurement.obrigatorio };
+      return { state: measurement.state, contraste: measurement.contraste, obrigatorio: measurement.obrigatorio };
     });
   } finally {
     desfazer();

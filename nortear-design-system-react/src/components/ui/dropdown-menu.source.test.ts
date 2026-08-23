@@ -12,7 +12,7 @@ import {
   dropdownMenuSource,
 } from './dropdown-menu.source';
 
-const TODAS = [
+const ALL = [
   dropdownMenuSource,
   dropdownMenuItemDefaultSource,
   dropdownMenuItemDestructiveSource,
@@ -110,7 +110,7 @@ describe('estados', () => {
 
 describe('composições', () => {
   it('o rótulo mora dentro do grupo em todos os snippets', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       expect(groupLabelInside(fn()), `${fn.name}: rótulo fora do grupo`).toBe(true);
     }
   });
@@ -158,7 +158,7 @@ describe('composições', () => {
 
 describe('guardas do painel', () => {
   it('nenhum snippet carrega o andaime do canvas da story', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).not.toContain('fixtures');
       expect(saida).not.toContain('{...args}');
@@ -169,7 +169,7 @@ describe('guardas do painel', () => {
   });
 
   it('o `modal={false}` das capturas do Chromatic não vaza para os snippets', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       expect(fn()).not.toContain('modal={false}');
     }
   });

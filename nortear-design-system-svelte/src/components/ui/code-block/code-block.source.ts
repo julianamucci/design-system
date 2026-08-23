@@ -46,14 +46,14 @@ function bloco(props: string[]): string {
  */
 export function codeBlockSource(_gerado?: string, ctx?: { args?: Partial<CodeBlockArgs> }): string {
   const a = ctx?.args ?? {};
-  const marcadas = a.highlightLines;
+  const checked = a.highlightLines;
 
   const props = [
     'code={source}',
     `language="${a.language ?? 'text'}"`,
     a.title ? `title="${a.title}"` : '',
     a.showLineNumbers === false ? 'showLineNumbers={false}' : '',
-    marcadas && (!Array.isArray(marcadas) || marcadas.length > 0) ? highlight(marcadas) : '',
+    checked && (!Array.isArray(checked) || checked.length > 0) ? highlight(checked) : '',
     a.footer ? `footer="${a.footer}"` : '',
   ].filter((prop): prop is string => Boolean(prop));
 

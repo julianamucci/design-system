@@ -156,9 +156,9 @@ export class NdsResizableStore {
     const n = this.panels.length;
     if (!n) return;
 
-    const bruto =
+    const raw =
       restaurado && restaurado.length === n ? restaurado : this.distribuir();
-    this._sizes.set(this.normalizar(bruto));
+    this._sizes.set(this.normalizar(raw));
   }
 
   /** `defaultSize` declarado manda; quem não declarou divide a sobra por igual. */
@@ -172,8 +172,8 @@ export class NdsResizableStore {
   }
 
   /** Respeita min/max de cada painel e devolve uma soma de 100. */
-  private normalizar(valores: number[]): number[] {
-    const limitados = valores.map((s, i) =>
+  private normalizar(values: number[]): number[] {
+    const limitados = values.map((s, i) =>
       limitar(s, this.panels[i].minSize(), this.panels[i].maxSize()),
     );
     const sum = limitados.reduce((a, b) => a + b, 0);
@@ -302,9 +302,9 @@ export class NdsResizable implements AfterContentInit {
     const k = this.chave();
     if (!k) return undefined;
     try {
-      const bruto = localStorage.getItem(k);
-      if (!bruto) return undefined;
-      const v: unknown = JSON.parse(bruto);
+      const raw = localStorage.getItem(k);
+      if (!raw) return undefined;
+      const v: unknown = JSON.parse(raw);
       return Array.isArray(v) && v.every((n) => typeof n === 'number' && Number.isFinite(n))
         ? (v as number[])
         : undefined;

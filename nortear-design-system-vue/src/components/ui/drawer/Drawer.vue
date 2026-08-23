@@ -40,7 +40,7 @@ const props = withDefaults(defineProps<DrawerRootProps>(), {
 const emits = defineEmits<DrawerRootEmits>()
 
 const notControlled = ref(props.defaultOpen === true)
-const aberto = computed(() => (props.open === undefined ? notControlled.value : props.open))
+const isOpen = computed(() => (props.open === undefined ? notControlled.value : props.open))
 
 function onChangeAbertura(valor: boolean) {
   // Guarda contra o ECO do modo controlado. Como este wrapper passa sempre um
@@ -48,7 +48,7 @@ function onChangeAbertura(valor: boolean) {
   // estado e emite `update:open` de novo — o consumidor recebia DUAS chamadas
   // por abertura. Medido contra a stack de referência, que notifica uma vez
   // por gesto: espião em 3 onde deveria estar em 2.
-  if (valor === aberto.value) return
+  if (valor === isOpen.value) return
   notControlled.value = valor
   emits('update:open', valor)
 }
@@ -65,7 +65,7 @@ provideDrawerModal(computed(() => props.modal))
     v-slot="slotProps"
     data-slot="drawer"
     v-bind="repassados"
-    :open="aberto"
+    :open="isOpen"
     @update:open="onChangeAbertura"
     @update:active-snap-point="(v) => emits('update:activeSnapPoint', v)"
     @drag="(v) => emits('drag', v)"

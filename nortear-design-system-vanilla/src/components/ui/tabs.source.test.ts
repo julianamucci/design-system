@@ -62,11 +62,11 @@ describe('tabsSnippet', () => {
 describe('tabsSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
     const padrão = tabsSource('<div data-slot="tabs">', {});
-    const outra = tabsSource('<div data-slot="tabs">', {
+    const other = tabsSource('<div data-slot="tabs">', {
       args: { defaultValue: 'properties', 'aria-label': 'Configurações' },
     });
-    expect(padrão).not.toBe(outra);
-    expect(outra).toContain("defaultValue: 'properties'");
+    expect(padrão).not.toBe(other);
+    expect(other).toContain("defaultValue: 'properties'");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {

@@ -131,11 +131,11 @@ function header(menu: Menu, collapsible: SidebarArgs['collapsible']): string {
   }
   // Em modo ícone o texto da marca sai de cena junto com os rótulos: a classe
   // é o que o esconde sem tirá-lo do documento.
-  const classe = collapsible === 'icon'
+  const className = collapsible === 'icon'
     ? 'nds-font-semibold nds-text-body nds-text-muted-foreground nds-sidebar-hide-collapsed'
     : 'nds-font-semibold nds-text-body nds-text-muted-foreground';
   return `    <SidebarHeader class="nds-px-4 nds-py-2 nds-border-b">
-      <span class="${classe}">Design System</span>
+      <span class="${className}">Design System</span>
     </SidebarHeader>`;
 }
 

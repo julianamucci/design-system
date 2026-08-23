@@ -21,7 +21,7 @@ export const Shapes: Story = {
     covers: ['visual.item1', 'visual.item2', 'visual.item3', 'visual.item4', 'visual.item5'],
   },
   render: () => ({
-    props: { linhas: [1, 2, 3, 4, 5] },
+    props: { lines: [1, 2, 3, 4, 5] },
     template: `
       <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 15rem">
         <div class="nds-stack" data-spacing="sm">
@@ -55,7 +55,7 @@ export const Shapes: Story = {
         <div class="nds-stack" data-spacing="sm">
           <p class="nds-text-caption nds-text-muted-foreground">Lista</p>
           <div role="status" aria-busy="true" aria-label="Carregando lista" class="nds-stack" data-spacing="sm">
-            @for (i of linhas; track i) {
+            @for (i of lines; track i) {
               <div class="nds-cluster" data-spacing="sm">
                 <div ndsSkeleton data-shape="avatar" data-size="sm"></div>
                 <div ndsSkeleton data-shape="text" data-width="1-2"></div>
@@ -91,11 +91,11 @@ export const Shapes: Story = {
       // Percentual só resolve contra container com largura definida: uma pilha
       // sem base de largura encolhe para o conteúdo e as linhas somem. Sem esta
       // medição o defeito passa — a story renderiza, só que vazia.
-      const linhas = [
+      const lines = [
         ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"][data-shape="text"]'),
       ];
-      await expect(linhas.length).toBeGreaterThan(0);
-      for (const l of linhas) await expect(l.getBoundingClientRect().width).toBeGreaterThan(0);
+      await expect(lines.length).toBeGreaterThan(0);
+      for (const l of lines) await expect(l.getBoundingClientRect().width).toBeGreaterThan(0);
     });
 
     await step('O esqueleto dentro do AspectRatio preenche a caixa', async () => {

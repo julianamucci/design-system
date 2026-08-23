@@ -128,7 +128,7 @@ export interface FoundationBlock {
   tipo: BlockType;
   html: string;
   colunas: string[];
-  linhas: string[][];
+  lines: string[][];
   itens: string[];
   cartoes: FoundationCartao[];
 }
@@ -166,7 +166,7 @@ function bloco(tipo: BlockType, parcial: Partial<FoundationBlock> = {}): Foundat
     tipo,
     html: '',
     colunas: [],
-    linhas: [],
+    lines: [],
     itens: [],
     cartoes: [],
     ...parcial,
@@ -256,13 +256,13 @@ function tableBlock(cols: unknown, rows: unknown): FoundationBlock {
     ? cols.map((c) => String(c))
     : Object.values(ehObjeto(cols) ? cols : {}).map((c) => String(c));
 
-  const linhas = entries(rows).map(([, linha]) => {
-    if (Array.isArray(linha)) return linha.map((c) => String(c ?? ''));
-    if (ehObjeto(linha)) return columnKeys.map((k) => String(linha[k] ?? ''));
-    return [String(linha)];
+  const lines = entries(rows).map(([, line]) => {
+    if (Array.isArray(line)) return line.map((c) => String(c ?? ''));
+    if (ehObjeto(line)) return columnKeys.map((k) => String(line[k] ?? ''));
+    return [String(line)];
   });
 
-  return bloco('tabela', { colunas: rotulos, linhas });
+  return bloco('tabela', { colunas: rotulos, lines });
 }
 
 // Chaves com tratamento próprio dentro de uma seção — o resto é deduzido.
@@ -402,9 +402,9 @@ const METADADO_KEYS = new Set([
                 </tr>
               </thead>
               <tbody ndsTableBody>
-                @for (linha of b.linhas; track $index) {
+                @for (line of b.lines; track $index) {
                   <tr ndsTableRow>
-                    @for (celula of linha; track $index) {
+                    @for (celula of line; track $index) {
                       <td ndsTableCell [innerHTML]="DOMPurify.sanitize(celula)"></td>
                     }
                   </tr>
@@ -498,44 +498,44 @@ const METADADO_KEYS = new Set([
              @if não entregariam o conteúdo a nenhuma das duas. -->
         <ng-content />
 
-        @for (secao of sections(); track secao.chave) {
+        @for (section of sections(); track section.chave) {
           <section class="nds-stack nds-docs-section-divider" data-spacing="md">
-            @if (secao.titulo || secao.subtitulo) {
+            @if (section.titulo || section.subtitulo) {
               <div class="nds-stack" data-spacing="xs">
-                @if (secao.titulo) {
+                @if (section.titulo) {
                   <h2
                     class="nds-text-h2 nds-text-foreground"
-                    [innerHTML]="DOMPurify.sanitize(secao.titulo)"
+                    [innerHTML]="DOMPurify.sanitize(section.titulo)"
                   ></h2>
                 }
-                @if (secao.subtitulo) {
-                  <p class="nds-text-body" [innerHTML]="DOMPurify.sanitize(secao.subtitulo)"></p>
+                @if (section.subtitulo) {
+                  <p class="nds-text-body" [innerHTML]="DOMPurify.sanitize(section.subtitulo)"></p>
                 }
               </div>
             }
 
-            @if (secao.corpo) {
+            @if (section.corpo) {
               <p
                 class="nds-text-body nds-leading-relaxed"
-                [innerHTML]="DOMPurify.sanitize(secao.corpo)"
+                [innerHTML]="DOMPurify.sanitize(section.corpo)"
               ></p>
             }
 
-            @if (secao.audiencia) {
+            @if (section.audiencia) {
               <p
                 class="nds-text-body nds-leading-relaxed"
-                [innerHTML]="DOMPurify.sanitize(secao.audiencia)"
+                [innerHTML]="DOMPurify.sanitize(section.audiencia)"
               ></p>
             }
 
-            @for (b of secao.blocks; track $index) {
+            @for (b of section.blocks; track $index) {
               <ng-container
                 [ngTemplateOutlet]="tplBloco"
                 [ngTemplateOutletContext]="{ $implicit: b }"
               />
             }
 
-            @for (grupo of secao.grupos; track $index) {
+            @for (grupo of section.grupos; track $index) {
               <div class="nds-stack" data-spacing="sm">
                 @if (grupo.titulo) {
                   <h3
@@ -558,10 +558,10 @@ const METADADO_KEYS = new Set([
               </div>
             }
 
-            @if (secao.nota) {
+            @if (section.nota) {
               <p
                 class="nds-text-body nds-leading-relaxed"
-                [innerHTML]="DOMPurify.sanitize(secao.nota)"
+                [innerHTML]="DOMPurify.sanitize(section.nota)"
               ></p>
             }
           </section>
@@ -592,9 +592,9 @@ export class NdsFoundationPage implements OnInit, OnDestroy {
    * do Vanilla.
    */
   private readonly dicionario = computed<Registro>(() => {
-    const todos = this.translations();
-    const bruto = (todos[localeSignal()] ?? todos['pt-BR'] ?? {}) as Registro;
-    return codeResolveVariants(bruto) as Registro;
+    const all = this.translations();
+    const raw = (all[localeSignal()] ?? all['pt-BR'] ?? {}) as Registro;
+    return codeResolveVariants(raw) as Registro;
   });
 
   protected readonly titulo = computed(() => texto(this.dicionario()['title']));

@@ -50,9 +50,9 @@ describe('sheetSnippet', () => {
   });
 
   it('troca o corpo conforme a composição, sempre com peças do design system', () => {
-    const formulario = sheetSnippet({ corpo: 'formulario' });
-    expect(formulario).toContain("import { createFormField } from '@/components/ui/form';");
-    expect(formulario).toContain('createFormField({ label:');
+    const form = sheetSnippet({ corpo: 'formulario' });
+    expect(form).toContain("import { createFormField } from '@/components/ui/form';");
+    expect(form).toContain('createFormField({ label:');
 
     const navigation = sheetSnippet({ corpo: 'navegacao' });
     expect(navigation).toContain("corpo.setAttribute('aria-label', 'Seções');");

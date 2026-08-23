@@ -190,7 +190,7 @@ export class NdsDrawerContent {
           rdxDialogBackdrop
           class="nds-sheet-overlay"
           data-slot="drawer-overlay"
-          [attr.data-state]="estado()"
+          [attr.data-state]="state()"
         ></div>
 
         <div
@@ -198,7 +198,7 @@ export class NdsDrawerContent {
           [class]="classeDoPainel()"
           data-slot="drawer-content"
           [attr.data-vaul-drawer-direction]="direction()"
-          [attr.data-state]="estado()"
+          [attr.data-state]="state()"
         >
           <!-- Alça: pura afordância. O CSS só a mostra na direção de baixo, e
                ela não recebe foco nem nome — não há gesto atrás dela. -->
@@ -226,7 +226,7 @@ export class NdsDrawer {
    * compartilhado. O par `data-open` / `data-closed` que o primitivo escreve
    * continua lá — este atributo é adição, não substituição.
    */
-  protected readonly estado = computed(() => (this.raiz.open() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.raiz.open() ? 'open' : 'closed'));
 
   protected readonly classeDoPainel = computed(() =>
     cn('nds-drawer-content', this.conteudo()?.panelClass()),

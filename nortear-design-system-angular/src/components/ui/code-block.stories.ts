@@ -184,13 +184,13 @@ export const Playground: Story = {
     });
 
     await step('Uma linha por quebra do código, numeradas a partir de 1', async () => {
-      const linhas = [...root.querySelectorAll<HTMLElement>('.nds-code-block-line')];
-      await expect(linhas).toHaveLength(args.code.split('\n').length);
-      const numeros = linhas.map(
+      const lines = [...root.querySelectorAll<HTMLElement>('.nds-code-block-line')];
+      await expect(lines).toHaveLength(args.code.split('\n').length);
+      const numeros = lines.map(
         (l) => l.querySelector<HTMLElement>('.nds-code-block-gutter')!.textContent?.trim(),
       );
       await expect(numeros[0]).toBe('1');
-      await expect(numeros.at(-1)).toBe(String(linhas.length));
+      await expect(numeros.at(-1)).toBe(String(lines.length));
     });
 
     await step('A linguagem suportada recebe classificação com cor própria', async () => {
@@ -212,10 +212,10 @@ export const Playground: Story = {
     });
 
     await step('O destaque marca exatamente as linhas pedidas', async () => {
-      const marcadas = [...root.querySelectorAll('.nds-code-block-line')]
+      const checked = [...root.querySelectorAll('.nds-code-block-line')]
         .map((el, i) => (el.getAttribute('data-highlighted') === 'true' ? i + 1 : 0))
         .filter(Boolean);
-      await expect(marcadas).toEqual([3, 5, 6, 7]);
+      await expect(checked).toEqual([3, 5, 6, 7]);
     });
 
     await step('A numeração fica fora da leitura e da seleção', async () => {

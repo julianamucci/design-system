@@ -86,7 +86,7 @@ export const Playground: Story = {
     const inicial = canvas.getByRole('tab', { name: LABELS[args.defaultValue] });
     const propriedades = canvas.getByRole('tab', { name: LABELS.properties });
     const exemplos = canvas.getByRole('tab', { name: LABELS.examples });
-    const primeira = canvas.getByRole('tab', { name: LABELS.overview });
+    const first = canvas.getByRole('tab', { name: LABELS.overview });
 
     await step('Os três papéis do padrão tabs estão no DOM', async () => {
       // A asserção já existia e passava — com a story escrevendo o atributo por
@@ -127,7 +127,7 @@ export const Playground: Story = {
       await userEvent.keyboard('{End}');
       await waitFor(() => expect(exemplos).toHaveAttribute('aria-selected', 'true'));
       await userEvent.keyboard('{Home}');
-      await waitFor(() => expect(primeira).toHaveAttribute('aria-selected', 'true'));
+      await waitFor(() => expect(first).toHaveAttribute('aria-selected', 'true'));
       // Fecha o ciclo no estado de montagem, qualquer que seja o defaultValue
       // escolhido no painel de controles.
       await ativar(inicial);

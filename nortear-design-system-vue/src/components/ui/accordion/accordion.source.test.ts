@@ -189,9 +189,9 @@ describe('transforms das stories de composição', () => {
     const saida = accordionFaqSource();
     expect(saida).toContain('v-for="p in perguntas" :key="p.valor" :value="p.valor"');
     expect(saida).toContain('<AccordionTrigger>{{ p.pergunta }}</AccordionTrigger>');
-    const valores = [...saida.matchAll(/^ {4}valor: '([^']+)',$/gm)].map((m) => m[1]);
-    expect(valores).toHaveLength(3);
+    const values = [...saida.matchAll(/^ {4}valor: '([^']+)',$/gm)].map((m) => m[1]);
+    expect(values).toHaveLength(3);
     // Valor repetido faria dois itens abrirem juntos no modo único.
-    expect(new Set(valores).size).toBe(valores.length);
+    expect(new Set(values).size).toBe(values.length);
   });
 });

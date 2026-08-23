@@ -586,7 +586,7 @@ import { NdsToggleGroup, NdsToggleGroupIcon } from '@/components/ui/toggle-group
     // a mudança sai pelo output `valueChange` e não existe input de classe. O
     // `size` do conteúdo compartilhado não aparece porque o grupo não tem esse
     // input — o degrau de densidade é escolha de cada item.
-    const linhas: { name: string; type: string; k: string }[] = [
+    const lines: { name: string; type: string; k: string }[] = [
       { name: 'type',         type: '"single" | "multiple"',           k: 'type_prop'     },
       { name: 'value',        type: 'model<string | string[]>',        k: 'value'         },
       { name: 'defaultValue', type: 'string | string[]',               k: 'defaultValue'  },
@@ -600,7 +600,7 @@ import { NdsToggleGroup, NdsToggleGroupIcon } from '@/components/ui/toggle-group
       {
         title: 'NdsToggleGroup',
         cols,
-        items: linhas.map(({ name, type, k }) => ({
+        items: lines.map(({ name, type, k }) => ({
           name,
           type,
           defaultValue: toPlainText(t(`props.table.${k}.default`)),

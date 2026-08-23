@@ -127,18 +127,18 @@ export const WithGroups: Story = {
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Sudeste</SelectLabel>
-            {REGIOES.Sudeste.map((estado) => (
-              <SelectItem key={estado.value} value={estado.value}>
-                {estado.label}
+            {REGIOES.Sudeste.map((state) => (
+              <SelectItem key={state.value} value={state.value}>
+                {state.label}
               </SelectItem>
             ))}
           </SelectGroup>
           <SelectSeparator />
           <SelectGroup>
             <SelectLabel>Sul</SelectLabel>
-            {REGIOES.Sul.map((estado) => (
-              <SelectItem key={estado.value} value={estado.value}>
-                {estado.label}
+            {REGIOES.Sul.map((state) => (
+              <SelectItem key={state.value} value={state.value}>
+                {state.label}
               </SelectItem>
             ))}
           </SelectGroup>

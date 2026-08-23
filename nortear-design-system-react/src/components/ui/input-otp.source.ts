@@ -63,7 +63,7 @@ function otpSnippet({
   imports?: string;
   depois?: string;
 }): string {
-  const linhas = atributos.map((atributo) => `    ${atributo}`).join('\n');
+  const lines = atributos.map((atributo) => `    ${atributo}`).join('\n');
   return jsxSnippet(
     imports,
     `const [codigo, setCodigo] = useState("${valueInitial}");
@@ -72,7 +72,7 @@ function otpSnippet({
   <Label htmlFor="${id}">${rotulo}</Label>
   <InputOTP
     id="${id}"
-${linhas}
+${lines}
     value={codigo}
     onChange={setCodigo}
     autoComplete="one-time-code"

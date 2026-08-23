@@ -19,7 +19,7 @@ type HoverCardArgs = {
   align: 'start' | 'center' | 'end';
   openDelay: number;
   closeDelay: number;
-  onOpenChange: (aberto: boolean) => void;
+  onOpenChange: (isOpen: boolean) => void;
 };
 
 /**

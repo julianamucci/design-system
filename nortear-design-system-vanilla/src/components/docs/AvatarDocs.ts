@@ -122,9 +122,9 @@ function buildGroupAvatar(): HTMLElement {
     group.appendChild(av);
   }
 
-  const contador = createAvatarGroupCount({ text: '+3' });
-  contador.setAttribute('aria-hidden', 'true');
-  group.appendChild(contador);
+  const counter = createAvatarGroupCount({ text: '+3' });
+  counter.setAttribute('aria-hidden', 'true');
+  group.appendChild(counter);
 
   return group;
 }

@@ -164,10 +164,10 @@ export const WithRadio: Story = {
       // igual em qualquer rodada, não importa de onde parta.
       const partiuDeGrid = item('grid').getAttribute('aria-checked') === 'true';
       const click = partiuDeGrid ? 'columns' : 'grid';
-      const outro = partiuDeGrid ? 'grid' : 'columns';
+      const other = partiuDeGrid ? 'grid' : 'columns';
       await userEvent.click(item(click));
       await waitFor(() => expect(item(click).getAttribute('aria-checked')).toBe('true'));
-      await expect(item(outro).getAttribute('aria-checked')).toBe('false');
+      await expect(item(other).getAttribute('aria-checked')).toBe('false');
     });
   },
 };

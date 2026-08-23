@@ -56,7 +56,7 @@ type MenubarArgs = {
   align: MenubarAlign;
   modal: boolean;
   loopFocus: boolean;
-  onOpenChange: (aberto: boolean) => void;
+  onOpenChange: (isOpen: boolean) => void;
 };
 
 /**

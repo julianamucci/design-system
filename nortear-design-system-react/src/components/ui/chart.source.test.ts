@@ -13,7 +13,7 @@ import {
   chartEmptySource,
 } from './chart.source';
 
-const TODAS = [
+const ALL = [
   chartSource,
   chartLineSource,
   chartAreaSource,
@@ -185,7 +185,7 @@ describe('estados e composição', () => {
 
 describe('nenhum snippet ensina o andaime da story', () => {
   it('todos falam só do design system e das dependências reais', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).not.toContain('fixtures');
       expect(saida).not.toContain('desenhoPronto');

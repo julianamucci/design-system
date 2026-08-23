@@ -33,16 +33,16 @@ const MAX_DEFAULT = 100;
  * `null` sai escrito porque é o modo indeterminado: "não sei quanto falta", que
  * é outra coisa de "zero por cento".
  */
-function valor(bruto: unknown): string {
-  if (bruto === null) return ':model-value="null"';
-  if (typeof bruto !== 'number' || Number.isNaN(bruto)) return ':model-value="0"';
-  return `:model-value="${bruto}"`;
+function valor(raw: unknown): string {
+  if (raw === null) return ':model-value="null"';
+  if (typeof raw !== 'number' || Number.isNaN(raw)) return ':model-value="0"';
+  return `:model-value="${raw}"`;
 }
 
 /** Escala máxima: essa sim some quando é a de fábrica. */
-function escala(bruto: unknown): string {
-  if (typeof bruto !== 'number' || Number.isNaN(bruto) || bruto === MAX_DEFAULT) return '';
-  return `:max="${bruto}"`;
+function escala(raw: unknown): string {
+  if (typeof raw !== 'number' || Number.isNaN(raw) || raw === MAX_DEFAULT) return '';
+  return `:max="${raw}"`;
 }
 
 const IMPORT = `import { Progress } from '@/components/ui/progress'`;
@@ -84,9 +84,9 @@ ${p}</div>`;
  * nome anuncia "barra de progresso" e mais nada.
  */
 export const progressSource: SourceTransform<ProgressArgs> = (_gerado, ctx) => {
-  const bruto = ctx?.args?.modelValue;
-  const numero = typeof bruto === 'number' && !Number.isNaN(bruto) ? bruto : 0;
-  const barra = `<Progress${attrs(valor(bruto), escala(ctx?.args?.max))} aria-label="Progresso do upload" />`;
+  const raw = ctx?.args?.modelValue;
+  const numero = typeof raw === 'number' && !Number.isNaN(raw) ? raw : 0;
+  const barra = `<Progress${attrs(valor(raw), escala(ctx?.args?.max))} aria-label="Progresso do upload" />`;
 
   return vueSnippet(
     IMPORT,

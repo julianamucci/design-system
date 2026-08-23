@@ -65,7 +65,7 @@
         <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Sidebar sempre visível — sem toggle</span>
       </header>
       <main id="main-content" tabindex="-1" class="nds-flex-1 nds-p-6">
-        <p class="nds-text-body">collapsible="none": sidebar fixa sem possibilidade de recolher.</p>
+        <p class="nds-text-body">collapsible="none": sidebar fixa without possibilidade de recolher.</p>
       </main>
     </SidebarInset>
   </SidebarProvider>

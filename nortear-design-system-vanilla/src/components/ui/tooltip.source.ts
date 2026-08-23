@@ -43,7 +43,7 @@ export function tooltipSnippet(o: TooltipSnippetOptions = {}): string {
   const conteudo = o.content ?? 'Salvar (Ctrl+S)';
   const withProvider = Boolean(o.provider);
 
-  const linhas = opcoes([
+  const lines = opcoes([
     ['trigger', 'gatilho'],
     ['content', o.contentComMarcacao ? 'conteudo' : texto(conteudo)],
     ['side', o.side && o.side !== 'top' ? texto(o.side) : undefined],
@@ -83,7 +83,7 @@ const tecla = document.createElement('kbd');
 tecla.textContent = 'Ctrl+S';
 conteudo.appendChild(tecla);`
       : undefined,
-    `const dica = ${chamada(fabrica, linhas)};`,
+    `const dica = ${chamada(fabrica, lines)};`,
     montar('dica'),
   );
 }

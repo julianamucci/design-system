@@ -61,7 +61,7 @@ export function checkboxSource(_gerado?: string, ctx?: { args?: Partial<Checkbox
     .filter(Boolean)
     .join('\n');
 
-  const estado = [
+  const state = [
     `let marcado = $state(${checked});`,
     indeterminate ? 'let parcial = $state(true);' : '',
   ]
@@ -80,18 +80,18 @@ export function checkboxSource(_gerado?: string, ctx?: { args?: Partial<Checkbox
     comRotulo ? '' : `aria-label="${labelText}"`,
   ];
 
-  const script = `${imports}\n\n${estado}`;
+  const script = `${imports}\n\n${state}`;
 
   // `data-disabled` na linha é o que apaga o rótulo junto da caixa: sem ele o
   // texto continua com o contraste cheio ao lado de um controle indisponível.
-  const linha = `<div class="nds-cluster" data-spacing="sm"${
+  const line = `<div class="nds-cluster" data-spacing="sm"${
     disabled ? ' data-disabled="true"' : ''
   }>`;
 
   if (withDescription) {
     return svelteSnippet(
       script,
-      `${linha}
+      `${line}
   ${tag('Checkbox', props, '  ')}
   <div class="nds-stack" data-spacing="xs">
     <Label for="${ID}">${labelText}</Label>
@@ -104,7 +104,7 @@ export function checkboxSource(_gerado?: string, ctx?: { args?: Partial<Checkbox
   if (withLabel) {
     return svelteSnippet(
       script,
-      `${linha}
+      `${line}
   ${tag('Checkbox', props, '  ')}
   <Label for="${ID}">${labelText}</Label>
 </div>`,

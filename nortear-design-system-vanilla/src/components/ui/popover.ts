@@ -68,12 +68,12 @@ export type PopoverPartOptions = {
 function createParte(
   tag: keyof HTMLElementTagNameMap,
   slot: string,
-  classe: string,
+  className: string,
   options: PopoverPartOptions,
 ): HTMLElement {
   const el = document.createElement(tag);
   el.dataset.slot = slot;
-  el.className = cn(classe, options.class);
+  el.className = cn(className, options.class);
   if (options.text) el.textContent = options.text;
   return el;
 }
@@ -261,8 +261,8 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     notificar(false);
   }
 
-  function setOpen(proximo: boolean): void {
-    if (proximo) open();
+  function setOpen(next: boolean): void {
+    if (next) open();
     else close();
   }
 
@@ -273,8 +273,8 @@ export function createPopover(options: PopoverOptions): PopoverElement {
    * quem chama, e o aviso já saiu na intenção. Sem esta cerca, um
    * `onOpenChange` que responde com `setOpen()` receberia o evento duas vezes.
    */
-  function notificar(aberto: boolean): void {
-    if (!controlled) onOpenChange?.(aberto);
+  function notificar(isOpen: boolean): void {
+    if (!controlled) onOpenChange?.(isOpen);
   }
 
   /**
@@ -283,12 +283,12 @@ export function createPopover(options: PopoverOptions): PopoverElement {
    * Controlado, ela só é anunciada: quem manda no estado é quem chama. Não
    * controlado, ela é executada — e `open`/`close` anunciam por conta própria.
    */
-  function pedirChange(proximo: boolean): void {
+  function pedirChange(next: boolean): void {
     if (controlled) {
-      onOpenChange?.(proximo);
+      onOpenChange?.(next);
       return;
     }
-    setOpen(proximo);
+    setOpen(next);
   }
 
   function handleKeydown(e: KeyboardEvent): void {

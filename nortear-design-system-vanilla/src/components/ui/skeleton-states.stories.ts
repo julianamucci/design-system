@@ -20,7 +20,7 @@ const meta: Meta = {
       // elas é a preferência do sistema, que opção nenhuma da fábrica controla.
       source: {
         transform: skeletonSourceWith({
-          linhas: [
+          lines: [
             { shape: 'text', width: 'full' },
             { shape: 'text', width: '3-4' },
           ],

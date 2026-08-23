@@ -59,7 +59,7 @@ export function inputSnippet(o: InputSnippetOptions = {}): string {
     o.mensagem ? `${id}-erro` : undefined,
   ].filter((d): d is string => d !== undefined);
 
-  const linhas = opcoes([
+  const lines = opcoes([
     ['id', texto(id)],
     ['type', o.type && o.type !== 'text' ? texto(o.type) : undefined],
     ['placeholder', o.placeholder ? texto(o.placeholder) : undefined],
@@ -85,7 +85,7 @@ export function inputSnippet(o: InputSnippetOptions = {}): string {
     // A paleta escura é uma classe no documento: o campo é exatamente o mesmo
     // dos demais estados, e é isso que o snippet precisa deixar claro.
     o.temaEscuro ? `document.documentElement.classList.add('dark');` : undefined,
-    [`const campo = ${chamada('createInput', linhas)};`, ...atributos].join('\n'),
+    [`const campo = ${chamada('createInput', lines)};`, ...atributos].join('\n'),
     `const rotulo = ${chamada('createLabel', opcoes([['text', texto(rotulo)], ['htmlFor', texto(id)]]))};`,
     o.ajuda
       ? `const apoio = document.createElement('p');
@@ -115,7 +115,7 @@ export function inputWithPrefixoSnippet(o: InputSnippetOptions & { prefixo?: str
   const rotulo = o.label ?? 'URL do site';
   const prefixo = o.prefixo ?? 'https://';
 
-  const linhas = opcoes([
+  const lines = opcoes([
     ['id', texto(id)],
     ['type', o.type && o.type !== 'text' ? texto(o.type) : undefined],
     ['placeholder', o.placeholder ? texto(o.placeholder) : undefined],
@@ -130,7 +130,7 @@ grupo.setAttribute('role', 'group');`,
 prefixo.className = 'nds-input-group-addon';
 prefixo.dataset.align = 'inline-start';
 prefixo.textContent = ${texto(prefixo)};`,
-    `const campo = ${chamada('createInput', linhas)};
+    `const campo = ${chamada('createInput', lines)};
 campo.classList.add('nds-input-group-control');
 campo.dataset.slot = 'input-group-control';`,
     `grupo.append(prefixo, campo);`,

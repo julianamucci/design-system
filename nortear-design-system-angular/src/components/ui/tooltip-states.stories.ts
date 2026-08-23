@@ -86,10 +86,10 @@ export const Closed: Story = {
 
 export const Open: Story = {
   render: () => ({
-    props: { aberto: true },
+    props: { isOpen: true },
     template: `
       <div ndsTooltipProvider [delay]="0" class="nds-p-8">
-        <span ndsTooltip [open]="aberto" (openChange)="aberto = $event">
+        <span ndsTooltip [open]="isOpen" (openChange)="isOpen = $event">
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
             ${ICON_SALVAR}
           </button>

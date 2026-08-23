@@ -75,7 +75,7 @@ function labelValue(rotulo: string | string[] | undefined): string {
 
 /** `panels: [ … ]`, um painel por linha, já recuado para dentro da chamada. */
 function blockPanels(panels: ResizableSnippetPanel[]): string {
-  const linhas = panels.map((p) => {
+  const lines = panels.map((p) => {
     const pairs = opcoes([
       ['defaultSize', p.defaultSize !== undefined ? String(p.defaultSize) : undefined],
       // 10 é o piso que a fábrica assume; 100 é o teto.
@@ -85,7 +85,7 @@ function blockPanels(panels: ResizableSnippetPanel[]): string {
     ]);
     return `    { ${pairs.map((par) => par.replace(/,$/, '')).join(', ')} },`;
   });
-  return `[\n${linhas.join('\n')}\n  ]`;
+  return `[\n${lines.join('\n')}\n  ]`;
 }
 
 /**
@@ -99,10 +99,10 @@ function panelsOf(o: ResizableSnippetOptions): ResizableSnippetPanel[] {
   if (o.defaultSize === undefined && o.minSize === undefined && o.maxSize === undefined) {
     return PANELS_DEFAULT;
   }
-  const primeiro = o.defaultSize ?? 30;
+  const first = o.defaultSize ?? 30;
   return [
-    { titulo: 'Sidebar', defaultSize: primeiro, minSize: o.minSize, maxSize: o.maxSize },
-    { titulo: 'Conteúdo principal', defaultSize: 100 - primeiro, minSize: o.minSize },
+    { titulo: 'Sidebar', defaultSize: first, minSize: o.minSize, maxSize: o.maxSize },
+    { titulo: 'Conteúdo principal', defaultSize: 100 - first, minSize: o.minSize },
   ];
 }
 

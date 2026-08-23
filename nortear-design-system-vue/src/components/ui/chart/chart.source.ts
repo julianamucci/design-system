@@ -77,7 +77,7 @@ function container(opcoes: {
   option: string;
   altura?: unknown;
   rotulo?: string;
-  classe?: string;
+  className?: string;
   renderer?: unknown;
   emptyLabel?: unknown;
 }): string {
@@ -87,7 +87,7 @@ function container(opcoes: {
     attr('renderer', opcoes.renderer, 'svg'),
     opcoes.rotulo ? attr('aria-label', opcoes.rotulo) : '',
     attr('empty-label', opcoes.emptyLabel, CHART_EMPTY_LABEL),
-    opcoes.classe ? attr('class', opcoes.classe) : '',
+    opcoes.className ? attr('class', opcoes.className) : '',
   ]);
   return partes.startsWith('\n')
     ? `<ChartContainer${partes}/>`
@@ -215,7 +215,7 @@ export function designChartTitleSource(): string {
     container({
       option: "buildBarOption({ xAxis: meses, series, title: 'Vendas mensais' })",
       altura: 260,
-      classe: 'nds-max-w-lg',
+      className: 'nds-max-w-lg',
     }),
   );
 }
@@ -311,7 +311,7 @@ export function themeChartTokensSource(): string {
     altura: 260,
     rotulo: 'Acessos mensais por dispositivo, em barras',
   });
-  const linhas = container({
+  const lines = container({
     option: 'buildLineOption({ xAxis: meses, series })',
     altura: 260,
     rotulo: 'Acessos mensais por dispositivo, em linhas',
@@ -320,7 +320,7 @@ export function themeChartTokensSource(): string {
     `${importing('buildBarOption', 'buildLineOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIES_QUADRIMESTRE_2}`,
     `<div class="nds-stack">
 ${indentar(barras, 2)}
-${indentar(linhas, 2)}
+${indentar(lines, 2)}
 </div>`,
   );
 }

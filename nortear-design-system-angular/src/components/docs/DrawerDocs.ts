@@ -1046,15 +1046,15 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
     // classe — a lista continua explícita porque o TOKEN de cada linha não
     // mora no JSON.
     return [
-      { token: '--background',       classe: 'nds-drawer-content',  k: 'background' },
-      { token: '--foreground',       classe: 'nds-drawer-content',  k: 'foreground' },
-      { token: '--border',           classe: 'nds-drawer-content',  k: 'border'     },
-      { token: '--z-modal-backdrop', classe: 'nds-sheet-overlay',   k: 'overlay'    },
-      { token: '--muted',            classe: 'nds-drawer-handle',   k: 'handle'     },
-      { token: '--radius-xl',        classe: 'nds-drawer-content',  k: 'rounded'    },
-    ].map(({ token, classe, k }) => ({
+      { token: '--background',       className: 'nds-drawer-content',  k: 'background' },
+      { token: '--foreground',       className: 'nds-drawer-content',  k: 'foreground' },
+      { token: '--border',           className: 'nds-drawer-content',  k: 'border'     },
+      { token: '--z-modal-backdrop', className: 'nds-sheet-overlay',   k: 'overlay'    },
+      { token: '--muted',            className: 'nds-drawer-handle',   k: 'handle'     },
+      { token: '--radius-xl',        className: 'nds-drawer-content',  k: 'rounded'    },
+    ].map(({ token, className, k }) => ({
       token,
-      value: classe,
+      value: className,
       description: toPlainText(t(`tokens.table.${k}.part`)),
     }));
   });

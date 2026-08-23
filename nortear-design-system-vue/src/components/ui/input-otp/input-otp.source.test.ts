@@ -15,7 +15,7 @@ import {
   inputOtpEmptySource,
 } from './input-otp.source';
 
-const TODAS = [
+const ALL = [
   inputOtpSource,
   inputOtpSeisDigitosSource,
   inputOtpQuatroDigitosSource,
@@ -104,18 +104,18 @@ describe('contrato comum a todo snippet de OTP', () => {
     // A prop já falhou em silêncio nesta stack: caindo em `$attrs`, o campo
     // montava com zero caixas sem erro no console. Um snippet sem comprimento
     // ensina o caminho desse defeito.
-    for (const fn of TODAS) expect(fn()).toMatch(/:max-length="\d+"/);
+    for (const fn of ALL) expect(fn()).toMatch(/:max-length="\d+"/);
   });
 
   it('todo campo pede o código de uso único ao sistema e escolhe o teclado', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       expect(fn()).toContain('autocomplete="one-time-code"');
       expect(fn()).toMatch(/inputmode="(numeric|text)"/);
     }
   });
 
   it('todo campo chega rotulado, e o for casa com o id', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       const alvo = /<Label for="([^"]+)">/.exec(saida)?.[1];
       expect(alvo).toBeTruthy();
@@ -124,7 +124,7 @@ describe('contrato comum a todo snippet de OTP', () => {
   });
 
   it('nenhum snippet carrega andaime de story', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       // Reserva de altura para o exemplo caber no canvas centralizado.
       expect(saida).not.toContain('style=');

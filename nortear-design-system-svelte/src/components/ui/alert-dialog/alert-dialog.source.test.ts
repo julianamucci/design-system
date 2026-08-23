@@ -65,9 +65,9 @@ describe('alertDialogSource', () => {
   });
 
   it('o control de mídia acrescenta o bloco E o import, sem sobrar nenhum dos dois', () => {
-    const sem = alertDialogSource('', { args: { showMedia: false } });
-    expect(sem).not.toContain('AlertDialogMedia');
-    expect(sem).not.toContain('triangle-alert');
+    const without = alertDialogSource('', { args: { showMedia: false } });
+    expect(without).not.toContain('AlertDialogMedia');
+    expect(without).not.toContain('triangle-alert');
 
     const com = alertDialogSource('', { args: { showMedia: true } });
     expect(com).toContain('    AlertDialogMedia,');

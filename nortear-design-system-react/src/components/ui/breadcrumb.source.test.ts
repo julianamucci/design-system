@@ -89,7 +89,7 @@ describe('trilha responsiva', () => {
 
 describe('nenhum snippet ensina o andaime da story', () => {
   // Toda transform é chamável sem argumento — é o que a guarda transversal exige.
-  const todos: Array<() => string> = [
+  const all: Array<() => string> = [
     breadcrumbSource,
     breadcrumbSimpleSource,
     breadcrumbWithEllipsisSource,
@@ -99,7 +99,7 @@ describe('nenhum snippet ensina o andaime da story', () => {
   ];
 
   it('sem fixtures, sem espalhamento de args e sem espião de navegação', () => {
-    for (const fn of todos) {
+    for (const fn of all) {
       const saida = fn();
       expect(saida).not.toContain('fixtures');
       expect(saida).not.toContain('{...args}');

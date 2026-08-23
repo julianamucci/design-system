@@ -233,12 +233,12 @@ export const WithCheckboxItems: Story = {
     setup() {
       // Reativo de verdade: com um objeto solto o clique emitiria a mudança e
       // nada re-renderizaria — o item ficaria preso no estado inicial.
-      const estado = reactive<Record<string, boolean>>({
+      const state = reactive<Record<string, boolean>>({
         'Régua': true,
         'Barra lateral': false,
         Grade: false,
       });
-      return { exibicoes: EXIBICOES, estado };
+      return { exibicoes: EXIBICOES, state };
     },
     template: `
       <div style="contain: layout; min-height: 280px;">
@@ -251,8 +251,8 @@ export const WithCheckboxItems: Story = {
                 <MenubarCheckboxItem
                   v-for="e in exibicoes"
                   :key="e"
-                  :checked="estado[e]"
-                  @update:checked="estado[e] = $event"
+                  :checked="state[e]"
+                  @update:checked="state[e] = $event"
                 >{{ e }}</MenubarCheckboxItem>
               </MenubarGroup>
             </MenubarContent>
@@ -303,8 +303,8 @@ export const WithCheckboxItems: Story = {
 
     await step('Marcar não fecha o menu — quem marca uma quer marcar a próxima', async () => {
       await expect(document.body.contains(menu)).toBe(true);
-      const outra = boxes[EXIBICOES.indexOf('Grade')];
-      await expect(outra.getAttribute('aria-checked')).toBe('false');
+      const other = boxes[EXIBICOES.indexOf('Grade')];
+      await expect(other.getAttribute('aria-checked')).toBe('false');
     });
   },
 };

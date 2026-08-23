@@ -169,7 +169,7 @@ export const InForm: Story = {
         <form class="nds-grid nds-w-2xs" data-spacing="sm" @submit.prevent>
           <div class="nds-stack" data-spacing="sm">
             <Label for="form-estado">Estado</Label>
-            <Select name="estado">
+            <Select name="state">
               <SelectTrigger id="form-estado" aria-label="Selecionar estado" class="nds-w-full">
                 <SelectValue placeholder="Selecione..." />
               </SelectTrigger>
@@ -213,7 +213,7 @@ export const InForm: Story = {
       await userEvent.click(canvas.getByRole('button', { name: /Enviar/i }));
       await waitFor(async () => {
         await expect(Object.fromEntries(new FormData(form).entries())).toEqual({
-          estado: 'rj',
+          state: 'rj',
         });
       });
     });

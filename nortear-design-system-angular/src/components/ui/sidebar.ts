@@ -89,7 +89,7 @@ export class NdsSidebarStore {
   readonly state = computed<SidebarState>(() => (this._open() ? 'expanded' : 'collapsed'));
 
   /** Avisa quem controla de fora; o Provider liga isto ao próprio model. */
-  onChange: ((aberto: boolean) => void) | undefined;
+  onChange: ((isOpen: boolean) => void) | undefined;
 
   constructor() {
     const destroyRef = inject(DestroyRef);
@@ -115,20 +115,20 @@ export class NdsSidebarStore {
     });
   }
 
-  definir(aberto: boolean): void {
-    this._open.set(aberto);
-    this.onChange?.(aberto);
+  definir(isOpen: boolean): void {
+    this._open.set(isOpen);
+    this.onChange?.(isOpen);
     // Persistência entre visitas. Falha em silêncio onde cookie não é gravável
     // (iframe de terceiro, modo restrito) — é preferência, não dado.
     try {
-      document.cookie = `${COOKIE}=${aberto}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax`;
+      document.cookie = `${COOKIE}=${isOpen}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax`;
     } catch {
       /* preferência perdida, sidebar funcionando */
     }
   }
 
-  definirMovel(aberto: boolean): void {
-    this._openMobile.set(aberto);
+  definirMovel(isOpen: boolean): void {
+    this._openMobile.set(isOpen);
   }
 
   alternar(): void {
@@ -173,7 +173,7 @@ export class NdsSidebarProvider implements OnInit {
 
     // O store avisa quem controla; sem isto um `[(open)]` nunca receberia de
     // volta o efeito do atalho de teclado nem do clique no gatilho.
-    this.store.onChange = (aberto) => this.open.set(aberto);
+    this.store.onChange = (isOpen) => this.open.set(isOpen);
   }
 
   constructor() {

@@ -14,7 +14,7 @@ import {
   resizableVerticalSource,
 } from './resizable.source';
 
-const TODAS = [
+const ALL = [
   resizableSource(),
   resizableHorizontalSource(),
   resizableVerticalSource(),
@@ -93,13 +93,13 @@ describe('a moldura de tamanho definido', () => {
   it('toda transform embrulha o grupo num contêiner com tamanho', () => {
     // Sem tamanho no pai não há o que dividir: o grupo vertical empilharia os
     // painéis no tamanho do conteúdo e nada se ajustaria.
-    for (const saida of TODAS) {
+    for (const saida of ALL) {
       expect(saida).toMatch(/<div class="nds-w-\w+ nds-aspect-[\w-]+ /);
     }
   });
 
   it('o tamanho vem de utilitária, nunca de style inline', () => {
-    for (const saida of TODAS) expect(saida).not.toContain('style=');
+    for (const saida of ALL) expect(saida).not.toContain('style=');
   });
 
   it('o conteúdo de cada painel ocupa a faixa inteira', () => {
@@ -172,8 +172,8 @@ describe('transforms das stories de composição', () => {
   it('as três faixas empilhadas somam 100 e dividem a altura', () => {
     const saida = resizableFaixasSource();
     expect(saida).toContain('direction="vertical"');
-    const tamanhos = [...saida.matchAll(/:default-size="(\d+)"/g)].map((m) => Number(m[1]));
-    expect(tamanhos).toEqual([20, 60, 20]);
+    const sizes = [...saida.matchAll(/:default-size="(\d+)"/g)].map((m) => Number(m[1]));
+    expect(sizes).toEqual([20, 60, 20]);
   });
 
   it('a sidebar com console aninha o segundo grupo dentro do painel maior', () => {
@@ -186,7 +186,7 @@ describe('transforms das stories de composição', () => {
 
 describe('o andaime das stories não entra no snippet', () => {
   it('nenhuma transform cita a medição de proporção nem a caixa da story', () => {
-    for (const saida of TODAS) {
+    for (const saida of ALL) {
       expect(saida).not.toContain('fracaoDoPrimeiro');
       expect(saida).not.toContain('resizable.fixtures');
     }

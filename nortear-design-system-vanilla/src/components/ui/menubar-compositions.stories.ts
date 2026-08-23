@@ -166,8 +166,8 @@ export const WithSubmenu: Story = {
     await step('Seta Baixo alcança o sub-gatilho; Seta Direita abre o submenu', async () => {
       // Idempotente: só navega e abre quando ainda está fechado.
       if (subTrigger.getAttribute('aria-expanded') !== 'true') {
-        const primeiro = within(painel).getAllByRole('menuitem')[0];
-        primeiro.focus();
+        const first = within(painel).getAllByRole('menuitem')[0];
+        first.focus();
         await userEvent.keyboard('{ArrowDown}');
         await waitFor(async () => {
           await expect(document.activeElement).toBe(subTrigger);
@@ -270,8 +270,8 @@ export const WithCheckboxItems: Story = {
 
     await step('Marcar não fecha o menu — quem marca uma quer marcar a próxima', async () => {
       await expect(painel.hidden).toBe(false);
-      const outra = boxes[EXIBICOES.findIndex((e) => e.label === 'Grade')];
-      await expect(outra.getAttribute('aria-checked')).toBe('false');
+      const other = boxes[EXIBICOES.findIndex((e) => e.label === 'Grade')];
+      await expect(other.getAttribute('aria-checked')).toBe('false');
     });
   },
 };

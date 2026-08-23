@@ -21,7 +21,7 @@ type ChartArgs = {
  */
 function playgroundSource(_gerado: string, ctx: { args?: Partial<ChartArgs> }): string {
   const { type = 'bar', label = '', chartTitle = '', showData = false } = ctx.args ?? {};
-  const linhas = [
+  const lines = [
     `<div ndsChart`,
     `  type="${type}"`,
     `  [xAxis]="meses"`,
@@ -30,16 +30,16 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<ChartArgs> }): 
     // compilador reclama, e é isso que o snippet precisa mostrar.
     `  label="${label}"`,
   ];
-  if (chartTitle) linhas.push(`  chartTitle="${chartTitle}"`);
-  if (showData) linhas.push(`  [showData]="true"`);
-  linhas.push(`></div>`);
+  if (chartTitle) lines.push(`  chartTitle="${chartTitle}"`);
+  if (showData) lines.push(`  [showData]="true"`);
+  lines.push(`></div>`);
 
   return `import { NdsChart } from '@/components/ui/chart';
 
 @Component({
   imports: [NdsChart],
   template: \`
-${linhas.map((l) => `    ${l}`).join('\n')}
+${lines.map((l) => `    ${l}`).join('\n')}
   \`,
 })
 export class Exemplo {
@@ -138,10 +138,10 @@ export const Playground: Story = {
 
     await step('A alternativa textual traz os mesmos números', async () => {
       // O <svg> sozinho é conteúdo perdido: a tabela é o que leitor de tela lê.
-      const linhas = [...chart.querySelectorAll<HTMLTableRowElement>('tbody tr')];
-      await expect(linhas).toHaveLength(MONTHS.length);
-      await expect(linhas[0].querySelector('th')?.textContent?.trim()).toBe(MONTHS[0]);
-      await expect(linhas[0].querySelector('td')?.textContent?.trim())
+      const lines = [...chart.querySelectorAll<HTMLTableRowElement>('tbody tr')];
+      await expect(lines).toHaveLength(MONTHS.length);
+      await expect(lines[0].querySelector('th')?.textContent?.trim()).toBe(MONTHS[0]);
+      await expect(lines[0].querySelector('td')?.textContent?.trim())
         .toBe(String(SERIE_UNICA[0].data[0]));
       await expect(chart.querySelector('caption')?.textContent?.trim()).toBe(args.label);
     });

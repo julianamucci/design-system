@@ -31,9 +31,9 @@ const IMPORT = 'import { Alert, AlertDescription, AlertTitle } from "@/component
 
 /** Import do design system somado ao do ícone, nesta ordem em todos os snippets. */
 function header(icons: string[], extra?: string): string {
-  const linhas = [extra ?? IMPORT];
-  if (icons.length) linhas.push(`import { ${icons.join(', ')} } from "lucide-react";`);
-  return linhas.join('\n');
+  const lines = [extra ?? IMPORT];
+  if (icons.length) lines.push(`import { ${icons.join(', ')} } from "lucide-react";`);
+  return lines.join('\n');
 }
 
 /**
@@ -45,11 +45,11 @@ function header(icons: string[], extra?: string): string {
  * colorido, o texto corrido não pode depender da variante para alcançar 4.5:1.
  */
 function corpo(icone: string | null, titulo: string, descricao: string, indentacao = '  '): string {
-  const linhas: string[] = [];
-  if (icone) linhas.push(`${indentacao}<${icone} aria-hidden="true" className="nds-icon" />`);
-  if (titulo) linhas.push(`${indentacao}<AlertTitle>${titulo}</AlertTitle>`);
-  linhas.push(`${indentacao}<AlertDescription>${descricao}</AlertDescription>`);
-  return linhas.join('\n');
+  const lines: string[] = [];
+  if (icone) lines.push(`${indentacao}<${icone} aria-hidden="true" className="nds-icon" />`);
+  if (titulo) lines.push(`${indentacao}<AlertTitle>${titulo}</AlertTitle>`);
+  lines.push(`${indentacao}<AlertDescription>${descricao}</AlertDescription>`);
+  return lines.join('\n');
 }
 
 function alerta(atributos: string, interior: string): string {

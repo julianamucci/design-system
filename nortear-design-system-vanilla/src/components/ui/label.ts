@@ -20,11 +20,11 @@ export interface LabelOptions {
 
 export function createLabel(options: LabelOptions = {}): HTMLLabelElement {
   const { text = '', htmlFor } = options;
-  const classe = options.class ?? options.className;
+  const className = options.class ?? options.className;
 
   const el = document.createElement('label');
   el.dataset.slot = 'label';
-  el.className = cn('nds-label', classe);
+  el.className = cn('nds-label', className);
   if (htmlFor) el.htmlFor = htmlFor;
   if (text) el.textContent = text;
 

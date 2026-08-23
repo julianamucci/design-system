@@ -39,7 +39,7 @@ type Story = StoryObj;
 
 // O `data-value` aparece na célula E no botão dentro dela: sem escopar pela
 // classe do botão, cada dia entra duas vezes na conta.
-const marcadas = (el: HTMLElement): string[] =>
+const checked = (el: HTMLElement): string[] =>
   Array.from(el.querySelectorAll('.nds-calendar-day-btn[data-value][data-selected]')).map(
     (n) => n.getAttribute('data-value') ?? '',
   );
@@ -59,14 +59,14 @@ export const Single: Story = {
     const canvas = within(canvasElement);
 
     await step('A data inicial chega marcada, e só ela', async () => {
-      await expect(marcadas(canvasElement)).toEqual(['2026-04-12']);
+      await expect(checked(canvasElement)).toEqual(['2026-04-12']);
     });
 
     await step('Escolher outra data substitui a marcação', async () => {
       // functional.item2 — o modo único quebra justamente aqui: se a marcação
       // antiga sobrevivesse, a tela mostraria duas datas escolhidas.
       await userEvent.click(canvas.getByRole('button', { name: /20 de abril de 2026/i }));
-      await expect(marcadas(canvasElement)).toEqual(['2026-04-20']);
+      await expect(checked(canvasElement)).toEqual(['2026-04-20']);
       // O dia de partida perdeu a marcação de fato — sem isto, um componente que
       // só ACRESCENTA marcação passaria neste modo.
       await expect(
@@ -93,7 +93,7 @@ export const Multiple: Story = {
     const canvas = within(canvasElement);
 
     await step('As três datas iniciais chegam marcadas', async () => {
-      await expect(marcadas(canvasElement)).toEqual(['2026-04-08', '2026-04-12', '2026-04-16']);
+      await expect(checked(canvasElement)).toEqual(['2026-04-08', '2026-04-12', '2026-04-16']);
     });
 
     await step('Uma nova escolha soma, e repetir remove', async () => {
@@ -102,14 +102,14 @@ export const Multiple: Story = {
       // grid ao estado inicial, para o replay no painel medir o mesmo.
       const dia29 = canvas.getByRole('button', { name: /29 de abril de 2026/i });
       await userEvent.click(dia29);
-      await expect(marcadas(canvasElement)).toEqual([
+      await expect(checked(canvasElement)).toEqual([
         '2026-04-08',
         '2026-04-12',
         '2026-04-16',
         '2026-04-29',
       ]);
       await userEvent.click(dia29);
-      await expect(marcadas(canvasElement)).toEqual(['2026-04-08', '2026-04-12', '2026-04-16']);
+      await expect(checked(canvasElement)).toEqual(['2026-04-08', '2026-04-12', '2026-04-16']);
     });
   },
 };
@@ -139,7 +139,7 @@ export const Range: Story = {
       await expect(dia('2026-04-18')).toHaveAttribute('data-selection-end');
       // O miolo é o que separa intervalo de "duas datas avulsas": sem ele, o
       // modo múltiplo passaria por aqui.
-      await expect(marcadas(canvasElement)).toEqual([
+      await expect(checked(canvasElement)).toEqual([
         '2026-04-10',
         '2026-04-11',
         '2026-04-12',
@@ -176,7 +176,7 @@ export const Range: Story = {
       // sexto do produto. Medido no escuro, as pontas do intervalo de uma stack
       // marcavam 1.18:1 e o número do dia sumia. Aritmética, não olhômetro.
       const measurements = calendarMeasureContrast(canvasElement).filter(
-        (m) => m.presente && (STATES_WITH_TEXT_LEGIVEL as readonly string[]).includes(m.estado),
+        (m) => m.presente && (STATES_WITH_TEXT_LEGIVEL as readonly string[]).includes(m.state),
       );
       await expect(measurements.length).toBeGreaterThan(0);
       const reprovadas = measurements.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);
@@ -189,7 +189,7 @@ export const Range: Story = {
       // mede o mesmo que a primeira rodada.
       await userEvent.click(canvas.getByRole('button', { name: /22 de abril de 2026/i }));
       await userEvent.click(canvas.getByRole('button', { name: /25 de abril de 2026/i }));
-      await expect(marcadas(canvasElement)).toEqual([
+      await expect(checked(canvasElement)).toEqual([
         '2026-04-22',
         '2026-04-23',
         '2026-04-24',

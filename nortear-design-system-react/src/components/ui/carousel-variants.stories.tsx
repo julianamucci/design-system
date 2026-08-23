@@ -66,7 +66,7 @@ export const Horizontal: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const regiao = canvas.getByRole("region");
-    const trilho = canvasElement.querySelector<HTMLElement>(".nds-carousel-track")!;
+    const track = canvasElement.querySelector<HTMLElement>(".nds-carousel-track")!;
 
     await step("A região se anuncia como carrossel e tem nome próprio", async () => {
       await expect(regiao).toHaveAttribute("aria-roledescription", "carousel");
@@ -74,8 +74,8 @@ export const Horizontal: Story = {
     });
 
     await step("O trilho deita os slides em linha", async () => {
-      await expect(trilho).toHaveAttribute("data-orientation", "horizontal");
-      await expect(getComputedStyle(trilho).flexDirection).toBe("row");
+      await expect(track).toHaveAttribute("data-orientation", "horizontal");
+      await expect(getComputedStyle(track).flexDirection).toBe("row");
     });
 
     await step("As setas ficam nas laterais, fora da área dos slides", async () => {
@@ -87,11 +87,11 @@ export const Horizontal: Story = {
       const previous = canvas
         .getByRole("button", { name: /item anterior/i })
         .getBoundingClientRect();
-      const proximo = canvas
+      const next = canvas
         .getByRole("button", { name: /próximo item/i })
         .getBoundingClientRect();
       await expect(previous.left).toBeLessThan(area.left);
-      await expect(proximo.right).toBeGreaterThan(area.right);
+      await expect(next.right).toBeGreaterThan(area.right);
     });
 
     await step("O slide atual fica em tamanho cheio e os vizinhos recuam", async () => {
@@ -122,7 +122,7 @@ export const Horizontal: Story = {
     });
 
     await step("A seta responde ao ponteiro sem sair do lugar", async () => {
-      const proximo = canvas.getByRole("button", { name: /próximo item/i });
+      const next = canvas.getByRole("button", { name: /próximo item/i });
 
       // A escrita direta do `transform` faz as vezes do ponteiro. Não é atalho:
       // `userEvent.hover` despacha eventos, e o `:hover` do CSS responde ao
@@ -130,8 +130,8 @@ export const Horizontal: Story = {
       // importa aqui é a COLISÃO de duas regras na propriedade `transform`, e
       // escrevê-la à mão reproduz a colisão inteira.
       const failures = [
-        ...(await feedbackDePointerReprovas(proximo, waitFor)),
-        ...controlReach(proximo),
+        ...(await feedbackDePointerReprovas(next, waitFor)),
+        ...controlReach(next),
       ];
       await expect(describeFailures(failures)).toBe("");
     });
@@ -175,11 +175,11 @@ export const Vertical: Story = {
     const canvas = within(canvasElement);
     const regiao = canvas.getByRole("region");
     const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
-    const trilho = canvasElement.querySelector<HTMLElement>(".nds-carousel-track")!;
+    const track = canvasElement.querySelector<HTMLElement>(".nds-carousel-track")!;
 
     await step("O trilho empilha os slides em coluna", async () => {
-      await expect(trilho).toHaveAttribute("data-orientation", "vertical");
-      await expect(getComputedStyle(trilho).flexDirection).toBe("column");
+      await expect(track).toHaveAttribute("data-orientation", "vertical");
+      await expect(getComputedStyle(track).flexDirection).toBe("column");
     });
 
     await step("Cada slide ocupa a altura do viewport", async () => {
@@ -199,11 +199,11 @@ export const Vertical: Story = {
       const previous = canvas
         .getByRole("button", { name: /item anterior/i })
         .getBoundingClientRect();
-      const proximo = canvas
+      const next = canvas
         .getByRole("button", { name: /próximo item/i })
         .getBoundingClientRect();
       await expect(previous.top).toBeLessThan(area.top);
-      await expect(proximo.bottom).toBeGreaterThan(area.bottom);
+      await expect(next.bottom).toBeGreaterThan(area.bottom);
     });
 
     await step("A seta girada também não sai do lugar sob o ponteiro", async () => {
@@ -212,8 +212,8 @@ export const Vertical: Story = {
       // centralização quando o `scale` do hover chegava — o chevron voltava a
       // apontar para o lado errado no mesmo quadro em que o botão despencava.
       // Escrita em `translate` + `rotate`, as duas convivem com o `scale`.
-      const proximo = canvas.getByRole("button", { name: /próximo item/i });
-      const failures = await feedbackDePointerReprovas(proximo, waitFor);
+      const next = canvas.getByRole("button", { name: /próximo item/i });
+      const failures = await feedbackDePointerReprovas(next, waitFor);
       await expect(describeFailures(failures)).toBe("");
     });
   },

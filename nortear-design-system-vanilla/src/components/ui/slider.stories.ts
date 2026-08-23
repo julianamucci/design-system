@@ -184,7 +184,7 @@ export const Playground: Story = {
     });
 
     await step('Apontar para o trilho leva o valor até o ponteiro', async () => {
-      const trilho = canvasElement.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
+      const track = canvasElement.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
 
       // Precondição própria, para o passo sobreviver ao replay: leva o valor ao
       // mínimo antes de medir. Sem isto, a segunda rodada partiria dos 50 que a
@@ -201,7 +201,7 @@ export const Playground: Story = {
       // Ponteiro de VERDADE, no centro do trilho. O alvo aqui é um
       // `<input type="range">` nativo: só evento trusted o move, e o ponteiro
       // sintético deixava este passo verde sem nada ter acontecido.
-      await centerClick(trilho);
+      await centerClick(track);
 
       await expect(spyChange).toHaveBeenCalled();
       // O centro do trilho é 50% da faixa — número exato, não faixa de tolerância.
@@ -209,7 +209,7 @@ export const Playground: Story = {
 
       // E o desenho acompanha o dado: a asserção é sobre a geometria da própria
       // alça, não sobre o valor que acabamos de escrever.
-      const caixa = trilho.getBoundingClientRect();
+      const caixa = track.getBoundingClientRect();
       const thumb = canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
       const boxHandle = thumb.getBoundingClientRect();
       const centerHandle = boxHandle.left + boxHandle.width / 2;

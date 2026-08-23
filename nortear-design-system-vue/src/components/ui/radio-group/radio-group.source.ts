@@ -56,7 +56,7 @@ const ENTREGA: Option[] = [
  * rádio e estende o alvo de clique ao texto — sem o par, o rádio fica anônimo e
  * só o círculo de 16px é clicável.
  */
-function linha(o: Option, recuo = 2): string {
+function line(o: Option, recuo = 2): string {
   const p = ' '.repeat(recuo);
   return `${p}<div class="nds-cluster" data-spacing="sm">
 ${p}  <RadioGroupItem value="${o.valor}" id="${o.id}"${o.desabilitado ? ' disabled' : ''} />
@@ -72,7 +72,7 @@ function grupo(
 ): string {
   const p = ' '.repeat(recuo - 2);
   return `${p}<RadioGroup${attrsMultilinha(partes, `${p}  `)}>
-${opcoes.map((o) => linha(o, recuo)).join('\n')}
+${opcoes.map((o) => line(o, recuo)).join('\n')}
 ${p}</RadioGroup>`;
 }
 

@@ -73,8 +73,8 @@ function attrLinhas(valor: unknown): string {
 }
 
 /** O bloco, com os atributos em uma linha cada quando a fila fica longa. */
-function bloco(codigo: string, partes: Array<string | false>): string {
-  const atributos = attrsMultilinha([`:code="${codigo}"`, ...partes]);
+function bloco(code: string, partes: Array<string | false>): string {
+  const atributos = attrsMultilinha([`:code="${code}"`, ...partes]);
   return atributos.startsWith('\n') ? `<CodeBlock${atributos}/>` : `<CodeBlock${atributos} />`;
 }
 

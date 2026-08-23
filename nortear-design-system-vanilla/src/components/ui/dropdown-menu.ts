@@ -118,7 +118,7 @@ type MarkupState = 'checked' | 'unchecked' | 'indeterminate';
  * "marcado", e misto não é isso — repetir o tique nos dois estados apagaria a
  * diferença justamente para quem depende do símbolo.
  */
-function createIndicador(estado: MarkupState, slot: string): HTMLSpanElement {
+function createIndicador(state: MarkupState, slot: string): HTMLSpanElement {
   const span = document.createElement('span');
   span.className = 'nds-dropdown-menu-item-indicator';
   // `data-slot` por TIPO de item, como nas outras quatro stacks
@@ -127,7 +127,7 @@ function createIndicador(estado: MarkupState, slot: string): HTMLSpanElement {
   // Redundante com o `aria-checked` que o papel já anuncia: para o leitor de
   // tela é ruído, para quem enxerga é o estado inteiro.
   span.setAttribute('aria-hidden', 'true');
-  if (estado === 'unchecked') return span;
+  if (state === 'unchecked') return span;
 
   const svg = document.createElementNS(SVG_NS, 'svg');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -136,13 +136,13 @@ function createIndicador(estado: MarkupState, slot: string): HTMLSpanElement {
   svg.setAttribute('stroke-width', '2');
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
-  if (estado === 'indeterminate') {
-    const linha = document.createElementNS(SVG_NS, 'line');
-    linha.setAttribute('x1', '5');
-    linha.setAttribute('y1', '12');
-    linha.setAttribute('x2', '19');
-    linha.setAttribute('y2', '12');
-    svg.appendChild(linha);
+  if (state === 'indeterminate') {
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', '5');
+    line.setAttribute('y1', '12');
+    line.setAttribute('x2', '19');
+    line.setAttribute('y2', '12');
+    svg.appendChild(line);
   } else {
     const path = document.createElementNS(SVG_NS, 'path');
     path.setAttribute('d', 'M20 6 9 17l-5-5');
@@ -444,8 +444,8 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     notificar(false);
   }
 
-  function setOpen(proximo: boolean): void {
-    if (proximo) open();
+  function setOpen(next: boolean): void {
+    if (next) open();
     else close();
   }
 
@@ -456,8 +456,8 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
    * quem chama, e o aviso já saiu na intenção. Sem esta cerca, um
    * `onOpenChange` que responde com `setOpen()` receberia o evento duas vezes.
    */
-  function notificar(aberto: boolean): void {
-    if (!controlled) onOpenChange?.(aberto);
+  function notificar(isOpen: boolean): void {
+    if (!controlled) onOpenChange?.(isOpen);
   }
 
   /**
@@ -466,12 +466,12 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
    * Controlada, ela só é anunciada — quem manda no estado é quem chama. Fora do
    * modo controlado, ela é executada, e `open`/`close` anunciam por conta.
    */
-  function pedirChange(proximo: boolean): void {
+  function pedirChange(next: boolean): void {
     if (controlled) {
-      onOpenChange?.(proximo);
+      onOpenChange?.(next);
       return;
     }
-    setOpen(proximo);
+    setOpen(next);
   }
 
   function bloquearOutsideModal(e: Event): void {

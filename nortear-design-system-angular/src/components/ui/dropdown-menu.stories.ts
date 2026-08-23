@@ -14,7 +14,7 @@ type DropdownMenuArgs = {
   align: DropdownMenuAlign;
   modal: boolean;
   defaultOpen: boolean;
-  onOpenChange: (aberto: boolean) => void;
+  onOpenChange: (isOpen: boolean) => void;
 };
 
 /**

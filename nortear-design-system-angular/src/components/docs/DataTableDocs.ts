@@ -736,8 +736,8 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
   protected readonly faturasCurtas = INVOICES_DT.slice(0, 4).map((f) => ({ ...f }));
   protected readonly selecionadas = signal<readonly InvoiceDT[]>([]);
 
-  protected readonly chaveDaFatura = (fatura: InvoiceDT): string => fatura.id;
-  protected readonly rotuloDaFatura = (fatura: InvoiceDT): string => fatura.id;
+  protected readonly chaveDaFatura = (invoice: InvoiceDT): string => invoice.id;
+  protected readonly rotuloDaFatura = (invoice: InvoiceDT): string => invoice.id;
 
   /** Status do dado (em português) → texto na língua da página. */
   private readonly statusTraduzido = computed<Record<string, string>>(() => {
@@ -827,10 +827,10 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
 
   protected readonly resumoDoLote = computed(() => {
     dict();
-    const marcadas = this.selecionadas();
-    return marcadas.length === 0
+    const checked = this.selecionadas();
+    return checked.length === 0
       ? t('labels.batchEmpty')
-      : `${t('labels.batchAction')}: ${marcadas.map((f) => f.id).join(', ')}`;
+      : `${t('labels.batchAction')}: ${checked.map((f) => f.id).join(', ')}`;
   });
 
   /**
@@ -847,8 +847,8 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
     // O componente não guarda os dados: ele avisa a edição e quem consome
     // atualiza o array. É esse o exemplo honesto do que se escreve ao usar.
     this.faturas.update((atual) =>
-      atual.map((fatura, indice) =>
-        indice === edicao.rowIndex ? { ...fatura, [edicao.columnId]: edicao.value } : fatura,
+      atual.map((invoice, indice) =>
+        indice === edicao.rowIndex ? { ...invoice, [edicao.columnId]: edicao.value } : invoice,
       ),
     );
   }
@@ -1023,7 +1023,7 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
     const not = tNav('common.no');
     // "—" e nunca a string "undefined": travessão é o vazio tipográfico, e é o
     // que as outras stacks mostram.
-    const linha = (
+    const line = (
       name: string,
       chave: string,
       tipo: string,
@@ -1042,40 +1042,40 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
         title: t('props.containerTitle'),
         cols,
         items: [
-          linha('columns', 'columns', 'DataTableColumn<TData>[]', '—', sim),
-          linha('data', 'data', 'TData[]', '—', sim),
+          line('columns', 'columns', 'DataTableColumn<TData>[]', '—', sim),
+          line('data', 'data', 'TData[]', '—', sim),
           // A cadeia do rótulo da linha: `rowLabel`, senão a primeira coluna,
           // senão a chave. Por isso `rowLabel` sem valor não vira nome vazio.
-          linha('rowKey', 'rowKey', '(row, index) => string', 'índice do array'),
-          linha('rowLabel', 'rowLabel', '(row) => string', '—'),
-          linha('caption', 'caption', 'string', `''`),
-          linha('enableGlobalFilter', 'enableGlobalFilter', 'boolean', 'true'),
-          linha('globalFilterPlaceholder', 'globalFilterPlaceholder', 'string', `'Buscar...'`),
-          linha('enableRowSelection', 'enableRowSelection', 'boolean', 'false'),
-          linha('enableColumnVisibility', 'enableColumnVisibility', 'boolean', 'true'),
-          linha('enableColumnFilters', 'enableColumnFilters', 'boolean', 'false'),
-          linha('enablePagination', 'enablePagination', 'boolean', 'true'),
-          linha('pageSize', 'pageSize', 'number', '10'),
-          linha('pageSizeOptions', 'pageSizeOptions', 'number[]', '[10, 20, 50, 100]'),
-          linha('emptyMessage', 'emptyMessage', 'string', `'Sem resultados.'`),
-          linha('labels', 'labels', 'Partial<DataTableLabels>', '{}'),
-          linha('cellEdit', 'onCellEdit', 'output<DataTableCellEdit>', '—'),
-          linha('selectionChange', 'selectionChange', 'output<TData[]>', '—'),
+          line('rowKey', 'rowKey', '(row, index) => string', 'índice do array'),
+          line('rowLabel', 'rowLabel', '(row) => string', '—'),
+          line('caption', 'caption', 'string', `''`),
+          line('enableGlobalFilter', 'enableGlobalFilter', 'boolean', 'true'),
+          line('globalFilterPlaceholder', 'globalFilterPlaceholder', 'string', `'Buscar...'`),
+          line('enableRowSelection', 'enableRowSelection', 'boolean', 'false'),
+          line('enableColumnVisibility', 'enableColumnVisibility', 'boolean', 'true'),
+          line('enableColumnFilters', 'enableColumnFilters', 'boolean', 'false'),
+          line('enablePagination', 'enablePagination', 'boolean', 'true'),
+          line('pageSize', 'pageSize', 'number', '10'),
+          line('pageSizeOptions', 'pageSizeOptions', 'number[]', '[10, 20, 50, 100]'),
+          line('emptyMessage', 'emptyMessage', 'string', `'Sem resultados.'`),
+          line('labels', 'labels', 'Partial<DataTableLabels>', '{}'),
+          line('cellEdit', 'onCellEdit', 'output<DataTableCellEdit>', '—'),
+          line('selectionChange', 'selectionChange', 'output<TData[]>', '—'),
         ],
       },
       {
         title: t('props.tooltipTitle'),
         cols,
         items: [
-          linha('id', 'colId', 'string', '—', sim),
-          linha('header', 'colHeader', 'string', '—', sim),
-          linha('accessor', 'colAccessor', '(row) => unknown', '—', sim),
-          linha('format', 'colFormat', '(value, row) => string', '—'),
-          linha('sortable', 'colSortable', 'boolean', 'false'),
-          linha('hideable', 'colHideable', 'boolean', 'true'),
-          linha('editable', 'metaEditable', 'boolean', 'false'),
-          linha('numeric', 'colNumeric', 'boolean', 'false'),
-          linha('filter', 'metaFilter', 'DataTableColumnFilter', '—'),
+          line('id', 'colId', 'string', '—', sim),
+          line('header', 'colHeader', 'string', '—', sim),
+          line('accessor', 'colAccessor', '(row) => unknown', '—', sim),
+          line('format', 'colFormat', '(value, row) => string', '—'),
+          line('sortable', 'colSortable', 'boolean', 'false'),
+          line('hideable', 'colHideable', 'boolean', 'true'),
+          line('editable', 'metaEditable', 'boolean', 'false'),
+          line('numeric', 'colNumeric', 'boolean', 'false'),
+          line('filter', 'metaFilter', 'DataTableColumnFilter', '—'),
         ],
       },
     ];

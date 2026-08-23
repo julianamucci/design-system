@@ -365,12 +365,12 @@ export const CompleteTable: Story = {
     rodape.dataset.align = 'center';
     rodape.dataset.justify = 'between';
 
-    const contador = document.createElement('span');
-    contador.className = 'nds-text-body nds-text-muted-foreground';
-    contador.textContent = 'Mostrando 11–20 de 120 resultados';
+    const counter = document.createElement('span');
+    counter.className = 'nds-text-body nds-text-muted-foreground';
+    counter.textContent = 'Mostrando 11–20 de 120 resultados';
 
     rodape.append(
-      contador,
+      counter,
       createPagination({
         total: 12,
         current: 2,

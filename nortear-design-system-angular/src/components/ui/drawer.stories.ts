@@ -27,7 +27,7 @@ type DrawerArgs = {
   modal: boolean;
   defaultOpen: boolean;
   triggerLabel: string;
-  onOpenChange: (aberto: boolean) => void;
+  onOpenChange: (isOpen: boolean) => void;
 };
 
 /**

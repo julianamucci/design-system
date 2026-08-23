@@ -143,7 +143,7 @@ ${importingPagination(
   'PaginationPrevious',
 )}`;
 
-  const estado = withEllipsis
+  const state = withEllipsis
     ? `const total = ${total};
 const [pagina, setPagina] = useState(${inicial});
 // Janela de páginas visíveis: a primeira, a última, a atual e as vizinhas.
@@ -193,7 +193,7 @@ const paginas = Array.from({ length: total }, (_, indice) => indice + 1);`;
     ))}`;
 
   return jsxSnippet(
-    `${header}\n\n${estado}`,
+    `${header}\n\n${state}`,
     `<Pagination>
   <PaginationContent>
     <PaginationItem>

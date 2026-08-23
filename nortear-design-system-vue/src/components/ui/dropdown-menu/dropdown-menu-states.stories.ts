@@ -162,15 +162,15 @@ export const Controlled: Story = {
   render: () => ({
     components: componentes,
     setup() {
-      const aberto = ref(false);
-      return { aberto };
+      const isOpen = ref(false);
+      return { isOpen };
     },
     template: `
       <div class="nds-stack nds-min-h-70" data-spacing="sm" style="contain: layout">
-        <Button @click="aberto = !aberto">
-          {{ aberto ? 'Fechar pelo estado' : 'Abrir pelo estado' }}
+        <Button @click="isOpen = !isOpen">
+          {{ isOpen ? 'Fechar pelo estado' : 'Abrir pelo estado' }}
         </Button>
-        <DropdownMenu :open="aberto" @update:open="(v) => aberto = v" :modal="false">
+        <DropdownMenu :open="isOpen" @update:open="(v) => isOpen = v" :modal="false">
           <DropdownMenuTrigger as-child>
             <Button variant="outline">Ações</Button>
           </DropdownMenuTrigger>

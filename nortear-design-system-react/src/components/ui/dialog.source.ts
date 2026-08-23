@@ -169,7 +169,7 @@ export function dialogNoFooterSource(): string {
 }
 
 /** Campos de formulário dentro do painel, com o rodapé DENTRO do `<form>`. */
-function formulario(fields: Array<{ id: string; rotulo: string; valor: string; tipo?: string }>): string {
+function form(fields: Array<{ id: string; rotulo: string; valor: string; tipo?: string }>): string {
   const blocks = fields
     .map(
       ({ id, rotulo, valor, tipo }) => `      <div className="nds-stack" data-spacing="sm">
@@ -213,7 +213,7 @@ export function dialogWithFormSource(): string {
 ${TRIGGER}
   <DialogContent>
 ${HEADER}
-${formulario([
+${form([
   { id: 'dialog-name', rotulo: 'Nome', valor: 'Maria Silva' },
   { id: 'dialog-email', rotulo: 'E-mail', valor: 'maria@exemplo.com', tipo: 'email' },
 ])}
@@ -235,7 +235,7 @@ export function dialogPerfilSource(): string {
 ${TRIGGER}
   <DialogContent className="nds-sm-max-w-md">
 ${HEADER}
-${formulario([
+${form([
   { id: 'profile-name', rotulo: 'Nome completo', valor: 'Maria Silva' },
   { id: 'profile-username', rotulo: 'Nome de usuário', valor: '@mariasilva' },
 ])}

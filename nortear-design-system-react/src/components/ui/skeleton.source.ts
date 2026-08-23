@@ -62,8 +62,8 @@ function largura(valor: unknown): (typeof LARGURAS)[number] {
  * violação de ARIA. As duas metades juntas são o que faz o leitor de tela
  * dizer "carregando conteúdo".
  */
-function regiao(rotulo: string, conteudo: string, classe = 'nds-w-sm', ocupada = true): string {
-  const lineClassName = classe ? `\n  className="${classe}"` : '';
+function regiao(rotulo: string, conteudo: string, className = 'nds-w-sm', ocupada = true): string {
+  const lineClassName = className ? `\n  className="${className}"` : '';
   return `<div
   role="status"
   aria-busy="${ocupada}"
@@ -74,7 +74,7 @@ ${conteudo}
 }
 
 /** Linha de texto: a forma escolhe a altura, a fração escolhe a largura. */
-function linha(fraction: (typeof LARGURAS)[number], tipo: 'text' | 'heading' = 'text'): string {
+function line(fraction: (typeof LARGURAS)[number], tipo: 'text' | 'heading' = 'text'): string {
   return `  <Skeleton data-shape="${tipo}" data-width="${fraction}" />`;
 }
 
@@ -112,7 +112,7 @@ export const skeletonSource: SourceTransform<SkeletonArgs> = (_gerado, ctx) => {
 
   return jsxSnippet(
     IMPORT,
-    regiao('Carregando conteúdo', linha(largura(args.width), caixa), 'nds-w-sm', ocupada),
+    regiao('Carregando conteúdo', line(largura(args.width), caixa), 'nds-w-sm', ocupada),
   );
 };
 
@@ -161,9 +161,9 @@ export function skeletonParagrafoSource(): string {
   className="nds-stack nds-w-sm"
   data-spacing="sm"
 >
-${linha('full')}
-${linha('3-4')}
-${linha('1-2')}
+${line('full')}
+${line('3-4')}
+${line('1-2')}
 </div>`,
   );
 }
@@ -183,8 +183,8 @@ export function skeletonPulsandoSource(): string {
   className="nds-stack nds-w-sm"
   data-spacing="sm"
 >
-${linha('full')}
-${linha('3-4')}
+${line('full')}
+${line('3-4')}
 </div>`,
   );
 }
@@ -207,8 +207,8 @@ export function skeletonCardDePerfilSource(): string {
 >
   <Skeleton data-shape="avatar" />
   <div className="nds-stack nds-flex-1" data-spacing="sm">
-${indentar(linha('2-3'))}
-${indentar(linha('1-2'))}
+${indentar(line('2-3'))}
+${indentar(line('1-2'))}
   </div>
 </div>`,
   );

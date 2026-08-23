@@ -195,12 +195,12 @@ const REGRAS_DE_ACESSIBILIDADE = [
             class="nds-stack nds-text-body nds-text-muted-foreground nds-list-none nds-p-0 nds-m-0"
             data-spacing="xs"
           >
-            @for (regra of regras; track regra) {
+            @for (rule of rules; track rule) {
               <li class="nds-cluster nds-list-none" data-spacing="sm" data-align="start">
                 <span class="nds-text-primary nds-shrink-0 nds-mt-0-5" aria-hidden="true">✓</span>
                 <!-- O texto da regra traz <code> no conteúdo compartilhado;
                      sanitizado no próprio binding (guideline 09). -->
-                <span [innerHTML]="DOMPurify.sanitize(t(regra))"></span>
+                <span [innerHTML]="DOMPurify.sanitize(t(rule))"></span>
               </li>
             }
           </ul>
@@ -286,7 +286,7 @@ export class NdsIconsDocs implements OnInit, OnDestroy {
   protected readonly DOMPurify = DOMPurify;
 
   protected readonly catalogo = CATALOGO;
-  protected readonly regras = REGRAS_DE_ACESSIBILIDADE;
+  protected readonly rules = REGRAS_DE_ACESSIBILIDADE;
   protected readonly glifoDaBusca = Search;
   protected readonly glifoDoPacote = Package;
   protected readonly exemploDeImportacao = EXEMPLO_IMPORTACAO;

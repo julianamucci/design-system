@@ -60,7 +60,7 @@ ${opcoes.celulas ?? GROUP_UNICO}
 }
 
 /** Estado do código, que a raiz recebe por `bind:value`. */
-function estado(valueInitial = ''): string {
+function state(valueInitial = ''): string {
   return `\n\nlet codigo = $state("${valueInitial}");`;
 }
 
@@ -82,7 +82,7 @@ export function inputOtpSource(_gerado?: string, ctx?: { args?: Partial<InputOTP
   } = ctx?.args ?? {};
 
   return svelteSnippet(
-    `${IMPORT}${estado(defaultValue)}`,
+    `${IMPORT}${state(defaultValue)}`,
     fieldOtp({
       label,
       atributos: [
@@ -112,7 +112,7 @@ export function inputOtpWithSeparatorSource(): string {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { Label } from "@/components/ui/label";${estado()}`,
+import { Label } from "@/components/ui/label";${state()}`,
     fieldOtp({
       label: 'Código de recuperação',
       atributos: [
@@ -143,7 +143,7 @@ import { Label } from "@/components/ui/label";${estado()}`,
  */
 export function helperInputOtpWithTextSource(): string {
   return svelteSnippet(
-    `${IMPORT}${estado()}`,
+    `${IMPORT}${state()}`,
     fieldOtp({
       label: 'Código de verificação',
       atributos: [
@@ -167,7 +167,7 @@ export function helperInputOtpWithTextSource(): string {
  */
 export function inputOtpWithErrorSource(): string {
   return svelteSnippet(
-    `${IMPORT}${estado('482913')}`,
+    `${IMPORT}${state('482913')}`,
     fieldOtp({
       label: 'Código de verificação',
       atributos: [
@@ -193,7 +193,7 @@ export function inputOtpWithErrorSource(): string {
 export function inputOtpWithReenvioSource(): string {
   return svelteSnippet(
     `${IMPORT}
-import { Button } from "@/components/ui/button";${estado()}`,
+import { Button } from "@/components/ui/button";${state()}`,
     fieldOtp({
       label: 'Código de verificação',
       atributos: [

@@ -251,7 +251,7 @@ export const CheckboxChecked: Story = {
     setup() {
       // Reativo de verdade: com um objeto solto o clique emitiria a mudança e
       // nada re-renderizaria — o item ficaria preso no estado inicial.
-      return { estado: reactive<Record<string, boolean>>({ 'Régua': true, Grade: false }) };
+      return { state: reactive<Record<string, boolean>>({ 'Régua': true, Grade: false }) };
     },
     template: `
       <div style="contain: layout; min-height: 240px;">
@@ -261,10 +261,10 @@ export const CheckboxChecked: Story = {
             <MenubarContent>
               <MenubarLabel>Mostrar na tela</MenubarLabel>
               <MenubarCheckboxItem
-                v-for="(marcado, nome) in estado"
+                v-for="(marcado, nome) in state"
                 :key="nome"
                 :checked="marcado"
-                @update:checked="estado[nome] = $event"
+                @update:checked="state[nome] = $event"
               >{{ nome }}</MenubarCheckboxItem>
             </MenubarContent>
           </MenubarMenu>

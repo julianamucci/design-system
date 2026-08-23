@@ -107,7 +107,7 @@ export const Playground: Story = {
           // Só o valor: o `eventDetails` do base-ui carrega o evento nativo, e
           // a aba Actions estoura SecurityError ao serializar `event.view`.
           onOpenChange={(open) =>
-            (onOpenChange as unknown as ((aberto: boolean) => void) | undefined)?.(open)
+            (onOpenChange as unknown as ((isOpen: boolean) => void) | undefined)?.(open)
           }
         >
           <TooltipTrigger

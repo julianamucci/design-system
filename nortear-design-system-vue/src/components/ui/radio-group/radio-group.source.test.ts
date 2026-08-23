@@ -176,7 +176,7 @@ describe('transforms das stories de composição', () => {
 
 describe('largura de canvas não entra no snippet', () => {
   it('nenhuma transform leva style inline com valor de design', () => {
-    const todas = [
+    const all = [
       radioGroupSource(),
       radioGroupVerticalSource(),
       radioGroupHorizontalSource(),
@@ -191,6 +191,6 @@ describe('largura de canvas não entra no snippet', () => {
       formRadioGroupSource(),
       radioGroupCartoesSource(),
     ];
-    for (const saida of todas) expect(saida).not.toContain('style=');
+    for (const saida of all) expect(saida).not.toContain('style=');
   });
 });

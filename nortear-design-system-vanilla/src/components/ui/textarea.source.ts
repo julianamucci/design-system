@@ -54,18 +54,18 @@ const PLACEHOLDER_DEFAULT = 'ex: Descreva o produto...';
  * nunca de `style` inline: inline vence a folha e sairia do tema, da densidade
  * e da escala de tipo.
  */
-function classe(o: TextareaSnippetOptions): string {
+function className(o: TextareaSnippetOptions): string {
   return `${RESIZE_CLASSNAME[o.resize ?? 'y']} nds-min-h-30`;
 }
 
 /** Linhas escritas pela API do DOM — o que a fábrica não recebe como opção. */
 function ajustesNativos(o: TextareaSnippetOptions, id: string): string {
-  const linhas: string[] = [];
-  if (o.maxLength && o.maxLength > 0) linhas.push(`campo.maxLength = ${o.maxLength};`);
-  if (o.readOnly) linhas.push('campo.readOnly = true;');
-  if (o.ariaInvalid || o.erro) linhas.push("campo.setAttribute('aria-invalid', 'true');");
-  if (o.erro) linhas.push(`campo.setAttribute('aria-describedby', ${texto(`${id}-erro`)});`);
-  return linhas.join('\n');
+  const lines: string[] = [];
+  if (o.maxLength && o.maxLength > 0) lines.push(`campo.maxLength = ${o.maxLength};`);
+  if (o.readOnly) lines.push('campo.readOnly = true;');
+  if (o.ariaInvalid || o.erro) lines.push("campo.setAttribute('aria-invalid', 'true');");
+  if (o.erro) lines.push(`campo.setAttribute('aria-describedby', ${texto(`${id}-erro`)});`);
+  return lines.join('\n');
 }
 
 /**
@@ -132,20 +132,20 @@ function fieldBlocks(o: TextareaSnippetOptions): string[] {
   const id = o.id ?? ID_DEFAULT;
   const rotulo = o.label ?? LABEL_DEFAULT;
 
-  const linhas = opcoes([
+  const lines = opcoes([
     ['id', texto(id)],
     ['name', o.name ? texto(o.name) : undefined],
     ['placeholder', texto(o.placeholder ?? PLACEHOLDER_DEFAULT)],
     ['value', o.value ? texto(o.value) : undefined],
     ['rows', o.rows && o.rows > 0 ? String(o.rows) : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
-    ['class', texto(classe(o))],
+    ['class', texto(className(o))],
   ]);
 
   const ajustes = ajustesNativos(o, id);
 
   return [
-    `const campo = ${chamada('createTextarea', linhas)};${ajustes ? `\n${ajustes}` : ''}`,
+    `const campo = ${chamada('createTextarea', lines)};${ajustes ? `\n${ajustes}` : ''}`,
     `const grupo = document.createElement('div');
 grupo.className = 'nds-stack';
 grupo.dataset.spacing = 'sm';

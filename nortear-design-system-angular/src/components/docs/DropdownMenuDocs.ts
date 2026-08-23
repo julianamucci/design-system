@@ -710,8 +710,8 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
    * o componente dispararia num app. O payload leva o IDENTIFICADOR do menu e do
    * item, nunca o rótulo traduzido — o rótulo partiria um evento em três no GA4.
    */
-  protected onOpenChange(menu: string, aberto: boolean): void {
-    track(aberto ? 'dropdown_menu_open' : 'dropdown_menu_close', {
+  protected onOpenChange(menu: string, isOpen: boolean): void {
+    track(isOpen ? 'dropdown_menu_open' : 'dropdown_menu_close', {
       component: 'dropdown-menu',
       label: menu,
       location: 'docs-demonstration',
@@ -892,7 +892,7 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
       description: toPlainText(t(`props.${chave}.description`)),
     });
 
-    const classe = local('class', 'string', '—', 'class');
+    const className = local('class', 'string', '—', 'class');
 
     return [
       {
@@ -905,7 +905,7 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
           ofContent('modal', 'modal'),
           local('disabled', 'boolean', 'false', 'disabled'),
           local('loopFocus', 'boolean', 'true', 'loopFocus'),
-          classe,
+          className,
         ],
       },
       {
@@ -916,7 +916,7 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
           ofContent('align', 'align'),
           local('sideOffset', 'number', '4', 'sideOffset'),
           local('alignOffset', 'number', '0', 'alignOffset'),
-          classe,
+          className,
         ],
       },
       {
@@ -971,16 +971,16 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
     // A coluna do meio mostra a classe `.nds-*` real, não a classe utilitária
     // que o conteúdo compartilhado guarda — é o que existe no CSS deste sistema.
     return [
-      { token: '--popover',            k: 'background',  classe: '.nds-dropdown-menu-content'   },
-      { token: '--popover-foreground', k: 'foreground',  classe: '.nds-dropdown-menu-content'   },
-      { token: '--border',             k: 'border',      classe: '.nds-dropdown-menu-content'   },
-      { token: '--elevation-md',       k: 'shadow',      classe: '.nds-dropdown-menu-content'   },
-      { token: '--radius',             k: 'rounded',     classe: '.nds-dropdown-menu-content'   },
-      { token: '--accent',             k: 'itemHover',   classe: '.nds-dropdown-menu-item'      },
-      { token: '--destructive',        k: 'destructive', classe: '.nds-dropdown-menu-item'      },
-    ].map(({ token, k, classe }) => ({
+      { token: '--popover',            k: 'background',  className: '.nds-dropdown-menu-content'   },
+      { token: '--popover-foreground', k: 'foreground',  className: '.nds-dropdown-menu-content'   },
+      { token: '--border',             k: 'border',      className: '.nds-dropdown-menu-content'   },
+      { token: '--elevation-md',       k: 'shadow',      className: '.nds-dropdown-menu-content'   },
+      { token: '--radius',             k: 'rounded',     className: '.nds-dropdown-menu-content'   },
+      { token: '--accent',             k: 'itemHover',   className: '.nds-dropdown-menu-item'      },
+      { token: '--destructive',        k: 'destructive', className: '.nds-dropdown-menu-item'      },
+    ].map(({ token, k, className }) => ({
       token,
-      value: classe,
+      value: className,
       description: toPlainText(t(`tokens.table.${k}.part`)),
     }));
   });

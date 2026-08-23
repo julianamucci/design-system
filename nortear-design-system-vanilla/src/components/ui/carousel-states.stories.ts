@@ -49,15 +49,15 @@ export const FirstSlide: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const previous = canvas.getByRole('button', { name: 'Item anterior' });
-    const proximo = canvas.getByRole('button', { name: 'Próximo item' });
+    const next = canvas.getByRole('button', { name: 'Próximo item' });
 
     await step('No começo só a seta de avanço leva a algum lugar', async () => {
       await expect(previous).toBeDisabled();
       // `aria-disabled` acompanha o `disabled` nativo porque o leitor de tela
       // anuncia o primeiro; o segundo é o que tira o botão da ordem de foco.
       await expect(previous).toHaveAttribute('aria-disabled', 'true');
-      await expect(proximo).toBeEnabled();
-      await expect(proximo).toHaveAttribute('aria-disabled', 'false');
+      await expect(next).toBeEnabled();
+      await expect(next).toHaveAttribute('aria-disabled', 'false');
     });
 
     await step('O extremo é visível, não só programático', async () => {
@@ -70,7 +70,7 @@ export const FirstSlide: Story = {
       // desabilitado, e transição não anima valor inicial — não há nada em
       // curso para esperar.
       const apagada = Number(getComputedStyle(previous).opacity);
-      const viva = Number(getComputedStyle(proximo).opacity);
+      const viva = Number(getComputedStyle(next).opacity);
       await expect(apagada).toBeLessThan(viva);
     });
   },
@@ -86,7 +86,7 @@ export const LastSlide: Story = {
     const canvas = within(canvasElement);
     const track = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-track"]')!;
     const clip = canvasElement.querySelector<HTMLElement>('.nds-carousel-overflow')!;
-    const proximo = () =>
+    const next = () =>
       canvas.getByRole('button', { name: 'Próximo item' }) as HTMLButtonElement;
 
     // Quanto o track já saiu do recorte. Valor ABSOLUTO: "andou mais do que
@@ -103,7 +103,7 @@ export const LastSlide: Story = {
       // quebraria só na segunda rodada.
       const total = slides().length;
       for (let passo = 0; passo < total; passo++) {
-        const button = proximo();
+        const button = next();
         if (button.disabled) break;
         await userEvent.click(button);
       }
@@ -117,8 +117,8 @@ export const LastSlide: Story = {
     await step('No fim a seta de avanço desabilita e a de voltar acorda', async () => {
       // functional.item4 — o par importa: só "next desabilitado" também seria
       // verdade num carrossel de um slide só, onde nada nunca avançou.
-      await expect(proximo()).toBeDisabled();
-      await expect(proximo()).toHaveAttribute('aria-disabled', 'true');
+      await expect(next()).toBeDisabled();
+      await expect(next()).toHaveAttribute('aria-disabled', 'true');
 
       const previous = canvas.getByRole('button', { name: 'Item anterior' });
       await expect(previous).toBeEnabled();
@@ -130,7 +130,7 @@ export const LastSlide: Story = {
       // desabilitado no clique anterior. Ler no primeiro quadro pega o valor de
       // PARTIDA (1 contra 1) e o teste reprova por corrida, não por defeito.
       await waitFor(async () => {
-        const apagada = Number(getComputedStyle(proximo()).opacity);
+        const apagada = Number(getComputedStyle(next()).opacity);
         const viva = Number(getComputedStyle(previous).opacity);
         await expect(apagada).toBeLessThan(viva);
       }, { timeout: 4000 });

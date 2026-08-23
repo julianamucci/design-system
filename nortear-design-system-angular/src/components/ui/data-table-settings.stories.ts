@@ -64,11 +64,11 @@ export const Paginated: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+    const lines = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
     /** Identificador da primeira linha da página — o que prova qual fatia está na tela. */
-    const firstInvoice = () => linhas()[0].textContent!.trim();
+    const firstInvoice = () => lines()[0].textContent!.trim();
 
-    const primeira = () => canvas.getByRole('button', { name: 'Primeira página' }) as HTMLButtonElement;
+    const first = () => canvas.getByRole('button', { name: 'Primeira página' }) as HTMLButtonElement;
     const previous = () => canvas.getByRole('button', { name: 'Página anterior' }) as HTMLButtonElement;
     const next = () => canvas.getByRole('button', { name: 'Próxima página' }) as HTMLButtonElement;
     const last = () => canvas.getByRole('button', { name: 'Última página' }) as HTMLButtonElement;
@@ -77,11 +77,11 @@ export const Paginated: Story = {
       // Clicar num botão desabilitado é impossível para quem usa — o CSS lhe
       // tira o `pointer-events`. Então o teste AFIRMA a propriedade em vez de
       // tentar o clique: um clique forçado provaria algo que ninguém consegue.
-      await expect(linhas().length).toBe(PAGE_SIZE);
+      await expect(lines().length).toBe(PAGE_SIZE);
       await expect(firstInvoice()).toContain('#INV-001');
       await expect(canvas.getByText(`Página 1 de ${TOTAL_PAGES}`)).toBeInTheDocument();
 
-      await expect(primeira()).toBeDisabled();
+      await expect(first()).toBeDisabled();
       await expect(previous()).toBeDisabled();
       await expect(next()).toBeEnabled();
       await expect(last()).toBeEnabled();
@@ -99,7 +99,7 @@ export const Paginated: Story = {
       });
       await expect(canvas.getByText(`Página 2 de ${TOTAL_PAGES}`)).toBeInTheDocument();
       // No meio do caminho os quatro estão vivos: há para onde ir dos dois lados.
-      await expect(primeira()).toBeEnabled();
+      await expect(first()).toBeEnabled();
       await expect(previous()).toBeEnabled();
       await expect(last()).toBeEnabled();
     });
@@ -113,7 +113,7 @@ export const Paginated: Story = {
       });
       // Doze faturas em páginas de cinco deixam duas na última — número
       // derivado da fixture, nunca escrito à mão.
-      await expect(linhas().length).toBe(INVOICES_DT.length % PAGE_SIZE);
+      await expect(lines().length).toBe(INVOICES_DT.length % PAGE_SIZE);
       await expect(canvas.getByText(`Página ${TOTAL_PAGES} de ${TOTAL_PAGES}`))
         .toBeInTheDocument();
 
@@ -135,13 +135,13 @@ export const Paginated: Story = {
     await step('O salto para a primeira página devolve o estado de entrada', async () => {
       // Fecha o ciclo e deixa a tela como a encontrou: a rodada seguinte — e a
       // captura de regressão visual — partem da página 1.
-      const button = primeira();
+      const button = first();
       await userEvent.click(button);
 
       await waitFor(async () => {
         await expect(firstInvoice()).toContain('#INV-001');
       });
-      await expect(primeira()).toBeDisabled();
+      await expect(first()).toBeDisabled();
       await expect(previous()).toBeDisabled();
     });
   },
@@ -187,27 +187,27 @@ export const ExplicitRowLabel: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-    const lineBox = (linha: HTMLElement) =>
-      linha.querySelector<HTMLElement>('button[role="checkbox"]')!;
+    const lines = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+    const lineBox = (line: HTMLElement) =>
+      line.querySelector<HTMLElement>('button[role="checkbox"]')!;
     /** Terceira célula: a coluna "Cliente", de onde `rowLabel` tira o texto. */
-    const cliente = (linha: HTMLElement) =>
-      linha.querySelectorAll('td')[2]!.textContent!.trim();
+    const cliente = (line: HTMLElement) =>
+      line.querySelectorAll('td')[2]!.textContent!.trim();
 
     await step('O nome do controle sai de rowLabel, e não da primeira coluna', async () => {
       // A prova precisa do CONTRASTE: se `rowLabel` fosse ignorado, o nome
       // cairia no identificador da primeira coluna ("#INV-001") e a asserção
       // seguinte reprovaria.
-      for (const linha of linhas()) {
-        await expect(lineBox(linha)).toHaveAttribute(
+      for (const line of lines()) {
+        await expect(lineBox(line)).toHaveAttribute(
           'aria-label',
-          `Selecionar fatura ${cliente(linha)}`,
+          `Selecionar fatura ${cliente(line)}`,
         );
       }
     });
 
     await step('Nenhuma linha repete o nome de outra', async () => {
-      const names = linhas().map((l) => lineBox(l).getAttribute('aria-label') ?? '');
+      const names = lines().map((l) => lineBox(l).getAttribute('aria-label') ?? '');
       await expect(names.length).toBe(INVOICES_DT.length);
       await expect(new Set(names).size).toBe(names.length);
     });

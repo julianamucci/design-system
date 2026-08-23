@@ -47,7 +47,7 @@ const LABEL_DEFAULT = 'Progresso do upload';
 function recuar(bloco: string, espacos: string): string {
   return bloco
     .split('\n')
-    .map((linha, i) => (i === 0 ? linha : `${espacos}${linha}`))
+    .map((line, i) => (i === 0 ? line : `${espacos}${line}`))
     .join('\n');
 }
 

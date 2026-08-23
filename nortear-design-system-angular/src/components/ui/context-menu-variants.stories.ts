@@ -174,10 +174,10 @@ export const WithSelection: Story = {
       // e afirma o PAR, em vez de assumir de onde a rodada parte.
       const partiuDoEmail = alvo('radio-email').getAttribute('aria-checked') === 'true';
       const click = partiuDoEmail ? 'radio-link' : 'radio-email';
-      const outro = partiuDoEmail ? 'radio-email' : 'radio-link';
+      const other = partiuDoEmail ? 'radio-email' : 'radio-link';
       await userEvent.click(alvo(click));
       await waitFor(() => expect(alvo(click).getAttribute('aria-checked')).toBe('true'));
-      await expect(alvo(outro).getAttribute('aria-checked')).toBe('false');
+      await expect(alvo(other).getAttribute('aria-checked')).toBe('false');
     });
   },
 };

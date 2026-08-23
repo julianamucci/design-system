@@ -185,21 +185,21 @@ export const Controlled: Story = {
   render: () => ({
     components: sharedComponents,
     setup() {
-      const aberto = ref(false);
-      return { aberto };
+      const isOpen = ref(false);
+      return { isOpen };
     },
     template: `
       <div class="nds-stack" data-spacing="md" style="${STYLE_PARAGRAFO}">
         <div class="nds-cluster" data-spacing="xs">
           <!-- Nomes próprios, e não os mesmos do gatilho: dois controles com o
                mesmo nome acessível são ambíguos em leitor de tela. -->
-          <Button size="sm" variant="outline" @click="aberto = true">Abrir pelo estado externo</Button>
-          <Button size="sm" variant="outline" @click="aberto = false">Fechar pelo estado externo</Button>
+          <Button size="sm" variant="outline" @click="isOpen = true">Abrir pelo estado externo</Button>
+          <Button size="sm" variant="outline" @click="isOpen = false">Fechar pelo estado externo</Button>
         </div>
 
         <p class="nds-text-body">
           Comentário de
-          <HoverCard :open="aberto" @update:open="(v) => aberto = v">
+          <HoverCard :open="isOpen" @update:open="(v) => isOpen = v">
             <HoverCardTrigger as-child>
               <a href="/users/joana" class="nds-text-primary nds-font-medium nds-hover-underline">@joana</a>
             </HoverCardTrigger>
@@ -209,7 +209,7 @@ export const Controlled: Story = {
         </p>
 
         <p class="nds-text-caption nds-text-muted-foreground" data-testid="estado-externo">
-          Estado externo: {{ aberto ? 'aberto' : 'fechado' }}
+          Estado externo: {{ isOpen ? 'aberto' : 'fechado' }}
         </p>
       </div>
     `,

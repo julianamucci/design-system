@@ -117,7 +117,7 @@ export function inputOtpCompositionSnippet(o: InputOtpCompositionOptions = {}): 
   const idError = o.erro ? 'otp-erro' : undefined;
   const idLabel = o.ligarRotulo ? 'otp-rotulo' : undefined;
 
-  const linhas = otpLines({
+  const lines = otpLines({
     ...o,
     describedBy: o.describedBy ?? idAjuda ?? idError,
     invalid: o.invalid ?? Boolean(o.erro),
@@ -137,7 +137,7 @@ export function inputOtpCompositionSnippet(o: InputOtpCompositionOptions = {}): 
 titulo.className = 'nds-text-label';${idLabel ? `\ntitulo.id = ${texto(idLabel)};` : ''}
 titulo.textContent = ${texto(rotulo)};`,
     [
-      `const codigo = ${chamada('createInputOTP', linhas)};`,
+      `const codigo = ${chamada('createInputOTP', lines)};`,
       ...(idLabel
         ? [
             `codigo.removeAttribute('aria-label');`,

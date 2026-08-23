@@ -752,7 +752,7 @@ export class NdsTextareaDocs implements AfterViewInit, OnDestroy {
     };
     // Nenhuma linha é input da diretiva: todas descrevem atributo nativo do
     // <textarea>, e os nomes seguem o HTML em vez de uma API que não existe.
-    const linha = (name: string, k: string) => ({
+    const line = (name: string, k: string) => ({
       name,
       type: toPlainText(t(`props.table.${k}.type`)),
       defaultValue: t(`props.table.${k}.default`),
@@ -763,15 +763,15 @@ export class NdsTextareaDocs implements AfterViewInit, OnDestroy {
       {
         cols,
         items: [
-          linha('value', 'value'),
-          linha('(conteúdo do elemento)', 'defaultValue'),
-          linha('(input)', 'onChange'),
-          linha('placeholder', 'placeholder'),
-          linha('maxlength', 'maxLength'),
-          linha('rows', 'rows'),
-          linha('disabled', 'disabled'),
-          linha('readonly', 'readOnly'),
-          linha('class', 'className'),
+          line('value', 'value'),
+          line('(conteúdo do elemento)', 'defaultValue'),
+          line('(input)', 'onChange'),
+          line('placeholder', 'placeholder'),
+          line('maxlength', 'maxLength'),
+          line('rows', 'rows'),
+          line('disabled', 'disabled'),
+          line('readonly', 'readOnly'),
+          line('class', 'className'),
         ],
       },
     ];

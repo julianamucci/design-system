@@ -82,7 +82,7 @@ caixa.setAttribute('aria-invalid', 'true');
 caixa.setAttribute('aria-describedby', 'erro-${ID_DEFAULT}');`
     : '';
 
-  const linha = `const linha = document.createElement('div');
+  const line = `const linha = document.createElement('div');
 linha.className = 'nds-cluster';
 linha.dataset.spacing = 'sm';${o.disabled ? "\nlinha.dataset.disabled = 'true';" : ''}`;
 
@@ -98,7 +98,7 @@ linha.append(caixa, rotulo);`;
   if (!o.invalid) {
     return snippet(
       importing('checkbox', 'createCheckbox'),
-      linha,
+      line,
       `${caixa}${errorMarca}`,
       rotulo,
       montar('linha'),
@@ -107,7 +107,7 @@ linha.append(caixa, rotulo);`;
 
   return snippet(
     importing('checkbox', 'createCheckbox'),
-    linha,
+    line,
     `${caixa}${errorMarca}`,
     rotulo,
     `const mensagem = document.createElement('p');
@@ -226,7 +226,7 @@ const ITEMS_DEFAULT: NonNullable<GroupSnippetOptionsCheckbox['itens']> = [
  */
 export function groupCheckboxSnippet(o: GroupSnippetOptionsCheckbox = {}): string {
   const itens = o.itens ?? ITEMS_DEFAULT;
-  const linhas = itens
+  const lines = itens
     .map(
       ({ id, label, checked }) => `  { id: ${texto(id)}, label: ${texto(label)}${
         checked ? ', checked: true' : ''
@@ -260,7 +260,7 @@ grupo.appendChild(titulo);`;
 
   return snippet(
     importing('checkbox', 'createCheckbox'),
-    `const opcoes = [\n${linhas}\n];`,
+    `const opcoes = [\n${lines}\n];`,
     raiz,
     `for (const { id, label, checked } of opcoes) {
   const linha = document.createElement('div');

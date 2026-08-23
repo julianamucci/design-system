@@ -45,14 +45,14 @@ export const Empty: Story = {
 export const Filling: Story = {
   parameters: { covers: ['visual.item2', 'accessibility.item6'] },
   render: () => ({
-    props: { codigo: '123' },
+    props: { code: '123' },
     template: `
       <div class="nds-stack" data-spacing="sm">
         <span id="est-parcial-label" class="nds-text-label">Código de verificação</span>
         <nds-input-otp
           aria-labelledby="est-parcial-label"
           [maxLength]="6"
-          [value]="codigo"
+          [value]="code"
         ></nds-input-otp>
       </div>
     `,
@@ -78,14 +78,14 @@ export const Filling: Story = {
 export const Complete: Story = {
   parameters: { covers: ['visual.item3'] },
   render: () => ({
-    props: { codigo: '482913' },
+    props: { code: '482913' },
     template: `
       <div class="nds-stack" data-spacing="sm">
         <span id="est-completo-label" class="nds-text-label">Código de verificação</span>
         <nds-input-otp
           aria-labelledby="est-completo-label"
           [maxLength]="6"
-          [value]="codigo"
+          [value]="code"
         ></nds-input-otp>
       </div>
     `,
@@ -101,14 +101,14 @@ export const Complete: Story = {
 export const Disabled: Story = {
   parameters: { covers: ['functional.item6'] },
   render: () => ({
-    props: { codigo: '4829' },
+    props: { code: '4829' },
     template: `
       <div class="nds-stack" data-spacing="sm">
         <span id="est-off-label" class="nds-text-label">Código de verificação</span>
         <nds-input-otp
           aria-labelledby="est-off-label"
           [maxLength]="6"
-          [value]="codigo"
+          [value]="code"
           [disabled]="true"
         ></nds-input-otp>
       </div>
@@ -136,7 +136,7 @@ export const Invalid: Story = {
     covers: ['functional.item7', 'accessibility.item5', 'visual.item4'],
   },
   render: () => ({
-    props: { codigo: '482913' },
+    props: { code: '482913' },
     template: `
       <div class="nds-stack" data-spacing="sm">
         <span id="est-erro-label" class="nds-text-label">Código de verificação</span>
@@ -144,7 +144,7 @@ export const Invalid: Story = {
           data-testid="com-erro"
           aria-labelledby="est-erro-label"
           [maxLength]="6"
-          [value]="codigo"
+          [value]="code"
           [invalid]="true"
           describedBy="est-erro-msg"
         ></nds-input-otp>
@@ -157,7 +157,7 @@ export const Invalid: Story = {
           data-testid="sem-erro"
           aria-labelledby="est-ok-label"
           [maxLength]="6"
-          [value]="codigo"
+          [value]="code"
         ></nds-input-otp>
       </div>
     `,

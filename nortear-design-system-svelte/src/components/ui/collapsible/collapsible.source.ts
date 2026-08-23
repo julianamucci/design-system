@@ -38,9 +38,9 @@ const PANEL =
  * `aria-expanded` e `aria-controls`, e um botão aninhado dentro dele seria um
  * segundo elemento interativo sem estado nenhum.
  */
-function gatilho(rotulo: string, classe: string = TRIGGER_FANTASMA): string {
+function gatilho(rotulo: string, className: string = TRIGGER_FANTASMA): string {
   return `  <CollapsibleTrigger
-    class="${classe}"
+    class="${className}"
     data-justify="between"
   >
     <span>${rotulo}</span>

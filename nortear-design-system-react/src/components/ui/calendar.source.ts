@@ -87,28 +87,28 @@ function calendarControlled(
   modo: Mode,
   extras: Array<string | false | null | undefined> = [],
 ): string {
-  const estado = STATE[modo];
+  const state = STATE[modo];
   // O componente do design system vem primeiro, e as dependências depois: é a
   // ordem do Badge, que é o modelo destas transforms.
   const imports = [
     IMPORT_CALENDAR,
     'import { useState } from "react";',
-    estado.precisaDeTipo ? 'import type { DateRange } from "react-day-picker";' : undefined,
+    state.precisaDeTipo ? 'import type { DateRange } from "react-day-picker";' : undefined,
     IMPORT_LOCALE,
   ]
-    .filter((linha): linha is string => Boolean(linha))
+    .filter((line): line is string => Boolean(line))
     .join('\n');
   // O estado entra no mesmo bloco do cabeçalho, separado por uma linha em
   // branco: é declaração de componente, e não marcação.
-  const header = `${imports}\n\n${estado.declaration}`;
+  const header = `${imports}\n\n${state.declaration}`;
 
   return jsxSnippet(
     header,
     calendarWithProps([
       `mode="${modo}"`,
       ...extras,
-      `selected={${estado.valor}}`,
-      estado.handler,
+      `selected={${state.valor}}`,
+      state.handler,
       'locale={ptBR}',
     ]),
   );

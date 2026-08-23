@@ -148,10 +148,10 @@ export const Playground: Story = {
       //
       // O valor viaja por um campo escondido: é ele que a serialização nativa
       // enxerga, e sem `name` o campo não participaria do formulário.
-      const oculto = canvasElement.querySelector<HTMLInputElement>(
+      const hidden = canvasElement.querySelector<HTMLInputElement>(
         '[data-slot="select-hidden-input"]',
       );
-      await expect(oculto?.name).toBe(args.name);
+      await expect(hidden?.name).toBe(args.name);
     });
 
     if (args.disabled) {

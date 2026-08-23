@@ -58,7 +58,7 @@ export const Playground: Story = {
     emptyMessage: 'Sem resultados.',
     caption: 'Faturas recentes',
     labels: labelsInvoice,
-    rowKey: (fatura: Invoice) => fatura.id,
+    rowKey: (invoice: Invoice) => invoice.id,
     // Deliberadamente ausente: é aqui que o FALLBACK é provado. Sem `rowLabel`,
     // o nome de cada controle de seleção sai da primeira coluna — e a play
     // compara os nomes entre si para mostrar que saem distintos.
@@ -179,16 +179,16 @@ export const Playground: Story = {
     }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+    const lines = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
     /** Primeira célula de DADOS da linha — é ela que identifica a fatura. */
     const identidadeCell = (tr: HTMLElement) =>
       tr.querySelector<HTMLElement>("td:not(:has([role='checkbox']))")!;
-    const firstCell = () => identidadeCell(linhas()[0]);
+    const firstCell = () => identidadeCell(lines()[0]);
     // O nome vem da fixture `labelsInvoice`: se `labels` deixasse de chegar aos
     // controles, nenhuma das buscas por nome abaixo encontraria nada.
     const allBox = () => canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
-    const invoiceBox = (fatura: string) => () =>
-      canvas.getByRole('checkbox', { name: `Selecionar fatura ${fatura}` });
+    const invoiceBox = (invoice: string) => () =>
+      canvas.getByRole('checkbox', { name: `Selecionar fatura ${invoice}` });
     const regiaoViva = () => canvasElement.querySelector<HTMLElement>("[role='status']")!;
 
     /** Estabelece a precondição do passo: sem ordem aplicada, venha de onde vier. */
@@ -214,7 +214,7 @@ export const Playground: Story = {
       await waitFor(() => expect(find()).toHaveAttribute('aria-checked', alvo));
     };
     const lineBox = (i: number) => () =>
-      linhas()[i].querySelector<HTMLElement>("[role='checkbox']")!;
+      lines()[i].querySelector<HTMLElement>("[role='checkbox']")!;
 
     await step('É uma tabela de verdade, com seções semânticas', async () => {
       // accessibility.item1 — o que faz um leitor anunciar "tabela, 6 colunas" é
@@ -228,7 +228,7 @@ export const Playground: Story = {
       await expect(canvasElement.querySelector("[data-slot='data-table']")).toHaveClass(
         'nds-data-table',
       );
-      await expect(linhas().length).toBe(10);
+      await expect(lines().length).toBe(10);
     });
 
     await step('A tabela diz o próprio nome sem ocupar espaço na tela', async () => {
@@ -305,19 +305,19 @@ export const Playground: Story = {
       // linha' e, com isso, GUARDAVA o defeito: dez controles homônimos passavam
       // por ela todo dia. Nome repetido em dez controles é o mesmo que nome
       // nenhum na lista do leitor (WCAG 4.1.2).
-      const names = linhas().map(
+      const names = lines().map(
         (tr) => tr.querySelector<HTMLElement>("[role='checkbox']")!.getAttribute('aria-label')!,
       );
 
-      await expect(names.length).toBe(linhas().length);
+      await expect(names.length).toBe(lines().length);
       // Distintos ENTRE SI — só verificar a presença deixaria os homônimos
       // passarem exatamente como antes.
       await expect(new Set(names).size).toBe(names.length);
       // E cada nome é o da PRÓPRIA linha: nomes distintos porém trocados seriam
       // igualmente inúteis para quem não vê a tabela. O identificador vem da
       // primeira coluna, que é o fallback em ação — a story não passa `rowLabel`.
-      for (const [i, linha] of linhas().entries()) {
-        await expect(names[i]).toContain(identidadeCell(linha).textContent!.trim());
+      for (const [i, line] of lines().entries()) {
+        await expect(names[i]).toContain(identidadeCell(line).textContent!.trim());
       }
       await expect(names).not.toContain(allBox().getAttribute('aria-label'));
     });
@@ -329,14 +329,14 @@ export const Playground: Story = {
       await userEvent.tripleClick(search);
       await userEvent.keyboard('{Delete}');
       await userEvent.type(search, 'Karen');
-      await waitFor(() => expect(linhas().length).toBe(1));
+      await waitFor(() => expect(lines().length).toBe(1));
       await expect(firstCell()).toHaveTextContent('INV-011');
       // A contagem acompanha o recorte, e não o total do dataset.
       await expect(regiaoViva()).toHaveTextContent('de 1 fatura(s) selecionada(s).');
 
       await userEvent.tripleClick(search);
       await userEvent.keyboard('{Delete}');
-      await waitFor(() => expect(linhas().length).toBe(10));
+      await waitFor(() => expect(lines().length).toBe(10));
     });
 
     await step('Selecionar tudo marca a página e a contagem é anunciada', async () => {
@@ -345,20 +345,20 @@ export const Playground: Story = {
       // viva carrega o número.
       await marcar(allBox, 'true');
 
-      for (const linha of linhas()) {
-        await expect(linha).toHaveAttribute('data-state', 'selected');
+      for (const line of lines()) {
+        await expect(line).toHaveAttribute('data-state', 'selected');
       }
       await expect(regiaoViva()).toHaveAttribute('aria-live', 'polite');
       // Dez marcadas de doze: o cabeçalho marca a PÁGINA, a contagem conta o
       // conjunto filtrado inteiro.
       await expect(regiaoViva()).toHaveTextContent('10 de 12 fatura(s) selecionada(s).');
-      await expect(getComputedStyle(linhas()[0]).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+      await expect(getComputedStyle(lines()[0]).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
     });
 
     await step('Desmarcar uma linha deixa o cabeçalho em estado misto', async () => {
       await marcar(lineBox(0), 'false');
       await waitFor(() => expect(allBox()).toHaveAttribute('aria-checked', 'mixed'));
-      await expect(linhas()[0].hasAttribute('data-state')).toBe(false);
+      await expect(lines()[0].hasAttribute('data-state')).toBe(false);
     });
 
     await step('Do estado misto, dois cliques marcam tudo e depois limpam', async () => {

@@ -53,8 +53,8 @@ export const AlignmentBar: Story = {
       // Um container com borda; os itens perdem a sua. É o que separa o
       // "segmentado" de quatro botões soltos lado a lado.
       await expect(parseFloat(getComputedStyle(grupo).borderTopWidth)).toBeGreaterThan(0);
-      const primeiro = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
-      await expect(parseFloat(getComputedStyle(primeiro).borderTopWidth)).toBe(0);
+      const first = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
+      await expect(parseFloat(getComputedStyle(first).borderTopWidth)).toBe(0);
       await expect(parseFloat(getComputedStyle(grupo).columnGap || '0')).toBe(0);
     });
 

@@ -41,16 +41,16 @@ function importingParts(...names: string[]): string {
 }
 
 function legenda(o: TableSnippetOptions): string {
-  const classe = o.captionVisivel ? '' : ", 'nds-sr-only'";
+  const className = o.captionVisivel ? '' : ", 'nds-sr-only'";
   return [
     '// A legenda é o NOME da tabela. `nds-sr-only` a tira da tela e nunca do',
     '// DOM: quem entra pela árvore de acessibilidade encontraria só "tabela".',
-    `table.appendChild(createTableCaption(${texto(o.caption ?? CAPTION_DEFAULT)}${classe}));`,
+    `table.appendChild(createTableCaption(${texto(o.caption ?? CAPTION_DEFAULT)}${className}));`,
   ].join('\n');
 }
 
 function header(o: TableSnippetOptions = {}): string {
-  const linhas = [
+  const lines = [
     'const cabecalho = createTableHeader();',
     'const linhaDeCabecalho = createTableRow();',
     '// A última coluna é numérica: o rótulo acompanha os números que ele',
@@ -63,7 +63,7 @@ function header(o: TableSnippetOptions = {}): string {
   ];
 
   if (o.withActions) {
-    linhas.push(
+    lines.push(
       '',
       '// A coluna de ação também precisa de cabeçalho: sem ele a coluna existe',
       '// para quem vê e some para quem navega por cabeçalhos. Quem sai da tela',
@@ -77,22 +77,22 @@ function header(o: TableSnippetOptions = {}): string {
     );
   }
 
-  linhas.push('', 'cabecalho.appendChild(linhaDeCabecalho);', 'table.appendChild(cabecalho);');
-  return linhas.join('\n');
+  lines.push('', 'cabecalho.appendChild(linhaDeCabecalho);', 'table.appendChild(cabecalho);');
+  return lines.join('\n');
 }
 
 function corpo(o: TableSnippetOptions): string {
-  const linhas = ['const corpo = createTableBody();', 'for (const fatura of faturas) {', '  const linha = createTableRow();'];
+  const lines = ['const corpo = createTableBody();', 'for (const fatura of faturas) {', '  const linha = createTableRow();'];
 
   if (o.lineSelecionada) {
-    linhas.push(
+    lines.push(
       '  // Só o atributo: quem pinta a linha marcada é o próprio componente,',
       '  // pela regra `.nds-table tbody tr[data-state="selected"]`.',
       "  if (fatura.id === '#INV-002') linha.setAttribute('data-state', 'selected');",
     );
   }
 
-  linhas.push(
+  lines.push(
     "  linha.appendChild(createTableCell(fatura.id, 'nds-font-medium'));",
     '  linha.appendChild(createTableCell(fatura.status));',
     '  linha.appendChild(createTableCell(fatura.method));',
@@ -100,7 +100,7 @@ function corpo(o: TableSnippetOptions): string {
   );
 
   if (o.withActions) {
-    linhas.push(
+    lines.push(
       '',
       "  const celulaDeAcao = createTableCell('', 'nds-text-right');",
       '  celulaDeAcao.appendChild(',
@@ -117,8 +117,8 @@ function corpo(o: TableSnippetOptions): string {
     );
   }
 
-  linhas.push('', '  corpo.appendChild(linha);', '}', 'table.appendChild(corpo);');
-  return linhas.join('\n');
+  lines.push('', '  corpo.appendChild(linha);', '}', 'table.appendChild(corpo);');
+  return lines.join('\n');
 }
 
 function rodape(): string {

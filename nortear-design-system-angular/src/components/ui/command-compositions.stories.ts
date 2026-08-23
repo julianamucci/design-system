@@ -25,7 +25,7 @@ import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wai
   encapsulation: ViewEncapsulation.None,
   imports: [...NDS_COMMAND, ...NDS_POPOVER],
   template: `
-    <div ndsPopover [open]="aberto()" (openChange)="aberto.set($event)">
+    <div ndsPopover [open]="isOpen()" (openChange)="isOpen.set($event)">
       <!--
         O papel de combobox é escrito à mão: o gatilho do Popover é um botão
         comum para o primitivo, e sem ele o leitor de tela anuncia "botão" — a
@@ -75,14 +75,14 @@ import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wai
   `,
 })
 class DemoCommandCombobox {
-  protected readonly aberto = signal(false);
+  protected readonly isOpen = signal(false);
   protected readonly selecionado = signal('');
 
   protected choose(detalhe: CommandSelectDetails): void {
     this.selecionado.set(detalhe.label);
     // Fechar aqui é a guideline: sem isso o popover fica aberto por cima do
     // valor que a pessoa acabou de escolher.
-    this.aberto.set(false);
+    this.isOpen.set(false);
   }
 }
 
@@ -105,7 +105,7 @@ class DemoCommandCombobox {
     '(window:keydown)': 'onKeyDown($event)',
   },
   template: `
-    <div ndsDialog [open]="aberto()" (openChange)="aberto.set($event)">
+    <div ndsDialog [open]="isOpen()" (openChange)="isOpen.set($event)">
       <button ndsDialogTrigger ndsButton variant="outline">
         Buscar <span ndsCommandShortcut>⌘K</span>
       </button>
@@ -148,19 +148,19 @@ class DemoCommandCombobox {
   `,
 })
 class DemoCommandPalette {
-  protected readonly aberto = signal(false);
+  protected readonly isOpen = signal(false);
   protected readonly last = signal('');
 
   protected onKeyDown(evento: KeyboardEvent): void {
     if (evento.key.toLowerCase() !== 'k' || !(evento.metaKey || evento.ctrlKey)) return;
     // Sem isto o navegador leva o Cmd+K para a barra de endereço.
     evento.preventDefault();
-    this.aberto.set(true);
+    this.isOpen.set(true);
   }
 
   protected executar(detalhe: CommandSelectDetails): void {
     this.last.set(detalhe.value);
-    this.aberto.set(false);
+    this.isOpen.set(false);
   }
 }
 

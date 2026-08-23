@@ -89,8 +89,8 @@ function horizontalRange(itens: number): string {
  * faz a tabela passar da caixa: largura de tabela nasce do conteúdo, então não
  * há medida a cravar em lugar nenhum.
  */
-function tableAmpla(linhas: number): string {
-  return `const linhas = Array.from({ length: ${linhas} }, (_, i) => i + 1);
+function tableAmpla(lines: number): string {
+  return `const linhas = Array.from({ length: ${lines} }, (_, i) => i + 1);
 const colunas = Array.from({ length: 12 }, (_, i) => i + 1);
 
 <ScrollArea size="lg" className="nds-w-lg nds-rounded-md nds-border-default">

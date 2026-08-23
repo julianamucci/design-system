@@ -34,8 +34,8 @@ function importingMenubar(...parts: string[]): string {
  * `MenubarMenu` é o par de gatilho e painel — a barra é a lista deles, e é por
  * isso que a `<Menubar>` nunca recebe item nenhum diretamente.
  */
-function menu(rotulo: string, miolo: string, aberto = false): string {
-  return `  <MenubarMenu${aberto ? ' defaultOpen' : ''}>
+function menu(rotulo: string, miolo: string, isOpen = false): string {
+  return `  <MenubarMenu${isOpen ? ' defaultOpen' : ''}>
     <MenubarTrigger>${rotulo}</MenubarTrigger>
     <MenubarContent>
 ${miolo}

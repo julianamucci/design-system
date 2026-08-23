@@ -87,7 +87,7 @@ export class NdsCollapsible {}
   host: {
     type: 'button',
     '[attr.data-slot]': '"collapsible-trigger"',
-    '[attr.data-state]': 'estado()',
+    '[attr.data-state]': 'state()',
   },
 })
 export class NdsCollapsibleTrigger {
@@ -96,7 +96,7 @@ export class NdsCollapsibleTrigger {
   private readonly raiz = injectCollapsibleRootContext();
 
   /** Espelha o estado do primitivo para o `data-state` das outras stacks. */
-  protected readonly estado = computed(() => (this.raiz.open() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.raiz.open() ? 'open' : 'closed'));
 }
 
 /**
@@ -122,13 +122,13 @@ export class NdsCollapsibleTrigger {
   ],
   host: {
     '[attr.data-slot]': '"collapsible-content"',
-    '[attr.data-state]': 'estado()',
+    '[attr.data-state]': 'state()',
   },
 })
 export class NdsCollapsiblePanel {
   private readonly raiz = injectCollapsibleRootContext();
 
-  protected readonly estado = computed(() => (this.raiz.open() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.raiz.open() ? 'open' : 'closed'));
 }
 
 /** As três peças — conveniência para o `imports` de quem compõe. */

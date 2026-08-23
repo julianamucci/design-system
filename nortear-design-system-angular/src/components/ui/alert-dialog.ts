@@ -101,14 +101,14 @@ export class NdsAlertDialogContent {
         rdxDialogBackdrop
         class="nds-alert-dialog-overlay"
         data-slot="alert-dialog-overlay"
-        [attr.data-state]="estado()"
+        [attr.data-state]="state()"
       ></div>
 
       <div
         rdxDialogPopup
         class="nds-alert-dialog-content"
         data-slot="alert-dialog-content"
-        [attr.data-state]="estado()"
+        [attr.data-state]="state()"
       >
         <ng-container [ngTemplateOutlet]="painel()!.tpl" />
       </div>
@@ -125,7 +125,7 @@ export class NdsAlertDialog {
    * estados do conteúdo. O par `data-open`/`data-closed` que o CSS lê continua
    * vindo do primitivo — este atributo é adição, não substituição.
    */
-  protected readonly estado = computed(() => (this.raiz.isOpen() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.raiz.isOpen() ? 'open' : 'closed'));
 }
 
 /** Abre o diálogo. Compõe com `ndsButton` no mesmo elemento. */

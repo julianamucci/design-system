@@ -10,8 +10,8 @@
 
 <div data-moldura class="nds-p-4 nds-border-default nds-rounded-lg">
   <div class="nds-stack" data-spacing="sm">
-    {#each LARGURAS as classe (classe)}
-      <div class="{classe} nds-p-2 nds-bg-muted nds-text-caption">{classe}</div>
+    {#each LARGURAS as className (className)}
+      <div class="{className} nds-p-2 nds-bg-muted nds-text-caption">{className}</div>
     {/each}
   </div>
 </div>

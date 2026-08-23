@@ -53,7 +53,7 @@ const MENUS = [
 type PlaygroundArgs = {
   modal: boolean
   loopFocus: boolean
-  onOpenChange: (aberto: boolean) => void
+  onOpenChange: (isOpen: boolean) => void
 }
 
 const meta = {
@@ -116,7 +116,7 @@ export const Playground: Story = {
         {MENUS.map((menu) => (
           <MenubarMenu
             key={menu.label}
-            onOpenChange={(aberto) => onOpenChange?.(aberto)}
+            onOpenChange={(isOpen) => onOpenChange?.(isOpen)}
           >
             <MenubarTrigger>{menu.label}</MenubarTrigger>
             <MenubarContent>

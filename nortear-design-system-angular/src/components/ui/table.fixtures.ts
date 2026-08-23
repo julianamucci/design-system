@@ -10,14 +10,14 @@
 // propósito: a composição `FilterToolbar` busca por "boleto" esperando zero
 // resultados, e a `SortableHeaders` depende de o maior valor ser o #INV-004.
 
-export interface Fatura {
+export interface Invoice {
   id: string;
   status: string;
   metodo: string;
   valor: string;
 }
 
-export const INVOICES: Fatura[] = [
+export const INVOICES: Invoice[] = [
   { id: '#INV-001', status: 'Pago',      metodo: 'Cartão de crédito',      valor: 'R$ 250,00' },
   { id: '#INV-002', status: 'Pendente',  metodo: 'Transferência bancária', valor: 'R$ 150,00' },
   { id: '#INV-003', status: 'Cancelado', metodo: 'Pix',                    valor: 'R$ 350,00' },

@@ -99,10 +99,10 @@ export const Range: Story = {
     await step("O preenchimento é o miolo entre as duas alças", async () => {
       // Afirma o desenho, não o dado: 80 − 20 do trilho, com folga de 1pt para
       // o arredondamento de subpixel.
-      const trilho = sliderTrack(canvasElement);
+      const track = sliderTrack(canvasElement);
       const faixa = canvasElement.querySelector<HTMLElement>('[data-slot="slider-range"]')!;
       const pct =
-        (faixa.getBoundingClientRect().width / trilho.getBoundingClientRect().width) * 100;
+        (faixa.getBoundingClientRect().width / track.getBoundingClientRect().width) * 100;
       await expect(Math.abs(pct - 60)).toBeLessThan(1.5);
     });
   },

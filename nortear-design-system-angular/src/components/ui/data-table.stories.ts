@@ -19,7 +19,7 @@ type DataTableArgs = {
 };
 
 /** Identidade da linha: a fatura, não a posição dela na página. */
-const INVOICE_KEY = (fatura: InvoiceDT) => fatura.id;
+const INVOICE_KEY = (invoice: InvoiceDT) => invoice.id;
 
 /**
  * O painel Code imprime o `template` da story como está escrito — com todos os
@@ -224,10 +224,10 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-    const identidadeCell = (linha: HTMLElement) =>
-      linha.querySelector<HTMLElement>('td:not(:has(button[role="checkbox"]))')!;
-    const firstCell = () => identidadeCell(linhas()[0]);
+    const lines = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+    const identidadeCell = (line: HTMLElement) =>
+      line.querySelector<HTMLElement>('td:not(:has(button[role="checkbox"]))')!;
+    const firstCell = () => identidadeCell(lines()[0]);
 
     // Os alvos são funções, e não elementos guardados: ordenar reordena os nós
     // do corpo, e um elemento capturado antes viraria referência a outra linha.
@@ -247,19 +247,19 @@ export const Playground: Story = {
     // distingue clique condicional de clique cego, para quem lê e para a regra
     // `play_nao_idempotente` do audit — que só enxerga a condição quando ela
     // está na própria linha do `userEvent.click`.
-    const moveBox = async (caixa: () => HTMLElement, estado: 'true' | 'false') => {
-      if (caixa().getAttribute('aria-checked') !== estado) await userEvent.click(caixa());
+    const moveBox = async (caixa: () => HTMLElement, state: 'true' | 'false') => {
+      if (caixa().getAttribute('aria-checked') !== state) await userEvent.click(caixa());
       // Segundo clique: partindo do misto, o primeiro só completa a página.
-      if (caixa().getAttribute('aria-checked') !== estado) await userEvent.click(caixa());
-      await expect(caixa()).toHaveAttribute('aria-checked', estado);
+      if (caixa().getAttribute('aria-checked') !== state) await userEvent.click(caixa());
+      await expect(caixa()).toHaveAttribute('aria-checked', state);
     };
 
     /** Mesma ideia para a ordenação, que é um ciclo de três estados. */
-    const moveOrdenacao = async (estado: 'none' | 'ascending' | 'descending') => {
-      for (let i = 0; i < 3 && valueHeader().getAttribute('aria-sort') !== estado; i += 1) {
+    const moveOrdenacao = async (state: 'none' | 'ascending' | 'descending') => {
+      for (let i = 0; i < 3 && valueHeader().getAttribute('aria-sort') !== state; i += 1) {
         await userEvent.click(ordenarButton());
       }
-      await expect(valueHeader()).toHaveAttribute('aria-sort', estado);
+      await expect(valueHeader()).toHaveAttribute('aria-sort', state);
     };
 
     await step('É uma tabela de verdade, com nome e seções semânticas', async () => {
@@ -274,7 +274,7 @@ export const Playground: Story = {
       await expect(canvasElement.querySelector('[data-slot="data-table"]')).toHaveClass(
         'nds-data-table',
       );
-      await expect(linhas().length).toBe(args.pageSize);
+      await expect(lines().length).toBe(args.pageSize);
     });
 
     await step('Uma camada só rola na horizontal, e ela recebe foco', async () => {
@@ -347,8 +347,8 @@ export const Playground: Story = {
     await step('Cada checkbox de linha tem um nome só dele', async () => {
       // accessibility.item3 — "Selecionar linha" repetido em doze checkboxes é o
       // mesmo que nenhum nome: o leitor lista doze controles idênticos.
-      const boxes = linhas().map(
-        (linha) => linha.querySelector<HTMLElement>('button[role="checkbox"]')!,
+      const boxes = lines().map(
+        (line) => line.querySelector<HTMLElement>('button[role="checkbox"]')!,
       );
       const names = boxes.map((caixa) => caixa.getAttribute('aria-label')!);
       await expect(names).toEqual([
@@ -367,7 +367,7 @@ export const Playground: Story = {
       // E distintos pelo motivo certo: cada nome carrega o identificador da
       // PRÓPRIA linha — o mesmo texto que quem enxerga lê na primeira célula.
       for (const [i, caixa] of boxes.entries()) {
-        const identificador = identidadeCell(linhas()[i]).textContent!.trim();
+        const identificador = identidadeCell(lines()[i]).textContent!.trim();
         await expect(caixa.getAttribute('aria-label')).toContain(identificador);
       }
 
@@ -382,12 +382,12 @@ export const Playground: Story = {
       // viva carrega o número.
       await moveBox(allBox, 'true');
 
-      for (const linha of linhas()) {
-        await expect(linha).toHaveAttribute('data-state', 'selected');
+      for (const line of lines()) {
+        await expect(line).toHaveAttribute('data-state', 'selected');
       }
       await expect(regiaoViva()).toHaveAttribute('aria-live', 'polite');
       await expect(regiaoViva()).toHaveTextContent('5 de 12 linha(s) selecionada(s).');
-      await expect(getComputedStyle(linhas()[0]).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+      await expect(getComputedStyle(lines()[0]).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
     });
 
     await step('Desmarcar uma linha deixa o cabeçalho em estado misto', async () => {
@@ -424,14 +424,14 @@ export const Playground: Story = {
       await userEvent.clear(search);
       await userEvent.type(search, 'Karina');
 
-      await expect(linhas().length).toBe(1);
+      await expect(lines().length).toBe(1);
       await expect(firstCell()).toHaveTextContent('#INV-011');
       // O denominador acompanha o recorte: sem isto a contagem podia continuar
       // dizendo "de 12" com uma linha na tela.
       await expect(regiaoViva()).toHaveTextContent('de 1 linha(s) selecionada(s).');
 
       await userEvent.clear(search);
-      await expect(linhas().length).toBe(args.pageSize);
+      await expect(lines().length).toBe(args.pageSize);
     });
 
     await step('Ordenar não move a marcação de linha', async () => {

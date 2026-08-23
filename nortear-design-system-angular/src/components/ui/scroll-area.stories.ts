@@ -140,7 +140,7 @@ export const Playground: Story = {
         // não tem globais (`Array`, `String`) — armadilha 4 do CLAUDE.md.
         tags: Array.from({ length: total }, (_, i) => `Tag ${i + 1}`),
         cards: Array.from({ length: total }, (_, i) => `Card ${i + 1}`),
-        linhas: Array.from({ length: total }, (_, i) => `L${i + 1}`),
+        lines: Array.from({ length: total }, (_, i) => `L${i + 1}`),
         colunas: Array.from({ length: 12 }, (_, i) => `C${i + 1}`),
       },
       template: `
@@ -167,10 +167,10 @@ export const Playground: Story = {
             class="nds-max-w-md nds-rounded-md nds-border-default"
           >
             <div class="nds-stack nds-p-4" data-spacing="sm">
-              @for (linha of linhas; track linha) {
+              @for (line of lines; track line) {
                 <div class="nds-row nds-whitespace-nowrap" data-spacing="md">
                   @for (coluna of colunas; track coluna) {
-                    <span class="nds-text-body nds-shrink-0">{{ linha }} · {{ coluna }}</span>
+                    <span class="nds-text-body nds-shrink-0">{{ line }} · {{ coluna }}</span>
                   }
                 </div>
               }

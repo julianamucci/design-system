@@ -88,14 +88,14 @@ function marcarItems(itens: readonly Item[]): string {
 function mountGroup(opcoes: {
   itens: readonly Item[];
   rotulo: string;
-  estado: string;
+  state: string;
   declaration: string;
   props: string[];
 }): string {
-  const { itens, rotulo, estado, declaration, props } = opcoes;
+  const { itens, rotulo, state, declaration, props } = opcoes;
   const abertura = attrsMultilinha([
     ...props,
-    `bind:value={${estado}}`,
+    `bind:value={${state}}`,
     // O nome do grupo é a categoria da escolha, não a opção escolhida.
     `aria-label="${rotulo}"`,
   ]);
@@ -132,7 +132,7 @@ export function toggleGroupSource(
   return mountGroup({
     itens: ALIGNMENT,
     rotulo: 'Alinhamento do texto',
-    estado: 'alinhamento',
+    state: 'alinhamento',
     declaration,
     props: [
       // `type` é o assunto do componente: fica explícito mesmo no valor padrão.
@@ -154,7 +154,7 @@ export function toggleGroupFormattingSource(): string {
   return mountGroup({
     itens: FORMATTING,
     rotulo: 'Formatação',
-    estado: 'formatacao',
+    state: 'formatacao',
     declaration: 'let formatacao: string[] = $state([]);',
     props: ['type="multiple"'],
   });
@@ -165,7 +165,7 @@ export function toggleGroupSelectionMultiplaSource(): string {
   return mountGroup({
     itens: FORMATTING,
     rotulo: 'Formatação',
-    estado: 'formatacao',
+    state: 'formatacao',
     declaration: 'let formatacao = $state(["bold", "italic"]);',
     props: ['type="multiple"'],
   });
@@ -176,7 +176,7 @@ export function toggleGroupVerticalSource(): string {
   return mountGroup({
     itens: VISUALIZACAO,
     rotulo: 'Modo de visualização',
-    estado: 'visualizacao',
+    state: 'visualizacao',
     declaration: 'let visualizacao = $state("");',
     props: ['type="single"', 'orientation="vertical"'],
   });
@@ -187,7 +187,7 @@ export function toggleGroupVisualizacaoVerticalSource(): string {
   return mountGroup({
     itens: VISUALIZACAO,
     rotulo: 'Modo de visualização',
-    estado: 'visualizacao',
+    state: 'visualizacao',
     declaration: 'let visualizacao = $state("");',
     props: ['type="single"', 'variant="outline"', 'orientation="vertical"'],
   });
@@ -198,7 +198,7 @@ export function alignmentToggleGroupBarSource(): string {
   return mountGroup({
     itens: [...ALIGNMENT, { value: 'justify', rotulo: 'Justificar', icone: 'alignJustify' }],
     rotulo: 'Alinhamento do texto',
-    estado: 'alinhamento',
+    state: 'alinhamento',
     declaration: 'let alinhamento = $state("");',
     props: ['type="single"'],
   });
@@ -209,7 +209,7 @@ export function toggleGroupItemDisabledSource(): string {
   return mountGroup({
     itens: [ALIGNMENT[0], { ...ALIGNMENT[1], disabled: true }, ALIGNMENT[2]],
     rotulo: 'Alinhamento do texto',
-    estado: 'alinhamento',
+    state: 'alinhamento',
     declaration: 'let alinhamento = $state("");',
     props: ['type="single"'],
   });

@@ -401,8 +401,8 @@ export function colorPopoverSelectorSource(): string {
     ['nds-bg-destructive', 'Destrutiva'],
   ]
     .map(
-      ([classe, nome]) =>
-        `      <button type="button" class="nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring ${classe}" aria-label="${nome}"></button>`,
+      ([className, nome]) =>
+        `      <button type="button" class="nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring ${className}" aria-label="${nome}"></button>`,
     )
     .join('\n');
 

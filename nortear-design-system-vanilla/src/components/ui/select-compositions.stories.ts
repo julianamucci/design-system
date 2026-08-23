@@ -199,10 +199,10 @@ export const RegionWithGroups: Story = {
       await userEvent.click(within(listbox).getByRole('option', { name: 'Paraná' }));
       await waitForPortalGone('listbox');
       await expect(gatilho).toHaveTextContent('Paraná');
-      const oculto = canvasElement.querySelector<HTMLInputElement>(
+      const hidden = canvasElement.querySelector<HTMLInputElement>(
         '[data-slot="select-hidden-input"]',
       );
-      await expect(oculto?.value).toBe('pr');
+      await expect(hidden?.value).toBe('pr');
     });
   },
 };

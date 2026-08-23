@@ -199,7 +199,7 @@ export const Range: Story = {
       // sexto do produto. Medido no escuro, as pontas do intervalo de uma stack
       // marcavam 1.18:1 e o número do dia sumia. Aritmética, não olhômetro.
       const measurements = calendarMeasureContrast(canvasElement).filter(
-        (m) => m.presente && (STATES_WITH_TEXT_LEGIVEL as readonly string[]).includes(m.estado),
+        (m) => m.presente && (STATES_WITH_TEXT_LEGIVEL as readonly string[]).includes(m.state),
       );
       await expect(measurements.length).toBeGreaterThan(0);
       const reprovadas = measurements.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);
@@ -233,13 +233,13 @@ export const Multiple: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const marcadas = () =>
+    const checked = () =>
       Array.from(canvasElement.querySelectorAll('.nds-calendar-day-btn[data-selected]')).map(
         (el) => (el as HTMLElement).dataset.day ?? '',
       );
 
     await step('As três datas iniciais chegam marcadas', async () => {
-      await expect(marcadas()).toEqual(['2026-04-08', '2026-04-12', '2026-04-16']);
+      await expect(checked()).toEqual(['2026-04-08', '2026-04-12', '2026-04-16']);
     });
 
     await step('Uma nova escolha soma, e repetir remove', async () => {
@@ -249,7 +249,7 @@ export const Multiple: Story = {
       const dia29 = () => canvas.getByRole('button', { name: /29 de abril de 2026/i });
       onSelect.mockClear();
       await userEvent.click(dia29());
-      await expect(marcadas()).toEqual([
+      await expect(checked()).toEqual([
         '2026-04-08', '2026-04-12', '2026-04-16', '2026-04-29',
       ]);
       await expect(onSelect).toHaveBeenLastCalledWith([
@@ -257,7 +257,7 @@ export const Multiple: Story = {
       ]);
 
       await userEvent.click(dia29());
-      await expect(marcadas()).toEqual(['2026-04-08', '2026-04-12', '2026-04-16']);
+      await expect(checked()).toEqual(['2026-04-08', '2026-04-12', '2026-04-16']);
     });
   },
 };

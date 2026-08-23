@@ -66,7 +66,7 @@ function region(extras = ' position="top-right" rich-colors'): string {
 function call(type: string, title: string, options: string[] = []): string {
   const fn = type === 'default' ? 'toast' : `toast.${type}`;
   if (!options.length) return `${fn}('${title}')`;
-  return `${fn}('${title}', {\n${options.map((linha) => `  ${linha}`).join('\n')}\n})`;
+  return `${fn}('${title}', {\n${options.map((line) => `  ${line}`).join('\n')}\n})`;
 }
 
 /** O corpo do manipulador que o botão dispara. */
@@ -117,7 +117,7 @@ export const sonnerPlaygroundSource: SourceTransform<SonnerArgs> = (_gerado, ctx
   const options = [
     description && `description: '${description}',`,
     actionLabel && `action: { label: '${actionLabel}', onClick: desfazer },`,
-  ].filter((linha): linha is string => Boolean(linha));
+  ].filter((line): line is string => Boolean(line));
   const body = handler(call(type, literal(args.title, 'Alterações salvas.'), options));
   // A ação precisa existir em algum lugar: a notificação some, e com ela o
   // botão. O manipulador nomeado é o que deixa isso visível no exemplo.

@@ -66,7 +66,7 @@ function literalDeLinhas(valor: string | Array<string | number>): string | undef
  */
 export function codeBlockSnippet(o: CodeBlockSnippetOptions = {}): string {
   const linguagem = (o.language ?? '').toLowerCase();
-  const linhas = opcoes([
+  const lines = opcoes([
     ['code', 'source'],
     ['language', LANGUAGE_DEFAULT.includes(linguagem) ? undefined : texto(o.language!)],
     ['title', o.title ? texto(o.title) : undefined],
@@ -81,7 +81,7 @@ export function codeBlockSnippet(o: CodeBlockSnippetOptions = {}): string {
   return snippet(
     importing('code-block', 'createCodeBlock'),
     `const source = ${codeLiteral(o.code ?? TRECHO_DEFAULT)};`,
-    `const bloco = ${chamada('createCodeBlock', linhas)};`,
+    `const bloco = ${chamada('createCodeBlock', lines)};`,
     montar('bloco'),
   );
 }

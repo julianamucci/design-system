@@ -11,7 +11,7 @@ type InputOtpArgs = {
   disabled: boolean;
   invalid: boolean;
   label: string;
-  onComplete: (codigo: string) => void;
+  onComplete: (code: string) => void;
 };
 
 /**
@@ -177,13 +177,13 @@ export const Playground: Story = {
     });
 
     await step('Colar distribui o código inteiro e dispara complete', async () => {
-      const codigo = '123456'.slice(0, args.maxLength);
+      const code = '123456'.slice(0, args.maxLength);
       slots()[0].focus();
-      await userEvent.paste(codigo);
+      await userEvent.paste(code);
       await waitFor(async () => {
-        await expect(slots().map((s) => s.value).join('')).toBe(codigo);
+        await expect(slots().map((s) => s.value).join('')).toBe(code);
       });
-      await expect(args.onComplete).toHaveBeenCalledWith(codigo);
+      await expect(args.onComplete).toHaveBeenCalledWith(code);
     });
   },
 };

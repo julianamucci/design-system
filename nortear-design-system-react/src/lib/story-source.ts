@@ -121,7 +121,7 @@ export function propOption<T extends string>(
 export function indentar(conteudo: string, prefixo = '  '): string {
   return conteudo
     .split('\n')
-    .map((linha) => (linha.trim() ? `${prefixo}${linha}` : linha))
+    .map((line) => (line.trim() ? `${prefixo}${line}` : line))
     .join('\n');
 }
 

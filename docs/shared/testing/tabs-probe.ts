@@ -154,19 +154,19 @@ export async function measureAbaDesabilitada(
   nomeDesabilitada: string,
   actions: Actions,
 ): Promise<AbaDesabilitadaMeasurement> {
-  const todas = abas(raiz);
-  const idx = todas.findIndex(
+  const all = abas(raiz);
+  const idx = all.findIndex(
     (a) => (a.getAttribute('aria-label') || a.textContent || '').trim() === nomeDesabilitada,
   );
   if (idx < 1) {
     throw new Error(
       `SONDA: aba "${nomeDesabilitada}" não encontrada (ou é a primeira, e a medição ` +
         `da seta precisa de uma aba anterior). Abas: ` +
-        todas.map((a) => (a.textContent ?? '').trim()).join(' | '),
+        all.map((a) => (a.textContent ?? '').trim()).join(' | '),
     );
   }
-  const alvo = todas[idx];
-  const previous = todas[idx - 1];
+  const alvo = all[idx];
+  const previous = all[idx - 1];
   const estilo = getComputedStyle(alvo);
   const doc = raiz.ownerDocument;
 
@@ -217,7 +217,7 @@ export async function measureAbaDesabilitada(
   // ── A seta continua a partir dela? ─────────────────────────────────────────
   let arrowSegueAdiante: boolean | null = null;
   let seguiuTo: string | null = null;
-  const seguinte = todas[idx + 1];
+  const seguinte = all[idx + 1];
   if (seguinte) {
     alvo.focus();
     if (doc.activeElement === alvo) {
@@ -292,7 +292,7 @@ export const TARGET_MINIMUM_PX = 24;
 
 export interface TrackBox {
   /** Altura do `.nds-tabs-list`. */
-  trilho: number;
+  track: number;
   /** Altura do gatilho mais alto. */
   gatilho: number;
   /** Respiro somado do trilho (topo + base). */
@@ -319,12 +319,12 @@ export function trackMeasureBox(raiz: HTMLElement): TrackBox {
   const respiro = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
   const triggers = Array.from(lista.querySelectorAll<HTMLElement>('[role="tab"]'));
   const gatilho = Math.max(...triggers.map((g) => g.getBoundingClientRect().height));
-  const trilho = lista.getBoundingClientRect().height;
+  const track = lista.getBoundingClientRect().height;
   return {
-    trilho: arred(trilho),
+    track: arred(track),
     gatilho: arred(gatilho),
     respiro: arred(respiro),
-    folga: arred(trilho - respiro - gatilho),
+    folga: arred(track - respiro - gatilho),
   };
 }
 
@@ -375,16 +375,16 @@ export function trackMeasureCrescimento(raiz: HTMLElement): TrackCrescimento {
     // O empurrão parte da caixa MEDIDA, não de um número escrito à mão: assim
     // ele continua sendo "mais alto que o trilho" em qualquer densidade, tema
     // ou família de fonte.
-    gatilho.style.minHeight = `${normal.trilho + 8}px`;
+    gatilho.style.minHeight = `${normal.track + 8}px`;
     reflow();
     const empurrado = trackMeasureBox(raiz);
 
     return {
       normal,
       dobrada,
-      fator: normal.trilho > 0 ? arred(dobrada.trilho / normal.trilho) : 0,
+      fator: normal.track > 0 ? arred(dobrada.track / normal.track) : 0,
       empurrado,
-      ganho: arred(empurrado.trilho - normal.trilho),
+      ganho: arred(empurrado.track - normal.track),
     };
   } finally {
     if (fonteOriginal) html.style.fontSize = fonteOriginal;
@@ -405,13 +405,13 @@ export function boxDoTrackDesvios(m: TrackCrescimento): string[] {
   const d: string[] = [];
   if (m.fator < 1.9)
     d.push(
-      `o trilho não acompanha a fonte da raiz: ${m.normal.trilho}px → ${m.dobrada.trilho}px ` +
+      `o trilho não acompanha a fonte da raiz: ${m.normal.track}px → ${m.dobrada.track}px ` +
         `(fator ${m.fator}, esperado ~2)`,
     );
   if (m.ganho <= 0)
     d.push(
       `o trilho não cresce com o conteúdo: gatilho empurrado para além dele e o trilho ` +
-        `ficou em ${m.empurrado.trilho}px (era ${m.normal.trilho}px) — altura cravada`,
+        `ficou em ${m.empurrado.track}px (era ${m.normal.track}px) — altura cravada`,
     );
   if (m.empurrado.folga < 0)
     d.push(

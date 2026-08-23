@@ -40,7 +40,7 @@ export type ToggleSize = 'default' | 'sm' | 'lg';
   host: {
     class: 'nds-toggle',
     '[attr.data-slot]': '"toggle"',
-    '[attr.data-state]': 'estado()',
+    '[attr.data-state]': 'state()',
     // `default` não vira atributo: o CSS trata a ausência como padrão, e emitir
     // `data-variant="default"` divergiria do Vanilla, que também o omite.
     '[attr.data-variant]': 'variant() === "default" ? null : variant()',
@@ -59,7 +59,7 @@ export class NdsToggle {
   // `data-state="off"` — o CSS pintaria o estado errado e nada acusaria, porque
   // o atributo ARIA (que os testes olham) estaria certo. `pressedState` é o
   // mesmo signal que o primitivo usa para emitir `aria-pressed`.
-  protected readonly estado = computed(() => (this.raiz.pressedState() ? 'on' : 'off'));
+  protected readonly state = computed(() => (this.raiz.pressedState() ? 'on' : 'off'));
 }
 
 // ─── Ícones ───────────────────────────────────────────────────────────────────

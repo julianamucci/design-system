@@ -220,10 +220,10 @@ export const RichContent: Story = {
     await step('E os controles de dentro continuam operáveis', async () => {
       // O painel só existe no DOM enquanto aberto: se o conteúdo fosse
       // renderizado inerte, o clique abaixo não mudaria nada.
-      const primeiro = canvas.getAllByRole('checkbox')[0];
-      const antes = primeiro.getAttribute('aria-checked');
-      await userEvent.click(primeiro);
-      await expect(primeiro.getAttribute('aria-checked')).not.toBe(antes);
+      const first = canvas.getAllByRole('checkbox')[0];
+      const antes = first.getAttribute('aria-checked');
+      await userEvent.click(first);
+      await expect(first.getAttribute('aria-checked')).not.toBe(antes);
     });
   },
 };

@@ -171,7 +171,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
   root.className = cn('nds-menubar', options?.class);
 
   const triggers: HTMLButtonElement[] = [];
-  let aberto: { panel: HTMLElement; trigger: HTMLButtonElement; itens: HTMLElement[] } | null = null;
+  let isOpen: { panel: HTMLElement; trigger: HTMLButtonElement; itens: HTMLElement[] } | null = null;
 
   /**
    * Tabulação itinerante: a barra inteira é UMA parada de Tab.
@@ -185,12 +185,12 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
   }
 
   function closeAll(): void {
-    if (!aberto) return;
-    closeSubmenus(aberto.panel);
-    aberto.panel.hidden = true;
-    aberto.trigger.dataset.state = 'closed';
-    aberto.trigger.setAttribute('aria-expanded', 'false');
-    aberto = null;
+    if (!isOpen) return;
+    closeSubmenus(isOpen.panel);
+    isOpen.panel.hidden = true;
+    isOpen.trigger.dataset.state = 'closed';
+    isOpen.trigger.setAttribute('aria-expanded', 'false');
+    isOpen = null;
   }
 
   function closeSubmenus(escopo: HTMLElement): void {
@@ -207,12 +207,12 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
   function openMenu(indice: number, focus: 'item' | 'gatilho' | 'nenhum'): void {
     const alvo = menusMontados[indice];
     if (!alvo) return;
-    if (aberto?.trigger === alvo.trigger) return;
+    if (isOpen?.trigger === alvo.trigger) return;
     closeAll();
     alvo.panel.hidden = false;
     alvo.trigger.dataset.state = 'open';
     alvo.trigger.setAttribute('aria-expanded', 'true');
-    aberto = alvo;
+    isOpen = alvo;
     moverTabulacao(alvo.trigger);
     if (focus === 'item') alvo.itens[0]?.focus();
     else if (focus === 'gatilho') alvo.trigger.focus();
@@ -352,13 +352,13 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
           choice.addEventListener('click', () => {
             if (opcao.disabled || escolhido === opcao.value) return;
             escolhido = opcao.value;
-            for (const outro of elementos) {
-              const active = outro.valor === escolhido;
-              outro.el.setAttribute('aria-checked', String(active));
-              if (active) outro.el.dataset.checked = '';
-              else delete outro.el.dataset.checked;
-              outro.indicador.replaceChildren();
-              if (active) outro.indicador.appendChild(ICON_MARCA());
+            for (const other of elementos) {
+              const active = other.valor === escolhido;
+              other.el.setAttribute('aria-checked', String(active));
+              if (active) other.el.dataset.checked = '';
+              else delete other.el.dataset.checked;
+              other.indicador.replaceChildren();
+              if (active) other.indicador.appendChild(ICON_MARCA());
             }
             item.onValueChange?.(escolhido);
           });
@@ -447,7 +447,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
 
       const acionar = (): void => {
         if (item.disabled) return;
-        const menuTrigger = aberto?.trigger ?? null;
+        const menuTrigger = isOpen?.trigger ?? null;
         item.onClick?.();
         closeAll();
         menuTrigger?.focus();
@@ -567,7 +567,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft' && e.key !== 'Escape') return;
 
     if (e.key === 'Escape') {
-      const openTrigger = aberto?.trigger ?? null;
+      const openTrigger = isOpen?.trigger ?? null;
       closeAll();
       if (openTrigger) {
         moverTabulacao(openTrigger);
@@ -577,22 +577,22 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     }
 
     const passo = e.key === 'ArrowRight' ? 1 : -1;
-    const atual = aberto
-      ? triggers.indexOf(aberto.trigger)
+    const atual = isOpen
+      ? triggers.indexOf(isOpen.trigger)
       : triggers.indexOf(document.activeElement as HTMLButtonElement);
     if (atual < 0) return;
 
-    let proximo = atual + passo;
-    if (proximo >= triggers.length) proximo = loop ? 0 : triggers.length - 1;
-    if (proximo < 0) proximo = loop ? triggers.length - 1 : 0;
-    if (proximo === atual) return;
+    let next = atual + passo;
+    if (next >= triggers.length) next = loop ? 0 : triggers.length - 1;
+    if (next < 0) next = loop ? triggers.length - 1 : 0;
+    if (next === atual) return;
 
     e.preventDefault();
-    if (aberto) {
-      openMenu(proximo, 'gatilho');
+    if (isOpen) {
+      openMenu(next, 'gatilho');
     } else {
-      moverTabulacao(triggers[proximo]);
-      triggers[proximo].focus();
+      moverTabulacao(triggers[next]);
+      triggers[next].focus();
     }
   });
 
@@ -603,7 +603,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
    * permanente no `document`, com a closure inteira da barra presa junto.
    */
   function onClickOutside(e: MouseEvent): void {
-    if (aberto && !root.contains(e.target as Node)) closeAll();
+    if (isOpen && !root.contains(e.target as Node)) closeAll();
   }
 
   document.addEventListener('click', onClickOutside);

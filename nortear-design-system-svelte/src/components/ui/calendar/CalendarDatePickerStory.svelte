@@ -16,7 +16,7 @@
     year: 'numeric',
   });
 
-  let aberto = $state(false);
+  let isOpen = $state(false);
   let selecionada = $state<DateValue | undefined>(new CalendarDate(2026, 4, 12));
   let placeholder = $state<DateValue | undefined>(new CalendarDate(2026, 4, 15));
 
@@ -27,7 +27,7 @@
   );
 </script>
 
-<Popover.Root bind:open={aberto}>
+<Popover.Root bind:open={isOpen}>
   <Popover.Trigger>
     {#snippet child({ props })}
       <Button {...props} variant="outline">{rotulo}</Button>
@@ -44,7 +44,7 @@
         onSelect?.(v);
         // Escolhida a data, o popover não tem mais o que oferecer: mantê-lo
         // aberto obrigaria a fechá-lo à mão para ver o resultado.
-        aberto = false;
+        isOpen = false;
       }}
     />
   </Popover.Content>

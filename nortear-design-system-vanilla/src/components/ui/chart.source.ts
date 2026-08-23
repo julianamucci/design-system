@@ -60,8 +60,8 @@ function snippetData(o: ChartSnippetOptions): {
   bloco?: string;
   pairs: Array<[string, string | undefined]>;
 } {
-  const serie = (nome: string, valores: string, cor?: string) =>
-    `  { name: ${texto(nome)}, data: ${valores}${cor ? `, color: ${texto(cor)}` : ''} },`;
+  const serie = (nome: string, values: string, cor?: string) =>
+    `  { name: ${texto(nome)}, data: ${values}${cor ? `, color: ${texto(cor)}` : ''} },`;
 
   switch (o.dados ?? 'simples') {
     case 'umPonto':
@@ -131,7 +131,7 @@ ${serie('Mobile', '[120, 190, 165, 98, 174, 158]')}
 export function chartSnippet(o: ChartSnippetOptions = {}): string {
   const { bloco, pairs } = snippetData(o);
 
-  const linhas = opcoes([
+  const lines = opcoes([
     ...pairs,
     ['type', o.type && o.type !== 'bar' ? texto(o.type) : undefined],
     ['aria-label', o['aria-label'] ? texto(o['aria-label']) : undefined],
@@ -146,7 +146,7 @@ export function chartSnippet(o: ChartSnippetOptions = {}): string {
   return snippet(
     importing('chart', 'createChart'),
     bloco,
-    `const grafico = ${chamada('createChart', linhas)};`,
+    `const grafico = ${chamada('createChart', lines)};`,
     montar('grafico'),
   );
 }
@@ -184,7 +184,7 @@ export type ChartEmCardSnippetOptions = ChartSnippetOptions & {
 export function chartEmCardSnippet(o: ChartEmCardSnippetOptions = {}): string {
   const { bloco, pairs } = snippetData(o);
 
-  const linhas = opcoes([
+  const lines = opcoes([
     ...pairs,
     ['type', o.type && o.type !== 'bar' ? texto(o.type) : undefined],
     ['height', o.height ? String(o.height) : undefined],
@@ -205,7 +205,7 @@ cabecalho.append(
   createCardDescription({ text: ${texto(o.cardDescription ?? 'Janeiro — Junho de 2024')} }),
 );`,
     `const conteudo = createCardContent();
-conteudo.appendChild(${chamada('createChart', linhas)});
+conteudo.appendChild(${chamada('createChart', lines)});
 
 card.append(cabecalho, conteudo);`,
     montar('card'),

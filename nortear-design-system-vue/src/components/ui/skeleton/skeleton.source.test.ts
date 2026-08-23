@@ -12,7 +12,7 @@ import {
   skeletonRetanguloSource,
 } from './skeleton.source';
 
-const TODAS = [
+const ALL = [
   skeletonPlaygroundSource,
   skeletonRetanguloSource,
   skeletonCirculoSource,
@@ -88,7 +88,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 describe('o placeholder nunca aparece sozinho', () => {
   it('toda transform embrulha a peça numa região com papel, estado e nome', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).toMatch(/role="(status|list)"/);
       expect(saida).toContain('aria-busy=');
@@ -97,7 +97,7 @@ describe('o placeholder nunca aparece sozinho', () => {
   });
 
   it('nenhuma escreve aria-hidden na peça — ele já vem do componente', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       expect(fn()).not.toContain('aria-hidden');
     }
   });

@@ -450,9 +450,9 @@ export function createRadioGroupDocs(): HTMLElement {
                   items: items.map(i => ({ value: i.value, label: i.label })),
                 });
 
-                const linhas = Array.from(base.querySelectorAll<HTMLElement>('.nds-radio-row'));
+                const lines = Array.from(base.querySelectorAll<HTMLElement>('.nds-radio-row'));
                 items.forEach((item, idx) => {
-                  const row = linhas[idx];
+                  const row = lines[idx];
                   if (!row) return;
                   row.style.alignItems = 'flex-start';
                   const label = row.querySelector('label');

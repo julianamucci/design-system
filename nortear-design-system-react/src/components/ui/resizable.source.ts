@@ -112,7 +112,7 @@ export const resizableSource: SourceTransform<ResizableArgs> = (_gerado, ctx) =>
   const inicial = typeof args.defaultSize === 'number' ? args.defaultSize : 30;
   const minimum = typeof args.minSize === 'number' ? args.minSize : 20;
 
-  const primeiro = attrs(
+  const first = attrs(
     propNumber('defaultSize', inicial),
     propNumber('minSize', minimum),
     typeof args.maxSize === 'number' && args.maxSize !== 100
@@ -129,7 +129,7 @@ export const resizableSource: SourceTransform<ResizableArgs> = (_gerado, ctx) =>
     grupo(
       direcao,
       `${painel(
-        primeiro,
+        first,
         `<div className="nds-stack nds-p-4" data-spacing="xs">
   <p className="nds-text-body nds-font-semibold">Sidebar</p>
   <p className="nds-text-caption nds-text-muted-foreground">Navegação do projeto</p>

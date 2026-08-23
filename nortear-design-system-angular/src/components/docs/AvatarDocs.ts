@@ -597,7 +597,7 @@ export class NdsAvatarDocs implements AfterViewInit, OnDestroy {
     };
     const sim = tNav('common.yes');
     const not = tNav('common.no');
-    const classe = {
+    const className = {
       name: 'class',
       type: 'string',
       defaultValue: '—',
@@ -617,7 +617,7 @@ export class NdsAvatarDocs implements AfterViewInit, OnDestroy {
             required: not,
             description: toPlainText(t('props.table.size')),
           },
-          classe,
+          className,
           {
             name: '(conteúdo)',
             type: 'HTML',
@@ -652,7 +652,7 @@ export class NdsAvatarDocs implements AfterViewInit, OnDestroy {
             required: not,
             description: toPlainText(t('props.table.onLoadingStatusChange')),
           },
-          classe,
+          className,
         ],
       },
       {
@@ -666,7 +666,7 @@ export class NdsAvatarDocs implements AfterViewInit, OnDestroy {
             required: not,
             description: toPlainText(t('props.table.delayMs')),
           },
-          classe,
+          className,
           {
             name: '(conteúdo)',
             type: 'HTML',

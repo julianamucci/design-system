@@ -250,7 +250,7 @@ export class NdsFormField implements AfterContentInit {
    * `events` do controle emite em toda mudança de valor, e só três bits dele
    * interessam.
    */
-  private readonly estado = signal<StateControl | null>(null, {
+  private readonly state = signal<StateControl | null>(null, {
     equal: (a, b) =>
       a === b ||
       (!!a && !!b && a.invalid === b.invalid && a.touched === b.touched && a.dirty === b.dirty),
@@ -264,7 +264,7 @@ export class NdsFormField implements AfterContentInit {
   readonly invalido = computed(() => {
     const manual = this.invalid();
     if (manual !== undefined) return manual;
-    const e = this.estado();
+    const e = this.state();
     return !!e && e.invalid && (e.touched || e.dirty);
   });
 
@@ -274,7 +274,7 @@ export class NdsFormField implements AfterContentInit {
    * — que é o oposto do que quem escreveu queria.
    */
   private readonly gerenciaValidade = computed(
-    () => this.invalid() !== undefined || this.estado() !== null,
+    () => this.invalid() !== undefined || this.state() !== null,
   );
 
   /** Ids que quem compõe já tinha escrito no controle — preservados na junção. */
@@ -289,11 +289,11 @@ export class NdsFormField implements AfterContentInit {
     effect((onCleanup) => {
       const controle = this.ngControl()?.control ?? null;
       if (!controle) {
-        this.estado.set(null);
+        this.state.set(null);
         return;
       }
       const ler = () =>
-        this.estado.set({
+        this.state.set({
           invalid: controle.invalid,
           touched: controle.touched,
           dirty: controle.dirty,

@@ -60,9 +60,9 @@ describe('sheetSource', () => {
   });
 
   it('o arg open transforma o painel em controlado, nos dois valores', () => {
-    const aberto = sheetSource('', { args: { open: true } });
-    expect(aberto).toContain('let open = $state(true);');
-    expect(aberto).toContain('<Sheet bind:open>');
+    const isOpen = sheetSource('', { args: { open: true } });
+    expect(isOpen).toContain('let open = $state(true);');
+    expect(isOpen).toContain('<Sheet bind:open>');
 
     const closed = sheetSource('', { args: { open: false } });
     expect(closed).toContain('let open = $state(false);');

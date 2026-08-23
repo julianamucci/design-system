@@ -198,7 +198,7 @@ export const Controlled: Story = {
   },
   render: () => {
     const ControlledDemo = () => {
-      const [aberto, setAberto] = useState(false);
+      const [isOpen, setAberto] = useState(false);
       return (
         <div className="nds-stack" data-spacing="md" style={paragrafo}>
           <div className="nds-cluster" data-spacing="xs">
@@ -214,7 +214,7 @@ export const Controlled: Story = {
 
           <p className="nds-text-body">
             Comentário de{" "}
-            <HoverCard open={aberto} onOpenChange={setAberto}>
+            <HoverCard open={isOpen} onOpenChange={setAberto}>
               <HoverCardTrigger asChild>
                 <a href="/users/joana" className="nds-text-primary nds-font-medium nds-hover-underline">
                   @joana
@@ -228,7 +228,7 @@ export const Controlled: Story = {
           </p>
 
           <p className="nds-text-caption nds-text-muted-foreground" data-testid="estado-externo">
-            State externo: {aberto ? "aberto" : "fechado"}
+            State externo: {isOpen ? "aberto" : "fechado"}
           </p>
         </div>
       );

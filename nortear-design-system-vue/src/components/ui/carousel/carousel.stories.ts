@@ -62,7 +62,7 @@ export const Playground: Story = {
     // onde o carrossel anda, e é ele que a medição precisa acompanhar.
     const eixo = track.dataset.orientation === 'vertical' ? 'y' : 'x';
     const previous = () => canvas.getByRole('button', { name: /item anterior/i }) as HTMLButtonElement;
-    const proximo = () => canvas.getByRole('button', { name: /próximo item/i }) as HTMLButtonElement;
+    const next = () => canvas.getByRole('button', { name: /próximo item/i }) as HTMLButtonElement;
 
     const emSlide = async (i: number) =>
       waitFor(async () => { await expect(focusSlide(canvasElement, eixo)).toBe(i); }, { timeout: 4000 });
@@ -107,12 +107,12 @@ export const Playground: Story = {
       // `canScrollNext` nasce falso e só vira verdadeiro quando o embla emite
       // `init` — que ele agenda com `setTimeout(…, 0)`. Ler no primeiro quadro
       // pegaria o valor de partida, não o estado do componente montado.
-      await waitFor(() => expect(proximo()).toBeEnabled(), { timeout: 4000 });
+      await waitFor(() => expect(next()).toBeEnabled(), { timeout: 4000 });
       await expect(previous()).toBeDisabled();
     });
 
     await step('Clicar em avançar leva ao segundo slide e acorda a seta de voltar', async () => {
-      await userEvent.click(proximo());
+      await userEvent.click(next());
       await emSlide(1);
       await expect(previous()).toBeEnabled();
     });

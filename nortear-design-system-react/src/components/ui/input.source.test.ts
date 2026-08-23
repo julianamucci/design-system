@@ -46,7 +46,7 @@ const GROUP = [
   addonInputGroupClickSource,
 ];
 
-const TODAS = [...SIMPLE_FIELD, ...GROUP];
+const ALL = [...SIMPLE_FIELD, ...GROUP];
 
 describe('inputSource', () => {
   it('ensina a importação do design system, não a da lib headless', () => {
@@ -206,7 +206,7 @@ describe('InputGroup', () => {
 
 describe('regras que valem para todo snippet', () => {
   it('todo campo tem rótulo programático, e o for aponta para um id que existe', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       const targets = [...saida.matchAll(/<Label htmlFor="([a-z0-9-]+)"/g)].map(([, id]) => id);
       expect(targets.length, `${fn.name} não tem rótulo`).toBeGreaterThan(0);
@@ -219,14 +219,14 @@ describe('regras que valem para todo snippet', () => {
   it('nenhum snippet crava altura nem valor de design em style', () => {
     // A altura do campo é resultado de padding-block + line-height (WCAG
     // 1.4.4), e valor de design mora em classe `.nds-*`, nunca inline.
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       expect(fn(), `${fn.name} usa style inline`).not.toContain('style=');
       expect(fn(), `${fn.name} crava altura`).not.toMatch(/\bheight\b/);
     }
   });
 
   it('nenhum snippet ensina o andaime da story', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).not.toContain('fixtures');
       expect(saida).not.toContain('{...args}');

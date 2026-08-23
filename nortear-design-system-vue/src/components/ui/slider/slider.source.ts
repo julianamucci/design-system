@@ -34,9 +34,9 @@ import { Slider } from '@/components/ui/slider'
 import { Label } from '@/components/ui/label'`;
 
 /** Só array de números vira estado inicial; qualquer outra coisa cai no padrão. */
-function valores(bruto: unknown, padrao: number[]): number[] {
-  return Array.isArray(bruto) && bruto.length > 0 && bruto.every((n) => typeof n === 'number')
-    ? bruto
+function values(raw: unknown, padrao: number[]): number[] {
+  return Array.isArray(raw) && raw.length > 0 && raw.every((n) => typeof n === 'number')
+    ? raw
     : padrao;
 }
 
@@ -49,7 +49,7 @@ function valores(bruto: unknown, padrao: number[]): number[] {
  */
 function bloco(opcoes: {
   rotulo: string;
-  estado: string;
+  state: string;
   saida?: string;
   controle: string;
   largura?: string;
@@ -69,8 +69,8 @@ ${indentar(opcoes.controle)}${opcoes.extra ? `\n${indentar(opcoes.extra)}` : ''}
 }
 
 /** O controle em si, com os atributos que diferem do padrão do componente. */
-function controle(estado: string, rotulo: string, extras = ''): string {
-  return `<Slider v-model="${estado}"${extras} aria-label="${rotulo}" />`;
+function controle(state: string, rotulo: string, extras = ''): string {
+  return `<Slider v-model="${state}"${extras} aria-label="${rotulo}" />`;
 }
 
 /**
@@ -82,7 +82,7 @@ function controle(estado: string, rotulo: string, extras = ''): string {
  */
 export const sliderPlaygroundSource: SourceTransform<SliderArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const inicial = valores(args.modelValue ?? args.defaultValue, [50]);
+  const inicial = values(args.modelValue ?? args.defaultValue, [50]);
   const extras = attrs(
     attrNum('min', args.min, 0),
     attrNum('max', args.max, 100),
@@ -94,7 +94,7 @@ export const sliderPlaygroundSource: SourceTransform<SliderArgs> = (_gerado, ctx
     `${IMPORTS}\n\nconst volume = ref([${inicial.join(', ')}])`,
     bloco({
       rotulo: 'Volume',
-      estado: 'volume',
+      state: 'volume',
       saida: '{{ volume[0] }}%',
       controle: controle('volume', 'Volume', extras),
     }),
@@ -107,7 +107,7 @@ export function sliderUnicoSource(): string {
     `${IMPORTS}\n\nconst volume = ref([50])`,
     bloco({
       rotulo: 'Volume',
-      estado: 'volume',
+      state: 'volume',
       saida: '{{ volume[0] }}%',
       controle: controle('volume', 'Volume'),
     }),
@@ -124,7 +124,7 @@ export function sliderRangeSource(): string {
     `${IMPORTS}\n\nconst faixa = ref([20, 80])`,
     bloco({
       rotulo: 'Faixa de preço',
-      estado: 'faixa',
+      state: 'faixa',
       saida: 'R$ {{ faixa[0] }} — R$ {{ faixa[1] }}',
       controle: controle('faixa', 'Faixa de preço'),
     }),
@@ -141,7 +141,7 @@ export function sliderVerticalSource(): string {
     `${IMPORTS}\n\nconst brilho = ref([60])`,
     bloco({
       rotulo: 'Brilho',
-      estado: 'brilho',
+      state: 'brilho',
       saida: '{{ brilho[0] }}%',
       largura: 'nds-stack',
       controle: `<div class="nds-cluster" data-justify="center">
@@ -168,7 +168,7 @@ export function sliderFocusSource(): string {
     `${IMPORTS}\n\nconst volume = ref([50])`,
     bloco({
       rotulo: 'Volume',
-      estado: 'volume',
+      state: 'volume',
       controle: controle('volume', 'Volume'),
     }),
   );
@@ -183,7 +183,7 @@ export function sliderDisabledSource(): string {
     `${IMPORTS}\n\nconst volume = ref([50])`,
     bloco({
       rotulo: 'Volume',
-      estado: 'volume',
+      state: 'volume',
       controle: controle('volume', 'Volume', ' disabled'),
     }),
   );
@@ -198,7 +198,7 @@ export function minimumSliderSource(): string {
     `${IMPORTS}\n\nconst volume = ref([0])`,
     bloco({
       rotulo: 'Volume',
-      estado: 'volume',
+      state: 'volume',
       saida: '{{ volume[0] }}%',
       controle: controle('volume', 'Volume'),
     }),
@@ -211,7 +211,7 @@ export function sliderNoMaximoSource(): string {
     `${IMPORTS}\n\nconst volume = ref([100])`,
     bloco({
       rotulo: 'Volume',
-      estado: 'volume',
+      state: 'volume',
       saida: '{{ volume[0] }}%',
       controle: controle('volume', 'Volume'),
     }),
@@ -233,7 +233,7 @@ export function sliderPrecoSource(): string {
     `${IMPORTS}\n\nconst faixa = ref([100, 400])`,
     bloco({
       rotulo: 'Faixa de preço',
-      estado: 'faixa',
+      state: 'faixa',
       saida: 'R$ {{ faixa[0] }} — R$ {{ faixa[1] }}',
       controle: controle('faixa', 'Faixa de preço', ' :max="500" :step="10"'),
       extra: `<div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
@@ -275,7 +275,7 @@ function salvar() {
 ${indentar(
   bloco({
     rotulo: 'Brilho',
-    estado: 'brilho',
+    state: 'brilho',
     saida: '{{ brilho[0] }}%',
     controle: controle('brilho', 'Brilho'),
     largura: 'nds-stack',
@@ -285,7 +285,7 @@ ${indentar(
 ${indentar(
   bloco({
     rotulo: 'Opacidade',
-    estado: 'opacidade',
+    state: 'opacidade',
     saida: '{{ opacidade[0] }}%',
     controle: controle('opacidade', 'Opacidade'),
     largura: 'nds-stack',
@@ -307,7 +307,7 @@ export function sliderStepGrossoSource(): string {
     `${IMPORTS}\n\nconst avaliacao = ref([3])`,
     bloco({
       rotulo: 'Avaliação',
-      estado: 'avaliacao',
+      state: 'avaliacao',
       saida: '{{ avaliacao[0] }} / 5',
       controle: controle('avaliacao', 'Avaliação', ' :min="1" :max="5"'),
       extra: `<div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">

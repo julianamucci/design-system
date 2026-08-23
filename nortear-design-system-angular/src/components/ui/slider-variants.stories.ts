@@ -17,9 +17,9 @@ type Story = StoryObj;
 
 /** Largura preenchida do range, em % do trilho. Mede o desenho, não o dado. */
 function preenchimento(raiz: HTMLElement): number {
-  const trilho = raiz.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
+  const track = raiz.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
   const faixa = raiz.querySelector<HTMLElement>('[data-slot="slider-range"]')!;
-  return Math.round((faixa.getBoundingClientRect().width / trilho.getBoundingClientRect().width) * 100);
+  return Math.round((faixa.getBoundingClientRect().width / track.getBoundingClientRect().width) * 100);
 }
 
 export const Types: Story = {
@@ -105,8 +105,8 @@ export const Vertical: Story = {
     });
 
     await step('O trilho fica em pé', async () => {
-      const trilho = canvasElement.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
-      const caixa = trilho.getBoundingClientRect();
+      const track = canvasElement.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
+      const caixa = track.getBoundingClientRect();
       await expect(caixa.height).toBeGreaterThan(caixa.width);
     });
 

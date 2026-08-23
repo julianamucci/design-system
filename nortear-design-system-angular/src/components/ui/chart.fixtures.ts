@@ -69,8 +69,8 @@ export function contrastRatio(a: RGB, b: RGB): number {
  * criar elemento de sonda, que exigiria escrever estilo inline.
  */
 export function rgbToken(token: string, insideOf: Element = document.documentElement): RGB | null {
-  const bruto = getComputedStyle(insideOf).getPropertyValue(token).trim();
-  const nums = bruto.match(/-?[\d.]+/g);
+  const raw = getComputedStyle(insideOf).getPropertyValue(token).trim();
+  const nums = raw.match(/-?[\d.]+/g);
   if (!nums || nums.length < 3) return null;
   return rgbHsl(Number(nums[0]), Number(nums[1]), Number(nums[2]));
 }

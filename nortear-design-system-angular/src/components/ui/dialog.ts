@@ -180,7 +180,7 @@ export class NdsDialogPortal {}
   host: {
     '[class]': 'hostClass()',
     '[attr.data-slot]': '"dialog-overlay"',
-    '[attr.data-state]': 'estado()',
+    '[attr.data-state]': 'state()',
   },
 })
 export class NdsDialogOverlay {
@@ -189,7 +189,7 @@ export class NdsDialogOverlay {
 
   private readonly raiz = injectRdxDialogRootContext();
 
-  protected readonly estado = computed(() => (this.raiz.isOpen() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.raiz.isOpen() ? 'open' : 'closed'));
 
   protected readonly hostClass = computed(() =>
     ['nds-dialog-overlay', this.scroll() ? 'nds-dialog-overlay-scroll' : '']
@@ -237,7 +237,7 @@ export class NdsDialogOverlay {
   host: {
     '[class]': 'hostClass()',
     '[attr.data-slot]': '"dialog-content"',
-    '[attr.data-state]': 'estado()',
+    '[attr.data-state]': 'state()',
   },
   template: `
     <ng-content />
@@ -291,7 +291,7 @@ export class NdsDialogContent {
 
   private readonly raiz = injectRdxDialogRootContext();
 
-  protected readonly estado = computed(() => (this.raiz.isOpen() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.raiz.isOpen() ? 'open' : 'closed'));
 
   protected readonly hostClass = computed(() =>
     ['nds-dialog-content', this.scroll() ? 'nds-dialog-content-scroll' : '']

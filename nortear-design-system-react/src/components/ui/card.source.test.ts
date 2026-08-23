@@ -10,7 +10,7 @@ import {
   cardSource,
 } from './card.source';
 
-const TODAS = [
+const ALL = [
   cardSource,
   cardNoFooterSource,
   cardCompactoSource,
@@ -140,7 +140,7 @@ describe('composições', () => {
 
 describe('nenhum snippet ensina o andaime da story', () => {
   it('todos importam do design system e nenhum cita o módulo de apoio', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).not.toContain('fixtures');
       expect(saida).not.toContain('./card');

@@ -122,12 +122,12 @@ export class NdsAccordion {
 
     event.preventDefault();
     const last = triggers.length - 1;
-    const proximo =
+    const next =
       event.key === 'ArrowDown' ? (indice + 1) % triggers.length
       : event.key === 'ArrowUp' ? (indice - 1 + triggers.length) % triggers.length
       : event.key === 'Home' ? 0
       : last;
-    triggers[proximo]?.focus();
+    triggers[next]?.focus();
   }
 }
 
@@ -224,7 +224,7 @@ export class NdsAccordionItem {
     // `data-panel-open` (convenção do Base UI) e as outras quatro stacks
     // emitem `data-state="open|closed"`. O CSS aceita as duas convenções, mas
     // a paridade de markup é o que a auditoria cross-stack compara.
-    '[attr.data-state]': 'aberto() ? "open" : "closed"',
+    '[attr.data-state]': 'isOpen() ? "open" : "closed"',
     // O primitivo só aponta `aria-controls` enquanto o painel existe, porque
     // no Base UI ele desmonta ao fechar. Aqui o painel NUNCA desmonta (ver
     // NdsAccordionItem), então o id sempre resolve — e apontar sempre é o que
@@ -239,7 +239,7 @@ export class NdsAccordionTrigger {
   private readonly item = injectAccordionItemContext();
   private readonly colapsavel = injectCollapsibleRootContext();
 
-  protected readonly aberto = computed(() => this.item.open());
+  protected readonly isOpen = computed(() => this.item.open());
   protected readonly painelId = computed(() => this.colapsavel.panelId());
 }
 
@@ -258,7 +258,7 @@ export class NdsAccordionTrigger {
   host: {
     class: 'nds-accordion-content',
     '[attr.data-slot]': '"accordion-content"',
-    '[attr.data-state]': 'aberto() ? "open" : "closed"',
+    '[attr.data-state]': 'isOpen() ? "open" : "closed"',
     // Sem `role="region"` e sem `aria-labelledby`, os dois vindos do
     // primitivo. Com o painel sempre montado (exigência do `until-found`), o
     // role transformaria TODO item fechado em landmark: medido na docs page,
@@ -274,5 +274,5 @@ export class NdsAccordionTrigger {
 export class NdsAccordionContent {
   private readonly colapsavel = injectCollapsibleRootContext();
 
-  protected readonly aberto = computed(() => this.colapsavel.open());
+  protected readonly isOpen = computed(() => this.colapsavel.open());
 }

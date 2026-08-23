@@ -496,17 +496,17 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '--primary',              classe: '.nds-badge',             k: 'primary'              },
-      { token: '--primary-foreground',   classe: '.nds-badge',             k: 'primaryForeground'    },
-      { token: '--secondary',            classe: '.nds-badge-secondary',   k: 'secondary'            },
-      { token: '--destructive',          classe: '.nds-badge-destructive', k: 'destructive'          },
-      { token: '--warning',              classe: '.nds-badge-warning',     k: 'warning'              },
-      { token: '--success',              classe: '.nds-badge-success',     k: 'success'              },
-      { token: '--info',                 classe: '.nds-badge-info',        k: 'info'                 },
-      { token: '--border',               classe: '.nds-badge-outline',     k: 'badgeBorder'          },
-    ].map(({ token, classe, k }) => ({
+      { token: '--primary',              className: '.nds-badge',             k: 'primary'              },
+      { token: '--primary-foreground',   className: '.nds-badge',             k: 'primaryForeground'    },
+      { token: '--secondary',            className: '.nds-badge-secondary',   k: 'secondary'            },
+      { token: '--destructive',          className: '.nds-badge-destructive', k: 'destructive'          },
+      { token: '--warning',              className: '.nds-badge-warning',     k: 'warning'              },
+      { token: '--success',              className: '.nds-badge-success',     k: 'success'              },
+      { token: '--info',                 className: '.nds-badge-info',        k: 'info'                 },
+      { token: '--border',               className: '.nds-badge-outline',     k: 'badgeBorder'          },
+    ].map(({ token, className, k }) => ({
       token,
-      value: classe,
+      value: className,
       description: toPlainText(t(`tokens.table.${k}`)),
     }));
   });

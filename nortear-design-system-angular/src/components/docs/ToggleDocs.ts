@@ -111,7 +111,7 @@ const INTERFACE_CODE = `// <button ndsToggle> — compõe o primitivo do Radix N
   ],
   host: {
     class: 'nds-toggle',
-    '[attr.data-state]': 'estado()',
+    '[attr.data-state]': 'state()',
     '[attr.data-variant]': 'variant() === "default" ? null : variant()',
     '[attr.data-size]': 'size() === "default" ? null : size()',
   },
@@ -551,7 +551,7 @@ export class NdsToggleDocs implements AfterViewInit, OnDestroy {
     // Tipos e nomes vêm da API real: `pressed` é um `model` (aceita
     // `[(pressed)]`), a mudança sai pelo output `pressedChange`, e não existe
     // input de classe. As descrições continuam vindo do conteúdo compartilhado.
-    const linhas: { name: string; type: string; k: string }[] = [
+    const lines: { name: string; type: string; k: string }[] = [
       { name: 'pressed',        type: 'model<boolean>',  k: 'pressed'         },
       { name: 'defaultPressed', type: 'boolean',         k: 'defaultPressed'  },
       { name: 'pressedChange',  type: 'output<boolean>', k: 'onPressedChange' },
@@ -564,7 +564,7 @@ export class NdsToggleDocs implements AfterViewInit, OnDestroy {
       {
         title: 'NdsToggle',
         cols,
-        items: linhas.map(({ name, type, k }) => ({
+        items: lines.map(({ name, type, k }) => ({
           name,
           type,
           defaultValue: toPlainText(t(`props.table.${k}.default`)),

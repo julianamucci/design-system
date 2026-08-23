@@ -10,7 +10,7 @@ import {
   carouselVerticalSource,
 } from './carousel.source';
 
-const TODAS = [
+const ALL = [
   carouselSource,
   carouselVerticalSource,
   carouselItemUnicoSource,
@@ -159,7 +159,7 @@ describe('composições', () => {
 
 describe('nenhum snippet ensina o andaime da story', () => {
   it('todos falam só do design system e das dependências reais', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).not.toContain('fixtures');
       expect(saida).not.toContain('SlideCard');

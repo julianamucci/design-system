@@ -179,10 +179,10 @@ export const RestHoverEFocoNotFicamBelow: Story = {
       const hover = ratio(resolveColor(raiz, hoverColor!) ?? background, background)?.ratio ?? 0;
       const focus = ratio(resolveColor(raiz, focusColor!) ?? background, background)?.ratio ?? 0;
 
-      const linha = `${tema}/${modo} repouso ${rest}:1 · hover ${hover}:1 · foco ${focus}:1`;
-      if (hover < rest) return `hover ABAIXO do repouso — ${linha}`;
-      if (focus < rest) return `foco ABAIXO do repouso — ${linha}`;
-      if (focus < MINIMO) return `foco abaixo de ${MINIMO}:1 — ${linha}`;
+      const line = `${tema}/${modo} repouso ${rest}:1 · hover ${hover}:1 · foco ${focus}:1`;
+      if (hover < rest) return `hover ABAIXO do repouso — ${line}`;
+      if (focus < rest) return `foco ABAIXO do repouso — ${line}`;
+      if (focus < MINIMO) return `foco abaixo de ${MINIMO}:1 — ${line}`;
       return null;
     });
     campo.style.removeProperty('transition');

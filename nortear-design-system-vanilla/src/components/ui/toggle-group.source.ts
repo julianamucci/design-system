@@ -75,7 +75,7 @@ export function toggleGroupSnippet(o: ToggleGroupSnippetOptions = {}): string {
 
   // `items` entra abreviado: a variável já tem o nome da opção, e `items: items`
   // só faria barulho no snippet.
-  const linhas = [
+  const lines = [
     'items,',
     ...opcoes([
       // `role="toolbar"` sem nome é anunciado como "barra de ferramentas" e nada
@@ -102,7 +102,7 @@ export function toggleGroupSnippet(o: ToggleGroupSnippetOptions = {}): string {
       .filter(Boolean)
       .join('\n'),
     `const items: ToggleGroupItem[] = [\n${linesItems.join('\n')}\n];`,
-    `const grupo = ${chamada('createToggleGroup', linhas)};`,
+    `const grupo = ${chamada('createToggleGroup', lines)};`,
     // `ToggleGroupItem.children` é `string`: o ícone não cabe na chamada, e
     // quem consome o coloca no botão do item depois de construir o grupo.
     withIcon

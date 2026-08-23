@@ -468,7 +468,7 @@ interface InputOTPProps {
             dontPreview: (
               <div className="nds-text-caption nds-font-mono nds-text-muted-foreground nds-italic">
                 {/* sem autoComplete */}
-                (sem autoComplete)
+                (without autoComplete)
               </div>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),

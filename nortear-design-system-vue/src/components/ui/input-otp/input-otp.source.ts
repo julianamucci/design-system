@@ -116,11 +116,11 @@ ${indentar(partes.join('\n'))}
 }
 
 /** Estado do campo, do lado de quem consome: uma `ref` com o valor digitado. */
-function script(estado: string): string {
+function script(state: string): string {
   return `import { ref } from 'vue'
 ${IMPORT}
 
-${estado}`;
+${state}`;
 }
 
 /**

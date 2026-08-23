@@ -136,20 +136,20 @@ export const SelectedRow: Story = {
     await step('Só a linha marcada carrega data-state="selected"', async () => {
       // functional.item4 — o estado é do `<tr>`, e é ele que o CSS compartilhado
       // pinta. Marcar a célula não pintaria a linha.
-      const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-      await expect(linhas.length).toBe(LINES.length);
-      await expect(linhas[1]).toHaveAttribute('data-state', 'selected');
+      const lines = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+      await expect(lines.length).toBe(LINES.length);
+      await expect(lines[1]).toHaveAttribute('data-state', 'selected');
       for (const i of [0, 2]) {
-        await expect(linhas[i].hasAttribute('data-state')).toBe(false);
+        await expect(lines[i].hasAttribute('data-state')).toBe(false);
       }
     });
 
     await step('A linha marcada se destaca das demais', async () => {
       // visual.item5 — sem contraste, a seleção existe só no atributo. A cor sai
       // do componente, não de uma classe repetida na story.
-      const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-      await expect(getComputedStyle(linhas[1]).backgroundColor).not.toBe(
-        getComputedStyle(linhas[0]).backgroundColor,
+      const lines = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+      await expect(getComputedStyle(lines[1]).backgroundColor).not.toBe(
+        getComputedStyle(lines[0]).backgroundColor,
       );
     });
   },
@@ -202,10 +202,10 @@ export const Loading: Story = {
     await step('Uma célula de esqueleto por coluna, em cada linha', async () => {
       // visual.item6 — o esqueleto mede a caixa que o dado vai ocupar; a grade
       // não pode encolher enquanto carrega, senão a tabela salta ao chegar.
-      const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-      await expect(linhas.length).toBe(LINES_SKELETON.length);
-      for (const linha of linhas) {
-        await expect(linha.querySelectorAll('[data-slot="skeleton"]').length).toBe(
+      const lines = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+      await expect(lines.length).toBe(LINES_SKELETON.length);
+      for (const line of lines) {
+        await expect(line.querySelectorAll('[data-slot="skeleton"]').length).toBe(
           COLUMNS.length,
         );
       }

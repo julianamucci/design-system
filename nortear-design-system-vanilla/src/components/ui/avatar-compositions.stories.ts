@@ -182,9 +182,9 @@ export const Group: Story = {
       const av = createAvatar({ src, alt: '', fallbackText: '' });
       grupo.appendChild(av);
     }
-    const contador = createAvatarGroupCount({ text: '+3' });
-    contador.setAttribute('aria-hidden', 'true');
-    grupo.appendChild(contador);
+    const counter = createAvatarGroupCount({ text: '+3' });
+    counter.setAttribute('aria-hidden', 'true');
+    grupo.appendChild(counter);
 
     return grupo;
   },
@@ -198,15 +198,15 @@ export const Group: Story = {
     // functional.item5 — a sobreposição é o que a composição promete. Medir a
     // posição prova o recuo; antes o grupo era montado com estilo inline na
     // story e a play só contava botões, que não existem aqui.
-    const primeiro = avatares[0].getBoundingClientRect();
+    const first = avatares[0].getBoundingClientRect();
     const segundo = avatares[1].getBoundingClientRect();
-    await expect(segundo.left).toBeLessThan(primeiro.right);
+    await expect(segundo.left).toBeLessThan(first.right);
 
     // O contador fecha a fila e sobrepõe igual.
-    const contador = grupo.querySelector('[data-slot="avatar-group-count"]');
-    await expect(contador).not.toBeNull();
-    await expect(contador!.textContent).toBe('+3');
-    const rc = contador!.getBoundingClientRect();
+    const counter = grupo.querySelector('[data-slot="avatar-group-count"]');
+    await expect(counter).not.toBeNull();
+    await expect(counter!.textContent).toBe('+3');
+    const rc = counter!.getBoundingClientRect();
     await expect(rc.left).toBeLessThan(avatares[2].getBoundingClientRect().right);
   },
 };

@@ -240,13 +240,13 @@ export const SelectableCards: Story = {
       // a play só olhava o aria-checked do rádio de dentro.
       const cartoes = Array.from(canvasElement.querySelectorAll<HTMLElement>('.nds-radio-card'));
       const escolhido = cartoes.find((c) => c.querySelector('[role="radio"][aria-checked="true"]'))!;
-      const outro = cartoes.find((c) => c !== escolhido)!;
+      const other = cartoes.find((c) => c !== escolhido)!;
       await waitFor(async () => {
         await expect(getComputedStyle(escolhido).borderTopColor).not.toBe(
-          getComputedStyle(outro).borderTopColor,
+          getComputedStyle(other).borderTopColor,
         );
         await expect(getComputedStyle(escolhido).backgroundColor).not.toBe(
-          getComputedStyle(outro).backgroundColor,
+          getComputedStyle(other).backgroundColor,
         );
       });
     });

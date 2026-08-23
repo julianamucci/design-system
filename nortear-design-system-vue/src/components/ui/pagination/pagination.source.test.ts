@@ -209,7 +209,7 @@ describe('transforms das stories de composição', () => {
 });
 
 describe('o snippet ensina o design system, não o andaime da story', () => {
-  const todas = [
+  const all = [
     paginationSource,
     paginationRangeSource,
     paginationFirstPageSource,
@@ -224,7 +224,7 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
   ];
 
   it('nenhuma traz o espião de contagem nem o nome de story no landmark', () => {
-    for (const fn of todas) {
+    for (const fn of all) {
       const saida = fn();
       expect(saida).not.toContain('onPageChange');
       expect(saida).not.toContain('Paginação em repouso');
@@ -235,7 +235,7 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
   });
 
   it('todas importam do design system, nunca de um caminho interno', () => {
-    for (const fn of todas) {
+    for (const fn of all) {
       expect(fn()).toContain(`from '@/components/ui/pagination'`);
     }
   });

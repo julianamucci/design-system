@@ -42,10 +42,10 @@ const COMMIT_DEFAULT = '(valor) => registrarAjuste(valor)';
 
 /** `role="slider"` sem nome é controle que o leitor de tela não sabe ler. */
 function accessibleName(o: SliderSnippetOptions, intervalo: boolean): string {
-  const bruto =
+  const raw =
     o['aria-label'] ??
     (intervalo ? ['Faixa de preço — mínimo', 'Faixa de preço — máximo'] : 'Volume');
-  return Array.isArray(bruto) ? `[${bruto.map(texto).join(', ')}]` : texto(bruto);
+  return Array.isArray(raw) ? `[${raw.map(texto).join(', ')}]` : texto(raw);
 }
 
 function valueLiteral(valor: number | number[] | undefined): string | undefined {
@@ -62,7 +62,7 @@ function expressao(valor: unknown, padrao: string): string | undefined {
 export function sliderSnippet(o: SliderSnippetOptions = {}): string {
   const intervalo = Array.isArray(o.value);
 
-  const linhas = opcoes([
+  const lines = opcoes([
     ['min', o.min !== undefined && o.min !== 0 ? String(o.min) : undefined],
     ['max', o.max !== undefined && o.max !== 100 ? String(o.max) : undefined],
     ['step', o.step !== undefined && o.step !== 1 ? String(o.step) : undefined],
@@ -77,7 +77,7 @@ export function sliderSnippet(o: SliderSnippetOptions = {}): string {
 
   return snippet(
     importing('slider', 'createSlider'),
-    `const controle = ${chamada('createSlider', linhas)};`,
+    `const controle = ${chamada('createSlider', lines)};`,
     montar('controle'),
   );
 }

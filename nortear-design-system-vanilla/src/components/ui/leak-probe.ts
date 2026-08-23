@@ -89,7 +89,7 @@ const BATERIA: Array<() => Event> = [
   () => new KeyboardEvent('keydown', { key: 'b', ctrlKey: true, bubbles: true }),
 ];
 
-function esperar(ms: number): Promise<void> {
+function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -106,7 +106,7 @@ async function countOrfaos(selector: string | undefined, limit = 1200): Promise<
   const end = Date.now() + limit;
   let n = document.querySelectorAll(selector).length;
   while (n > 0 && Date.now() < end) {
-    await esperar(30);
+    await sleep(30);
     n = document.querySelectorAll(selector).length;
   }
   return n;
@@ -145,21 +145,21 @@ export async function sondarOuvintes(opts: {
     document.querySelectorAll(seletorDePortal).forEach((el) => el.remove());
   }
   document.body.style.overflow = '';
-  await esperar(20);
+  await sleep(20);
 
   const spy = espiarOuvintes();
   try {
     const no = montar();
     host.appendChild(no);
-    await esperar(20);
+    await sleep(20);
     await exercitar?.(no);
-    await esperar(40);
+    await sleep(40);
 
     no.remove();
     // O observador da forma compartilhada roda em microtask; os `setTimeout(…,
     // 0)` de clique-fora, no tique seguinte. 200ms cobre os dois com folga sem
     // virar espera cega longa.
-    await esperar(200);
+    await sleep(200);
 
     const vivosAposOutput = spy.vivos();
     const orfaosAposOutput = await countOrfaos(seletorDePortal);
@@ -171,7 +171,7 @@ export async function sondarOuvintes(opts: {
     const aposLimpeza = assinatura(no, seletorDePortal);
 
     for (const fazer of BATERIA) document.dispatchEvent(fazer());
-    await esperar(80);
+    await sleep(80);
     const leaveReagiuAfter = assinatura(no, seletorDePortal) !== aposLimpeza;
 
     const withDestroy = no as HTMLElement & { destroy?: () => void };
@@ -192,7 +192,7 @@ export async function sondarOuvintes(opts: {
     const orfaosAposDestroy = await countOrfaos(seletorDePortal, 400);
 
     for (const fazer of BATERIA) document.dispatchEvent(fazer());
-    await esperar(80);
+    await sleep(80);
     const vivosAposReprise = spy.vivos();
 
     return {

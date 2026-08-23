@@ -94,8 +94,8 @@ export const WithNavGroups: Story = {
     });
 
     await step('O Tab alcança os itens e as ações — nenhuma parada sem nome', async () => {
-      const primeiro = canvas.getByRole('button', { name: 'Adicionar item' });
-      primeiro.focus();
+      const first = canvas.getByRole('button', { name: 'Adicionar item' });
+      first.focus();
       const alcancados: string[] = [];
       for (let i = 0; i < 5; i++) {
         await userEvent.tab();
@@ -108,7 +108,7 @@ export const WithNavGroups: Story = {
       await expect(alcancados).toContain('Dashboard');
       await expect(alcancados).not.toContain('');
       // Devolve o foco ao ponto de partida para o replay.
-      primeiro.blur();
+      first.blur();
     });
   },
   render: () => ({

@@ -402,11 +402,11 @@ export const LoadingSkeleton: Story = {
     });
 
     await step('showIcon monta o quadrado do ícone à esquerda do texto', async () => {
-      const primeiro = canvasElement.querySelector<HTMLElement>(
+      const first = canvasElement.querySelector<HTMLElement>(
         '[data-slot="sidebar-menu-skeleton"]',
       )!;
-      const icone = primeiro.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-icon')!;
-      const texto = primeiro.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-text')!;
+      const icone = first.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-icon')!;
+      const texto = first.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-text')!;
       await expect(icone).not.toBeNull();
       await expect(icone.getBoundingClientRect().left).toBeLessThan(
         texto.getBoundingClientRect().left,

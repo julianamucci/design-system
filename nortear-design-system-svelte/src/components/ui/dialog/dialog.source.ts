@@ -46,8 +46,8 @@ import { Button } from "@/components/ui/button";`;
 
 type Frame = {
   imports?: string;
-  estado?: string;
-  aberto?: boolean;
+  state?: string;
+  isOpen?: boolean;
   showCloseButton?: boolean;
   contentClass?: string;
   triggerLabel: string;
@@ -65,7 +65,7 @@ type Frame = {
  */
 function dialogo({
   imports,
-  aberto = false,
+  isOpen = false,
   showCloseButton = true,
   contentClass,
   triggerLabel,
@@ -86,7 +86,7 @@ function dialogo({
   return svelteSnippet(
     `${imports ?? (rodape ? IMPORT_BASE : IMPORT_NO_FOOTER)}
 
-let open = $state(${aberto});`,
+let open = $state(${isOpen});`,
     `<Dialog bind:open>
   <DialogTrigger>
     {#snippet child({ props })}
@@ -129,7 +129,7 @@ export function dialogSource(_gerado?: string, ctx?: { args?: Partial<DialogArgs
   } = ctx?.args ?? {};
 
   return dialogo({
-    aberto: open,
+    isOpen: open,
     showCloseButton,
     triggerLabel,
     title,
@@ -181,7 +181,7 @@ ${footerDefault('Cancelar', 'Salvar')}
  */
 export function dialogWithScrollSource(): string {
   return dialogo({
-    aberto: true,
+    isOpen: true,
     triggerLabel: 'Termos de uso',
     title: 'Termos e condições',
     description: 'Leia atentamente antes de aceitar.',
@@ -203,7 +203,7 @@ export function dialogWithScrollSource(): string {
 /** Sem rodapé: painel informativo, cuja única saída visível é o botão do canto. */
 export function dialogNoFooterSource(): string {
   return dialogo({
-    aberto: true,
+    isOpen: true,
     triggerLabel: 'Sobre o produto',
     title: 'Sobre este produto',
     description:
@@ -214,7 +214,7 @@ export function dialogNoFooterSource(): string {
 /** Ação primária destrutiva, para destrutividade secundária ao fluxo. */
 export function dialogActionDestructiveSource(): string {
   return dialogo({
-    aberto: true,
+    isOpen: true,
     triggerLabel: 'Remover item',
     title: 'Remover item da lista',
     description: 'Você pode adicioná-lo novamente depois, mas perderá os ajustes feitos.',
@@ -305,7 +305,7 @@ function salvar(evento: SubmitEvent) {
 /** Composição de produto: mídia em destaque, sem rodapé porque não há o que confirmar. */
 export function dialogPreviaDeMidiaSource(): string {
   return dialogo({
-    aberto: true,
+    isOpen: true,
     contentClass: 'nds-sm-max-w-lg',
     triggerLabel: 'Ver imagem',
     title: 'Pôr-do-sol na praia',

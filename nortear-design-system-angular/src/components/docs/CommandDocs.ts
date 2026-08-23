@@ -670,7 +670,7 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const linha = (name: string, chave: string, tipo: string, padrao: string) => ({
+    const line = (name: string, chave: string, tipo: string, padrao: string) => ({
       name,
       type: tipo,
       defaultValue: padrao,
@@ -683,9 +683,9 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
         title: t('props.commandTitle'),
         cols,
         items: [
-          linha('filter', 'commandFilter', '(valor, busca, paraTexto) => boolean', '—'),
-          linha('value', 'commandValue', 'model<string>', `''`),
-          linha('valueChange', 'commandOnValueChange', 'output<string>', '—'),
+          line('filter', 'commandFilter', '(valor, busca, paraTexto) => boolean', '—'),
+          line('value', 'commandValue', 'model<string>', `''`),
+          line('valueChange', 'commandOnValueChange', 'output<string>', '—'),
           {
             name: 'itemSelect',
             type: 'output<CommandSelectDetails>',
@@ -715,7 +715,7 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
         title: t('props.commandInputTitle'),
         cols,
         items: [
-          linha('placeholder', 'inputPlaceholder', 'string', '—'),
+          line('placeholder', 'inputPlaceholder', 'string', '—'),
           {
             name: 'label',
             type: 'string',
@@ -730,9 +730,9 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
         title: t('props.commandItemTitle'),
         cols,
         items: [
-          linha('value', 'itemValue', 'string', '—'),
-          linha('(onSelect)', 'itemOnSelect', 'output<CommandSelectDetails>', '—'),
-          linha('disabled', 'itemDisabled', 'boolean', 'false'),
+          line('value', 'itemValue', 'string', '—'),
+          line('(onSelect)', 'itemOnSelect', 'output<CommandSelectDetails>', '—'),
+          line('disabled', 'itemDisabled', 'boolean', 'false'),
           {
             name: 'textValue',
             type: 'string',
@@ -757,9 +757,9 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
         title: t('props.commandDialogTitle'),
         cols,
         items: [
-          linha('title', 'dialogTitle', 'conteúdo de h2/h3', '—'),
-          linha('description', 'dialogDescription', 'conteúdo de p', '—'),
-          linha('showCloseButton', 'dialogShowCloseButton', 'boolean', 'true'),
+          line('title', 'dialogTitle', 'conteúdo de h2/h3', '—'),
+          line('description', 'dialogDescription', 'conteúdo de p', '—'),
+          line('showCloseButton', 'dialogShowCloseButton', 'boolean', 'true'),
         ],
       },
     ];
@@ -931,8 +931,8 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
   }
 
   /** Só a abertura interessa; o fechamento não é adoção de nada. */
-  protected registrarAberturaDaPaleta(aberto: boolean): void {
-    if (aberto) track('command_palette_open', { trigger: 'button' });
+  protected registrarAberturaDaPaleta(isOpen: boolean): void {
+    if (isOpen) track('command_palette_open', { trigger: 'button' });
   }
 
   private observer: { disconnect: () => void } | undefined;

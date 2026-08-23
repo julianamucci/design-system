@@ -572,7 +572,7 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const linha = (name: string, chave: string, tipo: string, padrao: string) => ({
+    const line = (name: string, chave: string, tipo: string, padrao: string) => ({
       name,
       type: tipo,
       defaultValue: padrao,
@@ -585,7 +585,7 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
         title: t('props.rootTitle'),
         cols,
         items: [
-          linha('openChange', 'onOpenChange', 'output<boolean>', '—'),
+          line('openChange', 'onOpenChange', 'output<boolean>', '—'),
           {
             name: 'modal',
             type: 'boolean',
@@ -600,42 +600,42 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
         title: t('props.contentTitle'),
         cols,
         items: [
-          linha('side', 'side', `'top' | 'bottom' | 'left' | 'right'`, `'bottom'`),
-          linha('align', 'align', `'start' | 'center' | 'end'`, `'start'`),
-          linha('sideOffset', 'sideOffset', 'number', '0'),
-          linha('alignOffset', 'alignOffset', 'number', '0'),
+          line('side', 'side', `'top' | 'bottom' | 'left' | 'right'`, `'bottom'`),
+          line('align', 'align', `'start' | 'center' | 'end'`, `'start'`),
+          line('sideOffset', 'sideOffset', 'number', '0'),
+          line('alignOffset', 'alignOffset', 'number', '0'),
         ],
       },
       {
         title: t('props.itemTitle'),
         cols,
         items: [
-          linha('variant', 'variant', `'default' | 'destructive'`, `'default'`),
-          linha('inset', 'inset', 'boolean', 'false'),
-          linha('disabled', 'disabled', 'boolean', 'false'),
-          linha('(onSelect)', 'onSelect', 'output<void>', '—'),
+          line('variant', 'variant', `'default' | 'destructive'`, `'default'`),
+          line('inset', 'inset', 'boolean', 'false'),
+          line('disabled', 'disabled', 'boolean', 'false'),
+          line('(onSelect)', 'onSelect', 'output<void>', '—'),
         ],
       },
       {
         title: t('props.checkboxItemTitle'),
         cols,
         items: [
-          linha('checked', 'checked', 'model<boolean>', 'false'),
-          linha('checkedChange', 'onCheckedChange', 'output<boolean>', '—'),
+          line('checked', 'checked', 'model<boolean>', 'false'),
+          line('checkedChange', 'onCheckedChange', 'output<boolean>', '—'),
         ],
       },
       {
         title: t('props.radioGroupTitle'),
         cols,
         items: [
-          linha('value', 'value', 'model<string>', '—'),
-          linha('valueChange', 'onValueChange', 'output<string>', '—'),
+          line('value', 'value', 'model<string>', '—'),
+          line('valueChange', 'onValueChange', 'output<string>', '—'),
         ],
       },
       {
         title: t('props.radioItemTitle'),
         cols,
-        items: [linha('value', 'value', 'string', '—')],
+        items: [line('value', 'value', 'string', '—')],
       },
     ];
   });

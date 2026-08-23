@@ -35,8 +35,8 @@ export const WithIconAndCounter: Story = {
     });
 
     await step('O contador é só número, sem rótulo redundante', async () => {
-      const contador = canvasElement.querySelectorAll('[data-slot="badge"]')[1];
-      await expect(contador.textContent?.trim()).toMatch(/^\d+$/);
+      const counter = canvasElement.querySelectorAll('[data-slot="badge"]')[1];
+      await expect(counter.textContent?.trim()).toMatch(/^\d+$/);
     });
   },
 };

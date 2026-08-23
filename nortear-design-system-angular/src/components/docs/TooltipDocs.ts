@@ -745,8 +745,8 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
    * payload leva o id do gatilho, valor estável — o texto traduzido viraria três
    * eventos diferentes no GA4, um por idioma.
    */
-  protected aoAlternar(gatilho: string, aberto: boolean): void {
-    if (!aberto) return;
+  protected aoAlternar(gatilho: string, isOpen: boolean): void {
+    if (!isOpen) return;
     track('tooltip_view', {
       component: 'tooltip',
       trigger_id: gatilho,
@@ -831,19 +831,19 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
 
   /** Par "gatilho icon-only" da tabela de UX Writing — vira o Do & Don't 1. */
   protected readonly uxIcone = computed(() => {
-    const linha = this.uxRows().find((l) => /aria-label/i.test(l.format));
+    const line = this.uxRows().find((l) => /aria-label/i.test(l.format));
     return {
-      good: toPlainText(linha?.good ?? ''),
-      bad: toPlainText(linha?.bad ?? ''),
+      good: toPlainText(line?.good ?? ''),
+      bad: toPlainText(line?.bad ?? ''),
     };
   });
 
   /** Par "texto do balão" da tabela de UX Writing — vira o Do & Don't 2. */
   protected readonly uxTexto = computed(() => {
-    const linha = this.uxRows()[0];
+    const line = this.uxRows()[0];
     return {
-      good: toPlainText(linha?.good ?? ''),
-      bad: toPlainText(linha?.bad ?? ''),
+      good: toPlainText(line?.good ?? ''),
+      bad: toPlainText(line?.bad ?? ''),
     };
   });
 
@@ -1091,13 +1091,13 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
     // `tokens.table.fill` (cor da seta) fica de fora: este stack não compõe a
     // Arrow — ver a nota no fim de components/ui/tooltip.ts.
     return [
-      { token: '--primary',            classe: 'nds-tooltip-content',    k: 'foreground' },
-      { token: '--primary-foreground', classe: 'nds-tooltip-content',    k: 'background' },
-      { token: '--radius-sm',          classe: 'nds-tooltip-content',    k: 'radius'     },
-      { token: '--z-tooltip',          classe: 'nds-tooltip-positioner', k: 'zIndex'     },
-    ].map(({ token, classe, k }) => ({
+      { token: '--primary',            className: 'nds-tooltip-content',    k: 'foreground' },
+      { token: '--primary-foreground', className: 'nds-tooltip-content',    k: 'background' },
+      { token: '--radius-sm',          className: 'nds-tooltip-content',    k: 'radius'     },
+      { token: '--z-tooltip',          className: 'nds-tooltip-positioner', k: 'zIndex'     },
+    ].map(({ token, className, k }) => ({
       token,
-      value: classe,
+      value: className,
       description: toPlainText(t(`tokens.table.${k}.part`)),
     }));
   });

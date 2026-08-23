@@ -184,15 +184,15 @@ export const Group: Story = {
       await expect(avatares).toHaveLength(3);
       // Medir a posição é o que prova o recuo: sem a regra do grupo, os
       // avatares ficariam encostados e nada mais mudaria na tela.
-      const primeiro = avatares[0].getBoundingClientRect();
+      const first = avatares[0].getBoundingClientRect();
       const segundo = avatares[1].getBoundingClientRect();
-      await expect(segundo.left).toBeLessThan(primeiro.right);
+      await expect(segundo.left).toBeLessThan(first.right);
     });
 
     await step('O contador fecha a fila e sobrepõe igual', async () => {
-      const contador = grupo.querySelector<HTMLElement>('[data-slot="avatar-group-count"]')!;
-      await expect(contador.textContent?.trim()).toBe('+3');
-      const rc = contador.getBoundingClientRect();
+      const counter = grupo.querySelector<HTMLElement>('[data-slot="avatar-group-count"]')!;
+      await expect(counter.textContent?.trim()).toBe('+3');
+      const rc = counter.getBoundingClientRect();
       await expect(rc.left).toBeLessThan(avatares[2].getBoundingClientRect().right);
       await expect(Math.abs(rc.width - avatares[2].getBoundingClientRect().width)).toBeLessThan(0.5);
     });

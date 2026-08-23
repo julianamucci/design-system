@@ -36,8 +36,8 @@ const WIDTH = 'nds-w-xs';
 
 /** Empilha rótulo, campo e o que vier depois (apoio, mensagem de erro). */
 function empilhado(filhos: string[], largura = WIDTH, espaco = 'xs'): string {
-  const classe = ['nds-stack', largura].filter(Boolean).join(' ');
-  return `<div class="${classe}" data-spacing="${espaco}">
+  const className = ['nds-stack', largura].filter(Boolean).join(' ');
+  return `<div class="${className}" data-spacing="${espaco}">
 ${indentar(filhos.join('\n'))}
 </div>`;
 }

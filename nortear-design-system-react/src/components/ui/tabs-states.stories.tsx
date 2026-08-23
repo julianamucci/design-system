@@ -141,7 +141,7 @@ export const Disabled: Story = {
   render: () => <TresAbas desabilitada />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const primeira = canvas.getByRole("tab", { name: "Visão geral" });
+    const first = canvas.getByRole("tab", { name: "Visão geral" });
     const desabilitada = canvas.getByRole("tab", { name: "Propriedades" });
     const last = canvas.getByRole("tab", { name: "Exemplos" });
 
@@ -149,9 +149,9 @@ export const Disabled: Story = {
     // Interactions reexecuta a play no mesmo DOM, e um passo que assumisse o
     // estado deixado pelo passo passado inverteria o resultado no replay.
     const startVoltar = async () => {
-      if (primeira.getAttribute("aria-selected") !== "true") await userEvent.click(primeira);
+      if (first.getAttribute("aria-selected") !== "true") await userEvent.click(first);
       await waitFor(() =>
-        expect(primeira).toHaveAttribute("aria-selected", "true")
+        expect(first).toHaveAttribute("aria-selected", "true")
       );
     };
 
@@ -172,7 +172,7 @@ export const Disabled: Story = {
 
     await step("A seta ALCANÇA a aba desabilitada, e não a ativa", async () => {
       await startVoltar();
-      primeira.focus();
+      first.focus();
       await userEvent.keyboard("{ArrowRight}");
       await waitFor(() => expect(desabilitada).toHaveFocus());
       // Alcançar não é ativar: com ativação automática, focar uma aba habilitada

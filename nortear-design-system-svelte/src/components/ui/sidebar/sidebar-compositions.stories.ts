@@ -102,10 +102,10 @@ export const WithSubmenu: StoryObj<Record<string, never>> = {
 
     // Par idempotente: só clica quando o estado atual não é o desejado, então o
     // replay do painel Interactions (que roda no MESMO DOM) chega ao mesmo fim.
-    const definir = async (aberto: boolean) => {
+    const definir = async (isOpen: boolean) => {
       const alvo = parent();
-      if (alvo.getAttribute('aria-expanded') !== String(aberto)) await userEvent.click(alvo);
-      await waitFor(() => expect(parent()).toHaveAttribute('aria-expanded', String(aberto)));
+      if (alvo.getAttribute('aria-expanded') !== String(isOpen)) await userEvent.click(alvo);
+      await waitFor(() => expect(parent()).toHaveAttribute('aria-expanded', String(isOpen)));
     };
 
     /**
@@ -184,11 +184,11 @@ export const WithSkeleton: StoryObj<Record<string, never>> = {
     });
 
     await step('showIcon monta o quadrado do ícone à esquerda do texto', async () => {
-      const primeiro = canvasElement.querySelector<HTMLElement>(
+      const first = canvasElement.querySelector<HTMLElement>(
         '[data-slot="sidebar-menu-skeleton"]',
       )!;
-      const icone = primeiro.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-icon')!;
-      const texto = primeiro.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-text')!;
+      const icone = first.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-icon')!;
+      const texto = first.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-text')!;
       await expect(icone).not.toBeNull();
       await expect(icone.getBoundingClientRect().left).toBeLessThan(
         texto.getBoundingClientRect().left,

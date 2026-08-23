@@ -10,7 +10,7 @@ import {
   separatorVerticalSource,
 } from './separator.source';
 
-const TODAS = [
+const ALL = [
   separatorSource(),
   separatorHorizontalSource(),
   separatorVerticalSource(),
@@ -86,14 +86,14 @@ import { Separator } from '@/components/ui/separator'
   it('nenhuma transform crava medida em style inline', () => {
     // A altura da linha vertical nasce do vizinho; cravá-la esconderia o
     // contrato que o componente promete.
-    for (const saida of TODAS) {
+    for (const saida of ALL) {
       expect(saida).not.toContain('style=');
       expect(saida).not.toContain('height');
     }
   });
 
   it('nenhuma transform leva marca de teste da story', () => {
-    for (const saida of TODAS) expect(saida).not.toContain('data-testid');
+    for (const saida of ALL) expect(saida).not.toContain('data-testid');
   });
 });
 

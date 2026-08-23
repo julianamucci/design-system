@@ -181,7 +181,7 @@ function frame(opcoes: {
   legenda: string;
   paragrafo: string;
 }): string {
-  const linhas: Array<string | false | undefined> = [
+  const lines: Array<string | false | undefined> = [
     `<SidebarProvider${opcoes.provider ?? ''}>`,
     `  <nav aria-label="Navegação principal">`,
     `    <Sidebar${opcoes.barra ?? ''}>`,
@@ -204,7 +204,7 @@ function frame(opcoes: {
     `  </SidebarInset>`,
     `</SidebarProvider>`,
   ];
-  return linhas.filter((linha): linha is string => Boolean(linha)).join('\n');
+  return lines.filter((line): line is string => Boolean(line)).join('\n');
 }
 
 const APLICACAO: Item[] = [

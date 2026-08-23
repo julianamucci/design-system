@@ -496,7 +496,7 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
     // componente no conteúdo compartilhado, e `t()` devolve a própria chave
     // quando erra o caminho. Era assim que "props.table.mode.description"
     // aparecia escrito dentro da tabela, sem erro nenhum.
-    const linha = (name: string, chave: string, tipo: string, padrao: string) => ({
+    const line = (name: string, chave: string, tipo: string, padrao: string) => ({
       name,
       type: tipo,
       defaultValue: padrao,
@@ -509,21 +509,21 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
         title: t('props.calendarTitle'),
         cols,
         items: [
-          linha('mode', 'mode', `'single' | 'multiple'`, `'single'`),
-          linha('value', 'selected', 'model<CalendarValue>', '—'),
-          linha('valueChange', 'onSelect', 'output<CalendarValue>', '—'),
-          linha('locale', 'locale', 'string', `'en-US'`),
-          linha('disabled', 'disabled', 'CalendarDateMatcher', '—'),
-          linha('showOutsideDays', 'showOutsideDays', 'boolean', 'true'),
-          linha('captionLayout', 'captionLayout', `'label' | 'dropdown'`, `'label'`),
-          linha('numberOfMonths', 'numberOfMonths', 'number', '1'),
-          linha('class', 'className', 'string', '—'),
+          line('mode', 'mode', `'single' | 'multiple'`, `'single'`),
+          line('value', 'selected', 'model<CalendarValue>', '—'),
+          line('valueChange', 'onSelect', 'output<CalendarValue>', '—'),
+          line('locale', 'locale', 'string', `'en-US'`),
+          line('disabled', 'disabled', 'CalendarDateMatcher', '—'),
+          line('showOutsideDays', 'showOutsideDays', 'boolean', 'true'),
+          line('captionLayout', 'captionLayout', `'label' | 'dropdown'`, `'label'`),
+          line('numberOfMonths', 'numberOfMonths', 'number', '1'),
+          line('class', 'className', 'string', '—'),
         ],
       },
       {
         title: t('props.dayButtonTitle'),
         cols,
-        items: [linha('buttonVariant', 'buttonVariant', `'ghost' | 'outline'`, `'ghost'`)],
+        items: [line('buttonVariant', 'buttonVariant', `'ghost' | 'outline'`, `'ghost'`)],
       },
     ];
   });

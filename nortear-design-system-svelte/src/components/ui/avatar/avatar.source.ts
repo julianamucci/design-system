@@ -17,8 +17,8 @@ const IMPORT_IMAGE = `import { Avatar, AvatarFallback, AvatarImage } from "@/com
 const FOTO = `<AvatarImage src="/equipe/maria.jpg" alt="Foto de perfil de Maria Rodrigues" />`;
 
 /** Junta os atributos da raiz: só o que difere do padrão do componente entra. */
-function raiz(size: AvatarArgs['size'] = 'md', classe?: string): string {
-  return attrs(size !== 'md' ? `size="${size}"` : '', classe ? `class="${classe}"` : '');
+function raiz(size: AvatarArgs['size'] = 'md', className?: string): string {
+  return attrs(size !== 'md' ? `size="${size}"` : '', className ? `class="${className}"` : '');
 }
 
 /**
@@ -26,11 +26,11 @@ function raiz(size: AvatarArgs['size'] = 'md', classe?: string): string {
  * `md` dos tamanhos e as stories de imagem carregada dos estados e composições.
  */
 export function avatarSource(_gerado?: string, ctx?: { args?: Partial<AvatarArgs> }): string {
-  const { size = 'md', class: classe } = ctx?.args ?? {};
+  const { size = 'md', class: className } = ctx?.args ?? {};
 
   return svelteSnippet(
     IMPORT_IMAGE,
-    `<Avatar${raiz(size, classe)}>
+    `<Avatar${raiz(size, className)}>
   ${FOTO}
   <AvatarFallback>MR</AvatarFallback>
 </Avatar>`,

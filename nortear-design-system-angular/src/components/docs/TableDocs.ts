@@ -372,10 +372,10 @@ const LINHAS_DEMO: {
             </tr>
           </thead>
           <tbody ndsTableBody>
-            @for (linha of linhasCurtas(); track linha.key) {
+            @for (line of linhasCurtas(); track line.key) {
               <tr ndsTableRow>
-                <td ndsTableCell class="nds-font-medium">{{ linha.id }}</td>
-                <td ndsTableCell>{{ linha.status }}</td>
+                <td ndsTableCell class="nds-font-medium">{{ line.id }}</td>
+                <td ndsTableCell>{{ line.status }}</td>
               </tr>
             }
           </tbody>
@@ -393,10 +393,10 @@ const LINHAS_DEMO: {
             </tr>
           </thead>
           <tbody>
-            @for (linha of linhasCurtas(); track linha.key) {
+            @for (line of linhasCurtas(); track line.key) {
               <tr>
-                <td>{{ linha.id }}</td>
-                <td>{{ linha.status }}</td>
+                <td>{{ line.id }}</td>
+                <td>{{ line.status }}</td>
               </tr>
             }
           </tbody>
@@ -451,11 +451,11 @@ const LINHAS_DEMO: {
             </tr>
           </thead>
           <tbody ndsTableBody>
-            @for (linha of linhasCurtas(); track linha.key) {
+            @for (line of linhasCurtas(); track line.key) {
               <tr ndsTableRow>
-                <td ndsTableCell class="nds-font-medium">{{ linha.id }}</td>
-                <td ndsTableCell>{{ linha.status }}</td>
-                <td ndsTableCell class="nds-text-right">{{ linha.valor }}</td>
+                <td ndsTableCell class="nds-font-medium">{{ line.id }}</td>
+                <td ndsTableCell>{{ line.status }}</td>
+                <td ndsTableCell class="nds-text-right">{{ line.valor }}</td>
               </tr>
             }
           </tbody>
@@ -475,11 +475,11 @@ const LINHAS_DEMO: {
             </tr>
           </thead>
           <tbody ndsTableBody>
-            @for (linha of linhasCurtas(); track linha.key) {
+            @for (line of linhasCurtas(); track line.key) {
               <tr ndsTableRow>
-                <td ndsTableCell class="nds-font-medium">{{ linha.id }}</td>
-                <td ndsTableCell>{{ linha.status }}</td>
-                <td ndsTableCell class="nds-text-right">{{ linha.valor }}</td>
+                <td ndsTableCell class="nds-font-medium">{{ line.id }}</td>
+                <td ndsTableCell>{{ line.status }}</td>
+                <td ndsTableCell class="nds-text-right">{{ line.valor }}</td>
               </tr>
             }
           </tbody>
@@ -504,10 +504,10 @@ const LINHAS_DEMO: {
             </tr>
           </thead>
           <tbody ndsTableBody>
-            @for (linha of linhasCurtas(); track linha.key) {
+            @for (line of linhasCurtas(); track line.key) {
               <tr ndsTableRow>
-                <td ndsTableCell class="nds-font-medium">{{ linha.id }}</td>
-                <td ndsTableCell>{{ linha.metodo }}</td>
+                <td ndsTableCell class="nds-font-medium">{{ line.id }}</td>
+                <td ndsTableCell>{{ line.metodo }}</td>
               </tr>
             }
           </tbody>
@@ -529,14 +529,14 @@ const LINHAS_DEMO: {
             </tr>
           </thead>
           <tbody ndsTableBody>
-            @for (linha of linhasCurtas(); track linha.key) {
+            @for (line of linhasCurtas(); track line.key) {
               <tr ndsTableRow>
-                <td ndsTableCell class="nds-font-medium">{{ linha.id }}</td>
+                <td ndsTableCell class="nds-font-medium">{{ line.id }}</td>
                 <td ndsTableCell>
-                  <span ndsBadge [variant]="linha.variant">{{ linha.status }}</span>
+                  <span ndsBadge [variant]="line.variant">{{ line.status }}</span>
                 </td>
                 <td ndsTableCell class="nds-text-right">
-                  <button ndsButton variant="ghost" size="icon-sm" [attr.aria-label]="linha.acaoLabel">
+                  <button ndsButton variant="ghost" size="icon-sm" [attr.aria-label]="line.acaoLabel">
                     <svg ndsButtonIcon kind="pencil" class="nds-icon"></svg>
                   </button>
                 </td>
@@ -598,10 +598,10 @@ const LINHAS_DEMO: {
               </tr>
             </thead>
             <tbody ndsTableBody>
-              @for (linha of linhasFiltradas(); track linha.key) {
+              @for (line of linhasFiltradas(); track line.key) {
                 <tr ndsTableRow>
-                  <td ndsTableCell class="nds-font-medium">{{ linha.id }}</td>
-                  <td ndsTableCell>{{ linha.metodo }}</td>
+                  <td ndsTableCell class="nds-font-medium">{{ line.id }}</td>
+                  <td ndsTableCell>{{ line.metodo }}</td>
                 </tr>
               } @empty {
                 <tr ndsTableRow>
@@ -632,10 +632,10 @@ const LINHAS_DEMO: {
             </tr>
           </thead>
           <tbody ndsTableBody>
-            @for (linha of linhasOrdenadas(); track linha.key) {
+            @for (line of linhasOrdenadas(); track line.key) {
               <tr ndsTableRow>
-                <td ndsTableCell class="nds-font-medium">{{ linha.id }}</td>
-                <td ndsTableCell class="nds-text-right">{{ linha.valor }}</td>
+                <td ndsTableCell class="nds-font-medium">{{ line.id }}</td>
+                <td ndsTableCell class="nds-text-right">{{ line.valor }}</td>
               </tr>
             }
           </tbody>
@@ -655,10 +655,10 @@ const LINHAS_DEMO: {
               </tr>
             </thead>
             <tbody ndsTableBody>
-              @for (linha of linhasCurtas(); track linha.key) {
+              @for (line of linhasCurtas(); track line.key) {
                 <tr ndsTableRow>
-                  <td ndsTableCell class="nds-font-medium">{{ linha.id }}</td>
-                  <td ndsTableCell>{{ linha.status }}</td>
+                  <td ndsTableCell class="nds-font-medium">{{ line.id }}</td>
+                  <td ndsTableCell>{{ line.status }}</td>
                 </tr>
               }
             </tbody>
@@ -709,18 +709,18 @@ const LINHAS_DEMO: {
             </tr>
           </thead>
           <tbody ndsTableBody>
-            @for (linha of linhasCurtas(); track linha.key) {
-              <tr ndsTableRow [selected]="selecionadas().has(linha.key)">
+            @for (line of linhasCurtas(); track line.key) {
+              <tr ndsTableRow [selected]="selecionadas().has(line.key)">
                 <td ndsTableCell>
                   <button
                     ndsCheckbox
-                    [attr.aria-label]="linha.selecaoLabel"
-                    [checked]="selecionadas().has(linha.key)"
-                    (checkedChange)="alternarSelecao(linha.key, $event)"
+                    [attr.aria-label]="line.selecaoLabel"
+                    [checked]="selecionadas().has(line.key)"
+                    (checkedChange)="alternarSelecao(line.key, $event)"
                   ></button>
                 </td>
-                <td ndsTableCell class="nds-font-medium">{{ linha.id }}</td>
-                <td ndsTableCell>{{ linha.status }}</td>
+                <td ndsTableCell class="nds-font-medium">{{ line.id }}</td>
+                <td ndsTableCell>{{ line.status }}</td>
               </tr>
             }
           </tbody>
@@ -759,16 +759,16 @@ const LINHAS_DEMO: {
                 </tr>
               </thead>
               <tbody ndsTableBody>
-                @for (linha of linhasDemo(); track linha.key) {
+                @for (line of linhasDemo(); track line.key) {
                   <tr ndsTableRow>
-                    <td ndsTableCell class="nds-font-medium">{{ linha.id }}</td>
+                    <td ndsTableCell class="nds-font-medium">{{ line.id }}</td>
                     <td ndsTableCell>
-                      <span ndsBadge [variant]="linha.variant">{{ linha.status }}</span>
+                      <span ndsBadge [variant]="line.variant">{{ line.status }}</span>
                     </td>
-                    <td ndsTableCell>{{ linha.metodo }}</td>
-                    <td ndsTableCell class="nds-text-right">{{ linha.valor }}</td>
+                    <td ndsTableCell>{{ line.metodo }}</td>
+                    <td ndsTableCell class="nds-text-right">{{ line.valor }}</td>
                     <td ndsTableCell class="nds-text-right">
-                      <button ndsButton variant="ghost" size="icon-sm" [attr.aria-label]="linha.acaoLabel">
+                      <button ndsButton variant="ghost" size="icon-sm" [attr.aria-label]="line.acaoLabel">
                         <svg ndsButtonIcon kind="pencil" class="nds-icon"></svg>
                       </button>
                     </td>
@@ -912,17 +912,17 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
   /** As cinco faturas da demonstração, já traduzidas. */
   protected readonly linhasDemo = computed(() => {
     dict();
-    return LINHAS_DEMO.map((linha) => ({
-      key: linha.key,
-      variant: linha.variant,
-      id: t(`demonstration.labels.${linha.idKey}`),
-      status: t(`demonstration.labels.${linha.statusKey}`),
-      metodo: t(`demonstration.labels.${linha.metodoKey}`),
-      valor: t(`demonstration.labels.${linha.valorKey}`),
+    return LINHAS_DEMO.map((line) => ({
+      key: line.key,
+      variant: line.variant,
+      id: t(`demonstration.labels.${line.idKey}`),
+      status: t(`demonstration.labels.${line.statusKey}`),
+      metodo: t(`demonstration.labels.${line.metodoKey}`),
+      valor: t(`demonstration.labels.${line.valorKey}`),
       // O rótulo da ação carrega o identificador da linha: "Ações" sozinho, cinco
       // vezes, é indistinguível na lista de controles do leitor de tela.
-      acaoLabel: `${t('demonstration.labels.actionsLabel')} ${t(`demonstration.labels.${linha.idKey}`)}`,
-      selecaoLabel: `${t('demonstration.labels.selectRow')} ${t(`demonstration.labels.${linha.idKey}`)}`,
+      acaoLabel: `${t('demonstration.labels.actionsLabel')} ${t(`demonstration.labels.${line.idKey}`)}`,
+      selecaoLabel: `${t('demonstration.labels.selectRow')} ${t(`demonstration.labels.${line.idKey}`)}`,
     }));
   });
 
@@ -943,9 +943,9 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
   protected readonly termo = signal('');
   protected readonly linhasFiltradas = computed(() => {
     const search = this.termo().trim().toLowerCase();
-    const linhas = this.linhasDemo();
-    if (!search) return linhas;
-    return linhas.filter((l) => `${l.id} ${l.metodo}`.toLowerCase().includes(search));
+    const lines = this.linhasDemo();
+    if (!search) return lines;
+    return lines.filter((l) => `${l.id} ${l.metodo}`.toLowerCase().includes(search));
   });
 
   protected filtrar(evento: Event): void {
@@ -979,10 +979,10 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
   });
 
   protected alternarSelecao(key: string, marcado: boolean): void {
-    const proximo = new Set(this.selecionadas());
-    if (marcado) proximo.add(key);
-    else proximo.delete(key);
-    this.selecionadas.set(proximo);
+    const next = new Set(this.selecionadas());
+    if (marcado) next.add(key);
+    else next.delete(key);
+    this.selecionadas.set(next);
   }
 
   protected alternarTodas(marcado: boolean): void {
@@ -1139,7 +1139,7 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const classe = {
+    const className = {
       name: 'class',
       type: 'string',
       defaultValue: '—',
@@ -1163,21 +1163,21 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
         items: [
           { name: '(elemento)', type: 'div',    defaultValue: '—', required: not, description: toPlainText(t('props.items.wrapper')) },
           { name: 'tabindex',   type: '"0"',    defaultValue: '"0"', required: not, description: toPlainText(t('props.items.tabindex')) },
-          classe,
+          className,
           conteudo,
         ],
       },
-      { title: t('props.tableTitle'),        cols, items: [classe, conteudo] },
-      { title: t('props.tableHeaderTitle'),  cols, items: [classe, conteudo] },
-      { title: t('props.tableBodyTitle'),    cols, items: [classe, conteudo] },
-      { title: t('props.tableFooterTitle'),  cols, items: [classe, conteudo] },
+      { title: t('props.tableTitle'),        cols, items: [className, conteudo] },
+      { title: t('props.tableHeaderTitle'),  cols, items: [className, conteudo] },
+      { title: t('props.tableBodyTitle'),    cols, items: [className, conteudo] },
+      { title: t('props.tableFooterTitle'),  cols, items: [className, conteudo] },
       {
         title: t('props.tableRowTitle'),
         cols,
         items: [
           { name: 'selected',   type: 'boolean',    defaultValue: 'false', required: not, description: toPlainText(t('props.items.selected')) },
           { name: 'data-state', type: '"selected"', defaultValue: '—',     required: not, description: toPlainText(t('props.items.dataState')) },
-          classe,
+          className,
           conteudo,
         ],
       },
@@ -1187,7 +1187,7 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
         items: [
           { name: 'scope', type: '"col" | "row" | "colgroup" | "rowgroup"', defaultValue: "'col'", required: not, description: toPlainText(t('props.items.scope')) },
           { name: 'sort',  type: 'TableSortDirection',                      defaultValue: '—',     required: not, description: toPlainText(t('props.items.sort')) },
-          classe,
+          className,
           conteudo,
         ],
       },
@@ -1197,11 +1197,11 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
         items: [
           { name: 'colspan', type: 'number', defaultValue: '—', required: not, description: toPlainText(t('props.items.colSpan')) },
           { name: 'rowspan', type: 'number', defaultValue: '—', required: not, description: toPlainText(t('props.items.rowSpan')) },
-          classe,
+          className,
           conteudo,
         ],
       },
-      { title: t('props.tableCaptionTitle'), cols, items: [classe, conteudo] },
+      { title: t('props.tableCaptionTitle'), cols, items: [className, conteudo] },
     ];
   });
 

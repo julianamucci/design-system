@@ -39,7 +39,7 @@ export default meta;
 type Story = StoryObj;
 
 /** Datas marcadas na grade, em ordem de leitura. */
-function marcadas(raiz: HTMLElement): string[] {
+function checked(raiz: HTMLElement): string[] {
   return Array.from(raiz.querySelectorAll<HTMLElement>('.nds-calendar-day-btn[data-selected]')).map(
     (el) => el.getAttribute('data-value') ?? '',
   );
@@ -68,7 +68,7 @@ export const Single: Story = {
 
     await step('A data inicial chega marcada, e sozinha', async () => {
       // accessibility.item3 — a marcação é exclusiva no modo único.
-      await expect(marcadas(canvasElement)).toEqual(['2026-04-12']);
+      await expect(checked(canvasElement)).toEqual(['2026-04-12']);
       await expect(canvasElement.querySelectorAll('td[aria-selected="true"]').length).toBe(1);
     });
 
@@ -78,10 +78,10 @@ export const Single: Story = {
       // própria precondição: o clique final devolve o grid ao estado inicial,
       // porque o painel Interactions reexecuta a play no mesmo DOM.
       await userEvent.click(dia(20));
-      await expect(marcadas(canvasElement)).toEqual(['2026-04-20']);
+      await expect(checked(canvasElement)).toEqual(['2026-04-20']);
 
       await userEvent.click(dia(12));
-      await expect(marcadas(canvasElement)).toEqual(['2026-04-12']);
+      await expect(checked(canvasElement)).toEqual(['2026-04-12']);
     });
 
     await step('O dia escolhido passa em contraste nos três temas e nos dois modos', async () => {
@@ -89,7 +89,7 @@ export const Single: Story = {
       // "axe-core / Lighthouse", que só enxerga o tema claro da marca default: um
       // sexto do produto. O escuro é a outra metade, e nunca era medido.
       const measurements = calendarMeasureContrast(canvasElement).filter(
-        (m) => m.presente && (STATES_WITH_TEXT_LEGIVEL as readonly string[]).includes(m.estado),
+        (m) => m.presente && (STATES_WITH_TEXT_LEGIVEL as readonly string[]).includes(m.state),
       );
       await expect(measurements.length).toBeGreaterThan(0);
       const reprovadas = measurements.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);
@@ -124,7 +124,7 @@ export const Multiple: Story = {
     const dia29 = () => canvas.getByRole('button', { name: /29 de abril de 2026/i });
 
     await step('As três datas iniciais chegam marcadas', async () => {
-      await expect(marcadas(canvasElement)).toEqual(['2026-04-08', '2026-04-12', '2026-04-16']);
+      await expect(checked(canvasElement)).toEqual(['2026-04-08', '2026-04-12', '2026-04-16']);
       await expect(canvasElement.querySelectorAll('td[aria-selected="true"]').length).toBe(3);
     });
 
@@ -133,12 +133,12 @@ export const Multiple: Story = {
       // O segundo clique devolve o grid ao estado inicial, para o replay no
       // painel medir o mesmo.
       await userEvent.click(dia29());
-      await expect(marcadas(canvasElement)).toEqual([
+      await expect(checked(canvasElement)).toEqual([
         '2026-04-08', '2026-04-12', '2026-04-16', '2026-04-29',
       ]);
 
       await userEvent.click(dia29());
-      await expect(marcadas(canvasElement)).toEqual(['2026-04-08', '2026-04-12', '2026-04-16']);
+      await expect(checked(canvasElement)).toEqual(['2026-04-08', '2026-04-12', '2026-04-16']);
     });
   },
 };
@@ -177,8 +177,8 @@ export const CaptionLabel: Story = {
     await step('A semana começa no domingo, e não no que o locale mandar', async () => {
       // O primitivo começa na segunda por padrão. Uma grade que muda de forma na
       // troca de idioma tiraria a coluna do fim de semana das pontas.
-      const primeiro = canvasElement.querySelector('th[scope="col"]');
-      await expect(primeiro?.textContent?.trim().toLowerCase()).toBe('dom');
+      const first = canvasElement.querySelector('th[scope="col"]');
+      await expect(first?.textContent?.trim().toLowerCase()).toBe('dom');
     });
   },
 };

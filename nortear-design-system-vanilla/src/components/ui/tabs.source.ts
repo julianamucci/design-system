@@ -57,7 +57,7 @@ const PANEL_FABRICA = `const painel = (texto) => {
 };`;
 
 function itemsLiterais(itens: TabsSnippetItem[]): string {
-  const linhas = itens.map((i) => {
+  const lines = itens.map((i) => {
     const partes = [
       `value: ${texto(i.value)}`,
       `label: ${texto(i.label)}`,
@@ -66,7 +66,7 @@ function itemsLiterais(itens: TabsSnippetItem[]): string {
     if (i.disabled) partes.push('disabled: true');
     return `    { ${partes.join(', ')} },`;
   });
-  return `[\n${linhas.join('\n')}\n  ]`;
+  return `[\n${lines.join('\n')}\n  ]`;
 }
 
 function expressao(valor: unknown): string | undefined {

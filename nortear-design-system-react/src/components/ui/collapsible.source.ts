@@ -81,12 +81,12 @@ ${itens.map((item) => `    <p>${item}</p>`).join('\n')}
  */
 export const collapsibleSource: SourceTransform<CollapsibleArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const aberto = args.defaultOpen === true;
+  const isOpen = args.defaultOpen === true;
   return jsxSnippet(
     IMPORTS,
     `<Collapsible${attrs(propBool('defaultOpen', args.defaultOpen))} className="${ROOT_CLASSES}">
 ${corpo(
-  aberto ? 'Ocultar filtros avançados' : 'Exibir filtros avançados',
+  isOpen ? 'Ocultar filtros avançados' : 'Exibir filtros avançados',
   'ghost',
   propBool('disabled', args.disabled) ? '\n    disabled' : '',
 )}

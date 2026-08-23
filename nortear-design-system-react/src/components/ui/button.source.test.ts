@@ -27,7 +27,7 @@ import {
 } from './button.source';
 
 /** Toda transform é chamável sem argumento — é o que a guarda transversal exige. */
-const TODOS: Array<() => string> = [
+const ALL: Array<() => string> = [
   buttonSource,
   buttonDefaultSource,
   buttonDestructiveSource,
@@ -203,11 +203,11 @@ describe('composições', () => {
 describe('regras que valem para todo snippet de botão', () => {
   it('nenhum crava altura — ela é resultado do padding com o line-height', () => {
     // WCAG 1.4.4: altura fixa congela o botão e corta o texto a 200%.
-    for (const fn of TODOS) expect(fn()).not.toMatch(/height/i);
+    for (const fn of ALL) expect(fn()).not.toMatch(/height/i);
   });
 
   it('nenhum ensina o andaime da story', () => {
-    for (const fn of TODOS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).not.toContain('fixtures');
       expect(saida).not.toContain('{...args}');

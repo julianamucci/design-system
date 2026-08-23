@@ -6,7 +6,7 @@ import {
   codeBlockSource,
 } from './code-block.source';
 
-const TODAS = [
+const ALL = [
   codeBlockSource,
   codeBlockRolagemSource,
   codeBlockPaletteSource,
@@ -104,7 +104,7 @@ describe('overrides de story', () => {
 
 describe('regras do repositório', () => {
   it('nenhum snippet leva estilo inline nem andaime da story', () => {
-    for (const fn of TODAS) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).toContain('code={source}');
       expect(saida).not.toContain('style={{');

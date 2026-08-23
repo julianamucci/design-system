@@ -48,7 +48,7 @@ export const ItemDisabled: Story = {
     covers: ['functional.item9', 'accessibility.item6', 'visual.item5'],
     docs: { source: { transform: contextMenuItemDisabledSource } },
   },
-  render: () => ({ Component: ContextMenuEstadoStory, props: { estado: 'disabled' } }),
+  render: () => ({ Component: ContextMenuEstadoStory, props: { state: 'disabled' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
 
@@ -88,7 +88,7 @@ export const ItemInset: Story = {
   parameters: {
     docs: { source: { transform: contextMenuItemRecuadoSource } },
   },
-  render: () => ({ Component: ContextMenuEstadoStory, props: { estado: 'inset' } }),
+  render: () => ({ Component: ContextMenuEstadoStory, props: { state: 'inset' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
 
@@ -120,7 +120,7 @@ export const ItemDestructive: Story = {
     covers: ['functional.item10', 'visual.item2'],
     docs: { source: { transform: contextMenuItemDestructiveSource } },
   },
-  render: () => ({ Component: ContextMenuEstadoStory, props: { estado: 'destructive' } }),
+  render: () => ({ Component: ContextMenuEstadoStory, props: { state: 'destructive' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
 
@@ -153,7 +153,7 @@ export const CheckboxIndeterminate: Story = {
     covers: ['functional.item11'],
     docs: { source: { transform: contextMenuMarkupMistaSource } },
   },
-  render: () => ({ Component: ContextMenuEstadoStory, props: { estado: 'indeterminate' } }),
+  render: () => ({ Component: ContextMenuEstadoStory, props: { state: 'indeterminate' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
     const menu = await gestoOpen(area());
@@ -197,7 +197,7 @@ export const DarkPalette: Story = {
     themes: { themeOverride: 'dark' },
     docs: { source: { transform: contextMenuPaletteDarkSource } },
   },
-  render: () => ({ Component: ContextMenuEstadoStory, props: { estado: 'dark' } }),
+  render: () => ({ Component: ContextMenuEstadoStory, props: { state: 'dark' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
 

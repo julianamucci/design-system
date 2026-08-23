@@ -115,7 +115,7 @@ export const Playground: Story = {
         openDelay={openDelay}
         closeDelay={closeDelay}
         defaultOpen={defaultOpen}
-        onOpenChange={(aberto) => onOpenChange?.(aberto)}
+        onOpenChange={(isOpen) => onOpenChange?.(isOpen)}
       >
         <HoverCardTrigger asChild>
           <a href="/users/joana" className="nds-text-primary nds-font-medium nds-hover-underline">

@@ -91,12 +91,12 @@ function createMinusIcon(): SVGSVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  const linha = document.createElementNS(SVG_NS, 'line');
-  linha.setAttribute('x1', '5');
-  linha.setAttribute('y1', '12');
-  linha.setAttribute('x2', '19');
-  linha.setAttribute('y2', '12');
-  svg.appendChild(linha);
+  const line = document.createElementNS(SVG_NS, 'line');
+  line.setAttribute('x1', '5');
+  line.setAttribute('y1', '12');
+  line.setAttribute('x2', '19');
+  line.setAttribute('y2', '12');
+  svg.appendChild(line);
   return svg;
 }
 

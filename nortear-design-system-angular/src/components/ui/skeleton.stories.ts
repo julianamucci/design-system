@@ -81,11 +81,11 @@ export const Playground: Story = {
       // `fill` preenche a caixa que o container estabelece; aqui quem
       // estabelece é a proporção de mídia, senão o bloco nasce com altura zero
       // e o Playground mostra um esqueleto invisível.
-      classe: args.shape === 'fill' ? 'nds-docs-skeleton-media' : '',
+      className: args.shape === 'fill' ? 'nds-docs-skeleton-media' : '',
     },
     template: `
       <div role="status" [attr.aria-busy]="loading" aria-label="Carregando conteúdo">
-        <div ndsSkeleton [attr.data-shape]="shape" [attr.data-width]="largura" [class]="classe"></div>
+        <div ndsSkeleton [attr.data-shape]="shape" [attr.data-width]="largura" [class]="className"></div>
       </div>
     `,
   }),

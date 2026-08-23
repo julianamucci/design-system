@@ -34,11 +34,11 @@ type Story = StoryObj;
 // Sem listener próprio no rótulo: `<button>` é elemento rotulável, então o
 // `<label for>` já encaminha a ativação.
 
-function rotulo(id: string, texto: string, classe = 'nds-text-body'): HTMLLabelElement {
+function rotulo(id: string, texto: string, className = 'nds-text-body'): HTMLLabelElement {
   const label = document.createElement('label');
   label.htmlFor = id;
   label.textContent = texto;
-  label.className = `${classe} nds-font-medium nds-leading-none nds-cursor-pointer`;
+  label.className = `${className} nds-font-medium nds-leading-none nds-cursor-pointer`;
   return label;
 }
 

@@ -67,12 +67,12 @@ function montar(opcoes: {
   raiz: string;
   conteudo: string;
   corpo: string;
-  estado?: string;
+  state?: string;
 }): string {
   const [nome, caminho] = ICONS[opcoes.icone];
   const script = [
     `${IMPORT}\nimport ${nome} from "@lucide/svelte/icons/${caminho}";`,
-    opcoes.estado ?? '',
+    opcoes.state ?? '',
   ]
     .filter(Boolean)
     .join('\n\n');
@@ -151,6 +151,6 @@ export function tooltipControlledSource(): string {
     raiz: ' bind:open={aberto}',
     conteudo: ' sideOffset={4}',
     corpo: 'Salvar (Ctrl+S)',
-    estado: 'let aberto = $state(true);',
+    state: 'let aberto = $state(true);',
   });
 }

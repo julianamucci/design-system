@@ -172,7 +172,7 @@ ${indentar(
  * próprio estado de partida e o seu próprio rótulo.
  */
 export function configSwitchPanelSource(): string {
-  const linhas = [
+  const lines = [
     {
       id: 'marketing',
       rotulo: 'Emails de marketing',
@@ -194,7 +194,7 @@ export function configSwitchPanelSource(): string {
   return vueSnippet(
     IMPORT_PAIR,
     `<div class="nds-stack nds-w-md" data-spacing="sm">
-${linhas.map((linha) => indentar(panelLine(linha))).join('\n\n')}
+${lines.map((line) => indentar(panelLine(line))).join('\n\n')}
 </div>`,
   );
 }
@@ -209,7 +209,7 @@ export function preferenciasSwitchListSource(): string {
     { id: 'email', rotulo: 'Notificações por email', atributos: '' },
     { id: 'sms', rotulo: 'SMS', atributos: '' },
   ];
-  const linhas = itens
+  const lines = itens
     .map(({ id, rotulo, atributos }, i) => {
       const border = i === 0 ? '' : ' nds-border-t';
       return `  <li class="nds-cluster nds-p-4${border}" data-align="center" data-justify="between">
@@ -221,7 +221,7 @@ export function preferenciasSwitchListSource(): string {
   return vueSnippet(
     IMPORT_PAIR,
     `<ul class="nds-w-sm nds-rounded-lg nds-border-default">
-${linhas}
+${lines}
 </ul>`,
   );
 }
@@ -265,7 +265,7 @@ export function switchItemDeMenuSource(): string {
     { id: 'salvar-automaticamente', rotulo: 'Salvar automaticamente', atributos: 'size="sm" default-value' },
     { id: 'visualizacao-compacta', rotulo: 'Visualização compacta', atributos: 'size="sm"' },
   ];
-  const linhas = itens
+  const lines = itens
     .map(
       ({ id, rotulo, atributos }) =>
         `  <div class="nds-cluster nds-rounded nds-px-2 nds-py-1 nds-hover-bg-muted-40" data-align="center" data-justify="between">
@@ -277,7 +277,7 @@ export function switchItemDeMenuSource(): string {
   return vueSnippet(
     IMPORT_PAIR,
     `<div class="nds-stack nds-w-xs nds-rounded-md nds-border-default nds-p-2" data-spacing="xs">
-${linhas}
+${lines}
 </div>`,
   );
 }

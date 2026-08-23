@@ -220,12 +220,12 @@ export const Focus: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const punho = canvas.getByRole("separator", { name: LABEL });
-    const primeiro = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-panel"]')!;
+    const first = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-panel"]')!;
 
     await step("O Tab alcança o divisor", async () => {
       // functional.item4. Um divisor fora da ordem de tabulação seria
       // inalcançável para quem não usa mouse, e as setas nunca chegariam a ele.
-      primeiro.focus();
+      first.focus();
       await userEvent.tab();
       await expect(punho).toHaveFocus();
     });
@@ -241,7 +241,7 @@ export const Focus: Story = {
     await step("O painel também é alcançável pelo Tab", async () => {
       // O painel pode rolar; região rolável fora da ordem de tabulação esconde
       // conteúdo de quem não usa mouse (WCAG 2.1.1).
-      await expect(primeiro).toHaveAttribute("tabindex", "0");
+      await expect(first).toHaveAttribute("tabindex", "0");
     });
   },
 };

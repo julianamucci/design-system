@@ -46,7 +46,7 @@ const DEFAULT: CalendarSnippetOptions = { locale: 'pt-BR', value: DATA_DE_EXEMPL
 
 /** A chamada real de `createCalendar` com as opções da story. */
 export function calendarSnippet(o: CalendarSnippetOptions = {}): string {
-  const linhas = opcoes([
+  const lines = opcoes([
     ['mode', o.mode && o.mode !== 'single' ? texto(o.mode) : undefined],
     ['locale', o.locale ? texto(o.locale) : undefined],
     ['value', o.value],
@@ -60,7 +60,7 @@ export function calendarSnippet(o: CalendarSnippetOptions = {}): string {
 
   return snippet(
     importing('calendar', 'createCalendar'),
-    `const calendario = ${chamada('createCalendar', linhas)};`,
+    `const calendario = ${chamada('createCalendar', lines)};`,
     montar('calendario'),
   );
 }

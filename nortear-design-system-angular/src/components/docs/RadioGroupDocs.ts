@@ -710,7 +710,7 @@ export class NdsRadioGroupDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const linha = (nome: string, chave: string, tipo?: string, padrao?: string) => ({
+    const line = (nome: string, chave: string, tipo?: string, padrao?: string) => ({
       name: nome,
       type: tipo ?? toPlainText(t(`props.table.${chave}.type`)),
       defaultValue: padrao ?? toPlainText(t(`props.table.${chave}.default`)),
@@ -722,14 +722,14 @@ export class NdsRadioGroupDocs implements AfterViewInit, OnDestroy {
         title: 'NdsRadioGroup',
         cols,
         items: [
-          linha('value', 'value', 'model<string | null>'),
-          linha('defaultValue', 'defaultValue'),
-          linha('valueChange', 'onValueChange', 'output<string | null>'),
-          linha('disabled', 'disabled'),
-          linha('name', 'name'),
+          line('value', 'value', 'model<string | null>'),
+          line('defaultValue', 'defaultValue'),
+          line('valueChange', 'onValueChange', 'output<string | null>'),
+          line('disabled', 'disabled'),
+          line('name', 'name'),
           // Sem prop de orientação nesta stack — a descrição vem do override.
-          linha('orientation', 'orientation'),
-          linha('class', 'className'),
+          line('orientation', 'orientation'),
+          line('class', 'className'),
         ],
       },
       {
@@ -743,8 +743,8 @@ export class NdsRadioGroupDocs implements AfterViewInit, OnDestroy {
             required: tNav('common.yes'),
             description: toPlainText(t('props.itemValue.description')),
           },
-          linha('disabled', 'disabled'),
-          linha('class', 'className'),
+          line('disabled', 'disabled'),
+          line('class', 'className'),
         ],
       },
     ].map((tabela) => ({

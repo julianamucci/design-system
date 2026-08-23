@@ -238,8 +238,8 @@ export const Playground: Story = {
       // não do que a rodada anterior deixou.
       await userEvent.keyboard('{Home}');
       await waitFor(async () => {
-        const primeiro = canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')!;
-        return expect(primeiro).toHaveTextContent('Button');
+        const first = canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')!;
+        return expect(first).toHaveTextContent('Button');
       });
 
       await userEvent.keyboard('{ArrowDown}');

@@ -101,8 +101,8 @@ export const TodoTokenDocumentadoExists: Story = {
 export const PairConsumidoAlcanca4a5: Story = {
   render: () => createThemeColorsDocs(),
   play: async ({ canvasElement }) => {
-    const todos = pagePairs(canvasElement);
-    const cobertos = todos.filter(
+    const all = pagePairs(canvasElement);
+    const cobertos = all.filter(
       (p) => !(BACKGROUND_SMOOTH_PAIRS as readonly string[]).includes(p),
     );
 

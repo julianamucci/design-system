@@ -64,12 +64,12 @@ describe('dropdownMenuSource', () => {
     expect(closed).toContain('<DropdownMenu>');
     expect(closed).not.toContain('$state');
 
-    const aberto = dropdownMenuSource('', { args: { defaultOpen: true } });
-    expect(aberto).toContain('let aberto = $state(true);');
-    expect(aberto).toContain('<DropdownMenu bind:open={aberto}>');
+    const isOpen = dropdownMenuSource('', { args: { defaultOpen: true } });
+    expect(isOpen).toContain('let aberto = $state(true);');
+    expect(isOpen).toContain('<DropdownMenu bind:open={aberto}>');
     // `defaultOpen` é prop do invólucro da story, não do primitivo: escrevê-la
     // no snippet ensinaria uma API que a raiz não aceita.
-    expect(aberto).not.toContain('defaultOpen');
+    expect(isOpen).not.toContain('defaultOpen');
   });
 
   it('o control de abertura externa vence o inicial', () => {

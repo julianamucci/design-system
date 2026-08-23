@@ -158,12 +158,12 @@ export const SelectedRow: Story = {
                  direto, como as outras stacks fazem nas fixtures. Se o host
                  binding apagasse o atributo escrito, esta story ficaria
                  vermelha em vez de o defeito aparecer só na tela. -->
-            @for (fatura of faturas; track fatura.id; let i = $index) {
+            @for (invoice of faturas; track invoice.id; let i = $index) {
               <tr ndsTableRow [selected]="i === 1">
-                <td ndsTableCell class="nds-font-medium">{{ fatura.id }}</td>
-                <td ndsTableCell>{{ fatura.status }}</td>
-                <td ndsTableCell>{{ fatura.metodo }}</td>
-                <td ndsTableCell class="nds-text-right">{{ fatura.valor }}</td>
+                <td ndsTableCell class="nds-font-medium">{{ invoice.id }}</td>
+                <td ndsTableCell>{{ invoice.status }}</td>
+                <td ndsTableCell>{{ invoice.metodo }}</td>
+                <td ndsTableCell class="nds-text-right">{{ invoice.valor }}</td>
               </tr>
             }
             <tr ndsTableRow data-state="selected">
@@ -182,24 +182,24 @@ export const SelectedRow: Story = {
       // functional.item4 — e prova, de quebra, que o input chegou ao template:
       // sob o fallback JIT o binding cai em silêncio e a linha nasceria sem
       // atributo nenhum (armadilha 1 do CLAUDE.md do stack).
-      const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-      await expect(linhas.length).toBe(INVOICES.length + 1);
-      await expect(linhas[1]).toHaveAttribute('data-state', 'selected');
-      await expect(linhas[linhas.length - 1]).toHaveAttribute('data-state', 'selected');
+      const lines = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+      await expect(lines.length).toBe(INVOICES.length + 1);
+      await expect(lines[1]).toHaveAttribute('data-state', 'selected');
+      await expect(lines[lines.length - 1]).toHaveAttribute('data-state', 'selected');
       for (const i of [0, 2, 3, 4]) {
-        await expect(linhas[i].hasAttribute('data-state')).toBe(false);
+        await expect(lines[i].hasAttribute('data-state')).toBe(false);
       }
     });
 
     await step('A linha marcada se destaca das demais', async () => {
       // visual.item5 — `.nds-table tbody tr[data-state="selected"]` pinta
       // hsl(var(--muted)). Sem contraste, a seleção existe só no estado interno.
-      const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-      await expect(getComputedStyle(linhas[1]).backgroundColor).not.toBe(
-        getComputedStyle(linhas[0]).backgroundColor,
+      const lines = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+      await expect(getComputedStyle(lines[1]).backgroundColor).not.toBe(
+        getComputedStyle(lines[0]).backgroundColor,
       );
-      await expect(getComputedStyle(linhas[linhas.length - 1]).backgroundColor).toBe(
-        getComputedStyle(linhas[1]).backgroundColor,
+      await expect(getComputedStyle(lines[lines.length - 1]).backgroundColor).toBe(
+        getComputedStyle(lines[1]).backgroundColor,
       );
     });
   },
@@ -220,7 +220,7 @@ export const Loading: Story = {
     },
   },
   render: () => ({
-    props: { linhas: LINES_SKELETON, colunas: COLUMNS },
+    props: { lines: LINES_SKELETON, colunas: COLUMNS },
     template: `
       <!-- aria-busy na REGIÃO, não na célula: o esqueleto é aria-hidden, e sem o
            container quem usa leitor de tela ouve uma tabela vazia sem saber que
@@ -237,7 +237,7 @@ export const Loading: Story = {
               </tr>
             </thead>
             <tbody ndsTableBody>
-              @for (linha of linhas; track linha) {
+              @for (line of lines; track line) {
                 <tr ndsTableRow>
                   @for (coluna of colunas; track coluna) {
                     <td ndsTableCell>
@@ -260,10 +260,10 @@ export const Loading: Story = {
     await step('Uma célula de esqueleto por coluna, em cada linha', async () => {
       // visual.item6 — o esqueleto mede a caixa que o dado vai ocupar; a grade
       // não pode encolher enquanto carrega, senão a tabela salta ao chegar.
-      const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-      await expect(linhas.length).toBe(LINES_SKELETON.length);
-      for (const linha of linhas) {
-        await expect(linha.querySelectorAll('[data-slot="skeleton"]').length).toBe(
+      const lines = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+      await expect(lines.length).toBe(LINES_SKELETON.length);
+      for (const line of lines) {
+        await expect(line.querySelectorAll('[data-slot="skeleton"]').length).toBe(
           COLUMNS.length,
         );
       }

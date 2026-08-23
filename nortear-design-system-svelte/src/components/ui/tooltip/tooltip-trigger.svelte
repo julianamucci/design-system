@@ -15,7 +15,7 @@
 	$effect(() => {
 		const alvo = ref;
 		if (!alvo || !descricao) return;
-		const ligado = descricao.aberto && descricao.montado;
+		const ligado = descricao.isOpen && descricao.montado;
 		if (ligado) alvo.setAttribute("aria-describedby", descricao.id);
 		else alvo.removeAttribute("aria-describedby");
 	});

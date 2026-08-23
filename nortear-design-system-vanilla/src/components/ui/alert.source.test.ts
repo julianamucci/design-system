@@ -48,8 +48,8 @@ describe('alertSnippet', () => {
   });
 
   it('o botão de fechar traz o rótulo acessível e o callback, e só quando existe', () => {
-    const sem = alertSnippet({ dismissLabel: 'Fechar confirmação' });
-    expect(sem).not.toContain('dismissLabel');
+    const without = alertSnippet({ dismissLabel: 'Fechar confirmação' });
+    expect(without).not.toContain('dismissLabel');
 
     const com = alertSnippet({
       dismissible: true,

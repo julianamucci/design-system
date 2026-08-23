@@ -185,7 +185,7 @@ export class NdsSheetContent {
           rdxDialogBackdrop
           class="nds-sheet-overlay"
           data-slot="sheet-overlay"
-          [attr.data-state]="estado()"
+          [attr.data-state]="state()"
         ></div>
 
         <div
@@ -193,7 +193,7 @@ export class NdsSheetContent {
           [class]="classeDoPainel()"
           data-slot="sheet-content"
           [attr.data-side]="c.side()"
-          [attr.data-state]="estado()"
+          [attr.data-state]="state()"
         >
           <ng-container [ngTemplateOutlet]="c.tpl" />
 
@@ -233,7 +233,7 @@ export class NdsSheet {
    * compartilhado. O par `data-open` / `data-closed` que o CSS lê continua vindo
    * do primitivo — este atributo é adição, não substituição.
    */
-  protected readonly estado = computed(() => (this.raiz.open() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.raiz.open() ? 'open' : 'closed'));
 
   protected readonly classeDoPainel = computed(() =>
     cn('nds-sheet-content', this.conteudo()?.panelClass()),

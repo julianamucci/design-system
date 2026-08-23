@@ -34,7 +34,7 @@ const HAS_WIDTH = new Set(['text', 'heading']);
 function regiao(opcoes: {
   rotulo: string;
   ocupado?: boolean;
-  classe?: string;
+  className?: string;
   espaco?: string;
   miolo: string;
   tag?: string;
@@ -46,24 +46,24 @@ function regiao(opcoes: {
     `role="${papel}"`,
     `aria-busy="${opcoes.ocupado === false ? 'false' : 'true'}"`,
     `aria-label="${opcoes.rotulo}"`,
-    opcoes.classe && `class="${opcoes.classe}"`,
+    opcoes.className && `class="${opcoes.className}"`,
     opcoes.espaco && `data-spacing="${opcoes.espaco}"`,
   ]);
   return `<${tag}${abertura}>\n${indentar(opcoes.miolo)}\n</${tag}>`;
 }
 
 /** Uma peça: a forma sempre aparece, a largura só onde a folha a lê. */
-function part(shape: string, width?: string, classe?: string): string {
+function part(shape: string, width?: string, className?: string): string {
   const partes = [
     `data-shape="${shape}"`,
     width && HAS_WIDTH.has(shape) ? `data-width="${width}"` : '',
-    classe ? `class="${classe}"` : '',
+    className ? `class="${className}"` : '',
   ].filter(Boolean);
   return `<Skeleton ${partes.join(' ')} />`;
 }
 
 /** Duas ou três linhas de larguras decrescentes — o desenho de um parágrafo. */
-function linhas(larguras: string[]): string {
+function lines(larguras: string[]): string {
   return larguras.map((largura) => part('text', largura)).join('\n');
 }
 
@@ -99,7 +99,7 @@ export function skeletonRetanguloSource(): string {
     IMPORT,
     regiao({
       rotulo: 'Carregando bloco',
-      classe: 'nds-w-sm',
+      className: 'nds-w-sm',
       miolo: part('fill', undefined, 'nds-docs-skeleton-media'),
     }),
   );
@@ -126,9 +126,9 @@ export function skeletonLineTextSource(): string {
     IMPORT,
     regiao({
       rotulo: 'Carregando linhas de texto',
-      classe: 'nds-stack nds-w-sm',
+      className: 'nds-stack nds-w-sm',
       espaco: 'sm',
-      miolo: linhas(['full', '3-4', '1-2']),
+      miolo: lines(['full', '3-4', '1-2']),
     }),
   );
 }
@@ -139,9 +139,9 @@ export function skeletonPulsandoSource(): string {
     IMPORT,
     regiao({
       rotulo: 'Carregando conteúdo',
-      classe: 'nds-stack nds-w-sm',
+      className: 'nds-stack nds-w-sm',
       espaco: 'sm',
-      miolo: linhas(['full', '3-4']),
+      miolo: lines(['full', '3-4']),
     }),
   );
 }
@@ -158,7 +158,7 @@ export function skeletonMovimentoReduzidoSource(): string {
     IMPORT,
     regiao({
       rotulo: 'Carregando conteúdo',
-      classe: 'nds-stack nds-w-sm',
+      className: 'nds-stack nds-w-sm',
       espaco: 'sm',
       miolo: part('text', '3-4'),
     }),
@@ -171,11 +171,11 @@ export function skeletonCardPerfilSource(): string {
     IMPORT,
     regiao({
       rotulo: 'Carregando card de perfil',
-      classe: 'nds-cluster nds-p-4 nds-border-default nds-rounded-md nds-w-sm',
+      className: 'nds-cluster nds-p-4 nds-border-default nds-rounded-md nds-w-sm',
       espaco: 'md',
       miolo: `${part('avatar')}
 <div class="nds-stack nds-flex-1" data-spacing="sm">
-${indentar(linhas(['2-3', '1-2']))}
+${indentar(lines(['2-3', '1-2']))}
 </div>`,
     }),
   );
@@ -192,12 +192,12 @@ export function skeletonListSource(): string {
       tag: 'ul',
       papel: 'list',
       rotulo: 'Carregando lista de pedidos',
-      classe: 'nds-stack nds-list-none nds-p-0 nds-w-md',
+      className: 'nds-stack nds-list-none nds-p-0 nds-w-md',
       espaco: 'md',
       miolo: `<li v-for="i in 5" :key="i" class="nds-cluster" data-align="center" data-spacing="sm">
   <Skeleton data-shape="avatar" data-size="sm" />
   <div class="nds-stack nds-flex-1" data-spacing="xs">
-${indentar(linhas(['2-3', '1-3']), 4)}
+${indentar(lines(['2-3', '1-3']), 4)}
   </div>
 </li>`,
     }),
@@ -214,7 +214,7 @@ export function skeletonImageRatioSource(): string {
     `${IMPORT}\nimport { AspectRatio } from '@/components/ui/aspect-ratio'`,
     regiao({
       rotulo: 'Carregando imagem',
-      classe: 'nds-w-sm',
+      className: 'nds-w-sm',
       miolo: `<AspectRatio :ratio="16 / 9">
   ${part('fill')}
 </AspectRatio>`,
@@ -228,9 +228,9 @@ export function skeletonParagrafoSource(): string {
     IMPORT,
     regiao({
       rotulo: 'Carregando parágrafo',
-      classe: 'nds-stack nds-w-sm',
+      className: 'nds-stack nds-w-sm',
       espaco: 'sm',
-      miolo: linhas(['full', '3-4', '1-2']),
+      miolo: lines(['full', '3-4', '1-2']),
     }),
   );
 }

@@ -50,8 +50,8 @@ describe('avatarSnippet', () => {
     expect(com).toContain('createAvatarBadge');
     expect(com).toContain("avatar.appendChild(createAvatarBadge({ 'aria-label': 'Online' }));");
 
-    const sem = avatarSnippet();
-    expect(sem).not.toContain('createAvatarBadge');
+    const without = avatarSnippet();
+    expect(without).not.toContain('createAvatarBadge');
   });
 });
 

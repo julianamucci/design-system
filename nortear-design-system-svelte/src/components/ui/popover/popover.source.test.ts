@@ -59,9 +59,9 @@ describe('popoverSource', () => {
   it('o painel que nasce aberto vira estado local com bind:open', () => {
     // `open` é bindable: um valor cravado congelaria o painel aberto, e o
     // snippet ensinaria um popover que não fecha.
-    const aberto = popoverSource('', { args: { defaultOpen: true } });
-    expect(aberto).toContain('let aberto = $state(true);');
-    expect(aberto).toContain('<Popover bind:open={aberto}>');
+    const isOpen = popoverSource('', { args: { defaultOpen: true } });
+    expect(isOpen).toContain('let aberto = $state(true);');
+    expect(isOpen).toContain('<Popover bind:open={aberto}>');
     expect(popoverSource()).not.toContain('bind:open');
   });
 

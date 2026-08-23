@@ -170,9 +170,9 @@ export const WithGroups: Story = {
       // Linha para o olho, silêncio para o leitor de tela — quem separa
       // semanticamente é o grupo, e um `separator` dentro de `listbox` seria filho
       // não permitido.
-      const linhas = listbox.querySelectorAll('[data-slot="select-separator"]');
-      await expect(linhas).toHaveLength(Object.keys(REGIOES).length - 1);
-      await expect(linhas[0]).toHaveAttribute('aria-hidden', 'true');
+      const lines = listbox.querySelectorAll('[data-slot="select-separator"]');
+      await expect(lines).toHaveLength(Object.keys(REGIOES).length - 1);
+      await expect(lines[0]).toHaveAttribute('aria-hidden', 'true');
     });
   },
 };

@@ -47,7 +47,7 @@ describe('skeletonSnippet', () => {
 
   it('empilha várias peças quando a story mostra um parágrafo', () => {
     const código = skeletonSnippet({
-      linhas: [
+      lines: [
         { shape: 'text', width: 'full' },
         { shape: 'text', width: '3-4' },
         { shape: 'text', width: '1-2' },

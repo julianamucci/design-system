@@ -60,13 +60,13 @@ export function carouselSource(_gerado?: string, ctx?: { args?: Partial<Carousel
   // No eixo vertical o trilho precisa de altura DEFINIDA: sem ela a base do
   // slide não tem contra o que resolver, e o carrossel cresce em vez de
   // recortar. A altura vem de uma classe de proporção, nunca de `style`.
-  const trilho = vertical ? ' class="nds-aspect-4-3"' : '';
+  const track = vertical ? ' class="nds-aspect-4-3"' : '';
 
   return svelteSnippet(
     `${IMPORT}\n\n${SLIDES}`,
     `<div class="${vertical ? 'nds-w-xs' : WIDTH_MD}">
   <Carousel${raiz}>
-    <CarouselContent${trilho}>
+    <CarouselContent${track}>
       {#each slides as numero (numero)}
         <CarouselItem aria-label="Slide {numero} de {slides.length}">
 ${miolo(vertical)}

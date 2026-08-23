@@ -81,7 +81,7 @@ export interface DayState {
 export interface DayContrast {
   tema: string;
   modo: string;
-  estado: string;
+  state: string;
   /** `false` quando o estado não existe na tela — isso É o achado. */
   presente: boolean;
   frente: string | null;
@@ -275,7 +275,7 @@ export const DAY_STATES = Object.keys(SELECTORS);
 
 export function measureCalendar(raiz: HTMLElement) {
   const um = <T extends HTMLElement>(sel: string) => raiz.querySelector<T>(sel);
-  const todos = (sel: string) => Array.from(raiz.querySelectorAll<HTMLElement>(sel));
+  const all = (sel: string) => Array.from(raiz.querySelectorAll<HTMLElement>(sel));
   const conta = (sel: string) => raiz.querySelectorAll(sel).length;
 
   // O Vanilla nomeava a raiz, a paginação e o dia com uma família de classes
@@ -285,13 +285,13 @@ export function measureCalendar(raiz: HTMLElement) {
   const dayButton = um('.nds-calendar-day-btn') ?? um('.nds-calendar-day');
   const legenda = um('.nds-calendar-caption') ?? um('.nds-calendar-caption-dropdown') ?? um('.nds-calendar-month-label');
   const semana = um('thead');
-  const seletores = todos('.nds-calendar-select');
+  const seletores = all('.nds-calendar-select');
   const tabela = um('table');
 
   const buttonPrevious =
-    todos('button').find((b) => /previous|previous|mês previous/i.test(b.getAttribute('aria-label') ?? '')) ?? null;
+    all('button').find((b) => /previous|previous|mês previous/i.test(b.getAttribute('aria-label') ?? '')) ?? null;
   const buttonNext =
-    todos('button').find((b) => /next|próximo|proximo|siguiente/i.test(b.getAttribute('aria-label') ?? '')) ?? null;
+    all('button').find((b) => /next|próximo|next|siguiente/i.test(b.getAttribute('aria-label') ?? '')) ?? null;
 
   const respiro =
     legenda && semana
@@ -304,7 +304,7 @@ export function measureCalendar(raiz: HTMLElement) {
   const states: Record<string, DayState> = {};
   for (const [nome, lista] of Object.entries(SELECTORS)) states[nome] = dayState(raiz, lista);
 
-  const domDays = todos('.nds-calendar-day-btn, .nds-calendar-day');
+  const domDays = all('.nds-calendar-day-btn, .nds-calendar-day');
   const tabulaveis = domDays.filter((d) => d.tabIndex >= 0);
 
   const meio = firstQueCasar(raiz, SELECTORS.intervaloMeio).el;
@@ -478,9 +478,9 @@ function frenteWithOpacity(el: HTMLElement): string {
  * deixá-la posta envenena a story seguinte e a foto do Chromatic.
  */
 export function calendarMeasureContrast(raiz: HTMLElement): DayContrast[] {
-  const targets = DAY_STATES.map((estado) => ({
-    estado,
-    el: firstQueCasar(raiz, SELECTORS[estado]).el,
+  const targets = DAY_STATES.map((state) => ({
+    state,
+    el: firstQueCasar(raiz, SELECTORS[state]).el,
   }));
 
   // As transições morrem ANTES da troca de tema: o dia declara
@@ -494,14 +494,14 @@ export function calendarMeasureContrast(raiz: HTMLElement): DayContrast[] {
 
   try {
     return byTheme(raiz, (tema, modo) =>
-      targets.map(({ estado, el }): DayContrast => {
-        if (!el) return { tema, modo, estado, presente: false, frente: null, background: null, ratio: null };
+      targets.map(({ state, el }): DayContrast => {
+        if (!el) return { tema, modo, state, presente: false, frente: null, background: null, ratio: null };
         const background = backgroundEffective(el);
         const r = ratio(frenteWithOpacity(el), background);
         return {
           tema,
           modo,
-          estado,
+          state,
           presente: true,
           frente: r?.frente ?? null,
           background,
@@ -521,8 +521,8 @@ export function calendarMeasureContrast(raiz: HTMLElement): DayContrast[] {
 
 /** Linha legível de uma medida — o que a falha da story precisa mostrar. */
 export function describeContrast(m: DayContrast): string {
-  if (!m.presente) return `${m.tema}/${m.modo} · ${m.estado}: estado ausente na tela`;
-  return `${m.tema}/${m.modo} · ${m.estado}: ${m.frente} sobre ${m.background} = ${m.ratio}:1`;
+  if (!m.presente) return `${m.tema}/${m.modo} · ${m.state}: estado ausente na tela`;
+  return `${m.tema}/${m.modo} · ${m.state}: ${m.frente} sobre ${m.background} = ${m.ratio}:1`;
 }
 
 /**
@@ -571,7 +571,7 @@ export function calendarMeasureDensity(raiz: HTMLElement): DensityMeasurement[] 
       const dia = raiz.querySelector<HTMLElement>('.nds-calendar-day-btn, .nds-calendar-day');
       const legenda = raiz.querySelector<HTMLElement>('.nds-calendar-caption');
       const semana = raiz.querySelector<HTMLElement>('thead');
-      const linha = raiz.querySelector<HTMLElement>('.nds-calendar-week');
+      const line = raiz.querySelector<HTMLElement>('.nds-calendar-week');
       saida.push({
         densidade,
         larguraDaRaiz: Math.round(alvo.getBoundingClientRect().width),
@@ -581,7 +581,7 @@ export function calendarMeasureDensity(raiz: HTMLElement): DensityMeasurement[] 
             ? Math.round(semana.getBoundingClientRect().top - legenda.getBoundingClientRect().bottom)
             : null,
         paddingDaRaiz: getComputedStyle(alvo).padding,
-        gapEntreSemanas: linha ? getComputedStyle(linha).marginTop : null,
+        gapEntreSemanas: line ? getComputedStyle(line).marginTop : null,
       });
     }
   } finally {

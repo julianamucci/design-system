@@ -787,7 +787,7 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
     };
     const not = tNav('common.no');
     const sim = tNav('common.yes');
-    const classe = {
+    const className = {
       name: 'class',
       type: 'string',
       defaultValue: '—',
@@ -808,27 +808,27 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
         cols,
         items: [
           { name: 'label', type: 'string', defaultValue: "'breadcrumb'", required: not, description: toPlainText(t('props.table.label')) },
-          classe,
+          className,
           conteudo,
         ],
       },
-      { title: t('props.listTitle'), cols, items: [classe, conteudo] },
-      { title: t('props.itemTitle'), cols, items: [classe, conteudo] },
+      { title: t('props.listTitle'), cols, items: [className, conteudo] },
+      { title: t('props.itemTitle'), cols, items: [className, conteudo] },
       {
         title: t('props.linkTitle'),
         cols,
         items: [
           { name: 'href', type: 'string', defaultValue: '—', required: sim, description: toPlainText(t('props.table.href')) },
-          classe,
+          className,
           conteudo,
         ],
       },
-      { title: t('props.pageTitle'), cols, items: [classe, conteudo] },
+      { title: t('props.pageTitle'), cols, items: [className, conteudo] },
       {
         title: t('props.separatorTitle'),
         cols,
         items: [
-          classe,
+          className,
           {
             name: '(conteúdo)',
             type: 'HTML',
@@ -843,7 +843,7 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
         cols,
         items: [
           { name: 'label', type: 'string', defaultValue: '—', required: not, description: toPlainText(t('props.table.ellipsisLabel')) },
-          classe,
+          className,
         ],
       },
     ];
@@ -861,17 +861,17 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '--muted-foreground', classe: '.nds-breadcrumb-list',            k: 'mutedForeground' },
-      { token: '--foreground',       classe: '.nds-breadcrumb-page',            k: 'foreground'      },
-      { token: '--ring',             classe: '.nds-breadcrumb-link',            k: 'ring'            },
-      { token: '--text-control',     classe: '.nds-breadcrumb-list',            k: 'textSm'          },
-      { token: '--spacing-1-5',      classe: '.nds-breadcrumb-list',            k: 'gap'             },
+      { token: '--muted-foreground', className: '.nds-breadcrumb-list',            k: 'mutedForeground' },
+      { token: '--foreground',       className: '.nds-breadcrumb-page',            k: 'foreground'      },
+      { token: '--ring',             className: '.nds-breadcrumb-link',            k: 'ring'            },
+      { token: '--text-control',     className: '.nds-breadcrumb-list',            k: 'textSm'          },
+      { token: '--spacing-1-5',      className: '.nds-breadcrumb-list',            k: 'gap'             },
       // Sem token: o CSS compartilhado mede o chevron em 0.875rem literal.
-      { token: '0.875rem',           classe: '.nds-breadcrumb-separator > svg', k: 'sizeSeparator'   },
-      { token: '--spacing-4',        classe: '.nds-breadcrumb-ellipsis > svg',  k: 'sizeEllipsis'    },
-    ].map(({ token, classe, k }) => ({
+      { token: '0.875rem',           className: '.nds-breadcrumb-separator > svg', k: 'sizeSeparator'   },
+      { token: '--spacing-4',        className: '.nds-breadcrumb-ellipsis > svg',  k: 'sizeEllipsis'    },
+    ].map(({ token, className, k }) => ({
       token,
-      value: classe,
+      value: className,
       description: toPlainText(t(`tokens.table.${k}`)),
     }));
   });

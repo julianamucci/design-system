@@ -397,9 +397,9 @@
    */
   function lineLabel(row: Row): string {
     if (rowLabel) return rowLabel(row.original);
-    const primeira = row.getAllCells().find((c) => c.column.id !== '__select__');
-    const bruto = primeira?.getValue();
-    return bruto == null || bruto === '' ? row.id : String(bruto);
+    const first = row.getAllCells().find((c) => c.column.id !== '__select__');
+    const raw = first?.getValue();
+    return raw == null || raw === '' ? row.id : String(raw);
   }
 </script>
 

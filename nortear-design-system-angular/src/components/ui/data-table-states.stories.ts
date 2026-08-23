@@ -123,8 +123,8 @@ export const Sorted: Story = {
       const ordenada = button.closest('th')!;
       await expect(ordenada).toHaveAttribute('aria-sort', 'ascending');
 
-      const outra = canvas.getByRole('button', { name: 'Ordenar por Fatura' }).closest('th')!;
-      await expect(outra).toHaveAttribute('aria-sort', 'none');
+      const other = canvas.getByRole('button', { name: 'Ordenar por Fatura' }).closest('th')!;
+      await expect(other).toHaveAttribute('aria-sort', 'none');
     });
 
     await step('A ordem do dinheiro é numérica, não alfabética', async () => {
@@ -134,11 +134,11 @@ export const Sorted: Story = {
       await userEvent.click(button);
 
       await waitFor(async () => {
-        const valores = [
+        const values = [
           ...canvasElement.querySelectorAll<HTMLElement>('tbody tr td:last-child'),
         ].map((td) => td.textContent!.trim());
-        await expect(valores[0]).toContain('40,00');
-        await expect(valores[valores.length - 1]).toContain('990,00');
+        await expect(values[0]).toContain('40,00');
+        await expect(values[values.length - 1]).toContain('990,00');
       });
     });
   },
@@ -171,19 +171,19 @@ export const SelectedRows: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+    const lines = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
 
     await step('Marcar duas linhas destaca só elas', async () => {
-      const primeira = linhas()[0].querySelector<HTMLElement>('button[role="checkbox"]')!;
-      await userEvent.click(primeira);
-      const terceira = linhas()[2].querySelector<HTMLElement>('button[role="checkbox"]')!;
+      const first = lines()[0].querySelector<HTMLElement>('button[role="checkbox"]')!;
+      await userEvent.click(first);
+      const terceira = lines()[2].querySelector<HTMLElement>('button[role="checkbox"]')!;
       await userEvent.click(terceira);
 
-      await expect(linhas()[0]).toHaveAttribute('data-state', 'selected');
-      await expect(linhas()[2]).toHaveAttribute('data-state', 'selected');
-      await expect(linhas()[1].hasAttribute('data-state')).toBe(false);
-      await expect(getComputedStyle(linhas()[0]).backgroundColor).not.toBe(
-        getComputedStyle(linhas()[1]).backgroundColor,
+      await expect(lines()[0]).toHaveAttribute('data-state', 'selected');
+      await expect(lines()[2]).toHaveAttribute('data-state', 'selected');
+      await expect(lines()[1].hasAttribute('data-state')).toBe(false);
+      await expect(getComputedStyle(lines()[0]).backgroundColor).not.toBe(
+        getComputedStyle(lines()[1]).backgroundColor,
       );
     });
 

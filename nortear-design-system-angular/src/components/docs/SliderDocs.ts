@@ -583,7 +583,7 @@ export class NdsSliderDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const linha = (name: string, key: string, tipo: string, padrao: string) => ({
+    const line = (name: string, key: string, tipo: string, padrao: string) => ({
       name,
       type: tipo,
       defaultValue: padrao,
@@ -595,13 +595,13 @@ export class NdsSliderDocs implements AfterViewInit, OnDestroy {
         title: 'NdsSlider',
         cols,
         items: [
-          linha('value', 'value', 'model<number[]>', '[min, max]'),
-          linha('valueChange', 'onValueChange', 'output<number[]>', '—'),
-          linha('min', 'min', 'number', '0'),
-          linha('max', 'max', 'number', '100'),
-          linha('step', 'step', 'number', '1'),
-          linha('orientation', 'orientation', `'horizontal' | 'vertical'`, `'horizontal'`),
-          linha('disabled', 'disabled', 'boolean', 'false'),
+          line('value', 'value', 'model<number[]>', '[min, max]'),
+          line('valueChange', 'onValueChange', 'output<number[]>', '—'),
+          line('min', 'min', 'number', '0'),
+          line('max', 'max', 'number', '100'),
+          line('step', 'step', 'number', '1'),
+          line('orientation', 'orientation', `'horizontal' | 'vertical'`, `'horizontal'`),
+          line('disabled', 'disabled', 'boolean', 'false'),
           {
             name: 'aria-label',
             type: 'string',

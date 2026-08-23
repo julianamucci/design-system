@@ -186,7 +186,7 @@ export class NdsCarouselStore {
     this.navegar(this._index() - 1, origem);
   }
 
-  proximo(origem: CarouselNavSource): void {
+  next(origem: CarouselNavSource): void {
     this.navegar(this._index() + 1, origem);
   }
 
@@ -224,16 +224,16 @@ export class NdsCarouselStore {
     const vp = this.viewport;
     const lista = this._slides();
     const alvo = lista[i];
-    const primeiro = lista[0];
-    if (!vp || !alvo || !primeiro) return null;
+    const first = lista[0];
+    if (!vp || !alvo || !first) return null;
     const vertical = this.orientation() === 'vertical';
-    const bruto = vertical
-      ? alvo.offsetTop - primeiro.offsetTop
-      : alvo.offsetLeft - primeiro.offsetLeft;
+    const raw = vertical
+      ? alvo.offsetTop - first.offsetTop
+      : alvo.offsetLeft - first.offsetLeft;
     const limit = vertical
       ? vp.scrollHeight - vp.clientHeight
       : vp.scrollWidth - vp.clientWidth;
-    return Math.min(bruto, Math.max(limit, 0));
+    return Math.min(raw, Math.max(limit, 0));
   }
 
   /** Índice do slide cujo início está mais perto da posição de rolagem atual. */
@@ -481,7 +481,7 @@ export class NdsCarousel implements OnInit {
       // seria justamente o que a preferência pede para não acontecer.
       if (!rodando || prefersReducedMotion()) return;
       const ms = this.autoplayDelay();
-      const timer = setInterval(() => this.store.proximo('autoplay'), ms);
+      const timer = setInterval(() => this.store.next('autoplay'), ms);
       onCleanup(() => clearInterval(timer));
     });
   }
@@ -507,8 +507,8 @@ export class NdsCarousel implements OnInit {
   }
 
   /** Próximo slide. */
-  proximo(origem: CarouselNavSource = 'api'): void {
-    this.store.proximo(origem);
+  next(origem: CarouselNavSource = 'api'): void {
+    this.store.next(origem);
   }
 
   /** Vai direto a um índice (base zero). */
@@ -530,7 +530,7 @@ export class NdsCarousel implements OnInit {
     // Sem `preventDefault` a seta rola a página junto com o carrossel.
     evento.preventDefault();
     if (evento.key === voltar) this.store.previous('keyboard');
-    else this.store.proximo('keyboard');
+    else this.store.next('keyboard');
   }
 
   /** Suspende o avanço enquanto o ponteiro ou o foco estiverem dentro. */
@@ -803,7 +803,7 @@ export class NdsCarouselPrevious {
     '[disabled]': '!store.canNext()',
     '[attr.aria-disabled]': 'store.canNext() ? null : "true"',
     '[attr.aria-label]': 'accessibleName()',
-    '(click)': 'store.proximo("button")',
+    '(click)': 'store.next("button")',
   },
 })
 export class NdsCarouselNext {

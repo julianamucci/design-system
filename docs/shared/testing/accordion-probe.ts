@@ -45,16 +45,16 @@ function backgroundEffective(el: HTMLElement): string {
 
 export function measureAccordion(raiz: HTMLElement) {
   const triggers = Array.from(raiz.querySelectorAll<HTMLElement>('.nds-accordion-trigger'));
-  const primeiro = triggers[0] ?? null;
+  const first = triggers[0] ?? null;
   const conteudos = Array.from(raiz.querySelectorAll<HTMLElement>('.nds-accordion-content'));
   const itens = Array.from(raiz.querySelectorAll<HTMLElement>('.nds-accordion-item'));
-  const chevron = primeiro?.querySelector<HTMLElement>('svg') ?? null;
+  const chevron = first?.querySelector<HTMLElement>('svg') ?? null;
 
   // Quem está aberto: o painel visível, não o que o data-state diz — atributo é
   // promessa, altura é entrega.
   const abertos = conteudos.filter((c) => c.getBoundingClientRect().height > 0).length;
 
-  const background = primeiro ? backgroundEffective(primeiro) : 'rgb(255, 255, 255)';
+  const background = first ? backgroundEffective(first) : 'rgb(255, 255, 255)';
 
   return {
     finding: triggers.length > 0,
@@ -71,19 +71,19 @@ export function measureAccordion(raiz: HTMLElement) {
        * onde a semântica é a mesma. Aconteceu nesta sonda.
        */
       papelDoEnvoltorio: (() => {
-        const parent = primeiro?.parentElement;
+        const parent = first?.parentElement;
         if (!parent) return null;
         const tag = parent.tagName.toLowerCase();
         if (/^h[1-6]$/.test(tag)) return 'heading ' + tag[1];
         if (parent.getAttribute('role') === 'heading') return 'heading ' + (parent.getAttribute('aria-level') ?? '?');
         return tag;
       })(),
-      tagDoGatilho: primeiro?.tagName.toLowerCase() ?? null,
+      tagDoGatilho: first?.tagName.toLowerCase() ?? null,
       tagDoConteudo: conteudos[0]?.tagName.toLowerCase() ?? null,
     },
     semantica: {
-      expandido: primeiro?.getAttribute('aria-expanded') ?? null,
-      controla: primeiro?.getAttribute('aria-controls') ? 'sim' : 'não',
+      expandido: first?.getAttribute('aria-expanded') ?? null,
+      controla: first?.getAttribute('aria-controls') ? 'sim' : 'não',
       /** O painel aponta de volta para o gatilho? */
       labelledBy: conteudos[0]?.getAttribute('aria-labelledby') ? 'sim' : 'não',
       papelDoConteudo: conteudos[0]?.getAttribute('role') ?? null,
@@ -103,13 +103,13 @@ export function measureAccordion(raiz: HTMLElement) {
       escondidoDoConteudo: conteudos[0]?.hasAttribute('hidden') ? 'sim' : 'não',
       corpoInterno: conteudos[0]?.querySelector('.nds-accordion-content-body') ? 'sim' : 'não',
       estadoDoItem: itens[0]?.getAttribute('data-state') ?? null,
-      estadoDoGatilho: primeiro?.getAttribute('data-state') ?? null,
+      estadoDoGatilho: first?.getAttribute('data-state') ?? null,
       chevronEscondido: chevron?.getAttribute('aria-hidden') ?? null,
-      tabindexDoGatilho: primeiro?.getAttribute('tabindex') ?? null,
-      textoDoPrimeiro: texto(primeiro),
+      tabindexDoGatilho: first?.getAttribute('tabindex') ?? null,
+      textoDoPrimeiro: texto(first),
     },
     geometria: {
-      gatilho: caixa(primeiro),
+      gatilho: caixa(first),
       chevron: chevron
         ? {
             largura: Math.round(chevron.getBoundingClientRect().width),
@@ -120,9 +120,9 @@ export function measureAccordion(raiz: HTMLElement) {
       conteudo: caixa(conteudos.find((c) => c.getBoundingClientRect().height > 0) ?? null),
       bordaDoItem: itens[0] ? getComputedStyle(itens[0]).borderBottomWidth : null,
     },
-    contraste: primeiro
+    contraste: first
       ? {
-          gatilho: contraste(getComputedStyle(primeiro).color, background),
+          gatilho: contraste(getComputedStyle(first).color, background),
           chevron: chevron ? contraste(getComputedStyle(chevron).color, background) : null,
         }
       : null,

@@ -290,12 +290,12 @@ export function createCommand(options: CommandOptions): HTMLElement {
     if (noResult) return;
 
     const grupos = agrupar(filtrados);
-    let primeiro = true;
+    let first = true;
     let groupIndex = 0;
 
     grupos.forEach(({ titulo: nomeDoGrupo, itens: itensDoGrupo }) => {
-      if (!primeiro) list.appendChild(createSeparator());
-      primeiro = false;
+      if (!first) list.appendChild(createSeparator());
+      first = false;
 
       const groupEl = document.createElement('div');
       groupEl.className = 'nds-command-group';

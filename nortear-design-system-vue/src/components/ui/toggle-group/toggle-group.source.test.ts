@@ -16,7 +16,7 @@ import {
 
 /** A linha da raiz — é nela que mora tudo que o grupo decide pelos itens. */
 function rootOf(saida: string): string {
-  return saida.split('\n').find((linha) => linha.includes('<ToggleGroup ')) ?? '';
+  return saida.split('\n').find((line) => line.includes('<ToggleGroup ')) ?? '';
 }
 
 describe('toggleGroupSource', () => {

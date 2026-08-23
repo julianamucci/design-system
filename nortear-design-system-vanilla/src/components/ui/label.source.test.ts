@@ -85,12 +85,12 @@ describe('labelComCaixaSnippet', () => {
 describe('labelSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
     const padrão = labelSource('<label data-slot="label">', {});
-    const outro = labelSource('<label data-slot="label">', {
+    const other = labelSource('<label data-slot="label">', {
       args: { text: 'Telefone', className: 'nds-text-caption' },
     });
-    expect(padrão).not.toBe(outro);
-    expect(outro).toContain("text: 'Telefone'");
-    expect(outro).toContain("class: 'nds-text-caption'");
+    expect(padrão).not.toBe(other);
+    expect(other).toContain("text: 'Telefone'");
+    expect(other).toContain("class: 'nds-text-caption'");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {

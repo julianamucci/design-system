@@ -151,7 +151,7 @@ ${fila('        ', 'paginaAtual', 'onclick={() => (paginaAtual = p.value)}')}
 /** Rodapé de tabela: contador à esquerda e a faixa encostada à direita. */
 function markupTable(args: PaginationArgs): string {
   const props = rootProps(args, 'data-align="end"');
-  const primeiro = (args.page - 1) * args.perPage + 1;
+  const first = (args.page - 1) * args.perPage + 1;
   const last = args.page * args.perPage;
 
   return `<div
@@ -161,7 +161,7 @@ function markupTable(args: PaginationArgs): string {
   data-justify="between"
 >
   <span class="nds-text-body nds-text-muted-foreground">
-    Mostrando ${primeiro}–${last} de ${args.count} resultados
+    Mostrando ${first}–${last} de ${args.count} resultados
   </span>
   <Pagination${props}>
     {#snippet children({ pages, currentPage })}

@@ -55,7 +55,7 @@ type Part = {
   /** Linhas de import de outros componentes do design system. */
   externos: string[];
   /** Estado local que a composição exige (`$state`, handlers). */
-  estado: string;
+  state: string;
   /** Conteúdo do `PopoverContent`, já indentado em 4 espaços. */
   markup: string;
 };
@@ -67,7 +67,7 @@ function part(a: PopoverArgs): Part {
     return {
       names: [],
       externos: [],
-      estado: '',
+      state: '',
       markup: `    <p class="nds-text-body">${a.description}</p>`,
     };
   }
@@ -80,7 +80,7 @@ function part(a: PopoverArgs): Part {
         `import { Input } from "@/components/ui/input";`,
         `import { Label } from "@/components/ui/label";`,
       ],
-      estado: `let nome = $state("Ana Ribeiro");
+      state: `let nome = $state("Ana Ribeiro");
 let email = $state("ana@nortear.com.br");
 
 function salvar(evento: SubmitEvent) {
@@ -108,7 +108,7 @@ ${fechar(a.cancelLabel, 'ghost', '        ')}
     return {
       names: HEADER,
       externos: [`import { Button } from "@/components/ui/button";`],
-      estado: '',
+      state: '',
       markup: `${head}
     <div class="nds-stack nds-text-body" data-spacing="xs">
       <label class="nds-cluster" data-spacing="sm">
@@ -137,7 +137,7 @@ ${fechar(a.cancelLabel, 'ghost', '        ')}
     return {
       names: HEADER,
       externos: [],
-      estado: '',
+      state: '',
       markup: `${head}
     <div class="nds-cluster" data-spacing="sm">
       <button type="button" class="nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-bg-primary" aria-label="Primária"></button>
@@ -154,7 +154,7 @@ ${fechar(a.cancelLabel, 'ghost', '        ')}
     return {
       names: HEADER,
       externos: [],
-      estado: '',
+      state: '',
       markup: `${head}
     <div class="nds-stack nds-text-body" data-spacing="sm">
       <label class="nds-cluster" data-align="center" data-justify="between">
@@ -176,7 +176,7 @@ ${fechar(a.cancelLabel, 'ghost', '        ')}
   return {
     names: [...HEADER, 'PopoverClose'],
     externos: [`import { Button } from "@/components/ui/button";`],
-    estado: '',
+    state: '',
     markup: `${head}
     <div class="nds-cluster" data-justify="end" data-spacing="sm">
 ${fechar(a.cancelLabel, 'outline', '      ')}
@@ -208,14 +208,14 @@ export function popoverSource(_gerado?: string, ctx?: { args?: Partial<PopoverAr
     ...ctx?.args,
   };
 
-  const { names, externos, estado, markup } = part(a);
-  const aberto = Boolean(a.open || a.defaultOpen);
+  const { names, externos, state, markup } = part(a);
+  const isOpen = Boolean(a.open || a.defaultOpen);
 
   const script = [
     importDoPopover(['Popover', 'PopoverTrigger', 'PopoverContent', ...names]),
     ...(externos.length ? externos : [`import { Button } from "@/components/ui/button";`]),
-    ...(aberto ? ['', 'let aberto = $state(true);'] : []),
-    ...(estado ? ['', estado] : []),
+    ...(isOpen ? ['', 'let aberto = $state(true);'] : []),
+    ...(state ? ['', state] : []),
   ].join('\n');
 
   const propsDoContent = attrs(
@@ -226,7 +226,7 @@ export function popoverSource(_gerado?: string, ctx?: { args?: Partial<PopoverAr
 
   return svelteSnippet(
     script,
-    `<Popover${aberto ? ' bind:open={aberto}' : ''}>
+    `<Popover${isOpen ? ' bind:open={aberto}' : ''}>
   <PopoverTrigger>
     {#snippet child({ props })}
       <Button {...props}>${a.triggerLabel}</Button>

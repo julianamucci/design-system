@@ -24,7 +24,7 @@ const LARGURAS = [
 // Montado como string porque a story não tem componente: `@for` exigiria um
 // contexto de template, e o que se mede aqui é a folha de estilo, não Angular.
 const BOXES = LARGURAS.map(
-  (classe) => `<div class="${classe} nds-p-2 nds-bg-muted nds-text-caption">${classe}</div>`,
+  (className) => `<div class="${className} nds-p-2 nds-bg-muted nds-text-caption">${className}</div>`,
 ).join('');
 
 const meta: Meta = {

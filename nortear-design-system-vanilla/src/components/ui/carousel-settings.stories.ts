@@ -347,7 +347,7 @@ export const DragGesture: Story = {
     const clip = clipOf(canvasElement);
     const track = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
     const previous = () => canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
-    const proximo = () => canvas.getByRole('button', { name: 'Próximo item' });
+    const next = () => canvas.getByRole('button', { name: 'Próximo item' });
 
     // Quanto o trilho já saiu do recorte. O motor move o trilho por
     // `transform`, então `scrollLeft` fica em zero o tempo todo.
@@ -402,14 +402,14 @@ export const DragGesture: Story = {
       await waitFor(async () => {
         await expect(
           Math.abs(deslocamento() - alvo),
-          `${onde}: posição=${deslocamento()} alvo=${alvo} setas=[ant:${desligada(previous())} prox:${desligada(proximo())}]`,
+          `${onde}: posição=${deslocamento()} alvo=${alvo} setas=[ant:${desligada(previous())} prox:${desligada(next())}]`,
         ).toBeLessThan(2);
       }, { timeout: 4000 });
     };
 
     // O motor só mede depois que a raiz entra no documento: esperar a seta de
     // avanço acordar é o portão de montagem, não uma folga arbitrária.
-    await waitFor(() => expect(proximo()).toBeEnabled(), { timeout: 4000 });
+    await waitFor(() => expect(next()).toBeEnabled(), { timeout: 4000 });
 
     // ── A RÉGUA ───────────────────────────────────────────────────────────────
     //
@@ -434,7 +434,7 @@ export const DragGesture: Story = {
       posZero = await settle();
       await expect(previous()).toBeDisabled();
 
-      await userEvent.click(proximo());
+      await userEvent.click(next());
       posUm = await settle();
       await expect(posUm).toBeGreaterThan(posZero);
 
