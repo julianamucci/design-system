@@ -3381,6 +3381,107 @@ function sidebarConhecidos() {
   return nomes;
 }
 
+/** Nomes ainda em português, lidos do próprio primitivo que os declara. */
+let _identsPt = null;
+function identsPt() {
+  if (_identsPt) return _identsPt;
+  const src = readFile(join(ROOT, 'docs', 'shared', 'primitives', 'identificadores-pt.ts')) || '';
+  // Chave balanceada, não `\n};`: a primeira versão procurava o fechamento em
+  // início de linha e não achava um objeto escrito numa linha só — que é
+  // exatamente como `MANTIDOS` nasce (`= {};`) e como fica quando alguém
+  // declara a primeira exceção. O bloco vinha vazio, a dispensa não valia, e a
+  // regra continuava acusando um nome já decidido.
+  const bloco = (nome) => {
+    const i = src.indexOf(`export const ${nome}`);
+    if (i < 0) return '';
+    const abre = src.indexOf('{', i);
+    if (abre < 0) return '';
+    let n = 0;
+    for (let k = abre; k < src.length; k++) {
+      if (src[k] === '{') n++;
+      else if (src[k] === '}') { n--; if (n === 0) return src.slice(abre, k); }
+    }
+    return '';
+  };
+  // Cega o VALOR antes de ler a chave. Os motivos são frases em português e
+  // vêm cheios de `:` e de `,` — `'polissêmico: elemento recém-montado…'` —, e
+  // qualquer regex que leia o bloco cru acaba colhendo pedaço de prosa como se
+  // fosse nome. Com o valor apagado, sobra só `chave:`.
+  const chaves = (texto) => {
+    const cego = texto.replace(/(['"`])(?:\\.|(?!\1)[\s\S])*\1/g, "''");
+    return new Set([...cego.matchAll(/([A-Za-zÀ-ÿ_$][\w$À-ÿ]*)\s*:/g)].map((m) => m[1]));
+  };
+  _identsPt = { pendentes: chaves(bloco('PENDENTES')), mantidos: chaves(bloco('MANTIDOS')) };
+  return _identsPt;
+}
+
+/**
+ * Identificador em português dentro do componente.
+ *
+ * Duas fontes, porque uma só não cobre:
+ *
+ *  · a **lista declarada** em `identificadores-pt.ts`, que é o que sobrou da
+ *    campanha de tradução — nomes cujo alvo em inglês já existe no arquivo com
+ *    outro sentido, ou que significam duas coisas em dois lugares. Morfologia
+ *    não os pega: `texto`, `linhas` e `atual` não têm sufixo português nenhum;
+ *  · a **morfologia** de `pareceProtugues`, que pega o que ainda não foi
+ *    catalogado — nome novo escrito em português depois desta lista fechar.
+ *
+ * Só DECLARAÇÃO conta, e só fora de comentário. O detector de colisão da
+ * campanha era cego às duas coisas e inflou o backlog: `esperar` entrou como
+ * conflito em seis arquivos quando é declarado UMA vez no repositório — nos
+ * outros cinco aparecia em prosa.
+ */
+const DECLARA_RX = (n) =>
+  new RegExp(
+    `(?:const|let|var|function|type|interface|class|enum)\\s+${n}\\b` +
+      `|\\b${n}\\s*[:=]\\s*(?:\\(|function|async|signal|computed|input)`,
+    'g',
+  );
+
+function auditIdentificadorPt(slug) {
+  const violations = [];
+  const { pendentes, mantidos } = identsPt();
+
+  for (const stack of STACKS) {
+    const { all } = filesForSlug(slug, stack);
+    for (const file of all) {
+      const content = stripComments(readFile(file) || '');
+      const vistos = new Set();
+
+      for (const nome of pendentes) {
+        // `MANTIDOS` vence `PENDENTES`. Decidir que um nome fica é mover a
+        // entrada de uma lista para a outra, e quem faz isso não deve precisar
+        // lembrar de apagar a original — a regra tem de ficar calada pelo ato
+        // de declarar, não pela limpeza que o segue.
+        if (mantidos.has(nome)) continue;
+        if (vistos.has(nome) || !content.includes(nome)) continue;
+        if (!DECLARA_RX(nome).test(content)) continue;
+        vistos.add(nome);
+        violations.push({
+          category: 'quality', severity: 'low', slug, stack,
+          file: relative(ROOT, file), rule: 'identificador_pt',
+          message: `\`${nome}\` continua em português — a campanha não pôde traduzi-lo por varredura, e o motivo está em docs/shared/primitives/identificadores-pt.ts. Renomeie e tire da lista, ou mova para MANTIDOS com o motivo`,
+        });
+      }
+
+      // A morfologia de `pareceProtugues` NÃO entra aqui, e a medição é o
+      // motivo: ligada, ela produziu 1178 achados em 50 componentes — 24 por
+      // componente, contra os 11 da lista declarada. O que ela pega não são os
+      // nomes que a campanha deixou em aberto, e sim uma cauda muito maior que
+      // a campanha nunca cobriu (`descricao`, `luminancia`, `deslocamento`,
+      // `opcao`), porque estava fora dos 432 radicais varridos.
+      //
+      // Portão que despeja backlog não é portão: quem abre o componente para
+      // revisar testes não vai traduzir 24 nomes de passagem, então aprende a
+      // ignorar a regra inteira — e junto some o achado que importava. A cauda
+      // é trabalho legítimo, mas é trabalho de um lote próprio, medido de uma
+      // vez, e não pedaço avulso no meio da revisão de outro assunto.
+    }
+  }
+  return violations;
+}
+
 function auditSidebarVocab(slug) {
   const violations = [];
   const conhecidos = sidebarConhecidos();
@@ -4154,6 +4255,7 @@ function runAudit(slug, category) {
     ...auditFixtureDuplicada(slug),
     ...auditGuardrails(slug),
     ...auditSidebarVocab(slug),
+    ...auditIdentificadorPt(slug),
     ...auditPromessaDeCustomizacao(slug),
     ...auditDeadClassInTokenTable(slug),
   ];
