@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { managerHref } from '@shared/primitives/manager-href';
+
   interface DocsRelatedItem { name: string; description: string; path: string }
 
   /**
@@ -35,7 +37,7 @@
            e o href navega o manager (target="_top"), não há resolve() aplicável. -->
       <!-- eslint-disable svelte/no-navigation-without-resolve -->
       <a
-        href={item.path}
+        href={managerHref(item.path)}
         target="_top"
         class="nds-related-card"
         data-track="related"

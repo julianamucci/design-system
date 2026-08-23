@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
+import { managerHref } from '@shared/primitives/manager-href';
 
 export interface DocsRelatedItem { name: string; description: string; path: string }
 
@@ -23,7 +24,7 @@ function slugify(s: string): string {
             difere: vertical, multi-linha, padding maior, sem white-space:nowrap.
           -->
           <a
-            [href]="item.path"
+            [href]="managerHref(item.path)"
             target="_top"
             class="nds-related-card"
             data-track="related"
@@ -42,6 +43,9 @@ export class NdsDocsRelated {
   readonly title = input.required<string>();
   readonly items = input.required<DocsRelatedItem[]>();
   readonly componentSlug = input<string | undefined>(undefined);
+
+  /** O template não alcança função importada solta; precisa de um membro. */
+  protected readonly managerHref = managerHref;
 
   protected trackId(item: DocsRelatedItem): string | null {
     const slug = this.componentSlug();

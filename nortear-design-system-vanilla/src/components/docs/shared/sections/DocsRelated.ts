@@ -1,3 +1,5 @@
+import { managerHref } from '@shared/primitives/manager-href';
+
 import DOMPurify from 'dompurify';
 
 export interface DocsRelatedItem { name: string; description: string; path: string }
@@ -33,7 +35,7 @@ export function createDocsRelated(props: DocsRelatedProps): HTMLElement {
 
   props.items.forEach(item => {
     const a = document.createElement('a');
-    a.href = item.path;
+    a.href = managerHref(item.path);
     a.target = '_top';
     // Card clicável com aparência do button outline (border + bg + hover accent).
     // Implementado como classe própria .nds-related-card em vez de usar

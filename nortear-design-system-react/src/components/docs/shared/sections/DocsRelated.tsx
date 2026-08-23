@@ -1,3 +1,5 @@
+import { managerHref } from '@shared/primitives/manager-href';
+
 export interface DocsRelatedItem {
   name: string;
   description: string;
@@ -34,7 +36,7 @@ export function DocsRelated({ title, items, componentSlug }: DocsRelatedProps) {
             // padding maior, sem white-space:nowrap nem inline-flex centralizado).
             <a
               key={i}
-              href={item.path}
+              href={managerHref(item.path)}
               target="_top"
               className="nds-related-card"
               data-track="related"

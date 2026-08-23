@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { managerHref } from '@shared/primitives/manager-href';
+
 interface DocsRelatedItem { name: string; description: string; path: string }
 
 /**
@@ -40,7 +42,7 @@ function trackId(name: string): string | undefined {
       <a
         v-for="(item, i) in items"
         :key="i"
-        :href="item.path"
+        :href="managerHref(item.path)"
         target="_top"
         class="nds-related-card"
         data-track="related"
