@@ -19,6 +19,18 @@
  */
 
 .nds-alert {
+  /* Força da lavagem semântica do fundo, por MODO.
+   *
+   * No claro, 10% já separa a caixa da página. No escuro não separava: sobre o
+   * Ink a lavagem sumia e o alerta parecia não ter fundo nenhum. A variável
+   * existe para o valor ser um só, em vez de repetido nas quatro variantes —
+   * e para o par com `.dark` abaixo ficar legível.
+   *
+   * Engrossar a lavagem CUSTA contraste, porque ela é da própria cor: o fundo
+   * anda em direção ao texto. Foi por isso que o título de `destructive` e
+   * `success` passou a `--foreground` (ver o bloco de títulos adiante); com a
+   * cor semântica eles cairiam para 3.90:1 e 3.83:1, abaixo dos 4.5 do título. */
+  --alert-bg-alpha: 0.1;
   --alert-bg: hsl(var(--muted));
   --alert-fg: hsl(var(--card-foreground));
   --alert-border: hsl(var(--border));
@@ -122,9 +134,15 @@
  *     continuam garantidos e o token abre a customização em projetos derivados.
  * ────────────────────────────────────────────────────────────────────────── */
 
+/* A lavagem do escuro é mais forte: sobre o Ink, 10% não separava a caixa da
+   página. Vale para as quatro variantes de uma vez. */
+.dark .nds-alert {
+  --alert-bg-alpha: 0.2;
+}
+
 /* destructive — vermelho com bg soft */
 .nds-alert-destructive {
-  --alert-bg: hsl(var(--destructive) / 0.1);
+  --alert-bg: hsl(var(--destructive) / var(--alert-bg-alpha));
   --alert-fg: hsl(var(--destructive));
   --alert-body-fg: hsl(var(--destructive-foreground));
   --alert-border: hsl(var(--destructive) / 0.3);
@@ -132,7 +150,7 @@
 
 /* success — verde com bg soft */
 .nds-alert-success {
-  --alert-bg: hsl(var(--success) / 0.1);
+  --alert-bg: hsl(var(--success) / var(--alert-bg-alpha));
   --alert-fg: hsl(var(--success));
   --alert-body-fg: hsl(var(--success-foreground));
   --alert-border: hsl(var(--success) / 0.3);
@@ -140,14 +158,14 @@
 
 /* warning — âmbar com bg soft */
 .nds-alert-warning {
-  --alert-bg: hsl(var(--warning) / 0.1);
+  --alert-bg: hsl(var(--warning) / var(--alert-bg-alpha));
   --alert-fg: hsl(var(--warning));
   --alert-body-fg: hsl(var(--warning-foreground));
   --alert-border: hsl(var(--warning) / 0.3);
 }
 /* info — azul no tema Default e no Cold, laranja no Warm */
 .nds-alert-info {
-  --alert-bg: hsl(var(--info) / 0.1);
+  --alert-bg: hsl(var(--info) / var(--alert-bg-alpha));
   --alert-fg: hsl(var(--info));
   --alert-body-fg: hsl(var(--info-foreground));
   --alert-border: hsl(var(--info) / 0.3);
@@ -168,17 +186,46 @@
  * legibilidade depende do tema de marca escolhido é o mesmo defeito que a regra
  * do contêiner colorido proíbe por variante — então os dois recebem
  * `--foreground`, e a variante segue se distinguindo pelo fundo, pela borda e
- * pelo ícone. `destructive` e `success` mantêm a cor semântica: o pior caso
- * deles nas seis combinações é 4.84:1.
+ * pelo ícone.
+ *
+ * `destructive` e `success` entraram na mesma regra depois, e o motivo vale
+ * escrito: eles mantinham a cor semântica porque CONSEGUIAM (pior caso 4.84:1),
+ * não porque devessem. Quando a lavagem do modo escuro subiu para 20% — o fundo
+ * é da própria cor, então engrossá-lo aproxima fundo e texto —, o pior caso caiu
+ * para 3.90:1 no destructive e 3.83:1 no success. Manter a cor exigiria clareá-
+ * los até rosa e menta pálidos, perdendo justamente a presença que a lavagem
+ * mais forte foi buscar.
+ *
+ * Com as quatro na mesma regra, a cor semântica pinta só o ÍCONE, que é
+ * não-textual e exige 3:1 — folga que as cores atuais têm de sobra nos dois
+ * modos. O que o alerta perde é o título colorido; o que ele mantém é o ícone,
+ * a borda e o fundo, que é exatamente o argumento já registrado acima.
  *
  * Guardado pela story `Variants/Contrast` das cinco stacks, que varre os três
  * temas nos dois modos.
  *
- * Os dois blocos são separados, e não uma lista de seletores só, porque cada um
- * usa o par `-foreground` da SUA cor: `--warning-foreground` no warning e
- * `--info-foreground` no info. Nos dois o valor é `--foreground` neste projeto —
- * a cor pintada é a mesma de antes — mas um tema derivado pode divergir os dois,
- * e uma lista única obrigaria os dois a andarem juntos. */
+ * Os quatro blocos são separados, e não uma lista de seletores só, porque cada
+ * um usa o par `-foreground` da SUA cor. Nos quatro o valor é `--foreground`
+ * neste projeto — a cor pintada é a mesma — mas um tema derivado pode divergir
+ * os quatro, e uma lista única obrigaria todos a andarem juntos. */
+.nds-alert-destructive .nds-alert-title,
+.nds-alert-destructive > h1,
+.nds-alert-destructive > h2,
+.nds-alert-destructive > h3,
+.nds-alert-destructive > h4,
+.nds-alert-destructive > h5,
+.nds-alert-destructive > h6 {
+  color: hsl(var(--destructive-foreground));
+}
+.nds-alert-success .nds-alert-title,
+.nds-alert-success > h1,
+.nds-alert-success > h2,
+.nds-alert-success > h3,
+.nds-alert-success > h4,
+.nds-alert-success > h5,
+.nds-alert-success > h6 {
+  color: hsl(var(--success-foreground));
+}
 .nds-alert-warning .nds-alert-title,
 .nds-alert-warning > h1,
 .nds-alert-warning > h2,
