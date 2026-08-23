@@ -1,0 +1,34 @@
+/*
+ * ─── Do & Don't: moldura do preview ───────────────────────────────────────────
+ *
+ * O par certo/errado se distingue pela BORDA, não por preenchimento. A versão
+ * anterior usava `.nds-bg-{success,destructive}-soft` — uma lavagem de 10% da
+ * cor semântica — e o preenchimento tinha dois problemas: competia com o
+ * componente demonstrado dentro da caixa, que é o assunto, e servia de fundo
+ * para o texto do próprio exemplo, o que apertava o contraste sem necessidade
+ * (um `.nds-text-destructive` dentro de uma caixa destructive-soft ficava sobre
+ * uma lavagem do próprio matiz).
+ *
+ * O estilo mora aqui e não nas utilidades porque `.nds-border-*-soft` é
+ * compartilhada com outras docs pages (Sidebar, ContextMenu, DropdownMenu,
+ * Menubar), onde a espessura de 1px continua correta. Mudar a utilidade para
+ * atender esta seção mexeria em quatro páginas que não pediram nada.
+ *
+ * O gancho é `data-docs-preview`, que o componente já expunha. Os valores `do` e
+ * `dont` são exclusivos desta seção — `demonstracao` e `variante` são de
+ * ComponentDemo e DocsVariants, e não entram nestas regras.
+ */
+
+[data-docs-preview="do"],
+[data-docs-preview="dont"] {
+  border-style: solid;
+  border-width: 2px;
+}
+
+[data-docs-preview="do"] {
+  border-color: hsl(var(--success) / 0.3);
+}
+
+[data-docs-preview="dont"] {
+  border-color: hsl(var(--destructive) / 0.3);
+}

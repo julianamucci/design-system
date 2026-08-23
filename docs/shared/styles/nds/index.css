@@ -111,3 +111,7 @@
 @import "./colors.css";
 @import "./spacing.css";
 @import "./utilities.css";
+
+/* Seção de docs, depois das utilidades: sobrescreve a borda do `.nds-card`
+   do preview sem depender de especificidade extra. */
+@import "./do-dont.css";

@@ -51,7 +51,7 @@ defineProps<{
                  a coluna do `.nds-card` e encosta tudo à esquerda — visível em
                  qualquer componente de largura própria. -->
             <Card
-              class="nds-cluster nds-border-success-soft nds-bg-success-soft nds-shadow-none nds-p-4"
+              class="nds-cluster nds-shadow-none nds-p-4"
               data-justify="center"
               data-docs-preview="do"
             >
@@ -77,7 +77,7 @@ defineProps<{
               <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">{{ pair.dontLabel }}</span>
             </div>
             <Card
-              class="nds-cluster nds-border-destructive-soft nds-bg-destructive-soft nds-shadow-none nds-p-4"
+              class="nds-cluster nds-shadow-none nds-p-4"
               data-justify="center"
               data-docs-preview="dont"
             >
