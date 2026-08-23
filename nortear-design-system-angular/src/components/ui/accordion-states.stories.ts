@@ -47,10 +47,10 @@ export const Closed: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button');
+    const trigger = canvas.getByRole('button');
 
     await step('Gatilho tem aria-expanded=false', async () => {
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('O painel fechado permanece no documento', async () => {
@@ -58,19 +58,19 @@ export const Closed: Story = {
       // de um item fechado; desmontar o painel mataria o recurso em silêncio. O
       // display entra junto porque um `display: none` de autor o anula sem
       // quebrar nada visível.
-      const painel = await waitFor(() => {
+      const panel = await waitFor(() => {
         const el = canvasElement.querySelector<HTMLElement>('[data-slot="accordion-content"]');
         if (!el || !el.hasAttribute('hidden')) throw new Error('painel ainda assentando');
         return el;
       });
-      await expect(painel.getAttribute('hidden')).toBe('until-found');
-      await expect(getComputedStyle(painel).display).not.toBe('none');
+      await expect(panel.getAttribute('hidden')).toBe('until-found');
+      await expect(getComputedStyle(panel).display).not.toBe('none');
     });
 
     await step('Fechado, o gatilho ainda aponta para o painel', async () => {
       // Sem `role="region"` no painel, o aria-controls é o ÚNICO vínculo entre
       // gatilho e conteúdo.
-      const contentId = gatilho.getAttribute('aria-controls');
+      const contentId = trigger.getAttribute('aria-controls');
       await expect(contentId).toBeTruthy();
       await expect(
         canvasElement.querySelector(`#${CSS.escape(contentId!)}`),
@@ -103,10 +103,10 @@ export const Open: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button');
+    const trigger = canvas.getByRole('button');
 
     await step('Gatilho tem aria-expanded=true', async () => {
-      await waitFor(() => expect(gatilho).toHaveAttribute('aria-expanded', 'true'), {
+      await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'), {
         timeout: 500,
       });
     });
@@ -116,10 +116,10 @@ export const Open: Story = {
       // animação de grid, e já houve regressão com gatilho aberto e painel
       // colapsado.
       await waitFor(() => {
-        const painel = canvasElement.querySelector<HTMLElement>(
+        const panel = canvasElement.querySelector<HTMLElement>(
           '[data-slot="accordion-content"]:not([hidden])',
         );
-        if (!painel || painel.getBoundingClientRect().height === 0) {
+        if (!panel || panel.getBoundingClientRect().height === 0) {
           throw new Error('painel ainda abrindo');
         }
       });

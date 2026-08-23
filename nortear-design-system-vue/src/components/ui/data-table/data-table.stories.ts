@@ -167,20 +167,20 @@ export const Playground: Story = {
       await waitFor(() => expect(th).toHaveAttribute('aria-sort', 'none'));
     };
     /** Clica só se o estado ainda não é o desejado — sobrevive ao replay. */
-    const marcar = async (caixa: HTMLElement, alvo: 'true' | 'false') => {
-      if (caixa.getAttribute('aria-checked') !== alvo) await userEvent.click(caixa);
-      await waitFor(() => expect(caixa).toHaveAttribute('aria-checked', alvo));
+    const marcar = async (box: HTMLElement, target: 'true' | 'false') => {
+      if (box.getAttribute('aria-checked') !== target) await userEvent.click(box);
+      await waitFor(() => expect(box).toHaveAttribute('aria-checked', target));
     };
 
     await step('É uma tabela de verdade, com seções semânticas', async () => {
       // accessibility.item1 — o que faz um leitor anunciar "tabela, 6 colunas" é
       // a TAG, não a classe. A mesma grade montada com div sumiria da árvore de
       // acessibilidade sem mudar um pixel.
-      const tabela = canvas.getByRole('table');
-      await expect(tabela.tagName).toBe('TABLE');
-      await expect(tabela).toHaveAttribute('data-slot', 'table');
-      await expect(tabela.querySelector('thead')).toHaveAttribute('data-slot', 'table-header');
-      await expect(tabela.querySelector('tbody')).toHaveAttribute('data-slot', 'table-body');
+      const table = canvas.getByRole('table');
+      await expect(table.tagName).toBe('TABLE');
+      await expect(table).toHaveAttribute('data-slot', 'table');
+      await expect(table.querySelector('thead')).toHaveAttribute('data-slot', 'table-header');
+      await expect(table.querySelector('tbody')).toHaveAttribute('data-slot', 'table-body');
       await expect(canvasElement.querySelector("[data-slot='data-table']")).toHaveClass(
         'nds-data-table',
       );
@@ -191,20 +191,20 @@ export const Playground: Story = {
       // accessibility.item6 — a legenda é a única coisa que diz DE QUÊ é esta
       // grade a quem entra nela pelo leitor. Fora da tela porque o título já
       // está acima para quem vê; repeti-lo seria ruído visual.
-      const tabela = canvas.getByRole('table');
-      const legenda = tabela.querySelector('caption');
-      await expect(legenda).not.toBeNull();
+      const table = canvas.getByRole('table');
+      const caption = table.querySelector('caption');
+      await expect(caption).not.toBeNull();
       // Primeiro filho porque o HTML exige: em outra posição o navegador a
       // descarta e o nome acessível some junto.
-      await expect(tabela.firstElementChild).toBe(legenda);
-      await expect(tabela).toHaveAccessibleName('Faturas recentes');
+      await expect(table.firstElementChild).toBe(caption);
+      await expect(table).toHaveAccessibleName('Faturas recentes');
       // O efeito COMPUTADO, não o nome da classe: uma classe renomeada no CSS
       // deixaria a legenda visível sem quebrar asserção nenhuma.
-      const estilo = getComputedStyle(legenda!);
-      const caixa = legenda!.getBoundingClientRect();
+      const estilo = getComputedStyle(caption!);
+      const box = caption!.getBoundingClientRect();
       await expect(estilo.position).toBe('absolute');
-      await expect(caixa.width).toBeLessThanOrEqual(2);
-      await expect(caixa.height).toBeLessThanOrEqual(2);
+      await expect(box.width).toBeLessThanOrEqual(2);
+      await expect(box.height).toBeLessThanOrEqual(2);
     });
 
     await step('Uma só camada rola na horizontal, e ela recebe foco', async () => {

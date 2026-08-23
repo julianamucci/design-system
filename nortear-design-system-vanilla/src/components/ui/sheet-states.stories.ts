@@ -115,19 +115,19 @@ export const Open: Story = {
     openInitially: true,
   }),
   play: async ({ step }) => {
-    const painel = await waitForPortal('dialog');
+    const panel = await waitForPortal('dialog');
 
     await step('Monta já aberto, com o contrato de markup completo', async () => {
-      await expect(painel).toBeVisible();
-      await expect(painel).toHaveAttribute('aria-modal', 'true');
-      await expect(painel).toHaveAccessibleName(/Filtros avançados/i);
-      await expect(painel).toHaveAccessibleDescription();
+      await expect(panel).toBeVisible();
+      await expect(panel).toHaveAttribute('aria-modal', 'true');
+      await expect(panel).toHaveAccessibleName(/Filtros avançados/i);
+      await expect(panel).toHaveAccessibleDescription();
       await expect(document.querySelector('[data-slot="sheet-overlay"]')).not.toBeNull();
     });
 
     await step('O foco está dentro do painel', async () => {
       await waitFor(() => {
-        if (!painel.contains(document.activeElement)) {
+        if (!panel.contains(document.activeElement)) {
           throw new Error('o foco não entrou no painel');
         }
       });
@@ -209,9 +209,9 @@ export const Controlled: Story = {
 
     await step('O comando externo abre o painel', async () => {
       await userEvent.click(externo);
-      const painel = await waitForPortal('dialog');
-      await expect(painel).toBeVisible();
-      await expect(painel).toHaveAttribute('data-slot', 'sheet-content');
+      const panel = await waitForPortal('dialog');
+      await expect(panel).toBeVisible();
+      await expect(panel).toHaveAttribute('data-slot', 'sheet-content');
       // O callback devolveu o estado a quem é dono dele.
       await expect(externo).toHaveAttribute('data-open', 'true');
     });
@@ -267,13 +267,13 @@ export const ListenerCleanup: Story = {
       probe = await sondarOuvintes({
         host: host as HTMLElement,
         montar: () => {
-          const conteudo = document.createElement('p');
-          conteudo.textContent = 'Conteúdo do painel.';
+          const content = document.createElement('p');
+          content.textContent = 'Conteúdo do painel.';
           return createSheet({
             trigger: createButton({ variant: 'outline', label: 'Abrir' }),
             title: 'Título',
             description: 'Descrição do painel.',
-            content: conteudo,
+            content: content,
           });
         },
         exercitar: (no) => no.querySelector<HTMLElement>('button')?.click(),

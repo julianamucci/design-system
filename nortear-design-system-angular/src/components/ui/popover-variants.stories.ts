@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, screen } from 'storybook/test';
 import { NDS_POPOVER } from './popover';
-import { abrir, painel } from './popover.fixtures';
+import { open, panel } from './popover.fixtures';
 import { NdsButton } from './button';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
@@ -51,20 +51,20 @@ export const Default: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Ver atalhos' });
+    const trigger = canvas.getByRole('button', { name: 'Ver atalhos' });
 
     await step('Sem título, o painel herda o nome acessível do gatilho', async () => {
       // `role="dialog"` sem nome reprova na regra aria-dialog-name do axe. O
       // Vanilla resolve assim, e este stack copia: o texto do gatilho vira
       // aria-label do painel enquanto não houver `ndsPopoverTitle`.
-      await abrir(gatilho);
+      await open(trigger);
       const dialogo = screen.getByRole('dialog', { name: 'Ver atalhos' });
       await expect(dialogo).toBeVisible();
       await expect(dialogo).not.toHaveAttribute('aria-labelledby');
     });
 
     await step('O painel carrega a classe do design system', async () => {
-      await expect(painel()).toHaveClass(/nds-popover-content/);
+      await expect(panel()).toHaveClass(/nds-popover-content/);
     });
   },
 };
@@ -92,17 +92,17 @@ export const WithTitle: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Configurações de exibição' });
+    const trigger = canvas.getByRole('button', { name: 'Configurações de exibição' });
 
     await step('O título nomeia o painel por aria-labelledby', async () => {
-      await abrir(gatilho);
+      await open(trigger);
       const dialogo = screen.getByRole('dialog');
       const idTitle = dialogo.getAttribute('aria-labelledby');
       await expect(idTitle).toBeTruthy();
-      const titulo = document.getElementById(idTitle!)!;
-      await expect(titulo).toHaveAttribute('data-slot', 'popover-title');
-      await expect(titulo).toHaveClass(/nds-popover-title/);
-      await expect(titulo.textContent?.trim()).toBe('Configurações de exibição');
+      const title = document.getElementById(idTitle!)!;
+      await expect(title).toHaveAttribute('data-slot', 'popover-title');
+      await expect(title).toHaveClass(/nds-popover-title/);
+      await expect(title.textContent?.trim()).toBe('Configurações de exibição');
     });
 
     await step('A descrição entra por aria-describedby', async () => {
@@ -114,7 +114,7 @@ export const WithTitle: Story = {
 
     await step('O cabeçalho é um agrupador com classe própria', async () => {
       await expect(
-        painel()!.querySelector('[data-slot="popover-header"]'),
+        panel()!.querySelector('[data-slot="popover-header"]'),
       ).toHaveClass(/nds-popover-header/);
     });
   },
@@ -153,13 +153,13 @@ export const Form: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Editar perfil' });
+    const trigger = canvas.getByRole('button', { name: 'Editar perfil' });
 
     await step('Os campos existem e estão associados aos rótulos', async () => {
-      await abrir(gatilho);
-      const nome = screen.getByLabelText('Nome');
+      await open(trigger);
+      const name = screen.getByLabelText('Nome');
       const email = screen.getByLabelText('Email');
-      await expect(nome).toHaveValue('Ana Ribeiro');
+      await expect(name).toHaveValue('Ana Ribeiro');
       await expect(email).toHaveValue('ana@nortear.com.br');
     });
 
@@ -167,10 +167,10 @@ export const Form: Story = {
       // Conteúdo interativo dentro do painel é a razão de existir do popover.
       // Se o portal renderizasse fora de qualquer contexto de eventos, a
       // digitação abaixo não mudaria nada.
-      const nome = screen.getByLabelText('Nome') as HTMLInputElement;
-      await userEvent.clear(nome);
-      await userEvent.type(nome, 'Bruno Lima');
-      await expect(nome).toHaveValue('Bruno Lima');
+      const name = screen.getByLabelText('Nome') as HTMLInputElement;
+      await userEvent.clear(name);
+      await userEvent.type(name, 'Bruno Lima');
+      await expect(name).toHaveValue('Bruno Lima');
     });
   },
 };

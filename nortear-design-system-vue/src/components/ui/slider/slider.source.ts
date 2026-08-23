@@ -47,30 +47,30 @@ function values(raw: unknown, padrao: number[]): number[] {
  * controle: quem arrasta com o ponteiro não ouve a alça, e sem esta linha o
  * número só existe para quem vê.
  */
-function bloco(opcoes: {
-  rotulo: string;
+function block(options: {
+  label: string;
   state: string;
   saida?: string;
-  controle: string;
-  largura?: string;
+  control: string;
+  width?: string;
   extra?: string;
 }): string {
-  const largura = opcoes.largura ?? 'nds-stack nds-w-sm';
-  const header = opcoes.saida
+  const width = options.width ?? 'nds-stack nds-w-sm';
+  const header = options.saida
     ? `  <div class="nds-cluster" data-justify="between">
-    <Label>${opcoes.rotulo}</Label>
-    <span aria-live="polite" class="nds-text-body nds-tabular-nums">${opcoes.saida}</span>
+    <Label>${options.label}</Label>
+    <span aria-live="polite" class="nds-text-body nds-tabular-nums">${options.saida}</span>
   </div>`
-    : `  <Label>${opcoes.rotulo}</Label>`;
-  return `<div class="${largura}" data-spacing="sm">
+    : `  <Label>${options.label}</Label>`;
+  return `<div class="${width}" data-spacing="sm">
 ${header}
-${indentar(opcoes.controle)}${opcoes.extra ? `\n${indentar(opcoes.extra)}` : ''}
+${indentar(options.control)}${options.extra ? `\n${indentar(options.extra)}` : ''}
 </div>`;
 }
 
 /** O controle em si, com os atributos que diferem do padrão do componente. */
-function controle(state: string, rotulo: string, extras = ''): string {
-  return `<Slider v-model="${state}"${extras} aria-label="${rotulo}" />`;
+function control(state: string, label: string, extras = ''): string {
+  return `<Slider v-model="${state}"${extras} aria-label="${label}" />`;
 }
 
 /**
@@ -92,11 +92,11 @@ export const sliderPlaygroundSource: SourceTransform<SliderArgs> = (_gerado, ctx
   );
   return vueSnippet(
     `${IMPORTS}\n\nconst volume = ref([${inicial.join(', ')}])`,
-    bloco({
-      rotulo: 'Volume',
+    block({
+      label: 'Volume',
       state: 'volume',
       saida: '{{ volume[0] }}%',
-      controle: controle('volume', 'Volume', extras),
+      control: control('volume', 'Volume', extras),
     }),
   );
 };
@@ -105,11 +105,11 @@ export const sliderPlaygroundSource: SourceTransform<SliderArgs> = (_gerado, ctx
 export function sliderUnicoSource(): string {
   return vueSnippet(
     `${IMPORTS}\n\nconst volume = ref([50])`,
-    bloco({
-      rotulo: 'Volume',
+    block({
+      label: 'Volume',
       state: 'volume',
       saida: '{{ volume[0] }}%',
-      controle: controle('volume', 'Volume'),
+      control: control('volume', 'Volume'),
     }),
   );
 }
@@ -122,11 +122,11 @@ export function sliderUnicoSource(): string {
 export function sliderRangeSource(): string {
   return vueSnippet(
     `${IMPORTS}\n\nconst faixa = ref([20, 80])`,
-    bloco({
-      rotulo: 'Faixa de preço',
+    block({
+      label: 'Faixa de preço',
       state: 'faixa',
       saida: 'R$ {{ faixa[0] }} — R$ {{ faixa[1] }}',
-      controle: controle('faixa', 'Faixa de preço'),
+      control: control('faixa', 'Faixa de preço'),
     }),
   );
 }
@@ -139,13 +139,13 @@ export function sliderRangeSource(): string {
 export function sliderVerticalSource(): string {
   return vueSnippet(
     `${IMPORTS}\n\nconst brilho = ref([60])`,
-    bloco({
-      rotulo: 'Brilho',
+    block({
+      label: 'Brilho',
       state: 'brilho',
       saida: '{{ brilho[0] }}%',
-      largura: 'nds-stack',
-      controle: `<div class="nds-cluster" data-justify="center">
-  ${controle('brilho', 'Brilho', ' orientation="vertical"')}
+      width: 'nds-stack',
+      control: `<div class="nds-cluster" data-justify="center">
+  ${control('brilho', 'Brilho', ' orientation="vertical"')}
 </div>`,
     }),
   );
@@ -166,10 +166,10 @@ export function sliderDefaultSource(): string {
 export function sliderFocusSource(): string {
   return vueSnippet(
     `${IMPORTS}\n\nconst volume = ref([50])`,
-    bloco({
-      rotulo: 'Volume',
+    block({
+      label: 'Volume',
       state: 'volume',
-      controle: controle('volume', 'Volume'),
+      control: control('volume', 'Volume'),
     }),
   );
 }
@@ -181,10 +181,10 @@ export function sliderFocusSource(): string {
 export function sliderDisabledSource(): string {
   return vueSnippet(
     `${IMPORTS}\n\nconst volume = ref([50])`,
-    bloco({
-      rotulo: 'Volume',
+    block({
+      label: 'Volume',
       state: 'volume',
-      controle: controle('volume', 'Volume', ' disabled'),
+      control: control('volume', 'Volume', ' disabled'),
     }),
   );
 }
@@ -196,11 +196,11 @@ export function sliderDisabledSource(): string {
 export function minimumSliderSource(): string {
   return vueSnippet(
     `${IMPORTS}\n\nconst volume = ref([0])`,
-    bloco({
-      rotulo: 'Volume',
+    block({
+      label: 'Volume',
       state: 'volume',
       saida: '{{ volume[0] }}%',
-      controle: controle('volume', 'Volume'),
+      control: control('volume', 'Volume'),
     }),
   );
 }
@@ -209,11 +209,11 @@ export function minimumSliderSource(): string {
 export function sliderNoMaximoSource(): string {
   return vueSnippet(
     `${IMPORTS}\n\nconst volume = ref([100])`,
-    bloco({
-      rotulo: 'Volume',
+    block({
+      label: 'Volume',
       state: 'volume',
       saida: '{{ volume[0] }}%',
-      controle: controle('volume', 'Volume'),
+      control: control('volume', 'Volume'),
     }),
   );
 }
@@ -231,11 +231,11 @@ export function sliderVolumeSource(): string {
 export function sliderPrecoSource(): string {
   return vueSnippet(
     `${IMPORTS}\n\nconst faixa = ref([100, 400])`,
-    bloco({
-      rotulo: 'Faixa de preço',
+    block({
+      label: 'Faixa de preço',
       state: 'faixa',
       saida: 'R$ {{ faixa[0] }} — R$ {{ faixa[1] }}',
-      controle: controle('faixa', 'Faixa de preço', ' :max="500" :step="10"'),
+      control: control('faixa', 'Faixa de preço', ' :max="500" :step="10"'),
       extra: `<div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
   <span>R$ 0</span>
   <span>R$ 500</span>
@@ -259,7 +259,7 @@ const opacidade = ref([100])
 const salvo = ref('')
 
 function salvar() {
-  salvo.value = \`Brilho \${brilho.value[0]}% · Opacidade \${opacidade.value[0]}%\`
+  salvo.value = \`Brilho \${brilho.value[0]}% · Opacidade \${opacity.value[0]}%\`
 }`,
     `<form
   class="nds-stack nds-w-sm"
@@ -273,22 +273,22 @@ function salvar() {
   </div>
 
 ${indentar(
-  bloco({
-    rotulo: 'Brilho',
+  block({
+    label: 'Brilho',
     state: 'brilho',
     saida: '{{ brilho[0] }}%',
-    controle: controle('brilho', 'Brilho'),
-    largura: 'nds-stack',
+    control: control('brilho', 'Brilho'),
+    width: 'nds-stack',
   }),
 )}
 
 ${indentar(
-  bloco({
-    rotulo: 'Opacidade',
+  block({
+    label: 'Opacidade',
     state: 'opacidade',
     saida: '{{ opacidade[0] }}%',
-    controle: controle('opacidade', 'Opacidade'),
-    largura: 'nds-stack',
+    control: control('opacidade', 'Opacidade'),
+    width: 'nds-stack',
   }),
 )}
 
@@ -305,11 +305,11 @@ ${indentar(
 export function sliderStepGrossoSource(): string {
   return vueSnippet(
     `${IMPORTS}\n\nconst avaliacao = ref([3])`,
-    bloco({
-      rotulo: 'Avaliação',
+    block({
+      label: 'Avaliação',
       state: 'avaliacao',
       saida: '{{ avaliacao[0] }} / 5',
-      controle: controle('avaliacao', 'Avaliação', ' :min="1" :max="5"'),
+      control: control('avaliacao', 'Avaliação', ' :min="1" :max="5"'),
       extra: `<div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
   <span>1</span>
   <span>2</span>

@@ -69,11 +69,11 @@ export const Default: Story = {
   }),
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
-    const itens = within(menu).getAllByRole('menuitem');
+    const items = within(menu).getAllByRole('menuitem');
 
     await step('A variante default é escrita no markup', async () => {
-      await expect(itens).toHaveLength(3);
-      for (const item of itens) {
+      await expect(items).toHaveLength(3);
+      for (const item of items) {
         await expect(item).toHaveAttribute('data-variant', 'default');
         await expect(item.classList.contains('nds-dropdown-menu-item')).toBe(true);
       }
@@ -82,7 +82,7 @@ export const Default: Story = {
     await step('O item neutro herda a cor do popup, sem cor semântica', async () => {
       // O item destacado troca de cor de propósito — a comparação tem que ser
       // com um item em repouso, senão ela mede o realce e não a variante.
-      const inRest = itens.filter((i) => !i.hasAttribute('data-highlighted'));
+      const inRest = items.filter((i) => !i.hasAttribute('data-highlighted'));
       await expect(inRest.length).toBeGreaterThan(0);
       await expect(getComputedStyle(inRest[0]).color).toBe(getComputedStyle(menu).color);
     });
@@ -91,7 +91,7 @@ export const Default: Story = {
       // O item de contrato dizia "verificar por axe-core" — verificação que
       // ninguém rodava. A razão é aritmética, e é ela que responde. 14px em peso
       // normal é texto normal pela WCAG: o limite é 4.5, não 3.
-      const inRest = itens.filter((i) => !i.hasAttribute('data-highlighted'));
+      const inRest = items.filter((i) => !i.hasAttribute('data-highlighted'));
       const measurement = itemContrast(inRest[0]);
       await expect(measurement).not.toBeNull();
       await expect(measurement!.ratio).toBeGreaterThanOrEqual(4.5);

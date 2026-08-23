@@ -69,11 +69,11 @@ export const CustomDimension: Story = {
       // A medida vem de `data-shape=avatar` -> escada --size-*, que responde à
       // densidade. Se o atributo sumir, o esqueleto colapsa para zero e só a
       // medição acusa.
-      const caixa = boxDesenhada(parts[0]);
-      await expect(caixa.quadrado).toBe(true);
+      const box = boxDesenhada(parts[0]);
+      await expect(box.quadrado).toBe(true);
       // Sem número mágico: a medida vem da escada --size-*, que muda por
       // densidade. Afirmar '40px' amarraria o teste ao tema padrão.
-      await expect(caixa.largura).toBeGreaterThan(0);
+      await expect(box.width).toBeGreaterThan(0);
     });
 
     await step('As duas linhas seguem a fração de largura declarada', async () => {

@@ -81,12 +81,12 @@ export const Right: Story = {
     description: 'Filtros avançados encostados à direita.',
   }),
   play: async () => {
-    const painel = await waitForPortal('dialog');
-    await expect(painel).toHaveAttribute('data-side', 'right');
-    await expect(painel).toHaveAttribute('aria-modal', 'true');
-    await expect(painel).toHaveClass(/nds-sheet-content/);
+    const panel = await waitForPortal('dialog');
+    await expect(panel).toHaveAttribute('data-side', 'right');
+    await expect(panel).toHaveAttribute('aria-modal', 'true');
+    await expect(panel).toHaveClass(/nds-sheet-content/);
     // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
-    await borderWaitForEncostar(painel, 'right');
+    await borderWaitForEncostar(panel, 'right');
   },
 };
 
@@ -114,10 +114,10 @@ export const Left: Story = {
     description: 'Navegação secundária encostada à esquerda.',
   }),
   play: async () => {
-    const painel = await waitForPortal('dialog');
-    await expect(painel).toHaveAttribute('data-side', 'left');
-    await expect(painel).toHaveClass(/nds-sheet-content/);
-    await borderWaitForEncostar(painel, 'left');
+    const panel = await waitForPortal('dialog');
+    await expect(panel).toHaveAttribute('data-side', 'left');
+    await expect(panel).toHaveClass(/nds-sheet-content/);
+    await borderWaitForEncostar(panel, 'left');
   },
 };
 
@@ -142,10 +142,10 @@ export const Top: Story = {
     description: 'Faixa superior com ações rápidas.',
   }),
   play: async () => {
-    const painel = await waitForPortal('dialog');
-    await expect(painel).toHaveAttribute('data-side', 'top');
-    await expect(painel).toHaveClass(/nds-sheet-content/);
-    await borderWaitForEncostar(painel, 'top');
+    const panel = await waitForPortal('dialog');
+    await expect(panel).toHaveAttribute('data-side', 'top');
+    await expect(panel).toHaveClass(/nds-sheet-content/);
+    await borderWaitForEncostar(panel, 'top');
   },
 };
 
@@ -171,9 +171,9 @@ export const Bottom: Story = {
     description: 'Painel mobile-style sem swipe.',
   }),
   play: async () => {
-    const painel = await waitForPortal('dialog');
-    await expect(painel).toHaveAttribute('data-side', 'bottom');
-    await expect(painel).toHaveClass(/nds-sheet-content/);
-    await borderWaitForEncostar(painel, 'bottom');
+    const panel = await waitForPortal('dialog');
+    await expect(panel).toHaveAttribute('data-side', 'bottom');
+    await expect(panel).toHaveClass(/nds-sheet-content/);
+    await borderWaitForEncostar(panel, 'bottom');
   },
 };

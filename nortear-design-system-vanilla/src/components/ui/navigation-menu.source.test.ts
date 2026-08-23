@@ -10,21 +10,21 @@ import {
 
 describe('navigationMenuSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML da barra', () => {
-    const código = navigationMenuSnippet();
-    expect(código).toContain(
+    const code = navigationMenuSnippet();
+    expect(code).toContain(
       "import { createNavigationMenu } from '@/components/ui/navigation-menu';",
     );
-    expect(código).toContain('createNavigationMenu([');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('<nav');
+    expect(code).toContain('createNavigationMenu([');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('<nav');
   });
 
   it('passa os itens no primeiro argumento, que é posicional', () => {
-    const código = navigationMenuSnippet();
-    expect(código).toContain("{ label: 'Início', href: '#inicio' },");
-    expect(código).toContain('children: [');
-    expect(código).toContain("{ label: 'Plano Inicial', href: '#inicial' },");
-    expect(código).toContain("document.querySelector('#app')?.append(barra);");
+    const code = navigationMenuSnippet();
+    expect(code).toContain("{ label: 'Início', href: '#inicio' },");
+    expect(code).toContain('children: [');
+    expect(code).toContain("{ label: 'Plano Inicial', href: '#inicial' },");
+    expect(code).toContain("document.querySelector('#app')?.append(barra);");
   });
 
   it('nomeia o landmark — dois "navegação" na página são indistinguíveis', () => {
@@ -37,43 +37,43 @@ describe('navigationMenuSnippet', () => {
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = navigationMenuSnippet({
+    const code = navigationMenuSnippet({
       orientation: 'horizontal',
       delayDuration: 200,
       skipDelayDuration: 300,
     });
-    expect(código).not.toContain('orientation');
-    expect(código).not.toContain('delayDuration');
-    expect(código).not.toContain('skipDelayDuration');
-    expect(código).not.toContain('], {');
+    expect(code).not.toContain('orientation');
+    expect(code).not.toContain('delayDuration');
+    expect(code).not.toContain('skipDelayDuration');
+    expect(code).not.toContain('], {');
   });
 
   it('mostra a orientação e as esperas quando a story as usa', () => {
-    const código = navigationMenuSnippet({
+    const code = navigationMenuSnippet({
       orientation: 'vertical',
       delayDuration: 100,
       skipDelayDuration: 0,
       class: 'nds-w-sm',
     });
-    expect(código).toContain("orientation: 'vertical'");
-    expect(código).toContain('delayDuration: 100');
-    expect(código).toContain('skipDelayDuration: 0');
-    expect(código).toContain("class: 'nds-w-sm'");
+    expect(code).toContain("orientation: 'vertical'");
+    expect(code).toContain('delayDuration: 100');
+    expect(code).toContain('skipDelayDuration: 0');
+    expect(code).toContain("class: 'nds-w-sm'");
   });
 
   it('marca a página atual pelo item, que é de onde sai o aria-current', () => {
-    const código = navigationMenuSnippet({
+    const code = navigationMenuSnippet({
       items: [
         { label: 'Início', href: '#inicio', active: true },
         { label: 'Sobre', href: '#sobre' },
       ],
     });
-    expect(código).toContain("{ label: 'Início', href: '#inicio', active: true },");
-    expect(código).toContain("{ label: 'Sobre', href: '#sobre' },");
+    expect(code).toContain("{ label: 'Início', href: '#inicio', active: true },");
+    expect(code).toContain("{ label: 'Sobre', href: '#sobre' },");
   });
 
   it('quebra o destino em bloco quando a descrição não cabe na linha', () => {
-    const código = navigationMenuSnippet({
+    const code = navigationMenuSnippet({
       items: [
         {
           label: 'Soluções',
@@ -87,8 +87,8 @@ describe('navigationMenuSnippet', () => {
         },
       ],
     });
-    expect(código).toContain("description: 'Campanhas, automação e atribuição num lugar só.',");
-    expect(código).toContain("label: 'Para Marketing',");
+    expect(code).toContain("description: 'Campanhas, automação e atribuição num lugar só.',");
+    expect(code).toContain("label: 'Para Marketing',");
   });
 
   it('mostra a limpeza só onde ela é o assunto', () => {
@@ -97,31 +97,31 @@ describe('navigationMenuSnippet', () => {
   });
 
   it('não vaza a fixture nem o andaime das stories', () => {
-    const código = navigationMenuSnippet();
-    expect(código).not.toContain('esperarPainel');
-    expect(código).not.toContain('painelAberto');
-    expect(código).not.toContain('impedirNavegacao');
-    expect(código).not.toContain('SELETOR_PAINEL');
-    expect(código).not.toContain('wrap(');
+    const code = navigationMenuSnippet();
+    expect(code).not.toContain('esperarPainel');
+    expect(code).not.toContain('painelAberto');
+    expect(code).not.toContain('impedirNavegacao');
+    expect(code).not.toContain('SELETOR_PAINEL');
+    expect(code).not.toContain('wrap(');
   });
 });
 
 describe('navigationMenuMegaSnippet', () => {
   it('faz as colunas com as utilities compartilhadas, sem largura em style', () => {
-    const código = navigationMenuMegaSnippet();
-    expect(código).toContain("painel.classList.add('nds-grid', 'nds-w-lg');");
-    expect(código).toContain("painel.dataset.cols = '2';");
-    expect(código).not.toContain('style.width');
-    expect(código).not.toContain('style=');
+    const code = navigationMenuMegaSnippet();
+    expect(code).toContain("painel.classList.add('nds-grid', 'nds-w-lg');");
+    expect(code).toContain("painel.dataset.cols = '2';");
+    expect(code).not.toContain('style.width');
+    expect(code).not.toContain('style=');
   });
 });
 
 describe('navigationMenuDestaqueSnippet', () => {
   it('põe o destaque na coluna inteira e empilha os complementares', () => {
-    const código = navigationMenuHighlightSnippet();
-    expect(código).toContain("destaque.classList.add('nds-h-full');");
-    expect(código).toContain("coluna.className = 'nds-stack';");
-    expect(código).toContain('painel.appendChild(coluna);');
+    const code = navigationMenuHighlightSnippet();
+    expect(code).toContain("destaque.classList.add('nds-h-full');");
+    expect(code).toContain("coluna.className = 'nds-stack';");
+    expect(code).toContain('painel.appendChild(coluna);');
   });
 });
 
@@ -129,11 +129,11 @@ describe('navigationMenuControladoSnippet', () => {
   it('mostra as duas metades do modo controlado', () => {
     // Definir `value` é o que troca o modo; sem `setValue()` nada se move, e um
     // snippet que parasse na chamada esconderia justamente isso.
-    const código = navigationMenuControlledSnippet();
-    expect(código).toContain("value: ''");
-    expect(código).toContain('onValueChange: (valor) => registrarPedido(valor)');
-    expect(código).toContain("barra.setValue('produtos');");
-    expect(código).toContain('barra.getValue();');
+    const code = navigationMenuControlledSnippet();
+    expect(code).toContain("value: ''");
+    expect(code).toContain('onValueChange: (valor) => registrarPedido(valor)');
+    expect(code).toContain("barra.setValue('produtos');");
+    expect(code).toContain('barra.getValue();');
   });
 });
 
@@ -161,9 +161,9 @@ describe('navigationMenuSourceCom', () => {
       orientation: 'vertical',
       items: [{ label: 'Painel', href: '#painel' }],
     });
-    const código = transform('', { args: { orientation: 'horizontal' } });
-    expect(código).toContain("orientation: 'vertical'");
-    expect(código).toContain("{ label: 'Painel', href: '#painel' },");
-    expect(código).not.toContain("label: 'Produtos'");
+    const code = transform('', { args: { orientation: 'horizontal' } });
+    expect(code).toContain("orientation: 'vertical'");
+    expect(code).toContain("{ label: 'Painel', href: '#painel' },");
+    expect(code).not.toContain("label: 'Produtos'");
   });
 });

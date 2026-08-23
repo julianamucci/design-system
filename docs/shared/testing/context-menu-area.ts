@@ -22,13 +22,13 @@ export { AREA_CLICK_DIREITO };
  * `*.stories.ts` é indexada como story pelo Storybook: um helper exportado dali
  * viraria uma entrada quebrada no menu lateral.
  */
-export function clickCreateArea(rotulo: string): HTMLElement {
+export function clickCreateArea(label: string): HTMLElement {
   const el = document.createElement('div');
   el.className = AREA_CLICK_DIREITO;
   el.dataset.align = 'center';
   el.dataset.justify = 'center';
   el.dataset.testid = 'area';
-  el.textContent = rotulo;
+  el.textContent = label;
   return el;
 }
 
@@ -59,11 +59,11 @@ export async function closeMenu(): Promise<void> {
  */
 export async function gestoOpen(area: HTMLElement): Promise<HTMLElement> {
   await closeMenu();
-  const caixa = area.getBoundingClientRect();
+  const box = area.getBoundingClientRect();
   await userEvent.pointer({
     keys: '[MouseRight]',
     target: area,
-    coords: { clientX: caixa.left + caixa.width / 2, clientY: caixa.top + caixa.height / 2 },
+    coords: { clientX: box.left + box.width / 2, clientY: box.top + box.height / 2 },
   });
   await waitFor(() => {
     const menu = menuOpen();
@@ -72,8 +72,8 @@ export async function gestoOpen(area: HTMLElement): Promise<HTMLElement> {
     // qualquer medida de geometria leem o painel a meio caminho: o `toBeVisible`
     // do jest-dom só reprova em opacidade exatamente 0, então a asserção passa
     // no vitest e falha no painel Interactions — o pior dos dois mundos.
-    const opacidade = parseFloat(getComputedStyle(menu).opacity);
-    if (opacidade < 0.9) throw new Error(`o menu ainda está animando (${opacidade})`);
+    const opacity = parseFloat(getComputedStyle(menu).opacity);
+    if (opacity < 0.9) throw new Error(`o menu ainda está animando (${opacity})`);
   });
   return menuOpen()!;
 }
@@ -91,9 +91,9 @@ export async function gestoOpen(area: HTMLElement): Promise<HTMLElement> {
  * `click` foi a causa da falha antiga do Sheet.
  */
 export async function clickOutside(): Promise<void> {
-  for (const tipo of ['pointerdown', 'mousedown', 'click'] as const) {
+  for (const type of ['pointerdown', 'mousedown', 'click'] as const) {
     document.body.dispatchEvent(
-      new MouseEvent(tipo, { bubbles: true, cancelable: true, button: 0 }),
+      new MouseEvent(type, { bubbles: true, cancelable: true, button: 0 }),
     );
   }
   await waitFor(() => {

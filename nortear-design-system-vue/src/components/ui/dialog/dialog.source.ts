@@ -66,17 +66,17 @@ function descricao(frase: string): string {
 
 type Frame = {
   /** Props da raiz: `default-open`, `:modal="false"`. */
-  raiz?: string;
+  root?: string;
   /** `DialogContent` (centrado) ou `DialogScrollContent` (rola no overlay). */
-  painel?: 'DialogContent' | 'DialogScrollContent';
+  panel?: 'DialogContent' | 'DialogScrollContent';
   painelProps?: string;
-  gatilho: string;
-  titulo: string;
+  trigger: string;
+  title: string;
   descricao: string;
   /** Miolo entre o cabeçalho e o rodapé, já indentado em 4 espaços. */
-  corpo?: string;
+  body?: string;
   /** Rodapé completo, já indentado em 4 espaços. Vazio significa sem rodapé. */
-  rodape?: string;
+  footer?: string;
 };
 
 /**
@@ -87,22 +87,22 @@ type Frame = {
  * botão DENTRO de outro botão.
  */
 function dialogo(m: Frame): string {
-  const { raiz = '', painel = 'DialogContent', painelProps = '', corpo = '', rodape = '' } = m;
+  const { root = '', panel = 'DialogContent', painelProps = '', body = '', footer = '' } = m;
   // Sem corpo e sem rodapé o painel é só cabeçalho: nada de linha em branco
   // sobrando entre o fim do cabeçalho e o fecho do painel.
-  const partes = [corpo, rodape].filter(Boolean);
+  const partes = [body, footer].filter(Boolean);
   const miolo = partes.length ? `\n${partes.join('\n')}` : '';
 
-  return `<Dialog${attrs(raiz)}>
+  return `<Dialog${attrs(root)}>
   <DialogTrigger as-child>
-    <Button variant="outline">${m.gatilho}</Button>
+    <Button variant="outline">${m.trigger}</Button>
   </DialogTrigger>
-  <${painel}${attrs(painelProps)}>
+  <${panel}${attrs(painelProps)}>
     <DialogHeader>
-      <DialogTitle>${m.titulo}</DialogTitle>
+      <DialogTitle>${m.title}</DialogTitle>
 ${descricao(m.descricao)}
     </DialogHeader>${miolo}
-  </${painel}>
+  </${panel}>
 </Dialog>`;
 }
 
@@ -147,14 +147,14 @@ export const dialogSource: SourceTransform<DialogArgs> = (_gerado, ctx) => {
     dialogo({
       // `.trim()` porque `dialogo` já reaplica o espaço da frente: sem ele a
       // tag sairia com dois espaços quando alguma prop entra.
-      raiz: attrs(
+      root: attrs(
         attrBool('default-open', defaultOpen, false),
         attrBool('modal', modal, true),
       ).trim(),
-      gatilho: 'Editar perfil',
-      titulo: 'Editar perfil',
+      trigger: 'Editar perfil',
+      title: 'Editar perfil',
       descricao: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
-      rodape: footerDefault('Cancelar', 'Salvar alterações'),
+      footer: footerDefault('Cancelar', 'Salvar alterações'),
     }),
   );
 };
@@ -169,11 +169,11 @@ export function dialogOpenSource(): string {
   return vueSnippet(
     importing(PARTS_COMPLETAS),
     dialogo({
-      raiz: 'default-open',
-      gatilho: 'Editar perfil',
-      titulo: 'Editar perfil',
+      root: 'default-open',
+      trigger: 'Editar perfil',
+      title: 'Editar perfil',
       descricao: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
-      rodape: footerDefault('Cancelar', 'Salvar alterações'),
+      footer: footerDefault('Cancelar', 'Salvar alterações'),
     }),
   );
 }
@@ -189,10 +189,10 @@ export function dialogNoButtonCloseSource(): string {
     importing(PARTS_COMPLETAS),
     dialogo({
       painelProps: ':show-close-button="false"',
-      gatilho: 'Ver atualização',
-      titulo: 'Aceitar atualização',
+      trigger: 'Ver atualização',
+      title: 'Aceitar atualização',
       descricao: 'Uma nova versão está disponível. Clique em continuar para atualizar.',
-      rodape: footerDefault('Mais tarde', 'Atualizar agora'),
+      footer: footerDefault('Mais tarde', 'Atualizar agora'),
     }),
   );
 }
@@ -250,10 +250,10 @@ export function dialogWithFormSource(): string {
   return vueSnippet(
     importing(PARTS_COMPLETAS, true),
     dialogo({
-      gatilho: 'Editar perfil',
-      titulo: 'Editar perfil',
+      trigger: 'Editar perfil',
+      title: 'Editar perfil',
       descricao: 'Atualize seu nome e email. As mudanças entram em vigor após salvar.',
-      corpo: `    <form class="nds-grid" data-spacing="sm">
+      body: `    <form class="nds-grid" data-spacing="sm">
       <div class="nds-grid" data-spacing="xs">
         <Label for="dialog-name">Nome</Label>
         <Input id="dialog-name" default-value="Juliana Mucci" />
@@ -263,7 +263,7 @@ export function dialogWithFormSource(): string {
         <Input id="dialog-email" type="email" default-value="juliana@example.com" />
       </div>
     </form>`,
-      rodape: `    <DialogFooter>
+      footer: `    <DialogFooter>
       <DialogClose as-child>
         <Button variant="outline">Cancelar</Button>
       </DialogClose>
@@ -299,15 +299,15 @@ const termos = [
   'Do encerramento: o cancelamento pode ser pedido a qualquer momento, e os dados ficam disponíveis por trinta dias.',
 ]`,
     dialogo({
-      painel: 'DialogScrollContent',
+      panel: 'DialogScrollContent',
       painelProps: 'class="nds-max-w-lg"',
-      gatilho: 'Ver termos',
-      titulo: 'Termos de serviço',
+      trigger: 'Ver termos',
+      title: 'Termos de serviço',
       descricao: 'Leia atentamente os termos antes de aceitar.',
-      corpo: `    <div class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
+      body: `    <div class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
       <p v-for="(clausula, i) in termos" :key="i">{{ clausula }}</p>
     </div>`,
-      rodape: footerDefault('Recusar', 'Aceitar termos'),
+      footer: footerDefault('Recusar', 'Aceitar termos'),
     }),
   );
 }
@@ -329,8 +329,8 @@ export function dialogNoFooterSource(): string {
       'DialogTrigger',
     ]),
     dialogo({
-      gatilho: 'Ver detalhes do pedido',
-      titulo: 'Detalhes do pedido #4287',
+      trigger: 'Ver detalhes do pedido',
+      title: 'Detalhes do pedido #4287',
       descricao:
         'Pedido confirmado em 15 de março às 14:32. Entrega prevista para 20 de março via transportadora parceira.',
     }),
@@ -347,10 +347,10 @@ export function dialogActionDestructiveSource(): string {
   return vueSnippet(
     importing(PARTS_COMPLETAS),
     dialogo({
-      gatilho: 'Remover anexo',
-      titulo: 'Remover anexo',
+      trigger: 'Remover anexo',
+      title: 'Remover anexo',
       descricao: 'O anexo será removido desta mensagem. Você pode adicioná-lo novamente depois.',
-      rodape: footerDefault('Cancelar', 'Remover anexo', true),
+      footer: footerDefault('Cancelar', 'Remover anexo', true),
     }),
   );
 }
@@ -374,10 +374,10 @@ export function footerDialogCloseSource(): string {
     ]),
     dialogo({
       painelProps: ':show-close-button="false"',
-      gatilho: 'Configurar notificações',
-      titulo: 'Configurações de notificação',
+      trigger: 'Configurar notificações',
+      title: 'Configurações de notificação',
       descricao: 'Escolha como deseja ser avisado sobre novas atividades.',
-      rodape: `    <DialogFooter show-close-button>
+      footer: `    <DialogFooter show-close-button>
       <Button>Salvar preferências</Button>
     </DialogFooter>`,
     }),
@@ -389,16 +389,16 @@ export function dialogConfirmarEmailSource(): string {
   return vueSnippet(
     importing(PARTS_COMPLETAS, true),
     dialogo({
-      gatilho: 'Confirmar novo email',
-      titulo: 'Confirmar novo email',
+      trigger: 'Confirmar novo email',
+      title: 'Confirmar novo email',
       descricao:
         'Enviaremos um link de confirmação para o novo endereço. O email atual continua ativo até a confirmação.',
-      corpo: `    <div class="nds-grid" data-spacing="xs">
+      body: `    <div class="nds-grid" data-spacing="xs">
       <Label for="new-email">Novo email</Label>
       <Input id="new-email" type="email" placeholder="voce@example.com" />
     </div>`,
       // A operação é reversível, então a ação primária é neutra.
-      rodape: footerDefault('Cancelar', 'Enviar confirmação'),
+      footer: footerDefault('Cancelar', 'Enviar confirmação'),
     }),
   );
 }
@@ -408,10 +408,10 @@ export function dialogEditarPerfilSource(): string {
   return vueSnippet(
     importing(PARTS_COMPLETAS, true),
     dialogo({
-      gatilho: 'Editar perfil',
-      titulo: 'Editar perfil',
+      trigger: 'Editar perfil',
+      title: 'Editar perfil',
       descricao: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
-      corpo: `    <form class="nds-grid" data-spacing="sm">
+      body: `    <form class="nds-grid" data-spacing="sm">
       <div class="nds-grid" data-spacing="xs">
         <Label for="profile-name">Nome</Label>
         <Input id="profile-name" default-value="Juliana Mucci" />
@@ -425,7 +425,7 @@ export function dialogEditarPerfilSource(): string {
         <Input id="profile-bio" default-value="Designer de sistemas em São Paulo" />
       </div>
     </form>`,
-      rodape: `    <DialogFooter>
+      footer: `    <DialogFooter>
       <DialogClose as-child>
         <Button variant="outline">Cancelar</Button>
       </DialogClose>
@@ -453,10 +453,10 @@ export function dialogPreviaDeMidiaSource(): string {
     ]),
     dialogo({
       painelProps: 'class="nds-sm-max-w-md"',
-      gatilho: 'Pré-visualizar imagem',
-      titulo: 'Pré-visualização da imagem',
+      trigger: 'Pré-visualizar imagem',
+      title: 'Pré-visualização da imagem',
       descricao: 'captura-de-tela.png · 1920×1080 · 248 KB',
-      corpo: `    <div
+      body: `    <div
       data-slot="dialog-body"
       role="img"
       aria-label="Imagem em destaque"

@@ -132,32 +132,32 @@ export class NdsInputOtp {
 }`;
 
 /** Propriedade do conteúdo compartilhado → input real deste stack. */
-const PROPS_MAP: { chave: string; nome: string; tipo: string; padrao: string }[] = [
-  { chave: 'maxLength',  nome: 'maxLength',   tipo: 'number',                          padrao: '6'                  },
-  { chave: 'value',      nome: 'value',       tipo: 'string (model)',                  padrao: `''`                 },
-  { chave: 'onChange',   nome: 'valueChange', tipo: 'output<string>',                  padrao: '—'                  },
-  { chave: 'onComplete', nome: 'complete',    tipo: 'output<string>',                  padrao: '—'                  },
-  { chave: 'pattern',    nome: 'mode',        tipo: `'numeric' | 'alphanumeric'`,      padrao: `'numeric'`          },
-  { chave: 'disabled',   nome: 'disabled',    tipo: 'boolean',                         padrao: 'false'              },
-  { chave: 'autoFocus',  nome: 'autoFocus',   tipo: 'boolean',                         padrao: 'false'              },
+const PROPS_MAP: { key: string; name: string; type: string; padrao: string }[] = [
+  { key: 'maxLength',  name: 'maxLength',   type: 'number',                          padrao: '6'                  },
+  { key: 'value',      name: 'value',       type: 'string (model)',                  padrao: `''`                 },
+  { key: 'onChange',   name: 'valueChange', type: 'output<string>',                  padrao: '—'                  },
+  { key: 'onComplete', name: 'complete',    type: 'output<string>',                  padrao: '—'                  },
+  { key: 'pattern',    name: 'mode',        type: `'numeric' | 'alphanumeric'`,      padrao: `'numeric'`          },
+  { key: 'disabled',   name: 'disabled',    type: 'boolean',                         padrao: 'false'              },
+  { key: 'autoFocus',  name: 'autoFocus',   type: 'boolean',                         padrao: 'false'              },
 ];
 
 /** Chave de token do conteúdo → custom property e seletor reais do CSS. */
 // O seletor sai do conteúdo compartilhado (`tokens.table.<chave>.class`), que
 // desde esta rodada guarda o seletor REAL e não mais uma classe utilitária sem
 // prefixo. Aqui fica só a custom property, que é o que a pessoa sobrescreve.
-const TOKENS_MAP: { chave: string; token: string }[] = [
-  { chave: 'slotSize',  token: '--size-lg' },
-  { chave: 'border',    token: '--input' },
-  { chave: 'rounded',   token: '--radius' },
-  { chave: 'hover',     token: '--ring' },
-  { chave: 'active',    token: '--ring' },
-  { chave: 'invalid',   token: '--destructive' },
+const TOKENS_MAP: { key: string; token: string }[] = [
+  { key: 'slotSize',  token: '--size-lg' },
+  { key: 'border',    token: '--input' },
+  { key: 'rounded',   token: '--radius' },
+  { key: 'hover',     token: '--ring' },
+  { key: 'active',    token: '--ring' },
+  { key: 'invalid',   token: '--destructive' },
   // Desabilitado é só opacidade: nenhuma custom property entra na regra, e
   // inventar uma aqui daria à pessoa um token que não sobrescreve nada.
-  { chave: 'disabled',  token: '—' },
-  { chave: 'caret',     token: '--foreground' },
-  { chave: 'separator', token: '--muted-foreground' },
+  { key: 'disabled',  token: '—' },
+  { key: 'caret',     token: '--foreground' },
+  { key: 'separator', token: '--muted-foreground' },
 ];
 
 @Component({
@@ -587,12 +587,12 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
           required: t('props.table.required'),
           description: t('props.table.description'),
         },
-        items: PROPS_MAP.map(({ chave, nome, tipo, padrao }) => ({
-          name: nome,
-          type: tipo,
+        items: PROPS_MAP.map(({ key, name, type, padrao }) => ({
+          name: name,
+          type: type,
           defaultValue: padrao,
-          required: t(`props.table.${chave}.required`),
-          description: toPlainText(t(`props.table.${chave}.description`)),
+          required: t(`props.table.${key}.required`),
+          description: toPlainText(t(`props.table.${key}.description`)),
         })),
       },
     ];
@@ -609,10 +609,10 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
-    return TOKENS_MAP.map(({ chave, token }) => ({
+    return TOKENS_MAP.map(({ key, token }) => ({
       token,
-      value: toPlainText(t(`tokens.table.${chave}.class`)),
-      description: toPlainText(t(`tokens.table.${chave}.part`)),
+      value: toPlainText(t(`tokens.table.${key}.class`)),
+      description: toPlainText(t(`tokens.table.${key}.part`)),
     }));
   });
 
@@ -703,8 +703,8 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
       // Aqui os itens são string solta (sem criterion/level/how): o critério é
       // o texto, e o nível vem dentro dele quando existe.
-      items: numberedItems(d, 'testes.accessibility').map((texto) => ({
-        criterion: toPlainText(texto),
+      items: numberedItems(d, 'testes.accessibility').map((text) => ({
+        criterion: toPlainText(text),
         level: 'AA',
         how: 'axe + play',
       })),
@@ -784,9 +784,9 @@ const priorityKeyMap: Record<string, string> = {
  * quando ela não existe, então sem esta ponte o menu de quem não traz o bloco
  * mostrava "nav.overview" escrito na tela, sem erro nenhum.
  */
-function navLabel(chave: string): string {
-  const doComponente = t(chave);
-  return doComponente === chave ? tNav(chave) : doComponente;
+function navLabel(key: string): string {
+  const doComponente = t(key);
+  return doComponente === key ? tNav(key) : doComponente;
 }
 
 function priorityLabel(raw: string): string {
@@ -800,16 +800,16 @@ function numberedItems(d: Record<string, string>, base: string): string[] {
   return out;
 }
 
-/** Sub-chaves de `base` que têm o campo `campo` — descarta cabeçalhos da seção. */
-function keysWith(d: Record<string, string>, base: string, campo: string): string[] {
+/** Sub-chaves de `base` que têm o campo `field` — descarta cabeçalhos da seção. */
+function keysWith(d: Record<string, string>, base: string, field: string): string[] {
   const prefixo = `${base}.`;
   const out: string[] = [];
-  for (const chave of Object.keys(d)) {
-    if (!chave.startsWith(prefixo)) continue;
-    const nome = chave.slice(prefixo.length).split('.')[0];
-    if (out.includes(nome)) continue;
-    if (d[`${base}.${nome}.${campo}`] === undefined) continue;
-    out.push(nome);
+  for (const key of Object.keys(d)) {
+    if (!key.startsWith(prefixo)) continue;
+    const name = key.slice(prefixo.length).split('.')[0];
+    if (out.includes(name)) continue;
+    if (d[`${base}.${name}.${field}`] === undefined) continue;
+    out.push(name);
   }
   return out;
 }
@@ -818,9 +818,9 @@ function keysWith(d: Record<string, string>, base: string, campo: string): strin
 function keysSheet(d: Record<string, string>, base: string): string[] {
   const prefixo = `${base}.`;
   const out: string[] = [];
-  for (const chave of Object.keys(d)) {
-    if (!chave.startsWith(prefixo)) continue;
-    const remainder = chave.slice(prefixo.length);
+  for (const key of Object.keys(d)) {
+    if (!key.startsWith(prefixo)) continue;
+    const remainder = key.slice(prefixo.length);
     if (remainder.includes('.')) continue;
     out.push(remainder);
   }

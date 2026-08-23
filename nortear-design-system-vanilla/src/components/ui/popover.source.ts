@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { PopoverAlign, PopoverSide } from './popover';
@@ -45,8 +45,8 @@ const CALLBACK_DEFAULT = '(aberto) => registrar(aberto)';
  * chamada no topo do arquivo e curta demais quando ela entra numa lista de
  * argumentos.
  */
-function recuar(bloco: string, espacos: string): string {
-  return bloco
+function recuar(block: string, espacos: string): string {
+  return block
     .split('\n')
     .map((line, i) => (i === 0 ? line : `${espacos}${line}`))
     .join('\n');
@@ -59,20 +59,20 @@ const DESCRIPTION_DEFAULT = 'Ajuste a aparência do conteúdo da página.';
 function blockTrigger(o: PopoverSnippetOptions): string {
   return `const gatilho = ${chamada(
     'createButton',
-    opcoes([
-      ['variant', texto(o.triggerVariant ?? 'outline')],
-      ['label', texto(o.triggerLabel ?? 'Abrir popover')],
+    options([
+      ['variant', text(o.triggerVariant ?? 'outline')],
+      ['label', text(o.triggerLabel ?? 'Abrir popover')],
     ]),
   )};`;
 }
 
 /** As opções do painel que não dependem da forma do conteúdo. */
-function panelLines(o: PopoverSnippetOptions, conteudo: string): string[] {
-  return opcoes([
+function panelLines(o: PopoverSnippetOptions, content: string): string[] {
+  return options([
     ['trigger', 'gatilho'],
-    ['content', conteudo],
-    ['side', o.side && o.side !== 'bottom' ? texto(o.side) : undefined],
-    ['align', o.align && o.align !== 'center' ? texto(o.align) : undefined],
+    ['content', content],
+    ['side', o.side && o.side !== 'bottom' ? text(o.side) : undefined],
+    ['align', o.align && o.align !== 'center' ? text(o.align) : undefined],
     ['sideOffset', o.sideOffset !== undefined && o.sideOffset !== 8 ? String(o.sideOffset) : undefined],
     ['defaultOpen', o.defaultOpen ? 'true' : undefined],
     [
@@ -121,15 +121,15 @@ conteudo.append(
   ${recuar(
     chamada(
       'createPopoverTitle',
-      opcoes([
-        ['text', texto(o.title ?? TITLE_DEFAULT)],
+      options([
+        ['text', text(o.title ?? TITLE_DEFAULT)],
         ['level', o.titleLevel && o.titleLevel !== 4 ? String(o.titleLevel) : undefined],
       ]),
     ),
     '  ',
   )},
   ${recuar(
-    chamada('createPopoverDescription', opcoes([['text', texto(o.description ?? DESCRIPTION_DEFAULT)]])),
+    chamada('createPopoverDescription', options([['text', text(o.description ?? DESCRIPTION_DEFAULT)]])),
     '  ',
   )},
 );`;
@@ -140,7 +140,7 @@ conteudo.append(
     soText ? undefined : header,
     `const painel = ${chamada(
       'createPopover',
-      panelLines(o, soText ? texto(o.text as string) : 'conteudo'),
+      panelLines(o, soText ? text(o.text as string) : 'conteudo'),
     )};`,
     blockFinal(o),
   );
@@ -230,7 +230,7 @@ acoes.append(
 );
 
 conteudo.append(${recuar(
-      chamada('createPopoverTitle', opcoes([['text', texto(o.title ?? 'Confirmar alteração')]])),
+      chamada('createPopoverTitle', options([['text', text(o.title ?? 'Confirmar alteração')]])),
       '  ',
     )}, acoes);`,
     `const painel = ${chamada('createPopover', panelLines(o, 'conteudo'))};`,

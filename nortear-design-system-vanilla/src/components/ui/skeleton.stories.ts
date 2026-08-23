@@ -108,11 +108,11 @@ export const Playground: Story = {
       // Mede o que foi DESENHADO, não a classe: foi exatamente assim que
       // `nds-skeleton-line` sobreviveu como classe inexistente, com o esqueleto
       // do Playground renderizando altura zero.
-      const caixa = boxDesenhada(sk, regiao);
-      await expect(caixa.altura).toBeGreaterThan(0);
+      const box = boxDesenhada(sk, regiao);
+      await expect(box.height).toBeGreaterThan(0);
       if (args.shape === 'text' || args.shape === 'heading') {
         await expect(
-          Math.abs(caixa.fracaoDoContainer - WIDTH_FRACTION[args.width]),
+          Math.abs(box.fracaoDoContainer - WIDTH_FRACTION[args.width]),
         ).toBeLessThan(0.02);
       }
     });

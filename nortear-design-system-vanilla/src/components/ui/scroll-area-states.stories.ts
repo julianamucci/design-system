@@ -135,7 +135,7 @@ export const Hover: Story = {
     return outer;
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
     const viewport = canvasElement.querySelector<HTMLElement>(
       '[data-slot="scroll-area-viewport"]',
     )!;
@@ -145,8 +145,8 @@ export const Hover: Story = {
       // é a decisão do componente: passar o mouse não acrescenta peça nenhuma ao
       // DOM, porque não existe barra desenhada por nós para reagir.
       const antes = canvasElement.querySelectorAll('*').length;
-      await userEvent.unhover(raiz);
-      await userEvent.hover(raiz);
+      await userEvent.unhover(root);
+      await userEvent.hover(root);
       await expect(canvasElement.querySelectorAll('*').length).toBe(antes);
       await expect(
         canvasElement.querySelector('[data-slot="scroll-area-scrollbar"]'),
@@ -211,7 +211,7 @@ export const FocusableContent: Story = {
         transform: scrollAreaSourceWith({
           size: 'md',
           'aria-label': 'Lista de ações',
-          conteudo: 'links',
+          content: 'links',
         }),
       },
       description: { story: 'Conteúdo focável dentro da área rolável — o componente não reordena nem remove nada da ordem de tabulação, e o navegador traz para o campo visível o item focado.' } },

@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { BadgeVariant } from './badge';
@@ -24,13 +24,13 @@ export type BadgeSnippetOptions = {
 export function badgeSnippet(o: BadgeSnippetOptions = {}): string {
   const label = o.label ?? 'Novo';
 
-  const lines = opcoes([
+  const lines = options([
     // `default` é o padrão da fábrica: só as outras variantes entram.
-    ['variant', o.variant && o.variant !== 'default' ? texto(o.variant) : undefined],
+    ['variant', o.variant && o.variant !== 'default' ? text(o.variant) : undefined],
     // `children` aceita texto, elemento ou a lista dos dois — é assim que ícone
     // e rótulo entram juntos, sem sub-fábrica nenhuma.
-    ['children', o.withIcon ? `[icone, ${texto(label)}]` : texto(label)],
-    ['className', o.className ? texto(o.className) : undefined],
+    ['children', o.withIcon ? `[icone, ${text(label)}]` : text(label)],
+    ['className', o.className ? text(o.className) : undefined],
   ]);
 
   return snippet(
@@ -62,7 +62,7 @@ export function badgeSourceCom(fixas: BadgeSnippetOptions): SourceTransform<Badg
 export type BadgeGrupoItem = { variant: BadgeVariant; label: string };
 
 export type BadgeGrupoSnippetOptions = {
-  itens?: readonly BadgeGrupoItem[];
+  items?: readonly BadgeGrupoItem[];
 };
 
 const GRUPO_PADRAO: readonly BadgeGrupoItem[] = [
@@ -76,9 +76,9 @@ const GRUPO_PADRAO: readonly BadgeGrupoItem[] = [
  * que as variantes semânticas prometem — ser distinguíveis entre si.
  */
 export function badgeEmGrupoSnippet(o: BadgeGrupoSnippetOptions = {}): string {
-  const itens = o.itens?.length ? o.itens : GRUPO_PADRAO;
-  const calls = itens
-    .map((i) => `  createBadge({ variant: ${texto(i.variant)}, children: ${texto(i.label)} }),`)
+  const items = o.items?.length ? o.items : GRUPO_PADRAO;
+  const calls = items
+    .map((i) => `  createBadge({ variant: ${text(i.variant)}, children: ${text(i.label)} }),`)
     .join('\n');
 
   return snippet(
@@ -118,20 +118,20 @@ export function badgeEmGatilhoSnippet(o: BadgeEmGatilhoSnippetOptions = {}): str
   const button = o.como === 'botao';
   const label = o.label ?? (button ? 'React' : 'Design');
   const variant = o.variant ?? (button ? 'outline' : 'secondary');
-  const nome = o.accessibleName ?? (button ? 'Filtrar por React' : 'Ver todos os itens da categoria Design');
+  const name = o.accessibleName ?? (button ? 'Filtrar por React' : 'Ver todos os itens da categoria Design');
 
-  const alvo = button
+  const target = button
     ? `const alvo = document.createElement('button');
 alvo.type = 'button';`
     : `const alvo = document.createElement('a');
-alvo.href = ${texto(o.href ?? '#design')};`;
+alvo.href = ${text(o.href ?? '#design')};`;
 
   return snippet(
     importing('badge', 'createBadge'),
-    `${alvo}
+    `${target}
 alvo.className = 'nds-cluster nds-rounded-md nds-focus-ring-inset';
-alvo.setAttribute('aria-label', ${texto(nome)});
-alvo.appendChild(createBadge({ variant: ${texto(variant)}, children: ${texto(label)} }));`,
+alvo.setAttribute('aria-label', ${text(name)});
+alvo.appendChild(createBadge({ variant: ${text(variant)}, children: ${text(label)} }));`,
     montar('alvo'),
   );
 }

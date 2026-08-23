@@ -63,24 +63,24 @@ export const Fieldset: Story = {
     }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const grupo = canvasElement.querySelector<HTMLFieldSetElement>('[data-slot="fieldset"]')!;
+    const group = canvasElement.querySelector<HTMLFieldSetElement>('[data-slot="fieldset"]')!;
 
     await step('É um <fieldset> com <legend> de verdade', async () => {
       // O par nativo é o que faz o leitor de tela anunciar o grupo. Um <div>
       // com um título por cima parece igual e não anuncia nada.
-      await expect(grupo.tagName).toBe('FIELDSET');
-      await expect(grupo.querySelector('legend')).toHaveTextContent('Endereço de entrega');
+      await expect(group.tagName).toBe('FIELDSET');
+      await expect(group.querySelector('legend')).toHaveTextContent('Endereço de entrega');
     });
 
     await step('A legenda é o PRIMEIRO filho — é o que a rotula como do grupo', async () => {
       // `<legend>` fora da primeira posição deixa de rotular o `<fieldset>`; o
       // texto continua na tela e o grupo passa a ser anônimo.
-      const legenda = grupo.querySelector('legend')!;
-      await expect(grupo.firstElementChild).toBe(legenda);
+      const caption = group.querySelector('legend')!;
+      await expect(group.firstElementChild).toBe(caption);
     });
 
     await step('Os campos do grupo ficam a 16px um do outro', async () => {
-      await expect(Math.round(parseFloat(getComputedStyle(grupo).rowGap))).toBe(16);
+      await expect(Math.round(parseFloat(getComputedStyle(group).rowGap))).toBe(16);
     });
 
     await step('Cada campo do grupo segue alcançável pelo próprio rótulo', async () => {
@@ -119,7 +119,7 @@ export const MultipleFields: Story = {
             },
             {
               label: 'Biografia',
-              controle: 'textarea',
+              control: 'textarea',
               name: 'bio',
               rows: 3,
               description: 'Máximo 280 caracteres.',
@@ -173,9 +173,9 @@ export const MultipleFields: Story = {
     await step('Cada campo descreve o seu próprio controle', async () => {
       // Três campos irmãos: se os ids fossem gerados de forma colidente, o
       // aria-describedby de um apontaria para o texto do outro.
-      const nome = canvas.getByLabelText('Nome completo');
+      const name = canvas.getByLabelText('Nome completo');
       const bio = canvas.getByLabelText('Biografia');
-      await expect(nome.getAttribute('aria-describedby')).not.toBe(
+      await expect(name.getAttribute('aria-describedby')).not.toBe(
         bio.getAttribute('aria-describedby'),
       );
     });
@@ -183,7 +183,7 @@ export const MultipleFields: Story = {
     await step('Os controles focalizáveis estão na ordem do DOM', async () => {
       // Medido pela ordem que o teclado visita, e por NOME acessível: uma ordem
       // certa de campos anônimos não seria uma ordem útil.
-      await expect(tabulacaoOrder(canvasElement).map((c) => c.nome)).toEqual([
+      await expect(tabulacaoOrder(canvasElement).map((c) => c.name)).toEqual([
         'Nome completo',
         'Email',
         'Biografia',
@@ -192,8 +192,8 @@ export const MultipleFields: Story = {
     });
 
     await step('Tab percorre os controles nessa mesma ordem', async () => {
-      const nome = canvas.getByLabelText('Nome completo');
-      nome.focus();
+      const name = canvas.getByLabelText('Nome completo');
+      name.focus();
       await userEvent.tab();
       await expect(canvas.getByLabelText('Email')).toHaveFocus();
       await userEvent.tab();

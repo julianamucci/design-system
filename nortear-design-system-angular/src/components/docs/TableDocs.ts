@@ -455,7 +455,7 @@ const LINHAS_DEMO: {
               <tr ndsTableRow>
                 <td ndsTableCell class="nds-font-medium">{{ line.id }}</td>
                 <td ndsTableCell>{{ line.status }}</td>
-                <td ndsTableCell class="nds-text-right">{{ line.valor }}</td>
+                <td ndsTableCell class="nds-text-right">{{ line.value }}</td>
               </tr>
             }
           </tbody>
@@ -479,7 +479,7 @@ const LINHAS_DEMO: {
               <tr ndsTableRow>
                 <td ndsTableCell class="nds-font-medium">{{ line.id }}</td>
                 <td ndsTableCell>{{ line.status }}</td>
-                <td ndsTableCell class="nds-text-right">{{ line.valor }}</td>
+                <td ndsTableCell class="nds-text-right">{{ line.value }}</td>
               </tr>
             }
           </tbody>
@@ -623,7 +623,7 @@ const LINHAS_DEMO: {
           <thead ndsTableHeader>
             <tr ndsTableRow>
               <th ndsTableHead>{{ t('demonstration.labels.invoice') }}</th>
-              <th ndsTableHead [sort]="direcao()">
+              <th ndsTableHead [sort]="direction()">
                 <button ndsButton variant="ghost" size="sm" (click)="alternarOrdem()">
                   {{ t('demonstration.labels.amount') }}
                   <svg ndsButtonIcon kind="chevron-right" class="nds-icon"></svg>
@@ -635,7 +635,7 @@ const LINHAS_DEMO: {
             @for (line of linhasOrdenadas(); track line.key) {
               <tr ndsTableRow>
                 <td ndsTableCell class="nds-font-medium">{{ line.id }}</td>
-                <td ndsTableCell class="nds-text-right">{{ line.valor }}</td>
+                <td ndsTableCell class="nds-text-right">{{ line.value }}</td>
               </tr>
             }
           </tbody>
@@ -766,7 +766,7 @@ const LINHAS_DEMO: {
                       <span ndsBadge [variant]="line.variant">{{ line.status }}</span>
                     </td>
                     <td ndsTableCell>{{ line.metodo }}</td>
-                    <td ndsTableCell class="nds-text-right">{{ line.valor }}</td>
+                    <td ndsTableCell class="nds-text-right">{{ line.value }}</td>
                     <td ndsTableCell class="nds-text-right">
                       <button ndsButton variant="ghost" size="icon-sm" [attr.aria-label]="line.acaoLabel">
                         <svg ndsButtonIcon kind="pencil" class="nds-icon"></svg>
@@ -918,7 +918,7 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
       id: t(`demonstration.labels.${line.idKey}`),
       status: t(`demonstration.labels.${line.statusKey}`),
       metodo: t(`demonstration.labels.${line.metodoKey}`),
-      valor: t(`demonstration.labels.${line.valorKey}`),
+      value: t(`demonstration.labels.${line.valorKey}`),
       // O rótulo da ação carrega o identificador da linha: "Ações" sozinho, cinco
       // vezes, é indistinguível na lista de controles do leitor de tela.
       acaoLabel: `${t('demonstration.labels.actionsLabel')} ${t(`demonstration.labels.${line.idKey}`)}`,
@@ -953,16 +953,16 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
   }
 
   // Composição "cabeçalhos ordenáveis".
-  protected readonly direcao = signal<'ascending' | 'descending'>('ascending');
+  protected readonly direction = signal<'ascending' | 'descending'>('ascending');
   protected readonly linhasOrdenadas = computed(() => {
-    const sinal = this.direcao() === 'ascending' ? 1 : -1;
+    const sinal = this.direction() === 'ascending' ? 1 : -1;
     return [...this.linhasCurtas()].sort(
-      (a, b) => (valueNumerico(a.valor) - valueNumerico(b.valor)) * sinal,
+      (a, b) => (valueNumerico(a.value) - valueNumerico(b.value)) * sinal,
     );
   });
 
   protected alternarOrdem(): void {
-    this.direcao.update((d) => (d === 'ascending' ? 'descending' : 'ascending'));
+    this.direction.update((d) => (d === 'ascending' ? 'descending' : 'ascending'));
   }
 
   // Composição "seleção de linhas".
@@ -978,16 +978,16 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
     return t('demonstration.labels.selectAll');
   });
 
-  protected alternarSelecao(key: string, marcado: boolean): void {
+  protected alternarSelecao(key: string, checked: boolean): void {
     const next = new Set(this.selecionadas());
-    if (marcado) next.add(key);
+    if (checked) next.add(key);
     else next.delete(key);
     this.selecionadas.set(next);
   }
 
-  protected alternarTodas(marcado: boolean): void {
+  protected alternarTodas(checked: boolean): void {
     this.selecionadas.set(
-      marcado ? new Set(this.linhasCurtas().map((l) => l.key)) : new Set(),
+      checked ? new Set(this.linhasCurtas().map((l) => l.key)) : new Set(),
     );
   }
 
@@ -1146,7 +1146,7 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
       required: not,
       description: toPlainText(t('props.items.className')),
     };
-    const conteudo = {
+    const content = {
       name: '(conteúdo)',
       type: 'HTML',
       defaultValue: '—',
@@ -1164,13 +1164,13 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
           { name: '(elemento)', type: 'div',    defaultValue: '—', required: not, description: toPlainText(t('props.items.wrapper')) },
           { name: 'tabindex',   type: '"0"',    defaultValue: '"0"', required: not, description: toPlainText(t('props.items.tabindex')) },
           className,
-          conteudo,
+          content,
         ],
       },
-      { title: t('props.tableTitle'),        cols, items: [className, conteudo] },
-      { title: t('props.tableHeaderTitle'),  cols, items: [className, conteudo] },
-      { title: t('props.tableBodyTitle'),    cols, items: [className, conteudo] },
-      { title: t('props.tableFooterTitle'),  cols, items: [className, conteudo] },
+      { title: t('props.tableTitle'),        cols, items: [className, content] },
+      { title: t('props.tableHeaderTitle'),  cols, items: [className, content] },
+      { title: t('props.tableBodyTitle'),    cols, items: [className, content] },
+      { title: t('props.tableFooterTitle'),  cols, items: [className, content] },
       {
         title: t('props.tableRowTitle'),
         cols,
@@ -1178,7 +1178,7 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
           { name: 'selected',   type: 'boolean',    defaultValue: 'false', required: not, description: toPlainText(t('props.items.selected')) },
           { name: 'data-state', type: '"selected"', defaultValue: '—',     required: not, description: toPlainText(t('props.items.dataState')) },
           className,
-          conteudo,
+          content,
         ],
       },
       {
@@ -1188,7 +1188,7 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
           { name: 'scope', type: '"col" | "row" | "colgroup" | "rowgroup"', defaultValue: "'col'", required: not, description: toPlainText(t('props.items.scope')) },
           { name: 'sort',  type: 'TableSortDirection',                      defaultValue: '—',     required: not, description: toPlainText(t('props.items.sort')) },
           className,
-          conteudo,
+          content,
         ],
       },
       {
@@ -1198,10 +1198,10 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
           { name: 'colspan', type: 'number', defaultValue: '—', required: not, description: toPlainText(t('props.items.colSpan')) },
           { name: 'rowspan', type: 'number', defaultValue: '—', required: not, description: toPlainText(t('props.items.rowSpan')) },
           className,
-          conteudo,
+          content,
         ],
       },
-      { title: t('props.tableCaptionTitle'), cols, items: [className, conteudo] },
+      { title: t('props.tableCaptionTitle'), cols, items: [className, content] },
     ];
   });
 
@@ -1268,14 +1268,14 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'dataTable',    nome: 'DataTable',    path: '?path=/docs/ui-datatable--docs'    },
-      { key: 'badge',        nome: 'Badge',        path: '?path=/docs/ui-badge--docs'        },
-      { key: 'skeleton',     nome: 'Skeleton',     path: '?path=/docs/ui-skeleton--docs'     },
-      { key: 'avatar',       nome: 'Avatar',       path: '?path=/docs/ui-avatar--docs'       },
-      { key: 'pagination',   nome: 'Pagination',   path: '?path=/docs/ui-pagination--docs'   },
-      { key: 'dropdownMenu', nome: 'DropdownMenu', path: '?path=/docs/ui-dropdownmenu--docs' },
-    ].map(({ key, nome, path }) => ({
-      name: nome,
+      { key: 'dataTable',    name: 'DataTable',    path: '?path=/docs/ui-datatable--docs'    },
+      { key: 'badge',        name: 'Badge',        path: '?path=/docs/ui-badge--docs'        },
+      { key: 'skeleton',     name: 'Skeleton',     path: '?path=/docs/ui-skeleton--docs'     },
+      { key: 'avatar',       name: 'Avatar',       path: '?path=/docs/ui-avatar--docs'       },
+      { key: 'pagination',   name: 'Pagination',   path: '?path=/docs/ui-pagination--docs'   },
+      { key: 'dropdownMenu', name: 'DropdownMenu', path: '?path=/docs/ui-dropdownmenu--docs' },
+    ].map(({ key, name, path }) => ({
+      name: name,
       description: toPlainText(t(`related.${key}`)),
       path,
     }));
@@ -1392,8 +1392,8 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
 }
 
 /** "R$ 250,00" → 250. Ordenar as strings colocaria "R$ 50,00" depois de "R$ 450,00". */
-function valueNumerico(valor: string): number {
-  return Number(valor.replace(/[^\d,]/g, '').replace(',', '.'));
+function valueNumerico(value: string): number {
+  return Number(value.replace(/[^\d,]/g, '').replace(',', '.'));
 }
 
 /**
@@ -1427,13 +1427,13 @@ function numberedFromDict(
   base: string,
   prefixo = 'item',
 ): string[] {
-  const itens: string[] = [];
+  const items: string[] = [];
   for (let i = 1; ; i++) {
-    const valor = d[`${base}.${prefixo}${i}`];
-    if (valor === undefined) break;
-    itens.push(valor);
+    const value = d[`${base}.${prefixo}${i}`];
+    if (value === undefined) break;
+    items.push(value);
   }
-  return itens;
+  return items;
 }
 
 function itemsFromDict<K extends string>(

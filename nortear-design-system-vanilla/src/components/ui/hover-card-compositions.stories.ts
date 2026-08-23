@@ -66,10 +66,10 @@ export const UserProfile: Story = {
     const canvas = within(canvasElement);
 
     await step('O cartão traz avatar, nome e uma métrica curta', async () => {
-      const painel = await waitForOpen();
-      await expect(painel).toBeVisible();
-      await expect(within(painel).getByText('Joana Silva')).toBeVisible();
-      await expect(within(painel).getByText(/142 seguidores/)).toBeVisible();
+      const panel = await waitForOpen();
+      await expect(panel).toBeVisible();
+      await expect(within(panel).getByText('Joana Silva')).toBeVisible();
+      await expect(within(panel).getByText(/142 seguidores/)).toBeVisible();
     });
 
     await step('E o gatilho continua sendo um link de verdade', async () => {
@@ -89,9 +89,9 @@ export const LinkPreview: Story = {
     },
   },
   render: () => {
-    const conteudo = document.createElement('div');
-    conteudo.className = 'nds-stack';
-    conteudo.dataset.spacing = 'sm';
+    const content = document.createElement('div');
+    content.className = 'nds-stack';
+    content.dataset.spacing = 'sm';
 
     const header = document.createElement('div');
     header.className = 'nds-cluster nds-text-caption nds-text-muted-foreground';
@@ -107,7 +107,7 @@ export const LinkPreview: Story = {
     url.textContent = 'design-system.dev/overlays';
 
     header.append(favicon, url);
-    conteudo.append(
+    content.append(
       header,
       construirDuasLines(
         'Guia de overlays acessíveis',
@@ -117,7 +117,7 @@ export const LinkPreview: Story = {
 
     const cartao = createHoverCard({
       trigger: construirLink('design-system.dev', 'https://design-system.dev'),
-      content: conteudo,
+      content: content,
       defaultOpen: true,
     });
     return emFrase(cartao, 'O guia completo está em', '.');
@@ -126,10 +126,10 @@ export const LinkPreview: Story = {
     const canvas = within(canvasElement);
 
     await step('O cartão mostra origem, título e descrição do destino', async () => {
-      const painel = await waitForOpen();
-      await expect(painel).toBeVisible();
-      await expect(within(painel).getByText(/design-system\.dev\/overlays/)).toBeVisible();
-      await expect(within(painel).getByText('Guia de overlays acessíveis')).toBeVisible();
+      const panel = await waitForOpen();
+      await expect(panel).toBeVisible();
+      await expect(within(panel).getByText(/design-system\.dev\/overlays/)).toBeVisible();
+      await expect(within(panel).getByText('Guia de overlays acessíveis')).toBeVisible();
       await expect(canvas.getByRole('link')).toHaveAttribute('href', 'https://design-system.dev');
     });
   },
@@ -161,10 +161,10 @@ export const TermDefinition: Story = {
     },
   },
   render: () => {
-    const gatilho = construirButton('WCAG 2.2 AA');
-    gatilho.setAttribute('aria-label', 'Definição de WCAG 2.2 AA');
+    const trigger = construirButton('WCAG 2.2 AA');
+    trigger.setAttribute('aria-label', 'Definição de WCAG 2.2 AA');
     const cartao = createHoverCard({
-      trigger: gatilho,
+      trigger: trigger,
       content: construirDuasLines(
         'WCAG 2.2 nível AA',
         'Diretrizes de acessibilidade para conteúdo web — contraste mínimo de 4.5:1, operação por teclado e alvo de toque de 24px.',
@@ -177,18 +177,18 @@ export const TermDefinition: Story = {
     const canvas = within(canvasElement);
 
     await step('O gatilho de definição é um botão, e não envia formulário', async () => {
-      const gatilho = canvas.getByRole('button', { name: 'Definição de WCAG 2.2 AA' });
+      const trigger = canvas.getByRole('button', { name: 'Definição de WCAG 2.2 AA' });
       // Sem `type="button"`, o mesmo gatilho dentro de um <form> enviaria o
       // formulário ao ser ativado por Enter.
-      await expect(gatilho).toHaveAttribute('type', 'button');
+      await expect(trigger).toHaveAttribute('type', 'button');
     });
 
     await step('O nome acessível do painel vem do rótulo declarado', async () => {
-      const painel = await waitForOpen();
+      const panel = await waitForOpen();
       // Sem rótulo no gatilho, o nome cairia no texto dele ("WCAG 2.2 AA"), que
       // repetiria a sigla sem dizer o que o cartão traz.
-      await expect(accessibleName(painel)).toBe('Definição de WCAG 2.2 AA');
-      await expect(within(painel).getByText('WCAG 2.2 nível AA')).toBeVisible();
+      await expect(accessibleName(panel)).toBe('Definição de WCAG 2.2 AA');
+      await expect(within(panel).getByText('WCAG 2.2 nível AA')).toBeVisible();
     });
   },
 };
@@ -217,9 +217,9 @@ export const ExplainedMetric: Story = {
     },
   },
   render: () => {
-    const conteudo = document.createElement('div');
-    conteudo.className = 'nds-stack';
-    conteudo.dataset.spacing = 'xs';
+    const content = document.createElement('div');
+    content.className = 'nds-stack';
+    content.dataset.spacing = 'xs';
 
     const header = document.createElement('div');
     header.className = 'nds-cluster';
@@ -227,34 +227,34 @@ export const ExplainedMetric: Story = {
     header.dataset.align = 'baseline';
     header.dataset.spacing = 'sm';
 
-    const nome = document.createElement('p');
-    nome.className = 'nds-text-body nds-font-medium';
-    nome.textContent = 'Largest Contentful Paint';
+    const name = document.createElement('p');
+    name.className = 'nds-text-body nds-font-medium';
+    name.textContent = 'Largest Contentful Paint';
 
-    const valor = document.createElement('span');
-    valor.className = 'nds-text-caption nds-font-medium nds-text-success';
-    valor.textContent = '1.8s';
+    const value = document.createElement('span');
+    value.className = 'nds-text-caption nds-font-medium nds-text-success';
+    value.textContent = '1.8s';
 
-    header.append(nome, valor);
+    header.append(name, value);
 
     const descricao = document.createElement('p');
     descricao.className = 'nds-text-caption nds-text-muted-foreground';
     descricao.textContent =
       'Tempo até o maior elemento visível aparecer. Bom até 2,5s; ruim acima de 4s.';
 
-    conteudo.append(header, descricao);
+    content.append(header, descricao);
 
-    const gatilho = construirButton('LCP 1.8s');
-    gatilho.setAttribute('aria-label', 'Explicação da métrica LCP');
-    const cartao = createHoverCard({ trigger: gatilho, content: conteudo, defaultOpen: true });
+    const trigger = construirButton('LCP 1.8s');
+    trigger.setAttribute('aria-label', 'Explicação da métrica LCP');
+    const cartao = createHoverCard({ trigger: trigger, content: content, defaultOpen: true });
     return emFrase(cartao, 'A página inicial fechou o mês em', ', dentro da meta.');
   },
   play: async ({ step }) => {
     await step('O número carrega a cor semântica; o texto corrido, não', async () => {
-      const painel = await waitForOpen();
-      const valor = within(painel).getByText('1.8s');
-      await expect(valor).toHaveClass('nds-text-success');
-      const descricao = within(painel).getByText(/Tempo até o maior elemento/);
+      const panel = await waitForOpen();
+      const value = within(panel).getByText('1.8s');
+      await expect(value).toHaveClass('nds-text-success');
+      const descricao = within(panel).getByText(/Tempo até o maior elemento/);
       await expect(descricao).not.toHaveClass('nds-text-success');
     });
   },
@@ -286,36 +286,36 @@ export const Sides: Story = {
     },
   },
   render: () => {
-    const grade = document.createElement('div');
-    grade.className = 'nds-grid nds-max-w-lg';
-    grade.dataset.cols = '2';
-    grade.dataset.spacing = 'lg';
+    const grid = document.createElement('div');
+    grid.className = 'nds-grid nds-max-w-lg';
+    grid.dataset.cols = '2';
+    grid.dataset.spacing = 'lg';
 
 
-    const lados: Array<{ rotulo: string; side: 'top' | 'bottom' | 'left' | 'right' }> = [
-      { rotulo: 'acima', side: 'top' },
-      { rotulo: 'abaixo', side: 'bottom' },
-      { rotulo: 'esquerda', side: 'left' },
-      { rotulo: 'direita', side: 'right' },
+    const lados: Array<{ label: string; side: 'top' | 'bottom' | 'left' | 'right' }> = [
+      { label: 'acima', side: 'top' },
+      { label: 'abaixo', side: 'bottom' },
+      { label: 'esquerda', side: 'left' },
+      { label: 'direita', side: 'right' },
     ];
 
-    for (const { rotulo, side } of lados) {
-      const gatilho = construirButton(rotulo);
-      gatilho.setAttribute('aria-label', `Cartão ${rotulo} do gatilho`);
-      const conteudo = document.createElement('p');
-      conteudo.className = 'nds-text-caption';
-      conteudo.textContent = `Lado preferido: ${rotulo}.`;
+    for (const { label, side } of lados) {
+      const trigger = construirButton(label);
+      trigger.setAttribute('aria-label', `Cartão ${label} do gatilho`);
+      const content = document.createElement('p');
+      content.className = 'nds-text-caption';
+      content.textContent = `Lado preferido: ${label}.`;
 
-      const cartao = createHoverCard({ trigger: gatilho, content: conteudo, side, defaultOpen: true });
+      const cartao = createHoverCard({ trigger: trigger, content: content, side, defaultOpen: true });
       const frase = emFrase(cartao, 'Abre', 'do gatilho.');
       // Na grade cada célula já tem altura própria: a altura mínima da frase
       // solta só empurraria as quatro para longe umas das outras.
       frase.classList.remove('nds-min-h-50');
       frase.classList.add('nds-p-8');
-      grade.appendChild(frase);
+      grid.appendChild(frase);
     }
 
-    return grade;
+    return grid;
   },
   play: async ({ step }) => {
     await step('Os quatro cartões abrem e cada um declara o lado que usou', async () => {
@@ -323,8 +323,8 @@ export const Sides: Story = {
       await expect(panels).toHaveLength(4);
 
       const lados = panels.map((p) => p.getAttribute('data-side'));
-      for (const lado of lados) {
-        await expect(lado).toBeTruthy();
+      for (const side of lados) {
+        await expect(side).toBeTruthy();
       }
 
       // O EIXO é o contrato, e não o lado exato: nas stacks com fuga de colisão
@@ -375,12 +375,12 @@ export const ExtraPanelClass: Story = {
   },
   play: async ({ step }) => {
     await step('A classe extra convive com a classe do componente', async () => {
-      const painel = await waitForOpen();
+      const panel = await waitForOpen();
       // As duas coexistem: a classe do design system não é substituída pela do
       // consumidor, é acrescida.
-      await expect(painel).toHaveClass('nds-hover-card-content');
-      await expect(painel).toHaveClass('nds-w-md');
-      await expect(getComputedStyle(painel).textAlign).toBe('center');
+      await expect(panel).toHaveClass('nds-hover-card-content');
+      await expect(panel).toHaveClass('nds-w-md');
+      await expect(getComputedStyle(panel).textAlign).toBe('center');
       await expect(panelsAbertos()).toHaveLength(1);
     });
 
@@ -388,9 +388,9 @@ export const ExtraPanelClass: Story = {
       // 28rem da utilitária contra os 20rem que `.nds-hover-card-content`
       // define. É o que prova que a customização de largura funciona de fato,
       // e não só que a classe está no atributo.
-      const painel = await waitForOpen();
-      const raiz = parseFloat(getComputedStyle(document.documentElement).fontSize);
-      await expect(painel.getBoundingClientRect().width).toBeCloseTo(28 * raiz, 0);
+      const panel = await waitForOpen();
+      const root = parseFloat(getComputedStyle(document.documentElement).fontSize);
+      await expect(panel.getBoundingClientRect().width).toBeCloseTo(28 * root, 0);
     });
   },
 };

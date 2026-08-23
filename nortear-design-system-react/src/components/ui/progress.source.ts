@@ -25,7 +25,7 @@ import {
   jsxSnippet,
   propNumber,
   propText,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -56,23 +56,23 @@ const LABEL_DEFAULT = 'Progresso do upload';
  * Contêiner de largura. A trilha herda a largura de quem a contém, então sem
  * este bloco o snippet ensinaria uma barra da largura da página.
  */
-function inWidth(conteudo: string): string {
-  return `<div className="nds-w-sm">\n${indentar(conteudo)}\n</div>`;
+function inWidth(content: string): string {
+  return `<div className="nds-w-sm">\n${indentar(content)}\n</div>`;
 }
 
 /** Pilha de barras irmãs — a lista precisa de ritmo vertical entre elas. */
-function empilhado(conteudo: string): string {
-  return `<div className="nds-stack nds-w-sm" data-spacing="md">\n${indentar(conteudo)}\n</div>`;
+function empilhado(content: string): string {
+  return `<div className="nds-stack nds-w-sm" data-spacing="md">\n${indentar(content)}\n</div>`;
 }
 
 /**
  * Uma barra com rótulo próprio. `aria-label` descreve a OPERAÇÃO medida — é o
  * que a pessoa ouve —, nunca "barra de progresso", que só repete o papel.
  */
-function barra(valor: string, rotulo: string, variante?: string): string {
+function barra(value: string, label: string, variant?: string): string {
   return `<Progress
-  value={${valor}}${variante ? `\n  data-variant="${variante}"` : ''}
-  aria-label="${rotulo}"
+  value={${value}}${variant ? `\n  data-variant="${variant}"` : ''}
+  aria-label="${label}"
 />`;
 }
 
@@ -86,13 +86,13 @@ function barra(valor: string, rotulo: string, variante?: string): string {
  */
 export const progressSource: SourceTransform<ProgressArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const valor =
+  const value =
     args.value === null ? 'null' : String(typeof args.value === 'number' ? args.value : VALUE_DEFAULT);
   const line = attrs(
-    `value={${valor}}`,
+    `value={${value}}`,
     typeof args.min === 'number' && args.min !== 0 ? propNumber('min', args.min) : undefined,
     typeof args.max === 'number' && args.max !== 100 ? propNumber('max', args.max) : undefined,
-    `aria-label="${texto(args['aria-label']) ?? LABEL_DEFAULT}"`,
+    `aria-label="${text(args['aria-label']) ?? LABEL_DEFAULT}"`,
     propText('className', args.className),
   );
 

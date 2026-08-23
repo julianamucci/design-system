@@ -3,37 +3,37 @@ import { menubarSnippet, menubarSource, menubarSourceWith } from './menubar.sour
 
 describe('menubarSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML da barra', () => {
-    const código = menubarSnippet();
-    expect(código).toContain("import { createMenubar } from '@/components/ui/menubar';");
-    expect(código).toContain('createMenubar([');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('role="menubar"');
+    const code = menubarSnippet();
+    expect(code).toContain("import { createMenubar } from '@/components/ui/menubar';");
+    expect(code).toContain('createMenubar([');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('role="menubar"');
   });
 
   it('passa os menus no primeiro argumento, que é posicional', () => {
-    const código = menubarSnippet();
-    expect(código).toContain("label: 'Arquivo'");
-    expect(código).toContain("{ label: 'Novo', shortcut: '⌘N', onClick: () => novo() },");
-    expect(código).toContain("document.querySelector('#app')?.append(barra);");
+    const code = menubarSnippet();
+    expect(code).toContain("label: 'Arquivo'");
+    expect(code).toContain("{ label: 'Novo', shortcut: '⌘N', onClick: () => novo() },");
+    expect(code).toContain("document.querySelector('#app')?.append(barra);");
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = menubarSnippet({ loop: true, side: 'bottom', align: 'start' });
-    expect(código).not.toContain('loop');
-    expect(código).not.toContain('side');
-    expect(código).not.toContain('align');
-    expect(código).not.toContain('defaultOpen');
+    const code = menubarSnippet({ loop: true, side: 'bottom', align: 'start' });
+    expect(code).not.toContain('loop');
+    expect(code).not.toContain('side');
+    expect(code).not.toContain('align');
+    expect(code).not.toContain('defaultOpen');
     // Sem opção nenhuma o segundo argumento nem existe.
-    expect(código).toContain('createMenubar([\n');
-    expect(código).not.toContain('], {');
+    expect(code).toContain('createMenubar([\n');
+    expect(code).not.toContain('], {');
   });
 
   it('mostra as opções quando a story as usa', () => {
-    const código = menubarSnippet({ loop: false, side: 'top', align: 'end', defaultOpen: 0 });
-    expect(código).toContain('loop: false');
-    expect(código).toContain("side: 'top'");
-    expect(código).toContain("align: 'end'");
-    expect(código).toContain('defaultOpen: 0');
+    const code = menubarSnippet({ loop: false, side: 'top', align: 'end', defaultOpen: 0 });
+    expect(code).toContain('loop: false');
+    expect(code).toContain("side: 'top'");
+    expect(code).toContain("align: 'end'");
+    expect(code).toContain('defaultOpen: 0');
   });
 
   it('traduz o control booleano de abertura para o índice que a fábrica recebe', () => {
@@ -42,7 +42,7 @@ describe('menubarSnippet', () => {
   });
 
   it('escreve a variante de perigo e o separador do menu', () => {
-    const código = menubarSnippet({
+    const code = menubarSnippet({
       menus: [
         {
           label: 'Arquivo',
@@ -54,14 +54,14 @@ describe('menubarSnippet', () => {
         },
       ],
     });
-    expect(código).toContain("{ type: 'separator' }");
-    expect(código).toContain("variant: 'destructive'");
+    expect(code).toContain("{ type: 'separator' }");
+    expect(code).toContain("variant: 'destructive'");
     // `default` é o que a fábrica assume: repeti-lo não ensinaria nada.
-    expect(código).not.toContain("variant: 'default'");
+    expect(code).not.toContain("variant: 'default'");
   });
 
   it('não mostra marcado junto com misto — o misto vale sobre ele', () => {
-    const código = menubarSnippet({
+    const code = menubarSnippet({
       menus: [
         {
           label: 'Exibir',
@@ -73,13 +73,13 @@ describe('menubarSnippet', () => {
         },
       ],
     });
-    expect(código).toContain("{ type: 'checkbox', label: 'Colunas', indeterminate: true }");
-    expect(código).toContain("{ type: 'checkbox', label: 'Régua', checked: true }");
-    expect(código).toContain("{ type: 'checkbox', label: 'Grade' }");
+    expect(code).toContain("{ type: 'checkbox', label: 'Colunas', indeterminate: true }");
+    expect(code).toContain("{ type: 'checkbox', label: 'Régua', checked: true }");
+    expect(code).toContain("{ type: 'checkbox', label: 'Grade' }");
   });
 
   it('aninha o submenu e as opções da escolha única', () => {
-    const código = menubarSnippet({
+    const code = menubarSnippet({
       menus: [
         {
           label: 'Arquivo',
@@ -97,11 +97,11 @@ describe('menubarSnippet', () => {
         },
       ],
     });
-    expect(código).toContain("type: 'submenu'");
-    expect(código).toContain('items: [');
-    expect(código).toContain("{ label: 'PDF' },");
-    expect(código).toContain('options: [');
-    expect(código).toContain("{ value: 'dark', label: 'Escuro' },");
+    expect(code).toContain("type: 'submenu'");
+    expect(code).toContain('items: [');
+    expect(code).toContain("{ label: 'PDF' },");
+    expect(code).toContain('options: [');
+    expect(code).toContain("{ value: 'dark', label: 'Escuro' },");
   });
 
   it('mostra a limpeza só onde ela é o assunto', () => {
@@ -110,11 +110,11 @@ describe('menubarSnippet', () => {
   });
 
   it('não vaza o andaime das stories', () => {
-    const código = menubarSnippet({ defaultOpen: 0 });
-    expect(código).not.toContain('embrulhar');
-    expect(código).not.toContain('esperarPainel');
-    expect(código).not.toContain('gatilhosDe');
-    expect(código).not.toContain('MENUS');
+    const code = menubarSnippet({ defaultOpen: 0 });
+    expect(code).not.toContain('embrulhar');
+    expect(code).not.toContain('esperarPainel');
+    expect(code).not.toContain('gatilhosDe');
+    expect(code).not.toContain('MENUS');
   });
 });
 
@@ -142,11 +142,11 @@ describe('menubarSourceCom', () => {
       menus: [{ label: 'Exibir', items: [{ type: 'checkbox', label: 'Régua', checked: true }] }],
       defaultOpen: 0,
     });
-    const código = transform('', { args: { defaultOpen: false, side: 'top' } });
-    expect(código).toContain("label: 'Exibir'");
-    expect(código).toContain('defaultOpen: 0');
+    const code = transform('', { args: { defaultOpen: false, side: 'top' } });
+    expect(code).toContain("label: 'Exibir'");
+    expect(code).toContain('defaultOpen: 0');
     // O que o control ainda cobre continua passando.
-    expect(código).toContain("side: 'top'");
-    expect(código).not.toContain("label: 'Arquivo'");
+    expect(code).toContain("side: 'top'");
+    expect(code).not.toContain("label: 'Arquivo'");
   });
 });

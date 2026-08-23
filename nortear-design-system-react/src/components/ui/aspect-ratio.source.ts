@@ -35,11 +35,11 @@ const RATIOS_CANONICOS: ReadonlyArray<readonly [string, number]> = [
 ];
 
 /** Expressão do `ratio` para o snippet. Valor fora dos presets vira decimal curto. */
-export function ratioExpr(valor: unknown): string {
-  if (typeof valor !== 'number' || !Number.isFinite(valor) || valor <= 0) return '16 / 9';
-  const canonico = RATIOS_CANONICOS.find(([, n]) => Math.abs(n - valor) < 0.005);
+export function ratioExpr(value: unknown): string {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) return '16 / 9';
+  const canonico = RATIOS_CANONICOS.find(([, n]) => Math.abs(n - value) < 0.005);
   if (canonico) return canonico[0];
-  return String(Number(valor.toFixed(3)));
+  return String(Number(value.toFixed(3)));
 }
 
 /**

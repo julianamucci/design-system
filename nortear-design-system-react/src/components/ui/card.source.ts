@@ -33,8 +33,8 @@ const SIZES = ['default', 'sm'] as const;
  * inteiro em todo exemplo ensinaria a copiar peça que não está na tela.
  */
 function importCard(...parts: string[]): string {
-  const lista = ['Card', ...parts].sort();
-  return `import {\n${lista.map((part) => `  ${part},`).join('\n')}\n} from "@/components/ui/card";`;
+  const list = ['Card', ...parts].sort();
+  return `import {\n${list.map((part) => `  ${part},`).join('\n')}\n} from "@/components/ui/card";`;
 }
 
 const IMPORT_BUTTON = 'import { Button } from "@/components/ui/button";';
@@ -87,14 +87,14 @@ const FOOTER = `  <CardFooter className="nds-cluster" data-justify="end" data-sp
  */
 export const cardSource: SourceTransform<CardArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const raiz = attrs(
+  const root = attrs(
     propOption('size', args.size, SIZES, 'default'),
     propText('className', args.className) ?? `className="${WIDTH}"`,
   );
 
   return jsxSnippet(
     `${IMPORT_BUTTON}\n${importCard('CardContent', 'CardDescription', 'CardFooter', 'CardHeader', 'CardTitle')}`,
-    `<Card${raiz}>
+    `<Card${root}>
 ${HEADER}
 ${BODY}
 ${FOOTER}

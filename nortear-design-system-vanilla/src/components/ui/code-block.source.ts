@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -44,18 +44,18 @@ export type CodeBlockSnippetOptions = {
  * um código que tem quebras. Escapa o que fecharia a crase antes da hora.
  */
 function codeLiteral(code: string): string {
-  const corpo = code
+  const body = code
     .replace(/\\/g, '\\\\')
     .replace(/`/g, '\\`')
     .replace(/\$\{/g, '\\${');
-  return `\`${corpo}\``;
+  return `\`${body}\``;
 }
 
 /** `'1, 4-5'` fica string; `[3, '5-7']` fica array — como a story escreveu. */
-function literalDeLinhas(valor: string | Array<string | number>): string | undefined {
-  if (typeof valor === 'string') return valor.trim() === '' ? undefined : texto(valor);
-  if (valor.length === 0) return undefined;
-  return `[${valor.map((n) => (typeof n === 'number' ? String(n) : texto(n))).join(', ')}]`;
+function literalDeLinhas(value: string | Array<string | number>): string | undefined {
+  if (typeof value === 'string') return value.trim() === '' ? undefined : text(value);
+  if (value.length === 0) return undefined;
+  return `[${value.map((n) => (typeof n === 'number' ? String(n) : text(n))).join(', ')}]`;
 }
 
 /**
@@ -66,16 +66,16 @@ function literalDeLinhas(valor: string | Array<string | number>): string | undef
  */
 export function codeBlockSnippet(o: CodeBlockSnippetOptions = {}): string {
   const linguagem = (o.language ?? '').toLowerCase();
-  const lines = opcoes([
+  const lines = options([
     ['code', 'source'],
-    ['language', LANGUAGE_DEFAULT.includes(linguagem) ? undefined : texto(o.language!)],
-    ['title', o.title ? texto(o.title) : undefined],
+    ['language', LANGUAGE_DEFAULT.includes(linguagem) ? undefined : text(o.language!)],
+    ['title', o.title ? text(o.title) : undefined],
     ['showLineNumbers', o.showLineNumbers === false ? 'false' : undefined],
     [
       'highlightLines',
       o.highlightLines === undefined ? undefined : literalDeLinhas(o.highlightLines),
     ],
-    ['footer', o.footer ? texto(o.footer) : undefined],
+    ['footer', o.footer ? text(o.footer) : undefined],
   ]);
 
   return snippet(

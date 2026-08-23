@@ -38,12 +38,12 @@ const PANEL =
  * `aria-expanded` e `aria-controls`, e um botão aninhado dentro dele seria um
  * segundo elemento interativo sem estado nenhum.
  */
-function gatilho(rotulo: string, className: string = TRIGGER_FANTASMA): string {
+function trigger(label: string, className: string = TRIGGER_FANTASMA): string {
   return `  <CollapsibleTrigger
     class="${className}"
     data-justify="between"
   >
-    <span>${rotulo}</span>
+    <span>${label}</span>
     <ChevronDown
       aria-hidden="true"
       class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
@@ -52,12 +52,12 @@ function gatilho(rotulo: string, className: string = TRIGGER_FANTASMA): string {
 }
 
 /** O painel inteiro, indentado como filho do Collapsible. */
-function painel(corpo: string): string {
+function panel(body: string): string {
   return `  <CollapsibleContent
     class="${PANEL}"
     data-spacing="sm"
   >
-${corpo}
+${body}
   </CollapsibleContent>`;
 }
 
@@ -68,13 +68,13 @@ export function collapsibleSource(
 ): string {
   const { defaultOpen = false, disabled = false } = ctx?.args ?? {};
   const props = attrs(defaultOpen ? 'open' : '', disabled ? 'disabled' : '');
-  const rotulo = defaultOpen ? 'Ocultar filtros avançados' : 'Exibir filtros avançados';
+  const label = defaultOpen ? 'Ocultar filtros avançados' : 'Exibir filtros avançados';
 
   return svelteSnippet(
     IMPORT,
     `<Collapsible class="nds-w-sm"${props}>
-${gatilho(rotulo)}
-${painel('    <p>Filtro avançado 1 · Filtro avançado 2</p>')}
+${trigger(label)}
+${panel('    <p>Filtro avançado 1 · Filtro avançado 2</p>')}
 </Collapsible>`,
   );
 }
@@ -114,8 +114,8 @@ let aberto = $state(false);`,
     </Button>
   </div>
   <Collapsible bind:open={aberto} class="nds-w-full">
-${gatilho("{aberto ? 'Ocultar filtros avançados' : 'Exibir filtros avançados'}")}
-${painel('    <p>Conteúdo colapsável controlado externamente.</p>')}
+${trigger("{aberto ? 'Ocultar filtros avançados' : 'Exibir filtros avançados'}")}
+${panel('    <p>Conteúdo colapsável controlado externamente.</p>')}
   </Collapsible>
 </div>`,
   );
@@ -126,8 +126,8 @@ export function collapsibleWithButtonSource(): string {
   return svelteSnippet(
     IMPORT,
     `<Collapsible class="nds-w-sm">
-${gatilho('Exibir opções avançadas', TRIGGER_CONTORNO)}
-${painel(`    <p>Opção avançada 1</p>
+${trigger('Exibir opções avançadas', TRIGGER_CONTORNO)}
+${panel(`    <p>Opção avançada 1</p>
     <p>Opção avançada 2</p>
     <p>Opção avançada 3</p>`)}
 </Collapsible>`,
@@ -144,8 +144,8 @@ export function collapsibleWithChevronSource(): string {
   return svelteSnippet(
     IMPORT,
     `<Collapsible class="nds-w-sm">
-${gatilho('Configurações avançadas', TRIGGER_CONTORNO)}
-${painel(`    <div class="nds-cluster" data-justify="between">
+${trigger('Configurações avançadas', TRIGGER_CONTORNO)}
+${panel(`    <div class="nds-cluster" data-justify="between">
       <span class="nds-text-muted-foreground">Notificações</span>
       <span class="nds-font-medium">Ativadas</span>
     </div>

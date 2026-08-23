@@ -172,10 +172,10 @@ export const InForm: Story = {
     await step('Submeter guarda o valor corrente dos dois', async () => {
       const thumbs = canvas.getAllByRole('slider');
       const brilho = handleValue(thumbs[0]);
-      const opacidade = handleValue(thumbs[1]);
+      const opacity = handleValue(thumbs[1]);
       await userEvent.click(canvas.getByRole('button', { name: 'Salvar preset' }));
       await expect(
-        canvas.getByText(`Brilho ${brilho}% · Opacidade ${opacidade}%`),
+        canvas.getByText(`Brilho ${brilho}% · Opacidade ${opacity}%`),
       ).toBeVisible();
     });
   },

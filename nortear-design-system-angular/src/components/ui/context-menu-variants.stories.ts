@@ -73,8 +73,8 @@ export const WithSubmenu: Story = {
       await waitFor(() => expect(subTrigger().getAttribute('aria-expanded')).toBe('true'));
 
       const submenu = document.querySelector<HTMLElement>('[data-slot="context-menu-sub-content"]')!;
-      const itens = submenu.querySelectorAll('[data-slot="context-menu-item"]');
-      await expect(itens.length).toBe(2);
+      const items = submenu.querySelectorAll('[data-slot="context-menu-item"]');
+      await expect(items.length).toBe(2);
 
       // "À direita" é medida, não atributo: é o que o conteúdo promete e o que
       // um `side` errado quebraria sem nenhum aviso.
@@ -120,7 +120,7 @@ export const WithSelection: Story = {
     ],
   },
   render: () => ({
-    props: { grade: false, canal: 'email', areaClasse: AREA_CLICK_DIREITO },
+    props: { grid: false, canal: 'email', areaClasse: AREA_CLICK_DIREITO },
     template: `
       <div ndsContextMenu>
         <div
@@ -132,7 +132,7 @@ export const WithSelection: Story = {
           >Clique com o botão direito aqui</div>
 
         <ng-template ndsContextMenuContent>
-          <div ndsContextMenuCheckboxItem [(checked)]="grade" data-testid="check">
+          <div ndsContextMenuCheckboxItem [(checked)]="grid" data-testid="check">
             Mostrar grade
           </div>
 
@@ -148,12 +148,12 @@ export const WithSelection: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const area = () => canvasElement.querySelector<HTMLElement>('[data-testid="area"]')!;
-    const alvo = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`)!;
+    const target = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`)!;
 
     await step('Os papéis dizem que tipo de escolha cada item é', async () => {
       await gestoOpen(area());
-      await expect(alvo('check').getAttribute('role')).toBe('menuitemcheckbox');
-      await expect(alvo('radio-email').getAttribute('role')).toBe('menuitemradio');
+      await expect(target('check').getAttribute('role')).toBe('menuitemcheckbox');
+      await expect(target('radio-email').getAttribute('role')).toBe('menuitemradio');
     });
 
     await step('O estado marcado é anunciado, não só desenhado', async () => {
@@ -161,10 +161,10 @@ export const WithSelection: Story = {
       // e só valia na montagem: o painel Interactions reexecuta a play no MESMO
       // DOM, então na segunda rodada o item já vinha marcado e a asserção
       // reprovava um componente correto.
-      const antes = alvo('check').getAttribute('aria-checked');
+      const antes = target('check').getAttribute('aria-checked');
       const esperado = antes === 'true' ? 'false' : 'true';
-      await userEvent.click(alvo('check'));
-      await waitFor(() => expect(alvo('check').getAttribute('aria-checked')).toBe(esperado));
+      await userEvent.click(target('check'));
+      await waitFor(() => expect(target('check').getAttribute('aria-checked')).toBe(esperado));
       // O menu NÃO fecha: quem marca uma opção costuma querer marcar a próxima.
       await expect(document.querySelector('[data-slot="context-menu-content"]')).not.toBeNull();
     });
@@ -172,12 +172,12 @@ export const WithSelection: Story = {
     await step('A escolha única limpa a anterior', async () => {
       // Mesmo motivo: alterna entre os dois valores a partir do estado corrente
       // e afirma o PAR, em vez de assumir de onde a rodada parte.
-      const partiuDoEmail = alvo('radio-email').getAttribute('aria-checked') === 'true';
+      const partiuDoEmail = target('radio-email').getAttribute('aria-checked') === 'true';
       const click = partiuDoEmail ? 'radio-link' : 'radio-email';
       const other = partiuDoEmail ? 'radio-email' : 'radio-link';
-      await userEvent.click(alvo(click));
-      await waitFor(() => expect(alvo(click).getAttribute('aria-checked')).toBe('true'));
-      await expect(alvo(other).getAttribute('aria-checked')).toBe('false');
+      await userEvent.click(target(click));
+      await waitFor(() => expect(target(click).getAttribute('aria-checked')).toBe('true'));
+      await expect(target(other).getAttribute('aria-checked')).toBe('false');
     });
   },
 };
@@ -225,24 +225,24 @@ export const WithDisabledItems: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const area = () => canvasElement.querySelector<HTMLElement>('[data-testid="area"]')!;
-    const alvo = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`)!;
+    const target = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`)!;
 
     await step('O item desabilitado é anunciado como tal', async () => {
       await gestoOpen(area());
-      await expect(alvo('off').getAttribute('aria-disabled')).toBe('true');
+      await expect(target('off').getAttribute('aria-disabled')).toBe('true');
     });
 
     await step('Ele está atenuado, e não só marcado', async () => {
       // A cor sozinha não chega a quem não a distingue; a opacidade é o sinal
       // que sobra quando o contraste falha.
-      await expect(Number(getComputedStyle(alvo('off')).opacity)).toBeLessThan(1);
+      await expect(Number(getComputedStyle(target('off')).opacity)).toBeLessThan(1);
     });
 
     await step('O ponteiro também não o alcança', async () => {
       // Aqui a asserção é a folha de estilo, e não um clique: `userEvent` se
       // recusa a clicar em elemento com `pointer-events: none` e derruba a play
       // com erro em vez de falha — o que provaria o mesmo, mas sem dizer o quê.
-      await expect(getComputedStyle(alvo('off')).pointerEvents).toBe('none');
+      await expect(getComputedStyle(target('off')).pointerEvents).toBe('none');
     });
 
     await step('Ele recebe foco, mas não ativa', async () => {
@@ -250,9 +250,9 @@ export const WithDisabledItems: Story = {
       // justamente para que quem navega por teclado saiba que a opção existe e
       // está indisponível — some-la esconderia a informação. O que não pode é
       // ativar.
-      alvo('primeiro').focus();
+      target('primeiro').focus();
       await userEvent.keyboard('{ArrowDown}');
-      await waitFor(() => expect(document.activeElement).toBe(alvo('off')));
+      await waitFor(() => expect(document.activeElement).toBe(target('off')));
 
       await userEvent.keyboard('{Enter}');
       // O menu segue aberto: Enter num item desabilitado não escolhe nada.
@@ -262,7 +262,7 @@ export const WithDisabledItems: Story = {
     await step('O item destrutivo se declara pelo atributo, não só pela cor', async () => {
       // Cor sozinha não chega a quem não a distingue; o `data-variant` é o que
       // o CSS lê e o que a auditoria compara entre stacks.
-      await expect(alvo('perigo').getAttribute('data-variant')).toBe('destructive');
+      await expect(target('perigo').getAttribute('data-variant')).toBe('destructive');
     });
   },
 };
@@ -351,14 +351,14 @@ export const CheckboxIndeterminate: Story = {
     const menu = await gestoOpen(area);
     const canvas = within(menu);
     const misto = canvas.getByRole('menuitemcheckbox', { name: 'Colunas' });
-    const marcado = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
+    const checked = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
     const desmarcado = canvas.getByRole('menuitemcheckbox', { name: 'Grade' });
 
     await step('O estado misto é anunciado como misto, e não como marcado', async () => {
       // Uma comparação frouxa leria `'indeterminate'` como verdadeiro; o que a
       // pessoa ouve tem que separar os três estados.
       await expect(misto.getAttribute('aria-checked')).toBe('mixed');
-      await expect(marcado.getAttribute('aria-checked')).toBe('true');
+      await expect(checked.getAttribute('aria-checked')).toBe('true');
       await expect(desmarcado.getAttribute('aria-checked')).toBe('false');
     });
 
@@ -367,7 +367,7 @@ export const CheckboxIndeterminate: Story = {
       // traço é largo e sem altura, tique tem a diagonal. Com o mesmo símbolo
       // nos dois estados — o defeito — esta asserção fica vermelha.
       const formaMista = formaDoIndicador(misto);
-      const formaMarcada = formaDoIndicador(marcado);
+      const formaMarcada = formaDoIndicador(checked);
       await expect(ehTraco(formaMista)).toBe(true);
       await expect(ehTique(formaMista)).toBe(false);
       await expect(ehTique(formaMarcada)).toBe(true);

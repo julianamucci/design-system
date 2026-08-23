@@ -27,7 +27,7 @@ import {
   jsxSnippet,
   propBool,
   propOption,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -55,16 +55,16 @@ function importingIcons(...icons: string[]): string {
  * texto, e sem rótulo quem nomeia o botão é o `aria-label` — nos dois casos
  * anunciar o desenho diria a mesma coisa duas vezes.
  */
-function toggle(atributos: string, icone: string, labelVisible?: string): string {
-  const corpo = labelVisible
+function toggle(attrs: string, icone: string, labelVisible?: string): string {
+  const body = labelVisible
     ? `  <${icone} aria-hidden="true" />\n  ${labelVisible}`
     : `  <${icone} aria-hidden="true" />`;
-  return `<Toggle${atributos}>\n${corpo}\n</Toggle>`;
+  return `<Toggle${attrs}>\n${body}\n</Toggle>`;
 }
 
 /** Indenta um toggle para dentro de um contêiner. */
-function insideOf(conteudo: string): string {
-  return conteudo
+function insideOf(content: string): string {
+  return content
     .split('\n')
     .map((line) => (line.trim() ? `  ${line}` : line))
     .join('\n');
@@ -84,21 +84,21 @@ function insideOf(conteudo: string): string {
 export const toggleSource: SourceTransform<ToggleArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const soIcon = args.iconOnly ?? true;
-  const rotulo = texto(args.label) ?? (soIcon ? 'Negrito' : 'Mostrar ocultos');
+  const label = text(args.label) ?? (soIcon ? 'Negrito' : 'Mostrar ocultos');
   const icone = soIcon ? 'Bold' : 'Eye';
 
-  const atributos = attrs(
+  const attrList = attrs(
     propOption('variant', args.variant, VARIANTS, 'default'),
     propOption('size', args.size, SIZES, 'default'),
     propBool('defaultPressed', args.defaultPressed),
     propBool('disabled', args.disabled),
     // Sem texto visível não há nome acessível nenhum sem isto.
-    soIcon ? `aria-label="${rotulo}"` : undefined,
+    soIcon ? `aria-label="${label}"` : undefined,
   );
 
   return jsxSnippet(
     `${IMPORT_TOGGLE}\n${importingIcons(icone)}`,
-    toggle(atributos, icone, soIcon ? undefined : rotulo),
+    toggle(attrList, icone, soIcon ? undefined : label),
   );
 };
 

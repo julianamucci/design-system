@@ -61,9 +61,9 @@ type Story = StoryObj<RadioGroupArgs>;
  * exclusiva — no replay do painel Interactions o DOM não remonta, então um
  * clique cego partiria do estado que a rodada anterior deixou.
  */
-const choose = async (alvo: HTMLElement): Promise<void> => {
-  if (alvo.getAttribute('aria-checked') !== 'true') await userEvent.click(alvo);
-  await expect(alvo).toHaveAttribute('aria-checked', 'true');
+const choose = async (target: HTMLElement): Promise<void> => {
+  if (target.getAttribute('aria-checked') !== 'true') await userEvent.click(target);
+  await expect(target).toHaveAttribute('aria-checked', 'true');
 };
 
 export const Playground: Story = {
@@ -102,12 +102,12 @@ export const Playground: Story = {
       // por fora. O que ela prova agora é que a OPÇÃO `legend` da factory nomeia
       // o grupo, e que o nome é VISÍVEL: a legenda é um elemento na tela, não um
       // atributo invisível.
-      const grupo = canvas.getByRole('radiogroup', { name: args.groupLabel });
-      await expect(grupo).toBeInTheDocument();
-      const legenda = canvasElement.querySelector<HTMLElement>('[data-slot="radio-group-legend"]')!;
-      await expect(legenda).toBeVisible();
-      await expect(legenda).toHaveTextContent(args.groupLabel);
-      await expect(grupo).toHaveAttribute('aria-labelledby', legenda.id);
+      const group = canvas.getByRole('radiogroup', { name: args.groupLabel });
+      await expect(group).toBeInTheDocument();
+      const caption = canvasElement.querySelector<HTMLElement>('[data-slot="radio-group-legend"]')!;
+      await expect(caption).toBeVisible();
+      await expect(caption).toHaveTextContent(args.groupLabel);
+      await expect(group).toHaveAttribute('aria-labelledby', caption.id);
       await expect(radios).toHaveLength(3);
     });
 
@@ -152,8 +152,8 @@ export const Playground: Story = {
       // por opção em vez de sair do grupo.
       const order = radios.map((r) => r.tabIndex);
       await expect(order.filter((t) => t === 0)).toHaveLength(1);
-      const marcado = radios.findIndex((r) => r.getAttribute('aria-checked') === 'true');
-      await expect(order[marcado]).toBe(0);
+      const checked = radios.findIndex((r) => r.getAttribute('aria-checked') === 'true');
+      await expect(order[checked]).toBe(0);
     });
   },
 };

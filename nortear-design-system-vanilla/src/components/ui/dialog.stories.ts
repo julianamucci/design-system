@@ -6,15 +6,15 @@ import { createButton } from './button';
 import { createDialogDocs } from '@/components/docs/DialogDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import {
-  abrir,
+  open,
   cantoButtonClose,
   checkFocusTrap,
   checkNameEDescricao,
   waitForClosed,
-  fechar,
-  gatilho,
+  close,
+  trigger,
   overlay,
-  painel,
+  panel,
 } from './dialog.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -111,16 +111,16 @@ export const Playground: Story = {
   },
   render: (args) => buildPlayground(args),
   play: async ({ canvasElement, step, args }) => {
-    const trigger = gatilho(canvasElement)!;
+    const triggerEl = trigger(canvasElement)!;
     const spy = args.onOpenChange as unknown as ReturnType<typeof fn>;
 
     await step('O markup é o contrato que as outras stacks copiam', async () => {
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="dialog"]')!;
-      await expect(raiz.tagName).toBe('DIV');
-      await expect(trigger.tagName).toBe('BUTTON');
+      const root = canvasElement.querySelector<HTMLElement>('[data-slot="dialog"]')!;
+      await expect(root.tagName).toBe('DIV');
+      await expect(triggerEl.tagName).toBe('BUTTON');
       // `type="button"`: dentro de um `<form>`, o submit herdado faria abrir o
       // diálogo enviar o formulário.
-      await expect(trigger).toHaveAttribute('type', 'button');
+      await expect(triggerEl).toHaveAttribute('type', 'button');
     });
 
     await step('Fechado, nada do conteúdo existe no DOM', async () => {
@@ -128,14 +128,14 @@ export const Playground: Story = {
       // ABERTA (último passo), então na segunda rodada do painel Interactions o
       // painel já estaria montado. Quem verifica o estado fechado NA MONTAGEM é
       // a story `Closed`, que não interage com nada.
-      await fechar();
-      await expect(painel()).toBeNull();
+      await close();
+      await expect(panel()).toBeNull();
       await expect(overlay()).toBeNull();
     });
 
     await step('Clicar no gatilho abre o diálogo com overlay', async () => {
       const callsBefore = spy.mock.calls.length;
-      const p = await abrir(canvasElement);
+      const p = await open(canvasElement);
       await expect(p).toBeVisible();
       await expect(overlay()).toBeInTheDocument();
       await expect(p).toHaveAttribute('data-state', 'open');
@@ -144,21 +144,21 @@ export const Playground: Story = {
     });
 
     await step('O painel se anuncia como diálogo modal, com nome e descrição', async () => {
-      const p = painel()!;
+      const p = panel()!;
       await expect(p).toHaveAttribute('role', 'dialog');
       await expect(p).toHaveAttribute('aria-modal', 'true');
       await checkNameEDescricao(p);
     });
 
     await step('O foco entra no painel ao abrir', async () => {
-      const p = painel()!;
+      const p = panel()!;
       await waitFor(async () => {
         await expect(p.contains(document.activeElement)).toBe(true);
       });
     });
 
     await step('Tab não sai do painel', async () => {
-      await checkFocusTrap(painel()!);
+      await checkFocusTrap(panel()!);
     });
 
     await step('Escape fecha, avisa o callback e devolve o foco ao gatilho', async () => {
@@ -168,34 +168,34 @@ export const Playground: Story = {
       await expect(spy.mock.calls.length).toBe(callsBefore + 1);
       // Sem `waitFor`: a factory devolve o foco de forma síncrona, e envolver a
       // asserção mascararia um bug de foco real.
-      await expect(document.activeElement).toBe(trigger);
+      await expect(document.activeElement).toBe(triggerEl);
     });
 
     await step('Clique no overlay fecha e devolve o foco', async () => {
-      await abrir(canvasElement);
+      await open(canvasElement);
       overlay()!.click();
       await waitForClosed();
-      await expect(document.activeElement).toBe(trigger);
+      await expect(document.activeElement).toBe(triggerEl);
     });
 
     if (args.showCloseButton) {
       await step('O botão X fecha, tem nome acessível e devolve o foco', async () => {
-        const p = await abrir(canvasElement);
+        const p = await open(canvasElement);
         const x = cantoButtonClose(p)!;
         await expect(x).toHaveAccessibleName();
         await userEvent.click(x);
         await waitForClosed();
-        await expect(document.activeElement).toBe(trigger);
+        await expect(document.activeElement).toBe(triggerEl);
       });
     }
 
     await step('O Cancelar do rodapé fecha sem tocar na ação primária', async () => {
-      const p = await abrir(canvasElement);
-      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      const p = await open(canvasElement);
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = footer.querySelectorAll<HTMLElement>('button');
       // As ações são filhas DIRETAS do rodapé: é o que o CSS do sistema espera.
       await expect(buttons.length).toBe(2);
-      await expect(buttons[0].parentElement).toBe(rodape);
+      await expect(buttons[0].parentElement).toBe(footer);
       await userEvent.click(buttons[0]);
       await waitForClosed();
     });
@@ -206,7 +206,7 @@ export const Playground: Story = {
       // varredura de acessibilidade medir uma página sem diálogo nenhum — o
       // conteúdo compartilhado declara os dois sobre o estado ABERTO
       // (`visual.item1`, `accessibility.item6`).
-      const p = await abrir(canvasElement);
+      const p = await open(canvasElement);
       await expect(p).toBeVisible();
       await expect(within(p).getAllByRole('button').length).toBeGreaterThan(0);
     });

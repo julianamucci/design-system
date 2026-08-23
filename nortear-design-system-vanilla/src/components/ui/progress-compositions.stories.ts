@@ -310,13 +310,13 @@ export const CustomColor: Story = {
     await step('As três cores são realmente distintas', async () => {
       const colors = canvas
         .getAllByRole('progressbar')
-        .map((raiz) => getComputedStyle(indicadorDoProgresso(raiz)).backgroundColor);
+        .map((root) => getComputedStyle(indicadorDoProgresso(root)).backgroundColor);
       await expect(new Set(colors).size).toBe(3);
     });
 
     await step('Nenhuma variante abre mão dos 3:1 contra a trilha', async () => {
-      for (const raiz of canvas.getAllByRole('progressbar')) {
-        await expect(contrastBarTrack(raiz)).toBeGreaterThanOrEqual(3);
+      for (const root of canvas.getAllByRole('progressbar')) {
+        await expect(contrastBarTrack(root)).toBeGreaterThanOrEqual(3);
       }
     });
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSelect, type SelectItem } from './select';
-import { abridor, comRotulo } from './select.fixtures';
+import { abridor, withLabel } from './select.fixtures';
 import { selectSource, selectSourceWith } from './select.source';
 import { focusMeasureRing } from '@shared/testing/select-probe';
 
@@ -38,7 +38,7 @@ const BASIC_ITEMS: SelectItem[] = [
 
 export const Default: Story = {
   render: () =>
-    comRotulo('st-default', 'Estado', { placeholder: 'Selecione...', items: BASIC_ITEMS }),
+    withLabel('st-default', 'Estado', { placeholder: 'Selecione...', items: BASIC_ITEMS }),
   parameters: {
     covers: ['visual.item1'],
     docs: {
@@ -53,14 +53,14 @@ export const Default: Story = {
   // opção nunca sobrevive ao replay do painel Interactions.
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('combobox');
+    const trigger = canvas.getByRole('combobox');
 
     await step('Campo fechado exibindo o placeholder', async () => {
-      await expect(gatilho).toHaveTextContent('Selecione...');
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveTextContent('Selecione...');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
       // `data-placeholder` é o que faz a folha pintar o texto em cor secundária;
       // sem ele o placeholder teria o peso de um valor escolhido.
-      await expect(gatilho).toHaveAttribute('data-placeholder');
+      await expect(trigger).toHaveAttribute('data-placeholder');
     });
 
     await step('Nenhum valor viaja no formulário', async () => {
@@ -78,7 +78,7 @@ export const Default: Story = {
     });
 
     await step('O rótulo externo nomeia o campo', async () => {
-      await expect(gatilho).toHaveAccessibleName('Estado');
+      await expect(trigger).toHaveAccessibleName('Estado');
     });
   },
 };
@@ -87,7 +87,7 @@ export const Default: Story = {
 
 export const Selected: Story = {
   render: () =>
-    comRotulo('st-selected', 'Estado', {
+    withLabel('st-selected', 'Estado', {
       placeholder: 'Selecione...',
       defaultValue: 'rj',
       items: BASIC_ITEMS,
@@ -105,18 +105,18 @@ export const Selected: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('combobox');
+    const trigger = canvas.getByRole('combobox');
 
     await step('O campo exibe o rótulo do valor escolhido', async () => {
       // O rótulo tem de existir ANTES da primeira abertura: as opções só existem
       // enquanto a lista está montada, então sem o mapa interno o campo mostraria
       // o valor cru "rj".
-      await expect(gatilho).toHaveTextContent('Rio de Janeiro');
-      await expect(gatilho).not.toHaveTextContent('Selecione...');
+      await expect(trigger).toHaveTextContent('Rio de Janeiro');
+      await expect(trigger).not.toHaveTextContent('Selecione...');
     });
 
     await step('O placeholder deixa de valer como estado do campo', async () => {
-      await expect(gatilho).not.toHaveAttribute('data-placeholder');
+      await expect(trigger).not.toHaveAttribute('data-placeholder');
     });
 
     await step('O valor inicial já viaja no formulário', async () => {
@@ -132,7 +132,7 @@ export const Selected: Story = {
 
 export const Open: Story = {
   render: () =>
-    comRotulo('st-open', 'Estado', { placeholder: 'Selecione...', items: BASIC_ITEMS }),
+    withLabel('st-open', 'Estado', { placeholder: 'Selecione...', items: BASIC_ITEMS }),
   parameters: {
     covers: ['visual.item3'],
     docs: {
@@ -144,16 +144,16 @@ export const Open: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('combobox');
+    const trigger = canvas.getByRole('combobox');
 
     await step('Abrir mostra a lista em portal, e o campo concorda', async () => {
       // Idempotente: o clique só acontece com a lista fechada, então o replay do
       // painel Interactions parte do mesmo estado da primeira rodada — e a story
       // TERMINA aberta, que é o estado que ela documenta e o Chromatic fotografa.
-      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       const listbox = await waitForPortal('listbox');
       await expect(listbox).toBeVisible();
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
       // Portal de verdade: a lista mora no `body`, não dentro do campo.
       await expect(canvasElement.contains(listbox)).toBe(false);
       await expect(listbox.parentElement).toHaveAttribute('data-slot', 'select-positioner');
@@ -165,7 +165,7 @@ export const Open: Story = {
       // no `auto` do fallback e o painel sairia com a largura do texto mais longo
       // — divergindo das outras stacks, que recebem a variável da lib headless.
       const listbox = await waitForPortal('listbox');
-      const fieldWidth = gatilho.getBoundingClientRect().width;
+      const fieldWidth = trigger.getBoundingClientRect().width;
       const publicada = parseFloat(getComputedStyle(listbox).getPropertyValue('--anchor-width'));
       await expect(Math.abs(publicada - fieldWidth)).toBeLessThan(2);
       // E o painel nunca sai mais ESTREITO que o campo — a folha tem um mínimo
@@ -204,14 +204,14 @@ export const Open: Story = {
 
     await step('Home e End vão aos extremos da lista', async () => {
       const listbox = await waitForPortal('listbox');
-      const opcoes = () => within(listbox).getAllByRole('option');
+      const options = () => within(listbox).getAllByRole('option');
       await userEvent.keyboard('{End}');
       await waitFor(async () => {
-        await expect(opcoes()[opcoes().length - 1]).toHaveAttribute('data-highlighted');
+        await expect(options()[options().length - 1]).toHaveAttribute('data-highlighted');
       });
       await userEvent.keyboard('{Home}');
       await waitFor(async () => {
-        await expect(opcoes()[0]).toHaveAttribute('data-highlighted');
+        await expect(options()[0]).toHaveAttribute('data-highlighted');
       });
     });
   },
@@ -221,7 +221,7 @@ export const Open: Story = {
 
 export const Disabled: Story = {
   render: () =>
-    comRotulo('st-disabled', 'Estado', {
+    withLabel('st-disabled', 'Estado', {
       placeholder: 'Selecione...',
       disabled: true,
       items: BASIC_ITEMS,
@@ -238,17 +238,17 @@ export const Disabled: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('combobox');
+    const trigger = canvas.getByRole('combobox');
 
     await step('O campo se anuncia bloqueado', async () => {
       // `disabled` nativo, e não só `aria-disabled`: é o atributo que tira o
       // botão do percurso do Tab e cancela o clique no próprio navegador.
-      await expect(gatilho).toBeDisabled();
+      await expect(trigger).toBeDisabled();
     });
 
     await step('Bloqueado, o campo não recebe foco', async () => {
-      gatilho.focus();
-      await expect(gatilho).not.toHaveFocus();
+      trigger.focus();
+      await expect(trigger).not.toHaveFocus();
     });
 
     // Clique em elemento desabilitado é exceção legítima à regra de
@@ -258,9 +258,9 @@ export const Disabled: Story = {
       // story é defeito de limpeza dela, e é lá que ele deve reprovar — aqui
       // esconderia o que esta story mede, que é o clique não abrir nada.
       const antes = within(document.body).queryAllByRole('listbox').length;
-      await userEvent.click(gatilho, { pointerEventsCheck: 0 });
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
-      await expect(gatilho).not.toHaveAttribute('aria-controls');
+      await userEvent.click(trigger, { pointerEventsCheck: 0 });
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).not.toHaveAttribute('aria-controls');
       await expect(within(document.body).queryAllByRole('listbox')).toHaveLength(antes);
     });
   },
@@ -275,7 +275,7 @@ export const DisabledItem: Story = {
     wrap.dataset.spacing = 'lg';
 
     wrap.append(
-      comRotulo('st-disabled-item', 'Estado', {
+      withLabel('st-disabled-item', 'Estado', {
         placeholder: 'Selecione...',
         items: [
           { value: 'sp', label: 'São Paulo' },
@@ -286,7 +286,7 @@ export const DisabledItem: Story = {
       // O caso extremo do mesmo estado: NENHUMA opção disponível. Uma lista de
       // filtro esgotada chega aqui, e é onde o destaque não tem onde pousar — o
       // campo tem de abrir sem apontar nada e não pode escolher com Enter.
-      comRotulo('st-none-available', 'Cidade', {
+      withLabel('st-none-available', 'Cidade', {
         placeholder: 'Selecione...',
         items: [
           { value: 'a', label: 'Campinas (indisponível)', disabled: true },
@@ -316,42 +316,42 @@ export const DisabledItem: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const [gatilho, gatilhoVazio] = canvas.getAllByRole('combobox');
-    const abrir = abridor(gatilho);
+    const [trigger, gatilhoVazio] = canvas.getAllByRole('combobox');
+    const open = abridor(trigger);
 
     await step('A opção indisponível se anuncia bloqueada', async () => {
-      const listbox = await abrir();
+      const listbox = await open();
       const mg = within(listbox).getByRole('option', { name: /Minas Gerais/ });
       await expect(mg).toHaveAttribute('aria-disabled', 'true');
     });
 
     await step('O teclado pula a opção bloqueada e para na anterior', async () => {
-      const listbox = await abrir();
-      const opcoes = () => within(listbox).getAllByRole('option');
+      const listbox = await open();
+      const options = () => within(listbox).getAllByRole('option');
       // Três setas para baixo numa lista de três, sendo a última bloqueada: o
       // destaque para na segunda. Sem a guarda, ele pousaria numa opção que o
       // Enter não consegue escolher — e o teclado ficaria preso ali.
       await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
       await waitFor(async () => {
-        await expect(opcoes()[1]).toHaveAttribute('data-highlighted');
-        await expect(opcoes()[2]).not.toHaveAttribute('data-highlighted');
+        await expect(options()[1]).toHaveAttribute('data-highlighted');
+        await expect(options()[2]).not.toHaveAttribute('data-highlighted');
       });
 
       // Mesma abertura, para não depender do que outro passo deixou: o Enter
       // resolve na opção disponível em que o destaque parou.
       await userEvent.keyboard('{Enter}');
       await waitForPortalGone('listbox');
-      await expect(gatilho).toHaveTextContent('Rio de Janeiro');
+      await expect(trigger).toHaveTextContent('Rio de Janeiro');
     });
 
     await step('Clicar na opção bloqueada não escolhe nada', async () => {
-      const listbox = await abrir();
+      const listbox = await open();
       const mg = within(listbox).getByRole('option', { name: /Minas Gerais/ });
       await userEvent.click(mg, { pointerEventsCheck: 0 });
       // A folha põe `pointer-events: none` na opção bloqueada, então o clique nem
       // chega — e o campo continua no valor anterior, com a lista aberta.
-      await expect(gatilho).toHaveTextContent('Rio de Janeiro');
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(trigger).toHaveTextContent('Rio de Janeiro');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
       await userEvent.keyboard('{Escape}');
       await waitForPortalGone('listbox');
     });
@@ -429,21 +429,21 @@ export const Invalid: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('combobox');
+    const trigger = canvas.getByRole('combobox');
 
     await step('O campo inválido se anuncia como tal', async () => {
-      await expect(gatilho).toHaveAttribute('aria-invalid', 'true');
+      await expect(trigger).toHaveAttribute('aria-invalid', 'true');
     });
 
     await step('Mensagem de erro associada e visível', async () => {
-      await expect(gatilho).toHaveAttribute('aria-describedby', 'st-invalid-msg');
+      await expect(trigger).toHaveAttribute('aria-describedby', 'st-invalid-msg');
       await expect(canvas.getByText(/Selecione um estado para continuar/)).toBeVisible();
     });
 
     await step('O anel de erro vem da folha compartilhada', async () => {
       // A story NÃO pinta nada: se a regra de estado inválido sumir do CSS
       // compartilhado, isto reprova.
-      await expect(getComputedStyle(gatilho).boxShadow).not.toBe('none');
+      await expect(getComputedStyle(trigger).boxShadow).not.toBe('none');
     });
 
     await step('Focar o campo inválido continua mostrando o foco', async () => {
@@ -451,7 +451,7 @@ export const Invalid: Story = {
       // `:focus-visible` com a mesma especificidade: sem a regra de aninhamento,
       // focar um campo inválido não mudava nada na tela. `boxShadow !== 'none'`
       // passaria mesmo assim — só a MUDANÇA reprova.
-      await expect(focusMeasureRing(gatilho).mudou).toBe(true);
+      await expect(focusMeasureRing(trigger).mudou).toBe(true);
     });
   },
 };
@@ -460,7 +460,7 @@ export const Invalid: Story = {
 
 export const FocusVisible: Story = {
   render: () =>
-    comRotulo('st-focus', 'Estado', { placeholder: 'Selecione...', items: BASIC_ITEMS }),
+    withLabel('st-focus', 'Estado', { placeholder: 'Selecione...', items: BASIC_ITEMS }),
   parameters: {
     docs: {
       description: {
@@ -470,18 +470,18 @@ export const FocusVisible: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('combobox');
+    const trigger = canvas.getByRole('combobox');
 
     await step('O campo recebe foco por Tab', async () => {
       // Solta o foco antes de tabular: no replay ele já estaria no campo, e o Tab
       // passaria PARA O SEGUINTE — a asserção reprovaria um comportamento certo.
       (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
       await userEvent.tab();
-      await expect(gatilho).toHaveFocus();
+      await expect(trigger).toHaveFocus();
     });
 
     await step('E o foco é visível, não só existente', async () => {
-      await expect(focusMeasureRing(gatilho).mudou).toBe(true);
+      await expect(focusMeasureRing(trigger).mudou).toBe(true);
     });
   },
 };

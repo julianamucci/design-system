@@ -59,11 +59,11 @@ export const Empty: Story = {
     height: 200,
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('Sem dado não há desenho — há uma frase', async () => {
-      await expect(raiz.querySelector('svg')).toBeNull();
-      const aviso = raiz.querySelector('.nds-chart-empty');
+      await expect(root.querySelector('svg')).toBeNull();
+      const aviso = root.querySelector('.nds-chart-empty');
       await expect(aviso?.textContent?.trim()).toBe(FRASE_VAZIA);
     });
 
@@ -71,12 +71,12 @@ export const Empty: Story = {
       // `role="img"` poda a subárvore da árvore de acessibilidade: com desenho
       // isso é o que se quer, aqui esconderia justamente a explicação. Sem papel,
       // a frase é lida.
-      await expect(raiz.getAttribute('role')).toBeNull();
+      await expect(root.getAttribute('role')).toBeNull();
     });
 
     await step('O container mantém o piso de altura', async () => {
       // Sem piso, o bloco colapsa e a página salta quando o dado chega.
-      await expect(raiz.getBoundingClientRect().height).toBeGreaterThan(100);
+      await expect(root.getBoundingClientRect().height).toBeGreaterThan(100);
     });
   },
 };
@@ -96,13 +96,13 @@ export const SingleSeries: Story = {
     'aria-label': 'Acessos mensais no desktop',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('Com uma série a legenda some', async () => {
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
       // O nome da série só existiria na legenda: se ele não está escrito em
       // lugar nenhum do desenho, a legenda não foi montada.
-      await expect(designTexts(raiz)).not.toContain(SERIE_UNICA[0].name);
+      await expect(designTexts(root)).not.toContain(SERIE_UNICA[0].name);
     });
   },
 };
@@ -123,13 +123,13 @@ export const MultiSeries: Story = {
     'aria-label': 'Acessos mensais por dispositivo: desktop e mobile',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('A legenda nomeia cada série por escrito', async () => {
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
       await waitFor(
         () => {
-          for (const serie of SERIES_MULTI) expect(designTexts(raiz)).toContain(serie.name);
+          for (const serie of SERIES_MULTI) expect(designTexts(root)).toContain(serie.name);
         },
         { timeout: 3000 },
       );
@@ -139,7 +139,7 @@ export const MultiSeries: Story = {
       // A trama entra como preenchimento `url(#…)`; tirando essas, o que sobra
       // são as cores de série de verdade.
       const colors = new Set(
-        datumFormas(raiz)
+        datumFormas(root)
           .map((forma) => getComputedStyle(forma).fill)
           .filter((cor) => !cor.startsWith('url')),
       );
@@ -152,7 +152,7 @@ export const MultiSeries: Story = {
       // chegam ao DOM depende de como a lib reaproveita a definição do padrão —
       // detalhe de implementação, não promessa do design system. O que a regra
       // exige, e o que se verifica aqui, é que a trama chegue à forma.
-      await expect(tramasAplicadas(raiz).size).toBeGreaterThanOrEqual(1);
+      await expect(tramasAplicadas(root).size).toBeGreaterThanOrEqual(1);
     });
   },
 };
@@ -217,9 +217,9 @@ export const ThemeTokens: Story = {
       for (const g of graficos) {
         await waitFor(
           () => {
-            const rotulo = g.querySelector<SVGTextElement>('svg text');
-            expect(rotulo).toBeTruthy();
-            expect(getComputedStyle(rotulo!).fill).toBe(tokenColor('muted-foreground', g));
+            const label = g.querySelector<SVGTextElement>('svg text');
+            expect(label).toBeTruthy();
+            expect(getComputedStyle(label!).fill).toBe(tokenColor('muted-foreground', g));
           },
           { timeout: 3000, interval: 200 },
         );
@@ -255,14 +255,14 @@ export const GraphicContrast: Story = {
     'aria-label': 'Acessos mensais no desktop',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
-    await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+    const root = exigirRoot(canvasElement);
+    await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
     // Precondição da medida: ver o comentário de `settleTheme`.
     await settleTheme(document);
-    const background = backgroundOpacoAtras(raiz);
+    const background = backgroundOpacoAtras(root);
 
     await step('Todo contorno de forma passa de 3:1 contra o fundo', async () => {
-      const formas = datumFormas(raiz);
+      const formas = datumFormas(root);
       await expect(formas.length).toBeGreaterThan(0);
       for (const forma of formas) {
         await expect(contraste(getComputedStyle(forma).stroke, background)).toBeGreaterThanOrEqual(3);
@@ -270,9 +270,9 @@ export const GraphicContrast: Story = {
     });
 
     await step('O texto do eixo passa de 4.5:1 — é texto, não objeto', async () => {
-      const rotulo = raiz.querySelector<SVGTextElement>('svg text');
-      await expect(rotulo).not.toBeNull();
-      await expect(contraste(getComputedStyle(rotulo!).fill, background)).toBeGreaterThanOrEqual(4.5);
+      const label = root.querySelector<SVGTextElement>('svg text');
+      await expect(label).not.toBeNull();
+      await expect(contraste(getComputedStyle(label!).fill, background)).toBeGreaterThanOrEqual(4.5);
     });
   },
 };

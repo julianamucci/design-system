@@ -42,16 +42,16 @@ const CLASSES = 'className="nds-resize-y nds-min-h-30"';
 const LINES_DEFAULT = 2;
 
 /** Um atributo por linha — a fila de props do campo passa de qualquer limite. */
-function campo(partes: Array<string | false | null | undefined>, recuo = '  '): string {
-  const lista = partes.filter((parte): parte is string => Boolean(parte));
-  return `${recuo}<Textarea\n${lista.map((parte) => `${recuo}  ${parte}`).join('\n')}\n${recuo}/>`;
+function field(partes: Array<string | false | null | undefined>, recuo = '  '): string {
+  const list = partes.filter((parte): parte is string => Boolean(parte));
+  return `${recuo}<Textarea\n${list.map((parte) => `${recuo}  ${parte}`).join('\n')}\n${recuo}/>`;
 }
 
 /** Contêiner do campo: rótulo, campo e o que vier depois, empilhados. */
-function bloco(rotulo: string, id: string, corpo: string): string {
+function block(label: string, id: string, body: string): string {
   return `<div className="nds-stack nds-w-md" data-spacing="sm">
-  <Label htmlFor="${id}">${rotulo}</Label>
-${corpo}
+  <Label htmlFor="${id}">${label}</Label>
+${body}
 </div>`;
 }
 
@@ -67,7 +67,7 @@ function counter(dica: string, limit: number): string {
     <span>${dica}</span>
     <span
       aria-live="polite"
-      aria-label={\`\${valor.length} de ${limit} caracteres usados\`}
+      aria-label={\`\${value.length} de ${limit} caracteres usados\`}
     >
       {valor.length}/${limit}
     </span>
@@ -116,15 +116,15 @@ export const textareaSource: SourceTransform<TextareaArgs> = (_gerado, ctx) => {
   ];
 
   if (limit === undefined) {
-    return jsxSnippet(IMPORTS, bloco('Descrição', 'descricao', campo(['id="descricao"', ...comuns])));
+    return jsxSnippet(IMPORTS, block('Descrição', 'descricao', field(['id="descricao"', ...comuns])));
   }
 
   return jsxSnippet(
     IMPORTS_CONTROLLED,
-    bloco(
+    block(
       'Descrição',
       'descricao',
-      `${campo([
+      `${field([
         'id="descricao"',
         'value={valor}',
         'onChange={(e) => setValor(e.target.value)}',
@@ -143,10 +143,10 @@ ${counter('Descreva o produto com clareza.', limit)}`,
 export function textareaNoRedimensionarSource(): string {
   return jsxSnippet(
     IMPORTS,
-    bloco(
+    block(
       'Feedback',
       'feedback',
-      campo([
+      field([
         'id="feedback"',
         'placeholder="O que poderíamos melhorar?"',
         'className="nds-resize-none nds-min-h-30"',
@@ -162,10 +162,10 @@ export function textareaNoRedimensionarSource(): string {
 export function textareaWithCounterSource(): string {
   return jsxSnippet(
     IMPORTS_CONTROLLED,
-    bloco(
+    block(
       'Descrição',
       'descricao',
-      `${campo([
+      `${field([
         'id="descricao"',
         'value={valor}',
         'onChange={(e) => setValor(e.target.value)}',
@@ -185,10 +185,10 @@ ${counter('Descreva com clareza.', 500)}`,
 export function textareaPreenchidoSource(): string {
   return jsxSnippet(
     IMPORTS,
-    bloco(
+    block(
       'Biografia',
       'biografia',
-      campo([
+      field([
         'id="biografia"',
         'defaultValue="Designer de interfaces há 8 anos, apaixonada por sistemas de design escaláveis e acessibilidade web."',
         CLASSES,
@@ -205,10 +205,10 @@ export function textareaPreenchidoSource(): string {
 export function textareaDisabledSource(): string {
   return jsxSnippet(
     IMPORTS,
-    bloco(
+    block(
       'Descrição',
       'descricao',
-      campo(['id="descricao"', 'placeholder="Não disponível"', 'disabled', CLASSES]),
+      field(['id="descricao"', 'placeholder="Não disponível"', 'disabled', CLASSES]),
     ),
   );
 }
@@ -221,10 +221,10 @@ export function textareaDisabledSource(): string {
 export function textareaInvalidoSource(): string {
   return jsxSnippet(
     IMPORTS,
-    bloco(
+    block(
       'Descrição',
       'descricao',
-      `${campo([
+      `${field([
         'id="descricao"',
         'defaultValue="curto"',
         'aria-invalid="true"',
@@ -245,10 +245,10 @@ export function textareaInvalidoSource(): string {
 export function textareaSomenteLeituraSource(): string {
   return jsxSnippet(
     IMPORTS,
-    bloco(
+    block(
       'Observações',
       'observacoes',
-      campo([
+      field([
         'id="observacoes"',
         'defaultValue="Pedido confirmado em 02/05/2026. Entrega prevista em até 5 dias úteis."',
         'readOnly',
@@ -266,10 +266,10 @@ export function textareaSomenteLeituraSource(): string {
 export function textareaWithDescriptionSource(): string {
   return jsxSnippet(
     IMPORTS,
-    bloco(
+    block(
       'Descrição',
       'descricao',
-      `${campo([
+      `${field([
         'id="descricao"',
         'placeholder="ex: Camiseta de algodão, gola redonda..."',
         'aria-describedby="descricao-ajuda"',
@@ -290,10 +290,10 @@ export function textareaWithDescriptionSource(): string {
 export function textareaCounterAccessibleSource(): string {
   return jsxSnippet(
     IMPORTS_CONTROLLED,
-    bloco(
+    block(
       'Mensagem',
       'mensagem',
-      `${campo([
+      `${field([
         'id="mensagem"',
         'value={valor}',
         'onChange={(e) => setValor(e.target.value)}',
@@ -321,7 +321,7 @@ export function formTextareaSource(): string {
 >
   <div className="nds-stack" data-spacing="sm">
     <Label htmlFor="biografia">Biografia</Label>
-${campo(
+${field(
   [
     'id="biografia"',
     'name="bio"',
@@ -355,10 +355,10 @@ export function textareaControlledSource(): string {
 ${IMPORTS}
 
 const [valor, setValor] = useState("Texto inicial controlado.");`,
-    bloco(
+    block(
       'Observações',
       'observacoes',
-      `${campo([
+      `${field([
         'id="observacoes"',
         'value={valor}',
         'onChange={(e) => setValor(e.target.value)}',

@@ -14,9 +14,9 @@ export type BadgeArgs = {
 const IMPORT = `import { Badge } from "@/components/ui/badge";`;
 
 /** Uma etiqueta solta: a forma que todas as variantes compartilham. */
-function etiqueta(variant: BadgeArgs['variant'], rotulo: string): string {
+function etiqueta(variant: BadgeArgs['variant'], label: string): string {
   const props = attrs(variant !== 'default' ? `variant="${variant}"` : '');
-  return svelteSnippet(IMPORT, `<Badge${props}>${rotulo}</Badge>`);
+  return svelteSnippet(IMPORT, `<Badge${props}>${label}</Badge>`);
 }
 
 /** Forma canônica: uma etiqueta de texto curto. Serve o Playground. */

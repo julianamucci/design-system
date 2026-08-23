@@ -41,7 +41,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<FormArgs> }): s
     .filter(Boolean)
     .join(' ');
 
-  const campo = [
+  const field = [
     `<div ndsFormField${fieldAttrs}>`,
     `  <label ndsFormLabel>${label}</label>`,
     `  <input ${inputAttrs} />`,
@@ -61,7 +61,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
   imports: [...NDS_FORM, NdsInput, ReactiveFormsModule],
   template: \`
     <form ndsForm [formGroup]="form">
-${campo}
+${field}
     </form>
   \`,
 })
@@ -144,37 +144,37 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const campo = canvasElement.querySelector<HTMLElement>('.nds-form-field')!;
-    const controle = campo.querySelector<HTMLInputElement>('input')!;
-    const rotulo = campo.querySelector<HTMLLabelElement>('label')!;
+    const field = canvasElement.querySelector<HTMLElement>('.nds-form-field')!;
+    const control = field.querySelector<HTMLInputElement>('input')!;
+    const label = field.querySelector<HTMLLabelElement>('label')!;
 
     await step('O id do controle é gerado e o rótulo aponta para ele', async () => {
       // O template não escreve `id` nem `for`. Se a fiação falhar, o campo
       // continua bonito na tela e some do leitor de tela.
-      await expect(controle.id).not.toBe('');
-      await expect(rotulo.htmlFor).toBe(controle.id);
+      await expect(control.id).not.toBe('');
+      await expect(label.htmlFor).toBe(control.id);
     });
 
     await step('O controle é alcançável pelo texto do rótulo', async () => {
       // Buscar por rótulo é o que prova a associação de verdade: um `for`
       // apontando para id inexistente passaria numa checagem de atributo.
-      await expect(canvas.getByLabelText(args.label)).toBe(controle);
+      await expect(canvas.getByLabelText(args.label)).toBe(control);
     });
 
     await step('A descrição é LIDA junto com o campo, não só exibida', async () => {
-      const descricao = campo.querySelector<HTMLElement>('[data-slot="field-description"]')!;
+      const descricao = field.querySelector<HTMLElement>('[data-slot="field-description"]')!;
       // O alvo tem que EXISTIR, não só estar citado: um `aria-describedby`
       // apontando para id inexistente passa em asserção de atributo e o leitor
       // de tela não anuncia nada. Foi assim que a rodada do textarea ficou verde
       // com o campo mudo.
       await expect(descricao.id).not.toBe('');
-      await expect(controle.getAttribute('aria-describedby')).toContain(descricao.id);
+      await expect(control.getAttribute('aria-describedby')).toContain(descricao.id);
       await expect(document.getElementById(descricao.id)).toBe(descricao);
     });
 
     await step('Clicar no rótulo leva o foco ao controle', async () => {
-      await userEvent.click(rotulo);
-      await expect(controle).toHaveFocus();
+      await userEvent.click(label);
+      await expect(control).toHaveFocus();
     });
   },
 };

@@ -64,14 +64,14 @@ export class NdsInputGroupAddon {
   private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   protected onClick(evento: Event): void {
-    const alvo = evento.target as HTMLElement | null;
+    const target = evento.target as HTMLElement | null;
     // Clique em botão é do botão. Sem esta guarda, apertar "limpar" também
     // devolveria o foco ao campo — e o botão perderia o próprio foco no meio
     // da ação, o que quebra a navegação por teclado.
-    if (alvo?.closest('button')) return;
+    if (target?.closest('button')) return;
 
-    const grupo = this.hostRef.nativeElement.parentElement;
-    grupo?.querySelector<HTMLElement>('[data-slot="input-group-control"]')?.focus();
+    const group = this.hostRef.nativeElement.parentElement;
+    group?.querySelector<HTMLElement>('[data-slot="input-group-control"]')?.focus();
   }
 }
 

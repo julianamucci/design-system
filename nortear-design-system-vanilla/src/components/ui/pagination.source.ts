@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -42,8 +42,8 @@ const CALLBACK_DEFAULT = '(page) => irPara(page)';
  * chamada no topo do arquivo e curta demais quando ela entra dentro de um
  * corpo de função.
  */
-function recuar(bloco: string, espacos: string): string {
-  return bloco
+function recuar(block: string, espacos: string): string {
+  return block
     .split('\n')
     .map((line, i) => (i === 0 ? line : `${espacos}${line}`))
     .join('\n');
@@ -56,9 +56,9 @@ function linesComuns(o: PaginationSnippetOptions, current: string): Array<[strin
     ['current', current],
     [
       'aria-label',
-      o['aria-label'] && o['aria-label'] !== LABEL_DEFAULT ? texto(o['aria-label']) : undefined,
+      o['aria-label'] && o['aria-label'] !== LABEL_DEFAULT ? text(o['aria-label']) : undefined,
     ],
-    ['align', o.align ? texto(o.align) : undefined],
+    ['align', o.align ? text(o.align) : undefined],
     // `true` é o padrão da fábrica: só a supressão dos direcionais entra.
     ['showPrevNext', o.showPrevNext === false ? 'false' : undefined],
     ['hrefForPage', o.hrefForPage],
@@ -67,7 +67,7 @@ function linesComuns(o: PaginationSnippetOptions, current: string): Array<[strin
 
 /** A chamada real de `createPagination` com as opções da story. */
 export function paginationSnippet(o: PaginationSnippetOptions = {}): string {
-  const lines = opcoes([
+  const lines = options([
     ...linesComuns(o, String(o.current ?? 1)),
     ['onPageChange', o.onPageChange ?? CALLBACK_DEFAULT],
   ]);
@@ -87,7 +87,7 @@ export function paginationSnippet(o: PaginationSnippetOptions = {}): string {
  * isso ensinaria uma paginação que não pagina.
  */
 export function paginationWithStateSnippet(o: PaginationSnippetOptions = {}): string {
-  const lines = opcoes([
+  const lines = options([
     ...linesComuns(o, 'paginaAtual'),
     ['onPageChange', '(page) => { paginaAtual = page; remontar(); }'],
   ]);

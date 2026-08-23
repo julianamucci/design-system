@@ -68,9 +68,9 @@ export const SVG_ATTRS: Record<string, string> = {
   'stroke-linejoin': 'round',
 };
 
-function serializar(atributos: Record<string, string>): string {
-  return Object.entries(atributos)
-    .map(([chave, valor]) => `${chave}="${valor}"`)
+function serializar(attrs: Record<string, string>): string {
+  return Object.entries(attrs)
+    .map(([key, value]) => `${key}="${value}"`)
     .join(' ');
 }
 
@@ -88,6 +88,6 @@ function serializar(atributos: Record<string, string>): string {
  * inline hardcoded".
  */
 export function iconMountSvg(nos: IconNo[], className: string): string {
-  const interior = nos.map(([tag, atributos]) => `<${tag} ${serializar(atributos)}/>`).join('');
+  const interior = nos.map(([tag, attrs]) => `<${tag} ${serializar(attrs)}/>`).join('');
   return `<svg ${serializar(SVG_ATTRS)} class="${className}" aria-hidden="true">${interior}</svg>`;
 }

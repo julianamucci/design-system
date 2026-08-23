@@ -22,21 +22,21 @@ export type SheetSide = 'top' | 'right' | 'bottom' | 'left';
 /** Folga aceita em px. Abaixo de 1 o arredondamento subpixel derruba a medida. */
 const FOLGA = 1;
 
-function distanciaAteABorda(caixa: DOMRect, side: SheetSide): number {
+function distanciaAteABorda(box: DOMRect, side: SheetSide): number {
   switch (side) {
-    case 'right':  return window.innerWidth - caixa.right;
-    case 'left':   return caixa.left;
-    case 'top':    return caixa.top;
-    case 'bottom': return window.innerHeight - caixa.bottom;
+    case 'right':  return window.innerWidth - box.right;
+    case 'left':   return box.left;
+    case 'top':    return box.top;
+    case 'bottom': return window.innerHeight - box.bottom;
   }
 }
 
 /** Distância até a borda OPOSTA — o que separa "encostou" de "ocupou a tela". */
-function distanciaAteAOposta(caixa: DOMRect, side: SheetSide): number {
+function distanciaAteAOposta(box: DOMRect, side: SheetSide): number {
   const oposta: Record<SheetSide, SheetSide> = {
     right: 'left', left: 'right', top: 'bottom', bottom: 'top',
   };
-  return distanciaAteABorda(caixa, oposta[side]);
+  return distanciaAteABorda(box, oposta[side]);
 }
 
 /**
@@ -48,7 +48,7 @@ function distanciaAteAOposta(caixa: DOMRect, side: SheetSide): number {
  * deixaria de distinguir left de right.
  */
 export async function borderWaitForEncostar(
-  painel: HTMLElement,
+  panel: HTMLElement,
   side: SheetSide,
   timeout = 3000,
 ): Promise<DOMRect> {
@@ -56,15 +56,15 @@ export async function borderWaitForEncostar(
   let lastFailure = 'o painel não foi medido';
 
   for (;;) {
-    const caixa = painel.getBoundingClientRect();
-    const encostou = Math.abs(distanciaAteABorda(caixa, side)) <= FOLGA;
-    const sobrouEspaco = distanciaAteAOposta(caixa, side) > FOLGA;
+    const box = panel.getBoundingClientRect();
+    const encostou = Math.abs(distanciaAteABorda(box, side)) <= FOLGA;
+    const sobrouEspaco = distanciaAteAOposta(box, side) > FOLGA;
 
-    if (encostou && sobrouEspaco) return caixa;
+    if (encostou && sobrouEspaco) return box;
 
     lastFailure = encostou
       ? `o painel encostou nas duas bordas do eixo de "${side}" — não dá para distinguir a direção`
-      : `o painel parou a ${distanciaAteABorda(caixa, side).toFixed(1)}px da borda "${side}"`;
+      : `o painel parou a ${distanciaAteABorda(box, side).toFixed(1)}px da borda "${side}"`;
 
     if (Date.now() > limit) throw new Error(lastFailure);
     await new Promise((resolve) => setTimeout(resolve, 50));

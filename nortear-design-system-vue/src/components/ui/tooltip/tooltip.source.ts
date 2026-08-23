@@ -42,17 +42,17 @@ function importIcons(...names: string[]): string {
 }
 
 /** Bloco `<script setup>`: os componentes da composição, os ícones e o estado. */
-function script(opcoes: { kbd?: boolean; icons?: string[]; state?: string } = {}): string {
+function script(options: { kbd?: boolean; icons?: string[]; state?: string } = {}): string {
   const imports = [
     IMPORT_BUTTON,
-    opcoes.kbd ? IMPORT_KBD : '',
+    options.kbd ? IMPORT_KBD : '',
     IMPORT_TOOLTIP,
-    opcoes.icons?.length ? importIcons(...opcoes.icons) : '',
-    opcoes.state ? `import { ref } from 'vue'` : '',
+    options.icons?.length ? importIcons(...options.icons) : '',
+    options.state ? `import { ref } from 'vue'` : '',
   ]
     .filter(Boolean)
     .join('\n');
-  return opcoes.state ? `${imports}\n\n${opcoes.state}` : imports;
+  return options.state ? `${imports}\n\n${options.state}` : imports;
 }
 
 /**
@@ -60,19 +60,19 @@ function script(opcoes: { kbd?: boolean; icons?: string[]; state?: string } = {}
  * toque não há hover que o abra. O ícone entra `aria-hidden` para não competir
  * com esse nome.
  */
-function triggerIcon(opcoes: { rotulo: string; icone: string; variante?: string }): string {
-  const variante = opcoes.variante ?? 'outline';
+function triggerIcon(options: { label: string; icone: string; variant?: string }): string {
+  const variant = options.variant ?? 'outline';
   return `<TooltipTrigger as-child>
-  <Button variant="${variante}" size="icon" aria-label="${opcoes.rotulo}">
-    <${opcoes.icone} aria-hidden="true" class="nds-size-4" />
+  <Button variant="${variant}" size="icon" aria-label="${options.label}">
+    <${options.icone} aria-hidden="true" class="nds-size-4" />
   </Button>
 </TooltipTrigger>`;
 }
 
 /** Gatilho com rótulo visível: o texto do botão já é o nome acessível. */
-function triggerText(rotulo: string, extra = ''): string {
+function triggerText(label: string, extra = ''): string {
   return `<TooltipTrigger as-child>
-  <Button${attrs('variant="outline"', extra)}>${rotulo}</Button>
+  <Button${attrs('variant="outline"', extra)}>${label}</Button>
 </TooltipTrigger>`;
 }
 
@@ -82,20 +82,20 @@ function triggerText(rotulo: string, extra = ''): string {
  * O balão fica em linha quando é texto corrido e vira bloco quando o conteúdo
  * tem estrutura própria (o rótulo mais as teclas do atalho).
  */
-function balao(opcoes: {
-  raiz?: Array<string | false | null | undefined>;
-  gatilho: string;
-  conteudo: string;
+function balao(options: {
+  root?: Array<string | false | null | undefined>;
+  trigger: string;
+  contentText: string;
   content?: Array<string | false | null | undefined>;
 }): string {
-  const raiz = attrs(...(opcoes.raiz ?? []));
-  const attrsBalao = attrs(...(opcoes.content ?? []));
-  const conteudo = opcoes.conteudo.includes('\n')
-    ? `<TooltipContent${attrsBalao}>\n${indentar(opcoes.conteudo)}\n</TooltipContent>`
-    : `<TooltipContent${attrsBalao}>${opcoes.conteudo}</TooltipContent>`;
-  return `<Tooltip${raiz}>
-${indentar(opcoes.gatilho)}
-${indentar(conteudo)}
+  const root = attrs(...(options.root ?? []));
+  const attrsBalao = attrs(...(options.content ?? []));
+  const content = options.contentText.includes('\n')
+    ? `<TooltipContent${attrsBalao}>\n${indentar(options.contentText)}\n</TooltipContent>`
+    : `<TooltipContent${attrsBalao}>${options.contentText}</TooltipContent>`;
+  return `<Tooltip${root}>
+${indentar(options.trigger)}
+${indentar(content)}
 </Tooltip>`;
 }
 
@@ -106,13 +106,13 @@ ${indentar(conteudo)}
  * Sem atributo ele já entrega a espera padrão do design system — declarar o
  * valor padrão aqui ensinaria que a prop é obrigatória.
  */
-function withProvider(miolo: string, ...atributos: Array<string | false>): string {
-  return `<TooltipProvider${attrs(...atributos)}>\n${indentar(miolo)}\n</TooltipProvider>`;
+function withProvider(miolo: string, ...parts: Array<string | false>): string {
+  return `<TooltipProvider${attrs(...parts)}>\n${indentar(miolo)}\n</TooltipProvider>`;
 }
 
 /** Contêiner de composição, com a fila de atributos quebrada quando fica longa. */
-function blockWith(tag: string, atributos: string[], miolo: string): string {
-  return `<${tag}${attrsMultilinha(atributos)}>\n${indentar(miolo)}\n</${tag}>`;
+function blockWith(tag: string, attrs: string[], miolo: string): string {
+  return `<${tag}${attrsMultilinha(attrs)}>\n${indentar(miolo)}\n</${tag}>`;
 }
 
 /**
@@ -129,10 +129,10 @@ export const tooltipSource: SourceTransform<TooltipArgs> = (_gerado, ctx) => {
     script({ icons: ['Save'] }),
     withProvider(
       balao({
-        raiz: [attrBool('default-open', args.defaultOpen, false)],
-        gatilho: triggerIcon({ rotulo: 'Salvar', icone: 'Save' }),
+        root: [attrBool('default-open', args.defaultOpen, false)],
+        trigger: triggerIcon({ label: 'Salvar', icone: 'Save' }),
         content: [attr('side', args.side, 'top'), attr('align', args.align, 'center')],
-        conteudo: 'Salvar (Ctrl+S)',
+        contentText: 'Salvar (Ctrl+S)',
       }),
     ),
   );
@@ -144,10 +144,10 @@ export function tooltipTextCurtoSource(): string {
     script({ icons: ['Save'] }),
     withProvider(
       balao({
-        raiz: ['default-open'],
-        gatilho: triggerIcon({ rotulo: 'Salvar', icone: 'Save' }),
+        root: ['default-open'],
+        trigger: triggerIcon({ label: 'Salvar', icone: 'Save' }),
         content: ['side="bottom"'],
-        conteudo: 'Salvar',
+        contentText: 'Salvar',
       }),
     ),
   );
@@ -162,10 +162,10 @@ export function tooltipWithShortcutSource(): string {
     script({ kbd: true, icons: ['Save'] }),
     withProvider(
       balao({
-        raiz: ['default-open'],
-        gatilho: triggerIcon({ rotulo: 'Salvar', icone: 'Save' }),
+        root: ['default-open'],
+        trigger: triggerIcon({ label: 'Salvar', icone: 'Save' }),
         content: ['side="bottom"'],
-        conteudo: `<span>Salvar</span>
+        contentText: `<span>Salvar</span>
 <Kbd>Ctrl</Kbd>
 <Kbd>S</Kbd>`,
       }),
@@ -182,10 +182,10 @@ export function tooltipTextLongSource(): string {
     script(),
     withProvider(
       balao({
-        raiz: ['default-open'],
-        gatilho: triggerText('Compartilhar'),
+        root: ['default-open'],
+        trigger: triggerText('Compartilhar'),
         content: ['side="bottom"'],
-        conteudo: 'Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo',
+        contentText: 'Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo',
       }),
     ),
   );
@@ -197,8 +197,8 @@ export function tooltipClosedSource(): string {
     script({ icons: ['Save'] }),
     withProvider(
       balao({
-        gatilho: triggerIcon({ rotulo: 'Salvar', icone: 'Save' }),
-        conteudo: 'Salvar',
+        trigger: triggerIcon({ label: 'Salvar', icone: 'Save' }),
+        contentText: 'Salvar',
       }),
     ),
   );
@@ -210,10 +210,10 @@ export function tooltipOpenSource(): string {
     script({ icons: ['Save'] }),
     withProvider(
       balao({
-        raiz: ['default-open'],
-        gatilho: triggerIcon({ rotulo: 'Salvar', icone: 'Save' }),
+        root: ['default-open'],
+        trigger: triggerIcon({ label: 'Salvar', icone: 'Save' }),
         content: ['side="bottom"'],
-        conteudo: 'Salvar (Ctrl+S)',
+        contentText: 'Salvar (Ctrl+S)',
       }),
     ),
   );
@@ -231,9 +231,9 @@ export function tooltipWithWaitSource(): string {
     script({ icons: ['Save'] }),
     withProvider(
       balao({
-        gatilho: triggerIcon({ rotulo: 'Salvar', icone: 'Save' }),
+        trigger: triggerIcon({ label: 'Salvar', icone: 'Save' }),
         content: ['side="bottom"'],
-        conteudo: 'Salvar (Ctrl+S)',
+        contentText: 'Salvar (Ctrl+S)',
       }),
       ':delay-duration="600"',
     ),
@@ -249,9 +249,9 @@ export function tooltipPersistenteSource(): string {
     script(),
     withProvider(
       balao({
-        gatilho: triggerText('Compartilhar'),
+        trigger: triggerText('Compartilhar'),
         content: ['side="bottom"'],
-        conteudo: 'Cria um link público de leitura',
+        contentText: 'Cria um link público de leitura',
       }),
     ),
   );
@@ -277,10 +277,10 @@ export function tooltipControlledSource(): string {
 </div>
 
 ${balao({
-  raiz: [':open="aberto"', '@update:open="(valor) => (aberto = valor)"'],
-  gatilho: triggerIcon({ rotulo: 'Salvar', icone: 'Save' }),
+  root: [':open="aberto"', '@update:open="(valor) => (aberto = valor)"'],
+  trigger: triggerIcon({ label: 'Salvar', icone: 'Save' }),
   content: ['side="bottom"'],
-  conteudo: 'Salvar (Ctrl+S)',
+  contentText: 'Salvar (Ctrl+S)',
 })}`,
       ),
     ),
@@ -301,12 +301,12 @@ export function tooltipButtonIconSource(): string {
  * reforço. Um Provider só serve a todos — a espera é compartilhada.
  */
 export function actionsTooltipBarSource(): string {
-  const actions: Array<{ rotulo: string; icone: string }> = [
-    { rotulo: 'Salvar', icone: 'Save' },
-    { rotulo: 'Copiar', icone: 'Copy' },
-    { rotulo: 'Editar', icone: 'Pencil' },
-    { rotulo: 'Compartilhar', icone: 'Share2' },
-    { rotulo: 'Excluir', icone: 'Trash2' },
+  const actions: Array<{ label: string; icone: string }> = [
+    { label: 'Salvar', icone: 'Save' },
+    { label: 'Copiar', icone: 'Copy' },
+    { label: 'Editar', icone: 'Pencil' },
+    { label: 'Compartilhar', icone: 'Share2' },
+    { label: 'Excluir', icone: 'Trash2' },
   ];
   return vueSnippet(
     script({ icons: actions.map((acao) => acao.icone) }),
@@ -323,9 +323,9 @@ export function actionsTooltipBarSource(): string {
         actions
           .map((acao) =>
             balao({
-              gatilho: triggerIcon({ ...acao, variante: 'ghost' }),
+              trigger: triggerIcon({ ...acao, variant: 'ghost' }),
               content: ['side="bottom"'],
-              conteudo: acao.rotulo,
+              contentText: acao.label,
             }),
           )
           .join('\n\n'),
@@ -350,12 +350,12 @@ export function tooltipQuatroLadosSource(): string {
         'div',
         ['class="nds-grid nds-p-8"', 'data-spacing="xl"', 'data-cols="2"'],
         lados
-          .map((lado) =>
+          .map((side) =>
             balao({
-              raiz: ['default-open'],
-              gatilho: triggerText(lado, 'size="sm"'),
-              content: [attr('side', lado, 'top')],
-              conteudo: `Tooltip ${lado}`,
+              root: ['default-open'],
+              trigger: triggerText(side, 'size="sm"'),
+              content: [attr('side', side, 'top')],
+              contentText: `Tooltip ${side}`,
             }),
           )
           .join('\n\n'),

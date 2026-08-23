@@ -32,9 +32,9 @@ const IMPORT_WITH_BAR =
   'import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";';
 
 /** Quantidade de itens do exemplo, e só quando o control entrega um número. */
-function quantidade(valor: unknown, padrao: number): number {
-  if (typeof valor !== 'number' || !Number.isFinite(valor)) return padrao;
-  const inteiro = Math.round(valor);
+function quantidade(value: unknown, padrao: number): number {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return padrao;
+  const inteiro = Math.round(value);
   return inteiro > 0 ? inteiro : padrao;
 }
 
@@ -43,8 +43,8 @@ function quantidade(valor: unknown, padrao: number): number {
  * de uma utilitária: as duas medidas moram no componente, não num quadro em
  * volta dele.
  */
-function verticalList(itens: number): string {
-  return `const tags = Array.from({ length: ${itens} }, (_, i) => \`Tag \${i + 1}\`);
+function verticalList(items: number): string {
+  return `const tags = Array.from({ length: ${items} }, (_, i) => \`Tag \${i + 1}\`);
 
 <ScrollArea size="lg" className="nds-w-sm nds-rounded-md nds-border-default">
   <div className="nds-stack nds-p-4" data-spacing="sm">
@@ -63,8 +63,8 @@ function verticalList(itens: number): string {
  * cartões não encolhem (`nds-shrink-0`) — sem isso o flex os espremeria para
  * caber e o transbordo, que é o assunto, deixaria de existir.
  */
-function horizontalRange(itens: number): string {
-  return `const cartoes = Array.from({ length: ${itens} }, (_, i) => \`Card \${i + 1}\`);
+function horizontalRange(items: number): string {
+  return `const cartoes = Array.from({ length: ${items} }, (_, i) => \`Card \${i + 1}\`);
 
 <ScrollArea
   size="sm"

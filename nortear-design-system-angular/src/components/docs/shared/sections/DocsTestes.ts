@@ -143,7 +143,7 @@ export class NdsDocsTestes {
    * warning, baixa é info. O mapeamento vive em @shared/primitives para cobrir
    * os três idiomas: um mapa só pt/en fazia "Media"/"Baja" caírem no outline.
    */
-  protected prioridade(valor: string): BadgeVariant {
-    return prioridadeVariant(valor) as BadgeVariant;
+  protected prioridade(value: string): BadgeVariant {
+    return prioridadeVariant(value) as BadgeVariant;
   }
 }

@@ -35,10 +35,10 @@ export default meta;
 type Story = StoryObj;
 
 const LABEL = {
-  gatilho: () => t('usage.uxWriting.table.trigger.good'),
-  titulo: () => t('usage.uxWriting.table.title.good'),
+  trigger: () => t('usage.uxWriting.table.trigger.good'),
+  title: () => t('usage.uxWriting.table.title.good'),
   descricao: () => t('usage.uxWriting.table.description.good'),
-  fechar: () => t('usage.uxWriting.table.close.good'),
+  close: () => t('usage.uxWriting.table.close.good'),
 };
 
 /** Rótulo do botão externo da story controlada — não é rótulo de produto. */
@@ -57,8 +57,8 @@ export const Closed: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: LABEL.gatilho(),
-      tituloPainel: LABEL.titulo(),
+      rotuloGatilho: LABEL.trigger(),
+      tituloPainel: LABEL.title(),
       descricaoPainel: LABEL.descricao(),
     },
     template: `
@@ -76,7 +76,7 @@ export const Closed: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: LABEL.gatilho() });
+    const trigger = canvas.getByRole('button', { name: LABEL.trigger() });
 
     await step('Fechado, o painel não existe no DOM', async () => {
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
@@ -104,10 +104,10 @@ export const Open: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: LABEL.gatilho(),
-      tituloPainel: LABEL.titulo(),
+      rotuloGatilho: LABEL.trigger(),
+      tituloPainel: LABEL.title(),
       descricaoPainel: LABEL.descricao(),
-      rotuloFechar: LABEL.fechar(),
+      rotuloFechar: LABEL.close(),
     },
     template: `
       <nds-drawer [defaultOpen]="true">
@@ -127,20 +127,20 @@ export const Open: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const painel = await waitForPortal('dialog');
+    const panel = await waitForPortal('dialog');
 
     await step('Monta já aberto, com o contrato de markup completo', async () => {
-      await expect(painel).toBeVisible();
-      await expect(painel).toHaveAttribute('role', 'dialog');
-      await expect(painel).toHaveAttribute('aria-modal', 'true');
-      await expect(painel).toHaveAttribute('data-state', 'open');
-      await expect(painel).toHaveAccessibleName(LABEL.titulo());
+      await expect(panel).toBeVisible();
+      await expect(panel).toHaveAttribute('role', 'dialog');
+      await expect(panel).toHaveAttribute('aria-modal', 'true');
+      await expect(panel).toHaveAttribute('data-state', 'open');
+      await expect(panel).toHaveAccessibleName(LABEL.title());
       await expect(document.querySelector('[data-slot="drawer-overlay"]')).not.toBeNull();
     });
 
     await step('O foco está dentro do painel', async () => {
       await waitFor(() => {
-        if (!painel.contains(document.activeElement)) {
+        if (!panel.contains(document.activeElement)) {
           throw new Error('o foco não entrou no painel');
         }
       });
@@ -163,9 +163,9 @@ export const Controlled: Story = {
     props: {
       isOpen: false,
       rotuloExterno: TRIGGER_EXTERNO,
-      tituloPainel: LABEL.titulo(),
+      tituloPainel: LABEL.title(),
       descricaoPainel: LABEL.descricao(),
-      rotuloFechar: LABEL.fechar(),
+      rotuloFechar: LABEL.close(),
     },
     template: `
       <div class="nds-stack" data-spacing="sm">
@@ -200,13 +200,13 @@ export const Controlled: Story = {
 
     await step('O estado externo abre o painel', async () => {
       await userEvent.click(externo);
-      const painel = await waitForPortal('dialog');
-      await expect(painel).toHaveAttribute('data-state', 'open');
+      const panel = await waitForPortal('dialog');
+      await expect(panel).toHaveAttribute('data-state', 'open');
     });
 
     await step('Fechar por dentro devolve o valor a quem é dono dele', async () => {
-      const painel = await waitForPortal('dialog');
-      await userEvent.click(within(painel).getByRole('button', { name: LABEL.fechar() }));
+      const panel = await waitForPortal('dialog');
+      await userEvent.click(within(panel).getByRole('button', { name: LABEL.close() }));
       await waitForPortalVanish('dialog');
       // Se o output não tivesse chegado, `isOpen` continuaria true e o painel
       // reabriria no próximo ciclo de detecção.
@@ -228,10 +228,10 @@ export const NotDismissible: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: LABEL.gatilho(),
-      tituloPainel: LABEL.titulo(),
+      rotuloGatilho: LABEL.trigger(),
+      tituloPainel: LABEL.title(),
       descricaoPainel: LABEL.descricao(),
-      rotuloFechar: LABEL.fechar(),
+      rotuloFechar: LABEL.close(),
     },
     template: `
       <nds-drawer [defaultOpen]="true" [disablePointerDismissal]="true">
@@ -251,7 +251,7 @@ export const NotDismissible: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const painel = await waitForPortal('dialog');
+    const panel = await waitForPortal('dialog');
 
     await step('Clique no overlay não fecha', async () => {
       const overlay = document.querySelector<HTMLElement>('[data-slot="drawer-overlay"]');
@@ -261,12 +261,12 @@ export const NotDismissible: Story = {
       // transição de saída levaria menos que isto.
       await new Promise((r) => setTimeout(r, 400));
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(1);
-      await expect(painel).toBeVisible();
+      await expect(panel).toBeVisible();
     });
 
     await step('A saída explícita do rodapé continua no painel', async () => {
-      await expect(within(painel).getByRole('button', { name: LABEL.fechar() })).toBeVisible();
-      await expect(painel).toHaveAccessibleName(LABEL.titulo());
+      await expect(within(panel).getByRole('button', { name: LABEL.close() })).toBeVisible();
+      await expect(panel).toHaveAccessibleName(LABEL.title());
     });
   },
 };

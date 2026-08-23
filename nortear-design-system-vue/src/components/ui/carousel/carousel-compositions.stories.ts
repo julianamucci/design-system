@@ -152,8 +152,8 @@ export const WithDots: Story = {
      * pseudo-elemento não entra em `firstElementChild`. Buscar por classe seria
      * asserir o nome dela; o que interessa aqui é a CAIXA que ela produz.
      */
-    const rotulo = (el: Element) => el.firstElementChild as HTMLElement;
-    const largura = (el: Element) => el.getBoundingClientRect().width;
+    const label = (el: Element) => el.firstElementChild as HTMLElement;
+    const width = (el: Element) => el.getBoundingClientRect().width;
 
     const emSlide = async (i: number) =>
       waitFor(async () => { await expect(focusSlide(canvasElement)).toBe(i); }, { timeout: 4000 });
@@ -181,22 +181,22 @@ export const WithDots: Story = {
       // `waitFor` porque a mudança de forma é ANIMADA: medida no primeiro
       // quadro, a pílula ainda está fechada e o ponto anterior ainda aberto.
       await waitFor(async () => {
-        await expect(largura(rotulo(dot(2)))).toBeGreaterThan(0);
-        await expect(largura(rotulo(dot(1)))).toBeLessThan(1);
+        await expect(width(label(dot(2)))).toBeGreaterThan(0);
+        await expect(width(label(dot(1)))).toBeLessThan(1);
       }, { timeout: 4000 });
 
       // Rótulo visível certo, e é um pedaço do nome acessível (WCAG 2.5.3).
-      await expect(rotulo(dot(2))).toHaveTextContent(labelVisible(2));
+      await expect(label(dot(2))).toHaveTextContent(labelVisible(2));
       await expect(accessibleName(2, total).toLowerCase()).toContain(labelVisible(2).toLowerCase());
 
       // A forma mudou, não só a cor: a pílula é mais larga que o ponto vizinho.
-      await expect(largura(dot(2))).toBeGreaterThan(largura(dot(3)));
+      await expect(width(dot(2))).toBeGreaterThan(width(dot(3)));
 
       // E os DEMAIS continuam pontos: nenhum outro rótulo à vista, e um único
       // `aria-current` na fileira inteira.
       const demais = Array.from({ length: total }, (_, k) => k + 1).filter((p) => p !== 2);
       for (const position of demais) {
-        await expect(largura(rotulo(dot(position)))).toBeLessThan(1);
+        await expect(width(label(dot(position)))).toBeLessThan(1);
         await expect(dot(position).hasAttribute('aria-current')).toBe(false);
       }
     });
@@ -206,9 +206,9 @@ export const WithDots: Story = {
       // pílula tem texto de 12px: sem o piso, os dois ficariam abaixo dos 24px
       // que a WCAG 2.5.8 cobra — foi o defeito que criou `.nds-carousel-dot`.
       for (let position = 1; position <= total; position++) {
-        const caixa = dot(position).getBoundingClientRect();
-        await expect(caixa.width).toBeGreaterThanOrEqual(24);
-        await expect(caixa.height).toBeGreaterThanOrEqual(24);
+        const box = dot(position).getBoundingClientRect();
+        await expect(box.width).toBeGreaterThanOrEqual(24);
+        await expect(box.height).toBeGreaterThanOrEqual(24);
       }
     });
 
@@ -250,9 +250,9 @@ export const Gallery: Story = {
     template: `
       <Carousel class="nds-w-sm" aria-label="Galeria de fotos do produto">
         <CarouselContent>
-          <CarouselItem v-for="(rotulo, i) in slides" :key="i">
+          <CarouselItem v-for="(label, i) in slides" :key="i">
             <div class="nds-cluster nds-aspect-16-9 nds-p-4 nds-bg-muted-soft nds-rounded-lg" data-align="end" data-justify="start">
-              <span class="nds-text-body nds-font-semibold nds-text-foreground">{{ rotulo }}</span>
+              <span class="nds-text-body nds-font-semibold nds-text-foreground">{{ label }}</span>
             </div>
           </CarouselItem>
         </CarouselContent>
@@ -270,11 +270,11 @@ export const Gallery: Story = {
     });
 
     await step('Cada slide rotulado entrega o próprio rótulo', async () => {
-      const grupos = canvas.getAllByRole('group');
-      await expect(grupos.length).toBe(LABELS.length);
-      for (const [i, rotulo] of LABELS.entries()) {
-        await expect(grupos[i]).toHaveTextContent(rotulo);
-        await expect(canvas.getByText(rotulo)).toBeVisible();
+      const groups = canvas.getAllByRole('group');
+      await expect(groups.length).toBe(LABELS.length);
+      for (const [i, label] of LABELS.entries()) {
+        await expect(groups[i]).toHaveTextContent(label);
+        await expect(canvas.getByText(label)).toBeVisible();
       }
     });
   },

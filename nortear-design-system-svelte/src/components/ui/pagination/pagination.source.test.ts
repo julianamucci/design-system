@@ -86,7 +86,7 @@ describe('paginationSource', () => {
   });
 
   it('não carrega o rótulo de landmark que só existe para separar as stories', () => {
-    // Cada story usa um `rotulo` diferente para não repetir o nome do landmark
+    // Cada story usa um `label` diferente para não repetir o nome do landmark
     // na mesma página de docs; o padrão do primitivo já é "Paginação".
     expect(paginationSource()).not.toContain('aria-label');
   });

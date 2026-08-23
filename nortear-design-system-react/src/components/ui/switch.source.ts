@@ -45,10 +45,10 @@ import { Switch } from "@/components/ui/switch";`;
  * essa ligação que nomeia o controle para o leitor de tela e que faz o clique
  * no texto alternar o interruptor.
  */
-function pairLabelled(id: string, rotulo: string, atributos = ''): string {
+function pairLabelled(id: string, label: string, attrs = ''): string {
   return `<div className="nds-cluster" data-spacing="sm">
-  <Switch id="${id}"${atributos} />
-  <Label htmlFor="${id}">${rotulo}</Label>
+  <Switch id="${id}"${attrs} />
+  <Label htmlFor="${id}">${label}</Label>
 </div>`;
 }
 
@@ -65,7 +65,7 @@ function pairLabelled(id: string, rotulo: string, atributos = ''): string {
  */
 export const switchSource: SourceTransform<SwitchArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const atributos = attrs(
+  const attrList = attrs(
     propBool('defaultChecked', args.defaultChecked),
     propBool('disabled', args.disabled),
     propText('name', args.name),
@@ -73,7 +73,7 @@ export const switchSource: SourceTransform<SwitchArgs> = (_gerado, ctx) => {
   );
   return jsxSnippet(
     IMPORTS,
-    pairLabelled('notificacoes-email', 'Receber notificações por email', atributos),
+    pairLabelled('notificacoes-email', 'Receber notificações por email', attrList),
   );
 };
 
@@ -196,9 +196,9 @@ export function switchPanelSource(): string {
  * importa é a FORMA de cada linha, e um `map` esconderia justamente ela.
  */
 export function switchPreferenciasSource(): string {
-  const line = (id: string, rotulo: string, descricao: string) => `    <div className="nds-cluster" data-align="center" data-justify="between">
+  const line = (id: string, label: string, descricao: string) => `    <div className="nds-cluster" data-align="center" data-justify="between">
       <div className="nds-stack nds-pr-4" data-spacing="xs">
-        <Label htmlFor="${id}">${rotulo}</Label>
+        <Label htmlFor="${id}">${label}</Label>
         <p className="nds-text-caption nds-text-muted-foreground">${descricao}</p>
       </div>
       <Switch id="${id}" />
@@ -247,8 +247,8 @@ const [ativo, setAtivo] = useState(false);`,
  * olhada só.
  */
 export function switchListCompactaSource(): string {
-  const line = (id: string, rotulo: string) => `  <div className="nds-cluster" data-align="center" data-justify="between">
-    <Label htmlFor="${id}" className="nds-text-body">${rotulo}</Label>
+  const line = (id: string, label: string) => `  <div className="nds-cluster" data-align="center" data-justify="between">
+    <Label htmlFor="${id}" className="nds-text-body">${label}</Label>
     <Switch id="${id}" size="sm" />
   </div>`;
 

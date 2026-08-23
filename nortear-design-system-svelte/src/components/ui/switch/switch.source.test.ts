@@ -46,17 +46,17 @@ describe('switchSource', () => {
   });
 
   it('o layout em painel acrescenta a descrição auxiliar, sem promovê-la a nome', () => {
-    const painel = switchSource('', {
+    const panel = switchSource('', {
       args: {
         withDescription: true,
         labelText: 'Emails de marketing',
         descriptionText: 'Receba novidades e promoções da plataforma.',
       },
     });
-    expect(painel).toContain('aria-labelledby="opcao-label"');
-    expect(painel).toContain('aria-describedby="opcao-description"');
-    expect(painel).toContain('<p id="opcao-description" class="nds-text-body">');
-    expect(painel).toContain('data-justify="between"');
+    expect(panel).toContain('aria-labelledby="opcao-label"');
+    expect(panel).toContain('aria-describedby="opcao-description"');
+    expect(panel).toContain('<p id="opcao-description" class="nds-text-body">');
+    expect(panel).toContain('data-justify="between"');
   });
 
   it('sem rótulo visível, o nome acessível passa a vir de aria-label', () => {

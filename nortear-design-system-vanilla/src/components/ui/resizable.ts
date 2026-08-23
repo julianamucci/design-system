@@ -54,8 +54,8 @@ export type ResizablePanelOptions = {
 /** Passo de cada seta, em pontos percentuais. Mesmo valor das outras stacks. */
 const STEP_KEYBOARD = 2;
 
-function limitar(valor: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, valor));
+function limitar(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
 }
 
 // ─── createResizablePanel ─────────────────────────────────────────────────────
@@ -75,8 +75,8 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
 
   /** Nome do divisor `i` — string única vale para todos; array indexa. */
   const labelOf = (i: number): string | undefined => {
-    const rotulo = options['aria-label'];
-    return Array.isArray(rotulo) ? rotulo[i] : rotulo;
+    const label = options['aria-label'];
+    return Array.isArray(label) ? label[i] : label;
   };
 
   const minimumOf = (i: number) => panels[i]?.minSize ?? 10;
@@ -163,8 +163,8 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
       handle.setAttribute('aria-orientation', horizontalIs ? 'vertical' : 'horizontal');
       handle.setAttribute('tabindex', '0');
       handle.className = 'nds-resizable-handle';
-      const rotulo = labelOf(i);
-      if (rotulo) handle.setAttribute('aria-label', rotulo);
+      const label = labelOf(i);
+      if (label) handle.setAttribute('aria-label', label);
       if (disabled) {
         // `aria-disabled` em vez de sumir da ordem de tabulação: um controle que
         // desaparece do Tab não tem como explicar por que está travado.

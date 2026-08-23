@@ -45,14 +45,14 @@ export type ResizableDirection = 'horizontal' | 'vertical';
 const STEP_KEYBOARD = 2;
 
 /** Ordem de documento — a de registro depende da ordem de construção das views. */
-function documentOrdenar<T extends { readonly el: HTMLElement }>(itens: T[]): T[] {
-  return [...itens].sort((a, b) =>
+function documentOrdenar<T extends { readonly el: HTMLElement }>(items: T[]): T[] {
+  return [...items].sort((a, b) =>
     a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
   );
 }
 
-function limitar(valor: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, valor));
+function limitar(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
 }
 
 /**
@@ -74,7 +74,7 @@ export class NdsResizableStore {
 
   private panels: NdsResizablePanel[] = [];
   private punhos: NdsResizableHandle[] = [];
-  private grupo: HTMLElement | undefined;
+  private group: HTMLElement | undefined;
   /** Tamanhos no instante do pointerdown — o arrasto é sempre relativo a eles. */
   private base: number[] = [];
 
@@ -82,7 +82,7 @@ export class NdsResizableStore {
   aoFinalizar: ((sizes: number[]) => void) | undefined;
 
   registrarGrupo(el: HTMLElement): void {
-    this.grupo = el;
+    this.group = el;
   }
 
   registrarPainel(p: NdsResizablePanel): void {
@@ -194,7 +194,7 @@ export class NdsResizableStore {
    * o divisor descolaria do cursor ao longo do arrasto.
    */
   arrastar(h: NdsResizableHandle, deslocamentoPx: number): void {
-    const total = this.horizontal() ? this.grupo?.offsetWidth : this.grupo?.offsetHeight;
+    const total = this.horizontal() ? this.group?.offsetWidth : this.group?.offsetHeight;
     if (!total) return;
     this.aplicar(h, (deslocamentoPx / total) * 100, this.base);
   }
@@ -205,19 +205,19 @@ export class NdsResizableStore {
   }
 
   /** Home / End / Enter: leva o painel anterior direto a um extremo. */
-  levarPara(h: NdsResizableHandle, alvo: 'min' | 'max' | 'default'): void {
+  levarPara(h: NdsResizableHandle, target: 'min' | 'max' | 'default'): void {
     const v = this.neighbours(h);
     if (!v) return;
     const [a] = v;
     const i = this.indiceDoPunho(h);
-    const atual = this._sizes()[i] ?? 0;
+    const current = this._sizes()[i] ?? 0;
     const destination =
-      alvo === 'min'
-        ? (this.minimumOf(h) ?? atual)
-        : alvo === 'max'
-          ? (this.maximoDe(h) ?? atual)
-          : (a.defaultSize() ?? atual);
-    this.aplicar(h, destination - atual, this._sizes());
+      target === 'min'
+        ? (this.minimumOf(h) ?? current)
+        : target === 'max'
+          ? (this.maximoDe(h) ?? current)
+          : (a.defaultSize() ?? current);
+    this.aplicar(h, destination - current, this._sizes());
   }
 
   /**
@@ -293,13 +293,13 @@ export class NdsResizable implements AfterContentInit {
     this.store.start(this.restaurar());
   }
 
-  private chave(): string {
+  private key(): string {
     const id = this.autoSaveId();
     return id ? `nds-resizable:${id}` : '';
   }
 
   private restaurar(): number[] | undefined {
-    const k = this.chave();
+    const k = this.key();
     if (!k) return undefined;
     try {
       const raw = localStorage.getItem(k);
@@ -315,7 +315,7 @@ export class NdsResizable implements AfterContentInit {
   }
 
   private persistir(sizes: number[]): void {
-    const k = this.chave();
+    const k = this.key();
     if (!k) return;
     try {
       localStorage.setItem(k, JSON.stringify(sizes));

@@ -55,18 +55,18 @@ const sharedComponents = {
 };
 
 /** Mesmo painel nas quatro direções — o que muda é `direction` e o título. */
-function painel(direction: string, titulo: string, descricao: string) {
+function panel(direction: string, title: string, descricao: string) {
   return () => ({
     components: sharedComponents,
     setup() {
-      return { direction, titulo, descricao };
+      return { direction, title, descricao };
     },
     template: `
       <div style="contain: layout">
         <Drawer :default-open="true" :direction="direction">
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle>{{ titulo }}</DrawerTitle>
+              <DrawerTitle>{{ title }}</DrawerTitle>
               <DrawerDescription>{{ descricao }}</DrawerDescription>
             </DrawerHeader>
             <DrawerBody class="nds-text-body nds-text-muted-foreground">
@@ -99,7 +99,7 @@ export const Bottom: Story = {
       },
     },
   },
-  render: painel('bottom', 'Detalhes do pedido', 'Pedido #4287 confirmado em 15 de março.'),
+  render: panel('bottom', 'Detalhes do pedido', 'Pedido #4287 confirmado em 15 de março.'),
   play: async ({ step }) => {
     await step('O painel encosta na base e mostra a alça', async () => {
       const panelEl = await waitForPortal('dialog');
@@ -127,7 +127,7 @@ export const Top: Story = {
       },
     },
   },
-  render: painel('top', 'Nova versão disponível', 'Atualize agora para acessar as novidades.'),
+  render: panel('top', 'Nova versão disponível', 'Atualize agora para acessar as novidades.'),
   play: async ({ step }) => {
     await step('O painel encosta no topo e esconde a alça', async () => {
       const panelEl = await waitForPortal('dialog');
@@ -152,7 +152,7 @@ export const Left: Story = {
       },
     },
   },
-  render: painel('left', 'Menu', 'Navegue pelas seções do app.'),
+  render: panel('left', 'Menu', 'Navegue pelas seções do app.'),
   play: async ({ step }) => {
     await step('O painel encosta na borda esquerda', async () => {
       const panelEl = await waitForPortal('dialog');
@@ -185,7 +185,7 @@ export const Right: Story = {
       },
     },
   },
-  render: painel('right', 'Filtros', 'Refine sua busca por categoria, preço e disponibilidade.'),
+  render: panel('right', 'Filtros', 'Refine sua busca por categoria, preço e disponibilidade.'),
   play: async ({ step }) => {
     await step('O painel encosta na borda direita', async () => {
       const panelEl = await waitForPortal('dialog');
@@ -195,8 +195,8 @@ export const Right: Story = {
       // Espera o transform de entrada assentar: medido, o painel chega 384px
       // além da borda (a própria largura) e só depois desliza para dentro.
       await waitFor(async () => {
-        const caixa = panelEl.getBoundingClientRect();
-        await expect(Math.abs(caixa.right - window.innerWidth)).toBeLessThan(2);
+        const box = panelEl.getBoundingClientRect();
+        await expect(Math.abs(box.right - window.innerWidth)).toBeLessThan(2);
       });
     });
   },

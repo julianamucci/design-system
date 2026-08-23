@@ -14,7 +14,7 @@ export type CardArgs = {
 /** Import do card com só as partes que o exemplo usa, em ordem alfabética. */
 function importCard(...partes: string[]): string {
   const names = ['Card', ...partes].sort();
-  return `import {\n${names.map((nome) => `  ${nome},`).join('\n')}\n} from '@/components/ui/card'`;
+  return `import {\n${names.map((name) => `  ${name},`).join('\n')}\n} from '@/components/ui/card'`;
 }
 
 const IMPORT_BUTTON = `import { Button } from '@/components/ui/button'`;
@@ -27,12 +27,12 @@ const WIDTH_SM = 'class="nds-w-sm"';
 const WIDTH_XS = 'class="nds-w-xs"';
 
 /** Raiz do card com os filhos já indentados. */
-function card(partes: Array<string | ''>, ...filhos: string[]): string {
-  const corpo = filhos
+function card(partes: Array<string | ''>, ...children: string[]): string {
+  const body = children
     .filter(Boolean)
-    .map((filho) => indentar(filho, 2))
+    .map((child) => indentar(child, 2))
     .join('\n');
-  return `<Card${attrs(...partes)}>\n${corpo}\n</Card>`;
+  return `<Card${attrs(...partes)}>\n${body}\n</Card>`;
 }
 
 /**
@@ -43,13 +43,13 @@ function card(partes: Array<string | ''>, ...filhos: string[]): string {
  * `as="h3"` porque o título nasce `div`: o CSS dá a aparência de título, e quem
  * dá a semântica é o elemento.
  */
-function header(titulo: string, descricao: string, acao = ''): string {
-  const corpo = [
-    `  <CardTitle as="h3">${titulo}</CardTitle>`,
+function header(title: string, descricao: string, acao = ''): string {
+  const body = [
+    `  <CardTitle as="h3">${title}</CardTitle>`,
     `  <CardDescription>${descricao}</CardDescription>`,
     acao ? `  <CardAction>\n${indentar(acao, 4)}\n  </CardAction>` : '',
   ].filter(Boolean);
-  return `<CardHeader>\n${corpo.join('\n')}\n</CardHeader>`;
+  return `<CardHeader>\n${body.join('\n')}\n</CardHeader>`;
 }
 
 const PRODUCT = 'Cadeira Gamer Pro';
@@ -64,7 +64,7 @@ const PRECO = `<CardContent>
  * lista de cards, "Excluir" sozinho vira uma fileira de botões idênticos para
  * quem navega por leitor de tela.
  */
-function rodape(...buttons: string[]): string {
+function footer(...buttons: string[]): string {
   return `<CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
 ${buttons.map((button) => `  ${button}`).join('\n')}
 </CardFooter>`;
@@ -82,7 +82,7 @@ ${IMPORT_BUTTON}`,
       [attr('size', ctx?.args?.size, 'default'), WIDTH_SM],
       header(PRODUCT, DESCRIPTION_PRODUCT),
       PRECO,
-      rodape(
+      footer(
         `<Button variant="outline" aria-label="Editar produto ${PRODUCT}">Editar</Button>`,
         `<Button variant="destructive" aria-label="Excluir produto ${PRODUCT}">Excluir</Button>`,
       ),
@@ -150,7 +150,7 @@ ${IMPORT_BUTTON}`,
       [WIDTH_SM],
       header(PRODUCT, 'Produto atualizado em 12/04.'),
       PRECO,
-      rodape(
+      footer(
         `<Button variant="outline" aria-label="Cancelar edição de ${PRODUCT}">Cancelar</Button>`,
         `<Button aria-label="Salvar alterações em ${PRODUCT}">Salvar</Button>`,
       ),
@@ -221,7 +221,7 @@ import { Badge } from '@/components/ui/badge'`,
 />`,
       header(PRODUCT, DESCRIPTION_PRODUCT, `<Badge variant="secondary">Em estoque</Badge>`),
       PRECO,
-      rodape(
+      footer(
         `<Button variant="outline" size="sm" aria-label="Editar produto ${PRODUCT}">Editar</Button>`,
         `<Button variant="destructive" size="sm" aria-label="Excluir produto ${PRODUCT}">Excluir</Button>`,
       ),

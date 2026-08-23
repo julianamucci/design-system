@@ -160,11 +160,11 @@ export const Playground: Story = {
     // desejado. Um clique cego ALTERNA — a partir do estado errado ele inverte
     // o resultado. É o que faz a play passar no vitest (montagem limpa) e
     // falhar no painel Interactions, onde o replay reaproveita o DOM.
-    const abrir = async (t: HTMLElement) => {
+    const open = async (t: HTMLElement) => {
       if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
       await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
     };
-    const fechar = async (t: HTMLElement) => {
+    const close = async (t: HTMLElement) => {
       if (t.getAttribute('aria-expanded') !== 'false') await userEvent.click(t);
       await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'false'));
     };
@@ -172,9 +172,9 @@ export const Playground: Story = {
     await step('O markup é o do Vanilla: h3 > button > span + svg', async () => {
       // Sem esta asserção nada impede o cabeçalho semântico de sumir numa
       // refatoração — e a APG exige o gatilho dentro de um heading.
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="accordion"]')!;
-      await expect(raiz.classList.contains('nds-accordion')).toBe(true);
-      await expect(raiz).toHaveAttribute('data-type', args.multiple ? 'multiple' : 'single');
+      const root = canvasElement.querySelector<HTMLElement>('[data-slot="accordion"]')!;
+      await expect(root.classList.contains('nds-accordion')).toBe(true);
+      await expect(root).toHaveAttribute('data-type', args.multiple ? 'multiple' : 'single');
 
       const item = canvasElement.querySelector<HTMLElement>('[data-slot="accordion-item"]')!;
       await expect(item.classList.contains('nds-accordion-item')).toBe(true);
@@ -182,46 +182,46 @@ export const Playground: Story = {
       const header = item.querySelector<HTMLElement>('h3.nds-accordion-header')!;
       await expect(header).not.toBeNull();
 
-      const gatilho = header.querySelector<HTMLButtonElement>('[data-slot="accordion-trigger"]')!;
-      await expect(gatilho.tagName).toBe('BUTTON');
-      await expect(gatilho.type).toBe('button');
-      await expect(gatilho.classList.contains('nds-accordion-trigger')).toBe(true);
+      const trigger = header.querySelector<HTMLButtonElement>('[data-slot="accordion-trigger"]')!;
+      await expect(trigger.tagName).toBe('BUTTON');
+      await expect(trigger.type).toBe('button');
+      await expect(trigger.classList.contains('nds-accordion-trigger')).toBe(true);
       // `role="button"` num <button> é ruído do primitivo; o markup das cinco
       // stacks não o tem.
-      await expect(gatilho.hasAttribute('role')).toBe(false);
-      await expect(gatilho.firstElementChild!.tagName).toBe('SPAN');
+      await expect(trigger.hasAttribute('role')).toBe(false);
+      await expect(trigger.firstElementChild!.tagName).toBe('SPAN');
 
       // Classe estática em <svg>: `className` de SVG é SVGAnimatedString e não
       // aceita atribuição — se o Angular deixasse de usar setAttribute aqui, o
       // chevron perderia tamanho e cor sem nenhum erro.
-      const icone = gatilho.querySelector('svg')!;
+      const icone = trigger.querySelector('svg')!;
       await expect(icone.getAttribute('class')).toContain('nds-accordion-icon');
     });
 
     await step('O painel não é landmark e o corpo tem a classe de animação', async () => {
-      const painel = canvasElement.querySelector<HTMLElement>('[data-slot="accordion-content"]')!;
-      await expect(painel.classList.contains('nds-accordion-content')).toBe(true);
+      const panel = canvasElement.querySelector<HTMLElement>('[data-slot="accordion-content"]')!;
+      await expect(panel.classList.contains('nds-accordion-content')).toBe(true);
       // role="region" e aria-labelledby vêm do primitivo e são removidos: com o
       // painel sempre montado, um landmark por item proliferaria (axe
       // landmark-unique). A relação fica no aria-controls.
-      await expect(painel.hasAttribute('role')).toBe(false);
-      await expect(painel.hasAttribute('aria-labelledby')).toBe(false);
+      await expect(panel.hasAttribute('role')).toBe(false);
+      await expect(panel.hasAttribute('aria-labelledby')).toBe(false);
       await expect(
-        painel.querySelector('.nds-accordion-content-body'),
+        panel.querySelector('.nds-accordion-content-body'),
       ).not.toBeNull();
     });
 
     await step('Modo único mantém um item aberto por vez', async () => {
       const triggers = canvas.getAllByRole('button');
-      await abrir(triggers[0]);
+      await open(triggers[0]);
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
       await expect(triggers[2]).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('Clicar no gatilho fechado abre o item', async () => {
       const triggers = canvas.getAllByRole('button');
-      await fechar(triggers[1]);
-      await abrir(triggers[1]);
+      await close(triggers[1]);
+      await open(triggers[1]);
       await expect(args.onValueChange).toHaveBeenCalled();
     });
 
@@ -230,7 +230,7 @@ export const Playground: Story = {
       // regressão em que o gatilho reportava aberto e o conteúdo ficava
       // colapsado. A abertura anima a ALTURA (0fr → 1fr), então medir no
       // primeiro quadro dá zero — daí o waitFor.
-      const painel = await waitFor(() => {
+      const panel = await waitFor(() => {
         const el = canvasElement.querySelector<HTMLElement>(
           '[data-slot="accordion-content"][data-state="open"]',
         );
@@ -239,16 +239,16 @@ export const Playground: Story = {
         }
         return el;
       });
-      await expect(painel).toBeVisible();
+      await expect(panel).toBeVisible();
     });
 
     await step('Gatilho aponta para o painel por aria-controls', async () => {
-      const gatilho = canvas.getAllByRole('button')[0];
-      await abrir(gatilho);
-      const idPanel = gatilho.getAttribute('aria-controls');
+      const trigger = canvas.getAllByRole('button')[0];
+      await open(trigger);
+      const idPanel = trigger.getAttribute('aria-controls');
       await expect(idPanel).toBeTruthy();
       await expect(canvasElement.querySelector(`#${CSS.escape(idPanel!)}`)).not.toBeNull();
-      await expect(gatilho.id).toBeTruthy();
+      await expect(trigger.id).toBeTruthy();
     });
 
     await step('Painel fechado continua no DOM, achável pelo Ctrl+F', async () => {
@@ -256,21 +256,21 @@ export const Playground: Story = {
       // é o que deixa a busca do navegador achar a resposta e abrir o item. O
       // display computado entra na asserção de propósito: uma regra de autor com
       // `display: none` anula o recurso sem quebrar nada visível.
-      const gatilho = canvas.getAllByRole('button')[0];
-      await abrir(gatilho);
-      await fechar(gatilho);
-      const painel = await waitFor(() => {
+      const trigger = canvas.getAllByRole('button')[0];
+      await open(trigger);
+      await close(trigger);
+      const panel = await waitFor(() => {
         const el = canvasElement.querySelector<HTMLElement>('[data-slot="accordion-content"]');
         if (!el || !el.hasAttribute('hidden')) throw new Error('painel ainda fechando');
         return el;
       });
-      await expect(painel.getAttribute('hidden')).toBe('until-found');
-      await expect(getComputedStyle(painel).display).not.toBe('none');
+      await expect(panel.getAttribute('hidden')).toBe('until-found');
+      await expect(getComputedStyle(panel).display).not.toBe('none');
     });
 
     await step('Enter expande o item focado', async () => {
       const triggers = canvas.getAllByRole('button');
-      await fechar(triggers[2]);
+      await close(triggers[2]);
       triggers[2].focus();
       await expect(triggers[2]).toHaveFocus();
       await userEvent.keyboard('{Enter}');
@@ -279,7 +279,7 @@ export const Playground: Story = {
 
     await step('Space colapsa o item focado', async () => {
       const triggers = canvas.getAllByRole('button');
-      await abrir(triggers[2]);
+      await open(triggers[2]);
       triggers[2].focus();
       await userEvent.keyboard(' ');
       await waitFor(() => expect(triggers[2]).toHaveAttribute('aria-expanded', 'false'));
@@ -314,8 +314,8 @@ export const Playground: Story = {
     if (!args.multiple) {
       await step('Abrir um item fecha o anterior (modo único)', async () => {
         const triggers = canvas.getAllByRole('button');
-        await abrir(triggers[1]);
-        await abrir(triggers[2]);
+        await open(triggers[1]);
+        await open(triggers[2]);
         await expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
         await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
       });

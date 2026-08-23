@@ -81,8 +81,8 @@ export const WithoutNumbering: Story = {
     await step('O código recebe o recuo que a coluna ocupava', async () => {
       // Sem este respiro o trecho encosta na borda — é o resultado que a linha
       // "Sem numeração" da tabela de configurações promete.
-      const texto = canvasElement.querySelector<HTMLElement>('.nds-code-block-text')!;
-      await expect(parseFloat(getComputedStyle(texto).paddingInlineStart)).toBeGreaterThan(0);
+      const text = canvasElement.querySelector<HTMLElement>('.nds-code-block-text')!;
+      await expect(parseFloat(getComputedStyle(text).paddingInlineStart)).toBeGreaterThan(0);
     });
   },
 };
@@ -201,19 +201,19 @@ export const RemovedBeforeFeedback: Story = {
     const slot = document.createElement('div');
     const alternar = createButton({ variant: 'outline' });
 
-    let bloco: HTMLElement | null = null;
+    let block: HTMLElement | null = null;
     const sincronizar = (visible: boolean) => {
-      if (visible && !bloco) {
-        bloco = createCodeBlock({ code: COMPOSITION_CODE, language: 'ts' });
-        slot.append(bloco);
-      } else if (!visible && bloco) {
-        bloco.remove();
-        bloco = null;
+      if (visible && !block) {
+        block = createCodeBlock({ code: COMPOSITION_CODE, language: 'ts' });
+        slot.append(block);
+      } else if (!visible && block) {
+        block.remove();
+        block = null;
       }
       alternar.textContent = visible ? 'Remover o bloco' : 'Restaurar o bloco';
     };
 
-    alternar.addEventListener('click', () => sincronizar(!bloco));
+    alternar.addEventListener('click', () => sincronizar(!block));
     sincronizar(true);
 
     wrap.append(slot, alternar);
@@ -271,7 +271,7 @@ export const RemovedBeforeFeedback: Story = {
         //
         // A referência é tomada ANTES de remover: depois da remoção o seletor
         // não acha mais nada, e é justamente nela que `destroy()` mora.
-        const raiz = canvasElement.querySelector<HTMLElement>(
+        const root = canvasElement.querySelector<HTMLElement>(
           '[data-slot="code-block"]',
         ) as DestroyableElement;
         await userEvent.click(canvas.getByRole('button', { name: /remover o bloco/i }));
@@ -282,7 +282,7 @@ export const RemovedBeforeFeedback: Story = {
 
         // Idempotência é a outra metade do contrato da forma: a varredura
         // automática já rodou, e quem consome ainda pode chamar na mão.
-        await expect(() => raiz.destroy()).not.toThrow();
+        await expect(() => root.destroy()).not.toThrow();
       });
     } finally {
       window.setTimeout = setOriginal;

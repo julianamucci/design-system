@@ -15,7 +15,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 const MENUS = [
   {
     label: 'Arquivo',
-    itens: [
+    items: [
       { label: 'Novo', shortcut: '⌘N' },
       { label: 'Abrir', shortcut: '⌘O' },
       { label: 'Salvar', shortcut: '⌘S' },
@@ -23,7 +23,7 @@ const MENUS = [
   },
   {
     label: 'Editar',
-    itens: [
+    items: [
       { label: 'Desfazer', shortcut: '⌘Z' },
       { label: 'Refazer', shortcut: '⇧⌘Z' },
       { label: 'Copiar', shortcut: '⌘C' },
@@ -31,11 +31,11 @@ const MENUS = [
   },
   {
     label: 'Exibir',
-    itens: [{ label: 'Aproximar' }, { label: 'Afastar' }, { label: 'Tela cheia' }],
+    items: [{ label: 'Aproximar' }, { label: 'Afastar' }, { label: 'Tela cheia' }],
   },
   {
     label: 'Ajuda',
-    itens: [{ label: 'Documentação' }, { label: 'Atalhos de teclado' }],
+    items: [{ label: 'Documentação' }, { label: 'Atalhos de teclado' }],
   },
 ] as const;
 
@@ -120,7 +120,7 @@ export const Playground: Story = {
     const barra = createMenubar(
       MENUS.map((m) => ({
         label: m.label,
-        items: m.itens.map((i) => ({
+        items: m.items.map((i) => ({
           label: i.label,
           shortcut: 'shortcut' in i ? i.shortcut : undefined,
           onClick: () => args.onSelect(i.label),
@@ -143,9 +143,9 @@ export const Playground: Story = {
 
     await step('A barra é um menubar, e cada gatilho anuncia o menu que abre', async () => {
       await expect(triggers).toHaveLength(MENUS.length);
-      for (const [i, gatilho] of triggers.entries()) {
-        await expect(gatilho).toHaveAccessibleName(MENUS[i].label);
-        await expect(gatilho.getAttribute('aria-haspopup')).toBe('menu');
+      for (const [i, trigger] of triggers.entries()) {
+        await expect(trigger).toHaveAccessibleName(MENUS[i].label);
+        await expect(trigger.getAttribute('aria-haspopup')).toBe('menu');
       }
     });
 
@@ -171,27 +171,27 @@ export const Playground: Story = {
         await expect(arquivo.getAttribute('aria-expanded')).toBe('true');
       });
 
-      const painel = panelOpen(canvasElement)!;
-      await expect(painel.getAttribute('role')).toBe('menu');
-      const itens = within(painel).getAllByRole('menuitem');
-      await expect(itens).toHaveLength(MENUS[0].itens.length);
+      const panel = panelOpen(canvasElement)!;
+      await expect(panel.getAttribute('role')).toBe('menu');
+      const items = within(panel).getAllByRole('menuitem');
+      await expect(items).toHaveLength(MENUS[0].items.length);
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(itens[0]);
+        await expect(document.activeElement).toBe(items[0]);
       });
     });
 
     await step('Dentro do menu, a seta vertical anda entre os itens', async () => {
-      const painel = panelOpen(canvasElement)!;
-      const itens = within(painel).getAllByRole('menuitem');
+      const panel = panelOpen(canvasElement)!;
+      const items = within(panel).getAllByRole('menuitem');
 
       await userEvent.keyboard('{ArrowDown}');
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(itens[1]);
+        await expect(document.activeElement).toBe(items[1]);
       });
 
       await userEvent.keyboard('{ArrowUp}');
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(itens[0]);
+        await expect(document.activeElement).toBe(items[0]);
       });
     });
 

@@ -29,13 +29,13 @@ export function panelLabelled(label: string, extraClass = ''): HTMLElement {
 }
 
 /** Conteúdo de painel com título e uma linha de apoio abaixo dele. */
-export function panelWithHelper(titulo: string, helper: string): HTMLElement {
+export function panelWithHelper(title: string, helper: string): HTMLElement {
   const el = document.createElement('div');
   el.className = 'nds-stack nds-p-4';
   el.dataset.spacing = 'xs';
   const h = document.createElement('p');
   h.className = 'nds-text-body nds-font-semibold';
-  h.textContent = titulo;
+  h.textContent = title;
   const p = document.createElement('p');
   p.className = 'nds-text-caption nds-text-muted-foreground';
   p.textContent = helper;
@@ -44,7 +44,7 @@ export function panelWithHelper(titulo: string, helper: string): HTMLElement {
 }
 
 /** Invólucro de altura definida para o grupo de painéis. */
-export function frame(child: HTMLElement, altura = '220px'): HTMLElement {
+export function frame(child: HTMLElement, height = '220px'): HTMLElement {
   const wrap = document.createElement('div');
   wrap.style.contain = 'layout';
   // ALTURA DEFINIDA, e não só `min-height`: um grupo vertical distribui a
@@ -52,7 +52,7 @@ export function frame(child: HTMLElement, altura = '220px'): HTMLElement {
   // contêiner de altura automática — os painéis colapsavam para zero. Com
   // `min-height` no invólucro, o `height: 100%` do grupo resolvia para `auto`.
   // A suíte só viu isso quando a asserção passou a medir a geometria.
-  wrap.style.height = altura;
+  wrap.style.height = height;
   wrap.className = 'nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background';
   wrap.appendChild(child);
   return wrap;

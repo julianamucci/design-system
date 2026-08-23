@@ -443,7 +443,7 @@ const TARGETS_DEMO = [
       aberto é o que as stories capturam para a regressão visual.
     -->
     <ng-template #tplDoDont1Do>
-      <nav ndsNavigationMenu [attr.aria-label]="rotulo(t('nav.doDont'), tNav('common.do') + ' 1')">
+      <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.doDont'), tNav('common.do') + ' 1')">
         <ul ndsNavigationMenuList>
           <li ndsNavigationMenuItem>
             <a ndsNavigationMenuLink href="#inicio" active>
@@ -477,7 +477,7 @@ const TARGETS_DEMO = [
       </nav>
     </ng-template>
     <ng-template #tplDoDont2Do>
-      <nav ndsNavigationMenu [attr.aria-label]="rotulo(t('nav.doDont'), tNav('common.do') + ' 2')">
+      <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.doDont'), tNav('common.do') + ' 2')">
         <ul ndsNavigationMenuList>
           <li ndsNavigationMenuItem value="solucoes">
             <button ndsNavigationMenuTrigger>{{ t('usage.uxWriting.table.trigger.good') }}</button>
@@ -505,7 +505,7 @@ const TARGETS_DEMO = [
       </nav>
     </ng-template>
     <ng-template #tplDoDont2Dont>
-      <nav ndsNavigationMenu [attr.aria-label]="rotulo(t('nav.doDont'), tNav('common.dont') + ' 2')">
+      <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.doDont'), tNav('common.dont') + ' 2')">
         <ul ndsNavigationMenuList>
           <li ndsNavigationMenuItem value="tudo">
             <button ndsNavigationMenuTrigger>{{ t('usage.uxWriting.table.trigger.good') }}</button>
@@ -528,7 +528,7 @@ const TARGETS_DEMO = [
     </ng-template>
 
     <ng-template #tplVarHorizontal>
-      <nav ndsNavigationMenu [attr.aria-label]="rotulo(t('nav.variants'), t('variants.items.horizontal'))">
+      <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.variants'), t('variants.items.horizontal'))">
         <ul ndsNavigationMenuList>
           <li ndsNavigationMenuItem>
             <a ndsNavigationMenuLink href="#inicio" active>
@@ -558,7 +558,7 @@ const TARGETS_DEMO = [
       <nav
         ndsNavigationMenu
         orientation="vertical"
-        [attr.aria-label]="rotulo(t('nav.variants'), t('variants.items.vertical'))"
+        [attr.aria-label]="label(t('nav.variants'), t('variants.items.vertical'))"
       >
         <ul ndsNavigationMenuList class="nds-w-sm">
           <li ndsNavigationMenuItem>
@@ -575,7 +575,7 @@ const TARGETS_DEMO = [
       </nav>
     </ng-template>
     <ng-template #tplVarSimple>
-      <nav ndsNavigationMenu [attr.aria-label]="rotulo(t('nav.variants'), t('variants.items.linkSimples.name'))">
+      <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.variants'), t('variants.items.linkSimples.name'))">
         <ul ndsNavigationMenuList>
           <li ndsNavigationMenuItem>
             <a ndsNavigationMenuLink href="#inicio" active>
@@ -591,7 +591,7 @@ const TARGETS_DEMO = [
       </nav>
     </ng-template>
     <ng-template #tplVarDropdown>
-      <nav ndsNavigationMenu [attr.aria-label]="rotulo(t('nav.variants'), t('variants.items.comDropdown.name'))">
+      <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.variants'), t('variants.items.comDropdown.name'))">
         <ul ndsNavigationMenuList>
           <li ndsNavigationMenuItem value="planos">
             <button ndsNavigationMenuTrigger>{{ t('usage.uxWriting.table.trigger.good') }}</button>
@@ -613,7 +613,7 @@ const TARGETS_DEMO = [
       </nav>
     </ng-template>
     <ng-template #tplVarGrid>
-      <nav ndsNavigationMenu [attr.aria-label]="rotulo(t('nav.variants'), t('variants.items.megaMenuGrid.name'))">
+      <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.variants'), t('variants.items.megaMenuGrid.name'))">
         <ul ndsNavigationMenuList>
           <li ndsNavigationMenuItem value="solucoes">
             <button ndsNavigationMenuTrigger>{{ t('demonstration.labels.withGrid') }}</button>
@@ -644,7 +644,7 @@ const TARGETS_DEMO = [
       </nav>
     </ng-template>
     <ng-template #tplVarFeatured>
-      <nav ndsNavigationMenu [attr.aria-label]="rotulo(t('nav.variants'), t('variants.items.comCardDestacado.name'))">
+      <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.variants'), t('variants.items.comCardDestacado.name'))">
         <ul ndsNavigationMenuList>
           <li ndsNavigationMenuItem value="recursos">
             <button ndsNavigationMenuTrigger>{{ t('demonstration.labels.withFeatured') }}</button>
@@ -697,7 +697,7 @@ const TARGETS_DEMO = [
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
           <div class="nds-stack" data-spacing="lg">
-            <nav ndsNavigationMenu [attr.aria-label]="rotulo(t('nav.demonstration'), t('demonstration.labels.simpleLink'))">
+            <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.demonstration'), t('demonstration.labels.simpleLink'))">
               <ul ndsNavigationMenuList>
                 <li ndsNavigationMenuItem>
                   <a
@@ -717,7 +717,7 @@ const TARGETS_DEMO = [
               </ul>
             </nav>
 
-            <nav ndsNavigationMenu [attr.aria-label]="rotulo(t('nav.demonstration'), t('demonstration.labels.withDropdown'))">
+            <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.demonstration'), t('demonstration.labels.withDropdown'))">
               <ul ndsNavigationMenuList>
                 <li ndsNavigationMenuItem value="planos">
                   <button ndsNavigationMenuTrigger>
@@ -748,7 +748,7 @@ const TARGETS_DEMO = [
               </ul>
             </nav>
 
-            <nav ndsNavigationMenu [attr.aria-label]="rotulo(t('nav.demonstration'), t('demonstration.labels.withGrid'))">
+            <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.demonstration'), t('demonstration.labels.withGrid'))">
               <ul ndsNavigationMenuList>
                 <li ndsNavigationMenuItem value="solucoes">
                   <button ndsNavigationMenuTrigger>
@@ -784,7 +784,7 @@ const TARGETS_DEMO = [
               </ul>
             </nav>
 
-            <nav ndsNavigationMenu [attr.aria-label]="rotulo(t('nav.demonstration'), t('demonstration.labels.withFeatured'))">
+            <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.demonstration'), t('demonstration.labels.withFeatured'))">
               <ul ndsNavigationMenuList>
                 <li ndsNavigationMenuItem value="recursos">
                   <button ndsNavigationMenuTrigger>
@@ -950,7 +950,7 @@ export class NdsNavigationMenuDocs implements AfterViewInit, OnDestroy {
    * duas. Foi exatamente esse par que reprovou aqui — dois "Com card destacado"
    * na mesma página.
    */
-  protected rotulo(section: string, exemplo: string): string {
+  protected label(section: string, exemplo: string): string {
     const base = toPlainText(t('usage.uxWriting.table.ariaLabel.good'));
     return `${base} — ${toPlainText(section)} — ${toPlainText(exemplo)}`;
   }
@@ -1128,21 +1128,21 @@ export class NdsNavigationMenuDocs implements AfterViewInit, OnDestroy {
     const not = tNav('common.no');
 
     /** Linha cujo tipo/padrão/descrição vêm da tabela do conteúdo compartilhado. */
-    const ofContent = (nome: string, chave: string, tipo?: string) => ({
-      name: nome,
-      type: tipo ?? toPlainText(t(`props.table.${chave}.type`)),
-      defaultValue: toPlainText(t(`props.table.${chave}.default`)),
-      required: toPlainText(t(`props.table.${chave}.required`)),
-      description: toPlainText(t(`props.table.${chave}.description`)),
+    const ofContent = (name: string, key: string, type?: string) => ({
+      name: name,
+      type: type ?? toPlainText(t(`props.table.${key}.type`)),
+      defaultValue: toPlainText(t(`props.table.${key}.default`)),
+      required: toPlainText(t(`props.table.${key}.required`)),
+      description: toPlainText(t(`props.table.${key}.description`)),
     });
 
     /** Linha que só existe neste stack — descrição vem do override. */
-    const local = (nome: string, tipo: string, padrao: string, chave: string) => ({
-      name: nome,
-      type: tipo,
+    const local = (name: string, type: string, padrao: string, key: string) => ({
+      name: name,
+      type: type,
       defaultValue: padrao,
       required: not,
-      description: toPlainText(t(`props.${chave}.description`)),
+      description: toPlainText(t(`props.${key}.description`)),
     });
 
     const className = local('class', 'string', '—', 'class');
@@ -1293,15 +1293,15 @@ export class NdsNavigationMenuDocs implements AfterViewInit, OnDestroy {
     // mesmo que a demonstração acima dispara de verdade. `navigation_click` é o
     // nome tipado no catálogo desta stack, compartilhado com Breadcrumb e
     // Sidebar — três peças de navegação com um evento só agregam no GA4.
-    const gatilho = toPlainText(t('analytics.description'));
+    const trigger = toPlainText(t('analytics.description'));
     return [
       {
         event: 'navigation_click',
-        trigger: gatilho,
+        trigger: trigger,
         payload: 'component, label, destination, location',
       },
-      { event: 'docs_page_view',      trigger: gatilho, payload: 'component_name, locale, page_title' },
-      { event: 'docs_section_viewed', trigger: gatilho, payload: 'component_name, section_id, locale' },
+      { event: 'docs_page_view',      trigger: trigger, payload: 'component_name, locale, page_title' },
+      { event: 'docs_section_viewed', trigger: trigger, payload: 'component_name, section_id, locale' },
     ];
   });
 

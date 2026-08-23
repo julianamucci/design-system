@@ -143,9 +143,9 @@ export const VariantSidebar: Story = {
   ...makeStory('sidebar'),
   play: async ({ canvasElement, step }) => {
     await step('A variante padrão não arredonda o painel interno', async () => {
-      const raiz = rootOf(canvasElement);
-      await expect(raiz.getAttribute('data-variant')).toBe('sidebar');
-      const interno = raiz.querySelector<HTMLElement>('.nds-sidebar-inner')!;
+      const root = rootOf(canvasElement);
+      await expect(root.getAttribute('data-variant')).toBe('sidebar');
+      const interno = root.querySelector<HTMLElement>('.nds-sidebar-inner')!;
       await expect(parseFloat(getComputedStyle(interno).borderTopLeftRadius)).toBe(0);
     });
   },
@@ -169,10 +169,10 @@ export const VariantFloating: Story = {
       // Afirma o pixel, e não só o atributo: a regra é
       // `[data-variant="floating"] .nds-sidebar-inner`, e um atributo no lugar
       // errado passaria despercebido.
-      const raiz = rootOf(canvasElement);
-      await expect(raiz.getAttribute('data-variant')).toBe('floating');
+      const root = rootOf(canvasElement);
+      await expect(root.getAttribute('data-variant')).toBe('floating');
 
-      const interno = raiz.querySelector<HTMLElement>('.nds-sidebar-inner')!;
+      const interno = root.querySelector<HTMLElement>('.nds-sidebar-inner')!;
       const estilo = getComputedStyle(interno);
       await expect(parseFloat(estilo.borderTopLeftRadius)).toBeGreaterThan(0);
       await expect(parseFloat(estilo.borderTopWidth)).toBeGreaterThan(0);
@@ -195,8 +195,8 @@ export const VariantInset: Story = {
   ...makeStory('inset'),
   play: async ({ canvasElement, step }) => {
     await step('inset marca a variante que arredonda o conteúdo adjacente', async () => {
-      const raiz = rootOf(canvasElement);
-      await expect(raiz.getAttribute('data-variant')).toBe('inset');
+      const root = rootOf(canvasElement);
+      await expect(root.getAttribute('data-variant')).toBe('inset');
       // A regra que arredonda o conteúdo é `[data-variant="inset"] ~ .nds-sidebar-inset`
       // — depende de a barra e o conteúdo serem irmãos, e é isso que se perde
       // primeiro quando alguém envolve um dos dois.
@@ -221,12 +221,12 @@ export const SideRight: Story = {
     const canvas = within(canvasElement);
 
     await step('A barra encosta na direita', async () => {
-      const raiz = rootOf(canvasElement);
-      await expect(raiz.getAttribute('data-side')).toBe('right');
+      const root = rootOf(canvasElement);
+      await expect(root.getAttribute('data-side')).toBe('right');
       // Medida, não atributo: a regra que posiciona é
       // `[data-side="right"] .nds-sidebar-panel { right: 0 }`.
-      const painel = raiz.querySelector<HTMLElement>('.nds-sidebar-panel')!;
-      await expect(getComputedStyle(painel).right).toBe('0px');
+      const panel = root.querySelector<HTMLElement>('.nds-sidebar-panel')!;
+      await expect(getComputedStyle(panel).right).toBe('0px');
     });
 
     await step('Trocar de lado não mexe na navegação', async () => {

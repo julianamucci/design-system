@@ -13,24 +13,24 @@ import {
 
 describe('progressSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML da barra', () => {
-    const código = progressSnippet();
-    expect(código).toContain("import { createProgress } from '@/components/ui/progress';");
-    expect(código).toContain('createProgress({');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('role="progressbar"');
+    const code = progressSnippet();
+    expect(code).toContain("import { createProgress } from '@/components/ui/progress';");
+    expect(code).toContain('createProgress({');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('role="progressbar"');
   });
 
   it('usa o nome acessível canônico, nunca o apelido', () => {
-    const código = progressSnippet({ 'aria-label': 'Progresso do backup' });
-    expect(código).toContain("'aria-label': 'Progresso do backup'");
-    expect(código).not.toContain('ariaLabel');
+    const code = progressSnippet({ 'aria-label': 'Progresso do backup' });
+    expect(code).toContain("'aria-label': 'Progresso do backup'");
+    expect(code).not.toContain('ariaLabel');
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = progressSnippet();
-    expect(código).not.toContain('max:');
-    expect(código).not.toContain('variant');
-    expect(código).not.toContain('className');
+    const code = progressSnippet();
+    expect(code).not.toContain('max:');
+    expect(code).not.toContain('variant');
+    expect(code).not.toContain('className');
   });
 
   it('o control vazio de variante não vira uma opção vazia no snippet', () => {
@@ -39,81 +39,81 @@ describe('progressSnippet', () => {
   });
 
   it('mostra as opções quando a story as usa', () => {
-    const código = progressSnippet({ value: 92, max: 200, variant: 'destructive' });
-    expect(código).toContain('value: 92');
-    expect(código).toContain('max: 200');
-    expect(código).toContain("variant: 'destructive'");
+    const code = progressSnippet({ value: 92, max: 200, variant: 'destructive' });
+    expect(code).toContain('value: 92');
+    expect(code).toContain('max: 200');
+    expect(code).toContain("variant: 'destructive'");
   });
 
   it('o modo sem estimativa entra como `null`, e não como zero', () => {
-    const código = progressSnippet({ value: null, 'aria-label': 'Processando…' });
-    expect(código).toContain('value: null');
-    expect(código).not.toContain('value: 0');
+    const code = progressSnippet({ value: null, 'aria-label': 'Processando…' });
+    expect(code).toContain('value: null');
+    expect(code).not.toContain('value: 0');
   });
 
   it('não vaza o andaime das stories', () => {
-    const código = progressSnippet();
-    expect(código).not.toContain('buildBar');
-    expect(código).not.toContain('buildLabeled');
+    const code = progressSnippet();
+    expect(code).not.toContain('buildBar');
+    expect(code).not.toContain('buildLabeled');
   });
 });
 
 describe('progressComRotuloSnippet', () => {
   it('compõe rótulo e valor acima da barra, em região polite', () => {
-    const código = progressComRotuloSnippet({
+    const code = progressComRotuloSnippet({
       value: 48,
       label: 'Enviando arquivo',
       'aria-label': 'Progresso do upload de documento-final.pdf',
     });
-    expect(código).toContain("nome.textContent = 'Enviando arquivo';");
-    expect(código).toContain("valor.textContent = '48%';");
-    expect(código).toContain("setAttribute('aria-live', 'polite')");
+    expect(code).toContain("nome.textContent = 'Enviando arquivo';");
+    expect(code).toContain("valor.textContent = '48%';");
+    expect(code).toContain("setAttribute('aria-live', 'polite')");
     // O comentário do snippet CITA `assertive` para dizer por que não usá-lo —
     // a asserção é sobre a chamada, não sobre a palavra.
-    expect(código).not.toContain("'aria-live', 'assertive'");
-    expect(código).toContain('createProgress({');
+    expect(code).not.toContain("'aria-live', 'assertive'");
+    expect(code).toContain('createProgress({');
   });
 
   it('deixa a região anunciar o texto da etapa quando não é porcentagem', () => {
-    const código = progressComRotuloSnippet({
+    const code = progressComRotuloSnippet({
       value: 60,
       label: 'Etapa 3 de 5',
       valueText: 'Endereço',
     });
-    expect(código).toContain("valor.textContent = 'Endereço';");
-    expect(código).not.toContain("valor.textContent = '60%';");
+    expect(code).toContain("valor.textContent = 'Endereço';");
+    expect(code).not.toContain("valor.textContent = '60%';");
   });
 });
 
 describe('progressListaSnippet', () => {
   it('mostra uma chamada por barra, cada uma com o próprio nome', () => {
-    const código = progressListaSnippet([
+    const code = progressListaSnippet([
       { value: 100, variant: 'success', 'aria-label': 'Sincronização concluída' },
       { value: 92, variant: 'destructive', 'aria-label': 'Espaço quase esgotado' },
     ]);
-    expect(código.match(/createProgress\(/g)).toHaveLength(2);
-    expect(código).toContain("variant: 'success'");
-    expect(código).toContain("'aria-label': 'Espaço quase esgotado'");
+    expect(code.match(/createProgress\(/g)).toHaveLength(2);
+    expect(code).toContain("variant: 'success'");
+    expect(code).toContain("'aria-label': 'Espaço quase esgotado'");
   });
 });
 
 describe('progressAnimadoSnippet', () => {
   it('avança pela mesma custom property que a fábrica alimenta', () => {
-    const código = progressAnimadoSnippet({ value: 0 });
-    expect(código).toContain("setProperty('--value'");
-    expect(código).toContain("setAttribute('aria-valuenow'");
+    const code = progressAnimadoSnippet({ value: 0 });
+    expect(code).toContain("setProperty('--value'");
+    expect(code).toContain("setAttribute('aria-valuenow'");
     // Escrever largura ou transform passaria por cima da folha compartilhada.
-    expect(código).not.toContain('style.width');
-    expect(código).not.toContain('style.transform');
+    expect(code).not.toContain('style.width');
+    expect(code).not.toContain('style.transform');
   });
 });
 
 describe('progressOcupadoSnippet', () => {
   it('declara o contêiner ocupado ao redor da barra', () => {
-    const código = progressOcupadoSnippet({ value: 35 });
-    expect(código).toContain("setAttribute('role', 'status')");
-    expect(código).toContain("setAttribute('aria-busy', 'true')");
-    expect(código).toContain('value: 35');
+    const code = progressOcupadoSnippet({ value: 35 });
+    expect(code).toContain("setAttribute('role', 'status')");
+    expect(code).toContain("setAttribute('aria-busy', 'true')");
+    expect(code).toContain('value: 35');
   });
 });
 
@@ -138,9 +138,9 @@ describe('progressSource', () => {
 describe('progressSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = progressSourceWith({ value: null });
-    const código = transform('', { args: { value: 42 } });
-    expect(código).toContain('value: null');
-    expect(código).not.toContain('value: 42');
+    const code = transform('', { args: { value: 42 } });
+    expect(code).toContain('value: null');
+    expect(code).not.toContain('value: 42');
   });
 });
 

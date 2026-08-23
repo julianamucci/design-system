@@ -15,7 +15,7 @@ import {
   propNumber,
   propOption,
   propText,
-  texto,
+  text,
 } from './story-source';
 
 /** Como o Storybook entrega uma prop de callback: função, não string. */
@@ -64,19 +64,19 @@ describe('attrsMultilinha', () => {
 
 describe('texto', () => {
   it('aceita string não vazia', () => {
-    expect(texto(' Salvar ')).toBe('Salvar');
+    expect(text(' Salvar ')).toBe('Salvar');
   });
 
   it('recusa espião de control — ele chega como FUNÇÃO', () => {
-    expect(texto(spy)).toBeUndefined();
+    expect(text(spy)).toBeUndefined();
     // E o corpo do mock, que é o que apareceria no painel, não sobra em lugar
     // nenhum da montagem.
     expect(attrs(propText('onClick', spy))).toBe('');
   });
 
   it('recusa string vazia, número, objeto e nulo', () => {
-    for (const valor of ['', '   ', 42, {}, null, undefined, true]) {
-      expect(texto(valor)).toBeUndefined();
+    for (const value of ['', '   ', 42, {}, null, undefined, true]) {
+      expect(text(value)).toBeUndefined();
     }
   });
 });

@@ -48,11 +48,11 @@ type Story = StoryObj<typeof meta>;
  * clique cego num toggle parte do estado que a rodada anterior deixou e inverte
  * todas as asserções seguintes.
  */
-const abrir = async (t: HTMLElement) => {
+const open = async (t: HTMLElement) => {
   if (t.getAttribute("aria-expanded") !== "true") await userEvent.click(t);
   await waitFor(() => expect(t).toHaveAttribute("aria-expanded", "true"));
 };
-const fechar = async (t: HTMLElement) => {
+const close = async (t: HTMLElement) => {
   if (t.getAttribute("aria-expanded") !== "false") await userEvent.click(t);
   await waitFor(() => expect(t).toHaveAttribute("aria-expanded", "false"));
 };
@@ -78,22 +78,22 @@ export const Uncontrolled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole("button");
-    const painel = () =>
+    const panel = () =>
       canvasElement.querySelector<HTMLElement>('[data-slot="collapsible-content"]');
 
     await step("o estado nasce e vive dentro do componente", async () => {
       // Ninguém de fora escreveu `open`: o painel abre porque o próprio
       // primitivo guarda o estado.
-      await fechar(trigger);
-      await expect(painel()).toBeNull();
-      await abrir(trigger);
-      await expect(painel()).toBeInTheDocument();
+      await close(trigger);
+      await expect(panel()).toBeNull();
+      await open(trigger);
+      await expect(panel()).toBeInTheDocument();
       await expect(canvas.getByText("Filtro avançado 1")).toBeVisible();
     });
 
     await step("e continua alternando sem controle externo", async () => {
-      await fechar(trigger);
-      await waitFor(() => expect(painel()).toBeNull());
+      await close(trigger);
+      await waitFor(() => expect(panel()).toBeNull());
     });
   },
 };
@@ -124,7 +124,7 @@ export const OpenByDefault: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole("button");
-    const painel = () =>
+    const panel = () =>
       canvasElement.querySelector<HTMLElement>('[data-slot="collapsible-content"]');
 
     await step("monta já expandido, sem estado externo nenhum", async () => {
@@ -132,16 +132,16 @@ export const OpenByDefault: Story = {
       // não interage. No replay do painel Interactions o DOM não remonta, então
       // o passo seguinte devolve o estado aberto antes de terminar.
       await expect(trigger).toHaveAttribute("aria-expanded", "true");
-      await expect(painel()).toBeInTheDocument();
+      await expect(panel()).toBeInTheDocument();
       await expect(canvas.getByText("Filtro avançado 1")).toBeVisible();
     });
 
     await step("defaultOpen é ponto de partida, não trava", async () => {
-      await fechar(trigger);
-      await abrir(trigger);
+      await close(trigger);
+      await open(trigger);
       // Termina aberto de propósito: é o quadro que o Chromatic fotografa e o
       // estado que o axe varre para esta story (visual.item2).
-      await expect(painel()).toBeInTheDocument();
+      await expect(panel()).toBeInTheDocument();
     });
   },
 };
@@ -193,7 +193,7 @@ export const Controlled: Story = {
     const trigger = canvasElement.querySelector<HTMLButtonElement>(
       '[data-slot="collapsible-trigger"]',
     )!;
-    const painel = () =>
+    const panel = () =>
       canvasElement.querySelector<HTMLElement>('[data-slot="collapsible-content"]');
 
     await step("o painel obedece ao estado externo", async () => {
@@ -203,14 +203,14 @@ export const Controlled: Story = {
         await userEvent.click(canvas.getByRole("button", { name: "Abrir pelo estado externo" }));
       }
       await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "true"));
-      await expect(painel()).toBeInTheDocument();
+      await expect(panel()).toBeInTheDocument();
       await expect(trigger).toHaveTextContent("Ocultar filtros avançados");
     });
 
     await step("o trigger devolve a mudança para o estado externo", async () => {
-      await fechar(trigger);
+      await close(trigger);
       await expect(trigger).toHaveTextContent("Exibir filtros avançados");
-      await waitFor(() => expect(painel()).toBeNull());
+      await waitFor(() => expect(panel()).toBeNull());
     });
 
     await step("e o botão externo fecha de volta", async () => {

@@ -133,19 +133,19 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     // Procura pela classe, e não pelo data-slot: `.nds-chart` é o que o CSS
     // compartilhado define, e é o contrato que as cinco stacks têm em comum.
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('O desenho é anunciado como imagem, com a descrição da story', async () => {
-      await expect(raiz.dataset.slot).toBe('chart');
-      await expect(raiz.getAttribute('role')).toBe('img');
+      await expect(root.dataset.slot).toBe('chart');
+      await expect(root.getAttribute('role')).toBe('img');
       // A descrição EXATA, não "existe o atributo": um aria-label vazio ou
       // genérico passaria pelo teste de presença e não descreveria nada.
-      await expect(raiz.getAttribute('aria-label')).toBe(args['aria-label']);
+      await expect(root.getAttribute('aria-label')).toBe(args['aria-label']);
     });
 
     await step('O desenho sai — e sai com forma, não como casca vazia', async () => {
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(datumFormas(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(datumFormas(root).length).toBeGreaterThan(0), { timeout: 3000 });
     });
 
     await step('O apelido depreciado continua produzindo o atributo', async () => {
@@ -177,7 +177,7 @@ export const Playground: Story = {
       // A marca de eixo é a alternativa textual do valor: categoria que o
       // desenho não escreve é dado que só existe como pixel.
       for (const month of MONTHS) {
-        await expect(designEscreve(raiz, month)).toBe(true);
+        await expect(designEscreve(root, month)).toBe(true);
       }
     });
   },

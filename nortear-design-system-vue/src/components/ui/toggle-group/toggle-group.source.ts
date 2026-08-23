@@ -35,41 +35,41 @@ const IMPORT = `import { ToggleGroup, ToggleGroupItem } from '@/components/ui/to
  * com esse nome.
  */
 type Item = {
-  valor: string;
-  rotulo: string;
+  value: string;
+  label: string;
   icone: string;
-  desabilitado?: boolean;
-  variante?: string;
+  disabled?: boolean;
+  variant?: string;
 };
 
 const ALIGNMENT: Item[] = [
-  { valor: 'left', rotulo: 'Alinhar à esquerda', icone: 'AlignLeft' },
-  { valor: 'center', rotulo: 'Centralizar', icone: 'AlignCenter' },
-  { valor: 'right', rotulo: 'Alinhar à direita', icone: 'AlignRight' },
+  { value: 'left', label: 'Alinhar à esquerda', icone: 'AlignLeft' },
+  { value: 'center', label: 'Centralizar', icone: 'AlignCenter' },
+  { value: 'right', label: 'Alinhar à direita', icone: 'AlignRight' },
 ];
 
 const ALIGNMENT_WITH_JUSTIFICAR: Item[] = [
   ...ALIGNMENT,
-  { valor: 'justify', rotulo: 'Justificar', icone: 'AlignJustify' },
+  { value: 'justify', label: 'Justificar', icone: 'AlignJustify' },
 ];
 
 const FORMATTING: Item[] = [
-  { valor: 'bold', rotulo: 'Negrito', icone: 'Bold' },
-  { valor: 'italic', rotulo: 'Itálico', icone: 'Italic' },
-  { valor: 'underline', rotulo: 'Sublinhado', icone: 'Underline' },
+  { value: 'bold', label: 'Negrito', icone: 'Bold' },
+  { value: 'italic', label: 'Itálico', icone: 'Italic' },
+  { value: 'underline', label: 'Sublinhado', icone: 'Underline' },
 ];
 
 const VISUALIZACAO: Item[] = [
-  { valor: 'grid', rotulo: 'Grade', icone: 'LayoutGrid' },
-  { valor: 'list', rotulo: 'Lista', icone: 'List' },
+  { value: 'grid', label: 'Grade', icone: 'LayoutGrid' },
+  { value: 'list', label: 'Lista', icone: 'List' },
 ];
 
 /** Os mesmos três alinhamentos, com o nome do tamanho no rótulo de cada um. */
 function sizeAlignment(sufixo: string): Item[] {
   return [
-    { valor: 'left', rotulo: `Esquerda ${sufixo}`, icone: 'AlignLeft' },
-    { valor: 'center', rotulo: `Centro ${sufixo}`, icone: 'AlignCenter' },
-    { valor: 'right', rotulo: `Direita ${sufixo}`, icone: 'AlignRight' },
+    { value: 'left', label: `Esquerda ${sufixo}`, icone: 'AlignLeft' },
+    { value: 'center', label: `Centro ${sufixo}`, icone: 'AlignCenter' },
+    { value: 'right', label: `Direita ${sufixo}`, icone: 'AlignRight' },
   ];
 }
 
@@ -91,29 +91,29 @@ function script(...listas: Item[][]): string {
  * A fila de atributos da raiz quebra em uma linha por atributo quando fica
  * longa: atributo em linha comprida some na barra de rolagem do painel.
  */
-function grupo(opcoes: {
-  raiz: Array<string | false | null | undefined>;
-  itens: Item[];
+function group(options: {
+  root: Array<string | false | null | undefined>;
+  items: Item[];
   recuo?: number;
 }): string {
-  const p = ' '.repeat(opcoes.recuo ?? 0);
-  const abertura = attrsMultilinha(opcoes.raiz, `${p}  `);
+  const p = ' '.repeat(options.recuo ?? 0);
+  const abertura = attrsMultilinha(options.root, `${p}  `);
   const fecha = abertura.endsWith('\n') ? `${p}>` : '>';
-  const corpo = opcoes.itens
+  const body = options.items
     .map((item) => {
-      const atributos = attrs(
-        item.variante && `variant="${item.variante}"`,
-        `value="${item.valor}"`,
-        item.desabilitado && 'disabled',
-        `aria-label="${item.rotulo}"`,
+      const attrList = attrs(
+        item.variant && `variant="${item.variant}"`,
+        `value="${item.value}"`,
+        item.disabled && 'disabled',
+        `aria-label="${item.label}"`,
       );
-      return `${p}  <ToggleGroupItem${atributos}>
+      return `${p}  <ToggleGroupItem${attrList}>
 ${p}    <${item.icone} aria-hidden="true" />
 ${p}  </ToggleGroupItem>`;
     })
     .join('\n');
   return `${p}<ToggleGroup${abertura}${fecha}
-${corpo}
+${body}
 ${p}</ToggleGroup>`;
 }
 
@@ -126,12 +126,12 @@ ${p}</ToggleGroup>`;
  */
 export const toggleGroupSource: SourceTransform<ToggleGroupArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const modo = asCode(args.type) === 'multiple' ? 'multiple' : 'single';
+  const mode = asCode(args.type) === 'multiple' ? 'multiple' : 'single';
   return vueSnippet(
     script(ALIGNMENT),
-    grupo({
-      raiz: [
-        `type="${modo}"`,
+    group({
+      root: [
+        `type="${mode}"`,
         attr('orientation', args.orientation, 'horizontal'),
         attr('variant', args.variant, 'default'),
         attr('size', args.size, 'default'),
@@ -139,7 +139,7 @@ export const toggleGroupSource: SourceTransform<ToggleGroupArgs> = (_gerado, ctx
         attrBool('disabled', args.disabled, false),
         'aria-label="Alinhamento do texto"',
       ],
-      itens: ALIGNMENT,
+      items: ALIGNMENT,
     }),
   );
 };
@@ -148,9 +148,9 @@ export const toggleGroupSource: SourceTransform<ToggleGroupArgs> = (_gerado, ctx
 export function toggleGroupSingleSource(): string {
   return vueSnippet(
     script(ALIGNMENT),
-    grupo({
-      raiz: ['type="single"', 'default-value="center"', 'aria-label="Alinhamento do texto"'],
-      itens: ALIGNMENT,
+    group({
+      root: ['type="single"', 'default-value="center"', 'aria-label="Alinhamento do texto"'],
+      items: ALIGNMENT,
     }),
   );
 }
@@ -162,13 +162,13 @@ export function toggleGroupSingleSource(): string {
 export function toggleGroupMultipleSource(): string {
   return vueSnippet(
     script(FORMATTING),
-    grupo({
-      raiz: [
+    group({
+      root: [
         'type="multiple"',
         `:default-value="['bold', 'italic']"`,
         'aria-label="Formatação"',
       ],
-      itens: FORMATTING,
+      items: FORMATTING,
     }),
   );
 }
@@ -180,15 +180,15 @@ export function toggleGroupMultipleSource(): string {
 export function toggleGroupVerticalSource(): string {
   return vueSnippet(
     script(VISUALIZACAO),
-    grupo({
-      raiz: [
+    group({
+      root: [
         'type="single"',
         'orientation="vertical"',
         'variant="outline"',
         'default-value="grid"',
         'aria-label="Modo de visualização"',
       ],
-      itens: VISUALIZACAO,
+      items: VISUALIZACAO,
     }),
   );
 }
@@ -197,9 +197,9 @@ export function toggleGroupVerticalSource(): string {
 export function toggleGroupDefaultSource(): string {
   return vueSnippet(
     script(ALIGNMENT),
-    grupo({
-      raiz: ['type="single"', 'aria-label="Alinhamento do texto"'],
-      itens: ALIGNMENT,
+    group({
+      root: ['type="single"', 'aria-label="Alinhamento do texto"'],
+      items: ALIGNMENT,
     }),
   );
 }
@@ -216,9 +216,9 @@ export function toggleGroupSelectedSource(): string {
 export function toggleGroupDisabledSource(): string {
   return vueSnippet(
     script(ALIGNMENT),
-    grupo({
-      raiz: ['type="single"', 'disabled', 'aria-label="Alinhamento do texto"'],
-      itens: ALIGNMENT,
+    group({
+      root: ['type="single"', 'disabled', 'aria-label="Alinhamento do texto"'],
+      items: ALIGNMENT,
     }),
   );
 }
@@ -227,10 +227,10 @@ export function toggleGroupDisabledSource(): string {
 export function toggleGroupItemDisabledSource(): string {
   return vueSnippet(
     script(ALIGNMENT),
-    grupo({
-      raiz: ['type="single"', 'aria-label="Alinhamento do texto"'],
-      itens: ALIGNMENT.map((item) =>
-        item.valor === 'center' ? { ...item, desabilitado: true } : item,
+    group({
+      root: ['type="single"', 'aria-label="Alinhamento do texto"'],
+      items: ALIGNMENT.map((item) =>
+        item.value === 'center' ? { ...item, disabled: true } : item,
       ),
     }),
   );
@@ -240,14 +240,14 @@ export function toggleGroupItemDisabledSource(): string {
 export function toggleGroupBarAlignmentSource(): string {
   return vueSnippet(
     script(ALIGNMENT_WITH_JUSTIFICAR),
-    grupo({
-      raiz: [
+    group({
+      root: [
         'type="single"',
         'variant="outline"',
         'default-value="left"',
         'aria-label="Alinhamento do texto"',
       ],
-      itens: ALIGNMENT_WITH_JUSTIFICAR,
+      items: ALIGNMENT_WITH_JUSTIFICAR,
     }),
   );
 }
@@ -256,9 +256,9 @@ export function toggleGroupBarAlignmentSource(): string {
 export function toggleGroupBarFormattingSource(): string {
   return vueSnippet(
     script(FORMATTING),
-    grupo({
-      raiz: ['type="multiple"', `:default-value="['bold']"`, 'aria-label="Formatação"'],
-      itens: FORMATTING,
+    group({
+      root: ['type="multiple"', `:default-value="['bold']"`, 'aria-label="Formatação"'],
+      items: FORMATTING,
     }),
   );
 }
@@ -271,9 +271,9 @@ export function toggleGroupBarFormattingSource(): string {
 export function toggleGroupWithSpacingSource(): string {
   return vueSnippet(
     script(FORMATTING),
-    grupo({
-      raiz: ['type="multiple"', ':spacing="1"', 'aria-label="Formatação"'],
-      itens: FORMATTING.map((item) => ({ ...item, variante: 'outline' })),
+    group({
+      root: ['type="multiple"', ':spacing="1"', 'aria-label="Formatação"'],
+      items: FORMATTING.map((item) => ({ ...item, variant: 'outline' })),
     }),
   );
 }
@@ -283,21 +283,21 @@ export function toggleGroupWithSpacingSource(): string {
  * escrevê-lo ensinaria que o tamanho precisa ser declarado sempre.
  */
 export function toggleGroupSizesSource(): string {
-  const escalas: Array<{ size?: string; sufixo: string; rotulo: string }> = [
-    { size: 'sm', sufixo: 'sm', rotulo: 'Alinhamento pequeno' },
-    { sufixo: 'default', rotulo: 'Alinhamento padrão' },
-    { size: 'lg', sufixo: 'lg', rotulo: 'Alinhamento grande' },
+  const escalas: Array<{ size?: string; sufixo: string; label: string }> = [
+    { size: 'sm', sufixo: 'sm', label: 'Alinhamento pequeno' },
+    { sufixo: 'default', label: 'Alinhamento padrão' },
+    { size: 'lg', sufixo: 'lg', label: 'Alinhamento grande' },
   ];
-  const grupos = escalas
+  const groups = escalas
     .map((escala) =>
-      grupo({
-        raiz: [
+      group({
+        root: [
           'type="single"',
           escala.size ? `size="${escala.size}"` : '',
           'default-value="left"',
-          `aria-label="${escala.rotulo}"`,
+          `aria-label="${escala.label}"`,
         ],
-        itens: sizeAlignment(escala.sufixo),
+        items: sizeAlignment(escala.sufixo),
         recuo: 2,
       }),
     )
@@ -305,7 +305,7 @@ export function toggleGroupSizesSource(): string {
   return vueSnippet(
     script(ALIGNMENT),
     `<div class="nds-stack" data-spacing="sm">
-${grupos}
+${groups}
 </div>`,
   );
 }

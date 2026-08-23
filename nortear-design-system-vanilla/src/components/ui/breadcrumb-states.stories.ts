@@ -66,7 +66,7 @@ export const Simple: Story = {
       source: {
         transform: breadcrumbSourceWith({
           levels: ['Início'],
-          atual: 'Componentes',
+          current: 'Componentes',
           onNavigate: 'registrarNavegacao(text);',
         }),
       },

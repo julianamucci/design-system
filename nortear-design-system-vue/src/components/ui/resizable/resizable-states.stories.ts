@@ -55,7 +55,7 @@ function contrastRatio(frente: string, background: string): number {
   return (a + 0.05) / (b + 0.05);
 }
 
-function caixa(interno: string): string {
+function box(interno: string): string {
   return `
     <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 480px; height: 240px">
       ${interno}
@@ -67,7 +67,7 @@ export const Dragging: Story = {
   parameters: { covers: ['functional.item1', 'accessibility.item2'] },
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
-    template: caixa(`
+    template: box(`
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel :default-size="50" :min-size="10">
           <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Esquerda</div>
@@ -134,7 +134,7 @@ export const Limits: Story = {
   },
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
-    template: caixa(`
+    template: box(`
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel :default-size="50" :min-size="30" :max-size="60">
           <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Limitado</div>
@@ -187,7 +187,7 @@ export const Focus: Story = {
   },
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
-    template: caixa(`
+    template: box(`
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel :default-size="50" :min-size="20">
           <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Um</div>
@@ -235,7 +235,7 @@ export const Disabled: Story = {
   },
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
-    template: caixa(`
+    template: box(`
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel :default-size="50" :min-size="20">
           <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Fixo</div>

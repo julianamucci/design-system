@@ -5,7 +5,7 @@ import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
 import PopoverDocs from '@/components/docs/PopoverDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { painel } from './popover.fixtures';
+import { panel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 
 const meta: Meta = {
@@ -121,7 +121,7 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
-    const gatilho = canvas.getByRole('button', { name: /Abrir popover/i });
+    const trigger = canvas.getByRole('button', { name: /Abrir popover/i });
 
     const closed = async () => {
       await waitFor(
@@ -135,57 +135,57 @@ export const Playground: Story = {
       );
     };
 
-    const abrir = async () => {
-      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+    const open = async () => {
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       return await waitForPortal('dialog');
     };
 
-    const fechar = async () => {
-      if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.click(gatilho);
+    const close = async () => {
+      if (trigger.getAttribute('aria-expanded') === 'true') await userEvent.click(trigger);
       await closed();
     };
 
     await step('1. O gatilho anuncia que abre um diálogo', async () => {
-      await expect(gatilho).toHaveAttribute('aria-haspopup', 'dialog');
-      await expect(gatilho).toHaveAttribute('data-slot', 'popover-trigger');
+      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+      await expect(trigger).toHaveAttribute('data-slot', 'popover-trigger');
     });
 
     await step('2. Clicar no gatilho abre o painel com role=dialog', async () => {
-      await fechar();
-      const p = await abrir();
+      await close();
+      const p = await open();
       await expect(p).toBeVisible();
       await expect(p).toHaveClass(/nds-popover-content/);
       await expect(p).toHaveAccessibleName(/Configuracoes de exibição/i);
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('3. O painel não é modal', async () => {
       // Popover não bloqueia o resto da página: `aria-modal` faria o leitor de
       // tela esconder tudo o que está fora dele, que é contrato de Dialog.
-      await expect(painel()).not.toHaveAttribute('aria-modal');
+      await expect(panel()).not.toHaveAttribute('aria-modal');
     });
 
     await step('4. O foco entra no painel ao abrir', async () => {
       await waitFor(() => {
-        if (!painel()!.contains(document.activeElement)) {
+        if (!panel()!.contains(document.activeElement)) {
           throw new Error('foco não entrou no painel');
         }
       });
     });
 
     await step('5. Escape fecha o popover e retorna foco ao trigger', async () => {
-      await abrir();
+      await open();
       await userEvent.keyboard('{Escape}');
       await closed();
       await waitFor(() => {
-        if (document.activeElement !== gatilho) {
+        if (document.activeElement !== trigger) {
           throw new Error('focus did not return to trigger');
         }
       });
     });
 
     await step('6. Clicar fora fecha o painel', async () => {
-      await abrir();
+      await open();
       // O clique de fora é REEMITIDO até a dispensa acontecer. A camada de
       // dispensa da lib só passa a escutar `pointerdown` um tick depois de o
       // painel montar (`afterSleep(1)` + `debounce(10)` na fonte), e o
@@ -200,11 +200,11 @@ export const Playground: Story = {
         },
         { timeout: 3000, interval: 100 }
       );
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('7. Cancelar (PopoverClose) fecha o painel por dentro', async () => {
-      await abrir();
+      await open();
       const cancelar = body.getByRole('button', { name: args.cancelLabel as string });
       await expect(cancelar).toHaveAttribute('data-slot', 'popover-close');
       await userEvent.click(cancelar);
@@ -214,7 +214,7 @@ export const Playground: Story = {
 
     // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.
     await step('8. Estado final: painel aberto', async () => {
-      await expect(await abrir()).toBeVisible();
+      await expect(await open()).toBeVisible();
     });
   },
 };

@@ -118,8 +118,8 @@ export const Playground: Story = {
       // `aria-label` num <div> sem papel é atributo proibido (axe
       // aria-prohibited-attr) e o leitor de tela o descarta. Quem tem
       // role="slider" é o input.
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="slider"]')!;
-      await expect(raiz.hasAttribute('aria-label')).toBe(false);
+      const root = canvasElement.querySelector<HTMLElement>('[data-slot="slider"]')!;
+      await expect(root.hasAttribute('aria-label')).toBe(false);
 
       const input = canvasElement.querySelector<HTMLInputElement>(
         '[data-slot="slider-thumb"] > input',

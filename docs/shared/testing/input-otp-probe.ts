@@ -44,7 +44,7 @@ export { darkLigarTheme };
 export type FamiliaDeMarkup = 'nativa' | 'composta' | 'nenhuma';
 
 export interface SlotMeasurement {
-  indice: number;
+  index: number;
   tag: string;
   /** O que a pessoa vê na caixa: `value` no input, texto no div. */
   caractere: string | null;
@@ -53,18 +53,18 @@ export interface SlotMeasurement {
   accessibleName: string | null;
   active: boolean;
   temCaret: boolean;
-  desabilitado: boolean;
+  disabled: boolean;
   ariaInvalid: string | null;
   autocomplete: string | null;
   inputmode: string | null;
-  largura: number;
-  altura: number;
+  width: number;
+  height: number;
   raio: string;
   borderWidth: string;
   corDaBorda: string;
   background: string;
   cor: string;
-  opacidade: string;
+  opacity: string;
   classesInertes: string[];
 }
 
@@ -75,7 +75,7 @@ const SEL_SLOT = '.nds-input-otp-slot';
 const SEL_SEPARATOR = '.nds-input-otp-separator';
 const SEL_ACTIVE = '[data-active]:not([data-active="false"])';
 
-const texto = (el: Element | null | undefined): string | null =>
+const text = (el: Element | null | undefined): string | null =>
   el?.textContent?.trim().replace(/\s+/g, ' ') || null;
 
 const classesDe = (el: Element | null | undefined): string[] =>
@@ -92,8 +92,8 @@ export function accessibleName(el: Element | null | undefined): string | null {
       .filter(Boolean);
     if (partes.length) return partes.join(' ');
   }
-  const rotulo = el.getAttribute('aria-label');
-  if (rotulo?.trim()) return rotulo.trim();
+  const label = el.getAttribute('aria-label');
+  if (label?.trim()) return label.trim();
   const id = el.getAttribute('id');
   if (id) {
     const label = el.ownerDocument.querySelector(`label[for="${CSS.escape(id)}"]`);
@@ -104,16 +104,16 @@ export function accessibleName(el: Element | null | undefined): string | null {
   return null;
 }
 
-export function containerDe(raiz: HTMLElement): HTMLElement | null {
-  return raiz.querySelector<HTMLElement>(SEL_CONTAINER);
+export function containerDe(root: HTMLElement): HTMLElement | null {
+  return root.querySelector<HTMLElement>(SEL_CONTAINER);
 }
 
-export function slotsDe(raiz: HTMLElement): HTMLElement[] {
-  return [...raiz.querySelectorAll<HTMLElement>(SEL_SLOT)];
+export function slotsDe(root: HTMLElement): HTMLElement[] {
+  return [...root.querySelectorAll<HTMLElement>(SEL_SLOT)];
 }
 
-export function familiaDe(raiz: HTMLElement): FamiliaDeMarkup {
-  const slots = slotsDe(raiz);
+export function familiaDe(root: HTMLElement): FamiliaDeMarkup {
+  const slots = slotsDe(root);
   if (!slots.length) return 'nenhuma';
   return slots[0].tagName.toLowerCase() === 'input' ? 'nativa' : 'composta';
 }
@@ -126,28 +126,28 @@ export function familiaDe(raiz: HTMLElement): FamiliaDeMarkup {
  * nativa é o primeiro slot. Devolver o alvo certo é o que permite às cinco
  * stories digitarem com o mesmo código.
  */
-export function entryField(raiz: HTMLElement): HTMLInputElement | null {
-  const familia = familiaDe(raiz);
-  if (familia === 'nativa') return slotsDe(raiz)[0] as HTMLInputElement | null;
-  const container = containerDe(raiz);
+export function entryField(root: HTMLElement): HTMLInputElement | null {
+  const familia = familiaDe(root);
+  if (familia === 'nativa') return slotsDe(root)[0] as HTMLInputElement | null;
+  const container = containerDe(root);
   return (
-    raiz.querySelector<HTMLInputElement>('input[data-input-otp]') ??
+    root.querySelector<HTMLInputElement>('input[data-input-otp]') ??
     container?.parentElement?.querySelector<HTMLInputElement>('input') ??
-    raiz.querySelector<HTMLInputElement>('input') ??
+    root.querySelector<HTMLInputElement>('input') ??
     null
   );
 }
 
 /** O que cada caixa EXIBE hoje — `''` é caixa pintada e vazia. */
-export function caracteresVisiveis(raiz: HTMLElement): string[] {
-  return slotsDe(raiz).map((s) =>
-    s.tagName.toLowerCase() === 'input' ? (s as HTMLInputElement).value : (texto(s) ?? ''),
+export function caracteresVisiveis(root: HTMLElement): string[] {
+  return slotsDe(root).map((s) =>
+    s.tagName.toLowerCase() === 'input' ? (s as HTMLInputElement).value : (text(s) ?? ''),
   );
 }
 
 /** Índice da caixa que mostra o cursor. `-1` é nenhuma — o cursor sumiu. */
-export function slotWithCaret(raiz: HTMLElement): number {
-  const slots = slotsDe(raiz);
+export function slotWithCaret(root: HTMLElement): number {
+  const slots = slotsDe(root);
   const byAttr = slots.findIndex(
     (s) => s.matches(SEL_ACTIVE) || !!s.querySelector('.nds-input-otp-caret'),
   );
@@ -162,13 +162,13 @@ export function slotWithCaret(raiz: HTMLElement): number {
  * importa do seu próprio pacote. Um `ClipboardEvent` real medido no mesmo lugar
  * nas cinco é o que torna a coluna comparável.
  */
-export function colar(raiz: HTMLElement, code: string): boolean {
-  const alvo = (raiz.ownerDocument.activeElement as HTMLElement | null) ?? entryField(raiz);
-  if (!alvo) return false;
-  const dados = new DataTransfer();
-  dados.setData('text', code);
-  return alvo.dispatchEvent(
-    new ClipboardEvent('paste', { bubbles: true, cancelable: true, clipboardData: dados }),
+export function colar(root: HTMLElement, code: string): boolean {
+  const target = (root.ownerDocument.activeElement as HTMLElement | null) ?? entryField(root);
+  if (!target) return false;
+  const data = new DataTransfer();
+  data.setData('text', code);
+  return target.dispatchEvent(
+    new ClipboardEvent('paste', { bubbles: true, cancelable: true, clipboardData: data }),
   );
 }
 
@@ -180,13 +180,13 @@ export function colar(raiz: HTMLElement, code: string): boolean {
  * mantém a medida sendo do navegador — e é assim que se prova que o hover
  * REFORÇA a borda em vez de apagá-la, comparando com a cor de repouso.
  */
-export function hoverColorDeclarada(raiz: HTMLElement): string | null {
+export function hoverColorDeclarada(root: HTMLElement): string | null {
   const declarada = ruleDeclaration(
-    raiz.ownerDocument,
+    root.ownerDocument,
     (selector) => selector.includes(':hover') && selector.includes('nds-input-otp'),
     'border-color',
   );
-  return declarada ? resolveColor(raiz, declarada) : null;
+  return declarada ? resolveColor(root, declarada) : null;
 }
 
 // ─── Medição ──────────────────────────────────────────────────────────────────
@@ -205,54 +205,54 @@ export function folgaEntre(a: Element | null | undefined, b: Element | null | un
   return Math.round(cb.left - ca.right);
 }
 
-function measureSlot(el: HTMLElement, indice: number): SlotMeasurement {
+function measureSlot(el: HTMLElement, index: number): SlotMeasurement {
   const cs = getComputedStyle(el);
-  const caixa = el.getBoundingClientRect();
+  const box = el.getBoundingClientRect();
   const ehInput = el.tagName.toLowerCase() === 'input';
   return {
-    indice,
+    index,
     tag: el.tagName.toLowerCase(),
-    caractere: ehInput ? (el as HTMLInputElement).value : texto(el),
+    caractere: ehInput ? (el as HTMLInputElement).value : text(el),
     focalizavel: ehInput ? !(el as HTMLInputElement).disabled : el.tabIndex >= 0,
     accessibleName: accessibleName(el),
     active: el.matches(SEL_ACTIVE),
     temCaret: !!el.querySelector('.nds-input-otp-caret'),
-    desabilitado: ehInput ? (el as HTMLInputElement).disabled : el.hasAttribute('data-disabled'),
+    disabled: ehInput ? (el as HTMLInputElement).disabled : el.hasAttribute('data-disabled'),
     ariaInvalid: el.getAttribute('aria-invalid'),
     autocomplete: el.getAttribute('autocomplete'),
     inputmode: el.getAttribute('inputmode'),
-    largura: Math.round(caixa.width),
-    altura: Math.round(caixa.height),
+    width: Math.round(box.width),
+    height: Math.round(box.height),
     raio: `${cs.borderStartStartRadius} ${cs.borderStartEndRadius}`,
     borderWidth: `${cs.borderTopWidth} ${cs.borderInlineStartWidth} ${cs.borderInlineEndWidth}`,
     corDaBorda: cs.borderTopColor,
     background: cs.backgroundColor,
     cor: cs.color,
-    opacidade: cs.opacity,
+    opacity: cs.opacity,
     classesInertes: classesDe(el).filter((c) => !c.startsWith('nds-')),
   };
 }
 
-/** Mede UM InputOTP e o que o acompanha. `raiz` é o wrapper do cenário. */
-export function measureInputOtp(raiz: HTMLElement) {
-  const container = containerDe(raiz);
-  const slots = slotsDe(raiz);
-  const separadores = [...raiz.querySelectorAll<HTMLElement>(SEL_SEPARATOR)];
-  const grupos = [...raiz.querySelectorAll<HTMLElement>('.nds-input-otp-group')];
-  const campo = entryField(raiz);
-  const familia = familiaDe(raiz);
+/** Mede UM InputOTP e o que o acompanha. `root` é o wrapper do cenário. */
+export function measureInputOtp(root: HTMLElement) {
+  const container = containerDe(root);
+  const slots = slotsDe(root);
+  const separadores = [...root.querySelectorAll<HTMLElement>(SEL_SEPARATOR)];
+  const groups = [...root.querySelectorAll<HTMLElement>('.nds-input-otp-group')];
+  const field = entryField(root);
+  const familia = familiaDe(root);
 
   if (!container && !slots.length) {
     return { presente: false, familia } as const;
   }
 
   const csContainer = container ? getComputedStyle(container) : null;
-  const described = campo?.getAttribute('aria-describedby') ?? null;
+  const described = field?.getAttribute('aria-describedby') ?? null;
   const targetsDescribed = described
-    ? described.split(/\s+/).map((id) => raiz.ownerDocument.getElementById(id))
+    ? described.split(/\s+/).map((id) => root.ownerDocument.getElementById(id))
     : [];
 
-  const measurements = noTransicao(container ?? raiz, () => slots.map(measureSlot));
+  const measurements = noTransicao(container ?? root, () => slots.map(measureSlot));
   const background = backgroundEffective(slots[0] ?? container);
 
   return {
@@ -264,43 +264,43 @@ export function measureInputOtp(raiz: HTMLElement) {
       containerDataSlot: container?.getAttribute('data-slot') ?? null,
       /** Zero é o achado: caixa nenhuma pintada, com a suíte verde. */
       quantidadeDeSlots: slots.length,
-      quantidadeDeGrupos: grupos.length,
+      quantidadeDeGrupos: groups.length,
       quantidadeDeSeparadores: separadores.length,
       slotDataSlot: slots[0]?.getAttribute('data-slot') ?? null,
       /** Classe sem o prefixo do design system: inerte, não pinta nada. */
       classesInertes: [
         ...new Set([...classesDe(container), ...slots.flatMap(classesDe)].filter((c) => !c.startsWith('nds-'))),
       ],
-      campoDeEntradaTag: campo?.tagName.toLowerCase() ?? null,
-      campoRecortado: campo ? getComputedStyle(campo).opacity !== '1' || !!campo.style.clipPath : null,
+      campoDeEntradaTag: field?.tagName.toLowerCase() ?? null,
+      campoRecortado: field ? getComputedStyle(field).opacity !== '1' || !!field.style.clipPath : null,
     },
     semantica: {
       papelDoConjunto: container?.getAttribute('role') ?? null,
       nomeDoConjunto: accessibleName(container),
-      nomeDoCampo: accessibleName(campo),
+      nomeDoCampo: accessibleName(field),
       /** Quantas caixas o leitor consegue nomear. `0` na família composta. */
       slotsComNome: measurements.filter((m) => m.accessibleName).length,
       slotsFocalizaveis: measurements.filter((m) => m.focalizavel).length,
       nomesDosSlots: measurements.map((m) => m.accessibleName),
-      autocompleteDoCampo: campo?.getAttribute('autocomplete') ?? null,
-      inputmodeDoCampo: campo?.getAttribute('inputmode') ?? null,
+      autocompleteDoCampo: field?.getAttribute('autocomplete') ?? null,
+      inputmodeDoCampo: field?.getAttribute('inputmode') ?? null,
       autocompletePorSlot: measurements.map((m) => m.autocomplete),
       papelDoSeparador: separadores[0]?.getAttribute('role') ?? null,
       separadorEscondido: separadores[0]?.getAttribute('aria-hidden') ?? null,
-      textoDoSeparador: texto(separadores[0]),
-      ariaInvalidDoCampo: campo?.getAttribute('aria-invalid') ?? null,
+      textoDoSeparador: text(separadores[0]),
+      ariaInvalidDoCampo: field?.getAttribute('aria-invalid') ?? null,
       ariaInvalidPorSlot: measurements.map((m) => m.ariaInvalid),
       ariaDescribedby: described,
       alvoDescribedbyExiste: described ? targetsDescribed.every(Boolean) : null,
-      maxlengthDoCampo: campo && campo.maxLength > 0 ? campo.maxLength : null,
-      campoDesabilitado: campo?.disabled ?? null,
+      maxlengthDoCampo: field && field.maxLength > 0 ? field.maxLength : null,
+      campoDesabilitado: field?.disabled ?? null,
     },
     geometria: {
       larguraDoConjunto: container ? Math.round(container.getBoundingClientRect().width) : null,
       displayDoContainer: csContainer?.display ?? null,
       gapDoContainer: csContainer?.gap ?? null,
       slot: measurements[0]
-        ? { largura: measurements[0].largura, altura: measurements[0].altura, border: measurements[0].borderWidth }
+        ? { width: measurements[0].width, height: measurements[0].height, border: measurements[0].borderWidth }
         : null,
       raioPrimeiro: measurements[0]?.raio ?? null,
       raioUltimo: measurements.at(-1)?.raio ?? null,
@@ -320,12 +320,12 @@ export function measureInputOtp(raiz: HTMLElement) {
       folgaDepoisDoSeparador: folgaEntre(separadores[0], separadores[0]?.nextElementSibling),
     },
     state: {
-      caretEm: slotWithCaret(raiz),
+      caretEm: slotWithCaret(root),
       caracteres: measurements.map((m) => m.caractere),
       opacidadeDoContainer: csContainer?.opacity ?? null,
-      opacidadeDoSlot: measurements[0]?.opacidade ?? null,
+      opacidadeDoSlot: measurements[0]?.opacity ?? null,
       corDaBordaEmRepouso: measurements[0]?.corDaBorda ?? null,
-      corDaBordaNoHover: hoverColorDeclarada(raiz),
+      corDaBordaNoHover: hoverColorDeclarada(root),
       fundoDoSlot: measurements[0]?.background ?? null,
       corDoTexto: measurements[0]?.cor ?? null,
     },
@@ -338,7 +338,7 @@ export function measureInputOtp(raiz: HTMLElement) {
      * confirma.
      */
     tokens: (() => {
-      const caret = raiz.querySelector<HTMLElement>('.nds-input-otp-caret');
+      const caret = root.querySelector<HTMLElement>('.nds-input-otp-caret');
       const csCaret = caret ? getComputedStyle(caret) : null;
       const csSep = separadores[0] ? getComputedStyle(separadores[0]) : null;
       const csFirst = slots[0] ? getComputedStyle(slots[0]) : null;
@@ -358,21 +358,21 @@ export function measureInputOtp(raiz: HTMLElement) {
     contraste: {
       textoNoSlot: background && measurements[0] ? ratio(measurements[0].cor, background) : null,
       bordaNoFundo: background && measurements[0] ? ratio(measurements[0].corDaBorda, background) : null,
-      hoverNoFundo: background && hoverColorDeclarada(raiz) ? ratio(hoverColorDeclarada(raiz)!, background) : null,
+      hoverNoFundo: background && hoverColorDeclarada(root) ? ratio(hoverColorDeclarada(root)!, background) : null,
     },
     slots: measurements,
   };
 }
 
 /**
- * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `raiz`.
+ * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `root`.
  * Cenário ausente vem `null` — é o achado de "a stack não monta este caso".
  */
-export function multipleMeasure(raiz: HTMLElement, cenarios: string[]) {
+export function multipleMeasure(root: HTMLElement, cenarios: string[]) {
   const registro: Record<string, unknown> = {};
   for (const cenario of cenarios) {
-    const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
-    registro[cenario] = alvo ? measureInputOtp(alvo) : null;
+    const target = root.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
+    registro[cenario] = target ? measureInputOtp(target) : null;
   }
   return registro;
 }
@@ -382,12 +382,12 @@ export function multipleMeasure(raiz: HTMLElement, cenarios: string[]) {
  * nunca vê, porque a tela está sempre no claro. A classe sai no `finally`:
  * deixá-la posta envenena a story seguinte e a foto do Chromatic.
  */
-export function darkMeasure(raiz: HTMLElement, cenario: string) {
-  const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
-  if (!alvo) return null;
-  const desfazer = darkLigarTheme(raiz.ownerDocument);
+export function darkMeasure(root: HTMLElement, cenario: string) {
+  const target = root.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
+  if (!target) return null;
+  const desfazer = darkLigarTheme(root.ownerDocument);
   try {
-    const measurement = measureInputOtp(alvo);
+    const measurement = measureInputOtp(target);
     if (!measurement.presente) return null;
     return { state: measurement.state, contraste: measurement.contraste };
   } finally {
@@ -401,10 +401,10 @@ export function darkMeasure(raiz: HTMLElement, cenario: string) {
  * Via exceção, e não `console.log`: o addon do Storybook instrumenta o console
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest.
  */
-export function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[], extra?: unknown) {
+export function reportProbe(stack: string, root: HTMLElement, cenarios: string[], extra?: unknown) {
   const registro = {
-    light: multipleMeasure(raiz, cenarios),
-    escuro: darkMeasure(raiz, cenarios[0]),
+    light: multipleMeasure(root, cenarios),
+    escuro: darkMeasure(root, cenarios[0]),
     comportamento: extra ?? null,
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);

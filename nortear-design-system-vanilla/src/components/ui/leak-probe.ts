@@ -30,20 +30,20 @@ import { expect } from 'storybook/test';
 import { espiarOuvintes, describeVivos, type ListenerVivo } from '@/lib/listener-ledger';
 
 /** Caixa de montagem da sonda, com legenda para a story nunca ficar em branco. */
-export function probeHost(legenda: string): HTMLElement {
-  const raiz = document.createElement('div');
+export function probeHost(caption: string): HTMLElement {
+  const root = document.createElement('div');
 
-  const texto = document.createElement('p');
-  texto.style.margin = '0 0 0.75rem';
-  texto.style.fontSize = '0.875rem';
-  texto.textContent = legenda;
+  const text = document.createElement('p');
+  text.style.margin = '0 0 0.75rem';
+  text.style.fontSize = '0.875rem';
+  text.textContent = caption;
 
   const host = document.createElement('div');
   host.dataset.testid = 'cleanup-host';
   host.classList.add('nds-min-h-24');
 
-  raiz.append(texto, host);
-  return raiz;
+  root.append(text, host);
+  return root;
 }
 
 /**

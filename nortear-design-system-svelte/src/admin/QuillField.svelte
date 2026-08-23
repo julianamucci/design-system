@@ -20,7 +20,7 @@ const {
 }: {
   fieldKey: string;
   value?: string;
-  onchange: (fieldKey: string, valor: string) => void;
+  onchange: (fieldKey: string, value: string) => void;
 } = $props();
 
 let container = $state<HTMLDivElement | null>(null);
@@ -64,8 +64,8 @@ onMount(() => {
 // Troca de idioma reescreve o conteúdo por fora; sem isto o editor continuaria
 // mostrando o texto do idioma anterior.
 $effect(() => {
-  const atual = value;
-  if (editor && editor.root.innerHTML !== atual) editor.root.innerHTML = atual;
+  const current = value;
+  if (editor && editor.root.innerHTML !== current) editor.root.innerHTML = current;
 });
 </script>
 

@@ -57,7 +57,7 @@ export const TagList: Story = {
         transform: scrollAreaSourceWith({
           size: 'xl',
           'aria-label': 'Versões publicadas',
-          conteudo: 'badges',
+          content: 'badges',
         }),
       },
     },
@@ -88,11 +88,11 @@ export const TagList: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
     const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area-viewport"]')!;
 
     await step('A lista inteira está no DOM, dentro do viewport', async () => {
-      await expect(raiz.dataset.size).toBe('xl');
+      await expect(root.dataset.size).toBe('xl');
       await expect(viewport.contains(canvas.getByText('v1.0.0'))).toBe(true);
       await expect(canvas.getAllByText(/^v\d+\.\d+\.\d+$/).length).toBe(20);
     });
@@ -118,7 +118,7 @@ export const HorizontalCards: Story = {
           width: '100%',
           'aria-label': 'Carrossel de produtos',
           class: 'nds-rounded-md nds-border-default',
-          conteudo: 'fileira',
+          content: 'fileira',
           itemCount: 10,
         }),
       },
@@ -197,7 +197,7 @@ export const WideTable: Story = {
           width: '100%',
           'aria-label': 'Tabela ampla',
           class: 'nds-rounded-md nds-border-default',
-          conteudo: 'matriz',
+          content: 'matriz',
           itemCount: 20,
         }),
       },
@@ -351,8 +351,8 @@ export const InsideCard: Story = {
     await step('A área rolável fica DENTRO do card, e o título fica fora dela', async () => {
       // O ponto da composição: o cabeçalho do card não pode rolar junto, senão
       // quem lê perde a referência do que está vendo.
-      const titulo = canvas.getByText('Histórico de atividades');
-      await expect(viewport.contains(titulo)).toBe(false);
+      const title = canvas.getByText('Histórico de atividades');
+      await expect(viewport.contains(title)).toBe(false);
       await expect(transbordo(viewport).y).toBe(true);
     });
 
@@ -378,7 +378,7 @@ export const Sidebar: Story = {
           size: 'xl',
           'aria-label': 'Navegação lateral',
           class: 'nds-rounded-md nds-border-default',
-          conteudo: 'links',
+          content: 'links',
           itemCount: 44,
         }),
       },

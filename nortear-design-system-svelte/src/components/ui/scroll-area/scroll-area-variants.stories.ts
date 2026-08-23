@@ -34,8 +34,8 @@ export default meta;
 type Story = StoryObj;
 
 /** Barras montadas no DOM, por eixo. */
-function barras(raiz: HTMLElement, orientation: 'vertical' | 'horizontal') {
-  return raiz.querySelectorAll(
+function barras(root: HTMLElement, orientation: 'vertical' | 'horizontal') {
+  return root.querySelectorAll(
     `[data-slot="scroll-area-scrollbar"][data-orientation="${orientation}"]`,
   );
 }

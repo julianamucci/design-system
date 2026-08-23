@@ -51,7 +51,7 @@ export class NdsToggle {
   readonly variant = input<ToggleVariant>('default');
   readonly size = input<ToggleSize>('default');
 
-  private readonly raiz = inject(RdxToggle, { self: true });
+  private readonly root = inject(RdxToggle, { self: true });
 
   // `pressedState()` e não `pressed()`: `pressed` é um `model` que nasce
   // `undefined` e só é escrito no primeiro clique. Lendo `pressed()`, um toggle
@@ -59,7 +59,7 @@ export class NdsToggle {
   // `data-state="off"` — o CSS pintaria o estado errado e nada acusaria, porque
   // o atributo ARIA (que os testes olham) estaria certo. `pressedState` é o
   // mesmo signal que o primitivo usa para emitir `aria-pressed`.
-  protected readonly state = computed(() => (this.raiz.pressedState() ? 'on' : 'off'));
+  protected readonly state = computed(() => (this.root.pressedState() ? 'on' : 'off'));
 }
 
 // ─── Ícones ───────────────────────────────────────────────────────────────────

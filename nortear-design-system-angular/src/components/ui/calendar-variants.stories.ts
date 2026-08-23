@@ -39,8 +39,8 @@ export default meta;
 type Story = StoryObj;
 
 /** Datas marcadas na grade, em ordem de leitura. */
-function checked(raiz: HTMLElement): string[] {
-  return Array.from(raiz.querySelectorAll<HTMLElement>('.nds-calendar-day-btn[data-selected]')).map(
+function checked(root: HTMLElement): string[] {
+  return Array.from(root.querySelectorAll<HTMLElement>('.nds-calendar-day-btn[data-selected]')).map(
     (el) => el.getAttribute('data-value') ?? '',
   );
 }
@@ -58,8 +58,8 @@ export const Single: Story = {
     },
   },
   render: () => ({
-    props: { valor: parseDate('2026-04-12') },
-    template: `<div ndsCalendar locale="pt-BR" [value]="valor"></div>`,
+    props: { value: parseDate('2026-04-12') },
+    template: `<div ndsCalendar locale="pt-BR" [value]="value"></div>`,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -115,9 +115,9 @@ export const Multiple: Story = {
   },
   render: () => ({
     props: {
-      valor: [parseDate('2026-04-08'), parseDate('2026-04-12'), parseDate('2026-04-16')],
+      value: [parseDate('2026-04-08'), parseDate('2026-04-12'), parseDate('2026-04-16')],
     },
-    template: `<div ndsCalendar mode="multiple" locale="pt-BR" [value]="valor"></div>`,
+    template: `<div ndsCalendar mode="multiple" locale="pt-BR" [value]="value"></div>`,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -154,8 +154,8 @@ export const CaptionLabel: Story = {
     },
   },
   render: () => ({
-    props: { valor: parseDate('2026-04-12') },
-    template: `<div ndsCalendar locale="pt-BR" [value]="valor"></div>`,
+    props: { value: parseDate('2026-04-12') },
+    template: `<div ndsCalendar locale="pt-BR" [value]="value"></div>`,
   }),
   play: async ({ canvasElement, step }) => {
     await step('A legenda traz mês e ano no idioma pedido', async () => {
@@ -193,9 +193,9 @@ export const CaptionDropdown: Story = {
     },
   },
   render: () => ({
-    props: { valor: parseDate('2026-04-12') },
+    props: { value: parseDate('2026-04-12') },
     template: `
-      <div ndsCalendar locale="pt-BR" captionLayout="dropdown" [value]="valor"></div>
+      <div ndsCalendar locale="pt-BR" captionLayout="dropdown" [value]="value"></div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
@@ -264,9 +264,9 @@ export const TwoMonths: Story = {
     },
   },
   render: () => ({
-    props: { valor: parseDate('2026-04-12') },
+    props: { value: parseDate('2026-04-12') },
     template: `
-      <div ndsCalendar locale="pt-BR" [numberOfMonths]="2" [value]="valor"></div>
+      <div ndsCalendar locale="pt-BR" [numberOfMonths]="2" [value]="value"></div>
     `,
   }),
   play: async ({ canvasElement, step }) => {

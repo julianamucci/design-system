@@ -66,10 +66,10 @@ export const Vertical: Story = {
       // O rádio tem 16px de lado, abaixo dos 24px de alvo mínimo. A norma
       // aceita o alvo menor quando há espaçamento: os centros ficam a 24px ou
       // mais um do outro. É o gap do grupo que paga essa conta.
-      const itens = canvas.getAllByRole('radio');
-      const topos = new Set(itens.map((el) => Math.round(el.getBoundingClientRect().top)));
+      const items = canvas.getAllByRole('radio');
+      const topos = new Set(items.map((el) => Math.round(el.getBoundingClientRect().top)));
       await expect(topos.size).toBe(3);
-      const [a, b] = itens.map((el) => el.getBoundingClientRect());
+      const [a, b] = items.map((el) => el.getBoundingClientRect());
       await expect(b.top + b.height / 2 - (a.top + a.height / 2)).toBeGreaterThanOrEqual(24);
     });
   },

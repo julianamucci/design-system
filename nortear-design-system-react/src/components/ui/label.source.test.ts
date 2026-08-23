@@ -50,11 +50,11 @@ describe('o par htmlFor ↔ id', () => {
   it('todo snippet mostra o rótulo ligado a um controle real', () => {
     for (const fn of ALL) {
       const saida = fn();
-      const alvo = saida.match(/<Label htmlFor="([a-z-]+)"/)?.[1];
-      expect(alvo, `${fn.name} não tem htmlFor`).toBeDefined();
+      const target = saida.match(/<Label htmlFor="([a-z-]+)"/)?.[1];
+      expect(target, `${fn.name} não tem htmlFor`).toBeDefined();
       // O `id` correspondente precisa existir no MESMO snippet: um `for`
       // apontando para nada é o defeito que o componente existe para evitar.
-      expect(saida).toContain(`id="${alvo}"`);
+      expect(saida).toContain(`id="${target}"`);
     }
   });
 

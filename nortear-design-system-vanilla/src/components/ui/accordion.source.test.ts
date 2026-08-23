@@ -9,31 +9,31 @@ import {
 
 describe('accordionSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = accordionSnippet();
-    expect(código).toContain("import { createAccordion } from '@/components/ui/accordion';");
-    expect(código).toContain('createAccordion({');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('aria-expanded');
+    const code = accordionSnippet();
+    expect(code).toContain("import { createAccordion } from '@/components/ui/accordion';");
+    expect(code).toContain('createAccordion({');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('aria-expanded');
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = accordionSnippet();
+    const code = accordionSnippet();
     // `single` é o padrão; `defaultValue`, `class` e o callback são opcionais.
-    expect(código).not.toContain('type:');
-    expect(código).not.toContain('defaultValue');
-    expect(código).not.toContain('class:');
-    expect(código).not.toContain('onValueChange');
+    expect(code).not.toContain('type:');
+    expect(code).not.toContain('defaultValue');
+    expect(code).not.toContain('class:');
+    expect(code).not.toContain('onValueChange');
   });
 
   it('mostra o modo múltiplo, o valor inicial e a classe quando a story os usa', () => {
-    const código = accordionSnippet({
+    const code = accordionSnippet({
       type: 'multiple',
       defaultValue: ['item-1'],
       class: 'nds-max-w-lg',
     });
-    expect(código).toContain("type: 'multiple'");
-    expect(código).toContain("defaultValue: ['item-1']");
-    expect(código).toContain("class: 'nds-max-w-lg'");
+    expect(code).toContain("type: 'multiple'");
+    expect(code).toContain("defaultValue: ['item-1']");
+    expect(code).toContain("class: 'nds-max-w-lg'");
   });
 
   it('aceita o valor inicial nas duas formas que a fábrica documenta', () => {
@@ -42,14 +42,14 @@ describe('accordionSnippet', () => {
   });
 
   it('leva o item desabilitado para o snippet', () => {
-    const código = accordionSnippet({
+    const code = accordionSnippet({
       items: [
         { value: 'item-1', trigger: 'Item habilitado' },
         { value: 'item-2', trigger: 'Item desabilitado', disabled: true },
       ],
     });
-    expect(código).toContain("{ value: 'item-2', trigger: 'Item desabilitado', content: '…', disabled: true },");
-    expect(código).not.toContain("{ value: 'item-1', trigger: 'Item habilitado', content: '…', disabled");
+    expect(code).toContain("{ value: 'item-2', trigger: 'Item desabilitado', content: '…', disabled: true },");
+    expect(code).not.toContain("{ value: 'item-1', trigger: 'Item habilitado', content: '…', disabled");
   });
 
   it('ignora o callback que a story passa como função de verdade', () => {
@@ -63,9 +63,9 @@ describe('accordionSnippet', () => {
   });
 
   it('não vaza os itens da story como texto corrido de exemplo', () => {
-    const código = accordionSnippet({ items: [{ value: 'senha', trigger: 'Como redefinir?' }] });
-    expect(código).toContain("content: '…'");
-    expect(código).not.toContain('Esqueci minha senha');
+    const code = accordionSnippet({ items: [{ value: 'senha', trigger: 'Como redefinir?' }] });
+    expect(code).toContain("content: '…'");
+    expect(code).not.toContain('Esqueci minha senha');
   });
 });
 
@@ -89,42 +89,42 @@ describe('accordionSource', () => {
 describe('accordionSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = accordionSourceWith({ type: 'single', defaultValue: 'item-1' });
-    const código = transform('', { args: { type: 'multiple' } });
-    expect(código).not.toContain("type: 'multiple'");
-    expect(código).toContain("defaultValue: 'item-1'");
+    const code = transform('', { args: { type: 'multiple' } });
+    expect(code).not.toContain("type: 'multiple'");
+    expect(code).toContain("defaultValue: 'item-1'");
   });
 });
 
 describe('accordionComGatilhoRicoSnippet', () => {
   it('monta o rótulo com fábrica do design system, sem helper de story', () => {
-    const código = accordionWithTriggerRichSnippet({
+    const code = accordionWithTriggerRichSnippet({
       value: 'novo',
-      rotulo: 'Novidades da versão 3.0',
+      label: 'Novidades da versão 3.0',
       badge: 'Novo',
     });
-    expect(código).toContain("import { createBadge } from '@/components/ui/badge';");
-    expect(código).toContain("createBadge({ variant: 'default', children: 'Novo' })");
-    expect(código).toContain('acordeao.querySelector(\'[data-value="novo"] span\')');
-    expect(código).not.toContain('makeIconTrigger');
-    expect(código).not.toContain('createIcon');
+    expect(code).toContain("import { createBadge } from '@/components/ui/badge';");
+    expect(code).toContain("createBadge({ variant: 'default', children: 'Novo' })");
+    expect(code).toContain('acordeao.querySelector(\'[data-value="novo"] span\')');
+    expect(code).not.toContain('makeIconTrigger');
+    expect(code).not.toContain('createIcon');
   });
 
   it('trata o ícone como conteúdo de quem consome, sem inventar fábrica', () => {
-    const código = accordionWithTriggerRichSnippet({ withIcon: true, rotulo: 'Informação' });
-    expect(código).toContain('rotulo.prepend(icone);');
-    expect(código).toContain('aria-hidden');
+    const code = accordionWithTriggerRichSnippet({ withIcon: true, label: 'Informação' });
+    expect(code).toContain('rotulo.prepend(icone);');
+    expect(code).toContain('aria-hidden');
     // Não existe fábrica de ícone genérica nesta stack: inventá-la seria API falsa.
-    expect(código).not.toContain('createIcon(');
-    expect(código).not.toContain('lucide');
+    expect(code).not.toContain('createIcon(');
+    expect(code).not.toContain('lucide');
   });
 });
 
 describe('accordionComConteudoRicoSnippet', () => {
   it('sanitiza no call site, como a guideline 09 exige', () => {
-    const código = accordionWithContentRichSnippet({ type: 'multiple', value: 'specs' });
-    expect(código).toContain("import DOMPurify from 'dompurify';");
-    expect(código).toContain('DOMPurify.sanitize(');
-    expect(código).toContain('.nds-accordion-content-body');
-    expect(código).toContain("type: 'multiple'");
+    const code = accordionWithContentRichSnippet({ type: 'multiple', value: 'specs' });
+    expect(code).toContain("import DOMPurify from 'dompurify';");
+    expect(code).toContain('DOMPurify.sanitize(');
+    expect(code).toContain('.nds-accordion-content-body');
+    expect(code).toContain("type: 'multiple'");
   });
 });

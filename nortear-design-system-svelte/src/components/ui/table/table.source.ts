@@ -19,8 +19,8 @@ export type TableArgs = {
 };
 
 /** Recua um bloco inteiro, para quando a tabela vive dentro de outro elemento. */
-function recuar(bloco: string, espacos = '  '): string {
-  return bloco
+function recuar(block: string, espacos = '  '): string {
+  return block
     .split('\n')
     .map((line) => (line.trim() ? `${espacos}${line}` : line))
     .join('\n');
@@ -28,7 +28,7 @@ function recuar(bloco: string, espacos = '  '): string {
 
 function imports(names: string[]): string {
   return `import {
-${names.map((nome) => `  ${nome},`).join('\n')}
+${names.map((name) => `  ${name},`).join('\n')}
 } from "@/components/ui/table";`;
 }
 
@@ -86,10 +86,10 @@ const FOOTER = `  <TableFooter>
     </TableRow>
   </TableFooter>`;
 
-function legenda(texto: string, visible: boolean): string {
+function renderCaption(text: string, visible: boolean): string {
   return visible
-    ? `  <TableCaption>${texto}</TableCaption>`
-    : `  <TableCaption class="nds-sr-only">${texto}</TableCaption>`;
+    ? `  <TableCaption>${text}</TableCaption>`
+    : `  <TableCaption class="nds-sr-only">${text}</TableCaption>`;
 }
 
 /**
@@ -104,7 +104,7 @@ export function tableSource(_gerado?: string, ctx?: { args?: Partial<TableArgs> 
     showFooter = true,
   } = ctx?.args ?? {};
 
-  const partes = [legenda(caption, captionVisivel), HEADER, BODY];
+  const partes = [renderCaption(caption, captionVisivel), HEADER, BODY];
   if (showFooter) partes.push(FOOTER);
 
   return svelteSnippet(
@@ -124,7 +124,7 @@ export function tableBasicaSource(): string {
 
 ${INVOICES}`,
     `<Table>
-${legenda('Lista de faturas recentes', true)}
+${renderCaption('Lista de faturas recentes', true)}
 ${HEADER}
 ${BODY}
 </Table>`,
@@ -138,7 +138,7 @@ export function tableWithFooterSource(): string {
 
 ${INVOICES}`,
     `<Table>
-${legenda('Lista de faturas recentes', true)}
+${renderCaption('Lista de faturas recentes', true)}
 ${HEADER}
 ${BODY}
 ${FOOTER}
@@ -155,7 +155,7 @@ ${INVOICES_CURTAS}`,
     `<div>
   <h3 class="nds-text-body nds-font-medium nds-mb-2">Faturas recentes</h3>
 ${recuar(`<Table>
-${legenda('Lista de faturas recentes', false)}
+${renderCaption('Lista de faturas recentes', false)}
 ${HEADER}
 ${BODY}
 </Table>`)}
@@ -171,7 +171,7 @@ import { Button } from "@/components/ui/button";
 
 ${INVOICES_CURTAS}`,
     `<Table>
-${legenda('Lista de faturas recentes', true)}
+${renderCaption('Lista de faturas recentes', true)}
   <TableHeader>
     <TableRow>
       <TableHead>Fatura</TableHead>
@@ -247,7 +247,7 @@ export function tableVaziaSource(): string {
 
 const faturas: Array<{ id: string; status: string; metodo: string; valor: string }> = [];`,
     `<Table>
-${legenda('Lista de faturas recentes', true)}
+${renderCaption('Lista de faturas recentes', true)}
 ${HEADER}
   <TableBody>
     {#each faturas as fatura (fatura.id)}
@@ -287,7 +287,7 @@ const faturas = [
   { id: "#INV-003", status: "Cancelado", metodo: "Pix",               valor: "R$ 350,00", selecionada: false },
 ];`,
     `<Table>
-${legenda('Lista de faturas recentes', true)}
+${renderCaption('Lista de faturas recentes', true)}
 ${HEADER}
   <TableBody>
     {#each faturas as fatura (fatura.id)}
@@ -315,7 +315,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const linhas = [1, 2, 3, 4, 5];`,
     `<div role="status" aria-busy="true" aria-label="Carregando faturas">
 ${recuar(`<Table>
-${legenda('Lista de faturas recentes', true)}
+${renderCaption('Lista de faturas recentes', true)}
 ${HEADER}
   <TableBody>
     {#each linhas as linha (linha)}

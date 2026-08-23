@@ -431,7 +431,7 @@ const COMPOSITION_CODE = {
             @for (opcao of opcoesFiltro(); track opcao.id) {
               <div class="nds-cluster" data-spacing="sm">
                 <button ndsCheckbox [id]="opcao.id"></button>
-                <label ndsLabel [attr.for]="opcao.id">{{ opcao.rotulo }}</label>
+                <label ndsLabel [attr.for]="opcao.id">{{ opcao.label }}</label>
               </div>
             }
           </div>
@@ -460,7 +460,7 @@ const COMPOSITION_CODE = {
               <button
                 type="button"
                 [class]="swatchClasses + ' ' + cor.className"
-                [attr.aria-label]="cor.rotulo"
+                [attr.aria-label]="cor.label"
               ></button>
             }
           </div>
@@ -481,7 +481,7 @@ const COMPOSITION_CODE = {
           <div class="nds-stack" data-spacing="sm">
             @for (pref of preferencias(); track pref.id) {
               <div class="nds-cluster" data-justify="between">
-                <label ndsLabel [attr.for]="pref.id">{{ pref.rotulo }}</label>
+                <label ndsLabel [attr.for]="pref.id">{{ pref.label }}</label>
                 <button ndsCheckbox [id]="pref.id"></button>
               </div>
             }
@@ -523,7 +523,7 @@ const COMPOSITION_CODE = {
                 <div class="nds-stack" data-spacing="sm">
                   @for (pref of preferencias(); track pref.id) {
                     <div class="nds-cluster" data-justify="between">
-                      <label ndsLabel [attr.for]="'demo-' + pref.id">{{ pref.rotulo }}</label>
+                      <label ndsLabel [attr.for]="'demo-' + pref.id">{{ pref.label }}</label>
                       <button ndsCheckbox [id]="'demo-' + pref.id"></button>
                     </div>
                   }
@@ -721,18 +721,18 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
   /** Os três status do filtro de tabela, tirados da descrição da composição. */
   protected readonly opcoesFiltro = computed(() => {
     dict();
-    return codesFrom(t('variants.compositions.tableFilter.description')).map((rotulo, i) => ({
+    return codesFrom(t('variants.compositions.tableFilter.description')).map((label, i) => ({
       id: `pd-filtro-${i + 1}`,
-      rotulo,
+      label,
     }));
   });
 
   /** As preferências booleanas, tiradas da descrição da composição. */
   protected readonly preferencias = computed(() => {
     dict();
-    return codesFrom(t('variants.compositions.quickSettings.description')).map((rotulo, i) => ({
+    return codesFrom(t('variants.compositions.quickSettings.description')).map((label, i) => ({
       id: `pd-pref-${i + 1}`,
-      rotulo,
+      label,
     }));
   });
 
@@ -746,12 +746,12 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
    * traduzi-los desligaria o rótulo do que a pessoa encontra no CSS.
    */
   protected readonly amostrasDeCor = [
-    { className: 'nds-bg-primary',     rotulo: 'primary'     },
-    { className: 'nds-bg-secondary',   rotulo: 'secondary'   },
-    { className: 'nds-bg-success',     rotulo: 'success'     },
-    { className: 'nds-bg-warning',     rotulo: 'warning'     },
-    { className: 'nds-bg-info',        rotulo: 'info'        },
-    { className: 'nds-bg-destructive', rotulo: 'destructive' },
+    { className: 'nds-bg-primary',     label: 'primary'     },
+    { className: 'nds-bg-secondary',   label: 'secondary'   },
+    { className: 'nds-bg-success',     label: 'success'     },
+    { className: 'nds-bg-warning',     label: 'warning'     },
+    { className: 'nds-bg-info',        label: 'info'        },
+    { className: 'nds-bg-destructive', label: 'destructive' },
   ];
 
   /**
@@ -1057,9 +1057,9 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
       string,
       { accessibility?: { screenReader?: Record<string, string> } }
     >;
-    const bloco = byLocale[locale]?.accessibility?.screenReader ?? {};
+    const block = byLocale[locale]?.accessibility?.screenReader ?? {};
     // `title` é o cabeçalho da seção, não uma linha da lista.
-    return Object.entries(bloco).filter(([k]) => k !== 'title').map(([, v]) => v);
+    return Object.entries(block).filter(([k]) => k !== 'title').map(([, v]) => v);
   });
 
   protected readonly relatedItems = computed(() => {
@@ -1219,9 +1219,9 @@ function priorityLabel(raw: string): string {
  * a frase inteira renderizaria cinco caixas de seleção onde há três.
  */
 function codesFrom(frase: string): string[] {
-  const grupo = /\(([^)]*)\)/.exec(String(frase ?? ''));
-  const alvo = grupo ? grupo[1] : String(frase ?? '');
-  return [...alvo.matchAll(/<code>([^<]+)<\/code>/g)].map((m) => m[1]);
+  const group = /\(([^)]*)\)/.exec(String(frase ?? ''));
+  const target = group ? group[1] : String(frase ?? '');
+  return [...target.matchAll(/<code>([^<]+)<\/code>/g)].map((m) => m[1]);
 }
 
 /** `base.item1`, `base.item2`, … enquanto existirem. Nunca contar à mão. */

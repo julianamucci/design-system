@@ -447,10 +447,10 @@ export class NdsInputDocs implements AfterViewInit, OnDestroy {
     // conteúdo compartilhado descreve um a um. Sem preview por tipo: o que
     // muda é o teclado do dispositivo e a validação do browser, não o visual —
     // nove caixas idênticas na tela ensinariam o contrário.
-    return TYPES.map((tipo) => ({
-      name: tipo,
-      description: t(`variants.items.types.${tipo}`),
-      trackId: tipo,
+    return TYPES.map((type) => ({
+      name: type,
+      description: t(`variants.items.types.${type}`),
+      trackId: type,
       preview: this.tplCompLabel(),
     }));
   });
@@ -574,10 +574,10 @@ export class NdsInputDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
-    return FIELD_TOKENS.map(([token, selector, chave]) => ({
+    return FIELD_TOKENS.map(([token, selector, key]) => ({
       token,
       value: selector,
-      description: toPlainText(t(`tokens.table.${chave}`)),
+      description: toPlainText(t(`tokens.table.${key}`)),
     }));
   });
 
@@ -609,13 +609,13 @@ export class NdsInputDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'textarea',   nome: 'Textarea',   path: '?path=/docs/ui-textarea--docs'   },
-      { key: 'inputOTP',   nome: 'Input OTP',  path: '?path=/docs/ui-inputotp--docs'   },
-      { key: 'select',     nome: 'Select',     path: '?path=/docs/ui-select--docs'     },
-      { key: 'form',       nome: 'Form',       path: '?path=/docs/ui-form--docs'       },
-      { key: 'label',      nome: 'Label',      path: '?path=/docs/ui-label--docs'      },
-    ].map(({ key, nome, path }) => ({
-      name: nome,
+      { key: 'textarea',   name: 'Textarea',   path: '?path=/docs/ui-textarea--docs'   },
+      { key: 'inputOTP',   name: 'Input OTP',  path: '?path=/docs/ui-inputotp--docs'   },
+      { key: 'select',     name: 'Select',     path: '?path=/docs/ui-select--docs'     },
+      { key: 'form',       name: 'Form',       path: '?path=/docs/ui-form--docs'       },
+      { key: 'label',      name: 'Label',      path: '?path=/docs/ui-label--docs'      },
+    ].map(({ key, name, path }) => ({
+      name: name,
       description: t(`related.${key}`),
       path,
     }));

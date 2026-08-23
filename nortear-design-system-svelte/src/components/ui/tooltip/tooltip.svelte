@@ -35,8 +35,8 @@
 		get montado() {
 			return montado;
 		},
-		marcarMontado(valor: boolean) {
-			montado = valor;
+		marcarMontado(value: boolean) {
+			montado = value;
 		},
 	});
 </script>

@@ -8,13 +8,13 @@ import {
 
 describe('breadcrumbSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = breadcrumbSnippet();
-    expect(código).toContain("from '@/components/ui/breadcrumb';");
-    expect(código).toContain('createBreadcrumb(');
-    expect(código).toContain('createBreadcrumbList()');
-    expect(código).toContain('createBreadcrumbPage({');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('<nav');
+    const code = breadcrumbSnippet();
+    expect(code).toContain("from '@/components/ui/breadcrumb';");
+    expect(code).toContain('createBreadcrumb(');
+    expect(code).toContain('createBreadcrumbList()');
+    expect(code).toContain('createBreadcrumbPage({');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('<nav');
   });
 
   it('usa o nome acessível da fábrica, e o omite quando é o padrão dela', () => {
@@ -32,26 +32,26 @@ describe('breadcrumbSnippet', () => {
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = breadcrumbSnippet();
+    const code = breadcrumbSnippet();
     // O separador padrão é o chevron: `content` só entra quando o desenho muda.
-    expect(código).toContain('createBreadcrumbSeparator()');
-    expect(código).not.toContain('content:');
-    expect(código).not.toContain('createBreadcrumbEllipsis');
+    expect(code).toContain('createBreadcrumbSeparator()');
+    expect(code).not.toContain('content:');
+    expect(code).not.toContain('createBreadcrumbEllipsis');
   });
 
   it('a página atual fecha a trilha e nunca é link', () => {
-    const código = breadcrumbSnippet({ atual: 'Detalhes' });
-    expect(código).toContain("createBreadcrumbPage({ text: 'Detalhes' })");
+    const code = breadcrumbSnippet({ current: 'Detalhes' });
+    expect(code).toContain("createBreadcrumbPage({ text: 'Detalhes' })");
     // O último item não passa por `createBreadcrumbLink`: são dois níveis
     // navegáveis, e não três.
     //
     // A contagem é do CORPO, sem a linha de importação — `createBreadcrumbLink`
     // aparece lá também, e contá-la fazia a asserção medir a lista de imports
     // em vez do que o snippet ensina.
-    const corpo = código.slice(código.indexOf("from '@/components/ui/breadcrumb';"));
-    expect(corpo.match(/createBreadcrumbLink/g)?.length).toBe(1);
-    expect(código).toContain("nivel('Início', '/')");
-    expect(código).toContain("nivel('Componentes', '/componentes')");
+    const body = code.slice(code.indexOf("from '@/components/ui/breadcrumb';"));
+    expect(body.match(/createBreadcrumbLink/g)?.length).toBe(1);
+    expect(code).toContain("nivel('Início', '/')");
+    expect(code).toContain("nivel('Componentes', '/componentes')");
   });
 
   it('mostra as reticências e o separador próprio quando a story os usa', () => {
@@ -68,21 +68,21 @@ describe('breadcrumbSnippet', () => {
   });
 
   it('mostra o ouvinte de navegação e o atributo do consumidor quando pedidos', () => {
-    const código = breadcrumbSnippet({
+    const code = breadcrumbSnippet({
       onNavigate: 'registrarNavegacao(text);',
       linkSetup: "link.setAttribute('data-router-link', 'true');",
     });
-    expect(código).toContain("link.addEventListener('click', (evento) => {");
-    expect(código).toContain('evento.preventDefault();');
-    expect(código).toContain('registrarNavegacao(text);');
-    expect(código).toContain("link.setAttribute('data-router-link', 'true');");
+    expect(code).toContain("link.addEventListener('click', (evento) => {");
+    expect(code).toContain('evento.preventDefault();');
+    expect(code).toContain('registrarNavegacao(text);');
+    expect(code).toContain("link.setAttribute('data-router-link', 'true');");
   });
 
   it('não vaza helper de story', () => {
-    const código = breadcrumbSnippet({ separator: '/', ellipsis: true });
-    expect(código).not.toContain('criarSlashSvg');
-    expect(código).not.toContain('criarNivel');
-    expect(código).not.toContain('buildPlaygroundBreadcrumb');
+    const code = breadcrumbSnippet({ separator: '/', ellipsis: true });
+    expect(code).not.toContain('criarSlashSvg');
+    expect(code).not.toContain('criarNivel');
+    expect(code).not.toContain('buildPlaygroundBreadcrumb');
   });
 });
 
@@ -90,7 +90,7 @@ describe('breadcrumbSource', () => {
   it('acompanha os args em vez de congelar um snippet fixo', () => {
     const noArgs = breadcrumbSource('<nav data-slot="breadcrumb">', {});
     const withArgs = breadcrumbSource('<nav data-slot="breadcrumb">', {
-      args: { levels: ['Início', 'Componentes', 'Navegação'], atual: 'Trilha' },
+      args: { levels: ['Início', 'Componentes', 'Navegação'], current: 'Trilha' },
     });
     expect(noArgs).not.toBe(withArgs);
     expect(withArgs).toContain("nivel('Navegação', '/navegacao')");
@@ -106,30 +106,30 @@ describe('breadcrumbSource', () => {
 
 describe('breadcrumbSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = breadcrumbSourceWith({ levels: ['Início'], atual: 'Componentes' });
-    const código = transform('', { args: { levels: ['A', 'B', 'C'], atual: 'Z' } });
-    expect(código).toContain("nivel('Início', '/')");
-    expect(código).not.toContain("nivel('B'");
-    expect(código).toContain("createBreadcrumbPage({ text: 'Componentes' })");
+    const transform = breadcrumbSourceWith({ levels: ['Início'], current: 'Componentes' });
+    const code = transform('', { args: { levels: ['A', 'B', 'C'], current: 'Z' } });
+    expect(code).toContain("nivel('Início', '/')");
+    expect(code).not.toContain("nivel('B'");
+    expect(code).toContain("createBreadcrumbPage({ text: 'Componentes' })");
   });
 });
 
 describe('breadcrumbComMenuSnippet', () => {
   it('mostra as duas fábricas da composição, e o gatilho que nomeia o conjunto', () => {
-    const código = breadcrumbWithMenuSnippet();
-    expect(código).toContain('createDropdownMenu({');
-    expect(código).toContain('trigger: gatilho');
-    expect(código).toContain("'aria-label': 'Expandir níveis ocultos'");
-    expect(código).toContain('children: createBreadcrumbEllipsis()');
-    expect(código).toContain("{ label: 'Documentação' },");
-    expect(código).not.toContain('data-slot=');
+    const code = breadcrumbWithMenuSnippet();
+    expect(code).toContain('createDropdownMenu({');
+    expect(code).toContain('trigger: gatilho');
+    expect(code).toContain("'aria-label': 'Expandir níveis ocultos'");
+    expect(code).toContain('children: createBreadcrumbEllipsis()');
+    expect(code).toContain("{ label: 'Documentação' },");
+    expect(code).not.toContain('data-slot=');
   });
 
   it('o gatilho sai do design system, sem estilo escrito à mão', () => {
-    const código = breadcrumbWithMenuSnippet();
-    expect(código).toContain('createButton({');
+    const code = breadcrumbWithMenuSnippet();
+    expect(code).toContain('createButton({');
     // A story monta o gatilho com `style.background`/`style.border`/`style.padding`
     // à mão; o snippet não ensina valor solto em atributo de estilo.
-    expect(código).not.toContain('.style.');
+    expect(code).not.toContain('.style.');
   });
 });

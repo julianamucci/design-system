@@ -131,9 +131,9 @@ export const Playground: Story = {
     });
 
     await step("Clicar no rótulo alterna o controle associado", async () => {
-      const rotulo = canvas.getByText("Receber notificações por email");
-      await definir(switchEl, false, rotulo);
-      await definir(switchEl, true, rotulo);
+      const label = canvas.getByText("Receber notificações por email");
+      await definir(switchEl, false, label);
+      await definir(switchEl, true, label);
     });
   },
 };

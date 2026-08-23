@@ -9,28 +9,28 @@ import {
 
 describe('commandSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = commandSnippet();
-    expect(código).toContain("import { createCommand } from '@/components/ui/command';");
-    expect(código).toContain('createCommand({');
-    expect(código).toContain("document.querySelector('#app')?.append(paleta);");
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('role="listbox"');
+    const code = commandSnippet();
+    expect(code).toContain("import { createCommand } from '@/components/ui/command';");
+    expect(code).toContain('createCommand({');
+    expect(code).toContain("document.querySelector('#app')?.append(paleta);");
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('role="listbox"');
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = commandSnippet();
-    expect(código).not.toContain('placeholder');
-    expect(código).not.toContain('emptyMessage');
-    expect(código).not.toContain('onSelect');
+    const code = commandSnippet();
+    expect(code).not.toContain('placeholder');
+    expect(code).not.toContain('emptyMessage');
+    expect(code).not.toContain('onSelect');
   });
 
   it('mostra os textos quando a story os troca', () => {
-    const código = commandSnippet({
+    const code = commandSnippet({
       placeholder: 'Buscar componente...',
       emptyMessage: 'Nenhum resultado encontrado.',
     });
-    expect(código).toContain("placeholder: 'Buscar componente...'");
-    expect(código).toContain("emptyMessage: 'Nenhum resultado encontrado.'");
+    expect(code).toContain("placeholder: 'Buscar componente...'");
+    expect(code).toContain("emptyMessage: 'Nenhum resultado encontrado.'");
   });
 
   it('agrupa os itens por padrão e desagrupa quando o control pede', () => {
@@ -39,7 +39,7 @@ describe('commandSnippet', () => {
   });
 
   it('mostra as chaves de item que a story exercita', () => {
-    const código = commandSnippet({
+    const code = commandSnippet({
       items: [
         { value: 'novo', label: 'Novo arquivo', shortcut: '⌘N' },
         { type: 'separator' },
@@ -47,46 +47,46 @@ describe('commandSnippet', () => {
         { value: 'arquivar', label: 'Arquivar', disabled: true },
       ],
     });
-    expect(código).toContain("shortcut: '⌘N'");
-    expect(código).toContain("{ type: 'separator' }");
-    expect(código).toContain('checked: true');
-    expect(código).toContain('disabled: true');
+    expect(code).toContain("shortcut: '⌘N'");
+    expect(code).toContain("{ type: 'separator' }");
+    expect(code).toContain('checked: true');
+    expect(code).toContain('disabled: true');
   });
 
   it('não vaza o andaime das stories', () => {
-    const código = commandSnippet();
-    expect(código).not.toContain('montarInline');
-    expect(código).not.toContain('buildItems');
-    expect(código).not.toContain('ITENS_AGRUPADOS');
-    expect(código).not.toContain('WRAPPER');
+    const code = commandSnippet();
+    expect(code).not.toContain('montarInline');
+    expect(code).not.toContain('buildItems');
+    expect(code).not.toContain('ITENS_AGRUPADOS');
+    expect(code).not.toContain('WRAPPER');
   });
 
   it('nunca imprime a função que os args trazem no lugar do corpo do callback', () => {
-    const código = commandSnippet({ onSelect: (() => undefined) as unknown as string });
-    expect(código).not.toContain('onSelect');
+    const code = commandSnippet({ onSelect: (() => undefined) as unknown as string });
+    expect(code).not.toContain('onSelect');
   });
 });
 
 describe('commandEmPopoverSnippet', () => {
   it('mostra a sub-fábrica que é o assunto da composição', () => {
-    const código = commandEmPopoverSnippet();
-    expect(código).toContain("import { createPopover } from '@/components/ui/popover';");
-    expect(código).toContain('createPopover({');
-    expect(código).toContain('trigger: gatilho');
-    expect(código).toContain('content: paleta');
+    const code = commandEmPopoverSnippet();
+    expect(code).toContain("import { createPopover } from '@/components/ui/popover';");
+    expect(code).toContain('createPopover({');
+    expect(code).toContain('trigger: gatilho');
+    expect(code).toContain('content: paleta');
     // O papel é de quem compõe: sem ele o leitor anuncia só "botão".
-    expect(código).toContain("gatilho.setAttribute('role', 'combobox');");
+    expect(code).toContain("gatilho.setAttribute('role', 'combobox');");
   });
 });
 
 describe('commandEmDialogSnippet', () => {
   it('mostra o diálogo e o atalho global, que é de quem consome', () => {
-    const código = commandEmDialogSnippet();
-    expect(código).toContain("import { createDialog } from '@/components/ui/dialog';");
-    expect(código).toContain('headerHidden: true');
-    expect(código).toContain('showCloseButton: false');
-    expect(código).toContain("window.addEventListener('keydown'");
-    expect(código).not.toContain('dialog.fixtures');
+    const code = commandEmDialogSnippet();
+    expect(code).toContain("import { createDialog } from '@/components/ui/dialog';");
+    expect(code).toContain('headerHidden: true');
+    expect(code).toContain('showCloseButton: false');
+    expect(code).toContain("window.addEventListener('keydown'");
+    expect(code).not.toContain('dialog.fixtures');
   });
 });
 
@@ -113,9 +113,9 @@ describe('commandSourceCom', () => {
     const transform = commandSourceWith({
       items: [{ value: 'sair', label: 'Sair' }],
     });
-    const código = transform('', { args: { placeholder: 'Buscar comando...' } });
-    expect(código).toContain("placeholder: 'Buscar comando...'");
-    expect(código).toContain("{ value: 'sair', label: 'Sair' }");
-    expect(código).not.toContain("label: 'Button'");
+    const code = transform('', { args: { placeholder: 'Buscar comando...' } });
+    expect(code).toContain("placeholder: 'Buscar comando...'");
+    expect(code).toContain("{ value: 'sair', label: 'Sair' }");
+    expect(code).not.toContain("label: 'Button'");
   });
 });

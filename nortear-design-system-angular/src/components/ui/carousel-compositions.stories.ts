@@ -136,8 +136,8 @@ export const WithDots: Story = {
      * pseudo-elemento não entra em `firstElementChild`. Buscar por classe seria
      * asserir o nome dela; o que interessa aqui é a CAIXA que ela produz.
      */
-    const rotulo = (el: Element) => el.firstElementChild as HTMLElement;
-    const largura = (el: Element) => el.getBoundingClientRect().width;
+    const label = (el: Element) => el.firstElementChild as HTMLElement;
+    const width = (el: Element) => el.getBoundingClientRect().width;
 
     await step('Há um dot por slide, e o primeiro nasce como o atual', async () => {
       // Contado a partir dos slides renderizados: um número escrito à mão
@@ -161,24 +161,24 @@ export const WithDots: Story = {
       // `waitFor` porque a mudança de forma é ANIMADA: medida no primeiro
       // quadro, a pílula ainda está fechada e o ponto anterior ainda aberto.
       await waitFor(() => {
-        expect(largura(rotulo(dot(2)))).toBeGreaterThan(0);
-        expect(largura(rotulo(dot(1)))).toBeLessThan(1);
+        expect(width(label(dot(2)))).toBeGreaterThan(0);
+        expect(width(label(dot(1)))).toBeLessThan(1);
       }, { timeout: 4000 });
 
       // Rótulo visível certo, e é um pedaço do nome acessível (WCAG 2.5.3).
-      await expect(rotulo(dot(2))).toHaveTextContent(labelVisible(2));
+      await expect(label(dot(2))).toHaveTextContent(labelVisible(2));
       await expect(accessibleName(2, SLIDES.length).toLowerCase()).toContain(
         labelVisible(2).toLowerCase(),
       );
 
       // A forma mudou, não só a cor: a pílula é mais larga que o ponto vizinho.
-      await expect(largura(dot(2))).toBeGreaterThan(largura(dot(3)));
+      await expect(width(dot(2))).toBeGreaterThan(width(dot(3)));
 
       // E os DEMAIS continuam pontos: nenhum outro rótulo à vista, e um único
       // `aria-current` na fileira inteira.
       const demais = SLIDES.filter((p) => p !== 2);
       for (const position of demais) {
-        await expect(largura(rotulo(dot(position)))).toBeLessThan(1);
+        await expect(width(label(dot(position)))).toBeLessThan(1);
         await expect(dot(position).hasAttribute('aria-current')).toBe(false);
       }
     });
@@ -188,9 +188,9 @@ export const WithDots: Story = {
       // pílula tem texto de 12px: sem o piso, os dois ficariam abaixo dos 24px
       // que a WCAG 2.5.8 cobra — foi o defeito que criou `.nds-carousel-dot`.
       for (const position of SLIDES) {
-        const caixa = dot(position).getBoundingClientRect();
-        await expect(caixa.width).toBeGreaterThanOrEqual(24);
-        await expect(caixa.height).toBeGreaterThanOrEqual(24);
+        const box = dot(position).getBoundingClientRect();
+        await expect(box.width).toBeGreaterThanOrEqual(24);
+        await expect(box.height).toBeGreaterThanOrEqual(24);
       }
     });
 
@@ -252,10 +252,10 @@ export const WithDots: Story = {
 // proporção fixa a um título e uma legenda.
 
 const FOTOS = [
-  { titulo: 'Foto 1', legenda: 'Paisagem natural ao amanhecer' },
-  { titulo: 'Foto 2', legenda: 'Detalhe arquitetônico em pedra' },
-  { titulo: 'Foto 3', legenda: 'Cidade iluminada à noite' },
-  { titulo: 'Foto 4', legenda: 'Praia vista do alto' },
+  { title: 'Foto 1', caption: 'Paisagem natural ao amanhecer' },
+  { title: 'Foto 2', caption: 'Detalhe arquitetônico em pedra' },
+  { title: 'Foto 3', caption: 'Cidade iluminada à noite' },
+  { title: 'Foto 4', caption: 'Praia vista do alto' },
 ];
 
 export const Gallery: Story = {
@@ -272,17 +272,17 @@ export const Gallery: Story = {
     template: `
       <nds-carousel class="nds-w-md" label="Galeria de fotos do produto" slideLabel="Slide {index} de {total}">
         <div ndsCarouselContent>
-          @for (foto of fotos; track foto.titulo) {
+          @for (foto of fotos; track foto.title) {
             <div ndsCarouselItem>
               <div ndsCard class="nds-overflow-hidden">
                 <div ndsAspectRatio [ratio]="16 / 9">
                   <div class="nds-cluster nds-bg-muted-soft" data-justify="center">
-                    <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ foto.titulo }}</span>
+                    <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ foto.title }}</span>
                   </div>
                 </div>
                 <div ndsCardHeader>
-                  <h3 ndsCardTitle>{{ foto.titulo }}</h3>
-                  <p ndsCardDescription>{{ foto.legenda }}</p>
+                  <h3 ndsCardTitle>{{ foto.title }}</h3>
+                  <p ndsCardDescription>{{ foto.caption }}</p>
                 </div>
               </div>
             </div>
@@ -305,9 +305,9 @@ export const Gallery: Story = {
       await expect(slides.length).toBe(FOTOS.length);
       for (const [i, slide] of slides.entries()) {
         await expect(within(slide).getByRole('heading', { level: 3 })).toHaveTextContent(
-          FOTOS[i].titulo,
+          FOTOS[i].title,
         );
-        await expect(slide).toHaveTextContent(FOTOS[i].legenda);
+        await expect(slide).toHaveTextContent(FOTOS[i].caption);
       }
     });
 

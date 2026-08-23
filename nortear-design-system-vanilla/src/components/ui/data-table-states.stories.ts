@@ -122,10 +122,10 @@ export const ListenerCleanup: Story = {
           enablePagination: false,
         }),
         exercitar: (no) => {
-          const tabela = (no as HTMLElement & { __table?: { setGlobalFilter: (v: string) => void } }).__table;
+          const table = (no as HTMLElement & { __table?: { setGlobalFilter: (v: string) => void } }).__table;
           no.querySelector<HTMLElement>('.nds-data-table-columns-btn')?.click();
-          tabela?.setGlobalFilter('a');
-          tabela?.setGlobalFilter('');
+          table?.setGlobalFilter('a');
+          table?.setGlobalFilter('');
         },
       });
     });

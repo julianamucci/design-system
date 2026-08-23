@@ -13,26 +13,26 @@ import {
 
 describe('radioGroupSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do grupo', () => {
-    const código = radioGroupSnippet();
-    expect(código).toContain("import { createRadioGroup } from '@/components/ui/radio-group';");
-    expect(código).toContain('createRadioGroup({');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('<fieldset');
+    const code = radioGroupSnippet();
+    expect(code).toContain("import { createRadioGroup } from '@/components/ui/radio-group';");
+    expect(code).toContain('createRadioGroup({');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('<fieldset');
   });
 
   it('prefere a legenda VISÍVEL ao nome invisível', () => {
-    const código = radioGroupSnippet({ legend: 'Forma de entrega' });
-    expect(código).toContain("legend: 'Forma de entrega'");
-    expect(código).not.toContain("'aria-label'");
+    const code = radioGroupSnippet({ legend: 'Forma de entrega' });
+    expect(code).toContain("legend: 'Forma de entrega'");
+    expect(code).not.toContain("'aria-label'");
   });
 
   it('só cai no nome invisível quando não há legenda', () => {
     // Os dois no mesmo elemento é o defeito, não a solução: a fábrica ignora o
     // `aria-label` quando a legenda existe.
-    const código = radioGroupSnippet({ 'aria-label': 'Forma de pagamento' });
-    expect(código).toContain("'aria-label': 'Forma de pagamento'");
-    expect(código).not.toContain('legend:');
-    expect(código).not.toContain('ariaLabel');
+    const code = radioGroupSnippet({ 'aria-label': 'Forma de pagamento' });
+    expect(code).toContain("'aria-label': 'Forma de pagamento'");
+    expect(code).not.toContain('legend:');
+    expect(code).not.toContain('ariaLabel');
 
     const withAsDuas = radioGroupSnippet({
       legend: 'Forma de pagamento',
@@ -43,14 +43,14 @@ describe('radioGroupSnippet', () => {
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = radioGroupSnippet();
-    expect(código).not.toContain('orientation');
-    expect(código).not.toContain('disabled');
-    expect(código).not.toContain('defaultValue');
+    const code = radioGroupSnippet();
+    expect(code).not.toContain('orientation');
+    expect(code).not.toContain('disabled');
+    expect(code).not.toContain('defaultValue');
   });
 
   it('mostra as opções quando a story as usa', () => {
-    const código = radioGroupSnippet({
+    const code = radioGroupSnippet({
       name: 'delivery',
       orientation: 'horizontal',
       defaultValue: 'pix',
@@ -60,52 +60,52 @@ describe('radioGroupSnippet', () => {
         { value: 'boleto', label: 'Boleto', disabled: true },
       ],
     });
-    expect(código).toContain("name: 'delivery'");
-    expect(código).toContain("orientation: 'horizontal'");
-    expect(código).toContain("defaultValue: 'pix'");
-    expect(código).toContain('disabled: true');
-    expect(código).toContain("{ value: 'boleto', label: 'Boleto', disabled: true },");
+    expect(code).toContain("name: 'delivery'");
+    expect(code).toContain("orientation: 'horizontal'");
+    expect(code).toContain("defaultValue: 'pix'");
+    expect(code).toContain('disabled: true');
+    expect(code).toContain("{ value: 'boleto', label: 'Boleto', disabled: true },");
   });
 
   it('não vaza o andaime das stories', () => {
-    const código = radioGroupSnippet();
-    expect(código).not.toContain('escolher(');
-    expect(código).not.toContain('razaoContraste');
+    const code = radioGroupSnippet();
+    expect(code).not.toContain('escolher(');
+    expect(code).not.toContain('razaoContraste');
   });
 });
 
 describe('radioGroupComDescricaoSnippet', () => {
   it('amarra a descrição ao controle, que é o que a fábrica não faz', () => {
-    const código = radioGroupWithDescriptionSnippet(
+    const code = radioGroupWithDescriptionSnippet(
       [{ value: 'standard', label: 'Padrão', description: 'Entrega em 5 dias úteis.' }],
       { name: 'delivery', legend: 'Forma de entrega' },
     );
-    expect(código).toContain("description: 'Entrega em 5 dias úteis.'");
-    expect(código).toContain("setAttribute('aria-describedby'");
-    expect(código).toContain('createRadioGroup({');
+    expect(code).toContain("description: 'Entrega em 5 dias úteis.'");
+    expect(code).toContain("setAttribute('aria-describedby'");
+    expect(code).toContain('createRadioGroup({');
     // A descrição não é opção da fábrica: só `value` e `label` chegam a `items`.
-    expect(código).toContain('items: escolhas.map(({ value, label }) => ({ value, label }))');
+    expect(code).toContain('items: escolhas.map(({ value, label }) => ({ value, label }))');
   });
 });
 
 describe('radioGroupInvalidoSnippet', () => {
   it('marca o atributo e aponta a mensagem, sem pintar nada por conta própria', () => {
-    const código = radioGroupInvalidoSnippet({ name: 'pagamento' });
-    expect(código).toContain("setAttribute('aria-invalid', 'true')");
-    expect(código).toContain("setAttribute('aria-describedby', 'pagamento-erro')");
-    expect(código).toContain('nds-text-destructive');
-    expect(código).not.toContain('box-shadow');
-    expect(código).not.toContain('style.border');
+    const code = radioGroupInvalidoSnippet({ name: 'pagamento' });
+    expect(code).toContain("setAttribute('aria-invalid', 'true')");
+    expect(code).toContain("setAttribute('aria-describedby', 'pagamento-erro')");
+    expect(code).toContain('nds-text-destructive');
+    expect(code).not.toContain('box-shadow');
+    expect(code).not.toContain('style.border');
   });
 });
 
 describe('radioGroupEmFormularioSnippet', () => {
   it('recolhe a escolha pelo FormData do submit, não por um callback por clique', () => {
-    const código = formRadioGroupSnippet({ name: 'payment' });
-    expect(código).toContain('new FormData(formulario)');
-    expect(código).toContain("get('payment')");
-    expect(código).toContain("type: 'submit'");
-    expect(código).not.toContain('onValueChange');
+    const code = formRadioGroupSnippet({ name: 'payment' });
+    expect(code).toContain('new FormData(formulario)');
+    expect(code).toContain("get('payment')");
+    expect(code).toContain("type: 'submit'");
+    expect(code).not.toContain('onValueChange');
   });
 });
 
@@ -122,9 +122,9 @@ describe('radioGroupSource', () => {
 
   it('traduz o nome do control para o da opção da fábrica', () => {
     // O Playground chama a legenda de `groupLabel`; a fábrica a chama de `legend`.
-    const código = radioGroupSource('', { args: { groupLabel: 'Forma de pagamento' } });
-    expect(código).toContain("legend: 'Forma de pagamento'");
-    expect(código).not.toContain('groupLabel');
+    const code = radioGroupSource('', { args: { groupLabel: 'Forma de pagamento' } });
+    expect(code).toContain("legend: 'Forma de pagamento'");
+    expect(code).not.toContain('groupLabel');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -137,8 +137,8 @@ describe('radioGroupSource', () => {
 describe('radioGroupSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = radioGroupSourceWith({ disabled: true });
-    const código = transform('', { args: { disabled: false, name: 'payment' } });
-    expect(código).toContain('disabled: true');
+    const code = transform('', { args: { disabled: false, name: 'payment' } });
+    expect(code).toContain('disabled: true');
   });
 });
 

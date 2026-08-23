@@ -56,18 +56,18 @@ const IMPORT = 'import { Slider } from "@/components/ui/slider";';
 const IMPORT_LABEL = 'import { Label } from "@/components/ui/label";';
 
 /** Cabeçalho com o estado da(s) alça(s) declarado, que é o uso controlado. */
-function state(nome: string, setter: string, valueInitial: string, extras = ''): string {
+function state(name: string, setter: string, valueInitial: string, extras = ''): string {
   return `${IMPORT_STATE}
 ${IMPORT}${extras ? `\n${extras}` : ''}
 
-const [${nome}, ${setter}] = useState(${valueInitial});`;
+const [${name}, ${setter}] = useState(${valueInitial});`;
 }
 
 /**
  * Atributos da faixa. Só o que difere do padrão: repetir `min={0} max={100}`
  * em todo exemplo ensina ruído a quem copia.
  */
-function faixa(args: Partial<SliderArgs>): Array<string | undefined> {
+function range(args: Partial<SliderArgs>): Array<string | undefined> {
   return [
     typeof args.min === 'number' && args.min !== MINIMUM_DEFAULT
       ? propNumber('min', args.min)
@@ -86,14 +86,14 @@ function faixa(args: Partial<SliderArgs>): Array<string | undefined> {
  * entrega a mudança a quem não vê a alça andar: sem ele o valor muda em
  * silêncio, e a alça anuncia só o próprio `aria-valuenow` quando tem foco.
  */
-function valueLine(rotulo: string, valor: string, comLabel = false): string {
-  const nome = comLabel
-    ? `    <Label>${rotulo}</Label>`
-    : `    <span className="nds-text-body nds-text-muted-foreground">${rotulo}</span>`;
+function valueLine(label: string, value: string, comLabel = false): string {
+  const name = comLabel
+    ? `    <Label>${label}</Label>`
+    : `    <span className="nds-text-body nds-text-muted-foreground">${label}</span>`;
   return `  <div className="nds-cluster" data-justify="between">
-${nome}
+${name}
     <span aria-live="polite" className="nds-text-body nds-tabular-nums">
-      ${valor}
+      ${value}
     </span>
   </div>`;
 }
@@ -104,23 +104,23 @@ ${nome}
  * de rolagem do painel, que é estreito.
  */
 function tag(partes: Array<string | false | null | undefined>): string {
-  const lista = partes.filter((p): p is string => Boolean(p));
-  const inLine = lista.join(' ');
+  const list = partes.filter((p): p is string => Boolean(p));
+  const inLine = list.join(' ');
   if (inLine.length <= 52) return `  <Slider ${inLine} />`;
-  return `  <Slider\n${lista.map((p) => `    ${p}`).join('\n')}\n  />`;
+  return `  <Slider\n${list.map((p) => `    ${p}`).join('\n')}\n  />`;
 }
 
 /** Bloco vertical: sem largura de página e com o valor acima da barra. */
-function emPe(conteudo: string): string {
+function emPe(content: string): string {
   return `<div className="nds-stack" data-align="center" data-spacing="sm">
-${conteudo}
+${content}
 </div>`;
 }
 
 /** Bloco horizontal: a largura do contêiner é a largura do controle. */
-function deitado(conteudo: string): string {
+function deitado(content: string): string {
   return `<div className="nds-stack nds-w-sm" data-spacing="sm">
-${conteudo}
+${content}
 </div>`;
 }
 
@@ -132,28 +132,28 @@ ${conteudo}
  */
 export const sliderSource: SourceTransform<SliderArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const rotulo = childText(args['aria-label'], 'Volume');
+  const label = childText(args['aria-label'], 'Volume');
   const emPeAgora = args.orientation === 'vertical';
 
-  const controle = tag([
+  const control = tag([
     'value={volume}',
     'onValueChange={setVolume}',
-    ...faixa(args),
+    ...range(args),
     propOption('orientation', args.orientation, ORIENTACOES, 'horizontal'),
     propBool('disabled', args.disabled),
-    `aria-label="${rotulo}"`,
+    `aria-label="${label}"`,
   ]);
 
-  const corpo = emPeAgora
+  const body = emPeAgora
     ? emPe(
         `  <span aria-live="polite" className="nds-text-body nds-tabular-nums">
     {volume[0]}
   </span>
-${controle}`,
+${control}`,
       )
-    : deitado(`${valueLine(rotulo, '{volume[0]}')}\n${controle}`);
+    : deitado(`${valueLine(label, '{volume[0]}')}\n${control}`);
 
-  return jsxSnippet(state('volume', 'setVolume', '[50]'), corpo);
+  return jsxSnippet(state('volume', 'setVolume', '[50]'), body);
 };
 
 /**
@@ -298,10 +298,10 @@ const [brilho, setBrilho] = useState([80]);`,
   onSubmit={(evento) => evento.preventDefault()}
 >
   <div className="nds-stack" data-spacing="sm">
-${campo('Volume', 'volume', 'setVolume')}
+${field('Volume', 'volume', 'setVolume')}
   </div>
   <div className="nds-stack" data-spacing="sm">
-${campo('Brilho', 'brilho', 'setBrilho')}
+${field('Brilho', 'brilho', 'setBrilho')}
   </div>
   <Button type="submit" size="sm">Salvar preset</Button>
 </form>`,
@@ -309,12 +309,12 @@ ${campo('Brilho', 'brilho', 'setBrilho')}
 }
 
 /** Um controle do formulário: rótulo, valor corrente e barra. */
-function campo(rotulo: string, valor: string, setter: string): string {
+function field(label: string, value: string, setter: string): string {
   return `    <div className="nds-cluster" data-justify="between">
-      <Label>${rotulo}</Label>
+      <Label>${label}</Label>
       <span aria-live="polite" className="nds-text-body nds-tabular-nums">
-        {\`\${${valor}[0]}%\`}
+        {\`\${${value}[0]}%\`}
       </span>
     </div>
-    <Slider value={${valor}} onValueChange={${setter}} aria-label="${rotulo}" />`;
+    <Slider value={${value}} onValueChange={${setter}} aria-label="${label}" />`;
 }

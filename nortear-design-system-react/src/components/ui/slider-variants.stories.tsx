@@ -100,9 +100,9 @@ export const Range: Story = {
       // Afirma o desenho, não o dado: 80 − 20 do trilho, com folga de 1pt para
       // o arredondamento de subpixel.
       const track = sliderTrack(canvasElement);
-      const faixa = canvasElement.querySelector<HTMLElement>('[data-slot="slider-range"]')!;
+      const range = canvasElement.querySelector<HTMLElement>('[data-slot="slider-range"]')!;
       const pct =
-        (faixa.getBoundingClientRect().width / track.getBoundingClientRect().width) * 100;
+        (range.getBoundingClientRect().width / track.getBoundingClientRect().width) * 100;
       await expect(Math.abs(pct - 60)).toBeLessThan(1.5);
     });
   },
@@ -145,8 +145,8 @@ export const Vertical: Story = {
     await step("O trilho fica em pé", async () => {
       // A orientação não pode ser só um atributo: a geometria tem que virar
       // junto, senão o controle continua deitado dizendo que está de pé.
-      const caixa = sliderTrack(canvasElement).getBoundingClientRect();
-      await expect(caixa.height).toBeGreaterThan(caixa.width);
+      const box = sliderTrack(canvasElement).getBoundingClientRect();
+      await expect(box.height).toBeGreaterThan(box.width);
     });
 
     await step("ArrowUp incrementa no eixo vertical", async () => {

@@ -138,13 +138,13 @@ function normalizar(cor: string): string | null {
   return `${Math.round(p[0])},${Math.round(p[1])},${Math.round(p[2])},${Math.round(a * 1000) / 1000}`;
 }
 
-function identificarToken(raiz: HTMLElement, cor: string): string {
-  const alvo = normalizar(cor);
-  if (!alvo) return 'desconhecido';
-  const casados = CANDIDATOS.filter(([, valor]) => {
-    const resolvido = resolveColor(raiz, valor);
-    return resolvido !== null && normalizar(resolvido) === alvo;
-  }).map(([nome]) => nome);
+function identificarToken(root: HTMLElement, cor: string): string {
+  const target = normalizar(cor);
+  if (!target) return 'desconhecido';
+  const casados = CANDIDATOS.filter(([, value]) => {
+    const resolvido = resolveColor(root, value);
+    return resolvido !== null && normalizar(resolvido) === target;
+  }).map(([name]) => name);
   return casados.length ? casados.join(' | ') : 'desconhecido';
 }
 
@@ -156,7 +156,7 @@ function describe(el: Element | null): string | null {
 
 // ─── Medição de um separador ──────────────────────────────────────────────────
 
-function measureSeparator(sep: HTMLElement, raiz: HTMLElement): SeparatorMeasurement {
+function measureSeparator(sep: HTMLElement, root: HTMLElement): SeparatorMeasurement {
   const cs = getComputedStyle(sep);
   const r = sep.getBoundingClientRect();
   const parent = sep.parentElement;
@@ -217,7 +217,7 @@ function measureSeparator(sep: HTMLElement, raiz: HTMLElement): SeparatorMeasure
     background,
     fundoAtras: atras,
     contraste: atras ? ratio(background, atras) : null,
-    tokenDeOrigem: identificarToken(raiz, background),
+    tokenDeOrigem: identificarToken(root, background),
 
     elementoNoCentro: describe(center),
   };
@@ -225,25 +225,25 @@ function measureSeparator(sep: HTMLElement, raiz: HTMLElement): SeparatorMeasure
 
 // ─── API pública ──────────────────────────────────────────────────────────────
 
-/** Mede todos os separadores dentro de `alvo`. */
-export function measureCenario(alvo: HTMLElement | null, raiz: HTMLElement): CenarioMeasurement {
-  if (!alvo) return { separadores: null, quantidade: 0 };
-  const seps = [...alvo.querySelectorAll<HTMLElement>(SEL_SEPARATOR)];
+/** Mede todos os separadores dentro de `target`. */
+export function measureCenario(target: HTMLElement | null, root: HTMLElement): CenarioMeasurement {
+  if (!target) return { separadores: null, quantidade: 0 };
+  const seps = [...target.querySelectorAll<HTMLElement>(SEL_SEPARATOR)];
   return {
-    separadores: seps.map((s) => noTransicao(s, () => measureSeparator(s, raiz))),
+    separadores: seps.map((s) => noTransicao(s, () => measureSeparator(s, root))),
     quantidade: seps.length,
   };
 }
 
 /**
- * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `raiz`.
+ * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `root`.
  * Cenário ausente vem `separadores: null` — é o achado de "a stack não monta
  * este caso", e não uma falha da medição.
  */
-export function measureCenarios(raiz: HTMLElement, cenarios: string[]): Record<string, CenarioMeasurement> {
+export function measureCenarios(root: HTMLElement, cenarios: string[]): Record<string, CenarioMeasurement> {
   const registro: Record<string, CenarioMeasurement> = {};
   for (const cenario of cenarios) {
-    registro[cenario] = measureCenario(raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`), raiz);
+    registro[cenario] = measureCenario(root.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`), root);
   }
   return registro;
 }
@@ -256,9 +256,9 @@ export function measureCenarios(raiz: HTMLElement, cenarios: string[]): Record<s
  * que deixou isso passar; aqui a fonte é `getComputedStyle` mais os candidatos
  * resolvidos na própria árvore.
  */
-export function measureTokens(raiz: HTMLElement) {
-  const cs = getComputedStyle(raiz);
-  const ler = (nome: string) => cs.getPropertyValue(nome).trim();
+export function measureTokens(root: HTMLElement) {
+  const cs = getComputedStyle(root);
+  const ler = (name: string) => cs.getPropertyValue(name).trim();
   return {
     border: ler('--border'),
     input: ler('--input'),
@@ -267,7 +267,7 @@ export function measureTokens(raiz: HTMLElement) {
     background: ler('--background'),
     /** As cores já resolvidas, que é o que a comparação de token usa. */
     resolvidos: Object.fromEntries(
-      CANDIDATOS.map(([nome, valor]) => [nome, resolveColor(raiz, valor)]),
+      CANDIDATOS.map(([name, value]) => [name, resolveColor(root, value)]),
     ),
   };
 }
@@ -277,12 +277,12 @@ export function measureTokens(raiz: HTMLElement) {
  * vê, porque a tela está sempre no claro. A classe sai no `finally`: deixá-la
  * posta envenena a story seguinte e a foto do Chromatic.
  */
-export function darkMeasure(raiz: HTMLElement, cenarios: string[]) {
-  const desfazer = darkLigarTheme(raiz.ownerDocument);
+export function darkMeasure(root: HTMLElement, cenarios: string[]) {
+  const desfazer = darkLigarTheme(root.ownerDocument);
   try {
     return {
-      tokens: measureTokens(raiz),
-      cenarios: measureCenarios(raiz, cenarios),
+      tokens: measureTokens(root),
+      cenarios: measureCenarios(root, cenarios),
     };
   } finally {
     desfazer();
@@ -295,11 +295,11 @@ export function darkMeasure(raiz: HTMLElement, cenarios: string[]) {
  * Via exceção, e não `console.log`: o addon do Storybook instrumenta o console
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest.
  */
-export function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[]): never {
+export function reportProbe(stack: string, root: HTMLElement, cenarios: string[]): never {
   const registro = {
-    tokens: measureTokens(raiz),
-    light: measureCenarios(raiz, cenarios),
-    escuro: darkMeasure(raiz, cenarios),
+    tokens: measureTokens(root),
+    light: measureCenarios(root, cenarios),
+    escuro: darkMeasure(root, cenarios),
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);
 }

@@ -107,8 +107,8 @@ export const Basic: Story = {
     });
 
     await step('A legenda visível é o nome acessível da tabela', async () => {
-      const tabela = canvas.getByRole('table', { name: /faturas recentes/ });
-      const caption = tabela.querySelector<HTMLElement>('caption')!;
+      const table = canvas.getByRole('table', { name: /faturas recentes/ });
+      const caption = table.querySelector<HTMLElement>('caption')!;
       await expect(getComputedStyle(caption).position).not.toBe('absolute');
     });
   },
@@ -146,15 +146,15 @@ export const WithFooter: Story = {
     await step('O rodapé fica depois do corpo e cobre as três primeiras colunas', async () => {
       // functional.item3 — o `colspan` é o que faz o rótulo "Total" ocupar a
       // largura das colunas descritivas e o valor cair sob a coluna certa.
-      const tabela = canvasElement.querySelector<HTMLElement>('table')!;
-      const tfoot = tabela.querySelector<HTMLElement>('tfoot')!;
-      const position = tabela.querySelector('tbody')!.compareDocumentPosition(tfoot);
+      const table = canvasElement.querySelector<HTMLElement>('table')!;
+      const tfoot = table.querySelector<HTMLElement>('tfoot')!;
+      const position = table.querySelector('tbody')!.compareDocumentPosition(tfoot);
       await expect(position & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
       await expect(tfoot.querySelector('td')).toHaveAttribute('colspan', '3');
       // O total é derivado das linhas exibidas — número fixo continuaria verde
       // depois de alguém acrescentar uma linha.
       await expect(tfoot).toHaveTextContent(totalOf(LINES));
-      await expect(tabela.querySelectorAll('tbody tr').length).toBe(LINES.length);
+      await expect(table.querySelectorAll('tbody tr').length).toBe(LINES.length);
     });
 
     await step('O rodapé se distingue do corpo por fundo próprio', async () => {
@@ -175,14 +175,14 @@ export const CaptionSrOnly: Story = {
   parameters: { covers: ['functional.item6', 'accessibility.item2'] },
   // Sem override: a legenda fora da tela já é o que o snippet do meta mostra.
   render: () => {
-    const bloco = document.createElement('div');
-    bloco.className = 'nds-stack';
-    bloco.dataset.spacing = 'sm';
+    const block = document.createElement('div');
+    block.className = 'nds-stack';
+    block.dataset.spacing = 'sm';
 
-    const titulo = document.createElement('h2');
-    titulo.className = 'nds-text-h3 nds-m-0';
-    titulo.textContent = 'Faturas recentes';
-    bloco.appendChild(titulo);
+    const title = document.createElement('h2');
+    title.className = 'nds-text-h3 nds-m-0';
+    title.textContent = 'Faturas recentes';
+    block.appendChild(title);
 
     const { wrapper, table } = createTable();
     // `nds-sr-only`, com prefixo: `sr-only` não existe no CSS deste projeto, e
@@ -190,9 +190,9 @@ export const CaptionSrOnly: Story = {
     table.appendChild(createTableCaption('Lista de faturas recentes', 'nds-sr-only'));
     buildHeader(table, COLUMNS);
     buildBodyRows(table, LINES);
-    bloco.appendChild(wrapper);
+    block.appendChild(wrapper);
 
-    return bloco;
+    return block;
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

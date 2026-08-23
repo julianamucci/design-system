@@ -23,7 +23,7 @@ export type TableArgs = {
  */
 function importTable(markup: string): string {
   const usados = [...new Set([...markup.matchAll(/<(Table[A-Za-z]*)\b/g)].map((m) => m[1]))].sort();
-  return `import {\n${usados.map((nome) => `  ${nome},`).join('\n')}\n} from '@/components/ui/table'`;
+  return `import {\n${usados.map((name) => `  ${name},`).join('\n')}\n} from '@/components/ui/table'`;
 }
 
 /**
@@ -86,12 +86,12 @@ const FOOTER = `<TableFooter>
 const TOTAL = `const total = 'R$ 1.400,00'`;
 
 /** A legenda nunca sai do DOM: é ela que dá nome à tabela para o leitor de tela. */
-function legenda(texto: string, visible = false): string {
-  return `<TableCaption${visible ? '' : ' class="nds-sr-only"'}>${texto}</TableCaption>`;
+function caption(text: string, visible = false): string {
+  return `<TableCaption${visible ? '' : ' class="nds-sr-only"'}>${text}</TableCaption>`;
 }
 
 /** Envolve as seções na raiz, cada uma um nível para dentro. */
-function tabela(...sections: string[]): string {
+function table(...sections: string[]): string {
   return `<Table>\n${sections.map((section) => indentar(section)).join('\n')}\n</Table>`;
 }
 
@@ -109,12 +109,12 @@ export const tableSource: SourceTransform<TableArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const withFooter = args.withFooter !== false;
   const sections = [
-    legenda('Lista de faturas recentes', args.captionVisivel === true),
+    caption('Lista de faturas recentes', args.captionVisivel === true),
     HEADER,
     BODY,
   ];
   if (withFooter) sections.push(FOOTER);
-  return snippet(withFooter ? `${INVOICES}\n${TOTAL}` : INVOICES, tabela(...sections));
+  return snippet(withFooter ? `${INVOICES}\n${TOTAL}` : INVOICES, table(...sections));
 };
 
 /**
@@ -122,7 +122,7 @@ export const tableSource: SourceTransform<TableArgs> = (_gerado, ctx) => {
  * fazendo as vezes de título.
  */
 export function tableBasicaSource(): string {
-  return snippet(INVOICES, tabela(legenda('Lista de faturas recentes', true), HEADER, BODY));
+  return snippet(INVOICES, table(caption('Lista de faturas recentes', true), HEADER, BODY));
 }
 
 /**
@@ -132,7 +132,7 @@ export function tableBasicaSource(): string {
 export function tableWithFooterSource(): string {
   return snippet(
     `${INVOICES}\n${TOTAL}`,
-    tabela(legenda('Faturas recentes com total'), HEADER, BODY, FOOTER),
+    table(caption('Faturas recentes com total'), HEADER, BODY, FOOTER),
   );
 }
 
@@ -149,7 +149,7 @@ export function tableCaptionInvisivelSource(): string {
     <TableHead class="nds-text-right">Valor</TableHead>
   </TableRow>
 </TableHeader>`;
-  const corpo = `<TableBody>
+  const body = `<TableBody>
   <TableRow v-for="fatura in faturas" :key="fatura.id">
     <TableCell class="nds-font-medium">{{ fatura.id }}</TableCell>
     <TableCell>{{ fatura.status }}</TableCell>
@@ -158,7 +158,7 @@ export function tableCaptionInvisivelSource(): string {
 </TableBody>`;
   const markup = `<div class="nds-stack" data-spacing="sm">
   <h2 class="nds-text-h3 nds-m-0">Faturas recentes</h2>
-${indentar(tabela(legenda('Lista de faturas recentes'), header, corpo))}
+${indentar(table(caption('Lista de faturas recentes'), header, body))}
 </div>`;
   return snippet(INVOICES, markup);
 }
@@ -179,7 +179,7 @@ export function tableWithActionsSource(): string {
     <TableHead><span class="nds-sr-only">Ações</span></TableHead>
   </TableRow>
 </TableHeader>`;
-  const corpo = `<TableBody>
+  const body = `<TableBody>
   <TableRow v-for="fatura in faturas" :key="fatura.id">
     <TableCell class="nds-font-medium">{{ fatura.id }}</TableCell>
     <TableCell>{{ fatura.status }}</TableCell>
@@ -194,7 +194,7 @@ export function tableWithActionsSource(): string {
 </TableBody>`;
   return snippet(
     INVOICES,
-    tabela(legenda('Faturas recentes com ações'), header, corpo),
+    table(caption('Faturas recentes com ações'), header, body),
     `import { Button } from '@/components/ui/button'`,
   );
 }
@@ -211,7 +211,7 @@ export function tableScrollHorizontalSource(): string {
     <TableHead v-for="mes in meses" :key="mes">{{ mes }}</TableHead>
   </TableRow>
 </TableHeader>`;
-  const corpo = `<TableBody>
+  const body = `<TableBody>
   <TableRow v-for="fatura in faturas" :key="fatura.id">
     <TableCell class="nds-font-medium">{{ fatura.id }}</TableCell>
     <TableCell v-for="mes in meses" :key="mes" class="nds-text-right">
@@ -226,7 +226,7 @@ export function tableScrollHorizontalSource(): string {
 )`;
   return snippet(
     `${INVOICES}\n\n${meses}`,
-    tabela(legenda('Faturas por mês de competência'), header, corpo),
+    table(caption('Faturas por mês de competência'), header, body),
   );
 }
 
@@ -239,12 +239,12 @@ export function tableScrollHorizontalSource(): string {
  * voltarão a existir quando houver dados.
  */
 export function tableVaziaSource(): string {
-  const corpo = `<TableBody>
+  const body = `<TableBody>
   <TableEmpty :colspan="colunas.length">Nenhuma fatura encontrada.</TableEmpty>
 </TableBody>`;
   return snippet(
     COLUMNS,
-    tabela(legenda('Lista de faturas recentes'), HEADER_ITERADO, corpo),
+    table(caption('Lista de faturas recentes'), HEADER_ITERADO, body),
   );
 }
 
@@ -254,7 +254,7 @@ export function tableVaziaSource(): string {
  * `null`; a string "false" ainda casaria com um seletor de presença.
  */
 export function tableLineSelecionadaSource(): string {
-  const corpo = `<TableBody>
+  const body = `<TableBody>
   <TableRow
     v-for="fatura in faturas"
     :key="fatura.id"
@@ -268,7 +268,7 @@ export function tableLineSelecionadaSource(): string {
 </TableBody>`;
   return snippet(
     `${INVOICES}\nconst selecionada = ref('#INV-002')`,
-    tabela(legenda('Lista de faturas recentes'), HEADER, corpo),
+    table(caption('Lista de faturas recentes'), HEADER, body),
     `import { ref } from 'vue'`,
   );
 }
@@ -283,7 +283,7 @@ export function tableLineSelecionadaSource(): string {
  * navegador (WCAG 1.4.4).
  */
 export function tableLoadingSource(): string {
-  const corpo = `<TableBody>
+  const body = `<TableBody>
   <TableRow v-for="linha in 3" :key="linha">
     <TableCell v-for="coluna in colunas" :key="coluna">
       <Skeleton data-shape="text" data-width="3-4" />
@@ -291,7 +291,7 @@ export function tableLoadingSource(): string {
   </TableRow>
 </TableBody>`;
   const markup = `<div role="status" aria-busy="true" aria-label="Carregando faturas">
-${indentar(tabela(legenda('Lista de faturas recentes'), HEADER_ITERADO, corpo))}
+${indentar(table(caption('Lista de faturas recentes'), HEADER_ITERADO, body))}
 </div>`;
   return snippet(COLUMNS, markup, `import { Skeleton } from '@/components/ui/skeleton'`);
 }

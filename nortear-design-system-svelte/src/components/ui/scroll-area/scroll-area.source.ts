@@ -24,7 +24,7 @@ type Options = {
   scrollHideDelay?: number;
   /** `undefined` reproduz o caso sem teto: o conteúdo expande e nada rola. */
   size?: Size;
-  itens?: number;
+  items?: number;
   className?: string;
 };
 
@@ -46,11 +46,11 @@ function props(orientation: ScrollAreaArgs['orientation'], o: Options): string {
 
 /** Lista longa que transborda na vertical — a forma canônica do componente. */
 function verticalList(o: Options): string {
-  const itens = o.itens ?? 30;
+  const items = o.items ?? 30;
   return svelteSnippet(
     `${IMPORT}
 
-const tags = Array.from({ length: ${itens} }, (_, i) => \`Tag \${i + 1}\`);`,
+const tags = Array.from({ length: ${items} }, (_, i) => \`Tag \${i + 1}\`);`,
     `<ScrollArea${props('vertical', o)}>
   <div class="nds-p-4">
     {#each tags as tag (tag)}
@@ -63,11 +63,11 @@ const tags = Array.from({ length: ${itens} }, (_, i) => \`Tag \${i + 1}\`);`,
 
 /** Faixa de cards mais larga que a janela — transbordo no eixo horizontal. */
 function horizontalRange(o: Options): string {
-  const itens = o.itens ?? 10;
+  const items = o.items ?? 10;
   return svelteSnippet(
     `${IMPORT}
 
-const cards = Array.from({ length: ${itens} }, (_, i) => \`Card \${i + 1}\`);`,
+const cards = Array.from({ length: ${items} }, (_, i) => \`Card \${i + 1}\`);`,
     `<ScrollArea${props('horizontal', { ...o, className: 'nds-whitespace-nowrap' })}>
   <!-- A faixa precisa ser mais larga que a janela: sem transbordo não há barra. -->
   <div class="nds-row nds-p-4" data-spacing="md" style="width: max-content">
@@ -109,19 +109,19 @@ const colunas = Array.from({ length: ${colunas} }, (_, i) => i + 1);`,
 }
 
 /** Lista de links dentro da área rolável — navegação de sidebar. */
-function linksList(o: Options & { rotulo: string; nav: string }): string {
-  const itens = o.itens ?? 40;
+function linksList(o: Options & { label: string; nav: string }): string {
+  const items = o.items ?? 40;
   return svelteSnippet(
     `${IMPORT}
 
-const itens = Array.from({ length: ${itens} }, (_, i) => i + 1);`,
+const itens = Array.from({ length: ${items} }, (_, i) => i + 1);`,
     `<ScrollArea${props('vertical', o)}>
   <nav aria-label="${o.nav}" class="nds-p-4">
     <ul class="nds-stack nds-list-none nds-p-0 nds-m-0" data-spacing="xs">
       {#each itens as n (n)}
         <li>
           <a href="#secao-{n}" class="nds-block nds-rounded-sm nds-px-2 nds-py-1 nds-text-body nds-hover-bg-muted-soft">
-            ${o.rotulo} {n}
+            ${o.label} {n}
           </a>
         </li>
       {/each}
@@ -142,19 +142,19 @@ export function scrollAreaSource(
 ): string {
   const { orientation = 'vertical', type = 'always', scrollHideDelay = 600 } = ctx?.args ?? {};
   const base = { type, scrollHideDelay, size: 'xl' as Size };
-  if (orientation === 'horizontal') return horizontalRange({ ...base, size: 'md', itens: 10 });
+  if (orientation === 'horizontal') return horizontalRange({ ...base, size: 'md', items: 10 });
   if (orientation === 'both') return tableBidirecional({ ...base, size: 'lg' });
   return verticalList(base);
 }
 
 /** Variante vertical: lista longa dentro de uma janela de altura fixa. */
 export function scrollAreaVerticalSource(): string {
-  return verticalList({ type: 'always', size: 'xl', itens: 30 });
+  return verticalList({ type: 'always', size: 'xl', items: 30 });
 }
 
 /** Variante horizontal (também a galeria de cards das composições). */
 export function scrollAreaHorizontalSource(): string {
-  return horizontalRange({ type: 'always', size: 'md', itens: 10 });
+  return horizontalRange({ type: 'always', size: 'md', items: 10 });
 }
 
 /** Variante bidirecional: matriz que transborda na largura e na altura. */
@@ -164,7 +164,7 @@ export function scrollAreaBothSource(): string {
 
 /** Estado ocioso: com o padrão de `type`, a barra só aparece sob o ponteiro. */
 export function scrollAreaOciosoSource(): string {
-  return verticalList({ size: 'lg', itens: 20 });
+  return verticalList({ size: 'lg', items: 20 });
 }
 
 /**
@@ -172,12 +172,12 @@ export function scrollAreaOciosoSource(): string {
  * na ordem de tabulação) já vem do componente, sem prop nenhuma.
  */
 export function scrollAreaSempreVisibleSource(): string {
-  return verticalList({ type: 'always', size: 'lg', itens: 20 });
+  return verticalList({ type: 'always', size: 'lg', items: 20 });
 }
 
 /** Barra durante a rolagem, com atraso próprio para ela sumir depois. */
 export function scrollAreaDuranteScrollSource(): string {
-  return verticalList({ type: 'scroll', scrollHideDelay: 1000, size: 'lg', itens: 20 });
+  return verticalList({ type: 'scroll', scrollHideDelay: 1000, size: 'lg', items: 20 });
 }
 
 /** Conteúdo focável dentro da área: rolar por teclado e agir por teclado convivem. */
@@ -185,8 +185,8 @@ export function scrollAreaContentFocavelSource(): string {
   return linksList({
     type: 'always',
     size: 'lg',
-    itens: 20,
-    rotulo: 'Ação',
+    items: 20,
+    label: 'Ação',
     nav: 'Ações',
   });
 }
@@ -196,15 +196,15 @@ export function scrollAreaContentFocavelSource(): string {
  * sem transbordo não há rolagem — o componente aparenta estar quebrado.
  */
 export function scrollAreaNoTetoSource(): string {
-  return verticalList({ type: 'always', itens: 20 });
+  return verticalList({ type: 'always', items: 20 });
 }
 
 /** Composição: lista de navegação numa barra lateral. */
 export function sidebarScrollAreaListSource(): string {
   return linksList({
     size: 'xl',
-    itens: 40,
-    rotulo: 'Item',
+    items: 40,
+    label: 'Item',
     nav: 'Seções da documentação',
   });
 }

@@ -30,23 +30,23 @@ const IMPORT = `import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'`;
 
 type Option = {
-  valor: string;
+  value: string;
   id: string;
-  rotulo: string;
-  desabilitado?: boolean;
+  label: string;
+  disabled?: boolean;
   descricao?: string;
 };
 
 const PAGAMENTO: Option[] = [
-  { valor: 'cartao', id: 'pagamento-cartao', rotulo: 'Cartão de crédito' },
-  { valor: 'pix', id: 'pagamento-pix', rotulo: 'Pix' },
-  { valor: 'boleto', id: 'pagamento-boleto', rotulo: 'Boleto bancário' },
+  { value: 'cartao', id: 'pagamento-cartao', label: 'Cartão de crédito' },
+  { value: 'pix', id: 'pagamento-pix', label: 'Pix' },
+  { value: 'boleto', id: 'pagamento-boleto', label: 'Boleto bancário' },
 ];
 
 const ENTREGA: Option[] = [
-  { valor: 'standard', id: 'entrega-padrao', rotulo: 'Padrão (5 dias)' },
-  { valor: 'express', id: 'entrega-expressa', rotulo: 'Expressa (1 dia)' },
-  { valor: 'pickup', id: 'entrega-retirada', rotulo: 'Retirar na loja' },
+  { value: 'standard', id: 'entrega-padrao', label: 'Padrão (5 dias)' },
+  { value: 'express', id: 'entrega-expressa', label: 'Expressa (1 dia)' },
+  { value: 'pickup', id: 'entrega-retirada', label: 'Retirar na loja' },
 ];
 
 /**
@@ -59,20 +59,20 @@ const ENTREGA: Option[] = [
 function line(o: Option, recuo = 2): string {
   const p = ' '.repeat(recuo);
   return `${p}<div class="nds-cluster" data-spacing="sm">
-${p}  <RadioGroupItem value="${o.valor}" id="${o.id}"${o.desabilitado ? ' disabled' : ''} />
-${p}  <Label for="${o.id}">${o.rotulo}</Label>
+${p}  <RadioGroupItem value="${o.value}" id="${o.id}"${o.disabled ? ' disabled' : ''} />
+${p}  <Label for="${o.id}">${o.label}</Label>
 ${p}</div>`;
 }
 
 /** A raiz nomeada com as linhas dentro. */
-function grupo(
-  opcoes: Option[],
+function group(
+  options: Option[],
   partes: Array<string | false | null | undefined>,
   recuo = 2,
 ): string {
   const p = ' '.repeat(recuo - 2);
   return `${p}<RadioGroup${attrsMultilinha(partes, `${p}  `)}>
-${opcoes.map((o) => line(o, recuo)).join('\n')}
+${options.map((o) => line(o, recuo)).join('\n')}
 ${p}</RadioGroup>`;
 }
 
@@ -87,7 +87,7 @@ export const radioGroupSource: SourceTransform<RadioGroupArgs> = (_gerado, ctx) 
   const args = ctx?.args ?? {};
   return vueSnippet(
     IMPORT,
-    grupo(PAGAMENTO, [
+    group(PAGAMENTO, [
       attr('default-value', args.defaultValue),
       attrBool('disabled', args.disabled, false),
       attr('orientation', args.orientation, 'vertical'),
@@ -99,7 +99,7 @@ export const radioGroupSource: SourceTransform<RadioGroupArgs> = (_gerado, ctx) 
 
 /** Eixo padrão: as opções empilham, e a navegação por setas desce a lista. */
 export function radioGroupVerticalSource(): string {
-  return vueSnippet(IMPORT, grupo(PAGAMENTO, [LABEL_PAGAMENTO]));
+  return vueSnippet(IMPORT, group(PAGAMENTO, [LABEL_PAGAMENTO]));
 }
 
 /**
@@ -110,7 +110,7 @@ export function radioGroupVerticalSource(): string {
 export function radioGroupHorizontalSource(): string {
   return vueSnippet(
     IMPORT,
-    grupo(ENTREGA, ['orientation="horizontal"', LABEL_ENTREGA]),
+    group(ENTREGA, ['orientation="horizontal"', LABEL_ENTREGA]),
   );
 }
 
@@ -120,22 +120,22 @@ export function radioGroupHorizontalSource(): string {
  * o leitor de tela leria o parágrafo inteiro a cada seta.
  */
 export function radioGroupWithDescriptionSource(): string {
-  const opcoes: Array<Option & { descricao: string }> = [
+  const options: Array<Option & { descricao: string }> = [
     { ...PAGAMENTO[0], descricao: 'Aprovação imediata em até 12x.' },
     { ...PAGAMENTO[1], descricao: 'Pagamento instantâneo com 5% de desconto.' },
     { ...PAGAMENTO[2], descricao: 'Compensação em até 3 dias úteis.' },
   ];
-  const corpo = opcoes
+  const body = options
     .map(
       (o) => `  <div class="nds-cluster" data-align="start" data-spacing="sm">
     <RadioGroupItem
-      value="${o.valor}"
+      value="${o.value}"
       id="${o.id}"
       class="nds-mt-1"
       aria-describedby="${o.id}-desc"
     />
     <div class="nds-stack" data-spacing="xs">
-      <Label for="${o.id}">${o.rotulo}</Label>
+      <Label for="${o.id}">${o.label}</Label>
       <p id="${o.id}-desc" class="nds-text-caption nds-text-muted-foreground">
         ${o.descricao}
       </p>
@@ -146,14 +146,14 @@ export function radioGroupWithDescriptionSource(): string {
   return vueSnippet(
     IMPORT,
     `<RadioGroup ${LABEL_PAGAMENTO}>
-${corpo}
+${body}
 </RadioGroup>`,
   );
 }
 
 /** Estado de partida: nenhuma opção marcada, o grupo espera a escolha. */
 export function radioGroupDefaultSource(): string {
-  return vueSnippet(IMPORT, grupo(PAGAMENTO.slice(0, 2), [LABEL_PAGAMENTO]));
+  return vueSnippet(IMPORT, group(PAGAMENTO.slice(0, 2), [LABEL_PAGAMENTO]));
 }
 
 /**
@@ -163,7 +163,7 @@ export function radioGroupDefaultSource(): string {
 export function radioGroupCheckedSource(): string {
   return vueSnippet(
     IMPORT,
-    grupo(PAGAMENTO.slice(0, 2), ['default-value="pix"', LABEL_PAGAMENTO]),
+    group(PAGAMENTO.slice(0, 2), ['default-value="pix"', LABEL_PAGAMENTO]),
   );
 }
 
@@ -171,7 +171,7 @@ export function radioGroupCheckedSource(): string {
 export function radioGroupDisabledSource(): string {
   return vueSnippet(
     IMPORT,
-    grupo(PAGAMENTO.slice(0, 2), ['disabled', LABEL_PAGAMENTO]),
+    group(PAGAMENTO.slice(0, 2), ['disabled', LABEL_PAGAMENTO]),
   );
 }
 
@@ -181,12 +181,12 @@ export function radioGroupDisabledSource(): string {
  * apagada não explica nada a quem usa leitor de tela.
  */
 export function radioGroupItemDisabledSource(): string {
-  const opcoes: Option[] = [
+  const options: Option[] = [
     PAGAMENTO[0],
-    { ...PAGAMENTO[1], rotulo: 'Pix (indisponível)', desabilitado: true },
+    { ...PAGAMENTO[1], label: 'Pix (indisponível)', disabled: true },
     PAGAMENTO[2],
   ];
-  return vueSnippet(IMPORT, grupo(opcoes, [LABEL_PAGAMENTO]));
+  return vueSnippet(IMPORT, group(options, [LABEL_PAGAMENTO]));
 }
 
 /**
@@ -225,7 +225,7 @@ export function radioGroupInvalidoSource(): string {
 
 /** Padrão de escolha exclusiva: uma pergunta, uma resposta entre poucas. */
 export function radioGroupPagamentoSource(): string {
-  return vueSnippet(IMPORT, grupo(PAGAMENTO, [LABEL_PAGAMENTO]));
+  return vueSnippet(IMPORT, group(PAGAMENTO, [LABEL_PAGAMENTO]));
 }
 
 /**
@@ -238,7 +238,7 @@ export function radioGroupFieldsetSource(): string {
     IMPORT,
     `<fieldset class="nds-border-default nds-rounded-lg nds-p-4">
   <legend class="nds-text-body nds-font-semibold nds-px-1">Forma de entrega</legend>
-${grupo(ENTREGA, ['class="nds-stack"', 'data-spacing="sm"', LABEL_ENTREGA], 4)}
+${group(ENTREGA, ['class="nds-stack"', 'data-spacing="sm"', LABEL_ENTREGA], 4)}
 </fieldset>`,
   );
 }
@@ -261,7 +261,7 @@ ${IMPORT}`,
 
   <fieldset class="nds-stack" data-spacing="sm">
     <legend class="nds-text-body nds-font-medium nds-mb-1">Forma de pagamento</legend>
-${grupo(PAGAMENTO, ['required', 'class="nds-stack"', 'data-spacing="sm"', LABEL_PAGAMENTO], 6)}
+${group(PAGAMENTO, ['required', 'class="nds-stack"', 'data-spacing="sm"', LABEL_PAGAMENTO], 6)}
   </fieldset>
 
   <Button type="submit" class="nds-w-full">Finalizar pedido</Button>
@@ -276,16 +276,16 @@ ${grupo(PAGAMENTO, ['required', 'class="nds-stack"', 'data-spacing="sm"', LABEL_
  */
 export function radioGroupCartoesSource(): string {
   const planos = [
-    { valor: 'basico', id: 'plano-basico', titulo: 'Básico — R$ 19/mês', helper: 'Para uso pessoal e projetos pequenos.' },
-    { valor: 'pro', id: 'plano-pro', titulo: 'Pro — R$ 49/mês', helper: 'Para times com até 5 pessoas.' },
-    { valor: 'enterprise', id: 'plano-enterprise', titulo: 'Enterprise — Sob consulta', helper: 'Suporte dedicado e SLA personalizado.' },
+    { value: 'basico', id: 'plano-basico', title: 'Básico — R$ 19/mês', helper: 'Para uso pessoal e projetos pequenos.' },
+    { value: 'pro', id: 'plano-pro', title: 'Pro — R$ 49/mês', helper: 'Para times com até 5 pessoas.' },
+    { value: 'enterprise', id: 'plano-enterprise', title: 'Enterprise — Sob consulta', helper: 'Suporte dedicado e SLA personalizado.' },
   ];
   const cartoes = planos
     .map(
       (p) => `  <label for="${p.id}" class="nds-radio-card nds-cluster" data-align="start" data-spacing="sm">
-    <RadioGroupItem value="${p.valor}" id="${p.id}" class="nds-mt-1" />
+    <RadioGroupItem value="${p.value}" id="${p.id}" class="nds-mt-1" />
     <div class="nds-stack" data-spacing="xs">
-      <span class="nds-block nds-text-body nds-font-medium">${p.titulo}</span>
+      <span class="nds-block nds-text-body nds-font-medium">${p.title}</span>
       <span class="nds-block nds-text-caption nds-text-muted-foreground">${p.helper}</span>
     </div>
   </label>`,

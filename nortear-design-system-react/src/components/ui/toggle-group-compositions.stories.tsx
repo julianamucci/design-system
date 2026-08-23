@@ -85,9 +85,9 @@ export const SingleAlignment: Story = {
     const center = canvas.getByRole("button", { name: "Centralizar" });
 
     await step("visual.item4 — a variante outline emenda os itens num container só", async () => {
-      const grupo = canvas.getByRole("toolbar");
-      await expect(grupo).toHaveAttribute("data-variant", "outline");
-      await expect(parseFloat(getComputedStyle(grupo).borderTopWidth)).toBeGreaterThan(0);
+      const group = canvas.getByRole("toolbar");
+      await expect(group).toHaveAttribute("data-variant", "outline");
+      await expect(parseFloat(getComputedStyle(group).borderTopWidth)).toBeGreaterThan(0);
       await expect(parseFloat(getComputedStyle(left).borderTopWidth)).toBe(0);
     });
 

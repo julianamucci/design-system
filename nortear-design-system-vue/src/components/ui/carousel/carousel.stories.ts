@@ -70,7 +70,7 @@ export const Playground: Story = {
     /** Volta ao primeiro slide clicando ENQUANTO a seta de voltar estiver viva. */
     const startVoltar = async () => {
       const total = canvas.getAllByRole('group').length;
-      for (let passo = 0; passo < total; passo++) {
+      for (let step = 0; step < total; step++) {
         const button = previous();
         // `.nds-button:disabled` declara `pointer-events: none`, e o userEvent
         // recusa clicar num alvo assim: nunca clicar sem checar antes.

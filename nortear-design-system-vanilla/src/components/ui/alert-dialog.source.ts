@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -64,9 +64,9 @@ export function alertDialogSnippet(o: AlertDialogSnippetOptions = {}): string {
   ];
 
   const buttons = [
-    `const trigger = createButton({ variant: ${texto(triggerVariant)}, label: ${texto(o.triggerLabel ?? DEFAULTS.triggerLabel)} });`,
-    `const cancelButton = createButton({ variant: 'outline', label: ${texto(o.cancelLabel ?? DEFAULTS.cancelLabel)} });`,
-    `const actionButton = createButton({ variant: ${texto(actionVariant)}, label: ${texto(o.actionLabel ?? DEFAULTS.actionLabel)} });`,
+    `const trigger = createButton({ variant: ${text(triggerVariant)}, label: ${text(o.triggerLabel ?? DEFAULTS.triggerLabel)} });`,
+    `const cancelButton = createButton({ variant: 'outline', label: ${text(o.cancelLabel ?? DEFAULTS.cancelLabel)} });`,
+    `const actionButton = createButton({ variant: ${text(actionVariant)}, label: ${text(o.actionLabel ?? DEFAULTS.actionLabel)} });`,
   ].join('\n');
 
   const media = o.showMedia
@@ -76,19 +76,19 @@ media.appendChild(createAlertIcon('warning'));`
 
   // Propriedade abreviada onde a fábrica recebe o elemento pronto: é assim que
   // se escreve, e `trigger: trigger` seria ruído. `chamada` só junta as linhas,
-  // então a abreviação convive com o que `opcoes` monta.
+  // então a abreviação convive com o que `options` monta.
   const lines = [
     'trigger,',
-    ...opcoes([
-      ['title', texto(o.title ?? DEFAULTS.title)],
-      ['description', description ? texto(description) : undefined],
+    ...options([
+      ['title', text(o.title ?? DEFAULTS.title)],
+      ['description', description ? text(description) : undefined],
     ]),
     ...(o.showMedia ? ['media,'] : []),
     'cancelButton,',
     'actionButton,',
-    ...opcoes([
+    ...options([
       ['defaultOpen', o.defaultOpen ? 'true' : undefined],
-      ['class', o.class ? texto(o.class) : undefined],
+      ['class', o.class ? text(o.class) : undefined],
       // A story passa uma FUNÇÃO nos args; só um corpo escrito como texto vira
       // snippet. Sem esta guarda o painel imprimiria o espião da story.
       ['onOpenChange', typeof o.onOpenChange === 'string' ? o.onOpenChange : undefined],

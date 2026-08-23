@@ -45,7 +45,7 @@ const LABELS = {
   navigation: 'Paginação',
   previous: 'Ir para a página anterior',
   next: 'Ir para a próxima página',
-  pagina: (n: number) => `Ir para página ${n}`,
+  page: (n: number) => `Ir para página ${n}`,
 } as const;
 
 // ─── SVGs ──────────────────────────────────────────────────────────────────
@@ -127,7 +127,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
     // Todo link numerado tem rótulo com contexto — inclusive o da página atual:
     // "3" sozinho não diz nada em voz alta. Quem anuncia que é a página atual é
     // o `aria-current`, nativamente e em qualquer idioma.
-    a.setAttribute('aria-label', LABELS.pagina(page));
+    a.setAttribute('aria-label', LABELS.page(page));
     if (isCurrent) {
       a.setAttribute('aria-current', 'page');
       a.dataset.active = 'true';
@@ -150,28 +150,28 @@ export function createPagination(options: PaginationOptions): HTMLElement {
    * tabindex negativo o controle inerte continuava na ordem de tabulação.
    */
   function makeDirecional(
-    direcao: 'left' | 'right',
-    rotulo: string,
+    direction: 'left' | 'right',
+    label: string,
     slot: string,
-    desabilitado: boolean,
+    disabled: boolean,
     destination: number,
     onClick: () => void,
   ): HTMLAnchorElement {
     const a = document.createElement('a');
     // Nos extremos o controle não leva a lugar nenhum: `#` ali é honesto, e um
     // endereço válido convidaria a abrir em nova aba uma página que não existe.
-    a.href = desabilitado ? '#' : pageEndereco(destination);
+    a.href = disabled ? '#' : pageEndereco(destination);
     a.dataset.slot = slot;
-    a.setAttribute('aria-label', rotulo);
+    a.setAttribute('aria-label', label);
     a.className = 'nds-pagination-link nds-pagination-icon';
-    if (desabilitado) {
+    if (disabled) {
       a.setAttribute('aria-disabled', 'true');
       a.tabIndex = -1;
     }
-    a.appendChild(createChevronSvg(direcao));
+    a.appendChild(createChevronSvg(direction));
     a.addEventListener('click', (e) => {
-      if (!hrefForPage || desabilitado) e.preventDefault();
-      if (!desabilitado) onClick();
+      if (!hrefForPage || disabled) e.preventDefault();
+      if (!disabled) onClick();
     });
     return a;
   }

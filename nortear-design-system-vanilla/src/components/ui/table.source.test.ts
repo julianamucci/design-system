@@ -9,13 +9,13 @@ import {
 
 describe('tableSnippet', () => {
   it('devolve a montagem das fábricas, e não o outerHTML da tabela', () => {
-    const código = tableSnippet();
-    expect(código).toContain("} from '@/components/ui/table';");
-    expect(código).toContain('const { wrapper, table } = createTable();');
-    expect(código).toContain('createTableHead(');
-    expect(código).toContain("document.querySelector('#app')?.append(wrapper);");
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('<table');
+    const code = tableSnippet();
+    expect(code).toContain("} from '@/components/ui/table';");
+    expect(code).toContain('const { wrapper, table } = createTable();');
+    expect(code).toContain('createTableHead(');
+    expect(code).toContain("document.querySelector('#app')?.append(wrapper);");
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('<table');
   });
 
   it('não importa a peça que a story não usa', () => {
@@ -48,39 +48,39 @@ describe('tableSnippet', () => {
   });
 
   it('usa o nome acessível canônico, nunca o apelido depreciado', () => {
-    const código = tableSnippet({ withActions: true });
-    expect(código).toContain("'aria-label':");
-    expect(código).not.toContain('ariaLabel');
+    const code = tableSnippet({ withActions: true });
+    expect(code).toContain("'aria-label':");
+    expect(code).not.toContain('ariaLabel');
   });
 
   it('leva dados próprios, e não a fixture das stories', () => {
-    const código = tableSnippet();
-    expect(código).toContain('const faturas = [');
-    expect(código).not.toContain('INVOICES');
-    expect(código).not.toContain('table.fixtures');
-    expect(código).not.toContain('totalDe(');
-    expect(código).not.toContain('buildHeader');
-    expect(código).not.toContain('buildBodyRows');
+    const code = tableSnippet();
+    expect(code).toContain('const faturas = [');
+    expect(code).not.toContain('INVOICES');
+    expect(code).not.toContain('table.fixtures');
+    expect(code).not.toContain('totalDe(');
+    expect(code).not.toContain('buildHeader');
+    expect(code).not.toContain('buildBodyRows');
   });
 });
 
 describe('tableVaziaSnippet', () => {
   it('atravessa a tabela com a mensagem, sem desmontar o cabeçalho', () => {
-    const código = tableVaziaSnippet();
-    expect(código).toContain("'nds-table-empty'");
-    expect(código).toContain("celula.setAttribute('colspan', String(colunas.length));");
-    expect(código).toContain('createTableHead(');
-    expect(código).not.toContain('const faturas = [');
+    const code = tableVaziaSnippet();
+    expect(code).toContain("'nds-table-empty'");
+    expect(code).toContain("celula.setAttribute('colspan', String(colunas.length));");
+    expect(code).toContain('createTableHead(');
+    expect(code).not.toContain('const faturas = [');
   });
 });
 
 describe('tableCarregandoSnippet', () => {
   it('põe o esqueleto na célula e o anúncio na região', () => {
-    const código = tableLoadingSnippet();
-    expect(código).toContain("import { createSkeleton } from '@/components/ui/skeleton';");
-    expect(código).toContain("createSkeleton({ shape: 'text', width: '3-4' })");
-    expect(código).toContain("regiao.setAttribute('aria-busy', 'true');");
-    expect(código).toContain("document.querySelector('#app')?.append(regiao);");
+    const code = tableLoadingSnippet();
+    expect(code).toContain("import { createSkeleton } from '@/components/ui/skeleton';");
+    expect(code).toContain("createSkeleton({ shape: 'text', width: '3-4' })");
+    expect(code).toContain("regiao.setAttribute('aria-busy', 'true');");
+    expect(code).toContain("document.querySelector('#app')?.append(regiao);");
   });
 });
 
@@ -106,8 +106,8 @@ describe('tableSource', () => {
 describe('tableSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = tableSourceWith({ withFooter: false, withActions: true });
-    const código = transform('', { args: { withFooter: true } });
-    expect(código).not.toContain('createTableFooter');
-    expect(código).toContain('createButton');
+    const code = transform('', { args: { withFooter: true } });
+    expect(code).not.toContain('createTableFooter');
+    expect(code).toContain('createButton');
   });
 });

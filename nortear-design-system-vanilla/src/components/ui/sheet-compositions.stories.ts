@@ -36,14 +36,14 @@ type Story = StoryObj;
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function buildInputField(labelText: string, id: string, type: string, value: string): HTMLElement {
-  const campo = document.createElement('div');
-  campo.className = 'nds-stack';
-  campo.dataset.spacing = 'xs';
-  campo.append(
+  const field = document.createElement('div');
+  field.className = 'nds-stack';
+  field.dataset.spacing = 'xs';
+  field.append(
     createLabel({ text: labelText, htmlFor: id }),
     createInput({ id, type, value }),
   );
-  return campo;
+  return field;
 }
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
@@ -53,7 +53,7 @@ export const AdvancedFilters: Story = {
     docs: {
       // O corpo é um formulário: `createFormField` é quem fecha o par rótulo ↔
       // controle, e é ele que a composição ensina.
-      source: { transform: sheetSourceWith({ corpo: 'formulario' }) },
+      source: { transform: sheetSourceWith({ body: 'formulario' }) },
       description: {
         story: 'Filtros avançados no painel direito — caso de uso canônico do Sheet em desktop.',
       },
@@ -82,9 +82,9 @@ export const AdvancedFilters: Story = {
     return sheet;
   },
   play: async () => {
-    const painel = await waitForPortal('dialog');
-    await expect(painel).toHaveAccessibleName(/Filtros avançados/i);
-    await expect(within(painel).getByLabelText(/Categoria/i)).toBeVisible();
+    const panel = await waitForPortal('dialog');
+    await expect(panel).toHaveAccessibleName(/Filtros avançados/i);
+    await expect(within(panel).getByLabelText(/Categoria/i)).toBeVisible();
   },
 };
 
@@ -94,7 +94,7 @@ export const SecondaryNavigation: Story = {
       source: {
         transform: sheetSourceWith({
           side: 'left',
-          corpo: 'navegacao',
+          body: 'navegacao',
           triggerLabel: 'Abrir menu',
           title: 'Menu',
           description: 'Navegue entre as áreas do sistema.',
@@ -134,10 +134,10 @@ export const SecondaryNavigation: Story = {
     const canvas = within(canvasElement);
     const trigger = await canvas.findByRole('button', { name: 'Abrir menu' });
     await userEvent.click(trigger);
-    const painel = await waitForPortal('dialog');
-    await expect(painel).toHaveAttribute('data-side', 'left');
-    await expect(within(painel).getByRole('navigation')).toBeVisible();
-    await expect(within(painel).getByRole('link', { name: 'Dashboard' })).toBeVisible();
+    const panel = await waitForPortal('dialog');
+    await expect(panel).toHaveAttribute('data-side', 'left');
+    await expect(within(panel).getByRole('navigation')).toBeVisible();
+    await expect(within(panel).getByRole('link', { name: 'Dashboard' })).toBeVisible();
   },
 };
 
@@ -147,7 +147,7 @@ export const MobileBottomPanel: Story = {
       source: {
         transform: sheetSourceWith({
           side: 'bottom',
-          corpo: 'acoes',
+          body: 'acoes',
           triggerLabel: 'Mais opções',
           title: 'Ações rápidas',
           description: 'Escolha o que fazer com este item.',
@@ -165,11 +165,11 @@ export const MobileBottomPanel: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Mais opções' });
 
-    const lista = document.createElement('div');
-    lista.className = 'nds-cluster';
-    lista.dataset.spacing = 'sm';
+    const list = document.createElement('div');
+    list.className = 'nds-cluster';
+    list.dataset.spacing = 'sm';
     for (const label of ['Compartilhar', 'Copiar link', 'Editar', 'Arquivar', 'Mover', 'Excluir']) {
-      lista.appendChild(createButton({ variant: 'outline', label }));
+      list.appendChild(createButton({ variant: 'outline', label }));
     }
 
     const sheet = createSheet({
@@ -177,16 +177,16 @@ export const MobileBottomPanel: Story = {
       side: 'bottom',
       title: 'Ações rápidas',
       description: 'Escolha o que fazer com este item.',
-      content: lista,
+      content: list,
     });
     queueMicrotask(() => trigger.click());
     return sheet;
   },
   play: async () => {
-    const painel = await waitForPortal('dialog');
-    await expect(painel).toHaveAttribute('data-side', 'bottom');
-    await expect(painel).toHaveAccessibleName(/Ações rápidas/i);
-    await expect(within(painel).getByRole('button', { name: 'Compartilhar' })).toBeVisible();
+    const panel = await waitForPortal('dialog');
+    await expect(panel).toHaveAttribute('data-side', 'bottom');
+    await expect(panel).toHaveAccessibleName(/Ações rápidas/i);
+    await expect(within(panel).getByRole('button', { name: 'Compartilhar' })).toBeVisible();
   },
 };
 
@@ -198,7 +198,7 @@ export const WithLongScrollContent: Story = {
       // onde está sem nenhuma opção extra.
       source: {
         transform: sheetSourceWith({
-          corpo: 'paragrafos',
+          body: 'paragrafos',
           triggerLabel: 'Ler termos',
           title: 'Termos de uso',
           description: 'Leia atentamente antes de aceitar.',
@@ -236,26 +236,26 @@ export const WithLongScrollContent: Story = {
     return sheet;
   },
   play: async ({ step }) => {
-    const painel = await waitForPortal('dialog');
-    const corpo = painel.querySelector<HTMLElement>('[data-slot="sheet-body"]')!;
-    const rodape = painel.querySelector<HTMLElement>('[data-slot="sheet-footer"]')!;
+    const panel = await waitForPortal('dialog');
+    const body = panel.querySelector<HTMLElement>('[data-slot="sheet-body"]')!;
+    const footer = panel.querySelector<HTMLElement>('[data-slot="sheet-footer"]')!;
 
     await step('O corpo é quem rola, não o painel', async () => {
-      await expect(corpo).not.toBeNull();
-      await expect(corpo.scrollHeight).toBeGreaterThan(corpo.clientHeight);
+      await expect(body).not.toBeNull();
+      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
       // O painel em si não rola: o `flex` do corpo é o que segura o rodapé.
-      await expect(painel.scrollHeight).toBeLessThanOrEqual(painel.clientHeight + 1);
+      await expect(panel.scrollHeight).toBeLessThanOrEqual(panel.clientHeight + 1);
     });
 
     await step('A região rolável é alcançável por teclado', async () => {
       // WCAG 2.1.1 — sem o tabindex quem navega por teclado não consegue rolar
       // o corpo (é a regra scrollable-region-focusable do axe).
-      await expect(corpo).toHaveAttribute('tabindex', '0');
+      await expect(body).toHaveAttribute('tabindex', '0');
     });
 
     await step('O rodapé continua visível com o corpo cheio', async () => {
-      const boxFooter = rodape.getBoundingClientRect();
-      const boxPanel = painel.getBoundingClientRect();
+      const boxFooter = footer.getBoundingClientRect();
+      const boxPanel = panel.getBoundingClientRect();
       await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
       await expect(boxFooter.height).toBeGreaterThan(0);
     });

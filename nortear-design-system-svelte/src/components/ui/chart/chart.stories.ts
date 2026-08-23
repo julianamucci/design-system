@@ -97,19 +97,19 @@ export const Playground: Story = {
   play: async ({ canvasElement, args, step }) => {
     // Procura pela classe, não pelo data-slot: é o que o CSS compartilhado
     // define, e é o mesmo colhedor nas cinco stacks.
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('O desenho é anunciado como imagem, com a descrição da story', async () => {
-      await expect(raiz).toHaveAttribute('role', 'img');
+      await expect(root).toHaveAttribute('role', 'img');
       // O valor exato, não só a presença do atributo: rótulo vazio ou genérico
       // passa em "tem aria-label" e não descreve nada.
-      await expect(raiz.getAttribute('aria-label')).toBe(args['aria-label']);
+      await expect(root.getAttribute('aria-label')).toBe(args['aria-label']);
     });
 
     await step('O desenho sai', async () => {
       // Gráfico mede a si mesmo antes de desenhar: espera o desenho existir em
       // vez de medir no primeiro quadro.
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
     });
 
     // Os controls trocam o renderer, e canvas não tem texto nem forma no DOM.
@@ -118,13 +118,13 @@ export const Playground: Story = {
     if (args.renderer === 'svg') {
       await step('O eixo escreve todas as categorias dos dados', async () => {
         await waitFor(() => {
-          for (const month of MONTHS) expect(designEscreve(raiz, month)).toBe(true);
+          for (const month of MONTHS) expect(designEscreve(root, month)).toBe(true);
         }, { timeout: 3000 });
       });
 
       await step('Cada mês vira forma desenhada — o SVG não é casca vazia', async () => {
         await waitFor(
-          () => expect(datumFormas(raiz).length).toBeGreaterThanOrEqual(MONTHS.length),
+          () => expect(datumFormas(root).length).toBeGreaterThanOrEqual(MONTHS.length),
           { timeout: 3000 },
         );
       });

@@ -31,8 +31,8 @@ export interface BoxMeasurement {
   heightInline: string | null;
   position: string | null;
   overflow: string | null;
-  largura: number | null;
-  altura: number | null;
+  width: number | null;
+  height: number | null;
   /** largura / altura, com duas casas. */
   ratio: number | null;
   mecanismo: Mecanismo;
@@ -55,7 +55,7 @@ export interface RatioMeasurement {
   contrato: BoxMeasurement;
   /** A caixa que o `data-slot` aponta — pode não ser a mesma. */
   slot: BoxMeasurement;
-  filho: ChildMeasurement;
+  child: ChildMeasurement;
 }
 
 const NENHUMA: BoxMeasurement = {
@@ -69,18 +69,18 @@ const NENHUMA: BoxMeasurement = {
   heightInline: null,
   position: null,
   overflow: null,
-  largura: null,
-  altura: null,
+  width: null,
+  height: null,
   ratio: null,
   mecanismo: 'nenhum',
 };
 
-function profundidadeAte(raiz: Element, el: Element): number {
+function profundidadeAte(root: Element, el: Element): number {
   let n = 0;
-  let atual: Element | null = el;
-  while (atual && atual !== raiz) {
+  let current: Element | null = el;
+  while (current && current !== root) {
     n += 1;
-    atual = atual.parentElement;
+    current = current.parentElement;
   }
   return n;
 }
@@ -103,7 +103,7 @@ function mecanismoDe(cs: CSSStyleDeclaration, heightInline: string | null): Meca
   return 'nenhum';
 }
 
-function measureBox(raiz: Element, el: HTMLElement | null): BoxMeasurement {
+function measureBox(root: Element, el: HTMLElement | null): BoxMeasurement {
   if (!el) return { ...NENHUMA };
   const cs = getComputedStyle(el);
   const rect = el.getBoundingClientRect();
@@ -115,7 +115,7 @@ function measureBox(raiz: Element, el: HTMLElement | null): BoxMeasurement {
       .filter((c) => c.startsWith('nds-'))
       .sort()
       .join(' '),
-    profundidade: profundidadeAte(raiz, el),
+    profundidade: profundidadeAte(root, el),
     ratioInline: el.style.getPropertyValue('--ratio').trim() || null,
     aspectRatioComputado: cs.aspectRatio || null,
     // O computado devolve px; a declaração inline preserva a porcentagem, que é
@@ -124,25 +124,25 @@ function measureBox(raiz: Element, el: HTMLElement | null): BoxMeasurement {
     heightInline,
     position: cs.position,
     overflow: cs.overflow,
-    largura: Math.round(rect.width * 100) / 100,
-    altura: Math.round(rect.height * 100) / 100,
+    width: Math.round(rect.width * 100) / 100,
+    height: Math.round(rect.height * 100) / 100,
     ratio: rect.height > 0 ? Math.round((rect.width / rect.height) * 100) / 100 : null,
     mecanismo: mecanismoDe(cs, heightInline),
   };
 }
 
-function measureChild(caixa: HTMLElement | null): ChildMeasurement {
+function measureChild(box: HTMLElement | null): ChildMeasurement {
   // `:scope > *` e não um seletor descendente: a regra que interessa é
   // `.nds-aspect-ratio > *`, que só alcança filho DIRETO. Buscar em profundidade
   // devolveria um neto e mediria uma promessa que a folha não faz.
-  const filho = caixa?.querySelector<HTMLElement>(':scope > *');
-  if (!caixa || !filho) return { presente: false, tag: null, position: null, objectFit: null, transbordoLargura: null, transbordoAltura: null };
-  const rc = caixa.getBoundingClientRect();
-  const rf = filho.getBoundingClientRect();
-  const cs = getComputedStyle(filho);
+  const child = box?.querySelector<HTMLElement>(':scope > *');
+  if (!box || !child) return { presente: false, tag: null, position: null, objectFit: null, transbordoLargura: null, transbordoAltura: null };
+  const rc = box.getBoundingClientRect();
+  const rf = child.getBoundingClientRect();
+  const cs = getComputedStyle(child);
   return {
     presente: true,
-    tag: filho.tagName.toLowerCase(),
+    tag: child.tagName.toLowerCase(),
     position: cs.position,
     objectFit: cs.objectFit,
     transbordoLargura: Math.round((rf.width - rc.width) * 100) / 100,
@@ -166,13 +166,13 @@ export function measureRatio(parent: HTMLElement, cenario: string): RatioMeasure
     larguraDoPai: Math.round(parent.getBoundingClientRect().width * 100) / 100,
     contrato: measureBox(parent, byContrato),
     slot: measureBox(parent, bySlot),
-    filho: measureChild(bySlot ?? byContrato),
+    child: measureChild(bySlot ?? byContrato),
   };
 }
 
 /** Mede todos os cenários marcados com `data-cenario` dentro da raiz. */
-export function measureCenarios(raiz: HTMLElement): RatioMeasurement[] {
-  return Array.from(raiz.querySelectorAll<HTMLElement>('[data-cenario]')).map((parent) =>
+export function measureCenarios(root: HTMLElement): RatioMeasurement[] {
+  return Array.from(root.querySelectorAll<HTMLElement>('[data-cenario]')).map((parent) =>
     measureRatio(parent, parent.dataset.cenario ?? '?'),
   );
 }
@@ -189,11 +189,11 @@ export function resumirProporcoes(measurements: RatioMeasurement[]): string[] {
       `slot=${s.presente ? s.tag : 'null'}@prof${s.profundidade}`,
       `ratioInline=${s.ratioInline ?? c.ratioInline ?? 'null'}`,
       `mecanismo=${s.mecanismo}`,
-      `caixa=${s.largura}x${s.altura}`,
+      `caixa=${s.width}x${s.height}`,
       `razao=${s.ratio}`,
       `alturaInline=${s.heightInline ?? 'null'}`,
-      `filho=${m.filho.tag}/${m.filho.position}/${m.filho.objectFit}`,
-      `transbordo=${m.filho.transbordoLargura}x${m.filho.transbordoAltura}`,
+      `filho=${m.child.tag}/${m.child.position}/${m.child.objectFit}`,
+      `transbordo=${m.child.transbordoLargura}x${m.child.transbordoAltura}`,
     ].join('|');
   });
 }
@@ -233,17 +233,17 @@ export function ratioReprovas(
     if (Math.abs(m.contrato.ratio - razaoEsperada) > tolerancia) {
       failures.push({
         cenario: m.cenario,
-        motivo: `razão medida ${m.contrato.ratio} contra ${Math.round(razaoEsperada * 100) / 100} pedida (caixa ${m.contrato.largura}x${m.contrato.altura})`,
+        motivo: `razão medida ${m.contrato.ratio} contra ${Math.round(razaoEsperada * 100) / 100} pedida (caixa ${m.contrato.width}x${m.contrato.height})`,
       });
     }
     // A folha promete que o filho DIRETO cobre a caixa
     // (`.nds-aspect-ratio > * { position: absolute; inset: 0 }`). Sem a regra, um
     // filho sem altura própria fica menor que o container e a promessa é falsa —
     // sem que a proporção da caixa acuse nada.
-    if (m.filho.presente && m.filho.position !== 'absolute') {
+    if (m.child.presente && m.child.position !== 'absolute') {
       failures.push({
         cenario: m.cenario,
-        motivo: `filho <${m.filho.tag}> em position: ${m.filho.position} — a folha não o está esticando para cobrir a caixa`,
+        motivo: `filho <${m.child.tag}> em position: ${m.child.position} — a folha não o está esticando para cobrir a caixa`,
       });
     }
   }

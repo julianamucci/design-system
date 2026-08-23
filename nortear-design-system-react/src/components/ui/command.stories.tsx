@@ -113,9 +113,9 @@ export const Playground: Story = {
   ),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
-    const campo = canvas.getByRole("combobox");
-    const lista = canvas.getByRole("listbox");
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
+    const field = canvas.getByRole("combobox");
+    const list = canvas.getByRole("listbox");
     const spy = args.onItemSelect as ReturnType<typeof fn>;
     // O destaque é resolvido por `aria-selected`, não por
     // `aria-activedescendant`. Medido na fonte da lib (`cmdk/dist/index.mjs`):
@@ -129,44 +129,44 @@ export const Playground: Story = {
 
     // A play REEXECUTA no mesmo DOM: a busca parte sempre do zero, senão a
     // contagem de comandos herda o filtro da rodada anterior.
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     await waitFor(async () => {
       await expect(canvas.getAllByRole("option")).toHaveLength(5);
     });
 
     await step("O markup é o mesmo contrato das outras stacks", async () => {
-      await expect(raiz).toHaveClass(/nds-command/);
-      await expect(campo).toHaveClass(/nds-command-input/);
-      await expect(campo).toHaveAttribute("data-slot", "command-input");
-      await expect(lista).toHaveClass(/nds-command-list/);
-      await expect(lista).toHaveAttribute("data-slot", "command-list");
+      await expect(root).toHaveClass(/nds-command/);
+      await expect(field).toHaveClass(/nds-command-input/);
+      await expect(field).toHaveAttribute("data-slot", "command-input");
+      await expect(list).toHaveClass(/nds-command-list/);
+      await expect(list).toHaveAttribute("data-slot", "command-list");
       // A lupa é do componente, não do call site — quem escreve a paleta não
       // pode esquecê-la.
-      await expect(raiz.querySelector(".nds-command-input-wrapper > svg")).not.toBeNull();
+      await expect(root.querySelector(".nds-command-input-wrapper > svg")).not.toBeNull();
     });
 
     await step("O campo é uma combobox ligada à lista REAL", async () => {
       // Este é o par que separa a paleta de um menu: papel de combobox no
       // campo, papel de listbox na lista, e o `aria-controls` apontando para o
       // id que a lista tem de verdade — id órfão o axe reprova.
-      await expect(campo).toHaveAttribute("aria-autocomplete", "list");
-      await expect(campo).toHaveAttribute("aria-expanded", "true");
-      const controlled = campo.getAttribute("aria-controls");
+      await expect(field).toHaveAttribute("aria-autocomplete", "list");
+      await expect(field).toHaveAttribute("aria-expanded", "true");
+      const controlled = field.getAttribute("aria-controls");
       await expect(controlled).toBeTruthy();
-      await expect(document.getElementById(controlled!)).toBe(lista);
+      await expect(document.getElementById(controlled!)).toBe(list);
     });
 
     await step("Cada comando é uma opção, e o cabeçalho nomeia o grupo", async () => {
-      const opcoes = canvas.getAllByRole("option");
-      await expect(opcoes).toHaveLength(5);
-      await expect(opcoes[0]).toHaveClass(/nds-command-item/);
-      await expect(opcoes[0]).toHaveAttribute("data-slot", "command-item");
-      await expect(opcoes[0]).toHaveAttribute("aria-selected");
+      const options = canvas.getAllByRole("option");
+      await expect(options).toHaveLength(5);
+      await expect(options[0]).toHaveClass(/nds-command-item/);
+      await expect(options[0]).toHaveAttribute("data-slot", "command-item");
+      await expect(options[0]).toHaveAttribute("aria-selected");
       // Sem o `aria-labelledby` do cabeçalho, o leitor anuncia só "grupo".
       await expect(canvas.getByRole("group", { name: "Componentes" })).toBeVisible();
       await expect(canvas.getByRole("group", { name: "Utilitários" })).toBeVisible();
       // O divisor é desenho: existe no markup e não vira comando.
-      await expect(raiz.querySelector('[data-slot="command-separator"]'))
+      await expect(root.querySelector('[data-slot="command-separator"]'))
         .toHaveClass(/nds-command-separator/);
     });
 
@@ -174,7 +174,7 @@ export const Playground: Story = {
     // etapas seguintes descrevem justamente o filtro, então só valem ligado.
     if (args.shouldFilter !== false) {
       await step('Buscando "sep", só o comando que casa sobra', async () => {
-        await userEvent.type(campo, "sep");
+        await userEvent.type(field, "sep");
 
         await waitFor(async () => {
           await expect(canvas.getAllByRole("option")).toHaveLength(1);
@@ -182,42 +182,42 @@ export const Playground: Story = {
         await expect(canvas.getByRole("option", { name: "Separator" })).toBeVisible();
         // A lib desta stack DESMONTA o comando que não casa (outras o escondem
         // com `hidden`): procurar por ele no DOM tem de dar nada.
-        await expect(raiz.querySelector('[data-value="button"]')).toBeNull();
+        await expect(root.querySelector('[data-value="button"]')).toBeNull();
         // O grupo inteiro se recolhe quando nenhum comando dele passa — sem
         // isso a paleta mostraria "Utilitários" com nada embaixo. A busca
         // reordena os grupos por pontuação, então a asserção conta os que
         // sobraram em vez de apontar um índice.
-        const grupos = Array.from(
-          raiz.querySelectorAll<HTMLElement>('[data-slot="command-group"]'),
+        const groups = Array.from(
+          root.querySelectorAll<HTMLElement>('[data-slot="command-group"]'),
         );
-        await expect(grupos).toHaveLength(2);
-        await expect(grupos.filter((g) => !g.hidden)).toHaveLength(1);
+        await expect(groups).toHaveLength(2);
+        await expect(groups.filter((g) => !g.hidden)).toHaveLength(1);
       });
 
       await step('Buscando "zzz", a mensagem de vazio ocupa o lugar da lista', async () => {
-        await userEvent.clear(campo);
-        await userEvent.type(campo, "zzz");
+        await userEvent.clear(field);
+        await userEvent.type(field, "zzz");
 
         await waitFor(async () => {
           await expect(canvas.queryAllByRole("option")).toHaveLength(0);
         });
-        const vazio = raiz.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+        const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
         await expect(vazio).toBeVisible();
         await expect(vazio).toHaveTextContent("Nenhum resultado encontrado.");
         await expect(vazio).toHaveClass(/nds-command-empty/);
       });
 
       await step("Apagar a busca traz os cinco comandos de volta", async () => {
-        await userEvent.clear(campo);
+        await userEvent.clear(field);
         await waitFor(async () => {
           await expect(canvas.getAllByRole("option")).toHaveLength(5);
         });
-        await expect(raiz.querySelector('[data-slot="command-empty"]')).toBeNull();
+        await expect(root.querySelector('[data-slot="command-empty"]')).toBeNull();
       });
     }
 
     await step("As setas percorrem a lista sem tirar o foco do campo", async () => {
-      campo.focus();
+      field.focus();
       // Home leva o destaque ao primeiro comando: precondição própria, para o
       // replay não partir de onde a rodada anterior parou.
       await userEvent.keyboard("{Home}");
@@ -226,7 +226,7 @@ export const Playground: Story = {
       });
       // O foco NÃO se move: é o que permite continuar digitando enquanto se
       // navega, e é por isso que o destaque viaja por `aria-activedescendant`.
-      await expect(campo).toHaveFocus();
+      await expect(field).toHaveFocus();
       await expect(inHighlight()).toHaveAttribute("role", "option");
       await expect(inHighlight()).toHaveAttribute("aria-selected", "true");
 
@@ -234,11 +234,11 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(inHighlight()).toHaveTextContent("Input");
       });
-      await expect(campo).toHaveFocus();
+      await expect(field).toHaveFocus();
       // Aqui o valor MUDOU, então o `aria-activedescendant` foi reescrito — é o
       // ponto em que dá para provar o mecanismo do combobox sem depender de um
       // efeito que pode não disparar.
-      await expect(campo).toHaveAttribute(
+      await expect(field).toHaveAttribute(
         "aria-activedescendant",
         inHighlight()!.id,
       );
@@ -259,7 +259,7 @@ export const Playground: Story = {
       });
       await expect(spy.mock.calls[antes][0]).toBe("button");
       // A paleta não tem estado fechado: continua aberta depois de executar.
-      await expect(campo).toHaveAttribute("aria-expanded", "true");
+      await expect(field).toHaveAttribute("aria-expanded", "true");
     });
 
     await step("Clicar num comando também o escolhe", async () => {

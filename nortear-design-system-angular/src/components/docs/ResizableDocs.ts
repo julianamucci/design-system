@@ -181,7 +181,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
             {{ t('demonstration.labels.left') }}
           </div>
         </div>
-        <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="rotulo('do-limites')"></div>
+        <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="label('do-limites')"></div>
         <div ndsResizablePanel [defaultSize]="60" [minSize]="25">
           <div class="nds-cluster nds-h-full nds-w-full nds-p-4 nds-text-body nds-font-medium" data-align="center" data-justify="center" tabindex="0">
             {{ t('demonstration.labels.right') }}
@@ -197,7 +197,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
             {{ t('demonstration.labels.left') }}
           </div>
         </div>
-        <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="rotulo('dont-limites')"></div>
+        <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="label('dont-limites')"></div>
         <div ndsResizablePanel [defaultSize]="60" [minSize]="0" [maxSize]="100">
           <div class="nds-cluster nds-h-full nds-w-full nds-p-4 nds-text-body nds-font-medium" data-align="center" data-justify="center" tabindex="0">
             {{ t('demonstration.labels.right') }}
@@ -213,7 +213,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
             {{ t('demonstration.labels.left') }}
           </div>
         </div>
-        <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="rotulo('do-rotulo')"></div>
+        <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="label('do-rotulo')"></div>
         <div ndsResizablePanel [defaultSize]="50" [minSize]="20">
           <div class="nds-cluster nds-h-full nds-w-full nds-p-4 nds-text-body nds-font-medium" data-align="center" data-justify="center" tabindex="0">
             {{ t('demonstration.labels.right') }}
@@ -247,7 +247,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
             {{ t('demonstration.labels.sidebar') }}
           </div>
         </div>
-        <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="rotulo('variante-horizontal')"></div>
+        <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="label('variante-horizontal')"></div>
         <div ndsResizablePanel [defaultSize]="70" [minSize]="50">
           <div class="nds-cluster nds-h-full nds-w-full nds-p-4 nds-text-body nds-font-medium" data-align="center" data-justify="center" tabindex="0">
             {{ t('demonstration.labels.content') }}
@@ -263,7 +263,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
             {{ t('demonstration.labels.top') }}
           </div>
         </div>
-        <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="rotulo('variante-vertical')"></div>
+        <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="label('variante-vertical')"></div>
         <div ndsResizablePanel [defaultSize]="50" [minSize]="20" [maxSize]="80">
           <div class="nds-cluster nds-h-full nds-w-full nds-p-4 nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabindex="0">
             {{ t('demonstration.labels.bottom') }}
@@ -279,7 +279,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
             {{ t('demonstration.labels.sidebar') }}
           </div>
         </div>
-        <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="rotulo('variante-aninhada-externa')"></div>
+        <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="label('variante-aninhada-externa')"></div>
         <div ndsResizablePanel [defaultSize]="75" [minSize]="50">
           <div ndsResizable direction="vertical" class="nds-h-full">
             <div ndsResizablePanel [defaultSize]="70" [minSize]="30">
@@ -287,7 +287,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
                 {{ t('demonstration.labels.content') }}
               </div>
             </div>
-            <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="rotulo('variante-aninhada-interna')"></div>
+            <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="label('variante-aninhada-interna')"></div>
             <div ndsResizablePanel [defaultSize]="30" [minSize]="15">
               <div class="nds-cluster nds-h-full nds-w-full nds-p-4 nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabindex="0">
                 {{ t('demonstration.labels.bottom') }}
@@ -330,7 +330,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
                     {{ t('demonstration.labels.sidebar') }}
                   </div>
                 </div>
-                <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="rotulo('demo-horizontal')"></div>
+                <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="label('demo-horizontal')"></div>
                 <div ndsResizablePanel [defaultSize]="70" [minSize]="50" [maxSize]="80">
                   <div class="nds-cluster nds-h-full nds-w-full nds-p-4 nds-text-body nds-font-medium" data-align="center" data-justify="center" tabindex="0">
                     {{ t('demonstration.labels.content') }}
@@ -354,7 +354,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
                     {{ t('demonstration.labels.top') }}
                   </div>
                 </div>
-                <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="rotulo('demo-vertical')"></div>
+                <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="label('demo-vertical')"></div>
                 <div ndsResizablePanel [defaultSize]="50" [minSize]="20" [maxSize]="80">
                   <div class="nds-cluster nds-h-full nds-w-full nds-p-4 nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabindex="0">
                     {{ t('demonstration.labels.bottom') }}
@@ -378,7 +378,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
                     {{ t('demonstration.labels.left') }}
                   </div>
                 </div>
-                <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="rotulo('demo-aninhada-externa')"></div>
+                <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="label('demo-aninhada-externa')"></div>
                 <div ndsResizablePanel [defaultSize]="75" [minSize]="50">
                   <div
                     ndsResizable
@@ -391,7 +391,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
                         {{ t('demonstration.labels.content') }}
                       </div>
                     </div>
-                    <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="rotulo('demo-aninhada-interna')"></div>
+                    <div ndsResizableHandle [withHandle]="true" [attr.aria-label]="label('demo-aninhada-interna')"></div>
                     <div ndsResizablePanel [defaultSize]="30" [minSize]="15">
                       <div class="nds-cluster nds-h-full nds-w-full nds-p-4 nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabindex="0">
                         {{ t('demonstration.labels.bottom') }}
@@ -524,17 +524,17 @@ export class NdsResizableDocs implements AfterViewInit, OnDestroy {
    * compartilhado — é lá que a regra de escrita deste rótulo mora, e assim ele
    * acompanha o idioma. As aspas do exemplo saem.
    */
-  protected rotulo(sufixo: string): string {
+  protected label(sufixo: string): string {
     const base = toPlainText(t('usage.uxWriting.table.ariaLabel.good')).replace(/^"|"$/g, '');
     return `${base} (${sufixo})`;
   }
 
-  protected aoRedimensionar(grupo: string, sizes: number[]): void {
+  protected aoRedimensionar(group: string, sizes: number[]): void {
     // Payload com valores ESTÁVEIS — o rótulo traduzido dividiria o evento em
     // três no GA4, um por idioma.
     track('panel_resize', {
       component: 'resizable',
-      group_id: grupo,
+      group_id: group,
       sizes: sizes.map((n) => Math.round(n)).join('/'),
       location: 'docs_demo',
     });
@@ -666,12 +666,12 @@ export class NdsResizableDocs implements AfterViewInit, OnDestroy {
     };
     // `—` e nunca a string "undefined": travessão é o que a tabela usa quando
     // não há valor padrão, e é o que o conteúdo compartilhado já traz.
-    const line = (name: string, chave: string) => ({
+    const line = (name: string, key: string) => ({
       name,
-      type: t(`props.table.${chave}.type`),
-      defaultValue: t(`props.table.${chave}.default`) || '—',
-      required: t(`props.table.${chave}.required`),
-      description: toPlainText(t(`props.table.${chave}.description`)),
+      type: t(`props.table.${key}.type`),
+      defaultValue: t(`props.table.${key}.default`) || '—',
+      required: t(`props.table.${key}.required`),
+      description: toPlainText(t(`props.table.${key}.description`)),
     });
 
     return [
@@ -816,8 +816,8 @@ export class NdsResizableDocs implements AfterViewInit, OnDestroy {
           level: r.level,
           how: toPlainText(r.how),
         }))
-      : numberedItems(d, 'testes.accessibility').map((texto) => ({
-          criterion: toPlainText(texto),
+      : numberedItems(d, 'testes.accessibility').map((text) => ({
+          criterion: toPlainText(text),
           level: '',
           how: '',
         }));
@@ -890,12 +890,12 @@ export class NdsResizableDocs implements AfterViewInit, OnDestroy {
  * `t()` devolve a própria chave quando ela aponta para um objeto — e é assim
  * que a chave crua acaba escrita na tela, sem erro nenhum.
  */
-function valueOuField(base: string, campo: string): string {
+function valueOuField(base: string, field: string): string {
   const direto = t(base);
   if (direto !== base) return direto;
-  const chave = `${base}.${campo}`;
-  const ofField = t(chave);
-  return ofField === chave ? '' : ofField;
+  const key = `${base}.${field}`;
+  const ofField = t(key);
+  return ofField === key ? '' : ofField;
 }
 
 /**
@@ -906,16 +906,16 @@ function valueOuField(base: string, campo: string): string {
  * quando ela não existe, então sem esta ponte o menu de quem não traz o bloco
  * mostrava "nav.overview" escrito na tela, sem erro nenhum.
  */
-function navLabel(chave: string): string {
-  const doComponente = t(chave);
-  return doComponente === chave ? tNav(chave) : doComponente;
+function navLabel(key: string): string {
+  const doComponente = t(key);
+  return doComponente === key ? tNav(key) : doComponente;
 }
 
 /** Itens `base.itemN` na ordem numérica, quantos existirem. */
 function numberedItems(d: Record<string, string>, base: string): string[] {
-  const itens: string[] = [];
-  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) itens.push(d[`${base}.item${i}`]);
-  return itens;
+  const items: string[] = [];
+  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) items.push(d[`${base}.item${i}`]);
+  return items;
 }
 
 const priorityKeyMap: Record<string, string> = {

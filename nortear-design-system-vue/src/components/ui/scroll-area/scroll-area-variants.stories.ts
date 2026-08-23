@@ -35,8 +35,8 @@ const COLS = Array.from({ length: 12 }, (_, i) => `C${i + 1}`);
 const ROWS = Array.from({ length: 16 }, (_, i) => `R${i + 1}`);
 
 /** Barras montadas no DOM, por eixo. */
-function barras(raiz: HTMLElement, orientation: 'vertical' | 'horizontal') {
-  return raiz.querySelectorAll(
+function barras(root: HTMLElement, orientation: 'vertical' | 'horizontal') {
+  return root.querySelectorAll(
     `[data-slot="scroll-area-scrollbar"][data-orientation="${orientation}"]`,
   );
 }

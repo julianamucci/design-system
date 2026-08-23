@@ -25,7 +25,7 @@ import {
   indentar,
   jsxSnippet,
   propText,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -43,17 +43,17 @@ const TEXT_NEXT = 'Próxima';
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
 function importingPagination(...parts: string[]): string {
-  const lista = [...parts].sort();
-  return `import {\n${lista
+  const list = [...parts].sort();
+  return `import {\n${list
     .map((part) => `  ${part},`)
     .join('\n')}\n} from "@/components/ui/pagination";`;
 }
 
 /** A faixa inteira: o landmark, a lista e os itens dentro dela. */
-function faixa(itens: string): string {
+function range(items: string): string {
   return `<Pagination>
   <PaginationContent>
-${indentar(itens, '    ')}
+${indentar(items, '    ')}
   </PaginationContent>
 </Pagination>`;
 }
@@ -88,13 +88,13 @@ function direcional(part: 'PaginationPrevious' | 'PaginationNext', bloqueado = f
  * A janela de páginas visíveis quando a lista é longa: primeira, última, a
  * atual e as vizinhas. O resto colapsa em reticências.
  */
-function windowWithEllipsis(total: number, atual: number): Array<number | 'reticencias'> {
+function windowWithEllipsis(total: number, current: number): Array<number | 'reticencias'> {
   const trechos: Array<number | 'reticencias'> = [1];
-  const start = Math.max(2, atual - 1);
-  const end = Math.min(total - 1, atual + 1);
-  if (atual > 3) trechos.push('reticencias');
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+  if (current > 3) trechos.push('reticencias');
   for (let n = start; n <= end; n++) trechos.push(n);
-  if (atual < total - 2) trechos.push('reticencias');
+  if (current < total - 2) trechos.push('reticencias');
   trechos.push(total);
   return trechos;
 }
@@ -127,8 +127,8 @@ export const paginationSource: SourceTransform<PaginationArgs> = (_gerado, ctx) 
       : 1;
   const withEllipsis = args.withEllipsis === true && total > 7;
 
-  const labelPrevious = propText('text', texto(args.previousText) === TEXT_PREVIOUS ? undefined : args.previousText);
-  const labelNext = propText('text', texto(args.nextText) === TEXT_NEXT ? undefined : args.nextText);
+  const labelPrevious = propText('text', text(args.previousText) === TEXT_PREVIOUS ? undefined : args.previousText);
+  const labelNext = propText('text', text(args.nextText) === TEXT_NEXT ? undefined : args.nextText);
   const attrPrevious = labelPrevious ? `\n        ${labelPrevious}` : '';
   const attrNext = labelNext ? `\n        ${labelNext}` : '';
 
@@ -171,7 +171,7 @@ const paginas = Array.from({ length: total }, (_, indice) => indice + 1);`;
           </PaginationLink>
         </PaginationItem>
       ) : (
-        <PaginationItem key={\`reticencias-\${indice}\`}>
+        <PaginationItem key={\`reticencias-\${index}\`}>
           <PaginationEllipsis />
         </PaginationItem>
       ),
@@ -233,7 +233,7 @@ ${numbered}
 export function paginationLinkInactiveSource(): string {
   return jsxSnippet(
     importingPagination('Pagination', 'PaginationContent', 'PaginationItem', 'PaginationLink'),
-    faixa(numberedLink(2)),
+    range(numberedLink(2)),
   );
 }
 
@@ -245,7 +245,7 @@ export function paginationLinkInactiveSource(): string {
 export function paginationLinkActiveSource(): string {
   return jsxSnippet(
     importingPagination('Pagination', 'PaginationContent', 'PaginationItem', 'PaginationLink'),
-    faixa([numberedLink(1), numberedLink(2, true)].join('\n')),
+    range([numberedLink(1), numberedLink(2, true)].join('\n')),
   );
 }
 
@@ -263,7 +263,7 @@ export function paginationDirecionalSource(): string {
       'PaginationNext',
       'PaginationPrevious',
     ),
-    faixa([direcional('PaginationPrevious'), direcional('PaginationNext')].join('\n')),
+    range([direcional('PaginationPrevious'), direcional('PaginationNext')].join('\n')),
   );
 }
 
@@ -282,7 +282,7 @@ export function paginationDisabledSource(): string {
       'PaginationNext',
       'PaginationPrevious',
     ),
-    faixa(
+    range(
       [
         direcional('PaginationPrevious', true),
         numberedLink(1, true),
@@ -325,7 +325,7 @@ ${indentar(direcional('PaginationPrevious'), '    ')}
           </PaginationLink>
         </PaginationItem>
       ) : (
-        <PaginationItem key={\`reticencias-\${indice}\`}>
+        <PaginationItem key={\`reticencias-\${index}\`}>
           <PaginationEllipsis />
         </PaginationItem>
       ),
@@ -351,7 +351,7 @@ export function paginationLastPageSource(): string {
       'PaginationNext',
       'PaginationPrevious',
     ),
-    faixa(
+    range(
       [
         direcional('PaginationPrevious'),
         numberedLink(8),
@@ -364,7 +364,7 @@ export function paginationLastPageSource(): string {
 }
 
 /**
- * Estado fora do componente, com o contador ao lado. O mesmo `pagina` alimenta
+ * Estado fora do componente, com o contador ao lado. O mesmo `page` alimenta
  * três coisas: o destaque, o `aria-current` e o texto do contador — é o que
  * garante que os três nunca discordem entre si.
  */

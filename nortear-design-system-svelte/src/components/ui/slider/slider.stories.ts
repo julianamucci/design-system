@@ -127,8 +127,8 @@ export const Playground: Story = {
     await step('Arrastar move o valor e avisa ao soltar', async () => {
       const control = canvasElement.querySelector<HTMLElement>('.nds-slider')!;
       const track = canvasElement.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
-      const caixa = track.getBoundingClientRect();
-      const y = caixa.top + caixa.height / 2;
+      const box = track.getBoundingClientRect();
+      const y = box.top + box.height / 2;
 
       // Limpa antes de medir: no replay o espião chega com as chamadas da
       // rodada anterior e a asserção passaria sem nada ter se movido.
@@ -143,15 +143,15 @@ export const Playground: Story = {
       // exatamente nesse evento — nunca era chamado. O arrasto em si funcionava,
       // então a story falhava só no commit.
       await userEvent.pointer([
-        { keys: '[MouseLeft>]', target: control, coords: { clientX: caixa.left + caixa.width * 0.2, clientY: y } },
-        { target: control, coords: { clientX: caixa.left + caixa.width * 0.6, clientY: y } },
+        { keys: '[MouseLeft>]', target: control, coords: { clientX: box.left + box.width * 0.2, clientY: y } },
+        { target: control, coords: { clientX: box.left + box.width * 0.6, clientY: y } },
         { keys: '[/MouseLeft]' },
       ]);
 
       // Gateado na geometria da própria alça, não no valor recém-escrito.
       const thumb = canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
       const center = thumb.getBoundingClientRect().left + thumb.getBoundingClientRect().width / 2;
-      await expect(center).toBeGreaterThan(caixa.left + caixa.width * 0.5);
+      await expect(center).toBeGreaterThan(box.left + box.width * 0.5);
 
       await expect(spyCommit).toHaveBeenCalled();
     });

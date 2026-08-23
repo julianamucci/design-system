@@ -133,20 +133,20 @@ export const Responsive: Story = {
 
     // O gatilho é quem nomeia e quem recebe o foco; as reticências dentro dele
     // ficam decorativas, senão o controle teria dois nomes.
-    const gatilho = document.createElement('button');
-    gatilho.type = 'button';
-    gatilho.className = 'nds-cluster nds-rounded-md';
-    gatilho.style.background = 'transparent';
-    gatilho.style.border = '0';
-    gatilho.style.padding = '0';
-    gatilho.dataset.spacing = 'xs';
-    gatilho.setAttribute('aria-label', 'Expandir níveis ocultos');
-    gatilho.appendChild(createBreadcrumbEllipsis());
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'nds-cluster nds-rounded-md';
+    trigger.style.background = 'transparent';
+    trigger.style.border = '0';
+    trigger.style.padding = '0';
+    trigger.dataset.spacing = 'xs';
+    trigger.setAttribute('aria-label', 'Expandir níveis ocultos');
+    trigger.appendChild(createBreadcrumbEllipsis());
 
     const ellipsis = createBreadcrumbItem();
     ellipsis.appendChild(
       createDropdownMenu({
-        trigger: gatilho,
+        trigger: trigger,
         items: [
           { label: 'Documentação' },
           { label: 'Guia' },
@@ -171,31 +171,31 @@ export const Responsive: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /expandir níveis ocultos/i });
+    const trigger = canvas.getByRole('button', { name: /expandir níveis ocultos/i });
 
-    const abrir = async () => {
-      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
-      await waitFor(() => expect(gatilho).toHaveAttribute('aria-expanded', 'true'));
+    const open = async () => {
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+      await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
     };
-    const fechar = async () => {
-      if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.keyboard('{Escape}');
-      await waitFor(() => expect(gatilho).not.toHaveAttribute('aria-expanded', 'true'));
+    const close = async () => {
+      if (trigger.getAttribute('aria-expanded') === 'true') await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(trigger).not.toHaveAttribute('aria-expanded', 'true'));
     };
 
     await step('O gatilho abre a lista dos níveis colapsados', async () => {
       // functional.item5 — é aqui que os níveis ocultos voltam a existir para
       // quem navega: as reticências sozinhas informam, o menu é que leva.
-      await fechar();
-      await abrir();
-      const itens = await waitFor(() => within(document.body).getAllByRole('menuitem'));
-      await expect(itens.map((i) => i.textContent?.trim())).toEqual(['Documentação', 'Guia', 'Componentes']);
+      await close();
+      await open();
+      const items = await waitFor(() => within(document.body).getAllByRole('menuitem'));
+      await expect(items.map((i) => i.textContent?.trim())).toEqual(['Documentação', 'Guia', 'Componentes']);
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
-      await abrir();
+      await open();
       await userEvent.keyboard('{Escape}');
-      await waitFor(() => expect(gatilho).not.toHaveAttribute('aria-expanded', 'true'));
-      await waitFor(() => expect(gatilho).toHaveFocus());
+      await waitFor(() => expect(trigger).not.toHaveAttribute('aria-expanded', 'true'));
+      await waitFor(() => expect(trigger).toHaveFocus());
     });
   },
 };

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, within } from "storybook/test";
 import {
-  abrir,
+  open,
   cantoButtonClose,
   waitForOpen,
   waitForClosed,
@@ -102,8 +102,8 @@ export const Default: Story = {
       // `flex-direction: column-reverse` põe a ação primária no topo da pilha
       // no estreito e à direita no largo. No DOM ela vem por último, que é a
       // ordem de leitura e de foco correta.
-      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const buttons = rodape.querySelectorAll<HTMLElement>("button");
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = footer.querySelectorAll<HTMLElement>("button");
       await expect(buttons.length).toBe(2);
       await expect(buttons[buttons.length - 1]).toHaveClass("nds-button-default");
     });
@@ -172,9 +172,9 @@ export const WithForm: Story = {
       // entra junto porque um campo que renderiza vazio passaria na primeira
       // asserção sem mostrar nada — foi assim que um `defaultValue` ignorado
       // sobreviveu em outra stack.
-      const nome = p.querySelector<HTMLInputElement>("#dialog-name")!;
-      await expect(nome).toHaveAccessibleName("Nome");
-      await expect(nome.value).toBe("Maria Silva");
+      const name = p.querySelector<HTMLInputElement>("#dialog-name")!;
+      await expect(name).toHaveAccessibleName("Nome");
+      await expect(name.value).toBe("Maria Silva");
 
       const email = p.querySelector<HTMLInputElement>("#dialog-email")!;
       await expect(email).toHaveAccessibleName("E-mail");
@@ -182,9 +182,9 @@ export const WithForm: Story = {
     });
 
     await step("O foco alcança os campos por teclado, dentro do painel", async () => {
-      const nome = p.querySelector<HTMLInputElement>("#dialog-name")!;
-      nome.focus();
-      await expect(document.activeElement).toBe(nome);
+      const name = p.querySelector<HTMLInputElement>("#dialog-name")!;
+      name.focus();
+      await expect(document.activeElement).toBe(name);
       await userEvent.tab();
       await expect(document.activeElement).toBe(p.querySelector("#dialog-email"));
     });
@@ -253,9 +253,9 @@ export const WithScrollContent: Story = {
       // Comportamento e não nome de classe: o corpo precisa poder rolar E ter
       // conteúdo mais alto que a própria caixa. Asserção de classe morreria
       // junto com o bug se a classe sumisse.
-      const corpo = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
-      await expect(getComputedStyle(corpo).overflowY).toBe("auto");
-      await expect(corpo.scrollHeight).toBeGreaterThan(corpo.clientHeight);
+      const body = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
+      await expect(getComputedStyle(body).overflowY).toBe("auto");
+      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
       await expect(p.querySelector('[data-slot="dialog-header"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeInTheDocument();
     });
@@ -263,9 +263,9 @@ export const WithScrollContent: Story = {
     await step("A região rolável é alcançável por teclado e tem nome", async () => {
       // Sem `tabindex` quem navega só por teclado não consegue rolar a caixa —
       // é a exigência que acompanha toda região com rolagem própria.
-      const corpo = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
-      await expect(corpo).toHaveAttribute("tabindex", "0");
-      await expect(corpo).toHaveAccessibleName();
+      const body = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
+      await expect(body).toHaveAttribute("tabindex", "0");
+      await expect(body).toHaveAccessibleName();
     });
   },
 };
@@ -316,7 +316,7 @@ export const NoFooter: Story = {
       await waitForClosed();
       // O Chromatic fotografa o estado final: uma composição que termina
       // fechada capturaria só o gatilho.
-      await expect(await abrir(canvasElement)).toBeVisible();
+      await expect(await open(canvasElement)).toBeVisible();
     });
   },
 };
@@ -364,8 +364,8 @@ export const WithDestructiveAction: Story = {
     const p = await waitForOpen();
 
     await step("A ação primária carrega a variante destrutiva", async () => {
-      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const buttons = rodape.querySelectorAll<HTMLElement>("button");
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = footer.querySelectorAll<HTMLElement>("button");
       await expect(buttons[buttons.length - 1]).toHaveClass("nds-button-destructive");
     });
 
@@ -419,17 +419,17 @@ export const CustomCloseInFooter: Story = {
     await step("Sem X no canto, o fechar mora no rodapé", async () => {
       // O X do canto some com `showCloseButton={false}` no Content; o que resta
       // é o botão de fechar que o Footer acrescenta.
-      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       await expect(cantoButtonClose(p)).toBeNull();
-      await expect(within(rodape).getByRole("button", { name: /fechar/i })).toBeVisible();
+      await expect(within(footer).getByRole("button", { name: /fechar/i })).toBeVisible();
     });
 
     await step("E o botão do rodapé fecha o diálogo", async () => {
-      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      await userEvent.click(within(rodape).getByRole("button", { name: /fechar/i }));
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      await userEvent.click(within(footer).getByRole("button", { name: /fechar/i }));
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final da play.
-      await expect(await abrir(canvasElement)).toBeVisible();
+      await expect(await open(canvasElement)).toBeVisible();
     });
   },
 };

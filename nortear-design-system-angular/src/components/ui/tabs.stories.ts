@@ -19,7 +19,7 @@ type TabsArgs = {
   orientation: TabsOrientation;
   variant: TabsListVariant;
   activationMode: TabsActivationMode;
-  onValueChange: (valor: string) => void;
+  onValueChange: (value: string) => void;
 };
 
 /**
@@ -38,10 +38,10 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<TabsArgs> }): s
 
   // Só o que difere do default entra: snippet que repete valor padrão ensina
   // ruído a quem copia.
-  const raiz = ['ndsTabs', 'defaultValue="overview"']
+  const root = ['ndsTabs', 'defaultValue="overview"']
     .concat(orientation === 'horizontal' ? [] : [`orientation="${orientation}"`])
     .join(' ');
-  const lista = ['ndsTabsList', 'aria-label="Seções do componente"']
+  const list = ['ndsTabsList', 'aria-label="Seções do componente"']
     .concat(variant === 'default' ? [] : [`variant="${variant}"`])
     .concat(activationMode === 'automatic' ? [] : [`activationMode="${activationMode}"`])
     .join(' ');
@@ -53,8 +53,8 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<TabsArgs> }): s
 @Component({
   imports: [NdsTabs, NdsTabsList, NdsTabsTrigger, NdsTabsContent],
   template: \`
-    <div ${raiz}>
-      <div ${lista}>
+    <div ${root}>
+      <div ${list}>
         <button ndsTabsTrigger value="overview">Visão geral</button>
         <button ndsTabsTrigger value="properties">Propriedades</button>
         <button ndsTabsTrigger value="examples">Exemplos</button>
@@ -169,11 +169,11 @@ export const Playground: Story = {
     });
 
     await step('O painel ativo é o único visível e está ligado à sua aba', async () => {
-      const painel = canvas.getByRole('tabpanel');
-      await expect(painel.textContent).toContain('Conteúdo da visão geral');
+      const panel = canvas.getByRole('tabpanel');
+      await expect(panel.textContent).toContain('Conteúdo da visão geral');
       const aba = canvas.getByRole('tab', { name: 'Visão geral' });
-      await expect(painel.getAttribute('aria-labelledby')).toBe(aba.id);
-      await expect(aba.getAttribute('aria-controls')).toBe(painel.id);
+      await expect(panel.getAttribute('aria-labelledby')).toBe(aba.id);
+      await expect(aba.getAttribute('aria-controls')).toBe(panel.id);
     });
 
     await step('Clicar em "Propriedades" troca a aba e o painel', async () => {

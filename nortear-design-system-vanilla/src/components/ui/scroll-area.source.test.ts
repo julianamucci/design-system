@@ -9,20 +9,20 @@ import {
 
 describe('scrollAreaSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = scrollAreaSnippet();
-    expect(código).toContain("import { createScrollArea } from '@/components/ui/scroll-area';");
-    expect(código).toContain('createScrollArea({');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('tabindex="0"');
+    const code = scrollAreaSnippet();
+    expect(code).toContain("import { createScrollArea } from '@/components/ui/scroll-area';");
+    expect(code).toContain('createScrollArea({');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('tabindex="0"');
   });
 
   it('usa o nome acessível canônico, nunca o apelido depreciado', () => {
-    const código = scrollAreaSnippet({ label: 'Lista de itens' });
-    expect(código).toContain("'aria-label': 'Lista de itens'");
+    const code = scrollAreaSnippet({ label: 'Lista de itens' });
+    expect(code).toContain("'aria-label': 'Lista de itens'");
     // `label:` e `className:` são apelidos `@deprecated` da fábrica.
-    expect(código).not.toMatch(/(^|[^-\w])label:/m);
-    expect(código).not.toContain('className:');
-    expect(código).toContain("class: 'nds-w-full nds-rounded-md nds-border-default'");
+    expect(code).not.toMatch(/(^|[^-\w])label:/m);
+    expect(code).not.toContain('className:');
+    expect(code).toContain("class: 'nds-w-full nds-rounded-md nds-border-default'");
   });
 
   it('mostra o degrau de altura — sem teto não há transbordo, logo não há rolagem', () => {
@@ -38,31 +38,31 @@ describe('scrollAreaSnippet', () => {
   });
 
   it('constrói o conteúdo com DOM curto e fábricas do design system, sem helper de story', () => {
-    const lista = scrollAreaSnippet({ itemCount: 12 });
-    expect(lista).toContain('for (let i = 1; i <= 12; i++)');
-    expect(lista).not.toContain('buildList');
-    expect(lista).not.toContain('buildVerticalList');
+    const list = scrollAreaSnippet({ itemCount: 12 });
+    expect(list).toContain('for (let i = 1; i <= 12; i++)');
+    expect(list).not.toContain('buildList');
+    expect(list).not.toContain('buildVerticalList');
 
-    const row = scrollAreaSnippet({ conteudo: 'fileira' });
+    const row = scrollAreaSnippet({ content: 'fileira' });
     expect(row).toContain("import { createCard, createCardContent } from '@/components/ui/card';");
     expect(row).toContain('nds-shrink-0');
     expect(row).not.toContain('buildHorizontalRow');
 
-    const badges = scrollAreaSnippet({ conteudo: 'badges' });
+    const badges = scrollAreaSnippet({ content: 'badges' });
     expect(badges).toContain("import { createBadge } from '@/components/ui/badge';");
     expect(badges).not.toContain('tagItem');
   });
 
   it('dá nome ao marco quando o conteúdo é navegação', () => {
-    const código = scrollAreaSnippet({ conteudo: 'links' });
-    expect(código).toContain("navegacao.setAttribute('aria-label', 'Ações da conta');");
-    expect(código).not.toContain('buildLinkList');
+    const code = scrollAreaSnippet({ content: 'links' });
+    expect(code).toContain("navegacao.setAttribute('aria-label', 'Ações da conta');");
+    expect(code).not.toContain('buildLinkList');
   });
 
   it('não crava medida em style inline', () => {
-    const código = scrollAreaSnippet({ conteudo: 'fileira' });
-    expect(código).not.toContain('.style.width');
-    expect(código).not.toContain('max-content');
+    const code = scrollAreaSnippet({ content: 'fileira' });
+    expect(code).not.toContain('.style.width');
+    expect(code).not.toContain('max-content');
   });
 });
 
@@ -87,35 +87,35 @@ describe('scrollAreaSource', () => {
 
 describe('scrollAreaSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = scrollAreaSourceWith({ conteudo: 'matriz', size: 'xl' })('', {
+    const code = scrollAreaSourceWith({ content: 'matriz', size: 'xl' })('', {
       args: { size: 'sm' },
     });
-    expect(código).toContain("size: 'xl'");
-    expect(código).toContain('nds-whitespace-nowrap');
+    expect(code).toContain("size: 'xl'");
+    expect(code).toContain('nds-whitespace-nowrap');
   });
 });
 
 describe('scrollAreaSemLimiteSnippet', () => {
   it('mostra o par sem teto × com teto, que é o assunto da story', () => {
-    const código = scrollAreaNoLimitSnippet({ size: 'sm' });
-    expect(código).toContain('const semTeto = createScrollArea({');
-    expect(código).toContain('const comTeto = createScrollArea({');
-    expect(código).toContain("size: 'sm'");
-    expect(código).toContain("append(semTeto, comTeto)");
+    const code = scrollAreaNoLimitSnippet({ size: 'sm' });
+    expect(code).toContain('const semTeto = createScrollArea({');
+    expect(code).toContain('const comTeto = createScrollArea({');
+    expect(code).toContain("size: 'sm'");
+    expect(code).toContain("append(semTeto, comTeto)");
     // A área sem teto também não tem nome: papel sem nome não vira marco.
     //
     // A busca é pela OPÇÃO (`'aria-label':`), não pelo texto solto: o snippet
     // carrega um comentário explicando por que o nome está ausente, e procurar
     // a palavra fazia a asserção reprovar a própria explicação.
-    expect(código.split('const comTeto')[0]).not.toContain("'aria-label':");
+    expect(code.split('const comTeto')[0]).not.toContain("'aria-label':");
   });
 });
 
 describe('scrollAreaEmCardSnippet', () => {
   it('põe a área DENTRO do cartão, com o cabeçalho fora dela', () => {
-    const código = scrollAreaEmCardSnippet({ size: 'lg' });
-    expect(código).toContain('createCardHeader()');
-    expect(código).toContain('corpo.appendChild(area);');
-    expect(código).toContain('cartao.append(cabecalho, corpo);');
+    const code = scrollAreaEmCardSnippet({ size: 'lg' });
+    expect(code).toContain('createCardHeader()');
+    expect(code).toContain('corpo.appendChild(area);');
+    expect(code).toContain('cartao.append(cabecalho, corpo);');
   });
 });

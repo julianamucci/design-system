@@ -30,13 +30,13 @@ const TEXT_NEXT = 'Próxima';
 
 /** Import do design system, uma peça por linha e em ordem alfabética. */
 function importa(...parts: string[]): string {
-  const lista = [...new Set(parts)].sort();
-  return `import {\n${lista.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/pagination'`;
+  const list = [...new Set(parts)].sort();
+  return `import {\n${list.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/pagination'`;
 }
 
 /** Número de control, com o padrão de volta quando o control não trouxe um. */
-function numero(valor: unknown, padrao: number): number {
-  return typeof valor === 'number' && Number.isFinite(valor) && valor > 0 ? valor : padrao;
+function numero(value: unknown, padrao: number): number {
+  return typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : padrao;
 }
 
 /**
@@ -49,16 +49,16 @@ function numero(valor: unknown, padrao: number): number {
  * O `aria-label` com o número por extenso também não é enfeite: "3" sozinho não
  * diz nada em voz alta.
  */
-function numberedLink(opcoes: { active: string; recuo: number; onClick?: string; valor?: string }): string {
-  const { active, recuo, onClick = '@click.prevent', valor = 'n' } = opcoes;
+function numberedLink(options: { active: string; recuo: number; onClick?: string; value?: string }): string {
+  const { active, recuo, onClick = '@click.prevent', value = 'n' } = options;
   const p = ' '.repeat(recuo);
   return `${p}<PaginationLink
 ${p}  href="#"
 ${p}  :is-active="${active}"
-${p}  :aria-label="\`Ir para página \${${valor}}\`"
+${p}  :aria-label="\`Ir para página \${${value}}\`"
 ${p}  ${onClick}
 ${p}>
-${p}  {{ ${valor} }}
+${p}  {{ ${value} }}
 ${p}</PaginationLink>`;
 }
 
@@ -120,7 +120,7 @@ ${numberedLink({ active: 'atual === n', recuo: 6, onClick: '@click.prevent="irPa
  * O que muda entre elas é a página em que a faixa está parada — e é `:page`
  * que decide, junto, qual direcional o componente desabilita.
  */
-function rangeFixa(atual: number): string {
+function rangeFixa(current: number): string {
   return vueSnippet(
     `${importa(
       'Pagination',
@@ -132,11 +132,11 @@ function rangeFixa(atual: number): string {
     )}
 
 const paginas = [1, 2, 3, 4, 5]`,
-    `<Pagination :total="50" :items-per-page="10" :page="${atual}">
+    `<Pagination :total="50" :items-per-page="10" :page="${current}">
   <PaginationContent>
     <PaginationItem><PaginationPrevious /></PaginationItem>
     <PaginationItem v-for="n in paginas" :key="n">
-${numberedLink({ active: `n === ${atual}`, recuo: 6 })}
+${numberedLink({ active: `n === ${current}`, recuo: 6 })}
     </PaginationItem>
     <PaginationItem><PaginationNext /></PaginationItem>
   </PaginationContent>

@@ -42,11 +42,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /** Par idempotente — ver a nota em collapsible.stories.tsx. */
-const abrir = async (t: HTMLElement) => {
+const open = async (t: HTMLElement) => {
   if (t.getAttribute("aria-expanded") !== "true") await userEvent.click(t);
   await waitFor(() => expect(t).toHaveAttribute("aria-expanded", "true"));
 };
-const fechar = async (t: HTMLElement) => {
+const close = async (t: HTMLElement) => {
   if (t.getAttribute("aria-expanded") !== "false") await userEvent.click(t);
   await waitFor(() => expect(t).toHaveAttribute("aria-expanded", "false"));
 };
@@ -89,8 +89,8 @@ export const WithCustomButton: Story = {
     });
 
     await step("aberto, o mesmo botão aponta para o painel", async () => {
-      await fechar(trigger);
-      await abrir(trigger);
+      await close(trigger);
+      await open(trigger);
       const id = trigger.getAttribute("aria-controls");
       await expect(id).toBeTruthy();
       await expect(document.getElementById(id!)).toBe(
@@ -144,14 +144,14 @@ export const WithIconInTrigger: Story = {
     });
 
     await step("fechado, o chevron não está girado", async () => {
-      await fechar(trigger);
+      await close(trigger);
       // waitFor porque `.nds-chevron` tem transition: transform — medido no
       // primeiro quadro, o valor computado ainda é a matriz da animação.
       await waitFor(() => expect(getComputedStyle(chevron).transform).toBe("none"));
     });
 
     await step("aberto, o CSS gira 180° a partir do estado no trigger", async () => {
-      await abrir(trigger);
+      await open(trigger);
       await expect(trigger).toHaveAttribute("data-panel-open");
       // matrix(-1, 0, 0, -1, 0, 0) é a forma computada de rotate(180deg).
       await waitFor(() =>
@@ -193,7 +193,7 @@ export const WithStructuredContent: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole("button", { name: "Exibir filtros avançados" });
-    const painel = () =>
+    const panel = () =>
       canvasElement.querySelector<HTMLElement>('[data-slot="collapsible-content"]');
 
     await step("trigger só de ícone tem nome acessível pelo aria-label", async () => {
@@ -204,13 +204,13 @@ export const WithStructuredContent: Story = {
     });
 
     await step("o cabeçalho fica visível independente do painel", async () => {
-      await fechar(trigger);
+      await close(trigger);
       await expect(canvas.getByText("Filtro básico ativo")).toBeVisible();
-      await expect(painel()).toBeNull();
+      await expect(panel()).toBeNull();
     });
 
     await step("abrir revela os filtros avançados sob o cabeçalho", async () => {
-      await abrir(trigger);
+      await open(trigger);
       await expect(canvas.getByText("Filtro avançado 1")).toBeVisible();
     });
   },

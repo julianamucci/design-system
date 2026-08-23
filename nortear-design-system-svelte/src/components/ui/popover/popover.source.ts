@@ -41,10 +41,10 @@ function header(title: string, description: string): string {
 }
 
 /** Botão que fecha o painel por dentro — o único papel do `PopoverClose`. */
-function fechar(rotulo: string, variante: 'outline' | 'ghost', indentacao: string): string {
+function close(label: string, variant: 'outline' | 'ghost', indentacao: string): string {
   return `${indentacao}<PopoverClose>
 ${indentacao}  {#snippet child({ props })}
-${indentacao}    <Button variant="${variante}" size="sm" {...props}>${rotulo}</Button>
+${indentacao}    <Button variant="${variant}" size="sm" {...props}>${label}</Button>
 ${indentacao}  {/snippet}
 ${indentacao}</PopoverClose>`;
 }
@@ -97,7 +97,7 @@ function salvar(evento: SubmitEvent) {
         <Input id="perfil-email" type="email" bind:value={email} />
       </div>
       <div class="nds-cluster" data-justify="end" data-spacing="sm">
-${fechar(a.cancelLabel, 'ghost', '        ')}
+${close(a.cancelLabel, 'ghost', '        ')}
         <Button type="submit" size="sm">${a.submitLabel}</Button>
       </div>
     </form>`,
@@ -179,7 +179,7 @@ ${fechar(a.cancelLabel, 'ghost', '        ')}
     state: '',
     markup: `${head}
     <div class="nds-cluster" data-justify="end" data-spacing="sm">
-${fechar(a.cancelLabel, 'outline', '      ')}
+${close(a.cancelLabel, 'outline', '      ')}
       <Button size="sm">${a.saveLabel}</Button>
     </div>`,
   };

@@ -44,27 +44,27 @@ describe('fiação do painel Code', () => {
   it.each(files.filter((f) => !ehGate(f)))(
     '%s declara docs.source.transform no meta',
     (arquivo) => {
-      const conteudo = readFileSync(join(UI, arquivo), 'utf8');
+      const content = readFileSync(join(UI, arquivo), 'utf8');
       // O `meta` é tudo que vem antes do primeiro export de story.
-      const corte = conteudo.search(/^export const /m);
-      const meta = corte === -1 ? conteudo : conteudo.slice(0, corte);
+      const corte = content.search(/^export const /m);
+      const meta = corte === -1 ? content : content.slice(0, corte);
       expect(meta).toMatch(/source:\s*\{\s*transform:/);
     },
   );
 
   it.each(files)('%s importa a transform de um módulo `.source`', (arquivo) => {
     if (ehGate(arquivo)) return;
-    const conteudo = readFileSync(join(UI, arquivo), 'utf8');
+    const content = readFileSync(join(UI, arquivo), 'utf8');
     // Função exportada de `<slug>.source.ts`, nunca lambda inline: a saída do
     // painel não aparece no DOM durante a `play`, então só a função exportada
     // tem como ser testada.
-    expect(conteudo).toMatch(/from '\.\/[a-z0-9-]+\.source'/);
+    expect(content).toMatch(/from '\.\/[a-z0-9-]+\.source'/);
   });
 
   it('nenhum arquivo de story define a transform como lambda inline', () => {
     const culpados = files.filter((f) => {
-      const conteudo = readFileSync(join(UI, f), 'utf8');
-      return /transform:\s*\(/.test(conteudo) || /transform:\s*function/.test(conteudo);
+      const content = readFileSync(join(UI, f), 'utf8');
+      return /transform:\s*\(/.test(content) || /transform:\s*function/.test(content);
     });
     expect(culpados).toEqual([]);
   });

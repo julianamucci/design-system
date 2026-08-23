@@ -107,10 +107,10 @@ export const FiltersPanel: Story = {
     </Sheet>
   ),
   play: async () => {
-    const painel = await waitForPortal("dialog");
-    await expect(painel).toHaveAccessibleName(/Filtros avançados/i);
-    const campo = within(painel).getByLabelText(/Categoria/i);
-    await expect(campo).toBeVisible();
+    const panel = await waitForPortal("dialog");
+    await expect(panel).toHaveAccessibleName(/Filtros avançados/i);
+    const field = within(panel).getByLabelText(/Categoria/i);
+    await expect(field).toBeVisible();
   },
 };
 
@@ -148,9 +148,9 @@ export const SecondaryNavigation: Story = {
     </Sheet>
   ),
   play: async () => {
-    const painel = await waitForPortal("dialog");
-    await expect(painel).toHaveAttribute("data-side", "left");
-    const nav = within(painel).getByRole("navigation");
+    const panel = await waitForPortal("dialog");
+    await expect(panel).toHaveAttribute("data-side", "left");
+    const nav = within(panel).getByRole("navigation");
     await expect(nav).toBeVisible();
   },
 };
@@ -192,9 +192,9 @@ export const BottomPanel: Story = {
     </Sheet>
   ),
   play: async () => {
-    const painel = await waitForPortal("dialog");
-    await expect(painel).toHaveAttribute("data-side", "bottom");
-    await expect(painel).toHaveAccessibleName(/Ações rápidas/i);
+    const panel = await waitForPortal("dialog");
+    await expect(panel).toHaveAttribute("data-side", "bottom");
+    await expect(panel).toHaveAccessibleName(/Ações rápidas/i);
   },
 };
 
@@ -222,8 +222,8 @@ export const WithLongScrollContent: Story = {
         <SheetBody className="nds-stack" data-spacing="sm">
           {Array.from({ length: 24 }, (_, i) => (
             <p key={i} className="nds-text-body">
-              Parágrafo {i + 1}: termos longos o bastante para o corpo precisar rolar
-              inside do painel, without empurrar o rodapé para outside da tela.
+              Parágrafo {i + 1}: termos longos o bastante para o body precisar rolar
+              inside do panel, without empurrar o rodapé para outside da tela.
             </p>
           ))}
         </SheetBody>
@@ -235,26 +235,26 @@ export const WithLongScrollContent: Story = {
     </Sheet>
   ),
   play: async ({ step }) => {
-    const painel = await waitForPortal("dialog");
-    const corpo = painel.querySelector<HTMLElement>('[data-slot="sheet-body"]')!;
-    const rodape = painel.querySelector<HTMLElement>('[data-slot="sheet-footer"]')!;
+    const panel = await waitForPortal("dialog");
+    const body = panel.querySelector<HTMLElement>('[data-slot="sheet-body"]')!;
+    const footer = panel.querySelector<HTMLElement>('[data-slot="sheet-footer"]')!;
 
     await step("O corpo é quem rola, não o painel", async () => {
-      await expect(corpo).not.toBeNull();
-      await expect(corpo.scrollHeight).toBeGreaterThan(corpo.clientHeight);
+      await expect(body).not.toBeNull();
+      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
       // O painel em si não rola: o `flex` do corpo é o que segura o rodapé.
-      await expect(painel.scrollHeight).toBeLessThanOrEqual(painel.clientHeight + 1);
+      await expect(panel.scrollHeight).toBeLessThanOrEqual(panel.clientHeight + 1);
     });
 
     await step("A região rolável é alcançável por teclado", async () => {
       // WCAG 2.1.1 — sem o tabindex quem navega por teclado não consegue rolar
       // o corpo (é a regra scrollable-region-focusable do axe).
-      await expect(corpo).toHaveAttribute("tabindex", "0");
+      await expect(body).toHaveAttribute("tabindex", "0");
     });
 
     await step("O rodapé continua visível com o corpo cheio", async () => {
-      const boxFooter = rodape.getBoundingClientRect();
-      const boxPanel = painel.getBoundingClientRect();
+      const boxFooter = footer.getBoundingClientRect();
+      const boxPanel = panel.getBoundingClientRect();
       await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
       await expect(boxFooter.height).toBeGreaterThan(0);
     });

@@ -13,14 +13,14 @@ import {
 } from './index';
 import { Button } from '@/components/ui/button';
 import {
-  abrir,
+  open,
   cantoButtonClose,
   checkNameEDescricao,
   waitForOpen,
   waitForClosed,
-  gatilho,
+  trigger,
   overlay,
-  painel,
+  panel,
 } from './dialog.fixtures';
 import {
   dialogOpenSource,
@@ -96,20 +96,20 @@ export const Closed: Story = {
   // Esta story não interage com nada: é aqui que a leitura do estado de
   // MONTAGEM vale, porque nenhum replay pode ter mudado o que ela observa.
   play: async ({ canvasElement, step }) => {
-    const trigger = gatilho(canvasElement)!;
+    const triggerEl = trigger(canvasElement)!;
 
     await step('Fechado, nada do conteúdo existe no DOM', async () => {
       // O portal é estrutural: fechado, nem o overlay nem o painel estão no
       // DOM. Um painel escondido por CSS continuaria na ordem de tabulação e
       // seria lido pelo leitor de tela.
-      await expect(painel()).toBeNull();
+      await expect(panel()).toBeNull();
       await expect(overlay()).toBeNull();
-      await expect(trigger).toBeVisible();
+      await expect(triggerEl).toBeVisible();
     });
 
     await step('O gatilho anuncia que abre um diálogo, e que está recolhido', async () => {
-      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(triggerEl).toHaveAttribute('aria-haspopup', 'dialog');
+      await expect(triggerEl).toHaveAttribute('aria-expanded', 'false');
     });
   },
 };
@@ -217,7 +217,7 @@ export const WithCloseButtonHidden: Story = {
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final, e o que esta story existe
       // para mostrar é o painel SEM o X no canto.
-      await expect(await abrir(canvasElement)).toBeVisible();
+      await expect(await open(canvasElement)).toBeVisible();
     });
   },
 };
@@ -276,7 +276,7 @@ export const Controlled: Story = {
     spyControlled.mockClear();
 
     await step('Nasce fechado, porque o valor externo diz que sim', async () => {
-      await expect(painel()).toBeNull();
+      await expect(panel()).toBeNull();
     });
 
     await step('Interagir avisa o dono do estado, e o painel segue o valor', async () => {
@@ -292,7 +292,7 @@ export const Controlled: Story = {
       // O valor externo é quem fecha: se o callback não disparasse, o painel
       // teria sumido por conta própria e o estado do pai ficaria mentindo.
       await expect(spyControlled).toHaveBeenLastCalledWith(false);
-      await expect(painel()).toBeNull();
+      await expect(panel()).toBeNull();
     });
   },
 };

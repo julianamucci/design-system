@@ -41,10 +41,10 @@ export const HorizontalNoScroll: StoryObj = {
     stack.className = 'nds-stack';
     stack.dataset['spacing'] = 'sm';
     for (const className of LARGURAS) {
-      const caixa = document.createElement('div');
-      caixa.className = `${className} nds-p-2 nds-bg-muted nds-text-caption`;
-      caixa.textContent = className;
-      stack.appendChild(caixa);
+      const box = document.createElement('div');
+      box.className = `${className} nds-p-2 nds-bg-muted nds-text-caption`;
+      box.textContent = className;
+      stack.appendChild(box);
     }
     frame.appendChild(stack);
     return frame;

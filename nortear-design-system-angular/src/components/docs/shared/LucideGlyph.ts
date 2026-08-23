@@ -47,12 +47,12 @@ export class NdsLucideGlyph implements OnInit {
 
   ngOnInit(): void {
     const svg = this.hostRef.nativeElement;
-    for (const [tag, atributos] of this.ndsLucideGlyph()) {
-      const filho = document.createElementNS('http://www.w3.org/2000/svg', tag);
-      for (const [nome, valor] of Object.entries(atributos)) {
-        filho.setAttribute(nome, String(valor));
+    for (const [tag, attrs] of this.ndsLucideGlyph()) {
+      const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
+      for (const [name, value] of Object.entries(attrs)) {
+        child.setAttribute(name, String(value));
       }
-      svg.appendChild(filho);
+      svg.appendChild(child);
     }
   }
 }

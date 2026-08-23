@@ -70,7 +70,7 @@ export const Closed: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button');
+    const trigger = within(canvasElement).getByRole('button');
 
     await step('O balão não está no DOM, nem no canvas nem no portal', async () => {
       await expect(document.querySelector('[data-slot="tooltip-content"]')).toBeNull();
@@ -79,7 +79,7 @@ export const Closed: Story = {
     await step('Sem balão, não há describedby apontando para o vazio', async () => {
       // Um `aria-describedby` para um id ausente é violação de
       // `aria-valid-attr-value` — o mesmo axe que roda no addon-a11y da story.
-      await expect(gatilho.getAttribute('aria-describedby')).toBeNull();
+      await expect(trigger.getAttribute('aria-describedby')).toBeNull();
     });
   },
 };
@@ -99,13 +99,13 @@ export const Open: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button');
+    const trigger = within(canvasElement).getByRole('button');
 
     await step('O estado externo abre o balão sem interação nenhuma', async () => {
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       await expect(balao).toHaveAttribute('role', 'tooltip');
       await expect(balao).toHaveAttribute('data-state', 'open');
       await waitFor(async () => {
@@ -114,8 +114,8 @@ export const Open: Story = {
     });
 
     await step('E o gatilho passa a apontar para ele', async () => {
-      await expect(document.getElementById(gatilho.getAttribute('aria-describedby')!)).toBe(
-        balaoDe(gatilho),
+      await expect(document.getElementById(trigger.getAttribute('aria-describedby')!)).toBe(
+        balaoDe(trigger),
       );
     });
   },
@@ -137,21 +137,21 @@ export const Hover: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button');
+    const trigger = within(canvasElement).getByRole('button');
 
     await step('O mouse passando não abre — o delay é o que separa passar de parar', async () => {
-      await userEvent.hover(gatilho);
-      await expect(balaoDe(gatilho)).toBeNull();
+      await userEvent.hover(trigger);
+      await expect(balaoDe(trigger)).toBeNull();
     });
 
     await step('Parado sobre o gatilho, o balão abre depois do delay do provider', async () => {
       await waitFor(
         async () => {
-          await expect(balaoDe(gatilho)).not.toBeNull();
+          await expect(balaoDe(trigger)).not.toBeNull();
         },
         { timeout: LONG_DELAY * 5 },
       );
-      await expect(balaoDe(gatilho)).toHaveAttribute('data-state', 'open');
+      await expect(balaoDe(trigger)).toHaveAttribute('data-state', 'open');
     });
   },
 };
@@ -172,22 +172,22 @@ export const Focus: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button');
+    const trigger = within(canvasElement).getByRole('button');
 
     await step('O foco abre na hora, mesmo com o provider pedindo espera', async () => {
       // Quem chega por teclado não tem como "parar em cima": esperar o delay
       // aqui seria o mesmo que esconder a informação de quem não usa mouse.
-      gatilho.focus();
+      trigger.focus();
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      await expect(balaoDe(gatilho)).toHaveAttribute('data-state', 'open');
+      await expect(balaoDe(trigger)).toHaveAttribute('data-state', 'open');
     });
 
     await step('Sair do gatilho fecha o balão', async () => {
-      gatilho.blur();
+      trigger.blur();
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).toBeNull();
+        await expect(balaoDe(trigger)).toBeNull();
       });
     });
   },
@@ -208,24 +208,24 @@ export const PersistenceInBubble: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button');
+    const trigger = within(canvasElement).getByRole('button');
 
     await step('O hover abre o balão', async () => {
-      await userEvent.hover(gatilho);
+      await userEvent.hover(trigger);
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
     });
 
     await step('Levar o mouse até o balão não fecha nada', async () => {
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       // `pointerEventsCheck: 0` porque a folha compartilhada deixa o balão
       // `pointer-events: none` — quem segura a abertura é a área de tolerância
       // entre gatilho e balão, calculada por coordenada, não por hover no
       // elemento.
       await userEvent.hover(balao, { pointerEventsCheck: 0 });
       await wait(200);
-      await expect(balaoDe(gatilho)).not.toBeNull();
+      await expect(balaoDe(trigger)).not.toBeNull();
     });
   },
 };

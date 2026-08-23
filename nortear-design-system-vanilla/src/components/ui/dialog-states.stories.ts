@@ -5,14 +5,14 @@ import { dialogSource, dialogSourceWith } from './dialog.source';
 import { createButton } from './button';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import {
-  abrir,
+  open,
   cantoButtonClose,
   checkNameEDescricao,
   waitForOpen,
   waitForClosed,
-  gatilho,
+  trigger,
   overlay,
-  painel,
+  panel,
 } from './dialog.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -28,7 +28,7 @@ const meta: Meta = {
       source: { transform: dialogSource },
       description: {
         component:
-          'Configuracoes canônicas do Dialog: closed, open, sem botão Close e controlled (abertura programática via referência ao trigger).',
+          'Configuracoes canônicas do Dialog: closed, open, sem botão Close e controlled (abertura programática via referência ao triggerEl).',
       },
     },
   },
@@ -84,21 +84,21 @@ export const Closed: Story = {
   // Esta story não interage com nada: é aqui que a leitura do estado de
   // MONTAGEM vale, porque nenhum replay pode ter mudado o que ela observa.
   play: async ({ canvasElement, step }) => {
-    const trigger = gatilho(canvasElement)!;
+    const triggerEl = trigger(canvasElement)!;
 
     await step('Fechado, nada do conteúdo existe no DOM', async () => {
       // O portal é estrutural: fechado, nem o overlay nem o painel estão no
       // DOM. Um painel escondido por CSS continuaria na ordem de tabulação e
       // seria lido pelo leitor de tela.
-      await expect(painel()).toBeNull();
+      await expect(panel()).toBeNull();
       await expect(overlay()).toBeNull();
-      await expect(trigger).toBeVisible();
+      await expect(triggerEl).toBeVisible();
     });
 
     await step('E o gatilho é um botão de verdade, pronto para o teclado', async () => {
-      await expect(trigger.tagName).toBe('BUTTON');
-      await expect(trigger).toHaveAttribute('type', 'button');
-      await expect(trigger).toHaveAccessibleName('Editar perfil');
+      await expect(triggerEl.tagName).toBe('BUTTON');
+      await expect(triggerEl).toHaveAttribute('type', 'button');
+      await expect(triggerEl).toHaveAccessibleName('Editar perfil');
     });
   },
 };
@@ -183,7 +183,7 @@ export const WithCloseButtonHidden: Story = {
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final, e o que esta story existe
       // para mostrar é o painel SEM o X no canto.
-      await expect(await abrir(canvasElement)).toBeVisible();
+      await expect(await open(canvasElement)).toBeVisible();
     });
   },
 };
@@ -204,7 +204,7 @@ export const Controlled: Story = {
         transform: dialogSourceWith({
           triggerLabel: 'Abrir',
           title: 'Controlado pelo pai',
-          description: 'Abertura programática via referência ao trigger.',
+          description: 'Abertura programática via referência ao triggerEl.',
           bodyText: 'Este diálogo é comandado por estado externo.',
           footer: [{ label: 'Cancelar', variant: 'outline' }, { label: 'Confirmar' }],
           onOpenChange: '(aberto) => sincronizarEstadoExterno(aberto)',
@@ -212,7 +212,7 @@ export const Controlled: Story = {
       },
       description: {
         story:
-          'Abertura controlada externamente. O trigger interno do dialog fica escondido e a abertura acontece via `trigger.click()` a partir de um botão externo. `onOpenChange` rastreia o estado para o pai.',
+          'Abertura controlada externamente. O triggerEl interno do dialog fica escondido e a abertura acontece via `triggerEl.click()` a partir de um botão externo. `onOpenChange` rastreia o estado para o pai.',
       },
     },
   },
@@ -238,7 +238,7 @@ export const Controlled: Story = {
     const dialog = createDialog({
       trigger: hiddenTrigger,
       title: 'Controlado pelo pai',
-      description: 'Abertura programática via referência ao trigger.',
+      description: 'Abertura programática via referência ao triggerEl.',
       content,
       footer: [
         createButton({ variant: 'outline', label: 'Cancelar' }),
@@ -267,7 +267,7 @@ export const Controlled: Story = {
     spyControlled.mockClear();
 
     await step('Nasce fechado, porque o valor externo diz que sim', async () => {
-      await expect(painel()).toBeNull();
+      await expect(panel()).toBeNull();
       await expect(externo).toHaveAttribute('data-open', 'false');
     });
 
@@ -281,7 +281,7 @@ export const Controlled: Story = {
     });
 
     await step('Interagir avisa o dono do estado, e o painel segue o valor', async () => {
-      if (!painel()) await userEvent.click(externo);
+      if (!panel()) await userEvent.click(externo);
       await expect(await waitForOpen()).toBeVisible();
       await expect(spyControlled).toHaveBeenLastCalledWith(true);
       await expect(externo).toHaveAttribute('data-open', 'true');
@@ -325,13 +325,13 @@ export const ListenerCleanup: Story = {
       probe = await sondarOuvintes({
         host: host as HTMLElement,
         montar: () => {
-          const conteudo = document.createElement('p');
-          conteudo.textContent = 'Conteúdo do diálogo.';
+          const content = document.createElement('p');
+          content.textContent = 'Conteúdo do diálogo.';
           return createDialog({
             trigger: createButton({ variant: 'outline', label: 'Abrir' }),
             title: 'Título',
             description: 'Descrição do diálogo.',
-            content: conteudo,
+            content: content,
           });
         },
         exercitar: (no) => no.querySelector<HTMLElement>('button')?.click(),

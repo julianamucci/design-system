@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -47,9 +47,9 @@ function itemsDefault(withGroups: boolean): CommandEntrySnippet[] {
 
 function literalDoItem(entry: CommandEntrySnippet): string {
   if ('type' in entry) return "{ type: 'separator' }";
-  const partes = [`value: ${texto(entry.value)}`, `label: ${texto(entry.label)}`];
-  if (entry.group) partes.push(`group: ${texto(entry.group)}`);
-  if (entry.shortcut) partes.push(`shortcut: ${texto(entry.shortcut)}`);
+  const partes = [`value: ${text(entry.value)}`, `label: ${text(entry.label)}`];
+  if (entry.group) partes.push(`group: ${text(entry.group)}`);
+  if (entry.shortcut) partes.push(`shortcut: ${text(entry.shortcut)}`);
   if (entry.checked !== undefined) partes.push(`checked: ${String(entry.checked)}`);
   if (entry.disabled) partes.push('disabled: true');
   return `{ ${partes.join(', ')} }`;
@@ -60,19 +60,19 @@ function literalDoItem(entry: CommandEntrySnippet): string {
  * prefixa só a PRIMEIRA linha de cada opção, então as de dentro do array já
  * saem daqui no recuo final.
  */
-function itemsLiteral(itens: CommandEntrySnippet[]): string {
-  return `[\n${itens.map((i) => `    ${literalDoItem(i)},`).join('\n')}\n  ]`;
+function itemsLiteral(items: CommandEntrySnippet[]): string {
+  return `[\n${items.map((i) => `    ${literalDoItem(i)},`).join('\n')}\n  ]`;
 }
 
 /** O texto do callback só entra quando é texto: nos args ele chega como função. */
-function callbackBody(valor: unknown): string | undefined {
-  return typeof valor === 'string' && valor.length > 0 ? valor : undefined;
+function callbackBody(value: unknown): string | undefined {
+  return typeof value === 'string' && value.length > 0 ? value : undefined;
 }
 
 function paletteOptions(o: CommandSnippetOptions): string[] {
-  return opcoes([
-    ['placeholder', o.placeholder ? texto(o.placeholder) : undefined],
-    ['emptyMessage', o.emptyMessage ? texto(o.emptyMessage) : undefined],
+  return options([
+    ['placeholder', o.placeholder ? text(o.placeholder) : undefined],
+    ['emptyMessage', o.emptyMessage ? text(o.emptyMessage) : undefined],
     ['items', itemsLiteral(o.items ?? itemsDefault(o.showGroups !== false))],
     ['onSelect', callbackBody(o.onSelect)],
   ]);
@@ -118,11 +118,11 @@ export function commandEmPopoverSnippet(o: CommandSnippetOptions = {}): string {
       "gatilho.setAttribute('role', 'combobox');",
     ].join('\n'),
     `const paleta = ${chamada('createCommand', lines)};`,
-    `const popover = ${chamada('createPopover', opcoes([
+    `const popover = ${chamada('createPopover', options([
       ['trigger', 'gatilho'],
       ['content', 'paleta'],
-      ['side', texto('bottom')],
-      ['align', texto('start')],
+      ['side', text('bottom')],
+      ['align', text('start')],
     ]))};`,
     montar('popover'),
   );
@@ -144,10 +144,10 @@ export function commandEmDialogSnippet(o: CommandSnippetOptions = {}): string {
     ].join('\n'),
     "const gatilho = createButton({ variant: 'outline', label: 'Buscar' });",
     `const paleta = ${chamada('createCommand', paletteOptions(o))};`,
-    `const dialogo = ${chamada('createDialog', opcoes([
+    `const dialogo = ${chamada('createDialog', options([
       ['trigger', 'gatilho'],
-      ['title', texto('Command Palette')],
-      ['description', texto('Busque por um comando ou ação...')],
+      ['title', text('Command Palette')],
+      ['description', text('Busque por um comando ou ação...')],
       ['headerHidden', 'true'],
       ['showCloseButton', 'false'],
       ['content', 'paleta'],

@@ -276,11 +276,11 @@ export const VerticalSettings: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const lista = canvas.getByRole('tablist');
+    const list = canvas.getByRole('tablist');
     const abas = canvas.getAllByRole('tab') as HTMLElement[];
 
     await step('A lista anuncia a orientação vertical', async () => {
-      await expect(lista).toHaveAttribute('aria-orientation', 'vertical');
+      await expect(list).toHaveAttribute('aria-orientation', 'vertical');
     });
 
     await step('ArrowDown move o foco e ativa a próxima aba', async () => {

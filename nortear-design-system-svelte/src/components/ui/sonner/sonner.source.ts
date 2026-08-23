@@ -41,10 +41,10 @@ function region(props: string): string {
 }
 
 /** Botão de disparo + região, na ordem em que a pessoa lê. */
-function nextFrame(script: string, label: string, gatilho: string, props: string): string {
+function nextFrame(script: string, label: string, trigger: string, props: string): string {
   return svelteSnippet(
     script,
-    `<Button variant="outline" onclick={${gatilho}}>
+    `<Button variant="outline" onclick={${trigger}}>
   ${label}
 </Button>
 

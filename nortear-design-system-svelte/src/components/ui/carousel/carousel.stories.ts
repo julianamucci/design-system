@@ -157,7 +157,7 @@ export const Playground: Story = {
       // "no primeiro slide" encontraria a seta de voltar já habilitada.
       //
       // Volta ENQUANTO der, nunca um número fixo de cliques.
-      for (let passo = 0; passo < TOTAL; passo++) {
+      for (let step = 0; step < TOTAL; step++) {
         const button = previous();
         if (button.disabled) break;
         await userEvent.click(button);

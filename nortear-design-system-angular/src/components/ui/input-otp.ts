@@ -45,10 +45,10 @@ export type InputOtpMode = 'numeric' | 'alphanumeric';
 
 interface CellOtp {
   /** Chave estável para o `track` do @for — separador e slot nunca colidem. */
-  chave: string;
+  key: string;
   separator: boolean;
   /** Índice do slot no código; -1 num separador. */
-  indice: number;
+  index: number;
   caractere: string;
 }
 
@@ -64,7 +64,7 @@ interface CellOtp {
     '[attr.aria-label]': 'ariaLabel()',
   },
   template: `
-    @for (celula of celulas(); track celula.chave) {
+    @for (celula of celulas(); track celula.key) {
       @if (celula.separator) {
         <!-- role="separator" e não aria-hidden: o conteúdo compartilhado cobra
              o papel (testes.accessibility.item4) porque é ele que informa ao
@@ -84,14 +84,14 @@ interface CellOtp {
           [value]="celula.caractere"
           [disabled]="disabled()"
           [attr.inputmode]="inputMode()"
-          [attr.autocomplete]="celula.indice === 0 ? autocomplete() : 'off'"
-          [attr.aria-label]="rotuloDoDigito(celula.indice)"
+          [attr.autocomplete]="celula.index === 0 ? autocomplete() : 'off'"
+          [attr.aria-label]="rotuloDoDigito(celula.index)"
           [attr.aria-invalid]="invalid() ? 'true' : null"
           [attr.aria-describedby]="describedBy() || null"
           (focus)="aoFocar($event)"
-          (input)="aoDigitar(celula.indice, $event)"
-          (keydown)="onKeyDown(celula.indice, $event)"
-          (paste)="aoColar(celula.indice, $event)"
+          (input)="aoDigitar(celula.index, $event)"
+          (keydown)="onKeyDown(celula.index, $event)"
+          (paste)="aoColar(celula.index, $event)"
         />
       }
     }
@@ -168,9 +168,9 @@ export class NdsInputOtp implements AfterViewInit {
     const out: CellOtp[] = [];
     for (let i = 0; i < total; i++) {
       if (antes.has(i)) {
-        out.push({ chave: `sep-${i}`, separator: true, indice: -1, caractere: '' });
+        out.push({ key: `sep-${i}`, separator: true, index: -1, caractere: '' });
       }
-      out.push({ chave: `slot-${i}`, separator: false, indice: i, caractere: atuais[i] ?? '' });
+      out.push({ key: `slot-${i}`, separator: false, index: i, caractere: atuais[i] ?? '' });
     }
     return out;
   });
@@ -194,8 +194,8 @@ export class NdsInputOtp implements AfterViewInit {
     if (this.autoFocus()) this.focar(0);
   }
 
-  protected rotuloDoDigito(indice: number): string {
-    return `${this.digitLabel()} ${indice + 1}`;
+  protected rotuloDoDigito(index: number): string {
+    return `${this.digitLabel()} ${index + 1}`;
   }
 
   // ─── Interação ─────────────────────────────────────────────────────────────
@@ -207,7 +207,7 @@ export class NdsInputOtp implements AfterViewInit {
     (evento.target as HTMLInputElement).select();
   }
 
-  protected aoDigitar(indice: number, evento: Event): void {
+  protected aoDigitar(index: number, evento: Event): void {
     const el = evento.target as HTMLInputElement;
     const aceitos = [...el.value].filter((c) => this.aceito().test(c));
     const caractere = aceitos.at(-1) ?? '';
@@ -218,13 +218,13 @@ export class NdsInputOtp implements AfterViewInit {
     el.value = caractere;
 
     const proximas = [...this.chars()];
-    proximas[indice] = caractere;
+    proximas[index] = caractere;
     this.aplicar(proximas);
 
-    if (caractere) this.focar(indice + 1);
+    if (caractere) this.focar(index + 1);
   }
 
-  protected onKeyDown(indice: number, evento: KeyboardEvent): void {
+  protected onKeyDown(index: number, evento: KeyboardEvent): void {
     const proximas = [...this.chars()];
 
     switch (evento.key) {
@@ -233,29 +233,29 @@ export class NdsInputOtp implements AfterViewInit {
         // Apagar e voltar num toque só. Ficar parado no slot recém-esvaziado
         // obriga a pressionar Backspace duas vezes por dígito para corrigir um
         // código inteiro — e é sempre o código inteiro que se corrige.
-        if (proximas[indice]) {
-          proximas[indice] = '';
-        } else if (indice > 0) {
-          proximas[indice - 1] = '';
+        if (proximas[index]) {
+          proximas[index] = '';
+        } else if (index > 0) {
+          proximas[index - 1] = '';
         }
         this.aplicar(proximas);
-        this.focar(indice - 1);
+        this.focar(index - 1);
         break;
       }
       case 'Delete': {
         evento.preventDefault();
-        proximas[indice] = '';
+        proximas[index] = '';
         this.aplicar(proximas);
         break;
       }
       case 'ArrowLeft': {
         evento.preventDefault();
-        this.focar(indice - 1);
+        this.focar(index - 1);
         break;
       }
       case 'ArrowRight': {
         evento.preventDefault();
-        this.focar(indice + 1);
+        this.focar(index + 1);
         break;
       }
       case 'Home': {
@@ -273,16 +273,16 @@ export class NdsInputOtp implements AfterViewInit {
     }
   }
 
-  protected aoColar(indice: number, evento: ClipboardEvent): void {
+  protected aoColar(index: number, evento: ClipboardEvent): void {
     evento.preventDefault();
-    const texto = evento.clipboardData?.getData('text') ?? '';
-    const aceitos = [...texto].filter((c) => this.aceito().test(c));
+    const text = evento.clipboardData?.getData('text') ?? '';
+    const aceitos = [...text].filter((c) => this.aceito().test(c));
     if (aceitos.length === 0) return;
 
     const total = this.maxLength();
     const proximas = [...this.chars()];
-    for (let k = 0; k < aceitos.length && indice + k < total; k++) {
-      proximas[indice + k] = aceitos[k];
+    for (let k = 0; k < aceitos.length && index + k < total; k++) {
+      proximas[index + k] = aceitos[k];
     }
     this.aplicar(proximas);
 
@@ -321,10 +321,10 @@ export class NdsInputOtp implements AfterViewInit {
     ];
   }
 
-  private focar(indice: number): void {
+  private focar(index: number): void {
     const slots = this.slots();
-    const alvo = slots[Math.min(Math.max(indice, 0), slots.length - 1)];
-    alvo?.focus();
-    alvo?.select();
+    const target = slots[Math.min(Math.max(index, 0), slots.length - 1)];
+    target?.focus();
+    target?.select();
   }
 }

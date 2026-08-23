@@ -691,13 +691,13 @@ export class NdsFormDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'input',    nome: 'Input',    path: '?path=/docs/ui-input--docs'    },
-      { key: 'textarea', nome: 'Textarea', path: '?path=/docs/ui-textarea--docs' },
-      { key: 'select',   nome: 'Select',   path: '?path=/docs/ui-select--docs'   },
-      { key: 'checkbox', nome: 'Checkbox', path: '?path=/docs/ui-checkbox--docs' },
-      { key: 'label',    nome: 'Label',    path: '?path=/docs/ui-label--docs'    },
-    ].map(({ key, nome, path }) => ({
-      name: nome,
+      { key: 'input',    name: 'Input',    path: '?path=/docs/ui-input--docs'    },
+      { key: 'textarea', name: 'Textarea', path: '?path=/docs/ui-textarea--docs' },
+      { key: 'select',   name: 'Select',   path: '?path=/docs/ui-select--docs'   },
+      { key: 'checkbox', name: 'Checkbox', path: '?path=/docs/ui-checkbox--docs' },
+      { key: 'label',    name: 'Label',    path: '?path=/docs/ui-label--docs'    },
+    ].map(({ key, name, path }) => ({
+      name: name,
       description: toPlainText(t(`related.${key}`)),
       path,
     }));
@@ -756,8 +756,8 @@ export class NdsFormDocs implements AfterViewInit, OnDestroy {
       title: t('testes.accessibility.title'),
       description: t('testes.accessibility.description'),
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-      items: stringItemsFromDict(d, 'testes.accessibility').map((texto) => ({
-        criterion: toPlainText(texto),
+      items: stringItemsFromDict(d, 'testes.accessibility').map((text) => ({
+        criterion: toPlainText(text),
         level: '—',
         how: 'axe + play',
       })),
@@ -831,9 +831,9 @@ const priorityKeyMap: Record<string, string> = {
  * quando ela não existe, então sem esta ponte o menu de quem não traz o bloco
  * mostrava "nav.overview" escrito na tela, sem erro nenhum.
  */
-function navLabel(chave: string): string {
-  const doComponente = t(chave);
-  return doComponente === chave ? tNav(chave) : doComponente;
+function navLabel(key: string): string {
+  const doComponente = t(key);
+  return doComponente === key ? tNav(key) : doComponente;
 }
 
 function priorityLabel(raw: string): string {
@@ -859,9 +859,9 @@ function itemsFromDict<K extends string>(
 function stringItemsFromDict(d: Record<string, string>, base: string): string[] {
   const rows: string[] = [];
   for (let i = 1; ; i++) {
-    const valor = d[`${base}.item${i}`];
-    if (valor === undefined) break;
-    rows.push(valor);
+    const value = d[`${base}.item${i}`];
+    if (value === undefined) break;
+    rows.push(value);
   }
   return rows;
 }

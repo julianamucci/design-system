@@ -349,11 +349,11 @@ createDropdownMenu({
           li.className = 'nds-dropdown-menu-separator';
           return li;
         }
-        function makeIndicator(marcado: boolean): HTMLSpanElement {
+        function makeIndicator(checked: boolean): HTMLSpanElement {
           const span = document.createElement('span');
           span.className = 'nds-dropdown-menu-item-indicator';
           span.setAttribute('aria-hidden', 'true');
-          if (marcado) {
+          if (checked) {
             const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
             svg.setAttribute('viewBox', '0 0 24 24');
             svg.setAttribute('fill', 'none');

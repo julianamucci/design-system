@@ -127,21 +127,21 @@ function accessibleName(el: Element | null | undefined): string | null {
   if (!el) return null;
   const labelled = el.getAttribute('aria-labelledby');
   if (labelled) {
-    const alvo = el.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
-    if (alvo?.textContent?.trim()) return alvo.textContent.trim();
+    const target = el.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
+    if (target?.textContent?.trim()) return target.textContent.trim();
   }
-  const rotulo = el.getAttribute('aria-label');
-  if (rotulo?.trim()) return rotulo.trim();
+  const label = el.getAttribute('aria-label');
+  if (label?.trim()) return label.trim();
   return el.textContent?.trim() || null;
 }
 
 /** Filhos DIRETOS: num layout aninhado, o grupo de dentro não é do de fora. */
-function childrenDiretos(grupo: HTMLElement, selector: string): HTMLElement[] {
-  return [...grupo.children].filter((c): c is HTMLElement => c instanceof HTMLElement && c.matches(selector));
+function childrenDiretos(group: HTMLElement, selector: string): HTMLElement[] {
+  return [...group.children].filter((c): c is HTMLElement => c instanceof HTMLElement && c.matches(selector));
 }
 
-function horizontalEh(grupo: HTMLElement): boolean {
-  return getComputedStyle(grupo).flexDirection.startsWith('row');
+function horizontalEh(group: HTMLElement): boolean {
+  return getComputedStyle(group).flexDirection.startsWith('row');
 }
 
 function measurement(el: HTMLElement, horizontal: boolean): number {
@@ -233,18 +233,18 @@ function fracoes(panels: HTMLElement[], horizontal: boolean, total: number): num
 }
 
 async function measureKeyboard(
-  grupo: HTMLElement,
+  group: HTMLElement,
   panels: HTMLElement[],
   punho: HTMLElement,
 ): Promise<KeyboardMeasurement | null> {
   if (panels.length < 2) return null;
-  const horizontal = horizontalEh(grupo);
-  const total = measurement(grupo, horizontal);
+  const horizontal = horizontalEh(group);
+  const total = measurement(group, horizontal);
   const cresce = horizontal ? 'ArrowRight' : 'ArrowDown';
   const encolhe = horizontal ? 'ArrowLeft' : 'ArrowUp';
   const otherEixo = horizontal ? 'ArrowDown' : 'ArrowRight';
 
-  const previous = grupo.ownerDocument.activeElement as HTMLElement | null;
+  const previous = group.ownerDocument.activeElement as HTMLElement | null;
   punho.focus();
 
   try {
@@ -305,9 +305,9 @@ async function measureKeyboard(
  * Mede um grupo. `comTeclado: false` para os cenários em que a interação
  * envenenaria a medida seguinte (o grupo desabilitado, por exemplo).
  */
-export async function measureGroup(raiz: HTMLElement, comTeclado = true): Promise<GroupMeasurement> {
-  const grupo = raiz.matches(SEL_GROUP) ? raiz : raiz.querySelector<HTMLElement>(SEL_GROUP);
-  if (!grupo) {
+export async function measureGroup(root: HTMLElement, comTeclado = true): Promise<GroupMeasurement> {
+  const group = root.matches(SEL_GROUP) ? root : root.querySelector<HTMLElement>(SEL_GROUP);
+  if (!group) {
     return {
       presente: false,
       tag: null,
@@ -322,25 +322,25 @@ export async function measureGroup(raiz: HTMLElement, comTeclado = true): Promis
     };
   }
 
-  const horizontal = horizontalEh(grupo);
-  const total = measurement(grupo, horizontal);
-  const panels = childrenDiretos(grupo, SEL_PANEL);
-  const punhos = childrenDiretos(grupo, SEL_HANDLE);
+  const horizontal = horizontalEh(group);
+  const total = measurement(group, horizontal);
+  const panels = childrenDiretos(group, SEL_PANEL);
+  const punhos = childrenDiretos(group, SEL_HANDLE);
 
   const estatico: GroupMeasurement = {
     presente: true,
-    tag: grupo.tagName.toLowerCase(),
-    temClasseDoContrato: grupo.classList.contains('nds-resizable'),
-    dataDirection: grupo.getAttribute('data-direction'),
-    ariaOrientation: grupo.getAttribute('aria-orientation'),
-    dataPanelGroupDirection: grupo.getAttribute('data-panel-group-direction'),
-    flexDirection: getComputedStyle(grupo).flexDirection,
+    tag: group.tagName.toLowerCase(),
+    temClasseDoContrato: group.classList.contains('nds-resizable'),
+    dataDirection: group.getAttribute('data-direction'),
+    ariaOrientation: group.getAttribute('aria-orientation'),
+    dataPanelGroupDirection: group.getAttribute('data-panel-group-direction'),
+    flexDirection: getComputedStyle(group).flexDirection,
     panels: panels.map((p) => measurePanel(p, horizontal, total)),
     punhos: punhos.map(measureHandle),
     teclado: null,
   };
 
-  if (comTeclado && punhos[0]) estatico.teclado = await measureKeyboard(grupo, panels, punhos[0]);
+  if (comTeclado && punhos[0]) estatico.teclado = await measureKeyboard(group, panels, punhos[0]);
   return estatico;
 }
 
@@ -349,10 +349,10 @@ export async function measureGroup(raiz: HTMLElement, comTeclado = true): Promis
  * nunca vê, porque a tela está sempre no claro. A classe sai no `finally`:
  * deixá-la posta envenena a story seguinte e a foto do Chromatic.
  */
-export function darkMeasure(raiz: HTMLElement) {
-  const punho = raiz.querySelector<HTMLElement>(SEL_HANDLE);
+export function darkMeasure(root: HTMLElement) {
+  const punho = root.querySelector<HTMLElement>(SEL_HANDLE);
   if (!punho) return null;
-  const desfazer = darkLigarTheme(raiz.ownerDocument);
+  const desfazer = darkLigarTheme(root.ownerDocument);
   try {
     // `background-color` do punho está em transição; sem desligá-la a sonda
     // leria a cor do tema CLARO e relataria um divisor que não escurece.
@@ -375,14 +375,14 @@ export function darkMeasure(raiz: HTMLElement) {
  * existe em regra nenhuma. Conferir a tabela contra a folha lida a olho foi
  * exatamente o que deixou isso passar; aqui a fonte é `getComputedStyle`.
  */
-export function measureTokens(raiz: HTMLElement) {
-  const punho = raiz.querySelector<HTMLElement>(SEL_HANDLE);
-  const painel = raiz.querySelector<HTMLElement>(SEL_PANEL);
+export function measureTokens(root: HTMLElement) {
+  const punho = root.querySelector<HTMLElement>(SEL_HANDLE);
+  const panel = root.querySelector<HTMLElement>(SEL_PANEL);
   if (!punho) return null;
   const grip = punho.querySelector<HTMLElement>('.nds-resizable-grip');
   const bar = punho.querySelector<HTMLElement>('.nds-resizable-grip-bar');
   const cs = getComputedStyle(punho);
-  const previous = raiz.ownerDocument.activeElement as HTMLElement | null;
+  const previous = root.ownerDocument.activeElement as HTMLElement | null;
   punho.focus();
   const withFocus = getComputedStyle(punho).boxShadow;
   previous?.focus?.();
@@ -395,50 +395,50 @@ export function measureTokens(raiz: HTMLElement) {
       boxShadowComFoco: withFocus,
       focusVisible: punho.matches(':focus-visible'),
     },
-    areaDeToque: { largura: lineAfter.width, altura: lineAfter.height },
+    areaDeToque: { width: lineAfter.width, height: lineAfter.height },
     grip: grip
       ? {
           background: getComputedStyle(grip).backgroundColor,
           border: getComputedStyle(grip).borderTopColor,
           raio: getComputedStyle(grip).borderTopLeftRadius,
-          largura: getComputedStyle(grip).width,
-          altura: getComputedStyle(grip).height,
+          width: getComputedStyle(grip).width,
+          height: getComputedStyle(grip).height,
         }
       : null,
     gripBar: bar
       ? {
           background: getComputedStyle(bar).backgroundColor,
           raio: getComputedStyle(bar).borderTopLeftRadius,
-          largura: getComputedStyle(bar).width,
-          altura: getComputedStyle(bar).height,
+          width: getComputedStyle(bar).width,
+          height: getComputedStyle(bar).height,
         }
       : null,
-    painel: painel ? { overflow: getComputedStyle(painel).overflow, flexBasis: getComputedStyle(painel).flexBasis } : null,
+    panel: panel ? { overflow: getComputedStyle(panel).overflow, flexBasis: getComputedStyle(panel).flexBasis } : null,
     variaveis: {
-      ring: getComputedStyle(raiz).getPropertyValue('--ring').trim(),
-      border: getComputedStyle(raiz).getPropertyValue('--border').trim(),
-      foreground: getComputedStyle(raiz).getPropertyValue('--foreground').trim(),
-      radiusXs: getComputedStyle(raiz).getPropertyValue('--radius-xs').trim(),
-      radius: getComputedStyle(raiz).getPropertyValue('--radius').trim(),
-      spacing1: getComputedStyle(raiz).getPropertyValue('--spacing-1').trim(),
-      spacing4: getComputedStyle(raiz).getPropertyValue('--spacing-4').trim(),
-      spacing6: getComputedStyle(raiz).getPropertyValue('--spacing-6').trim(),
-      durationFast: getComputedStyle(raiz).getPropertyValue('--duration-fast').trim(),
+      ring: getComputedStyle(root).getPropertyValue('--ring').trim(),
+      border: getComputedStyle(root).getPropertyValue('--border').trim(),
+      foreground: getComputedStyle(root).getPropertyValue('--foreground').trim(),
+      radiusXs: getComputedStyle(root).getPropertyValue('--radius-xs').trim(),
+      radius: getComputedStyle(root).getPropertyValue('--radius').trim(),
+      spacing1: getComputedStyle(root).getPropertyValue('--spacing-1').trim(),
+      spacing4: getComputedStyle(root).getPropertyValue('--spacing-4').trim(),
+      spacing6: getComputedStyle(root).getPropertyValue('--spacing-6').trim(),
+      durationFast: getComputedStyle(root).getPropertyValue('--duration-fast').trim(),
     },
   };
 }
 
 /**
- * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `raiz`.
+ * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `root`.
  * Cenário ausente vem `null` — é o achado de "a stack não monta este caso".
  */
-export async function measureCenarios(raiz: HTMLElement, cenarios: string[]) {
+export async function measureCenarios(root: HTMLElement, cenarios: string[]) {
   const registro: Record<string, unknown> = {};
   for (const cenario of cenarios) {
-    const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
+    const target = root.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
     // O cenário desabilitado TAMBÉM passa pelo teclado: o achado ali é o
     // divisor travado que mesmo assim se mexe.
-    registro[cenario] = alvo ? await measureGroup(alvo, true) : null;
+    registro[cenario] = target ? await measureGroup(target, true) : null;
   }
   return registro;
 }
@@ -449,11 +449,11 @@ export async function measureCenarios(raiz: HTMLElement, cenarios: string[]) {
  * Via exceção, e não `console.log`: o addon do Storybook instrumenta o console
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest.
  */
-export async function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[]) {
+export async function reportProbe(stack: string, root: HTMLElement, cenarios: string[]) {
   const registro = {
-    tokens: measureTokens(raiz),
-    light: await measureCenarios(raiz, cenarios),
-    escuro: darkMeasure(raiz),
+    tokens: measureTokens(root),
+    light: await measureCenarios(root, cenarios),
+    escuro: darkMeasure(root),
     persistencia: Object.keys(localStorage).filter((k) => /resiz|panel|split|pane/i.test(k)),
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);

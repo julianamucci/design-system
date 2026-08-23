@@ -31,7 +31,7 @@ const EPSILON = 0.03;
 
 export interface SlideMeasurement {
   /** Posição no trilho, para a mensagem de falha dizer QUAL slide. */
-  indice: number;
+  index: number;
   /** `null` quando a stack não declarou o estado — e isso É o achado. */
   state: string | null;
   /** Caixa RENDERIZADA (com `transform` aplicado). */
@@ -56,13 +56,13 @@ export interface CarrosselFailure {
  * deixa a sonda provar as duas metades — que a pintura mudou e que a caixa do
  * slide não mudou.
  */
-function measureSlide(el: HTMLElement, indice: number): SlideMeasurement {
-  const conteudo = el.firstElementChild as HTMLElement | null;
-  const alvo = conteudo ?? el;
-  const rect = alvo.getBoundingClientRect();
-  const layout = alvo.offsetWidth;
+function measureSlide(el: HTMLElement, index: number): SlideMeasurement {
+  const content = el.firstElementChild as HTMLElement | null;
+  const target = content ?? el;
+  const rect = target.getBoundingClientRect();
+  const layout = target.offsetWidth;
   return {
-    indice,
+    index,
     state: el.getAttribute('data-active'),
     larguraVisivel: rect.width,
     larguraDeLayout: layout,
@@ -77,9 +77,9 @@ function measureSlide(el: HTMLElement, indice: number): SlideMeasurement {
  * marcador que as cinco stacks já emitem para o slide, e o único que sobrevive
  * a uma troca de vocabulário `.nds-*`.
  */
-export function measureSlides(raiz: HTMLElement): SlideMeasurement[] {
+export function measureSlides(root: HTMLElement): SlideMeasurement[] {
   return Array.from(
-    raiz.querySelectorAll<HTMLElement>('[data-slot="carousel-item"]'),
+    root.querySelectorAll<HTMLElement>('[data-slot="carousel-item"]'),
   ).map(measureSlide);
 }
 
@@ -117,33 +117,33 @@ export function reprovasDeEscala(
       motivo: `${ativos.length} slides marcados como atual (esperado exatamente 1)`,
     });
   }
-  if (ativos.length === 1 && ativos[0].indice !== indiceEsperado) {
+  if (ativos.length === 1 && ativos[0].index !== indiceEsperado) {
     failures.push({
       onde: 'trilho',
-      motivo: `o slide marcado como atual é o ${ativos[0].indice}, e o que está em foco é o ${indiceEsperado}`,
+      motivo: `o slide marcado como atual é o ${ativos[0].index}, e o que está em foco é o ${indiceEsperado}`,
     });
   }
 
   for (const m of measurements) {
     if (m.larguraDeLayout === 0) {
-      failures.push({ onde: `slide ${m.indice}`, motivo: 'caixa de layout com largura zero' });
+      failures.push({ onde: `slide ${m.index}`, motivo: 'caixa de layout com largura zero' });
       continue;
     }
     if (m.state === 'true' && Math.abs(m.escala - 1) > EPSILON) {
       failures.push({
-        onde: `slide ${m.indice}`,
+        onde: `slide ${m.index}`,
         motivo: `é o atual e deveria estar em tamanho cheio, mas está em ${m.escala.toFixed(3)}`,
       });
     }
     if (m.state === 'false' && m.escala >= 1 - EPSILON) {
       failures.push({
-        onde: `slide ${m.indice}`,
+        onde: `slide ${m.index}`,
         motivo: `é vizinho e deveria estar recuado, mas está em ${m.escala.toFixed(3)}`,
       });
     }
     if (m.state === 'false' && m.escala > 1) {
       failures.push({
-        onde: `slide ${m.indice}`,
+        onde: `slide ${m.index}`,
         motivo: `vizinho AUMENTADO (${m.escala.toFixed(3)}) — escala acima de 1 transborda o recorte`,
       });
     }
@@ -161,9 +161,9 @@ export function reprovasDeEscala(
  * de encosto do `scroll-snap`. Se a escala tivesse encolhido a caixa de layout,
  * os passos ficariam desiguais e o carrossel pararia fora do slide.
  */
-export function pontoDeParadaIntacto(raiz: HTMLElement): CarrosselFailure[] {
+export function pontoDeParadaIntacto(root: HTMLElement): CarrosselFailure[] {
   const slides = Array.from(
-    raiz.querySelectorAll<HTMLElement>('[data-slot="carousel-item"]'),
+    root.querySelectorAll<HTMLElement>('[data-slot="carousel-item"]'),
   );
   if (slides.length < 3) return [];
 
@@ -202,27 +202,27 @@ export function pontoDeParadaIntacto(raiz: HTMLElement): CarrosselFailure[] {
  * nada do runner, senão passaria a ter uma dependência por stack.
  */
 export async function escalaSobMovimentoReduzido(
-  raiz: HTMLElement,
+  root: HTMLElement,
   aguardar: (verificacao: () => void) => Promise<unknown>,
 ): Promise<CarrosselFailure[]> {
-  const html = raiz.ownerDocument.documentElement;
+  const html = root.ownerDocument.documentElement;
   const previous = html.getAttribute('data-reduced-motion');
   try {
     html.setAttribute('data-reduced-motion', 'true');
     await aguardar(() => {
-      const neighbours = measureSlides(raiz).filter((m) => m.state === 'false');
+      const neighbours = measureSlides(root).filter((m) => m.state === 'false');
       if (neighbours.length === 0) throw new Error('nenhum vizinho para medir');
       for (const v of neighbours) {
         if (Math.abs(v.escala - 1) > EPSILON) {
-          throw new Error(`slide ${v.indice} ainda em ${v.escala.toFixed(3)}`);
+          throw new Error(`slide ${v.index} ainda em ${v.escala.toFixed(3)}`);
         }
       }
     });
     return [];
-  } catch (erro) {
+  } catch (error) {
     return [{
       onde: 'movimento reduzido',
-      motivo: `com a preferência ligada, a escala deveria sumir por inteiro e não sumiu: ${(erro as Error).message}`,
+      motivo: `com a preferência ligada, a escala deveria sumir por inteiro e não sumiu: ${(error as Error).message}`,
     }];
   } finally {
     if (previous === null) html.removeAttribute('data-reduced-motion');
@@ -235,8 +235,8 @@ export async function escalaSobMovimentoReduzido(
 export interface ControlMeasurement {
   centroX: number;
   centroY: number;
-  largura: number;
-  altura: number;
+  width: number;
+  height: number;
 }
 
 export function measureControl(el: HTMLElement): ControlMeasurement {
@@ -244,8 +244,8 @@ export function measureControl(el: HTMLElement): ControlMeasurement {
   return {
     centroX: r.left + r.width / 2,
     centroY: r.top + r.height / 2,
-    largura: r.width,
-    altura: r.height,
+    width: r.width,
+    height: r.height,
   };
 }
 
@@ -294,7 +294,7 @@ export function reprovasDeSaltoNoHover(
 ): CarrosselFailure[] {
   const failures: CarrosselFailure[] = [];
 
-  const crescimento = antes.largura > 0 ? depois.largura / antes.largura : 0;
+  const crescimento = antes.width > 0 ? depois.width / antes.width : 0;
   if (Math.abs(crescimento - fator) > 0.01) {
     failures.push({
       onde: 'controle',
@@ -342,7 +342,7 @@ export async function feedbackDePointerReprovas(
     el.style.transform = `scale(${fator})`;
     await aguardar(() => {
       const agora = measureControl(el);
-      const crescimento = antes.largura > 0 ? agora.largura / antes.largura : 0;
+      const crescimento = antes.width > 0 ? agora.width / antes.width : 0;
       if (Math.abs(crescimento - fator) > 0.01) {
         throw new Error(`ainda em ${crescimento.toFixed(3)}`);
       }
@@ -377,29 +377,29 @@ export function controlReach(el: HTMLElement): CarrosselFailure[] {
   const failures: CarrosselFailure[] = [];
   const doc = el.ownerDocument;
   const window = doc.defaultView;
-  const raiz = el.closest('.nds-carousel') ?? doc.body;
-  const controle = el.getBoundingClientRect();
+  const root = el.closest('.nds-carousel') ?? doc.body;
+  const control = el.getBoundingClientRect();
 
   // A caixa de cada slide é RECORTADA pela do viewport antes de qualquer
   // comparação. Sem isso a medida acusaria um defeito que não existe: o slide 3
   // de um trilho começa muito à direita da área visível e o retângulo dele
   // atravessa a seta de avanço no papel — mas nada daquilo é pintado, porque o
   // recorte corta. O que pode encostar no controle é só o que está à vista.
-  const clip = raiz.querySelector<HTMLElement>('[data-slot="carousel-content"]');
-  const limit = (clip ?? (raiz as HTMLElement)).getBoundingClientRect();
+  const clip = root.querySelector<HTMLElement>('[data-slot="carousel-content"]');
+  const limit = (clip ?? (root as HTMLElement)).getBoundingClientRect();
 
-  const slides = Array.from(raiz.querySelectorAll<HTMLElement>('[data-slot="carousel-item"]'));
+  const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-slot="carousel-item"]'));
   for (const [i, slide] of slides.entries()) {
-    const conteudo = (slide.firstElementChild as HTMLElement | null) ?? slide;
-    const caixa = conteudo.getBoundingClientRect();
-    const esquerda = Math.max(caixa.left, limit.left);
-    const direita = Math.min(caixa.right, limit.right);
-    const topo = Math.max(caixa.top, limit.top);
-    const base = Math.min(caixa.bottom, limit.bottom);
+    const content = (slide.firstElementChild as HTMLElement | null) ?? slide;
+    const box = content.getBoundingClientRect();
+    const esquerda = Math.max(box.left, limit.left);
+    const direita = Math.min(box.right, limit.right);
+    const topo = Math.max(box.top, limit.top);
+    const base = Math.min(box.bottom, limit.bottom);
     if (direita <= esquerda || base <= topo) continue; // inteiro fora do recorte
 
-    const sobrepoeX = direita > controle.left + 0.5 && esquerda < controle.right - 0.5;
-    const sobrepoeY = base > controle.top + 0.5 && topo < controle.bottom - 0.5;
+    const sobrepoeX = direita > control.left + 0.5 && esquerda < control.right - 0.5;
+    const sobrepoeY = base > control.top + 0.5 && topo < control.bottom - 0.5;
     if (sobrepoeX && sobrepoeY) {
       failures.push({
         onde: 'controle',

@@ -53,13 +53,13 @@ export function focusMeasureRing(btn: HTMLElement): RingMeasurement {
 }
 
 /** Toggles da tela cujo anel de foco NÃO aparece — a lista vazia é o resultado bom. */
-export function focusTogglesNoRing(raiz: HTMLElement): string[] {
+export function focusTogglesNoRing(root: HTMLElement): string[] {
   const failures: string[] = [];
-  for (const btn of raiz.querySelectorAll<HTMLElement>('.nds-toggle')) {
+  for (const btn of root.querySelectorAll<HTMLElement>('.nds-toggle')) {
     if (btn.hasAttribute('disabled')) continue;
     if (!focusMeasureRing(btn).mudou) failures.push(describeToggle(btn));
   }
-  (raiz.ownerDocument.activeElement as HTMLElement | null)?.blur();
+  (root.ownerDocument.activeElement as HTMLElement | null)?.blur();
   return failures;
 }
 
@@ -67,16 +67,16 @@ export function focusTogglesNoRing(raiz: HTMLElement): string[] {
 
 export interface ContrastToggleFailure {
   toggle: string;
-  tema: string;
+  theme: string;
   contraste: number;
 }
 
 /** Identificação legível: variante, tamanho e o nome acessível. */
 export function describeToggle(btn: HTMLElement): string {
-  const variante = btn.getAttribute('data-variant') ?? 'default';
-  const tamanho = btn.getAttribute('data-size') ?? 'default';
-  const nome = btn.getAttribute('aria-label') || btn.textContent?.trim() || '(sem nome)';
-  return `${variante}/${tamanho} "${nome}"`;
+  const variant = btn.getAttribute('data-variant') ?? 'default';
+  const size = btn.getAttribute('data-size') ?? 'default';
+  const name = btn.getAttribute('aria-label') || btn.textContent?.trim() || '(sem nome)';
+  return `${variant}/${size} "${name}"`;
 }
 
 /**
@@ -98,9 +98,9 @@ const ACTIVE =
   '.nds-toggle[data-pressed]:not([data-pressed="false"])';
 
 function contrastFailures(
-  raiz: HTMLElement,
+  root: HTMLElement,
   minimum: number,
-  tema: string,
+  theme: string,
 ): ContrastToggleFailure[] {
   const encontradas: ContrastToggleFailure[] = [];
   // Só o estado ATIVO. É o que o contrato documenta ("texto/ícone contra o
@@ -110,12 +110,12 @@ function contrastFailures(
   // Medir o repouso aqui dava 1.1:1 no escuro — não porque o toggle esteja
   // errado, mas porque o harness não repinta o `body` ao trocar de tema: a cor
   // herdada continua a do claro enquanto `--background` já virou escuro.
-  for (const btn of raiz.querySelectorAll<HTMLElement>(ACTIVE)) {
+  for (const btn of root.querySelectorAll<HTMLElement>(ACTIVE)) {
     // O desabilitado tem opacidade reduzida por contrato — a WCAG isenta
     // controle inativo (1.4.3), e medi-lo produziria falha que não é defeito.
     if (btn.hasAttribute('disabled')) continue;
     const ratio = toggleContrast(btn);
-    if (ratio < minimum) encontradas.push({ toggle: describeToggle(btn), tema, contraste: ratio });
+    if (ratio < minimum) encontradas.push({ toggle: describeToggle(btn), theme, contraste: ratio });
   }
   return encontradas;
 }
@@ -129,13 +129,13 @@ function contrastFailures(
  * foto do Chromatic.
  */
 export function toggleNosDoisThemesContrast(
-  raiz: HTMLElement,
+  root: HTMLElement,
   minimum = 4.5,
 ): ContrastToggleFailure[] {
-  const light = contrastFailures(raiz, minimum, 'claro');
-  const desfazer = darkLigarTheme(raiz.ownerDocument);
+  const light = contrastFailures(root, minimum, 'claro');
+  const desfazer = darkLigarTheme(root.ownerDocument);
   try {
-    return [...light, ...contrastFailures(raiz, minimum, 'escuro')];
+    return [...light, ...contrastFailures(root, minimum, 'escuro')];
   } finally {
     desfazer();
   }
@@ -143,5 +143,5 @@ export function toggleNosDoisThemesContrast(
 
 /** Mensagem de falha legível, com o número medido. */
 export function contrastDescribeFailures(fs: ContrastToggleFailure[]): string {
-  return fs.map((f) => `  · ${f.toggle} (${f.tema}) — ${f.contraste}:1`).join('\n');
+  return fs.map((f) => `  · ${f.toggle} (${f.theme}) — ${f.contraste}:1`).join('\n');
 }

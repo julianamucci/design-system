@@ -70,9 +70,9 @@ export const Closed: Story = {
     });
 
     await step('Fechado é ausência: nenhum painel visível e nenhum item alcançável', async () => {
-      for (const gatilho of triggers) {
-        await expect(gatilho.getAttribute('data-state')).toBe('closed');
-        await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
+      for (const trigger of triggers) {
+        await expect(trigger.getAttribute('data-state')).toBe('closed');
+        await expect(trigger.getAttribute('aria-expanded')).toBe('false');
       }
       // Painel oculto pelo atributo `hidden`: continua fora da árvore de
       // acessibilidade, então o leitor de tela não o lê nem a busca o acha.
@@ -115,7 +115,7 @@ export const Open: Story = {
     const barra = canvas.getByRole('menubar');
     const [arquivo, editar] = triggersOf(barra);
 
-    const painel = await waitFor(() => {
+    const panel = await waitFor(() => {
       const p = panelOpen(canvasElement);
       if (!p) throw new Error('painel não abriu');
       return p;
@@ -133,14 +133,14 @@ export const Open: Story = {
     });
 
     await step('O painel é um menu de verdade, ancorado abaixo do gatilho', async () => {
-      await expect(painel.getAttribute('role')).toBe('menu');
-      await expect(painel.getAttribute('data-slot')).toBe('menubar-content');
-      await expect(painel.getAttribute('data-side')).toBe('bottom');
+      await expect(panel.getAttribute('role')).toBe('menu');
+      await expect(panel.getAttribute('data-slot')).toBe('menubar-content');
+      await expect(panel.getAttribute('data-side')).toBe('bottom');
       // A âncora é o GATILHO, não a barra: sem lib de posicionamento, o painel
       // é absoluto dentro do wrapper do menu, e o recheio da barra fica entre
       // um e outro. Medir contra a barra acusaria 1,5px de "acima" que ninguém
       // vê — e esconderia um painel realmente nascido para cima.
-      await expect(painel.getBoundingClientRect().top).toBeGreaterThanOrEqual(
+      await expect(panel.getBoundingClientRect().top).toBeGreaterThanOrEqual(
         arquivo.getBoundingClientRect().bottom,
       );
     });
@@ -188,16 +188,16 @@ export const ItemDisabled: Story = {
       ),
     ),
   play: async ({ canvasElement, step, args }) => {
-    const painel = await waitFor(() => {
+    const panel = await waitFor(() => {
       const p = panelOpen(canvasElement);
       if (!p) throw new Error('painel não abriu');
       return p;
     });
-    const itens = within(painel).getAllByRole('menuitem');
-    const bloqueado = itens[ITEMS_WITH_BLOCK.findIndex((i) => i.disabled)];
+    const items = within(panel).getAllByRole('menuitem');
+    const bloqueado = items[ITEMS_WITH_BLOCK.findIndex((i) => i.disabled)];
 
     await step('O item bloqueado se anuncia como tal', async () => {
-      await expect(itens).toHaveLength(ITEMS_WITH_BLOCK.length);
+      await expect(items).toHaveLength(ITEMS_WITH_BLOCK.length);
       await expect(bloqueado.getAttribute('aria-disabled')).toBe('true');
       // `aria-disabled`, e não o atributo `disabled`: o item continua
       // alcançável pela seta, para ser ANUNCIADO como indisponível em vez de
@@ -207,7 +207,7 @@ export const ItemDisabled: Story = {
 
     await step('O bloqueio é visível sem depender de cor', async () => {
       await expect(Number(getComputedStyle(bloqueado).opacity)).toBeLessThan(
-        Number(getComputedStyle(itens[0]).opacity),
+        Number(getComputedStyle(items[0]).opacity),
       );
     });
 
@@ -265,18 +265,18 @@ export const CheckboxChecked: Story = {
       ),
     ),
   play: async ({ canvasElement, step }) => {
-    const painel = await waitFor(() => {
+    const panel = await waitFor(() => {
       const p = panelOpen(canvasElement);
       if (!p) throw new Error('painel não abriu');
       return p;
     });
-    const canvas = within(painel);
+    const canvas = within(panel);
     const regua = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
-    const grade = canvas.getByRole('menuitemcheckbox', { name: 'Grade' });
+    const grid = canvas.getByRole('menuitemcheckbox', { name: 'Grade' });
 
     await step('O estado inicial chega marcado ao markup', async () => {
       await expect(regua.getAttribute('aria-checked')).toBe('true');
-      await expect(grade.getAttribute('aria-checked')).toBe('false');
+      await expect(grid.getAttribute('aria-checked')).toBe('false');
     });
 
     await step('O marcado mostra o tique; o desmarcado, não', async () => {
@@ -285,7 +285,7 @@ export const CheckboxChecked: Story = {
       const tique = (item: HTMLElement) =>
         item.querySelector('.nds-dropdown-menu-item-indicator svg') !== null;
       await expect(tique(regua)).toBe(true);
-      await expect(tique(grade)).toBe(false);
+      await expect(tique(grid)).toBe(false);
     });
 
     await step('Desmarcar o que estava marcado mantém o menu aberto', async () => {
@@ -348,21 +348,21 @@ export const CheckboxIndeterminate: Story = {
       ),
     ),
   play: async ({ canvasElement, step }) => {
-    const painel = await waitFor(() => {
+    const panel = await waitFor(() => {
       const p = panelOpen(canvasElement);
       if (!p) throw new Error('painel não abriu');
       return p;
     });
-    const canvas = within(painel);
+    const canvas = within(panel);
     const misto = canvas.getByRole('menuitemcheckbox', { name: 'Colunas' });
-    const marcado = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
+    const checked = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
     const desmarcado = canvas.getByRole('menuitemcheckbox', { name: 'Grade' });
 
     await step('O estado misto é anunciado como misto, e não como marcado', async () => {
       // Uma comparação frouxa leria o misto como verdadeiro; o que a pessoa ouve
       // tem que separar os três estados.
       await expect(misto.getAttribute('aria-checked')).toBe('mixed');
-      await expect(marcado.getAttribute('aria-checked')).toBe('true');
+      await expect(checked.getAttribute('aria-checked')).toBe('true');
       await expect(desmarcado.getAttribute('aria-checked')).toBe('false');
     });
 
@@ -371,7 +371,7 @@ export const CheckboxIndeterminate: Story = {
       // traço é largo e sem altura, tique tem a diagonal. Com o mesmo símbolo
       // nos dois estados — o defeito — esta asserção fica vermelha.
       const formaMista = formaDoIndicador(misto);
-      const formaMarcada = formaDoIndicador(marcado);
+      const formaMarcada = formaDoIndicador(checked);
       await expect(ehTraco(formaMista)).toBe(true);
       await expect(ehTique(formaMista)).toBe(false);
       await expect(ehTique(formaMarcada)).toBe(true);

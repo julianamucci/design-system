@@ -142,7 +142,7 @@ export const WithSubmenu: Story = {
     docs: { source: { transform: dropdownMenuWithSubmenuSource } },
   },
   play: async ({ step }) => {
-    const corpo = within(document.body);
+    const body = within(document.body);
     const menu = await waitForPortal('menu');
     const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar como' });
 
@@ -159,12 +159,12 @@ export const WithSubmenu: Story = {
       }
       await waitFor(async () => {
         await expect(subTrigger).toHaveAttribute('aria-expanded', 'true');
-        await expect(corpo.getAllByRole('menu')).toHaveLength(2);
+        await expect(body.getAllByRole('menu')).toHaveLength(2);
       });
     });
 
     await step('O submenu abre AO LADO, não por cima do menu pai', async () => {
-      const submenu = corpo.getAllByRole('menu')[1];
+      const submenu = body.getAllByRole('menu')[1];
       await expect(within(submenu).getAllByRole('menuitem')).toHaveLength(3);
       // Um submenu que nasce sobre o pai cobre os irmãos do item que o abriu.
       // A comparação é com a borda DIREITA do pai — comparar com a esquerda

@@ -65,18 +65,18 @@ export const IconButtonWithShortcut: Story = {
     return wrap(el, COMPOSITION_HEIGHT);
   },
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button', { name: /salvar/i });
+    const trigger = within(canvasElement).getByRole('button', { name: /salvar/i });
 
     await step('O nome acessível é do botão; o atalho é o extra', async () => {
       // A ordem importa: o `aria-label` sozinho já diz o que o botão faz. O
       // Tooltip acrescenta a tecla, que é conveniência, não requisito.
-      await expect(gatilho).toHaveAttribute('aria-label', 'Salvar');
-      gatilho.blur();
-      gatilho.focus();
+      await expect(trigger).toHaveAttribute('aria-label', 'Salvar');
+      trigger.blur();
+      trigger.focus();
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      await expect(balaoDe(gatilho)!.textContent).toMatch(/Ctrl\+S/);
+      await expect(balaoDe(trigger)!.textContent).toMatch(/Ctrl\+S/);
     });
 
     await step('Cleanup', async () => { clearPortal(); });
@@ -141,23 +141,23 @@ export const HelpInFormField: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /Onde encontrar o Token de API/i });
+    const trigger = canvas.getByRole('button', { name: /Onde encontrar o Token de API/i });
 
     await step('O campo continua rotulado pelo label, não pelo Tooltip', async () => {
       // O `for`/`id` é o que nomeia o campo. O Tooltip explica ONDE achar o
       // valor — informação complementar, que pode faltar sem quebrar o form.
-      const campo = canvas.getByLabelText('Token de API');
-      await expect(campo).toHaveAttribute('id', 'api-token-input');
+      const field = canvas.getByLabelText('Token de API');
+      await expect(field).toHaveAttribute('id', 'api-token-input');
     });
 
     await step('O ícone de ajuda é um botão focável, com nome próprio', async () => {
-      gatilho.blur();
-      gatilho.focus();
-      await expect(gatilho).toHaveFocus();
+      trigger.blur();
+      trigger.focus();
+      await expect(trigger).toHaveFocus();
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      await expect(balaoDe(gatilho)!.textContent).toContain('Tokens');
+      await expect(balaoDe(trigger)!.textContent).toContain('Tokens');
     });
 
     await step('Cleanup', async () => { clearPortal(); });
@@ -217,16 +217,16 @@ export const MetricDescription: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /O que é LCP/i });
+    const trigger = canvas.getByRole('button', { name: /O que é LCP/i });
 
     await step('A sigla fica visível; o Tooltip só a expande', async () => {
       await expect(canvasElement.textContent).toContain('LCP');
-      gatilho.blur();
-      gatilho.focus();
+      trigger.blur();
+      trigger.focus();
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      await expect(balaoDe(gatilho)!.textContent).toContain('Largest Contentful Paint');
+      await expect(balaoDe(trigger)!.textContent).toContain('Largest Contentful Paint');
     });
 
     await step('Cleanup', async () => { clearPortal(); });
@@ -274,12 +274,12 @@ export const PlacementSides: Story = {
     });
 
     await step('Cada balão nasce do lado pedido', async () => {
-      for (const lado of ['top', 'right', 'bottom', 'left']) {
-        const gatilho = canvas.getByRole('button', { name: lado });
+      for (const side of ['top', 'right', 'bottom', 'left']) {
+        const trigger = canvas.getByRole('button', { name: side });
         // A factory posiciona por JS e publica o lado escolhido em `data-side`
         // — o mesmo gancho que as outras stacks emitem.
-        await expect(balaoDe(gatilho)).toHaveAttribute('data-side', lado);
-        await expect(balaoDe(gatilho)!.textContent).toBe(`Tooltip ${lado}`);
+        await expect(balaoDe(trigger)).toHaveAttribute('data-side', side);
+        await expect(balaoDe(trigger)!.textContent).toBe(`Tooltip ${side}`);
       }
     });
 
@@ -324,18 +324,18 @@ export const ProviderWithMarkup: Story = {
     // janela do grupo, o segundo balão levaria três segundos para aparecer, e a
     // asserção da play falha por tempo. Uma espera por chamada é justamente o
     // que a constante de módulo não permitia.
-    const grupo = createTooltipProvider({ delayDuration: 3000, skipDelayDuration: 5000 });
+    const group = createTooltipProvider({ delayDuration: 3000, skipDelayDuration: 5000 });
 
     for (const [acao, tecla] of [['Copiar', 'C'], ['Colar', 'V']] as const) {
       const trigger = createButton({ variant: 'outline', label: acao, 'aria-label': acao });
 
-      const conteudo = document.createElement('span');
-      conteudo.append(`${acao} `);
+      const content = document.createElement('span');
+      content.append(`${acao} `);
       const kbd = document.createElement('kbd');
       kbd.textContent = `Ctrl+${tecla}`;
-      conteudo.appendChild(kbd);
+      content.appendChild(kbd);
 
-      barra.appendChild(grupo.createTooltip({ trigger, content: conteudo, side: 'bottom' }));
+      barra.appendChild(group.createTooltip({ trigger, content: content, side: 'bottom' }));
     }
 
     return wrap(barra, COMPOSITION_HEIGHT);

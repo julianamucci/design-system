@@ -124,11 +124,11 @@ export const Playground: Story = {
     // <button>, controle rotulável do HTML: o clique no texto move o foco para
     // ela E dispara a ativação, sem nenhum ouvinte escrito na story.
     await step('Clicar no texto do rótulo foca a caixa E alterna o estado', async () => {
-      const rotulo = canvas.getByText('Aceito os termos e condições');
+      const label = canvas.getByText('Aceito os termos e condições');
       await desmarcar(checkbox);                  // precondição própria
       checkbox.blur();
       await expect(checkbox).not.toHaveFocus();   // o foco tem que VIR do clique
-      await userEvent.click(rotulo);
+      await userEvent.click(label);
       await expect(checkbox).toHaveFocus();
       await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'true'));
       await expect(args.onCheckedChange).toHaveBeenLastCalledWith(true);

@@ -9,7 +9,7 @@
 // esperava que alguém corrigisse uma das duas.
 
 /** A coluna rótulo + controle: é o par que toda story do Label monta. */
-export function bloco(): HTMLDivElement {
+export function block(): HTMLDivElement {
   const wrapper = document.createElement('div');
   wrapper.className = 'nds-stack nds-w-xs';
   wrapper.dataset.spacing = 'xs';

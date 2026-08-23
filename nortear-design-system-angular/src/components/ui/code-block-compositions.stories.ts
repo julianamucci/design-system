@@ -64,9 +64,9 @@ export const WithLabel: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('O header mostra o nome do arquivo ao lado da ação de copiar', async () => {
-      const titulo = root(canvasElement).querySelector<HTMLElement>('.nds-code-block-title')!;
-      await expect(titulo).toBeVisible();
-      await expect(titulo).toHaveTextContent('lista.ts');
+      const title = root(canvasElement).querySelector<HTMLElement>('.nds-code-block-title')!;
+      await expect(title).toBeVisible();
+      await expect(title).toHaveTextContent('lista.ts');
       // data-slot é o contrato que story, teste e ferramenta usam para achar a
       // ação de copiar sem depender de classe — as cinco stacks emitem o mesmo.
       await expect(
@@ -161,21 +161,21 @@ export const WithHighlightedRange: Story = {
 
 export const WithFooter: Story = {
   render: () => ({
-    props: { code: COMPOSITION_CODE, rodape: FOOTER },
-    template: `<nds-code-block [code]="code" language="ts" [footer]="rodape" />`,
+    props: { code: COMPOSITION_CODE, footer: FOOTER },
+    template: `<nds-code-block [code]="code" language="ts" [footer]="footer" />`,
   }),
   play: async ({ canvasElement, step }) => {
     await step('O rodapé aparece abaixo do código', async () => {
-      const rodape = root(canvasElement).querySelector<HTMLElement>('.nds-code-block-footer')!;
-      await expect(rodape).toBeVisible();
-      await expect(rodape).toHaveTextContent(FOOTER);
+      const footer = root(canvasElement).querySelector<HTMLElement>('.nds-code-block-footer')!;
+      await expect(footer).toBeVisible();
+      await expect(footer).toHaveTextContent(FOOTER);
     });
 
     await step('O rodapé fica fora da região que rola', async () => {
       // A observação precisa continuar visível enquanto a pessoa rola o trecho.
       const scroll = root(canvasElement).querySelector<HTMLElement>('.nds-code-block-scroll')!;
-      const rodape = root(canvasElement).querySelector<HTMLElement>('.nds-code-block-footer')!;
-      await expect(scroll.contains(rodape)).toBe(false);
+      const footer = root(canvasElement).querySelector<HTMLElement>('.nds-code-block-footer')!;
+      await expect(scroll.contains(footer)).toBe(false);
     });
   },
 };

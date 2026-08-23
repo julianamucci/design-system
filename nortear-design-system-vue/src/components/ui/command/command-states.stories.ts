@@ -64,26 +64,26 @@ export const EmptyState: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
-    const campo = canvas.getByRole('combobox');
-    const vazio = raiz.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
+    const field = canvas.getByRole('combobox');
+    const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
 
     // Idempotente: a busca parte sempre do zero.
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     await waitFor(async () => {
       // Com o campo vazio, os dois comandos aparecem.
       await expect(canvas.getAllByRole('option')).toHaveLength(2);
     });
 
     await step('Nenhum comando sobra e o grupo se recolhe', async () => {
-      await userEvent.type(campo, 'xyz');
+      await userEvent.type(field, 'xyz');
 
       // Buscando "xyz": nada casa.
       await waitFor(async () => {
         await expect(canvas.queryAllByRole('option')).toHaveLength(0);
       });
       // Cabeçalho sem itens embaixo é ruído.
-      await expect(raiz.querySelector<HTMLElement>('[data-slot="command-group"]'))
+      await expect(root.querySelector<HTMLElement>('[data-slot="command-group"]'))
         .not.toBeVisible();
     });
 
@@ -102,12 +102,12 @@ export const EmptyState: Story = {
     await step('A região viva não é filha do listbox', async () => {
       // `role="status"` dentro de `role="listbox"` é filho não permitido, e o
       // axe reprova por aria-required-children.
-      const lista = canvas.getByRole('listbox');
-      await expect(lista.contains(vazio)).toBe(false);
+      const list = canvas.getByRole('listbox');
+      await expect(list.contains(vazio)).toBe(false);
     });
 
     await step('Apagar a busca traz os comandos de volta', async () => {
-      await userEvent.clear(campo);
+      await userEvent.clear(field);
       await waitFor(async () => {
         await expect(canvas.getAllByRole('option')).toHaveLength(2);
       });
@@ -115,7 +115,7 @@ export const EmptyState: Story = {
     });
 
     await step('A story termina SEM resultados — é o quadro documentado', async () => {
-      await userEvent.type(campo, 'xyz');
+      await userEvent.type(field, 'xyz');
       await waitFor(async () => {
         await expect(vazio).toHaveAttribute('data-empty', '');
       });
@@ -163,10 +163,10 @@ export const ItemDisabled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const campo = canvas.getByRole('combobox');
+    const field = canvas.getByRole('combobox');
     const escolhido = canvas.getByTestId('escolhido');
 
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     await waitFor(async () => {
       // Com o campo vazio, os três comandos aparecem.
       await expect(canvas.getAllByRole('option')).toHaveLength(3);
@@ -192,7 +192,7 @@ export const ItemDisabled: Story = {
     });
 
     await step('As setas pulam o comando desabilitado', async () => {
-      campo.focus();
+      field.focus();
       // Home fixa a precondição do passo: destaque no primeiro comando.
       await userEvent.keyboard('{Home}');
       await waitFor(async () => {
@@ -251,9 +251,9 @@ export const CheckedItem: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const campo = canvas.getByRole('combobox');
+    const field = canvas.getByRole('combobox');
 
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     await waitFor(async () => {
       // Com o campo vazio, os três temas aparecem.
       await expect(canvas.getAllByRole('option')).toHaveLength(3);

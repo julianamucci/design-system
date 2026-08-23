@@ -45,10 +45,10 @@ const IMPORTS = `${IMPORT_LABEL}\n${IMPORT_GROUP}`;
  * muda por exemplo porque dois grupos na mesma página com os mesmos `id`
  * fariam o rótulo de um apontar para o item do outro.
  */
-function opcao(prefixo: string, valor: string, rotulo: string, extra = ''): string {
+function opcao(prefixo: string, value: string, label: string, extra = ''): string {
   return `<div className="nds-cluster" data-spacing="sm">
-  <RadioGroupItem value="${valor}" id="${prefixo}-${valor}"${extra} />
-  <Label htmlFor="${prefixo}-${valor}">${rotulo}</Label>
+  <RadioGroupItem value="${value}" id="${prefixo}-${value}"${extra} />
+  <Label htmlFor="${prefixo}-${value}">${label}</Label>
 </div>`;
 }
 
@@ -60,8 +60,8 @@ ${opcao(prefixo, 'boleto', 'Boleto bancário', extra)}`;
 }
 
 /** O grupo inteiro: raiz com os atributos que diferem do padrão e as opções. */
-function grupo(raiz: string, opcoes: string): string {
-  return `<RadioGroup${raiz}>\n${indentar(opcoes)}\n</RadioGroup>`;
+function group(root: string, options: string): string {
+  return `<RadioGroup${root}>\n${indentar(options)}\n</RadioGroup>`;
 }
 
 /**
@@ -78,14 +78,14 @@ function grupo(raiz: string, opcoes: string): string {
  */
 export const radioGroupSource: SourceTransform<RadioGroupArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const raiz = attrs(
+  const root = attrs(
     propText('name', args.name),
     propBool('disabled', args.disabled),
     'aria-label="Forma de pagamento"',
   );
   const extra = args.disabled === true ? ' disabled' : '';
 
-  return jsxSnippet(IMPORTS, grupo(raiz, pagamentos('pagamento', extra)));
+  return jsxSnippet(IMPORTS, group(root, pagamentos('pagamento', extra)));
 };
 
 /**
@@ -97,7 +97,7 @@ export const radioGroupSource: SourceTransform<RadioGroupArgs> = (_gerado, ctx) 
 export function radioGroupHorizontalSource(): string {
   return jsxSnippet(
     IMPORTS,
-    grupo(
+    group(
       ' aria-orientation="horizontal" aria-label="Forma de entrega"',
       `${opcao('entrega', 'padrao', 'Padrão')}
 ${opcao('entrega', 'expressa', 'Expressa')}
@@ -113,18 +113,18 @@ ${opcao('entrega', 'retirar', 'Retirar')}`,
  * espera encontrá-lo.
  */
 export function radioGroupWithDescriptionSource(): string {
-  const item = (valor: string, titulo: string, descricao: string) =>
+  const item = (value: string, title: string, descricao: string) =>
     `<div className="nds-cluster" data-align="start" data-spacing="sm">
-  <RadioGroupItem value="${valor}" id="descricao-${valor}" className="nds-mt-0-5" />
+  <RadioGroupItem value="${value}" id="descricao-${value}" className="nds-mt-0-5" />
   <div className="nds-stack" data-spacing="xs">
-    <Label htmlFor="descricao-${valor}">${titulo}</Label>
+    <Label htmlFor="descricao-${value}">${title}</Label>
     <p className="nds-text-body">${descricao}</p>
   </div>
 </div>`;
 
   return jsxSnippet(
     IMPORTS,
-    grupo(
+    group(
       ' aria-label="Forma de entrega" className="nds-max-w-md"',
       `${item('padrao', 'Padrão', 'Entrega em até 5 dias úteis. Frete grátis acima de R$ 99.')}
 ${item('expressa', 'Expressa', 'Entrega em 1 dia útil. Custo adicional de R$ 19,90.')}
@@ -141,7 +141,7 @@ ${item('retirar', 'Retirar na loja', 'Disponível em 2 horas após confirmação
 export function radioGroupCheckedSource(): string {
   return jsxSnippet(
     IMPORTS,
-    grupo(
+    group(
       ' defaultValue="pix" aria-label="Forma de pagamento"',
       `${opcao('marcado', 'cartao', 'Cartão de crédito')}
 ${opcao('marcado', 'pix', 'Pix')}`,
@@ -157,7 +157,7 @@ ${opcao('marcado', 'pix', 'Pix')}`,
 export function radioGroupDisabledSource(): string {
   return jsxSnippet(
     IMPORTS,
-    grupo(
+    group(
       ' disabled aria-label="Forma de pagamento"',
       `${opcao('bloqueado', 'cartao', 'Cartão de crédito', ' disabled')}
 ${opcao('bloqueado', 'pix', 'Pix', ' disabled')}`,
@@ -173,7 +173,7 @@ ${opcao('bloqueado', 'pix', 'Pix', ' disabled')}`,
 export function radioGroupItemDisabledSource(): string {
   return jsxSnippet(
     IMPORTS,
-    grupo(
+    group(
       ' aria-label="Forma de pagamento"',
       `${opcao('indisponivel', 'cartao', 'Cartão de crédito')}
 ${opcao('indisponivel', 'pix', 'Pix')}
@@ -192,7 +192,7 @@ export function radioGroupInvalidoSource(): string {
     IMPORTS,
     `<div className="nds-stack" data-spacing="sm">
 ${indentar(
-  grupo(
+  group(
     ' aria-invalid="true" aria-label="Forma de pagamento"',
     `${opcao('invalido', 'cartao', 'Cartão de crédito', ' aria-invalid="true"')}
 ${opcao('invalido', 'pix', 'Pix', ' aria-invalid="true"')}`,
@@ -218,7 +218,7 @@ ${IMPORTS}
 const [forma, setForma] = useState("");`,
     `<div className="nds-stack nds-w-xs" data-spacing="md">
 ${indentar(
-  grupo(
+  group(
     ' value={forma} onValueChange={setForma} aria-label="Forma de pagamento"',
     pagamentos('controlado'),
   ),
@@ -297,7 +297,7 @@ const ENTREGAS = [
   {ENTREGAS.map((entregaOpcao) => (
     <Label
       key={entregaOpcao.valor}
-      htmlFor={\`cartao-\${entregaOpcao.valor}\`}
+      htmlFor={\`cartao-\${entregaOpcao.value}\`}
       className="nds-radio-card nds-stack"
       data-align="start"
       data-spacing="xs"
@@ -306,7 +306,7 @@ const ENTREGAS = [
         <span className="nds-text-body nds-font-medium">{entregaOpcao.titulo}</span>
         <RadioGroupItem
           value={entregaOpcao.valor}
-          id={\`cartao-\${entregaOpcao.valor}\`}
+          id={\`cartao-\${entregaOpcao.value}\`}
         />
       </div>
       <p className="nds-text-caption nds-text-muted-foreground nds-font-normal">

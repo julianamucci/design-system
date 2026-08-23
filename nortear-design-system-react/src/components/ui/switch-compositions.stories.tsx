@@ -51,7 +51,7 @@ export const WithLabel: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const switchEl = canvas.getByRole("switch");
-    const rotulo = canvas.getByText("Receber notificações por email");
+    const label = canvas.getByText("Receber notificações por email");
 
     await step("O rótulo nomeia o controle", async () => {
       await expect(canvas.getByRole("switch", { name: /Receber notificações por email/i }))
@@ -61,8 +61,8 @@ export const WithLabel: Story = {
     await step("Clicar no rótulo liga e desliga o controle", async () => {
       // O par (liga e depois desliga) garante DOIS cliques reais em qualquer
       // rodada e devolve a story ao estado que o Chromatic fotografa.
-      await definir(switchEl, true, rotulo);
-      await definir(switchEl, false, rotulo);
+      await definir(switchEl, true, label);
+      await definir(switchEl, false, label);
     });
   },
 };

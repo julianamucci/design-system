@@ -283,16 +283,16 @@ export const Virtualized1000Rows: Story = {
     await step('Rolar troca a janela de linhas e mantém a posição', async () => {
       // visual.item5 — a story termina com o scroll no meio, que é o estado
       // que o item documenta.
-      const alvo = rolador();
+      const target = rolador();
       const firstBefore = datumLines()[0].textContent!.trim();
-      alvo.scrollTop = 0;
-      alvo.scrollTop = 4000;
-      alvo.dispatchEvent(new Event('scroll'));
+      target.scrollTop = 0;
+      target.scrollTop = 4000;
+      target.dispatchEvent(new Event('scroll'));
 
       await waitFor(async () => {
         await expect(datumLines()[0].textContent!.trim()).not.toBe(firstBefore);
       });
-      await expect(alvo.scrollTop).toBe(4000);
+      await expect(target.scrollTop).toBe(4000);
       await expect(datumLines().length).toBeLessThan(100);
     });
   },

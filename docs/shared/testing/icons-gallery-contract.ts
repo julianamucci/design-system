@@ -23,21 +23,21 @@ const TILE = '.nds-icon-tile';
 const EMPTY = '.nds-icon-empty-state';
 const SEARCH = 'input[type="search"]';
 
-function texto(el: Element | null): string {
+function text(el: Element | null): string {
   return (el?.textContent ?? '').trim();
 }
 
 /** Item visível = está no DOM e não carrega `is-hidden`. */
-export function itemsVisiveis(raiz: HTMLElement): HTMLElement[] {
-  return Array.from(raiz.querySelectorAll<HTMLElement>(ITEM)).filter(
+export function itemsVisiveis(root: HTMLElement): HTMLElement[] {
+  return Array.from(root.querySelectorAll<HTMLElement>(ITEM)).filter(
     (item) => !item.classList.contains('is-hidden')
   );
 }
 
-export function searchField(raiz: HTMLElement): HTMLInputElement {
-  const campo = raiz.querySelector<HTMLInputElement>(SEARCH);
-  if (!campo) throw new Error('contrato: a galeria não tem campo de busca (input[type="search"])');
-  return campo;
+export function searchField(root: HTMLElement): HTMLInputElement {
+  const field = root.querySelector<HTMLInputElement>(SEARCH);
+  if (!field) throw new Error('contrato: a galeria não tem campo de busca (input[type="search"])');
+  return field;
 }
 
 /**
@@ -49,30 +49,30 @@ export function searchField(raiz: HTMLElement): HTMLInputElement {
  * já escutam. Uma única emissão por consulta, em vez de uma por tecla — com
  * dois mil tiles no DOM, a diferença é de segundos por story.
  */
-export function searchDigitar(raiz: HTMLElement, consulta: string): HTMLInputElement {
-  const campo = searchField(raiz);
+export function searchDigitar(root: HTMLElement, query: string): HTMLInputElement {
+  const field = searchField(root);
   const setter = Object.getOwnPropertyDescriptor(
-    Object.getPrototypeOf(campo) as object,
+    Object.getPrototypeOf(field) as object,
     'value'
   )?.set;
-  setter?.call(campo, consulta);
-  campo.dispatchEvent(new Event('input', { bubbles: true }));
-  return campo;
+  setter?.call(field, query);
+  field.dispatchEvent(new Event('input', { bubbles: true }));
+  return field;
 }
 
 /** Texto da região viva que anuncia quantos ícones estão à vista. */
-export function contagemText(raiz: HTMLElement): string {
-  return texto(raiz.querySelector('[aria-live="polite"]'));
+export function contagemText(root: HTMLElement): string {
+  return text(root.querySelector('[aria-live="polite"]'));
 }
 
-export function stateEmptyVisible(raiz: HTMLElement): boolean {
-  const vazio = raiz.querySelector(EMPTY);
+export function stateEmptyVisible(root: HTMLElement): boolean {
+  const vazio = root.querySelector(EMPTY);
   return !!vazio && vazio.classList.contains('is-visible');
 }
 
-export function gridEscondida(raiz: HTMLElement): boolean {
-  const grade = raiz.querySelector(GRID);
-  return !!grade && grade.classList.contains('is-hidden');
+export function gridEscondida(root: HTMLElement): boolean {
+  const grid = root.querySelector(GRID);
+  return !!grid && grid.classList.contains('is-hidden');
 }
 
 /**
@@ -83,41 +83,41 @@ export function gridEscondida(raiz: HTMLElement): boolean {
  * classe, não por remoção de nó) e que nenhuma stack perdeu ícone no caminho.
  */
 export function galeriaAuditarStructure(
-  raiz: HTMLElement,
+  root: HTMLElement,
   totalEsperado: number
 ): string[] {
   const problemas: string[] = [];
 
-  const grade = raiz.querySelector<HTMLElement>(GRID);
-  if (!grade) {
+  const grid = root.querySelector<HTMLElement>(GRID);
+  if (!grid) {
     problemas.push(`sem ${GRID} na página`);
     return problemas;
   }
-  if (grade.tagName !== 'UL') {
-    problemas.push(`a grade é <${grade.tagName.toLowerCase()}>, e o contrato é <ul>`);
+  if (grid.tagName !== 'UL') {
+    problemas.push(`a grade é <${grid.tagName.toLowerCase()}>, e o contrato é <ul>`);
   }
-  if (!grade.getAttribute('aria-label')?.trim()) {
+  if (!grid.getAttribute('aria-label')?.trim()) {
     problemas.push('a grade não tem aria-label — a lista fica sem nome acessível');
   }
 
-  const itens = Array.from(raiz.querySelectorAll<HTMLElement>(ITEM));
-  if (itens.length !== totalEsperado) {
-    problemas.push(`a grade tem ${itens.length} itens, e o catálogo tem ${totalEsperado}`);
+  const items = Array.from(root.querySelectorAll<HTMLElement>(ITEM));
+  if (items.length !== totalEsperado) {
+    problemas.push(`a grade tem ${items.length} itens, e o catálogo tem ${totalEsperado}`);
   }
 
-  const noName = itens.filter((item) => !item.dataset.iconName).length;
+  const noName = items.filter((item) => !item.dataset.iconName).length;
   if (noName > 0) {
     problemas.push(`${noName} itens sem data-icon-name — a sonda não consegue endereçá-los`);
   }
 
-  const vazio = raiz.querySelector(EMPTY);
+  const vazio = root.querySelector(EMPTY);
   if (!vazio) {
     problemas.push(`sem ${EMPTY} no DOM — o estado vazio precisa existir antes de a busca falhar`);
   } else if (vazio.getAttribute('role') !== 'status') {
     problemas.push('o estado vazio não é role="status"');
   }
 
-  if (!raiz.querySelector('[aria-live="polite"]')) {
+  if (!root.querySelector('[aria-live="polite"]')) {
     problemas.push('sem região viva anunciando a contagem da busca');
   }
 
@@ -131,10 +131,10 @@ export function galeriaAuditarStructure(
  * dimensão cai no tamanho intrínseco de 300×150 e estoura o tile. Era o estado
  * do Vanilla antes desta rodada, e nenhuma asserção pegava.
  */
-export function auditarTile(raiz: HTMLElement, nomeDoIcone: string): string[] {
+export function auditarTile(root: HTMLElement, nomeDoIcone: string): string[] {
   const problemas: string[] = [];
 
-  const item = raiz.querySelector<HTMLElement>(`${ITEM}[data-icon-name="${nomeDoIcone}"]`);
+  const item = root.querySelector<HTMLElement>(`${ITEM}[data-icon-name="${nomeDoIcone}"]`);
   if (!item) {
     problemas.push(`nenhum item para o ícone ${nomeDoIcone}`);
     return problemas;
@@ -149,10 +149,10 @@ export function auditarTile(raiz: HTMLElement, nomeDoIcone: string): string[] {
     problemas.push(`o tile de ${nomeDoIcone} é type="${button.type}" — submete o formulário ao redor`);
   }
 
-  const rotulo = button.getAttribute('aria-label') ?? '';
-  if (!rotulo.includes(nomeDoIcone)) {
+  const label = button.getAttribute('aria-label') ?? '';
+  if (!label.includes(nomeDoIcone)) {
     problemas.push(
-      `o nome acessível do tile de ${nomeDoIcone} não contém o nome do ícone (veio "${rotulo}")`
+      `o nome acessível do tile de ${nomeDoIcone} não contém o nome do ícone (veio "${label}")`
     );
   }
 
@@ -168,10 +168,10 @@ export function auditarTile(raiz: HTMLElement, nomeDoIcone: string): string[] {
     problemas.push(`o <svg> de ${nomeDoIcone} não é aria-hidden — o leitor lê o desenho`);
   }
 
-  const caixa = svg.getBoundingClientRect();
-  if (caixa.width > 32 || caixa.height > 32) {
+  const box = svg.getBoundingClientRect();
+  if (box.width > 32 || box.height > 32) {
     problemas.push(
-      `o <svg> de ${nomeDoIcone} mede ${Math.round(caixa.width)}×${Math.round(caixa.height)}px — ` +
+      `o <svg> de ${nomeDoIcone} mede ${Math.round(box.width)}×${Math.round(box.height)}px — ` +
         'sem classe de dimensão, o SVG cai no tamanho intrínseco'
     );
   }
@@ -187,15 +187,15 @@ export function auditarTile(raiz: HTMLElement, nomeDoIcone: string): string[] {
  * era o caso do `.nds-icon-search-input` antes de virar modificador do
  * `.nds-input`.
  */
-export function fieldAuditarHeight(raiz: HTMLElement): string[] {
-  const campo = searchField(raiz);
-  const fonteOriginal = campo.style.fontSize;
-  const antes = campo.getBoundingClientRect().height;
+export function fieldAuditarHeight(root: HTMLElement): string[] {
+  const field = searchField(root);
+  const fonteOriginal = field.style.fontSize;
+  const antes = field.getBoundingClientRect().height;
   try {
-    campo.style.fontSize = '200%';
+    field.style.fontSize = '200%';
     // Leitura force o layout antes de medir.
-    void campo.offsetHeight;
-    const depois = campo.getBoundingClientRect().height;
+    void field.offsetHeight;
+    const depois = field.getBoundingClientRect().height;
     if (depois <= antes) {
       return [
         `o campo de busca não cresce com a fonte (${Math.round(antes)}px a 100%, ` +
@@ -205,6 +205,6 @@ export function fieldAuditarHeight(raiz: HTMLElement): string[] {
     return [];
   } finally {
     // Restaurar SEMPRE: o Chromatic fotografa o fim da play.
-    campo.style.fontSize = fonteOriginal;
+    field.style.fontSize = fonteOriginal;
   }
 }

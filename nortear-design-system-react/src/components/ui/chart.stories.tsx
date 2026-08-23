@@ -88,26 +88,26 @@ export const Playground: Story = {
   play: async ({ canvasElement, args, step }) => {
     // Procura pela classe do CSS compartilhado, não pelo `data-slot`: é o que o
     // design system define, e o mesmo seletor serve nas cinco stacks.
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('O desenho é anunciado como imagem, com a descrição autoral', async () => {
-      await expect(raiz).toHaveAttribute('data-slot', 'chart');
-      await expect(raiz).toHaveAttribute('role', 'img');
+      await expect(root).toHaveAttribute('data-slot', 'chart');
+      await expect(root).toHaveAttribute('role', 'img');
       // Não basta "o atributo existe": o que o leitor de tela lê é o texto, e
       // um rótulo vazio passaria por qualquer verificação de presença.
-      await expect(raiz.getAttribute('aria-label')).toBe(args['aria-label']);
+      await expect(root.getAttribute('aria-label')).toBe(args['aria-label']);
     });
 
     await step('O desenho sai — o container não é casca vazia', async () => {
       // Gráfico tem dimensão calculada: medir antes de o desenho existir é o
       // caminho mais curto para um teste intermitente.
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
     });
 
     await step('O eixo escreve todas as categorias do dado', async () => {
       await waitFor(
         () => {
-          for (const month of meses) expect(designEscreve(raiz, month)).toBe(true);
+          for (const month of meses) expect(designEscreve(root, month)).toBe(true);
         },
         { timeout: 3000 },
       );
@@ -120,7 +120,7 @@ export const Playground: Story = {
       // arredondamento de layout não é defeito.
       const heightPedida = args.height ?? 0;
       await expect(heightPedida).toBeGreaterThan(0);
-      await expect(Math.abs(raiz.getBoundingClientRect().height - heightPedida)).toBeLessThanOrEqual(1);
+      await expect(Math.abs(root.getBoundingClientRect().height - heightPedida)).toBeLessThanOrEqual(1);
     });
   },
 };

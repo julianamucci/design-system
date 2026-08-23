@@ -275,9 +275,9 @@ export const WithTextPrefix: Story = {
     });
 
     await step('A moldura é do GRUPO; o campo interno fica nu', async () => {
-      const grupo = canvasElement.querySelector<HTMLElement>('.nds-input-group')!;
+      const group = canvasElement.querySelector<HTMLElement>('.nds-input-group')!;
       const input = canvasElement.querySelector<HTMLInputElement>('#input-url')!;
-      await expect(parseFloat(getComputedStyle(grupo).borderTopWidth)).toBeGreaterThan(0);
+      await expect(parseFloat(getComputedStyle(group).borderTopWidth)).toBeGreaterThan(0);
       await expect(parseFloat(getComputedStyle(input).borderTopWidth)).toBe(0);
     });
 

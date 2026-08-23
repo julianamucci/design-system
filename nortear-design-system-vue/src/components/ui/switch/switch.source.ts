@@ -26,10 +26,10 @@ import { Label } from '@/components/ui/label'`;
  * Par em linha: o controle e, à direita, o rótulo que o nomeia. O `for` do
  * rótulo casa com o `id` do controle — é o que dá nome acessível ao switch.
  */
-function linePair(id: string, rotulo: string, atributos = ''): string {
+function linePair(id: string, label: string, extra = ''): string {
   return `<div class="nds-cluster" data-spacing="sm">
-  <Switch id="${id}"${attrs(atributos)} />
-  <Label for="${id}">${rotulo}</Label>
+  <Switch id="${id}"${attrs(extra)} />
+  <Label for="${id}">${label}</Label>
 </div>`;
 }
 
@@ -38,24 +38,24 @@ function linePair(id: string, rotulo: string, atributos = ''): string {
  * controle à direita. A descrição fica FORA do rótulo — se entrasse nele, o
  * leitor de tela anunciaria o parágrafo inteiro como nome do controle.
  */
-function panelLine(opcoes: {
+function panelLine(options: {
   id: string;
-  rotulo: string;
+  label: string;
   descricao: string;
-  atributos?: string;
+  attrs?: string;
   border?: string;
-  largura?: string;
+  width?: string;
 }): string {
-  const { id, rotulo, descricao, atributos = '', border = 'nds-border-default', largura } = opcoes;
-  const classes = ['nds-cluster', largura, 'nds-rounded-lg', border, 'nds-p-4']
+  const { id, label, descricao, attrs: extra = '', border = 'nds-border-default', width } = options;
+  const classes = ['nds-cluster', width, 'nds-rounded-lg', border, 'nds-p-4']
     .filter(Boolean)
     .join(' ');
   return `<div class="${classes}" data-align="center" data-justify="between">
   <div class="nds-stack" data-spacing="xs">
-    <Label for="${id}">${rotulo}</Label>
+    <Label for="${id}">${label}</Label>
     <p class="nds-text-body">${descricao}</p>
   </div>
-  <Switch id="${id}"${attrs(atributos)} />
+  <Switch id="${id}"${attrs(extra)} />
 </div>`;
 }
 
@@ -98,9 +98,9 @@ export function switchWithDescriptionSource(): string {
     IMPORT_PAIR,
     panelLine({
       id: 'marketing',
-      rotulo: 'Emails de marketing',
+      label: 'Emails de marketing',
       descricao: 'Receba novidades e promoções da plataforma.',
-      largura: 'nds-w-sm',
+      width: 'nds-w-sm',
     }),
   );
 }
@@ -156,9 +156,9 @@ export function switchInvalidoSource(): string {
 ${indentar(
   panelLine({
     id: 'aceitar-termos',
-    rotulo: 'Aceitar termos',
+    label: 'Aceitar termos',
     descricao: 'Você precisa aceitar para continuar.',
-    atributos: 'aria-invalid="true" aria-describedby="aceitar-termos-erro"',
+    attrs: 'aria-invalid="true" aria-describedby="aceitar-termos-erro"',
     border: 'nds-border-destructive',
   }),
 )}
@@ -175,19 +175,19 @@ export function configSwitchPanelSource(): string {
   const lines = [
     {
       id: 'marketing',
-      rotulo: 'Emails de marketing',
+      label: 'Emails de marketing',
       descricao: 'Receba novidades e promoções da plataforma.',
-      atributos: 'default-value',
+      attrs: 'default-value',
     },
     {
       id: 'seguranca',
-      rotulo: 'Alertas de segurança',
+      label: 'Alertas de segurança',
       descricao: 'Notificações sobre acessos suspeitos à sua conta.',
-      atributos: 'default-value',
+      attrs: 'default-value',
     },
     {
       id: 'resumo-semanal',
-      rotulo: 'Resumo semanal',
+      label: 'Resumo semanal',
       descricao: 'Receba um resumo das principais novidades toda segunda.',
     },
   ];
@@ -204,17 +204,17 @@ ${lines.map((line) => indentar(panelLine(line))).join('\n\n')}
  * lista de verdade — três itens relacionados são uma `ul`, não três `div`.
  */
 export function preferenciasSwitchListSource(): string {
-  const itens = [
-    { id: 'push', rotulo: 'Notificações push', atributos: 'default-value' },
-    { id: 'email', rotulo: 'Notificações por email', atributos: '' },
-    { id: 'sms', rotulo: 'SMS', atributos: '' },
+  const items = [
+    { id: 'push', label: 'Notificações push', attrs: 'default-value' },
+    { id: 'email', label: 'Notificações por email', attrs: '' },
+    { id: 'sms', label: 'SMS', attrs: '' },
   ];
-  const lines = itens
-    .map(({ id, rotulo, atributos }, i) => {
+  const lines = items
+    .map(({ id, label, attrs: extra }, i) => {
       const border = i === 0 ? '' : ' nds-border-t';
       return `  <li class="nds-cluster nds-p-4${border}" data-align="center" data-justify="between">
-    <Label for="${id}">${rotulo}</Label>
-    <Switch id="${id}"${attrs(atributos)} />
+    <Label for="${id}">${label}</Label>
+    <Switch id="${id}"${attrs(extra)} />
   </li>`;
     })
     .join('\n');
@@ -244,9 +244,9 @@ import { Button } from '@/components/ui/button'`,
 ${indentar(
   panelLine({
     id: 'perfil-publico',
-    rotulo: 'Perfil público',
+    label: 'Perfil público',
     descricao: 'Qualquer pessoa pode visualizar seu perfil.',
-    atributos: 'name="perfil-publico"',
+    attrs: 'name="perfil-publico"',
   }),
 )}
 
@@ -260,17 +260,17 @@ ${indentar(
  * rótulo desce junto para a escala de legenda.
  */
 export function switchItemDeMenuSource(): string {
-  const itens = [
-    { id: 'modo-escuro', rotulo: 'Modo escuro', atributos: 'size="sm"' },
-    { id: 'salvar-automaticamente', rotulo: 'Salvar automaticamente', atributos: 'size="sm" default-value' },
-    { id: 'visualizacao-compacta', rotulo: 'Visualização compacta', atributos: 'size="sm"' },
+  const items = [
+    { id: 'modo-escuro', label: 'Modo escuro', attrs: 'size="sm"' },
+    { id: 'salvar-automaticamente', label: 'Salvar automaticamente', attrs: 'size="sm" default-value' },
+    { id: 'visualizacao-compacta', label: 'Visualização compacta', attrs: 'size="sm"' },
   ];
-  const lines = itens
+  const lines = items
     .map(
-      ({ id, rotulo, atributos }) =>
+      ({ id, label, attrs: extra }) =>
         `  <div class="nds-cluster nds-rounded nds-px-2 nds-py-1 nds-hover-bg-muted-40" data-align="center" data-justify="between">
-    <Label for="${id}" class="nds-text-caption">${rotulo}</Label>
-    <Switch id="${id}"${attrs(atributos)} />
+    <Label for="${id}" class="nds-text-caption">${label}</Label>
+    <Switch id="${id}"${attrs(extra)} />
   </div>`,
     )
     .join('\n');

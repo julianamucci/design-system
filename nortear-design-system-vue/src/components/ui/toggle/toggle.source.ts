@@ -16,7 +16,7 @@ import {
   attrs,
   asCode,
   indentar,
-  texto,
+  text,
   vueSnippet,
   type SourceTransform,
 } from '@/lib/story-source';
@@ -53,8 +53,8 @@ function snippet(markup: string, state = '', extra = ''): string {
  * Toggle sem texto: o ícone é decorativo (`aria-hidden`) e quem nomeia o
  * controle é o `aria-label`. Sem ele o botão não tem nome acessível nenhum.
  */
-function iconOnly(icone: string, rotulo: string, atributos = '', umaLine = false): string {
-  const abertura = `<Toggle${attrs(atributos, `aria-label="${rotulo}"`)}>`;
+function iconOnly(icone: string, label: string, extra = '', umaLine = false): string {
+  const abertura = `<Toggle${attrs(extra, `aria-label="${label}"`)}>`;
   const miolo = `<${icone} aria-hidden="true" />`;
   return umaLine ? `${abertura}${miolo}</Toggle>` : `${abertura}\n  ${miolo}\n</Toggle>`;
 }
@@ -63,32 +63,32 @@ function iconOnly(icone: string, rotulo: string, atributos = '', umaLine = false
  * Toggle com texto visível: o próprio texto é o nome acessível, e por isso não
  * há `aria-label` nenhum aqui.
  */
-function comRotulo(icone: string, rotulo: string, atributos = ''): string {
-  return `<Toggle${attrs(atributos)}>
+function withLabel(icone: string, label: string, extra = ''): string {
+  return `<Toggle${attrs(extra)}>
   <${icone} aria-hidden="true" />
-  ${rotulo}
+  ${label}
 </Toggle>`;
 }
 
 /** Fila horizontal — a forma em que os toggles quase sempre aparecem. */
-function fila(...itens: string[]): string {
+function fila(...items: string[]): string {
   return `<div class="nds-cluster" data-spacing="sm">
-${itens.map((item) => indentar(item)).join('\n')}
+${items.map((item) => indentar(item)).join('\n')}
 </div>`;
 }
 
 /**
  * Forma canônica do painel: um toggle com os valores atuais dos controles.
  *
- * O `label` é lido por `asCode`/`texto`: o control é de texto, mas qualquer
+ * O `label` é lido por `asCode`/`text`: o control é de texto, mas qualquer
  * leitura de `ctx.args` que possa cair num espião de ação precisa da guarda — e
  * as aspas do texto precisam escapar antes de entrar num atributo.
  */
 export const toggleSource: SourceTransform<ToggleArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const rotulo = texto(asCode(args.label) ?? 'Alternar');
+  const label = text(asCode(args.label) ?? 'Alternar');
   const noText = args.iconOnly !== false;
-  const atributos = attrs(
+  const attrList = attrs(
     attr('variant', args.variant, 'default'),
     attr('size', args.size, 'default'),
     // `modelValue` é a via controlada e não entra aqui: os dois estados no mesmo
@@ -97,8 +97,8 @@ export const toggleSource: SourceTransform<ToggleArgs> = (_gerado, ctx) => {
     attrBool('disabled', args.disabled, false),
   ).trim();
   const markup = noText
-    ? iconOnly('Bold', rotulo, atributos)
-    : comRotulo('Eye', rotulo, atributos);
+    ? iconOnly('Bold', label, attrList)
+    : withLabel('Eye', label, attrList);
   return snippet(markup);
 };
 
@@ -123,8 +123,8 @@ export function toggleContornoSource(): string {
 export function toggleWithLabelSource(): string {
   return snippet(
     fila(
-      comRotulo('Eye', 'Mostrar ocultos', 'variant="outline"'),
-      comRotulo('List', 'Visão compacta', 'variant="outline" default-value'),
+      withLabel('Eye', 'Mostrar ocultos', 'variant="outline"'),
+      withLabel('List', 'Visão compacta', 'variant="outline" default-value'),
     ),
   );
 }
@@ -219,7 +219,7 @@ export function formattingToggleBarSource(): string {
   data-align="center"
   data-spacing="xs"
 >
-${buttons.map(([icone, rotulo]) => indentar(iconOnly(icone, rotulo, '', true))).join('\n')}
+${buttons.map(([icone, label]) => indentar(iconOnly(icone, label, '', true))).join('\n')}
 </div>`,
   );
 }
@@ -235,8 +235,8 @@ export function filtersToggleListSource(): string {
   <p class="nds-text-body nds-font-semibold">Filtros de exibição</p>
 ${indentar(
   fila(
-    comRotulo('Eye', 'Mostrar ocultos', 'variant="outline"'),
-    comRotulo('List', 'Visão compacta', 'variant="outline" default-value'),
+    withLabel('Eye', 'Mostrar ocultos', 'variant="outline"'),
+    withLabel('List', 'Visão compacta', 'variant="outline" default-value'),
   ),
 )}
 </div>`,

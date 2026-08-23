@@ -139,8 +139,8 @@ export const Playground: Story = {
     });
 
     await step('O nome acessível existe nos dois modos', async () => {
-      const nome = args.label ? btn.textContent?.trim() : btn.getAttribute('aria-label');
-      await expect(nome).toBeTruthy();
+      const name = args.label ? btn.textContent?.trim() : btn.getAttribute('aria-label');
+      await expect(name).toBeTruthy();
       // Sem texto visível, o nome só pode vir da OPÇÃO `aria-label`: é ela que
       // tem de produzir o atributo, e não um retoque no elemento retornado.
       if (!args.label) await expect(btn).toHaveAttribute('aria-label', args['aria-label']);
@@ -149,9 +149,9 @@ export const Playground: Story = {
     });
 
     await step('O alvo de toque cabe no mínimo de 24px (WCAG 2.5.8)', async () => {
-      const caixa = btn.getBoundingClientRect();
-      await expect(caixa.width).toBeGreaterThanOrEqual(24);
-      await expect(caixa.height).toBeGreaterThanOrEqual(24);
+      const box = btn.getBoundingClientRect();
+      await expect(box.width).toBeGreaterThanOrEqual(24);
+      await expect(box.height).toBeGreaterThanOrEqual(24);
     });
 
     if (!args.disabled) {

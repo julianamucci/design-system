@@ -169,7 +169,7 @@ export const Info: Story = {
 function alertDismissivelRemontavel(
   onDismiss: () => void,
   kind: string,
-  titulo: string,
+  title: string,
   descricao: string,
 ) {
   const instancia = signal(0);
@@ -177,7 +177,7 @@ function alertDismissivelRemontavel(
     props: {
       instancia,
       kind,
-      titulo,
+      title,
       descricao,
       aoFechar: () => {
         instancia.update((n) => n + 1);
@@ -188,7 +188,7 @@ function alertDismissivelRemontavel(
       @for (i of [instancia()]; track i) {
         <div ndsAlert variant="success" dismissible (dismiss)="aoFechar()">
           <svg ndsAlertIcon [kind]="kind"></svg>
-          <h5 ndsAlertTitle>{{ titulo }}</h5>
+          <h5 ndsAlertTitle>{{ title }}</h5>
           <section ndsAlertDescription>{{ descricao }}</section>
         </div>
       }
@@ -219,30 +219,30 @@ export const Dismissible: Story = {
 
     await step('O botão de fechar é o último filho e tem rótulo acessível', async () => {
       const alerta = canvas.getByRole('alert');
-      const fechar = canvas.getByRole('button', { name: 'Fechar alerta' });
+      const close = canvas.getByRole('button', { name: 'Fechar alerta' });
       // Ordem no DOM: o X vem DEPOIS do conteúdo, então o leitor de tela
       // anuncia a mensagem antes da ação e o Tab chega nele por último.
-      await expect(alerta.lastElementChild).toBe(fechar);
-      await expect(fechar).toHaveAttribute('data-slot', 'alert-dismiss');
+      await expect(alerta.lastElementChild).toBe(close);
+      await expect(close).toHaveAttribute('data-slot', 'alert-dismiss');
       // waitFor: o alert dismissible ENTRA animado (opacidade 0 → 1); no
       // Chromium headless a animação fica presa no quadro zero até o timeout
       // de segurança do primitivo limpar a classe.
-      await waitFor(() => expect(fechar).toBeVisible());
+      await waitFor(() => expect(close).toBeVisible());
     });
 
     await step('Fechar remove o alert original e a demo remonta', async () => {
       const original = canvas.getByRole('alert');
-      const fechar = canvas.getByRole('button', { name: 'Fechar alerta' });
-      await userEvent.click(fechar);
+      const close = canvas.getByRole('button', { name: 'Fechar alerta' });
+      await userEvent.click(close);
 
       // Segunda ativação com a saída em curso: tem que cair na guarda de
       // reentrada. Sem ela, o "uma única vez" do último step seria verdade
       // trivial — nunca teria havido chance de disparar duas.
-      fechar.click();
+      close.click();
 
       // E a animação de um DESCENDENTE não pode encerrar a saída do alert:
       // `animationend` borbulha.
-      fechar.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      close.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
       await expect(original).toBeInTheDocument();
 
       // waitFor: a saída é animada e o nó só some quando ela termina — ou no
@@ -284,9 +284,9 @@ export const DismissibleByKeyboard: Story = {
 
     await step('Enter no botão focado fecha o alert', async () => {
       const original = canvas.getByRole('alert');
-      const fechar = canvas.getByRole('button', { name: 'Fechar alerta' });
-      fechar.focus();
-      await expect(fechar).toHaveFocus();
+      const close = canvas.getByRole('button', { name: 'Fechar alerta' });
+      close.focus();
+      await expect(close).toHaveFocus();
       await userEvent.keyboard('{Enter}');
 
       await waitFor(() => expect(original).not.toBeInTheDocument());

@@ -33,28 +33,28 @@ const IMPORT_WITH_ELLIPSIS = `import {
  * O separador é irmão dos itens dentro da `<ol>`, e não filho de um deles: é
  * assim que ele fica fora da leitura sem levar o nível junto.
  */
-function trail(itens: string[], separator = '<BreadcrumbSeparator />'): string {
-  const corpo = itens
+function trail(items: string[], separator = '<BreadcrumbSeparator />'): string {
+  const body = items
     .map((item) => `    <BreadcrumbItem>\n${indentar(item, 6)}\n    </BreadcrumbItem>`)
     .join(`\n    ${separator}\n`);
   return `<Breadcrumb>
   <BreadcrumbList>
-${corpo}
+${body}
   </BreadcrumbList>
 </Breadcrumb>`;
 }
 
 /** Nível anterior: navegável, e por isso link de verdade, com destino. */
-function link(rotulo: string, destination: string): string {
-  return `<BreadcrumbLink href="${destination}">${rotulo}</BreadcrumbLink>`;
+function link(label: string, destination: string): string {
+  return `<BreadcrumbLink href="${destination}">${label}</BreadcrumbLink>`;
 }
 
 /**
  * Nível atual: marcado com `aria-current="page"` pelo próprio componente, e
  * nunca link — clicar nele não leva a lugar nenhum.
  */
-function pagina(rotulo: string): string {
-  return `<BreadcrumbPage>${rotulo}</BreadcrumbPage>`;
+function page(label: string): string {
+  return `<BreadcrumbPage>${label}</BreadcrumbPage>`;
 }
 
 /**
@@ -67,14 +67,14 @@ export function breadcrumbSource(): string {
     trail([
       link('Início', '/'),
       link('Componentes', '/componentes'),
-      pagina('Breadcrumb'),
+      page('Breadcrumb'),
     ]),
   );
 }
 
 /** Trilha de dois níveis: o mínimo que ainda é um caminho. */
 export function breadcrumbSimpleSource(): string {
-  return vueSnippet(IMPORT, trail([link('Início', '/'), pagina('Componentes')]));
+  return vueSnippet(IMPORT, trail([link('Início', '/'), page('Componentes')]));
 }
 
 /**
@@ -89,7 +89,7 @@ export function breadcrumbWithEllipsisSource(): string {
       link('Início', '/'),
       '<BreadcrumbEllipsis label="Mais páginas" />',
       link('Componentes', '/componentes'),
-      pagina('Breadcrumb'),
+      page('Breadcrumb'),
     ]),
   );
 }
@@ -104,7 +104,7 @@ export function breadcrumbSeparatorCustomizadoSource(): string {
     `${IMPORT}
 import { Slash } from 'lucide-vue-next'`,
     trail(
-      [link('Início', '/'), link('Componentes', '/componentes'), pagina('Breadcrumb')],
+      [link('Início', '/'), link('Componentes', '/componentes'), page('Breadcrumb')],
       '<BreadcrumbSeparator><Slash /></BreadcrumbSeparator>',
     ),
   );
@@ -126,7 +126,7 @@ import { RouterLink } from 'vue-router'`,
       `<BreadcrumbLink as-child>
   <RouterLink to="/componentes">Componentes</RouterLink>
 </BreadcrumbLink>`,
-      pagina('Breadcrumb'),
+      page('Breadcrumb'),
     ]),
   );
 }
@@ -157,7 +157,7 @@ import {
     <DropdownMenuItem>Componentes</DropdownMenuItem>
   </DropdownMenuContent>
 </DropdownMenu>`,
-      pagina('Breadcrumb'),
+      page('Breadcrumb'),
     ]),
   );
 }

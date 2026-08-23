@@ -83,9 +83,9 @@ export const IframeAndVideo: Story = {
       // filho recebessem `pointer-events: none`, a mídia continuaria visível e
       // deixaria de responder — sintoma clássico de overlay mal posicionado.
       const video = canvasElement.querySelector<HTMLVideoElement>('video')!;
-      const caixa = video.closest<HTMLElement>('[data-slot="aspect-ratio"]')!;
+      const box = video.closest<HTMLElement>('[data-slot="aspect-ratio"]')!;
       await expect(getComputedStyle(video).pointerEvents).not.toBe('none');
-      await expect(getComputedStyle(caixa).pointerEvents).not.toBe('none');
+      await expect(getComputedStyle(box).pointerEvents).not.toBe('none');
     });
   },
 };

@@ -9,25 +9,25 @@ import {
 
 describe('alertSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = alertSnippet();
-    expect(código).toContain("from '@/components/ui/alert';");
-    expect(código).toContain('createAlert()');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('role="alert"');
+    const code = alertSnippet();
+    expect(code).toContain("from '@/components/ui/alert';");
+    expect(code).toContain('createAlert()');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('role="alert"');
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = alertSnippet();
-    expect(código).not.toContain('variant:');
-    expect(código).not.toContain('role:');
-    expect(código).not.toContain('dismissible');
-    expect(código).not.toContain('className');
+    const code = alertSnippet();
+    expect(code).not.toContain('variant:');
+    expect(code).not.toContain('role:');
+    expect(code).not.toContain('dismissible');
+    expect(code).not.toContain('className');
   });
 
   it('mostra a variante e a semântica de anúncio quando a story as usa', () => {
-    const código = alertSnippet({ variant: 'destructive', role: 'note' });
-    expect(código).toContain("variant: 'destructive'");
-    expect(código).toContain("role: 'note'");
+    const code = alertSnippet({ variant: 'destructive', role: 'note' });
+    expect(code).toContain("variant: 'destructive'");
+    expect(code).toContain("role: 'note'");
   });
 
   it('escolhe o ícone que acompanha a variante', () => {
@@ -62,12 +62,12 @@ describe('alertSnippet', () => {
   });
 
   it('ignora o callback que a story passa como função de verdade', () => {
-    const código = alertSnippet({
+    const code = alertSnippet({
       dismissible: true,
       onDismiss: (() => {}) as unknown as string,
     });
-    expect(código).toContain('dismissible: true');
-    expect(código).not.toContain('onDismiss');
+    expect(code).toContain('dismissible: true');
+    expect(code).not.toContain('onDismiss');
   });
 });
 
@@ -92,19 +92,19 @@ describe('alertSource', () => {
 describe('alertSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = alertSourceWith({ variant: 'warning' });
-    const código = transform('', { args: { variant: 'destructive' } });
-    expect(código).toContain("variant: 'warning'");
-    expect(código).not.toContain("variant: 'destructive'");
+    const code = transform('', { args: { variant: 'destructive' } });
+    expect(code).toContain("variant: 'warning'");
+    expect(code).not.toContain("variant: 'destructive'");
   });
 });
 
 describe('alertComAcaoSnippet', () => {
   it('mostra a sub-fábrica do slot de ação, com o botão do design system', () => {
-    const código = alertWithActionSnippet({ acao: 'Atualizar' });
-    expect(código).toContain("import { createButton } from '@/components/ui/button';");
-    expect(código).toContain('createAlertAction()');
-    expect(código).toContain("createButton({ label: 'Atualizar', variant: 'outline', size: 'sm' })");
-    expect(código).toContain('alerta.appendChild(acao);');
+    const code = alertWithActionSnippet({ acao: 'Atualizar' });
+    expect(code).toContain("import { createButton } from '@/components/ui/button';");
+    expect(code).toContain('createAlertAction()');
+    expect(code).toContain("createButton({ label: 'Atualizar', variant: 'outline', size: 'sm' })");
+    expect(code).toContain('alerta.appendChild(acao);');
   });
 
   it('leva a classe do consumidor para a raiz', () => {
@@ -114,9 +114,9 @@ describe('alertComAcaoSnippet', () => {
 
 describe('alertEmRegiaoVivaSnippet', () => {
   it('mostra a região viva e a inserção em tempo de execução', () => {
-    const código = alertEmRegiaoVivaSnippet({ icon: 'success', title: 'Operação concluída' });
-    expect(código).toContain("regiao.setAttribute('aria-live', 'polite');");
-    expect(código).toContain('regiao.appendChild(alerta);');
-    expect(código).toContain("createAlertIcon('success')");
+    const code = alertEmRegiaoVivaSnippet({ icon: 'success', title: 'Operação concluída' });
+    expect(code).toContain("regiao.setAttribute('aria-live', 'polite');");
+    expect(code).toContain('regiao.appendChild(alerta);');
+    expect(code).toContain("createAlertIcon('success')");
   });
 });

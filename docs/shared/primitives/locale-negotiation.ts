@@ -18,9 +18,9 @@ export const LOCALES: readonly Locale[] = ['pt-BR', 'en', 'es'];
 
 /** `pt-PT` e `pt-AO` também são português: casa pela raiz quando não há exato. */
 function byRoot(tag: string, validos: readonly Locale[]): Locale | null {
-  const raiz = tag.split('-')[0]?.toLowerCase();
-  if (!raiz) return null;
-  return validos.find((l) => l.split('-')[0].toLowerCase() === raiz) ?? null;
+  const root = tag.split('-')[0]?.toLowerCase();
+  if (!root) return null;
+  return validos.find((l) => l.split('-')[0].toLowerCase() === root) ?? null;
 }
 
 /**
@@ -35,7 +35,7 @@ export function localeDoNavegador(
   idiomas?: readonly string[],
   validos: readonly Locale[] = LOCALES,
 ): Locale | null {
-  const lista =
+  const list =
     idiomas ??
     (typeof navigator === 'undefined'
       ? []
@@ -45,12 +45,12 @@ export function localeDoNavegador(
           ? [navigator.language]
           : []);
 
-  for (const tag of lista) {
+  for (const tag of list) {
     if (!tag) continue;
     const exato = validos.find((l) => l.toLowerCase() === tag.toLowerCase());
     if (exato) return exato;
-    const raiz = byRoot(tag, validos);
-    if (raiz) return raiz;
+    const root = byRoot(tag, validos);
+    if (root) return root;
   }
   return null;
 }
@@ -63,7 +63,7 @@ export function localeDoNavegador(
 export function negociarLocale(
   window?: { location?: { search?: string }; localStorage?: Pick<Storage, 'getItem'> },
   idiomasDoNavegador?: readonly string[],
-  chave = 'ds-locale',
+  key = 'ds-locale',
   padrao: Locale = 'pt-BR',
 ): Locale {
   const w = window ?? (typeof window === 'undefined' ? undefined : window);
@@ -73,7 +73,7 @@ export function negociarLocale(
   const urlValida = LOCALES.find((l) => l === daUrl);
   if (urlValida) return urlValida;
 
-  const salvo = w.localStorage?.getItem(chave);
+  const salvo = w.localStorage?.getItem(key);
   const salvoValido = LOCALES.find((l) => l === salvo);
   if (salvoValido) return salvoValido;
 

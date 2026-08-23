@@ -496,12 +496,12 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
     // componente no conteúdo compartilhado, e `t()` devolve a própria chave
     // quando erra o caminho. Era assim que "props.table.mode.description"
     // aparecia escrito dentro da tabela, sem erro nenhum.
-    const line = (name: string, chave: string, tipo: string, padrao: string) => ({
+    const line = (name: string, key: string, type: string, padrao: string) => ({
       name,
-      type: tipo,
+      type: type,
       defaultValue: padrao,
       required: not,
-      description: toPlainText(valueOuField(`props.table.${chave}`, 'description')),
+      description: toPlainText(valueOuField(`props.table.${key}`, 'description')),
     });
 
     return [
@@ -540,17 +540,17 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '--primary',          k: 'primary',         alvo: '.nds-calendar-day' },
-      { token: '--muted',            k: 'muted',           alvo: '.nds-calendar-day' },
-      { token: '--muted-foreground', k: 'mutedForeground', alvo: '.nds-calendar-weekday' },
-      { token: '--foreground',       k: 'foreground',      alvo: '.nds-calendar' },
-      { token: '--ring',             k: 'ring',            alvo: '.nds-calendar-day' },
-      { token: '--radius',           k: 'cellRadius',      alvo: '.nds-calendar-day' },
-      { token: '--size-default',     k: 'cellSize',        alvo: '.nds-calendar-day-cell' },
-      { token: '--accent',           k: 'pickerItem',      alvo: '.nds-calendar-caption' },
-    ].map(({ token, k, alvo }) => ({
+      { token: '--primary',          k: 'primary',         target: '.nds-calendar-day' },
+      { token: '--muted',            k: 'muted',           target: '.nds-calendar-day' },
+      { token: '--muted-foreground', k: 'mutedForeground', target: '.nds-calendar-weekday' },
+      { token: '--foreground',       k: 'foreground',      target: '.nds-calendar' },
+      { token: '--ring',             k: 'ring',            target: '.nds-calendar-day' },
+      { token: '--radius',           k: 'cellRadius',      target: '.nds-calendar-day' },
+      { token: '--size-default',     k: 'cellSize',        target: '.nds-calendar-day-cell' },
+      { token: '--accent',           k: 'pickerItem',      target: '.nds-calendar-caption' },
+    ].map(({ token, k, target }) => ({
       token,
-      value: alvo,
+      value: target,
       description: toPlainText(t(`tokens.table.${k}`)),
     }));
   });
@@ -581,11 +581,11 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'datePicker', nome: 'Popover', path: '?path=/docs/ui-popover--docs' },
-      { key: 'popover',    nome: 'Popover', path: '?path=/docs/ui-popover--docs' },
-      { key: 'form',       nome: 'Form',    path: '?path=/docs/ui-form--docs'    },
-      { key: 'input',      nome: 'Input',   path: '?path=/docs/ui-input--docs'   },
-    ].map(({ key, nome, path }) => ({ name: nome, description: t(`related.${key}`), path }));
+      { key: 'datePicker', name: 'Popover', path: '?path=/docs/ui-popover--docs' },
+      { key: 'popover',    name: 'Popover', path: '?path=/docs/ui-popover--docs' },
+      { key: 'form',       name: 'Form',    path: '?path=/docs/ui-form--docs'    },
+      { key: 'input',      name: 'Input',   path: '?path=/docs/ui-input--docs'   },
+    ].map(({ key, name, path }) => ({ name: name, description: t(`related.${key}`), path }));
   });
 
   protected readonly noteItems = computed(() => {
@@ -605,14 +605,14 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
   protected readonly analyticsItems = computed(() => {
     dict();
     return [
-      { e: 'fieldChange',   gatilho: 'fieldChangeTrigger',   carga: 'fieldChangePayload'   },
-      { e: 'dialogOpen',    gatilho: 'dialogOpenTrigger',    carga: 'dialogOpenPayload'    },
-      { e: 'pageView',      gatilho: 'pageViewTrigger',      carga: 'pageViewPayload'      },
-      { e: 'sectionViewed', gatilho: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
-      { e: 'langSwitch',    gatilho: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
-    ].map(({ e, gatilho, carga }) => ({
+      { e: 'fieldChange',   trigger: 'fieldChangeTrigger',   carga: 'fieldChangePayload'   },
+      { e: 'dialogOpen',    trigger: 'dialogOpenTrigger',    carga: 'dialogOpenPayload'    },
+      { e: 'pageView',      trigger: 'pageViewTrigger',      carga: 'pageViewPayload'      },
+      { e: 'sectionViewed', trigger: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
+      { e: 'langSwitch',    trigger: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
+    ].map(({ e, trigger, carga }) => ({
       event: t(`analytics.table.${e}`),
-      trigger: toPlainText(t(`analytics.table.${gatilho}`)),
+      trigger: toPlainText(t(`analytics.table.${trigger}`)),
       payload: toPlainText(t(`analytics.table.${carga}`)),
     }));
   });
@@ -645,8 +645,8 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
           level: r.level,
           how: toPlainText(r.how),
         }))
-      : numberedItems(d, 'testes.accessibility').map((texto) => ({
-          criterion: toPlainText(texto),
+      : numberedItems(d, 'testes.accessibility').map((text) => ({
+          criterion: toPlainText(text),
           level: '',
           how: '',
         }));
@@ -717,12 +717,12 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
  * `t()` devolve a própria chave quando ela aponta para um objeto — e é assim
  * que a chave crua acaba escrita na tela, sem erro nenhum.
  */
-function valueOuField(base: string, campo: string): string {
+function valueOuField(base: string, field: string): string {
   const direto = t(base);
   if (direto !== base) return direto;
-  const chave = `${base}.${campo}`;
-  const ofField = t(chave);
-  return ofField === chave ? '' : ofField;
+  const key = `${base}.${field}`;
+  const ofField = t(key);
+  return ofField === key ? '' : ofField;
 }
 
 /**
@@ -733,16 +733,16 @@ function valueOuField(base: string, campo: string): string {
  * quando ela não existe, então sem esta ponte o menu de quem não traz o bloco
  * mostrava "nav.overview" escrito na tela, sem erro nenhum.
  */
-function navLabel(chave: string): string {
-  const doComponente = t(chave);
-  return doComponente === chave ? tNav(chave) : doComponente;
+function navLabel(key: string): string {
+  const doComponente = t(key);
+  return doComponente === key ? tNav(key) : doComponente;
 }
 
 /** Itens `base.itemN` na ordem numérica, quantos existirem. */
 function numberedItems(d: Record<string, string>, base: string): string[] {
-  const itens: string[] = [];
-  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) itens.push(d[`${base}.item${i}`]);
-  return itens;
+  const items: string[] = [];
+  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) items.push(d[`${base}.item${i}`]);
+  return items;
 }
 
 const priorityKeyMap: Record<string, string> = {

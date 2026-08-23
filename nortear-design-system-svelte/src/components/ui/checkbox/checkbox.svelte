@@ -43,10 +43,10 @@
 	{...restProps}
 >
 	{#snippet child({ props, checked, indeterminate })}
-		{@const { disabled: desabilitado, ...semDisabled } = props}
+		{@const { disabled: disabled, ...semDisabled } = props}
 		<button
 			{...semDisabled}
-			aria-disabled={desabilitado ? 'true' : undefined}
+			aria-disabled={disabled ? 'true' : undefined}
 		>
 			<div
 				data-slot="checkbox-indicator"

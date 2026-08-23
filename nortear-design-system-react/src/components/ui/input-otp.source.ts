@@ -26,7 +26,7 @@ export type InputOtpArgs = {
   maxLength: number;
   disabled: boolean;
   autoFocus: boolean;
-  onComplete: (valor: string) => void;
+  onComplete: (value: string) => void;
 };
 
 const IMPORT_BASE = `import { useState } from "react";
@@ -43,33 +43,33 @@ const DEFAULT = 6;
 /**
  * Um campo de código completo: coluna, rótulo, estado e uma caixa por dígito.
  *
- * `atributos` já vem indentado para dentro da tag — é onde cada exemplo põe o
+ * `attrs` já vem indentado para dentro da tag — é onde cada exemplo põe o
  * que o diferencia (comprimento, bloqueio, marcas de erro).
  */
 function otpSnippet({
   id,
-  rotulo,
+  label,
   boxes,
-  atributos,
+  attrs,
   valueInitial = '',
   imports = IMPORT_BASE,
   depois = '',
 }: {
   id: string;
-  rotulo: string;
+  label: string;
   boxes: number;
-  atributos: string[];
+  attrs: string[];
   valueInitial?: string;
   imports?: string;
   depois?: string;
 }): string {
-  const lines = atributos.map((atributo) => `    ${atributo}`).join('\n');
+  const lines = attrs.map((atributo) => `    ${atributo}`).join('\n');
   return jsxSnippet(
     imports,
     `const [codigo, setCodigo] = useState("${valueInitial}");
 
 <div className="nds-stack" data-spacing="sm">
-  <Label htmlFor="${id}">${rotulo}</Label>
+  <Label htmlFor="${id}">${label}</Label>
   <InputOTP
     id="${id}"
 ${lines}
@@ -105,9 +105,9 @@ export const inputOtpSource: SourceTransform<InputOtpArgs> = (_gerado, ctx) => {
       : DEFAULT;
   return otpSnippet({
     id: 'codigo-verificacao',
-    rotulo: 'Código de verificação',
+    label: 'Código de verificação',
     boxes,
-    atributos: [
+    attrs: [
       propNumber('maxLength', boxes) ?? `maxLength={${DEFAULT}}`,
       ...(args.disabled === true ? ['disabled'] : []),
       ...(args.autoFocus === true ? ['autoFocus'] : []),
@@ -125,9 +125,9 @@ export const inputOtpSource: SourceTransform<InputOtpArgs> = (_gerado, ctx) => {
 export function inputOtpQuatroDigitosSource(): string {
   return otpSnippet({
     id: 'pin',
-    rotulo: 'PIN do aplicativo',
+    label: 'PIN do aplicativo',
     boxes: 4,
-    atributos: ['maxLength={4}'],
+    attrs: ['maxLength={4}'],
   });
 }
 
@@ -223,9 +223,9 @@ import { Label } from "@/components/ui/label";`,
 export function inputOtpEmptySource(): string {
   return otpSnippet({
     id: 'codigo-vazio',
-    rotulo: 'Código de verificação',
+    label: 'Código de verificação',
     boxes: DEFAULT,
-    atributos: ['maxLength={6}', 'autoFocus'],
+    attrs: ['maxLength={6}', 'autoFocus'],
   });
 }
 
@@ -236,9 +236,9 @@ export function inputOtpEmptySource(): string {
 export function inputOtpPreenchendoSource(): string {
   return otpSnippet({
     id: 'codigo-parcial',
-    rotulo: 'Código de verificação',
+    label: 'Código de verificação',
     boxes: DEFAULT,
-    atributos: ['maxLength={6}'],
+    attrs: ['maxLength={6}'],
     valueInitial: '123',
   });
 }
@@ -247,9 +247,9 @@ export function inputOtpPreenchendoSource(): string {
 export function inputOtpCompletoSource(): string {
   return otpSnippet({
     id: 'codigo-completo',
-    rotulo: 'Código de verificação',
+    label: 'Código de verificação',
     boxes: DEFAULT,
-    atributos: ['maxLength={6}', 'onComplete={(valor) => verificarCodigo(valor)}'],
+    attrs: ['maxLength={6}', 'onComplete={(valor) => verificarCodigo(valor)}'],
     valueInitial: '482913',
   });
 }
@@ -258,9 +258,9 @@ export function inputOtpCompletoSource(): string {
 export function inputOtpDisabledSource(): string {
   return otpSnippet({
     id: 'codigo-bloqueado',
-    rotulo: 'Código de verificação',
+    label: 'Código de verificação',
     boxes: DEFAULT,
-    atributos: ['maxLength={6}', 'disabled'],
+    attrs: ['maxLength={6}', 'disabled'],
     valueInitial: '4829',
   });
 }
@@ -275,9 +275,9 @@ export function inputOtpDisabledSource(): string {
 export function inputOtpWithErrorSource(): string {
   return otpSnippet({
     id: 'codigo-erro',
-    rotulo: 'Código de verificação',
+    label: 'Código de verificação',
     boxes: DEFAULT,
-    atributos: [
+    attrs: [
       'maxLength={6}',
       'aria-invalid="true"',
       'aria-describedby="codigo-erro-msg"',
@@ -300,9 +300,9 @@ export function inputOtpWithErrorSource(): string {
 export function inputOtpWithTextAuxiliarSource(): string {
   return otpSnippet({
     id: 'codigo-ajuda',
-    rotulo: 'Código de verificação',
+    label: 'Código de verificação',
     boxes: DEFAULT,
-    atributos: ['maxLength={6}', 'aria-describedby="codigo-ajuda-texto"'],
+    attrs: ['maxLength={6}', 'aria-describedby="codigo-ajuda-texto"'],
     depois: `
   <p id="codigo-ajuda-texto" className="nds-text-caption nds-text-muted-foreground">
     Enviamos por SMS, expira em 5 min.

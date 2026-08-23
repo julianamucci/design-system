@@ -21,31 +21,31 @@ let observer: MutationObserver | null = null
 // observar. Por isso a correção reexecuta por quadro enquanto o painel não
 // aparece, com teto para não deixar laço rodando num popover que fechou no meio
 // do caminho.
-function corrigir(gatilho: HTMLElement, tentativa = 0): void {
-  if (!gatilho.isConnected || tentativa > 10) return
-  if (gatilho.getAttribute('aria-expanded') !== 'true') {
-    if (gatilho.hasAttribute('aria-controls')) gatilho.removeAttribute('aria-controls')
+function corrigir(trigger: HTMLElement, tentativa = 0): void {
+  if (!trigger.isConnected || tentativa > 10) return
+  if (trigger.getAttribute('aria-expanded') !== 'true') {
+    if (trigger.hasAttribute('aria-controls')) trigger.removeAttribute('aria-controls')
     return
   }
-  const painel = gatilho.ownerDocument.querySelector<HTMLElement>('[data-slot="popover-content"]')
-  if (!painel?.id) {
-    requestAnimationFrame(() => corrigir(gatilho, tentativa + 1))
+  const panel = trigger.ownerDocument.querySelector<HTMLElement>('[data-slot="popover-content"]')
+  if (!panel?.id) {
+    requestAnimationFrame(() => corrigir(trigger, tentativa + 1))
     return
   }
-  if (gatilho.getAttribute('aria-controls') !== painel.id) {
-    gatilho.setAttribute('aria-controls', painel.id)
+  if (trigger.getAttribute('aria-controls') !== panel.id) {
+    trigger.setAttribute('aria-controls', panel.id)
   }
 }
 
 onMounted(async () => {
   await nextTick()
-  const gatilho = triggerRef.value?.$el as HTMLElement | undefined
-  if (!gatilho || gatilho.nodeType !== Node.ELEMENT_NODE) return
-  corrigir(gatilho)
+  const trigger = triggerRef.value?.$el as HTMLElement | undefined
+  if (!trigger || trigger.nodeType !== Node.ELEMENT_NODE) return
+  corrigir(trigger)
   // O painel monta um quadro depois de `aria-expanded` virar `true`, então o
   // observador reexecuta a correção a cada mudança dos dois atributos.
-  observer = new MutationObserver(() => corrigir(gatilho))
-  observer.observe(gatilho, {
+  observer = new MutationObserver(() => corrigir(trigger))
+  observer.observe(trigger, {
     attributes: true,
     attributeFilter: ['aria-expanded', 'aria-controls'],
   })

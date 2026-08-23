@@ -35,11 +35,11 @@ export default meta;
 type Story = StoryObj;
 
 /** Par idempotente — ver a nota em collapsible.stories.ts. */
-const abrir = async (t: HTMLElement) => {
+const open = async (t: HTMLElement) => {
   if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
 };
-const fechar = async (t: HTMLElement) => {
+const close = async (t: HTMLElement) => {
   if (t.getAttribute('aria-expanded') !== 'false') await userEvent.click(t);
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'false'));
 };
@@ -64,15 +64,15 @@ export const Uncontrolled: Story = {
     const trigger = canvas.getByRole('button');
 
     await step('o estado nasce e vive dentro do componente', async () => {
-      await fechar(trigger);
+      await close(trigger);
       await expect(panelOf(canvasElement)).not.toBeVisible();
-      await abrir(trigger);
+      await open(trigger);
       await expect(panelOf(canvasElement)).toBeInTheDocument();
       await expect(canvas.getByText(/Filtro avançado 1/)).toBeVisible();
     });
 
     await step('e continua alternando sem controle externo', async () => {
-      await fechar(trigger);
+      await close(trigger);
       await waitFor(() => expect(panelOf(canvasElement)).not.toBeVisible());
     });
   },
@@ -104,8 +104,8 @@ export const OpenByDefault: Story = {
     });
 
     await step('defaultOpen é ponto de partida, não trava', async () => {
-      await fechar(trigger);
-      await abrir(trigger);
+      await close(trigger);
+      await open(trigger);
       // Termina aberto de propósito: é o quadro que o Chromatic fotografa e o
       // estado que o axe varre nesta story (visual.item2).
       await expect(panelOf(canvasElement)).toBeInTheDocument();
@@ -144,7 +144,7 @@ export const Controlled: Story = {
     });
 
     await step('o trigger devolve a mudança para o estado externo', async () => {
-      await fechar(trigger);
+      await close(trigger);
       await expect(trigger).toHaveTextContent('Exibir filtros avançados');
       await waitFor(() => expect(panelOf(canvasElement)).not.toBeVisible());
     });

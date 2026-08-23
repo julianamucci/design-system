@@ -153,11 +153,11 @@ export const Playground: Story = {
     // do rótulo apontava para um elemento que ninguém vê; hoje a raiz é um
     // <button> nativo e a associação é a do HTML.
     await step("Clicar no texto do rótulo foca a caixa E alterna o estado", async () => {
-      const rotulo = canvas.getByText("Aceito os termos e condições");
+      const label = canvas.getByText("Aceito os termos e condições");
       await desmarcar();                          // precondição própria
       checkbox.blur();
       await expect(checkbox).not.toHaveFocus();   // o foco tem que VIR do clique
-      await userEvent.click(rotulo);
+      await userEvent.click(label);
       await expect(checkbox).toHaveFocus();
       await waitFor(() => expect(checkbox).toHaveAttribute("aria-checked", "true"));
       await expect(args.onCheckedChange).toHaveBeenLastCalledWith(true);

@@ -50,7 +50,7 @@ export type DestroyableElement<T extends HTMLElement = HTMLElement> = T & Destro
 const MOUNT_MS_GRACA = 600;
 
 type Registro = {
-  raiz: HTMLElement;
+  root: HTMLElement;
   clear: () => void;
   /** Se a raiz já foi vista dentro do documento alguma vez. */
   jaConectou: boolean;
@@ -63,7 +63,7 @@ let observador: MutationObserver | null = null;
 
 function varrer(): void {
   for (const registro of [...registros]) {
-    if (registro.raiz.isConnected) {
+    if (registro.root.isConnected) {
       registro.jaConectou = true;
       continue;
     }
@@ -77,11 +77,11 @@ function varrer(): void {
     // ficando vermelho. O preço de compartilhar o observador é isolar a falha.
     try {
       registro.clear();
-    } catch (erro) {
+    } catch (error) {
       // Relançar viraria erro global não tratado e derrubaria a story que por
       // acaso estivesse rodando — que não é a culpada. O console basta para o
       // caso aparecer na saída da suíte.
-      console.error('[nds] falha ao limpar instância ao sair do documento', erro);
+      console.error('[nds] falha ao limpar instância ao sair do documento', error);
     }
   }
   if (registros.size === 0) {
@@ -115,14 +115,14 @@ function ensureObservador(): void {
  * @param limpar Solta o que a instância prendeu. Roda no máximo UMA vez.
  */
 export function tornarDestruivel<T extends object>(
-  raiz: HTMLElement,
-  alvo: T,
+  root: HTMLElement,
+  target: T,
   clear: () => void,
 ): T & Destroyable {
   let destruido = false;
 
   const registro: Registro = {
-    raiz,
+    root,
     jaConectou: false,
     nascidoEm: Date.now(),
     clear: () => {
@@ -142,7 +142,7 @@ export function tornarDestruivel<T extends object>(
     setTimeout(varrer, MOUNT_MS_GRACA + 50);
   }
 
-  Object.defineProperty(alvo, 'destroy', {
+  Object.defineProperty(target, 'destroy', {
     value: (): void => {
       // Sai do registro ANTES de limpar: se `clear` mexer no DOM — e mexe,
       // remove painel portalado —, a varredura disparada por essa mutação não
@@ -155,5 +155,5 @@ export function tornarDestruivel<T extends object>(
     enumerable: false,
   });
 
-  return alvo as T & Destroyable;
+  return target as T & Destroyable;
 }

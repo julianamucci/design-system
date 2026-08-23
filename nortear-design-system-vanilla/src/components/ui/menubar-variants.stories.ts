@@ -64,26 +64,26 @@ export const Default: Story = {
       '240px',
     ),
   play: async ({ canvasElement, step }) => {
-    const painel = await waitForPanel(canvasElement);
-    const itens = within(painel).getAllByRole('menuitem');
+    const panel = await waitForPanel(canvasElement);
+    const items = within(panel).getAllByRole('menuitem');
 
     await step('A variante default é escrita no markup', async () => {
-      await expect(itens).toHaveLength(ITEMS_NEUTROS.length);
-      for (const item of itens) {
+      await expect(items).toHaveLength(ITEMS_NEUTROS.length);
+      for (const item of items) {
         await expect(item.getAttribute('data-variant')).toBe('default');
         await expect(item.classList.contains('nds-dropdown-menu-item')).toBe(true);
       }
     });
 
     await step('O item neutro herda a cor do painel, sem cor semântica', async () => {
-      await expect(getComputedStyle(itens[0]).color).toBe(getComputedStyle(painel).color);
+      await expect(getComputedStyle(items[0]).color).toBe(getComputedStyle(panel).color);
     });
 
     await step('O painel é opaco', async () => {
       // O contraste de 4.5:1 que o axe mede entre o texto do item e o fundo do
       // painel só significa alguma coisa se o fundo for opaco: sobre um painel
       // translúcido a razão medida é a do que estiver por baixo.
-      const background = getComputedStyle(painel).backgroundColor;
+      const background = getComputedStyle(panel).backgroundColor;
       await expect(background).not.toBe('rgba(0, 0, 0, 0)');
       await expect(background.startsWith('rgba(')).toBe(false);
     });
@@ -133,8 +133,8 @@ export const Destructive: Story = {
       '240px',
     ),
   play: async ({ canvasElement, step }) => {
-    const painel = await waitForPanel(canvasElement);
-    const canvas = within(painel);
+    const panel = await waitForPanel(canvasElement);
+    const canvas = within(panel);
     const neutro = canvas.getByRole('menuitem', { name: ITEMS_WITH_PERIGO[0] });
     const perigoso = canvas.getByRole('menuitem', { name: ITEMS_WITH_PERIGO[1] });
 

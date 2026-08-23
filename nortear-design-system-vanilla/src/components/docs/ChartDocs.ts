@@ -705,10 +705,10 @@ export interface ChartOptions {
             ['--border', 'border'],
             ['--background', 'background'],
             ['--foreground', 'foreground'],
-          ] as const).map(([token, chave]) => ({
+          ] as const).map(([token, key]) => ({
             token,
             value: `hsl(var(${token}))`,
-            description: toPlainText(t(`tokens.table.${chave}`)),
+            description: toPlainText(t(`tokens.table.${key}`)),
           })),
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,

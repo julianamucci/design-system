@@ -68,9 +68,9 @@ export const AlignmentBar: Story = {
       await definir(left, true);
     });
     await step('visual.item4 — a variante outline emenda os itens num container só', async () => {
-      const grupo = canvasElement.querySelector('[data-slot="toggle-group"]') as HTMLElement;
-      await expect(grupo).toHaveAttribute('data-variant', 'outline');
-      await expect(parseFloat(getComputedStyle(grupo).borderTopWidth)).toBeGreaterThan(0);
+      const group = canvasElement.querySelector('[data-slot="toggle-group"]') as HTMLElement;
+      await expect(group).toHaveAttribute('data-variant', 'outline');
+      await expect(parseFloat(getComputedStyle(group).borderTopWidth)).toBeGreaterThan(0);
       await expect(parseFloat(getComputedStyle(left).borderTopWidth)).toBe(0);
     });
   },

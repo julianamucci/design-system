@@ -27,8 +27,8 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const slotsDe = (raiz: HTMLElement): HTMLInputElement[] => [
-  ...raiz.querySelectorAll<HTMLInputElement>('[data-slot="input-otp-slot"]'),
+const slotsDe = (root: HTMLElement): HTMLInputElement[] => [
+  ...root.querySelectorAll<HTMLInputElement>('[data-slot="input-otp-slot"]'),
 ];
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
@@ -122,16 +122,16 @@ export const Error: Story = {
         transform: inputOtpSourceComposition({
           value: '482913',
           invalid: true,
-          erro: 'Código incorreto. Verifique e tente novamente.',
+          error: 'Código incorreto. Verifique e tente novamente.',
         }),
       },
     },
   },
   render: () => {
-    const raiz = document.createElement('div');
-    raiz.className = 'nds-stack';
-    raiz.dataset.spacing = 'sm';
-    raiz.style.width = 'fit-content';
+    const root = document.createElement('div');
+    root.className = 'nds-stack';
+    root.dataset.spacing = 'sm';
+    root.style.width = 'fit-content';
 
     const withError = createInputOTP({
       length: 6,
@@ -153,8 +153,8 @@ export const Error: Story = {
     const noError = createInputOTP({ length: 6, value: '482913' });
     noError.dataset.testid = 'sem-erro';
 
-    raiz.append(withError, msg, labelOk, noError);
-    return wrap(raiz);
+    root.append(withError, msg, labelOk, noError);
+    return wrap(root);
   },
   play: async ({ canvasElement, step }) => {
     const withError = () => canvasElement.querySelector<HTMLElement>('[data-testid="com-erro"]')!;

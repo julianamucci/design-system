@@ -32,22 +32,22 @@ export interface InvoiceDT {
   cliente: string;
   status: string;
   metodo: string;
-  valor: number;
+  value: number;
 }
 
 export const INVOICES_DT: InvoiceDT[] = [
-  { id: '#INV-001', cliente: 'Ana Prado',      status: 'Pago',      metodo: 'Cartão de crédito',      valor: 250 },
-  { id: '#INV-002', cliente: 'Bruno Lima',     status: 'Pendente',  metodo: 'Transferência bancária', valor: 150 },
-  { id: '#INV-003', cliente: 'Carla Souza',    status: 'Cancelado', metodo: 'Pix',                    valor: 350 },
-  { id: '#INV-004', cliente: 'Diego Martins',  status: 'Pago',      metodo: 'Cartão de crédito',      valor: 450 },
-  { id: '#INV-005', cliente: 'Elisa Rocha',    status: 'Pendente',  metodo: 'Pix',                    valor: 50  },
-  { id: '#INV-006', cliente: 'Fábio Nunes',    status: 'Pago',      metodo: 'Pix',                    valor: 90  },
-  { id: '#INV-007', cliente: 'Gabriela Alves', status: 'Pendente',  metodo: 'Cartão de crédito',      valor: 720 },
-  { id: '#INV-008', cliente: 'Henrique Dias',  status: 'Cancelado', metodo: 'Transferência bancária', valor: 180 },
-  { id: '#INV-009', cliente: 'Isabel Freitas', status: 'Pago',      metodo: 'Pix',                    valor: 310 },
-  { id: '#INV-010', cliente: 'João Teixeira',  status: 'Pendente',  metodo: 'Pix',                    valor: 40  },
-  { id: '#INV-011', cliente: 'Karina Melo',    status: 'Pago',      metodo: 'Cartão de crédito',      valor: 990 },
-  { id: '#INV-012', cliente: 'Lucas Barreto',  status: 'Cancelado', metodo: 'Pix',                    valor: 210 },
+  { id: '#INV-001', cliente: 'Ana Prado',      status: 'Pago',      metodo: 'Cartão de crédito',      value: 250 },
+  { id: '#INV-002', cliente: 'Bruno Lima',     status: 'Pendente',  metodo: 'Transferência bancária', value: 150 },
+  { id: '#INV-003', cliente: 'Carla Souza',    status: 'Cancelado', metodo: 'Pix',                    value: 350 },
+  { id: '#INV-004', cliente: 'Diego Martins',  status: 'Pago',      metodo: 'Cartão de crédito',      value: 450 },
+  { id: '#INV-005', cliente: 'Elisa Rocha',    status: 'Pendente',  metodo: 'Pix',                    value: 50  },
+  { id: '#INV-006', cliente: 'Fábio Nunes',    status: 'Pago',      metodo: 'Pix',                    value: 90  },
+  { id: '#INV-007', cliente: 'Gabriela Alves', status: 'Pendente',  metodo: 'Cartão de crédito',      value: 720 },
+  { id: '#INV-008', cliente: 'Henrique Dias',  status: 'Cancelado', metodo: 'Transferência bancária', value: 180 },
+  { id: '#INV-009', cliente: 'Isabel Freitas', status: 'Pago',      metodo: 'Pix',                    value: 310 },
+  { id: '#INV-010', cliente: 'João Teixeira',  status: 'Pendente',  metodo: 'Pix',                    value: 40  },
+  { id: '#INV-011', cliente: 'Karina Melo',    status: 'Pago',      metodo: 'Cartão de crédito',      value: 990 },
+  { id: '#INV-012', cliente: 'Lucas Barreto',  status: 'Cancelado', metodo: 'Pix',                    value: 210 },
 ];
 
 export const STATUS_DT = ['Pago', 'Pendente', 'Cancelado'];
@@ -67,9 +67,9 @@ export const LABELS_DT: Partial<DataTableLabels> = {
 // O valor é NÚMERO na fixture e vira texto só na exibição. Guardar "R$ 250,00"
 // faria a ordenação comparar strings, e "R$ 50,00" cairia depois de
 // "R$ 450,00" — o defeito clássico de tabela de dinheiro.
-function formatarBRL(valor: unknown): string {
-  return typeof valor === 'number'
-    ? valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+function formatarBRL(value: unknown): string {
+  return typeof value === 'number'
+    ? value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
     : '—';
 }
 
@@ -82,7 +82,7 @@ export const COLUMNS_INVOICES: DataTableColumn<InvoiceDT>[] = [
   {
     id: 'valor',
     header: 'Valor',
-    accessor: (f) => f.valor,
+    accessor: (f) => f.value,
     format: formatarBRL,
     sortable: true,
     // Só a CÉLULA alinha à direita. `.nds-table th` declara `text-align: left`
@@ -167,9 +167,9 @@ export class NdsDataTableDemo {
   );
 
   aplicarEdicao(edicao: DataTableCellEdit): void {
-    this.faturas.update((atual) =>
-      atual.map((invoice, indice) =>
-        indice === edicao.rowIndex
+    this.faturas.update((current) =>
+      current.map((invoice, index) =>
+        index === edicao.rowIndex
           ? { ...invoice, [edicao.columnId]: edicao.value }
           : invoice,
       ),

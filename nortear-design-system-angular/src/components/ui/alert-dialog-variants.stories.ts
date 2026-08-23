@@ -48,9 +48,9 @@ export const Neutral: Story = {
   }),
   play: async ({ step }) => {
     await step('O painel abre com o nome acessível da confirmação neutra', async () => {
-      const painel = await waitForPortal('alertdialog');
-      await expect(painel).toBeVisible();
-      await expect(painel).toHaveAccessibleName(/Sair da conta/i);
+      const panel = await waitForPortal('alertdialog');
+      await expect(panel).toBeVisible();
+      await expect(panel).toHaveAccessibleName(/Sair da conta/i);
     });
 
     await step('A confirmação neutra não usa a cor de perigo', async () => {
@@ -96,7 +96,7 @@ export const LongDescription: Story = {
   }),
   play: async ({ step }) => {
     await step('A descrição longa quebra em várias linhas dentro do painel', async () => {
-      const painel = await waitForPortal('alertdialog');
+      const panel = await waitForPortal('alertdialog');
       const descricao = document.querySelector<HTMLElement>('[data-testid="descricao"]')!;
       const lines =
         descricao.getBoundingClientRect().height /
@@ -105,7 +105,7 @@ export const LongDescription: Story = {
       // E não vaza do painel: o texto é o que dimensiona a caixa, não o
       // contrário — não há altura cravada aqui.
       await expect(descricao.getBoundingClientRect().bottom).toBeLessThanOrEqual(
-        painel.getBoundingClientRect().bottom,
+        panel.getBoundingClientRect().bottom,
       );
     });
   },
@@ -138,23 +138,23 @@ export const WithoutDescription: Story = {
   }),
   play: async ({ step }) => {
     await step('O painel abre sem descrição e mantém o nome acessível', async () => {
-      const painel = await waitForPortal('alertdialog');
-      await expect(painel).toBeVisible();
+      const panel = await waitForPortal('alertdialog');
+      await expect(panel).toBeVisible();
       await expect(
-        painel.querySelector('[data-slot="alert-dialog-description"]'),
+        panel.querySelector('[data-slot="alert-dialog-description"]'),
       ).toBeNull();
-      await expect(painel).toHaveAccessibleName(/Descartar rascunho/i);
+      await expect(panel).toHaveAccessibleName(/Descartar rascunho/i);
     });
 
     await step('Nenhum aria-describedby pendurado', async () => {
-      const painel = await waitForPortal('alertdialog');
-      await expect(painel).not.toHaveAttribute('aria-describedby');
-      await expect(painel).toHaveAccessibleDescription('');
+      const panel = await waitForPortal('alertdialog');
+      await expect(panel).not.toHaveAttribute('aria-describedby');
+      await expect(panel).toHaveAccessibleDescription('');
     });
 
     await step('As duas saídas continuam presentes e alcançáveis', async () => {
-      const painel = await waitForPortal('alertdialog');
-      const escopo = within(painel);
+      const panel = await waitForPortal('alertdialog');
+      const escopo = within(panel);
       await expect(escopo.getByRole('button', { name: /^Cancelar$/i })).toBeInTheDocument();
       await expect(escopo.getByRole('button', { name: /^Descartar$/i })).toBeInTheDocument();
     });
@@ -203,10 +203,10 @@ export const WithMedia: Story = {
       // seria a terceira voz na mesma frase.
       await waitForPortal('alertdialog');
       const midia = document.querySelector<HTMLElement>('[data-testid="midia"]')!;
-      const titulo = document.querySelector<HTMLElement>('[data-slot="alert-dialog-title"]')!;
+      const title = document.querySelector<HTMLElement>('[data-slot="alert-dialog-title"]')!;
       await expect(midia.getAttribute('aria-hidden')).toBe('true');
       await expect(midia.getBoundingClientRect().bottom).toBeLessThanOrEqual(
-        titulo.getBoundingClientRect().top + 1,
+        title.getBoundingClientRect().top + 1,
       );
     });
   },
@@ -247,14 +247,14 @@ export const StackedFooter: Story = {
       // responde à largura — e é isso que o Chromatic exercita no viewport
       // móvel, onde o parâmetro vale.
       await waitForPortal('alertdialog');
-      const rodape = document.querySelector<HTMLElement>('[data-testid="rodape"]')!;
+      const footer = document.querySelector<HTMLElement>('[data-testid="rodape"]')!;
       const wide = window.matchMedia('(min-width: 40rem)').matches;
 
-      await expect(getComputedStyle(rodape).flexDirection).toBe(
+      await expect(getComputedStyle(footer).flexDirection).toBe(
         wide ? 'row' : 'column-reverse',
       );
 
-      const [cancelar, excluir] = [...rodape.querySelectorAll('button')].map((b) =>
+      const [cancelar, excluir] = [...footer.querySelectorAll('button')].map((b) =>
         b.getBoundingClientRect(),
       );
       if (wide) {
@@ -305,9 +305,9 @@ export const Controlled: Story = {
       // Abrir por um botão que não é o gatilho prova que `open` manda.
       await expect(document.querySelector('[data-slot="alert-dialog-content"]')).toBeNull();
       await userEvent.click(canvas.getByTestId('abrir'));
-      const painel = await waitForPortal('alertdialog');
-      await expect(painel).toBeVisible();
-      await expect(painel).toHaveAccessibleName(/Excluir conta/i);
+      const panel = await waitForPortal('alertdialog');
+      await expect(panel).toBeVisible();
+      await expect(panel).toHaveAccessibleName(/Excluir conta/i);
     });
 
     await step('O Escape devolve o estado ao pai, que fecha o diálogo', async () => {

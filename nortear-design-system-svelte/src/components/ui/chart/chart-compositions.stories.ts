@@ -75,11 +75,11 @@ export const InlineTitle: Story = {
     class: 'nds-w-full',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('O título do objeto de configuração é escrito dentro do desenho', async () => {
       await waitFor(
-        () => expect(designEscreve(raiz, DESIGN_TITLE)).toBe(true),
+        () => expect(designEscreve(root, DESIGN_TITLE)).toBe(true),
         { timeout: 3000 },
       );
     });
@@ -88,8 +88,8 @@ export const InlineTitle: Story = {
       // O padrão é uma palavra genérica de propósito: ela mantém o papel de
       // imagem coerente, e não finge descrever o gráfico. Quem descreve é o
       // `aria-label` autoral — todas as outras stories passam um.
-      await expect(raiz).toHaveAttribute('role', 'img');
-      await expect(raiz.getAttribute('aria-label')).toBe('Gráfico');
+      await expect(root).toHaveAttribute('role', 'img');
+      await expect(root.getAttribute('aria-label')).toBe('Gráfico');
     });
   },
 };

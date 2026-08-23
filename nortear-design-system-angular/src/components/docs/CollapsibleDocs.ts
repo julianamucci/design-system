@@ -373,7 +373,7 @@ const COMPOSITION_CODE = {
               class="nds-cluster nds-w-full nds-px-4"
               data-justify="between"
             >
-              <span>{{ section.rotulo }}</span>
+              <span>{{ section.label }}</span>
               <ng-container [ngTemplateOutlet]="tplChevron" />
             </button>
             <div ndsCollapsiblePanel [class]="painelClasses" data-spacing="sm">
@@ -508,7 +508,7 @@ const COMPOSITION_CODE = {
           @for (opcao of opcoesRicas(); track opcao.id) {
             <div class="nds-cluster" data-spacing="sm">
               <button ndsCheckbox [id]="opcao.id"></button>
-              <label ndsLabel [attr.for]="opcao.id">{{ opcao.rotulo }}</label>
+              <label ndsLabel [attr.for]="opcao.id">{{ opcao.label }}</label>
             </div>
           }
         </div>
@@ -763,16 +763,16 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
   protected readonly secoesRepetidas = computed(() => {
     dict();
     const base = t('demonstration.labels.headerLabel');
-    return [1, 2, 3].map((i) => ({ id: `dd2-${i}`, rotulo: `${base} ${i}` }));
+    return [1, 2, 3].map((i) => ({ id: `dd2-${i}`, label: `${base} ${i}` }));
   });
 
   /** Os três controles do exemplo de conteúdo rico. */
   protected readonly opcoesRicas = computed(() => {
     dict();
     return [
-      { id: 'comp-rico-1', rotulo: t('demonstration.labels.basicFilter') },
-      { id: 'comp-rico-2', rotulo: t('demonstration.labels.advancedFilter1') },
-      { id: 'comp-rico-3', rotulo: t('demonstration.labels.advancedFilter2') },
+      { id: 'comp-rico-1', label: t('demonstration.labels.basicFilter') },
+      { id: 'comp-rico-2', label: t('demonstration.labels.advancedFilter1') },
+      { id: 'comp-rico-3', label: t('demonstration.labels.advancedFilter2') },
     ];
   });
 
@@ -1028,9 +1028,9 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
       string,
       { accessibility?: { screenReader?: Record<string, string> } }
     >;
-    const bloco = byLocale[locale]?.accessibility?.screenReader ?? {};
+    const block = byLocale[locale]?.accessibility?.screenReader ?? {};
     // `title`, quando existe, é o cabeçalho da seção e não uma linha da lista.
-    return Object.entries(bloco).filter(([k]) => k !== 'title').map(([, v]) => v);
+    return Object.entries(block).filter(([k]) => k !== 'title').map(([, v]) => v);
   });
 
   protected readonly relatedItems = computed(() => {

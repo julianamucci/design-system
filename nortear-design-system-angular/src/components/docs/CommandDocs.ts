@@ -670,12 +670,12 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const line = (name: string, chave: string, tipo: string, padrao: string) => ({
+    const line = (name: string, key: string, type: string, padrao: string) => ({
       name,
-      type: tipo,
+      type: type,
       defaultValue: padrao,
       required: not,
-      description: toPlainText(t(`props.table.${chave}`)),
+      description: toPlainText(t(`props.table.${key}`)),
     });
 
     return [
@@ -785,19 +785,19 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
     // que o campo tem fundo próprio seria falsa, e repetir `.nds-command`
     // duplicaria a primeira.
     return [
-      { token: '--popover',            k: 'popoverBg',   alvo: '.nds-command' },
-      { token: '--popover-foreground', k: 'popoverFg',   alvo: '.nds-command' },
-      { token: '--muted-foreground',   k: 'mutedFg',     alvo: '.nds-command-group-heading' },
-      { token: '--border',             k: 'inputBorder', alvo: '.nds-command-input-wrapper' },
+      { token: '--popover',            k: 'popoverBg',   target: '.nds-command' },
+      { token: '--popover-foreground', k: 'popoverFg',   target: '.nds-command' },
+      { token: '--muted-foreground',   k: 'mutedFg',     target: '.nds-command-group-heading' },
+      { token: '--border',             k: 'inputBorder', target: '.nds-command-input-wrapper' },
       // O destaque é pintado pelo seletor de estado, não pela classe base — a
       // regra do item sem destaque não tem cor de fundo nenhuma.
-      { token: '--accent',             k: 'selectedBg',  alvo: '.nds-command-item[aria-selected="true"]' },
-      { token: '--accent-foreground',  k: 'selectedFg',  alvo: '.nds-command-item[aria-selected="true"]' },
-      { token: '--border',             k: 'border',      alvo: '.nds-command-separator' },
-      { token: '--radius',             k: 'radius',      alvo: '.nds-command · .nds-command-item' },
-    ].map(({ token, k, alvo }) => ({
+      { token: '--accent',             k: 'selectedBg',  target: '.nds-command-item[aria-selected="true"]' },
+      { token: '--accent-foreground',  k: 'selectedFg',  target: '.nds-command-item[aria-selected="true"]' },
+      { token: '--border',             k: 'border',      target: '.nds-command-separator' },
+      { token: '--radius',             k: 'radius',      target: '.nds-command · .nds-command-item' },
+    ].map(({ token, k, target }) => ({
       token,
-      value: alvo,
+      value: target,
       description: toPlainText(t(`tokens.table.${k}`)),
     }));
   });
@@ -834,12 +834,12 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'select',       nome: 'Select',        path: '?path=/docs/ui-select--docs'       },
-      { key: 'dropdownMenu', nome: 'Dropdown Menu', path: '?path=/docs/ui-dropdownmenu--docs' },
-      { key: 'popover',      nome: 'Popover',       path: '?path=/docs/ui-popover--docs'      },
-      { key: 'dialog',       nome: 'Dialog',        path: '?path=/docs/ui-dialog--docs'       },
-      { key: 'inputGroup',   nome: 'Input',         path: '?path=/docs/ui-input--docs'        },
-    ].map(({ key, nome, path }) => ({ name: nome, description: t(`related.${key}`), path }));
+      { key: 'select',       name: 'Select',        path: '?path=/docs/ui-select--docs'       },
+      { key: 'dropdownMenu', name: 'Dropdown Menu', path: '?path=/docs/ui-dropdownmenu--docs' },
+      { key: 'popover',      name: 'Popover',       path: '?path=/docs/ui-popover--docs'      },
+      { key: 'dialog',       name: 'Dialog',        path: '?path=/docs/ui-dialog--docs'       },
+      { key: 'inputGroup',   name: 'Input',         path: '?path=/docs/ui-input--docs'        },
+    ].map(({ key, name, path }) => ({ name: name, description: t(`related.${key}`), path }));
   });
 
   protected readonly noteItems = computed(() => {
@@ -859,14 +859,14 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
   protected readonly analyticsItems = computed(() => {
     dict();
     return [
-      { e: 'itemSelect',    gatilho: 'itemSelectTrigger',    carga: 'itemSelectPayload'    },
-      { e: 'paletteOpen',   gatilho: 'paletteOpenTrigger',   carga: 'paletteOpenPayload'   },
-      { e: 'pageView',      gatilho: 'pageViewTrigger',      carga: 'pageViewPayload'      },
-      { e: 'sectionViewed', gatilho: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
-      { e: 'langSwitch',    gatilho: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
-    ].map(({ e, gatilho, carga }) => ({
+      { e: 'itemSelect',    trigger: 'itemSelectTrigger',    carga: 'itemSelectPayload'    },
+      { e: 'paletteOpen',   trigger: 'paletteOpenTrigger',   carga: 'paletteOpenPayload'   },
+      { e: 'pageView',      trigger: 'pageViewTrigger',      carga: 'pageViewPayload'      },
+      { e: 'sectionViewed', trigger: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
+      { e: 'langSwitch',    trigger: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
+    ].map(({ e, trigger, carga }) => ({
       event: t(`analytics.table.${e}`),
-      trigger: toPlainText(t(`analytics.table.${gatilho}`)),
+      trigger: toPlainText(t(`analytics.table.${trigger}`)),
       payload: toPlainText(t(`analytics.table.${carga}`)),
     }));
   });
@@ -896,8 +896,8 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
       description: t('testes.accessibility.description'),
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
       // Aqui os itens são string solta, não a trinca criterion/level/how.
-      items: numberedItems(d, 'testes.accessibility').map((texto) => ({
-        criterion: toPlainText(texto),
+      items: numberedItems(d, 'testes.accessibility').map((text) => ({
+        criterion: toPlainText(text),
         level: '',
         how: '',
       })),
@@ -992,19 +992,19 @@ function defaultName(key: string): string {
  * `t()` devolve a própria chave quando ela aponta para um objeto — e é assim
  * que a chave crua acaba escrita na tela, sem erro nenhum.
  */
-function valueOuField(base: string, campo: string): string {
+function valueOuField(base: string, field: string): string {
   const direto = t(base);
   if (direto !== base) return direto;
-  const chave = `${base}.${campo}`;
-  const ofField = t(chave);
-  return ofField === chave ? '' : ofField;
+  const key = `${base}.${field}`;
+  const ofField = t(key);
+  return ofField === key ? '' : ofField;
 }
 
 /** Itens `base.itemN` na ordem numérica, quantos existirem. */
 function numberedItems(d: Record<string, string>, base: string): string[] {
-  const itens: string[] = [];
-  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) itens.push(d[`${base}.item${i}`]);
-  return itens;
+  const items: string[] = [];
+  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) items.push(d[`${base}.item${i}`]);
+  return items;
 }
 
 const priorityKeyMap: Record<string, string> = {

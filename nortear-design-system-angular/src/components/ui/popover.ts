@@ -154,15 +154,15 @@ export class NdsPopoverContent {
   template: `
     <ng-content />
 
-    @if (conteudo(); as painel) {
+    @if (content(); as panel) {
       <ng-template rdxPopoverPortal>
         <div
           rdxPopoverPositioner
           class="nds-popover-positioner"
-          [side]="painel.side()"
-          [align]="painel.align()"
-          [sideOffset]="painel.sideOffset()"
-          [alignOffset]="painel.alignOffset()"
+          [side]="panel.side()"
+          [align]="panel.align()"
+          [sideOffset]="panel.sideOffset()"
+          [alignOffset]="panel.alignOffset()"
         >
           <div
             rdxPopoverPopup
@@ -172,7 +172,7 @@ export class NdsPopoverContent {
             [attr.aria-label]="rotuloDeReserva()"
             (openAutoFocus)="aoAutoFocar($event)"
           >
-            <ng-container [ngTemplateOutlet]="painel.templateRef" />
+            <ng-container [ngTemplateOutlet]="panel.templateRef" />
           </div>
         </div>
       </ng-template>
@@ -180,7 +180,7 @@ export class NdsPopoverContent {
   `,
 })
 export class NdsPopover {
-  private readonly raiz = injectRdxPopoverRootContext();
+  private readonly root = injectRdxPopoverRootContext();
 
   /**
    * O molde do painel.
@@ -190,9 +190,9 @@ export class NdsPopover {
    * só de filhos diretos o perderia em silêncio, deixando o gatilho abrir um
    * painel vazio.
    */
-  protected readonly conteudo = contentChild(NdsPopoverContent, { descendants: true });
+  protected readonly content = contentChild(NdsPopoverContent, { descendants: true });
 
-  protected readonly state = computed(() => (this.raiz.isOpen() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.root.isOpen() ? 'open' : 'closed'));
 
   /**
    * Nome acessível de reserva para o painel.
@@ -205,9 +205,9 @@ export class NdsPopover {
    * dois contratos no mesmo elemento.
    */
   protected readonly rotuloDeReserva = computed(() => {
-    if (this.raiz.titleId()) return null;
-    const gatilho = this.raiz.trigger();
-    return gatilho?.getAttribute('aria-label') || gatilho?.textContent?.trim() || null;
+    if (this.root.titleId()) return null;
+    const trigger = this.root.trigger();
+    return trigger?.getAttribute('aria-label') || trigger?.textContent?.trim() || null;
   });
 
   /**
@@ -230,8 +230,8 @@ export class NdsPopover {
    */
   protected aoAutoFocar(evento: Event): void {
     evento.preventDefault();
-    const painel = evento.target as HTMLElement | null;
-    if (painel) this.focarQuandoVisivel(painel, 0);
+    const panel = evento.target as HTMLElement | null;
+    if (panel) this.focarQuandoVisivel(panel, 0);
   }
 
   /**
@@ -242,15 +242,15 @@ export class NdsPopover {
    * que um painel que nunca aparece (fechado no mesmo quadro, por exemplo) não
    * deixe um laço rodando.
    */
-  private focarQuandoVisivel(painel: HTMLElement, tentativa: number): void {
-    if (!painel.isConnected || tentativa > 10) return;
-    if (getComputedStyle(painel).visibility === 'hidden') {
-      requestAnimationFrame(() => this.focarQuandoVisivel(painel, tentativa + 1));
+  private focarQuandoVisivel(panel: HTMLElement, tentativa: number): void {
+    if (!panel.isConnected || tentativa > 10) return;
+    if (getComputedStyle(panel).visibility === 'hidden') {
+      requestAnimationFrame(() => this.focarQuandoVisivel(panel, tentativa + 1));
       return;
     }
     // Se o conteúdo já levou o foco para dentro, não mexer: a intenção dele é
     // mais específica que a política genérica de "primeiro focável".
-    if (painel.contains(document.activeElement)) return;
+    if (panel.contains(document.activeElement)) return;
 
     // `data-autofocus` é como o conteúdo diz ONDE quer o foco.
     //
@@ -266,9 +266,9 @@ export class NdsPopover {
     // Sem elemento focável nenhum, o foco vai para o próprio painel — que o
     // gerenciador de foco já deixou com `tabindex="-1"`. Assim o leitor de tela
     // anuncia o diálogo mesmo quando ele só tem texto.
-    const declarado = painel.querySelector<HTMLElement>('[data-autofocus]');
-    const alvo = declarado ?? painel.querySelector<HTMLElement>(FOCAVEIS);
-    (alvo ?? painel).focus();
+    const declarado = panel.querySelector<HTMLElement>('[data-autofocus]');
+    const target = declarado ?? panel.querySelector<HTMLElement>(FOCAVEIS);
+    (target ?? panel).focus();
   }
 }
 
@@ -313,9 +313,9 @@ const FOCAVEIS = [
 export class NdsPopoverTrigger {
   // O contexto da raiz, e não `inject(RdxPopoverRoot)`: a raiz está em OUTRO
   // elemento (o wrapper), então a injeção por diretiva não a alcança.
-  private readonly raiz = injectRdxPopoverRootContext();
+  private readonly root = injectRdxPopoverRootContext();
 
-  protected readonly state = computed(() => (this.raiz.isOpen() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.root.isOpen() ? 'open' : 'closed'));
 }
 
 // ─── NdsPopoverHeader ─────────────────────────────────────────────────────────

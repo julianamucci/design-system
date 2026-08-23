@@ -42,9 +42,9 @@ const VARIAS_DATAS = `const selecionadas = ref([
  * e aí a tag já vem com a quebra antes do fecho. Em linha, o espaço antes de
  * `/>` é por conta daqui.
  */
-function tag(nome: string, partes: Array<string | ''>): string {
+function tag(name: string, partes: Array<string | ''>): string {
   const fila = attrsMultilinha(partes);
-  return fila.startsWith('\n') ? `<${nome}${fila}/>` : `<${nome}${fila} />`;
+  return fila.startsWith('\n') ? `<${name}${fila}/>` : `<${name}${fila} />`;
 }
 
 /** Calendário de data única com os imports que todo exemplo dele repete. */

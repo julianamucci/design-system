@@ -22,8 +22,8 @@ const SUL = [
 ] as const;
 
 const GROUPS = [
-  { label: 'Sudeste', itens: SUDESTE },
-  { label: 'Sul', itens: SUL },
+  { label: 'Sudeste', items: SUDESTE },
+  { label: 'Sul', items: SUL },
 ] as const;
 
 const meta: Meta = {
@@ -80,19 +80,19 @@ export const Default: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const lista = await waitForPortal('listbox', { name: 'Estado' });
+    const list = await waitForPortal('listbox', { name: 'Estado' });
 
     await step('A lista é um listbox nomeado, com uma opção por estado', async () => {
-      const opcoes = within(lista).getAllByRole('option');
-      await expect(opcoes).toHaveLength(SUDESTE.length);
-      await expect(opcoes[0]).toHaveAccessibleName(SUDESTE[0].label);
+      const options = within(list).getAllByRole('option');
+      await expect(options).toHaveLength(SUDESTE.length);
+      await expect(options[0]).toHaveAccessibleName(SUDESTE[0].label);
       // `aria-selected` existe em toda opção: é ele que o leitor de tela lê ao
       // percorrer a lista, e não só no item escolhido.
-      await expect(opcoes[0].getAttribute('aria-selected')).toBe('false');
+      await expect(options[0].getAttribute('aria-selected')).toBe('false');
     });
 
     await step('Nenhum cabeçalho de grupo aparece na lista plana', async () => {
-      await expect(within(lista).queryAllByRole('group')).toHaveLength(0);
+      await expect(within(list).queryAllByRole('group')).toHaveLength(0);
     });
   },
 };
@@ -110,7 +110,7 @@ export const WithGroups: Story = {
     },
   },
   render: () => ({
-    props: { grupos: GROUPS },
+    props: { groups: GROUPS },
     template: `
       <nds-select [defaultOpen]="true" [modal]="false">
         <button ndsSelectTrigger aria-label="Estado">
@@ -118,10 +118,10 @@ export const WithGroups: Story = {
         </button>
 
         <ng-template ndsSelectContent>
-          @for (grupo of grupos; track grupo.label; let last = $last) {
+          @for (group of groups; track group.label; let last = $last) {
             <div ndsSelectGroup>
-              <div ndsSelectLabel>{{ grupo.label }}</div>
-              @for (state of grupo.itens; track state.value) {
+              <div ndsSelectLabel>{{ group.label }}</div>
+              @for (state of group.items; track state.value) {
                 <div ndsSelectItem [value]="state.value">{{ state.label }}</div>
               }
             </div>
@@ -134,30 +134,30 @@ export const WithGroups: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const lista = await waitForPortal('listbox', { name: 'Estado' });
-    const inside = within(lista);
+    const list = await waitForPortal('listbox', { name: 'Estado' });
+    const inside = within(list);
 
     await step('Cada categoria vira um grupo nomeado pelo seu cabeçalho', async () => {
-      const grupos = inside.getAllByRole('group');
-      await expect(grupos).toHaveLength(GROUPS.length);
+      const groups = inside.getAllByRole('group');
+      await expect(groups).toHaveLength(GROUPS.length);
       // O nome do grupo depende de o `aria-labelledby` apontar para um id que
       // EXISTE — o primitivo gera o id no grupo e não o escreve em lugar nenhum;
       // quem o põe no cabeçalho é o componente. Sem isso o grupo ficaria anônimo
       // e o `aria-labelledby` viraria referência quebrada.
-      for (const [i, grupo] of grupos.entries()) {
-        await expect(grupo).toHaveAccessibleName(GROUPS[i].label);
+      for (const [i, group] of groups.entries()) {
+        await expect(group).toHaveAccessibleName(GROUPS[i].label);
       }
     });
 
     await step('As opções continuam todas na mesma lista', async () => {
-      const total = GROUPS.reduce((sum, g) => sum + g.itens.length, 0);
+      const total = GROUPS.reduce((sum, g) => sum + g.items.length, 0);
       await expect(inside.getAllByRole('option')).toHaveLength(total);
     });
 
     await step('A divisão entre grupos é decorativa', async () => {
       // `role="separator"` com `aria-hidden`: linha para o olho, silêncio para o
       // leitor de tela — quem separa semanticamente é o grupo.
-      const separadores = lista.querySelectorAll('.nds-select-separator');
+      const separadores = list.querySelectorAll('.nds-select-separator');
       await expect(separadores).toHaveLength(GROUPS.length - 1);
       await expect(separadores[0].getAttribute('aria-hidden')).toBe('true');
     });
@@ -208,18 +208,18 @@ export const WithIcon: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const lista = await waitForPortal('listbox', { name: 'Estado' });
-    const opcoes = within(lista).getAllByRole('option');
+    const list = await waitForPortal('listbox', { name: 'Estado' });
+    const options = within(list).getAllByRole('option');
 
     await step('O ícone entra na opção e fica fora do nome acessível', async () => {
-      await expect(opcoes[0].querySelector('svg')).toBeTruthy();
-      await expect(opcoes[0]).toHaveAccessibleName(SUDESTE[0].label);
+      await expect(options[0].querySelector('svg')).toBeTruthy();
+      await expect(options[0]).toHaveAccessibleName(SUDESTE[0].label);
     });
 
     await step('O ícone é dimensionado pela folha do componente', async () => {
       // `.nds-select-item svg:not([class*="size-"])` é a regra que dá 1rem; sem
       // ela o SVG viria no tamanho intrínseco e estouraria a linha.
-      const icone = opcoes[0].querySelector('svg') as SVGElement;
+      const icone = options[0].querySelector('svg') as SVGElement;
       await expect(getComputedStyle(icone).width).toBe('16px');
     });
   },

@@ -119,7 +119,7 @@ function animationCorrerEnd(
         size="icon-sm"
         class="nds-alert-dismiss"
         [attr.aria-label]="dismissLabel()"
-        (click)="fechar()"
+        (click)="close()"
       >
         <svg ndsButtonIcon kind="x" class="nds-icon"></svg>
       </button>
@@ -215,7 +215,7 @@ export class NdsAlert implements OnDestroy {
     });
   }
 
-  protected fechar(): void {
+  protected close(): void {
     // Guarda de reentrada: enquanto a saída corre o botão continua clicável, e
     // sem isto `dismiss` sairia uma vez por clique.
     if (this.saindo() || this.closed()) return;
@@ -350,9 +350,9 @@ export class NdsAlertIcon {
       const svg = this.hostRef.nativeElement;
       svg.replaceChildren();
       for (const [tag, attrs] of ALERT_ICON_MAP[this.kind()]) {
-        const filho = document.createElementNS('http://www.w3.org/2000/svg', tag);
-        for (const [k, v] of Object.entries(attrs)) filho.setAttribute(k, v);
-        svg.appendChild(filho);
+        const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
+        for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
+        svg.appendChild(child);
       }
     });
   }

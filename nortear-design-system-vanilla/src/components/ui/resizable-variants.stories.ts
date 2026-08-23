@@ -49,9 +49,9 @@ function fraction(panels: HTMLElement[], horizontal: boolean): number[] {
   return panels.map((p) => measurement(p) / total);
 }
 
-function panelsOf(raiz: ParentNode, seletorGrupo = '[data-slot="resizable"]'): HTMLElement[] {
-  const grupo = raiz.querySelector<HTMLElement>(seletorGrupo)!;
-  return [...grupo.querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
+function panelsOf(root: ParentNode, seletorGrupo = '[data-slot="resizable"]'): HTMLElement[] {
+  const group = root.querySelector<HTMLElement>(seletorGrupo)!;
+  return [...group.querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
 }
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
@@ -74,12 +74,12 @@ export const Horizontal: Story = {
       // O CSS decide espessura e cursor pelo eixo do punho. Um grupo horizontal
       // é dividido por uma linha VERTICAL — a inversão é a fonte clássica de
       // erro aqui.
-      const grupo = canvasElement.querySelector<HTMLElement>('[data-slot="resizable"]')!;
+      const group = canvasElement.querySelector<HTMLElement>('[data-slot="resizable"]')!;
       const punho = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-handle"]')!;
-      await expect(grupo).toHaveAttribute('data-direction', 'horizontal');
+      await expect(group).toHaveAttribute('data-direction', 'horizontal');
       await expect(punho).toHaveAttribute('role', 'separator');
       await expect(punho).toHaveAttribute('aria-orientation', 'vertical');
-      await expect(getComputedStyle(grupo).flexDirection).toBe('row');
+      await expect(getComputedStyle(group).flexDirection).toBe('row');
       await expect(getComputedStyle(punho).cursor).toBe('col-resize');
     });
 
@@ -101,8 +101,8 @@ export const Vertical: Story = {
           direction: 'vertical',
           'aria-label': 'Redimensionar Topo e Rodapé — use setas para ajustar',
           panels: [
-            { titulo: 'Topo', defaultSize: 40, minSize: 20 },
-            { titulo: 'Rodapé', defaultSize: 60, minSize: 20 },
+            { title: 'Topo', defaultSize: 40, minSize: 20 },
+            { title: 'Rodapé', defaultSize: 60, minSize: 20 },
           ],
         }),
       },
@@ -121,10 +121,10 @@ export const Vertical: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('Split empilhado: o divisor é uma linha deitada', async () => {
-      const grupo = canvasElement.querySelector<HTMLElement>('[data-slot="resizable"]')!;
+      const group = canvasElement.querySelector<HTMLElement>('[data-slot="resizable"]')!;
       const punho = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-handle"]')!;
       await expect(punho).toHaveAttribute('aria-orientation', 'horizontal');
-      await expect(getComputedStyle(grupo).flexDirection).toBe('column');
+      await expect(getComputedStyle(group).flexDirection).toBe('column');
       await expect(getComputedStyle(punho).cursor).toBe('row-resize');
     });
 
@@ -149,18 +149,18 @@ export const Nested: Story = {
             direction: 'vertical',
             'aria-label': 'Redimensionar Editor e Console — use setas para ajustar',
             panels: [
-              { titulo: 'Editor', defaultSize: 60, minSize: 20 },
-              { titulo: 'Console', defaultSize: 40, minSize: 20 },
+              { title: 'Editor', defaultSize: 60, minSize: 20 },
+              { title: 'Console', defaultSize: 40, minSize: 20 },
             ],
           },
           externo: {
             'aria-label': 'Redimensionar Sidebar e área principal — use setas para ajustar',
             panels: [
-              { titulo: 'Sidebar', defaultSize: 30, minSize: 15 },
-              { titulo: 'Área principal', defaultSize: 70, minSize: 30 },
+              { title: 'Sidebar', defaultSize: 30, minSize: 15 },
+              { title: 'Área principal', defaultSize: 70, minSize: 30 },
             ],
           },
-          neighbour: { titulo: 'Sidebar', defaultSize: 30, minSize: 15 },
+          neighbour: { title: 'Sidebar', defaultSize: 30, minSize: 15 },
         }),
       },
     },
@@ -196,25 +196,25 @@ export const Nested: Story = {
     await step('Cada grupo governa só os próprios painéis', async () => {
       // O grupo de dentro é outro grupo: os painéis dele não podem entrar na
       // conta do de fora, senão um ajuste move os dois layouts ao mesmo tempo.
-      const grupos = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable"]')];
-      await expect(grupos).toHaveLength(2);
-      for (const g of grupos) {
+      const groups = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable"]')];
+      await expect(groups).toHaveLength(2);
+      for (const g of groups) {
         await expect(g.querySelectorAll(':scope > [data-slot="resizable-panel"]')).toHaveLength(2);
       }
     });
 
     await step('O divisor de dentro tem o eixo do grupo de dentro', async () => {
-      const grupos = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable"]')];
+      const groups = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable"]')];
       const eixo = (g: HTMLElement) =>
         g.querySelector(':scope > [data-slot="resizable-handle"]')!.getAttribute('aria-orientation');
-      await expect(eixo(grupos[0])).toBe('vertical');
-      await expect(eixo(grupos[1])).toBe('horizontal');
+      await expect(eixo(groups[0])).toBe('vertical');
+      await expect(eixo(groups[1])).toBe('horizontal');
     });
 
     await step('E as proporções de cada grupo são independentes', async () => {
-      const grupos = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable"]')];
-      const externo = [...grupos[0].querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
-      const interno = [...grupos[1].querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
+      const groups = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable"]')];
+      const externo = [...groups[0].querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
+      const interno = [...groups[1].querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
       await expect(fraction(externo, true)[0]).toBeCloseTo(0.3, 1);
       await expect(fraction(interno, false)[0]).toBeCloseTo(0.6, 1);
     });
@@ -232,8 +232,8 @@ export const WithHandle: Story = {
           withHandle: true,
           'aria-label': 'Redimensionar painéis — use setas para ajustar',
           panels: [
-            { titulo: 'Antes', defaultSize: 50, minSize: 20 },
-            { titulo: 'Depois', defaultSize: 50, minSize: 20 },
+            { title: 'Antes', defaultSize: 50, minSize: 20 },
+            { title: 'Depois', defaultSize: 50, minSize: 20 },
           ],
         }),
       },

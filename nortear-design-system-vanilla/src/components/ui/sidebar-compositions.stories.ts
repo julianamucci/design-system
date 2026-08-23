@@ -91,7 +91,7 @@ function wrapSidebar(instance: ReturnType<typeof createSidebar>, main: HTMLEleme
 }
 
 /** Barra superior com o gatilho e um rótulo de contexto. */
-function buildTopbar(instance: ReturnType<typeof createSidebar>, texto: string): HTMLElement {
+function buildTopbar(instance: ReturnType<typeof createSidebar>, text: string): HTMLElement {
   const topbar = document.createElement('div');
   topbar.className = 'nds-cluster nds-border-b nds-pl-4 nds-pr-4';
   topbar.dataset.spacing = 'sm';
@@ -99,13 +99,13 @@ function buildTopbar(instance: ReturnType<typeof createSidebar>, texto: string):
   topbar.appendChild(createSidebarTrigger(instance.toggle));
   const lbl = document.createElement('span');
   lbl.className = 'nds-text-body nds-text-muted-foreground';
-  lbl.textContent = texto;
+  lbl.textContent = text;
   topbar.appendChild(lbl);
   return topbar;
 }
 
 /** Andaime de conteúdo principal, quando a story não usa `SidebarInset`. */
-function buildPlainInset(instance: ReturnType<typeof createSidebar>, topo: string, corpo: string): HTMLElement {
+function buildPlainInset(instance: ReturnType<typeof createSidebar>, topo: string, body: string): HTMLElement {
   const inset = document.createElement('div');
   inset.className = 'nds-flex-1';
   inset.style.display = 'flex';
@@ -113,7 +113,7 @@ function buildPlainInset(instance: ReturnType<typeof createSidebar>, topo: strin
   const mainContent = document.createElement('div');
   mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground nds-p-8';
   mainContent.dataset.justify = 'center';
-  mainContent.textContent = corpo;
+  mainContent.textContent = body;
   inset.append(buildTopbar(instance, topo), mainContent);
   return inset;
 }
@@ -171,7 +171,7 @@ export const WithGroups: Story = {
       // Dois grupos e a linha entre eles: é a separação que a story documenta.
       source: {
         transform: sidebarSourceWith({
-          grupos: [
+          groups: [
             {
               label: 'Principal',
               items: [
@@ -189,7 +189,7 @@ export const WithGroups: Story = {
               ],
             },
           ],
-          rodape: false,
+          footer: false,
         }),
       },
       description: {
@@ -267,8 +267,8 @@ export const WithGroupActions: Story = {
     group.dataset.slot = 'sidebar-group';
     group.setAttribute('data-sidebar', 'group');
 
-    const rotulo = createSidebarGroupLabel({ text: 'Projetos', id: 'grupo-projetos' });
-    group.appendChild(rotulo);
+    const label = createSidebarGroupLabel({ text: 'Projetos', id: 'grupo-projetos' });
+    group.appendChild(label);
 
     let adicionados = 0;
     group.appendChild(
@@ -337,10 +337,10 @@ export const WithGroupActions: Story = {
 
     const inset = createSidebarInset();
     inset.appendChild(buildTopbar(instance, 'Projetos'));
-    const corpo = document.createElement('p');
-    corpo.className = 'nds-text-body nds-text-muted-foreground nds-p-8';
-    corpo.textContent = 'Ação de grupo, contador ancorado e ação por item.';
-    inset.appendChild(corpo);
+    const body = document.createElement('p');
+    body.className = 'nds-text-body nds-text-muted-foreground nds-p-8';
+    body.textContent = 'Ação de grupo, contador ancorado e ação por item.';
+    inset.appendChild(body);
 
     return wrapSidebar(instance, inset);
   },
@@ -360,16 +360,16 @@ export const WithGroupActions: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const raiz = () => canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
+    const root = () => canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
 
     await step('O rótulo do grupo nomeia a lista que ele encabeça', async () => {
       // Sem a ligação, a <ul> é anunciada como "lista, 3 itens" e o rótulo ao
       // lado é só pintura.
-      const rotulo = canvasElement.querySelector<HTMLElement>('[data-sidebar="group-label"]')!;
+      const label = canvasElement.querySelector<HTMLElement>('[data-sidebar="group-label"]')!;
       const menu = canvasElement.querySelector<HTMLElement>('[data-sidebar="menu"]')!;
-      await expect(rotulo.id).toBe('grupo-projetos');
-      await expect(menu.getAttribute('aria-labelledby')).toBe(rotulo.id);
-      await expect(rotulo.textContent).toBe('Projetos');
+      await expect(label.id).toBe('grupo-projetos');
+      await expect(menu.getAttribute('aria-labelledby')).toBe(label.id);
+      await expect(label.textContent).toBe('Projetos');
     });
 
     await step('A ação do grupo é um botão com nome, e responde', async () => {
@@ -377,10 +377,10 @@ export const WithGroupActions: Story = {
       await expect(acao.getAttribute('data-sidebar')).toBe('group-action');
       // Relativo, não absoluto: o painel Interactions reexecuta a play no mesmo
       // DOM, e um valor cravado falharia na segunda rodada.
-      const grupo = acao.closest<HTMLElement>('[data-sidebar="group"]')!;
-      const antes = Number(grupo.dataset.adicionados ?? 0);
+      const group = acao.closest<HTMLElement>('[data-sidebar="group"]')!;
+      const antes = Number(group.dataset.adicionados ?? 0);
       await userEvent.click(acao);
-      await expect(Number(grupo.dataset.adicionados)).toBe(antes + 1);
+      await expect(Number(group.dataset.adicionados)).toBe(antes + 1);
     });
 
     await step('O contador ancorado não é lido solto — a contagem está no nome do item', async () => {
@@ -426,23 +426,23 @@ export const WithGroupActions: Story = {
     });
 
     await step('A faixa não duplica a parada de teclado do gatilho', async () => {
-      const faixa = canvasElement.querySelector<HTMLButtonElement>('[data-sidebar="rail"]')!;
-      await expect(faixa.getAttribute('aria-hidden')).toBe('true');
-      await expect(faixa.tabIndex).toBe(-1);
+      const range = canvasElement.querySelector<HTMLButtonElement>('[data-sidebar="rail"]')!;
+      await expect(range.getAttribute('aria-hidden')).toBe('true');
+      await expect(range.tabIndex).toBe(-1);
       // Dica de ponteiro em português, e o mesmo texto do gatilho: a ação é a
       // mesma. Era "Toggle sidebar", cravado.
-      await expect(faixa.title).toBe('Alternar barra lateral');
+      await expect(range.title).toBe('Alternar barra lateral');
       // Um único controle na ordem de tabulação para a mesma ação.
       await expect(canvas.getAllByRole('button', { name: /alternar barra lateral/i }).length).toBe(1);
     });
 
     await step('A faixa alterna a barra — e devolve ao estado de partida', async () => {
-      const faixa = canvasElement.querySelector<HTMLButtonElement>('[data-sidebar="rail"]')!;
-      const antes = raiz().dataset.state;
-      faixa.click();
-      await expect(raiz().dataset.state).not.toBe(antes);
-      faixa.click();
-      await expect(raiz().dataset.state).toBe(antes);
+      const range = canvasElement.querySelector<HTMLButtonElement>('[data-sidebar="rail"]')!;
+      const antes = root().dataset.state;
+      range.click();
+      await expect(root().dataset.state).not.toBe(antes);
+      range.click();
+      await expect(root().dataset.state).toBe(antes);
     });
 
     await step('A área ao lado da barra é o marco principal da página', async () => {
@@ -556,8 +556,8 @@ export const WithSubmenu: Story = {
     // Par idempotente: só clica quando o estado atual não é o desejado, então o
     // replay do painel Interactions (que roda no MESMO DOM) chega ao mesmo fim.
     const definir = async (isOpen: boolean) => {
-      const alvo = parent();
-      if (alvo.getAttribute('aria-expanded') !== String(isOpen)) await userEvent.click(alvo);
+      const target = parent();
+      if (target.getAttribute('aria-expanded') !== String(isOpen)) await userEvent.click(target);
       await expect(parent().getAttribute('aria-expanded')).toBe(String(isOpen));
     };
 
@@ -590,11 +590,11 @@ export const WithSubmenu: Story = {
     });
 
     await step('O subitem desabilitado não navega nem se anuncia clicável', async () => {
-      const desabilitado = canvasElement.querySelector<HTMLElement>('[data-sidebar="menu-sub-button"][aria-disabled="true"]')!;
-      await expect(desabilitado.textContent).toBe('Dialog');
+      const disabled = canvasElement.querySelector<HTMLElement>('[data-sidebar="menu-sub-button"][aria-disabled="true"]')!;
+      await expect(disabled.textContent).toBe('Dialog');
       // Sem destino, é <button disabled> — não uma âncora que continua navegando.
-      await expect(desabilitado.tagName).toBe('BUTTON');
-      await expect((desabilitado as HTMLButtonElement).disabled).toBe(true);
+      await expect(disabled.tagName).toBe('BUTTON');
+      await expect((disabled as HTMLButtonElement).disabled).toBe(true);
     });
   },
 };
@@ -667,14 +667,14 @@ export const LoadingSkeleton: Story = {
 
     await step('Com showIcon, a caixa do ícone vem antes da caixa do texto', async () => {
       const first = lines()[0];
-      const filhos = Array.from(first.children).map((f) => f.getAttribute('data-sidebar'));
-      await expect(filhos).toEqual(['menu-skeleton-icon', 'menu-skeleton-text']);
+      const children = Array.from(first.children).map((f) => f.getAttribute('data-sidebar'));
+      await expect(children).toEqual(['menu-skeleton-icon', 'menu-skeleton-text']);
     });
 
     await step('Sem showIcon, só a caixa do texto é desenhada', async () => {
       const terceira = lines()[2];
-      const filhos = Array.from(terceira.children).map((f) => f.getAttribute('data-sidebar'));
-      await expect(filhos).toEqual(['menu-skeleton-text']);
+      const children = Array.from(terceira.children).map((f) => f.getAttribute('data-sidebar'));
+      await expect(children).toEqual(['menu-skeleton-text']);
     });
 
     await step('As caixas são esqueletos de verdade, não divs sem pintura', async () => {
@@ -685,15 +685,15 @@ export const LoadingSkeleton: Story = {
         '.nds-sidebar-menu-skeleton-icon, .nds-sidebar-menu-skeleton-text',
       );
       await expect(boxes.length).toBe(5);
-      for (const caixa of boxes) {
-        await expect(caixa.classList.contains('nds-skeleton')).toBe(true);
-        await expect(getComputedStyle(caixa).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+      for (const box of boxes) {
+        await expect(box.classList.contains('nds-skeleton')).toBe(true);
+        await expect(getComputedStyle(box).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
       }
     });
 
     await step('A largura declarada chega à folha pela custom property', async () => {
-      const texto = lines()[1].querySelector<HTMLElement>('[data-sidebar="menu-skeleton-text"]')!;
-      await expect(texto.style.getPropertyValue('--skeleton-width')).toBe('55%');
+      const text = lines()[1].querySelector<HTMLElement>('[data-sidebar="menu-skeleton-text"]')!;
+      await expect(text.style.getPropertyValue('--skeleton-width')).toBe('55%');
     });
 
     await step('Uma linha anuncia o carregamento; as outras são mudas', async () => {
@@ -782,7 +782,7 @@ export const WithSearch: Story = {
       source: {
         transform: sidebarSourceWith({
           search: 'Buscar na navegação',
-          grupos: [
+          groups: [
             {
               label: 'Navegação',
               items: [
@@ -874,8 +874,8 @@ export const WithBadges: Story = {
       // O contador é o assunto: ele entra no próprio item, dentro do botão.
       source: {
         transform: sidebarSourceWith({
-          rodape: false,
-          grupos: [
+          footer: false,
+          groups: [
             {
               items: [
                 { label: 'Dashboard', href: '#', active: true, icon: 'House' },
@@ -908,8 +908,8 @@ export const WithBadges: Story = {
     });
 
     await step('Item sem contador não ganha caixa vazia', async () => {
-      const itens = canvasElement.querySelectorAll('.nds-sidebar-menu-button');
-      await expect(itens.length).toBe(4);
+      const items = canvasElement.querySelectorAll('.nds-sidebar-menu-button');
+      await expect(items.length).toBe(4);
       await expect(
         canvasElement.querySelectorAll('.nds-sidebar-menu-button-badge').length,
       ).toBe(2);

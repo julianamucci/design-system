@@ -107,8 +107,8 @@ export const CompleteTrail: Story = {
       // rastrear clique no item atual inflaria o evento com uma navegação que
       // nunca aconteceu.
       onNavigate.mockClear();
-      for (const nome of ['Início', 'Documentação', 'Componentes']) {
-        await userEvent.click(canvas.getByRole('link', { name: nome }));
+      for (const name of ['Início', 'Documentação', 'Componentes']) {
+        await userEvent.click(canvas.getByRole('link', { name: name }));
       }
       await expect(onNavigate).toHaveBeenCalledTimes(3);
       await expect(canvas.getAllByRole('link').length).toBe(3);
@@ -162,8 +162,8 @@ export const EllipsisWithTrigger: Story = {
 
     await step('O gatilho é quem carrega o nome; as reticências são desenho', async () => {
       // functional.item5, metade "decorativas quando não recebem rótulo".
-      const gatilho = canvas.getByRole('button', { name: 'Expandir níveis ocultos' });
-      const reticencias = gatilho.querySelector<HTMLElement>(
+      const trigger = canvas.getByRole('button', { name: 'Expandir níveis ocultos' });
+      const reticencias = trigger.querySelector<HTMLElement>(
         '[data-slot="breadcrumb-ellipsis"]',
       )!;
       await expect(reticencias).toHaveAttribute('aria-hidden', 'true');
@@ -173,9 +173,9 @@ export const EllipsisWithTrigger: Story = {
 
     await step('O gatilho é alcançável por teclado e responde', async () => {
       onEllipsisOpen.mockClear();
-      const gatilho = canvas.getByRole('button', { name: 'Expandir níveis ocultos' });
-      gatilho.focus();
-      await expect(gatilho).toHaveFocus();
+      const trigger = canvas.getByRole('button', { name: 'Expandir níveis ocultos' });
+      trigger.focus();
+      await expect(trigger).toHaveFocus();
       await userEvent.keyboard('{Enter}');
       await expect(onEllipsisOpen).toHaveBeenCalledTimes(1);
     });
@@ -247,7 +247,7 @@ export const Collapsed: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = () => canvas.getByRole('button', { name: 'Mostrar níveis ocultos' });
+    const trigger = () => canvas.getByRole('button', { name: 'Mostrar níveis ocultos' });
     const menu = () => document.querySelector<HTMLElement>('[data-slot="dropdown-menu-content"]');
 
     await step('A trilha visível fica curta, e o resto vai para o gatilho', async () => {
@@ -266,18 +266,18 @@ export const Collapsed: Story = {
     });
 
     await step('O gatilho abre o menu e diz que abre algo', async () => {
-      await expect(gatilho().getAttribute('aria-haspopup')).toBe('menu');
-      await userEvent.click(gatilho());
+      await expect(trigger().getAttribute('aria-haspopup')).toBe('menu');
+      await userEvent.click(trigger());
       await waitFor(() => expect(menu()).not.toBeNull());
-      await expect(gatilho().getAttribute('aria-expanded')).toBe('true');
+      await expect(trigger().getAttribute('aria-expanded')).toBe('true');
     });
 
     await step('Os níveis ocultos são links de verdade, não comandos', async () => {
       // É o ponto da composição: destino quer <a href>. Com <div> e callback a
       // pessoa perde nova aba, copiar endereço e a barra de status.
-      const itens = [...menu()!.querySelectorAll('[data-slot="dropdown-menu-item"]')];
-      await expect(itens.length).toBe(2);
-      for (const item of itens) {
+      const items = [...menu()!.querySelectorAll('[data-slot="dropdown-menu-item"]')];
+      await expect(items.length).toBe(2);
+      for (const item of items) {
         await expect(item.tagName).toBe('A');
         await expect(item.getAttribute('href')).toBeTruthy();
       }
@@ -297,7 +297,7 @@ export const Collapsed: Story = {
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
       await userEvent.keyboard('{Escape}');
       await waitFor(() => expect(menu()).toBeNull());
-      await waitFor(() => expect(document.activeElement).toBe(gatilho()));
+      await waitFor(() => expect(document.activeElement).toBe(trigger()));
     });
   },
 };

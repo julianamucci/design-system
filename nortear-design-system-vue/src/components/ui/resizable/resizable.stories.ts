@@ -62,7 +62,7 @@ export const Playground: Story = {
   render: (args) => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     setup() {
-      return { args, rotulo: LABEL_HANDLE };
+      return { args, label: LABEL_HANDLE };
     },
     template: `
       <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 480px; height: 240px">
@@ -73,7 +73,7 @@ export const Playground: Story = {
               <p class="nds-text-caption nds-text-muted-foreground">Navegação do projeto</p>
             </div>
           </ResizablePanel>
-          <ResizableHandle with-handle :aria-label="rotulo" />
+          <ResizableHandle with-handle :aria-label="label" />
           <ResizablePanel :default-size="70" :min-size="20">
             <div class="nds-stack nds-p-4" data-spacing="xs">
               <p class="nds-text-body nds-font-semibold">Conteúdo principal</p>

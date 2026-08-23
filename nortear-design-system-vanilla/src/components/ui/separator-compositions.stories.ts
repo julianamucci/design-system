@@ -30,7 +30,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-function texto(txt: string, className = 'nds-text-body'): HTMLElement {
+function text(txt: string, className = 'nds-text-body'): HTMLElement {
   const el = document.createElement('p');
   el.className = className;
   el.textContent = txt;
@@ -56,7 +56,7 @@ export const InCard: Story = {
     );
 
     const content = createCardContent();
-    content.append(texto('Total: R$ 249,90'));
+    content.append(text('Total: R$ 249,90'));
 
     card.append(header, createSeparator({ orientation: 'horizontal' }), content);
     return card;
@@ -73,9 +73,9 @@ export const InCard: Story = {
     await step('Não estoura a largura do Card', async () => {
       // Separador dentro de um contêiner com padding é onde a largura costuma
       // vazar — medir o par prova que ele respeita a caixa.
-      const caixa = sep!.getBoundingClientRect();
-      await expect(caixa.width).toBeGreaterThan(0);
-      await expect(caixa.width).toBeLessThanOrEqual(card.getBoundingClientRect().width);
+      const box = sep!.getBoundingClientRect();
+      await expect(box.width).toBeGreaterThan(0);
+      await expect(box.width).toBeLessThanOrEqual(card.getBoundingClientRect().width);
     });
   },
 };
@@ -115,7 +115,7 @@ export const InMenu: Story = {
   play: async ({ canvasElement, step }) => {
     const menu = canvasElement.querySelector<HTMLElement>('.nds-stack')!;
     const sep = menu.querySelector<HTMLElement>('.nds-separator')!;
-    const itens = [...menu.children].filter((c) => !c.classList.contains('nds-separator'));
+    const items = [...menu.children].filter((c) => !c.classList.contains('nds-separator'));
 
     await step('A divisão entre grupos é anunciada', async () => {
       await expect(sep).toHaveAttribute('role', 'separator');
@@ -124,9 +124,9 @@ export const InMenu: Story = {
 
     await step('Fica ENTRE os dois grupos, não dentro de um deles', async () => {
       const meio = sep.getBoundingClientRect().top;
-      await expect(itens).toHaveLength(3);
-      await expect(itens[1].getBoundingClientRect().bottom).toBeLessThanOrEqual(meio + 1);
-      await expect(itens[2].getBoundingClientRect().top).toBeGreaterThanOrEqual(meio - 1);
+      await expect(items).toHaveLength(3);
+      await expect(items[1].getBoundingClientRect().bottom).toBeLessThanOrEqual(meio + 1);
+      await expect(items[2].getBoundingClientRect().top).toBeGreaterThanOrEqual(meio - 1);
     });
   },
 };
@@ -165,11 +165,11 @@ export const EmphasisStrong: Story = {
     forte.dataset.testid = 'forte';
 
     wrap.append(
-      texto('Fim da seção', 'nds-text-body nds-text-muted-foreground'),
+      text('Fim da seção', 'nds-text-body nds-text-muted-foreground'),
       padrao,
-      texto('Continuação do mesmo assunto', 'nds-text-body nds-text-muted-foreground'),
+      text('Continuação do mesmo assunto', 'nds-text-body nds-text-muted-foreground'),
       forte,
-      texto('Troca de assunto', 'nds-text-body nds-font-medium'),
+      text('Troca de assunto', 'nds-text-body nds-font-medium'),
     );
     return wrap;
   },

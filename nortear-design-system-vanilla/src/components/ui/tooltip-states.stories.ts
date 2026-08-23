@@ -20,8 +20,8 @@ function wait(ms: number): Promise<void> {
 }
 
 /** Põe o ponteiro no centro de um elemento e devolve a coordenada usada. */
-function mover(alvo: HTMLElement): { x: number; y: number } {
-  const r = alvo.getBoundingClientRect();
+function mover(target: HTMLElement): { x: number; y: number } {
+  const r = target.getBoundingClientRect();
   const x = r.left + r.width / 2;
   const y = r.top + r.height / 2;
   document.dispatchEvent(new MouseEvent('mousemove', { clientX: x, clientY: y, bubbles: true }));
@@ -56,10 +56,10 @@ export const Closed: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
-    const gatilho = canvas.getByRole('button', { name: /salvar/i });
+    const trigger = canvas.getByRole('button', { name: /salvar/i });
 
     await step('O balão não está no DOM, nem no canvas nem no portal', async () => {
-      await expect(gatilho).toBeVisible();
+      await expect(trigger).toBeVisible();
       await expect(document.querySelector('[data-slot="tooltip-content"]')).toBeNull();
       await expect(body.queryByRole('tooltip')).not.toBeInTheDocument();
     });
@@ -68,7 +68,7 @@ export const Closed: Story = {
       // A factory escrevia o atributo na montagem, muito antes de existir balão:
       // id ausente é violação de `aria-valid-attr-value` no axe, e uma descrição
       // que o leitor de tela procura e não acha.
-      await expect(gatilho.getAttribute('aria-describedby')).toBeNull();
+      await expect(trigger.getAttribute('aria-describedby')).toBeNull();
     });
   },
 };
@@ -82,15 +82,15 @@ export const Open: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /salvar/i });
+    const trigger = canvas.getByRole('button', { name: /salvar/i });
 
     await step('O balão abre e traz o papel e o slot do contrato', async () => {
-      gatilho.blur();
-      gatilho.focus();
+      trigger.blur();
+      trigger.focus();
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       await expect(balao).toHaveAttribute('role', 'tooltip');
       await expect(balao).toHaveAttribute('data-slot', 'tooltip-content');
       await expect(balao).toHaveAttribute('data-state', 'open');
@@ -98,9 +98,9 @@ export const Open: Story = {
     });
 
     await step('E o gatilho passa a apontar para ele', async () => {
-      const id = gatilho.getAttribute('aria-describedby');
+      const id = trigger.getAttribute('aria-describedby');
       await expect(id).toBeTruthy();
-      await expect(document.getElementById(id!)).toBe(balaoDe(gatilho));
+      await expect(document.getElementById(id!)).toBe(balaoDe(trigger));
     });
 
     await step('Cleanup antes do postVisit', async () => {
@@ -117,22 +117,22 @@ export const Hover: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /salvar/i });
+    const trigger = canvas.getByRole('button', { name: /salvar/i });
 
     await step('O mouse passando não abre — a espera separa passar de parar', async () => {
-      gatilho.blur();
-      await userEvent.hover(gatilho);
-      await expect(balaoDe(gatilho)).toBeNull();
+      trigger.blur();
+      await userEvent.hover(trigger);
+      await expect(balaoDe(trigger)).toBeNull();
     });
 
     await step('Parado sobre o gatilho, o balão abre depois da espera', async () => {
       await waitFor(
         async () => {
-          await expect(balaoDe(gatilho)).not.toBeNull();
+          await expect(balaoDe(trigger)).not.toBeNull();
         },
         { timeout: HOVER_WAIT * 8 },
       );
-      await expect(balaoDe(gatilho)).toHaveAttribute('role', 'tooltip');
+      await expect(balaoDe(trigger)).toHaveAttribute('role', 'tooltip');
     });
 
     await step('Cleanup antes do postVisit', async () => {
@@ -150,22 +150,22 @@ export const KeyboardFocus: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /salvar/i });
+    const trigger = canvas.getByRole('button', { name: /salvar/i });
 
     await step('O foco abre na hora, sem a espera do hover', async () => {
       // Quem chega por teclado não tem como "parar em cima": esperar aqui seria
       // o mesmo que esconder a informação de quem não usa mouse.
-      gatilho.blur();
-      gatilho.focus();
-      await expect(gatilho).toHaveFocus();
-      await expect(balaoDe(gatilho)).not.toBeNull();
-      await expect(balaoDe(gatilho)).toHaveAttribute('role', 'tooltip');
+      trigger.blur();
+      trigger.focus();
+      await expect(trigger).toHaveFocus();
+      await expect(balaoDe(trigger)).not.toBeNull();
+      await expect(balaoDe(trigger)).toHaveAttribute('role', 'tooltip');
     });
 
     await step('Sair do gatilho fecha o balão', async () => {
-      gatilho.blur();
+      trigger.blur();
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).toBeNull();
+        await expect(balaoDe(trigger)).toBeNull();
       });
     });
   },
@@ -200,16 +200,16 @@ export const PersistenceInBubble: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /compartilhar/i });
+    const trigger = canvas.getByRole('button', { name: /compartilhar/i });
 
     await step('O hover abre o balão', async () => {
       // Hover, e não foco: o que se mede aqui é o trajeto do PONTEIRO do gatilho
       // até o balão, e ele precisa começar sobre o gatilho.
-      gatilho.blur();
-      await userEvent.hover(gatilho);
+      trigger.blur();
+      await userEvent.hover(trigger);
       await waitFor(
         async () => {
-          await expect(balaoDe(gatilho)).not.toBeNull();
+          await expect(balaoDe(trigger)).not.toBeNull();
         },
         { timeout: 3000 },
       );
@@ -221,10 +221,10 @@ export const PersistenceInBubble: Story = {
       // sobre um nó assim chega com clientX/clientY em 0,0 — mediria o ponteiro
       // no canto da tela, não sobre o balão. A área de tolerância da factory lê
       // COORDENADA, então é coordenada que o teste precisa fornecer.
-      const center = mover(balaoDe(gatilho)!);
+      const center = mover(balaoDe(trigger)!);
       await expect(center).toBeTruthy();
       await wait(400);
-      await expect(balaoDe(gatilho)).not.toBeNull();
+      await expect(balaoDe(trigger)).not.toBeNull();
     });
 
     await step('Levar o ponteiro para longe fecha — a tolerância tem limite', async () => {
@@ -235,12 +235,12 @@ export const PersistenceInBubble: Story = {
         new MouseEvent('mousemove', { clientX: 0, clientY: 0, bubbles: true }),
       );
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).toBeNull();
+        await expect(balaoDe(trigger)).toBeNull();
       });
     });
 
     await step('Cleanup antes do postVisit', async () => {
-      gatilho.blur();
+      trigger.blur();
       clearPortal();
     });
   },
@@ -284,9 +284,9 @@ export const ListenerCleanup: Story = {
           content: 'Texto de ajuda.',
         }),
         exercitar: (no) => {
-          const gatilho = no.querySelector<HTMLElement>('button');
-          gatilho?.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
-          gatilho?.dispatchEvent(new FocusEvent('focus'));
+          const trigger = no.querySelector<HTMLElement>('button');
+          trigger?.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+          trigger?.dispatchEvent(new FocusEvent('focus'));
         },
         seletorDePortal: '[data-slot="tooltip-content"]',
       });

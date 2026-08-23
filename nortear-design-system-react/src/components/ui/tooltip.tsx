@@ -62,10 +62,10 @@ function Tooltip({
     [onOpenChange]
   )
 
-  const valor = React.useMemo(() => ({ id, open: isOpen }), [id, isOpen])
+  const value = React.useMemo(() => ({ id, open: isOpen }), [id, isOpen])
 
   return (
-    <TooltipDescriptionContext.Provider value={valor}>
+    <TooltipDescriptionContext.Provider value={value}>
       <TooltipPrimitive.Root
         data-slot="tooltip"
         open={open}

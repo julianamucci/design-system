@@ -123,9 +123,9 @@ export const WithError: Story = {
 
     await step('aria-describedby aponta para a mensagem renderizada', async () => {
       const id = textarea.getAttribute('aria-describedby')!;
-      const alvo = canvasElement.ownerDocument.getElementById(id);
-      await expect(alvo).toBeInTheDocument();
-      await expect(alvo).toHaveTextContent(/pelo menos 10 caracteres/);
+      const target = canvasElement.ownerDocument.getElementById(id);
+      await expect(target).toBeInTheDocument();
+      await expect(target).toHaveTextContent(/pelo menos 10 caracteres/);
     });
   },
 };

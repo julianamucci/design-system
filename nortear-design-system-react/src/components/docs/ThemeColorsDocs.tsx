@@ -114,9 +114,9 @@ export function ThemeColorsDocs() {
   useEffect(() => {
     const read = () => {
       const cl = document.documentElement.classList;
-      const tema = ['tema-default', 'tema-warm', 'tema-cold'].find((c) => cl.contains(c))
+      const theme = ['tema-default', 'tema-warm', 'tema-cold'].find((c) => cl.contains(c))
         ?? 'tema-default';
-      setTemaAtivo(tema);
+      setTemaAtivo(theme);
       setPaginaDark(cl.contains('dark'));
 
       // Relê os valores HSL resolvidos a cada mudança de classe do <html>.

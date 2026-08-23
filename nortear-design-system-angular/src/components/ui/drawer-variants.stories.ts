@@ -39,20 +39,20 @@ export default meta;
 type Story = StoryObj;
 
 const LABEL = {
-  gatilho: () => t('usage.uxWriting.table.trigger.good'),
+  trigger: () => t('usage.uxWriting.table.trigger.good'),
   descricao: () => t('usage.uxWriting.table.description.good'),
-  fechar: () => t('usage.uxWriting.table.close.good'),
+  close: () => t('usage.uxWriting.table.close.good'),
 };
 
 /** Mesmo painel nas quatro direções — o que muda é `direction` e o título. */
-function painel(direction: DrawerDirection) {
+function panel(direction: DrawerDirection) {
   return () => ({
     props: {
       direction,
       tituloPainel: stripHtml(t(`demonstration.labels.${direction}`)),
       descricaoPainel: LABEL.descricao(),
-      rotuloGatilho: LABEL.gatilho(),
-      rotuloFechar: LABEL.fechar(),
+      rotuloGatilho: LABEL.trigger(),
+      rotuloFechar: LABEL.close(),
     },
     template: `
       <nds-drawer [direction]="direction" [defaultOpen]="true">
@@ -91,7 +91,7 @@ export const Bottom: Story = {
       },
     },
   },
-  render: painel('bottom'),
+  render: panel('bottom'),
   play: async ({ step }) => {
     await step('O painel encosta na base e mostra a alça', async () => {
       const panelEl = await waitForPortal('dialog');
@@ -118,7 +118,7 @@ export const Top: Story = {
       },
     },
   },
-  render: painel('top'),
+  render: panel('top'),
   play: async ({ step }) => {
     await step('O painel encosta no topo e esconde a alça', async () => {
       const panelEl = await waitForPortal('dialog');
@@ -143,7 +143,7 @@ export const Left: Story = {
       },
     },
   },
-  render: painel('left'),
+  render: panel('left'),
   play: async ({ step }) => {
     await step('O painel encosta na borda esquerda', async () => {
       const panelEl = await waitForPortal('dialog');
@@ -167,15 +167,15 @@ export const Right: Story = {
       },
     },
   },
-  render: painel('right'),
+  render: panel('right'),
   play: async ({ step }) => {
     await step('O painel encosta na borda direita', async () => {
       const panelEl = await waitForPortal('dialog');
       await expect(panelEl).toHaveAttribute('data-vaul-drawer-direction', 'right');
       await expect(panelEl).toHaveClass(/nds-drawer-content/);
       await expect(panelEl).toHaveAccessibleName();
-      const caixa = panelEl.getBoundingClientRect();
-      await expect(Math.abs(caixa.right - window.innerWidth)).toBeLessThan(2);
+      const box = panelEl.getBoundingClientRect();
+      await expect(Math.abs(box.right - window.innerWidth)).toBeLessThan(2);
     });
   },
 };
@@ -194,11 +194,11 @@ export const WithScroll: Story = {
     props: {
       tituloPainel: t('variants.items.withScroll.name'),
       descricaoPainel: LABEL.descricao(),
-      rotuloGatilho: LABEL.gatilho(),
-      rotuloFechar: LABEL.fechar(),
+      rotuloGatilho: LABEL.trigger(),
+      rotuloFechar: LABEL.close(),
       paragrafos: Array.from({ length: 30 }, (_, i) => ({
         id: `p-${i}`,
-        texto: `${i + 1}. ${stripHtml(t('variants.items.withScroll.use'))}`,
+        text: `${i + 1}. ${stripHtml(t('variants.items.withScroll.use'))}`,
       })),
     },
     template: `
@@ -213,7 +213,7 @@ export const WithScroll: Story = {
 
           <div ndsDrawerBody class="nds-stack" data-spacing="sm">
             @for (p of paragrafos; track p.id) {
-              <p class="nds-text-body nds-text-muted-foreground">{{ p.texto }}</p>
+              <p class="nds-text-body nds-text-muted-foreground">{{ p.text }}</p>
             }
           </div>
 
@@ -226,12 +226,12 @@ export const WithScroll: Story = {
   }),
   play: async ({ step }) => {
     const panelEl = await waitForPortal('dialog');
-    const corpo = panelEl.querySelector<HTMLElement>('[data-slot="drawer-body"]')!;
-    const rodape = panelEl.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
+    const body = panelEl.querySelector<HTMLElement>('[data-slot="drawer-body"]')!;
+    const footer = panelEl.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
 
     await step('O corpo é quem rola, não o painel', async () => {
-      await expect(corpo).not.toBeNull();
-      await expect(corpo.scrollHeight).toBeGreaterThan(corpo.clientHeight);
+      await expect(body).not.toBeNull();
+      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
       // O painel em si não rola: o mínimo automático zero de um item com
       // overflow é o que faz o corpo ceder altura em vez de esticar a caixa.
       await expect(panelEl.scrollHeight).toBeLessThanOrEqual(panelEl.clientHeight + 1);
@@ -240,11 +240,11 @@ export const WithScroll: Story = {
     await step('A região rolável é alcançável por teclado', async () => {
       // WCAG 2.1.1 — sem o tabindex, quem navega por teclado não consegue rolar
       // o corpo (é a regra scrollable-region-focusable do axe).
-      await expect(corpo).toHaveAttribute('tabindex', '0');
+      await expect(body).toHaveAttribute('tabindex', '0');
     });
 
     await step('O rodapé continua visível com o corpo cheio', async () => {
-      const boxFooter = rodape.getBoundingClientRect();
+      const boxFooter = footer.getBoundingClientRect();
       const boxPanel = panelEl.getBoundingClientRect();
       await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
       await expect(boxFooter.height).toBeGreaterThan(0);

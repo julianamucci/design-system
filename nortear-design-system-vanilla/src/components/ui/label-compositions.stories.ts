@@ -3,7 +3,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import { createLabel } from './label';
 import { createInput } from './input';
 import { createCheckbox } from './checkbox';
-import { bloco } from './label.fixtures';
+import { block } from './label.fixtures';
 import {
   labelSource,
   labelSourceBox,
@@ -50,7 +50,7 @@ export const WithInput: Story = {
     },
   },
   render: () => {
-    const wrapper = bloco();
+    const wrapper = block();
     const inputId = 'comp-input';
     wrapper.append(
       createLabel({ text: 'Telefone', htmlFor: inputId }),
@@ -147,7 +147,7 @@ export const RequiredField: Story = {
     },
   },
   render: () => {
-    const wrapper = bloco();
+    const wrapper = block();
     const inputId = 'comp-required';
     const label = createLabel({ htmlFor: inputId });
 

@@ -111,45 +111,45 @@ const TRACOS: readonly string[] = ['0', '10 5', '2 4', '12 4 2 4', '6 3 2 3'];
 type FormaSimbolo = 'circulo' | 'quadrado' | 'triangulo' | 'losango' | 'cruz';
 const FORMAS: readonly FormaSimbolo[] = ['circulo', 'quadrado', 'triangulo', 'losango', 'cruz'];
 
-export interface GridY { y: number; rotulo: string }
-export interface MarcaX { x: number; rotulo: string }
+export interface GridY { y: number; label: string }
+export interface MarcaX { x: number; label: string }
 export interface FormaDatum {
   /** `d` de path ou geometria de rect, conforme o consumidor. */
   x: number; y: number; w: number; h: number;
-  cor: string; trama: string; serie: number; titulo: string;
+  cor: string; trama: string; serie: number; title: string;
 }
 export interface TracadoLine { d: string; cor: string; traco: string; serie: number }
 export interface AreaPreenchida { d: string; cor: string; trama: string; serie: number }
-export interface SimboloPonto { d: string; cor: string; serie: number; titulo: string }
-export interface FatiaPizza { d: string; cor: string; trama: string; serie: number; titulo: string }
-export interface LabelValue { x: number; y: number; texto: string }
+export interface SimboloPonto { d: string; cor: string; serie: number; title: string }
+export interface FatiaPizza { d: string; cor: string; trama: string; serie: number; title: string }
+export interface LabelValue { x: number; y: number; text: string }
 export interface ItemCaption {
   x: number; y: number; cor: string; trama: string; traco: string;
-  simbolo: string; texto: string;
+  simbolo: string; text: string;
 }
 
 // ─── Funções puras ────────────────────────────────────────────────────────────
 
 /** Escada "redonda" para o eixo Y: 0, passo, 2·passo… até cobrir o máximo. */
-function escalaY(maximo: number): { topo: number; passo: number } {
-  if (!(maximo > 0)) return { topo: 1, passo: 1 / DIVISOES_Y };
+function escalaY(maximo: number): { topo: number; step: number } {
+  if (!(maximo > 0)) return { topo: 1, step: 1 / DIVISOES_Y };
   const raw = maximo / DIVISOES_Y;
   const magnitude = Math.pow(10, Math.floor(Math.log10(raw)));
   const normalizado = raw / magnitude;
   const fator = normalizado <= 1 ? 1 : normalizado <= 2 ? 2 : normalizado <= 5 ? 5 : 10;
-  const passo = fator * magnitude;
-  return { topo: Math.ceil(maximo / passo) * passo, passo };
+  const step = fator * magnitude;
+  return { topo: Math.ceil(maximo / step) * step, step };
 }
 
 /** Número curto o bastante para caber no eixo, sem depender de locale. */
-export function formatarValue(valor: number): string {
-  if (Number.isInteger(valor)) return String(valor);
-  return String(Math.round(valor * 100) / 100);
+export function formatarValue(value: number): string {
+  if (Number.isInteger(value)) return String(value);
+  return String(Math.round(value * 100) / 100);
 }
 
 /** Cor da série: a explícita, ou o token da posição (ciclo de 5). */
-function serieColor(indice: number, explicita?: string): string {
-  return explicita ?? `hsl(var(--chart-${(indice % 5) + 1}))`;
+function serieColor(index: number, explicita?: string): string {
+  return explicita ?? `hsl(var(--chart-${(index % 5) + 1}))`;
 }
 
 function caminhoSimbolo(forma: FormaSimbolo, cx: number, cy: number, r: number): string {
@@ -251,17 +251,17 @@ let sequencia = 0;
               text-anchor="end"
               dominant-baseline="middle"
               fill="hsl(var(--muted-foreground))"
-            >{{ line.rotulo }}</text>
+            >{{ line.label }}</text>
           }
 
-          @for (marca of marcasX(); track marca.rotulo) {
+          @for (marca of marcasX(); track marca.label) {
             <text
               [attr.x]="marca.x"
               [attr.y]="plot().y + plot().h + 20"
               text-anchor="middle"
               dominant-baseline="hanging"
               fill="hsl(var(--muted-foreground))"
-            >{{ marca.rotulo }}</text>
+            >{{ marca.label }}</text>
           }
         }
 
@@ -279,7 +279,7 @@ let sequencia = 0;
             [attr.fill]="barra.cor"
             [attr.data-series]="barra.serie"
             stroke="none"
-          ><title>{{ barra.titulo }}</title></rect>
+          ><title>{{ barra.title }}</title></rect>
           <rect
             [attr.x]="barra.x" [attr.y]="barra.y"
             [attr.width]="barra.w" [attr.height]="barra.h"
@@ -309,7 +309,7 @@ let sequencia = 0;
             [attr.data-series]="simbolo.serie"
             stroke="hsl(var(--foreground))"
             stroke-width="1"
-          ><title>{{ simbolo.titulo }}</title></path>
+          ><title>{{ simbolo.title }}</title></path>
         }
 
         @for (fatia of fatias(); track $index) {
@@ -318,7 +318,7 @@ let sequencia = 0;
             [attr.fill]="fatia.cor"
             [attr.data-series]="fatia.serie"
             stroke="none"
-          ><title>{{ fatia.titulo }}</title></path>
+          ><title>{{ fatia.title }}</title></path>
           <path
             [attr.d]="fatia.d"
             [attr.fill]="'url(#' + fatia.trama + ')'"
@@ -328,16 +328,16 @@ let sequencia = 0;
         }
 
         <!-- Valor legível junto do dado — só na série única, onde cabe. -->
-        @for (rotulo of rotulosValor(); track $index) {
+        @for (label of rotulosValor(); track $index) {
           <text
-            [attr.x]="rotulo.x"
-            [attr.y]="rotulo.y"
+            [attr.x]="label.x"
+            [attr.y]="label.y"
             text-anchor="middle"
             fill="hsl(var(--foreground))"
-          >{{ rotulo.texto }}</text>
+          >{{ label.text }}</text>
         }
 
-        @for (item of legenda(); track item.texto) {
+        @for (item of caption(); track item.text) {
           @if (tipoLegendaLinha()) {
             <path
               [attr.d]="'M' + item.x + ' ' + (item.y + 7) + ' h22'"
@@ -372,7 +372,7 @@ let sequencia = 0;
             [attr.y]="item.y + 7"
             dominant-baseline="middle"
             fill="hsl(var(--foreground))"
-          >{{ item.texto }}</text>
+          >{{ item.text }}</text>
         }
       </svg>
 
@@ -395,13 +395,13 @@ let sequencia = 0;
           <caption>{{ label() }}</caption>
           <thead>
             <tr>
-              @for (coluna of tabela().header; track coluna) {
+              @for (coluna of table().header; track coluna) {
                 <th scope="col">{{ coluna }}</th>
               }
             </tr>
           </thead>
           <tbody>
-            @for (line of tabela().lines; track $index) {
+            @for (line of table().lines; track $index) {
               <tr>
                 <th scope="row">{{ line[0] }}</th>
                 @for (celula of line.slice(1); track $index) {
@@ -531,7 +531,7 @@ export class NdsChart {
     const { topo } = this.escala();
     return Array.from({ length: DIVISOES_Y + 1 }, (_, i) => {
       const fraction = i / DIVISOES_Y;
-      return { y: y + h - fraction * h, rotulo: formatarValue(topo * fraction) };
+      return { y: y + h - fraction * h, label: formatarValue(topo * fraction) };
     });
   });
 
@@ -544,14 +544,14 @@ export class NdsChart {
     if (!this.cartesiano() || this.compact()) return [];
     const { x } = this.plot();
     const banda = this.banda();
-    return this.categorias().map((rotulo, i) => ({ x: x + (i + 0.5) * banda, rotulo }));
+    return this.categorias().map((label, i) => ({ x: x + (i + 0.5) * banda, label }));
   });
 
   /** y de um valor dentro da área de plotagem. */
-  private posY(valor: number): number {
+  private posY(value: number): number {
     const { y, h } = this.plot();
     const { topo } = this.escala();
-    return y + h - (Math.max(0, valor) / topo) * h;
+    return y + h - (Math.max(0, value) / topo) * h;
   }
 
   protected readonly barras = computed<FormaDatum[]>(() => {
@@ -559,23 +559,23 @@ export class NdsChart {
     const series = this.serieNorm();
     const banda = this.banda();
     const { x, y, h } = this.plot();
-    const grupo = banda * 0.68;
-    const largura = grupo / Math.max(1, series.length);
+    const group = banda * 0.68;
+    const width = group / Math.max(1, series.length);
     const saida: FormaDatum[] = [];
     this.categorias().forEach((categoria, iCat) => {
       series.forEach((serie, iSerie) => {
-        const valor = serie.data[iCat];
-        if (valor === undefined) return;
-        const topoBar = this.posY(valor);
+        const value = serie.data[iCat];
+        if (value === undefined) return;
+        const topoBar = this.posY(value);
         saida.push({
-          x: x + iCat * banda + (banda - grupo) / 2 + iSerie * largura,
+          x: x + iCat * banda + (banda - group) / 2 + iSerie * width,
           y: topoBar,
-          w: largura,
+          w: width,
           h: Math.max(0, y + h - topoBar),
           cor: serieColor(iSerie, serie.color),
           trama: `${this.uid}-trama-${iSerie % TRAMAS.length}`,
           serie: iSerie,
-          titulo: `${serie.name}, ${categoria}: ${formatarValue(valor)}`,
+          title: `${serie.name}, ${categoria}: ${formatarValue(value)}`,
         });
       });
     });
@@ -589,14 +589,14 @@ export class NdsChart {
     return this.serieNorm().map((serie, iSerie) => ({
       serie: iSerie,
       cor: serieColor(iSerie, serie.color),
-      nome: serie.name,
+      name: serie.name,
       coords: this.categorias().flatMap((categoria, iCat) => {
-        const valor = serie.data[iCat];
-        if (valor === undefined) return [];
+        const value = serie.data[iCat];
+        if (value === undefined) return [];
         return [{
           cx: x + (iCat + 0.5) * banda,
-          cy: this.posY(valor),
-          titulo: `${serie.name}, ${categoria}: ${formatarValue(valor)}`,
+          cy: this.posY(value),
+          title: `${serie.name}, ${categoria}: ${formatarValue(value)}`,
         }];
       }),
     }));
@@ -637,7 +637,7 @@ export class NdsChart {
         d: caminhoSimbolo(FORMAS[s.serie % FORMAS.length], p.cx, p.cy, RAIO_SIMBOLO),
         cor: s.cor,
         serie: s.serie,
-        titulo: p.titulo,
+        title: p.title,
       })),
     ),
   );
@@ -665,7 +665,7 @@ export class NdsChart {
         cor: serieColor(i, undefined),
         trama: `${this.uid}-trama-${i % TRAMAS.length}`,
         serie: i,
-        titulo: `${ponto.label}: ${formatarValue(ponto.value)} (${this.percentual(ponto.value)})`,
+        title: `${ponto.label}: ${formatarValue(ponto.value)} (${this.percentual(ponto.value)})`,
       };
     });
   });
@@ -680,28 +680,28 @@ export class NdsChart {
       return this.barras().map((barra, i) => ({
         x: barra.x + barra.w / 2,
         y: barra.y - 6,
-        texto: formatarValue(values[i] ?? 0),
+        text: formatarValue(values[i] ?? 0),
       }));
     }
     const banda = this.banda();
     const { x } = this.plot();
     return this.categorias().flatMap((_, i) => {
-      const valor = values[i];
-      if (valor === undefined) return [];
+      const value = values[i];
+      if (value === undefined) return [];
       return [{
         x: x + (i + 0.5) * banda,
-        y: this.posY(valor) - RAIO_SIMBOLO - 6,
-        texto: formatarValue(valor),
+        y: this.posY(value) - RAIO_SIMBOLO - 6,
+        text: formatarValue(value),
       }];
     });
   });
 
-  protected readonly legenda = computed<ItemCaption[]>(() => {
+  protected readonly caption = computed<ItemCaption[]>(() => {
     if (!this.legendaVisivel()) return [];
     const names = this.cartesiano()
-      ? this.serieNorm().map((s, i) => ({ texto: s.name, cor: serieColor(i, s.color), i }))
+      ? this.serieNorm().map((s, i) => ({ text: s.name, cor: serieColor(i, s.color), i }))
       : this.fatiasDados().map((p, i) => ({
-        texto: `${p.label} — ${formatarValue(p.value)} (${this.percentual(p.value)})`,
+        text: `${p.label} — ${formatarValue(p.value)} (${this.percentual(p.value)})`,
         cor: serieColor(i, undefined),
         i,
       }));
@@ -718,12 +718,12 @@ export class NdsChart {
         trama: `${this.uid}-trama-${n.i % TRAMAS.length}`,
         traco: TRACOS[n.i % TRACOS.length],
         simbolo: caminhoSimbolo(FORMAS[n.i % FORMAS.length], x + 11, y + 7, RAIO_SIMBOLO),
-        texto: n.texto,
+        text: n.text,
       };
     });
   });
 
-  protected readonly tabela = computed<{ header: string[]; lines: string[][] }>(() => {
+  protected readonly table = computed<{ header: string[]; lines: string[][] }>(() => {
     if (!this.cartesiano()) {
       return {
         header: [this.categoryLabel(), this.valueLabel(), this.shareLabel()],
@@ -744,9 +744,9 @@ export class NdsChart {
     };
   });
 
-  private percentual(valor: number): string {
+  private percentual(value: number): string {
     const total = this.totalPizza();
     if (total <= 0) return '—';
-    return `${Math.round((Math.max(0, valor) / total) * 1000) / 10}%`;
+    return `${Math.round((Math.max(0, value) / total) * 1000) / 10}%`;
   }
 }

@@ -90,7 +90,7 @@
                  ceder altura em vez de empurrar o rodapé para fora da tela. -->
             <DrawerBody class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
               {#each Array.from({ length: 30 }) as _, i (i)}
-                <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar a rolagem interna do painel.</p>
+                <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar a rolagem interna do panel.</p>
               {/each}
             </DrawerBody>
           {/if}

@@ -32,9 +32,9 @@ type Story = StoryObj;
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /** Idempotente — ver a nota em `radio-group.stories.ts`. */
-const choose = async (alvo: HTMLElement): Promise<void> => {
-  if (alvo.getAttribute('aria-checked') !== 'true') await userEvent.click(alvo);
-  await expect(alvo).toHaveAttribute('aria-checked', 'true');
+const choose = async (target: HTMLElement): Promise<void> => {
+  if (target.getAttribute('aria-checked') !== 'true') await userEvent.click(target);
+  await expect(target).toHaveAttribute('aria-checked', 'true');
 };
 
 // ─── FormaDePagamento ─────────────────────────────────────────────────────────

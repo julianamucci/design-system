@@ -62,12 +62,12 @@ const wrapTemplate = (typeAttr: string) => `
  * Interactions — o gate é a opacidade computada.
  */
 async function waitForBar(
-  raiz: HTMLElement,
+  root: HTMLElement,
   orientation: 'vertical' | 'horizontal' = 'vertical',
 ): Promise<HTMLElement> {
   return await waitFor(
     () => {
-      const barra = raiz.querySelector<HTMLElement>(
+      const barra = root.querySelector<HTMLElement>(
         `[data-slot="scroll-area-scrollbar"][data-orientation="${orientation}"]`,
       );
       if (!barra) throw new Error('barra ainda não montada');
@@ -205,9 +205,9 @@ export const Always: Story = {
         expect(measure().deslocamento).toBeLessThan(4);
       });
 
-      const caixa = grabber.getBoundingClientRect();
-      const x = caixa.left + caixa.width / 2;
-      const y = caixa.top + caixa.height / 2;
+      const box = grabber.getBoundingClientRect();
+      const x = box.left + box.width / 2;
+      const y = box.top + box.height / 2;
       await userEvent.pointer([
         { keys: '[MouseLeft>]', target: grabber, coords: { clientX: x, clientY: y } },
         { target: grabber, coords: { clientX: x, clientY: y + 60 } },

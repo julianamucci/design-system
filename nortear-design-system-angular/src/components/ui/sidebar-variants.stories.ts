@@ -121,13 +121,13 @@ export const Collapse: Story = {
 
     await step('No modo icon o painel estreita para a largura de ícone', async () => {
       const icone = canvasElement.querySelector<HTMLElement>('[data-testid="col-icon"]')!;
-      const painel = icone.querySelector<HTMLElement>('.nds-sidebar-panel')!;
+      const panel = icone.querySelector<HTMLElement>('.nds-sidebar-panel')!;
       const widthIcon = parseFloat(
         getComputedStyle(icone).getPropertyValue('--sidebar-width-icon'),
       );
       // A custom property vem em rem; comparar em px exige a raiz.
       const px = widthIcon * parseFloat(getComputedStyle(document.documentElement).fontSize);
-      await expect(Math.round(painel.getBoundingClientRect().width)).toBe(Math.round(px));
+      await expect(Math.round(panel.getBoundingClientRect().width)).toBe(Math.round(px));
     });
   },
 };
@@ -144,14 +144,14 @@ export const Side: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('O painel encosta na direita', async () => {
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-testid="direita"]')!;
-      await expect(raiz.getAttribute('data-side')).toBe('right');
+      const root = canvasElement.querySelector<HTMLElement>('[data-testid="direita"]')!;
+      await expect(root.getAttribute('data-side')).toBe('right');
 
-      const painel = raiz.querySelector<HTMLElement>('.nds-sidebar-panel')!;
-      const caixa = painel.getBoundingClientRect();
+      const panel = root.querySelector<HTMLElement>('.nds-sidebar-panel')!;
+      const box = panel.getBoundingClientRect();
       // Medida, não atributo: a regra que posiciona é
       // `[data-side="right"] .nds-sidebar-panel { right: 0 }`.
-      await expect(Math.round(caixa.right)).toBe(Math.round(window.innerWidth));
+      await expect(Math.round(box.right)).toBe(Math.round(window.innerWidth));
     });
   },
 };

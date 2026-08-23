@@ -81,9 +81,9 @@ export const Default: Story = {
       // Idempotente: o clique só acontece com a lista fechada.
       if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       const listbox = await waitForPortal('listbox');
-      const opcoes = within(listbox).getAllByRole('option');
-      await expect(opcoes).toHaveLength(4);
-      await expect(opcoes[0]).toHaveAccessibleName('São Paulo');
+      const options = within(listbox).getAllByRole('option');
+      await expect(options).toHaveLength(4);
+      await expect(options[0]).toHaveAccessibleName('São Paulo');
       // Nada escolhido ainda: nenhuma opção se anuncia selecionada. A conta é
       // por PAPEL, não por atributo — em lista de escolha única a marca só é
       // exigida na opção escolhida, e cada lib decide se escreve a negativa.
@@ -118,23 +118,23 @@ export const WithGroups: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: /Selecionar região/i });
 
-    const abrir = async () => {
+    const open = async () => {
       // Idempotente: o clique só acontece com a lista fechada.
       if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       return await waitForPortal('listbox');
     };
 
     await step('Cada categoria vira um grupo nomeado pelo cabeçalho', async () => {
-      const listbox = await abrir();
-      const grupos = within(listbox).getAllByRole('group');
-      await expect(grupos).toHaveLength(GROUPS.length);
-      for (const [i, grupo] of grupos.entries()) {
-        await expect(grupo).toHaveAccessibleName(GROUPS[i].label);
+      const listbox = await open();
+      const groups = within(listbox).getAllByRole('group');
+      await expect(groups).toHaveLength(GROUPS.length);
+      for (const [i, group] of groups.entries()) {
+        await expect(group).toHaveAccessibleName(GROUPS[i].label);
       }
     });
 
     await step('As opções continuam todas na mesma lista', async () => {
-      const listbox = await abrir();
+      const listbox = await open();
       const total = GROUPS.reduce((sum, g) => sum + g.options.length, 0);
       await expect(within(listbox).getAllByRole('option')).toHaveLength(total);
     });
@@ -142,7 +142,7 @@ export const WithGroups: Story = {
     await step('A divisão entre grupos é decorativa', async () => {
       // Linha para o olho, silêncio para o leitor de tela — quem separa
       // semanticamente é o grupo.
-      const listbox = await abrir();
+      const listbox = await open();
       await expect(listbox.querySelectorAll('.nds-select-separator')).toHaveLength(
         GROUPS.length - 1,
       );
@@ -169,22 +169,22 @@ export const WithIcon: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
 
-    const abrir = async () => {
+    const open = async () => {
       // Idempotente: o clique só acontece com a lista fechada.
       if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       return await waitForPortal('listbox');
     };
 
     await step('O ícone entra na opção e fica fora do nome acessível', async () => {
-      const listbox = await abrir();
-      const opcoes = within(listbox).getAllByRole('option');
-      await expect(opcoes).toHaveLength(4);
-      await expect(opcoes[0].querySelector('svg')).toBeTruthy();
-      await expect(opcoes[0]).toHaveAccessibleName('São Paulo');
+      const listbox = await open();
+      const options = within(listbox).getAllByRole('option');
+      await expect(options).toHaveLength(4);
+      await expect(options[0].querySelector('svg')).toBeTruthy();
+      await expect(options[0]).toHaveAccessibleName('São Paulo');
     });
 
     await step('O ícone é dimensionado pela folha, não pelo tamanho intrínseco', async () => {
-      const listbox = await abrir();
+      const listbox = await open();
       const icone = within(listbox)
         .getAllByRole('option')[0]
         .querySelector('svg') as SVGElement;

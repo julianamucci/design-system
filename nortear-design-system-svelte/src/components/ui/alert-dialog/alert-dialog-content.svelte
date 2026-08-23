@@ -38,15 +38,15 @@
 		if (event.defaultPrevented) return;
 		event.preventDefault();
 		await tick();
-		const painel = ref;
-		if (!painel) return;
-		const alvo =
-			painel.querySelector<HTMLElement>('[data-slot="alert-dialog-cancel"]') ??
-			painel.querySelector<HTMLElement>(
+		const panel = ref;
+		if (!panel) return;
+		const target =
+			panel.querySelector<HTMLElement>('[data-slot="alert-dialog-cancel"]') ??
+			panel.querySelector<HTMLElement>(
 				'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
 			) ??
-			painel;
-		alvo.focus();
+			panel;
+		target.focus();
 	}
 </script>
 

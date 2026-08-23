@@ -42,8 +42,8 @@ const IMPORT_BUTTON = 'import { Button } from "@/components/ui/button";';
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
 function importingSheet(...parts: string[]): string {
-  const lista = [...parts].sort();
-  return `import {\n${lista
+  const list = [...parts].sort();
+  return `import {\n${list
     .map((part) => `  ${part},`)
     .join('\n')}\n} from "@/components/ui/sheet";`;
 }
@@ -67,9 +67,9 @@ const DESCRIPTION = 'Configure os filtros para refinar os resultados.';
  * o `aria-labelledby` e o `aria-describedby` do painel, e um diálogo modal sem
  * nome chega ao leitor de tela como uma região anônima.
  */
-function header(titulo = TITLE, descricao = DESCRIPTION): string {
+function header(title = TITLE, descricao = DESCRIPTION): string {
   return `    <SheetHeader>
-      <SheetTitle>${titulo}</SheetTitle>
+      <SheetTitle>${title}</SheetTitle>
       <SheetDescription>
         ${descricao}
       </SheetDescription>
@@ -81,7 +81,7 @@ function header(titulo = TITLE, descricao = DESCRIPTION): string {
  * A ordem de leitura e de foco é a do markup — inverter aqui mudaria o que o
  * teclado alcança primeiro, mesmo com o CSS desenhando o contrário.
  */
-function rodape(acao = 'Aplicar filtros', saida = 'Cancelar'): string {
+function footer(acao = 'Aplicar filtros', saida = 'Cancelar'): string {
   return `    <SheetFooter>
       <SheetClose render={<Button variant="outline" />}>${saida}</SheetClose>
       <Button>${acao}</Button>
@@ -89,13 +89,13 @@ function rodape(acao = 'Aplicar filtros', saida = 'Cancelar'): string {
 }
 
 /** A composição inteira: raiz, gatilho e painel. */
-function sheet(raiz: string, painel: string, corpo: string, gatilhoRotulo: string): string {
-  return `<Sheet${raiz}>
+function sheet(root: string, panel: string, body: string, gatilhoRotulo: string): string {
+  return `<Sheet${root}>
   <SheetTrigger render={<Button variant="outline" />}>
     ${gatilhoRotulo}
   </SheetTrigger>
-  <SheetContent${painel}>
-${corpo}
+  <SheetContent${panel}>
+${body}
   </SheetContent>
 </Sheet>`;
 }
@@ -111,20 +111,20 @@ ${corpo}
  */
 export const sheetSource: SourceTransform<SheetArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const raiz = attrs(
+  const root = attrs(
     propBool('defaultOpen', args.defaultOpen),
     propBool('modal', args.modal, true),
   );
-  const painel = attrs(
+  const panel = attrs(
     propOption('side', args.side, LADOS, 'right'),
     propBool('showCloseButton', args.showCloseButton, true),
   );
   return jsxSnippet(
     `${importingSheet(...PARTS_BASE)}\n${IMPORT_BUTTON}`,
     sheet(
-      raiz,
-      painel,
-      `${header()}\n${rodape()}`,
+      root,
+      panel,
+      `${header()}\n${footer()}`,
       childText(args.triggerLabel, 'Abrir filtros'),
     ),
   );
@@ -137,10 +137,10 @@ export const sheetSource: SourceTransform<SheetArgs> = (_gerado, ctx) => {
  * uma para a outra é só a borda de onde o painel desliza, e trocar o conteúdo
  * junto faria parecer que a direção pede outra composição.
  */
-function bySide(lado: string, titulo: string): string {
+function bySide(side: string, title: string): string {
   return jsxSnippet(
     `${importingSheet(...PARTS_BASE)}\n${IMPORT_BUTTON}`,
-    sheet('', ` side="${lado}"`, `${header(titulo)}\n${rodape()}`, 'Abrir filtros'),
+    sheet('', ` side="${side}"`, `${header(title)}\n${footer()}`, 'Abrir filtros'),
   );
 }
 
@@ -175,7 +175,7 @@ export function sheetSideInferiorSource(): string {
 export function sheetOpenSource(): string {
   return jsxSnippet(
     `${importingSheet(...PARTS_BASE)}\n${IMPORT_BUTTON}`,
-    sheet(' defaultOpen', '', `${header()}\n${rodape()}`, 'Abrir filtros'),
+    sheet(' defaultOpen', '', `${header()}\n${footer()}`, 'Abrir filtros'),
   );
 }
 
@@ -277,7 +277,7 @@ import { Label } from "@/components/ui/label";`,
         </div>
       </form>
     </SheetBody>
-${rodape()}`,
+${footer()}`,
       'Abrir filtros',
     ),
   );
@@ -378,7 +378,7 @@ const PARAGRAFOS = Array.from({ length: 24 }, (_, i) => i + 1);`,
         </p>
       ))}
     </SheetBody>
-${rodape('Aceitar termos')}`,
+${footer('Aceitar termos')}`,
       'Ler termos',
     ),
   );

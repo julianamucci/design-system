@@ -27,14 +27,14 @@ export function skeletonSource(_gerado?: string, ctx?: { args?: Partial<Skeleton
   const { shape = 'text', width = '3-4', loading = true } = ctx?.args ?? {};
   // `data-width` é fração da largura do container e só se aplica às formas de
   // texto: escrevê-lo em avatar ou fill ensinaria um atributo que não responde.
-  const largura = shape === 'text' || shape === 'heading' ? ` data-width="${width}"` : '';
+  const widthAttr = shape === 'text' || shape === 'heading' ? ` data-width="${width}"` : '';
 
   return svelteSnippet(
     `${IMPORT}
 
 let carregando = $state(${loading});`,
     `<div role="status" aria-busy={carregando} aria-label="Carregando conteúdo">
-  <Skeleton data-shape="${shape}"${largura} />
+  <Skeleton data-shape="${shape}"${widthAttr} />
 </div>`,
   );
 }

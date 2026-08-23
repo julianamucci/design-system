@@ -78,8 +78,8 @@
 	 * `thumbAriaLabels` continua acima na ordem: é o único jeito de dar nomes
 	 * DIFERENTES às duas alças de uma faixa ("mínimo" e "máximo").
 	 */
-	const handleName = (indice: number): string =>
-		thumbAriaLabels?.[indice] ?? ariaLabel ?? thumbAriaLabel;
+	const handleName = (index: number): string =>
+		thumbAriaLabels?.[index] ?? ariaLabel ?? thumbAriaLabel;
 
 	/**
 	 * PageUp/PageDown — o salto largo que a lib headless não implementa.
@@ -104,18 +104,18 @@
 		const alcas = [
 			...(ref?.querySelectorAll<HTMLElement>('[data-slot="slider-thumb"]') ?? []),
 		];
-		const indice = Math.max(0, alcas.indexOf(thumb));
-		const direcao = evento.key === "PageUp" ? 1 : -1;
+		const index = Math.max(0, alcas.indexOf(thumb));
+		const direction = evento.key === "PageUp" ? 1 : -1;
 
-		const atual = Array.isArray(value) ? [...value] : [value ?? min];
-		const raw = (atual[indice] ?? min) + largeStep * direcao;
+		const current = Array.isArray(value) ? [...value] : [value ?? min];
+		const raw = (current[index] ?? min) + largeStep * direction;
 		// Arredonda ao passo antes de prender na faixa: um salto que caísse entre
 		// dois passos deixaria o controle num valor que as setas não alcançam.
 		const inStep = min + Math.round((raw - min) / step) * step;
-		atual[indice] = Math.min(max, Math.max(min, inStep));
+		current[index] = Math.min(max, Math.max(min, inStep));
 
 		evento.preventDefault();
-		value = (Array.isArray(value) ? atual : atual[0]) as never;
+		value = (Array.isArray(value) ? current : current[0]) as never;
 	}
 </script>
 

@@ -103,7 +103,7 @@ export const Vertical: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
     const viewport = canvasElement.querySelector<HTMLElement>(
       '[data-slot="scroll-area-viewport"]',
     )!;
@@ -112,11 +112,11 @@ export const Vertical: Story = {
       // Sem o teto não há transbordo, e sem transbordo não há barra: a medida é
       // a condição de existir a variante. Ela mora numa só declaração — a folha
       // resolve `block-size` no root e o viewport é `height: 100%` por ela.
-      await expect(raiz.dataset.size).toBe('lg');
+      await expect(root.dataset.size).toBe('lg');
       await expect(viewport.style.maxHeight).toBe('');
       // O degrau `lg` de `--box-height-*` são 15rem. A conta vai à raiz porque é
       // ela que a folha dimensiona; o viewport preenche o que sobra da borda.
-      await expect(raiz.getBoundingClientRect().height).toBe(240);
+      await expect(root.getBoundingClientRect().height).toBe(240);
     });
 
     await step('Rola só na vertical', async () => {
@@ -140,7 +140,7 @@ export const Horizontal: Story = {
           width: '100%',
           'aria-label': 'Fila horizontal de cards',
           class: 'nds-rounded-md nds-border-default',
-          conteudo: 'fileira',
+          content: 'fileira',
         }),
       },
       description: { story: 'Scroll horizontal — largura fixa no root e faixa com largura de conteúdo (itens que não encolhem) geram barra inferior.' },
@@ -194,7 +194,7 @@ export const Both: Story = {
           width: '100%',
           'aria-label': 'Matriz com rolagem nos dois eixos',
           class: 'nds-rounded-md nds-border-default',
-          conteudo: 'matriz',
+          content: 'matriz',
         }),
       },
       description: { story: 'Scroll bidirecional — degrau de altura e largura no root, conteúdo maior nas duas dimensões.' },

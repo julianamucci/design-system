@@ -90,10 +90,10 @@ export const Alignments: Story = {
     });
 
     await step('block-start empilha: o grupo vira coluna', async () => {
-      const bloco = canvasElement.querySelector<HTMLElement>('[data-testid="addon-bloco"]')!;
-      const campo = canvasElement.querySelector<HTMLElement>('#ig-bloco')!;
-      await expect(bloco.getBoundingClientRect().bottom).toBeLessThanOrEqual(
-        campo.getBoundingClientRect().top + 1,
+      const block = canvasElement.querySelector<HTMLElement>('[data-testid="addon-bloco"]')!;
+      const field = canvasElement.querySelector<HTMLElement>('#ig-bloco')!;
+      await expect(block.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+        field.getBoundingClientRect().top + 1,
       );
     });
 
@@ -101,15 +101,15 @@ export const Alignments: Story = {
       // É o ponto do componente: uma borda só em volta de tudo, em vez de duas
       // caixas encostadas. Se o campo mantivesse a própria, apareceria uma
       // linha dupla no meio.
-      const grupo = canvasElement.querySelector<HTMLElement>('[data-slot="input-group"]')!;
-      const campo = canvasElement.querySelector<HTMLElement>('#ig-inicio')!;
-      await expect(parseFloat(getComputedStyle(grupo).borderTopWidth)).toBeGreaterThan(0);
-      await expect(parseFloat(getComputedStyle(campo).borderTopWidth)).toBe(0);
+      const group = canvasElement.querySelector<HTMLElement>('[data-slot="input-group"]')!;
+      const field = canvasElement.querySelector<HTMLElement>('#ig-inicio')!;
+      await expect(parseFloat(getComputedStyle(group).borderTopWidth)).toBeGreaterThan(0);
+      await expect(parseFloat(getComputedStyle(field).borderTopWidth)).toBe(0);
     });
 
     await step('O grupo é uma região só para o leitor de tela', async () => {
-      const grupo = canvasElement.querySelector<HTMLElement>('[data-slot="input-group"]')!;
-      await expect(grupo.getAttribute('role')).toBe('group');
+      const group = canvasElement.querySelector<HTMLElement>('[data-slot="input-group"]')!;
+      await expect(group.getAttribute('role')).toBe('group');
     });
   },
 };
@@ -136,13 +136,13 @@ export const AddonClick: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const campo = () => canvasElement.querySelector<HTMLInputElement>('#ig-clique')!;
+    const field = () => canvasElement.querySelector<HTMLInputElement>('#ig-clique')!;
 
     await step('Clicar no addon leva o foco ao campo', async () => {
       // A área toda parece o campo. Quem mira o "@" espera começar a digitar.
       const addon = canvasElement.querySelector<HTMLElement>('[data-testid="addon"]')!;
       await userEvent.click(addon);
-      await expect(document.activeElement).toBe(campo());
+      await expect(document.activeElement).toBe(field());
     });
 
     await step('Clicar no BOTÃO dentro do addon não rouba o foco dele', async () => {
@@ -150,7 +150,7 @@ export const AddonClick: Story = {
       // da ação — e quem navega por teclado perderia o lugar.
       const button = canvas.getByRole('button', { name: 'Limpar' });
       await userEvent.click(button);
-      await expect(document.activeElement).not.toBe(campo());
+      await expect(document.activeElement).not.toBe(field());
     });
   },
 };

@@ -58,7 +58,7 @@ type Frame = {
   title: string;
   description: string;
   /** Corpo entre o cabeçalho e o rodapé, já indentado em 4 espaços. */
-  corpo?: string;
+  body?: string;
   actionLabel: string;
   cancelLabel: string;
 };
@@ -67,7 +67,7 @@ type Frame = {
  * Estrutura comum a todas as composições: raiz com estado ligado, gatilho,
  * painel, cabeçalho, corpo opcional e rodapé com a ação e a saída.
  */
-function painel({
+function panel({
   imports = IMPORT_BASE,
   isOpen = false,
   direction = 'bottom',
@@ -75,7 +75,7 @@ function painel({
   triggerLabel,
   title,
   description,
-  corpo = '',
+  body = '',
   actionLabel,
   cancelLabel,
 }: Frame): string {
@@ -83,7 +83,7 @@ function painel({
     direction === 'bottom' ? '' : `direction="${direction}"`,
     dismissible ? '' : 'dismissible={false}',
   );
-  const miolo = corpo ? `\n${corpo}` : '';
+  const miolo = body ? `\n${body}` : '';
 
   return svelteSnippet(
     `${imports}
@@ -127,7 +127,7 @@ export function drawerSource(_gerado?: string, ctx?: { args?: Partial<DrawerArgs
     cancelLabel = 'Cancelar',
   } = ctx?.args ?? {};
 
-  return painel({
+  return panel({
     isOpen: open ?? defaultOpen,
     direction,
     dismissible,
@@ -141,14 +141,14 @@ export function drawerSource(_gerado?: string, ctx?: { args?: Partial<DrawerArgs
 
 /** Composição com formulário curto no corpo, em painel lateral. */
 export function drawerWithFormSource(): string {
-  return painel({
+  return panel({
     imports: IMPORT_WITH_FIELDS,
     isOpen: true,
     direction: 'right',
     triggerLabel: 'Editar dados',
     title: 'Editar dados pessoais',
     description: 'Atualize seu nome e e-mail.',
-    corpo: `    <DrawerBody>
+    body: `    <DrawerBody>
       <form class="nds-grid" data-spacing="sm">
         <div class="nds-grid" data-spacing="xs">
           <Label for="drawer-nome">Nome</Label>
@@ -167,13 +167,13 @@ export function drawerWithFormSource(): string {
 
 /** Composição de confirmação reversível: mensagem curta e par de ações. */
 export function drawerWithConfirmSource(): string {
-  return painel({
+  return panel({
     imports: IMPORT_WITH_BODY,
     isOpen: true,
     triggerLabel: 'Remover anexo',
     title: 'Remover anexo?',
     description: 'O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.',
-    corpo: `    <DrawerBody class="nds-text-body nds-text-muted-foreground">
+    body: `    <DrawerBody class="nds-text-body nds-text-muted-foreground">
       <p>Confirme a ação para prosseguir. Esta operação pode ser desfeita depois.</p>
     </DrawerBody>`,
     actionLabel: 'Remover',
@@ -188,13 +188,13 @@ export function drawerWithConfirmSource(): string {
  * ele quem cede altura — o rodapé com as ações continua visível.
  */
 export function drawerWithScrollSource(): string {
-  return painel({
+  return panel({
     imports: IMPORT_WITH_BODY,
     isOpen: true,
     triggerLabel: 'Ler termos',
     title: 'Termos de uso',
     description: 'Leia atentamente antes de aceitar.',
-    corpo: `    <DrawerBody class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
+    body: `    <DrawerBody class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
       <p>Parágrafo 1: conteúdo extenso o bastante para o corpo passar da altura do painel.</p>
       <p>Parágrafo 2: quem rola é o corpo, e o rodapé continua alcançável.</p>
     </DrawerBody>`,

@@ -109,32 +109,32 @@ export const Playground: Story = {
     setup() {
       // O estado da página vive aqui, como em qualquer consumidor: a faixa não
       // guarda página atual. `key` no root remonta quando os controls mudam.
-      const atual = ref(args.defaultPage);
+      const current = ref(args.defaultPage);
       const totalPages = Math.ceil(args.total / args.itemsPerPage);
       const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
       const irTo = (n: number) => {
         if (n < 1 || n > totalPages) return;
-        atual.value = n;
+        current.value = n;
         args.onPageChange(n);
       };
-      return { args, atual, pages, totalPages, irTo };
+      return { args, current, pages, totalPages, irTo };
     },
     template: `
       <Pagination
         :key="String(args.total) + String(args.itemsPerPage) + String(args.defaultPage)"
         :total="args.total"
         :items-per-page="args.itemsPerPage"
-        :page="atual"
+        :page="current"
       >
         <PaginationContent>
           <PaginationItem>
             <!-- O primitivo já desabilita nos extremos a partir de :page. -->
-            <PaginationPrevious :text="args.textoAnterior" @click="irTo(atual - 1)" />
+            <PaginationPrevious :text="args.textoAnterior" @click="irTo(current - 1)" />
           </PaginationItem>
           <PaginationItem v-for="n in pages" :key="n">
             <PaginationLink
               href="#"
-              :is-active="atual === n"
+              :is-active="current === n"
               :aria-label="\`Ir para página \${n}\`"
               @click.prevent="irTo(n)"
             >
@@ -142,7 +142,7 @@ export const Playground: Story = {
             </PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationNext :text="args.textoProxima" @click="irTo(atual + 1)" />
+            <PaginationNext :text="args.textoProxima" @click="irTo(current + 1)" />
           </PaginationItem>
         </PaginationContent>
       </Pagination>
@@ -189,12 +189,12 @@ export const Playground: Story = {
       // functional.item1 — a story guarda a página, então o passo VOLTA ao
       // valor inicial no fim: o painel Interactions reexecuta a play no mesmo
       // DOM, e sem isso a segunda rodada partiria de outra página.
-      const alvo = args.defaultPage === 1 ? 2 : 1;
+      const target = args.defaultPage === 1 ? 2 : 1;
       (args.onPageChange as unknown as { mockClear: () => void }).mockClear();
-      await userEvent.click(canvas.getByRole('link', { name: `Ir para página ${alvo}` }));
-      await expect(args.onPageChange).toHaveBeenLastCalledWith(alvo);
+      await userEvent.click(canvas.getByRole('link', { name: `Ir para página ${target}` }));
+      await expect(args.onPageChange).toHaveBeenLastCalledWith(target);
       await expect(
-        canvas.getByRole('link', { name: `Ir para página ${alvo}` }),
+        canvas.getByRole('link', { name: `Ir para página ${target}` }),
       ).toHaveAttribute('aria-current', 'page');
 
       await userEvent.click(
@@ -216,9 +216,9 @@ export const Playground: Story = {
       ].filter((el) => !(el as HTMLButtonElement).disabled);
 
       (document.activeElement as HTMLElement | null)?.blur();
-      for (const alvo of esperados) {
+      for (const target of esperados) {
         await userEvent.tab();
-        await expect(alvo).toHaveFocus();
+        await expect(target).toHaveFocus();
       }
     });
   },

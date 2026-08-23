@@ -57,16 +57,16 @@ export const Horizontal: Story = {
       // O CSS decide espessura e cursor pelo eixo do punho. Um grupo horizontal
       // é dividido por uma linha VERTICAL — a inversão é a fonte clássica de
       // erro aqui.
-      const grupo = canvasElement.querySelector<HTMLElement>(SEL_GROUP)!;
+      const group = canvasElement.querySelector<HTMLElement>(SEL_GROUP)!;
       const punho = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-handle"]')!;
       await expect(punho).toHaveAttribute('aria-orientation', 'vertical');
-      await expect(getComputedStyle(grupo).flexDirection).toBe('row');
+      await expect(getComputedStyle(group).flexDirection).toBe('row');
       await expect(punho.getBoundingClientRect().width).toBeLessThan(4);
     });
 
     await step('Os painéis dividem a LARGURA na proporção declarada', async () => {
-      const grupo = canvasElement.querySelector(SEL_GROUP)!;
-      await expect(fracoes(panelsDiretos(grupo))[0]).toBeCloseTo(0.3, 1);
+      const group = canvasElement.querySelector(SEL_GROUP)!;
+      await expect(fracoes(panelsDiretos(group))[0]).toBeCloseTo(0.3, 1);
     });
   },
 };
@@ -91,18 +91,18 @@ export const Vertical: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('Split empilhado: o divisor é uma linha deitada', async () => {
-      const grupo = canvasElement.querySelector<HTMLElement>(SEL_GROUP)!;
+      const group = canvasElement.querySelector<HTMLElement>(SEL_GROUP)!;
       const punho = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-handle"]')!;
       await expect(punho).toHaveAttribute('aria-orientation', 'horizontal');
-      await expect(getComputedStyle(grupo).flexDirection).toBe('column');
+      await expect(getComputedStyle(group).flexDirection).toBe('column');
       await expect(punho.getBoundingClientRect().height).toBeLessThan(4);
     });
 
     await step('Os painéis dividem a ALTURA, e não a largura', async () => {
       // O eixo trocado é invisível numa foto quadrada: os dois painéis
       // apareceriam empilhados de qualquer jeito e só a proporção denunciaria.
-      const grupo = canvasElement.querySelector(SEL_GROUP)!;
-      await expect(fracoes(panelsDiretos(grupo), 'vertical')[0]).toBeCloseTo(0.4, 1);
+      const group = canvasElement.querySelector(SEL_GROUP)!;
+      await expect(fracoes(panelsDiretos(group), 'vertical')[0]).toBeCloseTo(0.4, 1);
     });
   },
 };
@@ -133,9 +133,9 @@ export const Nested: Story = {
     await step('Cada grupo governa só os próprios painéis', async () => {
       // O grupo de dentro é outro grupo: os painéis dele não podem entrar na
       // conta do de fora, senão um ajuste move os dois layouts ao mesmo tempo.
-      const grupos = [...canvasElement.querySelectorAll(SEL_GROUP)];
-      await expect(grupos).toHaveLength(2);
-      for (const g of grupos) await expect(panelsDiretos(g)).toHaveLength(2);
+      const groups = [...canvasElement.querySelectorAll(SEL_GROUP)];
+      await expect(groups).toHaveLength(2);
+      for (const g of groups) await expect(panelsDiretos(g)).toHaveLength(2);
     });
 
     await step('O divisor de dentro tem o eixo do grupo de dentro', async () => {
@@ -148,9 +148,9 @@ export const Nested: Story = {
     });
 
     await step('E as proporções de cada grupo são independentes', async () => {
-      const grupos = [...canvasElement.querySelectorAll(SEL_GROUP)];
-      await expect(fracoes(panelsDiretos(grupos[0]))[0]).toBeCloseTo(0.3, 1);
-      await expect(fracoes(panelsDiretos(grupos[1]), 'vertical')[0]).toBeCloseTo(0.6, 1);
+      const groups = [...canvasElement.querySelectorAll(SEL_GROUP)];
+      await expect(fracoes(panelsDiretos(groups[0]))[0]).toBeCloseTo(0.3, 1);
+      await expect(fracoes(panelsDiretos(groups[1]), 'vertical')[0]).toBeCloseTo(0.6, 1);
     });
   },
 };

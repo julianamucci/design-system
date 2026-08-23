@@ -70,7 +70,7 @@ export function lerAba(aba: HTMLElement): AbaAttrs {
  */
 export interface AbaAnnouncement {
   papel: string | null;
-  nome: string;
+  name: string;
   /** A aba pode receber foco? Botão nativo desabilitado não pode. */
   alcancavel: boolean;
   /** Existe estado de desabilitado exposto à árvore de acessibilidade? */
@@ -82,7 +82,7 @@ export function abaAnnouncement(aba: HTMLElement): AbaAnnouncement {
   const a = lerAba(aba);
   return {
     papel: a.role,
-    nome: a.accessibleName,
+    name: a.accessibleName,
     // `disabled` nativo vence tudo: o elemento não é focável nem por script.
     alcancavel: !a.disabledNativo,
     // O `disabled` nativo TAMBÉM é anunciado — quando alcançado. O ponto é que
@@ -95,10 +95,10 @@ export function abaAnnouncement(aba: HTMLElement): AbaAnnouncement {
 // ─── Medição completa da aba desabilitada ─────────────────────────────────────
 
 export interface AbaDesabilitadaMeasurement {
-  atributos: AbaAttrs;
+  attrs: AbaAttrs;
   anuncio: AbaAnnouncement;
   /** Está esmaecida? (a WCAG isenta controle inativo, mas o desenho promete.) */
-  opacidade: number;
+  opacity: number;
   pointerEvents: string;
   /** A seta partindo da aba anterior pousou NELA? */
   arrowAlcanca: boolean;
@@ -126,15 +126,15 @@ export interface AbaDesabilitadaMeasurement {
 }
 
 /** Texto do painel visível — é o efeito que prova ativação, não o atributo. */
-function panelVisible(raiz: HTMLElement): string {
-  const painel = Array.from(
-    raiz.querySelectorAll<HTMLElement>('[role="tabpanel"]'),
+function panelVisible(root: HTMLElement): string {
+  const panel = Array.from(
+    root.querySelectorAll<HTMLElement>('[role="tabpanel"]'),
   ).find((p) => !p.hasAttribute('hidden'));
-  return (painel?.textContent ?? '').trim();
+  return (panel?.textContent ?? '').trim();
 }
 
-function abas(raiz: HTMLElement): HTMLElement[] {
-  return Array.from(raiz.querySelectorAll<HTMLElement>('[role="tab"]'));
+function abas(root: HTMLElement): HTMLElement[] {
+  return Array.from(root.querySelectorAll<HTMLElement>('[role="tab"]'));
 }
 
 /**
@@ -150,11 +150,11 @@ function abas(raiz: HTMLElement): HTMLElement[] {
  * @param acoes teclado e ponteiro da stack
  */
 export async function measureAbaDesabilitada(
-  raiz: HTMLElement,
+  root: HTMLElement,
   nomeDesabilitada: string,
   actions: Actions,
 ): Promise<AbaDesabilitadaMeasurement> {
-  const all = abas(raiz);
+  const all = abas(root);
   const idx = all.findIndex(
     (a) => (a.getAttribute('aria-label') || a.textContent || '').trim() === nomeDesabilitada,
   );
@@ -165,12 +165,12 @@ export async function measureAbaDesabilitada(
         all.map((a) => (a.textContent ?? '').trim()).join(' | '),
     );
   }
-  const alvo = all[idx];
+  const target = all[idx];
   const previous = all[idx - 1];
-  const estilo = getComputedStyle(alvo);
-  const doc = raiz.ownerDocument;
+  const estilo = getComputedStyle(target);
+  const doc = root.ownerDocument;
 
-  const origemPanel = panelVisible(raiz);
+  const origemPanel = panelVisible(root);
 
   // ── A seta alcança? ────────────────────────────────────────────────────────
   // Parte SEMPRE da aba anterior, focada por script: o que se mede aqui é o
@@ -178,39 +178,39 @@ export async function measureAbaDesabilitada(
   previous.focus();
   await actions.apertar('{ArrowRight}');
   const pousou = doc.activeElement as HTMLElement | null;
-  const arrowAlcanca = pousou === alvo;
+  const arrowAlcanca = pousou === target;
   const arrowPousouIn = pousou ? (pousou.getAttribute('aria-label') || pousou.textContent || '').trim() : null;
 
   // ── O foco sozinho ativa? (ativação automática) ────────────────────────────
-  const focusAtivou = arrowAlcanca ? panelVisible(raiz) !== origemPanel : null;
+  const focusAtivou = arrowAlcanca ? panelVisible(root) !== origemPanel : null;
 
   // ── Restaura o painel de origem antes de medir o clique ────────────────────
   const startVoltar = async () => {
-    if (panelVisible(raiz) === origemPanel) return;
+    if (panelVisible(root) === origemPanel) return;
     previous.focus();
     await actions.apertar('{ArrowLeft}');
     // Se a seta não resolveu, o clique na aba anterior resolve.
-    if (panelVisible(raiz) !== origemPanel) await actions.click(previous);
+    if (panelVisible(root) !== origemPanel) await actions.click(previous);
   };
   await startVoltar();
 
   // ── O clique ativa? ────────────────────────────────────────────────────────
-  await actions.click(alvo);
-  const clickAtivou = panelVisible(raiz) !== origemPanel;
+  await actions.click(target);
+  const clickAtivou = panelVisible(root) !== origemPanel;
   await startVoltar();
 
   // ── Enter e Espaço ativam? ─────────────────────────────────────────────────
   let enterAtivou: boolean | null = null;
   let espacoAtivou: boolean | null = null;
-  alvo.focus();
-  if (doc.activeElement === alvo) {
+  target.focus();
+  if (doc.activeElement === target) {
     await actions.apertar('{Enter}');
-    enterAtivou = panelVisible(raiz) !== origemPanel;
+    enterAtivou = panelVisible(root) !== origemPanel;
     await startVoltar();
 
-    alvo.focus();
+    target.focus();
     await actions.apertar(' ');
-    espacoAtivou = panelVisible(raiz) !== origemPanel;
+    espacoAtivou = panelVisible(root) !== origemPanel;
     await startVoltar();
   }
 
@@ -219,8 +219,8 @@ export async function measureAbaDesabilitada(
   let seguiuTo: string | null = null;
   const seguinte = all[idx + 1];
   if (seguinte) {
-    alvo.focus();
-    if (doc.activeElement === alvo) {
+    target.focus();
+    if (doc.activeElement === target) {
       await actions.apertar('{ArrowRight}');
       const parou = doc.activeElement as HTMLElement | null;
       arrowSegueAdiante = parou === seguinte;
@@ -232,9 +232,9 @@ export async function measureAbaDesabilitada(
   (doc.activeElement as HTMLElement | null)?.blur();
 
   return {
-    atributos: lerAba(alvo),
-    anuncio: abaAnnouncement(alvo),
-    opacidade: Number(estilo.opacity),
+    attrs: lerAba(target),
+    anuncio: abaAnnouncement(target),
+    opacity: Number(estilo.opacity),
     pointerEvents: estilo.pointerEvents,
     arrowAlcanca,
     arrowPousouIn,
@@ -255,10 +255,10 @@ export async function measureAbaDesabilitada(
  */
 export function desviosDaAbaDesabilitada(m: AbaDesabilitadaMeasurement): string[] {
   const desvios: string[] = [];
-  if (m.atributos.disabledNativo)
+  if (m.attrs.disabledNativo)
     desvios.push('emite `disabled` nativo — a aba sai do alcance da seta e do leitor de tela');
-  if (m.atributos.ariaDisabled !== 'true')
-    desvios.push(`aria-disabled=${JSON.stringify(m.atributos.ariaDisabled)} (esperado "true")`);
+  if (m.attrs.ariaDisabled !== 'true')
+    desvios.push(`aria-disabled=${JSON.stringify(m.attrs.ariaDisabled)} (esperado "true")`);
   if (!m.arrowAlcanca)
     desvios.push(`a seta não alcança a aba (pousou em ${JSON.stringify(m.arrowPousouIn)})`);
   if (!m.anuncio.anunciadaComoDesabilitada)
@@ -294,7 +294,7 @@ export interface TrackBox {
   /** Altura do `.nds-tabs-list`. */
   track: number;
   /** Altura do gatilho mais alto. */
-  gatilho: number;
+  trigger: number;
   /** Respiro somado do trilho (topo + base). */
   respiro: number;
   /**
@@ -304,8 +304,8 @@ export interface TrackBox {
   folga: number;
 }
 
-function trackOf(raiz: HTMLElement): HTMLElement {
-  const el = raiz.querySelector<HTMLElement>('.nds-tabs-list');
+function trackOf(root: HTMLElement): HTMLElement {
+  const el = root.querySelector<HTMLElement>('.nds-tabs-list');
   if (!el) throw new Error('SONDA: nenhum .nds-tabs-list em cena');
   return el;
 }
@@ -313,18 +313,18 @@ function trackOf(raiz: HTMLElement): HTMLElement {
 const arred = (n: number) => Math.round(n * 100) / 100;
 
 /** Lê a caixa do trilho e do gatilho mais alto, no estado atual do documento. */
-export function trackMeasureBox(raiz: HTMLElement): TrackBox {
-  const lista = trackOf(raiz);
-  const cs = getComputedStyle(lista);
+export function trackMeasureBox(root: HTMLElement): TrackBox {
+  const list = trackOf(root);
+  const cs = getComputedStyle(list);
   const respiro = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
-  const triggers = Array.from(lista.querySelectorAll<HTMLElement>('[role="tab"]'));
-  const gatilho = Math.max(...triggers.map((g) => g.getBoundingClientRect().height));
-  const track = lista.getBoundingClientRect().height;
+  const triggers = Array.from(list.querySelectorAll<HTMLElement>('[role="tab"]'));
+  const trigger = Math.max(...triggers.map((g) => g.getBoundingClientRect().height));
+  const track = list.getBoundingClientRect().height;
   return {
     track: arred(track),
-    gatilho: arred(gatilho),
+    trigger: arred(trigger),
     respiro: arred(respiro),
-    folga: arred(track - respiro - gatilho),
+    folga: arred(track - respiro - trigger),
   };
 }
 
@@ -352,21 +352,21 @@ export interface TrackCrescimento {
  * 3. um gatilho empurrado para além da caixa atual — o estímulo que distingue
  *    respiro de altura cravada.
  */
-export function trackMeasureCrescimento(raiz: HTMLElement): TrackCrescimento {
-  const lista = trackOf(raiz);
-  const html = raiz.ownerDocument.documentElement;
+export function trackMeasureCrescimento(root: HTMLElement): TrackCrescimento {
+  const list = trackOf(root);
+  const html = root.ownerDocument.documentElement;
   const fonteOriginal = html.style.fontSize;
-  const gatilho = lista.querySelector<HTMLElement>('[role="tab"]')!;
-  const minOriginal = gatilho.style.minHeight;
-  const reflow = () => void raiz.offsetHeight;
+  const trigger = list.querySelector<HTMLElement>('[role="tab"]')!;
+  const minOriginal = trigger.style.minHeight;
+  const reflow = () => void root.offsetHeight;
 
   try {
-    const normal = trackMeasureBox(raiz);
+    const normal = trackMeasureBox(root);
 
     const emPx = parseFloat(getComputedStyle(html).fontSize) || 16;
     html.style.fontSize = `${emPx * 2}px`;
     reflow();
-    const dobrada = trackMeasureBox(raiz);
+    const dobrada = trackMeasureBox(root);
 
     if (fonteOriginal) html.style.fontSize = fonteOriginal;
     else html.style.removeProperty('font-size');
@@ -375,9 +375,9 @@ export function trackMeasureCrescimento(raiz: HTMLElement): TrackCrescimento {
     // O empurrão parte da caixa MEDIDA, não de um número escrito à mão: assim
     // ele continua sendo "mais alto que o trilho" em qualquer densidade, tema
     // ou família de fonte.
-    gatilho.style.minHeight = `${normal.track + 8}px`;
+    trigger.style.minHeight = `${normal.track + 8}px`;
     reflow();
-    const empurrado = trackMeasureBox(raiz);
+    const empurrado = trackMeasureBox(root);
 
     return {
       normal,
@@ -389,8 +389,8 @@ export function trackMeasureCrescimento(raiz: HTMLElement): TrackCrescimento {
   } finally {
     if (fonteOriginal) html.style.fontSize = fonteOriginal;
     else html.style.removeProperty('font-size');
-    if (minOriginal) gatilho.style.minHeight = minOriginal;
-    else gatilho.style.removeProperty('min-height');
+    if (minOriginal) trigger.style.minHeight = minOriginal;
+    else trigger.style.removeProperty('min-height');
     reflow();
   }
 }
@@ -419,9 +419,9 @@ export function boxDoTrackDesvios(m: TrackCrescimento): string[] {
     );
   if (m.normal.folga < 0)
     d.push(`o gatilho já vaza para fora do trilho em repouso (folga ${m.normal.folga}px)`);
-  if (m.normal.gatilho < TARGET_MINIMUM_PX)
+  if (m.normal.trigger < TARGET_MINIMUM_PX)
     d.push(
-      `alvo de toque do gatilho em ${m.normal.gatilho}px, abaixo dos ${TARGET_MINIMUM_PX}px da WCAG 2.5.8`,
+      `alvo de toque do gatilho em ${m.normal.trigger}px, abaixo dos ${TARGET_MINIMUM_PX}px da WCAG 2.5.8`,
     );
   return d;
 }
@@ -432,6 +432,6 @@ export function boxDoTrackDesvios(m: TrackCrescimento): string[] {
  * `console.log` NÃO chega ao terminal — o addon do Storybook instrumenta o
  * console dentro da `play`. A exceção chega.
  */
-export function relatar(stack: string, cenario: string, dados: unknown): never {
-  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(dados)}`);
+export function relatar(stack: string, cenario: string, data: unknown): never {
+  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(data)}`);
 }

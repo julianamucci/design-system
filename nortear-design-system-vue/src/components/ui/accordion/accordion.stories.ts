@@ -125,11 +125,11 @@ export const Playground: Story = {
     // o resultado e a asserção seguinte falha. É o que fazia este Playground
     // passar no vitest (montagem limpa) e falhar no painel Interactions, onde
     // o replay reaproveita o componente já mexido.
-    const abrir = async (t: HTMLElement) => {
+    const open = async (t: HTMLElement) => {
       if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
       await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
     };
-    const fechar = async (t: HTMLElement) => {
+    const close = async (t: HTMLElement) => {
       if (t.getAttribute('aria-expanded') !== 'false') await userEvent.click(t);
       await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'false'));
     };
@@ -145,7 +145,7 @@ export const Playground: Story = {
     // vale na montagem, é provado pela story DefaultOpen, com DOM limpo.
     await step('Modo único mantém um item aberto por vez', async () => {
       const triggers = canvas.getAllByRole('button');
-      await abrir(triggers[0]);
+      await open(triggers[0]);
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
       await expect(triggers[2]).toHaveAttribute('aria-expanded', 'false');
     });
@@ -154,8 +154,8 @@ export const Playground: Story = {
       const triggers = canvas.getAllByRole('button');
       // fecha antes de abrir: garante que o clique aconteça de verdade nesta
       // rodada — é ele que popula a aba Actions.
-      await fechar(triggers[1]);
-      await abrir(triggers[1]);
+      await close(triggers[1]);
+      await open(triggers[1]);
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
       await expect(args['onUpdate:modelValue']).toHaveBeenCalled();
     });
@@ -186,7 +186,7 @@ export const Playground: Story = {
 
     await step('Enter expande item focado', async () => {
       const triggers = canvas.getAllByRole('button');
-      await fechar(triggers[2]);
+      await close(triggers[2]);
       triggers[2].focus();
       await expect(triggers[2]).toHaveFocus();
       await userEvent.keyboard('{Enter}');
@@ -195,7 +195,7 @@ export const Playground: Story = {
 
     await step('Space colapsa item aberto', async () => {
       const triggers = canvas.getAllByRole('button');
-      await abrir(triggers[2]);
+      await open(triggers[2]);
       triggers[2].focus();
       await userEvent.keyboard(' ');
       await waitFor(() => expect(triggers[2]).toHaveAttribute('aria-expanded', 'false'));
@@ -206,7 +206,7 @@ export const Playground: Story = {
       // Medido com o item ABERTO: onde o painel desmonta ao fechar, apontar
       // aria-controls para id ausente seria ARIA inválido.
       const trigger = canvas.getAllByRole('button')[0];
-      await abrir(trigger);
+      await open(trigger);
       const contentId = trigger.getAttribute('aria-controls');
       await expect(contentId).toBeTruthy();
       const panel = canvasElement.querySelector(`#${CSS.escape(contentId!)}`);
@@ -223,8 +223,8 @@ export const Playground: Story = {
       // O display computado entra na asserção de propósito: uma regra de autor
       // com `display: none` anula o recurso sem quebrar nada visível.
       const trigger = canvas.getAllByRole('button')[0];
-      await abrir(trigger);
-      await fechar(trigger);
+      await open(trigger);
+      await close(trigger);
       const panel = await waitFor(() => {
         const el = canvasElement.querySelector<HTMLElement>('[data-slot="accordion-content"]');
         if (!el || el.getAttribute('hidden') === null) throw new Error('painel ainda fechando');

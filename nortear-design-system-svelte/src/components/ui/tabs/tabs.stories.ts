@@ -130,10 +130,10 @@ export const Playground: Story = {
     await step('Aba e painel se apontam de verdade', async () => {
       // Par cruzado: já achamos `aria-controls` apontando para um id que não
       // existia. Assere os dois lados, não presuma.
-      const painel = canvas.getByRole('tabpanel');
-      await expect(painel).toHaveTextContent('Conteúdo da visão geral');
-      await expect(painel.getAttribute('aria-labelledby')).toBe(visaoGeral.id);
-      await expect(visaoGeral.getAttribute('aria-controls')).toBe(painel.id);
+      const panel = canvas.getByRole('tabpanel');
+      await expect(panel).toHaveTextContent('Conteúdo da visão geral');
+      await expect(panel.getAttribute('aria-labelledby')).toBe(visaoGeral.id);
+      await expect(visaoGeral.getAttribute('aria-controls')).toBe(panel.id);
     });
 
     await step('Só a aba ativa é parada de tabulação (roving tabindex)', async () => {

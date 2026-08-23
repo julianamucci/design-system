@@ -82,9 +82,9 @@ const { t, dict } = useTranslation(sliderTranslations as Record<string, unknown>
  * slider não tem nav.compositions. Sem a queda, o que aparece na barra
  * lateral é a chave crua.
  */
-function navLabel(chave: string): string {
-  const doComponente = t(chave);
-  return doComponente === chave ? tNav(chave) : doComponente;
+function navLabel(key: string): string {
+  const doComponente = t(key);
+  return doComponente === key ? tNav(key) : doComponente;
 }
 
 const SECTION_IDS = [
@@ -442,8 +442,8 @@ export class NdsSliderDocs implements AfterViewInit, OnDestroy {
    */
   protected readonly rotulosDaFaixa = computed(() => {
     dict();
-    const faixa = t('demonstration.labels.priceRange');
-    return [`${faixa} — ${tNav('common.min')}`, `${faixa} — ${tNav('common.max')}`];
+    const range = t('demonstration.labels.priceRange');
+    return [`${range} — ${tNav('common.min')}`, `${range} — ${tNav('common.max')}`];
   });
 
   protected readonly navGroups = computed(() => {
@@ -583,9 +583,9 @@ export class NdsSliderDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const line = (name: string, key: string, tipo: string, padrao: string) => ({
+    const line = (name: string, key: string, type: string, padrao: string) => ({
       name,
-      type: tipo,
+      type: type,
       defaultValue: padrao,
       required: not,
       description: toPlainText(t(`props.table.${key}.description`)),
@@ -638,16 +638,16 @@ export class NdsSliderDocs implements AfterViewInit, OnDestroy {
     // realmente pinta, e duas linhas usam `--primary` (o trilho, a 20%, e a
     // borda da alça). Derivar o nome da chave voltaria a inventar token.
     return [
-      { chave: 'track', token: '--primary / 0.2' },
-      { chave: 'range', token: '--primary' },
-      { chave: 'thumbBorder', token: '--primary' },
-      { chave: 'thumbBackground', token: '--background' },
-      { chave: 'focusRing', token: '--ring' },
-      { chave: 'radius', token: '--radius-full' },
-    ].map(({ chave, token }) => ({
+      { key: 'track', token: '--primary / 0.2' },
+      { key: 'range', token: '--primary' },
+      { key: 'thumbBorder', token: '--primary' },
+      { key: 'thumbBackground', token: '--background' },
+      { key: 'focusRing', token: '--ring' },
+      { key: 'radius', token: '--radius-full' },
+    ].map(({ key, token }) => ({
       token,
-      value: toPlainText(t(`tokens.table.${chave}.class`)),
-      description: toPlainText(t(`tokens.table.${chave}.part`)),
+      value: toPlainText(t(`tokens.table.${key}.class`)),
+      description: toPlainText(t(`tokens.table.${key}.part`)),
     }));
   });
 
@@ -655,11 +655,11 @@ export class NdsSliderDocs implements AfterViewInit, OnDestroy {
     const d = dict();
     // A seção genérica não tem faixa própria para ARIA; as duas listas dizem a
     // mesma coisa em graus diferentes de detalhe, então saem juntas.
-    const itens = Object.keys(d).filter((k) => /^accessibility\.items\.item\d+$/.test(k)).sort().map((k) => d[k]);
+    const items = Object.keys(d).filter((k) => /^accessibility\.items\.item\d+$/.test(k)).sort().map((k) => d[k]);
     const aria = ['role', 'valuenow', 'valuemin', 'valuemax', 'orientation'].map((k) =>
       t(`accessibility.aria.${k}`),
     );
-    return [...itens, ...aria];
+    return [...items, ...aria];
   });
 
   protected readonly keyboardItems = computed(() => {
@@ -742,7 +742,7 @@ export class NdsSliderDocs implements AfterViewInit, OnDestroy {
   protected readonly testesAccessibility = computed(() => {
     const d = dict();
     // Aqui os itens são string solta, não a trinca criterion/level/how.
-    const itens = Object.keys(d)
+    const items = Object.keys(d)
       .filter((k) => /^testes\.accessibility\.item\d+$/.test(k))
       .sort()
       .map((k) => ({ criterion: toPlainText(d[k]), level: '', how: '' }));
@@ -750,7 +750,7 @@ export class NdsSliderDocs implements AfterViewInit, OnDestroy {
       title: t('testes.accessibility.title'),
       description: t('testes.accessibility.description'),
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-      items: itens,
+      items: items,
     };
   });
 

@@ -121,7 +121,7 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /Salvar/i });
+    const trigger = canvas.getByRole('button', { name: /Salvar/i });
     const spy = args['onUpdate:open'] as ReturnType<typeof fn>;
 
     await step('O gatilho é um botão nativo, alcançável por teclado', async () => {
@@ -129,21 +129,21 @@ export const Playground: Story = {
       // `data-slot="tooltip"` que o Vanilla põe no wrapper não existe aqui, e o
       // `data-slot` do gatilho é o do Button. O que o contrato cobra em todas as
       // stacks é o `data-slot="tooltip-content"` no balão, verificado abaixo.
-      await expect(gatilho.tagName).toBe('BUTTON');
-      await expect(gatilho).toBeVisible();
+      await expect(trigger.tagName).toBe('BUTTON');
+      await expect(trigger).toBeVisible();
     });
 
     await step('O gatilho icon-only tem nome acessível próprio', async () => {
       // O Tooltip é complementar: em touch não há hover, e sem o aria-label o
       // botão ficaria anônimo para quem não usa mouse.
-      await expect(gatilho).toHaveAttribute('aria-label', 'Salvar');
+      await expect(trigger).toHaveAttribute('aria-label', 'Salvar');
     });
 
     await step('Fechado, não há describedby apontando para o vazio', async () => {
       // `aria-describedby` para um id ausente é violação de
       // `aria-valid-attr-value` — o mesmo axe que roda no addon-a11y da story.
       if (!args.defaultOpen) {
-        await expect(gatilho.getAttribute('aria-describedby')).toBeNull();
+        await expect(trigger.getAttribute('aria-describedby')).toBeNull();
       }
     });
 
@@ -152,16 +152,16 @@ export const Playground: Story = {
       // Escape do último passo não tira o foco), e `focus()` num elemento já
       // focado não dispara evento nenhum — o balão nunca reabriria.
       const callsBefore = spy.mock.calls.length;
-      gatilho.blur();
-      gatilho.focus();
+      trigger.blur();
+      trigger.focus();
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
       await expect(spy.mock.calls.length).toBeGreaterThan(callsBefore);
     });
 
     await step('Aberto, o balão é um role=tooltip ligado ao gatilho', async () => {
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       await expect(balao).toHaveAttribute('role', 'tooltip');
       await expect(balao).toHaveAttribute('data-slot', 'tooltip-content');
       await expect(balao.textContent).toContain('Salvar (Ctrl+S)');
@@ -176,20 +176,20 @@ export const Playground: Story = {
       // É o gancho que o CSS compartilhado lê. Auto-flip por colisão pode
       // devolver o lado oposto quando falta espaço — comportamento, não defeito.
       const oposto = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' } as const;
-      const lado = ((args as { side?: keyof typeof oposto }).side ?? 'top');
+      const side = ((args as { side?: keyof typeof oposto }).side ?? 'top');
       await waitFor(async () => {
-        await expect(sideOf(balaoDe(gatilho))).toBeTruthy();
+        await expect(sideOf(balaoDe(trigger))).toBeTruthy();
       });
-      await expect([lado, oposto[lado]]).toContain(sideOf(balaoDe(gatilho)));
+      await expect([side, oposto[side]]).toContain(sideOf(balaoDe(trigger)));
     });
 
     await step('Escape fecha e o foco fica onde estava', async () => {
       await userEvent.keyboard('{Escape}');
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).toBeNull();
+        await expect(balaoDe(trigger)).toBeNull();
       });
-      await expect(gatilho).toHaveFocus();
-      await expect(gatilho.getAttribute('aria-describedby')).toBeNull();
+      await expect(trigger).toHaveFocus();
+      await expect(trigger.getAttribute('aria-describedby')).toBeNull();
     });
   },
 };

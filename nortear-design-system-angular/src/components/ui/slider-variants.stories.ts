@@ -16,10 +16,10 @@ export default meta;
 type Story = StoryObj;
 
 /** Largura preenchida do range, em % do trilho. Mede o desenho, não o dado. */
-function preenchimento(raiz: HTMLElement): number {
-  const track = raiz.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
-  const faixa = raiz.querySelector<HTMLElement>('[data-slot="slider-range"]')!;
-  return Math.round((faixa.getBoundingClientRect().width / track.getBoundingClientRect().width) * 100);
+function preenchimento(root: HTMLElement): number {
+  const track = root.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
+  const range = root.querySelector<HTMLElement>('[data-slot="slider-range"]')!;
+  return Math.round((range.getBoundingClientRect().width / track.getBoundingClientRect().width) * 100);
 }
 
 export const Types: Story = {
@@ -81,8 +81,8 @@ export const Types: Story = {
     });
 
     await step('step=5 arredonda o passo, não o valor inicial', async () => {
-      const passo = canvasElement.querySelector<HTMLElement>('[data-testid="passo"]')!;
-      const input = passo.querySelector<HTMLInputElement>('[data-slot="slider-thumb"] > input')!;
+      const step = canvasElement.querySelector<HTMLElement>('[data-testid="passo"]')!;
+      const input = step.querySelector<HTMLInputElement>('[data-slot="slider-thumb"] > input')!;
       await expect(input.step).toBe('5');
     });
   },
@@ -106,8 +106,8 @@ export const Vertical: Story = {
 
     await step('O trilho fica em pé', async () => {
       const track = canvasElement.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
-      const caixa = track.getBoundingClientRect();
-      await expect(caixa.height).toBeGreaterThan(caixa.width);
+      const box = track.getBoundingClientRect();
+      await expect(box.height).toBeGreaterThan(box.width);
     });
 
     await step('ArrowUp incrementa no eixo vertical', async () => {

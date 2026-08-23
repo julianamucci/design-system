@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { TooltipSide } from './tooltip';
@@ -39,14 +39,14 @@ export type TooltipSnippetOptions = {
 
 /** A chamada real de `createTooltip` (ou do provedor) com as opções da story. */
 export function tooltipSnippet(o: TooltipSnippetOptions = {}): string {
-  const rotulo = o.triggerLabel ?? 'Salvar';
-  const conteudo = o.content ?? 'Salvar (Ctrl+S)';
+  const label = o.triggerLabel ?? 'Salvar';
+  const content = o.content ?? 'Salvar (Ctrl+S)';
   const withProvider = Boolean(o.provider);
 
-  const lines = opcoes([
+  const lines = options([
     ['trigger', 'gatilho'],
-    ['content', o.contentComMarcacao ? 'conteudo' : texto(conteudo)],
-    ['side', o.side && o.side !== 'top' ? texto(o.side) : undefined],
+    ['content', o.contentComMarcacao ? 'conteudo' : text(content)],
+    ['side', o.side && o.side !== 'top' ? text(o.side) : undefined],
     // Sem provedor, a espera é por balão; com provedor, o padrão vem do grupo.
     ['delayDuration', !withProvider && o.delayDuration ? String(o.delayDuration) : undefined],
     ['onShow', o.onShow],
@@ -55,7 +55,7 @@ export function tooltipSnippet(o: TooltipSnippetOptions = {}): string {
   const fabrica = withProvider ? 'grupo.createTooltip' : 'createTooltip';
 
   const linesProvider = o.provider
-    ? opcoes([
+    ? options([
         ['delayDuration', o.provider.delayDuration ? String(o.provider.delayDuration) : undefined],
         ['skipDelayDuration', o.provider.skipDelayDuration !== undefined ? String(o.provider.skipDelayDuration) : undefined],
       ])
@@ -69,16 +69,16 @@ export function tooltipSnippet(o: TooltipSnippetOptions = {}): string {
     withProvider
       ? `// O provedor guarda a espera do grupo: o balão seguinte abre na hora\n// enquanto a janela de dispensa dura.\nconst grupo = ${chamada('createTooltipProvider', linesProvider)};`
       : undefined,
-    `const gatilho = ${chamada('createButton', opcoes([
-      ['variant', texto(o.triggerVariant ?? 'outline')],
-      ['size', o.triggerSize ? texto(o.triggerSize) : undefined],
-      ['label', texto(rotulo)],
-      ['aria-label', o.triggerAriaLabel ? texto(o.triggerAriaLabel) : undefined],
+    `const gatilho = ${chamada('createButton', options([
+      ['variant', text(o.triggerVariant ?? 'outline')],
+      ['size', o.triggerSize ? text(o.triggerSize) : undefined],
+      ['label', text(label)],
+      ['aria-label', o.triggerAriaLabel ? text(o.triggerAriaLabel) : undefined],
     ]))};`,
     o.contentComMarcacao
       ? `// Marcação entra como ELEMENTO já montado, nunca como HTML em string.
 const conteudo = document.createElement('span');
-conteudo.append(${texto(conteudo + ' ')});
+conteudo.append(${text(content + ' ')});
 const tecla = document.createElement('kbd');
 tecla.textContent = 'Ctrl+S';
 conteudo.appendChild(tecla);`

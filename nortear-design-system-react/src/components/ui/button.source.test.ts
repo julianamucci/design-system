@@ -123,8 +123,8 @@ describe('tamanhos', () => {
       'icon-sm': buttonIconSmSource(),
       'icon-lg': buttonIconLgSource(),
     };
-    for (const [tamanho, saida] of Object.entries(bySize)) {
-      expect(saida).toContain(`size="${tamanho}"`);
+    for (const [size, saida] of Object.entries(bySize)) {
+      expect(saida).toContain(`size="${size}"`);
       // Sem texto dentro, quem nomeia é o aria-label e o ícone sai da árvore de
       // acessibilidade — as duas coisas juntas, ou o botão fica sem nome.
       expect(saida).toContain('aria-label="Adicionar item"');

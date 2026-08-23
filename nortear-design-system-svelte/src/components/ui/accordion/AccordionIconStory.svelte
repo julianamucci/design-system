@@ -19,7 +19,7 @@
       </span>
     </AccordionTrigger>
     <AccordionContent>
-      Ícones facilitam a identificação rápida do tipo de conteúdo. Adicione aria-hidden="true" no ícone.
+      Ícones facilitam a identificação rápida do type de conteúdo. Adicione aria-hidden="true" no ícone.
     </AccordionContent>
   </AccordionItem>
   <AccordionItem value="warning">

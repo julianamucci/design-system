@@ -55,8 +55,8 @@ export const Loaded: Story = {
       // caixa. Quem responde por um ponto é o que o leitor de fato vê.
       const root = canvasElement.querySelector<HTMLElement>('[data-slot="avatar"]')!;
       const r = root.getBoundingClientRect();
-      const alvo = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-      await expect(alvo && alvo.closest('[data-slot="avatar-image"]')).not.toBeNull();
+      const target = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      await expect(target && target.closest('[data-slot="avatar-image"]')).not.toBeNull();
     });
   },
 };
@@ -146,8 +146,8 @@ export const Failed: Story = {
     await step('E a foto não está pintada por cima', async () => {
       const root = canvasElement.querySelector<HTMLElement>('[data-slot="avatar"]')!;
       const r = root.getBoundingClientRect();
-      const alvo = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-      await expect(alvo && alvo.closest('[data-slot="avatar-image"]')).toBeNull();
+      const target = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      await expect(target && target.closest('[data-slot="avatar-image"]')).toBeNull();
     });
 
     await step('As iniciais continuam legíveis para o leitor de tela', async () => {

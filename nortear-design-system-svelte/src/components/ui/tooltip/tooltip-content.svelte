@@ -28,10 +28,10 @@
 	// é engolido no caminho e o balão nasce sem id nenhum.
 	// Ver tooltip-descricao.svelte.ts.
 	$effect(() => {
-		const alvo = ref;
+		const target = ref;
 		const identificador = id ?? descricao?.id;
-		if (!alvo || !identificador) return;
-		if (alvo.id !== identificador) alvo.id = identificador;
+		if (!target || !identificador) return;
+		if (target.id !== identificador) target.id = identificador;
 		// Avisar a raiz é o que devolve a vez ao gatilho — sem isto ele escreve
 		// o `aria-describedby` antes de a lib escrever o dela, e perde.
 		descricao?.marcarMontado(true);

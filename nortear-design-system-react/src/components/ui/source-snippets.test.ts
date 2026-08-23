@@ -49,14 +49,14 @@ for (const [caminho, fonte] of Object.entries(fontes)) {
   if (caminho.endsWith('.stories.tsx') || caminho.endsWith('.fixtures.tsx')) continue;
   const slug = caminho.replace(/^\.\//, '').replace(/\.tsx$/, '');
   const names = new Set<string>();
-  for (const [, nome] of fonte.matchAll(/export\s+(?:async\s+)?(?:const|function|class|let)\s+([A-Za-z0-9_$]+)/g)) {
-    names.add(nome);
+  for (const [, name] of fonte.matchAll(/export\s+(?:async\s+)?(?:const|function|class|let)\s+([A-Za-z0-9_$]+)/g)) {
+    names.add(name);
   }
-  for (const [, nome] of fonte.matchAll(/export\s+type\s+([A-Za-z0-9_$]+)/g)) names.add(nome);
-  for (const [, bloco] of fonte.matchAll(/export\s*\{([^}]*)\}/g)) {
-    for (const parte of bloco.split(',')) {
-      const nome = parte.trim().split(/\s+as\s+/).pop()?.trim();
-      if (nome) names.add(nome.replace(/^type\s+/, ''));
+  for (const [, name] of fonte.matchAll(/export\s+type\s+([A-Za-z0-9_$]+)/g)) names.add(name);
+  for (const [, block] of fonte.matchAll(/export\s*\{([^}]*)\}/g)) {
+    for (const parte of block.split(',')) {
+      const name = parte.trim().split(/\s+as\s+/).pop()?.trim();
+      if (name) names.add(name.replace(/^type\s+/, ''));
     }
   }
   slugExportados.set(slug, names);
@@ -95,12 +95,12 @@ const MARCA_SPY = 'ESPIAO_DE_CONTROL_VAZOU';
  * não produz.
  */
 function argsWithSpies(): Record<string, unknown> {
-  const eCallback = (chave: string | symbol) =>
-    typeof chave === 'string' && /^(on|set)[A-Z]/.test(chave);
+  const eCallback = (key: string | symbol) =>
+    typeof key === 'string' && /^(on|set)[A-Z]/.test(key);
   return new Proxy({} as Record<string, unknown>, {
-    get: (_alvo, chave) =>
-      eCallback(chave) ? () => 'ESPIAO_DE_CONTROL_VAZOU' : undefined,
-    has: (_alvo, chave) => eCallback(chave),
+    get: (_alvo, key) =>
+      eCallback(key) ? () => 'ESPIAO_DE_CONTROL_VAZOU' : undefined,
+    has: (_alvo, key) => eCallback(key),
   });
 }
 
@@ -114,14 +114,14 @@ function importesDo(snippet: string): { names: Set<string>; modulos: string[] } 
     const chaves = clausula.match(/\{([\s\S]*)\}/);
     if (chaves) {
       for (const parte of chaves[1].split(',')) {
-        const nome = parte.trim().split(/\s+as\s+/).pop()?.trim();
-        if (nome) names.add(nome.replace(/^type\s+/, ''));
+        const name = parte.trim().split(/\s+as\s+/).pop()?.trim();
+        if (name) names.add(name.replace(/^type\s+/, ''));
       }
     }
     const defaultOuNamespace = clausula.replace(/\{[\s\S]*\}/, '').replace(/^type\s+/, '');
     for (const parte of defaultOuNamespace.split(',')) {
-      const nome = parte.trim().replace(/^\*\s+as\s+/, '');
-      if (nome && /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(nome)) names.add(nome);
+      const name = parte.trim().replace(/^\*\s+as\s+/, '');
+      if (name && /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(name)) names.add(name);
     }
   }
   return { names, modulos };
@@ -130,8 +130,8 @@ function importesDo(snippet: string): { names: Set<string>; modulos: string[] } 
 /** Nomes que o próprio snippet declara — função, const, let, class, parâmetro de map. */
 function declaradosNo(snippet: string): Set<string> {
   const names = new Set<string>();
-  for (const [, nome] of snippet.matchAll(/(?:function|const|let|var|class)\s+([A-Za-z0-9_$]+)/g)) {
-    names.add(nome);
+  for (const [, name] of snippet.matchAll(/(?:function|const|let|var|class)\s+([A-Za-z0-9_$]+)/g)) {
+    names.add(name);
   }
   return names;
 }
@@ -160,7 +160,7 @@ describe('transforms do painel Code', () => {
   for (const caminho of caminhos) {
     const modulo = modulos[caminho];
     const exportadas = Object.entries(modulo).filter(
-      ([, valor]) => typeof valor === 'function',
+      ([, value]) => typeof value === 'function',
     ) as Array<[string, (...args: never[]) => unknown]>;
 
     describe(caminho, () => {
@@ -177,7 +177,7 @@ describe('transforms do painel Code', () => {
       // cobra a forma do nome é este check.
       it('todo export é construtor de snippet ou helper declarado', () => {
         const outside = Object.keys(modulo).filter(
-          (nome) => !/(?:Source|Snippet)$/.test(nome) && !HELPERS.has(nome),
+          (name) => !/(?:Source|Snippet)$/.test(name) && !HELPERS.has(name),
         );
         expect(
           outside,
@@ -185,34 +185,34 @@ describe('transforms do painel Code', () => {
         ).toEqual([]);
       });
 
-      for (const [nome, fn] of exportadas) {
-        it(`${nome} devolve um snippet honesto`, () => {
+      for (const [name, fn] of exportadas) {
+        it(`${name} devolve um snippet honesto`, () => {
           const saida = fn();
-          expect(typeof saida, `${nome} deve devolver string sem receber args`).toBe('string');
-          const texto = saida as string;
-          expect(texto.trim().length).toBeGreaterThan(0);
+          expect(typeof saida, `${name} deve devolver string sem receber args`).toBe('string');
+          const text = saida as string;
+          expect(text.trim().length).toBeGreaterThan(0);
 
           // Docs de cada stack são consumidas isoladamente.
-          expect(texto).not.toMatch(OTHER_STACK);
+          expect(text).not.toMatch(OTHER_STACK);
           // A lib headless é detalhe de implementação: quem lê importa do
           // design system, nunca dela.
-          expect(texto).not.toContain('@base-ui');
+          expect(text).not.toContain('@base-ui');
           // Andaime de story, por forma do nome.
-          expect(texto).not.toMatch(FORMA_SCAFFOLD);
+          expect(text).not.toMatch(FORMA_SCAFFOLD);
           // Módulo que só existe para as stories montarem.
-          expect(texto).not.toContain('fixtures');
+          expect(text).not.toContain('fixtures');
           // O `{...args}` da story não é composição que alguém escreva.
-          expect(texto).not.toContain('{...args}');
+          expect(text).not.toContain('{...args}');
           // Sobra de template literal mal fechado.
-          expect(texto).not.toContain('undefined');
-          expect(texto).not.toContain('[object Object]');
-          expect(texto).not.toContain('NaN');
+          expect(text).not.toContain('undefined');
+          expect(text).not.toContain('[object Object]');
+          expect(text).not.toContain('NaN');
         });
 
-        it(`${nome} só usa peças com origem`, () => {
-          const texto = fn() as string;
-          const { names, modulos: mods } = importesDo(texto);
-          const locais = declaradosNo(texto);
+        it(`${name} só usa peças com origem`, () => {
+          const text = fn() as string;
+          const { names, modulos: mods } = importesDo(text);
+          const locais = declaradosNo(text);
 
           for (const mod of mods) {
             const conhecido =
@@ -221,7 +221,7 @@ describe('transforms do painel Code', () => {
               mod.startsWith('@/hooks/') ||
               dependencias.has(mod) ||
               dependencias.has(mod.split('/').slice(0, mod.startsWith('@') ? 2 : 1).join('/'));
-            expect(conhecido, `${nome}: import de módulo desconhecido "${mod}"`).toBe(true);
+            expect(conhecido, `${name}: import de módulo desconhecido "${mod}"`).toBe(true);
           }
 
           // O `<` de uma tag JSX nunca vem colado a um identificador. O de um
@@ -229,37 +229,37 @@ describe('transforms do painel Code', () => {
           // `Record<string, Foo>`. Sem esta âncora a guarda cobrava import de
           // `Date` — tipo global, que ninguém importa.
           const tags = new Set(
-            [...texto.matchAll(/(?:^|[^A-Za-z0-9_$])<([A-Z][A-Za-z0-9_$]*)/g)].map(([, tag]) => tag),
+            [...text.matchAll(/(?:^|[^A-Za-z0-9_$])<([A-Z][A-Za-z0-9_$]*)/g)].map(([, tag]) => tag),
           );
           for (const tag of tags) {
             if (TAGS_LIVRES.has(tag)) continue;
             const hasOrigem = names.has(tag) || locais.has(tag);
-            expect(hasOrigem, `${nome}: <${tag}> não é importado nem declarado no snippet`).toBe(true);
+            expect(hasOrigem, `${name}: <${tag}> não é importado nem declarado no snippet`).toBe(true);
           }
         });
 
-        it(`${nome} importa só o que o componente exporta`, () => {
-          const texto = fn() as string;
+        it(`${name} importa só o que o componente exporta`, () => {
+          const text = fn() as string;
           // `[^{}]` e não `[\s\S]`: a chave de um import nunca aninha, e a
           // versão gulosa emendava DOIS imports quando o do design system não
           // era o primeiro — lia `useState } from "react"; import { Calendar`
           // como um nome só e reprovava um snippet correto.
           const re = /import\s+(?:type\s+)?\{([^{}]*)\}\s+from\s+["']@\/components\/ui\/([a-z0-9-]+)["']/g;
-          for (const [, clausula, slug] of texto.matchAll(re)) {
+          for (const [, clausula, slug] of text.matchAll(re)) {
             const disponiveis = slugExportados.get(slug);
-            expect(disponiveis, `${nome}: não existe src/components/ui/${slug}.tsx`).toBeDefined();
+            expect(disponiveis, `${name}: não existe src/components/ui/${slug}.tsx`).toBeDefined();
             for (const parte of clausula.split(',')) {
               const importado = parte.trim().split(/\s+as\s+/)[0].replace(/^type\s+/, '').trim();
               if (!importado) continue;
               expect(
                 disponiveis!.has(importado),
-                `${nome}: ${slug} não exporta "${importado}"`,
+                `${name}: ${slug} não exporta "${importado}"`,
               ).toBe(true);
             }
           }
         });
 
-        it(`${nome} não deixa espião de control virar código`, () => {
+        it(`${name} não deixa espião de control virar código`, () => {
           const withSpies = fn(undefined as never, { args: argsWithSpies() } as never);
           expect(typeof withSpies).toBe('string');
           // A arrow function EM SI é legítima num snippet — `onClick={() =>

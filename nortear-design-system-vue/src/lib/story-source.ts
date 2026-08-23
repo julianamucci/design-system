@@ -21,9 +21,9 @@
 export const END_SCRIPT = '</' + 'script>';
 
 /** Indenta cada linha não vazia com `n` espaços. */
-export function indentar(texto: string, n = 2): string {
+export function indentar(text: string, n = 2): string {
   const espacos = ' '.repeat(n);
-  return texto
+  return text
     .split('\n')
     .map((line) => (line.trim() ? `${espacos}${line}` : line))
     .join('\n');
@@ -40,11 +40,11 @@ export function indentar(texto: string, n = 2): string {
  * marcação com classes `.nds-*` e não importa nada.
  */
 export function vueSnippet(script: string, template: string): string {
-  const corpo = script.trim();
+  const body = script.trim();
   const marcacao = indentar(template.trim());
-  const bloco = `<template>\n${marcacao}\n</template>`;
-  if (!corpo) return bloco;
-  return `<script setup lang="ts">\n${corpo}\n${END_SCRIPT}\n\n${bloco}`;
+  const block = `<template>\n${marcacao}\n</template>`;
+  if (!body) return block;
+  return `<script setup lang="ts">\n${body}\n${END_SCRIPT}\n\n${block}`;
 }
 
 /**
@@ -56,8 +56,8 @@ export function vueSnippet(script: string, template: string): string {
  * ruído a quem copia.
  */
 export function attrs(...partes: Array<string | false | null | undefined>): string {
-  const lista = partes.filter((parte): parte is string => Boolean(parte) && parte !== '');
-  return lista.length ? ` ${lista.join(' ')}` : '';
+  const list = partes.filter((parte): parte is string => Boolean(parte) && parte !== '');
+  return list.length ? ` ${list.join(' ')}` : '';
 }
 
 /**
@@ -70,11 +70,11 @@ export function attrsMultilinha(
   indentacao = '  ',
   limit = 60,
 ): string {
-  const lista = partes.filter((parte): parte is string => Boolean(parte) && parte !== '');
-  if (!lista.length) return '';
-  const inLine = lista.join(' ');
+  const list = partes.filter((parte): parte is string => Boolean(parte) && parte !== '');
+  if (!list.length) return '';
+  const inLine = list.join(' ');
   if (inLine.length <= limit) return ` ${inLine}`;
-  return `\n${lista.map((parte) => `${indentacao}${parte}`).join('\n')}\n`;
+  return `\n${list.map((parte) => `${indentacao}${parte}`).join('\n')}\n`;
 }
 
 /**
@@ -88,8 +88,8 @@ export function attrsMultilinha(
  *
  * Toda leitura de `ctx.args` que possa cair num handler passa por aqui.
  */
-export function asCode(valor: unknown): string | undefined {
-  return typeof valor === 'string' && valor.trim() !== '' ? valor : undefined;
+export function asCode(value: unknown): string | undefined {
+  return typeof value === 'string' && value.trim() !== '' ? value : undefined;
 }
 
 /**
@@ -97,8 +97,8 @@ export function asCode(valor: unknown): string | undefined {
  * não trouxer string. Fecha a mesma porta que `asCode`, do lado do texto
  * que o leitor vê renderizado.
  */
-export function texto(valor: unknown, padrao = ''): string {
-  const raw = typeof valor === 'string' ? valor : padrao;
+export function text(value: unknown, padrao = ''): string {
+  const raw = typeof value === 'string' ? value : padrao;
   return raw.replace(/"/g, '&quot;');
 }
 
@@ -106,30 +106,30 @@ export function texto(valor: unknown, padrao = ''): string {
  * Atributo `nome="valor"` — omitido quando o valor não é string útil ou é
  * igual ao padrão do componente.
  */
-export function attr(nome: string, valor: unknown, padrao?: string): string {
-  const raw = asCode(valor);
+export function attr(name: string, value: unknown, padrao?: string): string {
+  const raw = asCode(value);
   if (raw === undefined) return '';
   if (padrao !== undefined && raw === padrao) return '';
-  return `${nome}="${texto(raw)}"`;
+  return `${name}="${text(raw)}"`;
 }
 
 /**
  * Atributo booleano de Vue: `:nome="false"` quando o control desliga algo que
- * nasce ligado, e `nome` puro quando liga algo que nasce desligado.
+ * nasce ligado, e `name` puro quando liga algo que nasce desligado.
  */
-export function attrBool(nome: string, valor: unknown, padrao: boolean): string {
-  if (typeof valor !== 'boolean' || valor === padrao) return '';
-  return valor ? nome : `:${nome}="false"`;
+export function attrBool(name: string, value: unknown, padrao: boolean): string {
+  if (typeof value !== 'boolean' || value === padrao) return '';
+  return value ? name : `:${name}="false"`;
 }
 
 /**
  * Atributo numérico: `:nome="8"`, omitido quando bate com o padrão do
  * componente ou quando o control não trouxe número.
  */
-export function attrNum(nome: string, valor: unknown, padrao?: number): string {
-  if (typeof valor !== 'number' || Number.isNaN(valor)) return '';
-  if (padrao !== undefined && valor === padrao) return '';
-  return `:${nome}="${valor}"`;
+export function attrNum(name: string, value: unknown, padrao?: number): string {
+  if (typeof value !== 'number' || Number.isNaN(value)) return '';
+  if (padrao !== undefined && value === padrao) return '';
+  return `:${name}="${value}"`;
 }
 
 /** Assinatura das transforms: entra o gerado pelo Storybook, sai o snippet. */

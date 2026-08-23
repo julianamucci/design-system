@@ -36,11 +36,11 @@ type Story = StoryObj<typeof meta>;
 
 /** Primeira cor de fundo opaca subindo a árvore — o "ambiente" do controle. */
 function environmentBackground(el: HTMLElement): string {
-  let atual: HTMLElement | null = el.parentElement;
-  while (atual) {
-    const cor = getComputedStyle(atual).backgroundColor;
+  let current: HTMLElement | null = el.parentElement;
+  while (current) {
+    const cor = getComputedStyle(current).backgroundColor;
     if (cor && !/,\s*0\s*\)$/.test(cor) && cor !== 'transparent') return cor;
-    atual = atual.parentElement;
+    current = current.parentElement;
   }
   return 'rgb(255, 255, 255)';
 }

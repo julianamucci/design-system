@@ -48,7 +48,7 @@ export const Paginated: Story = {
       colunas: COLUMNS_INVOICES,
       faturas: INVOICES_DT,
       rotulos: LABELS_DT,
-      tamanho: PAGE_SIZE,
+      size: PAGE_SIZE,
     },
     template: `
       <div
@@ -58,7 +58,7 @@ export const Paginated: Story = {
         [data]="faturas"
         [labels]="rotulos"
         [enableGlobalFilter]="false"
-        [pageSize]="tamanho"
+        [pageSize]="size"
       ></div>
     `,
   }),

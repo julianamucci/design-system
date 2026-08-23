@@ -150,8 +150,8 @@ export const Playground: Story = {
     await step("Arrastar move o valor e avisa a cada movimento", async () => {
       const control = canvasElement.querySelector<HTMLElement>(".nds-slider")!;
       const track = canvasElement.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
-      const caixa = track.getBoundingClientRect();
-      const y = caixa.top + caixa.height / 2;
+      const box = track.getBoundingClientRect();
+      const y = box.top + box.height / 2;
 
       // Limpa antes de medir: no replay o espião chega com as chamadas da
       // rodada anterior, e `toHaveBeenCalled` passaria mesmo se o arrasto desta
@@ -170,8 +170,8 @@ export const Playground: Story = {
       // botão que aquela instância nunca viu apertado, e o `pointerup` que
       // fecha o arrasto nunca chegava ao componente.
       await userEvent.pointer([
-        { keys: "[MouseLeft>]", target: control, coords: { clientX: caixa.left + caixa.width * 0.2, clientY: y } },
-        { target: control, coords: { clientX: caixa.left + caixa.width * 0.6, clientY: y } },
+        { keys: "[MouseLeft>]", target: control, coords: { clientX: box.left + box.width * 0.2, clientY: y } },
+        { target: control, coords: { clientX: box.left + box.width * 0.6, clientY: y } },
         { keys: "[/MouseLeft]" },
       ]);
 
@@ -180,7 +180,7 @@ export const Playground: Story = {
       // escrever: a alça tem de ter andado para depois do meio do trilho.
       const thumb = canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
       const handleCenter = thumb.getBoundingClientRect().left + thumb.getBoundingClientRect().width / 2;
-      await expect(handleCenter).toBeGreaterThan(caixa.left + caixa.width * 0.5);
+      await expect(handleCenter).toBeGreaterThan(box.left + box.width * 0.5);
     });
 
     await step("Soltar dispara o callback de commit", async () => {

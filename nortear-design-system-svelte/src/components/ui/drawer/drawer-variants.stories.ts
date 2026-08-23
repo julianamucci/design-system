@@ -53,13 +53,13 @@ export const Bottom: Story = {
   },
   play: async ({ step }) => {
     await step('O painel encosta na base e mostra a alça', async () => {
-      const painel = await waitForPortal('dialog');
-      await expect(painel).toHaveAttribute('data-vaul-drawer-direction', 'bottom');
-      await expect(painel).toHaveClass(/nds-drawer-content/);
-      await expect(painel).toHaveAccessibleName('Detalhes do pedido');
+      const panel = await waitForPortal('dialog');
+      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', 'bottom');
+      await expect(panel).toHaveClass(/nds-drawer-content/);
+      await expect(panel).toHaveAccessibleName('Detalhes do pedido');
       // A alça só é visível nesta direção — o CSS compartilhado a esconde nas
       // outras. Contraste e cor do painel são verificados pelo axe da story.
-      const thumb = painel.querySelector<HTMLElement>('.nds-drawer-handle')!;
+      const thumb = panel.querySelector<HTMLElement>('.nds-drawer-handle')!;
       await expect(window.getComputedStyle(thumb).display).toBe('block');
     });
   },
@@ -85,11 +85,11 @@ export const Top: Story = {
   },
   play: async ({ step }) => {
     await step('O painel encosta no topo e esconde a alça', async () => {
-      const painel = await waitForPortal('dialog');
-      await expect(painel).toHaveAttribute('data-vaul-drawer-direction', 'top');
-      await expect(painel).toHaveClass(/nds-drawer-content/);
-      await expect(painel).toHaveAccessibleName('Nova versão disponível');
-      const thumb = painel.querySelector<HTMLElement>('.nds-drawer-handle')!;
+      const panel = await waitForPortal('dialog');
+      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', 'top');
+      await expect(panel).toHaveClass(/nds-drawer-content/);
+      await expect(panel).toHaveAccessibleName('Nova versão disponível');
+      const thumb = panel.querySelector<HTMLElement>('.nds-drawer-handle')!;
       await expect(window.getComputedStyle(thumb).display).toBe('none');
     });
   },
@@ -115,12 +115,12 @@ export const Left: Story = {
   },
   play: async ({ step }) => {
     await step('O painel encosta na borda esquerda', async () => {
-      const painel = await waitForPortal('dialog');
-      await expect(painel).toHaveAttribute('data-vaul-drawer-direction', 'left');
-      await expect(painel).toHaveClass(/nds-drawer-content/);
-      await expect(painel).toHaveAccessibleName('Menu');
+      const panel = await waitForPortal('dialog');
+      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', 'left');
+      await expect(panel).toHaveClass(/nds-drawer-content/);
+      await expect(panel).toHaveAccessibleName('Menu');
       // Ocupa a altura inteira, encostada na borda — ao contrário de bottom/top.
-      await expect(painel.getBoundingClientRect().left).toBeLessThan(1);
+      await expect(panel.getBoundingClientRect().left).toBeLessThan(1);
     });
   },
 };
@@ -145,12 +145,12 @@ export const Right: Story = {
   },
   play: async ({ step }) => {
     await step('O painel encosta na borda direita', async () => {
-      const painel = await waitForPortal('dialog');
-      await expect(painel).toHaveAttribute('data-vaul-drawer-direction', 'right');
-      await expect(painel).toHaveClass(/nds-drawer-content/);
-      await expect(painel).toHaveAccessibleName('Filtros');
-      const caixa = painel.getBoundingClientRect();
-      await expect(Math.abs(caixa.right - window.innerWidth)).toBeLessThan(2);
+      const panel = await waitForPortal('dialog');
+      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', 'right');
+      await expect(panel).toHaveClass(/nds-drawer-content/);
+      await expect(panel).toHaveAccessibleName('Filtros');
+      const box = panel.getBoundingClientRect();
+      await expect(Math.abs(box.right - window.innerWidth)).toBeLessThan(2);
     });
   },
 };

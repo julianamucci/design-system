@@ -53,14 +53,14 @@ const BOXES = `<template #default="{ slots }">
  * que faz o sistema operacional oferecer o código recebido, o segundo é o
  * teclado que aparece no celular.
  */
-function fieldOtp(opcoes: {
+function fieldOtp(options: {
   id: string;
-  rotulo: string;
+  label: string;
   modelo: string;
   comprimento?: number;
   teclado?: string;
   padraoAceito?: string;
-  desabilitado?: boolean;
+  disabled?: boolean;
   focus?: boolean;
   invalido?: boolean;
   describedBy?: string;
@@ -70,19 +70,19 @@ function fieldOtp(opcoes: {
 }): string {
   const {
     id,
-    rotulo,
+    label,
     modelo,
     comprimento = 6,
     teclado = 'numeric',
     padraoAceito,
-    desabilitado = false,
+    disabled = false,
     focus = false,
     invalido = false,
     describedBy,
     miolo = BOXES,
     depois = [],
     espaco = 'sm',
-  } = opcoes;
+  } = options;
 
   const cabeca = attrsMultilinha(
     [
@@ -90,7 +90,7 @@ function fieldOtp(opcoes: {
       `v-model="${modelo}"`,
       attrNum('max-length', comprimento),
       padraoAceito && `pattern="${padraoAceito}"`,
-      attrBool('disabled', desabilitado, false),
+      attrBool('disabled', disabled, false),
       attrBool('auto-focus', focus, false),
       invalido && 'aria-invalid="true"',
       describedBy && `aria-describedby="${describedBy}"`,
@@ -105,7 +105,7 @@ function fieldOtp(opcoes: {
   );
 
   const partes = [
-    `<Label for="${id}">${rotulo}</Label>`,
+    `<Label for="${id}">${label}</Label>`,
     `<InputOTP${cabeca}>\n${indentar(miolo)}\n</InputOTP>`,
     ...depois,
   ];
@@ -137,10 +137,10 @@ export const inputOtpSource: SourceTransform<InputOTPArgs> = (_gerado, ctx) => {
     script(`const codigo = ref('')`),
     fieldOtp({
       id: 'codigo-verificacao',
-      rotulo: 'Código de verificação',
+      label: 'Código de verificação',
       modelo: 'codigo',
       comprimento: typeof args.maxLength === 'number' ? args.maxLength : 6,
-      desabilitado: args.disabled === true,
+      disabled: args.disabled === true,
       focus: args.autoFocus === true,
     }),
   );
@@ -152,7 +152,7 @@ export function inputOtpSeisDigitosSource(): string {
     script(`const codigo = ref('')`),
     fieldOtp({
       id: 'codigo-sms',
-      rotulo: 'Código enviado por SMS',
+      label: 'Código enviado por SMS',
       modelo: 'codigo',
     }),
   );
@@ -164,7 +164,7 @@ export function inputOtpQuatroDigitosSource(): string {
     script(`const pin = ref('')`),
     fieldOtp({
       id: 'pin',
-      rotulo: 'PIN do aplicativo',
+      label: 'PIN do aplicativo',
       modelo: 'pin',
       comprimento: 4,
     }),
@@ -193,7 +193,7 @@ import { Label } from '@/components/ui/label'
 const codigo = ref('')`,
     fieldOtp({
       id: 'codigo-recuperacao',
-      rotulo: 'Código de recuperação',
+      label: 'Código de recuperação',
       modelo: 'codigo',
       miolo: `<template #default>
   <InputOTPGroup>
@@ -223,7 +223,7 @@ export function inputOtpAlfanumericoSource(): string {
     script(`const codigo = ref('')`),
     fieldOtp({
       id: 'codigo-autenticacao',
-      rotulo: 'Código de autenticação',
+      label: 'Código de autenticação',
       modelo: 'codigo',
       padraoAceito: '^[a-zA-Z0-9]+$',
       teclado: 'text',
@@ -237,7 +237,7 @@ export function inputOtpEmptySource(): string {
     script(`const codigo = ref('')`),
     fieldOtp({
       id: 'codigo-verificacao',
-      rotulo: 'Código de verificação',
+      label: 'Código de verificação',
       modelo: 'codigo',
       focus: true,
     }),
@@ -253,7 +253,7 @@ export function inputOtpPreenchendoSource(): string {
     script(`const codigo = ref('123')`),
     fieldOtp({
       id: 'codigo-verificacao',
-      rotulo: 'Código de verificação',
+      label: 'Código de verificação',
       modelo: 'codigo',
     }),
   );
@@ -265,7 +265,7 @@ export function inputOtpCompletoSource(): string {
     script(`const codigo = ref('482913')`),
     fieldOtp({
       id: 'codigo-verificacao',
-      rotulo: 'Código de verificação',
+      label: 'Código de verificação',
       modelo: 'codigo',
     }),
   );
@@ -277,9 +277,9 @@ export function inputOtpDisabledSource(): string {
     script(`const codigo = ref('4829')`),
     fieldOtp({
       id: 'codigo-verificacao',
-      rotulo: 'Código de verificação',
+      label: 'Código de verificação',
       modelo: 'codigo',
-      desabilitado: true,
+      disabled: true,
     }),
   );
 }
@@ -294,7 +294,7 @@ export function inputOtpWithErrorSource(): string {
     script(`const codigo = ref('482913')`),
     fieldOtp({
       id: 'codigo-verificacao',
-      rotulo: 'Código de verificação',
+      label: 'Código de verificação',
       modelo: 'codigo',
       invalido: true,
       describedBy: 'codigo-erro',
@@ -313,7 +313,7 @@ export function inputOtpWithLabelSource(): string {
     script(`const codigo = ref('')`),
     fieldOtp({
       id: 'codigo-verificacao',
-      rotulo: 'Código de verificação',
+      label: 'Código de verificação',
       modelo: 'codigo',
     }),
   );
@@ -328,7 +328,7 @@ export function inputOtpWithHelperSource(): string {
     script(`const codigo = ref('')`),
     fieldOtp({
       id: 'codigo-sms',
-      rotulo: 'Código SMS',
+      label: 'Código SMS',
       modelo: 'codigo',
       describedBy: 'codigo-sms-apoio',
       depois: [
@@ -352,7 +352,7 @@ import { Button } from '@/components/ui/button'
 const codigo = ref('')`,
     fieldOtp({
       id: 'codigo-verificacao',
-      rotulo: 'Código de verificação',
+      label: 'Código de verificação',
       modelo: 'codigo',
       depois: [
         `<div class="nds-cluster" data-align="center" data-spacing="xs">

@@ -730,7 +730,7 @@ const a11yCritCols = computed(() => ({
                       :key="i"
                     >
                       <NavigationMenuLink href="#">
-                        Link {{ i }} (without grupo)
+                        Link {{ i }} (without group)
                       </NavigationMenuLink>
                     </li>
                   </ul>

@@ -7,33 +7,33 @@ import {
 
 describe('contextMenuSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = contextMenuSnippet();
-    expect(código).toContain(
+    const code = contextMenuSnippet();
+    expect(code).toContain(
       "import { createContextMenu } from '@/components/ui/context-menu';",
     );
-    expect(código).toContain('createContextMenu({');
-    expect(código).toContain("document.querySelector('#app')?.append(menu);");
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('nds-dropdown-menu-item');
+    expect(code).toContain('createContextMenu({');
+    expect(code).toContain("document.querySelector('#app')?.append(menu);");
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('nds-dropdown-menu-item');
   });
 
   it('omite o tipo padrão e as opções que a fábrica já assume', () => {
-    const código = contextMenuSnippet();
+    const code = contextMenuSnippet();
     // `item` é o padrão de `type`: escrevê-lo em toda entrada seria ensinar a
     // repetir o default.
-    expect(código).not.toContain("type: 'item'");
-    expect(código).not.toContain('inset');
-    expect(código).not.toContain('disabled');
-    expect(código).not.toContain('radioValue');
+    expect(code).not.toContain("type: 'item'");
+    expect(code).not.toContain('inset');
+    expect(code).not.toContain('disabled');
+    expect(code).not.toContain('radioValue');
   });
 
   it('monta a área com DOM curto, sem a sonda de teste', () => {
-    const código = contextMenuSnippet();
-    expect(código).toContain("const area = document.createElement('div');");
-    expect(código).toContain('trigger: area');
-    expect(código).not.toContain('criarAreaDeClique');
-    expect(código).not.toContain('abrirPorGesto');
-    expect(código).not.toContain('menuAberto');
+    const code = contextMenuSnippet();
+    expect(code).toContain("const area = document.createElement('div');");
+    expect(code).toContain('trigger: area');
+    expect(code).not.toContain('criarAreaDeClique');
+    expect(code).not.toContain('abrirPorGesto');
+    expect(code).not.toContain('menuAberto');
   });
 
   it('acompanha os controls do menu canônico', () => {
@@ -53,7 +53,7 @@ describe('contextMenuSnippet', () => {
   });
 
   it('mostra as peças que a story exercita', () => {
-    const código = contextMenuSnippet({
+    const code = contextMenuSnippet({
       radioValue: 'grid',
       items: [
         { type: 'label', label: 'Visualização', inset: true },
@@ -62,17 +62,17 @@ describe('contextMenuSnippet', () => {
         { label: 'Duplicar', value: 'off', disabled: true },
       ],
     });
-    expect(código).toContain("radioValue: 'grid'");
-    expect(código).toContain("type: 'label'");
-    expect(código).toContain("type: 'checkbox'");
-    expect(código).toContain("type: 'radio'");
-    expect(código).toContain('indeterminate: true');
-    expect(código).toContain('inset: true');
-    expect(código).toContain('disabled: true');
+    expect(code).toContain("radioValue: 'grid'");
+    expect(code).toContain("type: 'label'");
+    expect(code).toContain("type: 'checkbox'");
+    expect(code).toContain("type: 'radio'");
+    expect(code).toContain('indeterminate: true');
+    expect(code).toContain('inset: true');
+    expect(code).toContain('disabled: true');
   });
 
   it('recua o submenu dentro da entrada que o abre', () => {
-    const código = contextMenuSnippet({
+    const code = contextMenuSnippet({
       items: [
         {
           type: 'submenu',
@@ -82,15 +82,15 @@ describe('contextMenuSnippet', () => {
         },
       ],
     });
-    expect(código).toContain('      items: [');
-    expect(código).toContain("        { label: 'Por e-mail', value: 'por-email' },");
+    expect(code).toContain('      items: [');
+    expect(code).toContain("        { label: 'Por e-mail', value: 'por-email' },");
   });
 
   it('nunca imprime a função que os args trazem no lugar do corpo do callback', () => {
-    const código = contextMenuSnippet({
+    const code = contextMenuSnippet({
       onOpenChange: (() => undefined) as unknown as string,
     });
-    expect(código).not.toContain('onOpenChange');
+    expect(code).not.toContain('onOpenChange');
   });
 });
 
@@ -117,9 +117,9 @@ describe('contextMenuSourceCom', () => {
     const transform = contextMenuSourceWith({
       items: [{ type: 'checkbox', label: 'Mostrar grade', value: 'grade', checked: false }],
     });
-    const código = transform('', { args: { triggerLabel: 'Área do documento' } });
-    expect(código).toContain("area.textContent = 'Área do documento';");
-    expect(código).toContain('checked: false');
-    expect(código).not.toContain("label: 'Editar'");
+    const code = transform('', { args: { triggerLabel: 'Área do documento' } });
+    expect(code).toContain("area.textContent = 'Área do documento';");
+    expect(code).toContain('checked: false');
+    expect(code).not.toContain("label: 'Editar'");
   });
 });

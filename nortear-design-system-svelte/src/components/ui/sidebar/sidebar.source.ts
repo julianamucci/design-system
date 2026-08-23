@@ -26,7 +26,7 @@ type Options = Partial<SidebarArgs> & {
   /** Estado inicial de quem não controla `open` de fora. */
   defaultOpen?: boolean;
   menu?: Menu;
-  titulo?: string;
+  title?: string;
 };
 
 const QUERY_DEFAULT = '(max-width: 767px)';
@@ -80,7 +80,7 @@ function icons(menu: Menu): string[] {
 }
 
 /** Listas e estado que a marcação consome. */
-function dados(menu: Menu): string {
+function data(menu: Menu): string {
   if (menu === 'esqueleto') return '';
   if (menu === 'grupos') {
     return `
@@ -164,7 +164,7 @@ function itemButton(collapsible: SidebarArgs['collapsible']): string {
 }
 
 /** Grupos de navegação, já indentados para dentro do `<nav>`. */
-function grupos(menu: Menu, collapsible: SidebarArgs['collapsible']): string {
+function groups(menu: Menu, collapsible: SidebarArgs['collapsible']): string {
   if (menu === 'esqueleto') {
     return `        <SidebarGroup>
           <SidebarGroupLabel>Carregando...</SidebarGroupLabel>
@@ -310,14 +310,14 @@ function aplicacao(o: Options = {}): string {
     mobileQuery = QUERY_DEFAULT,
     defaultOpen = true,
     menu = 'navegacao',
-    titulo = 'Conteúdo principal',
+    title = 'Conteúdo principal',
   } = o;
 
   // Sem recolhimento não há o que alternar: o gatilho e a faixa saem junto.
   const withTrigger = collapsible !== 'none';
 
   const iconImportes = icons(menu)
-    .map((nome) => `import ${nome} from "@lucide/svelte/icons/${ICONS[nome]}";`)
+    .map((name) => `import ${name} from "@lucide/svelte/icons/${ICONS[name]}";`)
     .join('\n');
   const importeDeTransicao = menu === 'submenu' ? `\nimport { slide } from "svelte/transition";` : '';
 
@@ -334,9 +334,9 @@ function aplicacao(o: Options = {}): string {
   const script = `import {
 ${parts(menu, withTrigger).map((p) => `  ${p},`).join('\n')}
 } from "@/components/ui/sidebar";
-${iconImportes}${importeDeTransicao}${stateInitial}${dados(menu)}`;
+${iconImportes}${importeDeTransicao}${stateInitial}${data(menu)}`;
 
-  const rodape = menu === 'grupos' ? 'Design System v1.0' : 'v1.0.0';
+  const footer = menu === 'grupos' ? 'Design System v1.0' : 'v1.0.0';
   const footerClassName =
     collapsible === 'icon'
       ? 'nds-text-caption nds-text-muted-foreground nds-sidebar-hide-collapsed'
@@ -352,16 +352,16 @@ ${iconImportes}${importeDeTransicao}${stateInitial}${dados(menu)}`;
 ${header(menu, collapsible)}
     <SidebarContent>
       <nav aria-label="Navegação principal">
-${grupos(menu, collapsible)}
+${groups(menu, collapsible)}
       </nav>
     </SidebarContent>
     <SidebarFooter class="nds-px-4 nds-py-2 nds-border-t">
-      <span class="${footerClassName}">${rodape}</span>
+      <span class="${footerClassName}">${footer}</span>
     </SidebarFooter>${withTrigger ? '\n    <SidebarRail />' : ''}
   </Sidebar>
   <SidebarInset class="nds-stack nds-flex-1 nds-min-w-0">
     <header class="nds-cluster nds-border-b nds-px-4 nds-py-2" data-align="center" data-spacing="sm">
-${withTrigger ? '      <SidebarTrigger />\n' : ''}      <span class="nds-text-body nds-font-medium nds-text-muted-foreground">${titulo}</span>
+${withTrigger ? '      <SidebarTrigger />\n' : ''}      <span class="nds-text-body nds-font-medium nds-text-muted-foreground">${title}</span>
     </header>
     <main id="main-content" tabindex="-1" class="nds-flex-1 nds-p-6">
       <p class="nds-text-body">Área de conteúdo da aplicação.</p>
@@ -406,7 +406,7 @@ export function sidebarExpandidaSource(): string {
 
 /** Recolhida em ícones: o rótulo some da tela, o nome acessível fica. */
 export function sidebarModeIconSource(): string {
-  return aplicacao({ collapsible: 'icon', defaultOpen: false, titulo: 'Modo ícone recolhido' });
+  return aplicacao({ collapsible: 'icon', defaultOpen: false, title: 'Modo ícone recolhido' });
 }
 
 /** Recolhida em offcanvas: o vão no fluxo zera e a barra sai da coluna. */
@@ -416,7 +416,7 @@ export function sidebarOffcanvasFechadaSource(): string {
 
 /** Fixa: sem recolhimento não há estado, nem gatilho, nem faixa. */
 export function sidebarFixaSource(): string {
-  return aplicacao({ collapsible: 'none', titulo: 'Barra sempre visível' });
+  return aplicacao({ collapsible: 'none', title: 'Barra sempre visível' });
 }
 
 /**
@@ -429,15 +429,15 @@ export function sidebarGavetaSource(): string {
 
 /** Composição: dois grupos, busca no cabeçalho, contadores e ações nomeadas. */
 export function navigationSidebarGroupsSource(): string {
-  return aplicacao({ menu: 'grupos', titulo: 'Com grupos de navegação' });
+  return aplicacao({ menu: 'grupos', title: 'Com grupos de navegação' });
 }
 
 /** Composição: item com nível abaixo, anunciado por aria-expanded. */
 export function sidebarSubmenuSource(): string {
-  return aplicacao({ menu: 'submenu', titulo: 'Com submenu' });
+  return aplicacao({ menu: 'submenu', title: 'Com submenu' });
 }
 
 /** Composição: carregamento — cada item vira um espaço reservado. */
 export function sidebarSkeletonSource(): string {
-  return aplicacao({ menu: 'esqueleto', titulo: 'Estado de carregamento' });
+  return aplicacao({ menu: 'esqueleto', title: 'Estado de carregamento' });
 }

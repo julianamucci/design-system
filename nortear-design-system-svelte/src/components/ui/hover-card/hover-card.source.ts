@@ -176,7 +176,7 @@ export function hoverCardSource(_gerado?: string, ctx?: { args?: Partial<HoverCa
     label ? `aria-label="${label}"` : '',
   );
 
-  const gatilho = TRIGGERS_BUTTON.includes(variant)
+  const trigger = TRIGGERS_BUTTON.includes(variant)
     ? `<button type="button" {...props}>${triggerLabel}</button>`
     : `<a href="${href}" {...props}>${triggerLabel}</a>`;
 
@@ -187,7 +187,7 @@ export function hoverCardSource(_gerado?: string, ctx?: { args?: Partial<HoverCa
   <HoverCard${rootProps}>
     <HoverCardTrigger>
       {#snippet child({ props })}
-        ${gatilho}
+        ${trigger}
       {/snippet}
     </HoverCardTrigger>
     <HoverCardContent${contentProps}>

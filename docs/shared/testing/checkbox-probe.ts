@@ -42,7 +42,7 @@ const ROTULAVEIS = ['button', 'input', 'meter', 'output', 'progress', 'select', 
 
 const SELECTOR_BOX = '[data-slot="checkbox"], .nds-checkbox, [role="checkbox"]';
 
-const texto = (el: Element | null | undefined): string | null =>
+const text = (el: Element | null | undefined): string | null =>
   el?.textContent?.trim().replace(/\s+/g, ' ') || null;
 
 const classesDe = (el: Element | null | undefined): string[] =>
@@ -52,10 +52,10 @@ const describeIn = (el: Element | null): string | null =>
   el ? [el.tagName.toLowerCase(), ...classesDe(el)].join('.') : null;
 
 /** Valor do atributo, tratando presença vazia como `"true"` e `"false"` como falso. */
-function presenca(el: Element | null, nome: string): boolean | null {
+function presenca(el: Element | null, name: string): boolean | null {
   if (!el) return null;
-  if (!el.hasAttribute(nome)) return false;
-  return el.getAttribute(nome) !== 'false';
+  if (!el.hasAttribute(name)) return false;
+  return el.getAttribute(name) !== 'false';
 }
 
 // ─── Estado marcável ──────────────────────────────────────────────────────────
@@ -107,23 +107,23 @@ export function focusEstaIn(el: Element | null): boolean {
  * uma pelo `aria-labelledby` que a própria story escreveu à mão e outra pela
  * associação nativa do `<label for>`. A primeira é andaime; a segunda é produto.
  */
-function accessibleName(caixa: Element | null) {
-  if (!caixa) return { valor: null, origem: null } as const;
-  const doc = caixa.ownerDocument;
+function accessibleName(box: Element | null) {
+  if (!box) return { value: null, origem: null } as const;
+  const doc = box.ownerDocument;
 
-  const labelledBy = caixa.getAttribute('aria-labelledby');
+  const labelledBy = box.getAttribute('aria-labelledby');
   if (labelledBy) {
     const partes = labelledBy
       .split(/\s+/)
-      .map((id) => texto(doc.getElementById(id)))
+      .map((id) => text(doc.getElementById(id)))
       .filter(Boolean);
-    if (partes.length) return { valor: partes.join(' '), origem: 'aria-labelledby' } as const;
+    if (partes.length) return { value: partes.join(' '), origem: 'aria-labelledby' } as const;
   }
 
-  const rotulo = caixa.getAttribute('aria-label');
-  if (rotulo) return { valor: rotulo, origem: 'aria-label' } as const;
+  const label = box.getAttribute('aria-label');
+  if (label) return { value: label, origem: 'aria-label' } as const;
 
-  const id = caixa.getAttribute('id');
+  const id = box.getAttribute('id');
   if (id) {
     const associado = doc.querySelector<HTMLLabelElement>(`label[for="${CSS.escape(id)}"]`);
     if (associado) {
@@ -131,20 +131,20 @@ function accessibleName(caixa: Element | null) {
       // navegador ignora a associação, e o leitor de tela anuncia a caixa sem
       // nome. Registrar "label[for]" aqui esconderia exatamente o defeito que a
       // sonda existe para achar — por isso a origem diz que a associação é nula.
-      const vale = ROTULAVEIS.includes(caixa.tagName.toLowerCase());
+      const vale = ROTULAVEIS.includes(box.tagName.toLowerCase());
       return vale
-        ? ({ valor: texto(associado), origem: 'label[for]' } as const)
-        : ({ valor: null, origem: 'label[for] inerte (caixa não é rotulável)' } as const);
+        ? ({ value: text(associado), origem: 'label[for]' } as const)
+        : ({ value: null, origem: 'label[for] inerte (caixa não é rotulável)' } as const);
     }
   }
 
-  const ancestral = caixa.closest('label');
-  if (ancestral) return { valor: texto(ancestral), origem: 'label ancestral' } as const;
+  const ancestral = box.closest('label');
+  if (ancestral) return { value: text(ancestral), origem: 'label ancestral' } as const;
 
-  const own = texto(caixa);
-  if (own) return { valor: own, origem: 'conteúdo' } as const;
+  const own = text(box);
+  if (own) return { value: own, origem: 'conteúdo' } as const;
 
-  return { valor: null, origem: null } as const;
+  return { value: null, origem: null } as const;
 }
 
 /**
@@ -154,20 +154,20 @@ function accessibleName(caixa: Element | null) {
  * eles percorrem (nome, papel, estado, obrigatoriedade, validade, desabilitado).
  * O que a sonda compara entre stacks é a presença e a sequência, não o texto.
  */
-function leituraOrder(caixa: Element | null): string[] {
-  if (!caixa) return [];
+function leituraOrder(box: Element | null): string[] {
+  if (!box) return [];
   const partes: string[] = [];
-  const nome = accessibleName(caixa).valor;
-  if (nome) partes.push(`nome:${nome}`);
-  partes.push(`papel:${caixa.getAttribute('role') ?? caixa.tagName.toLowerCase()}`);
-  const marcado = stateChecked(caixa);
-  partes.push(`estado:${marcado === null ? 'ausente' : String(marcado)}`);
-  if (caixa.getAttribute('aria-required') === 'true' || (caixa as HTMLInputElement).required) {
+  const name = accessibleName(box).value;
+  if (name) partes.push(`nome:${name}`);
+  partes.push(`papel:${box.getAttribute('role') ?? box.tagName.toLowerCase()}`);
+  const checked = stateChecked(box);
+  partes.push(`estado:${checked === null ? 'ausente' : String(checked)}`);
+  if (box.getAttribute('aria-required') === 'true' || (box as HTMLInputElement).required) {
     partes.push('obrigatório');
   }
-  if (caixa.getAttribute('aria-invalid') === 'true') partes.push('inválido');
-  if (caixa.getAttribute('aria-readonly') === 'true') partes.push('somente leitura');
-  if (estaDesabilitada(caixa)) partes.push('desabilitado');
+  if (box.getAttribute('aria-invalid') === 'true') partes.push('inválido');
+  if (box.getAttribute('aria-readonly') === 'true') partes.push('somente leitura');
+  if (estaDesabilitada(box)) partes.push('desabilitado');
   return partes;
 }
 
@@ -182,63 +182,63 @@ function leituraOrder(caixa: Element | null): string[] {
  *
  * Tudo é restaurado no fim.
  */
-function labelAoClick(rotulo: HTMLElement | null, caixa: Element | null) {
-  if (!rotulo) return { focou: null, focusFoiTo: null, alternou: null, erro: 'sem rótulo' };
+function labelAoClick(label: HTMLElement | null, box: Element | null) {
+  if (!label) return { focou: null, focusFoiTo: null, alternou: null, error: 'sem rótulo' };
 
-  const doc = rotulo.ownerDocument;
+  const doc = label.ownerDocument;
   const focusPrevious = doc.activeElement as HTMLElement | null;
-  const antes = stateChecked(caixa);
+  const antes = stateChecked(box);
 
   let focou: boolean | null = null;
   let focusFoiTo: string | null = null;
   let alternou: boolean | null = null;
-  let erro: string | null = null;
+  let error: string | null = null;
 
   try {
-    rotulo.click();
-    focou = focusEstaIn(caixa);
+    label.click();
+    focou = focusEstaIn(box);
     focusFoiTo = describeIn(doc.activeElement);
-    const depois = stateChecked(caixa);
+    const depois = stateChecked(box);
     alternou = antes === null ? null : depois !== antes;
   } catch (e) {
-    erro = e instanceof Error ? e.message : String(e);
+    error = e instanceof Error ? e.message : String(e);
   }
 
   // Desfaz: devolve a caixa ao estado original e o foco a quem o tinha.
-  if (antes !== null && stateChecked(caixa) !== antes) (caixa as HTMLElement).click();
+  if (antes !== null && stateChecked(box) !== antes) (box as HTMLElement).click();
   if (focusPrevious && focusPrevious !== doc.body) focusPrevious.focus();
   else (doc.activeElement as HTMLElement | null)?.blur?.();
 
-  return { focou, focusFoiTo, alternou, erro };
+  return { focou, focusFoiTo, alternou, error };
 }
 
 /** Clicar na própria caixa alterna? (o foco do clique real é medido à parte) */
-function boxAoClick(caixa: Element | null) {
-  if (!caixa) return { alternou: null, erro: 'sem caixa' };
-  const antes = stateChecked(caixa);
+function boxAoClick(box: Element | null) {
+  if (!box) return { alternou: null, error: 'sem caixa' };
+  const antes = stateChecked(box);
   let alternou: boolean | null = null;
-  let erro: string | null = null;
+  let error: string | null = null;
   try {
-    (caixa as HTMLElement).click();
-    const depois = stateChecked(caixa);
+    (box as HTMLElement).click();
+    const depois = stateChecked(box);
     alternou = antes === null ? null : depois !== antes;
   } catch (e) {
-    erro = e instanceof Error ? e.message : String(e);
+    error = e instanceof Error ? e.message : String(e);
   }
-  if (antes !== null && stateChecked(caixa) !== antes) (caixa as HTMLElement).click();
-  return { alternou, erro };
+  if (antes !== null && stateChecked(box) !== antes) (box as HTMLElement).click();
+  return { alternou, error };
 }
 
 /** A caixa aceita foco programático, e sobra foco visível? */
-function focabilidade(caixa: Element | null) {
-  if (!caixa) return { aceitaFocus: null, focusRing: null };
-  const doc = caixa.ownerDocument;
+function focabilidade(box: Element | null) {
+  if (!box) return { aceitaFocus: null, focusRing: null };
+  const doc = box.ownerDocument;
   const focusPrevious = doc.activeElement as HTMLElement | null;
-  (caixa as HTMLElement).focus?.();
-  const aceitaFocus = doc.activeElement === caixa;
+  (box as HTMLElement).focus?.();
+  const aceitaFocus = doc.activeElement === box;
   let focusRing: boolean | null = null;
   if (aceitaFocus) {
-    const cs = getComputedStyle(caixa);
+    const cs = getComputedStyle(box);
     focusRing = cs.outlineStyle !== 'none' || cs.boxShadow !== 'none';
   }
   if (focusPrevious && focusPrevious !== doc.body) focusPrevious.focus();
@@ -249,52 +249,52 @@ function focabilidade(caixa: Element | null) {
 /** Quem recebe o clique no centro do elemento — pega peça coberta por overlay. */
 function quemRecebeOClique(el: Element | null): string | null {
   if (!el) return null;
-  const caixa = el.getBoundingClientRect();
-  if (caixa.width === 0 || caixa.height === 0) return null;
-  const alvo = el.ownerDocument.elementFromPoint(
-    caixa.left + caixa.width / 2,
-    caixa.top + caixa.height / 2,
+  const box = el.getBoundingClientRect();
+  if (box.width === 0 || box.height === 0) return null;
+  const target = el.ownerDocument.elementFromPoint(
+    box.left + box.width / 2,
+    box.top + box.height / 2,
   );
-  return describeIn(alvo);
+  return describeIn(target);
 }
 
 // ─── Medição ──────────────────────────────────────────────────────────────────
 
-/** Mede UMA caixa e o rótulo que a rotula. `raiz` é o wrapper do cenário. */
-export function measureBox(raiz: HTMLElement) {
-  const caixa = raiz.querySelector<HTMLElement>(SELECTOR_BOX);
-  if (!caixa) return { presente: false } as const;
+/** Mede UMA caixa e o rótulo que a rotula. `root` é o wrapper do cenário. */
+export function measureBox(root: HTMLElement) {
+  const box = root.querySelector<HTMLElement>(SELECTOR_BOX);
+  if (!box) return { presente: false } as const;
 
-  const doc = caixa.ownerDocument;
-  const classes = classesDe(caixa);
-  const cs = getComputedStyle(caixa);
-  const retangulo = caixa.getBoundingClientRect();
+  const doc = box.ownerDocument;
+  const classes = classesDe(box);
+  const cs = getComputedStyle(box);
+  const retangulo = box.getBoundingClientRect();
 
-  const rotulo =
-    raiz.querySelector<HTMLLabelElement>('label[data-slot="label"]') ??
-    raiz.querySelector<HTMLLabelElement>('label');
+  const label =
+    root.querySelector<HTMLLabelElement>('label[data-slot="label"]') ??
+    root.querySelector<HTMLLabelElement>('label');
 
-  const htmlFor = rotulo?.getAttribute('for') ?? null;
+  const htmlFor = label?.getAttribute('for') ?? null;
   const forTarget = htmlFor ? doc.getElementById(htmlFor) : null;
 
-  const indicador = caixa.querySelector<HTMLElement>(
+  const indicador = box.querySelector<HTMLElement>(
     '[data-slot="checkbox-indicator"], .nds-checkbox-indicator',
   );
-  const inputEscondido = raiz.querySelector<HTMLInputElement>('input[type="checkbox"]');
+  const inputEscondido = root.querySelector<HTMLInputElement>('input[type="checkbox"]');
 
   return {
     presente: true,
 
     // ── Estrutura: é rotulável pelo HTML? é aí que o defeito nasce ────────────
-    caixa: {
-      tag: caixa.tagName.toLowerCase(),
+    box: {
+      tag: box.tagName.toLowerCase(),
       /** O eixo do defeito: `label[for]` só alcança elemento rotulável. */
-      ehRotulavelPeloHtml: ROTULAVEIS.includes(caixa.tagName.toLowerCase()),
-      type: caixa.getAttribute('type'),
-      role: caixa.getAttribute('role'),
-      id: caixa.getAttribute('id'),
-      dataSlot: caixa.getAttribute('data-slot'),
-      tabIndex: caixa.getAttribute('tabindex'),
+      ehRotulavelPeloHtml: ROTULAVEIS.includes(box.tagName.toLowerCase()),
+      type: box.getAttribute('type'),
+      role: box.getAttribute('role'),
+      id: box.getAttribute('id'),
+      dataSlot: box.getAttribute('data-slot'),
+      tabIndex: box.getAttribute('tabindex'),
       /**
        * O tabIndex EFETIVO, não o atributo. Um `<button disabled>` continua
        * reportando `0` aqui e não tem atributo `tabindex` nenhum — o que o tira
@@ -302,60 +302,60 @@ export function measureBox(raiz: HTMLElement) {
        * responderia "0" nas duas situações opostas, que é exatamente o erro que
        * esta sonda existe para não cometer.
        */
-      tabIndexEfetivo: (caixa as HTMLElement).tabIndex,
+      tabIndexEfetivo: (box as HTMLElement).tabIndex,
       temClasseBase: classes.includes('nds-checkbox'),
       /** Classe sem o prefixo do design system: inerte, não pinta nada. */
       classesInertes: classes.filter((c) => !c.startsWith('nds-')),
-      largura: Math.round(retangulo.width),
-      altura: Math.round(retangulo.height),
+      width: Math.round(retangulo.width),
+      height: Math.round(retangulo.height),
       cursor: cs.cursor,
     },
 
     // ── Estado tri-valorado ──────────────────────────────────────────────────
     state: {
-      ariaChecked: caixa.getAttribute('aria-checked'),
-      dataState: caixa.getAttribute('data-state'),
-      dataChecked: presenca(caixa, 'data-checked'),
-      dataIndeterminate: presenca(caixa, 'data-indeterminate'),
-      marcado: stateChecked(caixa),
+      ariaChecked: box.getAttribute('aria-checked'),
+      dataState: box.getAttribute('data-state'),
+      dataChecked: presenca(box, 'data-checked'),
+      dataIndeterminate: presenca(box, 'data-indeterminate'),
+      checked: stateChecked(box),
       background: cs.backgroundColor,
     },
 
     // ── Desabilitado: atributo nativo × ARIA ─────────────────────────────────
-    desabilitado: {
-      atributoNativo: (caixa as HTMLButtonElement).disabled === true,
-      ariaDisabled: caixa.getAttribute('aria-disabled'),
-      dataDisabled: presenca(caixa, 'data-disabled'),
-      efetivo: estaDesabilitada(caixa),
-      opacidade: Number(cs.opacity),
+    disabled: {
+      atributoNativo: (box as HTMLButtonElement).disabled === true,
+      ariaDisabled: box.getAttribute('aria-disabled'),
+      dataDisabled: presenca(box, 'data-disabled'),
+      efetivo: estaDesabilitada(box),
+      opacity: Number(cs.opacity),
     },
 
     // ── Contrato ARIA que o WAI-ARIA pede para role="checkbox" ───────────────
     aria: {
-      ariaRequired: caixa.getAttribute('aria-required'),
-      ariaInvalid: caixa.getAttribute('aria-invalid'),
-      ariaReadonly: caixa.getAttribute('aria-readonly'),
-      ariaLabelledby: caixa.getAttribute('aria-labelledby'),
-      ariaLabel: caixa.getAttribute('aria-label'),
-      ariaDescribedby: caixa.getAttribute('aria-describedby'),
+      ariaRequired: box.getAttribute('aria-required'),
+      ariaInvalid: box.getAttribute('aria-invalid'),
+      ariaReadonly: box.getAttribute('aria-readonly'),
+      ariaLabelledby: box.getAttribute('aria-labelledby'),
+      ariaLabel: box.getAttribute('aria-label'),
+      ariaDescribedby: box.getAttribute('aria-describedby'),
     },
 
-    nome: accessibleName(caixa),
-    leitura: leituraOrder(caixa),
+    name: accessibleName(box),
+    leitura: leituraOrder(box),
 
     // ── Rótulo e a associação ────────────────────────────────────────────────
-    rotulo: {
-      existe: !!rotulo,
-      dataSlot: rotulo?.getAttribute('data-slot') ?? null,
+    label: {
+      existe: !!label,
+      dataSlot: label?.getAttribute('data-slot') ?? null,
       htmlFor,
-      texto: texto(rotulo),
+      text: text(label),
       alvoDoForExiste: htmlFor ? !!forTarget : null,
       /** `false` aqui significa: o `for` aponta para outra coisa (input oculto). */
-      alvoDoForEhACaixa: forTarget ? forTarget === caixa : null,
+      alvoDoForEhACaixa: forTarget ? forTarget === box : null,
       alvoDoForTag: forTarget?.tagName.toLowerCase() ?? null,
-      cursor: rotulo ? getComputedStyle(rotulo).cursor : null,
+      cursor: label ? getComputedStyle(label).cursor : null,
       /** Ouvinte de clique escrito na story para compensar o componente. */
-      temAndaimeDeClique: rotulo?.hasAttribute('data-andaime-clique') ?? null,
+      temAndaimeDeClique: label?.hasAttribute('data-andaime-clique') ?? null,
     },
 
     // ── Input nativo escondido (participação em formulário) ──────────────────
@@ -383,26 +383,26 @@ export function measureBox(raiz: HTMLElement) {
     },
 
     // ── OS DOIS EIXOS ────────────────────────────────────────────────────────
-    cliqueNoRotulo: labelAoClick(rotulo, caixa),
-    cliqueNaCaixa: boxAoClick(caixa),
-    focus: focabilidade(caixa),
+    cliqueNoRotulo: labelAoClick(label, box),
+    cliqueNaCaixa: boxAoClick(box),
+    focus: focabilidade(box),
 
     reach: {
-      centroDaCaixa: quemRecebeOClique(caixa),
-      centroDoRotulo: quemRecebeOClique(rotulo),
+      centroDaCaixa: quemRecebeOClique(box),
+      centroDoRotulo: quemRecebeOClique(label),
     },
   };
 }
 
 /**
- * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `raiz`.
+ * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `root`.
  * Cenário ausente vem `null` — é o achado de "a stack não monta este caso".
  */
-export function measureBoxes(raiz: HTMLElement, cenarios: string[]) {
+export function measureBoxes(root: HTMLElement, cenarios: string[]) {
   const registro: Record<string, unknown> = {};
   for (const cenario of cenarios) {
-    const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
-    registro[cenario] = alvo ? measureBox(alvo) : null;
+    const target = root.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
+    registro[cenario] = target ? measureBox(target) : null;
   }
   return registro;
 }
@@ -425,34 +425,34 @@ export function measureBoxes(raiz: HTMLElement, cenarios: string[]) {
  * vale; o de `medirCaixa.cliqueNoRotulo` só serve como pista.
  */
 export async function usuarioMeasureClick(
-  raiz: HTMLElement,
+  root: HTMLElement,
   cenarios: string[],
   click: (el: HTMLElement) => Promise<unknown>,
 ) {
   const registro: Record<string, unknown> = {};
   for (const cenario of cenarios) {
-    const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
-    const caixa = alvo?.querySelector<HTMLElement>(SELECTOR_BOX) ?? null;
-    const rotulo = alvo?.querySelector<HTMLLabelElement>('label') ?? null;
-    if (!alvo || !rotulo) {
+    const target = root.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
+    const box = target?.querySelector<HTMLElement>(SELECTOR_BOX) ?? null;
+    const label = target?.querySelector<HTMLLabelElement>('label') ?? null;
+    if (!target || !label) {
       registro[cenario] = null;
       continue;
     }
-    const doc = rotulo.ownerDocument;
-    const antes = stateChecked(caixa);
+    const doc = label.ownerDocument;
+    const antes = stateChecked(box);
     let result: Record<string, unknown>;
     try {
-      await click(rotulo);
+      await click(label);
       result = {
-        focou: focusEstaIn(caixa),
+        focou: focusEstaIn(box),
         focusFoiTo: describeIn(doc.activeElement),
-        alternou: antes === null ? null : stateChecked(caixa) !== antes,
+        alternou: antes === null ? null : stateChecked(box) !== antes,
       };
     } catch (e) {
-      result = { erro: e instanceof Error ? e.message : String(e) };
+      result = { error: e instanceof Error ? e.message : String(e) };
     }
     // Desfaz, para não envenenar o cenário seguinte nem a foto do Chromatic.
-    if (antes !== null && stateChecked(caixa) !== antes) caixa?.click();
+    if (antes !== null && stateChecked(box) !== antes) box?.click();
     (doc.activeElement as HTMLElement | null)?.blur?.();
     registro[cenario] = result;
   }
@@ -491,22 +491,22 @@ export type KeyboardFerramentas = {
  * Tudo é desfeito: o estado marcável volta ao valor anterior e o foco é solto.
  */
 export async function keyboardMeasureReach(
-  raiz: HTMLElement,
+  root: HTMLElement,
   cenarios: string[],
   { tab, teclar, click }: KeyboardFerramentas,
 ) {
   const registro: Record<string, unknown> = {};
 
   for (const cenario of cenarios) {
-    const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
-    const caixa = alvo?.querySelector<HTMLElement>(SELECTOR_BOX) ?? null;
-    if (!caixa) {
+    const target = root.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
+    const box = target?.querySelector<HTMLElement>(SELECTOR_BOX) ?? null;
+    if (!box) {
       registro[cenario] = null;
       continue;
     }
 
-    const doc = caixa.ownerDocument;
-    const inicial = stateChecked(caixa);
+    const doc = box.ownerDocument;
+    const inicial = stateChecked(box);
 
     // ── 1. Tab para na caixa? ────────────────────────────────────────────────
     (doc.activeElement as HTMLElement | null)?.blur?.();
@@ -516,7 +516,7 @@ export async function keyboardMeasureReach(
     for (let i = 1; i <= LIMIT_TAB && !tabAlcancada; i += 1) {
       await tab();
       paradasDoTab.push(describeIn(doc.activeElement) ?? 'nenhum');
-      if (focusEstaIn(caixa)) {
+      if (focusEstaIn(box)) {
         tabAlcancada = true;
         tabsAteChegar = i;
       }
@@ -528,31 +528,31 @@ export async function keyboardMeasureReach(
     let espacoAlterna: boolean | null = null;
     let teclaFocusAceito = tabAlcancada;
     if (!tabAlcancada) {
-      caixa.focus?.();
-      teclaFocusAceito = doc.activeElement === caixa;
+      box.focus?.();
+      teclaFocusAceito = doc.activeElement === box;
     }
     if (teclaFocusAceito) {
-      const antes = stateChecked(caixa);
+      const antes = stateChecked(box);
       await teclar(' ');
-      espacoAlterna = antes === null ? null : stateChecked(caixa) !== antes;
-      if (antes !== null && stateChecked(caixa) !== antes) await teclar(' ');
+      espacoAlterna = antes === null ? null : stateChecked(box) !== antes;
+      if (antes !== null && stateChecked(box) !== antes) await teclar(' ');
     }
 
     // ── 3. O clique de ponteiro alterna? ─────────────────────────────────────
     let clickAlterna: boolean | null = null;
     let clickError: string | null = null;
     {
-      const antes = stateChecked(caixa);
+      const antes = stateChecked(box);
       try {
-        await click(caixa);
-        clickAlterna = antes === null ? null : stateChecked(caixa) !== antes;
+        await click(box);
+        clickAlterna = antes === null ? null : stateChecked(box) !== antes;
       } catch (e) {
         clickError = e instanceof Error ? e.message : String(e);
       }
     }
 
     // Desfaz tudo o que a medição possa ter mudado.
-    if (inicial !== null && stateChecked(caixa) !== inicial) caixa.click();
+    if (inicial !== null && stateChecked(box) !== inicial) box.click();
     (doc.activeElement as HTMLElement | null)?.blur?.();
 
     registro[cenario] = {
@@ -563,7 +563,7 @@ export async function keyboardMeasureReach(
       espacoAlterna,
       clickAlterna,
       clickError,
-      estadoPreservado: stateChecked(caixa) === inicial,
+      estadoPreservado: stateChecked(box) === inicial,
     };
   }
 
@@ -602,21 +602,21 @@ export async function keyboardMeasureReach(
  * rodada nenhuma — então a lista sobrevive ao REPLAY do painel Interactions.
  */
 export async function disabledReprovas(
-  caixa: HTMLElement,
+  box: HTMLElement,
   { tab, teclar, click }: KeyboardFerramentas,
 ): Promise<string[]> {
   const reprovas: string[] = [];
-  const doc = caixa.ownerDocument;
+  const doc = box.ownerDocument;
 
   // 1. Anunciada como indisponível, pelo canal que não tira da tabulação.
-  if (caixa.getAttribute('aria-disabled') !== 'true') {
+  if (box.getAttribute('aria-disabled') !== 'true') {
     reprovas.push(
       `não é anunciada como desabilitada: aria-disabled=${JSON.stringify(
-        caixa.getAttribute('aria-disabled'),
+        box.getAttribute('aria-disabled'),
       )}`,
     );
   }
-  if ((caixa as HTMLButtonElement).disabled === true) {
+  if ((box as HTMLButtonElement).disabled === true) {
     reprovas.push('carrega o atributo `disabled` nativo, que a tira da ordem de tabulação');
   }
 
@@ -625,7 +625,7 @@ export async function disabledReprovas(
   let alcancada = false;
   for (let i = 0; i < LIMIT_TAB && !alcancada; i += 1) {
     await tab();
-    if (focusEstaIn(caixa)) alcancada = true;
+    if (focusEstaIn(box)) alcancada = true;
   }
   if (!alcancada) {
     reprovas.push(`o Tab não alcança a caixa em ${LIMIT_TAB} passos`);
@@ -633,10 +633,10 @@ export async function disabledReprovas(
 
   // 3. Espaço não alterna. Só faz sentido perguntar com o foco na caixa.
   if (alcancada) {
-    const antes = stateChecked(caixa);
+    const antes = stateChecked(box);
     await teclar(' ');
-    if (stateChecked(caixa) !== antes) {
-      reprovas.push(`Espaço alternou o estado: ${String(antes)} → ${String(stateChecked(caixa))}`);
+    if (stateChecked(box) !== antes) {
+      reprovas.push(`Espaço alternou o estado: ${String(antes)} → ${String(stateChecked(box))}`);
     }
   }
 
@@ -644,10 +644,10 @@ export async function disabledReprovas(
   // `cursor: not-allowed` não bloqueia ponteiro, mas a checagem do userEvent
   // reprova antes de clicar em parte das stacks.
   {
-    const antes = stateChecked(caixa);
-    await click(caixa);
-    if (stateChecked(caixa) !== antes) {
-      reprovas.push(`o clique alternou o estado: ${String(antes)} → ${String(stateChecked(caixa))}`);
+    const antes = stateChecked(box);
+    await click(box);
+    if (stateChecked(box) !== antes) {
+      reprovas.push(`o clique alternou o estado: ${String(antes)} → ${String(stateChecked(box))}`);
     }
   }
 
@@ -663,14 +663,14 @@ export async function disabledReprovas(
  */
 export async function reportProbe(
   stack: string,
-  raiz: HTMLElement,
+  root: HTMLElement,
   cenarios: string[],
   ferramentas: KeyboardFerramentas,
 ) {
   const registro = {
-    dom: measureBoxes(raiz, cenarios),
-    cliqueDoUsuario: await usuarioMeasureClick(raiz, cenarios, ferramentas.click),
-    teclado: await keyboardMeasureReach(raiz, cenarios, ferramentas),
+    dom: measureBoxes(root, cenarios),
+    cliqueDoUsuario: await usuarioMeasureClick(root, cenarios, ferramentas.click),
+    teclado: await keyboardMeasureReach(root, cenarios, ferramentas),
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);
 }

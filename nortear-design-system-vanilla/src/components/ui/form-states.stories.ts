@@ -64,10 +64,10 @@ export const Invalid: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const campo = canvasElement.querySelector<HTMLElement>('[data-slot="field"]')!;
-    const controle = canvas.getByLabelText('Senha');
-    const rotulo = campo.querySelector<HTMLLabelElement>('label')!;
-    const mensagem = campo.querySelector<HTMLElement>('[data-slot="field-error"]')!;
+    const field = canvasElement.querySelector<HTMLElement>('[data-slot="field"]')!;
+    const control = canvas.getByLabelText('Senha');
+    const label = field.querySelector<HTMLLabelElement>('label')!;
+    const mensagem = field.querySelector<HTMLElement>('[data-slot="field-error"]')!;
 
     await step('A mensagem é anunciada sem roubar o foco', async () => {
       // `polite` e não `assertive`: em validação a cada tecla, interromper a
@@ -79,7 +79,7 @@ export const Invalid: Story = {
       // Comparar com o token RESOLVIDO pelo navegador, não com um rgb literal:
       // o literal quebraria a cada ajuste de paleta e não valeria nos temas de
       // marca. É a metade do item de contrato que ninguém verificava.
-      const destrutivo = resolveColor(campo, 'hsl(var(--destructive))');
+      const destrutivo = resolveColor(field, 'hsl(var(--destructive))');
       await expect(getComputedStyle(mensagem).color).toBe(destrutivo);
     });
 
@@ -87,22 +87,22 @@ export const Invalid: Story = {
       // Vermelho sozinho não alcança quem não enxerga cor. O `aria-describedby`
       // é o que faz o leitor anunciar a mensagem junto com o nome do campo, e o
       // `data-error` é o gancho que o CSS usa para pintar o rótulo.
-      await expect(controle.getAttribute('aria-describedby')).toContain(mensagem.id);
+      await expect(control.getAttribute('aria-describedby')).toContain(mensagem.id);
       await expect(document.getElementById(mensagem.id)).toBe(mensagem);
-      await expect(rotulo).toHaveAttribute('data-error', 'true');
-      await expect(getComputedStyle(rotulo).color).toBe(resolveColor(campo, 'hsl(var(--destructive))'));
+      await expect(label).toHaveAttribute('data-error', 'true');
+      await expect(getComputedStyle(label).color).toBe(resolveColor(field, 'hsl(var(--destructive))'));
     });
 
     await step('Rótulo, apoio e erro passam de 4.5:1 no claro E no escuro', async () => {
       // O axe do test-runner mede só o que está na tela, e a tela está sempre no
       // tema claro — metade do produto ficava fora enquanto o contrato afirmava
       // "em todos os temas". A classe `.dark` sai no `finally` do colhedor.
-      const measurements = contrastesNosDoisModos(campo);
+      const measurements = contrastesNosDoisModos(field);
       await expect(measurements).toHaveLength(2);
       for (const m of measurements) {
-        await expect(m.rotulo).toBeGreaterThanOrEqual(4.5);
+        await expect(m.label).toBeGreaterThanOrEqual(4.5);
         await expect(m.helper).toBeGreaterThanOrEqual(4.5);
-        await expect(m.erro).toBeGreaterThanOrEqual(4.5);
+        await expect(m.error).toBeGreaterThanOrEqual(4.5);
       }
     });
   },
@@ -135,27 +135,27 @@ export const Disabled: Story = {
     }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const controle = canvas.getByLabelText('CPF') as HTMLInputElement;
+    const control = canvas.getByLabelText('CPF') as HTMLInputElement;
 
     await step('O controle não recebe foco nem digitação', async () => {
       // Clique em elemento desabilitado é idempotente por natureza: ele não
       // muda de estado em rodada nenhuma do replay.
-      await expect(controle).toBeDisabled();
-      await userEvent.click(controle);
-      await expect(controle).not.toHaveFocus();
+      await expect(control).toBeDisabled();
+      await userEvent.click(control);
+      await expect(control).not.toHaveFocus();
     });
 
     await step('O rótulo continua visível e associado', async () => {
       // Rótulo escondido em campo desabilitado é o padrão que faz a pessoa
       // perder a referência do que aquele valor significa.
-      const rotulo = canvasElement.querySelector<HTMLLabelElement>('label')!;
-      await expect(rotulo.offsetParent).not.toBeNull();
-      await expect(rotulo.htmlFor).toBe(controle.id);
+      const label = canvasElement.querySelector<HTMLLabelElement>('label')!;
+      await expect(label.offsetParent).not.toBeNull();
+      await expect(label.htmlFor).toBe(control.id);
     });
 
     await step('A descrição segue sendo lida junto com o campo', async () => {
       const descricao = canvasElement.querySelector<HTMLElement>('[data-slot="field-description"]')!;
-      await expect(controle.getAttribute('aria-describedby')).toContain(descricao.id);
+      await expect(control.getAttribute('aria-describedby')).toContain(descricao.id);
     });
   },
 };
@@ -173,10 +173,10 @@ export const DarkPalette: Story = {
     themes: { themeOverride: 'dark' },
   },
   render: () => {
-    const raiz = document.createElement('div');
-    raiz.className = 'nds-stack nds-max-w-sm';
+    const root = document.createElement('div');
+    root.className = 'nds-stack nds-max-w-sm';
 
-    raiz.appendChild(
+    root.appendChild(
       createFormField({
         label: 'Nome completo',
         input: createInput({ type: 'text', placeholder: 'ex: João da Silva' }),
@@ -185,7 +185,7 @@ export const DarkPalette: Story = {
 
     const email = createInput({ type: 'email', value: 'joao@' });
     email.setAttribute('aria-invalid', 'true');
-    raiz.appendChild(
+    root.appendChild(
       createFormField({
         label: 'Email',
         input: email,
@@ -194,7 +194,7 @@ export const DarkPalette: Story = {
       }),
     );
 
-    raiz.appendChild(
+    root.appendChild(
       createFieldset({
         legend: 'Endereço de entrega',
         children: [
@@ -206,7 +206,7 @@ export const DarkPalette: Story = {
       }),
     );
 
-    return raiz;
+    return root;
   },
   play: async ({ canvasElement, step }) => {
     await step('A paleta escura está aplicada no documento', async () => {
@@ -216,8 +216,8 @@ export const DarkPalette: Story = {
     await step('O campo é mais escuro que o texto que ele recebe', async () => {
       // Prova que a paleta trocou de verdade: com os tokens do claro esta
       // relação se inverte, e a asserção acusa.
-      const campo = canvasElement.querySelector<HTMLElement>('input[type="text"]')!;
-      const cs = getComputedStyle(campo);
+      const field = canvasElement.querySelector<HTMLElement>('input[type="text"]')!;
+      const cs = getComputedStyle(field);
       const brilho = (cor: string) => {
         const [r = 0, g = 0, b = 0] = cor.match(/[\d.]+/g)?.map(Number) ?? [];
         return 0.2126 * r + 0.7152 * g + 0.0722 * b;

@@ -28,30 +28,30 @@ ${parts.map((part) => `  ${part},`).join('\n')}
 }
 
 /** Destino direto da barra: um `<a href>` de verdade, não um botão. */
-function destination(valor: string, href: string, rotulo: string, active: boolean): string {
+function destination(value: string, href: string, label: string, active: boolean): string {
   const props = attrs(`href="${href}"`, active ? 'active' : '');
-  return `    <NavigationMenuItem value="${valor}">
-      <NavigationMenuLink${props}>${rotulo}</NavigationMenuLink>
+  return `    <NavigationMenuItem value="${value}">
+      <NavigationMenuLink${props}>${label}</NavigationMenuLink>
     </NavigationMenuItem>`;
 }
 
 /** Item com painel: o gatilho é botão porque abre conteúdo, e não navega. */
-function withPanel(valor: string, rotulo: string, corpo: string): string {
-  return `    <NavigationMenuItem value="${valor}">
-      <NavigationMenuTrigger>${rotulo}</NavigationMenuTrigger>
+function withPanel(value: string, label: string, body: string): string {
+  return `    <NavigationMenuItem value="${value}">
+      <NavigationMenuTrigger>${label}</NavigationMenuTrigger>
       <NavigationMenuContent>
-${corpo}
+${body}
       </NavigationMenuContent>
     </NavigationMenuItem>`;
 }
 
 /** Lista vertical de destinos dentro do painel. */
-function targetsList(itens: Array<[string, string]>): string {
-  const lines = itens
+function targetsList(items: Array<[string, string]>): string {
+  const lines = items
     .map(
-      ([href, rotulo]) => `          <li>
+      ([href, label]) => `          <li>
             <NavigationMenuChild href="${href}">
-              <div class="nds-navigation-menu-child-label">${rotulo}</div>
+              <div class="nds-navigation-menu-child-label">${label}</div>
             </NavigationMenuChild>
           </li>`,
     )
@@ -63,12 +63,12 @@ ${lines}
 }
 
 /** Duas colunas com uma linha de contexto por destino. */
-function targetsGrid(itens: Array<[string, string, string]>): string {
-  const lines = itens
+function targetsGrid(items: Array<[string, string, string]>): string {
+  const lines = items
     .map(
-      ([href, rotulo, descricao]) => `          <li>
+      ([href, label, descricao]) => `          <li>
             <NavigationMenuChild href="${href}">
-              <div class="nds-navigation-menu-child-label">${rotulo}</div>
+              <div class="nds-navigation-menu-child-label">${label}</div>
               <p class="nds-navigation-menu-child-description">
                 ${descricao}
               </p>
@@ -126,7 +126,7 @@ const HIGHLIGHT_PANEL = `        <div class="nds-grid nds-w-lg" data-fixed data-
         </div>`;
 
 /** Os itens da barra, na composição escolhida pela story. */
-function itens(demonstration: NavigationMenuArgs['demonstration'], activeHref?: string): string {
+function items(demonstration: NavigationMenuArgs['demonstration'], activeHref?: string): string {
   const active = (href: string) => activeHref === href;
 
   if (demonstration === 'simpleLink') {
@@ -241,7 +241,7 @@ let aberto = $state("${defaultValue}");`
       : importing(parts),
     `<NavigationMenuRoot${props}>
   <NavigationMenuList${listProps}>
-${itens(demonstration, activeHref)}${arrow}
+${items(demonstration, activeHref)}${arrow}
   </NavigationMenuList>
 </NavigationMenuRoot>`,
   );

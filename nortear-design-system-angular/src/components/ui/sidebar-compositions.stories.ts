@@ -105,8 +105,8 @@ export const WithGroupsAndSearch: Story = {
     await step('O Tab alcança busca, itens e ações — e não a faixa', async () => {
       // A faixa faz o mesmo que o gatilho, que já está na ordem de tabulação.
       // Duas paradas para uma ação só é ruído para quem navega sem mouse.
-      const faixa = canvasElement.querySelector<HTMLElement>('[data-slot="sidebar-rail"]')!;
-      await expect(faixa.tabIndex).toBe(-1);
+      const range = canvasElement.querySelector<HTMLElement>('[data-slot="sidebar-rail"]')!;
+      await expect(range.tabIndex).toBe(-1);
 
       const search = canvas.getByLabelText('Buscar na navegação');
       search.focus();
@@ -170,9 +170,9 @@ export const Loading: Story = {
         '[data-slot="sidebar-menu-skeleton"]',
       )!;
       const icone = withIcon.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-icon')!;
-      const texto = withIcon.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-text')!;
+      const text = withIcon.querySelector<HTMLElement>('.nds-sidebar-menu-skeleton-text')!;
       await expect(icone.getBoundingClientRect().left).toBeLessThan(
-        texto.getBoundingClientRect().left,
+        text.getBoundingClientRect().left,
       );
     });
   },
@@ -224,26 +224,26 @@ export const Mobile: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = () => canvas.getByRole('button', { name: 'Abrir navegação' });
+    const trigger = () => canvas.getByRole('button', { name: 'Abrir navegação' });
     // O painel vive num portal no fim do <body>, fora do canvasElement.
-    const painel = () => document.querySelector<HTMLElement>('.nds-sidebar-mobile');
+    const panel = () => document.querySelector<HTMLElement>('.nds-sidebar-mobile');
 
     await step('Em tela estreita a barra não é coluna: não há painel fixo', async () => {
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-testid="sb"]')!;
-      await expect(raiz.getAttribute('data-mobile')).toBe('true');
-      await expect(raiz.querySelector('.nds-sidebar-panel')).toBeNull();
-      await expect(painel()).toBeNull();
+      const root = canvasElement.querySelector<HTMLElement>('[data-testid="sb"]')!;
+      await expect(root.getAttribute('data-mobile')).toBe('true');
+      await expect(root.querySelector('.nds-sidebar-panel')).toBeNull();
+      await expect(panel()).toBeNull();
     });
 
     await step('O gatilho abre a gaveta', async () => {
-      await userEvent.click(gatilho());
-      await waitFor(() => expect(painel()).not.toBeNull());
+      await userEvent.click(trigger());
+      await waitFor(() => expect(panel()).not.toBeNull());
     });
 
     await step('A gaveta é um diálogo COM nome — não um painel anônimo', async () => {
       // Sem título o leitor de tela anuncia "diálogo" e mais nada. O par
       // título/descrição é sr-only: aparece para quem ouve, não para quem vê.
-      const dialogo = painel()!;
+      const dialogo = panel()!;
       await expect(dialogo.getAttribute('role')).toBe('dialog');
       const labelledBy = dialogo.getAttribute('aria-labelledby');
       await expect(labelledBy).toBeTruthy();
@@ -251,7 +251,7 @@ export const Mobile: Story = {
     });
 
     await step('A navegação inteira foi para dentro da gaveta', async () => {
-      const dialogo = painel()!;
+      const dialogo = panel()!;
       await expect(dialogo.querySelector('[data-slot="sidebar-menu"]')).not.toBeNull();
       await expect(dialogo.querySelectorAll('[data-slot="sidebar-menu-item"]').length).toBe(2);
     });
@@ -260,7 +260,7 @@ export const Mobile: Story = {
       // Mede o pixel: as regras de lado do sheet.css são (0,2,0) e a classe
       // .nds-sidebar-mobile é (0,1,0) — por classe ela perderia. Quem entrega a
       // medida é a custom property, e é isso que esta asserção guarda.
-      const dialogo = painel()!;
+      const dialogo = panel()!;
       const esperado = parseFloat(
         getComputedStyle(dialogo).getPropertyValue('--sidebar-width-mobile'),
       ) * parseFloat(getComputedStyle(document.documentElement).fontSize);
@@ -269,9 +269,9 @@ export const Mobile: Story = {
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
       await userEvent.keyboard('{Escape}');
-      await waitFor(() => expect(painel()).toBeNull());
+      await waitFor(() => expect(panel()).toBeNull());
       // O foco volta depois da animação de saída, não junto com a desmontagem.
-      await waitFor(() => expect(document.activeElement).toBe(gatilho()));
+      await waitFor(() => expect(document.activeElement).toBe(trigger()));
     });
 
     await step('Termina ABERTA: é este o estado que a foto registra', async () => {
@@ -282,12 +282,12 @@ export const Mobile: Story = {
       // O replay continua honesto: o passo de abertura acima parte da gaveta
       // fechada e o Escape a fechou de novo, então o clique daqui acontece
       // NESTA rodada. Este passo prova só o estado final.
-      await userEvent.click(gatilho());
+      await userEvent.click(trigger());
       // `waitForPortal` gateia na opacidade computada: afirmar no primeiro
       // quadro leria a gaveta no meio do fade de entrada.
       const dialogo = await waitForPortal('dialog', { name: /barra lateral/i });
       await expect(dialogo).toBeVisible();
-      await expect(dialogo).toBe(painel());
+      await expect(dialogo).toBe(panel());
     });
   },
 };
@@ -340,8 +340,8 @@ export const TooltipInIconMode: Story = {
     const balao = () => document.querySelector<HTMLElement>('[data-slot="tooltip-content"]');
 
     await step('A barra está recolhida em ícones: não há rótulo visível', async () => {
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-testid="sb"]')!;
-      await expect(raiz.getAttribute('data-collapsible')).toBe('icon');
+      const root = canvasElement.querySelector<HTMLElement>('[data-testid="sb"]')!;
+      await expect(root.getAttribute('data-collapsible')).toBe('icon');
       await expect(item().textContent?.trim()).toBe('');
     });
 

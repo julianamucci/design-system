@@ -684,8 +684,8 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarMetric = viewChild.required<TemplateRef<unknown>>('tplVarMetric');
 
   /** Primeira frase de uma descrição do conteúdo — cabe numa linha do cartão. */
-  private primeiraFrase(chave: string): string {
-    const limpo = stripHtml(t(chave));
+  private primeiraFrase(key: string): string {
+    const limpo = stripHtml(t(key));
     const corte = limpo.indexOf('.');
     return corte > 0 ? limpo.slice(0, corte + 1) : limpo;
   }
@@ -1019,9 +1019,9 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
       string,
       { accessibility?: { screenReader?: Record<string, string> } }
     >;
-    const bloco = byLocale[locale]?.accessibility?.screenReader ?? {};
+    const block = byLocale[locale]?.accessibility?.screenReader ?? {};
     // `title` é o cabeçalho da seção, não uma linha da lista.
-    return Object.entries(bloco).filter(([k]) => k !== 'title').map(([, v]) => v);
+    return Object.entries(block).filter(([k]) => k !== 'title').map(([, v]) => v);
   });
 
   protected readonly relatedItems = computed(() => {

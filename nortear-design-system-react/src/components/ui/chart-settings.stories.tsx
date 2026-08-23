@@ -44,35 +44,35 @@ export const WithTooltip: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await designPronto(canvasElement);
-    const valor = String(serieUnica[0].data[0]);
+    const root = await designPronto(canvasElement);
+    const value = String(serieUnica[0].data[0]);
 
     await step('O valor do ponto não está escrito no desenho', async () => {
       // Precondição da medida seguinte: se o número já aparecesse numa marca de
       // eixo, encontrá-lo depois não provaria que a dica abriu. Os dados foram
       // escolhidos para isso — 186 não cai em nenhuma marca.
-      await expect(designTexts(raiz)).not.toContain(valor);
+      await expect(designTexts(root)).not.toContain(value);
     });
 
     await step('Com o ponteiro sobre a barra, a dica escreve categoria e valor', async () => {
-      const forma = datumFormas(raiz)[0];
+      const forma = datumFormas(root)[0];
       await expect(forma).toBeDefined();
-      const caixa = forma.getBoundingClientRect();
-      const svg = raiz.querySelector('svg')!;
+      const box = forma.getBoundingClientRect();
+      const svg = root.querySelector('svg')!;
 
       // `userEvent.hover` não serve aqui: ele não leva coordenada, e a lib faz
       // o teste de acerto por coordenada — o ponteiro cairia em (0, 0), fora do
       // gráfico. `fireEvent.mouseMove` carrega o par clientX/clientY.
       fireEvent.mouseMove(svg, {
-        clientX: caixa.left + caixa.width / 2,
-        clientY: caixa.top + caixa.height / 2,
+        clientX: box.left + box.width / 2,
+        clientY: box.top + box.height / 2,
       });
 
       await waitFor(
         () => {
-          const texto = raiz.textContent ?? '';
-          expect(texto).toContain(valor);
-          expect(texto).toContain(meses[0]);
+          const text = root.textContent ?? '';
+          expect(text).toContain(value);
+          expect(text).toContain(meses[0]);
         },
         { timeout: 3000 },
       );
@@ -98,16 +98,16 @@ export const WithCaption: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await designPronto(canvasElement);
+    const root = await designPronto(canvasElement);
 
     await step('A legenda nomeia cada série por escrito', async () => {
-      for (const serie of seriesMulti) await expect(designEscreve(raiz, serie.name)).toBe(true);
+      for (const serie of seriesMulti) await expect(designEscreve(root, serie.name)).toBe(true);
     });
 
     await step('E há uma forma desenhada por categoria em cada série', async () => {
       // Piso, não igualdade: além das barras o desenho carrega a camada de
       // trama e o ícone da legenda, que também são formas preenchidas.
-      const formas = datumFormas(raiz);
+      const formas = datumFormas(root);
       await expect(formas.length).toBeGreaterThanOrEqual(meses.length * seriesMulti.length);
     });
   },
@@ -135,21 +135,21 @@ export const MultipleSeries: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await designPronto(canvasElement);
+    const root = await designPronto(canvasElement);
 
     await step('O título passado na configuração é escrito acima dos eixos', async () => {
-      await expect(designEscreve(raiz, 'Acessos por dispositivo')).toBe(true);
+      await expect(designEscreve(root, 'Acessos por dispositivo')).toBe(true);
     });
 
     await step('O rótulo autoral vence o título — é ele que o leitor de tela lê', async () => {
       // Sem rótulo o container cairia no título do gráfico; com rótulo, o texto
       // autoral prevalece, e é isso que separa descrição de acessibilidade de
       // título visual.
-      await expect(raiz.getAttribute('aria-label')).toBe('Acessos por dispositivo, de janeiro a junho');
+      await expect(root.getAttribute('aria-label')).toBe('Acessos por dispositivo, de janeiro a junho');
     });
 
     await step('A legenda nomeia cada série por escrito', async () => {
-      for (const serie of seriesMulti) await expect(designEscreve(raiz, serie.name)).toBe(true);
+      for (const serie of seriesMulti) await expect(designEscreve(root, serie.name)).toBe(true);
     });
   },
 };

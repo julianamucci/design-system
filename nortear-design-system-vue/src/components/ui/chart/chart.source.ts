@@ -73,21 +73,21 @@ const DISPOSITIVOS = `const dispositivos = [
  * `renderer` nasce em `svg` e `empty-label` na frase padrão: nenhum dos dois
  * entra no snippet quando o valor bate com o padrão do componente.
  */
-function container(opcoes: {
+function container(options: {
   option: string;
-  altura?: unknown;
-  rotulo?: string;
+  height?: unknown;
+  label?: string;
   className?: string;
   renderer?: unknown;
   emptyLabel?: unknown;
 }): string {
   const partes = attrsMultilinha([
-    `:option="${opcoes.option}"`,
-    attrNum('height', opcoes.altura),
-    attr('renderer', opcoes.renderer, 'svg'),
-    opcoes.rotulo ? attr('aria-label', opcoes.rotulo) : '',
-    attr('empty-label', opcoes.emptyLabel, CHART_EMPTY_LABEL),
-    opcoes.className ? attr('class', opcoes.className) : '',
+    `:option="${options.option}"`,
+    attrNum('height', options.height),
+    attr('renderer', options.renderer, 'svg'),
+    options.label ? attr('aria-label', options.label) : '',
+    attr('empty-label', options.emptyLabel, CHART_EMPTY_LABEL),
+    options.className ? attr('class', options.className) : '',
   ]);
   return partes.startsWith('\n')
     ? `<ChartContainer${partes}/>`
@@ -107,10 +107,10 @@ export const chartSource: SourceTransform<ChartArgs> = (_gerado, ctx) =>
     `${importing('buildBarOption')}\n\n${MONTHS_SEMESTER}\n${SERIE_SEMESTER}`,
     container({
       option: 'buildBarOption({ xAxis: meses, series })',
-      altura: typeof ctx?.args?.height === 'number' ? ctx.args.height : HEIGHT_PLAYGROUND,
+      height: typeof ctx?.args?.height === 'number' ? ctx.args.height : HEIGHT_PLAYGROUND,
       renderer: ctx?.args?.renderer,
       emptyLabel: ctx?.args?.emptyLabel,
-      rotulo: LABEL_PLAYGROUND,
+      label: LABEL_PLAYGROUND,
     }),
   );
 
@@ -120,8 +120,8 @@ export function chartBarSource(): string {
     `${importing('buildBarOption')}\n\n${MONTHS_SEMESTER}\n${SERIE_SEMESTER}`,
     container({
       option: 'buildBarOption({ xAxis: meses, series })',
-      altura: 240,
-      rotulo: 'Gráfico de barras: acessos mensais no desktop',
+      height: 240,
+      label: 'Gráfico de barras: acessos mensais no desktop',
     }),
   );
 }
@@ -132,8 +132,8 @@ export function chartLineSource(): string {
     `${importing('buildLineOption')}\n\n${MONTHS_SEMESTER}\n${SERIES_SEMESTER}`,
     container({
       option: 'buildLineOption({ xAxis: meses, series })',
-      altura: 260,
-      rotulo: 'Gráfico de linhas: acessos mensais por dispositivo',
+      height: 260,
+      label: 'Gráfico de linhas: acessos mensais por dispositivo',
     }),
   );
 }
@@ -144,8 +144,8 @@ export function chartAreaSource(): string {
     `${importing('buildAreaOption')}\n\n${MONTHS_SEMESTER}\n${SERIES_SEMESTER}`,
     container({
       option: 'buildAreaOption({ xAxis: meses, series })',
-      altura: 260,
-      rotulo: 'Gráfico de área: volume mensal de acessos por dispositivo',
+      height: 260,
+      label: 'Gráfico de área: volume mensal de acessos por dispositivo',
     }),
   );
 }
@@ -159,8 +159,8 @@ export function chartPieSource(): string {
     `${importing('buildPieOption')}\n\n${DISPOSITIVOS}`,
     container({
       option: 'buildPieOption({ data: dispositivos })',
-      altura: 280,
-      rotulo: 'Distribuição de acessos por dispositivo',
+      height: 280,
+      label: 'Distribuição de acessos por dispositivo',
     }),
   );
 }
@@ -175,8 +175,8 @@ export function chartPieSource(): string {
 export function chartWithCardSource(): string {
   const grafico = container({
     option: 'buildBarOption({ xAxis: meses, series })',
-    altura: 200,
-    rotulo: 'Acessos mensais no desktop, de janeiro a junho',
+    height: 200,
+    label: 'Acessos mensais no desktop, de janeiro a junho',
   });
   return vueSnippet(
     `${importing('buildBarOption')}
@@ -214,7 +214,7 @@ export function designChartTitleSource(): string {
     `${importing('buildBarOption')}\n\n${MONTHS_SEMESTER}\n${SERIE_SEMESTER}`,
     container({
       option: "buildBarOption({ xAxis: meses, series, title: 'Vendas mensais' })",
-      altura: 260,
+      height: 260,
       className: 'nds-max-w-lg',
     }),
   );
@@ -229,8 +229,8 @@ export function chartWithDicaSource(): string {
     `${importing('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIE_QUADRIMESTRE}`,
     container({
       option: 'buildBarOption({ xAxis: meses, series })',
-      altura: 240,
-      rotulo: 'Acessos mensais no desktop',
+      height: 240,
+      label: 'Acessos mensais no desktop',
     }),
   );
 }
@@ -241,8 +241,8 @@ export function chartWithCaptionSource(): string {
     `${importing('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIES_QUADRIMESTRE_3}`,
     container({
       option: 'buildBarOption({ xAxis: meses, series })',
-      altura: 280,
-      rotulo: 'Acessos mensais por dispositivo',
+      height: 280,
+      label: 'Acessos mensais por dispositivo',
     }),
   );
 }
@@ -253,8 +253,8 @@ export function chartMultiSerieSource(): string {
     `${importing('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIES_QUADRIMESTRE_3}`,
     container({
       option: "buildBarOption({ xAxis: meses, series, title: 'Acessos por dispositivo' })",
-      altura: 300,
-      rotulo: 'Acessos mensais por dispositivo, de janeiro a abril',
+      height: 300,
+      label: 'Acessos mensais por dispositivo, de janeiro a abril',
     }),
   );
 }
@@ -270,7 +270,7 @@ export function chartEmptySource(): string {
     importing('buildBarOption'),
     container({
       option: 'buildBarOption({ data: [] })',
-      altura: 200,
+      height: 200,
       emptyLabel: 'Nenhum dado disponível para o período selecionado.',
     }),
   );
@@ -282,8 +282,8 @@ export function chartSerieUnicaSource(): string {
     `${importing('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIE_QUADRIMESTRE}`,
     container({
       option: 'buildBarOption({ xAxis: meses, series })',
-      altura: 240,
-      rotulo: 'Acessos mensais no desktop',
+      height: 240,
+      label: 'Acessos mensais no desktop',
     }),
   );
 }
@@ -294,8 +294,8 @@ export function chartDuasSeriesSource(): string {
     `${importing('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIES_QUADRIMESTRE_2}`,
     container({
       option: 'buildBarOption({ xAxis: meses, series })',
-      altura: 280,
-      rotulo: 'Acessos mensais por dispositivo: desktop e mobile',
+      height: 280,
+      label: 'Acessos mensais por dispositivo: desktop e mobile',
     }),
   );
 }
@@ -308,13 +308,13 @@ export function chartDuasSeriesSource(): string {
 export function themeChartTokensSource(): string {
   const barras = container({
     option: 'buildBarOption({ xAxis: meses, series })',
-    altura: 260,
-    rotulo: 'Acessos mensais por dispositivo, em barras',
+    height: 260,
+    label: 'Acessos mensais por dispositivo, em barras',
   });
   const lines = container({
     option: 'buildLineOption({ xAxis: meses, series })',
-    altura: 260,
-    rotulo: 'Acessos mensais por dispositivo, em linhas',
+    height: 260,
+    label: 'Acessos mensais por dispositivo, em linhas',
   });
   return vueSnippet(
     `${importing('buildBarOption', 'buildLineOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIES_QUADRIMESTRE_2}`,
@@ -335,8 +335,8 @@ export function chartContrastSource(): string {
     `${importing('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIE_QUADRIMESTRE}`,
     container({
       option: 'buildBarOption({ xAxis: meses, series })',
-      altura: 260,
-      rotulo: 'Acessos mensais no desktop',
+      height: 260,
+      label: 'Acessos mensais no desktop',
     }),
   );
 }

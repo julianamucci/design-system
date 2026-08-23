@@ -16,7 +16,7 @@ import {
   attrs,
   asCode,
   indentar,
-  texto,
+  text,
   vueSnippet,
   type SourceTransform,
 } from '@/lib/story-source';
@@ -55,43 +55,43 @@ const CARTAO_PERFIL = `<div class="nds-cluster" data-spacing="sm" data-align="st
   </div>
 </div>`;
 
-function link(href: string, rotulo: string): string {
-  return `<a href="${href}" class="${TRIGGER_LINK}">${rotulo}</a>`;
+function link(href: string, label: string): string {
+  return `<a href="${href}" class="${TRIGGER_LINK}">${label}</a>`;
 }
 
-function button(rotulo: string): string {
+function button(label: string): string {
   // Sem `type="button"`, o mesmo gatilho dentro de um formulário o enviaria ao
   // ser ativado por Enter.
-  return `<button type="button" class="${TRIGGER_BUTTON}">${rotulo}</button>`;
+  return `<button type="button" class="${TRIGGER_BUTTON}">${label}</button>`;
 }
 
 /** O cartão no meio de uma frase: o texto antes, o gatilho, o texto depois. */
-function frase(opcoes: {
+function frase(options: {
   antes: string;
   depois: string;
-  raiz?: string;
-  gatilho: string;
-  painel?: string;
-  conteudo: string;
+  root?: string;
+  trigger: string;
+  panel?: string;
+  content: string;
   frame?: string;
 }): string {
   const {
     antes,
     depois,
-    raiz = '',
-    gatilho,
-    painel = '',
-    conteudo,
+    root = '',
+    trigger,
+    panel = '',
+    content,
     frame = 'nds-text-body nds-max-w-sm',
-  } = opcoes;
+  } = options;
   return `<p class="${frame}">
   ${antes}
-  <HoverCard${attrs(raiz)}>
+  <HoverCard${attrs(root)}>
     <HoverCardTrigger as-child>
-      ${gatilho}
+      ${trigger}
     </HoverCardTrigger>
-    <HoverCardContent${attrs(painel)}>
-${indentar(conteudo, 6)}
+    <HoverCardContent${attrs(panel)}>
+${indentar(content, 6)}
     </HoverCardContent>
   </HoverCard>
   ${depois}
@@ -112,16 +112,16 @@ export const hoverCardSource: SourceTransform<HoverCardArgs> = (_gerado, ctx) =>
     frase({
       antes: 'Comentário de',
       depois: 'há 2 horas.',
-      raiz: attrs(
+      root: attrs(
         attrBool('default-open', args.defaultOpen, false),
         attrNum('open-delay', args.openDelay, OPEN_DEFAULT),
         attrNum('close-delay', args.closeDelay, CLOSE_DEFAULT),
       ).trim(),
       // O gatilho é um link de verdade: no toque não existe hover, e é pelo
       // clique que a mesma informação continua alcançável.
-      gatilho: link('/users/joana', texto(asCode(args.triggerLabel), '@joana')),
-      painel: attrs(attr('side', args.side, 'bottom'), attr('align', args.align, 'center')).trim(),
-      conteudo: CARTAO_PERFIL,
+      trigger: link('/users/joana', text(asCode(args.triggerLabel), '@joana')),
+      panel: attrs(attr('side', args.side, 'bottom'), attr('align', args.align, 'center')).trim(),
+      content: CARTAO_PERFIL,
     }),
   );
 };
@@ -136,8 +136,8 @@ export function hoverCardDefaultSource(): string {
     frase({
       antes: 'Comentário de',
       depois: 'há 2 horas.',
-      gatilho: link('/users/joana', '@joana'),
-      conteudo: `<div class="nds-stack" data-spacing="xs">
+      trigger: link('/users/joana', '@joana'),
+      content: `<div class="nds-stack" data-spacing="xs">
   <p class="nds-text-body nds-font-medium nds-leading-none">Joana Silva</p>
   <p class="nds-text-caption nds-text-muted-foreground">
     Espera padrão: 600ms para abrir e 300ms para fechar.
@@ -157,9 +157,9 @@ export function hoverCardWaitCurtaSource(): string {
     frase({
       antes: 'Documentação em',
       depois: '— leitura de 8 minutos.',
-      raiz: ':open-delay="150" :close-delay="100"',
-      gatilho: link('https://design-system.dev', 'design-system.dev'),
-      conteudo: `<div class="nds-stack" data-spacing="xs">
+      root: ':open-delay="150" :close-delay="100"',
+      trigger: link('https://design-system.dev', 'design-system.dev'),
+      content: `<div class="nds-stack" data-spacing="xs">
   <p class="nds-text-body nds-font-medium nds-leading-none">Guia de overlays acessíveis</p>
   <p class="nds-text-caption nds-text-muted-foreground">
     Espera de 150ms para abrir e 100ms para fechar.
@@ -184,8 +184,8 @@ export function hoverCardPerfilSource(): string {
     frase({
       antes: 'Comentário de',
       depois: 'há 2 horas.',
-      gatilho: link('/users/joana', '@joana'),
-      conteudo: CARTAO_PERFIL,
+      trigger: link('/users/joana', '@joana'),
+      content: CARTAO_PERFIL,
     }),
   );
 }
@@ -234,8 +234,8 @@ export function hoverCardPreviaDeLinkSource(): string {
     frase({
       antes: 'O guia completo está em',
       depois: '.',
-      gatilho: link('https://design-system.dev', 'design-system.dev'),
-      conteudo: `<div class="nds-stack" data-spacing="sm">
+      trigger: link('https://design-system.dev', 'design-system.dev'),
+      content: `<div class="nds-stack" data-spacing="sm">
   <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="xs">
     <span class="nds-rounded-sm nds-bg-muted nds-px-1" aria-hidden="true">D</span>
     <span class="nds-truncate">design-system.dev/overlays</span>
@@ -260,9 +260,9 @@ export function hoverCardDefinicaoSource(): string {
     frase({
       antes: 'Todo componente do sistema atende',
       depois: ', sem exceção.',
-      gatilho: button('WCAG 2.2 AA'),
-      painel: 'aria-label="Definição de WCAG 2.2 AA"',
-      conteudo: `<div class="nds-stack" data-spacing="xs">
+      trigger: button('WCAG 2.2 AA'),
+      panel: 'aria-label="Definição de WCAG 2.2 AA"',
+      content: `<div class="nds-stack" data-spacing="xs">
   <p class="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 nível AA</p>
   <p class="nds-text-caption nds-text-muted-foreground">
     Diretrizes de acessibilidade para conteúdo web — contraste mínimo de 4.5:1,
@@ -284,9 +284,9 @@ export function hoverCardMetricaSource(): string {
     frase({
       antes: 'A página inicial fechou o mês em',
       depois: ', dentro da meta.',
-      gatilho: button('LCP 1.8s'),
-      painel: 'aria-label="Explicação da métrica LCP"',
-      conteudo: `<div class="nds-stack" data-spacing="xs">
+      trigger: button('LCP 1.8s'),
+      panel: 'aria-label="Explicação da métrica LCP"',
+      content: `<div class="nds-stack" data-spacing="xs">
   <div class="nds-cluster" data-justify="between" data-align="baseline" data-spacing="sm">
     <p class="nds-text-body nds-font-medium">Largest Contentful Paint</p>
     <span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
@@ -342,9 +342,9 @@ export function hoverCardClassNameExtraSource(): string {
     frase({
       antes: 'Resumo da entrega de',
       depois: 'nesta sprint.',
-      gatilho: link('/users/joana', '@joana'),
-      painel: 'class="nds-w-md nds-text-center"',
-      conteudo: `<div class="nds-stack" data-spacing="xs">
+      trigger: link('/users/joana', '@joana'),
+      panel: 'class="nds-w-md nds-text-center"',
+      content: `<div class="nds-stack" data-spacing="xs">
   <p class="nds-text-body nds-font-medium nds-leading-none">Joana Silva</p>
   <p class="nds-text-caption nds-text-muted-foreground">
     Fechou 14 tarefas nesta sprint, 9 delas em revisão de acessibilidade.

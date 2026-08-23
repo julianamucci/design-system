@@ -138,9 +138,9 @@ describe('estados', () => {
 describe('composições', () => {
   it('a barra repete o par rótulo do botão + texto do balão em cada ação', () => {
     const saida = iconsTooltipBarSource();
-    for (const rotulo of ['Salvar', 'Compartilhar', 'Excluir']) {
-      expect(saida).toContain(`aria-label="${rotulo}"`);
-      expect(saida).toContain(`<TooltipContent>${rotulo}</TooltipContent>`);
+    for (const label of ['Salvar', 'Compartilhar', 'Excluir']) {
+      expect(saida).toContain(`aria-label="${label}"`);
+      expect(saida).toContain(`<TooltipContent>${label}</TooltipContent>`);
     }
     expect(saida).toContain('import { Save, Share2, Trash2 } from "lucide-react";');
   });

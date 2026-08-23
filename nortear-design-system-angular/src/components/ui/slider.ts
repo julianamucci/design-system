@@ -92,7 +92,7 @@ import { RdxControlValueAccessor } from '@radix-ng/primitives/core';
            removido de propósito, e o motivo está no próprio slider.css — com
            6px de trilho contra uma alça de 24, recortar deixaria visível só uma
            tira dela. -->
-      @for (rotulo of rotulosDasAlcas(); track $index) {
+      @for (label of rotulosDasAlcas(); track $index) {
         <div
           rdxSliderThumb
           [index]="$index"
@@ -105,7 +105,7 @@ import { RdxControlValueAccessor } from '@radix-ng/primitives/core';
                alça fica sem nome acessível — em silêncio, com o slider ainda na
                tela. Mesma regra do id no Switch e do invalid no Checkbox: quem
                compõe não é dono do atributo que o primitivo liga. -->
-          <input rdxSliderThumbInput [aria-label]="rotulo" />
+          <input rdxSliderThumbInput [aria-label]="label" />
         </div>
       }
     </div>
@@ -129,7 +129,7 @@ export class NdsSlider {
   /** Um rótulo por alça, na ordem. Vence o `aria-label` onde estiver definido. */
   readonly thumbLabels = input<readonly string[]>([]);
 
-  private readonly raiz = inject(RdxSliderRoot, { self: true });
+  private readonly root = inject(RdxSliderRoot, { self: true });
 
   /**
    * Uma entrada por alça. O tamanho sai de `values()` do primitivo — que é o
@@ -139,7 +139,7 @@ export class NdsSlider {
   protected readonly rotulosDasAlcas = computed<(string | undefined)[]>(() => {
     const proprios = this.thumbLabels();
     const padrao = this.ariaLabel();
-    return this.raiz.values().map((_, i) => proprios[i] ?? padrao);
+    return this.root.values().map((_, i) => proprios[i] ?? padrao);
   });
 
   /**
@@ -167,8 +167,8 @@ export class NdsSlider {
     // o que já estava lá, e por isso isto não disputa o valor com ninguém —
     // durante o arraste o acessor já guarda um número e este effect não escreve.
     effect(() => {
-      const atual = this.cva.value();
-      if (Array.isArray(atual) && atual.length === 1) this.cva.writeValue(atual[0]);
+      const current = this.cva.value();
+      if (Array.isArray(current) && current.length === 1) this.cva.writeValue(current[0]);
     });
 
     // ── E de volta ──────────────────────────────────────────────────────────
@@ -178,7 +178,7 @@ export class NdsSlider {
     // `untracked` de propósito: como dependência, ela acordaria este effect no
     // meio do arraste com o valor antigo em mãos.
     effect(() => {
-      const doPrimitivo = this.raiz.values();
+      const doPrimitivo = this.root.values();
       const meu = untracked(this.value);
       const igual = meu.length === doPrimitivo.length && meu.every((v, i) => v === doPrimitivo[i]);
       if (!igual) this.value.set([...doPrimitivo]);

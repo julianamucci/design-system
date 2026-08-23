@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { ButtonIconKind, ButtonSize, ButtonVariant } from './button';
@@ -54,15 +54,15 @@ export function buttonSnippet(o: ButtonSnippetOptions = {}): string {
   // mock no painel Code. Só a string escrita por uma story entra no snippet.
   const onClick = typeof o.onClick === 'string' ? o.onClick : undefined;
 
-  const lines = opcoes([
-    ['variant', o.variant && o.variant !== 'default' ? texto(o.variant) : undefined],
-    ['size', o.size && o.size !== 'default' ? texto(o.size) : undefined],
-    ['label', o.label && !withTextEIcone ? texto(o.label) : undefined],
-    ['aria-label', o.ariaLabel ? texto(o.ariaLabel) : undefined],
+  const lines = options([
+    ['variant', o.variant && o.variant !== 'default' ? text(o.variant) : undefined],
+    ['size', o.size && o.size !== 'default' ? text(o.size) : undefined],
+    ['label', o.label && !withTextEIcone ? text(o.label) : undefined],
+    ['aria-label', o.ariaLabel ? text(o.ariaLabel) : undefined],
     ['aria-busy', o.ariaBusy ? 'true' : undefined],
     ['aria-invalid', o.ariaInvalid ? 'true' : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
-    ['children', o.children ? texto(o.children) : o.childrenElement ? 'conteudo' : undefined],
+    ['children', o.children ? text(o.children) : o.childrenElement ? 'conteudo' : undefined],
     ['onClick', onClick],
   ]);
 
@@ -70,17 +70,17 @@ export function buttonSnippet(o: ButtonSnippetOptions = {}): string {
   if (o.icon) names.push('createButtonIcon');
 
   const icone = o.icon
-    ? `createButtonIcon(${texto(o.icon)}${o.iconSpin ? ', { spin: true }' : ''})`
+    ? `createButtonIcon(${text(o.icon)}${o.iconSpin ? ', { spin: true }' : ''})`
     : undefined;
 
   const contentBlock = o.childrenElement
     ? `const conteudo = document.createElement('span');
-conteudo.textContent = ${texto(o.childrenElement)};`
+conteudo.textContent = ${text(o.childrenElement)};`
     : undefined;
 
   const labelBlock = withTextEIcone
     ? `const rotulo = document.createElement('span');
-rotulo.textContent = ${texto(o.label!)};`
+rotulo.textContent = ${text(o.label!)};`
     : undefined;
 
   const composition = withTextEIcone
@@ -174,8 +174,8 @@ acoes.dataset.spacing = 'sm';
 
 // A primária fica à direita: é a última do fluxo de leitura.
 acoes.append(
-  createButton({ variant: 'outline', label: ${texto(o.cancelar ?? 'Cancelar')} }),
-  createButton({ label: ${texto(o.confirmar ?? 'Confirmar')} }),
+  createButton({ variant: 'outline', label: ${text(o.cancelar ?? 'Cancelar')} }),
+  createButton({ label: ${text(o.confirmar ?? 'Confirmar')} }),
 );`,
     montar('acoes'),
   );
@@ -206,15 +206,15 @@ export type ButtonAsLinkSnippetOptions = {
  * contexto e abertura em outra aba. A aparência é o que se empresta.
  */
 export function buttonAsLinkSnippet(o: ButtonAsLinkSnippetOptions = {}): string {
-  const argumentos = [texto(o.variant ?? 'link')];
-  if (o.size && o.size !== 'default') argumentos.push(texto(o.size));
+  const args = [text(o.variant ?? 'link')];
+  if (o.size && o.size !== 'default') args.push(text(o.size));
 
   return snippet(
     importing('button', 'btnClass'),
     `const link = document.createElement('a');
-link.href = ${texto(o.href ?? '/documentacao')};
-link.className = btnClass(${argumentos.join(', ')});
-link.textContent = ${texto(o.label ?? 'Ver documentação')};`,
+link.href = ${text(o.href ?? '/documentacao')};
+link.className = btnClass(${args.join(', ')});
+link.textContent = ${text(o.label ?? 'Ver documentação')};`,
     montar('link'),
   );
 }

@@ -76,7 +76,7 @@ function dialogo(parcial: Partial<Composition> = {}): string {
   ].filter(Boolean);
 
   const script = `import {
-${names.map((nome) => `  ${nome},`).join('\n')}
+${names.map((name) => `  ${name},`).join('\n')}
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";${
     c.showMedia ? '\nimport TriangleAlert from "@lucide/svelte/icons/triangle-alert";' : ''

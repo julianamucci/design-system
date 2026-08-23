@@ -7,7 +7,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from './index';
-import { campo } from './input-otp.fixtures';
+import { field } from './input-otp.fixtures';
 import {
   inputOtpCompletoSource,
   inputOtpWithErrorSource,
@@ -39,12 +39,12 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { InputOTP, InputOTPGroup, InputOTPSlot };
 
-const boxes = (raiz: HTMLElement): HTMLElement[] => [
-  ...raiz.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),
+const boxes = (root: HTMLElement): HTMLElement[] => [
+  ...root.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),
 ];
 
-const texts = (raiz: HTMLElement): string[] =>
-  boxes(raiz).map((c) => c.textContent?.trim() ?? '');
+const texts = (root: HTMLElement): string[] =>
+  boxes(root).map((c) => c.textContent?.trim() ?? '');
 
 export const Empty: Story = {
   parameters: {
@@ -74,7 +74,7 @@ export const Empty: Story = {
     await step('Nasce vazio com o campo pronto para receber', async () => {
       await expect(boxes(canvasElement)).toHaveLength(6);
       await expect(texts(canvasElement).join('')).toBe('');
-      await expect(campo(canvasElement)).toHaveFocus();
+      await expect(field(canvasElement)).toHaveFocus();
     });
   },
 };
@@ -189,7 +189,7 @@ export const Disabled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('O campo não aceita foco nem digitação', async () => {
-      const input = campo(canvasElement);
+      const input = field(canvasElement);
       await expect(input).toBeDisabled();
       await userEvent.click(input);
       await expect(input).not.toHaveFocus();
@@ -263,11 +263,11 @@ export const Error: Story = {
     const noError = canvasElement.querySelector<HTMLElement>('[data-testid="sem-erro"]')!;
 
     await step('O erro é anunciado por ARIA, não só pela borda', async () => {
-      await expect(campo(withError)).toHaveAttribute('aria-invalid', 'true');
+      await expect(field(withError)).toHaveAttribute('aria-invalid', 'true');
     });
 
     await step('A mensagem de erro está ligada ao campo', async () => {
-      await expect(campo(withError)).toHaveAttribute('aria-describedby', 'otp-error-msg');
+      await expect(field(withError)).toHaveAttribute('aria-describedby', 'otp-error-msg');
       await expect(canvasElement.querySelector('#otp-error-msg')).toBeTruthy();
     });
 

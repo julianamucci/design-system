@@ -35,23 +35,23 @@ const FRAME = 'nds-resize-y nds-min-h-30';
  * quando não cabem — atributo em linha longa demais some na barra de rolagem do
  * painel.
  */
-function campo(atributos: Array<string | false | undefined>, recuo = 2): string {
+function field(attrs: Array<string | false | undefined>, recuo = 2): string {
   const p = ' '.repeat(recuo);
-  const lista = atributos.filter((a): a is string => Boolean(a));
-  const inLine = lista.join(' ');
+  const list = attrs.filter((a): a is string => Boolean(a));
+  const inLine = list.join(' ');
   if (inLine.length <= 60) return `${p}<Textarea ${inLine} />`;
-  return `${p}<Textarea\n${lista.map((a) => `${p}  ${a}`).join('\n')}\n${p}/>`;
+  return `${p}<Textarea\n${list.map((a) => `${p}  ${a}`).join('\n')}\n${p}/>`;
 }
 
 /** Moldura do formulário: rótulo, campo e o que mais a composição pedir. */
-function grupo(...lines: string[]): string {
+function group(...lines: string[]): string {
   return `<div class="nds-stack nds-w-md" data-spacing="sm">
 ${lines.join('\n')}
 </div>`;
 }
 
-function rotulo(id: string, texto: string): string {
-  return `  <Label for="${id}">${texto}</Label>`;
+function label(id: string, text: string): string {
+  return `  <Label for="${id}">${text}</Label>`;
 }
 
 /**
@@ -78,8 +78,8 @@ export const textareaSource: SourceTransform<TextareaArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const limit = typeof args.maxlength === 'number' && args.maxlength > 0 ? args.maxlength : null;
   const lines = [
-    rotulo('descricao', 'Descrição'),
-    campo([
+    label('descricao', 'Descrição'),
+    field([
       'id="descricao"',
       'v-model="descricao"',
       limit !== null && ':maxlength="maximo"',
@@ -98,7 +98,7 @@ export const textareaSource: SourceTransform<TextareaArgs> = (_gerado, ctx) => {
   ]
     .filter(Boolean)
     .join('\n');
-  return vueSnippet(`${IMPORT_PAIR}\nimport { ref } from 'vue'\n\n${state}`, grupo(...lines));
+  return vueSnippet(`${IMPORT_PAIR}\nimport { ref } from 'vue'\n\n${state}`, group(...lines));
 };
 
 /**
@@ -108,9 +108,9 @@ export const textareaSource: SourceTransform<TextareaArgs> = (_gerado, ctx) => {
 export function textareaWithLabelSource(): string {
   return vueSnippet(
     IMPORT_PAIR,
-    grupo(
-      rotulo('descricao', 'Descrição'),
-      campo(['id="descricao"', 'placeholder="ex: Descreva o produto..."', `class="${FRAME}"`]),
+    group(
+      label('descricao', 'Descrição'),
+      field(['id="descricao"', 'placeholder="ex: Descreva o produto..."', `class="${FRAME}"`]),
     ),
   );
 }
@@ -119,9 +119,9 @@ export function textareaWithLabelSource(): string {
 export function textareaDefaultSource(): string {
   return vueSnippet(
     IMPORT_PAIR,
-    grupo(
-      rotulo('biografia', 'Biografia'),
-      campo(['id="biografia"', 'placeholder="Conte um pouco sobre você..."', `class="${FRAME}"`]),
+    group(
+      label('biografia', 'Biografia'),
+      field(['id="biografia"', 'placeholder="Conte um pouco sobre você..."', `class="${FRAME}"`]),
     ),
   );
 }
@@ -137,9 +137,9 @@ import { ref } from 'vue'
 
 const descricao = ref('')
 const maximo = 500`,
-    grupo(
-      rotulo('descricao', 'Descrição'),
-      campo([
+    group(
+      label('descricao', 'Descrição'),
+      field([
         'id="descricao"',
         'v-model="descricao"',
         ':maxlength="maximo"',
@@ -158,9 +158,9 @@ const maximo = 500`,
 export function textareaNoRedimensionarSource(): string {
   return vueSnippet(
     IMPORT_PAIR,
-    grupo(
-      rotulo('feedback', 'Feedback'),
-      campo([
+    group(
+      label('feedback', 'Feedback'),
+      field([
         'id="feedback"',
         'placeholder="O que poderíamos melhorar?"',
         'class="nds-resize-none nds-min-h-30"',
@@ -176,9 +176,9 @@ export function textareaNoRedimensionarSource(): string {
 export function textareaPreenchidoSource(): string {
   return vueSnippet(
     IMPORT_PAIR,
-    grupo(
-      rotulo('biografia', 'Biografia'),
-      campo([
+    group(
+      label('biografia', 'Biografia'),
+      field([
         'id="biografia"',
         'default-value="Designer e desenvolvedora apaixonada por design systems e acessibilidade."',
         `class="${FRAME}"`,
@@ -191,9 +191,9 @@ export function textareaPreenchidoSource(): string {
 export function textareaDisabledSource(): string {
   return vueSnippet(
     IMPORT_PAIR,
-    grupo(
-      rotulo('descricao', 'Descrição'),
-      campo(['id="descricao"', 'placeholder="Não disponível"', 'disabled', `class="${FRAME}"`]),
+    group(
+      label('descricao', 'Descrição'),
+      field(['id="descricao"', 'placeholder="Não disponível"', 'disabled', `class="${FRAME}"`]),
     ),
   );
 }
@@ -205,9 +205,9 @@ export function textareaDisabledSource(): string {
 export function textareaSomenteLeituraSource(): string {
   return vueSnippet(
     IMPORT_PAIR,
-    grupo(
-      rotulo('observacoes', 'Observações'),
-      campo([
+    group(
+      label('observacoes', 'Observações'),
+      field([
         'id="observacoes"',
         'default-value="Pedido confirmado em 02/05/2026. Entrega prevista em até 5 dias úteis."',
         'readonly',
@@ -224,9 +224,9 @@ export function textareaSomenteLeituraSource(): string {
 export function textareaInvalidoSource(): string {
   return vueSnippet(
     IMPORT_PAIR,
-    grupo(
-      rotulo('descricao', 'Descrição'),
-      campo([
+    group(
+      label('descricao', 'Descrição'),
+      field([
         'id="descricao"',
         'default-value="curto"',
         'aria-invalid="true"',
@@ -247,9 +247,9 @@ export function textareaInvalidoSource(): string {
 export function textareaWithHelperSource(): string {
   return vueSnippet(
     IMPORT_PAIR,
-    grupo(
-      rotulo('biografia', 'Biografia'),
-      campo([
+    group(
+      label('biografia', 'Biografia'),
+      field([
         'id="biografia"',
         'placeholder="Conte um pouco sobre você..."',
         'aria-describedby="biografia-apoio"',
@@ -268,12 +268,12 @@ export function textareaWithHelperSource(): string {
 export function textareaObrigatorioSource(): string {
   return vueSnippet(
     IMPORT_PAIR,
-    grupo(
+    group(
       `  <Label for="feedback">
     Feedback
     <span class="nds-text-destructive" aria-hidden="true">*</span>
   </Label>`,
-      campo([
+      field([
         'id="feedback"',
         'placeholder="O que poderíamos melhorar?"',
         'aria-required="true"',

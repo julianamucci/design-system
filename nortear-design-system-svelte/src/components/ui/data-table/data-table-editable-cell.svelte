@@ -28,7 +28,7 @@
     onCommit: (value: unknown) => void;
   } = $props();
 
-  const rotulo = $derived((edit ?? DATA_TABLE_LABELS_DEFAULT.edit)(label ?? columnId));
+  const editLabel = $derived((edit ?? DATA_TABLE_LABELS_DEFAULT.edit)(label ?? columnId));
 
   let value = $derived(initial == null ? '' : String(initial));
   let editing = $state(false);
@@ -65,7 +65,7 @@
       oninput={(e: Event) => (value = (e.currentTarget as HTMLInputElement).value)}
       onblur={commit}
       onkeydown={handleKeyDown}
-      aria-label={rotulo}
+      aria-label={editLabel}
       class="nds-data-table-edit-input"
     />
   {:else}
@@ -73,7 +73,7 @@
       type="button"
       onclick={() => (editing = true)}
       class="nds-data-table-edit-btn"
-      aria-label={rotulo}
+      aria-label={editLabel}
     >
       {#if value === ''}
         <span class="nds-dt-icon-muted">—</span>

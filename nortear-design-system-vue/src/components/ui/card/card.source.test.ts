@@ -102,8 +102,8 @@ describe('transforms das stories de tamanho e de estado', () => {
 
   it('o rodapé é filho direto do card, e vem depois do corpo', () => {
     const saida = cardWithFooterSource();
-    const raiz = saida.slice(saida.indexOf('<Card '));
-    expect(raiz.indexOf('</CardContent>')).toBeLessThan(raiz.indexOf('<CardFooter'));
+    const root = saida.slice(saida.indexOf('<Card '));
+    expect(root.indexOf('</CardContent>')).toBeLessThan(root.indexOf('<CardFooter'));
     // Um invólucro entre os dois mataria a regra que zera o respiro de baixo.
     expect(saida).toContain('    <CardFooter class="nds-cluster"');
   });
@@ -120,8 +120,8 @@ describe('transforms das stories de composição', () => {
 
   it('a imagem é o primeiro filho, e o canto vem do card, não de classe nela', () => {
     const saida = cardWithImageSource();
-    const raiz = saida.slice(saida.indexOf('<Card '));
-    expect(raiz.indexOf('<img')).toBeLessThan(raiz.indexOf('<CardHeader>'));
+    const root = saida.slice(saida.indexOf('<Card '));
+    expect(root.indexOf('<img')).toBeLessThan(root.indexOf('<CardHeader>'));
     expect(saida).not.toContain('nds-rounded-t');
     // Imagem informativa: alt vazio a esconderia de quem usa leitor de tela.
     expect(saida).toContain('alt="Cadeira Gamer Pro vista de frente, em fundo neutro"');
@@ -139,8 +139,8 @@ describe('transforms das stories de composição', () => {
   it('na métrica o título nomeia e o corpo carrega o valor', () => {
     const saida = cardDeMetricaSource();
     expect(saida).toContain('<CardTitle as="h3">Assinantes ativos</CardTitle>');
-    const corpo = saida.slice(saida.indexOf('<CardContent>'), saida.indexOf('</CardContent>'));
-    expect(corpo).toContain('8.742');
+    const body = saida.slice(saida.indexOf('<CardContent>'), saida.indexOf('</CardContent>'));
+    expect(body).toContain('8.742');
     // Trocar título e valor faria o leitor anunciar "8.742" como nome do card.
     expect(saida).not.toContain('<CardTitle as="h3">8.742');
   });

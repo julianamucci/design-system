@@ -3,14 +3,14 @@ import { userEvent, expect, waitFor, fn } from 'storybook/test';
 import DialogStory from './DialogStory.svelte';
 import { dialogSource } from './dialog.source';
 import {
-  abrir,
+  open,
   cantoButtonClose,
   checkNameEDescricao,
   waitForOpen,
   waitForClosed,
-  gatilho,
+  trigger,
   overlay,
-  painel,
+  panel,
 } from './dialog.fixtures';
 
 const meta: Meta = {
@@ -52,20 +52,20 @@ export const Closed: Story = {
   // Esta story não interage com nada: é aqui que a leitura do estado de
   // MONTAGEM vale, porque nenhum replay pode ter mudado o que ela observa.
   play: async ({ canvasElement, step }) => {
-    const trigger = gatilho(canvasElement)!;
+    const triggerEl = trigger(canvasElement)!;
 
     await step('Fechado, nada do conteúdo existe no DOM', async () => {
       // O portal é estrutural: fechado, nem o overlay nem o painel estão no
       // DOM. Um painel escondido por CSS continuaria na ordem de tabulação e
       // seria lido pelo leitor de tela.
-      await expect(painel()).toBeNull();
+      await expect(panel()).toBeNull();
       await expect(overlay()).toBeNull();
-      await expect(trigger).toBeVisible();
+      await expect(triggerEl).toBeVisible();
     });
 
     await step('O gatilho anuncia que abre um diálogo, e que está recolhido', async () => {
-      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(triggerEl).toHaveAttribute('aria-haspopup', 'dialog');
+      await expect(triggerEl).toHaveAttribute('aria-expanded', 'false');
     });
   },
 };
@@ -137,7 +137,7 @@ export const WithCloseButtonHidden: Story = {
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final, e o que esta story existe
       // para mostrar é o painel SEM o X no canto.
-      await expect(await abrir(canvasElement)).toBeVisible();
+      await expect(await open(canvasElement)).toBeVisible();
     });
   },
 };
@@ -164,34 +164,34 @@ export const Controlled: Story = {
     onCancel: spyCancelar,
   },
   play: async ({ canvasElement, step }) => {
-    const trigger = gatilho(canvasElement)!;
+    const triggerEl = trigger(canvasElement)!;
     spyCancelar.mockClear();
 
     await step('Nasce fechado, porque o valor externo diz que sim', async () => {
-      await expect(painel()).toBeNull();
+      await expect(panel()).toBeNull();
     });
 
     await step('Interagir avisa o dono do estado, e o painel segue o valor', async () => {
-      const p = await abrir(canvasElement);
+      const p = await open(canvasElement);
       await expect(p).toBeVisible();
-      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      await expect(triggerEl).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('O Cancelar do rodapé passa pelo callback do pai', async () => {
-      const p = painel()!;
-      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      const p = panel()!;
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = footer.querySelectorAll<HTMLElement>('button');
       await userEvent.click(buttons[0]);
       await waitForClosed();
       await expect(spyCancelar).toHaveBeenCalled();
     });
 
     await step('Escape também fecha, e o estado externo acompanha', async () => {
-      await abrir(canvasElement);
+      await open(canvasElement);
       await userEvent.keyboard('{Escape}');
       await waitForClosed();
-      await expect(painel()).toBeNull();
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(panel()).toBeNull();
+      await expect(triggerEl).toHaveAttribute('aria-expanded', 'false');
     });
   },
 };

@@ -29,10 +29,10 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const lista = (el: HTMLElement): HTMLElement =>
+const list = (el: HTMLElement): HTMLElement =>
   el.querySelector<HTMLElement>('[data-slot="tabs-list"]')!;
 
-const raiz = (el: HTMLElement): HTMLElement =>
+const root = (el: HTMLElement): HTMLElement =>
   el.querySelector<HTMLElement>('[data-slot="tabs"]')!;
 
 export const Default: Story = {
@@ -53,7 +53,7 @@ export const Default: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const l = lista(canvasElement);
+    const l = list(canvasElement);
 
     await step('A variante default é escrita no markup', async () => {
       // Afirmar o atributo resultante é o que impede o defeito silencioso do
@@ -111,7 +111,7 @@ export const Line: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const l = lista(canvasElement);
+    const l = list(canvasElement);
 
     await step('A variante line chega ao markup', async () => {
       await expect(l.getAttribute('data-variant')).toBe('line');
@@ -154,10 +154,10 @@ export const Vertical: Story = {
     const canvas = within(canvasElement);
 
     await step('A orientação chega à raiz e ao tablist', async () => {
-      await expect(raiz(canvasElement).getAttribute('data-orientation')).toBe('vertical');
+      await expect(root(canvasElement).getAttribute('data-orientation')).toBe('vertical');
       // `aria-orientation` só é escrito no caso vertical: no horizontal ele é o
       // padrão implícito do papel e repeti-lo é ruído.
-      await expect(lista(canvasElement).getAttribute('aria-orientation')).toBe('vertical');
+      await expect(list(canvasElement).getAttribute('aria-orientation')).toBe('vertical');
     });
 
     await step('As abas ficam empilhadas', async () => {
@@ -167,9 +167,9 @@ export const Vertical: Story = {
     });
 
     await step('O painel fica ao lado da lista, não abaixo', async () => {
-      const l = lista(canvasElement).getBoundingClientRect();
-      const painel = canvas.getByRole('tabpanel').getBoundingClientRect();
-      await expect(painel.left).toBeGreaterThanOrEqual(l.right);
+      const l = list(canvasElement).getBoundingClientRect();
+      const panel = canvas.getByRole('tabpanel').getBoundingClientRect();
+      await expect(panel.left).toBeGreaterThanOrEqual(l.right);
     });
   },
 };

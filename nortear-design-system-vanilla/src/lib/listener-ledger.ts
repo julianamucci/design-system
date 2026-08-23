@@ -29,7 +29,7 @@
 type Target = 'document' | 'window';
 
 type Entry = {
-  alvo: Target;
+  target: Target;
   type: string;
   fn: unknown;
   capture: boolean;
@@ -37,7 +37,7 @@ type Entry = {
   embrulho?: EventListener;
 };
 
-export type ListenerVivo = { alvo: Target; type: string; origem: string };
+export type ListenerVivo = { target: Target; type: string; origem: string };
 
 /**
  * Arquivo:linha de quem chamou `addEventListener`.
@@ -70,13 +70,13 @@ export function espiarOuvintes(): OuvintesSpy {
   const entries: Entry[] = [];
   const restauradores: Array<() => void> = [];
 
-  const instalar = (nome: Target, obj: EventTarget): void => {
+  const instalar = (name: Target, obj: EventTarget): void => {
     const addOriginal = EventTarget.prototype.addEventListener.bind(obj);
     const removeOriginal = EventTarget.prototype.removeEventListener.bind(obj);
 
     const baixar = (type: string, fn: unknown, capture: boolean): Entry | undefined => {
       const i = entries.findIndex(
-        (e) => e.alvo === nome && e.type === type && e.fn === fn && e.capture === capture,
+        (e) => e.target === name && e.type === type && e.fn === fn && e.capture === capture,
       );
       if (i < 0) return undefined;
       return entries.splice(i, 1)[0];
@@ -91,7 +91,7 @@ export function espiarOuvintes(): OuvintesSpy {
 
         const umaVez = typeof opts === 'object' && opts !== null && Boolean(opts.once);
         if (!umaVez) {
-          entries.push({ alvo: nome, type, fn, capture, origem: callOrigem() });
+          entries.push({ target: name, type, fn, capture, origem: callOrigem() });
           return addOriginal(type, fn as EventListener, opts);
         }
 
@@ -102,7 +102,7 @@ export function espiarOuvintes(): OuvintesSpy {
           baixar(type, fn, capture);
           (fn as EventListener).call(obj, evento);
         };
-        entries.push({ alvo: nome, type, fn, capture, embrulho, origem: callOrigem() });
+        entries.push({ target: name, type, fn, capture, embrulho, origem: callOrigem() });
         return addOriginal(type, embrulho, opts);
       },
     });
@@ -128,7 +128,7 @@ export function espiarOuvintes(): OuvintesSpy {
   instalar('window', window);
 
   return {
-    vivos: () => entries.map(({ alvo, type, origem }) => ({ alvo, type, origem })),
+    vivos: () => entries.map(({ target, type, origem }) => ({ target, type, origem })),
     parar: () => restauradores.forEach((r) => r()),
   };
 }
@@ -139,5 +139,5 @@ export function espiarOuvintes(): OuvintesSpy {
  */
 export function describeVivos(vivos: ListenerVivo[]): string {
   if (vivos.length === 0) return 'nenhum';
-  return vivos.map((v) => `${v.alvo}:${v.type}@${v.origem}`).join(', ');
+  return vivos.map((v) => `${v.target}:${v.type}@${v.origem}`).join(', ');
 }

@@ -31,8 +31,8 @@ const HAS_WIDTH = new Set(['text', 'heading']);
  * `div` sem papel é violação de ARIA — é o par papel + nome que faz o leitor de
  * tela dizer "carregando". O placeholder dentro fica `aria-hidden` de fábrica.
  */
-function regiao(opcoes: {
-  rotulo: string;
+function regiao(options: {
+  label: string;
   ocupado?: boolean;
   className?: string;
   espaco?: string;
@@ -40,16 +40,16 @@ function regiao(opcoes: {
   tag?: string;
   papel?: string;
 }): string {
-  const tag = opcoes.tag ?? 'div';
-  const papel = opcoes.papel ?? 'status';
+  const tag = options.tag ?? 'div';
+  const papel = options.papel ?? 'status';
   const abertura = attrsMultilinha([
     `role="${papel}"`,
-    `aria-busy="${opcoes.ocupado === false ? 'false' : 'true'}"`,
-    `aria-label="${opcoes.rotulo}"`,
-    opcoes.className && `class="${opcoes.className}"`,
-    opcoes.espaco && `data-spacing="${opcoes.espaco}"`,
+    `aria-busy="${options.ocupado === false ? 'false' : 'true'}"`,
+    `aria-label="${options.label}"`,
+    options.className && `class="${options.className}"`,
+    options.espaco && `data-spacing="${options.espaco}"`,
   ]);
-  return `<${tag}${abertura}>\n${indentar(opcoes.miolo)}\n</${tag}>`;
+  return `<${tag}${abertura}>\n${indentar(options.miolo)}\n</${tag}>`;
 }
 
 /** Uma peça: a forma sempre aparece, a largura só onde a folha a lê. */
@@ -64,7 +64,7 @@ function part(shape: string, width?: string, className?: string): string {
 
 /** Duas ou três linhas de larguras decrescentes — o desenho de um parágrafo. */
 function lines(larguras: string[]): string {
-  return larguras.map((largura) => part('text', largura)).join('\n');
+  return larguras.map((width) => part('text', width)).join('\n');
 }
 
 /**
@@ -86,7 +86,7 @@ export const skeletonPlaygroundSource: SourceTransform<SkeletonArgs> = (_gerado,
   return vueSnippet(
     IMPORT,
     regiao({
-      rotulo: 'Carregando conteúdo',
+      label: 'Carregando conteúdo',
       ocupado: args.loading !== false,
       miolo,
     }),
@@ -98,7 +98,7 @@ export function skeletonRetanguloSource(): string {
   return vueSnippet(
     IMPORT,
     regiao({
-      rotulo: 'Carregando bloco',
+      label: 'Carregando bloco',
       className: 'nds-w-sm',
       miolo: part('fill', undefined, 'nds-docs-skeleton-media'),
     }),
@@ -112,7 +112,7 @@ export function skeletonRetanguloSource(): string {
 export function skeletonCirculoSource(): string {
   return vueSnippet(
     IMPORT,
-    regiao({ rotulo: 'Carregando avatar', miolo: part('avatar') }),
+    regiao({ label: 'Carregando avatar', miolo: part('avatar') }),
   );
 }
 
@@ -125,7 +125,7 @@ export function skeletonLineTextSource(): string {
   return vueSnippet(
     IMPORT,
     regiao({
-      rotulo: 'Carregando linhas de texto',
+      label: 'Carregando linhas de texto',
       className: 'nds-stack nds-w-sm',
       espaco: 'sm',
       miolo: lines(['full', '3-4', '1-2']),
@@ -138,7 +138,7 @@ export function skeletonPulsandoSource(): string {
   return vueSnippet(
     IMPORT,
     regiao({
-      rotulo: 'Carregando conteúdo',
+      label: 'Carregando conteúdo',
       className: 'nds-stack nds-w-sm',
       espaco: 'sm',
       miolo: lines(['full', '3-4']),
@@ -157,7 +157,7 @@ export function skeletonMovimentoReduzidoSource(): string {
   return vueSnippet(
     IMPORT,
     regiao({
-      rotulo: 'Carregando conteúdo',
+      label: 'Carregando conteúdo',
       className: 'nds-stack nds-w-sm',
       espaco: 'sm',
       miolo: part('text', '3-4'),
@@ -170,7 +170,7 @@ export function skeletonCardPerfilSource(): string {
   return vueSnippet(
     IMPORT,
     regiao({
-      rotulo: 'Carregando card de perfil',
+      label: 'Carregando card de perfil',
       className: 'nds-cluster nds-p-4 nds-border-default nds-rounded-md nds-w-sm',
       espaco: 'md',
       miolo: `${part('avatar')}
@@ -191,7 +191,7 @@ export function skeletonListSource(): string {
     regiao({
       tag: 'ul',
       papel: 'list',
-      rotulo: 'Carregando lista de pedidos',
+      label: 'Carregando lista de pedidos',
       className: 'nds-stack nds-list-none nds-p-0 nds-w-md',
       espaco: 'md',
       miolo: `<li v-for="i in 5" :key="i" class="nds-cluster" data-align="center" data-spacing="sm">
@@ -213,7 +213,7 @@ export function skeletonImageRatioSource(): string {
   return vueSnippet(
     `${IMPORT}\nimport { AspectRatio } from '@/components/ui/aspect-ratio'`,
     regiao({
-      rotulo: 'Carregando imagem',
+      label: 'Carregando imagem',
       className: 'nds-w-sm',
       miolo: `<AspectRatio :ratio="16 / 9">
   ${part('fill')}
@@ -227,7 +227,7 @@ export function skeletonParagrafoSource(): string {
   return vueSnippet(
     IMPORT,
     regiao({
-      rotulo: 'Carregando parágrafo',
+      label: 'Carregando parágrafo',
       className: 'nds-stack nds-w-sm',
       espaco: 'sm',
       miolo: lines(['full', '3-4', '1-2']),

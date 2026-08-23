@@ -25,10 +25,10 @@ const VARIANTS = [
 const IMPORT = 'import { Badge } from "@/components/ui/badge";';
 
 /** Uma etiqueta com texto curto dentro — a forma inteira do componente. */
-function badgeSnippet(variante: BadgeArgs['variant'] | undefined, conteudo: string): string {
+function badgeSnippet(variant: BadgeArgs['variant'] | undefined, content: string): string {
   return jsxSnippet(
     IMPORT,
-    `<Badge${attrs(propOption('variant', variante, VARIANTS, 'default'))}>${conteudo}</Badge>`,
+    `<Badge${attrs(propOption('variant', variant, VARIANTS, 'default'))}>${content}</Badge>`,
   );
 }
 

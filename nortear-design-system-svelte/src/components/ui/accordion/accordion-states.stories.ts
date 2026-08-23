@@ -75,13 +75,13 @@ export const Closed: Story = {
       // de um item fechado; desmontar o painel mataria o recurso em silêncio. O
       // display entra junto porque um `display: none` de autor o anula sem
       // quebrar nada visível.
-      const painel = await waitFor(() => {
+      const panel = await waitFor(() => {
         const el = canvasElement.querySelector<HTMLElement>('[data-slot="accordion-content"]');
         if (!el || !el.hasAttribute('hidden')) throw new Error('painel ainda assentando');
         return el;
       });
-      await expect(painel.getAttribute('hidden')).toBe('until-found');
-      await expect(getComputedStyle(painel).display).not.toBe('none');
+      await expect(panel.getAttribute('hidden')).toBe('until-found');
+      await expect(getComputedStyle(panel).display).not.toBe('none');
     });
 
     await step('Fechado, o gatilho ainda aponta para o painel', async () => {
@@ -127,10 +127,10 @@ export const Open: Story = {
       // anunciando aberto e o painel colapsado. O waitFor gateia na altura
       // computada, não no relógio.
       await waitFor(() => {
-        const painel = canvasElement.querySelector<HTMLElement>(
+        const panel = canvasElement.querySelector<HTMLElement>(
           '[data-slot="accordion-content"]:not([hidden])',
         );
-        if (!painel || painel.getBoundingClientRect().height === 0) {
+        if (!panel || panel.getBoundingClientRect().height === 0) {
           throw new Error('painel ainda abrindo');
         }
       });

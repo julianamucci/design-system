@@ -128,7 +128,7 @@ async function waitForPointerLiberado(): Promise<void> {
  * O painel Interactions REEXECUTA a play no mesmo DOM: um clique cego partiria
  * do estado que a rodada anterior deixou e inverteria o resultado.
  */
-async function abrir(trigger: HTMLElement): Promise<HTMLElement> {
+async function open(trigger: HTMLElement): Promise<HTMLElement> {
   // O ponteiro volta DEPOIS do nó sair: enquanto o painel é modal a lib deixa
   // `pointer-events: none` no `body` e só o devolve depois de remover o painel.
   // Sem esta espera o clique de reabertura falha no intervalo — medido.
@@ -140,7 +140,7 @@ async function abrir(trigger: HTMLElement): Promise<HTMLElement> {
 }
 
 /** Fecha só se estiver aberto. */
-async function fechar(): Promise<void> {
+async function close(): Promise<void> {
   if (within(document.body).queryAllByRole('dialog').length > 0) {
     await userEvent.keyboard('{Escape}');
   }
@@ -161,21 +161,21 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: args.triggerLabel });
 
-    await fechar();
+    await close();
 
     await step('Clicar no gatilho abre o painel, com nome e descrição acessíveis', async () => {
       const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
-      const painel = await abrir(trigger);
+      const panel = await open(trigger);
 
-      await expect(painel).toBeVisible();
+      await expect(panel).toBeVisible();
       // O nome acessível vem do aria-labelledby ligado ao id REAL do título —
       // painel modal anônimo é o defeito silencioso aqui.
-      await expect(painel).toHaveAccessibleName(args.title);
-      await expect(painel).toHaveAccessibleDescription(args.description);
-      await expect(painel).toHaveAttribute('aria-modal', 'true');
-      await expect(painel).toHaveAttribute('data-slot', 'sheet-content');
-      await expect(painel).toHaveAttribute('data-side', args.side);
-      await expect(painel).toHaveClass(/nds-sheet-content/);
+      await expect(panel).toHaveAccessibleName(args.title);
+      await expect(panel).toHaveAccessibleDescription(args.description);
+      await expect(panel).toHaveAttribute('aria-modal', 'true');
+      await expect(panel).toHaveAttribute('data-slot', 'sheet-content');
+      await expect(panel).toHaveAttribute('data-side', args.side);
+      await expect(panel).toHaveClass(/nds-sheet-content/);
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
       ).toBe(callsBefore + 1);
@@ -184,22 +184,22 @@ export const Playground: Story = {
     await step('O painel é portalizado para fora da story', async () => {
       // É o que faz `position: fixed` valer contra a viewport, e não contra um
       // ancestral com `contain`/`transform`.
-      const painel = await waitForPortal('dialog');
-      await expect(canvasElement.contains(painel)).toBe(false);
-      await expect(document.body.contains(painel)).toBe(true);
+      const panel = await waitForPortal('dialog');
+      await expect(canvasElement.contains(panel)).toBe(false);
+      await expect(document.body.contains(panel)).toBe(true);
     });
 
     await step('O foco entra no painel ao abrir', async () => {
-      const painel = await waitForPortal('dialog');
+      const panel = await waitForPortal('dialog');
       await waitFor(() => {
-        if (!painel.contains(document.activeElement)) {
+        if (!panel.contains(document.activeElement)) {
           throw new Error('o foco não entrou no painel');
         }
       });
     });
 
     await step('Tab mantém o foco preso dentro do painel', async () => {
-      const painel = await waitForPortal('dialog');
+      const panel = await waitForPortal('dialog');
       // Voltas suficientes para dar o ciclo completo em qualquer um dos lados.
       for (let i = 0; i < 6; i++) await userEvent.tab();
       // A espera é o mecanismo, não folga: quem dá a volta é uma âncora de foco
@@ -208,15 +208,15 @@ export const Playground: Story = {
       // destino; com ela, um foco que realmente escapasse continuaria
       // reprovando, porque nunca voltaria.
       await waitFor(() => {
-        if (!painel.contains(document.activeElement)) {
+        if (!panel.contains(document.activeElement)) {
           throw new Error('o foco saiu do painel e não voltou');
         }
       });
-      await expect(painel.contains(document.activeElement)).toBe(true);
+      await expect(panel.contains(document.activeElement)).toBe(true);
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
-      await fechar();
+      await close();
       await waitFor(() => {
         if (document.activeElement !== trigger) {
           throw new Error('o foco não voltou ao gatilho');
@@ -225,7 +225,7 @@ export const Playground: Story = {
     });
 
     await step('Clique no overlay fecha o painel', async () => {
-      await abrir(trigger);
+      await open(trigger);
       const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
       await expect(overlay).not.toBeNull();
       await userEvent.click(overlay!);
@@ -233,21 +233,21 @@ export const Playground: Story = {
     });
 
     await step('O botão do canto fecha o painel', async () => {
-      const painel = await abrir(trigger);
-      const closeBtn = within(painel).getByRole('button', { name: /fechar/i });
+      const panel = await open(trigger);
+      const closeBtn = within(panel).getByRole('button', { name: /fechar/i });
       await userEvent.click(closeBtn);
       await waitForPortalGone('dialog');
     });
 
     await step('Cancelar no rodapé também fecha', async () => {
-      const painel = await abrir(trigger);
-      const cancelar = within(painel).getByRole('button', { name: args.cancelLabel });
+      const panel = await open(trigger);
+      const cancelar = within(panel).getByRole('button', { name: args.cancelLabel });
       await userEvent.click(cancelar);
       await waitForPortalGone('dialog');
     });
 
     // Termina fechado: a próxima rodada da play (painel Interactions) precisa do
     // mesmo ponto de partida desta.
-    await fechar();
+    await close();
   },
 };

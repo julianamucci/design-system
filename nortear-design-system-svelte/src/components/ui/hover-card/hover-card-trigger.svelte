@@ -22,9 +22,9 @@
 
 	function anexo(el: Element) {
 		if (!contexto) return;
-		contexto.gatilho = el as HTMLElement;
+		contexto.trigger = el as HTMLElement;
 		return () => {
-			if (contexto.gatilho === el) contexto.gatilho = null;
+			if (contexto.trigger === el) contexto.trigger = null;
 		};
 	}
 

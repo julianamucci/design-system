@@ -81,27 +81,27 @@ export const WithShortcuts: Story = {
       '300px',
     ),
   play: async ({ canvasElement, step }) => {
-    const painel = await waitForPanel(canvasElement);
-    const itens = within(painel).getAllByRole('menuitem');
+    const panel = await waitForPanel(canvasElement);
+    const items = within(panel).getAllByRole('menuitem');
 
     await step('Cada item leva o próprio atalho', async () => {
-      await expect(itens).toHaveLength(SHORTCUTS.length);
-      const shortcuts = painel.querySelectorAll('[data-slot="menubar-shortcut"]');
+      await expect(items).toHaveLength(SHORTCUTS.length);
+      const shortcuts = panel.querySelectorAll('[data-slot="menubar-shortcut"]');
       await expect(shortcuts).toHaveLength(SHORTCUTS.length);
     });
 
     await step('O atalho entra no nome do item, e não fica escondido do leitor', async () => {
       // Sem `aria-hidden`: "Desfazer, ⌘Z" é o que dá serventia ao atalho para
       // quem não enxerga a tela. Escondê-lo devolveria só "Desfazer".
-      for (const [i, item] of itens.entries()) {
+      for (const [i, item] of items.entries()) {
         await expect(item).toHaveAccessibleName(`${SHORTCUTS[i].label} ${SHORTCUTS[i].shortcut}`);
       }
     });
 
     await step('O atalho é secundário — cor esmaecida à direita do rótulo', async () => {
-      const atalho = painel.querySelector<HTMLElement>('[data-slot="menubar-shortcut"]')!;
+      const atalho = panel.querySelector<HTMLElement>('[data-slot="menubar-shortcut"]')!;
       await expect(atalho.classList.contains('nds-dropdown-menu-shortcut')).toBe(true);
-      await expect(getComputedStyle(atalho).color).not.toBe(getComputedStyle(itens[0]).color);
+      await expect(getComputedStyle(atalho).color).not.toBe(getComputedStyle(items[0]).color);
     });
   },
 };
@@ -155,8 +155,8 @@ export const WithSubmenu: Story = {
       '340px',
     ),
   play: async ({ canvasElement, step }) => {
-    const painel = await waitForPanel(canvasElement);
-    const subTrigger = within(painel).getByRole('menuitem', { name: 'Exportar' });
+    const panel = await waitForPanel(canvasElement);
+    const subTrigger = within(panel).getByRole('menuitem', { name: 'Exportar' });
 
     await step('O sub-gatilho anuncia que abre outro menu', async () => {
       await expect(subTrigger.getAttribute('aria-haspopup')).toBe('menu');
@@ -166,7 +166,7 @@ export const WithSubmenu: Story = {
     await step('Seta Baixo alcança o sub-gatilho; Seta Direita abre o submenu', async () => {
       // Idempotente: só navega e abre quando ainda está fechado.
       if (subTrigger.getAttribute('aria-expanded') !== 'true') {
-        const first = within(painel).getAllByRole('menuitem')[0];
+        const first = within(panel).getAllByRole('menuitem')[0];
         first.focus();
         await userEvent.keyboard('{ArrowDown}');
         await waitFor(async () => {
@@ -191,7 +191,7 @@ export const WithSubmenu: Story = {
       // Um submenu que nascesse embaixo cobriria os irmãos do item que o abriu.
       await expect(submenu.getAttribute('data-side')).toBe('right');
       await expect(submenu.getBoundingClientRect().left).toBeGreaterThanOrEqual(
-        painel.getBoundingClientRect().left,
+        panel.getBoundingClientRect().left,
       );
     });
   },
@@ -245,31 +245,31 @@ export const WithCheckboxItems: Story = {
       '300px',
     ),
   play: async ({ canvasElement, step }) => {
-    const painel = await waitForPanel(canvasElement);
-    const boxes = within(painel).getAllByRole('menuitemcheckbox');
+    const panel = await waitForPanel(canvasElement);
+    const boxes = within(panel).getAllByRole('menuitemcheckbox');
 
     await step('Cada linha é uma caixa de seleção independente', async () => {
       await expect(boxes).toHaveLength(EXIBICOES.length);
-      for (const caixa of boxes) {
-        await expect(caixa.getAttribute('data-slot')).toBe('menubar-checkbox-item');
-        await expect(caixa.getAttribute('aria-checked')).toBeTruthy();
+      for (const box of boxes) {
+        await expect(box.getAttribute('data-slot')).toBe('menubar-checkbox-item');
+        await expect(box.getAttribute('aria-checked')).toBeTruthy();
       }
     });
 
     await step('Alternar reflete no estado anunciado e no marcador visual', async () => {
-      const alvo = boxes[EXIBICOES.findIndex((e) => e.label === 'Barra lateral')];
+      const target = boxes[EXIBICOES.findIndex((e) => e.label === 'Barra lateral')];
       // Idempotente: o clique só acontece com a caixa desmarcada, então o
       // replay do painel Interactions parte do mesmo estado da primeira rodada.
-      if (alvo.getAttribute('aria-checked') !== 'true') await userEvent.click(alvo);
+      if (target.getAttribute('aria-checked') !== 'true') await userEvent.click(target);
       await waitFor(async () => {
-        await expect(alvo.getAttribute('aria-checked')).toBe('true');
+        await expect(target.getAttribute('aria-checked')).toBe('true');
         // `aria-checked` é o que a pessoa ouve; o tique é o que ela vê.
-        await expect(alvo.querySelector('.nds-dropdown-menu-item-indicator svg')).not.toBeNull();
+        await expect(target.querySelector('.nds-dropdown-menu-item-indicator svg')).not.toBeNull();
       });
     });
 
     await step('Marcar não fecha o menu — quem marca uma quer marcar a próxima', async () => {
-      await expect(painel.hidden).toBe(false);
+      await expect(panel.hidden).toBe(false);
       const other = boxes[EXIBICOES.findIndex((e) => e.label === 'Grade')];
       await expect(other.getAttribute('aria-checked')).toBe('false');
     });
@@ -324,16 +324,16 @@ export const WithRadioGroup: Story = {
       '300px',
     ),
   play: async ({ canvasElement, step }) => {
-    const painel = await waitForPanel(canvasElement);
-    const opcoes = within(painel).getAllByRole('menuitemradio');
+    const panel = await waitForPanel(canvasElement);
+    const options = within(panel).getAllByRole('menuitemradio');
 
     await step('O grupo publica escolha única, e só uma opção está marcada', async () => {
-      await expect(opcoes).toHaveLength(THEMES.length);
-      await expect(opcoes.filter((o) => o.getAttribute('aria-checked') === 'true')).toHaveLength(1);
+      await expect(options).toHaveLength(THEMES.length);
+      await expect(options.filter((o) => o.getAttribute('aria-checked') === 'true')).toHaveLength(1);
     });
 
     await step('Escolher outra opção transfere a marcação', async () => {
-      const escuro = opcoes[THEMES.findIndex((t) => t.value === 'dark')];
+      const escuro = options[THEMES.findIndex((t) => t.value === 'dark')];
       // Idempotente: o clique só acontece com a opção desmarcada — e escolher a
       // MESMA opção duas vezes deixaria o mesmo estado de qualquer forma, que é
       // o que distingue escolha única de alternador.
@@ -341,7 +341,7 @@ export const WithRadioGroup: Story = {
       await waitFor(async () => {
         await expect(escuro.getAttribute('aria-checked')).toBe('true');
       });
-      await expect(opcoes.filter((o) => o.getAttribute('aria-checked') === 'true')).toHaveLength(1);
+      await expect(options.filter((o) => o.getAttribute('aria-checked') === 'true')).toHaveLength(1);
     });
   },
 };
@@ -432,8 +432,8 @@ export const EditorCompleto: Story = {
 
     await step('As quatro categorias clássicas convivem na mesma barra', async () => {
       await expect(triggers).toHaveLength(MENUS_EDITOR.length);
-      for (const [i, gatilho] of triggers.entries()) {
-        await expect(gatilho).toHaveAccessibleName(MENUS_EDITOR[i]);
+      for (const [i, trigger] of triggers.entries()) {
+        await expect(trigger).toHaveAccessibleName(MENUS_EDITOR[i]);
       }
     });
 
@@ -441,8 +441,8 @@ export const EditorCompleto: Story = {
       await expect(
         triggers.filter((g) => g.tabIndex === 0),
       ).toHaveLength(1);
-      for (const gatilho of triggers) {
-        await expect(gatilho.getAttribute('data-state')).toBe('closed');
+      for (const trigger of triggers) {
+        await expect(trigger.getAttribute('data-state')).toBe('closed');
       }
     });
   },

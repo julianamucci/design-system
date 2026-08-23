@@ -73,27 +73,27 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
-    const campo = canvas.getByRole('combobox');
-    const lista = canvas.getByRole('listbox');
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
+    const field = canvas.getByRole('combobox');
+    const list = canvas.getByRole('listbox');
     const spy = args.onItemSelect as unknown as ReturnType<typeof fn>;
 
     // A play REEXECUTA no mesmo DOM: a busca parte sempre do zero.
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     await waitFor(async () => {
       await expect(canvas.getAllByRole('option')).toHaveLength(5);
     });
 
     await step('O markup é o mesmo das outras stacks', async () => {
-      await expect(raiz).toHaveClass(/nds-command/);
-      await expect(campo).toHaveClass(/nds-command-input/);
-      await expect(campo).toHaveAttribute('data-slot', 'command-input');
-      await expect(lista).toHaveClass(/nds-command-list/);
-      await expect(lista).toHaveAttribute('data-slot', 'command-list');
+      await expect(root).toHaveClass(/nds-command/);
+      await expect(field).toHaveClass(/nds-command-input/);
+      await expect(field).toHaveAttribute('data-slot', 'command-input');
+      await expect(list).toHaveClass(/nds-command-list/);
+      await expect(list).toHaveAttribute('data-slot', 'command-list');
     });
 
     await step('A lupa é do componente e o invólucro dela existe de fato', async () => {
-      const involucro = raiz.querySelector<HTMLElement>('[data-slot="command-input-wrapper"]')!;
+      const involucro = root.querySelector<HTMLElement>('[data-slot="command-input-wrapper"]')!;
       await expect(involucro).toHaveClass(/nds-command-input-wrapper/);
       const lupa = involucro.querySelector('svg')!;
       // Filha DIRETA: o seletor da folha é `.nds-command-input-wrapper > svg`, e
@@ -104,19 +104,19 @@ export const Playground: Story = {
       await expect(getComputedStyle(lupa).opacity).toBe('0.5');
       // E uma borda só: `.nds-input-group` desenhava a moldura completa por cima
       // da borda de baixo do invólucro.
-      await expect(raiz.querySelector('.nds-input-group')).toBeNull();
+      await expect(root.querySelector('.nds-input-group')).toBeNull();
     });
 
     await step('O campo é uma combobox ligada à lista REAL', async () => {
-      await expect(campo).toHaveAttribute('aria-autocomplete', 'list');
-      await expect(campo).toHaveAttribute('aria-expanded', 'true');
-      const controlled = campo.getAttribute('aria-controls');
+      await expect(field).toHaveAttribute('aria-autocomplete', 'list');
+      await expect(field).toHaveAttribute('aria-expanded', 'true');
+      const controlled = field.getAttribute('aria-controls');
       await expect(controlled).toBeTruthy();
       // Id órfão o axe reprova, e era o que acontecia quando o `aria-controls`
       // vinha do wrapper da story em vez do componente.
-      await expect(document.getElementById(controlled!)).toBe(lista);
+      await expect(document.getElementById(controlled!)).toBe(list);
       // Nome da lista em português: o default da lib é "Suggestions...".
-      await expect(lista).toHaveAttribute('aria-label', 'Resultados da busca');
+      await expect(list).toHaveAttribute('aria-label', 'Resultados da busca');
     });
 
     await step('Cada comando é uma opção, e o divisor não é', async () => {
@@ -126,7 +126,7 @@ export const Playground: Story = {
       await expect(button).toHaveClass(/nds-command-item/);
       await expect(button).toHaveAttribute('data-slot', 'command-item');
       await expect(button).toHaveAttribute('data-value', 'button');
-      const divisor = raiz.querySelector<HTMLElement>('[data-slot="command-separator"]')!;
+      const divisor = root.querySelector<HTMLElement>('[data-slot="command-separator"]')!;
       await expect(divisor).toHaveClass(/nds-command-separator/);
       // ARIA só admite `option` e `group` dentro de um listbox.
       await expect(divisor).toHaveAttribute('aria-hidden', 'true');
@@ -136,7 +136,7 @@ export const Playground: Story = {
     });
 
     await step('Digitar filtra, e o que não casa sai da árvore', async () => {
-      await userEvent.type(campo, 'sep');
+      await userEvent.type(field, 'sep');
 
       await waitFor(async () => {
         // Buscando "sep": só o comando de value "separator" pontua.
@@ -146,18 +146,18 @@ export const Playground: Story = {
       await expect(canvas.queryByText('Button')).toBeNull();
       // O grupo inteiro se recolhe quando nenhum item dele passa — sem isso a
       // paleta mostraria "Utilitários" com nada embaixo.
-      const utilitarios = raiz.querySelector<HTMLElement>(
+      const utilitarios = root.querySelector<HTMLElement>(
         '[data-slot="command-group"][data-value="Utilitários"]',
       )!;
       await expect(utilitarios).not.toBeVisible();
     });
 
     await step('Sem correspondência, a mensagem de vazio aparece', async () => {
-      await userEvent.clear(campo);
-      await userEvent.type(campo, 'zzz');
+      await userEvent.clear(field);
+      await userEvent.type(field, 'zzz');
 
       const vazio = await waitFor(async () => {
-        const el = raiz.querySelector<HTMLElement>('[data-slot="command-empty"]');
+        const el = root.querySelector<HTMLElement>('[data-slot="command-empty"]');
         await expect(el).not.toBeNull();
         return el!;
       });
@@ -174,24 +174,24 @@ export const Playground: Story = {
     });
 
     await step('Apagar a busca traz os comandos de volta', async () => {
-      await userEvent.clear(campo);
+      await userEvent.clear(field);
       await waitFor(async () => {
         await expect(canvas.getAllByRole('option')).toHaveLength(5);
       });
-      await expect(raiz.querySelector('[data-slot="command-empty"]')).toBeNull();
+      await expect(root.querySelector('[data-slot="command-empty"]')).toBeNull();
     });
 
     await step('As setas percorrem a lista sem tirar o foco do campo', async () => {
-      campo.focus();
+      field.focus();
       // Precondição própria: Home fixa o destaque no primeiro comando da ordem
       // de DOM, seja qual for o estado que a rodada anterior deixou.
       await userEvent.keyboard('{Home}');
-      const opcoes = () => canvas.getAllByRole('option');
+      const options = () => canvas.getAllByRole('option');
       await waitFor(async () => {
-        await expect(opcoes()[0]).toHaveAttribute('aria-selected', 'true');
+        await expect(options()[0]).toHaveAttribute('aria-selected', 'true');
       });
-      const first = opcoes()[0];
-      const segundo = opcoes()[1];
+      const first = options()[0];
+      const segundo = options()[1];
 
       await userEvent.keyboard('{ArrowDown}');
       await waitFor(async () => {
@@ -199,7 +199,7 @@ export const Playground: Story = {
       });
       // O foco NÃO se move: é o que separa a paleta de um menu, e é o que
       // permite continuar digitando enquanto se navega.
-      await expect(campo).toHaveFocus();
+      await expect(field).toHaveFocus();
       // E o leitor de tela sabe onde está o destaque — sem este apontamento a
       // seta não anuncia nada.
       const active = canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')!;
@@ -225,7 +225,7 @@ export const Playground: Story = {
       });
       await expect(spy.mock.calls[antes][0]).toBe(valueEsperado);
       // A lista continua aberta: a paleta inline não tem estado fechado.
-      await expect(campo).toHaveAttribute('aria-expanded', 'true');
+      await expect(field).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Clicar num comando também o escolhe', async () => {

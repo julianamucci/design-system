@@ -397,8 +397,8 @@ export const InItemList: Story = {
       // nascem marcadas — o snippet do meta mostraria uma só, sem borda.
       source: {
         transform: groupSourceWithCheckbox({
-          legenda: 'Preferências de contato',
-          itens: [
+          caption: 'Preferências de contato',
+          items: [
             { id: 'pref-email', label: 'Receber novidades por email', checked: true },
             { id: 'pref-push', label: 'Receber notificações push' },
             { id: 'pref-sms', label: 'Alertas por SMS' },

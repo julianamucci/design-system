@@ -23,7 +23,7 @@ const MENUS = [
   {
     value: 'file',
     label: 'Arquivo',
-    itens: [
+    items: [
       { label: 'Novo', atalho: '⌘N' },
       { label: 'Abrir', atalho: '⌘O' },
       { label: 'Salvar', atalho: '⌘S' },
@@ -32,7 +32,7 @@ const MENUS = [
   {
     value: 'edit',
     label: 'Editar',
-    itens: [
+    items: [
       { label: 'Desfazer', atalho: '⌘Z' },
       { label: 'Refazer', atalho: '⇧⌘Z' },
       { label: 'Copiar', atalho: '⌘C' },
@@ -41,12 +41,12 @@ const MENUS = [
   {
     value: 'view',
     label: 'Exibir',
-    itens: [{ label: 'Aproximar' }, { label: 'Afastar' }, { label: 'Tela cheia' }],
+    items: [{ label: 'Aproximar' }, { label: 'Afastar' }, { label: 'Tela cheia' }],
   },
   {
     value: 'help',
     label: 'Ajuda',
-    itens: [{ label: 'Documentação' }, { label: 'Atalhos de teclado' }],
+    items: [{ label: 'Documentação' }, { label: 'Atalhos de teclado' }],
   },
 ];
 
@@ -112,7 +112,7 @@ export const Playground: Story = {
           <MenubarMenu v-for="m in menus" :key="m.value" :value="m.value">
             <MenubarTrigger>{{ m.label }}</MenubarTrigger>
             <MenubarContent>
-              <MenubarItem v-for="i in m.itens" :key="i.label">
+              <MenubarItem v-for="i in m.items" :key="i.label">
                 {{ i.label }}
                 <MenubarShortcut v-if="i.atalho">{{ i.atalho }}</MenubarShortcut>
               </MenubarItem>
@@ -130,9 +130,9 @@ export const Playground: Story = {
 
     await step('A barra é um menubar, e cada gatilho anuncia o menu que abre', async () => {
       await expect(triggers).toHaveLength(MENUS.length);
-      for (const [i, gatilho] of triggers.entries()) {
-        await expect(gatilho).toHaveAccessibleName(MENUS[i].label);
-        await expect(gatilho.getAttribute('aria-haspopup')).toBe('menu');
+      for (const [i, trigger] of triggers.entries()) {
+        await expect(trigger).toHaveAccessibleName(MENUS[i].label);
+        await expect(trigger.getAttribute('aria-haspopup')).toBe('menu');
       }
     });
 
@@ -159,25 +159,25 @@ export const Playground: Story = {
       await expect(arquivo.getAttribute('aria-expanded')).toBe('true');
       await expect(args['onUpdate:modelValue']).toHaveBeenCalled();
 
-      const itens = within(menu).getAllByRole('menuitem');
-      await expect(itens).toHaveLength(MENUS[0].itens.length);
+      const items = within(menu).getAllByRole('menuitem');
+      await expect(items).toHaveLength(MENUS[0].items.length);
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(itens[0]);
+        await expect(document.activeElement).toBe(items[0]);
       });
     });
 
     await step('Dentro do menu, a seta vertical anda entre os itens', async () => {
       const menu = await waitForPortal('menu');
-      const itens = within(menu).getAllByRole('menuitem');
+      const items = within(menu).getAllByRole('menuitem');
 
       await userEvent.keyboard('{ArrowDown}');
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(itens[1]);
+        await expect(document.activeElement).toBe(items[1]);
       });
 
       await userEvent.keyboard('{ArrowUp}');
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(itens[0]);
+        await expect(document.activeElement).toBe(items[0]);
       });
     });
 

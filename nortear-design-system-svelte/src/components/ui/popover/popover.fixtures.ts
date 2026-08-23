@@ -18,6 +18,6 @@
  * Procura pelo contrato de markup (`data-slot`) e não por texto, que segue o
  * idioma escolhido na toolbar.
  */
-export function painel(): HTMLElement | null {
+export function panel(): HTMLElement | null {
   return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
 }

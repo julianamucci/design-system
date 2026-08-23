@@ -192,10 +192,10 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const raiz = () => canvasElement.querySelector<HTMLElement>('[data-slot="sidebar"]')!;
+    const root = () => canvasElement.querySelector<HTMLElement>('[data-slot="sidebar"]')!;
 
     await step('O estado inicial aparece em data-state', async () => {
-      await expect(raiz().getAttribute('data-state')).toBe(
+      await expect(root().getAttribute('data-state')).toBe(
         args.defaultOpen ? 'expanded' : 'collapsed',
       );
     });
@@ -226,33 +226,33 @@ export const Playground: Story = {
       // Nome EXATO, e não presença: sem o padrão, o gatilho era anunciado pelo
       // que houvesse dentro dele — aqui, o glifo "Alternar" — e nas outras
       // stacks pelo "Toggle Sidebar" cravado no componente.
-      const gatilho = canvas.getByRole('button', { name: 'Alternar barra lateral' });
-      await expect(gatilho).toHaveAccessibleName('Alternar barra lateral');
+      const trigger = canvas.getByRole('button', { name: 'Alternar barra lateral' });
+      await expect(trigger).toHaveAccessibleName('Alternar barra lateral');
       // A faixa repete a ação com o ponteiro, e a dica dela é o mesmo texto.
       // Era a única das cinco implementações sem dica nenhuma.
-      const faixa = canvasElement.querySelector<HTMLButtonElement>('[data-slot="sidebar-rail"]')!;
-      await expect(faixa.title).toBe('Alternar barra lateral');
+      const range = canvasElement.querySelector<HTMLButtonElement>('[data-slot="sidebar-rail"]')!;
+      await expect(range.title).toBe('Alternar barra lateral');
     });
 
     await step('O gatilho alterna, e diz em qual estado está', async () => {
-      const gatilho = canvas.getByRole('button', { name: 'Alternar barra lateral' });
-      const antes = raiz().getAttribute('data-state');
-      await expect(gatilho.getAttribute('aria-expanded')).toBe(String(args.defaultOpen));
+      const trigger = canvas.getByRole('button', { name: 'Alternar barra lateral' });
+      const antes = root().getAttribute('data-state');
+      await expect(trigger.getAttribute('aria-expanded')).toBe(String(args.defaultOpen));
 
-      await userEvent.click(gatilho);
-      await expect(raiz().getAttribute('data-state')).not.toBe(antes);
-      await expect(gatilho.getAttribute('aria-expanded')).toBe(String(!args.defaultOpen));
+      await userEvent.click(trigger);
+      await expect(root().getAttribute('data-state')).not.toBe(antes);
+      await expect(trigger.getAttribute('aria-expanded')).toBe(String(!args.defaultOpen));
 
-      await userEvent.click(gatilho);
-      await expect(raiz().getAttribute('data-state')).toBe(antes);
+      await userEvent.click(trigger);
+      await expect(root().getAttribute('data-state')).toBe(antes);
     });
 
     await step('Ctrl+B alterna de qualquer lugar da página', async () => {
-      const antes = raiz().getAttribute('data-state');
+      const antes = root().getAttribute('data-state');
       await userEvent.keyboard('{Control>}b{/Control}');
-      await expect(raiz().getAttribute('data-state')).not.toBe(antes);
+      await expect(root().getAttribute('data-state')).not.toBe(antes);
       await userEvent.keyboard('{Control>}b{/Control}');
-      await expect(raiz().getAttribute('data-state')).toBe(antes);
+      await expect(root().getAttribute('data-state')).toBe(antes);
     });
   },
 };

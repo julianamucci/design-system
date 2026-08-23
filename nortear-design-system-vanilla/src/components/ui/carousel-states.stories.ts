@@ -102,7 +102,7 @@ export const LastSlide: Story = {
       // cego cairia num botão desabilitado — o `userEvent` recusa, e a story
       // quebraria só na segunda rodada.
       const total = slides().length;
-      for (let passo = 0; passo < total; passo++) {
+      for (let step = 0; step < total; step++) {
         const button = next();
         if (button.disabled) break;
         await userEvent.click(button);
@@ -110,8 +110,8 @@ export const LastSlide: Story = {
 
       // Assenta no último slide antes de medir qualquer estado.
       const last = slides().length - 1;
-      const alvo = last * (slides()[1].offsetLeft - slides()[0].offsetLeft);
-      await waitFor(() => expect(Math.abs(deslocamento() - alvo)).toBeLessThan(2), { timeout: 4000 });
+      const target = last * (slides()[1].offsetLeft - slides()[0].offsetLeft);
+      await waitFor(() => expect(Math.abs(deslocamento() - target)).toBeLessThan(2), { timeout: 4000 });
     });
 
     await step('No fim a seta de avanço desabilita e a de voltar acorda', async () => {

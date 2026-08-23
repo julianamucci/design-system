@@ -24,7 +24,7 @@ import { designPintado, exigirRoot } from '@shared/testing/chart-probe';
  * nas cinco stacks.
  */
 export async function designPronto(canvasElement: HTMLElement): Promise<HTMLElement> {
-  const raiz = exigirRoot(canvasElement);
-  await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
-  return raiz;
+  const root = exigirRoot(canvasElement);
+  await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+  return root;
 }

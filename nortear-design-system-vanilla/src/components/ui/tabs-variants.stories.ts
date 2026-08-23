@@ -60,17 +60,17 @@ export const Default: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const lista = canvas.getByRole('tablist');
+    const list = canvas.getByRole('tablist');
     const abas = canvas.getAllByRole('tab');
 
     await expect(abas).toHaveLength(3);
     await expect(abas[0]).toHaveAttribute('aria-selected', 'true');
-    await expect(lista).toHaveAttribute('data-variant', 'default');
+    await expect(list).toHaveAttribute('data-variant', 'default');
     // Horizontal é o padrão implícito de `tablist`: escrever aria-orientation
     // aqui só repetiria o que o papel já diz.
-    await expect(lista).not.toHaveAttribute('aria-orientation');
+    await expect(list).not.toHaveAttribute('aria-orientation');
     // O trilho existe: a lista pinta fundo próprio.
-    await expect(getComputedStyle(lista).backgroundColor).not.toBe(TRANSPARENTE);
+    await expect(getComputedStyle(list).backgroundColor).not.toBe(TRANSPARENTE);
     // A aba ativa se distingue por FUNDO, não só por cor de texto (WCAG 1.4.1).
     await expect(getComputedStyle(abas[0]).backgroundColor)
       .not.toBe(getComputedStyle(abas[1]).backgroundColor);
@@ -114,12 +114,12 @@ export const Line: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const lista = canvas.getByRole('tablist');
+    const list = canvas.getByRole('tablist');
     const [ativa, inativa] = canvas.getAllByRole('tab');
 
-    await expect(lista).toHaveAttribute('data-variant', 'line');
+    await expect(list).toHaveAttribute('data-variant', 'line');
     // O trilho some — é o que separa "line" de "default".
-    await expect(getComputedStyle(lista).backgroundColor).toBe(TRANSPARENTE);
+    await expect(getComputedStyle(list).backgroundColor).toBe(TRANSPARENTE);
     await expect(getComputedStyle(ativa).backgroundColor).toBe(TRANSPARENTE);
     // O indicador é pseudo-elemento: procurar nó no DOM não acha nada. O que
     // distingue ativo de inativo é a opacidade do ::after.
@@ -154,19 +154,19 @@ export const Vertical: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector('[data-slot="tabs"]')!;
-    const lista = canvas.getByRole('tablist');
+    const root = canvasElement.querySelector('[data-slot="tabs"]')!;
+    const list = canvas.getByRole('tablist');
     const abas = canvas.getAllByRole('tab');
-    const painel = canvas.getByRole('tabpanel');
+    const panel = canvas.getByRole('tabpanel');
 
-    await expect(raiz).toHaveAttribute('data-orientation', 'vertical');
-    await expect(lista).toHaveAttribute('aria-orientation', 'vertical');
+    await expect(root).toHaveAttribute('data-orientation', 'vertical');
+    await expect(list).toHaveAttribute('aria-orientation', 'vertical');
     // Empilhadas: todas começam na mesma coluna.
     const borders = new Set(abas.map((a) => Math.round(a.getBoundingClientRect().left)));
     await expect(borders.size).toBe(1);
     // O painel fica AO LADO da lista, não abaixo dela.
-    await expect(painel.getBoundingClientRect().left)
-      .toBeGreaterThanOrEqual(lista.getBoundingClientRect().right);
+    await expect(panel.getBoundingClientRect().left)
+      .toBeGreaterThanOrEqual(list.getBoundingClientRect().right);
 
     // A seta segue a orientação. ArrowUp devolve o conjunto ao estado inicial,
     // para o replay da play começar de onde começou.

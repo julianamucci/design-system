@@ -133,9 +133,9 @@ export const WithCheckboxItems: Story = {
   render: () => ({
     components: componentes,
     setup() {
-      const nome = ref(true);
+      const name = ref(true);
       const email = ref(false);
-      return { nome, email };
+      return { name, email };
     },
     template: `
       <div style="contain: layout; min-height: 300px;">
@@ -146,7 +146,7 @@ export const WithCheckboxItems: Story = {
           <DropdownMenuContent side="bottom" align="start">
             <DropdownMenuGroup>
               <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
-              <DropdownMenuCheckboxItem v-model="nome">Nome</DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem v-model="name">Nome</DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem v-model="email">E-mail</DropdownMenuCheckboxItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
@@ -157,12 +157,12 @@ export const WithCheckboxItems: Story = {
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const canvas = within(menu);
-    const nome = canvas.getByRole('menuitemcheckbox', { name: 'Nome' });
+    const name = canvas.getByRole('menuitemcheckbox', { name: 'Nome' });
     const email = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });
 
     await step('O papel e o estado inicial chegam ao markup', async () => {
       await expect(canvas.getAllByRole('menuitemcheckbox')).toHaveLength(2);
-      await expect(nome).toHaveAttribute('aria-checked', 'true');
+      await expect(name).toHaveAttribute('aria-checked', 'true');
       await expect(email).toHaveAttribute('aria-checked', 'false');
     });
 
@@ -171,7 +171,7 @@ export const WithCheckboxItems: Story = {
       // `aria-checked` é o que ela ouve.
       const marca = (item: HTMLElement) =>
         item.querySelector('.nds-dropdown-menu-item-indicator svg') !== null;
-      await expect(marca(nome)).toBe(true);
+      await expect(marca(name)).toBe(true);
       await expect(marca(email)).toBe(false);
     });
 
@@ -186,7 +186,7 @@ export const WithCheckboxItems: Story = {
       // Alternar não fecha: quem marca uma coluna costuma marcar a próxima.
       await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
       // Independentes entre si — é o que separa checkbox de escolha única.
-      await expect(nome).toHaveAttribute('aria-checked', 'true');
+      await expect(name).toHaveAttribute('aria-checked', 'true');
     });
   },
 };
@@ -201,8 +201,8 @@ export const WithRadioGroup: Story = {
   render: () => ({
     components: componentes,
     setup() {
-      const tema = ref('light');
-      return { tema };
+      const theme = ref('light');
+      return { theme };
     },
     template: `
       <div style="contain: layout; min-height: 300px;">
@@ -211,7 +211,7 @@ export const WithRadioGroup: Story = {
             <Button variant="outline">Tema</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side="bottom" align="start">
-            <DropdownMenuRadioGroup :model-value="tema" @update:model-value="(v) => tema = v">
+            <DropdownMenuRadioGroup :model-value="theme" @update:model-value="(v) => theme = v">
               <DropdownMenuLabel>Aparência</DropdownMenuLabel>
               <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
@@ -285,7 +285,7 @@ export const WithSubmenu: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const corpo = within(document.body);
+    const body = within(document.body);
     const menu = await waitForPortal('menu');
     const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar' });
 
@@ -302,12 +302,12 @@ export const WithSubmenu: Story = {
       }
       await waitFor(async () => {
         await expect(subTrigger).toHaveAttribute('aria-expanded', 'true');
-        await expect(corpo.getAllByRole('menu')).toHaveLength(2);
+        await expect(body.getAllByRole('menu')).toHaveLength(2);
       });
     });
 
     await step('O submenu abre AO LADO, não por cima do menu pai', async () => {
-      const submenu = corpo.getAllByRole('menu')[1];
+      const submenu = body.getAllByRole('menu')[1];
       await expect(within(submenu).getAllByRole('menuitem')).toHaveLength(2);
       // Um submenu que nasce sobre o pai cobre os irmãos do item que o abriu.
       // A comparação é com a borda DIREITA do pai — comparar com a esquerda

@@ -69,32 +69,32 @@ export const EmptyState: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
-    const campo = canvas.getByRole("combobox");
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
+    const field = canvas.getByRole("combobox");
 
     // Idempotente: a busca parte sempre do zero.
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
 
     await step("Com o campo vazio, os dois comandos aparecem", async () => {
       await waitFor(async () => {
         await expect(canvas.getAllByRole("option")).toHaveLength(2);
       });
-      await expect(raiz.querySelector('[data-slot="command-empty"]')).toBeNull();
+      await expect(root.querySelector('[data-slot="command-empty"]')).toBeNull();
     });
 
     await step('Buscando "zzz", nenhum comando sobra e o grupo se recolhe', async () => {
-      await userEvent.type(campo, "zzz");
+      await userEvent.type(field, "zzz");
 
       await waitFor(async () => {
         await expect(canvas.queryAllByRole("option")).toHaveLength(0);
       });
       // Cabeçalho sem nada embaixo é ruído: o grupo inteiro sai da tela.
-      await expect(raiz.querySelector<HTMLElement>('[data-slot="command-group"]'))
+      await expect(root.querySelector<HTMLElement>('[data-slot="command-group"]'))
         .not.toBeVisible();
     });
 
     await step("A frase ocupa o lugar da lista", async () => {
-      const vazio = raiz.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+      const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
       await expect(vazio).toBeVisible();
       await expect(vazio).toHaveTextContent("Nenhum resultado encontrado.");
       await expect(vazio).toHaveClass(/nds-command-empty/);
@@ -136,14 +136,14 @@ export const ItemDisabled: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const campo = canvas.getByRole("combobox");
+    const field = canvas.getByRole("combobox");
     // Resolvido por `aria-selected`, e não por `aria-activedescendant`: medido
     // na fonte do `cmdk`, o id só é reescrito quando o valor muda de fato, e
     // `{Home}` sobre a lista já no primeiro item é no-op.
     const inHighlight = () =>
       canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]');
 
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     await waitFor(async () => {
       await expect(canvas.getAllByRole("option")).toHaveLength(3);
     });
@@ -169,7 +169,7 @@ export const ItemDisabled: Story = {
     });
 
     await step("As setas pulam o comando desabilitado", async () => {
-      campo.focus();
+      field.focus();
       // Home estabelece a precondição do passo: destaque no primeiro comando.
       await userEvent.keyboard("{Home}");
       await waitFor(async () => {
@@ -223,18 +223,18 @@ export const CheckedItem: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
-    const campo = canvas.getByRole("combobox");
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
+    const field = canvas.getByRole("combobox");
 
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     await waitFor(async () => {
       await expect(canvas.getAllByRole("option")).toHaveLength(3);
     });
 
-    const comando = (valor: string) =>
-      raiz.querySelector<HTMLElement>(`[data-value="${valor}"]`)!;
-    const marca = (valor: string) =>
-      getComputedStyle(comando(valor).querySelector<HTMLElement>(".nds-command-item-check")!);
+    const comando = (value: string) =>
+      root.querySelector<HTMLElement>(`[data-value="${value}"]`)!;
+    const marca = (value: string) =>
+      getComputedStyle(comando(value).querySelector<HTMLElement>(".nds-command-item-check")!);
 
     await step("O estado chega ao markup", async () => {
       await expect(comando("claro")).toHaveAttribute("data-checked", "true");

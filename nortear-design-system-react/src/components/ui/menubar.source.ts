@@ -24,8 +24,8 @@ export type MenubarArgs = {
 
 /** Bloco de import do menubar, sempre em ordem alfabética das peças usadas. */
 function importingMenubar(...parts: string[]): string {
-  const lista = [...parts].sort();
-  return `import {\n${lista.map((part) => `  ${part},`).join('\n')}\n} from "@/components/ui/menubar";`;
+  const list = [...parts].sort();
+  return `import {\n${list.map((part) => `  ${part},`).join('\n')}\n} from "@/components/ui/menubar";`;
 }
 
 /**
@@ -34,9 +34,9 @@ function importingMenubar(...parts: string[]): string {
  * `MenubarMenu` é o par de gatilho e painel — a barra é a lista deles, e é por
  * isso que a `<Menubar>` nunca recebe item nenhum diretamente.
  */
-function menu(rotulo: string, miolo: string, isOpen = false): string {
+function menu(label: string, miolo: string, isOpen = false): string {
   return `  <MenubarMenu${isOpen ? ' defaultOpen' : ''}>
-    <MenubarTrigger>${rotulo}</MenubarTrigger>
+    <MenubarTrigger>${label}</MenubarTrigger>
     <MenubarContent>
 ${miolo}
     </MenubarContent>
@@ -56,7 +56,7 @@ ${miolo}
  */
 export const menubarSource: SourceTransform<MenubarArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const raiz = attrs(
+  const root = attrs(
     propBool('modal', args.modal, true),
     propBool('loopFocus', args.loopFocus, true),
   );
@@ -70,7 +70,7 @@ export const menubarSource: SourceTransform<MenubarArgs> = (_gerado, ctx) => {
       'MenubarShortcut',
       'MenubarTrigger',
     ),
-    `<Menubar${raiz}>
+    `<Menubar${root}>
 ${menu(
   'Arquivo',
   `      <MenubarItem>

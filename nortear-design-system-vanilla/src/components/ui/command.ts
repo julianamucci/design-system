@@ -202,9 +202,9 @@ export function createCommand(options: CommandOptions): HTMLElement {
   let navigableItems: HTMLElement[] = [];
 
   /** Um item já filtrado, com o bloco a que ele pertence. */
-  type ItemFiltrado = { item: CommandItem; bloco: number };
+  type ItemFiltrado = { item: CommandItem; block: number };
   /** O que vira uma caixa `.nds-command-group` na tela. */
-  type GroupRenderizado = { titulo: string; itens: CommandItem[] };
+  type GroupRenderizado = { title: string; items: CommandItem[] };
 
   /**
    * Junta os itens em grupos, na ordem em que eles aparecem na tela.
@@ -222,20 +222,20 @@ export function createCommand(options: CommandOptions): HTMLElement {
     const byBlock = new Map<number, Map<string, GroupRenderizado>>();
     const order: GroupRenderizado[] = [];
 
-    for (const { item, bloco } of filtrados) {
-      let ofBlock = byBlock.get(bloco);
+    for (const { item, block } of filtrados) {
+      let ofBlock = byBlock.get(block);
       if (!ofBlock) {
         ofBlock = new Map<string, GroupRenderizado>();
-        byBlock.set(bloco, ofBlock);
+        byBlock.set(block, ofBlock);
       }
-      const titulo = item.group ?? '';
-      let grupo = ofBlock.get(titulo);
-      if (!grupo) {
-        grupo = { titulo, itens: [] };
-        ofBlock.set(titulo, grupo);
-        order.push(grupo);
+      const title = item.group ?? '';
+      let group = ofBlock.get(title);
+      if (!group) {
+        group = { title, items: [] };
+        ofBlock.set(title, group);
+        order.push(group);
       }
-      grupo.itens.push(item);
+      group.items.push(item);
     }
 
     return order;
@@ -267,15 +267,15 @@ export function createCommand(options: CommandOptions): HTMLElement {
 
     const q = query.toLowerCase();
     const filtrados: ItemFiltrado[] = [];
-    let bloco = 0;
+    let block = 0;
     for (const entry of items) {
       if (entry.type === 'separator') {
-        bloco += 1;
+        block += 1;
         continue;
       }
       const casa =
         !q || entry.label.toLowerCase().includes(q) || entry.value.toLowerCase().includes(q);
-      if (casa) filtrados.push({ item: entry, bloco });
+      if (casa) filtrados.push({ item: entry, block });
     }
 
     const noResult = filtrados.length === 0;
@@ -289,11 +289,11 @@ export function createCommand(options: CommandOptions): HTMLElement {
 
     if (noResult) return;
 
-    const grupos = agrupar(filtrados);
+    const groups = agrupar(filtrados);
     let first = true;
     let groupIndex = 0;
 
-    grupos.forEach(({ titulo: nomeDoGrupo, itens: itensDoGrupo }) => {
+    groups.forEach(({ title: nomeDoGrupo, items: itensDoGrupo }) => {
       if (!first) list.appendChild(createSeparator());
       first = false;
 
@@ -363,17 +363,17 @@ export function createCommand(options: CommandOptions): HTMLElement {
   }
 
   function setActive(index: number): void {
-    const alvo = index >= 0 ? navigableItems[index] ?? null : null;
+    const target = index >= 0 ? navigableItems[index] ?? null : null;
 
     for (const el of visibleItems) {
-      el.setAttribute('aria-selected', String(el === alvo));
+      el.setAttribute('aria-selected', String(el === target));
     }
 
-    if (alvo) {
-      alvo.scrollIntoView({ block: 'nearest' });
+    if (target) {
+      target.scrollIntoView({ block: 'nearest' });
       // Sem isto o leitor de tela não tem como dizer QUAL comando está em
       // destaque: o foco nunca sai do campo de busca.
-      input.setAttribute('aria-activedescendant', alvo.id);
+      input.setAttribute('aria-activedescendant', target.id);
       activeIndex = index;
     } else {
       input.removeAttribute('aria-activedescendant');

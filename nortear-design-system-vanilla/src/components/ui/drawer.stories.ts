@@ -152,51 +152,51 @@ export const Playground: Story = {
 
     // Par idempotente: o painel Interactions REEXECUTA a play no mesmo DOM, e um
     // clique cego partiria do estado que a rodada anterior deixou.
-    const abrir = async () => {
+    const open = async () => {
       if (within(document.body).queryAllByRole('dialog').length === 0) {
         await userEvent.click(trigger);
       }
       return await waitForPortal('dialog');
     };
-    const fechar = async () => {
+    const close = async () => {
       if (within(document.body).queryAllByRole('dialog').length > 0) {
         await userEvent.keyboard('{Escape}');
       }
       await waitForPortalGone('dialog');
     };
 
-    await fechar();
+    await close();
 
     await step('1. Clicar no gatilho abre o painel, com nome e descrição acessíveis', async () => {
-      const painel = await abrir();
-      await expect(painel).toBeVisible();
-      await expect(painel).toHaveAttribute('role', 'dialog');
-      await expect(painel).toHaveAttribute('aria-modal', 'true');
-      await expect(painel).toHaveAccessibleName(args.title);
-      await expect(painel).toHaveAccessibleDescription(args.description);
-      await expect(painel).toHaveAttribute('data-vaul-drawer-direction', args.direction);
-      await expect(painel).toHaveClass(/nds-drawer-content/);
+      const panel = await open();
+      await expect(panel).toBeVisible();
+      await expect(panel).toHaveAttribute('role', 'dialog');
+      await expect(panel).toHaveAttribute('aria-modal', 'true');
+      await expect(panel).toHaveAccessibleName(args.title);
+      await expect(panel).toHaveAccessibleDescription(args.description);
+      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', args.direction);
+      await expect(panel).toHaveClass(/nds-drawer-content/);
     });
 
     await step('2. O painel é portalizado para fora da story', async () => {
-      const painel = await waitForPortal('dialog');
-      await expect(canvasElement.contains(painel)).toBe(false);
-      await expect(document.body.contains(painel)).toBe(true);
+      const panel = await waitForPortal('dialog');
+      await expect(canvasElement.contains(panel)).toBe(false);
+      await expect(document.body.contains(panel)).toBe(true);
     });
 
     await step('3. O foco entra no painel e Tab não escapa dele', async () => {
-      const painel = await waitForPortal('dialog');
+      const panel = await waitForPortal('dialog');
       await waitFor(() => {
-        if (!painel.contains(document.activeElement)) {
+        if (!panel.contains(document.activeElement)) {
           throw new Error('o foco não entrou no painel');
         }
       });
       for (let i = 0; i < 6; i++) await userEvent.tab();
-      await expect(painel.contains(document.activeElement)).toBe(true);
+      await expect(panel.contains(document.activeElement)).toBe(true);
     });
 
     await step('4. Escape fecha e devolve o foco ao gatilho', async () => {
-      await fechar();
+      await close();
       await waitFor(() => {
         if (document.activeElement !== trigger) {
           throw new Error('o foco não voltou ao gatilho');
@@ -206,8 +206,8 @@ export const Playground: Story = {
     });
 
     await step('5. O botão de fechar do rodapé fecha e devolve o foco ao gatilho', async () => {
-      const painel = await abrir();
-      await userEvent.click(within(painel).getByRole('button', { name: args.cancelLabel }));
+      const panel = await open();
+      await userEvent.click(within(panel).getByRole('button', { name: args.cancelLabel }));
       await waitForPortalGone('dialog');
       await waitFor(() => {
         if (document.activeElement !== trigger) {
@@ -236,6 +236,6 @@ export const Playground: Story = {
 
     // O control `defaultOpen` decide o estado FINAL — que é o que o Chromatic
     // fotografa e o axe examina.
-    if (args.defaultOpen) await abrir();
+    if (args.defaultOpen) await open();
   },
 };

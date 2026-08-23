@@ -19,15 +19,15 @@ import { expect, userEvent, waitFor } from 'storybook/test';
  * cego alterna a partir do que a rodada anterior deixou e inverte o resultado —
  * a suíte fica verde (o vitest remonta a cada teste) e o painel falha.
  *
- * `alvo` existe porque nem sempre se clica no próprio switch: num par
+ * `target` existe porque nem sempre se clica no próprio switch: num par
  * rótulo ↔ controle quem recebe o clique é o rótulo, e o estado que se mede
  * continua sendo o do switch.
  */
 export async function definir(
   sw: HTMLElement,
   ligado: boolean,
-  alvo: HTMLElement = sw,
+  target: HTMLElement = sw,
 ): Promise<void> {
-  if ((sw.getAttribute('aria-checked') === 'true') !== ligado) await userEvent.click(alvo);
+  if ((sw.getAttribute('aria-checked') === 'true') !== ligado) await userEvent.click(target);
   await waitFor(() => expect(sw).toHaveAttribute('aria-checked', String(ligado)));
 }

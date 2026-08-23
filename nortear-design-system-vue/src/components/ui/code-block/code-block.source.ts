@@ -43,7 +43,7 @@ render(items, total);`;
  * `END_SCRIPT` evita neste repositório.
  */
 function codeLiteral(code: string): string {
-  const scriptNoEnd = (texto: string) => texto.replace(/<\/script/gi, '<\\/script');
+  const scriptNoEnd = (text: string) => text.replace(/<\/script/gi, '<\\/script');
   if (!code.includes('\n') && !code.includes("'") && !code.includes('\\')) {
     return `'${scriptNoEnd(code)}'`;
   }
@@ -59,23 +59,23 @@ function codeLiteral(code: string): string {
  * `'3, 5-7'` vira atributo comum, e a lista `[2]` vira ligação — escrita com
  * aspas simples por dentro, porque o valor do atributo já usa as duplas.
  */
-function attrLinhas(valor: unknown): string {
-  if (typeof valor === 'string') {
-    return valor.trim() === '' ? '' : `highlight-lines="${valor}"`;
+function attrLinhas(value: unknown): string {
+  if (typeof value === 'string') {
+    return value.trim() === '' ? '' : `highlight-lines="${value}"`;
   }
-  if (Array.isArray(valor) && valor.length > 0) {
-    const lista = valor
+  if (Array.isArray(value) && value.length > 0) {
+    const list = value
       .map((item) => (typeof item === 'number' ? String(item) : `'${String(item)}'`))
       .join(', ');
-    return `:highlight-lines="[${lista}]"`;
+    return `:highlight-lines="[${list}]"`;
   }
   return '';
 }
 
 /** O bloco, com os atributos em uma linha cada quando a fila fica longa. */
-function bloco(code: string, partes: Array<string | false>): string {
-  const atributos = attrsMultilinha([`:code="${code}"`, ...partes]);
-  return atributos.startsWith('\n') ? `<CodeBlock${atributos}/>` : `<CodeBlock${atributos} />`;
+function block(code: string, partes: Array<string | false>): string {
+  const attrs = attrsMultilinha([`:code="${code}"`, ...partes]);
+  return attrs.startsWith('\n') ? `<CodeBlock${attrs}/>` : `<CodeBlock${attrs} />`;
 }
 
 /**
@@ -93,7 +93,7 @@ export const codeBlockSource: SourceTransform<CodeBlockArgs> = (_gerado, ctx) =>
   const code = typeof args.code === 'string' && args.code !== '' ? args.code : CODE_DEFAULT;
   return vueSnippet(
     `${IMPORT}\n\nconst source = ${codeLiteral(code)}`,
-    bloco('source', [
+    block('source', [
       attr('language', args.language, 'text'),
       attr('title', args.title),
       attrBool('show-line-numbers', args.showLineNumbers, true),
@@ -159,9 +159,9 @@ const consulta =
   'formato=json&incluirDetalhes=true&ordenarPor=dataCriacao&limite=100&pagina=1'
 const rotas = Array.from(
   { length: 40 },
-  (_, i) => \`const rota\${i} = "/api/v1/relatorios/consolidado/por-periodo/\${i}?\${consulta}";\`,
+  (_, i) => \`const rota\${i} = "/api/v1/relatorios/consolidado/por-periodo/\${i}?\${query}";\`,
 ).join('\\n')`,
-    bloco('rotas', [attr('language', 'ts')]),
+    block('rotas', [attr('language', 'ts')]),
   );
 }
 

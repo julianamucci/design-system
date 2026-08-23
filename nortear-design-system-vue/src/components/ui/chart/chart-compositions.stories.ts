@@ -67,8 +67,8 @@ export const WithCard: Story = {
       );
       await expect(inside).not.toBeNull();
 
-      const raiz = exigirRoot(canvasElement);
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      const root = exigirRoot(canvasElement);
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
     });
   },
 };
@@ -92,11 +92,11 @@ export const InlineTitle: Story = {
     class: 'nds-max-w-lg',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('O título do option é desenhado junto do gráfico', async () => {
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(designEscreve(raiz, DESIGN_TITLE)).toBe(true), {
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designEscreve(root, DESIGN_TITLE)).toBe(true), {
         timeout: 3000,
       });
     });
@@ -105,7 +105,7 @@ export const InlineTitle: Story = {
       // A ordem do container é: rótulo passado, título do option, palavra
       // genérica. A story não passa rótulo, então o degrau do meio é o que vale
       // — e um desenho nunca fica mudo para leitor de tela.
-      await expect(raiz.getAttribute('aria-label')).toBe(DESIGN_TITLE);
+      await expect(root.getAttribute('aria-label')).toBe(DESIGN_TITLE);
     });
   },
 };

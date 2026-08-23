@@ -232,10 +232,10 @@ const TECLAS: Record<string, string> = {
 // barra CUSTOMIZADA, e aqui a barra é a nativa do navegador. O filtro em
 // `tokenItems` derruba a chave que não está neste mapa, então documentar peça
 // que não existe na página deixa de ser possível.
-const TOKENS: Record<string, { token: string; alvo: string }> = {
-  ring:       { token: '--ring',       alvo: '.nds-scroll-area-viewport:focus-visible' },
-  background: { token: '--background', alvo: '.nds-scroll-area' },
-  foreground: { token: '--foreground', alvo: '.nds-scroll-area-viewport' },
+const TOKENS: Record<string, { token: string; target: string }> = {
+  ring:       { token: '--ring',       target: '.nds-scroll-area-viewport:focus-visible' },
+  background: { token: '--background', target: '.nds-scroll-area' },
+  foreground: { token: '--foreground', target: '.nds-scroll-area-viewport' },
 };
 
 const CAMINHOS: Record<string, string> = {
@@ -517,14 +517,14 @@ export class NdsScrollAreaDocs implements AfterViewInit, OnDestroy {
   // tem globais (`Array`), e o rótulo repetido vem do dicionário.
   protected readonly tagsDemo = computed(() => {
     dict();
-    const rotulo = t('demonstration.labels.tag');
-    return Array.from({ length: 24 }, (_, i) => `${rotulo} ${i + 1}`);
+    const label = t('demonstration.labels.tag');
+    return Array.from({ length: 24 }, (_, i) => `${label} ${i + 1}`);
   });
   protected readonly tagsCurtas = computed(() => this.tagsDemo().slice(0, 12));
   protected readonly cardsDemo = computed(() => {
     dict();
-    const rotulo = t('demonstration.labels.tag');
-    return Array.from({ length: 12 }, (_, i) => `${rotulo} ${i + 1}`);
+    const label = t('demonstration.labels.tag');
+    return Array.from({ length: 12 }, (_, i) => `${label} ${i + 1}`);
   });
   protected readonly linhasDemo = computed(() => Array.from({ length: 16 }, (_, i) => `L${i + 1}`));
   protected readonly colunasDemo = computed(() => Array.from({ length: 10 }, (_, i) => `C${i + 1}`));
@@ -729,7 +729,7 @@ export class NdsScrollAreaDocs implements AfterViewInit, OnDestroy {
       .filter((key) => TOKENS[key])
       .map((key) => ({
         token: TOKENS[key].token,
-        value: TOKENS[key].alvo,
+        value: TOKENS[key].target,
         description: toPlainText(t(`tokens.table.${key}.part`)),
       }));
   });
@@ -910,8 +910,8 @@ function namedFromDict(d: Record<string, string>, base: string, field?: string):
   const sufixo = field ? `.${field}` : '';
   const rx = new RegExp(`^${base.replace(/\./g, '\\.')}\\.([^.]+)${sufixo.replace(/\./g, '\\.')}$`);
   const out: string[] = [];
-  for (const chave of Object.keys(d)) {
-    const m = chave.match(rx);
+  for (const key of Object.keys(d)) {
+    const m = key.match(rx);
     if (m && !out.includes(m[1])) out.push(m[1]);
   }
   return out;

@@ -16,7 +16,7 @@ import {
   propBool,
   propNumber,
   propText,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -116,7 +116,7 @@ function tableSnippet(partes: {
     partes.colunas ?? COLUMNS,
     partes.extra ?? null,
     partes.markup,
-  ].filter((bloco): bloco is string => Boolean(bloco));
+  ].filter((block): block is string => Boolean(block));
   return blocks.join('\n\n');
 }
 
@@ -158,7 +158,7 @@ export const dataTableSource: SourceTransform<DataTableArgs> = (_gerado, ctx) =>
       propBool('enableColumnVisibility', args.enableColumnVisibility, true),
       propBool('enablePagination', args.enablePagination, true),
       propNumber('pageSize', args.pageSize === 10 ? null : args.pageSize),
-      propText('caption', texto(args.caption) ?? CAPTION),
+      propText('caption', text(args.caption) ?? CAPTION),
       propText('globalFilterPlaceholder', args.globalFilterPlaceholder),
       propText('emptyMessage', args.emptyMessage),
       selection ? 'labels={rotulos}' : null,

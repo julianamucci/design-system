@@ -46,9 +46,9 @@ const ALINHAMENTOS = ['start', 'center', 'end'] as const;
 
 /** Import base: só as peças que o snippet correspondente usa. */
 function importDe(...parts: string[]): string {
-  const lista = ['DropdownMenu', ...parts].sort();
+  const list = ['DropdownMenu', ...parts].sort();
   return `import {
-${lista.map((part) => `  ${part},`).join('\n')}
+${list.map((part) => `  ${part},`).join('\n')}
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";`;
 }
@@ -58,17 +58,17 @@ import { Button } from "@/components/ui/button";`;
  * `aria-expanded` é o `<Button>` de quem consome. Sem `asChild` sobraria um
  * elemento a mais entre o botão e o menu.
  */
-function gatilho(rotulo: string): string {
+function trigger(label: string): string {
   return `<DropdownMenuTrigger asChild>
-  <Button variant="outline">${rotulo}</Button>
+  <Button variant="outline">${label}</Button>
 </DropdownMenuTrigger>`;
 }
 
-function menu(propsRaiz: string, rotuloGatilho: string, propsConteudo: string, itens: string): string {
+function menu(propsRaiz: string, rotuloGatilho: string, propsConteudo: string, items: string): string {
   return `<DropdownMenu${propsRaiz}>
-${indentar(gatilho(rotuloGatilho))}
+${indentar(trigger(rotuloGatilho))}
   <DropdownMenuContent${propsConteudo}>
-${indentar(itens, '    ')}
+${indentar(items, '    ')}
   </DropdownMenuContent>
 </DropdownMenu>`;
 }
@@ -82,11 +82,11 @@ ${indentar(itens, '    ')}
  */
 export const dropdownMenuSource: SourceTransform<DropdownMenuArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const raiz = attrsMultilinha([
+  const root = attrsMultilinha([
     propBool('defaultOpen', args.defaultOpen),
     propBool('modal', args.modal, true),
   ]);
-  const conteudo = attrs(
+  const content = attrs(
     propOption('side', args.side, LADOS, 'bottom'),
     propOption('align', args.align, ALINHAMENTOS, 'start'),
   );
@@ -101,9 +101,9 @@ export const dropdownMenuSource: SourceTransform<DropdownMenuArgs> = (_gerado, c
       'DropdownMenuTrigger',
     ),
     menu(
-      raiz,
+      root,
       'Abrir menu',
-      conteudo,
+      content,
       `<DropdownMenuGroup>
   <DropdownMenuLabel>Conta</DropdownMenuLabel>
   <DropdownMenuItem>Perfil</DropdownMenuItem>

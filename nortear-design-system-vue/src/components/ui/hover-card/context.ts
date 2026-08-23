@@ -9,7 +9,7 @@ import type { InjectionKey, Ref } from 'vue'
  * de vir da árvore de componentes, e é isso que este contexto carrega.
  */
 export type HoverCardContext = {
-  gatilho: Ref<HTMLElement | null>
+  trigger: Ref<HTMLElement | null>
 }
 
 export const KEY_HOVER_CARD: InjectionKey<HoverCardContext> = Symbol('nds-hover-card')

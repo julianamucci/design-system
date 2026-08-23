@@ -45,13 +45,13 @@
 	 * seta, Enter e Espaço, e estas quatro não chegavam a lugar nenhum.
 	 */
 	async function onGridKeyDown(evento: KeyboardEvent) {
-		const raiz = evento.currentTarget as HTMLElement | null;
+		const root = evento.currentTarget as HTMLElement | null;
 		const destination = teclaTarget(isoDoElemento(evento.target as Element | null), evento);
-		if (!destination || !raiz) return;
+		if (!destination || !root) return;
 		evento.preventDefault();
 		placeholder = parseDate(destination);
 		await tick();
-		gridDay(raiz, destination)?.focus();
+		gridDay(root, destination)?.focus();
 	}
 
 	/** Nome do mês por extenso mais o ano — o rótulo acessível da grade. */

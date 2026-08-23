@@ -51,14 +51,14 @@ export const Vertical: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const itens = radios(canvasElement);
+    const items = radios(canvasElement);
 
     await step('As linhas ficam empilhadas', async () => {
       // Afirma o layout, não só a renderização: sem a classe do grupo o
       // fieldset volta ao fluxo em bloco e as linhas continuam empilhadas por
       // acidente — o `display: grid` é o que garante o ritmo do gap.
-      const grupo = canvasElement.querySelector<HTMLElement>('[data-slot="radio-group"]')!;
-      await expect(getComputedStyle(grupo).display).toBe('grid');
+      const group = canvasElement.querySelector<HTMLElement>('[data-slot="radio-group"]')!;
+      await expect(getComputedStyle(group).display).toBe('grid');
     });
 
     await step('Os alvos têm o espaçamento livre que a WCAG 2.5.8 exige', async () => {
@@ -66,7 +66,7 @@ export const Vertical: Story = {
       // aceita o alvo menor quando há espaçamento: círculos de 24px de diâmetro
       // centrados em cada alvo não podem se cruzar, ou seja, os centros ficam a
       // 24px ou mais um do outro. É o gap do grupo que paga essa conta.
-      const [a, b] = itens.map((el) => el.getBoundingClientRect());
+      const [a, b] = items.map((el) => el.getBoundingClientRect());
       const distanciaEntreCentros = b.top + b.height / 2 - (a.top + a.height / 2);
       await expect(distanciaEntreCentros).toBeGreaterThanOrEqual(24);
     });
@@ -108,10 +108,10 @@ export const Horizontal: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const itens = radios(canvasElement);
+    const items = radios(canvasElement);
 
     await step('As três opções ficam na mesma linha', async () => {
-      const topos = new Set(itens.map((el) => Math.round(el.getBoundingClientRect().top)));
+      const topos = new Set(items.map((el) => Math.round(el.getBoundingClientRect().top)));
       await expect(topos.size).toBe(1);
     });
 
@@ -126,13 +126,13 @@ export const Horizontal: Story = {
       // a marcação no keyup. Com `{ArrowRight}` — pressiona e solta no mesmo
       // sopro — o keyup sintético chega antes do microtask que seleciona, e o
       // teste reprovaria um comportamento que no teclado de verdade funciona.
-      itens[0].focus();
+      items[0].focus();
       await userEvent.keyboard('{ArrowRight>}');
       await waitFor(async () => {
-        await expect(canvasElement.ownerDocument.activeElement).toBe(itens[1]);
+        await expect(canvasElement.ownerDocument.activeElement).toBe(items[1]);
       });
       await waitFor(async () => {
-        await expect(itens[1].getAttribute('aria-checked')).toBe('true');
+        await expect(items[1].getAttribute('aria-checked')).toBe('true');
       });
       await userEvent.keyboard('{/ArrowRight}');
     });
@@ -190,10 +190,10 @@ export const WithDescription: Story = {
 
     await step('A descrição chega ao controle por aria-describedby', async () => {
       const item = canvasElement.querySelector<HTMLElement>('#var-desc-padrao')!;
-      const alvo = item.getAttribute('aria-describedby');
-      await expect(alvo).toBe('var-desc-padrao-texto');
+      const target = item.getAttribute('aria-describedby');
+      await expect(target).toBe('var-desc-padrao-texto');
       await expect(
-        canvasElement.ownerDocument.getElementById(alvo!)?.textContent ?? '',
+        canvasElement.ownerDocument.getElementById(target!)?.textContent ?? '',
       ).toContain('5 dias úteis');
     });
   },

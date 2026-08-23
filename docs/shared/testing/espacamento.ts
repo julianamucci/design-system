@@ -29,7 +29,7 @@ export type Density = (typeof DENSIDADES)[number];
 
 export interface EspacoTarget {
   /** Nome que aparece no relatório de falha. */
-  nome: string;
+  name: string;
   selector: string;
   /** Propriedade longhand — `padding-inline-start`, não `padding-inline`. */
   prop: string;
@@ -47,7 +47,7 @@ export interface EspacoTarget {
 }
 
 export interface EspacoMeasurement {
-  alvo: string;
+  target: string;
   prop: string;
   densidade: Density;
   /** `false` quando o seletor não casou — isso É o achado, não falha da medição. */
@@ -69,7 +69,7 @@ export const TOLERANCIA_PX = 0.06;
 // ─── Sonda de resolução ───────────────────────────────────────────────────────
 
 /**
- * Resolve uma expressão CSS de comprimento para px, dentro da árvore de `raiz`
+ * Resolve uma expressão CSS de comprimento para px, dentro da árvore de `root`
  * (portanto sob a densidade que estiver aplicada nela).
  *
  * Devolve `null` quando a expressão não produz comprimento — que é o que
@@ -89,20 +89,20 @@ const SENTINELA_PX = 3.7;
  * empurra o arredondamento para a sexta casa.
  */
 export function pxResolve(
-  raiz: HTMLElement,
+  root: HTMLElement,
   expressao: string,
   fator = 1,
 ): number | null {
-  const probe = raiz.ownerDocument.createElement('div');
+  const probe = root.ownerDocument.createElement('div');
   probe.setAttribute('aria-hidden', 'true');
   probe.style.cssText =
     `position:absolute;top:0;left:0;visibility:hidden;pointer-events:none;` +
     `padding:0;border:0;min-width:0;max-width:none;box-sizing:content-box;` +
     `width:${SENTINELA_PX}px`;
-  raiz.appendChild(probe);
+  root.appendChild(probe);
   try {
     probe.style.setProperty('width', fator === 1 ? expressao : `calc((${expressao}) * ${fator})`);
-    const raw = raiz.ownerDocument.defaultView!.getComputedStyle(probe).width;
+    const raw = root.ownerDocument.defaultView!.getComputedStyle(probe).width;
     const px = parseFloat(raw);
     if (!Number.isFinite(px)) return null;
     // Comparado ANTES de dividir: expressão inválida (token inexistente dentro
@@ -142,10 +142,10 @@ export const FATOR_DE_PRECISAO = 512;
  * seguinte, e a suíte compartilha o mesmo documento.
  */
 export function byDensity<T>(
-  raiz: HTMLElement,
+  root: HTMLElement,
   fn: (densidade: Density) => T,
 ): T[] {
-  const html = raiz.ownerDocument.documentElement;
+  const html = root.ownerDocument.documentElement;
   const classNameOriginal = html.className;
   const noDensity = classNameOriginal
     .split(/\s+/)
@@ -155,19 +155,19 @@ export function byDensity<T>(
   try {
     for (const densidade of DENSIDADES) {
       html.className = `${noDensity} densidade-${densidade}`.trim();
-      void raiz.offsetHeight;
+      void root.offsetHeight;
       saida.push(fn(densidade));
     }
   } finally {
     html.className = classNameOriginal;
-    void raiz.offsetHeight;
+    void root.offsetHeight;
   }
   return saida;
 }
 
-/** Base de spacing resolvida em px, na densidade aplicada agora em `raiz`. */
-export function baseEmPx(raiz: HTMLElement): number | null {
-  return pxResolve(raiz, 'var(--spacing-base)', FATOR_DE_PRECISAO);
+/** Base de spacing resolvida em px, na densidade aplicada agora em `root`. */
+export function baseEmPx(root: HTMLElement): number | null {
+  return pxResolve(root, 'var(--spacing-base)', FATOR_DE_PRECISAO);
 }
 
 /**
@@ -213,45 +213,45 @@ export function degrausDeclarados(doc: Document): DegrauDaEscala[] {
 
 /** Mede cada alvo nas três densidades. Alvo ausente vira `presente: false`. */
 export function densityMeasure(
-  raiz: HTMLElement,
+  root: HTMLElement,
   targets: EspacoTarget[],
 ): EspacoMeasurement[] {
-  return byDensity(raiz, (densidade) =>
-    targets.map((alvo): EspacoMeasurement => {
-      const el = raiz.querySelector<HTMLElement>(alvo.selector);
+  return byDensity(root, (densidade) =>
+    targets.map((target): EspacoMeasurement => {
+      const el = root.querySelector<HTMLElement>(target.selector);
       if (!el) {
         return {
-          alvo: alvo.nome, prop: alvo.prop, densidade,
-          presente: false, px: null, esperado: alvo.esperado[densidade],
+          target: target.name, prop: target.prop, densidade,
+          presente: false, px: null, esperado: target.esperado[densidade],
         };
       }
-      const raw = raiz.ownerDocument.defaultView!.getComputedStyle(el).getPropertyValue(alvo.prop);
+      const raw = root.ownerDocument.defaultView!.getComputedStyle(el).getPropertyValue(target.prop);
       const px = parseFloat(raw);
       return {
-        alvo: alvo.nome, prop: alvo.prop, densidade,
+        target: target.name, prop: target.prop, densidade,
         presente: true,
         px: Number.isFinite(px) ? px : null,
-        esperado: alvo.esperado[densidade],
+        esperado: target.esperado[densidade],
       };
     }),
   ).flat();
 }
 
 export function describeMeasurement(m: EspacoMeasurement): string {
-  if (!m.presente) return `${m.alvo} — seletor não casou (${m.prop}, ${m.densidade})`;
-  return `${m.alvo} · ${m.prop} · ${m.densidade}: medido ${m.px}px, esperado ${m.esperado}px`;
+  if (!m.presente) return `${m.target} — seletor não casou (${m.prop}, ${m.densidade})`;
+  return `${m.target} · ${m.prop} · ${m.densidade}: medido ${m.px}px, esperado ${m.esperado}px`;
 }
 
 /** Agrupa as três medidas de um mesmo alvo+prop, na ordem de `DENSIDADES`. */
 export function byTarget(measurements: EspacoMeasurement[]): Map<string, EspacoMeasurement[]> {
-  const grupos = new Map<string, EspacoMeasurement[]>();
+  const groups = new Map<string, EspacoMeasurement[]>();
   for (const m of measurements) {
-    const chave = `${m.alvo} · ${m.prop}`;
-    if (!grupos.has(chave)) grupos.set(chave, []);
-    grupos.get(chave)!.push(m);
+    const key = `${m.target} · ${m.prop}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)!.push(m);
   }
-  for (const lista of grupos.values()) {
-    lista.sort((a, b) => DENSIDADES.indexOf(a.densidade) - DENSIDADES.indexOf(b.densidade));
+  for (const list of groups.values()) {
+    list.sort((a, b) => DENSIDADES.indexOf(a.densidade) - DENSIDADES.indexOf(b.densidade));
   }
-  return grupos;
+  return groups;
 }

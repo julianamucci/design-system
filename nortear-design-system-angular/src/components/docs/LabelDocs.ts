@@ -465,10 +465,10 @@ export class NdsLabelDocs implements AfterViewInit, OnDestroy {
         ['--spacing-2', '.nds-label', 'gap'],
         ['--destructive', '.nds-text-destructive', 'destructive'],
       ] as const
-    ).map(([token, value, chave]) => ({
+    ).map(([token, value, key]) => ({
       token,
       value,
-      description: t(`tokens.table.${chave}`),
+      description: t(`tokens.table.${key}`),
     }));
   });
 

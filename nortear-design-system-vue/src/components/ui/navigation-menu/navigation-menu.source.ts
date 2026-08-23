@@ -32,8 +32,8 @@ const WAIT_DEFAULT = 200;
 
 /** Import do design system, uma peça por linha e em ordem alfabética. */
 function importa(...parts: string[]): string {
-  const lista = [...new Set(parts)].sort();
-  return `import {\n${lista.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/navigation-menu'`;
+  const list = [...new Set(parts)].sort();
+  return `import {\n${list.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/navigation-menu'`;
 }
 
 /**
@@ -44,36 +44,36 @@ function importa(...parts: string[]): string {
  * A descrição NÃO leva `aria-hidden`: "Para Marketing" sozinho não diz o que há
  * do outro lado, e é a descrição que completa o nome do destino (WCAG 2.4.4).
  */
-function destination(href: string, titulo: string, descricao?: string, recuo = 0): string {
+function destination(href: string, title: string, descricao?: string, recuo = 0): string {
   const p = ' '.repeat(recuo);
-  const corpo = descricao
+  const body = descricao
     ? `\n${p}  <p class="nds-navigation-menu-child-description">\n${p}    ${descricao}\n${p}  </p>`
     : '';
   return `${p}<NavigationMenuChild href="${href}">
-${p}  <div class="nds-navigation-menu-child-label">${titulo}</div>${corpo}
+${p}  <div class="nds-navigation-menu-child-label">${title}</div>${body}
 ${p}</NavigationMenuChild>`;
 }
 
 /** Lista vertical de destinos dentro do painel, cada um em seu `<li>`. */
 function panelList(
-  itens: Array<{ href: string; titulo: string }>,
+  items: Array<{ href: string; title: string }>,
   recuo: number,
-  largura = 'nds-w-xs',
+  width = 'nds-w-xs',
 ): string {
   const p = ' '.repeat(recuo);
-  const lines = itens
-    .map((item) => `${p}  <li>\n${destination(item.href, item.titulo, undefined, recuo + 4)}\n${p}  </li>`)
+  const lines = items
+    .map((item) => `${p}  <li>\n${destination(item.href, item.title, undefined, recuo + 4)}\n${p}  </li>`)
     .join('\n');
-  return `${p}<ul class="nds-stack nds-list-none ${largura}" data-spacing="xs">
+  return `${p}<ul class="nds-stack nds-list-none ${width}" data-spacing="xs">
 ${lines}
 ${p}</ul>`;
 }
 
 /** Item da barra que só navega: um destino direto, sem painel. */
-function itemDireto(href: string, rotulo: string, active = false): string {
+function itemDireto(href: string, label: string, active = false): string {
   const marca = active ? ' :active="true"' : '';
   return `    <NavigationMenuItem>
-      <NavigationMenuLink href="${href}"${marca}>${rotulo}</NavigationMenuLink>
+      <NavigationMenuLink href="${href}"${marca}>${label}</NavigationMenuLink>
     </NavigationMenuItem>`;
 }
 
@@ -89,7 +89,7 @@ function itemDireto(href: string, rotulo: string, active = false): string {
  * painel precisam dele.
  */
 export const navigationMenuSource: SourceTransform<NavigationMenuArgs> = (_gerado, ctx) => {
-  const raiz = attrsMultilinha([
+  const root = attrsMultilinha([
     attr('default-value', ctx?.args?.defaultValue),
     attrNum('delay-duration', ctx?.args?.delayDuration, WAIT_DEFAULT),
     attr('orientation', ctx?.args?.orientation, 'horizontal'),
@@ -105,7 +105,7 @@ export const navigationMenuSource: SourceTransform<NavigationMenuArgs> = (_gerad
       'NavigationMenuList',
       'NavigationMenuTrigger',
     ),
-    `<NavigationMenu${raiz}>
+    `<NavigationMenu${root}>
   <NavigationMenuList>
 ${itemDireto('#inicio', 'Início')}
 
@@ -114,8 +114,8 @@ ${itemDireto('#inicio', 'Início')}
       <NavigationMenuContent>
 ${panelList(
   [
-    { href: '#inicial', titulo: 'Plano Inicial' },
-    { href: '#profissional', titulo: 'Plano Profissional' },
+    { href: '#inicial', title: 'Plano Inicial' },
+    { href: '#profissional', title: 'Plano Profissional' },
   ],
   8,
 )}
@@ -127,8 +127,8 @@ ${panelList(
       <NavigationMenuContent>
 ${panelList(
   [
-    { href: '#marketing', titulo: 'Para Marketing' },
-    { href: '#vendas', titulo: 'Para Vendas' },
+    { href: '#marketing', title: 'Para Marketing' },
+    { href: '#vendas', title: 'Para Vendas' },
   ],
   8,
 )}
@@ -165,8 +165,8 @@ ${itemDireto('#inicio', 'Início')}
       <NavigationMenuContent>
 ${panelList(
   [
-    { href: '#inicial', titulo: 'Plano Inicial' },
-    { href: '#profissional', titulo: 'Plano Profissional' },
+    { href: '#inicial', title: 'Plano Inicial' },
+    { href: '#profissional', title: 'Plano Profissional' },
   ],
   8,
 )}
@@ -178,8 +178,8 @@ ${panelList(
       <NavigationMenuContent>
 ${panelList(
   [
-    { href: '#guias', titulo: 'Guias' },
-    { href: '#api', titulo: 'Referência da API' },
+    { href: '#guias', title: 'Guias' },
+    { href: '#api', title: 'Referência da API' },
   ],
   8,
 )}
@@ -238,7 +238,7 @@ ${itemDireto('#inicio', 'Início')}
     <NavigationMenuItem value="produtos">
       <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
       <NavigationMenuContent>
-${panelList([{ href: '#inicial', titulo: 'Plano Inicial' }], 8)}
+${panelList([{ href: '#inicial', title: 'Plano Inicial' }], 8)}
       </NavigationMenuContent>
     </NavigationMenuItem>
 ${itemDireto('#sobre', 'Sobre')}
@@ -272,9 +272,9 @@ ${itemDireto('#inicio', 'Início')}
       <NavigationMenuContent>
 ${panelList(
   [
-    { href: '#inicial', titulo: 'Plano Inicial' },
-    { href: '#profissional', titulo: 'Plano Profissional' },
-    { href: '#empresarial', titulo: 'Plano Empresarial' },
+    { href: '#inicial', title: 'Plano Inicial' },
+    { href: '#profissional', title: 'Plano Profissional' },
+    { href: '#empresarial', title: 'Plano Empresarial' },
   ],
   8,
 )}
@@ -347,9 +347,9 @@ ${itemDireto('#inicio', 'Início')}
       <NavigationMenuContent>
 ${panelList(
   [
-    { href: '#inicial', titulo: 'Plano Inicial' },
-    { href: '#profissional', titulo: 'Plano Profissional' },
-    { href: '#empresarial', titulo: 'Plano Empresarial' },
+    { href: '#inicial', title: 'Plano Inicial' },
+    { href: '#profissional', title: 'Plano Profissional' },
+    { href: '#empresarial', title: 'Plano Empresarial' },
   ],
   8,
 )}
@@ -369,12 +369,12 @@ ${itemDireto('#contato', 'Contato')}
  */
 export function navigationMenuMegaMenuSource(): string {
   const cartoes = [
-    { href: '#marketing', titulo: 'Para Marketing', desc: 'Campanhas, automação e atribuição num lugar só.' },
-    { href: '#vendas', titulo: 'Para Vendas', desc: 'Funil, previsão e histórico de cada negociação.' },
-    { href: '#suporte', titulo: 'Para Suporte', desc: 'Fila de atendimento, base de conhecimento e métricas.' },
-    { href: '#financeiro', titulo: 'Para Financeiro', desc: 'Cobrança recorrente, conciliação e relatórios fiscais.' },
+    { href: '#marketing', title: 'Para Marketing', desc: 'Campanhas, automação e atribuição num lugar só.' },
+    { href: '#vendas', title: 'Para Vendas', desc: 'Funil, previsão e histórico de cada negociação.' },
+    { href: '#suporte', title: 'Para Suporte', desc: 'Fila de atendimento, base de conhecimento e métricas.' },
+    { href: '#financeiro', title: 'Para Financeiro', desc: 'Cobrança recorrente, conciliação e relatórios fiscais.' },
   ]
-    .map((c) => `          <li>\n${destination(c.href, c.titulo, c.desc, 12)}\n          </li>`)
+    .map((c) => `          <li>\n${destination(c.href, c.title, c.desc, 12)}\n          </li>`)
     .join('\n');
 
   return vueSnippet(
@@ -411,11 +411,11 @@ ${cartoes}
  */
 export function navigationMenuWithHighlightSource(): string {
   const helper = [
-    { href: '#guias', titulo: 'Guias' },
-    { href: '#api', titulo: 'Referência da API' },
-    { href: '#changelog', titulo: 'Novidades' },
+    { href: '#guias', title: 'Guias' },
+    { href: '#api', title: 'Referência da API' },
+    { href: '#changelog', title: 'Novidades' },
   ]
-    .map((item) => `            <li>\n${destination(item.href, item.titulo, undefined, 14)}\n            </li>`)
+    .map((item) => `            <li>\n${destination(item.href, item.title, undefined, 14)}\n            </li>`)
     .join('\n');
 
   return vueSnippet(

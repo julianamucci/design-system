@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { ProgressVariant } from './progress';
@@ -44,8 +44,8 @@ const LABEL_DEFAULT = 'Progresso do upload';
  * chamada no topo do arquivo e curta demais quando ela entra numa lista de
  * argumentos.
  */
-function recuar(bloco: string, espacos: string): string {
-  return bloco
+function recuar(block: string, espacos: string): string {
+  return block
     .split('\n')
     .map((line, i) => (i === 0 ? line : `${espacos}${line}`))
     .join('\n');
@@ -58,13 +58,13 @@ const NOTA_INDETERMINADO = `// \`null\` é o modo sem estimativa: \`aria-valueno
 /** As opções da fábrica. Só o que difere do padrão entra. */
 function linhasDaBarra(o: ProgressSnippetOptions): string[] {
   const indeterminado = o.value === null;
-  return opcoes([
+  return options([
     ['value', indeterminado ? 'null' : String(o.value ?? 42)],
     ['max', o.max !== undefined && o.max !== 100 ? String(o.max) : undefined],
-    ['variant', o.variant ? texto(o.variant) : undefined],
+    ['variant', o.variant ? text(o.variant) : undefined],
     // Um `role="progressbar"` sem nome é anunciado como "barra de progresso,
     // 40%": o leitor diz quanto, nunca de quê.
-    ['aria-label', texto(o['aria-label'] ?? LABEL_DEFAULT)],
+    ['aria-label', text(o['aria-label'] ?? LABEL_DEFAULT)],
   ]);
 }
 
@@ -86,7 +86,7 @@ export function progressSnippet(o: ProgressSnippetOptions = {}): string {
  * `polite` — `assertive` interromperia quem escuta a cada avanço.
  */
 export function progressComRotuloSnippet(o: ProgressSnippetOptions = {}): string {
-  const rotulo = o.label ?? 'Enviando arquivo';
+  const label = o.label ?? 'Enviando arquivo';
   const anunciado = o.valueText ?? `${o.value ?? 42}%`;
 
   return snippet(
@@ -101,14 +101,14 @@ linha.dataset.justify = 'between';
 
 const nome = document.createElement('span');
 nome.className = 'nds-text-foreground';
-nome.textContent = ${texto(rotulo)};
+nome.textContent = ${text(label)};
 
 const valor = document.createElement('span');
 valor.className = 'nds-text-muted-foreground nds-tabular-nums';
 // \`polite\` e nunca \`assertive\`: o valor muda o tempo todo, e interromper a
 // cada avanço deixaria quem usa leitor de tela sem ouvir o resto da tela.
 valor.setAttribute('aria-live', 'polite');
-valor.textContent = ${texto(anunciado)};
+valor.textContent = ${text(anunciado)};
 
 linha.append(nome, valor);`,
     `bloco.append(linha, ${chamada('createProgress', linhasDaBarra(o))});`,
@@ -117,16 +117,16 @@ linha.append(nome, valor);`,
 }
 
 /** Uma lista de barras — a forma das stories que mostram várias de uma vez. */
-export function progressListaSnippet(itens: ProgressSnippetItem[]): string {
-  const calls = itens.map(
+export function progressListaSnippet(items: ProgressSnippetItem[]): string {
+  const calls = items.map(
     (i) =>
       `  ${recuar(
         chamada(
           'createProgress',
-          opcoes([
+          options([
             ['value', String(i.value)],
-            ['variant', i.variant ? texto(i.variant) : undefined],
-            ['aria-label', texto(i['aria-label'])],
+            ['variant', i.variant ? text(i.variant) : undefined],
+            ['aria-label', text(i['aria-label'])],
           ]),
         ),
         '  ',
@@ -149,8 +149,8 @@ ${calls.join('\n')}
 }
 
 /** Transform de story para a lista de barras. */
-export function progressSourceLista(itens: ProgressSnippetItem[]): SourceTransform<ProgressSnippetOptions> {
-  return () => progressListaSnippet(itens);
+export function progressSourceLista(items: ProgressSnippetItem[]): SourceTransform<ProgressSnippetOptions> {
+  return () => progressListaSnippet(items);
 }
 
 /**
@@ -201,7 +201,7 @@ cartao.dataset.spacing = 'sm';
 
 const titulo = document.createElement('div');
 titulo.className = 'nds-text-body nds-font-medium';
-titulo.textContent = ${texto(o.label ?? 'Processando relatório')};`,
+titulo.textContent = ${text(o.label ?? 'Processando relatório')};`,
     `cartao.append(titulo, ${chamada('createProgress', linhasDaBarra(o))});`,
     montar('cartao'),
   );

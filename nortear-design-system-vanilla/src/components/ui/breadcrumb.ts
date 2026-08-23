@@ -95,9 +95,9 @@ function createIconLucide(nodes: LucideIconNode[]): SVGSVGElement {
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
   for (const [tag, attrs] of nodes) {
-    const filho = document.createElementNS(SVG_NS, tag);
-    for (const [k, v] of Object.entries(attrs)) filho.setAttribute(k, v);
-    svg.appendChild(filho);
+    const child = document.createElementNS(SVG_NS, tag);
+    for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
+    svg.appendChild(child);
   }
   return svg;
 }

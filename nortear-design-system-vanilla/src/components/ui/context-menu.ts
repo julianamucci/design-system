@@ -193,7 +193,7 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
     }
 
     if (type === 'checkbox' || type === 'radio') {
-      let marcado =
+      let checked =
         type === 'checkbox' ? item.checked === true : radioValue === item.value;
       // O misto vale SOBRE o marcado enquanto durar — é ele quem manda no que se
       // anuncia e no que se desenha. Só o item de marcação o tem.
@@ -203,7 +203,7 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       li.setAttribute('role', type === 'checkbox' ? 'menuitemcheckbox' : 'menuitemradio');
       // "mixed" é o que distingue "alguns selecionados" de "todos selecionados";
       // um booleano aqui mentiria para quem lê a tela.
-      li.setAttribute('aria-checked', misto ? 'mixed' : String(marcado));
+      li.setAttribute('aria-checked', misto ? 'mixed' : String(checked));
       li.setAttribute('tabindex', '-1');
       li.dataset.slot = type === 'checkbox' ? 'context-menu-checkbox-item' : 'context-menu-radio-item';
       li.className =
@@ -221,7 +221,7 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
         type === 'checkbox' ? 'context-menu-checkbox-item-indicator' : 'context-menu-radio-item-indicator';
       indicador.className = 'nds-dropdown-menu-item-indicator';
       if (misto) indicador.appendChild(createMinusIcon());
-      else if (marcado) indicador.appendChild(createCheckIcon());
+      else if (checked) indicador.appendChild(createCheckIcon());
       li.appendChild(indicador);
 
       fillItemContent(li, item);
@@ -234,7 +234,7 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
               // propriedade `indeterminate` do input nativo — e não devolve o
               // misto a ninguém, porque "alguns" é conclusão de quem consome.
               misto = false;
-              marcado = true;
+              checked = true;
               li.setAttribute('aria-checked', 'true');
               indicador.replaceChildren(createCheckIcon());
               item.onIndeterminateChange?.(false);
@@ -242,11 +242,11 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
               item.onClick?.();
               return;
             }
-            marcado = !marcado;
-            li.setAttribute('aria-checked', String(marcado));
+            checked = !checked;
+            li.setAttribute('aria-checked', String(checked));
             indicador.replaceChildren();
-            if (marcado) indicador.appendChild(createCheckIcon());
-            item.onCheckedChange?.(marcado);
+            if (checked) indicador.appendChild(createCheckIcon());
+            item.onCheckedChange?.(checked);
           } else if (item.value) {
             radioValue = item.value;
             sincronizarRadios(li.closest('[data-slot="context-menu-content"]') as HTMLElement);
@@ -328,11 +328,11 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
   function sincronizarRadios(menu: HTMLElement | null): void {
     if (!menu) return;
     for (const li of menu.querySelectorAll<HTMLElement>('[role="menuitemradio"]')) {
-      const marcado = li.dataset.value === radioValue;
-      li.setAttribute('aria-checked', String(marcado));
+      const checked = li.dataset.value === radioValue;
+      li.setAttribute('aria-checked', String(checked));
       const indicador = li.querySelector<HTMLElement>('.nds-dropdown-menu-item-indicator');
       indicador?.replaceChildren();
-      if (marcado && indicador) indicador.appendChild(createCheckIcon());
+      if (checked && indicador) indicador.appendChild(createCheckIcon());
     }
   }
 
@@ -347,20 +347,20 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
     return menu;
   }
 
-  function openSubmenu(gatilho: HTMLElement, def: ContextMenuItemDef): void {
-    if (subTriggerEl === gatilho && subPanelEl) return;
+  function openSubmenu(trigger: HTMLElement, def: ContextMenuItemDef): void {
+    if (subTriggerEl === trigger && subPanelEl) return;
     closeSubmenu();
 
     subPanelEl = buildMenu(def.items ?? [], 'context-menu-sub-content');
     subPanelEl.style.position = 'absolute';
     document.body.appendChild(subPanelEl);
 
-    const caixa = gatilho.getBoundingClientRect();
-    subPanelEl.style.top = `${caixa.top + window.scrollY}px`;
-    subPanelEl.style.left = `${caixa.right + window.scrollX}px`;
+    const box = trigger.getBoundingClientRect();
+    subPanelEl.style.top = `${box.top + window.scrollY}px`;
+    subPanelEl.style.left = `${box.right + window.scrollX}px`;
 
-    gatilho.setAttribute('aria-expanded', 'true');
-    subTriggerEl = gatilho;
+    trigger.setAttribute('aria-expanded', 'true');
+    subTriggerEl = trigger;
   }
 
   function closeSubmenu(): void {
@@ -441,9 +441,9 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
     if (e.key === 'Escape') {
       e.preventDefault();
       if (subPanelEl) {
-        const gatilho = subTriggerEl;
+        const trigger = subTriggerEl;
         closeSubmenu();
-        gatilho?.focus();
+        trigger?.focus();
         return;
       }
       close();
@@ -453,11 +453,11 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
     const active = document.activeElement as HTMLElement | null;
 
     if (e.key === 'ArrowRight') {
-      const gatilho = active?.closest<HTMLElement>('[data-slot="context-menu-sub-trigger"]');
-      const def = gatilho ? subTriggerDef.get(gatilho) : undefined;
-      if (gatilho && def) {
+      const trigger = active?.closest<HTMLElement>('[data-slot="context-menu-sub-trigger"]');
+      const def = trigger ? subTriggerDef.get(trigger) : undefined;
+      if (trigger && def) {
         e.preventDefault();
-        openSubmenu(gatilho, def);
+        openSubmenu(trigger, def);
         if (subPanelEl) getMenuItems(subPanelEl)[0]?.focus();
         return;
       }
@@ -465,9 +465,9 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
 
     if (e.key === 'ArrowLeft' && subPanelEl?.contains(active)) {
       e.preventDefault();
-      const gatilho = subTriggerEl;
+      const trigger = subTriggerEl;
       closeSubmenu();
-      gatilho?.focus();
+      trigger?.focus();
       return;
     }
 

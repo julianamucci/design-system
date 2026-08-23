@@ -209,9 +209,9 @@ export const Playground: Story = {
      * caixa é buscada de novo a cada chamada porque a factory REMONTA o corpo
      * a cada mudança de estado: o nó capturado antes do clique já morreu.
      */
-    const marcar = async (find: () => HTMLElement, alvo: 'true' | 'false') => {
-      if (find().getAttribute('aria-checked') !== alvo) await userEvent.click(find());
-      await waitFor(() => expect(find()).toHaveAttribute('aria-checked', alvo));
+    const marcar = async (find: () => HTMLElement, target: 'true' | 'false') => {
+      if (find().getAttribute('aria-checked') !== target) await userEvent.click(find());
+      await waitFor(() => expect(find()).toHaveAttribute('aria-checked', target));
     };
     const lineBox = (i: number) => () =>
       lines()[i].querySelector<HTMLElement>("[role='checkbox']")!;
@@ -220,11 +220,11 @@ export const Playground: Story = {
       // accessibility.item1 — o que faz um leitor anunciar "tabela, 6 colunas" é
       // a TAG, não a classe. A mesma grade montada com div sumiria da árvore de
       // acessibilidade sem mudar um pixel.
-      const tabela = canvas.getByRole('table');
-      await expect(tabela.tagName).toBe('TABLE');
-      await expect(tabela).toHaveAttribute('data-slot', 'table');
-      await expect(tabela.querySelector('thead')).toHaveAttribute('data-slot', 'table-header');
-      await expect(tabela.querySelector('tbody')).toHaveAttribute('data-slot', 'table-body');
+      const table = canvas.getByRole('table');
+      await expect(table.tagName).toBe('TABLE');
+      await expect(table).toHaveAttribute('data-slot', 'table');
+      await expect(table.querySelector('thead')).toHaveAttribute('data-slot', 'table-header');
+      await expect(table.querySelector('tbody')).toHaveAttribute('data-slot', 'table-body');
       await expect(canvasElement.querySelector("[data-slot='data-table']")).toHaveClass(
         'nds-data-table',
       );
@@ -235,19 +235,19 @@ export const Playground: Story = {
       // accessibility.item6 — a legenda é o PRIMEIRO filho de `<table>`: em
       // qualquer outra posição o parser de HTML a move, e a tabela volta a
       // chegar ao leitor como "tabela, 6 colunas", sem nome.
-      const tabela = canvas.getByRole('table');
-      const legenda = tabela.firstElementChild!;
-      await expect(legenda.tagName).toBe('CAPTION');
+      const table = canvas.getByRole('table');
+      const caption = table.firstElementChild!;
+      await expect(caption.tagName).toBe('CAPTION');
       // O nome ACESSÍVEL, e não o texto do nó: é a pergunta que o leitor faz.
-      await expect(canvas.getByRole('table', { name: 'Faturas recentes' })).toBe(tabela);
+      await expect(canvas.getByRole('table', { name: 'Faturas recentes' })).toBe(table);
 
       // Fora da tela pela CAIXA COMPUTADA, não pela classe: asserir
       // `.nds-sr-only` provaria só que alguém escreveu o nome da classe.
-      const estilo = getComputedStyle(legenda);
-      const caixa = legenda.getBoundingClientRect();
+      const estilo = getComputedStyle(caption);
+      const box = caption.getBoundingClientRect();
       await expect(estilo.position).toBe('absolute');
-      await expect(caixa.width).toBeLessThanOrEqual(2);
-      await expect(caixa.height).toBeLessThanOrEqual(2);
+      await expect(box.width).toBeLessThanOrEqual(2);
+      await expect(box.height).toBeLessThanOrEqual(2);
     });
 
     await step('Uma camada rola na horizontal, e o teclado alcança ela', async () => {

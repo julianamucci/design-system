@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -21,7 +21,7 @@ export type FormField = {
   description?: string;
   disabled?: boolean;
   /** `textarea` troca a fábrica do controle: o campo não é só de `<input>`. */
-  controle?: 'input' | 'textarea';
+  control?: 'input' | 'textarea';
   rows?: number;
 };
 
@@ -46,15 +46,15 @@ export type FormSnippetOptions = {
 
 /** `createInput({ … })` / `createTextarea({ … })` em uma linha. */
 function fieldControl(c: FormField | FormSnippetOptions): string {
-  const ehTextarea = 'controle' in c && c.controle === 'textarea';
-  const tipo = 'type' in c ? c.type : (c as FormSnippetOptions).inputType;
-  const pairs = opcoes([
+  const ehTextarea = 'control' in c && c.control === 'textarea';
+  const type = 'type' in c ? c.type : (c as FormSnippetOptions).inputType;
+  const pairs = options([
     // A área de texto não tem `type`: o elemento já é o que é.
-    ['type', !ehTextarea && tipo && tipo !== 'text' ? texto(tipo) : undefined],
-    ['name', 'name' in c && c.name !== undefined ? texto(c.name) : undefined],
+    ['type', !ehTextarea && type && type !== 'text' ? text(type) : undefined],
+    ['name', 'name' in c && c.name !== undefined ? text(c.name) : undefined],
     ['rows', 'rows' in c && c.rows !== undefined ? String(c.rows) : undefined],
-    ['placeholder', c.placeholder !== undefined ? texto(c.placeholder) : undefined],
-    ['value', c.value !== undefined ? texto(c.value) : undefined],
+    ['placeholder', c.placeholder !== undefined ? text(c.placeholder) : undefined],
+    ['value', c.value !== undefined ? text(c.value) : undefined],
     ['disabled', c.disabled ? 'true' : undefined],
   ])
     .map((line) => line.replace(/,$/, ''))
@@ -65,9 +65,9 @@ function fieldControl(c: FormField | FormSnippetOptions): string {
 
 /** Um `createFormField({ … })` recuado para entrar numa lista de filhos. */
 function fieldBlock(c: FormField, recuo: string): string {
-  const lines = [`${recuo}  label: ${texto(c.label)},`, `${recuo}  input: ${fieldControl(c)},`];
+  const lines = [`${recuo}  label: ${text(c.label)},`, `${recuo}  input: ${fieldControl(c)},`];
   if (c.description !== undefined) {
-    lines.push(`${recuo}  description: ${texto(c.description)},`);
+    lines.push(`${recuo}  description: ${text(c.description)},`);
   }
   return `${recuo}createFormField({\n${lines.join('\n')}\n${recuo}}),`;
 }
@@ -82,13 +82,13 @@ function fieldBlock(c: FormField, recuo: string): string {
  */
 export function formSnippet(o: FormSnippetOptions = {}): string {
   const precisaDeVariavel = o.ariaInvalid === true;
-  const controle = fieldControl(o.inputType === undefined ? { ...o, inputType: 'email' } : o);
+  const control = fieldControl(o.inputType === undefined ? { ...o, inputType: 'email' } : o);
 
-  const lines = opcoes([
-    ['label', texto(o.label ?? 'Email')],
-    ['input', precisaDeVariavel ? 'controle' : controle],
-    ['description', o.description ? texto(o.description) : undefined],
-    ['error', o.error ? texto(o.error) : undefined],
+  const lines = options([
+    ['label', text(o.label ?? 'Email')],
+    ['input', precisaDeVariavel ? 'controle' : control],
+    ['description', o.description ? text(o.description) : undefined],
+    ['error', o.error ? text(o.error) : undefined],
   ]);
 
   return snippet(
@@ -96,7 +96,7 @@ export function formSnippet(o: FormSnippetOptions = {}): string {
     precisaDeVariavel
       ? `// \`aria-invalid\` é de quem compõe: o campo não tem fonte de verdade sobre
 // validade, e escrevê-lo na fábrica apagaria o que o formulário já disse.
-const controle = ${controle};
+const controle = ${control};
 controle.setAttribute('aria-invalid', 'true');`
       : undefined,
     `const campo = ${chamada('createFormField', lines)};`,
@@ -138,8 +138,8 @@ export function formWithFieldsetSnippet(o: FormWithFieldsetSnippetOptions = {}):
     { label: 'Cidade', placeholder: 'ex: São Paulo' },
   ];
 
-  const lines = opcoes([
-    ['legend', texto(o.legend ?? 'Endereço de entrega')],
+  const lines = options([
+    ['legend', text(o.legend ?? 'Endereço de entrega')],
     ['children', `[\n${fields.map((c) => fieldBlock(c, '    ')).join('\n')}\n  ]`],
   ]);
 
@@ -181,11 +181,11 @@ export function formWithMultipleFieldsSnippet(o: FormWithMultipleFieldsSnippetOp
     { label: 'Email', type: 'email', name: 'email', placeholder: 'ex: joao@empresa.com' },
   ];
   const submitLabel = o.submitLabel ?? 'Salvar';
-  const hasTextarea = fields.some((c) => c.controle === 'textarea');
+  const hasTextarea = fields.some((c) => c.control === 'textarea');
 
-  const filhos = fields.map((c) => fieldBlock(c, '  '));
+  const children = fields.map((c) => fieldBlock(c, '  '));
   if (submitLabel) {
-    filhos.push(`  createButton({ label: ${texto(submitLabel)}, type: 'submit' }),`);
+    children.push(`  createButton({ label: ${text(submitLabel)}, type: 'submit' }),`);
   }
 
   return snippet(
@@ -200,7 +200,7 @@ export function formWithMultipleFieldsSnippet(o: FormWithMultipleFieldsSnippetOp
     `const formulario = document.createElement('form');
 formulario.className = 'nds-stack';
 formulario.append(
-${filhos.join('\n')}
+${children.join('\n')}
 );`,
     montar('formulario'),
   );

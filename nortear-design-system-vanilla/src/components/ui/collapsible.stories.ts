@@ -61,11 +61,11 @@ type Story = StoryObj<CollapsibleArgs>;
 // Idempotentes: o painel Interactions reexecuta a play no MESMO DOM, então o
 // estado de partida é o que a rodada anterior deixou. Um clique cego ALTERNA —
 // a partir do estado errado ele inverte o resultado e a asserção seguinte falha.
-const abrir = async (t: HTMLElement) => {
+const open = async (t: HTMLElement) => {
   if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
 };
-const fechar = async (t: HTMLElement) => {
+const close = async (t: HTMLElement) => {
   if (t.getAttribute('aria-expanded') !== 'false') await userEvent.click(t);
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'false'));
 };
@@ -85,9 +85,9 @@ export const Playground: Story = {
     const content = document.createElement('div');
     content.className = PANEL_CLASSES;
     content.dataset.spacing = 'sm';
-    for (const texto of ['Filtro avançado 1', 'Filtro avançado 2']) {
+    for (const text of ['Filtro avançado 1', 'Filtro avançado 2']) {
       const p = document.createElement('p');
-      p.textContent = texto;
+      p.textContent = text;
       content.appendChild(p);
     }
 
@@ -103,7 +103,7 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button');
-    const painel = canvasElement.querySelector<HTMLElement>(
+    const panel = canvasElement.querySelector<HTMLElement>(
       '[data-slot="collapsible-content"]',
     )!;
 
@@ -124,31 +124,31 @@ export const Playground: Story = {
     await step('Clicar no trigger abre o painel', async () => {
       // fechar/abrir e não só abrir: o par garante um clique REAL nesta rodada,
       // que é o que a contagem do spy abaixo mede.
-      await fechar(trigger);
+      await close(trigger);
       const spy = args.onOpenChange as unknown as ReturnType<typeof fn>;
       const antes = spy.mock.calls.length;
-      await abrir(trigger);
+      await open(trigger);
       // Nesta stack o painel NÃO sai do DOM: alterna `hidden` + `aria-hidden`.
-      await expect(painel).toBeVisible();
-      await expect(painel).toHaveAttribute('aria-hidden', 'false');
+      await expect(panel).toBeVisible();
+      await expect(panel).toHaveAttribute('aria-hidden', 'false');
       await expect(spy.mock.calls.length).toBe(antes + 1);
     });
 
     await step('Aberto, aria-controls aponta para o id real do painel', async () => {
       const id = trigger.getAttribute('aria-controls');
       await expect(id).toBeTruthy();
-      await expect(document.getElementById(id!)).toBe(painel);
+      await expect(document.getElementById(id!)).toBe(panel);
     });
 
     await step('Enter alterna o painel', async () => {
-      await fechar(trigger);
+      await close(trigger);
       trigger.focus();
       await userEvent.keyboard('{Enter}');
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Space alterna o painel, idêntico a Enter', async () => {
-      await fechar(trigger);
+      await close(trigger);
       trigger.focus();
       await userEvent.keyboard(' ');
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
@@ -157,9 +157,9 @@ export const Playground: Story = {
     await step('Clicar novamente fecha o painel', async () => {
       // Último passo de propósito: a story declara visual.item1 (fechado por
       // padrão), e é o quadro final que o Chromatic fotografa e o axe varre.
-      await abrir(trigger);
-      await fechar(trigger);
-      await expect(painel).not.toBeVisible();
+      await open(trigger);
+      await close(trigger);
+      await expect(panel).not.toBeVisible();
     });
   },
 };

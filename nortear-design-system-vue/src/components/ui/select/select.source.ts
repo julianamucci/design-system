@@ -22,7 +22,7 @@ export type SelectArgs = {
 /** Os nomes que a composição usa, um por linha, do design system. */
 function importing(...names: string[]): string {
   return `import {
-${names.map((nome) => `  ${nome},`).join('\n')}
+${names.map((name) => `  ${name},`).join('\n')}
 } from '@/components/ui/select'`;
 }
 
@@ -59,20 +59,20 @@ const LACO_ITEMS = `<SelectItem v-for="estado in estados" :key="estado.value" :v
  * conteúdo — o conteúdo dele é o valor escolhido. Sem `aria-label` ou rótulo
  * externo o campo fica anônimo mesmo mostrando texto.
  */
-function campo(opcoes: {
-  raiz?: Array<string | false | null | undefined>;
-  gatilho?: Array<string | false | null | undefined>;
-  valor?: string;
-  itens: string;
+function field(options: {
+  root?: Array<string | false | null | undefined>;
+  trigger?: Array<string | false | null | undefined>;
+  value?: string;
+  items: string;
 }): string {
-  const { raiz = [], gatilho = [], itens } = opcoes;
-  const valor = opcoes.valor ?? '<SelectValue placeholder="Selecione..." />';
-  return `<Select${attrs(...raiz)}>
-  <SelectTrigger${attrs(...gatilho)}>
-${indentar(valor, 4)}
+  const { root = [], trigger = [], items } = options;
+  const value = options.value ?? '<SelectValue placeholder="Selecione..." />';
+  return `<Select${attrs(...root)}>
+  <SelectTrigger${attrs(...trigger)}>
+${indentar(value, 4)}
   </SelectTrigger>
   <SelectContent>
-${indentar(itens, 4)}
+${indentar(items, 4)}
   </SelectContent>
 </Select>`;
 }
@@ -86,16 +86,16 @@ export const selectSource: SourceTransform<SelectArgs> = (_gerado, ctx) => {
   const bloqueado = args.disabled === true;
   return vueSnippet(
     `${IMPORT_BASE}\n\n${STATES}`,
-    campo({
-      raiz: [
+    field({
+      root: [
         attr('default-value', args.defaultValue),
         attrBool('disabled', args.disabled, false),
         attr('name', args.name),
       ],
       // O bloqueio vale para os dois: a raiz impede a abertura, e o gatilho é
       // o que sai do percurso do Tab — `disabled` nativo, não só `aria-`.
-      gatilho: ['aria-label="Selecionar estado"', WIDTH_FIELD, bloqueado && 'disabled'],
-      itens: LACO_ITEMS,
+      trigger: ['aria-label="Selecionar estado"', WIDTH_FIELD, bloqueado && 'disabled'],
+      items: LACO_ITEMS,
     }),
   );
 };
@@ -109,9 +109,9 @@ const QUATRO_STATES = `<SelectItem value="sp">São Paulo</SelectItem>
 export function selectListPlanaSource(): string {
   return vueSnippet(
     IMPORT_BASE,
-    campo({
-      gatilho: ['aria-label="Selecionar estado"', WIDTH_FIELD],
-      itens: QUATRO_STATES,
+    field({
+      trigger: ['aria-label="Selecionar estado"', WIDTH_FIELD],
+      items: QUATRO_STATES,
     }),
   );
 }
@@ -131,9 +131,9 @@ export function selectAgrupadoSource(): string {
       'SelectTrigger',
       'SelectValue',
     ),
-    campo({
-      gatilho: ['aria-label="Selecionar estado por região"', WIDTH_FIELD],
-      itens: `<SelectGroup>
+    field({
+      trigger: ['aria-label="Selecionar estado por região"', WIDTH_FIELD],
+      items: `<SelectGroup>
   <SelectLabel>Sudeste</SelectLabel>
   <SelectItem value="sp">São Paulo</SelectItem>
   <SelectItem value="rj">Rio de Janeiro</SelectItem>
@@ -158,9 +158,9 @@ export function selectWithIconSource(): string {
   return vueSnippet(
     `import { Globe } from 'lucide-vue-next'
 ${IMPORT_BASE}`,
-    campo({
-      gatilho: ['aria-label="Selecionar idioma"', WIDTH_FIELD],
-      itens: `<SelectItem value="pt-BR">
+    field({
+      trigger: ['aria-label="Selecionar idioma"', WIDTH_FIELD],
+      items: `<SelectItem value="pt-BR">
   <Globe class="nds-size-4" aria-hidden="true" />
   <span>Português (BR)</span>
 </SelectItem>
@@ -180,9 +180,9 @@ ${IMPORT_BASE}`,
 export function selectEmptySource(): string {
   return vueSnippet(
     `${IMPORT_BASE}\n\n${STATES}`,
-    campo({
-      gatilho: ['aria-label="Selecionar estado"', WIDTH_FIELD],
-      itens: LACO_ITEMS,
+    field({
+      trigger: ['aria-label="Selecionar estado"', WIDTH_FIELD],
+      items: LACO_ITEMS,
     }),
   );
 }
@@ -200,15 +200,15 @@ export function selectPreenchidoSource(): string {
 ${STATES}
 
 const rotulos = Object.fromEntries(estados.map((estado) => [estado.value, estado.label]))`,
-    campo({
-      raiz: ['default-value="rj"'],
-      gatilho: ['aria-label="Selecionar estado"', WIDTH_FIELD],
-      valor: `<SelectValue placeholder="Selecione...">
+    field({
+      root: ['default-value="rj"'],
+      trigger: ['aria-label="Selecionar estado"', WIDTH_FIELD],
+      value: `<SelectValue placeholder="Selecione...">
   <template #default="{ modelValue }">
     {{ rotulos[modelValue] ?? 'Selecione...' }}
   </template>
 </SelectValue>`,
-      itens: LACO_ITEMS,
+      items: LACO_ITEMS,
     }),
   );
 }
@@ -221,10 +221,10 @@ const rotulos = Object.fromEntries(estados.map((estado) => [estado.value, estado
 export function selectBloqueadoSource(): string {
   return vueSnippet(
     `${IMPORT_BASE}\n\n${STATES}`,
-    campo({
-      raiz: ['disabled'],
-      gatilho: ['aria-label="Selecionar estado"', WIDTH_FIELD, 'disabled'],
-      itens: LACO_ITEMS,
+    field({
+      root: ['disabled'],
+      trigger: ['aria-label="Selecionar estado"', WIDTH_FIELD, 'disabled'],
+      items: LACO_ITEMS,
     }),
   );
 }
@@ -238,9 +238,9 @@ export function selectInvalidoSource(): string {
     `${IMPORT_BASE}\n\n${STATES}`,
     `<div class="nds-stack" data-spacing="sm">
 ${indentar(
-  campo({
-    gatilho: ['aria-label="Selecionar estado"', 'aria-invalid="true"', WIDTH_FIELD],
-    itens: LACO_ITEMS,
+  field({
+    trigger: ['aria-label="Selecionar estado"', 'aria-invalid="true"', WIDTH_FIELD],
+    items: LACO_ITEMS,
   }),
 )}
   <p class="nds-text-body nds-text-destructive">Selecione um estado para continuar.</p>
@@ -258,16 +258,16 @@ export function selectCompactoSource(): string {
     `${IMPORT_BASE}\n\n${STATES}`,
     `<div class="nds-stack" data-spacing="sm">
 ${indentar(
-  campo({
-    gatilho: ['aria-label="Selecionar estado"', WIDTH_FIELD],
-    itens: LACO_ITEMS,
+  field({
+    trigger: ['aria-label="Selecionar estado"', WIDTH_FIELD],
+    items: LACO_ITEMS,
   }),
 )}
 
 ${indentar(
-  campo({
-    gatilho: ['aria-label="Selecionar cidade"', 'size="sm"', WIDTH_FIELD],
-    itens: '<SelectItem value="campinas">Campinas</SelectItem>',
+  field({
+    trigger: ['aria-label="Selecionar cidade"', 'size="sm"', WIDTH_FIELD],
+    items: '<SelectItem value="campinas">Campinas</SelectItem>',
   }),
 )}
 </div>`,
@@ -286,9 +286,9 @@ ${IMPORT_BASE}`,
     `<div class="nds-stack nds-w-xs" data-spacing="sm">
   <Label id="estado-rotulo" for="estado">Estado</Label>
 ${indentar(
-  campo({
-    gatilho: ['id="estado"', 'aria-labelledby="estado-rotulo"', 'class="nds-w-full"'],
-    itens: `<SelectItem value="sp">São Paulo</SelectItem>
+  field({
+    trigger: ['id="estado"', 'aria-labelledby="estado-rotulo"', 'class="nds-w-full"'],
+    items: `<SelectItem value="sp">São Paulo</SelectItem>
 <SelectItem value="rj">Rio de Janeiro</SelectItem>
 <SelectItem value="mg">Minas Gerais</SelectItem>`,
   }),
@@ -313,10 +313,10 @@ const estado = ref('')`,
   <div class="nds-stack" data-spacing="sm">
     <Label for="estado">Estado</Label>
 ${indentar(
-  campo({
-    raiz: [':model-value="estado"', '@update:model-value="(valor) => (estado = valor)"'],
-    gatilho: ['id="estado"', 'aria-label="Selecionar estado"', 'class="nds-w-full"'],
-    itens: `<SelectItem value="sp">São Paulo</SelectItem>
+  field({
+    root: [':model-value="estado"', '@update:model-value="(valor) => (estado = valor)"'],
+    trigger: ['id="estado"', 'aria-label="Selecionar estado"', 'class="nds-w-full"'],
+    items: `<SelectItem value="sp">São Paulo</SelectItem>
 <SelectItem value="rj">Rio de Janeiro</SelectItem>
 <SelectItem value="mg">Minas Gerais</SelectItem>`,
   }),
@@ -342,10 +342,10 @@ ${IMPORT_BASE}`,
   <div class="nds-stack" data-spacing="sm">
     <Label for="estado">Estado</Label>
 ${indentar(
-  campo({
-    raiz: ['name="estado"'],
-    gatilho: ['id="estado"', 'aria-label="Selecionar estado"', 'class="nds-w-full"'],
-    itens: `<SelectItem value="sp">São Paulo</SelectItem>
+  field({
+    root: ['name="estado"'],
+    trigger: ['id="estado"', 'aria-label="Selecionar estado"', 'class="nds-w-full"'],
+    items: `<SelectItem value="sp">São Paulo</SelectItem>
 <SelectItem value="rj">Rio de Janeiro</SelectItem>
 <SelectItem value="mg">Minas Gerais</SelectItem>`,
   }),
@@ -373,9 +373,9 @@ export function selectWithSeparatorSource(): string {
       'SelectTrigger',
       'SelectValue',
     ),
-    campo({
-      gatilho: ['aria-label="Selecionar estado"', WIDTH_FIELD],
-      itens: `<SelectGroup>
+    field({
+      trigger: ['aria-label="Selecionar estado"', WIDTH_FIELD],
+      items: `<SelectGroup>
   <SelectLabel>Sudeste</SelectLabel>
   <SelectItem value="sp">São Paulo</SelectItem>
   <SelectItem value="rj">Rio de Janeiro</SelectItem>

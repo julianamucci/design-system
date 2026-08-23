@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -46,12 +46,12 @@ function boxOptions(o: CheckboxSnippetOptions, id?: string): string[] {
   // corpo do mock no painel Code. Só a string escrita por uma story entra.
   const onCheckedChange = typeof o.onCheckedChange === 'string' ? o.onCheckedChange : undefined;
 
-  return opcoes([
-    ['id', id ? texto(id) : undefined],
+  return options([
+    ['id', id ? text(id) : undefined],
     ['checked', o.checked ? 'true' : undefined],
     ['indeterminate', o.indeterminate ? 'true' : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
-    ['aria-label', o['aria-label'] ? texto(o['aria-label']) : undefined],
+    ['aria-label', o['aria-label'] ? text(o['aria-label']) : undefined],
     ['onCheckedChange', onCheckedChange],
   ]);
 }
@@ -68,10 +68,10 @@ export function checkboxSnippet(o: CheckboxSnippetOptions = {}): string {
   const noLabelVisible = o.label === undefined && Boolean(o['aria-label']);
   const label = o.label ?? LABEL_DEFAULT;
   const id = noLabelVisible ? undefined : ID_DEFAULT;
-  const caixa = `const caixa = ${chamada('createCheckbox', boxOptions(o, id))};`;
+  const box = `const caixa = ${chamada('createCheckbox', boxOptions(o, id))};`;
 
   if (noLabelVisible) {
-    return snippet(importing('checkbox', 'createCheckbox'), caixa, montar('caixa'));
+    return snippet(importing('checkbox', 'createCheckbox'), box, montar('caixa'));
   }
 
   const errorMarca = o.invalid
@@ -86,12 +86,12 @@ caixa.setAttribute('aria-describedby', 'erro-${ID_DEFAULT}');`
 linha.className = 'nds-cluster';
 linha.dataset.spacing = 'sm';${o.disabled ? "\nlinha.dataset.disabled = 'true';" : ''}`;
 
-  const rotulo = `// Só \`for\`/\`id\`: a caixa é um controle rotulável, então o clique no texto
+  const labelCode = `// Só \`for\`/\`id\`: a caixa é um controle rotulável, então o clique no texto
 // move o foco para ela E alterna o estado, sem nenhum ouvinte escrito à mão.
 const rotulo = document.createElement('label');
-rotulo.htmlFor = ${texto(ID_DEFAULT)};
-rotulo.textContent = ${texto(label)};
-rotulo.className = ${texto(labelClassName(o.disabled))};
+rotulo.htmlFor = ${text(ID_DEFAULT)};
+rotulo.textContent = ${text(label)};
+rotulo.className = ${text(labelClassName(o.disabled))};
 
 linha.append(caixa, rotulo);`;
 
@@ -99,8 +99,8 @@ linha.append(caixa, rotulo);`;
     return snippet(
       importing('checkbox', 'createCheckbox'),
       line,
-      `${caixa}${errorMarca}`,
-      rotulo,
+      `${box}${errorMarca}`,
+      labelCode,
       montar('linha'),
     );
   }
@@ -108,12 +108,12 @@ linha.append(caixa, rotulo);`;
   return snippet(
     importing('checkbox', 'createCheckbox'),
     line,
-    `${caixa}${errorMarca}`,
-    rotulo,
+    `${box}${errorMarca}`,
+    labelCode,
     `const mensagem = document.createElement('p');
 mensagem.id = 'erro-${ID_DEFAULT}';
 mensagem.className = 'nds-text-body nds-text-destructive';
-mensagem.textContent = ${texto(o.errorMessage ?? ERROR_DEFAULT)};
+mensagem.textContent = ${text(o.errorMessage ?? ERROR_DEFAULT)};
 
 const campo = document.createElement('div');
 campo.className = 'nds-stack';
@@ -162,17 +162,17 @@ linha.className = 'nds-cluster';
 linha.dataset.spacing = 'sm';
 linha.dataset.align = 'start';
 
-const caixa = createCheckbox({ id: ${texto(id)} });`,
+const caixa = createCheckbox({ id: ${text(id)} });`,
     `const rotulo = document.createElement('label');
-rotulo.htmlFor = ${texto(id)};
-rotulo.textContent = ${texto(o.label ?? 'Receber novidades por email')};
-rotulo.className = ${texto(labelClassName())};
+rotulo.htmlFor = ${text(id)};
+rotulo.textContent = ${text(o.label ?? 'Receber novidades por email')};
+rotulo.className = ${text(labelClassName())};
 
 // Fora do <label> de propósito: dentro dele a frase viraria parte do nome
 // acessível e seria lida a cada foco na caixa.
 const auxiliar = document.createElement('p');
 auxiliar.className = 'nds-text-body';
-auxiliar.textContent = ${texto(
+auxiliar.textContent = ${text(
       o.description ?? 'Enviaremos atualizações sobre novos recursos e melhorias do produto.',
     )};
 
@@ -201,17 +201,17 @@ export type GroupSnippetOptionsCheckbox = {
    * Nome do conjunto. Com `fieldset`, ele vira a `<legend>` — que é o que liga
    * as caixas umas às outras para quem lê a tela (WCAG 1.3.1).
    */
-  legenda?: string;
+  caption?: string;
   /** `<fieldset>` + `<legend>` em vez de uma lista de linhas com borda. */
   fieldset?: boolean;
   /** Itens do conjunto, na ordem. */
-  itens?: Array<{ id: string; label: string; checked?: boolean }>;
+  items?: Array<{ id: string; label: string; checked?: boolean }>;
 };
 
 // Anotado, e não inferido: sem o tipo, `checked` some da forma do padrão e o
 // destructuring de `groupCheckboxSnippet` deixa de compilar quando ninguém
-// passa `itens`.
-const ITEMS_DEFAULT: NonNullable<GroupSnippetOptionsCheckbox['itens']> = [
+// passa `items`.
+const ITEMS_DEFAULT: NonNullable<GroupSnippetOptionsCheckbox['items']> = [
   { id: 'notif-email', label: 'Receber novidades por email' },
   { id: 'notif-push', label: 'Receber notificações push' },
   { id: 'notif-sms', label: 'Alertas por SMS' },
@@ -225,16 +225,16 @@ const ITEMS_DEFAULT: NonNullable<GroupSnippetOptionsCheckbox['itens']> = [
  * elas só existe visualmente.
  */
 export function groupCheckboxSnippet(o: GroupSnippetOptionsCheckbox = {}): string {
-  const itens = o.itens ?? ITEMS_DEFAULT;
-  const lines = itens
+  const items = o.items ?? ITEMS_DEFAULT;
+  const lines = items
     .map(
-      ({ id, label, checked }) => `  { id: ${texto(id)}, label: ${texto(label)}${
+      ({ id, label, checked }) => `  { id: ${text(id)}, label: ${text(label)}${
         checked ? ', checked: true' : ''
       } },`,
     )
     .join('\n');
 
-  const raiz = o.fieldset
+  const root = o.fieldset
     ? `// <fieldset> + <legend>: é a legenda que nomeia o conjunto e liga as caixas
 // umas às outras para quem lê a tela.
 const grupo = document.createElement('fieldset');
@@ -243,7 +243,7 @@ grupo.dataset.spacing = 'sm';
 
 const legenda = document.createElement('legend');
 legenda.className = 'nds-text-body nds-font-semibold nds-px-1';
-legenda.textContent = ${texto(o.legenda ?? 'Notificações')};
+legenda.textContent = ${text(o.caption ?? 'Notificações')};
 grupo.appendChild(legenda);`
     : `const grupo = document.createElement('div');
 grupo.className = 'nds-stack';
@@ -251,7 +251,7 @@ grupo.dataset.spacing = 'sm';
 
 const titulo = document.createElement('p');
 titulo.className = 'nds-text-body nds-font-semibold';
-titulo.textContent = ${texto(o.legenda ?? 'Preferências de contato')};
+titulo.textContent = ${text(o.caption ?? 'Preferências de contato')};
 grupo.appendChild(titulo);`;
 
   const lineClassName = o.fieldset
@@ -261,7 +261,7 @@ grupo.appendChild(titulo);`;
   return snippet(
     importing('checkbox', 'createCheckbox'),
     `const opcoes = [\n${lines}\n];`,
-    raiz,
+    root,
     `for (const { id, label, checked } of opcoes) {
   const linha = document.createElement('div');
   linha.className = ${lineClassName};
@@ -270,7 +270,7 @@ grupo.appendChild(titulo);`;
   const rotulo = document.createElement('label');
   rotulo.htmlFor = id;
   rotulo.textContent = label;
-  rotulo.className = ${texto(labelClassName())};
+  rotulo.className = ${text(labelClassName())};
 
   linha.append(createCheckbox({ id, checked }), rotulo);
   grupo.appendChild(linha);
@@ -367,7 +367,7 @@ for (const { id, label } of opcoes) {
   const rotulo = document.createElement('label');
   rotulo.htmlFor = id;
   rotulo.textContent = label;
-  rotulo.className = ${texto(labelClassName())};
+  rotulo.className = ${text(labelClassName())};
 
   linha.append(filho, rotulo);
   sublista.appendChild(linha);

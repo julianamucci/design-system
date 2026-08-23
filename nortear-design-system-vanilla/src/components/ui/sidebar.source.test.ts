@@ -10,21 +10,21 @@ import {
 
 describe('sidebarSnippet', () => {
   it('devolve as chamadas das fábricas, e não o outerHTML da barra', () => {
-    const código = sidebarSnippet();
-    expect(código).toContain("from '@/components/ui/sidebar';");
-    expect(código).toContain('createSidebar(');
-    expect(código).toContain('createSidebarProvider()');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('nds-sidebar-root');
+    const code = sidebarSnippet();
+    expect(code).toContain("from '@/components/ui/sidebar';");
+    expect(code).toContain('createSidebar(');
+    expect(code).toContain('createSidebarProvider()');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('nds-sidebar-root');
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = sidebarSnippet();
-    expect(código).toContain('createSidebar({})');
-    expect(código).not.toContain('defaultOpen');
-    expect(código).not.toContain('side:');
-    expect(código).not.toContain('variant:');
-    expect(código).not.toContain('mobileQuery');
+    const code = sidebarSnippet();
+    expect(code).toContain('createSidebar({})');
+    expect(code).not.toContain('defaultOpen');
+    expect(code).not.toContain('side:');
+    expect(code).not.toContain('variant:');
+    expect(code).not.toContain('mobileQuery');
   });
 
   it('não repete o ponto de virada padrão que o control já traz', () => {
@@ -35,10 +35,10 @@ describe('sidebarSnippet', () => {
   });
 
   it('mostra estado inicial, lado e variante quando a story os troca', () => {
-    const código = sidebarSnippet({ defaultOpen: false, side: 'right', variant: 'floating' });
-    expect(código).toContain('defaultOpen: false');
-    expect(código).toContain("side: 'right'");
-    expect(código).toContain("variant: 'floating'");
+    const code = sidebarSnippet({ defaultOpen: false, side: 'right', variant: 'floating' });
+    expect(code).toContain('defaultOpen: false');
+    expect(code).toContain("side: 'right'");
+    expect(code).toContain("variant: 'floating'");
   });
 
   it('dá nome ao marco de navegação — a fábrica não impõe o elemento', () => {
@@ -51,12 +51,12 @@ describe('sidebarSnippet', () => {
   });
 
   it('monta os ícones com o lucide, sem helper de story', () => {
-    const código = sidebarSnippet();
-    expect(código).toContain("from 'lucide';");
-    expect(código).toContain('createElement(House)');
-    expect(código).not.toContain('makeIcon');
-    expect(código).not.toContain('ICON_HOME');
-    expect(código).not.toContain('DOMPurify');
+    const code = sidebarSnippet();
+    expect(code).toContain("from 'lucide';");
+    expect(code).toContain('createElement(House)');
+    expect(code).not.toContain('makeIcon');
+    expect(code).not.toContain('ICON_HOME');
+    expect(code).not.toContain('DOMPurify');
   });
 
   it('põe a linha do componente entre dois grupos, e nenhuma com um só', () => {
@@ -64,7 +64,7 @@ describe('sidebarSnippet', () => {
     expect(um).not.toContain('createSidebarSeparator');
 
     const dois = sidebarSnippet({
-      grupos: [
+      groups: [
         { label: 'Principal', items: [{ label: 'Dashboard', href: '#', active: true }] },
         { label: 'Conta', items: [{ label: 'Perfil', href: '#', badge: '5' }] },
       ],
@@ -76,15 +76,15 @@ describe('sidebarSnippet', () => {
 
   it('acrescenta a busca com nome acessível obrigatório', () => {
     expect(sidebarSnippet()).not.toContain('createSidebarInput');
-    const código = sidebarSnippet({ search: 'Buscar na navegação' });
-    expect(código).toContain("createSidebarInput({ 'aria-label': 'Buscar na navegação'");
-    expect(código).toContain('createSidebarInput,');
+    const code = sidebarSnippet({ search: 'Buscar na navegação' });
+    expect(code).toContain("createSidebarInput({ 'aria-label': 'Buscar na navegação'");
+    expect(code).toContain('createSidebarInput,');
   });
 
   it('monta a página sem gatilho quando a barra é fixa', () => {
-    const código = sidebarSnippet({ withTrigger: false });
-    expect(código).not.toContain('createSidebarTrigger');
-    expect(código).toContain('// Sem gatilho');
+    const code = sidebarSnippet({ withTrigger: false });
+    expect(code).not.toContain('createSidebarTrigger');
+    expect(code).toContain('// Sem gatilho');
   });
 
   it('mostra a limpeza só quando a story trata dela', () => {
@@ -111,28 +111,28 @@ describe('sidebarSource', () => {
   });
 
   it('liga a linha do callback quando a story passa um spy nos args', () => {
-    const código = sidebarSource('', { args: { onOpenChange: () => {} } });
-    expect(código).toContain('onOpenChange: (aberta) => registrarBarra(aberta)');
+    const code = sidebarSource('', { args: { onOpenChange: () => {} } });
+    expect(code).toContain('onOpenChange: (aberta) => registrarBarra(aberta)');
   });
 });
 
 describe('sidebarSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = sidebarSourceWith({ variant: 'inset' })('', { args: { variant: 'sidebar' } });
-    expect(código).toContain("variant: 'inset'");
+    const code = sidebarSourceWith({ variant: 'inset' })('', { args: { variant: 'sidebar' } });
+    expect(code).toContain("variant: 'inset'");
   });
 });
 
 describe('sidebarComAcoesSnippet', () => {
   it('mostra as sub-fábricas que o atalho de grupo esconderia', () => {
-    const código = sidebarWithActionsSnippet();
-    expect(código).toContain("createSidebarGroupLabel({ text: 'Projetos', id: 'grupo-projetos' })");
-    expect(código).toContain("createSidebarMenu({ 'aria-labelledby': 'grupo-projetos' })");
-    expect(código).toContain('createSidebarGroupAction({');
-    expect(código).toContain('createSidebarMenuBadge(');
-    expect(código).toContain('createSidebarMenuAction({');
-    expect(código).toContain('createSidebarRail(barra.toggle)');
-    expect(código).not.toContain('createSidebarGroup(');
+    const code = sidebarWithActionsSnippet();
+    expect(code).toContain("createSidebarGroupLabel({ text: 'Projetos', id: 'grupo-projetos' })");
+    expect(code).toContain("createSidebarMenu({ 'aria-labelledby': 'grupo-projetos' })");
+    expect(code).toContain('createSidebarGroupAction({');
+    expect(code).toContain('createSidebarMenuBadge(');
+    expect(code).toContain('createSidebarMenuAction({');
+    expect(code).toContain('createSidebarRail(barra.toggle)');
+    expect(code).not.toContain('createSidebarGroup(');
   });
 
   it('põe a contagem no nome do item, porque o contador é oculto', () => {
@@ -142,21 +142,21 @@ describe('sidebarComAcoesSnippet', () => {
 
 describe('sidebarComSubmenuSnippet', () => {
   it('deixa o recolhimento com quem compõe, ligado ao aria-expanded', () => {
-    const código = sidebarWithSubmenuSnippet();
-    expect(código).toContain("botaoPai.setAttribute('aria-expanded', 'false');");
-    expect(código).toContain('createSidebarMenuSub()');
-    expect(código).toContain('createSidebarMenuSubButton({ ...sub, size: \'sm\' })');
-    expect(código).toContain("subLista.style.display = aberto ? 'none' : '';");
-    expect(código).toContain('disabled: true');
+    const code = sidebarWithSubmenuSnippet();
+    expect(code).toContain("botaoPai.setAttribute('aria-expanded', 'false');");
+    expect(code).toContain('createSidebarMenuSub()');
+    expect(code).toContain('createSidebarMenuSubButton({ ...sub, size: \'sm\' })');
+    expect(code).toContain("subLista.style.display = aberto ? 'none' : '';");
+    expect(code).toContain('disabled: true');
   });
 });
 
 describe('sidebarComEsqueletoSnippet', () => {
   it('anuncia uma linha só — as outras ficam mudas', () => {
-    const código = sidebarWithSkeletonSnippet();
-    expect(código).toContain("{ showIcon: true, 'aria-label': 'Carregando navegação', width: '70%' }");
-    expect(código).toContain('{ showIcon: true, width: \'55%\' }');
-    expect(código).toContain('createSidebarMenuSkeleton(linha)');
-    expect(código).not.toContain('createSkeleton(');
+    const code = sidebarWithSkeletonSnippet();
+    expect(code).toContain("{ showIcon: true, 'aria-label': 'Carregando navegação', width: '70%' }");
+    expect(code).toContain('{ showIcon: true, width: \'55%\' }');
+    expect(code).toContain('createSidebarMenuSkeleton(linha)');
+    expect(code).not.toContain('createSkeleton(');
   });
 });

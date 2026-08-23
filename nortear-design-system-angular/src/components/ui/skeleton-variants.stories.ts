@@ -102,9 +102,9 @@ export const Shapes: Story = {
       // É o caso que junta os dois componentes: se o filho perdesse o
       // `position: absolute; inset: 0`, o esqueleto colapsaria e a caixa
       // ficaria vazia mesmo com a proporção certa.
-      const caixa = canvasElement.querySelector<HTMLElement>('[data-slot="aspect-ratio"]')!;
-      const sk = caixa.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
-      const boxBox = caixa.getBoundingClientRect();
+      const box = canvasElement.querySelector<HTMLElement>('[data-slot="aspect-ratio"]')!;
+      const sk = box.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
+      const boxBox = box.getBoundingClientRect();
       const skBox = sk.getBoundingClientRect();
       await expect(Math.abs(skBox.height - boxBox.height)).toBeLessThan(2);
     });

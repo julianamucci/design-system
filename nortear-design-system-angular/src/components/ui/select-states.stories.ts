@@ -19,8 +19,8 @@ const STATES = [
  * gatilho mostraria o valor cru. Esta função é o caminho que o primitivo
  * oferece para isso, e é o que a docs page recomenda.
  */
-const stateLabel = (valor: unknown): string =>
-  STATES.find((e) => e.value === valor)?.label ?? String(valor ?? '');
+const stateLabel = (value: unknown): string =>
+  STATES.find((e) => e.value === value)?.label ?? String(value ?? '');
 
 const meta: Meta = {
   title: 'UI/Select/States',
@@ -73,14 +73,14 @@ export const Default: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('combobox', { name: 'Estado' });
+    const trigger = within(canvasElement).getByRole('combobox', { name: 'Estado' });
 
     await step('O gatilho anuncia o campo vazio', async () => {
-      await expect(gatilho).toHaveTextContent('Selecione...');
+      await expect(trigger).toHaveTextContent('Selecione...');
       // `data-placeholder` é o que faz a folha pintar o texto em cor secundária;
       // sem ele o placeholder teria o mesmo peso de um valor escolhido.
-      await expect(gatilho.hasAttribute('data-placeholder')).toBe(true);
-      await expect(gatilho.getAttribute('data-state')).toBe('closed');
+      await expect(trigger.hasAttribute('data-placeholder')).toBe(true);
+      await expect(trigger.getAttribute('data-state')).toBe('closed');
     });
 
     await step('A lista não existe enquanto está fechada', async () => {
@@ -124,25 +124,25 @@ export const Selected: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('combobox', { name: 'Estado' });
+    const trigger = within(canvasElement).getByRole('combobox', { name: 'Estado' });
 
     await step('O gatilho exibe o rótulo do valor escolhido', async () => {
       await waitFor(async () => {
-        await expect(gatilho).toHaveTextContent('Rio de Janeiro');
+        await expect(trigger).toHaveTextContent('Rio de Janeiro');
       });
-      await expect(gatilho.hasAttribute('data-placeholder')).toBe(false);
+      await expect(trigger.hasAttribute('data-placeholder')).toBe(false);
       // `data-filled` é o que um Field usa para saber que o campo tem conteúdo.
-      await expect(gatilho.hasAttribute('data-filled')).toBe(true);
+      await expect(trigger.hasAttribute('data-filled')).toBe(true);
     });
 
     await step('Ao abrir, a opção escolhida é a que nasce marcada e destacada', async () => {
-      await userEvent.click(gatilho);
-      const lista = await waitForPortal('listbox', { name: 'Estado' });
-      const escolhida = within(lista).getByRole('option', { name: 'Rio de Janeiro' });
+      await userEvent.click(trigger);
+      const list = await waitForPortal('listbox', { name: 'Estado' });
+      const escolhida = within(list).getByRole('option', { name: 'Rio de Janeiro' });
 
       await expect(escolhida.getAttribute('aria-selected')).toBe('true');
       await waitFor(async () => {
-        await expect(lista.getAttribute('aria-activedescendant')).toBe(escolhida.id);
+        await expect(list.getAttribute('aria-activedescendant')).toBe(escolhida.id);
       });
 
       await userEvent.keyboard('{Escape}');
@@ -190,43 +190,43 @@ export const Open: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('combobox', { name: 'Estado' });
-    const lista = await waitForPortal('listbox', { name: 'Estado' });
-    const opcoes = within(lista).getAllByRole('option');
+    const trigger = within(canvasElement).getByRole('combobox', { name: 'Estado' });
+    const list = await waitForPortal('listbox', { name: 'Estado' });
+    const options = within(list).getAllByRole('option');
 
     await step('O gatilho e a lista concordam sobre estar aberta', async () => {
-      await expect(gatilho.getAttribute('aria-expanded')).toBe('true');
-      await expect(gatilho.getAttribute('data-state')).toBe('open');
+      await expect(trigger.getAttribute('aria-expanded')).toBe('true');
+      await expect(trigger.getAttribute('data-state')).toBe('open');
       // `aria-controls` só existe enquanto a lista existe — é o detalhe que
       // evita `aria-valid-attr-value` no axe quando ela desmonta.
-      await expect(gatilho.getAttribute('aria-controls')).toBe(lista.id);
+      await expect(trigger.getAttribute('aria-controls')).toBe(list.id);
     });
 
     await step('Quem detém o foco é a lista, não a opção', async () => {
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(lista);
+        await expect(document.activeElement).toBe(list);
       });
-      for (const opcao of opcoes) {
+      for (const opcao of options) {
         await expect(opcao.hasAttribute('tabindex')).toBe(false);
       }
     });
 
     await step('A seta para baixo desce um item por vez', async () => {
       await waitFor(async () => {
-        await expect(lista.getAttribute('aria-activedescendant')).toBe(opcoes[0].id);
+        await expect(list.getAttribute('aria-activedescendant')).toBe(options[0].id);
       });
       await userEvent.keyboard('{ArrowDown}');
-      await expect(lista.getAttribute('aria-activedescendant')).toBe(opcoes[1].id);
-      await expect(opcoes[1].hasAttribute('data-highlighted')).toBe(true);
+      await expect(list.getAttribute('aria-activedescendant')).toBe(options[1].id);
+      await expect(options[1].hasAttribute('data-highlighted')).toBe(true);
     });
 
     await step('Home e End vão ao primeiro e ao último', async () => {
       await userEvent.keyboard('{End}');
-      await expect(lista.getAttribute('aria-activedescendant')).toBe(
-        opcoes[opcoes.length - 1].id,
+      await expect(list.getAttribute('aria-activedescendant')).toBe(
+        options[options.length - 1].id,
       );
       await userEvent.keyboard('{Home}');
-      await expect(lista.getAttribute('aria-activedescendant')).toBe(opcoes[0].id);
+      await expect(list.getAttribute('aria-activedescendant')).toBe(options[0].id);
     });
 
     await step('Digitar uma letra salta para a opção que começa com ela', async () => {
@@ -234,8 +234,8 @@ export const Open: Story = {
       // opção. Vem do popup do primitivo, e some se a lista de itens não for
       // encontrada — daí valer a pena afirmar.
       await userEvent.keyboard('m');
-      await expect(lista.getAttribute('aria-activedescendant')).toBe(
-        within(lista).getByRole('option', { name: 'Minas Gerais' }).id,
+      await expect(list.getAttribute('aria-activedescendant')).toBe(
+        within(list).getByRole('option', { name: 'Minas Gerais' }).id,
       );
     });
   },
@@ -269,19 +269,19 @@ export const Disabled: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('combobox', { name: 'Estado' });
+    const trigger = within(canvasElement).getByRole('combobox', { name: 'Estado' });
 
     await step('O gatilho se anuncia bloqueado', async () => {
       // `disabled` nativo, e não só `aria-disabled`: é o atributo que tira o
       // botão do percurso do Tab e cancela o clique no próprio navegador.
-      await expect((gatilho as HTMLButtonElement).disabled).toBe(true);
-      await expect(gatilho.hasAttribute('data-disabled')).toBe(true);
+      await expect((trigger as HTMLButtonElement).disabled).toBe(true);
+      await expect(trigger.hasAttribute('data-disabled')).toBe(true);
     });
 
     await step('Clicar não abre a lista', async () => {
-      await userEvent.click(gatilho);
+      await userEvent.click(trigger);
       await expect(within(document.body).queryAllByRole('listbox')).toHaveLength(0);
-      await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
+      await expect(trigger.getAttribute('aria-expanded')).toBe('false');
     });
   },
 };
@@ -377,8 +377,8 @@ export const OptionDisabled: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const lista = await waitForPortal('listbox', { name: 'Estado' });
-    const indisponivel = within(lista).getByRole('option', { name: 'Rio de Janeiro' });
+    const list = await waitForPortal('listbox', { name: 'Estado' });
+    const indisponivel = within(list).getByRole('option', { name: 'Rio de Janeiro' });
 
     await step('A opção se anuncia indisponível', async () => {
       await expect(indisponivel.getAttribute('aria-disabled')).toBe('true');
@@ -395,7 +395,7 @@ export const OptionDisabled: Story = {
       // O destaque só pousa em opção escolhível: parar numa que não se pode
       // escolher deixaria o Enter sem efeito, sem explicação.
       await userEvent.keyboard('r');
-      await expect(lista.getAttribute('aria-activedescendant')).not.toBe(indisponivel.id);
+      await expect(list.getAttribute('aria-activedescendant')).not.toBe(indisponivel.id);
     });
   },
 };

@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -45,32 +45,32 @@ function accessibleName(o: SliderSnippetOptions, intervalo: boolean): string {
   const raw =
     o['aria-label'] ??
     (intervalo ? ['Faixa de preço — mínimo', 'Faixa de preço — máximo'] : 'Volume');
-  return Array.isArray(raw) ? `[${raw.map(texto).join(', ')}]` : texto(raw);
+  return Array.isArray(raw) ? `[${raw.map(text).join(', ')}]` : text(raw);
 }
 
-function valueLiteral(valor: number | number[] | undefined): string | undefined {
-  if (valor === undefined) return undefined;
-  return Array.isArray(valor) ? `[${valor.join(', ')}]` : String(valor);
+function valueLiteral(value: number | number[] | undefined): string | undefined {
+  if (value === undefined) return undefined;
+  return Array.isArray(value) ? `[${value.join(', ')}]` : String(value);
 }
 
-function expressao(valor: unknown, padrao: string): string | undefined {
-  if (!valor) return undefined;
-  return typeof valor === 'string' ? valor : padrao;
+function expressao(value: unknown, padrao: string): string | undefined {
+  if (!value) return undefined;
+  return typeof value === 'string' ? value : padrao;
 }
 
 /** A chamada real de `createSlider` com as opções da story. */
 export function sliderSnippet(o: SliderSnippetOptions = {}): string {
   const intervalo = Array.isArray(o.value);
 
-  const lines = opcoes([
+  const lines = options([
     ['min', o.min !== undefined && o.min !== 0 ? String(o.min) : undefined],
     ['max', o.max !== undefined && o.max !== 100 ? String(o.max) : undefined],
     ['step', o.step !== undefined && o.step !== 1 ? String(o.step) : undefined],
     ['value', valueLiteral(o.value)],
     ['aria-label', accessibleName(o, intervalo)],
-    ['orientation', o.orientation === 'vertical' ? texto('vertical') : undefined],
+    ['orientation', o.orientation === 'vertical' ? text('vertical') : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
-    ['class', o.class ? texto(o.class) : undefined],
+    ['class', o.class ? text(o.class) : undefined],
     ['onValueChange', expressao(o.onValueChange, CHANGE_DEFAULT)],
     ['onValueCommitted', expressao(o.onValueCommitted, COMMIT_DEFAULT)],
   ]);

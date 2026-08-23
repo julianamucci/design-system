@@ -73,7 +73,7 @@ export const AutoDismiss: Story = {
       // abaixo de 0,99, de propósito, para não asserir sobre elemento em fade.
       // Sob carga de suíte cheia, um polling de 30ms erra uma janela dessas: a
       // story reprovava sozinha, sem regressão nenhuma no componente.
-      toast.error(TEXTS.erro);
+      toast.error(TEXTS.error);
       const toastEl = await waitForToast({ type: 'error' });
       await expect(toastEl).toHaveAttribute('data-type', 'error');
       await expect(toastEl).toHaveAttribute('data-rich-colors', 'true');
@@ -260,7 +260,7 @@ export const DarkTheme: Story = {
       // tela, a foto do Chromatic cobriria um quinto do que o item promete.
       toast(TEXTS.padrao, PERSISTENT);
       toast.success(TEXTS.sucesso, PERSISTENT);
-      toast.error(TEXTS.erro, PERSISTENT);
+      toast.error(TEXTS.error, PERSISTENT);
       toast.warning(TEXTS.aviso, PERSISTENT);
       toast.info(TEXTS.info, PERSISTENT);
 

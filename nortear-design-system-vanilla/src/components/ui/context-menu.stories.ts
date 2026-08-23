@@ -85,7 +85,7 @@ export const Playground: Story = {
     ],
   },
   render: (args) => {
-    const itens: ContextMenuItemDef[] = [
+    const items: ContextMenuItemDef[] = [
       {
         type: 'item',
         label: 'Editar',
@@ -96,10 +96,10 @@ export const Playground: Story = {
       { type: 'item', label: 'Duplicar', value: 'duplicate', onClick: fn() },
     ];
 
-    if (args.showSeparator) itens.push({ type: 'separator' });
+    if (args.showSeparator) items.push({ type: 'separator' });
 
     if (args.showDestructive) {
-      itens.push({
+      items.push({
         type: 'item',
         label: 'Excluir',
         value: 'delete',
@@ -111,7 +111,7 @@ export const Playground: Story = {
 
     return createContextMenu({
       trigger: clickCreateArea(args.triggerLabel),
-      items: itens,
+      items: items,
       onOpenChange: args.onOpenChange,
     });
   },
@@ -145,9 +145,9 @@ export const Playground: Story = {
     await step('Os itens são itens de menu de verdade', async () => {
       const menu = menuOpen()!;
       await expect(menu.getAttribute('role')).toBe('menu');
-      const itens = [...menu.querySelectorAll('[data-slot="context-menu-item"]')];
-      await expect(itens.length).toBe(3);
-      for (const item of itens) await expect(item.getAttribute('role')).toBe('menuitem');
+      const items = [...menu.querySelectorAll('[data-slot="context-menu-item"]')];
+      await expect(items.length).toBe(3);
+      for (const item of items) await expect(item.getAttribute('role')).toBe('menuitem');
       await expect(
         menu.querySelector('[data-slot="context-menu-separator"]')?.getAttribute('role'),
       ).toBe('separator');
@@ -166,14 +166,14 @@ export const Playground: Story = {
     await step('As setas percorrem os itens na ordem em que aparecem', async () => {
       // O foco parte de um item conhecido: assim o passo vale igual na primeira
       // rodada e no replay, e não depende de onde a abertura deixou o foco.
-      const itens = [
+      const items = [
         ...menuOpen()!.querySelectorAll<HTMLElement>('[data-slot="context-menu-item"]'),
       ];
-      itens[0].focus();
+      items[0].focus();
       await userEvent.keyboard('{ArrowDown}');
-      await waitFor(() => expect(document.activeElement).toBe(itens[1]));
+      await waitFor(() => expect(document.activeElement).toBe(items[1]));
       await userEvent.keyboard('{ArrowUp}');
-      await waitFor(() => expect(document.activeElement).toBe(itens[0]));
+      await waitFor(() => expect(document.activeElement).toBe(items[0]));
     });
 
     await step('Escape fecha e devolve o foco à área', async () => {

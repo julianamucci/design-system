@@ -60,7 +60,7 @@ export const Default: Story = {
 export const WithCounter: Story = {
   parameters: { covers: ['functional.item3', 'visual.item4'] },
   render: () => ({
-    props: { valor: '', max: 500 },
+    props: { value: '', max: 500 },
     template: `
       <div class="nds-stack nds-w-md" data-spacing="sm">
         <label ndsLabel for="var-counter">Descrição</label>
@@ -70,15 +70,15 @@ export const WithCounter: Story = {
           class="nds-resize-y nds-min-h-30"
           [attr.maxlength]="max"
           placeholder="ex: Camiseta de algodão, gola redonda..."
-          [value]="valor"
-          (input)="valor = $any($event.target).value"
+          [value]="value"
+          (input)="value = $any($event.target).value"
         ></textarea>
         <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
           <span>Descreva com clareza.</span>
           <span
             aria-live="polite"
-            [attr.aria-label]="valor.length + ' de ' + max + ' caracteres usados'"
-          >{{ valor.length }}/{{ max }}</span>
+            [attr.aria-label]="value.length + ' de ' + max + ' caracteres usados'"
+          >{{ value.length }}/{{ max }}</span>
         </div>
       </div>
     `,

@@ -58,11 +58,11 @@ export const Single: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const marcado = () =>
+    const checked = () =>
       canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn[aria-pressed="true"]');
 
     await step('A data inicial chega marcada', async () => {
-      await expect(marcado()).toHaveTextContent('12');
+      await expect(checked()).toHaveTextContent('12');
     });
 
     await step('Clicar em outro dia move a marcação e reporta a data', async () => {
@@ -73,7 +73,7 @@ export const Single: Story = {
       await expect(onSelect).toHaveBeenCalledTimes(1);
       const [data] = onSelect.mock.calls[0] as [Date];
       await expect(data.getDate()).toBe(20);
-      await expect(marcado()).toHaveTextContent('20');
+      await expect(checked()).toHaveTextContent('20');
       await expect(
         canvasElement.querySelectorAll('.nds-calendar-day-btn[aria-pressed="true"]').length,
       ).toBe(1);

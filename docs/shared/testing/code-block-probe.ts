@@ -42,8 +42,8 @@ export interface TokenMeasurement {
 }
 
 export interface PaletteMeasurement {
-  tema: string;
-  modo: string;
+  theme: string;
+  mode: string;
   backgroundSuperficie: string | null;
   backgroundHighlight: string | null;
   tokens: TokenMeasurement[];
@@ -75,7 +75,7 @@ export const PALETTE_TRECHOS: ReadonlyArray<{ language: string; code: string }> 
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const texto = (el: Element | null | undefined): string | null =>
+const text = (el: Element | null | undefined): string | null =>
   el?.textContent?.replace(/\s+/g, ' ').trim() || null;
 
 const classes = (el: Element | null | undefined): string[] =>
@@ -91,12 +91,12 @@ function accessibleName(el: Element | null | undefined): string | null {
   if (!el) return null;
   const labelled = el.getAttribute('aria-labelledby');
   if (labelled) {
-    const alvo = el.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
-    if (alvo?.textContent?.trim()) return alvo.textContent.trim();
+    const target = el.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
+    if (target?.textContent?.trim()) return target.textContent.trim();
   }
-  const rotulo = el.getAttribute('aria-label');
-  if (rotulo?.trim()) return rotulo.trim();
-  return texto(el);
+  const label = el.getAttribute('aria-label');
+  if (label?.trim()) return label.trim();
+  return text(el);
 }
 
 /** Ancestrais de `el` (inclusive) até `limit` que rolam de fato. */
@@ -109,36 +109,36 @@ function donosDeEixo(el: Element | null, limit: Element): Array<{
   tabIndex: number | null;
 }> {
   const saida: ReturnType<typeof donosDeEixo> = [];
-  let atual: Element | null = el;
-  while (atual) {
-    const cs = getComputedStyle(atual);
+  let current: Element | null = el;
+  while (current) {
+    const cs = getComputedStyle(current);
     const scrollable = /(auto|scroll)/.test(cs.overflowX) || /(auto|scroll)/.test(cs.overflowY);
     if (scrollable) {
-      const html = atual as HTMLElement;
+      const html = current as HTMLElement;
       saida.push({
-        selector: `${atual.tagName.toLowerCase()}${classes(atual).map((c) => `.${c}`).join('')}`,
+        selector: `${current.tagName.toLowerCase()}${classes(current).map((c) => `.${c}`).join('')}`,
         overflowX: cs.overflowX,
         overflowY: cs.overflowY,
-        rolaHorizontal: atual.scrollWidth > atual.clientWidth + 1,
-        rolaVertical: atual.scrollHeight > atual.clientHeight + 1,
+        rolaHorizontal: current.scrollWidth > current.clientWidth + 1,
+        rolaVertical: current.scrollHeight > current.clientHeight + 1,
         tabIndex: html.hasAttribute('tabindex') ? html.tabIndex : null,
       });
     }
-    if (atual === limit) break;
-    atual = atual.parentElement;
+    if (current === limit) break;
+    current = current.parentElement;
   }
   return saida;
 }
 
 // ─── Medição de estrutura, semântica e comportamento ──────────────────────────
 
-/** Mede UM bloco. `raiz` é o wrapper do cenário. */
-export function measureCodeBlock(raiz: HTMLElement) {
-  const root = raiz.querySelector<HTMLElement>('[data-slot="code-block"]');
+/** Mede UM bloco. `wrapper` é a raiz do cenário. */
+export function measureCodeBlock(wrapper: HTMLElement) {
+  const root = wrapper.querySelector<HTMLElement>('[data-slot="code-block"]');
   if (!root) return { presente: false } as const;
 
   const header = root.querySelector<HTMLElement>('.nds-code-block-header');
-  const titulo = root.querySelector<HTMLElement>('.nds-code-block-title');
+  const title = root.querySelector<HTMLElement>('.nds-code-block-title');
   const button = root.querySelector<HTMLElement>('[data-slot="code-block-copy"]');
   const status = root.querySelector<HTMLElement>('[role="status"]');
   const scroll = root.querySelector<HTMLElement>('.nds-code-block-scroll');
@@ -147,7 +147,7 @@ export function measureCodeBlock(raiz: HTMLElement) {
   const lines = [...root.querySelectorAll<HTMLElement>('.nds-code-block-line')];
   const gutters = [...root.querySelectorAll<HTMLElement>('.nds-code-block-gutter')];
   const texts = [...root.querySelectorAll<HTMLElement>('.nds-code-block-text')];
-  const rodape = root.querySelector<HTMLElement>('.nds-code-block-footer');
+  const footer = root.querySelector<HTMLElement>('.nds-code-block-footer');
 
   const csRoot = getComputedStyle(root);
   const csScroll = scroll ? getComputedStyle(scroll) : null;
@@ -175,8 +175,8 @@ export function measureCodeBlock(raiz: HTMLElement) {
       /** Vanilla e Angular registram a linguagem na raiz; medir se as outras registram. */
       dataLanguage: root.getAttribute('data-language'),
       temHeader: !!header,
-      tituloVisivel: texto(titulo),
-      temRodape: !!rodape,
+      tituloVisivel: text(title),
+      temRodape: !!footer,
       totalDeLinhas: lines.length,
       totalDeGutters: gutters.length,
       linhasDestacadas: destacadas.map((el) => lines.indexOf(el) + 1),
@@ -196,7 +196,7 @@ export function measureCodeBlock(raiz: HTMLElement) {
       statusExiste: !!status,
       statusAriaLive: status?.getAttribute('aria-live') ?? null,
       statusForaDoBotao: status && button ? !button.contains(status) : null,
-      statusTexto: texto(status),
+      statusTexto: text(status),
       gutterAriaHidden: gutters.map((g) => g.getAttribute('aria-hidden')),
       gutterNumeros: gutters.map((g) => g.textContent?.trim() ?? null),
     },
@@ -259,20 +259,20 @@ export function measureCodeBlock(raiz: HTMLElement) {
  * semitransparente, então `backgroundColor` devolve uma cor que ninguém vê:
  * `ratio` compõe sobre o ancestral opaco antes de dividir.
  *
- * `raiz` recebe as classes de tema; a original volta no `finally` de `byTheme`.
+ * `root` recebe as classes de tema; a original volta no `finally` de `byTheme`.
  */
-export function themeMeasurePalette(raiz: HTMLElement): PaletteMeasurement[] {
-  return byTheme(raiz, (tema, modo): PaletteMeasurement => {
+export function themeMeasurePalette(root: HTMLElement): PaletteMeasurement[] {
+  return byTheme(root, (theme, mode): PaletteMeasurement => {
     // TODOS os blocos dentro da raiz, não só o primeiro: a paleta tem onze
     // tokens e nenhum trecho isolado os exercita. Medir um bloco só devolvia
     // cinco cores e deixava seis sem nunca terem sido medidas.
-    const roots = [...raiz.querySelectorAll<HTMLElement>('[data-slot="code-block"]')];
+    const roots = [...root.querySelectorAll<HTMLElement>('[data-slot="code-block"]')];
     if (roots.length === 0) {
-      return { tema, modo, backgroundSuperficie: null, backgroundHighlight: null, tokens: [], pior: null };
+      return { theme, mode, backgroundSuperficie: null, backgroundHighlight: null, tokens: [], pior: null };
     }
 
     const backgroundSuperficie = backgroundEffective(roots[0]);
-    const destacada = raiz.querySelector<HTMLElement>(
+    const destacada = root.querySelector<HTMLElement>(
       '.nds-code-block-line[data-highlighted]:not([data-highlighted="false"])',
     );
     const backgroundHighlight = destacada
@@ -283,7 +283,7 @@ export function themeMeasurePalette(raiz: HTMLElement): PaletteMeasurement[] {
     // Uma amostra por NOME de token: cores iguais em spans diferentes são a
     // mesma medida, e medir todos os spans transformaria o relatório em ruído.
     const byName = new Map<string, HTMLElement>();
-    for (const el of raiz.querySelectorAll<HTMLElement>(
+    for (const el of root.querySelectorAll<HTMLElement>(
       '[data-token]:not([data-token="plain"])',
     )) {
       if (!byName.has(el.dataset.token!)) byName.set(el.dataset.token!, el);
@@ -310,7 +310,7 @@ export function themeMeasurePalette(raiz: HTMLElement): PaletteMeasurement[] {
       }
     }
 
-    return { tema, modo, backgroundSuperficie, backgroundHighlight, tokens, pior };
+    return { theme, mode, backgroundSuperficie, backgroundHighlight, tokens, pior };
   });
 }
 
@@ -321,26 +321,26 @@ export function themeMeasurePalette(raiz: HTMLElement): PaletteMeasurement[] {
  * cor de qualquer tema cair abaixo do mínimo de texto de corpo.
  */
 export function palettePiorContrast(
-  raiz: HTMLElement,
+  root: HTMLElement,
   /** `light` ou `escuro` recorta a varredura; omitido mede os dois. */
   apenasModo?: (typeof MODOS)[number],
 ): {
   ratio: number;
   token: string;
-  tema: string;
-  modo: string;
+  theme: string;
+  mode: string;
   background: string;
 } | null {
   let pior: ReturnType<typeof palettePiorContrast> = null;
-  for (const measurement of themeMeasurePalette(raiz)) {
-    if (apenasModo && measurement.modo !== apenasModo) continue;
+  for (const measurement of themeMeasurePalette(root)) {
+    if (apenasModo && measurement.mode !== apenasModo) continue;
     if (!measurement.pior) continue;
     if (!pior || measurement.pior.ratio < pior.ratio) {
       pior = {
         ratio: measurement.pior.ratio,
         token: measurement.pior.token,
-        tema: measurement.tema,
-        modo: measurement.modo,
+        theme: measurement.theme,
+        mode: measurement.mode,
         background: measurement.pior.background,
       };
     }
@@ -366,22 +366,22 @@ export const CONTRAST_MINIMUM = 4.5;
  * "4.31 não é >= 4.5" e alguém teria de refazer a medição na mão.
  */
 export function contrastLaudo(
-  raiz: HTMLElement,
-  modo?: (typeof MODOS)[number],
+  root: HTMLElement,
+  mode?: (typeof MODOS)[number],
   minimum: number = CONTRAST_MINIMUM,
 ): string {
-  const pior = palettePiorContrast(raiz, modo);
+  const pior = palettePiorContrast(root, mode);
   if (!pior) return `nenhum token classificado · abaixo de ${minimum}: true`;
   return (
-    `${pior.tema}/${pior.modo} · ${pior.token} sobre ${pior.background} = ${pior.ratio}:1` +
+    `${pior.theme}/${pior.mode} · ${pior.token} sobre ${pior.background} = ${pior.ratio}:1` +
     ` · abaixo de ${minimum}: ${pior.ratio < minimum}`
   );
 }
 
 /** Linha legível de uma combinação — o que a falha da story precisa mostrar. */
 export function describePalette(m: PaletteMeasurement): string {
-  if (!m.pior) return `${m.tema}/${m.modo}: nenhum token classificado`;
-  return `${m.tema}/${m.modo} · pior ${m.pior.token} sobre ${m.pior.background} = ${m.pior.ratio}:1`;
+  if (!m.pior) return `${m.theme}/${m.mode}: nenhum token classificado`;
+  return `${m.theme}/${m.mode} · pior ${m.pior.token} sobre ${m.pior.background} = ${m.pior.ratio}:1`;
 }
 
 // ─── Copiar ───────────────────────────────────────────────────────────────────
@@ -397,7 +397,7 @@ export function describePalette(m: PaletteMeasurement): string {
  * que o componente ENTREGA à API, e o feedback que ele mostra depois.
  */
 export async function withClipboardSpy<T>(
-  spy: (texto: string) => Promise<unknown>,
+  spy: (text: string) => Promise<unknown>,
   run: () => Promise<T>,
 ): Promise<T> {
   const original = navigator.clipboard;
@@ -413,16 +413,16 @@ export async function withClipboardSpy<T>(
 }
 
 /** O que o bloco mostra e anuncia depois da cópia — medido, não presumido. */
-export function measureConfirm(raiz: HTMLElement) {
-  const root = raiz.querySelector<HTMLElement>('[data-slot="code-block"]');
+export function measureConfirm(wrapper: HTMLElement) {
+  const root = wrapper.querySelector<HTMLElement>('[data-slot="code-block"]');
   const button = root?.querySelector<HTMLElement>('[data-slot="code-block-copy"]');
   const status = root?.querySelector<HTMLElement>('[role="status"]');
-  const rotulo = root?.querySelector<HTMLElement>('.nds-code-block-copy-label');
+  const label = root?.querySelector<HTMLElement>('.nds-code-block-copy-label');
   return {
     nomeDoBotao: accessibleName(button),
     quantosIcones: button ? button.querySelectorAll('svg').length : null,
-    anuncio: texto(status),
-    labelVisible: rotulo && !rotulo.hidden ? texto(rotulo) : null,
+    anuncio: text(status),
+    labelVisible: label && !label.hidden ? text(label) : null,
   };
 }
 
@@ -434,8 +434,8 @@ export function measureConfirm(raiz: HTMLElement) {
  * Via exceção, e não `console.log`: o addon do Storybook instrumenta o console
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest.
  */
-export function reportProbe(stack: string, cenario: string, dados: unknown): never {
-  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(dados)}`);
+export function reportProbe(stack: string, cenario: string, data: unknown): never {
+  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(data)}`);
 }
 
 export { MODOS, THEMES };

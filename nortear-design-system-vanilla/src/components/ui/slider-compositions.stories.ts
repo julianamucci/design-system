@@ -119,7 +119,7 @@ export const PriceRange: Story = {
 
     // O par de valores é o que pede as duas alças. O clamping mútuo é da
     // fábrica: cada extremo para no outro, sem nada escrito aqui.
-    const faixa = createSlider({
+    const range = createSlider({
       min: 0,
       max: 1000,
       step: 10,
@@ -128,7 +128,7 @@ export const PriceRange: Story = {
       onValueChange: fmt,
     });
 
-    wrap.append(row, faixa);
+    wrap.append(row, range);
     return wrap;
   },
   parameters: {
@@ -248,14 +248,14 @@ export const InForm: Story = {
 
     await step('O commit registra o valor confirmado', async () => {
       await apertarTecla(canvas.getByRole('slider'), '{ArrowRight}');
-      const valor = handleValue(canvas.getByRole('slider'));
-      await expect(canvas.getByText(`Commitado: ${valor}%`)).toBeVisible();
+      const value = handleValue(canvas.getByRole('slider'));
+      await expect(canvas.getByText(`Commitado: ${value}%`)).toBeVisible();
     });
 
     await step('Submeter usa o último valor confirmado', async () => {
-      const valor = handleValue(canvas.getByRole('slider'));
+      const value = handleValue(canvas.getByRole('slider'));
       await userEvent.click(canvas.getByRole('button', { name: 'Salvar preset' }));
-      await expect(canvas.getByText(`Enviado: volume=${valor}%`)).toBeVisible();
+      await expect(canvas.getByText(`Enviado: volume=${value}%`)).toBeVisible();
     });
   },
 };

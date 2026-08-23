@@ -603,13 +603,13 @@ export class NdsTextareaDocs implements AfterViewInit, OnDestroy {
 
   protected enviarFormulario(evento: Event): void {
     evento.preventDefault();
-    const texto = this.formValue().trim();
-    this.formEnviado.set(texto ? `${texto.length} / ${this.formValue().length}` : '0');
+    const text = this.formValue().trim();
+    this.formEnviado.set(text ? `${text.length} / ${this.formValue().length}` : '0');
   }
 
-  protected registrarSaida(campo: string, valor: string): void {
-    if (!valor.trim()) return;
-    track('field_blur', { component: 'textarea', field_name: campo, location: 'docs_demo' });
+  protected registrarSaida(field: string, value: string): void {
+    if (!value.trim()) return;
+    track('field_blur', { component: 'textarea', field_name: field, location: 'docs_demo' });
   }
 
   protected readonly navGroups = computed(() => {

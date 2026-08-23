@@ -75,9 +75,9 @@ describe('contrato comum a todo snippet de rótulo', () => {
   it('o for do rótulo e o id do controle carregam o mesmo valor', () => {
     for (const fn of ALL) {
       const saida = fn();
-      const alvo = /<Label for="([^"]+)"/.exec(saida)?.[1];
-      expect(alvo).toBeTruthy();
-      expect(saida).toContain(`id="${alvo}"`);
+      const target = /<Label for="([^"]+)"/.exec(saida)?.[1];
+      expect(target).toBeTruthy();
+      expect(saida).toContain(`id="${target}"`);
     }
   });
 });

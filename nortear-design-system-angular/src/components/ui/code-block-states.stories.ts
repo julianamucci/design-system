@@ -50,9 +50,9 @@ export const WithNumbering: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('A numeração aparece e fica registrada na raiz', async () => {
-      const bloco = root(canvasElement);
-      await expect(bloco).toHaveAttribute('data-numbered', 'true');
-      const gutter = bloco.querySelector<HTMLElement>('.nds-code-block-gutter')!;
+      const block = root(canvasElement);
+      await expect(block).toHaveAttribute('data-numbered', 'true');
+      const gutter = block.querySelector<HTMLElement>('.nds-code-block-gutter')!;
       await expect(gutter).toBeVisible();
       await expect(gutter).toHaveTextContent('1');
     });
@@ -67,18 +67,18 @@ export const WithoutNumbering: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('Sem numeração a coluna some da tela', async () => {
-      const bloco = root(canvasElement);
-      await expect(bloco).toHaveAttribute('data-numbered', 'false');
+      const block = root(canvasElement);
+      await expect(block).toHaveAttribute('data-numbered', 'false');
       // O gutter continua no DOM (é aria-hidden e não selecionável); quem o
       // remove é o CSS, via data-numbered.
-      await expect(bloco.querySelector('.nds-code-block-gutter')).not.toBeVisible();
+      await expect(block.querySelector('.nds-code-block-gutter')).not.toBeVisible();
     });
 
     await step('O código recebe o recuo que a coluna ocupava', async () => {
       // Sem este respiro o trecho encosta na borda — é o resultado que a linha
       // "Sem numeração" da tabela de configurações promete.
-      const texto = root(canvasElement).querySelector<HTMLElement>('.nds-code-block-text')!;
-      await expect(parseFloat(getComputedStyle(texto).paddingInlineStart)).toBeGreaterThan(0);
+      const text = root(canvasElement).querySelector<HTMLElement>('.nds-code-block-text')!;
+      await expect(parseFloat(getComputedStyle(text).paddingInlineStart)).toBeGreaterThan(0);
     });
   },
 };
@@ -90,16 +90,16 @@ export const Copied: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const bloco = root(canvasElement);
+    const block = root(canvasElement);
 
     await step('Copiar troca o rótulo acessível e anuncia a confirmação', async () => {
       await withClipboardStub(async () => {
-        await userEvent.click(bloco.querySelector<HTMLElement>('[data-slot="code-block-copy"]')!);
+        await userEvent.click(block.querySelector<HTMLElement>('[data-slot="code-block-copy"]')!);
         await waitFor(() =>
           expect(canvas.getByRole('button', { name: /copiado/i })).toBeInTheDocument(),
         );
       });
-      const live = bloco.querySelector('[role="status"]')!;
+      const live = block.querySelector('[role="status"]')!;
       await expect(live).toHaveAttribute('aria-live', 'polite');
       await expect(live).toHaveTextContent('Copiado!');
     });
@@ -107,7 +107,7 @@ export const Copied: Story = {
     await step('Um ícone por vez no botão', async () => {
       // A primeira versão mantinha os dois SVGs no DOM alternando `hidden`, que
       // não esconde elemento de outro namespace — e os dois apareciam juntos.
-      const button = bloco.querySelector('[data-slot="code-block-copy"]')!;
+      const button = block.querySelector('[data-slot="code-block-copy"]')!;
       await expect(button.querySelectorAll('svg')).toHaveLength(1);
     });
   },
@@ -144,13 +144,13 @@ export const UnknownLanguage: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('Linguagem desconhecida cai em texto simples sem quebrar o bloco', async () => {
-      const bloco = root(canvasElement);
-      await expect(bloco).toHaveAttribute('data-language', 'text');
+      const block = root(canvasElement);
+      await expect(block).toHaveAttribute('data-language', 'text');
       await expect(
-        bloco.querySelectorAll('[data-token]:not([data-token="plain"])').length,
+        block.querySelectorAll('[data-token]:not([data-token="plain"])').length,
       ).toBe(0);
       // O conteúdo continua todo lá: uma linha por linha do código.
-      await expect(bloco.querySelectorAll('.nds-code-block-line')).toHaveLength(
+      await expect(block.querySelectorAll('.nds-code-block-line')).toHaveLength(
         COMPOSITION_CODE.split('\n').length,
       );
     });

@@ -299,10 +299,10 @@ export const WithOutsideDays: Story = {
       // marcado num mês que não está mais visível. Cada passo estabelece a
       // própria precondição — o clique final devolve a visão para abril.
       const canvas = within(canvasElement);
-      const legenda = () => canvasElement.querySelector('.nds-calendar-caption');
+      const caption = () => canvasElement.querySelector('.nds-calendar-caption');
 
       await userEvent.click(canvas.getByRole('button', { name: /30 de março de 2026/i }));
-      await expect(legenda()).toHaveTextContent(/março 2026/i);
+      await expect(caption()).toHaveTextContent(/março 2026/i);
       await expect(
         canvasElement.querySelector('.nds-calendar-day-btn[data-day="2026-03-30"][data-selected]'),
       ).not.toBeNull();
@@ -313,7 +313,7 @@ export const WithOutsideDays: Story = {
       await userEvent.click(
         canvas.getByRole('button', { name: /quarta-feira, 1 de abril de 2026/i }),
       );
-      await expect(legenda()).toHaveTextContent(/abril 2026/i);
+      await expect(caption()).toHaveTextContent(/abril 2026/i);
     });
 
     await step('Sem eles, a casa fica vazia em vez de emprestar um dia', async () => {

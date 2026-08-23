@@ -45,13 +45,13 @@ export function panelsAbertos(): HTMLElement[] {
  * stack resolve para os overlays com `role`, e aqui o `role` não serve de
  * âncora porque ele próprio está sob teste.
  */
-function assentado(painel: HTMLElement | null): painel is HTMLElement {
-  if (!painel) return false;
-  if (painel.getAttribute('data-state') === 'closed') return false;
-  const estilo = getComputedStyle(painel);
+function assentado(panel: HTMLElement | null): panel is HTMLElement {
+  if (!panel) return false;
+  if (panel.getAttribute('data-state') === 'closed') return false;
+  const estilo = getComputedStyle(panel);
   if (estilo.visibility === 'hidden' || estilo.display === 'none') return false;
-  const opacidade = parseFloat(estilo.opacity);
-  return !(estilo.opacity !== '1' && opacidade < 0.9);
+  const opacity = parseFloat(estilo.opacity);
+  return !(estilo.opacity !== '1' && opacity < 0.9);
 }
 
 export async function waitForOpen(contexto = '', timeout = 3000): Promise<HTMLElement> {
@@ -109,11 +109,11 @@ function center(el: HTMLElement): { clientX: number; clientY: number } {
  * As coordenadas são explícitas de propósito: sem `coords` o user-event dispara
  * tudo em (0,0) e o ponto nunca sai do polígono.
  */
-export async function leaveWithPointer(gatilho: HTMLElement, painel: HTMLElement): Promise<void> {
-  const r = painel.getBoundingClientRect();
+export async function leaveWithPointer(trigger: HTMLElement, panel: HTMLElement): Promise<void> {
+  const r = panel.getBoundingClientRect();
   const y1 = Math.min(r.bottom + 40, window.innerHeight - 140);
   await userEvent.pointer([
-    { target: gatilho, coords: center(gatilho) },
+    { target: trigger, coords: center(trigger) },
     { target: document.body, coords: { clientX: 2, clientY: y1 } },
     { target: document.body, coords: { clientX: 2, clientY: y1 + 120 } },
   ]);
@@ -126,10 +126,10 @@ export async function leaveWithPointer(gatilho: HTMLElement, painel: HTMLElement
  * há fechamento agendado, e "continua aberto" passaria mesmo com o componente
  * quebrado.
  */
-export async function panelEntrar(gatilho: HTMLElement, painel: HTMLElement): Promise<void> {
+export async function panelEntrar(trigger: HTMLElement, panel: HTMLElement): Promise<void> {
   await userEvent.pointer([
-    { target: gatilho, coords: center(gatilho) },
-    { target: painel, coords: center(painel) },
+    { target: trigger, coords: center(trigger) },
+    { target: panel, coords: center(panel) },
   ]);
 }
 
@@ -154,11 +154,11 @@ export function contrastRatio(corA: string, corB: string): number {
  * As cinco stacks resolvem o nome de formas diferentes (rótulo declarado,
  * heading interno, texto do gatilho) e o contrato é o RESULTADO, não o caminho.
  */
-export function accessibleName(painel: HTMLElement): string {
-  const labelled = painel.getAttribute('aria-labelledby');
+export function accessibleName(panel: HTMLElement): string {
+  const labelled = panel.getAttribute('aria-labelledby');
   if (labelled) {
-    const alvo = painel.ownerDocument.getElementById(labelled);
-    if (alvo) return alvo.textContent?.trim() ?? '';
+    const target = panel.ownerDocument.getElementById(labelled);
+    if (target) return target.textContent?.trim() ?? '';
   }
-  return painel.getAttribute('aria-label')?.trim() ?? '';
+  return panel.getAttribute('aria-label')?.trim() ?? '';
 }

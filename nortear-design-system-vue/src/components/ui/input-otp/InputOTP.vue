@@ -54,15 +54,15 @@ const pattern = computed(() => props.pattern ?? REGEXP_ONLY_DIGITS)
  * carregamento do documento — num componente montado depois ele não foca nada,
  * em silêncio. Quem pede foco inicial precisa de uma chamada de verdade.
  */
-const raiz = ref<{ $el?: HTMLInputElement | null } | null>(null)
+const root = ref<{ $el?: HTMLInputElement | null } | null>(null)
 onMounted(() => {
-  if (autofocus.value) raiz.value?.$el?.focus()
+  if (autofocus.value) root.value?.$el?.focus()
 })
 </script>
 
 <template>
   <OTPInput
-    ref="raiz"
+    ref="root"
     v-slot="slotProps"
     v-bind="(forwarded as any)"
     :maxlength="maxlength"

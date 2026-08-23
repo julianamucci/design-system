@@ -45,9 +45,9 @@ type Story = StoryObj;
  * trama) com a mesma geometria, então o agrupamento por centro devolve um
  * ponto por categoria.
  */
-function categoriaCentros(raiz: HTMLElement): Array<{ x: number; y: number }> {
+function categoriaCentros(root: HTMLElement): Array<{ x: number; y: number }> {
   const byCenter = new Map<number, { x: number; y: number }>();
-  for (const forma of datumFormas(raiz)) {
+  for (const forma of datumFormas(root)) {
     const r = forma.getBoundingClientRect();
     const x = Math.round(r.x + r.width / 2);
     byCenter.set(x, { x, y: r.y + r.height / 2 });
@@ -70,10 +70,10 @@ export const WithTooltip: Story = {
     'aria-label': 'Gráfico de barras: acessos mensais no desktop',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
-    await waitForDesign(raiz);
-    const svg = raiz.querySelector('svg')!;
-    const centros = categoriaCentros(raiz);
+    const root = exigirRoot(canvasElement);
+    await waitForDesign(root);
+    const svg = root.querySelector('svg')!;
+    const centros = categoriaCentros(root);
     await expect(centros).toHaveLength(MONTHS.length);
 
     // `userEvent.hover` não serve aqui: ele não leva coordenada, e a lib faz o
@@ -87,16 +87,16 @@ export const WithTooltip: Story = {
       // 50): achar o número no container é prova de que a dica escreveu.
       await apontarTo(1);
       await waitFor(() => {
-        expect(raiz.textContent).toContain('Fev');
-        expect(raiz.textContent).toContain('305');
+        expect(root.textContent).toContain('Fev');
+        expect(root.textContent).toContain('305');
       }, { timeout: 3000 });
     });
 
     await step('E acompanha o ponteiro — a dica é do ponto apontado, não a primeira que abriu', async () => {
       await apontarTo(3);
       await waitFor(() => {
-        expect(raiz.textContent).toContain('73');
-        expect(raiz.textContent).not.toContain('305');
+        expect(root.textContent).toContain('73');
+        expect(root.textContent).not.toContain('305');
       }, { timeout: 3000 });
     });
   },
@@ -116,21 +116,21 @@ export const WithCaption: Story = {
     'aria-label': 'Gráfico de barras com legenda: acessos mensais no desktop',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
-    await waitForDesign(raiz);
+    const root = exigirRoot(canvasElement);
+    await waitForDesign(root);
 
     await step('Com a legenda ligada, o nome da série é escrito mesmo havendo uma só', async () => {
       // Sem a configuração, este mesmo desenho não escreve "Vendas" — é o que a
       // story SingleSeries mede do outro lado.
       await waitFor(
-        () => expect(designEscreve(raiz, SERIE_UNICA[0].name)).toBe(true),
+        () => expect(designEscreve(root, SERIE_UNICA[0].name)).toBe(true),
         { timeout: 3000 },
       );
     });
 
     await step('E o desenho continua completo, com uma forma por categoria', async () => {
-      for (const month of MONTHS) await expect(designEscreve(raiz, month)).toBe(true);
-      await expect(datumFormas(raiz).length).toBeGreaterThanOrEqual(MONTHS.length);
+      for (const month of MONTHS) await expect(designEscreve(root, month)).toBe(true);
+      await expect(datumFormas(root).length).toBeGreaterThanOrEqual(MONTHS.length);
     });
   },
 };
@@ -153,19 +153,19 @@ export const MultipleSeries: Story = {
     'aria-label': 'Acessos por dispositivo: desktop, mobile e tablet, de janeiro a abril',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
-    await waitForDesign(raiz);
+    const root = exigirRoot(canvasElement);
+    await waitForDesign(root);
 
     await step('O título do desenho aparece escrito', async () => {
       await waitFor(
-        () => expect(designEscreve(raiz, 'Acessos por dispositivo')).toBe(true),
+        () => expect(designEscreve(root, 'Acessos por dispositivo')).toBe(true),
         { timeout: 3000 },
       );
     });
 
     await step('A legenda nomeia cada série', async () => {
       for (const serie of SERIES_MULTI) {
-        await expect(designEscreve(raiz, serie.name)).toBe(true);
+        await expect(designEscreve(root, serie.name)).toBe(true);
       }
     });
   },

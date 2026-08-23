@@ -5,7 +5,7 @@
  * rodarem no projeto `unit` do vitest. A saída do painel não chega ao DOM
  * durante a `play`, então este é o único lugar em que elas têm guarda.
  *
- * O `rotulo` das stories não vira `aria-label` no snippet: ele existe para dar
+ * O `label` das stories não vira `aria-label` no snippet: ele existe para dar
  * um nome DIFERENTE a cada landmark da mesma página de docs (sem isso o axe
  * acusa `landmark-unique`), e o nome padrão do primitivo já é "Paginação".
  * Copiar "Paginação com link inativo" para dentro de um projeto ensinaria o

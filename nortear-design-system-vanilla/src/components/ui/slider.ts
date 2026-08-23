@@ -155,7 +155,7 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
     else (options as SliderSingleOptions).onValueCommitted?.(values[0]);
   }
 
-  values.forEach((valueInitial, indice) => {
+  values.forEach((valueInitial, index) => {
     const thumb = document.createElement('span');
     thumb.className = 'nds-slider-thumb';
     thumb.dataset.slot = 'slider-thumb';
@@ -170,8 +170,8 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
     nativeInput.step = String(step);
     nativeInput.value = String(valueInitial);
     nativeInput.disabled = disabled;
-    const nome = names[indice] ?? names[0];
-    if (nome) nativeInput.setAttribute('aria-label', nome);
+    const name = names[index] ?? names[0];
+    if (name) nativeInput.setAttribute('aria-label', name);
     // `<input type="range">` é horizontal por definição na árvore de
     // acessibilidade; em pé, a orientação precisa ser dita.
     if (vertical) nativeInput.setAttribute('aria-orientation', 'vertical');
@@ -184,12 +184,12 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
       // isto o arrasto passa por cima do irmão e o intervalo sai invertido —
       // e ninguém que lê `[80, 20]` sabe o que fazer com ele.
       const preso = ehIntervalo
-        ? indice === 0
+        ? index === 0
           ? Math.min(raw, values[1])
           : Math.max(raw, values[0])
         : raw;
       if (preso !== raw) nativeInput.value = String(preso);
-      values[indice] = preso;
+      values[index] = preso;
       updateVisuals();
       emitirChange();
     });
@@ -210,12 +210,12 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
      * estava por cima naquele instante.
      */
     const chooseHandle = (e: PointerEvent): void => {
-      const caixa = track.getBoundingClientRect();
+      const box = track.getBoundingClientRect();
       const ratio = vertical
-        ? caixa.height === 0 ? 0 : (caixa.bottom - e.clientY) / caixa.height
-        : caixa.width === 0 ? 0 : (e.clientX - caixa.left) / caixa.width;
-      const alvo = min + ratio * (max - min);
-      const perto = Math.abs(alvo - values[0]) <= Math.abs(alvo - values[1]) ? 0 : 1;
+        ? box.height === 0 ? 0 : (box.bottom - e.clientY) / box.height
+        : box.width === 0 ? 0 : (e.clientX - box.left) / box.width;
+      const target = min + ratio * (max - min);
+      const perto = Math.abs(target - values[0]) <= Math.abs(target - values[1]) ? 0 : 1;
       inputs[perto].style.zIndex = '2';
       inputs[perto === 0 ? 1 : 0].style.zIndex = '1';
     };

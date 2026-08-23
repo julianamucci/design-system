@@ -72,8 +72,8 @@ type Story = StoryObj<InputOTPArgs>;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const slotsDe = (raiz: HTMLElement): HTMLInputElement[] => [
-  ...raiz.querySelectorAll<HTMLInputElement>('[data-slot="input-otp-slot"]'),
+const slotsDe = (root: HTMLElement): HTMLInputElement[] => [
+  ...root.querySelectorAll<HTMLInputElement>('[data-slot="input-otp-slot"]'),
 ];
 
 // ─── Playground ───────────────────────────────────────────────────────────────

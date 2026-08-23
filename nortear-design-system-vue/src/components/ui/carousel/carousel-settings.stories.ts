@@ -70,15 +70,15 @@ const viewportDe = (canvasElement: HTMLElement) =>
  * rolar junto.
  */
 function toque(
-  alvo: HTMLElement,
-  tipo: 'touchstart' | 'touchmove' | 'touchend',
+  target: HTMLElement,
+  type: 'touchstart' | 'touchmove' | 'touchend',
   x: number,
   y: number,
 ): void {
-  const dedo = new Touch({ identifier: 1, target: alvo, clientX: x, clientY: y });
-  const soltou = tipo === 'touchend';
-  alvo.dispatchEvent(
-    new TouchEvent(tipo, {
+  const dedo = new Touch({ identifier: 1, target: target, clientX: x, clientY: y });
+  const soltou = type === 'touchend';
+  target.dispatchEvent(
+    new TouchEvent(type, {
       touches: soltou ? [] : [dedo],
       targetTouches: soltou ? [] : [dedo],
       changedTouches: [dedo],
@@ -101,17 +101,17 @@ function toque(
  * o arraste continua vivo.
  */
 function mouse(
-  alvo: HTMLElement,
-  tipo: 'mousedown' | 'mousemove' | 'mouseup',
+  target: HTMLElement,
+  type: 'mousedown' | 'mousemove' | 'mouseup',
   x: number,
   y: number,
 ): void {
-  alvo.dispatchEvent(
-    new MouseEvent(tipo, {
+  target.dispatchEvent(
+    new MouseEvent(type, {
       clientX: x,
       clientY: y,
       button: 0,
-      buttons: tipo === 'mouseup' ? 0 : 1,
+      buttons: type === 'mouseup' ? 0 : 1,
       bubbles: true,
       cancelable: true,
     }),
@@ -327,7 +327,7 @@ export const Autoplay: Story = {
     await step('E a story termina parada e no começo', async () => {
       const previous = () => canvas.getByRole('button', { name: /item anterior/i }) as HTMLButtonElement;
       const total = canvas.getAllByRole('group').length;
-      for (let passo = 0; passo < total; passo++) {
+      for (let step = 0; step < total; step++) {
         const button = previous();
         // `.nds-button:disabled` declara `pointer-events: none` — checar antes
         // de clicar, senão o userEvent recusa e a story quebra no replay.
@@ -429,9 +429,9 @@ export const DragGesture: Story = {
     };
 
     /** Espera a posição chegar a uma coordenada já conhecida. */
-    const inPosition = async (alvo: number) => {
+    const inPosition = async (target: number) => {
       await waitFor(async () => {
-        await expect(Math.abs(deslocamento() - alvo)).toBeLessThan(2);
+        await expect(Math.abs(deslocamento() - target)).toBeLessThan(2);
       }, { timeout: 4000 });
     };
 
@@ -480,10 +480,10 @@ export const DragGesture: Story = {
       }, { timeout: 4000 });
     });
 
-    const caixa = viewport.getBoundingClientRect();
-    const y = caixa.top + caixa.height / 2;
-    const direita = caixa.left + caixa.width * 0.85;
-    const esquerda = caixa.left + caixa.width * 0.15;
+    const box = viewport.getBoundingClientRect();
+    const y = box.top + box.height / 2;
+    const direita = box.left + box.width * 0.85;
+    const esquerda = box.left + box.width * 0.15;
 
     await step('O conteúdo acompanha o DEDO durante o gesto', async () => {
       // Pressiona e anda um pedaço, sem soltar. A medida acontece com o gesto

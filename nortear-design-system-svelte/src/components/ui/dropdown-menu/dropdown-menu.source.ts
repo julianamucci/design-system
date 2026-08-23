@@ -48,12 +48,12 @@ const PACOTE = '@/components/ui/dropdown-menu';
 
 /** Bloco de import com as peças usadas, em ordem alfabética. */
 function importing(names: string[]): string {
-  const lista = [
+  const list = [
     ...new Set(['DropdownMenu', 'DropdownMenuTrigger', 'DropdownMenuContent', ...names]),
   ].sort();
   return [
     `import {`,
-    ...lista.map((nome) => `  ${nome},`),
+    ...list.map((name) => `  ${name},`),
     `} from "${PACOTE}";`,
     `import { Button } from "@/components/ui/button";`,
   ].join('\n');

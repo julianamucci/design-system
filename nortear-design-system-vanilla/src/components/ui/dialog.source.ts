@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -49,9 +49,9 @@ const IMPORTS_BASE = [
  * sempre um item de lista, nunca a chamada principal do snippet.
  */
 function button(acao: DialogSnippetAction): string {
-  const pairs = opcoes([
-    ['variant', acao.variant && acao.variant !== 'default' ? texto(acao.variant) : undefined],
-    ['label', texto(acao.label)],
+  const pairs = options([
+    ['variant', acao.variant && acao.variant !== 'default' ? text(acao.variant) : undefined],
+    ['label', text(acao.label)],
   ])
     .map((line) => line.replace(/,$/, ''))
     .join(', ');
@@ -59,7 +59,7 @@ function button(acao: DialogSnippetAction): string {
 }
 
 /** Rodapé como lista: as ações são filhas DIRETAS de `.nds-dialog-footer`. */
-function rodape(actions: DialogSnippetAction[]): string | undefined {
+function footer(actions: DialogSnippetAction[]): string | undefined {
   if (actions.length === 0) return undefined;
   return `[\n${actions.map((a) => `    ${button(a)},`).join('\n')}\n  ]`;
 }
@@ -75,15 +75,15 @@ function actionsOf(o: DialogSnippetOptions): DialogSnippetAction[] {
 
 /** As opções comuns às três formas de snippet. `content` é o nome da variável. */
 function linesComuns(o: DialogSnippetOptions, content: string): string[] {
-  return opcoes([
+  return options([
     ['trigger', button({ label: o.triggerLabel ?? 'Editar perfil', variant: 'outline' })],
-    ['title', texto(o.title ?? 'Editar perfil')],
+    ['title', text(o.title ?? 'Editar perfil')],
     [
       'description',
-      o.description === '' ? undefined : texto(o.description ?? 'Atualize suas informações pessoais.'),
+      o.description === '' ? undefined : text(o.description ?? 'Atualize suas informações pessoais.'),
     ],
     ['content', content],
-    ['footer', rodape(actionsOf(o))],
+    ['footer', footer(actionsOf(o))],
     ['showCloseButton', o.showCloseButton === false ? 'false' : undefined],
     // Guarda de tipo, e não confiança no tipo declarado: `ctx.args` chega do
     // Storybook, e o control de callback do Playground é um espião de teste —
@@ -105,7 +105,7 @@ export function dialogSnippet(o: DialogSnippetOptions = {}): string {
     IMPORTS_BASE,
     `const corpo = document.createElement('p');
 corpo.className = 'nds-text-body nds-text-muted-foreground';
-corpo.textContent = ${texto(o.bodyText ?? 'Conteúdo do corpo do diálogo (formulário, mensagem, mídia).')};`,
+corpo.textContent = ${text(o.bodyText ?? 'Conteúdo do corpo do diálogo (formulário, mensagem, mídia).')};`,
     `const dialogo = ${chamada('createDialog', linesComuns(o, 'corpo'))};`,
     montar('dialogo'),
   );
@@ -137,15 +137,15 @@ export type DialogWithFormSnippetOptions = Omit<DialogSnippetOptions, 'bodyText'
   fields?: DialogField[];
 };
 
-function campo(c: DialogField): string {
-  const entry = opcoes([
-    ['type', c.type && c.type !== 'text' ? texto(c.type) : undefined],
-    ['value', c.value !== undefined ? texto(c.value) : undefined],
+function field(c: DialogField): string {
+  const entry = options([
+    ['type', c.type && c.type !== 'text' ? text(c.type) : undefined],
+    ['value', c.value !== undefined ? text(c.value) : undefined],
   ])
     .map((line) => line.replace(/,$/, ''))
     .join(', ');
   return `  createFormField({
-    label: ${texto(c.label)},
+    label: ${text(c.label)},
     input: createInput({ ${entry} }),
   }),`;
 }
@@ -175,7 +175,7 @@ export function dialogWithFormSnippet(o: DialogWithFormSnippetOptions = {}): str
 formulario.className = 'nds-stack';
 formulario.dataset.spacing = 'md';
 formulario.append(
-${fields.map(campo).join('\n')}
+${fields.map(field).join('\n')}
 );`,
     `const dialogo = ${chamada('createDialog', linesComuns(o, 'formulario'))};`,
     montar('dialogo'),
@@ -221,7 +221,7 @@ corpo.dataset.spacing = 'md';
 // 2.1.1) — sem isto ela só rola para quem tem ponteiro.
 corpo.tabIndex = 0;
 corpo.setAttribute('role', 'region');
-corpo.setAttribute('aria-label', ${texto(o.scrollLabel ?? 'Conteúdo rolável')});
+corpo.setAttribute('aria-label', ${text(o.scrollLabel ?? 'Conteúdo rolável')});
 
 for (let i = 1; i <= ${total}; i++) {
   const paragrafo = document.createElement('p');

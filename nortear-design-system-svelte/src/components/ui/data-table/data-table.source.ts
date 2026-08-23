@@ -87,8 +87,8 @@ function script(...partes: Array<string | false | null | undefined>): string {
 
 /** Monta a tag do componente com uma prop por linha, descartando as vazias. */
 function tag(props: Array<string | false | null | undefined>): string {
-  const lista = props.filter((prop): prop is string => Boolean(prop));
-  return `<DataTable\n${lista.map((prop) => `  ${prop}`).join('\n')}\n/>`;
+  const list = props.filter((prop): prop is string => Boolean(prop));
+  return `<DataTable\n${list.map((prop) => `  ${prop}`).join('\n')}\n/>`;
 }
 
 /** Forma canônica: seleção de linhas, busca livre, paginação e legenda. */

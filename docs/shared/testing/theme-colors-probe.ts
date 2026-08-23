@@ -21,12 +21,12 @@ import { compor, ratio, resolveColor, selectorsQueLeem, THEMES, MODOS } from './
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
 export interface SwatchMeasurement {
-  tema: string;
-  modo: string;
+  theme: string;
+  mode: string;
   /** Nome do token lido do próprio rótulo, sem o `--`. */
   token: string;
   /** Texto HSL exibido. `null` quando o swatch não mostra valor — o achado. */
-  rotulo: string | null;
+  label: string | null;
   /** Cor computada do chip. `null` quando nada foi pintado — o achado. */
   pintado: string | null;
   /** O que o rótulo exibido produz quando o navegador o resolve. */
@@ -36,8 +36,8 @@ export interface SwatchMeasurement {
 }
 
 export interface PairMeasurement {
-  tema: string;
-  modo: string;
+  theme: string;
+  mode: string;
   /** `primary` para o par `--primary` / `--primary-foreground`. */
   par: string;
   background: string | null;
@@ -62,7 +62,7 @@ export interface PairMeasurement {
  */
 export async function documentByTheme<T>(
   doc: Document,
-  fn: (tema: string, modo: string) => Promise<T>,
+  fn: (theme: string, mode: string) => Promise<T>,
 ): Promise<T[]> {
   const html = doc.documentElement;
   const classNameOriginal = html.className;
@@ -72,15 +72,15 @@ export async function documentByTheme<T>(
     .join(' ');
   const saida: T[] = [];
   try {
-    for (const tema of THEMES) {
-      for (const modo of MODOS) {
-        html.className = `${base} tema-${tema}${modo === 'escuro' ? ' dark' : ''}`.trim();
+    for (const theme of THEMES) {
+      for (const mode of MODOS) {
+        html.className = `${base} tema-${theme}${mode === 'escuro' ? ' dark' : ''}`.trim();
         void html.offsetHeight;
         // Dois turnos: um para a MutationObserver disparar, outro para o que
         // ela agendar (o Vue e o Angular reescrevem o texto numa segunda volta).
         await Promise.resolve();
         await new Promise((r) => setTimeout(r, 0));
-        saida.push(await fn(tema, modo));
+        saida.push(await fn(theme, mode));
       }
     }
   } finally {
@@ -92,28 +92,28 @@ export async function documentByTheme<T>(
 
 // ─── Swatches ─────────────────────────────────────────────────────────────────
 
-function texto(el: Element | null): string | null {
+function text(el: Element | null): string | null {
   const s = el?.textContent?.trim();
   return s ? s : null;
 }
 
 /** Mede todos os `.nds-swatch` da página, nos três temas e nos dois modos. */
-export async function measureSwatches(raiz: HTMLElement): Promise<SwatchMeasurement[]> {
-  const swatches = [...raiz.querySelectorAll<HTMLElement>('.nds-swatch')];
+export async function measureSwatches(root: HTMLElement): Promise<SwatchMeasurement[]> {
+  const swatches = [...root.querySelectorAll<HTMLElement>('.nds-swatch')];
 
   return (
-    await documentByTheme(raiz.ownerDocument, async (tema, modo) =>
+    await documentByTheme(root.ownerDocument, async (theme, mode) =>
       swatches.map((sw): SwatchMeasurement => {
-        const nome = texto(sw.querySelector('.nds-swatch-token'))?.replace(/^--/, '') ?? '(sem nome)';
-        const rotulo = texto(sw.querySelector('.nds-swatch-value'));
+        const name = text(sw.querySelector('.nds-swatch-token'))?.replace(/^--/, '') ?? '(sem nome)';
+        const label = text(sw.querySelector('.nds-swatch-value'));
         const chip = sw.querySelector<HTMLElement>('.nds-swatch-color');
         const cru = chip ? getComputedStyle(chip).backgroundColor : null;
         // `rgba(0, 0, 0, 0)` é o que sobra quando `hsl(var(--x))` não resolve:
         // a declaração inteira é descartada e o chip fica sem pintura.
         const pintado = cru && cru !== 'rgba(0, 0, 0, 0)' ? cru : null;
-        const ofLabel = rotulo ? resolveColor(raiz, `hsl(${rotulo})`) : null;
+        const ofLabel = label ? resolveColor(root, `hsl(${label})`) : null;
         return {
-          tema, modo, token: nome, rotulo, pintado, ofLabel,
+          theme, mode, token: name, label, pintado, ofLabel,
           bate: !!pintado && !!ofLabel && pintado === ofLabel,
         };
       }),
@@ -126,9 +126,9 @@ export function swatchFailures(measurements: SwatchMeasurement[]): string[] {
   return measurements
     .filter((m) => !m.bate)
     .map((m) => {
-      if (!m.rotulo) return `${m.tema}/${m.modo} · --${m.token}: sem valor exibido`;
-      if (!m.pintado) return `${m.tema}/${m.modo} · --${m.token}: chip sem cor (token inexistente)`;
-      return `${m.tema}/${m.modo} · --${m.token}: exibido ${m.rotulo} (${m.ofLabel}) ≠ pintado ${m.pintado}`;
+      if (!m.label) return `${m.theme}/${m.mode} · --${m.token}: sem valor exibido`;
+      if (!m.pintado) return `${m.theme}/${m.mode} · --${m.token}: chip sem cor (token inexistente)`;
+      return `${m.theme}/${m.mode} · --${m.token}: exibido ${m.label} (${m.ofLabel}) ≠ pintado ${m.pintado}`;
     });
 }
 
@@ -141,10 +141,10 @@ export function swatchFailures(measurements: SwatchMeasurement[]): string[] {
  * par removido não deixe uma asserção apontando para o vazio. É a mesma escolha
  * de `degrausDeclarados` em `espacamento.ts`.
  */
-export function pagePairs(raiz: HTMLElement): string[] {
+export function pagePairs(root: HTMLElement): string[] {
   const tokens = new Set(
-    [...raiz.querySelectorAll('.nds-swatch-token')]
-      .map((el) => texto(el)?.replace(/^--/, ''))
+    [...root.querySelectorAll('.nds-swatch-token')]
+      .map((el) => text(el)?.replace(/^--/, ''))
       .filter((s): s is string => !!s),
   );
   return [...tokens]
@@ -161,14 +161,14 @@ export function pagePairs(raiz: HTMLElement): string[] {
  * que está pintado na tela, e a página exibe amostras, não texto sobre cada
  * fundo. A promessa é sobre a PALETA, então quem responde é a paleta.
  */
-export async function measurePairs(raiz: HTMLElement, pairs: string[]): Promise<PairMeasurement[]> {
+export async function measurePairs(root: HTMLElement, pairs: string[]): Promise<PairMeasurement[]> {
   return (
-    await documentByTheme(raiz.ownerDocument, async (tema, modo) =>
+    await documentByTheme(root.ownerDocument, async (theme, mode) =>
       pairs.map((par): PairMeasurement => {
-        const background = resolveColor(raiz, `hsl(var(--${par}))`);
-        const frente = resolveColor(raiz, `hsl(var(--${par}-foreground))`);
+        const background = resolveColor(root, `hsl(var(--${par}))`);
+        const frente = resolveColor(root, `hsl(var(--${par}-foreground))`);
         const r = background && frente ? ratio(frente, background) : null;
-        return { tema, modo, par, background, frente, ratio: r?.ratio ?? null };
+        return { theme, mode, par, background, frente, ratio: r?.ratio ?? null };
       }),
     )
   ).flat();
@@ -179,8 +179,8 @@ export function pairFailures(measurements: PairMeasurement[], minimum: number): 
     .filter((m) => m.ratio === null || m.ratio < minimum)
     .map((m) =>
       m.ratio === null
-        ? `${m.tema}/${m.modo} · --${m.par}: token do par não resolve`
-        : `${m.tema}/${m.modo} · --${m.par} / --${m.par}-foreground: ${m.ratio}:1 (mínimo ${minimum})`,
+        ? `${m.theme}/${m.mode} · --${m.par}: token do par não resolve`
+        : `${m.theme}/${m.mode} · --${m.par} / --${m.par}-foreground: ${m.ratio}:1 (mínimo ${minimum})`,
     );
 }
 
@@ -203,8 +203,8 @@ export function pairFailures(measurements: PairMeasurement[], minimum: number): 
 export const BACKGROUND_SMOOTH_ALFAS = [0.08, 0.1, 0.12, 0.15, 0.18, 0.25] as const;
 
 export interface PairSmoothMeasurement {
-  tema: string;
-  modo: string;
+  theme: string;
+  mode: string;
   /** `destructive` para o par `--destructive` / `--destructive-foreground`. */
   par: string;
   alfa: number;
@@ -231,20 +231,20 @@ export interface PairSmoothMeasurement {
  * devolveu ~1.0 em cinco variantes de seis.
  */
 export async function measurePairsSuaves(
-  raiz: HTMLElement,
+  root: HTMLElement,
   pairs: string[],
   alfas: readonly number[] = BACKGROUND_SMOOTH_ALFAS,
 ): Promise<PairSmoothMeasurement[]> {
   return (
-    await documentByTheme(raiz.ownerDocument, async (tema, modo) => {
-      const superficie = resolveColor(raiz, 'hsl(var(--background))');
+    await documentByTheme(root.ownerDocument, async (theme, mode) => {
+      const superficie = resolveColor(root, 'hsl(var(--background))');
       return pairs.flatMap((par) => {
-        const frente = resolveColor(raiz, `hsl(var(--${par}-foreground))`);
+        const frente = resolveColor(root, `hsl(var(--${par}-foreground))`);
         return alfas.map((alfa): PairSmoothMeasurement => {
-          const tinta = resolveColor(raiz, `hsl(var(--${par}) / ${alfa})`);
+          const tinta = resolveColor(root, `hsl(var(--${par}) / ${alfa})`);
           const background = tinta && superficie ? compor(tinta, superficie) : null;
           const r = background && frente ? ratio(frente, background) : null;
-          return { tema, modo, par, alfa, background, frente, ratio: r?.ratio ?? null };
+          return { theme, mode, par, alfa, background, frente, ratio: r?.ratio ?? null };
         });
       });
     })
@@ -256,8 +256,8 @@ export function pairSmoothFailures(measurements: PairSmoothMeasurement[], minimu
     .filter((m) => m.ratio === null || m.ratio < minimum)
     .map((m) =>
       m.ratio === null
-        ? `${m.tema}/${m.modo} · --${m.par}-foreground sobre --${m.par}/${m.alfa}: token não resolve`
-        : `${m.tema}/${m.modo} · --${m.par}-foreground (${m.frente}) sobre --${m.par}/${m.alfa} (${m.background}): ${m.ratio}:1 (mínimo ${minimum})`,
+        ? `${m.theme}/${m.mode} · --${m.par}-foreground sobre --${m.par}/${m.alfa}: token não resolve`
+        : `${m.theme}/${m.mode} · --${m.par}-foreground (${m.frente}) sobre --${m.par}/${m.alfa} (${m.background}): ${m.ratio}:1 (mínimo ${minimum})`,
     );
 }
 
@@ -275,23 +275,23 @@ export function pairsNoConsumidor(doc: Document, pairs: string[]): string[] {
 
 // ─── Canal de saída ───────────────────────────────────────────────────────────
 
-export async function report(stack: string, raiz: HTMLElement): Promise<never> {
-  const swatches = await measureSwatches(raiz);
-  const pairs = pagePairs(raiz);
-  const pairMeasurements = await measurePairs(raiz, pairs);
-  const suaves = await measurePairsSuaves(raiz, pairs);
+export async function report(stack: string, root: HTMLElement): Promise<never> {
+  const swatches = await measureSwatches(root);
+  const pairs = pagePairs(root);
+  const pairMeasurements = await measurePairs(root, pairs);
+  const suaves = await measurePairsSuaves(root, pairs);
   throw new Error(
     `SONDA::${stack}::` +
       JSON.stringify({
         totalDeSwatches: swatches.length / (THEMES.length * MODOS.length),
         pairs,
-        semConsumidor: pairsNoConsumidor(raiz.ownerDocument, pairs),
+        semConsumidor: pairsNoConsumidor(root.ownerDocument, pairs),
         swatchFailures: swatchFailures(swatches),
         parLimite4_5: pairFailures(pairMeasurements, 4.5),
         parLimite3: pairFailures(pairMeasurements, 3),
-        razoes: pairMeasurements.map((m) => `${m.tema}/${m.modo} ${m.par}=${m.ratio}`),
+        razoes: pairMeasurements.map((m) => `${m.theme}/${m.mode} ${m.par}=${m.ratio}`),
         suaveLimite4_5: pairSmoothFailures(suaves, 4.5),
-        razoesSuaves: suaves.map((m) => `${m.tema}/${m.modo} ${m.par}@${m.alfa}=${m.ratio}`),
+        razoesSuaves: suaves.map((m) => `${m.theme}/${m.mode} ${m.par}@${m.alfa}=${m.ratio}`),
       }),
   );
 }

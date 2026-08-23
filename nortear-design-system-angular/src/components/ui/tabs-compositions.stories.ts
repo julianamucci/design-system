@@ -80,10 +80,10 @@ export const WithIcons: Story = {
       // `pointer-events: none` no SVG é o que faz o clique cair sempre no
       // botão: sem isso, um clique em cima do desenho teria o próprio SVG como
       // alvo. Idempotente — clicar numa aba já ativa a mantém ativa.
-      const conta = canvas.getByRole('tab', { name: 'Conta' });
-      await expect(getComputedStyle(conta.querySelector('svg')!).pointerEvents).toBe('none');
-      await userEvent.click(conta);
-      const selecionada = conta.getAttribute('aria-selected');
+      const count = canvas.getByRole('tab', { name: 'Conta' });
+      await expect(getComputedStyle(count.querySelector('svg')!).pointerEvents).toBe('none');
+      await userEvent.click(count);
+      const selecionada = count.getAttribute('aria-selected');
       await expect(selecionada).toBe('true');
     });
   },

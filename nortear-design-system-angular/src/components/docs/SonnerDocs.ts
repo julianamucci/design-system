@@ -251,14 +251,14 @@ const TYPE_CODE: Record<string, string> = {
             <div class="nds-stack" data-spacing="sm">
               <span class="nds-text-caption">{{ t('variants.title') }}</span>
               <div class="nds-cluster" data-spacing="sm">
-                @for (gatilho of gatilhosDeTipo(); track gatilho.tipo) {
+                @for (trigger of gatilhosDeTipo(); track trigger.type) {
                   <button
                     ndsButton
                     variant="outline"
                     size="sm"
-                    (click)="dispararTipo(gatilho.tipo)"
+                    (click)="dispararTipo(trigger.type)"
                   >
-                    {{ gatilho.rotulo }}
+                    {{ trigger.label }}
                   </button>
                 }
               </div>
@@ -413,22 +413,22 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
    */
   protected readonly gatilhosDeTipo = computed(() => {
     dict();
-    return this.tiposDeToast.map((tipo) => ({
-      tipo,
-      rotulo: t(`demonstration.labels.trigger${tipo.charAt(0).toUpperCase()}${tipo.slice(1)}`),
+    return this.tiposDeToast.map((type) => ({
+      type,
+      label: t(`demonstration.labels.trigger${type.charAt(0).toUpperCase()}${type.slice(1)}`),
     }));
   });
 
-  protected dispararTipo(tipo: string): void {
-    track('toast_demo_triggered', { toast_type: tipo, locale: getLocale() });
-    const texto = t(`demonstration.labels.${tipo}`);
-    switch (tipo) {
-      case 'success': toast.success(texto); break;
-      case 'error':   toast.error(texto);   break;
-      case 'warning': toast.warning(texto); break;
-      case 'info':    toast.info(texto);    break;
-      case 'loading': toast.loading(texto); break;
-      default:        toast(texto);
+  protected dispararTipo(type: string): void {
+    track('toast_demo_triggered', { toast_type: type, locale: getLocale() });
+    const text = t(`demonstration.labels.${type}`);
+    switch (type) {
+      case 'success': toast.success(text); break;
+      case 'error':   toast.error(text);   break;
+      case 'warning': toast.warning(text); break;
+      case 'info':    toast.info(text);    break;
+      case 'loading': toast.loading(text); break;
+      default:        toast(text);
     }
   }
 
@@ -582,13 +582,13 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
     return Object.keys(d)
       .filter((k) => /^variants\.items\.[a-zA-Z]+$/.test(k))
       .map((k) => k.split('.')[2])
-      .filter((chave) => previews[chave] !== undefined)
-      .map((chave) => ({
-        name: chave,
-        description: t(`variants.items.${chave}`),
-        trackId: chave,
-        code: TYPE_CODE[chave] ?? '',
-        preview: previews[chave],
+      .filter((key) => previews[key] !== undefined)
+      .map((key) => ({
+        name: key,
+        description: t(`variants.items.${key}`),
+        trackId: key,
+        code: TYPE_CODE[key] ?? '',
+        preview: previews[key],
       }));
   });
 
@@ -611,14 +611,14 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
   protected readonly stateItems = computed(() => {
     dict();
     return [
-      { chave: 'withDescription', chamada: `toast.success(msg, { description })` },
-      { chave: 'withAction', chamada: `toast(msg, { action: { label, onClick } })` },
-      { chave: 'promise', chamada: `toast.promise(p, { loading, success, error })` },
-      { chave: 'persistent', chamada: `toast.error(msg, { duration: Infinity })` },
-    ].map(({ chave, chamada }) => ({
-      label: t(`states.items.${chave}.label`),
+      { key: 'withDescription', chamada: `toast.success(msg, { description })` },
+      { key: 'withAction', chamada: `toast(msg, { action: { label, onClick } })` },
+      { key: 'promise', chamada: `toast.promise(p, { loading, success, error })` },
+      { key: 'persistent', chamada: `toast.error(msg, { duration: Infinity })` },
+    ].map(({ key, chamada }) => ({
+      label: t(`states.items.${key}.label`),
       trigger: chamada,
-      behavior: toPlainText(t(`states.items.${chave}.description`)),
+      behavior: toPlainText(t(`states.items.${key}.description`)),
     }));
   });
 
@@ -632,12 +632,12 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const line = (name: string, chave: string, tipo: string, padrao: string) => ({
+    const line = (name: string, key: string, type: string, padrao: string) => ({
       name,
-      type: tipo,
+      type: type,
       defaultValue: padrao,
       required: not,
-      description: toPlainText(t(`props.table.${chave}`)),
+      description: toPlainText(t(`props.table.${key}`)),
     });
 
     return [
@@ -712,12 +712,12 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'alert',       nome: 'Alert',       path: '?path=/docs/ui-alert--docs' },
-      { key: 'alertDialog', nome: 'AlertDialog', path: '?path=/docs/ui-alertdialog--docs' },
-      { key: 'badge',       nome: 'Badge',       path: '?path=/docs/ui-badge--docs' },
-      { key: 'progress',    nome: 'Progress',    path: '?path=/docs/ui-progress--docs' },
-    ].map(({ key, nome, path }) => ({
-      name: nome,
+      { key: 'alert',       name: 'Alert',       path: '?path=/docs/ui-alert--docs' },
+      { key: 'alertDialog', name: 'AlertDialog', path: '?path=/docs/ui-alertdialog--docs' },
+      { key: 'badge',       name: 'Badge',       path: '?path=/docs/ui-badge--docs' },
+      { key: 'progress',    name: 'Progress',    path: '?path=/docs/ui-progress--docs' },
+    ].map(({ key, name, path }) => ({
+      name: name,
       description: toPlainText(t(`related.${key}`)),
       path,
     }));
@@ -725,7 +725,7 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
 
   protected readonly noteItems = computed(() => {
     const d = dict();
-    return numberedItems(d, 'notes').map((conteudo) => ({ title: '', content: conteudo }));
+    return numberedItems(d, 'notes').map((content) => ({ title: '', content: content }));
   });
 
   protected readonly analyticsCols = computed(() => {
@@ -740,13 +740,13 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
   protected readonly analyticsItems = computed(() => {
     dict();
     return [
-      { e: 'actionClick',   gatilho: 'actionClickTrigger',   carga: 'actionClickPayload'   },
-      { e: 'pageView',      gatilho: 'pageViewTrigger',      carga: 'pageViewPayload'      },
-      { e: 'sectionViewed', gatilho: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
-      { e: 'langSwitch',    gatilho: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
-    ].map(({ e, gatilho, carga }) => ({
+      { e: 'actionClick',   trigger: 'actionClickTrigger',   carga: 'actionClickPayload'   },
+      { e: 'pageView',      trigger: 'pageViewTrigger',      carga: 'pageViewPayload'      },
+      { e: 'sectionViewed', trigger: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
+      { e: 'langSwitch',    trigger: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
+    ].map(({ e, trigger, carga }) => ({
       event: t(`analytics.table.${e}`),
-      trigger: toPlainText(t(`analytics.table.${gatilho}`)),
+      trigger: toPlainText(t(`analytics.table.${trigger}`)),
       payload: toPlainText(t(`analytics.table.${carga}`)),
     }));
   });
@@ -780,8 +780,8 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
           level: r.level,
           how: toPlainText(r.how),
         }))
-      : numberedItems(d, 'testes.accessibility').map((texto) => ({
-          criterion: toPlainText(texto),
+      : numberedItems(d, 'testes.accessibility').map((text) => ({
+          criterion: toPlainText(text),
           level: '',
           how: '',
         }));
@@ -854,16 +854,16 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
  * quando ela não existe, então sem esta ponte o menu de quem não traz o bloco
  * mostrava "nav.overview" escrito na tela, sem erro nenhum.
  */
-function navLabel(chave: string): string {
-  const doComponente = t(chave);
-  return doComponente === chave ? tNav(chave) : doComponente;
+function navLabel(key: string): string {
+  const doComponente = t(key);
+  return doComponente === key ? tNav(key) : doComponente;
 }
 
 /** Itens `base.itemN` na ordem numérica, quantos existirem. */
 function numberedItems(d: Record<string, string>, base: string): string[] {
-  const itens: string[] = [];
-  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) itens.push(d[`${base}.item${i}`]);
-  return itens;
+  const items: string[] = [];
+  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) items.push(d[`${base}.item${i}`]);
+  return items;
 }
 
 const priorityKeyMap: Record<string, string> = {

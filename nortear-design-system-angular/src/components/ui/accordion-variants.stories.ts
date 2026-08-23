@@ -29,11 +29,11 @@ type Story = StoryObj;
 // Idempotentes: o painel Interactions reexecuta a play no MESMO DOM, então o
 // estado de partida é o que a rodada anterior deixou. Um clique cego ALTERNA —
 // a partir do estado errado ele inverte o resultado e a asserção falha.
-const abrir = async (t: HTMLElement) => {
+const open = async (t: HTMLElement) => {
   if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
 };
-const fechar = async (t: HTMLElement) => {
+const close = async (t: HTMLElement) => {
   if (t.getAttribute('aria-expanded') !== 'false') await userEvent.click(t);
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'false'));
 };
@@ -86,13 +86,13 @@ export const Single: Story = {
 
     await step('Abrir o item 2 fecha automaticamente o item 1', async () => {
       const triggers = canvas.getAllByRole('button');
-      await abrir(triggers[1]);
+      await open(triggers[1]);
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('Clicar no item ativo o fecha', async () => {
       const triggers = canvas.getAllByRole('button');
-      await fechar(triggers[1]);
+      await close(triggers[1]);
     });
   },
 };
@@ -107,7 +107,7 @@ export const Single: Story = {
  * desligado por omissão — foi assim que a divergência foi medida.
  *
  * Sobrevive ao REPLAY: cada passo estabelece a própria precondição, e o par
- * `abrir`/`fechar` garante um clique real nesta rodada partindo de um estado
+ * `open`/`close` garante um clique real nesta rodada partindo de um estado
  * conhecido, em vez de alternar a partir do que a rodada anterior deixou.
  */
 export const CloseOnSecondClick: Story = {
@@ -141,8 +141,8 @@ export const CloseOnSecondClick: Story = {
 
     await step('Clicar de novo no item aberto o fecha', async () => {
       const triggers = canvas.getAllByRole('button');
-      await abrir(triggers[0]);  // precondição própria: garantidamente aberto
-      await fechar(triggers[0]); // clique real nesta rodada + asserção de estado
+      await open(triggers[0]);  // precondição própria: garantidamente aberto
+      await close(triggers[0]); // clique real nesta rodada + asserção de estado
     });
 
     await step('O painel recolhe de fato, não só o atributo', async () => {
@@ -193,14 +193,14 @@ export const Multiple: Story = {
 
     await step('Dois itens abertos ao mesmo tempo', async () => {
       const triggers = canvas.getAllByRole('button');
-      await abrir(triggers[0]);
-      await abrir(triggers[1]);
+      await open(triggers[0]);
+      await open(triggers[1]);
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Fechar um não mexe no outro', async () => {
       const triggers = canvas.getAllByRole('button');
-      await fechar(triggers[0]);
+      await close(triggers[0]);
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
     });
   },
@@ -220,13 +220,13 @@ export const Controlled: Story = {
   render: () => ({
     // `[(value)]` é a forma canônica aqui: `value` é um `model` do primitivo, e
     // o atalho de duas vias já cobre input e output.
-    props: { valor: 'item-1' },
+    props: { value: 'item-1' },
     template: `
       <div class="nds-stack nds-w-lg" data-spacing="sm">
         <p class="nds-text-caption nds-text-muted-foreground">
-          Item aberto: <code>{{ valor || 'nenhum' }}</code>
+          Item aberto: <code>{{ value || 'nenhum' }}</code>
         </p>
-        <div ndsAccordion [(value)]="valor">
+        <div ndsAccordion [(value)]="value">
           <div ndsAccordionItem value="item-1">
             <button ndsAccordionTrigger>Item 1 — controlado</button>
             <div ndsAccordionContent>Estado gerenciado externamente por value.</div>
@@ -253,7 +253,7 @@ export const Controlled: Story = {
 
     await step('Clicar no item 2 atualiza o estado externo', async () => {
       const triggers = canvas.getAllByRole('button');
-      await abrir(triggers[1]);
+      await open(triggers[1]);
       await waitFor(() => expect(canvasElement.textContent).toContain('item-2'));
     });
   },

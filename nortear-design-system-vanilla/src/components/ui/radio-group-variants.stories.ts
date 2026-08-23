@@ -240,10 +240,10 @@ export const WithDescription: Story = {
     });
     await step('A descrição chega ao controle por aria-describedby', async () => {
       const padrao = canvas.getByRole('radio', { name: 'Padrão' });
-      const alvo = padrao.getAttribute('aria-describedby');
-      await expect(alvo).toBe('rg-with-desc-standard-desc');
+      const target = padrao.getAttribute('aria-describedby');
+      await expect(target).toBe('rg-with-desc-standard-desc');
       await expect(
-        canvasElement.ownerDocument.getElementById(alvo!)?.textContent ?? '',
+        canvasElement.ownerDocument.getElementById(target!)?.textContent ?? '',
       ).toContain('5 dias úteis');
     });
   },

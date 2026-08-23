@@ -49,10 +49,10 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<CollapsibleArgs
 
   // Só o que difere do default entra no snippet — documentação que repete valor
   // padrão ensina ruído.
-  const raiz = ['<div ndsCollapsible class="nds-w-sm"', open ? '[defaultOpen]="true"' : '']
+  const root = ['<div ndsCollapsible class="nds-w-sm"', open ? '[defaultOpen]="true"' : '']
     .filter(Boolean)
     .join(' ');
-  const gatilho = [
+  const trigger = [
     '<button ndsCollapsibleTrigger ndsButton variant="ghost"',
     'class="nds-cluster nds-w-full nds-px-4" data-justify="between"',
     disabled ? '[disabled]="true"' : '',
@@ -64,8 +64,8 @@ import { NdsButton } from '@/components/ui/button';
 @Component({
   imports: [...NDS_COLLAPSIBLE, NdsButton],
   template: \`
-    ${raiz}>
-      ${gatilho}>
+    ${root}>
+      ${trigger}>
         <span>${triggerLabel}</span>
         ${CHEVRON.replace(/\n/g, '\n  ')}
       </button>
@@ -127,13 +127,13 @@ export default meta;
 type Story = StoryObj<CollapsibleArgs>;
 
 /** Abre só se estiver fechado — ver a nota de idempotência abaixo. */
-async function abrir(trigger: HTMLElement): Promise<void> {
+async function open(trigger: HTMLElement): Promise<void> {
   if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
   await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
 }
 
 /** Fecha só se estiver aberto. */
-async function fechar(trigger: HTMLElement): Promise<void> {
+async function close(trigger: HTMLElement): Promise<void> {
   if (trigger.getAttribute('aria-expanded') !== 'false') await userEvent.click(trigger);
   await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'false'));
 }
@@ -186,15 +186,15 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="collapsible"]')!;
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="collapsible"]')!;
     const trigger = canvas.getByRole('button');
-    const painel = () => canvasElement.querySelector<HTMLElement>('[data-slot="collapsible-content"]');
+    const panel = () => canvasElement.querySelector<HTMLElement>('[data-slot="collapsible-content"]');
 
     await step('O markup é o mesmo das outras stacks', async () => {
       // A raiz é um <div> com a classe do design system, não um elemento
       // próprio: é o que faz o CSS `.nds-collapsible` casar sem wrapper.
-      await expect(raiz.tagName).toBe('DIV');
-      await expect(raiz).toHaveClass(/nds-collapsible/);
+      await expect(root.tagName).toBe('DIV');
+      await expect(root).toHaveClass(/nds-collapsible/);
       await expect(trigger.tagName).toBe('BUTTON');
       await expect(trigger).toHaveAttribute('data-slot', 'collapsible-trigger');
     });
@@ -207,7 +207,7 @@ export const Playground: Story = {
       // `data-state` é o contrato de markup do Vanilla, que este componente
       // emite de propósito — o primitivo só entrega data-open/data-closed.
       await expect(trigger).toHaveAttribute('data-state', args.open ? 'open' : 'closed');
-      await expect(painel() !== null).toBe(args.open);
+      await expect(panel() !== null).toBe(args.open);
     });
 
     await step('O chevron é decorativo', async () => {
@@ -229,12 +229,12 @@ export const Playground: Story = {
       // O par abrir/fechar em vez do clique cego: o painel Interactions
       // REEXECUTA a play no mesmo DOM, e um clique absoluto partiria do estado
       // que a rodada anterior deixou, invertendo o resultado.
-      await fechar(trigger);
+      await close(trigger);
       const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
-      await abrir(trigger);
+      await open(trigger);
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
       await expect(trigger).toHaveAttribute('data-state', 'open');
-      await expect(painel()).toBeInTheDocument();
+      await expect(panel()).toBeInTheDocument();
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
       ).toBe(callsBefore + 1);
@@ -246,33 +246,33 @@ export const Playground: Story = {
       // reprovaria por aria-valid-attr-value.
       const id = trigger.getAttribute('aria-controls');
       await expect(id).toBeTruthy();
-      await expect(document.getElementById(id!)).toBe(painel());
+      await expect(document.getElementById(id!)).toBe(panel());
     });
 
     await step('Clicar com o painel aberto recolhe o conteúdo', async () => {
-      await abrir(trigger);
-      await fechar(trigger);
+      await open(trigger);
+      await close(trigger);
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
       await expect(trigger).toHaveAttribute('data-state', 'closed');
       // `waitFor` e não asserção seca: o painel continua no DOM enquanto a
       // transição de saída roda — é o que dá o que animar no fechamento. Só
       // depois dela o primitivo desmonta o elemento.
       await waitFor(async () => {
-        await expect(painel()).toBeNull();
+        await expect(panel()).toBeNull();
       });
       // Fechado não há painel para apontar, e o atributo some junto.
       await expect(trigger.getAttribute('aria-controls')).toBeNull();
     });
 
     await step('Enter alterna o painel', async () => {
-      await fechar(trigger);
+      await close(trigger);
       trigger.focus();
       await userEvent.keyboard('{Enter}');
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Space alterna o painel, idêntico a Enter', async () => {
-      await fechar(trigger);
+      await close(trigger);
       trigger.focus();
       await userEvent.keyboard(' ');
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
@@ -283,9 +283,9 @@ export const Playground: Story = {
       // por padrão" — e o quadro que o Chromatic fotografa e o axe varre é o
       // FINAL da play, não o da montagem. Sem isto a foto saía aberta e o item
       // do contrato ficava declarado sem nunca ter sido capturado.
-      await fechar(trigger);
+      await close(trigger);
       await waitFor(async () => {
-        await expect(painel()).toBeNull();
+        await expect(panel()).toBeNull();
       });
     });
   },

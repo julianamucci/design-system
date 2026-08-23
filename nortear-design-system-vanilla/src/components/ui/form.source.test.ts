@@ -9,33 +9,33 @@ import {
 
 describe('formSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = formSnippet();
-    expect(código).toContain("import { createFormField } from '@/components/ui/form';");
-    expect(código).toContain('createFormField({');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('aria-describedby');
+    const code = formSnippet();
+    expect(code).toContain("import { createFormField } from '@/components/ui/form';");
+    expect(code).toContain('createFormField({');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('aria-describedby');
   });
 
   it('mostra o CAMPO inteiro, e não um rótulo solto ao lado de um controle solto', () => {
     // O produto deste componente é a costura de acessibilidade: `for` ↔ `id`,
     // id gerado, descrição entrando no `aria-describedby`. Nada disso existe
     // quando se escreve o par à mão.
-    const código = formSnippet();
-    expect(código).toContain('label:');
-    expect(código).toContain('input: createInput(');
-    expect(código).not.toContain('createLabel');
+    const code = formSnippet();
+    expect(code).toContain('label:');
+    expect(code).toContain('input: createInput(');
+    expect(code).not.toContain('createLabel');
   });
 
   it('omite as peças opcionais que a story não usa', () => {
-    const código = formSnippet();
-    expect(código).not.toContain('description');
-    expect(código).not.toContain('error');
-    expect(código).not.toContain('aria-invalid');
-    expect(código).not.toContain('disabled');
+    const code = formSnippet();
+    expect(code).not.toContain('description');
+    expect(code).not.toContain('error');
+    expect(code).not.toContain('aria-invalid');
+    expect(code).not.toContain('disabled');
   });
 
   it('mostra as peças quando a story as usa', () => {
-    const código = formSnippet({
+    const code = formSnippet({
       label: 'Senha',
       inputType: 'password',
       value: '123',
@@ -43,27 +43,27 @@ describe('formSnippet', () => {
       error: 'A senha precisa ter pelo menos 8 caracteres.',
       ariaInvalid: true,
     });
-    expect(código).toContain("label: 'Senha'");
-    expect(código).toContain("type: 'password'");
-    expect(código).toContain("description: 'Use pelo menos 8 caracteres, com letras e números.'");
-    expect(código).toContain("error: 'A senha precisa ter pelo menos 8 caracteres.'");
+    expect(code).toContain("label: 'Senha'");
+    expect(code).toContain("type: 'password'");
+    expect(code).toContain("description: 'Use pelo menos 8 caracteres, com letras e números.'");
+    expect(code).toContain("error: 'A senha precisa ter pelo menos 8 caracteres.'");
   });
 
   it('o aria-invalid é escrito no CONTROLE, porque a fábrica não o escreve', () => {
     // A fábrica deliberadamente não tem fonte de verdade sobre validade. Um
     // snippet que passasse `ariaInvalid` para `createFormField` inventaria API.
-    const código = formSnippet({ ariaInvalid: true });
-    expect(código).toContain("controle.setAttribute('aria-invalid', 'true');");
-    expect(código).toContain('input: controle');
-    expect(código).not.toContain('ariaInvalid');
+    const code = formSnippet({ ariaInvalid: true });
+    expect(code).toContain("controle.setAttribute('aria-invalid', 'true');");
+    expect(code).toContain('input: controle');
+    expect(code).not.toContain('ariaInvalid');
   });
 
   it('não vaza helper de story', () => {
-    const código = formSnippet({ description: 'Usaremos apenas para contato.' });
-    expect(código).not.toContain('buildField');
-    expect(código).not.toContain('ordemDeTabulacao');
-    expect(código).not.toContain('contrastesNosDoisModos');
-    expect(código).not.toContain('nds-max-w-sm');
+    const code = formSnippet({ description: 'Usaremos apenas para contato.' });
+    expect(code).not.toContain('buildField');
+    expect(code).not.toContain('ordemDeTabulacao');
+    expect(code).not.toContain('contrastesNosDoisModos');
+    expect(code).not.toContain('nds-max-w-sm');
   });
 });
 
@@ -81,9 +81,9 @@ describe('formSource', () => {
 
   it('descrição e erro vazios são ausência, e não string vazia no snippet', () => {
     // Os controls do Playground nascem com `''`, que significa "sem a peça".
-    const código = formSource('', { args: { description: '', error: '' } });
-    expect(código).not.toContain('description');
-    expect(código).not.toContain('error');
+    const code = formSource('', { args: { description: '', error: '' } });
+    expect(code).not.toContain('description');
+    expect(code).not.toContain('error');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -94,45 +94,45 @@ describe('formSource', () => {
 describe('formSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = formSourceWith({ label: 'Senha', inputType: 'password' });
-    const código = transform('', { args: { label: 'Email' } });
-    expect(código).toContain("label: 'Senha'");
-    expect(código).toContain("type: 'password'");
+    const code = transform('', { args: { label: 'Email' } });
+    expect(code).toContain("label: 'Senha'");
+    expect(code).toContain("type: 'password'");
   });
 });
 
 describe('formComFieldsetSnippet', () => {
   it('usa a fábrica do grupo, que é outra', () => {
-    const código = formWithFieldsetSnippet({
+    const code = formWithFieldsetSnippet({
       legend: 'Endereço de entrega',
       fields: [{ label: 'Rua', placeholder: 'ex: Av. Paulista, 1000' }],
     });
-    expect(código).toContain("import { createFieldset, createFormField } from '@/components/ui/form';");
-    expect(código).toContain('createFieldset({');
-    expect(código).toContain("legend: 'Endereço de entrega'");
-    expect(código).toContain('children: [');
-    expect(código).toContain('createFormField({');
+    expect(code).toContain("import { createFieldset, createFormField } from '@/components/ui/form';");
+    expect(code).toContain('createFieldset({');
+    expect(code).toContain("legend: 'Endereço de entrega'");
+    expect(code).toContain('children: [');
+    expect(code).toContain('createFormField({');
   });
 });
 
 describe('formComVariosCamposSnippet', () => {
   it('a área de texto passa pelo mesmo campo, com a fábrica dela', () => {
-    const código = formWithMultipleFieldsSnippet({
+    const code = formWithMultipleFieldsSnippet({
       fields: [
         { label: 'Nome completo', name: 'nome' },
-        { label: 'Biografia', controle: 'textarea', name: 'bio', rows: 3 },
+        { label: 'Biografia', control: 'textarea', name: 'bio', rows: 3 },
       ],
       submitLabel: 'Salvar',
     });
-    expect(código).toContain("import { createTextarea } from '@/components/ui/textarea';");
-    expect(código).toContain("createTextarea({ name: 'bio', rows: 3 })");
+    expect(code).toContain("import { createTextarea } from '@/components/ui/textarea';");
+    expect(code).toContain("createTextarea({ name: 'bio', rows: 3 })");
     // A área de texto não tem `type`: o elemento já é o que é.
-    expect(código).not.toContain("type: 'textarea'");
-    expect(código).toContain("createButton({ label: 'Salvar', type: 'submit' })");
+    expect(code).not.toContain("type: 'textarea'");
+    expect(code).toContain("createButton({ label: 'Salvar', type: 'submit' })");
   });
 
   it('não importa a fábrica de área de texto quando não há nenhuma', () => {
-    const código = formWithMultipleFieldsSnippet({ fields: [{ label: 'Email', type: 'email' }] });
-    expect(código).not.toContain('createTextarea');
-    expect(código).toContain("type: 'email'");
+    const code = formWithMultipleFieldsSnippet({ fields: [{ label: 'Email', type: 'email' }] });
+    expect(code).not.toContain('createTextarea');
+    expect(code).toContain("type: 'email'");
   });
 });

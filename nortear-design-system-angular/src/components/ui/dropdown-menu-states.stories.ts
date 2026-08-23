@@ -46,10 +46,10 @@ export const Closed: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button', { name: 'Abrir menu' });
+    const trigger = within(canvasElement).getByRole('button', { name: 'Abrir menu' });
 
     await step('Só o gatilho está na tela', async () => {
-      await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
+      await expect(trigger.getAttribute('aria-expanded')).toBe('false');
       // O portal desmonta o popup ao fechar: fechado não é "escondido com
       // display:none", é ausente do DOM. Um popup só escondido continuaria no
       // percurso do leitor de tela.
@@ -78,33 +78,33 @@ export const Open: Story = {
   }),
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
-    const itens = within(menu).getAllByRole('menuitem');
+    const items = within(menu).getAllByRole('menuitem');
 
     await step('Só o item destacado está no percurso do Tab', async () => {
       // Roving tabindex: EXATAMENTE um item no percurso, e os demais fora, para
       // que o Tab escape do menu inteiro de uma vez e não item por item.
       // `toBeLessThanOrEqual(1)`, como estava, passava também com ZERO — ou
       // seja, com o menu inteiro fora do percurso do Tab, que é o defeito.
-      const noPercurso = itens.filter((i) => i.getAttribute('tabindex') === '0');
+      const noPercurso = items.filter((i) => i.getAttribute('tabindex') === '0');
       await expect(noPercurso).toHaveLength(1);
     });
 
     await step('As setas descem e sobem um item por vez', async () => {
-      itens[0].focus();
+      items[0].focus();
       await userEvent.keyboard('{ArrowDown}');
-      await expect(document.activeElement).toBe(itens[1]);
-      await expect(itens[1].getAttribute('data-highlighted')).toBe('');
+      await expect(document.activeElement).toBe(items[1]);
+      await expect(items[1].getAttribute('data-highlighted')).toBe('');
       // A volta não é simetria gratuita: o item documenta "setas Cima/Baixo", e
       // só a descida estava verificada.
       await userEvent.keyboard('{ArrowUp}');
-      await expect(document.activeElement).toBe(itens[0]);
+      await expect(document.activeElement).toBe(items[0]);
     });
 
     await step('Home e End vão ao primeiro e ao último', async () => {
       await userEvent.keyboard('{End}');
-      await expect(document.activeElement).toBe(itens[2]);
+      await expect(document.activeElement).toBe(items[2]);
       await userEvent.keyboard('{Home}');
-      await expect(document.activeElement).toBe(itens[0]);
+      await expect(document.activeElement).toBe(items[0]);
     });
 
     await step('Digitar uma letra salta para o item que começa com ela', async () => {
@@ -112,7 +112,7 @@ export const Open: Story = {
       // item. Vem do popup do primitivo, e some se a lista de itens não for
       // encontrada — daí valer a pena afirmar.
       await userEvent.keyboard('e');
-      await expect(document.activeElement).toBe(itens[2]);
+      await expect(document.activeElement).toBe(items[2]);
     });
   },
 };
@@ -146,16 +146,16 @@ export const Controlled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Ações' });
+    const trigger = canvas.getByRole('button', { name: 'Ações' });
 
     await step('O botão externo abre o menu', async () => {
       // Idempotente: só clica quando o estado atual não é o desejado, então o
       // replay do painel Interactions chega ao mesmo lugar.
-      if (gatilho.getAttribute('aria-expanded') !== 'true') {
+      if (trigger.getAttribute('aria-expanded') !== 'true') {
         await userEvent.click(canvas.getByRole('button', { name: 'Abrir pelo estado' }));
       }
       await waitForPortal('menu');
-      await expect(gatilho.getAttribute('aria-expanded')).toBe('true');
+      await expect(trigger.getAttribute('aria-expanded')).toBe('true');
     });
 
     await step('Escape fecha e o estado de fora acompanha', async () => {
@@ -186,23 +186,23 @@ export const ItemDisabled: Story = {
   }),
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
-    const desabilitado = within(menu).getByRole('menuitem', { name: 'Arquivar' });
+    const disabled = within(menu).getByRole('menuitem', { name: 'Arquivar' });
 
     await step('O item se anuncia desabilitado', async () => {
-      await expect(desabilitado.getAttribute('aria-disabled')).toBe('true');
-      await expect(desabilitado.hasAttribute('data-disabled')).toBe(true);
+      await expect(disabled.getAttribute('aria-disabled')).toBe('true');
+      await expect(disabled.hasAttribute('data-disabled')).toBe(true);
     });
 
     await step('O item desabilitado continua alcançável pela seta', async () => {
       // Padrão WAI-ARIA de menu: a seta PODE pousar no item desabilitado, para
       // que ele seja anunciado. O que ele não pode é executar.
-      await expect(desabilitado.getAttribute('tabindex')).not.toBe(null);
+      await expect(disabled.getAttribute('tabindex')).not.toBe(null);
     });
 
     await step('O clique é bloqueado pelo CSS, não só pelo callback', async () => {
       // `pointer-events: none` é o que impede o clique de chegar; sem ele o
       // item continuaria clicável e o bloqueio dependeria de cada consumidor.
-      await expect(getComputedStyle(desabilitado).pointerEvents).toBe('none');
+      await expect(getComputedStyle(disabled).pointerEvents).toBe('none');
     });
   },
 };
@@ -234,14 +234,14 @@ export const CheckboxIndeterminate: Story = {
     const menu = await waitForPortal('menu');
     const canvas = within(menu);
     const misto = canvas.getByRole('menuitemcheckbox', { name: 'Nome' });
-    const marcado = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });
+    const checked = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });
     const desmarcado = canvas.getByRole('menuitemcheckbox', { name: 'Telefone' });
 
     await step('O estado misto é anunciado como misto, e não como marcado', async () => {
       // Uma comparação frouxa leria `'indeterminate'` como verdadeiro; o que a
       // pessoa ouve tem que separar os três estados.
       await expect(misto.getAttribute('aria-checked')).toBe('mixed');
-      await expect(marcado.getAttribute('aria-checked')).toBe('true');
+      await expect(checked.getAttribute('aria-checked')).toBe('true');
       await expect(desmarcado.getAttribute('aria-checked')).toBe('false');
     });
 
@@ -250,7 +250,7 @@ export const CheckboxIndeterminate: Story = {
       // traço é largo e sem altura, tique tem a diagonal. Com o mesmo símbolo
       // nos dois estados — o defeito — esta asserção fica vermelha.
       const formaMista = formaDoIndicador(misto);
-      const formaMarcada = formaDoIndicador(marcado);
+      const formaMarcada = formaDoIndicador(checked);
       await expect(ehTraco(formaMista)).toBe(true);
       await expect(ehTique(formaMista)).toBe(false);
       await expect(ehTique(formaMarcada)).toBe(true);

@@ -9,7 +9,7 @@
  * a região de "nenhum resultado" FORA da lista. A tag da raiz sozinha não
  * ensinaria nenhuma dessas posições.
  */
-import { attrBool, asCode, indentar, texto, vueSnippet, type SourceTransform } from '@/lib/story-source';
+import { attrBool, asCode, indentar, text, vueSnippet, type SourceTransform } from '@/lib/story-source';
 
 export type CommandArgs = {
   placeholder: string;
@@ -21,7 +21,7 @@ export type CommandArgs = {
 /** Import do design system, com as peças que cada arranjo usa. */
 function importing(...names: string[]): string {
   return `import {
-${names.map((nome) => `  ${nome},`).join('\n')}
+${names.map((name) => `  ${name},`).join('\n')}
 } from '@/components/ui/command'`;
 }
 
@@ -44,19 +44,19 @@ ${indentar(interior, 2)}
  * é filho permitido de `role="listbox"`, e dentro dela o axe reprova por
  * `aria-required-children`.
  */
-function palette(opcoes: {
-  raiz?: string;
+function palette(options: {
+  root?: string;
   placeholder: string;
-  lista: string;
+  list: string;
   vazio?: string;
 }): string {
-  const { raiz = '', placeholder, lista, vazio = 'Nenhum resultado encontrado.' } = opcoes;
-  const abertura = raiz ? `<Command ${raiz}>` : '<Command>';
+  const { root = '', placeholder, list, vazio = 'Nenhum resultado encontrado.' } = options;
+  const abertura = root ? `<Command ${root}>` : '<Command>';
   return `${abertura}
   <CommandInput placeholder="${placeholder}" />
 
   <CommandList>
-${indentar(lista, 4)}
+${indentar(list, 4)}
   </CommandList>
 
   <CommandEmpty>${vazio}</CommandEmpty>
@@ -66,7 +66,7 @@ ${indentar(lista, 4)}
 /**
  * Playground: o campo, dois grupos separados por um divisor e cinco comandos.
  *
- * Os controls de texto passam por `asCode`/`texto`, que descartam o que não
+ * Os controls de texto passam por `asCode`/`text`, que descartam o que não
  * for string — o Storybook troca arg de ação por um espião, e o corpo do mock
  * interpolado apareceria no painel como se fosse o exemplo.
  *
@@ -76,10 +76,10 @@ ${indentar(lista, 4)}
  */
 export const commandSource: SourceTransform<CommandArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const placeholder = texto(asCode(args.placeholder), 'Buscar componente...');
+  const placeholder = text(asCode(args.placeholder), 'Buscar componente...');
   const vazio = asCode(args.emptyMessage) ?? 'Nenhum resultado encontrado.';
   const withGroups = args.showGroups !== false;
-  const titulo = (nome: string) => (withGroups ? ` heading="${nome}"` : '');
+  const title = (name: string) => (withGroups ? ` heading="${name}"` : '');
 
   return vueSnippet(
     `${importing(...PARTS_BASICAS, 'CommandSeparator', 'CommandShortcut')}
@@ -89,10 +89,10 @@ function executar(valor: string) {
 }`,
     frame(
       palette({
-        raiz: attrBool('highlight-on-hover', args.highlightOnHover, false),
+        root: attrBool('highlight-on-hover', args.highlightOnHover, false),
         placeholder,
         vazio,
-        lista: `<CommandGroup${titulo('Componentes')}>
+        list: `<CommandGroup${title('Componentes')}>
   <CommandItem value="button" @select="executar('button')">
     Button
     <CommandShortcut>⌘B</CommandShortcut>
@@ -103,7 +103,7 @@ function executar(valor: string) {
 
 <CommandSeparator />
 
-<CommandGroup${titulo('Utilitários')}>
+<CommandGroup${title('Utilitários')}>
   <CommandItem value="cn" @select="executar('cn')">cn()</CommandItem>
   <CommandItem value="clsx" @select="executar('clsx')">clsx()</CommandItem>
 </CommandGroup>`,
@@ -123,7 +123,7 @@ export function commandEmptySource(): string {
     frame(
       palette({
         placeholder: 'Buscar componente...',
-        lista: `<CommandGroup heading="Componentes">
+        list: `<CommandGroup heading="Componentes">
   <CommandItem value="button">Button</CommandItem>
   <CommandItem value="input">Input</CommandItem>
 </CommandGroup>`,
@@ -148,7 +148,7 @@ ${indentar(
   frame(
     palette({
       placeholder: 'Buscar comando...',
-      lista: `<CommandGroup heading="Arquivo">
+      list: `<CommandGroup heading="Arquivo">
   <CommandItem value="novo" @select="ultimo = 'novo'">Novo</CommandItem>
   <CommandItem value="arquivar" disabled @select="ultimo = 'arquivar'">Arquivar</CommandItem>
   <CommandItem value="renomear" @select="ultimo = 'renomear'">Renomear</CommandItem>
@@ -177,7 +177,7 @@ export function commandItemCheckedSource(): string {
     frame(
       palette({
         placeholder: 'Buscar tema...',
-        lista: `<CommandGroup heading="Aparência">
+        list: `<CommandGroup heading="Aparência">
   <CommandItem value="claro" :checked="true">Claro</CommandItem>
   <CommandItem value="escuro" :checked="false">Escuro</CommandItem>
   <CommandItem value="sistema" :checked="true">
@@ -201,7 +201,7 @@ export function commandWithGroupsSource(): string {
     frame(
       palette({
         placeholder: 'Buscar componente...',
-        lista: `<CommandGroup heading="Componentes">
+        list: `<CommandGroup heading="Componentes">
   <CommandItem value="button">Button</CommandItem>
   <CommandItem value="input">Input</CommandItem>
   <CommandItem value="select">Select</CommandItem>
@@ -229,7 +229,7 @@ export function commandWithShortcutsSource(): string {
     frame(
       palette({
         placeholder: 'Buscar ação...',
-        lista: `<CommandGroup heading="Ações">
+        list: `<CommandGroup heading="Ações">
   <CommandItem value="novo-arquivo">
     Novo arquivo
     <CommandShortcut>⌘N</CommandShortcut>
@@ -317,7 +317,7 @@ function escolher(value: string) {
 ${indentar(
   palette({
     placeholder: 'Buscar item...',
-    lista: `<CommandGroup heading="Componentes">
+    list: `<CommandGroup heading="Componentes">
   <CommandItem
     v-for="item in itens"
     :key="item.value"

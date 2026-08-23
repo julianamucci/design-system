@@ -144,13 +144,13 @@ export const Playground: Story = {
   ),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole("link", { name: /@joana/i });
+    const trigger = canvas.getByRole("link", { name: /@joana/i });
 
     await step("O gatilho continua sendo um link de verdade", async () => {
       // O cartão é ENRIQUECIMENTO: quem está no toque, ou num leitor de tela,
       // chega ao perfil pelo clique. É exigência do componente, não do exemplo.
-      await expect(gatilho).toHaveAttribute("href", "/users/joana");
-      await expect(gatilho).toHaveAttribute("data-slot", "hover-card-trigger");
+      await expect(trigger).toHaveAttribute("href", "/users/joana");
+      await expect(trigger).toHaveAttribute("data-slot", "hover-card-trigger");
     });
 
     // Estado conhecido antes das afirmações: o painel Interactions REEXECUTA a
@@ -165,23 +165,23 @@ export const Playground: Story = {
 
     await step("Passar o ponteiro abre o cartão", async () => {
       const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
-      await userEvent.hover(gatilho);
-      const painel = await waitForOpen();
-      await expect(painel).toBeVisible();
+      await userEvent.hover(trigger);
+      const panel = await waitForOpen();
+      await expect(panel).toBeVisible();
       // `role="dialog"` é contrato de markup das cinco stacks — o primitivo não
       // o emite, este componente sim.
-      await expect(painel).toHaveAttribute("role", "dialog");
-      await expect(painel).toHaveClass(/nds-hover-card-content/);
+      await expect(panel).toHaveAttribute("role", "dialog");
+      await expect(panel).toHaveClass(/nds-hover-card-content/);
       // Nome acessível: sem ele o axe reprova por `aria-dialog-name`. Sai do
       // texto do gatilho quando quem compõe não informa outro.
-      await expect(accessibleName(painel)).toBe(args.triggerLabel);
+      await expect(accessibleName(panel)).toBe(args.triggerLabel);
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
       ).toBeGreaterThan(callsBefore);
     });
 
     await step("Levar o ponteiro para longe fecha o cartão", async () => {
-      await leaveWithPointer(gatilho, panelOpen()!);
+      await leaveWithPointer(trigger, panelOpen()!);
       await waitForClosed("depois do ponteiro sair");
       await expect(panelOpen()).toBeNull();
     });
@@ -194,9 +194,9 @@ export const Playground: Story = {
       // o gatilho casa `:focus-visible`, e foco programático não casa. Com
       // `.focus()` este passo provaria o contrário do que pretende.
       await userEvent.tab();
-      await expect(gatilho).toHaveFocus();
-      const painel = await waitForOpen("depois do foco");
-      await expect(painel).toBeVisible();
+      await expect(trigger).toHaveFocus();
+      const panel = await waitForOpen("depois do foco");
+      await expect(panel).toBeVisible();
     });
 
     await step("Escape fecha o cartão", async () => {

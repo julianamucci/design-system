@@ -100,10 +100,10 @@ export const UserProfile: Story = {
     const canvas = within(canvasElement);
 
     await step("O cartão traz avatar, nome e uma métrica curta", async () => {
-      const painel = await waitForOpen();
-      await expect(painel).toBeVisible();
-      await expect(within(painel).getByText("Joana Silva")).toBeVisible();
-      await expect(within(painel).getByText(/142 seguidores/)).toBeVisible();
+      const panel = await waitForOpen();
+      await expect(panel).toBeVisible();
+      await expect(within(panel).getByText("Joana Silva")).toBeVisible();
+      await expect(within(panel).getByText(/142 seguidores/)).toBeVisible();
     });
 
     await step("E o gatilho continua sendo um link de verdade", async () => {
@@ -160,10 +160,10 @@ export const LinkPreview: Story = {
     const canvas = within(canvasElement);
 
     await step("O cartão mostra origem, título e descrição do destino", async () => {
-      const painel = await waitForOpen();
-      await expect(painel).toBeVisible();
-      await expect(within(painel).getByText(/design-system\.dev\/overlays/)).toBeVisible();
-      await expect(within(painel).getByText("Guia de overlays acessíveis")).toBeVisible();
+      const panel = await waitForOpen();
+      await expect(panel).toBeVisible();
+      await expect(within(panel).getByText(/design-system\.dev\/overlays/)).toBeVisible();
+      await expect(within(panel).getByText("Guia de overlays acessíveis")).toBeVisible();
       await expect(canvas.getByRole("link")).toHaveAttribute("href", "https://design-system.dev");
     });
   },
@@ -208,18 +208,18 @@ export const TermDefinition: Story = {
     const canvas = within(canvasElement);
 
     await step("O gatilho de definição é um botão, e não envia formulário", async () => {
-      const gatilho = canvas.getByRole("button", { name: "WCAG 2.2 AA" });
+      const trigger = canvas.getByRole("button", { name: "WCAG 2.2 AA" });
       // Sem `type="button"`, o mesmo gatilho dentro de um <form> enviaria o
       // formulário ao ser ativado por Enter.
-      await expect(gatilho).toHaveAttribute("type", "button");
+      await expect(trigger).toHaveAttribute("type", "button");
     });
 
     await step("O nome acessível do painel vem do rótulo declarado", async () => {
-      const painel = await waitForOpen();
+      const panel = await waitForOpen();
       // Sem `aria-label`, o nome cairia no texto do gatilho ("WCAG 2.2 AA"),
       // que repetiria a sigla sem dizer o que o cartão traz.
-      await expect(accessibleName(painel)).toBe("Definição de WCAG 2.2 AA");
-      await expect(within(painel).getByText("WCAG 2.2 nível AA")).toBeVisible();
+      await expect(accessibleName(panel)).toBe("Definição de WCAG 2.2 AA");
+      await expect(within(panel).getByText("WCAG 2.2 nível AA")).toBeVisible();
     });
   },
 };
@@ -267,10 +267,10 @@ export const ExplainedMetric: Story = {
   ),
   play: async ({ step }) => {
     await step("O número carrega a cor semântica; o texto corrido, não", async () => {
-      const painel = await waitForOpen();
-      const valor = within(painel).getByText("1.8s");
-      await expect(valor).toHaveClass(/nds-text-success/);
-      const descricao = within(painel).getByText(/Tempo até o maior elemento/);
+      const panel = await waitForOpen();
+      const value = within(panel).getByText("1.8s");
+      await expect(value).toHaveClass(/nds-text-success/);
+      const descricao = within(panel).getByText(/Tempo até o maior elemento/);
       await expect(descricao).not.toHaveClass(/nds-text-success/);
     });
   },
@@ -298,20 +298,20 @@ export const Sides: Story = {
           ["esquerda", "left"],
           ["direita", "right"],
         ] as const
-      ).map(([rotulo, lado]) => (
-        <p className="nds-text-body nds-p-8" key={lado}>
+      ).map(([label, side]) => (
+        <p className="nds-text-body nds-p-8" key={side}>
           Abre{" "}
           <HoverCard defaultOpen>
             <HoverCardTrigger asChild>
               <button type="button" className={CLASSES_TRIGGER_BUTTON}>
-                {rotulo}
+                {label}
               </button>
             </HoverCardTrigger>
-            <HoverCardContent side={lado} aria-label={`Cartão ${rotulo} do gatilho`}>
-              <p className="nds-text-caption">Side preferido: {rotulo}.</p>
+            <HoverCardContent side={side} aria-label={`Cartão ${label} do gatilho`}>
+              <p className="nds-text-caption">Side preferido: {label}.</p>
             </HoverCardContent>
           </HoverCard>{" "}
-          do gatilho.
+          do trigger.
         </p>
       ))}
     </div>
@@ -322,8 +322,8 @@ export const Sides: Story = {
       await expect(panels).toHaveLength(4);
 
       const lados = panels.map((p) => p.getAttribute("data-side"));
-      for (const lado of lados) {
-        await expect(lado).toBeTruthy();
+      for (const side of lados) {
+        await expect(side).toBeTruthy();
       }
 
       // O EIXO é o contrato, não o lado exato: pedir "acima" sem espaço acima
@@ -374,12 +374,12 @@ export const ExtraPanelClass: Story = {
   ),
   play: async ({ step }) => {
     await step("A classe extra convive com a classe do componente", async () => {
-      const painel = await waitForOpen();
+      const panel = await waitForOpen();
       // As duas coexistem: a classe do design system não é substituída pela do
       // consumidor, é acrescida.
-      await expect(painel).toHaveClass(/nds-hover-card-content/);
-      await expect(painel).toHaveClass(/nds-w-md/);
-      await expect(getComputedStyle(painel).textAlign).toBe("center");
+      await expect(panel).toHaveClass(/nds-hover-card-content/);
+      await expect(panel).toHaveClass(/nds-w-md/);
+      await expect(getComputedStyle(panel).textAlign).toBe("center");
       await expect(panelsAbertos()).toHaveLength(1);
     });
 
@@ -387,9 +387,9 @@ export const ExtraPanelClass: Story = {
       // 28rem da utilitária contra os 20rem que `.nds-hover-card-content`
       // define. É o que prova que a customização de largura funciona de fato,
       // e não só que a classe está no atributo.
-      const painel = await waitForOpen();
-      const raiz = parseFloat(getComputedStyle(document.documentElement).fontSize);
-      await expect(painel.getBoundingClientRect().width).toBeCloseTo(28 * raiz, 0);
+      const panel = await waitForOpen();
+      const root = parseFloat(getComputedStyle(document.documentElement).fontSize);
+      await expect(panel.getBoundingClientRect().width).toBeCloseTo(28 * root, 0);
     });
   },
 };

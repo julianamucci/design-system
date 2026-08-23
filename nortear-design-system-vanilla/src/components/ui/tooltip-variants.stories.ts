@@ -56,15 +56,15 @@ export const Default: Story = {
     return wrap(el);
   },
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button', { name: /salvar/i });
+    const trigger = within(canvasElement).getByRole('button', { name: /salvar/i });
 
     await step('Nasce aberto, com o texto curto no balão', async () => {
-      gatilho.blur();
-      gatilho.focus();
+      trigger.blur();
+      trigger.focus();
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       await expect(balao).toHaveClass(/nds-tooltip-content/);
       await expect(balao.textContent?.trim()).toBe('Salvar');
     });
@@ -73,7 +73,7 @@ export const Default: Story = {
       // Medido no elemento real, não na tabela de tokens: é a combinação
       // aplicada (fundo --primary, texto --primary-foreground) que a pessoa lê,
       // e ela precisa valer em qualquer tema da toolbar.
-      const estilo = getComputedStyle(balaoDe(gatilho)!);
+      const estilo = getComputedStyle(balaoDe(trigger)!);
       await expect(contraste(estilo.color, estilo.backgroundColor)).toBeGreaterThanOrEqual(4.5);
     });
 
@@ -90,15 +90,15 @@ export const WithShortcut: Story = {
     return wrap(el);
   },
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button', { name: /salvar/i });
+    const trigger = within(canvasElement).getByRole('button', { name: /salvar/i });
 
     await step('O balão traz o texto e o atalho', async () => {
-      gatilho.blur();
-      gatilho.focus();
+      trigger.blur();
+      trigger.focus();
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       await expect(balao.textContent).toContain('Salvar');
       await expect(balao.textContent).toMatch(/Ctrl\+S/);
     });
@@ -106,7 +106,7 @@ export const WithShortcut: Story = {
     await step('O atalho não vira nome do botão — ele já tem o seu', async () => {
       // O `aria-label` continua curto; o atalho é reforço visual, e duplicá-lo
       // no nome acessível faria o leitor de tela soletrar a tecla toda vez.
-      await expect(gatilho).toHaveAttribute('aria-label', 'Salvar');
+      await expect(trigger).toHaveAttribute('aria-label', 'Salvar');
     });
 
     await step('Cleanup', async () => { clearPortal(); });
@@ -141,15 +141,15 @@ export const LongText: Story = {
     return wrap(el);
   },
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button', { name: /mais informação/i });
+    const trigger = within(canvasElement).getByRole('button', { name: /mais informação/i });
 
     await step('O texto quebra dentro do limite de largura do balão', async () => {
-      gatilho.blur();
-      gatilho.focus();
+      trigger.blur();
+      trigger.focus();
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       await expect(balao.textContent).toMatch(/sincroniza/);
       // O limite vem da folha compartilhada; medir a largura real prova que o
       // texto respeitou o teto em vez de esticar o balão pela viewport. A classe

@@ -81,12 +81,12 @@ export const Playground: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const lista = canvas.getByRole('tablist');
+    const list = canvas.getByRole('tablist');
     const abas = canvas.getAllByRole('tab');
     const [visaoGeral, propriedades, exemplos] = abas as HTMLElement[];
 
     await step('Papéis ARIA: tablist rotulado, três tabs e um tabpanel visível', async () => {
-      await expect(lista).toHaveAttribute('aria-label', 'Seções do componente');
+      await expect(list).toHaveAttribute('aria-label', 'Seções do componente');
       await expect(abas).toHaveLength(3);
       await expect(canvas.getAllByRole('tabpanel')).toHaveLength(1);
     });
@@ -98,17 +98,17 @@ export const Playground: Story = {
     });
 
     await step('aria-controls e aria-labelledby casam nos dois sentidos', async () => {
-      const painel = canvas.getByRole('tabpanel');
-      await expect(visaoGeral).toHaveAttribute('aria-controls', painel.id);
-      await expect(painel).toHaveAttribute('aria-labelledby', visaoGeral.id);
+      const panel = canvas.getByRole('tabpanel');
+      await expect(visaoGeral).toHaveAttribute('aria-controls', panel.id);
+      await expect(panel).toHaveAttribute('aria-labelledby', visaoGeral.id);
     });
 
     await step('Clicar em uma aba ativa o painel correspondente', async () => {
       await ativar(propriedades);
       await expect(visaoGeral).toHaveAttribute('aria-selected', 'false');
-      const painel = canvas.getByRole('tabpanel');
-      await expect(painel).toHaveAttribute('aria-labelledby', propriedades.id);
-      await expect(painel).toHaveTextContent('Lista de propriedades');
+      const panel = canvas.getByRole('tabpanel');
+      await expect(panel).toHaveAttribute('aria-labelledby', propriedades.id);
+      await expect(panel).toHaveTextContent('Lista de propriedades');
     });
 
     await step('Roving tabindex: só a aba ativa entra na ordem de tabulação', async () => {

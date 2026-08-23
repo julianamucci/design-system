@@ -187,7 +187,7 @@ const CODE_16_9 = `<div ndsAspectRatio [ratio]="16 / 9">
               <div class="nds-stack" data-spacing="sm">
                 <p class="nds-text-caption nds-text-muted-foreground">{{ p.label }}</p>
                 <div ndsAspectRatio [ratio]="p.ratio">
-                  <img [src]="img" [alt]="'Exemplo na proporção ' + p.nome" />
+                  <img [src]="img" [alt]="'Exemplo na proporção ' + p.name" />
                 </div>
               </div>
             }
@@ -295,10 +295,10 @@ export class NdsAspectRatioDocs implements AfterViewInit, OnDestroy {
   protected readonly demoProporcoes = computed(() => {
     dict();
     return [
-      { key: 'sixteenNine', ratio: 16 / 9, nome: '16:9', label: t('demonstration.labels.sixteenNine') },
-      { key: 'fourThree',   ratio: 4 / 3,  nome: '4:3',  label: t('demonstration.labels.fourThree')   },
-      { key: 'square',      ratio: 1,      nome: '1:1',  label: t('demonstration.labels.square')      },
-      { key: 'threeFour',   ratio: 3 / 4,  nome: '3:4',  label: t('demonstration.labels.threeFour')   },
+      { key: 'sixteenNine', ratio: 16 / 9, name: '16:9', label: t('demonstration.labels.sixteenNine') },
+      { key: 'fourThree',   ratio: 4 / 3,  name: '4:3',  label: t('demonstration.labels.fourThree')   },
+      { key: 'square',      ratio: 1,      name: '1:1',  label: t('demonstration.labels.square')      },
+      { key: 'threeFour',   ratio: 3 / 4,  name: '3:4',  label: t('demonstration.labels.threeFour')   },
     ];
   });
   protected readonly img = IMG;
@@ -510,11 +510,11 @@ export class NdsAspectRatioDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'avatar',   nome: 'Avatar',   path: '?path=/docs/ui-avatar--docs'   },
-      { key: 'card',     nome: 'Card',     path: '?path=/docs/ui-card--docs'     },
-      { key: 'skeleton', nome: 'Skeleton', path: '?path=/docs/ui-skeleton--docs' },
-    ].map(({ key, nome, path }) => ({
-      name: nome,
+      { key: 'avatar',   name: 'Avatar',   path: '?path=/docs/ui-avatar--docs'   },
+      { key: 'card',     name: 'Card',     path: '?path=/docs/ui-card--docs'     },
+      { key: 'skeleton', name: 'Skeleton', path: '?path=/docs/ui-skeleton--docs' },
+    ].map(({ key, name, path }) => ({
+      name: name,
       description: t(`related.${key}`),
       path,
     }));

@@ -42,16 +42,16 @@ function coluna(): HTMLElement {
   return root;
 }
 
-function rotulo(texto: string, id?: string): HTMLElement {
+function label(text: string, id?: string): HTMLElement {
   const label = document.createElement('span');
   label.className = 'nds-text-label';
   if (id) label.id = id;
-  label.textContent = texto;
+  label.textContent = text;
   return label;
 }
 
-const slotsDe = (raiz: HTMLElement): HTMLInputElement[] => [
-  ...raiz.querySelectorAll<HTMLInputElement>('[data-slot="input-otp-slot"]'),
+const slotsDe = (root: HTMLElement): HTMLInputElement[] => [
+  ...root.querySelectorAll<HTMLInputElement>('[data-slot="input-otp-slot"]'),
 ];
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
@@ -63,7 +63,7 @@ export const WithLabel: Story = {
     docs: {
       source: {
         transform: inputOtpSourceComposition({
-          rotulo: 'Código de verificação',
+          label: 'Código de verificação',
           ligarRotulo: true,
         }),
       },
@@ -74,7 +74,7 @@ export const WithLabel: Story = {
     const otp = createInputOTP({ length: 6 });
     otp.removeAttribute('aria-label');
     otp.setAttribute('aria-labelledby', 'comp-label-texto');
-    root.append(rotulo('Código de verificação', 'comp-label-texto'), otp);
+    root.append(label('Código de verificação', 'comp-label-texto'), otp);
     return wrap(root, FRAME_HEIGHT);
   },
   play: async ({ canvasElement, step }) => {
@@ -93,7 +93,7 @@ export const WithHelpText: Story = {
     docs: {
       source: {
         transform: inputOtpSourceComposition({
-          rotulo: 'Código de verificação',
+          label: 'Código de verificação',
           ajuda: 'Enviamos por SMS, expira em 5 min.',
         }),
       },
@@ -106,7 +106,7 @@ export const WithHelpText: Story = {
     help.id = 'comp-ajuda-texto';
     help.className = 'nds-text-caption nds-text-muted-foreground';
     help.textContent = 'Enviamos por SMS, expira em 5 min.';
-    root.append(rotulo('Código de verificação'), otp, help);
+    root.append(label('Código de verificação'), otp, help);
     return wrap(root, FRAME_HEIGHT);
   },
   play: async ({ canvasElement, step }) => {
@@ -124,10 +124,10 @@ export const WithErrorMessage: Story = {
     docs: {
       source: {
         transform: inputOtpSourceComposition({
-          rotulo: 'Código de verificação',
+          label: 'Código de verificação',
           value: '482913',
           invalid: true,
-          erro: 'Código incorreto. Verifique e tente novamente.',
+          error: 'Código incorreto. Verifique e tente novamente.',
         }),
       },
     },
@@ -144,7 +144,7 @@ export const WithErrorMessage: Story = {
     err.id = 'comp-erro-texto';
     err.className = 'nds-text-caption nds-text-destructive';
     err.textContent = 'Código incorreto. Verifique e tente novamente.';
-    root.append(rotulo('Código de verificação'), otp, err);
+    root.append(label('Código de verificação'), otp, err);
     return wrap(root, FRAME_HEIGHT);
   },
   play: async ({ canvasElement, step }) => {
@@ -167,7 +167,7 @@ export const WithResendButton: Story = {
     docs: {
       source: {
         transform: inputOtpSourceComposition({
-          rotulo: 'Código de verificação',
+          label: 'Código de verificação',
           reenvio: 'Reenviar código',
         }),
       },
@@ -187,7 +187,7 @@ export const WithResendButton: Story = {
     note.textContent = 'Não recebeu?';
 
     row.append(note, createButton({ variant: 'link', size: 'sm', label: 'Reenviar código' }));
-    root.append(rotulo('Código de verificação'), otp, row);
+    root.append(label('Código de verificação'), otp, row);
     return wrap(root, FRAME_HEIGHT);
   },
   play: async ({ canvasElement, step }) => {

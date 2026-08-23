@@ -198,7 +198,7 @@ export const Playground: Story = {
       // ainda em curso — e a comparação inverte (1216 contra 19). O estado de
       // chegada é absoluto e não tem esse ruído: o começo do trilho é zero.
       const total = canvas.getAllByRole('group').length;
-      for (let passo = 0; passo < total; passo++) {
+      for (let step = 0; step < total; step++) {
         const button = previous();
         if (button.disabled) break;
         await userEvent.click(button);

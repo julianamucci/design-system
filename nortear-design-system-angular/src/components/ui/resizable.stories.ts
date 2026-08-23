@@ -107,7 +107,7 @@ export const Playground: Story = {
     ],
   },
   render: (args) => ({
-    props: { ...args, rotulo: LABEL_HANDLE },
+    props: { ...args, label: LABEL_HANDLE },
     template: `
       <div ndsResizable [direction]="direction" class="nds-min-h-50 nds-w-full">
         <div ndsResizablePanel [defaultSize]="defaultSize" [minSize]="minSize" [maxSize]="60">
@@ -117,7 +117,7 @@ export const Playground: Story = {
           </div>
         </div>
 
-        <div ndsResizableHandle [withHandle]="withHandle" [attr.aria-label]="rotulo"></div>
+        <div ndsResizableHandle [withHandle]="withHandle" [attr.aria-label]="label"></div>
 
         <div ndsResizablePanel [minSize]="minSize">
           <div class="nds-p-4">

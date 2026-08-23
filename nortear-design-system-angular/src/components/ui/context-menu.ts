@@ -107,7 +107,7 @@ export class NdsContextMenuContent {
       <div
         rdxMenuPositioner
         class="nds-dropdown-menu-positioner"
-        [side]="lado()"
+        [side]="side()"
         [align]="alinhamento()"
         [sideOffset]="deslocamentoDoLado()"
         [alignOffset]="deslocamentoDoAlinhamento()"
@@ -120,35 +120,35 @@ export class NdsContextMenuContent {
   `,
 })
 export class NdsContextMenu {
-  private readonly raiz = inject(RdxMenuRoot, { self: true });
+  private readonly root = inject(RdxMenuRoot, { self: true });
 
-  private readonly conteudo = contentChild(NdsContextMenuContent);
+  private readonly content = contentChild(NdsContextMenuContent);
 
   protected readonly templateDoConteudo = computed<TemplateRef<unknown> | null>(
-    () => this.conteudo()?.tpl ?? null,
+    () => this.content()?.tpl ?? null,
   );
 
   protected readonly slotDoPopup = computed(() =>
-    this.raiz.isSubmenu() ? 'context-menu-sub-content' : 'context-menu-content',
+    this.root.isSubmenu() ? 'context-menu-sub-content' : 'context-menu-content',
   );
 
   // O menu de raiz é ancorado no PONTEIRO, então `side`/`align` valem pouco
   // aqui — o primitivo posiciona a partir das coordenadas do gesto. Os padrões
   // servem ao submenu, que continua ancorado no item que o abre.
-  protected readonly lado = computed<ContextMenuSide>(
-    () => this.conteudo()?.side() ?? (this.raiz.isSubmenu() ? 'right' : 'bottom'),
+  protected readonly side = computed<ContextMenuSide>(
+    () => this.content()?.side() ?? (this.root.isSubmenu() ? 'right' : 'bottom'),
   );
 
   protected readonly alinhamento = computed<ContextMenuAlign>(
-    () => this.conteudo()?.align() ?? 'start',
+    () => this.content()?.align() ?? 'start',
   );
 
   protected readonly deslocamentoDoLado = computed<number>(
-    () => this.conteudo()?.sideOffset() ?? (this.raiz.isSubmenu() ? 0 : 0),
+    () => this.content()?.sideOffset() ?? (this.root.isSubmenu() ? 0 : 0),
   );
 
   protected readonly deslocamentoDoAlinhamento = computed<number>(
-    () => this.conteudo()?.alignOffset() ?? (this.raiz.isSubmenu() ? -3 : 0),
+    () => this.content()?.alignOffset() ?? (this.root.isSubmenu() ? -3 : 0),
   );
 }
 
@@ -183,20 +183,20 @@ export class NdsContextMenu {
       <div
         rdxMenuPositioner
         class="nds-dropdown-menu-positioner"
-        [side]="conteudo()?.side() ?? 'right'"
-        [align]="conteudo()?.align() ?? 'start'"
-        [sideOffset]="conteudo()?.sideOffset() ?? 0"
-        [alignOffset]="conteudo()?.alignOffset() ?? -3"
+        [side]="content()?.side() ?? 'right'"
+        [align]="content()?.align() ?? 'start'"
+        [sideOffset]="content()?.sideOffset() ?? 0"
+        [alignOffset]="content()?.alignOffset() ?? -3"
       >
         <div rdxMenuPopup class="nds-dropdown-menu-content" data-slot="context-menu-sub-content">
-          <ng-container [ngTemplateOutlet]="conteudo()!.tpl" />
+          <ng-container [ngTemplateOutlet]="content()!.tpl" />
         </div>
       </div>
     </ng-template>
   `,
 })
 export class NdsContextMenuSub {
-  protected readonly conteudo = contentChild(NdsContextMenuContent);
+  protected readonly content = contentChild(NdsContextMenuContent);
 }
 
 /**
@@ -259,10 +259,10 @@ export class NdsContextMenuLabel {
 
   protected readonly id = injectId('nds-context-menu-label-');
 
-  private readonly grupo = injectRdxMenuGroupContext(true);
+  private readonly group = injectRdxMenuGroupContext(true);
 
   constructor() {
-    this.grupo?.labelId.set(this.id);
+    this.group?.labelId.set(this.id);
   }
 }
 
@@ -371,9 +371,9 @@ export class NdsContextMenuIcon {
       const svg = this.hostRef.nativeElement;
       svg.replaceChildren();
       for (const [tag, attrs] of CONTEXT_ICON_MAP[this.kind()]) {
-        const filho = document.createElementNS('http://www.w3.org/2000/svg', tag);
-        for (const [k, v] of Object.entries(attrs)) filho.setAttribute(k, v);
-        svg.appendChild(filho);
+        const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
+        for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
+        svg.appendChild(child);
       }
     });
   }

@@ -33,7 +33,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const abrir = async (t: HTMLElement) => {
+const open = async (t: HTMLElement) => {
   if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
 };
@@ -109,15 +109,15 @@ export const WithIconInTrigger: Story = {
       // Com o ícone sem aria-hidden, o nome do botão viraria "Informação" mais
       // o que o leitor inventasse do SVG — e o gatilho deixaria de ser
       // localizável pelo próprio rótulo.
-      const gatilho = canvas.getByRole('button', { name: 'Informação' });
-      await expect(gatilho).not.toBeNull();
+      const trigger = canvas.getByRole('button', { name: 'Informação' });
+      await expect(trigger).not.toBeNull();
       for (const svg of canvasElement.querySelectorAll('.nds-icon-sm')) {
         await expect(svg.getAttribute('aria-hidden')).toBe('true');
       }
     });
 
     await step('Clicar no gatilho abre o item', async () => {
-      await abrir(canvas.getByRole('button', { name: 'Informação' }));
+      await open(canvas.getByRole('button', { name: 'Informação' }));
     });
   },
 };
@@ -232,8 +232,8 @@ export const RichContent: Story = {
 
     await step('Os dois itens abrem juntos e o conteúdo rico aparece', async () => {
       const triggers = canvas.getAllByRole('button');
-      await abrir(triggers[0]);
-      await abrir(triggers[1]);
+      await open(triggers[0]);
+      await open(triggers[1]);
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
       await expect(canvas.getByRole('table')).toBeVisible();
       await expect(canvas.getAllByRole('listitem').length).toBe(3);
@@ -291,8 +291,8 @@ export const FAQ: Story = {
 
     await step('Abrir uma pergunta fecha a anterior (modo único)', async () => {
       const triggers = canvas.getAllByRole('button');
-      await abrir(triggers[0]);
-      await abrir(triggers[1]);
+      await open(triggers[0]);
+      await open(triggers[1]);
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
     });
   },

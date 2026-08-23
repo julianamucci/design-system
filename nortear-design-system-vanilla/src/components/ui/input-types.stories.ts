@@ -26,7 +26,7 @@ export const Text: Story = {
   render: () =>
     fieldLabelled({
       id: 'tipo-text',
-      rotulo: 'Nome completo',
+      label: 'Nome completo',
       type: 'text',
       placeholder: 'ex: João da Silva',
     }),
@@ -57,7 +57,7 @@ export const Email: Story = {
   render: () =>
     fieldLabelled({
       id: 'tipo-email',
-      rotulo: 'Email',
+      label: 'Email',
       type: 'email',
       placeholder: 'ex: joao@empresa.com',
     }),
@@ -86,7 +86,7 @@ export const Password: Story = {
   render: () =>
     fieldLabelled({
       id: 'tipo-password',
-      rotulo: 'Senha',
+      label: 'Senha',
       type: 'password',
       placeholder: '••••••••',
     }),
@@ -113,7 +113,7 @@ export const Number: Story = {
     },
   },
   render: () =>
-    fieldLabelled({ id: 'tipo-number', rotulo: 'Quantidade', type: 'number', placeholder: '0' }),
+    fieldLabelled({ id: 'tipo-number', label: 'Quantidade', type: 'number', placeholder: '0' }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('Input do tipo number renderizado', async () => {
@@ -144,7 +144,7 @@ export const Search: Story = {
   render: () =>
     fieldLabelled({
       id: 'tipo-search',
-      rotulo: 'Buscar',
+      label: 'Buscar',
       type: 'search',
       placeholder: 'Buscar componentes...',
     }),
@@ -177,7 +177,7 @@ export const File: Story = {
       },
     },
   },
-  render: () => fieldLabelled({ id: 'tipo-file', rotulo: 'Arquivo', type: 'file' }),
+  render: () => fieldLabelled({ id: 'tipo-file', label: 'Arquivo', type: 'file' }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 

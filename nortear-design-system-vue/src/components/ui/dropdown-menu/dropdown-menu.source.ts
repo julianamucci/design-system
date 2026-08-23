@@ -66,14 +66,14 @@ const BASE = ['DropdownMenu', 'DropdownMenuContent', 'DropdownMenuTrigger'];
  *
  * O conteúdo já chega indentado com quatro espaços.
  */
-function menu(opcoes: { gatilho: string; conteudo: string; raiz?: string }): string {
-  const { gatilho, conteudo, raiz = '' } = opcoes;
-  return `<DropdownMenu${attrs(raiz)}>
+function menu(options: { trigger: string; content: string; root?: string }): string {
+  const { trigger, content, root = '' } = options;
+  return `<DropdownMenu${attrs(root)}>
   <DropdownMenuTrigger as-child>
-    <Button variant="outline">${gatilho}</Button>
+    <Button variant="outline">${trigger}</Button>
   </DropdownMenuTrigger>
   <DropdownMenuContent>
-${conteudo}
+${content}
   </DropdownMenuContent>
 </DropdownMenu>`;
 }
@@ -96,12 +96,12 @@ export const dropdownMenuSource: SourceTransform<DropdownMenuArgs> = (_gerado, c
       'DropdownMenuSeparator',
     ]),
     menu({
-      raiz: attrs(
+      root: attrs(
         attrBool('default-open', defaultOpen, false),
         attrBool('modal', modal, true),
       ).trim(),
-      gatilho: 'Abrir menu',
-      conteudo: `    <DropdownMenuGroup>
+      trigger: 'Abrir menu',
+      content: `    <DropdownMenuGroup>
       <DropdownMenuLabel>Conta</DropdownMenuLabel>
       <DropdownMenuItem>Perfil</DropdownMenuItem>
       <DropdownMenuItem>Configurações</DropdownMenuItem>
@@ -122,8 +122,8 @@ export function dropdownMenuDefaultSource(): string {
   return vueSnippet(
     importing([...BASE, 'DropdownMenuItem']),
     menu({
-      gatilho: 'Conta',
-      conteudo: `    <DropdownMenuItem>Perfil</DropdownMenuItem>
+      trigger: 'Conta',
+      content: `    <DropdownMenuItem>Perfil</DropdownMenuItem>
     <DropdownMenuItem>Configurações</DropdownMenuItem>
     <DropdownMenuItem>Equipe</DropdownMenuItem>`,
     }),
@@ -140,8 +140,8 @@ export function dropdownMenuDestructiveSource(): string {
   return vueSnippet(
     importing([...BASE, 'DropdownMenuItem', 'DropdownMenuSeparator']),
     menu({
-      gatilho: 'Conta',
-      conteudo: `    <DropdownMenuItem>Perfil</DropdownMenuItem>
+      trigger: 'Conta',
+      content: `    <DropdownMenuItem>Perfil</DropdownMenuItem>
     <DropdownMenuSeparator />
     <DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>`,
     }),
@@ -158,8 +158,8 @@ export function dropdownMenuClosedSource(): string {
   return vueSnippet(
     importing([...BASE, 'DropdownMenuItem']),
     menu({
-      gatilho: 'Abrir menu',
-      conteudo: `    <DropdownMenuItem>Perfil</DropdownMenuItem>
+      trigger: 'Abrir menu',
+      content: `    <DropdownMenuItem>Perfil</DropdownMenuItem>
     <DropdownMenuItem>Sair</DropdownMenuItem>`,
     }),
   );
@@ -175,9 +175,9 @@ export function dropdownMenuOpenSource(): string {
   return vueSnippet(
     importing([...BASE, 'DropdownMenuItem']),
     menu({
-      raiz: 'default-open',
-      gatilho: 'Abrir menu',
-      conteudo: `    <DropdownMenuItem>Perfil</DropdownMenuItem>
+      root: 'default-open',
+      trigger: 'Abrir menu',
+      content: `    <DropdownMenuItem>Perfil</DropdownMenuItem>
     <DropdownMenuItem>Configurações</DropdownMenuItem>
     <DropdownMenuItem>Equipe</DropdownMenuItem>`,
     }),
@@ -224,8 +224,8 @@ export function dropdownMenuItemDisabledSource(): string {
   return vueSnippet(
     importing([...BASE, 'DropdownMenuItem']),
     menu({
-      gatilho: 'Ações',
-      conteudo: `    <DropdownMenuItem>Editar</DropdownMenuItem>
+      trigger: 'Ações',
+      content: `    <DropdownMenuItem>Editar</DropdownMenuItem>
     <DropdownMenuItem disabled>Arquivar</DropdownMenuItem>
     <DropdownMenuItem>Duplicar</DropdownMenuItem>`,
     }),
@@ -246,8 +246,8 @@ export function dropdownMenuMarkupMistaSource(): string {
   return vueSnippet(
     importing([...BASE, 'DropdownMenuCheckboxItem']),
     menu({
-      gatilho: 'Colunas',
-      conteudo: `    <DropdownMenuCheckboxItem model-value="indeterminate">Nome</DropdownMenuCheckboxItem>
+      trigger: 'Colunas',
+      content: `    <DropdownMenuCheckboxItem model-value="indeterminate">Nome</DropdownMenuCheckboxItem>
     <DropdownMenuCheckboxItem :model-value="true">E-mail</DropdownMenuCheckboxItem>
     <DropdownMenuCheckboxItem :model-value="false">Telefone</DropdownMenuCheckboxItem>`,
     }),
@@ -271,8 +271,8 @@ export function dropdownMenuWithLabelSource(): string {
       'DropdownMenuSeparator',
     ]),
     menu({
-      gatilho: 'Conta',
-      conteudo: `    <DropdownMenuGroup>
+      trigger: 'Conta',
+      content: `    <DropdownMenuGroup>
       <DropdownMenuLabel>Conta</DropdownMenuLabel>
       <DropdownMenuItem>Perfil</DropdownMenuItem>
       <DropdownMenuItem>Configurações</DropdownMenuItem>
@@ -306,8 +306,8 @@ import { ref } from 'vue'
 const mostrarNome = ref(true)
 const mostrarEmail = ref(false)`,
     menu({
-      gatilho: 'Colunas',
-      conteudo: `    <DropdownMenuGroup>
+      trigger: 'Colunas',
+      content: `    <DropdownMenuGroup>
       <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
       <DropdownMenuCheckboxItem v-model="mostrarNome">Nome</DropdownMenuCheckboxItem>
       <DropdownMenuCheckboxItem v-model="mostrarEmail">E-mail</DropdownMenuCheckboxItem>
@@ -334,8 +334,8 @@ import { ref } from 'vue'
 
 const tema = ref('light')`,
     menu({
-      gatilho: 'Tema',
-      conteudo: `    <DropdownMenuRadioGroup v-model="tema">
+      trigger: 'Tema',
+      content: `    <DropdownMenuRadioGroup v-model="tema">
       <DropdownMenuLabel>Aparência</DropdownMenuLabel>
       <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
       <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
@@ -362,8 +362,8 @@ export function dropdownMenuWithSubmenuSource(): string {
       'DropdownMenuSubTrigger',
     ]),
     menu({
-      gatilho: 'Arquivo',
-      conteudo: `    <DropdownMenuItem>Renomear</DropdownMenuItem>
+      trigger: 'Arquivo',
+      content: `    <DropdownMenuItem>Renomear</DropdownMenuItem>
     <DropdownMenuSub>
       <DropdownMenuSubTrigger>Exportar</DropdownMenuSubTrigger>
       <DropdownMenuSubContent>
@@ -391,8 +391,8 @@ export function dropdownMenuWithShortcutsSource(): string {
       'DropdownMenuShortcut',
     ]),
     menu({
-      gatilho: 'Editar',
-      conteudo: `    <DropdownMenuItem>
+      trigger: 'Editar',
+      content: `    <DropdownMenuItem>
       Desfazer<DropdownMenuShortcut>Ctrl Z</DropdownMenuShortcut>
     </DropdownMenuItem>
     <DropdownMenuItem>

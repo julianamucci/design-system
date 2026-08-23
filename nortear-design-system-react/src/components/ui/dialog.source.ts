@@ -67,16 +67,16 @@ const TRIGGER = `  <DialogTrigger render={<Button variant="outline" />}>
 function dialogSnippet(
   raizProps: string,
   contentProps: string,
-  corpo: string,
+  body: string,
   header = IMPORT_BASE,
-  gatilho = TRIGGER,
+  trigger = TRIGGER,
 ): string {
   return jsxSnippet(
     header,
     `<Dialog${raizProps}>
-${gatilho}
+${trigger}
   <DialogContent${contentProps}>
-${corpo}
+${body}
   </DialogContent>
 </Dialog>`,
   );
@@ -91,11 +91,11 @@ ${corpo}
  */
 export const dialogSource: SourceTransform<DialogArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const raiz = attrs(
+  const root = attrs(
     propBool('defaultOpen', args.defaultOpen, false),
     propBool('modal', args.modal, true),
   );
-  return dialogSnippet(raiz, '', `${HEADER}\n${FOOTER}`);
+  return dialogSnippet(root, '', `${HEADER}\n${FOOTER}`);
 };
 
 /**
@@ -169,12 +169,12 @@ export function dialogNoFooterSource(): string {
 }
 
 /** Campos de formulário dentro do painel, com o rodapé DENTRO do `<form>`. */
-function form(fields: Array<{ id: string; rotulo: string; valor: string; tipo?: string }>): string {
+function form(fields: Array<{ id: string; label: string; value: string; type?: string }>): string {
   const blocks = fields
     .map(
-      ({ id, rotulo, valor, tipo }) => `      <div className="nds-stack" data-spacing="sm">
-        <Label htmlFor="${id}">${rotulo}</Label>
-        <Input id="${id}"${tipo ? ` type="${tipo}"` : ''} defaultValue="${valor}" />
+      ({ id, label, value, type }) => `      <div className="nds-stack" data-spacing="sm">
+        <Label htmlFor="${id}">${label}</Label>
+        <Input id="${id}"${type ? ` type="${type}"` : ''} defaultValue="${value}" />
       </div>`,
     )
     .join('\n');
@@ -214,8 +214,8 @@ ${TRIGGER}
   <DialogContent>
 ${HEADER}
 ${form([
-  { id: 'dialog-name', rotulo: 'Nome', valor: 'Maria Silva' },
-  { id: 'dialog-email', rotulo: 'E-mail', valor: 'maria@exemplo.com', tipo: 'email' },
+  { id: 'dialog-name', label: 'Nome', value: 'Maria Silva' },
+  { id: 'dialog-email', label: 'E-mail', value: 'maria@exemplo.com', type: 'email' },
 ])}
   </DialogContent>
 </Dialog>`,
@@ -236,8 +236,8 @@ ${TRIGGER}
   <DialogContent className="nds-sm-max-w-md">
 ${HEADER}
 ${form([
-  { id: 'profile-name', rotulo: 'Nome completo', valor: 'Maria Silva' },
-  { id: 'profile-username', rotulo: 'Nome de usuário', valor: '@mariasilva' },
+  { id: 'profile-name', label: 'Nome completo', value: 'Maria Silva' },
+  { id: 'profile-username', label: 'Nome de usuário', value: '@mariasilva' },
 ])}
   </DialogContent>
 </Dialog>`,

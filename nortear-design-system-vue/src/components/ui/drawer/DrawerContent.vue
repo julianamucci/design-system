@@ -71,7 +71,7 @@ const modal = useDrawerModal()
  * primeiro focável: focar direto um campo faria o leitor de tela anunciar o
  * campo sem antes anunciar o nome do diálogo.
  */
-const painel = ref<{ $el?: unknown } | null>(null)
+const panel = ref<{ $el?: unknown } | null>(null)
 
 async function moveFocusInside(instancia: { $el?: unknown }) {
   // Acompanha alguns quadros em vez de agir num instante só, porque a abertura
@@ -118,7 +118,7 @@ async function moveFocusInside(instancia: { $el?: unknown }) {
  * que já nasce aberto.
  */
 watch(
-  painel,
+  panel,
   async (instancia) => {
     if (!instancia) return
     await nextTick()
@@ -132,7 +132,7 @@ watch(
   <DrawerPortal>
     <DrawerOverlay />
     <DrawerContent
-      ref="painel"
+      ref="panel"
       data-slot="drawer-content"
       v-bind="{ 'aria-modal': modal ? 'true' : undefined, ...$attrs, ...forwarded }"
       :class="cn('nds-drawer-content', props.class)"

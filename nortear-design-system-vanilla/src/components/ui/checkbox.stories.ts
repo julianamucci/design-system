@@ -160,11 +160,11 @@ export const Playground: Story = {
     // vivia aqui conferia `label.htmlFor` e passou anos verde sobre um par
     // inerte: a caixa era um <div>, que `label[for]` não alcança.
     await step('Clicar no texto do rótulo foca a caixa E alterna o estado', async () => {
-      const rotulo = canvas.getByText(args.label);
+      const label = canvas.getByText(args.label);
       await desmarcar(checkbox);                       // precondição própria
       (checkbox as HTMLElement).blur();
       await expect(checkbox).not.toHaveFocus();        // o foco tem que VIR do clique
-      await userEvent.click(rotulo);
+      await userEvent.click(label);
       await expect(checkbox).toHaveFocus();
       await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'true'));
       await expect(args.onCheckedChange).toHaveBeenLastCalledWith(true);

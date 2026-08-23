@@ -41,7 +41,7 @@ export type PopoverOptions = {
  * O que a fábrica devolve.
  *
  * Os três verbos em INGLÊS, como no Sidebar desta stack — que é a forma que o
- * repositório passou a adotar. (`createHoverCard` ainda expõe `abrir`/`fechar`;
+ * repositório passou a adotar. (`createHoverCard` ainda expõe `open`/`close`;
  * renomear ali é mudança de API pública e tem dono.)
  */
 export type PopoverElement = DestroyableElement & {

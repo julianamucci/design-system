@@ -24,8 +24,8 @@
  * nenhuma, mas a forma que não pode ser sombreada é a que continua certa se
  * este módulo um dia ganhar um export com esse nome.
  */
-export function campo(raiz: HTMLElement): HTMLInputElement {
-  const el = raiz.querySelector<HTMLInputElement>('input[autocomplete="one-time-code"]');
+export function field(root: HTMLElement): HTMLInputElement {
+  const el = root.querySelector<HTMLInputElement>('input[autocomplete="one-time-code"]');
   if (!el) throw new globalThis.Error('input do OTP não encontrado');
   return el;
 }

@@ -28,7 +28,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<DropdownMenuArg
 
   // Só o que difere do padrão entra: snippet que repete valor default ensina
   // ruído a quem copia.
-  const raiz = ['<nds-dropdown-menu'].concat(modal ? [] : ['[modal]="false"']).join(' ') + '>';
+  const root = ['<nds-dropdown-menu'].concat(modal ? [] : ['[modal]="false"']).join(' ') + '>';
   const content = ['<ng-template ndsDropdownMenuContent']
     .concat(side === 'bottom' ? [] : [`side="${side}"`])
     .concat(align === 'start' ? [] : [`align="${align}"`])
@@ -40,7 +40,7 @@ import { NdsButton } from '@/components/ui/button';
 @Component({
   imports: [...NDS_DROPDOWN_MENU, NdsButton],
   template: \`
-    ${raiz}
+    ${root}
       <button ndsDropdownMenuTrigger ndsButton variant="outline">Abrir menu</button>
 
       ${content}
@@ -144,26 +144,26 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Abrir menu' });
+    const trigger = canvas.getByRole('button', { name: 'Abrir menu' });
 
     await step('O gatilho anuncia que abre um menu, e que está fechado', async () => {
-      await expect(gatilho.getAttribute('aria-haspopup')).toBe('menu');
-      await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
+      await expect(trigger.getAttribute('aria-haspopup')).toBe('menu');
+      await expect(trigger.getAttribute('aria-expanded')).toBe('false');
     });
 
     await step('Clicar abre o menu com papel de menu e foco no primeiro item', async () => {
       // Idempotente: o clique só acontece com o menu fechado, então o replay do
       // painel Interactions parte do mesmo estado da primeira rodada.
-      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
 
       const menu = await waitForPortal('menu');
-      await expect(gatilho.getAttribute('aria-expanded')).toBe('true');
+      await expect(trigger.getAttribute('aria-expanded')).toBe('true');
       await expect(args.onOpenChange).toHaveBeenCalledWith(true);
 
-      const itens = within(menu).getAllByRole('menuitem');
-      await expect(itens).toHaveLength(3);
+      const items = within(menu).getAllByRole('menuitem');
+      await expect(items).toHaveLength(3);
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(itens[0]);
+        await expect(document.activeElement).toBe(items[0]);
       });
     });
 
@@ -174,23 +174,23 @@ export const Playground: Story = {
       await userEvent.keyboard('{Enter}');
       await expect(itemChoice).toHaveBeenCalledTimes(1);
       await waitForPortalVanish('menu');
-      await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
+      await expect(trigger.getAttribute('aria-expanded')).toBe('false');
       // O foco não pode cair no corpo do documento: quem navega por teclado
       // teria de percorrer a página inteira de novo para voltar ao ponto.
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(gatilho);
+        await expect(document.activeElement).toBe(trigger);
       });
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
-      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       await waitForPortal('menu');
 
       await userEvent.keyboard('{Escape}');
       await waitForPortalVanish('menu');
-      await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
+      await expect(trigger.getAttribute('aria-expanded')).toBe('false');
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(gatilho);
+        await expect(document.activeElement).toBe(trigger);
       });
     });
   },

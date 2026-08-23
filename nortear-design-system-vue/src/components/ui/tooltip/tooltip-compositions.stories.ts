@@ -80,14 +80,14 @@ export const IconOnlyButton: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button', { name: /Salvar/i });
+    const trigger = within(canvasElement).getByRole('button', { name: /Salvar/i });
 
     await step('O nome acessível é do botão; o balão é o reforço', async () => {
-      await expect(gatilho).toHaveAttribute('aria-label', 'Salvar');
+      await expect(trigger).toHaveAttribute('aria-label', 'Salvar');
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      await expect(balaoDe(gatilho)).toBeVisible();
+      await expect(balaoDe(trigger)).toBeVisible();
     });
   },
 };
@@ -203,17 +203,17 @@ export const KeyboardShortcut: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button', { name: /Salvar/i });
+    const trigger = within(canvasElement).getByRole('button', { name: /Salvar/i });
 
     await step('O nome acessível é do botão; o atalho é o extra', async () => {
-      await expect(gatilho).toHaveAttribute('aria-label', 'Salvar');
+      await expect(trigger).toHaveAttribute('aria-label', 'Salvar');
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
     });
 
     await step('O atalho vai em <kbd>, e a folha reconhece a tecla', async () => {
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       const teclas = balao.querySelectorAll('kbd');
       await expect(teclas.length).toBe(2);
       await expect(teclas[0].textContent).toBe('Ctrl');
@@ -283,10 +283,10 @@ export const FourSides: Story = {
     });
 
     await step('Cada balão nasce do lado pedido, ou do oposto quando falta espaço', async () => {
-      for (const lado of ['top', 'right', 'bottom', 'left']) {
+      for (const side of ['top', 'right', 'bottom', 'left']) {
         // O texto identifica o balão sem depender do gatilho: aqui o que
         // interessa é de onde ele nasceu, não a ponte de acessibilidade.
-        const balao = baloes().find((b) => b.textContent?.includes(`Tooltip ${lado}`));
+        const balao = baloes().find((b) => b.textContent?.includes(`Tooltip ${side}`));
         await expect(balao).toBeTruthy();
         // Esperar o `data-side`, e não só o elemento: o balão entra no DOM
         // antes de o posicionador medir, e nesse intervalo o atributo é nulo.
@@ -295,7 +295,7 @@ export const FourSides: Story = {
         });
         // O auto-flip por colisão é comportamento documentado: perto da borda o
         // balão troca para o lado oposto em vez de sair da tela.
-        await expect([lado, oposto[lado]]).toContain(sideOf(balao!));
+        await expect([side, oposto[side]]).toContain(sideOf(balao!));
       }
     });
   },

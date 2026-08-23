@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { ToggleGroupOrientation, ToggleGroupOptions } from './toggle-group';
@@ -46,45 +46,45 @@ const ITEMS_DEFAULT: ToggleGroupSnippetItem[] = [
 ];
 
 function valueLiteral(v: string | string[]): string {
-  return Array.isArray(v) ? `[${v.map(texto).join(', ')}]` : texto(v);
+  return Array.isArray(v) ? `[${v.map(text).join(', ')}]` : text(v);
 }
 
 /** A chamada real de `createToggleGroup` com as opções da story. */
 export function toggleGroupSnippet(o: ToggleGroupSnippetOptions = {}): string {
-  const itens = o.items ?? ITEMS_DEFAULT;
-  const tipo = o.type ?? 'single';
-  const withIcon = itens.some((i) => i.icon);
+  const items = o.items ?? ITEMS_DEFAULT;
+  const type = o.type ?? 'single';
+  const withIcon = items.some((i) => i.icon);
 
-  const linesItems = itens.map((i) => {
-    const fields = opcoes([
-      ['value', texto(i.value)],
+  const linesItems = items.map((i) => {
+    const fields = options([
+      ['value', text(i.value)],
       // O item só de ícone não tem texto: `children` fica vazio e o nome
       // acessível é o que o leitor anuncia.
-      ['children', texto(i.children ?? (i.icon ? '' : i.value))],
-      ['aria-label', i['aria-label'] ? texto(i['aria-label']) : undefined],
+      ['children', text(i.children ?? (i.icon ? '' : i.value))],
+      ['aria-label', i['aria-label'] ? text(i['aria-label']) : undefined],
       ['disabled', i.disabled ? 'true' : undefined],
     ]);
     return `  { ${fields.map((c) => c.replace(/,$/, '')).join(', ')} },`;
   });
 
   const padrao =
-    o.defaultValue === null ? undefined : (o.defaultValue ?? (tipo === 'single' ? 'left' : ['left']));
+    o.defaultValue === null ? undefined : (o.defaultValue ?? (type === 'single' ? 'left' : ['left']));
   // A apresentação canônica do grupo é a contornada — é a que todas as stories
   // usam, e o que emenda os cantos internos num bloco só.
-  const variante = o.variant ?? 'outline';
+  const variant = o.variant ?? 'outline';
 
   // `items` entra abreviado: a variável já tem o nome da opção, e `items: items`
   // só faria barulho no snippet.
   const lines = [
     'items,',
-    ...opcoes([
+    ...options([
       // `role="toolbar"` sem nome é anunciado como "barra de ferramentas" e nada
       // mais — por isso o nome do grupo entra sempre.
-      ['aria-label', texto(o['aria-label'] ?? 'Alinhamento do texto')],
-      ['type', tipo !== 'single' ? texto(tipo) : undefined],
-      ['variant', variante !== 'default' ? texto(variante) : undefined],
-      ['size', o.size && o.size !== 'default' ? texto(o.size) : undefined],
-      ['orientation', o.orientation && o.orientation !== 'horizontal' ? texto(o.orientation) : undefined],
+      ['aria-label', text(o['aria-label'] ?? 'Alinhamento do texto')],
+      ['type', type !== 'single' ? text(type) : undefined],
+      ['variant', variant !== 'default' ? text(variant) : undefined],
+      ['size', o.size && o.size !== 'default' ? text(o.size) : undefined],
+      ['orientation', o.orientation && o.orientation !== 'horizontal' ? text(o.orientation) : undefined],
       ['spacing', o.spacing ? String(o.spacing) : undefined],
       ['disabled', o.disabled ? 'true' : undefined],
       ['defaultValue', padrao === undefined ? undefined : valueLiteral(padrao)],
@@ -92,7 +92,7 @@ export function toggleGroupSnippet(o: ToggleGroupSnippetOptions = {}): string {
     ]),
   ];
 
-  const icons = itens.map((i) => i.icon).filter((n): n is string => Boolean(n));
+  const icons = items.map((i) => i.icon).filter((n): n is string => Boolean(n));
 
   return snippet(
     [

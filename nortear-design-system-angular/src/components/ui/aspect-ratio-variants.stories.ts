@@ -5,11 +5,11 @@ import { NdsAspectRatio } from './aspect-ratio';
 import { IMG_PLACEHOLDER } from './aspect-ratio.stories';
 
 const PROPORCOES = [
-  { nome: '16:9',  ratio: 16 / 9  },
-  { nome: '4:3',   ratio: 4 / 3   },
-  { nome: '1:1',   ratio: 1       },
-  { nome: '3:4',   ratio: 3 / 4   },
-  { nome: '21:9',  ratio: 21 / 9  },
+  { name: '16:9',  ratio: 16 / 9  },
+  { name: '4:3',   ratio: 4 / 3   },
+  { name: '1:1',   ratio: 1       },
+  { name: '3:4',   ratio: 3 / 4   },
+  { name: '21:9',  ratio: 21 / 9  },
 ];
 
 const meta: Meta = {
@@ -32,11 +32,11 @@ export const Ratios: Story = {
     props: { proporcoes: PROPORCOES, src: IMG_PLACEHOLDER },
     template: `
       <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 12rem">
-        @for (p of proporcoes; track p.nome) {
+        @for (p of proporcoes; track p.name) {
           <div class="nds-stack" data-spacing="sm">
-            <p class="nds-text-caption nds-text-muted-foreground">{{ p.nome }}</p>
+            <p class="nds-text-caption nds-text-muted-foreground">{{ p.name }}</p>
             <div ndsAspectRatio [ratio]="p.ratio">
-              <img [src]="src" [alt]="'Exemplo na proporção ' + p.nome" />
+              <img [src]="src" [alt]="'Exemplo na proporção ' + p.name" />
             </div>
           </div>
         }
@@ -49,8 +49,8 @@ export const Ratios: Story = {
       // visual compara, e é nele que uma proporção errada salta aos olhos.
       const boxes = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="aspect-ratio"]')];
       await expect(boxes).toHaveLength(PROPORCOES.length);
-      for (const [i, caixa] of boxes.entries()) {
-        const { width, height } = caixa.getBoundingClientRect();
+      for (const [i, box] of boxes.entries()) {
+        const { width, height } = box.getBoundingClientRect();
         await expect(Math.abs(width / height - PROPORCOES[i].ratio)).toBeLessThan(0.1);
       }
     });
@@ -59,10 +59,10 @@ export const Ratios: Story = {
       // Os filhos vão para `position: absolute; inset: 0`; se essa regra sair,
       // a img volta a ter dimensão intrínseca e vaza da caixa.
       const boxes = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="aspect-ratio"]')];
-      for (const caixa of boxes) {
-        const img = caixa.querySelector<HTMLImageElement>('img')!;
+      for (const box of boxes) {
+        const img = box.querySelector<HTMLImageElement>('img')!;
         await expect(img.getBoundingClientRect().height)
-          .toBeLessThanOrEqual(caixa.getBoundingClientRect().height + 1);
+          .toBeLessThanOrEqual(box.getBoundingClientRect().height + 1);
       }
     });
   },

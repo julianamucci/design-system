@@ -60,7 +60,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<TooltipArgs> })
     align !== 'center' ? `align="${align}"` : '',
     sideOffset !== 4 ? `[sideOffset]="${sideOffset}"` : '',
   ].filter(Boolean).join(' ');
-  const conteudo = position ? `<ng-template ndsTooltipContent ${position}>` : '<ng-template ndsTooltipContent>';
+  const content = position ? `<ng-template ndsTooltipContent ${position}>` : '<ng-template ndsTooltipContent>';
 
   return `import { NDS_TOOLTIP } from '@/components/ui/tooltip';
 import { NdsButton } from '@/components/ui/button';
@@ -75,7 +75,7 @@ import { NdsButton } from '@/components/ui/button';
           ${ICON_SALVAR.replace(/\n/g, '\n  ')}
         </button>
 
-        ${conteudo}${label}</ng-template>
+        ${content}${label}</ng-template>
       </span>
     </div>
   \`,
@@ -177,37 +177,37 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="tooltip"]')!;
-    const gatilho = canvas.getByRole('button');
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="tooltip"]')!;
+    const trigger = canvas.getByRole('button');
 
     await step('O markup é o do design system, não um elemento inventado', async () => {
       // A raiz é um elemento nativo com data-slot, como no Vanilla — nada de
       // <nds-tooltip>, que quebraria o CSS e a paridade cross-stack.
-      await expect(raiz.tagName).toBe('SPAN');
-      await expect(gatilho.tagName).toBe('BUTTON');
-      await expect(gatilho).toHaveAttribute('data-slot', 'tooltip-trigger');
+      await expect(root.tagName).toBe('SPAN');
+      await expect(trigger.tagName).toBe('BUTTON');
+      await expect(trigger).toHaveAttribute('data-slot', 'tooltip-trigger');
     });
 
     await step('O gatilho icon-only tem nome acessível próprio', async () => {
       // O Tooltip é complementar: em touch não há hover, e sem o aria-label o
       // botão ficaria anônimo para quem não usa mouse.
-      await expect(gatilho).toHaveAttribute('aria-label', 'Salvar');
+      await expect(trigger).toHaveAttribute('aria-label', 'Salvar');
     });
 
     await step('Fechado, não há describedby apontando para o vazio', async () => {
       // O primitivo só escreve `aria-describedby` enquanto o balão existe. O
       // Vanilla escreve na montagem — id ausente é `aria-valid-attr-value`.
       if (!args.open) {
-        await expect(gatilho.getAttribute('aria-describedby')).toBeNull();
+        await expect(trigger.getAttribute('aria-describedby')).toBeNull();
       }
     });
 
     await step('Focar pelo teclado abre na hora, sem esperar delay', async () => {
-      const estavaClosed = balaoDe(gatilho) === null;
+      const estavaClosed = balaoDe(trigger) === null;
       const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
-      gatilho.focus();
+      trigger.focus();
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
       // O output só avisa quem consome quando o estado MUDA — se o control já
       // trouxe o balão aberto, não há transição para contar.
@@ -219,7 +219,7 @@ export const Playground: Story = {
     });
 
     await step('Aberto, o balão é um role=tooltip ligado ao gatilho', async () => {
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       await expect(balao).toHaveAttribute('role', 'tooltip');
       await expect(balao).toHaveAttribute('data-slot', 'tooltip-content');
       await expect(balao).toHaveAttribute('data-state', 'open');
@@ -239,20 +239,20 @@ export const Playground: Story = {
       // Esperar o atributo, e não só o elemento: o balão entra no DOM antes de
       // o posicionador medir, e nesse intervalo o `data-side` ainda é nulo.
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)?.getAttribute('data-side')).toBeTruthy();
+        await expect(balaoDe(trigger)?.getAttribute('data-side')).toBeTruthy();
       });
       await expect([args.side, oposto[args.side]]).toContain(
-        balaoDe(gatilho)!.getAttribute('data-side'),
+        balaoDe(trigger)!.getAttribute('data-side'),
       );
     });
 
     await step('Escape fecha e o foco fica onde estava', async () => {
       await userEvent.keyboard('{Escape}');
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).toBeNull();
+        await expect(balaoDe(trigger)).toBeNull();
       });
-      await expect(gatilho).toHaveFocus();
-      await expect(gatilho.getAttribute('aria-describedby')).toBeNull();
+      await expect(trigger).toHaveFocus();
+      await expect(trigger.getAttribute('aria-describedby')).toBeNull();
     });
   },
 };

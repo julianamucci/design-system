@@ -81,7 +81,7 @@ export const Playground: Story = {
   },
   play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
-    const lista = canvas.getByRole('tablist');
+    const list = canvas.getByRole('tablist');
     const abas = canvas.getAllByRole('tab');
     const inicial = canvas.getByRole('tab', { name: LABELS[args.defaultValue] });
     const propriedades = canvas.getByRole('tab', { name: LABELS.properties });
@@ -91,7 +91,7 @@ export const Playground: Story = {
     await step('Os três papéis do padrão tabs estão no DOM', async () => {
       // A asserção já existia e passava — com a story escrevendo o atributo por
       // fora. O que ela prova agora é que a OPÇÃO da factory chega ao tablist.
-      await expect(lista).toHaveAttribute('aria-label', args['aria-label']);
+      await expect(list).toHaveAttribute('aria-label', args['aria-label']);
       await expect(abas).toHaveLength(3);
       // Só o painel da aba ativa está na árvore de acessibilidade — os demais
       // saem por `hidden`, que é o que impede o leitor de tela de lê-los.
@@ -107,9 +107,9 @@ export const Playground: Story = {
     });
 
     await step('aria-controls e aria-labelledby fecham o par nos dois sentidos', async () => {
-      const painel = canvas.getByRole('tabpanel');
-      await expect(inicial.getAttribute('aria-controls')).toBe(painel.id);
-      await expect(painel.getAttribute('aria-labelledby')).toBe(inicial.id);
+      const panel = canvas.getByRole('tabpanel');
+      await expect(inicial.getAttribute('aria-controls')).toBe(panel.id);
+      await expect(panel.getAttribute('aria-labelledby')).toBe(inicial.id);
     });
 
     await step('Clicar numa aba ativa ela e troca o painel', async () => {

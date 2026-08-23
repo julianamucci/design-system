@@ -61,9 +61,9 @@ export const WithIcon: Story = {
 
     await step('O ícone é alinhado à esquerda do texto', async () => {
       const icone = alerta.querySelector<SVGSVGElement>(':scope > svg')!;
-      const titulo = canvas.getByText('Informação');
+      const title = canvas.getByText('Informação');
       await expect(icone.getBoundingClientRect().right).toBeLessThanOrEqual(
-        titulo.getBoundingClientRect().left,
+        title.getBoundingClientRect().left,
       );
     });
   },

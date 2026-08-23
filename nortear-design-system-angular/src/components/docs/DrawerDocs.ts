@@ -282,14 +282,14 @@ const TOKENS_CODE = `/* Tokens que o painel consome */
    borda e cantos:
    .nds-drawer-content[data-vaul-drawer-direction="right"] { right: 0; … } */`;
 
-const VARIANT_CODE = (direction: DrawerDirection, titulo: string) => `<nds-drawer${
+const VARIANT_CODE = (direction: DrawerDirection, title: string) => `<nds-drawer${
   direction === 'bottom' ? '' : ` direction="${direction}"`
 }>
   <button ndsDrawerTrigger ndsButton variant="outline">Abrir</button>
 
   <ng-template ndsDrawerContent>
     <div ndsDrawerHeader>
-      <h2 ndsDrawerTitle>${titulo}</h2>
+      <h2 ndsDrawerTitle>${title}</h2>
       <p ndsDrawerDescription>Atualize seus dados pessoais e foto.</p>
     </div>
 
@@ -510,7 +510,7 @@ const DIRECOES: DrawerDirection[] = ['bottom', 'top', 'left', 'right'];
           </div>
           <div ndsDrawerBody class="nds-stack" data-spacing="sm">
             @for (p of paragrafosLongos(); track p.id) {
-              <p class="nds-text-body nds-text-muted-foreground">{{ p.texto }}</p>
+              <p class="nds-text-body nds-text-muted-foreground">{{ p.text }}</p>
             }
           </div>
           <div ndsDrawerFooter>
@@ -584,19 +584,19 @@ const DIRECOES: DrawerDirection[] = ['bottom', 'top', 'left', 'right'];
           <div class="nds-cluster nds-w-full" data-spacing="md">
             @for (d of direcoes(); track d.key) {
               <div class="nds-stack" data-spacing="xs">
-                <p class="nds-text-caption nds-text-muted-foreground">{{ d.rotulo }}</p>
+                <p class="nds-text-caption nds-text-muted-foreground">{{ d.label }}</p>
 
                 <nds-drawer
                   [direction]="d.key"
                   (onOpenChange)="aoMudarPainel(d.key, $event)"
                 >
                   <button ndsDrawerTrigger ndsButton variant="outline">
-                    {{ d.nome }}
+                    {{ d.name }}
                   </button>
 
                   <ng-template ndsDrawerContent>
                     <div ndsDrawerHeader>
-                      <h3 ndsDrawerTitle>{{ d.rotulo }}</h3>
+                      <h3 ndsDrawerTitle>{{ d.label }}</h3>
                       <p ndsDrawerDescription>{{ d.estilo }}</p>
                     </div>
 
@@ -740,15 +740,15 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
 
   /**
    * As quatro direções, derivadas do conteúdo — nunca contadas à mão.
-   * `nome` é o rótulo curto da variante, `rotulo` a legenda da demonstração e
+   * `name` é o rótulo curto da variante, `label` a legenda da demonstração e
    * `estilo` a descrição de como o painel se comporta naquela direção.
    */
   protected readonly direcoes = computed(() => {
     dict();
     return DIRECOES.map((key) => ({
       key,
-      nome: t(`variants.items.${key}`),
-      rotulo: stripHtml(t(`demonstration.labels.${key}`)),
+      name: t(`variants.items.${key}`),
+      label: stripHtml(t(`demonstration.labels.${key}`)),
       estilo: stripHtml(t(`variants.styles.${key}`)),
     }));
   });
@@ -757,7 +757,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
   protected readonly paragrafosLongos = computed(() => {
     dict();
     const base = stripHtml(t('variants.items.withScroll.use'));
-    return Array.from({ length: 12 }, (_, i) => ({ id: `p-${i}`, texto: `${i + 1}. ${base}` }));
+    return Array.from({ length: 12 }, (_, i) => ({ id: `p-${i}`, text: `${i + 1}. ${base}` }));
   });
 
   /** Aviso do "don't" descritivo do segundo par — a consequência, sem rodeio. */
@@ -778,14 +778,14 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
    * `@/lib/analytics`. O payload leva valores estáveis (a direção, o motivo),
    * nunca o texto traduzido, que viraria três valores distintos no GA4.
    */
-  protected aoMudarPainel(direcao: DrawerDirection, evento: RdxDialogOpenChange): void {
+  protected aoMudarPainel(direction: DrawerDirection, evento: RdxDialogOpenChange): void {
     if (evento.open) {
-      track('drawer_open', { component: 'drawer', label: direcao, location: 'docs_demo' });
+      track('drawer_open', { component: 'drawer', label: direction, location: 'docs_demo' });
       return;
     }
     track('drawer_close', {
       component: 'drawer',
-      label: direcao,
+      label: direction,
       reason: drawerCloseReason(evento.reason),
       location: 'docs_demo',
     });
@@ -1082,9 +1082,9 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
       string,
       { accessibility?: { screenReader?: Record<string, string> } }
     >;
-    const bloco = byLocale[locale]?.accessibility?.screenReader ?? {};
+    const block = byLocale[locale]?.accessibility?.screenReader ?? {};
     // `title` é o cabeçalho da seção, não uma linha da lista.
-    return Object.entries(bloco).filter(([k]) => k !== 'title').map(([, v]) => v);
+    return Object.entries(block).filter(([k]) => k !== 'title').map(([, v]) => v);
   });
 
   protected readonly relatedItems = computed(() => {

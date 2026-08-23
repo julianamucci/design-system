@@ -167,7 +167,7 @@ function create(type: ToastType, title: string, opts: ToastOptions = {}): number
     visible: signal(false),
   };
 
-  queue.update((atual) => [...atual, enter]);
+  queue.update((current) => [...current, enter]);
 
   // Dois quadros: o elemento precisa existir com `data-visible="false"` para
   // que a virada para `true` seja uma TRANSIÇÃO, e não o estado inicial. Sem
@@ -181,25 +181,25 @@ function create(type: ToastType, title: string, opts: ToastOptions = {}): number
 
 /** Troca tipo e texto de uma torrada viva, mantendo o mesmo nó no DOM. */
 function update(id: number, patch: Partial<Toast>, duration: number): void {
-  const alvo = queue().find((t) => t.id === id);
-  if (!alvo) return;
-  queue.update((atual) => atual.map((t) => (t.id === id ? { ...t, ...patch } : t)));
+  const target = queue().find((t) => t.id === id);
+  if (!target) return;
+  queue.update((current) => current.map((t) => (t.id === id ? { ...t, ...patch } : t)));
   schedule(id, duration);
 }
 
 function dismiss(id: number): void {
-  const alvo = queue().find((t) => t.id === id);
-  if (!alvo || exits.has(id)) return;
+  const target = queue().find((t) => t.id === id);
+  if (!target || exits.has(id)) return;
 
   stopTimer(id);
   timers.delete(id);
-  alvo.visible.set(false);
+  target.visible.set(false);
 
   exits.set(
     id,
     setTimeout(() => {
       exits.delete(id);
-      queue.update((atual) => atual.filter((t) => t.id !== id));
+      queue.update((current) => current.filter((t) => t.id !== id));
     }, EXIT_DURATION),
   );
 }
@@ -490,9 +490,9 @@ export class NdsToaster implements OnDestroy {
    * espelha a fila item a item, inclusive as que estão saindo.
    */
   protected aoEscape(evento: Event): void {
-    const alvo = (evento.target as HTMLElement | null)?.closest<HTMLElement>('.nds-toast');
-    if (!alvo) return;
-    const index = Array.prototype.indexOf.call(this.hostRef.nativeElement.children, alvo);
+    const target = (evento.target as HTMLElement | null)?.closest<HTMLElement>('.nds-toast');
+    if (!target) return;
+    const index = Array.prototype.indexOf.call(this.hostRef.nativeElement.children, target);
     const enter = this.toastEls()[index];
     if (enter) dismiss(enter.id);
   }

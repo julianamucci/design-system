@@ -76,8 +76,8 @@ export const SingleSeries: Story = {
       // A contrapartida de esconder a legenda: com uma série só não há números
       // se sobrepondo, então o valor exato é escrito no desenho.
       const texts = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
-      for (const valor of SERIE_UNICA[0].data) {
-        await expect(texts).toContain(String(valor));
+      for (const value of SERIE_UNICA[0].data) {
+        await expect(texts).toContain(String(value));
       }
     });
 
@@ -176,7 +176,7 @@ export const DarkTheme: Story = {
     // está declarada só em :root e nos três temas de marca, sem bloco .dark, e
     // o comentário em themes/default.css diz isso com todas as letras. Medir a
     // barra afirmaria que a cor muda, e ela não muda em tema nenhum.
-    const rotulo = chart.querySelector<SVGTextElement>('svg text')!;
+    const label = chart.querySelector<SVGTextElement>('svg text')!;
 
     await step('Os dois tipos estão na foto', async () => {
       // O item de regressão visual fala de barras E linhas.
@@ -187,12 +187,12 @@ export const DarkTheme: Story = {
     await step('Trocar o tema recolore sem remontar', async () => {
       try {
         html.classList.remove('dark');
-        const light = getComputedStyle(rotulo).fill;
+        const light = getComputedStyle(label).fill;
         html.classList.add('dark');
-        const escuro = getComputedStyle(rotulo).fill;
+        const escuro = getComputedStyle(label).fill;
         // Mesmo nó no DOM: nada foi recriado, só a cascata resolveu outro token.
         await expect(escuro).not.toBe(light);
-        await expect(chart.querySelector('svg text')).toBe(rotulo);
+        await expect(chart.querySelector('svg text')).toBe(label);
         await expect(chart.querySelector('rect[data-series="0"]')).toBe(barra);
       } finally {
         // Repõe o estado que ENCONTROU. No Storybook o `globals` desta story
@@ -248,8 +248,8 @@ export const GraphicContrast: Story = {
     });
 
     await step('O texto dos eixos passa de 4.5:1', async () => {
-      const rotulo = chart.querySelector<SVGTextElement>('svg text')!;
-      const cor = rgbColor(getComputedStyle(rotulo).fill)!;
+      const label = chart.querySelector<SVGTextElement>('svg text')!;
+      const cor = rgbColor(getComputedStyle(label).fill)!;
       await expect(contrastRatio(cor, background)).toBeGreaterThanOrEqual(4.5);
     });
   },

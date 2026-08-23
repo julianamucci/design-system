@@ -67,13 +67,13 @@ const MINIMO = 3;
  * `--background` sobre o trilho dava 1.25:1 — polegar invisível).
  */
 function cenario(): HTMLElement {
-  const raiz = document.createElement('div');
+  const root = document.createElement('div');
   // .nds-stack já dá 16px de ritmo vertical entre os filhos diretos; o fundo
   // opaco é o que a medição compara contra (o campo é transparente ao redor).
-  raiz.className = 'nds-bg-background nds-stack nds-p-4';
+  root.className = 'nds-bg-background nds-stack nds-p-4';
 
-  const campo = createInput({ placeholder: 'Campo de texto' });
-  campo.setAttribute('aria-label', 'Campo de texto');
+  const field = createInput({ placeholder: 'Campo de texto' });
+  field.setAttribute('aria-label', 'Campo de texto');
 
   const area = createTextarea({ placeholder: 'Área de texto' });
   area.setAttribute('aria-label', 'Área de texto');
@@ -92,10 +92,10 @@ function cenario(): HTMLElement {
   });
 
   const marca = createCheckbox({ id: 'borda-de-campo-checkbox', 'aria-label': 'Caixa de seleção' });
-  const chave = createSwitch({ checked: false, 'aria-label': 'Chave liga-desliga' });
+  const key = createSwitch({ checked: false, 'aria-label': 'Chave liga-desliga' });
 
-  const grupo = document.createElement('div');
-  grupo.className = 'nds-input-group';
+  const group = document.createElement('div');
+  group.className = 'nds-input-group';
   const addon = document.createElement('span');
   addon.className = 'nds-input-group-addon';
   addon.dataset.align = 'inline-start';
@@ -104,19 +104,19 @@ function cenario(): HTMLElement {
   interno.setAttribute('aria-label', 'Endereço do site');
   interno.classList.add('nds-input-group-control');
   interno.dataset.slot = 'input-group-control';
-  grupo.append(addon, interno);
+  group.append(addon, interno);
 
-  raiz.append(campo, area, choice, marca, chave, grupo);
-  return raiz;
+  root.append(field, area, choice, marca, key, group);
+  return root;
 }
 
 const TARGETS: ColorTarget[] = [
-  { nome: 'input', selector: 'input.nds-input:not(.nds-input-group-control)' },
-  { nome: 'textarea', selector: '.nds-textarea' },
-  { nome: 'select (gatilho)', selector: '.nds-select-trigger' },
-  { nome: 'checkbox', selector: '.nds-checkbox' },
-  { nome: 'input-group', selector: '.nds-input-group' },
-  { nome: 'switch (trilho desligado)', selector: '.nds-switch', lado: 'preenchimento' },
+  { name: 'input', selector: 'input.nds-input:not(.nds-input-group-control)' },
+  { name: 'textarea', selector: '.nds-textarea' },
+  { name: 'select (gatilho)', selector: '.nds-select-trigger' },
+  { name: 'checkbox', selector: '.nds-checkbox' },
+  { name: 'input-group', selector: '.nds-input-group' },
+  { name: 'switch (trilho desligado)', selector: '.nds-switch', side: 'preenchimento' },
 ];
 
 /**
@@ -130,8 +130,8 @@ const TARGETS: ColorTarget[] = [
 export const RestAlcanca3a1: Story = {
   render: cenario,
   play: async ({ canvasElement }) => {
-    const raiz = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
-    const measurements = themeMeasureColor(raiz, TARGETS);
+    const root = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
+    const measurements = themeMeasureColor(root, TARGETS);
 
     await expect(measurements).toHaveLength(TARGETS.length * 6);
 
@@ -155,8 +155,8 @@ export const RestAlcanca3a1: Story = {
 export const RestHoverEFocoNotFicamBelow: Story = {
   render: cenario,
   play: async ({ canvasElement }) => {
-    const raiz = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
-    const campo = raiz.querySelector<HTMLElement>('input.nds-input:not(.nds-input-group-control)')!;
+    const root = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
+    const field = root.querySelector<HTMLElement>('input.nds-input:not(.nds-input-group-control)')!;
     const doc = canvasElement.ownerDocument;
 
     const hoverColor = ruleDeclaration(
@@ -172,20 +172,20 @@ export const RestHoverEFocoNotFicamBelow: Story = {
     await expect(hoverColor, 'regra de hover do .nds-input sumiu da folha').not.toBeNull();
     await expect(focusColor, 'regra de foco do .nds-input sumiu da folha').not.toBeNull();
 
-    campo.style.transition = 'none';
-    const problemas = byTheme(raiz, (tema, modo) => {
-      const background = getComputedStyle(campo).backgroundColor;
-      const rest = ratio(getComputedStyle(campo).borderTopColor, background)?.ratio ?? 0;
-      const hover = ratio(resolveColor(raiz, hoverColor!) ?? background, background)?.ratio ?? 0;
-      const focus = ratio(resolveColor(raiz, focusColor!) ?? background, background)?.ratio ?? 0;
+    field.style.transition = 'none';
+    const problemas = byTheme(root, (theme, mode) => {
+      const background = getComputedStyle(field).backgroundColor;
+      const rest = ratio(getComputedStyle(field).borderTopColor, background)?.ratio ?? 0;
+      const hover = ratio(resolveColor(root, hoverColor!) ?? background, background)?.ratio ?? 0;
+      const focus = ratio(resolveColor(root, focusColor!) ?? background, background)?.ratio ?? 0;
 
-      const line = `${tema}/${modo} repouso ${rest}:1 · hover ${hover}:1 · foco ${focus}:1`;
+      const line = `${theme}/${mode} repouso ${rest}:1 · hover ${hover}:1 · foco ${focus}:1`;
       if (hover < rest) return `hover ABAIXO do repouso — ${line}`;
       if (focus < rest) return `foco ABAIXO do repouso — ${line}`;
       if (focus < MINIMO) return `foco abaixo de ${MINIMO}:1 — ${line}`;
       return null;
     });
-    campo.style.removeProperty('transition');
+    field.style.removeProperty('transition');
 
     await expect(problemas.filter(Boolean)).toEqual([]);
   },

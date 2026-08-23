@@ -211,16 +211,16 @@ export const SemanticColor: Story = {
 
     await step('Cada variante pinta a barra de uma cor diferente', async () => {
       const [ok, critico] = canvas.getAllByRole('progressbar');
-      const colorOf = (raiz: HTMLElement) =>
-        getComputedStyle(indicadorDoProgresso(raiz)).backgroundColor;
+      const colorOf = (root: HTMLElement) =>
+        getComputedStyle(indicadorDoProgresso(root)).backgroundColor;
       await expect(colorOf(ok)).not.toBe(colorOf(critico));
     });
 
     await step('As duas variantes mantêm 3:1 contra a trilha', async () => {
       // O contraste não pode depender de qual variante alguém escolheu — é o
       // motivo de a trilha continuar neutra em vez de acompanhar a cor.
-      for (const raiz of canvas.getAllByRole('progressbar')) {
-        await expect(contrastBarTrack(raiz)).toBeGreaterThanOrEqual(3);
+      for (const root of canvas.getAllByRole('progressbar')) {
+        await expect(contrastBarTrack(root)).toBeGreaterThanOrEqual(3);
       }
     });
 

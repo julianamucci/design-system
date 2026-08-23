@@ -57,8 +57,8 @@ export const Loaded: Story = {
     const root = canvasElement.querySelector('[data-slot="avatar"]')!;
     await waitFor(async () => {
       const r = root.getBoundingClientRect();
-      const alvo = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-      await expect(alvo && alvo.closest('[data-slot="avatar-image"]')).not.toBeNull();
+      const target = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      await expect(target && target.closest('[data-slot="avatar-image"]')).not.toBeNull();
     }, { timeout: 5000 });
   },
 };
@@ -123,8 +123,8 @@ export const Failed: Story = {
     // centro do avatar — e é isso que o leitor vê.
     const root = canvasElement.querySelector('[data-slot="avatar"]')!;
     const r = root.getBoundingClientRect();
-    const alvo = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-    await expect(alvo && alvo.closest('[data-slot="avatar-image"]')).toBeNull();
+    const target = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    await expect(target && target.closest('[data-slot="avatar-image"]')).toBeNull();
 
     // accessibility.item2 — com a foto fora, o fallback é o ÚNICO conteúdo do
     // avatar. Marcá-lo com aria-hidden (que a regra antiga do conteúdo

@@ -51,20 +51,20 @@ const { t } = useTranslation(iconsTranslations as Record<string, unknown>);
 
 /** Nome + geometria de cada ícone, na ordem em que o pacote os expõe. */
 interface CatalogoIcon {
-  nome: string;
+  name: string;
   no: IconNode;
 }
 
-const CATALOGO: CatalogoIcon[] = ICON_NAMES.map((nome) => ({
-  nome,
+const CATALOGO: CatalogoIcon[] = ICON_NAMES.map((name) => ({
+  name,
   // O JSON guarda `[tag, atributos][]`, a mesma forma do IconNode; o cast só
   // reaperta a tag de `string` para o union de tags SVG que o tipo declara.
-  no: CATALOGO_LUCIDE[nome] as unknown as IconNode,
+  no: CATALOGO_LUCIDE[name] as unknown as IconNode,
 }));
 
 /** Normaliza para a busca casar "arrowright", "arrow-right" e "Arrow Right". */
-function normalizar(texto: string): string {
-  return texto.trim().toLowerCase().replace(/[\s\-_]+/g, '');
+function normalizar(text: string): string {
+  return text.trim().toLowerCase().replace(/[\s\-_]+/g, '');
 }
 
 // Os snippets são curtos de propósito: `.nds-docs-code` rola na horizontal, e
@@ -248,27 +248,27 @@ const REGRAS_DE_ACESSIBILIDADE = [
           [class.is-hidden]="noResults()"
           [attr.aria-label]="textoDeDisponiveis()"
         >
-          @for (icone of catalogo; track icone.nome) {
+          @for (icone of catalogo; track icone.name) {
             <li
               class="nds-icon-grid-item"
-              [class.is-hidden]="!visiveis().has(icone.nome)"
-              [attr.data-icon-name]="icone.nome"
+              [class.is-hidden]="!visiveis().has(icone.name)"
+              [attr.data-icon-name]="icone.name"
             >
               <button
                 type="button"
                 class="nds-icon-tile"
-                [attr.aria-label]="t('copy.tooltip') + ' ' + icone.nome"
-                (click)="copiar(icone.nome)"
+                [attr.aria-label]="t('copy.tooltip') + ' ' + icone.name"
+                (click)="copiar(icone.name)"
               >
                 <span class="nds-icon-tile-svg">
                   <svg [ndsLucideGlyph]="icone.no" class="nds-icon-lg"></svg>
                 </span>
-                <span class="nds-icon-tile-name">{{ icone.nome }}</span>
+                <span class="nds-icon-tile-name">{{ icone.name }}</span>
                 <span
                   class="nds-icon-tile-tooltip"
-                  [class.is-visible]="copiado() === icone.nome"
+                  [class.is-visible]="copiado() === icone.name"
                   aria-hidden="true"
-                  >{{ copiado() === icone.nome ? t('copy.copied') : t('copy.tooltip') }}</span
+                  >{{ copiado() === icone.name ? t('copy.copied') : t('copy.tooltip') }}</span
                 >
               </button>
             </li>
@@ -305,10 +305,10 @@ export class NdsIconsDocs implements OnInit, OnDestroy {
 
   /** Nomes que passam no filtro. Set, e não array: o template consulta 2000×. */
   protected readonly visiveis = computed(() => {
-    const consulta = normalizar(this.search());
-    if (!consulta) return new Set(CATALOGO.map((i) => i.nome));
+    const query = normalizar(this.search());
+    if (!query) return new Set(CATALOGO.map((i) => i.name));
     return new Set(
-      CATALOGO.filter((i) => normalizar(i.nome).includes(consulta)).map((i) => i.nome),
+      CATALOGO.filter((i) => normalizar(i.name).includes(query)).map((i) => i.name),
     );
   });
 
@@ -320,23 +320,23 @@ export class NdsIconsDocs implements OnInit, OnDestroy {
 
   protected readonly contagemText = computed(() => {
     const total = this.visiveis().size;
-    const consulta = this.search().trim();
-    if (!consulta) return t('search.count').replace('{count}', String(total));
+    const query = this.search().trim();
+    if (!query) return t('search.count').replace('{count}', String(total));
     return t('search.results')
       .replace('{count}', String(total))
       .replace('{plural}', total !== 1 ? 's' : '')
-      .replace('{query}', consulta);
+      .replace('{query}', query);
   });
 
   protected aoBuscar(evento: Event): void {
     this.search.set((evento.target as HTMLInputElement).value);
   }
 
-  protected copiar(nome: string): void {
+  protected copiar(name: string): void {
     navigator.clipboard
-      .writeText(nome)
+      .writeText(name)
       .then(() => {
-        this.copiado.set(nome);
+        this.copiado.set(name);
         clearTimeout(this.relogioDeCopia);
         this.relogioDeCopia = setTimeout(() => this.copiado.set(null), 1500);
       })

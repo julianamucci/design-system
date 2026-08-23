@@ -565,10 +565,10 @@ interface InputProps extends HTMLInputAttributes {
           value: $tStore('tokens.table.class'),
           description: $tStore('tokens.table.part'),
         }}
-        items={FIELD_TOKENS.map(([token, selector, chave]) => ({
+        items={FIELD_TOKENS.map(([token, selector, key]) => ({
           token,
           value: selector,
-          description: $tStore(`tokens.table.${chave}`),
+          description: $tStore(`tokens.table.${key}`),
         }))}
         customizationTitle={$tStore('tokens.customizationTitle')}
         customizationCode={codeTokenCustomization}

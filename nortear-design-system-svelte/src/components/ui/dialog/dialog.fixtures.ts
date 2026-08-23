@@ -12,14 +12,14 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 // componente.
 
 /** O painel vive no `<body>`, fora do `canvasElement` — o portal é o ponto. */
-export const painel = (): HTMLElement | null =>
+export const panel = (): HTMLElement | null =>
   document.querySelector<HTMLElement>('[data-slot="dialog-content"]');
 
 export const overlay = (): HTMLElement | null =>
   document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]');
 
-export const gatilho = (raiz: ParentNode): HTMLElement | null =>
-  raiz.querySelector<HTMLElement>('[data-slot="dialog-trigger"]');
+export const trigger = (root: ParentNode): HTMLElement | null =>
+  root.querySelector<HTMLElement>('[data-slot="dialog-trigger"]');
 
 /**
  * O botão X do CANTO — e não qualquer controle que fecha.
@@ -44,7 +44,7 @@ export const cantoButtonClose = (p: HTMLElement): HTMLElement | null =>
  */
 export async function waitForOpen(): Promise<HTMLElement> {
   await waitForPortal('dialog');
-  return painel()!;
+  return panel()!;
 }
 
 /** Espera o painel sair do DOM — fechar não desmonta antes da animação de saída. */
@@ -59,29 +59,29 @@ export async function waitForClosed(): Promise<void> {
  * absoluto partiria do estado que a rodada anterior deixou e inverteria o
  * resultado. Cada passo estabelece a própria precondição.
  */
-export async function abrir(raiz: ParentNode): Promise<HTMLElement> {
-  if (!painel()) {
-    const trigger = gatilho(raiz);
-    if (trigger) {
+export async function open(root: ParentNode): Promise<HTMLElement> {
+  if (!panel()) {
+    const triggerEl = trigger(root);
+    if (triggerEl) {
       // A trava de rolagem do primitivo desta stack põe `pointer-events: none`
       // no documento e só a solta um tique DEPOIS de o painel sair do DOM.
       // Clicar antes disso falha com "element has pointer-events: none", e o
       // culpado aparente seria o gatilho. Esperar a trava sair é esperar o
       // fechamento terminar de verdade — não é folga para asserção nenhuma.
       await waitFor(() => {
-        if (getComputedStyle(trigger).pointerEvents === 'none') {
+        if (getComputedStyle(triggerEl).pointerEvents === 'none') {
           throw new Error('trava de rolagem do diálogo ainda ativa');
         }
       });
-      await userEvent.click(trigger);
+      await userEvent.click(triggerEl);
     }
   }
   return waitForOpen();
 }
 
-/** O par idempotente de `abrir`. Escape porque existe em toda composição. */
-export async function fechar(): Promise<void> {
-  if (painel()) await userEvent.keyboard('{Escape}');
+/** O par idempotente de `open`. Escape porque existe em toda composição. */
+export async function close(): Promise<void> {
+  if (panel()) await userEvent.keyboard('{Escape}');
   await waitForClosed();
 }
 
@@ -106,8 +106,8 @@ export async function checkNameEDescricao(p: HTMLElement): Promise<void> {
 
   // O nome acessível é o texto do título REAL, e não uma constante: assim a
   // asserção vale nos três idiomas.
-  const titulo = document.getElementById(idTitle!)!;
-  await expect(p).toHaveAccessibleName(titulo.textContent!.trim());
+  const title = document.getElementById(idTitle!)!;
+  await expect(p).toHaveAccessibleName(title.textContent!.trim());
 }
 
 /**

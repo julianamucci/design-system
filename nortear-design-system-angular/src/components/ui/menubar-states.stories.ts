@@ -70,9 +70,9 @@ export const Closed: Story = {
     });
 
     await step('Fechado é ausência: nenhum painel existe no DOM', async () => {
-      for (const gatilho of triggers) {
-        await expect(gatilho.getAttribute('data-state')).toBe('closed');
-        await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
+      for (const trigger of triggers) {
+        await expect(trigger.getAttribute('data-state')).toBe('closed');
+        await expect(trigger.getAttribute('aria-expanded')).toBe('false');
       }
       // Portal desmontado, não escondido: um painel só oculto continuaria
       // sendo lido por leitor de tela e encontrável pela busca da página.
@@ -154,13 +154,13 @@ export const ItemDisabled: Story = {
   },
   args: { onSelect: fn() },
   render: (args) => ({
-    props: { ...args, itens: ITEMS_WITH_BLOCK },
+    props: { ...args, items: ITEMS_WITH_BLOCK },
     template: `
       <nds-menubar [modal]="false">
         <nds-menubar-menu [defaultOpen]="true">
           <button ndsMenubarTrigger>Arquivo</button>
           <ng-template ndsMenubarContent>
-            @for (i of itens; track i.label) {
+            @for (i of items; track i.label) {
               <div ndsMenubarItem [disabled]="i.disabled" (onSelect)="onSelect(i.label)">
                 {{ i.label }}
               </div>
@@ -172,11 +172,11 @@ export const ItemDisabled: Story = {
   }),
   play: async ({ step, args }) => {
     const menu = await waitForPortal('menu');
-    const itens = within(menu).getAllByRole('menuitem');
-    const bloqueado = itens[ITEMS_WITH_BLOCK.findIndex((i) => i.disabled)];
+    const items = within(menu).getAllByRole('menuitem');
+    const bloqueado = items[ITEMS_WITH_BLOCK.findIndex((i) => i.disabled)];
 
     await step('O item bloqueado se anuncia como tal', async () => {
-      await expect(itens).toHaveLength(ITEMS_WITH_BLOCK.length);
+      await expect(items).toHaveLength(ITEMS_WITH_BLOCK.length);
       await expect(bloqueado.getAttribute('aria-disabled')).toBe('true');
       // `aria-disabled`, e não o atributo `disabled`: o item continua
       // alcançável pela seta, para ser ANUNCIADO como indisponível em vez de
@@ -185,7 +185,7 @@ export const ItemDisabled: Story = {
     });
 
     await step('O bloqueio é visível sem depender de cor', async () => {
-      const livre = itens[0];
+      const livre = items[0];
       await expect(Number(getComputedStyle(bloqueado).opacity))
         .toBeLessThan(Number(getComputedStyle(livre).opacity));
     });
@@ -205,7 +205,7 @@ export const CheckboxChecked: Story = {
     covers: ['functional.item7'],
   },
   render: () => ({
-    props: { regua: true, grade: false },
+    props: { regua: true, grid: false },
     template: `
       <nds-menubar [modal]="false">
         <nds-menubar-menu [defaultOpen]="true">
@@ -219,8 +219,8 @@ export const CheckboxChecked: Story = {
             >Régua</div>
             <div
               ndsMenubarCheckboxItem
-              [checked]="grade"
-              (checkedChange)="grade = $event"
+              [checked]="grid"
+              (checkedChange)="grid = $event"
             >Grade</div>
           </ng-template>
         </nds-menubar-menu>
@@ -231,13 +231,13 @@ export const CheckboxChecked: Story = {
     const menu = await waitForPortal('menu');
     const canvas = within(menu);
     const regua = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
-    const grade = canvas.getByRole('menuitemcheckbox', { name: 'Grade' });
+    const grid = canvas.getByRole('menuitemcheckbox', { name: 'Grade' });
 
     await step('O estado inicial chega marcado ao markup', async () => {
       // Afirmar o resultado do input é o que impede o defeito silencioso do
       // fallback JIT, em que `[checked]="true"` é ignorado sem erro nenhum.
       await expect(regua.getAttribute('aria-checked')).toBe('true');
-      await expect(grade.getAttribute('aria-checked')).toBe('false');
+      await expect(grid.getAttribute('aria-checked')).toBe('false');
     });
 
     await step('O marcado mostra o tique; o desmarcado, não', async () => {
@@ -248,7 +248,7 @@ export const CheckboxChecked: Story = {
       const marca = (item: HTMLElement) =>
         getComputedStyle(item.querySelector<HTMLElement>('[rdxmenucheckboxitemindicator]')!).display;
       await expect(marca(regua)).not.toBe('none');
-      await expect(marca(grade)).toBe('none');
+      await expect(marca(grid)).toBe('none');
     });
 
     await step('Desmarcar o que estava marcado mantém o menu aberto', async () => {
@@ -292,14 +292,14 @@ export const CheckboxIndeterminate: Story = {
     const menu = await waitForPortal('menu');
     const canvas = within(menu);
     const misto = canvas.getByRole('menuitemcheckbox', { name: 'Colunas' });
-    const marcado = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
+    const checked = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
     const desmarcado = canvas.getByRole('menuitemcheckbox', { name: 'Grade' });
 
     await step('O estado misto é anunciado como misto, e não como marcado', async () => {
       // Uma comparação frouxa leria `'indeterminate'` como verdadeiro; o que a
       // pessoa ouve tem que separar os três estados.
       await expect(misto.getAttribute('aria-checked')).toBe('mixed');
-      await expect(marcado.getAttribute('aria-checked')).toBe('true');
+      await expect(checked.getAttribute('aria-checked')).toBe('true');
       await expect(desmarcado.getAttribute('aria-checked')).toBe('false');
     });
 
@@ -308,7 +308,7 @@ export const CheckboxIndeterminate: Story = {
       // traço é largo e sem altura, tique tem a diagonal. Com o mesmo símbolo
       // nos dois estados — o defeito — esta asserção fica vermelha.
       const formaMista = formaDoIndicador(misto);
-      const formaMarcada = formaDoIndicador(marcado);
+      const formaMarcada = formaDoIndicador(checked);
       await expect(ehTraco(formaMista)).toBe(true);
       await expect(ehTique(formaMista)).toBe(false);
       await expect(ehTique(formaMarcada)).toBe(true);

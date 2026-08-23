@@ -95,19 +95,19 @@ export const Playground: Story = {
   },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
     const viewport = canvasElement.querySelector<HTMLElement>(
       '[data-slot="scroll-area-viewport"]',
     )!;
 
     await step('O markup é o mesmo das outras stacks', async () => {
-      await expect(raiz.tagName).toBe('DIV');
-      await expect(raiz).toHaveClass('nds-scroll-area');
+      await expect(root.tagName).toBe('DIV');
+      await expect(root).toHaveClass('nds-scroll-area');
       await expect(viewport.tagName).toBe('DIV');
       await expect(viewport).toHaveClass('nds-scroll-area-viewport');
       // O degrau vai para a RAIZ, e é ela que a folha compartilhada dimensiona:
       // o viewport é `height: 100%` por ela, sem medida repetida no elemento.
-      await expect(raiz.dataset.size).toBe(args.size);
+      await expect(root.dataset.size).toBe(args.size);
       await expect(viewport.style.maxHeight).toBe('');
     });
 

@@ -11,7 +11,7 @@
 // digitação.
 
 /** O campo escondido que recebe a digitação, achado pelo contrato de markup. */
-export function campo(canvasElement: HTMLElement): HTMLInputElement {
+export function field(canvasElement: HTMLElement): HTMLInputElement {
   const el = canvasElement.querySelector<HTMLInputElement>(
     'input[autocomplete="one-time-code"]'
   );

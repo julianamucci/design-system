@@ -93,9 +93,9 @@ export const Playground: Story = {
     await step('Imagem preenche a caixa sem distorcer', async () => {
       // functional.item3 — comportamento, não classe.
       await expect(getComputedStyle(img).objectFit).toBe('cover');
-      const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]')!;
+      const box = canvasElement.querySelector('[data-slot="aspect-ratio"]')!;
       await expect(img.getBoundingClientRect().width).toBeCloseTo(
-        caixa.getBoundingClientRect().width,
+        box.getBoundingClientRect().width,
         0,
       );
       await expect(img).toBeVisible();

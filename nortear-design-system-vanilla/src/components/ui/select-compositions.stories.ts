@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSelect, type SelectItem } from './select';
-import { abridor, comRotulo } from './select.fixtures';
+import { abridor, withLabel } from './select.fixtures';
 import { selectSource, selectSourceWith, formSelectSource } from './select.source';
 import { createButton } from './button';
 
@@ -30,7 +30,7 @@ type Story = StoryObj;
 
 export const BrazilianState: Story = {
   render: () =>
-    comRotulo('comp-state', 'Estado', {
+    withLabel('comp-state', 'Estado', {
       placeholder: 'Selecione...',
       items: [
         { value: 'sp', label: 'São Paulo' },
@@ -49,23 +49,23 @@ export const BrazilianState: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('combobox');
-    const abrir = abridor(gatilho);
+    const trigger = canvas.getByRole('combobox');
+    const open = abridor(trigger);
 
     await step('Quatro opções disponíveis', async () => {
-      const listbox = await abrir();
+      const listbox = await open();
       await expect(within(listbox).getAllByRole('option')).toHaveLength(4);
     });
 
     await step('Escolher pelo ponteiro atualiza o rótulo exibido', async () => {
-      const listbox = await abrir();
+      const listbox = await open();
       await userEvent.click(within(listbox).getByRole('option', { name: 'Minas Gerais' }));
       await waitForPortalGone('listbox');
-      await expect(gatilho).toHaveTextContent('Minas Gerais');
+      await expect(trigger).toHaveTextContent('Minas Gerais');
     });
 
     await step('Reabrir mostra de onde a escolha partiu', async () => {
-      const listbox = await abrir();
+      const listbox = await open();
       const escolhida = within(listbox).getByRole('option', { name: 'Minas Gerais' });
       await expect(escolhida).toHaveAttribute('aria-selected', 'true');
       // O destaque nasce na opção escolhida: é o que orienta quem reabre a lista
@@ -170,19 +170,19 @@ export const RegionWithGroups: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('combobox');
-    const abrir = abridor(gatilho);
+    const trigger = canvas.getByRole('combobox');
+    const open = abridor(trigger);
 
     await step('O rótulo visível nomeia o campo', async () => {
-      await expect(gatilho).toHaveAccessibleName('Selecione a região');
+      await expect(trigger).toHaveAccessibleName('Selecione a região');
     });
 
     await step('Cada região vira um grupo nomeado', async () => {
-      const listbox = await abrir();
-      const grupos = within(listbox).getAllByRole('group');
-      await expect(grupos).toHaveLength(2);
-      await expect(grupos[0]).toHaveAccessibleName('Sudeste');
-      await expect(grupos[1]).toHaveAccessibleName('Sul');
+      const listbox = await open();
+      const groups = within(listbox).getAllByRole('group');
+      await expect(groups).toHaveLength(2);
+      await expect(groups[0]).toHaveAccessibleName('Sudeste');
+      await expect(groups[1]).toHaveAccessibleName('Sul');
     });
 
     await step('O cabeçalho do grupo não é uma opção', async () => {
@@ -195,10 +195,10 @@ export const RegionWithGroups: Story = {
     });
 
     await step('Escolher dentro de um grupo atualiza o campo e o formulário', async () => {
-      const listbox = await abrir();
+      const listbox = await open();
       await userEvent.click(within(listbox).getByRole('option', { name: 'Paraná' }));
       await waitForPortalGone('listbox');
-      await expect(gatilho).toHaveTextContent('Paraná');
+      await expect(trigger).toHaveTextContent('Paraná');
       const hidden = canvasElement.querySelector<HTMLInputElement>(
         '[data-slot="select-hidden-input"]',
       );
@@ -283,15 +283,15 @@ export const InForm: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('combobox');
-    const abrir = abridor(gatilho);
+    const trigger = canvas.getByRole('combobox');
+    const open = abridor(trigger);
 
     await step('O campo se anuncia obrigatório', async () => {
-      await expect(gatilho).toHaveAttribute('aria-required', 'true');
+      await expect(trigger).toHaveAttribute('aria-required', 'true');
     });
 
     await step('Escolher uma opção e enviar leva o valor no FormData', async () => {
-      const listbox = await abrir();
+      const listbox = await open();
       await userEvent.click(within(listbox).getByRole('option', { name: 'Rio de Janeiro' }));
       await waitForPortalGone('listbox');
       await userEvent.click(canvas.getByRole('button', { name: 'Continuar' }));

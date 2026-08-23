@@ -27,7 +27,7 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function buildVariant(direction: DrawerDirection, titulo: string, descricao: string): HTMLElement {
+function buildVariant(direction: DrawerDirection, title: string, descricao: string): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: 'Abrir' });
 
   const content = document.createElement('div');
@@ -45,7 +45,7 @@ function buildVariant(direction: DrawerDirection, titulo: string, descricao: str
   const drawer = createDrawer({
     trigger,
     direction,
-    title: titulo,
+    title: title,
     description: descricao,
     content,
     footer,
@@ -77,14 +77,14 @@ export const Bottom: Story = {
   },
   render: () => buildVariant('bottom', 'Detalhes do pedido', 'Pedido #4287 confirmado em 15 de março.'),
   play: async ({ canvasElement, step }) => {
-    const painel = await openPeloTrigger(canvasElement);
+    const panel = await openPeloTrigger(canvasElement);
     await step('O painel encosta na base e mostra a alça', async () => {
-      await expect(painel).toHaveAttribute('data-vaul-drawer-direction', 'bottom');
-      await expect(painel).toHaveClass(/nds-drawer-content/);
-      await expect(painel).toHaveAccessibleName('Detalhes do pedido');
+      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', 'bottom');
+      await expect(panel).toHaveClass(/nds-drawer-content/);
+      await expect(panel).toHaveAccessibleName('Detalhes do pedido');
       // A alça só é visível nesta direção — o CSS compartilhado a esconde nas
       // outras. Contraste e cor do painel são verificados pelo axe da story.
-      const thumb = painel.querySelector<HTMLElement>('.nds-drawer-handle')!;
+      const thumb = panel.querySelector<HTMLElement>('.nds-drawer-handle')!;
       await expect(window.getComputedStyle(thumb).display).toBe('block');
     });
   },
@@ -115,12 +115,12 @@ export const Top: Story = {
   },
   render: () => buildVariant('top', 'Nova versão disponível', 'Atualize agora para acessar as novidades.'),
   play: async ({ canvasElement, step }) => {
-    const painel = await openPeloTrigger(canvasElement);
+    const panel = await openPeloTrigger(canvasElement);
     await step('O painel encosta no topo e esconde a alça', async () => {
-      await expect(painel).toHaveAttribute('data-vaul-drawer-direction', 'top');
-      await expect(painel).toHaveClass(/nds-drawer-content/);
-      await expect(painel).toHaveAccessibleName('Nova versão disponível');
-      const thumb = painel.querySelector<HTMLElement>('.nds-drawer-handle')!;
+      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', 'top');
+      await expect(panel).toHaveClass(/nds-drawer-content/);
+      await expect(panel).toHaveAccessibleName('Nova versão disponível');
+      const thumb = panel.querySelector<HTMLElement>('.nds-drawer-handle')!;
       await expect(window.getComputedStyle(thumb).display).toBe('none');
     });
   },
@@ -150,13 +150,13 @@ export const Left: Story = {
   },
   render: () => buildVariant('left', 'Menu', 'Navegue pelas seções do app.'),
   play: async ({ canvasElement, step }) => {
-    const painel = await openPeloTrigger(canvasElement);
+    const panel = await openPeloTrigger(canvasElement);
     await step('O painel encosta na borda esquerda', async () => {
-      await expect(painel).toHaveAttribute('data-vaul-drawer-direction', 'left');
-      await expect(painel).toHaveClass(/nds-drawer-content/);
-      await expect(painel).toHaveAccessibleName('Menu');
+      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', 'left');
+      await expect(panel).toHaveClass(/nds-drawer-content/);
+      await expect(panel).toHaveAccessibleName('Menu');
       // Ocupa a altura inteira, encostada na borda — ao contrário de bottom/top.
-      await expect(painel.getBoundingClientRect().left).toBeLessThan(1);
+      await expect(panel.getBoundingClientRect().left).toBeLessThan(1);
     });
   },
 };
@@ -185,13 +185,13 @@ export const Right: Story = {
   },
   render: () => buildVariant('right', 'Filtros', 'Refine sua busca por categoria, preço e disponibilidade.'),
   play: async ({ canvasElement, step }) => {
-    const painel = await openPeloTrigger(canvasElement);
+    const panel = await openPeloTrigger(canvasElement);
     await step('O painel encosta na borda direita', async () => {
-      await expect(painel).toHaveAttribute('data-vaul-drawer-direction', 'right');
-      await expect(painel).toHaveClass(/nds-drawer-content/);
-      await expect(painel).toHaveAccessibleName('Filtros');
-      const caixa = painel.getBoundingClientRect();
-      await expect(Math.abs(caixa.right - window.innerWidth)).toBeLessThan(2);
+      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', 'right');
+      await expect(panel).toHaveClass(/nds-drawer-content/);
+      await expect(panel).toHaveAccessibleName('Filtros');
+      const box = panel.getBoundingClientRect();
+      await expect(Math.abs(box.right - window.innerWidth)).toBeLessThan(2);
     });
   },
 };

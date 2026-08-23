@@ -26,11 +26,11 @@ import { drawerClearPortais } from './drawer-portal-cleanup';
  */
 export async function openPeloTrigger(
   canvasElement: HTMLElement,
-  nome: RegExp = /^abrir$/i,
+  name: RegExp = /^abrir$/i,
 ): Promise<HTMLElement> {
   drawerClearPortais();
   if (within(document.body).queryAllByRole('dialog').length === 0) {
-    await userEvent.click(within(canvasElement).getByRole('button', { name: nome }));
+    await userEvent.click(within(canvasElement).getByRole('button', { name: name }));
   }
   return await waitForPortal('dialog');
 }

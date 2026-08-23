@@ -51,15 +51,15 @@ function importing(parts: string[], comCampos = false): string {
 
 type Frame = {
   /** Props da raiz: `direction`, `default-open`, `:dismissible="false"`… */
-  raiz?: string;
+  root?: string;
   /** Rótulo do gatilho. Vazio significa sem gatilho — quem abre está fora. */
-  gatilho?: string;
-  titulo: string;
+  trigger?: string;
+  title: string;
   descricao: string;
   /** Corpo do painel, já indentado em 4 espaços. */
-  corpo?: string;
+  body?: string;
   /** Rodapé completo, já indentado em 4 espaços. */
-  rodape: string;
+  footer: string;
 };
 
 /**
@@ -70,22 +70,22 @@ type Frame = {
  * deles que saem o nome e a descrição acessíveis do painel.
  */
 function drawer(m: Frame): string {
-  const { raiz = '', gatilho = '', corpo = '' } = m;
-  const disparo = gatilho
+  const { root = '', trigger = '', body = '' } = m;
+  const disparo = trigger
     ? `  <DrawerTrigger as-child>
-    <Button variant="outline">${gatilho}</Button>
+    <Button variant="outline">${trigger}</Button>
   </DrawerTrigger>
 `
     : '';
-  const miolo = corpo ? `${corpo}\n` : '';
+  const miolo = body ? `${body}\n` : '';
 
-  return `<Drawer${attrs(raiz)}>
+  return `<Drawer${attrs(root)}>
 ${disparo}  <DrawerContent>
     <DrawerHeader>
-      <DrawerTitle>${m.titulo}</DrawerTitle>
+      <DrawerTitle>${m.title}</DrawerTitle>
       <DrawerDescription>${m.descricao}</DrawerDescription>
     </DrawerHeader>
-${miolo}${m.rodape}
+${miolo}${m.footer}
   </DrawerContent>
 </Drawer>`;
 }
@@ -97,7 +97,7 @@ ${miolo}${m.rodape}
  * na tela estreita, e a ação principal fica no alto da pilha, onde o polegar
  * alcança.
  */
-function rodape(acao: string, saida: string, destrutiva = false): string {
+function footer(acao: string, saida: string, destrutiva = false): string {
   return `    <DrawerFooter>
       <Button${destrutiva ? ' variant="destructive"' : ''}>${acao}</Button>
       <DrawerClose as-child>
@@ -140,19 +140,19 @@ export const drawerSource: SourceTransform<DrawerArgs> = (_gerado, ctx) => {
   return vueSnippet(
     importing(PARTS_COMPLETAS),
     drawer({
-      raiz: attrs(
+      root: attrs(
         attr('direction', direction, 'bottom'),
         attrBool('default-open', defaultOpen, false),
         attrBool('dismissible', dismissible, true),
         attrBool('modal', modal, true),
       ).trim(),
-      gatilho: 'Abrir drawer',
-      titulo: 'Editar perfil',
+      trigger: 'Abrir drawer',
+      title: 'Editar perfil',
       descricao: 'Atualize seus dados pessoais e foto.',
-      corpo: `    <DrawerBody class="nds-text-body nds-text-muted-foreground">
+      body: `    <DrawerBody class="nds-text-body nds-text-muted-foreground">
       Conteúdo do drawer.
     </DrawerBody>`,
-      rodape: rodape('Confirmar', 'Cancelar'),
+      footer: footer('Confirmar', 'Cancelar'),
     }),
   );
 };
@@ -160,21 +160,21 @@ export const drawerSource: SourceTransform<DrawerArgs> = (_gerado, ctx) => {
 /** Molde das quatro direções: só a prop da raiz e o texto mudam. */
 function byDirection(
   direction: DrawerArgs['direction'],
-  titulo: string,
+  title: string,
   descricao: string,
-  gatilho: string,
+  trigger: string,
 ): string {
   return vueSnippet(
     importing(PARTS_COMPLETAS),
     drawer({
-      raiz: attr('direction', direction, 'bottom'),
-      gatilho,
-      titulo,
+      root: attr('direction', direction, 'bottom'),
+      trigger,
+      title,
       descricao,
-      corpo: `    <DrawerBody class="nds-text-body nds-text-muted-foreground">
+      body: `    <DrawerBody class="nds-text-body nds-text-muted-foreground">
       Conteúdo do painel.
     </DrawerBody>`,
-      rodape: outputFooter('Fechar'),
+      footer: outputFooter('Fechar'),
     }),
   );
 }
@@ -227,10 +227,10 @@ export function drawerClosedSource(): string {
   return vueSnippet(
     importing(PARTS_NO_BODY),
     drawer({
-      gatilho: 'Abrir drawer',
-      titulo: 'Editar perfil',
+      trigger: 'Abrir drawer',
+      title: 'Editar perfil',
       descricao: 'Atualize seus dados.',
-      rodape: outputFooter('Cancelar'),
+      footer: outputFooter('Cancelar'),
     }),
   );
 }
@@ -245,10 +245,10 @@ export function drawerOpenSource(): string {
   return vueSnippet(
     importing(PARTS_NO_BODY.filter((part) => part !== 'DrawerTrigger')),
     drawer({
-      raiz: 'default-open',
-      titulo: 'Editar perfil',
+      root: 'default-open',
+      title: 'Editar perfil',
       descricao: 'Atualize seus dados pessoais. As mudanças são salvas ao confirmar.',
-      rodape: rodape('Confirmar', 'Cancelar'),
+      footer: footer('Confirmar', 'Cancelar'),
     }),
   );
 }
@@ -299,10 +299,10 @@ export function drawerNotDispensavelSource(): string {
   return vueSnippet(
     importing(PARTS_NO_BODY.filter((part) => part !== 'DrawerTrigger')),
     drawer({
-      raiz: ':dismissible="false"',
-      titulo: 'Aceitar termos',
+      root: ':dismissible="false"',
+      title: 'Aceitar termos',
       descricao: 'Você precisa aceitar os termos para continuar.',
-      rodape: rodape('Aceitar', 'Recusar'),
+      footer: footer('Aceitar', 'Recusar'),
     }),
   );
 }
@@ -317,10 +317,10 @@ export function drawerWithFormSource(): string {
   return vueSnippet(
     importing(PARTS_COMPLETAS, true),
     drawer({
-      gatilho: 'Editar perfil',
-      titulo: 'Editar perfil',
+      trigger: 'Editar perfil',
+      title: 'Editar perfil',
       descricao: 'Atualize seu nome e e-mail.',
-      corpo: `    <DrawerBody>
+      body: `    <DrawerBody>
       <form class="nds-grid" data-spacing="sm">
         <div class="nds-grid" data-spacing="xs">
           <Label for="drawer-name">Nome</Label>
@@ -332,7 +332,7 @@ export function drawerWithFormSource(): string {
         </div>
       </form>
     </DrawerBody>`,
-      rodape: `    <DrawerFooter>
+      footer: `    <DrawerFooter>
       <Button type="submit">Confirmar</Button>
       <DrawerClose as-child>
         <Button variant="outline">Cancelar</Button>
@@ -352,10 +352,10 @@ export function drawerWithConfirmSource(): string {
   return vueSnippet(
     importing(PARTS_NO_BODY),
     drawer({
-      gatilho: 'Remover anexo',
-      titulo: 'Remover anexo?',
+      trigger: 'Remover anexo',
+      title: 'Remover anexo?',
       descricao: 'O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.',
-      rodape: rodape('Remover', 'Cancelar', true),
+      footer: footer('Remover', 'Cancelar', true),
     }),
   );
 }
@@ -377,13 +377,13 @@ const clausulas = [
   'Do encerramento: o cancelamento pode ser pedido a qualquer momento, e os dados ficam disponíveis por trinta dias.',
 ]`,
     drawer({
-      gatilho: 'Ver termos',
-      titulo: 'Termos de serviço',
+      trigger: 'Ver termos',
+      title: 'Termos de serviço',
       descricao: 'Leia atentamente os termos antes de aceitar.',
-      corpo: `    <DrawerBody class="nds-text-body nds-text-muted-foreground">
+      body: `    <DrawerBody class="nds-text-body nds-text-muted-foreground">
       <p v-for="(clausula, i) in clausulas" :key="i">{{ clausula }}</p>
     </DrawerBody>`,
-      rodape: rodape('Aceitar termos', 'Recusar'),
+      footer: footer('Aceitar termos', 'Recusar'),
     }),
   );
 }

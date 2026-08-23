@@ -9,7 +9,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "./navigation-menu";
-import { abrir, fechar } from "./navigation-menu.fixtures";
+import { open, close } from "./navigation-menu.fixtures";
 import { navigationMenuSource, navigationMenuVerticalSource } from "./navigation-menu.source";
 
 const meta = {
@@ -105,30 +105,30 @@ export const Horizontal: Story = {
     const canvas = within(canvasElement);
 
     await step("Cinco itens, dois deles com painel", async () => {
-      const itens = canvasElement.querySelectorAll('[data-slot="navigation-menu-item"]');
-      await expect(itens).toHaveLength(5);
+      const items = canvasElement.querySelectorAll('[data-slot="navigation-menu-item"]');
+      await expect(items).toHaveLength(5);
       await expect(canvas.getAllByRole("button")).toHaveLength(2);
       await expect(canvas.getAllByRole("link")).toHaveLength(3);
     });
 
     await step("Os itens ficam lado a lado, na mesma linha", async () => {
-      const itens = [
+      const items = [
         ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="navigation-menu-item"]'),
       ];
-      const first = itens[0].getBoundingClientRect();
-      const segundo = itens[1].getBoundingClientRect();
+      const first = items[0].getBoundingClientRect();
+      const segundo = items[1].getBoundingClientRect();
       await expect(segundo.left).toBeGreaterThan(first.left);
       await expect(Math.abs(segundo.top - first.top)).toBeLessThan(2);
     });
 
     await step("O painel abre abaixo da barra", async () => {
-      const gatilho = canvas.getByRole("button", { name: /Produtos/ });
-      const painel = await abrir(gatilho);
-      const popup = painel.closest<HTMLElement>(".nds-navigation-menu-popup");
+      const trigger = canvas.getByRole("button", { name: /Produtos/ });
+      const panel = await open(trigger);
+      const popup = panel.closest<HTMLElement>(".nds-navigation-menu-popup");
       // `data-side` só existe depois de o floating-ui medir — por isso o
-      // `abrir` espera por ele antes de devolver.
+      // `open` espera por ele antes de devolver.
       await expect(popup?.getAttribute("data-side")).toBe("bottom");
-      await fechar(gatilho);
+      await close(trigger);
     });
   },
 };
@@ -181,21 +181,21 @@ export const Vertical: Story = {
     const canvas = within(canvasElement);
 
     await step("Os itens empilham em coluna", async () => {
-      const itens = [
+      const items = [
         ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="navigation-menu-item"]'),
       ];
-      await expect(itens).toHaveLength(3);
-      const first = itens[0].getBoundingClientRect();
-      const segundo = itens[1].getBoundingClientRect();
+      await expect(items).toHaveLength(3);
+      const first = items[0].getBoundingClientRect();
+      const segundo = items[1].getBoundingClientRect();
       await expect(segundo.top).toBeGreaterThan(first.top);
     });
 
     await step("As setas do eixo vertical percorrem a barra", async () => {
-      const painel = canvas.getByRole("link", { name: "Painel" });
-      const gatilho = canvas.getByRole("button", { name: /Relatórios/ });
-      painel.focus();
+      const panel = canvas.getByRole("link", { name: "Painel" });
+      const trigger = canvas.getByRole("button", { name: /Relatórios/ });
+      panel.focus();
       await userEvent.keyboard("{ArrowDown}");
-      await expect(document.activeElement).toBe(gatilho);
+      await expect(document.activeElement).toBe(trigger);
     });
   },
 };

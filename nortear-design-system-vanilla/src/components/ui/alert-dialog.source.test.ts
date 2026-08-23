@@ -7,34 +7,34 @@ import {
 
 describe('alertDialogSnippet', () => {
   it('devolve a composição das fábricas, e não o outerHTML do elemento', () => {
-    const código = alertDialogSnippet();
-    expect(código).toContain("import { createAlertDialog } from '@/components/ui/alert-dialog';");
-    expect(código).toContain("import { createButton } from '@/components/ui/button';");
-    expect(código).toContain('createAlertDialog({');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('role="alertdialog"');
+    const code = alertDialogSnippet();
+    expect(code).toContain("import { createAlertDialog } from '@/components/ui/alert-dialog';");
+    expect(code).toContain("import { createButton } from '@/components/ui/button';");
+    expect(code).toContain('createAlertDialog({');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('role="alertdialog"');
   });
 
   it('usa o rótulo VISÍVEL do botão, que é o que a fábrica chama de label', () => {
-    const código = alertDialogSnippet({ triggerLabel: 'Excluir conta' });
-    expect(código).toContain("label: 'Excluir conta'");
+    const code = alertDialogSnippet({ triggerLabel: 'Excluir conta' });
+    expect(code).toContain("label: 'Excluir conta'");
     // `aria-label` é o nome acessível do botão só de ícone — aqui há texto.
-    expect(código).not.toContain('aria-label');
-    expect(código).not.toContain('ariaLabel');
+    expect(code).not.toContain('aria-label');
+    expect(code).not.toContain('ariaLabel');
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = alertDialogSnippet();
-    expect(código).not.toContain('defaultOpen');
-    expect(código).not.toContain('class:');
-    expect(código).not.toContain('onOpenChange');
-    expect(código).not.toContain('media');
+    const code = alertDialogSnippet();
+    expect(code).not.toContain('defaultOpen');
+    expect(code).not.toContain('class:');
+    expect(code).not.toContain('onOpenChange');
+    expect(code).not.toContain('media');
   });
 
   it('mostra o estado inicial aberto e a classe extra quando a story os usa', () => {
-    const código = alertDialogSnippet({ defaultOpen: true, class: 'nds-overflow-hidden' });
-    expect(código).toContain('defaultOpen: true');
-    expect(código).toContain("class: 'nds-overflow-hidden'");
+    const code = alertDialogSnippet({ defaultOpen: true, class: 'nds-overflow-hidden' });
+    expect(code).toContain('defaultOpen: true');
+    expect(code).toContain("class: 'nds-overflow-hidden'");
   });
 
   it('o tom escolhe a variante do Button do gatilho e da ação', () => {
@@ -62,17 +62,17 @@ describe('alertDialogSnippet', () => {
   });
 
   it('a descrição é opcional, e sem ela a opção some da chamada', () => {
-    const código = alertDialogSnippet({ description: '' });
-    expect(código).not.toContain('description:');
-    expect(código).toContain('title:');
+    const code = alertDialogSnippet({ description: '' });
+    expect(code).not.toContain('description:');
+    expect(code).toContain('title:');
   });
 
   it('escreve as propriedades abreviadas onde a fábrica recebe o elemento pronto', () => {
-    const código = alertDialogSnippet({ defaultOpen: true });
-    expect(código).toContain('  trigger,');
-    expect(código).toContain('  cancelButton,');
-    expect(código).toContain('  actionButton,');
-    expect(código).not.toContain('trigger: trigger');
+    const code = alertDialogSnippet({ defaultOpen: true });
+    expect(code).toContain('  trigger,');
+    expect(code).toContain('  cancelButton,');
+    expect(code).toContain('  actionButton,');
+    expect(code).not.toContain('trigger: trigger');
   });
 
   it('ignora o callback que a story passa como função de verdade', () => {
@@ -105,8 +105,8 @@ describe('alertDialogSource', () => {
 describe('alertDialogSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = alertDialogSourceWith({ defaultOpen: true, tone: 'default' });
-    const código = transform('', { args: { defaultOpen: false, tone: 'destructive' } });
-    expect(código).toContain('defaultOpen: true');
-    expect(código).toContain("const actionButton = createButton({ variant: 'default'");
+    const code = transform('', { args: { defaultOpen: false, tone: 'destructive' } });
+    expect(code).toContain('defaultOpen: true');
+    expect(code).toContain("const actionButton = createButton({ variant: 'default'");
   });
 });

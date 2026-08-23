@@ -56,9 +56,9 @@ export const Bar: Story = {
       // categoria/valor está na tabela, alcançável sem mouse.
       const barras = [...chart.querySelectorAll<SVGRectElement>('rect[data-series]')];
       barras.forEach((barra, i) => {
-        const titulo = barra.querySelector('title')?.textContent ?? '';
-        expect(titulo).toContain(MONTHS[i]);
-        expect(titulo).toContain(String(SERIE_UNICA[0].data[i]));
+        const title = barra.querySelector('title')?.textContent ?? '';
+        expect(title).toContain(MONTHS[i]);
+        expect(title).toContain(String(SERIE_UNICA[0].data[i]));
       });
 
       const celulas = [...chart.querySelectorAll<HTMLTableCellElement>('tbody td')];
@@ -68,8 +68,8 @@ export const Bar: Story = {
 
     await step('Com uma série só, o valor também fica escrito no desenho', async () => {
       const texts = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
-      for (const valor of SERIE_UNICA[0].data) {
-        await expect(texts).toContain(String(valor));
+      for (const value of SERIE_UNICA[0].data) {
+        await expect(texts).toContain(String(value));
       }
     });
   },
@@ -177,11 +177,11 @@ export const Area: Story = {
 export const Pie: Story = {
   parameters: { controls: { disable: true } },
   render: () => ({
-    props: { dados: DATA_DISPOSITIVO },
+    props: { data: DATA_DISPOSITIVO },
     template: `
       <div ndsChart
         type="pie"
-        [data]="dados"
+        [data]="data"
         label="Distribuição de acessos por dispositivo"
       ></div>
     `,
@@ -197,9 +197,9 @@ export const Pie: Story = {
     await step('A legenda traz nome, valor e participação — não só a cor', async () => {
       const texts = [...chart.querySelectorAll('svg text')].map((t) => t.textContent ?? '');
       for (const ponto of DATA_DISPOSITIVO) {
-        await expect(texts.some((texto) => texto.includes(ponto.label)
-          && texto.includes(String(ponto.value))
-          && texto.includes('%'))).toBe(true);
+        await expect(texts.some((text) => text.includes(ponto.label)
+          && text.includes(String(ponto.value))
+          && text.includes('%'))).toBe(true);
       }
     });
 

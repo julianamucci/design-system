@@ -50,9 +50,9 @@ const wrapperStyle: React.CSSProperties = {
 };
 
 /** Mesmo painel nas quatro direções — o que muda é `direction` e o título. */
-function painel(
+function panel(
   direction: "bottom" | "top" | "left" | "right",
-  titulo: string,
+  title: string,
   descricao: string,
 ) {
   return () => (
@@ -63,7 +63,7 @@ function painel(
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>{titulo}</DrawerTitle>
+            <DrawerTitle>{title}</DrawerTitle>
             <DrawerDescription>{descricao}</DrawerDescription>
           </DrawerHeader>
           <DrawerBody className="nds-text-body nds-text-muted-foreground">
@@ -95,7 +95,7 @@ export const Bottom: Story = {
       },
     },
   },
-  render: painel("bottom", "Detalhes do pedido", "Pedido #4287 confirmado em 15 de março."),
+  render: panel("bottom", "Detalhes do pedido", "Pedido #4287 confirmado em 15 de março."),
   play: async ({ step }) => {
     await step("O painel encosta na base e mostra a alça", async () => {
       const panelEl = await waitForPortal("dialog");
@@ -122,7 +122,7 @@ export const Top: Story = {
       },
     },
   },
-  render: painel("top", "Nova versão disponível", "Atualize agora para acessar as novidades."),
+  render: panel("top", "Nova versão disponível", "Atualize agora para acessar as novidades."),
   play: async ({ step }) => {
     await step("O painel encosta no topo e esconde a alça", async () => {
       const panelEl = await waitForPortal("dialog");
@@ -147,7 +147,7 @@ export const Left: Story = {
       },
     },
   },
-  render: painel("left", "Menu", "Navegue pelas seções do app."),
+  render: panel("left", "Menu", "Navegue pelas seções do app."),
   play: async ({ step }) => {
     await step("O painel encosta na borda esquerda", async () => {
       const panelEl = await waitForPortal("dialog");
@@ -172,15 +172,15 @@ export const Right: Story = {
       },
     },
   },
-  render: painel("right", "Filtros", "Refine sua busca por categoria, preço e disponibilidade."),
+  render: panel("right", "Filtros", "Refine sua busca por categoria, preço e disponibilidade."),
   play: async ({ step }) => {
     await step("O painel encosta na borda direita", async () => {
       const panelEl = await waitForPortal("dialog");
       await expect(panelEl).toHaveAttribute("data-vaul-drawer-direction", "right");
       await expect(panelEl).toHaveClass(/nds-drawer-content/);
       await expect(panelEl).toHaveAccessibleName("Filtros");
-      const caixa = panelEl.getBoundingClientRect();
-      await expect(Math.abs(caixa.right - window.innerWidth)).toBeLessThan(2);
+      const box = panelEl.getBoundingClientRect();
+      await expect(Math.abs(box.right - window.innerWidth)).toBeLessThan(2);
     });
   },
 };

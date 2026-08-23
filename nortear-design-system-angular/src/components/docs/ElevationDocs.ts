@@ -36,33 +36,33 @@ const CARTAO_DE_RAIO =
 
 /** Degrau da escada de elevação. */
 interface ElevationDegrau {
-  rotulo: string;
+  label: string;
   token: string;
   classes: string;
 }
 
 const ELEVACOES: ElevationDegrau[] = [
-  { rotulo: '0 — Plano', token: '—', classes: `${CARTAO_DE_SOMBRA} nds-shadow-none` },
-  { rotulo: '1 — Card', token: '--elevation-sm', classes: `${CARTAO_DE_SOMBRA} nds-shadow-sm` },
-  { rotulo: '2 — Dropdown', token: '--elevation-md', classes: `${CARTAO_DE_SOMBRA} nds-shadow-md` },
-  { rotulo: '3 — Dialog', token: '--elevation-lg', classes: `${CARTAO_DE_SOMBRA} nds-shadow-lg` },
-  { rotulo: '4 — Tooltip', token: '--elevation-xl', classes: `${CARTAO_DE_SOMBRA} nds-shadow-xl` },
+  { label: '0 — Plano', token: '—', classes: `${CARTAO_DE_SOMBRA} nds-shadow-none` },
+  { label: '1 — Card', token: '--elevation-sm', classes: `${CARTAO_DE_SOMBRA} nds-shadow-sm` },
+  { label: '2 — Dropdown', token: '--elevation-md', classes: `${CARTAO_DE_SOMBRA} nds-shadow-md` },
+  { label: '3 — Dialog', token: '--elevation-lg', classes: `${CARTAO_DE_SOMBRA} nds-shadow-lg` },
+  { label: '4 — Tooltip', token: '--elevation-xl', classes: `${CARTAO_DE_SOMBRA} nds-shadow-xl` },
 ];
 
-/** Degrau da escala de radius. `rotulo` é o que a amostra imprime. */
+/** Degrau da escala de radius. `label` é o que a amostra imprime. */
 interface DegrauDeRadius {
-  rotulo: string;
+  label: string;
   classes: string;
 }
 
 const RAIOS: DegrauDeRadius[] = [
-  { rotulo: '--radius-none', classes: `${CARTAO_DE_RAIO} nds-rounded-none` },
-  { rotulo: '--radius-xs', classes: `${CARTAO_DE_RAIO} nds-rounded-xs` },
-  { rotulo: '--radius-sm', classes: `${CARTAO_DE_RAIO} nds-rounded-sm` },
-  { rotulo: '--radius-md', classes: `${CARTAO_DE_RAIO} nds-rounded-md` },
-  { rotulo: '--radius-lg', classes: `${CARTAO_DE_RAIO} nds-rounded-lg` },
-  { rotulo: '--radius-xl', classes: `${CARTAO_DE_RAIO} nds-rounded-xl` },
-  { rotulo: '.nds-rounded-full', classes: `${CARTAO_DE_RAIO} nds-rounded-full` },
+  { label: '--radius-none', classes: `${CARTAO_DE_RAIO} nds-rounded-none` },
+  { label: '--radius-xs', classes: `${CARTAO_DE_RAIO} nds-rounded-xs` },
+  { label: '--radius-sm', classes: `${CARTAO_DE_RAIO} nds-rounded-sm` },
+  { label: '--radius-md', classes: `${CARTAO_DE_RAIO} nds-rounded-md` },
+  { label: '--radius-lg', classes: `${CARTAO_DE_RAIO} nds-rounded-lg` },
+  { label: '--radius-xl', classes: `${CARTAO_DE_RAIO} nds-rounded-xl` },
+  { label: '.nds-rounded-full', classes: `${CARTAO_DE_RAIO} nds-rounded-full` },
 ];
 
 /** Um par de caixas aninhadas, com a legenda que explica o resultado. */
@@ -70,7 +70,7 @@ interface RaioNesting {
   externo: string;
   meio: string;
   interno: string;
-  legenda: string;
+  caption: string;
 }
 
 const ANINHAMENTOS: RaioNesting[] = [
@@ -79,14 +79,14 @@ const ANINHAMENTOS: RaioNesting[] = [
     externo: 'nds-bg-primary-soft nds-p-1 nds-rounded-xl',
     meio: 'nds-bg-card nds-p-1 nds-rounded-lg',
     interno: 'nds-bg-primary-soft nds-p-6 nds-rounded-sm',
-    legenda: 'specimens.nestedOk',
+    caption: 'specimens.nestedOk',
   },
   // Errado: o mesmo raio nos três níveis — o canto interno fica pesado.
   {
     externo: 'nds-bg-primary-soft nds-p-1 nds-rounded-xl',
     meio: 'nds-bg-card nds-p-1 nds-rounded-xl',
     interno: 'nds-bg-primary-soft nds-p-6 nds-rounded-xl',
-    legenda: 'specimens.nestedBad',
+    caption: 'specimens.nestedBad',
   },
 ];
 
@@ -108,9 +108,9 @@ const ANINHAMENTOS: RaioNesting[] = [
         <div class="nds-stack" data-spacing="sm">
           <h3 class="nds-text-body nds-font-medium">{{ t('specimens.shadows') }}</h3>
           <div class="nds-grid nds-elevation-grid nds-p-6 nds-rounded-lg" data-spacing="lg">
-            @for (level of elevacoes; track level.rotulo) {
+            @for (level of elevacoes; track level.label) {
               <div [class]="level.classes">
-                <div class="nds-font-medium nds-text-foreground nds-mb-1">{{ level.rotulo }}</div>
+                <div class="nds-font-medium nds-text-foreground nds-mb-1">{{ level.label }}</div>
                 <code class="nds-specimen-token-code">{{ level.token }}</code>
               </div>
             }
@@ -121,9 +121,9 @@ const ANINHAMENTOS: RaioNesting[] = [
         <div class="nds-stack" data-spacing="sm">
           <h3 class="nds-text-body nds-font-medium">{{ t('specimens.radius') }}</h3>
           <div class="nds-grid nds-radius-grid" data-spacing="md">
-            @for (raio of raios; track raio.rotulo) {
+            @for (raio of raios; track raio.label) {
               <div [class]="raio.classes">
-                <code>{{ raio.rotulo }}</code>
+                <code>{{ raio.label }}</code>
               </div>
             }
           </div>
@@ -133,7 +133,7 @@ const ANINHAMENTOS: RaioNesting[] = [
         <div class="nds-stack" data-spacing="sm">
           <h3 class="nds-text-body nds-font-medium">{{ t('specimens.nested') }}</h3>
           <div class="nds-grid nds-radius-nested-grid" data-spacing="md">
-            @for (aninhamento of aninhamentos; track aninhamento.legenda) {
+            @for (aninhamento of aninhamentos; track aninhamento.caption) {
               <div class="nds-stack" data-spacing="xs">
                 <div [class]="aninhamento.externo">
                   <div [class]="aninhamento.meio">
@@ -141,7 +141,7 @@ const ANINHAMENTOS: RaioNesting[] = [
                   </div>
                 </div>
                 <span class="nds-text-caption nds-text-muted-foreground">{{
-                  t(aninhamento.legenda)
+                  t(aninhamento.caption)
                 }}</span>
               </div>
             }

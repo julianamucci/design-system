@@ -7,7 +7,7 @@ import {
   attrsMultilinha,
   asCode,
   indentar,
-  texto,
+  text,
   vueSnippet,
 } from './story-source';
 
@@ -79,12 +79,12 @@ describe('comoCodigo', () => {
 
 describe('texto', () => {
   it('cai no padrão quando o control não trouxe string', () => {
-    expect(texto(undefined, 'Salvar')).toBe('Salvar');
-    expect(texto(() => {}, 'Salvar')).toBe('Salvar');
+    expect(text(undefined, 'Salvar')).toBe('Salvar');
+    expect(text(() => {}, 'Salvar')).toBe('Salvar');
   });
 
   it('escapa aspas — elas fechariam o atributo cedo', () => {
-    expect(texto('diz "oi"')).toBe('diz &quot;oi&quot;');
+    expect(text('diz "oi"')).toBe('diz &quot;oi&quot;');
   });
 });
 

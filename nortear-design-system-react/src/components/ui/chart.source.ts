@@ -18,7 +18,7 @@ import {
   propNumber,
   propOption,
   propText,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -66,16 +66,16 @@ function importChart(...construtores: string[]): string {
  */
 export const chartSource: SourceTransform<ChartArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const frase = texto(args.emptyLabel);
+  const frase = text(args.emptyLabel);
 
-  const atributos = attrsMultilinha(
+  const attrs = attrsMultilinha(
     [
       'option={buildBarOption({ xAxis: meses, series })}',
       propNumber('height', args.height) ?? 'height={300}',
       propOption('renderer', args.renderer, RENDERIZADORES, 'svg'),
       frase && frase !== FRASE_VAZIA_DEFAULT ? `emptyLabel="${frase}"` : undefined,
       propText('className', args.className),
-      `aria-label="${texto(args['aria-label']) ?? LABEL_DEFAULT}"`,
+      `aria-label="${text(args['aria-label']) ?? LABEL_DEFAULT}"`,
     ],
     '  ',
     0,
@@ -86,7 +86,7 @@ export const chartSource: SourceTransform<ChartArgs> = (_gerado, ctx) => {
 
 ${DATA_MENSAIS}
 ${SERIE_UNICA}`,
-    `<ChartContainer${atributos}/>`,
+    `<ChartContainer${attrs}/>`,
   );
 };
 

@@ -9,7 +9,7 @@
 // instrumenta o console dentro da `play` e a mensagem não chega ao terminal.
 
 export type RetratoDeElemento = {
-  texto: string;
+  text: string;
   tag: string;
   role: string | null;
   classes: string;
@@ -41,7 +41,7 @@ export type RetratoDoMenubar = {
     background: string;
     ancoradoNoBody: boolean;
   }>;
-  itens: RetratoDeElemento[];
+  items: RetratoDeElemento[];
   marcacoes: RetratoDeElemento[];
   shortcuts: { quantidade: number; classes: string | null };
 };
@@ -50,7 +50,7 @@ const DATA_IGNORADOS = new Set(['data-slot', 'data-state', 'data-testid']);
 
 function retratar(el: HTMLElement): RetratoDeElemento {
   return {
-    texto: (el.textContent ?? '').replace(/\s+/g, ' ').trim(),
+    text: (el.textContent ?? '').replace(/\s+/g, ' ').trim(),
     tag: el.tagName.toLowerCase(),
     role: el.getAttribute('role'),
     classes: el.getAttribute('class') ?? '',
@@ -80,23 +80,23 @@ export function radiografarMenubar(barra: HTMLElement | null): RetratoDoMenubar 
 
   const panels = Array.from(document.querySelectorAll<HTMLElement>('[role="menu"]'));
 
-  const itens: RetratoDeElemento[] = [];
+  const items: RetratoDeElemento[] = [];
   const marcacoes: RetratoDeElemento[] = [];
   let shortcuts: { quantidade: number; classes: string | null } = {
     quantidade: 0,
     classes: null,
   };
 
-  for (const painel of panels) {
-    for (const el of painel.querySelectorAll<HTMLElement>('[role="menuitem"]')) {
-      itens.push(retratar(el));
+  for (const panel of panels) {
+    for (const el of panel.querySelectorAll<HTMLElement>('[role="menuitem"]')) {
+      items.push(retratar(el));
     }
-    for (const el of painel.querySelectorAll<HTMLElement>(
+    for (const el of panel.querySelectorAll<HTMLElement>(
       '[role="menuitemcheckbox"], [role="menuitemradio"]',
     )) {
       marcacoes.push(retratar(el));
     }
-    const encontrados = painel.querySelectorAll<HTMLElement>(
+    const encontrados = panel.querySelectorAll<HTMLElement>(
       '[data-slot$="shortcut"], .nds-dropdown-menu-shortcut, .nds-menubar-shortcut',
     );
     if (encontrados.length > 0) {
@@ -126,13 +126,13 @@ export function radiografarMenubar(barra: HTMLElement | null): RetratoDoMenubar 
       background: getComputedStyle(p).backgroundColor,
       ancoradoNoBody: !p.closest('#storybook-root'),
     })),
-    itens,
+    items,
     marcacoes,
     shortcuts,
   };
 }
 
 /** Único canal que atravessa o instrumentador do Storybook até o terminal. */
-export function lancarProbe(stack: string, cenario: string, dados: unknown): never {
-  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(dados)}`);
+export function lancarProbe(stack: string, cenario: string, data: unknown): never {
+  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(data)}`);
 }

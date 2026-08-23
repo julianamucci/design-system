@@ -41,17 +41,17 @@ const pintura = (el: HTMLElement) => {
   const s = getComputedStyle(el);
   return {
     background: s.backgroundColor,
-    texto: s.color,
+    text: s.color,
     border: s.borderTopColor,
     larguraBorda: s.borderTopWidth,
   };
 };
 const transparente = (cor: string) => cor === 'rgba(0, 0, 0, 0)' || cor === 'transparent';
 
-const render = (variant: string, texto: string) => () => ({
+const render = (variant: string, text: string) => () => ({
   components: { Badge },
-  setup: () => ({ variant, texto }),
-  template: `<Badge :variant="variant">{{ texto }}</Badge>`,
+  setup: () => ({ variant, text }),
+  template: `<Badge :variant="variant">{{ text }}</Badge>`,
 });
 
 export const Default: Story = {
@@ -62,9 +62,9 @@ export const Default: Story = {
     const badge = canvas.getByText('Novo');
     await expect(badge).toHaveAttribute('data-variant', 'default');
     // functional.item1 — fundo preenchido, texto contrastante, borda invisível.
-    const { background, texto, border } = pintura(badge);
+    const { background, text, border } = pintura(badge);
     await expect(transparente(background)).toBe(false);
-    await expect(background).not.toBe(texto);
+    await expect(background).not.toBe(text);
     await expect(transparente(border)).toBe(true);
   },
 };
@@ -109,7 +109,7 @@ export const Destructive: Story = {
     // functional.item3 — fundo suave E borda colorida, com o texto no
     // --foreground. É a combinação que sustenta os 4.5:1 documentados: cor
     // sinaliza, contraste vem do texto neutro.
-    const { background, texto, border } = pintura(badge);
+    const { background, text, border } = pintura(badge);
     await expect(transparente(background)).toBe(false);
     await expect(transparente(border)).toBe(false);
 
@@ -118,7 +118,7 @@ export const Destructive: Story = {
     canvasElement.appendChild(referencia);
     const neutralText = getComputedStyle(referencia).color;
     referencia.remove();
-    await expect(texto).toBe(neutralText);
+    await expect(text).toBe(neutralText);
   },
 };
 
@@ -187,14 +187,14 @@ export const Semantics: Story = {
     referencia.remove();
 
     const fundos: string[] = [];
-    for (const [nome, badge] of Object.entries(badges)) {
-      await expect(badge).toHaveAttribute('data-variant', nome);
-      const { background, texto, border } = pintura(badge);
+    for (const [name, badge] of Object.entries(badges)) {
+      await expect(badge).toHaveAttribute('data-variant', name);
+      const { background, text, border } = pintura(badge);
       // functional.item7 — cor vem do fundo e da borda; o texto fica neutro,
       // que é o que sustenta 4.5:1 sem depender da variante escolhida.
       await expect(transparente(background)).toBe(false);
       await expect(transparente(border)).toBe(false);
-      await expect(texto).toBe(neutralText);
+      await expect(text).toBe(neutralText);
       fundos.push(background);
     }
 

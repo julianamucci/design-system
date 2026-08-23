@@ -35,13 +35,13 @@ function importIcon(...names: string[]): string {
 }
 
 /** O ícone entra como filho comum: a posição é do CSS, não de uma prop. */
-function icone(nome: string): string {
-  return `<${nome} class="nds-icon" aria-hidden="true" />`;
+function icone(name: string): string {
+  return `<${name} class="nds-icon" aria-hidden="true" />`;
 }
 
 /** Raiz + filhos, cada filho indentado um nível. */
-function alerta(partes: Array<string | false | undefined>, filhos: string[]): string {
-  return `<Alert${attrs(...partes)}>\n${indentar(filhos.join('\n'))}\n</Alert>`;
+function alerta(partes: Array<string | false | undefined>, children: string[]): string {
+  return `<Alert${attrs(...partes)}>\n${indentar(children.join('\n'))}\n</Alert>`;
 }
 
 /**
@@ -51,12 +51,12 @@ function alerta(partes: Array<string | false | undefined>, filhos: string[]): st
  * contêiner colorido: cor semântica sobre fundo suave raramente alcança os
  * 4.5:1 que texto longo exige. Por isso não há classe de cor aqui.
  */
-function corpo(nomeIcone: string | null, titulo: string, descricao: string): string[] {
-  const filhos = [];
-  if (nomeIcone) filhos.push(icone(nomeIcone));
-  if (titulo) filhos.push(`<AlertTitle>${titulo}</AlertTitle>`);
-  filhos.push(`<AlertDescription>${descricao}</AlertDescription>`);
-  return filhos;
+function body(nomeIcone: string | null, title: string, descricao: string): string[] {
+  const children = [];
+  if (nomeIcone) children.push(icone(nomeIcone));
+  if (title) children.push(`<AlertTitle>${title}</AlertTitle>`);
+  children.push(`<AlertDescription>${descricao}</AlertDescription>`);
+  return children;
 }
 
 /**
@@ -76,7 +76,7 @@ export const alertSource: SourceTransform<AlertArgs> = (_gerado, ctx) => {
         attr('role', args.role, 'alert'),
         attrBool('dismissible', args.dismissible, false),
       ],
-      corpo('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.'),
+      body('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.'),
     ),
   );
 };
@@ -85,7 +85,7 @@ export const alertSource: SourceTransform<AlertArgs> = (_gerado, ctx) => {
 export function alertDefaultSource(): string {
   return vueSnippet(
     `${IMPORT}\n${importIcon('Info')}`,
-    alerta([], corpo('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.')),
+    alerta([], body('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.')),
   );
 }
 
@@ -95,7 +95,7 @@ export function alertDestructiveSource(): string {
     `${IMPORT}\n${importIcon('AlertCircle')}`,
     alerta(
       ['variant="destructive"'],
-      corpo(
+      body(
         'AlertCircle',
         'Erro ao salvar',
         'Não foi possível salvar. Verifique sua conexão e tente novamente.',
@@ -110,7 +110,7 @@ export function alertSuccessSource(): string {
     `${IMPORT}\n${importIcon('CheckCircle2')}`,
     alerta(
       ['variant="success"'],
-      corpo('CheckCircle2', 'Perfil atualizado', 'Suas informações foram salvas com sucesso.'),
+      body('CheckCircle2', 'Perfil atualizado', 'Suas informações foram salvas com sucesso.'),
     ),
   );
 }
@@ -121,7 +121,7 @@ export function alertWarningSource(): string {
     `${IMPORT}\n${importIcon('TriangleAlert')}`,
     alerta(
       ['variant="warning"'],
-      corpo(
+      body(
         'TriangleAlert',
         'Assinatura expirando',
         'Sua assinatura expira em 3 dias. Renove para evitar interrupções.',
@@ -136,7 +136,7 @@ export function alertInfoSource(): string {
     `${IMPORT}\n${importIcon('Info')}`,
     alerta(
       ['variant="info"'],
-      corpo('Info', 'Dica', 'Você pode personalizar os atalhos de teclado nas configurações.'),
+      body('Info', 'Dica', 'Você pode personalizar os atalhos de teclado nas configurações.'),
     ),
   );
 }
@@ -163,7 +163,7 @@ const avisoVisivel = ref(true)`,
         'dismiss-label="Fechar alerta"',
         '@dismiss="avisoVisivel = false"',
       ],
-      corpo('CheckCircle2', 'Perfil atualizado', 'Suas informações foram salvas com sucesso.'),
+      body('CheckCircle2', 'Perfil atualizado', 'Suas informações foram salvas com sucesso.'),
     ),
   );
 }
@@ -178,7 +178,7 @@ export function keyboardAlertDismissivelSource(): string {
     `${IMPORT}\n${importIcon('Info')}`,
     alerta(
       ['dismissible', 'dismiss-label="Fechar alerta"'],
-      corpo('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.'),
+      body('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.'),
     ),
   );
 }
@@ -193,7 +193,7 @@ export function alertContrastSource(): string {
   const blocks = variantes.map((v) =>
     alerta(
       [attr('variant', v, 'default')],
-      corpo(null, `Título ${v}`, `Texto corrido da variante ${v}.`),
+      body(null, `Título ${v}`, `Texto corrido da variante ${v}.`),
     ),
   );
   return vueSnippet(
@@ -208,7 +208,7 @@ ${indentar(blocks.join('\n'))}
 export function alertCompletoSource(): string {
   return vueSnippet(
     `${IMPORT}\n${importIcon('Info')}`,
-    alerta([], corpo('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.')),
+    alerta([], body('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.')),
   );
 }
 
@@ -219,7 +219,7 @@ export function alertCompletoSource(): string {
 export function alertNoTitleSource(): string {
   return vueSnippet(
     `${IMPORT.replace(', AlertTitle', '')}\n${importIcon('Info')}`,
-    alerta([], corpo('Info', '', 'Suas alterações serão aplicadas na próxima sessão.')),
+    alerta([], body('Info', '', 'Suas alterações serão aplicadas na próxima sessão.')),
   );
 }
 
@@ -227,7 +227,7 @@ export function alertNoTitleSource(): string {
 export function alertNoIconSource(): string {
   return vueSnippet(
     IMPORT,
-    alerta([], corpo(null, 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.')),
+    alerta([], body(null, 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.')),
   );
 }
 
@@ -245,7 +245,7 @@ export function alertNoAnnouncementSource(): string {
 ${indentar(
   alerta(
     ['role="note"'],
-    corpo(
+    body(
       'Info',
       'Nota de implementação',
       'Conteúdo estático, já presente no carregamento: o leitor de tela lê na ordem da página, sem interromper.',
@@ -255,7 +255,7 @@ ${indentar(
 ${indentar(
   alerta(
     [],
-    corpo(
+    body(
       'Info',
       'Falha ao salvar',
       'Sem papel explícito o alerta segue como live region assertiva.',
@@ -276,7 +276,7 @@ export function alertInsercaoDinamicaSource(): string {
     `${IMPORT}\n${importIcon('Info')}`,
     `<div aria-live="polite">
 ${indentar(
-  alerta([], corpo('Info', 'Operação concluída', 'O relatório foi gerado com sucesso.')),
+  alerta([], body('Info', 'Operação concluída', 'O relatório foi gerado com sucesso.')),
 )}
 </div>`,
   );
@@ -286,7 +286,7 @@ ${indentar(
 export function alertWithIconSource(): string {
   return vueSnippet(
     `${IMPORT}\n${importIcon('Info')}`,
-    alerta([], corpo('Info', 'Informação', 'Ícone posicionado automaticamente.')),
+    alerta([], body('Info', 'Informação', 'Ícone posicionado automaticamente.')),
   );
 }
 
@@ -302,7 +302,7 @@ ${importIcon('Info')}`,
     alerta(
       [],
       [
-        ...corpo('Info', 'Atualização disponível', 'Uma nova versão está pronta para instalação.'),
+        ...body('Info', 'Atualização disponível', 'Uma nova versão está pronta para instalação.'),
         `<AlertAction>
   <Button size="sm" variant="outline">Atualizar</Button>
 </AlertAction>`,
@@ -335,6 +335,6 @@ ${importIcon('Info')}`,
 export function alertLayoutNoIconSource(): string {
   return vueSnippet(
     IMPORT,
-    alerta([], corpo(null, 'Sem ícone', 'Alerta sem ícone mantém layout de coluna única.')),
+    alerta([], body(null, 'Sem ícone', 'Alerta sem ícone mantém layout de coluna única.')),
   );
 }

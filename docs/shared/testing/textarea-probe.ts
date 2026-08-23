@@ -39,7 +39,7 @@ export interface CounterMeasurement {
   existe: boolean;
   ariaLive: string | null;
   ariaLabel: string | null;
-  texto: string | null;
+  text: string | null;
   /** Um contador fora do fluxo de leitura não é anunciado ao mudar. */
   ehRegiaoViva: boolean;
 }
@@ -66,7 +66,7 @@ const HEIGHT_CLASSES = [
   'min-h-[100px]',
 ] as const;
 
-const texto = (el: Element | null | undefined): string | null =>
+const text = (el: Element | null | undefined): string | null =>
   el?.textContent?.trim().replace(/\s+/g, ' ') || null;
 
 /** Nome acessível pela ordem que o leitor usa. `null` é campo sem nome. */
@@ -74,11 +74,11 @@ function accessibleName(el: Element | null | undefined): string | null {
   if (!el) return null;
   const labelled = el.getAttribute('aria-labelledby');
   if (labelled) {
-    const alvo = el.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
-    if (alvo?.textContent?.trim()) return alvo.textContent.trim();
+    const target = el.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
+    if (target?.textContent?.trim()) return target.textContent.trim();
   }
-  const rotulo = el.getAttribute('aria-label');
-  if (rotulo?.trim()) return rotulo.trim();
+  const label = el.getAttribute('aria-label');
+  if (label?.trim()) return label.trim();
   const id = el.getAttribute('id');
   if (id) {
     const label = el.ownerDocument.querySelector(`label[for="${CSS.escape(id)}"]`);
@@ -188,12 +188,12 @@ export function preencherAte(ta: HTMLTextAreaElement, n: number): void {
   ta.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
-/** Mede UM textarea e o que o acompanha. `raiz` é o wrapper do cenário. */
-export function measureTextarea(raiz: HTMLElement) {
+/** Mede UM textarea e o que o acompanha. `root` é o wrapper do cenário. */
+export function measureTextarea(root: HTMLElement) {
   const ta =
-    raiz.querySelector<HTMLTextAreaElement>('textarea[data-slot="textarea"]') ??
-    raiz.querySelector<HTMLTextAreaElement>('textarea.nds-textarea') ??
-    raiz.querySelector<HTMLTextAreaElement>('textarea');
+    root.querySelector<HTMLTextAreaElement>('textarea[data-slot="textarea"]') ??
+    root.querySelector<HTMLTextAreaElement>('textarea.nds-textarea') ??
+    root.querySelector<HTMLTextAreaElement>('textarea');
 
   if (!ta) {
     return { presente: false } as const;
@@ -202,7 +202,7 @@ export function measureTextarea(raiz: HTMLElement) {
   const classes = (ta.getAttribute('class') || '').split(/\s+/).filter(Boolean);
   const cs = getComputedStyle(ta);
   const csPlaceholder = getComputedStyle(ta, '::placeholder');
-  const caixa = ta.getBoundingClientRect();
+  const box = ta.getBoundingClientRect();
 
   const describedby = ta.getAttribute('aria-describedby');
   const targetDescribed = describedby
@@ -213,12 +213,12 @@ export function measureTextarea(raiz: HTMLElement) {
     : [];
 
   const counterEl =
-    raiz.querySelector<HTMLElement>('[aria-live]') ?? raiz.querySelector<HTMLElement>('[role="status"]');
+    root.querySelector<HTMLElement>('[aria-live]') ?? root.querySelector<HTMLElement>('[role="status"]');
   const counter: CounterMeasurement = {
     existe: !!counterEl,
     ariaLive: counterEl?.getAttribute('aria-live') ?? null,
     ariaLabel: counterEl?.getAttribute('aria-label') ?? null,
-    texto: texto(counterEl),
+    text: text(counterEl),
     ehRegiaoViva: counterEl?.getAttribute('aria-live') === 'polite' || counterEl?.getAttribute('role') === 'status',
   };
 
@@ -238,9 +238,9 @@ export function measureTextarea(raiz: HTMLElement) {
       classesInertes: classes.filter((c) => !c.startsWith('nds-')),
       estiloInline: ta.getAttribute('style'),
       wrapper: {
-        tag: raiz.firstElementChild?.tagName.toLowerCase() ?? null,
-        classes: (raiz.firstElementChild?.getAttribute('class') || '').split(/\s+/).filter(Boolean),
-        estiloInline: raiz.firstElementChild?.getAttribute('style') ?? null,
+        tag: root.firstElementChild?.tagName.toLowerCase() ?? null,
+        classes: (root.firstElementChild?.getAttribute('class') || '').split(/\s+/).filter(Boolean),
+        estiloInline: root.firstElementChild?.getAttribute('style') ?? null,
       },
     },
     semantica: {
@@ -252,17 +252,17 @@ export function measureTextarea(raiz: HTMLElement) {
       maxLength: ta.maxLength > 0 ? ta.maxLength : null,
       ariaInvalid: ta.getAttribute('aria-invalid'),
       ariaRequired: ta.getAttribute('aria-required'),
-      desabilitado: ta.disabled,
+      disabled: ta.disabled,
       somenteLeitura: ta.readOnly,
-      nome: ta.name || null,
+      name: ta.name || null,
       ariaDescribedby: describedby,
       alvoDescribedbyExiste: describedby ? targetDescribed.length === describedby.split(/\s+/).length : null,
-      textoDescrito: targetDescribed.map((el) => texto(el)),
+      textoDescrito: targetDescribed.map((el) => text(el)),
       counter,
     },
     geometria: {
-      largura: Math.round(caixa.width),
-      altura: Math.round(caixa.height),
+      boxWidth: Math.round(box.width),
+      boxHeight: Math.round(box.height),
       minHeight: cs.minHeight,
       height: cs.height,
       paddingBloco: `${cs.paddingTop} ${cs.paddingBottom}`,
@@ -288,7 +288,7 @@ export function measureTextarea(raiz: HTMLElement) {
       cor: cs.color,
       corDaBorda: cs.borderTopColor,
       corDoPlaceholder: csPlaceholder.color || null,
-      opacidade: cs.opacity,
+      opacity: cs.opacity,
       cursor: cs.cursor,
     },
     contraste: {
@@ -303,14 +303,14 @@ export function measureTextarea(raiz: HTMLElement) {
 }
 
 /**
- * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `raiz`.
+ * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `root`.
  * Cenário ausente vem `null` — é o achado de "a stack não monta este caso".
  */
-export function measureTextareas(raiz: HTMLElement, cenarios: string[]) {
+export function measureTextareas(root: HTMLElement, cenarios: string[]) {
   const registro: Record<string, unknown> = {};
   for (const cenario of cenarios) {
-    const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
-    registro[cenario] = alvo ? measureTextarea(alvo) : null;
+    const target = root.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
+    registro[cenario] = target ? measureTextarea(target) : null;
   }
   return registro;
 }
@@ -322,18 +322,18 @@ export function measureTextareas(raiz: HTMLElement, cenarios: string[]) {
  * A classe sai no `finally`: deixá-la posta envenena a story seguinte e a foto
  * do Chromatic.
  */
-export function darkMeasure(raiz: HTMLElement, cenario: string) {
-  const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
-  const campo = alvo?.querySelector<HTMLTextAreaElement>('textarea');
-  if (!alvo || !campo) return null;
+export function darkMeasure(root: HTMLElement, cenario: string) {
+  const target = root.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
+  const field = target?.querySelector<HTMLTextAreaElement>('textarea');
+  if (!target || !field) return null;
 
-  const desfazer = darkLigarTheme(raiz.ownerDocument);
+  const desfazer = darkLigarTheme(root.ownerDocument);
   try {
     // Trocar o tema troca `border-color`, que é uma propriedade em transição:
     // sem desligá-la a sonda leria a cor do tema CLARO e relataria uma borda
     // que não escurece. Ver `noTransicao`.
-    return noTransicao(campo, () => {
-      const measurement = measureTextarea(alvo);
+    return noTransicao(field, () => {
+      const measurement = measureTextarea(target);
       if (!measurement.presente) return null;
       return { state: measurement.state, contraste: measurement.contraste };
     });
@@ -348,10 +348,10 @@ export function darkMeasure(raiz: HTMLElement, cenario: string) {
  * Via exceção, e não `console.log`: o addon do Storybook instrumenta o console
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest.
  */
-export function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[]) {
+export function reportProbe(stack: string, root: HTMLElement, cenarios: string[]) {
   const registro = {
-    light: measureTextareas(raiz, cenarios),
-    escuro: darkMeasure(raiz, cenarios[0]),
+    light: measureTextareas(root, cenarios),
+    escuro: darkMeasure(root, cenarios[0]),
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);
 }

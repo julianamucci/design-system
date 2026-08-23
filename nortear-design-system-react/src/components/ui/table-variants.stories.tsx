@@ -108,8 +108,8 @@ export const Basic: Story = {
     });
 
     await step("A legenda visível é o nome acessível da tabela", async () => {
-      const tabela = canvas.getByRole("table", { name: /faturas recentes/ });
-      const caption = tabela.querySelector<HTMLElement>("caption")!;
+      const table = canvas.getByRole("table", { name: /faturas recentes/ });
+      const caption = table.querySelector<HTMLElement>("caption")!;
       await expect(caption.classList.contains("nds-sr-only")).toBe(false);
     });
   },
@@ -152,15 +152,15 @@ export const WithFooter: Story = {
     await step("O rodapé fica depois do corpo e cobre as três primeiras colunas", async () => {
       // functional.item3 — o `colspan` é o que faz o rótulo "Total" ocupar a
       // largura das colunas descritivas e o valor cair sob a coluna certa.
-      const tabela = canvasElement.querySelector<HTMLElement>("table")!;
-      const tfoot = tabela.querySelector<HTMLElement>("tfoot")!;
+      const table = canvasElement.querySelector<HTMLElement>("table")!;
+      const tfoot = table.querySelector<HTMLElement>("tfoot")!;
       await expect(tfoot).toHaveAttribute("data-slot", "table-footer");
-      const position = tabela.querySelector("tbody")!.compareDocumentPosition(tfoot);
+      const position = table.querySelector("tbody")!.compareDocumentPosition(tfoot);
       await expect(position & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
       await expect(tfoot.querySelector("td")).toHaveAttribute("colspan", "3");
       await expect(tfoot).toHaveTextContent(TOTAL);
       // O total não é registro: o corpo continua com as mesmas cinco linhas.
-      await expect(tabela.querySelectorAll("tbody tr").length).toBe(INVOICES.length);
+      await expect(table.querySelectorAll("tbody tr").length).toBe(INVOICES.length);
     });
 
     await step("O rodapé se distingue do corpo por fundo próprio", async () => {

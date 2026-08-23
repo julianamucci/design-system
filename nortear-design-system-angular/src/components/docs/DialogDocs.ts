@@ -522,10 +522,10 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
               <p ndsDialogDescription>{{ t('demonstration.labels.description') }}</p>
             </div>
             <div ndsDialogBody class="nds-stack" data-spacing="md">
-              @for (campo of camposDoFormulario(); track campo.id) {
+              @for (field of camposDoFormulario(); track field.id) {
                 <div class="nds-stack" data-spacing="xs">
-                  <label ndsLabel [attr.for]="campo.id">{{ campo.rotulo }}</label>
-                  <input ndsInput [id]="campo.id" [name]="campo.id" [value]="campo.valor" />
+                  <label ndsLabel [attr.for]="field.id">{{ field.label }}</label>
+                  <input ndsInput [id]="field.id" [name]="field.id" [value]="field.value" />
                 </div>
               }
             </div>
@@ -686,10 +686,10 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
                 </div>
 
                 <div ndsDialogBody class="nds-stack" data-spacing="md">
-                  @for (campo of camposDoFormulario(); track campo.id) {
+                  @for (field of camposDoFormulario(); track field.id) {
                     <div class="nds-stack" data-spacing="xs">
-                      <label ndsLabel [attr.for]="'demo-' + campo.id">{{ campo.rotulo }}</label>
-                      <input ndsInput [id]="'demo-' + campo.id" [name]="campo.id" [value]="campo.valor" />
+                      <label ndsLabel [attr.for]="'demo-' + field.id">{{ field.label }}</label>
+                      <input ndsInput [id]="'demo-' + field.id" [name]="field.id" [value]="field.value" />
                     </div>
                   }
                   <p class="nds-text-caption nds-text-muted-foreground">
@@ -867,8 +867,8 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
   protected readonly camposDoFormulario = computed(() => {
     dict();
     return [
-      { id: 'perfil-nome', rotulo: t('demonstration.labels.fieldName'), valor: 'Ana Ribeiro' },
-      { id: 'perfil-email', rotulo: t('demonstration.labels.fieldEmail'), valor: 'ana@exemplo.com' },
+      { id: 'perfil-nome', label: t('demonstration.labels.fieldName'), value: 'Ana Ribeiro' },
+      { id: 'perfil-email', label: t('demonstration.labels.fieldEmail'), value: 'ana@exemplo.com' },
     ];
   });
 
@@ -1024,7 +1024,7 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
       { key: 'withDestructiveAction', tpl: this.tplVarWithDestructiveAction() },
       { key: 'customCloseInFooter',   tpl: this.tplVarCustomCloseInFooter()   },
     ];
-    const itens: DocsVariantItem[] = mapa.map(({ key, tpl }) => ({
+    const items: DocsVariantItem[] = mapa.map(({ key, tpl }) => ({
       name: key,
       description: stripHtml(t(`variants.items.${key}`)),
       code: VARIANT_CODE[key],
@@ -1032,14 +1032,14 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
       preview: tpl,
     }));
     // `confirmEmail` é o único que traz nome e descrição próprios no conteúdo.
-    itens.push({
+    items.push({
       name: t('variants.items.confirmEmail.name'),
       description: stripHtml(t('variants.items.confirmEmail.description')),
       code: VARIANT_CODE.confirmEmail,
       trackId: 'confirmEmail',
       preview: this.tplVarConfirmEmail(),
     });
-    return itens;
+    return items;
   });
 
   protected readonly compositionItems = computed(() => {
@@ -1267,9 +1267,9 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
       string,
       { screenReader?: Record<string, string> }
     >;
-    const bloco = byLocale[locale]?.screenReader ?? {};
+    const block = byLocale[locale]?.screenReader ?? {};
     // `title`, quando existe, é o cabeçalho da seção e não uma linha da lista.
-    return Object.entries(bloco).filter(([k]) => k !== 'title').map(([, v]) => v);
+    return Object.entries(block).filter(([k]) => k !== 'title').map(([, v]) => v);
   });
 
   protected readonly relatedItems = computed(() => {
@@ -1434,9 +1434,9 @@ function firstExemplo(raw: string): string {
  * aparecer na página — e ninguém percebe, porque nada quebra.
  */
 function itemsList(d: Record<string, string>, base: string): string[] {
-  const itens: string[] = [];
-  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) itens.push(d[`${base}.item${i}`]);
-  return itens;
+  const items: string[] = [];
+  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) items.push(d[`${base}.item${i}`]);
+  return items;
 }
 
 function itemsFromDict<K extends string>(

@@ -52,8 +52,8 @@ describe('variantes', () => {
 
   it('as semânticas aparecem juntas, que é o que a story afirma', () => {
     const saida = badgeSemanticasSource();
-    for (const variante of ['warning', 'success', 'info']) {
-      expect(saida).toContain(`variant="${variante}"`);
+    for (const variant of ['warning', 'success', 'info']) {
+      expect(saida).toContain(`variant="${variant}"`);
     }
   });
 });

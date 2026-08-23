@@ -8,11 +8,11 @@ import {
 
 describe('sheetSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do painel', () => {
-    const código = sheetSnippet();
-    expect(código).toContain("import { createSheet } from '@/components/ui/sheet';");
-    expect(código).toContain('createSheet({');
-    expect(código).not.toContain('data-slot="sheet-content"');
-    expect(código).not.toContain('aria-modal="true"');
+    const code = sheetSnippet();
+    expect(code).toContain("import { createSheet } from '@/components/ui/sheet';");
+    expect(code).toContain('createSheet({');
+    expect(code).not.toContain('data-slot="sheet-content"');
+    expect(code).not.toContain('aria-modal="true"');
   });
 
   it('omite o que já é padrão da fábrica', () => {
@@ -28,36 +28,36 @@ describe('sheetSnippet', () => {
   });
 
   it('monta o gatilho com a fábrica de botão, sem helper de story', () => {
-    const código = sheetSnippet({ triggerLabel: 'Abrir filtros' });
-    expect(código).toContain("import { createButton } from '@/components/ui/button';");
-    expect(código).toContain("trigger: createButton({ variant: 'outline', label: 'Abrir filtros' })");
-    expect(código).not.toContain('buildPlayground');
-    expect(código).not.toContain('makeFooter');
-    expect(código).not.toContain('buildSheetSide');
+    const code = sheetSnippet({ triggerLabel: 'Abrir filtros' });
+    expect(code).toContain("import { createButton } from '@/components/ui/button';");
+    expect(code).toContain("trigger: createButton({ variant: 'outline', label: 'Abrir filtros' })");
+    expect(code).not.toContain('buildPlayground');
+    expect(code).not.toContain('makeFooter');
+    expect(code).not.toContain('buildSheetSide');
   });
 
   it('mostra que quem fecha pelo rodapé é o overlay — não existe botão componível', () => {
-    const código = sheetSnippet();
-    expect(código).toContain('footer: rodape');
-    expect(código).toContain("[data-slot=\"sheet-overlay\"]");
-    expect(código).not.toContain('SheetClose');
+    const code = sheetSnippet();
+    expect(code).toContain('footer: rodape');
+    expect(code).toContain("[data-slot=\"sheet-overlay\"]");
+    expect(code).not.toContain('SheetClose');
   });
 
   it('monta o painel sem rodapé quando a story não tem ações', () => {
-    const código = sheetSnippet({ cancelLabel: false, applyLabel: false });
-    expect(código).not.toContain('footer:');
-    expect(código).not.toContain('const rodape');
+    const code = sheetSnippet({ cancelLabel: false, applyLabel: false });
+    expect(code).not.toContain('footer:');
+    expect(code).not.toContain('const rodape');
   });
 
   it('troca o corpo conforme a composição, sempre com peças do design system', () => {
-    const form = sheetSnippet({ corpo: 'formulario' });
+    const form = sheetSnippet({ body: 'formulario' });
     expect(form).toContain("import { createFormField } from '@/components/ui/form';");
     expect(form).toContain('createFormField({ label:');
 
-    const navigation = sheetSnippet({ corpo: 'navegacao' });
+    const navigation = sheetSnippet({ body: 'navegacao' });
     expect(navigation).toContain("corpo.setAttribute('aria-label', 'Seções');");
 
-    const paragrafos = sheetSnippet({ corpo: 'paragrafos', paragrafos: 8 });
+    const paragrafos = sheetSnippet({ body: 'paragrafos', paragrafos: 8 });
     expect(paragrafos).toContain('i <= 8');
   });
 
@@ -67,8 +67,8 @@ describe('sheetSnippet', () => {
   });
 
   it('não repete o import do botão quando o corpo também o usa', () => {
-    const código = sheetSnippet({ corpo: 'acoes' });
-    expect(código.match(/from '@\/components\/ui\/button'/g)).toHaveLength(1);
+    const code = sheetSnippet({ body: 'acoes' });
+    expect(code.match(/from '@\/components\/ui\/button'/g)).toHaveLength(1);
   });
 });
 
@@ -90,24 +90,24 @@ describe('sheetSource', () => {
   });
 
   it('liga a linha do callback quando a story passa um spy nos args', () => {
-    const código = sheetSource('', { args: { onOpenChange: () => {} } });
-    expect(código).toContain('onOpenChange: (aberto) => registrarPainel(aberto)');
+    const code = sheetSource('', { args: { onOpenChange: () => {} } });
+    expect(code).toContain('onOpenChange: (aberto) => registrarPainel(aberto)');
   });
 });
 
 describe('sheetSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = sheetSourceWith({ side: 'bottom' })('', { args: { side: 'right' } });
-    expect(código).toContain("side: 'bottom'");
+    const code = sheetSourceWith({ side: 'bottom' })('', { args: { side: 'right' } });
+    expect(code).toContain("side: 'bottom'");
   });
 });
 
 describe('sheetControladoSnippet', () => {
   it('abre pelo gatilho interno — a fábrica não expõe prop de estado', () => {
-    const código = sheetControlledSnippet();
-    expect(código).toContain("gatilhoInterno.classList.add('nds-sr-only');");
-    expect(código).toContain('gatilhoInterno.click();');
-    expect(código).toContain('onOpenChange: (estado) => { aberto = estado; }');
-    expect(código).not.toContain('open: true');
+    const code = sheetControlledSnippet();
+    expect(code).toContain("gatilhoInterno.classList.add('nds-sr-only');");
+    expect(code).toContain('gatilhoInterno.click();');
+    expect(code).toContain('onOpenChange: (estado) => { aberto = estado; }');
+    expect(code).not.toContain('open: true');
   });
 });

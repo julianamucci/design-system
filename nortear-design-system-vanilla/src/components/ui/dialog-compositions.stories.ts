@@ -4,17 +4,17 @@ import { createDialog } from './dialog';
 import { dialogWithFormSource, dialogSource, dialogSourceWith } from './dialog.source';
 import { createButton } from './button';
 import {
-  abrir,
+  open,
   mountOpen,
   cantoButtonClose,
   buildField,
   checkNameEDescricao,
   waitForOpen,
   waitForClosed,
-  fechar,
-  gatilho,
+  close,
+  trigger,
   makeFooter,
-  painel,
+  panel,
 } from './dialog.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -74,13 +74,13 @@ export const ConfirmEmail: Story = {
     await step('O endereço confirmado aparece no corpo, não só no título', async () => {
       // O dado que a pessoa precisa conferir antes de decidir tem que estar na
       // tela — o título sozinho não diz para onde o link vai.
-      const corpo = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
-      await expect(corpo).toHaveTextContent('maria@exemplo.com');
+      const body = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
+      await expect(body).toHaveTextContent('maria@exemplo.com');
     });
 
     await step('A operação é reversível, então a ação primária é neutra', async () => {
-      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = footer.querySelectorAll<HTMLElement>('button');
       await expect(buttons.length).toBe(2);
       await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-default');
     });
@@ -128,9 +128,9 @@ export const ProfileEdit: Story = {
     const p = await waitForOpen();
 
     await step('Os campos estão rotulados e trazem o valor inicial', async () => {
-      const nome = p.querySelector<HTMLInputElement>('#profile-name')!;
-      await expect(nome).toHaveAccessibleName('Nome de exibição');
-      await expect(nome.value).toBe('Maria Souza');
+      const name = p.querySelector<HTMLInputElement>('#profile-name')!;
+      await expect(name).toHaveAccessibleName('Nome de exibição');
+      await expect(name.value).toBe('Maria Souza');
 
       const funcao = p.querySelector<HTMLInputElement>('#profile-role')!;
       await expect(funcao).toHaveAccessibleName('Função');
@@ -138,8 +138,8 @@ export const ProfileEdit: Story = {
     });
 
     await step('O Tab percorre os campos na ordem em que aparecem', async () => {
-      const nome = p.querySelector<HTMLInputElement>('#profile-name')!;
-      nome.focus();
+      const name = p.querySelector<HTMLInputElement>('#profile-name')!;
+      name.focus();
       await userEvent.tab();
       await expect(document.activeElement).toBe(p.querySelector('#profile-role'));
     });
@@ -203,22 +203,22 @@ export const MediaPreview: Story = {
     });
 
     await step('O botão de fechar é a saída, e devolve o foco ao gatilho', async () => {
-      const trigger = gatilho(canvasElement)!;
+      const triggerEl = trigger(canvasElement)!;
       // A devolução do foco só faz sentido se o diálogo tiver sido ABERTO pelo
       // gatilho. Esta story MONTA aberta, e nesse caminho o elemento focado
       // antes era o próprio documento — era para lá que o foco voltava, com razão.
       // Fechar e reabrir pelo gatilho estabelece a precondição do que se quer
       // provar.
-      await fechar();
-      await abrir(canvasElement);
-      const x = cantoButtonClose(painel()!)!;
+      await close();
+      await open(canvasElement);
+      const x = cantoButtonClose(panel()!)!;
       await expect(x).toHaveAccessibleName();
       await userEvent.click(x);
       await waitForClosed();
-      await expect(document.activeElement).toBe(trigger);
+      await expect(document.activeElement).toBe(triggerEl);
       // Reabre: o Chromatic fotografa o estado final, e é o painel ABERTO que o
       // axe precisa varrer — `accessibility.item6` é declarado nesta story.
-      await expect(await abrir(canvasElement)).toBeVisible();
+      await expect(await open(canvasElement)).toBeVisible();
     });
   },
 };

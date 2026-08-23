@@ -37,9 +37,9 @@ const IMPORT = `import { Toggle } from "@/components/ui/toggle";`;
 function importing(...icons: IconKey[]): string {
   return [
     IMPORT,
-    ...icons.map((chave) => {
-      const [nome, caminho] = ICONS[chave];
-      return `import ${nome} from "@lucide/svelte/icons/${caminho}";`;
+    ...icons.map((key) => {
+      const [name, caminho] = ICONS[key];
+      return `import ${name} from "@lucide/svelte/icons/${caminho}";`;
     }),
   ].join('\n');
 }
@@ -74,11 +74,11 @@ export function toggleSource(_gerado?: string, ctx?: { args?: Partial<ToggleArgs
   );
 
   const icone = ICONS[icon][0];
-  const corpo = withLabel
+  const body = withLabel
     ? `  <${icone} aria-hidden="true" />\n  ${label}`
     : `  <${icone} aria-hidden="true" />`;
 
-  return svelteSnippet(importing(icon), `<Toggle${props}>\n${corpo}\n</Toggle>`);
+  return svelteSnippet(importing(icon), `<Toggle${props}>\n${body}\n</Toggle>`);
 }
 
 /**

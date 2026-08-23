@@ -99,15 +99,15 @@ export const WithColumnFilters: Story = {
       // functional.item2 — o valor esperado é 1, e não 3: se o segundo filtro
       // trocasse o primeiro, "Carla" sozinha devolveria a mesma linha e o teste
       // passaria sem provar nada. A prova é que "Ana" (que é Pago) some.
-      const campo = canvas.getByRole('textbox', { name: 'Filtrar Cliente' });
-      await userEvent.type(campo, 'Carla');
+      const field = canvas.getByRole('textbox', { name: 'Filtrar Cliente' });
+      await userEvent.type(field, 'Carla');
       await waitFor(async () => {
         await expect(lines().length).toBe(1);
       });
       await expect(lines()[0]).toHaveTextContent('#INV-003');
 
-      await userEvent.clear(campo);
-      await userEvent.type(campo, 'Ana');
+      await userEvent.clear(field);
+      await userEvent.type(field, 'Ana');
       await waitFor(async () => {
         await expect(lines().length).toBe(0);
       });
@@ -155,15 +155,15 @@ export const WithColumnVisibility: Story = {
       // Duas diretivas no mesmo botão (gatilho do menu e visual do botão) ligam
       // `data-slot` e uma sobrescreve a outra sem ordem garantida. A classe é o
       // que sobra estável — armadilha 11 do CLAUDE.md deste stack.
-      const gatilho = canvasElement.querySelector<HTMLElement>('.nds-data-table-columns-btn')!;
-      await expect(gatilho.tagName).toBe('BUTTON');
-      await expect(gatilho).toHaveAttribute('aria-haspopup', 'menu');
+      const trigger = canvasElement.querySelector<HTMLElement>('.nds-data-table-columns-btn')!;
+      await expect(trigger.tagName).toBe('BUTTON');
+      await expect(trigger).toHaveAttribute('aria-haspopup', 'menu');
       await expect(cabecalhos().length).toBe(COLUMNS_WITH_FILTER.length);
     });
 
     await step('Desmarcar uma coluna a tira da grade inteira', async () => {
-      const gatilho = canvasElement.querySelector<HTMLElement>('.nds-data-table-columns-btn')!;
-      await userEvent.click(gatilho);
+      const trigger = canvasElement.querySelector<HTMLElement>('.nds-data-table-columns-btn')!;
+      await userEvent.click(trigger);
       await waitForPortal('menu');
 
       const menu = within(document.body);
@@ -223,13 +223,13 @@ export const WithInlineEditing: Story = {
       const button = canvas.getAllByRole('button', { name: 'Editar Cliente' })[0];
       await userEvent.click(button);
 
-      const campo = await waitFor(() =>
+      const field = await waitFor(() =>
         canvas.getByRole('textbox', { name: 'Editar Cliente' }),
       );
-      await expect(campo).toHaveFocus();
+      await expect(field).toHaveFocus();
 
-      await userEvent.clear(campo);
-      await userEvent.type(campo, 'Ana Prado Filha{Enter}');
+      await userEvent.clear(field);
+      await userEvent.type(field, 'Ana Prado Filha{Enter}');
 
       await waitFor(async () => {
         await expect(canvas.getAllByRole('button', { name: 'Editar Cliente' })[0])
@@ -241,9 +241,9 @@ export const WithInlineEditing: Story = {
       const button = canvas.getAllByRole('button', { name: 'Editar Valor' })[0];
       await userEvent.click(button);
 
-      const campo = await waitFor(() => canvas.getByRole('textbox', { name: 'Editar Valor' }));
-      await userEvent.clear(campo);
-      await userEvent.type(campo, '9999{Escape}');
+      const field = await waitFor(() => canvas.getByRole('textbox', { name: 'Editar Valor' }));
+      await userEvent.clear(field);
+      await userEvent.type(field, '9999{Escape}');
 
       await waitFor(async () => {
         await expect(canvas.getAllByRole('button', { name: 'Editar Valor' })[0])

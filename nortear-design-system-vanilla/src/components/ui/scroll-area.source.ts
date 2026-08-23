@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { ScrollAreaSize } from './scroll-area';
@@ -33,14 +33,14 @@ export type ScrollAreaSnippetOptions = {
   /** @deprecated Apelido de `class` — chave dos args da story. */
   className?: string;
   itemCount?: number;
-  conteudo?: ScrollAreaContent;
+  content?: ScrollAreaContent;
 };
 
 const CLASSNAME_DEFAULT = 'nds-w-full nds-rounded-md nds-border-default';
 
 function accessibleName(o: ScrollAreaSnippetOptions): string | undefined {
-  const nome = o['aria-label'] ?? o.label;
-  return nome ? texto(nome) : undefined;
+  const name = o['aria-label'] ?? o.label;
+  return name ? text(name) : undefined;
 }
 
 function className(o: ScrollAreaSnippetOptions): string {
@@ -54,14 +54,14 @@ function className(o: ScrollAreaSnippetOptions): string {
  * padrão, e sem teto de altura não há transbordo — logo não há rolagem. Omiti-lo
  * ensinaria o erro de uso mais comum do componente, que é a story `NoLimit`.
  */
-function areaLines(o: ScrollAreaSnippetOptions, filho: string): string[] {
+function areaLines(o: ScrollAreaSnippetOptions, child: string): string[] {
   const degrau = o.size === null ? undefined : (o.size ?? 'lg');
-  return opcoes([
-    ['size', degrau ? texto(degrau) : undefined],
-    ['width', o.width ? texto(o.width) : undefined],
+  return options([
+    ['size', degrau ? text(degrau) : undefined],
+    ['width', o.width ? text(o.width) : undefined],
     ['aria-label', accessibleName(o)],
-    ['class', texto(className(o))],
-    ['children', filho],
+    ['class', text(className(o))],
+    ['children', child],
   ]);
 }
 
@@ -71,13 +71,13 @@ function areaLines(o: ScrollAreaSnippetOptions, filho: string): string[] {
 // abaixo é escrito com DOM curto ou com fábricas do design system, nunca com o
 // `buildList`/`buildMatrix` que só existe dentro do arquivo de story.
 
-type Content = { imports: string[]; bloco: string; variavel: string };
+type Content = { imports: string[]; block: string; variavel: string };
 
 function contentList(total: number): Content {
   return {
     imports: [],
     variavel: 'lista',
-    bloco: `const lista = document.createElement('ul');
+    block: `const lista = document.createElement('ul');
 lista.className = 'nds-stack nds-list-none nds-p-2 nds-m-0';
 lista.dataset.spacing = 'sm';
 for (let i = 1; i <= ${total}; i++) {
@@ -96,7 +96,7 @@ function contentRow(total: number): Content {
     // `nds-row` e não `nds-cluster`: o cluster quebra linha, e sem transbordo não
     // há barra horizontal nenhuma. Os cartões não encolhem, e é a soma deles que
     // passa da largura da área.
-    bloco: `const fileira = document.createElement('div');
+    block: `const fileira = document.createElement('div');
 fileira.className = 'nds-row nds-p-2';
 fileira.dataset.spacing = 'md';
 for (let i = 1; i <= ${total}; i++) {
@@ -113,7 +113,7 @@ function contentMatriz(lines: number, colunas: number): Content {
   return {
     imports: [],
     variavel: 'matriz',
-    bloco: `const matriz = document.createElement('table');
+    block: `const matriz = document.createElement('table');
 matriz.className = 'nds-text-caption nds-border-collapse';
 for (let l = 1; l <= ${lines}; l++) {
   const tr = document.createElement('tr');
@@ -136,7 +136,7 @@ function contentLinks(total: number): Content {
     variavel: 'navegacao',
     // A navegação tem nome próprio: dentro da área rolável ela continua sendo um
     // marco da página, e marco sem nome não é listado pelo leitor de tela.
-    bloco: `const navegacao = document.createElement('nav');
+    block: `const navegacao = document.createElement('nav');
 navegacao.setAttribute('aria-label', 'Ações da conta');
 
 const lista = document.createElement('ul');
@@ -159,7 +159,7 @@ function contentBadges(total: number): Content {
   return {
     imports: [importing('badge', 'createBadge')],
     variavel: 'versoes',
-    bloco: `const versoes = document.createElement('div');
+    block: `const versoes = document.createElement('div');
 versoes.className = 'nds-stack nds-p-2';
 versoes.dataset.spacing = 'sm';
 for (let i = 1; i <= ${total}; i++) {
@@ -177,7 +177,7 @@ for (let i = 1; i <= ${total}; i++) {
 
 function contentOf(o: ScrollAreaSnippetOptions): Content {
   const total = o.itemCount ?? 30;
-  switch (o.conteudo) {
+  switch (o.content) {
     case 'fileira':
       return contentRow(o.itemCount ?? 15);
     case 'matriz':
@@ -195,11 +195,11 @@ function contentOf(o: ScrollAreaSnippetOptions): Content {
 
 /** A chamada real de `createScrollArea` com o conteúdo que a story mostra. */
 export function scrollAreaSnippet(o: ScrollAreaSnippetOptions = {}): string {
-  const conteudo = contentOf(o);
+  const content = contentOf(o);
   return snippet(
-    [importing('scroll-area', 'createScrollArea'), ...conteudo.imports].join('\n'),
-    conteudo.bloco,
-    `const area = ${chamada('createScrollArea', areaLines(o, conteudo.variavel))};`,
+    [importing('scroll-area', 'createScrollArea'), ...content.imports].join('\n'),
+    content.block,
+    `const area = ${chamada('createScrollArea', areaLines(o, content.variavel))};`,
     montar('area'),
   );
 }
@@ -211,18 +211,18 @@ export function scrollAreaSnippet(o: ScrollAreaSnippetOptions = {}): string {
  * mostrasse só a chamada certa esconderia o erro de uso que ela documenta.
  */
 export function scrollAreaNoLimitSnippet(o: ScrollAreaSnippetOptions = {}): string {
-  const conteudo = contentOf(o);
+  const content = contentOf(o);
   return snippet(
     importing('scroll-area', 'createScrollArea'),
-    conteudo.bloco,
+    content.block,
     `// Sem degrau de altura o conteúdo expande e NÃO há rolagem: sem teto não há
 // transbordo. Sem nome também não há papel — região anônima não vira marco, e
 // \`aria-label\` em elemento sem papel é atributo proibido.
 const semTeto = ${chamada('createScrollArea', [
-      `class: ${texto(className(o))},`,
-      `children: ${conteudo.variavel},`,
+      `class: ${text(className(o))},`,
+      `children: ${content.variavel},`,
     ])};`,
-    `const comTeto = ${chamada('createScrollArea', areaLines({ ...o, size: o.size ?? 'sm' }, conteudo.variavel))};`,
+    `const comTeto = ${chamada('createScrollArea', areaLines({ ...o, size: o.size ?? 'sm' }, content.variavel))};`,
     `document.querySelector('#app')?.append(semTeto, comTeto);`,
   );
 }
@@ -234,7 +234,7 @@ const semTeto = ${chamada('createScrollArea', [
  * senão o título rola junto e quem lê perde a referência do que está vendo.
  */
 export function scrollAreaEmCardSnippet(o: ScrollAreaSnippetOptions = {}): string {
-  const conteudo = contentOf(o);
+  const content = contentOf(o);
   return snippet(
     [
       importing('scroll-area', 'createScrollArea'),
@@ -246,10 +246,10 @@ export function scrollAreaEmCardSnippet(o: ScrollAreaSnippetOptions = {}): strin
         'createCardHeader',
         'createCardTitle',
       ),
-      ...conteudo.imports,
+      ...content.imports,
     ].join('\n'),
-    conteudo.bloco,
-    `const area = ${chamada('createScrollArea', areaLines(o, conteudo.variavel))};`,
+    content.block,
+    `const area = ${chamada('createScrollArea', areaLines(o, content.variavel))};`,
     `const cabecalho = createCardHeader();
 cabecalho.append(
   createCardTitle({ text: 'Histórico de atividades' }),

@@ -165,10 +165,10 @@ export const Focus: Story = {
     });
 
     await step('O Tab seguinte move o foco para o painel ativo', async () => {
-      const painel = canvas.getByRole('tabpanel');
-      await expect(painel).toHaveAttribute('tabindex', '0');
+      const panel = canvas.getByRole('tabpanel');
+      await expect(panel).toHaveAttribute('tabindex', '0');
       await userEvent.tab();
-      await waitFor(() => expect(painel).toHaveFocus());
+      await waitFor(() => expect(panel).toHaveFocus());
     });
   },
 };

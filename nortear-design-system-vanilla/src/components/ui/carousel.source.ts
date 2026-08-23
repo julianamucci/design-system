@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { CarouselOrientation } from './carousel';
@@ -38,12 +38,12 @@ export type CarouselSnippetOptions = {
  */
 export function carouselSnippet(o: CarouselSnippetOptions = {}): string {
   const total = o.slides ?? 5;
-  const lines = opcoes([
+  const lines = options([
     ['items', 'slides'],
-    ['aria-label', texto(o.ariaLabel ?? 'Galeria de exemplos')],
-    ['orientation', o.orientation && o.orientation !== 'horizontal' ? texto(o.orientation) : undefined],
-    ['contentClass', o.contentClass ? texto(o.contentClass) : undefined],
-    ['slideClass', o.slideClass ? texto(o.slideClass) : undefined],
+    ['aria-label', text(o.ariaLabel ?? 'Galeria de exemplos')],
+    ['orientation', o.orientation && o.orientation !== 'horizontal' ? text(o.orientation) : undefined],
+    ['contentClass', o.contentClass ? text(o.contentClass) : undefined],
+    ['slideClass', o.slideClass ? text(o.slideClass) : undefined],
     ['autoplay', o.autoplay ? 'true' : undefined],
     ['autoplayInterval', o.autoplay && o.autoplayInterval && o.autoplayInterval !== 3000 ? String(o.autoplayInterval) : undefined],
     ['onIndexChange', o.onIndexChange],

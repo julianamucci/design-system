@@ -32,7 +32,7 @@ export const Paginated: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
-      return { columns: baseColumns, data: invoices, tamanho: PAGE_SIZE, sizes: [PAGE_SIZE, 10] };
+      return { columns: baseColumns, data: invoices, size: PAGE_SIZE, sizes: [PAGE_SIZE, 10] };
     },
     // O tamanho inicial precisa existir entre as opções do seletor: fora da
     // lista, o `select` não tem opção marcada e passa a exibir a primeira,
@@ -41,7 +41,7 @@ export const Paginated: Story = {
       :columns="columns"
       :data="data"
       :enable-global-filter="false"
-      :page-size="tamanho"
+      :page-size="size"
       :page-size-options="sizes"
     />`,
   }),
@@ -156,8 +156,8 @@ export const ExplicitRowLabel: Story = {
       return {
         columns: baseColumns,
         data: invoices,
-        chave: (f: Invoice) => f.id,
-        rotulo: (f: Invoice) => f.customer,
+        key: (f: Invoice) => f.id,
+        label: (f: Invoice) => f.customer,
       };
     },
     template: `<DataTable
@@ -166,8 +166,8 @@ export const ExplicitRowLabel: Story = {
       :enable-row-selection="true"
       :enable-global-filter="false"
       :enable-pagination="false"
-      :row-key="chave"
-      :row-label="rotulo"
+      :row-key="key"
+      :row-label="label"
     />`,
   }),
   parameters: {
@@ -275,16 +275,16 @@ export const Virtualized1000Rows: Story = {
     await step('Rolar troca a janela de linhas e mantém a posição', async () => {
       // visual.item5 — a story termina com o scroll no meio, que é o estado
       // que o item documenta.
-      const alvo = rolador();
+      const target = rolador();
       const firstBefore = datumLines()[0].textContent!.trim();
-      alvo.scrollTop = 0;
-      alvo.scrollTop = 4000;
-      alvo.dispatchEvent(new Event('scroll'));
+      target.scrollTop = 0;
+      target.scrollTop = 4000;
+      target.dispatchEvent(new Event('scroll'));
 
       await waitFor(async () => {
         await expect(datumLines()[0].textContent!.trim()).not.toBe(firstBefore);
       });
-      await expect(alvo.scrollTop).toBe(4000);
+      await expect(target.scrollTop).toBe(4000);
       await expect(datumLines().length).toBeLessThan(100);
     });
   },

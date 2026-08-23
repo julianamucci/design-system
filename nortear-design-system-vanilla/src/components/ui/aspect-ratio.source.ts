@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -45,7 +45,7 @@ const FRACOES: ReadonlyArray<[number, string]> = [
 ];
 
 export function ratioExpressao(ratio: number): string {
-  const fraction = FRACOES.find(([valor]) => Math.abs(valor - ratio) < 1e-9);
+  const fraction = FRACOES.find(([value]) => Math.abs(value - ratio) < 1e-9);
   return fraction ? fraction[1] : String(ratio);
 }
 
@@ -59,15 +59,15 @@ const ALT_DEFAULT = 'Paisagem montanhosa ao entardecer';
  * altura e posição saem da folha. O que sobra para quem consome é o recorte
  * (`object-fit`, que não tem utilitária) e o arredondamento, por classe.
  */
-function contentBlock(o: AspectRatioSnippetOptions): { nome: string; code: string } | null {
+function contentBlock(o: AspectRatioSnippetOptions): { name: string; code: string } | null {
   const alt = o.alt ?? ALT_DEFAULT;
 
   if (o.content === 'iframe') {
     return {
-      nome: 'mapa',
+      name: 'mapa',
       code: `const mapa = document.createElement('iframe');
 mapa.src = 'https://www.openstreetmap.org/export/embed.html';
-mapa.title = ${texto(alt)};
+mapa.title = ${text(alt)};
 mapa.loading = 'lazy';
 mapa.className = 'nds-rounded-md';`,
     };
@@ -75,11 +75,11 @@ mapa.className = 'nds-rounded-md';`,
 
   if (o.content === 'video') {
     return {
-      nome: 'video',
+      name: 'video',
       code: `const video = document.createElement('video');
 video.controls = true;
-video.poster = ${texto(o.imageUrl ?? IMAGE_DEFAULT)};
-video.setAttribute('aria-label', ${texto(alt)});
+video.poster = ${text(o.imageUrl ?? IMAGE_DEFAULT)};
+video.setAttribute('aria-label', ${text(alt)});
 video.className = 'nds-rounded-md';
 video.style.objectFit = 'cover';
 
@@ -96,10 +96,10 @@ video.appendChild(legenda);`,
   if (o.content === 'none') return null;
 
   return {
-    nome: 'imagem',
+    name: 'imagem',
     code: `const imagem = document.createElement('img');
-imagem.src = ${texto(o.imageUrl ?? IMAGE_DEFAULT)};
-imagem.alt = ${texto(alt)};
+imagem.src = ${text(o.imageUrl ?? IMAGE_DEFAULT)};
+imagem.alt = ${text(alt)};
 imagem.loading = 'lazy';
 imagem.className = 'nds-rounded-md';
 imagem.style.objectFit = 'cover';`,
@@ -109,18 +109,18 @@ imagem.style.objectFit = 'cover';`,
 /** A chamada real de `createAspectRatio` com o filho que a story mostra. */
 export function aspectRatioSnippet(o: AspectRatioSnippetOptions = {}): string {
   const ratio = o.ratio ?? 16 / 9;
-  const conteudo = contentBlock(o);
+  const content = contentBlock(o);
 
-  const lines = opcoes([
+  const lines = options([
     // `1` é o padrão da fábrica (quadrado): só a proporção diferente entra.
     ['ratio', ratio === 1 ? undefined : ratioExpressao(ratio)],
-    ['content', conteudo?.nome],
-    ['className', o.className ? texto(o.className) : undefined],
+    ['content', content?.name],
+    ['className', o.className ? text(o.className) : undefined],
   ]);
 
   return snippet(
     importing('aspect-ratio', 'createAspectRatio'),
-    conteudo?.code,
+    content?.code,
     `const caixa = ${chamada('createAspectRatio', lines)};`,
     montar('caixa'),
   );

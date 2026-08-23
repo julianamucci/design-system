@@ -12,16 +12,16 @@
 
 import { contraste } from './alert-probe';
 
-function texto(el: Element | null): string {
+function text(el: Element | null): string {
   return (el?.textContent ?? '').trim().replace(/\s+/g, ' ');
 }
 
-function caixa(el: HTMLElement | null) {
+function box(el: HTMLElement | null) {
   if (!el) return null;
   const cs = getComputedStyle(el);
   const r = el.getBoundingClientRect();
   return {
-    altura: Math.round(r.height),
+    height: Math.round(r.height),
     padding: cs.padding,
     background: cs.backgroundColor,
     cor: cs.color,
@@ -33,21 +33,21 @@ function caixa(el: HTMLElement | null) {
 
 /** Fundo composto: o painel costuma ser transparente sobre o card. */
 function backgroundEffective(el: HTMLElement): string {
-  let atual: HTMLElement | null = el;
-  while (atual) {
-    const cor = getComputedStyle(atual).backgroundColor;
+  let current: HTMLElement | null = el;
+  while (current) {
+    const cor = getComputedStyle(current).backgroundColor;
     const alfa = Number((cor.match(/-?[\d.]+/g) ?? [])[3] ?? 1);
     if (cor !== 'rgba(0, 0, 0, 0)' && alfa >= 1) return cor;
-    atual = atual.parentElement;
+    current = current.parentElement;
   }
   return 'rgb(255, 255, 255)';
 }
 
-export function measureAccordion(raiz: HTMLElement) {
-  const triggers = Array.from(raiz.querySelectorAll<HTMLElement>('.nds-accordion-trigger'));
+export function measureAccordion(root: HTMLElement) {
+  const triggers = Array.from(root.querySelectorAll<HTMLElement>('.nds-accordion-trigger'));
   const first = triggers[0] ?? null;
-  const conteudos = Array.from(raiz.querySelectorAll<HTMLElement>('.nds-accordion-content'));
-  const itens = Array.from(raiz.querySelectorAll<HTMLElement>('.nds-accordion-item'));
+  const conteudos = Array.from(root.querySelectorAll<HTMLElement>('.nds-accordion-content'));
+  const items = Array.from(root.querySelectorAll<HTMLElement>('.nds-accordion-item'));
   const chevron = first?.querySelector<HTMLElement>('svg') ?? null;
 
   // Quem está aberto: o painel visível, não o que o data-state diz — atributo é
@@ -59,8 +59,8 @@ export function measureAccordion(raiz: HTMLElement) {
   return {
     finding: triggers.length > 0,
     estrutura: {
-      raiz: raiz.querySelector('.nds-accordion') ? '.nds-accordion' : null,
-      itens: itens.length,
+      root: root.querySelector('.nds-accordion') ? '.nds-accordion' : null,
+      items: items.length,
       triggers: triggers.length,
       conteudos: conteudos.length,
       abertos,
@@ -102,27 +102,27 @@ export function measureAccordion(raiz: HTMLElement) {
       })(),
       escondidoDoConteudo: conteudos[0]?.hasAttribute('hidden') ? 'sim' : 'não',
       corpoInterno: conteudos[0]?.querySelector('.nds-accordion-content-body') ? 'sim' : 'não',
-      estadoDoItem: itens[0]?.getAttribute('data-state') ?? null,
+      estadoDoItem: items[0]?.getAttribute('data-state') ?? null,
       estadoDoGatilho: first?.getAttribute('data-state') ?? null,
       chevronEscondido: chevron?.getAttribute('aria-hidden') ?? null,
       tabindexDoGatilho: first?.getAttribute('tabindex') ?? null,
-      textoDoPrimeiro: texto(first),
+      textoDoPrimeiro: text(first),
     },
     geometria: {
-      gatilho: caixa(first),
+      trigger: box(first),
       chevron: chevron
         ? {
-            largura: Math.round(chevron.getBoundingClientRect().width),
+            width: Math.round(chevron.getBoundingClientRect().width),
             transform: getComputedStyle(chevron).transform,
             transicao: getComputedStyle(chevron).transitionProperty,
           }
         : null,
-      conteudo: caixa(conteudos.find((c) => c.getBoundingClientRect().height > 0) ?? null),
-      bordaDoItem: itens[0] ? getComputedStyle(itens[0]).borderBottomWidth : null,
+      content: box(conteudos.find((c) => c.getBoundingClientRect().height > 0) ?? null),
+      bordaDoItem: items[0] ? getComputedStyle(items[0]).borderBottomWidth : null,
     },
     contraste: first
       ? {
-          gatilho: contraste(getComputedStyle(first).color, background),
+          trigger: contraste(getComputedStyle(first).color, background),
           chevron: chevron ? contraste(getComputedStyle(chevron).color, background) : null,
         }
       : null,
@@ -130,6 +130,6 @@ export function measureAccordion(raiz: HTMLElement) {
 }
 
 /** Canal de saída: o console da play não chega ao terminal do vitest. */
-export function reportAccordion(stack: string, cenario: string, raiz: HTMLElement) {
-  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(measureAccordion(raiz))}`);
+export function reportAccordion(stack: string, cenario: string, root: HTMLElement) {
+  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(measureAccordion(root))}`);
 }

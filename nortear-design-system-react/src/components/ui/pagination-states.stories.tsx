@@ -36,19 +36,19 @@ type Story = StoryObj<typeof meta>;
 const onPageChange = fn();
 
 /** Faixa de 5 páginas com os dois extremos parametrizados. */
-function faixa(rotulo: string, atual: number) {
+function range(label: string, current: number) {
   return (
-    <Pagination aria-label={rotulo}>
+    <Pagination aria-label={label}>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
             href="#"
             text="Anterior"
-            aria-disabled={atual === 1}
-            tabIndex={atual === 1 ? -1 : 0}
+            aria-disabled={current === 1}
+            tabIndex={current === 1 ? -1 : 0}
             onClick={(e) => {
               e.preventDefault();
-              if (atual > 1) onPageChange(atual - 1);
+              if (current > 1) onPageChange(current - 1);
             }}
           />
         </PaginationItem>
@@ -56,7 +56,7 @@ function faixa(rotulo: string, atual: number) {
           <PaginationItem key={n}>
             <PaginationLink
               href="#"
-              isActive={n === atual}
+              isActive={n === current}
               aria-label={`Ir para página ${n}`}
               onClick={(e) => {
                 e.preventDefault();
@@ -71,11 +71,11 @@ function faixa(rotulo: string, atual: number) {
           <PaginationNext
             href="#"
             text="Próxima"
-            aria-disabled={atual === 5}
-            tabIndex={atual === 5 ? -1 : 0}
+            aria-disabled={current === 5}
+            tabIndex={current === 5 ? -1 : 0}
             onClick={(e) => {
               e.preventDefault();
-              if (atual < 5) onPageChange(atual + 1);
+              if (current < 5) onPageChange(current + 1);
             }}
           />
         </PaginationItem>
@@ -92,7 +92,7 @@ export const Default: Story = {
       },
     },
   },
-  render: () => faixa("Paginação em repouso", 3),
+  render: () => range("Paginação em repouso", 3),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("O link inativo está visível e não é a página atual", async () => {
@@ -113,7 +113,7 @@ export const Hover: Story = {
       },
     },
   },
-  render: () => faixa("Paginação sob o ponteiro", 3),
+  render: () => range("Paginação sob o ponteiro", 3),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("O link é alcançável pelo ponteiro e se anuncia clicável", async () => {
@@ -123,12 +123,12 @@ export const Hover: Story = {
       // O que prova a afordância é o cursor, e o que prova que o clique CHEGA é
       // o elemento devolvido no centro da caixa.
       await expect(getComputedStyle(link).cursor).toBe("pointer");
-      const caixa = link.getBoundingClientRect();
-      const alvo = document.elementFromPoint(
-        caixa.left + caixa.width / 2,
-        caixa.top + caixa.height / 2
+      const box = link.getBoundingClientRect();
+      const target = document.elementFromPoint(
+        box.left + box.width / 2,
+        box.top + box.height / 2
       );
-      await expect(link.contains(alvo)).toBe(true);
+      await expect(link.contains(target)).toBe(true);
     });
   },
 };
@@ -142,7 +142,7 @@ export const ActivePage: Story = {
       },
     },
   },
-  render: () => faixa("Paginação com página atual", 3),
+  render: () => range("Paginação com página atual", 3),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("Exatamente um link é a página atual", async () => {
@@ -174,7 +174,7 @@ export const Disabled: Story = {
       },
     },
   },
-  render: () => faixa("Paginação na primeira página", 1),
+  render: () => range("Paginação na primeira página", 1),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const previous = canvas.getByRole("link", { name: "Ir para a página anterior" });
@@ -219,7 +219,7 @@ export const Focus: Story = {
       },
     },
   },
-  render: () => faixa("Paginação com foco", 3),
+  render: () => range("Paginação com foco", 3),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
@@ -254,7 +254,7 @@ export const Contrast: Story = {
       },
     },
   },
-  render: () => faixa("Paginação medida por contraste", 3),
+  render: () => range("Paginação medida por contraste", 3),
   play: async ({ canvasElement, step }) => {
     await step("Todo link passa dos 4.5:1 exigidos para texto", async () => {
       // accessibility.item2 — o texto da faixa tem 14px, tamanho normal pela

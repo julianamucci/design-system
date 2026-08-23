@@ -168,7 +168,7 @@ export class NdsDropdownMenuContent {
       <div
         rdxMenuPositioner
         class="nds-dropdown-menu-positioner"
-        [side]="lado()"
+        [side]="side()"
         [align]="alinhamento()"
         [sideOffset]="deslocamentoDoLado()"
         [alignOffset]="deslocamentoDoAlinhamento()"
@@ -185,39 +185,39 @@ export class NdsDropdownMenuContent {
   `,
 })
 export class NdsDropdownMenu {
-  private readonly raiz = inject(RdxMenuRoot, { self: true });
+  private readonly root = inject(RdxMenuRoot, { self: true });
 
   /** O `<ng-template>` que quem consome declarou dentro desta raiz. */
-  private readonly conteudo = contentChild(NdsDropdownMenuContent);
+  private readonly content = contentChild(NdsDropdownMenuContent);
 
   protected readonly templateDoConteudo = computed<TemplateRef<unknown> | null>(
-    () => this.conteudo()?.tpl ?? null,
+    () => this.content()?.tpl ?? null,
   );
 
   /** Submenu e menu de raiz têm `data-slot` distintos, como nas outras stacks. */
   protected readonly slotDoPopup = computed(() =>
-    this.raiz.isSubmenu() ? 'dropdown-menu-sub-content' : 'dropdown-menu-content',
+    this.root.isSubmenu() ? 'dropdown-menu-sub-content' : 'dropdown-menu-content',
   );
 
   /** Submenu abre ao lado do item que o dispara; menu de raiz, abaixo do botão. */
-  protected readonly lado = computed<DropdownMenuSide>(
-    () => this.conteudo()?.side() ?? (this.raiz.isSubmenu() ? 'right' : 'bottom'),
+  protected readonly side = computed<DropdownMenuSide>(
+    () => this.content()?.side() ?? (this.root.isSubmenu() ? 'right' : 'bottom'),
   );
 
   protected readonly alinhamento = computed<DropdownMenuAlign>(
-    () => this.conteudo()?.align() ?? 'start',
+    () => this.content()?.align() ?? 'start',
   );
 
   // 4px afastam o popup do gatilho sem soltá-lo; encostado no submenu, para o
   // cursor cruzar do item para o submenu sem atravessar um vão.
   protected readonly deslocamentoDoLado = computed<number>(
-    () => this.conteudo()?.sideOffset() ?? (this.raiz.isSubmenu() ? 0 : 4),
+    () => this.content()?.sideOffset() ?? (this.root.isSubmenu() ? 0 : 4),
   );
 
   // -3px compensam o padding do popup pai, alinhando o primeiro item do submenu
   // com o item que o abriu.
   protected readonly deslocamentoDoAlinhamento = computed<number>(
-    () => this.conteudo()?.alignOffset() ?? (this.raiz.isSubmenu() ? -3 : 0),
+    () => this.content()?.alignOffset() ?? (this.root.isSubmenu() ? -3 : 0),
   );
 }
 
@@ -281,10 +281,10 @@ export class NdsDropdownMenuLabel {
 
   protected readonly id = injectId('nds-dropdown-menu-label-');
 
-  private readonly grupo = injectRdxMenuGroupContext(true);
+  private readonly group = injectRdxMenuGroupContext(true);
 
   constructor() {
-    this.grupo?.labelId.set(this.id);
+    this.group?.labelId.set(this.id);
   }
 }
 
@@ -456,9 +456,9 @@ export class NdsDropdownMenuIcon {
       const svg = this.hostRef.nativeElement;
       svg.replaceChildren();
       for (const [tag, attrs] of DROPDOWN_ICON_MAP[this.kind()]) {
-        const filho = document.createElementNS('http://www.w3.org/2000/svg', tag);
-        for (const [k, v] of Object.entries(attrs)) filho.setAttribute(k, v);
-        svg.appendChild(filho);
+        const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
+        for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
+        svg.appendChild(child);
       }
     });
   }

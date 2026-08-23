@@ -69,10 +69,10 @@ const sharedComponents = {
 };
 
 /** Mesmo painel nas quatro direções — o que muda é `side` e o título. */
-function painel(side: string, titulo: string) {
+function panel(side: string, title: string) {
   return () => ({
     components: sharedComponents,
-    setup: () => ({ side, titulo }),
+    setup: () => ({ side, title }),
     template: `
       <Sheet default-open>
         <SheetTrigger as-child>
@@ -80,7 +80,7 @@ function painel(side: string, titulo: string) {
         </SheetTrigger>
         <SheetContent :side="side">
           <SheetHeader>
-            <SheetTitle>{{ titulo }}</SheetTitle>
+            <SheetTitle>{{ title }}</SheetTitle>
             <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
           </SheetHeader>
           <SheetFooter>
@@ -110,7 +110,7 @@ export const Right: Story = {
       },
     },
   },
-  render: painel('right', 'Painel direito'),
+  render: panel('right', 'Painel direito'),
   play: async () => {
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toHaveAttribute('data-side', 'right');
@@ -135,7 +135,7 @@ export const Left: Story = {
       },
     },
   },
-  render: painel('left', 'Painel esquerdo'),
+  render: panel('left', 'Painel esquerdo'),
   play: async () => {
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toHaveAttribute('data-side', 'left');
@@ -157,7 +157,7 @@ export const Top: Story = {
       },
     },
   },
-  render: painel('top', 'Painel superior'),
+  render: panel('top', 'Painel superior'),
   play: async () => {
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toHaveAttribute('data-side', 'top');
@@ -180,7 +180,7 @@ export const Bottom: Story = {
       },
     },
   },
-  render: painel('bottom', 'Painel inferior'),
+  render: panel('bottom', 'Painel inferior'),
   play: async () => {
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toHaveAttribute('data-side', 'bottom');

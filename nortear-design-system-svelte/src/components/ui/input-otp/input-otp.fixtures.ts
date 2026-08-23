@@ -1,6 +1,6 @@
 // Fixture compartilhada pelas quatro stories do InputOTP.
 //
-// Existiam QUATRO cópias de `campo` — uma por arquivo de story. Elas já tinham
+// Existiam QUATRO cópias de `field` — uma por arquivo de story. Elas já tinham
 // começado a divergir: a de estados precisou trocar `Error` por
 // `globalThis.Error` e as outras três ficaram para trás, então o mesmo helper
 // falhava de jeitos diferentes conforme o arquivo. Um construtor só, aqui.
@@ -22,8 +22,8 @@
  * módulo, obrigando aquela cópia a escrever `globalThis.Error`. Fora do arquivo
  * de story o sombreamento não existe, e a gambiarra sai junto.
  */
-export function campo(raiz: HTMLElement): HTMLInputElement {
-  const el = raiz.querySelector<HTMLInputElement>('input[autocomplete="one-time-code"]');
+export function field(root: HTMLElement): HTMLInputElement {
+  const el = root.querySelector<HTMLInputElement>('input[autocomplete="one-time-code"]');
   if (!el) throw new Error('input do OTP não encontrado');
   return el;
 }

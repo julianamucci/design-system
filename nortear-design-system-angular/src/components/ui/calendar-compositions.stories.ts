@@ -52,11 +52,11 @@ export const InPopover: Story = {
   render: () => ({
     props: {
       month: parseDate('2026-04-01'),
-      valor: undefined as DateValue | undefined,
+      value: undefined as DateValue | undefined,
       // O rótulo do gatilho sai do mesmo formatador que a grade usa, no mesmo
       // locale — escrever "15/04/2026" à mão aqui criaria uma segunda forma de
       // escrever data na mesma tela.
-      rotulo(v: DateValue | undefined): string {
+      label(v: DateValue | undefined): string {
         if (!v) return 'Escolher data';
         return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' }).format(
           new Date(v.year, v.month - 1, v.day),
@@ -66,7 +66,7 @@ export const InPopover: Story = {
     template: `
       <div ndsPopover>
         <button ndsPopoverTrigger ndsButton variant="outline" data-testid="gatilho">
-          {{ rotulo(valor) }}
+          {{ label(value) }}
         </button>
 
         <ng-template ndsPopoverContent side="bottom" align="start">
@@ -74,7 +74,7 @@ export const InPopover: Story = {
             ndsCalendar
             locale="pt-BR"
             [defaultMonth]="month"
-            [(value)]="valor"
+            [(value)]="value"
             [initialFocus]="true"
           ></div>
         </ng-template>
@@ -83,20 +83,20 @@ export const InPopover: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = () => canvas.getByTestId('gatilho');
-    const grade = () => document.querySelector<HTMLElement>('.nds-calendar-root');
+    const trigger = () => canvas.getByTestId('gatilho');
+    const grid = () => document.querySelector<HTMLElement>('.nds-calendar-root');
 
     await step('Fechado, o gatilho convida e não mostra grade', async () => {
-      await expect(gatilho()).toHaveTextContent('Escolher data');
-      await expect(grade()).toBeNull();
+      await expect(trigger()).toHaveTextContent('Escolher data');
+      await expect(grid()).toBeNull();
     });
 
     await step('Abrir leva o foco para dentro da grade', async () => {
-      await userEvent.click(gatilho());
+      await userEvent.click(trigger());
       // O painel entra no DOM ANTES de o floating-ui medir e antes de o foco
       // inicial assentar; ler qualquer coisa no primeiro quadro é ler o estado
       // de transição.
-      await waitFor(() => expect(grade()).not.toBeNull());
+      await waitFor(() => expect(grid()).not.toBeNull());
       // O foco tem que parar num DIA, não no primeiro tabulável do painel. Sem
       // esta distinção o teste passaria com o foco no botão de mês anterior —
       // que foi o estado real medido antes do conserto, e que obriga quem chega
@@ -116,19 +116,19 @@ export const InPopover: Story = {
       // peça de fora decidindo pela de dentro. Quem quiser esse comportamento
       // liga o `open` ao evento de escolha — a composição permite, o padrão não
       // impõe.
-      const quinze = grade()!.querySelector<HTMLElement>(
+      const quinze = grid()!.querySelector<HTMLElement>(
         '.nds-calendar-day-btn[data-value="2026-04-15"]',
       )!;
       await userEvent.click(quinze);
-      await waitFor(() => expect(gatilho()).toHaveTextContent('15 de abril de 2026'));
+      await waitFor(() => expect(trigger()).toHaveTextContent('15 de abril de 2026'));
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
       // Sem a devolução, o Tab recomeçaria do topo da página depois de escolher
       // a data, e a pessoa perderia o lugar no formulário que preenchia.
       await userEvent.keyboard('{Escape}');
-      await waitFor(() => expect(grade()).toBeNull());
-      await waitFor(() => expect(document.activeElement).toBe(gatilho()));
+      await waitFor(() => expect(grid()).toBeNull());
+      await waitFor(() => expect(document.activeElement).toBe(trigger()));
     });
   },
 };

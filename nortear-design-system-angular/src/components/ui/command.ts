@@ -180,7 +180,7 @@ export class NdsCommand {
    */
   readonly rotuloDeBusca = signal<string | undefined>(undefined);
 
-  private readonly raiz = inject(RdxAutocompleteRoot, { self: true });
+  private readonly root = inject(RdxAutocompleteRoot, { self: true });
 
   /**
    * Item do primitivo → emissor do `NdsCommandItem` correspondente.
@@ -205,15 +205,15 @@ export class NdsCommand {
     // aqui: a camada de dispensa do Dialog escuta o keydown no `document` em
     // fase de captura, fecha o diálogo e interrompe a propagação antes de o
     // campo ver a tecla.
-    this.raiz.onOpenChange.subscribe((mudanca) => {
+    this.root.onOpenChange.subscribe((mudanca) => {
       if (!mudanca.open) mudanca.eventDetails.cancel();
     });
 
-    this.raiz.onValueChange.subscribe((detalhes) => this.aoMudarValor(detalhes));
+    this.root.onValueChange.subscribe((detalhes) => this.aoMudarValor(detalhes));
 
     // Depois das assinaturas: abrir emite `onOpenChange`, e um listener
     // registrado tarde demais não veria a primeira mudança.
-    this.raiz.open.set(true);
+    this.root.open.set(true);
   }
 
   /** @internal Chamado pelo `NdsCommandItem` ao nascer. */
@@ -256,9 +256,9 @@ export class NdsCommand {
 
     detalhes.eventDetails.cancel();
 
-    const escolhido = this.alvoDoClique ?? this.raiz.highlightedItem();
+    const escolhido = this.alvoDoClique ?? this.root.highlightedItem();
     // Zerar a busca reabre a lista inteira para o próximo comando.
-    this.raiz.value.set('');
+    this.root.value.set('');
 
     if (!escolhido) return;
 
@@ -297,7 +297,7 @@ export class NdsCommand {
     type: 'text',
     class: 'nds-command-input',
     '[attr.data-slot]': '"command-input"',
-    '[attr.aria-label]': 'rotulo()',
+    '[attr.aria-label]': 'resolvedLabel()',
   },
 })
 export class NdsCommandInput implements OnInit {
@@ -312,12 +312,12 @@ export class NdsCommandInput implements OnInit {
 
   private readonly placeholder = signal<string | undefined>(undefined);
 
-  protected readonly rotulo = computed(() => this.label() ?? this.placeholder());
+  protected readonly resolvedLabel = computed(() => this.label() ?? this.placeholder());
 
   constructor() {
     // Publica para a lista herdar o mesmo nome. Efeito, e não uma escrita
     // única, porque o rótulo muda junto com o idioma.
-    effect(() => this.comando.rotuloDeBusca.set(this.rotulo()));
+    effect(() => this.comando.rotuloDeBusca.set(this.resolvedLabel()));
   }
 
   ngOnInit(): void {
@@ -345,7 +345,7 @@ export class NdsCommandInput implements OnInit {
   host: {
     class: 'nds-command-list',
     '[attr.data-slot]': '"command-list"',
-    '[attr.aria-label]': 'rotulo()',
+    '[attr.aria-label]': 'resolvedLabel()',
   },
 })
 export class NdsCommandList {
@@ -354,7 +354,7 @@ export class NdsCommandList {
 
   private readonly comando = inject(NdsCommand);
 
-  protected readonly rotulo = computed(() => this.label() ?? this.comando.rotuloDeBusca());
+  protected readonly resolvedLabel = computed(() => this.label() ?? this.comando.rotuloDeBusca());
 }
 
 // ─── NdsCommandEmpty ──────────────────────────────────────────────────────────
@@ -397,9 +397,9 @@ export class NdsCommandList {
   `,
 })
 export class NdsCommandEmpty {
-  private readonly raiz = inject(RdxAutocompleteRoot);
+  private readonly root = inject(RdxAutocompleteRoot);
 
-  protected readonly vazio = computed(() => this.raiz.visibleCount() === 0);
+  protected readonly vazio = computed(() => this.root.visibleCount() === 0);
 
   protected readonly hostClass = computed(() => (this.vazio() ? 'nds-command-empty' : ''));
 }
@@ -534,8 +534,8 @@ export class NdsCommandItem implements OnDestroy {
   protected readonly marcavel = computed(() => this.checked() !== undefined);
 
   protected readonly marcaAttr = computed(() => {
-    const marcado = this.checked();
-    return marcado === undefined ? null : String(marcado);
+    const checked = this.checked();
+    return checked === undefined ? null : String(checked);
   });
 
   constructor() {

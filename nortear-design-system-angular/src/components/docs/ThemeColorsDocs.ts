@@ -64,49 +64,49 @@ const { t } = useTranslation(themeColorsTranslations as Record<string, unknown>)
 
 /** Grupos da paleta semântica e seus tokens (sem o prefixo `--`). */
 interface PaletteGroup {
-  chave: string;
-  rotulo: string;
+  key: string;
+  label: string;
   tokens: string[];
 }
 
 const PALETTE_GROUPS: PaletteGroup[] = [
   {
-    chave: 'surface',
-    rotulo: 'palette.groups.surface',
+    key: 'surface',
+    label: 'palette.groups.surface',
     tokens: [
       'background', 'foreground', 'card', 'card-foreground', 'popover',
       'popover-foreground', 'muted', 'muted-foreground', 'accent', 'accent-foreground',
     ],
   },
   {
-    chave: 'brand',
-    rotulo: 'palette.groups.brand',
+    key: 'brand',
+    label: 'palette.groups.brand',
     tokens: ['primary', 'primary-foreground', 'secondary', 'secondary-foreground'],
   },
   {
-    chave: 'feedback',
-    rotulo: 'palette.groups.feedback',
+    key: 'feedback',
+    label: 'palette.groups.feedback',
     tokens: [
       'destructive', 'destructive-foreground', 'success', 'success-foreground',
       'warning', 'warning-foreground', 'info', 'info-foreground',
     ],
   },
   {
-    chave: 'structure',
-    rotulo: 'palette.groups.structure',
+    key: 'structure',
+    label: 'palette.groups.structure',
     tokens: ['border', 'input', 'input-background', 'ring'],
   },
   {
-    chave: 'sidebar',
-    rotulo: 'palette.groups.sidebar',
+    key: 'sidebar',
+    label: 'palette.groups.sidebar',
     tokens: [
       'sidebar', 'sidebar-foreground', 'sidebar-primary', 'sidebar-primary-foreground',
       'sidebar-accent', 'sidebar-accent-foreground', 'sidebar-border', 'sidebar-ring',
     ],
   },
   {
-    chave: 'chart',
-    rotulo: 'palette.groups.chart',
+    key: 'chart',
+    label: 'palette.groups.chart',
     tokens: ['chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5'],
   },
 ];
@@ -119,43 +119,43 @@ const TOKENS_DA_AMOSTRA = [
 const ALL_OS_TOKENS = PALETTE_GROUPS.flatMap((g) => g.tokens);
 
 interface ItemDeEixo {
-  chave: string;
-  rotulo: string;
+  key: string;
+  label: string;
   className: string;
 }
 
 const MARCA_THEMES: ItemDeEixo[] = [
-  { chave: 'default', rotulo: 'brand.themes.default', className: 'tema-default' },
-  { chave: 'warm', rotulo: 'brand.themes.warm', className: 'tema-warm' },
-  { chave: 'cold', rotulo: 'brand.themes.cold', className: 'tema-cold' },
+  { key: 'default', label: 'brand.themes.default', className: 'tema-default' },
+  { key: 'warm', label: 'brand.themes.warm', className: 'tema-warm' },
+  { key: 'cold', label: 'brand.themes.cold', className: 'tema-cold' },
 ];
 
-const MODOS: Array<{ chave: string; rotulo: string; escuro: boolean }> = [
-  { chave: 'light', rotulo: 'modes.light', escuro: false },
-  { chave: 'dark', rotulo: 'modes.dark', escuro: true },
+const MODOS: Array<{ key: string; label: string; escuro: boolean }> = [
+  { key: 'light', label: 'modes.light', escuro: false },
+  { key: 'dark', label: 'modes.dark', escuro: true },
 ];
 
 const DENSIDADES: ItemDeEixo[] = [
   {
-    chave: 'condensado',
-    rotulo: 'axes.density.items.condensado',
+    key: 'condensado',
+    label: 'axes.density.items.condensado',
     className: 'densidade-condensado',
   },
-  { chave: 'default', rotulo: 'axes.density.items.default', className: 'densidade-default' },
+  { key: 'default', label: 'axes.density.items.default', className: 'densidade-default' },
   {
-    chave: 'confortavel',
-    rotulo: 'axes.density.items.confortavel',
+    key: 'confortavel',
+    label: 'axes.density.items.confortavel',
     className: 'densidade-confortavel',
   },
 ];
 
 const FONTES: ItemDeEixo[] = [
-  { chave: 'default', rotulo: 'axes.fonts.items.default', className: 'fonte-default' },
-  { chave: 'lexend', rotulo: 'axes.fonts.items.lexend', className: 'fonte-lexend' },
-  { chave: 'pt-serif', rotulo: 'axes.fonts.items.pt-serif', className: 'fonte-pt-serif' },
+  { key: 'default', label: 'axes.fonts.items.default', className: 'fonte-default' },
+  { key: 'lexend', label: 'axes.fonts.items.lexend', className: 'fonte-lexend' },
+  { key: 'pt-serif', label: 'axes.fonts.items.pt-serif', className: 'fonte-pt-serif' },
   {
-    chave: 'lxgw-wenkai',
-    rotulo: 'axes.fonts.items.lxgw-wenkai',
+    key: 'lxgw-wenkai',
+    label: 'axes.fonts.items.lxgw-wenkai',
     className: 'fonte-lxgw-wenkai',
   },
 ];
@@ -232,16 +232,16 @@ interface DensityTable {
             <p class="nds-text-body">{{ t('palette.subtitle') }}</p>
           </div>
 
-          @for (grupo of gruposDaPaleta; track grupo.chave) {
+          @for (group of gruposDaPaleta; track group.key) {
             <div class="nds-swatch-group">
-              <h3 class="nds-swatch-group-title">{{ t(grupo.rotulo) }}</h3>
+              <h3 class="nds-swatch-group-title">{{ t(group.label) }}</h3>
               <ul class="nds-swatch-grid">
-                @for (token of grupo.tokens; track token) {
+                @for (token of group.tokens; track token) {
                   <li class="nds-swatch-grid-item">
                     <button
                       ndsSwatch
                       [token]="token"
-                      [valor]="valoresDosTokens()[token] ?? ''"
+                      [value]="valoresDosTokens()[token] ?? ''"
                       [rotuloDeCopia]="t('copy.tooltip')"
                       [rotuloCopiado]="t('copy.copied')"
                     ></button>
@@ -259,11 +259,11 @@ interface DensityTable {
             <p class="nds-text-body">{{ t('brand.subtitle') }}</p>
           </div>
           <div class="nds-theme-card-grid">
-            @for (tema of temasDeMarca; track tema.chave) {
+            @for (theme of temasDeMarca; track theme.key) {
               <div class="nds-theme-card">
                 <!-- Cada cartão mostra o SEU tema no modo atual da página. -->
-                <div [class]="escopoDaMarca()[tema.chave]">
-                  <span class="nds-theme-card-label">{{ t(tema.rotulo) }}</span>
+                <div [class]="escopoDaMarca()[theme.key]">
+                  <span class="nds-theme-card-label">{{ t(theme.label) }}</span>
                   <div class="nds-miniswatch-row">
                     @for (token of tokensDaAmostra; track token) {
                       <div ndsMiniSwatch [token]="token"></div>
@@ -282,11 +282,11 @@ interface DensityTable {
             <p class="nds-text-body">{{ t('modes.subtitle') }}</p>
           </div>
           <div class="nds-theme-card-grid">
-            @for (modo of modos; track modo.chave) {
+            @for (mode of modos; track mode.key) {
               <div class="nds-theme-card">
                 <!-- Cada cartão mostra o tema ATIVO num modo fixo. -->
-                <div [class]="escopoDoModo()[modo.chave]">
-                  <span class="nds-theme-card-label">{{ t(modo.rotulo) }}</span>
+                <div [class]="escopoDoModo()[mode.key]">
+                  <span class="nds-theme-card-label">{{ t(mode.label) }}</span>
                   <div class="nds-miniswatch-row">
                     @for (token of tokensDaAmostra; track token) {
                       <div ndsMiniSwatch [token]="token"></div>
@@ -314,12 +314,12 @@ interface DensityTable {
               <p class="nds-text-body">{{ t('axes.density.subtitle') }}</p>
             </div>
             <div class="nds-axis-grid">
-              @for (densidade of densidades; track densidade.chave) {
+              @for (densidade of densidades; track densidade.key) {
                 <div class="nds-axis-sample">
                   <span class="nds-axis-sample-label">{{
-                    t(densidade.rotulo)
+                    t(densidade.label)
                   }}</span>
-                  <div [class]="escopoDeDensidade()[densidade.chave]">
+                  <div [class]="escopoDeDensidade()[densidade.key]">
                     <div ndsTableWrapper>
                       <table ndsTable class="nds-axis-density-table">
                         <thead ndsTableHeader>
@@ -353,10 +353,10 @@ interface DensityTable {
               <p class="nds-text-body">{{ t('axes.fonts.subtitle') }}</p>
             </div>
             <div class="nds-axis-grid" data-cols="4">
-              @for (fonte of fontes; track fonte.chave) {
+              @for (fonte of fontes; track fonte.key) {
                 <div class="nds-axis-sample">
                   <span class="nds-axis-sample-label">{{
-                    t(fonte.rotulo)
+                    t(fonte.label)
                   }}</span>
                   <div [class]="fonte.className">
                     <span class="nds-font-sample">Aa Bb Cc 123</span>
@@ -414,9 +414,9 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
   protected readonly escopoDaMarca = computed<Record<string, string>>(() => {
     const sufixo = this.paginaEscura() ? ' dark' : '';
     return Object.fromEntries(
-      MARCA_THEMES.map((tema) => [
-        tema.chave,
-        `nds-theme-card-scope ${tema.className}${sufixo}`,
+      MARCA_THEMES.map((theme) => [
+        theme.key,
+        `nds-theme-card-scope ${theme.className}${sufixo}`,
       ]),
     );
   });
@@ -425,9 +425,9 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
   protected readonly escopoDoModo = computed<Record<string, string>>(() => {
     const marca = this.marcaAtiva();
     return Object.fromEntries(
-      MODOS.map((modo) => [
-        modo.chave,
-        `nds-theme-card-scope ${marca}${modo.escuro ? ' dark' : ''}`,
+      MODOS.map((mode) => [
+        mode.key,
+        `nds-theme-card-scope ${marca}${mode.escuro ? ' dark' : ''}`,
       ]),
     );
   });
@@ -435,7 +435,7 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
   /** Classe de cada amostra de densidade — estática, mas no mesmo formato. */
   protected readonly escopoDeDensidade = computed<Record<string, string>>(() =>
     Object.fromEntries(
-      DENSIDADES.map((item) => [item.chave, `nds-axis-scope ${item.className}`]),
+      DENSIDADES.map((item) => [item.key, `nds-axis-scope ${item.className}`]),
     ),
   );
 
@@ -502,7 +502,7 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
   /** Lê marca, modo e valores HSL resolvidos no `<html>`. */
   private lerTema(): void {
     const classes = document.documentElement.classList;
-    const marca = MARCA_THEMES.find((tema) => classes.contains(tema.className));
+    const marca = MARCA_THEMES.find((theme) => classes.contains(theme.className));
     this.marcaAtiva.set(marca ? marca.className : 'tema-default');
     this.paginaEscura.set(classes.contains('dark'));
 

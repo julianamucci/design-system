@@ -52,8 +52,8 @@ describe('collapsibleSource', () => {
   it('disabled vai no gatilho, não na raiz', () => {
     const saida = collapsibleSource(undefined, { args: { disabled: true } });
     expect(saida).toContain('data-justify="between"\n    disabled');
-    const raiz = saida.split('\n').find((line) => line.startsWith('<Collapsible '))!;
-    expect(raiz).not.toContain('disabled');
+    const root = saida.split('\n').find((line) => line.startsWith('<Collapsible '))!;
+    expect(root).not.toContain('disabled');
   });
 
   it('não deixa o espião do control virar atributo', () => {

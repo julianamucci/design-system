@@ -34,10 +34,10 @@ const delegatedProps = reactiveOmit(props, 'class', 'variant')
 // contém é `stopPropagation()`, que impede o evento de chegar ao ouvinte do
 // primitivo. O foco em si acontece: é ele que faz o leitor de tela anunciar.
 
-const lista = ref<ComponentPublicInstance | null>(null)
+const list = ref<ComponentPublicInstance | null>(null)
 
-function abaBloqueada(alvo: EventTarget | null): boolean {
-  return alvo instanceof Element && !!alvo.closest('[role="tab"][aria-disabled="true"]')
+function abaBloqueada(target: EventTarget | null): boolean {
+  return target instanceof Element && !!target.closest('[role="tab"][aria-disabled="true"]')
 }
 
 function bloquearAtivacao(e: Event): void {
@@ -61,22 +61,22 @@ const EVENTOS: Array<[string, (e: Event) => void]> = [
   ['focus', bloquearAtivacao],
 ]
 
-let alvo: HTMLElement | null = null
+let target: HTMLElement | null = null
 
 onMounted(() => {
-  alvo = unrefElement(lista) as HTMLElement | null
-  for (const [nome, fn] of EVENTOS) alvo?.addEventListener(nome, fn, true)
+  target = unrefElement(list) as HTMLElement | null
+  for (const [name, fn] of EVENTOS) target?.addEventListener(name, fn, true)
 })
 
 onBeforeUnmount(() => {
-  for (const [nome, fn] of EVENTOS) alvo?.removeEventListener(nome, fn, true)
-  alvo = null
+  for (const [name, fn] of EVENTOS) target?.removeEventListener(name, fn, true)
+  target = null
 })
 </script>
 
 <template>
   <TabsList
-    ref="lista"
+    ref="list"
     data-slot="tabs-list"
     :data-variant="variant"
     v-bind="delegatedProps"

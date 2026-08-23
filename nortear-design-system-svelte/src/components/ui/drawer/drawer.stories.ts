@@ -8,8 +8,8 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { drawerSource } from './drawer.source';
 
 const LABEL = {
-  gatilho: 'Abrir drawer',
-  titulo: 'Editar perfil',
+  trigger: 'Abrir drawer',
+  title: 'Editar perfil',
   descricao: 'Atualize seus dados pessoais e foto.',
   confirmar: 'Confirmar',
   cancelar: 'Cancelar',
@@ -91,8 +91,8 @@ const meta: Meta = {
     direction: 'bottom',
     defaultOpen: false,
     dismissible: true,
-    triggerLabel: LABEL.gatilho,
-    title: LABEL.titulo,
+    triggerLabel: LABEL.trigger,
+    title: LABEL.title,
     description: LABEL.descricao,
     actionLabel: LABEL.confirmar,
     cancelLabel: LABEL.cancelar,
@@ -111,14 +111,14 @@ type Story = StoryObj;
  * cego partiria do estado que a rodada anterior deixou e inverteria todo o
  * resto. Cada passo estabelece a própria precondição.
  */
-async function abrir(trigger: HTMLElement): Promise<HTMLElement> {
+async function open(trigger: HTMLElement): Promise<HTMLElement> {
   if (within(document.body).queryAllByRole('dialog').length === 0) {
     await userEvent.click(trigger);
   }
   return await waitForPortal('dialog');
 }
 
-async function fechar(): Promise<void> {
+async function close(): Promise<void> {
   if (within(document.body).queryAllByRole('dialog').length > 0) {
     await userEvent.keyboard('{Escape}');
   }
@@ -134,43 +134,43 @@ export const Playground: Story = {
   },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: LABEL.gatilho });
+    const trigger = canvas.getByRole('button', { name: LABEL.trigger });
 
-    await fechar();
+    await close();
 
     await step('1. Clicar no gatilho abre o painel, com nome e descrição acessíveis', async () => {
-      const painel = await abrir(trigger);
+      const panel = await open(trigger);
 
-      await expect(painel).toBeVisible();
-      await expect(painel).toHaveAttribute('role', 'dialog');
-      await expect(painel).toHaveAttribute('aria-modal', 'true');
-      await expect(painel).toHaveAccessibleName(LABEL.titulo);
-      await expect(painel).toHaveAccessibleDescription(LABEL.descricao);
-      await expect(painel).toHaveAttribute('data-vaul-drawer-direction', args.direction as string);
-      await expect(painel).toHaveClass(/nds-drawer-content/);
+      await expect(panel).toBeVisible();
+      await expect(panel).toHaveAttribute('role', 'dialog');
+      await expect(panel).toHaveAttribute('aria-modal', 'true');
+      await expect(panel).toHaveAccessibleName(LABEL.title);
+      await expect(panel).toHaveAccessibleDescription(LABEL.descricao);
+      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', args.direction as string);
+      await expect(panel).toHaveClass(/nds-drawer-content/);
     });
 
     await step('2. O painel é portalizado para fora da story', async () => {
-      const painel = await waitForPortal('dialog');
-      await expect(canvasElement.contains(painel)).toBe(false);
-      await expect(document.body.contains(painel)).toBe(true);
+      const panel = await waitForPortal('dialog');
+      await expect(canvasElement.contains(panel)).toBe(false);
+      await expect(document.body.contains(panel)).toBe(true);
     });
 
     await step('3. O foco entra no painel e Tab não escapa dele', async () => {
-      const painel = await waitForPortal('dialog');
+      const panel = await waitForPortal('dialog');
       // O primitivo desta stack nasce com `autoFocus: false` e devolvia o foco
       // ao gatilho — o wrapper inverte o default, e é isto que prova a inversão.
       await waitFor(() => {
-        if (!painel.contains(document.activeElement)) {
+        if (!panel.contains(document.activeElement)) {
           throw new Error('o foco não entrou no painel');
         }
       });
       for (let i = 0; i < 6; i++) await userEvent.tab();
-      await expect(painel.contains(document.activeElement)).toBe(true);
+      await expect(panel.contains(document.activeElement)).toBe(true);
     });
 
     await step('4. Escape fecha e devolve o foco ao gatilho', async () => {
-      await fechar();
+      await close();
       await waitFor(() => {
         if (document.activeElement !== trigger) {
           throw new Error('o foco não voltou ao gatilho');
@@ -180,10 +180,10 @@ export const Playground: Story = {
     });
 
     await step('5. O botão de fechar do rodapé fecha e devolve o foco ao gatilho', async () => {
-      const painel = await abrir(trigger);
+      const panel = await open(trigger);
       const spy = args.onCancel as ReturnType<typeof fn>;
       const callsBefore = spy.mock.calls.length;
-      await userEvent.click(within(painel).getByRole('button', { name: LABEL.cancelar }));
+      await userEvent.click(within(panel).getByRole('button', { name: LABEL.cancelar }));
       await waitForPortalGone('dialog');
       await expect(spy.mock.calls.length).toBe(callsBefore + 1);
       await waitFor(() => {
@@ -195,6 +195,6 @@ export const Playground: Story = {
 
     // Termina fechado: a próxima rodada da play precisa do mesmo ponto de
     // partida desta, e é este estado que o Chromatic fotografa.
-    await fechar();
+    await close();
   },
 };

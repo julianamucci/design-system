@@ -29,15 +29,15 @@ export interface ControlMeasurement {
   /** `data-slot` — o contrato de markup que as cinco stacks compartilham. */
   slot: string | null;
   /** Nome acessível efetivo: `aria-label` quando existe, senão o texto. */
-  nome: string | null;
+  name: string | null;
   /** Classes `.nds-*` do elemento, em ordem alfabética. */
   classesNds: string[];
   /** Caixa em px CSS, arredondada. */
-  caixa: { largura: number; altura: number } | null;
+  box: { width: number; height: number } | null;
   /** `pointer-events` computado — o que de fato barra (ou não) o mouse. */
   pointerEvents: string | null;
   /** Opacidade computada. */
-  opacidade: number | null;
+  opacity: number | null;
   tabindex: string | null;
   ariaDisabled: string | null;
   ariaCurrent: string | null;
@@ -52,14 +52,14 @@ export interface ControlMeasurement {
 
 export interface PaginationMeasurement {
   /** Raiz: tag, classes e rótulo do landmark. */
-  raiz: {
+  root: {
     tag: string | null;
     role: string | null;
-    rotulo: string | null;
+    label: string | null;
     classesNds: string[];
   } | null;
   /** Lista: tag e classes. */
-  lista: { tag: string | null; classesNds: string[]; itens: number } | null;
+  list: { tag: string | null; classesNds: string[]; items: number } | null;
   /** Controle anterior, o que fica desabilitado na primeira página. */
   previous: ControlMeasurement | null;
   /** Controle próximo. */
@@ -70,7 +70,7 @@ export interface PaginationMeasurement {
   numeroAtivo: ControlMeasurement | null;
   /** Reticências, quando a faixa as tem. */
   reticencias:
-    | (ControlMeasurement & { texto: string | null; ariaHidden: string | null })
+    | (ControlMeasurement & { text: string | null; ariaHidden: string | null })
     | null;
   /** Quantidade de reticências na faixa. */
   totalReticencias: number;
@@ -83,10 +83,10 @@ function classesNds(el: Element): string[] {
 }
 
 function accessibleName(el: Element): string | null {
-  const rotulo = el.getAttribute('aria-label');
-  if (rotulo) return rotulo;
-  const texto = (el.textContent ?? '').trim();
-  return texto || null;
+  const label = el.getAttribute('aria-label');
+  if (label) return label;
+  const text = (el.textContent ?? '').trim();
+  return text || null;
 }
 
 /**
@@ -97,31 +97,31 @@ function accessibleName(el: Element): string | null {
  * classe revela isso.
  */
 function alcancavel(el: Element): boolean | null {
-  const caixa = el.getBoundingClientRect();
-  if (caixa.width === 0 || caixa.height === 0) return null;
-  const alvo = el.ownerDocument.elementFromPoint(
-    caixa.left + caixa.width / 2,
-    caixa.top + caixa.height / 2,
+  const box = el.getBoundingClientRect();
+  if (box.width === 0 || box.height === 0) return null;
+  const target = el.ownerDocument.elementFromPoint(
+    box.left + box.width / 2,
+    box.top + box.height / 2,
   );
-  if (!alvo) return null;
-  return alvo === el || el.contains(alvo);
+  if (!target) return null;
+  return target === el || el.contains(target);
 }
 
 function measureControl(el: Element | null): ControlMeasurement | null {
   if (!el) return null;
   const estilo = getComputedStyle(el);
-  const caixa = el.getBoundingClientRect();
+  const box = el.getBoundingClientRect();
   return {
     tag: el.tagName,
     slot: el.getAttribute('data-slot'),
-    nome: accessibleName(el),
+    name: accessibleName(el),
     classesNds: classesNds(el),
-    caixa:
-      caixa.width || caixa.height
-        ? { largura: Math.round(caixa.width), altura: Math.round(caixa.height) }
+    box:
+      box.width || box.height
+        ? { width: Math.round(box.width), height: Math.round(box.height) }
         : null,
     pointerEvents: estilo.pointerEvents,
-    opacidade: Number(estilo.opacity),
+    opacity: Number(estilo.opacity),
     tabindex: el.getAttribute('tabindex'),
     ariaDisabled: el.getAttribute('aria-disabled'),
     ariaCurrent: el.getAttribute('aria-current'),
@@ -140,7 +140,7 @@ function measureControl(el: Element | null): ControlMeasurement | null {
  */
 export function measurePagination(raizBusca: HTMLElement): PaginationMeasurement {
   const nav = raizBusca.querySelector('[data-slot="pagination"]') ?? raizBusca.querySelector('nav');
-  const lista =
+  const list =
     raizBusca.querySelector('[data-slot="pagination-content"]') ?? raizBusca.querySelector('ul');
 
   const previous =
@@ -164,16 +164,16 @@ export function measurePagination(raizBusca: HTMLElement): PaginationMeasurement
   const measurementReticencia = measureControl(firstReticencia);
 
   return {
-    raiz: nav
+    root: nav
       ? {
           tag: nav.tagName,
           role: nav.getAttribute('role'),
-          rotulo: nav.getAttribute('aria-label'),
+          label: nav.getAttribute('aria-label'),
           classesNds: classesNds(nav),
         }
       : null,
-    lista: lista
-      ? { tag: lista.tagName, classesNds: classesNds(lista), itens: lista.children.length }
+    list: list
+      ? { tag: list.tagName, classesNds: classesNds(list), items: list.children.length }
       : null,
     previous: measureControl(previous),
     next: measureControl(next),
@@ -187,7 +187,7 @@ export function measurePagination(raizBusca: HTMLElement): PaginationMeasurement
       measurementReticencia && firstReticencia
         ? {
             ...measurementReticencia,
-            texto: (firstReticencia.textContent ?? '').trim() || null,
+            text: (firstReticencia.textContent ?? '').trim() || null,
             ariaHidden: firstReticencia.getAttribute('aria-hidden'),
           }
         : null,
@@ -212,8 +212,8 @@ export function reportProbe(stack: string, cenario: string, measurement: unknown
 // conta é explícita e nomeia quem falhou.
 
 /** `rgb(...)`/`rgba(...)` → canais; `null` quando o valor é transparente. */
-function canais(valor: string): [number, number, number] | null {
-  const raw = valor.match(/rgba?\(([^)]+)\)/);
+function canais(value: string): [number, number, number] | null {
+  const raw = value.match(/rgba?\(([^)]+)\)/);
   if (!raw) return null;
   const partes = raw[1].split(/[,/]/).map((p) => Number.parseFloat(p));
   if (partes.length >= 4 && partes[3] === 0) return null;
@@ -254,7 +254,7 @@ export function backgroundEffective(elemento: Element): [number, number, number]
 }
 
 export interface ContrastMeasurement {
-  nome: string;
+  name: string;
   ratio: number;
 }
 
@@ -271,14 +271,14 @@ export function rangeContrastes(raizBusca: HTMLElement): ContrastMeasurement[] {
   );
   const vistos = new Set<Element>();
   const measurements: ContrastMeasurement[] = [];
-  for (const controle of controles) {
-    if (vistos.has(controle)) continue;
-    vistos.add(controle);
-    const cor = canais(getComputedStyle(controle).color);
+  for (const control of controles) {
+    if (vistos.has(control)) continue;
+    vistos.add(control);
+    const cor = canais(getComputedStyle(control).color);
     if (!cor) continue;
     measurements.push({
-      nome: accessibleName(controle) ?? '(sem nome)',
-      ratio: contrastRatio(cor, backgroundEffective(controle)),
+      name: accessibleName(control) ?? '(sem nome)',
+      ratio: contrastRatio(cor, backgroundEffective(control)),
     });
   }
   return measurements;
@@ -287,9 +287,9 @@ export function rangeContrastes(raizBusca: HTMLElement): ContrastMeasurement[] {
 // ─── Alvo de toque ───────────────────────────────────────────────────────────
 
 export interface TargetMedido {
-  nome: string;
-  largura: number;
-  altura: number;
+  name: string;
+  width: number;
+  height: number;
 }
 
 /**
@@ -308,15 +308,15 @@ export function minimumTargetsBelow(raizBusca: HTMLElement, minimum = 24): Targe
   );
   const vistos = new Set<Element>();
   const faltantes: TargetMedido[] = [];
-  for (const controle of controles) {
-    if (vistos.has(controle)) continue;
-    vistos.add(controle);
-    const caixa = controle.getBoundingClientRect();
-    if (caixa.width < minimum || caixa.height < minimum) {
+  for (const control of controles) {
+    if (vistos.has(control)) continue;
+    vistos.add(control);
+    const box = control.getBoundingClientRect();
+    if (box.width < minimum || box.height < minimum) {
       faltantes.push({
-        nome: accessibleName(controle) ?? '(sem nome)',
-        largura: Math.round(caixa.width),
-        altura: Math.round(caixa.height),
+        name: accessibleName(control) ?? '(sem nome)',
+        width: Math.round(box.width),
+        height: Math.round(box.height),
       });
     }
   }

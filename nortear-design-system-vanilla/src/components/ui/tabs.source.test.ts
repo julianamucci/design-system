@@ -9,11 +9,11 @@ import {
 
 describe('tabsSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = tabsSnippet();
-    expect(código).toContain("import { createTabs } from '@/components/ui/tabs';");
-    expect(código).toContain('createTabs({');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('role="tablist"');
+    const code = tabsSnippet();
+    expect(code).toContain("import { createTabs } from '@/components/ui/tabs';");
+    expect(code).toContain('createTabs({');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('role="tablist"');
   });
 
   it('usa o nome acessível canônico, que ali é obrigatório', () => {
@@ -25,10 +25,10 @@ describe('tabsSnippet', () => {
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = tabsSnippet();
-    expect(código).not.toContain('variant');
-    expect(código).not.toContain('orientation');
-    expect(código).not.toContain('disabled');
+    const code = tabsSnippet();
+    expect(code).not.toContain('variant');
+    expect(code).not.toContain('orientation');
+    expect(code).not.toContain('disabled');
   });
 
   it('mostra variante e orientação quando a story as usa', () => {
@@ -38,24 +38,24 @@ describe('tabsSnippet', () => {
   });
 
   it('constrói os painéis à vista, sem helper de story', () => {
-    const código = tabsSnippet();
-    expect(código).toContain('const painel = (texto) =>');
-    expect(código).toContain("content: painel('Conteúdo da visão geral.')");
-    expect(código).not.toContain('makePanel');
-    expect(código).not.toContain('buildItems');
-    expect(código).not.toContain('makeRichPanel');
+    const code = tabsSnippet();
+    expect(code).toContain('const painel = (texto) =>');
+    expect(code).toContain("content: painel('Conteúdo da visão geral.')");
+    expect(code).not.toContain('makePanel');
+    expect(code).not.toContain('buildItems');
+    expect(code).not.toContain('makeRichPanel');
   });
 
   it('a aba bloqueada entra como item, e a seleção inicial acompanha os itens', () => {
-    const código = tabsSnippet({
-      itens: [
+    const code = tabsSnippet({
+      items: [
         { value: 'inicio', label: 'Início', content: 'Conteúdo ativo.' },
         { value: 'bloqueada', label: 'Bloqueada', content: 'Indisponível.', disabled: true },
       ],
     });
-    expect(código).toContain("defaultValue: 'inicio'");
-    expect(código).toContain('disabled: true');
-    expect(código).toContain("label: 'Bloqueada'");
+    expect(code).toContain("defaultValue: 'inicio'");
+    expect(code).toContain('disabled: true');
+    expect(code).toContain("label: 'Bloqueada'");
   });
 });
 
@@ -78,38 +78,38 @@ describe('tabsSource', () => {
 
 describe('tabsSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = tabsSourceWith({ variant: 'line' })('', { args: { variant: 'default' } });
-    expect(código).toContain("variant: 'line'");
+    const code = tabsSourceWith({ variant: 'line' })('', { args: { variant: 'default' } });
+    expect(code).toContain("variant: 'line'");
   });
 });
 
 describe('tabsComIconesSnippet', () => {
   it('põe o ícone no gatilho depois de montado — `label` é texto', () => {
-    const código = tabsWithIconsSnippet([
+    const code = tabsWithIconsSnippet([
       { value: 'profile', label: 'Perfil', content: 'Informações públicas.', icon: 'User' },
       { value: 'security', label: 'Segurança', content: 'Senha e 2FA.', icon: 'Shield' },
     ]);
-    expect(código).toContain("import { Shield, User, createElement } from 'lucide';");
-    expect(código).toContain('[role="tab"][data-value=');
+    expect(code).toContain("import { Shield, User, createElement } from 'lucide';");
+    expect(code).toContain('[role="tab"][data-value=');
     // O ícone é decorativo: o rótulo já descreve a aba.
-    expect(código).toContain("svg.setAttribute('aria-hidden', 'true')");
-    expect(código).not.toContain('createIcon(');
-    expect(código).not.toContain('LucideIconNode');
+    expect(code).toContain("svg.setAttribute('aria-hidden', 'true')");
+    expect(code).not.toContain('createIcon(');
+    expect(code).not.toContain('LucideIconNode');
   });
 });
 
 describe('tabsComBadgeSnippet', () => {
   it('usa o badge do design system e só nos itens que o têm', () => {
-    const código = tabsWithBadgeSnippet([
+    const code = tabsWithBadgeSnippet([
       { value: 'inbox', label: 'Caixa de entrada', content: '12 não lidas.', badge: { text: '12' } },
       { value: 'spam', label: 'Spam', content: '3 marcadas.', badge: { text: '3', variant: 'destructive' } },
       { value: 'trash', label: 'Lixeira', content: 'Excluídos.' },
     ]);
-    expect(código).toContain("import { createBadge } from '@/components/ui/badge';");
-    expect(código).toContain('createBadge({ text, variant })');
-    expect(código.match(/value: '/g)).toHaveLength(5);
-    expect(código).toContain("variant: 'destructive'");
+    expect(code).toContain("import { createBadge } from '@/components/ui/badge';");
+    expect(code).toContain('createBadge({ text, variant })');
+    expect(code.match(/value: '/g)).toHaveLength(5);
+    expect(code).toContain("variant: 'destructive'");
     // `default` é o padrão do badge — repetir o padrão é ruído.
-    expect(código).not.toContain("variant: 'default'");
+    expect(code).not.toContain("variant: 'default'");
   });
 });

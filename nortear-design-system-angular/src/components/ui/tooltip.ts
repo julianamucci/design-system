@@ -186,7 +186,7 @@ export class NdsTooltipTrigger {}
   template: `
     <ng-content />
 
-    @if (conteudo(); as c) {
+    @if (content(); as c) {
       <ng-template rdxTooltipPortal>
         <div
           rdxTooltipPositioner
@@ -212,16 +212,16 @@ export class NdsTooltip {
   // A instância da host directive, não `injectRdxTooltipContext()`: a diretiva
   // está NESTE elemento, então a injeção direta é a mais curta e não depende de
   // como o primitivo registra o contexto.
-  private readonly raiz = inject(RdxTooltip);
+  private readonly root = inject(RdxTooltip);
 
   // `descendants` explícito: o `<ng-template ndsTooltipContent>` costuma estar
   // um nível abaixo (dentro de um wrapper de layout do consumidor), e uma busca
   // só em filhos diretos devolveria `undefined` sem erro nenhum — tooltip que
   // nunca abre.
-  protected readonly conteudo = contentChild(NdsTooltipContent, { descendants: true });
+  protected readonly content = contentChild(NdsTooltipContent, { descendants: true });
 
   /** Espelha o estado para o `data-state` que Vue e Svelte também emitem. */
-  protected readonly state = computed(() => (this.raiz.open() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.root.open() ? 'open' : 'closed'));
 }
 
 // ─── Sobre a Arrow ────────────────────────────────────────────────────────────

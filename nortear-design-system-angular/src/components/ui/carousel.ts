@@ -142,11 +142,11 @@ export class NdsCarouselStore {
   }
 
   registrarSlide(el: HTMLElement): void {
-    this._slides.update((lista) => documentOrdenar([...lista, el]));
+    this._slides.update((list) => documentOrdenar([...list, el]));
   }
 
   removerSlide(el: HTMLElement): void {
-    this._slides.update((lista) => lista.filter((x) => x !== el));
+    this._slides.update((list) => list.filter((x) => x !== el));
   }
 
   /**
@@ -163,19 +163,19 @@ export class NdsCarouselStore {
 
   /** Rótulo acessível de um slide, já com posição e total resolvidos. */
   rotuloDoSlide(el: HTMLElement): string {
-    const lista = this._slides();
-    const position = lista.indexOf(el) + 1;
+    const list = this._slides();
+    const position = list.indexOf(el) + 1;
     return this.slideLabel()
       .replace('{index}', String(position || 1))
-      .replace('{total}', String(lista.length || 1));
+      .replace('{total}', String(list.length || 1));
   }
 
-  navegar(alvo: number, origem: CarouselNavSource): void {
+  navegar(target: number, origem: CarouselNavSource): void {
     const total = this.total();
     if (total === 0) return;
     const destination = this.loop()
-      ? ((alvo % total) + total) % total
-      : Math.min(Math.max(alvo, 0), total - 1);
+      ? ((target % total) + total) % total
+      : Math.min(Math.max(target, 0), total - 1);
     if (destination === this._index()) return;
     this._index.set(destination);
     this.rolarAte(destination);
@@ -192,11 +192,11 @@ export class NdsCarouselStore {
 
   private rolarAte(i: number): void {
     const vp = this.viewport;
-    const alvo = this.alvoDoSlide(i);
-    if (!vp || alvo === null) return;
+    const target = this.alvoDoSlide(i);
+    if (!vp || target === null) return;
     const behavior: ScrollBehavior = prefersReducedMotion() ? 'auto' : 'smooth';
-    if (this.orientation() === 'vertical') vp.scrollTo({ top: alvo, behavior });
-    else vp.scrollTo({ left: alvo, behavior });
+    if (this.orientation() === 'vertical') vp.scrollTo({ top: target, behavior });
+    else vp.scrollTo({ left: target, behavior });
   }
 
   // ── Rolagem conduzida por quem lê ──────────────────────────────────────────
@@ -222,14 +222,14 @@ export class NdsCarouselStore {
    */
   private alvoDoSlide(i: number): number | null {
     const vp = this.viewport;
-    const lista = this._slides();
-    const alvo = lista[i];
-    const first = lista[0];
-    if (!vp || !alvo || !first) return null;
+    const list = this._slides();
+    const target = list[i];
+    const first = list[0];
+    if (!vp || !target || !first) return null;
     const vertical = this.orientation() === 'vertical';
     const raw = vertical
-      ? alvo.offsetTop - first.offsetTop
-      : alvo.offsetLeft - first.offsetLeft;
+      ? target.offsetTop - first.offsetTop
+      : target.offsetLeft - first.offsetLeft;
     const limit = vertical
       ? vp.scrollHeight - vp.clientHeight
       : vp.scrollWidth - vp.clientWidth;
@@ -244,9 +244,9 @@ export class NdsCarouselStore {
     let melhor: number | null = null;
     let menorDistancia = Number.POSITIVE_INFINITY;
     for (let i = 0; i < this.total(); i++) {
-      const alvo = this.alvoDoSlide(i);
-      if (alvo === null) continue;
-      const distancia = Math.abs(alvo - position);
+      const target = this.alvoDoSlide(i);
+      if (target === null) continue;
+      const distancia = Math.abs(target - position);
       if (distancia < menorDistancia) {
         menorDistancia = distancia;
         melhor = i;
@@ -666,8 +666,8 @@ export class NdsCarouselContent implements OnDestroy {
 
   private readonly aoMover = (evento: PointerEvent): void => {
     if (evento.pointerId !== this.pointer) return;
-    const atual = this.vertical() ? evento.clientY : evento.clientX;
-    this.store.rolarPara(this.origemDaRolagem - (atual - this.origemDoPonteiro));
+    const current = this.vertical() ? evento.clientY : evento.clientX;
+    this.store.rolarPara(this.origemDaRolagem - (current - this.origemDoPonteiro));
   };
 
   private readonly aoSoltar = (evento: PointerEvent): void => {

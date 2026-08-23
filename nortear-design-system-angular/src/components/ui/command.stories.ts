@@ -24,7 +24,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<CommandArgs> })
     showGroups = true,
   } = ctx.args ?? {};
 
-  const grupo = showGroups ? ' heading="Componentes"' : '';
+  const group = showGroups ? ' heading="Componentes"' : '';
 
   return `import { NDS_COMMAND } from '@/components/ui/command';
 
@@ -35,7 +35,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<CommandArgs> })
       <input ndsCommandInput placeholder="${placeholder}" />
 
       <div ndsCommandList>
-        <div ndsCommandGroup${grupo}>
+        <div ndsCommandGroup${group}>
           <div ndsCommandItem value="button">Button</div>
           <div ndsCommandItem value="input">Input</div>
         </div>
@@ -136,13 +136,13 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
-    const campo = canvas.getByRole('combobox');
-    const lista = canvas.getByRole('listbox');
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
+    const field = canvas.getByRole('combobox');
+    const list = canvas.getByRole('listbox');
     const spy = args.onItemSelect as ReturnType<typeof fn>;
 
     // A busca começa sempre vazia: a play REEXECUTA no mesmo DOM.
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     // Os itens só se registram no render seguinte ao da montagem (é assim que
     // o primitivo lê o texto de cada um do DOM), então até lá a lista está
     // legitimamente vazia.
@@ -151,34 +151,34 @@ export const Playground: Story = {
     });
 
     await step('O markup é o mesmo das outras stacks', async () => {
-      await expect(raiz).toHaveClass(/nds-command/);
-      await expect(campo).toHaveClass(/nds-command-input/);
-      await expect(campo).toHaveAttribute('data-slot', 'command-input');
-      await expect(lista).toHaveClass(/nds-command-list/);
-      await expect(lista).toHaveAttribute('data-slot', 'command-list');
+      await expect(root).toHaveClass(/nds-command/);
+      await expect(field).toHaveClass(/nds-command-input/);
+      await expect(field).toHaveAttribute('data-slot', 'command-input');
+      await expect(list).toHaveClass(/nds-command-list/);
+      await expect(list).toHaveAttribute('data-slot', 'command-list');
       // A lupa é do componente, não do call site — quem escreve a paleta não
       // pode esquecê-la.
-      await expect(raiz.querySelector('.nds-command-input-wrapper > svg')).not.toBeNull();
+      await expect(root.querySelector('.nds-command-input-wrapper > svg')).not.toBeNull();
     });
 
     await step('O campo é uma combobox ligada à lista REAL', async () => {
       // Este é o par que separa a paleta de um menu: papel de combobox no
       // campo, papel de listbox na lista, e o `aria-controls` apontando para o
       // id que a lista tem de verdade — id órfão o axe reprova.
-      await expect(campo).toHaveAttribute('aria-autocomplete', 'list');
-      await expect(campo).toHaveAttribute('aria-expanded', 'true');
-      const controlled = campo.getAttribute('aria-controls');
+      await expect(field).toHaveAttribute('aria-autocomplete', 'list');
+      await expect(field).toHaveAttribute('aria-expanded', 'true');
+      const controlled = field.getAttribute('aria-controls');
       await expect(controlled).toBeTruthy();
-      await expect(document.getElementById(controlled!)).toBe(lista);
+      await expect(document.getElementById(controlled!)).toBe(list);
       // Nome acessível herdado do placeholder, nos dois papéis.
-      await expect(campo).toHaveAttribute('aria-label', args.placeholder);
-      await expect(lista).toHaveAttribute('aria-label', args.placeholder);
+      await expect(field).toHaveAttribute('aria-label', args.placeholder);
+      await expect(list).toHaveAttribute('aria-label', args.placeholder);
     });
 
     await step('O rótulo do grupo vem do input, não do default', async () => {
       // Sob JIT o componente renderiza com o default e `heading` nunca chega
       // (armadilha 1): com o control ligado, o cabeçalho existiria mesmo assim.
-      const cabecalhos = raiz.querySelectorAll('.nds-command-group-heading');
+      const cabecalhos = root.querySelectorAll('.nds-command-group-heading');
       await expect(cabecalhos.length).toBe(args.showGroups ? 2 : 0);
       if (args.showGroups) {
         await expect(canvas.getByRole('group', { name: 'Componentes' })).toBeTruthy();
@@ -186,20 +186,20 @@ export const Playground: Story = {
     });
 
     await step('Cada comando é uma opção da lista', async () => {
-      const opcoes = canvas.getAllByRole('option');
-      await expect(opcoes).toHaveLength(5);
-      await expect(opcoes[0]).toHaveClass(/nds-command-item/);
-      await expect(opcoes[0]).toHaveAttribute('data-slot', 'command-item');
-      await expect(opcoes[0]).toHaveAttribute('aria-selected', 'false');
+      const options = canvas.getAllByRole('option');
+      await expect(options).toHaveLength(5);
+      await expect(options[0]).toHaveClass(/nds-command-item/);
+      await expect(options[0]).toHaveAttribute('data-slot', 'command-item');
+      await expect(options[0]).toHaveAttribute('aria-selected', 'false');
       // O divisor não entra na lista de opções — ARIA só admite `option` e
       // `group` dentro de um listbox.
       await expect(
-        raiz.querySelector('[data-slot="command-separator"]'),
+        root.querySelector('[data-slot="command-separator"]'),
       ).toHaveAttribute('aria-hidden', 'true');
     });
 
     await step('Digitar filtra, e o que não casa sai da árvore', async () => {
-      await userEvent.type(campo, 'sep');
+      await userEvent.type(field, 'sep');
 
       await waitFor(async () => {
         await expect(canvas.getAllByRole('option')).toHaveLength(1);
@@ -208,30 +208,30 @@ export const Playground: Story = {
       // Não basta sumir da consulta por papel: o item precisa estar realmente
       // invisível, e é a troca de classe que garante isso (a folha pinta
       // `display: flex` e venceria o `hidden` do navegador).
-      const escondido = raiz.querySelector<HTMLElement>('[data-value="button"]')!;
+      const escondido = root.querySelector<HTMLElement>('[data-value="button"]')!;
       await expect(escondido).not.toBeVisible();
       // O grupo inteiro se recolhe quando nenhum item dele passa no filtro —
       // sem isso a paleta mostraria "Utilitários" com nada embaixo.
-      const grupos = raiz.querySelectorAll<HTMLElement>('[data-slot="command-group"]');
-      await expect(grupos[1]).not.toBeVisible();
+      const groups = root.querySelectorAll<HTMLElement>('[data-slot="command-group"]');
+      await expect(groups[1]).not.toBeVisible();
 
       // Apagar devolve a lista inteira. Também é o que zera o destaque: o
       // primitivo solta o item que o filtro escondeu, então o passo das setas
       // adiante parte sempre de "nenhum destaque", inclusive no replay.
-      await userEvent.clear(campo);
+      await userEvent.clear(field);
       await waitFor(async () => {
         await expect(canvas.getAllByRole('option')).toHaveLength(5);
       });
     });
 
     await step('As setas percorrem TODOS os comandos, sem tirar o foco do campo', async () => {
-      campo.focus();
+      field.focus();
 
-      const inHighlight = async (texto: string) => {
+      const inHighlight = async (text: string) => {
         await waitFor(async () => {
-          const id = campo.getAttribute('aria-activedescendant');
+          const id = field.getAttribute('aria-activedescendant');
           await expect(id).toBeTruthy();
-          await expect(document.getElementById(id!)).toHaveTextContent(texto);
+          await expect(document.getElementById(id!)).toHaveTextContent(text);
         });
       };
 
@@ -240,22 +240,22 @@ export const Playground: Story = {
       // grupos — que é onde a sequência quebraria — sem verificação nenhuma.
       const order = ['Button', 'Input', 'Separator', 'cn()', 'clsx()'];
 
-      for (const texto of order) {
+      for (const text of order) {
         await userEvent.keyboard('{ArrowDown}');
-        await inHighlight(texto);
+        await inHighlight(text);
       }
 
-      const last = document.getElementById(campo.getAttribute('aria-activedescendant')!)!;
+      const last = document.getElementById(field.getAttribute('aria-activedescendant')!)!;
       await expect(last).toHaveAttribute('role', 'option');
       await expect(last).toHaveAttribute('aria-selected', 'true');
       // O foco NÃO se move: é o que separa a paleta de um menu, e é o que
       // permite continuar digitando enquanto se navega.
-      await expect(campo).toHaveFocus();
+      await expect(field).toHaveFocus();
 
       // E de volta, na ordem inversa, até o primeiro.
-      for (const texto of ['cn()', 'Separator', 'Input', 'Button']) {
+      for (const text of ['cn()', 'Separator', 'Input', 'Button']) {
         await userEvent.keyboard('{ArrowUp}');
-        await inHighlight(texto);
+        await inHighlight(text);
       }
 
       // Um destaque por vez: quem estava marcado no fim da descida não está
@@ -278,11 +278,11 @@ export const Playground: Story = {
       // A busca volta ao zero para o próximo comando — o campo não pode virar
       // o nome do que acabou de rodar.
       await waitFor(async () => {
-        await expect(campo).toHaveValue('');
+        await expect(field).toHaveValue('');
         await expect(canvas.getAllByRole('option')).toHaveLength(5);
       });
       // E a lista continua aberta: a paleta não tem estado fechado.
-      await expect(campo).toHaveAttribute('aria-expanded', 'true');
+      await expect(field).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Clicar num comando também o escolhe', async () => {
@@ -294,7 +294,7 @@ export const Playground: Story = {
       });
       await expect(spy.mock.calls[antes][0]).toEqual({ value: 'cn', label: 'cn()' });
       await waitFor(async () => {
-        await expect(campo).toHaveValue('');
+        await expect(field).toHaveValue('');
       });
     });
   },

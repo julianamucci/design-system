@@ -137,9 +137,9 @@ export const Playground: Story = {
 
     await step('Os itens são itens de menu de verdade', async () => {
       const menu = await waitForPortal('menu');
-      const itens = [...menu.querySelectorAll('[data-slot="context-menu-item"]')];
-      await expect(itens.length).toBe(3);
-      for (const item of itens) await expect(item.getAttribute('role')).toBe('menuitem');
+      const items = [...menu.querySelectorAll('[data-slot="context-menu-item"]')];
+      await expect(items.length).toBe(3);
+      for (const item of items) await expect(item.getAttribute('role')).toBe('menuitem');
       await expect(menu.querySelector('[data-slot="context-menu-separator"]')).not.toBeNull();
     });
 

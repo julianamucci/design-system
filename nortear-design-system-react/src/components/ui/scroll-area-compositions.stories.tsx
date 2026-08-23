@@ -68,8 +68,8 @@ export const TagList: Story = {
     )!;
 
     await step("A lista inteira está no DOM, dentro do viewport", async () => {
-      const titulo = canvas.getByRole("heading", { name: "Tags" });
-      await expect(viewport.contains(titulo)).toBe(true);
+      const title = canvas.getByRole("heading", { name: "Tags" });
+      await expect(viewport.contains(title)).toBe(true);
       await expect(canvas.getAllByText(/^v1\.0\.\d+$/).length).toBe(tags.length);
     });
 

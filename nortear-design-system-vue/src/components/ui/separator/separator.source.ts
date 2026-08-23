@@ -42,10 +42,10 @@ function line(o: SeparatorArgs & { className?: string } = {}): string {
  * A largura máxima faz parte da lição da horizontal — a linha ocupa 100% do
  * pai, e sem um pai medido não há como ver onde ela começa e termina.
  */
-function section(vertical: boolean, filhos: string): string {
+function section(vertical: boolean, children: string): string {
   const eixo = vertical ? 'nds-cluster' : 'nds-stack';
   return `<div class="${eixo} nds-w-md" data-spacing="md">
-${indentar(filhos)}
+${indentar(children)}
 </div>`;
 }
 

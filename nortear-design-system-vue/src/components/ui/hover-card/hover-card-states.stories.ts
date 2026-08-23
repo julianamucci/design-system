@@ -85,11 +85,11 @@ export const Closed: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('link', { name: /@joana/i });
+    const trigger = canvas.getByRole('link', { name: /@joana/i });
 
     await step('Fechado, o portal está vazio', async () => {
       await waitForClosed();
-      await expect(gatilho).toBeVisible();
+      await expect(trigger).toBeVisible();
       await expect(panelOpen()).toBeNull();
     });
 
@@ -97,8 +97,8 @@ export const Closed: Story = {
       // Deliberado, e igual nas cinco stacks: `aria-expanded` descreveria o
       // cartão como um menu que o leitor comanda. Ele é conteúdo suplementar —
       // quem tem estado é o painel, não o link.
-      await expect(gatilho).not.toHaveAttribute('aria-expanded');
-      await expect(gatilho).not.toHaveAttribute('aria-haspopup');
+      await expect(trigger).not.toHaveAttribute('aria-expanded');
+      await expect(trigger).not.toHaveAttribute('aria-haspopup');
     });
   },
 };
@@ -130,40 +130,40 @@ export const Open: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('link', { name: /@joana/i });
+    const trigger = canvas.getByRole('link', { name: /@joana/i });
 
     // Estado conhecido: a play reexecuta no mesmo DOM pelo painel Interactions.
     await userEvent.keyboard('{Escape}');
     await waitForClosed();
-    await userEvent.hover(gatilho);
-    const painel = await waitForOpen();
+    await userEvent.hover(trigger);
+    const panel = await waitForOpen();
 
     await step('O painel é um dialog não-modal', async () => {
-      await expect(painel).toHaveAttribute('role', 'dialog');
+      await expect(panel).toHaveAttribute('role', 'dialog');
       // Sem `aria-modal`: a ausência do atributo JÁ significa não-modal, e é o
       // markup que o Vanilla — referência do sistema — emite. Escrever
       // `aria-modal="false"` seria redundância que nenhuma outra stack tem.
-      await expect(painel).not.toHaveAttribute('aria-modal');
+      await expect(panel).not.toHaveAttribute('aria-modal');
       // Não-modal de verdade: o resto da página continua alcançável.
-      await expect(gatilho).toBeVisible();
-      await expect(accessibleName(painel)).toBe('@joana');
+      await expect(trigger).toBeVisible();
+      await expect(accessibleName(panel)).toBe('@joana');
     });
 
     await step('Levar o cursor para dentro do painel mantém o cartão aberto', async () => {
       // O caminho completo: sai do gatilho (o que agenda o fechamento) e entra
       // no painel (o que o cancela). Só a entrada, sem a saída, provaria nada.
-      await panelEntrar(gatilho, painel);
+      await panelEntrar(trigger, panel);
       // Espera deliberada, maior que o closeDelay de 80ms: o que se prova aqui
       // é a AUSÊNCIA de fechamento, e ausência não tem evento para aguardar.
       await new Promise((resolve) => setTimeout(resolve, 300));
-      await expect(panelOpen()).toBe(painel);
-      await expect(painel).toBeVisible();
+      await expect(panelOpen()).toBe(panel);
+      await expect(panel).toBeVisible();
     });
 
     await step('O texto do painel tem contraste de 4.5:1 contra o fundo do cartão', async () => {
       // Medido do par que o design system promete (--popover-foreground sobre
       // --popover), e não deduzido do token: é o valor que o navegador aplicou.
-      const estilo = getComputedStyle(painel);
+      const estilo = getComputedStyle(panel);
       await expect(contrastRatio(estilo.color, estilo.backgroundColor)).toBeGreaterThanOrEqual(4.5);
     });
   },
@@ -216,21 +216,21 @@ export const Controlled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const abrir = canvas.getByRole('button', { name: 'Abrir pelo estado externo' });
-    const fechar = canvas.getByRole('button', { name: 'Fechar pelo estado externo' });
+    const open = canvas.getByRole('button', { name: 'Abrir pelo estado externo' });
+    const close = canvas.getByRole('button', { name: 'Fechar pelo estado externo' });
     const espelho = canvas.getByTestId('estado-externo');
 
     await step('O cartão obedece ao estado externo, sem ponteiro nenhum', async () => {
       // Nenhum hover e nenhum foco no gatilho: quem abre é a propriedade, e é
       // isso que distingue o modo controlado.
-      await userEvent.click(abrir);
-      const painel = await waitForOpen();
-      await expect(painel).toBeVisible();
+      await userEvent.click(open);
+      const panel = await waitForOpen();
+      await expect(panel).toBeVisible();
       await expect(espelho).toHaveTextContent('aberto');
     });
 
     await step('E fecha pelo mesmo caminho', async () => {
-      await userEvent.click(fechar);
+      await userEvent.click(close);
       await waitForClosed();
       await expect(panelOpen()).toBeNull();
       await expect(espelho).toHaveTextContent('fechado');

@@ -44,8 +44,8 @@ function withLabel(label: string, child: HTMLElement): HTMLElement {
   return col;
 }
 
-const slotsDe = (raiz: HTMLElement): HTMLInputElement[] => [
-  ...raiz.querySelectorAll<HTMLInputElement>('[data-slot="input-otp-slot"]'),
+const slotsDe = (root: HTMLElement): HTMLInputElement[] => [
+  ...root.querySelectorAll<HTMLInputElement>('[data-slot="input-otp-slot"]'),
 ];
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
@@ -121,9 +121,9 @@ export const WithSeparator: Story = {
     });
 
     await step('O separador fica entre o terceiro e o quarto slot', async () => {
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="input-otp"]')!;
-      const filhos = [...raiz.children];
-      const position = filhos.findIndex((el) => el.matches('[data-slot="input-otp-separator"]'));
+      const root = canvasElement.querySelector<HTMLElement>('[data-slot="input-otp"]')!;
+      const children = [...root.children];
+      const position = children.findIndex((el) => el.matches('[data-slot="input-otp-separator"]'));
       await expect(position).toBe(3);
       await expect(slotsDe(canvasElement)).toHaveLength(6);
     });

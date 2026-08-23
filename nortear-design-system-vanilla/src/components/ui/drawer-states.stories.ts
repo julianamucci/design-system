@@ -129,24 +129,24 @@ export const Open: Story = {
     if (within(document.body).queryAllByRole('dialog').length === 0) {
       await userEvent.click(trigger);
     }
-    const painel = await waitForPortal('dialog');
+    const panel = await waitForPortal('dialog');
 
     await step('Aberto, com o contrato de markup completo', async () => {
-      await expect(painel).toBeVisible();
-      await expect(painel).toHaveAttribute('role', 'dialog');
-      await expect(painel).toHaveAttribute('aria-modal', 'true');
-      await expect(painel).toHaveAttribute('data-slot', 'drawer-content');
-      await expect(painel).toHaveAccessibleName('Editar perfil');
+      await expect(panel).toBeVisible();
+      await expect(panel).toHaveAttribute('role', 'dialog');
+      await expect(panel).toHaveAttribute('aria-modal', 'true');
+      await expect(panel).toHaveAttribute('data-slot', 'drawer-content');
+      await expect(panel).toHaveAccessibleName('Editar perfil');
       await expect(document.querySelector('[data-slot="drawer-overlay"]')).not.toBeNull();
     });
 
     await step('O foco está dentro do painel', async () => {
       await waitFor(() => {
-        if (!painel.contains(document.activeElement)) {
+        if (!panel.contains(document.activeElement)) {
           throw new Error('o foco não entrou no painel');
         }
       });
-      await expect(painel.contains(document.activeElement)).toBe(true);
+      await expect(panel.contains(document.activeElement)).toBe(true);
     });
   },
 };
@@ -231,24 +231,24 @@ export const Controlled: Story = {
 
     await step('O estado externo abre o painel', async () => {
       await userEvent.click(externo);
-      const painel = await waitForPortal('dialog');
-      await expect(painel).toBeVisible();
-      await expect(painel).toHaveAccessibleName('Controlado pelo pai');
+      const panel = await waitForPortal('dialog');
+      await expect(panel).toBeVisible();
+      await expect(panel).toHaveAccessibleName('Controlado pelo pai');
       // O callback devolveu a mudança a quem é dono do estado.
       await expect(externo).toHaveAttribute('data-open', 'true');
     });
 
     await step('Fechar por dentro devolve o valor a quem é dono dele', async () => {
-      const painel = await waitForPortal('dialog');
-      await userEvent.click(within(painel).getByRole('button', { name: /cancelar/i }));
+      const panel = await waitForPortal('dialog');
+      await userEvent.click(within(panel).getByRole('button', { name: /cancelar/i }));
       await waitForPortalGone('dialog');
       await expect(externo).toHaveAttribute('data-open', 'false');
     });
 
     await step('E o mesmo botão externo reabre — o ciclo fecha', async () => {
       await userEvent.click(externo);
-      const painel = await waitForPortal('dialog');
-      await expect(painel).toBeVisible();
+      const panel = await waitForPortal('dialog');
+      await expect(panel).toBeVisible();
     });
   },
 };
@@ -288,14 +288,14 @@ export const NotDismissible: Story = {
     if (within(document.body).queryAllByRole('dialog').length === 0) {
       await userEvent.click(canvas.getByRole('button', { name: /abrir confirmação/i }));
     }
-    const painel = await waitForPortal('dialog');
+    const panel = await waitForPortal('dialog');
 
     await step('Escape não fecha', async () => {
       await userEvent.keyboard('{Escape}');
       // Espera ATIVA por um fechamento que não deve acontecer.
       await new Promise((r) => setTimeout(r, 400));
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(1);
-      await expect(painel).toBeVisible();
+      await expect(panel).toBeVisible();
     });
 
     await step('Clique no overlay não fecha', async () => {
@@ -307,8 +307,8 @@ export const NotDismissible: Story = {
     });
 
     await step('A saída explícita do rodapé continua funcionando', async () => {
-      await expect(within(painel).getByRole('button', { name: /cancelar/i })).toBeVisible();
-      await expect(painel).toHaveAccessibleName(/confirmação obrigatória/i);
+      await expect(within(panel).getByRole('button', { name: /cancelar/i })).toBeVisible();
+      await expect(panel).toHaveAccessibleName(/confirmação obrigatória/i);
     });
   },
 };
@@ -342,13 +342,13 @@ export const ListenerCleanup: Story = {
       probe = await sondarOuvintes({
         host: host as HTMLElement,
         montar: () => {
-          const conteudo = document.createElement('p');
-          conteudo.textContent = 'Conteúdo da gaveta.';
+          const content = document.createElement('p');
+          content.textContent = 'Conteúdo da gaveta.';
           return createDrawer({
             trigger: createButton({ variant: 'outline', label: 'Abrir' }),
             title: 'Título',
             description: 'Descrição da gaveta.',
-            content: conteudo,
+            content: content,
           });
         },
         exercitar: (no) => no.querySelector<HTMLElement>('button')?.click(),

@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { AvatarSize } from './avatar';
@@ -33,15 +33,15 @@ export function avatarSnippet(o: AvatarSnippetOptions = {}): string {
   const src = o.src === undefined ? FOTO_DEFAULT : o.src;
   const fallback = o.fallback ?? 'MR';
 
-  const lines = opcoes([
-    ['src', src ? texto(src) : undefined],
+  const lines = options([
+    ['src', src ? text(src) : undefined],
     // Sem foto não há o que descrever: o alt acompanha a imagem.
-    ['alt', src ? texto(o.alt ?? ALT_DEFAULT) : undefined],
-    ['fallbackText', fallback ? texto(fallback) : undefined],
+    ['alt', src ? text(o.alt ?? ALT_DEFAULT) : undefined],
+    ['fallbackText', fallback ? text(fallback) : undefined],
     // `md` é o padrão da fábrica: só os outros presets entram.
-    ['size', o.size && o.size !== 'md' ? texto(o.size) : undefined],
+    ['size', o.size && o.size !== 'md' ? text(o.size) : undefined],
     ['delayMs', src && o.delayMs ? String(o.delayMs) : undefined],
-    ['className', o.className ? texto(o.className) : undefined],
+    ['className', o.className ? text(o.className) : undefined],
   ]);
 
   const names = ['createAvatar'];
@@ -51,7 +51,7 @@ export function avatarSnippet(o: AvatarSnippetOptions = {}): string {
     importing('avatar', ...names),
     `const avatar = ${chamada('createAvatar', lines)};`,
     o.status
-      ? `avatar.appendChild(createAvatarBadge({ 'aria-label': ${texto(o.status)} }));`
+      ? `avatar.appendChild(createAvatarBadge({ 'aria-label': ${text(o.status)} }));`
       : undefined,
     montar('avatar'),
   );
@@ -88,17 +88,17 @@ export type AvatarGranularSnippetOptions = {
  */
 export function avatarGranularSnippet(o: AvatarGranularSnippetOptions = {}): string {
   const names = ['createAvatarFallback', 'createAvatarRoot'];
-  const raiz = opcoes([['size', o.size && o.size !== 'md' ? texto(o.size) : undefined]]);
+  const root = options([['size', o.size && o.size !== 'md' ? text(o.size) : undefined]]);
 
   if (o.iconLabel) {
     return snippet(
       importing('avatar', ...names),
-      `const avatar = ${raiz.length ? chamada('createAvatarRoot', raiz) : 'createAvatarRoot()'};`,
+      `const avatar = ${root.length ? chamada('createAvatarRoot', root) : 'createAvatarRoot()'};`,
       `// \`icone\` é um SVG do seu conjunto, decorativo: aria-hidden="true".
 // O papel de imagem é o que deixa o fallback receber um nome acessível.
 const fallback = createAvatarFallback();
 fallback.setAttribute('role', 'img');
-fallback.setAttribute('aria-label', ${texto(o.iconLabel)});
+fallback.setAttribute('aria-label', ${text(o.iconLabel)});
 fallback.appendChild(icone);
 avatar.appendChild(fallback);`,
       montar('avatar'),
@@ -107,8 +107,8 @@ avatar.appendChild(fallback);`,
 
   return snippet(
     importing('avatar', ...names),
-    `const avatar = ${raiz.length ? chamada('createAvatarRoot', raiz) : 'createAvatarRoot()'};`,
-    `avatar.appendChild(createAvatarFallback({ text: ${texto(o.fallback ?? 'JP')} }));`,
+    `const avatar = ${root.length ? chamada('createAvatarRoot', root) : 'createAvatarRoot()'};`,
+    `avatar.appendChild(createAvatarFallback({ text: ${text(o.fallback ?? 'JP')} }));`,
     montar('avatar'),
   );
 }
@@ -139,13 +139,13 @@ export function groupAvatarSnippet(o: AvatarGroupSnippetOptions = {}): string {
     importing('avatar', 'createAvatar', 'createAvatarGroup', 'createAvatarGroupCount'),
     `const fotos = ['/equipe/maria.jpg', '/equipe/joao.jpg', '/equipe/ana.jpg'];
 
-const grupo = createAvatarGroup({ 'aria-label': ${texto(o['aria-label'] ?? 'Participantes')} });
+const grupo = createAvatarGroup({ 'aria-label': ${text(o['aria-label'] ?? 'Participantes')} });
 for (const src of fotos) {
   // Alt vazio: quem nomeia a fila é o rótulo do grupo, e repetir o nome de
   // cada pessoa faria o leitor de tela anunciar a lista duas vezes.
   grupo.appendChild(createAvatar({ src, alt: '', fallbackText: '' }));
 }`,
-    `const contador = createAvatarGroupCount({ text: ${texto(o.excedente ?? '+3')} });
+    `const contador = createAvatarGroupCount({ text: ${text(o.excedente ?? '+3')} });
 contador.setAttribute('aria-hidden', 'true');
 grupo.appendChild(contador);`,
     montar('grupo'),

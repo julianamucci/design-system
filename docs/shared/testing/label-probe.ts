@@ -46,7 +46,7 @@ const CLASSES_DE_PEER_LABEL = [
 const SELECTOR_CONTROL =
   'input, select, textarea, button, [role="checkbox"], [role="radio"], [role="switch"], [role="textbox"]';
 
-const texto = (el: Element | null | undefined): string | null =>
+const text = (el: Element | null | undefined): string | null =>
   el?.textContent?.trim().replace(/\s+/g, ' ') || null;
 
 const classesDe = (el: Element | null | undefined): string[] =>
@@ -62,7 +62,7 @@ function estaDisabled(el: Element | null): boolean | null {
 }
 
 /** Estado marcável do controle, seja nativo ou ARIA. `null` = não é marcável. */
-function marcado(el: Element | null): boolean | null {
+function checked(el: Element | null): boolean | null {
   if (!el) return null;
   const aria = el.getAttribute('aria-checked');
   if (aria === 'true' || aria === 'false') return aria === 'true';
@@ -86,46 +86,46 @@ function marcado(el: Element | null): boolean | null {
  * Tudo é restaurado: o marcável volta ao estado anterior e o foco volta a quem
  * o tinha. Sem isso a sonda mudaria o resultado da story seguinte.
  */
-function labelAoClick(rotulo: HTMLElement, controle: Element | null) {
-  const doc = rotulo.ownerDocument;
+function labelAoClick(label: HTMLElement, control: Element | null) {
+  const doc = label.ownerDocument;
   const focusPrevious = doc.activeElement as HTMLElement | null;
-  const checkedBefore = marcado(controle);
+  const checkedBefore = checked(control);
 
   let focou: boolean | null = null;
   let ativou: boolean | null = null;
-  let erro: string | null = null;
+  let error: string | null = null;
 
   try {
-    rotulo.click();
+    label.click();
     const focado = doc.activeElement;
-    focou = !!controle && (focado === controle || !!controle.contains(focado));
-    const checkedAfter = marcado(controle);
+    focou = !!control && (focado === control || !!control.contains(focado));
+    const checkedAfter = checked(control);
     ativou = checkedBefore === null ? null : checkedAfter !== checkedBefore;
   } catch (e) {
-    erro = e instanceof Error ? e.message : String(e);
+    error = e instanceof Error ? e.message : String(e);
   }
 
   // Desfaz: devolve o marcável ao estado original e o foco a quem o tinha.
-  if (checkedBefore !== null && marcado(controle) !== checkedBefore) {
-    (controle as HTMLElement).click();
+  if (checkedBefore !== null && checked(control) !== checkedBefore) {
+    (control as HTMLElement).click();
   }
   if (focusPrevious && focusPrevious !== doc.body) focusPrevious.focus();
   else (doc.activeElement as HTMLElement | null)?.blur?.();
 
-  return { focouOControle: focou, ativouOControle: ativou, erro };
+  return { focouOControle: focou, ativouOControle: ativou, error };
 }
 
 /** Quem recebe o clique no centro do rótulo — pega rótulo coberto por overlay. */
-function clickReach(rotulo: HTMLElement): { ehORotulo: boolean; quemRecebe: string | null } {
-  const caixa = rotulo.getBoundingClientRect();
-  if (caixa.width === 0 || caixa.height === 0) return { ehORotulo: false, quemRecebe: null };
-  const alvo = rotulo.ownerDocument.elementFromPoint(
-    caixa.left + caixa.width / 2,
-    caixa.top + caixa.height / 2,
+function clickReach(label: HTMLElement): { ehORotulo: boolean; quemRecebe: string | null } {
+  const box = label.getBoundingClientRect();
+  if (box.width === 0 || box.height === 0) return { ehORotulo: false, quemRecebe: null };
+  const target = label.ownerDocument.elementFromPoint(
+    box.left + box.width / 2,
+    box.top + box.height / 2,
   );
   return {
-    ehORotulo: !!alvo && (alvo === rotulo || rotulo.contains(alvo)),
-    quemRecebe: alvo ? `${alvo.tagName.toLowerCase()}.${classesDe(alvo).join('.')}` : null,
+    ehORotulo: !!target && (target === label || label.contains(target)),
+    quemRecebe: target ? `${target.tagName.toLowerCase()}.${classesDe(target).join('.')}` : null,
   };
 }
 
@@ -149,8 +149,8 @@ export function cursorComputado(el: Element): string {
  * Clica no rótulo e devolve se o controle recebeu foco — sem deixar rastro.
  * É a asserção que faltava nas cinco stacks.
  */
-export function clickFocaOControle(rotulo: HTMLElement, controle: Element | null): boolean | null {
-  return labelAoClick(rotulo, controle).focouOControle;
+export function clickFocaOControle(label: HTMLElement, control: Element | null): boolean | null {
+  return labelAoClick(label, control).focouOControle;
 }
 
 /** Razão WCAG entre o texto do rótulo e o primeiro fundo opaco acima dele. */
@@ -183,38 +183,38 @@ export function themeContrast(el: HTMLElement): { light: number | null; escuro: 
 
 // ─── Medição ──────────────────────────────────────────────────────────────────
 
-/** Mede UM rótulo e o controle que ele rotula. `raiz` é o wrapper do cenário. */
-export function measureLabel(raiz: HTMLElement) {
-  const rotulo =
-    raiz.querySelector<HTMLElement>('[data-slot="label"]') ??
-    raiz.querySelector<HTMLElement>('label.nds-label') ??
-    raiz.querySelector<HTMLElement>('label');
+/** Mede UM rótulo e o controle que ele rotula. `root` é o wrapper do cenário. */
+export function measureLabel(root: HTMLElement) {
+  const label =
+    root.querySelector<HTMLElement>('[data-slot="label"]') ??
+    root.querySelector<HTMLElement>('label.nds-label') ??
+    root.querySelector<HTMLElement>('label');
 
-  if (!rotulo) return { presente: false } as const;
+  if (!label) return { presente: false } as const;
 
-  const doc = rotulo.ownerDocument;
-  const classes = classesDe(rotulo);
-  const cs = getComputedStyle(rotulo);
-  const caixa = rotulo.getBoundingClientRect();
+  const doc = label.ownerDocument;
+  const classes = classesDe(label);
+  const cs = getComputedStyle(label);
+  const box = label.getBoundingClientRect();
 
   // ── Associação ──────────────────────────────────────────────────────────────
-  const htmlFor = rotulo.getAttribute('for');
+  const htmlFor = label.getAttribute('for');
   const forTarget = htmlFor ? doc.getElementById(htmlFor) : null;
-  const nested = rotulo.querySelector(SELECTOR_CONTROL);
-  const controle = forTarget ?? nested ?? raiz.querySelector(SELECTOR_CONTROL);
+  const nested = label.querySelector(SELECTOR_CONTROL);
+  const control = forTarget ?? nested ?? root.querySelector(SELECTOR_CONTROL);
   const forma = forTarget ? 'for' : nested ? 'aninhado' : null;
 
   // ── Marcador de obrigatório ─────────────────────────────────────────────────
   const marcador =
-    rotulo.querySelector<HTMLElement>('[aria-hidden="true"]') ??
-    rotulo.querySelector<HTMLElement>('.nds-text-destructive');
+    label.querySelector<HTMLElement>('[aria-hidden="true"]') ??
+    label.querySelector<HTMLElement>('.nds-text-destructive');
   const csMarcador = marcador ? getComputedStyle(marcador) : null;
   const marcadorBackground = marcador ? backgroundEffective(marcador) : null;
 
-  const background = backgroundEffective(rotulo);
+  const background = backgroundEffective(label);
 
   // ── Irmão desabilitado: qual vocabulário cada stack usa ─────────────────────
-  const irmaos = [...(rotulo.parentElement?.children ?? [])].filter((el) => el !== rotulo);
+  const irmaos = [...(label.parentElement?.children ?? [])].filter((el) => el !== label);
   const familiaDePeer = CLASSES_DE_PEER.filter((c) =>
     irmaos.some((el) => el.classList.contains(c)),
   );
@@ -222,8 +222,8 @@ export function measureLabel(raiz: HTMLElement) {
   return {
     presente: true,
     estrutura: {
-      tag: rotulo.tagName.toLowerCase(),
-      dataSlot: rotulo.getAttribute('data-slot'),
+      tag: label.tagName.toLowerCase(),
+      dataSlot: label.getAttribute('data-slot'),
       temClasseBase: classes.includes('nds-label'),
       classes,
       /** Classe sem o prefixo do design system: inerte, não pinta nada. */
@@ -232,28 +232,28 @@ export function measureLabel(raiz: HTMLElement) {
       familiaDePeerNoRotulo: CLASSES_DE_PEER_LABEL.filter((c) => classes.includes(c)),
       /** Vocabulário de "sou o controle irmão" presente nos irmãos do rótulo. */
       familiaDePeer,
-      estiloInline: rotulo.getAttribute('style'),
-      textoVisivel: texto(rotulo),
-      wrapperClasses: classesDe(raiz.firstElementChild),
-      wrapperDataDisabled: raiz.querySelector('[data-disabled]')?.getAttribute('data-disabled') ?? null,
+      estiloInline: label.getAttribute('style'),
+      textoVisivel: text(label),
+      wrapperClasses: classesDe(root.firstElementChild),
+      wrapperDataDisabled: root.querySelector('[data-disabled]')?.getAttribute('data-disabled') ?? null,
     },
     associacao: {
       forma,
       htmlFor,
       alvoDoForExiste: htmlFor ? !!forTarget : null,
-      controleTag: controle?.tagName.toLowerCase() ?? null,
-      controleTipo: controle?.getAttribute('type') ?? controle?.getAttribute('role') ?? null,
-      controleId: controle?.getAttribute('id') ?? null,
-      controleDesabilitado: estaDisabled(controle),
-      controleAriaRequired: controle?.getAttribute('aria-required') ?? null,
+      controleTag: control?.tagName.toLowerCase() ?? null,
+      controleTipo: control?.getAttribute('type') ?? control?.getAttribute('role') ?? null,
+      controleId: control?.getAttribute('id') ?? null,
+      controleDesabilitado: estaDisabled(control),
+      controleAriaRequired: control?.getAttribute('aria-required') ?? null,
       /** Nome acessível do controle: é o que o leitor de tela anuncia. */
-      nomeDoControle: controle
-        ? (controle.getAttribute('aria-label') ??
-           (controle.getAttribute('aria-labelledby')
-             ? texto(doc.getElementById(controle.getAttribute('aria-labelledby')!.split(/\s+/)[0]))
+      nomeDoControle: control
+        ? (control.getAttribute('aria-label') ??
+           (control.getAttribute('aria-labelledby')
+             ? text(doc.getElementById(control.getAttribute('aria-labelledby')!.split(/\s+/)[0]))
              : null) ??
-           (controle.getAttribute('id')
-             ? texto(doc.querySelector(`label[for="${CSS.escape(controle.getAttribute('id')!)}"]`))
+           (control.getAttribute('id')
+             ? text(doc.querySelector(`label[for="${CSS.escape(control.getAttribute('id')!)}"]`))
              : null))
         : null,
     },
@@ -267,34 +267,34 @@ export function measureLabel(raiz: HTMLElement) {
       alinhamento: cs.alignItems,
       espacoInterno: cs.gap,
       selecaoDeTexto: cs.userSelect,
-      largura: Math.round(caixa.width),
-      altura: Math.round(caixa.height),
+      width: Math.round(box.width),
+      height: Math.round(box.height),
       /** Altura fixa em primitivo com texto é defeito de WCAG 1.4.4. */
       alturaCss: cs.height === 'auto' ? 'auto' : cs.height,
     },
     state: {
       cor: cs.color,
       backgroundEffective: background,
-      opacidade: Number(cs.opacity),
+      opacity: Number(cs.opacity),
       cursor: cs.cursor,
       pointer: cs.pointerEvents,
     },
     obrigatorio: {
       existe: !!marcador,
-      texto: texto(marcador),
+      text: text(marcador),
       ariaHidden: marcador?.getAttribute('aria-hidden') ?? null,
       cor: csMarcador?.color ?? null,
       /** `null` significa "só pintura": nada anuncia a obrigatoriedade. */
       anunciado:
-        controle?.getAttribute('aria-required') === 'true' ||
-        (controle as HTMLInputElement | null)?.required === true
+        control?.getAttribute('aria-required') === 'true' ||
+        (control as HTMLInputElement | null)?.required === true
           ? 'aria-required'
           : null,
       contraste: csMarcador && marcadorBackground ? ratio(csMarcador.color, marcadorBackground) : null,
     },
     clique: {
-      ...labelAoClick(rotulo, controle),
-      reach: clickReach(rotulo),
+      ...labelAoClick(label, control),
+      reach: clickReach(label),
     },
     contraste: {
       textoNoFundo: background ? ratio(cs.color, background) : null,
@@ -303,14 +303,14 @@ export function measureLabel(raiz: HTMLElement) {
 }
 
 /**
- * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `raiz`.
+ * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `root`.
  * Cenário ausente vem `null` — é o achado de "a stack não monta este caso".
  */
-export function measureLabels(raiz: HTMLElement, cenarios: string[]) {
+export function measureLabels(root: HTMLElement, cenarios: string[]) {
   const registro: Record<string, unknown> = {};
   for (const cenario of cenarios) {
-    const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
-    registro[cenario] = alvo ? measureLabel(alvo) : null;
+    const target = root.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
+    registro[cenario] = target ? measureLabel(target) : null;
   }
   return registro;
 }
@@ -322,17 +322,17 @@ export function measureLabels(raiz: HTMLElement, cenarios: string[]) {
  * A classe sai no `finally`: deixá-la posta envenena a story seguinte e a foto
  * do Chromatic.
  */
-export function darkMeasure(raiz: HTMLElement, cenario: string) {
-  const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
-  const rotulo = alvo?.querySelector<HTMLElement>('label');
-  if (!alvo || !rotulo) return null;
+export function darkMeasure(root: HTMLElement, cenario: string) {
+  const target = root.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
+  const label = target?.querySelector<HTMLElement>('label');
+  if (!target || !label) return null;
 
-  const desfazer = darkLigarTheme(raiz.ownerDocument);
+  const desfazer = darkLigarTheme(root.ownerDocument);
   try {
     // Trocar o tema troca `color`, que é propriedade em transição: sem desligá-la
     // a sonda leria a cor do tema CLARO e relataria um contraste que não existe.
-    return noTransicao(rotulo, () => {
-      const measurement = measureLabel(alvo);
+    return noTransicao(label, () => {
+      const measurement = measureLabel(target);
       if (!measurement.presente) return null;
       return { state: measurement.state, contraste: measurement.contraste, obrigatorio: measurement.obrigatorio };
     });
@@ -347,10 +347,10 @@ export function darkMeasure(raiz: HTMLElement, cenario: string) {
  * Via exceção, e não `console.log`: o addon do Storybook instrumenta o console
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest.
  */
-export function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[]) {
+export function reportProbe(stack: string, root: HTMLElement, cenarios: string[]) {
   const registro = {
-    light: measureLabels(raiz, cenarios),
-    escuro: darkMeasure(raiz, cenarios[0]),
+    light: measureLabels(root, cenarios),
+    escuro: darkMeasure(root, cenarios[0]),
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);
 }

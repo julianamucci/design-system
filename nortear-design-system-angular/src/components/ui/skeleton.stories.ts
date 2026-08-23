@@ -20,7 +20,7 @@ type SkeletonArgs = {
 /** Ver a nota em separator.stories.ts. */
 function playgroundSource(_gerado: string, ctx: { args?: Partial<SkeletonArgs> }): string {
   const { shape = 'text', width = '3-4' } = ctx.args ?? {};
-  const largura = shape === 'text' || shape === 'heading' ? ` data-width="${width}"` : '';
+  const widthAttr = shape === 'text' || shape === 'heading' ? ` data-width="${width}"` : '';
   return `import { NdsSkeleton } from '@/components/ui/skeleton';
 
 @Component({
@@ -29,7 +29,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<SkeletonArgs> }
     <!-- aria-busy no CONTAINER: o esqueleto é aria-hidden e quem anuncia
          o carregamento é a região que vai receber o conteúdo. -->
     <div role="status" [attr.aria-busy]="carregando()" aria-label="Carregando conteúdo">
-      <div ndsSkeleton data-shape="${shape}"${largura}></div>
+      <div ndsSkeleton data-shape="${shape}"${widthAttr}></div>
     </div>
   \`,
 })
@@ -77,7 +77,7 @@ export const Playground: Story = {
   render: (args) => ({
     props: {
       ...args,
-      largura: args.shape === 'text' || args.shape === 'heading' ? args.width : null,
+      width: args.shape === 'text' || args.shape === 'heading' ? args.width : null,
       // `fill` preenche a caixa que o container estabelece; aqui quem
       // estabelece é a proporção de mídia, senão o bloco nasce com altura zero
       // e o Playground mostra um esqueleto invisível.
@@ -85,7 +85,7 @@ export const Playground: Story = {
     },
     template: `
       <div role="status" [attr.aria-busy]="loading" aria-label="Carregando conteúdo">
-        <div ndsSkeleton [attr.data-shape]="shape" [attr.data-width]="largura" [class]="className"></div>
+        <div ndsSkeleton [attr.data-shape]="shape" [attr.data-width]="width" [class]="className"></div>
       </div>
     `,
   }),
@@ -110,11 +110,11 @@ export const Playground: Story = {
       // outras quatro stacks, onde `h-4 w-[250px]` era texto inerte e o
       // Playground renderizava altura zero.
       await expect(sk).toHaveClass(/nds-skeleton/);
-      const caixa = boxDesenhada(sk, regiao);
-      await expect(caixa.altura).toBeGreaterThan(0);
+      const box = boxDesenhada(sk, regiao);
+      await expect(box.height).toBeGreaterThan(0);
       if (args.shape === 'text' || args.shape === 'heading') {
         await expect(
-          Math.abs(caixa.fracaoDoContainer - WIDTH_FRACTION[args.width]),
+          Math.abs(box.fracaoDoContainer - WIDTH_FRACTION[args.width]),
         ).toBeLessThan(0.02);
       }
     });

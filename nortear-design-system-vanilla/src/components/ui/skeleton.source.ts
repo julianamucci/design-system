@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { SkeletonShape, SkeletonSize, SkeletonWidth } from './skeleton';
@@ -30,13 +30,13 @@ export type SkeletonSnippetOptions = SkeletonPart & {
 
 /** `createSkeleton(…)` em uma linha — a peça é sempre item de uma lista. */
 function partCall(p: SkeletonPart): string {
-  const pairs = opcoes([
+  const pairs = options([
     // A fábrica não assume forma nem largura: sem atributo, a folha aplica a
     // caixa base. Só entra o que a story declara.
-    ['shape', p.shape ? texto(p.shape) : undefined],
-    ['width', p.width ? texto(p.width) : undefined],
-    ['size', p.size ? texto(p.size) : undefined],
-    ['className', p.className ? texto(p.className) : undefined],
+    ['shape', p.shape ? text(p.shape) : undefined],
+    ['width', p.width ? text(p.width) : undefined],
+    ['size', p.size ? text(p.size) : undefined],
+    ['className', p.className ? text(p.className) : undefined],
   ])
     .map((line) => line.replace(/,$/, ''))
     .join(', ');
@@ -54,9 +54,9 @@ function partCall(p: SkeletonPart): string {
  */
 function regiao(o: SkeletonSnippetOptions, className?: string, spacing?: string): string {
   return `const regiao = document.createElement('div');
-${className ? `regiao.className = ${texto(className)};\n` : ''}${spacing ? `regiao.dataset.spacing = ${texto(spacing)};\n` : ''}regiao.setAttribute('role', 'status');
-regiao.setAttribute('aria-busy', ${texto(String(o.loading ?? true))});
-regiao.setAttribute('aria-label', ${texto(o.regionLabel ?? 'Carregando conteúdo')});`;
+${className ? `regiao.className = ${text(className)};\n` : ''}${spacing ? `regiao.dataset.spacing = ${text(spacing)};\n` : ''}regiao.setAttribute('role', 'status');
+regiao.setAttribute('aria-busy', ${text(String(o.loading ?? true))});
+regiao.setAttribute('aria-label', ${text(o.regionLabel ?? 'Carregando conteúdo')});`;
 }
 
 /** A chamada real de `createSkeleton` dentro da região que a anuncia. */
@@ -132,7 +132,7 @@ lista.dataset.spacing = 'md';
 // A lista inteira é UMA região ocupada: uma por item repetiria o aviso cinco
 // vezes para quem usa leitor de tela.
 lista.setAttribute('aria-busy', 'true');
-lista.setAttribute('aria-label', ${texto(o.regionLabel ?? 'Carregando lista de pedidos')});`,
+lista.setAttribute('aria-label', ${text(o.regionLabel ?? 'Carregando lista de pedidos')});`,
     `for (let i = 0; i < ${total}; i++) {
   const item = document.createElement('li');
   item.className = 'nds-cluster';
@@ -166,7 +166,7 @@ export function ratioSkeletonSnippet(o: SkeletonSnippetOptions = {}): string {
     [importing('skeleton', 'createSkeleton'), importing('aspect-ratio', 'createAspectRatio')].join('\n'),
     regiao({ ...o, regionLabel: o.regionLabel ?? 'Carregando imagem' }, 'nds-w-sm'),
     `regiao.appendChild(
-  ${chamada('createAspectRatio', opcoes([
+  ${chamada('createAspectRatio', options([
     ['ratio', '16 / 9'],
     ['content', partCall({ shape: 'fill' })],
   ]))},

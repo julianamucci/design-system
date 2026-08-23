@@ -17,9 +17,9 @@ const EXPORTACOES = ['PDF', 'CSV', 'PNG'] as const;
 const EXIBICOES = ['Régua', 'Barra lateral', 'Grade'] as const;
 
 const THEMES = [
-  { valor: 'light', label: 'Claro' },
-  { valor: 'dark', label: 'Escuro' },
-  { valor: 'system', label: 'Do sistema' },
+  { value: 'light', label: 'Claro' },
+  { value: 'dark', label: 'Escuro' },
+  { value: 'system', label: 'Do sistema' },
 ] as const;
 
 const MENUS_EDITOR = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'] as const;
@@ -71,10 +71,10 @@ export const WithShortcuts: Story = {
   }),
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
-    const itens = within(menu).getAllByRole('menuitem');
+    const items = within(menu).getAllByRole('menuitem');
 
     await step('Cada item leva o próprio atalho', async () => {
-      await expect(itens).toHaveLength(SHORTCUTS.length);
+      await expect(items).toHaveLength(SHORTCUTS.length);
       const shortcuts = menu.querySelectorAll('[data-slot="menubar-shortcut"]');
       await expect(shortcuts).toHaveLength(SHORTCUTS.length);
     });
@@ -82,7 +82,7 @@ export const WithShortcuts: Story = {
     await step('O atalho entra no nome do item, e não fica escondido do leitor', async () => {
       // Sem `aria-hidden`: "Desfazer, Control Z" é o que dá serventia ao atalho
       // para quem não enxerga a tela. Escondê-lo devolveria só "Desfazer".
-      for (const [i, item] of itens.entries()) {
+      for (const [i, item] of items.entries()) {
         await expect(item).toHaveAccessibleName(`${SHORTCUTS[i].label} ${SHORTCUTS[i].atalho}`);
       }
     });
@@ -90,7 +90,7 @@ export const WithShortcuts: Story = {
     await step('O atalho é secundário — cor esmaecida à direita do rótulo', async () => {
       const atalho = menu.querySelector<HTMLElement>('[data-slot="menubar-shortcut"]')!;
       await expect(atalho.classList.contains('nds-dropdown-menu-shortcut')).toBe(true);
-      await expect(getComputedStyle(atalho).color).not.toBe(getComputedStyle(itens[0]).color);
+      await expect(getComputedStyle(atalho).color).not.toBe(getComputedStyle(items[0]).color);
     });
   },
 };
@@ -124,7 +124,7 @@ export const WithSubmenu: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const corpo = within(document.body);
+    const body = within(document.body);
     const menu = await waitForPortal('menu');
     const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar' });
 
@@ -147,12 +147,12 @@ export const WithSubmenu: Story = {
         await expect(subTrigger.getAttribute('aria-expanded')).toBe('true');
         // Dois painéis abertos ao mesmo tempo: o pai continua no lugar, é o que
         // distingue submenu de troca de menu.
-        await expect(corpo.getAllByRole('menu')).toHaveLength(2);
+        await expect(body.getAllByRole('menu')).toHaveLength(2);
       });
     });
 
     await step('O submenu traz os próprios itens e abre AO LADO do pai', async () => {
-      const submenu = corpo.getAllByRole('menu').find((m) => m !== menu)!;
+      const submenu = body.getAllByRole('menu').find((m) => m !== menu)!;
       await expect(within(submenu).getAllByRole('menuitem')).toHaveLength(EXPORTACOES.length);
       await expect(submenu.getAttribute('data-slot')).toBe('menubar-sub-content');
       // `side="right"` é o padrão do submenu neste stack: um submenu que nasce
@@ -196,22 +196,22 @@ export const WithCheckboxItems: Story = {
 
     await step('Cada linha é uma caixa de seleção independente', async () => {
       await expect(boxes).toHaveLength(EXIBICOES.length);
-      for (const caixa of boxes) {
-        await expect(caixa.getAttribute('data-slot')).toBe('menubar-checkbox-item');
-        await expect(caixa.getAttribute('aria-checked')).toBeTruthy();
+      for (const box of boxes) {
+        await expect(box.getAttribute('data-slot')).toBe('menubar-checkbox-item');
+        await expect(box.getAttribute('aria-checked')).toBeTruthy();
       }
     });
 
     await step('Alternar reflete no estado anunciado e no marcador visual', async () => {
-      const alvo = boxes[EXIBICOES.indexOf('Barra lateral')];
+      const target = boxes[EXIBICOES.indexOf('Barra lateral')];
       // Idempotente: o clique só acontece com a caixa desmarcada, então o
       // replay do painel Interactions parte do mesmo estado da primeira rodada.
-      if (alvo.getAttribute('aria-checked') !== 'true') await userEvent.click(alvo);
+      if (target.getAttribute('aria-checked') !== 'true') await userEvent.click(target);
       await waitFor(async () => {
-        await expect(alvo.getAttribute('aria-checked')).toBe('true');
+        await expect(target.getAttribute('aria-checked')).toBe('true');
         // O marcador visual acompanha: `aria-checked` é o que a pessoa ouve,
         // `data-checked` é o que o CSS usa para desenhar o tique.
-        await expect(alvo.hasAttribute('data-checked')).toBe(true);
+        await expect(target.hasAttribute('data-checked')).toBe(true);
       });
     });
 
@@ -228,17 +228,17 @@ export const WithCheckboxItems: Story = {
 export const WithRadioGroup: Story = {
   parameters: { covers: ['accessibility.item5'] },
   render: () => ({
-    props: { temas: THEMES, tema: 'light' },
+    props: { temas: THEMES, theme: 'light' },
     template: `
       <nds-menubar [modal]="false">
         <nds-menubar-menu [defaultOpen]="true">
           <button ndsMenubarTrigger>Aparência</button>
 
           <ng-template ndsMenubarContent>
-            <div ndsMenubarRadioGroup [value]="tema" (valueChange)="tema = $event">
+            <div ndsMenubarRadioGroup [value]="theme" (valueChange)="theme = $event">
               <div ndsMenubarLabel>Tema</div>
-              @for (t of temas; track t.valor) {
-                <div ndsMenubarRadioItem [value]="t.valor">{{ t.label }}</div>
+              @for (t of temas; track t.value) {
+                <div ndsMenubarRadioItem [value]="t.value">{{ t.label }}</div>
               }
             </div>
           </ng-template>
@@ -248,15 +248,15 @@ export const WithRadioGroup: Story = {
   }),
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
-    const opcoes = within(menu).getAllByRole('menuitemradio');
+    const options = within(menu).getAllByRole('menuitemradio');
 
     await step('O grupo publica escolha única, e só uma opção está marcada', async () => {
-      await expect(opcoes).toHaveLength(THEMES.length);
-      await expect(opcoes.filter((o) => o.getAttribute('aria-checked') === 'true')).toHaveLength(1);
+      await expect(options).toHaveLength(THEMES.length);
+      await expect(options.filter((o) => o.getAttribute('aria-checked') === 'true')).toHaveLength(1);
     });
 
     await step('Escolher outra opção transfere a marcação', async () => {
-      const escuro = opcoes[THEMES.findIndex((t) => t.valor === 'dark')];
+      const escuro = options[THEMES.findIndex((t) => t.value === 'dark')];
       // Idempotente: o clique só acontece com a opção desmarcada — e escolher a
       // MESMA opção duas vezes deixaria o mesmo estado de qualquer forma, que é
       // o que distingue escolha única de alternador.
@@ -264,7 +264,7 @@ export const WithRadioGroup: Story = {
       await waitFor(async () => {
         await expect(escuro.getAttribute('aria-checked')).toBe('true');
       });
-      await expect(opcoes.filter((o) => o.getAttribute('aria-checked') === 'true')).toHaveLength(1);
+      await expect(options.filter((o) => o.getAttribute('aria-checked') === 'true')).toHaveLength(1);
     });
   },
 };
@@ -323,15 +323,15 @@ export const EditorCompleto: Story = {
 
     await step('As quatro categorias clássicas convivem na mesma barra', async () => {
       await expect(triggers).toHaveLength(MENUS_EDITOR.length);
-      for (const [i, gatilho] of triggers.entries()) {
-        await expect(gatilho).toHaveAccessibleName(MENUS_EDITOR[i]);
+      for (const [i, trigger] of triggers.entries()) {
+        await expect(trigger).toHaveAccessibleName(MENUS_EDITOR[i]);
       }
     });
 
     await step('A barra é uma só parada de tabulação, com todos os menus fechados', async () => {
       await expect(triggers.filter((g) => g.tabIndex === 0)).toHaveLength(1);
-      for (const gatilho of triggers) {
-        await expect(gatilho.getAttribute('data-state')).toBe('closed');
+      for (const trigger of triggers) {
+        await expect(trigger.getAttribute('data-state')).toBe('closed');
       }
     });
   },

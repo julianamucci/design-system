@@ -35,7 +35,7 @@ describe('transforms do painel Code', () => {
   for (const caminho of caminhos) {
     const modulo = modulos[caminho];
     const exportadas = Object.entries(modulo).filter(
-      ([, valor]) => typeof valor === 'function',
+      ([, value]) => typeof value === 'function',
     ) as Array<[string, (...args: never[]) => unknown]>;
 
     describe(caminho, () => {
@@ -52,7 +52,7 @@ describe('transforms do painel Code', () => {
       // cobra a forma do nome é este check.
       it('todo export é construtor de snippet ou helper declarado', () => {
         const outside = Object.keys(modulo).filter(
-          (nome) => !/(?:Source|Snippet)$/.test(nome) && !HELPERS.has(nome),
+          (name) => !/(?:Source|Snippet)$/.test(name) && !HELPERS.has(name),
         );
         expect(
           outside,
@@ -60,22 +60,22 @@ describe('transforms do painel Code', () => {
         ).toEqual([]);
       });
 
-      for (const [nome, fn] of exportadas) {
-        it(`${nome} devolve um snippet honesto`, () => {
+      for (const [name, fn] of exportadas) {
+        it(`${name} devolve um snippet honesto`, () => {
           const saida = fn();
-          expect(typeof saida, `${nome} deve devolver string sem receber args`).toBe('string');
-          const texto = saida as string;
-          expect(texto.trim().length).toBeGreaterThan(0);
+          expect(typeof saida, `${name} deve devolver string sem receber args`).toBe('string');
+          const text = saida as string;
+          expect(text.trim().length).toBeGreaterThan(0);
           // O andaime da story não é parte do design system.
-          expect(texto).not.toMatch(SCAFFOLD);
+          expect(text).not.toMatch(SCAFFOLD);
           // Docs de cada stack são consumidas isoladamente.
-          expect(texto).not.toMatch(OTHER_STACK);
+          expect(text).not.toMatch(OTHER_STACK);
           // `bits-ui` é a lib headless por baixo; o leitor importa do design
           // system, nunca dela.
-          expect(texto).not.toContain('bits-ui');
+          expect(text).not.toContain('bits-ui');
           // Sobra de template literal mal fechado.
-          expect(texto).not.toContain('undefined');
-          expect(texto).not.toContain('[object Object]');
+          expect(text).not.toContain('undefined');
+          expect(text).not.toContain('[object Object]');
         });
       }
     });

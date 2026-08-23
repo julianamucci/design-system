@@ -66,11 +66,11 @@ export const Empty: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('Sem dado não há desenho — há uma frase', async () => {
-      await expect(raiz.querySelector('svg')).toBeNull();
-      const aviso = raiz.querySelector('.nds-chart-empty');
+      await expect(root.querySelector('svg')).toBeNull();
+      const aviso = root.querySelector('.nds-chart-empty');
       await expect(aviso?.textContent?.trim()).toBe(FRASE_VAZIA);
     });
 
@@ -78,14 +78,14 @@ export const Empty: Story = {
       // `role="img"` poda a subárvore da árvore de acessibilidade: com a frase
       // no lugar do gráfico, ela é justamente o conteúdo a ser lido, e ficaria
       // escondida atrás de um rótulo genérico.
-      await expect(raiz.getAttribute('role')).toBeNull();
-      await expect(raiz.getAttribute('aria-label')).toBeNull();
+      await expect(root.getAttribute('role')).toBeNull();
+      await expect(root.getAttribute('aria-label')).toBeNull();
     });
 
     await step('O container mantém o piso de altura', async () => {
       // Sem piso o bloco colapsa e a página salta quando o dado chega. A story
       // não passa `height` de propósito: o que se mede aqui é o piso.
-      await expect(raiz.getBoundingClientRect().height).toBeGreaterThan(100);
+      await expect(root.getBoundingClientRect().height).toBeGreaterThan(100);
     });
   },
 };
@@ -109,10 +109,10 @@ export const SingleSeries: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await designPronto(canvasElement);
+    const root = await designPronto(canvasElement);
 
     await step('A linha da série é traçada', async () => {
-      const tracados = [...raiz.querySelectorAll<SVGPathElement>('svg path')].filter((p) => {
+      const tracados = [...root.querySelectorAll<SVGPathElement>('svg path')].filter((p) => {
         const s = getComputedStyle(p);
         return s.fill === 'none' && s.stroke !== 'none' && parseFloat(s.strokeWidth || '0') >= 2;
       });
@@ -121,7 +121,7 @@ export const SingleSeries: Story = {
     });
 
     await step('Com uma série a legenda some — o nome não é escrito em lugar nenhum', async () => {
-      await expect(designTexts(raiz)).not.toContain(serieUnica[0].name);
+      await expect(designTexts(root)).not.toContain(serieUnica[0].name);
     });
   },
 };
@@ -145,10 +145,10 @@ export const MultiSeries: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await designPronto(canvasElement);
+    const root = await designPronto(canvasElement);
 
     await step('A legenda escreve o nome de cada série', async () => {
-      for (const serie of seriesMulti) await expect(designEscreve(raiz, serie.name)).toBe(true);
+      for (const serie of seriesMulti) await expect(designEscreve(root, serie.name)).toBe(true);
     });
 
     await step('E cada série carrega uma trama própria — a cor não é o único sinal', async () => {
@@ -159,12 +159,12 @@ export const MultiSeries: Story = {
       // O piso é o número de séries e não a igualdade: o ícone da legenda
       // repete a trama num tamanho próprio, o que pode gerar mais de um padrão
       // por série sem que nada esteja errado.
-      const tramas = tramasAplicadas(raiz);
+      const tramas = tramasAplicadas(root);
       await expect(tramas.size).toBeGreaterThanOrEqual(seriesMulti.length);
     });
 
     await step('E uma cor própria por série, sobre uma forma por categoria', async () => {
-      const formas = datumFormas(raiz);
+      const formas = datumFormas(root);
       await expect(formas.length).toBeGreaterThanOrEqual(meses.length * seriesMulti.length);
       const preenchimentos = new Set(formas.map((f) => getComputedStyle(f).fill));
       await expect(preenchimentos.size).toBeGreaterThanOrEqual(seriesMulti.length);
@@ -238,9 +238,9 @@ export const ThemeTokens: Story = {
       for (const g of graficos) {
         await waitFor(
           () => {
-            const rotulo = g.querySelector<SVGTextElement>('svg text');
-            expect(rotulo).toBeTruthy();
-            expect(getComputedStyle(rotulo!).fill).toBe(tokenColor('muted-foreground', g));
+            const label = g.querySelector<SVGTextElement>('svg text');
+            expect(label).toBeTruthy();
+            expect(getComputedStyle(label!).fill).toBe(tokenColor('muted-foreground', g));
           },
           { timeout: 3000, interval: 200 },
         );
@@ -276,13 +276,13 @@ export const GraphicContrast: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await designPronto(canvasElement);
+    const root = await designPronto(canvasElement);
     // Precondição da medida: ver o comentário de `settleTheme`.
     await settleTheme(document);
-    const background = backgroundOpacoAtras(raiz);
+    const background = backgroundOpacoAtras(root);
 
     await step('O contorno de toda forma de dado passa de 3:1 contra o fundo', async () => {
-      const formas = datumFormas(raiz);
+      const formas = datumFormas(root);
       // Sem esta linha o laço abaixo seria vácuo: lista vazia passa em tudo.
       await expect(formas.length).toBeGreaterThan(0);
       const fracos = formas
@@ -295,9 +295,9 @@ export const GraphicContrast: Story = {
     });
 
     await step('O texto dos eixos passa de 4.5:1 — é texto, não objeto gráfico', async () => {
-      const rotulo = raiz.querySelector<SVGTextElement>('svg text');
-      await expect(rotulo).not.toBeNull();
-      await expect(contraste(getComputedStyle(rotulo!).fill, background)).toBeGreaterThanOrEqual(4.5);
+      const label = root.querySelector<SVGTextElement>('svg text');
+      await expect(label).not.toBeNull();
+      await expect(contraste(getComputedStyle(label!).fill, background)).toBeGreaterThanOrEqual(4.5);
     });
   },
 };

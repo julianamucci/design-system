@@ -38,7 +38,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const alvo = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`)!;
+const target = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`)!;
 
 // ── Com atalhos ───────────────────────────────────────────────────────────────
 
@@ -63,8 +63,8 @@ export const WithShortcut: Story = {
     await step('O atalho fica encostado à direita do rótulo', async () => {
       // É o alinhamento que faz a coluna de atalhos existir; sem ele o texto
       // sai colado no rótulo e a leitura visual se perde.
-      const item = alvo('editar').getBoundingClientRect();
-      const atalho = alvo('editar')
+      const item = target('editar').getBoundingClientRect();
+      const atalho = target('editar')
         .querySelector<HTMLElement>('[data-slot="context-menu-shortcut"]')!
         .getBoundingClientRect();
       await expect(item.right - atalho.right).toBeLessThan(16);
@@ -85,8 +85,8 @@ export const WithCheckbox: Story = {
 
     await step('O papel diz que tipo de escolha o item é', async () => {
       await gestoOpen(area());
-      await expect(alvo('grade').getAttribute('role')).toBe('menuitemcheckbox');
-      await expect(alvo('reguas').getAttribute('aria-checked')).toBe('true');
+      await expect(target('grade').getAttribute('role')).toBe('menuitemcheckbox');
+      await expect(target('reguas').getAttribute('aria-checked')).toBe('true');
     });
 
     await step('O indicador publica o data-slot do seu tipo de item', async () => {
@@ -95,13 +95,13 @@ export const WithCheckbox: Story = {
       await gestoOpen(area());
       for (const id of ['grade', 'reguas']) {
         await expect(
-          alvo(id).querySelector('[data-slot="context-menu-checkbox-item-indicator"]'),
+          target(id).querySelector('[data-slot="context-menu-checkbox-item-indicator"]'),
         ).not.toBeNull();
       }
       // O tique mora DENTRO do indicador — prova que o atributo ficou no
       // invólucro, e não no item nem no nó que a lib injeta.
       await expect(
-        alvo('reguas').querySelector(
+        target('reguas').querySelector(
           '[data-slot="context-menu-checkbox-item-indicator"] svg',
         ),
       ).not.toBeNull();
@@ -110,16 +110,16 @@ export const WithCheckbox: Story = {
     await step('Marcar alterna o estado anunciado e o indicador', async () => {
       // Lê o estado ANTES de clicar: no replay a story parte do que a rodada
       // anterior deixou, e um valor esperado fixo inverteria o resultado.
-      const antes = alvo('grade').getAttribute('aria-checked');
+      const antes = target('grade').getAttribute('aria-checked');
       const esperado = antes === 'true' ? 'false' : 'true';
-      await userEvent.click(alvo('grade'));
+      await userEvent.click(target('grade'));
       // Algumas libs fecham o menu ao escolher; reabrir é o que torna o passo
       // igual nas cinco stacks.
       await gestoOpen(area());
       await waitFor(() =>
-        expect(alvo('grade').getAttribute('aria-checked')).toBe(esperado),
+        expect(target('grade').getAttribute('aria-checked')).toBe(esperado),
       );
-      await expect(!!alvo('grade').querySelector('svg')).toBe(esperado === 'true');
+      await expect(!!target('grade').querySelector('svg')).toBe(esperado === 'true');
     });
   },
 };
@@ -137,16 +137,16 @@ export const WithRadioGroup: Story = {
 
     await step('O papel diz que a escolha é única', async () => {
       await gestoOpen(area());
-      await expect(alvo('grid').getAttribute('role')).toBe('menuitemradio');
-      await expect(alvo('list').getAttribute('role')).toBe('menuitemradio');
+      await expect(target('grid').getAttribute('role')).toBe('menuitemradio');
+      await expect(target('list').getAttribute('role')).toBe('menuitemradio');
     });
 
     await step('O indicador publica o data-slot do seu tipo de item', async () => {
       // Endereço por TIPO de item: escolha única e marcação não compartilham
       // slot, como nas outras stacks.
       await gestoOpen(area());
-      const opcoes = ['grid', 'list', 'columns'].map(alvo);
-      for (const opcao of opcoes) {
+      const options = ['grid', 'list', 'columns'].map(target);
+      for (const opcao of options) {
         await expect(
           opcao.querySelector('[data-slot="context-menu-radio-item-indicator"]'),
         ).not.toBeNull();
@@ -154,7 +154,7 @@ export const WithRadioGroup: Story = {
       // O tique mora DENTRO do indicador — prova que o atributo ficou no
       // invólucro. Qual opção está marcada varia entre rodadas, então ela é
       // procurada, nunca fixada.
-      const marcada = opcoes.find((o) => o.getAttribute('aria-checked') === 'true')!;
+      const marcada = options.find((o) => o.getAttribute('aria-checked') === 'true')!;
       await expect(
         marcada.querySelector('[data-slot="context-menu-radio-item-indicator"] svg'),
       ).not.toBeNull();
@@ -163,13 +163,13 @@ export const WithRadioGroup: Story = {
     await step('Escolher uma opção limpa a anterior', async () => {
       // Alterna entre dois valores conhecidos e afirma o PAR: assim o passo vale
       // igual em qualquer rodada, não importa de onde parta.
-      const partiuDeGrid = alvo('grid').getAttribute('aria-checked') === 'true';
+      const partiuDeGrid = target('grid').getAttribute('aria-checked') === 'true';
       const click = partiuDeGrid ? 'columns' : 'grid';
       const other = partiuDeGrid ? 'grid' : 'columns';
-      await userEvent.click(alvo(click));
+      await userEvent.click(target(click));
       await gestoOpen(area());
-      await waitFor(() => expect(alvo(click).getAttribute('aria-checked')).toBe('true'));
-      await expect(alvo(other).getAttribute('aria-checked')).toBe('false');
+      await waitFor(() => expect(target(click).getAttribute('aria-checked')).toBe('true'));
+      await expect(target(other).getAttribute('aria-checked')).toBe('false');
     });
   },
 };
@@ -189,14 +189,14 @@ export const WithSubmenu: Story = {
 
     await step('O sub-gatilho diz que abre um menu', async () => {
       await gestoOpen(area());
-      await expect(alvo('sub').getAttribute('aria-haspopup')).toBe('menu');
-      await expect(alvo('sub').getAttribute('aria-expanded')).toBe('false');
+      await expect(target('sub').getAttribute('aria-haspopup')).toBe('menu');
+      await expect(target('sub').getAttribute('aria-expanded')).toBe('false');
     });
 
     await step('Seta direita abre o submenu ao lado do item que o dispara', async () => {
-      alvo('sub').focus();
+      target('sub').focus();
       await userEvent.keyboard('{ArrowRight}');
-      await waitFor(() => expect(alvo('sub').getAttribute('aria-expanded')).toBe('true'));
+      await waitFor(() => expect(target('sub').getAttribute('aria-expanded')).toBe('true'));
       await expect(
         submenu()!.querySelectorAll('[data-slot="context-menu-item"]').length,
       ).toBe(2);
@@ -207,15 +207,15 @@ export const WithSubmenu: Story = {
       // (0,0).
       await waitFor(() =>
         expect(submenu()!.getBoundingClientRect().left).toBeGreaterThanOrEqual(
-          alvo('sub').getBoundingClientRect().left,
+          target('sub').getBoundingClientRect().left,
         ),
       );
     });
 
     await step('Seta esquerda fecha o submenu e devolve o foco ao sub-gatilho', async () => {
       await userEvent.keyboard('{ArrowLeft}');
-      await waitFor(() => expect(alvo('sub').getAttribute('aria-expanded')).toBe('false'));
-      await expect(document.activeElement).toBe(alvo('sub'));
+      await waitFor(() => expect(target('sub').getAttribute('aria-expanded')).toBe('false'));
+      await expect(document.activeElement).toBe(target('sub'));
     });
 
     await step('A story termina com o submenu ABERTO', async () => {
@@ -242,8 +242,8 @@ export const CompleteComposition: Story = {
       // `visual.item4` descreve exatamente esta convivência — é o que precisa
       // estar na tela quando o Chromatic fotografa.
       const menu = await gestoOpen(area());
-      await expect(alvo('grade').getAttribute('role')).toBe('menuitemcheckbox');
-      await expect(alvo('grid').getAttribute('role')).toBe('menuitemradio');
+      await expect(target('grade').getAttribute('role')).toBe('menuitemcheckbox');
+      await expect(target('grid').getAttribute('role')).toBe('menuitemradio');
       await expect(
         menu.querySelectorAll('[data-slot="context-menu-separator"]').length,
       ).toBe(3);
@@ -253,10 +253,10 @@ export const CompleteComposition: Story = {
       // O cabeçalho vira o `aria-labelledby` do grupo: é o que faz o leitor de
       // tela anunciar "Ações, grupo" em vez de um bloco anônimo.
       const menu = await waitForPortal('menu');
-      const grupos = menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-group"]');
-      await expect(grupos.length).toBe(3);
-      for (const grupo of grupos) {
-        const id = grupo.getAttribute('aria-labelledby');
+      const groups = menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-group"]');
+      await expect(groups.length).toBe(3);
+      for (const group of groups) {
+        const id = group.getAttribute('aria-labelledby');
         await expect(id && document.getElementById(id)?.textContent?.trim()).toBeTruthy();
       }
     });

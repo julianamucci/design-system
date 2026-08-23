@@ -51,7 +51,7 @@ const CONTENT_NAMESPACES = new Set([
   'notes', 'analytics', 'testes', 'demonstration', 'nav', 'common',
 ]);
 
-function texto(el: Element): string {
+function text(el: Element): string {
   return (el.textContent ?? '').trim().replace(/\s+/g, ' ');
 }
 
@@ -70,7 +70,7 @@ function ondeEsta(el: Element): string {
   const section = el.closest('section');
   const id = section?.id ? `#${section.id}` : section ? 'section sem id' : 'fora de seção';
   const line = el.closest('tr');
-  const neighbour = line ? clip(texto(line), 50) : clip(texto(el.parentElement ?? el), 50);
+  const neighbour = line ? clip(text(line), 50) : clip(text(el.parentElement ?? el), 50);
   return neighbour ? `${id}, perto de "${neighbour}"` : id;
 }
 
@@ -82,15 +82,15 @@ function ondeEsta(el: Element): string {
  * estático pega as chaves que ele consegue casar no fonte; aqui pega qualquer
  * uma, inclusive as montadas em tempo de execução.
  */
-function keysVazadas(raiz: HTMLElement): ProblemaDeContrato[] {
+function keysVazadas(root: HTMLElement): ProblemaDeContrato[] {
   const problemas: ProblemaDeContrato[] = [];
-  const reach = raiz.querySelectorAll<HTMLElement>('p, h1, h2, h3, h4, li, td, th, span, dt, dd');
+  const reach = root.querySelectorAll<HTMLElement>('p, h1, h2, h3, h4, li, td, th, span, dt, dd');
   for (const el of reach) {
     // Só folhas: um <p> herda o texto dos filhos e reportaria o mesmo duas vezes.
     if (el.children.length > 0) continue;
     // Dentro de código, caminho com ponto é o assunto da página, não um vazamento.
     if (el.closest('pre, code, kbd, samp')) continue;
-    const t = texto(el);
+    const t = text(el);
     if (!t || !RE_KEY_I18N.test(t)) continue;
     if (!CONTENT_NAMESPACES.has(t.split('.')[0])) continue;
     problemas.push({ rule: 'chave_i18n_visivel', detalhe: `"${t}" como texto — ${ondeEsta(el)}` });
@@ -99,11 +99,11 @@ function keysVazadas(raiz: HTMLElement): ProblemaDeContrato[] {
 }
 
 /** `undefined`, `NaN` e companhia impressos na página. */
-function lixoVisible(raiz: HTMLElement): ProblemaDeContrato[] {
+function lixoVisible(root: HTMLElement): ProblemaDeContrato[] {
   const problemas: ProblemaDeContrato[] = [];
-  for (const el of raiz.querySelectorAll<HTMLElement>('p, h1, h2, h3, h4, li, td, th, dd')) {
+  for (const el of root.querySelectorAll<HTMLElement>('p, h1, h2, h3, h4, li, td, th, dd')) {
     if (el.children.length > 0) continue;
-    const t = texto(el);
+    const t = text(el);
     if (LIXO.includes(t)) {
       problemas.push({ rule: 'valor_indefinido_visivel', detalhe: `renderiza "${t}" — ${ondeEsta(el)}` });
     }
@@ -118,10 +118,10 @@ function lixoVisible(raiz: HTMLElement): ProblemaDeContrato[] {
  * que falta cai para `web` → `react`. Quando nem isso existe, a caixa de código
  * aparece vazia — a página promete um exemplo e entrega uma moldura.
  */
-function emptyCode(raiz: HTMLElement): ProblemaDeContrato[] {
+function emptyCode(root: HTMLElement): ProblemaDeContrato[] {
   const problemas: ProblemaDeContrato[] = [];
-  raiz.querySelectorAll<HTMLElement>('pre').forEach((pre, i) => {
-    if (!texto(pre)) {
+  root.querySelectorAll<HTMLElement>('pre').forEach((pre, i) => {
+    if (!text(pre)) {
       problemas.push({ rule: 'bloco_de_codigo_vazio', detalhe: `o bloco #${i + 1} não tem código` });
     }
   });
@@ -137,11 +137,11 @@ function emptyCode(raiz: HTMLElement): ProblemaDeContrato[] {
  * teste via: o defeito só aparece com componente de largura própria, e a
  * asserção que faltava é sobre a caixa computada, não sobre a classe presente.
  */
-function previews(raiz: HTMLElement): ProblemaDeContrato[] {
+function previews(root: HTMLElement): ProblemaDeContrato[] {
   const problemas: ProblemaDeContrato[] = [];
-  for (const c of raiz.querySelectorAll<HTMLElement>('[data-docs-preview]')) {
+  for (const c of root.querySelectorAll<HTMLElement>('[data-docs-preview]')) {
     const qual = c.dataset.docsPreview ?? '?';
-    if (c.childElementCount === 0 && !texto(c)) {
+    if (c.childElementCount === 0 && !text(c)) {
       problemas.push({ rule: 'preview_vazio', detalhe: `contêiner "${qual}" vazio — ${ondeEsta(c)}` });
       continue;
     }
@@ -177,16 +177,16 @@ function previews(raiz: HTMLElement): ProblemaDeContrato[] {
  * Quem navega por títulos usa a hierarquia como sumário: pular de h2 para h4
  * some com um nível inteiro da lista. WCAG 1.3.1.
  */
-function hierarquiaDeTitulos(raiz: HTMLElement): ProblemaDeContrato[] {
+function hierarquiaDeTitulos(root: HTMLElement): ProblemaDeContrato[] {
   const problemas: ProblemaDeContrato[] = [];
-  const titulos = Array.from(raiz.querySelectorAll<HTMLElement>('h1, h2, h3, h4, h5, h6'));
+  const titulos = Array.from(root.querySelectorAll<HTMLElement>('h1, h2, h3, h4, h5, h6'));
   let previous = 0;
   for (const t of titulos) {
     const level = Number(t.tagName[1]);
     if (previous && level > previous + 1) {
       problemas.push({
         rule: 'titulo_pulado',
-        detalhe: `h${previous} → h${level} em "${clip(texto(t), 40)}"`,
+        detalhe: `h${previous} → h${level} em "${clip(text(t), 40)}"`,
       });
     }
     previous = level;
@@ -208,18 +208,18 @@ function hierarquiaDeTitulos(raiz: HTMLElement): ProblemaDeContrato[] {
  */
 const CONTRATO_SECTIONS = ['propriedades', 'tokens', 'testes', 'estados', 'analytics'];
 
-function tabelasVazias(raiz: HTMLElement): ProblemaDeContrato[] {
+function tabelasVazias(root: HTMLElement): ProblemaDeContrato[] {
   const problemas: ProblemaDeContrato[] = [];
   for (const id of CONTRATO_SECTIONS) {
-    const section = raiz.querySelector<HTMLElement>(`section#${id}`);
+    const section = root.querySelector<HTMLElement>(`section#${id}`);
     if (!section) continue;
-    section.querySelectorAll<HTMLTableElement>('table').forEach((tabela) => {
-      if (tabela.closest('.nds-docs-demo, [data-track-container]')) return;
-      if (tabela.querySelectorAll('tbody tr').length > 0) return;
-      const titulo = section.querySelector('h2, h3');
+    section.querySelectorAll<HTMLTableElement>('table').forEach((table) => {
+      if (table.closest('.nds-docs-demo, [data-track-container]')) return;
+      if (table.querySelectorAll('tbody tr').length > 0) return;
+      const title = section.querySelector('h2, h3');
       problemas.push({
         rule: 'tabela_sem_linhas',
-        detalhe: `tabela vazia em "${clip(texto(titulo ?? tabela), 40)}"`,
+        detalhe: `tabela vazia em "${clip(text(title ?? table), 40)}"`,
       });
     });
   }
@@ -237,11 +237,11 @@ const VERIFICACOES = [
 
 /** Roda o contrato inteiro e devolve os problemas que sobraram. */
 export function docsAuditarPage(
-  raiz: HTMLElement,
-  opcoes: ContratoOptions = {},
+  root: HTMLElement,
+  options: ContratoOptions = {},
 ): ProblemaDeContrato[] {
-  const ignorar = opcoes.ignorar ?? {};
-  return VERIFICACOES.flatMap((v) => v(raiz)).filter((p) => !(p.rule in ignorar));
+  const ignorar = options.ignorar ?? {};
+  return VERIFICACOES.flatMap((v) => v(root)).filter((p) => !(p.rule in ignorar));
 }
 
 /** Mensagem de falha legível: uma linha por problema, com o culpado. */

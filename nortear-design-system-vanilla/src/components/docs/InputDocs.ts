@@ -703,10 +703,10 @@ export type InputOptions = {
             value: t('tokens.table.class'),
             description: t('tokens.table.part'),
           },
-          items: FIELD_TOKENS.map(([token, selector, chave]) => ({
+          items: FIELD_TOKENS.map(([token, selector, key]) => ({
             token,
             value: selector,
-            description: t(`tokens.table.${chave}`),
+            description: t(`tokens.table.${key}`),
           })),
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,

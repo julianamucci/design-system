@@ -373,9 +373,9 @@ const TOKENS_CSS = `/* O DataTable não declara variáveis próprias: consome os
  * O valor continua número no dado — guardar "R$ 250,00" faria a ordenação
  * comparar strings, e "R$ 50,00" cairia depois de "R$ 450,00".
  */
-function formatarBRL(valor: unknown): string {
-  return typeof valor === 'number'
-    ? valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+function formatarBRL(value: unknown): string {
+  return typeof value === 'number'
+    ? value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
     : '—';
 }
 
@@ -404,7 +404,7 @@ function formatarBRL(valor: unknown): string {
       <!-- Placeholder específico ao escopo: diz onde a busca procura. -->
       <div
         ndsDataTable
-        [caption]="legenda(toPlainText(t('doDont.pair1.do')))"
+        [caption]="caption(toPlainText(t('doDont.pair1.do')))"
         [columns]="colunas()"
         [data]="faturasCurtas"
         [labels]="rotulos()"
@@ -419,7 +419,7 @@ function formatarBRL(valor: unknown): string {
       <!-- Placeholder genérico: não orienta ninguém. -->
       <div
         ndsDataTable
-        [caption]="legenda(toPlainText(t('doDont.pair1.dont')))"
+        [caption]="caption(toPlainText(t('doDont.pair1.dont')))"
         [columns]="colunas()"
         [data]="faturasCurtas"
         [labels]="rotulos()"
@@ -433,7 +433,7 @@ function formatarBRL(valor: unknown): string {
     <ng-template #tplDoDont2Do>
       <div
         ndsDataTable
-        [caption]="legenda(toPlainText(t('doDont.pair2.do')))"
+        [caption]="caption(toPlainText(t('doDont.pair2.do')))"
         [columns]="colunas()"
         [data]="faturas()"
         [labels]="rotulos()"
@@ -448,7 +448,7 @@ function formatarBRL(valor: unknown): string {
     <ng-template #tplDoDont2Dont>
       <div
         ndsDataTable
-        [caption]="legenda(toPlainText(t('doDont.pair2.dont')))"
+        [caption]="caption(toPlainText(t('doDont.pair2.dont')))"
         [columns]="colunas()"
         [data]="faturas()"
         [labels]="rotulos()"
@@ -462,7 +462,7 @@ function formatarBRL(valor: unknown): string {
     <ng-template #tplVarBusca>
       <div
         ndsDataTable
-        [caption]="legenda(t('variants.items.globalFilter.name'))"
+        [caption]="caption(t('variants.items.globalFilter.name'))"
         [columns]="colunas()"
         [data]="faturas()"
         [labels]="rotulos()"
@@ -476,7 +476,7 @@ function formatarBRL(valor: unknown): string {
     <ng-template #tplVarFiltros>
       <div
         ndsDataTable
-        [caption]="legenda(t('variants.items.columnFilters.name'))"
+        [caption]="caption(t('variants.items.columnFilters.name'))"
         [columns]="colunas()"
         [data]="faturas()"
         [labels]="rotulos()"
@@ -491,7 +491,7 @@ function formatarBRL(valor: unknown): string {
     <ng-template #tplVarSelecao>
       <div
         ndsDataTable
-        [caption]="legenda(t('variants.items.selection.name'))"
+        [caption]="caption(t('variants.items.selection.name'))"
         [columns]="colunas()"
         [data]="faturas()"
         [labels]="rotulos()"
@@ -508,7 +508,7 @@ function formatarBRL(valor: unknown): string {
     <ng-template #tplVarVisibilidade>
       <div
         ndsDataTable
-        [caption]="legenda(t('variants.items.visibility.name'))"
+        [caption]="caption(t('variants.items.visibility.name'))"
         [columns]="colunas()"
         [data]="faturas()"
         [labels]="rotulos()"
@@ -521,7 +521,7 @@ function formatarBRL(valor: unknown): string {
     <ng-template #tplVarPaginacao>
       <div
         ndsDataTable
-        [caption]="legenda(t('variants.items.pagination.name'))"
+        [caption]="caption(t('variants.items.pagination.name'))"
         [columns]="colunas()"
         [data]="faturas()"
         [labels]="rotulos()"
@@ -538,7 +538,7 @@ function formatarBRL(valor: unknown): string {
            experiência mais próxima de uma planilha que esta stack entrega. -->
       <div
         ndsDataTable
-        [caption]="legenda(t('variants.items.editableSheet.name'))"
+        [caption]="caption(t('variants.items.editableSheet.name'))"
         [columns]="colunasEditaveis()"
         [data]="faturas()"
         [labels]="rotulos()"
@@ -555,7 +555,7 @@ function formatarBRL(valor: unknown): string {
       <div class="nds-stack nds-w-full" data-spacing="md">
         <div
           ndsDataTable
-          [caption]="legenda(t('variants.compositions.selectionWithActions.name'))"
+          [caption]="caption(t('variants.compositions.selectionWithActions.name'))"
           [columns]="colunas()"
           [data]="faturas()"
           [labels]="rotulos()"
@@ -594,7 +594,7 @@ function formatarBRL(valor: unknown): string {
           <div
             ndsDataTable
             class="nds-w-full"
-            [caption]="legenda(t('demonstration.title'))"
+            [caption]="caption(t('demonstration.title'))"
             [columns]="colunasEditaveis()"
             [data]="faturas()"
             [labels]="rotulos()"
@@ -752,7 +752,7 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
   protected readonly colunas = computed<DataTableColumn<InvoiceDT>[]>(() => {
     dict();
     const status = this.statusTraduzido();
-    const opcoes = Object.values(status);
+    const options = Object.values(status);
     return [
       {
         id: 'id',
@@ -773,9 +773,9 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
         id: 'status',
         header: t('demonstration.labels.status'),
         accessor: (f) => f.status,
-        format: (valor) => status[String(valor)] ?? '—',
+        format: (value) => status[String(value)] ?? '—',
         // As opções do select são o TEXTO exibido: o filtro compara o que se lê.
-        filter: { type: 'select', options: opcoes },
+        filter: { type: 'select', options: options },
       },
       {
         id: 'metodo',
@@ -785,7 +785,7 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
       {
         id: 'valor',
         header: t('demonstration.labels.amount'),
-        accessor: (f) => f.valor,
+        accessor: (f) => f.value,
         format: formatarBRL,
         sortable: true,
         numeric: true,
@@ -839,16 +839,16 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
    * A legenda é o nome da tabela para o leitor de tela — repetida em meia dúzia
    * de previews, a lista de tabelas fica indistinguível.
    */
-  protected legenda(sufixo: string): string {
+  protected caption(sufixo: string): string {
     return `${t('title')} — ${toPlainText(sufixo)}`;
   }
 
   protected aplicarEdicao(edicao: DataTableCellEdit): void {
     // O componente não guarda os dados: ele avisa a edição e quem consome
     // atualiza o array. É esse o exemplo honesto do que se escreve ao usar.
-    this.faturas.update((atual) =>
-      atual.map((invoice, indice) =>
-        indice === edicao.rowIndex ? { ...invoice, [edicao.columnId]: edicao.value } : invoice,
+    this.faturas.update((current) =>
+      current.map((invoice, index) =>
+        index === edicao.rowIndex ? { ...invoice, [edicao.columnId]: edicao.value } : invoice,
       ),
     );
   }
@@ -1025,16 +1025,16 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
     // que as outras stacks mostram.
     const line = (
       name: string,
-      chave: string,
-      tipo: string,
+      key: string,
+      type: string,
       padrao: string,
       obrigatorio = not,
     ) => ({
       name,
-      type: tipo,
+      type: type,
       defaultValue: padrao,
       required: obrigatorio,
-      description: toPlainText(t(`props.table.${chave}`)),
+      description: toPlainText(t(`props.table.${key}`)),
     });
 
     return [
@@ -1131,14 +1131,14 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'table',        nome: 'Table',        path: '?path=/docs/ui-table--docs'        },
-      { key: 'chart',        nome: 'Chart',        path: '?path=/docs/ui-chart--docs'        },
-      { key: 'pagination',   nome: 'Pagination',   path: '?path=/docs/ui-pagination--docs'   },
-      { key: 'checkbox',     nome: 'Checkbox',     path: '?path=/docs/ui-checkbox--docs'     },
-      { key: 'input',        nome: 'Input',        path: '?path=/docs/ui-input--docs'        },
-      { key: 'dropdownMenu', nome: 'DropdownMenu', path: '?path=/docs/ui-dropdownmenu--docs' },
-    ].map(({ key, nome, path }) => ({
-      name: nome,
+      { key: 'table',        name: 'Table',        path: '?path=/docs/ui-table--docs'        },
+      { key: 'chart',        name: 'Chart',        path: '?path=/docs/ui-chart--docs'        },
+      { key: 'pagination',   name: 'Pagination',   path: '?path=/docs/ui-pagination--docs'   },
+      { key: 'checkbox',     name: 'Checkbox',     path: '?path=/docs/ui-checkbox--docs'     },
+      { key: 'input',        name: 'Input',        path: '?path=/docs/ui-input--docs'        },
+      { key: 'dropdownMenu', name: 'DropdownMenu', path: '?path=/docs/ui-dropdownmenu--docs' },
+    ].map(({ key, name, path }) => ({
+      name: name,
       description: toPlainText(t(`related.${key}`)),
       path,
     }));
@@ -1162,12 +1162,12 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
     // O DataTable é camada de UI: não dispara evento de produto por padrão. O
     // que sai daqui é o tracking da própria docs page.
     return [
-      { e: 'pageView',      gatilho: 'pageViewTrigger',      carga: 'pageViewPayload'      },
-      { e: 'sectionViewed', gatilho: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
-      { e: 'langSwitch',    gatilho: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
-    ].map(({ e, gatilho, carga }) => ({
+      { e: 'pageView',      trigger: 'pageViewTrigger',      carga: 'pageViewPayload'      },
+      { e: 'sectionViewed', trigger: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
+      { e: 'langSwitch',    trigger: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
+    ].map(({ e, trigger, carga }) => ({
       event: t(`analytics.table.${e}`),
-      trigger: toPlainText(t(`analytics.table.${gatilho}`)),
+      trigger: toPlainText(t(`analytics.table.${trigger}`)),
       payload: toPlainText(t(`analytics.table.${carga}`)),
     }));
   });
@@ -1206,8 +1206,8 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
           level: r.level,
           how: toPlainText(r.how),
         }))
-      : numberedItems(d, 'testes.accessibility').map((texto) => ({
-          criterion: toPlainText(texto),
+      : numberedItems(d, 'testes.accessibility').map((text) => ({
+          criterion: toPlainText(text),
           level: '',
           how: '',
         }));
@@ -1275,9 +1275,9 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
 // ─── Helpers de cauda ─────────────────────────────────────────────────────────
 
 /** Rótulo de navegação, com queda para o ui.json quando o slug não o declara. */
-function navLabel(chave: string): string {
-  const doComponente = t(chave);
-  return doComponente === chave ? tNav(chave) : doComponente;
+function navLabel(key: string): string {
+  const doComponente = t(key);
+  return doComponente === key ? tNav(key) : doComponente;
 }
 
 /**
@@ -1286,12 +1286,12 @@ function navLabel(chave: string): string {
  * `t()` devolve a PRÓPRIA CHAVE quando ela aponta para um objeto — e é assim
  * que "variants.items.editableSheet" acaba escrito na tela, sem erro nenhum.
  */
-function valueOuField(base: string, campo: string): string {
+function valueOuField(base: string, field: string): string {
   const direto = t(base);
   if (direto !== base) return direto;
-  const chave = `${base}.${campo}`;
-  const ofField = t(chave);
-  return ofField === chave ? '' : ofField;
+  const key = `${base}.${field}`;
+  const ofField = t(key);
+  return ofField === key ? '' : ofField;
 }
 
 /**
@@ -1315,13 +1315,13 @@ function numberedItems(
   base: string,
   prefixo = 'item',
 ): string[] {
-  const itens: string[] = [];
+  const items: string[] = [];
   for (let i = 1; ; i++) {
-    const valor = d[`${base}.${prefixo}${i}`];
-    if (valor === undefined) break;
-    itens.push(valor);
+    const value = d[`${base}.${prefixo}${i}`];
+    if (value === undefined) break;
+    items.push(value);
   }
-  return itens;
+  return items;
 }
 
 const priorityKeyMap: Record<string, string> = {

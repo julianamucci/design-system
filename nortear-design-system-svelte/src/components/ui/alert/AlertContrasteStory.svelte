@@ -8,10 +8,10 @@
 </script>
 
 <div class="nds-stack" data-spacing="sm">
-  {#each variantes as variante (variante)}
-    <Alert variant={variante}>
-      <AlertTitle>Título {variante}</AlertTitle>
-      <AlertDescription>Texto corrido da variante {variante}.</AlertDescription>
+  {#each variantes as variant (variant)}
+    <Alert variant={variant}>
+      <AlertTitle>Título {variant}</AlertTitle>
+      <AlertDescription>Texto corrido da variant {variant}.</AlertDescription>
     </Alert>
   {/each}
 </div>

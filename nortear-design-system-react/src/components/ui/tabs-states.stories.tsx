@@ -70,9 +70,9 @@ export const DefaultAndActive: Story = {
     await step("E é a única cujo painel está no DOM acessível", async () => {
       // As inativas ficam `hidden`, então `getByRole` só acha uma — é o que
       // impede que um painel escondido continue sendo lido.
-      const painel = canvas.getByRole("tabpanel");
+      const panel = canvas.getByRole("tabpanel");
       await expect(canvas.getAllByRole("tabpanel")).toHaveLength(1);
-      await expect(painel).toHaveTextContent("Conteúdo da visão geral");
+      await expect(panel).toHaveTextContent("Conteúdo da visão geral");
     });
   },
 };
@@ -115,10 +115,10 @@ export const FocusVisible: Story = {
     });
 
     await step("O Tab seguinte cai dentro do painel ativo", async () => {
-      const painel = canvas.getByRole("tabpanel");
-      await expect(painel).toHaveAttribute("tabindex", "0");
+      const panel = canvas.getByRole("tabpanel");
+      await expect(panel).toHaveAttribute("tabindex", "0");
       await userEvent.tab();
-      await waitFor(() => expect(painel).toHaveFocus());
+      await waitFor(() => expect(panel).toHaveFocus());
     });
   },
 };

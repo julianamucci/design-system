@@ -30,11 +30,11 @@ type Story = StoryObj;
 
 export const NameAccessible: Story = {
   render: () => {
-    const grupo = createKbdGroup();
-    grupo.appendChild(createKbd({ text: 'Ctrl', 'aria-label': 'Control' }));
-    grupo.appendChild(document.createTextNode('+'));
-    grupo.appendChild(createKbd({ text: 'B' }));
-    return grupo;
+    const group = createKbdGroup();
+    group.appendChild(createKbd({ text: 'Ctrl', 'aria-label': 'Control' }));
+    group.appendChild(document.createTextNode('+'));
+    group.appendChild(createKbd({ text: 'B' }));
+    return group;
   },
   play: async ({ canvasElement, step }) => {
     await step('A tecla desenhada carrega o nome legível do atalho', async () => {

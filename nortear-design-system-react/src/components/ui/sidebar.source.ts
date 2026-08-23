@@ -44,7 +44,7 @@
  * de itens não é o assunto de nenhuma story, e cada item repetido afasta da
  * tela a peça que a story ensina.
  */
-import { attrs, jsxSnippet, propBool, propOption, texto, type SourceTransform } from '@/lib/story-source';
+import { attrs, jsxSnippet, propBool, propOption, text, type SourceTransform } from '@/lib/story-source';
 
 export type SidebarArgs = {
   side: 'left' | 'right';
@@ -76,10 +76,10 @@ const NUCLEO = [
   'SidebarProvider',
 ];
 
-/** Indenta `conteudo` em `n` níveis de dois espaços. */
-function level(conteudo: string, n: number): string {
+/** Indenta `content` em `n` níveis de dois espaços. */
+function level(content: string, n: number): string {
   const prefixo = '  '.repeat(n);
-  return conteudo
+  return content
     .split('\n')
     .map((line) => (line.trim() ? `${prefixo}${line}` : line))
     .join('\n');
@@ -87,16 +87,16 @@ function level(conteudo: string, n: number): string {
 
 /** Bloco de import do componente, em ordem alfabética e sem repetição. */
 function importingSidebar(parts: string[]): string {
-  const lista = [...new Set(parts)].sort();
+  const list = [...new Set(parts)].sort();
   return `import {
-${lista.map((part) => `  ${part},`).join('\n')}
+${list.map((part) => `  ${part},`).join('\n')}
 } from "@/components/ui/sidebar";`;
 }
 
 /** Import dos ícones usados, quando há algum. */
 function importingIcons(icons: string[]): string {
-  const lista = [...new Set(icons)].sort();
-  return lista.length ? `import { ${lista.join(', ')} } from "lucide-react";` : '';
+  const list = [...new Set(icons)].sort();
+  return list.length ? `import { ${list.join(', ')} } from "lucide-react";` : '';
 }
 
 /**
@@ -106,31 +106,31 @@ function importingIcons(icons: string[]): string {
  */
 function destination(
   icone: string,
-  rotulo: string,
-  opcoes: { active?: boolean; depois?: string } = {},
+  label: string,
+  options: { active?: boolean; depois?: string } = {},
 ): string {
   const props = attrs(
-    opcoes.active ? 'isActive' : undefined,
-    `tooltip="${rotulo}"`,
-    opcoes.active ? 'aria-current="page"' : undefined,
+    options.active ? 'isActive' : undefined,
+    `tooltip="${label}"`,
+    options.active ? 'aria-current="page"' : undefined,
   );
-  const extra = opcoes.depois ? `\n${level(opcoes.depois, 1)}` : '';
+  const extra = options.depois ? `\n${level(options.depois, 1)}` : '';
   return `<SidebarMenuItem>
   <SidebarMenuButton${props}>
     <${icone} aria-hidden="true" />
-    <span>${rotulo}</span>
+    <span>${label}</span>
   </SidebarMenuButton>${extra}
 </SidebarMenuItem>`;
 }
 
 /** Grupo nomeado. O rótulo nomeia o menu; a ação do grupo é opcional. */
-function grupo(rotulo: string, itens: string[], acao?: string): string {
+function group(label: string, items: string[], acao?: string): string {
   const lineAction = acao ? `\n${level(acao, 1)}` : '';
   return `<SidebarGroup>
-  <SidebarGroupLabel>${rotulo}</SidebarGroupLabel>${lineAction}
+  <SidebarGroupLabel>${label}</SidebarGroupLabel>${lineAction}
   <SidebarGroupContent>
     <SidebarMenu>
-${level(itens.join('\n'), 3)}
+${level(items.join('\n'), 3)}
     </SidebarMenu>
   </SidebarGroupContent>
 </SidebarGroup>`;
@@ -166,7 +166,7 @@ type Composition = {
   /** Cabeçalho da barra, quando ele carrega mais que a marca. */
   header?: string;
   /** Grupos já montados, na ordem em que aparecem. */
-  grupos: string[];
+  groups: string[];
   /** Peças além do núcleo (rodapé, faixa, separador, distintivo…). */
   parts?: string[];
   icons?: string[];
@@ -183,7 +183,7 @@ type Composition = {
  * conteúdo adjacente com o gatilho no cabeçalho. É o menor exemplo que
  * realmente desenha uma sidebar.
  */
-function pagina(c: Composition): string {
+function page(c: Composition): string {
   const withTrigger = c.withTrigger !== false;
   const parts = [
     ...NUCLEO,
@@ -204,7 +204,7 @@ function pagina(c: Composition): string {
   const barBody = [
     c.header ?? BAR_HEADER,
     `<SidebarContent>
-${level(c.grupos.join('\n'), 1)}
+${level(c.groups.join('\n'), 1)}
 </SidebarContent>`,
     ...(c.withFooter !== false ? [FOOTER] : []),
     ...(c.comFaixa ? ['<SidebarRail />'] : []),
@@ -213,7 +213,7 @@ ${level(c.grupos.join('\n'), 1)}
   // Sem recolhimento não há o que alternar, e um botão que não muda nada é uma
   // parada de teclado prometendo uma ação inexistente. O conteúdo adjacente
   // continua ali — vazio no exemplo porque a página é de quem consome.
-  const conteudo = withTrigger
+  const content = withTrigger
     ? `<SidebarInset>
     <header className="nds-cluster nds-p-4 nds-border-b" data-spacing="sm">
       <SidebarTrigger />
@@ -229,17 +229,17 @@ ${level(c.grupos.join('\n'), 1)}
 ${level(barBody, 3)}
     </Sidebar>
   </nav>
-  ${conteudo}
+  ${content}
 </SidebarProvider>`,
   );
 }
 
 /** Composição de referência: um menu, um rodapé, e nada além disso. */
 function barWith(provider: string, barra: string, extras: Partial<Composition> = {}): string {
-  return pagina({
+  return page({
     provider,
     barra,
-    grupos: [grupo('Menu', menuDefault())],
+    groups: [group('Menu', menuDefault())],
     ...extras,
   });
 }
@@ -256,22 +256,22 @@ function barWith(provider: string, barra: string, extras: Partial<Composition> =
  */
 export const sidebarSource: SourceTransform<SidebarArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const consulta = texto(args.mobileQuery);
+  const query = text(args.mobileQuery);
 
-  return pagina({
+  return page({
     provider: attrs(
       propBool('defaultOpen', args.defaultOpen, true),
-      consulta && consulta !== QUERY_DEFAULT ? `mobileQuery="${consulta}"` : undefined,
+      query && query !== QUERY_DEFAULT ? `mobileQuery="${query}"` : undefined,
     ),
     barra: attrs(
       propOption('side', args.side, LADOS, 'left'),
       propOption('variant', args.variant, VARIANTS, 'sidebar'),
       propOption('collapsible', args.collapsible, RECOLHIMENTOS, 'offcanvas'),
     ),
-    grupos: [
-      grupo('Aplicação', menuDefault()),
+    groups: [
+      group('Aplicação', menuDefault()),
       '<SidebarSeparator />',
-      grupo('Sistema', [destination('Bell', 'Notificações'), destination('Settings', 'Configurações')]),
+      group('Sistema', [destination('Bell', 'Notificações'), destination('Settings', 'Configurações')]),
     ],
     parts: ['SidebarSeparator'],
     icons: ['LayoutDashboard', 'Blocks', 'Coins', 'Bell', 'Settings', 'User'],
@@ -385,8 +385,8 @@ export function sidebarLoadingSource(): string {
   <SidebarMenuSkeleton showIcon />
 </SidebarMenuItem>`;
 
-  return pagina({
-    grupos: [
+  return page({
+    groups: [
       `<SidebarGroup>
   <SidebarGroupLabel>Carregando…</SidebarGroupLabel>
   <SidebarGroupContent>
@@ -426,15 +426,15 @@ export function sidebarMovelSource(): string {
  * "Componentes 12".
  */
 export function sidebarGroupsSource(): string {
-  return pagina({
-    grupos: [
-      grupo('Aplicação', [
+  return page({
+    groups: [
+      group('Aplicação', [
         destination('LayoutDashboard', 'Dashboard', { active: true }),
         destination('Blocks', 'Componentes', { depois: '<SidebarMenuBadge>12</SidebarMenuBadge>' }),
         destination('Coins', 'Tokens'),
       ]),
       '<SidebarSeparator />',
-      grupo(
+      group(
         'Sistema',
         [
           destination('Bell', 'Notificações', { depois: '<SidebarMenuBadge>3</SidebarMenuBadge>' }),
@@ -459,9 +459,9 @@ export function sidebarGroupsSource(): string {
  * `[aria-expanded="true"]` —, não de classe condicional em JavaScript.
  */
 export function sidebarSubmenuSource(): string {
-  const subitem = (rotulo: string, active = false) => `<SidebarMenuSubItem>
+  const subitem = (label: string, active = false) => `<SidebarMenuSubItem>
   <SidebarMenuSubButton${active ? ' isActive' : ''}>
-    <span>${rotulo}</span>
+    <span>${label}</span>
   </SidebarMenuSubButton>
 </SidebarMenuSubItem>`;
 
@@ -488,10 +488,10 @@ ${level([subitem('Button', true), subitem('Input'), subitem('Select')].join('\n'
 </SidebarMenuAction>`,
   });
 
-  return pagina({
+  return page({
     barra: ' collapsible="icon"',
-    grupos: [
-      grupo('Menu', [destination('LayoutDashboard', 'Dashboard', { active: true }), parent, withAction]),
+    groups: [
+      group('Menu', [destination('LayoutDashboard', 'Dashboard', { active: true }), parent, withAction]),
     ],
     parts: [
       'SidebarMenuAction',
@@ -523,7 +523,7 @@ export function sidebarSearchSource(): string {
   ))}
 </SidebarMenu>`;
 
-  return pagina({
+  return page({
     header: `<SidebarHeader className="nds-p-2" data-spacing="sm">
   <span className="nds-font-semibold nds-text-body nds-text-muted-foreground">
     Design System
@@ -536,7 +536,7 @@ export function sidebarSearchSource(): string {
     aria-label="Buscar na navegação"
   />
 </SidebarHeader>`,
-    grupos: [
+    groups: [
       `<SidebarGroup>
   <SidebarGroupLabel>
     {busca ? \`Resultados (\${visiveis.length})\` : "Navegação"}

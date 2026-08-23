@@ -61,10 +61,10 @@ function sleep(ms: number): Promise<void> {
   return new Promise<void>((resolve) => setTimeout(resolve, ms));
 }
 
-const nextFrame = (tagAttrs: string, altura = 120) => ({
+const nextFrame = (tagAttrs: string, height = 120) => ({
   components: { Toaster },
   template: `
-    <div style="contain: layout; position: relative; min-height: ${altura}px;">
+    <div style="contain: layout; position: relative; min-height: ${height}px;">
       <Toaster ${tagAttrs} />
     </div>
   `,
@@ -96,7 +96,7 @@ export const AutoDismiss: Story = {
       // abaixo de 0,99, de propósito, para não asserir sobre elemento em fade.
       // Sob carga de suíte cheia, um polling de 30ms erra uma janela dessas: a
       // story reprovava sozinha, sem regressão nenhuma no componente.
-      toast.error(TEXTS.erro);
+      toast.error(TEXTS.error);
       const toastEl = await waitForToast({ type: 'error' });
       await expect(toastEl).toHaveAttribute('data-type', 'error');
       await expect(toastEl).toHaveAttribute('data-rich-colors', 'true');
@@ -294,7 +294,7 @@ export const DarkTheme: Story = {
       // tela, a foto do Chromatic cobriria um quinto do que o item promete.
       toast(TEXTS.padrao, PERSISTENT);
       toast.success(TEXTS.sucesso, PERSISTENT);
-      toast.error(TEXTS.erro, PERSISTENT);
+      toast.error(TEXTS.error, PERSISTENT);
       toast.warning(TEXTS.aviso, PERSISTENT);
       toast.info(TEXTS.info, PERSISTENT);
 

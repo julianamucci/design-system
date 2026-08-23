@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
-import { painel } from './popover.fixtures';
+import { panel } from './popover.fixtures';
 import {
   popoverEditarPerfilSource,
   popoverFilterSource,
@@ -97,7 +97,7 @@ export const EditProfile: Story = {
   play: async ({ step }) => {
     await step('O formulário abre preenchido e pronto para edição', async () => {
       await waitForPortal('dialog');
-      const ctx = within(painel()!);
+      const ctx = within(panel()!);
       await expect(ctx.getByLabelText(/Nome/i)).toHaveValue('Ana Ribeiro');
       await expect(ctx.getByLabelText(/Email/i)).toHaveValue('ana@nortear.com.br');
     });
@@ -155,7 +155,7 @@ export const TableFilter: Story = {
   play: async ({ step }) => {
     await step('Os três status são combináveis', async () => {
       await waitForPortal('dialog');
-      const ctx = within(painel()!);
+      const ctx = within(panel()!);
       await expect(ctx.getAllByRole('checkbox')).toHaveLength(3);
       await expect(ctx.getByLabelText(/Ativo/i)).toBeChecked();
     });
@@ -163,10 +163,10 @@ export const TableFilter: Story = {
     await step('E marcar outro não fecha o painel', async () => {
       // Filtro é escolha múltipla: fechar no primeiro clique obrigaria a
       // reabrir para cada critério.
-      const pendente = within(painel()!).getByLabelText(/Pendente/i);
+      const pendente = within(panel()!).getByLabelText(/Pendente/i);
       if (!(pendente as HTMLInputElement).checked) await userEvent.click(pendente);
       await expect(pendente).toBeChecked();
-      await expect(painel()).toBeInTheDocument();
+      await expect(panel()).toBeInTheDocument();
     });
   },
 };
@@ -216,7 +216,7 @@ export const ColorPicker: Story = {
       // A cor não é o nome: quem não distingue a cor precisa do rótulo, e sem
       // ele o axe reprova por button-name.
       await waitForPortal('dialog');
-      const amostras = within(painel()!).getAllByRole('button');
+      const amostras = within(panel()!).getAllByRole('button');
       const names = amostras
         .map((b) => b.getAttribute('aria-label'))
         .filter((n): n is string => n !== null);
@@ -225,7 +225,7 @@ export const ColorPicker: Story = {
     });
 
     await step('E o foco chega a cada uma por Tab', async () => {
-      const ctx = within(painel()!);
+      const ctx = within(panel()!);
       const first = ctx.getByRole('button', { name: 'Primária' });
       const segunda = ctx.getByRole('button', { name: 'Secundária' });
       first.focus();
@@ -287,7 +287,7 @@ export const QuickSettings: Story = {
   play: async ({ step }) => {
     await step('As preferências são independentes entre si', async () => {
       await waitForPortal('dialog');
-      const ctx = within(painel()!);
+      const ctx = within(panel()!);
       const notificacoes = ctx.getByLabelText(/Notificações/i) as HTMLInputElement;
       const escuro = ctx.getByLabelText(/Modo escuro/i) as HTMLInputElement;
 

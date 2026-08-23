@@ -100,16 +100,16 @@ export const Disabled: Story = {
     const canvas = within(canvasElement);
 
     await step('O grupo desabilitado se anuncia e desabilita cada item', async () => {
-      const grupo = canvas.getByRole('toolbar');
-      await expect(grupo).toHaveAttribute('data-disabled', '');
+      const group = canvas.getByRole('toolbar');
+      await expect(group).toHaveAttribute('data-disabled', '');
       for (const button of canvas.getAllByRole('button')) {
         await expect(button).toBeDisabled();
       }
     });
 
     await step('O estado desabilitado é visível, não só semântico', async () => {
-      const opacidade = parseFloat(getComputedStyle(canvas.getAllByRole('button')[0]).opacity);
-      await expect(opacidade).toBeLessThan(1);
+      const opacity = parseFloat(getComputedStyle(canvas.getAllByRole('button')[0]).opacity);
+      await expect(opacity).toBeLessThan(1);
     });
   },
 };

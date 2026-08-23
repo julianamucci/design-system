@@ -55,11 +55,11 @@ export function createToggle(options: ToggleOptions = {}): HTMLButtonElement {
   if (disabled) btn.disabled = true;
 
   if (options.children) {
-    const filhos = Array.isArray(options.children) ? options.children : [options.children];
-    for (const filho of filhos) {
+    const children = Array.isArray(options.children) ? options.children : [options.children];
+    for (const child of children) {
       // `append` com string cria nó de texto — nunca interpreta markup, então
       // não há caminho de injeção aqui.
-      btn.append(filho);
+      btn.append(child);
     }
   }
 

@@ -6,7 +6,7 @@ import {
   createPopoverHeader,
   createPopoverTitle,
 } from './popover';
-import { abrir, centralizar, painel } from './popover.fixtures';
+import { open, centralizar, panel } from './popover.fixtures';
 import { popoverSource, popoverSourceWith, popoverSourceForm } from './popover.source';
 import { createButton } from './button';
 import { createInput } from './input';
@@ -63,18 +63,18 @@ export const Default: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /ver atalhos/i });
+    const trigger = canvas.getByRole('button', { name: /ver atalhos/i });
 
     await step('Sem título, o painel herda o nome acessível do gatilho', async () => {
       // `role="dialog"` sem nome reprova na regra aria-dialog-name do axe.
-      const p = await abrir(gatilho);
+      const p = await open(trigger);
       await expect(p).toHaveAttribute('aria-label', 'Ver atalhos');
       await expect(p).not.toHaveAttribute('aria-labelledby');
     });
 
     await step('E carrega a classe do design system com o conteúdo livre', async () => {
-      await expect(painel()).toHaveClass(/nds-popover-content/);
-      await expect(painel()!.textContent).toMatch(/Ctrl \+ K/);
+      await expect(panel()).toHaveClass(/nds-popover-content/);
+      await expect(panel()!.textContent).toMatch(/Ctrl \+ K/);
     });
   },
 };
@@ -100,26 +100,26 @@ export const WithTitle: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Configuracoes de exibição' });
+    const trigger = canvas.getByRole('button', { name: 'Configuracoes de exibição' });
 
     await step('O título nomeia o painel por aria-labelledby', async () => {
-      const p = await abrir(gatilho);
+      const p = await open(trigger);
       const id = p.getAttribute('aria-labelledby');
       await expect(id).toBeTruthy();
-      const titulo = document.getElementById(id!)!;
-      await expect(titulo).toHaveAttribute('data-slot', 'popover-title');
-      await expect(titulo).toHaveClass(/nds-popover-title/);
-      await expect(titulo.textContent?.trim()).toBe('Configuracoes de exibição');
+      const title = document.getElementById(id!)!;
+      await expect(title).toHaveAttribute('data-slot', 'popover-title');
+      await expect(title).toHaveClass(/nds-popover-title/);
+      await expect(title.textContent?.trim()).toBe('Configuracoes de exibição');
     });
 
     await step('E a descrição usa a classe própria, não a de título', async () => {
-      const desc = painel()!.querySelector('[data-slot="popover-description"]')!;
+      const desc = panel()!.querySelector('[data-slot="popover-description"]')!;
       await expect(desc).toHaveClass(/nds-popover-description/);
       await expect(desc.textContent).toMatch(/Ajuste a aparência/);
     });
 
     await step('O cabeçalho é uma peça, não uma div com classe escrita à mão', async () => {
-      const header = painel()!.querySelector('[data-slot="popover-header"]')!;
+      const header = panel()!.querySelector('[data-slot="popover-header"]')!;
       await expect(header).toHaveClass(/nds-popover-header/);
       // Título e descrição moram DENTRO dele: é o cabeçalho que dá o respiro
       // entre os dois, e a folha compartilhada só o entrega nesse aninhamento.
@@ -176,10 +176,10 @@ export const Form: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /editar perfil/i });
+    const trigger = canvas.getByRole('button', { name: /editar perfil/i });
 
     await step('Os campos existem e estão associados aos rótulos', async () => {
-      const p = await abrir(gatilho);
+      const p = await open(trigger);
       const ctx = within(p);
       await expect(ctx.getByLabelText(/nome/i)).toHaveValue('Ana Ribeiro');
       await expect(ctx.getByLabelText(/email/i)).toHaveValue('ana@nortear.com.br');
@@ -188,10 +188,10 @@ export const Form: Story = {
 
     await step('E aceitam digitação — o painel não é inerte', async () => {
       // Conteúdo interativo dentro do painel é a razão de existir do popover.
-      const nome = within(painel()!).getByLabelText(/nome/i);
-      await userEvent.clear(nome);
-      await userEvent.type(nome, 'Bruno Lima');
-      await expect(nome).toHaveValue('Bruno Lima');
+      const name = within(panel()!).getByLabelText(/nome/i);
+      await userEvent.clear(name);
+      await userEvent.type(name, 'Bruno Lima');
+      await expect(name).toHaveValue('Bruno Lima');
     });
   },
 };

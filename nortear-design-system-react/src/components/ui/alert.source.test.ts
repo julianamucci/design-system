@@ -76,9 +76,9 @@ describe('variantes', () => {
   ] as const;
 
   it('cada uma declara a variante e troca o ícone junto', () => {
-    for (const [nome, icone, fn] of casos) {
+    for (const [name, icone, fn] of casos) {
       const saida = fn();
-      expect(saida).toContain(`<Alert variant="${nome}">`);
+      expect(saida).toContain(`<Alert variant="${name}">`);
       expect(saida).toContain(`import { ${icone} } from "lucide-react";`);
       expect(saida).toContain(`<${icone} aria-hidden="true" className="nds-icon" />`);
     }
@@ -96,8 +96,8 @@ describe('variantes', () => {
 
   it('a comparação de contraste mostra as cinco, sem ícone', () => {
     const saida = alertContrastSource();
-    for (const nome of ['destructive', 'success', 'warning', 'info']) {
-      expect(saida).toContain(`<Alert variant="${nome}">`);
+    for (const name of ['destructive', 'success', 'warning', 'info']) {
+      expect(saida).toContain(`<Alert variant="${name}">`);
     }
     expect(saida).toContain('<Alert>');
     expect(saida).not.toContain('lucide-react');

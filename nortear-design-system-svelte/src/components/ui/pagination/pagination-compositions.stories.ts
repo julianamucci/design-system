@@ -40,7 +40,7 @@ export const Simple: Story = {
     page: 1,
     siblingCount: 2,
     demonstration: 'simples',
-    rotulo: 'Paginação simples',
+    label: 'Paginação simples',
     onPageChange,
   },
   parameters: {
@@ -84,7 +84,7 @@ export const WithEllipsis: Story = {
     page: 6,
     siblingCount: 1,
     demonstration: 'simples',
-    rotulo: 'Paginação com reticências',
+    label: 'Paginação com reticências',
     onPageChange,
   },
   parameters: {
@@ -128,7 +128,7 @@ export const LastPage: Story = {
     page: 10,
     siblingCount: 1,
     demonstration: 'simples',
-    rotulo: 'Paginação na última página',
+    label: 'Paginação na última página',
     onPageChange,
   },
   parameters: {
@@ -176,7 +176,7 @@ export const Controlled: Story = {
     page: 1,
     siblingCount: 2,
     demonstration: 'controlada',
-    rotulo: 'Paginação controlada',
+    label: 'Paginação controlada',
   },
   parameters: {
     docs: {
@@ -192,8 +192,8 @@ export const Controlled: Story = {
       // Par idempotente: só clica quando ainda não é a página atual. O painel
       // Interactions reexecuta a play no mesmo DOM, e um clique cego partiria
       // do estado que a rodada anterior deixou.
-      const alvo = canvas.getByRole('button', { name: `Ir para página ${n}` });
-      if (alvo.getAttribute('aria-current') !== 'page') await userEvent.click(alvo);
+      const target = canvas.getByRole('button', { name: `Ir para página ${n}` });
+      if (target.getAttribute('aria-current') !== 'page') await userEvent.click(target);
       await expect(canvas.getByRole('button', { name: `Ir para página ${n}` })).toHaveAttribute(
         'aria-current',
         'page',
@@ -227,7 +227,7 @@ export const CompleteTable: Story = {
     page: 2,
     siblingCount: 1,
     demonstration: 'tabela',
-    rotulo: 'Paginação do rodapé da tabela',
+    label: 'Paginação do rodapé da tabela',
   },
   parameters: {
     docs: {
@@ -251,8 +251,8 @@ export const CompleteTable: Story = {
     });
 
     await step('O contador e a faixa dividem a mesma linha', async () => {
-      const rodape = canvasElement.querySelector('.nds-cluster') as HTMLElement;
-      await expect(getComputedStyle(rodape).justifyContent).toBe('space-between');
+      const footer = canvasElement.querySelector('.nds-cluster') as HTMLElement;
+      await expect(getComputedStyle(footer).justifyContent).toBe('space-between');
       await expect(canvas.getByRole('button', { name: 'Ir para página 2' })).toHaveAttribute(
         'aria-current',
         'page',

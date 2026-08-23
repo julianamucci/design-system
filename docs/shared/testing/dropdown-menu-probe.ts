@@ -17,7 +17,7 @@
 import { ratio, backgroundEffective, type Contrast } from './cor';
 
 export type RetratoDeElemento = {
-  texto: string;
+  text: string;
   tag: string;
   role: string | null;
   classes: string;
@@ -63,17 +63,17 @@ export type KeyboardRetrato = {
 };
 
 export type RetratoDoDropdown = {
-  gatilho: RetratoDeElemento | null;
-  painel: PanelRetrato;
+  trigger: RetratoDeElemento | null;
+  panel: PanelRetrato;
   /** `role="group"` dentro do menu e o nome acessível de cada um. */
-  grupos: Array<{ accessibleName: string | null; slot: string | null }>;
+  groups: Array<{ accessibleName: string | null; slot: string | null }>;
   rotulos: RetratoDeElemento[];
   separadores: RetratoDeElemento[];
-  itens: RetratoDeElemento[];
+  items: RetratoDeElemento[];
   marcacoes: RetratoDeElemento[];
   /** Indicador visual do item marcado — `display` computado por estado. */
   indicadores: Array<{ parent: string; display: string; classes: string }>;
-  shortcuts: Array<{ texto: string; classes: string; ariaHidden: string | null; encostaNaDireita: boolean }>;
+  shortcuts: Array<{ text: string; classes: string; ariaHidden: string | null; encostaNaDireita: boolean }>;
   teclado: KeyboardRetrato | null;
   submenu: {
     subTrigger: RetratoDeElemento | null;
@@ -96,14 +96,14 @@ const PRESENTE = (attr: string) => `[${attr}]:not([${attr}="false"])`;
 function describe(el: Element | null | undefined): string | null {
   if (!el) return null;
   const html = el as HTMLElement;
-  const texto = (html.textContent ?? '').replace(/\s+/g, ' ').trim().slice(0, 40);
+  const text = (html.textContent ?? '').replace(/\s+/g, ' ').trim().slice(0, 40);
   const papel = html.getAttribute('role') ?? html.tagName.toLowerCase();
-  return texto ? `${papel}:${texto}` : papel;
+  return text ? `${papel}:${text}` : papel;
 }
 
 function retratar(el: HTMLElement): RetratoDeElemento {
   return {
-    texto: (el.textContent ?? '').replace(/\s+/g, ' ').trim(),
+    text: (el.textContent ?? '').replace(/\s+/g, ' ').trim(),
     tag: el.tagName.toLowerCase(),
     role: el.getAttribute('role'),
     classes: el.getAttribute('class') ?? '',
@@ -121,20 +121,20 @@ function retratar(el: HTMLElement): RetratoDeElemento {
   };
 }
 
-function retratarPanel(painel: HTMLElement | null): PanelRetrato {
-  if (!painel) return null;
-  const s = getComputedStyle(painel);
+function retratarPanel(panel: HTMLElement | null): PanelRetrato {
+  if (!panel) return null;
+  const s = getComputedStyle(panel);
   return {
-    tag: painel.tagName.toLowerCase(),
-    role: painel.getAttribute('role'),
-    classes: painel.getAttribute('class') ?? '',
-    slot: painel.getAttribute('data-slot'),
+    tag: panel.tagName.toLowerCase(),
+    role: panel.getAttribute('role'),
+    classes: panel.getAttribute('class') ?? '',
+    slot: panel.getAttribute('data-slot'),
     background: s.backgroundColor,
     cor: s.color,
     raio: s.borderTopLeftRadius,
     sombra: s.boxShadow,
     border: `${s.borderTopWidth} ${s.borderTopStyle} ${s.borderTopColor}`,
-    ancoradoNoBody: !painel.closest('#storybook-root'),
+    ancoradoNoBody: !panel.closest('#storybook-root'),
   };
 }
 
@@ -155,10 +155,10 @@ async function ate(cond: () => boolean, limit = 1200): Promise<boolean> {
 
 export type ProbeOptions = {
   /** O botão que abre o menu; `null` onde a story não tem gatilho. */
-  gatilho?: HTMLElement | null;
+  trigger?: HTMLElement | null;
   /** `userEvent` de `storybook/test` — injetado para o colhedor não importar nada. */
   teclado: {
-    keyboard: (texto: string) => Promise<void>;
+    keyboard: (text: string) => Promise<void>;
     click: (el: Element) => Promise<void>;
   };
   /** Mede navegação por setas/Home/End/typeahead. Exige menu já aberto. */
@@ -179,17 +179,17 @@ export type ProbeOptions = {
 export async function radiografarDropdown(
   opts: ProbeOptions,
 ): Promise<RetratoDoDropdown> {
-  const { gatilho = null, teclado } = opts;
-  const painel = findPanel();
+  const { trigger = null, teclado } = opts;
+  const panel = findPanel();
 
   const inside = <T extends HTMLElement>(sel: string): T[] =>
-    painel ? Array.from(painel.querySelectorAll<T>(sel)) : [];
+    panel ? Array.from(panel.querySelectorAll<T>(sel)) : [];
 
   // Os retratos são materializados AGORA, não no `return`: o painel do Vanilla
   // sai do DOM no mesmo tick do Escape, e `getComputedStyle` de nó desanexado
   // devolve string vazia em todo campo — o que se leria como "sem estilo" é a
   // medição chegando tarde.
-  const itens = inside<HTMLElement>('[role="menuitem"]').map(retratar);
+  const items = inside<HTMLElement>('[role="menuitem"]').map(retratar);
   const marcacoes = inside<HTMLElement>(
     '[role="menuitemcheckbox"], [role="menuitemradio"]',
   ).map(retratar);
@@ -199,7 +199,7 @@ export async function radiografarDropdown(
   const separadores = inside<HTMLElement>(
     '[role="separator"], .nds-dropdown-menu-separator, [data-slot="dropdown-menu-separator"]',
   ).map(retratar);
-  const grupos = inside<HTMLElement>('[role="group"]').map((g) => ({
+  const groups = inside<HTMLElement>('[role="group"]').map((g) => ({
     accessibleName:
       g.getAttribute('aria-label') ??
       (g.getAttribute('aria-labelledby')
@@ -207,7 +207,7 @@ export async function radiografarDropdown(
         : null),
     slot: g.getAttribute('data-slot'),
   }));
-  const panelRetrato = retratarPanel(painel);
+  const panelRetrato = retratarPanel(panel);
 
   const indicadores = inside<HTMLElement>(
     '.nds-dropdown-menu-item-indicator, [data-slot$="item-indicator"]',
@@ -224,7 +224,7 @@ export async function radiografarDropdown(
     const ca = a.getBoundingClientRect();
     const ci = item?.getBoundingClientRect();
     return {
-      texto: (a.textContent ?? '').trim(),
+      text: (a.textContent ?? '').trim(),
       classes: a.getAttribute('class') ?? '',
       ariaHidden: a.getAttribute('aria-hidden'),
       encostaNaDireita: ci ? ci.right - ca.right < ca.left - ci.left : false,
@@ -233,9 +233,9 @@ export async function radiografarDropdown(
 
   // ── Teclado ────────────────────────────────────────────────────────────────
   let keyboardRetrato: KeyboardRetrato | null = null;
-  if (opts.measureKeyboard && painel) {
+  if (opts.measureKeyboard && panel) {
     const navegaveis = [
-      ...painel.querySelectorAll<HTMLElement>(
+      ...panel.querySelectorAll<HTMLElement>(
         '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
       ),
     ];
@@ -260,16 +260,16 @@ export async function radiografarDropdown(
       digitarAfter = describe(document.activeElement);
     }
 
-    const desabilitado = painel.querySelector<HTMLElement>(
+    const disabled = panel.querySelector<HTMLElement>(
       `${PRESENTE('data-disabled')}, [aria-disabled="true"]`,
     );
     let arrowAlcancaDisabled: boolean | null = null;
-    if (desabilitado) {
+    if (disabled) {
       navegaveis[0]?.focus();
       arrowAlcancaDisabled = false;
       for (let i = 0; i < navegaveis.length + 1; i++) {
         await teclado.keyboard('{ArrowDown}');
-        if (document.activeElement === desabilitado) {
+        if (document.activeElement === disabled) {
           arrowAlcancaDisabled = true;
           break;
         }
@@ -290,11 +290,11 @@ export async function radiografarDropdown(
 
   // ── Submenu ────────────────────────────────────────────────────────────────
   let submenu: RetratoDoDropdown['submenu'] = null;
-  if (opts.medirSubmenu && painel) {
-    const alvo = painel.querySelector<HTMLElement>(
+  if (opts.medirSubmenu && panel) {
+    const target = panel.querySelector<HTMLElement>(
       '.nds-dropdown-menu-sub-trigger, [data-slot="dropdown-menu-sub-trigger"], [aria-haspopup="menu"]',
     );
-    if (!alvo) {
+    if (!target) {
       submenu = {
         subTrigger: null,
         arrowAbriu: null,
@@ -303,37 +303,37 @@ export async function radiografarDropdown(
         escapeFechou: null,
       };
     } else {
-      alvo.focus();
+      target.focus();
       await teclado.keyboard('{ArrowRight}');
       await ate(() => document.querySelectorAll('[role="menu"]').length > 1);
       const panels = Array.from(document.querySelectorAll<HTMLElement>('[role="menu"]'));
-      const filho = panels.find((p) => p !== painel) ?? null;
-      const arrowAbriu = filho !== null;
+      const child = panels.find((p) => p !== panel) ?? null;
+      const arrowAbriu = child !== null;
       // O posicionador (floating-ui) coloca o popup em passo assíncrono: medir a
       // caixa no tick da abertura lê a posição de partida, não a final. Espera a
       // esquerda parar de mudar antes de comparar com o menu pai.
-      if (filho) {
+      if (child) {
         let previous = NaN;
         await ate(() => {
-          const atual = filho.getBoundingClientRect().left;
-          const estavel = atual === previous;
-          previous = atual;
+          const current = child.getBoundingClientRect().left;
+          const estavel = current === previous;
+          previous = current;
           return estavel;
         }, 1500);
       }
-      const onSide = filho
-        ? filho.getBoundingClientRect().left >= painel.getBoundingClientRect().right - 8
+      const onSide = child
+        ? child.getBoundingClientRect().left >= panel.getBoundingClientRect().right - 8
         : null;
       // Sobreposição real com o menu pai: `onSide` responde "nasce à direita?",
       // isto responde "cobre os irmãos do item que o abriu?".
-      const sobrepoe = filho
-        ? filho.getBoundingClientRect().left < painel.getBoundingClientRect().right - 8
+      const sobrepoe = child
+        ? child.getBoundingClientRect().left < panel.getBoundingClientRect().right - 8
         : null;
       await teclado.keyboard('{Escape}');
       const escapeFechou = await ate(
         () => document.querySelectorAll('[role="menu"]').length < panels.length,
       );
-      submenu = { subTrigger: retratar(alvo), arrowAbriu, onSide, sobrepoe, escapeFechou };
+      submenu = { subTrigger: retratar(target), arrowAbriu, onSide, sobrepoe, escapeFechou };
     }
   }
 
@@ -345,18 +345,18 @@ export async function radiografarDropdown(
     // `activeElement` no mesmo tick mede o menu ainda desmontando, e o retrato
     // acusaria uma falha de foco que não existe.
     await ate(() => document.querySelector('[role="menu"]') === null);
-    await ate(() => document.activeElement === gatilho);
+    await ate(() => document.activeElement === trigger);
     closeFocus =
-      document.activeElement === gatilho ? 'gatilho' : describe(document.activeElement);
+      document.activeElement === trigger ? 'gatilho' : describe(document.activeElement);
   }
 
   return {
-    gatilho: gatilho ? retratar(gatilho) : null,
-    painel: panelRetrato,
-    grupos,
+    trigger: trigger ? retratar(trigger) : null,
+    panel: panelRetrato,
+    groups,
     rotulos,
     separadores,
-    itens,
+    items,
     marcacoes,
     indicadores,
     shortcuts,
@@ -367,8 +367,8 @@ export async function radiografarDropdown(
 }
 
 /** Único canal que atravessa o instrumentador do Storybook até o terminal. */
-export function lancarProbe(stack: string, cenario: string, dados: unknown): never {
-  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(dados)}`);
+export function lancarProbe(stack: string, cenario: string, data: unknown): never {
+  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(data)}`);
 }
 
 /**

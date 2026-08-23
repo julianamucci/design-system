@@ -44,27 +44,27 @@ function header(icons: string[], extra?: string): string {
  * margem no ícone. Título e descrição ficam no `--foreground`: em contêiner
  * colorido, o texto corrido não pode depender da variante para alcançar 4.5:1.
  */
-function corpo(icone: string | null, titulo: string, descricao: string, indentacao = '  '): string {
+function body(icone: string | null, title: string, descricao: string, indentacao = '  '): string {
   const lines: string[] = [];
   if (icone) lines.push(`${indentacao}<${icone} aria-hidden="true" className="nds-icon" />`);
-  if (titulo) lines.push(`${indentacao}<AlertTitle>${titulo}</AlertTitle>`);
+  if (title) lines.push(`${indentacao}<AlertTitle>${title}</AlertTitle>`);
   lines.push(`${indentacao}<AlertDescription>${descricao}</AlertDescription>`);
   return lines.join('\n');
 }
 
-function alerta(atributos: string, interior: string): string {
-  return `<Alert${atributos}>\n${interior}\n</Alert>`;
+function alerta(attrs: string, interior: string): string {
+  return `<Alert${attrs}>\n${interior}\n</Alert>`;
 }
 
 /** Uma variante inteira: raiz, ícone próprio e o par título/descrição. */
-function variante(
-  nome: (typeof VARIANTS)[number],
+function variant(
+  name: (typeof VARIANTS)[number],
   icone: string,
-  titulo: string,
+  title: string,
   descricao: string,
 ): string {
-  const atributos = nome === 'default' ? '' : ` variant="${nome}"`;
-  return jsxSnippet(header([icone]), alerta(atributos, corpo(icone, titulo, descricao)));
+  const attrs = name === 'default' ? '' : ` variant="${name}"`;
+  return jsxSnippet(header([icone]), alerta(attrs, body(icone, title, descricao)));
 }
 
 /**
@@ -79,7 +79,7 @@ function variante(
  */
 export const alertSource: SourceTransform<AlertArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const atributos = attrsMultilinha([
+  const attrs = attrsMultilinha([
     propOption('variant', args.variant, VARIANTS, 'default'),
     propOption('role', args.role, PAPEIS, 'alert'),
     propBool('dismissible', args.dismissible),
@@ -87,8 +87,8 @@ export const alertSource: SourceTransform<AlertArgs> = (_gerado, ctx) => {
   return jsxSnippet(
     header(['Info']),
     alerta(
-      atributos,
-      corpo('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.'),
+      attrs,
+      body('Info', 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.'),
     ),
   );
 };
@@ -100,7 +100,7 @@ export const alertSource: SourceTransform<AlertArgs> = (_gerado, ctx) => {
  * o significado sem depender de enxergar a cor.
  */
 export function alertDestructiveSource(): string {
-  return variante(
+  return variant(
     'destructive',
     'AlertCircle',
     'Erro ao salvar',
@@ -109,7 +109,7 @@ export function alertDestructiveSource(): string {
 }
 
 export function alertSucessoSource(): string {
-  return variante(
+  return variant(
     'success',
     'CheckCircle2',
     'Perfil atualizado',
@@ -118,7 +118,7 @@ export function alertSucessoSource(): string {
 }
 
 export function alertAvisoSource(): string {
-  return variante(
+  return variant(
     'warning',
     'TriangleAlert',
     'Assinatura expirando',
@@ -127,7 +127,7 @@ export function alertAvisoSource(): string {
 }
 
 export function alertInfoSource(): string {
-  return variante(
+  return variant(
     'info',
     'Info',
     'Dica',
@@ -153,7 +153,7 @@ function aoFechar() {
 }`,
     alerta(
       ' dismissible onDismiss={aoFechar}',
-      corpo(
+      body(
         'CheckCircle2',
         'Perfil atualizado',
         'Suas informações foram salvas com sucesso.',
@@ -168,12 +168,12 @@ function aoFechar() {
  * propósito — o que se mede aqui é texto sobre o fundo que a variante pinta.
  */
 export function alertContrastSource(): string {
-  const blocks = VARIANTS.map((nome) => {
-    const atributos = nome === 'default' ? '' : ` variant="${nome}"`;
+  const blocks = VARIANTS.map((name) => {
+    const attrs = name === 'default' ? '' : ` variant="${name}"`;
     return [
-      `  <Alert${atributos}>`,
-      `    <AlertTitle>Título ${nome}</AlertTitle>`,
-      `    <AlertDescription>Texto corrido da variante ${nome}.</AlertDescription>`,
+      `  <Alert${attrs}>`,
+      `    <AlertTitle>Título ${name}</AlertTitle>`,
+      `    <AlertDescription>Texto corrido da variante ${name}.</AlertDescription>`,
       '  </Alert>',
     ].join('\n');
   }).join('\n');
@@ -190,7 +190,7 @@ export function alertContrastSource(): string {
 export function alertNoTitleSource(): string {
   return jsxSnippet(
     header(['Info'], 'import { Alert, AlertDescription } from "@/components/ui/alert";'),
-    alerta('', corpo('Info', '', 'Suas alterações serão aplicadas na próxima sessão.')),
+    alerta('', body('Info', '', 'Suas alterações serão aplicadas na próxima sessão.')),
   );
 }
 
@@ -202,7 +202,7 @@ export function alertNoTitleSource(): string {
 export function alertNoIconSource(): string {
   return jsxSnippet(
     IMPORT,
-    alerta('', corpo(null, 'Atenção', 'Alert sem ícone mantém layout de coluna única.')),
+    alerta('', body(null, 'Atenção', 'Alert sem ícone mantém layout de coluna única.')),
   );
 }
 
@@ -217,7 +217,7 @@ export function alertNoIconSource(): string {
 export function alertNoAnnouncementSource(): string {
   const nota = [
     '  <Alert role="note">',
-    corpo(
+    body(
       'Info',
       'Nota de implementação',
       'Conteúdo já presente no carregamento — o leitor de tela não é interrompido.',
@@ -227,7 +227,7 @@ export function alertNoAnnouncementSource(): string {
   ].join('\n');
   const padrao = [
     '  <Alert>',
-    corpo(
+    body(
       'Info',
       'Sessão expirada',
       'Mensagem urgente que surge em tempo de execução.',
@@ -251,7 +251,7 @@ export function alertInsercaoDinamicaSource(): string {
     header(['Info']),
     `<div aria-live="polite">\n${[
       '  <Alert>',
-      corpo('Info', 'Operação concluída', 'O relatório foi gerado com sucesso.', '    '),
+      body('Info', 'Operação concluída', 'O relatório foi gerado com sucesso.', '    '),
       '  </Alert>',
     ].join('\n')}\n</div>`,
   );
@@ -271,7 +271,7 @@ import { Info } from "lucide-react";`,
     alerta(
       '',
       [
-        corpo('Info', 'Atualização disponível', 'Uma nova versão está pronta para instalação.'),
+        body('Info', 'Atualização disponível', 'Uma nova versão está pronta para instalação.'),
         '  <AlertAction>',
         '    <Button size="sm" variant="outline">',
         '      Atualizar',

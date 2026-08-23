@@ -90,13 +90,13 @@ export const Default: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button', { name: /Salvar/i });
+    const trigger = within(canvasElement).getByRole('button', { name: /Salvar/i });
 
     await step('Nasce aberto, com o texto curto no balão', async () => {
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       await expect(balao).toHaveClass(/nds-tooltip-content/);
       // `toContain` e não igualdade: a lib acrescenta uma cópia acessível do
       // texto dentro do balão, então `textContent` traz o rótulo duas vezes.
@@ -107,7 +107,7 @@ export const Default: Story = {
       // Medido no elemento real, não na tabela de tokens: é a combinação
       // aplicada (fundo --primary, texto --primary-foreground) que a pessoa lê,
       // e ela precisa valer em qualquer tema da toolbar.
-      const estilo = getComputedStyle(balaoDe(gatilho)!);
+      const estilo = getComputedStyle(balaoDe(trigger)!);
       await expect(contraste(estilo.color, estilo.backgroundColor)).toBeGreaterThanOrEqual(4.5);
     });
   },
@@ -145,13 +145,13 @@ export const WithShortcut: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button', { name: /Salvar/i });
+    const trigger = within(canvasElement).getByRole('button', { name: /Salvar/i });
 
     await step('O atalho vai em Kbd, não solto no texto', async () => {
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      const teclas = balaoDe(gatilho)!.querySelectorAll('kbd');
+      const teclas = balaoDe(trigger)!.querySelectorAll('kbd');
       await expect(teclas.length).toBe(2);
       await expect(teclas[0].textContent).toBe('Ctrl');
     });
@@ -159,7 +159,7 @@ export const WithShortcut: Story = {
     await step('A folha compartilhada reconhece a tecla e encurta o respiro', async () => {
       // `.nds-tooltip-content:has([data-slot="kbd"])` só casa se o data-slot
       // estiver na tecla — sem ele a regra existe e não pinta nada.
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       await expect(balao.querySelector('[data-slot="kbd"]')).not.toBeNull();
       await expect(getComputedStyle(balao).paddingInlineEnd).not.toBe(
         getComputedStyle(balao).paddingInlineStart,
@@ -197,13 +197,13 @@ export const LongText: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button', { name: /Compartilhar/i });
+    const trigger = within(canvasElement).getByRole('button', { name: /Compartilhar/i });
 
     await step('O texto quebra dentro do limite de largura do balão', async () => {
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       await expect(balao.textContent).toContain('link público');
       // O limite vem da folha compartilhada; medir a largura real prova que o
       // texto respeitou o teto em vez de esticar o balão pela viewport.

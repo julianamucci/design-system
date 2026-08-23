@@ -11,7 +11,7 @@
  * `code="const items = await load();\nconst total = …"` numa linha só é a forma
  * mais rápida de quem lê perder as quebras de linha.
  */
-import { jsxSnippet, propBool, propText, texto, type SourceTransform } from '@/lib/story-source';
+import { jsxSnippet, propBool, propText, text, type SourceTransform } from '@/lib/story-source';
 
 export type CodeBlockArgs = {
   code: string;
@@ -53,20 +53,20 @@ const source = \`${literalDeTemplate(code)}\`;`;
  * control, e o array `[3, "5-7"]`. Valor de outro tipo não vira atributo
  * inventado.
  */
-function propLinhas(valor: unknown): string | undefined {
-  if (typeof valor === 'string') {
-    const limpo = valor.trim();
+function propLinhas(value: unknown): string | undefined {
+  if (typeof value === 'string') {
+    const limpo = value.trim();
     return limpo ? `highlightLines="${limpo}"` : undefined;
   }
-  if (Array.isArray(valor)) {
-    const itens = (valor as ReadonlyArray<unknown>)
+  if (Array.isArray(value)) {
+    const items = (value as ReadonlyArray<unknown>)
       .filter(
         (item): item is number | string =>
           (typeof item === 'number' && Number.isFinite(item)) ||
           (typeof item === 'string' && item.trim() !== ''),
       )
       .map((item) => (typeof item === 'number' ? String(item) : `"${item.trim()}"`));
-    return itens.length ? `highlightLines={[${itens.join(', ')}]}` : undefined;
+    return items.length ? `highlightLines={[${items.join(', ')}]}` : undefined;
   }
   return undefined;
 }
@@ -76,10 +76,10 @@ function propLinhas(valor: unknown): string | undefined {
  * não couber. `code={source}` vem sempre primeiro: é a única prop obrigatória.
  */
 function tagCodeBlock(partes: Array<string | false | undefined>): string {
-  const lista = ['code={source}', ...partes].filter((parte): parte is string => Boolean(parte));
-  const inLine = lista.join(' ');
+  const list = ['code={source}', ...partes].filter((parte): parte is string => Boolean(parte));
+  const inLine = list.join(' ');
   if (inLine.length <= 56) return `<CodeBlock ${inLine} />`;
-  return `<CodeBlock\n${lista.map((parte) => `  ${parte}`).join('\n')}\n/>`;
+  return `<CodeBlock\n${list.map((parte) => `  ${parte}`).join('\n')}\n/>`;
 }
 
 /**
@@ -92,7 +92,7 @@ function tagCodeBlock(partes: Array<string | false | undefined>): string {
 export const codeBlockSource: SourceTransform<CodeBlockArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   return jsxSnippet(
-    cabecalhoCom(texto(args.code) ?? CODE_BASE),
+    cabecalhoCom(text(args.code) ?? CODE_BASE),
     tagCodeBlock([
       propText('language', args.language),
       propText('title', args.title),

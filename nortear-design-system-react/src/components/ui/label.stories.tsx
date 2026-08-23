@@ -64,18 +64,18 @@ export const Playground: Story = {
       // É o que `accessibility.item2` promete: `getByLabelText` só encontra o
       // campo se a associação `for`/`id` estiver de pé. Conferir o atributo
       // sozinho passaria com um id que não aponta para nada.
-      const campo = canvas.getByLabelText("Nome completo");
-      await expect(campo).toBe(canvasElement.querySelector("#playground-label"));
+      const field = canvas.getByLabelText("Nome completo");
+      await expect(field).toBe(canvasElement.querySelector("#playground-label"));
     });
 
     await step("Clicar no rótulo move o foco para o campo", async () => {
       // Precondição própria: o replay reexecuta no mesmo DOM, e sem tirar o
       // foco daqui a asserção passaria pelo estado que a rodada anterior deixou.
-      const campo = canvasElement.querySelector<HTMLInputElement>("#playground-label")!;
-      campo.blur();
-      await expect(campo).not.toHaveFocus();
+      const field = canvasElement.querySelector<HTMLInputElement>("#playground-label")!;
+      field.blur();
+      await expect(field).not.toHaveFocus();
       await userEvent.click(label);
-      await expect(campo).toHaveFocus();
+      await expect(field).toHaveFocus();
     });
   },
 };

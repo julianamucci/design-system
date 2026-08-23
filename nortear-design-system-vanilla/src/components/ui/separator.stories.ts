@@ -64,7 +64,7 @@ export const Playground: Story = {
   },
   render: (args) => {
     const wrapper = document.createElement('div');
-    const opcoes = {
+    const options = {
       orientation: args.orientation,
       decorative: args.decorative,
       emphasis: args.emphasis,
@@ -82,7 +82,7 @@ export const Playground: Story = {
       bottom.className = 'nds-text-body';
       bottom.textContent = 'Seção inferior';
 
-      wrapper.append(top, createSeparator(opcoes), bottom);
+      wrapper.append(top, createSeparator(options), bottom);
     } else {
       // Sem altura cravada: o `align-self: stretch` da folha faz a linha
       // acompanhar a linha do flex. Cravar altura aqui esconderia o contrato.
@@ -97,7 +97,7 @@ export const Playground: Story = {
       right.className = 'nds-text-body nds-text-muted-foreground';
       right.textContent = 'Item B';
 
-      wrapper.append(left, createSeparator(opcoes), right);
+      wrapper.append(left, createSeparator(options), right);
     }
 
     return wrapper;
@@ -113,9 +113,9 @@ export const Playground: Story = {
     await step('Espessura de 1px no eixo da orientação', async () => {
       // Medida computada, não nome de classe: é a espessura que a pessoa vê, e
       // é o que uma troca de folha quebraria sem mudar atributo nenhum.
-      const caixa = separator!.getBoundingClientRect();
-      await expect(Math.min(caixa.width, caixa.height)).toBeCloseTo(1, 1);
-      await expect(Math.max(caixa.width, caixa.height)).toBeGreaterThan(8);
+      const box = separator!.getBoundingClientRect();
+      await expect(Math.min(box.width, box.height)).toBeCloseTo(1, 1);
+      await expect(Math.max(box.width, box.height)).toBeGreaterThan(8);
     });
 
     await step('Semântica conforme o modo escolhido', async () => {

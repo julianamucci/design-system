@@ -880,8 +880,8 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
    * página reprovam em `landmark-unique`, e uma região sem nome nenhum some da
    * lista de marcos. O prefixo é o título do componente, o sufixo distingue.
    */
-  protected rotuloRegiao(nome: string): string {
-    return `${t('title')} — ${nome}`;
+  protected rotuloRegiao(name: string): string {
+    return `${t('title')} — ${name}`;
   }
 
   // ─── Analytics de produto ───────────────────────────────────────────────────
@@ -1064,15 +1064,15 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
     const not = tNav('common.no');
     // "—" e nunca a string "undefined": travessão é o vazio tipográfico, e é o
     // que as outras stacks mostram.
-    const line = (name: string, chave: string, tipo: string, padrao: string) => ({
+    const line = (name: string, key: string, type: string, padrao: string) => ({
       name,
-      type: tipo,
+      type: type,
       defaultValue: padrao,
       required: not,
-      description: toPlainText(t(`props.table.${chave}`)),
+      description: toPlainText(t(`props.table.${key}`)),
     });
     const className = line('class', 'className', 'string', '—');
-    const conteudo = line('(conteúdo)', 'children', 'HTML', '—');
+    const content = line('(conteúdo)', 'children', 'HTML', '—');
 
     return [
       {
@@ -1088,14 +1088,14 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
           line('slideChange', 'slideChange', 'output<CarouselSlideChange>', '—'),
           line('autoplayPause', 'autoplayPause', 'output<{ index: number }>', '—'),
           className,
-          conteudo,
+          content,
         ],
       },
-      { title: t('props.contentTitle'), cols, items: [className, conteudo] },
+      { title: t('props.contentTitle'), cols, items: [className, content] },
       {
         title: t('props.itemTitle'),
         cols,
-        items: [line('label', 'itemLabel', 'string', '—'), className, conteudo],
+        items: [line('label', 'itemLabel', 'string', '—'), className, content],
       },
       {
         title: t('props.navTitle'),
@@ -1122,17 +1122,17 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '--background', k: 'background',   alvo: '.nds-carousel-arrow' },
-      { token: '--foreground', k: 'foreground',   alvo: '.nds-carousel-arrow' },
-      { token: '--border',     k: 'border',       alvo: '.nds-carousel-arrow' },
-      { token: '--accent',     k: 'accent',       alvo: '.nds-carousel-arrow' },
-      { token: '--ring',       k: 'ring',         alvo: '.nds-carousel-arrow' },
-      { token: '--radius',     k: 'radiusButton', alvo: '.nds-carousel-arrow' },
-      { token: '--primary',    k: 'primary',      alvo: '.nds-carousel' },
-      { token: '--nds-carousel-slide-scale', k: 'slideScale', alvo: '.nds-carousel-slide' },
-    ].map(({ token, k, alvo }) => ({
+      { token: '--background', k: 'background',   target: '.nds-carousel-arrow' },
+      { token: '--foreground', k: 'foreground',   target: '.nds-carousel-arrow' },
+      { token: '--border',     k: 'border',       target: '.nds-carousel-arrow' },
+      { token: '--accent',     k: 'accent',       target: '.nds-carousel-arrow' },
+      { token: '--ring',       k: 'ring',         target: '.nds-carousel-arrow' },
+      { token: '--radius',     k: 'radiusButton', target: '.nds-carousel-arrow' },
+      { token: '--primary',    k: 'primary',      target: '.nds-carousel' },
+      { token: '--nds-carousel-slide-scale', k: 'slideScale', target: '.nds-carousel-slide' },
+    ].map(({ token, k, target }) => ({
       token,
-      value: alvo,
+      value: target,
       description: toPlainText(t(`tokens.table.${k}`)),
     }));
   });
@@ -1160,12 +1160,12 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'tabs',       nome: 'Tabs',       path: '?path=/docs/ui-tabs--docs'       },
-      { key: 'scrollArea', nome: 'ScrollArea', path: '?path=/docs/ui-scrollarea--docs' },
-      { key: 'card',       nome: 'Card',       path: '?path=/docs/ui-card--docs'       },
-      { key: 'pagination', nome: 'Pagination', path: '?path=/docs/ui-pagination--docs' },
-    ].map(({ key, nome, path }) => ({
-      name: nome,
+      { key: 'tabs',       name: 'Tabs',       path: '?path=/docs/ui-tabs--docs'       },
+      { key: 'scrollArea', name: 'ScrollArea', path: '?path=/docs/ui-scrollarea--docs' },
+      { key: 'card',       name: 'Card',       path: '?path=/docs/ui-card--docs'       },
+      { key: 'pagination', name: 'Pagination', path: '?path=/docs/ui-pagination--docs' },
+    ].map(({ key, name, path }) => ({
+      name: name,
       description: toPlainText(t(`related.${key}`)),
       path,
     }));
@@ -1187,14 +1187,14 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
   protected readonly analyticsItems = computed(() => {
     dict();
     return [
-      { e: 'slideChange',   gatilho: 'slideChangeTrigger',   carga: 'slideChangePayload'   },
-      { e: 'autoplayPause', gatilho: 'autoplayPauseTrigger', carga: 'autoplayPausePayload' },
-      { e: 'pageView',      gatilho: 'pageViewTrigger',      carga: 'pageViewPayload'      },
-      { e: 'sectionViewed', gatilho: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
-      { e: 'langSwitch',    gatilho: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
-    ].map(({ e, gatilho, carga }) => ({
+      { e: 'slideChange',   trigger: 'slideChangeTrigger',   carga: 'slideChangePayload'   },
+      { e: 'autoplayPause', trigger: 'autoplayPauseTrigger', carga: 'autoplayPausePayload' },
+      { e: 'pageView',      trigger: 'pageViewTrigger',      carga: 'pageViewPayload'      },
+      { e: 'sectionViewed', trigger: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
+      { e: 'langSwitch',    trigger: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
+    ].map(({ e, trigger, carga }) => ({
       event: t(`analytics.table.${e}`),
-      trigger: toPlainText(t(`analytics.table.${gatilho}`)),
+      trigger: toPlainText(t(`analytics.table.${trigger}`)),
       payload: toPlainText(t(`analytics.table.${carga}`)),
     }));
   });
@@ -1227,8 +1227,8 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
           level: r.level,
           how: toPlainText(r.how),
         }))
-      : numberedItems(d, 'testes.accessibility').map((texto) => ({
-          criterion: toPlainText(texto),
+      : numberedItems(d, 'testes.accessibility').map((text) => ({
+          criterion: toPlainText(text),
           level: '',
           how: '',
         }));
@@ -1296,9 +1296,9 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
 // ─── Helpers de cauda ─────────────────────────────────────────────────────────
 
 /** Rótulo de navegação, com queda para o ui.json quando o slug não o declara. */
-function navLabel(chave: string): string {
-  const doComponente = t(chave);
-  return doComponente === chave ? tNav(chave) : doComponente;
+function navLabel(key: string): string {
+  const doComponente = t(key);
+  return doComponente === key ? tNav(key) : doComponente;
 }
 
 /**
@@ -1307,12 +1307,12 @@ function navLabel(chave: string): string {
  * `t()` devolve a PRÓPRIA CHAVE quando ela aponta para um objeto — e é assim
  * que "variants.items.autoplay" acaba escrito na tela, sem erro nenhum.
  */
-function valueOuField(base: string, campo: string): string {
+function valueOuField(base: string, field: string): string {
   const direto = t(base);
   if (direto !== base) return direto;
-  const chave = `${base}.${campo}`;
-  const ofField = t(chave);
-  return ofField === chave ? '' : ofField;
+  const key = `${base}.${field}`;
+  const ofField = t(key);
+  return ofField === key ? '' : ofField;
 }
 
 /**
@@ -1336,13 +1336,13 @@ function numberedItems(
   base: string,
   prefixo = 'item',
 ): string[] {
-  const itens: string[] = [];
+  const items: string[] = [];
   for (let i = 1; ; i++) {
-    const valor = d[`${base}.${prefixo}${i}`];
-    if (valor === undefined) break;
-    itens.push(valor);
+    const value = d[`${base}.${prefixo}${i}`];
+    if (value === undefined) break;
+    items.push(value);
   }
-  return itens;
+  return items;
 }
 
 const priorityKeyMap: Record<string, string> = {

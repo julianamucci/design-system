@@ -14,7 +14,7 @@ import {
   jsxSnippet,
   propBool,
   propText,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -39,11 +39,11 @@ const VALUE_DEFAULT = 'on';
  * `indent` é a indentação da própria tag, para o fechamento voltar a ela.
  */
 function tagCheckbox(partes: Array<string | false | undefined>, indent = '  '): string {
-  const lista = partes.filter((parte): parte is string => Boolean(parte));
-  if (!lista.length) return '<Checkbox />';
-  const inLine = lista.join(' ');
+  const list = partes.filter((parte): parte is string => Boolean(parte));
+  if (!list.length) return '<Checkbox />';
+  const inLine = list.join(' ');
   if (inLine.length <= 56) return `<Checkbox ${inLine} />`;
-  return `<Checkbox\n${lista.map((parte) => `${indent}  ${parte}`).join('\n')}\n${indent}/>`;
+  return `<Checkbox\n${list.map((parte) => `${indent}  ${parte}`).join('\n')}\n${indent}/>`;
 }
 
 /**
@@ -52,14 +52,14 @@ function tagCheckbox(partes: Array<string | false | undefined>, indent = '  '): 
  */
 function pairLabelled(
   id: string,
-  rotulo: string,
+  label: string,
   partes: Array<string | false | undefined> = [],
   atributosDoGrupo = '',
 ): string {
   return `<div className="nds-cluster" data-spacing="sm"${atributosDoGrupo}>
   ${tagCheckbox([`id="${id}"`, ...partes])}
   <label htmlFor="${id}" className="nds-label">
-    ${rotulo}
+    ${label}
   </label>
 </div>`;
 }
@@ -72,12 +72,12 @@ function pairLabelled(
  */
 export const checkboxSource: SourceTransform<CheckboxArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const valor = texto(args.value);
+  const value = text(args.value);
   return jsxSnippet(
     IMPORT,
     pairLabelled('termos', 'Aceito os termos e condições', [
       propText('name', args.name),
-      valor && valor !== VALUE_DEFAULT ? `value="${valor}"` : undefined,
+      value && value !== VALUE_DEFAULT ? `value="${value}"` : undefined,
       propBool('defaultChecked', args.defaultChecked),
       propBool('indeterminate', args.indeterminate),
       propBool('disabled', args.disabled),

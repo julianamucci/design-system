@@ -9,7 +9,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from './index';
-import { abrir, waitForPanel, waitForPanelVanish, panelOpen } from './navigation-menu.fixtures';
+import { open, waitForPanel, waitForPanelVanish, panelOpen } from './navigation-menu.fixtures';
 import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import {
   navigationMenuWithHighlightSource,
@@ -160,20 +160,20 @@ export const WithDropdown: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /Planos/ });
+    const trigger = canvas.getByRole('button', { name: /Planos/ });
 
     await step('O painel abre com os três destinos', async () => {
-      const conteudo = await abrir(gatilho);
-      await expect(within(conteudo).getAllByRole('link')).toHaveLength(3);
+      const content = await open(trigger);
+      await expect(within(content).getAllByRole('link')).toHaveLength(3);
     });
 
     await step('Escolher um destino fecha o painel', async () => {
       // Navegar É sair da página: um painel que sobrevive ao clique fica
       // pendurado sobre a página seguinte.
-      const conteudo = await waitForPanel();
-      await userEvent.click(within(conteudo).getByRole('link', { name: 'Plano Profissional' }));
+      const content = await waitForPanel();
+      await userEvent.click(within(content).getByRole('link', { name: 'Plano Profissional' }));
       await waitForPanelVanish();
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('O foco volta a ser alcançável na barra', async () => {
@@ -254,10 +254,10 @@ export const MegaMenuGrid: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const conteudo = await waitForPanel();
+    const content = await waitForPanel();
 
     await step('Quatro destinos em duas colunas', async () => {
-      const targets = [...conteudo.querySelectorAll<HTMLElement>('a')];
+      const targets = [...content.querySelectorAll<HTMLElement>('a')];
       await expect(targets).toHaveLength(4);
       // Duas colunas de verdade: o segundo destino está à direita do primeiro,
       // na mesma linha; o terceiro desce.
@@ -270,13 +270,13 @@ export const MegaMenuGrid: Story = {
     await step('A descrição faz parte do nome do destino', async () => {
       // Critério 2.4.4 (Link Purpose): "Para Marketing" sozinho não diz o que
       // há do outro lado. Por isso a descrição NÃO recebe aria-hidden.
-      const destination = within(conteudo).getByRole('link', { name: /Para Marketing/ });
+      const destination = within(content).getByRole('link', { name: /Para Marketing/ });
       await expect(destination.textContent).toContain('Campanhas');
     });
 
     await step('O gatilho continua sendo o dono do painel', async () => {
-      const gatilho = canvas.getByRole('button', { name: /Soluções/ });
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      const trigger = canvas.getByRole('button', { name: /Soluções/ });
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
       // Esta story termina ABERTA de propósito: é o estado que a regressão
       // visual precisa capturar.
       await expect(panelOpen()).not.toBeNull();
@@ -346,11 +346,11 @@ export const WithHighlightedCard: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /Recursos/ });
-    const conteudo = await abrir(gatilho);
+    const trigger = canvas.getByRole('button', { name: /Recursos/ });
+    const content = await open(trigger);
 
     await step('Um destino em destaque e três de apoio', async () => {
-      const targets = [...conteudo.querySelectorAll<HTMLElement>('a')];
+      const targets = [...content.querySelectorAll<HTMLElement>('a')];
       await expect(targets).toHaveLength(4);
       // O destaque ocupa a coluna inteira: é mais alto que qualquer um dos
       // complementares, que é como a hierarquia aparece sem depender de cor.
@@ -360,14 +360,14 @@ export const WithHighlightedCard: Story = {
     });
 
     await step('Tab alcança todo o painel', async () => {
-      const targets = [...conteudo.querySelectorAll<HTMLElement>('a')];
+      const targets = [...content.querySelectorAll<HTMLElement>('a')];
       for (const destination of targets) {
         await expect(destination.getAttribute('tabindex')).not.toBe('-1');
       }
       targets[0].focus();
       await expect(document.activeElement).toBe(targets[0]);
       await userEvent.tab();
-      await expect(conteudo.contains(document.activeElement)).toBe(true);
+      await expect(content.contains(document.activeElement)).toBe(true);
     });
   },
 };

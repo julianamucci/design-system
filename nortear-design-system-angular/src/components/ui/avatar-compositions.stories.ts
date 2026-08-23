@@ -177,8 +177,8 @@ export const Group: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const grupo = canvas.getByRole('group', { name: /Participantes/i });
-    const avatares = [...grupo.querySelectorAll<HTMLElement>('[data-slot="avatar"]')];
+    const group = canvas.getByRole('group', { name: /Participantes/i });
+    const avatares = [...group.querySelectorAll<HTMLElement>('[data-slot="avatar"]')];
 
     await step('Os três avatares se sobrepõem', async () => {
       await expect(avatares).toHaveLength(3);
@@ -190,7 +190,7 @@ export const Group: Story = {
     });
 
     await step('O contador fecha a fila e sobrepõe igual', async () => {
-      const counter = grupo.querySelector<HTMLElement>('[data-slot="avatar-group-count"]')!;
+      const counter = group.querySelector<HTMLElement>('[data-slot="avatar-group-count"]')!;
       await expect(counter.textContent?.trim()).toBe('+3');
       const rc = counter.getBoundingClientRect();
       await expect(rc.left).toBeLessThan(avatares[2].getBoundingClientRect().right);
@@ -236,8 +236,8 @@ export const WithStatus: Story = {
       // Recorte não muda layout: enquanto o root teve `overflow: hidden`, o
       // ponto ficava com a caixa certa e sem pintura nenhuma.
       const rb = badge.getBoundingClientRect();
-      const alvo = document.elementFromPoint(rb.left + rb.width / 2, rb.top + rb.height / 2);
-      await expect(badge.contains(alvo)).toBe(true);
+      const target = document.elementFromPoint(rb.left + rb.width / 2, rb.top + rb.height / 2);
+      await expect(badge.contains(target)).toBe(true);
     });
 
     await step('O estado não é comunicado só por cor', async () => {

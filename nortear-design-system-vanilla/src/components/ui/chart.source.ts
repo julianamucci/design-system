@@ -10,9 +10,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { ChartType } from './chart';
@@ -38,7 +38,7 @@ export type ChartSnippetOptions = {
   renderer?: 'svg' | 'canvas';
   /** O arg do Playground se chama `className`; a opção da fábrica é `class`. */
   className?: string;
-  dados?: ChartSnippetData;
+  data?: ChartSnippetData;
   /** Cor autoral de série, fora da paleta de tokens. */
   color?: string;
   /** Frase mostrada no lugar do desenho quando não há dado. */
@@ -49,7 +49,7 @@ const MONTHS = "const meses = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];";
 
 /** Uso canônico: uma série simples, descrita, num bloco de altura definida. */
 const DEFAULT: ChartSnippetOptions = {
-  dados: 'simples',
+  data: 'simples',
   'aria-label': 'Acessos mensais no desktop, de janeiro a junho',
   height: 240,
   className: 'nds-max-w-md',
@@ -57,22 +57,22 @@ const DEFAULT: ChartSnippetOptions = {
 
 /** O bloco de dado e as opções que o entregam à fábrica. */
 function snippetData(o: ChartSnippetOptions): {
-  bloco?: string;
+  block?: string;
   pairs: Array<[string, string | undefined]>;
 } {
-  const serie = (nome: string, values: string, cor?: string) =>
-    `  { name: ${texto(nome)}, data: ${values}${cor ? `, color: ${texto(cor)}` : ''} },`;
+  const serie = (name: string, values: string, cor?: string) =>
+    `  { name: ${text(name)}, data: ${values}${cor ? `, color: ${text(cor)}` : ''} },`;
 
-  switch (o.dados ?? 'simples') {
+  switch (o.data ?? 'simples') {
     case 'umPonto':
       return {
-        bloco: "const acessos = [{ label: 'Jan', value: 186 }];",
+        block: "const acessos = [{ label: 'Jan', value: 186 }];",
         pairs: [['data', 'acessos']],
       };
 
     case 'serieUnica':
       return {
-        bloco: `${MONTHS}
+        block: `${MONTHS}
 
 const acessos = [
 ${serie('Desktop', '[186, 305, 237, 73, 209, 214]', o.color)}
@@ -85,7 +85,7 @@ ${serie('Desktop', '[186, 305, 237, 73, 209, 214]', o.color)}
 
     case 'multi':
       return {
-        bloco: `${MONTHS}
+        block: `${MONTHS}
 
 const acessosPorDispositivo = [
 ${serie('Desktop', '[186, 305, 237, 73, 209, 214]', o.color)}
@@ -99,7 +99,7 @@ ${serie('Mobile', '[120, 190, 165, 98, 174, 158]')}
 
     case 'rosca':
       return {
-        bloco: `const acessosPorDispositivo = [
+        block: `const acessosPorDispositivo = [
   { label: 'Desktop', value: 580 },
   { label: 'Mobile', value: 420 },
   { label: 'Tablet', value: 180 },
@@ -110,11 +110,11 @@ ${serie('Mobile', '[120, 190, 165, 98, 174, 158]')}
     case 'vazio':
       // Sem série com dado o bloco troca o desenho pela frase — e não se
       // anuncia como imagem, porque não há imagem para narrar.
-      return { bloco: MONTHS, pairs: [['xAxis', 'meses'], ['series', '[]']] };
+      return { block: MONTHS, pairs: [['xAxis', 'meses'], ['series', '[]']] };
 
     default:
       return {
-        bloco: `const acessosMensais = [
+        block: `const acessosMensais = [
   { label: 'Jan', value: 186 },
   { label: 'Feb', value: 305 },
   { label: 'Mar', value: 237 },
@@ -129,23 +129,23 @@ ${serie('Mobile', '[120, 190, 165, 98, 174, 158]')}
 
 /** A chamada real de `createChart` com as opções da story. */
 export function chartSnippet(o: ChartSnippetOptions = {}): string {
-  const { bloco, pairs } = snippetData(o);
+  const { block, pairs } = snippetData(o);
 
-  const lines = opcoes([
+  const lines = options([
     ...pairs,
-    ['type', o.type && o.type !== 'bar' ? texto(o.type) : undefined],
-    ['aria-label', o['aria-label'] ? texto(o['aria-label']) : undefined],
-    ['title', o.title ? texto(o.title) : undefined],
+    ['type', o.type && o.type !== 'bar' ? text(o.type) : undefined],
+    ['aria-label', o['aria-label'] ? text(o['aria-label']) : undefined],
+    ['title', o.title ? text(o.title) : undefined],
     ['showLegend', o.showLegend === undefined ? undefined : String(o.showLegend)],
     ['height', o.height ? String(o.height) : undefined],
-    ['renderer', o.renderer && o.renderer !== 'svg' ? texto(o.renderer) : undefined],
-    ['class', o.className ? texto(o.className) : undefined],
-    ['emptyLabel', o.emptyLabel ? texto(o.emptyLabel) : undefined],
+    ['renderer', o.renderer && o.renderer !== 'svg' ? text(o.renderer) : undefined],
+    ['class', o.className ? text(o.className) : undefined],
+    ['emptyLabel', o.emptyLabel ? text(o.emptyLabel) : undefined],
   ]);
 
   return snippet(
     importing('chart', 'createChart'),
-    bloco,
+    block,
     `const grafico = ${chamada('createChart', lines)};`,
     montar('grafico'),
   );
@@ -182,13 +182,13 @@ export type ChartEmCardSnippetOptions = ChartSnippetOptions & {
  * continua sendo o `aria-label`.
  */
 export function chartEmCardSnippet(o: ChartEmCardSnippetOptions = {}): string {
-  const { bloco, pairs } = snippetData(o);
+  const { block, pairs } = snippetData(o);
 
-  const lines = opcoes([
+  const lines = options([
     ...pairs,
-    ['type', o.type && o.type !== 'bar' ? texto(o.type) : undefined],
+    ['type', o.type && o.type !== 'bar' ? text(o.type) : undefined],
     ['height', o.height ? String(o.height) : undefined],
-    ['aria-label', o['aria-label'] ? texto(o['aria-label']) : undefined],
+    ['aria-label', o['aria-label'] ? text(o['aria-label']) : undefined],
   ]);
 
   return snippet(
@@ -196,13 +196,13 @@ export function chartEmCardSnippet(o: ChartEmCardSnippetOptions = {}): string {
       `import {\n  createCard,\n  createCardContent,\n  createCardDescription,\n  createCardHeader,\n  createCardTitle,\n} from '@/components/ui/card';`,
       importing('chart', 'createChart'),
     ].join('\n'),
-    bloco,
+    block,
     `const card = createCard({ class: 'nds-w-sm' });
 
 const cabecalho = createCardHeader();
 cabecalho.append(
-  createCardTitle({ text: ${texto(o.cardTitle ?? 'Acessos mensais')} }),
-  createCardDescription({ text: ${texto(o.cardDescription ?? 'Janeiro — Junho de 2024')} }),
+  createCardTitle({ text: ${text(o.cardTitle ?? 'Acessos mensais')} }),
+  createCardDescription({ text: ${text(o.cardDescription ?? 'Janeiro — Junho de 2024')} }),
 );`,
     `const conteudo = createCardContent();
 conteudo.appendChild(${chamada('createChart', lines)});

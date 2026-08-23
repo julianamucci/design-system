@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, fn, waitFor } from "storybook/test";
 import {
-  abrir,
+  open,
   cantoButtonClose,
   checkFocusTrap,
   checkNameEDescricao,
   waitForClosed,
-  fechar,
-  gatilho,
+  close,
+  trigger,
   overlay,
-  painel,
+  panel,
 } from "./dialog.fixtures";
 import {
   Dialog,
@@ -109,19 +109,19 @@ export const Playground: Story = {
     // Pelo contrato de markup e não por papel: enquanto o diálogo está aberto o
     // resto da página fica inerte, e uma consulta por papel depende de como a
     // biblioteca de teste trata `inert`.
-    const trigger = gatilho(canvasElement)!;
+    const triggerEl = trigger(canvasElement)!;
     const spy = args.onOpenChange as unknown as ReturnType<typeof fn>;
 
     await step("O markup é o mesmo das outras stacks", async () => {
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="dialog"]');
+      const root = canvasElement.querySelector<HTMLElement>('[data-slot="dialog"]');
       // O Vanilla é a referência: a raiz não tem visual próprio e o gatilho é
       // um `<button>` de verdade.
-      await expect(trigger.tagName).toBe("BUTTON");
-      await expect(trigger).toHaveAttribute("type", "button");
-      await expect(trigger).toHaveAttribute("aria-haspopup", "dialog");
+      await expect(triggerEl.tagName).toBe("BUTTON");
+      await expect(triggerEl).toHaveAttribute("type", "button");
+      await expect(triggerEl).toHaveAttribute("aria-haspopup", "dialog");
       // A raiz do base-ui não emite elemento próprio; o que precisa existir é o
       // gatilho dentro do canvas.
-      await expect(raiz ?? trigger).toBeInTheDocument();
+      await expect(root ?? triggerEl).toBeInTheDocument();
     });
 
     await step("Fechado, nada do conteúdo existe no DOM", async () => {
@@ -129,25 +129,25 @@ export const Playground: Story = {
       // ABERTA (último passo), então na segunda rodada do painel Interactions o
       // painel já estaria montado. Quem verifica o estado fechado NA MONTAGEM é
       // a story `Closed`, que não interage com nada.
-      await fechar();
-      await expect(painel()).toBeNull();
+      await close();
+      await expect(panel()).toBeNull();
       await expect(overlay()).toBeNull();
     });
 
     await step("Clicar no gatilho abre o diálogo com overlay", async () => {
-      const p = await abrir(canvasElement);
+      const p = await open(canvasElement);
       await expect(p).toBeVisible();
       await expect(overlay()).toBeInTheDocument();
     });
 
     await step("O painel se anuncia como diálogo, com nome e descrição", async () => {
-      const p = painel()!;
+      const p = panel()!;
       await expect(p).toHaveAttribute("role", "dialog");
       await checkNameEDescricao(p);
     });
 
     await step("Aberto e modal, o resto do documento sai do alcance", async () => {
-      const p = painel()!;
+      const p = panel()!;
       if (!args.modal) {
         // Sem modalidade não pode haver `aria-modal`: o atributo prometeria ao
         // leitor de tela um isolamento que não existe.
@@ -162,19 +162,19 @@ export const Playground: Story = {
       // com `inert`/`aria-hidden` (`floating-ui-react/utils/markOthers`), que é
       // o mecanismo que o leitor de tela e o axe realmente observam.
       await waitFor(async () => {
-        await expect(trigger.closest('[inert], [aria-hidden="true"]')).not.toBeNull();
+        await expect(triggerEl.closest('[inert], [aria-hidden="true"]')).not.toBeNull();
       });
     });
 
     await step("O foco entra no painel ao abrir", async () => {
-      const p = painel()!;
+      const p = panel()!;
       await waitFor(async () => {
         await expect(p.contains(document.activeElement)).toBe(true);
       });
     });
 
     await step("Tab não sai do painel", async () => {
-      await checkFocusTrap(painel()!);
+      await checkFocusTrap(panel()!);
     });
 
     await step("Escape fecha, avisa o callback e devolve o foco ao gatilho", async () => {
@@ -185,34 +185,34 @@ export const Playground: Story = {
       // Sem `waitFor` em volta do foco: a restauração é síncrona, e envolvê-la
       // mascararia um bug de foco real.
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(trigger);
+        await expect(document.activeElement).toBe(triggerEl);
       });
     });
 
     await step("Clique no overlay fecha e devolve o foco", async () => {
-      await abrir(canvasElement);
+      await open(canvasElement);
       overlay()!.click();
       await waitForClosed();
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(trigger);
+        await expect(document.activeElement).toBe(triggerEl);
       });
     });
 
     await step("O botão X fecha, tem nome acessível e devolve o foco", async () => {
-      const p = await abrir(canvasElement);
+      const p = await open(canvasElement);
       const x = cantoButtonClose(p)!;
       await expect(x).toHaveAccessibleName();
       await userEvent.click(x);
       await waitForClosed();
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(trigger);
+        await expect(document.activeElement).toBe(triggerEl);
       });
     });
 
     await step("O Cancelar do rodapé fecha sem tocar na ação primária", async () => {
-      const p = await abrir(canvasElement);
-      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const buttons = rodape.querySelectorAll<HTMLElement>("button");
+      const p = await open(canvasElement);
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = footer.querySelectorAll<HTMLElement>("button");
       // A ação primária é a última do DOM — `column-reverse` a põe no topo da
       // pilha no estreito e à direita no largo, mas a ordem de leitura e de
       // foco continua sendo esta.
@@ -220,7 +220,7 @@ export const Playground: Story = {
       await userEvent.click(cancelar);
       await waitForClosed();
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(trigger);
+        await expect(document.activeElement).toBe(triggerEl);
       });
     });
 
@@ -230,7 +230,7 @@ export const Playground: Story = {
       // varredura de acessibilidade medir uma página sem diálogo nenhum — o
       // conteúdo compartilhado declara os dois sobre o estado ABERTO
       // (`visual.item1`, `accessibility.item6`).
-      const p = await abrir(canvasElement);
+      const p = await open(canvasElement);
       await expect(p).toBeVisible();
       await expect(within(p).getAllByRole("button").length).toBeGreaterThan(0);
     });

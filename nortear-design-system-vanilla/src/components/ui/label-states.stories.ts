@@ -7,7 +7,7 @@ import {
 } from '@shared/testing/label-probe';
 import { createLabel } from './label';
 import { createInput } from './input';
-import { bloco } from './label.fixtures';
+import { block } from './label.fixtures';
 import { labelSource, labelSourceBlock, labelSourceWith, labelSourceObrigatorio } from './label.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -39,7 +39,7 @@ export const Default: Story = {
     covers: ['accessibility.item1', 'accessibility.item4', 'visual.item1'],
   },
   render: () => {
-    const wrapper = bloco();
+    const wrapper = block();
     const inputId = 'estado-padrao';
     wrapper.append(
       createLabel({ text: 'Nome completo', htmlFor: inputId }),
@@ -87,7 +87,7 @@ export const Disabled: Story = {
     },
   },
   render: () => {
-    const wrapper = bloco();
+    const wrapper = block();
     const inputId = 'estado-disabled';
     const input = createInput({
       id: inputId,
@@ -130,7 +130,7 @@ export const DisabledViaGroup: Story = {
     },
   },
   render: () => {
-    const wrapper = bloco();
+    const wrapper = block();
     wrapper.dataset.disabled = 'true';
     const inputId = 'estado-grupo-disabled';
     wrapper.append(
@@ -168,7 +168,7 @@ export const Required: Story = {
     },
   },
   render: () => {
-    const wrapper = bloco();
+    const wrapper = block();
     const inputId = 'estado-required';
     const label = createLabel({ htmlFor: inputId });
 

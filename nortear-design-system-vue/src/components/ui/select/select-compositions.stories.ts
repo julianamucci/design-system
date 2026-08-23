@@ -261,24 +261,24 @@ export const WithSeparator: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
 
-    const abrir = async () => {
+    const open = async () => {
       // Idempotente: o clique só acontece com a lista fechada.
       if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       return await waitForPortal('listbox', { timeout: 2000 });
     };
 
     await step('Os dois grupos aparecem nomeados pelos cabeçalhos', async () => {
-      const listbox = await abrir();
-      const grupos = within(listbox).getAllByRole('group');
-      await expect(grupos).toHaveLength(2);
-      await expect(grupos[0]).toHaveAccessibleName('Sudeste');
-      await expect(grupos[1]).toHaveAccessibleName('Sul');
+      const listbox = await open();
+      const groups = within(listbox).getAllByRole('group');
+      await expect(groups).toHaveLength(2);
+      await expect(groups[0]).toHaveAccessibleName('Sudeste');
+      await expect(groups[1]).toHaveAccessibleName('Sul');
     });
 
     await step('A divisão entre grupos é decorativa', async () => {
       // Linha para o olho, silêncio para o leitor de tela — quem separa
       // semanticamente é o grupo.
-      const listbox = await abrir();
+      const listbox = await open();
       await expect(listbox.querySelectorAll('.nds-select-separator')).toHaveLength(1);
       await expect(within(listbox).getAllByRole('option')).toHaveLength(4);
     });

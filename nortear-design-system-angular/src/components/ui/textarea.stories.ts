@@ -121,7 +121,7 @@ export const Playground: Story = {
     covers: ['functional.item1', 'functional.item2', 'functional.item4'],
   },
   render: (args) => ({
-    props: { ...args, valor: '' },
+    props: { ...args, value: '' },
     template: `
       <div class="nds-stack nds-w-md" data-spacing="sm">
         <label ndsLabel for="pg-textarea">{{ label }}</label>
@@ -135,15 +135,15 @@ export const Playground: Story = {
           [disabled]="disabled"
           [readOnly]="readonly"
           [attr.aria-invalid]="invalid ? 'true' : null"
-          [value]="valor"
-          (input)="valor = $any($event.target).value"
+          [value]="value"
+          (input)="value = $any($event.target).value"
         ></textarea>
         <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
           <span>Descreva o produto com clareza.</span>
           <span
             aria-live="polite"
-            [attr.aria-label]="valor.length + ' de ' + maxlength + ' caracteres usados'"
-          >{{ valor.length }}/{{ maxlength }}</span>
+            [attr.aria-label]="value.length + ' de ' + maxlength + ' caracteres usados'"
+          >{{ value.length }}/{{ maxlength }}</span>
         </div>
       </div>
     `,

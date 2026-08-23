@@ -74,8 +74,8 @@ export const WIDTH_FRACTION: Record<string, number> = {
 };
 
 export interface BoxDesenhada {
-  largura: number;
-  altura: number;
+  width: number;
+  height: number;
   /** Largura do placeholder dividida pela largura do container que o mede. */
   fracaoDoContainer: number;
   /** Quadrado dentro de meio pixel — é o que a forma de avatar promete. */
@@ -85,15 +85,15 @@ export interface BoxDesenhada {
 }
 
 export function boxDesenhada(el: HTMLElement, container?: HTMLElement | null): BoxDesenhada {
-  const caixa = el.getBoundingClientRect();
+  const box = el.getBoundingClientRect();
   const refer = (container ?? el.parentElement)?.getBoundingClientRect();
   const raio = Number.parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0;
   return {
-    largura: caixa.width,
-    altura: caixa.height,
-    fracaoDoContainer: refer && refer.width > 0 ? caixa.width / refer.width : 0,
-    quadrado: Math.abs(caixa.width - caixa.height) < 0.5,
-    circular: raio >= caixa.width / 2 - 0.5,
+    width: box.width,
+    height: box.height,
+    fracaoDoContainer: refer && refer.width > 0 ? box.width / refer.width : 0,
+    quadrado: Math.abs(box.width - box.height) < 0.5,
+    circular: raio >= box.width / 2 - 0.5,
   };
 }
 

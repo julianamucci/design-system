@@ -74,8 +74,8 @@ function item({ value, pergunta, resposta }: Pergunta, indentacao = '  '): strin
   ].join('\n');
 }
 
-function raiz(atributos: string, corpo: string): string {
-  return `<Accordion${atributos}>\n${corpo}\n</Accordion>`;
+function root(attrs: string, body: string): string {
+  return `<Accordion${attrs}>\n${body}\n</Accordion>`;
 }
 
 /**
@@ -88,14 +88,14 @@ function raiz(atributos: string, corpo: string): string {
  */
 export const accordionSource: SourceTransform<AccordionArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const atributos = attrsMultilinha([
+  const attrs = attrsMultilinha([
     propBool('multiple', args.multiple),
     propBool('disabled', args.disabled),
     propOption('orientation', args.orientation, ORIENTACOES, 'vertical'),
     'defaultValue={["item-1"]}',
     'className="nds-max-w-lg"',
   ]);
-  return jsxSnippet(IMPORT, raiz(atributos, FAQ.map((p) => item(p)).join('\n')));
+  return jsxSnippet(IMPORT, root(attrs, FAQ.map((p) => item(p)).join('\n')));
 };
 
 /**
@@ -106,7 +106,7 @@ export const accordionSource: SourceTransform<AccordionArgs> = (_gerado, ctx) =>
  * precise lembrar de ligar. Um snippet com props escondia o que a story prova.
  */
 export function accordionNoConfigSource(): string {
-  return jsxSnippet(IMPORT, raiz('', FAQ.slice(0, 2).map((p) => item(p)).join('\n')));
+  return jsxSnippet(IMPORT, root('', FAQ.slice(0, 2).map((p) => item(p)).join('\n')));
 }
 
 /**
@@ -114,7 +114,7 @@ export function accordionNoConfigSource(): string {
  * são desligados), então o snippet do `meta` mostraria o modo único.
  */
 export function accordionMultiploSource(): string {
-  const itens = [
+  const items = [
     {
       value: 'especificacoes',
       pergunta: 'Especificações técnicas',
@@ -133,7 +133,7 @@ export function accordionMultiploSource(): string {
   ];
   return jsxSnippet(
     IMPORT,
-    raiz(' multiple className="nds-max-w-lg"', itens.map((p) => item(p)).join('\n')),
+    root(' multiple className="nds-max-w-lg"', items.map((p) => item(p)).join('\n')),
   );
 }
 
@@ -150,7 +150,7 @@ export function accordionControlledSource(): string {
 ${IMPORT}
 
 const [abertos, setAbertos] = useState<string[]>(["item-1"]);`,
-    raiz(
+    root(
       attrsMultilinha([
         'value={abertos}',
         'onValueChange={setAbertos}',
@@ -180,7 +180,7 @@ const [abertos, setAbertos] = useState<string[]>(["item-1"]);`,
 export function accordionClosedSource(): string {
   return jsxSnippet(
     IMPORT,
-    raiz(
+    root(
       ' className="nds-max-w-lg"',
       item({
         value: 'item-1',
@@ -204,7 +204,7 @@ export function accordionItemDisabledSource(): string {
     pergunta: 'Item habilitado',
     resposta: 'Este item funciona normalmente.',
   });
-  const desabilitado = [
+  const disabled = [
     '  <AccordionItem value="item-2" disabled>',
     '    <AccordionTrigger>Item desabilitado</AccordionTrigger>',
     '    <AccordionContent>Este conteúdo não pode ser acessado.</AccordionContent>',
@@ -212,7 +212,7 @@ export function accordionItemDisabledSource(): string {
   ].join('\n');
   return jsxSnippet(
     IMPORT,
-    raiz(' className="nds-max-w-lg"', `${enabled}\n${desabilitado}`),
+    root(' className="nds-max-w-lg"', `${enabled}\n${disabled}`),
   );
 }
 
@@ -225,21 +225,21 @@ export function accordionItemDisabledSource(): string {
  */
 export function accordionWithIconSource(): string {
   const lines = [
-    { value: 'info', icone: 'Info', cor: 'nds-text-info', rotulo: 'Informação',
+    { value: 'info', icone: 'Info', cor: 'nds-text-info', label: 'Informação',
       resposta: 'Ícones facilitam a identificação rápida do tipo de conteúdo.' },
-    { value: 'warning', icone: 'AlertTriangle', cor: 'nds-text-warning', rotulo: 'Aviso',
+    { value: 'warning', icone: 'AlertTriangle', cor: 'nds-text-warning', label: 'Aviso',
       resposta: 'Sinalize categorias distintas com ícones semânticos.' },
-    { value: 'success', icone: 'CheckCircle', cor: 'nds-text-success', rotulo: 'Confirmação',
+    { value: 'success', icone: 'CheckCircle', cor: 'nds-text-success', label: 'Confirmação',
       resposta: 'Use ícones consistentes entre itens do mesmo accordion.' },
   ];
-  const corpo = lines
-    .map(({ value, icone, cor, rotulo, resposta }) =>
+  const body = lines
+    .map(({ value, icone, cor, label, resposta }) =>
       [
         `  <AccordionItem value="${value}">`,
         '    <AccordionTrigger>',
         '      <span className="nds-cluster" data-spacing="sm">',
         `        <${icone} className="nds-icon ${cor} nds-shrink-0" aria-hidden="true" />`,
-        `        ${rotulo}`,
+        `        ${label}`,
         '      </span>',
         '    </AccordionTrigger>',
         `    <AccordionContent>${resposta}</AccordionContent>`,
@@ -250,7 +250,7 @@ export function accordionWithIconSource(): string {
   return jsxSnippet(
     `import { AlertTriangle, CheckCircle, Info } from "lucide-react";
 ${IMPORT}`,
-    raiz(' className="nds-max-w-lg"', corpo),
+    root(' className="nds-max-w-lg"', body),
   );
 }
 
@@ -260,19 +260,19 @@ ${IMPORT}`,
  * alcance dos args.
  */
 export function accordionWithBadgeSource(): string {
-  const corpo = [
-    { value: 'novo', rotulo: 'Novidades da versão 3.0', variante: 'default', badge: 'Novo',
+  const body = [
+    { value: 'novo', label: 'Novidades da versão 3.0', variant: 'default', badge: 'Novo',
       resposta: 'Use badges para sinalizar status sem alterar o gatilho textual.' },
-    { value: 'beta', rotulo: 'Funcionalidades em beta', variante: 'secondary', badge: 'Beta',
+    { value: 'beta', label: 'Funcionalidades em beta', variant: 'secondary', badge: 'Beta',
       resposta: 'Funcionalidades beta podem mudar. Feedback é bem-vindo.' },
   ]
-    .map(({ value, rotulo, variante, badge, resposta }) =>
+    .map(({ value, label, variant, badge, resposta }) =>
       [
         `  <AccordionItem value="${value}">`,
         '    <AccordionTrigger>',
         '      <span className="nds-cluster" data-spacing="sm">',
-        `        ${rotulo}`,
-        `        <Badge variant="${variante}">${badge}</Badge>`,
+        `        ${label}`,
+        `        <Badge variant="${variant}">${badge}</Badge>`,
         '      </span>',
         '    </AccordionTrigger>',
         `    <AccordionContent>${resposta}</AccordionContent>`,
@@ -283,7 +283,7 @@ export function accordionWithBadgeSource(): string {
   return jsxSnippet(
     `import { Badge } from "@/components/ui/badge";
 ${IMPORT}`,
-    raiz(' className="nds-max-w-lg"', corpo),
+    root(' className="nds-max-w-lg"', body),
   );
 }
 
@@ -295,7 +295,7 @@ ${IMPORT}`,
  * marcação, e o snippet do `meta` mostraria um parágrafo.
  */
 export function accordionContentRichSource(): string {
-  const corpo = [
+  const body = [
     '  <AccordionItem value="specs">',
     '    <AccordionTrigger>Especificações técnicas</AccordionTrigger>',
     '    <AccordionContent>',
@@ -324,7 +324,7 @@ export function accordionContentRichSource(): string {
     '    </AccordionContent>',
     '  </AccordionItem>',
   ].join('\n');
-  return jsxSnippet(IMPORT, raiz(' multiple className="nds-max-w-lg nds-text-body"', corpo));
+  return jsxSnippet(IMPORT, root(' multiple className="nds-max-w-lg nds-text-body"', body));
 }
 
 /**
@@ -336,7 +336,7 @@ export function accordionContentRichSource(): string {
  * e sem ele a lista de perguntas fica sem título na navegação por headings.
  */
 export function accordionFaqSource(): string {
-  const dados = FAQ.map(
+  const data = FAQ.map(
     ({ value, pergunta, resposta }) =>
       `  { value: "${value}", pergunta: "${pergunta}", resposta: "${resposta}" },`,
   ).join('\n');
@@ -344,7 +344,7 @@ export function accordionFaqSource(): string {
     `${IMPORT}
 
 const perguntas = [
-${dados}
+${data}
 ];`,
     `<div className="nds-stack nds-w-lg" data-spacing="sm">
   <h2 className="nds-text-base nds-font-semibold">Perguntas frequentes</h2>

@@ -22,7 +22,7 @@
 
   // Fuso local, e não UTC: converter em UTC e formatar no fuso de quem lê
   // devolve o dia anterior em qualquer fuso a oeste de Greenwich.
-  const rotulo = $derived(
+  const label = $derived(
     selecionada ? formatador.format(selecionada.toDate(getLocalTimeZone())) : 'Escolher data',
   );
 </script>
@@ -30,7 +30,7 @@
 <Popover.Root bind:open={isOpen}>
   <Popover.Trigger>
     {#snippet child({ props })}
-      <Button {...props} variant="outline">{rotulo}</Button>
+      <Button {...props} variant="outline">{label}</Button>
     {/snippet}
   </Popover.Trigger>
   <Popover.Content>

@@ -117,8 +117,8 @@ export const Playground: Story = {
   },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const [esquerda, center, direita] = LABELS.map((nome) =>
-      canvas.getByRole('button', { name: nome }),
+    const [esquerda, center, direita] = LABELS.map((name) =>
+      canvas.getByRole('button', { name: name }),
     );
 
     await step('accessibility.item5 — o grupo e cada item icon-only têm nome', async () => {

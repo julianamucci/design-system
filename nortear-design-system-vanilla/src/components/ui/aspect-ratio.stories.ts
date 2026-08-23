@@ -85,9 +85,9 @@ export const Playground: Story = {
     await step('Caixa respeita a proporção do control', async () => {
       // functional.item1 — a custom property é o meio; a proporção medida é o
       // fim. Verificar as duas separa "o valor chegou" de "o CSS o aplicou".
-      const caixa = canvasElement.querySelector<HTMLElement>('[data-slot="aspect-ratio"]');
-      await expect(caixa).not.toBeNull();
-      await expect(caixa!.style.getPropertyValue('--ratio')).toBe(String(args.ratio));
+      const box = canvasElement.querySelector<HTMLElement>('[data-slot="aspect-ratio"]');
+      await expect(box).not.toBeNull();
+      await expect(box!.style.getPropertyValue('--ratio')).toBe(String(args.ratio));
 
       // A sonda mede mais que a razão: confere que a caixa é a `.nds-aspect-ratio`
       // do design system, que a proporção sai do `aspect-ratio` nativo da folha
@@ -115,9 +115,9 @@ export const Playground: Story = {
       // functional.item3 — comportamento, não classe.
       const img = await canvas.findByRole('img', { name: args.alt });
       await expect(getComputedStyle(img).objectFit).toBe('cover');
-      const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]')!;
+      const box = canvasElement.querySelector('[data-slot="aspect-ratio"]')!;
       await expect(img.getBoundingClientRect().width).toBeCloseTo(
-        caixa.getBoundingClientRect().width,
+        box.getBoundingClientRect().width,
         0,
       );
     });

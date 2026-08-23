@@ -24,8 +24,8 @@ import { waitForPortal } from '@/lib/wait-for-portal';
  * primitivo tira a posição do popup.
  */
 export async function gestoOpen(area: HTMLElement): Promise<HTMLElement> {
-  const caixa = area.getBoundingClientRect();
-  const coords = { clientX: caixa.left + caixa.width / 2, clientY: caixa.top + caixa.height / 2 };
+  const box = area.getBoundingClientRect();
+  const coords = { clientX: box.left + box.width / 2, clientY: box.top + box.height / 2 };
   await userEvent.pointer({ keys: '[MouseRight]', target: area, coords });
   return await waitForPortal('menu');
 }

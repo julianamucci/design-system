@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { createNavigationMenu } from './navigation-menu';
-import { abrir, fechar, wrap } from './navigation-menu.fixtures';
+import { open, close, wrap } from './navigation-menu.fixtures';
 import { navigationMenuSource, navigationMenuSourceWith } from './navigation-menu.source';
 
 const meta: Meta = {
@@ -56,10 +56,10 @@ export const Horizontal: Story = {
     const canvas = within(canvasElement);
 
     await step('A orientação padrão chega ao markup e à classe da lista', async () => {
-      const lista = canvasElement.querySelector<HTMLElement>('[data-slot="navigation-menu-list"]');
-      await expect(lista?.getAttribute('data-orientation')).toBe('horizontal');
-      await expect(lista?.classList.contains('nds-navigation-menu-list')).toBe(true);
-      await expect(lista?.classList.contains('nds-stack')).toBe(false);
+      const list = canvasElement.querySelector<HTMLElement>('[data-slot="navigation-menu-list"]');
+      await expect(list?.getAttribute('data-orientation')).toBe('horizontal');
+      await expect(list?.classList.contains('nds-navigation-menu-list')).toBe(true);
+      await expect(list?.classList.contains('nds-stack')).toBe(false);
     });
 
     await step('Cinco itens, dois deles com painel', async () => {
@@ -69,20 +69,20 @@ export const Horizontal: Story = {
     });
 
     await step('Os itens ficam lado a lado, na mesma linha', async () => {
-      const itens = [...canvasElement.querySelectorAll<HTMLElement>('li')];
-      const first = itens[0].getBoundingClientRect();
-      const segundo = itens[1].getBoundingClientRect();
+      const items = [...canvasElement.querySelectorAll<HTMLElement>('li')];
+      const first = items[0].getBoundingClientRect();
+      const segundo = items[1].getBoundingClientRect();
       await expect(segundo.left).toBeGreaterThan(first.left);
       await expect(Math.abs(segundo.top - first.top)).toBeLessThan(2);
     });
 
     await step('O painel abre abaixo da barra', async () => {
-      const gatilho = canvas.getByRole('button', { name: /Produtos/ });
-      const painel = await abrir(gatilho, canvasElement);
-      await expect(painel.getBoundingClientRect().top).toBeGreaterThan(
-        gatilho.getBoundingClientRect().top,
+      const trigger = canvas.getByRole('button', { name: /Produtos/ });
+      const panel = await open(trigger, canvasElement);
+      await expect(panel.getBoundingClientRect().top).toBeGreaterThan(
+        trigger.getBoundingClientRect().top,
       );
-      await fechar(gatilho, canvasElement);
+      await close(trigger, canvasElement);
     });
   },
 };
@@ -142,37 +142,37 @@ export const Vertical: Story = {
       // A folha compartilhada só descreve a barra horizontal — não há regra por
       // `data-orientation` na lista. Na vertical ela vira `.nds-stack`, que é a
       // mesma saída das demais stacks.
-      const lista = canvasElement.querySelector<HTMLElement>('[data-slot="navigation-menu-list"]');
-      await expect(lista?.getAttribute('data-orientation')).toBe('vertical');
-      await expect(lista?.classList.contains('nds-stack')).toBe(true);
-      await expect(lista?.classList.contains('nds-navigation-menu-list')).toBe(false);
+      const list = canvasElement.querySelector<HTMLElement>('[data-slot="navigation-menu-list"]');
+      await expect(list?.getAttribute('data-orientation')).toBe('vertical');
+      await expect(list?.classList.contains('nds-stack')).toBe(true);
+      await expect(list?.classList.contains('nds-navigation-menu-list')).toBe(false);
     });
 
     await step('Os itens empilham em coluna', async () => {
-      const itens = [...canvasElement.querySelectorAll<HTMLElement>('li')];
-      await expect(itens).toHaveLength(3);
-      const first = itens[0].getBoundingClientRect();
-      const segundo = itens[1].getBoundingClientRect();
+      const items = [...canvasElement.querySelectorAll<HTMLElement>('li')];
+      await expect(items).toHaveLength(3);
+      const first = items[0].getBoundingClientRect();
+      const segundo = items[1].getBoundingClientRect();
       await expect(segundo.top).toBeGreaterThan(first.top);
     });
 
     await step('As setas do eixo vertical percorrem a barra', async () => {
-      const painel = canvas.getByRole('link', { name: 'Painel' });
-      const gatilho = canvas.getByRole('button', { name: /Relatórios/ });
-      painel.focus();
+      const panel = canvas.getByRole('link', { name: 'Painel' });
+      const trigger = canvas.getByRole('button', { name: /Relatórios/ });
+      panel.focus();
       await userEvent.keyboard('{ArrowDown}');
-      await expect(document.activeElement).toBe(gatilho);
+      await expect(document.activeElement).toBe(trigger);
       await userEvent.keyboard('{ArrowUp}');
-      await expect(document.activeElement).toBe(painel);
+      await expect(document.activeElement).toBe(panel);
     });
 
     await step('O painel abre ao lado, nunca por baixo', async () => {
-      const gatilho = canvas.getByRole('button', { name: /Relatórios/ });
-      const painel = await abrir(gatilho, canvasElement);
-      await expect(painel.getBoundingClientRect().left).toBeGreaterThan(
-        gatilho.getBoundingClientRect().left,
+      const trigger = canvas.getByRole('button', { name: /Relatórios/ });
+      const panel = await open(trigger, canvasElement);
+      await expect(panel.getBoundingClientRect().left).toBeGreaterThan(
+        trigger.getBoundingClientRect().left,
       );
-      await fechar(gatilho, canvasElement);
+      await close(trigger, canvasElement);
     });
   },
 };

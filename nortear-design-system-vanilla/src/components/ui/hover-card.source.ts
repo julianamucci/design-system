@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { HoverCardAlign, HoverCardSide } from './hover-card';
@@ -61,10 +61,10 @@ const CLASSES_BUTTON =
  * destino no clique ou com nome no rótulo.
  */
 function triggerBlock(o: HoverCardSnippetOptions): string {
-  const rotulo = texto(o.triggerLabel ?? '@joana');
+  const label = text(o.triggerLabel ?? '@joana');
   const accessibleLabel =
     o.triggerAriaLabel !== undefined
-      ? `\ngatilho.setAttribute('aria-label', ${texto(o.triggerAriaLabel)});`
+      ? `\ngatilho.setAttribute('aria-label', ${text(o.triggerAriaLabel)});`
       : '';
 
   if (o.triggerTipo === 'botao') {
@@ -73,7 +73,7 @@ function triggerBlock(o: HoverCardSnippetOptions): string {
 const gatilho = document.createElement('button');
 gatilho.type = 'button';
 gatilho.className = '${CLASSES_BUTTON}';
-gatilho.textContent = ${rotulo};${accessibleLabel}`;
+gatilho.textContent = ${label};${accessibleLabel}`;
   }
 
   return `// O cartão é ENRIQUECIMENTO: quem está no toque, ou num leitor de tela, chega
@@ -81,7 +81,7 @@ gatilho.textContent = ${rotulo};${accessibleLabel}`;
 const gatilho = document.createElement('a');
 gatilho.href = '${o.triggerHref ?? '/users/joana'}';
 gatilho.className = '${CLASSES_LINK}';
-gatilho.textContent = ${rotulo};${accessibleLabel}`;
+gatilho.textContent = ${label};${accessibleLabel}`;
 }
 
 /** Conteúdo do painel: uma linha em destaque e uma de apoio. */
@@ -92,25 +92,25 @@ conteudo.dataset.spacing = 'xs';
 
 const titulo = document.createElement('p');
 titulo.className = 'nds-text-body nds-font-medium nds-leading-none';
-titulo.textContent = ${texto(o.contentTitle ?? 'Joana Silva')};
+titulo.textContent = ${text(o.contentTitle ?? 'Joana Silva')};
 
 const apoio = document.createElement('p');
 apoio.className = 'nds-text-caption nds-text-muted-foreground';
-apoio.textContent = ${texto(o.contentApoio ?? 'Designer · 142 seguidores')};
+apoio.textContent = ${text(o.contentApoio ?? 'Designer · 142 seguidores')};
 
 conteudo.append(titulo, apoio);`;
 }
 
 function callLines(o: HoverCardSnippetOptions): string[] {
-  return opcoes([
+  return options([
     ['trigger', 'gatilho'],
     ['content', 'conteudo'],
-    ['side', o.side && o.side !== 'bottom' ? texto(o.side) : undefined],
-    ['align', o.align && o.align !== 'center' ? texto(o.align) : undefined],
+    ['side', o.side && o.side !== 'bottom' ? text(o.side) : undefined],
+    ['align', o.align && o.align !== 'center' ? text(o.align) : undefined],
     ['openDelay', o.openDelay !== undefined && o.openDelay !== 600 ? String(o.openDelay) : undefined],
     ['closeDelay', o.closeDelay !== undefined && o.closeDelay !== 300 ? String(o.closeDelay) : undefined],
     ['defaultOpen', o.defaultOpen ? 'true' : undefined],
-    ['class', o.class ? texto(o.class) : undefined],
+    ['class', o.class ? text(o.class) : undefined],
     // Guarda de tipo, e não confiança no tipo declarado: `ctx.args` chega do
     // Storybook, e o control de callback do Playground é um espião de teste —
     // interpolá-lo despejaria o CORPO da função de mock dentro do snippet.
@@ -126,8 +126,8 @@ function callLines(o: HoverCardSnippetOptions): string[] {
  * violação.
  */
 function fraseBlock(o: HoverCardSnippetOptions): string {
-  const antes = texto(`${o.fraseAntes ?? 'Comentário de'} `);
-  const depois = texto(` ${o.fraseDepois ?? 'há 2 horas.'}`);
+  const antes = text(`${o.fraseAntes ?? 'Comentário de'} `);
+  const depois = text(` ${o.fraseDepois ?? 'há 2 horas.'}`);
   return `// O gatilho mora DENTRO de uma frase: é o uso real, e é o cerco de texto que
 // dispensa o alvo em linha do mínimo de 24px da WCAG 2.5.8.
 const frase = document.createElement('p');
@@ -178,8 +178,8 @@ export type HoverCardWithComandosSnippetOptions = HoverCardSnippetOptions & {
  * callback. Um snippet só com a chamada esconderia os dois comandos.
  */
 export function hoverCardWithComandosSnippet(o: HoverCardWithComandosSnippetOptions = {}): string {
-  const openLabel = texto(o.openLabel ?? 'Abrir pelo estado externo');
-  const closeLabel = texto(o.closeLabel ?? 'Fechar pelo estado externo');
+  const openLabel = text(o.openLabel ?? 'Abrir pelo estado externo');
+  const closeLabel = text(o.closeLabel ?? 'Fechar pelo estado externo');
 
   return snippet(
     [importing('hover-card', 'createHoverCard'), importing('button', 'createButton')].join('\n'),

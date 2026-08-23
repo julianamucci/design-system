@@ -19,7 +19,7 @@
     siblingCount?: number;
     demonstration?: Demonstration;
     /** Nome acessível do landmark — distinto por story, senão o axe acusa landmark-unique. */
-    rotulo?: string;
+    label?: string;
     /** Espião do consumidor: a play precisa alcançá-lo, então vem de fora. */
     onPageChange?: (page: number) => void;
   }
@@ -30,7 +30,7 @@
     page: initialPage = 1,
     siblingCount = 1,
     demonstration = 'simples',
-    rotulo = 'Paginação',
+    label = 'Paginação',
     onPageChange = () => {},
   }: Props = $props();
 
@@ -45,7 +45,7 @@
 
 {#key `${count}-${perPage}-${initialPage}-${siblingCount}-${demonstration}`}
   {#if demonstration === 'directional'}
-    <Pagination {count} {perPage} page={initialPage} {siblingCount} aria-label={rotulo}>
+    <Pagination {count} {perPage} page={initialPage} {siblingCount} aria-label={label}>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious onclick={() => onPageChange(initialPage - 1)} />
@@ -60,7 +60,7 @@
       <p class="nds-text-body nds-text-muted-foreground" data-slot="pagina-atual">
         Página {currentPage} de {totalPages}
       </p>
-      <Pagination {count} {perPage} bind:page={currentPage} {siblingCount} aria-label={rotulo}>
+      <Pagination {count} {perPage} bind:page={currentPage} {siblingCount} aria-label={label}>
         {#snippet children({ pages })}
           <PaginationContent>
             <PaginationItem>
@@ -115,7 +115,7 @@
         page={initialPage}
         {siblingCount}
         data-align="end"
-        aria-label={rotulo}
+        aria-label={label}
       >
         {#snippet children({ pages, currentPage: cp })}
           <PaginationContent>
@@ -137,7 +137,7 @@
       </Pagination>
     </div>
   {:else}
-    <Pagination {count} {perPage} page={initialPage} {siblingCount} aria-label={rotulo}>
+    <Pagination {count} {perPage} page={initialPage} {siblingCount} aria-label={label}>
       {#snippet children({ pages, currentPage: cp })}
         <PaginationContent>
           <PaginationItem>

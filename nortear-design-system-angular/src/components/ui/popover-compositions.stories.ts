@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, screen } from 'storybook/test';
 import { NDS_POPOVER } from './popover';
-import { abrir, painel } from './popover.fixtures';
+import { open, panel } from './popover.fixtures';
 import { NdsButton } from './button';
 import { NdsCheckbox } from './checkbox';
 import { NdsInput } from './input';
@@ -40,17 +40,17 @@ export default meta;
 type Story = StoryObj;
 
 /**
- * Marca e desmarca em par idempotente, como `abrir`/`fechar`.
+ * Marca e desmarca em par idempotente, como `open`/`close`.
  *
  * O painel Interactions REEXECUTA a play no mesmo DOM: um clique cego partiria
  * do estado que a rodada anterior deixou e inverteria a asserção seguinte.
  */
-async function marcar(caixa: HTMLElement): Promise<void> {
-  if (caixa.getAttribute('aria-checked') !== 'true') await userEvent.click(caixa);
+async function marcar(box: HTMLElement): Promise<void> {
+  if (box.getAttribute('aria-checked') !== 'true') await userEvent.click(box);
 }
 
-async function desmarcar(caixa: HTMLElement): Promise<void> {
-  if (caixa.getAttribute('aria-checked') !== 'false') await userEvent.click(caixa);
+async function desmarcar(box: HTMLElement): Promise<void> {
+  if (box.getAttribute('aria-checked') !== 'false') await userEvent.click(box);
 }
 
 export const EditProfile: Story = {
@@ -85,10 +85,10 @@ export const EditProfile: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Editar perfil' });
+    const trigger = canvas.getByRole('button', { name: 'Editar perfil' });
 
     await step('O formulário abre preenchido e pronto para edição', async () => {
-      await abrir(gatilho);
+      await open(trigger);
       await expect(screen.getByLabelText('Nome')).toHaveValue('Ana Ribeiro');
       await expect(screen.getByLabelText('Email')).toHaveValue('ana@nortear.com.br');
     });
@@ -96,12 +96,12 @@ export const EditProfile: Story = {
     await step('Cancelar fecha sem sair do contexto', async () => {
       await userEvent.click(screen.getByRole('button', { name: 'Cancelar' }));
       await waitFor(async () => {
-        await expect(painel()).toBeNull();
+        await expect(panel()).toBeNull();
       });
       // Fechar por dentro devolve o foco ao gatilho, senão quem navega por
       // teclado voltaria ao início da página.
       await waitFor(async () => {
-        await expect(gatilho).toHaveFocus();
+        await expect(trigger).toHaveFocus();
       });
     });
   },
@@ -144,10 +144,10 @@ export const TableFilter: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Filtros' });
+    const trigger = canvas.getByRole('button', { name: 'Filtros' });
 
     await step('Os três status são combináveis', async () => {
-      await abrir(gatilho);
+      await open(trigger);
       await expect(screen.getAllByRole('checkbox')).toHaveLength(3);
     });
 
@@ -157,7 +157,7 @@ export const TableFilter: Story = {
       const active = screen.getByRole('checkbox', { name: 'Ativo' });
       await marcar(active);
       await expect(active).toHaveAttribute('aria-checked', 'true');
-      await expect(painel()).toBeInTheDocument();
+      await expect(panel()).toBeInTheDocument();
     });
   },
 };
@@ -212,13 +212,13 @@ export const ColorPicker: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Escolher cor da etiqueta' });
+    const trigger = canvas.getByRole('button', { name: 'Escolher cor da etiqueta' });
 
     await step('Cada amostra tem nome acessível próprio', async () => {
       // A cor não é o nome: quem não distingue a cor precisa do rótulo, e sem
       // ele o axe reprova por button-name.
-      await abrir(gatilho);
-      const amostras = within(painel()!).getAllByRole('button');
+      await open(trigger);
+      const amostras = within(panel()!).getAllByRole('button');
       const names = amostras
         .map((b) => b.getAttribute('aria-label'))
         .filter((n): n is string => n !== null);
@@ -269,10 +269,10 @@ export const QuickSettings: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Configurações rápidas' });
+    const trigger = canvas.getByRole('button', { name: 'Configurações rápidas' });
 
     await step('As preferências são independentes entre si', async () => {
-      await abrir(gatilho);
+      await open(trigger);
       const notificacoes = screen.getByRole('checkbox', { name: 'Notificações' });
       const escuro = screen.getByRole('checkbox', { name: 'Modo escuro' });
 
@@ -312,10 +312,10 @@ export const SideTop: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Abrir acima' });
+    const trigger = canvas.getByRole('button', { name: 'Abrir acima' });
 
     await step('O lado pedido no template chega ao posicionamento', async () => {
-      await abrir(gatilho);
+      await open(trigger);
       const dialogo = screen.getByRole('dialog');
       // `top` ou `bottom`, nunca um lado do outro eixo: o auto-flip troca de
       // LADO por colisão, jamais de eixo. Se o input não tivesse chegado, o
@@ -326,7 +326,7 @@ export const SideTop: Story = {
 
     await step('E o sideOffset separa painel e gatilho pela medida pedida', async () => {
       const dialogo = screen.getByRole('dialog');
-      const r1 = gatilho.getBoundingClientRect();
+      const r1 = trigger.getBoundingClientRect();
       const r2 = dialogo.getBoundingClientRect();
       const distancia =
         dialogo.getAttribute('data-side') === 'top'

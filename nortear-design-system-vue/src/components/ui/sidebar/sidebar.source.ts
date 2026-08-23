@@ -64,8 +64,8 @@ const ICONS = [
 ];
 
 /** Usada de verdade: a tag abre e o próximo caractere não continua o nome. */
-function usada(nome: string, template: string): boolean {
-  return new RegExp(`<${nome}[\\s/>]`).test(template);
+function usada(name: string, template: string): boolean {
+  return new RegExp(`<${name}[\\s/>]`).test(template);
 }
 
 /**
@@ -89,23 +89,23 @@ const MARCA = `<SidebarHeader class="nds-p-4 nds-font-semibold nds-text-muted-fo
 
 type Item = {
   icone?: string;
-  rotulo: string;
+  label: string;
   active?: boolean;
   /** O balão só aparece com a barra recolhida — é o rótulo que sobrou. */
   tooltip?: boolean;
   badge?: string;
   acao?: string;
   expandido?: boolean;
-  sub?: Array<{ rotulo: string; active?: boolean }>;
+  sub?: Array<{ label: string; active?: boolean }>;
 };
 
 /** Lista de itens do menu, em coluna zero. */
-function menu(itens: Item[]): string {
-  const corpo = itens
+function menu(items: Item[]): string {
+  const body = items
     .map((item) => {
       const button = attrs(
         item.active ? 'is-active' : '',
-        item.tooltip === false ? '' : `tooltip="${item.rotulo}"`,
+        item.tooltip === false ? '' : `tooltip="${item.label}"`,
         item.expandido ? 'aria-expanded="true"' : '',
         item.active ? 'aria-current="page"' : '',
       );
@@ -124,39 +124,39 @@ function menu(itens: Item[]): string {
     </SidebarMenuAction>`);
       }
       if (item.sub) {
-        const filhos = item.sub
+        const children = item.sub
           .map(
-            (filho) => `      <SidebarMenuSubItem>
-        <SidebarMenuSubButton${attrs(filho.active ? 'is-active' : '')}>
-          <span>${filho.rotulo}</span>
+            (child) => `      <SidebarMenuSubItem>
+        <SidebarMenuSubButton${attrs(child.active ? 'is-active' : '')}>
+          <span>${child.label}</span>
         </SidebarMenuSubButton>
       </SidebarMenuSubItem>`,
           )
           .join('\n');
-        extras.push(`    <SidebarMenuSub>\n${filhos}\n    </SidebarMenuSub>`);
+        extras.push(`    <SidebarMenuSub>\n${children}\n    </SidebarMenuSub>`);
       }
       return `  <SidebarMenuItem>
     <SidebarMenuButton${button}>
-${icone}      <span>${item.rotulo}</span>${chevron}
+${icone}      <span>${item.label}</span>${chevron}
     </SidebarMenuButton>${extras.length ? `\n${extras.join('\n')}` : ''}
   </SidebarMenuItem>`;
     })
     .join('\n');
-  return `<SidebarMenu>\n${corpo}\n</SidebarMenu>`;
+  return `<SidebarMenu>\n${body}\n</SidebarMenu>`;
 }
 
 /** Grupo do conteúdo: rótulo opcional, ação opcional e o menu dentro. */
-function grupo(opcoes: { rotulo?: string; acao?: string; miolo: string }): string {
+function group(options: { label?: string; acao?: string; miolo: string }): string {
   const partes: string[] = ['<SidebarGroup>'];
-  if (opcoes.rotulo) partes.push(`  <SidebarGroupLabel>${opcoes.rotulo}</SidebarGroupLabel>`);
-  if (opcoes.acao) {
-    partes.push(`  <SidebarGroupAction title="${opcoes.acao}">
+  if (options.label) partes.push(`  <SidebarGroupLabel>${options.label}</SidebarGroupLabel>`);
+  if (options.acao) {
+    partes.push(`  <SidebarGroupAction title="${options.acao}">
     <Plus aria-hidden="true" />
-    <span class="nds-sr-only">${opcoes.acao}</span>
+    <span class="nds-sr-only">${options.acao}</span>
   </SidebarGroupAction>`);
   }
   partes.push('  <SidebarGroupContent>');
-  partes.push(indentar(opcoes.miolo, 4));
+  partes.push(indentar(options.miolo, 4));
   partes.push('  </SidebarGroupContent>');
   partes.push('</SidebarGroup>');
   return partes.join('\n');
@@ -170,36 +170,36 @@ function grupo(opcoes: { rotulo?: string; acao?: string; miolo: string }): strin
  * conteúdo na variante `inset` é um seletor de irmão, e envolver um dos dois é
  * o primeiro jeito de perdê-la.
  */
-function frame(opcoes: {
+function frame(options: {
   provider?: string;
   barra?: string;
   header?: string;
-  conteudo: string;
-  rodape?: string;
-  faixa?: boolean;
-  gatilho?: string | false;
-  legenda: string;
+  content: string;
+  footer?: string;
+  range?: boolean;
+  trigger?: string | false;
+  caption: string;
   paragrafo: string;
 }): string {
   const lines: Array<string | false | undefined> = [
-    `<SidebarProvider${opcoes.provider ?? ''}>`,
+    `<SidebarProvider${options.provider ?? ''}>`,
     `  <nav aria-label="Navegação principal">`,
-    `    <Sidebar${opcoes.barra ?? ''}>`,
-    opcoes.header && indentar(opcoes.header, 6),
+    `    <Sidebar${options.barra ?? ''}>`,
+    options.header && indentar(options.header, 6),
     `      <SidebarContent>`,
-    indentar(opcoes.conteudo, 8),
+    indentar(options.content, 8),
     `      </SidebarContent>`,
-    opcoes.rodape && indentar(opcoes.rodape, 6),
-    opcoes.faixa === false ? undefined : `      <SidebarRail />`,
+    options.footer && indentar(options.footer, 6),
+    options.range === false ? undefined : `      <SidebarRail />`,
     `    </Sidebar>`,
     `  </nav>`,
     `  <SidebarInset>`,
     `    <header class="nds-cluster nds-px-4 nds-py-2 nds-border-b" data-align="center" data-spacing="sm">`,
-    opcoes.gatilho === false ? undefined : `      <SidebarTrigger${opcoes.gatilho ?? ''} />`,
-    `      <span class="nds-text-body nds-text-muted-foreground">${opcoes.legenda}</span>`,
+    options.trigger === false ? undefined : `      <SidebarTrigger${options.trigger ?? ''} />`,
+    `      <span class="nds-text-body nds-text-muted-foreground">${options.caption}</span>`,
     `    </header>`,
     `    <main id="main-content" class="nds-p-4">`,
-    `      <p class="nds-text-body">${opcoes.paragrafo}</p>`,
+    `      <p class="nds-text-body">${options.paragrafo}</p>`,
     `    </main>`,
     `  </SidebarInset>`,
     `</SidebarProvider>`,
@@ -208,9 +208,9 @@ function frame(opcoes: {
 }
 
 const APLICACAO: Item[] = [
-  { icone: 'LayoutDashboard', rotulo: 'Dashboard', active: true },
-  { icone: 'Blocks', rotulo: 'Componentes' },
-  { icone: 'Palette', rotulo: 'Tokens' },
+  { icone: 'LayoutDashboard', label: 'Dashboard', active: true },
+  { icone: 'Blocks', label: 'Componentes' },
+  { icone: 'Palette', label: 'Tokens' },
 ];
 
 /**
@@ -229,18 +229,18 @@ export const sidebarPlaygroundSource: SourceTransform<SidebarArgs> = (_gerado, c
         attr('collapsible', args.collapsible, 'offcanvas'),
       ),
       header: MARCA,
-      conteudo: [
-        grupo({ rotulo: 'Aplicação', miolo: menu(APLICACAO) }),
+      content: [
+        group({ label: 'Aplicação', miolo: menu(APLICACAO) }),
         '<SidebarSeparator />',
-        grupo({
-          rotulo: 'Conta',
+        group({
+          label: 'Conta',
           miolo: menu([
-            { icone: 'Settings', rotulo: 'Configurações' },
-            { icone: 'User', rotulo: 'Perfil' },
+            { icone: 'Settings', label: 'Configurações' },
+            { icone: 'User', label: 'Perfil' },
           ]),
         }),
       ].join('\n'),
-      legenda: 'Conteúdo principal',
+      caption: 'Conteúdo principal',
       paragrafo: 'Conteúdo da página, adjacente à barra.',
     }),
   );
@@ -250,20 +250,20 @@ export const sidebarPlaygroundSource: SourceTransform<SidebarArgs> = (_gerado, c
  * As três variantes visuais compartilham a mesma composição: cabeçalho, um
  * grupo de navegação, rodapé com o perfil e a faixa de alternância.
  */
-function variante(variant: 'sidebar' | 'floating' | 'inset'): string {
+function variant(variant: 'sidebar' | 'floating' | 'inset'): string {
   return montar(
     frame({
       barra: attrs(attr('variant', variant, 'sidebar')),
       header: MARCA,
-      conteudo: grupo({
-        rotulo: 'Aplicação',
-        miolo: menu([...APLICACAO, { icone: 'Settings', rotulo: 'Configurações' }]),
+      content: group({
+        label: 'Aplicação',
+        miolo: menu([...APLICACAO, { icone: 'Settings', label: 'Configurações' }]),
       }),
-      rodape: `<SidebarFooter class="nds-p-2">
-${indentar(menu([{ icone: 'User', rotulo: 'Perfil' }]), 2)}
+      footer: `<SidebarFooter class="nds-p-2">
+${indentar(menu([{ icone: 'User', label: 'Perfil' }]), 2)}
 </SidebarFooter>`,
-      gatilho: ' class="nds-lg-hidden"',
-      legenda: 'Conteúdo principal',
+      trigger: ' class="nds-lg-hidden"',
+      caption: 'Conteúdo principal',
       paragrafo: 'Conteúdo principal adjacente à barra.',
     }),
   );
@@ -271,17 +271,17 @@ ${indentar(menu([{ icone: 'User', rotulo: 'Perfil' }]), 2)}
 
 /** Variante padrão: painel colado na borda, sem cantos nem sombra. */
 export function sidebarVariantSidebarSource(): string {
-  return variante('sidebar');
+  return variant('sidebar');
 }
 
 /** Flutuante: o painel ganha cantos, borda e sombra sobre um respiro. */
 export function sidebarVariantFloatingSource(): string {
-  return variante('floating');
+  return variant('floating');
 }
 
 /** Encaixada: quem ganha cantos é o conteúdo adjacente, não a barra. */
 export function sidebarVariantInsetSource(): string {
-  return variante('inset');
+  return variant('inset');
 }
 
 /**
@@ -302,10 +302,10 @@ export function sidebarSideDireitoSource(): string {
       <SidebarHeader class="nds-p-4 nds-font-semibold nds-text-muted-foreground">Detalhes</SidebarHeader>
       <SidebarContent>
 ${indentar(
-  grupo({
+  group({
     miolo: menu([
-      { icone: 'Settings', rotulo: 'Configurações' },
-      { icone: 'User', rotulo: 'Perfil' },
+      { icone: 'Settings', label: 'Configurações' },
+      { icone: 'User', label: 'Perfil' },
     ]),
   }),
   8,
@@ -328,8 +328,8 @@ export function sidebarExpandidaSource(): string {
     frame({
       provider: ' default-open',
       header: MARCA,
-      conteudo: grupo({ rotulo: 'Aplicação', miolo: menu(APLICACAO) }),
-      legenda: 'Barra expandida',
+      content: group({ label: 'Aplicação', miolo: menu(APLICACAO) }),
+      caption: 'Barra expandida',
       paragrafo: 'A barra ocupa a largura inteira, com ícone e rótulo lado a lado.',
     }),
   );
@@ -348,10 +348,10 @@ export function sidebarRecolhidaIconSource(): string {
       header: `<SidebarHeader class="nds-p-2 nds-font-semibold nds-text-muted-foreground nds-overflow-hidden">
   <span class="nds-sidebar-hide-collapsed">Design System</span>
 </SidebarHeader>`,
-      conteudo: grupo({
-        miolo: menu([...APLICACAO, { icone: 'Settings', rotulo: 'Configurações' }]),
+      content: group({
+        miolo: menu([...APLICACAO, { icone: 'Settings', label: 'Configurações' }]),
       }),
-      legenda: 'Barra recolhida em ícones',
+      caption: 'Barra recolhida em ícones',
       paragrafo: 'Só os ícones ficam visíveis; o balão traz o nome da seção.',
     }),
   );
@@ -367,12 +367,12 @@ export function sidebarFixaSource(): string {
     frame({
       barra: ' collapsible="none"',
       header: MARCA,
-      conteudo: grupo({
+      content: group({
         miolo: menu(APLICACAO.map((item) => ({ ...item, tooltip: false }))),
       }),
-      faixa: false,
-      gatilho: false,
-      legenda: 'Barra sempre visível',
+      range: false,
+      trigger: false,
+      caption: 'Barra sempre visível',
       paragrafo: 'Sem recolhimento, a barra é uma coluna fixa do layout.',
     }),
   );
@@ -387,17 +387,17 @@ export function sidebarLoadingSource(): string {
   return montar(
     frame({
       header: MARCA,
-      conteudo: grupo({
-        rotulo: 'Carregando',
+      content: group({
+        label: 'Carregando',
         miolo: `<SidebarMenu>
   <SidebarMenuItem v-for="i in 5" :key="i">
     <SidebarMenuSkeleton show-icon />
   </SidebarMenuItem>
 </SidebarMenu>`,
       }),
-      faixa: false,
-      gatilho: false,
-      legenda: 'Carregando a navegação',
+      range: false,
+      trigger: false,
+      caption: 'Carregando a navegação',
       paragrafo: 'Cada item que virá tem um espaço reservado no lugar.',
     }),
   );
@@ -416,11 +416,11 @@ export function sidebarGavetaMovelSource(): string {
     frame({
       provider: ' mobile-query="(min-width: 0px)"',
       header: MARCA,
-      conteudo: grupo({
+      content: group({
         miolo: menu(APLICACAO.map((item) => ({ ...item, tooltip: false }))),
       }),
-      faixa: false,
-      legenda: 'Toque no gatilho para abrir a gaveta',
+      range: false,
+      caption: 'Toque no gatilho para abrir a gaveta',
       paragrafo: 'Em tela estreita a barra sai do fluxo e abre sobreposta.',
     }),
   );
@@ -439,30 +439,30 @@ export function sidebarGroupsSource(): string {
   return montar(
     frame({
       header: MARCA,
-      conteudo: [
-        grupo({
-          rotulo: 'Aplicação',
+      content: [
+        group({
+          label: 'Aplicação',
           acao: 'Adicionar item',
           miolo: menu([
-            { icone: 'LayoutDashboard', rotulo: 'Dashboard', active: true, badge: '3' },
-            { icone: 'Blocks', rotulo: 'Componentes' },
-            { icone: 'Palette', rotulo: 'Tokens' },
+            { icone: 'LayoutDashboard', label: 'Dashboard', active: true, badge: '3' },
+            { icone: 'Blocks', label: 'Componentes' },
+            { icone: 'Palette', label: 'Tokens' },
           ]),
         }),
         '<SidebarSeparator />',
-        grupo({
-          rotulo: 'Conta',
+        group({
+          label: 'Conta',
           miolo: menu([
-            { icone: 'Bell', rotulo: 'Notificações', badge: '12', acao: 'Mais opções' },
-            { icone: 'Settings', rotulo: 'Configurações' },
+            { icone: 'Bell', label: 'Notificações', badge: '12', acao: 'Mais opções' },
+            { icone: 'Settings', label: 'Configurações' },
           ]),
         }),
       ].join('\n'),
-      rodape: `<SidebarFooter class="nds-p-2">
-${indentar(menu([{ icone: 'User', rotulo: 'Perfil do Usuário' }]), 2)}
+      footer: `<SidebarFooter class="nds-p-2">
+${indentar(menu([{ icone: 'User', label: 'Perfil do Usuário' }]), 2)}
 </SidebarFooter>`,
-      gatilho: ' class="nds-lg-hidden"',
-      legenda: 'Com grupos e contadores',
+      trigger: ' class="nds-lg-hidden"',
+      caption: 'Com grupos e contadores',
       paragrafo: 'Dois grupos de navegação, com contadores e ações por item.',
     }),
   );
@@ -477,31 +477,31 @@ export function sidebarSubmenuSource(): string {
   return montar(
     frame({
       header: MARCA,
-      conteudo: grupo({
-        rotulo: 'Documentação',
+      content: group({
+        label: 'Documentação',
         miolo: menu([
-          { icone: 'LayoutDashboard', rotulo: 'Dashboard', active: true },
+          { icone: 'LayoutDashboard', label: 'Dashboard', active: true },
           {
             icone: 'Blocks',
-            rotulo: 'Componentes',
+            label: 'Componentes',
             expandido: true,
             sub: [
-              { rotulo: 'Alert' },
-              { rotulo: 'Button' },
-              { rotulo: 'Barra lateral', active: true },
-              { rotulo: 'Card' },
+              { label: 'Alert' },
+              { label: 'Button' },
+              { label: 'Barra lateral', active: true },
+              { label: 'Card' },
             ],
           },
           {
             icone: 'Palette',
-            rotulo: 'Tokens',
+            label: 'Tokens',
             expandido: true,
-            sub: [{ rotulo: 'Cores' }, { rotulo: 'Tipografia' }, { rotulo: 'Espaçamento' }],
+            sub: [{ label: 'Cores' }, { label: 'Tipografia' }, { label: 'Espaçamento' }],
           },
         ]),
       }),
-      gatilho: ' class="nds-lg-hidden"',
-      legenda: 'Com sub-menus',
+      trigger: ' class="nds-lg-hidden"',
+      caption: 'Com sub-menus',
       paragrafo: 'Hierarquia de navegação aninhada dentro do item pai.',
     }),
   );
@@ -518,15 +518,15 @@ export function sidebarSearchSource(): string {
   <span class="nds-px-2 nds-font-semibold nds-text-muted-foreground nds-sidebar-hide-collapsed">Design System</span>
   <SidebarInput placeholder="Buscar..." aria-label="Buscar na navegação" />
 </SidebarHeader>`,
-      conteudo: grupo({
+      content: group({
         miolo: menu([
           ...APLICACAO,
-          { icone: 'Settings', rotulo: 'Configurações' },
-          { icone: 'User', rotulo: 'Perfil' },
+          { icone: 'Settings', label: 'Configurações' },
+          { icone: 'User', label: 'Perfil' },
         ]),
       }),
-      gatilho: ' class="nds-lg-hidden"',
-      legenda: 'Com busca no cabeçalho',
+      trigger: ' class="nds-lg-hidden"',
+      caption: 'Com busca no cabeçalho',
       paragrafo: 'O campo filtra a navegação sem sair da barra.',
     }),
   );

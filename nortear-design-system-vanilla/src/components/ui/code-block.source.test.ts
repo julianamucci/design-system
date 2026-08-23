@@ -8,35 +8,35 @@ import {
 
 describe('codeBlockSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = codeBlockSnippet();
-    expect(código).toContain("import { createCodeBlock } from '@/components/ui/code-block';");
-    expect(código).toContain('createCodeBlock({');
-    expect(código).toContain("document.querySelector('#app')?.append(bloco);");
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('nds-code-block-line');
+    const code = codeBlockSnippet();
+    expect(code).toContain("import { createCodeBlock } from '@/components/ui/code-block';");
+    expect(code).toContain('createCodeBlock({');
+    expect(code).toContain("document.querySelector('#app')?.append(bloco);");
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('nds-code-block-line');
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = codeBlockSnippet();
-    expect(código).not.toContain('showLineNumbers');
-    expect(código).not.toContain('title');
-    expect(código).not.toContain('highlightLines');
-    expect(código).not.toContain('footer');
+    const code = codeBlockSnippet();
+    expect(code).not.toContain('showLineNumbers');
+    expect(code).not.toContain('title');
+    expect(code).not.toContain('highlightLines');
+    expect(code).not.toContain('footer');
   });
 
   it('mostra as opções quando a story as usa', () => {
-    const código = codeBlockSnippet({
+    const code = codeBlockSnippet({
       language: 'ts',
       title: 'exemplo.ts',
       showLineNumbers: false,
       highlightLines: '3, 5-7',
       footer: 'A ação de copiar leva apenas o código.',
     });
-    expect(código).toContain("language: 'ts'");
-    expect(código).toContain("title: 'exemplo.ts'");
-    expect(código).toContain('showLineNumbers: false');
-    expect(código).toContain("highlightLines: '3, 5-7'");
-    expect(código).toContain("footer: 'A ação de copiar leva apenas o código.'");
+    expect(code).toContain("language: 'ts'");
+    expect(code).toContain("title: 'exemplo.ts'");
+    expect(code).toContain('showLineNumbers: false');
+    expect(code).toContain("highlightLines: '3, 5-7'");
+    expect(code).toContain("footer: 'A ação de copiar leva apenas o código.'");
   });
 
   it('guarda as duas formas de intervalo, como a fábrica as aceita', () => {
@@ -57,26 +57,26 @@ describe('codeBlockSnippet', () => {
   });
 
   it('leva o código como literal de várias linhas, sem helper de story', () => {
-    const código = codeBlockSnippet({ code: 'const a = 1;\nconst b = 2;' });
-    expect(código).toContain('const source = `const a = 1;\nconst b = 2;`;');
-    expect(código).not.toContain('COMPOSITION_CODE');
-    expect(código).not.toContain('LANGUAGE_ITEMS');
-    expect(código).not.toContain('LONG_CODE');
-    expect(código).not.toContain('renderLanguage');
+    const code = codeBlockSnippet({ code: 'const a = 1;\nconst b = 2;' });
+    expect(code).toContain('const source = `const a = 1;\nconst b = 2;`;');
+    expect(code).not.toContain('COMPOSITION_CODE');
+    expect(code).not.toContain('LANGUAGE_ITEMS');
+    expect(code).not.toContain('LONG_CODE');
+    expect(code).not.toContain('renderLanguage');
   });
 
   it('escapa o que fecharia a crase antes da hora', () => {
-    const código = codeBlockSnippet({ code: 'const s = `${x}`;' });
-    expect(código).toContain('\\`');
-    expect(código).toContain('\\${');
+    const code = codeBlockSnippet({ code: 'const s = `${x}`;' });
+    expect(code).toContain('\\`');
+    expect(code).toContain('\\${');
   });
 });
 
 describe('codeBlockComRemocaoSnippet', () => {
   it('acrescenta a saída da página à mesma chamada', () => {
-    const código = codeBlockWithRemovalSnippet({ language: 'ts' });
-    expect(código).toContain('createCodeBlock({');
-    expect(código).toContain('bloco.remove();');
+    const code = codeBlockWithRemovalSnippet({ language: 'ts' });
+    expect(code).toContain('createCodeBlock({');
+    expect(code).toContain('bloco.remove();');
   });
 });
 
@@ -100,9 +100,9 @@ describe('codeBlockSource', () => {
 describe('codeBlockSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = codeBlockSourceWith({ language: 'css', showLineNumbers: false });
-    const código = transform('', { args: { language: 'ts' } });
-    expect(código).toContain("language: 'css'");
-    expect(código).not.toContain("language: 'ts'");
-    expect(código).toContain('showLineNumbers: false');
+    const code = transform('', { args: { language: 'ts' } });
+    expect(code).toContain("language: 'css'");
+    expect(code).not.toContain("language: 'ts'");
+    expect(code).toContain('showLineNumbers: false');
   });
 });

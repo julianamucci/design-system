@@ -30,12 +30,12 @@ function urlDoChromatic(componentId?: string): string {
 
 function ChromaticLink(): React.ReactElement {
   const api = useStorybookApi();
-  const atual = api.getCurrentStoryData();
+  const current = api.getCurrentStoryData();
   // `componentId` existe nas entradas de índice do Storybook 7+; o fallback
   // cobre entrada de docs autônoma, que não tem componente associado.
   const componentId =
-    (atual as { componentId?: string } | undefined)?.componentId ??
-    atual?.id?.split('--')[0];
+    (current as { componentId?: string } | undefined)?.componentId ??
+    current?.id?.split('--')[0];
 
   return React.createElement(
     'a',

@@ -233,12 +233,12 @@ export class NdsPaginationLink {
  * — Enter num `<a>` que alguém tenha tornado focável, clique disparado por
  * script, e o `click()` de um teste.
  */
-function barrarClickQuandoDisabled(controle: { disabled: () => boolean }): void {
+function barrarClickQuandoDisabled(control: { disabled: () => boolean }): void {
   const host = inject<ElementRef<HTMLAnchorElement>>(ElementRef).nativeElement;
   host.addEventListener(
     'click',
     (evento) => {
-      if (!controle.disabled()) return;
+      if (!control.disabled()) return;
       evento.preventDefault();
       evento.stopImmediatePropagation();
     },

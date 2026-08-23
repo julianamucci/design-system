@@ -96,17 +96,17 @@ export const Open: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
-    const gatilho = canvas.getByRole('button', { name: /abrir menu/i });
+    const trigger = canvas.getByRole('button', { name: /abrir menu/i });
     const menuItems = async () =>
       within(await body.findByRole('menu')).getAllByRole('menuitem');
 
     await step('Clicar abre o menu e o foco entra no painel', async () => {
       // Idempotente: o clique só acontece com o menu fechado, então o replay do
       // painel Interactions parte do mesmo estado da primeira rodada.
-      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       const menu = await body.findByRole('menu');
       await expect(menu).toBeVisible();
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
       await expect(within(menu).getAllByRole('menuitem')).toHaveLength(3);
       // O foco tem que ENTRAR no menu: se ficasse no gatilho, a seta seguinte
       // não acharia item nenhum e o menu seria inoperável por teclado.
@@ -116,29 +116,29 @@ export const Open: Story = {
     });
 
     await step('As setas descem e sobem um item por vez', async () => {
-      const itens = await menuItems();
-      itens[0].focus();
+      const items = await menuItems();
+      items[0].focus();
       await userEvent.keyboard('{ArrowDown}');
-      await expect(document.activeElement).toBe(itens[1]);
+      await expect(document.activeElement).toBe(items[1]);
       await userEvent.keyboard('{ArrowUp}');
-      await expect(document.activeElement).toBe(itens[0]);
+      await expect(document.activeElement).toBe(items[0]);
     });
 
     await step('Home e End vão ao primeiro e ao último', async () => {
-      const itens = await menuItems();
+      const items = await menuItems();
       await userEvent.keyboard('{End}');
-      await expect(document.activeElement).toBe(itens[2]);
+      await expect(document.activeElement).toBe(items[2]);
       await userEvent.keyboard('{Home}');
-      await expect(document.activeElement).toBe(itens[0]);
+      await expect(document.activeElement).toBe(items[0]);
     });
 
     await step('Digitar uma letra salta para o item que começa com ela', async () => {
       // Typeahead: numa lista de ações longa é o que evita percorrer item por
       // item. Sem ele a letra não faz nada e o foco fica onde estava — por isso
       // a asserção compara com OUTRO item, e não com "mudou de lugar".
-      const itens = await menuItems();
+      const items = await menuItems();
       await userEvent.keyboard('s');
-      await expect(document.activeElement).toBe(itens[2]);
+      await expect(document.activeElement).toBe(items[2]);
     });
 
     await step('Limpa via ESC antes do postVisit', async () => {
@@ -251,27 +251,27 @@ export const ItemDisabled: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     const menu = await body.findByRole('menu');
-    const desabilitado = within(menu).getByRole('menuitem', { name: 'Arquivar' });
+    const disabled = within(menu).getByRole('menuitem', { name: 'Arquivar' });
 
     await step('O item se anuncia desabilitado', async () => {
-      await expect(desabilitado).toHaveAttribute('aria-disabled', 'true');
+      await expect(disabled).toHaveAttribute('aria-disabled', 'true');
     });
 
     await step('O clique é bloqueado pelo CSS, não só pelo callback', async () => {
       // `pointer-events: none` é o que impede o clique de chegar; sem ele o item
       // continuaria clicável e o bloqueio dependeria de cada consumidor.
-      await expect(getComputedStyle(desabilitado).pointerEvents).toBe('none');
+      await expect(getComputedStyle(disabled).pointerEvents).toBe('none');
     });
 
     await step('A seta pula o item desabilitado', async () => {
       // Aqui a navegação NÃO pousa no item bloqueado: ele fica fora do percurso
       // das setas, e por isso também não tem `tabindex`.
-      const itens = within(menu).getAllByRole('menuitem');
-      await expect(desabilitado.hasAttribute('tabindex')).toBe(false);
-      itens[0].focus();
+      const items = within(menu).getAllByRole('menuitem');
+      await expect(disabled.hasAttribute('tabindex')).toBe(false);
+      items[0].focus();
       await userEvent.keyboard('{ArrowDown}');
-      await expect(document.activeElement).not.toBe(desabilitado);
-      await expect(document.activeElement).toBe(itens[2]);
+      await expect(document.activeElement).not.toBe(disabled);
+      await expect(document.activeElement).toBe(items[2]);
     });
 
     await step('Limpa via ESC', async () => {
@@ -328,14 +328,14 @@ export const CheckboxIndeterminate: Story = {
     const menu = await within(document.body).findByRole('menu');
     const canvas = within(menu);
     const misto = canvas.getByRole('menuitemcheckbox', { name: 'Nome' });
-    const marcado = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });
+    const checked = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });
     const desmarcado = canvas.getByRole('menuitemcheckbox', { name: 'Telefone' });
 
     await step('O estado misto é anunciado como misto, e não como marcado', async () => {
       // Uma comparação frouxa leria o misto como verdadeiro; o que a pessoa ouve
       // tem que separar os três estados.
       await expect(misto.getAttribute('aria-checked')).toBe('mixed');
-      await expect(marcado.getAttribute('aria-checked')).toBe('true');
+      await expect(checked.getAttribute('aria-checked')).toBe('true');
       await expect(desmarcado.getAttribute('aria-checked')).toBe('false');
     });
 
@@ -344,7 +344,7 @@ export const CheckboxIndeterminate: Story = {
       // traço é largo e sem altura, tique tem a diagonal. Com o mesmo símbolo
       // nos dois estados — o defeito — esta asserção fica vermelha.
       const formaMista = formaDoIndicador(misto);
-      const formaMarcada = formaDoIndicador(marcado);
+      const formaMarcada = formaDoIndicador(checked);
       await expect(ehTraco(formaMista)).toBe(true);
       await expect(ehTique(formaMista)).toBe(false);
       await expect(ehTique(formaMarcada)).toBe(true);

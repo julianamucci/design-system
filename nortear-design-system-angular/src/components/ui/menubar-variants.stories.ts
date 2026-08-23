@@ -37,14 +37,14 @@ type Story = StoryObj;
 export const Default: Story = {
   parameters: { covers: ['accessibility.item7'] },
   render: () => ({
-    props: { itens: ITEMS_NEUTROS },
+    props: { items: ITEMS_NEUTROS },
     template: `
       <nds-menubar [modal]="false">
         <nds-menubar-menu [defaultOpen]="true">
           <button ndsMenubarTrigger>Arquivo</button>
 
           <ng-template ndsMenubarContent>
-            @for (i of itens; track i) {
+            @for (i of items; track i) {
               <div ndsMenubarItem>{{ i }}</div>
             }
           </ng-template>
@@ -61,14 +61,14 @@ export const Default: Story = {
   }),
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
-    const itens = within(menu).getAllByRole('menuitem');
+    const items = within(menu).getAllByRole('menuitem');
 
     await step('A variante default é escrita no markup', async () => {
       // Afirmar o atributo resultante é o que impede o defeito silencioso do
       // fallback JIT: sob JIT os `input()` não são vistos e o componente
       // renderiza com os valores padrão, sem erro nenhum na tela.
-      await expect(itens).toHaveLength(ITEMS_NEUTROS.length);
-      for (const item of itens) {
+      await expect(items).toHaveLength(ITEMS_NEUTROS.length);
+      for (const item of items) {
         await expect(item.getAttribute('data-variant')).toBe('default');
         await expect(item.classList.contains('nds-dropdown-menu-item')).toBe(true);
       }
@@ -78,7 +78,7 @@ export const Default: Story = {
       // O item destacado (o primeiro, que recebe o foco ao abrir) troca de cor
       // de propósito — a comparação tem que ser com um item em repouso, senão
       // ela mede o realce e não a variante.
-      const inRest = itens.filter((i) => !i.hasAttribute('data-highlighted'));
+      const inRest = items.filter((i) => !i.hasAttribute('data-highlighted'));
       await expect(inRest.length).toBeGreaterThan(0);
       await expect(getComputedStyle(inRest[0]).color).toBe(getComputedStyle(menu).color);
     });

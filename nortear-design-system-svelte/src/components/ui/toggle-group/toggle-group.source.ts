@@ -34,50 +34,50 @@ export type ToggleGroupArgs = {
 
 type Item = {
   value: string;
-  rotulo: string;
+  label: string;
   icone: IconKey;
   disabled?: boolean;
 };
 
 const ALIGNMENT: readonly Item[] = [
-  { value: 'left', rotulo: 'Alinhar à esquerda', icone: 'alignLeft' },
-  { value: 'center', rotulo: 'Centralizar', icone: 'alignCenter' },
-  { value: 'right', rotulo: 'Alinhar à direita', icone: 'alignRight' },
+  { value: 'left', label: 'Alinhar à esquerda', icone: 'alignLeft' },
+  { value: 'center', label: 'Centralizar', icone: 'alignCenter' },
+  { value: 'right', label: 'Alinhar à direita', icone: 'alignRight' },
 ];
 
 const FORMATTING: readonly Item[] = [
-  { value: 'bold', rotulo: 'Negrito', icone: 'bold' },
-  { value: 'italic', rotulo: 'Itálico', icone: 'italic' },
-  { value: 'underline', rotulo: 'Sublinhado', icone: 'underline' },
+  { value: 'bold', label: 'Negrito', icone: 'bold' },
+  { value: 'italic', label: 'Itálico', icone: 'italic' },
+  { value: 'underline', label: 'Sublinhado', icone: 'underline' },
 ];
 
 const VISUALIZACAO: readonly Item[] = [
-  { value: 'grid', rotulo: 'Grade', icone: 'grid' },
-  { value: 'list', rotulo: 'Lista', icone: 'list' },
+  { value: 'grid', label: 'Grade', icone: 'grid' },
+  { value: 'list', label: 'Lista', icone: 'list' },
 ];
 
 const IMPORT = `import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";`;
 
 /** Bloco de imports: o componente do design system mais os ícones do exemplo. */
-function importing(itens: readonly Item[]): string {
+function importing(items: readonly Item[]): string {
   return [
     IMPORT,
-    ...itens.map((item) => {
-      const [nome, caminho] = ICONS[item.icone];
-      return `import ${nome} from "@lucide/svelte/icons/${caminho}";`;
+    ...items.map((item) => {
+      const [name, caminho] = ICONS[item.icone];
+      return `import ${name} from "@lucide/svelte/icons/${caminho}";`;
     }),
   ].join('\n');
 }
 
 /** Os itens do grupo, um bloco por opção. */
-function marcarItems(itens: readonly Item[]): string {
-  return itens
+function marcarItems(items: readonly Item[]): string {
+  return items
     .map((item) => {
       const props = attrs(
         `value="${item.value}"`,
         item.disabled ? 'disabled' : '',
         // Item só de ícone: sem isto ele fica anônimo para quem lê a tela.
-        `aria-label="${item.rotulo}"`,
+        `aria-label="${item.label}"`,
       );
       return `  <ToggleGroupItem${props}>\n    <${ICONS[item.icone][0]} aria-hidden="true" />\n  </ToggleGroupItem>`;
     })
@@ -85,24 +85,24 @@ function marcarItems(itens: readonly Item[]): string {
 }
 
 /** Monta o grupo inteiro: script com estado e a lista de itens. */
-function mountGroup(opcoes: {
-  itens: readonly Item[];
-  rotulo: string;
+function mountGroup(options: {
+  items: readonly Item[];
+  label: string;
   state: string;
   declaration: string;
   props: string[];
 }): string {
-  const { itens, rotulo, state, declaration, props } = opcoes;
+  const { items, label, state, declaration, props } = options;
   const abertura = attrsMultilinha([
     ...props,
     `bind:value={${state}}`,
     // O nome do grupo é a categoria da escolha, não a opção escolhida.
-    `aria-label="${rotulo}"`,
+    `aria-label="${label}"`,
   ]);
 
   return svelteSnippet(
-    `${importing(itens)}\n\n${declaration}`,
-    `<ToggleGroup${abertura}>\n${marcarItems(itens)}\n</ToggleGroup>`,
+    `${importing(items)}\n\n${declaration}`,
+    `<ToggleGroup${abertura}>\n${marcarItems(items)}\n</ToggleGroup>`,
   );
 }
 
@@ -122,16 +122,16 @@ export function toggleGroupSource(
   } = ctx?.args ?? {};
 
   const combinado = type === 'multiple';
-  const lista = Array.isArray(value) ? value : [];
+  const list = Array.isArray(value) ? value : [];
   const declaration = combinado
-    ? lista.length
-      ? `let alinhamento = $state([${lista.map((v) => `"${v}"`).join(', ')}]);`
+    ? list.length
+      ? `let alinhamento = $state([${list.map((v) => `"${v}"`).join(', ')}]);`
       : 'let alinhamento: string[] = $state([]);'
     : `let alinhamento = $state("${typeof value === 'string' ? value : ''}");`;
 
   return mountGroup({
-    itens: ALIGNMENT,
-    rotulo: 'Alinhamento do texto',
+    items: ALIGNMENT,
+    label: 'Alinhamento do texto',
     state: 'alinhamento',
     declaration,
     props: [
@@ -152,8 +152,8 @@ export function toggleGroupSource(
  */
 export function toggleGroupFormattingSource(): string {
   return mountGroup({
-    itens: FORMATTING,
-    rotulo: 'Formatação',
+    items: FORMATTING,
+    label: 'Formatação',
     state: 'formatacao',
     declaration: 'let formatacao: string[] = $state([]);',
     props: ['type="multiple"'],
@@ -163,8 +163,8 @@ export function toggleGroupFormattingSource(): string {
 /** MultipleSelected (States): duas opções já combinadas na montagem. */
 export function toggleGroupSelectionMultiplaSource(): string {
   return mountGroup({
-    itens: FORMATTING,
-    rotulo: 'Formatação',
+    items: FORMATTING,
+    label: 'Formatação',
     state: 'formatacao',
     declaration: 'let formatacao = $state(["bold", "italic"]);',
     props: ['type="multiple"'],
@@ -174,8 +174,8 @@ export function toggleGroupSelectionMultiplaSource(): string {
 /** Vertical (Variants): itens empilhados, navegados por ArrowUp/ArrowDown. */
 export function toggleGroupVerticalSource(): string {
   return mountGroup({
-    itens: VISUALIZACAO,
-    rotulo: 'Modo de visualização',
+    items: VISUALIZACAO,
+    label: 'Modo de visualização',
     state: 'visualizacao',
     declaration: 'let visualizacao = $state("");',
     props: ['type="single"', 'orientation="vertical"'],
@@ -185,8 +185,8 @@ export function toggleGroupVerticalSource(): string {
 /** VerticalViewMode (Compositions): o mesmo empilhado, com a borda única. */
 export function toggleGroupVisualizacaoVerticalSource(): string {
   return mountGroup({
-    itens: VISUALIZACAO,
-    rotulo: 'Modo de visualização',
+    items: VISUALIZACAO,
+    label: 'Modo de visualização',
     state: 'visualizacao',
     declaration: 'let visualizacao = $state("");',
     props: ['type="single"', 'variant="outline"', 'orientation="vertical"'],
@@ -196,8 +196,8 @@ export function toggleGroupVisualizacaoVerticalSource(): string {
 /** AlignmentBar (Compositions): a barra clássica, com a quarta opção. */
 export function alignmentToggleGroupBarSource(): string {
   return mountGroup({
-    itens: [...ALIGNMENT, { value: 'justify', rotulo: 'Justificar', icone: 'alignJustify' }],
-    rotulo: 'Alinhamento do texto',
+    items: [...ALIGNMENT, { value: 'justify', label: 'Justificar', icone: 'alignJustify' }],
+    label: 'Alinhamento do texto',
     state: 'alinhamento',
     declaration: 'let alinhamento = $state("");',
     props: ['type="single"'],
@@ -207,8 +207,8 @@ export function alignmentToggleGroupBarSource(): string {
 /** DisabledItem (States): uma opção fora de uso sem derrubar o grupo inteiro. */
 export function toggleGroupItemDisabledSource(): string {
   return mountGroup({
-    itens: [ALIGNMENT[0], { ...ALIGNMENT[1], disabled: true }, ALIGNMENT[2]],
-    rotulo: 'Alinhamento do texto',
+    items: [ALIGNMENT[0], { ...ALIGNMENT[1], disabled: true }, ALIGNMENT[2]],
+    label: 'Alinhamento do texto',
     state: 'alinhamento',
     declaration: 'let alinhamento = $state("");',
     props: ['type="single"'],

@@ -46,10 +46,10 @@ import { Save } from "lucide-react";`;
  * do próprio `aria-label` — quem chega pelo toque nunca vê o balão, então o
  * tooltip não pode ser o único portador do nome.
  */
-function triggerIcon(rotulo = 'Salvar'): string {
+function triggerIcon(label = 'Salvar'): string {
   return `    <TooltipTrigger
       render={(props) => (
-        <Button {...props} variant="ghost" size="icon" aria-label="${rotulo}">
+        <Button {...props} variant="ghost" size="icon" aria-label="${label}">
           <Save aria-hidden="true" />
         </Button>
       )}
@@ -79,12 +79,12 @@ export const tooltipSource: SourceTransform<TooltipArgs> = (_gerado, ctx) => {
       ? propNumber('sideOffset', args.sideOffset)
       : undefined,
   );
-  const raiz = attrs(propBool('defaultOpen', args.defaultOpen));
+  const root = attrs(propBool('defaultOpen', args.defaultOpen));
 
   return jsxSnippet(
     IMPORT_DEFAULT,
     withProvider(
-      `  <Tooltip${raiz}>
+      `  <Tooltip${root}>
 ${triggerIcon()}
     <TooltipContent${position}>Salvar (Ctrl+S)</TooltipContent>
   </Tooltip>`,
@@ -247,15 +247,15 @@ ${triggerIcon()}
  * botão que sustenta o nome acessível sozinho.
  */
 export function iconsTooltipBarSource(): string {
-  const acao = (rotulo: string, icone: string) => `    <Tooltip>
+  const acao = (label: string, icone: string) => `    <Tooltip>
       <TooltipTrigger
         render={(props) => (
-          <Button {...props} variant="ghost" size="icon" aria-label="${rotulo}">
+          <Button {...props} variant="ghost" size="icon" aria-label="${label}">
             <${icone} aria-hidden="true" />
           </Button>
         )}
       />
-      <TooltipContent>${rotulo}</TooltipContent>
+      <TooltipContent>${label}</TooltipContent>
     </Tooltip>`;
 
   return jsxSnippet(

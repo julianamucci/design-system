@@ -14,15 +14,15 @@ export interface Invoice {
   id: string;
   status: string;
   metodo: string;
-  valor: string;
+  value: string;
 }
 
 export const INVOICES: Invoice[] = [
-  { id: '#INV-001', status: 'Pago',      metodo: 'Cartão de crédito',      valor: 'R$ 250,00' },
-  { id: '#INV-002', status: 'Pendente',  metodo: 'Transferência bancária', valor: 'R$ 150,00' },
-  { id: '#INV-003', status: 'Cancelado', metodo: 'Pix',                    valor: 'R$ 350,00' },
-  { id: '#INV-004', status: 'Pago',      metodo: 'Cartão de crédito',      valor: 'R$ 450,00' },
-  { id: '#INV-005', status: 'Pendente',  metodo: 'Pix',                    valor: 'R$ 50,00'  },
+  { id: '#INV-001', status: 'Pago',      metodo: 'Cartão de crédito',      value: 'R$ 250,00' },
+  { id: '#INV-002', status: 'Pendente',  metodo: 'Transferência bancária', value: 'R$ 150,00' },
+  { id: '#INV-003', status: 'Cancelado', metodo: 'Pix',                    value: 'R$ 350,00' },
+  { id: '#INV-004', status: 'Pago',      metodo: 'Cartão de crédito',      value: 'R$ 450,00' },
+  { id: '#INV-005', status: 'Pendente',  metodo: 'Pix',                    value: 'R$ 50,00'  },
 ];
 
 export const TOTAL = 'R$ 1.250,00';

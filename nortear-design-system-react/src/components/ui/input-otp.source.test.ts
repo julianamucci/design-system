@@ -97,9 +97,9 @@ describe('o contrato que faz o componente funcionar', () => {
     // campo não tem nome nenhum para quem usa leitor de tela.
     for (const fn of ALL) {
       const saida = fn();
-      const alvo = saida.match(/<Label htmlFor="([a-z0-9-]+)"/)?.[1];
-      expect(alvo, `${fn.name} sem rótulo`).toBeDefined();
-      expect(saida).toContain(`id="${alvo}"`);
+      const target = saida.match(/<Label htmlFor="([a-z0-9-]+)"/)?.[1];
+      expect(target, `${fn.name} sem rótulo`).toBeDefined();
+      expect(saida).toContain(`id="${target}"`);
     }
   });
 });
@@ -152,9 +152,9 @@ describe('estados', () => {
   it('o erro liga a mensagem ao campo pelas duas pontas', () => {
     const saida = inputOtpWithErrorSource();
     expect(saida).toContain('aria-invalid="true"');
-    const alvo = saida.match(/aria-describedby="([a-z0-9-]+)"/)?.[1];
-    expect(alvo).toBeDefined();
-    expect(saida).toContain(`<p id="${alvo}"`);
+    const target = saida.match(/aria-describedby="([a-z0-9-]+)"/)?.[1];
+    expect(target).toBeDefined();
+    expect(saida).toContain(`<p id="${target}"`);
     // Sem `role="alert"`: a mensagem já está no DOM ao carregar, e uma live
     // region em conteúdo estático faz o leitor anunciar erro sem que nada tenha
     // acontecido.

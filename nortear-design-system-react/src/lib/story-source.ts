@@ -30,9 +30,9 @@ export type SourceTransform<A> = (gerado?: string, ctx?: SourceCtx<A>) => string
  */
 export function jsxSnippet(header: string, markup: string): string {
   const topo = header.trim();
-  const corpo = markup.trim();
-  if (!topo) return corpo;
-  return `${topo}\n\n${corpo}`;
+  const body = markup.trim();
+  if (!topo) return body;
+  return `${topo}\n\n${body}`;
 }
 
 /**
@@ -44,8 +44,8 @@ export function jsxSnippet(header: string, markup: string): string {
  * a quem copia.
  */
 export function attrs(...partes: Array<string | false | null | undefined>): string {
-  const lista = partes.filter((parte): parte is string => Boolean(parte) && parte !== '');
-  return lista.length ? ` ${lista.join(' ')}` : '';
+  const list = partes.filter((parte): parte is string => Boolean(parte) && parte !== '');
+  return list.length ? ` ${list.join(' ')}` : '';
 }
 
 /**
@@ -58,11 +58,11 @@ export function attrsMultilinha(
   indentacao = '  ',
   limit = 60,
 ): string {
-  const lista = partes.filter((parte): parte is string => Boolean(parte) && parte !== '');
-  if (!lista.length) return '';
-  const inLine = lista.join(' ');
+  const list = partes.filter((parte): parte is string => Boolean(parte) && parte !== '');
+  if (!list.length) return '';
+  const inLine = list.join(' ');
   if (inLine.length <= limit) return ` ${inLine}`;
-  return `\n${lista.map((parte) => `${indentacao}${parte}`).join('\n')}\n`;
+  return `\n${list.map((parte) => `${indentacao}${parte}`).join('\n')}\n`;
 }
 
 /**
@@ -73,31 +73,31 @@ export function attrsMultilinha(
  * painel como se fosse código do design system. Qualquer coisa que não seja
  * string vira `undefined`, e `attrs` a descarta.
  */
-export function texto(valor: unknown): string | undefined {
-  if (typeof valor !== 'string') return undefined;
-  const limpo = valor.trim();
+export function text(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const limpo = value.trim();
   return limpo ? limpo : undefined;
 }
 
 /** `nome="valor"` quando o arg é string não vazia; nada em qualquer outro caso. */
-export function propText(nome: string, valor: unknown): string | undefined {
-  const conteudo = texto(valor);
-  return conteudo === undefined ? undefined : `${nome}="${conteudo}"`;
+export function propText(name: string, value: unknown): string | undefined {
+  const content = text(value);
+  return content === undefined ? undefined : `${name}="${content}"`;
 }
 
 /** `nome={42}` quando o arg é número finito. */
-export function propNumber(nome: string, valor: unknown): string | undefined {
-  if (typeof valor !== 'number' || !Number.isFinite(valor)) return undefined;
-  return `${nome}={${valor}}`;
+export function propNumber(name: string, value: unknown): string | undefined {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return undefined;
+  return `${name}={${value}}`;
 }
 
 /**
- * Prop booleana: `nome` na forma abreviada quando `true`, `nome={false}` quando
+ * Prop booleana: `name` na forma abreviada quando `true`, `nome={false}` quando
  * o padrão do componente é `true` e a story desliga. Igual ao padrão, nada.
  */
-export function propBool(nome: string, valor: unknown, padrao = false): string | undefined {
-  if (typeof valor !== 'boolean' || valor === padrao) return undefined;
-  return valor ? nome : `${nome}={false}`;
+export function propBool(name: string, value: unknown, padrao = false): string | undefined {
+  if (typeof value !== 'boolean' || value === padrao) return undefined;
+  return value ? name : `${name}={false}`;
 }
 
 /**
@@ -106,20 +106,20 @@ export function propBool(nome: string, valor: unknown, padrao = false): string |
  * inventado.
  */
 export function propOption<T extends string>(
-  nome: string,
-  valor: unknown,
+  name: string,
+  value: unknown,
   aceitos: readonly T[],
   padrao?: T,
 ): string | undefined {
-  if (typeof valor !== 'string') return undefined;
-  if (!(aceitos as readonly string[]).includes(valor)) return undefined;
-  if (padrao !== undefined && valor === padrao) return undefined;
-  return `${nome}="${valor}"`;
+  if (typeof value !== 'string') return undefined;
+  if (!(aceitos as readonly string[]).includes(value)) return undefined;
+  if (padrao !== undefined && value === padrao) return undefined;
+  return `${name}="${value}"`;
 }
 
 /** Indenta cada linha não vazia com `prefixo`. Blocos aninhados em JSX. */
-export function indentar(conteudo: string, prefixo = '  '): string {
-  return conteudo
+export function indentar(content: string, prefixo = '  '): string {
+  return content
     .split('\n')
     .map((line) => (line.trim() ? `${prefixo}${line}` : line))
     .join('\n');
@@ -127,8 +127,8 @@ export function indentar(conteudo: string, prefixo = '  '): string {
 
 /**
  * Filho de texto do componente, quando o control o alimenta. Mesmo cuidado de
- * `texto`: espião de action vira `undefined`, e o chamador cai no seu padrão.
+ * `text`: espião de action vira `undefined`, e o chamador cai no seu padrão.
  */
-export function childText(valor: unknown, padrao: string): string {
-  return texto(valor) ?? padrao;
+export function childText(value: unknown, padrao: string): string {
+  return text(value) ?? padrao;
 }

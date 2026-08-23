@@ -36,40 +36,40 @@ const IMPORT = `import {
 const WIDTH = 'class="nds-max-w-lg"';
 
 /** Corpo de várias linhas dentro de uma tag que abre na coluna `recuo - 2`. */
-function bloco(conteudo: string, recuo: number): string {
-  return `\n${indentar(conteudo.trim(), recuo)}\n${' '.repeat(recuo - 2)}`;
+function block(content: string, recuo: number): string {
+  return `\n${indentar(content.trim(), recuo)}\n${' '.repeat(recuo - 2)}`;
 }
 
 /** Um item: o valor que o identifica, o gatilho e o painel. */
-function item(valor: string, gatilho: string, conteudo: string, extra = ''): string {
-  const g = gatilho.includes('\n') ? bloco(gatilho, 6) : gatilho;
-  const c = conteudo.includes('\n') ? bloco(conteudo, 6) : conteudo;
-  return `  <AccordionItem${attrs(`value="${valor}"`, extra)}>
+function item(value: string, trigger: string, content: string, extra = ''): string {
+  const g = trigger.includes('\n') ? block(trigger, 6) : trigger;
+  const c = content.includes('\n') ? block(content, 6) : content;
+  return `  <AccordionItem${attrs(`value="${value}"`, extra)}>
     <AccordionTrigger>${g}</AccordionTrigger>
     <AccordionContent>${c}</AccordionContent>
   </AccordionItem>`;
 }
 
 /** Raiz + itens. `type` é obrigatório: é ele que decide um ou vários abertos. */
-function acordeao(partes: Array<string | false | undefined>, itens: string[]): string {
-  return `<Accordion${attrs(...partes)}>\n${itens.join('\n')}\n</Accordion>`;
+function acordeao(partes: Array<string | false | undefined>, items: string[]): string {
+  return `<Accordion${attrs(...partes)}>\n${items.join('\n')}\n</Accordion>`;
 }
 
 const PERGUNTAS = [
   {
-    valor: 'item-1',
+    value: 'item-1',
     q: 'Como faço para redefinir minha senha?',
     a: `Acesse a tela de login e clique em "Esqueci minha senha". Você receberá
 um link de redefinição no email cadastrado, válido por 24 horas.`,
   },
   {
-    valor: 'item-2',
+    value: 'item-2',
     q: 'Quais formas de pagamento são aceitas?',
     a: `Aceitamos cartão de crédito, Pix e boleto bancário. Parcelamento
 disponível em até 12 vezes sem juros no cartão.`,
   },
   {
-    valor: 'item-3',
+    value: 'item-3',
     q: 'Como cancelo minha assinatura?',
     a: `Você pode cancelar a qualquer momento em Configuracoes → Assinatura.
 O acesso permanece ativo até o fim do período já pago.`,
@@ -98,25 +98,25 @@ export const accordionSource: SourceTransform<AccordionArgs> = (_gerado, ctx) =>
         'default-value="item-1"',
         WIDTH,
       ],
-      PERGUNTAS.map((p) => item(p.valor, p.q, p.a)),
+      PERGUNTAS.map((p) => item(p.value, p.q, p.a)),
     ),
   );
 };
 
 const RESPOSTAS_CURTAS = [
   {
-    valor: 'item-1',
+    value: 'item-1',
     q: 'Como faço para redefinir minha senha?',
     a: `Acesse a tela de login e clique em "Esqueci minha senha". Você receberá
 um link de redefinição no email cadastrado, válido por 24 horas.`,
   },
   {
-    valor: 'item-2',
+    value: 'item-2',
     q: 'Quais formas de pagamento são aceitas?',
     a: 'Aceitamos cartão de crédito, Pix e boleto bancário.',
   },
   {
-    valor: 'item-3',
+    value: 'item-3',
     q: 'Como cancelo minha assinatura?',
     a: 'Você pode cancelar a qualquer momento em Configuracoes → Assinatura.',
   },
@@ -128,7 +128,7 @@ export function accordionSingleSource(): string {
     IMPORT,
     acordeao(
       ['type="single"', 'default-value="item-1"', WIDTH],
-      RESPOSTAS_CURTAS.map((p) => item(p.valor, p.q, p.a)),
+      RESPOSTAS_CURTAS.map((p) => item(p.value, p.q, p.a)),
     ),
   );
 }
@@ -317,10 +317,10 @@ export function accordionFocusVisibleSource(): string {
  * categoria em toda leitura.
  */
 export function accordionWithIconSource(): string {
-  const withIcon = (icone: string, cor: string, rotulo: string) =>
+  const withIcon = (icone: string, cor: string, label: string) =>
     `<span class="nds-cluster" data-spacing="sm">
   <${icone} class="nds-icon ${cor} nds-shrink-0" aria-hidden="true" />
-  ${rotulo}
+  ${label}
 </span>`;
   return vueSnippet(
     `${IMPORT}
@@ -353,10 +353,10 @@ import { AlertTriangle, CheckCircle, Info } from 'lucide-vue-next'`,
  * continua autoexplicativo sem ele.
  */
 export function accordionWithBadgeSource(): string {
-  const withBadge = (rotulo: string, variante: string, selo: string) =>
+  const withBadge = (label: string, variant: string, selo: string) =>
     `<span class="nds-cluster" data-spacing="sm">
-  ${rotulo}
-  <Badge${attrs(attr('variant', variante, 'default'))}>${selo}</Badge>
+  ${label}
+  <Badge${attrs(attr('variant', variant, 'default'))}>${selo}</Badge>
 </span>`;
   return vueSnippet(
     `${IMPORT}

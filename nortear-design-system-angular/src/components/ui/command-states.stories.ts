@@ -51,13 +51,13 @@ export const EmptyState: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
-    const campo = canvas.getByRole('combobox');
-    const vazio = raiz.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
+    const field = canvas.getByRole('combobox');
+    const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
 
     // Idempotente: a busca parte sempre do zero — a play REEXECUTA no mesmo
     // DOM, e esta story TERMINA com texto no campo.
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     // Com o campo vazio há dois comandos. Os itens só se registram no render
     // seguinte ao da montagem, e sem esta espera a contagem de zero logo
     // adiante passaria só por ter chegado cedo demais.
@@ -66,12 +66,12 @@ export const EmptyState: Story = {
     });
 
     await step('Buscando "xyz", nenhum comando sobra e a lista fica vazia', async () => {
-      await userEvent.type(campo, 'xyz');
+      await userEvent.type(field, 'xyz');
       await waitFor(async () => {
         await expect(canvas.queryAllByRole('option')).toHaveLength(0);
       });
       // O grupo se recolhe junto — cabeçalho sem itens embaixo é ruído.
-      await expect(raiz.querySelector<HTMLElement>('[data-slot="command-group"]'))
+      await expect(root.querySelector<HTMLElement>('[data-slot="command-group"]'))
         .not.toBeVisible();
     });
 
@@ -91,12 +91,12 @@ export const EmptyState: Story = {
     await step('A região viva não é filha do listbox', async () => {
       // `role="status"` dentro de `role="listbox"` é filho não permitido, e o
       // axe reprova por aria-required-children.
-      const lista = canvas.getByRole('listbox');
-      await expect(lista.contains(vazio)).toBe(false);
+      const list = canvas.getByRole('listbox');
+      await expect(list.contains(vazio)).toBe(false);
     });
 
     await step('Apagar a busca traz os comandos, e a região viva volta a zero', async () => {
-      await userEvent.clear(campo);
+      await userEvent.clear(field);
       await waitFor(async () => {
         await expect(canvas.getAllByRole('option')).toHaveLength(2);
       });
@@ -110,7 +110,7 @@ export const EmptyState: Story = {
     await step('E a story termina SEM resultados — é o quadro que o Chromatic tira', async () => {
       // Terminar cheia faria a foto do estado vazio ser a foto do estado
       // cheio: o Chromatic captura o FIM da play, não o meio.
-      await userEvent.type(campo, 'xyz');
+      await userEvent.type(field, 'xyz');
       await waitFor(async () => {
         await expect(canvas.queryAllByRole('option')).toHaveLength(0);
       });
@@ -148,10 +148,10 @@ export const ItemDisabled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const campo = canvas.getByRole('combobox');
+    const field = canvas.getByRole('combobox');
     const escolhido = canvas.getByTestId('escolhido');
 
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     await waitFor(async () => {
       await expect(canvas.getAllByRole('option')).toHaveLength(3);
     });
@@ -180,16 +180,16 @@ export const ItemDisabled: Story = {
     });
 
     await step('As setas pulam o comando desabilitado', async () => {
-      campo.focus();
+      field.focus();
       await userEvent.keyboard('{ArrowDown}');
       await waitFor(async () => {
-        const active = document.getElementById(campo.getAttribute('aria-activedescendant')!)!;
+        const active = document.getElementById(field.getAttribute('aria-activedescendant')!)!;
         await expect(active).toHaveTextContent('Novo');
       });
 
       await userEvent.keyboard('{ArrowDown}');
       await waitFor(async () => {
-        const active = document.getElementById(campo.getAttribute('aria-activedescendant')!)!;
+        const active = document.getElementById(field.getAttribute('aria-activedescendant')!)!;
         // "Arquivar" não é destino de navegação — quem usa teclado nunca para
         // num comando que não pode executar.
         await expect(active).toHaveTextContent('Renomear');
@@ -298,10 +298,10 @@ export const LongList: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const lista = canvas.getByRole('listbox');
-    const campo = canvas.getByRole('combobox');
+    const list = canvas.getByRole('listbox');
+    const field = canvas.getByRole('combobox');
 
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     await waitFor(async () => {
       await expect(canvas.getAllByRole('option')).toHaveLength(24);
     });
@@ -309,18 +309,18 @@ export const LongList: Story = {
     await step('A lista rola em vez de esticar a paleta', async () => {
       // 300px de teto na folha: sem ele a paleta cresceria para fora da tela e
       // o campo de busca sairia do alcance.
-      await expect(lista.scrollHeight).toBeGreaterThan(lista.clientHeight);
-      await expect(getComputedStyle(lista).overflowY).toBe('auto');
+      await expect(list.scrollHeight).toBeGreaterThan(list.clientHeight);
+      await expect(getComputedStyle(list).overflowY).toBe('auto');
     });
 
     await step('Digitar reduz a lista', async () => {
-      await userEvent.type(campo, 'comando 1');
+      await userEvent.type(field, 'comando 1');
       await waitFor(async () => {
         // 1, 10 a 19 e 21 não casam com "comando 1" no fim — sobram 1 e 10..19.
         await expect(canvas.getAllByRole('option')).toHaveLength(11);
       });
 
-      await userEvent.clear(campo);
+      await userEvent.clear(field);
       await waitFor(async () => {
         await expect(canvas.getAllByRole('option')).toHaveLength(24);
       });

@@ -130,12 +130,12 @@ export const WithIcons: Story = {
       // Idempotente: o clique só acontece com a lista fechada.
       if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       const listbox = await waitForPortal('listbox');
-      const opcoes = within(listbox).getAllByRole('option');
-      await expect(opcoes).toHaveLength(4);
-      for (const opcao of opcoes) {
+      const options = within(listbox).getAllByRole('option');
+      await expect(options).toHaveLength(4);
+      for (const opcao of options) {
         await expect(opcao.querySelector('svg')).toBeTruthy();
       }
-      await expect(opcoes[0]).toHaveAccessibleName('São Paulo');
+      await expect(options[0]).toHaveAccessibleName('São Paulo');
     });
   },
 };

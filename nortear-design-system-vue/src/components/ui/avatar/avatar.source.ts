@@ -47,8 +47,8 @@ const ICON_USUARIO = `<svg
 </svg>`;
 
 /** Raiz + filhos, cada filho indentado um nível. */
-function avatar(partes: Array<string | false | undefined>, filhos: string[]): string {
-  return `<Avatar${attrs(...partes)}>\n${indentar(filhos.join('\n'))}\n</Avatar>`;
+function avatar(partes: Array<string | false | undefined>, children: string[]): string {
+  return `<Avatar${attrs(...partes)}>\n${indentar(children.join('\n'))}\n</Avatar>`;
 }
 
 /** A foto, identificada pelo texto alternativo. */

@@ -91,28 +91,28 @@ export const Playground: Story = {
   },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="tooltip"]')!;
-    const gatilho = canvas.getByRole('button', {
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="tooltip"]')!;
+    const trigger = canvas.getByRole('button', {
       name: new RegExp(args.triggerLabel, 'i'),
     });
 
     await step('O markup é o do design system, não um elemento inventado', async () => {
-      await expect(raiz).toHaveAttribute('data-slot', 'tooltip');
-      await expect(gatilho.tagName).toBe('BUTTON');
+      await expect(root).toHaveAttribute('data-slot', 'tooltip');
+      await expect(trigger.tagName).toBe('BUTTON');
     });
 
     await step('O gatilho tem nome acessível próprio', async () => {
       // O Tooltip é complementar: em touch não há hover, e sem o aria-label o
       // botão ficaria anônimo para quem não usa mouse.
-      await expect(gatilho).toHaveAttribute('aria-label', args.triggerLabel);
+      await expect(trigger).toHaveAttribute('aria-label', args.triggerLabel);
     });
 
     await step('Fechado, não há describedby apontando para o vazio', async () => {
       // `aria-describedby` para um id ausente é violação de
       // `aria-valid-attr-value` — o mesmo axe que roda no addon-a11y da story.
-      gatilho.blur();
+      trigger.blur();
       await waitFor(async () => {
-        await expect(gatilho.getAttribute('aria-describedby')).toBeNull();
+        await expect(trigger.getAttribute('aria-describedby')).toBeNull();
       });
     });
 
@@ -120,15 +120,15 @@ export const Playground: Story = {
       // `blur()` antes do `focus()`: no replay o gatilho já está focado (o
       // Escape do último passo não tira o foco), e `focus()` num elemento já
       // focado não dispara evento nenhum — o balão nunca reabriria.
-      gatilho.blur();
-      gatilho.focus();
+      trigger.blur();
+      trigger.focus();
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
     });
 
     await step('Aberto, o balão é um role=tooltip ligado ao gatilho', async () => {
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       await expect(balao).toHaveAttribute('role', 'tooltip');
       await expect(balao).toHaveAttribute('data-slot', 'tooltip-content');
       await expect(balao.textContent).toContain(args.content);
@@ -140,16 +140,16 @@ export const Playground: Story = {
     await step('O lado pedido chega ao balão como data-side', async () => {
       // É o gancho que o CSS compartilhado lê, e o mesmo atributo que as outras
       // stacks publicam.
-      await expect(balaoDe(gatilho)).toHaveAttribute('data-side', args.side);
+      await expect(balaoDe(trigger)).toHaveAttribute('data-side', args.side);
     });
 
     await step('Escape fecha e o foco fica onde estava', async () => {
       await userEvent.keyboard('{Escape}');
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).toBeNull();
+        await expect(balaoDe(trigger)).toBeNull();
       });
-      await expect(gatilho).toHaveFocus();
-      await expect(gatilho.getAttribute('aria-describedby')).toBeNull();
+      await expect(trigger).toHaveFocus();
+      await expect(trigger.getAttribute('aria-describedby')).toBeNull();
     });
 
     await step('Cleanup do portal', async () => {

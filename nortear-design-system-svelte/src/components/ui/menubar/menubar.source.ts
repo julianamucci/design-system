@@ -48,18 +48,18 @@ const ORDER = [
 ];
 
 function importing(parts: string[]): string {
-  const usadas = ORDER.filter((nome) => parts.includes(nome));
+  const usadas = ORDER.filter((name) => parts.includes(name));
   return `import {
-${usadas.map((nome) => `  ${nome},`).join('\n')}
+${usadas.map((name) => `  ${name},`).join('\n')}
 } from "@/components/ui/menubar";`;
 }
 
 /** Um menu da barra: gatilho na barra e painel logo abaixo. */
-function menu(valor: string, rotulo: string, corpo: string): string {
-  return `  <MenubarMenu value="${valor}">
-    <MenubarTrigger>${rotulo}</MenubarTrigger>
+function menu(value: string, label: string, body: string): string {
+  return `  <MenubarMenu value="${value}">
+    <MenubarTrigger>${label}</MenubarTrigger>
     <MenubarContent>
-${corpo}
+${body}
     </MenubarContent>
   </MenubarMenu>`;
 }
@@ -73,14 +73,14 @@ function composition(
   variant: MenubarArgs['variant'],
 ): Composition {
   if (demonstration === 'shortcuts') {
-    const itens = [
+    const items = [
       ['Desfazer', '⌘Z'],
       ['Refazer', '⇧⌘Z'],
       ['Copiar', '⌘C'],
     ]
       .map(
-        ([rotulo, atalho]) => `      <MenubarItem>
-        ${rotulo}
+        ([label, atalho]) => `      <MenubarItem>
+        ${label}
         <MenubarShortcut>${atalho}</MenubarShortcut>
       </MenubarItem>`,
       )
@@ -89,7 +89,7 @@ function composition(
     return {
       parts: [...BASE, 'MenubarItem', 'MenubarShortcut'],
       state: [],
-      menus: menu('edit', 'Editar', itens),
+      menus: menu('edit', 'Editar', items),
     };
   }
 
@@ -258,11 +258,11 @@ function composition(
     parts: [...BASE, 'MenubarItem'],
     state: [],
     menus: categorias
-      .map(([valor, rotulo, itens]) =>
+      .map(([value, label, items]) =>
         menu(
-          valor,
-          rotulo,
-          itens.map((item) => `      <MenubarItem${enfase}>${item}</MenubarItem>`).join('\n'),
+          value,
+          label,
+          items.map((item) => `      <MenubarItem${enfase}>${item}</MenubarItem>`).join('\n'),
         ),
       )
       .join('\n'),

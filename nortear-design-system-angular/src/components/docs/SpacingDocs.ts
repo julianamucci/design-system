@@ -21,25 +21,25 @@ const { t } = useTranslation(translations as Record<string, unknown>);
 
 /** Um degrau da escada. `token` é o sufixo lido pelo `data-token` do CSS. */
 interface SpacingDegrau {
-  nome: string;
+  name: string;
   token: string;
   px: string;
 }
 
 const DEGRAUS: SpacingDegrau[] = [
-  { nome: 'spacing-px', token: 'px', px: '1px' },
-  { nome: 'spacing-0-5', token: '0-5', px: '2px' },
-  { nome: 'spacing-1', token: '1', px: '4px' },
-  { nome: 'spacing-2', token: '2', px: '8px' },
-  { nome: 'spacing-4', token: '4', px: '16px' },
-  { nome: 'spacing-6', token: '6', px: '24px' },
-  { nome: 'spacing-8', token: '8', px: '32px' },
-  { nome: 'spacing-10', token: '10', px: '40px' },
-  { nome: 'spacing-12', token: '12', px: '48px' },
-  { nome: 'spacing-14', token: '14', px: '56px' },
-  { nome: 'spacing-16', token: '16', px: '64px' },
-  { nome: 'spacing-20', token: '20', px: '80px' },
-  { nome: 'spacing-24', token: '24', px: '96px' },
+  { name: 'spacing-px', token: 'px', px: '1px' },
+  { name: 'spacing-0-5', token: '0-5', px: '2px' },
+  { name: 'spacing-1', token: '1', px: '4px' },
+  { name: 'spacing-2', token: '2', px: '8px' },
+  { name: 'spacing-4', token: '4', px: '16px' },
+  { name: 'spacing-6', token: '6', px: '24px' },
+  { name: 'spacing-8', token: '8', px: '32px' },
+  { name: 'spacing-10', token: '10', px: '40px' },
+  { name: 'spacing-12', token: '12', px: '48px' },
+  { name: 'spacing-14', token: '14', px: '56px' },
+  { name: 'spacing-16', token: '16', px: '64px' },
+  { name: 'spacing-20', token: '20', px: '80px' },
+  { name: 'spacing-24', token: '24', px: '96px' },
 ];
 
 @Component({
@@ -63,7 +63,7 @@ const DEGRAUS: SpacingDegrau[] = [
           @for (degrau of degraus; track degrau.token) {
             <div class="nds-row" data-align="center" data-spacing="md">
               <code class="nds-text-caption nds-text-muted-foreground nds-shrink-0 nds-spacing-scale-name">{{
-                degrau.nome
+                degrau.name
               }}</code>
               <!-- Gráfico puro: quem lê o nome do token já tem a informação, e
                    a barra repetiria a mesma coisa em forma de largura. -->

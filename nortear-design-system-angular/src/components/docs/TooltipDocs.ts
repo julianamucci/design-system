@@ -467,12 +467,12 @@ const COMPOSITION_CODE = {
 
     <ng-template #tplVarLados>
       <div class="nds-grid nds-w-full" data-cols="2" data-spacing="xl">
-        @for (lado of lados; track lado) {
+        @for (side of lados; track side) {
           <span ndsTooltip>
-            <button ndsTooltipTrigger ndsButton variant="outline" [attr.aria-label]="lado">
-              {{ lado }}
+            <button ndsTooltipTrigger ndsButton variant="outline" [attr.aria-label]="side">
+              {{ side }}
             </button>
-            <ng-template ndsTooltipContent [side]="lado">Tooltip {{ lado }}</ng-template>
+            <ng-template ndsTooltipContent [side]="side">Tooltip {{ side }}</ng-template>
           </span>
         }
       </div>
@@ -745,11 +745,11 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
    * payload leva o id do gatilho, valor estável — o texto traduzido viraria três
    * eventos diferentes no GA4, um por idioma.
    */
-  protected aoAlternar(gatilho: string, isOpen: boolean): void {
+  protected aoAlternar(trigger: string, isOpen: boolean): void {
     if (!isOpen) return;
     track('tooltip_view', {
       component: 'tooltip',
-      trigger_id: gatilho,
+      trigger_id: trigger,
       location: 'docs_demo',
     });
   }
@@ -803,8 +803,8 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
       string,
       { usage?: { uxWriting?: { table?: Record<string, unknown> } } }
     >;
-    const tabela = byLocale[locale]?.usage?.uxWriting?.table ?? {};
-    return Object.values(tabela).filter(
+    const table = byLocale[locale]?.usage?.uxWriting?.table ?? {};
+    return Object.values(table).filter(
       (v): v is { name: string; format: string; good: string; bad: string } =>
         typeof v === 'object' && v !== null && 'name' in (v as object),
     );
@@ -1123,9 +1123,9 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
       string,
       { accessibility?: { screenReader?: Record<string, string> } }
     >;
-    const bloco = byLocale[locale]?.accessibility?.screenReader ?? {};
+    const block = byLocale[locale]?.accessibility?.screenReader ?? {};
     // `title` é o cabeçalho da seção, não uma linha da lista.
-    return Object.entries(bloco).filter(([k]) => k !== 'title').map(([, v]) => v);
+    return Object.entries(block).filter(([k]) => k !== 'title').map(([, v]) => v);
   });
 
   protected readonly relatedItems = computed(() => {

@@ -69,8 +69,8 @@ describe('transforms das stories de variante', () => {
     const saida = alertContrastSource();
     expect(saida).toContain('const variantes: AlertVariant[]');
     expect(saida).toContain('<Alert variant={variante}>');
-    for (const variante of ['default', 'destructive', 'success', 'warning', 'info']) {
-      expect(saida).toContain(`"${variante}"`);
+    for (const variant of ['default', 'destructive', 'success', 'warning', 'info']) {
+      expect(saida).toContain(`"${variant}"`);
     }
   });
 });

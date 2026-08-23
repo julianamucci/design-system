@@ -35,11 +35,11 @@ const COLUMN = '<div className="nds-stack nds-w-xs" data-spacing="xs">';
  */
 export const labelSource: SourceTransform<LabelArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const texto = childText(args.children, 'Nome completo');
+  const text = childText(args.children, 'Nome completo');
   return jsxSnippet(
     IMPORT_FIELD,
     `${COLUMN}
-  <Label htmlFor="nome-completo"${attrs(propText('className', args.className))}>${texto}</Label>
+  <Label htmlFor="nome-completo"${attrs(propText('className', args.className))}>${text}</Label>
   <Input id="nome-completo" placeholder="ex: João da Silva" />
 </div>`,
   );

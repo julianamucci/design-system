@@ -17,21 +17,21 @@ import { createSelect } from './select';
  * O nome acessível vem do `aria-label`: `role="combobox"` não aceita nome vindo
  * do próprio conteúdo, e o conteúdo do gatilho é o valor exibido.
  */
-export function comRotulo(
+export function withLabel(
   id: string,
-  rotulo: string,
-  opcoes: Parameters<typeof createSelect>[0],
+  label: string,
+  options: Parameters<typeof createSelect>[0],
 ): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-stack nds-w-sm';
   wrap.dataset.spacing = 'sm';
 
-  const label = document.createElement('label');
-  label.htmlFor = id;
-  label.className = 'nds-text-body nds-font-semibold';
-  label.textContent = rotulo;
+  const labelEl = document.createElement('label');
+  labelEl.htmlFor = id;
+  labelEl.className = 'nds-text-body nds-font-semibold';
+  labelEl.textContent = label;
 
-  wrap.append(label, createSelect({ ...opcoes, id, 'aria-label': rotulo }));
+  wrap.append(labelEl, createSelect({ ...options, id, 'aria-label': label }));
   return wrap;
 }
 
@@ -42,13 +42,13 @@ export function comRotulo(
  * Interactions reexecuta a play no mesmo DOM, e um clique cego alternaria o
  * estado em vez de estabelecê-lo.
  */
-export function abridor(gatilho: HTMLElement) {
+export function abridor(trigger: HTMLElement) {
   return async () => {
-    if (gatilho.getAttribute('aria-expanded') === 'true') {
+    if (trigger.getAttribute('aria-expanded') === 'true') {
       await userEvent.keyboard('{Escape}');
       await waitForPortalGone('listbox');
     }
-    await userEvent.click(gatilho);
+    await userEvent.click(trigger);
     return await waitForPortal('listbox');
   };
 }

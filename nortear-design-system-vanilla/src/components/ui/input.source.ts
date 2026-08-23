@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -52,27 +52,27 @@ const ID_DEFAULT = 'campo';
  */
 export function inputSnippet(o: InputSnippetOptions = {}): string {
   const id = o.id ?? ID_DEFAULT;
-  const rotulo = o.label ?? LABEL_DEFAULT;
+  const label = o.label ?? LABEL_DEFAULT;
 
   const descritores = [
     o.ajuda ? `${id}-ajuda` : undefined,
     o.mensagem ? `${id}-erro` : undefined,
   ].filter((d): d is string => d !== undefined);
 
-  const lines = opcoes([
-    ['id', texto(id)],
-    ['type', o.type && o.type !== 'text' ? texto(o.type) : undefined],
-    ['placeholder', o.placeholder ? texto(o.placeholder) : undefined],
-    ['value', o.value ? texto(o.value) : undefined],
-    ['name', o.name ? texto(o.name) : undefined],
+  const lines = options([
+    ['id', text(id)],
+    ['type', o.type && o.type !== 'text' ? text(o.type) : undefined],
+    ['placeholder', o.placeholder ? text(o.placeholder) : undefined],
+    ['value', o.value ? text(o.value) : undefined],
+    ['name', o.name ? text(o.name) : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
-    ['class', o.class ? texto(o.class) : undefined],
+    ['class', o.class ? text(o.class) : undefined],
   ]);
 
-  const atributos = [
+  const attrs = [
     o.ariaInvalid ? `campo.setAttribute('aria-invalid', 'true');` : undefined,
     descritores.length
-      ? `campo.setAttribute('aria-describedby', ${texto(descritores.join(' '))});`
+      ? `campo.setAttribute('aria-describedby', ${text(descritores.join(' '))});`
       : undefined,
   ].filter((l): l is string => l !== undefined);
 
@@ -85,19 +85,19 @@ export function inputSnippet(o: InputSnippetOptions = {}): string {
     // A paleta escura é uma classe no documento: o campo é exatamente o mesmo
     // dos demais estados, e é isso que o snippet precisa deixar claro.
     o.temaEscuro ? `document.documentElement.classList.add('dark');` : undefined,
-    [`const campo = ${chamada('createInput', lines)};`, ...atributos].join('\n'),
-    `const rotulo = ${chamada('createLabel', opcoes([['text', texto(rotulo)], ['htmlFor', texto(id)]]))};`,
+    [`const campo = ${chamada('createInput', lines)};`, ...attrs].join('\n'),
+    `const rotulo = ${chamada('createLabel', options([['text', text(label)], ['htmlFor', text(id)]]))};`,
     o.ajuda
       ? `const apoio = document.createElement('p');
-apoio.id = ${texto(`${id}-ajuda`)};
+apoio.id = ${text(`${id}-ajuda`)};
 apoio.className = 'nds-text-caption nds-text-muted-foreground';
-apoio.textContent = ${texto(o.ajuda)};`
+apoio.textContent = ${text(o.ajuda)};`
       : undefined,
     o.mensagem
       ? `const erro = document.createElement('p');
-erro.id = ${texto(`${id}-erro`)};
+erro.id = ${text(`${id}-erro`)};
 erro.className = 'nds-text-caption nds-text-destructive';
-erro.textContent = ${texto(o.mensagem)};`
+erro.textContent = ${text(o.mensagem)};`
       : undefined,
     montar(montados.join(', ')),
   );
@@ -112,13 +112,13 @@ erro.textContent = ${texto(o.mensagem)};`
  */
 export function inputWithPrefixoSnippet(o: InputSnippetOptions & { prefixo?: string } = {}): string {
   const id = o.id ?? 'site';
-  const rotulo = o.label ?? 'URL do site';
+  const label = o.label ?? 'URL do site';
   const prefixo = o.prefixo ?? 'https://';
 
-  const lines = opcoes([
-    ['id', texto(id)],
-    ['type', o.type && o.type !== 'text' ? texto(o.type) : undefined],
-    ['placeholder', o.placeholder ? texto(o.placeholder) : undefined],
+  const lines = options([
+    ['id', text(id)],
+    ['type', o.type && o.type !== 'text' ? text(o.type) : undefined],
+    ['placeholder', o.placeholder ? text(o.placeholder) : undefined],
   ]);
 
   return snippet(
@@ -129,12 +129,12 @@ grupo.setAttribute('role', 'group');`,
     `const prefixo = document.createElement('span');
 prefixo.className = 'nds-input-group-addon';
 prefixo.dataset.align = 'inline-start';
-prefixo.textContent = ${texto(prefixo)};`,
+prefixo.textContent = ${text(prefixo)};`,
     `const campo = ${chamada('createInput', lines)};
 campo.classList.add('nds-input-group-control');
 campo.dataset.slot = 'input-group-control';`,
     `grupo.append(prefixo, campo);`,
-    `const rotulo = ${chamada('createLabel', opcoes([['text', texto(rotulo)], ['htmlFor', texto(id)]]))};`,
+    `const rotulo = ${chamada('createLabel', options([['text', text(label)], ['htmlFor', text(id)]]))};`,
     montar('rotulo, grupo'),
   );
 }

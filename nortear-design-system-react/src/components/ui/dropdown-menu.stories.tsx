@@ -106,21 +106,21 @@ export const Playground: Story = {
   },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole("button", { name: /Abrir menu/i });
+    const trigger = canvas.getByRole("button", { name: /Abrir menu/i });
 
     await step("O gatilho anuncia que abre um menu, e que está fechado", async () => {
-      await expect(gatilho).toHaveAttribute("aria-haspopup", "menu");
-      await expect(gatilho).toHaveAttribute("aria-expanded", "false");
+      await expect(trigger).toHaveAttribute("aria-haspopup", "menu");
+      await expect(trigger).toHaveAttribute("aria-expanded", "false");
     });
 
     await step("Clicar abre o menu com papel de menu e o foco entra nele", async () => {
       // Idempotente: o clique só acontece com o menu fechado, então o replay do
       // painel Interactions parte do mesmo estado da primeira rodada.
-      if (gatilho.getAttribute("aria-expanded") !== "true") await userEvent.click(gatilho);
+      if (trigger.getAttribute("aria-expanded") !== "true") await userEvent.click(trigger);
 
       const menu = await waitForPortal("menu");
       await expect(menu).toBeVisible();
-      await expect(gatilho).toHaveAttribute("aria-expanded", "true");
+      await expect(trigger).toHaveAttribute("aria-expanded", "true");
       await expect(args.onOpenChange).toHaveBeenCalledWith(true, expect.anything());
       await expect(within(menu).getAllByRole("menuitem")).toHaveLength(3);
       // O foco tem que ENTRAR no menu: se ficasse no gatilho, a seta seguinte
@@ -135,23 +135,23 @@ export const Playground: Story = {
       within(menu).getAllByRole("menuitem")[0].focus();
       await userEvent.keyboard("{Enter}");
       await waitForPortalGone("menu");
-      await expect(gatilho).toHaveAttribute("aria-expanded", "false");
+      await expect(trigger).toHaveAttribute("aria-expanded", "false");
       // O foco não pode cair no corpo do documento: quem navega por teclado
       // teria de percorrer a página inteira de novo para voltar ao ponto.
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(gatilho);
+        await expect(document.activeElement).toBe(trigger);
       });
     });
 
     await step("Escape fecha e devolve o foco ao gatilho", async () => {
-      if (gatilho.getAttribute("aria-expanded") !== "true") await userEvent.click(gatilho);
+      if (trigger.getAttribute("aria-expanded") !== "true") await userEvent.click(trigger);
       await waitForPortal("menu");
 
       await userEvent.keyboard("{Escape}");
       await waitForPortalGone("menu");
-      await expect(gatilho).toHaveAttribute("aria-expanded", "false");
+      await expect(trigger).toHaveAttribute("aria-expanded", "false");
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(gatilho);
+        await expect(document.activeElement).toBe(trigger);
       });
     });
   },

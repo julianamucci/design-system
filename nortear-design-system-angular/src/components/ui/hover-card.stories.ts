@@ -161,22 +161,22 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('link');
+    const trigger = canvas.getByRole('link');
 
     await step('O markup é o mesmo das outras stacks', async () => {
       // Raiz e gatilho são elementos nativos com diretiva de atributo: o DOM
       // sai igual ao do Vanilla e o CSS `.nds-hover-card-*` casa sem wrapper.
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="hover-card"]')!;
-      await expect(raiz.tagName).toBe('SPAN');
-      await expect(gatilho.tagName).toBe('A');
-      await expect(gatilho).toHaveAttribute('data-slot', 'hover-card-trigger');
+      const root = canvasElement.querySelector<HTMLElement>('[data-slot="hover-card"]')!;
+      await expect(root.tagName).toBe('SPAN');
+      await expect(trigger.tagName).toBe('A');
+      await expect(trigger).toHaveAttribute('data-slot', 'hover-card-trigger');
     });
 
     await step('O conteúdo do cartão não é o único caminho para a informação', async () => {
       // O gatilho continua sendo um link de verdade: quem está no touch, ou num
       // leitor de tela, chega ao perfil pelo clique. É exigência de
       // acessibilidade do componente, não detalhe do exemplo.
-      await expect(gatilho).toHaveAttribute('href', '/users/joana');
+      await expect(trigger).toHaveAttribute('href', '/users/joana');
     });
 
     // Estado conhecido antes das afirmações: o painel Interactions REEXECUTA a
@@ -191,23 +191,23 @@ export const Playground: Story = {
 
     await step('Passar o ponteiro abre o cartão', async () => {
       const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
-      await userEvent.hover(gatilho);
-      const painel = await waitForOpen();
-      await expect(painel).toBeVisible();
+      await userEvent.hover(trigger);
+      const panel = await waitForOpen();
+      await expect(panel).toBeVisible();
       // `role="dialog"` é contrato de markup das cinco stacks — o primitivo não
       // o emite, este componente sim.
-      await expect(painel).toHaveAttribute('role', 'dialog');
-      await expect(painel).toHaveClass(/nds-hover-card-content/);
+      await expect(panel).toHaveAttribute('role', 'dialog');
+      await expect(panel).toHaveClass(/nds-hover-card-content/);
       // Nome acessível: sem ele o axe reprova por `aria-dialog-name`. Sai do
       // texto do gatilho quando quem compõe não informa outro.
-      await expect(painel).toHaveAttribute('aria-label', args.triggerLabel);
+      await expect(panel).toHaveAttribute('aria-label', args.triggerLabel);
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
       ).toBeGreaterThan(callsBefore);
     });
 
     await step('Levar o ponteiro para longe fecha o cartão', async () => {
-      await leaveWithPointer(gatilho, panelOpen()!);
+      await leaveWithPointer(trigger, panelOpen()!);
       await waitForClosed('depois do ponteiro sair');
       await expect(panelOpen()).toBeNull();
     });
@@ -216,9 +216,9 @@ export const Playground: Story = {
       // É o que sustenta a WCAG 1.4.13 para quem navega por teclado: o mesmo
       // conteúdo, pelo foco.
       await userEvent.tab();
-      await expect(gatilho).toHaveFocus();
-      const painel = await waitForOpen();
-      await expect(painel).toBeVisible();
+      await expect(trigger).toHaveFocus();
+      const panel = await waitForOpen();
+      await expect(panel).toBeVisible();
     });
 
     await step('Escape fecha o cartão', async () => {

@@ -143,9 +143,9 @@ export class NdsNavigationMenuChevron {
       const svg = this.hostRef.nativeElement;
       svg.replaceChildren();
       for (const [tag, attrs] of CHEVRON) {
-        const filho = document.createElementNS('http://www.w3.org/2000/svg', tag);
-        for (const [k, v] of Object.entries(attrs)) filho.setAttribute(k, v);
-        svg.appendChild(filho);
+        const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
+        for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
+        svg.appendChild(child);
       }
     });
   }
@@ -204,7 +204,7 @@ export class NdsNavigationMenuChevron {
       <div
         rdxNavigationMenuPositioner
         class="nds-navigation-menu-positioner"
-        [side]="lado()"
+        [side]="side()"
         [align]="align()"
         [sideOffset]="sideOffset()"
       >
@@ -244,7 +244,7 @@ export class NdsNavigationMenu {
    */
   readonly indicator = input(false, { transform: booleanAttribute });
 
-  private readonly raiz = inject(RdxNavigationMenuRoot, { self: true });
+  private readonly root = inject(RdxNavigationMenuRoot, { self: true });
 
   /**
    * Barra horizontal abre para baixo; barra vertical abre para o lado.
@@ -252,8 +252,8 @@ export class NdsNavigationMenu {
    * Derivado da orientação em vez de virar mais um input: abrir para baixo numa
    * coluna cobriria os próprios itens seguintes, e nunca é o que se quer.
    */
-  protected readonly lado = computed(() =>
-    this.raiz.orientation() === 'vertical' ? 'right' : 'bottom',
+  protected readonly side = computed(() =>
+    this.root.orientation() === 'vertical' ? 'right' : 'bottom',
   );
 }
 

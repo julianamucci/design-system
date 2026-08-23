@@ -135,8 +135,8 @@ export const Group: Story = {
 
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const grupo = canvas.getByRole('group', { name: /Participantes/i });
-    const avatares = Array.from(grupo.querySelectorAll('[data-slot="avatar"]'));
+    const group = canvas.getByRole('group', { name: /Participantes/i });
+    const avatares = Array.from(group.querySelectorAll('[data-slot="avatar"]'));
     await expect(avatares.length).toBe(3);
 
     // functional.item5 — a sobreposição é o que a composição promete. Medir a
@@ -147,7 +147,7 @@ export const Group: Story = {
     await expect(segundo.left).toBeLessThan(first.right);
 
     // O contador fecha a fila e sobrepõe igual.
-    const counter = grupo.querySelector('[data-slot="avatar-group-count"]');
+    const counter = group.querySelector('[data-slot="avatar-group-count"]');
     await expect(counter).not.toBeNull();
     await expect(counter!.textContent).toBe('+3');
     const rc = counter!.getBoundingClientRect();
@@ -186,7 +186,7 @@ export const WithStatus: Story = {
     // elementFromPoint e não getBoundingClientRect sozinho: recorte não muda
     // layout. Enquanto o root tinha overflow:hidden, o ponto ficava com a caixa
     // certa e sem pintura nenhuma — invisível, e nenhuma medida acusava.
-    const alvo = document.elementFromPoint(rb.left + rb.width / 2, rb.top + rb.height / 2);
-    await expect(badge.contains(alvo)).toBe(true);
+    const target = document.elementFromPoint(rb.left + rb.width / 2, rb.top + rb.height / 2);
+    await expect(badge.contains(target)).toBe(true);
   },
 };

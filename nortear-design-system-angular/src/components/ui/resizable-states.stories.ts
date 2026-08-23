@@ -57,9 +57,9 @@ export const Dragging: Story = {
       // PointerEvent construído à mão: o punho chama `setPointerCapture` no
       // pointerdown, e captura só existe para um ponteiro que o navegador
       // conhece — evento sintético é descartado ali, em silêncio.
-      const caixa = punho.getBoundingClientRect();
-      const y = caixa.top + caixa.height / 2;
-      const x = caixa.left + caixa.width / 2;
+      const box = punho.getBoundingClientRect();
+      const y = box.top + box.height / 2;
+      const x = box.left + box.width / 2;
       const antes = Number(panels[0].style.getPropertyValue('--panel-size'));
 
       await userEvent.pointer([

@@ -24,9 +24,9 @@ import { Input } from '@/components/ui/input'`;
 const FRAME = 'nds-stack nds-w-xs';
 
 /** Bloco vertical: rótulo em cima, controle embaixo. */
-function bloco(filhos: string[], frame = FRAME, extra = ''): string {
+function block(children: string[], frame = FRAME, extra = ''): string {
   return `<div class="${frame}"${attrs('data-spacing="xs"', extra)}>
-${indentar(filhos.join('\n'))}
+${indentar(children.join('\n'))}
 </div>`;
 }
 
@@ -48,12 +48,12 @@ const ASTERISCO = '<span class="nds-text-destructive" aria-hidden="true">*</span
  */
 export const labelSource: SourceTransform<LabelArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const alvo = asCode(args.for) ?? 'nome-completo';
+  const target = asCode(args.for) ?? 'nome-completo';
   return vueSnippet(
     IMPORTS,
-    bloco([
-      `<Label${attrs(`for="${alvo}"`, attr('class', args.class))}>Nome completo</Label>`,
-      `<Input id="${alvo}" type="text" placeholder="ex: João da Silva" />`,
+    block([
+      `<Label${attrs(`for="${target}"`, attr('class', args.class))}>Nome completo</Label>`,
+      `<Input id="${target}" type="text" placeholder="ex: João da Silva" />`,
     ]),
   );
 };
@@ -62,7 +62,7 @@ export const labelSource: SourceTransform<LabelArgs> = (_gerado, ctx) => {
 export function labelDefaultSource(): string {
   return vueSnippet(
     IMPORTS,
-    bloco([
+    block([
       '<Label for="nome-completo">Nome completo</Label>',
       '<Input id="nome-completo" type="text" placeholder="ex: João da Silva" />',
     ]),
@@ -80,7 +80,7 @@ export function labelDefaultSource(): string {
 export function labelDisabledSource(): string {
   return vueSnippet(
     IMPORTS,
-    bloco([
+    block([
       '<Label for="cpf">CPF</Label>',
       '<Input id="cpf" type="text" class="nds-peer" placeholder="000.000.000-00" disabled />',
     ]),
@@ -95,7 +95,7 @@ export function labelDisabledSource(): string {
 export function labelDisabledPeloGroupSource(): string {
   return vueSnippet(
     IMPORTS,
-    bloco(
+    block(
       [
         '<Label for="documento">Documento</Label>',
         '<Input id="documento" type="text" placeholder="ex: 000.000.000-00" disabled />',
@@ -113,7 +113,7 @@ export function labelDisabledPeloGroupSource(): string {
 export function labelObrigatorioSource(): string {
   return vueSnippet(
     IMPORTS,
-    bloco([
+    block([
       `<Label for="email-profissional">
   Email profissional
   ${ASTERISCO}
@@ -127,7 +127,7 @@ export function labelObrigatorioSource(): string {
 export function labelWithFieldSource(): string {
   return vueSnippet(
     IMPORTS,
-    bloco([
+    block([
       '<Label for="telefone">Telefone</Label>',
       '<Input id="telefone" type="tel" placeholder="(11) 99999-9999" />',
     ]),

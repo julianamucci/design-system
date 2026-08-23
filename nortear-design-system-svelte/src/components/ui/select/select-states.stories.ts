@@ -120,14 +120,14 @@ export const Open: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
 
-    const abrir = async () => {
+    const open = async () => {
       // Idempotente: o clique só acontece com a lista fechada.
       if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       return await waitForPortal('listbox');
     };
 
     await step('O campo e a lista concordam sobre estar aberta', async () => {
-      const listbox = await abrir();
+      const listbox = await open();
       await expect(listbox).toBeVisible();
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
       await expect(within(listbox).getAllByRole('option')).toHaveLength(STATES.length);
@@ -137,7 +137,7 @@ export const Open: Story = {
       // O índice de partida vem MEDIDO, não suposto: umas libs já nascem com o
       // primeiro item destacado, outras só destacam quando o teclado entra. O
       // que o item do contrato promete é o passo de um, e é ele que se afirma.
-      const listbox = await abrir();
+      const listbox = await open();
       const destacada = () =>
         within(listbox)
           .getAllByRole('option')

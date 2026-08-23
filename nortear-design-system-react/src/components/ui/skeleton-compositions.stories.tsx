@@ -115,13 +115,13 @@ export const ListWithAvatar: Story = {
     </ul>
   ),
   play: async ({ canvasElement, step }) => {
-    const lista = canvasElement.querySelector<HTMLElement>("ul")!;
+    const list = canvasElement.querySelector<HTMLElement>("ul")!;
     const parts = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
     await step("A lista inteira é uma região ocupada, com nome", async () => {
-      await expect(lista).toHaveAttribute("aria-busy", "true");
-      await expect(lista.getAttribute("aria-label")).toBeTruthy();
-      await expect(lista.querySelectorAll("li")).toHaveLength(5);
+      await expect(list).toHaveAttribute("aria-busy", "true");
+      await expect(list.getAttribute("aria-label")).toBeTruthy();
+      await expect(list.querySelectorAll("li")).toHaveLength(5);
     });
 
     await step("Cinco itens de três peças, todas ocultas ao leitor", async () => {
@@ -159,7 +159,7 @@ export const ImageInAspectRatio: Story = {
     </div>
   ),
   play: async ({ canvasElement, step }) => {
-    const caixa = canvasElement.querySelector<HTMLElement>('[data-slot="aspect-ratio"]')!;
+    const box = canvasElement.querySelector<HTMLElement>('[data-slot="aspect-ratio"]')!;
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
 
     await step("A região de carregamento tem estado e nome", async () => {
@@ -171,7 +171,7 @@ export const ImageInAspectRatio: Story = {
     await step("O placeholder preenche a caixa proporcional", async () => {
       // Se o filho perdesse o `inset: 0`, a proporção continuaria certa e a
       // caixa ficaria vazia — só a medição acusa.
-      const c = caixa.getBoundingClientRect();
+      const c = box.getBoundingClientRect();
       const s = sk.getBoundingClientRect();
       await expect(Math.abs(s.height - c.height)).toBeLessThan(2);
       await expect(Math.abs(s.width - c.width)).toBeLessThan(2);

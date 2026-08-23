@@ -29,7 +29,7 @@ export type HoverCardOptions = {
  * Raiz do cartão com os dois comandos imperativos.
  *
  * É a forma que o modo CONTROLADO tem numa factory: não há prop reativa para
- * observar, então quem controla chama `abrir()`/`fechar()` e recebe cada
+ * observar, então quem controla chama `open()`/`close()` e recebe cada
  * mudança de volta por `onOpenChange`. Antes disso, a única maneira de abrir
  * por fora era despachar um `mouseenter` falso no gatilho — o que testava o
  * evento, não o estado.
@@ -39,10 +39,6 @@ export type HoverCardElement = HTMLElement & Destroyable & {
   close: () => void;
   toggle: () => void;
   isOpen: () => boolean;
-  /** @deprecated Apelido de `open`. */
-  abrir: () => void;
-  /** @deprecated Apelido de `close`. */
-  fechar: () => void;
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -130,7 +126,7 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
 
   // O elemento nasce sem os dois comandos e os recebe no fim desta função —
   // por isso a conversão passa por `unknown`: o `<div>` só vira `HoverCardElement`
-  // depois de `abrir`/`fechar` existirem.
+  // depois de `open`/`close` existirem.
   const wrapper = document.createElement('div') as unknown as HoverCardElement;
   wrapper.dataset.slot = 'hover-card';
   wrapper.style.display = 'contents';
@@ -213,13 +209,6 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
   wrapper.close = hide;
   wrapper.toggle = () => { if (panelEl) hide(); else show(); };
   wrapper.isOpen = () => panelEl !== null;
-
-  // As duas em português eram a API original desta fábrica, e eram a única do
-  // repositório assim — sidebar, drawer, popover e dropdown expõem
-  // `open`/`close`/`toggle`. Ficam como apelido em vez de sumir: apagá-las
-  // quebraria chamador em silêncio, e o apelido custa duas linhas.
-  wrapper.abrir = show;
-  wrapper.fechar = hide;
 
   /*
    * O painel mora no `document.body` e o `keydown` de Escape vive no

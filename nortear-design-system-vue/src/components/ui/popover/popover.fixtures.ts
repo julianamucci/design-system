@@ -13,6 +13,6 @@
 // quebraria em inglês e espanhol sem nada de errado no componente.
 
 /** O painel vive no `<body>`, fora do `canvasElement` — o portal é o ponto. */
-export function painel(): HTMLElement | null {
+export function panel(): HTMLElement | null {
   return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
 }

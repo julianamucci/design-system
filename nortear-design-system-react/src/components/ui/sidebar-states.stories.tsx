@@ -228,21 +228,21 @@ export const CollapsedIcon: Story = {
   render: () => <SidebarStatePreview defaultOpen={false} collapsible="icon" label="Sidebar icon mode (collapsible=icon, defaultOpen=false)" />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const raiz = () => canvasElement.querySelector<HTMLElement>("[data-slot='sidebar']")!;
+    const root = () => canvasElement.querySelector<HTMLElement>("[data-slot='sidebar']")!;
 
     await step("A barra nasce recolhida em ícones", async () => {
-      await expect(raiz()).toHaveAttribute("data-state", "collapsed");
-      await expect(raiz()).toHaveAttribute("data-collapsible", "icon");
+      await expect(root()).toHaveAttribute("data-state", "collapsed");
+      await expect(root()).toHaveAttribute("data-collapsible", "icon");
     });
 
     await step("O painel estreita para a largura de ícone", async () => {
       // Mede o pixel declarado, e não o atributo: a regra que estreita é
       // `[data-collapsible="icon"] .nds-sidebar-panel { width: … }`. Usa o
       // computado porque abaixo de 48rem o painel é `display: none`.
-      const painel = raiz().querySelector<HTMLElement>(".nds-sidebar-panel")!;
-      const emRem = parseFloat(getComputedStyle(raiz()).getPropertyValue("--sidebar-width-icon"));
+      const panel = root().querySelector<HTMLElement>(".nds-sidebar-panel")!;
+      const emRem = parseFloat(getComputedStyle(root()).getPropertyValue("--sidebar-width-icon"));
       const px = emRem * parseFloat(getComputedStyle(document.documentElement).fontSize);
-      await expect(Math.round(parseFloat(getComputedStyle(painel).width))).toBe(Math.round(px));
+      await expect(Math.round(parseFloat(getComputedStyle(panel).width))).toBe(Math.round(px));
     });
 
     await step("O ponteiro sobre o item abre o balão com o nome da seção", async () => {
@@ -270,11 +270,11 @@ export const CollapsedIcon: Story = {
     await step("O gatilho expande — e recolhe de volta", async () => {
       // Par idempotente: uma inversão só faria a segunda rodada do painel
       // Interactions afirmar o oposto.
-      const gatilho = canvas.getByRole("button", { name: /alternar barra lateral/i });
-      await userEvent.click(gatilho);
-      await waitFor(() => expect(raiz()).toHaveAttribute("data-state", "expanded"));
-      await userEvent.click(gatilho);
-      await waitFor(() => expect(raiz()).toHaveAttribute("data-state", "collapsed"));
+      const trigger = canvas.getByRole("button", { name: /alternar barra lateral/i });
+      await userEvent.click(trigger);
+      await waitFor(() => expect(root()).toHaveAttribute("data-state", "expanded"));
+      await userEvent.click(trigger);
+      await waitFor(() => expect(root()).toHaveAttribute("data-state", "collapsed"));
     });
   },
 };
@@ -291,22 +291,22 @@ export const Offcanvas: Story = {
   render: () => <SidebarStatePreview defaultOpen={false} collapsible="offcanvas" label="Sidebar offcanvas (colapsada fora da viewport)" />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const raiz = () => canvasElement.querySelector<HTMLElement>("[data-slot='sidebar']")!;
+    const root = () => canvasElement.querySelector<HTMLElement>("[data-slot='sidebar']")!;
 
     await step("Recolhida em offcanvas, o vão do fluxo zera", async () => {
-      await expect(raiz()).toHaveAttribute("data-state", "collapsed");
-      await expect(raiz()).toHaveAttribute("data-collapsible", "offcanvas");
+      await expect(root()).toHaveAttribute("data-state", "collapsed");
+      await expect(root()).toHaveAttribute("data-collapsible", "offcanvas");
 
-      const vao = raiz().querySelector<HTMLElement>(".nds-sidebar-gap-inner")!;
+      const vao = root().querySelector<HTMLElement>(".nds-sidebar-gap-inner")!;
       await expect(Math.round(parseFloat(getComputedStyle(vao).width))).toBe(0);
     });
 
     await step("O gatilho abre — e fecha de volta", async () => {
-      const gatilho = canvas.getByRole("button", { name: /alternar barra lateral/i });
-      await userEvent.click(gatilho);
-      await waitFor(() => expect(raiz()).toHaveAttribute("data-state", "expanded"));
-      await userEvent.click(gatilho);
-      await waitFor(() => expect(raiz()).toHaveAttribute("data-state", "collapsed"));
+      const trigger = canvas.getByRole("button", { name: /alternar barra lateral/i });
+      await userEvent.click(trigger);
+      await waitFor(() => expect(root()).toHaveAttribute("data-state", "expanded"));
+      await userEvent.click(trigger);
+      await waitFor(() => expect(root()).toHaveAttribute("data-state", "collapsed"));
     });
   },
 };
@@ -326,9 +326,9 @@ export const Fixed: Story = {
     const canvas = within(canvasElement);
 
     await step("Sem recolhimento não há estado de recolhimento", async () => {
-      const raiz = canvasElement.querySelector<HTMLElement>("[data-slot='sidebar']")!;
-      await expect(raiz).toHaveClass("nds-sidebar-static");
-      await expect(raiz).not.toHaveAttribute("data-state");
+      const root = canvasElement.querySelector<HTMLElement>("[data-slot='sidebar']")!;
+      await expect(root).toHaveClass("nds-sidebar-static");
+      await expect(root).not.toHaveAttribute("data-state");
       // Sem painel fixo, o conteúdo é a própria coluna — nada de reservar vão.
       await expect(canvasElement.querySelector(".nds-sidebar-gap-inner")).toBeNull();
     });
@@ -362,10 +362,10 @@ export const Loading: Story = {
         "[data-slot='sidebar-menu-skeleton']",
       )!;
       const icone = first.querySelector<HTMLElement>(".nds-sidebar-menu-skeleton-icon")!;
-      const texto = first.querySelector<HTMLElement>(".nds-sidebar-menu-skeleton-text")!;
+      const text = first.querySelector<HTMLElement>(".nds-sidebar-menu-skeleton-text")!;
       await expect(icone).not.toBeNull();
       await expect(icone.getBoundingClientRect().left).toBeLessThan(
-        texto.getBoundingClientRect().left,
+        text.getBoundingClientRect().left,
       );
     });
   },
@@ -401,7 +401,7 @@ export const Mobile: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = () => canvas.getByRole("button", { name: /alternar barra lateral/i });
+    const trigger = () => canvas.getByRole("button", { name: /alternar barra lateral/i });
     // A gaveta vive num portal no fim do <body>, fora do canvasElement.
     const gaveta = () =>
       document.querySelector<HTMLElement>("[data-slot='sidebar'][data-mobile='true']");
@@ -423,7 +423,7 @@ export const Mobile: Story = {
     });
 
     await step("O gatilho abre a gaveta", async () => {
-      await userEvent.click(gatilho());
+      await userEvent.click(trigger());
       await waitFor(() => expect(gaveta()).not.toBeNull());
     });
 
@@ -473,7 +473,7 @@ export const Mobile: Story = {
       // ele engolia o primeiro e a gaveta só fechava no segundo.
       await userEvent.keyboard("{Escape}");
       await waitFor(() => expect(gaveta()).toBeNull());
-      await waitFor(() => expect(document.activeElement).toBe(gatilho()));
+      await waitFor(() => expect(document.activeElement).toBe(trigger()));
     });
 
     await step("Ctrl+B alterna a mesma gaveta — e a devolve fechada", async () => {
@@ -492,13 +492,13 @@ export const Mobile: Story = {
       // O replay continua honesto: o primeiro passo fecha o que encontrar
       // aberto, e os pares abrir/fechar acima já provaram que os cliques
       // acontecem NESTA rodada. Este passo prova só o estado final.
-      await userEvent.click(gatilho());
+      await userEvent.click(trigger());
       // `waitForPortal` gateia na opacidade computada: `toBeVisible()` do
       // jest-dom só reprova em opacidade exatamente 0, e a gaveta entra com
       // animação — sem o gate, a foto poderia sair no meio do fade.
-      const painel = await waitForPortal("dialog", { name: /barra lateral/i });
-      await expect(painel).toBeVisible();
-      await expect(painel).toBe(gaveta());
+      const panel = await waitForPortal("dialog", { name: /barra lateral/i });
+      await expect(panel).toBeVisible();
+      await expect(panel).toBe(gaveta());
     });
   },
 };

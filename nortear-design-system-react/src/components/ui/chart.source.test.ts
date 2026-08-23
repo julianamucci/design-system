@@ -151,7 +151,7 @@ describe('rótulo e título', () => {
 
   it('dois desenhos na mesma tela carregam um rótulo cada', () => {
     const saida = chartDoisDesenhosSource();
-    const rotulos = [...saida.matchAll(/aria-label="([^"]+)"/g)].map(([, texto]) => texto);
+    const rotulos = [...saida.matchAll(/aria-label="([^"]+)"/g)].map(([, text]) => text);
     expect(rotulos.length).toBe(2);
     expect(new Set(rotulos).size).toBe(2);
     expect(saida).toContain('buildBarOption');
@@ -174,9 +174,9 @@ describe('estados e composição', () => {
   it('no Card o gráfico fica DENTRO do corpo, e a altura é do gráfico', () => {
     const saida = chartEmCardSource();
     expect(saida).toContain('} from "@/components/ui/card";');
-    const corpo = saida.indexOf('<CardContent>');
+    const body = saida.indexOf('<CardContent>');
     const grafico = saida.indexOf('<ChartContainer');
-    expect(grafico).toBeGreaterThan(corpo);
+    expect(grafico).toBeGreaterThan(body);
     expect(grafico).toBeLessThan(saida.indexOf('</CardContent>'));
     expect(saida).toContain('<Card className="nds-max-w-lg">');
     expect(saida).toContain('<CardTitle as="h3">');

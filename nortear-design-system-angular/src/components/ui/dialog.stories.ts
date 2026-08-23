@@ -5,9 +5,9 @@ import { NDS_DIALOG } from './dialog';
 import { NdsButton } from './button';
 import {
   LABELS,
-  abrir as abrirDialogo,
-  fechar as fecharDialogo,
-  painel,
+  open as abrirDialogo,
+  close as fecharDialogo,
+  panel,
   overlay,
   waitForClosed,
   checkNameEDescricao,
@@ -38,13 +38,13 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<DialogArgs> }):
 
   // Só o que difere do padrão entra no snippet — documentação que repete valor
   // default ensina ruído.
-  const raiz = [
+  const root = [
     '<div ndsDialog',
     defaultOpen ? '[defaultOpen]="true"' : '',
     modal ? '' : '[modal]="false"',
   ].filter(Boolean).join(' ');
 
-  const conteudo = [
+  const content = [
     '<div ndsDialogContent',
     showCloseButton ? '' : '[showCloseButton]="false"',
   ].filter(Boolean).join(' ');
@@ -55,13 +55,13 @@ import { NdsButton } from '@/components/ui/button';
 @Component({
   imports: [...NDS_DIALOG, NdsButton],
   template: \`
-    ${raiz}>
+    ${root}>
       <button ndsDialogTrigger ndsButton variant="outline">${triggerLabel}</button>
 
       <ng-template ndsDialogPortal>
         <div ndsDialogOverlay></div>
 
-        ${conteudo} closeLabel="${LABELS.close}">
+        ${content} closeLabel="${LABELS.close}">
           <div ndsDialogHeader>
             <h2 ndsDialogTitle>${LABELS.title}</h2>
             <p ndsDialogDescription>${LABELS.description}</p>
@@ -176,13 +176,13 @@ export const Playground: Story = {
     // Abrir só se estiver fechado: o painel Interactions REEXECUTA a play no
     // mesmo DOM, e um clique absoluto partiria do estado que a rodada anterior
     // deixou, invertendo o resultado.
-    const abrir = () => abrirDialogo(canvasElement);
+    const open = () => abrirDialogo(canvasElement);
 
     await step('O markup é o mesmo das outras stacks', async () => {
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="dialog"]')!;
+      const root = canvasElement.querySelector<HTMLElement>('[data-slot="dialog"]')!;
       // A raiz é um `<div>` sem visual próprio, como no Vanilla — não um
       // elemento `<nds-dialog>`, que não casaria com nenhuma regra do CSS.
-      await expect(raiz.tagName).toBe('DIV');
+      await expect(root.tagName).toBe('DIV');
       await expect(trigger.tagName).toBe('BUTTON');
       // `type="button"`: dentro de um `<form>`, o `submit` herdado faria abrir o
       // diálogo enviar o formulário.
@@ -197,13 +197,13 @@ export const Playground: Story = {
       // precondição; quem verifica o estado fechado NA MONTAGEM é a story
       // `Closed`, que não interage com nada.
       await fecharDialogo();
-      await expect(painel()).toBeNull();
+      await expect(panel()).toBeNull();
       await expect(overlay()).toBeNull();
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('Clicar no gatilho abre o diálogo com overlay', async () => {
-      const p = await abrir();
+      const p = await open();
       await expect(p).toBeVisible();
       await expect(overlay()).toBeInTheDocument();
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
@@ -214,7 +214,7 @@ export const Playground: Story = {
     });
 
     await step('O painel se anuncia como diálogo modal, com nome e descrição', async () => {
-      const p = painel()!;
+      const p = panel()!;
       await expect(p).toHaveAttribute('role', 'dialog');
       if (args.modal) await expect(p).toHaveAttribute('aria-modal', 'true');
       await checkNameEDescricao(p);
@@ -223,14 +223,14 @@ export const Playground: Story = {
     });
 
     await step('O foco entra no painel ao abrir', async () => {
-      const p = painel()!;
+      const p = panel()!;
       await waitFor(async () => {
         await expect(p.contains(document.activeElement)).toBe(true);
       });
     });
 
     await step('Tab não sai do painel', async () => {
-      const p = painel()!;
+      const p = panel()!;
       const focaveis = p.querySelectorAll<HTMLElement>(
         'button, [href], input, [tabindex]:not([tabindex="-1"])',
       );
@@ -254,7 +254,7 @@ export const Playground: Story = {
     });
 
     await step('Clique no overlay fecha', async () => {
-      await abrir();
+      await open();
       await userEvent.click(overlay()!);
       await waitForClosed();
       await waitFor(async () => {
@@ -264,7 +264,7 @@ export const Playground: Story = {
 
     if (args.showCloseButton) {
       await step('O botão X fecha, tem nome acessível e devolve o foco', async () => {
-        const p = await abrir();
+        const p = await open();
         const x = p.querySelector<HTMLElement>('[data-slot="dialog-close"]')!;
         await expect(x).toHaveAccessibleName(LABELS.close);
         await userEvent.click(x);
@@ -279,7 +279,7 @@ export const Playground: Story = {
     }
 
     await step('O Cancelar do rodapé fecha sem tocar na ação primária', async () => {
-      const p = await abrir();
+      const p = await open();
       // Pelo nome acessível, e não por `data-slot`: o Cancelar é um `ndsButton`
       // e o slot dele é `button` — ver a nota em NdsDialogClose sobre a disputa
       // de host binding no mesmo atributo.
@@ -297,7 +297,7 @@ export const Playground: Story = {
       // varredura de acessibilidade medir uma página sem diálogo nenhum — o
       // conteúdo compartilhado declara os dois sobre o estado ABERTO
       // (`visual.item1`, `accessibility.item6`).
-      const p = await abrir();
+      const p = await open();
       await expect(p).toBeVisible();
       await expect(p).toHaveAttribute('data-state', 'open');
     });

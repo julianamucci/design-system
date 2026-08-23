@@ -253,7 +253,7 @@ export const Vertical: Story = {
         transform: tabsSourceWith({
           orientation: 'vertical',
           'aria-label': 'Configurações',
-          itens: [
+          items: [
             { value: 'profile', label: 'Perfil', content: 'Edite suas informações públicas.' },
             { value: 'account', label: 'Conta', content: 'Email, idioma e preferências.' },
             { value: 'security', label: 'Segurança', content: 'Senha e autenticação em dois fatores.' },
@@ -277,17 +277,17 @@ export const Vertical: Story = {
     }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector('[data-slot="tabs"]')!;
-    const lista = canvas.getByRole('tablist');
+    const root = canvasElement.querySelector('[data-slot="tabs"]')!;
+    const list = canvas.getByRole('tablist');
     const abas = canvas.getAllByRole('tab');
 
     await step('O conjunto se declara vertical e se desenha empilhado', async () => {
-      await expect(raiz).toHaveAttribute('data-orientation', 'vertical');
-      await expect(lista).toHaveAttribute('aria-orientation', 'vertical');
+      await expect(root).toHaveAttribute('data-orientation', 'vertical');
+      await expect(list).toHaveAttribute('aria-orientation', 'vertical');
       const borders = new Set(abas.map((a) => Math.round(a.getBoundingClientRect().left)));
       await expect(borders.size).toBe(1);
       await expect(canvas.getByRole('tabpanel').getBoundingClientRect().left)
-        .toBeGreaterThanOrEqual(lista.getBoundingClientRect().right);
+        .toBeGreaterThanOrEqual(list.getBoundingClientRect().right);
     });
 
     await step('A seta segue a direção da lista', async () => {
@@ -309,7 +309,7 @@ export const SubNavigationLine: Story = {
         transform: tabsSourceWith({
           variant: 'line',
           'aria-label': 'Filtros de listagem',
-          itens: [
+          items: [
             { value: 'all', label: 'Tudo', content: 'Mostrando todos os itens.' },
             { value: 'active', label: 'Ativos', content: 'Mostrando apenas ativos.' },
             { value: 'archived', label: 'Arquivados', content: 'Mostrando apenas arquivados.' },
@@ -340,12 +340,12 @@ export const SubNavigationLine: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const lista = canvas.getByRole('tablist');
+    const list = canvas.getByRole('tablist');
     const [ativa, inativa] = canvas.getAllByRole('tab');
 
     await step('Sem trilho: a lista não pinta fundo', async () => {
-      await expect(lista).toHaveAttribute('data-variant', 'line');
-      await expect(getComputedStyle(lista).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+      await expect(list).toHaveAttribute('data-variant', 'line');
+      await expect(getComputedStyle(list).backgroundColor).toBe('rgba(0, 0, 0, 0)');
     });
 
     await step('O ativo é marcado por um traço, desenhado em ::after', async () => {

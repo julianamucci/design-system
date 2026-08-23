@@ -22,17 +22,17 @@ type Story = StoryObj;
  * cego alterna a partir do que a rodada anterior deixou e inverte o resultado —
  * a suíte fica verde (o vitest remonta) e o painel falha.
  */
-async function definir(sw: HTMLElement, ligado: boolean, alvo: HTMLElement = sw): Promise<void> {
-  if ((sw.getAttribute('aria-checked') === 'true') !== ligado) await userEvent.click(alvo);
+async function definir(sw: HTMLElement, ligado: boolean, target: HTMLElement = sw): Promise<void> {
+  if ((sw.getAttribute('aria-checked') === 'true') !== ligado) await userEvent.click(target);
 }
 
 /** Primeira cor de fundo opaca subindo a árvore — o "ambiente" do controle. */
 function environmentBackground(el: HTMLElement): string {
-  let atual: HTMLElement | null = el.parentElement;
-  while (atual) {
-    const cor = getComputedStyle(atual).backgroundColor;
+  let current: HTMLElement | null = el.parentElement;
+  while (current) {
+    const cor = getComputedStyle(current).backgroundColor;
     if (cor && !/,\s*0\s*\)$/.test(cor) && cor !== 'transparent') return cor;
-    atual = atual.parentElement;
+    current = current.parentElement;
   }
   return 'rgb(255, 255, 255)';
 }
@@ -155,7 +155,7 @@ export const AssociatedLabel: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const sw = canvasElement.querySelector<HTMLElement>('#lbl-switch')!;
-    const rotulo = canvasElement.querySelector<HTMLLabelElement>('label[for="lbl-switch"]')!;
+    const label = canvasElement.querySelector<HTMLLabelElement>('label[for="lbl-switch"]')!;
 
     await step('O rótulo nomeia o controle', async () => {
       await expect(canvas.getByRole('switch', { name: 'Modo escuro' })).toBe(sw);
@@ -164,9 +164,9 @@ export const AssociatedLabel: Story = {
     await step('Clicar no rótulo alterna o estado', async () => {
       // É o `for` chegando ao `id` real do host. Se o primitivo tivesse
       // sobrescrito o id com o seu gerado, o clique aqui não faria nada.
-      await definir(sw, true, rotulo);
+      await definir(sw, true, label);
       await expect(sw).toHaveAttribute('data-state', 'checked');
-      await definir(sw, false, rotulo);
+      await definir(sw, false, label);
       await expect(sw).toHaveAttribute('data-state', 'unchecked');
     });
   },

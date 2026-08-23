@@ -64,18 +64,18 @@ export function teclaTarget(
   evento: { key: string; shiftKey?: boolean },
 ): string | null {
   if (!isoAtual || !gridEhTecla(evento.key)) return null;
-  const atual = deIso(isoAtual);
-  if (!atual) return null;
+  const current = deIso(isoAtual);
+  if (!current) return null;
 
   switch (evento.key) {
     case 'Home':
-      return toIso(new Date(atual.getTime() - atual.getUTCDay() * 86_400_000));
+      return toIso(new Date(current.getTime() - current.getUTCDay() * 86_400_000));
     case 'End':
-      return toIso(new Date(atual.getTime() + (6 - atual.getUTCDay()) * 86_400_000));
+      return toIso(new Date(current.getTime() + (6 - current.getUTCDay()) * 86_400_000));
     case 'PageUp':
-      return toIso(somarMonths(atual, evento.shiftKey ? -12 : -1));
+      return toIso(somarMonths(current, evento.shiftKey ? -12 : -1));
     case 'PageDown':
-      return toIso(somarMonths(atual, evento.shiftKey ? 12 : 1));
+      return toIso(somarMonths(current, evento.shiftKey ? 12 : 1));
   }
 }
 
@@ -98,8 +98,8 @@ export function isoDoElemento(el: Element | null | undefined): string | null {
 }
 
 /** O botão do dia com esta data, dentro da raiz — `null` se a grade não o traz. */
-export function gridDay(raiz: ParentNode, iso: string): HTMLElement | null {
-  return raiz.querySelector<HTMLElement>(
+export function gridDay(root: ParentNode, iso: string): HTMLElement | null {
+  return root.querySelector<HTMLElement>(
     `.nds-calendar-day-btn[data-value="${iso}"], .nds-calendar-day-btn[data-day="${iso}"]`,
   );
 }

@@ -38,7 +38,7 @@ export const Default: Story = {
     page: 1,
     siblingCount: 2,
     demonstration: 'simples',
-    rotulo: 'Paginação com link inativo',
+    label: 'Paginação com link inativo',
   },
   parameters: {
     docs: {
@@ -65,7 +65,7 @@ export const Active: Story = {
     page: 3,
     siblingCount: 2,
     demonstration: 'simples',
-    rotulo: 'Paginação com página atual',
+    label: 'Paginação com página atual',
   },
   parameters: {
     covers: ['accessibility.item4'],
@@ -104,7 +104,7 @@ export const Directional: Story = {
     perPage: 10,
     page: 2,
     demonstration: 'directional',
-    rotulo: 'Paginação direcional',
+    label: 'Paginação direcional',
   },
   parameters: {
     covers: ['accessibility.item5', 'accessibility.item6'],

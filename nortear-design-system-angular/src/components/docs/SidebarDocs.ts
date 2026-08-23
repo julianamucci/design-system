@@ -63,9 +63,9 @@ const { t, dict } = useTranslation(sidebarTranslations as Record<string, unknown
  * slider não tem nav.compositions. Sem a queda, o que aparece na barra
  * lateral é a chave crua.
  */
-function navLabel(chave: string): string {
-  const doComponente = t(chave);
-  return doComponente === chave ? tNav(chave) : doComponente;
+function navLabel(key: string): string {
+  const doComponente = t(key);
+  return doComponente === key ? tNav(key) : doComponente;
 }
 
 const SECTION_IDS = [
@@ -700,12 +700,12 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const line = (name: string, chave: string, tipo: string, padrao: string) => ({
+    const line = (name: string, key: string, type: string, padrao: string) => ({
       name,
-      type: tipo,
+      type: type,
       defaultValue: padrao,
       required: not,
-      description: toPlainText(t(chave)),
+      description: toPlainText(t(key)),
     });
 
     return [
@@ -784,25 +784,25 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '--sidebar',                   k: 'sidebarBg',          alvo: '.nds-sidebar-inner' },
-      { token: '--sidebar-foreground',        k: 'sidebarFg',          alvo: '.nds-sidebar-root' },
-      { token: '--sidebar-border',            k: 'sidebarBorder',      alvo: '.nds-sidebar-panel' },
-      { token: '--sidebar-accent',            k: 'sidebarAccent',      alvo: '.nds-sidebar-menu-button' },
-      { token: '--sidebar-accent-foreground', k: 'sidebarAccentFg',    alvo: '.nds-sidebar-menu-button' },
-      { token: '--sidebar-ring',              k: 'sidebarRing',        alvo: '.nds-sidebar-menu-button' },
-      { token: '--sidebar-width',             k: 'sidebarWidth',       alvo: '.nds-sidebar-wrapper' },
-      { token: '--sidebar-width-icon',        k: 'sidebarWidthIcon',   alvo: '.nds-sidebar-wrapper' },
-      { token: '--sidebar-width-mobile',      k: 'sidebarWidthMobile', alvo: '.nds-sidebar-mobile' },
-    ].map(({ token, k, alvo }) => ({
+      { token: '--sidebar',                   k: 'sidebarBg',          target: '.nds-sidebar-inner' },
+      { token: '--sidebar-foreground',        k: 'sidebarFg',          target: '.nds-sidebar-root' },
+      { token: '--sidebar-border',            k: 'sidebarBorder',      target: '.nds-sidebar-panel' },
+      { token: '--sidebar-accent',            k: 'sidebarAccent',      target: '.nds-sidebar-menu-button' },
+      { token: '--sidebar-accent-foreground', k: 'sidebarAccentFg',    target: '.nds-sidebar-menu-button' },
+      { token: '--sidebar-ring',              k: 'sidebarRing',        target: '.nds-sidebar-menu-button' },
+      { token: '--sidebar-width',             k: 'sidebarWidth',       target: '.nds-sidebar-wrapper' },
+      { token: '--sidebar-width-icon',        k: 'sidebarWidthIcon',   target: '.nds-sidebar-wrapper' },
+      { token: '--sidebar-width-mobile',      k: 'sidebarWidthMobile', target: '.nds-sidebar-mobile' },
+    ].map(({ token, k, target }) => ({
       token,
-      value: alvo,
+      value: target,
       description: toPlainText(t(`tokens.${k}`)),
     }));
   });
 
   protected readonly a11yItems = computed(() => {
     const d = dict();
-    const itens = Object.keys(d)
+    const items = Object.keys(d)
       .filter((k) => /^accessibility\.item\d+$/.test(k))
       .sort()
       .map((k) => d[k]);
@@ -811,7 +811,7 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
     );
     // A seção genérica não tem faixa própria para ARIA; as duas listas dizem a
     // mesma coisa em graus diferentes de detalhe, então saem juntas.
-    return [...itens, ...aria];
+    return [...items, ...aria];
   });
 
   protected readonly keyboardItems = computed(() => {
@@ -837,13 +837,13 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'navigationMenu', nome: 'Navigation Menu', path: '?path=/docs/ui-navigationmenu--docs' },
-      { key: 'tabs',           nome: 'Tabs',            path: '?path=/docs/ui-tabs--docs'           },
-      { key: 'sheet',          nome: 'Sheet',           path: '?path=/docs/ui-sheet--docs'          },
-      { key: 'accordion',      nome: 'Accordion',       path: '?path=/docs/ui-accordion--docs'      },
-      { key: 'separator',      nome: 'Separator',       path: '?path=/docs/ui-separator--docs'      },
-      { key: 'skeleton',       nome: 'Skeleton',        path: '?path=/docs/ui-skeleton--docs'       },
-    ].map(({ key, nome, path }) => ({ name: nome, description: t(`related.${key}`), path }));
+      { key: 'navigationMenu', name: 'Navigation Menu', path: '?path=/docs/ui-navigationmenu--docs' },
+      { key: 'tabs',           name: 'Tabs',            path: '?path=/docs/ui-tabs--docs'           },
+      { key: 'sheet',          name: 'Sheet',           path: '?path=/docs/ui-sheet--docs'          },
+      { key: 'accordion',      name: 'Accordion',       path: '?path=/docs/ui-accordion--docs'      },
+      { key: 'separator',      name: 'Separator',       path: '?path=/docs/ui-separator--docs'      },
+      { key: 'skeleton',       name: 'Skeleton',        path: '?path=/docs/ui-skeleton--docs'       },
+    ].map(({ key, name, path }) => ({ name: name, description: t(`related.${key}`), path }));
   });
 
   protected readonly noteItems = computed(() => {
@@ -863,14 +863,14 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
   protected readonly analyticsItems = computed(() => {
     dict();
     return [
-      { e: 'navClick',      gatilho: 'navClickTrigger',      carga: 'navClickPayload'      },
-      { e: 'toggleOpen',    gatilho: 'toggleOpenTrigger',    carga: 'togglePayload'        },
-      { e: 'pageView',      gatilho: 'pageViewTrigger',      carga: 'pageViewPayload'      },
-      { e: 'sectionViewed', gatilho: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
-      { e: 'langSwitch',    gatilho: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
-    ].map(({ e, gatilho, carga }) => ({
+      { e: 'navClick',      trigger: 'navClickTrigger',      carga: 'navClickPayload'      },
+      { e: 'toggleOpen',    trigger: 'toggleOpenTrigger',    carga: 'togglePayload'        },
+      { e: 'pageView',      trigger: 'pageViewTrigger',      carga: 'pageViewPayload'      },
+      { e: 'sectionViewed', trigger: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
+      { e: 'langSwitch',    trigger: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
+    ].map(({ e, trigger, carga }) => ({
       event: t(`analytics.table.${e}`),
-      trigger: toPlainText(t(`analytics.table.${gatilho}`)),
+      trigger: toPlainText(t(`analytics.table.${trigger}`)),
       payload: toPlainText(t(`analytics.table.${carga}`)),
     }));
   });
@@ -978,9 +978,9 @@ function priorityLabel(raw: string): string {
  * "usage.dont.item4" apareceu escrito na página.
  */
 function numberedItems(d: Record<string, string>, base: string): string[] {
-  const itens: string[] = [];
-  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) itens.push(d[`${base}.item${i}`]);
-  return itens;
+  const items: string[] = [];
+  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) items.push(d[`${base}.item${i}`]);
+  return items;
 }
 
 function itemsFromDict<K extends string>(

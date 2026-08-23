@@ -131,24 +131,24 @@ export const Open: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const painel = await waitForPortal("dialog");
+    const panel = await waitForPortal("dialog");
 
     await step("Monta já aberto, com o contrato de markup completo", async () => {
-      await expect(painel).toBeVisible();
-      await expect(painel).toHaveAttribute("role", "dialog");
-      await expect(painel).toHaveAttribute("aria-modal", "true");
-      await expect(painel).toHaveAttribute("data-slot", "drawer-content");
-      await expect(painel).toHaveAccessibleName("Editar perfil");
+      await expect(panel).toBeVisible();
+      await expect(panel).toHaveAttribute("role", "dialog");
+      await expect(panel).toHaveAttribute("aria-modal", "true");
+      await expect(panel).toHaveAttribute("data-slot", "drawer-content");
+      await expect(panel).toHaveAccessibleName("Editar perfil");
       await expect(document.querySelector("[data-slot='drawer-overlay']")).not.toBeNull();
     });
 
     await step("O foco está dentro do painel", async () => {
       await waitFor(() => {
-        if (!painel.contains(document.activeElement)) {
+        if (!panel.contains(document.activeElement)) {
           throw new Error("o foco não entrou no painel");
         }
       });
-      await expect(painel.contains(document.activeElement)).toBe(true);
+      await expect(panel.contains(document.activeElement)).toBe(true);
     });
   },
 };
@@ -210,14 +210,14 @@ export const Controlled: Story = {
 
     await step("O estado externo abre o painel", async () => {
       await userEvent.click(openBtn);
-      const painel = await waitForPortal("dialog");
-      await expect(painel).toBeVisible();
-      await expect(painel).toHaveAccessibleName("Editar perfil");
+      const panel = await waitForPortal("dialog");
+      await expect(panel).toBeVisible();
+      await expect(panel).toHaveAccessibleName("Editar perfil");
     });
 
     await step("Fechar por dentro devolve o valor a quem é dono dele", async () => {
-      const painel = await waitForPortal("dialog");
-      await userEvent.click(within(painel).getByRole("button", { name: /Cancelar/i }));
+      const panel = await waitForPortal("dialog");
+      await userEvent.click(within(panel).getByRole("button", { name: /Cancelar/i }));
       await waitForPortalGone("dialog");
       // Se o callback não tivesse chegado, `open` continuaria true e o painel
       // reabriria no render seguinte.
@@ -259,7 +259,7 @@ export const NotDismissible: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    const painel = await waitForPortal("dialog");
+    const panel = await waitForPortal("dialog");
 
     await step("Escape não fecha", async () => {
       await userEvent.keyboard("{Escape}");
@@ -267,7 +267,7 @@ export const NotDismissible: Story = {
       // transição de saída levaria menos que isto.
       await new Promise((r) => setTimeout(r, 400));
       await expect(within(document.body).queryAllByRole("dialog")).toHaveLength(1);
-      await expect(painel).toBeVisible();
+      await expect(panel).toBeVisible();
     });
 
     await step("Clique no overlay não fecha", async () => {
@@ -280,7 +280,7 @@ export const NotDismissible: Story = {
 
     await step("A saída explícita do rodapé continua funcionando", async () => {
       await expect(
-        within(painel).getByRole("button", { name: /Confirmar e fechar/i }),
+        within(panel).getByRole("button", { name: /Confirmar e fechar/i }),
       ).toBeVisible();
     });
   },

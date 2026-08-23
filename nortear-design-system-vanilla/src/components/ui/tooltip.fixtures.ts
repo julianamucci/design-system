@@ -13,10 +13,10 @@
  */
 
 /** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
-export function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute('aria-describedby');
-  const alvo = id ? document.getElementById(id) : null;
-  return alvo?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
+export function balaoDe(trigger: HTMLElement): HTMLElement | null {
+  const id = trigger.getAttribute('aria-describedby');
+  const target = id ? document.getElementById(id) : null;
+  return target?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
 }
 
 /** Tira do DOM qualquer balão que tenha sobrado antes do axe varrer a página. */

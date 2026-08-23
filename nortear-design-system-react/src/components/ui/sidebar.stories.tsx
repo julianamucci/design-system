@@ -217,8 +217,8 @@ export const Playground: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const raiz = () => canvasElement.querySelector<HTMLElement>("[data-slot='sidebar']")!;
-    const gatilho = () => canvas.getByRole("button", { name: /alternar barra lateral/i });
+    const root = () => canvasElement.querySelector<HTMLElement>("[data-slot='sidebar']")!;
+    const trigger = () => canvas.getByRole("button", { name: /alternar barra lateral/i });
 
     await step("A navegação tem nome acessível", async () => {
       // Sem nome no <nav>, a barra é só "navegação" na lista de marcos do
@@ -245,45 +245,45 @@ export const Playground: Story = {
       // única coisa que quem usa leitor de tela recebe. Enquanto o texto era
       // "Toggle Sidebar", nenhuma asserção reprovava — a consulta por papel
       // casava o inglês tão bem quanto casaria qualquer outra coisa.
-      await expect(gatilho()).toHaveAccessibleName("Alternar barra lateral");
+      await expect(trigger()).toHaveAccessibleName("Alternar barra lateral");
       // A faixa repete a ação com o ponteiro, e a dica dela é o mesmo texto.
-      const faixa = canvasElement.querySelector<HTMLButtonElement>("[data-slot='sidebar-rail']")!;
-      await expect(faixa.title).toBe("Alternar barra lateral");
+      const range = canvasElement.querySelector<HTMLButtonElement>("[data-slot='sidebar-rail']")!;
+      await expect(range.title).toBe("Alternar barra lateral");
     });
 
     await step("O gatilho alterna o estado — e volta", async () => {
       // Par idempotente: o painel Interactions reexecuta a play no mesmo DOM,
       // e uma única inversão faria a segunda rodada afirmar o oposto.
-      const antes = raiz().getAttribute("data-state");
-      await userEvent.click(gatilho());
-      await waitFor(() => expect(raiz().getAttribute("data-state")).not.toBe(antes));
-      await userEvent.click(gatilho());
-      await waitFor(() => expect(raiz().getAttribute("data-state")).toBe(antes));
+      const antes = root().getAttribute("data-state");
+      await userEvent.click(trigger());
+      await waitFor(() => expect(root().getAttribute("data-state")).not.toBe(antes));
+      await userEvent.click(trigger());
+      await waitFor(() => expect(root().getAttribute("data-state")).toBe(antes));
     });
 
     await step("Ctrl+B alterna de qualquer lugar da página", async () => {
-      const antes = raiz().getAttribute("data-state");
+      const antes = root().getAttribute("data-state");
       await userEvent.keyboard("{Control>}b{/Control}");
-      await waitFor(() => expect(raiz().getAttribute("data-state")).not.toBe(antes));
+      await waitFor(() => expect(root().getAttribute("data-state")).not.toBe(antes));
       await userEvent.keyboard("{Control>}b{/Control}");
-      await waitFor(() => expect(raiz().getAttribute("data-state")).toBe(antes));
+      await waitFor(() => expect(root().getAttribute("data-state")).toBe(antes));
     });
 
     await step("A faixa alterna sem duplicar o gatilho para quem não usa ponteiro", async () => {
-      const faixa = canvasElement.querySelector<HTMLButtonElement>("[data-slot='sidebar-rail']")!;
-      await expect(faixa.tabIndex).toBe(-1);
+      const range = canvasElement.querySelector<HTMLButtonElement>("[data-slot='sidebar-rail']")!;
+      await expect(range.tabIndex).toBe(-1);
       // A faixa é o par de ponteiro do gatilho, e faz exatamente a mesma coisa.
       // Fora da ordem de tabulação E fora da árvore de acessibilidade: anunciada,
       // ela seria um segundo botão com o mesmo nome, para a mesma ação, sem foco.
       // A prova é o gatilho continuar sendo o único elemento com esse nome.
-      await expect(faixa).toHaveAttribute("aria-hidden", "true");
+      await expect(range).toHaveAttribute("aria-hidden", "true");
       await expect(canvas.getAllByRole("button", { name: /alternar barra lateral/i })).toHaveLength(1);
 
-      const antes = raiz().getAttribute("data-state");
-      faixa.click();
-      await waitFor(() => expect(raiz().getAttribute("data-state")).not.toBe(antes));
-      faixa.click();
-      await waitFor(() => expect(raiz().getAttribute("data-state")).toBe(antes));
+      const antes = root().getAttribute("data-state");
+      range.click();
+      await waitFor(() => expect(root().getAttribute("data-state")).not.toBe(antes));
+      range.click();
+      await waitFor(() => expect(root().getAttribute("data-state")).toBe(antes));
     });
   },
 };

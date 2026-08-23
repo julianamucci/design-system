@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createNavigationMenu, type NavigationMenuElement } from './navigation-menu';
 import {
-  abrir,
+  open,
   waitForPanel,
   waitForPanelVanish,
   panelOpen,
@@ -64,9 +64,9 @@ export const Closed: Story = {
     });
 
     await step('O gatilho anuncia o estado recolhido', async () => {
-      const gatilho = canvas.getByRole('button', { name: /Produtos/ });
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
-      await expect(gatilho).toHaveAttribute('data-state', 'closed');
+      const trigger = canvas.getByRole('button', { name: /Produtos/ });
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveAttribute('data-state', 'closed');
     });
   },
 };
@@ -118,28 +118,28 @@ export const Open: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /Produtos/ });
+    const trigger = canvas.getByRole('button', { name: /Produtos/ });
     // O painel abre por interação e a story TERMINA ABERTA: é o estado que a
-    // regressão visual precisa capturar. `abrir` é idempotente — no replay do
+    // regressão visual precisa capturar. `open` é idempotente — no replay do
     // painel Interactions ele não fecha o que a rodada anterior deixou aberto.
-    const painel = await abrir(gatilho, canvasElement);
+    const panel = await open(trigger, canvasElement);
 
     await step('O painel aberto lista os três destinos', async () => {
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
-      await expect(within(painel).getAllByRole('link')).toHaveLength(3);
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      await expect(within(panel).getAllByRole('link')).toHaveLength(3);
     });
 
     await step('O gatilho aponta para o painel que abriu', async () => {
-      const alvo = gatilho.getAttribute('aria-controls');
-      await expect(alvo).toBeTruthy();
-      await expect(painel.id).toBe(alvo);
+      const target = trigger.getAttribute('aria-controls');
+      await expect(target).toBeTruthy();
+      await expect(panel.id).toBe(target);
     });
 
     await step('O fundo do painel é opaco', async () => {
       // O contraste de 4.5:1 que o axe mede entre o texto do destino e o fundo
       // do painel só significa alguma coisa se o fundo for opaco: sobre um
       // painel translúcido a razão medida é a do que estiver por baixo.
-      const background = getComputedStyle(painel).backgroundColor;
+      const background = getComputedStyle(panel).backgroundColor;
       await expect(background).not.toBe('rgba(0, 0, 0, 0)');
       await expect(background.startsWith('rgba(')).toBe(false);
     });
@@ -178,11 +178,11 @@ export const Active: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const atual = canvas.getByRole('link', { name: 'Início' });
+    const current = canvas.getByRole('link', { name: 'Início' });
     const other = canvas.getByRole('link', { name: 'Sobre' });
 
     await step('A página atual é anunciada como tal', async () => {
-      await expect(atual).toHaveAttribute('aria-current', 'page');
+      await expect(current).toHaveAttribute('aria-current', 'page');
       await expect(other.hasAttribute('aria-current')).toBe(false);
     });
 
@@ -191,7 +191,7 @@ export const Active: Story = {
       // `.nds-navigation-menu-link[aria-current="page"]`. Antes o destaque
       // vinha de duas classes utilitárias pregadas pela story — o componente
       // não pintava nada sozinho, e nenhuma aplicação real teria o realce.
-      await expect(getComputedStyle(atual).backgroundColor).not.toBe(
+      await expect(getComputedStyle(current).backgroundColor).not.toBe(
         getComputedStyle(other).backgroundColor,
       );
     });
@@ -245,9 +245,9 @@ export const ControlledValue: Story = {
       {
         // Definir `value` é o que troca o modo. Vazio quer dizer "fechado".
         value: '',
-        onValueChange: (valor) => {
-          registro.textContent = valor ? `Pedido: ${valor}` : 'Pedido: fechar';
-          registro.dataset.pedido = valor;
+        onValueChange: (value) => {
+          registro.textContent = value ? `Pedido: ${value}` : 'Pedido: fechar';
+          registro.dataset.pedido = value;
         },
       },
     );
@@ -258,7 +258,7 @@ export const ControlledValue: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /Produtos/ });
+    const trigger = canvas.getByRole('button', { name: /Produtos/ });
     const registro = canvasElement.querySelector<HTMLElement>('[data-slot="valor-pedido"]')!;
     const barra = canvasElement.querySelector(
       '[data-slot="navigation-menu"]',
@@ -268,7 +268,7 @@ export const ControlledValue: Story = {
       // O clique aqui é idempotente por construção: controlada, a barra não se
       // move com ele, então a segunda rodada parte do mesmo lugar que a
       // primeira. É essa imobilidade que a story existe para provar.
-      await userEvent.click(gatilho);
+      await userEvent.click(trigger);
       await expect(registro.dataset.pedido).toBe('produtos');
       // Fora do modo controlado, este clique já teria aberto o painel.
       await expect(panelOpen(canvasElement)).toBeNull();
@@ -276,10 +276,10 @@ export const ControlledValue: Story = {
 
     await step('Quem controla manda, e aí o painel abre', async () => {
       barra.setValue('produtos');
-      const painel = await waitForPanel(canvasElement);
-      await expect(painel.dataset.value).toBe('produtos');
+      const panel = await waitForPanel(canvasElement);
+      await expect(panel.dataset.value).toBe('produtos');
       await expect(barra.getValue()).toBe('produtos');
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('E fecha pela mesma porta', async () => {

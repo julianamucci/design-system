@@ -572,12 +572,12 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const line = (name: string, chave: string, tipo: string, padrao: string) => ({
+    const line = (name: string, key: string, type: string, padrao: string) => ({
       name,
-      type: tipo,
+      type: type,
       defaultValue: padrao,
       required: not,
-      description: toPlainText(t(`props.items.${chave}`)),
+      description: toPlainText(t(`props.items.${key}`)),
     });
 
     return [
@@ -652,26 +652,26 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '--popover',              k: 'popoverBg',        alvo: '.nds-dropdown-menu-content' },
-      { token: '--popover-foreground',   k: 'popoverFg',        alvo: '.nds-dropdown-menu-content' },
-      { token: '--accent',               k: 'accentBg',         alvo: '.nds-dropdown-menu-item' },
-      { token: '--accent-foreground',    k: 'accentFg',         alvo: '.nds-dropdown-menu-item' },
-      { token: '--destructive',          k: 'destructive',      alvo: '[data-variant="destructive"]' },
-      { token: '--destructive',          k: 'destructiveFocus', alvo: '[data-variant="destructive"]' },
-      { token: '--muted-foreground',     k: 'mutedFg',          alvo: '.nds-dropdown-menu-shortcut' },
+      { token: '--popover',              k: 'popoverBg',        target: '.nds-dropdown-menu-content' },
+      { token: '--popover-foreground',   k: 'popoverFg',        target: '.nds-dropdown-menu-content' },
+      { token: '--accent',               k: 'accentBg',         target: '.nds-dropdown-menu-item' },
+      { token: '--accent-foreground',    k: 'accentFg',         target: '.nds-dropdown-menu-item' },
+      { token: '--destructive',          k: 'destructive',      target: '[data-variant="destructive"]' },
+      { token: '--destructive',          k: 'destructiveFocus', target: '[data-variant="destructive"]' },
+      { token: '--muted-foreground',     k: 'mutedFg',          target: '.nds-dropdown-menu-shortcut' },
       // Medido no navegador: o separador é `--muted` (245,245,245), não
       // `--border` (230,230,230) — este último pinta a BORDA do popup, que
       // agora tem linha própria. O raio do item é `--radius-sm` (6px), não o
       // `--radius` (10px) do popup.
-      { token: '--muted',                k: 'border',           alvo: '.nds-dropdown-menu-separator' },
-      { token: '--border',               k: 'popupBorder',      alvo: '.nds-dropdown-menu-content' },
-      { token: '--elevation-md',         k: 'shadow',           alvo: '.nds-dropdown-menu-content' },
-      { token: '--radius',               k: 'radius',           alvo: '.nds-dropdown-menu-content' },
-      { token: '--radius-sm',            k: 'radiusItem',       alvo: '.nds-dropdown-menu-item' },
-      { token: '--z-popover',            k: 'zIndex',           alvo: '.nds-dropdown-menu-positioner' },
-    ].map(({ token, k, alvo }) => ({
+      { token: '--muted',                k: 'border',           target: '.nds-dropdown-menu-separator' },
+      { token: '--border',               k: 'popupBorder',      target: '.nds-dropdown-menu-content' },
+      { token: '--elevation-md',         k: 'shadow',           target: '.nds-dropdown-menu-content' },
+      { token: '--radius',               k: 'radius',           target: '.nds-dropdown-menu-content' },
+      { token: '--radius-sm',            k: 'radiusItem',       target: '.nds-dropdown-menu-item' },
+      { token: '--z-popover',            k: 'zIndex',           target: '.nds-dropdown-menu-positioner' },
+    ].map(({ token, k, target }) => ({
       token,
-      value: alvo,
+      value: target,
       description: toPlainText(t(`tokens.table.${k}`)),
     }));
   });
@@ -710,12 +710,12 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'dropdownMenu', nome: 'Dropdown Menu', path: '?path=/docs/ui-dropdownmenu--docs' },
-      { key: 'menubar',      nome: 'Menubar',       path: '?path=/docs/ui-menubar--docs'      },
-      { key: 'dialog',       nome: 'Dialog',        path: '?path=/docs/ui-dialog--docs'       },
-      { key: 'alertDialog',  nome: 'Alert Dialog',  path: '?path=/docs/ui-alertdialog--docs'  },
-      { key: 'tooltip',      nome: 'Tooltip',       path: '?path=/docs/ui-tooltip--docs'      },
-    ].map(({ key, nome, path }) => ({ name: nome, description: t(`related.${key}`), path }));
+      { key: 'dropdownMenu', name: 'Dropdown Menu', path: '?path=/docs/ui-dropdownmenu--docs' },
+      { key: 'menubar',      name: 'Menubar',       path: '?path=/docs/ui-menubar--docs'      },
+      { key: 'dialog',       name: 'Dialog',        path: '?path=/docs/ui-dialog--docs'       },
+      { key: 'alertDialog',  name: 'Alert Dialog',  path: '?path=/docs/ui-alertdialog--docs'  },
+      { key: 'tooltip',      name: 'Tooltip',       path: '?path=/docs/ui-tooltip--docs'      },
+    ].map(({ key, name, path }) => ({ name: name, description: t(`related.${key}`), path }));
   });
 
   protected readonly noteItems = computed(() => {
@@ -735,14 +735,14 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
   protected readonly analyticsItems = computed(() => {
     dict();
     return [
-      { e: 'menuOpen',      gatilho: 'menuOpenTrigger',      carga: 'menuOpenPayload'      },
-      { e: 'itemClick',     gatilho: 'itemClickTrigger',     carga: 'itemClickPayload'     },
-      { e: 'pageView',      gatilho: 'pageViewTrigger',      carga: 'pageViewPayload'      },
-      { e: 'sectionViewed', gatilho: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
-      { e: 'langSwitch',    gatilho: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
-    ].map(({ e, gatilho, carga }) => ({
+      { e: 'menuOpen',      trigger: 'menuOpenTrigger',      carga: 'menuOpenPayload'      },
+      { e: 'itemClick',     trigger: 'itemClickTrigger',     carga: 'itemClickPayload'     },
+      { e: 'pageView',      trigger: 'pageViewTrigger',      carga: 'pageViewPayload'      },
+      { e: 'sectionViewed', trigger: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
+      { e: 'langSwitch',    trigger: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
+    ].map(({ e, trigger, carga }) => ({
       event: t(`analytics.table.${e}`),
-      trigger: toPlainText(t(`analytics.table.${gatilho}`)),
+      trigger: toPlainText(t(`analytics.table.${trigger}`)),
       payload: toPlainText(t(`analytics.table.${carga}`)),
     }));
   });
@@ -772,8 +772,8 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
       description: t('testes.accessibility.description'),
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
       // Aqui os itens são string solta, não a trinca criterion/level/how.
-      items: numberedItems(d, 'testes.accessibility').map((texto) => ({
-        criterion: toPlainText(texto),
+      items: numberedItems(d, 'testes.accessibility').map((text) => ({
+        criterion: toPlainText(text),
         level: '',
         how: '',
       })),
@@ -844,19 +844,19 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
  *  devolve a própria chave quando ela aponta para um objeto — e é assim
  * que a chave crua acaba escrita na tela, sem erro nenhum.
  */
-function valueOuField(base: string, campo: string): string {
+function valueOuField(base: string, field: string): string {
   const direto = t(base);
   if (direto !== base) return direto;
-  const chave = `${base}.${campo}`;
-  const ofField = t(chave);
-  return ofField === chave ? '' : ofField;
+  const key = `${base}.${field}`;
+  const ofField = t(key);
+  return ofField === key ? '' : ofField;
 }
 
 /** Itens `base.itemN` na ordem numérica, quantos existirem. */
 function numberedItems(d: Record<string, string>, base: string): string[] {
-  const itens: string[] = [];
-  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) itens.push(d[`${base}.item${i}`]);
-  return itens;
+  const items: string[] = [];
+  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) items.push(d[`${base}.item${i}`]);
+  return items;
 }
 
 const priorityKeyMap: Record<string, string> = {

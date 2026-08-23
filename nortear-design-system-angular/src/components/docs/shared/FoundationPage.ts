@@ -105,8 +105,8 @@ const STACK: Stack = 'angular';
 
 /** Cartão do grid de `items` — título, corpo e campos extras (metadados). */
 export interface FoundationCartao {
-  titulo: string;
-  corpo: string;
+  title: string;
+  body: string;
   extras: string[];
 }
 
@@ -125,29 +125,29 @@ export type BlockType =
  * template não depender de estreitamento de união — ver decisão 2 no topo.
  */
 export interface FoundationBlock {
-  tipo: BlockType;
+  type: BlockType;
   html: string;
   colunas: string[];
   lines: string[][];
-  itens: string[];
+  items: string[];
   cartoes: FoundationCartao[];
 }
 
 /** Sub-objeto de uma seção: ganha h3 próprio e conteúdo próprio. */
 export interface FoundationGroup {
-  titulo: string;
-  corpo: string;
+  title: string;
+  body: string;
   blocks: FoundationBlock[];
 }
 
 export interface FoundationSection {
-  chave: string;
-  titulo: string;
+  key: string;
+  title: string;
   subtitulo: string;
-  corpo: string;
+  body: string;
   audiencia: string;
   blocks: FoundationBlock[];
-  grupos: FoundationGroup[];
+  groups: FoundationGroup[];
   nota: string;
 }
 
@@ -157,17 +157,17 @@ function ehObjeto(v: unknown): v is Registro {
   return v !== null && typeof v === 'object' && !Array.isArray(v);
 }
 
-function texto(v: unknown): string {
+function text(v: unknown): string {
   return typeof v === 'string' ? v : '';
 }
 
-function bloco(tipo: BlockType, parcial: Partial<FoundationBlock> = {}): FoundationBlock {
+function block(type: BlockType, parcial: Partial<FoundationBlock> = {}): FoundationBlock {
   return {
-    tipo,
+    type,
     html: '',
     colunas: [],
     lines: [],
-    itens: [],
+    items: [],
     cartoes: [],
     ...parcial,
   };
@@ -186,10 +186,10 @@ function codeResolveVariants(no: unknown): unknown {
   if (Array.isArray(no)) return no.map(codeResolveVariants);
   if (!ehObjeto(no)) return no;
   const saida: Registro = {};
-  for (const [chave, valor] of Object.entries(no)) {
-    saida[chave] = isCodeVariantNode(chave, valor)
-      ? (resolveCodeVariant(valor, STACK) ?? '')
-      : codeResolveVariants(valor);
+  for (const [key, value] of Object.entries(no)) {
+    saida[key] = isCodeVariantNode(key, value)
+      ? (resolveCodeVariant(value, STACK) ?? '')
+      : codeResolveVariants(value);
   }
   return saida;
 }
@@ -205,16 +205,16 @@ function mountCartao(item: Registro): FoundationCartao {
     .filter(([k, v]) => typeof v === 'string' && k !== keyTitle && k !== keyBody)
     .map(([, v]) => String(v));
   return {
-    titulo: keyTitle ? texto(item[keyTitle]) : '',
-    corpo: keyBody ? texto(item[keyBody]) : '',
+    title: keyTitle ? text(item[keyTitle]) : '',
+    body: keyBody ? text(item[keyBody]) : '',
     extras,
   };
 }
 
 /** Pares chave→valor de um objeto OU de um array (índice como chave). */
-function entries(valor: unknown): Array<[string, unknown]> {
-  if (Array.isArray(valor)) return valor.map((v, i) => [String(i), v]);
-  if (ehObjeto(valor)) return Object.entries(valor);
+function entries(value: unknown): Array<[string, unknown]> {
+  if (Array.isArray(value)) return value.map((v, i) => [String(i), v]);
+  if (ehObjeto(value)) return Object.entries(value);
   return [];
 }
 
@@ -223,19 +223,19 @@ function entries(valor: unknown): Array<[string, unknown]> {
  * quando são só strings. É a mesma regra das outras quatro stacks — uma lista
  * de frases não vira grid de cartões de uma linha só.
  */
-function itemsBlock(valor: unknown): FoundationBlock {
-  const pairs = entries(valor);
+function itemsBlock(value: unknown): FoundationBlock {
+  const pairs = entries(value);
   const hasCartoes = pairs.some(([, v]) => ehObjeto(v));
 
   if (!hasCartoes) {
-    return bloco('lista', { itens: pairs.map(([, v]) => String(v)) });
+    return block('lista', { items: pairs.map(([, v]) => String(v)) });
   }
 
-  return bloco('cartoes', {
+  return block('cartoes', {
     cartoes: pairs.map(([, item]) =>
       ehObjeto(item)
         ? mountCartao(item)
-        : { titulo: '', corpo: String(item), extras: [] },
+        : { title: '', body: String(item), extras: [] },
     ),
   });
 }
@@ -262,7 +262,7 @@ function tableBlock(cols: unknown, rows: unknown): FoundationBlock {
     return [String(line)];
   });
 
-  return bloco('tabela', { colunas: rotulos, lines });
+  return block('tabela', { colunas: rotulos, lines });
 }
 
 // Chaves com tratamento próprio dentro de uma seção — o resto é deduzido.
@@ -279,65 +279,65 @@ function cartaoEhSheet(v: Registro): boolean {
   return hasLabel && Object.values(v).every((x) => typeof x === 'string');
 }
 
-function mountSubgrupo(valor: Registro): FoundationGroup {
-  const titulo = texto(valor['title']);
-  const corpo = texto(valor['subtitle']) || texto(valor['body']);
-  const itens = valor['items'] ?? valor['rules'];
-  const hasTable = valor['cols'] !== undefined && valor['rows'] !== undefined;
+function mountSubgrupo(value: Registro): FoundationGroup {
+  const title = text(value['title']);
+  const body = text(value['subtitle']) || text(value['body']);
+  const items = value['items'] ?? value['rules'];
+  const hasTable = value['cols'] !== undefined && value['rows'] !== undefined;
 
   const blocks: FoundationBlock[] = [];
-  if (hasTable) blocks.push(tableBlock(valor['cols'], valor['rows']));
-  if (itens !== undefined) blocks.push(itemsBlock(itens));
+  if (hasTable) blocks.push(tableBlock(value['cols'], value['rows']));
+  if (items !== undefined) blocks.push(itemsBlock(items));
   // Mapa puro (sem título, sem itens, sem tabela): o próprio objeto é o conteúdo.
-  if (!titulo && itens === undefined && !hasTable) blocks.push(itemsBlock(valor));
+  if (!title && items === undefined && !hasTable) blocks.push(itemsBlock(value));
 
-  return { titulo, corpo, blocks };
+  return { title, body, blocks };
 }
 
-function mountSection(chave: string, dados: Registro): FoundationSection {
+function mountSection(key: string, data: Registro): FoundationSection {
   const blocks: FoundationBlock[] = [];
 
   // Strings soltas primeiro, na ordem em que aparecem no JSON: são os passos de
   // um roteiro (`cloneTitle` → `cloneCode` → `installNote`), e a ordem é o
   // conteúdo.
-  for (const [k, v] of Object.entries(dados)) {
+  for (const [k, v] of Object.entries(data)) {
     if (typeof v !== 'string' || TEXT_KEYS.includes(k)) continue;
-    if (k.endsWith('Title')) blocks.push(bloco('subtitulo', { html: v }));
-    else if (k.endsWith('Code')) blocks.push(bloco('codigo', { html: v }));
-    else blocks.push(bloco('paragrafo', { html: v }));
+    if (k.endsWith('Title')) blocks.push(block('subtitulo', { html: v }));
+    else if (k.endsWith('Code')) blocks.push(block('codigo', { html: v }));
+    else blocks.push(block('paragrafo', { html: v }));
   }
 
-  const hasTable = dados['cols'] !== undefined && dados['rows'] !== undefined;
-  if (hasTable) blocks.push(tableBlock(dados['cols'], dados['rows']));
-  if (dados['items'] !== undefined) blocks.push(itemsBlock(dados['items']));
+  const hasTable = data['cols'] !== undefined && data['rows'] !== undefined;
+  if (hasTable) blocks.push(tableBlock(data['cols'], data['rows']));
+  if (data['items'] !== undefined) blocks.push(itemsBlock(data['items']));
 
   // Sem `items`/`cols`/`rows`, as folhas de cartão soltas na seção viram o grid
   // que o `items` teria dado — é como `testing` (automated/manual) chega.
   const noStructureOwn =
-    dados['items'] === undefined && dados['rows'] === undefined && dados['cols'] === undefined;
+    data['items'] === undefined && data['rows'] === undefined && data['cols'] === undefined;
   if (noStructureOwn) {
-    const folhas = Object.entries(dados).filter(
+    const folhas = Object.entries(data).filter(
       ([k, v]) => !KEYS_RESERVADAS.includes(k) && ehObjeto(v) && cartaoEhSheet(v),
     );
     if (folhas.length > 0) blocks.push(itemsBlock(Object.fromEntries(folhas)));
   }
 
-  if (dados['keys'] !== undefined) blocks.push(itemsBlock(dados['keys']));
-  if (dados['rules'] !== undefined) blocks.push(itemsBlock(dados['rules']));
+  if (data['keys'] !== undefined) blocks.push(itemsBlock(data['keys']));
+  if (data['rules'] !== undefined) blocks.push(itemsBlock(data['rules']));
 
-  const grupos = Object.entries(dados)
+  const groups = Object.entries(data)
     .filter(([k, v]) => !KEYS_RESERVADAS.includes(k) && ehObjeto(v) && !cartaoEhSheet(v))
     .map(([, v]) => mountSubgrupo(v as Registro));
 
   return {
-    chave,
-    titulo: texto(dados['title']),
-    subtitulo: texto(dados['subtitle']),
-    corpo: texto(dados['body']),
-    audiencia: texto(dados['audience']),
+    key,
+    title: text(data['title']),
+    subtitulo: text(data['subtitle']),
+    body: text(data['body']),
+    audiencia: text(data['audience']),
     blocks,
-    grupos,
-    nota: texto(dados['note']),
+    groups,
+    nota: text(data['note']),
   };
 }
 
@@ -382,7 +382,7 @@ const METADADO_KEYS = new Set([
          subgrupos. Duplicar a marcação nos dois lugares faria a próxima
          correção precisar acontecer duas vezes. -->
     <ng-template #tplBloco let-b>
-      @switch (b.tipo) {
+      @switch (b.type) {
         @case ('subtitulo') {
           <h3 class="nds-text-h3 nds-text-foreground" [innerHTML]="DOMPurify.sanitize(b.html)"></h3>
         }
@@ -415,7 +415,7 @@ const METADADO_KEYS = new Set([
         }
         @case ('lista') {
           <ul class="nds-stack nds-list-none" data-spacing="md">
-            @for (item of b.itens; track $index) {
+            @for (item of b.items; track $index) {
               <li
                 class="nds-text-body nds-leading-relaxed nds-accent-start"
                 [innerHTML]="DOMPurify.sanitize(item)"
@@ -428,11 +428,11 @@ const METADADO_KEYS = new Set([
             @for (cartao of b.cartoes; track $index) {
               <div ndsCard>
                 <div ndsCardHeader>
-                  @if (cartao.titulo) {
-                    <h3 ndsCardTitle [innerHTML]="DOMPurify.sanitize(cartao.titulo)"></h3>
+                  @if (cartao.title) {
+                    <h3 ndsCardTitle [innerHTML]="DOMPurify.sanitize(cartao.title)"></h3>
                   }
-                  @if (cartao.corpo) {
-                    <div ndsCardDescription [innerHTML]="DOMPurify.sanitize(cartao.corpo)"></div>
+                  @if (cartao.body) {
+                    <div ndsCardDescription [innerHTML]="DOMPurify.sanitize(cartao.body)"></div>
                   }
                 </div>
                 @if (cartao.extras.length) {
@@ -478,14 +478,14 @@ const METADADO_KEYS = new Set([
               >{{ categoria() }}</span
             >
             <span ndsBadge variant="outline" class="nds-text-muted-foreground nds-font-normal">{{
-              tipo()
+              type()
             }}</span>
             <div class="nds-spacer-start">
               <nds-language-switcher />
             </div>
           </div>
 
-          <h1 [id]="idDoTitulo" class="nds-text-h1 nds-text-foreground">{{ titulo() }}</h1>
+          <h1 [id]="idDoTitulo" class="nds-text-h1 nds-text-foreground">{{ title() }}</h1>
 
           <p
             class="nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose"
@@ -498,14 +498,14 @@ const METADADO_KEYS = new Set([
              @if não entregariam o conteúdo a nenhuma das duas. -->
         <ng-content />
 
-        @for (section of sections(); track section.chave) {
+        @for (section of sections(); track section.key) {
           <section class="nds-stack nds-docs-section-divider" data-spacing="md">
-            @if (section.titulo || section.subtitulo) {
+            @if (section.title || section.subtitulo) {
               <div class="nds-stack" data-spacing="xs">
-                @if (section.titulo) {
+                @if (section.title) {
                   <h2
                     class="nds-text-h2 nds-text-foreground"
-                    [innerHTML]="DOMPurify.sanitize(section.titulo)"
+                    [innerHTML]="DOMPurify.sanitize(section.title)"
                   ></h2>
                 }
                 @if (section.subtitulo) {
@@ -514,10 +514,10 @@ const METADADO_KEYS = new Set([
               </div>
             }
 
-            @if (section.corpo) {
+            @if (section.body) {
               <p
                 class="nds-text-body nds-leading-relaxed"
-                [innerHTML]="DOMPurify.sanitize(section.corpo)"
+                [innerHTML]="DOMPurify.sanitize(section.body)"
               ></p>
             }
 
@@ -535,21 +535,21 @@ const METADADO_KEYS = new Set([
               />
             }
 
-            @for (grupo of section.grupos; track $index) {
+            @for (group of section.groups; track $index) {
               <div class="nds-stack" data-spacing="sm">
-                @if (grupo.titulo) {
+                @if (group.title) {
                   <h3
                     class="nds-text-h3 nds-text-foreground"
-                    [innerHTML]="DOMPurify.sanitize(grupo.titulo)"
+                    [innerHTML]="DOMPurify.sanitize(group.title)"
                   ></h3>
                 }
-                @if (grupo.corpo) {
+                @if (group.body) {
                   <p
                     class="nds-text-body nds-leading-relaxed"
-                    [innerHTML]="DOMPurify.sanitize(grupo.corpo)"
+                    [innerHTML]="DOMPurify.sanitize(group.body)"
                   ></p>
                 }
-                @for (b of grupo.blocks; track $index) {
+                @for (b of group.blocks; track $index) {
                   <ng-container
                     [ngTemplateOutlet]="tplBloco"
                     [ngTemplateOutletContext]="{ $implicit: b }"
@@ -597,10 +597,10 @@ export class NdsFoundationPage implements OnInit, OnDestroy {
     return codeResolveVariants(raw) as Registro;
   });
 
-  protected readonly titulo = computed(() => texto(this.dicionario()['title']));
-  protected readonly descricao = computed(() => texto(this.dicionario()['description']));
-  protected readonly categoria = computed(() => texto(this.dicionario()['category']));
-  protected readonly tipo = computed(() => texto(this.dicionario()['type']));
+  protected readonly title = computed(() => text(this.dicionario()['title']));
+  protected readonly descricao = computed(() => text(this.dicionario()['description']));
+  protected readonly categoria = computed(() => text(this.dicionario()['category']));
+  protected readonly type = computed(() => text(this.dicionario()['type']));
 
   protected readonly sections = computed<FoundationSection[]>(() => {
     const d = this.dicionario();
@@ -621,20 +621,20 @@ export class NdsFoundationPage implements OnInit, OnDestroy {
 
       const clear = applySeo({
         // `seo.title` NÃO leva "· Design System": o applySeo acrescenta.
-        title: texto(seo['title']) || texto(d['title']),
-        description: texto(seo['description']) || texto(d['description']),
+        title: text(seo['title']) || text(d['title']),
+        description: text(seo['description']) || text(d['description']),
         locale: idioma,
         componentSlug: this.slug(),
         // Fundamento é guia, não componente: sem SoftwareSourceCode no JSON-LD.
         kind: 'guide',
-        aiSummary: texto(seo['aiSummary']),
-        aiEntities: texto(seo['aiEntities']),
+        aiSummary: text(seo['aiSummary']),
+        aiEntities: text(seo['aiEntities']),
       });
 
       track('docs_page_view', {
         component_name: this.slug(),
         locale: idioma,
-        page_title: `${texto(d['title'])} · Design System`,
+        page_title: `${text(d['title'])} · Design System`,
       });
 
       onCleanup(clear);

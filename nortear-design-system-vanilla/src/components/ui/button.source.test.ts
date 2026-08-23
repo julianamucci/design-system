@@ -10,42 +10,42 @@ import {
 
 describe('buttonSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = buttonSnippet({ label: 'Salvar' });
-    expect(código).toContain("import { createButton } from '@/components/ui/button';");
-    expect(código).toContain('createButton({');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('<button');
-    expect(código).not.toContain('class="nds-button');
+    const code = buttonSnippet({ label: 'Salvar' });
+    expect(code).toContain("import { createButton } from '@/components/ui/button';");
+    expect(code).toContain('createButton({');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('<button');
+    expect(code).not.toContain('class="nds-button');
   });
 
   it('usa o nome acessível canônico, nunca o apelido depreciado', () => {
-    const código = buttonSnippet({ size: 'icon', ariaLabel: 'Adicionar item', icon: 'plus' });
-    expect(código).toContain("'aria-label': 'Adicionar item'");
-    expect(código).not.toContain('ariaLabel');
-    expect(código).not.toContain('ariaBusy');
-    expect(código).not.toContain('ariaInvalid');
+    const code = buttonSnippet({ size: 'icon', ariaLabel: 'Adicionar item', icon: 'plus' });
+    expect(code).toContain("'aria-label': 'Adicionar item'");
+    expect(code).not.toContain('ariaLabel');
+    expect(code).not.toContain('ariaBusy');
+    expect(code).not.toContain('ariaInvalid');
   });
 
   it('escreve as marcas de estado com o nome do atributo', () => {
-    const código = buttonSnippet({ label: 'Salvando…', disabled: true, ariaBusy: true });
-    expect(código).toContain("'aria-busy': true");
-    expect(código).toContain('disabled: true');
+    const code = buttonSnippet({ label: 'Salvando…', disabled: true, ariaBusy: true });
+    expect(code).toContain("'aria-busy': true");
+    expect(code).toContain('disabled: true');
     expect(buttonSnippet({ label: 'X', ariaInvalid: true })).toContain("'aria-invalid': true");
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = buttonSnippet({ label: 'Salvar', variant: 'default', size: 'default' });
-    expect(código).toBe(buttonSnippet({ label: 'Salvar' }));
-    expect(código).not.toContain('variant');
-    expect(código).not.toContain('size');
-    expect(código).not.toContain('disabled');
-    expect(código).not.toContain('type');
+    const code = buttonSnippet({ label: 'Salvar', variant: 'default', size: 'default' });
+    expect(code).toBe(buttonSnippet({ label: 'Salvar' }));
+    expect(code).not.toContain('variant');
+    expect(code).not.toContain('size');
+    expect(code).not.toContain('disabled');
+    expect(code).not.toContain('type');
   });
 
   it('mostra variante e tamanho quando a story os usa', () => {
-    const código = buttonSnippet({ variant: 'destructive', size: 'lg', label: 'Excluir conta' });
-    expect(código).toContain("variant: 'destructive'");
-    expect(código).toContain("size: 'lg'");
+    const code = buttonSnippet({ variant: 'destructive', size: 'lg', label: 'Excluir conta' });
+    expect(code).toContain("variant: 'destructive'");
+    expect(code).toContain("size: 'lg'");
   });
 
   it('com ícone E texto, o texto sai de `label` e a ordem se decide no append', () => {
@@ -66,9 +66,9 @@ describe('buttonSnippet', () => {
   });
 
   it('sem texto visível, o ícone é o conteúdo inteiro', () => {
-    const código = buttonSnippet({ size: 'icon', ariaLabel: 'Baixar arquivo', icon: 'download' });
-    expect(código).toContain("botao.appendChild(createButtonIcon('download'));");
-    expect(código).not.toContain('rotulo');
+    const code = buttonSnippet({ size: 'icon', ariaLabel: 'Baixar arquivo', icon: 'download' });
+    expect(code).toContain("botao.appendChild(createButtonIcon('download'));");
+    expect(code).not.toContain('rotulo');
   });
 
   it('o ícone em rotação só aparece quando a story o pede', () => {
@@ -95,11 +95,11 @@ describe('buttonSnippet', () => {
   it('não deixa o espião do control vazar como código', () => {
     // `args.onClick` é uma FUNÇÃO no Playground; interpolada, o corpo do mock
     // apareceria no painel Code.
-    const código = buttonSnippet({
+    const code = buttonSnippet({
       label: 'Salvar',
       onClick: (() => {}) as unknown as string,
     });
-    expect(código).not.toContain('onClick');
+    expect(code).not.toContain('onClick');
     expect(buttonSnippet({ label: 'Salvar', onClick: '() => salvar()' })).toContain(
       'onClick: () => salvar()',
     );
@@ -141,41 +141,41 @@ describe('buttonPlaygroundSource', () => {
 describe('buttonSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = buttonSourceWith({ variant: 'ghost', label: 'Fechar' });
-    const código = transform('', { args: { variant: 'destructive', label: 'Excluir' } });
-    expect(código).toContain("variant: 'ghost'");
-    expect(código).toContain("label: 'Fechar'");
-    expect(código).not.toContain('destructive');
+    const code = transform('', { args: { variant: 'destructive', label: 'Excluir' } });
+    expect(code).toContain("variant: 'ghost'");
+    expect(code).toContain("label: 'Fechar'");
+    expect(code).not.toContain('destructive');
   });
 
   it('`label: undefined` apaga o padrão em vez de reintroduzi-lo', () => {
     const transform = buttonSourceWith({ label: undefined, ariaLabel: 'Baixar', size: 'icon' });
-    const código = transform('', {});
-    expect(código).not.toContain("label: 'Salvar'");
-    expect(código).toContain("'aria-label': 'Baixar'");
+    const code = transform('', {});
+    expect(code).not.toContain("label: 'Salvar'");
+    expect(code).toContain("'aria-label': 'Baixar'");
   });
 });
 
 describe('buttonParDeAcoesSnippet', () => {
   it('mostra os dois botões e o contêiner que fixa a ordem', () => {
-    const código = actionsButtonPairSnippet();
-    expect(código).toContain("variant: 'outline', label: 'Cancelar'");
-    expect(código).toContain("createButton({ label: 'Confirmar' })");
-    expect(código).toContain("acoes.className = 'nds-cluster';");
+    const code = actionsButtonPairSnippet();
+    expect(code).toContain("variant: 'outline', label: 'Cancelar'");
+    expect(code).toContain("createButton({ label: 'Confirmar' })");
+    expect(code).toContain("acoes.className = 'nds-cluster';");
     // A primária é a última: é a ordem que a composição ensina.
-    expect(código.indexOf('Cancelar')).toBeLessThan(código.indexOf('Confirmar'));
-    expect(código).not.toContain('data-slot=');
+    expect(code.indexOf('Cancelar')).toBeLessThan(code.indexOf('Confirmar'));
+    expect(code).not.toContain('data-slot=');
   });
 });
 
 describe('buttonComoLinkSnippet', () => {
   it('empresta a aparência sem trocar a semântica', () => {
-    const código = buttonAsLinkSnippet();
-    expect(código).toContain("import { btnClass } from '@/components/ui/button';");
-    expect(código).toContain("document.createElement('a')");
-    expect(código).toContain("btnClass('link')");
+    const code = buttonAsLinkSnippet();
+    expect(code).toContain("import { btnClass } from '@/components/ui/button';");
+    expect(code).toContain("document.createElement('a')");
+    expect(code).toContain("btnClass('link')");
     // `createButton` daria um <button>, e o que se quer é NAVEGAR.
-    expect(código).not.toContain('createButton(');
+    expect(code).not.toContain('createButton(');
     // O tamanho padrão não entra: `btnClass` já o assume.
-    expect(código).not.toContain("btnClass('link', 'default')");
+    expect(code).not.toContain("btnClass('link', 'default')");
   });
 });

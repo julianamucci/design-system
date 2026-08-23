@@ -40,11 +40,11 @@ export const Default: Story = {
     ]),
   play: async ({ step }) => {
     const menu = await within(document.body).findByRole('menu');
-    const itens = within(menu).getAllByRole('menuitem');
+    const items = within(menu).getAllByRole('menuitem');
 
     await step('A variante default é escrita no markup', async () => {
-      await expect(itens).toHaveLength(3);
-      for (const item of itens) {
+      await expect(items).toHaveLength(3);
+      for (const item of items) {
         await expect(item.dataset.variant).toBe('default');
         await expect(item.classList.contains('nds-dropdown-menu-item')).toBe(true);
       }
@@ -53,7 +53,7 @@ export const Default: Story = {
     await step('O item neutro herda a cor do popup, sem cor semântica', async () => {
       // O item em foco troca de cor de propósito — a comparação tem que ser com
       // um item em repouso, senão mede o realce e não a variante.
-      const inRest = itens.filter((i) => i !== document.activeElement);
+      const inRest = items.filter((i) => i !== document.activeElement);
       await expect(inRest.length).toBeGreaterThan(0);
       await expect(getComputedStyle(inRest[0]).color).toBe(getComputedStyle(menu).color);
     });
@@ -63,7 +63,7 @@ export const Default: Story = {
       // ninguém rodava: o axe do test-runner mede o que está na tela, e comparar
       // nome de token não responde a pergunta. A razão é aritmética. 14px em
       // peso normal é texto normal pela WCAG: o limite é 4.5, não 3.
-      const inRest = itens.filter((i) => i !== document.activeElement);
+      const inRest = items.filter((i) => i !== document.activeElement);
       const measurement = itemContrast(inRest[0]);
       await expect(measurement).not.toBeNull();
       await expect(measurement!.ratio).toBeGreaterThanOrEqual(4.5);
@@ -198,12 +198,12 @@ export const Placement: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /abrir para cima/i });
+    const trigger = canvas.getByRole('button', { name: /abrir para cima/i });
     const menu = await within(document.body).findByRole('menu');
 
     await step('Com side="top" o menu fica ACIMA do gatilho', async () => {
       const menuBox = menu.getBoundingClientRect();
-      const triggerBox = gatilho.getBoundingClientRect();
+      const triggerBox = trigger.getBoundingClientRect();
       // Com o `bottom` cravado da versão anterior, o menu nascia ABAIXO e esta
       // asserção falharia por toda a altura do gatilho mais o vão.
       await expect(menuBox.bottom).toBeLessThanOrEqual(triggerBox.top);
@@ -211,7 +211,7 @@ export const Placement: Story = {
 
     await step('Com align="end" as bordas direitas coincidem', async () => {
       const menuBox = menu.getBoundingClientRect();
-      const triggerBox = gatilho.getBoundingClientRect();
+      const triggerBox = trigger.getBoundingClientRect();
       // Um pixel de folga porque a medida é fracionária; `start` juntaria as
       // bordas ESQUERDAS, e a diferença aqui seria a largura inteira do menu.
       await expect(Math.abs(menuBox.right - triggerBox.right)).toBeLessThanOrEqual(1);

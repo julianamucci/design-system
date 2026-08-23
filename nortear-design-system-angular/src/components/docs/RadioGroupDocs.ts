@@ -710,12 +710,12 @@ export class NdsRadioGroupDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const line = (nome: string, chave: string, tipo?: string, padrao?: string) => ({
-      name: nome,
-      type: tipo ?? toPlainText(t(`props.table.${chave}.type`)),
-      defaultValue: padrao ?? toPlainText(t(`props.table.${chave}.default`)),
-      required: toPlainText(t(`props.table.${chave}.required`)),
-      description: toPlainText(t(`props.table.${chave}.description`)),
+    const line = (name: string, key: string, type?: string, padrao?: string) => ({
+      name: name,
+      type: type ?? toPlainText(t(`props.table.${key}.type`)),
+      defaultValue: padrao ?? toPlainText(t(`props.table.${key}.default`)),
+      required: toPlainText(t(`props.table.${key}.required`)),
+      description: toPlainText(t(`props.table.${key}.description`)),
     });
     return [
       {
@@ -747,9 +747,9 @@ export class NdsRadioGroupDocs implements AfterViewInit, OnDestroy {
           line('class', 'className'),
         ],
       },
-    ].map((tabela) => ({
-      ...tabela,
-      items: tabela.items.map((item) => ({ ...item, required: item.required || not })),
+    ].map((table) => ({
+      ...table,
+      items: table.items.map((item) => ({ ...item, required: item.required || not })),
     }));
   });
 

@@ -60,9 +60,9 @@ const SELECTORS_CONTROL = [
   'select',
 ];
 
-export function controlOf(campo: HTMLElement): HTMLElement | null {
+export function controlOf(field: HTMLElement): HTMLElement | null {
   for (const selector of SELECTORS_CONTROL) {
-    const finding = campo.querySelector<HTMLElement>(selector);
+    const finding = field.querySelector<HTMLElement>(selector);
     if (finding) return finding;
   }
   return null;
@@ -70,7 +70,7 @@ export function controlOf(campo: HTMLElement): HTMLElement | null {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const texto = (el: Element | null | undefined): string | null =>
+const text = (el: Element | null | undefined): string | null =>
   el?.textContent?.trim().replace(/\s+/g, ' ') || null;
 
 const classes = (el: Element | null | undefined): string[] =>
@@ -90,11 +90,11 @@ export function accessibleName(el: Element | null | undefined): string | null {
   if (!el) return null;
   const labelled = el.getAttribute('aria-labelledby');
   if (labelled) {
-    const alvo = el.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
-    if (alvo?.textContent?.trim()) return alvo.textContent.trim();
+    const target = el.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
+    if (target?.textContent?.trim()) return target.textContent.trim();
   }
-  const rotulo = el.getAttribute('aria-label');
-  if (rotulo?.trim()) return rotulo.trim();
+  const label = el.getAttribute('aria-label');
+  if (label?.trim()) return label.trim();
   const id = el.getAttribute('id');
   if (id) {
     const label = el.ownerDocument.querySelector(`label[for="${CSS.escape(id)}"]`);
@@ -119,17 +119,17 @@ export function accessibleName(el: Element | null | undefined): string | null {
  * `presentes` é o que o leitor de tela realmente vai ler. `orfaos` é o defeito
  * que passa por qualquer asserção de atributo: id escrito, alvo inexistente.
  */
-export function descriptionResolvida(controle: HTMLElement | null) {
-  const raw = controle?.getAttribute('aria-describedby') ?? null;
-  if (!controle || !raw) {
+export function descriptionResolvida(control: HTMLElement | null) {
+  const raw = control?.getAttribute('aria-describedby') ?? null;
+  if (!control || !raw) {
     return { atributo: raw, ids: [] as string[], presentes: [] as string[], orfaos: [] as string[] };
   }
   const ids = raw.split(/\s+/).filter(Boolean);
   const presentes: string[] = [];
   const orfaos: string[] = [];
   for (const id of ids) {
-    const alvo = controle.ownerDocument.getElementById(id);
-    if (alvo) presentes.push(texto(alvo) ?? '');
+    const target = control.ownerDocument.getElementById(id);
+    if (target) presentes.push(text(target) ?? '');
     else orfaos.push(id);
   }
   return { atributo: raw, ids, presentes, orfaos };
@@ -159,148 +159,148 @@ export function regiaoViva(el: HTMLElement | null) {
 
 // ─── Medição de um campo ──────────────────────────────────────────────────────
 
-export function measureField(raiz: HTMLElement) {
-  const campo = raiz.matches(SELECTOR_FIELD)
-    ? raiz
-    : raiz.querySelector<HTMLElement>(SELECTOR_FIELD);
-  if (!campo) return { presente: false } as const;
+export function measureField(root: HTMLElement) {
+  const field = root.matches(SELECTOR_FIELD)
+    ? root
+    : root.querySelector<HTMLElement>(SELECTOR_FIELD);
+  if (!field) return { presente: false } as const;
 
-  const rotulo = campo.querySelector<HTMLLabelElement>(SELECTOR_LABEL);
-  const controle = controlOf(campo);
-  const descricao = campo.querySelector<HTMLElement>(SELECTOR_DESCRIPTION);
-  const erro = campo.querySelector<HTMLElement>(SELECTOR_ERROR);
+  const label = field.querySelector<HTMLLabelElement>(SELECTOR_LABEL);
+  const control = controlOf(field);
+  const descricao = field.querySelector<HTMLElement>(SELECTOR_DESCRIPTION);
+  const error = field.querySelector<HTMLElement>(SELECTOR_ERROR);
 
-  const cs = getComputedStyle(campo);
-  const background = backgroundEffective(campo);
+  const cs = getComputedStyle(field);
+  const background = backgroundEffective(field);
 
-  const described = descriptionResolvida(controle);
+  const described = descriptionResolvida(control);
   const idsDescribed = new Set(described.ids);
 
   return {
     presente: true,
     estrutura: {
-      tag: campo.tagName.toLowerCase(),
-      dataSlot: campo.getAttribute('data-slot'),
-      temClasseBase: classes(campo).includes('nds-form-field'),
-      classesInertes: inertes(campo),
+      tag: field.tagName.toLowerCase(),
+      dataSlot: field.getAttribute('data-slot'),
+      temClasseBase: classes(field).includes('nds-form-field'),
+      classesInertes: inertes(field),
       /** Ordem visual das peças: rótulo, controle, apoio, erro. */
-      order: Array.from(campo.children).map(
+      order: Array.from(field.children).map(
         (c) => c.getAttribute('data-slot') ?? c.tagName.toLowerCase(),
       ),
-      hasLabel: Boolean(rotulo),
-      temControle: Boolean(controle),
+      hasLabel: Boolean(label),
+      temControle: Boolean(control),
       hasDescription: Boolean(descricao),
-      hasError: Boolean(erro),
+      hasError: Boolean(error),
     },
     associacao: {
       /** `for` do rótulo e `id` do controle — os dois lados do mesmo fio. */
-      rotuloFor: rotulo?.getAttribute('for') ?? null,
-      controleId: controle?.id || null,
+      rotuloFor: label?.getAttribute('for') ?? null,
+      controleId: control?.id || null,
       /** `null` quando falta um dos lados; `true` só quando o fio fecha. */
       forCasaComId:
-        rotulo && controle ? (rotulo.getAttribute('for') || null) === (controle.id || null) : null,
+        label && control ? (label.getAttribute('for') || null) === (control.id || null) : null,
       /** O rótulo ENVOLVE o controle — a outra forma válida de associar. */
-      rotuloEnvolve: rotulo && controle ? rotulo.contains(controle) : null,
+      rotuloEnvolve: label && control ? label.contains(control) : null,
       /** O que o leitor de tela realmente anuncia como nome do campo. */
-      accessibleName: accessibleName(controle),
-      idGerado: Boolean(controle?.id && !controle.getAttribute('data-id-escrito')),
-      textoDoRotulo: texto(rotulo),
+      accessibleName: accessibleName(control),
+      idGerado: Boolean(control?.id && !control.getAttribute('data-id-escrito')),
+      textoDoRotulo: text(label),
     },
     helper: {
-      texto: texto(descricao),
+      text: text(descricao),
       id: descricao?.id || null,
       /** Visível e mudo é o defeito: existe na tela, fora do describedby. */
       noDescribedby: descricao ? idsDescribed.has(descricao.id) : null,
       classesInertes: inertes(descricao),
       tag: descricao?.tagName.toLowerCase() ?? null,
     },
-    erro: {
-      texto: texto(erro),
-      id: erro?.id || null,
-      noDescribedby: erro ? idsDescribed.has(erro.id) : null,
-      viva: regiaoViva(erro),
-      classesInertes: inertes(erro),
-      tag: erro?.tagName.toLowerCase() ?? null,
+    error: {
+      text: text(error),
+      id: error?.id || null,
+      noDescribedby: error ? idsDescribed.has(error.id) : null,
+      viva: regiaoViva(error),
+      classesInertes: inertes(error),
+      tag: error?.tagName.toLowerCase() ?? null,
     },
-    controle: controle
+    control: control
       ? {
-          tag: controle.tagName.toLowerCase(),
-          dataSlot: controle.getAttribute('data-slot'),
-          ariaInvalid: controle.getAttribute('aria-invalid'),
-          ariaRequired: controle.getAttribute('aria-required'),
-          required: (controle as HTMLInputElement).required ?? null,
-          desabilitado: (controle as HTMLInputElement).disabled ?? null,
+          tag: control.tagName.toLowerCase(),
+          dataSlot: control.getAttribute('data-slot'),
+          ariaInvalid: control.getAttribute('aria-invalid'),
+          ariaRequired: control.getAttribute('aria-required'),
+          required: (control as HTMLInputElement).required ?? null,
+          disabled: (control as HTMLInputElement).disabled ?? null,
           describedby: described,
         }
       : null,
-    rotulo: rotulo
+    label: label
       ? {
           /** `data-error` é o gancho que pinta o rótulo de destructive. */
-          dataError: rotulo.getAttribute('data-error'),
+          dataError: label.getAttribute('data-error'),
           /** Marcado de erro DE VERDADE — `"false"` não conta. */
-          marcadoComErro: rotulo.matches('[data-error]:not([data-error="false"])'),
-          cor: getComputedStyle(rotulo).color,
-          peso: getComputedStyle(rotulo).fontWeight,
-          tamanho: getComputedStyle(rotulo).fontSize,
+          marcadoComErro: label.matches('[data-error]:not([data-error="false"])'),
+          cor: getComputedStyle(label).color,
+          peso: getComputedStyle(label).fontWeight,
+          size: getComputedStyle(label).fontSize,
         }
       : null,
     geometria: {
       /** O ritmo interno do campo — 6px pelo contrato (`--spacing-1-5`). */
       espacoEntrePecas: Math.round(parseFloat(cs.rowGap || '0')),
-      direcao: cs.flexDirection,
+      direction: cs.flexDirection,
       display: cs.display,
-      largura: Math.round(campo.getBoundingClientRect().width),
+      width: Math.round(field.getBoundingClientRect().width),
     },
     contraste: {
-      rotulo: rotulo && background ? ratio(getComputedStyle(rotulo).color, background) : null,
+      label: label && background ? ratio(getComputedStyle(label).color, background) : null,
       helper: descricao && background ? ratio(getComputedStyle(descricao).color, background) : null,
-      erro: erro && background ? ratio(getComputedStyle(erro).color, background) : null,
+      error: error && background ? ratio(getComputedStyle(error).color, background) : null,
     },
   };
 }
 
 // ─── Medição de um agrupamento ────────────────────────────────────────────────
 
-export function measureFieldset(raiz: HTMLElement) {
-  const grupo = raiz.matches(SELECTOR_FIELDSET)
-    ? raiz
-    : raiz.querySelector<HTMLElement>(SELECTOR_FIELDSET);
-  if (!grupo) return { presente: false } as const;
+export function measureFieldset(root: HTMLElement) {
+  const group = root.matches(SELECTOR_FIELDSET)
+    ? root
+    : root.querySelector<HTMLElement>(SELECTOR_FIELDSET);
+  if (!group) return { presente: false } as const;
 
-  const legenda = grupo.querySelector<HTMLElement>(SELECTOR_CAPTION);
-  const cs = getComputedStyle(grupo);
-  const background = backgroundEffective(grupo);
+  const caption = group.querySelector<HTMLElement>(SELECTOR_CAPTION);
+  const cs = getComputedStyle(group);
+  const background = backgroundEffective(group);
 
   return {
     presente: true,
     estrutura: {
       /** `<div>` com um título por cima parece igual e não anuncia grupo nenhum. */
-      tag: grupo.tagName.toLowerCase(),
-      nativo: grupo.tagName === 'FIELDSET',
-      dataSlot: grupo.getAttribute('data-slot'),
-      classesInertes: inertes(grupo),
-      legendaTag: legenda?.tagName.toLowerCase() ?? null,
-      legendaNativa: legenda?.tagName === 'LEGEND',
+      tag: group.tagName.toLowerCase(),
+      nativo: group.tagName === 'FIELDSET',
+      dataSlot: group.getAttribute('data-slot'),
+      classesInertes: inertes(group),
+      legendaTag: caption?.tagName.toLowerCase() ?? null,
+      legendaNativa: caption?.tagName === 'LEGEND',
       /** A legenda tem que ser o PRIMEIRO filho; senão não rotula o grupo. */
-      legendaPrimeira: legenda ? grupo.firstElementChild === legenda : null,
-      texto: texto(legenda),
-      fields: grupo.querySelectorAll(SELECTOR_FIELD).length,
+      legendaPrimeira: caption ? group.firstElementChild === caption : null,
+      text: text(caption),
+      fields: group.querySelectorAll(SELECTOR_FIELD).length,
     },
     semantica: {
       /** O que o leitor anuncia antes de cada campo do grupo. */
-      nomeDoGrupo: accessibleName(grupo) ?? texto(legenda),
-      papel: grupo.getAttribute('role'),
+      nomeDoGrupo: accessibleName(group) ?? text(caption),
+      papel: group.getAttribute('role'),
     },
     geometria: {
       /** 16px pelo contrato (`--spacing-4`). */
       espacoEntreCampos: Math.round(parseFloat(cs.rowGap || '0')),
-      direcao: cs.flexDirection,
+      direction: cs.flexDirection,
       border: cs.borderTopWidth,
       padding: cs.paddingTop,
       margem: cs.marginTop,
     },
     contraste: {
-      legenda: legenda && background ? ratio(getComputedStyle(legenda).color, background) : null,
+      caption: caption && background ? ratio(getComputedStyle(caption).color, background) : null,
     },
   };
 }
@@ -314,14 +314,14 @@ export function measureFieldset(raiz: HTMLElement) {
  * que o contrato afirma. Devolve o nome ACESSÍVEL de cada um: uma ordem certa
  * de campos anônimos não é uma ordem útil.
  */
-export function tabulacaoOrder(raiz: HTMLElement) {
+export function tabulacaoOrder(root: HTMLElement) {
   const focalizaveis = Array.from(
-    raiz.querySelectorAll<HTMLElement>(
+    root.querySelectorAll<HTMLElement>(
       'input:not([type="hidden"]):not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])',
     ),
   );
   return focalizaveis.map((el) => ({
-    nome: accessibleName(el),
+    name: accessibleName(el),
     tag: el.tagName.toLowerCase(),
     tabindex: el.getAttribute('tabindex'),
   }));
@@ -333,8 +333,8 @@ export function tabulacaoOrder(raiz: HTMLElement) {
  * `null` quando não há nenhum, o que é o estado válido. A story compara o foco
  * DEPOIS do envio com o que esta função aponta ANTES.
  */
-export function firstInvalido(raiz: HTMLElement): HTMLElement | null {
-  return raiz.querySelector<HTMLElement>('[aria-invalid="true"], :invalid:not(form)');
+export function firstInvalido(root: HTMLElement): HTMLElement | null {
+  return root.querySelector<HTMLElement>('[aria-invalid="true"], :invalid:not(form)');
 }
 
 // ─── Tema escuro ──────────────────────────────────────────────────────────────
@@ -347,29 +347,29 @@ export function firstInvalido(raiz: HTMLElement): HTMLElement | null {
  * "4.5:1 em todos os temas". A classe sai no `finally`: deixá-la posta envenena
  * a story seguinte e a foto do Chromatic.
  */
-export function contrastesNosDoisModos(raiz: HTMLElement) {
-  const measure = (modo: 'claro' | 'escuro') => {
-    const m = measureField(raiz);
+export function contrastesNosDoisModos(root: HTMLElement) {
+  const measure = (mode: 'claro' | 'escuro') => {
+    const m = measureField(root);
     if (!m.presente) return null;
     return {
-      modo,
-      rotulo: m.contraste.rotulo?.ratio ?? null,
+      mode,
+      label: m.contraste.label?.ratio ?? null,
       helper: m.contraste.helper?.ratio ?? null,
-      erro: m.contraste.erro?.ratio ?? null,
+      error: m.contraste.error?.ratio ?? null,
     };
   };
 
-  const campo = raiz.matches(SELECTOR_FIELD) ? raiz : raiz.querySelector<HTMLElement>(SELECTOR_FIELD);
+  const field = root.matches(SELECTOR_FIELD) ? root : root.querySelector<HTMLElement>(SELECTOR_FIELD);
   const light = measure('claro');
-  const desfazer = darkLigarTheme(raiz.ownerDocument);
+  const desfazer = darkLigarTheme(root.ownerDocument);
   let escuro: ReturnType<typeof measure> = null;
   try {
-    escuro = campo ? noTransicao(campo, () => measure('escuro')) : measure('escuro');
+    escuro = field ? noTransicao(field, () => measure('escuro')) : measure('escuro');
   } finally {
     desfazer();
   }
   return [light, escuro].filter(Boolean) as {
-    modo: string; rotulo: number | null; helper: number | null; erro: number | null;
+    mode: string; label: number | null; helper: number | null; error: number | null;
   }[];
 }
 
@@ -381,23 +381,23 @@ export function contrastesNosDoisModos(raiz: HTMLElement) {
  * Via exceção, e não `console.log`: o addon do Storybook instrumenta o console
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest.
  */
-export function reportProbeForm(stack: string, cenario: string, dados: unknown): never {
-  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(dados)}`);
+export function reportProbeForm(stack: string, cenario: string, data: unknown): never {
+  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(data)}`);
 }
 
 /**
- * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `raiz`.
+ * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `root`.
  * Cenário ausente vem `null` — o achado de "esta stack não monta este caso".
  */
-export function measureCenarios(raiz: HTMLElement, cenarios: string[]) {
+export function measureCenarios(root: HTMLElement, cenarios: string[]) {
   const registro: Record<string, unknown> = {};
   for (const cenario of cenarios) {
-    const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
-    if (!alvo) {
+    const target = root.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
+    if (!target) {
       registro[cenario] = null;
       continue;
     }
-    registro[cenario] = alvo.matches(SELECTOR_FIELDSET) ? measureFieldset(alvo) : measureField(alvo);
+    registro[cenario] = target.matches(SELECTOR_FIELDSET) ? measureFieldset(target) : measureField(target);
   }
   return registro;
 }

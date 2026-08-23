@@ -68,13 +68,13 @@ export const UserProfile: Story = {
     const canvas = within(canvasElement);
 
     await step('O cartão traz avatar, nome e uma métrica curta', async () => {
-      const painel = await waitForOpen();
-      await expect(painel).toBeVisible();
+      const panel = await waitForOpen();
+      await expect(panel).toBeVisible();
       // O avatar é o componente do design system, não um círculo desenhado à
       // mão: é o que garante o mesmo diâmetro e o mesmo fallback das outras telas.
-      await expect(painel.querySelector('[data-slot="avatar"]')).toBeInTheDocument();
-      await expect(within(painel).getByText('Joana Silva')).toBeVisible();
-      await expect(within(painel).getByText(/142 seguidores/)).toBeVisible();
+      await expect(panel.querySelector('[data-slot="avatar"]')).toBeInTheDocument();
+      await expect(within(panel).getByText('Joana Silva')).toBeVisible();
+      await expect(within(panel).getByText(/142 seguidores/)).toBeVisible();
     });
 
     await step('E o gatilho continua sendo um link de verdade', async () => {
@@ -124,10 +124,10 @@ export const LinkPreview: Story = {
   }),
   play: async ({ step }) => {
     await step('O cartão mostra origem, título e descrição do destino', async () => {
-      const painel = await waitForOpen();
-      await expect(painel).toBeVisible();
-      await expect(within(painel).getByText(/design-system\.dev\/overlays/)).toBeVisible();
-      await expect(within(painel).getByText('Guia de overlays acessíveis')).toBeVisible();
+      const panel = await waitForOpen();
+      await expect(panel).toBeVisible();
+      await expect(within(panel).getByText(/design-system\.dev\/overlays/)).toBeVisible();
+      await expect(within(panel).getByText('Guia de overlays acessíveis')).toBeVisible();
     });
   },
 };
@@ -176,18 +176,18 @@ export const TermDefinition: Story = {
     const canvas = within(canvasElement);
 
     await step('O gatilho de definição é um botão, e não envia formulário', async () => {
-      const gatilho = canvas.getByRole('button', { name: 'WCAG 2.2 AA' });
+      const trigger = canvas.getByRole('button', { name: 'WCAG 2.2 AA' });
       // `type="button"` posto na criação: sem ele, o mesmo gatilho dentro de um
       // <form> enviaria o formulário ao ser ativado por Enter.
-      await expect(gatilho).toHaveAttribute('type', 'button');
+      await expect(trigger).toHaveAttribute('type', 'button');
     });
 
     await step('O nome acessível do painel vem do rótulo declarado', async () => {
-      const painel = await waitForOpen();
+      const panel = await waitForOpen();
       // Sem `label`, o nome cairia no texto do gatilho ("WCAG 2.2 AA"), que
       // repetiria a sigla sem dizer o que o cartão traz.
-      await expect(painel).toHaveAttribute('aria-label', 'Definição de WCAG 2.2 AA');
-      await expect(within(painel).getByText('WCAG 2.2 nível AA')).toBeVisible();
+      await expect(panel).toHaveAttribute('aria-label', 'Definição de WCAG 2.2 AA');
+      await expect(within(panel).getByText('WCAG 2.2 nível AA')).toBeVisible();
     });
   },
 };
@@ -231,10 +231,10 @@ export const ExplainedMetric: Story = {
   }),
   play: async ({ step }) => {
     await step('O número carrega a cor semântica; o texto corrido, não', async () => {
-      const painel = await waitForOpen();
-      const valor = within(painel).getByText('1.8s');
-      await expect(valor).toHaveClass(/nds-text-success/);
-      const descricao = within(painel).getByText(/Tempo até o maior elemento/);
+      const panel = await waitForOpen();
+      const value = within(panel).getByText('1.8s');
+      await expect(value).toHaveClass(/nds-text-success/);
+      const descricao = within(panel).getByText(/Tempo até o maior elemento/);
       await expect(descricao).not.toHaveClass(/nds-text-success/);
     });
   },
@@ -319,8 +319,8 @@ export const Sides: Story = {
       await expect(panels).toHaveLength(4);
 
       const lados = panels.map((p) => p.getAttribute('data-side'));
-      for (const lado of lados) {
-        await expect(lado).toBeTruthy();
+      for (const side of lados) {
+        await expect(side).toBeTruthy();
       }
 
       // O EIXO é o contrato, não o lado exato: pedir "acima" sem espaço acima
@@ -377,13 +377,13 @@ export const ExtraPanelClass: Story = {
   }),
   play: async ({ step }) => {
     await step('A classe extra convive com a classe do componente', async () => {
-      const painel = await waitForOpen();
+      const panel = await waitForOpen();
       // As duas coexistem: a classe do design system não é substituída pela do
       // consumidor, é acrescida — é o mesmo contrato do resto do stack.
-      await expect(painel).toHaveClass(/nds-hover-card-content/);
-      await expect(painel).toHaveClass(/nds-w-md/);
+      await expect(panel).toHaveClass(/nds-hover-card-content/);
+      await expect(panel).toHaveClass(/nds-w-md/);
       // E ela vale de verdade, não só no atributo.
-      await expect(getComputedStyle(painel).textAlign).toBe('center');
+      await expect(getComputedStyle(panel).textAlign).toBe('center');
       await expect(panelsAbertos()).toHaveLength(1);
     });
 
@@ -391,9 +391,9 @@ export const ExtraPanelClass: Story = {
       // 28rem da utilitária contra os 20rem que `.nds-hover-card-content`
       // define. É o que prova que a customização de largura funciona de fato,
       // e não só que a classe está no atributo.
-      const painel = await waitForOpen();
-      const raiz = parseFloat(getComputedStyle(document.documentElement).fontSize);
-      await expect(painel.getBoundingClientRect().width).toBeCloseTo(28 * raiz, 0);
+      const panel = await waitForOpen();
+      const root = parseFloat(getComputedStyle(document.documentElement).fontSize);
+      await expect(panel.getBoundingClientRect().width).toBeCloseTo(28 * root, 0);
     });
   },
 };

@@ -368,9 +368,9 @@ const SHORTCUTS_EDIT = [
 ] as const;
 const EXIBICOES = ['Régua', 'Grade'] as const;
 const THEMES = [
-  { valor: 'light', label: 'Claro' },
-  { valor: 'dark', label: 'Escuro' },
-  { valor: 'system', label: 'Do sistema' },
+  { value: 'light', label: 'Claro' },
+  { value: 'dark', label: 'Escuro' },
+  { value: 'system', label: 'Do sistema' },
 ] as const;
 
 @Component({
@@ -506,7 +506,7 @@ const THEMES = [
           <ng-template ndsMenubarContent>
             <div ndsMenubarLabel>{{ t('demonstration.labels.viewMenu') }}</div>
             <div ndsMenubarCheckboxItem [(checked)]="regua">{{ exibicoes[0] }}</div>
-            <div ndsMenubarCheckboxItem [(checked)]="grade">{{ exibicoes[1] }}</div>
+            <div ndsMenubarCheckboxItem [(checked)]="grid">{{ exibicoes[1] }}</div>
           </ng-template>
         </nds-menubar-menu>
       </nds-menubar>
@@ -516,10 +516,10 @@ const THEMES = [
         <nds-menubar-menu>
           <button ndsMenubarTrigger>{{ t('demonstration.labels.toolsMenu') }}</button>
           <ng-template ndsMenubarContent>
-            <div ndsMenubarRadioGroup [(value)]="tema">
+            <div ndsMenubarRadioGroup [(value)]="theme">
               <div ndsMenubarLabel>{{ t('demonstration.labels.toolsMenu') }}</div>
-              @for (opcao of temas; track opcao.valor) {
-                <div ndsMenubarRadioItem [value]="opcao.valor">{{ opcao.label }}</div>
+              @for (opcao of temas; track opcao.value) {
+                <div ndsMenubarRadioItem [value]="opcao.value">{{ opcao.label }}</div>
               }
             </div>
           </ng-template>
@@ -614,7 +614,7 @@ const THEMES = [
                 <div ndsMenubarGroup>
                   <div ndsMenubarLabel>{{ t('demonstration.labels.viewMenu') }}</div>
                   <div ndsMenubarCheckboxItem [(checked)]="regua">{{ exibicoes[0] }}</div>
-                  <div ndsMenubarCheckboxItem [(checked)]="grade">{{ exibicoes[1] }}</div>
+                  <div ndsMenubarCheckboxItem [(checked)]="grid">{{ exibicoes[1] }}</div>
                 </div>
               </ng-template>
             </nds-menubar-menu>
@@ -622,10 +622,10 @@ const THEMES = [
             <nds-menubar-menu>
               <button ndsMenubarTrigger>{{ t('demonstration.labels.toolsMenu') }}</button>
               <ng-template ndsMenubarContent>
-                <div ndsMenubarRadioGroup [(value)]="tema">
+                <div ndsMenubarRadioGroup [(value)]="theme">
                   <div ndsMenubarLabel>{{ t('demonstration.labels.toolsMenu') }}</div>
-                  @for (opcao of temas; track opcao.valor) {
-                    <div ndsMenubarRadioItem [value]="opcao.valor">{{ opcao.label }}</div>
+                  @for (opcao of temas; track opcao.value) {
+                    <div ndsMenubarRadioItem [value]="opcao.value">{{ opcao.label }}</div>
                   }
                 </div>
               </ng-template>
@@ -745,8 +745,8 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
 
   /** Estado dos exemplos vivos — alternadores e escolha única. */
   protected readonly regua = signal(true);
-  protected readonly grade = signal(false);
-  protected readonly tema = signal<unknown>('light');
+  protected readonly grid = signal(false);
+  protected readonly theme = signal<unknown>('light');
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
@@ -911,21 +911,21 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
     const sim = tNav('common.yes');
 
     /** Linha cujo tipo/padrão/descrição vêm da tabela do conteúdo compartilhado. */
-    const ofContent = (nome: string, chave: string, tipo?: string, padrao?: string) => ({
-      name: nome,
-      type: tipo ?? toPlainText(t(`props.table.${chave}.type`)),
-      defaultValue: padrao ?? toPlainText(t(`props.table.${chave}.default`)),
-      required: toPlainText(t(`props.table.${chave}.required`)),
-      description: toPlainText(t(`props.table.${chave}.description`)),
+    const ofContent = (name: string, key: string, type?: string, padrao?: string) => ({
+      name: name,
+      type: type ?? toPlainText(t(`props.table.${key}.type`)),
+      defaultValue: padrao ?? toPlainText(t(`props.table.${key}.default`)),
+      required: toPlainText(t(`props.table.${key}.required`)),
+      description: toPlainText(t(`props.table.${key}.description`)),
     });
 
     /** Linha que só existe neste stack — descrição vem do override. */
-    const local = (nome: string, tipo: string, padrao: string, chave: string) => ({
-      name: nome,
-      type: tipo,
+    const local = (name: string, type: string, padrao: string, key: string) => ({
+      name: name,
+      type: type,
       defaultValue: padrao,
       required: not,
-      description: toPlainText(t(`props.${chave}.description`)),
+      description: toPlainText(t(`props.${key}.description`)),
     });
 
     const className = local('class', 'string', '—', 'class');
@@ -1093,14 +1093,14 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
     // Sem tabela no conteúdo compartilhado: os eventos vêm da descrição. Os
     // três de produto ainda NÃO existem no catálogo tipado de nenhuma stack —
     // a demonstração acima não os dispara, e a lacuna está reportada.
-    const gatilho = toPlainText(t('analytics.description'));
+    const trigger = toPlainText(t('analytics.description'));
     return [
-      { event: 'menubar_menu_open',       trigger: gatilho, payload: 'component, menu' },
-      { event: 'menubar_item_select',     trigger: gatilho, payload: 'component, menu, label' },
-      { event: 'menubar_shortcut_invoke', trigger: gatilho, payload: 'component, menu, label' },
+      { event: 'menubar_menu_open',       trigger: trigger, payload: 'component, menu' },
+      { event: 'menubar_item_select',     trigger: trigger, payload: 'component, menu, label' },
+      { event: 'menubar_shortcut_invoke', trigger: trigger, payload: 'component, menu, label' },
       {
         event: 'docs_page_view',
-        trigger: gatilho,
+        trigger: trigger,
         payload: 'component_name, locale, page_title',
       },
     ];

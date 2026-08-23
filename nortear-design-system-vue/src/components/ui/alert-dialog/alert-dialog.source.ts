@@ -36,14 +36,14 @@ export type AlertDialogArgs = {
  * tela estreita e a que o teclado percorre primeiro.
  */
 type Composition = {
-  raiz?: Array<string | false>;
-  gatilho?: { rotulo: string; variante?: string };
-  painel?: string;
+  root?: Array<string | false>;
+  trigger?: { label: string; variant?: string };
+  panel?: string;
   midia?: { className?: string };
-  titulo: string;
+  title: string;
   descricao?: string;
-  cancelar: { rotulo: string; evento?: string };
-  acao: { rotulo: string; variante?: string; evento?: string };
+  cancelar: { label: string; evento?: string };
+  acao: { label: string; variant?: string; evento?: string };
 };
 
 /** Import do design system, com só os subcomponentes que a composição usa. */
@@ -59,34 +59,34 @@ function importDialog(c: Composition): string {
   ];
   if (c.descricao) names.push('AlertDialogDescription');
   if (c.midia) names.push('AlertDialogMedia');
-  if (c.gatilho) names.push('AlertDialogTrigger');
+  if (c.trigger) names.push('AlertDialogTrigger');
   names.sort();
   return `import {\n${names.map((n) => `  ${n},`).join('\n')}\n} from '@/components/ui/alert-dialog'`;
 }
 
 /** Texto de bloco quebra em linhas próprias; frase curta fica na mesma linha. */
-function withText(tag: string, atributos: string, conteudo: string, recuo: number): string {
+function withText(tag: string, attrs: string, content: string, recuo: number): string {
   const p = ' '.repeat(recuo);
-  if (!conteudo.includes('\n')) {
-    return `${p}<${tag}${atributos}>${conteudo}</${tag}>`;
+  if (!content.includes('\n')) {
+    return `${p}<${tag}${attrs}>${content}</${tag}>`;
   }
-  return `${p}<${tag}${atributos}>\n${indentar(conteudo, recuo + 2)}\n${p}</${tag}>`;
+  return `${p}<${tag}${attrs}>\n${indentar(content, recuo + 2)}\n${p}</${tag}>`;
 }
 
 function dialogo(c: Composition): string {
-  const lines: string[] = [`<AlertDialog${attrs(...(c.raiz ?? []))}>`];
+  const lines: string[] = [`<AlertDialog${attrs(...(c.root ?? []))}>`];
 
-  if (c.gatilho) {
+  if (c.trigger) {
     // `as-child` faz o gatilho VESTIR o botão em vez de embrulhá-lo: um botão
     // dentro de outro não é marcação válida, e o foco iria para o de fora.
     lines.push(
       '  <AlertDialogTrigger as-child>',
-      `    <Button${attrs(attr('variant', c.gatilho.variante, 'default'))}>${c.gatilho.rotulo}</Button>`,
+      `    <Button${attrs(attr('variant', c.trigger.variant, 'default'))}>${c.trigger.label}</Button>`,
       '  </AlertDialogTrigger>',
     );
   }
 
-  lines.push(`  <AlertDialogContent${attrs(c.painel)}>`, '    <AlertDialogHeader>');
+  lines.push(`  <AlertDialogContent${attrs(c.panel)}>`, '    <AlertDialogHeader>');
 
   if (c.midia) {
     // A mídia é o PRIMEIRO filho do cabeçalho: dessa ordem dependem tanto a
@@ -98,14 +98,14 @@ function dialogo(c: Composition): string {
     );
   }
 
-  lines.push(withText('AlertDialogTitle', '', c.titulo, 6));
+  lines.push(withText('AlertDialogTitle', '', c.title, 6));
   if (c.descricao) lines.push(withText('AlertDialogDescription', '', c.descricao, 6));
 
   lines.push(
     '    </AlertDialogHeader>',
     '    <AlertDialogFooter>',
-    `      <AlertDialogCancel${attrs(c.cancelar.evento)}>${c.cancelar.rotulo}</AlertDialogCancel>`,
-    `      <AlertDialogAction${attrs(attr('variant', c.acao.variante, 'default'), c.acao.evento)}>${c.acao.rotulo}</AlertDialogAction>`,
+    `      <AlertDialogCancel${attrs(c.cancelar.evento)}>${c.cancelar.label}</AlertDialogCancel>`,
+    `      <AlertDialogAction${attrs(attr('variant', c.acao.variant, 'default'), c.acao.evento)}>${c.acao.label}</AlertDialogAction>`,
     '    </AlertDialogFooter>',
     '  </AlertDialogContent>',
     '</AlertDialog>',
@@ -117,7 +117,7 @@ function dialogo(c: Composition): string {
 /** Monta o SFC a partir da composição, somando os imports de fora do módulo. */
 function snippet(c: Composition, extras: string[] = [], state = ''): string {
   const imports = [importDialog(c)];
-  if (c.gatilho) imports.push(`import { Button } from '@/components/ui/button'`);
+  if (c.trigger) imports.push(`import { Button } from '@/components/ui/button'`);
   if (c.midia) imports.push(`import { TriangleAlert } from 'lucide-vue-next'`);
   imports.push(...extras);
   const script = state ? `${imports.join('\n')}\n\n${state}` : imports.join('\n');
@@ -139,16 +139,16 @@ export const alertDialogSource: SourceTransform<AlertDialogArgs> = (_gerado, ctx
   const args = ctx?.args ?? {};
   const tom = asCode(args.tone) ?? 'destructive';
   return snippet({
-    raiz: [
+    root: [
       attrBool('default-open', args.defaultOpen, false),
       attrBool('unmount-on-hide', args.unmountOnHide, true),
     ],
-    gatilho: { rotulo: asCode(args.triggerLabel) ?? 'Excluir conta', variante: tom },
+    trigger: { label: asCode(args.triggerLabel) ?? 'Excluir conta', variant: tom },
     midia: args.showMedia === true ? {} : undefined,
-    titulo: asCode(args.title) ?? 'Excluir conta',
+    title: asCode(args.title) ?? 'Excluir conta',
     descricao: asCode(args.description) ?? DESCRIPTION_DEFAULT,
-    cancelar: { rotulo: asCode(args.cancelLabel) ?? 'Cancelar' },
-    acao: { rotulo: asCode(args.actionLabel) ?? 'Excluir', variante: tom },
+    cancelar: { label: asCode(args.cancelLabel) ?? 'Cancelar' },
+    acao: { label: asCode(args.actionLabel) ?? 'Excluir', variant: tom },
   });
 };
 
@@ -158,11 +158,11 @@ export const alertDialogSource: SourceTransform<AlertDialogArgs> = (_gerado, ctx
  */
 export function alertDialogClosedSource(): string {
   return snippet({
-    gatilho: { rotulo: 'Excluir item', variante: 'destructive' },
-    titulo: 'Confirmar exclusão',
+    trigger: { label: 'Excluir item', variant: 'destructive' },
+    title: 'Confirmar exclusão',
     descricao: 'Esta ação não pode ser desfeita.',
-    cancelar: { rotulo: 'Cancelar' },
-    acao: { rotulo: 'Excluir', variante: 'destructive' },
+    cancelar: { label: 'Cancelar' },
+    acao: { label: 'Excluir', variant: 'destructive' },
   });
 }
 
@@ -175,12 +175,12 @@ export function alertDialogClosedSource(): string {
  */
 export function alertDialogOpenSource(): string {
   return snippet({
-    raiz: ['default-open'],
-    gatilho: { rotulo: 'Excluir item', variante: 'destructive' },
-    titulo: 'Excluir item permanentemente?',
+    root: ['default-open'],
+    trigger: { label: 'Excluir item', variant: 'destructive' },
+    title: 'Excluir item permanentemente?',
     descricao: 'O item será removido de forma definitiva e não poderá ser recuperado.',
-    cancelar: { rotulo: 'Cancelar' },
-    acao: { rotulo: 'Excluir', variante: 'destructive' },
+    cancelar: { label: 'Cancelar' },
+    acao: { label: 'Excluir', variant: 'destructive' },
   });
 }
 
@@ -188,12 +188,12 @@ export function alertDialogOpenSource(): string {
 export function alertDialogConfirmadoSource(): string {
   return snippet(
     {
-      raiz: ['default-open'],
-      gatilho: { rotulo: 'Excluir item', variante: 'destructive' },
-      titulo: 'Confirmar exclusão',
+      root: ['default-open'],
+      trigger: { label: 'Excluir item', variant: 'destructive' },
+      title: 'Confirmar exclusão',
       descricao: 'Esta ação é permanente.',
-      cancelar: { rotulo: 'Cancelar' },
-      acao: { rotulo: 'Excluir', variante: 'destructive', evento: '@click="excluirItem"' },
+      cancelar: { label: 'Cancelar' },
+      acao: { label: 'Excluir', variant: 'destructive', evento: '@click="excluirItem"' },
     },
     [],
     `function excluirItem() {
@@ -211,11 +211,11 @@ export function alertDialogConfirmadoSource(): string {
 export function alertDialogCanceladoSource(): string {
   return snippet(
     {
-      raiz: ['default-open'],
-      titulo: 'Confirmar exclusão',
+      root: ['default-open'],
+      title: 'Confirmar exclusão',
       descricao: 'Esta ação é permanente.',
-      cancelar: { rotulo: 'Cancelar', evento: '@click="aoDesistir"' },
-      acao: { rotulo: 'Excluir', variante: 'destructive', evento: '@click="excluirItem"' },
+      cancelar: { label: 'Cancelar', evento: '@click="aoDesistir"' },
+      acao: { label: 'Excluir', variant: 'destructive', evento: '@click="excluirItem"' },
     },
     [],
     `function aoDesistir() {
@@ -235,11 +235,11 @@ function excluirItem() {
  */
 export function alertDialogControlledSource(): string {
   const composition: Composition = {
-    raiz: [':open="aberto"', '@update:open="aberto = $event"'],
-    titulo: 'Controlado pelo pai',
+    root: [':open="aberto"', '@update:open="aberto = $event"'],
+    title: 'Controlado pelo pai',
     descricao: 'Este diálogo é comandado por estado externo.',
-    cancelar: { rotulo: 'Fechar' },
-    acao: { rotulo: 'Confirmar', variante: 'destructive', evento: '@click="aberto = false"' },
+    cancelar: { label: 'Fechar' },
+    acao: { label: 'Confirmar', variant: 'destructive', evento: '@click="aberto = false"' },
   };
   return vueSnippet(
     `${importDialog(composition)}
@@ -260,13 +260,13 @@ ${indentar(dialogo(composition))}
  */
 export function alertDialogWithIconSource(): string {
   return snippet({
-    raiz: ['default-open'],
-    gatilho: { rotulo: 'Excluir conta', variante: 'destructive' },
+    root: ['default-open'],
+    trigger: { label: 'Excluir conta', variant: 'destructive' },
     midia: {},
-    titulo: 'Excluir conta',
+    title: 'Excluir conta',
     descricao: DESCRIPTION_DEFAULT,
-    cancelar: { rotulo: 'Cancelar' },
-    acao: { rotulo: 'Excluir', variante: 'destructive' },
+    cancelar: { label: 'Cancelar' },
+    acao: { label: 'Excluir', variant: 'destructive' },
   });
 }
 
@@ -277,12 +277,12 @@ export function alertDialogWithIconSource(): string {
  */
 export function alertDialogDestructiveSource(): string {
   return snippet({
-    raiz: ['default-open'],
-    gatilho: { rotulo: 'Excluir conta', variante: 'destructive' },
-    titulo: 'Excluir conta',
+    root: ['default-open'],
+    trigger: { label: 'Excluir conta', variant: 'destructive' },
+    title: 'Excluir conta',
     descricao: DESCRIPTION_DEFAULT,
-    cancelar: { rotulo: 'Cancelar' },
-    acao: { rotulo: 'Excluir', variante: 'destructive' },
+    cancelar: { label: 'Cancelar' },
+    acao: { label: 'Excluir', variant: 'destructive' },
   });
 }
 
@@ -292,12 +292,12 @@ export function alertDialogDestructiveSource(): string {
  */
 export function alertDialogNeutralSource(): string {
   return snippet({
-    raiz: ['default-open'],
-    gatilho: { rotulo: 'Sair da conta', variante: 'outline' },
-    titulo: 'Sair da conta',
+    root: ['default-open'],
+    trigger: { label: 'Sair da conta', variant: 'outline' },
+    title: 'Sair da conta',
     descricao: 'Você precisará entrar novamente para acessar seus dados.',
-    cancelar: { rotulo: 'Cancelar' },
-    acao: { rotulo: 'Sair' },
+    cancelar: { label: 'Cancelar' },
+    acao: { label: 'Sair' },
   });
 }
 
@@ -307,15 +307,15 @@ export function alertDialogNeutralSource(): string {
  */
 export function alertDialogDescriptionLongaSource(): string {
   return snippet({
-    raiz: ['default-open'],
-    gatilho: { rotulo: 'Excluir conta', variante: 'destructive' },
-    titulo: 'Excluir conta',
+    root: ['default-open'],
+    trigger: { label: 'Excluir conta', variant: 'destructive' },
+    title: 'Excluir conta',
     descricao: `Todos os seus dados, arquivos enviados, integrações ativas e o histórico
 completo de faturamento serão removidos permanentemente dos nossos
 servidores. Esta ação não pode ser desfeita e nenhuma cópia de segurança
 fica disponível depois da confirmação.`,
-    cancelar: { rotulo: 'Cancelar' },
-    acao: { rotulo: 'Excluir', variante: 'destructive' },
+    cancelar: { label: 'Cancelar' },
+    acao: { label: 'Excluir', variant: 'destructive' },
   });
 }
 
@@ -328,11 +328,11 @@ fica disponível depois da confirmação.`,
  */
 export function alertDialogNoDescriptionSource(): string {
   return snippet({
-    raiz: ['default-open'],
-    gatilho: { rotulo: 'Descartar rascunho', variante: 'destructive' },
-    titulo: 'Descartar rascunho',
-    cancelar: { rotulo: 'Cancelar' },
-    acao: { rotulo: 'Descartar', variante: 'destructive' },
+    root: ['default-open'],
+    trigger: { label: 'Descartar rascunho', variant: 'destructive' },
+    title: 'Descartar rascunho',
+    cancelar: { label: 'Cancelar' },
+    acao: { label: 'Descartar', variant: 'destructive' },
   });
 }
 
@@ -345,13 +345,13 @@ export function alertDialogNoDescriptionSource(): string {
  */
 export function alertDialogClassNameExtraSource(): string {
   return snippet({
-    raiz: ['default-open'],
-    gatilho: { rotulo: 'Excluir conta', variante: 'destructive' },
-    painel: 'class="nds-overflow-hidden"',
+    root: ['default-open'],
+    trigger: { label: 'Excluir conta', variant: 'destructive' },
+    panel: 'class="nds-overflow-hidden"',
     midia: { className: 'class="nds-shrink-0"' },
-    titulo: 'Excluir conta',
+    title: 'Excluir conta',
     descricao: DESCRIPTION_DEFAULT,
-    cancelar: { rotulo: 'Cancelar' },
-    acao: { rotulo: 'Excluir', variante: 'destructive' },
+    cancelar: { label: 'Cancelar' },
+    acao: { label: 'Excluir', variant: 'destructive' },
   });
 }

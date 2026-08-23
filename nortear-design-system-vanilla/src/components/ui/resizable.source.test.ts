@@ -9,81 +9,81 @@ import {
 
 describe('resizableSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do grupo', () => {
-    const código = resizableSnippet();
-    expect(código).toContain("import { createResizablePanel } from '@/components/ui/resizable';");
-    expect(código).toContain('createResizablePanel({');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('role="separator"');
+    const code = resizableSnippet();
+    expect(code).toContain("import { createResizablePanel } from '@/components/ui/resizable';");
+    expect(code).toContain('createResizablePanel({');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('role="separator"');
   });
 
   it('usa o nome acessível canônico, nunca o apelido', () => {
-    const código = resizableSnippet({ 'aria-label': 'Redimensionar Sidebar e Conteúdo' });
-    expect(código).toContain("'aria-label': 'Redimensionar Sidebar e Conteúdo'");
-    expect(código).not.toContain('ariaLabel');
+    const code = resizableSnippet({ 'aria-label': 'Redimensionar Sidebar e Conteúdo' });
+    expect(code).toContain("'aria-label': 'Redimensionar Sidebar e Conteúdo'");
+    expect(code).not.toContain('ariaLabel');
   });
 
   it('nomeia um divisor por vez quando o grupo tem mais de um', () => {
     // Dois separadores com o mesmo nome são dois controles indistinguíveis na
     // lista do leitor de tela.
-    const código = resizableSnippet({
+    const code = resizableSnippet({
       'aria-label': ['Redimensionar a coluna Navegação', 'Redimensionar a coluna Metadados'],
       panels: [
-        { titulo: 'Navegação', defaultSize: 20, minSize: 12 },
-        { titulo: 'Conteúdo', defaultSize: 55, minSize: 30 },
-        { titulo: 'Metadados', defaultSize: 25, minSize: 15 },
+        { title: 'Navegação', defaultSize: 20, minSize: 12 },
+        { title: 'Conteúdo', defaultSize: 55, minSize: 30 },
+        { title: 'Metadados', defaultSize: 25, minSize: 15 },
       ],
     });
-    expect(código).toContain("'Redimensionar a coluna Navegação',");
-    expect(código).toContain("'Redimensionar a coluna Metadados',");
-    expect(código.match(/bloco\('/g)).toHaveLength(3);
+    expect(code).toContain("'Redimensionar a coluna Navegação',");
+    expect(code).toContain("'Redimensionar a coluna Metadados',");
+    expect(code.match(/bloco\('/g)).toHaveLength(3);
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = resizableSnippet();
+    const code = resizableSnippet();
     // `horizontal`, sem pegador, sem trava e sem callback de layout.
-    expect(código).not.toContain('direction:');
-    expect(código).not.toContain('withHandle');
-    expect(código).not.toContain('disabled');
-    expect(código).not.toContain('onLayout');
-    expect(código).not.toContain('destroy()');
+    expect(code).not.toContain('direction:');
+    expect(code).not.toContain('withHandle');
+    expect(code).not.toContain('disabled');
+    expect(code).not.toContain('onLayout');
+    expect(code).not.toContain('destroy()');
   });
 
   it('omite o piso e o teto que a fábrica já assume', () => {
-    const código = resizableSnippet({
+    const code = resizableSnippet({
       panels: [
-        { titulo: 'A', defaultSize: 50, minSize: 10, maxSize: 100 },
-        { titulo: 'B', defaultSize: 50, minSize: 10 },
+        { title: 'A', defaultSize: 50, minSize: 10, maxSize: 100 },
+        { title: 'B', defaultSize: 50, minSize: 10 },
       ],
     });
-    expect(código).not.toContain('minSize');
-    expect(código).not.toContain('maxSize');
+    expect(code).not.toContain('minSize');
+    expect(code).not.toContain('maxSize');
   });
 
   it('mostra as opções quando a story as usa', () => {
-    const código = resizableSnippet({
+    const code = resizableSnippet({
       direction: 'vertical',
       withHandle: true,
       disabled: true,
       onLayout: '(sizes) => guardarLayout(sizes)',
       panels: [
-        { titulo: 'Painel A', defaultSize: 50, minSize: 30, maxSize: 60 },
-        { titulo: 'Painel B', defaultSize: 50, minSize: 30 },
+        { title: 'Painel A', defaultSize: 50, minSize: 30, maxSize: 60 },
+        { title: 'Painel B', defaultSize: 50, minSize: 30 },
       ],
     });
-    expect(código).toContain("direction: 'vertical'");
-    expect(código).toContain('withHandle: true');
-    expect(código).toContain('disabled: true');
-    expect(código).toContain('onLayout: (sizes) => guardarLayout(sizes)');
-    expect(código).toContain('minSize: 30');
-    expect(código).toContain('maxSize: 60');
+    expect(code).toContain("direction: 'vertical'");
+    expect(code).toContain('withHandle: true');
+    expect(code).toContain('disabled: true');
+    expect(code).toContain('onLayout: (sizes) => guardarLayout(sizes)');
+    expect(code).toContain('minSize: 30');
+    expect(code).toContain('maxSize: 60');
   });
 
   it('os três números dos controls viram os dois painéis do exemplo', () => {
-    const código = resizableSnippet({ defaultSize: 40, minSize: 20, maxSize: 60 });
-    expect(código).toContain('defaultSize: 40');
-    expect(código).toContain('defaultSize: 60');
-    expect(código).toContain('minSize: 20');
-    expect(código).toContain('maxSize: 60');
+    const code = resizableSnippet({ defaultSize: 40, minSize: 20, maxSize: 60 });
+    expect(code).toContain('defaultSize: 40');
+    expect(code).toContain('defaultSize: 60');
+    expect(code).toContain('minSize: 20');
+    expect(code).toContain('maxSize: 60');
   });
 
   it('mostra a limpeza só quando ela é o assunto', () => {
@@ -91,39 +91,39 @@ describe('resizableSnippet', () => {
   });
 
   it('não vaza o andaime das stories', () => {
-    const código = resizableSnippet();
-    expect(código).not.toContain('panelContent(');
-    expect(código).not.toContain('frame(');
-    expect(código).not.toContain('listBlock(');
-    expect(código).not.toContain('fracaoDoPrimeiro');
+    const code = resizableSnippet();
+    expect(code).not.toContain('panelContent(');
+    expect(code).not.toContain('frame(');
+    expect(code).not.toContain('listBlock(');
+    expect(code).not.toContain('fracaoDoPrimeiro');
   });
 });
 
 describe('resizableAninhadoSnippet', () => {
   it('monta dois grupos, cada um com o nome do próprio divisor', () => {
-    const código = resizableNestedSnippet({
+    const code = resizableNestedSnippet({
       interno: {
         direction: 'vertical',
         'aria-label': 'Redimensionar Editor e Console',
         panels: [
-          { titulo: 'Editor', defaultSize: 60, minSize: 20 },
-          { titulo: 'Console', defaultSize: 40, minSize: 20 },
+          { title: 'Editor', defaultSize: 60, minSize: 20 },
+          { title: 'Console', defaultSize: 40, minSize: 20 },
         ],
       },
       externo: {
         'aria-label': 'Redimensionar Sidebar e área principal',
         panels: [
-          { titulo: 'Sidebar', defaultSize: 30, minSize: 15 },
-          { titulo: 'Área principal', defaultSize: 70, minSize: 30 },
+          { title: 'Sidebar', defaultSize: 30, minSize: 15 },
+          { title: 'Área principal', defaultSize: 70, minSize: 30 },
         ],
       },
-      neighbour: { titulo: 'Sidebar', defaultSize: 30, minSize: 15 },
+      neighbour: { title: 'Sidebar', defaultSize: 30, minSize: 15 },
     });
-    expect(código.match(/createResizablePanel\(\{/g)).toHaveLength(2);
-    expect(código).toContain("'aria-label': 'Redimensionar Editor e Console'");
-    expect(código).toContain("'aria-label': 'Redimensionar Sidebar e área principal'");
+    expect(code.match(/createResizablePanel\(\{/g)).toHaveLength(2);
+    expect(code).toContain("'aria-label': 'Redimensionar Editor e Console'");
+    expect(code).toContain("'aria-label': 'Redimensionar Sidebar e área principal'");
     // O grupo de dentro entra no de fora como conteúdo de um painel.
-    expect(código).toContain('content: interno');
+    expect(code).toContain('content: interno');
   });
 });
 
@@ -148,8 +148,8 @@ describe('resizableSource', () => {
 describe('resizableSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = resizableSourceWith({ direction: 'vertical' });
-    const código = transform('', { args: { direction: 'horizontal' } });
-    expect(código).toContain("direction: 'vertical'");
+    const code = transform('', { args: { direction: 'horizontal' } });
+    expect(code).toContain("direction: 'vertical'");
   });
 });
 
@@ -158,10 +158,10 @@ describe('resizableSourceAninhado', () => {
     const transform = resizableSourceNested({
       interno: { direction: 'vertical', 'aria-label': 'Interno' },
       externo: { 'aria-label': 'Externo' },
-      neighbour: { titulo: 'Sidebar', defaultSize: 30 },
+      neighbour: { title: 'Sidebar', defaultSize: 30 },
     });
-    const código = transform('', { args: { direction: 'horizontal' } });
-    expect(código).toContain('content: interno');
-    expect(código.match(/createResizablePanel\(\{/g)).toHaveLength(2);
+    const code = transform('', { args: { direction: 'horizontal' } });
+    expect(code).toContain('content: interno');
+    expect(code.match(/createResizablePanel\(\{/g)).toHaveLength(2);
   });
 });

@@ -68,7 +68,7 @@ export const Simple: Story = {
   },
   render: () => ({
     props: {
-      atual: 1,
+      current: 1,
       // Derivado, não literal: a faixa e as asserções leem a mesma fonte.
       pages: [1, 2, 3, 4, 5],
       rotuloPagina: LABEL_PAGE,
@@ -87,7 +87,7 @@ export const Simple: Story = {
               <a
                 ndsPaginationLink
                 href="#"
-                [isActive]="n === atual"
+                [isActive]="n === current"
                 [attr.aria-label]="rotuloPagina + ' ' + n"
                 (click)="semNavegar($event)"
               >{{ n }}</a>
@@ -141,7 +141,7 @@ export const WithEllipsis: Story = {
     props: {
       // A faixa recortada de um total de 12: 1 … 5 6 7 … 12.
       trechos: [1, 'ellipsis', 5, 6, 7, 'ellipsis', 12] as (number | string)[],
-      atual: 6,
+      current: 6,
       rotuloPagina: LABEL_PAGE,
       labelPrevious: LABEL_PREVIOUS,
       labelNext: LABEL_NEXT,
@@ -161,7 +161,7 @@ export const WithEllipsis: Story = {
                 <a
                   ndsPaginationLink
                   href="#"
-                  [isActive]="trecho === atual"
+                  [isActive]="trecho === current"
                   [attr.aria-label]="rotuloPagina + ' ' + trecho"
                   (click)="semNavegar($event)"
                 >{{ trecho }}</a>
@@ -274,19 +274,19 @@ export const Interactive: Story = {
   render: () => {
     // Signal e não campo comum: em modo zoneless é o signal que dispara a nova
     // detecção de mudança quando a página muda.
-    const atual = signal(3);
+    const current = signal(3);
     const total = 8;
     return {
       props: {
-        atual,
+        current,
         total,
         pages: Array.from({ length: total }, (_, i) => i + 1),
         rotuloPagina: LABEL_PAGE,
         labelPrevious: LABEL_PREVIOUS,
         labelNext: LABEL_NEXT,
-        irTo: (evento: Event, pagina: number) => {
+        irTo: (evento: Event, page: number) => {
           evento.preventDefault();
-          atual.set(pagina);
+          current.set(page);
         },
       },
       template: `
@@ -299,8 +299,8 @@ export const Interactive: Story = {
                   href="#"
                   text="Anterior"
                   [label]="labelPrevious"
-                  [disabled]="atual() === 1"
-                  (click)="irTo($event, atual() - 1)"
+                  [disabled]="current() === 1"
+                  (click)="irTo($event, current() - 1)"
                 ></a>
               </li>
               @for (n of pages; track n) {
@@ -308,7 +308,7 @@ export const Interactive: Story = {
                   <a
                     ndsPaginationLink
                     href="#"
-                    [isActive]="n === atual()"
+                    [isActive]="n === current()"
                     [attr.aria-label]="rotuloPagina + ' ' + n"
                     (click)="irTo($event, n)"
                   >{{ n }}</a>
@@ -320,13 +320,13 @@ export const Interactive: Story = {
                   href="#"
                   text="Próxima"
                   [label]="labelNext"
-                  [disabled]="atual() === total"
-                  (click)="irTo($event, atual() + 1)"
+                  [disabled]="current() === total"
+                  (click)="irTo($event, current() + 1)"
                 ></a>
               </li>
             </ul>
           </nav>
-          <p class="nds-text-body" data-slot="pagina-atual">Página {{ atual() }} de {{ total }}</p>
+          <p class="nds-text-body" data-slot="pagina-atual">Página {{ current() }} de {{ total }}</p>
         </div>
       `,
     };

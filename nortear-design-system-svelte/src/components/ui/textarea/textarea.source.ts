@@ -53,7 +53,7 @@ export function textareaSource(_gerado?: string, ctx?: { args?: Partial<Textarea
     maxLength,
   } = ctx?.args ?? {};
 
-  const campo = tagTextarea([
+  const field = tagTextarea([
     'id="descricao"',
     'bind:value',
     placeholder ? `placeholder="${placeholder}"` : '',
@@ -78,7 +78,7 @@ export function textareaSource(_gerado?: string, ctx?: { args?: Partial<Textarea
     script(),
     `<div class="nds-stack nds-max-w-md" data-spacing="sm">
   <Label for="descricao">Descrição</Label>
-  ${campo}${counter}
+  ${field}${counter}
 </div>`,
   );
 }

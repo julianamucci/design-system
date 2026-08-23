@@ -91,9 +91,9 @@ describe('inputSource', () => {
     // exemplo que ninguém lê — é o defeito que o estado de erro deveria evitar.
     const saida = inputSource(undefined, { args: { 'aria-invalid': true } });
     expect(saida).toContain('aria-invalid="true"');
-    const alvo = saida.match(/aria-describedby="([a-z-]+)"/)?.[1];
-    expect(alvo).toBeDefined();
-    expect(saida).toContain(`<p id="${alvo}"`);
+    const target = saida.match(/aria-describedby="([a-z-]+)"/)?.[1];
+    expect(target).toBeDefined();
+    expect(saida).toContain(`<p id="${target}"`);
   });
 });
 
@@ -154,8 +154,8 @@ describe('InputGroup', () => {
     // anunciado duplicaria a leitura.
     for (const fn of GROUP) {
       const saida = fn();
-      for (const [, tag, atributos] of saida.matchAll(/<(Search|Mail|EyeOff|Eye|X)\b([^>]*)>/g)) {
-        expect(atributos, `${fn.name}: <${tag}> sem aria-hidden`).toContain('aria-hidden="true"');
+      for (const [, tag, attrs] of saida.matchAll(/<(Search|Mail|EyeOff|Eye|X)\b([^>]*)>/g)) {
+        expect(attrs, `${fn.name}: <${tag}> sem aria-hidden`).toContain('aria-hidden="true"');
       }
     }
   });
@@ -210,8 +210,8 @@ describe('regras que valem para todo snippet', () => {
       const saida = fn();
       const targets = [...saida.matchAll(/<Label htmlFor="([a-z0-9-]+)"/g)].map(([, id]) => id);
       expect(targets.length, `${fn.name} não tem rótulo`).toBeGreaterThan(0);
-      for (const alvo of targets) {
-        expect(saida, `${fn.name}: for="${alvo}" sem campo`).toContain(`id="${alvo}"`);
+      for (const target of targets) {
+        expect(saida, `${fn.name}: for="${target}" sem campo`).toContain(`id="${target}"`);
       }
     }
   });

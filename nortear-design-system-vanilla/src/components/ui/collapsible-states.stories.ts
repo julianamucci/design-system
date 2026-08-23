@@ -26,11 +26,11 @@ type Story = StoryObj;
 // `makeContent` vem de `collapsible.fixtures.ts`.
 
 // Idempotentes — ver a nota em collapsible.stories.ts.
-const abrir = async (t: HTMLElement) => {
+const open = async (t: HTMLElement) => {
   if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
 };
-const fechar = async (t: HTMLElement) => {
+const close = async (t: HTMLElement) => {
   if (t.getAttribute('aria-expanded') !== 'false') await userEvent.click(t);
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'false'));
 };
@@ -58,19 +58,19 @@ export const Uncontrolled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button');
-    const painel = panelOf(canvasElement);
+    const panel = panelOf(canvasElement);
 
     await step('O estado nasce e vive dentro do componente', async () => {
-      await fechar(trigger);
-      await expect(painel).not.toBeVisible();
-      await abrir(trigger);
-      await expect(painel).toBeVisible();
+      await close(trigger);
+      await expect(panel).not.toBeVisible();
+      await open(trigger);
+      await expect(panel).toBeVisible();
       await expect(canvas.getByText('Filtro avançado 1')).toBeVisible();
     });
 
     await step('E continua alternando sem controle externo', async () => {
-      await fechar(trigger);
-      await expect(painel).not.toBeVisible();
+      await close(trigger);
+      await expect(panel).not.toBeVisible();
     });
   },
 };
@@ -101,22 +101,22 @@ export const OpenByDefault: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button');
-    const painel = panelOf(canvasElement);
+    const panel = panelOf(canvasElement);
 
     await step('Monta já expandido, sem estado externo nenhum', async () => {
       // Asserção de MONTAGEM: por isso o passo anterior não interage. No replay
       // o DOM não remonta, e o passo seguinte devolve o estado aberto.
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-      await expect(painel).toBeVisible();
+      await expect(panel).toBeVisible();
       await expect(canvas.getByText('Filtro avançado 1')).toBeVisible();
     });
 
     await step('defaultOpen é ponto de partida, não trava', async () => {
-      await fechar(trigger);
-      await abrir(trigger);
+      await close(trigger);
+      await open(trigger);
       // Termina aberto de propósito: é o quadro que o Chromatic fotografa e o
       // estado que o axe varre nesta story (visual.item2).
-      await expect(painel).toBeVisible();
+      await expect(panel).toBeVisible();
     });
   },
 };
@@ -144,13 +144,13 @@ export const Controlled: Story = {
       trigger: 'Exibir filtros avançados',
       content: makeContent(['Filtro avançado 1', 'Filtro avançado 2']),
       open: false,
-      onOpenChange: (valor) => definir(valor),
+      onOpenChange: (value) => definir(value),
       class: 'nds-w-full',
     });
 
-    function definir(valor: boolean) {
-      isOpen = valor;
-      collapsible.setOpen(valor);
+    function definir(value: boolean) {
+      isOpen = value;
+      collapsible.setOpen(value);
       pintar();
     }
     pintar();
@@ -160,15 +160,15 @@ export const Controlled: Story = {
     buttons.dataset.spacing = 'sm';
     // Nomes próprios, diferentes do trigger: dois botões com o mesmo nome
     // acessível são ambíguos na lista de controles do leitor de tela.
-    for (const [rotulo, valor] of [
+    for (const [label, value] of [
       ['Abrir pelo estado externo', true],
       ['Fechar pelo estado externo', false],
     ] as const) {
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'nds-button nds-button-outline nds-button-sm';
-      b.textContent = rotulo;
-      b.addEventListener('click', () => definir(valor));
+      b.textContent = label;
+      b.addEventListener('click', () => definir(value));
       buttons.appendChild(b);
     }
 
@@ -191,7 +191,7 @@ export const Controlled: Story = {
     const trigger = canvasElement.querySelector<HTMLButtonElement>(
       '[data-slot="collapsible-trigger"]',
     )!;
-    const painel = panelOf(canvasElement);
+    const panel = panelOf(canvasElement);
 
     await step('O painel obedece ao estado externo', async () => {
       // Nenhum clique no trigger: quem manda é o estado de fora.
@@ -199,13 +199,13 @@ export const Controlled: Story = {
         await userEvent.click(canvas.getByRole('button', { name: 'Abrir pelo estado externo' }));
       }
       await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
-      await expect(painel).toBeVisible();
+      await expect(panel).toBeVisible();
       await expect(canvas.getByText('Estado externo: aberto')).toBeInTheDocument();
     });
 
     await step('O trigger devolve a mudança para o estado externo', async () => {
-      await fechar(trigger);
-      await expect(painel).not.toBeVisible();
+      await close(trigger);
+      await expect(panel).not.toBeVisible();
       await expect(canvas.getByText('Estado externo: fechado')).toBeInTheDocument();
     });
 
@@ -245,7 +245,7 @@ export const Disabled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button');
-    const painel = panelOf(canvasElement);
+    const panel = panelOf(canvasElement);
 
     await step('O botão é desabilitado de verdade, não só na aparência', async () => {
       await expect(trigger).toBeDisabled();
@@ -257,7 +257,7 @@ export const Disabled: Story = {
       // estado em rodada nenhuma.
       await userEvent.click(trigger, { pointerEventsCheck: 0 });
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      await expect(painel).not.toBeVisible();
+      await expect(panel).not.toBeVisible();
     });
 
     await step('Teclado também não', async () => {

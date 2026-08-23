@@ -24,7 +24,7 @@ export type TooltipDescription = {
   readonly id: string;
   readonly isOpen: boolean;
   readonly montado: boolean;
-  marcarMontado(valor: boolean): void;
+  marcarMontado(value: boolean): void;
 };
 
 const KEY = Symbol('nds-tooltip-descricao');

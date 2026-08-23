@@ -76,9 +76,9 @@ export const Single: Story = {
     await step('Emendados: o conjunto tem uma borda só, e os cantos internos são retos', async () => {
       // `data-variant="outline"` certo com CSS ausente daria três botões
       // soltos — é o defeito que só a medida pega.
-      const grupo = canvas.getByRole('toolbar');
-      await expect(grupo).toHaveAttribute('data-variant', 'outline');
-      await expect(parseFloat(getComputedStyle(grupo).borderTopWidth)).toBeGreaterThan(0);
+      const group = canvas.getByRole('toolbar');
+      await expect(group).toHaveAttribute('data-variant', 'outline');
+      await expect(parseFloat(getComputedStyle(group).borderTopWidth)).toBeGreaterThan(0);
       await expect(parseFloat(getComputedStyle(center).borderTopLeftRadius)).toBe(0);
     });
   },
@@ -163,33 +163,33 @@ export const Vertical: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const grupo = canvas.getByRole('toolbar');
-    const grade = canvas.getByRole('button', { name: 'Grade' });
-    const lista = canvas.getByRole('button', { name: 'Lista' });
+    const group = canvas.getByRole('toolbar');
+    const grid = canvas.getByRole('button', { name: 'Grade' });
+    const list = canvas.getByRole('button', { name: 'Lista' });
 
     await step('A orientação chega ao markup e ao anúncio', async () => {
-      await expect(grupo).toHaveAttribute('data-orientation', 'vertical');
-      await expect(grupo).toHaveAttribute('aria-orientation', 'vertical');
+      await expect(group).toHaveAttribute('data-orientation', 'vertical');
+      await expect(group).toHaveAttribute('aria-orientation', 'vertical');
     });
 
     await step('Empilhado de verdade: o segundo item começa abaixo do primeiro', async () => {
       // `data-orientation` certo com CSS ausente deixaria os dois lado a lado.
-      const a = grade.getBoundingClientRect();
-      const b = lista.getBoundingClientRect();
+      const a = grid.getBoundingClientRect();
+      const b = list.getBoundingClientRect();
       await expect(b.top).toBeGreaterThanOrEqual(a.bottom - 1);
     });
 
     await step('Com texto visível, aria-label seria ruído', async () => {
-      await expect(grade.getAttribute('aria-label')).toBe(null);
-      await expect(grade.textContent?.trim()).toBe('Grade');
+      await expect(grid.getAttribute('aria-label')).toBe(null);
+      await expect(grid.textContent?.trim()).toBe('Grade');
     });
 
     await step('As setas verticais navegam, e as horizontais não roubam o foco', async () => {
-      grade.focus();
+      grid.focus();
       await userEvent.keyboard('{ArrowDown}');
-      await expect(lista).toHaveFocus();
+      await expect(list).toHaveFocus();
       await userEvent.keyboard('{ArrowUp}');
-      await expect(grade).toHaveFocus();
+      await expect(grid).toHaveFocus();
     });
   },
 };

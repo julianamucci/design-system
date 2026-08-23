@@ -33,11 +33,11 @@ const meta: Meta = {
 export default meta;
 
 /** Par idempotente — ver a nota em collapsible.stories.ts. */
-const abrir = async (t: HTMLElement) => {
+const open = async (t: HTMLElement) => {
   if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
 };
-const fechar = async (t: HTMLElement) => {
+const close = async (t: HTMLElement) => {
   if (t.getAttribute('aria-expanded') !== 'false') await userEvent.click(t);
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'false'));
 };
@@ -68,8 +68,8 @@ export const WithCustomButton: StoryObj<Record<string, never>> = {
     });
 
     await step('aberto, o mesmo botão aponta para o painel', async () => {
-      await fechar(trigger);
-      await abrir(trigger);
+      await close(trigger);
+      await open(trigger);
       const id = trigger.getAttribute('aria-controls');
       await expect(id).toBeTruthy();
       await expect(document.getElementById(id!)).toBe(
@@ -102,14 +102,14 @@ export const WithRotatingChevron: StoryObj<Record<string, never>> = {
     });
 
     await step('fechado, o ícone não está girado', async () => {
-      await fechar(trigger);
+      await close(trigger);
       // waitFor porque `.nds-chevron` tem transition: transform — medido no
       // primeiro quadro, o valor computado ainda é a matriz da animação.
       await waitFor(() => expect(getComputedStyle(chevron).transform).toBe('none'));
     });
 
     await step('aberto, o CSS gira 180° a partir do estado no trigger', async () => {
-      await abrir(trigger);
+      await open(trigger);
       // matrix(-1, 0, 0, -1, 0, 0) é a forma computada de rotate(180deg).
       await waitFor(() =>
         expect(getComputedStyle(chevron).transform).toBe('matrix(-1, 0, 0, -1, 0, 0)'),

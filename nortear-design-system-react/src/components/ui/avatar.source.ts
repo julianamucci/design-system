@@ -42,14 +42,14 @@ function importingParts(parts: readonly string[]): string {
  * tamanho do indicador de status.
  */
 function avatarWithFoto(size: unknown, className: unknown, delay = false): string {
-  const raiz = attrs(
+  const root = attrs(
     propOption('size', size, SIZES, 'md'),
     propText('className', className),
   );
   const fallback = delay ? '<AvatarFallback delayMs={600}>' : '<AvatarFallback>';
   return jsxSnippet(
     importingParts(['Avatar', 'AvatarImage', 'AvatarFallback']),
-    `<Avatar${raiz}>
+    `<Avatar${root}>
   <AvatarImage src="${FOTO}" alt="${ALT}" />
   ${fallback}MR</AvatarFallback>
 </Avatar>`,

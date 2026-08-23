@@ -127,12 +127,12 @@ export const WithCheckboxItems: Story = {
   play: async ({ step }) => {
     const menu = await within(document.body).findByRole('menu');
     const canvas = within(menu);
-    const nome = canvas.getByRole('menuitemcheckbox', { name: 'Nome' });
+    const name = canvas.getByRole('menuitemcheckbox', { name: 'Nome' });
     const email = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });
 
     await step('O papel e o estado inicial chegam ao markup', async () => {
       await expect(canvas.getAllByRole('menuitemcheckbox')).toHaveLength(3);
-      await expect(nome.getAttribute('aria-checked')).toBe('true');
+      await expect(name.getAttribute('aria-checked')).toBe('true');
       await expect(email.getAttribute('aria-checked')).toBe('false');
     });
 
@@ -141,7 +141,7 @@ export const WithCheckboxItems: Story = {
       // `aria-checked` é o que ela ouve.
       const marca = (item: HTMLElement) =>
         item.querySelector('.nds-dropdown-menu-item-indicator svg') !== null;
-      await expect(marca(nome)).toBe(true);
+      await expect(marca(name)).toBe(true);
       await expect(marca(email)).toBe(false);
     });
 
@@ -156,7 +156,7 @@ export const WithCheckboxItems: Story = {
       // Alternar não fecha: quem marca uma coluna costuma marcar a próxima.
       await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
       // Independentes entre si — é o que separa checkbox de escolha única.
-      await expect(nome.getAttribute('aria-checked')).toBe('true');
+      await expect(name.getAttribute('aria-checked')).toBe('true');
     });
 
     await step('Limpa via ESC', async () => {

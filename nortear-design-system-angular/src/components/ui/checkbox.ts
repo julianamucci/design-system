@@ -113,11 +113,11 @@ import {
   },
 })
 export class NdsCheckbox {
-  private readonly raiz = inject(RdxCheckboxRootDirective, { self: true });
+  private readonly root = inject(RdxCheckboxRootDirective, { self: true });
 
   /** Espelha o estado do primitivo para o `data-state` das outras stacks. */
-  protected readonly checked = computed(() => this.raiz.checked());
-  protected readonly indeterminate = computed(() => this.raiz.indeterminate());
+  protected readonly checked = computed(() => this.root.checked());
+  protected readonly indeterminate = computed(() => this.root.indeterminate());
 
   protected readonly state = computed(() =>
     this.indeterminate() ? 'indeterminate' : this.checked() ? 'checked' : 'unchecked',

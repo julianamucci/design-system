@@ -141,10 +141,10 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
   /** Move o dia focado e traz a visão junto quando ele cai em outro mês. */
   function moverFocus(days: number, meses = 0): void {
-    const alvo = new Date(focado.getFullYear(), focado.getMonth() + meses, focado.getDate() + days);
-    focado = alvo;
-    viewYear = alvo.getFullYear();
-    viewMonth = alvo.getMonth();
+    const target = new Date(focado.getFullYear(), focado.getMonth() + meses, focado.getDate() + days);
+    focado = target;
+    viewYear = target.getFullYear();
+    viewMonth = target.getMonth();
     devolverFocus = true;
     render();
   }
@@ -211,10 +211,10 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     const selMonth = document.createElement('select');
     selMonth.className = 'nds-calendar-select';
     selMonth.setAttribute('aria-label', rotulos.selecionarMes);
-    monthNames.forEach((nome, i) => {
+    monthNames.forEach((name, i) => {
       const opt = document.createElement('option');
       opt.value = String(i);
-      opt.textContent = nome;
+      opt.textContent = name;
       if (i === viewMonth) opt.selected = true;
       selMonth.appendChild(opt);
     });
@@ -355,14 +355,14 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
           };
           if (e.key === 'Home' || e.key === 'End') {
             e.preventDefault();
-            const alvo = e.key === 'Home' ? -date.getDay() : 6 - date.getDay();
-            moverFocus(alvo);
+            const target = e.key === 'Home' ? -date.getDay() : 6 - date.getDay();
+            moverFocus(target);
             return;
           }
-          const passo = steps[e.key];
-          if (!passo) return;
+          const step = steps[e.key];
+          if (!step) return;
           e.preventDefault();
-          moverFocus(passo[0], passo[1]);
+          moverFocus(step[0], step[1]);
         });
 
         if (!isDisabled) {
@@ -447,19 +447,19 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
     for (let i = 0; i < numberOfMonths; i++) {
       const d = new Date(viewYear, viewMonth + i, 1);
-      const bloco = document.createElement('div');
-      bloco.className = 'nds-calendar-month';
+      const block = document.createElement('div');
+      block.className = 'nds-calendar-month';
 
-      const legenda = document.createElement('div');
-      legenda.className = 'nds-calendar-caption';
+      const caption = document.createElement('div');
+      caption.className = 'nds-calendar-caption';
       if (captionLayout === 'dropdown') {
-        legenda.appendChild(buildDropdownCaption());
+        caption.appendChild(buildDropdownCaption());
       } else {
-        legenda.textContent = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+        caption.textContent = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
       }
 
-      bloco.append(legenda, buildGrid(d.getFullYear(), d.getMonth()));
-      meses.appendChild(bloco);
+      block.append(caption, buildGrid(d.getFullYear(), d.getMonth()));
+      meses.appendChild(block);
     }
     root.appendChild(meses);
 

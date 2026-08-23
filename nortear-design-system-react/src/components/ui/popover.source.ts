@@ -44,16 +44,16 @@ const IMPORT_BUTTON = 'import { Button } from "@/components/ui/button";';
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
 function importingPopover(...parts: string[]): string {
-  const lista = [...parts].sort();
-  return `import {\n${lista
+  const list = [...parts].sort();
+  return `import {\n${list
     .map((part) => `  ${part},`)
     .join('\n')}\n} from "@/components/ui/popover";`;
 }
 
 /** Gatilho: o botão de verdade da interface, com as props emprestadas. */
-function gatilho(rotulo: string): string {
+function trigger(label: string): string {
   return `  <PopoverTrigger asChild>
-    <Button variant="outline">${rotulo}</Button>
+    <Button variant="outline">${label}</Button>
   </PopoverTrigger>`;
 }
 
@@ -61,21 +61,21 @@ function gatilho(rotulo: string): string {
  * Cabeçalho nomeado. Com `PopoverTitle` a lib monta o `aria-labelledby`
  * sozinha — e `role="dialog"` sem nome reprova na regra `aria-dialog-name`.
  */
-function header(titulo: string, descricao?: string): string {
+function header(title: string, descricao?: string): string {
   const lineDescription = descricao
     ? `\n      <PopoverDescription>\n        ${descricao}\n      </PopoverDescription>`
     : '';
   return `    <PopoverHeader>
-      <PopoverTitle>${titulo}</PopoverTitle>${lineDescription}
+      <PopoverTitle>${title}</PopoverTitle>${lineDescription}
     </PopoverHeader>`;
 }
 
 /** A composição inteira: raiz, gatilho e painel. */
-function popover(raiz: string, gatilhoRotulo: string, painel: string, conteudo: string): string {
-  return `<Popover${raiz}>
-${gatilho(gatilhoRotulo)}
-  <PopoverContent${painel}>
-${conteudo}
+function popover(root: string, gatilhoRotulo: string, panel: string, content: string): string {
+  return `<Popover${root}>
+${trigger(gatilhoRotulo)}
+  <PopoverContent${panel}>
+${content}
   </PopoverContent>
 </Popover>`;
 }
@@ -96,8 +96,8 @@ const ACTIONS_DEFAULT = `    <div className="nds-cluster" data-justify="end" dat
  */
 export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const raiz = attrs(propBool('defaultOpen', args.defaultOpen), propBool('modal', args.modal));
-  const painel = attrsMultilinha([
+  const root = attrs(propBool('defaultOpen', args.defaultOpen), propBool('modal', args.modal));
+  const panel = attrsMultilinha([
     propOption('side', args.side, LADOS, 'bottom'),
     propOption('align', args.align, ALINHAMENTOS, 'center'),
     typeof args.sideOffset === 'number' && args.sideOffset !== DISTANCIA_DEFAULT
@@ -116,9 +116,9 @@ export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
     )}
 ${IMPORT_BUTTON}`,
     popover(
-      raiz,
+      root,
       'Abrir popover',
-      painel,
+      panel,
       `${header('Configurações de exibição', 'Ajuste a aparência do conteúdo da página.')}
 ${ACTIONS_DEFAULT}`,
     ),
@@ -318,9 +318,9 @@ import { Label } from "@/components/ui/label";`,
  * fica no fim, na ordem em que a decisão acontece.
  */
 export function popoverFilterSource(): string {
-  const opcao = (rotulo: string, marcada = false) => `      <label className="nds-cluster" data-spacing="sm">
+  const opcao = (label: string, marcada = false) => `      <label className="nds-cluster" data-spacing="sm">
         <input type="checkbox" className="nds-size-4"${marcada ? ' defaultChecked' : ''} />
-        <span>${rotulo}</span>
+        <span>${label}</span>
       </label>`;
 
   return jsxSnippet(
@@ -357,8 +357,8 @@ ${opcao('Arquivado')}
  * sem texto nenhum reprova no axe por `button-name`.
  */
 export function popoverPaletteSource(): string {
-  const amostra = (token: string, rotulo: string) =>
-    `      <button type="button" className={\`\${AMOSTRA} nds-bg-${token}\`} aria-label="${rotulo}" />`;
+  const amostra = (token: string, label: string) =>
+    `      <button type="button" className={\`\${AMOSTRA} nds-bg-${token}\`} aria-label="${label}" />`;
 
   return jsxSnippet(
     `${importingPopover(
@@ -395,12 +395,12 @@ ${amostra('destructive', 'Destrutiva')}
  * por isso que são caixas de marcação e não um grupo de escolha única.
  */
 export function popoverPreferenciasSource(): string {
-  const preferencia = (rotulo: string, ligada = false) => `      <label
+  const preferencia = (label: string, ligada = false) => `      <label
         className="nds-cluster"
         data-align="center"
         data-justify="between"
       >
-        <span>${rotulo}</span>
+        <span>${label}</span>
         <input type="checkbox" className="nds-size-4"${ligada ? ' defaultChecked' : ''} />
       </label>`;
 

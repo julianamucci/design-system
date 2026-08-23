@@ -48,17 +48,17 @@ const CHEVRON_CLASSES = 'nds-icon nds-shrink-0 nds-transition-transform nds-chev
  * esquerda, seta decorativa à direita (`data-justify="between"`), conteúdo
  * empilhado abaixo.
  */
-function corpo(
-  rotulo: string,
-  variante: 'ghost' | 'outline',
+function body(
+  label: string,
+  variant: 'ghost' | 'outline',
   atributosDoTrigger = '',
-  itens: readonly string[] = ['Filtro avançado 1', 'Filtro avançado 2'],
+  items: readonly string[] = ['Filtro avançado 1', 'Filtro avançado 2'],
 ): string {
   return `  <CollapsibleTrigger
-    className={cn(buttonVariants({ variant: "${variante}" }), "${TRIGGER_CLASSES}")}
+    className={cn(buttonVariants({ variant: "${variant}" }), "${TRIGGER_CLASSES}")}
     data-justify="between"${atributosDoTrigger}
   >
-    <span>${rotulo}</span>
+    <span>${label}</span>
     <ChevronDown
       aria-hidden="true"
       className="${CHEVRON_CLASSES}"
@@ -68,7 +68,7 @@ function corpo(
     className="${PANEL_CLASSES}"
     data-spacing="sm"
   >
-${itens.map((item) => `    <p>${item}</p>`).join('\n')}
+${items.map((item) => `    <p>${item}</p>`).join('\n')}
   </CollapsibleContent>`;
 }
 
@@ -85,7 +85,7 @@ export const collapsibleSource: SourceTransform<CollapsibleArgs> = (_gerado, ctx
   return jsxSnippet(
     IMPORTS,
     `<Collapsible${attrs(propBool('defaultOpen', args.defaultOpen))} className="${ROOT_CLASSES}">
-${corpo(
+${body(
   isOpen ? 'Ocultar filtros avançados' : 'Exibir filtros avançados',
   'ghost',
   propBool('disabled', args.disabled) ? '\n    disabled' : '',
@@ -102,7 +102,7 @@ export function defaultCollapsibleOpenSource(): string {
   return jsxSnippet(
     IMPORTS,
     `<Collapsible defaultOpen className="${ROOT_CLASSES}">
-${corpo('Ocultar filtros avançados', 'ghost')}
+${body('Ocultar filtros avançados', 'ghost')}
 </Collapsible>`,
   );
 }
@@ -190,7 +190,7 @@ export function collapsibleWithButtonSource(): string {
   return jsxSnippet(
     IMPORTS,
     `<Collapsible className="${ROOT_CLASSES}">
-${corpo('Exibir opções avançadas', 'outline', '', [
+${body('Exibir opções avançadas', 'outline', '', [
   'Opção avançada 1',
   'Opção avançada 2',
   'Opção avançada 3',

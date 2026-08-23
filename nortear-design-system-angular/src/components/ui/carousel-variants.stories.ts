@@ -153,8 +153,8 @@ export const Vertical: Story = {
       // A prova de que a altura definida chegou: sem ela a base 100% do slide
       // cai para `auto` e o slide encolhe até o conteúdo.
       const slide = canvas.getAllByRole('group')[0];
-      const altura = slide.getBoundingClientRect().height;
-      await expect(Math.abs(altura - viewport.clientHeight)).toBeLessThan(2);
+      const height = slide.getBoundingClientRect().height;
+      await expect(Math.abs(height - viewport.clientHeight)).toBeLessThan(2);
     });
 
     await step('As setas ficam acima e abaixo do viewport', async () => {

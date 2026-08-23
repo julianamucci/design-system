@@ -46,16 +46,16 @@ export const AlignmentBar: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const grupo = canvas.getByRole('toolbar');
+    const group = canvas.getByRole('toolbar');
 
     await step('visual.item4 — a variante outline emenda os itens num container só', async () => {
-      await expect(grupo).toHaveAttribute('data-variant', 'outline');
+      await expect(group).toHaveAttribute('data-variant', 'outline');
       // Um container com borda; os itens perdem a sua. É o que separa o
       // "segmentado" de quatro botões soltos lado a lado.
-      await expect(parseFloat(getComputedStyle(grupo).borderTopWidth)).toBeGreaterThan(0);
+      await expect(parseFloat(getComputedStyle(group).borderTopWidth)).toBeGreaterThan(0);
       const first = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
       await expect(parseFloat(getComputedStyle(first).borderTopWidth)).toBe(0);
-      await expect(parseFloat(getComputedStyle(grupo).columnGap || '0')).toBe(0);
+      await expect(parseFloat(getComputedStyle(group).columnGap || '0')).toBe(0);
     });
 
     await step('Quatro itens icon-only, cada um com a sua função no nome', async () => {
@@ -94,15 +94,15 @@ export const ViewMode: Story = {
     const canvas = within(canvasElement);
 
     await step('Texto visível dispensa aria-label no item', async () => {
-      const grade = canvas.getByRole('button', { name: 'Grade' });
-      const lista = canvas.getByRole('button', { name: 'Lista' });
-      await expect(grade.getAttribute('aria-label')).toBe(null);
-      await expect(lista.getAttribute('aria-label')).toBe(null);
+      const grid = canvas.getByRole('button', { name: 'Grade' });
+      const list = canvas.getByRole('button', { name: 'Lista' });
+      await expect(grid.getAttribute('aria-label')).toBe(null);
+      await expect(list.getAttribute('aria-label')).toBe(null);
     });
 
     await step('O grupo continua nomeado — o rótulo dele é a categoria', async () => {
-      const grupo = canvas.getByRole('toolbar');
-      await expect(grupo).toHaveAttribute('aria-label', 'Modo de visualização');
+      const group = canvas.getByRole('toolbar');
+      await expect(group).toHaveAttribute('aria-label', 'Modo de visualização');
     });
   },
 };
@@ -132,14 +132,14 @@ export const FiltersWithText: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const grupo = canvas.getByRole('toolbar');
+    const group = canvas.getByRole('toolbar');
     const ocultos = canvas.getByRole('button', { name: 'Mostrar ocultos' });
     const compacta = canvas.getByRole('button', { name: 'Visão compacta' });
 
     await step('visual.item5 — com espaçamento os botões deixam de ser emendados', async () => {
       // O atributo `data-spacing="0"` é o que liga o visual segmentado; acima
       // de zero ele sai de cena e vale o gap da regra base.
-      await expect(grupo.getAttribute('data-spacing')).toBe(null);
+      await expect(group.getAttribute('data-spacing')).toBe(null);
       const a = ocultos.getBoundingClientRect();
       const b = compacta.getBoundingClientRect();
       await expect(b.left).toBeGreaterThan(a.right);
@@ -152,7 +152,7 @@ export const FiltersWithText: Story = {
     await step('Filtros independentes: um ativo não desliga o outro', async () => {
       await expect(ocultos).toHaveAttribute('aria-pressed', 'true');
       await expect(compacta).toHaveAttribute('aria-pressed', 'false');
-      await expect(grupo).toHaveAttribute('aria-label', 'Filtros da lista');
+      await expect(group).toHaveAttribute('aria-label', 'Filtros da lista');
     });
   },
 };

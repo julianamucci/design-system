@@ -46,14 +46,14 @@ const WIDTH = 'class="nds-max-w-sm"';
  * qualquer outra coisa — o espião de ação, um control de objeto — também cai no
  * padrão, porque interpolada apareceria como código no painel.
  */
-function withDefault(valor: unknown, padrao: string): string {
-  if (typeof valor !== 'string') return padrao;
-  return valor.trim() === '' ? '' : valor;
+function withDefault(value: unknown, padrao: string): string {
+  if (typeof value !== 'string') return padrao;
+  return value.trim() === '' ? '' : value;
 }
 
 /** Campo raiz: os atributos quebram em linha quando a fila passa da margem. */
-function campo(atributos: Array<string | false | null | undefined>, filho: string): string {
-  return `<FormField${attrsMultilinha(atributos)}>\n${indentar(filho)}\n</FormField>`;
+function field(attrs: Array<string | false | null | undefined>, child: string): string {
+  return `<FormField${attrsMultilinha(attrs)}>\n${indentar(child)}\n</FormField>`;
 }
 
 /**
@@ -63,18 +63,18 @@ function campo(atributos: Array<string | false | null | undefined>, filho: strin
  */
 export const formSource: SourceTransform<FormArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const erro = withDefault(args.error, '');
+  const error = withDefault(args.error, '');
   // A mensagem de erro sozinha não alcança quem não enxerga cor: o controle
   // precisa sair inválido junto com ela.
-  const invalido = args.ariaInvalid === true || erro !== '';
+  const invalido = args.ariaInvalid === true || error !== '';
   return vueSnippet(
     IMPORTS,
-    campo(
+    field(
       [
         WIDTH,
         attr('label', withDefault(args.label, 'Email')),
         attr('description', withDefault(args.description, 'Usaremos apenas para contato.')),
-        attr('error', erro),
+        attr('error', error),
       ],
       `<Input${attrs(
         'type="email"',
@@ -90,7 +90,7 @@ export const formSource: SourceTransform<FormArgs> = (_gerado, ctx) => {
 export function formLabelEControleSource(): string {
   return vueSnippet(
     IMPORTS,
-    campo([WIDTH, 'label="Nome completo"'], '<Input type="text" placeholder="ex: João da Silva" />'),
+    field([WIDTH, 'label="Nome completo"'], '<Input type="text" placeholder="ex: João da Silva" />'),
   );
 }
 
@@ -101,7 +101,7 @@ export function formLabelEControleSource(): string {
 export function formWithDescriptionSource(): string {
   return vueSnippet(
     IMPORTS,
-    campo(
+    field(
       [WIDTH, 'label="Senha"', 'description="Use pelo menos 8 caracteres, com letras e números."'],
       '<Input type="password" autocomplete="new-password" />',
     ),
@@ -118,7 +118,7 @@ export function formInvalidoSource(): string {
 ${IMPORTS}
 
 const senha = ref('123')`,
-    campo(
+    field(
       [
         WIDTH,
         'label="Senha"',
@@ -140,7 +140,7 @@ export function formDisabledSource(): string {
 ${IMPORTS}
 
 const cpf = ref('000.000.000-00')`,
-    campo(
+    field(
       [WIDTH, 'label="CPF"', 'description="Preenchido pelo cadastro da empresa."'],
       '<Input v-model="cpf" type="text" disabled />',
     ),

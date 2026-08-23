@@ -127,8 +127,8 @@ export const WithLabel: Story = {
       // repetir a frase num `aria-label`, que só duplicaria a manutenção. É por
       // isso que o critério fala em NOME ACESSÍVEL, e não em `aria-label`.
       const bar = canvas.getByRole('progressbar', { name: 'Enviando arquivo' });
-      const rotulo = canvasElement.querySelector<HTMLElement>('[data-slot="progress-label"]')!;
-      await expect(bar.getAttribute('aria-labelledby')).toBe(rotulo.id);
+      const label = canvasElement.querySelector<HTMLElement>('[data-slot="progress-label"]')!;
+      await expect(bar.getAttribute('aria-labelledby')).toBe(label.id);
     });
 
     await step('Toda barra da tela tem nome acessível', async () => {
@@ -138,15 +138,15 @@ export const WithLabel: Story = {
     });
 
     await step('O valor formatado é escrito pelo componente, não pela aplicação', async () => {
-      const valor = canvasElement.querySelector<HTMLElement>('[data-slot="progress-value"]')!;
-      await expect(valor.textContent?.trim()).toBe('42%');
+      const value = canvasElement.querySelector<HTMLElement>('[data-slot="progress-value"]')!;
+      await expect(value.textContent?.trim()).toBe('42%');
     });
 
     await step('O valor visível não é lido duas vezes', async () => {
       // A raiz já anuncia 42 em aria-valuenow; o texto ao lado é redundância
       // visual, e o primitivo o esconde do leitor de propósito.
-      const valor = canvasElement.querySelector<HTMLElement>('[data-slot="progress-value"]')!;
-      await expect(valor).toHaveAttribute('aria-hidden', 'true');
+      const value = canvasElement.querySelector<HTMLElement>('[data-slot="progress-value"]')!;
+      await expect(value).toHaveAttribute('aria-hidden', 'true');
     });
   },
 };
@@ -187,14 +187,14 @@ export const SemanticColor: Story = {
 
     await step('Cada variante pinta a barra de uma cor diferente', async () => {
       const [ok, critico] = canvas.getAllByRole('progressbar');
-      const colorOf = (raiz: HTMLElement) =>
-        getComputedStyle(indicadorDoProgresso(raiz)).backgroundColor;
+      const colorOf = (root: HTMLElement) =>
+        getComputedStyle(indicadorDoProgresso(root)).backgroundColor;
       await expect(colorOf(ok)).not.toBe(colorOf(critico));
     });
 
     await step('As duas variantes mantêm 3:1 contra a trilha', async () => {
-      for (const raiz of canvas.getAllByRole('progressbar')) {
-        await expect(contrastBarTrack(raiz)).toBeGreaterThanOrEqual(3);
+      for (const root of canvas.getAllByRole('progressbar')) {
+        await expect(contrastBarTrack(root)).toBeGreaterThanOrEqual(3);
       }
     });
 

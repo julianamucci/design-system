@@ -18,8 +18,8 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const slotsDe = (raiz: HTMLElement): HTMLInputElement[] => [
-  ...raiz.querySelectorAll<HTMLInputElement>('[data-slot="input-otp-slot"]'),
+const slotsDe = (root: HTMLElement): HTMLInputElement[] => [
+  ...root.querySelectorAll<HTMLInputElement>('[data-slot="input-otp-slot"]'),
 ];
 
 export const SixDigits: Story = {
@@ -106,8 +106,8 @@ export const WithSeparator: Story = {
     });
 
     await step('O separador fica entre o terceiro e o quarto slot', async () => {
-      const filhos = [...canvasElement.querySelectorAll('nds-input-otp > *')];
-      const position = filhos.findIndex((el) => el.matches('[data-slot="input-otp-separator"]'));
+      const children = [...canvasElement.querySelectorAll('nds-input-otp > *')];
+      const position = children.findIndex((el) => el.matches('[data-slot="input-otp-separator"]'));
       await expect(position).toBe(3);
       await expect(slotsDe(canvasElement)).toHaveLength(6);
     });

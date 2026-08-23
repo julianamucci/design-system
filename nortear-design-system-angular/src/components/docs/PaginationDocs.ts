@@ -342,7 +342,7 @@ const META_A11Y = [
       tela anuncia "navegação" nove vezes sem dizer qual é qual.
     -->
     <ng-template #tplVarLink>
-      <nav ndsPagination [label]="rotulo('variante-link')">
+      <nav ndsPagination [label]="label('variante-link')">
         <ul ndsPaginationContent>
           <li ndsPaginationItem>
             <a
@@ -357,7 +357,7 @@ const META_A11Y = [
     </ng-template>
 
     <ng-template #tplVarDirecional>
-      <nav ndsPagination [label]="rotulo('variante-direcional')">
+      <nav ndsPagination [label]="label('variante-direcional')">
         <ul ndsPaginationContent>
           <li ndsPaginationItem>
             <a
@@ -382,7 +382,7 @@ const META_A11Y = [
     </ng-template>
 
     <ng-template #tplVarSimples>
-      <nav ndsPagination [label]="rotulo('variante-simples')">
+      <nav ndsPagination [label]="label('variante-simples')">
         <ul ndsPaginationContent>
           <li ndsPaginationItem>
             <a
@@ -418,7 +418,7 @@ const META_A11Y = [
     </ng-template>
 
     <ng-template #tplVarReticencias>
-      <nav ndsPagination [label]="rotulo('variante-reticencias')">
+      <nav ndsPagination [label]="label('variante-reticencias')">
         <ul ndsPaginationContent>
           <li ndsPaginationItem>
             <a
@@ -459,7 +459,7 @@ const META_A11Y = [
 
     <ng-template #tplVarInterativo>
       <div class="nds-stack" data-spacing="sm">
-        <nav ndsPagination [label]="rotulo('variante-interativa')">
+        <nav ndsPagination [label]="label('variante-interativa')">
           <ul ndsPaginationContent>
             <li ndsPaginationItem>
               <a
@@ -501,7 +501,7 @@ const META_A11Y = [
     </ng-template>
 
     <ng-template #tplDoDont1Do>
-      <nav ndsPagination [label]="rotulo('do-1')">
+      <nav ndsPagination [label]="label('do-1')">
         <ul ndsPaginationContent>
           @for (trecho of trechosLongos; track $index) {
             <li ndsPaginationItem>
@@ -524,7 +524,7 @@ const META_A11Y = [
 
     <ng-template #tplDoDont1Dont>
       <!-- O erro que o exemplo mostra: doze números seguidos, sem recorte. -->
-      <nav ndsPagination [label]="rotulo('dont-1')">
+      <nav ndsPagination [label]="label('dont-1')">
         <ul ndsPaginationContent>
           @for (n of paginasLongas; track n) {
             <li ndsPaginationItem>
@@ -542,7 +542,7 @@ const META_A11Y = [
     </ng-template>
 
     <ng-template #tplDoDont2Do>
-      <nav ndsPagination [label]="rotulo('do-2')">
+      <nav ndsPagination [label]="label('do-2')">
         <ul ndsPaginationContent>
           <li ndsPaginationItem>
             <a
@@ -594,7 +594,7 @@ const META_A11Y = [
               <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
                 {{ t('variants.items.interactive.name') }}
               </p>
-              <nav ndsPagination [label]="rotulo('demo-interativa')">
+              <nav ndsPagination [label]="label('demo-interativa')">
                 <ul ndsPaginationContent>
                   <li ndsPaginationItem>
                     <a
@@ -638,7 +638,7 @@ const META_A11Y = [
               <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
                 {{ t('variants.items.withEllipsis.name') }}
               </p>
-              <nav ndsPagination [label]="rotulo('demo-reticencias')">
+              <nav ndsPagination [label]="label('demo-reticencias')">
                 <ul ndsPaginationContent>
                   <li ndsPaginationItem>
                     <a
@@ -681,7 +681,7 @@ const META_A11Y = [
               <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
                 {{ t('states.lastPage.label') }}
               </p>
-              <nav ndsPagination [label]="rotulo('demo-ultima')">
+              <nav ndsPagination [label]="label('demo-ultima')">
                 <ul ndsPaginationContent>
                   <li ndsPaginationItem>
                     <a
@@ -844,13 +844,13 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
    * identificador do exemplo, e não texto de leitura — é o que garante nomes
    * distintos entre as nove paginações da página.
    */
-  protected rotulo(sufixo: string): string {
+  protected label(sufixo: string): string {
     return `${t('title')} — ${sufixo}`;
   }
 
   /** Nome acessível de um link numerado: o número sozinho não diz nada em voz alta. */
-  protected rotuloPagina(pagina: number | string): string {
-    return `${t('demonstration.labels.page')} ${pagina}`;
+  protected rotuloPagina(page: number | string): string {
+    return `${t('demonstration.labels.page')} ${page}`;
   }
 
   /**
@@ -858,20 +858,20 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
    * documentação. O payload leva números e o slug — nunca texto traduzido, que
    * partiria um evento em três no GA4.
    */
-  protected irTo(evento: Event, pagina: number | string, total: number): void {
+  protected irTo(evento: Event, page: number | string, total: number): void {
     evento.preventDefault();
     track('page_change', {
       component: SLUG,
-      page: Number(pagina),
+      page: Number(page),
       total_pages: total,
       location: 'docs_demo',
     });
   }
 
   /** A demonstração da seção guarda estado; as outras só emitem o evento. */
-  protected irParaDemo(evento: Event, pagina: number): void {
-    this.paginaDemo.set(pagina);
-    this.irTo(evento, pagina, SIMPLE_TOTAL);
+  protected irParaDemo(evento: Event, page: number): void {
+    this.paginaDemo.set(page);
+    this.irTo(evento, page, SIMPLE_TOTAL);
   }
 
   protected readonly navGroups = computed(() => {
@@ -1037,12 +1037,12 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
     };
     const not = tNav('common.no');
 
-    const ofKey = (chave: string, nome: string) => ({
-      name: nome,
-      type: toPlainText(t(`props.table.${chave}.type`)),
-      defaultValue: toPlainText(t(`props.table.${chave}.default`)),
-      required: toPlainText(t(`props.table.${chave}.required`)),
-      description: toPlainText(t(`props.table.${chave}.description`)),
+    const ofKey = (key: string, name: string) => ({
+      name: name,
+      type: toPlainText(t(`props.table.${key}.type`)),
+      defaultValue: toPlainText(t(`props.table.${key}.default`)),
+      required: toPlainText(t(`props.table.${key}.required`)),
+      description: toPlainText(t(`props.table.${key}.description`)),
     });
 
     return [
@@ -1297,23 +1297,23 @@ function itemsFromDict<K extends string>(
 
 /** Mesma ideia, para `item1..itemN` que são texto direto. */
 function stringsFromDict(d: Record<string, string>, base: string): string[] {
-  const itens: string[] = [];
+  const items: string[] = [];
   for (let i = 1; ; i++) {
-    const valor = d[`${base}.item${i}`];
-    if (valor === undefined) break;
-    itens.push(valor);
+    const value = d[`${base}.item${i}`];
+    if (value === undefined) break;
+    items.push(value);
   }
-  return itens;
+  return items;
 }
 
 /** Eventos de `analytics.table`: as chaves que têm um `.trigger` embaixo. */
 function eventKeysFromDict(d: Record<string, string>): string[] {
   const prefixo = 'analytics.table.';
   const eventos: string[] = [];
-  for (const chave of Object.keys(d)) {
-    if (!chave.startsWith(prefixo) || !chave.endsWith('.trigger')) continue;
-    const nome = chave.slice(prefixo.length, -'.trigger'.length);
-    if (nome && !nome.includes('.')) eventos.push(nome);
+  for (const key of Object.keys(d)) {
+    if (!key.startsWith(prefixo) || !key.endsWith('.trigger')) continue;
+    const name = key.slice(prefixo.length, -'.trigger'.length);
+    if (name && !name.includes('.')) eventos.push(name);
   }
   return eventos;
 }

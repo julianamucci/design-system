@@ -74,8 +74,8 @@ export const WithoutNumbering: Story = {
     await step('O código recebe o recuo que a coluna ocupava', async () => {
       // Sem este respiro o trecho encosta na borda — é o resultado que a linha
       // "Sem numeração" da tabela de configurações promete.
-      const texto = rootOf(canvasElement).querySelector<HTMLElement>('.nds-code-block-text')!;
-      await expect(parseFloat(getComputedStyle(texto).paddingInlineStart)).toBeGreaterThan(0);
+      const text = rootOf(canvasElement).querySelector<HTMLElement>('.nds-code-block-text')!;
+      await expect(parseFloat(getComputedStyle(text).paddingInlineStart)).toBeGreaterThan(0);
     });
   },
 };

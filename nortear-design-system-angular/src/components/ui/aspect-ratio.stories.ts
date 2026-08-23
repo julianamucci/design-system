@@ -22,7 +22,7 @@ type AspectRatioArgs = {
 /** Ver a nota em separator.stories.ts. */
 function playgroundSource(_gerado: string, ctx: { args?: Partial<AspectRatioArgs> }): string {
   const { ratio = 16 / 9, alt = 'Vista aérea da orla' } = ctx.args ?? {};
-  const legivel = RATIOS.find((r) => Math.abs(r.valor - ratio) < 0.001)?.expr ?? String(ratio);
+  const legivel = RATIOS.find((r) => Math.abs(r.value - ratio) < 0.001)?.expr ?? String(ratio);
   return `import { NdsAspectRatio } from '@/components/ui/aspect-ratio';
 
 @Component({
@@ -38,11 +38,11 @@ export class Exemplo {}`;
 
 /** Proporções com a expressão legível, para o snippet não mostrar 1.7777. */
 const RATIOS = [
-  { valor: 16 / 9, expr: '16 / 9' },
-  { valor: 4 / 3,  expr: '4 / 3'  },
-  { valor: 1,      expr: '1'      },
-  { valor: 3 / 4,  expr: '3 / 4'  },
-  { valor: 21 / 9, expr: '21 / 9' },
+  { value: 16 / 9, expr: '16 / 9' },
+  { value: 4 / 3,  expr: '4 / 3'  },
+  { value: 1,      expr: '1'      },
+  { value: 3 / 4,  expr: '3 / 4'  },
+  { value: 21 / 9, expr: '21 / 9' },
 ];
 
 const meta: Meta<AspectRatioArgs> = {
@@ -56,7 +56,7 @@ const meta: Meta<AspectRatioArgs> = {
   argTypes: {
     ratio: {
       control: 'select',
-      options: RATIOS.map((r) => r.valor),
+      options: RATIOS.map((r) => r.value),
       description: 'Proporção largura/altura. Ex.: 16/9, 4/3, 1.',
     },
     alt: {

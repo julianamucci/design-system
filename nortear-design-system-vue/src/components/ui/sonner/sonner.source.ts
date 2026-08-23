@@ -52,8 +52,8 @@ export type SonnerArgs = {
  * função quando é arg de ação, e interpolado direto o corpo do mock apareceria
  * no painel. A aspa simples é escapada porque o literal é escrito com ela.
  */
-function literal(valor: unknown, padrao = ''): string {
-  const raw = asCode(valor) ?? padrao;
+function literal(value: unknown, padrao = ''): string {
+  const raw = asCode(value) ?? padrao;
   return raw.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 }
 
@@ -70,8 +70,8 @@ function call(type: string, title: string, options: string[] = []): string {
 }
 
 /** O corpo do manipulador que o botão dispara. */
-function handler(body: string, nome = 'notificar'): string {
-  return `function ${nome}() {\n${indentar(body)}\n}`;
+function handler(body: string, name = 'notificar'): string {
+  return `function ${name}() {\n${indentar(body)}\n}`;
 }
 
 /**

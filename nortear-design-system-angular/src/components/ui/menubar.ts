@@ -188,7 +188,7 @@ export class NdsMenubarContent {
       <div
         rdxMenuPositioner
         class="nds-dropdown-menu-positioner"
-        [side]="lado()"
+        [side]="side()"
         [align]="alinhamento()"
         [sideOffset]="deslocamentoDoLado()"
         [alignOffset]="deslocamentoDoAlinhamento()"
@@ -201,44 +201,44 @@ export class NdsMenubarContent {
   `,
 })
 export class NdsMenubarMenu {
-  private readonly raiz = inject(RdxMenuRoot, { self: true });
+  private readonly root = inject(RdxMenuRoot, { self: true });
 
   /** O `<ng-template>` que quem consome declarou dentro deste menu. */
-  private readonly conteudo = contentChild(NdsMenubarContent);
+  private readonly content = contentChild(NdsMenubarContent);
 
   protected readonly templateDoConteudo = computed<TemplateRef<unknown> | null>(
-    () => this.conteudo()?.tpl ?? null,
+    () => this.content()?.tpl ?? null,
   );
 
   protected readonly slot = computed(() =>
-    this.raiz.isSubmenu() ? 'menubar-sub' : 'menubar-menu',
+    this.root.isSubmenu() ? 'menubar-sub' : 'menubar-menu',
   );
 
   protected readonly slotDoPopup = computed(() =>
-    this.raiz.isSubmenu() ? 'menubar-sub-content' : 'menubar-content',
+    this.root.isSubmenu() ? 'menubar-sub-content' : 'menubar-content',
   );
 
   /** Submenu abre ao lado do item que o dispara; menu da barra, abaixo do gatilho. */
-  protected readonly lado = computed<MenubarSide>(
-    () => this.conteudo()?.side() ?? (this.raiz.isSubmenu() ? 'right' : 'bottom'),
+  protected readonly side = computed<MenubarSide>(
+    () => this.content()?.side() ?? (this.root.isSubmenu() ? 'right' : 'bottom'),
   );
 
   protected readonly alinhamento = computed<MenubarAlign>(
-    () => this.conteudo()?.align() ?? 'start',
+    () => this.content()?.align() ?? 'start',
   );
 
   // 8px reproduzem o vão do Vanilla: 4px de padding da barra mais 4px de
   // margem do painel. Submenu nasce encostado, para o cursor cruzar do item
   // para ele sem atravessar um vão.
   protected readonly deslocamentoDoLado = computed<number>(
-    () => this.conteudo()?.sideOffset() ?? (this.raiz.isSubmenu() ? 0 : 8),
+    () => this.content()?.sideOffset() ?? (this.root.isSubmenu() ? 0 : 8),
   );
 
   // -4px devolvem o padding lateral do popup, alinhando o texto do primeiro
   // item com o texto do gatilho. No submenu o alvo é o item que o abriu, cujo
   // recuo é 3px.
   protected readonly deslocamentoDoAlinhamento = computed<number>(
-    () => this.conteudo()?.alignOffset() ?? (this.raiz.isSubmenu() ? -3 : -4),
+    () => this.content()?.alignOffset() ?? (this.root.isSubmenu() ? -3 : -4),
   );
 }
 
@@ -311,10 +311,10 @@ export class NdsMenubarLabel {
 
   protected readonly id = injectId('nds-menubar-label-');
 
-  private readonly grupo = injectRdxMenuGroupContext(true);
+  private readonly group = injectRdxMenuGroupContext(true);
 
   constructor() {
-    this.grupo?.labelId.set(this.id);
+    this.group?.labelId.set(this.id);
   }
 }
 
@@ -449,9 +449,9 @@ export class NdsMenubarIcon {
       const svg = this.hostRef.nativeElement;
       svg.replaceChildren();
       for (const [tag, attrs] of MENUBAR_ICON_MAP[this.kind()]) {
-        const filho = document.createElementNS('http://www.w3.org/2000/svg', tag);
-        for (const [k, v] of Object.entries(attrs)) filho.setAttribute(k, v);
-        svg.appendChild(filho);
+        const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
+        for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
+        svg.appendChild(child);
       }
     });
   }

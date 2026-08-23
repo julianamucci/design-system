@@ -17,19 +17,19 @@ export const CLASSES_TRIGGER_LINK = 'nds-text-primary nds-font-medium nds-hover-
 export const CLASSES_TRIGGER_BUTTON =
   'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 
-export function construirLink(rotulo: string, href = '/users/joana'): HTMLAnchorElement {
+export function construirLink(label: string, href = '/users/joana'): HTMLAnchorElement {
   const a = document.createElement('a');
   a.href = href;
   a.className = CLASSES_TRIGGER_LINK;
-  a.textContent = rotulo;
+  a.textContent = label;
   return a;
 }
 
-export function construirButton(rotulo: string): HTMLButtonElement {
+export function construirButton(label: string): HTMLButtonElement {
   const b = document.createElement('button');
   b.type = 'button';
   b.className = CLASSES_TRIGGER_BUTTON;
-  b.textContent = rotulo;
+  b.textContent = label;
   return b;
 }
 
@@ -52,10 +52,10 @@ export function emFrase(cartao: HTMLElement, antes: string, depois: string): HTM
 
 /** Cartão de perfil — avatar, nome e uma métrica curta. */
 export function construirCartaoPerfil(): HTMLElement {
-  const raiz = document.createElement('div');
-  raiz.className = 'nds-cluster';
-  raiz.dataset.spacing = 'sm';
-  raiz.dataset.align = 'start';
+  const root = document.createElement('div');
+  root.className = 'nds-cluster';
+  root.dataset.spacing = 'sm';
+  root.dataset.align = 'start';
 
   const avatar = document.createElement('div');
   avatar.className =
@@ -69,33 +69,33 @@ export function construirCartaoPerfil(): HTMLElement {
   info.className = 'nds-stack';
   info.dataset.spacing = 'xs';
 
-  const nome = document.createElement('p');
-  nome.className = 'nds-text-body nds-font-medium nds-leading-none';
-  nome.textContent = 'Joana Silva';
+  const name = document.createElement('p');
+  name.className = 'nds-text-body nds-font-medium nds-leading-none';
+  name.textContent = 'Joana Silva';
 
   const meta = document.createElement('p');
   meta.className = 'nds-text-caption nds-text-muted-foreground';
   meta.textContent = 'Designer · 142 seguidores';
 
-  info.append(nome, meta);
-  raiz.append(avatar, info);
-  return raiz;
+  info.append(name, meta);
+  root.append(avatar, info);
+  return root;
 }
 
 /** Bloco de duas linhas — título em destaque e uma frase de apoio. */
-export function construirDuasLines(titulo: string, helper: string): HTMLElement {
-  const raiz = document.createElement('div');
-  raiz.className = 'nds-stack';
-  raiz.dataset.spacing = 'xs';
+export function construirDuasLines(title: string, helper: string): HTMLElement {
+  const root = document.createElement('div');
+  root.className = 'nds-stack';
+  root.dataset.spacing = 'xs';
 
   const t = document.createElement('p');
   t.className = 'nds-text-body nds-font-medium nds-leading-none';
-  t.textContent = titulo;
+  t.textContent = title;
 
   const a = document.createElement('p');
   a.className = 'nds-text-caption nds-text-muted-foreground';
   a.textContent = helper;
 
-  raiz.append(t, a);
-  return raiz;
+  root.append(t, a);
+  return root;
 }

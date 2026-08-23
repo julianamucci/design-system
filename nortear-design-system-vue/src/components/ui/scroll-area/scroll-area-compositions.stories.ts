@@ -60,7 +60,7 @@ const GALLERY = Array.from({ length: 14 }, (_, i) => ({
 
 const COLS = ['Nome', 'Email', 'Função', 'Departamento', 'Localização', 'Início', 'Status'];
 const ROWS = Array.from({ length: 18 }, (_, i) => ({
-  nome: `Pessoa ${i + 1}`,
+  name: `Pessoa ${i + 1}`,
   email: `pessoa${i + 1}@exemplo.com`,
   funcao: i % 2 === 0 ? 'Designer' : 'Engenheiro',
   depto: i % 3 === 0 ? 'Design System' : 'Produto',
@@ -229,7 +229,7 @@ export const WideTable: Story = {
             </thead>
             <tbody>
               <tr v-for="row in rows" :key="row.email">
-                <td class="nds-border-b nds-py-2 nds-whitespace-nowrap" style="padding-inline: 0.75rem">{{ row.nome }}</td>
+                <td class="nds-border-b nds-py-2 nds-whitespace-nowrap" style="padding-inline: 0.75rem">{{ row.name }}</td>
                 <td class="nds-border-b nds-py-2 nds-whitespace-nowrap" style="padding-inline: 0.75rem">{{ row.email }}</td>
                 <td class="nds-border-b nds-py-2 nds-whitespace-nowrap" style="padding-inline: 0.75rem">{{ row.funcao }}</td>
                 <td class="nds-border-b nds-py-2 nds-whitespace-nowrap" style="padding-inline: 0.75rem">{{ row.depto }}</td>

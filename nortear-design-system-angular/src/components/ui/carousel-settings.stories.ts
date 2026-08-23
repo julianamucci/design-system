@@ -55,20 +55,20 @@ function nextFrame(): Promise<void> {
 }
 
 function pointer(
-  alvo: HTMLElement,
-  tipo: 'pointerdown' | 'pointermove' | 'pointerup',
+  target: HTMLElement,
+  type: 'pointerdown' | 'pointermove' | 'pointerup',
   x: number,
   y: number,
 ): void {
-  alvo.dispatchEvent(
-    new PointerEvent(tipo, {
+  target.dispatchEvent(
+    new PointerEvent(type, {
       pointerId: 1,
       pointerType: 'mouse',
       isPrimary: true,
       clientX: x,
       clientY: y,
       button: 0,
-      buttons: tipo === 'pointerup' ? 0 : 1,
+      buttons: type === 'pointerup' ? 0 : 1,
       bubbles: true,
       cancelable: true,
     }),
@@ -360,11 +360,11 @@ export const DragGesture: Story = {
      */
     const desligada = (el: Element) => el.matches('[disabled], [aria-disabled="true"]');
 
-    const inPosition = async (alvo: number, onde: string) => {
+    const inPosition = async (target: number, onde: string) => {
       await waitFor(async () => {
         await expect(
-          Math.abs(viewport.scrollLeft - alvo),
-          `${onde}: posição=${viewport.scrollLeft} alvo=${alvo} setas=[ant:${desligada(previous())} prox:${desligada(next())}]`,
+          Math.abs(viewport.scrollLeft - target),
+          `${onde}: posição=${viewport.scrollLeft} alvo=${target} setas=[ant:${desligada(previous())} prox:${desligada(next())}]`,
         ).toBeLessThan(2);
       }, { timeout: 4000 });
     };
@@ -444,10 +444,10 @@ export const DragGesture: Story = {
       await waitFor(() => expect(previous()).toBeEnabled(), { timeout: 4000 });
     });
 
-    const caixa = viewport.getBoundingClientRect();
-    const y = caixa.top + caixa.height / 2;
-    const direita = caixa.left + caixa.width * 0.85;
-    const esquerda = caixa.left + caixa.width * 0.15;
+    const box = viewport.getBoundingClientRect();
+    const y = box.top + box.height / 2;
+    const direita = box.left + box.width * 0.85;
+    const esquerda = box.left + box.width * 0.15;
 
     await step('O arraste por MOUSE move o conteúdo junto com o ponteiro', async () => {
       await userEvent.click(previous());

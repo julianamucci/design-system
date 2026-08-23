@@ -25,22 +25,22 @@ import { Label } from "@/components/ui/label";`;
  * depois. `indentacao` é a coluna do próprio elemento na marcação.
  */
 function elemento(
-  nome: string,
+  name: string,
   partes: Array<string | false | null | undefined>,
   indentacao = '',
 ): string {
   const props = attrsMultilinha(partes, `${indentacao}  `, 68);
-  return props.startsWith('\n') ? `<${nome}${props}${indentacao}/>` : `<${nome}${props} />`;
+  return props.startsWith('\n') ? `<${name}${props}${indentacao}/>` : `<${name}${props} />`;
 }
 
 /** Par rótulo + campo, que é a unidade mínima de uso do Input. */
 function fieldLabelled(
-  rotulo: string,
+  label: string,
   id: string,
   partes: Array<string | false | null | undefined>,
 ): string {
   return `<div class="nds-stack" data-spacing="xs">
-  <Label for="${id}">${rotulo}</Label>
+  <Label for="${id}">${label}</Label>
   ${elemento('Input', [`id="${id}"`, ...partes], '  ')}
 </div>`;
 }

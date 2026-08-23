@@ -49,9 +49,9 @@ const icons = {
 function buildBase(
   defaultOpen: boolean,
   collapsible?: 'offcanvas' | 'icon' | 'none',
-  opcoes: { mobileQuery?: string } = {},
+  options: { mobileQuery?: string } = {},
 ): HTMLElement {
-  const instance = createSidebar({ defaultOpen, variant: 'sidebar', mobileQuery: opcoes.mobileQuery });
+  const instance = createSidebar({ defaultOpen, variant: 'sidebar', mobileQuery: options.mobileQuery });
   const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
 
   const header = createSidebarHeader();
@@ -268,7 +268,7 @@ export const IconMode: Story = {
       // A fábrica não expõe modo de recolhimento: o que ela tem é a barra
       // recolhida, e é só isso que o snippet pode prometer. O esconde-rótulo da
       // story é andaime, não API.
-      source: { transform: sidebarSourceWith({ defaultOpen: false, rodape: false }) },
+      source: { transform: sidebarSourceWith({ defaultOpen: false, footer: false }) },
       description: {
         story: 'Sidebar reduzida a 3rem no modo icon. Apenas ícones são exibidos; tooltips são mostrados ao hover de cada item. <code>data-state="collapsed"</code>.',
       },
@@ -276,10 +276,10 @@ export const IconMode: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('A barra nasce recolhida', async () => {
-      const raiz = canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
-      await expect(raiz.getAttribute('data-state')).toBe('collapsed');
+      const root = canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
+      await expect(root.getAttribute('data-state')).toBe('collapsed');
       // O vão do fluxo acompanha a raiz — é o par que o CSS lê.
-      const vao = raiz.querySelector<HTMLElement>('.nds-sidebar-gap')!;
+      const vao = root.querySelector<HTMLElement>('.nds-sidebar-gap')!;
       await expect(vao.getAttribute('data-state')).toBe('collapsed');
     });
 
@@ -287,8 +287,8 @@ export const IconMode: Story = {
       // O texto some por `display: none`; o nome acessível não pode sumir junto,
       // senão o item vira um ícone sem nome para quem usa leitor de tela.
       const item = canvasElement.querySelector<HTMLElement>('[data-active="true"]')!;
-      const rotulo = item.querySelector<HTMLElement>('span:last-child')!;
-      await expect(getComputedStyle(rotulo).display).toBe('none');
+      const label = item.querySelector<HTMLElement>('span:last-child')!;
+      await expect(getComputedStyle(label).display).toBe('none');
       await expect(item.getAttribute('aria-label')).toBe('Dashboard');
       await expect(item.getAttribute('aria-current')).toBe('page');
     });
@@ -322,8 +322,8 @@ export const WithoutToggle: Story = {
 
     await step('A navegação continua inteira e visível', async () => {
       await expect(canvas.getByRole('navigation', { name: 'Navegação principal' })).toBeInTheDocument();
-      const raiz = canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
-      await expect(raiz.getAttribute('data-state')).toBe('expanded');
+      const root = canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
+      await expect(root.getAttribute('data-state')).toBe('expanded');
     });
   },
 };
@@ -364,7 +364,7 @@ export const MobileOverlay: Story = {
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = () => canvas.getByRole('button', { name: /alternar barra lateral/i });
+    const trigger = () => canvas.getByRole('button', { name: /alternar barra lateral/i });
     const gaveta = () => document.querySelector<HTMLElement>('[data-slot="sidebar"][data-mobile="true"]');
 
     await step('Na largura estreita a coluna não ocupa lugar no fluxo', async () => {
@@ -373,9 +373,9 @@ export const MobileOverlay: Story = {
         await userEvent.keyboard('{Escape}');
         await waitForPortalGone('dialog');
       }
-      const raiz = canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
-      await expect(raiz.hidden).toBe(true);
-      await expect(raiz.getBoundingClientRect().width).toBe(0);
+      const root = canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
+      await expect(root.hidden).toBe(true);
+      await expect(root.getBoundingClientRect().width).toBe(0);
       // Fechada, a gaveta não está no documento — e não há dois elementos
       // respondendo por `[data-slot="sidebar"]`.
       await expect(gaveta()).toBeNull();
@@ -383,13 +383,13 @@ export const MobileOverlay: Story = {
     });
 
     await step('O gatilho abre a gaveta como diálogo modal nomeado', async () => {
-      await userEvent.click(gatilho());
+      await userEvent.click(trigger());
       // Nome em português por padrão: era "Sidebar", cravado na fábrica.
-      const painel = await waitForPortal('dialog', { name: 'Barra lateral' });
-      await expect(painel.getAttribute('aria-modal')).toBe('true');
-      await expect(painel.dataset.mobile).toBe('true');
+      const panel = await waitForPortal('dialog', { name: 'Barra lateral' });
+      await expect(panel.getAttribute('aria-modal')).toBe('true');
+      await expect(panel.dataset.mobile).toBe('true');
       // A navegação inteira mudou de lugar: é a MESMA barra, não uma cópia.
-      const active = painel.querySelector<HTMLElement>('[data-active="true"]')!;
+      const active = panel.querySelector<HTMLElement>('[data-active="true"]')!;
       await expect(active).not.toBeNull();
       await expect(active.getAttribute('aria-current')).toBe('page');
       await expect(active.textContent).toContain('Dashboard');
@@ -401,18 +401,18 @@ export const MobileOverlay: Story = {
     });
 
     await step('Escape fecha a gaveta e devolve o foco ao gatilho', async () => {
-      const alvo = gatilho();
+      const target = trigger();
       await userEvent.keyboard('{Escape}');
       await waitForPortalGone('dialog');
       await expect(gaveta()).toBeNull();
-      await expect(document.activeElement).toBe(alvo);
+      await expect(document.activeElement).toBe(target);
     });
 
     await step('Fechada, a navegação volta inteira para dentro da barra', async () => {
       // O conteúdo é movido, não copiado: se a volta falhasse, a barra ficaria
       // vazia ao retornar à largura cheia — e nenhuma foto mostraria isso.
-      const raiz = canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
-      const interno = raiz.querySelector<HTMLElement>('[data-sidebar="sidebar"]')!;
+      const root = canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
+      const interno = root.querySelector<HTMLElement>('[data-sidebar="sidebar"]')!;
       await expect(interno).not.toBeNull();
       await expect(interno.classList.contains('nds-sidebar-mobile-inner')).toBe(false);
       const dashboard = interno.querySelector<HTMLElement>('[aria-label="Dashboard"]')!;
@@ -437,12 +437,12 @@ export const MobileOverlay: Story = {
       // O replay continua honesto: o primeiro passo fecha o que encontrar
       // aberto, e o par abrir/fechar acima já provou que o clique acontece
       // NESTA rodada. Este passo prova só o estado final.
-      await userEvent.click(gatilho());
+      await userEvent.click(trigger());
       // `waitForPortal` gateia na opacidade computada: `toBeVisible()` só
       // reprova em opacidade exatamente 0, e a gaveta entra com animação.
-      const painel = await waitForPortal('dialog', { name: 'Barra lateral' });
-      await expect(painel).toBeVisible();
-      await expect(painel).toBe(gaveta());
+      const panel = await waitForPortal('dialog', { name: 'Barra lateral' });
+      await expect(panel).toBeVisible();
+      await expect(panel).toBe(gaveta());
     });
   },
 };
@@ -466,24 +466,24 @@ export const MobileOff: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /alternar barra lateral/i });
-    const raiz = canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
+    const trigger = canvas.getByRole('button', { name: /alternar barra lateral/i });
+    const root = canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
 
     await step('A coluna está no fluxo e não há diálogo', async () => {
       // Precondição própria: devolve a barra ao estado aberto que a story monta.
-      if (raiz.dataset.state === 'collapsed') await userEvent.click(gatilho);
-      await expect(raiz.hidden).toBe(false);
-      await expect(raiz.dataset.state).toBe('expanded');
+      if (root.dataset.state === 'collapsed') await userEvent.click(trigger);
+      await expect(root.hidden).toBe(false);
+      await expect(root.dataset.state).toBe('expanded');
       await expect(document.querySelector('[data-mobile="true"]')).toBeNull();
     });
 
     await step('O gatilho recolhe a coluna em vez de abrir um painel', async () => {
-      await userEvent.click(gatilho);
-      await expect(raiz.dataset.state).toBe('collapsed');
+      await userEvent.click(trigger);
+      await expect(root.dataset.state).toBe('collapsed');
       await expect(document.querySelector('[role="dialog"]')).toBeNull();
       // Devolve o DOM ao estado de entrada para o replay.
-      await userEvent.click(gatilho);
-      await expect(raiz.dataset.state).toBe('expanded');
+      await userEvent.click(trigger);
+      await expect(root.dataset.state).toBe('expanded');
     });
   },
 };

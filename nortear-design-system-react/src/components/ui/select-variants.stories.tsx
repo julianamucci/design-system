@@ -33,7 +33,7 @@ const REGIOES = {
 } as const;
 
 const VALUE_REGIOES = Object.fromEntries(
-  Object.values(REGIOES).flatMap((itens) => itens.map((i) => [i.value, i.label])),
+  Object.values(REGIOES).flatMap((items) => items.map((i) => [i.value, i.label])),
 );
 
 const meta = {
@@ -150,14 +150,14 @@ export const WithGroups: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole("combobox");
 
-    const abrir = async () => {
+    const open = async () => {
       // Idempotente: o clique só acontece com a lista fechada.
       if (trigger.getAttribute("aria-expanded") !== "true") await userEvent.click(trigger);
       return await waitForPortal("listbox");
     };
 
     await step("Escolher item de um grupo atualiza o campo", async () => {
-      await abrir();
+      await open();
       const option = await waitForPortal("option", { name: "Santa Catarina" });
       await userEvent.click(option);
       await waitFor(async () => {
@@ -170,16 +170,16 @@ export const WithGroups: Story = {
     // muda entre as variantes, não o campo fechado, e é ela que a regressão
     // visual precisa fotografar.
     await step("Cada categoria vira um grupo nomeado pelo cabeçalho", async () => {
-      const listbox = await abrir();
-      const grupos = within(listbox).getAllByRole("group");
-      await expect(grupos).toHaveLength(Object.keys(REGIOES).length);
-      for (const [i, nome] of Object.keys(REGIOES).entries()) {
-        await expect(grupos[i]).toHaveAccessibleName(nome);
+      const listbox = await open();
+      const groups = within(listbox).getAllByRole("group");
+      await expect(groups).toHaveLength(Object.keys(REGIOES).length);
+      for (const [i, name] of Object.keys(REGIOES).entries()) {
+        await expect(groups[i]).toHaveAccessibleName(name);
       }
     });
 
     await step("As opções continuam todas na mesma lista", async () => {
-      const listbox = await abrir();
+      const listbox = await open();
       const total = Object.values(REGIOES).reduce((sum, g) => sum + g.length, 0);
       await expect(within(listbox).getAllByRole("option")).toHaveLength(total);
       // Linha para o olho, silêncio para o leitor de tela — quem separa

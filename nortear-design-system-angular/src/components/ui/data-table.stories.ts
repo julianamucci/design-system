@@ -247,11 +247,11 @@ export const Playground: Story = {
     // distingue clique condicional de clique cego, para quem lê e para a regra
     // `play_nao_idempotente` do audit — que só enxerga a condição quando ela
     // está na própria linha do `userEvent.click`.
-    const moveBox = async (caixa: () => HTMLElement, state: 'true' | 'false') => {
-      if (caixa().getAttribute('aria-checked') !== state) await userEvent.click(caixa());
+    const moveBox = async (box: () => HTMLElement, state: 'true' | 'false') => {
+      if (box().getAttribute('aria-checked') !== state) await userEvent.click(box());
       // Segundo clique: partindo do misto, o primeiro só completa a página.
-      if (caixa().getAttribute('aria-checked') !== state) await userEvent.click(caixa());
-      await expect(caixa()).toHaveAttribute('aria-checked', state);
+      if (box().getAttribute('aria-checked') !== state) await userEvent.click(box());
+      await expect(box()).toHaveAttribute('aria-checked', state);
     };
 
     /** Mesma ideia para a ordenação, que é um ciclo de três estados. */
@@ -266,11 +266,11 @@ export const Playground: Story = {
       // accessibility.item1 — o que faz um leitor anunciar "tabela, 6 colunas" é
       // a tag, não a classe. A mesma grade montada com div sumiria da árvore de
       // acessibilidade sem mudar um pixel.
-      const tabela = canvas.getByRole('table', { name: /faturas recentes/i });
-      await expect(tabela.tagName).toBe('TABLE');
-      await expect(tabela).toHaveAttribute('data-slot', 'table');
-      await expect(tabela.querySelector('thead')).toHaveAttribute('data-slot', 'table-header');
-      await expect(tabela.querySelector('tbody')).toHaveAttribute('data-slot', 'table-body');
+      const table = canvas.getByRole('table', { name: /faturas recentes/i });
+      await expect(table.tagName).toBe('TABLE');
+      await expect(table).toHaveAttribute('data-slot', 'table');
+      await expect(table.querySelector('thead')).toHaveAttribute('data-slot', 'table-header');
+      await expect(table.querySelector('tbody')).toHaveAttribute('data-slot', 'table-body');
       await expect(canvasElement.querySelector('[data-slot="data-table"]')).toHaveClass(
         'nds-data-table',
       );
@@ -298,16 +298,16 @@ export const Playground: Story = {
       // accessibility.item6 — o contrato é o EFEITO: a legenda abre a tabela,
       // dá o nome que o leitor anuncia e sai do fluxo numa caixa de 1px.
       // Afirmar `.nds-sr-only` provaria só que alguém escreveu a classe.
-      const tabela = canvas.getByRole('table', { name: args.caption });
-      const legenda = tabela.firstElementChild!;
-      await expect(legenda.tagName).toBe('CAPTION');
-      await expect(legenda).toHaveTextContent(args.caption);
+      const table = canvas.getByRole('table', { name: args.caption });
+      const caption = table.firstElementChild!;
+      await expect(caption.tagName).toBe('CAPTION');
+      await expect(caption).toHaveTextContent(args.caption);
 
-      const estilo = getComputedStyle(legenda);
-      const caixa = legenda.getBoundingClientRect();
+      const estilo = getComputedStyle(caption);
+      const box = caption.getBoundingClientRect();
       await expect(estilo.position).toBe('absolute');
-      await expect(caixa.width).toBeLessThanOrEqual(2);
-      await expect(caixa.height).toBeLessThanOrEqual(2);
+      await expect(box.width).toBeLessThanOrEqual(2);
+      await expect(box.height).toBeLessThanOrEqual(2);
     });
 
     await step('Cabeçalho ordenável anuncia que ordena, e como', async () => {
@@ -350,7 +350,7 @@ export const Playground: Story = {
       const boxes = lines().map(
         (line) => line.querySelector<HTMLElement>('button[role="checkbox"]')!,
       );
-      const names = boxes.map((caixa) => caixa.getAttribute('aria-label')!);
+      const names = boxes.map((box) => box.getAttribute('aria-label')!);
       await expect(names).toEqual([
         'Selecionar fatura #INV-001',
         'Selecionar fatura #INV-002',
@@ -366,9 +366,9 @@ export const Playground: Story = {
 
       // E distintos pelo motivo certo: cada nome carrega o identificador da
       // PRÓPRIA linha — o mesmo texto que quem enxerga lê na primeira célula.
-      for (const [i, caixa] of boxes.entries()) {
+      for (const [i, box] of boxes.entries()) {
         const identificador = identidadeCell(lines()[i]).textContent!.trim();
-        await expect(caixa.getAttribute('aria-label')).toContain(identificador);
+        await expect(box.getAttribute('aria-label')).toContain(identificador);
       }
 
       // O do cabeçalho age sobre a página inteira: confundi-lo com o de uma

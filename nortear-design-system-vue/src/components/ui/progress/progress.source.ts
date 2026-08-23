@@ -33,7 +33,7 @@ const MAX_DEFAULT = 100;
  * `null` sai escrito porque é o modo indeterminado: "não sei quanto falta", que
  * é outra coisa de "zero por cento".
  */
-function valor(raw: unknown): string {
+function value(raw: unknown): string {
   if (raw === null) return ':model-value="null"';
   if (typeof raw !== 'number' || Number.isNaN(raw)) return ':model-value="0"';
   return `:model-value="${raw}"`;
@@ -57,19 +57,19 @@ const IMPORT = `import { Progress } from '@/components/ui/progress'`;
  * `nds-tabular-nums` impede que o número dance de largura conforme os dígitos
  * mudam — sem ele, "9%" e "88%" empurram o rótulo a cada atualização.
  */
-function comRotulo(opcoes: {
-  titulo: string;
+function withLabel(options: {
+  title: string;
   numero: string;
   barra: string;
   vivo?: boolean;
   recuo?: number;
 }): string {
-  const { titulo, numero, barra, vivo = true, recuo = 0 } = opcoes;
+  const { title, numero, barra, vivo = true, recuo = 0 } = options;
   const p = ' '.repeat(recuo);
   const live = vivo ? ' aria-live="polite"' : '';
   return `${p}<div class="nds-stack" data-spacing="xs">
 ${p}  <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
-${p}    <span class="nds-text-foreground">${titulo}</span>
+${p}    <span class="nds-text-foreground">${title}</span>
 ${p}    <span class="nds-text-muted-foreground nds-tabular-nums"${live}>${numero}</span>
 ${p}  </div>
 ${p}  ${barra}
@@ -86,11 +86,11 @@ ${p}</div>`;
 export const progressSource: SourceTransform<ProgressArgs> = (_gerado, ctx) => {
   const raw = ctx?.args?.modelValue;
   const numero = typeof raw === 'number' && !Number.isNaN(raw) ? raw : 0;
-  const barra = `<Progress${attrs(valor(raw), escala(ctx?.args?.max))} aria-label="Progresso do upload" />`;
+  const barra = `<Progress${attrs(value(raw), escala(ctx?.args?.max))} aria-label="Progresso do upload" />`;
 
   return vueSnippet(
     IMPORT,
-    comRotulo({ titulo: 'Enviando arquivo', numero: `${numero}%`, barra }),
+    withLabel({ title: 'Enviando arquivo', numero: `${numero}%`, barra }),
   );
 };
 
@@ -118,8 +118,8 @@ export function progressIndeterminadoSource(): string {
 export function progressWithLabelSource(): string {
   return vueSnippet(
     IMPORT,
-    comRotulo({
-      titulo: 'Enviando arquivo',
+    withLabel({
+      title: 'Enviando arquivo',
       numero: '42%',
       barra: '<Progress :model-value="42" aria-label="Enviando arquivo" />',
     }),
@@ -158,8 +158,8 @@ export function progressZeroSource(): string {
 export function progressLoadingSource(): string {
   return vueSnippet(
     IMPORT,
-    comRotulo({
-      titulo: 'Carregando dados',
+    withLabel({
+      title: 'Carregando dados',
       numero: '50%',
       barra: '<Progress :model-value="50" aria-label="Progresso do carregamento" />',
     }),
@@ -177,8 +177,8 @@ export function progressLoadingSource(): string {
 export function progressConcluidoSource(): string {
   return vueSnippet(
     IMPORT,
-    comRotulo({
-      titulo: 'Concluído',
+    withLabel({
+      title: 'Concluído',
       numero: '100%',
       vivo: false,
       barra: '<Progress :model-value="100" aria-label="Operação concluída" />',
@@ -227,8 +227,8 @@ onUnmounted(() => {
     relogio = null
   }
 })`,
-    comRotulo({
-      titulo: 'Enviando arquivo',
+    withLabel({
+      title: 'Enviando arquivo',
       numero: '{{ valor }}%',
       barra: '<Progress :model-value="valor" aria-label="Progresso do upload" />',
     }),
@@ -274,22 +274,22 @@ export function listProgressColorsSource(): string {
   return vueSnippet(
     IMPORT,
     `<div class="nds-stack" data-spacing="sm">
-${comRotulo({
-  titulo: 'Sincronização',
+${withLabel({
+  title: 'Sincronização',
   numero: '100%',
   vivo: false,
   recuo: 2,
   barra: '<Progress :model-value="100" data-variant="success" aria-label="Sincronização concluída" />',
 })}
-${comRotulo({
-  titulo: 'Backup',
+${withLabel({
+  title: 'Backup',
   numero: '72%',
   vivo: false,
   recuo: 2,
   barra: '<Progress :model-value="72" aria-label="Progresso do backup" />',
 })}
-${comRotulo({
-  titulo: 'Espaço usado',
+${withLabel({
+  title: 'Espaço usado',
   numero: '92%',
   vivo: false,
   recuo: 2,

@@ -64,7 +64,7 @@ export const Default: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const lista = canvas.getByRole('tablist');
+    const list = canvas.getByRole('tablist');
     const abas = canvas.getAllByRole('tab') as HTMLElement[];
 
     await step('Três abas, a primeira ativa desde a montagem', async () => {
@@ -74,8 +74,8 @@ export const Default: Story = {
     });
 
     await step('A lista declara a variante default e desenha o trilho', async () => {
-      await expect(lista).toHaveAttribute('data-variant', 'default');
-      await expect(getComputedStyle(lista).backgroundColor).not.toBe(TRANSPARENTE);
+      await expect(list).toHaveAttribute('data-variant', 'default');
+      await expect(getComputedStyle(list).backgroundColor).not.toBe(TRANSPARENTE);
     });
 
     await step('A aba ativa se distingue por fundo, não só por cor de texto', async () => {
@@ -133,12 +133,12 @@ export const Line: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const lista = canvas.getByRole('tablist');
+    const list = canvas.getByRole('tablist');
     const abas = canvas.getAllByRole('tab') as HTMLElement[];
 
     await step('A lista declara a variante line e dispensa o trilho', async () => {
-      await expect(lista).toHaveAttribute('data-variant', 'line');
-      await expect(getComputedStyle(lista).backgroundColor).toBe(TRANSPARENTE);
+      await expect(list).toHaveAttribute('data-variant', 'line');
+      await expect(getComputedStyle(list).backgroundColor).toBe(TRANSPARENTE);
     });
 
     await step('O indicador é a linha da aba ativa e some nas inativas', async () => {
@@ -186,13 +186,13 @@ export const Vertical: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const lista = canvas.getByRole('tablist');
-    const raiz = lista.closest('[data-slot="tabs"]') as HTMLElement;
+    const list = canvas.getByRole('tablist');
+    const root = list.closest('[data-slot="tabs"]') as HTMLElement;
     const abas = canvas.getAllByRole('tab') as HTMLElement[];
 
     await step('Raiz e lista anunciam a orientação vertical', async () => {
-      await expect(raiz).toHaveAttribute('data-orientation', 'vertical');
-      await expect(lista).toHaveAttribute('aria-orientation', 'vertical');
+      await expect(root).toHaveAttribute('data-orientation', 'vertical');
+      await expect(list).toHaveAttribute('aria-orientation', 'vertical');
     });
 
     await step('As abas ficam empilhadas na mesma coluna', async () => {
@@ -201,8 +201,8 @@ export const Vertical: Story = {
     });
 
     await step('O painel fica ao lado da lista, não abaixo dela', async () => {
-      const painel = canvas.getByRole('tabpanel').getBoundingClientRect();
-      await expect(painel.left).toBeGreaterThanOrEqual(lista.getBoundingClientRect().right);
+      const panel = canvas.getByRole('tabpanel').getBoundingClientRect();
+      await expect(panel.left).toBeGreaterThanOrEqual(list.getBoundingClientRect().right);
     });
   },
 };

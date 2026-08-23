@@ -15,7 +15,7 @@ import { createLabel } from './label';
 // stories constroem.
 
 /** O painel vive no `<body>`, fora do `canvasElement` — o portal é o ponto. */
-export const painel = (): HTMLElement | null =>
+export const panel = (): HTMLElement | null =>
   document.querySelector<HTMLElement>('[data-slot="dialog-content"]');
 
 export const overlay = (): HTMLElement | null =>
@@ -27,8 +27,8 @@ export const overlay = (): HTMLElement | null =>
  * A factory não marca o gatilho com `data-slot` — quem escolhe o elemento é
  * quem chama, e ele já vem com o `data-slot` do próprio botão.
  */
-export const gatilho = (raiz: ParentNode): HTMLElement | null =>
-  raiz.querySelector<HTMLElement>('[data-slot="dialog"] > button');
+export const trigger = (root: ParentNode): HTMLElement | null =>
+  root.querySelector<HTMLElement>('[data-slot="dialog"] > button');
 
 /**
  * O botão X do CANTO — e não qualquer controle que fecha.
@@ -53,7 +53,7 @@ export const cantoButtonClose = (p: HTMLElement): HTMLElement | null =>
  */
 export async function waitForOpen(): Promise<HTMLElement> {
   await waitForPortal('dialog');
-  return painel()!;
+  return panel()!;
 }
 
 /** Espera o painel sair do DOM. */
@@ -68,17 +68,17 @@ export async function waitForClosed(): Promise<void> {
  * absoluto partiria do estado que a rodada anterior deixou e inverteria o
  * resultado. Cada passo estabelece a própria precondição.
  */
-export async function abrir(raiz: ParentNode): Promise<HTMLElement> {
-  if (!painel()) {
-    const trigger = gatilho(raiz);
-    if (trigger) await userEvent.click(trigger);
+export async function open(root: ParentNode): Promise<HTMLElement> {
+  if (!panel()) {
+    const triggerEl = trigger(root);
+    if (triggerEl) await userEvent.click(triggerEl);
   }
   return waitForOpen();
 }
 
-/** O par idempotente de `abrir`. Escape porque existe em toda composição. */
-export async function fechar(): Promise<void> {
-  if (painel()) await userEvent.keyboard('{Escape}');
+/** O par idempotente de `open`. Escape porque existe em toda composição. */
+export async function close(): Promise<void> {
+  if (panel()) await userEvent.keyboard('{Escape}');
   await waitForClosed();
 }
 
@@ -92,14 +92,14 @@ export async function fechar(): Promise<void> {
 export async function checkNameEDescricao(p: HTMLElement): Promise<void> {
   const idTitle = p.getAttribute('aria-labelledby');
   await expect(idTitle).toBeTruthy();
-  const titulo = document.getElementById(idTitle!);
-  await expect(titulo).toHaveClass('nds-dialog-title');
+  const title = document.getElementById(idTitle!);
+  await expect(title).toHaveClass('nds-dialog-title');
 
   const idDescription = p.getAttribute('aria-describedby');
   await expect(idDescription).toBeTruthy();
   await expect(document.getElementById(idDescription!)).toHaveClass('nds-dialog-description');
 
-  await expect(p).toHaveAccessibleName(titulo!.textContent!.trim());
+  await expect(p).toHaveAccessibleName(title!.textContent!.trim());
 }
 
 /**

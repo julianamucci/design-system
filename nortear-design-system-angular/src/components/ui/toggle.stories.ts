@@ -43,7 +43,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<ToggleArgs> }):
   ].filter(Boolean).join(' ');
 
   const abre = attrs ? `<button ndsToggle ${attrs}>` : '<button ndsToggle>';
-  const conteudo = iconOnly
+  const content = iconOnly
     ? '      <svg ndsToggleIcon kind="bold"></svg>'
     : `      <svg ndsToggleIcon kind="eye"></svg>\n      ${label}`;
 
@@ -53,7 +53,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<ToggleArgs> }):
   imports: [NdsToggle, NdsToggleIcon],
   template: \`
     ${abre}
-${conteudo}
+${content}
     </button>
   \`,
 })
@@ -184,8 +184,8 @@ export const Playground: Story = {
     });
 
     await step('O nome acessível existe nos dois modos', async () => {
-      const nome = args.iconOnly ? btn.getAttribute('aria-label') : btn.textContent?.trim();
-      await expect(nome).toBeTruthy();
+      const name = args.iconOnly ? btn.getAttribute('aria-label') : btn.textContent?.trim();
+      await expect(name).toBeTruthy();
       // Ícone decorativo: quem lê a tela não deve ouvi-lo duas vezes.
       await expect(btn.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
     });

@@ -27,7 +27,7 @@ export function triggersOf(barra: HTMLElement): HTMLElement[] {
  * reservas diferentes. Sem a reserva, o canvas encolhe e o painel sai da foto
  * da regressão visual.
  */
-export function embrulhar(filho: HTMLElement, alturaMinima = '260px'): HTMLElement {
+export function embrulhar(child: HTMLElement, alturaMinima = '260px'): HTMLElement {
   const wrapper = document.createElement('div');
   // `contain` é mecânica de layout, não valor de design.
   wrapper.style.contain = 'layout';
@@ -35,7 +35,7 @@ export function embrulhar(filho: HTMLElement, alturaMinima = '260px'): HTMLEleme
   wrapper.dataset.justify = 'center';
   wrapper.style.alignItems = 'flex-start';
   wrapper.style.minHeight = alturaMinima;
-  wrapper.appendChild(filho);
+  wrapper.appendChild(child);
   return wrapper;
 }
 

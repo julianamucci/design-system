@@ -355,7 +355,7 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
         type="bar"
         [xAxis]="meses"
         [series]="seriesMulti"
-        [label]="rotulo(toPlainText(t('doDont.pair1.do')))"
+        [label]="label(toPlainText(t('doDont.pair1.do')))"
       ></div>
     </ng-template>
 
@@ -367,7 +367,7 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
         [xAxis]="meses"
         [series]="seriesMulti"
         [showLegend]="false"
-        [label]="rotulo(toPlainText(t('doDont.pair1.dont')))"
+        [label]="label(toPlainText(t('doDont.pair1.dont')))"
       ></div>
     </ng-template>
 
@@ -378,7 +378,7 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
         type="line"
         [xAxis]="meses"
         [series]="seriesMulti"
-        [label]="rotulo(toPlainText(t('doDont.pair2.do')))"
+        [label]="label(toPlainText(t('doDont.pair2.do')))"
       ></div>
     </ng-template>
 
@@ -400,7 +400,7 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
         type="bar"
         [xAxis]="meses"
         [series]="serieUnica"
-        [label]="rotulo(t('variants.items.bar.name'))"
+        [label]="label(t('variants.items.bar.name'))"
       ></div>
     </ng-template>
 
@@ -410,7 +410,7 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
         type="line"
         [xAxis]="meses"
         [series]="seriesMulti"
-        [label]="rotulo(t('variants.items.line.name'))"
+        [label]="label(t('variants.items.line.name'))"
       ></div>
     </ng-template>
 
@@ -420,7 +420,7 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
         type="area"
         [xAxis]="meses"
         [series]="seriesMulti"
-        [label]="rotulo(t('variants.items.area.name'))"
+        [label]="label(t('variants.items.area.name'))"
       ></div>
     </ng-template>
 
@@ -429,7 +429,7 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
         ndsChart
         type="pie"
         [data]="dataDispositivo"
-        [label]="rotulo(t('variants.items.pie.name'))"
+        [label]="label(t('variants.items.pie.name'))"
         [categoryLabel]="t('demonstration.labels.dataLabel')"
         [valueLabel]="t('demonstration.labels.tooltipLabel')"
       ></div>
@@ -444,7 +444,7 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
           [series]="tendencia"
           [compact]="true"
           class="nds-max-w-xs"
-          [label]="rotulo(t('variants.items.smallInline.name'))"
+          [label]="label(t('variants.items.smallInline.name'))"
         ></div>
       </div>
     </ng-template>
@@ -461,7 +461,7 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
             type="bar"
             [xAxis]="meses"
             [series]="seriesTrio"
-            [label]="rotulo(t('variants.compositions.inCard.name'))"
+            [label]="label(t('variants.compositions.inCard.name'))"
           ></div>
         </div>
       </div>
@@ -492,7 +492,7 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
                 [xAxis]="meses"
                 [series]="seriesMulti"
                 [chartTitle]="t('demonstration.labels.chartTitle')"
-                [label]="rotulo(t('demonstration.labels.bar'))"
+                [label]="label(t('demonstration.labels.bar'))"
               ></div>
             </div>
 
@@ -503,7 +503,7 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
                 type="line"
                 [xAxis]="meses"
                 [series]="seriesMulti"
-                [label]="rotulo(t('demonstration.labels.line'))"
+                [label]="label(t('demonstration.labels.line'))"
               ></div>
             </div>
 
@@ -518,7 +518,7 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
                 [showData]="true"
                 [categoryLabel]="t('demonstration.labels.dataLabel')"
                 [valueLabel]="t('demonstration.labels.tooltipLabel')"
-                [label]="rotulo(t('demonstration.labels.pie'))"
+                [label]="label(t('demonstration.labels.pie'))"
               ></div>
             </div>
           </div>
@@ -668,7 +668,7 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
    * conteúdo perdido — e cada preview desta página precisa da sua, senão a
    * mesma frase apareceria na legenda de meia dúzia de tabelas de dados.
    */
-  protected rotulo(sufixo: string): string {
+  protected label(sufixo: string): string {
     return `${t('demonstration.labels.chartTitle')} — ${toPlainText(sufixo)}`;
   }
 
@@ -818,16 +818,16 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
     // que as outras stacks mostram.
     const line = (
       name: string,
-      chave: string,
-      tipo: string,
+      key: string,
+      type: string,
       padrao: string,
       obrigatorio = not,
     ) => ({
       name,
-      type: tipo,
+      type: type,
       defaultValue: padrao,
       required: obrigatorio,
-      description: toPlainText(t(`props.table.${chave}`)),
+      description: toPlainText(t(`props.table.${key}`)),
     });
 
     return [
@@ -916,11 +916,11 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'table',     nome: 'Table',     path: '?path=/docs/ui-table--docs'     },
-      { key: 'card',      nome: 'Card',      path: '?path=/docs/ui-card--docs'      },
-      { key: 'dataTable', nome: 'DataTable', path: '?path=/docs/ui-datatable--docs' },
-    ].map(({ key, nome, path }) => ({
-      name: nome,
+      { key: 'table',     name: 'Table',     path: '?path=/docs/ui-table--docs'     },
+      { key: 'card',      name: 'Card',      path: '?path=/docs/ui-card--docs'      },
+      { key: 'dataTable', name: 'DataTable', path: '?path=/docs/ui-datatable--docs' },
+    ].map(({ key, name, path }) => ({
+      name: name,
       description: toPlainText(t(`related.${key}`)),
       path,
     }));
@@ -944,12 +944,12 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
     // O Chart é passivo: não dispara evento próprio. O que sai daqui é o
     // tracking da própria docs page.
     return [
-      { e: 'pageView',      gatilho: 'pageViewTrigger',      carga: 'pageViewPayload'      },
-      { e: 'sectionViewed', gatilho: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
-      { e: 'langSwitch',    gatilho: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
-    ].map(({ e, gatilho, carga }) => ({
+      { e: 'pageView',      trigger: 'pageViewTrigger',      carga: 'pageViewPayload'      },
+      { e: 'sectionViewed', trigger: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
+      { e: 'langSwitch',    trigger: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
+    ].map(({ e, trigger, carga }) => ({
       event: t(`analytics.table.${e}`),
-      trigger: toPlainText(t(`analytics.table.${gatilho}`)),
+      trigger: toPlainText(t(`analytics.table.${trigger}`)),
       payload: toPlainText(t(`analytics.table.${carga}`)),
     }));
   });
@@ -982,8 +982,8 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
           level: r.level,
           how: toPlainText(r.how),
         }))
-      : numberedItems(d, 'testes.accessibility').map((texto) => ({
-          criterion: toPlainText(texto),
+      : numberedItems(d, 'testes.accessibility').map((text) => ({
+          criterion: toPlainText(text),
           level: '',
           how: '',
         }));
@@ -1051,9 +1051,9 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
 // ─── Helpers de cauda ─────────────────────────────────────────────────────────
 
 /** Rótulo de navegação, com queda para o ui.json quando o slug não o declara. */
-function navLabel(chave: string): string {
-  const doComponente = t(chave);
-  return doComponente === chave ? tNav(chave) : doComponente;
+function navLabel(key: string): string {
+  const doComponente = t(key);
+  return doComponente === key ? tNav(key) : doComponente;
 }
 
 /**
@@ -1062,12 +1062,12 @@ function navLabel(chave: string): string {
  * `t()` devolve a PRÓPRIA CHAVE quando ela aponta para um objeto — e é assim
  * que "variants.items.smallInline" acaba escrito na tela, sem erro nenhum.
  */
-function valueOuField(base: string, campo: string): string {
+function valueOuField(base: string, field: string): string {
   const direto = t(base);
   if (direto !== base) return direto;
-  const chave = `${base}.${campo}`;
-  const ofField = t(chave);
-  return ofField === chave ? '' : ofField;
+  const key = `${base}.${field}`;
+  const ofField = t(key);
+  return ofField === key ? '' : ofField;
 }
 
 /**
@@ -1091,13 +1091,13 @@ function numberedItems(
   base: string,
   prefixo = 'item',
 ): string[] {
-  const itens: string[] = [];
+  const items: string[] = [];
   for (let i = 1; ; i++) {
-    const valor = d[`${base}.${prefixo}${i}`];
-    if (valor === undefined) break;
-    itens.push(valor);
+    const value = d[`${base}.${prefixo}${i}`];
+    if (value === undefined) break;
+    items.push(value);
   }
-  return itens;
+  return items;
 }
 
 const priorityKeyMap: Record<string, string> = {

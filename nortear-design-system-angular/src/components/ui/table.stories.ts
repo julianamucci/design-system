@@ -37,7 +37,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<TableArgs> }): 
     ? '<caption ndsTableCaption>Lista de faturas recentes</caption>'
     : '<caption ndsTableCaption class="nds-sr-only">Lista de faturas recentes</caption>';
 
-  const rodape = withFooter
+  const footer = withFooter
     ? `
       <tfoot ndsTableFooter>
         <tr ndsTableRow>
@@ -81,7 +81,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<TableArgs> }): 
               <td ndsTableCell class="nds-text-right">{{ fatura.valor }}</td>
             </tr>
           }
-        </tbody>${rodape}
+        </tbody>${footer}
       </table>
     </div>
   \`,
@@ -168,7 +168,7 @@ export const Playground: Story = {
                 <td ndsTableCell class="nds-font-medium">{{ invoice.id }}</td>
                 <td ndsTableCell>{{ invoice.status }}</td>
                 <td ndsTableCell>{{ invoice.metodo }}</td>
-                <td ndsTableCell class="nds-text-right">{{ invoice.valor }}</td>
+                <td ndsTableCell class="nds-text-right">{{ invoice.value }}</td>
               </tr>
             }
           </tbody>
@@ -191,13 +191,13 @@ export const Playground: Story = {
       // functional.item1 — o que faz um leitor de tela anunciar "tabela, 4
       // colunas" é a tag, não a classe. Uma grade montada com div passaria
       // visualmente e sumiria da árvore de acessibilidade.
-      const tabela = canvas.getByRole('table');
-      await expect(tabela.tagName).toBe('TABLE');
-      await expect(tabela).toHaveClass('nds-table');
-      await expect(tabela).toHaveAttribute('data-slot', 'table');
-      await expect(tabela.querySelector('thead')).toHaveAttribute('data-slot', 'table-header');
-      await expect(tabela.querySelector('tbody')).toHaveAttribute('data-slot', 'table-body');
-      await expect(tabela.querySelectorAll('tbody tr').length).toBe(INVOICES.length);
+      const table = canvas.getByRole('table');
+      await expect(table.tagName).toBe('TABLE');
+      await expect(table).toHaveClass('nds-table');
+      await expect(table).toHaveAttribute('data-slot', 'table');
+      await expect(table.querySelector('thead')).toHaveAttribute('data-slot', 'table-header');
+      await expect(table.querySelector('tbody')).toHaveAttribute('data-slot', 'table-body');
+      await expect(table.querySelectorAll('tbody tr').length).toBe(INVOICES.length);
     });
 
     await step('A região rolável é alcançável por teclado', async () => {

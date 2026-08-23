@@ -33,12 +33,12 @@ export async function waitForPanel(
 ): Promise<HTMLElement> {
   return await waitFor(
     () => {
-      const painel = panelOpen(escopo);
-      if (!painel) throw new Error('painel: ainda fechado');
-      if (painel.getBoundingClientRect().height < 1) {
+      const panel = panelOpen(escopo);
+      if (!panel) throw new Error('painel: ainda fechado');
+      if (panel.getBoundingClientRect().height < 1) {
         throw new Error('painel: sem altura, ainda não pintou');
       }
-      return painel;
+      return panel;
     },
     { timeout, interval: 50 },
   );
@@ -64,13 +64,13 @@ export async function waitForPanelVanish(
  * asserção de estado inverte o resultado no replay do painel Interactions: a
  * segunda rodada parte do estado que a primeira deixou.
  */
-export async function abrir(gatilho: HTMLElement, escopo?: ParentNode): Promise<HTMLElement> {
-  if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+export async function open(trigger: HTMLElement, escopo?: ParentNode): Promise<HTMLElement> {
+  if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
   return await waitForPanel(escopo);
 }
 
-export async function fechar(gatilho: HTMLElement, escopo?: ParentNode): Promise<void> {
-  if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.click(gatilho);
+export async function close(trigger: HTMLElement, escopo?: ParentNode): Promise<void> {
+  if (trigger.getAttribute('aria-expanded') === 'true') await userEvent.click(trigger);
   await waitForPanelVanish(escopo);
 }
 

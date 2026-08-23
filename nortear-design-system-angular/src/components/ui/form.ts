@@ -287,19 +287,19 @@ export class NdsFormField implements AfterContentInit {
     // pristine numa emissão só — três `subscribe` separados dariam o mesmo
     // resultado com três chances de esquecer um.
     effect((onCleanup) => {
-      const controle = this.ngControl()?.control ?? null;
-      if (!controle) {
+      const control = this.ngControl()?.control ?? null;
+      if (!control) {
         this.state.set(null);
         return;
       }
       const ler = () =>
         this.state.set({
-          invalid: controle.invalid,
-          touched: controle.touched,
-          dirty: controle.dirty,
+          invalid: control.invalid,
+          touched: control.touched,
+          dirty: control.dirty,
         });
       ler();
-      const inscricao = controle.events.subscribe(ler);
+      const inscricao = control.events.subscribe(ler);
       onCleanup(() => inscricao.unsubscribe());
     });
 
@@ -319,42 +319,42 @@ export class NdsFormField implements AfterContentInit {
   }
 
   private findControl(): HTMLElement | null {
-    const raiz = this.hostRef.nativeElement;
+    const root = this.hostRef.nativeElement;
     for (const selector of SELECTORS_CONTROL) {
-      const encontrado = raiz.querySelector<HTMLElement>(selector);
+      const encontrado = root.querySelector<HTMLElement>(selector);
       if (encontrado) return encontrado;
     }
     return null;
   }
 
   private aplicar(): void {
-    const raiz = this.hostRef.nativeElement;
+    const root = this.hostRef.nativeElement;
     const descricao = this.descricao();
     const mensagem = this.mensagem();
     const invalido = this.invalido();
     const gerenciaValidade = this.gerenciaValidade();
 
-    const controle = this.findControl();
-    const rotulo = raiz.querySelector<HTMLLabelElement>('label');
+    const control = this.findControl();
+    const label = root.querySelector<HTMLLabelElement>('label');
 
-    if (rotulo) {
+    if (label) {
       // `for` só quando falta. Label que ENVOLVE o controle já está associado
       // pela estrutura, e escrever `for` ali não acrescenta nada.
-      if (controle && !rotulo.getAttribute('for') && !rotulo.contains(controle)) {
-        if (!controle.id) controle.id = `${this.idBase}-control`;
-        rotulo.setAttribute('for', controle.id);
+      if (control && !label.getAttribute('for') && !label.contains(control)) {
+        if (!control.id) control.id = `${this.idBase}-control`;
+        label.setAttribute('for', control.id);
       }
       // `.nds-form-label[data-error="true"]` é o seletor que pinta o rótulo de
       // destructive. Sem o atributo, o erro só existiria abaixo do campo.
-      if (invalido) rotulo.setAttribute('data-error', 'true');
-      else rotulo.removeAttribute('data-error');
+      if (invalido) label.setAttribute('data-error', 'true');
+      else label.removeAttribute('data-error');
     }
 
-    if (!controle) return;
+    if (!control) return;
 
     // Junção, não substituição: quem compõe pode já ter apontado o controle
     // para um texto fora do campo, e sobrescrever descartaria essa instrução.
-    this.describedByEscrito ??= (controle.getAttribute('aria-describedby') ?? '')
+    this.describedByEscrito ??= (control.getAttribute('aria-describedby') ?? '')
       .split(/\s+/)
       .filter(Boolean);
 
@@ -363,12 +363,12 @@ export class NdsFormField implements AfterContentInit {
       ...(descricao ? [descricao.id] : []),
       ...(mensagem ? [mensagem.id] : []),
     ];
-    if (ids.length) controle.setAttribute('aria-describedby', ids.join(' '));
-    else controle.removeAttribute('aria-describedby');
+    if (ids.length) control.setAttribute('aria-describedby', ids.join(' '));
+    else control.removeAttribute('aria-describedby');
 
     if (!gerenciaValidade) return;
-    if (invalido) controle.setAttribute('aria-invalid', 'true');
-    else controle.removeAttribute('aria-invalid');
+    if (invalido) control.setAttribute('aria-invalid', 'true');
+    else control.removeAttribute('aria-invalid');
   }
 }
 

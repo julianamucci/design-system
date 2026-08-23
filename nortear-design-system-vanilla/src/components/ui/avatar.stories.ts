@@ -91,8 +91,8 @@ export const Playground: Story = {
       // E é ela que fica na tela depois do load.
       await waitFor(async () => {
         const r = root!.getBoundingClientRect();
-        const alvo = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-        await expect(alvo && alvo.closest('[data-slot="avatar-image"]')).not.toBeNull();
+        const target = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+        await expect(target && target.closest('[data-slot="avatar-image"]')).not.toBeNull();
       }, { timeout: 5000 });
     });
 

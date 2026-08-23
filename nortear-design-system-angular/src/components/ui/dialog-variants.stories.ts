@@ -7,9 +7,9 @@ import { NdsInput } from './input';
 import { NdsLabel } from './label';
 import {
   LABELS,
-  painel,
+  panel,
   overlay,
-  abrir,
+  open,
   waitForOpen,
   waitForClosed,
   checkNameEDescricao,
@@ -87,8 +87,8 @@ export const Default: Story = {
       // `flex-direction: column-reverse` põe a ação primária no topo da pilha
       // no estreito e à direita no largo. No DOM ela vem por último, que é a
       // ordem de leitura e de foco correta.
-      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const buttons = rodape.querySelectorAll('button');
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = footer.querySelectorAll('button');
       await expect(buttons[buttons.length - 1]).toHaveTextContent(LABELS.action);
     });
   },
@@ -135,17 +135,17 @@ export const WithForm: Story = {
     const p = await waitForOpen();
 
     await step('Os campos estão rotulados', async () => {
-      const nome = p.querySelector<HTMLInputElement>('#dlg-nome')!;
+      const name = p.querySelector<HTMLInputElement>('#dlg-nome')!;
       // `toHaveAccessibleName` e não a presença do `<label>`: o que importa é o
       // par for/id ter fechado, e é isso que o leitor de tela anuncia.
-      await expect(nome).toHaveAccessibleName('Nome');
+      await expect(name).toHaveAccessibleName('Nome');
       await expect(p.querySelector('#dlg-email')).toHaveAccessibleName('E-mail');
     });
 
     await step('O foco alcança os campos por teclado, dentro do painel', async () => {
-      const nome = p.querySelector<HTMLInputElement>('#dlg-nome')!;
-      nome.focus();
-      await expect(document.activeElement).toBe(nome);
+      const name = p.querySelector<HTMLInputElement>('#dlg-nome')!;
+      name.focus();
+      await expect(document.activeElement).toBe(name);
       await userEvent.tab();
       await expect(document.activeElement).toBe(p.querySelector('#dlg-email'));
     });
@@ -252,7 +252,7 @@ export const NoFooter: Story = {
       await waitForClosed();
       // O Chromatic fotografa o estado final e o axe roda depois da play: uma
       // story de composição que termina fechada capturaria só o gatilho.
-      await expect(await abrir(canvasElement)).toBeVisible();
+      await expect(await open(canvasElement)).toBeVisible();
     });
   },
 };
@@ -289,8 +289,8 @@ export const WithDestructiveAction: Story = {
     const p = await waitForOpen();
 
     await step('A ação primária carrega a variante destrutiva', async () => {
-      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = footer.querySelectorAll<HTMLElement>('button');
       // Esta é a asserção que prova o binding de input: sob JIT o botão
       // renderizaria no default e a classe destructive nunca apareceria
       // (armadilha 1 do CLAUDE.md deste stack).
@@ -338,16 +338,16 @@ export const CustomCloseInFooter: Story = {
       await expect(p.querySelector('[data-slot="dialog-close"]')).toBeNull();
       // Pelo nome acessível: o botão do rodapé é um `ndsButton`, e o slot dele
       // é `button` — ver a nota em NdsDialogClose.
-      const fechar = within(p).getByRole('button', { name: LABELS.close });
-      await expect(fechar.closest('[data-slot="dialog-footer"]')).not.toBeNull();
+      const close = within(p).getByRole('button', { name: LABELS.close });
+      await expect(close.closest('[data-slot="dialog-footer"]')).not.toBeNull();
     });
 
     await step('E o botão do rodapé fecha o diálogo', async () => {
       await userEvent.click(within(p).getByRole('button', { name: LABELS.close }));
       await waitForClosed();
-      await expect(painel()).toBeNull();
+      await expect(panel()).toBeNull();
       // Reabre: o Chromatic fotografa o estado final da play.
-      await expect(await abrir(canvasElement)).toBeVisible();
+      await expect(await open(canvasElement)).toBeVisible();
     });
   },
 };
@@ -384,8 +384,8 @@ export const ConfirmEmail: Story = {
     const p = await waitForOpen();
 
     await step('A operação é reversível, então a ação primária é neutra', async () => {
-      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = footer.querySelectorAll<HTMLElement>('button');
       await expect(buttons[buttons.length - 1]).toHaveClass(/nds-button-default/);
     });
 
@@ -393,7 +393,7 @@ export const ConfirmEmail: Story = {
       await userEvent.click(within(p).getByRole('button', { name: LABELS.cancel }));
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final da play.
-      await expect(await abrir(canvasElement)).toBeVisible();
+      await expect(await open(canvasElement)).toBeVisible();
     });
   },
 };

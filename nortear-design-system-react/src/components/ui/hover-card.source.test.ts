@@ -143,8 +143,8 @@ describe('composições', () => {
 
   it('os quatro lados aparecem juntos, porque a fuga de colisão é o assunto', () => {
     const saida = hoverCardLadosSource();
-    for (const lado of ['"top"', '"bottom"', '"left"', '"right"']) {
-      expect(saida).toContain(lado);
+    for (const side of ['"top"', '"bottom"', '"left"', '"right"']) {
+      expect(saida).toContain(side);
     }
     expect(saida).toContain('side={lado}');
   });

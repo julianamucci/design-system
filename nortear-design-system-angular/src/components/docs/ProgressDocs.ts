@@ -474,11 +474,11 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
       // Os nomes de parte vêm do conteúdo compartilhado em forma neutra
       // (ProgressLabel/ProgressValue); aqui as partes são diretivas.
       items: [
-        { key: 'label', nome: 'ndsProgressLabel' },
-        { key: 'value', nome: 'ndsProgressValue' },
-        { key: 'ariaLabel', nome: 'aria-label' },
-      ].map(({ key, nome }) => ({
-        element: nome,
+        { key: 'label', name: 'ndsProgressLabel' },
+        { key: 'value', name: 'ndsProgressValue' },
+        { key: 'ariaLabel', name: 'aria-label' },
+      ].map(({ key, name }) => ({
+        element: name,
         rules: t(`usage.uxWriting.table.${key}.format`),
         do: t(`usage.uxWriting.table.${key}.good`),
         dont: t(`usage.uxWriting.table.${key}.bad`),
@@ -573,14 +573,14 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
         title: 'ndsProgress',
         cols,
         items: [
-          { key: 'value', nome: 'value' },
-          { key: 'min', nome: 'min' },
-          { key: 'max', nome: 'max' },
-          { key: 'getAriaValueText', nome: 'getAriaValueText' },
-          { key: 'variant', nome: 'data-variant' },
-          { key: 'className', nome: 'class' },
-        ].map(({ key, nome }) => ({
-          name: nome,
+          { key: 'value', name: 'value' },
+          { key: 'min', name: 'min' },
+          { key: 'max', name: 'max' },
+          { key: 'getAriaValueText', name: 'getAriaValueText' },
+          { key: 'variant', name: 'data-variant' },
+          { key: 'className', name: 'class' },
+        ].map(({ key, name }) => ({
+          name: name,
           type: toPlainText(t(`props.table.${key}.type`)),
           defaultValue: toPlainText(t(`props.table.${key}.default`)),
           required: toPlainText(t(`props.table.${key}.required`)),

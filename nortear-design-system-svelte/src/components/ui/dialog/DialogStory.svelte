@@ -83,7 +83,7 @@
           aria-label="Conteúdo rolável"
         >
           {#each Array.from({ length: 14 }) as _, i (i)}
-            <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar o scroll interno do Dialog quando o body excede a altura disponível em viewport.</p>
+            <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar o scroll interno do Dialog quando o body excede a height disponível em viewport.</p>
           {/each}
         </div>
       {/if}

@@ -54,7 +54,7 @@ function PaginationLink({
   // `aria-disabled={false}` deixava o atributo NO elemento com valor negativo —
   // `[aria-disabled]` passava a casar o controle habilitado. Aqui ele só existe
   // quando é verdade.
-  const desabilitado = ariaDisabled === true || ariaDisabled === "true"
+  const disabled = ariaDisabled === true || ariaDisabled === "true"
 
   return (
     <Button
@@ -65,20 +65,20 @@ function PaginationLink({
       render={
         <a
           aria-current={isActive ? "page" : undefined}
-          aria-disabled={desabilitado ? "true" : undefined}
+          aria-disabled={disabled ? "true" : undefined}
           data-slot="pagination-link"
           // `data-active` só existe quando é verdade, pelo mesmo motivo.
           data-active={isActive ? "true" : undefined}
           role="link"
           // Em `<a>` não existe `disabled`: o par correto é aria-disabled mais
           // a saída da ordem de tabulação.
-          tabIndex={desabilitado ? -1 : tabIndex}
+          tabIndex={disabled ? -1 : tabIndex}
           onClick={(evento) => {
             // `.nds-button[aria-disabled="true"]` já barra o PONTEIRO com
             // `pointer-events: none`. Isto fecha os outros caminhos — Enter no
             // teclado, clique disparado por script e o `click()` de um teste —
             // que continuavam chamando o handler de quem consome.
-            if (desabilitado) {
+            if (disabled) {
               evento.preventDefault()
               evento.stopPropagation()
               return

@@ -284,13 +284,13 @@ export const Playground: Story = {
       // VOLTA ao valor inicial no fim: o painel Interactions reexecuta a play no
       // mesmo DOM, e sem isso a segunda rodada partiria de outra página e
       // inverteria as asserções acima.
-      const alvo = args.initialPage === 1 ? 2 : 1;
+      const target = args.initialPage === 1 ? 2 : 1;
       const spy = args.onPageChange as unknown as { mockClear: () => void };
       spy.mockClear();
-      await userEvent.click(canvas.getByRole("link", { name: `Ir para página ${alvo}` }));
-      await expect(args.onPageChange).toHaveBeenLastCalledWith(alvo);
+      await userEvent.click(canvas.getByRole("link", { name: `Ir para página ${target}` }));
+      await expect(args.onPageChange).toHaveBeenLastCalledWith(target);
       await expect(
-        canvas.getByRole("link", { name: `Ir para página ${alvo}` })
+        canvas.getByRole("link", { name: `Ir para página ${target}` })
       ).toHaveAttribute("aria-current", "page");
 
       await userEvent.click(
@@ -313,9 +313,9 @@ export const Playground: Story = {
       ].filter((el) => el.getAttribute("tabindex") !== "-1");
 
       (document.activeElement as HTMLElement | null)?.blur();
-      for (const alvo of esperados) {
+      for (const target of esperados) {
         await userEvent.tab();
-        await expect(alvo).toHaveFocus();
+        await expect(target).toHaveFocus();
       }
     });
   },

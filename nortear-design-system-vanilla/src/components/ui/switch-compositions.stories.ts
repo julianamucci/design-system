@@ -34,10 +34,10 @@ type Story = StoryObj;
 // Sem listener próprio no rótulo: `<button>` é elemento rotulável, então o
 // `<label for>` já encaminha a ativação.
 
-function rotulo(id: string, texto: string, className = 'nds-text-body'): HTMLLabelElement {
+function label(id: string, text: string, className = 'nds-text-body'): HTMLLabelElement {
   const label = document.createElement('label');
   label.htmlFor = id;
-  label.textContent = texto;
+  label.textContent = text;
   label.className = `${className} nds-font-medium nds-leading-none nds-cursor-pointer`;
   return label;
 }
@@ -50,7 +50,7 @@ export const WithLabel: Story = {
     row.className = 'nds-cluster';
     row.dataset.spacing = 'sm';
     const id = 'sw-com-label';
-    row.append(createSwitch({ id }), rotulo(id, 'Receber notificações por email'));
+    row.append(createSwitch({ id }), label(id, 'Receber notificações por email'));
     return row;
   },
   parameters: {
@@ -101,7 +101,7 @@ export const WithDescription: Story = {
     desc.className = 'nds-text-body';
     desc.textContent = 'Receba novidades e promoções da plataforma.';
 
-    textGroup.append(rotulo(id, 'Emails de marketing'), desc);
+    textGroup.append(label(id, 'Emails de marketing'), desc);
     panel.append(textGroup, sw);
     return panel;
   },
@@ -173,7 +173,7 @@ export const SettingsList: Story = {
       desc.className = 'nds-text-body';
       desc.textContent = descText;
 
-      textGroup.append(rotulo(id, labelText), desc);
+      textGroup.append(label(id, labelText), desc);
       panel.append(textGroup, sw);
       wrapper.appendChild(panel);
     });
@@ -243,7 +243,7 @@ export const InFormWithHidden: Story = {
       onCheckedChange: (val) => { hidden.value = val ? 'on' : 'off'; },
     });
 
-    row.append(sw, rotulo(id, 'Aceitar newsletter semanal'));
+    row.append(sw, label(id, 'Aceitar newsletter semanal'));
 
     form.append(row, hidden, createButton({ type: 'submit', label: 'Salvar preferências' }));
     return form;

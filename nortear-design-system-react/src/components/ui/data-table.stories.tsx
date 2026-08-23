@@ -182,9 +182,9 @@ export const Playground: Story = {
       await waitFor(() => expect(th).toHaveAttribute("aria-sort", "none"))
     }
     /** Clica só se o estado ainda não é o desejado — sobrevive ao replay. */
-    const marcar = async (caixa: HTMLElement, alvo: "true" | "false") => {
-      if (caixa.getAttribute("aria-checked") !== alvo) await userEvent.click(caixa)
-      await waitFor(() => expect(caixa).toHaveAttribute("aria-checked", alvo))
+    const marcar = async (box: HTMLElement, target: "true" | "false") => {
+      if (box.getAttribute("aria-checked") !== target) await userEvent.click(box)
+      await waitFor(() => expect(box).toHaveAttribute("aria-checked", target))
     }
     /** Precondição de qualquer passo de seleção: nada marcado, venha de onde vier. */
     const clearSelection = async () => {
@@ -200,11 +200,11 @@ export const Playground: Story = {
       // accessibility.item1 — o que faz um leitor anunciar "tabela, 6 colunas" é
       // a TAG, não a classe. A mesma grade montada com div sumiria da árvore de
       // acessibilidade sem mudar um pixel.
-      const tabela = canvas.getByRole("table")
-      await expect(tabela.tagName).toBe("TABLE")
-      await expect(tabela).toHaveAttribute("data-slot", "table")
-      await expect(tabela.querySelector("thead")).toHaveAttribute("data-slot", "table-header")
-      await expect(tabela.querySelector("tbody")).toHaveAttribute("data-slot", "table-body")
+      const table = canvas.getByRole("table")
+      await expect(table.tagName).toBe("TABLE")
+      await expect(table).toHaveAttribute("data-slot", "table")
+      await expect(table.querySelector("thead")).toHaveAttribute("data-slot", "table-header")
+      await expect(table.querySelector("tbody")).toHaveAttribute("data-slot", "table-body")
       await expect(canvasElement.querySelector("[data-slot='data-table']")).toHaveClass(
         "nds-data-table"
       )
@@ -240,17 +240,17 @@ export const Playground: Story = {
       // acha nada, o que sugere que a regra não existisse — ela está sob o nome
       // `isHTMLTableCaptionElement`. Uma busca por texto quase trocou a asserção
       // forte por uma indireta.
-      const tabela = canvas.getByRole("table", { name: CAPTION })
-      const legenda = tabela.querySelector("caption")!
-      await expect(legenda.tagName).toBe("CAPTION")
+      const table = canvas.getByRole("table", { name: CAPTION })
+      const caption = table.querySelector("caption")!
+      await expect(caption.tagName).toBe("CAPTION")
       // Primeiro filho: fora dessa posição o parser expulsa a legenda da tabela.
-      await expect(tabela.firstElementChild).toBe(legenda)
-      await expect(legenda).toHaveTextContent(CAPTION)
-      const estilo = getComputedStyle(legenda)
-      const caixa = legenda.getBoundingClientRect()
+      await expect(table.firstElementChild).toBe(caption)
+      await expect(caption).toHaveTextContent(CAPTION)
+      const estilo = getComputedStyle(caption)
+      const box = caption.getBoundingClientRect()
       await expect(estilo.position).toBe("absolute")
-      await expect(caixa.width).toBeLessThanOrEqual(2)
-      await expect(caixa.height).toBeLessThanOrEqual(2)
+      await expect(box.width).toBeLessThanOrEqual(2)
+      await expect(box.height).toBeLessThanOrEqual(2)
     })
 
     await step("Cabeçalho ordenável anuncia que ordena, e como", async () => {

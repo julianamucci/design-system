@@ -10,75 +10,75 @@ import {
 
 describe('checkboxSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = checkboxSnippet();
-    expect(código).toContain("import { createCheckbox } from '@/components/ui/checkbox';");
-    expect(código).toContain('createCheckbox({');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('role="checkbox"');
-    expect(código).not.toContain('aria-checked');
+    const code = checkboxSnippet();
+    expect(code).toContain("import { createCheckbox } from '@/components/ui/checkbox';");
+    expect(code).toContain('createCheckbox({');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('role="checkbox"');
+    expect(code).not.toContain('aria-checked');
   });
 
   it('usa o nome acessível canônico, nunca um apelido', () => {
-    const código = checkboxSnippet({ label: undefined, 'aria-label': 'Aceitar os termos' });
-    expect(código).toContain("'aria-label': 'Aceitar os termos'");
-    expect(código).not.toContain('ariaLabel');
+    const code = checkboxSnippet({ label: undefined, 'aria-label': 'Aceitar os termos' });
+    expect(code).toContain("'aria-label': 'Aceitar os termos'");
+    expect(code).not.toContain('ariaLabel');
     // Sem rótulo visível não há `<label>` para associar, e o par cai fora.
-    expect(código).not.toContain('htmlFor');
+    expect(code).not.toContain('htmlFor');
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = checkboxSnippet();
-    expect(código).not.toContain('checked');
-    expect(código).not.toContain('indeterminate');
-    expect(código).not.toContain('disabled');
-    expect(código).not.toContain('aria-invalid');
+    const code = checkboxSnippet();
+    expect(code).not.toContain('checked');
+    expect(code).not.toContain('indeterminate');
+    expect(code).not.toContain('disabled');
+    expect(code).not.toContain('aria-invalid');
   });
 
   it('mostra os estados quando a story os usa', () => {
     expect(checkboxSnippet({ checked: true })).toContain('checked: true');
     expect(checkboxSnippet({ indeterminate: true })).toContain('indeterminate: true');
 
-    const desabilitado = checkboxSnippet({ disabled: true });
-    expect(desabilitado).toContain('disabled: true');
+    const disabled = checkboxSnippet({ disabled: true });
+    expect(disabled).toContain('disabled: true');
     // O estado alcança também a linha que envolve o par e o cursor do rótulo.
-    expect(desabilitado).toContain("linha.dataset.disabled = 'true';");
-    expect(desabilitado).toContain('nds-cursor-default');
+    expect(disabled).toContain("linha.dataset.disabled = 'true';");
+    expect(disabled).toContain('nds-cursor-default');
     expect(checkboxSnippet()).toContain('nds-cursor-pointer');
   });
 
   it('o par rótulo+caixa se liga só por for/id, sem ouvinte escrito à mão', () => {
-    const código = checkboxSnippet();
-    expect(código).toContain("rotulo.htmlFor = 'aceite-termos'");
-    expect(código).toContain("createCheckbox({ id: 'aceite-termos' })");
+    const code = checkboxSnippet();
+    expect(code).toContain("rotulo.htmlFor = 'aceite-termos'");
+    expect(code).toContain("createCheckbox({ id: 'aceite-termos' })");
     // A caixa é um <button>, que é controle rotulável: o clique no texto já move
     // o foco E alterna. Um ouvinte no rótulo seria andaime.
-    expect(código).not.toContain("rotulo.addEventListener('click'");
+    expect(code).not.toContain("rotulo.addEventListener('click'");
   });
 
   it('o estado de erro traz a mensagem e a ligação com a caixa', () => {
-    const código = checkboxSnippet({ invalid: true });
-    expect(código).toContain("caixa.setAttribute('aria-invalid', 'true');");
-    expect(código).toContain("caixa.setAttribute('aria-describedby', 'erro-aceite-termos');");
-    expect(código).toContain("mensagem.id = 'erro-aceite-termos';");
-    expect(código).toContain('nds-text-destructive');
+    const code = checkboxSnippet({ invalid: true });
+    expect(code).toContain("caixa.setAttribute('aria-invalid', 'true');");
+    expect(code).toContain("caixa.setAttribute('aria-describedby', 'erro-aceite-termos');");
+    expect(code).toContain("mensagem.id = 'erro-aceite-termos';");
+    expect(code).toContain('nds-text-destructive');
   });
 
   it('não deixa o espião do control vazar como código', () => {
-    const código = checkboxSnippet({
+    const code = checkboxSnippet({
       onCheckedChange: (() => {}) as unknown as string,
     });
-    expect(código).not.toContain('onCheckedChange');
+    expect(code).not.toContain('onCheckedChange');
     expect(checkboxSnippet({ onCheckedChange: '(marcado) => registrar(marcado)' })).toContain(
       'onCheckedChange: (marcado) => registrar(marcado)',
     );
   });
 
   it('não vaza helper de story', () => {
-    const código = checkboxSnippet({ disabled: true });
-    expect(código).not.toContain('wrapWithLabel');
-    expect(código).not.toContain('buildCheckboxWithLabel');
-    expect(código).not.toContain('FERRAMENTAS');
-    expect(código).not.toContain('Math.random');
+    const code = checkboxSnippet({ disabled: true });
+    expect(code).not.toContain('wrapWithLabel');
+    expect(code).not.toContain('buildCheckboxWithLabel');
+    expect(code).not.toContain('FERRAMENTAS');
+    expect(code).not.toContain('Math.random');
   });
 });
 
@@ -103,21 +103,21 @@ describe('checkboxSource', () => {
 describe('checkboxSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = checkboxSourceWith({ checked: true, disabled: true });
-    const código = transform('', { args: { checked: false, label: 'Manter sessão ativa' } });
-    expect(código).toContain('checked: true');
-    expect(código).toContain('disabled: true');
-    expect(código).toContain("rotulo.textContent = 'Manter sessão ativa';");
+    const code = transform('', { args: { checked: false, label: 'Manter sessão ativa' } });
+    expect(code).toContain('checked: true');
+    expect(code).toContain('disabled: true');
+    expect(code).toContain("rotulo.textContent = 'Manter sessão ativa';");
   });
 });
 
 describe('checkboxComDescricaoSnippet', () => {
   it('o texto auxiliar fica FORA do rótulo', () => {
-    const código = checkboxWithDescriptionSnippet();
-    expect(código).toContain('auxiliar.textContent =');
-    expect(código).toContain('textos.append(rotulo, auxiliar);');
+    const code = checkboxWithDescriptionSnippet();
+    expect(code).toContain('auxiliar.textContent =');
+    expect(code).toContain('textos.append(rotulo, auxiliar);');
     // Dentro do <label> a frase viraria parte do nome acessível.
-    expect(código).not.toContain('rotulo.appendChild(auxiliar)');
-    expect(código).not.toContain('data-slot=');
+    expect(code).not.toContain('rotulo.appendChild(auxiliar)');
+    expect(code).not.toContain('data-slot=');
   });
 
   it('não ensina valor de design solto em atributo de estilo', () => {
@@ -128,44 +128,44 @@ describe('checkboxComDescricaoSnippet', () => {
 
 describe('checkboxEmGrupoSnippet', () => {
   it('com fieldset, a legenda nomeia o conjunto', () => {
-    const código = groupCheckboxSnippet({ fieldset: true });
-    expect(código).toContain("document.createElement('fieldset')");
-    expect(código).toContain("document.createElement('legend')");
-    expect(código).toContain("legenda.textContent = 'Notificações';");
-    expect(código).toContain('createCheckbox({ id, checked })');
+    const code = groupCheckboxSnippet({ fieldset: true });
+    expect(code).toContain("document.createElement('fieldset')");
+    expect(code).toContain("document.createElement('legend')");
+    expect(code).toContain("legenda.textContent = 'Notificações';");
+    expect(code).toContain('createCheckbox({ id, checked })');
   });
 
   it('sem fieldset, as opções viram linhas com borda', () => {
-    const código = groupCheckboxSnippet({
-      legenda: 'Preferências de contato',
-      itens: [
+    const code = groupCheckboxSnippet({
+      caption: 'Preferências de contato',
+      items: [
         { id: 'pref-email', label: 'Receber novidades por email', checked: true },
         { id: 'pref-sms', label: 'Alertas por SMS' },
       ],
     });
-    expect(código).not.toContain('fieldset');
-    expect(código).toContain("titulo.textContent = 'Preferências de contato';");
-    expect(código).toContain("{ id: 'pref-email', label: 'Receber novidades por email', checked: true },");
-    expect(código).toContain("{ id: 'pref-sms', label: 'Alertas por SMS' },");
-    expect(código).toContain('nds-border-default');
+    expect(code).not.toContain('fieldset');
+    expect(code).toContain("titulo.textContent = 'Preferências de contato';");
+    expect(code).toContain("{ id: 'pref-email', label: 'Receber novidades por email', checked: true },");
+    expect(code).toContain("{ id: 'pref-sms', label: 'Alertas por SMS' },");
+    expect(code).toContain('nds-border-default');
   });
 });
 
 describe('checkboxSelecionarTodosSnippet', () => {
   it('mostra a engrenagem do estado misto: o pai é recriado, não mutado', () => {
-    const código = checkboxSelectAllSnippet();
-    expect(código).toContain('function estadoDoPai()');
-    expect(código).toContain("return 'indeterminate';");
-    expect(código).toContain('pai.replaceWith(novo);');
-    expect(código).toContain('indeterminate: estado === \'indeterminate\',');
-    expect(código).toContain('nds-checkbox-sublist');
-    expect(código).not.toContain('data-slot=');
+    const code = checkboxSelectAllSnippet();
+    expect(code).toContain('function estadoDoPai()');
+    expect(code).toContain("return 'indeterminate';");
+    expect(code).toContain('pai.replaceWith(novo);');
+    expect(code).toContain('indeterminate: estado === \'indeterminate\',');
+    expect(code).toContain('nds-checkbox-sublist');
+    expect(code).not.toContain('data-slot=');
   });
 
   it('não vaza helper de story', () => {
-    const código = checkboxSelectAllSnippet();
-    expect(código).not.toContain('computeParentState');
-    expect(código).not.toContain('makeParentCheckbox');
-    expect(código).not.toContain('childCheckboxes');
+    const code = checkboxSelectAllSnippet();
+    expect(code).not.toContain('computeParentState');
+    expect(code).not.toContain('makeParentCheckbox');
+    expect(code).not.toContain('childCheckboxes');
   });
 });

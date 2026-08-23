@@ -9,10 +9,10 @@ import { menubarSource } from './menubar.source';
 // As mesmas quatro categorias que o `MenubarStory` monta na demonstração
 // padrão: a contagem do play sai daqui, nunca de um número escrito à mão.
 const MENUS = [
-  { label: 'Arquivo', itens: ['Novo', 'Abrir', 'Salvar'] },
-  { label: 'Editar', itens: ['Desfazer', 'Refazer', 'Copiar'] },
-  { label: 'Exibir', itens: ['Aproximar', 'Afastar', 'Tela cheia'] },
-  { label: 'Ajuda', itens: ['Documentação', 'Atalhos de teclado'] },
+  { label: 'Arquivo', items: ['Novo', 'Abrir', 'Salvar'] },
+  { label: 'Editar', items: ['Desfazer', 'Refazer', 'Copiar'] },
+  { label: 'Exibir', items: ['Aproximar', 'Afastar', 'Tela cheia'] },
+  { label: 'Ajuda', items: ['Documentação', 'Atalhos de teclado'] },
 ];
 
 const meta: Meta = {
@@ -100,9 +100,9 @@ export const Playground: Story = {
 
     await step('A barra é um menubar, e cada gatilho anuncia o menu que abre', async () => {
       await expect(triggers).toHaveLength(MENUS.length);
-      for (const [i, gatilho] of triggers.entries()) {
-        await expect(gatilho).toHaveAccessibleName(MENUS[i].label);
-        await expect(gatilho.getAttribute('aria-haspopup')).toBe('menu');
+      for (const [i, trigger] of triggers.entries()) {
+        await expect(trigger).toHaveAccessibleName(MENUS[i].label);
+        await expect(trigger.getAttribute('aria-haspopup')).toBe('menu');
       }
     });
 
@@ -128,25 +128,25 @@ export const Playground: Story = {
       const menu = await waitForPortal('menu');
       await expect(arquivo.getAttribute('aria-expanded')).toBe('true');
 
-      const itens = within(menu).getAllByRole('menuitem');
-      await expect(itens).toHaveLength(MENUS[0].itens.length);
+      const items = within(menu).getAllByRole('menuitem');
+      await expect(items).toHaveLength(MENUS[0].items.length);
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(itens[0]);
+        await expect(document.activeElement).toBe(items[0]);
       });
     });
 
     await step('Dentro do menu, a seta vertical anda entre os itens', async () => {
       const menu = await waitForPortal('menu');
-      const itens = within(menu).getAllByRole('menuitem');
+      const items = within(menu).getAllByRole('menuitem');
 
       await userEvent.keyboard('{ArrowDown}');
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(itens[1]);
+        await expect(document.activeElement).toBe(items[1]);
       });
 
       await userEvent.keyboard('{ArrowUp}');
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(itens[0]);
+        await expect(document.activeElement).toBe(items[0]);
       });
     });
 

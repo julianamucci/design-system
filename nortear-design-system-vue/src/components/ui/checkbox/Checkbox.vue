@@ -26,7 +26,7 @@ const resolvedDefault = computed(() => {
   return undefined
 })
 
-const desabilitado = computed(() => props.disabled === true)
+const disabled = computed(() => props.disabled === true)
 
 /**
  * Contém a ativação quando desabilitado.
@@ -49,7 +49,7 @@ const desabilitado = computed(() => props.disabled === true)
  * O Enter já é cancelado pelo próprio primitivo.
  */
 function conterAtivacao(evento: Event) {
-  if (!desabilitado.value) return
+  if (!disabled.value) return
   evento.preventDefault()
   evento.stopImmediatePropagation()
 }
@@ -64,7 +64,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     v-bind="forwarded"
     :default-value="resolvedDefault"
     :class="cn('nds-checkbox', props.class)"
-    :aria-disabled="desabilitado ? 'true' : undefined"
+    :aria-disabled="disabled ? 'true' : undefined"
     @click="conterAtivacao"
   >
     <CheckboxIndicator

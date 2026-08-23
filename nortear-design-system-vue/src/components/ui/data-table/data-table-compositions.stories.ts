@@ -33,8 +33,8 @@ export default meta;
 type Story = StoryObj<Record<string, unknown>>;
 
 /** Linhas de dado — a mensagem de "sem resultados" também é um `tr` do tbody. */
-function datumLines(raiz: HTMLElement): HTMLElement[] {
-  return [...raiz.querySelectorAll<HTMLElement>('tbody tr')].filter(
+function datumLines(root: HTMLElement): HTMLElement[] {
+  return [...root.querySelectorAll<HTMLElement>('tbody tr')].filter(
     (tr) => !tr.querySelector('.nds-data-table-empty'),
   );
 }
@@ -113,14 +113,14 @@ export const WithColumnFilters: Story = {
       // functional.item2 — o valor esperado é 1, e não 2: se o segundo filtro
       // trocasse o primeiro, "Carla" sozinha devolveria a mesma linha e o teste
       // passaria sem provar nada. A prova é que "Ana" (que é Pago) some.
-      const campo = canvas.getByRole('textbox', { name: 'Filtrar Cliente' });
-      await userEvent.clear(campo);
-      await userEvent.type(campo, 'Carla');
+      const field = canvas.getByRole('textbox', { name: 'Filtrar Cliente' });
+      await userEvent.clear(field);
+      await userEvent.type(field, 'Carla');
       await waitFor(() => expect(lines().length).toBe(1));
       await expect(lines()[0]).toHaveTextContent('INV-003');
 
-      await userEvent.clear(campo);
-      await userEvent.type(campo, 'Ana');
+      await userEvent.clear(field);
+      await userEvent.type(field, 'Ana');
       await waitFor(() => expect(lines().length).toBe(0));
       // visual.item2 — a story termina com os dois filtros preenchidos e o
       // estado vazio na tela, que é o que a captura do Chromatic guarda.
@@ -171,11 +171,11 @@ export const ResizableColumns: Story = {
       const neighbour = header.nextElementSibling as HTMLElement;
       const antes = parseFloat(header.style.width);
       const neighbourDeclarada = neighbour.style.width;
-      const caixa = el.getBoundingClientRect();
+      const box = el.getBoundingClientRect();
 
-      fireEvent.mouseDown(el, { clientX: caixa.left, clientY: caixa.top });
-      fireEvent.mouseMove(document, { clientX: caixa.left + 80, clientY: caixa.top });
-      fireEvent.mouseUp(document, { clientX: caixa.left + 80, clientY: caixa.top });
+      fireEvent.mouseDown(el, { clientX: box.left, clientY: box.top });
+      fireEvent.mouseMove(document, { clientX: box.left + 80, clientY: box.top });
+      fireEvent.mouseUp(document, { clientX: box.left + 80, clientY: box.top });
 
       await waitFor(async () => {
         await expect(parseFloat(header.style.width)).toBeGreaterThan(antes + 40);
@@ -238,8 +238,8 @@ export const ReorderableAndPinnable: Story = {
     await step('Fixar uma coluna a gruda na borda durante o scroll horizontal', async () => {
       // visual.item3 — a story termina com a coluna fixada e as colunas
       // reordenadas, que é o par que o item documenta.
-      const gatilho = canvasElement.querySelector<HTMLElement>('.nds-data-table-columns-btn')!;
-      await userEvent.click(gatilho);
+      const trigger = canvasElement.querySelector<HTMLElement>('.nds-data-table-columns-btn')!;
+      await userEvent.click(trigger);
       await waitForPortal('menu');
 
       // Par idempotente: se a rodada anterior deixou a coluna fixada, desafixa
@@ -354,13 +354,13 @@ export const WithInlineEditing: Story = {
       const legacyValue = button.textContent!.trim();
       await userEvent.click(button);
 
-      const campo = await waitFor(() =>
+      const field = await waitFor(() =>
         canvas.getByRole('textbox', { name: 'Editar Cliente' }),
       );
-      await expect(campo).toHaveFocus();
+      await expect(field).toHaveFocus();
 
-      await userEvent.clear(campo);
-      await userEvent.type(campo, 'Ana Prado Filha{Enter}');
+      await userEvent.clear(field);
+      await userEvent.type(field, 'Ana Prado Filha{Enter}');
 
       await waitFor(async () => {
         await expect(
@@ -377,9 +377,9 @@ export const WithInlineEditing: Story = {
       const original = button.textContent!.trim();
       await userEvent.click(button);
 
-      const campo = await waitFor(() => canvas.getByRole('textbox', { name: 'Editar Valor' }));
-      await userEvent.clear(campo);
-      await userEvent.type(campo, '9999{Escape}');
+      const field = await waitFor(() => canvas.getByRole('textbox', { name: 'Editar Valor' }));
+      await userEvent.clear(field);
+      await userEvent.type(field, '9999{Escape}');
 
       await waitFor(async () => {
         await expect(

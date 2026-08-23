@@ -11,7 +11,7 @@ import {
 } from './index';
 import { Button } from '@/components/ui/button';
 import { waitForPortal } from '@/lib/wait-for-portal';
-import { painel } from './popover.fixtures';
+import { panel } from './popover.fixtures';
 import {
   popoverOpenSource,
   popoverAboveSource,
@@ -84,18 +84,18 @@ export const Closed: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /Abrir popover/i });
+    const trigger = canvas.getByRole('button', { name: /Abrir popover/i });
 
     await step('Fechado, o painel não existe no DOM', async () => {
       // Desmontado, e não escondido: leitor de tela e busca do navegador não
       // encontram conteúdo que não está lá.
-      await expect(gatilho).toBeVisible();
-      await expect(painel()).toBeNull();
+      await expect(trigger).toBeVisible();
+      await expect(panel()).toBeNull();
     });
 
     await step('E o gatilho declara o estado fechado', async () => {
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
-      await expect(gatilho).toHaveAttribute('data-state', 'closed');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveAttribute('data-state', 'closed');
     });
   },
 };
@@ -130,7 +130,7 @@ export const Open: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /Abrir popover/i });
+    const trigger = canvas.getByRole('button', { name: /Abrir popover/i });
 
     await step('O painel abre já na primeira renderização', async () => {
       const dialog = await waitForPortal('dialog');
@@ -139,10 +139,10 @@ export const Open: Story = {
     });
 
     await step('E o gatilho aponta para o painel que existe de fato', async () => {
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
-      const id = gatilho.getAttribute('aria-controls');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      const id = trigger.getAttribute('aria-controls');
       await expect(id).toBeTruthy();
-      await expect(document.getElementById(id!)).toBe(painel());
+      await expect(document.getElementById(id!)).toBe(panel());
     });
   },
 };
@@ -180,7 +180,7 @@ export const SideTop: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /Abrir acima/i });
+    const trigger = canvas.getByRole('button', { name: /Abrir acima/i });
 
     await step('O lado pedido no template chega ao posicionamento', async () => {
       const dialog = await waitForPortal('dialog');
@@ -194,8 +194,8 @@ export const SideTop: Story = {
       // reserva e só mede a posição num quadro seguinte. Medir antes disso lê o
       // painel fora da tela, e a falha aponta para o offset em vez do relógio.
       await waitFor(() => {
-        const dialog = painel()!;
-        const r1 = gatilho.getBoundingClientRect();
+        const dialog = panel()!;
+        const r1 = trigger.getBoundingClientRect();
         const r2 = dialog.getBoundingClientRect();
         const distancia =
           dialog.getAttribute('data-side') === 'top' ? r1.top - r2.bottom : r2.top - r1.bottom;
@@ -243,28 +243,28 @@ export const Controlled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /^Trigger$/ });
+    const trigger = canvas.getByRole('button', { name: /^Trigger$/ });
 
     await step('O estado externo abre o painel', async () => {
       // Cada passo estabelece a própria precondição: no replay do painel
       // Interactions o DOM chega no estado que a rodada anterior deixou.
       await userEvent.click(canvas.getByRole('button', { name: /Fechar externamente/i }));
       await waitFor(() => {
-        if (painel()) throw new Error('popover ainda aberto');
+        if (panel()) throw new Error('popover ainda aberto');
       }, { timeout: 2000 });
 
       await userEvent.click(canvas.getByRole('button', { name: /Abrir externamente/i }));
       const dialog = await waitForPortal('dialog', { timeout: 2000 });
       await expect(dialog).toBeVisible();
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('E o estado externo fecha o painel', async () => {
       await userEvent.click(canvas.getByRole('button', { name: /Fechar externamente/i }));
       await waitFor(() => {
-        if (painel()) throw new Error('popover ainda aberto');
+        if (panel()) throw new Error('popover ainda aberto');
       }, { timeout: 2000 });
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
     // Termina ABERTA: é o estado que o Chromatic fotografa.
@@ -309,7 +309,7 @@ export const Modal: Story = {
       // `modal` aqui é bloqueio de rolagem e prisão de foco — não é o contrato
       // de Dialog. `aria-modal` faria o leitor de tela esconder o resto da
       // página, e um popover continua sendo conteúdo AO LADO, não no lugar.
-      const dialog = painel()!;
+      const dialog = panel()!;
       await expect(dialog).not.toHaveAttribute('aria-modal');
       await waitFor(() => {
         if (!dialog.contains(document.activeElement)) throw new Error('foco fora do painel');

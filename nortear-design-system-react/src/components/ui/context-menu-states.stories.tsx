@@ -42,7 +42,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const alvo = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`)!;
+const target = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`)!;
 
 // ─── Item desabilitado ────────────────────────────────────────────────────────
 
@@ -88,20 +88,20 @@ export const ItemDisabled: Story = {
 
     await step("O item desabilitado é anunciado como tal", async () => {
       await gestoOpen(area());
-      await expect(alvo("off").getAttribute("aria-disabled")).toBe("true");
-      await expect(alvo("perigo-off").getAttribute("aria-disabled")).toBe("true");
+      await expect(target("off").getAttribute("aria-disabled")).toBe("true");
+      await expect(target("perigo-off").getAttribute("aria-disabled")).toBe("true");
     });
 
     await step("Ele está atenuado, e não só marcado", async () => {
       // A cor sozinha não chega a quem não a distingue; a opacidade é o sinal
       // que sobra quando o contraste falha.
-      await expect(Number(getComputedStyle(alvo("off")).opacity)).toBeLessThan(1);
+      await expect(Number(getComputedStyle(target("off")).opacity)).toBeLessThan(1);
     });
 
     await step("Enter nele não escolhe nada e o menu segue aberto", async () => {
       // Ativar um item desabilitado é o caso raro em que a play pode repetir sem
       // preparo: ele não muda de estado em rodada nenhuma.
-      alvo("off").focus();
+      target("off").focus();
       await userEvent.keyboard("{Enter}");
       await expect(await waitForPortal("menu")).toBeVisible();
     });
@@ -110,7 +110,7 @@ export const ItemDisabled: Story = {
       // Aqui a asserção é a folha de estilo, e não um clique: `userEvent` se
       // recusa a clicar em elemento com `pointer-events: none` e derruba a play
       // com erro em vez de falha — o que provaria o mesmo, mas sem dizer o quê.
-      await expect(getComputedStyle(alvo("off")).pointerEvents).toBe("none");
+      await expect(getComputedStyle(target("off")).pointerEvents).toBe("none");
     });
   },
 };
@@ -149,16 +149,16 @@ export const ItemInset: Story = {
       // esquerda. Afirmar o nome da classe não protegeria isso: a classe pode
       // continuar aplicada com a regra vazia.
       await gestoOpen(area());
-      const recuo = parseFloat(getComputedStyle(alvo("recuado")).paddingLeft);
-      const normal = parseFloat(getComputedStyle(alvo("normal")).paddingLeft);
+      const recuo = parseFloat(getComputedStyle(target("recuado")).paddingLeft);
+      const normal = parseFloat(getComputedStyle(target("normal")).paddingLeft);
       await expect(recuo).toBeGreaterThan(normal);
     });
 
     await step("Os dois itens continuam alinhados à direita", async () => {
       // O recuo empurra só a borda esquerda: se empurrasse a caixa inteira, o
       // menu ganharia um degrau à direita.
-      const recuo = alvo("recuado").getBoundingClientRect();
-      const normal = alvo("normal").getBoundingClientRect();
+      const recuo = target("recuado").getBoundingClientRect();
+      const normal = target("normal").getBoundingClientRect();
       await expect(Math.abs(recuo.right - normal.right)).toBeLessThan(2);
     });
   },
@@ -196,13 +196,13 @@ export const ItemDestructive: Story = {
       // `data-variant` é o que o CSS lê e o que a auditoria compara entre
       // stacks; a cor é consequência dele.
       await gestoOpen(area());
-      await expect(alvo("perigo").getAttribute("data-variant")).toBe("destructive");
-      await expect(alvo("normal").getAttribute("data-variant")).toBe("default");
+      await expect(target("perigo").getAttribute("data-variant")).toBe("destructive");
+      await expect(target("normal").getAttribute("data-variant")).toBe("default");
     });
 
     await step("E a cor do texto realmente muda", async () => {
-      await expect(getComputedStyle(alvo("perigo")).color).not.toBe(
-        getComputedStyle(alvo("normal")).color,
+      await expect(getComputedStyle(target("perigo")).color).not.toBe(
+        getComputedStyle(target("normal")).color,
       );
     });
   },

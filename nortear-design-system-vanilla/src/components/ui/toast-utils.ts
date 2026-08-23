@@ -198,9 +198,9 @@ function mountRegiao(options: ToasterOptions): HTMLElement {
   // sair "pelo lado" (Tab até o fim) deixaria a notificação ocupando a tela.
   el.addEventListener('keydown', (evento) => {
     if ((evento as KeyboardEvent).key !== 'Escape') return;
-    const alvo = (evento.target as HTMLElement | null)?.closest<HTMLElement>('.nds-toast');
-    if (!alvo) return;
-    const entry = activeToasts.find((t) => t.el === alvo);
+    const target = (evento.target as HTMLElement | null)?.closest<HTMLElement>('.nds-toast');
+    if (!target) return;
+    const entry = activeToasts.find((t) => t.el === target);
     if (entry) removeToast(entry.id);
   });
 
@@ -410,10 +410,10 @@ export const toast = Object.assign(
         ...opts,
         duration: Number.POSITIVE_INFINITY,
       });
-      const prazo = opts?.duration ?? DURATION_DEFAULT;
+      const duration = opts?.duration ?? DURATION_DEFAULT;
       void promise.then(
-        () => update(id, 'success', msgs.success, prazo),
-        () => update(id, 'error', msgs.error, prazo),
+        () => update(id, 'success', msgs.success, duration),
+        () => update(id, 'error', msgs.error, duration),
       );
     },
   },

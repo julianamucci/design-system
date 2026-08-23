@@ -68,7 +68,7 @@ type Story = StoryObj;
 /** "R$ 250,00" → 250. A ordenação é numérica; comparar as strings colocaria
  * "R$ 50,00" depois de "R$ 450,00". */
 function valueNumerico(invoice: Invoice): number {
-  return Number(invoice.valor.replace(/[^\d,]/g, '').replace(',', '.'));
+  return Number(invoice.value.replace(/[^\d,]/g, '').replace(',', '.'));
 }
 
 // ─── Toolbar de filtros ───────────────────────────────────────────────────────
@@ -130,7 +130,7 @@ export const FilterToolbar: Story = {
                     <td ndsTableCell class="nds-font-medium">{{ invoice.id }}</td>
                     <td ndsTableCell>{{ invoice.status }}</td>
                     <td ndsTableCell>{{ invoice.metodo }}</td>
-                    <td ndsTableCell class="nds-text-right">{{ invoice.valor }}</td>
+                    <td ndsTableCell class="nds-text-right">{{ invoice.value }}</td>
                   </tr>
                 } @empty {
                   <tr ndsTableRow>
@@ -152,14 +152,14 @@ export const FilterToolbar: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const campo = canvas.getByLabelText('Buscar fatura');
+    const field = canvas.getByLabelText('Buscar fatura');
 
     await step('Sem filtro, a tabela mostra o conjunto inteiro', async () => {
       await expect(canvasElement.querySelectorAll('tbody tr').length).toBe(INVOICES.length);
     });
 
     await step('O filtro reduz as linhas sem tocar no cabeçalho', async () => {
-      await userEvent.type(campo, 'Pix');
+      await userEvent.type(field, 'Pix');
       const lines = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
       await expect(lines.length).toBe(INVOICES.filter((f) => f.metodo === 'Pix').length);
       for (const line of lines) await expect(line).toHaveTextContent('Pix');
@@ -168,8 +168,8 @@ export const FilterToolbar: Story = {
     });
 
     await step('Busca sem resultado cai no empty state, não em tabela muda', async () => {
-      await userEvent.clear(campo);
-      await userEvent.type(campo, 'boleto');
+      await userEvent.clear(field);
+      await userEvent.type(field, 'boleto');
       const celula = canvasElement.querySelector<HTMLTableCellElement>('tbody td')!;
       await expect(celula).toHaveAttribute('colspan', '4');
       await expect(celula).toHaveTextContent('Nenhuma fatura encontrada.');
@@ -189,18 +189,18 @@ export const SortableHeaders: Story = {
     },
   },
   render: () => {
-    const direcao = signal<TableSortDirection>('ascending');
+    const direction = signal<TableSortDirection>('ascending');
     const ordenadas = computed(() => {
-      const sinal = direcao() === 'ascending' ? 1 : -1;
+      const sinal = direction() === 'ascending' ? 1 : -1;
       return [...INVOICES].sort((a, b) => (valueNumerico(a) - valueNumerico(b)) * sinal);
     });
 
     return {
       props: {
-        direcao,
+        direction,
         ordenadas,
         alternar: () =>
-          direcao.update((d) => (d === 'ascending' ? 'descending' : 'ascending')),
+          direction.update((d) => (d === 'ascending' ? 'descending' : 'ascending')),
       },
       template: `
         <div ndsTableWrapper>
@@ -212,7 +212,7 @@ export const SortableHeaders: Story = {
                 <th ndsTableHead>Status</th>
                 <!-- aria-sort na CÉLULA de cabeçalho, não no botão: quem carrega
                      a relação com a coluna é o th. O botão só é o gatilho. -->
-                <th ndsTableHead [sort]="direcao()">
+                <th ndsTableHead [sort]="direction()">
                   <button ndsButton variant="ghost" size="sm" (click)="alternar()">
                     Valor
                     <svg ndsButtonIcon kind="chevron-right" class="nds-icon"></svg>
@@ -225,7 +225,7 @@ export const SortableHeaders: Story = {
                 <tr ndsTableRow>
                   <td ndsTableCell class="nds-font-medium">{{ invoice.id }}</td>
                   <td ndsTableCell>{{ invoice.status }}</td>
-                  <td ndsTableCell class="nds-text-right">{{ invoice.valor }}</td>
+                  <td ndsTableCell class="nds-text-right">{{ invoice.value }}</td>
                 </tr>
               }
             </tbody>
@@ -285,14 +285,14 @@ export const RowSelection: Story = {
         selecionadas,
         all,
         algumas,
-        alternar: (id: string, marcado: boolean) => {
+        alternar: (id: string, checked: boolean) => {
           const next = new Set(selecionadas());
-          if (marcado) next.add(id);
+          if (checked) next.add(id);
           else next.delete(id);
           selecionadas.set(next);
         },
-        alternarTodas: (marcado: boolean) =>
-          selecionadas.set(marcado ? new Set(INVOICES.map((f) => f.id)) : new Set()),
+        alternarTodas: (checked: boolean) =>
+          selecionadas.set(checked ? new Set(INVOICES.map((f) => f.id)) : new Set()),
       },
       template: `
         <div ndsTableWrapper>
@@ -327,7 +327,7 @@ export const RowSelection: Story = {
                   </td>
                   <td ndsTableCell class="nds-font-medium">{{ invoice.id }}</td>
                   <td ndsTableCell>{{ invoice.status }}</td>
-                  <td ndsTableCell class="nds-text-right">{{ invoice.valor }}</td>
+                  <td ndsTableCell class="nds-text-right">{{ invoice.value }}</td>
                 </tr>
               }
             </tbody>

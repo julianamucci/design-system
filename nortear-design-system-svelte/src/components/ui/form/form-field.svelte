@@ -75,7 +75,7 @@
 	const idDescription = `${base}-description`;
 	const idError = `${base}-error`;
 
-	let raiz = $state<HTMLDivElement | null>(null);
+	let root = $state<HTMLDivElement | null>(null);
 	/** Ids que quem compõe já tinha escrito no controle — preservados na junção. */
 	let describedbyEscrito: string[] | null = null;
 
@@ -83,28 +83,28 @@
 		// Lidos aqui para que o efeito re-rode quando as peças entram ou saem.
 		const hasDescription = Boolean(description);
 		const hasError = Boolean(error);
-		const el = raiz;
+		const el = root;
 		if (!el) return;
 
-		let controle: HTMLElement | null = null;
+		let control: HTMLElement | null = null;
 		for (const selector of SELECTORS_CONTROL) {
-			controle = el.querySelector<HTMLElement>(selector);
-			if (controle) break;
+			control = el.querySelector<HTMLElement>(selector);
+			if (control) break;
 		}
 
-		const rotulo = el.querySelector<HTMLLabelElement>("label");
+		const label = el.querySelector<HTMLLabelElement>("label");
 		// `for` só quando falta. Label que ENVOLVE o controle já está associado
 		// pela estrutura, e escrever `for` ali não acrescenta nada.
-		if (rotulo && controle && !rotulo.getAttribute("for") && !rotulo.contains(controle)) {
-			if (!controle.id) controle.id = `${base}-control`;
-			rotulo.setAttribute("for", controle.id);
+		if (label && control && !label.getAttribute("for") && !label.contains(control)) {
+			if (!control.id) control.id = `${base}-control`;
+			label.setAttribute("for", control.id);
 		}
 
-		if (!controle) return;
+		if (!control) return;
 
 		// Junção, não substituição: quem compõe pode já ter apontado o controle
 		// para um texto fora do campo, e sobrescrever descartaria essa instrução.
-		describedbyEscrito ??= (controle.getAttribute("aria-describedby") ?? "")
+		describedbyEscrito ??= (control.getAttribute("aria-describedby") ?? "")
 			.split(/\s+/)
 			.filter(Boolean);
 
@@ -113,13 +113,13 @@
 			...(hasDescription ? [idDescription] : []),
 			...(hasError ? [idError] : []),
 		];
-		if (ids.length) controle.setAttribute("aria-describedby", ids.join(" "));
-		else controle.removeAttribute("aria-describedby");
+		if (ids.length) control.setAttribute("aria-describedby", ids.join(" "));
+		else control.removeAttribute("aria-describedby");
 	});
 </script>
 
 <div
-	bind:this={raiz}
+	bind:this={root}
 	data-slot="field"
 	data-invalid={error ? "true" : undefined}
 	class={cn("nds-form-field", className)}

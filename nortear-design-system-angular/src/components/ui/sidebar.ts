@@ -104,14 +104,14 @@ export class NdsSidebarStore {
     };
     document.addEventListener('keydown', onKeyDown);
 
-    const consulta = window.matchMedia(inject(NDS_SIDEBAR_MOBILE_QUERY));
-    const onChangeWidth = () => this._isMobile.set(consulta.matches);
+    const query = window.matchMedia(inject(NDS_SIDEBAR_MOBILE_QUERY));
+    const onChangeWidth = () => this._isMobile.set(query.matches);
     onChangeWidth();
-    consulta.addEventListener('change', onChangeWidth);
+    query.addEventListener('change', onChangeWidth);
 
     destroyRef.onDestroy(() => {
       document.removeEventListener('keydown', onKeyDown);
-      consulta.removeEventListener('change', onChangeWidth);
+      query.removeEventListener('change', onChangeWidth);
     });
   }
 
@@ -208,7 +208,7 @@ export class NdsSidebarProvider implements OnInit {
          resolve a projeção em tempo de compilação, e com dois destinos padrão o
          conteúdo não chega a NENHUM dos dois. O sintoma é a sidebar renderizar
          vazia, sem erro. O <ng-container> não deixa elemento no DOM. -->
-    <ng-template #conteudo><ng-content /></ng-template>
+    <ng-template #content><ng-content /></ng-template>
 
     @if (store.isMobile() && collapsible() !== 'none') {
       <!-- Em tela estreita a barra deixa de ser coluna e vira gaveta sobreposta.
@@ -235,14 +235,14 @@ export class NdsSidebarProvider implements OnInit {
             <p ndsSheetDescription>{{ mobileDescription() }}</p>
           </div>
           <div class="nds-sidebar-mobile-inner">
-            <ng-container [ngTemplateOutlet]="conteudo" />
+            <ng-container [ngTemplateOutlet]="content" />
           </div>
         </ng-template>
       </nds-sheet>
     } @else if (collapsible() === 'none') {
       <!-- Sem recolhimento não há vão a reservar nem painel flutuante: o
            conteúdo é a própria coluna. -->
-      <ng-container [ngTemplateOutlet]="conteudo" />
+      <ng-container [ngTemplateOutlet]="content" />
     } @else {
       <!-- O vão reserva a largura no fluxo enquanto o painel fica fixo por
            cima. Sem ele o conteúdo principal pularia a cada recolhimento. -->
@@ -251,7 +251,7 @@ export class NdsSidebarProvider implements OnInit {
       </div>
       <div class="nds-sidebar-panel" data-slot="sidebar-container">
         <div class="nds-sidebar-inner" data-sidebar="sidebar" data-slot="sidebar-inner">
-          <ng-container [ngTemplateOutlet]="conteudo" />
+          <ng-container [ngTemplateOutlet]="content" />
         </div>
       </div>
     }
@@ -294,11 +294,11 @@ export class NdsSidebar {
         this.gavetaFocusBefore = document.activeElement as HTMLElement | null;
         return;
       }
-      const alvo = this.gavetaFocusBefore;
+      const target = this.gavetaFocusBefore;
       this.gavetaFocusBefore = null;
       // Adiado de propósito: o painel ainda está saindo, e o gerenciador de
       // foco do primitivo mexe no foco durante a animação de saída.
-      if (alvo?.isConnected) setTimeout(() => alvo.focus());
+      if (target?.isConnected) setTimeout(() => target.focus());
     });
   }
 

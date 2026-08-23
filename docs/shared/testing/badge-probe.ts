@@ -38,12 +38,12 @@ export const VARIANTS_BADGE = [
 ] as const;
 
 export interface BadgeContrast {
-  tema: string;
-  modo: string;
-  variante: string;
+  theme: string;
+  mode: string;
+  variant: string;
   /** `null` quando o seletor não casou — isso É o achado, não falha da medição. */
   presente: boolean;
-  texto: number | null;
+  text: number | null;
   border: number | null;
   corDoTexto: string | null;
   background: string | null;
@@ -60,14 +60,14 @@ function variantOf(el: HTMLElement): string {
 }
 
 /**
- * Contraste de TODO badge dentro de `raiz`, nos três temas e nos dois modos.
+ * Contraste de TODO badge dentro de `root`, nos três temas e nos dois modos.
  *
- * `raiz` é quem recebe a classe `tema-*` — precisa ser um ancestral real dos
+ * `root` é quem recebe a classe `tema-*` — precisa ser um ancestral real dos
  * badges, e o `byTheme` devolve a classe original no `finally` (deixá-la posta
  * envenena a story seguinte e a foto do Chromatic).
  */
-export function badgeMeasureContrast(raiz: HTMLElement): BadgeContrast[] {
-  const badges = Array.from(raiz.querySelectorAll<HTMLElement>('.nds-badge'));
+export function badgeMeasureContrast(root: HTMLElement): BadgeContrast[] {
+  const badges = Array.from(root.querySelectorAll<HTMLElement>('.nds-badge'));
 
   // A RAIZ passa a pintar `--background` enquanto a medição dura.
   //
@@ -80,8 +80,8 @@ export function badgeMeasureContrast(raiz: HTMLElement): BadgeContrast[] {
   //
   // Como a raiz é quem carrega `tema-*`/`dark` durante o `byTheme`, o `var()`
   // resolve no tema vigente a cada passada.
-  const backgroundOriginal = raiz.style.backgroundColor;
-  raiz.style.setProperty('background-color', 'hsl(var(--background))');
+  const backgroundOriginal = root.style.backgroundColor;
+  root.style.setProperty('background-color', 'hsl(var(--background))');
 
   // A transição de cor morre ANTES da troca de tema: `.nds-badge` declara
   // `transition: background-color, color, border-color`, e medir logo depois de
@@ -93,7 +93,7 @@ export function badgeMeasureContrast(raiz: HTMLElement): BadgeContrast[] {
   });
 
   try {
-    return byTheme(raiz, (tema, modo) =>
+    return byTheme(root, (theme, mode) =>
       badges.map((b): BadgeContrast => {
         const cs = getComputedStyle(b);
         const background = backgroundEffective(b);
@@ -103,11 +103,11 @@ export function badgeMeasureContrast(raiz: HTMLElement): BadgeContrast[] {
         const rBorder =
           parseFloat(cs.borderTopWidth) > 0 ? ratio(cs.borderTopColor, pageBackground) : null;
         return {
-          tema,
-          modo,
-          variante: variantOf(b),
+          theme,
+          mode,
+          variant: variantOf(b),
           presente: true,
-          texto: rText?.ratio ?? null,
+          text: rText?.ratio ?? null,
           border: rBorder?.ratio ?? null,
           corDoTexto: rText?.frente ?? null,
           background,
@@ -119,13 +119,13 @@ export function badgeMeasureContrast(raiz: HTMLElement): BadgeContrast[] {
       if (antes[i]) b.style.transition = antes[i];
       else b.style.removeProperty('transition');
     });
-    if (backgroundOriginal) raiz.style.backgroundColor = backgroundOriginal;
-    else raiz.style.removeProperty('background-color');
+    if (backgroundOriginal) root.style.backgroundColor = backgroundOriginal;
+    else root.style.removeProperty('background-color');
   }
 }
 
 export interface BadgeHeight {
-  variante: string;
+  variant: string;
   fonteBase: string;
   alturaBase: number;
   fonteDobrada: string;
@@ -145,15 +145,15 @@ export interface BadgeHeight {
  *
  * O tamanho de fonte do `<html>` volta ao original no `finally`.
  */
-export function badgeMeasureHeight(raiz: HTMLElement): BadgeHeight[] {
-  const badges = Array.from(raiz.querySelectorAll<HTMLElement>('.nds-badge'));
-  const html = raiz.ownerDocument.documentElement;
+export function badgeMeasureHeight(root: HTMLElement): BadgeHeight[] {
+  const badges = Array.from(root.querySelectorAll<HTMLElement>('.nds-badge'));
+  const html = root.ownerDocument.documentElement;
   const fonteOriginal = html.style.fontSize;
 
   const base = badges.map((b) => {
     const cs = getComputedStyle(b);
     return {
-      variante: variantOf(b),
+      variant: variantOf(b),
       fonteBase: cs.fontSize,
       alturaBase: Math.round(b.getBoundingClientRect().height * 100) / 100,
       paddingBlock: `${cs.paddingTop} ${cs.paddingBottom}`,
@@ -164,7 +164,7 @@ export function badgeMeasureHeight(raiz: HTMLElement): BadgeHeight[] {
 
   try {
     html.style.fontSize = '32px'; // 2× o padrão de 16px
-    void raiz.offsetHeight;
+    void root.offsetHeight;
     return badges.map((b, i) => {
       const cs = getComputedStyle(b);
       return {
@@ -176,16 +176,16 @@ export function badgeMeasureHeight(raiz: HTMLElement): BadgeHeight[] {
   } finally {
     if (fonteOriginal) html.style.fontSize = fonteOriginal;
     else html.style.removeProperty('font-size');
-    void raiz.offsetHeight;
+    void root.offsetHeight;
   }
 }
 
 /** Estrutura e semântica de um badge — o contrato de markup entre as stacks. */
-export function badgeMeasureStructure(raiz: HTMLElement) {
-  return Array.from(raiz.querySelectorAll<HTMLElement>('.nds-badge')).map((b) => {
+export function badgeMeasureStructure(root: HTMLElement) {
+  return Array.from(root.querySelectorAll<HTMLElement>('.nds-badge')).map((b) => {
     const icone = b.querySelector<SVGElement>('svg');
     return {
-      variante: variantOf(b),
+      variant: variantOf(b),
       tag: b.tagName.toLowerCase(),
       slot: b.getAttribute('data-slot'),
       atributoDeVariante: b.getAttribute('data-variant'),
@@ -194,12 +194,12 @@ export function badgeMeasureStructure(raiz: HTMLElement) {
         .filter((c) => c.startsWith('nds-badge'))
         .sort()
         .join(' '),
-      texto: (b.textContent ?? '').trim().replace(/\s+/g, ' '),
+      text: (b.textContent ?? '').trim().replace(/\s+/g, ' '),
       icone: icone
         ? {
             escondido: icone.getAttribute('aria-hidden') ?? 'não',
             position: icone.getAttribute('data-icon'),
-            largura: Math.round(icone.getBoundingClientRect().width),
+            width: Math.round(icone.getBoundingClientRect().width),
             estiloInline: icone.getAttribute('style') ?? '',
           }
         : null,
@@ -212,16 +212,16 @@ export function contrastFailures(
   measurements: BadgeContrast[],
   minimum = 4.5,
 ): BadgeContrast[] {
-  return measurements.filter((m) => m.texto !== null && m.texto < minimum);
+  return measurements.filter((m) => m.text !== null && m.text < minimum);
 }
 
 export function describeContrast(ms: BadgeContrast[]): string {
   return ms
-    .map((m) => `  · ${m.variante} (${m.tema}/${m.modo}) — texto em ${m.texto}:1`)
+    .map((m) => `  · ${m.variant} (${m.theme}/${m.mode}) — texto em ${m.text}:1`)
     .join('\n');
 }
 
 /** Canal de saída: o console da play não chega ao terminal do vitest. */
-export function reportBadge(stack: string, cenario: string, dados: unknown): never {
-  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(dados)}`);
+export function reportBadge(stack: string, cenario: string, data: unknown): never {
+  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(data)}`);
 }

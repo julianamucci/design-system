@@ -18,9 +18,9 @@
 
   let open = $state(false);
 
-  function definir(valor: boolean) {
-    open = valor;
-    onOpenChange?.(valor);
+  function definir(value: boolean) {
+    open = value;
+    onOpenChange?.(value);
   }
 </script>
 

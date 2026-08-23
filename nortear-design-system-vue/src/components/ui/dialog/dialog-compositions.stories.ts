@@ -14,14 +14,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-  abrir,
+  open,
   cantoButtonClose,
   checkNameEDescricao,
   waitForOpen,
   waitForClosed,
-  fechar,
-  gatilho,
-  painel,
+  close,
+  trigger,
+  panel,
 } from './dialog.fixtures';
 import {
   dialogConfirmarEmailSource,
@@ -112,8 +112,8 @@ export const ConfirmEmail: Story = {
     });
 
     await step('A operação é reversível, então a ação primária é neutra', async () => {
-      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = footer.querySelectorAll<HTMLElement>('button');
       await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-default');
     });
   },
@@ -170,9 +170,9 @@ export const ProfileEdit: Story = {
     await step('Os campos estão rotulados e trazem o valor inicial', async () => {
       // O valor entra na asserção junto com o rótulo: um campo que renderiza
       // vazio passaria só na presença do label e ninguém veria a falha.
-      const nome = p.querySelector<HTMLInputElement>('#profile-name')!;
-      await expect(nome).toHaveAccessibleName('Nome');
-      await expect(nome.value).toBe('Juliana Mucci');
+      const name = p.querySelector<HTMLInputElement>('#profile-name')!;
+      await expect(name).toHaveAccessibleName('Nome');
+      await expect(name.value).toBe('Juliana Mucci');
 
       const handle = p.querySelector<HTMLInputElement>('#profile-handle')!;
       await expect(handle).toHaveAccessibleName('Username');
@@ -180,8 +180,8 @@ export const ProfileEdit: Story = {
     });
 
     await step('O Tab percorre os campos na ordem em que aparecem', async () => {
-      const nome = p.querySelector<HTMLInputElement>('#profile-name')!;
-      nome.focus();
+      const name = p.querySelector<HTMLInputElement>('#profile-name')!;
+      name.focus();
       await userEvent.tab();
       await expect(document.activeElement).toBe(p.querySelector('#profile-handle'));
       await userEvent.tab();
@@ -245,24 +245,24 @@ export const MediaPreview: Story = {
     });
 
     await step('O botão de fechar é a saída, e devolve o foco ao gatilho', async () => {
-      const trigger = gatilho(canvasElement)!;
+      const triggerEl = trigger(canvasElement)!;
       // A devolução do foco só faz sentido se o diálogo tiver sido ABERTO pelo
       // gatilho. Esta story MONTA aberta, e nesse caminho o elemento focado
       // antes era o próprio documento — era para lá que o foco voltava, com razão.
       // Fechar e reabrir pelo gatilho estabelece a precondição do que se quer
       // provar.
-      await fechar();
-      await abrir(canvasElement);
-      const x = cantoButtonClose(painel()!)!;
+      await close();
+      await open(canvasElement);
+      const x = cantoButtonClose(panel()!)!;
       await expect(x).toHaveAccessibleName();
       await userEvent.click(x);
       await waitForClosed();
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(trigger);
+        await expect(document.activeElement).toBe(triggerEl);
       });
       // Reabre: o Chromatic fotografa o estado final, e é o painel ABERTO que o
       // axe precisa varrer — `accessibility.item6` é declarado nesta story.
-      await expect(await abrir(canvasElement)).toBeVisible();
+      await expect(await open(canvasElement)).toBeVisible();
     });
   },
 };

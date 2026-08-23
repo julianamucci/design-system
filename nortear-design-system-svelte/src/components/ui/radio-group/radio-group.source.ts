@@ -47,7 +47,7 @@ const PAGAMENTO: Option[] = [
  * texto parte do alvo de clique.
  */
 function item(opt: Option): string {
-  const atributos = attrs(
+  const attrList = attrs(
     `value="${opt.value}"`,
     `id="${opt.value}"`,
     opt.disabled ? 'disabled' : '',
@@ -59,7 +59,7 @@ function item(opt: Option): string {
 
   if (opt.description) {
     return `  <div class="nds-cluster" data-align="start" data-spacing="sm">
-    <RadioGroupItem${atributos} />
+    <RadioGroupItem${attrList} />
     <div class="nds-stack" data-spacing="xs">
       <Label for="${opt.value}">${opt.label}</Label>
       <p id="${opt.value}-desc" class="nds-text-caption nds-text-muted-foreground">${opt.description}</p>
@@ -68,13 +68,13 @@ function item(opt: Option): string {
   }
 
   return `  <div class="nds-cluster" data-spacing="sm">
-    <RadioGroupItem${atributos} />
+    <RadioGroupItem${attrList} />
     <Label for="${opt.value}">${opt.label}</Label>
   </div>`;
 }
 
-function grupo(o: Grupo = {}): string {
-  const opcoes = o.options ?? PAGAMENTO;
+function group(o: Grupo = {}): string {
+  const options = o.options ?? PAGAMENTO;
   const horizontal = o.orientation === 'horizontal';
   const props = attrsMultilinha([
     'bind:value={forma}',
@@ -94,7 +94,7 @@ import { Label } from "@/components/ui/label";
 
 let forma = $state("${o.value ?? ''}");`,
     `<RadioGroup${props}>
-${opcoes.map(item).join('\n')}
+${options.map(item).join('\n')}
 </RadioGroup>`,
   );
 }
@@ -105,7 +105,7 @@ export function radioGroupSource(
   ctx?: { args?: Partial<RadioGroupArgs> },
 ): string {
   const a = ctx?.args ?? {};
-  return grupo({
+  return group({
     value: a.value ?? '',
     disabled: a.disabled ?? false,
     orientation: a.orientation ?? 'vertical',
@@ -120,12 +120,12 @@ export function radioGroupSource(
 
 /** Variante Vertical, e composição PaymentMethod: o empilhamento padrão. */
 export function radioGroupVerticalSource(): string {
-  return grupo({ ariaLabel: 'Forma de pagamento', options: PAGAMENTO });
+  return group({ ariaLabel: 'Forma de pagamento', options: PAGAMENTO });
 }
 
 /** Variante Horizontal: opções curtas lado a lado. */
 export function radioGroupHorizontalSource(): string {
-  return grupo({
+  return group({
     orientation: 'horizontal',
     ariaLabel: 'Forma de entrega',
     options: [
@@ -138,7 +138,7 @@ export function radioGroupHorizontalSource(): string {
 
 /** Variante WithDescription: texto auxiliar ligado por `aria-describedby`. */
 export function radioGroupWithDescriptionSource(): string {
-  return grupo({
+  return group({
     ariaLabel: 'Forma de pagamento',
     options: [
       { value: 'cartao', label: 'Cartão de crédito', description: 'Aprovação imediata em até 12x.' },
@@ -157,27 +157,27 @@ const DUAS: Option[] = [
 
 /** Estado Default: nenhuma opção escolhida — o estado inicial é vazio. */
 export function radioGroupDefaultSource(): string {
-  return grupo({ options: DUAS });
+  return group({ options: DUAS });
 }
 
 /** Estado FocusVisible: mesma marcação; o anel é comportamento, não markup. */
 export function radioGroupFocusSource(): string {
-  return grupo({ options: DUAS });
+  return group({ options: DUAS });
 }
 
 /** Estado Checked: o valor inicial já escolhe uma das opções. */
 export function radioGroupSelectedSource(): string {
-  return grupo({ value: 'pix', options: DUAS });
+  return group({ value: 'pix', options: DUAS });
 }
 
 /** Estado Disabled: a prop no grupo bloqueia todas as opções de uma vez. */
 export function radioGroupDisabledSource(): string {
-  return grupo({ disabled: true, options: DUAS });
+  return group({ disabled: true, options: DUAS });
 }
 
 /** Estado ItemDisabled: só a opção indisponível sai da ordem de tabulação. */
 export function radioGroupItemDisabledSource(): string {
-  return grupo({
+  return group({
     options: [
       { value: 'cartao', label: 'Cartão de crédito' },
       { value: 'pix', label: 'Pix (indisponível)', disabled: true },
@@ -188,14 +188,14 @@ export function radioGroupItemDisabledSource(): string {
 
 /** Estado Invalid: o atributo no grupo é o que troca a borda de cada item. */
 export function radioGroupInvalidoSource(): string {
-  return grupo({ ariaInvalid: true, options: DUAS });
+  return group({ ariaInvalid: true, options: DUAS });
 }
 
 /* ─── Composições ───────────────────────────────────────────────────────── */
 
 /** Composição DeliveryMethodHorizontal: prazo no rótulo, opções em linha. */
 export function radioGroupEntregaHorizontalSource(): string {
-  return grupo({
+  return group({
     orientation: 'horizontal',
     ariaLabel: 'Forma de entrega',
     options: [
@@ -208,7 +208,7 @@ export function radioGroupEntregaHorizontalSource(): string {
 
 /** Composição WithDescription da entrega: prazo como texto auxiliar. */
 export function radioGroupEntregaWithDescriptionSource(): string {
-  return grupo({
+  return group({
     ariaLabel: 'Forma de entrega',
     options: [
       { value: 'standard', label: 'Padrão', description: 'Entrega em até 5 dias úteis.' },

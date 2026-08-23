@@ -32,23 +32,23 @@ const IMPORT = `import { Checkbox } from '@/components/ui/checkbox'`;
  * `false` é o padrão e não entra; qualquer outro valor (o espião de ação de um
  * control, um objeto) também não vira código.
  */
-function attrChecked(valor: unknown): string {
-  if (valor === true) return ':checked="true"';
-  if (valor === 'indeterminate') return `:checked="'indeterminate'"`;
+function attrChecked(value: unknown): string {
+  if (value === true) return ':checked="true"';
+  if (value === 'indeterminate') return `:checked="'indeterminate'"`;
   return '';
 }
 
 /** O par canônico: a caixa, o rótulo, e o `for` que amarra os dois. */
-function par(opcoes: {
+function par(options: {
   id: string;
-  rotulo: string;
-  caixa?: Array<string | false>;
+  label: string;
+  box?: Array<string | false>;
   frame?: string;
 }): string {
-  const { id, rotulo, caixa = [], frame = '' } = opcoes;
+  const { id, label, box = [], frame = '' } = options;
   return `<div class="nds-cluster"${attrs('data-spacing="sm"', frame)}>
-  <Checkbox id="${id}"${attrs(...caixa)} />
-  <label for="${id}" class="nds-label">${rotulo}</label>
+  <Checkbox id="${id}"${attrs(...box)} />
+  <label for="${id}" class="nds-label">${label}</label>
 </div>`;
 }
 
@@ -67,8 +67,8 @@ export const checkboxSource: SourceTransform<CheckboxArgs> = (_gerado, ctx) =>
     IMPORT,
     par({
       id: 'termos',
-      rotulo: LABEL_TERMOS,
-      caixa: [
+      label: LABEL_TERMOS,
+      box: [
         attrChecked(ctx?.args?.checked),
         attrBool('disabled', ctx?.args?.disabled, false),
         attrBool('required', ctx?.args?.required, false),
@@ -81,14 +81,14 @@ export const checkboxSource: SourceTransform<CheckboxArgs> = (_gerado, ctx) =>
 
 /** Estado de partida: a caixa nasce desmarcada, sem prop nenhuma. */
 export function checkboxDesmarcadoSource(): string {
-  return vueSnippet(IMPORT, par({ id: 'termos', rotulo: LABEL_TERMOS }));
+  return vueSnippet(IMPORT, par({ id: 'termos', label: LABEL_TERMOS }));
 }
 
 /** Marcado de saída — estado inicial, sem controle externo. */
 export function checkboxCheckedSource(): string {
   return vueSnippet(
     IMPORT,
-    par({ id: 'termos', rotulo: LABEL_TERMOS, caixa: [attrChecked(true)] }),
+    par({ id: 'termos', label: LABEL_TERMOS, box: [attrChecked(true)] }),
   );
 }
 
@@ -102,8 +102,8 @@ export function checkboxMistoSource(): string {
     IMPORT,
     par({
       id: 'selecionar-todos',
-      rotulo: 'Selecionar todos os itens',
-      caixa: [attrChecked('indeterminate')],
+      label: 'Selecionar todos os itens',
+      box: [attrChecked('indeterminate')],
     }),
   );
 }
@@ -118,9 +118,9 @@ export function checkboxDisabledSource(): string {
     IMPORT,
     par({
       id: 'sessao',
-      rotulo: 'Manter sessão ativa',
+      label: 'Manter sessão ativa',
       frame: 'data-disabled="true"',
-      caixa: [attrBool('disabled', true, false)],
+      box: [attrBool('disabled', true, false)],
     }),
   );
 }
@@ -131,9 +131,9 @@ export function checkboxDisabledCheckedSource(): string {
     IMPORT,
     par({
       id: 'notificacoes',
-      rotulo: 'Receber notificações push',
+      label: 'Receber notificações push',
       frame: 'data-disabled="true"',
-      caixa: [attrBool('disabled', true, false), attrChecked(true)],
+      box: [attrBool('disabled', true, false), attrChecked(true)],
     }),
   );
 }
@@ -165,13 +165,13 @@ export function checkboxErrorSource(): string {
 export function checkboxFocusSource(): string {
   return vueSnippet(
     IMPORT,
-    par({ id: 'foco', rotulo: 'Foco visível via teclado' }),
+    par({ id: 'foco', label: 'Foco visível via teclado' }),
   );
 }
 
 /** Composição mínima: a caixa e o rótulo que a nomeia. */
 export function checkboxWithLabelSource(): string {
-  return vueSnippet(IMPORT, par({ id: 'termos', rotulo: LABEL_TERMOS }));
+  return vueSnippet(IMPORT, par({ id: 'termos', label: LABEL_TERMOS }));
 }
 
 /**

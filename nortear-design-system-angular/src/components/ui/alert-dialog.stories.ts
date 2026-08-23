@@ -132,20 +132,20 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const gatilho = () => canvas.getByRole('button', { name: args.triggerLabel });
+    const trigger = () => canvas.getByRole('button', { name: args.triggerLabel });
 
     await step('O gatilho abre, e o painel é um alertdialog — não um dialog', async () => {
       // `role="alertdialog"` não é enfeite: é ele que faz o leitor de tela ler a
       // descrição junto do título, em vez de esperar a pessoa navegar até ela.
-      await userEvent.click(gatilho());
-      const painel = await waitForPortal('alertdialog');
-      await expect(painel.getAttribute('aria-modal')).toBe('true');
+      await userEvent.click(trigger());
+      const panel = await waitForPortal('alertdialog');
+      await expect(panel.getAttribute('aria-modal')).toBe('true');
     });
 
     await step('Título e descrição são o nome e a explicação do painel', async () => {
-      const painel = await waitForPortal('alertdialog');
-      const labelledBy = painel.getAttribute('aria-labelledby');
-      const describedBy = painel.getAttribute('aria-describedby');
+      const panel = await waitForPortal('alertdialog');
+      const labelledBy = panel.getAttribute('aria-labelledby');
+      const describedBy = panel.getAttribute('aria-describedby');
       await expect(document.getElementById(labelledBy!)?.textContent?.trim()).toBe(args.title);
       await expect(document.getElementById(describedBy!)?.textContent?.trim()).toBe(
         args.description,
@@ -160,10 +160,10 @@ export const Playground: Story = {
     });
 
     await step('O Tab não sai do painel', async () => {
-      const painel = await waitForPortal('alertdialog');
+      const panel = await waitForPortal('alertdialog');
       for (let i = 0; i < 4; i++) {
         await userEvent.tab();
-        await expect(painel.contains(document.activeElement)).toBe(true);
+        await expect(panel.contains(document.activeElement)).toBe(true);
       }
     });
 
@@ -179,26 +179,26 @@ export const Playground: Story = {
     await step('Escape fecha, equivale a cancelar, e devolve o foco', async () => {
       await userEvent.keyboard('{Escape}');
       await waitForPortalVanish('alertdialog');
-      await waitFor(() => expect(document.activeElement).toBe(gatilho()));
+      await waitFor(() => expect(document.activeElement).toBe(trigger()));
       await expect(args.onConfirm).not.toHaveBeenCalled();
     });
 
     await step('Cancelar fecha sem executar a ação', async () => {
-      await userEvent.click(gatilho());
+      await userEvent.click(trigger());
       await waitForPortal('alertdialog');
       await userEvent.click(within(document.body).getByRole('button', { name: args.cancel }));
       await waitForPortalVanish('alertdialog');
       await expect(args.onConfirm).not.toHaveBeenCalled();
-      await waitFor(() => expect(document.activeElement).toBe(gatilho()));
+      await waitFor(() => expect(document.activeElement).toBe(trigger()));
     });
 
     await step('Confirmar executa a ação, fecha, e devolve o foco', async () => {
-      await userEvent.click(gatilho());
+      await userEvent.click(trigger());
       await waitForPortal('alertdialog');
       await userEvent.click(within(document.body).getByRole('button', { name: args.action }));
       await waitForPortalVanish('alertdialog');
       await expect(args.onConfirm).toHaveBeenCalledTimes(1);
-      await waitFor(() => expect(document.activeElement).toBe(gatilho()));
+      await waitFor(() => expect(document.activeElement).toBe(trigger()));
     });
   },
 };

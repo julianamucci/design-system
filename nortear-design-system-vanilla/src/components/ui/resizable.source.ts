@@ -4,16 +4,16 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
 /** Um painel do grupo, como a fábrica o recebe. */
 export type ResizableSnippetPanel = {
   /** Texto do bloco que a story põe dentro do painel. */
-  titulo: string;
+  title: string;
   defaultSize?: number;
   minSize?: number;
   maxSize?: number;
@@ -44,8 +44,8 @@ export type ResizableSnippetOptions = {
 };
 
 const PANELS_DEFAULT: ResizableSnippetPanel[] = [
-  { titulo: 'Sidebar', defaultSize: 30, minSize: 15 },
-  { titulo: 'Conteúdo principal', defaultSize: 70, minSize: 30 },
+  { title: 'Sidebar', defaultSize: 30, minSize: 15 },
+  { title: 'Conteúdo principal', defaultSize: 70, minSize: 30 },
 ];
 
 const LABEL_DEFAULT = 'Redimensionar Sidebar e Conteúdo — use setas para ajustar';
@@ -67,21 +67,21 @@ function bloco(titulo) {
 }`;
 
 /** O valor de `aria-label`: uma string, ou um nome por divisor. */
-function labelValue(rotulo: string | string[] | undefined): string {
-  const valor = rotulo ?? LABEL_DEFAULT;
-  if (!Array.isArray(valor)) return texto(valor);
-  return `[\n${valor.map((r) => `    ${texto(r)},`).join('\n')}\n  ]`;
+function labelValue(label: string | string[] | undefined): string {
+  const value = label ?? LABEL_DEFAULT;
+  if (!Array.isArray(value)) return text(value);
+  return `[\n${value.map((r) => `    ${text(r)},`).join('\n')}\n  ]`;
 }
 
 /** `panels: [ … ]`, um painel por linha, já recuado para dentro da chamada. */
 function blockPanels(panels: ResizableSnippetPanel[]): string {
   const lines = panels.map((p) => {
-    const pairs = opcoes([
+    const pairs = options([
       ['defaultSize', p.defaultSize !== undefined ? String(p.defaultSize) : undefined],
       // 10 é o piso que a fábrica assume; 100 é o teto.
       ['minSize', p.minSize !== undefined && p.minSize !== 10 ? String(p.minSize) : undefined],
       ['maxSize', p.maxSize !== undefined && p.maxSize !== 100 ? String(p.maxSize) : undefined],
-      ['content', `bloco(${texto(p.titulo)})`],
+      ['content', `bloco(${text(p.title)})`],
     ]);
     return `    { ${pairs.map((par) => par.replace(/,$/, '')).join(', ')} },`;
   });
@@ -101,16 +101,16 @@ function panelsOf(o: ResizableSnippetOptions): ResizableSnippetPanel[] {
   }
   const first = o.defaultSize ?? 30;
   return [
-    { titulo: 'Sidebar', defaultSize: first, minSize: o.minSize, maxSize: o.maxSize },
-    { titulo: 'Conteúdo principal', defaultSize: 100 - first, minSize: o.minSize },
+    { title: 'Sidebar', defaultSize: first, minSize: o.minSize, maxSize: o.maxSize },
+    { title: 'Conteúdo principal', defaultSize: 100 - first, minSize: o.minSize },
   ];
 }
 
 /** As opções da fábrica. Só o que difere do padrão entra. */
 function groupLines(o: ResizableSnippetOptions, panels: ResizableSnippetPanel[]): string[] {
-  return opcoes([
+  return options([
     // `horizontal` é o padrão da fábrica.
-    ['direction', o.direction === 'vertical' ? texto('vertical') : undefined],
+    ['direction', o.direction === 'vertical' ? text('vertical') : undefined],
     ['withHandle', o.withHandle ? 'true' : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
     // Um `role="separator"` focável sem nome é anunciado como "separador, 30":
@@ -179,14 +179,14 @@ export function resizableNestedSnippet(groupOptions: {
   const { externo, interno, neighbour } = groupOptions;
   const panelsInternos = panelsOf(interno);
 
-  const neighbourPairs = opcoes([
+  const neighbourPairs = options([
     ['defaultSize', neighbour.defaultSize !== undefined ? String(neighbour.defaultSize) : undefined],
     ['minSize', neighbour.minSize !== undefined && neighbour.minSize !== 10 ? String(neighbour.minSize) : undefined],
-    ['content', `bloco(${texto(neighbour.titulo)})`],
+    ['content', `bloco(${text(neighbour.title)})`],
   ]);
 
-  const linesExternas = opcoes([
-    ['direction', externo.direction === 'vertical' ? texto('vertical') : undefined],
+  const linesExternas = options([
+    ['direction', externo.direction === 'vertical' ? text('vertical') : undefined],
     ['withHandle', externo.withHandle ? 'true' : undefined],
     ['aria-label', labelValue(externo['aria-label'])],
     [

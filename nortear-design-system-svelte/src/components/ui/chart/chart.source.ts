@@ -41,15 +41,15 @@ const series = [
 ];`;
 
 /** Bloco `<script>` com o import do container e o(s) montador(es) usados. */
-function script(montadores: string[], dados = ''): string {
+function script(montadores: string[], data = ''): string {
   const imports = `import { ChartContainer, ${montadores.join(', ')} } from "@/components/ui/chart";`;
-  return dados ? `${imports}\n\n${dados}` : imports;
+  return data ? `${imports}\n\n${data}` : imports;
 }
 
 /** Uma linha por atributo: a lista cresce com a configuração do desenho. */
 function grafico(props: Array<string | false | ''>, recuo = ''): string {
-  const lista = props.filter((prop): prop is string => Boolean(prop));
-  return `<ChartContainer\n${lista.map((prop) => `${recuo}  ${prop}`).join('\n')}\n${recuo}/>`;
+  const list = props.filter((prop): prop is string => Boolean(prop));
+  return `<ChartContainer\n${list.map((prop) => `${recuo}  ${prop}`).join('\n')}\n${recuo}/>`;
 }
 
 /**

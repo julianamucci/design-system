@@ -133,8 +133,8 @@ const mountTheme = buildTheme();
  * registro da lib é por elemento, e o elemento nós temos.
  */
 function instanciaDoGrafico(): echarts.ECharts | undefined {
-  const alvo = containerRef.value?.querySelector<HTMLElement>('*');
-  return alvo ? echarts.getInstanceByDom(alvo) : undefined;
+  const target = containerRef.value?.querySelector<HTMLElement>('*');
+  return target ? echarts.getInstanceByDom(target) : undefined;
 }
 
 let observer: MutationObserver | null = null;
@@ -157,8 +157,8 @@ const rendererName = computed(() => props.renderer ?? 'svg');
 const accessibleLabel = computed(() => {
   const fornecido = props.ariaLabel;
   if (fornecido) return fornecido;
-  const titulo = (props.option as { title?: { text?: string } | { text?: string }[] }).title;
-  const doOption = Array.isArray(titulo) ? titulo[0]?.text : titulo?.text;
+  const title = (props.option as { title?: { text?: string } | { text?: string }[] }).title;
+  const doOption = Array.isArray(title) ? title[0]?.text : title?.text;
   return doOption ?? 'Gráfico';
 });
 

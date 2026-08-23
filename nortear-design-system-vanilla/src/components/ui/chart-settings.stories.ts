@@ -48,7 +48,7 @@ export const SeriesColor: Story = {
       // snippet precisa mostrar — não uma opção de topo.
       source: {
         transform: chartSourceWith({
-          dados: 'serieUnica',
+          data: 'serieUnica',
           color: ROXO,
           'aria-label': 'Acessos mensais no desktop, em cor autoral',
         }),
@@ -67,17 +67,17 @@ export const SeriesColor: Story = {
     'aria-label': 'Acessos mensais no desktop, em cor autoral',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('O desenho sai', async () => {
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(datumFormas(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(datumFormas(root).length).toBeGreaterThan(0), { timeout: 3000 });
     });
 
     await step('As formas da série saem na cor pedida', async () => {
       // A trama sobreposta entra como `url(#…)` e não carrega cor — por isso a
       // procura é entre os preenchimentos que são cor de verdade.
-      const colors = datumFormas(raiz)
+      const colors = datumFormas(root)
         .map((f) => getComputedStyle(f).fill)
         .filter((cor) => !cor.startsWith('url'));
       await expect(colors).toContain(ROXO_RGB);
@@ -85,7 +85,7 @@ export const SeriesColor: Story = {
 
     await step('Toda categoria continua escrita no eixo', async () => {
       for (const month of MONTHS) {
-        await expect(designEscreve(raiz, month)).toBe(true);
+        await expect(designEscreve(root, month)).toBe(true);
       }
     });
   },
@@ -116,17 +116,17 @@ export const CustomHeight: Story = {
     'aria-label': 'Acessos mensais, em bloco mais alto',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('O container fica com a altura pedida', async () => {
       // Tolerância de 1px: o retângulo do layout é fracionário, e comparar
       // igualdade exata em pixel é o caminho curto para um teste intermitente.
-      await expect(Math.abs(raiz.getBoundingClientRect().height - HEIGHT)).toBeLessThanOrEqual(1);
+      await expect(Math.abs(root.getBoundingClientRect().height - HEIGHT)).toBeLessThanOrEqual(1);
     });
 
     await step('E o desenho ocupa o bloco todo, não uma faixa do topo', async () => {
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
-      const design = designRenderizado(raiz) as SVGElement;
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+      const design = designRenderizado(root) as SVGElement;
       await waitFor(
         () => expect(design.getBoundingClientRect().height).toBeGreaterThan(HEIGHT * 0.9),
         { timeout: 3000 },
@@ -134,7 +134,7 @@ export const CustomHeight: Story = {
     });
 
     await step('E o dado continua desenhado', async () => {
-      await expect(datumFormas(raiz).length).toBeGreaterThan(0);
+      await expect(datumFormas(root).length).toBeGreaterThan(0);
     });
   },
 };

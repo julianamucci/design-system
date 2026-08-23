@@ -17,7 +17,7 @@ import {
   attrsMultilinha,
   asCode,
   indentar,
-  texto,
+  text,
   vueSnippet,
   type SourceTransform,
 } from '@/lib/story-source';
@@ -35,10 +35,10 @@ import { Label } from '@/components/ui/label'`;
 const WIDTH = 'nds-w-xs';
 
 /** Empilha rótulo, campo e o que vier depois (apoio, mensagem de erro). */
-function empilhado(filhos: string[], largura = WIDTH, espaco = 'xs'): string {
-  const className = ['nds-stack', largura].filter(Boolean).join(' ');
+function empilhado(children: string[], width = WIDTH, espaco = 'xs'): string {
+  const className = ['nds-stack', width].filter(Boolean).join(' ');
   return `<div class="${className}" data-spacing="${espaco}">
-${indentar(filhos.join('\n'))}
+${indentar(children.join('\n'))}
 </div>`;
 }
 
@@ -47,15 +47,15 @@ ${indentar(filhos.join('\n'))}
  * clique no texto levar o foco ao campo — e o que faz o leitor de tela
  * anunciar um pelo outro.
  */
-function campo(opcoes: {
+function field(options: {
   id: string;
-  rotulo: string;
+  label: string;
   input: string;
   depois?: string[];
-  largura?: string;
+  width?: string;
 }): string {
-  const { id, rotulo, input, depois = [], largura } = opcoes;
-  return empilhado([`<Label for="${id}">${rotulo}</Label>`, input, ...depois], largura);
+  const { id, label, input, depois = [], width } = options;
+  return empilhado([`<Label for="${id}">${label}</Label>`, input, ...depois], width);
 }
 
 /** `<Input>` com id e os atributos que diferem do padrão. */
@@ -73,13 +73,13 @@ export const inputSource: SourceTransform<InputArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   return vueSnippet(
     IMPORTS,
-    campo({
+    field({
       id: 'nome-completo',
-      rotulo: 'Nome completo',
+      label: 'Nome completo',
       input: input(
         'nome-completo',
         attr('type', args.type, 'text'),
-        attr('placeholder', texto(asCode(args.placeholder), 'ex: João da Silva')),
+        attr('placeholder', text(asCode(args.placeholder), 'ex: João da Silva')),
         attrBool('disabled', args.disabled, false),
       ),
     }),
@@ -87,12 +87,12 @@ export const inputSource: SourceTransform<InputArgs> = (_gerado, ctx) => {
 };
 
 /** Um tipo do HTML, rotulado. É o `type` que muda o teclado, o papel e o visual. */
-function tipo(id: string, rotulo: string, tipoHtml: string, marcador?: string): string {
+function type(id: string, label: string, tipoHtml: string, marcador?: string): string {
   return vueSnippet(
     IMPORTS,
-    campo({
+    field({
       id,
-      rotulo,
+      label,
       input: input(id, `type="${tipoHtml}"`, marcador && `placeholder="${marcador}"`),
     }),
   );
@@ -100,22 +100,22 @@ function tipo(id: string, rotulo: string, tipoHtml: string, marcador?: string): 
 
 /** Texto livre: o tipo padrão, escrito à vista porque aqui ele é o assunto. */
 export function inputTypeTextSource(): string {
-  return tipo('nome', 'Nome completo', 'text', 'ex: João da Silva');
+  return type('nome', 'Nome completo', 'text', 'ex: João da Silva');
 }
 
 /** Email: teclado com arroba no celular e validação nativa de formato. */
 export function inputTypeEmailSource(): string {
-  return tipo('email', 'Email', 'email', 'ex: joao@empresa.com');
+  return type('email', 'Email', 'email', 'ex: joao@empresa.com');
 }
 
 /** Senha: o navegador mascara o valor e oferece o gerenciador de senhas. */
 export function inputTypeSenhaSource(): string {
-  return tipo('senha', 'Senha', 'password', '••••••••');
+  return type('senha', 'Senha', 'password', '••••••••');
 }
 
 /** Número: teclado numérico e os controles de incremento do navegador. */
 export function inputTypeNumberSource(): string {
-  return tipo('quantidade', 'Quantidade', 'number', 'ex: 42');
+  return type('quantidade', 'Quantidade', 'number', 'ex: 42');
 }
 
 /**
@@ -123,7 +123,7 @@ export function inputTypeNumberSource(): string {
  * anuncia. Nada no visual denuncia se o tipo estiver errado.
  */
 export function inputTypeSearchSource(): string {
-  return tipo('busca', 'Buscar', 'search', 'Buscar componentes...');
+  return type('busca', 'Buscar', 'search', 'Buscar componentes...');
 }
 
 /**
@@ -131,7 +131,7 @@ export function inputTypeSearchSource(): string {
  * botão nativo recebe estilo próprio do design system pela folha do componente.
  */
 export function inputTypeFileSource(): string {
-  return tipo('arquivo', 'Arquivo', 'file');
+  return type('arquivo', 'Arquivo', 'file');
 }
 
 /**
@@ -141,9 +141,9 @@ export function inputTypeFileSource(): string {
 export function inputWithLabelSource(): string {
   return vueSnippet(
     IMPORTS,
-    campo({
+    field({
       id: 'nome-completo',
-      rotulo: 'Nome completo',
+      label: 'Nome completo',
       input: input('nome-completo', 'type="text"', 'placeholder="ex: João da Silva"'),
     }),
   );
@@ -156,9 +156,9 @@ export function inputWithLabelSource(): string {
 export function inputDisabledSource(): string {
   return vueSnippet(
     IMPORTS,
-    campo({
+    field({
       id: 'campo-indisponivel',
-      rotulo: 'Campo desabilitado',
+      label: 'Campo desabilitado',
       input: input('campo-indisponivel', 'type="text"', 'placeholder="Não disponível"', 'disabled'),
     }),
   );
@@ -175,9 +175,9 @@ export function inputWithErrorSource(): string {
   const idMessage = 'email-erro';
   return vueSnippet(
     IMPORTS,
-    campo({
+    field({
       id,
-      rotulo: 'Email',
+      label: 'Email',
       input: `<Input${attrsMultilinha(
         [
           `id="${id}"`,
@@ -206,9 +206,9 @@ export function inputWithHelperSource(): string {
   const idHelper = 'email-apoio';
   return vueSnippet(
     IMPORTS,
-    campo({
+    field({
       id,
-      rotulo: 'Email',
+      label: 'Email',
       input: input(
         id,
         'type="email"',
@@ -251,15 +251,15 @@ export function inputPaletteDarkSource(): string {
     IMPORTS,
     empilhado(
       [
-        campo({
+        field({
           id: 'padrao',
-          rotulo: 'Padrão',
+          label: 'Padrão',
           input: input('padrao', 'type="text"', 'placeholder="ex: João da Silva"'),
-          largura: '',
+          width: '',
         }),
-        campo({
+        field({
           id: 'com-erro',
-          rotulo: 'Com erro',
+          label: 'Com erro',
           input: input(
             'com-erro',
             'type="email"',
@@ -269,13 +269,13 @@ export function inputPaletteDarkSource(): string {
           depois: [
             '<p id="com-erro-msg" class="nds-text-body nds-text-destructive">Email inválido</p>',
           ],
-          largura: '',
+          width: '',
         }),
-        campo({
+        field({
           id: 'indisponivel',
-          rotulo: 'Desabilitado',
+          label: 'Desabilitado',
           input: input('indisponivel', 'type="text"', 'placeholder="Não disponível"', 'disabled'),
-          largura: '',
+          width: '',
         }),
       ],
       WIDTH,

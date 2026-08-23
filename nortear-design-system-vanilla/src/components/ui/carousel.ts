@@ -188,8 +188,8 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
   // regras de posição do controle são seletores de atributo com valor, e sem o
   // valor escrito o controle ficaria sem posição nenhuma no eixo horizontal.
   const orientacao = vertical ? 'vertical' : 'horizontal';
-  const arrowClassName = (direcao: 'prev' | 'next') =>
-    cn(btnClass('outline', 'icon-sm'), 'nds-carousel-arrow', `nds-carousel-arrow-${direcao}`);
+  const arrowClassName = (direction: 'prev' | 'next') =>
+    cn(btnClass('outline', 'icon-sm'), 'nds-carousel-arrow', `nds-carousel-arrow-${direction}`);
 
   const prevBtn = document.createElement('button');
   prevBtn.type = 'button';
@@ -252,7 +252,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
     origemPendente = 'button';
   }
 
-  function mover(alvo: 'prev' | 'next', source: CarouselNavSource): void {
+  function mover(target: 'prev' | 'next', source: CarouselNavSource): void {
     origemPendente = source;
     // O motor é montado quando a raiz entra no documento, e isso acontece um
     // quadro depois de a fábrica devolver o nó. Quem clica ANTES desse quadro
@@ -262,7 +262,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
     // se há um comando, a raiz já está na página.
     if (!embla) startMotor();
     if (!embla) return;
-    if (alvo === 'next') {
+    if (target === 'next') {
       // O avanço automático dá a volta; a navegação de quem usa respeita os
       // extremos. Sem essa distinção o teclado atravessava o fim do trilho e
       // voltava ao primeiro slide enquanto a seta ao lado estava desabilitada

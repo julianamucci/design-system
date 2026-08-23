@@ -287,7 +287,7 @@ export class NdsBreadcrumbEllipsis {
       e o leitor de tela anuncia "navegação" dez vezes sem dizer qual é qual.
     -->
     <ng-template #tplVarPadrao>
-      <nav ndsBreadcrumb [label]="rotulo('variante-padrao')">
+      <nav ndsBreadcrumb [label]="label('variante-padrao')">
         <ol ndsBreadcrumbList>
           <li ndsBreadcrumbItem>
             <a ndsBreadcrumbLink href="#" (click)="aoNavegar($event, 'home')">{{ t('demonstration.labels.home') }}</a>
@@ -305,7 +305,7 @@ export class NdsBreadcrumbEllipsis {
     </ng-template>
 
     <ng-template #tplVarReticencias>
-      <nav ndsBreadcrumb [label]="rotulo('variante-reticencias')">
+      <nav ndsBreadcrumb [label]="label('variante-reticencias')">
         <ol ndsBreadcrumbList>
           <li ndsBreadcrumbItem>
             <a ndsBreadcrumbLink href="#" (click)="aoNavegar($event, 'home')">{{ t('demonstration.labels.home') }}</a>
@@ -327,7 +327,7 @@ export class NdsBreadcrumbEllipsis {
     </ng-template>
 
     <ng-template #tplVarSeparador>
-      <nav ndsBreadcrumb [label]="rotulo('variante-separador')">
+      <nav ndsBreadcrumb [label]="label('variante-separador')">
         <ol ndsBreadcrumbList>
           <li ndsBreadcrumbItem>
             <a ndsBreadcrumbLink href="#" (click)="aoNavegar($event, 'home')">{{ t('demonstration.labels.home') }}</a>
@@ -345,7 +345,7 @@ export class NdsBreadcrumbEllipsis {
     </ng-template>
 
     <ng-template #tplDoDont1Do>
-      <nav ndsBreadcrumb [label]="rotulo('do-1')">
+      <nav ndsBreadcrumb [label]="label('do-1')">
         <ol ndsBreadcrumbList>
           <li ndsBreadcrumbItem>
             <a ndsBreadcrumbLink href="#" (click)="aoNavegar($event, 'home')">{{ t('demonstration.labels.home') }}</a>
@@ -363,7 +363,7 @@ export class NdsBreadcrumbEllipsis {
     </ng-template>
 
     <ng-template #tplDoDont1Dont>
-      <nav ndsBreadcrumb [label]="rotulo('dont-1')">
+      <nav ndsBreadcrumb [label]="label('dont-1')">
         <ol ndsBreadcrumbList>
           <li ndsBreadcrumbItem>
             <a ndsBreadcrumbLink href="#" (click)="aoNavegar($event, 'home')">{{ t('demonstration.labels.home') }}</a>
@@ -382,7 +382,7 @@ export class NdsBreadcrumbEllipsis {
     </ng-template>
 
     <ng-template #tplDoDont2Do>
-      <nav ndsBreadcrumb [label]="rotulo('do-2')">
+      <nav ndsBreadcrumb [label]="label('do-2')">
         <ol ndsBreadcrumbList>
           <li ndsBreadcrumbItem>
             <a ndsBreadcrumbLink href="#" (click)="aoNavegar($event, 'home')">{{ t('demonstration.labels.home') }}</a>
@@ -404,7 +404,7 @@ export class NdsBreadcrumbEllipsis {
     </ng-template>
 
     <ng-template #tplDoDont2Dont>
-      <nav ndsBreadcrumb [label]="rotulo('dont-2')">
+      <nav ndsBreadcrumb [label]="label('dont-2')">
         <ol ndsBreadcrumbList>
           <li ndsBreadcrumbItem>
             <a ndsBreadcrumbLink href="#" (click)="aoNavegar($event, 'home')">{{ t('demonstration.labels.home') }}</a>
@@ -450,7 +450,7 @@ export class NdsBreadcrumbEllipsis {
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
           <div class="nds-stack nds-w-full" data-spacing="lg">
-            <nav ndsBreadcrumb [label]="rotulo('demo-padrao')">
+            <nav ndsBreadcrumb [label]="label('demo-padrao')">
               <ol ndsBreadcrumbList>
                 <li ndsBreadcrumbItem>
                   <a ndsBreadcrumbLink href="#" (click)="aoNavegar($event, 'home')">{{ t('demonstration.labels.home') }}</a>
@@ -466,7 +466,7 @@ export class NdsBreadcrumbEllipsis {
               </ol>
             </nav>
 
-            <nav ndsBreadcrumb [label]="rotulo('demo-reticencias')">
+            <nav ndsBreadcrumb [label]="label('demo-reticencias')">
               <ol ndsBreadcrumbList>
                 <li ndsBreadcrumbItem>
                   <a ndsBreadcrumbLink href="#" (click)="aoNavegar($event, 'home')">{{ t('demonstration.labels.home') }}</a>
@@ -486,7 +486,7 @@ export class NdsBreadcrumbEllipsis {
               </ol>
             </nav>
 
-            <nav ndsBreadcrumb [label]="rotulo('demo-separador')">
+            <nav ndsBreadcrumb [label]="label('demo-separador')">
               <ol ndsBreadcrumbList>
                 <li ndsBreadcrumbItem>
                   <a ndsBreadcrumbLink href="#" (click)="aoNavegar($event, 'home')">{{ t('demonstration.labels.home') }}</a>
@@ -621,7 +621,7 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
    * identificador do exemplo, e não texto de leitura — é o que garante nomes
    * distintos entre as dez trilhas da página.
    */
-  protected rotulo(sufixo: string): string {
+  protected label(sufixo: string): string {
     return `${t('title')} — ${sufixo}`;
   }
 
@@ -630,11 +630,11 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
    * documentação. O payload leva a CHAVE do rótulo, não o rótulo traduzido —
    * texto traduzido partiria um evento em três no GA4.
    */
-  protected aoNavegar(event: Event, chave: string): void {
+  protected aoNavegar(event: Event, key: string): void {
     event.preventDefault();
     track('navigation_click', {
       component: 'breadcrumb',
-      label: chave,
+      label: key,
       destination: '#',
       location: 'docs_demo',
     });
@@ -794,7 +794,7 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
       required: not,
       description: toPlainText(t('props.table.className')),
     };
-    const conteudo = {
+    const content = {
       name: '(conteúdo)',
       type: 'HTML',
       defaultValue: '—',
@@ -809,21 +809,21 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
         items: [
           { name: 'label', type: 'string', defaultValue: "'breadcrumb'", required: not, description: toPlainText(t('props.table.label')) },
           className,
-          conteudo,
+          content,
         ],
       },
-      { title: t('props.listTitle'), cols, items: [className, conteudo] },
-      { title: t('props.itemTitle'), cols, items: [className, conteudo] },
+      { title: t('props.listTitle'), cols, items: [className, content] },
+      { title: t('props.itemTitle'), cols, items: [className, content] },
       {
         title: t('props.linkTitle'),
         cols,
         items: [
           { name: 'href', type: 'string', defaultValue: '—', required: sim, description: toPlainText(t('props.table.href')) },
           className,
-          conteudo,
+          content,
         ],
       },
-      { title: t('props.pageTitle'), cols, items: [className, conteudo] },
+      { title: t('props.pageTitle'), cols, items: [className, content] },
       {
         title: t('props.separatorTitle'),
         cols,
@@ -906,12 +906,12 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'navigationMenu', nome: 'NavigationMenu', path: '?path=/docs/ui-navigationmenu--docs' },
-      { key: 'stepper',        nome: 'Stepper',        path: '?path=/docs/ui-stepper--docs'        },
-      { key: 'tabs',           nome: 'Tabs',           path: '?path=/docs/ui-tabs--docs'           },
-      { key: 'dropdownMenu',   nome: 'DropdownMenu',   path: '?path=/docs/ui-dropdownmenu--docs'   },
-    ].map(({ key, nome, path }) => ({
-      name: nome,
+      { key: 'navigationMenu', name: 'NavigationMenu', path: '?path=/docs/ui-navigationmenu--docs' },
+      { key: 'stepper',        name: 'Stepper',        path: '?path=/docs/ui-stepper--docs'        },
+      { key: 'tabs',           name: 'Tabs',           path: '?path=/docs/ui-tabs--docs'           },
+      { key: 'dropdownMenu',   name: 'DropdownMenu',   path: '?path=/docs/ui-dropdownmenu--docs'   },
+    ].map(({ key, name, path }) => ({
+      name: name,
       description: toPlainText(t(`related.${key}`)),
       path,
     }));

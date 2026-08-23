@@ -186,23 +186,23 @@ export function createNavigationMenu(
 
   /** Abertura pedida por uma interação sobre um gatilho. */
   function open(trigger: HTMLElement): void {
-    const painel = [...panels.values()].find((p) => p.trigger === trigger);
-    if (painel) pedirValue(painel.value);
+    const panel = [...panels.values()].find((p) => p.trigger === trigger);
+    if (panel) pedirValue(panel.value);
   }
 
   /** Move a barra. É o único caminho que mexe no DOM dos painéis. */
-  function applyValue(valor: string): void {
+  function applyValue(value: string): void {
     // `?? ''` porque "nenhum painel aberto" é a string vazia, e sem ela um
     // `setValue('')` numa barra já fechada anunciaria um fechamento que não
     // aconteceu.
-    if ((openItem?.value ?? '') === valor) return;
+    if ((openItem?.value ?? '') === value) return;
     closeAll();
-    const painel = valor ? panels.get(valor) : undefined;
-    if (painel) {
-      painel.content.hidden = false;
-      painel.trigger.setAttribute('aria-expanded', 'true');
-      painel.trigger.dataset.state = 'open';
-      openItem = painel;
+    const panel = value ? panels.get(value) : undefined;
+    if (panel) {
+      panel.content.hidden = false;
+      panel.trigger.setAttribute('aria-expanded', 'true');
+      panel.trigger.dataset.state = 'open';
+      openItem = panel;
     }
     // Controlada, a barra não anuncia o que ela própria aplicou: quem pediu a
     // mudança foi quem chama, e o aviso já saiu na intenção. Sem esta cerca, um
@@ -217,13 +217,13 @@ export function createNavigationMenu(
    * Controlada, ela só é anunciada — quem manda na barra é quem chama. Fora do
    * modo controlado, ela é aplicada na hora.
    */
-  function pedirValue(valor: string): void {
-    if ((openItem?.value ?? '') === valor) return;
+  function pedirValue(value: string): void {
+    if ((openItem?.value ?? '') === value) return;
     if (controlled) {
-      options?.onValueChange?.(valor);
+      options?.onValueChange?.(value);
       return;
     }
-    applyValue(valor);
+    applyValue(value);
   }
 
   /** Os elementos focáveis da BARRA — gatilhos e destinos diretos, em ordem. */
@@ -244,19 +244,19 @@ export function createNavigationMenu(
   function navegarPelaBar(e: KeyboardEvent): boolean {
     const previous = vertical ? 'ArrowUp' : 'ArrowLeft';
     const next = vertical ? 'ArrowDown' : 'ArrowRight';
-    const itens = barItems();
-    const atual = itens.indexOf(document.activeElement as HTMLElement);
-    if (atual === -1) return false;
+    const items = barItems();
+    const current = items.indexOf(document.activeElement as HTMLElement);
+    if (current === -1) return false;
 
     let destination = -1;
-    if (e.key === next) destination = (atual + 1) % itens.length;
-    else if (e.key === previous) destination = (atual - 1 + itens.length) % itens.length;
+    if (e.key === next) destination = (current + 1) % items.length;
+    else if (e.key === previous) destination = (current - 1 + items.length) % items.length;
     else if (e.key === 'Home') destination = 0;
-    else if (e.key === 'End') destination = itens.length - 1;
+    else if (e.key === 'End') destination = items.length - 1;
     if (destination === -1) return false;
 
     e.preventDefault();
-    itens[destination]?.focus();
+    items[destination]?.focus();
     return true;
   }
 

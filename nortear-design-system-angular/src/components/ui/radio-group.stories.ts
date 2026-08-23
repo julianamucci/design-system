@@ -11,7 +11,7 @@ type RadioGroupArgs = {
   name: string;
   value: string;
   disabled: boolean;
-  onValueChange: (valor: string | null) => void;
+  onValueChange: (value: string | null) => void;
 };
 
 /** Ver a nota em separator.stories.ts. */
@@ -132,7 +132,7 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const itens = (): HTMLElement[] =>
+    const items = (): HTMLElement[] =>
       Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-slot="radio-group-item"]'));
 
     await step('O grupo é um radiogroup com nome acessível', async () => {
@@ -183,24 +183,24 @@ export const Playground: Story = {
       // A tecla fica PRESSIONADA durante as asserções: o primitivo só seleciona
       // no foco enquanto a seta está em curso (ver a nota em
       // `radio-group-variantes.stories.ts`).
-      const lista = itens();
-      lista[0].focus();
+      const list = items();
+      list[0].focus();
       await userEvent.keyboard('{ArrowDown>}');
       await waitFor(async () => {
-        await expect(canvasElement.ownerDocument.activeElement).toBe(lista[1]);
+        await expect(canvasElement.ownerDocument.activeElement).toBe(list[1]);
       });
       await waitFor(async () => {
-        await expect(lista[1].getAttribute('aria-checked')).toBe('true');
+        await expect(list[1].getAttribute('aria-checked')).toBe('true');
       });
       await userEvent.keyboard('{/ArrowDown}');
     });
 
     await step('ArrowUp circula do primeiro para o último', async () => {
-      const lista = itens();
-      lista[0].focus();
+      const list = items();
+      list[0].focus();
       await userEvent.keyboard('{ArrowUp>}');
       await waitFor(async () => {
-        await expect(canvasElement.ownerDocument.activeElement).toBe(lista[2]);
+        await expect(canvasElement.ownerDocument.activeElement).toBe(list[2]);
       });
       await userEvent.keyboard('{/ArrowUp}');
     });
@@ -209,10 +209,10 @@ export const Playground: Story = {
       // Asserção sobre o CONJUNTO, não só sobre o ativo: exatamente um item na
       // ordem de tabulação, e é o escolhido. Sem isso o Tab percorreria opção
       // por opção em vez de sair do grupo.
-      const order = itens().map((el) => el.tabIndex);
+      const order = items().map((el) => el.tabIndex);
       await expect(order.filter((t) => t === 0)).toHaveLength(1);
-      const marcado = itens().findIndex((el) => el.getAttribute('aria-checked') === 'true');
-      await expect(order[marcado]).toBe(0);
+      const checked = items().findIndex((el) => el.getAttribute('aria-checked') === 'true');
+      await expect(order[checked]).toBe(0);
     });
   },
 };

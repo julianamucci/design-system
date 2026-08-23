@@ -58,9 +58,9 @@ export const Default: Story = {
     const canvas = within(canvasElement);
 
     await step('Sem atraso escrito no markup, o cartão usa o padrão do componente', async () => {
-      const painel = await waitForOpen();
-      await expect(painel).toBeVisible();
-      await expect(within(painel).getByText(/600ms/)).toBeVisible();
+      const panel = await waitForOpen();
+      await expect(panel).toBeVisible();
+      await expect(within(panel).getByText(/600ms/)).toBeVisible();
       await expect(canvas.getByRole('link')).toHaveAttribute('data-slot', 'hover-card-trigger');
     });
   },
@@ -86,7 +86,7 @@ export const WithShortDelay: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('link');
+    const trigger = canvas.getByRole('link');
 
     // Estado conhecido: a play reexecuta no mesmo DOM pelo painel Interactions.
     await userEvent.keyboard('{Escape}');
@@ -95,10 +95,10 @@ export const WithShortDelay: Story = {
     await step('O cartão abre depois da espera pedida na raiz', async () => {
       await expect(panelOpen()).toBeNull();
       const start = performance.now();
-      await userEvent.hover(gatilho);
-      const painel = await waitForOpen();
-      await expect(painel).toBeVisible();
-      await expect(within(painel).getByText('Guia de overlays acessíveis')).toBeVisible();
+      await userEvent.hover(trigger);
+      const panel = await waitForOpen();
+      await expect(panel).toBeVisible();
+      await expect(within(panel).getByText('Guia de overlays acessíveis')).toBeVisible();
 
       // O cronômetro é a prova de que o atraso CHEGOU ao primitivo: com o
       // binding perdido, o cartão usaria os 600ms padrão, muito acima deste

@@ -49,8 +49,8 @@
 	// contém é `stopPropagation()`, que impede o evento de chegar ao ouvinte do
 	// primitivo. O foco em si acontece: é ele que faz o leitor de tela anunciar.
 
-	const abaBloqueada = (alvo: EventTarget | null): boolean =>
-		alvo instanceof Element && !!alvo.closest('[role="tab"][aria-disabled="true"]');
+	const abaBloqueada = (target: EventTarget | null): boolean =>
+		target instanceof Element && !!target.closest('[role="tab"][aria-disabled="true"]');
 
 	function bloquearAtivacao(e: Event): void {
 		if (!abaBloqueada(e.target)) return;

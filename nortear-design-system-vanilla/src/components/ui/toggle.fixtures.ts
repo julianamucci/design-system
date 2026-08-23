@@ -43,10 +43,10 @@ export function buildLucideSvg(icon: unknown, className?: string): SVGSVGElement
 }
 
 /** Fileira de toggles lado a lado — o agrupador é o `nds-cluster` do design system. */
-export function cluster(...filhos: HTMLElement[]): HTMLElement {
+export function cluster(...children: HTMLElement[]): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-cluster';
   wrap.dataset.spacing = 'sm';
-  wrap.append(...filhos);
+  wrap.append(...children);
   return wrap;
 }

@@ -69,9 +69,9 @@ import { Button } from "@/components/ui/button";`;
  * `aria-labelledby`/`aria-describedby` aos ids deles, e é daí que sai o nome
  * acessível do painel modal. Sem eles o diálogo abre anônimo.
  */
-function header(titulo: string, descricao: string): string {
+function header(title: string, descricao: string): string {
   return `<DrawerHeader>
-  <DrawerTitle>${titulo}</DrawerTitle>
+  <DrawerTitle>${title}</DrawerTitle>
   <DrawerDescription>${descricao}</DrawerDescription>
 </DrawerHeader>`;
 }
@@ -80,13 +80,13 @@ function header(titulo: string, descricao: string): string {
  * O gatilho entra por `asChild`: quem recebe foco, papel e nome acessível é o
  * `<Button>` de quem consome, não uma casca extra em volta dele.
  */
-function gatilho(rotulo: string): string {
+function trigger(label: string): string {
   return `<DrawerTrigger asChild>
-  <Button variant="outline">${rotulo}</Button>
+  <Button variant="outline">${label}</Button>
 </DrawerTrigger>`;
 }
 
-function painel(propsRaiz: string, miolo: string, withTrigger: string): string {
+function panel(propsRaiz: string, miolo: string, withTrigger: string): string {
   const partes = [withTrigger, `<DrawerContent>\n${indentar(miolo)}\n</DrawerContent>`]
     .filter(Boolean)
     .join('\n');
@@ -104,7 +104,7 @@ ${indentar(partes)}
  */
 export const drawerSource: SourceTransform<DrawerArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const raiz = attrsMultilinha([
+  const root = attrsMultilinha([
     propOption('direction', args.direction, DIRECOES, 'bottom'),
     propBool('defaultOpen', args.defaultOpen),
     propBool('dismissible', args.dismissible, true),
@@ -124,17 +124,17 @@ export const drawerSource: SourceTransform<DrawerArgs> = (_gerado, ctx) => {
 </DrawerFooter>`,
   ].join('\n');
 
-  return jsxSnippet(IMPORT, painel(raiz, miolo, gatilho('Abrir Drawer')));
+  return jsxSnippet(IMPORT, panel(root, miolo, trigger('Abrir Drawer')));
 };
 
 /** Mesmo painel das quatro direções — o que muda é `direction` e o texto. */
 function directionPanel(
   direction: DrawerArgs['direction'],
-  titulo: string,
+  title: string,
   descricao: string,
 ): string {
   const miolo = [
-    header(titulo, descricao),
+    header(title, descricao),
     `<DrawerBody className="nds-text-body nds-text-muted-foreground">
   Conteúdo do painel.
 </DrawerBody>`,
@@ -147,7 +147,7 @@ function directionPanel(
 
   return jsxSnippet(
     IMPORT,
-    painel(attrs(propOption('direction', direction, DIRECOES, 'bottom')), miolo, gatilho('Abrir')),
+    panel(attrs(propOption('direction', direction, DIRECOES, 'bottom')), miolo, trigger('Abrir')),
   );
 }
 
@@ -183,7 +183,7 @@ export function drawerOpenSource(): string {
 </DrawerFooter>`,
   ].join('\n');
 
-  return jsxSnippet(IMPORT_NO_BODY, painel(' defaultOpen', miolo, gatilho('Abrir')));
+  return jsxSnippet(IMPORT_NO_BODY, panel(' defaultOpen', miolo, trigger('Abrir')));
 }
 
 /**
@@ -253,7 +253,7 @@ export function drawerNotDispensavelSource(): string {
 </DrawerFooter>`,
   ].join('\n');
 
-  return jsxSnippet(IMPORT_NO_BODY, painel(' dismissible={false}', miolo, gatilho('Abrir')));
+  return jsxSnippet(IMPORT_NO_BODY, panel(' dismissible={false}', miolo, trigger('Abrir')));
 }
 
 /**
@@ -288,7 +288,7 @@ export function drawerWithFormSource(): string {
     `${IMPORT}
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";`,
-    painel('', miolo, gatilho('Editar perfil')),
+    panel('', miolo, trigger('Editar perfil')),
   );
 }
 
@@ -311,7 +311,7 @@ export function drawerWithConfirmSource(): string {
 </DrawerFooter>`,
   ].join('\n');
 
-  return jsxSnippet(IMPORT_NO_BODY, painel('', miolo, gatilho('Remover anexo')));
+  return jsxSnippet(IMPORT_NO_BODY, panel('', miolo, trigger('Remover anexo')));
 }
 
 /**
@@ -345,5 +345,5 @@ export function drawerWithScrollSource(): string {
 </DrawerFooter>`,
   ].join('\n');
 
-  return jsxSnippet(IMPORT, painel('', miolo, gatilho('Ver lista')));
+  return jsxSnippet(IMPORT, panel('', miolo, trigger('Ver lista')));
 }

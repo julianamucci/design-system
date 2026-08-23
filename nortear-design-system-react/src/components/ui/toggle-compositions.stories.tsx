@@ -37,9 +37,9 @@ type Story = StoryObj<typeof meta>;
  * lá. O painel Interactions reexecuta a play no mesmo DOM: um clique cego
  * partiria do estado que a rodada anterior deixou e inverteria o resultado.
  */
-async function definir(btn: HTMLElement, alvo: boolean) {
-  if ((btn.getAttribute("aria-pressed") === "true") !== alvo) await userEvent.click(btn);
-  await expect(btn).toHaveAttribute("aria-pressed", String(alvo));
+async function definir(btn: HTMLElement, target: boolean) {
+  if ((btn.getAttribute("aria-pressed") === "true") !== target) await userEvent.click(btn);
+  await expect(btn).toHaveAttribute("aria-pressed", String(target));
 }
 
 export const FormattingToolbar: Story = {
@@ -75,15 +75,15 @@ export const FormattingToolbar: Story = {
     const canvas = within(canvasElement);
 
     await step("O conjunto é anunciado como grupo, com nome próprio", async () => {
-      const grupo = canvas.getByRole("group", { name: "Formatação de texto" });
-      await expect(grupo).toBeVisible();
-      await expect(within(grupo).getAllByRole("button")).toHaveLength(4);
+      const group = canvas.getByRole("group", { name: "Formatação de texto" });
+      await expect(group).toBeVisible();
+      await expect(within(group).getAllByRole("button")).toHaveLength(4);
     });
 
     await step("Cada toggle icon-only tem nome acessível próprio", async () => {
-      for (const nome of ["Negrito", "Itálico", "Sublinhado", "Lista"]) {
-        const btn = canvas.getByRole("button", { name: nome });
-        await expect(btn).toHaveAttribute("aria-label", nome);
+      for (const name of ["Negrito", "Itálico", "Sublinhado", "Lista"]) {
+        const btn = canvas.getByRole("button", { name: name });
+        await expect(btn).toHaveAttribute("aria-label", name);
         await expect(btn.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
       }
     });
@@ -143,8 +143,8 @@ export const FilterList: Story = {
     });
 
     await step("Os dois filtros usam a variante outline", async () => {
-      for (const nome of ["Mostrar ocultos", "Visão compacta"]) {
-        await expect(canvas.getByRole("button", { name: nome })).toHaveAttribute(
+      for (const name of ["Mostrar ocultos", "Visão compacta"]) {
+        await expect(canvas.getByRole("button", { name: name })).toHaveAttribute(
           "data-variant",
           "outline",
         );

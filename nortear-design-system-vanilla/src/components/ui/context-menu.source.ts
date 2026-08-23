@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -48,20 +48,20 @@ const AREA_DEFAULT = 'Clique com o botão direito aqui';
  */
 function itemsDefault(o: ContextMenuSnippetOptions): ContextMenuEntrySnippet[] {
   const withShortcut = o.showShortcuts !== false;
-  const itens: ContextMenuEntrySnippet[] = [
+  const items: ContextMenuEntrySnippet[] = [
     { label: 'Editar', value: 'edit', shortcut: withShortcut ? '⌘E' : undefined },
     { label: 'Duplicar', value: 'duplicate' },
   ];
-  if (o.showSeparator !== false) itens.push({ type: 'separator' });
+  if (o.showSeparator !== false) items.push({ type: 'separator' });
   if (o.showDestructive !== false) {
-    itens.push({
+    items.push({
       label: 'Excluir',
       value: 'delete',
       variant: 'destructive',
       shortcut: withShortcut ? '⌫' : undefined,
     });
   }
-  return itens;
+  return items;
 }
 
 /** Uma entrada por linha, com o submenu recuado dentro da entrada que o abre. */
@@ -71,11 +71,11 @@ function entriesLines(
 ): string[] {
   return entries.flatMap((entry) => {
     const partes: string[] = [];
-    if (entry.type && entry.type !== 'item') partes.push(`type: ${texto(entry.type)}`);
-    if (entry.label !== undefined) partes.push(`label: ${texto(entry.label)}`);
-    if (entry.value !== undefined) partes.push(`value: ${texto(entry.value)}`);
-    if (entry.shortcut) partes.push(`shortcut: ${texto(entry.shortcut)}`);
-    if (entry.variant) partes.push(`variant: ${texto(entry.variant)}`);
+    if (entry.type && entry.type !== 'item') partes.push(`type: ${text(entry.type)}`);
+    if (entry.label !== undefined) partes.push(`label: ${text(entry.label)}`);
+    if (entry.value !== undefined) partes.push(`value: ${text(entry.value)}`);
+    if (entry.shortcut) partes.push(`shortcut: ${text(entry.shortcut)}`);
+    if (entry.variant) partes.push(`variant: ${text(entry.variant)}`);
     if (entry.inset) partes.push('inset: true');
     if (entry.disabled) partes.push('disabled: true');
     if (entry.checked !== undefined) partes.push(`checked: ${String(entry.checked)}`);
@@ -100,8 +100,8 @@ function entriesLiteral(entries: ContextMenuEntrySnippet[]): string {
 }
 
 /** O texto do callback só entra quando é texto: nos args ele chega como função. */
-function callbackBody(valor: unknown): string | undefined {
-  return typeof valor === 'string' && valor.length > 0 ? valor : undefined;
+function callbackBody(value: unknown): string | undefined {
+  return typeof value === 'string' && value.length > 0 ? value : undefined;
 }
 
 /**
@@ -111,10 +111,10 @@ function callbackBody(valor: unknown): string | undefined {
  * `criarAreaDeClique()`, que é sonda de teste e não faz parte do sistema.
  */
 export function contextMenuSnippet(o: ContextMenuSnippetOptions = {}): string {
-  const lines = opcoes([
+  const lines = options([
     ['trigger', 'area'],
     ['items', entriesLiteral(o.items ?? itemsDefault(o))],
-    ['radioValue', o.radioValue ? texto(o.radioValue) : undefined],
+    ['radioValue', o.radioValue ? text(o.radioValue) : undefined],
     ['onOpenChange', callbackBody(o.onOpenChange)],
   ]);
 
@@ -124,7 +124,7 @@ export function contextMenuSnippet(o: ContextMenuSnippetOptions = {}): string {
       '// A área é de quem consome. A fábrica só garante a parada de tabulação',
       '// nela, para que a tecla Menu abra o menu de quem não usa mouse.',
       "const area = document.createElement('div');",
-      `area.textContent = ${texto(o.triggerLabel ?? AREA_DEFAULT)};`,
+      `area.textContent = ${text(o.triggerLabel ?? AREA_DEFAULT)};`,
     ].join('\n'),
     `const menu = ${chamada('createContextMenu', lines)};`,
     montar('menu'),

@@ -18,8 +18,8 @@ import { DrawerDocs } from "@/components/docs/DrawerDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 const LABEL = {
-  gatilho: "Abrir Drawer",
-  titulo: "Editar perfil",
+  trigger: "Abrir Drawer",
+  title: "Editar perfil",
   descricao: "Atualize seus dados pessoais e foto.",
   confirmar: "Confirmar",
   cancelar: "Cancelar",
@@ -88,14 +88,14 @@ type Story = StoryObj<typeof meta>;
  * cego partiria do estado que a rodada anterior deixou e inverteria todo o
  * resto. Cada passo estabelece a própria precondição.
  */
-async function abrir(trigger: HTMLElement): Promise<HTMLElement> {
+async function open(trigger: HTMLElement): Promise<HTMLElement> {
   if (within(document.body).queryAllByRole("dialog").length === 0) {
     await userEvent.click(trigger);
   }
   return await waitForPortal("dialog");
 }
 
-async function fechar(): Promise<void> {
+async function close(): Promise<void> {
   if (within(document.body).queryAllByRole("dialog").length > 0) {
     await userEvent.keyboard("{Escape}");
   }
@@ -113,11 +113,11 @@ export const Playground: Story = {
     <div style={{ contain: "layout", minHeight: 400, position: "relative" }}>
       <Drawer {...args}>
         <DrawerTrigger asChild>
-          <Button variant="outline">{LABEL.gatilho}</Button>
+          <Button variant="outline">{LABEL.trigger}</Button>
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>{LABEL.titulo}</DrawerTitle>
+            <DrawerTitle>{LABEL.title}</DrawerTitle>
             <DrawerDescription>{LABEL.descricao}</DrawerDescription>
           </DrawerHeader>
           <DrawerBody className="nds-text-body nds-text-muted-foreground">
@@ -135,49 +135,49 @@ export const Playground: Story = {
   ),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole("button", { name: LABEL.gatilho });
+    const trigger = canvas.getByRole("button", { name: LABEL.trigger });
 
-    await fechar();
+    await close();
 
     await step("1. Clicar no gatilho abre o painel, com nome e descrição acessíveis", async () => {
       const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
-      const painel = await abrir(trigger);
+      const panel = await open(trigger);
 
-      await expect(painel).toBeVisible();
-      await expect(painel).toHaveAttribute("role", "dialog");
-      await expect(painel).toHaveAttribute("aria-modal", "true");
+      await expect(panel).toBeVisible();
+      await expect(panel).toHaveAttribute("role", "dialog");
+      await expect(panel).toHaveAttribute("aria-modal", "true");
       // Nome e descrição saem do aria-labelledby/-describedby que o primitivo
       // liga aos ids REAIS do título e da descrição — painel modal anônimo é o
       // defeito silencioso aqui.
-      await expect(painel).toHaveAccessibleName(LABEL.titulo);
-      await expect(painel).toHaveAccessibleDescription(LABEL.descricao);
-      await expect(painel).toHaveAttribute("data-vaul-drawer-direction", args.direction!);
-      await expect(painel).toHaveClass(/nds-drawer-content/);
+      await expect(panel).toHaveAccessibleName(LABEL.title);
+      await expect(panel).toHaveAccessibleDescription(LABEL.descricao);
+      await expect(panel).toHaveAttribute("data-vaul-drawer-direction", args.direction!);
+      await expect(panel).toHaveClass(/nds-drawer-content/);
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
       ).toBe(callsBefore + 1);
     });
 
     await step("2. O painel é portalizado para fora da story", async () => {
-      const painel = await waitForPortal("dialog");
-      await expect(canvasElement.contains(painel)).toBe(false);
-      await expect(document.body.contains(painel)).toBe(true);
+      const panel = await waitForPortal("dialog");
+      await expect(canvasElement.contains(panel)).toBe(false);
+      await expect(document.body.contains(panel)).toBe(true);
     });
 
     await step("3. O foco entra no painel e Tab não escapa dele", async () => {
-      const painel = await waitForPortal("dialog");
+      const panel = await waitForPortal("dialog");
       await waitFor(() => {
-        if (!painel.contains(document.activeElement)) {
+        if (!panel.contains(document.activeElement)) {
           throw new Error("o foco não entrou no painel");
         }
       });
       // Volta suficiente para dar a volta completa em qualquer direção.
       for (let i = 0; i < 6; i++) await userEvent.tab();
-      await expect(painel.contains(document.activeElement)).toBe(true);
+      await expect(panel.contains(document.activeElement)).toBe(true);
     });
 
     await step("4. Escape fecha e devolve o foco ao gatilho", async () => {
-      await fechar();
+      await close();
       await waitFor(() => {
         if (document.activeElement !== trigger) {
           throw new Error("o foco não voltou ao gatilho");
@@ -187,8 +187,8 @@ export const Playground: Story = {
     });
 
     await step("5. O botão de fechar do rodapé fecha e devolve o foco ao gatilho", async () => {
-      const painel = await abrir(trigger);
-      const closeBtn = within(painel).getByRole("button", { name: LABEL.cancelar });
+      const panel = await open(trigger);
+      const closeBtn = within(panel).getByRole("button", { name: LABEL.cancelar });
       await userEvent.click(closeBtn);
       await waitForPortalGone("dialog");
       await waitFor(() => {
@@ -201,6 +201,6 @@ export const Playground: Story = {
 
     // Termina fechado: a próxima rodada da play precisa do mesmo ponto de
     // partida desta, e é este estado que o Chromatic fotografa.
-    await fechar();
+    await close();
   },
 };

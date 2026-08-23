@@ -24,21 +24,21 @@ let observer: MutationObserver | null = null
 // MutationObserver reafirma o valor porque cada re-render da lib reescreve o
 // dela por cima.
 function reivindicar(): void {
-  const painel = el.value?.closest<HTMLElement>('[data-slot="popover-content"]')
-  if (!painel) return
-  if (painel.getAttribute('aria-labelledby') !== id) {
-    painel.setAttribute('aria-labelledby', id)
+  const panel = el.value?.closest<HTMLElement>('[data-slot="popover-content"]')
+  if (!panel) return
+  if (panel.getAttribute('aria-labelledby') !== id) {
+    panel.setAttribute('aria-labelledby', id)
   }
   // `aria-label` junto de `aria-labelledby` é ambiguidade, não redundância.
-  painel.removeAttribute('aria-label')
+  panel.removeAttribute('aria-label')
 }
 
 onMounted(() => {
   reivindicar()
-  const painel = el.value?.closest<HTMLElement>('[data-slot="popover-content"]')
-  if (!painel) return
+  const panel = el.value?.closest<HTMLElement>('[data-slot="popover-content"]')
+  if (!panel) return
   observer = new MutationObserver(reivindicar)
-  observer.observe(painel, { attributes: true, attributeFilter: ['aria-labelledby', 'aria-label'] })
+  observer.observe(panel, { attributes: true, attributeFilter: ['aria-labelledby', 'aria-label'] })
 })
 
 onBeforeUnmount(() => {

@@ -33,8 +33,8 @@ export type SelectArgs = {
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
 function importingSelect(...parts: string[]): string {
-  const lista = [...parts].sort();
-  return `import {\n${lista
+  const list = [...parts].sort();
+  return `import {\n${list
     .map((part) => `  ${part},`)
     .join('\n')}\n} from "@/components/ui/select";`;
 }
@@ -57,9 +57,9 @@ const MAPA = `const ESTADOS = {
  * Composição inteira do campo. O `placeholder` mora no `SelectValue`, e não no
  * gatilho: é ele que o primitivo troca pelo rótulo escolhido.
  */
-function campo(raiz: string, gatilho = ' aria-label="Selecionar estado"'): string {
-  return `<Select items={ESTADOS}${raiz}>
-  <SelectTrigger${gatilho}>
+function field(root: string, trigger = ' aria-label="Selecionar estado"'): string {
+  return `<Select items={ESTADOS}${root}>
+  <SelectTrigger${trigger}>
     <SelectValue placeholder="Selecione..." />
   </SelectTrigger>
   <SelectContent>
@@ -82,8 +82,8 @@ function campo(raiz: string, gatilho = ' aria-label="Selecionar estado"'): strin
  */
 export const selectSource: SourceTransform<SelectArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const raiz = attrs(propText('name', args.name), propBool('disabled', args.disabled));
-  return jsxSnippet(`${importingSelect(...PARTS_BASE)}\n\n${MAPA}`, campo(raiz));
+  const root = attrs(propText('name', args.name), propBool('disabled', args.disabled));
+  return jsxSnippet(`${importingSelect(...PARTS_BASE)}\n\n${MAPA}`, field(root));
 };
 
 /**
@@ -177,7 +177,7 @@ const CANAIS = {
 export function selectSelectedSource(): string {
   return jsxSnippet(
     `${importingSelect(...PARTS_BASE)}\n\n${MAPA}`,
-    campo(' defaultValue="rj"'),
+    field(' defaultValue="rj"'),
   );
 }
 
@@ -186,7 +186,7 @@ export function selectSelectedSource(): string {
  * impede a abertura da lista por teclado.
  */
 export function selectDisabledSource(): string {
-  return jsxSnippet(`${importingSelect(...PARTS_BASE)}\n\n${MAPA}`, campo(' disabled'));
+  return jsxSnippet(`${importingSelect(...PARTS_BASE)}\n\n${MAPA}`, field(' disabled'));
 }
 
 /**
@@ -198,7 +198,7 @@ export function selectInvalidoSource(): string {
   return jsxSnippet(
     `${importingSelect(...PARTS_BASE)}\n\n${MAPA}`,
     `<div className="nds-stack" data-spacing="sm">
-${indentar(campo('', ' aria-label="Selecionar estado" aria-invalid="true"'))}
+${indentar(field('', ' aria-label="Selecionar estado" aria-invalid="true"'))}
   <p className="nds-text-body nds-text-destructive">
     Selecione um estado para continuar.
   </p>
@@ -214,7 +214,7 @@ ${indentar(campo('', ' aria-label="Selecionar estado" aria-invalid="true"'))}
 export function selectCompactoSource(): string {
   return jsxSnippet(
     `${importingSelect(...PARTS_BASE)}\n\n${MAPA}`,
-    campo('', ' size="sm" aria-label="Selecionar estado"'),
+    field('', ' size="sm" aria-label="Selecionar estado"'),
   );
 }
 
@@ -316,7 +316,7 @@ import { Label } from "@/components/ui/label";
 ${MAPA}`,
     `<div className="nds-stack" data-spacing="sm">
   <Label htmlFor="estado-residencia">Estado de residência</Label>
-${indentar(campo('', ' id="estado-residencia" aria-label="Estado de residência"'))}
+${indentar(field('', ' id="estado-residencia" aria-label="Estado de residência"'))}
   <p className="nds-text-caption nds-text-muted-foreground">
     Esse dado é usado apenas para cálculo de frete.
   </p>

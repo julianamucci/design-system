@@ -10,67 +10,67 @@ import {
 
 describe('skeletonSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = skeletonSnippet();
-    expect(código).toContain("import { createSkeleton } from '@/components/ui/skeleton';");
-    expect(código).toContain('createSkeleton()');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('aria-hidden="true"');
+    const code = skeletonSnippet();
+    expect(code).toContain("import { createSkeleton } from '@/components/ui/skeleton';");
+    expect(code).toContain('createSkeleton()');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('aria-hidden="true"');
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = skeletonSnippet();
-    expect(código).not.toContain('shape:');
-    expect(código).not.toContain('width:');
-    expect(código).not.toContain('size:');
+    const code = skeletonSnippet();
+    expect(code).not.toContain('shape:');
+    expect(code).not.toContain('width:');
+    expect(code).not.toContain('size:');
   });
 
   it('mostra forma e fração de largura quando a story as usa', () => {
-    const código = skeletonSnippet({ shape: 'text', width: '2-3' });
-    expect(código).toContain("shape: 'text'");
-    expect(código).toContain("width: '2-3'");
+    const code = skeletonSnippet({ shape: 'text', width: '2-3' });
+    expect(code).toContain("shape: 'text'");
+    expect(code).toContain("width: '2-3'");
   });
 
   it('não mostra a fração de largura nas formas em que ela não vale', () => {
-    const código = skeletonSnippet({ shape: 'avatar', width: '3-4' });
-    expect(código).toContain("shape: 'avatar'");
-    expect(código).not.toContain('width:');
+    const code = skeletonSnippet({ shape: 'avatar', width: '3-4' });
+    expect(code).toContain("shape: 'avatar'");
+    expect(code).not.toContain('width:');
   });
 
   it('monta a região que anuncia o carregamento — o esqueleto já nasce oculto', () => {
-    const código = skeletonSnippet({ regionLabel: 'Carregando pedidos', loading: true });
-    expect(código).toContain("regiao.setAttribute('role', 'status');");
-    expect(código).toContain("regiao.setAttribute('aria-busy', 'true');");
-    expect(código).toContain("regiao.setAttribute('aria-label', 'Carregando pedidos');");
-    expect(código).not.toContain('regiaoDeCarregamento');
-    expect(código).not.toContain('regiaoComLinhas');
+    const code = skeletonSnippet({ regionLabel: 'Carregando pedidos', loading: true });
+    expect(code).toContain("regiao.setAttribute('role', 'status');");
+    expect(code).toContain("regiao.setAttribute('aria-busy', 'true');");
+    expect(code).toContain("regiao.setAttribute('aria-label', 'Carregando pedidos');");
+    expect(code).not.toContain('regiaoDeCarregamento');
+    expect(code).not.toContain('regiaoComLinhas');
   });
 
   it('empilha várias peças quando a story mostra um parágrafo', () => {
-    const código = skeletonSnippet({
+    const code = skeletonSnippet({
       lines: [
         { shape: 'text', width: 'full' },
         { shape: 'text', width: '3-4' },
         { shape: 'text', width: '1-2' },
       ],
     });
-    expect(código.match(/createSkeleton\(/g)).toHaveLength(3);
-    expect(código).toContain("regiao.dataset.spacing = 'sm';");
+    expect(code.match(/createSkeleton\(/g)).toHaveLength(3);
+    expect(code).toContain("regiao.dataset.spacing = 'sm';");
   });
 
   it('a forma que preenche a caixa vem dentro de um container que a estabelece', () => {
-    const código = skeletonSnippet({ shape: 'fill' });
-    expect(código).toContain('createAspectRatio(');
+    const code = skeletonSnippet({ shape: 'fill' });
+    expect(code).toContain('createAspectRatio(');
     // A classe de demonstração da docs page não é API do design system.
-    expect(código).not.toContain('nds-docs-skeleton-media');
+    expect(code).not.toContain('nds-docs-skeleton-media');
   });
 });
 
 describe('skeletonSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const texto = skeletonSource('<div data-slot="skeleton">', { args: { shape: 'text', width: 'full' } });
+    const text = skeletonSource('<div data-slot="skeleton">', { args: { shape: 'text', width: 'full' } });
     const avatar = skeletonSource('<div data-slot="skeleton">', { args: { shape: 'avatar' } });
-    expect(texto).not.toBe(avatar);
-    expect(texto).toContain("width: 'full'");
+    expect(text).not.toBe(avatar);
+    expect(text).toContain("width: 'full'");
     expect(avatar).toContain("shape: 'avatar'");
   });
 
@@ -89,38 +89,38 @@ describe('skeletonSource', () => {
 
 describe('skeletonSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = skeletonSourceWith({ shape: 'avatar' })('', { args: { shape: 'text' } });
-    expect(código).toContain("shape: 'avatar'");
-    expect(código).not.toContain("shape: 'text'");
+    const code = skeletonSourceWith({ shape: 'avatar' })('', { args: { shape: 'text' } });
+    expect(code).toContain("shape: 'avatar'");
+    expect(code).not.toContain("shape: 'text'");
   });
 });
 
 describe('skeletonPerfilSnippet', () => {
   it('põe a peça redonda ao lado das linhas, com larguras diferentes', () => {
-    const código = skeletonPerfilSnippet();
-    expect(código).toContain("createSkeleton({ shape: 'avatar' })");
-    expect(código).toContain("createSkeleton({ shape: 'text', width: '2-3' })");
-    expect(código).toContain("createSkeleton({ shape: 'text', width: '1-2' })");
-    expect(código).toContain("regiao.setAttribute('aria-label', 'Carregando card de perfil');");
+    const code = skeletonPerfilSnippet();
+    expect(code).toContain("createSkeleton({ shape: 'avatar' })");
+    expect(code).toContain("createSkeleton({ shape: 'text', width: '2-3' })");
+    expect(code).toContain("createSkeleton({ shape: 'text', width: '1-2' })");
+    expect(code).toContain("regiao.setAttribute('aria-label', 'Carregando card de perfil');");
   });
 });
 
 describe('skeletonListaSnippet', () => {
   it('faz da lista inteira UMA região ocupada', () => {
-    const código = skeletonListSnippet();
-    expect(código).toContain("lista.setAttribute('aria-busy', 'true');");
-    expect(código).toContain("lista.setAttribute('aria-label', 'Carregando lista de pedidos');");
-    expect(código).toContain("createSkeleton({ shape: 'avatar', size: 'sm' })");
-    expect(código).not.toContain("role', 'status");
+    const code = skeletonListSnippet();
+    expect(code).toContain("lista.setAttribute('aria-busy', 'true');");
+    expect(code).toContain("lista.setAttribute('aria-label', 'Carregando lista de pedidos');");
+    expect(code).toContain("createSkeleton({ shape: 'avatar', size: 'sm' })");
+    expect(code).not.toContain("role', 'status");
   });
 });
 
 describe('skeletonEmProporcaoSnippet', () => {
   it('deixa a caixa por conta do container da proporção', () => {
-    const código = ratioSkeletonSnippet();
-    expect(código).toContain("import { createAspectRatio } from '@/components/ui/aspect-ratio';");
-    expect(código).toContain('ratio: 16 / 9');
-    expect(código).toContain("content: createSkeleton({ shape: 'fill' })");
-    expect(código).not.toContain('style');
+    const code = ratioSkeletonSnippet();
+    expect(code).toContain("import { createAspectRatio } from '@/components/ui/aspect-ratio';");
+    expect(code).toContain('ratio: 16 / 9');
+    expect(code).toContain("content: createSkeleton({ shape: 'fill' })");
+    expect(code).not.toContain('style');
   });
 });

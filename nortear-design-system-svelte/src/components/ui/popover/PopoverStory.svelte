@@ -85,9 +85,9 @@
   const STATUS = ['Ativo', 'Pendente', 'Arquivado'];
 
   const PREFERENCIAS = [
-    { nome: 'Notificações', marcada: true },
-    { nome: 'Modo escuro', marcada: false },
-    { nome: 'Modo compacto', marcada: false },
+    { name: 'Notificações', marcada: true },
+    { name: 'Modo escuro', marcada: false },
+    { name: 'Modo compacto', marcada: false },
   ];
 </script>
 
@@ -195,9 +195,9 @@
               <PopoverDescription>{description}</PopoverDescription>
             </PopoverHeader>
             <div class="nds-stack nds-text-body" data-spacing="sm">
-              {#each PREFERENCIAS as pref (pref.nome)}
+              {#each PREFERENCIAS as pref (pref.name)}
                 <label class="nds-cluster" data-align="center" data-justify="between">
-                  <span>{pref.nome}</span>
+                  <span>{pref.name}</span>
                   <input type="checkbox" class="nds-size-4" checked={pref.marcada} />
                 </label>
               {/each}

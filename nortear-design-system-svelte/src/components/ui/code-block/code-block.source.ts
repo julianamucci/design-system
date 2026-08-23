@@ -25,16 +25,16 @@ const IMPORT = 'import { CodeBlock } from "@/components/ui/code-block";';
 const FONTE = 'const source = "…";';
 
 /** As duas formas aceitas de `highlightLines`: texto entre aspas, lista entre chaves. */
-function highlight(valor: string | Array<number | string>): string {
-  if (Array.isArray(valor)) {
-    const itens = valor.map((item) => (typeof item === 'number' ? String(item) : `'${item}'`));
-    return `highlightLines={[${itens.join(', ')}]}`;
+function highlight(value: string | Array<number | string>): string {
+  if (Array.isArray(value)) {
+    const items = value.map((item) => (typeof item === 'number' ? String(item) : `'${item}'`));
+    return `highlightLines={[${items.join(', ')}]}`;
   }
-  return `highlightLines="${valor}"`;
+  return `highlightLines="${value}"`;
 }
 
 /** Uma linha por atributo: a lista do bloco cresce com a configuração. */
-function bloco(props: string[]): string {
+function block(props: string[]): string {
   return `<CodeBlock\n${props.map((prop) => `  ${prop}`).join('\n')}\n/>`;
 }
 
@@ -57,7 +57,7 @@ export function codeBlockSource(_gerado?: string, ctx?: { args?: Partial<CodeBlo
     a.footer ? `footer="${a.footer}"` : '',
   ].filter((prop): prop is string => Boolean(prop));
 
-  return svelteSnippet(`${IMPORT}\n${FONTE}`, bloco(props));
+  return svelteSnippet(`${IMPORT}\n${FONTE}`, block(props));
 }
 
 /**

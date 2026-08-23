@@ -55,7 +55,7 @@ export const WithCard: Story = {
     </Card>
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await designPronto(canvasElement);
+    const root = await designPronto(canvasElement);
 
     await step('O card é o componente do design system, não um card desenhado à mão', async () => {
       const card = canvasElement.querySelector('[data-slot="card"]');
@@ -67,11 +67,11 @@ export const WithCard: Story = {
 
     await step('E o gráfico está DENTRO do card, não ao lado dele', async () => {
       const inside = canvasElement.querySelector('[data-slot="card"] [data-slot="chart"]');
-      await expect(inside).toBe(raiz);
+      await expect(inside).toBe(root);
     });
 
     await step('O desenho traz o dado das duas séries', async () => {
-      for (const serie of seriesMulti) await expect(designEscreve(raiz, serie.name)).toBe(true);
+      for (const serie of seriesMulti) await expect(designEscreve(root, serie.name)).toBe(true);
     });
   },
 };
@@ -95,17 +95,17 @@ export const InlineTitle: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await designPronto(canvasElement);
+    const root = await designPronto(canvasElement);
 
     await step('O título da configuração é escrito acima dos eixos', async () => {
-      await expect(designEscreve(raiz, DESIGN_TITLE)).toBe(true);
+      await expect(designEscreve(root, DESIGN_TITLE)).toBe(true);
     });
 
     await step('Sem rótulo autoral, o título vira a descrição do desenho', async () => {
       // A rede de segurança do container: um gráfico sem `aria-label` não fica
       // mudo, cai no título que já está na tela.
-      await expect(raiz).toHaveAttribute('role', 'img');
-      await expect(raiz.getAttribute('aria-label')).toBe(DESIGN_TITLE);
+      await expect(root).toHaveAttribute('role', 'img');
+      await expect(root.getAttribute('aria-label')).toBe(DESIGN_TITLE);
     });
   },
 };

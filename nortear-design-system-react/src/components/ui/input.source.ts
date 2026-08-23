@@ -24,7 +24,7 @@ import {
   propBool,
   propOption,
   propText,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -65,22 +65,22 @@ const COLUMN = '<div className="nds-stack nds-w-xs" data-spacing="xs">';
  */
 function fieldLabelled(
   id: string,
-  rotulo: string,
-  atributos: Array<string | false | undefined>,
+  label: string,
+  parts: Array<string | false | undefined>,
 ): string {
-  const lista = [`id="${id}"`, ...atributos].filter(
+  const list = [`id="${id}"`, ...parts].filter(
     (parte): parte is string => Boolean(parte),
   );
-  const inLine = lista.join(' ');
-  const campo =
+  const inLine = list.join(' ');
+  const field =
     inLine.length <= 60
-      ? `  <Input${attrs(...lista)} />`
-      : `  <Input${attrsMultilinha(lista, '    ', 0)}  />`;
+      ? `  <Input${attrs(...list)} />`
+      : `  <Input${attrsMultilinha(list, '    ', 0)}  />`;
   return jsxSnippet(
     IMPORT_PAIR,
     `${COLUMN}
-  <Label htmlFor="${id}">${rotulo}</Label>
-${campo}
+  <Label htmlFor="${id}">${label}</Label>
+${field}
 </div>`,
   );
 }
@@ -100,7 +100,7 @@ export const inputSource: SourceTransform<InputArgs> = (_gerado, ctx) => {
   if (args['aria-invalid'] === true) return inputWithErrorSource();
   return fieldLabelled('nome-completo', 'Nome completo', [
     propOption('type', args.type, TYPES, 'text'),
-    propText('placeholder', texto(args.placeholder) ?? 'ex: João da Silva'),
+    propText('placeholder', text(args.placeholder) ?? 'ex: João da Silva'),
     propBool('disabled', args.disabled),
   ]);
 };
@@ -224,10 +224,10 @@ export function inputPaletteDarkSource(): string {
  * inteira ensinaria uma dependência que aquele snippet não tem.
  */
 function importGroup(...names: string[]): string {
-  const lista = [...names].sort();
-  if (lista.length === 1) return `import { ${lista[0]} } from "@/components/ui/input-group";`;
+  const list = [...names].sort();
+  if (list.length === 1) return `import { ${list[0]} } from "@/components/ui/input-group";`;
   return `import {
-${lista.map((nome) => `  ${nome},`).join('\n')}
+${list.map((name) => `  ${name},`).join('\n')}
 } from "@/components/ui/input-group";`;
 }
 
@@ -238,7 +238,7 @@ ${lista.map((nome) => `  ${nome},`).join('\n')}
  */
 function groupLabelled(
   id: string,
-  rotulo: string,
+  label: string,
   miolo: string,
   ofGroup: string,
   deIcone = '',
@@ -246,7 +246,7 @@ function groupLabelled(
   return jsxSnippet(
     [ofGroup, IMPORT_LABEL, deIcone].filter(Boolean).join('\n'),
     `${COLUMN}
-  <Label htmlFor="${id}">${rotulo}</Label>
+  <Label htmlFor="${id}">${label}</Label>
   <InputGroup>
 ${miolo}
   </InputGroup>

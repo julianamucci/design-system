@@ -22,8 +22,8 @@ import { ${icons.join(', ')} } from 'lucide-vue-next'`;
 }
 
 /** Botão de texto: a forma que variantes, tamanhos e estados compartilham. */
-function texto(rotulo: string, ...partes: Array<string | ''>): string {
-  return vueSnippet(IMPORT, `<Button${attrs(...partes)}>${rotulo}</Button>`);
+function text(label: string, ...partes: Array<string | ''>): string {
+  return vueSnippet(IMPORT, `<Button${attrs(...partes)}>${label}</Button>`);
 }
 
 /**
@@ -31,10 +31,10 @@ function texto(rotulo: string, ...partes: Array<string | ''>): string {
  * tamanho pela cascata do componente, sem classe nenhuma. Sem o rótulo
  * acessível a ação fica sem nome, porque não sobrou texto para nomeá-la.
  */
-function soIcon(icone: string, size: string, rotulo: string): string {
+function soIcon(icone: string, size: string, label: string): string {
   return vueSnippet(
     withIcon(icone),
-    `<Button size="${size}" aria-label="${rotulo}">
+    `<Button size="${size}" aria-label="${label}">
   <${icone} aria-hidden="true" />
 </Button>`,
   );
@@ -49,7 +49,7 @@ function soIcon(icone: string, size: string, rotulo: string): string {
  */
 export const buttonSource: SourceTransform<ButtonArgs> = (_gerado, ctx) => {
   const { variant, size, disabled } = ctx?.args ?? {};
-  return texto(
+  return text(
     'Botão',
     attr('variant', variant, 'default'),
     attr('size', size, 'default'),
@@ -61,54 +61,54 @@ export const buttonSource: SourceTransform<ButtonArgs> = (_gerado, ctx) => {
 
 /** Variante primária: a ação principal da seção. */
 export function buttonDefaultSource(): string {
-  return texto('Salvar');
+  return text('Salvar');
 }
 
 /** Variante destrutiva: ação irreversível. */
 export function buttonDestructiveSource(): string {
-  return texto('Excluir conta', 'variant="destructive"');
+  return text('Excluir conta', 'variant="destructive"');
 }
 
 /** Variante com borda: acompanha a primária em pares de ação. */
 export function buttonOutlineSource(): string {
-  return texto('Cancelar', 'variant="outline"');
+  return text('Cancelar', 'variant="outline"');
 }
 
 /** Variante sólida de menor ênfase. */
 export function buttonSecundarioSource(): string {
-  return texto('Ver detalhes', 'variant="secondary"');
+  return text('Ver detalhes', 'variant="secondary"');
 }
 
 /** Variante sem fundo nem borda: barras de ferramentas e menus. */
 export function buttonGhostSource(): string {
-  return texto('Fechar', 'variant="ghost"');
+  return text('Fechar', 'variant="ghost"');
 }
 
 /** Variante com aparência de link, para ação em contexto textual. */
 export function buttonLinkSource(): string {
-  return texto('Saiba mais', 'variant="link"');
+  return text('Saiba mais', 'variant="link"');
 }
 
 /* ----------------------------------------------------------------- tamanhos */
 
 /** Tamanho padrão: nenhuma prop de tamanho é preciso escrever. */
 export function buttonSizeDefaultSource(): string {
-  return texto('Padrão');
+  return text('Padrão');
 }
 
 /** Tamanho mínimo: linha de tabela e chips de filtro. */
 export function buttonSizeXsSource(): string {
-  return texto('Mínimo', 'size="xs"');
+  return text('Mínimo', 'size="xs"');
 }
 
 /** Tamanho pequeno: barras de ferramentas e áreas densas. */
 export function buttonSizeSmSource(): string {
-  return texto('Pequeno', 'size="sm"');
+  return text('Pequeno', 'size="sm"');
 }
 
 /** Tamanho grande: chamadas de ação em destaque. */
 export function buttonSizeLgSource(): string {
-  return texto('Grande', 'size="lg"');
+  return text('Grande', 'size="lg"');
 }
 
 /** Botão de ícone no tamanho padrão. */
@@ -135,7 +135,7 @@ export function buttonIconLgSource(): string {
 
 /** Estado desabilitado: sem clique e fora da ordem de tabulação. */
 export function buttonDisabledSource(): string {
-  return texto('Salvar', 'disabled');
+  return text('Salvar', 'disabled');
 }
 
 /**
@@ -155,12 +155,12 @@ export function buttonLoadingSource(): string {
 
 /** Estado de foco por teclado: o anel é do componente, sem prop nenhuma. */
 export function buttonFocusVisibleSource(): string {
-  return texto('Foco visível');
+  return text('Foco visível');
 }
 
 /** Estado inválido: a sinalização de validação vai no atributo, não na cor. */
 export function buttonInvalidoSource(): string {
-  return texto('Formulário inválido', 'variant="outline"', 'aria-invalid="true"');
+  return text('Formulário inválido', 'variant="outline"', 'aria-invalid="true"');
 }
 
 /* -------------------------------------------------------------- composições */

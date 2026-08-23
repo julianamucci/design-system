@@ -579,12 +579,12 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
       description: t('props.table.description'),
     };
     const not = tNav('common.no');
-    const line = (name: string, chave: string, tipo: string, padrao: string) => ({
+    const line = (name: string, key: string, type: string, padrao: string) => ({
       name,
-      type: tipo,
+      type: type,
       defaultValue: padrao,
       required: not,
-      description: toPlainText(t(`props.table.${chave}`)),
+      description: toPlainText(t(`props.table.${key}`)),
     });
 
     return [
@@ -645,20 +645,20 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '—',                        k: 'overlayBg',             alvo: '.nds-alert-dialog-overlay' },
-      { token: '--background',             k: 'contentBg',             alvo: '.nds-alert-dialog-content' },
-      { token: '--foreground',             k: 'contentForeground',     alvo: '.nds-alert-dialog-content' },
-      { token: '--border',                 k: 'border',                alvo: '.nds-alert-dialog-content' },
-      { token: '--muted-foreground',       k: 'mutedForeground',       alvo: '.nds-alert-dialog-description' },
-      { token: '--destructive',            k: 'destructive',           alvo: '.nds-button' },
-      { token: '--destructive-foreground', k: 'destructiveForeground', alvo: '.nds-button' },
-      { token: '--radius',                 k: 'radius',                alvo: '.nds-alert-dialog-content' },
-      { token: '--elevation-lg',           k: 'elevation',             alvo: '.nds-alert-dialog-content' },
-      { token: '--muted',                  k: 'mediaBg',               alvo: '.nds-alert-dialog-media' },
-      { token: '--spacing-6',              k: 'padding',               alvo: '.nds-alert-dialog-content' },
-    ].map(({ token, k, alvo }) => ({
+      { token: '—',                        k: 'overlayBg',             target: '.nds-alert-dialog-overlay' },
+      { token: '--background',             k: 'contentBg',             target: '.nds-alert-dialog-content' },
+      { token: '--foreground',             k: 'contentForeground',     target: '.nds-alert-dialog-content' },
+      { token: '--border',                 k: 'border',                target: '.nds-alert-dialog-content' },
+      { token: '--muted-foreground',       k: 'mutedForeground',       target: '.nds-alert-dialog-description' },
+      { token: '--destructive',            k: 'destructive',           target: '.nds-button' },
+      { token: '--destructive-foreground', k: 'destructiveForeground', target: '.nds-button' },
+      { token: '--radius',                 k: 'radius',                target: '.nds-alert-dialog-content' },
+      { token: '--elevation-lg',           k: 'elevation',             target: '.nds-alert-dialog-content' },
+      { token: '--muted',                  k: 'mediaBg',               target: '.nds-alert-dialog-media' },
+      { token: '--spacing-6',              k: 'padding',               target: '.nds-alert-dialog-content' },
+    ].map(({ token, k, target }) => ({
       token,
-      value: alvo,
+      value: target,
       description: toPlainText(t(`tokens.table.${k}`)),
     }));
   });
@@ -689,11 +689,11 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'dialog', nome: 'Dialog', path: '?path=/docs/ui-dialog--docs' },
-      { key: 'sonner', nome: 'Sonner', path: '?path=/docs/ui-sonner--docs' },
-      { key: 'alert',  nome: 'Alert',  path: '?path=/docs/ui-alert--docs'  },
-      { key: 'button', nome: 'Button', path: '?path=/docs/ui-button--docs' },
-    ].map(({ key, nome, path }) => ({ name: nome, description: t(`related.${key}`), path }));
+      { key: 'dialog', name: 'Dialog', path: '?path=/docs/ui-dialog--docs' },
+      { key: 'sonner', name: 'Sonner', path: '?path=/docs/ui-sonner--docs' },
+      { key: 'alert',  name: 'Alert',  path: '?path=/docs/ui-alert--docs'  },
+      { key: 'button', name: 'Button', path: '?path=/docs/ui-button--docs' },
+    ].map(({ key, name, path }) => ({ name: name, description: t(`related.${key}`), path }));
   });
 
   protected readonly noteItems = computed(() => {
@@ -713,15 +713,15 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
   protected readonly analyticsItems = computed(() => {
     dict();
     return [
-      { e: 'open',          gatilho: 'openTrigger',          carga: 'openPayload'          },
-      { e: 'confirm',       gatilho: 'confirmTrigger',       carga: 'confirmPayload'       },
-      { e: 'close',         gatilho: 'closeTrigger',         carga: 'closePayload'         },
-      { e: 'pageView',      gatilho: 'pageViewTrigger',      carga: 'pageViewPayload'      },
-      { e: 'sectionViewed', gatilho: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
-      { e: 'langSwitch',    gatilho: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
-    ].map(({ e, gatilho, carga }) => ({
+      { e: 'open',          trigger: 'openTrigger',          carga: 'openPayload'          },
+      { e: 'confirm',       trigger: 'confirmTrigger',       carga: 'confirmPayload'       },
+      { e: 'close',         trigger: 'closeTrigger',         carga: 'closePayload'         },
+      { e: 'pageView',      trigger: 'pageViewTrigger',      carga: 'pageViewPayload'      },
+      { e: 'sectionViewed', trigger: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
+      { e: 'langSwitch',    trigger: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
+    ].map(({ e, trigger, carga }) => ({
       event: t(`analytics.table.${e}`),
-      trigger: toPlainText(t(`analytics.table.${gatilho}`)),
+      trigger: toPlainText(t(`analytics.table.${trigger}`)),
       payload: toPlainText(t(`analytics.table.${carga}`)),
     }));
   });
@@ -822,16 +822,16 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
 }
 
 /** Rótulo de navegação, com queda para o ui.json quando o slug não o declara. */
-function navLabel(chave: string): string {
-  const doComponente = t(chave);
-  return doComponente === chave ? tNav(chave) : doComponente;
+function navLabel(key: string): string {
+  const doComponente = t(key);
+  return doComponente === key ? tNav(key) : doComponente;
 }
 
 /** Itens `base.itemN` na ordem numérica, quantos existirem. */
 function numberedItems(d: Record<string, string>, base: string): string[] {
-  const itens: string[] = [];
-  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) itens.push(d[`${base}.item${i}`]);
-  return itens;
+  const items: string[] = [];
+  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) items.push(d[`${base}.item${i}`]);
+  return items;
 }
 
 const priorityKeyMap: Record<string, string> = {

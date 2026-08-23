@@ -72,11 +72,11 @@ export const Closed: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
-    const gatilho = canvas.getByRole('button', { name: /Abrir menu/i });
+    const trigger = canvas.getByRole('button', { name: /Abrir menu/i });
 
-    await expect(gatilho).toBeVisible();
-    await expect(gatilho).toHaveAttribute('aria-haspopup', 'menu');
-    await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+    await expect(trigger).toBeVisible();
+    await expect(trigger).toHaveAttribute('aria-haspopup', 'menu');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     // O portal desmonta o popup ao fechar: fechado não é "escondido com
     // display:none", é ausente do DOM. Um popup só escondido continuaria no
     // percurso do leitor de tela.
@@ -111,26 +111,26 @@ export const Open: Story = {
   }),
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
-    const itens = within(menu).getAllByRole('menuitem');
+    const items = within(menu).getAllByRole('menuitem');
 
     await step('O menu abre com os três itens', async () => {
-      await expect(itens).toHaveLength(3);
-      for (const item of itens) await expect(item).toHaveAttribute('role', 'menuitem');
+      await expect(items).toHaveLength(3);
+      for (const item of items) await expect(item).toHaveAttribute('role', 'menuitem');
     });
 
     await step('As setas descem e sobem um item por vez', async () => {
-      itens[0].focus();
+      items[0].focus();
       await userEvent.keyboard('{ArrowDown}');
-      await expect(document.activeElement).toBe(itens[1]);
+      await expect(document.activeElement).toBe(items[1]);
       await userEvent.keyboard('{ArrowUp}');
-      await expect(document.activeElement).toBe(itens[0]);
+      await expect(document.activeElement).toBe(items[0]);
     });
 
     await step('Home e End vão ao primeiro e ao último', async () => {
       await userEvent.keyboard('{End}');
-      await expect(document.activeElement).toBe(itens[2]);
+      await expect(document.activeElement).toBe(items[2]);
       await userEvent.keyboard('{Home}');
-      await expect(document.activeElement).toBe(itens[0]);
+      await expect(document.activeElement).toBe(items[0]);
     });
 
     await step('Digitar uma letra salta para o item que começa com ela', async () => {
@@ -139,14 +139,14 @@ export const Open: Story = {
       // a asserção compara com OUTRO item, e não com "mudou de lugar".
       await userEvent.keyboard('e');
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(itens[2]);
+        await expect(document.activeElement).toBe(items[2]);
       });
     });
 
     await step('O item em foco é o único destacado', async () => {
       // O realce é o que diz onde o teclado está: sem ele a navegação por setas
       // é invisível para quem enxerga.
-      const destacados = itens.filter((i) => i.hasAttribute('data-highlighted'));
+      const destacados = items.filter((i) => i.hasAttribute('data-highlighted'));
       await expect(destacados).toHaveLength(1);
       await expect(destacados[0]).toBe(document.activeElement);
     });
@@ -184,16 +184,16 @@ export const Controlled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Ações' });
+    const trigger = canvas.getByRole('button', { name: 'Ações' });
 
     await step('O botão externo abre o menu', async () => {
       // Idempotente: só clica quando o estado atual não é o desejado, então o
       // replay do painel Interactions chega ao mesmo lugar.
-      if (gatilho.getAttribute('aria-expanded') !== 'true') {
+      if (trigger.getAttribute('aria-expanded') !== 'true') {
         await userEvent.click(canvas.getByRole('button', { name: 'Abrir pelo estado' }));
       }
       await waitForPortal('menu');
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Escape fecha e o estado de fora acompanha', async () => {
@@ -232,25 +232,25 @@ export const ItemDisabled: Story = {
   }),
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
-    const itens = within(menu).getAllByRole('menuitem');
-    const desabilitado = within(menu).getByRole('menuitem', { name: 'Arquivar' });
+    const items = within(menu).getAllByRole('menuitem');
+    const disabled = within(menu).getByRole('menuitem', { name: 'Arquivar' });
 
     await step('O item se anuncia desabilitado', async () => {
-      await expect(desabilitado).toHaveAttribute('aria-disabled', 'true');
-      await expect(desabilitado.hasAttribute('data-disabled')).toBe(true);
+      await expect(disabled).toHaveAttribute('aria-disabled', 'true');
+      await expect(disabled.hasAttribute('data-disabled')).toBe(true);
     });
 
     await step('O clique é bloqueado pelo CSS, não só pelo callback', async () => {
       // `pointer-events: none` é o que impede o clique de chegar; sem ele o item
       // continuaria clicável e o bloqueio dependeria de cada consumidor.
-      await expect(getComputedStyle(desabilitado).pointerEvents).toBe('none');
+      await expect(getComputedStyle(disabled).pointerEvents).toBe('none');
     });
 
     await step('A seta pula o item desabilitado', async () => {
-      itens[0].focus();
+      items[0].focus();
       await userEvent.keyboard('{ArrowDown}');
-      await expect(document.activeElement).not.toBe(desabilitado);
-      await expect(document.activeElement).toBe(itens[2]);
+      await expect(document.activeElement).not.toBe(disabled);
+      await expect(document.activeElement).toBe(items[2]);
     });
   },
 };
@@ -290,12 +290,12 @@ export const CheckboxIndeterminate: Story = {
     const menu = await waitForPortal('menu');
     const canvas = within(menu);
     const misto = canvas.getByRole('menuitemcheckbox', { name: 'Nome' });
-    const marcado = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });
+    const checked = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });
     const desmarcado = canvas.getByRole('menuitemcheckbox', { name: 'Telefone' });
 
     await step('O estado misto é anunciado como misto, e não como marcado', async () => {
       await expect(misto.getAttribute('aria-checked')).toBe('mixed');
-      await expect(marcado.getAttribute('aria-checked')).toBe('true');
+      await expect(checked.getAttribute('aria-checked')).toBe('true');
       await expect(desmarcado.getAttribute('aria-checked')).toBe('false');
     });
 
@@ -303,7 +303,7 @@ export const CheckboxIndeterminate: Story = {
       // A medida é a GEOMETRIA do glifo, não o nome da classe nem o do ícone:
       // traço é largo e sem altura, tique tem a diagonal.
       const formaMista = formaDoIndicador(misto);
-      const formaMarcada = formaDoIndicador(marcado);
+      const formaMarcada = formaDoIndicador(checked);
       await expect(ehTraco(formaMista)).toBe(true);
       await expect(ehTique(formaMista)).toBe(false);
       await expect(ehTique(formaMarcada)).toBe(true);

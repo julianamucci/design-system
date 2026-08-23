@@ -42,9 +42,9 @@
 
   let open = $state(false);
 
-  function onChange(valor: boolean) {
-    open = valor;
-    onOpenChange?.(valor);
+  function onChange(value: boolean) {
+    open = value;
+    onOpenChange?.(value);
   }
 </script>
 

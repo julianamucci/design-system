@@ -33,23 +33,23 @@ const BACKGROUND: Record<TomDoSlide, string> = {
 };
 
 /** Um slide, com o rótulo centralizado. */
-export function slideDeExemplo(rotulo: string, o: SlideDeExemploOptions = {}): HTMLElement {
+export function slideDeExemplo(label: string, o: SlideDeExemploOptions = {}): HTMLElement {
   const { measurement = 'nds-aspect-16-9', tom = 'muted' } = o;
 
   const frame = document.createElement('div');
   frame.className = measurement;
 
-  const caixa = document.createElement('div');
-  caixa.className = `nds-cluster nds-h-full nds-rounded-lg ${BACKGROUND[tom]}`;
-  caixa.dataset.align = 'center';
-  caixa.dataset.justify = 'center';
+  const box = document.createElement('div');
+  box.className = `nds-cluster nds-h-full nds-rounded-lg ${BACKGROUND[tom]}`;
+  box.dataset.align = 'center';
+  box.dataset.justify = 'center';
 
   const labelEl = document.createElement('span');
   labelEl.className = 'nds-text-h3 nds-font-semibold nds-text-muted-foreground';
-  labelEl.textContent = rotulo;
+  labelEl.textContent = label;
 
-  caixa.appendChild(labelEl);
-  frame.appendChild(caixa);
+  box.appendChild(labelEl);
+  frame.appendChild(box);
   return frame;
 }
 

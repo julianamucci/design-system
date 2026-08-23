@@ -89,10 +89,10 @@ export const Default: Story = {
         ratioContrast(styleItem.borderTopColor, styleItem.backgroundColor),
       ).toBeGreaterThanOrEqual(3);
 
-      const rotulo = canvas.getByText("Cartão de crédito");
+      const label = canvas.getByText("Cartão de crédito");
       const backgroundPage = getComputedStyle(canvasElement.ownerDocument.body).backgroundColor;
       await expect(
-        ratioContrast(getComputedStyle(rotulo).color, backgroundPage),
+        ratioContrast(getComputedStyle(label).color, backgroundPage),
       ).toBeGreaterThanOrEqual(4.5);
     });
   },

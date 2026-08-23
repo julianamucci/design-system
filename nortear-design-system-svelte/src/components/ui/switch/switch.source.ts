@@ -59,7 +59,7 @@ export function switchSource(_gerado?: string, ctx?: { args?: Partial<SwitchArgs
     descriptionText = 'Receba novidades e promoções da plataforma.',
   } = ctx?.args ?? {};
 
-  const comRotulo = withDescription || withLabel;
+  const hasLabel = withDescription || withLabel;
 
   const props = [
     'id="opcao"',
@@ -70,12 +70,12 @@ export function switchSource(_gerado?: string, ctx?: { args?: Partial<SwitchArgs
     ariaInvalid ? 'aria-invalid="true"' : '',
     // Sem rótulo visível o nome tem de vir de `aria-label`: o controle continua
     // precisando ser anunciado com o mesmo texto que o rótulo traria.
-    comRotulo ? 'aria-labelledby="opcao-label"' : `aria-label="${ariaLabel}"`,
+    hasLabel ? 'aria-labelledby="opcao-label"' : `aria-label="${ariaLabel}"`,
     withDescription ? 'aria-describedby="opcao-description"' : '',
   ].filter((prop) => prop !== '');
 
   const script = `import { Switch } from "@/components/ui/switch";${
-    comRotulo ? '\nimport { Label } from "@/components/ui/label";' : ''
+    hasLabel ? '\nimport { Label } from "@/components/ui/label";' : ''
   }
 
 let ligado = $state(${checked});`;

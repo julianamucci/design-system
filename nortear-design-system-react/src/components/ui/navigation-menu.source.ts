@@ -43,8 +43,8 @@ const WAIT_DEFAULT = 50;
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
 function importingNav(...parts: string[]): string {
-  const lista = [...parts].sort();
-  return `import {\n${lista
+  const list = [...parts].sort();
+  return `import {\n${list
     .map((part) => `  ${part},`)
     .join('\n')}\n} from "@/components/ui/navigation-menu";`;
 }
@@ -54,18 +54,18 @@ function importingNav(...parts: string[]): string {
  * anuncia só "navegação", e duas barras na mesma página reprovam em
  * `landmark-unique`.
  */
-function barra(atributos: string, itens: string): string {
-  return `<NavigationMenu${atributos}>
+function barra(attrs: string, items: string): string {
+  return `<NavigationMenu${attrs}>
   <NavigationMenuList>
-${indentar(itens, '    ')}
+${indentar(items, '    ')}
   </NavigationMenuList>
 </NavigationMenu>`;
 }
 
 /** Destino direto da barra — sem painel, navega no clique. */
-function destination(href: string, rotulo: string, atual = false): string {
+function destination(href: string, label: string, current = false): string {
   return `<NavigationMenuItem>
-  <NavigationMenuLink href="${href}"${atual ? ' active' : ''}>${rotulo}</NavigationMenuLink>
+  <NavigationMenuLink href="${href}"${current ? ' active' : ''}>${label}</NavigationMenuLink>
 </NavigationMenuItem>`;
 }
 
@@ -74,34 +74,34 @@ function destination(href: string, rotulo: string, atual = false): string {
  * valor inicial e o retorno de mudança se referem a ESTE painel, e não à ordem
  * em que ele aparece na barra.
  */
-function withPanel(valor: string, rotulo: string, conteudo: string): string {
-  return `<NavigationMenuItem value="${valor}">
-  <NavigationMenuTrigger>${rotulo}</NavigationMenuTrigger>
+function withPanel(value: string, label: string, content: string): string {
+  return `<NavigationMenuItem value="${value}">
+  <NavigationMenuTrigger>${label}</NavigationMenuTrigger>
   <NavigationMenuContent>
-${indentar(conteudo, '    ')}
+${indentar(content, '    ')}
   </NavigationMenuContent>
 </NavigationMenuItem>`;
 }
 
 /** Um destino do painel dentro de `<li>`, com descrição opcional. */
-function filho(href: string, rotulo: string, descricao?: string): string {
-  const corpo = descricao
-    ? `    <div className="nds-navigation-menu-child-label">${rotulo}</div>
+function child(href: string, label: string, descricao?: string): string {
+  const body = descricao
+    ? `    <div className="nds-navigation-menu-child-label">${label}</div>
     <p className="nds-navigation-menu-child-description">
       ${descricao}
     </p>`
-    : `    <div className="nds-navigation-menu-child-label">${rotulo}</div>`;
+    : `    <div className="nds-navigation-menu-child-label">${label}</div>`;
   return `<li>
   <NavigationMenuChild href="${href}">
-${corpo}
+${body}
   </NavigationMenuChild>
 </li>`;
 }
 
 /** Lista vertical de destinos dentro do painel. */
-function panelList(...itens: string[]): string {
+function panelList(...items: string[]): string {
   return `<ul className="nds-stack nds-list-none nds-w-xs" data-spacing="xs">
-${indentar(itens.join('\n'), '  ')}
+${indentar(items.join('\n'), '  ')}
 </ul>`;
 }
 
@@ -138,7 +138,7 @@ const PARTS_SO_TARGETS = [
  */
 export const navigationMenuSource: SourceTransform<NavigationMenuArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const atributos = attrsMultilinha([
+  const attrs = attrsMultilinha([
     'aria-label="Navegação principal"',
     propText('defaultValue', args.defaultValue),
     typeof args.delay === 'number' && args.delay !== WAIT_DEFAULT
@@ -153,13 +153,13 @@ export const navigationMenuSource: SourceTransform<NavigationMenuArgs> = (_gerad
   return jsxSnippet(
     importingNav(...PARTS_WITH_PANEL),
     barra(
-      atributos,
+      attrs,
       [
         destination('#inicio', 'Início'),
         withPanel(
           'produtos',
           'Produtos',
-          panelList(filho('#inicial', 'Plano Inicial'), filho('#profissional', 'Plano Profissional')),
+          panelList(child('#inicial', 'Plano Inicial'), child('#profissional', 'Plano Profissional')),
         ),
         destination('#sobre', 'Sobre'),
       ].join('\n'),
@@ -183,7 +183,7 @@ ${indentar(
     withPanel(
       'relatorios',
       'Relatórios',
-      panelList(filho('#vendas', 'Vendas'), filho('#assinaturas', 'Assinaturas')),
+      panelList(child('#vendas', 'Vendas'), child('#assinaturas', 'Assinaturas')),
     ),
     destination('#configuracoes', 'Configurações'),
   ].join('\n'),
@@ -215,9 +215,9 @@ export function navigationMenuOpenSource(): string {
           'produtos',
           'Produtos',
           panelList(
-            filho('#inicial', 'Plano Inicial'),
-            filho('#profissional', 'Plano Profissional'),
-            filho('#empresarial', 'Plano Empresarial'),
+            child('#inicial', 'Plano Inicial'),
+            child('#profissional', 'Plano Profissional'),
+            child('#empresarial', 'Plano Empresarial'),
           ),
         ),
       ].join('\n'),
@@ -271,7 +271,7 @@ export function navigationMenuSomenteTargetsSource(): string {
  * linha de contexto que atende ao critério de propósito do link (WCAG 2.4.4).
  */
 export function navigationMenuMegaMenuSource(): string {
-  const grade = `<ul
+  const grid = `<ul
   className="nds-grid nds-list-none nds-w-lg"
   data-fixed
   data-cols="2"
@@ -279,10 +279,10 @@ export function navigationMenuMegaMenuSource(): string {
 >
 ${indentar(
   [
-    filho('#marketing', 'Para Marketing', 'Campanhas, automação e atribuição num lugar só.'),
-    filho('#vendas', 'Para Vendas', 'Funil, previsão e histórico de cada negociação.'),
-    filho('#suporte', 'Para Suporte', 'Fila de atendimento, base de conhecimento e métricas.'),
-    filho(
+    child('#marketing', 'Para Marketing', 'Campanhas, automação e atribuição num lugar só.'),
+    child('#vendas', 'Para Vendas', 'Funil, previsão e histórico de cada negociação.'),
+    child('#suporte', 'Para Suporte', 'Fila de atendimento, base de conhecimento e métricas.'),
+    child(
       '#financeiro',
       'Para Financeiro',
       'Cobrança recorrente, conciliação e relatórios fiscais.',
@@ -296,7 +296,7 @@ ${indentar(
     importingNav(...PARTS_WITH_PANEL),
     barra(
       ' aria-label="Navegação de soluções"',
-      [destination('#inicio', 'Início'), withPanel('solucoes', 'Soluções', grade)].join('\n'),
+      [destination('#inicio', 'Início'), withPanel('solucoes', 'Soluções', grid)].join('\n'),
     ),
   );
 }
@@ -307,7 +307,7 @@ ${indentar(
  * por cor: é o que mantém a distinção legível para quem não a percebe.
  */
 export function navigationMenuHighlightSource(): string {
-  const conteudo = `<div className="nds-grid nds-w-lg" data-fixed data-cols="2" data-spacing="sm">
+  const content = `<div className="nds-grid nds-w-lg" data-fixed data-cols="2" data-spacing="sm">
   <NavigationMenuChild href="#comece" className="nds-h-full">
     <div className="nds-navigation-menu-child-label">Comece agora</div>
     <p className="nds-navigation-menu-child-description">
@@ -318,9 +318,9 @@ export function navigationMenuHighlightSource(): string {
   <ul className="nds-stack nds-list-none" data-spacing="xs">
 ${indentar(
   [
-    filho('#guias', 'Guias'),
-    filho('#api', 'Referência da API'),
-    filho('#changelog', 'Novidades'),
+    child('#guias', 'Guias'),
+    child('#api', 'Referência da API'),
+    child('#changelog', 'Novidades'),
   ].join('\n'),
   '    ',
 )}
@@ -331,7 +331,7 @@ ${indentar(
     importingNav(...PARTS_WITH_PANEL),
     barra(
       ' aria-label="Navegação de recursos"',
-      [destination('#inicio', 'Início'), withPanel('recursos', 'Recursos', conteudo)].join('\n'),
+      [destination('#inicio', 'Início'), withPanel('recursos', 'Recursos', content)].join('\n'),
     ),
   );
 }

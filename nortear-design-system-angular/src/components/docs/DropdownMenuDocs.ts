@@ -470,7 +470,7 @@ const ITEMS_DEMO = ['perfil', 'configuracoes', 'sair'] as const;
           {{ t('demonstration.labels.withRadio') }}
         </button>
         <ng-template ndsDropdownMenuContent>
-          <div ndsDropdownMenuRadioGroup [(value)]="tema">
+          <div ndsDropdownMenuRadioGroup [(value)]="theme">
             <div ndsDropdownMenuLabel>{{ t('demonstration.labels.withRadio') }}</div>
             <div ndsDropdownMenuRadioItem value="light">Light</div>
             <div ndsDropdownMenuRadioItem value="dark">Dark</div>
@@ -552,7 +552,7 @@ const ITEMS_DEMO = ['perfil', 'configuracoes', 'sair'] as const;
                 {{ t('demonstration.labels.withRadio') }}
               </button>
               <ng-template ndsDropdownMenuContent>
-                <div ndsDropdownMenuRadioGroup [(value)]="tema">
+                <div ndsDropdownMenuRadioGroup [(value)]="theme">
                   <div ndsDropdownMenuLabel>{{ t('demonstration.labels.withRadio') }}</div>
                   <div ndsDropdownMenuRadioItem value="light">Light</div>
                   <div ndsDropdownMenuRadioItem value="dark">Dark</div>
@@ -690,7 +690,7 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
   /** Estado dos exemplos vivos — alternadores e escolha única. */
   protected readonly colunaNome = signal(true);
   protected readonly colunaEmail = signal(false);
-  protected readonly tema = signal<unknown>('light');
+  protected readonly theme = signal<unknown>('light');
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
@@ -875,21 +875,21 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
     const sim = tNav('common.yes');
 
     /** Linha cujo tipo/padrão/descrição vêm da tabela do conteúdo compartilhado. */
-    const ofContent = (nome: string, chave: string, tipo?: string) => ({
-      name: nome,
-      type: tipo ?? toPlainText(t(`props.table.${chave}.type`)),
-      defaultValue: toPlainText(t(`props.table.${chave}.default`)),
-      required: toPlainText(t(`props.table.${chave}.required`)),
-      description: toPlainText(t(`props.table.${chave}.description`)),
+    const ofContent = (name: string, key: string, type?: string) => ({
+      name: name,
+      type: type ?? toPlainText(t(`props.table.${key}.type`)),
+      defaultValue: toPlainText(t(`props.table.${key}.default`)),
+      required: toPlainText(t(`props.table.${key}.required`)),
+      description: toPlainText(t(`props.table.${key}.description`)),
     });
 
     /** Linha que só existe neste stack — descrição vem do override. */
-    const local = (nome: string, tipo: string, padrao: string, chave: string) => ({
-      name: nome,
-      type: tipo,
+    const local = (name: string, type: string, padrao: string, key: string) => ({
+      name: name,
+      type: type,
       defaultValue: padrao,
       required: not,
-      description: toPlainText(t(`props.${chave}.description`)),
+      description: toPlainText(t(`props.${key}.description`)),
     });
 
     const className = local('class', 'string', '—', 'class');
@@ -1048,14 +1048,14 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
     dict();
     // Sem tabela no conteúdo compartilhado: os eventos vêm da descrição, e são
     // os mesmos que a demonstração acima dispara de verdade.
-    const gatilho = toPlainText(t('analytics.description'));
+    const trigger = toPlainText(t('analytics.description'));
     return [
-      { event: 'dropdown_menu_open',        trigger: gatilho, payload: 'component, label, location' },
-      { event: 'dropdown_menu_close',       trigger: gatilho, payload: 'component, label, location' },
-      { event: 'dropdown_menu_item_select', trigger: gatilho, payload: 'component, label, menu, location' },
+      { event: 'dropdown_menu_open',        trigger: trigger, payload: 'component, label, location' },
+      { event: 'dropdown_menu_close',       trigger: trigger, payload: 'component, label, location' },
+      { event: 'dropdown_menu_item_select', trigger: trigger, payload: 'component, label, menu, location' },
       {
         event: 'docs_page_view',
-        trigger: gatilho,
+        trigger: trigger,
         payload: 'component_name, locale, page_title',
       },
     ];

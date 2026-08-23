@@ -43,8 +43,8 @@ export {
  * decidir o lado, e é um sinal mais preciso, neste stack, que a opacidade que o
  * colhedor compartilhado usa.
  */
-function posicionado(painel: HTMLElement | null): painel is HTMLElement {
-  return !!painel && painel.hasAttribute('data-side');
+function posicionado(panel: HTMLElement | null): panel is HTMLElement {
+  return !!panel && panel.hasAttribute('data-side');
 }
 
 export async function waitForOpen(): Promise<HTMLElement> {

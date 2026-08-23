@@ -32,49 +32,49 @@ const CLASSNAME_PANEL = 'nds-text-body nds-text-muted-foreground';
 const VERTICAL_CLASSNAME_PANEL = `${CLASSNAME_PANEL} nds-pl-4`;
 
 type Aba = {
-  valor: string;
+  value: string;
   /** Conteúdo do gatilho: o rótulo, ou rótulo com ícone/contador em várias linhas. */
-  gatilho: string;
+  trigger: string;
   /** Conteúdo do painel. */
-  painel: string;
+  panel: string;
   desabilitada?: boolean;
 };
 
 /** Abre em uma linha quando o conteúdo cabe, e quebra quando não cabe. */
-function bloco(tag: string, atributos: string, conteudo: string, recuo: number): string {
+function block(tag: string, attrs: string, content: string, recuo: number): string {
   const p = ' '.repeat(recuo);
-  if (!conteudo.includes('\n')) return `${p}<${tag}${atributos}>${conteudo}</${tag}>`;
-  return `${p}<${tag}${atributos}>\n${indentar(conteudo, recuo + 2)}\n${p}</${tag}>`;
+  if (!content.includes('\n')) return `${p}<${tag}${attrs}>${content}</${tag}>`;
+  return `${p}<${tag}${attrs}>\n${indentar(content, recuo + 2)}\n${p}</${tag}>`;
 }
 
-function tabs(opcoes: {
-  raiz?: string;
-  lista?: string;
+function tabs(options: {
+  root?: string;
+  list?: string;
   rotuloLista: string;
   abas: Aba[];
   classePainel?: string;
 }): string {
-  const { raiz = '', lista = '', rotuloLista, abas, classePainel = CLASSNAME_PANEL } = opcoes;
+  const { root = '', list = '', rotuloLista, abas, classePainel = CLASSNAME_PANEL } = options;
   const triggers = abas
     .map((aba) =>
-      bloco(
+      block(
         'TabsTrigger',
         // `disabled` da aba vira `aria-disabled`, nunca o atributo nativo: o
         // padrão WAI-ARIA manda a aba indisponível continuar alcançável pela
         // seta, para que o leitor de tela a anuncie.
-        attrs(`value="${aba.valor}"`, aba.desabilitada ? 'disabled' : ''),
-        aba.gatilho,
+        attrs(`value="${aba.value}"`, aba.desabilitada ? 'disabled' : ''),
+        aba.trigger,
         4,
       ),
     )
     .join('\n');
   const panels = abas
     .map((aba) =>
-      bloco('TabsContent', attrs(`value="${aba.valor}"`, `class="${classePainel}"`), aba.painel, 2),
+      block('TabsContent', attrs(`value="${aba.value}"`, `class="${classePainel}"`), aba.panel, 2),
     )
     .join('\n');
-  return `<Tabs${attrs(raiz)}>
-  <TabsList${attrs(lista, `aria-label="${rotuloLista}"`)}>
+  return `<Tabs${attrs(root)}>
+  <TabsList${attrs(list, `aria-label="${rotuloLista}"`)}>
 ${triggers}
   </TabsList>
 ${panels}
@@ -83,9 +83,9 @@ ${panels}
 
 /** As três seções que servem de exemplo na maioria das stories. */
 const SECTIONS: Aba[] = [
-  { valor: 'overview', gatilho: 'Visão geral', painel: 'Conteúdo da visão geral.' },
-  { valor: 'properties', gatilho: 'Propriedades', painel: 'Lista de propriedades.' },
-  { valor: 'examples', gatilho: 'Exemplos', painel: 'Exemplos de uso.' },
+  { value: 'overview', trigger: 'Visão geral', panel: 'Conteúdo da visão geral.' },
+  { value: 'properties', trigger: 'Propriedades', panel: 'Lista de propriedades.' },
+  { value: 'examples', trigger: 'Exemplos', panel: 'Exemplos de uso.' },
 ];
 
 /**
@@ -101,7 +101,7 @@ export const tabsSource: SourceTransform<TabsArgs> = (_gerado, ctx) => {
   return vueSnippet(
     IMPORT,
     tabs({
-      raiz: attrs(
+      root: attrs(
         attr('default-value', args.defaultValue) || 'default-value="overview"',
         attr('orientation', args.orientation, 'horizontal'),
         attr('activation-mode', args.activationMode, 'automatic'),
@@ -122,7 +122,7 @@ export function tabsDefaultSource(): string {
   return vueSnippet(
     IMPORT,
     tabs({
-      raiz: 'default-value="overview" class="nds-w-md"',
+      root: 'default-value="overview" class="nds-w-md"',
       rotuloLista: 'Seções do componente',
       abas: SECTIONS,
     }),
@@ -134,8 +134,8 @@ export function tabsLineSource(): string {
   return vueSnippet(
     IMPORT,
     tabs({
-      raiz: 'default-value="overview" class="nds-w-md"',
-      lista: 'variant="line"',
+      root: 'default-value="overview" class="nds-w-md"',
+      list: 'variant="line"',
       rotuloLista: 'Seções do componente',
       abas: SECTIONS,
     }),
@@ -150,24 +150,24 @@ export function tabsVerticalSource(): string {
   return vueSnippet(
     IMPORT,
     tabs({
-      raiz: 'default-value="profile" orientation="vertical" class="nds-w-lg"',
+      root: 'default-value="profile" orientation="vertical" class="nds-w-lg"',
       rotuloLista: 'Configurações da conta',
       classePainel: VERTICAL_CLASSNAME_PANEL,
       abas: [
         {
-          valor: 'profile',
-          gatilho: 'Perfil',
-          painel: 'Configurações do perfil — nome, foto e bio.',
+          value: 'profile',
+          trigger: 'Perfil',
+          panel: 'Configurações do perfil — nome, foto e bio.',
         },
         {
-          valor: 'account',
-          gatilho: 'Conta',
-          painel: 'Configurações da conta — e-mail, idioma e fuso.',
+          value: 'account',
+          trigger: 'Conta',
+          panel: 'Configurações da conta — e-mail, idioma e fuso.',
         },
         {
-          valor: 'security',
-          gatilho: 'Segurança',
-          painel: 'Configurações de segurança — senha e 2FA.',
+          value: 'security',
+          trigger: 'Segurança',
+          panel: 'Configurações de segurança — senha e 2FA.',
         },
       ],
     }),
@@ -182,7 +182,7 @@ export function tabsAbaAtivaSource(): string {
   return vueSnippet(
     IMPORT,
     tabs({
-      raiz: 'default-value="properties" class="nds-w-md"',
+      root: 'default-value="properties" class="nds-w-md"',
       rotuloLista: 'Seções do componente',
       abas: SECTIONS,
     }),
@@ -198,7 +198,7 @@ export function tabsAbaDesabilitadaSource(): string {
   return vueSnippet(
     IMPORT,
     tabs({
-      raiz: 'default-value="overview" class="nds-w-md"',
+      root: 'default-value="overview" class="nds-w-md"',
       rotuloLista: 'Seções do componente',
       abas: [
         SECTIONS[0],
@@ -218,23 +218,23 @@ export function tabsAbaDesabilitadaSource(): string {
  */
 export function tabsControlledSource(): string {
   const conjunto = tabs({
-    raiz: ':model-value="aba" class="nds-w-full" @update:model-value="aba = String($event)"',
+    root: ':model-value="aba" class="nds-w-full" @update:model-value="aba = String($event)"',
     rotuloLista: 'Seções do componente',
     abas: [
       {
-        valor: 'overview',
-        gatilho: 'Visão geral',
-        painel: 'O estado vive fora do componente.',
+        value: 'overview',
+        trigger: 'Visão geral',
+        panel: 'O estado vive fora do componente.',
       },
       {
-        valor: 'properties',
-        gatilho: 'Propriedades',
-        painel: 'Útil para sincronizar com a URL ou com o roteador.',
+        value: 'properties',
+        trigger: 'Propriedades',
+        panel: 'Útil para sincronizar com a URL ou com o roteador.',
       },
       {
-        valor: 'examples',
-        gatilho: 'Exemplos',
-        painel: 'Permite registrar a troca de aba na mudança de valor.',
+        value: 'examples',
+        trigger: 'Exemplos',
+        panel: 'Permite registrar a troca de aba na mudança de valor.',
       },
     ],
   });
@@ -258,29 +258,29 @@ ${indentar(conjunto)}
  * anunciado viraria um segundo pedaço de nome, sem acrescentar informação.
  */
 export function tabsWithIconsSource(): string {
-  const icone = (nome: string) => `<${nome} class="nds-size-4" aria-hidden="true" />`;
+  const icone = (name: string) => `<${name} class="nds-size-4" aria-hidden="true" />`;
   return vueSnippet(
     `${IMPORT}
 import { Code2, Eye, Settings2 } from 'lucide-vue-next'`,
     tabs({
-      raiz: 'default-value="preview" class="nds-w-md"',
-      lista: 'variant="line"',
+      root: 'default-value="preview" class="nds-w-md"',
+      list: 'variant="line"',
       rotuloLista: 'Modos de visualização',
       abas: [
         {
-          valor: 'preview',
-          gatilho: `${icone('Eye')}\nPreview`,
-          painel: 'Visualização renderizada do componente.',
+          value: 'preview',
+          trigger: `${icone('Eye')}\nPreview`,
+          panel: 'Visualização renderizada do componente.',
         },
         {
-          valor: 'code',
-          gatilho: `${icone('Code2')}\nCódigo`,
-          painel: 'Trecho copiável do componente.',
+          value: 'code',
+          trigger: `${icone('Code2')}\nCódigo`,
+          panel: 'Trecho copiável do componente.',
         },
         {
-          valor: 'settings',
-          gatilho: `${icone('Settings2')}\nAjustes`,
-          painel: 'Ajustes de tema, idioma e variantes.',
+          value: 'settings',
+          trigger: `${icone('Settings2')}\nAjustes`,
+          panel: 'Ajustes de tema, idioma e variantes.',
         },
       ],
     }),
@@ -297,20 +297,20 @@ export function tabsWithCounterSource(): string {
     `${IMPORT}
 import { Badge } from '@/components/ui/badge'`,
     tabs({
-      raiz: 'default-value="inbox" class="nds-w-md"',
+      root: 'default-value="inbox" class="nds-w-md"',
       rotuloLista: 'Caixas de mensagem',
       abas: [
         {
-          valor: 'inbox',
-          gatilho: 'Caixa de entrada\n<Badge as="span">12</Badge>',
-          painel: 'Mensagens recebidas.',
+          value: 'inbox',
+          trigger: 'Caixa de entrada\n<Badge as="span">12</Badge>',
+          panel: 'Mensagens recebidas.',
         },
         {
-          valor: 'spam',
-          gatilho: 'Spam\n<Badge as="span" variant="destructive">3</Badge>',
-          painel: 'Mensagens marcadas como spam.',
+          value: 'spam',
+          trigger: 'Spam\n<Badge as="span" variant="destructive">3</Badge>',
+          panel: 'Mensagens marcadas como spam.',
         },
-        { valor: 'trash', gatilho: 'Lixeira', painel: 'Mensagens excluídas.' },
+        { value: 'trash', trigger: 'Lixeira', panel: 'Mensagens excluídas.' },
       ],
     }),
   );
@@ -322,31 +322,31 @@ import { Badge } from '@/components/ui/badge'`,
  * então a cor atenuada desce para o parágrafo — título em `--foreground`.
  */
 export function tabsConfigVerticaisSource(): string {
-  const icone = (nome: string) => `<${nome} class="nds-size-4" aria-hidden="true" />`;
-  const painel = (titulo: string, texto: string) =>
-    `<h3 class="nds-font-medium nds-text-foreground">${titulo}</h3>\n<p class="nds-mt-1 nds-text-muted-foreground">${texto}</p>`;
+  const icone = (name: string) => `<${name} class="nds-size-4" aria-hidden="true" />`;
+  const panel = (title: string, text: string) =>
+    `<h3 class="nds-font-medium nds-text-foreground">${title}</h3>\n<p class="nds-mt-1 nds-text-muted-foreground">${text}</p>`;
   return vueSnippet(
     `${IMPORT}
 import { Settings2, Shield, User } from 'lucide-vue-next'`,
     tabs({
-      raiz: 'default-value="profile" orientation="vertical" class="nds-w-lg"',
+      root: 'default-value="profile" orientation="vertical" class="nds-w-lg"',
       rotuloLista: 'Configurações da conta',
       classePainel: 'nds-text-body nds-pl-4',
       abas: [
         {
-          valor: 'profile',
-          gatilho: `${icone('User')}\nPerfil`,
-          painel: painel('Perfil público', 'Nome, foto e bio visíveis para outros usuários.'),
+          value: 'profile',
+          trigger: `${icone('User')}\nPerfil`,
+          panel: panel('Perfil público', 'Nome, foto e bio visíveis para outros usuários.'),
         },
         {
-          valor: 'account',
-          gatilho: `${icone('Settings2')}\nConta`,
-          painel: painel('Conta', 'E-mail, idioma e preferências regionais.'),
+          value: 'account',
+          trigger: `${icone('Settings2')}\nConta`,
+          panel: panel('Conta', 'E-mail, idioma e preferências regionais.'),
         },
         {
-          valor: 'security',
-          gatilho: `${icone('Shield')}\nSegurança`,
-          painel: painel('Segurança', 'Senha, autenticação em dois fatores e sessões.'),
+          value: 'security',
+          trigger: `${icone('Shield')}\nSegurança`,
+          panel: panel('Segurança', 'Senha, autenticação em dois fatores e sessões.'),
         },
       ],
     }),
@@ -362,20 +362,20 @@ export function tabsModeManualSource(): string {
   return vueSnippet(
     IMPORT,
     tabs({
-      raiz: 'default-value="overview" activation-mode="manual" class="nds-w-md"',
+      root: 'default-value="overview" activation-mode="manual" class="nds-w-md"',
       rotuloLista: 'Seções do componente',
       abas: [
         {
-          valor: 'overview',
-          gatilho: 'Visão geral',
-          painel: 'A seta move o foco; Enter ou Espaço ativa a aba focada.',
+          value: 'overview',
+          trigger: 'Visão geral',
+          panel: 'A seta move o foco; Enter ou Espaço ativa a aba focada.',
         },
         {
-          valor: 'properties',
-          gatilho: 'Propriedades',
-          painel: 'Indicado quando trocar de aba tem custo.',
+          value: 'properties',
+          trigger: 'Propriedades',
+          panel: 'Indicado quando trocar de aba tem custo.',
         },
-        { valor: 'examples', gatilho: 'Exemplos', painel: 'Exemplos de uso.' },
+        { value: 'examples', trigger: 'Exemplos', panel: 'Exemplos de uso.' },
       ],
     }),
   );

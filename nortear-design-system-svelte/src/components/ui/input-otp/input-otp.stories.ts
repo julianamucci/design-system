@@ -4,7 +4,7 @@ import { userEvent, expect, fn, waitFor } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
 import InputOTPDocs from '@/components/docs/InputOTPDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { campo } from './input-otp.fixtures';
+import { field } from './input-otp.fixtures';
 import { inputOtpSource } from './input-otp.source';
 
 const meta: Meta = {
@@ -92,15 +92,15 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const boxes = (raiz: HTMLElement): HTMLElement[] => [
-  ...raiz.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),
+const boxes = (root: HTMLElement): HTMLElement[] => [
+  ...root.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),
 ];
 
-const texts = (raiz: HTMLElement): string[] =>
-  boxes(raiz).map((c) => c.textContent?.trim() ?? '');
+const texts = (root: HTMLElement): string[] =>
+  boxes(root).map((c) => c.textContent?.trim() ?? '');
 
-const boxAtiva = (raiz: HTMLElement): number =>
-  boxes(raiz).findIndex(
+const boxAtiva = (root: HTMLElement): number =>
+  boxes(root).findIndex(
     (c) => c.hasAttribute('data-active') && c.getAttribute('data-active') !== 'false',
   );
 
@@ -114,11 +114,11 @@ export const Playground: Story = {
   },
   play: async ({ canvasElement, step, args }) => {
     const total = (args.maxLength as number) ?? 6;
-    const input = campo(canvasElement);
+    const input = field(canvasElement);
 
     await step('O campo tem nome e uma caixa por dígito', async () => {
-      const rotulo = canvasElement.querySelector<HTMLLabelElement>('label[for]')!;
-      await expect(rotulo.htmlFor).toBe(input.id);
+      const label = canvasElement.querySelector<HTMLLabelElement>('label[for]')!;
+      await expect(label.htmlFor).toBe(input.id);
       await expect(boxes(canvasElement)).toHaveLength(total);
     });
 

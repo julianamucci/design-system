@@ -14,7 +14,7 @@ export type SelectArgs = {
 };
 
 type Option = { value: string; label: string };
-type Grupo = { label: string; opcoes: Option[] };
+type Grupo = { label: string; options: Option[] };
 
 const STATES: Option[] = [
   { value: 'sp', label: 'São Paulo' },
@@ -25,10 +25,10 @@ const STATES: Option[] = [
 const STATES_WITH_ES: Option[] = [...STATES, { value: 'es', label: 'Espírito Santo' }];
 
 const REGIOES: Grupo[] = [
-  { label: 'Sudeste', opcoes: STATES },
+  { label: 'Sudeste', options: STATES },
   {
     label: 'Sul',
-    opcoes: [
+    options: [
       { value: 'rs', label: 'Rio Grande do Sul' },
       { value: 'sc', label: 'Santa Catarina' },
       { value: 'pr', label: 'Paraná' },
@@ -39,14 +39,14 @@ const REGIOES: Grupo[] = [
 const PLACEHOLDER = 'Selecione...';
 
 /** Literal de opções indentado para dentro do bloco `<script>`. */
-function optionsLiteral(opcoes: Option[], recuo = '  '): string {
-  return opcoes
+function optionsLiteral(options: Option[], recuo = '  '): string {
+  return options
     .map((o) => `${recuo}{ value: "${o.value}", label: "${o.label}" },`)
     .join('\n');
 }
 
 type Options = {
-  valor?: string;
+  value?: string;
   disabled?: boolean;
   name?: string;
   size?: 'sm';
@@ -74,7 +74,7 @@ function triggerProps(o: Options): string {
 }
 
 /** Gatilho: rótulo do valor escolhido, ou o texto de espera em tom apagado. */
-function gatilho(o: Options): string {
+function trigger(o: Options): string {
   return `  <SelectTrigger${triggerProps(o)}>
     {#if rotulo}
       <span>{rotulo}</span>
@@ -90,7 +90,7 @@ function gatilho(o: Options): string {
  * O rótulo do campo fechado sai da lista que a composição já tem em mãos: a
  * lista é desmontada ao fechar, e não haveria de onde tirá-lo depois.
  */
-function listPlana(opcoes: Option[], o: Options = {}): string {
+function listPlana(options: Option[], o: Options = {}): string {
   return svelteSnippet(
     `import {
   Select,
@@ -99,15 +99,15 @@ function listPlana(opcoes: Option[], o: Options = {}): string {
   SelectTrigger,
 } from "@/components/ui/select";
 
-let value = $state("${o.valor ?? ''}");
+let value = $state("${o.value ?? ''}");
 
 const estados = [
-${optionsLiteral(opcoes)}
+${optionsLiteral(options)}
 ];
 
 const rotulo = $derived(estados.find((estado) => estado.value === value)?.label ?? "");`,
     `<Select${rootProps(o)}>
-${gatilho(o)}
+${trigger(o)}
   <SelectContent>
     {#each estados as estado (estado.value)}
       <SelectItem value={estado.value} label={estado.label} />
@@ -119,11 +119,11 @@ ${gatilho(o)}
 
 /** Lista agrupada por categoria, com divisão decorativa entre os grupos. */
 function listAgrupada(o: Options = {}): string {
-  const grupos = REGIOES.map(
+  const groups = REGIOES.map(
     (g) => `  {
     label: "${g.label}",
     opcoes: [
-${optionsLiteral(g.opcoes, '      ')}
+${optionsLiteral(g.options, '      ')}
     ],
   },`,
   ).join('\n');
@@ -142,14 +142,14 @@ ${optionsLiteral(g.opcoes, '      ')}
 let value = $state("");
 
 const regioes = [
-${grupos}
+${groups}
 ];
 
 const rotulo = $derived(
   regioes.flatMap((regiao) => regiao.opcoes).find((opcao) => opcao.value === value)?.label ?? "",
 );`,
     `<Select${rootProps(o)}>
-${gatilho(o)}
+${trigger(o)}
   <SelectContent>
     {#each regioes as regiao, i (regiao.label)}
       <SelectGroup>
@@ -186,7 +186,7 @@ ${optionsLiteral(STATES_WITH_ES)}
 
 const rotulo = $derived(estados.find((estado) => estado.value === value)?.label ?? "");`,
     `<Select${rootProps(o)}>
-${gatilho(o)}
+${trigger(o)}
   <SelectContent>
     {#each estados as estado (estado.value)}
       <SelectItem value={estado.value} label={estado.label}>
@@ -206,7 +206,7 @@ ${gatilho(o)}
  */
 export function selectSource(_gerado?: string, ctx?: { args?: Partial<SelectArgs> }): string {
   const { value = '', disabled = false, name } = ctx?.args ?? {};
-  return listPlana(STATES, { valor: value, disabled, name });
+  return listPlana(STATES, { value: value, disabled, name });
 }
 
 /** Variante de lista plana: só opções, sem cabeçalho nem divisão. */
@@ -229,7 +229,7 @@ export function selectWithIconSource(): string {
 
 /** Estado preenchido: um valor já escolhido antes da primeira abertura. */
 export function selectSelectedSource(): string {
-  return listPlana(STATES, { valor: 'rj' });
+  return listPlana(STATES, { value: 'rj' });
 }
 
 /** Estado bloqueado: o campo não abre e sai do percurso do Tab. */

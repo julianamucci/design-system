@@ -127,9 +127,9 @@ export const WithTitle: Story = {
       await expect(dialog).toBeVisible();
       const idTitle = dialog.getAttribute("aria-labelledby");
       await expect(idTitle).toBeTruthy();
-      const titulo = document.getElementById(idTitle!)!;
-      await expect(titulo).toHaveClass(/nds-popover-title/);
-      await expect(titulo.textContent).toMatch(/Configuracoes de exibição/i);
+      const title = document.getElementById(idTitle!)!;
+      await expect(title).toHaveClass(/nds-popover-title/);
+      await expect(title.textContent).toMatch(/Configuracoes de exibição/i);
     });
 
     await step("A descrição entra por aria-describedby", async () => {

@@ -68,8 +68,8 @@ export const WithCard: Story = {
     });
 
     await step('O Card nomeia o recorte por escrito', async () => {
-      const titulo = canvasElement.querySelector('[data-slot="card-title"]');
-      await expect(titulo?.textContent?.trim()).toBe('Acessos mensais');
+      const title = canvasElement.querySelector('[data-slot="card-title"]');
+      await expect(title?.textContent?.trim()).toBe('Acessos mensais');
       const descricao = canvasElement.querySelector('[data-slot="card-description"]');
       await expect(descricao?.textContent?.trim()).toBe('Total de acessos');
     });

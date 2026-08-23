@@ -9,33 +9,33 @@ import {
 
 describe('inputSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = inputSnippet();
-    expect(código).toContain("import { createInput } from '@/components/ui/input';");
-    expect(código).toContain('createInput({');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('<input');
+    const code = inputSnippet();
+    expect(code).toContain("import { createInput } from '@/components/ui/input';");
+    expect(code).toContain('createInput({');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('<input');
   });
 
   it('sai com o rótulo associado — campo sem nome não é anunciado por ninguém', () => {
-    const código = inputSnippet();
-    expect(código).toContain("import { createLabel } from '@/components/ui/label';");
-    expect(código).toContain("createLabel({ text: 'Nome completo', htmlFor: 'campo' })");
-    expect(código).toContain("document.querySelector('#app')?.append(rotulo, campo);");
+    const code = inputSnippet();
+    expect(code).toContain("import { createLabel } from '@/components/ui/label';");
+    expect(code).toContain("createLabel({ text: 'Nome completo', htmlFor: 'campo' })");
+    expect(code).toContain("document.querySelector('#app')?.append(rotulo, campo);");
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = inputSnippet();
-    expect(código).not.toContain('type');
-    expect(código).not.toContain('disabled');
-    expect(código).not.toContain('aria-invalid');
-    expect(código).not.toContain('aria-describedby');
+    const code = inputSnippet();
+    expect(code).not.toContain('type');
+    expect(code).not.toContain('disabled');
+    expect(code).not.toContain('aria-invalid');
+    expect(code).not.toContain('aria-describedby');
   });
 
   it('mostra tipo, texto de exemplo e bloqueio quando a story os usa', () => {
-    const código = inputSnippet({ type: 'email', placeholder: 'ex: joao@empresa.com', disabled: true });
-    expect(código).toContain("type: 'email'");
-    expect(código).toContain("placeholder: 'ex: joao@empresa.com'");
-    expect(código).toContain('disabled: true');
+    const code = inputSnippet({ type: 'email', placeholder: 'ex: joao@empresa.com', disabled: true });
+    expect(code).toContain("type: 'email'");
+    expect(code).toContain("placeholder: 'ex: joao@empresa.com'");
+    expect(code).toContain('disabled: true');
   });
 
   it('não repete o tipo padrão, que a fábrica já assume', () => {
@@ -45,29 +45,29 @@ describe('inputSnippet', () => {
   it('liga a mensagem de erro ao campo pelos dois atributos', () => {
     // Borda vermelha sem `aria-invalid` não é anunciada; mensagem sem
     // `aria-describedby` não é lida junto com o campo.
-    const código = inputSnippet({ id: 'email', ariaInvalid: true, mensagem: 'Email inválido.' });
-    expect(código).toContain("campo.setAttribute('aria-invalid', 'true');");
-    expect(código).toContain("campo.setAttribute('aria-describedby', 'email-erro');");
-    expect(código).toContain("erro.id = 'email-erro';");
-    expect(código).toContain('append(rotulo, campo, erro)');
+    const code = inputSnippet({ id: 'email', ariaInvalid: true, mensagem: 'Email inválido.' });
+    expect(code).toContain("campo.setAttribute('aria-invalid', 'true');");
+    expect(code).toContain("campo.setAttribute('aria-describedby', 'email-erro');");
+    expect(code).toContain("erro.id = 'email-erro';");
+    expect(code).toContain('append(rotulo, campo, erro)');
   });
 
   it('aponta o texto de apoio e o erro no mesmo describedby', () => {
-    const código = inputSnippet({ id: 'email', ajuda: 'Usaremos para notificações.', mensagem: 'Inválido.' });
-    expect(código).toContain("campo.setAttribute('aria-describedby', 'email-ajuda email-erro');");
-    expect(código).toContain('append(rotulo, campo, apoio, erro)');
+    const code = inputSnippet({ id: 'email', ajuda: 'Usaremos para notificações.', mensagem: 'Inválido.' });
+    expect(code).toContain("campo.setAttribute('aria-describedby', 'email-ajuda email-erro');");
+    expect(code).toContain('append(rotulo, campo, apoio, erro)');
   });
 
   it('mostra a paleta escura como classe do documento, não como outro campo', () => {
-    const código = inputSnippet({ temaEscuro: true });
-    expect(código).toContain("document.documentElement.classList.add('dark');");
-    expect(código.match(/createInput\(/g)).toHaveLength(1);
+    const code = inputSnippet({ temaEscuro: true });
+    expect(code).toContain("document.documentElement.classList.add('dark');");
+    expect(code.match(/createInput\(/g)).toHaveLength(1);
   });
 
   it('não vaza o andaime das stories', () => {
-    const código = inputSnippet({ ajuda: 'apoio' });
-    expect(código).not.toContain('campoRotulado');
-    expect(código).not.toContain('createFormField');
+    const code = inputSnippet({ ajuda: 'apoio' });
+    expect(code).not.toContain('campoRotulado');
+    expect(code).not.toContain('createFormField');
   });
 });
 
@@ -75,12 +75,12 @@ describe('inputComPrefixoSnippet', () => {
   it('acrescenta a classe do grupo em vez de substituir a base do campo', () => {
     // A regressão que esta forma existe para não ensinar: atribuir a classe
     // apagava `.nds-input` e o campo virava um input cru do navegador.
-    const código = inputWithPrefixoSnippet();
-    expect(código).toContain("campo.classList.add('nds-input-group-control');");
-    expect(código).not.toContain('campo.className =');
-    expect(código).toContain("grupo.className = 'nds-input-group';");
-    expect(código).toContain("prefixo.textContent = 'https://';");
-    expect(código).toContain('append(rotulo, grupo)');
+    const code = inputWithPrefixoSnippet();
+    expect(code).toContain("campo.classList.add('nds-input-group-control');");
+    expect(code).not.toContain('campo.className =');
+    expect(code).toContain("grupo.className = 'nds-input-group';");
+    expect(code).toContain("prefixo.textContent = 'https://';");
+    expect(code).toContain('append(rotulo, grupo)');
   });
 });
 
@@ -104,15 +104,15 @@ describe('inputSource', () => {
 
 describe('inputSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = inputSourceWith({ type: 'search' })('', { args: { type: 'text' } });
-    expect(código).toContain("type: 'search'");
+    const code = inputSourceWith({ type: 'search' })('', { args: { type: 'text' } });
+    expect(code).toContain("type: 'search'");
   });
 });
 
 describe('inputSourcePrefixo', () => {
   it('troca a forma do snippet, e não só as opções', () => {
-    const código = inputSourcePrefixo({ label: 'URL do site', type: 'url' })('', {});
-    expect(código).toContain('nds-input-group-addon');
-    expect(código).toContain("createLabel({ text: 'URL do site', htmlFor: 'site' })");
+    const code = inputSourcePrefixo({ label: 'URL do site', type: 'url' })('', {});
+    expect(code).toContain('nds-input-group-addon');
+    expect(code).toContain("createLabel({ text: 'URL do site', htmlFor: 'site' })");
   });
 });

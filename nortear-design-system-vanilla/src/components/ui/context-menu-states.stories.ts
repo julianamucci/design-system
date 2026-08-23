@@ -33,8 +33,8 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const item = (valor: string) =>
-  menuOpen()!.querySelector<HTMLElement>(`[data-value="${valor}"]`)!;
+const item = (value: string) =>
+  menuOpen()!.querySelector<HTMLElement>(`[data-value="${value}"]`)!;
 
 // ─── Item desabilitado ────────────────────────────────────────────────────────
 
@@ -273,14 +273,14 @@ export const CheckboxIndeterminate: Story = {
     const menu = await gestoOpen(area());
     const canvas = within(menu);
     const misto = canvas.getByRole('menuitemcheckbox', { name: 'Colunas' });
-    const marcado = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
+    const checked = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
     const desmarcado = canvas.getByRole('menuitemcheckbox', { name: 'Grade' });
 
     await step('O estado misto é anunciado como misto, e não como marcado', async () => {
       // Uma comparação frouxa leria o misto como verdadeiro; o que a pessoa ouve
       // tem que separar os três estados.
       await expect(misto.getAttribute('aria-checked')).toBe('mixed');
-      await expect(marcado.getAttribute('aria-checked')).toBe('true');
+      await expect(checked.getAttribute('aria-checked')).toBe('true');
       await expect(desmarcado.getAttribute('aria-checked')).toBe('false');
     });
 
@@ -289,7 +289,7 @@ export const CheckboxIndeterminate: Story = {
       // traço é largo e sem altura, tique tem a diagonal. Com o mesmo símbolo
       // nos dois estados — o defeito — esta asserção fica vermelha.
       const formaMista = formaDoIndicador(misto);
-      const formaMarcada = formaDoIndicador(marcado);
+      const formaMarcada = formaDoIndicador(checked);
       await expect(ehTraco(formaMista)).toBe(true);
       await expect(ehTique(formaMista)).toBe(false);
       await expect(ehTique(formaMarcada)).toBe(true);
@@ -341,8 +341,8 @@ export const ListenerCleanup: Story = {
           });
         },
         exercitar: (no) => {
-          const alvo = no.querySelector<HTMLElement>('[data-slot="context-menu-trigger"]');
-          alvo?.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, clientX: 20, clientY: 20 }));
+          const target = no.querySelector<HTMLElement>('[data-slot="context-menu-trigger"]');
+          target?.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, clientX: 20, clientY: 20 }));
         },
         seletorDePortal: '[data-slot="context-menu-content"]',
       });

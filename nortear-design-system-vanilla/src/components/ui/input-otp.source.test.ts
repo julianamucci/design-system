@@ -9,11 +9,11 @@ import {
 
 describe('inputOtpSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do conjunto', () => {
-    const código = inputOtpSnippet();
-    expect(código).toContain("import { createInputOTP } from '@/components/ui/input-otp';");
-    expect(código).toContain('createInputOTP({');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('input-otp-slot');
+    const code = inputOtpSnippet();
+    expect(code).toContain("import { createInputOTP } from '@/components/ui/input-otp';");
+    expect(code).toContain('createInputOTP({');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('input-otp-slot');
   });
 
   it('mostra sempre o comprimento — é a única opção obrigatória da fábrica', () => {
@@ -22,34 +22,34 @@ describe('inputOtpSnippet', () => {
   });
 
   it('usa o nome acessível canônico, nunca o apelido depreciado', () => {
-    const código = inputOtpSnippet({ 'aria-label': 'Código do aplicativo' });
-    expect(código).toContain("'aria-label': 'Código do aplicativo'");
-    expect(código).not.toContain('ariaLabel');
+    const code = inputOtpSnippet({ 'aria-label': 'Código do aplicativo' });
+    expect(code).toContain("'aria-label': 'Código do aplicativo'");
+    expect(code).not.toContain('ariaLabel');
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = inputOtpSnippet({ 'aria-label': 'Código de verificação' });
-    expect(código).not.toContain('aria-label');
-    expect(código).not.toContain('mode');
-    expect(código).not.toContain('separatorAt');
-    expect(código).not.toContain('disabled');
-    expect(código).not.toContain('invalid');
-    expect(código).not.toContain('autoFocus');
+    const code = inputOtpSnippet({ 'aria-label': 'Código de verificação' });
+    expect(code).not.toContain('aria-label');
+    expect(code).not.toContain('mode');
+    expect(code).not.toContain('separatorAt');
+    expect(code).not.toContain('disabled');
+    expect(code).not.toContain('invalid');
+    expect(code).not.toContain('autoFocus');
   });
 
   it('mostra conjunto aceito, valor e estados quando a story os usa', () => {
-    const código = inputOtpSnippet({
+    const code = inputOtpSnippet({
       mode: 'alphanumeric',
       value: '482913',
       invalid: true,
       disabled: true,
       autoFocus: true,
     });
-    expect(código).toContain("mode: 'alphanumeric'");
-    expect(código).toContain("value: '482913'");
-    expect(código).toContain('invalid: true');
-    expect(código).toContain('disabled: true');
-    expect(código).toContain('autoFocus: true');
+    expect(code).toContain("mode: 'alphanumeric'");
+    expect(code).toContain("value: '482913'");
+    expect(code).toContain('invalid: true');
+    expect(code).toContain('disabled: true');
+    expect(code).toContain('autoFocus: true');
   });
 
   it('traduz o atalho do control para os índices que a fábrica recebe', () => {
@@ -71,41 +71,41 @@ describe('inputOtpSnippet', () => {
   });
 
   it('não vaza o andaime das stories', () => {
-    const código = inputOtpSnippet({ withSeparator: true });
-    expect(código).not.toContain('slotsDe');
-    expect(código).not.toContain('withLabel');
-    expect(código).not.toContain('wrap(');
+    const code = inputOtpSnippet({ withSeparator: true });
+    expect(code).not.toContain('slotsDe');
+    expect(code).not.toContain('withLabel');
+    expect(code).not.toContain('wrap(');
   });
 });
 
 describe('inputOtpComposicaoSnippet', () => {
   it('liga o rótulo visível ao CONJUNTO, que label[for] não alcança', () => {
-    const código = inputOtpCompositionSnippet({ rotulo: 'Código de verificação', ligarRotulo: true });
-    expect(código).toContain("titulo.id = 'otp-rotulo';");
-    expect(código).toContain("codigo.removeAttribute('aria-label');");
-    expect(código).toContain("codigo.setAttribute('aria-labelledby', 'otp-rotulo');");
-    expect(código).not.toContain('createLabel');
+    const code = inputOtpCompositionSnippet({ label: 'Código de verificação', ligarRotulo: true });
+    expect(code).toContain("titulo.id = 'otp-rotulo';");
+    expect(code).toContain("codigo.removeAttribute('aria-label');");
+    expect(code).toContain("codigo.setAttribute('aria-labelledby', 'otp-rotulo');");
+    expect(code).not.toContain('createLabel');
   });
 
   it('aponta a ajuda pelo describedBy da própria fábrica', () => {
-    const código = inputOtpCompositionSnippet({ ajuda: 'Enviamos por SMS, expira em 5 min.' });
-    expect(código).toContain("describedBy: 'otp-ajuda'");
-    expect(código).toContain("apoio.id = 'otp-ajuda';");
+    const code = inputOtpCompositionSnippet({ ajuda: 'Enviamos por SMS, expira em 5 min.' });
+    expect(code).toContain("describedBy: 'otp-ajuda'");
+    expect(code).toContain("apoio.id = 'otp-ajuda';");
   });
 
   it('marca o erro e aponta a mensagem pelo mesmo caminho', () => {
-    const código = inputOtpCompositionSnippet({ erro: 'Código incorreto.' });
-    expect(código).toContain('invalid: true');
-    expect(código).toContain("describedBy: 'otp-erro'");
-    expect(código).toContain("aviso.textContent = 'Código incorreto.';");
+    const code = inputOtpCompositionSnippet({ error: 'Código incorreto.' });
+    expect(code).toContain('invalid: true');
+    expect(code).toContain("describedBy: 'otp-erro'");
+    expect(code).toContain("aviso.textContent = 'Código incorreto.';");
   });
 
   it('põe o reenvio DEPOIS do campo, com a fábrica de botão', () => {
-    const código = inputOtpCompositionSnippet({ reenvio: 'Reenviar código' });
-    expect(código).toContain("import { createButton } from '@/components/ui/button';");
-    expect(código).toContain("createButton({ variant: 'link', size: 'sm', label: 'Reenviar código' })");
-    expect(código.indexOf('createInputOTP')).toBeLessThan(código.indexOf('createButton({'));
-    expect(código).toContain('append(titulo, codigo, linha)');
+    const code = inputOtpCompositionSnippet({ reenvio: 'Reenviar código' });
+    expect(code).toContain("import { createButton } from '@/components/ui/button';");
+    expect(code).toContain("createButton({ variant: 'link', size: 'sm', label: 'Reenviar código' })");
+    expect(code.indexOf('createInputOTP')).toBeLessThan(code.indexOf('createButton({'));
+    expect(code).toContain('append(titulo, codigo, linha)');
   });
 });
 
@@ -129,16 +129,16 @@ describe('inputOtpSource', () => {
 
 describe('inputOtpSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = inputOtpSourceWith({ length: 4 })('', { args: { length: 6 } });
-    expect(código).toContain('length: 4');
-    expect(código).not.toContain('length: 6');
+    const code = inputOtpSourceWith({ length: 4 })('', { args: { length: 6 } });
+    expect(code).toContain('length: 4');
+    expect(code).not.toContain('length: 6');
   });
 });
 
 describe('inputOtpSourceComposicao', () => {
   it('troca a forma do snippet, e não só as opções', () => {
-    const código = inputOtpSourceComposition({ rotulo: 'Código', ajuda: 'Expira em 5 min.' })('', {});
-    expect(código).toContain("titulo.className = 'nds-text-label';");
-    expect(código).toContain("titulo.textContent = 'Código';");
+    const code = inputOtpSourceComposition({ label: 'Código', ajuda: 'Expira em 5 min.' })('', {});
+    expect(code).toContain("titulo.className = 'nds-text-label';");
+    expect(code).toContain("titulo.textContent = 'Código';");
   });
 });

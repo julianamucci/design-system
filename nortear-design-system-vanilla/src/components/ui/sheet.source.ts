@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { SheetSide } from './sheet';
@@ -20,7 +20,7 @@ export type SheetSnippetOptions = {
   side?: SheetSide;
   title?: string;
   description?: string;
-  corpo?: SheetBody;
+  body?: SheetBody;
   /** Rótulos do rodapé. `false` monta o painel SEM rodapé. */
   cancelLabel?: string | false;
   applyLabel?: string | false;
@@ -37,9 +37,9 @@ export type SheetSnippetOptions = {
 const CALLBACK_ABERTURA = '(aberto) => registrarPainel(aberto)';
 const CALLBACK_FECHAMENTO = '(motivo) => registrarSaida(motivo)';
 
-function expressao(valor: unknown, padrao: string): string | undefined {
-  if (!valor) return undefined;
-  return typeof valor === 'string' ? valor : padrao;
+function expressao(value: unknown, padrao: string): string | undefined {
+  if (!value) return undefined;
+  return typeof value === 'string' ? value : padrao;
 }
 
 // ─── Corpos de demonstração ──────────────────────────────────────────────────
@@ -48,12 +48,12 @@ function expressao(valor: unknown, padrao: string): string | undefined {
 // escrito com fábricas do design system ou com DOM curto, nunca com o
 // `buildPlayground`/`makeBody` que só existe dentro do arquivo de story.
 
-type Body = { imports: string[]; bloco: string };
+type Body = { imports: string[]; block: string };
 
 function bodyText(): Body {
   return {
     imports: [],
-    bloco: `const corpo = document.createElement('div');
+    block: `const corpo = document.createElement('div');
 corpo.className = 'nds-text-body nds-text-muted-foreground';
 corpo.textContent = 'Conteúdo do painel (formulário, lista, mensagem).';`,
   };
@@ -64,7 +64,7 @@ function bodyParagrafos(total: number): Body {
     imports: [],
     // O corpo é quem rola: `.nds-sheet-body` já tem o teto de altura e o
     // `tabindex` que o torna alcançável por teclado. O rodapé fica onde está.
-    bloco: `const corpo = document.createElement('div');
+    block: `const corpo = document.createElement('div');
 corpo.className = 'nds-stack nds-text-body nds-text-muted-foreground';
 corpo.dataset.spacing = 'sm';
 for (let i = 1; i <= ${total}; i++) {
@@ -78,7 +78,7 @@ for (let i = 1; i <= ${total}; i++) {
 function bodyActions(): Body {
   return {
     imports: [importing('button', 'createButton')],
-    bloco: `const corpo = document.createElement('div');
+    block: `const corpo = document.createElement('div');
 corpo.className = 'nds-cluster';
 corpo.dataset.spacing = 'sm';
 for (const rotulo of ['Compartilhar', 'Copiar link', 'Editar', 'Arquivar']) {
@@ -92,7 +92,7 @@ function bodyNavigation(): Body {
     imports: [],
     // A lista de links é um marco: sem nome, o leitor de tela anuncia
     // "navegação" e mais nada.
-    bloco: `const corpo = document.createElement('nav');
+    block: `const corpo = document.createElement('nav');
 corpo.className = 'nds-stack';
 corpo.dataset.spacing = 'sm';
 corpo.setAttribute('aria-label', 'Seções');
@@ -112,7 +112,7 @@ function bodyForm(): Body {
     // `createFormField` é quem fecha o par rótulo ↔ controle e gera o id que
     // falta. Um `<label>` cru com um `<input>` cru pareceria igual e não faria
     // nenhuma das duas coisas.
-    bloco: `const corpo = document.createElement('form');
+    block: `const corpo = document.createElement('form');
 corpo.className = 'nds-stack';
 corpo.dataset.spacing = 'sm';
 corpo.append(
@@ -124,7 +124,7 @@ corpo.append(
 }
 
 function bodyOf(o: SheetSnippetOptions): Body {
-  switch (o.corpo) {
+  switch (o.body) {
     case 'paragrafos':
       return bodyParagrafos(o.paragrafos ?? 24);
     case 'acoes':
@@ -145,19 +145,19 @@ function bodyOf(o: SheetSnippetOptions): Body {
  * quem fecha pelos botões do rodapé é o overlay. É o que a linha do clique
  * mostra — sem ela, o snippet prometeria um `SheetClose` que não existe.
  */
-function rodape(o: SheetSnippetOptions): { bloco?: string; referencia?: string } {
+function footer(o: SheetSnippetOptions): { block?: string; referencia?: string } {
   const cancelar = o.cancelLabel === false ? undefined : (o.cancelLabel ?? 'Cancelar');
   const aplicar = o.applyLabel === false ? undefined : (o.applyLabel ?? 'Aplicar filtros');
   if (!cancelar && !aplicar) return {};
 
   const buttons = [
-    cancelar ? `createButton({ variant: 'outline', label: ${texto(cancelar)} })` : undefined,
-    aplicar ? `createButton({ label: ${texto(aplicar)} })` : undefined,
+    cancelar ? `createButton({ variant: 'outline', label: ${text(cancelar)} })` : undefined,
+    aplicar ? `createButton({ label: ${text(aplicar)} })` : undefined,
   ].filter((b): b is string => Boolean(b));
 
   return {
     referencia: 'rodape',
-    bloco: `const rodape = document.createElement('div');
+    block: `const rodape = document.createElement('div');
 rodape.className = 'nds-cluster';
 rodape.dataset.spacing = 'sm';
 rodape.append(
@@ -173,17 +173,17 @@ for (const botao of Array.from(rodape.children)) {
   };
 }
 
-function panelLines(o: SheetSnippetOptions, gatilho: string, rodapeRef?: string): string[] {
-  return opcoes([
-    ['trigger', gatilho],
+function panelLines(o: SheetSnippetOptions, trigger: string, rodapeRef?: string): string[] {
+  return options([
+    ['trigger', trigger],
     // `right` é o padrão da fábrica e não entra no snippet.
-    ['side', o.side && o.side !== 'right' ? texto(o.side) : undefined],
-    ['title', texto(o.title ?? 'Filtros avançados')],
+    ['side', o.side && o.side !== 'right' ? text(o.side) : undefined],
+    ['title', text(o.title ?? 'Filtros avançados')],
     [
       'description',
       o.description === ''
         ? undefined
-        : texto(o.description ?? 'Configure os filtros para refinar os resultados.'),
+        : text(o.description ?? 'Configure os filtros para refinar os resultados.'),
     ],
     ['content', 'corpo'],
     ['footer', rodapeRef],
@@ -194,17 +194,17 @@ function panelLines(o: SheetSnippetOptions, gatilho: string, rodapeRef?: string)
 
 /** A chamada real de `createSheet` com o gatilho, o corpo e o rodapé da story. */
 export function sheetSnippet(o: SheetSnippetOptions = {}): string {
-  const corpo = bodyOf(o);
-  const pe = rodape(o);
-  const gatilho = `createButton({ variant: 'outline', label: ${texto(o.triggerLabel ?? 'Abrir filtros')} })`;
+  const body = bodyOf(o);
+  const pe = footer(o);
+  const trigger = `createButton({ variant: 'outline', label: ${text(o.triggerLabel ?? 'Abrir filtros')} })`;
 
   return snippet(
-    [importing('sheet', 'createSheet'), importing('button', 'createButton'), ...corpo.imports]
+    [importing('sheet', 'createSheet'), importing('button', 'createButton'), ...body.imports]
       .filter((line, i, all) => all.indexOf(line) === i)
       .join('\n'),
-    corpo.bloco,
-    pe.bloco,
-    `const painel = ${chamada('createSheet', panelLines(o, gatilho, pe.referencia))};`,
+    body.block,
+    pe.block,
+    `const painel = ${chamada('createSheet', panelLines(o, trigger, pe.referencia))};`,
     montar('painel'),
     o.mostrarDestroy
       ? `// O painel mora no \`body\` e o ouvinte de teclado mora no \`document\`: quem
@@ -223,13 +223,13 @@ painel.destroy();`
  * snippet com o gatilho visível esconderia exatamente isso.
  */
 export function sheetControlledSnippet(o: SheetSnippetOptions = {}): string {
-  const corpo = bodyOf(o);
+  const body = bodyOf(o);
 
   return snippet(
-    [importing('sheet', 'createSheet'), importing('button', 'createButton'), ...corpo.imports]
+    [importing('sheet', 'createSheet'), importing('button', 'createButton'), ...body.imports]
       .filter((line, i, all) => all.indexOf(line) === i)
       .join('\n'),
-    corpo.bloco,
+    body.block,
     `// O gatilho da fábrica continua existindo, fora da tela e fora do percurso do
 // teclado: é por ele que a abertura programática passa.
 const gatilhoInterno = createButton({ variant: 'outline', label: 'Abrir painel' });
@@ -239,12 +239,12 @@ gatilhoInterno.setAttribute('aria-hidden', 'true');`,
     `let aberto = false;
 const painel = ${chamada('createSheet', [
       'trigger: triggerInterno,',
-      `title: ${texto(o.title ?? 'Controlado pelo pai')},`,
-      `description: ${texto(o.description ?? 'Abertura programática pelo gatilho interno.')},`,
+      `title: ${text(o.title ?? 'Controlado pelo pai')},`,
+      `description: ${text(o.description ?? 'Abertura programática pelo gatilho interno.')},`,
       'content: corpo,',
       'onOpenChange: (estado) => { aberto = estado; },',
     ])};`,
-    `const externo = createButton({ label: ${texto(o.triggerLabel ?? 'Abrir pelo estado externo')} });
+    `const externo = createButton({ label: ${text(o.triggerLabel ?? 'Abrir pelo estado externo')} });
 externo.addEventListener('click', () => {
   if (!aberto) gatilhoInterno.click();
 });`,

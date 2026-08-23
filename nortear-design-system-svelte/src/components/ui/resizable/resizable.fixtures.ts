@@ -38,8 +38,8 @@ export type Eixo = 'horizontal' | 'vertical';
  * primeiro painel encolher sozinha — a medida sairia errada sem nada de errado
  * na tela.
  */
-export function panelsDiretos(grupo: Element): HTMLElement[] {
-  return [...grupo.querySelectorAll<HTMLElement>(`:scope > ${SEL_PANEL}`)];
+export function panelsDiretos(group: Element): HTMLElement[] {
+  return [...group.querySelectorAll<HTMLElement>(`:scope > ${SEL_PANEL}`)];
 }
 
 /**
@@ -51,11 +51,11 @@ export function panelsDiretos(grupo: Element): HTMLElement[] {
  */
 export type MeasurementTarget = HTMLElement | HTMLElement[];
 
-function resolvePanels(alvo: MeasurementTarget): HTMLElement[] {
-  if (Array.isArray(alvo)) return alvo;
-  const grupo = alvo.matches(SEL_GROUP) ? alvo : alvo.querySelector(SEL_GROUP);
-  if (!grupo) throw new Error('grupo de painéis não encontrado');
-  return panelsDiretos(grupo);
+function resolvePanels(target: MeasurementTarget): HTMLElement[] {
+  if (Array.isArray(target)) return target;
+  const group = target.matches(SEL_GROUP) ? target : target.querySelector(SEL_GROUP);
+  if (!group) throw new Error('grupo de painéis não encontrado');
+  return panelsDiretos(group);
 }
 
 /**
@@ -67,8 +67,8 @@ function resolvePanels(alvo: MeasurementTarget): HTMLElement[] {
  * `canvasElement.firstElementChild` ser truthy — passava com a tela vazia, com
  * o eixo trocado e com os dois painéis do mesmo tamanho.
  */
-export function fracoes(alvo: MeasurementTarget, eixo: Eixo = 'horizontal'): number[] {
-  const panels = resolvePanels(alvo);
+export function fracoes(target: MeasurementTarget, eixo: Eixo = 'horizontal'): number[] {
+  const panels = resolvePanels(target);
   const measurement = (p: HTMLElement) => {
     const r = p.getBoundingClientRect();
     return eixo === 'horizontal' ? r.width : r.height;
@@ -78,6 +78,6 @@ export function fracoes(alvo: MeasurementTarget, eixo: Eixo = 'horizontal'): num
 }
 
 /** A fatia do primeiro painel — o que `defaultSize` e `aria-valuenow` dizem. */
-export function firstFraction(alvo: MeasurementTarget, eixo: Eixo = 'horizontal'): number {
-  return fracoes(alvo, eixo)[0];
+export function firstFraction(target: MeasurementTarget, eixo: Eixo = 'horizontal'): number {
+  return fracoes(target, eixo)[0];
 }

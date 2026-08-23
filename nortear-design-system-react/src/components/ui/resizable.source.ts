@@ -62,34 +62,34 @@ const LABEL_SIDEBAR = 'Redimensionar sidebar e conteúdo — use setas';
 const LABEL_CONSOLE = 'Redimensionar editor e console — use setas';
 
 /** Conteúdo centralizado de um painel — o painel é a caixa, não o texto. */
-function centralizado(texto: string, background = ''): string {
+function centralizado(text: string, background = ''): string {
   const classes = ['nds-cluster', 'nds-p-4', 'nds-text-body', 'nds-h-full', background]
     .filter(Boolean)
     .join(' ');
   return `<div className="${classes}" data-align="center" data-justify="center">
-  ${texto}
+  ${text}
 </div>`;
 }
 
 /** Painel com os limites que a story declara e o conteúdo já indentado. */
-function painel(limites: string, conteudo: string): string {
+function panel(limites: string, content: string): string {
   return `<ResizablePanel${limites}>
-${indentar(conteudo)}
+${indentar(content)}
 </ResizablePanel>`;
 }
 
 /** Punho: `withHandle` mostra o pegador; o rótulo é sempre obrigatório. */
-function punho(rotulo: string, comPegador = true): string {
-  return `<ResizableHandle${comPegador ? ' withHandle' : ''} aria-label="${rotulo}" />`;
+function punho(label: string, comPegador = true): string {
+  return `<ResizableHandle${comPegador ? ' withHandle' : ''} aria-label="${label}" />`;
 }
 
 /** O grupo inteiro, já com a moldura que lhe dá espaço livre para repartir. */
-function grupo(direcao: string, filhos: string, extra = ''): string {
+function group(direction: string, children: string, extra = ''): string {
   return `<ResizablePanelGroup
-  direction="${direcao}"${extra}
+  direction="${direction}"${extra}
   className="${FRAME}"
 >
-${indentar(filhos)}
+${indentar(children)}
 </ResizablePanelGroup>`;
 }
 
@@ -105,7 +105,7 @@ ${indentar(filhos)}
  */
 export const resizableSource: SourceTransform<ResizableArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const direcao =
+  const direction =
     typeof args.direction === 'string' && (DIRECOES as readonly string[]).includes(args.direction)
       ? args.direction
       : 'horizontal';
@@ -126,9 +126,9 @@ export const resizableSource: SourceTransform<ResizableArgs> = (_gerado, ctx) =>
 
   return jsxSnippet(
     IMPORT,
-    grupo(
-      direcao,
-      `${painel(
+    group(
+      direction,
+      `${panel(
         first,
         `<div className="nds-stack nds-p-4" data-spacing="xs">
   <p className="nds-text-body nds-font-semibold">Sidebar</p>
@@ -136,7 +136,7 @@ export const resizableSource: SourceTransform<ResizableArgs> = (_gerado, ctx) =>
 </div>`,
       )}
 ${punho(LABEL_DEFAULT, args.withHandle !== false)}
-${painel(
+${panel(
   segundo,
   `<div className="nds-stack nds-p-4" data-spacing="xs">
   <p className="nds-text-body nds-font-semibold">Conteúdo principal</p>
@@ -157,11 +157,11 @@ ${painel(
 export function resizableHorizontalSource(): string {
   return jsxSnippet(
     IMPORT,
-    grupo(
+    group(
       'horizontal',
-      `${painel(' defaultSize={30} minSize={20} maxSize={50}', centralizado('Sidebar', 'nds-bg-muted'))}
+      `${panel(' defaultSize={30} minSize={20} maxSize={50}', centralizado('Sidebar', 'nds-bg-muted'))}
 ${punho(LABEL_COLUMNS, false)}
-${painel(' defaultSize={70} minSize={50}', centralizado('Conteúdo principal'))}`,
+${panel(' defaultSize={70} minSize={50}', centralizado('Conteúdo principal'))}`,
     ),
   );
 }
@@ -175,11 +175,11 @@ ${painel(' defaultSize={70} minSize={50}', centralizado('Conteúdo principal'))}
 export function resizableVerticalSource(): string {
   return jsxSnippet(
     IMPORT,
-    grupo(
+    group(
       'vertical',
-      `${painel(' defaultSize={40} minSize={20}', centralizado('Topo'))}
+      `${panel(' defaultSize={40} minSize={20}', centralizado('Topo'))}
 ${punho(LABEL_FAIXAS, false)}
-${painel(' defaultSize={60} minSize={20}', centralizado('Rodapé', 'nds-bg-muted'))}`,
+${panel(' defaultSize={60} minSize={20}', centralizado('Rodapé', 'nds-bg-muted'))}`,
     ),
   );
 }
@@ -193,19 +193,19 @@ ${painel(' defaultSize={60} minSize={20}', centralizado('Rodapé', 'nds-bg-muted
 export function resizableNestedSource(): string {
   const interno = `<ResizablePanelGroup direction="vertical">
 ${indentar(
-  `${painel(' defaultSize={60} minSize={20}', centralizado('Editor'))}
+  `${panel(' defaultSize={60} minSize={20}', centralizado('Editor'))}
 ${punho(LABEL_CONSOLE, false)}
-${painel(' defaultSize={40} minSize={20}', centralizado('Console', 'nds-bg-muted-60'))}`,
+${panel(' defaultSize={40} minSize={20}', centralizado('Console', 'nds-bg-muted-60'))}`,
 )}
 </ResizablePanelGroup>`;
 
   return jsxSnippet(
     IMPORT,
-    grupo(
+    group(
       'horizontal',
-      `${painel(' defaultSize={30} minSize={20}', centralizado('Sidebar', 'nds-bg-muted'))}
+      `${panel(' defaultSize={30} minSize={20}', centralizado('Sidebar', 'nds-bg-muted'))}
 ${punho(LABEL_SIDEBAR, false)}
-${painel(' defaultSize={70} minSize={40}', interno)}`,
+${panel(' defaultSize={70} minSize={40}', interno)}`,
     ),
   );
 }
@@ -218,11 +218,11 @@ ${painel(' defaultSize={70} minSize={40}', interno)}`,
 export function resizableWithGrabberSource(): string {
   return jsxSnippet(
     IMPORT,
-    grupo(
+    group(
       'horizontal',
-      `${painel(' defaultSize={50} minSize={20}', centralizado('Antes'))}
+      `${panel(' defaultSize={50} minSize={20}', centralizado('Antes'))}
 ${punho(LABEL_DEFAULT)}
-${painel(' defaultSize={50} minSize={20}', centralizado('Depois', 'nds-bg-muted'))}`,
+${panel(' defaultSize={50} minSize={20}', centralizado('Depois', 'nds-bg-muted'))}`,
     ),
   );
 }
@@ -240,11 +240,11 @@ ${IMPORT}
 const [tamanhos, setTamanhos] = useState([50, 50]);`,
     `<div className="nds-stack nds-max-w-lg" data-spacing="sm">
 ${indentar(
-  grupo(
+  group(
     'horizontal',
-    `${painel(' defaultSize={50} minSize={10}', centralizado('Esquerda'))}
+    `${panel(' defaultSize={50} minSize={10}', centralizado('Esquerda'))}
 ${punho(LABEL_DEFAULT)}
-${painel(' defaultSize={50} minSize={10}', centralizado('Direita', 'nds-bg-muted'))}`,
+${panel(' defaultSize={50} minSize={10}', centralizado('Direita', 'nds-bg-muted'))}`,
     '\n  onLayout={setTamanhos}',
   ),
 )}
@@ -264,11 +264,11 @@ ${painel(' defaultSize={50} minSize={10}', centralizado('Direita', 'nds-bg-muted
 export function resizableLimitesSource(): string {
   return jsxSnippet(
     IMPORT,
-    grupo(
+    group(
       'horizontal',
-      `${painel(' defaultSize={50} minSize={30} maxSize={60}', centralizado('Limitado'))}
+      `${panel(' defaultSize={50} minSize={30} maxSize={60}', centralizado('Limitado'))}
 ${punho(LABEL_DEFAULT, false)}
-${painel(' defaultSize={50} minSize={30}', centralizado('Livre', 'nds-bg-muted'))}`,
+${panel(' defaultSize={50} minSize={30}', centralizado('Livre', 'nds-bg-muted'))}`,
     ),
   );
 }
@@ -281,11 +281,11 @@ ${painel(' defaultSize={50} minSize={30}', centralizado('Livre', 'nds-bg-muted')
 export function resizableFocusSource(): string {
   return jsxSnippet(
     IMPORT,
-    grupo(
+    group(
       'horizontal',
-      `${painel(' defaultSize={50} minSize={20}', centralizado('Um'))}
+      `${panel(' defaultSize={50} minSize={20}', centralizado('Um'))}
 ${punho(LABEL_DEFAULT, false)}
-${painel(' defaultSize={50} minSize={20}', centralizado('Dois', 'nds-bg-muted'))}`,
+${panel(' defaultSize={50} minSize={20}', centralizado('Dois', 'nds-bg-muted'))}`,
     ),
   );
 }
@@ -298,11 +298,11 @@ ${painel(' defaultSize={50} minSize={20}', centralizado('Dois', 'nds-bg-muted'))
 export function resizableTravadoSource(): string {
   return jsxSnippet(
     IMPORT,
-    grupo(
+    group(
       'horizontal',
-      `${painel(' defaultSize={50} minSize={20}', centralizado('Fixo'))}
+      `${panel(' defaultSize={50} minSize={20}', centralizado('Fixo'))}
 <ResizableHandle disabled withHandle aria-label="${LABEL_DEFAULT}" />
-${painel(' defaultSize={50} minSize={20}', centralizado('Fixo', 'nds-bg-muted'))}`,
+${panel(' defaultSize={50} minSize={20}', centralizado('Fixo', 'nds-bg-muted'))}`,
     ),
   );
 }
@@ -315,9 +315,9 @@ ${painel(' defaultSize={50} minSize={20}', centralizado('Fixo', 'nds-bg-muted'))
 export function resizableEditorPreviewSource(): string {
   return jsxSnippet(
     IMPORT,
-    grupo(
+    group(
       'horizontal',
-      `${painel(
+      `${panel(
         ' defaultSize={50} minSize={30} maxSize={70}',
         `<div className="nds-stack nds-p-4 nds-text-caption nds-font-mono nds-h-full" data-spacing="xs">
   <span className="nds-text-muted-foreground">editor.tsx</span>
@@ -327,7 +327,7 @@ export function resizableEditorPreviewSource(): string {
 </div>`,
       )}
 ${punho(LABEL_DEFAULT)}
-${painel(' defaultSize={50} minSize={30}', centralizado('Resultado', 'nds-bg-muted'))}`,
+${panel(' defaultSize={50} minSize={30}', centralizado('Resultado', 'nds-bg-muted'))}`,
     ),
   );
 }
@@ -340,14 +340,14 @@ ${painel(' defaultSize={50} minSize={30}', centralizado('Resultado', 'nds-bg-mut
 export function resizableIdeSource(): string {
   const direita = `<ResizablePanelGroup direction="vertical">
 ${indentar(
-  `${painel(
+  `${panel(
     ' defaultSize={70} minSize={30}',
     `<div className="nds-cluster nds-p-4 nds-text-caption nds-font-mono nds-h-full" data-align="start">
   <span className="nds-text-muted-foreground">App.tsx (1:1)</span>
 </div>`,
   )}
 ${punho(LABEL_CONSOLE)}
-${painel(
+${panel(
   ' defaultSize={30} minSize={15}',
   `<div className="nds-cluster nds-bg-muted-60 nds-p-4 nds-text-caption nds-font-mono nds-h-full" data-align="center" data-spacing="sm">
   <span className="nds-text-muted-foreground">{">"}</span>
@@ -359,9 +359,9 @@ ${painel(
 
   return jsxSnippet(
     IMPORT,
-    grupo(
+    group(
       'horizontal',
-      `${painel(
+      `${panel(
         ' defaultSize={20} minSize={15} maxSize={35}',
         `<div className="nds-stack nds-bg-muted nds-p-4 nds-text-caption nds-h-full" data-spacing="xs">
   <span className="nds-font-medium">Explorer</span>
@@ -371,7 +371,7 @@ ${painel(
 </div>`,
       )}
 ${punho(LABEL_SIDEBAR)}
-${painel(' defaultSize={80} minSize={50}', direita)}`,
+${panel(' defaultSize={80} minSize={50}', direita)}`,
     ),
   );
 }
@@ -385,13 +385,13 @@ ${painel(' defaultSize={80} minSize={50}', direita)}`,
 export function resizableTriploSource(): string {
   return jsxSnippet(
     IMPORT,
-    grupo(
+    group(
       'horizontal',
-      `${painel(' defaultSize={25} minSize={15} maxSize={40}', centralizado('Lista', 'nds-bg-muted'))}
+      `${panel(' defaultSize={25} minSize={15} maxSize={40}', centralizado('Lista', 'nds-bg-muted'))}
 ${punho('Redimensionar lista e mensagens — use setas')}
-${painel(' defaultSize={50} minSize={25}', centralizado('Mensagens'))}
+${panel(' defaultSize={50} minSize={25}', centralizado('Mensagens'))}
 ${punho('Redimensionar mensagens e leitura — use setas')}
-${painel(' defaultSize={25} minSize={15} maxSize={40}', centralizado('Leitura', 'nds-bg-muted'))}`,
+${panel(' defaultSize={25} minSize={15} maxSize={40}', centralizado('Leitura', 'nds-bg-muted'))}`,
     ),
   );
 }
@@ -405,11 +405,11 @@ ${painel(' defaultSize={25} minSize={15} maxSize={40}', centralizado('Leitura', 
 export function resizablePersistidoSource(): string {
   return jsxSnippet(
     IMPORT,
-    grupo(
+    group(
       'horizontal',
-      `${painel(' defaultSize={30} minSize={20} maxSize={50}', centralizado('Sidebar', 'nds-bg-muted'))}
+      `${panel(' defaultSize={30} minSize={20} maxSize={50}', centralizado('Sidebar', 'nds-bg-muted'))}
 ${punho(LABEL_DEFAULT)}
-${painel(' defaultSize={70} minSize={50}', centralizado('Conteúdo principal'))}`,
+${panel(' defaultSize={70} minSize={50}', centralizado('Conteúdo principal'))}`,
       '\n  autoSaveId="layout-do-editor"',
     ),
   );

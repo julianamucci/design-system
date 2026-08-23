@@ -31,8 +31,8 @@ const TAGS = 'const tags = Array.from({ length: 40 }, (_, i) => `Tag ${i + 1}`)'
  * A largura sai de `max-width`, que é a utilitária que existe — não há
  * utilitária para uma largura cravada em pixels.
  */
-function frame(interno: string, largura = 'nds-w-xs'): string {
-  return `<div class="${largura} nds-rounded-md nds-border-default nds-overflow-hidden">
+function frame(interno: string, width = 'nds-w-xs'): string {
+  return `<div class="${width} nds-rounded-md nds-border-default nds-overflow-hidden">
 ${indentar(interno)}
 </div>`;
 }
@@ -265,18 +265,18 @@ const acoes = Array.from({ length: 20 }, (_, i) => \`Ação \${i + 1}\`)`,
  * até onde ela pode ir. `size` é o que dá o limite.
  */
 export function scrollAreaNoLimitSource(): string {
-  const lista = `<div class="nds-stack nds-p-4" data-spacing="sm">
+  const list = `<div class="nds-stack nds-p-4" data-spacing="sm">
   <div v-for="tag in tags" :key="tag" class="nds-text-body">{{ tag }}</div>
 </div>`;
   return vueSnippet(
     `${IMPORT_AREA}\n\n${TAGS_30}`,
     `<div class="nds-stack nds-w-xs" data-spacing="lg">
   <div class="nds-rounded-md nds-border-default">
-${indentar(area(['class="nds-w-full"'], lista), 4)}
+${indentar(area(['class="nds-w-full"'], list), 4)}
   </div>
 
   <div class="nds-rounded-md nds-border-default nds-overflow-hidden">
-${indentar(area(['size="sm"', 'class="nds-w-full"'], lista), 4)}
+${indentar(area(['size="sm"', 'class="nds-w-full"'], list), 4)}
   </div>
 </div>`,
   );

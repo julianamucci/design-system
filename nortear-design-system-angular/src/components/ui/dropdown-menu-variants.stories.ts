@@ -48,14 +48,14 @@ export const Default: Story = {
   }),
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
-    const itens = within(menu).getAllByRole('menuitem');
+    const items = within(menu).getAllByRole('menuitem');
 
     await step('A variante default é escrita no markup', async () => {
       // Afirmar o atributo resultante é o que impede o defeito silencioso do
       // fallback JIT: sob JIT os `input()` não são vistos e o componente
       // renderiza com os valores padrão, sem erro nenhum na tela.
-      await expect(itens).toHaveLength(3);
-      for (const item of itens) {
+      await expect(items).toHaveLength(3);
+      for (const item of items) {
         await expect(item.getAttribute('data-variant')).toBe('default');
         await expect(item.classList.contains('nds-dropdown-menu-item')).toBe(true);
       }
@@ -65,7 +65,7 @@ export const Default: Story = {
       // O item destacado (o primeiro, que recebe o foco ao abrir) troca de cor
       // de propósito — a comparação tem que ser com um item em repouso, senão
       // ela mede o realce e não a variante.
-      const inRest = itens.filter((i) => !i.hasAttribute('data-highlighted'));
+      const inRest = items.filter((i) => !i.hasAttribute('data-highlighted'));
       await expect(inRest.length).toBeGreaterThan(0);
       await expect(getComputedStyle(inRest[0]).color).toBe(getComputedStyle(menu).color);
     });
@@ -77,7 +77,7 @@ export const Default: Story = {
       // test-runner mede o que está na tela sem nunca comparar estes dois. A
       // razão é aritmética. 14px em peso normal é texto normal pela WCAG: o
       // limite é 4.5, não 3.
-      const inRest = itens.filter((i) => !i.hasAttribute('data-highlighted'));
+      const inRest = items.filter((i) => !i.hasAttribute('data-highlighted'));
       const measurement = itemContrast(inRest[0]);
       await expect(measurement).not.toBeNull();
       await expect(measurement!.ratio).toBeGreaterThanOrEqual(4.5);

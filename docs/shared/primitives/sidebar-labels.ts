@@ -90,9 +90,9 @@ export const NO_TRADUCAO: Record<string, string> = {
  * Nome de componente (Button, Badge) e de story (WithIcon) caem no fallback de
  * propósito: são vocabulário do design system, não prosa.
  */
-export function sidebarLabel(nome: string, locale: Locale): string {
-  if (locale === 'en') return nome;
-  return DICIONARIO[nome]?.[locale] ?? nome;
+export function sidebarLabel(name: string, locale: Locale): string {
+  if (locale === 'en') return name;
+  return DICIONARIO[name]?.[locale] ?? name;
 }
 
 /** Só para teste e para o auditor: o que o dicionário cobre. */

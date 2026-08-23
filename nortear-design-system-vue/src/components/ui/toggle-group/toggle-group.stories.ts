@@ -101,7 +101,7 @@ export const Playground: Story = {
     const left = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
     const center = canvas.getByRole('button', { name: 'Centralizar' });
     const right = canvas.getByRole('button', { name: 'Alinhar à direita' });
-    const grupo = canvasElement.querySelector('[data-slot="toggle-group"]') as HTMLElement;
+    const group = canvasElement.querySelector('[data-slot="toggle-group"]') as HTMLElement;
 
     /** Só clica quando o estado atual não é o desejado — a play tem que
      *  sobreviver ao replay do painel Interactions, que roda no mesmo DOM. */
@@ -112,15 +112,15 @@ export const Playground: Story = {
     };
 
     await step('accessibility.item5 — o grupo e cada item icon-only têm nome', async () => {
-      await expect(grupo).toHaveAttribute('aria-label', 'Alinhamento do texto');
+      await expect(group).toHaveAttribute('aria-label', 'Alinhamento do texto');
       await expect(left).toHaveAttribute('aria-label', 'Alinhar à esquerda');
       await expect(center).toHaveAttribute('aria-label', 'Centralizar');
       await expect(right).toHaveAttribute('aria-label', 'Alinhar à direita');
     });
 
     await step('Orientação e espaçamento chegam ao markup', async () => {
-      await expect(grupo).toHaveAttribute('data-orientation', String(args.orientation));
-      await expect(grupo).toHaveAttribute('data-spacing', String(args.spacing));
+      await expect(group).toHaveAttribute('data-orientation', String(args.orientation));
+      await expect(group).toHaveAttribute('data-spacing', String(args.spacing));
     });
 
     await step('accessibility.item4 — aria-pressed e data-state contam a mesma história', async () => {

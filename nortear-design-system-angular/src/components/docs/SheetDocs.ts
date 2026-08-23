@@ -400,7 +400,7 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
             @for (opcao of opcoesDeFiltro(); track opcao.id) {
               <div class="nds-cluster" data-spacing="sm">
                 <button ndsCheckbox [id]="opcao.id"></button>
-                <label ndsLabel [attr.for]="opcao.id">{{ opcao.rotulo }}</label>
+                <label ndsLabel [attr.for]="opcao.id">{{ opcao.label }}</label>
               </div>
             }
           </div>
@@ -431,7 +431,7 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
               data-spacing="xs"
             >
               @for (destination of destinosDeNavegacao(); track destination.id) {
-                <a href="#" [class]="linkClasses">{{ destination.rotulo }}</a>
+                <a href="#" [class]="linkClasses">{{ destination.label }}</a>
               }
             </nav>
           </div>
@@ -475,7 +475,7 @@ const LINK_CLASSES = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-b
                   @for (opcao of opcoesDeFiltro(); track opcao.id) {
                     <div class="nds-cluster" data-spacing="sm">
                       <button ndsCheckbox [id]="'demo-' + opcao.id"></button>
-                      <label ndsLabel [attr.for]="'demo-' + opcao.id">{{ opcao.rotulo }}</label>
+                      <label ndsLabel [attr.for]="'demo-' + opcao.id">{{ opcao.label }}</label>
                     </div>
                   }
                 </div>
@@ -650,17 +650,17 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
   protected readonly opcoesDeFiltro = computed(() => {
     dict();
     const base = t('demonstration.labels.section');
-    return [1, 2, 3].map((i) => ({ id: `filtro-${i}`, rotulo: `${base} ${i}` }));
+    return [1, 2, 3].map((i) => ({ id: `filtro-${i}`, label: `${base} ${i}` }));
   });
 
   /** Destinos do exemplo de navegação secundária. */
   protected readonly destinosDeNavegacao = computed(() => {
     dict();
     return [
-      { id: 'nav-1', rotulo: t('demonstration.labels.rightLabel') },
-      { id: 'nav-2', rotulo: t('demonstration.labels.leftLabel') },
-      { id: 'nav-3', rotulo: t('demonstration.labels.topLabel') },
-      { id: 'nav-4', rotulo: t('demonstration.labels.bottomLabel') },
+      { id: 'nav-1', label: t('demonstration.labels.rightLabel') },
+      { id: 'nav-2', label: t('demonstration.labels.leftLabel') },
+      { id: 'nav-3', label: t('demonstration.labels.topLabel') },
+      { id: 'nav-4', label: t('demonstration.labels.bottomLabel') },
     ];
   });
 
@@ -781,16 +781,16 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
 
   protected readonly variantItems = computed(() => {
     dict();
-    const mapa: { key: 'right' | 'left' | 'top' | 'bottom'; tpl: TemplateRef<unknown>; rotulo: string }[] = [
-      { key: 'right',  tpl: this.tplVarRight(),  rotulo: t('demonstration.labels.rightLabel')  },
-      { key: 'left',   tpl: this.tplVarLeft(),   rotulo: t('demonstration.labels.leftLabel')   },
-      { key: 'top',    tpl: this.tplVarTop(),    rotulo: t('demonstration.labels.topLabel')    },
-      { key: 'bottom', tpl: this.tplVarBottom(), rotulo: t('demonstration.labels.bottomLabel') },
+    const mapa: { key: 'right' | 'left' | 'top' | 'bottom'; tpl: TemplateRef<unknown>; label: string }[] = [
+      { key: 'right',  tpl: this.tplVarRight(),  label: t('demonstration.labels.rightLabel')  },
+      { key: 'left',   tpl: this.tplVarLeft(),   label: t('demonstration.labels.leftLabel')   },
+      { key: 'top',    tpl: this.tplVarTop(),    label: t('demonstration.labels.topLabel')    },
+      { key: 'bottom', tpl: this.tplVarBottom(), label: t('demonstration.labels.bottomLabel') },
     ];
-    return mapa.map(({ key, tpl, rotulo }) => ({
+    return mapa.map(({ key, tpl, label }) => ({
       name: t(`variants.items.${key}`),
       description: stripHtml(t(`variants.styles.${key}`)),
-      code: VARIANT_CODE(key, rotulo),
+      code: VARIANT_CODE(key, label),
       trackId: key,
       preview: tpl,
     }));
@@ -962,9 +962,9 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
       string,
       { accessibility?: { screenReader?: Record<string, string> } }
     >;
-    const bloco = byLocale[locale]?.accessibility?.screenReader ?? {};
+    const block = byLocale[locale]?.accessibility?.screenReader ?? {};
     // `title` é o cabeçalho da seção, não uma linha da lista.
-    return Object.entries(bloco).filter(([k]) => k !== 'title').map(([, v]) => v);
+    return Object.entries(block).filter(([k]) => k !== 'title').map(([, v]) => v);
   });
 
   protected readonly relatedItems = computed(() => {

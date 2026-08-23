@@ -27,8 +27,8 @@ export type SourceTransform<A = Record<string, unknown>> = (
 ) => string;
 
 /** Literal em aspas simples, com escape do que quebraria o snippet. */
-export function texto(valor: string): string {
-  return `'${valor.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n')}'`;
+export function text(value: string): string {
+  return `'${value.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n')}'`;
 }
 
 /**
@@ -39,10 +39,10 @@ export function texto(valor: string): string {
  * A chave é citada quando não é um identificador simples, que é o caso do nome
  * acessível canônico: `'aria-label'`.
  */
-export function opcoes(pairs: Array<[string, string | undefined]>): string[] {
+export function options(pairs: Array<[string, string | undefined]>): string[] {
   return pairs
     .filter((par): par is [string, string] => par[1] !== undefined)
-    .map(([chave, valor]) => `${/^[A-Za-z_$][\w$]*$/.test(chave) ? chave : texto(chave)}: ${valor},`);
+    .map(([key, value]) => `${/^[A-Za-z_$][\w$]*$/.test(key) ? key : text(key)}: ${value},`);
 }
 
 /**

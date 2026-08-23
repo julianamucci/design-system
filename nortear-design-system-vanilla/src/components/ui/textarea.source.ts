@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -36,7 +36,7 @@ export type TextareaSnippetOptions = {
   /** Texto de apoio à esquerda do contador. */
   hint?: string;
   /** Mensagem de erro; liga `aria-describedby` apontando para ela. */
-  erro?: string;
+  error?: string;
 };
 
 const RESIZE_CLASSNAME: Record<NonNullable<TextareaSnippetOptions['resize']>, string> = {
@@ -63,8 +63,8 @@ function ajustesNativos(o: TextareaSnippetOptions, id: string): string {
   const lines: string[] = [];
   if (o.maxLength && o.maxLength > 0) lines.push(`campo.maxLength = ${o.maxLength};`);
   if (o.readOnly) lines.push('campo.readOnly = true;');
-  if (o.ariaInvalid || o.erro) lines.push("campo.setAttribute('aria-invalid', 'true');");
-  if (o.erro) lines.push(`campo.setAttribute('aria-describedby', ${texto(`${id}-erro`)});`);
+  if (o.ariaInvalid || o.error) lines.push("campo.setAttribute('aria-invalid', 'true');");
+  if (o.error) lines.push(`campo.setAttribute('aria-describedby', ${text(`${id}-erro`)});`);
   return lines.join('\n');
 }
 
@@ -74,7 +74,7 @@ function ajustesNativos(o: TextareaSnippetOptions, id: string): string {
  * O número sozinho não serve a quem não o vê: `aria-live="polite"` anuncia a
  * mudança e o `aria-label` a diz por extenso, em vez de "487/500".
  */
-function rodape(o: TextareaSnippetOptions): string {
+function footer(o: TextareaSnippetOptions): string {
   const max = o.maxLength && o.maxLength > 0 ? o.maxLength : undefined;
   const hint = o.hint;
   if (!max && !hint) return '';
@@ -87,7 +87,7 @@ rodape.dataset.justify = 'between';`,
 
   if (hint) {
     partes.push(`const apoio = document.createElement('span');
-apoio.textContent = ${texto(hint)};`);
+apoio.textContent = ${text(hint)};`);
   }
 
   if (max) {
@@ -130,16 +130,16 @@ export function textareaSnippet(o: TextareaSnippetOptions = {}): string {
 /** Os blocos do campo, sem import nem montagem — reaproveitados no formulário. */
 function fieldBlocks(o: TextareaSnippetOptions): string[] {
   const id = o.id ?? ID_DEFAULT;
-  const rotulo = o.label ?? LABEL_DEFAULT;
+  const label = o.label ?? LABEL_DEFAULT;
 
-  const lines = opcoes([
-    ['id', texto(id)],
-    ['name', o.name ? texto(o.name) : undefined],
-    ['placeholder', texto(o.placeholder ?? PLACEHOLDER_DEFAULT)],
-    ['value', o.value ? texto(o.value) : undefined],
+  const lines = options([
+    ['id', text(id)],
+    ['name', o.name ? text(o.name) : undefined],
+    ['placeholder', text(o.placeholder ?? PLACEHOLDER_DEFAULT)],
+    ['value', o.value ? text(o.value) : undefined],
     ['rows', o.rows && o.rows > 0 ? String(o.rows) : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
-    ['class', texto(className(o))],
+    ['class', text(className(o))],
   ]);
 
   const ajustes = ajustesNativos(o, id);
@@ -149,13 +149,13 @@ function fieldBlocks(o: TextareaSnippetOptions): string[] {
     `const grupo = document.createElement('div');
 grupo.className = 'nds-stack';
 grupo.dataset.spacing = 'sm';
-grupo.append(createLabel({ htmlFor: ${texto(id)}, text: ${texto(rotulo)} }), campo);`,
-    rodape(o),
-    o.erro
+grupo.append(createLabel({ htmlFor: ${text(id)}, text: ${text(label)} }), campo);`,
+    footer(o),
+    o.error
       ? `const mensagem = document.createElement('p');
-mensagem.id = ${texto(`${id}-erro`)};
+mensagem.id = ${text(`${id}-erro`)};
 mensagem.className = 'nds-text-caption nds-text-destructive';
-mensagem.textContent = ${texto(o.erro)};
+mensagem.textContent = ${text(o.error)};
 grupo.append(mensagem);`
       : '',
   ].filter(Boolean);
@@ -170,7 +170,7 @@ grupo.append(mensagem);`
 export function textareaFormSnippet(o: TextareaSnippetOptions = {}): string {
   const id = o.id ?? 'feedback';
   const name = o.name ?? 'feedback';
-  const rotulo = o.label ?? 'Feedback';
+  const label = o.label ?? 'Feedback';
 
   return snippet(
     [
@@ -183,7 +183,7 @@ export function textareaFormSnippet(o: TextareaSnippetOptions = {}): string {
       ...o,
       id,
       name,
-      label: rotulo,
+      label: label,
       placeholder: o.placeholder ?? 'O que poderíamos melhorar?',
     }),
     `const formulario = document.createElement('form');
@@ -195,7 +195,7 @@ formulario.append(grupo, createButton({ type: 'submit', label: 'Enviar' }));
 formulario.addEventListener('submit', (evento) => {
   evento.preventDefault();
   const dados = new FormData(formulario);
-  enviar(dados.get(${texto(name)}));
+  enviar(dados.get(${text(name)}));
 });`,
     montar('formulario'),
   );

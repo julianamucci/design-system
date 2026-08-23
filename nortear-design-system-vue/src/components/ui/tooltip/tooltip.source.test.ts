@@ -165,8 +165,8 @@ describe('transforms das stories de composição', () => {
   it('os quatro lados aparecem juntos, e o de cima dispensa a declaração', () => {
     const saida = tooltipQuatroLadosSource();
     expect(saida.match(/<Tooltip default-open>/g)).toHaveLength(4);
-    for (const lado of ['right', 'bottom', 'left']) {
-      expect(saida).toContain(`<TooltipContent side="${lado}">Tooltip ${lado}</TooltipContent>`);
+    for (const side of ['right', 'bottom', 'left']) {
+      expect(saida).toContain(`<TooltipContent side="${side}">Tooltip ${side}</TooltipContent>`);
     }
     // O padrão não se escreve: a ausência é a lição de que o balão nasce em cima.
     expect(saida).not.toContain('side="top"');

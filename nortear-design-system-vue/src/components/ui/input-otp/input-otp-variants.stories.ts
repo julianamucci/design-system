@@ -8,7 +8,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from './index';
-import { campo } from './input-otp.fixtures';
+import { field } from './input-otp.fixtures';
 import {
   inputOtpAlfanumericoSource,
   inputOtpWithSeparatorSource,
@@ -78,11 +78,11 @@ export const SixDigits: Story = {
   play: async ({ canvasElement, step }) => {
     await step('Seis caixas, teclado numérico', async () => {
       await expect(boxes(canvasElement)).toHaveLength(6);
-      await expect(campo(canvasElement)).toHaveAttribute('inputmode', 'numeric');
+      await expect(field(canvasElement)).toHaveAttribute('inputmode', 'numeric');
     });
 
     await step('Letra não entra no modo numérico', async () => {
-      const input = campo(canvasElement);
+      const input = field(canvasElement);
       input.focus();
       await userEvent.clear(input);
       await userEvent.type(input, 'a');
@@ -131,7 +131,7 @@ export const FourDigits: Story = {
     });
 
     await step('O quinto caractere não entra', async () => {
-      const input = campo(canvasElement);
+      const input = field(canvasElement);
       input.focus();
       await userEvent.clear(input);
       await userEvent.type(input, '12345');
@@ -204,7 +204,7 @@ export const WithSeparator: Story = {
     });
 
     await step('Os seis dígitos se distribuem entre os dois blocos', async () => {
-      const input = campo(canvasElement);
+      const input = field(canvasElement);
       input.focus();
       await userEvent.clear(input);
       await userEvent.type(input, '123456');
@@ -247,11 +247,11 @@ export const Alphanumeric: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('O teclado do dispositivo passa a ser de texto', async () => {
-      await expect(campo(canvasElement)).toHaveAttribute('inputmode', 'text');
+      await expect(field(canvasElement)).toHaveAttribute('inputmode', 'text');
     });
 
     await step('Letra e dígito são aceitos', async () => {
-      const input = campo(canvasElement);
+      const input = field(canvasElement);
       input.focus();
       await userEvent.clear(input);
       await userEvent.type(input, 'a9');

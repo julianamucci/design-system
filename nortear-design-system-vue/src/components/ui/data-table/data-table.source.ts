@@ -131,9 +131,9 @@ function importing(...partes: string[]): string {
  * elas somem na barra de rolagem do painel.
  */
 function tag(props: Array<string | false | null | undefined>): string {
-  const lista = props.filter((prop): prop is string => Boolean(prop));
-  if (!lista.length) return '<DataTable />';
-  return `<DataTable\n${lista.map((prop) => `  ${prop}`).join('\n')}\n/>`;
+  const list = props.filter((prop): prop is string => Boolean(prop));
+  if (!list.length) return '<DataTable />';
+  return `<DataTable\n${list.map((prop) => `  ${prop}`).join('\n')}\n/>`;
 }
 
 /**

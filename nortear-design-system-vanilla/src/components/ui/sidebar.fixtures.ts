@@ -37,9 +37,9 @@ export function makeIcon(path: string): SVGElement {
  * quem navega por marcos não tem como chegar até ela. A fábrica não impõe o
  * elemento — quem compõe é que decide o rótulo —, então é aqui que ele entra.
  */
-export function envolverEmNav(sidebar: HTMLElement, rotulo = 'Navegação principal'): HTMLElement {
+export function envolverEmNav(sidebar: HTMLElement, label = 'Navegação principal'): HTMLElement {
   const nav = document.createElement('nav');
-  nav.setAttribute('aria-label', rotulo);
+  nav.setAttribute('aria-label', label);
   nav.appendChild(sidebar);
   return nav;
 }

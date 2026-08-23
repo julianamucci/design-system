@@ -96,8 +96,8 @@ export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
       fieldset.querySelectorAll<HTMLButtonElement>('[data-slot="radio-group-item"]'),
     );
     const habilitados = all.filter((b) => !b.disabled);
-    const marcado = habilitados.find((b) => b.getAttribute('aria-checked') === 'true');
-    const parada = marcado ?? habilitados[0];
+    const checked = habilitados.find((b) => b.getAttribute('aria-checked') === 'true');
+    const parada = checked ?? habilitados[0];
     // Todos saem da ordem de tabulação e só a parada volta. O item bloqueado é
     // incluído de propósito: `disabled` já o torna infocável, mas deixar o
     // `tabindex="0"` implícito do <button> faz o markup dizer o contrário do
@@ -181,22 +181,22 @@ export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
           fieldset.querySelectorAll<HTMLButtonElement>('[data-slot="radio-group-item"]:not([disabled])')
         );
         const idx = allBtns.indexOf(itemBtn);
-        const passo =
+        const step =
           e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1
           : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1
           : 0;
-        if (passo === 0) return;
+        if (step === 0) return;
         e.preventDefault();
         // Circula: do último volta ao primeiro, como o padrão WAI-ARIA e como
         // as libs headless das outras stacks.
-        const alvo = allBtns[(idx + passo + allBtns.length) % allBtns.length];
-        if (!alvo) return;
-        alvo.focus();
+        const target = allBtns[(idx + step + allBtns.length) % allBtns.length];
+        if (!target) return;
+        target.focus();
         // A seta MOVE E SELECIONA — é o que distingue um radiogroup de um punhado
         // de botões, e é o que a seção de acessibilidade do conteúdo descreve.
         // Antes daqui a seta só movia o foco, e o teste que a cobria assertava
         // apenas o foco: o defeito estava documentado como comportamento.
-        selectItem(alvo.dataset.value!);
+        selectItem(target.dataset.value!);
       });
     }
   });

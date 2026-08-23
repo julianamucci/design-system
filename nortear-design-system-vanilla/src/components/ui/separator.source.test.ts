@@ -8,36 +8,36 @@ import {
 
 describe('separatorSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = separatorSnippet();
-    expect(código).toContain("import { createSeparator } from '@/components/ui/separator';");
-    expect(código).toContain('createSeparator()');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('role="none"');
+    const code = separatorSnippet();
+    expect(code).toContain("import { createSeparator } from '@/components/ui/separator';");
+    expect(code).toContain('createSeparator()');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('role="none"');
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = separatorSnippet();
-    expect(código).not.toContain('orientation');
-    expect(código).not.toContain('decorative');
-    expect(código).not.toContain('emphasis');
+    const code = separatorSnippet();
+    expect(code).not.toContain('orientation');
+    expect(code).not.toContain('decorative');
+    expect(code).not.toContain('emphasis');
   });
 
   it('mostra orientação, modo semântico, ênfase e classe quando a story os usa', () => {
-    const código = separatorSnippet({
+    const code = separatorSnippet({
       orientation: 'vertical',
       decorative: false,
       emphasis: 'strong',
       className: 'nds-mt-4',
     });
-    expect(código).toContain("orientation: 'vertical'");
-    expect(código).toContain('decorative: false');
-    expect(código).toContain("emphasis: 'strong'");
-    expect(código).toContain("className: 'nds-mt-4'");
+    expect(code).toContain("orientation: 'vertical'");
+    expect(code).toContain('decorative: false');
+    expect(code).toContain("emphasis: 'strong'");
+    expect(code).toContain("className: 'nds-mt-4'");
   });
 
   it('mantém a chamada em uma linha só, dentro do append', () => {
-    const código = separatorSnippet({ decorative: false });
-    expect(código).toContain('secao.append(topo, createSeparator({ decorative: false }), base);');
+    const code = separatorSnippet({ decorative: false });
+    expect(code).toContain('secao.append(topo, createSeparator({ decorative: false }), base);');
   });
 
   it('troca o contêiner conforme o eixo — a linha vertical estica no flex', () => {
@@ -48,10 +48,10 @@ describe('separatorSnippet', () => {
   });
 
   it('põe o elemento na página e não vaza helper de story', () => {
-    const código = separatorSnippet();
-    expect(código).toContain("document.querySelector('#app')?.append(secao);");
-    expect(código).not.toContain('playgroundSource');
-    expect(código).not.toContain('texto(');
+    const code = separatorSnippet();
+    expect(code).toContain("document.querySelector('#app')?.append(secao);");
+    expect(code).not.toContain('playgroundSource');
+    expect(code).not.toContain('texto(');
   });
 });
 
@@ -74,21 +74,21 @@ describe('separatorSource', () => {
 
 describe('separatorSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = separatorSourceWith({ orientation: 'vertical' })('', {
+    const code = separatorSourceWith({ orientation: 'vertical' })('', {
       args: { orientation: 'horizontal' },
     });
-    expect(código).toContain("orientation: 'vertical'");
+    expect(code).toContain("orientation: 'vertical'");
   });
 });
 
 describe('separatorEmCardSnippet', () => {
   it('monta o cartão com as sub-fábricas do design system', () => {
-    const código = separatorEmCardSnippet();
-    expect(código).toContain("import { createCard, createCardContent");
-    expect(código).toContain('createCardTitle({');
-    expect(código).toContain('cartao.append(cabecalho, createSeparator(), conteudo);');
+    const code = separatorEmCardSnippet();
+    expect(code).toContain("import { createCard, createCardContent");
+    expect(code).toContain('createCardTitle({');
+    expect(code).toContain('cartao.append(cabecalho, createSeparator(), conteudo);');
     // `class` é o nome canônico do Card; `className` é apelido depreciado.
-    expect(código).toContain("createCard({ class: 'nds-max-w-md' })");
-    expect(código).not.toContain("createCard({ className:");
+    expect(code).toContain("createCard({ class: 'nds-max-w-md' })");
+    expect(code).not.toContain("createCard({ className:");
   });
 });

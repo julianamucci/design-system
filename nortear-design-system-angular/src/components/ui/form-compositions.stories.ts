@@ -49,9 +49,9 @@ export const Fieldset: Story = {
     await step('É um <fieldset> com <legend> de verdade', async () => {
       // O par nativo é o que faz o leitor de tela anunciar o grupo. Um <div>
       // com um título por cima parece igual e não anuncia nada.
-      const grupo = canvasElement.querySelector<HTMLFieldSetElement>('[data-slot="fieldset"]')!;
-      await expect(grupo.tagName).toBe('FIELDSET');
-      await expect(grupo.querySelector('legend')).toHaveTextContent('Endereço de entrega');
+      const group = canvasElement.querySelector<HTMLFieldSetElement>('[data-slot="fieldset"]')!;
+      await expect(group.tagName).toBe('FIELDSET');
+      await expect(group.querySelector('legend')).toHaveTextContent('Endereço de entrega');
     });
 
     await step('A legenda é o PRIMEIRO filho — é o que a rotula como do grupo', async () => {
@@ -59,13 +59,13 @@ export const Fieldset: Story = {
       // campos, e isso depende da posição: `<legend>` fora da primeira posição
       // deixa de rotular o `<fieldset>`, o texto continua na tela e o grupo
       // passa a ser anônimo. Só o texto estava sob asserção.
-      const grupo = canvasElement.querySelector<HTMLFieldSetElement>('[data-slot="fieldset"]')!;
-      await expect(grupo.firstElementChild).toBe(grupo.querySelector('legend'));
+      const group = canvasElement.querySelector<HTMLFieldSetElement>('[data-slot="fieldset"]')!;
+      await expect(group.firstElementChild).toBe(group.querySelector('legend'));
     });
 
     await step('Os campos do grupo ficam a 16px um do outro', async () => {
-      const grupo = canvasElement.querySelector<HTMLFieldSetElement>('[data-slot="fieldset"]')!;
-      await expect(Math.round(parseFloat(getComputedStyle(grupo).rowGap))).toBe(16);
+      const group = canvasElement.querySelector<HTMLFieldSetElement>('[data-slot="fieldset"]')!;
+      await expect(Math.round(parseFloat(getComputedStyle(group).rowGap))).toBe(16);
     });
 
     await step('Cada campo do grupo segue alcançável pelo próprio rótulo', async () => {
@@ -94,7 +94,7 @@ export const ReactiveForm: Story = {
   },
   render: () => {
     const form = new FormGroup({
-      nome: new FormControl('', Validators.required),
+      name: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
       bio: new FormControl(''),
     });
@@ -104,7 +104,7 @@ export const ReactiveForm: Story = {
         <form ndsForm class="nds-max-w-sm" [formGroup]="form">
           <div ndsFormField>
             <label ndsFormLabel>Nome completo</label>
-            <input ndsInput type="text" formControlName="nome" placeholder="ex: João da Silva" />
+            <input ndsInput type="text" formControlName="name" placeholder="ex: João da Silva" />
             <p ndsFormDescription>Como aparece em documentos oficiais.</p>
           </div>
 
@@ -138,16 +138,16 @@ export const ReactiveForm: Story = {
     await step('Cada campo descreve o seu próprio controle', async () => {
       // Três campos irmãos: se os ids fossem gerados de forma colidente, o
       // aria-describedby de um apontaria para o texto do outro.
-      const nome = canvas.getByLabelText('Nome completo');
+      const name = canvas.getByLabelText('Nome completo');
       const bio = canvas.getByLabelText('Biografia');
-      await expect(nome.getAttribute('aria-describedby')).not.toBe(
+      await expect(name.getAttribute('aria-describedby')).not.toBe(
         bio.getAttribute('aria-describedby'),
       );
     });
 
     await step('Tab percorre os controles na ordem do DOM', async () => {
-      const nome = canvas.getByLabelText('Nome completo');
-      nome.focus();
+      const name = canvas.getByLabelText('Nome completo');
+      name.focus();
       await userEvent.tab();
       await expect(canvas.getByLabelText('Email')).toHaveFocus();
       await userEvent.tab();

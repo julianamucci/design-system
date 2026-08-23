@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, screen } from 'storybook/test';
 import { NDS_POPOVER } from './popover';
-import { abrir, painel } from './popover.fixtures';
+import { open, panel } from './popover.fixtures';
 import { NdsButton } from './button';
 
 // Os quatro estados que o conteúdo compartilhado descreve: fechado (painel fora
@@ -54,21 +54,21 @@ export const Closed: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Abrir popover' });
+    const trigger = canvas.getByRole('button', { name: 'Abrir popover' });
 
     await step('Fechado, o painel não existe no DOM', async () => {
       // Desmontado, e não escondido: leitor de tela e busca do navegador não
       // encontram conteúdo que não está lá, que é o comportamento desejado.
-      await expect(painel()).toBeNull();
+      await expect(panel()).toBeNull();
       await expect(screen.queryByRole('dialog')).toBeNull();
     });
 
     await step('E o gatilho declara o estado nos dois contratos', async () => {
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
-      await expect(gatilho).toHaveAttribute('data-state', 'closed');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveAttribute('data-state', 'closed');
       // Sem painel não há id para apontar — o atributo some, senão o axe
       // reprovaria por aria-valid-attr-value.
-      await expect(gatilho.getAttribute('aria-controls')).toBeNull();
+      await expect(trigger.getAttribute('aria-controls')).toBeNull();
     });
   },
 };
@@ -89,7 +89,7 @@ export const Open: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Abrir popover' });
+    const trigger = canvas.getByRole('button', { name: 'Abrir popover' });
 
     await step('defaultOpen abre o painel já na primeira renderização', async () => {
       // Prova o binding de input: sob JIT o componente cairia no valor padrão
@@ -97,9 +97,9 @@ export const Open: Story = {
       await waitFor(async () => {
         await expect(screen.getByRole('dialog')).toBeVisible();
       });
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
-      await expect(gatilho).toHaveAttribute('data-state', 'open');
-      await expect(painel()).toHaveAttribute('data-state', 'open');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      await expect(trigger).toHaveAttribute('data-state', 'open');
+      await expect(panel()).toHaveAttribute('data-state', 'open');
     });
   },
 };
@@ -127,33 +127,33 @@ export const Controlled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Abrir popover' });
+    const trigger = canvas.getByRole('button', { name: 'Abrir popover' });
     const externo = canvas.getByRole('button', { name: 'Alternar por fora' });
 
     await step('O estado externo abre e fecha o painel', async () => {
-      if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.click(externo);
+      if (trigger.getAttribute('aria-expanded') === 'true') await userEvent.click(externo);
       await userEvent.click(externo);
       await waitFor(async () => {
         await expect(screen.getByRole('dialog')).toBeVisible();
       });
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Clicar fora do painel fecha o popover', async () => {
-      await abrir(gatilho);
+      await open(trigger);
       // Um elemento inerte fora do gatilho e fora do painel. O primitivo fecha
       // no pointerdown de fora — é o comportamento nativo que o conteúdo
       // compartilhado promete, e o `open` controlado acompanha.
       await userEvent.click(canvas.getByTestId('area-externa'));
       await waitFor(async () => {
-        await expect(painel()).toBeNull();
+        await expect(panel()).toBeNull();
       });
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
     // Termina ABERTA: é o estado que o Chromatic fotografa.
     await step('Estado final: painel aberto', async () => {
-      await abrir(gatilho);
+      await open(trigger);
       await expect(screen.getByRole('dialog')).toBeVisible();
     });
   },
@@ -171,12 +171,12 @@ export const Focus: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Abrir popover' });
+    const trigger = canvas.getByRole('button', { name: 'Abrir popover' });
 
     await step('O foco entra no painel ao abrir', async () => {
-      await abrir(gatilho);
+      await open(trigger);
       await waitFor(async () => {
-        await expect(painel()!.contains(document.activeElement)).toBe(true);
+        await expect(panel()!.contains(document.activeElement)).toBe(true);
       });
     });
 

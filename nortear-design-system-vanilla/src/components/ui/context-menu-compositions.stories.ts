@@ -30,8 +30,8 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const item = (valor: string) =>
-  document.querySelector<HTMLElement>(`[data-value="${valor}"]`)!;
+const item = (value: string) =>
+  document.querySelector<HTMLElement>(`[data-value="${value}"]`)!;
 
 // ─── Com atalhos ──────────────────────────────────────────────────────────────
 
@@ -340,8 +340,8 @@ export const CompleteComposition: Story = {
         '[data-slot="context-menu-label"]',
       );
       await expect(rotulos.length).toBe(3);
-      for (const rotulo of rotulos) {
-        await expect(rotulo.getAttribute('role')).not.toBe('menuitem');
+      for (const label of rotulos) {
+        await expect(label.getAttribute('role')).not.toBe('menuitem');
       }
     });
   },

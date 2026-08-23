@@ -45,7 +45,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<ToggleGroupArgs
 
   // Só o que difere do default entra no snippet — documentação que repete valor
   // padrão ensina ruído.
-  const atributos = [
+  const attrs = [
     type === 'single' ? '' : `type="${type}"`,
     variant === 'default' ? '' : `variant="${variant}"`,
     orientation === 'horizontal' ? '' : `orientation="${orientation}"`,
@@ -57,7 +57,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<ToggleGroupArgs
   ].filter(Boolean);
 
   const variantItem = variant === 'default' ? '' : ` variant="${variant}"`;
-  const itens = (['left', 'center', 'right'] as const)
+  const items = (['left', 'center', 'right'] as const)
     .map(
       (v) =>
         `      <button ndsToggle${variantItem} value="${v}" aria-label="${LABELS[v]}">\n` +
@@ -74,9 +74,9 @@ import { NdsToggleGroup, NdsToggleGroupIcon } from '@/components/ui/toggle-group
   template: \`
     <div
       ndsToggleGroup
-      ${atributos.join('\n      ')}
+      ${attrs.join('\n      ')}
     >
-${itens}
+${items}
     </div>
   \`,
 })
@@ -183,37 +183,37 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const grupo = canvas.getByRole('toolbar');
+    const group = canvas.getByRole('toolbar');
     const esquerda = canvas.getByRole('button', { name: LABELS.left });
     const center = canvas.getByRole('button', { name: LABELS.center });
     const direita = canvas.getByRole('button', { name: LABELS.right });
 
     await step('O grupo é uma barra de ferramentas nomeada', async () => {
-      await expect(grupo.tagName).toBe('DIV');
-      await expect(grupo).toHaveClass(/nds-toggle-group/);
-      await expect(grupo).toHaveAttribute('data-slot', 'toggle-group');
+      await expect(group.tagName).toBe('DIV');
+      await expect(group).toHaveClass(/nds-toggle-group/);
+      await expect(group).toHaveAttribute('data-slot', 'toggle-group');
       // accessibility.item5 — sem nome, o leitor anuncia só "barra de ferramentas".
-      await expect(grupo).toHaveAttribute('aria-label', args.ariaLabel);
+      await expect(group).toHaveAttribute('aria-label', args.ariaLabel);
     });
 
     await step('Orientação e variante viram atributo, e "default" é a ausência', async () => {
       // Esta é a asserção que prova o binding de input: sob JIT o componente
       // renderiza nos defaults e nenhum destes atributos acompanharia o control.
-      await expect(grupo).toHaveAttribute('data-orientation', args.orientation);
-      await expect(grupo).toHaveAttribute('aria-orientation', args.orientation);
-      await expect(grupo.getAttribute('data-variant')).toBe(
+      await expect(group).toHaveAttribute('data-orientation', args.orientation);
+      await expect(group).toHaveAttribute('aria-orientation', args.orientation);
+      await expect(group.getAttribute('data-variant')).toBe(
         args.variant === 'default' ? null : args.variant,
       );
-      await expect(grupo.getAttribute('data-spacing')).toBe(args.spacing === 0 ? '0' : null);
+      await expect(group.getAttribute('data-spacing')).toBe(args.spacing === 0 ? '0' : null);
     });
 
     await step('Cada item tem nome próprio, e o ícone não é lido', async () => {
-      for (const [button, nome] of [
+      for (const [button, name] of [
         [esquerda, LABELS.left],
         [center, LABELS.center],
         [direita, LABELS.right],
       ] as const) {
-        await expect(button).toHaveAttribute('aria-label', nome);
+        await expect(button).toHaveAttribute('aria-label', name);
         await expect(button.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
       }
     });
@@ -234,7 +234,7 @@ export const Playground: Story = {
 
     if (args.disabled) {
       await step('Grupo desabilitado propaga o estado a cada item', async () => {
-        await expect(grupo).toHaveAttribute('data-disabled', '');
+        await expect(group).toHaveAttribute('data-disabled', '');
         for (const button of [esquerda, center, direita]) {
           await expect(button).toBeDisabled();
         }

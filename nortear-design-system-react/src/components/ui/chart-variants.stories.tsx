@@ -53,16 +53,16 @@ type Story = StoryObj;
  * com 1px — sem ela, "existe um caminho vazado" seria verdade em qualquer
  * gráfico, inclusive num de barras.
  */
-function tracadosDeSerie(raiz: HTMLElement): SVGPathElement[] {
-  return [...raiz.querySelectorAll<SVGPathElement>('svg path')].filter((p) => {
+function tracadosDeSerie(root: HTMLElement): SVGPathElement[] {
+  return [...root.querySelectorAll<SVGPathElement>('svg path')].filter((p) => {
     const s = getComputedStyle(p);
     return s.fill === 'none' && s.stroke !== 'none' && parseFloat(s.strokeWidth || '0') >= 2;
   });
 }
 
 /** Caminhos preenchidos e largos — a região sob a linha, não o símbolo do ponto. */
-function areasPreenchidas(raiz: HTMLElement, larguraMinima: number): SVGPathElement[] {
-  return [...raiz.querySelectorAll<SVGPathElement>('svg path')].filter((p) => {
+function areasPreenchidas(root: HTMLElement, larguraMinima: number): SVGPathElement[] {
+  return [...root.querySelectorAll<SVGPathElement>('svg path')].filter((p) => {
     const fill = getComputedStyle(p).fill;
     if (fill === 'none' || /,\s*0\)\s*$/.test(fill)) return false;
     return p.getBBox().width >= larguraMinima;
@@ -83,14 +83,14 @@ export const Bar: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await designPronto(canvasElement);
+    const root = await designPronto(canvasElement);
 
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
-      for (const month of meses) await expect(designEscreve(raiz, month)).toBe(true);
+      for (const month of meses) await expect(designEscreve(root, month)).toBe(true);
     });
 
     await step('As barras existem e têm área — o desenho não é casca vazia', async () => {
-      const formas = datumFormas(raiz);
+      const formas = datumFormas(root);
       await expect(formas.length).toBeGreaterThan(0);
       for (const forma of formas) {
         await expect(forma.getBoundingClientRect().width).toBeGreaterThan(0);
@@ -118,10 +118,10 @@ export const Line: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await designPronto(canvasElement);
+    const root = await designPronto(canvasElement);
 
     await step('Uma linha traçada por série, com comprimento real', async () => {
-      const tracados = tracadosDeSerie(raiz);
+      const tracados = tracadosDeSerie(root);
       await expect(tracados.length).toBeGreaterThanOrEqual(seriesMulti.length);
       for (const tracado of tracados) {
         // Caminho declarado mas sem comando de desenho mede zero e continua no
@@ -131,11 +131,11 @@ export const Line: Story = {
     });
 
     await step('A legenda nomeia cada série por escrito', async () => {
-      for (const serie of seriesMulti) await expect(designEscreve(raiz, serie.name)).toBe(true);
+      for (const serie of seriesMulti) await expect(designEscreve(root, serie.name)).toBe(true);
     });
 
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
-      for (const month of meses) await expect(designEscreve(raiz, month)).toBe(true);
+      for (const month of meses) await expect(designEscreve(root, month)).toBe(true);
     });
   },
 };
@@ -157,25 +157,25 @@ export const Area: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await designPronto(canvasElement);
+    const root = await designPronto(canvasElement);
 
     await step('O traçado continua lá — a área é a linha com região abaixo', async () => {
-      const tracados = tracadosDeSerie(raiz);
+      const tracados = tracadosDeSerie(root);
       await expect(tracados.length).toBeGreaterThanOrEqual(seriesMulti.length);
     });
 
     await step('E há região preenchida sob a linha, não só o símbolo do ponto', async () => {
-      const svg = raiz.querySelector('svg')!;
+      const svg = root.querySelector('svg')!;
       // Metade da largura do desenho: o símbolo de ponto tem 6px, a região sob
       // a linha atravessa o gráfico. A comparação é relativa porque o desenho é
       // responsivo e o número absoluto muda com a largura do container.
       const meiaWidth = svg.getBoundingClientRect().width / 2;
-      const areas = areasPreenchidas(raiz, meiaWidth);
+      const areas = areasPreenchidas(root, meiaWidth);
       await expect(areas.length).toBeGreaterThanOrEqual(seriesMulti.length);
     });
 
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
-      for (const month of meses) await expect(designEscreve(raiz, month)).toBe(true);
+      for (const month of meses) await expect(designEscreve(root, month)).toBe(true);
     });
   },
 };
@@ -199,16 +199,16 @@ export const Pie: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await designPronto(canvasElement);
+    const root = await designPronto(canvasElement);
 
     await step('A legenda escreve o nome de cada fatia', async () => {
       for (const ponto of dataDispositivo) {
-        await expect(designEscreve(raiz, ponto.label)).toBe(true);
+        await expect(designEscreve(root, ponto.label)).toBe(true);
       }
     });
 
     await step('Cada fatia tem preenchimento próprio — a cor não se repete', async () => {
-      const formas = datumFormas(raiz);
+      const formas = datumFormas(root);
       await expect(formas.length).toBeGreaterThanOrEqual(dataDispositivo.length);
       const preenchimentos = new Set(formas.map((f) => getComputedStyle(f).fill));
       await expect(preenchimentos.size).toBeGreaterThanOrEqual(dataDispositivo.length);

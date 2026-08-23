@@ -67,7 +67,7 @@ export class NdsMiniSwatch {
     <span class="nds-swatch-color" [style.--swatch-color]="tokenColor()" aria-hidden="true"></span>
     <div class="nds-swatch-meta">
       <span class="nds-swatch-token">--{{ token() }}</span>
-      <span class="nds-swatch-value">{{ valor() || '—' }}</span>
+      <span class="nds-swatch-value">{{ value() || '—' }}</span>
     </div>
     <span class="nds-icon-tile-tooltip" [class.is-visible]="copiado()" aria-hidden="true">{{
       copiado() ? rotuloCopiado() : rotuloDeCopia()
@@ -78,7 +78,7 @@ export class NdsSwatch implements OnDestroy {
   /** Nome do token CSS sem o prefixo `--`. */
   readonly token = input.required<string>();
   /** Valor HSL já resolvido — quem lê o `<html>` é a página, não o swatch. */
-  readonly valor = input('');
+  readonly value = input('');
   /** Rótulo do tooltip de cópia. */
   readonly rotuloDeCopia = input('');
   /** Rótulo do tooltip depois de copiar. */

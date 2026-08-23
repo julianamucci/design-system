@@ -3,7 +3,7 @@
 // O Table não é uma fábrica só: são sete, uma por peça da tabela. O que o
 // leitor copia é a MONTAGEM — e ela é o snippet inteiro, não uma chamada.
 
-import { montar, snippet, texto, type SourceTransform } from '@/lib/story-source';
+import { montar, snippet, text, type SourceTransform } from '@/lib/story-source';
 
 export type TableSnippetOptions = {
   /** Legenda desenhada na tela; sem isto ela fica só para o leitor de tela. */
@@ -40,12 +40,12 @@ function importingParts(...names: string[]): string {
   return `import {\n${names.map((n) => `  ${n},`).join('\n')}\n} from '@/components/ui/table';`;
 }
 
-function legenda(o: TableSnippetOptions): string {
+function caption(o: TableSnippetOptions): string {
   const className = o.captionVisivel ? '' : ", 'nds-sr-only'";
   return [
     '// A legenda é o NOME da tabela. `nds-sr-only` a tira da tela e nunca do',
     '// DOM: quem entra pela árvore de acessibilidade encontraria só "tabela".',
-    `table.appendChild(createTableCaption(${texto(o.caption ?? CAPTION_DEFAULT)}${className}));`,
+    `table.appendChild(createTableCaption(${text(o.caption ?? CAPTION_DEFAULT)}${className}));`,
   ].join('\n');
 }
 
@@ -81,7 +81,7 @@ function header(o: TableSnippetOptions = {}): string {
   return lines.join('\n');
 }
 
-function corpo(o: TableSnippetOptions): string {
+function body(o: TableSnippetOptions): string {
   const lines = ['const corpo = createTableBody();', 'for (const fatura of faturas) {', '  const linha = createTableRow();'];
 
   if (o.lineSelecionada) {
@@ -121,7 +121,7 @@ function corpo(o: TableSnippetOptions): string {
   return lines.join('\n');
 }
 
-function rodape(): string {
+function footer(): string {
   return [
     '// O total vive no rodapé, e não como mais uma linha do corpo: dentro do',
     '// `tbody` ele entraria na contagem de registros.',
@@ -160,10 +160,10 @@ export function tableSnippet(o: TableSnippetOptions = {}): string {
       '// sem isso as colunas fora da caixa ficam inalcançáveis por teclado.',
       'const { wrapper, table } = createTable();',
     ].join('\n'),
-    legenda(o),
+    caption(o),
     header(o),
-    corpo(o),
-    o.withFooter ? rodape() : undefined,
+    body(o),
+    o.withFooter ? footer() : undefined,
     montar('wrapper'),
   );
 }
@@ -182,7 +182,7 @@ export function tableVaziaSnippet(o: TableSnippetOptions = {}): string {
     ),
     DATA.split('\n').slice(0, 1).join('\n'),
     'const { wrapper, table } = createTable();',
-    legenda(o),
+    caption(o),
     header(),
     [
       'const corpo = createTableBody();',
@@ -225,7 +225,7 @@ export function tableLoadingSnippet(o: TableSnippetOptions = {}): string {
       "regiao.setAttribute('aria-label', 'Carregando faturas');",
     ].join('\n'),
     'const { wrapper, table } = createTable();',
-    legenda(o),
+    caption(o),
     header(),
     [
       'const corpo = createTableBody();',

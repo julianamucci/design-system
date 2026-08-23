@@ -158,7 +158,7 @@ export class NdsHoverCardContent {
   template: `
     <ng-content />
 
-    @if (conteudo(); as c) {
+    @if (content(); as c) {
       <!-- A diretiva de portal é ESTRUTURAL: teleporta para o body só
            enquanto o cartão está presente e segura o elemento durante a
            animação de saída. Fechado, não há nada no DOM — o mesmo contrato do
@@ -192,11 +192,11 @@ export class NdsHoverCard {
    * por consulta de conteúdo e é instanciado dentro do portal — dois destinos
    * de projeção padrão não entregariam nada a nenhum dos dois.
    */
-  protected readonly conteudo = contentChild(NdsHoverCardContent);
+  protected readonly content = contentChild(NdsHoverCardContent);
 
   // O contexto da raiz vem do próprio elemento: `RdxPreviewCardRoot` é host
   // directive deste componente e publica o contexto no injetor do host.
-  private readonly raiz = injectRdxPreviewCardRootContext();
+  private readonly root = injectRdxPreviewCardRootContext();
 
   /**
    * Nome acessível do painel.
@@ -207,9 +207,9 @@ export class NdsHoverCard {
    * resolvido quando o painel monta, que é quando ele importa.
    */
   protected readonly accessibleName = computed(() => {
-    const explicito = this.conteudo()?.label();
+    const explicito = this.content()?.label();
     if (explicito) return explicito;
-    return this.raiz.trigger()?.textContent?.trim() || undefined;
+    return this.root.trigger()?.textContent?.trim() || undefined;
   });
 }
 

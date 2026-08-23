@@ -8,9 +8,9 @@
 import {
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { MenubarAlign, MenubarItemType, MenubarSide } from './menubar';
@@ -87,17 +87,17 @@ function objeto(lines: string[]): string {
 
 /** Um item serializado, já recuado. Submenu e escolha única abrem em bloco. */
 function serializarItem(item: MenubarItemSnippet, recuo: string): string {
-  const base = opcoes([
-    ['type', item.type && item.type !== 'item' ? texto(item.type) : undefined],
-    ['label', item.label ? texto(item.label) : undefined],
-    ['shortcut', item.shortcut ? texto(item.shortcut) : undefined],
-    ['variant', item.variant && item.variant !== 'default' ? texto(item.variant) : undefined],
+  const base = options([
+    ['type', item.type && item.type !== 'item' ? text(item.type) : undefined],
+    ['label', item.label ? text(item.label) : undefined],
+    ['shortcut', item.shortcut ? text(item.shortcut) : undefined],
+    ['variant', item.variant && item.variant !== 'default' ? text(item.variant) : undefined],
     ['inset', item.inset ? 'true' : undefined],
     // Misto vale SOBRE o marcado: mostrar os dois juntos ensinaria um estado
     // que a fábrica resolve por conta própria.
     ['indeterminate', item.indeterminate ? 'true' : undefined],
     ['checked', !item.indeterminate && item.checked ? 'true' : undefined],
-    ['value', item.value ? texto(item.value) : undefined],
+    ['value', item.value ? text(item.value) : undefined],
     ['disabled', item.disabled ? 'true' : undefined],
     ['onClick', item.onClick],
     ['onCheckedChange', item.onCheckedChange],
@@ -106,7 +106,7 @@ function serializarItem(item: MenubarItemSnippet, recuo: string): string {
 
   if (item.options) {
     const groupOptions = item.options
-      .map((op) => `${recuo}    { value: ${texto(op.value)}, label: ${texto(op.label)} },`)
+      .map((op) => `${recuo}    { value: ${text(op.value)}, label: ${text(op.label)} },`)
       .join('\n');
     return `${recuo}{
 ${base.map((l) => `${recuo}  ${l}`).join('\n')}
@@ -117,11 +117,11 @@ ${recuo}},`;
   }
 
   if (item.items) {
-    const filhos = item.items.map((f) => serializarItem(f, `${recuo}    `)).join('\n');
+    const children = item.items.map((f) => serializarItem(f, `${recuo}    `)).join('\n');
     return `${recuo}{
 ${base.map((l) => `${recuo}  ${l}`).join('\n')}
 ${recuo}  items: [
-${filhos}
+${children}
 ${recuo}  ],
 ${recuo}},`;
   }
@@ -131,33 +131,33 @@ ${recuo}},`;
 
 /** A lista de menus, do jeito que entra no primeiro argumento da fábrica. */
 function serializarMenus(menus: MenubarMenuSnippet[]): string {
-  const corpo = menus
+  const body = menus
     .map(
       (menu) => `  {
-    label: ${texto(menu.label)},
+    label: ${text(menu.label)},
     items: [
 ${menu.items.map((i) => serializarItem(i, '      ')).join('\n')}
     ],
   },`,
     )
     .join('\n');
-  return `[\n${corpo}\n]`;
+  return `[\n${body}\n]`;
 }
 
 /** A chamada real de `createMenubar` com a estrutura e as opções da story. */
 export function menubarSnippet(o: MenubarSnippetOptions = {}): string {
   const menus = o.menus ?? MENUS_DEFAULT;
 
-  const lines = opcoes([
+  const lines = options([
     // `loop` é ligado por padrão: só o desligamento merece uma linha.
     ['loop', o.loop === false ? 'false' : undefined],
     [
       'defaultOpen',
       o.defaultOpen === true ? '0' : typeof o.defaultOpen === 'number' ? String(o.defaultOpen) : undefined,
     ],
-    ['side', o.side && o.side !== 'bottom' ? texto(o.side) : undefined],
-    ['align', o.align && o.align !== 'start' ? texto(o.align) : undefined],
-    ['class', o.class ? texto(o.class) : undefined],
+    ['side', o.side && o.side !== 'bottom' ? text(o.side) : undefined],
+    ['align', o.align && o.align !== 'start' ? text(o.align) : undefined],
+    ['class', o.class ? text(o.class) : undefined],
   ]);
 
   const segundo = lines.length ? `, ${objeto(lines)}` : '';

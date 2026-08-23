@@ -84,33 +84,33 @@ export const Responsive: Story = {
   render: () => ({ Component: BreadcrumbStory, props: { variant: 'responsive' } }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /expandir níveis ocultos/i });
+    const trigger = canvas.getByRole('button', { name: /expandir níveis ocultos/i });
 
-    const abrir = async () => {
-      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
-      await waitFor(() => expect(gatilho).toHaveAttribute('aria-expanded', 'true'));
+    const open = async () => {
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+      await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
     };
-    const fechar = async () => {
-      if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.keyboard('{Escape}');
-      await waitFor(() => expect(gatilho).not.toHaveAttribute('aria-expanded', 'true'));
+    const close = async () => {
+      if (trigger.getAttribute('aria-expanded') === 'true') await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(trigger).not.toHaveAttribute('aria-expanded', 'true'));
     };
 
     await step('O gatilho abre a lista dos níveis colapsados', async () => {
       // functional.item5 — é aqui que os níveis ocultos voltam a existir para
       // quem navega: as reticências sozinhas informam, o menu é que leva.
-      await fechar();
-      await abrir();
-      const itens = await waitFor(() => within(document.body).getAllByRole('menuitem'));
-      await expect(itens.map((i) => i.textContent?.trim())).toEqual(['Documentação', 'Guia', 'Componentes']);
+      await close();
+      await open();
+      const items = await waitFor(() => within(document.body).getAllByRole('menuitem'));
+      await expect(items.map((i) => i.textContent?.trim())).toEqual(['Documentação', 'Guia', 'Componentes']);
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
-      await abrir();
+      await open();
       await userEvent.keyboard('{Escape}');
-      await waitFor(() => expect(gatilho).not.toHaveAttribute('aria-expanded', 'true'));
+      await waitFor(() => expect(trigger).not.toHaveAttribute('aria-expanded', 'true'));
       // waitFor aqui não é preguiça: o painel do menu sai animado, e o foco só
       // volta ao gatilho quando ele termina de sair.
-      await waitFor(() => expect(gatilho).toHaveFocus());
+      await waitFor(() => expect(trigger).toHaveFocus());
     });
   },
 };

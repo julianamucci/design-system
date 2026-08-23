@@ -144,16 +144,16 @@ export const Playground: Story = {
     });
 
     await step("O nome acessível existe nos dois modos", async () => {
-      const nome = args.iconOnly ? toggle.getAttribute("aria-label") : toggle.textContent?.trim();
-      await expect(nome).toBeTruthy();
+      const name = args.iconOnly ? toggle.getAttribute("aria-label") : toggle.textContent?.trim();
+      await expect(name).toBeTruthy();
       // Ícone decorativo: quem lê a tela não deve ouvi-lo duas vezes.
       await expect(toggle.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
     });
 
     await step("O alvo de toque cabe no mínimo de 24px (WCAG 2.5.8)", async () => {
-      const caixa = toggle.getBoundingClientRect();
-      await expect(caixa.width).toBeGreaterThanOrEqual(24);
-      await expect(caixa.height).toBeGreaterThanOrEqual(24);
+      const box = toggle.getBoundingClientRect();
+      await expect(box.width).toBeGreaterThanOrEqual(24);
+      await expect(box.height).toBeGreaterThanOrEqual(24);
     });
 
     if (!args.disabled) {

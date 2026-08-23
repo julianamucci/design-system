@@ -78,19 +78,19 @@ export const Default: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button');
+    const trigger = within(canvasElement).getByRole('button');
 
     await step('Nasce aberto, com o texto curto no balão', async () => {
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       await expect(balao).toHaveClass(/nds-tooltip-content/);
       await expect(balao.textContent?.trim()).toBe('Salvar');
     });
 
     await step('O texto do balão passa dos 4.5:1 exigidos', async () => {
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       // Medido no elemento real, não na tabela de tokens: é a combinação
       // aplicada (fundo --primary, texto --primary-foreground) que a pessoa lê,
       // e ela precisa valer em qualquer tema da toolbar.
@@ -119,13 +119,13 @@ export const WithShortcut: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button');
+    const trigger = within(canvasElement).getByRole('button');
 
     await step('O atalho vai em <kbd>, não solto no texto', async () => {
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      const teclas = balaoDe(gatilho)!.querySelectorAll('kbd');
+      const teclas = balaoDe(trigger)!.querySelectorAll('kbd');
       await expect(teclas.length).toBe(2);
       await expect(teclas[0].textContent).toBe('Ctrl');
     });
@@ -133,7 +133,7 @@ export const WithShortcut: Story = {
     await step('A folha compartilhada reconhece a tecla e encurta o respiro', async () => {
       // `.nds-tooltip-content:has([data-slot="kbd"])` só casa se o data-slot
       // estiver na tecla — sem ele a regra existe e não pinta nada.
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       await expect(balao.querySelector('[data-slot="kbd"]')).not.toBeNull();
       await expect(getComputedStyle(balao).paddingInlineEnd).not.toBe(
         getComputedStyle(balao).paddingInlineStart,
@@ -157,13 +157,13 @@ export const LongText: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button');
+    const trigger = within(canvasElement).getByRole('button');
 
     await step('O texto quebra dentro do limite de largura do balão', async () => {
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       const limit = parseFloat(getComputedStyle(balao).maxWidth);
       // O limite vem da folha compartilhada; medir a largura real prova que o
       // texto respeitou o teto em vez de esticar o balão pela viewport.
@@ -178,12 +178,12 @@ export const PlacementSides: Story = {
   render: () => ({
     template: `
       <div ndsTooltipProvider [delay]="0" class="nds-grid nds-p-8" data-cols="2" data-spacing="xl">
-        @for (lado of lados; track lado) {
+        @for (side of lados; track side) {
           <span ndsTooltip [defaultOpen]="true">
-            <button ndsTooltipTrigger ndsButton variant="outline" [attr.aria-label]="lado">
-              {{ lado }}
+            <button ndsTooltipTrigger ndsButton variant="outline" [attr.aria-label]="side">
+              {{ side }}
             </button>
-            <ng-template ndsTooltipContent [side]="lado">Tooltip {{ lado }}</ng-template>
+            <ng-template ndsTooltipContent [side]="side">Tooltip {{ side }}</ng-template>
           </span>
         }
       </div>
@@ -197,17 +197,17 @@ export const PlacementSides: Story = {
     };
 
     await step('Cada balão nasce do lado pedido, ou do oposto quando falta espaço', async () => {
-      for (const lado of ['top', 'right', 'bottom', 'left']) {
-        const gatilho = canvas.getByRole('button', { name: lado });
+      for (const side of ['top', 'right', 'bottom', 'left']) {
+        const trigger = canvas.getByRole('button', { name: side });
         // Esperar o `data-side`, e não só o elemento: o balão entra no DOM
         // antes de o posicionador medir, e nesse intervalo o atributo é nulo.
         await waitFor(async () => {
-          await expect(balaoDe(gatilho)?.getAttribute('data-side')).toBeTruthy();
+          await expect(balaoDe(trigger)?.getAttribute('data-side')).toBeTruthy();
         });
         // O auto-flip por colisão é comportamento documentado: perto da borda o
         // balão troca para o lado oposto em vez de sair da tela.
-        await expect([lado, oposto[lado]]).toContain(
-          balaoDe(gatilho)!.getAttribute('data-side'),
+        await expect([side, oposto[side]]).toContain(
+          balaoDe(trigger)!.getAttribute('data-side'),
         );
       }
     });

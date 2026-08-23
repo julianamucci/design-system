@@ -122,17 +122,17 @@ export const CustomColor: Story = {
       const colors = canvas
         .getAllByRole("progressbar")
         .map(
-          (raiz) =>
+          (root) =>
             getComputedStyle(
-              raiz.querySelector<HTMLElement>("[data-slot='progress-indicator']")!,
+              root.querySelector<HTMLElement>("[data-slot='progress-indicator']")!,
             ).backgroundColor,
         );
       await expect(new Set(colors).size).toBe(3);
     });
 
     await step("Nenhuma variante abre mão dos 3:1 contra a trilha", async () => {
-      for (const raiz of canvas.getAllByRole("progressbar")) {
-        await expect(contrastBarTrack(raiz)).toBeGreaterThanOrEqual(3);
+      for (const root of canvas.getAllByRole("progressbar")) {
+        await expect(contrastBarTrack(root)).toBeGreaterThanOrEqual(3);
       }
     });
 
@@ -184,10 +184,10 @@ export const WithLabelAndValue: Story = {
     });
 
     await step("O valor formatado é escrito pelo componente", async () => {
-      const valor = canvasElement.querySelector<HTMLElement>(
+      const value = canvasElement.querySelector<HTMLElement>(
         "[data-slot='progress-value']",
       )!;
-      await expect(valor.textContent?.trim()).toMatch(/^\d+%$/);
+      await expect(value.textContent?.trim()).toMatch(/^\d+%$/);
     });
 
     await step("A composição rende uma trilha só", async () => {

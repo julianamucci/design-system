@@ -171,9 +171,9 @@ export class NdsSelectIcon {
       const svg = this.hostRef.nativeElement;
       svg.replaceChildren();
       for (const [tag, attrs] of SELECT_ICON_MAP[this.kind()]) {
-        const filho = document.createElementNS('http://www.w3.org/2000/svg', tag);
-        for (const [k, v] of Object.entries(attrs)) filho.setAttribute(k, v);
-        svg.appendChild(filho);
+        const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
+        for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
+        svg.appendChild(child);
       }
     });
   }
@@ -321,7 +321,7 @@ export class NdsSelectOutlet implements OnInit {
     -->
     <ng-content />
 
-    @if (conteudo(); as lista) {
+    @if (content(); as list) {
       <!--
         O portal teleporta o popup para o \`body\` ao abrir e o DESMONTA ao
         fechar. É o desmonte que devolve o foco ao gatilho.
@@ -330,17 +330,17 @@ export class NdsSelectOutlet implements OnInit {
         <div
           rdxSelectPositioner
           class="nds-select-positioner"
-          [side]="lista.side()"
-          [align]="lista.align()"
-          [sideOffset]="lista.sideOffset()"
-          [alignOffset]="lista.alignOffset()"
+          [side]="list.side()"
+          [align]="list.align()"
+          [sideOffset]="list.sideOffset()"
+          [alignOffset]="list.alignOffset()"
         >
           <div
             rdxSelectPopup
             class="nds-select-content"
             data-slot="select-content"
             data-align-trigger="false"
-            [finalFocus]="gatilho()"
+            [finalFocus]="trigger()"
             [attr.data-state]="state()"
             [attr.aria-label]="rotuloDaLista()"
           >
@@ -353,7 +353,7 @@ export class NdsSelectOutlet implements OnInit {
             </div>
 
             <div rdxSelectList class="nds-select-viewport" data-slot="select-viewport">
-              <ng-container [ndsSelectOutlet]="lista.templateRef" />
+              <ng-container [ndsSelectOutlet]="list.templateRef" />
             </div>
 
             <div
@@ -370,7 +370,7 @@ export class NdsSelectOutlet implements OnInit {
   `,
 })
 export class NdsSelect {
-  private readonly raiz = injectSelectRootContext();
+  private readonly root = injectSelectRootContext();
 
   /**
    * O molde da lista.
@@ -380,9 +380,9 @@ export class NdsSelect {
    * consulta só de filhos diretos o perderia em silêncio, deixando o gatilho
    * abrir uma lista vazia.
    */
-  protected readonly conteudo = contentChild(NdsSelectContent, { descendants: true });
+  protected readonly content = contentChild(NdsSelectContent, { descendants: true });
 
-  protected readonly state = computed(() => (this.raiz.open() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.root.open() ? 'open' : 'closed'));
 
   /**
    * Para onde o foco volta quando a lista fecha.
@@ -399,7 +399,7 @@ export class NdsSelect {
    * resolvido no quadro seguinte ao desmonte. É também o comportamento que o
    * conteúdo compartilhado promete em três idiomas, e o das outras stacks.
    */
-  protected readonly gatilho = computed(() => this.raiz.triggerElement());
+  protected readonly trigger = computed(() => this.root.triggerElement());
 
   /**
    * Nome acessível do `role="listbox"`.
@@ -413,27 +413,27 @@ export class NdsSelect {
    * primeiro render, e é a abertura que precisa reavaliar isto.
    */
   protected readonly rotuloDaLista = computed<string | null>(() => {
-    this.raiz.open();
-    const gatilho = this.raiz.triggerElement();
-    if (!gatilho) return null;
+    this.root.open();
+    const trigger = this.root.triggerElement();
+    if (!trigger) return null;
 
-    const rotulo = gatilho.getAttribute('aria-label')?.trim();
-    if (rotulo) return rotulo;
+    const label = trigger.getAttribute('aria-label')?.trim();
+    if (label) return label;
 
-    const ids = gatilho.getAttribute('aria-labelledby')?.trim();
+    const ids = trigger.getAttribute('aria-labelledby')?.trim();
     if (ids) {
-      const texto = ids
+      const text = ids
         .split(/\s+/)
         .map((id) => document.getElementById(id)?.textContent?.trim() ?? '')
         .filter(Boolean)
         .join(' ');
-      if (texto) return texto;
+      if (text) return text;
     }
 
     // Último recurso: o texto do gatilho. Quando ele não tem nome nenhum o
     // campo inteiro já está errado — mas a lista herdar o valor exibido é
     // melhor do que ficar anônima.
-    return gatilho.textContent?.trim() || null;
+    return trigger.textContent?.trim() || null;
   });
 
   constructor() {
@@ -458,10 +458,10 @@ export class NdsSelect {
      * veio de ponteiro devolve o comportamento sem tocar no gesto de arrastar.
      */
     effect(() => {
-      if (!this.raiz.open()) return;
-      const abertura = this.raiz.openMethod();
+      if (!this.root.open()) return;
+      const abertura = this.root.openMethod();
       if (abertura === 'mouse' || abertura === 'touch' || abertura === 'pen') return;
-      this.raiz.triggerPointerDownPosRef.set(null);
+      this.root.triggerPointerDownPosRef.set(null);
     });
   }
 }
@@ -495,7 +495,7 @@ export class NdsSelect {
     // reprova em `aria-required-attr` e deixa quem usa leitor de tela sem saber
     // se a lista está aberta.
     'aria-haspopup': 'listbox',
-    '[attr.aria-expanded]': 'raiz.open()',
+    '[attr.aria-expanded]': 'root.open()',
   },
   template: `
     <ng-content />
@@ -506,9 +506,9 @@ export class NdsSelectTrigger {
   /** Altura do gatilho. Sai de `padding-block`, nunca de `height` fixo. */
   readonly size = input<SelectSize>('default');
 
-  protected readonly raiz = injectSelectRootContext();
+  protected readonly root = injectSelectRootContext();
 
-  protected readonly state = computed(() => (this.raiz.open() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.root.open() ? 'open' : 'closed'));
 }
 
 // ─── Value ────────────────────────────────────────────────────────────────────
@@ -534,12 +534,12 @@ export class NdsSelectTrigger {
     class: 'nds-select-value',
     '[attr.data-slot]': '"select-value"',
   },
-  template: `{{ texto() }}`,
+  template: `{{ text() }}`,
 })
 export class NdsSelectValue {
-  private readonly valor = inject(RdxSelectValue, { self: true });
+  private readonly value = inject(RdxSelectValue, { self: true });
 
-  protected readonly texto = computed(() => this.valor.slotText() ?? '');
+  protected readonly text = computed(() => this.value.slotText() ?? '');
 }
 
 // ─── Group + Label ────────────────────────────────────────────────────────────
@@ -578,9 +578,9 @@ export class NdsSelectGroup {}
   },
 })
 export class NdsSelectLabel {
-  private readonly grupo = inject(RdxSelectGroup, { optional: true });
+  private readonly group = inject(RdxSelectGroup, { optional: true });
 
-  protected readonly idDoGrupo = this.grupo?.id ?? null;
+  protected readonly idDoGrupo = this.group?.id ?? null;
 }
 
 // ─── Separator ────────────────────────────────────────────────────────────────

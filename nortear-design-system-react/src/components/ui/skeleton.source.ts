@@ -43,16 +43,16 @@ const IMPORT_RATIO = 'import { AspectRatio } from "@/components/ui/aspect-ratio"
  * Forma vinda do control, e só uma das quatro que a folha conhece. Control
  * adulterado não vira atributo inventado: cai no padrão do componente.
  */
-function forma(valor: unknown): (typeof FORMAS)[number] {
-  return typeof valor === 'string' && (FORMAS as readonly string[]).includes(valor)
-    ? (valor as (typeof FORMAS)[number])
+function forma(value: unknown): (typeof FORMAS)[number] {
+  return typeof value === 'string' && (FORMAS as readonly string[]).includes(value)
+    ? (value as (typeof FORMAS)[number])
     : 'text';
 }
 
 /** Mesma guarda para a fração de largura. */
-function largura(valor: unknown): (typeof LARGURAS)[number] {
-  return typeof valor === 'string' && (LARGURAS as readonly string[]).includes(valor)
-    ? (valor as (typeof LARGURAS)[number])
+function width(value: unknown): (typeof LARGURAS)[number] {
+  return typeof value === 'string' && (LARGURAS as readonly string[]).includes(value)
+    ? (value as (typeof LARGURAS)[number])
     : '3-4';
 }
 
@@ -62,20 +62,20 @@ function largura(valor: unknown): (typeof LARGURAS)[number] {
  * violação de ARIA. As duas metades juntas são o que faz o leitor de tela
  * dizer "carregando conteúdo".
  */
-function regiao(rotulo: string, conteudo: string, className = 'nds-w-sm', ocupada = true): string {
+function regiao(label: string, content: string, className = 'nds-w-sm', ocupada = true): string {
   const lineClassName = className ? `\n  className="${className}"` : '';
   return `<div
   role="status"
   aria-busy="${ocupada}"
-  aria-label="${rotulo}"${lineClassName}
+  aria-label="${label}"${lineClassName}
 >
-${conteudo}
+${content}
 </div>`;
 }
 
 /** Linha de texto: a forma escolhe a altura, a fração escolhe a largura. */
-function line(fraction: (typeof LARGURAS)[number], tipo: 'text' | 'heading' = 'text'): string {
-  return `  <Skeleton data-shape="${tipo}" data-width="${fraction}" />`;
+function line(fraction: (typeof LARGURAS)[number], type: 'text' | 'heading' = 'text'): string {
+  return `  <Skeleton data-shape="${type}" data-width="${fraction}" />`;
 }
 
 /**
@@ -86,10 +86,10 @@ function line(fraction: (typeof LARGURAS)[number], tipo: 'text' | 'heading' = 't
  */
 export const skeletonSource: SourceTransform<SkeletonArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const caixa = forma(args.shape);
+  const box = forma(args.shape);
   const ocupada = args.loading === false ? false : true;
 
-  if (caixa === 'fill') {
+  if (box === 'fill') {
     return jsxSnippet(
       `${IMPORT}\n${IMPORT_RATIO}`,
       regiao(
@@ -103,7 +103,7 @@ export const skeletonSource: SourceTransform<SkeletonArgs> = (_gerado, ctx) => {
     );
   }
 
-  if (caixa === 'avatar') {
+  if (box === 'avatar') {
     return jsxSnippet(
       IMPORT,
       regiao('Carregando conteúdo', '  <Skeleton data-shape="avatar" />', '', ocupada),
@@ -112,7 +112,7 @@ export const skeletonSource: SourceTransform<SkeletonArgs> = (_gerado, ctx) => {
 
   return jsxSnippet(
     IMPORT,
-    regiao('Carregando conteúdo', line(largura(args.width), caixa), 'nds-w-sm', ocupada),
+    regiao('Carregando conteúdo', line(width(args.width), box), 'nds-w-sm', ocupada),
   );
 };
 

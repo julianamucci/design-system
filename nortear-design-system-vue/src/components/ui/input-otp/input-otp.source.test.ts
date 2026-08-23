@@ -117,9 +117,9 @@ describe('contrato comum a todo snippet de OTP', () => {
   it('todo campo chega rotulado, e o for casa com o id', () => {
     for (const fn of ALL) {
       const saida = fn();
-      const alvo = /<Label for="([^"]+)">/.exec(saida)?.[1];
-      expect(alvo).toBeTruthy();
-      expect(saida).toContain(`id="${alvo}"`);
+      const target = /<Label for="([^"]+)">/.exec(saida)?.[1];
+      expect(target).toBeTruthy();
+      expect(saida).toContain(`id="${target}"`);
     }
   });
 
@@ -191,8 +191,8 @@ describe('transforms das stories de estado', () => {
   it('o erro liga o campo à mensagem, e a mensagem existe no snippet', () => {
     const saida = inputOtpWithErrorSource();
     expect(saida).toContain('aria-invalid="true"');
-    const alvo = /aria-describedby="([^"]+)"/.exec(saida)?.[1];
-    expect(saida).toContain(`<p id="${alvo}"`);
+    const target = /aria-describedby="([^"]+)"/.exec(saida)?.[1];
+    expect(saida).toContain(`<p id="${target}"`);
     // Um campo só: a segunda instância da story existe para a play comparar
     // bordas, e é andaime de medição.
     expect([...saida.matchAll(/<InputOTP\b/g)]).toHaveLength(1);

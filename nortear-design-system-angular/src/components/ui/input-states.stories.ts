@@ -48,7 +48,7 @@ export const Default: Story = {
       await expect(measurements).not.toBeNull();
       await expect(measurements!.length).toBe(2);
       for (const m of measurements!) {
-        await expect(m.texto ?? 0).toBeGreaterThanOrEqual(4.5);
+        await expect(m.text ?? 0).toBeGreaterThanOrEqual(4.5);
         await expect(m.placeholder ?? 0).toBeGreaterThanOrEqual(4.5);
         await expect(m.border ?? 0).toBeGreaterThanOrEqual(3);
       }
@@ -243,8 +243,8 @@ export const Types: Story = {
     });
 
     await step('Todos os campos são alcançáveis pelo rótulo', async () => {
-      for (const nome of ['Email', 'Senha', 'Buscar', 'Anexo']) {
-        await expect(canvas.getByLabelText(nome)).toBeTruthy();
+      for (const name of ['Email', 'Senha', 'Buscar', 'Anexo']) {
+        await expect(canvas.getByLabelText(name)).toBeTruthy();
       }
     });
 
@@ -333,8 +333,8 @@ export const DarkPalette: Story = {
     await step('O campo é mais escuro que o texto que ele recebe', async () => {
       // Prova que a paleta trocou de verdade: com os tokens do claro esta
       // relação se inverte, e a asserção acusa.
-      const campo = canvasElement.querySelector<HTMLElement>('#dk-padrao')!;
-      const cs = getComputedStyle(campo);
+      const field = canvasElement.querySelector<HTMLElement>('#dk-padrao')!;
+      const cs = getComputedStyle(field);
       const brilho = (cor: string) => {
         const [r = 0, g = 0, b = 0] = cor.match(/[\d.]+/g)?.map(Number) ?? [];
         return 0.2126 * r + 0.7152 * g + 0.0722 * b;

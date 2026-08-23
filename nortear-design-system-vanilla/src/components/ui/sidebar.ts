@@ -246,15 +246,15 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
     const header = document.createElement('div');
     header.className = 'nds-sheet-header nds-sr-only';
     header.dataset.slot = 'sheet-header';
-    const titulo = document.createElement('h2');
-    titulo.id = idTitle;
-    titulo.className = 'nds-sheet-title';
-    titulo.textContent = mobileTitle;
+    const title = document.createElement('h2');
+    title.id = idTitle;
+    title.className = 'nds-sheet-title';
+    title.textContent = mobileTitle;
     const descricao = document.createElement('p');
     descricao.id = idDescription;
     descricao.className = 'nds-sheet-description';
     descricao.textContent = mobileDescription;
-    header.append(titulo, descricao);
+    header.append(title, descricao);
     gavetaEl.appendChild(header);
 
     // O conteúdo é MOVIDO, não copiado: quem compôs a barra guarda referências
@@ -293,9 +293,9 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
     // Devolver o foco é trabalho de quem abriu. Sem isto o Escape fecha a
     // gaveta e o foco cai no <body>: quem navega por teclado volta ao começo
     // da página.
-    const alvo = gavetaFocusBefore;
+    const target = gavetaFocusBefore;
     gavetaFocusBefore = null;
-    if (devolverFocus && alvo?.isConnected) alvo.focus();
+    if (devolverFocus && target?.isConnected) target.focus();
     onMobileOpenChange?.(false);
   }
 
@@ -306,13 +306,13 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
       return;
     }
     if (e.key !== 'Tab' || !gavetaEl) return;
-    const lista = focaveis(gavetaEl);
-    if (!lista.length) {
+    const list = focaveis(gavetaEl);
+    if (!list.length) {
       e.preventDefault();
       return;
     }
-    const first = lista[0];
-    const last = lista[lista.length - 1];
+    const first = list[0];
+    const last = list[list.length - 1];
     if (e.shiftKey) {
       if (document.activeElement === first) {
         e.preventDefault();
@@ -677,8 +677,8 @@ export function createSidebarMenuButton(
 
   // `label` aqui NÃO é apelido: é o texto visível servindo de recurso quando
   // nenhum nome acessível foi declarado.
-  const nome = options['aria-label'] ?? options.ariaLabel ?? options.label;
-  if (nome) el.setAttribute('aria-label', nome);
+  const name = options['aria-label'] ?? options.ariaLabel ?? options.label;
+  if (name) el.setAttribute('aria-label', name);
 
   if (options.onClick) el.addEventListener('click', options.onClick);
   if (options.icon) el.appendChild(options.icon);
@@ -771,10 +771,10 @@ export function createSidebarMenuSkeleton(
   el.dataset.slot = 'sidebar-menu-skeleton';
   el.setAttribute('data-sidebar', 'menu-skeleton');
 
-  const nome = nameAccessibleOf(options);
-  if (nome) {
+  const name = nameAccessibleOf(options);
+  if (name) {
     el.setAttribute('role', 'status');
-    el.setAttribute('aria-label', nome);
+    el.setAttribute('aria-label', name);
   } else {
     el.setAttribute('aria-hidden', 'true');
   }
@@ -872,8 +872,8 @@ export function createSidebarMenuSubButton(
 
   // `label` aqui NÃO é apelido: é o texto visível servindo de recurso quando
   // nenhum nome acessível foi declarado.
-  const nome = options['aria-label'] ?? options.ariaLabel ?? options.label;
-  if (nome) el.setAttribute('aria-label', nome);
+  const name = options['aria-label'] ?? options.ariaLabel ?? options.label;
+  if (name) el.setAttribute('aria-label', name);
 
   if (options.onClick) el.addEventListener('click', options.onClick);
   if (options.icon) el.appendChild(options.icon);

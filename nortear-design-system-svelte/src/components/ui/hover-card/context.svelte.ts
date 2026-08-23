@@ -10,20 +10,20 @@ import { getContext, setContext } from 'svelte';
  * associação tem de vir da árvore de componentes.
  */
 export type HoverCardContexto = {
-  get gatilho(): HTMLElement | null;
-  set gatilho(el: HTMLElement | null);
+  get trigger(): HTMLElement | null;
+  set trigger(el: HTMLElement | null);
 };
 
 const KEY = Symbol('nds-hover-card');
 
 export function createContextoHoverCard(): HoverCardContexto {
-  let gatilho = $state<HTMLElement | null>(null);
+  let trigger = $state<HTMLElement | null>(null);
   const contexto: HoverCardContexto = {
-    get gatilho() {
-      return gatilho;
+    get trigger() {
+      return trigger;
     },
-    set gatilho(el: HTMLElement | null) {
-      gatilho = el;
+    set trigger(el: HTMLElement | null) {
+      trigger = el;
     },
   };
   setContext(KEY, contexto);

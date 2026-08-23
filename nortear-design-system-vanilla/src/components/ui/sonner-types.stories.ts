@@ -128,7 +128,7 @@ export const Error: Story = {
   parameters: {
     covers: ['visual.item1'],
     docs: {
-      source: { transform: sonnerSourceWith({ ...REGION, type: 'error', title: TEXTS.erro }) },
+      source: { transform: sonnerSourceWith({ ...REGION, type: 'error', title: TEXTS.error }) },
       description: {
         story:
           'Falha de uma operação. O texto diz a causa e o caminho de saída — nunca culpa quem estava usando.',
@@ -139,11 +139,11 @@ export const Error: Story = {
     await clearToasts();
 
     await step('A falha se anuncia pelo texto, não só pela cor', async () => {
-      toast.error(TEXTS.erro, PERSISTENT);
+      toast.error(TEXTS.error, PERSISTENT);
       const toastEl = await waitForToast({ type: 'error' });
       await expect(toastEl).toHaveAttribute('data-type', 'error');
       // WCAG 1.4.1: quem não distingue vermelho de verde precisa da frase.
-      await expect(toastEl).toHaveTextContent(TEXTS.erro);
+      await expect(toastEl).toHaveTextContent(TEXTS.error);
       await expect(toastEl.querySelector('.nds-toast-icon > svg')).not.toBeNull();
     });
   },

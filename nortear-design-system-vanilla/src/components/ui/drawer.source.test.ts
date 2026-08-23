@@ -8,39 +8,39 @@ import {
 
 describe('drawerSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = drawerSnippet();
-    expect(código).toContain("import { createDrawer } from '@/components/ui/drawer';");
-    expect(código).toContain('createDrawer({');
+    const code = drawerSnippet();
+    expect(code).toContain("import { createDrawer } from '@/components/ui/drawer';");
+    expect(code).toContain('createDrawer({');
     // A prova aqui NÃO é `not.toContain('data-slot=')` como nos outros
     // componentes: o snippet do Drawer PRECISA falar de `data-slot="drawer-close"`,
     // que é o fechador explícito desta fábrica. O que não pode aparecer é o
     // markup que o renderer despejaria.
-    expect(código).not.toContain('data-slot="drawer-content"');
-    expect(código).not.toContain('aria-modal');
-    expect(código).not.toContain('data-vaul-drawer-direction');
+    expect(code).not.toContain('data-slot="drawer-content"');
+    expect(code).not.toContain('aria-modal');
+    expect(code).not.toContain('data-vaul-drawer-direction');
   });
 
   it('o nome do painel sai do título, e não de um apelido inventado', () => {
     // A fábrica não tem opção de nome acessível: `aria-labelledby` aponta para o
     // título. Um `ariaLabel` no snippet seria API que não existe.
-    const código = drawerSnippet({ title: 'Editar perfil' });
-    expect(código).toContain("title: 'Editar perfil'");
-    expect(código).not.toContain('ariaLabel');
+    const code = drawerSnippet({ title: 'Editar perfil' });
+    expect(code).toContain("title: 'Editar perfil'");
+    expect(code).not.toContain('ariaLabel');
   });
 
   it('mostra o fechador explícito, que é o que liga o botão ao fechamento', () => {
-    const código = drawerSnippet();
-    expect(código).toContain("acao1.dataset.slot = 'drawer-close';");
-    expect(código).toContain('footer: rodape');
+    const code = drawerSnippet();
+    expect(code).toContain("acao1.dataset.slot = 'drawer-close';");
+    expect(code).toContain('footer: rodape');
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = drawerSnippet();
-    expect(código).not.toContain('direction');
-    expect(código).not.toContain('dismissible');
-    expect(código).not.toContain('modal');
-    expect(código).not.toContain('onOpenChange');
-    expect(código).not.toContain("variant: 'default'");
+    const code = drawerSnippet();
+    expect(code).not.toContain('direction');
+    expect(code).not.toContain('dismissible');
+    expect(code).not.toContain('modal');
+    expect(code).not.toContain('onOpenChange');
+    expect(code).not.toContain("variant: 'default'");
   });
 
   it('a borda de baixo é o padrão e não entra; as outras entram', () => {
@@ -49,38 +49,38 @@ describe('drawerSnippet', () => {
   });
 
   it('mostra as opções quando a story as usa', () => {
-    const código = drawerSnippet({ dismissible: false, modal: false });
-    expect(código).toContain('dismissible: false');
-    expect(código).toContain('modal: false');
+    const code = drawerSnippet({ dismissible: false, modal: false });
+    expect(code).toContain('dismissible: false');
+    expect(code).toContain('modal: false');
   });
 
   it('não inventa `defaultOpen`: abrir sem clique é comando da raiz', () => {
     // A fábrica não tem essa opção. O que existe são os verbos devolvidos pela
     // raiz, e é isso que o snippet mostra.
-    const código = drawerSnippet({ defaultOpen: true });
-    expect(código).not.toContain('defaultOpen');
-    expect(código).toContain('gaveta.open();');
+    const code = drawerSnippet({ defaultOpen: true });
+    expect(code).not.toContain('defaultOpen');
+    expect(code).toContain('gaveta.open();');
     expect(drawerSnippet()).not.toContain('gaveta.open()');
   });
 
   it('lista vazia de ações é gaveta SEM rodapé', () => {
-    const código = drawerSnippet({ footer: [] });
-    expect(código).not.toContain('footer');
-    expect(código).not.toContain('drawer-close');
+    const code = drawerSnippet({ footer: [] });
+    expect(code).not.toContain('footer');
+    expect(code).not.toContain('drawer-close');
   });
 
   it('não vaza helper de story', () => {
-    const código = drawerSnippet();
-    expect(código).not.toContain('buildDrawerEl');
-    expect(código).not.toContain('buildBase');
-    expect(código).not.toContain('buildFooter');
-    expect(código).not.toContain('buildWrapper');
-    expect(código).not.toContain('limparPortaisDoDrawer');
+    const code = drawerSnippet();
+    expect(code).not.toContain('buildDrawerEl');
+    expect(code).not.toContain('buildBase');
+    expect(code).not.toContain('buildFooter');
+    expect(code).not.toContain('buildWrapper');
+    expect(code).not.toContain('limparPortaisDoDrawer');
   });
 
   it('ignora um callback que não seja escrito como texto', () => {
-    const código = drawerSnippet({ onOpenChange: (() => {}) as unknown as string });
-    expect(código).not.toContain('onOpenChange');
+    const code = drawerSnippet({ onOpenChange: (() => {}) as unknown as string });
+    expect(code).not.toContain('onOpenChange');
   });
 });
 
@@ -105,21 +105,21 @@ describe('drawerSource', () => {
 describe('drawerSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = drawerSourceWith({ direction: 'top', dismissible: false });
-    const código = transform('', { args: { direction: 'left' } });
-    expect(código).toContain("direction: 'top'");
-    expect(código).toContain('dismissible: false');
+    const code = transform('', { args: { direction: 'left' } });
+    expect(code).toContain("direction: 'top'");
+    expect(code).toContain('dismissible: false');
   });
 });
 
 describe('drawerComFormularioSnippet', () => {
   it('constrói o corpo com a fábrica de campo, e não com rótulo e controle soltos', () => {
-    const código = drawerWithFormSnippet({
+    const code = drawerWithFormSnippet({
       fields: [{ label: 'E-mail', type: 'email', value: 'maria@exemplo.com' }],
     });
-    expect(código).toContain("import { createFormField } from '@/components/ui/form';");
-    expect(código).toContain("input: createInput({ type: 'email', value: 'maria@exemplo.com' })");
-    expect(código).toContain('content: formulario');
-    expect(código).not.toContain('buildField');
+    expect(code).toContain("import { createFormField } from '@/components/ui/form';");
+    expect(code).toContain("input: createInput({ type: 'email', value: 'maria@exemplo.com' })");
+    expect(code).toContain('content: formulario');
+    expect(code).not.toContain('buildField');
   });
 
   it('mantém o fechador do rodapé, que a gaveta precisa para fechar por dentro', () => {

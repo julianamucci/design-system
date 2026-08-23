@@ -94,7 +94,7 @@ export class NdsSwitch {
    */
   readonly size = input<SwitchSize>('default');
 
-  private readonly raiz = inject(RdxSwitchRoot, { self: true });
+  private readonly root = inject(RdxSwitchRoot, { self: true });
 
   /**
    * Espelha o estado do primitivo para o `data-state` das outras stacks.
@@ -104,6 +104,6 @@ export class NdsSwitch {
    * podendo divergir — e o que a tela mostra sairia do que o leitor anuncia.
    */
   protected readonly state = computed(() =>
-    this.raiz.checkedState() ? 'checked' : 'unchecked',
+    this.root.checkedState() ? 'checked' : 'unchecked',
   );
 }

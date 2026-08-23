@@ -52,10 +52,10 @@
   // Os mesmos dados das outras quatro stacks: a story é o que o Chromatic
   // fotografa, e um exemplo diferente por stack protegeria coisas diferentes.
   const MENUS = [
-    { valor: 'file', label: 'Arquivo', itens: ['Novo', 'Abrir', 'Salvar'] },
-    { valor: 'edit', label: 'Editar', itens: ['Desfazer', 'Refazer', 'Copiar'] },
-    { valor: 'view', label: 'Exibir', itens: ['Aproximar', 'Afastar', 'Tela cheia'] },
-    { valor: 'help', label: 'Ajuda', itens: ['Documentação', 'Atalhos de teclado'] },
+    { value: 'file', label: 'Arquivo', items: ['Novo', 'Abrir', 'Salvar'] },
+    { value: 'edit', label: 'Editar', items: ['Desfazer', 'Refazer', 'Copiar'] },
+    { value: 'view', label: 'Exibir', items: ['Aproximar', 'Afastar', 'Tela cheia'] },
+    { value: 'help', label: 'Ajuda', items: ['Documentação', 'Atalhos de teclado'] },
   ];
 
   const SHORTCUTS = [
@@ -73,15 +73,15 @@
   ];
 
   const THEMES = [
-    { valor: 'light', label: 'Claro' },
-    { valor: 'dark', label: 'Escuro' },
-    { valor: 'system', label: 'Do sistema' },
+    { value: 'light', label: 'Claro' },
+    { value: 'dark', label: 'Escuro' },
+    { value: 'system', label: 'Do sistema' },
   ];
 
   let regua = $state(true);
   let barLateral = $state(false);
-  let grade = $state(false);
-  let tema = $state('light');
+  let grid = $state(false);
+  let theme = $state('light');
 </script>
 
 <div style="contain: layout">
@@ -127,7 +127,7 @@
               <MenubarGroupHeading>Mostrar na tela</MenubarGroupHeading>
               <MenubarCheckboxItem bind:checked={regua}>Régua</MenubarCheckboxItem>
               <MenubarCheckboxItem bind:checked={barLateral}>Barra lateral</MenubarCheckboxItem>
-              <MenubarCheckboxItem bind:checked={grade}>Grade</MenubarCheckboxItem>
+              <MenubarCheckboxItem bind:checked={grid}>Grade</MenubarCheckboxItem>
             </MenubarGroup>
           </MenubarContent>
         </MenubarMenu>
@@ -149,10 +149,10 @@
         <MenubarMenu value="theme">
           <MenubarTrigger>Aparência</MenubarTrigger>
           <MenubarContent>
-            <MenubarRadioGroup bind:value={tema}>
+            <MenubarRadioGroup bind:value={theme}>
               <MenubarGroupHeading>Tema</MenubarGroupHeading>
-              {#each THEMES as t (t.valor)}
-                <MenubarRadioItem value={t.valor}>{t.label}</MenubarRadioItem>
+              {#each THEMES as t (t.value)}
+                <MenubarRadioItem value={t.value}>{t.label}</MenubarRadioItem>
               {/each}
             </MenubarRadioGroup>
           </MenubarContent>
@@ -194,7 +194,7 @@
             <MenubarGroup>
               <MenubarGroupHeading>Mostrar na tela</MenubarGroupHeading>
               <MenubarCheckboxItem bind:checked={regua}>Régua</MenubarCheckboxItem>
-              <MenubarCheckboxItem bind:checked={grade}>Grade</MenubarCheckboxItem>
+              <MenubarCheckboxItem bind:checked={grid}>Grade</MenubarCheckboxItem>
             </MenubarGroup>
           </MenubarContent>
         </MenubarMenu>
@@ -216,11 +216,11 @@
         </MenubarMenu>
       {:else}
         <!-- default: as quatro categorias clássicas -->
-        {#each MENUS as m (m.valor)}
-          <MenubarMenu value={m.valor}>
+        {#each MENUS as m (m.value)}
+          <MenubarMenu value={m.value}>
             <MenubarTrigger>{m.label}</MenubarTrigger>
             <MenubarContent>
-              {#each m.itens as item (item)}
+              {#each m.items as item (item)}
                 <MenubarItem {variant}>{item}</MenubarItem>
               {/each}
             </MenubarContent>

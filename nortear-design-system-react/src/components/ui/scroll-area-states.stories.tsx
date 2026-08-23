@@ -58,12 +58,12 @@ function List() {
  * falha no painel Interactions — o gate é a opacidade computada.
  */
 async function waitForBar(
-  raiz: HTMLElement,
+  root: HTMLElement,
   orientation: "vertical" | "horizontal" = "vertical",
 ): Promise<HTMLElement> {
   return await waitFor(
     () => {
-      const barra = raiz.querySelector<HTMLElement>(
+      const barra = root.querySelector<HTMLElement>(
         `[data-slot="scroll-area-scrollbar"][data-orientation="${orientation}"]`,
       );
       if (!barra) throw new Error("barra ainda não montada");
@@ -198,9 +198,9 @@ export const AlwaysVisible: Story = {
         expect(measure().deslocamento).toBeLessThan(4);
       });
 
-      const caixa = grabber.getBoundingClientRect();
-      const x = caixa.left + caixa.width / 2;
-      const y = caixa.top + caixa.height / 2;
+      const box = grabber.getBoundingClientRect();
+      const x = box.left + box.width / 2;
+      const y = box.top + box.height / 2;
       await userEvent.pointer([
         { keys: "[MouseLeft>]", target: grabber, coords: { clientX: x, clientY: y } },
         { target: grabber, coords: { clientX: x, clientY: y + 60 } },
@@ -249,7 +249,7 @@ export const Hover: Story = {
     </div>
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
 
     await step("O ponteiro sobre a área marca a barra como sob o cursor", async () => {
       // Par idempotente: sair antes de entrar garante uma entrada real nesta
@@ -258,9 +258,9 @@ export const Hover: Story = {
       // O estado de hover mora na BARRA, não na raiz: é a barra que muda de
       // aparência, e é nela que a lib publica o atributo de estado.
       const trail = await waitForBar(canvasElement);
-      await userEvent.unhover(raiz);
+      await userEvent.unhover(root);
       await waitFor(() => expect(trail).not.toHaveAttribute("data-hovering"));
-      await userEvent.hover(raiz);
+      await userEvent.hover(root);
       await waitFor(() => expect(trail).toHaveAttribute("data-hovering"));
     });
   },

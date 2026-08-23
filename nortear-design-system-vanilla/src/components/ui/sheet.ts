@@ -65,11 +65,11 @@ let _sheetCounter = 0;
  * O `MutationObserver` de cada instância cobre o caso oposto: o wrapper sai e
  * ninguém mais abre nada.
  */
-const abertos = new Set<{ fechar: () => void }>();
+const abertos = new Set<{ close: () => void }>();
 
-function closeOutrosPanels(atual: { fechar: () => void }): void {
+function closeOutrosPanels(current: { close: () => void }): void {
   for (const registro of [...abertos]) {
-    if (registro !== atual) registro.fechar();
+    if (registro !== current) registro.close();
   }
 }
 
@@ -106,7 +106,7 @@ export function createSheet(options: SheetOptions): DestroyableElement {
   wrapper.appendChild(trigger);
 
   const registro = {
-    fechar: () => {
+    close: () => {
       const estavaOpen = panelEl !== null;
       desmontarPanel();
       if (estavaOpen) onOpenChange?.(false);
@@ -254,6 +254,6 @@ export function createSheet(options: SheetOptions): DestroyableElement {
   // mesmo tique da criação (as stories que nascem abertas fazem isso) dispara a
   // primeira mutação com o wrapper ainda solto.
   return tornarDestruivel(wrapper, wrapper, () => {
-    registro.fechar();
+    registro.close();
   });
 }

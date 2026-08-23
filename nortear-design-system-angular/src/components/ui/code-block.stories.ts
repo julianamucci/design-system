@@ -53,12 +53,12 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<CodeBlockArgs> 
     footer = '',
   } = ctx.args ?? {};
 
-  const atributos = ['      [code]="source"'];
-  if (language && language !== 'text') atributos.push(`      language="${language}"`);
-  if (title) atributos.push(`      title="${title}"`);
-  if (!showLineNumbers) atributos.push('      [showLineNumbers]="false"');
-  if (highlightLines) atributos.push(`      [highlightLines]="'${highlightLines}'"`);
-  if (footer) atributos.push(`      footer="${footer}"`);
+  const attrs = ['      [code]="source"'];
+  if (language && language !== 'text') attrs.push(`      language="${language}"`);
+  if (title) attrs.push(`      title="${title}"`);
+  if (!showLineNumbers) attrs.push('      [showLineNumbers]="false"');
+  if (highlightLines) attrs.push(`      [highlightLines]="'${highlightLines}'"`);
+  if (footer) attrs.push(`      footer="${footer}"`);
 
   return [
     "import { NdsCodeBlock } from '@/components/ui/code-block';",
@@ -67,7 +67,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<CodeBlockArgs> 
     '  imports: [NdsCodeBlock],',
     '  template: `',
     '    <nds-code-block',
-    ...atributos,
+    ...attrs,
     '    />',
     '  `,',
     '})',
@@ -257,8 +257,8 @@ export const Playground: Story = {
           // inteiro no meio da interação em vez de só a confirmação.
           await expect(button.contains(live)).toBe(false);
 
-          const rotulo = root.querySelector<HTMLElement>('.nds-code-block-copy-label')!;
-          await expect(rotulo).toBeVisible();
+          const label = root.querySelector<HTMLElement>('.nds-code-block-copy-label')!;
+          await expect(label).toBeVisible();
         });
       }, writeText);
     });

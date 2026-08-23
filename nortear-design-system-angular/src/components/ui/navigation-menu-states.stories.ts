@@ -71,9 +71,9 @@ export const Closed: Story = {
     });
 
     await step('O gatilho anuncia o estado recolhido', async () => {
-      const gatilho = canvas.getByRole('button', { name: 'Produtos' });
-      await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
-      await expect(gatilho.hasAttribute('data-popup-open')).toBe(false);
+      const trigger = canvas.getByRole('button', { name: 'Produtos' });
+      await expect(trigger.getAttribute('aria-expanded')).toBe('false');
+      await expect(trigger.hasAttribute('data-popup-open')).toBe(false);
     });
   },
 };
@@ -124,22 +124,22 @@ export const Open: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Produtos' });
-    const painel = await waitForPanel();
-    const popup = painel.closest<HTMLElement>('.nds-navigation-menu-popup');
+    const trigger = canvas.getByRole('button', { name: 'Produtos' });
+    const panel = await waitForPanel();
+    const popup = panel.closest<HTMLElement>('.nds-navigation-menu-popup');
 
     await step('O item nasce aberto e o gatilho reflete o estado', async () => {
       // `defaultValue` é o único input em jogo aqui: se ele não chegasse, a
       // barra nasceria fechada e o `waitForPanel` acima já teria estourado.
-      await expect(gatilho.getAttribute('aria-expanded')).toBe('true');
-      await expect(gatilho.hasAttribute('data-popup-open')).toBe(true);
-      await expect(within(painel).getAllByRole('link')).toHaveLength(3);
+      await expect(trigger.getAttribute('aria-expanded')).toBe('true');
+      await expect(trigger.hasAttribute('data-popup-open')).toBe(true);
+      await expect(within(panel).getAllByRole('link')).toHaveLength(3);
     });
 
     await step('O gatilho aponta para o painel que abriu', async () => {
-      const alvo = gatilho.getAttribute('aria-controls');
-      await expect(alvo).toBeTruthy();
-      await expect(popup?.id).toBe(alvo);
+      const target = trigger.getAttribute('aria-controls');
+      await expect(target).toBeTruthy();
+      await expect(popup?.id).toBe(target);
     });
 
     await step('A seta indicadora existe enquanto o painel está aberto', async () => {
@@ -186,14 +186,14 @@ export const Active: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const atual = canvas.getByRole('link', { name: 'Início' });
+    const current = canvas.getByRole('link', { name: 'Início' });
     const other = canvas.getByRole('link', { name: 'Sobre' });
 
     await step('A página atual é anunciada como tal', async () => {
       // `aria-current="page"` é o que faz o leitor de tela dizer "página
       // atual". Sem o input `active` chegando ao componente, o atributo não
       // existiria — e o defeito seria invisível na tela.
-      await expect(atual.getAttribute('aria-current')).toBe('page');
+      await expect(current.getAttribute('aria-current')).toBe('page');
       await expect(other.hasAttribute('aria-current')).toBe(false);
     });
 
@@ -201,8 +201,8 @@ export const Active: Story = {
       // Critério 1.4.1 na prática. O seletor do CSS é
       // `.nds-navigation-menu-link[data-active]` — se o atributo não chegasse,
       // esta asserção pegaria o mesmo fundo do link vizinho.
-      await expect(atual.hasAttribute('data-active')).toBe(true);
-      await expect(getComputedStyle(atual).backgroundColor).not.toBe(
+      await expect(current.hasAttribute('data-active')).toBe(true);
+      await expect(getComputedStyle(current).backgroundColor).not.toBe(
         getComputedStyle(other).backgroundColor,
       );
     });

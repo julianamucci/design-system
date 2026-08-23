@@ -41,11 +41,11 @@ export const Default: Story = {
   parameters: { covers: ['accessibility.item7'] },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
-    const itens = within(menu).getAllByRole('menuitem');
+    const items = within(menu).getAllByRole('menuitem');
 
     await step('A variante default é escrita no markup', async () => {
-      await expect(itens).toHaveLength(ITEMS_NEUTROS.length);
-      for (const item of itens) {
+      await expect(items).toHaveLength(ITEMS_NEUTROS.length);
+      for (const item of items) {
         await expect(item.getAttribute('data-variant')).toBe('default');
         await expect(item.classList.contains('nds-dropdown-menu-item')).toBe(true);
       }
@@ -54,7 +54,7 @@ export const Default: Story = {
     await step('O item neutro herda a cor do painel, sem cor semântica', async () => {
       // O item destacado troca de cor de propósito — a comparação tem que ser
       // com um item em repouso, senão ela mede o realce e não a variante.
-      const inRest = itens.filter((i) => !i.hasAttribute('data-highlighted'));
+      const inRest = items.filter((i) => !i.hasAttribute('data-highlighted'));
       await expect(inRest.length).toBeGreaterThan(0);
       await expect(getComputedStyle(inRest[0]).color).toBe(getComputedStyle(menu).color);
     });

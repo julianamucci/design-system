@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -46,15 +46,15 @@ const DEFAULT: CalendarSnippetOptions = { locale: 'pt-BR', value: DATA_DE_EXEMPL
 
 /** A chamada real de `createCalendar` com as opções da story. */
 export function calendarSnippet(o: CalendarSnippetOptions = {}): string {
-  const lines = opcoes([
-    ['mode', o.mode && o.mode !== 'single' ? texto(o.mode) : undefined],
-    ['locale', o.locale ? texto(o.locale) : undefined],
+  const lines = options([
+    ['mode', o.mode && o.mode !== 'single' ? text(o.mode) : undefined],
+    ['locale', o.locale ? text(o.locale) : undefined],
     ['value', o.value],
     ['numberOfMonths', o.numberOfMonths && o.numberOfMonths !== 1 ? String(o.numberOfMonths) : undefined],
-    ['captionLayout', o.captionLayout && o.captionLayout !== 'label' ? texto(o.captionLayout) : undefined],
+    ['captionLayout', o.captionLayout && o.captionLayout !== 'label' ? text(o.captionLayout) : undefined],
     ['showOutsideDays', o.showOutsideDays === false ? 'false' : undefined],
     ['disabled', o.disabled],
-    ['class', o.class ? texto(o.class) : undefined],
+    ['class', o.class ? text(o.class) : undefined],
     ['onSelect', o.onSelect],
   ]);
 
@@ -84,7 +84,7 @@ export function calendarSourceWith(
 /** O que o seletor de data precisa mostrar. */
 export type CalendarWithPopoverSnippetOptions = {
   /** Texto do gatilho antes de haver data escolhida. */
-  gatilho?: string;
+  trigger?: string;
   locale?: string;
   value?: string;
 };
@@ -102,15 +102,15 @@ export function calendarWithPopoverSnippet(o: CalendarWithPopoverSnippetOptions 
       importing('calendar', 'createCalendar'),
       importing('popover', 'createPopover'),
     ].join('\n'),
-    `const formatador = new Intl.DateTimeFormat(${texto(locale)}, {
+    `const formatador = new Intl.DateTimeFormat(${text(locale)}, {
   day: '2-digit',
   month: 'long',
   year: 'numeric',
 });
 
-const gatilho = createButton({ variant: 'outline', label: ${texto(o.gatilho ?? 'Escolher data')} });`,
+const gatilho = createButton({ variant: 'outline', label: ${text(o.trigger ?? 'Escolher data')} });`,
     `const calendario = createCalendar({
-  locale: ${texto(locale)},
+  locale: ${text(locale)},
   value: ${o.value ?? DATA_DE_EXEMPLO},
   onSelect: (valor) => {
     if (!(valor instanceof Date)) return;

@@ -46,11 +46,11 @@ export function wrap(child: HTMLElement, alturaMinima = '180px'): HTMLElement {
  * mais espaço reservado que os estados e as variantes.
  */
 export function montar(
-  rotulo: string,
+  label: string,
   items: DropdownMenuItemDef[],
   alturaMinima?: string,
 ): HTMLElement {
-  const trigger = createButton({ variant: 'outline', label: rotulo });
+  const trigger = createButton({ variant: 'outline', label: label });
   const menu = createDropdownMenu({ trigger, items });
   queueMicrotask(() => trigger.click());
   return wrap(menu, alturaMinima);

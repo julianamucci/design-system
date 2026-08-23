@@ -27,7 +27,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<ScrollAreaArgs>
 
   // `size` entra sempre, e não só quando difere do valor de partida: ele não tem
   // default no componente — sem ele não há teto, e sem teto não há rolagem.
-  const raiz = [
+  const root = [
     '<div ndsScrollArea',
     `size="${size}"`,
     `label="${label}"`,
@@ -36,7 +36,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<ScrollAreaArgs>
     .filter(Boolean)
     .join(' ');
 
-  const conteudo =
+  const content =
     orientation === 'vertical'
       ? `  <div class="nds-stack nds-p-4" data-spacing="sm">
     @for (tag of tags; track tag) {
@@ -64,8 +64,8 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<ScrollAreaArgs>
 @Component({
   imports: [NdsScrollArea],
   template: \`
-    ${raiz}>
-    ${conteudo}
+    ${root}>
+    ${content}
     </div>
   \`,
 })
@@ -195,7 +195,7 @@ export const Playground: Story = {
   },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
     const viewport = canvasElement.querySelector<HTMLElement>(
       '[data-slot="scroll-area-viewport"]',
     )!;
@@ -203,8 +203,8 @@ export const Playground: Story = {
     await step('O markup é o mesmo das outras stacks', async () => {
       // Raiz e viewport são dois `<div>` com as classes do design system, não
       // elementos próprios: é o que faz o CSS compartilhado casar sem wrapper.
-      await expect(raiz.tagName).toBe('DIV');
-      await expect(raiz).toHaveClass(/nds-scroll-area/);
+      await expect(root.tagName).toBe('DIV');
+      await expect(root).toHaveClass(/nds-scroll-area/);
       await expect(viewport.tagName).toBe('DIV');
       await expect(viewport).toHaveClass(/nds-scroll-area-viewport/);
     });
@@ -217,7 +217,7 @@ export const Playground: Story = {
       // O degrau mora na RAIZ, e não no viewport: é a folha compartilhada que
       // resolve `block-size` ali, e o viewport é `height: 100%` por ela. Com a
       // raiz dimensionada a porcentagem resolve, e não há segunda medida.
-      await expect(raiz.dataset.size).toBe(args.size);
+      await expect(root.dataset.size).toBe(args.size);
       await expect(viewport.style.blockSize).toBe('');
       await expect(viewport.style.maxBlockSize).toBe('');
     });
@@ -272,8 +272,8 @@ export const Playground: Story = {
       // accessibility.item4: o componente estiliza a caixa, não filtra conteúdo.
       // Item fora do campo visível continua no DOM e continua anunciável.
       await expect(viewport.getAttribute('aria-hidden')).toBeNull();
-      const itens = viewport.querySelectorAll('p, span, div[class*="nds-w-xs"]');
-      await expect(itens.length).toBeGreaterThan(0);
+      const items = viewport.querySelectorAll('p, span, div[class*="nds-w-xs"]');
+      await expect(items.length).toBeGreaterThan(0);
     });
 
     await step('O foco chega ao viewport pela navegação por Tab', async () => {

@@ -27,7 +27,7 @@ type SelectArgs = {
   disabled: boolean;
   required: boolean;
   invalid: boolean;
-  onValueChange: (valor: unknown) => void;
+  onValueChange: (value: unknown) => void;
 };
 
 /**
@@ -50,19 +50,19 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<SelectArgs> }):
 
   // Só o que difere do padrão entra: snippet que repete valor default ensina
   // ruído a quem copia.
-  const raiz =
+  const root =
     ['<nds-select [(value)]="estado"']
       .concat(disabled ? ['disabled'] : [])
       .concat(required ? ['required'] : [])
       .concat(invalid ? ['invalid'] : [])
       .join(' ') + '>';
 
-  const gatilho =
+  const trigger =
     ['<button ndsSelectTrigger aria-label="Estado"']
       .concat(size === 'default' ? [] : [`size="${size}"`])
       .join(' ') + '>';
 
-  const conteudo =
+  const content =
     ['<ng-template ndsSelectContent']
       .concat(side === 'bottom' ? [] : [`side="${side}"`])
       .concat(align === 'start' ? [] : [`align="${align}"`])
@@ -73,12 +73,12 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<SelectArgs> }):
 @Component({
   imports: [...NDS_SELECT],
   template: \`
-    ${raiz}
-      ${gatilho}
+    ${root}
+      ${trigger}
         <span ndsSelectValue placeholder="${placeholder}"></span>
       </button>
 
-      ${conteudo}
+      ${content}
         <div ndsSelectItem value="sp">São Paulo</div>
         <div ndsSelectItem value="rj">Rio de Janeiro</div>
         <div ndsSelectItem value="mg">Minas Gerais</div>
@@ -187,32 +187,32 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('combobox', { name: 'Estado' });
+    const trigger = canvas.getByRole('combobox', { name: 'Estado' });
 
     await step('O gatilho é um combobox que anuncia a lista e o estado fechado', async () => {
-      await expect(gatilho.getAttribute('aria-haspopup')).toBe('listbox');
-      await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
+      await expect(trigger.getAttribute('aria-haspopup')).toBe('listbox');
+      await expect(trigger.getAttribute('aria-expanded')).toBe('false');
       // Fechado, a lista não existe no DOM — não é um painel escondido.
       await expect(within(document.body).queryAllByRole('listbox')).toHaveLength(0);
-      await expect(gatilho).toHaveTextContent('Selecione...');
+      await expect(trigger).toHaveTextContent('Selecione...');
     });
 
     await step('Clicar abre a lista com o primeiro item destacado', async () => {
       // Idempotente: o clique só acontece com a lista fechada, então o replay do
       // painel Interactions parte do mesmo estado da primeira rodada.
-      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
 
-      const lista = await waitForPortal('listbox', { name: 'Estado' });
-      await expect(gatilho.getAttribute('aria-expanded')).toBe('true');
+      const list = await waitForPortal('listbox', { name: 'Estado' });
+      await expect(trigger.getAttribute('aria-expanded')).toBe('true');
 
-      const opcoes = within(lista).getAllByRole('option');
-      await expect(opcoes).toHaveLength(STATES.length);
+      const options = within(list).getAllByRole('option');
+      await expect(options).toHaveLength(STATES.length);
 
       // Num listbox o teclado é do POPUP: os itens não recebem foco um a um, o
       // destaque anda por `aria-activedescendant`. Afirmar `document.activeElement`
       // aqui seria afirmar o padrão de MENU, que é outro.
       await waitFor(async () => {
-        await expect(lista.getAttribute('aria-activedescendant')).toBe(opcoes[0].id);
+        await expect(list.getAttribute('aria-activedescendant')).toBe(options[0].id);
       });
     });
 
@@ -222,17 +222,17 @@ export const Playground: Story = {
 
       await expect(args.onValueChange).toHaveBeenCalledWith(STATES[0].value);
       // O gatilho passa a anunciar o rótulo escolhido, não mais o placeholder.
-      await expect(gatilho).toHaveTextContent(STATES[0].label);
-      await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
+      await expect(trigger).toHaveTextContent(STATES[0].label);
+      await expect(trigger.getAttribute('aria-expanded')).toBe('false');
       // O foco não pode cair no corpo do documento: quem navega por teclado
       // teria de percorrer a página inteira de novo para voltar ao ponto.
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(gatilho);
+        await expect(document.activeElement).toBe(trigger);
       });
     });
 
     await step('Escape fecha sem trocar a escolha e devolve o foco', async () => {
-      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       await waitForPortal('listbox', { name: 'Estado' });
 
       const callsBefore = (args.onValueChange as unknown as { mock: { calls: unknown[] } }).mock
@@ -244,9 +244,9 @@ export const Playground: Story = {
       await expect(
         (args.onValueChange as unknown as { mock: { calls: unknown[] } }).mock.calls.length,
       ).toBe(callsBefore);
-      await expect(gatilho).toHaveTextContent(STATES[0].label);
+      await expect(trigger).toHaveTextContent(STATES[0].label);
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(gatilho);
+        await expect(document.activeElement).toBe(trigger);
       });
     });
 
@@ -254,11 +254,11 @@ export const Playground: Story = {
       // `outline: 0` na folha é intencional — o anel é `box-shadow`, e é sob
       // `:focus-visible` que ele existe. Medir a sombra computada prova que a
       // regra do CSS compartilhado chegou ao elemento, e não só que o foco chegou.
-      gatilho.blur();
-      gatilho.focus();
-      await expect(gatilho).toHaveFocus();
-      await expect(gatilho.matches(':focus-visible')).toBe(true);
-      await expect(getComputedStyle(gatilho).boxShadow).not.toBe('none');
+      trigger.blur();
+      trigger.focus();
+      await expect(trigger).toHaveFocus();
+      await expect(trigger.matches(':focus-visible')).toBe(true);
+      await expect(getComputedStyle(trigger).boxShadow).not.toBe('none');
     });
   },
 };

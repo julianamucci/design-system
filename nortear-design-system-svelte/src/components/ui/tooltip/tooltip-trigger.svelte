@@ -13,11 +13,11 @@
 	// dos de render — por isso a última palavra é esta.
 	// Ver tooltip-descricao.svelte.ts.
 	$effect(() => {
-		const alvo = ref;
-		if (!alvo || !descricao) return;
+		const target = ref;
+		if (!target || !descricao) return;
 		const ligado = descricao.isOpen && descricao.montado;
-		if (ligado) alvo.setAttribute("aria-describedby", descricao.id);
-		else alvo.removeAttribute("aria-describedby");
+		if (ligado) target.setAttribute("aria-describedby", descricao.id);
+		else target.removeAttribute("aria-describedby");
 	});
 </script>
 

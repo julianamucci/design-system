@@ -22,9 +22,9 @@ export type SheetArgs = {
 /** Corpo entre cabeçalho e rodapé. `nenhum` é o painel só de decisão. */
 type Body = 'nenhum' | 'formulario' | 'rolagem';
 
-type Options = Partial<SheetArgs> & { corpo?: Body };
+type Options = Partial<SheetArgs> & { body?: Body };
 
-const DEFAULT: SheetArgs & { corpo: Body } = {
+const DEFAULT: SheetArgs & { body: Body } = {
   side: 'right',
   showCloseButton: true,
   triggerLabel: 'Abrir filtros',
@@ -32,14 +32,14 @@ const DEFAULT: SheetArgs & { corpo: Body } = {
   description: 'Configure os filtros para refinar os resultados.',
   actionLabel: 'Aplicar filtros',
   cancelLabel: 'Cancelar',
-  corpo: 'nenhum',
+  body: 'nenhum',
 };
 
 /** Peças do design system que a composição usa, na ordem em que se lê o painel. */
-function imports(corpo: Body): string {
+function imports(body: Body): string {
   const parts = [
     'Sheet',
-    corpo !== 'nenhum' ? 'SheetBody' : '',
+    body !== 'nenhum' ? 'SheetBody' : '',
     'SheetClose',
     'SheetContent',
     'SheetDescription',
@@ -50,7 +50,7 @@ function imports(corpo: Body): string {
   ].filter(Boolean);
 
   const extras = [`import { Button } from "@/components/ui/button";`];
-  if (corpo === 'formulario') {
+  if (body === 'formulario') {
     extras.push(`import { Input } from "@/components/ui/input";`);
     extras.push(`import { Label } from "@/components/ui/label";`);
   }
@@ -62,8 +62,8 @@ ${extras.join('\n')}`;
 }
 
 /** Corpo rolável ou formulário, indentado para dentro do conteúdo. */
-function panelBody(corpo: Body): string {
-  if (corpo === 'formulario') {
+function panelBody(body: Body): string {
+  if (body === 'formulario') {
     return `
     <SheetBody>
       <form class="nds-grid" data-spacing="sm">
@@ -79,7 +79,7 @@ function panelBody(corpo: Body): string {
     </SheetBody>
 `;
   }
-  if (corpo === 'rolagem') {
+  if (body === 'rolagem') {
     // O corpo é peça do componente: o SheetBody já traz o overflow, o flex que
     // segura o rodapé e o tabindex que a região rolável exige (WCAG 2.1.1).
     return `
@@ -94,7 +94,7 @@ function panelBody(corpo: Body): string {
 }
 
 /** Composição completa do painel. */
-function painel(o: Options): string {
+function panel(o: Options): string {
   const {
     open,
     side,
@@ -104,7 +104,7 @@ function painel(o: Options): string {
     description,
     actionLabel,
     cancelLabel,
-    corpo,
+    body,
   } = { ...DEFAULT, ...o };
 
   // `open` ausente é o painel NÃO controlado: o gatilho abre e fecha sozinho, e
@@ -113,7 +113,7 @@ function painel(o: Options): string {
   const controlled = open !== undefined;
   const state = controlled ? `\n\nlet open = $state(${open});` : '';
   const paragrafosList =
-    corpo === 'rolagem'
+    body === 'rolagem'
       ? `\n\nconst paragrafos = Array.from(
   { length: 14 },
   (_, i) => \`Parágrafo \${i + 1}: conteúdo extenso, mais alto que o painel.\`,
@@ -121,7 +121,7 @@ function painel(o: Options): string {
       : '';
 
   return svelteSnippet(
-    `${imports(corpo)}${state}${paragrafosList}`,
+    `${imports(body)}${state}${paragrafosList}`,
     `<Sheet${attrs(controlled ? 'bind:open' : '')}>
   <SheetTrigger>
     {#snippet child({ props })}
@@ -133,7 +133,7 @@ function painel(o: Options): string {
       <SheetTitle>${title}</SheetTitle>
       <SheetDescription>${description}</SheetDescription>
     </SheetHeader>
-${panelBody(corpo)}    <SheetFooter>
+${panelBody(body)}    <SheetFooter>
       <SheetClose>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>${cancelLabel}</Button>
@@ -152,14 +152,14 @@ ${panelBody(corpo)}    <SheetFooter>
  * estado externo quando existe.
  */
 export function sheetSource(_gerado?: string, ctx?: { args?: Partial<SheetArgs> }): string {
-  return painel(ctx?.args ?? {});
+  return panel(ctx?.args ?? {});
 }
 
 /** Composição: filtros avançados, com formulário no corpo do painel. */
 export function sheetFiltersAvancadosSource(): string {
-  return painel({
+  return panel({
     open: true,
-    corpo: 'formulario',
+    body: 'formulario',
     triggerLabel: 'Filtros avançados',
     title: 'Filtros avançados',
     description: 'Refine os resultados configurando os filtros abaixo.',
@@ -168,9 +168,9 @@ export function sheetFiltersAvancadosSource(): string {
 
 /** Composição: edição de perfil — mesmo formulário, outra decisão no rodapé. */
 export function perfilSheetEditSource(): string {
-  return painel({
+  return panel({
     open: true,
-    corpo: 'formulario',
+    body: 'formulario',
     triggerLabel: 'Editar perfil',
     title: 'Editar perfil',
     description: 'Atualize seu nome e e-mail. As mudanças são salvas ao confirmar.',
@@ -180,9 +180,9 @@ export function perfilSheetEditSource(): string {
 
 /** Composição: texto mais alto que o painel — o corpo rola, o rodapé fica. */
 export function sheetTermosWithScrollSource(): string {
-  return painel({
+  return panel({
     open: true,
-    corpo: 'rolagem',
+    body: 'rolagem',
     triggerLabel: 'Ver termos',
     title: 'Termos e condições',
     description: 'Leia atentamente antes de aceitar.',

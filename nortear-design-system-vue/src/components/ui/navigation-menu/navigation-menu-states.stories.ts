@@ -97,9 +97,9 @@ export const Closed: Story = {
     });
 
     await step('O gatilho anuncia o estado recolhido', async () => {
-      const gatilho = canvas.getByRole('button', { name: /Produtos/ });
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
-      await expect(gatilho).toHaveAttribute('data-state', 'closed');
+      const trigger = canvas.getByRole('button', { name: /Produtos/ });
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveAttribute('data-state', 'closed');
     });
   },
 };
@@ -158,19 +158,19 @@ export const Open: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /Produtos/ });
-    const conteudo = await waitForPanel();
-    const painel = conteudo.closest<HTMLElement>('.nds-navigation-menu-viewport-panel');
+    const trigger = canvas.getByRole('button', { name: /Produtos/ });
+    const content = await waitForPanel();
+    const panel = content.closest<HTMLElement>('.nds-navigation-menu-viewport-panel');
 
     await step('O item nasce aberto e o gatilho reflete o estado', async () => {
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
-      await expect(within(conteudo).getAllByRole('link')).toHaveLength(3);
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      await expect(within(content).getAllByRole('link')).toHaveLength(3);
     });
 
     await step('O gatilho aponta para o painel que abriu', async () => {
-      const alvo = gatilho.getAttribute('aria-controls');
-      await expect(alvo).toBeTruthy();
-      await expect(document.getElementById(alvo as string)).toBeTruthy();
+      const target = trigger.getAttribute('aria-controls');
+      await expect(target).toBeTruthy();
+      await expect(document.getElementById(target as string)).toBeTruthy();
     });
 
     await step('A seta indicadora existe enquanto o painel está aberto', async () => {
@@ -183,7 +183,7 @@ export const Open: Story = {
       // O contraste de 4.5:1 que o axe mede entre o texto do destino e o fundo
       // do painel só significa alguma coisa se o fundo for opaco: sobre um
       // painel translúcido a razão medida é a do que estiver por baixo.
-      const background = getComputedStyle(painel as HTMLElement).backgroundColor;
+      const background = getComputedStyle(panel as HTMLElement).backgroundColor;
       await expect(background).not.toBe('rgba(0, 0, 0, 0)');
       await expect(background.startsWith('rgba(')).toBe(false);
     });
@@ -225,11 +225,11 @@ export const Active: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const atual = canvas.getByRole('link', { name: 'Início' });
+    const current = canvas.getByRole('link', { name: 'Início' });
     const other = canvas.getByRole('link', { name: 'Sobre' });
 
     await step('A página atual é anunciada como tal', async () => {
-      await expect(atual).toHaveAttribute('aria-current', 'page');
+      await expect(current).toHaveAttribute('aria-current', 'page');
       await expect(other.hasAttribute('aria-current')).toBe(false);
     });
 
@@ -237,7 +237,7 @@ export const Active: Story = {
       // Critério 1.4.1 na prática. O seletor do CSS é
       // `.nds-navigation-menu-link[aria-current="page"]` — se o atributo não
       // chegasse, esta asserção pegaria o mesmo fundo do destino vizinho.
-      await expect(getComputedStyle(atual).backgroundColor).not.toBe(
+      await expect(getComputedStyle(current).backgroundColor).not.toBe(
         getComputedStyle(other).backgroundColor,
       );
     });

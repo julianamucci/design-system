@@ -205,8 +205,8 @@ export const Vertical: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const grade = canvas.getByRole('button', { name: 'Grade' });
-    const lista = canvas.getByRole('button', { name: 'Lista' });
+    const grid = canvas.getByRole('button', { name: 'Grade' });
+    const list = canvas.getByRole('button', { name: 'Lista' });
 
     await step('A orientação chega ao markup e ao anúncio', async () => {
       const group = canvas.getByRole('toolbar');
@@ -218,17 +218,17 @@ export const Vertical: Story = {
       // `data-orientation` certo com CSS ausente deixaria os dois lado a lado —
       // era o que acontecia quando a story aplicava `flex-col`, classe que
       // nenhuma folha do projeto define.
-      const a = grade.getBoundingClientRect();
-      const b = lista.getBoundingClientRect();
+      const a = grid.getBoundingClientRect();
+      const b = list.getBoundingClientRect();
       await expect(b.top).toBeGreaterThanOrEqual(a.bottom - 1);
     });
 
     await step('As setas verticais navegam dentro do grupo', async () => {
-      grade.focus();
+      grid.focus();
       await userEvent.keyboard('{ArrowDown}');
-      await expect(lista).toHaveFocus();
+      await expect(list).toHaveFocus();
       await userEvent.keyboard('{ArrowUp}');
-      await expect(grade).toHaveFocus();
+      await expect(grid).toHaveFocus();
     });
   },
 };

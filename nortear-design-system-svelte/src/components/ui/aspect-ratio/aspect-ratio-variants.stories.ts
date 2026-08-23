@@ -40,11 +40,11 @@ export const SixteenNine: Story = {
   },
 
   play: async ({ canvasElement }) => {
-    const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
-    await expect(caixa).not.toBeNull();
+    const box = canvasElement.querySelector('[data-slot="aspect-ratio"]');
+    await expect(box).not.toBeNull();
     // A proporção É o componente: medir a caixa renderizada prova que o ratio
     // chegou ao CSS, seja por --ratio, por padding ou pelo que a lib usar.
-    const { width, height } = caixa!.getBoundingClientRect();
+    const { width, height } = box!.getBoundingClientRect();
     await expect(width).toBeGreaterThan(0);
     await expect(Math.abs(width / height - 16 / 9)).toBeLessThan(0.02);
   },
@@ -61,11 +61,11 @@ export const FourThree: Story = {
   },
 
   play: async ({ canvasElement }) => {
-    const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
-    await expect(caixa).not.toBeNull();
+    const box = canvasElement.querySelector('[data-slot="aspect-ratio"]');
+    await expect(box).not.toBeNull();
     // A proporção É o componente: medir a caixa renderizada prova que o ratio
     // chegou ao CSS, seja por --ratio, por padding ou pelo que a lib usar.
-    const { width, height } = caixa!.getBoundingClientRect();
+    const { width, height } = box!.getBoundingClientRect();
     await expect(width).toBeGreaterThan(0);
     await expect(Math.abs(width / height - 4 / 3)).toBeLessThan(0.02);
   },
@@ -82,11 +82,11 @@ export const Square: Story = {
   },
 
   play: async ({ canvasElement }) => {
-    const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
-    await expect(caixa).not.toBeNull();
+    const box = canvasElement.querySelector('[data-slot="aspect-ratio"]');
+    await expect(box).not.toBeNull();
     // A proporção É o componente: medir a caixa renderizada prova que o ratio
     // chegou ao CSS, seja por --ratio, por padding ou pelo que a lib usar.
-    const { width, height } = caixa!.getBoundingClientRect();
+    const { width, height } = box!.getBoundingClientRect();
     await expect(width).toBeGreaterThan(0);
     await expect(Math.abs(width / height - 1)).toBeLessThan(0.02);
   },
@@ -103,11 +103,11 @@ export const ThreeFour: Story = {
   },
 
   play: async ({ canvasElement }) => {
-    const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
-    await expect(caixa).not.toBeNull();
+    const box = canvasElement.querySelector('[data-slot="aspect-ratio"]');
+    await expect(box).not.toBeNull();
     // A proporção É o componente: medir a caixa renderizada prova que o ratio
     // chegou ao CSS, seja por --ratio, por padding ou pelo que a lib usar.
-    const { width, height } = caixa!.getBoundingClientRect();
+    const { width, height } = box!.getBoundingClientRect();
     await expect(width).toBeGreaterThan(0);
     await expect(Math.abs(width / height - 3 / 4)).toBeLessThan(0.02);
   },
@@ -124,11 +124,11 @@ export const UltraWide: Story = {
   },
 
   play: async ({ canvasElement }) => {
-    const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
-    await expect(caixa).not.toBeNull();
+    const box = canvasElement.querySelector('[data-slot="aspect-ratio"]');
+    await expect(box).not.toBeNull();
     // A proporção É o componente: medir a caixa renderizada prova que o ratio
     // chegou ao CSS, seja por --ratio, por padding ou pelo que a lib usar.
-    const { width, height } = caixa!.getBoundingClientRect();
+    const { width, height } = box!.getBoundingClientRect();
     await expect(width).toBeGreaterThan(0);
     await expect(Math.abs(width / height - 21 / 9)).toBeLessThan(0.02);
   },

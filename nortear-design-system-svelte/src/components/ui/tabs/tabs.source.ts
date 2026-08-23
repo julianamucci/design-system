@@ -17,9 +17,9 @@ export type TabsArgs = {
 };
 
 type Aba = {
-  valor: string;
-  rotulo: string;
-  conteudo: string;
+  value: string;
+  label: string;
+  content: string;
   desabilitada?: boolean;
 };
 
@@ -28,7 +28,7 @@ type Composition = {
   /** Aba ativa na montagem — é o valor inicial do `$state`. */
   ativa: string;
   rotuloLista: string;
-  variante?: 'line';
+  variant?: 'line';
   orientacao?: 'vertical';
   ativacao?: 'manual';
 };
@@ -41,9 +41,9 @@ const IMPORT = `import {
 } from "@/components/ui/tabs";`;
 
 const ABAS_DEFAULT: Aba[] = [
-  { valor: 'overview', rotulo: 'Visão geral', conteudo: 'Conteúdo da visão geral' },
-  { valor: 'properties', rotulo: 'Propriedades', conteudo: 'Lista de propriedades' },
-  { valor: 'examples', rotulo: 'Exemplos', conteudo: 'Exemplos de uso' },
+  { value: 'overview', label: 'Visão geral', content: 'Conteúdo da visão geral' },
+  { value: 'properties', label: 'Propriedades', content: 'Lista de propriedades' },
+  { value: 'examples', label: 'Exemplos', content: 'Exemplos de uso' },
 ];
 
 /**
@@ -55,38 +55,38 @@ function montar({
   abas,
   ativa,
   rotuloLista,
-  variante,
+  variant,
   orientacao,
   ativacao,
 }: Composition): string {
-  const raiz = attrs(
+  const root = attrs(
     'bind:value',
     orientacao ? `orientation="${orientacao}"` : '',
     ativacao ? `activationMode="${ativacao}"` : '',
     'class="nds-max-w-lg"',
   );
-  const lista = attrs(
-    variante ? `variant="${variante}"` : '',
+  const list = attrs(
+    variant ? `variant="${variant}"` : '',
     `aria-label="${rotuloLista}"`,
   );
 
   const triggers = abas
     .map(
       (aba) =>
-        `    <TabsTrigger value="${aba.valor}"${aba.desabilitada ? ' disabled' : ''}>${aba.rotulo}</TabsTrigger>`,
+        `    <TabsTrigger value="${aba.value}"${aba.desabilitada ? ' disabled' : ''}>${aba.label}</TabsTrigger>`,
     )
     .join('\n');
 
   const panels = abas
-    .map((aba) => `  <TabsContent value="${aba.valor}">${aba.conteudo}</TabsContent>`)
+    .map((aba) => `  <TabsContent value="${aba.value}">${aba.content}</TabsContent>`)
     .join('\n');
 
   return svelteSnippet(
     `${IMPORT}
 
 let value = $state("${ativa}");`,
-    `<Tabs${raiz}>
-  <TabsList${lista}>
+    `<Tabs${root}>
+  <TabsList${list}>
 ${triggers}
   </TabsList>
 ${panels}
@@ -118,13 +118,13 @@ export function tabsSource(_gerado?: string, ctx?: { args?: Partial<TabsArgs> })
 export function tabsLineSource(): string {
   return montar({
     abas: [
-      { valor: 'overview', rotulo: 'Visão geral', conteudo: 'Conteúdo da visão geral.' },
-      { valor: 'properties', rotulo: 'Propriedades', conteudo: 'Lista de propriedades.' },
-      { valor: 'examples', rotulo: 'Exemplos', conteudo: 'Exemplos de uso.' },
+      { value: 'overview', label: 'Visão geral', content: 'Conteúdo da visão geral.' },
+      { value: 'properties', label: 'Propriedades', content: 'Lista de propriedades.' },
+      { value: 'examples', label: 'Exemplos', content: 'Exemplos de uso.' },
     ],
     ativa: 'overview',
     rotuloLista: 'Seções do componente',
-    variante: 'line',
+    variant: 'line',
   });
 }
 
@@ -132,9 +132,9 @@ export function tabsLineSource(): string {
 export function tabsVerticalSource(): string {
   return montar({
     abas: [
-      { valor: 'overview', rotulo: 'Visão geral', conteudo: 'Conteúdo da visão geral.' },
-      { valor: 'properties', rotulo: 'Propriedades', conteudo: 'Lista de propriedades.' },
-      { valor: 'examples', rotulo: 'Exemplos', conteudo: 'Exemplos de uso.' },
+      { value: 'overview', label: 'Visão geral', content: 'Conteúdo da visão geral.' },
+      { value: 'properties', label: 'Propriedades', content: 'Lista de propriedades.' },
+      { value: 'examples', label: 'Exemplos', content: 'Exemplos de uso.' },
     ],
     ativa: 'overview',
     rotuloLista: 'Seções do componente',
@@ -146,9 +146,9 @@ export function tabsVerticalSource(): string {
 export function tabsAbaInitialSource(): string {
   return montar({
     abas: [
-      { valor: 'overview', rotulo: 'Visão geral', conteudo: 'Conteúdo da visão geral.' },
-      { valor: 'properties', rotulo: 'Propriedades', conteudo: 'Lista de propriedades.' },
-      { valor: 'examples', rotulo: 'Exemplos', conteudo: 'Exemplos de uso.' },
+      { value: 'overview', label: 'Visão geral', content: 'Conteúdo da visão geral.' },
+      { value: 'properties', label: 'Propriedades', content: 'Lista de propriedades.' },
+      { value: 'examples', label: 'Exemplos', content: 'Exemplos de uso.' },
     ],
     ativa: 'properties',
     rotuloLista: 'Seções do componente',
@@ -159,14 +159,14 @@ export function tabsAbaInitialSource(): string {
 export function tabsDesabilitadaSource(): string {
   return montar({
     abas: [
-      { valor: 'overview', rotulo: 'Visão geral', conteudo: 'Conteúdo da visão geral.' },
+      { value: 'overview', label: 'Visão geral', content: 'Conteúdo da visão geral.' },
       {
-        valor: 'properties',
-        rotulo: 'Propriedades',
-        conteudo: 'Lista de propriedades.',
+        value: 'properties',
+        label: 'Propriedades',
+        content: 'Lista de propriedades.',
         desabilitada: true,
       },
-      { valor: 'examples', rotulo: 'Exemplos', conteudo: 'Exemplos de uso.' },
+      { value: 'examples', label: 'Exemplos', content: 'Exemplos de uso.' },
     ],
     ativa: 'overview',
     rotuloLista: 'Seções do componente',
@@ -178,19 +178,19 @@ export function tabsConfigSource(): string {
   return montar({
     abas: [
       {
-        valor: 'profile',
-        rotulo: 'Perfil',
-        conteudo: 'Edite suas informações pessoais e foto de perfil.',
+        value: 'profile',
+        label: 'Perfil',
+        content: 'Edite suas informações pessoais e foto de perfil.',
       },
       {
-        valor: 'account',
-        rotulo: 'Conta',
-        conteudo: 'Gerencie email, senha e preferências de notificação.',
+        value: 'account',
+        label: 'Conta',
+        content: 'Gerencie email, senha e preferências de notificação.',
       },
       {
-        valor: 'security',
-        rotulo: 'Segurança',
-        conteudo: 'Autenticação de dois fatores e sessões ativas.',
+        value: 'security',
+        label: 'Segurança',
+        content: 'Autenticação de dois fatores e sessões ativas.',
       },
     ],
     ativa: 'profile',
@@ -203,17 +203,17 @@ export function tabsPreviewCodeSource(): string {
   return montar({
     abas: [
       {
-        valor: 'preview',
-        rotulo: 'Preview',
-        conteudo: 'Visualização renderizada do componente.',
+        value: 'preview',
+        label: 'Preview',
+        content: 'Visualização renderizada do componente.',
       },
       // Expressão, e não marcação solta: dentro do painel o trecho é TEXTO de
       // exemplo — escrito como tag ele viraria um componente de verdade.
-      { valor: 'code', rotulo: 'Código', conteudo: '{"<Button>Click me</Button>"}' },
+      { value: 'code', label: 'Código', content: '{"<Button>Click me</Button>"}' },
     ],
     ativa: 'preview',
     rotuloLista: 'Modos de visualização',
-    variante: 'line',
+    variant: 'line',
   });
 }
 
@@ -221,14 +221,14 @@ export function tabsPreviewCodeSource(): string {
 export function tabsNavigationVerticalSource(): string {
   return montar({
     abas: [
-      { valor: 'overview', rotulo: 'Visão geral', conteudo: 'Resumo executivo do projeto.' },
+      { value: 'overview', label: 'Visão geral', content: 'Resumo executivo do projeto.' },
       {
-        valor: 'properties',
-        rotulo: 'Propriedades',
-        conteudo: 'Lista completa de propriedades.',
+        value: 'properties',
+        label: 'Propriedades',
+        content: 'Lista completa de propriedades.',
       },
-      { valor: 'examples', rotulo: 'Exemplos', conteudo: 'Exemplos práticos de uso.' },
-      { valor: 'api', rotulo: 'API', conteudo: 'Referência completa da API.' },
+      { value: 'examples', label: 'Exemplos', content: 'Exemplos práticos de uso.' },
+      { value: 'api', label: 'API', content: 'Referência completa da API.' },
     ],
     ativa: 'overview',
     rotuloLista: 'Documentação',
@@ -240,9 +240,9 @@ export function tabsNavigationVerticalSource(): string {
 export function tabsAtivacaoManualSource(): string {
   return montar({
     abas: [
-      { valor: 'overview', rotulo: 'Visão geral', conteudo: 'Conteúdo da visão geral.' },
-      { valor: 'properties', rotulo: 'Propriedades', conteudo: 'Lista de propriedades.' },
-      { valor: 'examples', rotulo: 'Exemplos', conteudo: 'Exemplos de uso.' },
+      { value: 'overview', label: 'Visão geral', content: 'Conteúdo da visão geral.' },
+      { value: 'properties', label: 'Propriedades', content: 'Lista de propriedades.' },
+      { value: 'examples', label: 'Exemplos', content: 'Exemplos de uso.' },
     ],
     ativa: 'overview',
     rotuloLista: 'Seções do componente',

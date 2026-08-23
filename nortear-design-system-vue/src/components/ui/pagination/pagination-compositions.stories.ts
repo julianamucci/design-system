@@ -246,27 +246,27 @@ export const Controlled: Story = {
   render: () => ({
     components: sharedComponents,
     setup() {
-      const atual = ref(1);
+      const current = ref(1);
       const total = 4;
       const irTo = (n: number) => {
-        if (n >= 1 && n <= total) atual.value = n;
+        if (n >= 1 && n <= total) current.value = n;
       };
-      return { atual, total, pages: [1, 2, 3, 4], irTo };
+      return { current, total, pages: [1, 2, 3, 4], irTo };
     },
     template: `
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-body nds-text-muted-foreground" data-slot="pagina-atual">
-          Página {{ atual }} de {{ total }}
+          Página {{ current }} de {{ total }}
         </p>
-        <Pagination :total="40" :items-per-page="10" :page="atual" aria-label="Paginação controlada">
+        <Pagination :total="40" :items-per-page="10" :page="current" aria-label="Paginação controlada">
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious @click="irTo(atual - 1)" />
+              <PaginationPrevious @click="irTo(current - 1)" />
             </PaginationItem>
             <PaginationItem v-for="n in pages" :key="n">
               <PaginationLink
                 href="#"
-                :is-active="atual === n"
+                :is-active="current === n"
                 :aria-label="\`Ir para página \${n}\`"
                 @click.prevent="irTo(n)"
               >
@@ -274,7 +274,7 @@ export const Controlled: Story = {
               </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationNext @click="irTo(atual + 1)" />
+              <PaginationNext @click="irTo(current + 1)" />
             </PaginationItem>
           </PaginationContent>
         </Pagination>
@@ -287,8 +287,8 @@ export const Controlled: Story = {
       // Par idempotente: só clica quando ainda não é a página atual. O painel
       // Interactions reexecuta a play no mesmo DOM, e um clique cego partiria
       // do estado que a rodada anterior deixou.
-      const alvo = canvas.getByRole('link', { name: `Ir para página ${n}` });
-      if (alvo.getAttribute('aria-current') !== 'page') await userEvent.click(alvo);
+      const target = canvas.getByRole('link', { name: `Ir para página ${n}` });
+      if (target.getAttribute('aria-current') !== 'page') await userEvent.click(target);
       await expect(canvas.getByRole('link', { name: `Ir para página ${n}` })).toHaveAttribute(
         'aria-current',
         'page',
@@ -384,8 +384,8 @@ export const CompleteTable: Story = {
     });
 
     await step('O contador e a faixa dividem a mesma linha', async () => {
-      const rodape = canvasElement.querySelector('.nds-cluster') as HTMLElement;
-      await expect(getComputedStyle(rodape).justifyContent).toBe('space-between');
+      const footer = canvasElement.querySelector('.nds-cluster') as HTMLElement;
+      await expect(getComputedStyle(footer).justifyContent).toBe('space-between');
       await expect(canvas.getByRole('link', { name: 'Ir para página 2' })).toHaveAttribute(
         'aria-current',
         'page',

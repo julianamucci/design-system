@@ -174,18 +174,18 @@ export const Indeterminate: Story = {
       // <polyline> dentro do indicador, não que o próprio controle estava
       // marcado. `[checked]="true"` é literal no template, sem
       // `(checkedChange)` ligado: não há dono externo do estado.
-      const marcado = canvasElement.querySelector<HTMLElement>('#tri-on')!;
-      await expect(marcado.getAttribute('aria-checked')).toBe('true');
-      await expect(marcado).toHaveAttribute('data-state', 'checked');
+      const checked = canvasElement.querySelector<HTMLElement>('#tri-on')!;
+      await expect(checked.getAttribute('aria-checked')).toBe('true');
+      await expect(checked).toHaveAttribute('data-state', 'checked');
     });
 
     await step('Os três estados são visualmente distintos', async () => {
       // O indicador desenha traço no misto e marca de seleção no marcado; se
       // o SVG condicional quebrar, os dois ficam iguais e só isto acusa.
-      const marcado = canvasElement.querySelector<HTMLElement>('#tri-on')!;
+      const checked = canvasElement.querySelector<HTMLElement>('#tri-on')!;
       const misto = canvasElement.querySelector<HTMLElement>('#tri-mixed')!;
       const vazio = canvasElement.querySelector<HTMLElement>('#tri-off')!;
-      await expect(marcado.querySelector('polyline')).toBeTruthy();
+      await expect(checked.querySelector('polyline')).toBeTruthy();
       await expect(misto.querySelector('line')).toBeTruthy();
       await expect(vazio.querySelector('svg')).toBeNull();
     });
@@ -230,8 +230,8 @@ export const InForm: Story = {
       // submit. Sem ele, o formulário enviaria sem a opção marcada — e nada
       // na tela denunciaria.
       const form = canvasElement.querySelector<HTMLFormElement>('form')!;
-      const dados = new FormData(form);
-      await expect(dados.get('newsletter')).toBe('sim');
+      const data = new FormData(form);
+      await expect(data.get('newsletter')).toBe('sim');
     });
 
     await step('O foco por teclado deixa anel visível', async () => {

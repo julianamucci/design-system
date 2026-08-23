@@ -16,10 +16,10 @@ const { t } = useTranslation(drawerTranslations as Record<string, unknown>);
 // justamente onde o conteúdo diz como cada elemento deve ser escrito — o
 // exemplo "bom" de cada linha É o rótulo canônico, nos três idiomas.
 const LABEL = {
-  gatilho: () => t('usage.uxWriting.table.trigger.good'),
-  titulo: () => t('usage.uxWriting.table.title.good'),
+  trigger: () => t('usage.uxWriting.table.trigger.good'),
+  title: () => t('usage.uxWriting.table.title.good'),
   descricao: () => t('usage.uxWriting.table.description.good'),
-  fechar: () => t('usage.uxWriting.table.close.good'),
+  close: () => t('usage.uxWriting.table.close.good'),
 };
 
 type DrawerArgs = {
@@ -40,12 +40,12 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<DrawerArgs> }):
     direction = 'bottom',
     modal = true,
     defaultOpen = false,
-    triggerLabel = LABEL.gatilho(),
+    triggerLabel = LABEL.trigger(),
   } = ctx.args ?? {};
 
   // Só o que difere do default entra no snippet: documentação que repete valor
   // padrão ensina ruído.
-  const raiz = [
+  const root = [
     '<nds-drawer',
     direction === 'bottom' ? '' : `direction="${direction}"`,
     defaultOpen ? '[defaultOpen]="true"' : '',
@@ -60,17 +60,17 @@ import { NdsButton } from '@/components/ui/button';
 @Component({
   imports: [...NDS_DRAWER, NdsButton],
   template: \`
-    ${raiz}>
+    ${root}>
       <button ndsDrawerTrigger ndsButton variant="outline">${triggerLabel}</button>
 
       <ng-template ndsDrawerContent>
         <div ndsDrawerHeader>
-          <h2 ndsDrawerTitle>${LABEL.titulo()}</h2>
+          <h2 ndsDrawerTitle>${LABEL.title()}</h2>
           <p ndsDrawerDescription>${LABEL.descricao()}</p>
         </div>
 
         <div ndsDrawerFooter>
-          <button ndsDrawerClose ndsButton variant="outline">${LABEL.fechar()}</button>
+          <button ndsDrawerClose ndsButton variant="outline">${LABEL.close()}</button>
         </div>
       </ng-template>
     </nds-drawer>
@@ -120,7 +120,7 @@ const meta: Meta<DrawerArgs> = {
     direction: 'bottom',
     modal: true,
     defaultOpen: false,
-    triggerLabel: LABEL.gatilho(),
+    triggerLabel: LABEL.trigger(),
     onOpenChange: fn(),
   },
 };
@@ -134,7 +134,7 @@ type Story = StoryObj<DrawerArgs>;
  * O painel Interactions REEXECUTA a play no mesmo DOM: um clique cego partiria
  * do estado que a rodada anterior deixou e inverteria o resultado.
  */
-async function abrir(trigger: HTMLElement): Promise<HTMLElement> {
+async function open(trigger: HTMLElement): Promise<HTMLElement> {
   if (within(document.body).queryAllByRole('dialog').length === 0) {
     await userEvent.click(trigger);
   }
@@ -142,7 +142,7 @@ async function abrir(trigger: HTMLElement): Promise<HTMLElement> {
 }
 
 /** Fecha só se estiver aberto. */
-async function fechar(): Promise<void> {
+async function close(): Promise<void> {
   if (within(document.body).queryAllByRole('dialog').length > 0) {
     await userEvent.keyboard('{Escape}');
   }
@@ -163,9 +163,9 @@ export const Playground: Story = {
     // virariam controls falsos na aba API Reference.
     props: {
       ...args,
-      tituloPainel: LABEL.titulo(),
+      tituloPainel: LABEL.title(),
       descricaoPainel: LABEL.descricao(),
-      rotuloFechar: LABEL.fechar(),
+      rotuloFechar: LABEL.close(),
     },
     template: `
       <nds-drawer
@@ -193,24 +193,24 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: args.triggerLabel });
 
-    await fechar();
+    await close();
 
     await step('Clicar no gatilho abre o painel, com nome e descrição acessíveis', async () => {
       const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
-      const painel = await abrir(trigger);
+      const panel = await open(trigger);
 
-      await expect(painel).toBeVisible();
+      await expect(panel).toBeVisible();
       // O nome acessível vem do aria-labelledby que o primitivo liga ao id REAL
       // do ndsDrawerTitle — painel modal anônimo é o defeito silencioso aqui.
-      await expect(painel).toHaveAccessibleName(LABEL.titulo());
-      await expect(painel).toHaveAccessibleDescription(LABEL.descricao());
-      await expect(painel).toHaveAttribute('aria-modal', 'true');
-      await expect(painel).toHaveAttribute('data-slot', 'drawer-content');
-      await expect(painel).toHaveAttribute('data-state', 'open');
+      await expect(panel).toHaveAccessibleName(LABEL.title());
+      await expect(panel).toHaveAccessibleDescription(LABEL.descricao());
+      await expect(panel).toHaveAttribute('aria-modal', 'true');
+      await expect(panel).toHaveAttribute('data-slot', 'drawer-content');
+      await expect(panel).toHaveAttribute('data-state', 'open');
       // O atributo que o CSS compartilhado lê para posicionar o painel. Sob JIT
       // o input `direction` seria ignorado e viria sempre o default (armadilha 1).
-      await expect(painel).toHaveAttribute('data-vaul-drawer-direction', args.direction);
-      await expect(painel).toHaveClass(/nds-drawer-content/);
+      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', args.direction);
+      await expect(panel).toHaveClass(/nds-drawer-content/);
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
       ).toBe(callsBefore + 1);
@@ -219,14 +219,14 @@ export const Playground: Story = {
     await step('O painel é portalizado para fora da story', async () => {
       // É o que faz `position: fixed` valer contra a viewport, e não contra
       // qualquer ancestral com transform.
-      const painel = await waitForPortal('dialog');
-      await expect(canvasElement.contains(painel)).toBe(false);
-      await expect(document.body.contains(painel)).toBe(true);
+      const panel = await waitForPortal('dialog');
+      await expect(canvasElement.contains(panel)).toBe(false);
+      await expect(document.body.contains(panel)).toBe(true);
     });
 
     await step('A alça é decorativa, não um caminho de interação', async () => {
-      const painel = await waitForPortal('dialog');
-      const thumb = painel.querySelector<HTMLElement>('.nds-drawer-handle');
+      const panel = await waitForPortal('dialog');
+      const thumb = panel.querySelector<HTMLElement>('.nds-drawer-handle');
       await expect(thumb).not.toBeNull();
       // Sem gesto atrás dela, anunciar a alça só somaria ruído ao leitor de
       // tela — e é o que garante que nenhuma ação dependa de arrastar (WCAG 2.5.7).
@@ -235,23 +235,23 @@ export const Playground: Story = {
     });
 
     await step('O foco entra no painel ao abrir', async () => {
-      const painel = await waitForPortal('dialog');
+      const panel = await waitForPortal('dialog');
       await waitFor(() => {
-        if (!painel.contains(document.activeElement)) {
+        if (!panel.contains(document.activeElement)) {
           throw new Error('o foco não entrou no painel');
         }
       });
     });
 
     await step('Tab mantém o foco preso dentro do painel', async () => {
-      const painel = await waitForPortal('dialog');
+      const panel = await waitForPortal('dialog');
       // Volta suficiente para dar a volta completa em qualquer direção.
       for (let i = 0; i < 6; i++) await userEvent.tab();
-      await expect(painel.contains(document.activeElement)).toBe(true);
+      await expect(panel.contains(document.activeElement)).toBe(true);
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
-      await fechar();
+      await close();
       await waitFor(() => {
         if (document.activeElement !== trigger) {
           throw new Error('o foco não voltou ao gatilho');
@@ -261,7 +261,7 @@ export const Playground: Story = {
 
     if (args.modal) {
       await step('Clique no overlay fecha o painel', async () => {
-        await abrir(trigger);
+        await open(trigger);
         const overlay = document.querySelector<HTMLElement>('[data-slot="drawer-overlay"]');
         await expect(overlay).not.toBeNull();
         await userEvent.click(overlay!);
@@ -270,11 +270,11 @@ export const Playground: Story = {
     }
 
     await step('O botão de fechar do rodapé fecha e devolve o foco ao gatilho', async () => {
-      const painel = await abrir(trigger);
+      const panel = await open(trigger);
       // Procura pelo NOME, não pelo `data-slot`: o botão é também um ndsButton,
       // e duas diretivas ligando o mesmo atributo não têm vencedor definido
       // (armadilha 11) — por isso o NdsDrawerClose não liga `data-slot`.
-      const closeBtn = within(painel).getByRole('button', { name: LABEL.fechar() });
+      const closeBtn = within(panel).getByRole('button', { name: LABEL.close() });
       await userEvent.click(closeBtn);
       await waitForPortalVanish('dialog');
       await waitFor(() => {
@@ -286,6 +286,6 @@ export const Playground: Story = {
 
     // Termina fechado: a próxima rodada da play (painel Interactions) precisa
     // do mesmo ponto de partida desta.
-    await fechar();
+    await close();
   },
 };

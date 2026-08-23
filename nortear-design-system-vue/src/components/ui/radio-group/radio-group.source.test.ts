@@ -78,10 +78,10 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 
   it('cada rótulo aponta para o id do seu item — é dele que sai o nome acessível', () => {
     const saida = radioGroupSource();
-    const itens = [...saida.matchAll(/<RadioGroupItem value="[^"]+" id="([^"]+)"/g)].map((m) => m[1]);
+    const items = [...saida.matchAll(/<RadioGroupItem value="[^"]+" id="([^"]+)"/g)].map((m) => m[1]);
     const rotulos = [...saida.matchAll(/<Label for="([^"]+)">/g)].map((m) => m[1]);
-    expect(itens).toEqual(rotulos);
-    expect(new Set(itens).size).toBe(itens.length);
+    expect(items).toEqual(rotulos);
+    expect(new Set(items).size).toBe(items.length);
   });
 });
 

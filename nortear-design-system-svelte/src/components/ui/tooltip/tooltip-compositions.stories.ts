@@ -60,17 +60,17 @@ export const KeyboardShortcut: Story = {
     contentText: 'Salvar',
   },
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button', { name: /salvar/i });
+    const trigger = within(canvasElement).getByRole('button', { name: /salvar/i });
 
     await step('O nome acessível é do botão; o atalho é o extra', async () => {
-      await expect(gatilho).toHaveAttribute('aria-label', 'Salvar');
+      await expect(trigger).toHaveAttribute('aria-label', 'Salvar');
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
     });
 
     await step('O atalho vai em <kbd>, e a folha reconhece a tecla', async () => {
-      const balao = balaoDe(gatilho)!;
+      const balao = balaoDe(trigger)!;
       const teclas = balao.querySelectorAll('kbd');
       await expect(teclas.length).toBe(2);
       await expect(teclas[0].textContent).toBe('Ctrl');
@@ -89,14 +89,14 @@ export const SideTop: Story = {
     contentText: 'Tooltip no topo',
   },
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button', { name: /salvar/i });
+    const trigger = within(canvasElement).getByRole('button', { name: /salvar/i });
 
     await step('O balão nasce acima do gatilho', async () => {
       await waitFor(async () => {
-        await expect(sideOf(balaoDe(gatilho))).toBeTruthy();
+        await expect(sideOf(balaoDe(trigger))).toBeTruthy();
       });
-      await expect(sideOf(balaoDe(gatilho))).toBe('top');
-      await expect(balaoDe(gatilho)!.textContent).toContain('Tooltip no topo');
+      await expect(sideOf(balaoDe(trigger))).toBe('top');
+      await expect(balaoDe(trigger)!.textContent).toContain('Tooltip no topo');
     });
   },
 };
@@ -112,14 +112,14 @@ export const SideBottom: Story = {
   },
   parameters: COBRE_LADOS,
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button', { name: /excluir/i });
+    const trigger = within(canvasElement).getByRole('button', { name: /excluir/i });
 
     await step('O balão nasce abaixo do gatilho', async () => {
       await waitFor(async () => {
-        await expect(sideOf(balaoDe(gatilho))).toBeTruthy();
+        await expect(sideOf(balaoDe(trigger))).toBeTruthy();
       });
-      await expect(sideOf(balaoDe(gatilho))).toBe('bottom');
-      await expect(balaoDe(gatilho)!.textContent).toContain('Excluir item');
+      await expect(sideOf(balaoDe(trigger))).toBe('bottom');
+      await expect(balaoDe(trigger)!.textContent).toContain('Excluir item');
     });
   },
 };
@@ -135,14 +135,14 @@ export const SideLeft: Story = {
   },
   parameters: COBRE_LADOS,
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button', { name: /salvar/i });
+    const trigger = within(canvasElement).getByRole('button', { name: /salvar/i });
 
     await step('O balão nasce à esquerda do gatilho', async () => {
       await waitFor(async () => {
-        await expect(sideOf(balaoDe(gatilho))).toBeTruthy();
+        await expect(sideOf(balaoDe(trigger))).toBeTruthy();
       });
-      await expect(sideOf(balaoDe(gatilho))).toBe('left');
-      await expect(balaoDe(gatilho)!.textContent).toContain('À esquerda');
+      await expect(sideOf(balaoDe(trigger))).toBe('left');
+      await expect(balaoDe(trigger)!.textContent).toContain('À esquerda');
     });
   },
 };
@@ -158,14 +158,14 @@ export const SideRight: Story = {
   },
   parameters: COBRE_LADOS,
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button', { name: /salvar/i });
+    const trigger = within(canvasElement).getByRole('button', { name: /salvar/i });
 
     await step('O balão nasce à direita do gatilho', async () => {
       await waitFor(async () => {
-        await expect(sideOf(balaoDe(gatilho))).toBeTruthy();
+        await expect(sideOf(balaoDe(trigger))).toBeTruthy();
       });
-      await expect(sideOf(balaoDe(gatilho))).toBe('right');
-      await expect(balaoDe(gatilho)!.textContent).toContain('À direita');
+      await expect(sideOf(balaoDe(trigger))).toBe('right');
+      await expect(balaoDe(trigger)!.textContent).toContain('À direita');
     });
   },
 };
@@ -181,14 +181,14 @@ export const ActionDescription: Story = {
     contentText: 'Compartilhar link',
   },
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button', { name: /compartilhar/i });
+    const trigger = within(canvasElement).getByRole('button', { name: /compartilhar/i });
 
     await step('O botão já tem nome; o balão só descreve a ação', async () => {
-      await expect(gatilho).toHaveAttribute('aria-label', 'Compartilhar link');
+      await expect(trigger).toHaveAttribute('aria-label', 'Compartilhar link');
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      await expect(balaoDe(gatilho)!.textContent).toContain('Compartilhar link');
+      await expect(balaoDe(trigger)!.textContent).toContain('Compartilhar link');
     });
   },
 };

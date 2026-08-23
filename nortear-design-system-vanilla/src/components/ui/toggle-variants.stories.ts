@@ -31,21 +31,21 @@ type Story = StoryObj;
 function iconToggle(opts: {
   icon: unknown;
   'aria-label'?: string;
-  texto?: string;
+  text?: string;
   pressed?: boolean;
   variant?: ToggleOptions['variant'];
   size?: ToggleOptions['size'];
 }): HTMLButtonElement {
   // Ícone e texto são filhos DIRETOS: o espaço vem do `gap` do `.nds-toggle` e
   // a medida do ícone da regra `.nds-toggle > svg`.
-  const filhos = opts.texto
-    ? [buildLucideSvg(opts.icon), opts.texto]
+  const children = opts.text
+    ? [buildLucideSvg(opts.icon), opts.text]
     : [buildLucideSvg(opts.icon)];
   return createToggle({
     pressed: opts.pressed ?? false,
     variant: opts.variant ?? 'default',
     size: opts.size ?? 'default',
-    children: filhos,
+    children: children,
     // Texto visível dispensa aria-label — o leitor usa o conteúdo do botão.
     'aria-label': opts['aria-label'],
   });
@@ -137,8 +137,8 @@ export const WithLabel: Story = {
   },
   render: () =>
     cluster(
-      iconToggle({ icon: Eye, texto: 'Mostrar ocultos', variant: 'outline' }),
-      iconToggle({ icon: List, texto: 'Visão compacta', variant: 'outline', pressed: true }),
+      iconToggle({ icon: Eye, text: 'Mostrar ocultos', variant: 'outline' }),
+      iconToggle({ icon: List, text: 'Visão compacta', variant: 'outline', pressed: true }),
     ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -156,10 +156,10 @@ export const WithLabel: Story = {
     });
 
     await step('O toggle com rótulo é mais largo que alto', async () => {
-      const caixa = canvas
+      const box = canvas
         .getByRole('button', { name: 'Mostrar ocultos' })
         .getBoundingClientRect();
-      await expect(caixa.width).toBeGreaterThan(caixa.height);
+      await expect(box.width).toBeGreaterThan(box.height);
     });
   },
 };
@@ -205,9 +205,9 @@ export const Sizes: Story = {
 
     await step('Sem texto, o toggle é ao menos quadrado e cabe no alvo de toque', async () => {
       for (const btn of [sm, md, lg]) {
-        const caixa = btn.getBoundingClientRect();
-        await expect(caixa.width).toBeGreaterThanOrEqual(caixa.height - 1);
-        await expect(caixa.height).toBeGreaterThanOrEqual(24);
+        const box = btn.getBoundingClientRect();
+        await expect(box.width).toBeGreaterThanOrEqual(box.height - 1);
+        await expect(box.height).toBeGreaterThanOrEqual(24);
       }
     });
   },

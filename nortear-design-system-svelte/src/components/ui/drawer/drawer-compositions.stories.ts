@@ -54,12 +54,12 @@ export const WithForm: Story = {
     },
   },
   play: async ({ step }) => {
-    const painel = await waitForPortal('dialog');
-    const inside = within(painel);
+    const panel = await waitForPortal('dialog');
+    const inside = within(panel);
 
     await step('O painel carrega nome, descrição e os campos do formulário', async () => {
-      await expect(painel).toHaveAccessibleName('Editar dados pessoais');
-      await expect(painel).toHaveAccessibleDescription('Atualize seu nome e e-mail.');
+      await expect(panel).toHaveAccessibleName('Editar dados pessoais');
+      await expect(panel).toHaveAccessibleDescription('Atualize seu nome e e-mail.');
       // Os campos são achados pelo RÓTULO: se `for`/`id` não casassem, o input
       // ficaria sem nome acessível e a busca falharia.
       await expect(inside.getByLabelText(/Nome/i)).toBeInTheDocument();
@@ -67,9 +67,9 @@ export const WithForm: Story = {
     });
 
     await step('O rodapé oferece confirmar e cancelar', async () => {
-      const rodape = painel.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
-      await expect(rodape).not.toBeNull();
-      const names = within(rodape).getAllByRole('button').map((b) => b.textContent?.trim());
+      const footer = panel.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
+      await expect(footer).not.toBeNull();
+      const names = within(footer).getAllByRole('button').map((b) => b.textContent?.trim());
       await expect(names).toContain('Confirmar');
       await expect(names).toContain('Cancelar');
     });
@@ -96,12 +96,12 @@ export const WithConfirmation: Story = {
     },
   },
   play: async ({ step }) => {
-    const painel = await waitForPortal('dialog');
-    const inside = within(painel);
+    const panel = await waitForPortal('dialog');
+    const inside = within(panel);
 
     await step('A consequência está escrita, não subentendida', async () => {
-      await expect(painel).toHaveAccessibleName('Remover anexo?');
-      await expect(painel).toHaveAccessibleDescription(/adicioná-lo novamente depois/i);
+      await expect(panel).toHaveAccessibleName('Remover anexo?');
+      await expect(panel).toHaveAccessibleDescription(/adicioná-lo novamente depois/i);
     });
 
     await step('Cancelar continua sendo a saída de menor risco', async () => {
@@ -132,13 +132,13 @@ export const WithScroll: Story = {
     },
   },
   play: async ({ step }) => {
-    const painel = await waitForPortal('dialog');
-    const corpo = painel.querySelector<HTMLElement>('[data-slot="drawer-body"]')!;
-    const rodape = painel.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
+    const panel = await waitForPortal('dialog');
+    const body = panel.querySelector<HTMLElement>('[data-slot="drawer-body"]')!;
+    const footer = panel.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
 
     await step('O corpo é quem rola, não o painel', async () => {
-      await expect(corpo).not.toBeNull();
-      await expect(corpo.scrollHeight).toBeGreaterThan(corpo.clientHeight);
+      await expect(body).not.toBeNull();
+      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
       // O painel em si não rola: o mínimo automático zero de um item com
       // overflow é o que faz o corpo ceder altura em vez de esticar a caixa.
       // O painel NÃO é contêiner de rolagem, e é isso que prova o contrato.
@@ -149,19 +149,19 @@ export const WithScroll: Story = {
       // scroll 1524 — ou seja, o corpo cede altura e rola, e o número do painel
       // era só a caixa de conteúdo não recortada.
       await expect(['auto', 'scroll']).not.toContain(
-        getComputedStyle(painel).overflowY,
+        getComputedStyle(panel).overflowY,
       );
     });
 
     await step('A região rolável é alcançável por teclado', async () => {
       // WCAG 2.1.1 — sem o tabindex, quem navega por teclado não consegue rolar
       // o corpo. É a regra scrollable-region-focusable do axe.
-      await expect(corpo).toHaveAttribute('tabindex', '0');
+      await expect(body).toHaveAttribute('tabindex', '0');
     });
 
     await step('O rodapé continua visível com o corpo cheio', async () => {
-      const boxFooter = rodape.getBoundingClientRect();
-      const boxPanel = painel.getBoundingClientRect();
+      const boxFooter = footer.getBoundingClientRect();
+      const boxPanel = panel.getBoundingClientRect();
       await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
       await expect(boxFooter.height).toBeGreaterThan(0);
     });

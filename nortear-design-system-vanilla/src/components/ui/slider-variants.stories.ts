@@ -110,7 +110,7 @@ export const Range: Story = {
     // Um par de valores, uma instância. Antes eram dois sliders adjacentes com
     // clamping escrito à mão em cada `onValueChange` — o contorno de quando a
     // fábrica só sabia carregar um número.
-    const faixa = createSlider({
+    const range = createSlider({
       min: 0,
       max: 100,
       step: 1,
@@ -119,7 +119,7 @@ export const Range: Story = {
       onValueChange: fmt,
     });
 
-    wrap.append(row, faixa);
+    wrap.append(row, range);
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
@@ -193,8 +193,8 @@ export const Vertical: Story = {
     await step('O trilho fica em pé', async () => {
       // A orientação não pode ser só um atributo: a geometria vira junto, senão
       // o controle continua deitado dizendo que está de pé.
-      const caixa = sliderTrack(canvasElement).getBoundingClientRect();
-      await expect(caixa.height).toBeGreaterThan(caixa.width);
+      const box = sliderTrack(canvasElement).getBoundingClientRect();
+      await expect(box.height).toBeGreaterThan(box.width);
     });
 
     await step('ArrowUp incrementa no eixo vertical', async () => {

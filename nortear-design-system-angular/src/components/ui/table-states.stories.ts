@@ -163,7 +163,7 @@ export const SelectedRow: Story = {
                 <td ndsTableCell class="nds-font-medium">{{ invoice.id }}</td>
                 <td ndsTableCell>{{ invoice.status }}</td>
                 <td ndsTableCell>{{ invoice.metodo }}</td>
-                <td ndsTableCell class="nds-text-right">{{ invoice.valor }}</td>
+                <td ndsTableCell class="nds-text-right">{{ invoice.value }}</td>
               </tr>
             }
             <tr ndsTableRow data-state="selected">

@@ -302,14 +302,14 @@
   });
 
   $effect(() => {
-    const conta = rowsCount;
+    const count = rowsCount;
     const elemento = scrollRef;
     // `untrack`: `setOptions` reemite o store, e sem isto o próprio efeito se
     // reagendaria em laço — o que travava a paginação da tabela NÃO
     // virtualizada na primeira página.
     untrack(() =>
       $virtualizerStore.setOptions({
-        count: conta,
+        count: count,
         getScrollElement: () => elemento,
         estimateSize: () => virtualRowHeight,
         overscan: 10,

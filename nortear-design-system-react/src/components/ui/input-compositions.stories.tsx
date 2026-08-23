@@ -409,8 +409,8 @@ export const Alignments: Story = {
     await step("A moldura é do GRUPO; o campo interno fica nu", async () => {
       // É o ponto do componente: uma borda só em volta de tudo. Se o campo
       // mantivesse a própria, apareceria uma linha dupla no meio.
-      const grupo = q('[data-slot="input-group"]');
-      await expect(parseFloat(getComputedStyle(grupo).borderTopWidth)).toBeGreaterThan(0);
+      const group = q('[data-slot="input-group"]');
+      await expect(parseFloat(getComputedStyle(group).borderTopWidth)).toBeGreaterThan(0);
       await expect(parseFloat(getComputedStyle(q("#ig-inicio")).borderTopWidth)).toBe(0);
     });
 
@@ -446,19 +446,19 @@ export const AddonClick: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const campo = () => canvasElement.querySelector<HTMLInputElement>("#ig-clique")!;
+    const field = () => canvasElement.querySelector<HTMLInputElement>("#ig-clique")!;
 
     await step("Clicar no addon leva o foco ao campo", async () => {
       // A área toda parece o campo. Quem mira o "@" espera começar a digitar.
       await userEvent.click(canvasElement.querySelector<HTMLElement>('[data-testid="addon"]')!);
-      await expect(campo()).toHaveFocus();
+      await expect(field()).toHaveFocus();
     });
 
     await step("Clicar no BOTÃO dentro do addon não devolve o foco ao campo", async () => {
       // Sem esta distinção, apertar "Limpar" devolveria o foco ao campo no meio
       // da ação — e quem navega por teclado perderia o lugar.
       await userEvent.click(canvas.getByRole("button", { name: "Limpar" }));
-      await expect(campo()).not.toHaveFocus();
+      await expect(field()).not.toHaveFocus();
     });
   },
 };

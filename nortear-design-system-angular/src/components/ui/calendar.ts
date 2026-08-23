@@ -156,14 +156,14 @@ const EACH_SIDE_YEARS = 100;
 })
 export class NdsCalendarMonths implements OnInit {
   /** A raiz do primitivo, para quem precisa do formatador ou da paginação. */
-  readonly raiz = inject(RdxCalendarRootDirective, { self: true });
+  readonly root = inject(RdxCalendarRootDirective, { self: true });
 
   constructor() {
     // Troca de idioma em vida: a grade é recriada, cada célula recebe um
     // `day` novo e o `aria-label` é recalculado — mas só se o formatador já
     // estiver no idioma certo quando isso acontecer.
     effect(() => {
-      this.raiz.locale();
+      this.root.locale();
       this.sincronizarLocale();
     });
   }
@@ -187,8 +187,8 @@ export class NdsCalendarMonths implements OnInit {
    * foram criadas.
    */
   private sincronizarLocale(): void {
-    const locale = this.raiz.locale();
-    if (this.raiz.formatter.getLocale() !== locale) this.raiz.formatter.setLocale(locale);
+    const locale = this.root.locale();
+    if (this.root.formatter.getLocale() !== locale) this.root.formatter.setLocale(locale);
   }
 }
 
@@ -215,11 +215,11 @@ export class NdsCalendarMonths implements OnInit {
   standalone: true,
   hostDirectives: [{ directive: RdxCalendarCellTriggerDirective, inputs: ['day', 'month'] }],
   host: {
-    '[attr.tabindex]': 'gatilho.isFocusedDate() ? 0 : -1',
+    '[attr.tabindex]': 'trigger.isFocusedDate() ? 0 : -1',
   },
 })
 export class NdsCalendarDay {
-  protected readonly gatilho = inject(RdxCalendarCellTriggerDirective, { self: true });
+  protected readonly trigger = inject(RdxCalendarCellTriggerDirective, { self: true });
 }
 
 // ─── NdsCalendar ──────────────────────────────────────────────────────────────
@@ -322,8 +322,8 @@ export class NdsCalendarDay {
                   [attr.aria-label]="rotulos().selecionarMes"
                   (change)="aoTrocarMes($event)"
                 >
-                  @for (nome of nomesDosMeses(); track $index) {
-                    <option [value]="$index" [selected]="$index === mesEmVista()">{{ nome }}</option>
+                  @for (name of nomesDosMeses(); track $index) {
+                    <option [value]="$index" [selected]="$index === mesEmVista()">{{ name }}</option>
                   }
                 </select>
 
@@ -619,7 +619,7 @@ export class NdsCalendar implements OnInit {
 }
 
 /** A data que ancora o mês exibido, seja qual for o modo. */
-function firstData(valor: CalendarValue): DateValue | undefined {
-  if (!valor) return undefined;
-  return Array.isArray(valor) ? valor[0] : valor;
+function firstData(value: CalendarValue): DateValue | undefined {
+  if (!value) return undefined;
+  return Array.isArray(value) ? value[0] : value;
 }

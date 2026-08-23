@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { createPopover } from './popover';
-import { abrir, painel } from './popover.fixtures';
+import { open, panel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 import { createButton } from './button';
 import { createPopoverDocs } from '@/components/docs/PopoverDocs';
@@ -116,10 +116,10 @@ function buildContent(args: PopoverArgs): HTMLElement {
 }
 
 /** Fecha só se estiver aberto. */
-async function fechar(gatilho: HTMLElement): Promise<void> {
-  if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.click(gatilho);
+async function close(trigger: HTMLElement): Promise<void> {
+  if (trigger.getAttribute('aria-expanded') === 'true') await userEvent.click(trigger);
   await waitFor(() => {
-    if (painel()) throw new Error('popover ainda aberto');
+    if (panel()) throw new Error('popover ainda aberto');
   }, { timeout: 1000 });
 }
 
@@ -167,30 +167,30 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const triggerRe = new RegExp(args.triggerLabel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
-    const gatilho = canvas.getByRole('button', { name: triggerRe });
+    const trigger = canvas.getByRole('button', { name: triggerRe });
 
     await step('O gatilho anuncia que abre um diálogo', async () => {
-      await expect(gatilho).toHaveAttribute('aria-haspopup', 'dialog');
-      await expect(gatilho).toHaveAttribute('data-slot', 'popover-trigger');
+      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+      await expect(trigger).toHaveAttribute('data-slot', 'popover-trigger');
     });
 
     await step('Clicar no gatilho abre o painel com role=dialog', async () => {
-      await fechar(gatilho);
+      await close(trigger);
       const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
-      const p = await abrir(gatilho);
+      const p = await open(trigger);
       await expect(p).toHaveAttribute('role', 'dialog');
       await expect(p).toHaveClass(/nds-popover-content/);
       await expect(p).toHaveAttribute('data-state', 'open');
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
       ).toBe(callsBefore + 1);
     });
 
     await step('Aberto, aria-controls aponta para o id real do painel', async () => {
-      const id = gatilho.getAttribute('aria-controls');
+      const id = trigger.getAttribute('aria-controls');
       await expect(id).toBeTruthy();
-      await expect(document.getElementById(id!)).toBe(painel());
+      await expect(document.getElementById(id!)).toBe(panel());
     });
 
     await step('A folha governa o layout do painel, não o posicionador', async () => {
@@ -202,7 +202,7 @@ export const Playground: Story = {
       //
       // A medição é do valor COMPUTADO, não da classe: classe presente com
       // declaração inline por cima é exatamente o caso que passava despercebido.
-      const estilo = getComputedStyle(painel()!);
+      const estilo = getComputedStyle(panel()!);
       await expect(estilo.display).toBe('flex');
       await expect(estilo.flexDirection).toBe('column');
       await expect(parseFloat(estilo.rowGap)).toBeGreaterThan(0);
@@ -211,46 +211,46 @@ export const Playground: Story = {
     await step('O painel não é modal', async () => {
       // Popover não bloqueia o resto da página: `aria-modal` faria o leitor de
       // tela esconder tudo o que está fora dele, que é contrato de Dialog.
-      await expect(painel()).not.toHaveAttribute('aria-modal');
+      await expect(panel()).not.toHaveAttribute('aria-modal');
     });
 
     await step('O foco entra no painel ao abrir', async () => {
       await waitFor(() => {
-        if (!painel()!.contains(document.activeElement)) {
+        if (!panel()!.contains(document.activeElement)) {
           throw new Error('foco não entrou no painel');
         }
       });
       // Primeiro focável, não um qualquer: é o que a tabela de estados promete.
       await expect(document.activeElement).toBe(
-        within(painel()!).getByRole('button', { name: /cancelar/i }),
+        within(panel()!).getByRole('button', { name: /cancelar/i }),
       );
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
-      await abrir(gatilho);
+      await open(trigger);
       await userEvent.keyboard('{Escape}');
       await waitFor(() => {
-        if (painel()) throw new Error('popover ainda aberto');
+        if (panel()) throw new Error('popover ainda aberto');
       });
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
-      await expect(gatilho).toHaveAttribute('data-state', 'closed');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveAttribute('data-state', 'closed');
       // Sem painel não há id para apontar, e o atributo some junto.
-      await expect(gatilho.getAttribute('aria-controls')).toBeNull();
-      await expect(gatilho).toHaveFocus();
+      await expect(trigger.getAttribute('aria-controls')).toBeNull();
+      await expect(trigger).toHaveFocus();
     });
 
     await step('Clicar fora fecha o painel', async () => {
-      await abrir(gatilho);
+      await open(trigger);
       await userEvent.click(canvas.getByTestId('area-externa'));
       await waitFor(() => {
-        if (painel()) throw new Error('popover ainda aberto');
+        if (panel()) throw new Error('popover ainda aberto');
       });
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
     // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.
     await step('Estado final: painel aberto', async () => {
-      const p = await abrir(gatilho);
+      const p = await open(trigger);
       await expect(p).toBeVisible();
     });
   },

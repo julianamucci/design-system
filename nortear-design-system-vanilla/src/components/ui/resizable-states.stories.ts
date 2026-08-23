@@ -33,7 +33,7 @@ const LABEL = 'Redimensionar painéis — use setas para ajustar';
 // vem do fixture no padrão — quem varia o eixo é a story raiz, que passa o
 // parâmetro.
 
-function grupo(opcoes: {
+function group(options: {
   disabled?: boolean;
   withHandle?: boolean;
   minA?: number;
@@ -42,18 +42,18 @@ function grupo(opcoes: {
 }): HTMLElement {
   const root = createResizablePanel({
     direction: 'horizontal',
-    disabled: opcoes.disabled,
-    withHandle: opcoes.withHandle,
-    onLayout: opcoes.onLayout,
+    disabled: options.disabled,
+    withHandle: options.withHandle,
+    onLayout: options.onLayout,
     'aria-label': LABEL,
     panels: [
       {
         defaultSize: 50,
-        minSize: opcoes.minA ?? 20,
-        maxSize: opcoes.maxA,
+        minSize: options.minA ?? 20,
+        maxSize: options.maxA,
         content: panelLabelled('Painel A', 'nds-bg-muted nds-text-muted-foreground'),
       },
-      { defaultSize: 50, minSize: opcoes.minA ?? 20, content: panelLabelled('Painel B') },
+      { defaultSize: 50, minSize: options.minA ?? 20, content: panelLabelled('Painel B') },
     ],
   });
   return frame(root);
@@ -76,14 +76,14 @@ export const Dragging: Story = {
           onLayout: '(sizes) => guardarLayout(sizes)',
           'aria-label': LABEL,
           panels: [
-            { titulo: 'Painel A', defaultSize: 50 },
-            { titulo: 'Painel B', defaultSize: 50 },
+            { title: 'Painel A', defaultSize: 50 },
+            { title: 'Painel B', defaultSize: 50 },
           ],
         }),
       },
     },
   },
-  render: () => grupo({ minA: 10, withHandle: true, onLayout: (s) => layoutsEmitidos.push(s) }),
+  render: () => group({ minA: 10, withHandle: true, onLayout: (s) => layoutsEmitidos.push(s) }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const punho = canvas.getByRole('separator', { name: LABEL });
@@ -93,9 +93,9 @@ export const Dragging: Story = {
       // functional.item1. A sequência completa de ponteiro, e não um evento
       // construído à mão: o arrasto nasce no `mousedown` do punho e continua em
       // ouvintes de `document`, que um clique sintético nunca alcança.
-      const caixa = punho.getBoundingClientRect();
-      const x = caixa.left + caixa.width / 2;
-      const y = caixa.top + caixa.height / 2;
+      const box = punho.getBoundingClientRect();
+      const x = box.left + box.width / 2;
+      const y = box.top + box.height / 2;
       const antes = firstFraction(canvasElement);
 
       await userEvent.pointer([
@@ -159,14 +159,14 @@ export const Limits: Story = {
         transform: resizableSourceWith({
           'aria-label': LABEL,
           panels: [
-            { titulo: 'Painel A', defaultSize: 50, minSize: 30, maxSize: 60 },
-            { titulo: 'Painel B', defaultSize: 50, minSize: 30 },
+            { title: 'Painel A', defaultSize: 50, minSize: 30, maxSize: 60 },
+            { title: 'Painel B', defaultSize: 50, minSize: 30 },
           ],
         }),
       },
     },
   },
-  render: () => grupo({ minA: 30, maxA: 60 }),
+  render: () => group({ minA: 30, maxA: 60 }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const punho = canvas.getByRole('separator', { name: LABEL });
@@ -216,14 +216,14 @@ export const Focus: Story = {
         transform: resizableSourceWith({
           'aria-label': LABEL,
           panels: [
-            { titulo: 'Painel A', defaultSize: 50, minSize: 20 },
-            { titulo: 'Painel B', defaultSize: 50, minSize: 20 },
+            { title: 'Painel A', defaultSize: 50, minSize: 20 },
+            { title: 'Painel B', defaultSize: 50, minSize: 20 },
           ],
         }),
       },
     },
   },
-  render: () => grupo({}),
+  render: () => group({}),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const punho = canvas.getByRole('separator', { name: LABEL });
@@ -263,14 +263,14 @@ export const Disabled: Story = {
           disabled: true,
           'aria-label': LABEL,
           panels: [
-            { titulo: 'Painel A', defaultSize: 50, minSize: 20 },
-            { titulo: 'Painel B', defaultSize: 50, minSize: 20 },
+            { title: 'Painel A', defaultSize: 50, minSize: 20 },
+            { title: 'Painel B', defaultSize: 50, minSize: 20 },
           ],
         }),
       },
     },
   },
-  render: () => grupo({ disabled: true }),
+  render: () => group({ disabled: true }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const punho = canvas.getByRole('separator', { name: LABEL });
@@ -318,7 +318,7 @@ export const ListenerCleanup: Story = {
         transform: resizableSourceWith({
           destroy: true,
           'aria-label': LABEL,
-          panels: [{ titulo: 'Esquerda' }, { titulo: 'Direita' }],
+          panels: [{ title: 'Esquerda' }, { title: 'Direita' }],
         }),
       },
     },
@@ -336,14 +336,14 @@ export const ListenerCleanup: Story = {
       probe = await sondarOuvintes({
         host: host as HTMLElement,
         montar: () => {
-          const painel = (texto: string) => {
+          const panel = (text: string) => {
             const el = document.createElement('div');
-            el.textContent = texto;
+            el.textContent = text;
             return el;
           };
           return createResizablePanel({
             direction: 'horizontal',
-            panels: [{ content: painel('Esquerda') }, { content: painel('Direita') }],
+            panels: [{ content: panel('Esquerda') }, { content: panel('Direita') }],
           });
         },
         exercitar: (no) => {

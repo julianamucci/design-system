@@ -3,41 +3,41 @@ import { dataTableSnippet, dataTableSource, dataTableSourceWith } from './data-t
 
 describe('dataTableSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML da grade', () => {
-    const código = dataTableSnippet();
-    expect(código).toContain(
+    const code = dataTableSnippet();
+    expect(code).toContain(
       "import { createDataTable, type DataTableColumn } from '@/components/ui/data-table';",
     );
-    expect(código).toContain('createDataTable<Invoice>({');
+    expect(code).toContain('createDataTable<Invoice>({');
     // Forma abreviada: `columns: columns` é ruído que ninguém digita.
-    expect(código).toContain('\n  columns,\n');
-    expect(código).toContain("document.querySelector('#app')?.append(tabela);");
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('nds-data-table-th');
+    expect(code).toContain('\n  columns,\n');
+    expect(code).toContain("document.querySelector('#app')?.append(tabela);");
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('nds-data-table-th');
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = dataTableSnippet();
-    expect(código).not.toContain('enableRowSelection');
-    expect(código).not.toContain('enableGlobalFilter');
-    expect(código).not.toContain('enablePagination');
-    expect(código).not.toContain('enableColumnVisibility');
-    expect(código).not.toContain('virtualized');
-    expect(código).not.toContain('pageSize');
+    const code = dataTableSnippet();
+    expect(code).not.toContain('enableRowSelection');
+    expect(code).not.toContain('enableGlobalFilter');
+    expect(code).not.toContain('enablePagination');
+    expect(code).not.toContain('enableColumnVisibility');
+    expect(code).not.toContain('virtualized');
+    expect(code).not.toContain('pageSize');
   });
 
   it('não repete os textos que a fábrica já traz', () => {
-    const código = dataTableSnippet({
+    const code = dataTableSnippet({
       globalFilterPlaceholder: 'Buscar...',
       emptyMessage: 'Sem resultados.',
       pageSize: 10,
     });
-    expect(código).not.toContain('globalFilterPlaceholder');
-    expect(código).not.toContain('emptyMessage');
-    expect(código).not.toContain('pageSize');
+    expect(code).not.toContain('globalFilterPlaceholder');
+    expect(code).not.toContain('emptyMessage');
+    expect(code).not.toContain('pageSize');
   });
 
   it('mostra as opções quando a story as usa', () => {
-    const código = dataTableSnippet({
+    const code = dataTableSnippet({
       enableRowSelection: true,
       enableColumnFilters: true,
       enableColumnResizing: true,
@@ -49,16 +49,16 @@ describe('dataTableSnippet', () => {
       globalFilterPlaceholder: 'Buscar fatura, cliente, método...',
       emptyMessage: 'Nenhuma fatura encontrada.',
     });
-    expect(código).toContain('enableRowSelection: true');
-    expect(código).toContain('enableColumnFilters: true');
-    expect(código).toContain('enableColumnResizing: true');
-    expect(código).toContain('enableColumnOrdering: true');
-    expect(código).toContain('enableColumnPinning: true');
-    expect(código).toContain('enablePagination: false');
-    expect(código).toContain('pageSize: 5');
-    expect(código).toContain('pageSizeOptions: [5, 10]');
-    expect(código).toContain("globalFilterPlaceholder: 'Buscar fatura, cliente, método...'");
-    expect(código).toContain("emptyMessage: 'Nenhuma fatura encontrada.'");
+    expect(code).toContain('enableRowSelection: true');
+    expect(code).toContain('enableColumnFilters: true');
+    expect(code).toContain('enableColumnResizing: true');
+    expect(code).toContain('enableColumnOrdering: true');
+    expect(code).toContain('enableColumnPinning: true');
+    expect(code).toContain('enablePagination: false');
+    expect(code).toContain('pageSize: 5');
+    expect(code).toContain('pageSizeOptions: [5, 10]');
+    expect(code).toContain("globalFilterPlaceholder: 'Buscar fatura, cliente, método...'");
+    expect(code).toContain("emptyMessage: 'Nenhuma fatura encontrada.'");
   });
 
   it('a altura máxima só acompanha a virtualização', () => {
@@ -75,43 +75,43 @@ describe('dataTableSnippet', () => {
   });
 
   it('mantém a identidade da linha e o nome da grade', () => {
-    const código = dataTableSnippet();
-    expect(código).toContain("caption: 'Faturas recentes'");
-    expect(código).toContain('rowKey: (fatura) => fatura.id');
-    expect(código).not.toContain('rowLabel');
+    const code = dataTableSnippet();
+    expect(code).toContain("caption: 'Faturas recentes'");
+    expect(code).toContain('rowKey: (fatura) => fatura.id');
+    expect(code).not.toContain('rowLabel');
     expect(dataTableSnippet({ rowLabel: '(fatura) => fatura.customer' })).toContain(
       'rowLabel: (fatura) => fatura.customer',
     );
   });
 
   it('o estado sem resultado é dado vazio, e não grade desmontada', () => {
-    const código = dataTableSnippet({ semDados: true, emptyMessage: 'Nenhuma fatura encontrada.' });
-    expect(código).toContain('data: [],');
-    expect(código).toContain('const columns: DataTableColumn<Invoice>[] = [');
+    const code = dataTableSnippet({ semDados: true, emptyMessage: 'Nenhuma fatura encontrada.' });
+    expect(code).toContain('data: [],');
+    expect(code).toContain('const columns: DataTableColumn<Invoice>[] = [');
   });
 
   it('leva dados próprios, e não a fixture das stories', () => {
-    const código = dataTableSnippet();
-    expect(código).toContain('const invoices: Invoice[] = [');
-    expect(código).not.toContain('data-table.fixtures');
-    expect(código).not.toContain('baseColumns');
-    expect(código).not.toContain('rotulosFatura');
-    expect(código).not.toContain('bigData');
+    const code = dataTableSnippet();
+    expect(code).toContain('const invoices: Invoice[] = [');
+    expect(code).not.toContain('data-table.fixtures');
+    expect(code).not.toContain('baseColumns');
+    expect(code).not.toContain('rotulosFatura');
+    expect(code).not.toContain('bigData');
   });
 
   it('nunca imprime a função que os args trazem no lugar do corpo do callback', () => {
-    const código = dataTableSnippet({
+    const code = dataTableSnippet({
       onCellEdit: (() => undefined) as unknown as string,
       rowLabel: (() => undefined) as unknown as string,
     });
-    expect(código).not.toContain('onCellEdit');
-    expect(código).not.toContain('rowLabel');
+    expect(code).not.toContain('onCellEdit');
+    expect(code).not.toContain('rowLabel');
   });
 
   it('usa o nome acessível canônico no bloco de textos', () => {
-    const código = dataTableSnippet({ labels: true });
-    expect(código).toContain("selectAll: 'Selecionar todas as faturas'");
-    expect(código).toContain('selectRow: (fatura) =>');
+    const code = dataTableSnippet({ labels: true });
+    expect(code).toContain("selectAll: 'Selecionar todas as faturas'");
+    expect(code).toContain('selectRow: (fatura) =>');
     expect(dataTableSnippet()).not.toContain('labels');
   });
 });
@@ -137,9 +137,9 @@ describe('dataTableSource', () => {
 describe('dataTableSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = dataTableSourceWith({ virtualized: true, maxHeight: '400px' });
-    const código = transform('', { args: { enablePagination: true, enableRowSelection: true } });
-    expect(código).toContain('virtualized: true');
-    expect(código).toContain("maxHeight: '400px'");
-    expect(código).toContain('enableRowSelection: true');
+    const code = transform('', { args: { enablePagination: true, enableRowSelection: true } });
+    expect(code).toContain('virtualized: true');
+    expect(code).toContain("maxHeight: '400px'");
+    expect(code).toContain('enableRowSelection: true');
   });
 });

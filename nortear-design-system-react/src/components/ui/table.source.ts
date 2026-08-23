@@ -29,8 +29,8 @@ const CAPTION = 'Lista de faturas recentes';
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
 function importingTable(...parts: string[]): string {
-  const lista = [...parts].sort();
-  return `import {\n${lista.map((part) => `  ${part},`).join('\n')}\n} from "@/components/ui/table";`;
+  const list = [...parts].sort();
+  return `import {\n${list.map((part) => `  ${part},`).join('\n')}\n} from "@/components/ui/table";`;
 }
 
 /**
@@ -90,15 +90,15 @@ const FOOTER = `  <TableFooter>
  * O que muda é ficar ou não visível, e `nds-sr-only` recorta a caixa sem tirar
  * da árvore de acessibilidade — `display: none` tiraria das duas.
  */
-function legenda(visible: boolean, texto = CAPTION): string {
+function caption(visible: boolean, text = CAPTION): string {
   const className = visible ? '' : ' className="nds-sr-only"';
-  return `  <TableCaption${className}>${texto}</TableCaption>`;
+  return `  <TableCaption${className}>${text}</TableCaption>`;
 }
 
 /** Junta as seções dentro de uma `<Table>`, descartando as ausentes. */
-function tabela(...sections: Array<string | false | null | undefined>): string {
-  const corpo = sections.filter((section): section is string => Boolean(section)).join('\n');
-  return `<Table>\n${corpo}\n</Table>`;
+function table(...sections: Array<string | false | null | undefined>): string {
+  const body = sections.filter((section): section is string => Boolean(section)).join('\n');
+  return `<Table>\n${body}\n</Table>`;
 }
 
 const IMPORT_COMPLETO = importingTable(
@@ -139,7 +139,7 @@ export const tableSource: SourceTransform<TableArgs> = (_gerado, ctx) => {
 
 ${DATA}
 
-${tabela(legenda(args.captionVisivel === true), HEADER, BODY, withFooter && FOOTER)}`;
+${table(caption(args.captionVisivel === true), HEADER, BODY, withFooter && FOOTER)}`;
 };
 
 /**
@@ -152,7 +152,7 @@ export function tableBasicaSource(): string {
 
 ${DATA}
 
-${tabela(legenda(true), HEADER, BODY)}`;
+${table(caption(true), HEADER, BODY)}`;
 }
 
 /**
@@ -163,7 +163,7 @@ ${tabela(legenda(true), HEADER, BODY)}`;
  * legenda é só esconder informação.
  */
 export function tableCaptionOcultaSource(): string {
-  const dados = `const invoices = [
+  const data = `const invoices = [
   { id: "#INV-001", status: "Pago", amount: "R$ 250,00" },
   { id: "#INV-002", status: "Pendente", amount: "R$ 150,00" },
   { id: "#INV-003", status: "Cancelado", amount: "R$ 350,00" },
@@ -171,7 +171,7 @@ export function tableCaptionOcultaSource(): string {
 
   return `${IMPORT_NO_FOOTER}
 
-${dados}
+${data}
 
 <div className="nds-stack" data-spacing="sm">
   <h2 className="nds-text-h3 nds-m-0">Faturas recentes</h2>

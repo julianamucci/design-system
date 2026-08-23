@@ -31,20 +31,20 @@ type Story = StoryObj;
 function toggle(opts: {
   icon: unknown;
   'aria-label'?: string;
-  texto?: string;
+  text?: string;
   pressed?: boolean;
   variant?: ToggleOptions['variant'];
   onClick?: (pressed: boolean) => void;
 }): HTMLButtonElement {
   // Ícone e texto como filhos DIRETOS: o espaço vem do `gap` do `.nds-toggle`.
-  const filhos = opts.texto
-    ? [buildLucideSvg(opts.icon), opts.texto]
+  const children = opts.text
+    ? [buildLucideSvg(opts.icon), opts.text]
     : [buildLucideSvg(opts.icon)];
   return createToggle({
     pressed: opts.pressed ?? false,
     variant: opts.variant ?? 'default',
     onClick: opts.onClick,
-    children: filhos,
+    children: children,
     'aria-label': opts['aria-label'],
   });
 }
@@ -54,9 +54,9 @@ function toggle(opts: {
  * lá. O painel Interactions reexecuta a play no mesmo DOM: um clique cego
  * partiria do estado que a rodada anterior deixou e inverteria o resultado.
  */
-async function definir(btn: HTMLElement, alvo: boolean) {
-  if ((btn.getAttribute('aria-pressed') === 'true') !== alvo) await userEvent.click(btn);
-  await expect(btn).toHaveAttribute('aria-pressed', String(alvo));
+async function definir(btn: HTMLElement, target: boolean) {
+  if ((btn.getAttribute('aria-pressed') === 'true') !== target) await userEvent.click(btn);
+  await expect(btn).toHaveAttribute('aria-pressed', String(target));
 }
 
 // ─── FormattingToolbar ────────────────────────────────────────────────────────
@@ -100,15 +100,15 @@ export const FormattingToolbar: Story = {
     const canvas = within(canvasElement);
 
     await step('O conjunto é anunciado como grupo, com nome próprio', async () => {
-      const grupo = canvas.getByRole('group', { name: 'Formatação de texto' });
-      await expect(grupo).toBeVisible();
-      await expect(within(grupo).getAllByRole('button')).toHaveLength(4);
+      const group = canvas.getByRole('group', { name: 'Formatação de texto' });
+      await expect(group).toBeVisible();
+      await expect(within(group).getAllByRole('button')).toHaveLength(4);
     });
 
     await step('Cada toggle icon-only tem nome acessível próprio', async () => {
-      for (const nome of ['Negrito', 'Itálico', 'Sublinhado', 'Lista']) {
-        const btn = canvas.getByRole('button', { name: nome });
-        await expect(btn).toHaveAttribute('aria-label', nome);
+      for (const name of ['Negrito', 'Itálico', 'Sublinhado', 'Lista']) {
+        const btn = canvas.getByRole('button', { name: name });
+        await expect(btn).toHaveAttribute('aria-label', name);
         await expect(btn.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
       }
     });
@@ -144,19 +144,19 @@ export const FilterList: Story = {
     wrapper.className = 'nds-stack';
     wrapper.dataset.spacing = 'sm';
 
-    const titulo = document.createElement('p');
-    titulo.className = 'nds-text-body nds-font-semibold';
-    titulo.textContent = 'Filtros de exibição';
+    const title = document.createElement('p');
+    title.className = 'nds-text-body nds-font-semibold';
+    title.textContent = 'Filtros de exibição';
 
     const row = document.createElement('div');
     row.className = 'nds-cluster';
     row.dataset.spacing = 'sm';
     row.append(
-      toggle({ icon: Eye, texto: 'Mostrar ocultos', variant: 'outline' }),
-      toggle({ icon: List, texto: 'Visão compacta', variant: 'outline', pressed: true }),
+      toggle({ icon: Eye, text: 'Mostrar ocultos', variant: 'outline' }),
+      toggle({ icon: List, text: 'Visão compacta', variant: 'outline', pressed: true }),
     );
 
-    wrapper.append(titulo, row);
+    wrapper.append(title, row);
     return wrapper;
   },
   play: async ({ canvasElement, step }) => {
@@ -179,8 +179,8 @@ export const FilterList: Story = {
     });
 
     await step('Os dois filtros usam a variante outline', async () => {
-      for (const nome of ['Mostrar ocultos', 'Visão compacta']) {
-        await expect(canvas.getByRole('button', { name: nome })).toHaveAttribute(
+      for (const name of ['Mostrar ocultos', 'Visão compacta']) {
+        await expect(canvas.getByRole('button', { name: name })).toHaveAttribute(
           'data-variant',
           'outline',
         );
@@ -211,16 +211,16 @@ export const Controlled: Story = {
     const saida = document.createElement('p');
     saida.className = 'nds-text-caption nds-text-muted-foreground';
 
-    const valor = document.createElement('code');
-    valor.className = 'nds-font-mono';
-    valor.textContent = 'false';
-    saida.append('Estado atual: ', valor);
+    const value = document.createElement('code');
+    value.className = 'nds-font-mono';
+    value.textContent = 'false';
+    saida.append('Estado atual: ', value);
 
     const btn = toggle({
       icon: Bold,
       'aria-label': 'Negrito',
       onClick: (pressed) => {
-        valor.textContent = String(pressed);
+        value.textContent = String(pressed);
       },
     });
 

@@ -590,7 +590,7 @@ const EditableCell = defineComponent({
     return () => {
       // Mesmo rótulo no botão e no campo, e tirado do CABEÇALHO e não do id:
       // o id é chave de dados (`customer`, `amount`) e virava "Editar amount".
-      const rotulo = rotulos.value.edit(
+      const label = rotulos.value.edit(
         flexHeaderLabel(p.context.column.columnDef.header) ?? p.context.column.id,
       );
       if (!editing.value) {
@@ -601,7 +601,7 @@ const EditableCell = defineComponent({
               type: 'button',
               class:
                 'nds-data-table-edit-btn',
-              'aria-label': rotulo,
+              'aria-label': label,
               onClick: () => {
                 editing.value = true;
               },
@@ -639,7 +639,7 @@ const EditableCell = defineComponent({
           },
           // Sem isto o campo aberto não tem NOME nenhum: o leitor anuncia
           // "edição, em branco" e não diz de que coluna. WCAG 4.1.2, nível A.
-          'aria-label': rotulo,
+          'aria-label': label,
           class: 'nds-data-table-edit-input',
         }),
       ]);

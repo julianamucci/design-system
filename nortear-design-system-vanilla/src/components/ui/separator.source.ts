@@ -5,7 +5,7 @@
 // andaime, não o uso: o que se copia daqui é a chamada de `createSeparator`
 // entre os dois blocos que ela divide.
 
-import { importing, montar, opcoes, snippet, texto, type SourceTransform } from '@/lib/story-source';
+import { importing, montar, options, snippet, text, type SourceTransform } from '@/lib/story-source';
 import type { SeparatorEmphasis, SeparatorOrientation } from './separator';
 
 /** O que as stories usam da `SeparatorOptions`, mais os dois blocos vizinhos. */
@@ -28,13 +28,13 @@ export type SeparatorSnippetOptions = {
  * curtas — cabem.
  */
 function separatorCall(o: SeparatorSnippetOptions): string {
-  const pairs = opcoes([
+  const pairs = options([
     // Só o que difere do padrão entra: `horizontal`, `decorative: true` e
     // `emphasis: 'default'` são o que a fábrica já assume.
-    ['orientation', o.orientation === 'vertical' ? texto('vertical') : undefined],
+    ['orientation', o.orientation === 'vertical' ? text('vertical') : undefined],
     ['decorative', o.decorative === false ? 'false' : undefined],
-    ['emphasis', o.emphasis === 'strong' ? texto('strong') : undefined],
-    ['className', o.className ? texto(o.className) : undefined],
+    ['emphasis', o.emphasis === 'strong' ? text('strong') : undefined],
+    ['className', o.className ? text(o.className) : undefined],
   ])
     .map((line) => line.replace(/,$/, ''))
     .join(', ');
@@ -42,10 +42,10 @@ function separatorCall(o: SeparatorSnippetOptions): string {
 }
 
 /** Um parágrafo de exemplo, que é o que a linha separa. */
-function bloco(variavel: string, conteudo: string): string {
+function block(variavel: string, content: string): string {
   return `const ${variavel} = document.createElement('p');
 ${variavel}.className = 'nds-text-body';
-${variavel}.textContent = ${texto(conteudo)};`;
+${variavel}.textContent = ${text(content)};`;
 }
 
 /**
@@ -73,8 +73,8 @@ secao.dataset.spacing = 'md';`;
   return snippet(
     importing('separator', 'createSeparator'),
     container,
-    bloco(first, o.antes ?? (vertical ? 'Item A' : 'Seção superior')),
-    bloco(segundo, o.depois ?? (vertical ? 'Item B' : 'Seção inferior')),
+    block(first, o.antes ?? (vertical ? 'Item A' : 'Seção superior')),
+    block(segundo, o.depois ?? (vertical ? 'Item B' : 'Seção inferior')),
     `secao.append(${first}, ${separatorCall(o)}, ${segundo});`,
     montar('secao'),
   );
@@ -102,11 +102,11 @@ export function separatorEmCardSnippet(o: SeparatorSnippetOptions = {}): string 
     ].join('\n'),
     `const cabecalho = createCardHeader();
 cabecalho.append(
-  createCardTitle({ text: ${texto(o.antes ?? 'Resumo do pedido')} }),
+  createCardTitle({ text: ${text(o.antes ?? 'Resumo do pedido')} }),
   createCardDescription({ text: '3 itens, entrega em 5 dias úteis.' }),
 );`,
     `const conteudo = createCardContent();
-conteudo.textContent = ${texto(o.depois ?? 'Total: R$ 249,90')};`,
+conteudo.textContent = ${text(o.depois ?? 'Total: R$ 249,90')};`,
     `const cartao = createCard({ class: 'nds-max-w-md' });
 cartao.append(cabecalho, ${separatorCall(o)}, conteudo);`,
     montar('cartao'),

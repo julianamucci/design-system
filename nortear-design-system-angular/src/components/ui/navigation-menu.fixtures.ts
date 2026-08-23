@@ -46,13 +46,13 @@ export async function waitForPanel(timeout = 4000): Promise<HTMLElement> {
         throw new Error('painel: ainda sem data-side, o floating-ui não mediu');
       }
       if (popup.hasAttribute('data-closed')) throw new Error('painel: marcado como fechado');
-      const opacidade = window.getComputedStyle(popup).opacity;
-      if (opacidade !== '1' && Number.parseFloat(opacidade) < 0.9) {
-        throw new Error(`painel: opacity=${opacidade}, ainda animando`);
+      const opacity = window.getComputedStyle(popup).opacity;
+      if (opacity !== '1' && Number.parseFloat(opacity) < 0.9) {
+        throw new Error(`painel: opacity=${opacity}, ainda animando`);
       }
-      const painel = popup.querySelector<HTMLElement>(SELECTOR_PANEL);
-      if (!painel) throw new Error('painel: o viewport ainda não instanciou o conteúdo');
-      return painel;
+      const panel = popup.querySelector<HTMLElement>(SELECTOR_PANEL);
+      if (!panel) throw new Error('painel: o viewport ainda não instanciou o conteúdo');
+      return panel;
     },
     { timeout, interval: 50 },
   );
@@ -75,12 +75,12 @@ export async function waitForPanelVanish(timeout = 3000): Promise<void> {
  * asserção de estado inverte o resultado no replay do painel Interactions: a
  * segunda rodada parte do estado que a primeira deixou.
  */
-export async function abrir(gatilho: HTMLElement): Promise<HTMLElement> {
-  if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+export async function open(trigger: HTMLElement): Promise<HTMLElement> {
+  if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
   return await waitForPanel();
 }
 
-export async function fechar(gatilho: HTMLElement): Promise<void> {
-  if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.click(gatilho);
+export async function close(trigger: HTMLElement): Promise<void> {
+  if (trigger.getAttribute('aria-expanded') === 'true') await userEvent.click(trigger);
   await waitForPanelVanish();
 }

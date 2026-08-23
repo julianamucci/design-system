@@ -35,10 +35,10 @@ const LABEL_VARIANT: Record<string, PrioridadeVariant> = {
  */
 const DIACRITICOS = /[\u0300-\u036f]/g;
 
-function normalizar(rotulo: string): string {
-  return rotulo.trim().toLowerCase().normalize('NFD').replace(DIACRITICOS, '');
+function normalizar(label: string): string {
+  return label.trim().toLowerCase().normalize('NFD').replace(DIACRITICOS, '');
 }
 
-export function prioridadeVariant(rotulo: string): PrioridadeVariant {
-  return LABEL_VARIANT[normalizar(rotulo)] ?? 'outline';
+export function prioridadeVariant(label: string): PrioridadeVariant {
+  return LABEL_VARIANT[normalizar(label)] ?? 'outline';
 }

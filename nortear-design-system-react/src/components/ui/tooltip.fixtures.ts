@@ -17,7 +17,7 @@
  * pelo markup acharia o balão mesmo com a descrição desligada; por aqui, um
  * balão sem elo não é encontrado, que é o resultado certo.
  */
-export function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute("aria-describedby");
+export function balaoDe(trigger: HTMLElement): HTMLElement | null {
+  const id = trigger.getAttribute("aria-describedby");
   return id ? document.getElementById(id) : null;
 }

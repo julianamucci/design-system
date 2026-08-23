@@ -65,7 +65,7 @@ export const AutoDismiss: Story = {
   parameters: {
     covers: ['functional.item2'],
     docs: {
-      source: { transform: sonnerSourceWith({ ...REGION, type: 'error', title: TEXTS.erro }) },
+      source: { transform: sonnerSourceWith({ ...REGION, type: 'error', title: TEXTS.error }) },
       description: {
         story:
           'A notificação sai sozinha quando o prazo vence. É o que a separa do Alert: aqui a mensagem é passageira, e nada fica esperando uma decisão.',
@@ -86,7 +86,7 @@ export const AutoDismiss: Story = {
       // abaixo de 0,99, de propósito, para não asserir sobre elemento em fade.
       // Sob carga de suíte cheia, um polling de 30ms erra uma janela dessas: a
       // story reprovava sozinha, sem regressão nenhuma no componente.
-      toast.error(TEXTS.erro);
+      toast.error(TEXTS.error);
       const toastEl = await waitForToast({ type: 'error' });
       await expect(toastEl).toHaveAttribute('data-type', 'error');
       await expect(toastEl).toHaveAttribute('data-rich-colors', 'true');
@@ -283,7 +283,7 @@ export const DarkTheme: Story = {
           [
             { type: 'default', title: TEXTS.padrao },
             { type: 'success', title: TEXTS.sucesso },
-            { type: 'error', title: TEXTS.erro },
+            { type: 'error', title: TEXTS.error },
             { type: 'warning', title: TEXTS.aviso },
             { type: 'info', title: TEXTS.info },
           ],
@@ -304,7 +304,7 @@ export const DarkTheme: Story = {
     await step('Os cinco tipos são desenhados com os tokens do tema em vigor', async () => {
       toast(TEXTS.padrao, PERSISTENT);
       toast.success(TEXTS.sucesso, PERSISTENT);
-      toast.error(TEXTS.erro, PERSISTENT);
+      toast.error(TEXTS.error, PERSISTENT);
       toast.warning(TEXTS.aviso, PERSISTENT);
       toast.info(TEXTS.info, PERSISTENT);
 

@@ -9,7 +9,7 @@
  * porque é essa a API que o `index.ts` publica e por onde quem consome escreve.
  */
 import { AREA_CLICK_DIREITO } from '@shared/primitives/context-menu-area';
-import { attrBool, attrs, texto, vueSnippet, type SourceTransform } from '@/lib/story-source';
+import { attrBool, attrs, text, vueSnippet, type SourceTransform } from '@/lib/story-source';
 
 export type ContextMenuArgs = {
   triggerLabel: string;
@@ -47,13 +47,13 @@ ${usadas.map((part) => `  ${part},`).join('\n')}
 
 /** Um item do menu, com ou sem atalho ao lado do rótulo. */
 function item(
-  rotulo: string,
-  opcoes: { atalho?: string; props?: string; recuo?: string } = {},
+  label: string,
+  options: { atalho?: string; props?: string; recuo?: string } = {},
 ): string {
-  const { atalho, props = '', recuo = '    ' } = opcoes;
-  if (!atalho) return `${recuo}<ContextMenuItem${props}>${rotulo}</ContextMenuItem>`;
+  const { atalho, props = '', recuo = '    ' } = options;
+  if (!atalho) return `${recuo}<ContextMenuItem${props}>${label}</ContextMenuItem>`;
   return `${recuo}<ContextMenuItem${props}>
-${recuo}  ${rotulo}
+${recuo}  ${label}
 ${recuo}  <ContextMenuShortcut>${atalho}</ContextMenuShortcut>
 ${recuo}</ContextMenuItem>`;
 }
@@ -69,18 +69,18 @@ ${recuo}</ContextMenuItem>`;
  *
  * O conteúdo já chega indentado com quatro espaços.
  */
-function menu(conteudo: string, opcoes: { rotulo?: string; raiz?: string } = {}): string {
-  const { rotulo = LABEL_DEFAULT, raiz = '' } = opcoes;
-  return `<ContextMenu${attrs(raiz)}>
+function menu(content: string, options: { label?: string; root?: string } = {}): string {
+  const { label = LABEL_DEFAULT, root = '' } = options;
+  return `<ContextMenu${attrs(root)}>
   <ContextMenuTrigger
     class="${AREA_CLICK_DIREITO}"
     data-align="center"
     data-justify="center"
   >
-    ${rotulo}
+    ${label}
   </ContextMenuTrigger>
   <ContextMenuContent>
-${conteudo}
+${content}
   </ContextMenuContent>
 </ContextMenu>`;
 }
@@ -92,7 +92,7 @@ ${conteudo}
  * `modal` nasce ligado na raiz — só a desativação entra no snippet.
  */
 export const contextMenuSource: SourceTransform<ContextMenuArgs> = (_gerado, ctx) => {
-  const rotulo = texto(ctx?.args?.triggerLabel, LABEL_DEFAULT);
+  const label = text(ctx?.args?.triggerLabel, LABEL_DEFAULT);
   return vueSnippet(
     importing([
       'ContextMenu',
@@ -110,7 +110,7 @@ ${item('Duplicar', { recuo: '      ' })}
     </ContextMenuGroup>
     <ContextMenuSeparator />
 ${item('Excluir', { atalho: '⌫', props: ' variant="destructive"' })}`,
-      { rotulo, raiz: attrBool('modal', ctx?.args?.modal, true) },
+      { label, root: attrBool('modal', ctx?.args?.modal, true) },
     ),
   );
 };

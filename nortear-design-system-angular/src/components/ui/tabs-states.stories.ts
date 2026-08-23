@@ -255,11 +255,11 @@ export const Focus: Story = {
     await step('O Tab seguinte cai dentro do painel ativo', async () => {
       // É o que fecha o percurso: da fileira inteira para o conteúdo, sem
       // passar pelas abas inativas.
-      const painel = canvas.getByRole('tabpanel');
-      await expect(painel.getAttribute('tabindex')).toBe('0');
+      const panel = canvas.getByRole('tabpanel');
+      await expect(panel.getAttribute('tabindex')).toBe('0');
       await userEvent.tab();
       await waitFor(async () => {
-        await expect(canvasElement.ownerDocument.activeElement).toBe(painel);
+        await expect(canvasElement.ownerDocument.activeElement).toBe(panel);
       });
     });
   },

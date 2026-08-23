@@ -24,8 +24,8 @@
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
 export interface BoxMeasurement {
-  largura: number;
-  altura: number;
+  width: number;
+  height: number;
   background: string;
   cor: string;
   padding: string;
@@ -46,13 +46,13 @@ export interface ClickReach {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function caixa(el: Element | null | undefined): BoxMeasurement | null {
+function box(el: Element | null | undefined): BoxMeasurement | null {
   if (!el) return null;
   const cs = getComputedStyle(el);
   const r = el.getBoundingClientRect();
   return {
-    largura: Math.round(r.width),
-    altura: Math.round(r.height),
+    width: Math.round(r.width),
+    height: Math.round(r.height),
     background: cs.backgroundColor,
     cor: cs.color,
     padding: cs.padding,
@@ -91,11 +91,11 @@ function accessibleName(el: Element | null | undefined): string | null {
   if (!el) return null;
   const labelled = el.getAttribute('aria-labelledby');
   if (labelled) {
-    const alvo = el.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
-    if (alvo?.textContent?.trim()) return alvo.textContent.trim();
+    const target = el.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
+    if (target?.textContent?.trim()) return target.textContent.trim();
   }
-  const rotulo = el.getAttribute('aria-label');
-  if (rotulo?.trim()) return rotulo.trim();
+  const label = el.getAttribute('aria-label');
+  if (label?.trim()) return label.trim();
   const id = el.getAttribute('id');
   if (id) {
     const label = el.ownerDocument.querySelector(`label[for="${CSS.escape(id)}"]`);
@@ -103,40 +103,40 @@ function accessibleName(el: Element | null | undefined): string | null {
   }
   const labelInside = el.closest('label');
   if (labelInside?.textContent?.trim()) return labelInside.textContent.trim();
-  const titulo = el.getAttribute('title');
-  if (titulo?.trim()) return titulo.trim();
+  const title = el.getAttribute('title');
+  if (title?.trim()) return title.trim();
   if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') return null;
   return el.textContent?.trim().replace(/\s+/g, ' ') || null;
 }
 
 /** Nome acessível de uma `<table>`: caption, aria-label ou aria-labelledby. */
-function tableName(tabela: Element | null): string | null {
-  if (!tabela) return null;
-  const rotulo = tabela.getAttribute('aria-label');
-  if (rotulo?.trim()) return rotulo.trim();
-  const labelled = tabela.getAttribute('aria-labelledby');
+function tableName(table: Element | null): string | null {
+  if (!table) return null;
+  const label = table.getAttribute('aria-label');
+  if (label?.trim()) return label.trim();
+  const labelled = table.getAttribute('aria-labelledby');
   if (labelled) {
-    const alvo = tabela.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
-    if (alvo?.textContent?.trim()) return alvo.textContent.trim();
+    const target = table.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
+    if (target?.textContent?.trim()) return target.textContent.trim();
   }
-  const legenda = tabela.querySelector('caption');
-  return legenda?.textContent?.trim() || null;
+  const caption = table.querySelector('caption');
+  return caption?.textContent?.trim() || null;
 }
 
-const texto = (el: Element | null | undefined): string | null =>
+const text = (el: Element | null | undefined): string | null =>
   el?.textContent?.trim().replace(/\s+/g, ' ') || null;
 
 /** Compõe uma cor sobre o ancestral opaco — `backgroundColor` com alfa mente. */
 function backgroundEffective(el: Element | null): string | null {
-  let atual: Element | null = el;
-  while (atual) {
-    const cor = getComputedStyle(atual).backgroundColor;
+  let current: Element | null = el;
+  while (current) {
+    const cor = getComputedStyle(current).backgroundColor;
     const m = /rgba?\(([^)]+)\)/.exec(cor);
     if (m) {
       const partes = m[1].split(',').map((p) => parseFloat(p));
       if ((partes[3] ?? 1) > 0.99) return cor;
     }
-    atual = atual.parentElement;
+    current = current.parentElement;
   }
   return null;
 }
@@ -166,7 +166,7 @@ export function contraste(el: Element | null): { ratio: number; frente: string; 
 
 export interface ScrollCamada {
   /** Nome legível da camada, para a mensagem de falha dizer QUEM está errado. */
-  nome: string;
+  name: string;
   finding: boolean;
   overflowX: string;
   /** `-1` quando o elemento não está na ordem de tabulação. */
@@ -193,12 +193,12 @@ export interface ScrollMeasurement {
  *
  * O contrato é: exatamente uma camada rola, e ela está na ordem de tabulação.
  */
-export function measureScroll(raiz: HTMLElement): ScrollMeasurement {
-  const camada = (nome: string, el: Element | null): ScrollCamada => {
-    if (!el) return { nome, finding: false, overflowX: 'ausente', tabIndex: -1, transborda: false };
+export function measureScroll(root: HTMLElement): ScrollMeasurement {
+  const camada = (name: string, el: Element | null): ScrollCamada => {
+    if (!el) return { name, finding: false, overflowX: 'ausente', tabIndex: -1, transborda: false };
     const cs = getComputedStyle(el);
     return {
-      nome,
+      name,
       finding: true,
       overflowX: cs.overflowX,
       tabIndex: (el as HTMLElement).tabIndex,
@@ -206,11 +206,11 @@ export function measureScroll(raiz: HTMLElement): ScrollMeasurement {
     };
   };
 
-  const alvo = raiz.matches('.nds-data-table') ? raiz : (raiz.querySelector<HTMLElement>('.nds-data-table') ?? raiz);
-  const externo = camada('nds-data-table-scroll', alvo.querySelector('.nds-data-table-scroll'));
+  const target = root.matches('.nds-data-table') ? root : (root.querySelector<HTMLElement>('.nds-data-table') ?? root);
+  const externo = camada('nds-data-table-scroll', target.querySelector('.nds-data-table-scroll'));
   const interno = camada(
     'nds-table-wrapper',
-    alvo.querySelector('[data-slot="table-container"]') ?? alvo.querySelector('.nds-table-wrapper'),
+    target.querySelector('[data-slot="table-container"]') ?? target.querySelector('.nds-table-wrapper'),
   );
 
   const scrollable = (c: ScrollCamada) => c.finding && (c.overflowX === 'auto' || c.overflowX === 'scroll');
@@ -218,30 +218,30 @@ export function measureScroll(raiz: HTMLElement): ScrollMeasurement {
   return {
     externo,
     interno,
-    camadasRolaveis: camadas.filter(scrollable).map((c) => c.nome),
-    rolaveisForaDoTeclado: camadas.filter((c) => scrollable(c) && c.tabIndex < 0).map((c) => c.nome),
+    camadasRolaveis: camadas.filter(scrollable).map((c) => c.name),
+    rolaveisForaDoTeclado: camadas.filter((c) => scrollable(c) && c.tabIndex < 0).map((c) => c.name),
   };
 }
 
 // ─── Medição ──────────────────────────────────────────────────────────────────
 
 /**
- * Mede UMA tabela. `raiz` é o `.nds-data-table` (ou o contêiner que o envolve).
+ * Mede UMA tabela. `root` é o `.nds-data-table` (ou o contêiner que o envolve).
  */
-export function measureTable(raiz: HTMLElement) {
-  const um = (sel: string) => raiz.querySelector(sel);
-  const all = (sel: string) => Array.from(raiz.querySelectorAll(sel));
-  const conta = (sel: string) => raiz.querySelectorAll(sel).length;
+export function measureTable(root: HTMLElement) {
+  const um = (sel: string) => root.querySelector(sel);
+  const all = (sel: string) => Array.from(root.querySelectorAll(sel));
+  const count = (sel: string) => root.querySelectorAll(sel).length;
 
-  const tabela = um('table');
+  const table = um('table');
   const search = um('.nds-data-table-search-input') ?? um('input[type="search"]');
   const ordenarButton = um('.nds-data-table-sort-btn');
   const thOrdenavel = ordenarButton?.closest('th') ?? null;
 
   const selectionBoxes = all('[role="checkbox"], input[type="checkbox"]');
-  const allBox = raiz.querySelector('thead')?.querySelector('[role="checkbox"], input[type="checkbox"]') ?? null;
+  const allBox = root.querySelector('thead')?.querySelector('[role="checkbox"], input[type="checkbox"]') ?? null;
   const lineBoxes = Array.from(
-    raiz.querySelector('tbody')?.querySelectorAll('[role="checkbox"], input[type="checkbox"]') ?? [],
+    root.querySelector('tbody')?.querySelectorAll('[role="checkbox"], input[type="checkbox"]') ?? [],
   );
 
   const lines = all('tbody tr').filter((tr) => !tr.hasAttribute('aria-hidden'));
@@ -271,48 +271,48 @@ export function measureTable(raiz: HTMLElement) {
 
   return {
     estrutura: {
-      raiz: descreve(raiz.matches('.nds-data-table') ? raiz : um('.nds-data-table')),
-      slotDaRaiz: (um('.nds-data-table') ?? raiz).getAttribute('data-slot'),
-      tabela: descreve(tabela),
-      slotDaTabela: tabela?.getAttribute('data-slot') ?? null,
+      root: descreve(root.matches('.nds-data-table') ? root : um('.nds-data-table')),
+      slotDaRaiz: (um('.nds-data-table') ?? root).getAttribute('data-slot'),
+      table: descreve(table),
+      slotDaTabela: table?.getAttribute('data-slot') ?? null,
       contagens: {
-        toolbar: conta('.nds-data-table-toolbar'),
-        search: conta('.nds-data-table-search'),
-        searchField: conta('.nds-data-table-search-input'),
-        botaoDeColunas: conta('.nds-data-table-columns-btn'),
-        scroll: conta('.nds-data-table-scroll'),
-        wrapperDoPrimitivo: conta('.nds-table-wrapper'),
-        tabelaFixa: conta('.nds-table-fixed'),
-        th: conta('.nds-data-table-th'),
-        thInner: conta('.nds-data-table-th-inner'),
-        thLabel: conta('.nds-data-table-th-label'),
-        ordenarButton: conta('.nds-data-table-sort-btn'),
-        filtersLine: conta('.nds-data-table-filter-row'),
-        textFilter: conta('.nds-data-table-filter-input'),
-        selectFilter: conta('.nds-data-table-filter-select'),
-        tr: conta('.nds-data-table-tr'),
-        td: conta('.nds-data-table-td'),
-        vazio: conta('.nds-data-table-empty'),
-        editavel: conta('.nds-data-table-editable'),
-        editButton: conta('.nds-data-table-edit-btn'),
-        editField: conta('.nds-data-table-edit-input'),
-        pagination: conta('.nds-data-table-pagination'),
-        contagemDaPaginacao: conta('.nds-data-table-pagination-count'),
-        sizeSelector: conta('.nds-data-table-page-size-select'),
-        navigation: conta('.nds-data-table-pagination-nav'),
-        alcaDeRedimensionar: conta('.nds-data-table-resize-handle'),
-        somenteLeitor: conta('.nds-sr-only'),
+        toolbar: count('.nds-data-table-toolbar'),
+        search: count('.nds-data-table-search'),
+        searchField: count('.nds-data-table-search-input'),
+        botaoDeColunas: count('.nds-data-table-columns-btn'),
+        scroll: count('.nds-data-table-scroll'),
+        wrapperDoPrimitivo: count('.nds-table-wrapper'),
+        tabelaFixa: count('.nds-table-fixed'),
+        th: count('.nds-data-table-th'),
+        thInner: count('.nds-data-table-th-inner'),
+        thLabel: count('.nds-data-table-th-label'),
+        ordenarButton: count('.nds-data-table-sort-btn'),
+        filtersLine: count('.nds-data-table-filter-row'),
+        textFilter: count('.nds-data-table-filter-input'),
+        selectFilter: count('.nds-data-table-filter-select'),
+        tr: count('.nds-data-table-tr'),
+        td: count('.nds-data-table-td'),
+        vazio: count('.nds-data-table-empty'),
+        editavel: count('.nds-data-table-editable'),
+        editButton: count('.nds-data-table-edit-btn'),
+        editField: count('.nds-data-table-edit-input'),
+        pagination: count('.nds-data-table-pagination'),
+        contagemDaPaginacao: count('.nds-data-table-pagination-count'),
+        sizeSelector: count('.nds-data-table-page-size-select'),
+        navigation: count('.nds-data-table-pagination-nav'),
+        alcaDeRedimensionar: count('.nds-data-table-resize-handle'),
+        somenteLeitor: count('.nds-sr-only'),
         // Classes que só uma parte das stacks emite — a contagem denuncia quem.
         menuDeColunasRowForaDoMenu: Array.from(
-          raiz.querySelectorAll('.nds-data-table-columns-menu-row'),
+          root.querySelectorAll('.nds-data-table-columns-menu-row'),
         ).filter((el) => !!el.closest('thead')).length,
       },
       linhasNoCorpo: lines.length,
-      colunasNoCabecalho: conta('thead tr:first-child th'),
+      colunasNoCabecalho: count('thead tr:first-child th'),
       colspanDoVazio: vazio?.getAttribute('colspan') ?? null,
     },
     semantica: {
-      tableName: tableName(tabela),
+      tableName: tableName(table),
       papelDaBusca: search?.getAttribute('role') ?? (search?.getAttribute('type') === 'search' ? 'searchbox' : null),
       tipoDaBusca: search?.getAttribute('type') ?? null,
       nomeDaBusca: accessibleName(search),
@@ -338,13 +338,13 @@ export function measureTable(raiz: HTMLElement) {
             papel: regiaoViva.getAttribute('role'),
             ariaLive: regiaoViva.getAttribute('aria-live'),
             className: regiaoViva.getAttribute('class'),
-            texto: texto(regiaoViva),
+            text: text(regiaoViva),
           }
         : null,
       nomesDaPaginacao: pageButtons.map((b) => accessibleName(b)),
       estadoDaPaginacao: pageButtons.map((b) => (b as HTMLButtonElement).disabled),
-      textoDoIndicador: texto(all('.nds-data-table-pagination-count').slice(-1)[0]),
-      contagemText: texto(all('.nds-data-table-pagination-count')[0]),
+      textoDoIndicador: text(all('.nds-data-table-pagination-count').slice(-1)[0]),
+      contagemText: text(all('.nds-data-table-pagination-count')[0]),
       nomeDoSeletorDeTamanho: accessibleName(sizeSelector),
       nomeDoFiltroDeTexto: accessibleName(textFilter),
       nomeDoFiltroDeSelect: accessibleName(selectFilter),
@@ -354,35 +354,35 @@ export function measureTable(raiz: HTMLElement) {
               (c) => !c.querySelector('input, select'),
             )
           : null;
-        return th ? texto(th.querySelector('.nds-sr-only')) ?? th.getAttribute('aria-label') : null;
+        return th ? text(th.querySelector('.nds-sr-only')) ?? th.getAttribute('aria-label') : null;
       })(),
       nomeDoBotaoDeEdicao: accessibleName(editButton),
       nomeDoCampoDeEdicao: accessibleName(editField),
-      textoDoVazio: texto(vazio),
+      textoDoVazio: text(vazio),
       pinadoNoTh: um('thead th.nds-data-table-th-pinned') ? 'th-pinned' : um('thead th.nds-data-table-td-pinned') ? 'td-pinned' : null,
       pinadoNoTd: um('tbody td.nds-data-table-td-pinned') ? 'td-pinned' : um('tbody td.nds-data-table-th-pinned') ? 'th-pinned' : null,
     },
     geometria: {
-      larguraDaRaiz: Math.round(raiz.getBoundingClientRect().width),
-      th: caixa(thOrdenavel),
-      thInner: caixa(um('.nds-data-table-th-inner') ?? ordenarButton?.parentElement),
-      td: caixa(lines[0]?.querySelector('td:nth-child(2)')),
-      filterTh: caixa(filterTh),
-      filtersLine: caixa(filtersLine),
-      editButton: caixa(editButton),
-      editField: caixa(editField),
-      celulaVazia: caixa(vazio),
-      ordenarButton: caixa(ordenarButton),
+      larguraDaRaiz: Math.round(root.getBoundingClientRect().width),
+      th: box(thOrdenavel),
+      thInner: box(um('.nds-data-table-th-inner') ?? ordenarButton?.parentElement),
+      td: box(lines[0]?.querySelector('td:nth-child(2)')),
+      filterTh: box(filterTh),
+      filtersLine: box(filtersLine),
+      editButton: box(editButton),
+      editField: box(editField),
+      celulaVazia: box(vazio),
+      ordenarButton: box(ordenarButton),
     },
     states: {
       lineSelecionada: lineSelecionada
         ? { dataState: lineSelecionada.getAttribute('data-state'), background: getComputedStyle(lineSelecionada).backgroundColor }
         : null,
       lineNormal: lineNormal ? { background: getComputedStyle(lineNormal).backgroundColor } : null,
-      cellNumerica: caixa(cellNumerica),
-      contentNumerico: caixa(contentNumerico),
+      cellNumerica: box(cellNumerica),
+      contentNumerico: box(contentNumerico),
       classeDoConteudoNumerico: contentNumerico?.getAttribute('class') ?? null,
-      cabecalhoNumerico: caixa(thNumerico),
+      cabecalhoNumerico: box(thNumerico),
     },
     contraste: {
       celulaVazia: contraste(vazio),
@@ -399,14 +399,14 @@ export function measureTable(raiz: HTMLElement) {
 }
 
 /**
- * Mede todas as tabelas marcadas com `data-sonda="<cenario>"` dentro de `raiz`.
+ * Mede todas as tabelas marcadas com `data-sonda="<cenario>"` dentro de `root`.
  * Cenário sem tabela vem `null` — é o achado de "a stack não monta este caso".
  */
-export function measureDataTable(raiz: HTMLElement, cenarios: string[]) {
+export function measureDataTable(root: HTMLElement, cenarios: string[]) {
   const registro: Record<string, unknown> = {};
   for (const cenario of cenarios) {
-    const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
-    registro[cenario] = alvo ? measureTable(alvo) : null;
+    const target = root.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
+    registro[cenario] = target ? measureTable(target) : null;
   }
   return registro;
 }
@@ -418,6 +418,6 @@ export function measureDataTable(raiz: HTMLElement, cenarios: string[]) {
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest. A
  * mensagem de erro chega — é o único canal de saída disponível daqui.
  */
-export function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[]) {
-  throw new Error(`SONDA::${stack}::${JSON.stringify(measureDataTable(raiz, cenarios))}`);
+export function reportProbe(stack: string, root: HTMLElement, cenarios: string[]) {
+  throw new Error(`SONDA::${stack}::${JSON.stringify(measureDataTable(root, cenarios))}`);
 }

@@ -12,7 +12,7 @@
  * cima do `alt` da foto viram duas vozes para uma pessoa só.
  */
 
-function texto(el: Element | null): string {
+function text(el: Element | null): string {
   return (el?.textContent ?? '').trim().replace(/\s+/g, ' ');
 }
 
@@ -30,8 +30,8 @@ function measurement(el: HTMLElement | null) {
   const cs = getComputedStyle(el);
   const r = el.getBoundingClientRect();
   return {
-    largura: Math.round(r.width),
-    altura: Math.round(r.height),
+    width: Math.round(r.width),
+    height: Math.round(r.height),
     raio: cs.borderRadius,
     tamanhoDaFonte: cs.fontSize,
     background: cs.backgroundColor,
@@ -46,10 +46,10 @@ function measurement(el: HTMLElement | null) {
  * visível, o `aria-label` do fallback e o texto das iniciais na ordem em que
  * eles entram na árvore de acessibilidade.
  */
-export function measureAvatar(raiz: HTMLElement) {
-  const avatar = raiz.matches?.('.nds-avatar')
-    ? raiz
-    : raiz.querySelector<HTMLElement>('.nds-avatar');
+export function measureAvatar(root: HTMLElement) {
+  const avatar = root.matches?.('.nds-avatar')
+    ? root
+    : root.querySelector<HTMLElement>('.nds-avatar');
   if (!avatar) return { finding: false as const };
 
   const img = avatar.querySelector<HTMLImageElement>('.nds-avatar-image');
@@ -64,7 +64,7 @@ export function measureAvatar(raiz: HTMLElement) {
     finding: true as const,
     estrutura: {
       tagDaRaiz: avatar.tagName.toLowerCase(),
-      tamanho: avatar.getAttribute('data-size'),
+      size: avatar.getAttribute('data-size'),
       temImagem: img ? 'sim' : 'não',
       temFallback: fallback ? 'sim' : 'não',
       /** Qual das duas peças está de fato na tela — é o coração do componente. */
@@ -80,7 +80,7 @@ export function measureAvatar(raiz: HTMLElement) {
       papelDoFallback: fallback?.getAttribute('role') ?? null,
       rotuloDoFallback: fallback?.getAttribute('aria-label') ?? null,
       fallbackEscondido: fallback?.getAttribute('aria-hidden') ?? 'não',
-      iniciais: texto(fallback),
+      iniciais: text(fallback),
       iconeEscondido: icone ? (icone.getAttribute('aria-hidden') ?? 'não') : 'sem ícone',
       papelDoBadge: badge ? badge.getAttribute('role') ?? 'sem papel' : 'sem badge',
       rotuloDoBadge: badge ? badge.getAttribute('aria-label') ?? null : null,
@@ -92,20 +92,20 @@ export function measureAvatar(raiz: HTMLElement) {
       vozes: [
         imgVisible && img?.getAttribute('alt') ? `img:${img.getAttribute('alt')}` : null,
         fallbackVisible && fallback?.getAttribute('aria-hidden') !== 'true'
-          ? `fallback:${fallback?.getAttribute('aria-label') ?? texto(fallback)}`
+          ? `fallback:${fallback?.getAttribute('aria-label') ?? text(fallback)}`
           : null,
         badge && badge.getAttribute('aria-hidden') !== 'true'
-          ? `badge:${badge.getAttribute('aria-label') ?? texto(badge)}`
+          ? `badge:${badge.getAttribute('aria-label') ?? text(badge)}`
           : null,
       ].filter(Boolean),
     },
     geometria: {
-      raiz: measurement(avatar),
+      root: measurement(avatar),
       fallback: measurement(fallback),
       icone: icone
         ? {
-            largura: Math.round(icone.getBoundingClientRect().width),
-            altura: Math.round(icone.getBoundingClientRect().height),
+            width: Math.round(icone.getBoundingClientRect().width),
+            height: Math.round(icone.getBoundingClientRect().height),
             /** Style inline vence a folha: registrar é como se detecta o desvio. */
             estiloInline: icone.getAttribute('style') ?? '',
             classes: String(icone.getAttribute('class') ?? ''),
@@ -113,8 +113,8 @@ export function measureAvatar(raiz: HTMLElement) {
         : null,
       badge: badge
         ? {
-            largura: Math.round(badge.getBoundingClientRect().width),
-            altura: Math.round(badge.getBoundingClientRect().height),
+            width: Math.round(badge.getBoundingClientRect().width),
+            height: Math.round(badge.getBoundingClientRect().height),
           }
         : null,
     },
@@ -122,16 +122,16 @@ export function measureAvatar(raiz: HTMLElement) {
 }
 
 /** Mede todos os avatares da tela, na ordem do DOM — usado pela story de tamanhos. */
-export function measureAvatares(raiz: HTMLElement) {
-  return Array.from(raiz.querySelectorAll<HTMLElement>('.nds-avatar')).map((a) => {
+export function measureAvatares(root: HTMLElement) {
+  return Array.from(root.querySelectorAll<HTMLElement>('.nds-avatar')).map((a) => {
     const m = measureAvatar(a);
     return m.finding
-      ? { tamanho: m.estrutura.tamanho, geometria: m.geometria.raiz, naTela: m.estrutura.naTela }
+      ? { size: m.estrutura.size, geometria: m.geometria.root, naTela: m.estrutura.naTela }
       : null;
   });
 }
 
 /** Canal de saída: o console da play não chega ao terminal do vitest. */
-export function reportAvatar(stack: string, cenario: string, dados: unknown): never {
-  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(dados)}`);
+export function reportAvatar(stack: string, cenario: string, data: unknown): never {
+  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(data)}`);
 }

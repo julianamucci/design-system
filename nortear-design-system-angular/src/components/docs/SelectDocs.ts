@@ -432,10 +432,10 @@ const CODE_IN_FORM = `<form [formGroup]="form">
           <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>
         </button>
         <ng-template ndsSelectContent>
-          @for (grupo of grupos(); track grupo.label; let last = $last) {
+          @for (group of groups(); track group.label; let last = $last) {
             <div ndsSelectGroup>
-              <div ndsSelectLabel>{{ grupo.label }}</div>
-              @for (state of grupo.itens; track state.value) {
+              <div ndsSelectLabel>{{ group.label }}</div>
+              @for (state of group.items; track state.value) {
                 <div ndsSelectItem [value]="state.value">
                   {{ state.label }}
                 </div>
@@ -454,11 +454,11 @@ const CODE_IN_FORM = `<form [formGroup]="form">
           <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>
         </button>
         <ng-template ndsSelectContent>
-          @for (grupo of grupos(); track grupo.label) {
+          @for (group of groups(); track group.label) {
             <div ndsSelectGroup>
-              <div ndsSelectLabel>{{ grupo.label }}</div>
-              <div ndsSelectItem [value]="grupo.itens[0].value">
-                {{ grupo.itens[0].label }}
+              <div ndsSelectLabel>{{ group.label }}</div>
+              <div ndsSelectItem [value]="group.items[0].value">
+                {{ group.items[0].label }}
               </div>
             </div>
           }
@@ -486,10 +486,10 @@ const CODE_IN_FORM = `<form [formGroup]="form">
           <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>
         </button>
         <ng-template ndsSelectContent>
-          @for (grupo of grupos(); track grupo.label; let last = $last) {
+          @for (group of groups(); track group.label; let last = $last) {
             <div ndsSelectGroup>
-              <div ndsSelectLabel>{{ grupo.label }}</div>
-              @for (state of grupo.itens; track state.value) {
+              <div ndsSelectLabel>{{ group.label }}</div>
+              @for (state of group.items; track state.value) {
                 <div ndsSelectItem [value]="state.value">
                   {{ state.label }}
                 </div>
@@ -585,10 +585,10 @@ const CODE_IN_FORM = `<form [formGroup]="form">
                 <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>
               </button>
               <ng-template ndsSelectContent>
-                @for (grupo of grupos(); track grupo.label; let last = $last) {
+                @for (group of groups(); track group.label; let last = $last) {
                   <div ndsSelectGroup>
-                    <div ndsSelectLabel>{{ grupo.label }}</div>
-                    @for (state of grupo.itens; track state.value) {
+                    <div ndsSelectLabel>{{ group.label }}</div>
+                    @for (state of group.items; track state.value) {
                       <div ndsSelectItem [value]="state.value">
                         {{ state.label }}
                       </div>
@@ -734,19 +734,19 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
     ];
   });
 
-  protected readonly grupos = computed(() => {
+  protected readonly groups = computed(() => {
     dict();
     return [
       {
         label: t('demonstration.labels.groupSoutheast'),
-        itens: [
+        items: [
           { value: 'sp', label: t('demonstration.labels.sp') },
           { value: 'es', label: t('demonstration.labels.es') },
         ],
       },
       {
         label: t('demonstration.labels.groupSouth'),
-        itens: [
+        items: [
           { value: 'rs', label: t('demonstration.labels.rs') },
           { value: 'pr', label: t('demonstration.labels.pr') },
         ],
@@ -769,11 +769,11 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
    * e o valor, nunca o rótulo traduzido — o rótulo partiria um evento em três no
    * GA4, um por idioma.
    */
-  protected onValueChange(campo: string, valor: unknown): void {
+  protected onValueChange(field: string, value: unknown): void {
     track('option_select', {
       component: 'select',
-      field_name: campo,
-      value: String(valor ?? ''),
+      field_name: field,
+      value: String(value ?? ''),
       location: 'docs-demonstration',
     });
   }
@@ -923,21 +923,21 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
     const sim = tNav('common.yes');
 
     /** Linha cujo tipo/padrão/descrição vêm da tabela do conteúdo compartilhado. */
-    const ofContent = (nome: string, chave: string, tipo?: string) => ({
-      name: nome,
-      type: tipo ?? toPlainText(t(`props.table.${chave}.type`)),
-      defaultValue: toPlainText(t(`props.table.${chave}.default`)),
-      required: toPlainText(t(`props.table.${chave}.required`)),
-      description: toPlainText(t(`props.table.${chave}.description`)),
+    const ofContent = (name: string, key: string, type?: string) => ({
+      name: name,
+      type: type ?? toPlainText(t(`props.table.${key}.type`)),
+      defaultValue: toPlainText(t(`props.table.${key}.default`)),
+      required: toPlainText(t(`props.table.${key}.required`)),
+      description: toPlainText(t(`props.table.${key}.description`)),
     });
 
     /** Linha que só existe neste stack — descrição vem do override. */
-    const local = (nome: string, tipo: string, padrao: string, chave: string) => ({
-      name: nome,
-      type: tipo,
+    const local = (name: string, type: string, padrao: string, key: string) => ({
+      name: name,
+      type: type,
       defaultValue: padrao,
       required: not,
-      description: toPlainText(t(`props.${chave}.description`)),
+      description: toPlainText(t(`props.${key}.description`)),
     });
 
     const className = local('class', 'string', '—', 'class');

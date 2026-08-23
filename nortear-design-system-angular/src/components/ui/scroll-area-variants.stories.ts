@@ -70,8 +70,8 @@ export const Vertical: Story = {
       // raiz é a condição de existir a variante. Ele mora lá, e não no viewport,
       // porque é a folha compartilhada que resolve `block-size` na raiz — o
       // viewport é `height: 100%` por ela.
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
-      await expect(raiz.dataset.size).toBe('lg');
+      const root = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
+      await expect(root.dataset.size).toBe('lg');
     });
 
     await step('Rola só na vertical', async () => {

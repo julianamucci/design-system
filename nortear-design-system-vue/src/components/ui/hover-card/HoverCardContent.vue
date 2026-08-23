@@ -36,12 +36,12 @@ const forwardedProps = useForwardProps(delegatedProps)
 // CONTEXTO, não de uma busca no documento: com vários cartões na mesma tela (a
 // story Sides), o primeiro `[data-slot="hover-card-trigger"]` daria o mesmo
 // nome a todos os painéis.
-const atributos = useAttrs()
+const attrs = useAttrs()
 const contexto = inject(KEY_HOVER_CARD, null)
 
 const nameAutomatico = computed(() => {
-  if (atributos['aria-label'] || atributos['aria-labelledby']) return undefined
-  return contexto?.gatilho.value?.textContent?.trim() || 'Prévia'
+  if (attrs['aria-label'] || attrs['aria-labelledby']) return undefined
+  return contexto?.trigger.value?.textContent?.trim() || 'Prévia'
 })
 </script>
 

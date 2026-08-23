@@ -16,7 +16,7 @@ export interface FieldLabelledOptions {
   /** id do campo — é o que liga o rótulo ao controle. */
   id: string;
   /** Texto do rótulo visível. Campo sem rótulo não é anunciado por ninguém. */
-  rotulo: string;
+  label: string;
   type?: string;
   placeholder?: string;
   disabled?: boolean;
@@ -35,7 +35,7 @@ export function fieldLabelled(opts: FieldLabelledOptions): HTMLElement {
   const label = document.createElement('label');
   label.htmlFor = opts.id;
   label.className = 'nds-text-body nds-font-medium';
-  label.textContent = opts.rotulo;
+  label.textContent = opts.label;
 
   const input = createInput({
     type: opts.type ?? 'text',

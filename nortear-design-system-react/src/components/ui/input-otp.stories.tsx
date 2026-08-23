@@ -6,7 +6,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "./input-otp";
-import { campo } from "./input-otp.fixtures";
+import { field } from "./input-otp.fixtures";
 import { inputOtpSource } from "./input-otp.source";
 import { InputOTPDocs } from "@/components/docs/InputOTPDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
@@ -119,7 +119,7 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const total = (args.maxLength as number) ?? 6;
-    const input = campo(canvasElement);
+    const input = field(canvasElement);
 
     await step("O campo tem nome e uma caixa por dígito", async () => {
       // Uma caixa por dígito é o que a pessoa vê; conferir só o valor do input

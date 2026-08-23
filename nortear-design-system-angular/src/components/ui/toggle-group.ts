@@ -62,13 +62,13 @@ export type ToggleGroupValue = string | string[];
   hostDirectives: [RdxCompositeRoot],
   providers: [
     provideToggleGroupContext(() => {
-      const grupo = inject(NdsToggleGroup);
+      const group = inject(NdsToggleGroup);
       return {
-        value: grupo.valoresSelecionados,
-        disabled: grupo.disabled,
-        orientation: grupo.orientation,
-        isValueInitialized: grupo.valorInicializado,
-        toggle: (valor: string, next: boolean) => grupo.alternar(valor, next),
+        value: group.valoresSelecionados,
+        disabled: group.disabled,
+        orientation: group.orientation,
+        isValueInitialized: group.valorInicializado,
+        toggle: (value: string, next: boolean) => group.alternar(value, next),
       };
     }),
   ],
@@ -164,8 +164,8 @@ export class NdsToggleGroup {
   private readonly indiceAtivo = computed(() => {
     const selecionados = this.valoresSelecionados();
     if (selecionados.length === 0) return -1;
-    const itens = Array.from(this.composite.itemMap().values());
-    return itens.find((meta) => selecionados.includes(meta['value'] as string))?.index ?? -1;
+    const items = Array.from(this.composite.itemMap().values());
+    return items.find((meta) => selecionados.includes(meta['value'] as string))?.index ?? -1;
   });
 
   constructor() {
@@ -199,22 +199,22 @@ export class NdsToggleGroup {
    * pressionado é o `RdxToggle` (paridade com o Base UI); aqui só se mapeia
    * esse booleano para a seleção, respeitando a forma do modo.
    */
-  alternar(valor: string, next: boolean): void {
+  alternar(value: string, next: boolean): void {
     if (this.disabled()) return;
 
-    const atual = this.valoresSelecionados();
+    const current = this.valoresSelecionados();
 
     if (this.type() === 'multiple') {
-      const lista = next
-        ? atual.includes(valor)
-          ? atual
-          : [...atual, valor]
-        : atual.filter((item) => item !== valor);
-      this.value.set(lista);
+      const list = next
+        ? current.includes(value)
+          ? current
+          : [...current, value]
+        : current.filter((item) => item !== value);
+      this.value.set(list);
       return;
     }
 
-    this.value.set(next ? valor : '');
+    this.value.set(next ? value : '');
   }
 }
 

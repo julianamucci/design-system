@@ -27,12 +27,12 @@ export type ProgressArgs = {
 const IMPORT = `import { Progress } from "@/components/ui/progress";`;
 
 /** O relógio que faz a barra andar na composição de upload. */
-function stateAnimado(intervalMs: number, passo: number, max: number): string {
+function stateAnimado(intervalMs: number, step: number, max: number): string {
   return `let valor = $state(0);
 
 $effect(() => {
   const id = setInterval(() => {
-    valor = valor >= ${max} ? 0 : valor + ${passo};
+    valor = valor >= ${max} ? 0 : valor + ${step};
   }, ${intervalMs});
   return () => clearInterval(id);
 });`;
@@ -58,9 +58,9 @@ export function progressSource(_gerado?: string, ctx?: { args?: Partial<Progress
     ...ctx?.args,
   };
 
-  const valor = a.animated ? '{valor}' : `{${a.value === null ? 'null' : a.value}}`;
+  const value = a.animated ? '{valor}' : `{${a.value === null ? 'null' : a.value}}`;
   const props = attrs(
-    `value=${valor}`,
+    `value=${value}`,
     a.max === 100 ? '' : `max={${a.max}}`,
     a.variant ? `data-variant="${a.variant}"` : '',
     a.class ? `class="${a.class}"` : '',

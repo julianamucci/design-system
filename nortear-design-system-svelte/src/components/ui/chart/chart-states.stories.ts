@@ -60,11 +60,11 @@ export const Empty: Story = {
     emptyLabel: FRASE_VAZIA,
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('Sem dado não há desenho — há uma frase', async () => {
-      await expect(raiz.querySelector('svg')).toBeNull();
-      const aviso = raiz.querySelector('.nds-chart-empty');
+      await expect(root.querySelector('svg')).toBeNull();
+      const aviso = root.querySelector('.nds-chart-empty');
       // Frase completa e orientadora, não "Sem dados.": é a regra de UX writing
       // do estado vazio, e é ela que a story passa em `emptyLabel`.
       await expect(aviso?.textContent?.trim()).toBe(FRASE_VAZIA);
@@ -74,12 +74,12 @@ export const Empty: Story = {
       // `role="img"` poda a subárvore da árvore de acessibilidade — com ele, a
       // frase que explica a ausência de dado ficaria escondida atrás de um
       // rótulo genérico. E aria-label em div sem papel é atributo proibido.
-      await expect(raiz.getAttribute('role')).toBeNull();
-      await expect(raiz.getAttribute('aria-label')).toBeNull();
+      await expect(root.getAttribute('role')).toBeNull();
+      await expect(root.getAttribute('aria-label')).toBeNull();
     });
 
     await step('O bloco mantém a altura pedida — a página não salta quando o dado chega', async () => {
-      await expect(raiz.getBoundingClientRect().height).toBeCloseTo(240, -1);
+      await expect(root.getBoundingClientRect().height).toBeCloseTo(240, -1);
     });
   },
 };
@@ -98,19 +98,19 @@ export const SingleSeries: Story = {
     'aria-label': 'Gráfico de barras: acessos mensais no desktop',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
-    await waitForDesign(raiz);
+    const root = exigirRoot(canvasElement);
+    await waitForDesign(root);
 
     await step('O desenho saiu de verdade — controle da medição negativa abaixo', async () => {
       await waitFor(() => {
-        for (const month of MONTHS) expect(designEscreve(raiz, month)).toBe(true);
+        for (const month of MONTHS) expect(designEscreve(root, month)).toBe(true);
       }, { timeout: 3000 });
     });
 
     await step('Com uma série a legenda some — o nome da série não é escrito', async () => {
-      await expect(designTexts(raiz)).not.toContain(SERIE_UNICA[0].name);
+      await expect(designTexts(root)).not.toContain(SERIE_UNICA[0].name);
       // E some só a legenda: as formas de dado continuam todas lá.
-      await expect(datumFormas(raiz).length).toBeGreaterThanOrEqual(MONTHS.length);
+      await expect(datumFormas(root).length).toBeGreaterThanOrEqual(MONTHS.length);
     });
   },
 };
@@ -130,12 +130,12 @@ export const MultiSeries: Story = {
     'aria-label': 'Acessos mensais por dispositivo: desktop, mobile e tablet',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
-    await waitForDesign(raiz);
+    const root = exigirRoot(canvasElement);
+    await waitForDesign(root);
 
     await step('A legenda escreve o nome de cada série', async () => {
       await waitFor(() => {
-        for (const serie of SERIES_MULTI) expect(designEscreve(raiz, serie.name)).toBe(true);
+        for (const serie of SERIES_MULTI) expect(designEscreve(root, serie.name)).toBe(true);
       }, { timeout: 3000 });
     });
 
@@ -144,7 +144,7 @@ export const MultiSeries: Story = {
       // uma trama distinta por série, reaproveitada pelo ícone da legenda — daí
       // a igualdade com o número de séries, e não a soma das formas.
       await waitFor(
-        () => expect(tramasAplicadas(raiz).size).toBe(SERIES_MULTI.length),
+        () => expect(tramasAplicadas(root).size).toBe(SERIES_MULTI.length),
         { timeout: 3000 },
       );
     });
@@ -211,9 +211,9 @@ export const ThemeTokens: Story = {
       for (const g of graficos) {
         await waitFor(
           () => {
-            const rotulo = g.querySelector<SVGTextElement>('svg text');
-            expect(rotulo).toBeTruthy();
-            expect(getComputedStyle(rotulo!).fill).toBe(tokenColor('muted-foreground', g));
+            const label = g.querySelector<SVGTextElement>('svg text');
+            expect(label).toBeTruthy();
+            expect(getComputedStyle(label!).fill).toBe(tokenColor('muted-foreground', g));
           },
           { timeout: 3000, interval: 200 },
         );
@@ -245,14 +245,14 @@ export const GraphicContrast: Story = {
     'aria-label': 'Acessos mensais por dispositivo',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
-    await waitForDesign(raiz);
+    const root = exigirRoot(canvasElement);
+    await waitForDesign(root);
     // Precondição da medida: ver o comentário de `settleTheme`.
     await settleTheme(document);
-    const background = backgroundOpacoAtras(raiz);
+    const background = backgroundOpacoAtras(root);
 
     await step('Todo objeto gráfico passa de 3:1 pelo contorno', async () => {
-      const formas = datumFormas(raiz);
+      const formas = datumFormas(root);
       // Uma forma de cor e uma de trama por barra desenhada, mais as da legenda.
       await expect(formas.length).toBeGreaterThanOrEqual(MONTHS.length * SERIES_MULTI.length);
       for (const forma of formas) {
@@ -261,10 +261,10 @@ export const GraphicContrast: Story = {
     });
 
     await step('O texto dos eixos passa de 4.5:1 — é texto, não objeto', async () => {
-      const rotulos = [...raiz.querySelectorAll<SVGTextElement>('svg text')];
+      const rotulos = [...root.querySelectorAll<SVGTextElement>('svg text')];
       await expect(rotulos.length).toBeGreaterThan(0);
-      for (const rotulo of rotulos) {
-        await expect(contraste(getComputedStyle(rotulo).fill, background)).toBeGreaterThanOrEqual(4.5);
+      for (const label of rotulos) {
+        await expect(contraste(getComputedStyle(label).fill, background)).toBeGreaterThanOrEqual(4.5);
       }
     });
   },

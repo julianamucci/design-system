@@ -131,7 +131,7 @@ export const Controlled: Story = {
     const trigger = canvasElement.querySelector<HTMLButtonElement>(
       '[data-slot="collapsible-trigger"]',
     )!;
-    const painel = () =>
+    const panel = () =>
       canvasElement.querySelector<HTMLElement>('[data-slot="collapsible-content"]');
 
     await step('O painel obedece ao estado externo', async () => {
@@ -139,7 +139,7 @@ export const Controlled: Story = {
       // modo controlado.
       if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(openExterno);
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-      await expect(painel()).toBeInTheDocument();
+      await expect(panel()).toBeInTheDocument();
     });
 
     await step('O trigger devolve a mudança para o estado externo', async () => {
@@ -149,7 +149,7 @@ export const Controlled: Story = {
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
       await expect(trigger.textContent?.trim()).toBe('Exibir filtros avançados');
       await waitFor(async () => {
-        await expect(painel()).toBeNull();
+        await expect(panel()).toBeNull();
       });
     });
   },

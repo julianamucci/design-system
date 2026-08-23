@@ -68,10 +68,10 @@ export const Horizontal: Story = {
     await step('Linha fina na altura e cheia na largura', async () => {
       // O que o horizontal promete é linha cheia e fina. Medir os dois evita
       // que uma troca de folha passe com o atributo certo e o visual errado.
-      const caixa = sep!.getBoundingClientRect();
+      const box = sep!.getBoundingClientRect();
       const parent = wrap.getBoundingClientRect();
-      await expect(caixa.height).toBeCloseTo(1, 1);
-      await expect(caixa.width).toBeCloseTo(parent.width, 0);
+      await expect(box.height).toBeCloseTo(1, 1);
+      await expect(box.width).toBeCloseTo(parent.width, 0);
     });
   },
 };
@@ -121,9 +121,9 @@ export const Vertical: Story = {
       // Este é o caso que a asserção antiga jamais pegaria: o separador vertical
       // colapsa para 0px quando o contêiner não é flex nem grade, e continua
       // presente no DOM com o atributo certo. Medir a altura é o que denuncia.
-      const caixa = seps[0].getBoundingClientRect();
-      await expect(caixa.width).toBeCloseTo(1, 1);
-      await expect(caixa.height).toBeGreaterThan(8);
+      const box = seps[0].getBoundingClientRect();
+      await expect(box.width).toBeCloseTo(1, 1);
+      await expect(box.height).toBeGreaterThan(8);
       await expect(seps[0].style.height).toBe('');
     });
   },

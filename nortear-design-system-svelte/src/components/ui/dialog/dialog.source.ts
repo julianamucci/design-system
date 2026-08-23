@@ -54,9 +54,9 @@ type Frame = {
   title: string;
   description: string;
   /** Miolo entre o cabeçalho e o rodapé, já indentado em 4 espaços. */
-  corpo?: string;
+  body?: string;
   /** Rodapé completo, já indentado em 4 espaços. Vazio significa sem rodapé. */
-  rodape?: string;
+  footer?: string;
 };
 
 /**
@@ -71,8 +71,8 @@ function dialogo({
   triggerLabel,
   title,
   description,
-  corpo = '',
-  rodape = '',
+  body = '',
+  footer = '',
 }: Frame): string {
   const panelProps = attrs(
     contentClass ? `class="${contentClass}"` : '',
@@ -80,11 +80,11 @@ function dialogo({
   );
   // Sem corpo e sem rodapé o painel é só cabeçalho: nada de linha em branco
   // sobrando entre o fim do cabeçalho e o fecho do painel.
-  const partes = [corpo, rodape].filter(Boolean);
+  const partes = [body, footer].filter(Boolean);
   const miolo = partes.length ? `\n${partes.join('\n')}` : '';
 
   return svelteSnippet(
-    `${imports ?? (rodape ? IMPORT_BASE : IMPORT_NO_FOOTER)}
+    `${imports ?? (footer ? IMPORT_BASE : IMPORT_NO_FOOTER)}
 
 let open = $state(${isOpen});`,
     `<Dialog bind:open>
@@ -134,7 +134,7 @@ export function dialogSource(_gerado?: string, ctx?: { args?: Partial<DialogArgs
     triggerLabel,
     title,
     description,
-    rodape: footerDefault(cancelLabel, actionLabel),
+    footer: footerDefault(cancelLabel, actionLabel),
   });
 }
 
@@ -185,7 +185,7 @@ export function dialogWithScrollSource(): string {
     triggerLabel: 'Termos de uso',
     title: 'Termos e condições',
     description: 'Leia atentamente antes de aceitar.',
-    corpo: `    <div
+    body: `    <div
       class="nds-dialog-body nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground"
       data-slot="dialog-body"
       data-spacing="sm"
@@ -196,7 +196,7 @@ export function dialogWithScrollSource(): string {
       <p>Parágrafo 1: conteúdo extenso o bastante para o corpo passar da altura disponível.</p>
       <p>Parágrafo 2: a rolagem é do corpo, e não da página atrás do painel.</p>
     </div>`,
-    rodape: footerDefault('Recusar', 'Aceitar'),
+    footer: footerDefault('Recusar', 'Aceitar'),
   });
 }
 
@@ -218,7 +218,7 @@ export function dialogActionDestructiveSource(): string {
     triggerLabel: 'Remover item',
     title: 'Remover item da lista',
     description: 'Você pode adicioná-lo novamente depois, mas perderá os ajustes feitos.',
-    rodape: footerDefault('Cancelar', 'Remover item', true),
+    footer: footerDefault('Cancelar', 'Remover item', true),
   });
 }
 
@@ -310,7 +310,7 @@ export function dialogPreviaDeMidiaSource(): string {
     triggerLabel: 'Ver imagem',
     title: 'Pôr-do-sol na praia',
     description: 'Captura realizada em outubro de 2026, costa norte.',
-    corpo: `    <div
+    body: `    <div
       data-slot="dialog-body"
       role="img"
       aria-label="Imagem ilustrativa de pôr-do-sol"

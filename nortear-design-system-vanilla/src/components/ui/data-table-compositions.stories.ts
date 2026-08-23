@@ -22,8 +22,8 @@ export default meta;
 type Story = StoryObj;
 
 /** Linhas de dado — a mensagem de "sem resultados" também é um `tr` do tbody. */
-function datumLines(raiz: HTMLElement): HTMLElement[] {
-  return [...raiz.querySelectorAll<HTMLElement>('tbody tr')].filter(
+function datumLines(root: HTMLElement): HTMLElement[] {
+  return [...root.querySelectorAll<HTMLElement>('tbody tr')].filter(
     (tr) => !tr.querySelector('.nds-data-table-empty'),
   );
 }
@@ -177,20 +177,20 @@ export const ResizableColumns: Story = {
       // coluna vizinha encolhe na tela sem que ninguém tenha mexido no tamanho
       // dela.
       const el = thumb();
-      const indice = [...canvasElement.querySelectorAll('thead tr:first-child th')].indexOf(
+      const index = [...canvasElement.querySelectorAll('thead tr:first-child th')].indexOf(
         el.closest('th')!,
       );
       const header = () =>
-        canvasElement.querySelectorAll<HTMLElement>('thead tr:first-child th')[indice];
+        canvasElement.querySelectorAll<HTMLElement>('thead tr:first-child th')[index];
       const neighbour = () =>
-        canvasElement.querySelectorAll<HTMLElement>('thead tr:first-child th')[indice + 1];
+        canvasElement.querySelectorAll<HTMLElement>('thead tr:first-child th')[index + 1];
       const antes = parseFloat(header().style.width);
       const neighbourDeclarada = neighbour().style.width;
-      const caixa = el.getBoundingClientRect();
+      const box = el.getBoundingClientRect();
 
-      fireEvent.mouseDown(el, { clientX: caixa.left, clientY: caixa.top });
-      fireEvent.mouseMove(document, { clientX: caixa.left + 80, clientY: caixa.top });
-      fireEvent.mouseUp(document, { clientX: caixa.left + 80, clientY: caixa.top });
+      fireEvent.mouseDown(el, { clientX: box.left, clientY: box.top });
+      fireEvent.mouseMove(document, { clientX: box.left + 80, clientY: box.top });
+      fireEvent.mouseUp(document, { clientX: box.left + 80, clientY: box.top });
 
       await waitFor(async () => {
         await expect(parseFloat(header().style.width)).toBeGreaterThan(antes + 40);
@@ -260,15 +260,15 @@ export const ReorderableAndPinnable: Story = {
       // reordenadas, que é o par que o item documenta.
       //
       // Aqui o menu não é portal: é um `div[hidden]` ao lado do gatilho.
-      const gatilho = () => canvasElement.querySelector<HTMLElement>('.nds-data-table-columns-btn')!;
-      await userEvent.click(gatilho());
+      const trigger = () => canvasElement.querySelector<HTMLElement>('.nds-data-table-columns-btn')!;
+      await userEvent.click(trigger());
       const menu = () => canvasElement.querySelector<HTMLElement>('.nds-data-table-columns-menu')!;
       await waitFor(() => expect(menu().hidden).toBe(false));
 
       // Par idempotente: se a rodada anterior deixou a coluna fixada, desafixa
       // primeiro. Assim o passo sempre executa o clique que ele afirma testar.
-      const pin = (rotulo: string) =>
-        menu().querySelector<HTMLElement>(`.nds-data-table-pin-btn[aria-label="${rotulo}"]`);
+      const pin = (label: string) =>
+        menu().querySelector<HTMLElement>(`.nds-data-table-pin-btn[aria-label="${label}"]`);
       if (pin('Desafixar Cliente')) {
         await userEvent.click(pin('Desafixar Cliente')!);
         await waitFor(() =>
@@ -398,12 +398,12 @@ export const WithInlineEditing: Story = {
       const legacyValue = button.textContent!.trim();
       await userEvent.click(button);
 
-      const campo = await waitFor(() => canvas.getByRole('textbox', { name: 'Editar Cliente' }));
-      await expect(campo).toHaveFocus();
+      const field = await waitFor(() => canvas.getByRole('textbox', { name: 'Editar Cliente' }));
+      await expect(field).toHaveFocus();
 
-      await userEvent.tripleClick(campo);
+      await userEvent.tripleClick(field);
       await userEvent.keyboard('{Delete}');
-      await userEvent.type(campo, 'Ana Prado Filha{Enter}');
+      await userEvent.type(field, 'Ana Prado Filha{Enter}');
 
       await waitFor(async () => {
         await expect(
@@ -423,10 +423,10 @@ export const WithInlineEditing: Story = {
       const original = button.textContent!.trim().replace(/s+/g, ' ');
       await userEvent.click(button);
 
-      const campo = await waitFor(() => canvas.getByRole('textbox', { name: 'Editar Valor' }));
-      await userEvent.tripleClick(campo);
+      const field = await waitFor(() => canvas.getByRole('textbox', { name: 'Editar Valor' }));
+      await userEvent.tripleClick(field);
       await userEvent.keyboard('{Delete}');
-      await userEvent.type(campo, '9999{Escape}');
+      await userEvent.type(field, '9999{Escape}');
 
       // O que o Escape promete é DESCARTAR o rascunho: a prova é o valor
       // digitado não aparecer. Comparar com o texto original esbarrava no

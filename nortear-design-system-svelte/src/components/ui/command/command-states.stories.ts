@@ -55,29 +55,29 @@ export const EmptyState: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
-    const campo = canvas.getByRole('combobox');
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
+    const field = canvas.getByRole('combobox');
 
     // Idempotente: a busca parte sempre do zero.
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     await waitFor(async () => {
       // Com o campo vazio, os dois comandos da lista.
       await expect(canvas.getAllByRole('option')).toHaveLength(2);
     });
 
     await step('Buscando "xyz", nenhum comando sobra', async () => {
-      await userEvent.type(campo, 'xyz');
+      await userEvent.type(field, 'xyz');
       await waitFor(async () => {
         await expect(canvas.queryByRole('option', { name: 'Button' })).toBeNull();
       });
       await expect(canvas.queryByRole('option', { name: 'Input' })).toBeNull();
       // O grupo se recolhe junto — cabeçalho sem itens embaixo é ruído.
-      await expect(raiz.querySelector<HTMLElement>('[data-slot="command-group"]'))
+      await expect(root.querySelector<HTMLElement>('[data-slot="command-group"]'))
         .not.toBeVisible();
     });
 
     await step('A mensagem de vazio ocupa o lugar da lista', async () => {
-      const vazio = raiz.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+      const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
       await expect(vazio).toBeVisible();
       await expect(vazio).toHaveTextContent('Nenhum resultado encontrado.');
       await expect(vazio).toHaveClass(/nds-command-empty/);
@@ -100,7 +100,7 @@ export const LoadingState: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
 
     await step('O indicador se anuncia como progresso, com texto visível', async () => {
       const carregando = canvas.getByRole('progressbar');
@@ -111,9 +111,9 @@ export const LoadingState: Story = {
     await step('O indicador fica FORA do listbox', async () => {
       // `progressbar` não é filho permitido de `role="listbox"`; dentro dele o
       // axe reprova por aria-required-children.
-      const lista = canvas.getByRole('listbox');
-      await expect(lista.contains(canvas.getByRole('progressbar'))).toBe(false);
-      await expect(raiz.contains(canvas.getByRole('progressbar'))).toBe(true);
+      const list = canvas.getByRole('listbox');
+      await expect(list.contains(canvas.getByRole('progressbar'))).toBe(false);
+      await expect(root.contains(canvas.getByRole('progressbar'))).toBe(true);
     });
   },
 };
@@ -131,9 +131,9 @@ export const ItemDisabled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const campo = canvas.getByRole('combobox');
+    const field = canvas.getByRole('combobox');
 
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     await waitFor(async () => {
       await expect(canvas.getAllByRole('option')).toHaveLength(3);
     });
@@ -161,7 +161,7 @@ export const ItemDisabled: Story = {
     });
 
     await step('As setas pulam o comando desabilitado', async () => {
-      campo.focus();
+      field.focus();
       await waitFor(async () => {
         const active = canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')!;
         await expect(active).toHaveTextContent('Novo');

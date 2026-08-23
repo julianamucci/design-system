@@ -7,7 +7,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from './index';
-import { campo } from './input-otp.fixtures';
+import { field } from './input-otp.fixtures';
 import InputOTPDocs from '@/components/docs/InputOTPDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { inputOtpSource } from './input-otp.source';
@@ -114,7 +114,7 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const total = (args.maxLength as number) ?? 6;
-    const input = campo(canvasElement);
+    const input = field(canvasElement);
 
     await step('O campo tem nome e uma caixa por dígito', async () => {
       await expect(canvas.getByLabelText('Código de verificação')).toBe(input);

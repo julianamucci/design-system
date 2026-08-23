@@ -33,11 +33,11 @@ export const Horizontal: Story = {
       // O CSS decide espessura e cursor pelo `aria-orientation` do punho e pelo
       // `data-direction` do grupo. Um grupo horizontal é dividido por uma linha
       // VERTICAL — a inversão é a fonte clássica de erro aqui.
-      const grupo = canvasElement.querySelector<HTMLElement>('[data-slot="resizable"]')!;
+      const group = canvasElement.querySelector<HTMLElement>('[data-slot="resizable"]')!;
       const punho = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-handle"]')!;
-      await expect(grupo).toHaveAttribute('data-direction', 'horizontal');
+      await expect(group).toHaveAttribute('data-direction', 'horizontal');
       await expect(punho).toHaveAttribute('aria-orientation', 'vertical');
-      await expect(getComputedStyle(grupo).flexDirection).toBe('row');
+      await expect(getComputedStyle(group).flexDirection).toBe('row');
       await expect(getComputedStyle(punho).cursor).toBe('col-resize');
     });
 
@@ -67,11 +67,11 @@ export const Vertical: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('Split empilhado: o divisor é uma linha deitada', async () => {
-      const grupo = canvasElement.querySelector<HTMLElement>('[data-slot="resizable"]')!;
+      const group = canvasElement.querySelector<HTMLElement>('[data-slot="resizable"]')!;
       const punho = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-handle"]')!;
-      await expect(grupo).toHaveAttribute('data-direction', 'vertical');
+      await expect(group).toHaveAttribute('data-direction', 'vertical');
       await expect(punho).toHaveAttribute('aria-orientation', 'horizontal');
-      await expect(getComputedStyle(grupo).flexDirection).toBe('column');
+      await expect(getComputedStyle(group).flexDirection).toBe('column');
       await expect(getComputedStyle(punho).cursor).toBe('row-resize');
     });
 
@@ -116,11 +116,11 @@ export const Nested: Story = {
       // O estado vive no elemento do grupo, não em `root`: sem isso o grupo de
       // dentro e o de fora dividiriam a mesma lista de painéis e um arrasto
       // moveria os dois layouts ao mesmo tempo.
-      const grupos = canvasElement.querySelectorAll('[data-slot="resizable"]');
-      await expect(grupos).toHaveLength(2);
+      const groups = canvasElement.querySelectorAll('[data-slot="resizable"]');
+      await expect(groups).toHaveLength(2);
 
-      const externo = grupos[0].querySelectorAll(':scope > [data-slot="resizable-panel"]');
-      const interno = grupos[1].querySelectorAll(':scope > [data-slot="resizable-panel"]');
+      const externo = groups[0].querySelectorAll(':scope > [data-slot="resizable-panel"]');
+      const interno = groups[1].querySelectorAll(':scope > [data-slot="resizable-panel"]');
       await expect(externo).toHaveLength(2);
       await expect(interno).toHaveLength(2);
     });

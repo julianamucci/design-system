@@ -3,7 +3,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
-import { painel } from './popover.fixtures';
+import { panel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 
 const meta: Meta = {
@@ -43,18 +43,18 @@ export const Closed: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /Abrir popover/i });
+    const trigger = canvas.getByRole('button', { name: /Abrir popover/i });
 
     await step('Fechado, o painel não existe no DOM', async () => {
       // Desmontado, e não escondido: leitor de tela e busca do navegador não
       // encontram conteúdo que não está lá.
-      await expect(gatilho).toBeVisible();
-      await expect(painel()).toBeNull();
+      await expect(trigger).toBeVisible();
+      await expect(panel()).toBeNull();
     });
 
     await step('E o gatilho declara o estado fechado', async () => {
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
-      await expect(gatilho).toHaveAttribute('data-state', 'closed');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveAttribute('data-state', 'closed');
     });
   },
 };
@@ -79,7 +79,7 @@ export const Open: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /Abrir popover/i });
+    const trigger = canvas.getByRole('button', { name: /Abrir popover/i });
 
     await step('O painel abre já na primeira renderização', async () => {
       const dialog = await waitForPortal('dialog', { timeout: 2000 });
@@ -88,16 +88,16 @@ export const Open: Story = {
     });
 
     await step('E o gatilho e o painel declaram o estado aberto', async () => {
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
-      await expect(gatilho).toHaveAttribute('data-state', 'open');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      await expect(trigger).toHaveAttribute('data-state', 'open');
       // O painel é anunciado como diálogo e nomeado pelo título que carrega —
       // os dois contratos que o conteúdo compartilhado descreve para o estado
       // aberto. `aria-controls` fica de fora aqui de propósito: neste stack a
       // lib não o emite quando o gatilho é composto por snippet `child`, e o
       // atributo NÃO está na lista de ARIA documentada (role, labelledby,
       // describedby, expanded). Registrado no relatório da rodada.
-      await expect(painel()).toHaveAttribute('role', 'dialog');
-      await expect(painel()).toHaveAccessibleName(/Configuracoes de exibição/i);
+      await expect(panel()).toHaveAttribute('role', 'dialog');
+      await expect(panel()).toHaveAccessibleName(/Configuracoes de exibição/i);
     });
   },
 };
@@ -126,7 +126,7 @@ export const SideTop: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /Abrir acima/i });
+    const trigger = canvas.getByRole('button', { name: /Abrir acima/i });
 
     await step('O lado pedido chega ao posicionamento', async () => {
       const dialog = await waitForPortal('dialog', { timeout: 2000 });
@@ -140,8 +140,8 @@ export const SideTop: Story = {
       // reserva e só mede a posição num quadro seguinte. Medir antes disso lê o
       // painel fora do lugar, e a falha aponta para o offset em vez do relógio.
       await waitFor(() => {
-        const dialog = painel()!;
-        const r1 = gatilho.getBoundingClientRect();
+        const dialog = panel()!;
+        const r1 = trigger.getBoundingClientRect();
         const r2 = dialog.getBoundingClientRect();
         const distancia =
           dialog.getAttribute('data-side') === 'top' ? r1.top - r2.bottom : r2.top - r1.bottom;
@@ -176,7 +176,7 @@ export const Controlled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
-    const gatilho = canvas.getByRole('button', { name: /Abrir via estado externo/i });
+    const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
 
     const closed = async () => {
       await waitFor(
@@ -187,26 +187,26 @@ export const Controlled: Story = {
         { timeout: 2000 }
       );
     };
-    const abrir = async () => {
-      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+    const open = async () => {
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       return await waitForPortal('dialog', { timeout: 2000 });
     };
 
     await step('O estado externo abre o painel na montagem', async () => {
-      const dialog = await abrir();
+      const dialog = await open();
       await expect(dialog).toBeVisible();
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Escape fecha mesmo em modo controlado', async () => {
       await userEvent.keyboard('{Escape}');
       await closed();
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
     // Termina ABERTA: é o estado que o Chromatic fotografa.
     await step('Estado final: painel aberto', async () => {
-      await expect(await abrir()).toBeVisible();
+      await expect(await open()).toBeVisible();
     });
   },
 };

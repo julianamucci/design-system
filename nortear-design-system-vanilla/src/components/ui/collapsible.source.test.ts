@@ -10,19 +10,19 @@ import {
 
 describe('collapsibleSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = collapsibleSnippet();
-    expect(código).toContain("import { createCollapsible } from '@/components/ui/collapsible';");
-    expect(código).toContain('createCollapsible({');
-    expect(código).toContain("document.querySelector('#app')?.append(colapsavel);");
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('aria-expanded=');
+    const code = collapsibleSnippet();
+    expect(code).toContain("import { createCollapsible } from '@/components/ui/collapsible';");
+    expect(code).toContain('createCollapsible({');
+    expect(code).toContain("document.querySelector('#app')?.append(colapsavel);");
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('aria-expanded=');
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = collapsibleSnippet();
-    expect(código).not.toContain('defaultOpen');
-    expect(código).not.toContain('disabled');
-    expect(código).not.toContain('open:');
+    const code = collapsibleSnippet();
+    expect(code).not.toContain('defaultOpen');
+    expect(code).not.toContain('disabled');
+    expect(code).not.toContain('open:');
   });
 
   it('mostra as opções quando a story as usa', () => {
@@ -34,21 +34,21 @@ describe('collapsibleSnippet', () => {
   });
 
   it('monta o painel com DOM curto, sem helper de story', () => {
-    const código = collapsibleSnippet();
-    expect(código).toContain("const painel = document.createElement('div');");
-    expect(código).toContain('content: painel');
-    expect(código).not.toContain('makeContent');
-    expect(código).not.toContain('PAINEL_CLASSES');
-    expect(código).not.toContain('makeTriggerWithIcon');
+    const code = collapsibleSnippet();
+    expect(code).toContain("const painel = document.createElement('div');");
+    expect(code).toContain('content: painel');
+    expect(code).not.toContain('makeContent');
+    expect(code).not.toContain('PAINEL_CLASSES');
+    expect(code).not.toContain('makeTriggerWithIcon');
   });
 
   it('nunca imprime a função que os args trazem no lugar do corpo do callback', () => {
     // Nos args `onOpenChange` chega como spy, e imprimir a função devolveria
     // "() => {}" — ou pior, "[object Function]" — no painel Code.
-    const código = collapsibleSnippet({
+    const code = collapsibleSnippet({
       onOpenChange: (() => undefined) as unknown as string,
     });
-    expect(código).not.toContain('onOpenChange');
+    expect(code).not.toContain('onOpenChange');
     expect(collapsibleSnippet({ onOpenChange: '(aberto) => registrar(aberto)' })).toContain(
       'onOpenChange: (aberto) => registrar(aberto)',
     );
@@ -57,10 +57,10 @@ describe('collapsibleSnippet', () => {
 
 describe('collapsibleComGatilhoSnippet', () => {
   it('usa o botão do design system como gatilho', () => {
-    const código = collapsibleWithTriggerSnippet({ trigger: 'Exibir opções avançadas' });
-    expect(código).toContain("import { createButton } from '@/components/ui/button';");
-    expect(código).toContain("label: 'Exibir opções avançadas'");
-    expect(código).toContain('trigger: gatilho');
+    const code = collapsibleWithTriggerSnippet({ trigger: 'Exibir opções avançadas' });
+    expect(code).toContain("import { createButton } from '@/components/ui/button';");
+    expect(code).toContain("label: 'Exibir opções avançadas'");
+    expect(code).toContain('trigger: gatilho');
   });
 
   it('só menciona a classe do chevron quando a story a exercita', () => {
@@ -73,11 +73,11 @@ describe('collapsibleComGatilhoSnippet', () => {
 
 describe('collapsibleControladoSnippet', () => {
   it('mostra a posse do estado do lado de fora', () => {
-    const código = collapsibleControlledSnippet();
-    expect(código).toContain('let aberto = false;');
-    expect(código).toContain('open: aberto');
-    expect(código).toContain('onOpenChange: definir');
-    expect(código).toContain('colapsavel.setOpen(valor);');
+    const code = collapsibleControlledSnippet();
+    expect(code).toContain('let aberto = false;');
+    expect(code).toContain('open: aberto');
+    expect(code).toContain('onOpenChange: definir');
+    expect(code).toContain('colapsavel.setOpen(valor);');
   });
 });
 
@@ -101,15 +101,15 @@ describe('collapsibleSource', () => {
 describe('collapsibleSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = collapsibleSourceWith({ disabled: true });
-    const código = transform('', { args: { defaultOpen: true } });
-    expect(código).toContain('disabled: true');
-    expect(código).toContain('defaultOpen: true');
+    const code = transform('', { args: { defaultOpen: true } });
+    expect(code).toContain('disabled: true');
+    expect(code).toContain('defaultOpen: true');
   });
 
   it('vale também para a forma com gatilho de elemento', () => {
-    const código = collapsibleWithTriggerSource({ trigger: 'Configurações avançadas' })('', {
+    const code = collapsibleWithTriggerSource({ trigger: 'Configurações avançadas' })('', {
       args: { trigger: 'outro' },
     });
-    expect(código).toContain("label: 'Configurações avançadas'");
+    expect(code).toContain("label: 'Configurações avançadas'");
   });
 });

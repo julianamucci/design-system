@@ -14,10 +14,10 @@ const delegatedProps = reactiveOmit(props, 'class')
 // Ver accordion-a11y.ts: o id nasce dentro do reka e só pode ser LIDO daqui —
 // tentar impô-lo pelo atributo perde para o mergeProps da lib, e o
 // aria-controls acabaria apontando para um elemento que não existe.
-const painel = ref<InstanceType<typeof AccordionContent> | null>(null)
+const panel = ref<InstanceType<typeof AccordionContent> | null>(null)
 const contentId = inject(ACCORDION_ITEM_IDS, ref(''))
 onMounted(() => {
-  const el = unrefElement(painel as never) as HTMLElement | undefined
+  const el = unrefElement(panel as never) as HTMLElement | undefined
   /* v8 ignore next -- o painel fica sempre montado (unmount-on-hide=false),
      então o elemento existe em toda story; a guarda é de tipo. */
   if (el?.id) contentId.value = el.id
@@ -40,7 +40,7 @@ onMounted(() => {
     o atributo passaria a apontar para elemento inexistente.
   -->
   <AccordionContent
-    ref="painel"
+    ref="panel"
     data-slot="accordion-content"
     v-bind="delegatedProps"
     class="nds-accordion-content"

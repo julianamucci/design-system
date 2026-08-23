@@ -547,7 +547,7 @@ export class NdsCardDocs implements AfterViewInit, OnDestroy {
       required: not,
       description: toPlainText(t('props.table.className')),
     };
-    const conteudo = {
+    const content = {
       name: '(conteúdo)',
       type: 'HTML',
       defaultValue: '—',
@@ -571,15 +571,15 @@ export class NdsCardDocs implements AfterViewInit, OnDestroy {
             description: toPlainText(t('props.table.size')),
           },
           className,
-          conteudo,
+          content,
         ],
       },
-      { title: t('props.headerTitle'),      cols, items: [className, conteudo] },
-      { title: t('props.cardTitleTitle'),   cols, items: [className, conteudo] },
-      { title: t('props.descriptionTitle'), cols, items: [className, conteudo] },
-      { title: t('props.actionTitle'),      cols, items: [className, conteudo] },
-      { title: t('props.contentTitle'),     cols, items: [className, conteudo] },
-      { title: t('props.footerTitle'),      cols, items: [className, conteudo] },
+      { title: t('props.headerTitle'),      cols, items: [className, content] },
+      { title: t('props.cardTitleTitle'),   cols, items: [className, content] },
+      { title: t('props.descriptionTitle'), cols, items: [className, content] },
+      { title: t('props.actionTitle'),      cols, items: [className, content] },
+      { title: t('props.contentTitle'),     cols, items: [className, content] },
+      { title: t('props.footerTitle'),      cols, items: [className, content] },
     ];
   });
 
@@ -632,14 +632,14 @@ export class NdsCardDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'separator', nome: 'Separator', path: '?path=/docs/ui-separator--docs' },
-      { key: 'accordion', nome: 'Accordion', path: '?path=/docs/ui-accordion--docs' },
-      { key: 'alert',     nome: 'Alert',     path: '?path=/docs/ui-alert--docs'     },
-      { key: 'button',    nome: 'Button',    path: '?path=/docs/ui-button--docs'    },
-      { key: 'badge',     nome: 'Badge',     path: '?path=/docs/ui-badge--docs'     },
-      { key: 'avatar',    nome: 'Avatar',    path: '?path=/docs/ui-avatar--docs'    },
-    ].map(({ key, nome, path }) => ({
-      name: nome,
+      { key: 'separator', name: 'Separator', path: '?path=/docs/ui-separator--docs' },
+      { key: 'accordion', name: 'Accordion', path: '?path=/docs/ui-accordion--docs' },
+      { key: 'alert',     name: 'Alert',     path: '?path=/docs/ui-alert--docs'     },
+      { key: 'button',    name: 'Button',    path: '?path=/docs/ui-button--docs'    },
+      { key: 'badge',     name: 'Badge',     path: '?path=/docs/ui-badge--docs'     },
+      { key: 'avatar',    name: 'Avatar',    path: '?path=/docs/ui-avatar--docs'    },
+    ].map(({ key, name, path }) => ({
+      name: name,
       description: t(`related.${key}`),
       path,
     }));

@@ -61,12 +61,12 @@ type FaroMinimum = {
   api?: {
     setView?: (v: { name: string }) => void;
     startUserAction?: (
-      nome: string,
-      atributos?: Record<string, string>,
-      opcoes?: { triggerName?: string },
+      name: string,
+      attrs?: Record<string, string>,
+      options?: { triggerName?: string },
     ) => unknown;
     getActiveUserAction?: () => unknown;
-    pushEvent?: (nome: string, atributos?: Record<string, string>) => void;
+    pushEvent?: (name: string, attrs?: Record<string, string>) => void;
   };
 };
 
@@ -181,10 +181,10 @@ export function registrarAction(evento: string, params?: Record<string, unknown>
   const api = instancia?.api;
   if (!api?.startUserAction) return;
 
-  const atributos: Record<string, string> = {};
-  for (const [chave, valor] of Object.entries(params ?? {})) {
-    if (valor === undefined || valor === null) continue;
-    atributos[chave] = String(valor);
+  const attrs: Record<string, string> = {};
+  for (const [key, value] of Object.entries(params ?? {})) {
+    if (value === undefined || value === null) continue;
+    attrs[key] = String(value);
   }
 
   // Só UMA ação pode estar ativa por vez: com outra rodando, `startUserAction`
@@ -201,9 +201,9 @@ export function registrarAction(evento: string, params?: Record<string, unknown>
   // com o bloco `action` dela: continua chegando ao Grafana e correlacionado,
   // em vez de virar erro de console.
   if (api.getActiveUserAction?.()) {
-    api.pushEvent?.(evento, atributos);
+    api.pushEvent?.(evento, attrs);
     return;
   }
 
-  api.startUserAction(evento, atributos, { triggerName: 'analyticsTrack' });
+  api.startUserAction(evento, attrs, { triggerName: 'analyticsTrack' });
 }

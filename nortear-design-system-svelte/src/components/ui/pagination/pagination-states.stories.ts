@@ -35,32 +35,32 @@ export default meta;
 type Story = StoryObj;
 
 /** Faixa de 5 páginas com a página atual parametrizada. */
-const faixa = (rotulo: string, page: number) => ({
+const range = (label: string, page: number) => ({
   count: 50,
   perPage: 10,
   page,
   siblingCount: 2,
   demonstration: 'simples',
-  rotulo,
+  label,
   onPageChange,
 });
 
 export const Default: Story = {
-  args: faixa('Paginação em repouso', 3),
+  args: range('Paginação em repouso', 3),
   parameters: {
     docs: { description: { story: 'Estado padrão — sem fundo, texto em foreground e cursor de clique.' } },
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const alvo = canvas.getByRole('button', { name: 'Ir para página 4' });
-    await expect(alvo).toBeVisible();
-    await expect(alvo).not.toHaveAttribute('aria-current');
-    await expect(getComputedStyle(alvo).pointerEvents).toBe('auto');
+    const target = canvas.getByRole('button', { name: 'Ir para página 4' });
+    await expect(target).toBeVisible();
+    await expect(target).not.toHaveAttribute('aria-current');
+    await expect(getComputedStyle(target).pointerEvents).toBe('auto');
   },
 };
 
 export const Hover: Story = {
-  args: faixa('Paginação sob o ponteiro', 3),
+  args: range('Paginação sob o ponteiro', 3),
   parameters: {
     docs: {
       description: {
@@ -71,23 +71,23 @@ export const Hover: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const alvo = canvas.getByRole('button', { name: 'Ir para página 4' });
-    await userEvent.hover(alvo);
+    const target = canvas.getByRole('button', { name: 'Ir para página 4' });
+    await userEvent.hover(target);
     // Não se assere a cor do hover: `:hover` computado é frágil no harness. O
     // que prova a afordância é o cursor, e o que prova que o clique CHEGA é o
     // elemento devolvido no centro da caixa.
-    await expect(getComputedStyle(alvo).cursor).toBe('pointer');
-    const caixa = alvo.getBoundingClientRect();
+    await expect(getComputedStyle(target).cursor).toBe('pointer');
+    const box = target.getBoundingClientRect();
     const inCenter = document.elementFromPoint(
-      caixa.left + caixa.width / 2,
-      caixa.top + caixa.height / 2,
+      box.left + box.width / 2,
+      box.top + box.height / 2,
     );
-    await expect(alvo.contains(inCenter)).toBe(true);
+    await expect(target.contains(inCenter)).toBe(true);
   },
 };
 
 export const Active: Story = {
-  args: faixa('Paginação com página atual', 3),
+  args: range('Paginação com página atual', 3),
   parameters: {
     covers: ['visual.item3'],
     docs: { description: { story: 'Página atual destacada no meio da faixa — o caso que o Chromatic fotografa.' } },
@@ -114,7 +114,7 @@ export const Active: Story = {
 };
 
 export const Disabled: Story = {
-  args: faixa('Paginação na primeira página', 1),
+  args: range('Paginação na primeira página', 1),
   parameters: {
     covers: ['functional.item2', 'visual.item4'],
     docs: {
@@ -159,7 +159,7 @@ export const Disabled: Story = {
 };
 
 export const Focus: Story = {
-  args: faixa('Paginação com foco', 3),
+  args: range('Paginação com foco', 3),
   parameters: {
     covers: ['accessibility.item3'],
     docs: {
@@ -176,11 +176,11 @@ export const Focus: Story = {
       // accessibility.item3 — medir a sombra computada é o que prova que a
       // regra do CSS compartilhado chegou ao elemento, e não só que o foco
       // chegou. `ring-2 ring-ring`, que a documentação citava, não existe.
-      const alvo = canvas.getByRole('button', { name: 'Ir para página 2' });
-      alvo.blur();
-      alvo.focus();
-      await expect(alvo).toHaveFocus();
-      await expect(getComputedStyle(alvo).boxShadow).not.toBe('none');
+      const target = canvas.getByRole('button', { name: 'Ir para página 2' });
+      target.blur();
+      target.focus();
+      await expect(target).toHaveFocus();
+      await expect(getComputedStyle(target).boxShadow).not.toBe('none');
     });
 
     await step('A página atual também é focável', async () => {
@@ -194,7 +194,7 @@ export const Focus: Story = {
 };
 
 export const Contrast: Story = {
-  args: faixa('Paginação medida por contraste', 3),
+  args: range('Paginação medida por contraste', 3),
   parameters: {
     covers: ['accessibility.item2', 'accessibility.item6'],
     docs: {

@@ -56,30 +56,30 @@ const LABEL_NEXT = 'Ir para a próxima página';
 /** Espião de escopo de módulo: dentro do `render`, a play não o alcançaria. */
 const onPageChange = fn();
 
-function aoNavegar(evento: Event, pagina: number): void {
+function aoNavegar(evento: Event, page: number): void {
   evento.preventDefault();
-  onPageChange(pagina);
+  onPageChange(page);
 }
 
 /**
  * Faixa de 5 páginas com os dois extremos parametrizados. Um só molde para as
  * stories de extremo evita que uma delas envelheça sozinha.
  */
-function faixa(rotulo: string, atual: number): Record<string, unknown> {
+function range(label: string, current: number): Record<string, unknown> {
   return {
     props: {
-      atual,
+      current,
       total: 5,
       // Derivado do total: uma lista literal deixaria de acompanhar a faixa.
       pages: Array.from({ length: 5 }, (_, i) => i + 1),
-      rotulo,
+      label,
       rotuloPagina: LABEL_PAGE,
       labelPrevious: LABEL_PREVIOUS,
       labelNext: LABEL_NEXT,
       aoNavegar,
     },
     template: `
-      <nav ndsPagination [label]="rotulo">
+      <nav ndsPagination [label]="label">
         <ul ndsPaginationContent>
           <li ndsPaginationItem>
             <a
@@ -87,8 +87,8 @@ function faixa(rotulo: string, atual: number): Record<string, unknown> {
               href="#"
               text="Anterior"
               [label]="labelPrevious"
-              [disabled]="atual === 1"
-              (click)="aoNavegar($event, atual - 1)"
+              [disabled]="current === 1"
+              (click)="aoNavegar($event, current - 1)"
             ></a>
           </li>
           @for (n of pages; track n) {
@@ -96,7 +96,7 @@ function faixa(rotulo: string, atual: number): Record<string, unknown> {
               <a
                 ndsPaginationLink
                 href="#"
-                [isActive]="n === atual"
+                [isActive]="n === current"
                 [attr.aria-label]="rotuloPagina + ' ' + n"
                 (click)="aoNavegar($event, n)"
               >{{ n }}</a>
@@ -108,8 +108,8 @@ function faixa(rotulo: string, atual: number): Record<string, unknown> {
               href="#"
               text="Próxima"
               [label]="labelNext"
-              [disabled]="atual === total"
-              (click)="aoNavegar($event, atual + 1)"
+              [disabled]="current === total"
+              (click)="aoNavegar($event, current + 1)"
             ></a>
           </li>
         </ul>
@@ -130,7 +130,7 @@ export const FirstPage: Story = {
       },
     },
   },
-  render: () => faixa('Paginação na primeira página', 1),
+  render: () => range('Paginação na primeira página', 1),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const previous = canvas.getByRole('link', { name: LABEL_PREVIOUS });
@@ -176,7 +176,7 @@ export const LastPage: Story = {
       },
     },
   },
-  render: () => faixa('Paginação na última página', 5),
+  render: () => range('Paginação na última página', 5),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const next = canvas.getByRole('link', { name: LABEL_NEXT });
@@ -214,7 +214,7 @@ export const FocusVisible: Story = {
       },
     },
   },
-  render: () => faixa('Paginação com foco', 3),
+  render: () => range('Paginação com foco', 3),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
@@ -258,7 +258,7 @@ export const Contrast: Story = {
       },
     },
   },
-  render: () => faixa('Paginação medida por contraste', 3),
+  render: () => range('Paginação medida por contraste', 3),
   play: async ({ canvasElement, step }) => {
     await step('Todo link passa dos 4.5:1 exigidos para texto', async () => {
       // accessibility.item2 — o texto da faixa tem 14px, tamanho normal pela

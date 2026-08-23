@@ -23,17 +23,17 @@ export type Side = 'borda' | 'preenchimento';
 
 export interface ColorTarget {
   /** Nome que aparece no relatório de falha. */
-  nome: string;
+  name: string;
   selector: string;
   /** `border` lê border-top-color; `preenchimento` lê background-color. */
-  lado?: Side;
+  side?: Side;
 }
 
 export interface ColorMeasurement {
-  tema: string;
-  modo: 'claro' | 'escuro';
-  alvo: string;
-  lado: Side;
+  theme: string;
+  mode: 'claro' | 'escuro';
+  target: string;
+  side: Side;
   /** `false` quando o seletor não casou — isso É o achado, não falha da medição. */
   presente: boolean;
   frente: string | null;
@@ -94,12 +94,12 @@ export function ratio(frente: string, background: string): Contrast | null {
 
 /** Primeiro fundo OPACO acima do elemento — `backgroundColor` com alfa mente. */
 export function backgroundEffective(el: Element | null): string | null {
-  let atual: Element | null = el;
-  while (atual) {
-    const cor = getComputedStyle(atual).backgroundColor;
+  let current: Element | null = el;
+  while (current) {
+    const cor = getComputedStyle(current).backgroundColor;
     const c = componentes(cor);
     if (c && c[3] > 0.99) return cor;
-    atual = atual.parentElement;
+    current = current.parentElement;
   }
   return null;
 }
@@ -146,9 +146,9 @@ export const THEMES = ['default', 'warm', 'cold'] as const;
 export const MODOS = ['claro', 'escuro'] as const;
 
 /** Cor de frente do lado pedido, e o fundo contra o qual ela é vista. */
-function measureUm(el: HTMLElement, lado: Side): { frente: string; background: string } | null {
+function measureUm(el: HTMLElement, side: Side): { frente: string; background: string } | null {
   const cs = getComputedStyle(el);
-  if (lado === 'preenchimento') {
+  if (side === 'preenchimento') {
     const background = backgroundEffective(el.parentElement);
     return background ? { frente: cs.backgroundColor, background } : null;
   }
@@ -161,9 +161,9 @@ function measureUm(el: HTMLElement, lado: Side): { frente: string; background: s
 }
 
 /**
- * Mede os alvos dentro de `raiz` nos três temas e nos dois modos.
+ * Mede os alvos dentro de `root` nos três temas e nos dois modos.
  *
- * `raiz` recebe a classe de tema: as custom properties são herdadas, e
+ * `root` recebe a classe de tema: as custom properties são herdadas, e
  * `.dark.tema-x` exige as DUAS classes no MESMO elemento (não basta `.dark` no
  * `<html>` — o `.tema-x` mais fundo na árvore re-declara os tokens claros e
  * vence). A classe original volta no fim; deixá-la posta envenena a story
@@ -174,28 +174,28 @@ function measureUm(el: HTMLElement, lado: Side): { frente: string; background: s
  * do tema anterior.
  */
 export function byTheme<T>(
-  raiz: HTMLElement,
-  fn: (tema: (typeof THEMES)[number], modo: (typeof MODOS)[number]) => T,
+  root: HTMLElement,
+  fn: (theme: (typeof THEMES)[number], mode: (typeof MODOS)[number]) => T,
 ): T[] {
-  const classNameOriginal = raiz.className;
+  const classNameOriginal = root.className;
   const saida: T[] = [];
   try {
-    for (const tema of THEMES) {
-      for (const modo of MODOS) {
-        raiz.className = `${classNameOriginal} tema-${tema}${modo === 'escuro' ? ' dark' : ''}`.trim();
-        void raiz.offsetHeight;
-        saida.push(fn(tema, modo));
+    for (const theme of THEMES) {
+      for (const mode of MODOS) {
+        root.className = `${classNameOriginal} tema-${theme}${mode === 'escuro' ? ' dark' : ''}`.trim();
+        void root.offsetHeight;
+        saida.push(fn(theme, mode));
       }
     }
   } finally {
-    raiz.className = classNameOriginal;
-    void raiz.offsetHeight;
+    root.className = classNameOriginal;
+    void root.offsetHeight;
   }
   return saida;
 }
 
-export function themeMeasureColor(raiz: HTMLElement, targets: ColorTarget[]): ColorMeasurement[] {
-  const elementos = targets.map((a) => ({ alvo: a, el: raiz.querySelector<HTMLElement>(a.selector) }));
+export function themeMeasureColor(root: HTMLElement, targets: ColorTarget[]): ColorMeasurement[] {
+  const elementos = targets.map((a) => ({ target: a, el: root.querySelector<HTMLElement>(a.selector) }));
 
   const transicoesOriginais = elementos.map(({ el }) => el?.style.transition ?? null);
   elementos.forEach(({ el }) => {
@@ -203,19 +203,19 @@ export function themeMeasureColor(raiz: HTMLElement, targets: ColorTarget[]): Co
   });
 
   try {
-    return byTheme(raiz, (tema, modo) =>
-      elementos.map(({ alvo, el }): ColorMeasurement => {
-        const lado = alvo.lado ?? 'borda';
+    return byTheme(root, (theme, mode) =>
+      elementos.map(({ target, el }): ColorMeasurement => {
+        const side = target.side ?? 'borda';
         if (!el) {
-          return { tema, modo, alvo: alvo.nome, lado, presente: false, frente: null, background: null, ratio: null };
+          return { theme, mode, target: target.name, side, presente: false, frente: null, background: null, ratio: null };
         }
-        const par = measureUm(el, lado);
+        const par = measureUm(el, side);
         const r = par ? ratio(par.frente, par.background) : null;
         return {
-          tema,
-          modo,
-          alvo: alvo.nome,
-          lado,
+          theme,
+          mode,
+          target: target.name,
+          side,
           presente: true,
           frente: r?.frente ?? par?.frente ?? null,
           background: par?.background ?? null,
@@ -234,7 +234,7 @@ export function themeMeasureColor(raiz: HTMLElement, targets: ColorTarget[]): Co
 }
 
 /**
- * Resolve um valor CSS DENTRO da árvore de `raiz` — `var()`, alfa e tudo.
+ * Resolve um valor CSS DENTRO da árvore de `root` — `var()`, alfa e tudo.
  *
  * Serve para medir o estado que o ponteiro produz sem depender do ponteiro:
  * `:hover` só existe com mouse real, e o `userEvent` das plays dispara eventos
@@ -242,13 +242,13 @@ export function themeMeasureColor(raiz: HTMLElement, targets: ColorTarget[]): Co
  * resolvendo-a aqui, a medida continua sendo do navegador (é ele quem expande
  * o `var` e compõe o alfa), sem depender de CDP.
  */
-export function resolveColor(raiz: HTMLElement, valor: string): string | null {
-  const probe = raiz.ownerDocument.createElement('span');
-  probe.style.color = valor;
+export function resolveColor(root: HTMLElement, value: string): string | null {
+  const probe = root.ownerDocument.createElement('span');
+  probe.style.color = value;
   probe.style.position = 'absolute';
   probe.style.pointerEvents = 'none';
   probe.setAttribute('aria-hidden', 'true');
-  raiz.appendChild(probe);
+  root.appendChild(probe);
   try {
     const cor = getComputedStyle(probe).color;
     return cor || null;
@@ -313,13 +313,13 @@ export function ruleDeclaration(
  * declaração inteira, custom properties incluídas.
  */
 export function selectorsQueLeem(doc: Document, token: string): string[] {
-  const alvo = `var(--${token})`;
+  const target = `var(--${token})`;
   const findings: string[] = [];
 
   const visitar = (rules: CSSRuleList) => {
     for (const rule of Array.from(rules)) {
       if (rule instanceof CSSStyleRule) {
-        if (rule.cssText.includes(alvo)) findings.push(rule.selectorText);
+        if (rule.cssText.includes(target)) findings.push(rule.selectorText);
       }
       const aninhadas = (rule as CSSGroupingRule).cssRules;
       if (aninhadas) visitar(aninhadas);
@@ -339,6 +339,6 @@ export function selectorsQueLeem(doc: Document, token: string): string[] {
 
 /** Linha legível de uma medida — o que a falha da story precisa mostrar. */
 export function describeMeasurement(m: ColorMeasurement): string {
-  if (!m.presente) return `${m.tema}/${m.modo} · ${m.alvo}: seletor não casou`;
-  return `${m.tema}/${m.modo} · ${m.alvo} (${m.lado}) ${m.frente} sobre ${m.background} = ${m.ratio}:1`;
+  if (!m.presente) return `${m.theme}/${m.mode} · ${m.target}: seletor não casou`;
+  return `${m.theme}/${m.mode} · ${m.target} (${m.side}) ${m.frente} sobre ${m.background} = ${m.ratio}:1`;
 }

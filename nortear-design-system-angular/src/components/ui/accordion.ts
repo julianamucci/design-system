@@ -90,15 +90,15 @@ const SELECTOR_TRIGGERS =
     // um accordion único de um múltiplo depois de montado — CSS, teste,
     // devtools e o painel Code veriam exatamente o mesmo HTML. Mesmo atributo
     // nas cinco stacks.
-    '[attr.data-type]': 'modo()',
+    '[attr.data-type]': 'mode()',
     '(keydown)': 'onKeyDown($event)',
   },
 })
 export class NdsAccordion {
-  private readonly raiz = inject(RdxAccordionRootDirective, { self: true });
+  private readonly root = inject(RdxAccordionRootDirective, { self: true });
   private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  protected readonly modo = computed(() => (this.raiz.multiple() ? 'multiple' : 'single'));
+  protected readonly mode = computed(() => (this.root.multiple() ? 'multiple' : 'single'));
 
   /**
    * Setas, Home e End movendo o foco entre gatilhos, com laço nas pontas.
@@ -110,21 +110,21 @@ export class NdsAccordion {
     if (event.defaultPrevented) return;
     if (!NAV_KEYS.includes(event.key as NavKey)) return;
 
-    const alvo = event.target as HTMLElement | null;
-    const focado = alvo?.closest<HTMLButtonElement>('[data-slot="accordion-trigger"]');
+    const target = event.target as HTMLElement | null;
+    const focado = target?.closest<HTMLButtonElement>('[data-slot="accordion-trigger"]');
     if (!focado) return;
 
     const triggers = Array.from(
       this.hostRef.nativeElement.querySelectorAll<HTMLButtonElement>(SELECTOR_TRIGGERS),
     );
-    const indice = triggers.indexOf(focado);
-    if (indice < 0) return;
+    const index = triggers.indexOf(focado);
+    if (index < 0) return;
 
     event.preventDefault();
     const last = triggers.length - 1;
     const next =
-      event.key === 'ArrowDown' ? (indice + 1) % triggers.length
-      : event.key === 'ArrowUp' ? (indice - 1 + triggers.length) % triggers.length
+      event.key === 'ArrowDown' ? (index + 1) % triggers.length
+      : event.key === 'ArrowUp' ? (index - 1 + triggers.length) % triggers.length
       : event.key === 'Home' ? 0
       : last;
     triggers[next]?.focus();

@@ -49,7 +49,7 @@ const meta: Meta = {
       options: ['simples', 'directional', 'controlada', 'tabela'],
       description: 'Composição interna usada na demonstração.',
     },
-    rotulo: {
+    label: {
       control: 'text',
       description: 'Nome acessível do landmark de navegação.',
     },
@@ -61,7 +61,7 @@ const meta: Meta = {
     page: 1,
     siblingCount: 2,
     demonstration: 'simples',
-    rotulo: 'Paginação',
+    label: 'Paginação',
     onPageChange,
   },
 };
@@ -96,8 +96,8 @@ export const Playground: Story = {
       // accessibility.item5 — "3" sozinho não diz nada em voz alta. O primitivo
       // fixa "Page N", em inglês; o rótulo em português vem do snippet `child`.
       for (let n = 1; n <= 5; n++) {
-        const alvo = canvas.getByRole('button', { name: `Ir para página ${n}` });
-        await expect(alvo).toHaveAttribute('data-slot', 'pagination-link');
+        const target = canvas.getByRole('button', { name: `Ir para página ${n}` });
+        await expect(target).toHaveAttribute('data-slot', 'pagination-link');
       }
       await expect(canvas.getByRole('button', { name: LABEL_PREVIOUS })).toHaveAttribute(
         'data-slot',
@@ -147,9 +147,9 @@ export const Playground: Story = {
       ].filter((el) => !(el as HTMLButtonElement).disabled);
 
       (document.activeElement as HTMLElement | null)?.blur();
-      for (const alvo of esperados) {
+      for (const target of esperados) {
         await userEvent.tab();
-        await expect(alvo).toHaveFocus();
+        await expect(target).toHaveFocus();
       }
     });
   },

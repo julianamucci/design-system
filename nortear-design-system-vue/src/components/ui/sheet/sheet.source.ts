@@ -10,7 +10,7 @@ import {
   attrBool,
   attrs,
   asCode,
-  texto,
+  text,
   vueSnippet,
   type SourceTransform,
 } from '@/lib/story-source';
@@ -33,18 +33,18 @@ const LABEL_TRIGGER = 'Abrir filtros';
  * conteúdo monta a camada por dentro. Quem escrevesse o import não compilaria.
  */
 function importing(parts: string[]): string {
-  const lista = [...new Set(['Sheet', ...parts])].sort();
-  return `import {\n${lista.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/sheet'`;
+  const list = [...new Set(['Sheet', ...parts])].sort();
+  return `import {\n${list.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/sheet'`;
 }
 
 const BUTTON = `import { Button } from '@/components/ui/button'`;
 const FIELD = `import { Input } from '@/components/ui/input'\nimport { Label } from '@/components/ui/label'`;
 
 /** Cabeçalho: o título é o nome acessível do painel, a descrição é a descrição. */
-function header(titulo: string, descricao: string, recuo = 2): string {
+function header(title: string, descricao: string, recuo = 2): string {
   const p = ' '.repeat(recuo);
   return `${p}<SheetHeader>
-${p}  <SheetTitle>${titulo}</SheetTitle>
+${p}  <SheetTitle>${title}</SheetTitle>
 ${p}  <SheetDescription>${descricao}</SheetDescription>
 ${p}</SheetHeader>`;
 }
@@ -53,7 +53,7 @@ ${p}</SheetHeader>`;
  * Rodapé canônico: a saída à esquerda, a confirmação à direita. `SheetClose`
  * com `as-child` empresta o fechamento ao botão em vez de embrulhá-lo.
  */
-function rodape(saida: string, confirm: string, recuo = 2): string {
+function footer(saida: string, confirm: string, recuo = 2): string {
   const p = ' '.repeat(recuo);
   return `${p}<SheetFooter>
 ${p}  <SheetClose as-child>
@@ -64,8 +64,8 @@ ${p}</SheetFooter>`;
 }
 
 /** Gatilho canônico: `as-child` faz o botão do design system ser o gatilho. */
-const TRIGGER = (rotulo: string) => `  <SheetTrigger as-child>
-    <Button variant="outline">${rotulo}</Button>
+const TRIGGER = (label: string) => `  <SheetTrigger as-child>
+    <Button variant="outline">${label}</Button>
   </SheetTrigger>`;
 
 /**
@@ -76,12 +76,12 @@ const TRIGGER = (rotulo: string) => `  <SheetTrigger as-child>
  */
 export const sheetPlaygroundSource: SourceTransform<SheetArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const raiz = attrs(
+  const root = attrs(
     attrBool('default-open', args.defaultOpen, false),
     attrBool('modal', args.modal, true),
-    asCode(args.onOpenChange) && `@update:open="${texto(args.onOpenChange)}"`,
+    asCode(args.onOpenChange) && `@update:open="${text(args.onOpenChange)}"`,
   );
-  const conteudo = attrs(
+  const content = attrs(
     attr('side', args.side, 'right'),
     attrBool('show-close-button', args.showCloseButton, true),
   );
@@ -95,11 +95,11 @@ export const sheetPlaygroundSource: SourceTransform<SheetArgs> = (_gerado, ctx) 
       'SheetTitle',
       'SheetTrigger',
     ])}\n${BUTTON}`,
-    `<Sheet${raiz}>
-${TRIGGER(texto(args.triggerLabel, LABEL_TRIGGER))}
-  <SheetContent${conteudo}>
+    `<Sheet${root}>
+${TRIGGER(text(args.triggerLabel, LABEL_TRIGGER))}
+  <SheetContent${content}>
 ${header('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
-${rodape('Cancelar', 'Aplicar filtros', 4)}
+${footer('Cancelar', 'Aplicar filtros', 4)}
   </SheetContent>
 </Sheet>`,
   );
@@ -112,7 +112,7 @@ ${rodape('Cancelar', 'Aplicar filtros', 4)}
  * `default-open` o leitor copiaria o exemplo e veria um painel fechado, sem
  * nada na tela que explicasse a diferença.
  */
-function lado(side: string, titulo: string): string {
+function side(side: string, title: string): string {
   return vueSnippet(
     `${importing([
       'SheetClose',
@@ -126,8 +126,8 @@ function lado(side: string, titulo: string): string {
     `<Sheet default-open>
 ${TRIGGER(LABEL_TRIGGER)}
   <SheetContent${attrs(attr('side', side, 'right'))}>
-${header(titulo, 'Configure os filtros para refinar os resultados.', 4)}
-${rodape('Cancelar', 'Aplicar filtros', 4)}
+${header(title, 'Configure os filtros para refinar os resultados.', 4)}
+${footer('Cancelar', 'Aplicar filtros', 4)}
   </SheetContent>
 </Sheet>`,
   );
@@ -135,22 +135,22 @@ ${rodape('Cancelar', 'Aplicar filtros', 4)}
 
 /** Direita: o padrão de desktop, e por ser padrão a prop não aparece. */
 export function sheetSideDireitoSource(): string {
-  return lado('right', 'Painel direito');
+  return side('right', 'Painel direito');
 }
 
 /** Esquerda: a direção da navegação secundária. */
 export function sheetSideEsquerdoSource(): string {
-  return lado('left', 'Painel esquerdo');
+  return side('left', 'Painel esquerdo');
 }
 
 /** Topo: largura inteira, altura pelo conteúdo. */
 export function sheetSideSuperiorSource(): string {
-  return lado('top', 'Painel superior');
+  return side('top', 'Painel superior');
 }
 
 /** Base: o mesmo desenho do Drawer, sem o gesto de arrastar. */
 export function sheetSideInferiorSource(): string {
-  return lado('bottom', 'Painel inferior');
+  return side('bottom', 'Painel inferior');
 }
 
 /**
@@ -191,7 +191,7 @@ export function sheetOpenSource(): string {
 ${TRIGGER(LABEL_TRIGGER)}
   <SheetContent>
 ${header('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
-${rodape('Cancelar', 'Aplicar filtros', 4)}
+${footer('Cancelar', 'Aplicar filtros', 4)}
   </SheetContent>
 </Sheet>`,
   );
@@ -214,7 +214,7 @@ export function sheetNoButtonCloseSource(): string {
     `<Sheet default-open>
   <SheetContent :show-close-button="false">
 ${header('Aceitar atualização', 'Uma nova versão está disponível. Continue para atualizar.', 4)}
-${rodape('Mais tarde', 'Atualizar agora', 4)}
+${footer('Mais tarde', 'Atualizar agora', 4)}
   </SheetContent>
 </Sheet>`,
   );
@@ -261,11 +261,11 @@ ${header(
 }
 
 /** Campos empilhados dentro do corpo rolável, com rótulo ligado ao campo. */
-function campo(id: string, rotulo: string, valor: string, recuo: number): string {
+function field(id: string, label: string, value: string, recuo: number): string {
   const p = ' '.repeat(recuo);
   return `${p}<div class="nds-grid" data-spacing="xs">
-${p}  <Label for="${id}">${rotulo}</Label>
-${p}  <Input id="${id}" default-value="${valor}" />
+${p}  <Label for="${id}">${label}</Label>
+${p}  <Input id="${id}" default-value="${value}" />
 ${p}</div>`;
 }
 
@@ -292,12 +292,12 @@ ${FIELD}`,
 ${header('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
     <SheetBody>
       <div class="nds-grid" data-spacing="md">
-${campo('cat', 'Categoria', 'Componentes', 8)}
-${campo('status', 'Status', 'Estável', 8)}
-${campo('lang', 'Idioma', 'Português', 8)}
+${field('cat', 'Categoria', 'Componentes', 8)}
+${field('status', 'Status', 'Estável', 8)}
+${field('lang', 'Idioma', 'Português', 8)}
       </div>
     </SheetBody>
-${rodape('Cancelar', 'Aplicar filtros', 4)}
+${footer('Cancelar', 'Aplicar filtros', 4)}
   </SheetContent>
 </Sheet>`,
   );
@@ -329,9 +329,9 @@ ${header(
 )}
     <SheetBody>
       <form class="nds-grid" data-spacing="sm">
-${campo('profile-name', 'Nome', 'Juliana Mucci', 8)}
-${campo('profile-handle', 'Username', '@julianamucci', 8)}
-${campo('profile-bio', 'Bio', 'Designer de sistemas em São Paulo', 8)}
+${field('profile-name', 'Nome', 'Juliana Mucci', 8)}
+${field('profile-handle', 'Username', '@julianamucci', 8)}
+${field('profile-bio', 'Bio', 'Designer de sistemas em São Paulo', 8)}
       </form>
     </SheetBody>
     <SheetFooter>
@@ -407,7 +407,7 @@ ${header('Preferências de notificação', 'Configure cada tipo de notificação
         </div>
       </div>
     </SheetBody>
-${rodape('Cancelar', 'Salvar preferências', 4)}
+${footer('Cancelar', 'Salvar preferências', 4)}
   </SheetContent>
 </Sheet>`,
   );

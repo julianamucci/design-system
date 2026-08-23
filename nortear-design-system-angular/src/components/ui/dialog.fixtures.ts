@@ -41,7 +41,7 @@ export const IMG_PLACEHOLDER =
 // diálogo de `overflow` e `transform` de qualquer ancestral. Toda consulta ao
 // conteúdo aberto sai de `document`.
 
-export const painel = (): HTMLElement | null =>
+export const panel = (): HTMLElement | null =>
   document.querySelector<HTMLElement>('[data-slot="dialog-content"]');
 
 export const overlay = (): HTMLElement | null =>
@@ -57,7 +57,7 @@ export const overlay = (): HTMLElement | null =>
  */
 export async function waitForOpen(): Promise<HTMLElement> {
   const p = await waitFor(() => {
-    const el = painel();
+    const el = panel();
     if (!el) throw new Error('painel do diálogo ainda não montou');
     if (el.hasAttribute('data-starting-style')) throw new Error('animação de entrada em curso');
     return el;
@@ -84,7 +84,7 @@ export async function waitForOpen(): Promise<HTMLElement> {
  */
 export async function waitForClosed(): Promise<void> {
   await waitFor(() => {
-    if (painel()) throw new Error('painel do diálogo ainda montado');
+    if (panel()) throw new Error('painel do diálogo ainda montado');
   });
 }
 
@@ -100,22 +100,22 @@ export async function waitForClosed(): Promise<void> {
  * Clica no gatilho só se estiver fechado; se já estiver aberto, apenas espera a
  * animação assentar.
  */
-export async function abrir(raiz: ParentNode): Promise<HTMLElement> {
-  if (!painel()) {
-    const trigger = raiz.querySelector<HTMLElement>('[data-slot="dialog-trigger"]');
+export async function open(root: ParentNode): Promise<HTMLElement> {
+  if (!panel()) {
+    const trigger = root.querySelector<HTMLElement>('[data-slot="dialog-trigger"]');
     if (trigger) await userEvent.click(trigger);
   }
   return waitForOpen();
 }
 
 /**
- * Deixa o diálogo FECHADO, venha de onde vier — o par idempotente de `abrir`.
+ * Deixa o diálogo FECHADO, venha de onde vier — o par idempotente de `open`.
  *
  * Escape e não o botão X: a saída por teclado existe em toda composição,
  * inclusive nas que escondem o X.
  */
-export async function fechar(): Promise<void> {
-  if (painel()) await userEvent.keyboard('{Escape}');
+export async function close(): Promise<void> {
+  if (panel()) await userEvent.keyboard('{Escape}');
   await waitForClosed();
 }
 

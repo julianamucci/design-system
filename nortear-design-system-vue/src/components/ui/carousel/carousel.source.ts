@@ -40,28 +40,28 @@ ${p}</div>`;
 }
 
 /** Corpo comum: a raiz nomeada, o trilho, um item por slide e as duas setas. */
-function carrossel(opcoes: {
-  raiz?: string;
+function carrossel(options: {
+  root?: string;
   track?: string;
   item?: string;
   vertical?: boolean;
-  rotulo: string;
+  label: string;
   miolo?: string;
   laco?: string;
 }): string {
   const {
-    raiz = '',
+    root = '',
     track = '',
     item = '',
     vertical = false,
-    rotulo,
+    label,
     laco = 'v-for="n in slides" :key="n"',
-  } = opcoes;
-  const largura = vertical ? 'nds-w-xs' : WIDTH_SM;
-  return `<Carousel${attrs(raiz, `class="${largura}"`, `aria-label="${rotulo}"`)}>
+  } = options;
+  const width = vertical ? 'nds-w-xs' : WIDTH_SM;
+  return `<Carousel${attrs(root, `class="${width}"`, `aria-label="${label}"`)}>
   <CarouselContent${attrs(track)}>
     <CarouselItem ${attrs(laco, item).trim()}>
-${opcoes.miolo ?? miolo(vertical)}
+${options.miolo ?? miolo(vertical)}
     </CarouselItem>
   </CarouselContent>
   <CarouselPrevious aria-label="Item anterior" />
@@ -82,10 +82,10 @@ export const carouselSource: SourceTransform<CarouselArgs> = (_gerado, ctx) => {
   return vueSnippet(
     `${IMPORT}\n\n${SLIDES}`,
     carrossel({
-      raiz: vertical ? 'orientation="vertical"' : '',
+      root: vertical ? 'orientation="vertical"' : '',
       track: vertical ? 'class="nds-aspect-4-3"' : '',
       vertical,
-      rotulo: 'Galeria de exemplos',
+      label: 'Galeria de exemplos',
     }),
   );
 };
@@ -94,7 +94,7 @@ export const carouselSource: SourceTransform<CarouselArgs> = (_gerado, ctx) => {
 export function carouselHorizontalSource(): string {
   return vueSnippet(
     `${IMPORT}\n\n${SLIDES}`,
-    carrossel({ rotulo: 'Slides na horizontal' }),
+    carrossel({ label: 'Slides na horizontal' }),
   );
 }
 
@@ -103,10 +103,10 @@ export function carouselVerticalSource(): string {
   return vueSnippet(
     `${IMPORT}\n\n${SLIDES}`,
     carrossel({
-      raiz: 'orientation="vertical"',
+      root: 'orientation="vertical"',
       track: 'class="nds-aspect-4-3"',
       vertical: true,
-      rotulo: 'Slides na vertical',
+      label: 'Slides na vertical',
     }),
   );
 }
@@ -118,7 +118,7 @@ export function carouselVerticalSource(): string {
 export function carouselFirstSlideSource(): string {
   return vueSnippet(
     `${IMPORT}\n\n${SLIDES}\nconst opts = { startIndex: 0 }`,
-    carrossel({ raiz: ':opts="opts"', rotulo: 'Slides no primeiro item' }),
+    carrossel({ root: ':opts="opts"', label: 'Slides no primeiro item' }),
   );
 }
 
@@ -126,7 +126,7 @@ export function carouselFirstSlideSource(): string {
 export function carouselLastSlideSource(): string {
   return vueSnippet(
     `${IMPORT}\n\n${SLIDES}\nconst opts = { startIndex: slides.length - 1 }`,
-    carrossel({ raiz: ':opts="opts"', rotulo: 'Slides no último item' }),
+    carrossel({ root: ':opts="opts"', label: 'Slides no último item' }),
   );
 }
 
@@ -134,7 +134,7 @@ export function carouselLastSlideSource(): string {
 export function carouselItemUnicoSource(): string {
   return vueSnippet(
     `${IMPORT}\n\n${SLIDES}`,
-    carrossel({ rotulo: 'Um item por vez' }),
+    carrossel({ label: 'Um item por vez' }),
   );
 }
 
@@ -170,7 +170,7 @@ import AutoplayPlugin from 'embla-carousel-autoplay'
 
 ${SLIDES}
 const plugins = [AutoplayPlugin({ delay: 4000, stopOnInteraction: true })]`,
-    carrossel({ raiz: ':plugins="plugins"', rotulo: 'Destaques' }),
+    carrossel({ root: ':plugins="plugins"', label: 'Destaques' }),
   );
 }
 
@@ -181,7 +181,7 @@ const plugins = [AutoplayPlugin({ delay: 4000, stopOnInteraction: true })]`,
 export function carouselArrastarSource(): string {
   return vueSnippet(
     `${IMPORT}\n\nconst slides = [1, 2, 3, 4]`,
-    carrossel({ rotulo: 'Galeria com gesto de arrastar' }),
+    carrossel({ label: 'Galeria com gesto de arrastar' }),
   );
 }
 

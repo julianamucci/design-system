@@ -184,9 +184,9 @@ export const Playground: Story = {
 
     await step('O título é o heading que quem escreve escolheu', async () => {
       // Aqui o nível é do ELEMENTO, não de uma prop: `<h5 ndsAlertTitle>`.
-      const titulo = canvas.getByText(args.title);
-      await expect(titulo.tagName).toBe('H5');
-      await expect(titulo).toHaveClass('nds-alert-title');
+      const title = canvas.getByText(args.title);
+      await expect(title.tagName).toBe('H5');
+      await expect(title).toHaveClass('nds-alert-title');
     });
 
     await step('A variante default aplica só a classe base', async () => {

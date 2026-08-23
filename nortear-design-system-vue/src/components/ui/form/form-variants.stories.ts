@@ -46,8 +46,8 @@ export const LabelAndControl: Story = {
     await step('Sem descrição, o controle não ganha aria-describedby vazio', async () => {
       // Um `aria-describedby=""` faz o leitor de tela anunciar uma pausa sem
       // conteúdo — o atributo tem que sumir, não ficar vazio.
-      const controle = canvas.getByLabelText('Nome completo');
-      await expect(controle.hasAttribute('aria-describedby')).toBe(false);
+      const control = canvas.getByLabelText('Nome completo');
+      await expect(control.hasAttribute('aria-describedby')).toBe(false);
     });
   },
 };
@@ -76,7 +76,7 @@ export const WithDescription: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const controle = canvas.getByLabelText('Senha');
+    const control = canvas.getByLabelText('Senha');
     const descricao = canvasElement.querySelector<HTMLElement>('[data-slot="field-description"]')!;
 
     await step('A descrição é um parágrafo com a classe do design system', async () => {
@@ -88,12 +88,12 @@ export const WithDescription: Story = {
       // A ordem importa para quem navega por teclado: a instrução aparece onde
       // o campo termina, não empurrando o campo para baixo da dobra.
       await expect(descricao.getBoundingClientRect().top).toBeGreaterThanOrEqual(
-        controle.getBoundingClientRect().bottom,
+        control.getBoundingClientRect().bottom,
       );
     });
 
     await step('O texto de apoio entra no aria-describedby, e o alvo existe', async () => {
-      await expect(controle.getAttribute('aria-describedby')).toContain(descricao.id);
+      await expect(control.getAttribute('aria-describedby')).toContain(descricao.id);
       await expect(document.getElementById(descricao.id)).toBe(descricao);
     });
   },

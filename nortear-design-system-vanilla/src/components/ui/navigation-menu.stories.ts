@@ -131,10 +131,10 @@ export const Playground: Story = {
 
     await step('Enter abre o painel e alcança os destinos pelo teclado', async () => {
       await userEvent.keyboard('{Enter}');
-      const painel = await waitForPanel(canvasElement);
+      const panel = await waitForPanel(canvasElement);
       await expect(produtos).toHaveAttribute('aria-expanded', 'true');
 
-      const first = within(painel).getByRole('link', { name: 'Plano Inicial' });
+      const first = within(panel).getByRole('link', { name: 'Plano Inicial' });
       // Alcançável por teclado: nenhum destino do painel sai da ordem de foco.
       await expect(first).not.toHaveAttribute('tabindex', '-1');
       first.focus();
@@ -152,15 +152,15 @@ export const Playground: Story = {
 
     await step('O ponteiro abre o painel sem clique', async () => {
       await userEvent.hover(produtos);
-      const painel = await waitForPanel(canvasElement);
-      await expect(painel.textContent).toContain('Plano Inicial');
+      const panel = await waitForPanel(canvasElement);
+      await expect(panel.textContent).toContain('Plano Inicial');
     });
 
     await step('Passar de um gatilho ao outro troca o painel sem fechá-lo', async () => {
       await userEvent.hover(solucoes);
       await waitFor(async () => {
-        const painel = panelOpen(canvasElement);
-        await expect(painel?.textContent).toContain('Para Marketing');
+        const panel = panelOpen(canvasElement);
+        await expect(panel?.textContent).toContain('Para Marketing');
       });
       // Um painel por vez, e a troca é instantânea: reesperar entre dois
       // gatilhos vizinhos faria o painel piscar no caminho.

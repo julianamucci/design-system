@@ -42,13 +42,13 @@ export default meta;
 type Story = StoryObj;
 
 const LABEL = {
-  gatilho: () => t('usage.uxWriting.table.trigger.good'),
-  titulo: () => t('usage.uxWriting.table.title.good'),
+  trigger: () => t('usage.uxWriting.table.trigger.good'),
+  title: () => t('usage.uxWriting.table.title.good'),
   descricao: () => t('usage.uxWriting.table.description.good'),
-  fechar: () => t('usage.uxWriting.table.close.good'),
+  close: () => t('usage.uxWriting.table.close.good'),
   confirmar: () => t('demonstration.labels.confirm'),
   destruir: () => t('demonstration.labels.destroy'),
-  campo: () => t('demonstration.labels.fieldName'),
+  field: () => t('demonstration.labels.fieldName'),
   aviso: () => t('demonstration.labels.destroyMessage'),
 };
 
@@ -65,11 +65,11 @@ export const WithForm: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: LABEL.gatilho(),
-      tituloPainel: LABEL.titulo(),
+      rotuloGatilho: LABEL.trigger(),
+      tituloPainel: LABEL.title(),
       descricaoPainel: LABEL.descricao(),
-      rotuloCampo: LABEL.campo(),
-      rotuloFechar: LABEL.fechar(),
+      rotuloCampo: LABEL.field(),
+      rotuloFechar: LABEL.close(),
       rotuloConfirmar: LABEL.confirmar(),
     },
     template: `
@@ -96,28 +96,28 @@ export const WithForm: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const painel = await waitForPortal('dialog');
-    const inside = within(painel);
+    const panel = await waitForPortal('dialog');
+    const inside = within(panel);
 
     await step('O painel carrega nome, descrição e o campo do formulário', async () => {
-      await expect(painel).toHaveAccessibleName(LABEL.titulo());
-      await expect(painel).toHaveAccessibleDescription(LABEL.descricao());
+      await expect(panel).toHaveAccessibleName(LABEL.title());
+      await expect(panel).toHaveAccessibleDescription(LABEL.descricao());
       // O campo é achado pelo RÓTULO: se o `for`/`id` não casassem, o input
       // ficaria sem nome acessível e esta busca falharia.
-      await expect(inside.getByLabelText(LABEL.campo())).toBeInTheDocument();
+      await expect(inside.getByLabelText(LABEL.field())).toBeInTheDocument();
     });
 
     await step('O rodapé oferece cancelar e confirmar, nessa ordem de leitura', async () => {
       const buttons = inside.getAllByRole('button');
       const names = buttons.map((b) => b.textContent?.trim());
-      await expect(names).toContain(LABEL.fechar());
+      await expect(names).toContain(LABEL.close());
       await expect(names).toContain(LABEL.confirmar());
     });
 
     await step('O corpo do formulário é a região rolável do painel', async () => {
-      const corpo = painel.querySelector<HTMLElement>('[data-slot="drawer-body"]')!;
-      await expect(corpo).toHaveAttribute('tabindex', '0');
-      await expect(corpo).toHaveClass(/nds-overflow-y/);
+      const body = panel.querySelector<HTMLElement>('[data-slot="drawer-body"]')!;
+      await expect(body).toHaveAttribute('tabindex', '0');
+      await expect(body).toHaveClass(/nds-overflow-y/);
     });
   },
 };
@@ -134,10 +134,10 @@ export const WithConfirmation: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: LABEL.gatilho(),
+      rotuloGatilho: LABEL.trigger(),
       tituloPainel: stripHtml(t('variants.compositions.withConfirmation.name')),
       descricaoPainel: LABEL.aviso(),
-      rotuloFechar: LABEL.fechar(),
+      rotuloFechar: LABEL.close(),
       rotuloDestruir: LABEL.destruir(),
     },
     template: `
@@ -159,11 +159,11 @@ export const WithConfirmation: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const painel = await waitForPortal('dialog');
-    const inside = within(painel);
+    const panel = await waitForPortal('dialog');
+    const inside = within(panel);
 
     await step('A consequência está escrita, não subentendida', async () => {
-      await expect(painel).toHaveAccessibleDescription(LABEL.aviso());
+      await expect(panel).toHaveAccessibleDescription(LABEL.aviso());
     });
 
     await step('A ação principal carrega a variante destrutiva', async () => {
@@ -174,7 +174,7 @@ export const WithConfirmation: Story = {
     });
 
     await step('Cancelar continua sendo a saída de menor risco', async () => {
-      const cancelar = inside.getByRole('button', { name: LABEL.fechar() });
+      const cancelar = inside.getByRole('button', { name: LABEL.close() });
       await expect(cancelar).toHaveClass(/nds-button-outline/);
     });
   },

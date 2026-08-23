@@ -223,9 +223,9 @@ export const MaxValue: Story = {
       await expect(handleValue(canvas.getByRole('slider'))).toBe(100);
       // Afirma o desenho, não o dado: no máximo o preenchimento é o trilho.
       const track = canvasElement.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
-      const faixa = canvasElement.querySelector<HTMLElement>('[data-slot="slider-range"]')!;
+      const range = canvasElement.querySelector<HTMLElement>('[data-slot="slider-range"]')!;
       const pct =
-        (faixa.getBoundingClientRect().width / track.getBoundingClientRect().width) * 100;
+        (range.getBoundingClientRect().width / track.getBoundingClientRect().width) * 100;
       await expect(Math.abs(pct - 100)).toBeLessThan(1.5);
     });
 

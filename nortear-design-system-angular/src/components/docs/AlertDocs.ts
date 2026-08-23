@@ -749,23 +749,23 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '--muted',         valor: 'hsl(var(--muted))',                 k: 'background'       },
-      { token: '--foreground',    valor: 'hsl(var(--foreground))',            k: 'foreground'       },
-      { token: '--border',        valor: 'hsl(var(--border))',                k: 'border'           },
-      { token: '--destructive',   valor: 'hsl(var(--destructive) / 0.3)',     k: 'destructiveBorder'},
-      { token: '--destructive',   valor: 'hsl(var(--destructive))',           k: 'destructiveText'  },
-      { token: '--success',       valor: '.nds-alert-success',                k: 'success'          },
-      { token: '--warning',       valor: '.nds-alert-warning',                k: 'warning'          },
-      { token: '--info',          valor: '.nds-alert-info',                   k: 'info'             },
-      { token: '--radius-alert',  valor: 'var(--radius-alert)',               k: 'radius'           },
-      { token: '--alert-bg',      valor: 'hsl(var(--muted))',                 k: 'alertBg'          },
-      { token: '--alert-fg',      valor: 'hsl(var(--card-foreground))',       k: 'alertFg'          },
-      { token: '--alert-body-fg', valor: 'hsl(var(--foreground))',            k: 'alertBodyFg'      },
-      { token: '--alert-border',  valor: 'hsl(var(--border))',                k: 'alertBorder'      },
-      { token: '--alert-glow',    valor: 'hsl(var(--border))',                k: 'alertGlow'        },
-    ].map(({ token, valor, k }) => ({
+      { token: '--muted',         value: 'hsl(var(--muted))',                 k: 'background'       },
+      { token: '--foreground',    value: 'hsl(var(--foreground))',            k: 'foreground'       },
+      { token: '--border',        value: 'hsl(var(--border))',                k: 'border'           },
+      { token: '--destructive',   value: 'hsl(var(--destructive) / 0.3)',     k: 'destructiveBorder'},
+      { token: '--destructive',   value: 'hsl(var(--destructive))',           k: 'destructiveText'  },
+      { token: '--success',       value: '.nds-alert-success',                k: 'success'          },
+      { token: '--warning',       value: '.nds-alert-warning',                k: 'warning'          },
+      { token: '--info',          value: '.nds-alert-info',                   k: 'info'             },
+      { token: '--radius-alert',  value: 'var(--radius-alert)',               k: 'radius'           },
+      { token: '--alert-bg',      value: 'hsl(var(--muted))',                 k: 'alertBg'          },
+      { token: '--alert-fg',      value: 'hsl(var(--card-foreground))',       k: 'alertFg'          },
+      { token: '--alert-body-fg', value: 'hsl(var(--foreground))',            k: 'alertBodyFg'      },
+      { token: '--alert-border',  value: 'hsl(var(--border))',                k: 'alertBorder'      },
+      { token: '--alert-glow',    value: 'hsl(var(--border))',                k: 'alertGlow'        },
+    ].map(({ token, value, k }) => ({
       token,
-      value: valor,
+      value: value,
       description: toPlainText(t(`tokens.table.${k}`)),
     }));
   });
@@ -799,12 +799,12 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'sonner',      nome: 'Sonner',      path: '?path=/docs/ui-sonner--docs'      },
-      { key: 'alertDialog', nome: 'AlertDialog', path: '?path=/docs/ui-alertdialog--docs' },
-      { key: 'badge',       nome: 'Badge',       path: '?path=/docs/ui-badge--docs'       },
-      { key: 'progress',    nome: 'Progress',    path: '?path=/docs/ui-progress--docs'    },
-    ].map(({ key, nome, path }) => ({
-      name: nome,
+      { key: 'sonner',      name: 'Sonner',      path: '?path=/docs/ui-sonner--docs'      },
+      { key: 'alertDialog', name: 'AlertDialog', path: '?path=/docs/ui-alertdialog--docs' },
+      { key: 'badge',       name: 'Badge',       path: '?path=/docs/ui-badge--docs'       },
+      { key: 'progress',    name: 'Progress',    path: '?path=/docs/ui-progress--docs'    },
+    ].map(({ key, name, path }) => ({
+      name: name,
       description: toPlainText(t(`related.${key}`)),
       path,
     }));

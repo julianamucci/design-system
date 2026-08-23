@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { AccordionOptions } from './accordion';
@@ -47,27 +47,27 @@ const ITEMS_DEFAULT: readonly AccordionSnippetItem[] = [
 ];
 
 /** `'item-1'` ou `['item-1']` — a fábrica aceita as duas formas. */
-function valueInitial(valor: AccordionSnippetOptions['defaultValue']): string | undefined {
-  if (valor === undefined) return undefined;
-  return Array.isArray(valor) ? `[${valor.map((v) => texto(v)).join(', ')}]` : texto(valor);
+function valueInitial(value: AccordionSnippetOptions['defaultValue']): string | undefined {
+  if (value === undefined) return undefined;
+  return Array.isArray(value) ? `[${value.map((v) => text(v)).join(', ')}]` : text(value);
 }
 
-function itemsBlock(itens: readonly AccordionSnippetItem[]): string {
-  const lines = itens.map(
+function itemsBlock(items: readonly AccordionSnippetItem[]): string {
+  const lines = items.map(
     (item) =>
-      `  { value: ${texto(item.value)}, trigger: ${texto(item.trigger)}, content: '…'` +
+      `  { value: ${text(item.value)}, trigger: ${text(item.trigger)}, content: '…'` +
       `${item.disabled ? ', disabled: true' : ''} },`,
   );
   return `const itens = [\n${lines.join('\n')}\n];`;
 }
 
 function callLines(o: AccordionSnippetOptions): string[] {
-  return opcoes([
+  return options([
     // `single` é o padrão da fábrica: só o modo múltiplo entra no snippet.
-    ['type', o.type && o.type !== 'single' ? texto(o.type) : undefined],
+    ['type', o.type && o.type !== 'single' ? text(o.type) : undefined],
     ['defaultValue', valueInitial(o.defaultValue)],
     ['items', 'itens'],
-    ['class', o.class ? texto(o.class) : undefined],
+    ['class', o.class ? text(o.class) : undefined],
     // A story passa uma FUNÇÃO nos args; só um corpo escrito como texto vira
     // snippet. Sem esta guarda o painel imprimiria o espião da story.
     ['onValueChange', typeof o.onValueChange === 'string' ? o.onValueChange : undefined],
@@ -76,11 +76,11 @@ function callLines(o: AccordionSnippetOptions): string[] {
 
 /** A chamada real de `createAccordion` com as opções da story. */
 export function accordionSnippet(o: AccordionSnippetOptions = {}): string {
-  const itens = o.items?.length ? o.items : ITEMS_DEFAULT;
+  const items = o.items?.length ? o.items : ITEMS_DEFAULT;
 
   return snippet(
     importing('accordion', 'createAccordion'),
-    itemsBlock(itens),
+    itemsBlock(items),
     `const acordeao = ${chamada('createAccordion', callLines(o))};`,
     montar('acordeao'),
   );
@@ -107,7 +107,7 @@ export type AccordionTriggerRichSnippetOptions = AccordionSnippetOptions & {
   /** Item cujo rótulo é trocado — o `value` é o que liga um ao outro. */
   value?: string;
   /** Texto que fica no rótulo depois da troca. */
-  rotulo?: string;
+  label?: string;
   /** Etiqueta de status ao lado do rótulo. */
   badge?: string;
   badgeVariant?: BadgeVariant;
@@ -124,8 +124,8 @@ export function accordionWithTriggerRichSnippet(
   o: AccordionTriggerRichSnippetOptions = {},
 ): string {
   const value = o.value ?? 'novo';
-  const rotulo = o.rotulo ?? 'Novidades da versão 3.0';
-  const itens = o.items?.length ? o.items : [{ value, trigger: rotulo }];
+  const label = o.label ?? 'Novidades da versão 3.0';
+  const items = o.items?.length ? o.items : [{ value, trigger: label }];
 
   const imports = [importing('accordion', 'createAccordion')];
   if (o.badge) imports.push(importing('badge', 'createBadge'));
@@ -137,10 +137,10 @@ export function accordionWithTriggerRichSnippet(
     'const rotulo = document.createElement(\'span\');',
     'rotulo.className = \'nds-cluster\';',
     'rotulo.dataset.spacing = \'sm\';',
-    `rotulo.textContent = ${texto(rotulo)};`,
+    `rotulo.textContent = ${text(label)};`,
     o.withIcon ? 'rotulo.prepend(icone);' : '',
     o.badge
-      ? `rotulo.appendChild(createBadge({ variant: ${texto(o.badgeVariant ?? 'default')}, children: ${texto(o.badge)} }));`
+      ? `rotulo.appendChild(createBadge({ variant: ${text(o.badgeVariant ?? 'default')}, children: ${text(o.badge)} }));`
       : '',
   ]
     .filter(Boolean)
@@ -148,8 +148,8 @@ export function accordionWithTriggerRichSnippet(
 
   return snippet(
     imports.join('\n'),
-    itemsBlock(itens),
-    `const acordeao = ${chamada('createAccordion', callLines({ ...o, items: itens }))};`,
+    itemsBlock(items),
+    `const acordeao = ${chamada('createAccordion', callLines({ ...o, items: items }))};`,
     composition,
     `acordeao.querySelector('[data-value="${value}"] span')?.replaceWith(rotulo);`,
     montar('acordeao'),
@@ -178,12 +178,12 @@ export function accordionWithContentRichSnippet(
   o: AccordionContentRichSnippetOptions = {},
 ): string {
   const value = o.value ?? 'specs';
-  const itens = o.items?.length ? o.items : [{ value, trigger: 'Especificações técnicas' }];
+  const items = o.items?.length ? o.items : [{ value, trigger: 'Especificações técnicas' }];
 
   return snippet(
     [importing('accordion', 'createAccordion'), "import DOMPurify from 'dompurify';"].join('\n'),
-    itemsBlock(itens),
-    `const acordeao = ${chamada('createAccordion', callLines({ ...o, items: itens }))};`,
+    itemsBlock(items),
+    `const acordeao = ${chamada('createAccordion', callLines({ ...o, items: items }))};`,
     `const corpo = acordeao.querySelector(
   '[data-content-for="${value}"] .nds-accordion-content-body',
 );

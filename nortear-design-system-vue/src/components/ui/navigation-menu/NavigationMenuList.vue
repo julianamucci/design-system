@@ -24,17 +24,17 @@ const forwardedProps = useForwardProps(delegatedProps)
  * seria justamente o gesto que o leitor de tela ensina a usar.
  */
 function onKeyDown(event: KeyboardEvent): void {
-  const lista = event.currentTarget as HTMLElement | null
-  if (!lista) return
+  const list = event.currentTarget as HTMLElement | null
+  if (!list) return
 
-  const vertical = lista.getAttribute('data-orientation') === 'vertical'
+  const vertical = list.getAttribute('data-orientation') === 'vertical'
   const previous = vertical ? 'ArrowUp' : 'ArrowLeft'
   const next = vertical ? 'ArrowDown' : 'ArrowRight'
 
   // Um controle por item da barra: o primeiro gatilho ou destino DENTRO de cada
   // `<li>`. Os destinos do painel não entram — no modo viewport eles vivem fora
   // da lista, e mesmo assim varrer a lista inteira os arrastaria para a ordem.
-  const itens = [...lista.children]
+  const items = [...list.children]
     .map((li) =>
       li.querySelector<HTMLElement>(
         '[data-slot="navigation-menu-trigger"], [data-slot="navigation-menu-link"]',
@@ -42,21 +42,21 @@ function onKeyDown(event: KeyboardEvent): void {
     )
     .filter((el): el is HTMLElement => el !== null)
 
-  const atual = itens.indexOf(document.activeElement as HTMLElement)
-  if (atual === -1) return
+  const current = items.indexOf(document.activeElement as HTMLElement)
+  if (current === -1) return
 
   let destination = -1
-  if (event.key === next) destination = (atual + 1) % itens.length
-  else if (event.key === previous) destination = (atual - 1 + itens.length) % itens.length
+  if (event.key === next) destination = (current + 1) % items.length
+  else if (event.key === previous) destination = (current - 1 + items.length) % items.length
   else if (event.key === 'Home') destination = 0
-  else if (event.key === 'End') destination = itens.length - 1
+  else if (event.key === 'End') destination = items.length - 1
   if (destination === -1) return
 
   // A tecla de ENTRADA no painel (Seta-para-baixo numa barra horizontal) é da
   // lib e só vale com o painel aberto — por isso o eixo daqui é o da barra, e
   // os dois nunca disputam a mesma tecla.
   event.preventDefault()
-  itens[destination]?.focus()
+  items[destination]?.focus()
 }
 </script>
 

@@ -23,12 +23,12 @@ import { Input } from "@/components/ui/input";`;
  * depois. `indentacao` é a coluna do próprio elemento na marcação.
  */
 function elemento(
-  nome: string,
+  name: string,
   partes: Array<string | false | null | undefined>,
   indentacao = '',
 ): string {
   const props = attrsMultilinha(partes, `${indentacao}  `, 68);
-  return props.startsWith('\n') ? `<${nome}${props}${indentacao}/>` : `<${nome}${props} />`;
+  return props.startsWith('\n') ? `<${name}${props}${indentacao}/>` : `<${name}${props} />`;
 }
 
 /** Forma canônica: rótulo associado ao campo por `for`/`id`. Serve o Playground. */
@@ -36,14 +36,14 @@ export function labelSource(_gerado?: string, ctx?: { args?: Partial<LabelArgs> 
   const { class: className = '', required = false } = ctx?.args ?? {};
   const aberturaLabel = `<Label for="nome"${className ? ` class="${className}"` : ''}>`;
 
-  const rotulo = required
+  const label = required
     ? `  ${aberturaLabel}
     Nome completo
     <span class="nds-text-destructive" aria-hidden="true">*</span>
   </Label>`
     : `  ${aberturaLabel}Nome completo</Label>`;
 
-  const campo = elemento(
+  const field = elemento(
     'Input',
     [
       'id="nome"',
@@ -57,8 +57,8 @@ export function labelSource(_gerado?: string, ctx?: { args?: Partial<LabelArgs> 
   return svelteSnippet(
     IMPORT,
     `<div class="nds-stack" data-spacing="xs">
-${rotulo}
-  ${campo}
+${label}
+  ${field}
 </div>`,
   );
 }

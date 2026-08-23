@@ -34,7 +34,7 @@ type Story = StoryObj<typeof meta>;
 // Datas fixas para determinismo Chromatic — instanciadas dentro de setup()
 // para evitar criar CalendarDate no import do módulo.
 
-const legenda = (el: HTMLElement) => el.querySelector('[data-slot="calendar-heading"]');
+const caption = (el: HTMLElement) => el.querySelector('[data-slot="calendar-heading"]');
 
 /** Um mês fixo, para todas as stories partirem do mesmo lugar. */
 const abril2026 = () => ({
@@ -67,7 +67,7 @@ export const CaptionLabel: Story = {
     await step('A legenda traz mês e ano no idioma pedido', async () => {
       // functional.item6 — o idioma vale para a legenda E para o cabeçalho da
       // semana; verificar só um dos dois deixaria metade da tradução solta.
-      await expect(legenda(canvasElement)).toHaveTextContent(/abril 2026/i);
+      await expect(caption(canvasElement)).toHaveTextContent(/abril 2026/i);
       const days = Array.from(
         canvasElement.querySelectorAll('[data-slot="calendar-head-cell"]'),
       ).map((el) => el.textContent?.trim().toLowerCase() ?? '');

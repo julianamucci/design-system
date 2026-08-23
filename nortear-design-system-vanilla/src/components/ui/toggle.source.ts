@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { ToggleSize, ToggleVariant } from './toggle';
@@ -42,19 +42,19 @@ export function toggleSnippet(o: ToggleSnippetOptions = {}): string {
   // Ícone e texto são filhos DIRETOS — o espaço entre eles é o `gap` do próprio
   // `.nds-toggle`, e a medida do ícone vem da regra `.nds-toggle > svg`.
   const children = withText
-    ? `[createElement(${icone}), ${texto(o.label as string)}]`
+    ? `[createElement(${icone}), ${text(o.label as string)}]`
     : `createElement(${icone})`;
 
-  const lines = opcoes([
+  const lines = options([
     ['children', children],
     // Sem texto visível o nome acessível é obrigatório: `aria-pressed` sozinho
     // faz o leitor anunciar "pressionado" sem dizer o quê.
-    ['aria-label', withText ? undefined : texto(o['aria-label'] || 'Negrito')],
-    ['variant', o.variant && o.variant !== 'default' ? texto(o.variant) : undefined],
-    ['size', o.size && o.size !== 'default' ? texto(o.size) : undefined],
+    ['aria-label', withText ? undefined : text(o['aria-label'] || 'Negrito')],
+    ['variant', o.variant && o.variant !== 'default' ? text(o.variant) : undefined],
+    ['size', o.size && o.size !== 'default' ? text(o.size) : undefined],
     ['pressed', o.pressed ? 'true' : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
-    ['class', o.class ? texto(o.class) : undefined],
+    ['class', o.class ? text(o.class) : undefined],
     ['onClick', o.onClick ? (typeof o.onClick === 'string' ? o.onClick : CALLBACK_DEFAULT) : undefined],
   ]);
 
@@ -76,16 +76,16 @@ export function toggleRowSnippet(variacoes: ToggleSnippetOptions[]): string {
     const withText = Boolean(v.label);
     const icone = v.icon ?? (withText ? 'Eye' : 'Bold');
     icons.add(icone);
-    const lines = opcoes([
+    const lines = options([
       [
         'children',
         withText
-          ? `[createElement(${icone}), ${texto(v.label as string)}]`
+          ? `[createElement(${icone}), ${text(v.label as string)}]`
           : `createElement(${icone})`,
       ],
-      ['aria-label', withText ? undefined : texto(v['aria-label'] || 'Negrito')],
-      ['variant', v.variant && v.variant !== 'default' ? texto(v.variant) : undefined],
-      ['size', v.size && v.size !== 'default' ? texto(v.size) : undefined],
+      ['aria-label', withText ? undefined : text(v['aria-label'] || 'Negrito')],
+      ['variant', v.variant && v.variant !== 'default' ? text(v.variant) : undefined],
+      ['size', v.size && v.size !== 'default' ? text(v.size) : undefined],
       ['pressed', v.pressed ? 'true' : undefined],
       ['disabled', v.disabled ? 'true' : undefined],
     ]);
@@ -117,15 +117,15 @@ export function toggleSourceRow(variacoes: ToggleSnippetOptions[]): SourceTransf
  * Barra de formatação: toggles independentes dentro de um `role="group"` com
  * nome próprio. Sem o nome, o leitor anuncia "grupo" e mais nada.
  */
-export function toggleBarSnippet(itens: ToggleSnippetOptions[], nomeDoGrupo: string): string {
-  const icons = itens.map((i) => i.icon ?? 'Bold');
-  const calls = itens.map((i) =>
+export function toggleBarSnippet(items: ToggleSnippetOptions[], nomeDoGrupo: string): string {
+  const icons = items.map((i) => i.icon ?? 'Bold');
+  const calls = items.map((i) =>
     `  ${chamada(
       'createToggle',
-      opcoes([
+      options([
         ['children', `createElement(${i.icon ?? 'Bold'})`],
-        ['aria-label', texto(i['aria-label'] || 'Negrito')],
-        ['variant', i.variant && i.variant !== 'default' ? texto(i.variant) : undefined],
+        ['aria-label', text(i['aria-label'] || 'Negrito')],
+        ['variant', i.variant && i.variant !== 'default' ? text(i.variant) : undefined],
       ]),
     )},`,
   );
@@ -140,7 +140,7 @@ barra.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-1';
 barra.dataset.spacing = 'xs';
 barra.dataset.align = 'center';
 barra.setAttribute('role', 'group');
-barra.setAttribute('aria-label', ${texto(nomeDoGrupo)});
+barra.setAttribute('aria-label', ${text(nomeDoGrupo)});
 barra.append(
 ${calls.join('\n')}
 );`,
@@ -150,10 +150,10 @@ ${calls.join('\n')}
 
 /** Transform de story para a barra de formatação. */
 export function toggleSourceBar(
-  itens: ToggleSnippetOptions[],
+  items: ToggleSnippetOptions[],
   nomeDoGrupo: string,
 ): SourceTransform<ToggleSnippetOptions> {
-  return () => toggleBarSnippet(itens, nomeDoGrupo);
+  return () => toggleBarSnippet(items, nomeDoGrupo);
 }
 
 /**

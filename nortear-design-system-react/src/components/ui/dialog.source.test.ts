@@ -107,10 +107,10 @@ describe('composições estruturais', () => {
     for (const fn of [dialogWithFormSource, dialogPerfilSource]) {
       const saida = fn();
       const form = saida.indexOf('<form');
-      const rodape = saida.indexOf('<DialogFooter>');
+      const footer = saida.indexOf('<DialogFooter>');
       const endForm = saida.indexOf('</form>');
-      expect(rodape).toBeGreaterThan(form);
-      expect(rodape).toBeLessThan(endForm);
+      expect(footer).toBeGreaterThan(form);
+      expect(footer).toBeLessThan(endForm);
       expect(saida).toContain('<Button type="button" variant="outline" />');
       expect(saida).toContain('<Button type="submit">');
     }

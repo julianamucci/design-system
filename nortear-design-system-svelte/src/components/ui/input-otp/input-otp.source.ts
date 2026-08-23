@@ -40,22 +40,22 @@ const GROUP_UNICO = `      <InputOTPGroup>
  * `helper` é a marcação que vem depois do campo (ajuda, erro, reenvio), já
  * indentada na coluna do bloco.
  */
-function fieldOtp(opcoes: {
+function fieldOtp(options: {
   label: string;
-  atributos: Array<string | false | null | undefined>;
+  attrs: Array<string | false | null | undefined>;
   celulas?: string;
   helper?: string;
 }): string {
-  const props = attrsMultilinha(opcoes.atributos, '    ', 40);
+  const props = attrsMultilinha(options.attrs, '    ', 40);
   const abertura = props.startsWith('\n') ? `<InputOTP${props}  >` : `<InputOTP${props}>`;
 
   return `<div class="nds-stack" data-spacing="sm">
-  <Label for="codigo">${opcoes.label}</Label>
+  <Label for="codigo">${options.label}</Label>
   ${abertura}
     {#snippet children({ cells })}
-${opcoes.celulas ?? GROUP_UNICO}
+${options.celulas ?? GROUP_UNICO}
     {/snippet}
-  </InputOTP>${opcoes.helper ? `\n${opcoes.helper}` : ''}
+  </InputOTP>${options.helper ? `\n${options.helper}` : ''}
 </div>`;
 }
 
@@ -85,7 +85,7 @@ export function inputOtpSource(_gerado?: string, ctx?: { args?: Partial<InputOTP
     `${IMPORT}${state(defaultValue)}`,
     fieldOtp({
       label,
-      atributos: [
+      attrs: [
         'inputId="codigo"',
         `maxlength={${maxLength}}`,
         'bind:value={codigo}',
@@ -115,7 +115,7 @@ export function inputOtpWithSeparatorSource(): string {
 import { Label } from "@/components/ui/label";${state()}`,
     fieldOtp({
       label: 'Código de recuperação',
-      atributos: [
+      attrs: [
         'inputId="codigo"',
         'maxlength={6}',
         'bind:value={codigo}',
@@ -146,7 +146,7 @@ export function helperInputOtpWithTextSource(): string {
     `${IMPORT}${state()}`,
     fieldOtp({
       label: 'Código de verificação',
-      atributos: [
+      attrs: [
         'inputId="codigo"',
         'maxlength={6}',
         'bind:value={codigo}',
@@ -170,7 +170,7 @@ export function inputOtpWithErrorSource(): string {
     `${IMPORT}${state('482913')}`,
     fieldOtp({
       label: 'Código de verificação',
-      atributos: [
+      attrs: [
         'inputId="codigo"',
         'maxlength={6}',
         'bind:value={codigo}',
@@ -196,7 +196,7 @@ export function inputOtpWithReenvioSource(): string {
 import { Button } from "@/components/ui/button";${state()}`,
     fieldOtp({
       label: 'Código de verificação',
-      atributos: [
+      attrs: [
         'inputId="codigo"',
         'maxlength={6}',
         'bind:value={codigo}',

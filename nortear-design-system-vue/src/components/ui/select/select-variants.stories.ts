@@ -114,9 +114,9 @@ export const Default: Story = {
       if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       const listbox = await waitForPortal('listbox', { timeout: 2000 });
       await expect(listbox).toBeVisible();
-      const opcoes = within(listbox).getAllByRole('option');
-      await expect(opcoes).toHaveLength(4);
-      await expect(opcoes[0]).toHaveAccessibleName('São Paulo');
+      const options = within(listbox).getAllByRole('option');
+      await expect(options).toHaveLength(4);
+      await expect(options[0]).toHaveAccessibleName('São Paulo');
       // Nada escolhido ainda: nenhuma opção se anuncia selecionada. A conta é
       // por PAPEL, não por atributo — em lista de escolha única a marca só é
       // exigida na opção escolhida, e cada lib decide se escreve a negativa.
@@ -172,25 +172,25 @@ export const WithGroups: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: /Selecionar estado por região/i });
 
-    const abrir = async () => {
+    const open = async () => {
       // Idempotente: o clique só acontece com a lista fechada.
       if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       return await waitForPortal('listbox', { timeout: 2000 });
     };
 
     await step('Cada categoria vira um grupo nomeado pelo cabeçalho', async () => {
-      const listbox = await abrir();
-      const grupos = within(listbox).getAllByRole('group');
-      await expect(grupos).toHaveLength(Object.keys(REGIOES).length);
+      const listbox = await open();
+      const groups = within(listbox).getAllByRole('group');
+      await expect(groups).toHaveLength(Object.keys(REGIOES).length);
       // O nome do grupo depende de o `aria-labelledby` apontar para um id que
       // EXISTE — sem isso o grupo ficaria anônimo e a referência, quebrada.
-      for (const [i, nome] of Object.keys(REGIOES).entries()) {
-        await expect(grupos[i]).toHaveAccessibleName(nome);
+      for (const [i, name] of Object.keys(REGIOES).entries()) {
+        await expect(groups[i]).toHaveAccessibleName(name);
       }
     });
 
     await step('As opções continuam todas na mesma lista', async () => {
-      const listbox = await abrir();
+      const listbox = await open();
       const total = Object.values(REGIOES).reduce((sum, g) => sum + g.length, 0);
       await expect(within(listbox).getAllByRole('option')).toHaveLength(total);
     });
@@ -237,23 +237,23 @@ export const WithIcon: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: /Selecionar idioma/i });
 
-    const abrir = async () => {
+    const open = async () => {
       // Idempotente: o clique só acontece com a lista fechada.
       if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       return await waitForPortal('listbox', { timeout: 2000 });
     };
 
     await step('O ícone entra na opção e fica fora do nome acessível', async () => {
-      const listbox = await abrir();
-      const opcoes = within(listbox).getAllByRole('option');
-      await expect(opcoes).toHaveLength(3);
-      await expect(opcoes[0].querySelector('svg')).toBeTruthy();
+      const listbox = await open();
+      const options = within(listbox).getAllByRole('option');
+      await expect(options).toHaveLength(3);
+      await expect(options[0].querySelector('svg')).toBeTruthy();
       // Ícone decorativo: o nome acessível continua sendo só o rótulo, sem eco.
-      await expect(opcoes[0]).toHaveAccessibleName('Português (BR)');
+      await expect(options[0]).toHaveAccessibleName('Português (BR)');
     });
 
     await step('O ícone é dimensionado pela folha do componente', async () => {
-      const listbox = await abrir();
+      const listbox = await open();
       const icone = within(listbox)
         .getAllByRole('option')[0]
         .querySelector('svg') as SVGElement;

@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -58,10 +58,10 @@ const ITEMS_DEFAULT: SelectEntrySnippet[] = [
 ];
 
 function optionLiteral(o: SelectOptionSnippet): string {
-  const partes = [`value: ${texto(o.value)}`, `label: ${texto(o.label)}`];
+  const partes = [`value: ${text(o.value)}`, `label: ${text(o.label)}`];
   if (o.icon) {
     partes.push(
-      `icon: ${Array.isArray(o.icon) ? `[${o.icon.map(texto).join(', ')}]` : texto(o.icon)}`,
+      `icon: ${Array.isArray(o.icon) ? `[${o.icon.map(text).join(', ')}]` : text(o.icon)}`,
     );
   }
   if (o.disabled) partes.push('disabled: true');
@@ -74,7 +74,7 @@ function entryLiteral(entry: SelectEntrySnippet, recuo: string): string {
   if ('type' in entry && entry.type === 'group') {
     return `${recuo}{
 ${recuo}  type: 'group',
-${recuo}  label: ${texto(entry.label)},
+${recuo}  label: ${text(entry.label)},
 ${recuo}  items: [
 ${entry.items.map((i) => `${recuo}    ${optionLiteral(i)},`).join('\n')}
 ${recuo}  ],
@@ -83,8 +83,8 @@ ${recuo}},`;
   return `${recuo}${optionLiteral(entry as SelectOptionSnippet)},`;
 }
 
-function itemsLiteral(itens: SelectEntrySnippet[], recuo = '  '): string {
-  return `[\n${itens.map((i) => entryLiteral(i, `${recuo}  `)).join('\n')}\n${recuo}]`;
+function itemsLiteral(items: SelectEntrySnippet[], recuo = '  '): string {
+  return `[\n${items.map((i) => entryLiteral(i, `${recuo}  `)).join('\n')}\n${recuo}]`;
 }
 
 function fieldId(o: SelectSnippetOptions): string {
@@ -101,20 +101,20 @@ function fieldId(o: SelectSnippetOptions): string {
  */
 function fieldLines(o: SelectSnippetOptions, recuo = '  '): string[] {
   const id = fieldId(o);
-  const nome = o['aria-label'] ?? o.labelText ?? 'Estado';
-  return opcoes([
-    ['id', texto(id)],
-    ['name', o.name ? texto(o.name) : undefined],
-    ['aria-labelledby', o['aria-labelledby'] ? texto(`${id}-rotulo`) : undefined],
-    ['aria-label', o['aria-labelledby'] ? undefined : texto(nome)],
-    ['placeholder', texto(o.placeholder ?? 'Selecione...')],
-    ['defaultValue', o.defaultValue ? texto(o.defaultValue) : undefined],
+  const name = o['aria-label'] ?? o.labelText ?? 'Estado';
+  return options([
+    ['id', text(id)],
+    ['name', o.name ? text(o.name) : undefined],
+    ['aria-labelledby', o['aria-labelledby'] ? text(`${id}-rotulo`) : undefined],
+    ['aria-label', o['aria-labelledby'] ? undefined : text(name)],
+    ['placeholder', text(o.placeholder ?? 'Selecione...')],
+    ['defaultValue', o.defaultValue ? text(o.defaultValue) : undefined],
     // `default` é a densidade padrão e `false` é o estado padrão: nenhum entra.
-    ['size', o.size === 'sm' ? texto('sm') : undefined],
+    ['size', o.size === 'sm' ? text('sm') : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
     ['required', o.required ? 'true' : undefined],
     ['aria-invalid', o['aria-invalid'] ? 'true' : undefined],
-    ['aria-describedby', o.mensagemDeErro ? texto(`${id}-erro`) : undefined],
+    ['aria-describedby', o.mensagemDeErro ? text(`${id}-erro`) : undefined],
     ['items', itemsLiteral(o.items ?? ITEMS_DEFAULT, recuo)],
     [
       'onValueChange',
@@ -128,32 +128,32 @@ function fieldLines(o: SelectSnippetOptions, recuo = '  '): string[] {
 }
 
 /** O rótulo visível, associado ao gatilho por `for`/`id`. */
-function rotulo(o: SelectSnippetOptions): string {
+function label(o: SelectSnippetOptions): string {
   const id = fieldId(o);
   return `const rotulo = document.createElement('label');
-${o['aria-labelledby'] ? `rotulo.id = ${texto(`${id}-rotulo`)};\n` : ''}rotulo.htmlFor = ${texto(id)};
+${o['aria-labelledby'] ? `rotulo.id = ${text(`${id}-rotulo`)};\n` : ''}rotulo.htmlFor = ${text(id)};
 rotulo.className = 'nds-text-body nds-font-semibold';
-rotulo.textContent = ${texto(o.labelText ?? 'Estado')};`;
+rotulo.textContent = ${text(o.labelText ?? 'Estado')};`;
 }
 
 /** A mensagem de erro, quando a story mostra o campo inválido. */
 function mensagem(o: SelectSnippetOptions): string | undefined {
   if (!o.mensagemDeErro) return undefined;
   return `const erro = document.createElement('p');
-erro.id = ${texto(`${fieldId(o)}-erro`)};
+erro.id = ${text(`${fieldId(o)}-erro`)};
 erro.className = 'nds-text-body nds-text-destructive';
-erro.textContent = ${texto(o.mensagemDeErro)};`;
+erro.textContent = ${text(o.mensagemDeErro)};`;
 }
 
 /** A chamada real de `createSelect` com o rótulo que dá nome ao campo. */
 export function selectSnippet(o: SelectSnippetOptions = {}): string {
-  const erro = mensagem(o);
+  const error = mensagem(o);
   return snippet(
     importing('select', 'createSelect'),
-    rotulo(o),
+    label(o),
     `const campo = ${chamada('createSelect', fieldLines(o))};`,
-    erro,
-    `document.querySelector('#app')?.append(rotulo, campo${erro ? ', erro' : ''});`,
+    error,
+    `document.querySelector('#app')?.append(rotulo, campo${error ? ', erro' : ''});`,
   );
 }
 
@@ -171,7 +171,7 @@ export function formSelectSnippet(o: SelectSnippetOptions = {}): string {
     `const formulario = document.createElement('form');
 formulario.className = 'nds-stack nds-border-default nds-rounded-lg nds-w-sm nds-p-4';
 formulario.dataset.spacing = 'md';`,
-    rotulo(withName),
+    label(withName),
     `const campo = ${chamada('createSelect', fieldLines(withName))};`,
     `formulario.append(rotulo, campo, createButton({ type: 'submit', label: 'Continuar' }));`,
     `formulario.addEventListener('submit', (evento) => {
@@ -179,7 +179,7 @@ formulario.dataset.spacing = 'md';`,
   // O valor viaja pelo campo escondido que a fábrica mantém: é ele que a
   // serialização nativa enxerga.
   const dados = new FormData(formulario);
-  enviar(dados.get(${texto(withName.name ?? 'state')}));
+  enviar(dados.get(${text(withName.name ?? 'state')}));
 });`,
     montar('formulario'),
   );

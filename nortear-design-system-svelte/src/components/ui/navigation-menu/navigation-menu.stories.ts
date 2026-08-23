@@ -124,10 +124,10 @@ export const Playground: Story = {
 
     await step('Enter abre o painel e alcança os destinos pelo teclado', async () => {
       await userEvent.keyboard('{Enter}');
-      const conteudo = await waitForPanel();
+      const content = await waitForPanel();
       await expect(produtos).toHaveAttribute('aria-expanded', 'true');
 
-      const first = within(conteudo).getByRole('link', { name: 'Plano Inicial' });
+      const first = within(content).getByRole('link', { name: 'Plano Inicial' });
       // Alcançável por teclado: nenhum destino do painel sai da ordem de foco.
       await expect(first).not.toHaveAttribute('tabindex', '-1');
       first.focus();
@@ -147,15 +147,15 @@ export const Playground: Story = {
 
     await step('O ponteiro abre o painel sem clique', async () => {
       await userEvent.hover(produtos);
-      const conteudo = await waitForPanel();
-      await expect(conteudo.textContent).toContain('Plano Inicial');
+      const content = await waitForPanel();
+      await expect(content.textContent).toContain('Plano Inicial');
     });
 
     await step('Passar de um gatilho ao outro troca o painel sem fechá-lo', async () => {
       await userEvent.hover(solucoes);
       await waitFor(async () => {
-        const conteudo = document.body.querySelector('.nds-navigation-menu-viewport-content');
-        await expect(conteudo?.textContent).toContain('Para Marketing');
+        const content = document.body.querySelector('.nds-navigation-menu-viewport-content');
+        await expect(content?.textContent).toContain('Para Marketing');
       });
       // O painel é um só e nunca desmontou: a troca é instantânea, sem reabrir
       // a espera de hover.

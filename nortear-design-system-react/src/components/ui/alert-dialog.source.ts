@@ -42,9 +42,9 @@ const TONS = ['destructive', 'default'] as const;
  * a primeira coisa que o compilador de quem cola reclama.
  */
 function importingParts(parts: readonly string[]): string {
-  const lista = [...parts].sort();
+  const list = [...parts].sort();
   return `import {
-${lista.map((part) => `  ${part},`).join('\n')}
+${list.map((part) => `  ${part},`).join('\n')}
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";`;
 }

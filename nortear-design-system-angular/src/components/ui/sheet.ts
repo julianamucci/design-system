@@ -179,7 +179,7 @@ export class NdsSheetContent {
   template: `
     <ng-content />
 
-    @if (conteudo(); as c) {
+    @if (content(); as c) {
       <ng-template rdxDialogPortal>
         <div
           rdxDialogBackdrop
@@ -224,19 +224,19 @@ export class NdsSheet {
    * A raiz do Dialog aplicada como host directive. Injetável daqui porque host
    * directive vive no injector de elemento do próprio componente.
    */
-  private readonly raiz = inject(RdxDialogRoot);
+  private readonly root = inject(RdxDialogRoot);
 
-  protected readonly conteudo = contentChild(NdsSheetContent, { descendants: true });
+  protected readonly content = contentChild(NdsSheetContent, { descendants: true });
 
   /**
    * `data-state` para as outras stacks e para a tabela de estados do conteúdo
    * compartilhado. O par `data-open` / `data-closed` que o CSS lê continua vindo
    * do primitivo — este atributo é adição, não substituição.
    */
-  protected readonly state = computed(() => (this.raiz.open() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.root.open() ? 'open' : 'closed'));
 
   protected readonly classeDoPainel = computed(() =>
-    cn('nds-sheet-content', this.conteudo()?.panelClass()),
+    cn('nds-sheet-content', this.content()?.panelClass()),
   );
 
   constructor() {
@@ -246,13 +246,13 @@ export class NdsSheet {
     // `ndsSheetTitle` registrado — sem título visível, use um com .nds-sr-only.
     effect(() => {
       if (!isDevMode()) return;
-      if (!this.raiz.open()) return;
+      if (!this.root.open()) return;
       // A checagem é adiada de propósito. O `ndsSheetTitle` registra o próprio
       // id no construtor, e o construtor só roda quando o portal cria a view do
       // painel — um passo DEPOIS de `open` virar true. Avaliar aqui dentro
       // acusaria todo painel correto no instante da abertura.
       setTimeout(() => {
-        if (untracked(this.raiz.open) && !untracked(this.raiz.titleId)) {
+        if (untracked(this.root.open) && !untracked(this.root.titleId)) {
           console.warn(
             '[nds-sheet] painel aberto sem ndsSheetTitle: o diálogo fica sem nome ' +
               'acessível. Se o título não deve aparecer, mantenha o elemento e ' +

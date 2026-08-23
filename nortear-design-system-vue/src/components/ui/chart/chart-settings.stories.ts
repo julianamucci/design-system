@@ -48,23 +48,23 @@ export const WithTooltip: Story = {
     'aria-label': 'Acessos mensais no desktop',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
-    await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+    const root = exigirRoot(canvasElement);
+    await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
 
     await step('A dica aparece com o nome da série e o valor do ponto', async () => {
-      const forma = datumFormas(raiz)[0];
+      const forma = datumFormas(root)[0];
       await expect(forma).toBeDefined();
 
-      const caixa = forma.getBoundingClientRect();
-      const design = raiz.querySelector('svg')!;
+      const box = forma.getBoundingClientRect();
+      const design = root.querySelector('svg')!;
       // `userEvent.hover` não serve aqui: ele não carrega coordenada, e a lib
       // faz o acerto do alvo por coordenada — o ponteiro cairia em (0,0), fora
       // do desenho, e a dica nunca abriria. Daí o evento cru, com posição.
       // `pointerMove` vem primeiro porque é o que a lib escuta em navegador com
       // PointerEvent; o de mouse fica como rede para o caso contrário.
       const position = {
-        clientX: caixa.left + caixa.width / 2,
-        clientY: caixa.top + caixa.height / 2,
+        clientX: box.left + box.width / 2,
+        clientY: box.top + box.height / 2,
         bubbles: true,
       };
       fireEvent.pointerMove(design, position);
@@ -72,12 +72,12 @@ export const WithTooltip: Story = {
 
       await waitFor(
         () => {
-          const texto = raiz.textContent ?? '';
+          const text = root.textContent ?? '';
           // Com uma série só não há legenda: o nome da série não está escrito em
           // nenhum outro lugar da tela, então encontrá-lo prova que é a dica.
-          expect(texto).toContain(SERIE_UNICA[0].name);
+          expect(text).toContain(SERIE_UNICA[0].name);
           // E os valores não coincidem com nenhuma marca do eixo, que é redonda.
-          expect(SERIE_UNICA[0].data.some((v) => texto.includes(String(v)))).toBe(true);
+          expect(SERIE_UNICA[0].data.some((v) => text.includes(String(v)))).toBe(true);
         },
         { timeout: 3000 },
       );
@@ -100,13 +100,13 @@ export const WithCaption: Story = {
     'aria-label': 'Acessos mensais por dispositivo',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('A legenda nomeia cada série', async () => {
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
       await waitFor(
         () => {
-          for (const serie of SERIES_MULTI) expect(designTexts(raiz)).toContain(serie.name);
+          for (const serie of SERIES_MULTI) expect(designTexts(root)).toContain(serie.name);
         },
         { timeout: 3000 },
       );
@@ -114,7 +114,7 @@ export const WithCaption: Story = {
 
     await step('E o eixo continua escrevendo as categorias', async () => {
       for (const month of MONTHS) {
-        await expect(designEscreve(raiz, month)).toBe(true);
+        await expect(designEscreve(root, month)).toBe(true);
       }
     });
   },
@@ -135,18 +135,18 @@ export const MultipleSeries: Story = {
     'aria-label': 'Acessos mensais por dispositivo, de janeiro a abril',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('O título do option é desenhado junto do gráfico', async () => {
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(designEscreve(raiz, TITLE)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designEscreve(root, TITLE)).toBe(true), { timeout: 3000 });
     });
 
     await step('Cada série usa um token de cor distinto', async () => {
       // A trama entra como preenchimento `url(#…)`; tirando essas, o que sobra
       // são as cores de série de verdade.
       const colors = new Set(
-        datumFormas(raiz)
+        datumFormas(root)
           .map((forma) => getComputedStyle(forma).fill)
           .filter((cor) => !cor.startsWith('url')),
       );

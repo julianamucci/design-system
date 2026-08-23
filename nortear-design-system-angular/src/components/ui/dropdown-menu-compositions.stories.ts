@@ -87,7 +87,7 @@ export const WithCheckboxItems: Story = {
   // declaração deslocada: a story vizinha é que verificava.
   parameters: { covers: ['functional.item5', 'accessibility.item4', 'visual.item2'] },
   render: () => ({
-    props: { nome: true, email: false },
+    props: { name: true, email: false },
     template: `
       <nds-dropdown-menu [defaultOpen]="true" [modal]="false">
         <button ndsDropdownMenuTrigger ndsButton variant="outline">Colunas</button>
@@ -97,8 +97,8 @@ export const WithCheckboxItems: Story = {
             <div ndsDropdownMenuLabel>Colunas visíveis</div>
             <div
               ndsDropdownMenuCheckboxItem
-              [checked]="nome"
-              (checkedChange)="nome = $event"
+              [checked]="name"
+              (checkedChange)="name = $event"
             >Nome</div>
             <div
               ndsDropdownMenuCheckboxItem
@@ -113,11 +113,11 @@ export const WithCheckboxItems: Story = {
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const canvas = within(menu);
-    const nome = canvas.getByRole('menuitemcheckbox', { name: 'Nome' });
+    const name = canvas.getByRole('menuitemcheckbox', { name: 'Nome' });
     const email = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });
 
     await step('O papel e o estado inicial chegam ao markup', async () => {
-      await expect(nome.getAttribute('aria-checked')).toBe('true');
+      await expect(name.getAttribute('aria-checked')).toBe('true');
       await expect(email.getAttribute('aria-checked')).toBe('false');
     });
 
@@ -128,7 +128,7 @@ export const WithCheckboxItems: Story = {
       // o que muda é o `display`, então é ele que a asserção olha.
       const marca = (item: HTMLElement) =>
         getComputedStyle(item.querySelector<HTMLElement>('[rdxmenucheckboxitemindicator]')!).display;
-      await expect(marca(nome)).not.toBe('none');
+      await expect(marca(name)).not.toBe('none');
       await expect(marca(email)).toBe('none');
     });
 
@@ -144,7 +144,7 @@ export const WithCheckboxItems: Story = {
       // Alternar não fecha: quem marca uma coluna costuma marcar a próxima.
       await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
       // Independentes entre si — é o que separa checkbox de escolha única.
-      await expect(nome.getAttribute('aria-checked')).toBe('true');
+      await expect(name.getAttribute('aria-checked')).toBe('true');
     });
   },
 };
@@ -154,13 +154,13 @@ export const WithCheckboxItems: Story = {
 export const WithRadioGroup: Story = {
   parameters: { covers: ['functional.item6', 'accessibility.item4', 'visual.item3'] },
   render: () => ({
-    props: { tema: 'light' },
+    props: { theme: 'light' },
     template: `
       <nds-dropdown-menu [defaultOpen]="true" [modal]="false">
         <button ndsDropdownMenuTrigger ndsButton variant="outline">Tema</button>
 
         <ng-template ndsDropdownMenuContent>
-          <div ndsDropdownMenuRadioGroup [value]="tema" (valueChange)="tema = $event">
+          <div ndsDropdownMenuRadioGroup [value]="theme" (valueChange)="theme = $event">
             <div ndsDropdownMenuLabel>Aparência</div>
             <div ndsDropdownMenuRadioItem value="light">Claro</div>
             <div ndsDropdownMenuRadioItem value="dark">Escuro</div>
@@ -219,7 +219,7 @@ export const WithSubmenu: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const corpo = within(document.body);
+    const body = within(document.body);
     const menu = await waitForPortal('menu');
     const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar' });
 
@@ -237,12 +237,12 @@ export const WithSubmenu: Story = {
 
       await waitFor(async () => {
         await expect(subTrigger.getAttribute('aria-expanded')).toBe('true');
-        await expect(corpo.getAllByRole('menu')).toHaveLength(2);
+        await expect(body.getAllByRole('menu')).toHaveLength(2);
       });
     });
 
     await step('O submenu abre AO LADO, não por cima do menu pai', async () => {
-      const submenu = corpo.getAllByRole('menu')[1];
+      const submenu = body.getAllByRole('menu')[1];
       await expect(within(submenu).getAllByRole('menuitem')).toHaveLength(2);
       // A comparação é com a borda DIREITA do pai. Comparar com a ESQUERDA —
       // como estava — passa com os dois painéis perfeitamente empilhados, que é

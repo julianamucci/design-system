@@ -8,21 +8,21 @@ import {
 
 describe('calendarSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = calendarSnippet({ locale: 'pt-BR' });
-    expect(código).toContain("import { createCalendar } from '@/components/ui/calendar';");
-    expect(código).toContain('createCalendar({');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('nds-calendar-day-btn');
-    expect(código).not.toContain('<table');
+    const code = calendarSnippet({ locale: 'pt-BR' });
+    expect(code).toContain("import { createCalendar } from '@/components/ui/calendar';");
+    expect(code).toContain('createCalendar({');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('nds-calendar-day-btn');
+    expect(code).not.toContain('<table');
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = calendarSnippet({ locale: 'pt-BR' });
+    const code = calendarSnippet({ locale: 'pt-BR' });
     // `single`, um mês, legenda em texto e dias vizinhos visíveis são o padrão.
-    expect(código).not.toContain('mode');
-    expect(código).not.toContain('numberOfMonths');
-    expect(código).not.toContain('captionLayout');
-    expect(código).not.toContain('showOutsideDays');
+    expect(code).not.toContain('mode');
+    expect(code).not.toContain('numberOfMonths');
+    expect(code).not.toContain('captionLayout');
+    expect(code).not.toContain('showOutsideDays');
     expect(calendarSnippet({ mode: 'single', numberOfMonths: 1, captionLayout: 'label' })).not.toContain(
       'mode',
     );
@@ -57,16 +57,16 @@ describe('calendarSnippet', () => {
   });
 
   it('a data escrita é código, e não uma string entre aspas', () => {
-    const código = calendarSnippet({ value: 'new Date(2026, 3, 12)' });
-    expect(código).toContain('value: new Date(2026, 3, 12)');
-    expect(código).not.toContain("value: 'new Date");
+    const code = calendarSnippet({ value: 'new Date(2026, 3, 12)' });
+    expect(code).toContain('value: new Date(2026, 3, 12)');
+    expect(code).not.toContain("value: 'new Date");
   });
 
   it('não vaza helper de story', () => {
-    const código = calendarSnippet({ locale: 'pt-BR', value: 'new Date(2026, 3, 12)' });
-    expect(código).not.toContain('isoDoFoco');
-    expect(código).not.toContain('medirContrasteDoCalendario');
-    expect(código).not.toContain('diaNoBloco');
+    const code = calendarSnippet({ locale: 'pt-BR', value: 'new Date(2026, 3, 12)' });
+    expect(code).not.toContain('isoDoFoco');
+    expect(code).not.toContain('medirContrasteDoCalendario');
+    expect(code).not.toContain('diaNoBloco');
   });
 });
 
@@ -91,34 +91,34 @@ describe('calendarSource', () => {
 describe('calendarSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = calendarSourceWith({ mode: 'range', value: '{ from: new Date(2026, 3, 10) }' });
-    const código = transform('', { args: { mode: 'multiple', numberOfMonths: 3 } });
-    expect(código).toContain("mode: 'range'");
-    expect(código).toContain('{ from: new Date(2026, 3, 10) }');
+    const code = transform('', { args: { mode: 'multiple', numberOfMonths: 3 } });
+    expect(code).toContain("mode: 'range'");
+    expect(code).toContain('{ from: new Date(2026, 3, 10) }');
     // O que a story fixa vence; o que ela não fixa continua vindo dos args.
-    expect(código).toContain('numberOfMonths: 3');
+    expect(code).toContain('numberOfMonths: 3');
   });
 
   it('`value: undefined` apaga o padrão em vez de reintroduzi-lo', () => {
     // É o calendário que abre sem data escolhida — o destaque de hoje.
-    const código = calendarSourceWith({ value: undefined })('', {});
-    expect(código).not.toContain('value');
-    expect(código).toContain("createCalendar({ locale: 'pt-BR' })");
+    const code = calendarSourceWith({ value: undefined })('', {});
+    expect(code).not.toContain('value');
+    expect(code).toContain("createCalendar({ locale: 'pt-BR' })");
   });
 });
 
 describe('calendarComPopoverSnippet', () => {
   it('mostra as três fábricas e a ligação entre elas', () => {
-    const código = calendarWithPopoverSnippet();
-    expect(código).toContain("import { createButton } from '@/components/ui/button';");
-    expect(código).toContain("import { createPopover } from '@/components/ui/popover';");
-    expect(código).toContain('createPopover({ trigger: gatilho, content: calendario })');
-    expect(código).toContain('gatilho.textContent = formatador.format(valor);');
-    expect(código).not.toContain('data-slot=');
+    const code = calendarWithPopoverSnippet();
+    expect(code).toContain("import { createButton } from '@/components/ui/button';");
+    expect(code).toContain("import { createPopover } from '@/components/ui/popover';");
+    expect(code).toContain('createPopover({ trigger: gatilho, content: calendario })');
+    expect(code).toContain('gatilho.textContent = formatador.format(valor);');
+    expect(code).not.toContain('data-slot=');
   });
 
   it('não vaza o andaime de espera da story', () => {
-    const código = calendarWithPopoverSnippet();
-    expect(código).not.toContain('waitForPortal');
-    expect(código).not.toContain('onSelect(valor)');
+    const code = calendarWithPopoverSnippet();
+    expect(code).not.toContain('waitForPortal');
+    expect(code).not.toContain('onSelect(valor)');
   });
 });

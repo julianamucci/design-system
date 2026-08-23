@@ -38,7 +38,7 @@ function withDisabled(): TabsItemDef[] {
 const LABEL_LIST = 'Seções do componente';
 
 /** O nome da lista de abas vem da opção da factory, não de um retoque no DOM. */
-function grupo(defaultValue: string, items: TabsItemDef[]): HTMLElement {
+function group(defaultValue: string, items: TabsItemDef[]): HTMLElement {
   return createTabs({
     defaultValue,
     class: 'nds-w-md',
@@ -50,7 +50,7 @@ function grupo(defaultValue: string, items: TabsItemDef[]): HTMLElement {
 // ─── Default (primeira ativa) ─────────────────────────────────────────────────
 
 export const Default: Story = {
-  render: () => grupo('overview', baseItems()),
+  render: () => group('overview', baseItems()),
   parameters: {
     docs: { description: { story: 'Estado inicial: primeira aba ativa, demais inativas, um único painel visível.' } },
   },
@@ -64,9 +64,9 @@ export const Default: Story = {
     });
 
     await step('Um único painel visível, o da aba ativa', async () => {
-      const painel = canvas.getByRole('tabpanel');
+      const panel = canvas.getByRole('tabpanel');
       await expect(canvas.getAllByRole('tabpanel')).toHaveLength(1);
-      await expect(painel).toHaveAttribute('aria-labelledby', abas[0].id);
+      await expect(panel).toHaveAttribute('aria-labelledby', abas[0].id);
     });
   },
 };
@@ -74,7 +74,7 @@ export const Default: Story = {
 // ─── Active (segunda ativa via defaultValue) ──────────────────────────────────
 
 export const Active: Story = {
-  render: () => grupo('properties', baseItems()),
+  render: () => group('properties', baseItems()),
   parameters: {
     docs: {
       source: { transform: tabsSourceWith({ defaultValue: 'properties' }) },
@@ -104,11 +104,11 @@ export const FocusVisible: Story = {
     covers: ['functional.item4', 'accessibility.item3'],
     docs: { description: { story: 'Foco por teclado: anel visível na aba focada. Roving tabindex — só a aba ativa entra na ordem de Tab, e o Tab seguinte cai no painel.' } },
   },
-  render: () => grupo('overview', baseItems()),
+  render: () => group('overview', baseItems()),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const abas = canvas.getAllByRole('tab');
-    const painel = canvas.getByRole('tabpanel');
+    const panel = canvas.getByRole('tabpanel');
 
     // O foco tem que CHEGAR por teclado: `:focus-visible` não dispara em foco
     // programático, e o anel apareceria ausente num CSS que está certo.
@@ -121,9 +121,9 @@ export const FocusVisible: Story = {
     });
 
     await step('O Tab seguinte cai no painel da aba ativa', async () => {
-      await expect(painel).toHaveAttribute('tabindex', '0');
+      await expect(panel).toHaveAttribute('tabindex', '0');
       await userEvent.tab();
-      await expect(painel).toHaveFocus();
+      await expect(panel).toHaveFocus();
     });
   },
 };
@@ -138,7 +138,7 @@ export const Disabled: Story = {
       // abas iguais.
       source: {
         transform: tabsSourceWith({
-          itens: [
+          items: [
             { value: 'overview', label: 'Visão geral', content: 'Conteúdo ativo.' },
             { value: 'properties', label: 'Propriedades', content: 'Conteúdo bloqueado.', disabled: true },
             { value: 'examples', label: 'Exemplos', content: 'Outro conteúdo.' },
@@ -152,7 +152,7 @@ export const Disabled: Story = {
       },
     },
   },
-  render: () => grupo('overview', withDisabled()),
+  render: () => group('overview', withDisabled()),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const first = canvas.getByRole('tab', { name: 'Visão geral' });

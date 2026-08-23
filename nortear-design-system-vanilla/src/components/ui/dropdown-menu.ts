@@ -226,30 +226,30 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
 
       // 'item' | 'checkbox' | 'radio' — os três se comportam como item de menu;
       // o que muda é o papel ARIA, a classe e o que a ativação faz.
-      const tipo = type as keyof typeof TYPE_ROLE;
+      const kind = type as keyof typeof TYPE_ROLE;
       const li = document.createElement('li');
-      li.setAttribute('role', TYPE_ROLE[tipo]);
-      li.className = TYPE_CLASSNAME[tipo];
-      li.dataset.slot = `dropdown-menu-${tipo === 'item' ? 'item' : `${tipo}-item`}`;
-      if (tipo === 'item') li.dataset.variant = item.variant ?? 'default';
+      li.setAttribute('role', TYPE_ROLE[kind]);
+      li.className = TYPE_CLASSNAME[kind];
+      li.dataset.slot = `dropdown-menu-${kind === 'item' ? 'item' : `${kind}-item`}`;
+      if (kind === 'item') li.dataset.variant = item.variant ?? 'default';
       if (item.disabled) li.setAttribute('aria-disabled', 'true');
       if (!item.disabled) li.setAttribute('tabindex', '-1');
       if (item.value) li.dataset.value = item.value;
       if (item.group) li.dataset.group = item.group;
 
-      const marcavel = tipo !== 'item';
-      const slotDoIndicador = `dropdown-menu-${tipo}-item-indicator`;
+      const marcavel = kind !== 'item';
+      const slotDoIndicador = `dropdown-menu-${kind}-item-indicator`;
       // O misto vale SOBRE o marcado enquanto durar — é ele quem manda no que se
       // anuncia e no que se desenha. Só o item de marcação o tem.
-      let misto = tipo === 'checkbox' && item.indeterminate === true;
-      let marcado = item.checked ?? false;
+      let misto = kind === 'checkbox' && item.indeterminate === true;
+      let checked = item.checked ?? false;
 
       function pintarMarkup(): void {
         // "mixed" é o que distingue "alguns selecionados" de "todos
         // selecionados"; um booleano aqui mentiria para quem lê a tela.
-        li.setAttribute('aria-checked', misto ? 'mixed' : String(marcado));
+        li.setAttribute('aria-checked', misto ? 'mixed' : String(checked));
         const novo = createIndicador(
-          misto ? 'indeterminate' : marcado ? 'checked' : 'unchecked',
+          misto ? 'indeterminate' : checked ? 'checked' : 'unchecked',
           slotDoIndicador,
         );
         if (li.firstElementChild) li.replaceChild(novo, li.firstElementChild);
@@ -258,9 +258,9 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
 
       if (marcavel) pintarMarkup();
 
-      const texto = document.createElement('span');
-      texto.textContent = item.label ?? '';
-      li.appendChild(texto);
+      const text = document.createElement('span');
+      text.textContent = item.label ?? '';
+      li.appendChild(text);
 
       if (item.shortcut) {
         const atalho = document.createElement('span');
@@ -273,21 +273,21 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       }
 
       function toggleMarkup(): void {
-        if (tipo === 'checkbox') {
+        if (kind === 'checkbox') {
           if (misto) {
             // O primeiro clique RESOLVE o misto para marcado, como faz a
             // propriedade `indeterminate` do input nativo — e não devolve o
             // misto a ninguém, porque "alguns" é conclusão de quem consome.
             misto = false;
-            marcado = true;
+            checked = true;
             pintarMarkup();
             item.onIndeterminateChange?.(false);
             item.onCheckedChange?.(true);
             return;
           }
-          marcado = !marcado;
+          checked = !checked;
           pintarMarkup();
-          item.onCheckedChange?.(marcado);
+          item.onCheckedChange?.(checked);
           return;
         }
         // Escolha única: os irmãos do mesmo grupo desmarcam junto.
@@ -363,16 +363,16 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       timerTypeahead = null;
     }, 1000);
 
-    const atual = menuItems.indexOf(document.activeElement as HTMLElement);
+    const current = menuItems.indexOf(document.activeElement as HTMLElement);
     // A busca recomeça DEPOIS do item atual para que repetir a mesma letra
     // percorra os homônimos em vez de travar no primeiro.
     const order = menuItems
-      .slice(atual + 1)
-      .concat(menuItems.slice(0, Math.max(atual + 1, 0)));
-    const alvo = order.find((el) =>
+      .slice(current + 1)
+      .concat(menuItems.slice(0, Math.max(current + 1, 0)));
+    const target = order.find((el) =>
       (el.textContent ?? '').trim().toLowerCase().startsWith(searchTypeahead),
     );
-    alvo?.focus();
+    target?.focus();
   }
 
   function open(): void {
@@ -475,8 +475,8 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
   }
 
   function bloquearOutsideModal(e: Event): void {
-    const alvo = e.target as Node;
-    if (panelEl?.contains(alvo) || wrapper.contains(alvo)) return;
+    const target = e.target as Node;
+    if (panelEl?.contains(target) || wrapper.contains(target)) return;
     e.preventDefault();
     e.stopPropagation();
     // A dispensa sai no `click`, o último do gesto: dispensar antes desmontaria

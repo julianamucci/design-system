@@ -36,19 +36,19 @@ const PROPORCOES: Array<[number, string]> = [
   [9 / 16, '9 / 16'],
 ];
 
-export function ratioExpression(valor: number): string {
-  const conhecida = PROPORCOES.find(([n]) => Math.abs(n - valor) < 0.005);
-  return conhecida ? conhecida[1] : String(Math.round(valor * 100) / 100);
+export function ratioExpression(value: number): string {
+  const conhecida = PROPORCOES.find(([n]) => Math.abs(n - value) < 0.005);
+  return conhecida ? conhecida[1] : String(Math.round(value * 100) / 100);
 }
 
 /**
  * Atributo da proporção — omitido no quadrado, que é o padrão do componente, e
  * omitido também quando o control não trouxe número.
  */
-export function attrRatio(valor: unknown): string {
-  if (typeof valor !== 'number' || Number.isNaN(valor)) return '';
-  if (Math.abs(valor - 1) < 0.005) return '';
-  return `:ratio="${ratioExpression(valor)}"`;
+export function attrRatio(value: unknown): string {
+  if (typeof value !== 'number' || Number.isNaN(value)) return '';
+  if (Math.abs(value - 1) < 0.005) return '';
+  return `:ratio="${ratioExpression(value)}"`;
 }
 
 /**
@@ -58,10 +58,10 @@ export function attrRatio(valor: unknown): string {
  * já o estica para cobrir a caixa inteira. Escrever as duas no exemplo ensinaria
  * a repetir o que o componente faz.
  */
-function caixa(proporcao: string, filho: string, contexto = `class="${WIDTH}"`): string {
+function box(proporcao: string, child: string, contexto = `class="${WIDTH}"`): string {
   return `<div ${contexto}>
   <AspectRatio${attrs(proporcao)}>
-${indentar(filho, 4)}
+${indentar(child, 4)}
   </AspectRatio>
 </div>`;
 }
@@ -103,20 +103,20 @@ const FOTO_PANORAMICA =
 export const aspectRatioSource: SourceTransform<AspectRatioArgs> = (_gerado, ctx) =>
   vueSnippet(
     IMPORT,
-    caixa(attrRatio(ctx?.args?.ratio ?? 16 / 9), image(FOTO_PAISAGEM, 'Paisagem ao amanhecer')),
+    box(attrRatio(ctx?.args?.ratio ?? 16 / 9), image(FOTO_PAISAGEM, 'Paisagem ao amanhecer')),
   );
 
 /** Paisagem: a proporção de foto e de vídeo, e a mais comum em cabeçalho. */
 export function aspectRatioDezesseisNoveSource(): string {
   return vueSnippet(
     IMPORT,
-    caixa(attrRatio(16 / 9), image(FOTO_PAISAGEM, 'Paisagem 16:9')),
+    box(attrRatio(16 / 9), image(FOTO_PAISAGEM, 'Paisagem 16:9')),
   );
 }
 
 /** Produto: mais alta que a paisagem, para a foto de catálogo. */
 export function aspectRatioQuatroTresSource(): string {
-  return vueSnippet(IMPORT, caixa(attrRatio(4 / 3), image(FOTO_PRODUCT, 'Produto 4:3')));
+  return vueSnippet(IMPORT, box(attrRatio(4 / 3), image(FOTO_PRODUCT, 'Produto 4:3')));
 }
 
 /**
@@ -124,14 +124,14 @@ export function aspectRatioQuatroTresSource(): string {
  * proporção nenhuma. Escrevê-la ensinaria que ela é obrigatória.
  */
 export function aspectRatioQuadradoSource(): string {
-  return vueSnippet(IMPORT, caixa('', image(FOTO_QUADRADA, 'Avatar quadrado')));
+  return vueSnippet(IMPORT, box('', image(FOTO_QUADRADA, 'Avatar quadrado')));
 }
 
 /** Retrato: a proporção invertida, para capa e pôster. */
 export function aspectRatioTresQuatroSource(): string {
   return vueSnippet(
     IMPORT,
-    caixa(attrRatio(3 / 4), image(VERTICAL_FOTO, 'Capa vertical 3:4')),
+    box(attrRatio(3 / 4), image(VERTICAL_FOTO, 'Capa vertical 3:4')),
   );
 }
 
@@ -139,7 +139,7 @@ export function aspectRatioTresQuatroSource(): string {
 export function aspectRatioUltraWideSource(): string {
   return vueSnippet(
     IMPORT,
-    caixa(attrRatio(21 / 9), image(FOTO_PANORAMICA, 'Cabeçalho panorâmico 21:9')),
+    box(attrRatio(21 / 9), image(FOTO_PANORAMICA, 'Cabeçalho panorâmico 21:9')),
   );
 }
 
@@ -147,7 +147,7 @@ export function aspectRatioUltraWideSource(): string {
 export function aspectRatioWithImageSource(): string {
   return vueSnippet(
     IMPORT,
-    caixa(
+    box(
       attrRatio(16 / 9),
       image(FOTO_PAISAGEM, 'Paisagem ao amanhecer com montanhas e céu laranja'),
     ),
@@ -161,7 +161,7 @@ export function aspectRatioWithImageSource(): string {
 export function aspectRatioWithIframeSource(): string {
   return vueSnippet(
     IMPORT,
-    caixa(
+    box(
       attrRatio(16 / 9),
       `<iframe
   src="https://www.openstreetmap.org/export/embed.html?bbox=-46.66%2C-23.56%2C-46.63%2C-23.54&layer=mapnik"
@@ -180,7 +180,7 @@ export function aspectRatioWithIframeSource(): string {
 export function aspectRatioWithVideoSource(): string {
   return vueSnippet(
     IMPORT,
-    caixa(
+    box(
       attrRatio(16 / 9),
       `<video
   controls
@@ -227,7 +227,7 @@ ${indentar(celulas)}
 export function aspectRatioPlaceholderSource(): string {
   return vueSnippet(
     IMPORT,
-    caixa(
+    box(
       attrRatio(16 / 9),
       `<div
   class="nds-cluster nds-bg-muted nds-rounded-md nds-text-body nds-text-muted-foreground"
@@ -247,5 +247,5 @@ export function aspectRatioPlaceholderSource(): string {
  * atributo o leitor de tela cai no nome do arquivo.
  */
 export function aspectRatioDecorativaSource(): string {
-  return vueSnippet(IMPORT, caixa(attrRatio(16 / 9), image(FOTO_PAISAGEM, '')));
+  return vueSnippet(IMPORT, box(attrRatio(16 / 9), image(FOTO_PAISAGEM, '')));
 }

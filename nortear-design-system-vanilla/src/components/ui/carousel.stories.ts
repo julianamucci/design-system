@@ -102,11 +102,11 @@ export const Playground: Story = {
     // Coordenada de LAYOUT: `offsetLeft` não é afetado pelo `transform`
     // corrente, então o passo esperado não muda enquanto o deslize corre.
     const slides = () => canvas.getAllByRole('group') as HTMLElement[];
-    const passo = () => slides()[1].offsetLeft - slides()[0].offsetLeft;
+    const stepPx = () => slides()[1].offsetLeft - slides()[0].offsetLeft;
 
     /** Espera o carrossel ASSENTAR no slide `i`, não apenas sair do anterior. */
     const emSlide = async (i: number) =>
-      waitFor(() => expect(Math.abs(deslocamento() - i * passo())).toBeLessThan(2), { timeout: 4000 });
+      waitFor(() => expect(Math.abs(deslocamento() - i * stepPx())).toBeLessThan(2), { timeout: 4000 });
 
     await step('A região tem papel, roledescription e nome', async () => {
       // Sem nome acessível a região não vira marco de navegação e o leitor

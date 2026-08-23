@@ -27,7 +27,7 @@ const IMPORT = 'import { Separator } from "@/components/ui/separator";';
  * Atributos do divisor, e só os que diferem do padrão: `orientation` horizontal,
  * `decorative` ligado e `emphasis` normal já são o que o componente faz sozinho.
  */
-function atributos(args: Partial<SeparatorArgs>): string {
+function attrsOf(args: Partial<SeparatorArgs>): string {
   return attrs(
     propOption('orientation', args.orientation, ORIENTACOES, 'horizontal'),
     propBool('decorative', args.decorative, true),
@@ -70,7 +70,7 @@ function inLine(attrsDaLinha: string): string {
  */
 export const separatorSource: SourceTransform<SeparatorArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const line = atributos(args);
+  const line = attrsOf(args);
   return jsxSnippet(IMPORT, args.orientation === 'vertical' ? inLine(line) : empilhado(line));
 };
 

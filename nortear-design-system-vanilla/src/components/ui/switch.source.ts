@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { SwitchSize } from './switch';
@@ -34,21 +34,21 @@ const CALLBACK_DEFAULT = '(ligado) => salvarPreferencia(ligado)';
 const ID_DEFAULT = 'notificacoes-email';
 const LABEL_DEFAULT = 'Receber notificações por email';
 
-function expressao(valor: unknown): string | undefined {
-  if (!valor) return undefined;
-  return typeof valor === 'string' ? valor : CALLBACK_DEFAULT;
+function expressao(value: unknown): string | undefined {
+  if (!value) return undefined;
+  return typeof value === 'string' ? value : CALLBACK_DEFAULT;
 }
 
-function controlLines(o: SwitchSnippetOptions, id: string, comRotulo: boolean): string[] {
-  return opcoes([
-    ['id', comRotulo ? texto(id) : undefined],
+function controlLines(o: SwitchSnippetOptions, id: string, withLabel: boolean): string[] {
+  return options([
+    ['id', withLabel ? text(id) : undefined],
     // Sem rótulo visível o nome acessível é obrigatório: `aria-checked` sozinho
     // faz o leitor anunciar "ligado" sem dizer o quê.
-    ['aria-label', comRotulo ? undefined : texto(o['aria-label'] || 'Modo escuro')],
+    ['aria-label', withLabel ? undefined : text(o['aria-label'] || 'Modo escuro')],
     ['checked', o.checked ? 'true' : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
-    ['size', o.size && o.size !== 'default' ? texto(o.size) : undefined],
-    ['class', o.class ? texto(o.class) : undefined],
+    ['size', o.size && o.size !== 'default' ? text(o.size) : undefined],
+    ['class', o.class ? text(o.class) : undefined],
     ['onCheckedChange', expressao(o.onCheckedChange)],
   ]);
 }
@@ -62,12 +62,12 @@ function controlLines(o: SwitchSnippetOptions, id: string, comRotulo: boolean): 
  * dentro do arquivo de story.
  */
 export function switchSnippet(o: SwitchSnippetOptions = {}): string {
-  const rotulo = o.label === undefined ? LABEL_DEFAULT : o.label;
-  const comRotulo = Boolean(rotulo);
+  const label = o.label === undefined ? LABEL_DEFAULT : o.label;
+  const withLabel = Boolean(label);
   const id = o.id ?? ID_DEFAULT;
-  const lines = controlLines(o, id, comRotulo);
+  const lines = controlLines(o, id, withLabel);
 
-  if (!comRotulo) {
+  if (!withLabel) {
     return snippet(
       importing('switch', 'createSwitch'),
       `const controle = ${chamada('createSwitch', lines)};`,
@@ -78,7 +78,7 @@ export function switchSnippet(o: SwitchSnippetOptions = {}): string {
   return snippet(
     [importing('switch', 'createSwitch'), importing('label', 'createLabel')].join('\n'),
     `const controle = ${chamada('createSwitch', lines)};
-const rotulo = createLabel({ htmlFor: ${texto(id)}, text: ${texto(rotulo)} });`,
+const rotulo = createLabel({ htmlFor: ${text(id)}, text: ${text(label)} });`,
     `const linha = document.createElement('div');
 linha.className = 'nds-cluster';
 linha.dataset.spacing = 'sm';
@@ -102,15 +102,15 @@ export type SwitchPanelItem = {
  * nome acessível. É a forma das listas de preferências, e o agrupador é o
  * `nds-cluster` do design system.
  */
-export function switchPanelSnippet(itens: SwitchPanelItem[]): string {
-  const corpo =
-    itens.length === 1
-      ? umPanelBody(itens[0])
+export function switchPanelSnippet(items: SwitchPanelItem[]): string {
+  const body =
+    items.length === 1
+      ? umPanelBody(items[0])
       : `const preferencias = [
-${itens
+${items
   .map(
     (i) =>
-      `  { id: ${texto(i.id)}, label: ${texto(i.label)}, description: ${texto(i.description)}${
+      `  { id: ${text(i.id)}, label: ${text(i.label)}, description: ${text(i.description)}${
         // `false` é o padrão da fábrica: repeti-lo item a item não ensina nada.
         i.checked ? ', checked: true' : ''
       } },`,
@@ -143,8 +143,8 @@ preferencias.forEach(({ id, label, description, checked }) => {
 
   return snippet(
     [importing('switch', 'createSwitch'), importing('label', 'createLabel')].join('\n'),
-    corpo,
-    montar(itens.length === 1 ? 'painel' : 'lista'),
+    body,
+    montar(items.length === 1 ? 'painel' : 'lista'),
   );
 }
 
@@ -160,15 +160,15 @@ textos.dataset.spacing = 'xs';
 
 const auxiliar = document.createElement('p');
 auxiliar.className = 'nds-text-body';
-auxiliar.textContent = ${texto(item.description)};
+auxiliar.textContent = ${text(item.description)};
 
-textos.append(createLabel({ htmlFor: ${texto(item.id)}, text: ${texto(item.label)} }), auxiliar);
-painel.append(textos, ${chamada('createSwitch', opcoes([['id', texto(item.id)], ['checked', item.checked ? 'true' : undefined]]))});`;
+textos.append(createLabel({ htmlFor: ${text(item.id)}, text: ${text(item.label)} }), auxiliar);
+painel.append(textos, ${chamada('createSwitch', options([['id', text(item.id)], ['checked', item.checked ? 'true' : undefined]]))});`;
 }
 
 /** Transform de story para o painel com descrição / lista de preferências. */
-export function switchSourcePanel(itens: SwitchPanelItem[]): SourceTransform<SwitchSnippetOptions> {
-  return () => switchPanelSnippet(itens);
+export function switchSourcePanel(items: SwitchPanelItem[]): SourceTransform<SwitchSnippetOptions> {
+  return () => switchPanelSnippet(items);
 }
 
 /**
@@ -183,7 +183,7 @@ export function switchFormSnippet(
 ): string {
   const id = o.id ?? 'newsletter';
   const name = o.name ?? 'newsletter';
-  const rotulo = o.label ?? 'Aceitar newsletter semanal';
+  const label = o.label ?? 'Aceitar newsletter semanal';
   const checked = o.checked ?? true;
 
   return snippet(
@@ -198,11 +198,11 @@ formulario.dataset.spacing = 'sm';
 
 const oculto = document.createElement('input');
 oculto.type = 'hidden';
-oculto.name = ${texto(name)};
-oculto.value = ${texto(checked ? 'on' : 'off')};
+oculto.name = ${text(name)};
+oculto.value = ${text(checked ? 'on' : 'off')};
 
 const controle = createSwitch({
-  id: ${texto(id)},
+  id: ${text(id)},
   checked: ${checked ? 'true' : 'false'},
   onCheckedChange: (ligado) => { oculto.value = ligado ? 'on' : 'off'; },
 });
@@ -210,7 +210,7 @@ const controle = createSwitch({
 const linha = document.createElement('div');
 linha.className = 'nds-cluster';
 linha.dataset.spacing = 'sm';
-linha.append(controle, createLabel({ htmlFor: ${texto(id)}, text: ${texto(rotulo)} }));
+linha.append(controle, createLabel({ htmlFor: ${text(id)}, text: ${text(label)} }));
 
 formulario.append(linha, oculto, createButton({ type: 'submit', label: 'Salvar preferências' }));`,
     montar('formulario'),
@@ -235,23 +235,23 @@ export function switchInvalidoSnippet(
   o: { id?: string; label?: string; mensagem?: string } = {},
 ): string {
   const id = o.id ?? 'aceitar-termos';
-  const rotulo = o.label ?? 'Aceitar termos de uso';
+  const label = o.label ?? 'Aceitar termos de uso';
   const mensagem = o.mensagem ?? 'Você precisa ativar esta opção para continuar.';
 
   return snippet(
     [importing('switch', 'createSwitch'), importing('label', 'createLabel')].join('\n'),
-    `const controle = createSwitch({ id: ${texto(id)} });
+    `const controle = createSwitch({ id: ${text(id)} });
 controle.setAttribute('aria-invalid', 'true');
-controle.setAttribute('aria-describedby', ${texto(`${id}-msg`)});`,
+controle.setAttribute('aria-describedby', ${text(`${id}-msg`)});`,
     `const linha = document.createElement('div');
 linha.className = 'nds-cluster';
 linha.dataset.spacing = 'sm';
-linha.append(controle, createLabel({ htmlFor: ${texto(id)}, text: ${texto(rotulo)} }));
+linha.append(controle, createLabel({ htmlFor: ${text(id)}, text: ${text(label)} }));
 
 const mensagem = document.createElement('p');
-mensagem.id = ${texto(`${id}-msg`)};
+mensagem.id = ${text(`${id}-msg`)};
 mensagem.className = 'nds-text-body nds-text-destructive';
-mensagem.textContent = ${texto(mensagem)};
+mensagem.textContent = ${text(mensagem)};
 
 const grupo = document.createElement('div');
 grupo.className = 'nds-stack';

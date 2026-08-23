@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { DrawerDirection } from './drawer';
@@ -55,9 +55,9 @@ const IMPORTS_BASE = [
 
 /** Um botão em UMA linha — ele é sempre argumento, nunca a chamada principal. */
 function button(acao: DrawerSnippetAction): string {
-  const pairs = opcoes([
-    ['variant', acao.variant && acao.variant !== 'default' ? texto(acao.variant) : undefined],
-    ['label', texto(acao.label)],
+  const pairs = options([
+    ['variant', acao.variant && acao.variant !== 'default' ? text(acao.variant) : undefined],
+    ['label', text(acao.label)],
   ])
     .map((line) => line.replace(/,$/, ''))
     .join(', ');
@@ -83,7 +83,7 @@ function actionsOf(o: DrawerSnippetOptions): DrawerSnippetAction[] {
 function footerBlock(actions: DrawerSnippetAction[]): string | undefined {
   if (actions.length === 0) return undefined;
 
-  const declarados = actions.map((acao, i) => ({ acao, nome: `acao${i + 1}` }));
+  const declarados = actions.map((acao, i) => ({ acao, name: `acao${i + 1}` }));
   const fechadores = declarados.filter(({ acao }) => acao.close);
 
   const lines: string[] = [];
@@ -93,14 +93,14 @@ function footerBlock(actions: DrawerSnippetAction[]): string | undefined {
       '// `data-slot="drawer-close"` é o fechador explícito desta fábrica: o que',
       '// estiver marcado assim dentro do painel fecha a gaveta ao ser acionado.',
     );
-    for (const { acao, nome } of fechadores) {
-      lines.push(`const ${nome} = ${button(acao)};`, `${nome}.dataset.slot = 'drawer-close';`);
+    for (const { acao, name } of fechadores) {
+      lines.push(`const ${name} = ${button(acao)};`, `${name}.dataset.slot = 'drawer-close';`);
     }
     lines.push('');
   }
 
-  const argumentos = declarados
-    .map(({ acao, nome }) => (acao.close ? nome : button(acao)))
+  const args = declarados
+    .map(({ acao, name }) => (acao.close ? name : button(acao)))
     .join(', ');
 
   lines.push(
@@ -108,7 +108,7 @@ function footerBlock(actions: DrawerSnippetAction[]): string | undefined {
     `rodape.className = 'nds-cluster';`,
     `rodape.dataset.justify = 'end';`,
     `rodape.dataset.spacing = 'xs';`,
-    `rodape.append(${argumentos});`,
+    `rodape.append(${args});`,
   );
 
   return lines.join('\n');
@@ -116,16 +116,16 @@ function footerBlock(actions: DrawerSnippetAction[]): string | undefined {
 
 /** As opções comuns às duas formas de snippet. `content` é o nome da variável. */
 function linesComuns(o: DrawerSnippetOptions, content: string, temRodape: boolean): string[] {
-  return opcoes([
+  return options([
     ['trigger', button({ label: o.triggerLabel ?? 'Abrir drawer', variant: 'outline' })],
-    ['title', texto(o.title ?? 'Editar perfil')],
+    ['title', text(o.title ?? 'Editar perfil')],
     [
       'description',
-      o.description === '' ? undefined : texto(o.description ?? 'Atualize seus dados pessoais.'),
+      o.description === '' ? undefined : text(o.description ?? 'Atualize seus dados pessoais.'),
     ],
     ['content', content],
     ['footer', temRodape ? 'rodape' : undefined],
-    ['direction', o.direction && o.direction !== 'bottom' ? texto(o.direction) : undefined],
+    ['direction', o.direction && o.direction !== 'bottom' ? text(o.direction) : undefined],
     ['dismissible', o.dismissible === false ? 'false' : undefined],
     ['modal', o.modal === false ? 'false' : undefined],
     // Guarda de tipo, e não confiança no tipo declarado: `ctx.args` chega do
@@ -147,15 +147,15 @@ function codeAbertura(o: DrawerSnippetOptions): string | undefined {
  * inventa. O rodapé é UM elemento, e é ele quem arruma as ações.
  */
 export function drawerSnippet(o: DrawerSnippetOptions = {}): string {
-  const rodape = footerBlock(actionsOf(o));
+  const footer = footerBlock(actionsOf(o));
 
   return snippet(
     IMPORTS_BASE,
     `const corpo = document.createElement('p');
 corpo.className = 'nds-text-body nds-text-muted-foreground';
-corpo.textContent = ${texto(o.bodyText ?? 'Conteúdo do painel (formulário, mensagem, mídia).')};`,
-    rodape,
-    `const gaveta = ${chamada('createDrawer', linesComuns(o, 'corpo', rodape !== undefined))};`,
+corpo.textContent = ${text(o.bodyText ?? 'Conteúdo do painel (formulário, mensagem, mídia).')};`,
+    footer,
+    `const gaveta = ${chamada('createDrawer', linesComuns(o, 'corpo', footer !== undefined))};`,
     montar('gaveta'),
     codeAbertura(o),
   );
@@ -187,15 +187,15 @@ export type DrawerWithFormSnippetOptions = Omit<DrawerSnippetOptions, 'bodyText'
   fields?: DrawerField[];
 };
 
-function campo(c: DrawerField): string {
-  const entry = opcoes([
-    ['type', c.type && c.type !== 'text' ? texto(c.type) : undefined],
-    ['value', c.value !== undefined ? texto(c.value) : undefined],
+function field(c: DrawerField): string {
+  const entry = options([
+    ['type', c.type && c.type !== 'text' ? text(c.type) : undefined],
+    ['value', c.value !== undefined ? text(c.value) : undefined],
   ])
     .map((line) => line.replace(/,$/, ''))
     .join(', ');
   return `  createFormField({
-    label: ${texto(c.label)},
+    label: ${text(c.label)},
     input: createInput({ ${entry} }),
   }),`;
 }
@@ -212,7 +212,7 @@ export function drawerWithFormSnippet(o: DrawerWithFormSnippetOptions = {}): str
     { label: 'Nome', value: 'Maria Souza' },
     { label: 'E-mail', type: 'email', value: 'maria@exemplo.com' },
   ];
-  const rodape = footerBlock(actionsOf(o));
+  const footer = footerBlock(actionsOf(o));
 
   return snippet(
     [
@@ -224,10 +224,10 @@ export function drawerWithFormSnippet(o: DrawerWithFormSnippetOptions = {}): str
 formulario.className = 'nds-stack';
 formulario.dataset.spacing = 'md';
 formulario.append(
-${fields.map(campo).join('\n')}
+${fields.map(field).join('\n')}
 );`,
-    rodape,
-    `const gaveta = ${chamada('createDrawer', linesComuns(o, 'formulario', rodape !== undefined))};`,
+    footer,
+    `const gaveta = ${chamada('createDrawer', linesComuns(o, 'formulario', footer !== undefined))};`,
     montar('gaveta'),
     codeAbertura(o),
   );

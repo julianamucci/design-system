@@ -8,13 +8,13 @@ import {
 
 describe('aspectRatioSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = aspectRatioSnippet();
-    expect(código).toContain(
+    const code = aspectRatioSnippet();
+    expect(code).toContain(
       "import { createAspectRatio } from '@/components/ui/aspect-ratio';",
     );
-    expect(código).toContain('createAspectRatio({');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('--ratio');
+    expect(code).toContain('createAspectRatio({');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('--ratio');
   });
 
   it('escreve a proporção como fração, e não como a dízima que a conta produz', () => {
@@ -57,30 +57,30 @@ describe('aspectRatioSnippet', () => {
   });
 
   it('imagem decorativa é alt vazio, e não atributo ausente', () => {
-    const código = aspectRatioSnippet({ alt: '' });
-    expect(código).toContain("imagem.alt = '';");
+    const code = aspectRatioSnippet({ alt: '' });
+    expect(code).toContain("imagem.alt = '';");
   });
 
   it('o vídeo leva a faixa de legendas junto', () => {
-    const código = aspectRatioSnippet({ content: 'video' });
-    expect(código).toContain("legenda.kind = 'captions';");
-    expect(código).toContain('video.appendChild(legenda);');
-    expect(código).toContain('content: video');
+    const code = aspectRatioSnippet({ content: 'video' });
+    expect(code).toContain("legenda.kind = 'captions';");
+    expect(code).toContain('video.appendChild(legenda);');
+    expect(code).toContain('content: video');
   });
 
   it('sem filho, a caixa entra sozinha — é o que reserva o espaço', () => {
-    const código = aspectRatioSnippet({ content: 'none', className: 'nds-bg-muted' });
-    expect(código).not.toContain('content:');
-    expect(código).not.toContain('createElement');
-    expect(código).toContain("className: 'nds-bg-muted'");
+    const code = aspectRatioSnippet({ content: 'none', className: 'nds-bg-muted' });
+    expect(code).not.toContain('content:');
+    expect(code).not.toContain('createElement');
+    expect(code).toContain("className: 'nds-bg-muted'");
   });
 
   it('não vaza os helpers do arquivo de story', () => {
-    const código = aspectRatioSnippet();
-    expect(código).not.toContain('buildImage');
-    expect(código).not.toContain('boxed(');
+    const code = aspectRatioSnippet();
+    expect(code).not.toContain('buildImage');
+    expect(code).not.toContain('boxed(');
     // A largura máxima do andaime da story não é do componente.
-    expect(código).not.toContain('maxWidth');
+    expect(code).not.toContain('maxWidth');
   });
 });
 
@@ -105,9 +105,9 @@ describe('aspectRatioSource', () => {
 describe('aspectRatioSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = aspectRatioSourceWith({ ratio: 21 / 9, content: 'none' });
-    const código = transform('', { args: { ratio: 16 / 9 } });
-    expect(código).toContain('ratio: 21 / 9');
-    expect(código).not.toContain('16 / 9');
-    expect(código).not.toContain('createElement');
+    const code = transform('', { args: { ratio: 16 / 9 } });
+    expect(code).toContain('ratio: 21 / 9');
+    expect(code).not.toContain('16 / 9');
+    expect(code).not.toContain('createElement');
   });
 });

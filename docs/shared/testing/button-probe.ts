@@ -50,15 +50,15 @@ export function measureButton(el: HTMLElement) {
 
   return {
     tag: el.tagName.toLowerCase(),
-    tipo: el.getAttribute('type'),
+    type: el.getAttribute('type'),
     // Desabilitado: atributo nativo OU aria — as libs headless divergem, e o
     // que importa para quem usa teclado é que uma das duas formas exista.
-    desabilitado: el.hasAttribute('disabled')
+    disabled: el.hasAttribute('disabled')
       ? 'nativo'
       : el.getAttribute('aria-disabled') === 'true'
         ? 'aria'
         : 'não',
-    altura: Math.round(r.height),
+    height: Math.round(r.height),
     padding: cs.padding,
     raio: Math.round(parseFloat(cs.borderTopLeftRadius) || 0),
     borderWidth: Math.round(parseFloat(cs.borderTopWidth) || 0),
@@ -74,9 +74,9 @@ export function measureButton(el: HTMLElement) {
 }
 
 /** Todos os botões da tela, chaveados por variante. */
-export function measureButtons(raiz: HTMLElement) {
+export function measureButtons(root: HTMLElement) {
   const byVariant: Record<string, ReturnType<typeof measureButton>> = {};
-  for (const el of raiz.querySelectorAll<HTMLElement>('.nds-button')) {
+  for (const el of root.querySelectorAll<HTMLElement>('.nds-button')) {
     const v = variantOf(el);
     if (!byVariant[v]) byVariant[v] = measureButton(el);
   }
@@ -84,24 +84,24 @@ export function measureButtons(raiz: HTMLElement) {
 }
 
 /** Contraste de cada variante nos DOIS temas. O `.dark` sai no `finally`. */
-export function buttonsContrast(raiz: HTMLElement) {
+export function buttonsContrast(root: HTMLElement) {
   const ratio = (m: Record<string, ReturnType<typeof measureButton>>) =>
     Object.fromEntries(Object.entries(m).map(([v, d]) => [v, d.contraste]));
-  const light = ratio(measureButtons(raiz));
-  const desfazer = darkLigarTheme(raiz.ownerDocument);
+  const light = ratio(measureButtons(root));
+  const desfazer = darkLigarTheme(root.ownerDocument);
   try {
-    return { light, escuro: ratio(measureButtons(raiz)) };
+    return { light, escuro: ratio(measureButtons(root)) };
   } finally {
     desfazer();
   }
 }
 
 /** Canal de saída: o console da play não chega ao terminal do vitest. */
-export function reportButtons(stack: string, raiz: HTMLElement) {
+export function reportButtons(stack: string, root: HTMLElement) {
   throw new Error(
     `SONDA::${stack}::matriz::${JSON.stringify({
-      variantes: measureButtons(raiz),
-      contraste: buttonsContrast(raiz),
+      variantes: measureButtons(root),
+      contraste: buttonsContrast(root),
     })}`,
   );
 }
@@ -125,9 +125,9 @@ export function ehIconOnly(el: HTMLElement): boolean {
 }
 
 /** Todos os botões da tela, chaveados por TAMANHO (um por tamanho). */
-function bySize(raiz: HTMLElement): Map<string, HTMLElement> {
+function bySize(root: HTMLElement): Map<string, HTMLElement> {
   const mapa = new Map<string, HTMLElement>();
-  for (const el of raiz.querySelectorAll<HTMLElement>('.nds-button')) {
+  for (const el of root.querySelectorAll<HTMLElement>('.nds-button')) {
     const t = sizeOf(el);
     if (!mapa.has(t)) mapa.set(t, el);
   }
@@ -137,7 +137,7 @@ function bySize(raiz: HTMLElement): Map<string, HTMLElement> {
 // ─── WCAG 1.4.4 — a altura tem de crescer com a fonte ─────────────────────────
 
 export interface CrescimentoMeasurement {
-  tamanho: string;
+  size: string;
   iconOnly: boolean;
   /** Altura em px com a fonte da raiz no valor normal. */
   base: number;
@@ -160,13 +160,13 @@ export interface CrescimentoMeasurement {
  * configuração do navegador mexe. Volta no `finally`: fonte vazada envenena a
  * story seguinte e a foto do Chromatic.
  */
-export function measureCrescimentoWithFonte(raiz: HTMLElement): CrescimentoMeasurement[] {
-  const html = raiz.ownerDocument.documentElement;
+export function measureCrescimentoWithFonte(root: HTMLElement): CrescimentoMeasurement[] {
+  const html = root.ownerDocument.documentElement;
   const fonteOriginal = html.style.fontSize;
-  const targets = bySize(raiz);
+  const targets = bySize(root);
 
   const alturas = (): Map<string, number> => {
-    void raiz.offsetHeight;
+    void root.offsetHeight;
     return new Map([...targets].map(([t, el]) => [t, el.getBoundingClientRect().height]));
   };
 
@@ -175,11 +175,11 @@ export function measureCrescimentoWithFonte(raiz: HTMLElement): CrescimentoMeasu
     const emPx = parseFloat(getComputedStyle(html).fontSize) || 16;
     html.style.fontSize = `${emPx * 2}px`;
     const dobrada = alturas();
-    return [...targets].map(([tamanho, el]) => {
-      const b = base.get(tamanho)!;
-      const d = dobrada.get(tamanho)!;
+    return [...targets].map(([size, el]) => {
+      const b = base.get(size)!;
+      const d = dobrada.get(size)!;
       return {
-        tamanho,
+        size,
         iconOnly: ehIconOnly(el),
         base: Math.round(b * 100) / 100,
         dobrada: Math.round(d * 100) / 100,
@@ -189,17 +189,17 @@ export function measureCrescimentoWithFonte(raiz: HTMLElement): CrescimentoMeasu
   } finally {
     if (fonteOriginal) html.style.fontSize = fonteOriginal;
     else html.style.removeProperty('font-size');
-    void raiz.offsetHeight;
+    void root.offsetHeight;
   }
 }
 
 // ─── WCAG 2.5.8 — alvo de toque nas três densidades ───────────────────────────
 
 export interface TargetMeasurement {
-  tamanho: string;
+  size: string;
   densidade: Density;
-  largura: number;
-  altura: number;
+  width: number;
+  height: number;
   /** O menor lado — é ele que a 2.5.8 compara com 24. */
   menorLado: number;
 }
@@ -211,14 +211,14 @@ export interface TargetMeasurement {
  * em `:root`, então redeclarar a base num contêiner do meio da árvore não move
  * nada. O botão de ícone lê `--size-*`, que a densidade também redeclara.
  */
-export function touchMeasureTarget(raiz: HTMLElement): TargetMeasurement[] {
-  const targets = bySize(raiz);
-  return byDensity(raiz, (densidade) =>
-    [...targets].map(([tamanho, el]): TargetMeasurement => {
+export function touchMeasureTarget(root: HTMLElement): TargetMeasurement[] {
+  const targets = bySize(root);
+  return byDensity(root, (densidade) =>
+    [...targets].map(([size, el]): TargetMeasurement => {
       const r = el.getBoundingClientRect();
-      const largura = Math.round(r.width * 100) / 100;
-      const altura = Math.round(r.height * 100) / 100;
-      return { tamanho, densidade, largura, altura, menorLado: Math.min(largura, altura) };
+      const width = Math.round(r.width * 100) / 100;
+      const height = Math.round(r.height * 100) / 100;
+      return { size, densidade, width, height, menorLado: Math.min(width, height) };
     }),
   ).flat();
 }
@@ -226,12 +226,12 @@ export function touchMeasureTarget(raiz: HTMLElement): TargetMeasurement[] {
 // ─── Contraste por tema, modo, variante — texto E borda ───────────────────────
 
 export interface VariantMeasurement {
-  tema: string;
-  modo: 'claro' | 'escuro';
-  variante: string;
+  theme: string;
+  mode: 'claro' | 'escuro';
+  variant: string;
   /** `false` quando a variante não está na tela — isso É o achado. */
   presente: boolean;
-  texto: number | null;
+  text: number | null;
   /** `null` quando a variante não desenha borda (largura 0). */
   border: number | null;
   background: string | null;
@@ -246,9 +246,9 @@ export interface VariantMeasurement {
  * o mesmo fundo do botão: é a superfície com que ela faz limite por dentro, e
  * nos três temas `--background` responde pelo lado de fora.
  */
-export function themeMeasureVariants(raiz: HTMLElement): VariantMeasurement[] {
+export function themeMeasureVariants(root: HTMLElement): VariantMeasurement[] {
   const targets = new Map<string, HTMLElement>();
-  for (const el of raiz.querySelectorAll<HTMLElement>('.nds-button')) {
+  for (const el of root.querySelectorAll<HTMLElement>('.nds-button')) {
     const v = variantOf(el);
     if (!targets.has(v)) targets.set(v, el);
   }
@@ -258,10 +258,10 @@ export function themeMeasureVariants(raiz: HTMLElement): VariantMeasurement[] {
   // devolveria a cor do tema anterior — o "contraste ~1.0" do CLAUDE.md.
   const originais = [...targets.values()].map((el) => el.style.transition);
   targets.forEach((el) => { el.style.transition = 'none'; });
-  const backgroundOriginal = raiz.style.backgroundColor;
+  const backgroundOriginal = root.style.backgroundColor;
 
   try {
-    return byTheme(raiz, (tema, modo) => {
+    return byTheme(root, (theme, mode) => {
       // A raiz da sonda PINTA a superfície do app antes de medir.
       //
       // Sem isto o escuro é medido contra o branco do `<body>`, que o harness do
@@ -271,24 +271,24 @@ export function themeMeasureVariants(raiz: HTMLElement): VariantMeasurement[] {
       // acusava então ~1.05:1 no escuro, um defeito que não existe. É a mesma
       // armadilha que o `alert-probe` documenta, aqui pelo lado do CONTÊINER: lá
       // a saída foi resolver `--background`, e é ela que se aplica na raiz.
-      raiz.style.backgroundColor = superficieDoApp(raiz);
-      void raiz.offsetHeight;
-      const superficie = raiz.style.backgroundColor;
+      root.style.backgroundColor = superficieDoApp(root);
+      void root.offsetHeight;
+      const superficie = root.style.backgroundColor;
 
-      return [...VARIANTS].map((variante): VariantMeasurement => {
-        const el = targets.get(variante);
+      return [...VARIANTS].map((variant): VariantMeasurement => {
+        const el = targets.get(variant);
         if (!el) {
-          return { tema, modo, variante, presente: false, texto: null, border: null, background: null };
+          return { theme, mode, variant, presente: false, text: null, border: null, background: null };
         }
         const cs = getComputedStyle(el);
         const background = backgroundEffective(el) ?? superficie;
         const borderWidth = parseFloat(cs.borderTopWidth) || 0;
         return {
-          tema,
-          modo,
-          variante,
+          theme,
+          mode,
+          variant,
           presente: true,
-          texto: ratio(cs.color, background)?.ratio ?? null,
+          text: ratio(cs.color, background)?.ratio ?? null,
           // A borda é vista contra a PÁGINA, não contra o interior do botão: é o
           // limite externo do controle, e é dele que a 1.4.11 fala.
           border:
@@ -304,8 +304,8 @@ export function themeMeasureVariants(raiz: HTMLElement): VariantMeasurement[] {
       if (originais[i]) el.style.transition = originais[i];
       else el.style.removeProperty('transition');
     });
-    if (backgroundOriginal) raiz.style.backgroundColor = backgroundOriginal;
-    else raiz.style.removeProperty('background-color');
+    if (backgroundOriginal) root.style.backgroundColor = backgroundOriginal;
+    else root.style.removeProperty('background-color');
   }
 }
 
@@ -317,30 +317,30 @@ export function themeMeasureVariants(raiz: HTMLElement): VariantMeasurement[] {
  * cor do anel não sai do elemento — sai da DECLARAÇÃO da folha, resolvida
  * dentro da árvore que carrega o tema.
  */
-export function themeMeasureRing(raiz: HTMLElement) {
+export function themeMeasureRing(root: HTMLElement) {
   const rules: [string, string][] = [
     ['foco', '.nds-button:focus-visible'],
     ['foco-destructive', '.nds-button-destructive:focus-visible'],
     ['invalido', '.nds-button[aria-invalid="true"]'],
   ];
 
-  const declaradas = rules.map(([nome, selector]) => [
-    nome,
-    ruleDeclaration(raiz.ownerDocument, (s) => s.includes(selector), 'box-shadow') ?? '',
+  const declaradas = rules.map(([name, selector]) => [
+    name,
+    ruleDeclaration(root.ownerDocument, (s) => s.includes(selector), 'box-shadow') ?? '',
   ] as const);
 
-  return byTheme(raiz, (tema, modo) => {
-    const superficie = superficieDoApp(raiz);
+  return byTheme(root, (theme, mode) => {
+    const superficie = superficieDoApp(root);
     const saida: Record<string, number | null> = {};
-    for (const [nome, declarada] of declaradas) {
+    for (const [name, declarada] of declaradas) {
       // Última camada de cor da sombra: é a banda visível do anel — as
       // anteriores são o vão em `--background` e a elevação.
       const colors = declarada.match(/hsl\(var\(--[a-z-]+\)(?:\s*\/\s*[\d.]+)?\s*\)/g) ?? [];
       const banda = colors.at(-1);
-      const bruta = banda ? resolveColor(raiz, banda) : null;
-      saida[nome] = bruta ? (ratio(bruta, superficie)?.ratio ?? null) : null;
+      const bruta = banda ? resolveColor(root, banda) : null;
+      saida[name] = bruta ? (ratio(bruta, superficie)?.ratio ?? null) : null;
     }
-    return { tema, modo, ...saida };
+    return { theme, mode, ...saida };
   });
 }
 
@@ -379,7 +379,7 @@ export function focusMeasureRing(el: HTMLElement, rest: string): RingMeasurement
   // Desligar a transição faz o computado saltar para o valor final.
   const focus = noTransicao(el, () => getComputedStyle(el).boxShadow);
   const cs = getComputedStyle(el);
-  const raiz = el.parentElement ?? el;
+  const root = el.parentElement ?? el;
   const superficie = superficieDoApp(el);
 
   // A cor do anel sai da DECLARAÇÃO da folha, não da string do box-shadow
@@ -392,7 +392,7 @@ export function focusMeasureRing(el: HTMLElement, rest: string): RingMeasurement
     'box-shadow',
   );
   const ringToken = declarado?.match(/hsl\(var\(--ring\)[^)]*\)\s*\)?/)?.[0] ?? 'hsl(var(--ring) / 0.5)';
-  const bruta = resolveColor(raiz, ringToken);
+  const bruta = resolveColor(root, ringToken);
   const composto = bruta ? ratio(bruta, superficie) : null;
 
   const restBorder = parseFloat(cs.borderTopWidth) > 0 ? cs.borderTopColor : null;
@@ -419,7 +419,7 @@ export interface DisabledMeasurement {
   retemFocus: boolean;
   /** `true` quando `elementFromPoint` no centro devolve o próprio botão. */
   alcancavelPeloPonteiro: boolean;
-  opacidade: number;
+  opacity: number;
 }
 
 export function measureDisabled(el: HTMLElement): DisabledMeasurement {
@@ -427,7 +427,7 @@ export function measureDisabled(el: HTMLElement): DisabledMeasurement {
   const nativo = el.hasAttribute('disabled');
   const aria = el.getAttribute('aria-disabled') === 'true';
   const r = el.getBoundingClientRect();
-  const alvo = el.ownerDocument.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+  const target = el.ownerDocument.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
 
   const antes = el.ownerDocument.activeElement;
   el.focus();
@@ -438,8 +438,8 @@ export function measureDisabled(el: HTMLElement): DisabledMeasurement {
     mecanismo: nativo && aria ? 'ambos' : nativo ? 'nativo' : aria ? 'aria' : 'nenhum',
     pointer: cs.pointerEvents,
     retemFocus,
-    alcancavelPeloPonteiro: alvo === el || el.contains(alvo),
-    opacidade: Number(cs.opacity),
+    alcancavelPeloPonteiro: target === el || el.contains(target),
+    opacity: Number(cs.opacity),
   };
 }
 
@@ -482,7 +482,7 @@ export interface IconMeasurement {
   ariaHidden: string | null;
   /** `<title>` dentro do SVG entra no nome acessível e o polui. */
   temTitulo: boolean;
-  lado: number;
+  side: number;
   /** Texto que o leitor de tela anuncia para o botão inteiro. */
   accessibleName: string;
   /** `true` quando o nome vem do `aria-label` (obrigatório em icon-only). */
@@ -492,13 +492,13 @@ export interface IconMeasurement {
 export function measureIcon(button: HTMLElement): IconMeasurement | null {
   const svg = button.querySelector<SVGSVGElement>('svg');
   if (!svg) return null;
-  const rotulo = button.getAttribute('aria-label');
+  const label = button.getAttribute('aria-label');
   return {
     ariaHidden: svg.getAttribute('aria-hidden'),
     temTitulo: !!svg.querySelector('title'),
-    lado: Math.round(svg.getBoundingClientRect().width),
-    accessibleName: (rotulo ?? button.textContent ?? '').trim(),
-    nomeVemDoRotulo: !!rotulo,
+    side: Math.round(svg.getBoundingClientRect().width),
+    accessibleName: (label ?? button.textContent ?? '').trim(),
+    nomeVemDoRotulo: !!label,
   };
 }
 
@@ -516,10 +516,10 @@ export function measureIcon(button: HTMLElement): IconMeasurement | null {
  * test-runner mede o que está na tela, e a tela está sempre no tema claro
  * padrão. Cinco sextos da matriz nunca foram olhados por ninguém.
  */
-export function contrastDeTextFailures(raiz: HTMLElement, minimum: number): string[] {
-  return themeMeasureVariants(raiz)
-    .filter((m) => m.presente && m.texto !== null && m.texto < minimum)
-    .map((m) => `${m.tema}/${m.modo} · ${m.variante}: texto ${m.texto}:1 (mínimo ${minimum})`);
+export function contrastDeTextFailures(root: HTMLElement, minimum: number): string[] {
+  return themeMeasureVariants(root)
+    .filter((m) => m.presente && m.text !== null && m.text < minimum)
+    .map((m) => `${m.theme}/${m.mode} · ${m.variant}: texto ${m.text}:1 (mínimo ${minimum})`);
 }
 
 /**
@@ -528,19 +528,19 @@ export function contrastDeTextFailures(raiz: HTMLElement, minimum: number): stri
  * `minimum` é 3 — WCAG 1.4.11 trata o anel como informação não-textual. Cobre as
  * três regras de anel do botão (foco, foco destrutivo e inválido permanente).
  */
-export function ringFailures(raiz: HTMLElement, minimum: number): string[] {
+export function ringFailures(root: HTMLElement, minimum: number): string[] {
   const saida: string[] = [];
-  for (const line of themeMeasureRing(raiz)) {
-    for (const [nome, valor] of Object.entries(line)) {
-      if (nome === 'tema' || nome === 'modo') continue;
-      // `tema` e `modo` saíram no `continue` acima, então o que resta é razão
+  for (const line of themeMeasureRing(root)) {
+    for (const [name, value] of Object.entries(line)) {
+      if (name === 'theme' || name === 'mode') continue;
+      // `theme` e `mode` saíram no `continue` acima, então o que resta é razão
       // ou `null`. A guarda por tipo é o que o `Object.entries` exige — o cast
       // direto para número não compila, e forçá-lo esconderia um campo novo de
       // outro tipo no dia em que a linha crescer.
-      const r = typeof valor === 'number' ? valor : null;
+      const r = typeof value === 'number' ? value : null;
       // `null` quer dizer que a REGRA sumiu da folha — achado, não aprovação.
-      if (r === null) saida.push(`${line.tema}/${line.modo} · ${nome}: regra ausente na folha`);
-      else if (r < minimum) saida.push(`${line.tema}/${line.modo} · ${nome}: ${r}:1 (mínimo ${minimum})`);
+      if (r === null) saida.push(`${line.theme}/${line.mode} · ${name}: regra ausente na folha`);
+      else if (r < minimum) saida.push(`${line.theme}/${line.mode} · ${name}: ${r}:1 (mínimo ${minimum})`);
     }
   }
   return saida;
@@ -563,16 +563,16 @@ export function ringFailures(raiz: HTMLElement, minimum: number): string[] {
  */
 export async function colherAll(
   stack: string,
-  raiz: HTMLElement,
+  root: HTMLElement,
   tab: () => Promise<void>,
 ): Promise<never> {
-  const doc = raiz.ownerDocument;
-  const buttons = [...raiz.querySelectorAll<HTMLElement>('.nds-button')];
+  const doc = root.ownerDocument;
+  const buttons = [...root.querySelectorAll<HTMLElement>('.nds-button')];
   const rest = new Map(buttons.map((b) => [b, getComputedStyle(b).boxShadow]));
 
-  const crescimento = measureCrescimentoWithFonte(raiz);
-  const alvo = touchMeasureTarget(raiz);
-  const temas = themeMeasureVariants(raiz);
+  const crescimento = measureCrescimentoWithFonte(root);
+  const target = touchMeasureTarget(root);
+  const temas = themeMeasureVariants(root);
 
   const focos: Record<string, RingMeasurement> = {};
   (doc.activeElement as HTMLElement | null)?.blur();
@@ -580,11 +580,11 @@ export async function colherAll(
     await tab();
     const active = doc.activeElement as HTMLElement | null;
     if (!active?.classList?.contains('nds-button')) continue;
-    const chave = variantOf(active);
-    if (!focos[chave]) focos[chave] = focusMeasureRing(active, rest.get(active) ?? '');
+    const key = variantOf(active);
+    if (!focos[key]) focos[key] = focusMeasureRing(active, rest.get(active) ?? '');
   }
 
-  const find = (sel: string) => raiz.querySelector<HTMLElement>(sel);
+  const find = (sel: string) => root.querySelector<HTMLElement>(sel);
   const desab = find('[data-sonda="desabilitado"]');
   const link = find('[data-sonda="link"]');
   const withIcon = find('[data-sonda="com-icone"]');
@@ -593,13 +593,13 @@ export async function colherAll(
   throw new Error(
     `SONDA::${stack}::` +
       JSON.stringify({
-        matriz: measureButtons(raiz),
+        matriz: measureButtons(root),
         crescimento,
-        alvo,
+        target,
         temas,
-        anelPorTema: themeMeasureRing(raiz),
+        anelPorTema: themeMeasureRing(root),
         focos,
-        desabilitado: desab ? measureDisabled(desab) : null,
+        disabled: desab ? measureDisabled(desab) : null,
         link: link ? measureLink(link) : null,
         iconeComTexto: withIcon ? measureIcon(withIcon) : null,
         iconeSozinho: iconOnly ? measureIcon(iconOnly) : null,

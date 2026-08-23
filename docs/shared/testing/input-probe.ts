@@ -42,7 +42,7 @@ export { darkLigarTheme, noTransicao };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const texto = (el: Element | null | undefined): string | null =>
+const text = (el: Element | null | undefined): string | null =>
   el?.textContent?.trim().replace(/\s+/g, ' ') || null;
 
 /** Nome acessível pela ordem que o leitor usa. `null` é campo sem nome. */
@@ -50,11 +50,11 @@ export function accessibleName(el: Element | null | undefined): string | null {
   if (!el) return null;
   const labelled = el.getAttribute('aria-labelledby');
   if (labelled) {
-    const alvo = el.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
-    if (alvo?.textContent?.trim()) return alvo.textContent.trim();
+    const target = el.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
+    if (target?.textContent?.trim()) return target.textContent.trim();
   }
-  const rotulo = el.getAttribute('aria-label');
-  if (rotulo?.trim()) return rotulo.trim();
+  const label = el.getAttribute('aria-label');
+  if (label?.trim()) return label.trim();
   const id = el.getAttribute('id');
   if (id) {
     const label = el.ownerDocument.querySelector(`label[for="${CSS.escape(id)}"]`);
@@ -66,11 +66,11 @@ export function accessibleName(el: Element | null | undefined): string | null {
 }
 
 /** O `<input>` do cenário, pelo contrato e com os degraus de fallback. */
-export function fieldOf(raiz: HTMLElement): HTMLInputElement | null {
+export function fieldOf(root: HTMLElement): HTMLInputElement | null {
   return (
-    raiz.querySelector<HTMLInputElement>('input[data-slot="input"]') ??
-    raiz.querySelector<HTMLInputElement>('input.nds-input') ??
-    raiz.querySelector<HTMLInputElement>('input')
+    root.querySelector<HTMLInputElement>('input[data-slot="input"]') ??
+    root.querySelector<HTMLInputElement>('input.nds-input') ??
+    root.querySelector<HTMLInputElement>('input')
   );
 }
 
@@ -91,7 +91,7 @@ export function fieldOf(raiz: HTMLElement): HTMLInputElement | null {
 export function heightResultante(el: HTMLElement) {
   const cs = getComputedStyle(el);
   return {
-    caixa: Math.round(el.getBoundingClientRect().height),
+    box: Math.round(el.getBoundingClientRect().height),
     heightCss: cs.height,
     minHeightCss: cs.minHeight,
     paddingBloco: [cs.paddingTop, cs.paddingBottom] as const,
@@ -189,31 +189,31 @@ export function focusHalo(
  * escuro. A classe sai no `finally`: deixá-la posta envenena a story seguinte e
  * a foto do Chromatic.
  */
-export function contrastesNosDoisModos(raiz: HTMLElement) {
-  const campo = fieldOf(raiz);
-  if (!campo) return null;
+export function contrastesNosDoisModos(root: HTMLElement) {
+  const field = fieldOf(root);
+  if (!field) return null;
 
-  const measure = (modo: 'claro' | 'escuro') => {
-    const m = measureInput(raiz);
+  const measure = (mode: 'claro' | 'escuro') => {
+    const m = measureInput(root);
     if (!m.presente) return null;
     return {
-      modo,
-      texto: m.contraste.textoNoFundo?.ratio ?? null,
+      mode,
+      text: m.contraste.textoNoFundo?.ratio ?? null,
       placeholder: m.contraste.placeholderNoFundo?.ratio ?? null,
       border: m.contraste.bordaNoFundo?.ratio ?? null,
     };
   };
 
   const light = measure('claro');
-  const desfazer = darkLigarTheme(raiz.ownerDocument);
+  const desfazer = darkLigarTheme(root.ownerDocument);
   let escuro;
   try {
-    escuro = noTransicao(campo, () => measure('escuro'));
+    escuro = noTransicao(field, () => measure('escuro'));
   } finally {
     desfazer();
   }
   return [light, escuro].filter(Boolean) as {
-    modo: string; texto: number | null; placeholder: number | null; border: number | null;
+    mode: string; text: number | null; placeholder: number | null; border: number | null;
   }[];
 }
 
@@ -222,11 +222,11 @@ export function contrastesNosDoisModos(raiz: HTMLElement) {
  *
  * Serve para a story afirmar "esta borda é --destructive" sem escrever um rgb
  * literal, que quebraria a cada ajuste de paleta e não valeria nos temas de
- * marca. `raiz` precisa ser um elemento que RENDERIZE — `<input>` é vazio e um
+ * marca. `root` precisa ser um elemento que RENDERIZE — `<input>` é vazio e um
  * filho apendado nele nunca entra no layout.
  */
-export function tokenColor(raiz: HTMLElement, token: string): string | null {
-  const host = raiz.tagName === 'INPUT' ? raiz.parentElement ?? raiz : raiz;
+export function tokenColor(root: HTMLElement, token: string): string | null {
+  const host = root.tagName === 'INPUT' ? root.parentElement ?? root : root;
   return resolveColor(host as HTMLElement, `hsl(var(${token}))`);
 }
 
@@ -239,66 +239,66 @@ export function borderContrast(el: HTMLElement) {
 
 // ─── Medição de um campo ──────────────────────────────────────────────────────
 
-export function measureInput(raiz: HTMLElement) {
-  const campo = fieldOf(raiz);
-  if (!campo) return { presente: false } as const;
+export function measureInput(root: HTMLElement) {
+  const field = fieldOf(root);
+  if (!field) return { presente: false } as const;
 
-  const classes = (campo.getAttribute('class') || '').split(/\s+/).filter(Boolean);
-  const cs = getComputedStyle(campo);
-  const csPlaceholder = getComputedStyle(campo, '::placeholder');
-  const fileCsButton = getComputedStyle(campo, '::file-selector-button');
-  const caixa = campo.getBoundingClientRect();
-  const background = backgroundEffective(campo);
+  const classes = (field.getAttribute('class') || '').split(/\s+/).filter(Boolean);
+  const cs = getComputedStyle(field);
+  const csPlaceholder = getComputedStyle(field, '::placeholder');
+  const fileCsButton = getComputedStyle(field, '::file-selector-button');
+  const box = field.getBoundingClientRect();
+  const background = backgroundEffective(field);
 
-  const describedby = campo.getAttribute('aria-describedby');
+  const describedby = field.getAttribute('aria-describedby');
   const targetsDescribed = describedby
     ? describedby
         .split(/\s+/)
-        .map((id) => campo.ownerDocument.getElementById(id))
+        .map((id) => field.ownerDocument.getElementById(id))
         .filter(Boolean)
     : [];
 
   return {
     presente: true,
     estrutura: {
-      tag: campo.tagName.toLowerCase(),
-      dataSlot: campo.getAttribute('data-slot'),
+      tag: field.tagName.toLowerCase(),
+      dataSlot: field.getAttribute('data-slot'),
       temClasseBase: classes.includes('nds-input'),
       classes,
       /** Classe sem o prefixo do design system: inerte, não pinta nada. */
       classesInertes: classes.filter((c) => !c.startsWith('nds-')),
-      estiloInline: campo.getAttribute('style'),
+      estiloInline: field.getAttribute('style'),
       wrapper: {
-        tag: raiz.firstElementChild?.tagName.toLowerCase() ?? null,
-        classes: (raiz.firstElementChild?.getAttribute('class') || '').split(/\s+/).filter(Boolean),
-        estiloInline: raiz.firstElementChild?.getAttribute('style') ?? null,
+        tag: root.firstElementChild?.tagName.toLowerCase() ?? null,
+        classes: (root.firstElementChild?.getAttribute('class') || '').split(/\s+/).filter(Boolean),
+        estiloInline: root.firstElementChild?.getAttribute('style') ?? null,
       },
     },
     semantica: {
-      accessibleName: accessibleName(campo),
+      accessibleName: accessibleName(field),
       /** `type` do atributo e da propriedade: divergem quando a stack não repassa. */
-      typeAtributo: campo.getAttribute('type'),
-      typePropriedade: campo.type,
-      papel: campo.getAttribute('role'),
-      placeholder: campo.getAttribute('placeholder'),
-      ariaInvalid: campo.getAttribute('aria-invalid'),
-      ariaRequired: campo.getAttribute('aria-required'),
-      required: campo.required,
-      desabilitado: campo.disabled,
-      somenteLeitura: campo.readOnly,
+      typeAtributo: field.getAttribute('type'),
+      typePropriedade: field.type,
+      papel: field.getAttribute('role'),
+      placeholder: field.getAttribute('placeholder'),
+      ariaInvalid: field.getAttribute('aria-invalid'),
+      ariaRequired: field.getAttribute('aria-required'),
+      required: field.required,
+      disabled: field.disabled,
+      somenteLeitura: field.readOnly,
       /** Só `readonly` continua focalizável — é o que separa os dois estados. */
-      focalizavel: !campo.disabled,
-      nome: campo.name || null,
-      autocomplete: campo.getAttribute('autocomplete'),
+      focalizavel: !field.disabled,
+      name: field.name || null,
+      autocomplete: field.getAttribute('autocomplete'),
       ariaDescribedby: describedby,
       alvoDescribedbyExiste: describedby
         ? targetsDescribed.length === describedby.split(/\s+/).length
         : null,
-      textoDescrito: targetsDescribed.map((el) => texto(el)),
+      textoDescrito: targetsDescribed.map((el) => text(el)),
     },
     geometria: {
-      largura: Math.round(caixa.width),
-      ...heightResultante(campo),
+      width: Math.round(box.width),
+      ...heightResultante(field),
       paddingInline: [cs.paddingLeft, cs.paddingRight] as const,
       familiaDaFonte: cs.fontFamily.split(',')[0],
       raio: cs.borderTopLeftRadius,
@@ -310,7 +310,7 @@ export function measureInput(raiz: HTMLElement) {
       background: cs.backgroundColor,
       backgroundEffective: background,
       cor: cs.color,
-      opacidade: cs.opacity,
+      opacity: cs.opacity,
       cursor: cs.cursor,
       corDoPlaceholder: csPlaceholder.color || null,
       /** `::file-selector-button` só existe em `type="file"`; nos demais vem herdado. */
@@ -320,25 +320,25 @@ export function measureInput(raiz: HTMLElement) {
         raio: fileCsButton.borderTopLeftRadius || null,
         espessuraDaBorda: fileCsButton.borderTopWidth || null,
       },
-      borders: stateBorders(campo),
+      borders: stateBorders(field),
     },
     contraste: {
       textoNoFundo: background ? ratio(cs.color, background) : null,
       placeholderNoFundo: background && csPlaceholder.color ? ratio(csPlaceholder.color, background) : null,
-      bordaNoFundo: borderContrast(campo),
+      bordaNoFundo: borderContrast(field),
     },
   };
 }
 
 /**
- * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `raiz`.
+ * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `root`.
  * Cenário ausente vem `null` — é o achado de "a stack não monta este caso".
  */
-export function measureInputs(raiz: HTMLElement, cenarios: string[]) {
+export function measureInputs(root: HTMLElement, cenarios: string[]) {
   const registro: Record<string, unknown> = {};
   for (const cenario of cenarios) {
-    const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
-    registro[cenario] = alvo ? measureInput(alvo) : null;
+    const target = root.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
+    registro[cenario] = target ? measureInput(target) : null;
   }
   return registro;
 }
@@ -350,18 +350,18 @@ export function measureInputs(raiz: HTMLElement, cenarios: string[]) {
  * A classe sai no `finally`: deixá-la posta envenena a story seguinte e a foto
  * do Chromatic.
  */
-export function darkMeasure(raiz: HTMLElement, cenario: string) {
-  const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
-  const campo = alvo ? fieldOf(alvo) : null;
-  if (!alvo || !campo) return null;
+export function darkMeasure(root: HTMLElement, cenario: string) {
+  const target = root.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
+  const field = target ? fieldOf(target) : null;
+  if (!target || !field) return null;
 
-  const desfazer = darkLigarTheme(raiz.ownerDocument);
+  const desfazer = darkLigarTheme(root.ownerDocument);
   try {
     // Trocar o tema troca `border-color`, que é propriedade em transição: sem
     // desligá-la a sonda leria a cor do tema CLARO e relataria uma borda que
     // não escurece.
-    return noTransicao(campo, () => {
-      const measurement = measureInput(alvo);
+    return noTransicao(field, () => {
+      const measurement = measureInput(target);
       if (!measurement.presente) return null;
       return { state: measurement.state, contraste: measurement.contraste };
     });
@@ -376,10 +376,10 @@ export function darkMeasure(raiz: HTMLElement, cenario: string) {
  * Via exceção, e não `console.log`: o addon do Storybook instrumenta o console
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest.
  */
-export function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[]) {
+export function reportProbe(stack: string, root: HTMLElement, cenarios: string[]) {
   const registro = {
-    light: measureInputs(raiz, cenarios),
-    escuro: darkMeasure(raiz, cenarios[0]),
+    light: measureInputs(root, cenarios),
+    escuro: darkMeasure(root, cenarios[0]),
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);
 }

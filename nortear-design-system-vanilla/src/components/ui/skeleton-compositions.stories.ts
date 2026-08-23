@@ -32,7 +32,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-function bloco(className: string, spacing: string): HTMLElement {
+function block(className: string, spacing: string): HTMLElement {
   const el = document.createElement('div');
   el.className = className;
   el.dataset.spacing = spacing;
@@ -62,7 +62,7 @@ export const ProfileCard: Story = {
 
     wrap.appendChild(createSkeleton({ shape: 'avatar' }));
 
-    const lines = bloco('nds-stack nds-flex-1', 'sm');
+    const lines = block('nds-stack nds-flex-1', 'sm');
     lines.appendChild(createSkeleton({ shape: 'text', width: '2-3' }));
     lines.appendChild(createSkeleton({ shape: 'text', width: '1-2' }));
     wrap.appendChild(lines);
@@ -104,11 +104,11 @@ export const ListWithAvatar: Story = {
     },
   },
   render: () => {
-    const lista = document.createElement('ul');
-    lista.className = 'nds-stack nds-list-none nds-p-0 nds-w-md';
-    lista.dataset.spacing = 'md';
-    lista.setAttribute('aria-busy', 'true');
-    lista.setAttribute('aria-label', 'Carregando lista de pedidos');
+    const list = document.createElement('ul');
+    list.className = 'nds-stack nds-list-none nds-p-0 nds-w-md';
+    list.dataset.spacing = 'md';
+    list.setAttribute('aria-busy', 'true');
+    list.setAttribute('aria-label', 'Carregando lista de pedidos');
 
     for (let i = 0; i < 5; i++) {
       const item = document.createElement('li');
@@ -118,24 +118,24 @@ export const ListWithAvatar: Story = {
 
       item.appendChild(createSkeleton({ shape: 'avatar', size: 'sm' }));
 
-      const texto = bloco('nds-stack nds-flex-1', 'xs');
-      texto.appendChild(createSkeleton({ shape: 'text', width: '2-3' }));
-      texto.appendChild(createSkeleton({ shape: 'text', width: '1-3' }));
-      item.appendChild(texto);
+      const text = block('nds-stack nds-flex-1', 'xs');
+      text.appendChild(createSkeleton({ shape: 'text', width: '2-3' }));
+      text.appendChild(createSkeleton({ shape: 'text', width: '1-3' }));
+      item.appendChild(text);
 
-      lista.appendChild(item);
+      list.appendChild(item);
     }
 
-    return lista;
+    return list;
   },
   play: async ({ canvasElement, step }) => {
-    const lista = canvasElement.querySelector<HTMLElement>('ul')!;
+    const list = canvasElement.querySelector<HTMLElement>('ul')!;
     const parts = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
     await step('A lista inteira é uma região ocupada, com nome', async () => {
-      await expect(lista).toHaveAttribute('aria-busy', 'true');
-      await expect(lista.getAttribute('aria-label')).toBeTruthy();
-      await expect(lista.querySelectorAll('li')).toHaveLength(5);
+      await expect(list).toHaveAttribute('aria-busy', 'true');
+      await expect(list.getAttribute('aria-label')).toBeTruthy();
+      await expect(list.querySelectorAll('li')).toHaveLength(5);
     });
 
     await step('Cinco itens de três peças, todas ocultas ao leitor', async () => {
@@ -146,9 +146,9 @@ export const ListWithAvatar: Story = {
     await step('O avatar pequeno continua quadrado e com medida do tema', async () => {
       // `data-size="sm"` só entrega se a folha responder: sem isso o item da
       // lista sai com o mesmo bloco do card de perfil.
-      const caixa = boxDesenhada(parts[0]);
-      await expect(caixa.quadrado).toBe(true);
-      await expect(caixa.largura).toBeGreaterThan(0);
+      const box = boxDesenhada(parts[0]);
+      await expect(box.quadrado).toBe(true);
+      await expect(box.width).toBeGreaterThan(0);
     });
   },
 };
@@ -172,7 +172,7 @@ export const ImageInAspectRatio: Story = {
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    const caixa = canvasElement.querySelector<HTMLElement>('[data-slot="aspect-ratio"]')!;
+    const box = canvasElement.querySelector<HTMLElement>('[data-slot="aspect-ratio"]')!;
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
 
     await step('A região de carregamento tem estado e nome', async () => {
@@ -184,7 +184,7 @@ export const ImageInAspectRatio: Story = {
     await step('O placeholder preenche a caixa proporcional', async () => {
       // Se o filho perdesse o `inset: 0`, a proporção continuaria certa e a
       // caixa ficaria vazia — só a medição acusa.
-      const c = caixa.getBoundingClientRect();
+      const c = box.getBoundingClientRect();
       const s = sk.getBoundingClientRect();
       await expect(Math.abs(s.height - c.height)).toBeLessThan(2);
       await expect(Math.abs(s.width - c.width)).toBeLessThan(2);

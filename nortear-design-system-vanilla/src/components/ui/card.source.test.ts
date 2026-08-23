@@ -3,34 +3,34 @@ import { cardClickableSnippet, cardSnippet, cardSource, cardSourceWith } from '.
 
 describe('cardSnippet', () => {
   it('devolve a chamada das fábricas, e não o outerHTML do elemento', () => {
-    const código = cardSnippet();
-    expect(código).toContain("from '@/components/ui/card';");
-    expect(código).toContain('createCard(');
-    expect(código).toContain('createCardHeader()');
-    expect(código).toContain('createCardTitle({');
-    expect(código).toContain('createCardContent()');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('<div class=');
+    const code = cardSnippet();
+    expect(code).toContain("from '@/components/ui/card';");
+    expect(code).toContain('createCard(');
+    expect(code).toContain('createCardHeader()');
+    expect(code).toContain('createCardTitle({');
+    expect(code).toContain('createCardContent()');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('<div class=');
   });
 
   it('usa o nome canônico da opção de classe, nunca o apelido depreciado', () => {
     // As stories ainda chamam `className`, que a fábrica aceita como apelido; o
     // snippet ensina `class`, que é o nome.
-    const código = cardSnippet();
-    expect(código).toContain("class: 'nds-w-sm'");
+    const code = cardSnippet();
+    expect(code).toContain("class: 'nds-w-sm'");
     // A OPÇÃO da fábrica, não a propriedade do DOM: `valor.className = …` é
     // outra coisa, e proibir a palavra inteira mediria a linha errada.
-    expect(código).not.toContain('className:');
+    expect(code).not.toContain('className:');
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = cardSnippet();
+    const code = cardSnippet();
     // `default` no tamanho e nível 3 no título são o padrão.
-    expect(código).not.toContain('size:');
-    expect(código).not.toContain('level:');
-    expect(código).not.toContain('createCardFooter');
-    expect(código).not.toContain('createCardAction');
-    expect(cardSnippet({ size: 'default' })).toBe(código);
+    expect(code).not.toContain('size:');
+    expect(code).not.toContain('level:');
+    expect(code).not.toContain('createCardFooter');
+    expect(code).not.toContain('createCardAction');
+    expect(cardSnippet({ size: 'default' })).toBe(code);
   });
 
   it('mostra o tamanho compacto quando a story o usa', () => {
@@ -38,14 +38,14 @@ describe('cardSnippet', () => {
   });
 
   it('o rodapé entra como filho DIRETO, depois do conteúdo', () => {
-    const código = cardSnippet({ showFooter: true });
-    expect(código).toContain('createCardFooter,');
-    expect(código).toContain("createCardFooter({ class: 'nds-cluster' })");
-    expect(código).toContain("import { createButton } from '@/components/ui/button';");
-    expect(código).toContain('card.append(\n  cabecalho,\n  conteudo,\n  rodape,\n);');
+    const code = cardSnippet({ showFooter: true });
+    expect(code).toContain('createCardFooter,');
+    expect(code).toContain("createCardFooter({ class: 'nds-cluster' })");
+    expect(code).toContain("import { createButton } from '@/components/ui/button';");
+    expect(code).toContain('card.append(\n  cabecalho,\n  conteudo,\n  rodape,\n);');
     // Os botões nomeiam o cartão: "Salvar" sozinho vira uma fileira de rótulos
     // idênticos numa lista.
-    expect(código).toContain("'aria-label': 'Salvar alterações em Cadeira Gamer Pro'");
+    expect(code).toContain("'aria-label': 'Salvar alterações em Cadeira Gamer Pro'");
   });
 
   it('a ação vive dentro do cabeçalho, e a imagem é o primeiro filho', () => {
@@ -59,13 +59,13 @@ describe('cardSnippet', () => {
   });
 
   it('não vaza helper de story', () => {
-    const código = cardSnippet({ showFooter: true, image: true, action: true });
-    expect(código).not.toContain('buildHeader');
-    expect(código).not.toContain('buildPrice');
-    expect(código).not.toContain('buildBasicCard');
-    expect(código).not.toContain('buildProductCard');
-    expect(código).not.toContain('DEMO_IMAGE_PRODUCT');
-    expect(código).not.toContain('data:image/svg+xml');
+    const code = cardSnippet({ showFooter: true, image: true, action: true });
+    expect(code).not.toContain('buildHeader');
+    expect(code).not.toContain('buildPrice');
+    expect(code).not.toContain('buildBasicCard');
+    expect(code).not.toContain('buildProductCard');
+    expect(code).not.toContain('DEMO_IMAGE_PRODUCT');
+    expect(code).not.toContain('data:image/svg+xml');
   });
 });
 
@@ -92,30 +92,30 @@ describe('cardSource', () => {
 describe('cardSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = cardSourceWith({ size: 'sm' });
-    const código = transform('', { args: { size: 'default', title: 'Outro título' } });
-    expect(código).toContain("size: 'sm'");
-    expect(código).toContain("createCardTitle({ text: 'Outro título' })");
+    const code = transform('', { args: { size: 'default', title: 'Outro título' } });
+    expect(code).toContain("size: 'sm'");
+    expect(code).toContain("createCardTitle({ text: 'Outro título' })");
   });
 });
 
 describe('cardClicavelSnippet', () => {
   it('o destino é o <a> de fora; o Card continua passivo', () => {
-    const código = cardClickableSnippet();
-    expect(código).toContain("document.createElement('a')");
-    expect(código).toContain(
+    const code = cardClickableSnippet();
+    expect(code).toContain("document.createElement('a')");
+    expect(code).toContain(
       "destino.setAttribute('aria-label', 'Abrir detalhes do produto Cadeira Gamer Pro');",
     );
-    expect(código).toContain('destino.appendChild(card);');
+    expect(code).toContain('destino.appendChild(card);');
     // Nada de handler nem de tabindex no Card: a ativação por teclado e o anel
     // de foco vivem no wrapper.
-    expect(código).not.toContain('card.addEventListener');
-    expect(código).not.toContain('tabIndex');
-    expect(código).not.toContain('data-slot=');
+    expect(code).not.toContain('card.addEventListener');
+    expect(code).not.toContain('tabIndex');
+    expect(code).not.toContain('data-slot=');
   });
 
   it('a largura fica no destino, não no Card de dentro', () => {
-    const código = cardClickableSnippet();
-    expect(código).toContain("createCard({ class: 'nds-w-full' })");
-    expect(código).toContain('nds-w-sm');
+    const code = cardClickableSnippet();
+    expect(code).toContain("createCard({ class: 'nds-w-full' })");
+    expect(code).toContain('nds-w-sm');
   });
 });

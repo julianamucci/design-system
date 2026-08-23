@@ -383,7 +383,7 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
                 {{ item.label }}
               </span>
             </button>
-            <div ndsAccordionContent>{{ item.conteudo }}</div>
+            <div ndsAccordionContent>{{ item.content }}</div>
           </div>
         }
       </div>
@@ -422,10 +422,10 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
                  accordion. -->
             <table class="nds-w-full nds-text-body nds-border-collapse">
               <tbody>
-                @for (line of linhasDeEspecificacao(); track line.rotulo) {
+                @for (line of linhasDeEspecificacao(); track line.label) {
                   <tr class="nds-border-b">
-                    <td class="nds-py-1 nds-pr-4">{{ line.rotulo }}</td>
-                    <td class="nds-py-1">{{ line.valor }}</td>
+                    <td class="nds-py-1 nds-pr-4">{{ line.label }}</td>
+                    <td class="nds-py-1">{{ line.value }}</td>
                   </tr>
                 }
               </tbody>
@@ -724,24 +724,24 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
   protected readonly itensComIcone = computed(() => {
     const r = this.rotulos();
     return [
-      { value: 'comp-info',    label: r.informacao,   conteudo: r.informacaoTexto,   path: 'M12 16v-4M12 8h.01' },
-      { value: 'comp-aviso',   label: r.aviso,        conteudo: r.avisoTexto,        path: 'M12 8v4M12 16h.01' },
-      { value: 'comp-sucesso', label: r.confirm,  conteudo: r.confirmacaoTexto,  path: 'm9 12 2 2 4-4' },
+      { value: 'comp-info',    label: r.informacao,   content: r.informacaoTexto,   path: 'M12 16v-4M12 8h.01' },
+      { value: 'comp-aviso',   label: r.aviso,        content: r.avisoTexto,        path: 'M12 8v4M12 16h.01' },
+      { value: 'comp-sucesso', label: r.confirm,  content: r.confirmacaoTexto,  path: 'm9 12 2 2 4-4' },
     ];
   });
 
   protected readonly linhasDeEspecificacao = computed(() => {
     const r = this.rotulos();
     return r.cpu.split(', ').map((parte) => {
-      const [rotulo, ...remainder] = parte.split(': ');
-      return { rotulo, valor: remainder.join(': ') };
+      const [label, ...remainder] = parte.split(': ');
+      return { label, value: remainder.join(': ') };
     });
   });
 
   protected readonly itensInclusos = computed(() => [...this.rotulos().inclusos]);
 
-  protected definirControlado(valor: unknown): void {
-    this.itemControlado.set(typeof valor === 'string' ? valor : '');
+  protected definirControlado(value: unknown): void {
+    this.itemControlado.set(typeof value === 'string' ? value : '');
   }
 
   /**
@@ -753,10 +753,10 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
    * clique inverteria expand e collapse em silêncio. O payload leva o rótulo
    * traduzido porque é o que identifica a seção nesta página de demonstração.
    */
-  protected aoMudarItemDaDemo(evento: { open: boolean }, rotulo: string): void {
+  protected aoMudarItemDaDemo(evento: { open: boolean }, label: string): void {
     track(evento.open ? 'accordion_expand' : 'accordion_collapse', {
       component: 'accordion',
-      label: rotulo,
+      label: label,
       location: 'docs_demo',
     });
   }
@@ -928,7 +928,7 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
     };
     const sim = tNav('common.yes');
     const not = tNav('common.no');
-    const desc = (chave: string) => toPlainText(t(chave));
+    const desc = (key: string) => toPlainText(t(key));
 
     return [
       {

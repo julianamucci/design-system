@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { DropdownMenuAlign, DropdownMenuSide } from './dropdown-menu';
@@ -60,13 +60,13 @@ const ITEMS_DEFAULT: DropdownMenuSnippetItem[] = [
 ];
 
 function item(i: DropdownMenuSnippetItem): string {
-  const pairs = opcoes([
-    ['type', i.type && i.type !== 'item' ? texto(i.type) : undefined],
-    ['label', i.label !== undefined ? texto(i.label) : undefined],
-    ['value', i.value !== undefined ? texto(i.value) : undefined],
-    ['group', i.group !== undefined ? texto(i.group) : undefined],
-    ['variant', i.variant && i.variant !== 'default' ? texto(i.variant) : undefined],
-    ['shortcut', i.shortcut !== undefined ? texto(i.shortcut) : undefined],
+  const pairs = options([
+    ['type', i.type && i.type !== 'item' ? text(i.type) : undefined],
+    ['label', i.label !== undefined ? text(i.label) : undefined],
+    ['value', i.value !== undefined ? text(i.value) : undefined],
+    ['group', i.group !== undefined ? text(i.group) : undefined],
+    ['variant', i.variant && i.variant !== 'default' ? text(i.variant) : undefined],
+    ['shortcut', i.shortcut !== undefined ? text(i.shortcut) : undefined],
     ['checked', i.checked !== undefined ? String(i.checked) : undefined],
     ['indeterminate', i.indeterminate ? 'true' : undefined],
     ['disabled', i.disabled ? 'true' : undefined],
@@ -84,14 +84,14 @@ function item(i: DropdownMenuSnippetItem): string {
  * descreve os itens, não os monta.
  */
 export function dropdownMenuSnippet(o: DropdownMenuSnippetOptions = {}): string {
-  const itens = o.items ?? ITEMS_DEFAULT;
-  const gatilho = `createButton({ variant: 'outline', label: ${texto(o.triggerLabel ?? 'Abrir menu')} })`;
+  const items = o.items ?? ITEMS_DEFAULT;
+  const trigger = `createButton({ variant: 'outline', label: ${text(o.triggerLabel ?? 'Abrir menu')} })`;
 
-  const lines = opcoes([
-    ['trigger', gatilho],
-    ['items', `[\n${itens.map((i) => `    ${item(i)},`).join('\n')}\n  ]`],
-    ['side', o.side && o.side !== 'bottom' ? texto(o.side) : undefined],
-    ['align', o.align && o.align !== 'start' ? texto(o.align) : undefined],
+  const lines = options([
+    ['trigger', trigger],
+    ['items', `[\n${items.map((i) => `    ${item(i)},`).join('\n')}\n  ]`],
+    ['side', o.side && o.side !== 'bottom' ? text(o.side) : undefined],
+    ['align', o.align && o.align !== 'start' ? text(o.align) : undefined],
     ['sideOffset', o.sideOffset !== undefined && o.sideOffset !== 4 ? String(o.sideOffset) : undefined],
     ['modal', o.modal === false ? 'false' : undefined],
     ['defaultOpen', o.defaultOpen ? 'true' : undefined],

@@ -18,8 +18,8 @@ const forwarded = useForwardPropsEmits(props, emits)
 // O gatilho é registrado por HoverCardTrigger e lido por HoverCardContent, que
 // tira dele o nome acessível do painel. Buscar o gatilho no documento daria o
 // mesmo nome a todos os cartões de uma tela com vários (ver a story Sides).
-const gatilho = ref<HTMLElement | null>(null)
-provide(KEY_HOVER_CARD, { gatilho })
+const trigger = ref<HTMLElement | null>(null)
+provide(KEY_HOVER_CARD, { trigger })
 </script>
 
 <template>

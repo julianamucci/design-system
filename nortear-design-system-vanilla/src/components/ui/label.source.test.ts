@@ -10,75 +10,75 @@ import {
 
 describe('labelSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = labelSnippet();
-    expect(código).toContain("import { createLabel } from '@/components/ui/label';");
-    expect(código).toContain('createLabel({');
-    expect(código).not.toContain('data-slot=');
-    expect(código).not.toContain('<label');
+    const code = labelSnippet();
+    expect(code).toContain("import { createLabel } from '@/components/ui/label';");
+    expect(code).toContain('createLabel({');
+    expect(code).not.toContain('data-slot=');
+    expect(code).not.toContain('<label');
   });
 
   it('sai com o controle que o rótulo nomeia — sozinho ele não associa nada', () => {
-    const código = labelSnippet();
-    expect(código).toContain("createLabel({ text: 'Nome completo', htmlFor: 'campo' })");
-    expect(código).toContain("createInput({ id: 'campo' })");
-    expect(código).toContain("document.querySelector('#app')?.append(rotulo, campo);");
+    const code = labelSnippet();
+    expect(code).toContain("createLabel({ text: 'Nome completo', htmlFor: 'campo' })");
+    expect(code).toContain("createInput({ id: 'campo' })");
+    expect(code).toContain("document.querySelector('#app')?.append(rotulo, campo);");
   });
 
   it('usa a opção canônica `class`, nunca o apelido depreciado', () => {
     // `className` é o nome do control da story e sobrevive só como apelido
     // `@deprecated` na fábrica: ensiná-lo perpetuaria o que está de saída.
-    const código = labelSnippet({ className: 'nds-text-caption' });
-    expect(código).toContain("class: 'nds-text-caption'");
-    expect(código).not.toContain('className');
+    const code = labelSnippet({ className: 'nds-text-caption' });
+    expect(code).toContain("class: 'nds-text-caption'");
+    expect(code).not.toContain('className');
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = labelSnippet();
-    expect(código).not.toContain('class:');
-    expect(código).not.toContain('type');
-    expect(código).not.toContain('disabled');
+    const code = labelSnippet();
+    expect(code).not.toContain('class:');
+    expect(code).not.toContain('type');
+    expect(code).not.toContain('disabled');
   });
 
   it('marca o CONTROLE com nds-peer e o põe antes do rótulo quando bloqueado', () => {
     // O rótulo não recebe classe nenhuma: quem reage é o `.nds-label`, casando
     // no irmão marcado. Sem a ordem, a regra não alcança.
-    const código = labelSnippet({ text: 'CPF', htmlFor: 'cpf', disabled: true });
-    expect(código).toContain("class: 'nds-peer'");
-    expect(código).toContain('disabled: true');
-    expect(código).toContain("document.querySelector('#app')?.append(campo, rotulo);");
+    const code = labelSnippet({ text: 'CPF', htmlFor: 'cpf', disabled: true });
+    expect(code).toContain("class: 'nds-peer'");
+    expect(code).toContain('disabled: true');
+    expect(code).toContain("document.querySelector('#app')?.append(campo, rotulo);");
   });
 });
 
 describe('labelObrigatorioSnippet', () => {
   it('deixa o asterisco decorativo e a obrigatoriedade no controle', () => {
-    const código = labelObrigatorioSnippet();
-    expect(código).toContain("marcador.setAttribute('aria-hidden', 'true');");
-    expect(código).toContain("rotulo.append('Email profissional', marcador);");
-    expect(código).toContain("campo.setAttribute('aria-required', 'true');");
+    const code = labelObrigatorioSnippet();
+    expect(code).toContain("marcador.setAttribute('aria-hidden', 'true');");
+    expect(code).toContain("rotulo.append('Email profissional', marcador);");
+    expect(code).toContain("campo.setAttribute('aria-required', 'true');");
     // O texto entra pelo `append`, e não por `text:`, senão o asterisco ficaria
     // antes do rótulo.
-    expect(código).not.toContain('text:');
+    expect(code).not.toContain('text:');
   });
 });
 
 describe('labelBlocoDesabilitadoSnippet', () => {
   it('desabilita pelo ancestral, e não peça por peça', () => {
-    const código = labelBlockDisabledSnippet();
-    expect(código).toContain("bloco.dataset.disabled = 'true';");
-    expect(código).toContain("createLabel({ text: 'Documento', htmlFor: 'documento' })");
-    expect(código).toContain('append(bloco)');
+    const code = labelBlockDisabledSnippet();
+    expect(code).toContain("bloco.dataset.disabled = 'true';");
+    expect(code).toContain("createLabel({ text: 'Documento', htmlFor: 'documento' })");
+    expect(code).toContain('append(bloco)');
   });
 });
 
 describe('labelComCaixaSnippet', () => {
   it('usa a fábrica da caixa, e só o par for/id', () => {
-    const código = labelWithBoxSnippet();
-    expect(código).toContain("import { createCheckbox } from '@/components/ui/checkbox';");
-    expect(código).toContain("createCheckbox({ id: 'termos' })");
-    expect(código).toContain("htmlFor: 'termos'");
+    const code = labelWithBoxSnippet();
+    expect(code).toContain("import { createCheckbox } from '@/components/ui/checkbox';");
+    expect(code).toContain("createCheckbox({ id: 'termos' })");
+    expect(code).toContain("htmlFor: 'termos'");
     // Nada de ouvinte reenviando o clique: a caixa é um <button>, e a
     // associação nativa basta.
-    expect(código).not.toContain('addEventListener');
+    expect(code).not.toContain('addEventListener');
   });
 });
 
@@ -100,8 +100,8 @@ describe('labelSource', () => {
 
 describe('labelSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = labelSourceWith({ text: 'CPF', disabled: true })('', { args: { text: 'Nome' } });
-    expect(código).toContain("text: 'CPF'");
-    expect(código).toContain("class: 'nds-peer'");
+    const code = labelSourceWith({ text: 'CPF', disabled: true })('', { args: { text: 'Nome' } });
+    expect(code).toContain("text: 'CPF'");
+    expect(code).toContain("class: 'nds-peer'");
   });
 });

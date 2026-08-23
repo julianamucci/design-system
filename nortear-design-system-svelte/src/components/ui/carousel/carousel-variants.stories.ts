@@ -170,10 +170,10 @@ export const Vertical: Story = {
       // reprovar por um efeito que ele não está verificando. Quem verifica a
       // escala é o passo próprio dela, na story horizontal.
       await waitFor(async () => {
-        const altura = viewport.clientHeight;
-        await expect(altura).toBeGreaterThan(0);
+        const height = viewport.clientHeight;
+        await expect(height).toBeGreaterThan(0);
         for (const slide of canvas.getAllByRole('group')) {
-          const proporcao = (slide as HTMLElement).offsetHeight / altura;
+          const proporcao = (slide as HTMLElement).offsetHeight / height;
           await expect(proporcao).toBeGreaterThan(0.98);
           await expect(proporcao).toBeLessThan(1.2);
         }

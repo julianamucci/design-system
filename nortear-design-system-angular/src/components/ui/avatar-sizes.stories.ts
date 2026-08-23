@@ -75,8 +75,8 @@ export const Presets: Story = {
         await waitFor(async () => {
           await expect(img.style.display).toBe('');
         }, { timeout: 5000 });
-        const caixa = img.getBoundingClientRect();
-        await expect(Math.abs(caixa.width - DIAMETER[p])).toBeLessThan(0.5);
+        const box = img.getBoundingClientRect();
+        await expect(Math.abs(box.width - DIAMETER[p])).toBeLessThan(0.5);
       }
     });
   },

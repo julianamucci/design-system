@@ -78,13 +78,13 @@ const TARGET_MINIMUM_PX = 24;
  * do token.
  */
 function cenario(): HTMLElement {
-  const raiz = document.createElement('div');
-  raiz.className = 'nds-bg-background nds-stack nds-p-4';
+  const root = document.createElement('div');
+  root.className = 'nds-bg-background nds-stack nds-p-4';
 
-  const campo = createInput({ placeholder: 'Campo de texto' });
-  campo.setAttribute('aria-label', 'Campo de texto');
+  const field = createInput({ placeholder: 'Campo de texto' });
+  field.setAttribute('aria-label', 'Campo de texto');
 
-  raiz.innerHTML = `
+  root.innerHTML = `
     <div class="nds-item"><span>Item de lista</span></div>
     <kbd class="nds-kbd">Ctrl</kbd>
     <div class="nds-tooltip-content" style="position:static">Dica</div>
@@ -100,8 +100,8 @@ function cenario(): HTMLElement {
     <div class="nds-input-otp"><div class="nds-input-otp-slot">7</div></div>
     <button type="button" class="nds-button nds-button-xs nds-button-default">xs</button>
   `;
-  raiz.prepend(campo);
-  return raiz;
+  root.prepend(field);
+  return root;
 }
 
 /**
@@ -114,25 +114,25 @@ function cenario(): HTMLElement {
  */
 const TARGETS: EspacoTarget[] = [
   // ── Controle: degrau que já existia e já seguia a densidade ──────────────
-  { nome: 'input · degrau 2 (controle)', selector: '.nds-input', prop: 'padding-block-start',
+  { name: 'input · degrau 2 (controle)', selector: '.nds-input', prop: 'padding-block-start',
     esperado: { condensado: 6.4, default: 8, confortavel: 10 } },
 
   // ── Degraus completados nesta rodada ─────────────────────────────────────
-  { nome: 'input · degrau 3', selector: '.nds-input', prop: 'padding-inline-start',
+  { name: 'input · degrau 3', selector: '.nds-input', prop: 'padding-inline-start',
     esperado: { condensado: 9.6, default: 12, confortavel: 15 } },
-  { nome: 'item · degrau 3', selector: '.nds-item', prop: 'padding-inline-start',
+  { name: 'item · degrau 3', selector: '.nds-item', prop: 'padding-inline-start',
     esperado: { condensado: 9.6, default: 12, confortavel: 15 } },
-  { nome: 'item · degrau 2-5', selector: '.nds-item', prop: 'padding-block-start',
+  { name: 'item · degrau 2-5', selector: '.nds-item', prop: 'padding-block-start',
     esperado: { condensado: 8, default: 10, confortavel: 12.5 } },
-  { nome: 'kbd · degrau 1-5', selector: '.nds-kbd', prop: 'padding-inline-start',
+  { name: 'kbd · degrau 1-5', selector: '.nds-kbd', prop: 'padding-inline-start',
     esperado: { condensado: 4.8, default: 6, confortavel: 7.5 } },
-  { nome: 'tooltip · degrau 1-5', selector: '.nds-tooltip-content', prop: 'padding-block-start',
+  { name: 'tooltip · degrau 1-5', selector: '.nds-tooltip-content', prop: 'padding-block-start',
     esperado: { condensado: 4.8, default: 6, confortavel: 7.5 } },
-  { nome: 'breadcrumb ellipsis · degrau 5', selector: '.nds-breadcrumb-ellipsis', prop: 'width',
+  { name: 'breadcrumb ellipsis · degrau 5', selector: '.nds-breadcrumb-ellipsis', prop: 'width',
     esperado: { condensado: 16, default: 20, confortavel: 25 } },
-  { nome: 'dropdown item recuado · degrau 7', selector: '.nds-dropdown-menu-item[data-inset]', prop: 'padding-left',
+  { name: 'dropdown item recuado · degrau 7', selector: '.nds-dropdown-menu-item[data-inset]', prop: 'padding-left',
     esperado: { condensado: 22.4, default: 28, confortavel: 35 } },
-  { nome: 'alert com ação · degrau 18', selector: '.nds-alert', prop: 'padding-inline-end',
+  { name: 'alert com ação · degrau 18', selector: '.nds-alert', prop: 'padding-inline-end',
     esperado: { condensado: 57.6, default: 72, confortavel: 90 } },
 
   // ── Literal PURO, que a varredura de fallbacks não alcançava ─────────────
@@ -140,13 +140,13 @@ const TARGETS: EspacoTarget[] = [
   // token em volta, e valia exatamente os 2px da densidade padrão — por isso
   // atravessou a rodada inteira sem ninguém ver. Efeito medido: o `xs` era o
   // único tamanho de botão parado em 19px de altura nas TRÊS densidades.
-  { nome: 'button xs · degrau 0-5', selector: '.nds-button-xs', prop: 'padding-block-start',
+  { name: 'button xs · degrau 0-5', selector: '.nds-button-xs', prop: 'padding-block-start',
     esperado: { condensado: 1.6, default: 2, confortavel: 2.5 } },
 
   // ── Controle: caixa de controle migrada de --spacing-9 para --size-lg ────
-  { nome: 'pagination link · --size-lg', selector: '.nds-pagination-link', prop: 'min-height',
+  { name: 'pagination link · --size-lg', selector: '.nds-pagination-link', prop: 'min-height',
     esperado: { condensado: 32, default: 36, confortavel: 44 }, alvoDeToque: true },
-  { nome: 'input-otp slot · --size-lg', selector: '.nds-input-otp-slot', prop: 'width',
+  { name: 'input-otp slot · --size-lg', selector: '.nds-input-otp-slot', prop: 'width',
     esperado: { condensado: 32, default: 36, confortavel: 44 }, alvoDeToque: true },
 ];
 
@@ -162,16 +162,16 @@ const TARGETS: EspacoTarget[] = [
 export const BaseEachDegrauEhMultiplo: Story = {
   render: cenario,
   play: async ({ canvasElement }) => {
-    const raiz = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
-    const degraus = degrausDeclarados(raiz.ownerDocument);
+    const root = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
+    const degraus = degrausDeclarados(root.ownerDocument);
 
     await expect(degraus.length, 'nenhum degrau --spacing-* encontrado em :root').toBeGreaterThan(10);
 
-    const problemas = byDensity(raiz, (densidade) => {
-      const base = baseEmPx(raiz);
+    const problemas = byDensity(root, (densidade) => {
+      const base = baseEmPx(root);
       if (base === null) return [`${densidade}: --spacing-base não resolve para comprimento`];
       return degraus.flatMap(({ token, multiplicador }) => {
-        const px = pxResolve(raiz, `var(${token})`);
+        const px = pxResolve(root, `var(${token})`);
         if (px === null) {
           return [`${densidade}: ${token} não resolve para comprimento — o token não existe e a declaração é descartada`];
         }
@@ -199,8 +199,8 @@ export const BaseEachDegrauEhMultiplo: Story = {
 export const LiteralConsumidoresNotResolvem: Story = {
   render: cenario,
   play: async ({ canvasElement }) => {
-    const raiz = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
-    const measurements = densityMeasure(raiz, TARGETS);
+    const root = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
+    const measurements = densityMeasure(root, TARGETS);
 
     await expect(measurements).toHaveLength(TARGETS.length * DENSIDADES.length);
 
@@ -208,10 +208,10 @@ export const LiteralConsumidoresNotResolvem: Story = {
     await expect(ausentes.map(describeMeasurement)).toEqual([]);
 
     const congelados: string[] = [];
-    for (const [chave, lista] of byTarget(measurements)) {
-      const values = lista.map((m) => m.px!);
+    for (const [key, list] of byTarget(measurements)) {
+      const values = list.map((m) => m.px!);
       if (new Set(values.map((v) => v.toFixed(2))).size === 1) {
-        congelados.push(`${chave}: ${values[0]}px idêntico nas três densidades — valor literal, não token da escala`);
+        congelados.push(`${key}: ${values[0]}px idêntico nas três densidades — valor literal, não token da escala`);
       }
     }
     await expect(congelados).toEqual([]);
@@ -233,31 +233,31 @@ export const LiteralConsumidoresNotResolvem: Story = {
 export const TouchTargetSurvivesCondensed: Story = {
   render: cenario,
   play: async ({ canvasElement }) => {
-    const raiz = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
+    const root = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
     const touchTargets = TARGETS.filter((a) => a.alvoDeToque);
-    const measurements = densityMeasure(raiz, touchTargets);
+    const measurements = densityMeasure(root, touchTargets);
 
     const pequenos = measurements.filter((m) => (m.px ?? 0) < TARGET_MINIMUM_PX);
     await expect(
-      pequenos.map((m) => `${m.alvo} em ${m.densidade}: ${m.px}px < ${TARGET_MINIMUM_PX}px (WCAG 2.5.8)`),
+      pequenos.map((m) => `${m.target} em ${m.densidade}: ${m.px}px < ${TARGET_MINIMUM_PX}px (WCAG 2.5.8)`),
     ).toEqual([]);
 
     // O campo de texto não tem altura fixa: ela sai de padding + line-height, e
     // os dois encolhem no condensado. É o caso em que a densidade poderia
     // recortar texto sem ninguém notar.
-    const campo = raiz.querySelector<HTMLElement>('.nds-input')!;
-    const alturas = byDensity(raiz, (densidade) => ({
+    const field = root.querySelector<HTMLElement>('.nds-input')!;
+    const alturas = byDensity(root, (densidade) => ({
       densidade,
-      altura: campo.getBoundingClientRect().height,
+      height: field.getBoundingClientRect().height,
     }));
-    const baixos = alturas.filter((a) => a.altura < TARGET_MINIMUM_PX);
+    const baixos = alturas.filter((a) => a.height < TARGET_MINIMUM_PX);
     await expect(
-      baixos.map((a) => `input em ${a.densidade}: ${a.altura}px < ${TARGET_MINIMUM_PX}px`),
+      baixos.map((a) => `input em ${a.densidade}: ${a.height}px < ${TARGET_MINIMUM_PX}px`),
     ).toEqual([]);
     // E encolhe de verdade: altura travada seria o mesmo defeito noutro lugar.
     await expect(
-      alturas[0].altura,
+      alturas[0].height,
       `input não encolheu no condensado (${JSON.stringify(alturas)})`,
-    ).toBeLessThan(alturas[2].altura);
+    ).toBeLessThan(alturas[2].height);
   },
 };

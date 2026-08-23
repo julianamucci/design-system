@@ -110,26 +110,26 @@ export const Playground: Story = {
   play: async ({ canvasElement, step }) => {
     // Procura pela classe compartilhada, não pelo data-slot: é o que o CSS das
     // cinco stacks define e o que não some se o wrapper mudar de forma.
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('O desenho é anunciado como imagem, com descrição', async () => {
-      await expect(raiz).toHaveAttribute('role', 'img');
+      await expect(root).toHaveAttribute('role', 'img');
       // O valor, não só a presença: rótulo errado passa em "tem o atributo".
-      await expect(raiz.getAttribute('aria-label')).toBe(LABEL);
+      await expect(root.getAttribute('aria-label')).toBe(LABEL);
     });
 
     await step('O desenho sai, e não é casca vazia', async () => {
       // Gráfico tem dimensão calculada: esperar o desenho existir antes de medir
       // é o que separa asserção de contrato de teste intermitente.
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
-      await expect(datumFormas(raiz).length).toBeGreaterThan(0);
-      await expect(raiz.querySelector('.nds-chart-empty')).toBeNull();
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+      await expect(datumFormas(root).length).toBeGreaterThan(0);
+      await expect(root.querySelector('.nds-chart-empty')).toBeNull();
     });
 
     await step('O eixo escreve todas as categorias do dado', async () => {
       await waitFor(
         () => {
-          for (const month of MONTHS) expect(designEscreve(raiz, month)).toBe(true);
+          for (const month of MONTHS) expect(designEscreve(root, month)).toBe(true);
         },
         { timeout: 3000 },
       );
@@ -138,8 +138,8 @@ export const Playground: Story = {
     await step('A altura pedida é a altura entregue', async () => {
       // Sem a prop, a única saída documentada era uma classe de altura que não
       // existe mais no CSS — e o bloco caía no piso de 200px calado.
-      const altura = raiz.getBoundingClientRect().height;
-      await expect(Math.abs(altura - HEIGHT)).toBeLessThanOrEqual(1);
+      const height = root.getBoundingClientRect().height;
+      await expect(Math.abs(height - HEIGHT)).toBeLessThanOrEqual(1);
     });
   },
 };

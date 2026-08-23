@@ -31,10 +31,10 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const lista = (el: HTMLElement): HTMLElement =>
+const list = (el: HTMLElement): HTMLElement =>
   el.querySelector<HTMLElement>('[data-slot="tabs-list"]')!;
 
-const raiz = (el: HTMLElement): HTMLElement =>
+const root = (el: HTMLElement): HTMLElement =>
   el.querySelector<HTMLElement>('[data-slot="tabs"]')!;
 
 // ─── Default ──────────────────────────────────────────────────────────────────
@@ -63,7 +63,7 @@ export const Default: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const l = lista(canvasElement);
+    const l = list(canvasElement);
 
     await step("Três abas, a primeira ativa na montagem", async () => {
       // Esta story não interage: é ela que fixa o quadro de referência visual
@@ -140,7 +140,7 @@ export const Line: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const l = lista(canvasElement);
+    const l = list(canvasElement);
 
     await step("A variante de linha chega ao markup", async () => {
       await expect(l).toHaveAttribute("data-variant", "line");
@@ -200,13 +200,13 @@ export const Vertical: Story = {
     const canvas = within(canvasElement);
 
     await step("A orientação chega à raiz e ao tablist", async () => {
-      await expect(raiz(canvasElement)).toHaveAttribute(
+      await expect(root(canvasElement)).toHaveAttribute(
         "data-orientation",
         "vertical"
       );
       // `aria-orientation` só é escrito no caso vertical: no horizontal ele é o
       // padrão implícito do papel, e repeti-lo é ruído para o leitor de tela.
-      await expect(lista(canvasElement)).toHaveAttribute(
+      await expect(list(canvasElement)).toHaveAttribute(
         "aria-orientation",
         "vertical"
       );
@@ -222,7 +222,7 @@ export const Vertical: Story = {
     });
 
     await step("O painel fica ao lado da lista, não abaixo", async () => {
-      const boxList = lista(canvasElement).getBoundingClientRect();
+      const boxList = list(canvasElement).getBoundingClientRect();
       const boxPanel = canvas.getByRole("tabpanel").getBoundingClientRect();
       await expect(boxPanel.left).toBeGreaterThanOrEqual(boxList.right);
     });

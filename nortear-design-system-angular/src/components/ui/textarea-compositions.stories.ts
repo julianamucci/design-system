@@ -91,7 +91,7 @@ export const WithSupportText: Story = {
 
 export const WithAccessibleCounter: Story = {
   render: () => ({
-    props: { valor: '', max: 280 },
+    props: { value: '', max: 280 },
     template: `
       <div class="nds-stack nds-w-md" data-spacing="sm">
         <label ndsLabel for="comp-counter">Mensagem</label>
@@ -101,15 +101,15 @@ export const WithAccessibleCounter: Story = {
           class="nds-resize-y nds-min-h-30"
           [attr.maxlength]="max"
           placeholder="ex: Compartilhe seu pensamento..."
-          [value]="valor"
-          (input)="valor = $any($event.target).value"
+          [value]="value"
+          (input)="value = $any($event.target).value"
         ></textarea>
         <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
           <span>Limite: 280 caracteres.</span>
           <span
             aria-live="polite"
-            [attr.aria-label]="valor.length + ' de ' + max + ' caracteres usados'"
-          >{{ valor.length }}/{{ max }}</span>
+            [attr.aria-label]="value.length + ' de ' + max + ' caracteres usados'"
+          >{{ value.length }}/{{ max }}</span>
         </div>
       </div>
     `,
@@ -196,8 +196,8 @@ export const InForm: Story = {
       enviado: '',
       enviar(evento: Event) {
         evento.preventDefault();
-        const dados = new FormData(evento.target as HTMLFormElement);
-        this.enviado = `Enviado: feedback="${String(dados.get('feedback') ?? '')}"`;
+        const data = new FormData(evento.target as HTMLFormElement);
+        this.enviado = `Enviado: feedback="${String(data.get('feedback') ?? '')}"`;
       },
     },
     template: `

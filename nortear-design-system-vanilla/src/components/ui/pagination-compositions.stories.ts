@@ -230,8 +230,8 @@ export const Interactive: Story = {
       // Par idempotente: só clica quando ainda não é a página atual. O painel
       // Interactions reexecuta a play no mesmo DOM, e um clique cego partiria
       // do estado que a rodada anterior deixou.
-      const alvo = canvas.getByRole('link', { name: `Ir para página ${n}` });
-      if (alvo.getAttribute('aria-current') !== 'page') await userEvent.click(alvo);
+      const target = canvas.getByRole('link', { name: `Ir para página ${n}` });
+      if (target.getAttribute('aria-current') !== 'page') await userEvent.click(target);
       await waitFor(() =>
         expect(canvas.getByRole('link', { name: `Ir para página ${n}` })).toHaveAttribute(
           'aria-current',
@@ -304,8 +304,8 @@ export const WithRoute: Story = {
     // real. Numa aplicação seria `router.push(href)`; aqui basta que a story
     // não recarregue o iframe.
     nav.addEventListener('click', (e) => {
-      const alvo = (e.target as HTMLElement).closest('a');
-      if (!alvo) return;
+      const target = (e.target as HTMLElement).closest('a');
+      if (!target) return;
       // Antes de o roteador assumir, o clique tem de estar VIVO — se a fábrica
       // o tivesse anulado, `defaultPrevented` já viria verdadeiro e nenhum
       // roteador do mundo saberia que houve navegação.
@@ -358,18 +358,18 @@ export const CompleteTable: Story = {
   render: () => {
     // `nds-cluster` e não `nds-stack`: só o cluster tem data-align/data-justify,
     // e é ele que quebra a linha sozinho quando a largura aperta.
-    const rodape = document.createElement('div');
-    rodape.className =
+    const footer = document.createElement('div');
+    footer.className =
       'nds-cluster nds-w-prose nds-border-default nds-rounded-lg nds-p-4';
-    rodape.dataset.spacing = 'sm';
-    rodape.dataset.align = 'center';
-    rodape.dataset.justify = 'between';
+    footer.dataset.spacing = 'sm';
+    footer.dataset.align = 'center';
+    footer.dataset.justify = 'between';
 
     const counter = document.createElement('span');
     counter.className = 'nds-text-body nds-text-muted-foreground';
     counter.textContent = 'Mostrando 11–20 de 120 resultados';
 
-    rodape.append(
+    footer.append(
       counter,
       createPagination({
         total: 12,
@@ -380,7 +380,7 @@ export const CompleteTable: Story = {
         onPageChange: () => {},
       }),
     );
-    return rodape;
+    return footer;
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -396,8 +396,8 @@ export const CompleteTable: Story = {
     });
 
     await step('O contador e a faixa dividem a mesma linha', async () => {
-      const rodape = canvasElement.querySelector('.nds-cluster') as HTMLElement;
-      await expect(getComputedStyle(rodape).justifyContent).toBe('space-between');
+      const footer = canvasElement.querySelector('.nds-cluster') as HTMLElement;
+      await expect(getComputedStyle(footer).justifyContent).toBe('space-between');
       await expect(canvas.getByRole('link', { name: 'Ir para página 2' })).toHaveAttribute(
         'aria-current',
         'page',

@@ -65,13 +65,13 @@ function designStyles(snippet: string): string[] {
     for (const decl of m[1].split(';')) {
       const [prop, ...remainder] = decl.split(':');
       if (!prop || !remainder.length) continue;
-      const nome = prop.trim().toLowerCase();
-      const valor = remainder.join(':').trim();
-      if (!PROPS_DE_DESIGN.has(nome)) continue;
-      if (VALUE_MECANICO.test(valor)) continue;
-      if (valor.includes('var(')) continue; // token, não valor cravado
-      if (!QUANTIDADE.test(valor)) continue;
-      findings.push(`${nome}: ${valor}`);
+      const name = prop.trim().toLowerCase();
+      const value = remainder.join(':').trim();
+      if (!PROPS_DE_DESIGN.has(name)) continue;
+      if (VALUE_MECANICO.test(value)) continue;
+      if (value.includes('var(')) continue; // token, não valor cravado
+      if (!QUANTIDADE.test(value)) continue;
+      findings.push(`${name}: ${value}`);
     }
   }
   return findings;
@@ -85,7 +85,7 @@ describe('transforms do painel Code', () => {
   for (const caminho of caminhos) {
     const modulo = modulos[caminho];
     const exportadas = Object.entries(modulo).filter(
-      ([, valor]) => typeof valor === 'function',
+      ([, value]) => typeof value === 'function',
     ) as Array<[string, (...args: never[]) => unknown]>;
 
     describe(caminho, () => {
@@ -99,7 +99,7 @@ describe('transforms do painel Code', () => {
       // `attrLinhas`), que devolve um pedaço de atributo e não um snippet. Não é
       // buraco: o que o painel mostra é a saída dos construtores, e ela já
       // carrega o que qualquer helper produziu.
-      const construtores = exportadas.filter(([nome]) => /(?:Source|Snippet)$/.test(nome));
+      const construtores = exportadas.filter(([name]) => /(?:Source|Snippet)$/.test(name));
 
       // O filtro acima EXCLUI em silêncio, e silêncio aqui custou 28 testes: a
       // tradução dos identificadores moveu o sufixo para o meio do nome
@@ -111,7 +111,7 @@ describe('transforms do painel Code', () => {
       // precisa se declarar.
       it('todo export é construtor de snippet ou helper declarado', () => {
         const outside = Object.keys(modulo).filter(
-          (nome) => !/(?:Source|Snippet)$/.test(nome) && !HELPERS.has(nome),
+          (name) => !/(?:Source|Snippet)$/.test(name) && !HELPERS.has(name),
         );
         expect(
           outside,
@@ -119,19 +119,19 @@ describe('transforms do painel Code', () => {
         ).toEqual([]);
       });
 
-      for (const [nome, fn] of construtores) {
-        it(`${nome} devolve um snippet honesto`, () => {
+      for (const [name, fn] of construtores) {
+        it(`${name} devolve um snippet honesto`, () => {
           const saida = fn();
-          expect(typeof saida, `${nome} deve devolver string sem receber args`).toBe('string');
-          const texto = saida as string;
-          expect(texto.trim().length).toBeGreaterThan(0);
+          expect(typeof saida, `${name} deve devolver string sem receber args`).toBe('string');
+          const text = saida as string;
+          expect(text.trim().length).toBeGreaterThan(0);
           // O andaime da story não é parte do design system.
-          expect(texto).not.toMatch(SCAFFOLD);
+          expect(text).not.toMatch(SCAFFOLD);
           // Docs de cada stack são consumidas isoladamente.
-          expect(texto).not.toMatch(OTHER_STACK);
+          expect(text).not.toMatch(OTHER_STACK);
           // `reka-ui` é a lib headless por baixo; o leitor importa do design
           // system, nunca dela.
-          expect(texto).not.toContain('reka-ui');
+          expect(text).not.toContain('reka-ui');
           // Sobra de template literal mal fechado, ou control não-string
           // interpolado direto (o espião de ação, o control de objeto).
           // `undefined` só é defeito quando é ARTEFATO de interpolação: um
@@ -139,15 +139,15 @@ describe('transforms do painel Code', () => {
           // de objeto. Como valor de retorno — `() => undefined` — é código
           // legítimo que o snippet ensina, e proibi-lo por substring fazia a
           // guarda reprovar o que ela existe para proteger.
-          expect(texto).not.toMatch(
+          expect(text).not.toMatch(
             /="undefined"|:\s*undefined\s*[,}\n]|\{undefined\}|>undefined</,
           );
-          expect(texto).not.toContain('[object Object]');
-          expect(texto).not.toMatch(/\bfunction\s*\(/);
-          expect(texto).not.toContain('=> void 0');
+          expect(text).not.toContain('[object Object]');
+          expect(text).not.toMatch(/\bfunction\s*\(/);
+          expect(text).not.toContain('=> void 0');
           // Inline vence a folha: a declaração sai do tema, da densidade e da
           // escala tipográfica — e é o markup que o leitor copia.
-          expect(designStyles(texto), `${nome}: use classe .nds-* ou token`).toEqual([]);
+          expect(designStyles(text), `${name}: use classe .nds-* ou token`).toEqual([]);
         });
       }
     });

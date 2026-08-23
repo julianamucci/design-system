@@ -42,9 +42,9 @@ function otherSizeMeasure(
 ): number {
   const original = card.getAttribute('data-size')!;
   card.setAttribute('data-size', other);
-  const valor = ler();
+  const value = ler();
   card.setAttribute('data-size', original);
-  return valor;
+  return value;
 }
 
 function buildProductCard(): HTMLElement {

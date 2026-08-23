@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -39,12 +39,12 @@ const TEXT_DEFAULT = 'Nome completo';
 const ID_DEFAULT = 'campo';
 
 /** Linhas de `createLabel`, com o canônico `class` no lugar do apelido. */
-function labelLines(o: LabelSnippetOptions, id: string, conteudo?: string): string[] {
+function labelLines(o: LabelSnippetOptions, id: string, content?: string): string[] {
   const className = o.class ?? o.className;
-  return opcoes([
-    ['text', conteudo ? texto(conteudo) : undefined],
-    ['htmlFor', texto(id)],
-    ['class', className ? texto(className) : undefined],
+  return options([
+    ['text', content ? text(content) : undefined],
+    ['htmlFor', text(id)],
+    ['class', className ? text(className) : undefined],
   ]);
 }
 
@@ -56,18 +56,18 @@ function labelLines(o: LabelSnippetOptions, id: string, conteudo?: string): stri
  */
 export function labelSnippet(o: LabelSnippetOptions = {}): string {
   const id = o.htmlFor ?? ID_DEFAULT;
-  const campo = opcoes([
-    ['id', texto(id)],
-    ['type', o.type && o.type !== 'text' ? texto(o.type) : undefined],
-    ['placeholder', o.placeholder ? texto(o.placeholder) : undefined],
-    ['class', o.disabled ? texto('nds-peer') : undefined],
+  const field = options([
+    ['id', text(id)],
+    ['type', o.type && o.type !== 'text' ? text(o.type) : undefined],
+    ['placeholder', o.placeholder ? text(o.placeholder) : undefined],
+    ['class', o.disabled ? text('nds-peer') : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
   ]);
 
   return snippet(
     [importing('label', 'createLabel'), importing('input', 'createInput')].join('\n'),
     `const rotulo = ${chamada('createLabel', labelLines(o, id, o.text ?? TEXT_DEFAULT))};`,
-    `const campo = ${chamada('createInput', campo)};`,
+    `const campo = ${chamada('createInput', field)};`,
     // Com o controle desabilitado, a ORDEM importa: a folha casa no irmão
     // marcado com `nds-peer`, e é o controle que carrega a marca.
     montar(o.disabled ? 'campo, rotulo' : 'rotulo, campo'),
@@ -83,7 +83,7 @@ export function labelSnippet(o: LabelSnippetOptions = {}): string {
  */
 export function labelObrigatorioSnippet(o: LabelSnippetOptions = {}): string {
   const id = o.htmlFor ?? 'email';
-  const conteudo = o.text ?? 'Email profissional';
+  const content = o.text ?? 'Email profissional';
 
   return snippet(
     [importing('label', 'createLabel'), importing('input', 'createInput')].join('\n'),
@@ -93,13 +93,13 @@ const marcador = document.createElement('span');
 marcador.className = 'nds-text-destructive';
 marcador.setAttribute('aria-hidden', 'true');
 marcador.textContent = '*';
-rotulo.append(${texto(conteudo)}, marcador);`,
+rotulo.append(${text(content)}, marcador);`,
     `const campo = ${chamada(
       'createInput',
-      opcoes([
-        ['id', texto(id)],
-        ['type', texto(o.type ?? 'email')],
-        ['placeholder', o.placeholder ? texto(o.placeholder) : undefined],
+      options([
+        ['id', text(id)],
+        ['type', text(o.type ?? 'email')],
+        ['placeholder', o.placeholder ? text(o.placeholder) : undefined],
       ]),
     )};
 campo.setAttribute('aria-required', 'true');`,
@@ -126,9 +126,9 @@ bloco.dataset.disabled = 'true';`,
   ${chamada('createLabel', labelLines(o, id, o.text ?? 'Documento'))},
   ${chamada(
     'createInput',
-    opcoes([
-      ['id', texto(id)],
-      ['placeholder', o.placeholder ? texto(o.placeholder) : undefined],
+    options([
+      ['id', text(id)],
+      ['placeholder', o.placeholder ? text(o.placeholder) : undefined],
       ['disabled', 'true'],
     ]),
   )},
@@ -149,7 +149,7 @@ export function labelWithBoxSnippet(o: LabelSnippetOptions = {}): string {
 
   return snippet(
     [importing('label', 'createLabel'), importing('checkbox', 'createCheckbox')].join('\n'),
-    `const caixa = ${chamada('createCheckbox', opcoes([['id', texto(id)]]))};`,
+    `const caixa = ${chamada('createCheckbox', options([['id', text(id)]]))};`,
     `const rotulo = ${chamada(
       'createLabel',
       labelLines(o, id, o.text ?? 'Concordo com os termos de uso'),

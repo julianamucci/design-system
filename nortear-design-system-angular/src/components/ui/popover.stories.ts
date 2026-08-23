@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, screen, fn } from 'storybook/test';
 import { NDS_POPOVER, type PopoverAlign, type PopoverSide } from './popover';
-import { abrir, painel } from './popover.fixtures';
+import { open, panel } from './popover.fixtures';
 import { NdsButton } from './button';
 import { NdsPopoverDocs } from '@/components/docs/PopoverDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -32,12 +32,12 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<PopoverArgs> })
 
   // Só o que difere do padrão entra no snippet — documentação que repete valor
   // padrão ensina ruído.
-  const opcoes = [
+  const options = [
     side !== 'bottom' ? `side="${side}"` : '',
     align !== 'center' ? `align="${align}"` : '',
     sideOffset !== 4 ? `[sideOffset]="${sideOffset}"` : '',
   ].filter(Boolean).join(' ');
-  const raiz = ['<div ndsPopover', defaultOpen ? '[defaultOpen]="true"' : '']
+  const root = ['<div ndsPopover', defaultOpen ? '[defaultOpen]="true"' : '']
     .filter(Boolean)
     .join(' ');
 
@@ -47,10 +47,10 @@ import { NdsButton } from '@/components/ui/button';
 @Component({
   imports: [...NDS_POPOVER, NdsButton],
   template: \`
-    ${raiz}>
+    ${root}>
       <button ndsPopoverTrigger ndsButton variant="outline">${triggerLabel}</button>
 
-      <ng-template ndsPopoverContent${opcoes ? ` ${opcoes}` : ''}>
+      <ng-template ndsPopoverContent${options ? ` ${options}` : ''}>
         <div ndsPopoverHeader>
           <h3 ndsPopoverTitle>Configurações de exibição</h3>
           <p ndsPopoverDescription>Ajuste a aparência do conteúdo da página.</p>
@@ -121,9 +121,9 @@ export default meta;
 type Story = StoryObj<PopoverArgs>;
 
 /** Fecha só se estiver aberto. */
-async function fechar(gatilho: HTMLElement): Promise<void> {
-  if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.click(gatilho);
-  await waitFor(() => expect(painel()).toBeNull());
+async function close(trigger: HTMLElement): Promise<void> {
+  if (trigger.getAttribute('aria-expanded') === 'true') await userEvent.click(trigger);
+  await waitFor(() => expect(panel()).toBeNull());
 }
 
 /** O lado oposto no MESMO eixo — o auto-flip troca de lado, nunca de eixo. */
@@ -171,37 +171,37 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="popover"]')!;
-    const gatilho = canvas.getByRole('button', { name: args.triggerLabel });
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="popover"]')!;
+    const trigger = canvas.getByRole('button', { name: args.triggerLabel });
 
     await step('O markup é o mesmo das outras stacks', async () => {
-      await expect(raiz.tagName).toBe('DIV');
-      await expect(gatilho.tagName).toBe('BUTTON');
-      await expect(gatilho).toHaveAttribute('data-slot', 'popover-trigger');
+      await expect(root.tagName).toBe('DIV');
+      await expect(trigger.tagName).toBe('BUTTON');
+      await expect(trigger).toHaveAttribute('data-slot', 'popover-trigger');
       // O gatilho ANUNCIA que abre um diálogo — é o que separa o popover de um
       // botão comum para quem usa leitor de tela.
-      await expect(gatilho).toHaveAttribute('aria-haspopup', 'dialog');
-      await expect(gatilho).toHaveAttribute('type', 'button');
+      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+      await expect(trigger).toHaveAttribute('type', 'button');
     });
 
     await step('O estado inicial vem do input', async () => {
       // Esta é a asserção que prova o binding de input: sob JIT o componente
       // renderiza no default e `aria-expanded` viria sempre "false" com o
       // control em true (armadilha 1 do CLAUDE.md deste stack).
-      await expect(gatilho.getAttribute('aria-expanded')).toBe(String(args.defaultOpen));
-      await expect(gatilho).toHaveAttribute('data-state', args.defaultOpen ? 'open' : 'closed');
+      await expect(trigger.getAttribute('aria-expanded')).toBe(String(args.defaultOpen));
+      await expect(trigger).toHaveAttribute('data-state', args.defaultOpen ? 'open' : 'closed');
     });
 
     await step('Clicar no gatilho abre o painel com role=dialog', async () => {
-      await fechar(gatilho);
+      await close(trigger);
       const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
-      await abrir(gatilho);
+      await open(trigger);
 
       const dialogo = screen.getByRole('dialog');
       await expect(dialogo).toBeVisible();
       await expect(dialogo).toHaveClass(/nds-popover-content/);
       await expect(dialogo).toHaveAttribute('data-state', 'open');
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
       ).toBe(callsBefore + 1);
@@ -238,22 +238,22 @@ export const Playground: Story = {
       // O primitivo só escreve `aria-controls` enquanto o painel existe: com o
       // painel desmontado o atributo apontaria para um id ausente e o axe
       // reprovaria por aria-valid-attr-value.
-      const id = gatilho.getAttribute('aria-controls');
+      const id = trigger.getAttribute('aria-controls');
       await expect(id).toBeTruthy();
-      await expect(document.getElementById(id!)).toBe(painel());
+      await expect(document.getElementById(id!)).toBe(panel());
     });
 
     await step('O painel não é modal', async () => {
       // Popover não bloqueia o resto da página: `aria-modal` faria o leitor de
       // tela esconder tudo o que está fora dele, que é contrato de Dialog.
-      await expect(painel()).not.toHaveAttribute('aria-modal');
+      await expect(panel()).not.toHaveAttribute('aria-modal');
     });
 
     await step('O foco entra no painel ao abrir', async () => {
       // É o que separa popover de tooltip: o conteúdo é interativo, então o
       // foco precisa alcançá-lo sem caçar com Tab pela página inteira.
       await waitFor(async () => {
-        await expect(painel()!.contains(document.activeElement)).toBe(true);
+        await expect(panel()!.contains(document.activeElement)).toBe(true);
       });
       // No PRIMEIRO focável, e não num qualquer: é o que a tabela de estados
       // promete e o que evita uma varredura por Tab dentro do painel.
@@ -261,27 +261,27 @@ export const Playground: Story = {
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
-      await abrir(gatilho);
+      await open(trigger);
       await userEvent.keyboard('{Escape}');
       await waitFor(async () => {
-        await expect(painel()).toBeNull();
+        await expect(panel()).toBeNull();
       });
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
-      await expect(gatilho).toHaveAttribute('data-state', 'closed');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveAttribute('data-state', 'closed');
       // Fechado não há painel para apontar, e o atributo some junto.
-      await expect(gatilho.getAttribute('aria-controls')).toBeNull();
+      await expect(trigger.getAttribute('aria-controls')).toBeNull();
       await waitFor(async () => {
-        await expect(gatilho).toHaveFocus();
+        await expect(trigger).toHaveFocus();
       });
     });
 
     await step('O botão de fechar dentro do painel também fecha', async () => {
-      await abrir(gatilho);
+      await open(trigger);
       const cancelar = screen.getByRole('button', { name: 'Cancelar' });
       await expect(cancelar).toHaveAttribute('data-slot', 'popover-close');
       await userEvent.click(cancelar);
       await waitFor(async () => {
-        await expect(painel()).toBeNull();
+        await expect(panel()).toBeNull();
       });
     });
 
@@ -289,7 +289,7 @@ export const Playground: Story = {
     // fotografa. Terminar fechada era o que tornava falsa a declaração de
     // `accessibility.item1` que morava aqui.
     await step('Estado final: painel aberto', async () => {
-      await abrir(gatilho);
+      await open(trigger);
       await expect(screen.getByRole('dialog')).toBeVisible();
     });
   },

@@ -10,10 +10,10 @@
   // que revela nome acessível resolvido pelo gatilho errado quando a associação
   // vem de um seletor de documento em vez do contexto.
   const LADOS = [
-    { rotulo: 'acima', side: 'top' as const },
-    { rotulo: 'abaixo', side: 'bottom' as const },
-    { rotulo: 'esquerda', side: 'left' as const },
-    { rotulo: 'direita', side: 'right' as const },
+    { label: 'acima', side: 'top' as const },
+    { label: 'abaixo', side: 'bottom' as const },
+    { label: 'esquerda', side: 'left' as const },
+    { label: 'direita', side: 'right' as const },
   ];
 
   const CLASSES_BUTTON =
@@ -21,17 +21,17 @@
 </script>
 
 <div class="nds-grid nds-max-w-lg" data-cols="2" data-spacing="lg">
-  {#each LADOS as lado (lado.side)}
+  {#each LADOS as side (side.side)}
     <p class="nds-text-body nds-p-8">
       Abre
       <HoverCard open={true}>
         <HoverCardTrigger>
           {#snippet child({ props })}
-            <button type="button" class={CLASSES_BUTTON} {...props}>{lado.rotulo}</button>
+            <button type="button" class={CLASSES_BUTTON} {...props}>{side.label}</button>
           {/snippet}
         </HoverCardTrigger>
-        <HoverCardContent side={lado.side} aria-label={`Cartão ${lado.rotulo} do gatilho`}>
-          <p class="nds-text-caption">Side preferido: {lado.rotulo}.</p>
+        <HoverCardContent side={side.side} aria-label={`Cartão ${side.label} do gatilho`}>
+          <p class="nds-text-caption">Side preferido: {side.label}.</p>
         </HoverCardContent>
       </HoverCard>
       do gatilho.

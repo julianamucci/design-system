@@ -37,7 +37,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<CalendarArgs> }
   } = ctx.args ?? {};
 
   const multiplo = mode === 'multiple';
-  const atributos = [
+  const attrs = [
     multiplo ? 'mode="multiple"' : '',
     '[(value)]="data"',
     `locale="${locale}"`,
@@ -61,7 +61,7 @@ import { NdsCalendar } from '@/components/ui/calendar';
   template: \`
     <div
       ndsCalendar
-      ${atributos}
+      ${attrs}
     ></div>
   \`,
 })
@@ -128,13 +128,13 @@ export const Playground: Story = {
   render: (args) => ({
     props: {
       ...args,
-      valor: args.mode === 'multiple' ? DAYS_ESCOLHIDOS : DAY_ESCOLHIDO,
+      value: args.mode === 'multiple' ? DAYS_ESCOLHIDOS : DAY_ESCOLHIDO,
     },
     template: `
       <div
         ndsCalendar
         [mode]="mode"
-        [value]="valor"
+        [value]="value"
         [locale]="locale"
         [captionLayout]="captionLayout"
         [numberOfMonths]="numberOfMonths"
@@ -157,11 +157,11 @@ export const Playground: Story = {
       // manda o leitor de tela repassar todas as teclas e sair do modo de
       // leitura — e um aria-label que repete a legenda já visível. Nenhuma das
       // outras quatro stacks emite isso; a raiz aqui volta a ser um <div>.
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="calendar"]')!;
-      await expect(raiz.hasAttribute('role')).toBe(false);
-      await expect(raiz.hasAttribute('aria-label')).toBe(false);
+      const root = canvasElement.querySelector<HTMLElement>('[data-slot="calendar"]')!;
+      await expect(root.hasAttribute('role')).toBe(false);
+      await expect(root.hasAttribute('aria-label')).toBe(false);
 
-      const meses = raiz.querySelector<HTMLElement>('.nds-calendar-months')!;
+      const meses = root.querySelector<HTMLElement>('.nds-calendar-months')!;
       await expect(meses.hasAttribute('role')).toBe(false);
       await expect(meses.hasAttribute('aria-label')).toBe(false);
     });
@@ -219,8 +219,8 @@ export const Playground: Story = {
     await step('A grade se nomeia pelo mês em vista', async () => {
       // Sem `aria-label` o grid é anunciado como "tabela" e nada mais — e com
       // dois meses na tela as duas soam iguais.
-      const grade = canvasElement.querySelector('table')!;
-      await expect(grade.getAttribute('aria-label')).toMatch(/abril 2026/i);
+      const grid = canvasElement.querySelector('table')!;
+      await expect(grid.getAttribute('aria-label')).toMatch(/abril 2026/i);
     });
 
     await step('Home, End e Page Up/Down andam na grade e o foco acompanha', async () => {
@@ -268,10 +268,10 @@ export const Playground: Story = {
       // do botão que compunha por fora.
       const dia = canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn')!;
       const cs = getComputedStyle(dia);
-      const caixa = dia.getBoundingClientRect();
+      const box = dia.getBoundingClientRect();
 
-      await expect(Math.round(caixa.width)).toBe(Math.round(caixa.height));
-      await expect(Math.round(caixa.width)).toBeLessThanOrEqual(36);
+      await expect(Math.round(box.width)).toBe(Math.round(box.height));
+      await expect(Math.round(box.width)).toBeLessThanOrEqual(36);
       await expect(cs.alignItems).toBe('center');
       await expect(cs.justifyContent).toBe('center');
     });
@@ -289,8 +289,8 @@ export const Playground: Story = {
     await step('O calendário encolhe até o conteúdo, e não até o contêiner', async () => {
       // Sem `width: fit-content` as colunas se afastam e as setas vão parar nas
       // bordas do bloco, longe do mês.
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="calendar"]')!;
-      await expect(raiz.getBoundingClientRect().width).toBeLessThan(400);
+      const root = canvasElement.querySelector<HTMLElement>('[data-slot="calendar"]')!;
+      await expect(root.getBoundingClientRect().width).toBeLessThan(400);
     });
   },
 };

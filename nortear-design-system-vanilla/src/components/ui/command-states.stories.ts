@@ -31,11 +31,11 @@ type Story = StoryObj;
 const WRAPPER = 'nds-w-sm nds-border-default nds-rounded-md nds-shadow-md';
 
 /** O item pelo `value`, e não pelo nome acessível: atalho e marca entram no nome. */
-const comando = (raiz: ParentNode, value: string): HTMLElement =>
-  raiz.querySelector<HTMLElement>(`[data-slot="command-item"][data-value="${value}"]`)!;
+const comando = (root: ParentNode, value: string): HTMLElement =>
+  root.querySelector<HTMLElement>(`[data-slot="command-item"][data-value="${value}"]`)!;
 
-const regiaoVazia = (raiz: ParentNode): HTMLElement =>
-  raiz.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+const regiaoVazia = (root: ParentNode): HTMLElement =>
+  root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
 
 /**
  * Deixa a busca vazia E o destaque zerado.
@@ -45,9 +45,9 @@ const regiaoVazia = (raiz: ParentNode): HTMLElement =>
  * reexecuta no mesmo DOM) o destaque da rodada anterior sobreviveria, e a
  * primeira seta partiria do meio da lista.
  */
-async function zerarSearch(campo: HTMLElement): Promise<void> {
-  await userEvent.type(campo, 'zzz');
-  await userEvent.clear(campo);
+async function zerarSearch(field: HTMLElement): Promise<void> {
+  await userEvent.type(field, 'zzz');
+  await userEvent.clear(field);
 }
 
 // ─── Sem resultados ───────────────────────────────────────────────────────────
@@ -96,13 +96,13 @@ export const EmptyState: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const campo = canvas.getByRole('combobox');
-    const lista = canvas.getByRole('listbox');
+    const field = canvas.getByRole('combobox');
+    const list = canvas.getByRole('listbox');
     const vazio = regiaoVazia(canvasElement);
 
     await step('Buscando "xyznotfound" não sobra nenhum comando', async () => {
-      await userEvent.clear(campo);
-      await userEvent.type(campo, 'xyznotfound');
+      await userEvent.clear(field);
+      await userEvent.type(field, 'xyznotfound');
       await expect(canvas.queryAllByRole('option')).toHaveLength(0);
     });
 
@@ -118,11 +118,11 @@ export const EmptyState: Story = {
       await expect(vazio).toHaveAttribute('aria-atomic', 'true');
       // `role="status"` dentro de `role="listbox"` é filho não permitido, e o
       // axe reprova por aria-required-children.
-      await expect(lista.contains(vazio)).toBe(false);
+      await expect(list.contains(vazio)).toBe(false);
     });
 
     await step('Apagar a busca traz os 3 comandos de volta', async () => {
-      await userEvent.clear(campo);
+      await userEvent.clear(field);
       await expect(canvas.getAllByRole('option')).toHaveLength(3);
       await expect(vazio).not.toHaveAttribute('data-empty');
       await expect(vazio).not.toHaveClass(/nds-command-empty/);
@@ -131,7 +131,7 @@ export const EmptyState: Story = {
     await step('A story termina SEM resultados', async () => {
       // O Chromatic fotografa o estado final: terminar com a lista cheia
       // capturaria outra story.
-      await userEvent.type(campo, 'xyznotfound');
+      await userEvent.type(field, 'xyznotfound');
       await expect(canvas.queryAllByRole('option')).toHaveLength(0);
       await expect(vazio).toHaveAttribute('data-empty', '');
     });
@@ -179,9 +179,9 @@ export const ItemDisabled: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const campo = canvas.getByRole('combobox');
+    const field = canvas.getByRole('combobox');
 
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     await expect(canvas.getAllByRole('option')).toHaveLength(3);
     // Consultado a cada passo: o filtro reconstrói a lista, e um nó guardado
     // antes de um re-render vira uma asserção sobre elemento solto no ar.
@@ -203,18 +203,18 @@ export const ItemDisabled: Story = {
     });
 
     await step('As setas pulam o comando desabilitado', async () => {
-      await zerarSearch(campo);
-      campo.focus();
+      await zerarSearch(field);
+      field.focus();
       await userEvent.keyboard('{ArrowDown}');
       await expect(
-        document.getElementById(campo.getAttribute('aria-activedescendant')!),
+        document.getElementById(field.getAttribute('aria-activedescendant')!),
       ).toHaveTextContent('Novo');
 
       await userEvent.keyboard('{ArrowDown}');
       // "Arquivar" não é destino de navegação — quem usa teclado nunca para num
       // comando que não pode executar.
       await expect(
-        document.getElementById(campo.getAttribute('aria-activedescendant')!),
+        document.getElementById(field.getAttribute('aria-activedescendant')!),
       ).toHaveTextContent('Renomear');
       await expect(arquivar()).toHaveAttribute('aria-selected', 'false');
     });
@@ -273,9 +273,9 @@ export const CheckedItem: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const campo = canvas.getByRole('combobox');
+    const field = canvas.getByRole('combobox');
 
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     await expect(canvas.getAllByRole('option')).toHaveLength(3);
 
     const light = comando(canvasElement, 'claro');

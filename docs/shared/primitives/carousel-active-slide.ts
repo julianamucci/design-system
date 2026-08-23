@@ -19,9 +19,9 @@
 /** O atributo é único e escrito num lugar só, para não divergir de vocabulário. */
 export const ATTR_SLIDE_ACTIVE = 'data-active';
 
-/** O valor que o slide `indice` deve carregar quando o atual é `atual`. */
-export function slideState(indice: number, atual: number): 'true' | 'false' {
-  return indice === atual ? 'true' : 'false';
+/** O valor que o slide `index` deve carregar quando o atual é `current`. */
+export function slideState(index: number, current: number): 'true' | 'false' {
+  return index === current ? 'true' : 'false';
 }
 
 /**
@@ -30,8 +30,8 @@ export function slideState(indice: number, atual: number): 'true' | 'false' {
  * Percorre a lista inteira de propósito: marcar só o novo atual deixaria o
  * anterior marcado também, e a folha veria dois slides em tamanho cheio.
  */
-export function marcarSlideCurrent(slides: readonly HTMLElement[], atual: number): void {
-  slides.forEach((slide, indice) => {
-    slide.setAttribute(ATTR_SLIDE_ACTIVE, slideState(indice, atual));
+export function marcarSlideCurrent(slides: readonly HTMLElement[], current: number): void {
+  slides.forEach((slide, index) => {
+    slide.setAttribute(ATTR_SLIDE_ACTIVE, slideState(index, current));
   });
 }

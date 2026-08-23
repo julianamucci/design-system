@@ -52,9 +52,9 @@ const SELECTORS_CONTROL = [
   "select",
 ]
 
-function findControl(raiz: HTMLElement): HTMLElement | null {
+function findControl(root: HTMLElement): HTMLElement | null {
   for (const selector of SELECTORS_CONTROL) {
-    const finding = raiz.querySelector<HTMLElement>(selector)
+    const finding = root.querySelector<HTMLElement>(selector)
     if (finding) return finding
   }
   return null
@@ -82,7 +82,7 @@ function FormField({
   children,
   ...props
 }: FormFieldProps) {
-  const raiz = React.useRef<HTMLDivElement>(null)
+  const root = React.useRef<HTMLDivElement>(null)
   const base = React.useId()
   const idDescription = `${base}-description`
   const idError = `${base}-error`
@@ -91,26 +91,26 @@ function FormField({
   const describedbyEscrito = React.useRef<string[] | null>(null)
 
   React.useEffect(() => {
-    const el = raiz.current
+    const el = root.current
     if (!el) return
 
-    const controle = findControl(el)
-    const rotulo = el.querySelector<HTMLLabelElement>("label")
+    const control = findControl(el)
+    const label = el.querySelector<HTMLLabelElement>("label")
 
-    if (rotulo && controle) {
+    if (label && control) {
       // `for` só quando falta. Label que ENVOLVE o controle já está associado
       // pela estrutura, e escrever `for` ali não acrescenta nada.
-      if (!rotulo.getAttribute("for") && !rotulo.contains(controle)) {
-        if (!controle.id) controle.id = `${base}-control`
-        rotulo.setAttribute("for", controle.id)
+      if (!label.getAttribute("for") && !label.contains(control)) {
+        if (!control.id) control.id = `${base}-control`
+        label.setAttribute("for", control.id)
       }
     }
 
-    if (!controle) return
+    if (!control) return
 
     // Junção, não substituição: quem compõe pode já ter apontado o controle
     // para um texto fora do campo, e sobrescrever descartaria essa instrução.
-    describedbyEscrito.current ??= (controle.getAttribute("aria-describedby") ?? "")
+    describedbyEscrito.current ??= (control.getAttribute("aria-describedby") ?? "")
       .split(/\s+/)
       .filter(Boolean)
 
@@ -119,13 +119,13 @@ function FormField({
       ...(description ? [idDescription] : []),
       ...(error ? [idError] : []),
     ]
-    if (ids.length) controle.setAttribute("aria-describedby", ids.join(" "))
-    else controle.removeAttribute("aria-describedby")
+    if (ids.length) control.setAttribute("aria-describedby", ids.join(" "))
+    else control.removeAttribute("aria-describedby")
   }, [base, description, error, idDescription, idError, children])
 
   return (
     <div
-      ref={raiz}
+      ref={root}
       data-slot="field"
       data-invalid={error ? "true" : undefined}
       className={cn("nds-form-field", className)}

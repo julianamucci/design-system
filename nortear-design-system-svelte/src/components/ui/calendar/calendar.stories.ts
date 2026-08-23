@@ -79,10 +79,10 @@ export const Playground: Story = {
       // deixava o número no canto superior esquerdo.
       const dia = canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn')!;
       const cs = getComputedStyle(dia);
-      const caixa = dia.getBoundingClientRect();
+      const box = dia.getBoundingClientRect();
 
-      await expect(Math.round(caixa.width)).toBe(Math.round(caixa.height));
-      await expect(Math.round(caixa.width)).toBeLessThanOrEqual(36);
+      await expect(Math.round(box.width)).toBe(Math.round(box.height));
+      await expect(Math.round(box.width)).toBeLessThanOrEqual(36);
       await expect(cs.alignItems).toBe('center');
       await expect(cs.justifyContent).toBe('center');
     });
@@ -105,9 +105,9 @@ export const Playground: Story = {
       // então o gap interno não o alcançava). E o dia de fora do mês só ficava
       // apagado no Vue e no Vanilla — no React a regra mirava a célula, e o
       // botão dentro dela repunha a própria cor; no Svelte não havia regra.
-      const legenda = canvasElement.querySelector<HTMLElement>('.nds-calendar-caption')!;
+      const caption = canvasElement.querySelector<HTMLElement>('.nds-calendar-caption')!;
       const semana = canvasElement.querySelector<HTMLElement>('thead')!;
-      const respiro = semana.getBoundingClientRect().top - legenda.getBoundingClientRect().bottom;
+      const respiro = semana.getBoundingClientRect().top - caption.getBoundingClientRect().bottom;
       await expect(Math.round(respiro)).toBe(16);
 
       const neighbour = canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn[data-outside-month]')!;
@@ -122,8 +122,8 @@ export const Playground: Story = {
       // por cima e engolia o clique. `elementFromPoint` devolve QUEM está no
       // topo naquele ponto, e é a única coisa aqui que enxerga isso.
       const doc = canvasElement.ownerDocument;
-      for (const nome of [/previous|anterior/i, /next|próximo|proximo/i]) {
-        const btn = canvas.getByRole('button', { name: nome });
+      for (const name of [/previous|anterior/i, /next|próximo|proximo/i]) {
+        const btn = canvas.getByRole('button', { name: name });
         const r = btn.getBoundingClientRect();
         const noTopo = doc.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
         await expect(btn.contains(noTopo)).toBe(true);
@@ -166,8 +166,8 @@ export const Playground: Story = {
     await step('A grade se nomeia pelo mês em vista', async () => {
       // Sem `aria-label` o grid é anunciado como "tabela" e nada mais — e com
       // dois meses na tela as duas soam iguais.
-      const grade = canvasElement.querySelector('table')!;
-      await expect(grade.getAttribute('aria-label')).toMatch(/abril 2026/i);
+      const grid = canvasElement.querySelector('table')!;
+      await expect(grid.getAttribute('aria-label')).toMatch(/abril 2026/i);
     });
 
     await step('Home, End e Page Up/Down andam na grade e o foco acompanha', async () => {

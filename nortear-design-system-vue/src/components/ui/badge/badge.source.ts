@@ -23,8 +23,8 @@ function importIcon(...names: string[]): string {
  * o badge já nasce em elemento inline, que é o que o deixa caber dentro de
  * frase, de título e de célula de tabela.
  */
-function badge(variante: string | undefined, conteudo: string): string {
-  return `<Badge${attrs(attr('variant', variante, 'default'))}>${conteudo}</Badge>`;
+function badge(variant: string | undefined, content: string): string {
+  return `<Badge${attrs(attr('variant', variant, 'default'))}>${content}</Badge>`;
 }
 
 /**

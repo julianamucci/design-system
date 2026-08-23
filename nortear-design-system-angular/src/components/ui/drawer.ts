@@ -180,7 +180,7 @@ export class NdsDrawerContent {
   template: `
     <ng-content />
 
-    @if (conteudo(); as c) {
+    @if (content(); as c) {
       <ng-template rdxDialogPortal>
         <!-- O overlay do Drawer é o mesmo do Sheet, por decisão do CSS
              compartilhado: .nds-drawer-* só define painel, alça, cabeçalho e
@@ -215,21 +215,21 @@ export class NdsDrawer {
    * A raiz do Dialog aplicada como host directive. Injetável daqui porque host
    * directive vive no injector de elemento do próprio componente.
    */
-  private readonly raiz = inject(RdxDialogRoot);
+  private readonly root = inject(RdxDialogRoot);
 
   readonly direction = input<DrawerDirection>('bottom');
 
-  protected readonly conteudo = contentChild(NdsDrawerContent, { descendants: true });
+  protected readonly content = contentChild(NdsDrawerContent, { descendants: true });
 
   /**
    * `data-state` para as outras stacks e para a tabela de estados do conteúdo
    * compartilhado. O par `data-open` / `data-closed` que o primitivo escreve
    * continua lá — este atributo é adição, não substituição.
    */
-  protected readonly state = computed(() => (this.raiz.open() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.root.open() ? 'open' : 'closed'));
 
   protected readonly classeDoPainel = computed(() =>
-    cn('nds-drawer-content', this.conteudo()?.panelClass()),
+    cn('nds-drawer-content', this.content()?.panelClass()),
   );
 
   constructor() {
@@ -239,13 +239,13 @@ export class NdsDrawer {
     // `ndsDrawerTitle` registrado — sem título visível, use um com .nds-sr-only.
     effect(() => {
       if (!isDevMode()) return;
-      if (!this.raiz.open()) return;
+      if (!this.root.open()) return;
       // A checagem é adiada de propósito. O `ndsDrawerTitle` registra o próprio
       // id no construtor, e o construtor só roda quando o portal cria a view do
       // painel — um passo DEPOIS de `open` virar true. Avaliar aqui dentro
       // acusaria todo painel correto no instante da abertura.
       setTimeout(() => {
-        if (untracked(this.raiz.open) && !untracked(this.raiz.titleId)) {
+        if (untracked(this.root.open) && !untracked(this.root.titleId)) {
           console.warn(
             '[nds-drawer] painel aberto sem ndsDrawerTitle: o diálogo fica sem nome ' +
               'acessível. Se o título não deve aparecer, mantenha o elemento e ' +

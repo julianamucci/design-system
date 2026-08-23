@@ -103,9 +103,9 @@ function createIcon(nos: LucideIconNode[]): SVGSVGElement {
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
   for (const [tag, attrs] of nos) {
-    const filho = document.createElementNS(SVG_NS, tag);
-    for (const [k, v] of Object.entries(attrs)) filho.setAttribute(k, v);
-    svg.appendChild(filho);
+    const child = document.createElementNS(SVG_NS, tag);
+    for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
+    svg.appendChild(child);
   }
   return svg;
 }
@@ -143,9 +143,9 @@ function applyComuns(el: HTMLElement, item: MenubarItem): void {
 }
 
 function createLabelEAtalho(el: HTMLElement, item: MenubarItem): void {
-  const texto = document.createElement('span');
-  texto.textContent = item.label ?? '';
-  el.appendChild(texto);
+  const text = document.createElement('span');
+  text.textContent = item.label ?? '';
+  el.appendChild(text);
 
   if (item.shortcut) {
     const atalho = document.createElement('span');
@@ -171,7 +171,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
   root.className = cn('nds-menubar', options?.class);
 
   const triggers: HTMLButtonElement[] = [];
-  let isOpen: { panel: HTMLElement; trigger: HTMLButtonElement; itens: HTMLElement[] } | null = null;
+  let isOpen: { panel: HTMLElement; trigger: HTMLButtonElement; items: HTMLElement[] } | null = null;
 
   /**
    * Tabulação itinerante: a barra inteira é UMA parada de Tab.
@@ -180,8 +180,8 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
    * navega por teclado — e o conteúdo compartilhado promete o contrário, no
    * item de acessibilidade que diz que o Tab não para em cada gatilho.
    */
-  function moverTabulacao(alvo: HTMLButtonElement): void {
-    for (const g of triggers) g.tabIndex = g === alvo ? 0 : -1;
+  function moverTabulacao(target: HTMLButtonElement): void {
+    for (const g of triggers) g.tabIndex = g === target ? 0 : -1;
   }
 
   function closeAll(): void {
@@ -196,50 +196,50 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
   function closeSubmenus(escopo: HTMLElement): void {
     for (const sub of escopo.querySelectorAll<HTMLElement>('[data-slot="menubar-sub-content"]')) {
       sub.hidden = true;
-      const gatilho = sub.parentElement?.querySelector<HTMLElement>(
+      const trigger = sub.parentElement?.querySelector<HTMLElement>(
         '[data-slot="menubar-sub-trigger"]',
       );
-      gatilho?.setAttribute('aria-expanded', 'false');
-      gatilho?.setAttribute('data-state', 'closed');
+      trigger?.setAttribute('aria-expanded', 'false');
+      trigger?.setAttribute('data-state', 'closed');
     }
   }
 
-  function openMenu(indice: number, focus: 'item' | 'gatilho' | 'nenhum'): void {
-    const alvo = menusMontados[indice];
-    if (!alvo) return;
-    if (isOpen?.trigger === alvo.trigger) return;
+  function openMenu(index: number, focus: 'item' | 'gatilho' | 'nenhum'): void {
+    const target = menusMontados[index];
+    if (!target) return;
+    if (isOpen?.trigger === target.trigger) return;
     closeAll();
-    alvo.panel.hidden = false;
-    alvo.trigger.dataset.state = 'open';
-    alvo.trigger.setAttribute('aria-expanded', 'true');
-    isOpen = alvo;
-    moverTabulacao(alvo.trigger);
-    if (focus === 'item') alvo.itens[0]?.focus();
-    else if (focus === 'gatilho') alvo.trigger.focus();
+    target.panel.hidden = false;
+    target.trigger.dataset.state = 'open';
+    target.trigger.setAttribute('aria-expanded', 'true');
+    isOpen = target;
+    moverTabulacao(target.trigger);
+    if (focus === 'item') target.items[0]?.focus();
+    else if (focus === 'gatilho') target.trigger.focus();
   }
 
   // ── Construção de um painel (menu de topo ou submenu) ──────────────────────
 
   /** Devolve o painel e a lista de elementos focáveis DESTE nível. */
   function createPanel(
-    itens: MenubarItem[],
-    opcoes: { id: string; submenu: boolean },
+    items: MenubarItem[],
+    options: { id: string; submenu: boolean },
   ): { panel: HTMLElement; focaveis: HTMLElement[] } {
     const panel = document.createElement('div');
-    panel.id = opcoes.id;
+    panel.id = options.id;
     panel.className = 'nds-menubar-panel nds-dropdown-menu-content';
-    panel.dataset.slot = opcoes.submenu ? 'menubar-sub-content' : 'menubar-content';
-    panel.dataset.side = opcoes.submenu ? 'right' : side;
-    panel.dataset.align = opcoes.submenu ? 'start' : align;
+    panel.dataset.slot = options.submenu ? 'menubar-sub-content' : 'menubar-content';
+    panel.dataset.side = options.submenu ? 'right' : side;
+    panel.dataset.align = options.submenu ? 'start' : align;
     panel.setAttribute('role', 'menu');
     panel.hidden = true;
 
     const focaveis: HTMLElement[] = [];
 
-    itens.forEach((item, i) => {
-      const tipo = item.type ?? 'item';
+    items.forEach((item, i) => {
+      const type = item.type ?? 'item';
 
-      if (tipo === 'separator') {
+      if (type === 'separator') {
         const sep = document.createElement('div');
         sep.className = 'nds-dropdown-menu-separator';
         sep.dataset.slot = 'menubar-separator';
@@ -248,24 +248,24 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         return;
       }
 
-      if (tipo === 'label') {
-        const rotulo = document.createElement('div');
-        rotulo.className = 'nds-dropdown-menu-label';
-        rotulo.dataset.slot = 'menubar-label';
-        if (item.inset) rotulo.setAttribute('data-inset', '');
-        rotulo.textContent = item.label ?? '';
-        panel.appendChild(rotulo);
+      if (type === 'label') {
+        const label = document.createElement('div');
+        label.className = 'nds-dropdown-menu-label';
+        label.dataset.slot = 'menubar-label';
+        if (item.inset) label.setAttribute('data-inset', '');
+        label.textContent = item.label ?? '';
+        panel.appendChild(label);
         return;
       }
 
-      if (tipo === 'checkbox') {
-        const caixa = document.createElement('div');
-        caixa.className = 'nds-dropdown-menu-checkbox-item';
-        caixa.dataset.slot = 'menubar-checkbox-item';
-        caixa.setAttribute('role', 'menuitemcheckbox');
-        applyComuns(caixa, item);
+      if (type === 'checkbox') {
+        const box = document.createElement('div');
+        box.className = 'nds-dropdown-menu-checkbox-item';
+        box.dataset.slot = 'menubar-checkbox-item';
+        box.setAttribute('role', 'menuitemcheckbox');
+        applyComuns(box, item);
 
-        let marcado = item.checked ?? false;
+        let checked = item.checked ?? false;
         // O estado é TRI-VALORADO: marcado, desmarcado e misto. O misto vale
         // SOBRE o marcado enquanto durar — é ele quem manda no que se anuncia e
         // no que se desenha.
@@ -275,19 +275,19 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         const pintar = (): void => {
           // "mixed" é o que distingue "alguns selecionados" de "todos
           // selecionados"; um booleano aqui mentiria para quem lê a tela.
-          caixa.setAttribute('aria-checked', misto ? 'mixed' : String(marcado));
+          box.setAttribute('aria-checked', misto ? 'mixed' : String(checked));
           // Misto não é marcado: o atributo de dado do estado marcado fica fora.
-          if (!misto && marcado) caixa.dataset.checked = '';
-          else delete caixa.dataset.checked;
+          if (!misto && checked) box.dataset.checked = '';
+          else delete box.dataset.checked;
           indicador.replaceChildren();
           if (misto) indicador.appendChild(ICON_TRACO());
-          else if (marcado) indicador.appendChild(ICON_MARCA());
+          else if (checked) indicador.appendChild(ICON_MARCA());
         };
 
         pintar();
 
-        createLabelEAtalho(caixa, item);
-        caixa.appendChild(indicador);
+        createLabelEAtalho(box, item);
+        box.appendChild(indicador);
 
         const alternar = (): void => {
           if (item.disabled) return;
@@ -297,40 +297,40 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
             // estado misto a ninguém, porque "alguns" é conclusão de quem
             // consome, não de um clique.
             misto = false;
-            marcado = true;
+            checked = true;
             pintar();
             item.onIndeterminateChange?.(false);
             item.onCheckedChange?.(true);
             return;
           }
-          marcado = !marcado;
+          checked = !checked;
           pintar();
-          item.onCheckedChange?.(marcado);
+          item.onCheckedChange?.(checked);
           // Marcar NÃO fecha: quem marca uma preferência quer marcar a próxima.
         };
-        caixa.addEventListener('click', alternar);
-        caixa.addEventListener('keydown', (e) => {
+        box.addEventListener('click', alternar);
+        box.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             alternar();
           }
         });
 
-        focaveis.push(caixa);
-        panel.appendChild(caixa);
+        focaveis.push(box);
+        panel.appendChild(box);
         return;
       }
 
-      if (tipo === 'radio-group') {
-        const grupo = document.createElement('div');
-          grupo.dataset.slot = 'menubar-radio-group';
-        grupo.setAttribute('role', 'group');
+      if (type === 'radio-group') {
+        const group = document.createElement('div');
+          group.dataset.slot = 'menubar-radio-group';
+        group.setAttribute('role', 'group');
 
         let escolhido = item.value;
-        const opcoes = item.options ?? [];
-        const elementos: Array<{ el: HTMLElement; indicador: HTMLElement; valor: string }> = [];
+        const options = item.options ?? [];
+        const elementos: Array<{ el: HTMLElement; indicador: HTMLElement; value: string }> = [];
 
-        for (const opcao of opcoes) {
+        for (const opcao of options) {
           const choice = document.createElement('div');
           choice.className = 'nds-dropdown-menu-radio-item';
           choice.dataset.slot = 'menubar-radio-item';
@@ -338,13 +338,13 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
           choice.dataset.value = opcao.value;
           applyComuns(choice, { disabled: opcao.disabled });
 
-          const marcado = escolhido === opcao.value;
-          choice.setAttribute('aria-checked', String(marcado));
-          if (marcado) choice.dataset.checked = '';
+          const checked = escolhido === opcao.value;
+          choice.setAttribute('aria-checked', String(checked));
+          if (checked) choice.dataset.checked = '';
 
           createLabelEAtalho(choice, { label: opcao.label });
           const indicador = createIndicador(
-            marcado ? ICON_MARCA() : null,
+            checked ? ICON_MARCA() : null,
             'menubar-radio-item-indicator',
           );
           choice.appendChild(indicador);
@@ -353,7 +353,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
             if (opcao.disabled || escolhido === opcao.value) return;
             escolhido = opcao.value;
             for (const other of elementos) {
-              const active = other.valor === escolhido;
+              const active = other.value === escolhido;
               other.el.setAttribute('aria-checked', String(active));
               if (active) other.el.dataset.checked = '';
               else delete other.el.dataset.checked;
@@ -363,21 +363,21 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
             item.onValueChange?.(escolhido);
           });
 
-          elementos.push({ el: choice, indicador, valor: opcao.value });
+          elementos.push({ el: choice, indicador, value: opcao.value });
           focaveis.push(choice);
-          grupo.appendChild(choice);
+          group.appendChild(choice);
         }
 
-        panel.appendChild(grupo);
+        panel.appendChild(group);
         return;
       }
 
-      if (tipo === 'submenu') {
+      if (type === 'submenu') {
         const wrapper = document.createElement('div');
         wrapper.className = 'nds-menubar-menu';
         wrapper.dataset.slot = 'menubar-sub';
 
-        const subId = `${opcoes.id}-sub-${i}`;
+        const subId = `${options.id}-sub-${i}`;
         const subTrigger = document.createElement('div');
         subTrigger.className = 'nds-dropdown-menu-sub-trigger';
         subTrigger.dataset.slot = 'menubar-sub-trigger';
@@ -468,16 +468,16 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     panel.addEventListener('keydown', (e) => {
       const livres = focaveis.filter((el) => el.getAttribute('aria-disabled') !== 'true');
       if (livres.length === 0) return;
-      const atual = livres.indexOf(document.activeElement as HTMLElement);
+      const current = livres.indexOf(document.activeElement as HTMLElement);
 
       if (e.key === 'ArrowDown') {
         e.preventDefault();
         e.stopPropagation();
-        livres[(atual + 1 + livres.length) % livres.length]?.focus();
+        livres[(current + 1 + livres.length) % livres.length]?.focus();
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
         e.stopPropagation();
-        livres[(atual - 1 + livres.length) % livres.length]?.focus();
+        livres[(current - 1 + livres.length) % livres.length]?.focus();
       } else if (e.key === 'Home') {
         e.preventDefault();
         e.stopPropagation();
@@ -490,7 +490,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         // Typeahead: o conteúdo compartilhado promete que digitar uma letra
         // move o foco para o item que começa com ela.
         const letra = e.key.toLowerCase();
-        const ordenados = [...livres.slice(atual + 1), ...livres.slice(0, atual + 1)];
+        const ordenados = [...livres.slice(current + 1), ...livres.slice(0, current + 1)];
         const finding = ordenados.find((el) =>
           (el.textContent ?? '').trim().toLowerCase().startsWith(letra),
         );
@@ -510,11 +510,11 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
   const menusMontados: Array<{
     panel: HTMLElement;
     trigger: HTMLButtonElement;
-    itens: HTMLElement[];
+    items: HTMLElement[];
   }> = [];
 
-  menus.forEach((menu, indice) => {
-    const panelId = `menubar-panel-${id}-${indice}`;
+  menus.forEach((menu, index) => {
+    const panelId = `menubar-panel-${id}-${index}`;
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-menubar-menu';
     wrapper.dataset.slot = 'menubar-menu';
@@ -530,7 +530,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     trigger.setAttribute('aria-controls', panelId);
     trigger.setAttribute('aria-expanded', 'false');
     trigger.dataset.state = 'closed';
-    trigger.tabIndex = indice === 0 ? 0 : -1;
+    trigger.tabIndex = index === 0 ? 0 : -1;
     trigger.textContent = menu.label;
 
     const { panel, focaveis } = createPanel(menu.items, { id: panelId, submenu: false });
@@ -538,14 +538,14 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     trigger.addEventListener('click', () => {
       const estavaOpen = trigger.dataset.state === 'open';
       closeAll();
-      if (!estavaOpen) openMenu(indice, 'item');
+      if (!estavaOpen) openMenu(index, 'item');
       else moverTabulacao(trigger);
     });
 
     trigger.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        openMenu(indice, 'item');
+        openMenu(index, 'item');
       } else if (e.key === 'Escape') {
         closeAll();
         moverTabulacao(trigger);
@@ -555,7 +555,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     wrapper.append(trigger, panel);
     root.appendChild(wrapper);
     triggers.push(trigger);
-    menusMontados.push({ panel, trigger, itens: focaveis });
+    menusMontados.push({ panel, trigger, items: focaveis });
   });
 
   // ── Teclado da BARRA ──────────────────────────────────────────────────────
@@ -576,16 +576,16 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
       return;
     }
 
-    const passo = e.key === 'ArrowRight' ? 1 : -1;
-    const atual = isOpen
+    const step = e.key === 'ArrowRight' ? 1 : -1;
+    const current = isOpen
       ? triggers.indexOf(isOpen.trigger)
       : triggers.indexOf(document.activeElement as HTMLButtonElement);
-    if (atual < 0) return;
+    if (current < 0) return;
 
-    let next = atual + passo;
+    let next = current + step;
     if (next >= triggers.length) next = loop ? 0 : triggers.length - 1;
     if (next < 0) next = loop ? triggers.length - 1 : 0;
-    if (next === atual) return;
+    if (next === current) return;
 
     e.preventDefault();
     if (isOpen) {

@@ -39,7 +39,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<CardArgs> }): s
         <button ndsButton variant="ghost" size="sm" aria-label="Editar produto ${title}">Editar</button>
       </div>`
     : '';
-  const rodape = withFooter
+  const footer = withFooter
     ? `
     <div ndsCardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
       <button ndsButton variant="outline" aria-label="Editar produto ${title}">Editar</button>
@@ -62,7 +62,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<CardArgs> }): s
         <h3 ndsCardTitle>${title}</h3>
         <p ndsCardDescription>${description}</p>${acao}
       </div>
-      <div ndsCardContent>${content}</div>${rodape}
+      <div ndsCardContent>${content}</div>${footer}
     </div>
   \`,
 })

@@ -9,7 +9,7 @@ import {
 } from './dialog.source';
 import { createButton } from './button';
 import {
-  abrir,
+  open,
   mountOpen,
   cantoButtonClose,
   buildField,
@@ -78,10 +78,10 @@ export const Default: Story = {
     });
 
     await step('A ação primária é a última do rodapé, e é filha direta dele', async () => {
-      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = footer.querySelectorAll<HTMLElement>('button');
       await expect(buttons.length).toBe(2);
-      await expect(buttons[0].parentElement).toBe(rodape);
+      await expect(buttons[0].parentElement).toBe(footer);
       await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-default');
     });
   },
@@ -127,11 +127,11 @@ export const WithForm: Story = {
     const p = await waitForOpen();
 
     await step('Os campos estão rotulados e trazem o valor inicial', async () => {
-      const nome = p.querySelector<HTMLInputElement>('#dialog-name')!;
+      const name = p.querySelector<HTMLInputElement>('#dialog-name')!;
       // `toHaveAccessibleName` e não a presença do `<label>`: o que importa é o
       // par for/id ter fechado, e é isso que o leitor de tela anuncia.
-      await expect(nome).toHaveAccessibleName('Nome');
-      await expect(nome.value).toBe('Maria Souza');
+      await expect(name).toHaveAccessibleName('Nome');
+      await expect(name.value).toBe('Maria Souza');
 
       const email = p.querySelector<HTMLInputElement>('#dialog-email')!;
       await expect(email).toHaveAccessibleName('E-mail');
@@ -139,9 +139,9 @@ export const WithForm: Story = {
     });
 
     await step('O foco alcança os campos por teclado, dentro do painel', async () => {
-      const nome = p.querySelector<HTMLInputElement>('#dialog-name')!;
-      nome.focus();
-      await expect(document.activeElement).toBe(nome);
+      const name = p.querySelector<HTMLInputElement>('#dialog-name')!;
+      name.focus();
+      await expect(document.activeElement).toBe(name);
       await userEvent.tab();
       await expect(document.activeElement).toBe(p.querySelector('#dialog-email'));
     });
@@ -200,18 +200,18 @@ export const WithScrollContent: Story = {
     await step('O corpo rola sozinho, com header e rodapé parados', async () => {
       // Comportamento e não nome de classe: o corpo precisa poder rolar E ter
       // conteúdo mais alto que a própria caixa.
-      const corpo = p.querySelector<HTMLElement>('[role="region"]')!;
-      await expect(getComputedStyle(corpo).overflowY).toBe('auto');
-      await expect(corpo.scrollHeight).toBeGreaterThan(corpo.clientHeight);
+      const body = p.querySelector<HTMLElement>('[role="region"]')!;
+      await expect(getComputedStyle(body).overflowY).toBe('auto');
+      await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
       await expect(p.querySelector('[data-slot="dialog-header"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeInTheDocument();
     });
 
     await step('A região rolável é alcançável por teclado e tem nome', async () => {
       // Sem `tabindex` quem navega só por teclado não consegue rolar a caixa.
-      const corpo = p.querySelector<HTMLElement>('[role="region"]')!;
-      await expect(corpo).toHaveAttribute('tabindex', '0');
-      await expect(corpo).toHaveAccessibleName();
+      const body = p.querySelector<HTMLElement>('[role="region"]')!;
+      await expect(body).toHaveAttribute('tabindex', '0');
+      await expect(body).toHaveAccessibleName();
     });
   },
 };
@@ -257,7 +257,7 @@ export const NoFooter: Story = {
       await waitForClosed();
       // O Chromatic fotografa o estado final: uma composição que termina
       // fechada capturaria só o gatilho.
-      await expect(await abrir(canvasElement)).toBeVisible();
+      await expect(await open(canvasElement)).toBeVisible();
     });
   },
 };
@@ -301,8 +301,8 @@ export const WithDestructiveAction: Story = {
     const p = await waitForOpen();
 
     await step('A ação primária carrega a variante destrutiva', async () => {
-      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = footer.querySelectorAll<HTMLElement>('button');
       await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-destructive');
     });
 
@@ -370,16 +370,16 @@ export const CustomCloseInFooter: Story = {
 
     await step('Sem X no canto, o fechar mora no rodapé', async () => {
       await expect(cantoButtonClose(p)).toBeNull();
-      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      await expect(within(rodape).getByRole('button', { name: /fechar/i })).toBeVisible();
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      await expect(within(footer).getByRole('button', { name: /fechar/i })).toBeVisible();
     });
 
     await step('E o botão do rodapé fecha o diálogo', async () => {
-      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      await userEvent.click(within(rodape).getByRole('button', { name: /fechar/i }));
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      await userEvent.click(within(footer).getByRole('button', { name: /fechar/i }));
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final da play.
-      await expect(await abrir(canvasElement)).toBeVisible();
+      await expect(await open(canvasElement)).toBeVisible();
     });
   },
 };

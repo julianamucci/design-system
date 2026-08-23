@@ -143,11 +143,11 @@ export const CopyOnClick: Story = {
       await step('Clicar no tile marca "copiado" naquele tile', async () => {
         searchDigitar(canvasElement, 'package');
         const tile = await waitFor(() => {
-          const alvo = canvasElement.querySelector<HTMLButtonElement>(
+          const target = canvasElement.querySelector<HTMLButtonElement>(
             '.nds-icon-grid-item[data-icon-name="Package"] button.nds-icon-tile'
           );
-          expect(alvo).not.toBeNull();
-          return alvo as HTMLButtonElement;
+          expect(target).not.toBeNull();
+          return target as HTMLButtonElement;
         });
 
         tile.click();

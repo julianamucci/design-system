@@ -187,9 +187,9 @@ export class NdsDialogOverlay {
   /** Rola a página inteira do diálogo em vez de centralizar o painel. */
   readonly scroll = input(false, { transform: booleanAttribute });
 
-  private readonly raiz = injectRdxDialogRootContext();
+  private readonly root = injectRdxDialogRootContext();
 
-  protected readonly state = computed(() => (this.raiz.isOpen() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.root.isOpen() ? 'open' : 'closed'));
 
   protected readonly hostClass = computed(() =>
     ['nds-dialog-overlay', this.scroll() ? 'nds-dialog-overlay-scroll' : '']
@@ -289,9 +289,9 @@ export class NdsDialogContent {
   /** Par do `scroll` do overlay: tira o painel do centro fixo e o põe no fluxo. */
   readonly scroll = input(false, { transform: booleanAttribute });
 
-  private readonly raiz = injectRdxDialogRootContext();
+  private readonly root = injectRdxDialogRootContext();
 
-  protected readonly state = computed(() => (this.raiz.isOpen() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.root.isOpen() ? 'open' : 'closed'));
 
   protected readonly hostClass = computed(() =>
     ['nds-dialog-content', this.scroll() ? 'nds-dialog-content-scroll' : '']

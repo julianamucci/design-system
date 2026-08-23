@@ -97,7 +97,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<ButtonArgs> }):
   ].filter(Boolean).join(' ');
 
   const abre = attrs ? `<button ndsButton ${attrs}>` : '<button ndsButton>';
-  const conteudo = isIcon
+  const content = isIcon
     ? '      <svg ndsButtonIcon kind="plus"></svg>'
     : `      ${label}`;
 
@@ -107,7 +107,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<ButtonArgs> }):
   imports: [NdsButton${isIcon ? ', NdsButtonIcon' : ''}],
   template: \`
     ${abre}
-${conteudo}
+${content}
     </button>
   \`,
 })

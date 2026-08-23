@@ -143,8 +143,8 @@ export const Disabled: Story = {
       await expect(center).toHaveAttribute('aria-pressed', 'false');
     });
     await step('O estado desabilitado é visível, não só semântico', async () => {
-      const opacidade = parseFloat(getComputedStyle(canvas.getAllByRole('button')[0]).opacity);
-      await expect(opacidade).toBeLessThan(1);
+      const opacity = parseFloat(getComputedStyle(canvas.getAllByRole('button')[0]).opacity);
+      await expect(opacity).toBeLessThan(1);
     });
   },
 };

@@ -45,11 +45,11 @@ function Slider({
   // stacks entregam. Só o valor é repassado: o `eventDetails` do primitivo
   // carrega o evento nativo, e a aba Actions estoura ao serializar `event.view`.
   const adaptOutward = (
-    callback: ((valor: number[]) => void) | undefined,
+    callback: ((value: number[]) => void) | undefined,
   ) =>
     callback
-      ? (valor: number | readonly number[]) =>
-          callback(Array.isArray(valor) ? [...valor] : [valor as number])
+      ? (value: number | readonly number[]) =>
+          callback(Array.isArray(value) ? [...value] : [value as number])
       : undefined
 
   const ariaLabel = (props as { "aria-label"?: string })["aria-label"]

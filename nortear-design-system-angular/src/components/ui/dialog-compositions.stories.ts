@@ -7,11 +7,11 @@ import { NdsAspectRatio } from './aspect-ratio';
 import {
   IMG_PLACEHOLDER,
   LABELS,
-  abrir,
-  painel,
+  open,
+  panel,
   waitForOpen,
   waitForClosed,
-  fechar,
+  close,
 } from './dialog.fixtures';
 
 // Composições do Dialog: arranjos completos que resolvem um caso de uso, não
@@ -89,9 +89,9 @@ export const MediaPreview: Story = {
       // elemento focado antes era o próprio documento — era para lá que o foco
       // voltava, com razão. Fechar e reabrir pelo gatilho estabelece a
       // precondição do que se quer provar.
-      await fechar();
-      await abrir(canvasElement);
-      const x = painel()!.querySelector<HTMLElement>('[data-slot="dialog-close"]')!;
+      await close();
+      await open(canvasElement);
+      const x = panel()!.querySelector<HTMLElement>('[data-slot="dialog-close"]')!;
       await expect(x).toHaveAccessibleName(LABELS.close);
       await userEvent.click(x);
       await waitForClosed();
@@ -103,7 +103,7 @@ export const MediaPreview: Story = {
       });
       // Reabre: o Chromatic fotografa o estado final, e é o painel ABERTO que
       // o axe precisa varrer — 'accessibility.item6' é declarado nesta story.
-      await expect(await abrir(canvasElement)).toBeVisible();
+      await expect(await open(canvasElement)).toBeVisible();
     });
   },
 };

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import type { SelectItem } from './select';
-import { abridor, comRotulo } from './select.fixtures';
+import { abridor, withLabel } from './select.fixtures';
 import { selectSource, selectSourceWith } from './select.source';
 
 const meta: Meta = {
@@ -56,7 +56,7 @@ const ICONS = {
 
 export const Default: Story = {
   render: () =>
-    comRotulo('v-default-select', 'Estado', {
+    withLabel('v-default-select', 'Estado', {
       placeholder: 'Selecione...',
       items: [
         { value: 'sp', label: 'São Paulo' },
@@ -75,31 +75,31 @@ export const Default: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('combobox');
-    const abrir = abridor(gatilho);
+    const trigger = canvas.getByRole('combobox');
+    const open = abridor(trigger);
 
     await step('O campo é nomeado pelo rótulo externo', async () => {
-      await expect(gatilho).toHaveAccessibleName('Estado');
+      await expect(trigger).toHaveAccessibleName('Estado');
     });
 
     await step('Abrir mostra uma lista plana, sem cabeçalho de grupo', async () => {
-      const listbox = await abrir();
-      const opcoes = within(listbox).getAllByRole('option');
-      await expect(opcoes).toHaveLength(4);
-      await expect(opcoes[0]).toHaveAccessibleName('São Paulo');
+      const listbox = await open();
+      const options = within(listbox).getAllByRole('option');
+      await expect(options).toHaveLength(4);
+      await expect(options[0]).toHaveAccessibleName('São Paulo');
       // Lista plana não inventa grupo: um grupo de um só existe para o olho e
       // mente para o leitor de tela.
       await expect(within(listbox).queryAllByRole('group')).toHaveLength(0);
     });
 
     await step('Clicar numa opção escolhe e fecha', async () => {
-      const listbox = await abrir();
+      const listbox = await open();
       await userEvent.click(within(listbox).getByRole('option', { name: 'Minas Gerais' }));
       await waitForPortalGone('listbox');
-      await expect(gatilho).toHaveTextContent('Minas Gerais');
+      await expect(trigger).toHaveTextContent('Minas Gerais');
       // Escolher pelo ponteiro devolve o foco ao campo: sem isso o `mousedown` na
       // opção levaria o foco ao `<body>` e o teclado ficaria sem dono.
-      await expect(gatilho).toHaveFocus();
+      await expect(trigger).toHaveFocus();
     });
   },
 };
@@ -108,7 +108,7 @@ export const Default: Story = {
 
 export const WithGroups: Story = {
   render: () =>
-    comRotulo('v-groups-select', 'Selecione a região', {
+    withLabel('v-groups-select', 'Selecione a região', {
       placeholder: 'Selecione...',
       items: [
         { type: 'group', label: 'Sudeste', items: [...REGIOES.Sudeste] },
@@ -139,15 +139,15 @@ export const WithGroups: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('combobox');
-    const abrir = abridor(gatilho);
+    const trigger = canvas.getByRole('combobox');
+    const open = abridor(trigger);
 
     await step('Escolher item de um grupo atualiza o campo', async () => {
-      const listbox = await abrir();
+      const listbox = await open();
       await userEvent.click(within(listbox).getByRole('option', { name: 'Santa Catarina' }));
       await waitForPortalGone('listbox');
       await waitFor(async () => {
-        await expect(gatilho).toHaveTextContent('Santa Catarina');
+        await expect(trigger).toHaveTextContent('Santa Catarina');
       });
     });
 
@@ -155,11 +155,11 @@ export const WithGroups: Story = {
     // muda entre as variantes, não o campo fechado, e é ela que a regressão visual
     // precisa fotografar.
     await step('Cada categoria vira um grupo nomeado pelo cabeçalho', async () => {
-      const listbox = await abrir();
-      const grupos = within(listbox).getAllByRole('group');
-      await expect(grupos).toHaveLength(Object.keys(REGIOES).length);
-      for (const [i, nome] of Object.keys(REGIOES).entries()) {
-        await expect(grupos[i]).toHaveAccessibleName(nome);
+      const listbox = await open();
+      const groups = within(listbox).getAllByRole('group');
+      await expect(groups).toHaveLength(Object.keys(REGIOES).length);
+      for (const [i, name] of Object.keys(REGIOES).entries()) {
+        await expect(groups[i]).toHaveAccessibleName(name);
       }
     });
 
@@ -181,7 +181,7 @@ export const WithGroups: Story = {
 
 export const WithIcon: Story = {
   render: () =>
-    comRotulo('v-icon-select', 'Canal de contato', {
+    withLabel('v-icon-select', 'Canal de contato', {
       placeholder: 'Selecione...',
       items: [
         { value: 'email', label: 'E-mail', icon: [...ICONS.email] },
@@ -212,17 +212,17 @@ export const WithIcon: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('combobox');
-    const abrir = abridor(gatilho);
+    const trigger = canvas.getByRole('combobox');
+    const open = abridor(trigger);
 
     await step('O ícone entra na opção e fica fora do nome acessível', async () => {
-      const listbox = await abrir();
-      const opcoes = within(listbox).getAllByRole('option');
-      await expect(opcoes).toHaveLength(3);
-      await expect(opcoes[0].querySelector('svg')).toBeTruthy();
+      const listbox = await open();
+      const options = within(listbox).getAllByRole('option');
+      await expect(options).toHaveLength(3);
+      await expect(options[0].querySelector('svg')).toBeTruthy();
       // Decorativo: o nome acessível continua sendo só o rótulo, sem eco.
-      await expect(opcoes[0]).toHaveAccessibleName('E-mail');
-      await expect(opcoes[0].querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+      await expect(options[0]).toHaveAccessibleName('E-mail');
+      await expect(options[0].querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
     });
 
     await step('O ícone é dimensionado pela folha do componente', async () => {

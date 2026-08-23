@@ -91,10 +91,10 @@ export const Default: Story = {
         ratioContrast(styleItem.borderTopColor, styleItem.backgroundColor),
       ).toBeGreaterThanOrEqual(3);
 
-      const rotulo = canvasElement.querySelector<HTMLElement>('.nds-radio-label')!;
+      const label = canvasElement.querySelector<HTMLElement>('.nds-radio-label')!;
       const backgroundPage = getComputedStyle(canvasElement.ownerDocument.body).backgroundColor;
       await expect(
-        ratioContrast(getComputedStyle(rotulo).color, backgroundPage),
+        ratioContrast(getComputedStyle(label).color, backgroundPage),
       ).toBeGreaterThanOrEqual(4.5);
     });
   },
@@ -136,8 +136,8 @@ export const Checked: Story = {
     });
 
     await step('O dot da opção marcada fica visível', async () => {
-      const marcado = canvasElement.querySelector<HTMLElement>('#est-chk-pix')!;
-      const indicador = marcado.querySelector<HTMLElement>(
+      const checked = canvasElement.querySelector<HTMLElement>('#est-chk-pix')!;
+      const indicador = checked.querySelector<HTMLElement>(
         '[data-slot="radio-group-indicator"]',
       )!;
       await expect(getComputedStyle(indicador).display).not.toBe('none');
@@ -237,11 +237,11 @@ export const ItemDisabled: Story = {
       // seta pararia numa opção que a pessoa não pode escolher.
       // Do segundo item, ArrowDown pula o terceiro (bloqueado) e volta ao
       // primeiro. Sem os índices desabilitados, o foco pararia no bloqueado.
-      const itens = radios(canvasElement);
-      itens[1].focus();
+      const items = radios(canvasElement);
+      items[1].focus();
       await userEvent.keyboard('{ArrowDown}');
       await waitFor(async () => {
-        await expect(canvasElement.ownerDocument.activeElement).toBe(itens[0]);
+        await expect(canvasElement.ownerDocument.activeElement).toBe(items[0]);
       });
     });
 
@@ -288,8 +288,8 @@ export const Invalid: Story = {
       // Um `aria-invalid` estático no <fieldset> seria apagado: o primitivo liga
       // esse atributo ao próprio estado de validação. Quem compõe passa pelo
       // input `invalid`, não pelo atributo.
-      const grupo = canvasElement.querySelector<HTMLElement>('[data-slot="radio-group"]')!;
-      await expect(grupo.getAttribute('aria-invalid')).toBe('true');
+      const group = canvasElement.querySelector<HTMLElement>('[data-slot="radio-group"]')!;
+      await expect(group.getAttribute('aria-invalid')).toBe('true');
     });
 
     await step('A borda de erro chega a cada item', async () => {

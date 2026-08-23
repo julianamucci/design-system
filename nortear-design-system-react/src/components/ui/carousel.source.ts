@@ -77,7 +77,7 @@ const ARROWS = `  <CarouselPrevious aria-label="Item anterior" />
  */
 export const carouselSource: SourceTransform<CarouselArgs> = (_gerado, ctx) => {
   const vertical = ctx?.args?.orientation === 'vertical';
-  const raiz = attrsMultilinha([
+  const root = attrsMultilinha([
     propOption('orientation', ctx?.args?.orientation, ORIENTACOES, 'horizontal'),
     `className="${vertical ? 'nds-w-xs' : WIDTH_MD}"`,
     'aria-label="Galeria de exemplos"',
@@ -90,7 +90,7 @@ export const carouselSource: SourceTransform<CarouselArgs> = (_gerado, ctx) => {
 
   return jsxSnippet(
     `${IMPORT}\n\n${SLIDES}`,
-    `<Carousel${raiz}>
+    `<Carousel${root}>
   <CarouselContent${track}>
     {slides.map((numero) => (
       <CarouselItem key={numero}${item}>

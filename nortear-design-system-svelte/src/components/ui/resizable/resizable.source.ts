@@ -41,28 +41,28 @@ const IMPORT = `import {
  * de altura de verdade. `min-height` no elemento de fora não basta: os painéis
  * nascem com zero e o layout inteiro some sem erro nenhum.
  */
-function envolver(height: string, conteudo: string): string {
+function envolver(height: string, content: string): string {
   return `<div
   class="nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden"
   style="height: ${height}"
 >
-${conteudo}
+${content}
 </div>`;
 }
 
 /** Conteúdo centralizado de um painel — o painel em si não posiciona nada. */
-function conteudo(rotulo: string, indentacao: string, esmaecido = false): string {
+function content(label: string, indentacao: string, esmaecido = false): string {
   const className = esmaecido ? 'nds-text-body nds-text-muted-foreground' : 'nds-text-body';
   return `${indentacao}<div class="nds-cluster nds-h-full" data-align="center" data-justify="center">
-${indentacao}  <span class="${className}">${rotulo}</span>
+${indentacao}  <span class="${className}">${label}</span>
 ${indentacao}</div>`;
 }
 
-function punho(o: Grupo, rotulo: string, indentacao: string): string {
+function punho(o: Grupo, label: string, indentacao: string): string {
   return `${indentacao}<ResizableHandle${attrs(
     o.withHandle ? 'withHandle' : '',
     o.disabled ? 'disabled' : '',
-    `aria-label="${rotulo}"`,
+    `aria-label="${label}"`,
   )} />`;
 }
 
@@ -71,7 +71,7 @@ function simpleGroup(o: Grupo = {}): string {
   const direction = o.direction ?? 'horizontal';
   const first = o.defaultSize ?? 30;
   const minSize = o.minSize ?? 20;
-  const rotulo = o.ariaLabel ?? 'Redimensionar painéis — use setas para ajustar';
+  const label = o.ariaLabel ?? 'Redimensionar painéis — use setas para ajustar';
 
   const panelA = attrs(
     `defaultSize={${first}}`,
@@ -85,11 +85,11 @@ function simpleGroup(o: Grupo = {}): string {
       o.height ?? '240px',
       `  <ResizablePaneGroup direction="${direction}">
     <ResizablePane${panelA}>
-${conteudo(o.labelA ?? 'Sidebar', '      ', true)}
+${content(o.labelA ?? 'Sidebar', '      ', true)}
     </ResizablePane>
-${punho(o, rotulo, '    ')}
+${punho(o, label, '    ')}
     <ResizablePane defaultSize={${100 - first}} minSize={${minSize}}>
-${conteudo(o.labelB ?? 'Conteúdo principal', '      ')}
+${content(o.labelB ?? 'Conteúdo principal', '      ')}
     </ResizablePane>
   </ResizablePaneGroup>`,
     ),
@@ -118,17 +118,17 @@ function groupNested(o: Nested = {}): string {
       o.height ?? '320px',
       `  <ResizablePaneGroup direction="${direction}">
     <ResizablePane defaultSize={${first}} minSize={${minSize}}>
-${conteudo(o.labelA ?? 'Sidebar', '      ', true)}
+${content(o.labelA ?? 'Sidebar', '      ', true)}
     </ResizablePane>
 ${punho(o, o.ariaLabel ?? 'Redimensionar sidebar e conteúdo — use setas', '    ')}
     <ResizablePane defaultSize={${100 - first}} minSize={${minSize}}>
       <ResizablePaneGroup direction="${interno}">
         <ResizablePane defaultSize={60} minSize={20}>
-${conteudo(o.innerTop ?? 'Editor', '          ')}
+${content(o.innerTop ?? 'Editor', '          ')}
         </ResizablePane>
 ${punho(o, o.innerAriaLabel ?? 'Redimensionar editor e console — use setas', '        ')}
         <ResizablePane defaultSize={40} minSize={20}>
-${conteudo(o.innerBottom ?? 'Console', '          ', true)}
+${content(o.innerBottom ?? 'Console', '          ', true)}
         </ResizablePane>
       </ResizablePaneGroup>
     </ResizablePane>

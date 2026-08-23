@@ -70,9 +70,9 @@ export const Default: Story = {
     });
 
     await step('O painel visível é o da aba ativa', async () => {
-      const painel = canvas.getByRole('tabpanel');
-      await expect(painel).toHaveTextContent('Lista de propriedades');
-      await expect(painel.getAttribute('aria-labelledby')).toBe(propriedades.id);
+      const panel = canvas.getByRole('tabpanel');
+      await expect(panel).toHaveTextContent('Lista de propriedades');
+      await expect(panel.getAttribute('aria-labelledby')).toBe(propriedades.id);
     });
   },
 };
@@ -113,9 +113,9 @@ export const Active: Story = {
     });
 
     await step('O painel ativo é o único visível e aponta para a aba', async () => {
-      const painel = canvas.getByRole('tabpanel');
-      await expect(painel).toHaveTextContent('Conteúdo da visão geral');
-      await expect(visaoGeral.getAttribute('aria-controls')).toBe(painel.id);
+      const panel = canvas.getByRole('tabpanel');
+      await expect(panel).toHaveTextContent('Conteúdo da visão geral');
+      await expect(visaoGeral.getAttribute('aria-controls')).toBe(panel.id);
     });
   },
 };
@@ -253,10 +253,10 @@ export const FocusVisible: Story = {
     });
 
     await step('O Tab seguinte cai dentro do painel ativo', async () => {
-      const painel = canvas.getByRole('tabpanel');
-      await expect(painel).toHaveAttribute('tabindex', '0');
+      const panel = canvas.getByRole('tabpanel');
+      await expect(panel).toHaveAttribute('tabindex', '0');
       await userEvent.tab();
-      await expect(painel).toHaveFocus();
+      await expect(panel).toHaveFocus();
     });
   },
 };

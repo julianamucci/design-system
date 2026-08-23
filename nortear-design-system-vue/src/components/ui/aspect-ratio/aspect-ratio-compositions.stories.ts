@@ -52,8 +52,8 @@ export const WithImage: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
-    await expect(caixa).not.toBeNull();
+    const box = canvasElement.querySelector('[data-slot="aspect-ratio"]');
+    await expect(box).not.toBeNull();
     const img = canvasElement.querySelector('img');
     await expect(img).not.toBeNull();
     // accessibility.item1 — imagem informativa precisa de alt não vazio.
@@ -86,8 +86,8 @@ export const WithIframe: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
-    await expect(caixa).not.toBeNull();
+    const box = canvasElement.querySelector('[data-slot="aspect-ratio"]');
+    await expect(box).not.toBeNull();
     const frame = canvasElement.querySelector('iframe');
     await expect(frame).not.toBeNull();
     // accessibility.item3 — sem title o iframe não tem nome acessível.
@@ -123,14 +123,14 @@ export const WithVideo: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
-    await expect(caixa).not.toBeNull();
+    const box = canvasElement.querySelector('[data-slot="aspect-ratio"]');
+    await expect(box).not.toBeNull();
     const video = canvasElement.querySelector('video');
     await expect(video).not.toBeNull();
     // accessibility.item4 — a faixa de legendas é o que o contrato promete.
-    const legenda = video!.querySelector('track[kind="captions"]');
-    await expect(legenda).not.toBeNull();
-    await expect(legenda!.getAttribute('src')).toBeTruthy();
+    const caption = video!.querySelector('track[kind="captions"]');
+    await expect(caption).not.toBeNull();
+    await expect(caption!.getAttribute('src')).toBeTruthy();
     // accessibility.item5 — o controle de mídia é alcançável pelo teclado.
     // focus() em vez de tab(): a ordem de tabulação parte do documento inteiro,
     // e o que o critério promete é que o vídeo aceita foco — se não aceitasse,
@@ -250,11 +250,11 @@ export const EmptyPlaceholder: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
-    const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
-    await expect(caixa).not.toBeNull();
+    const box = canvasElement.querySelector('[data-slot="aspect-ratio"]');
+    await expect(box).not.toBeNull();
     // functional.item5 — sem mídia dentro, a caixa ainda reserva o espaço.
-    await expect(caixa!.querySelector('img, video, iframe')).toBeNull();
-    await expect(caixa!.getBoundingClientRect().height).toBeGreaterThan(0);
+    await expect(box!.querySelector('img, video, iframe')).toBeNull();
+    await expect(box!.getBoundingClientRect().height).toBeGreaterThan(0);
   },
 };
 

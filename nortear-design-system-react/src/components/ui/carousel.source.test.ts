@@ -123,7 +123,7 @@ describe('composições', () => {
     expect(saida).toContain('import { Card, CardContent } from "@/components/ui/card";');
     expect(saida).toContain('alt={foto.alt}');
     // Três textos alternativos distintos: repetir o mesmo equivale a não ter.
-    const alts = [...saida.matchAll(/alt: "([^"]+)"/g)].map(([, texto]) => texto);
+    const alts = [...saida.matchAll(/alt: "([^"]+)"/g)].map(([, text]) => text);
     expect(alts.length).toBe(3);
     expect(new Set(alts).size).toBe(3);
   });

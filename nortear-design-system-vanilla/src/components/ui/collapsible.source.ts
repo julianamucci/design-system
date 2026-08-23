@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -38,18 +38,18 @@ export type CollapsibleSnippetOptions = {
 };
 
 /** O texto do callback só entra quando é texto: nos args ele chega como função. */
-function callbackBody(valor: unknown): string | undefined {
-  return typeof valor === 'string' && valor.length > 0 ? valor : undefined;
+function callbackBody(value: unknown): string | undefined {
+  return typeof value === 'string' && value.length > 0 ? value : undefined;
 }
 
-function optionsComuns(o: CollapsibleSnippetOptions, gatilho: string): string[] {
-  return opcoes([
-    ['trigger', gatilho],
+function optionsComuns(o: CollapsibleSnippetOptions, trigger: string): string[] {
+  return options([
+    ['trigger', trigger],
     ['content', 'painel'],
     ['defaultOpen', o.defaultOpen ? 'true' : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
     ['onOpenChange', callbackBody(o.onOpenChange)],
-    ['class', o.class ? texto(o.class) : undefined],
+    ['class', o.class ? text(o.class) : undefined],
   ]);
 }
 
@@ -60,7 +60,7 @@ export function collapsibleSnippet(o: CollapsibleSnippetOptions = {}): string {
     PANEL,
     `const colapsavel = ${chamada(
       'createCollapsible',
-      optionsComuns(o, texto(o.trigger ?? TRIGGER_DEFAULT)),
+      optionsComuns(o, text(o.trigger ?? TRIGGER_DEFAULT)),
     )};`,
     montar('colapsavel'),
   );
@@ -90,9 +90,9 @@ export function collapsibleWithTriggerSnippet(
 
   return snippet(
     [importing('button', 'createButton'), importing('collapsible', 'createCollapsible')].join('\n'),
-    `const gatilho = ${chamada('createButton', opcoes([
-      ['variant', texto('outline')],
-      ['label', texto(o.trigger ?? TRIGGER_DEFAULT)],
+    `const gatilho = ${chamada('createButton', options([
+      ['variant', text('outline')],
+      ['label', text(o.trigger ?? TRIGGER_DEFAULT)],
     ]))};`,
     chevron,
     PANEL,
@@ -109,12 +109,12 @@ export function collapsibleWithTriggerSnippet(
  * chama, por `setOpen`.
  */
 export function collapsibleControlledSnippet(o: CollapsibleSnippetOptions = {}): string {
-  const lines = opcoes([
-    ['trigger', texto(o.trigger ?? TRIGGER_DEFAULT)],
+  const lines = options([
+    ['trigger', text(o.trigger ?? TRIGGER_DEFAULT)],
     ['content', 'painel'],
     ['open', 'aberto'],
     ['onOpenChange', 'definir'],
-    ['class', o.class ? texto(o.class) : undefined],
+    ['class', o.class ? text(o.class) : undefined],
   ]);
 
   return snippet(

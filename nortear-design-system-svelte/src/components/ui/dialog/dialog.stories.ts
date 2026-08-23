@@ -6,15 +6,15 @@ import DialogDocs from '@/components/docs/DialogDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { dialogSource } from './dialog.source';
 import {
-  abrir,
+  open,
   cantoButtonClose,
   checkFocusTrap,
   checkNameEDescricao,
   waitForClosed,
-  fechar,
-  gatilho,
+  close,
+  trigger,
   overlay,
-  painel,
+  panel,
 } from './dialog.fixtures';
 
 const meta: Meta = {
@@ -85,16 +85,16 @@ export const Playground: Story = {
     // Pelo contrato de markup e não por papel: enquanto o diálogo está aberto o
     // resto da página fica inerte, e uma consulta por papel depende de como a
     // biblioteca de teste trata `inert`.
-    const trigger = gatilho(canvasElement)!;
+    const triggerEl = trigger(canvasElement)!;
     const spyCancelar = args.onCancel as unknown as ReturnType<typeof fn>;
 
     await step('O markup é o mesmo das outras stacks', async () => {
       // O Vanilla é a referência: o gatilho é um `<button>` de verdade, e
       // `type="button"` porque dentro de um `<form>` o submit herdado faria
       // abrir o diálogo enviar o formulário.
-      await expect(trigger.tagName).toBe('BUTTON');
-      await expect(trigger).toHaveAttribute('type', 'button');
-      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+      await expect(triggerEl.tagName).toBe('BUTTON');
+      await expect(triggerEl).toHaveAttribute('type', 'button');
+      await expect(triggerEl).toHaveAttribute('aria-haspopup', 'dialog');
     });
 
     await step('Fechado, nada do conteúdo existe no DOM', async () => {
@@ -102,79 +102,79 @@ export const Playground: Story = {
       // ABERTA (último passo), então na segunda rodada do painel Interactions o
       // painel já estaria montado. Quem verifica o estado fechado NA MONTAGEM é
       // a story `Closed`, que não interage com nada.
-      await fechar();
-      await expect(painel()).toBeNull();
+      await close();
+      await expect(panel()).toBeNull();
       await expect(overlay()).toBeNull();
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(triggerEl).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('Clicar no gatilho abre o diálogo com overlay', async () => {
-      const p = await abrir(canvasElement);
+      const p = await open(canvasElement);
       await expect(p).toBeVisible();
       await expect(overlay()).toBeInTheDocument();
-      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      await expect(triggerEl).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('O painel se anuncia como diálogo modal, com nome e descrição', async () => {
-      const p = painel()!;
+      const p = panel()!;
       await expect(p).toHaveAttribute('role', 'dialog');
       await expect(p).toHaveAttribute('aria-modal', 'true');
       await checkNameEDescricao(p);
     });
 
     await step('O foco entra no painel ao abrir', async () => {
-      const p = painel()!;
+      const p = panel()!;
       await waitFor(async () => {
         await expect(p.contains(document.activeElement)).toBe(true);
       });
     });
 
     await step('Tab não sai do painel', async () => {
-      await checkFocusTrap(painel()!);
+      await checkFocusTrap(panel()!);
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
       await userEvent.keyboard('{Escape}');
       await waitForClosed();
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(trigger);
+        await expect(document.activeElement).toBe(triggerEl);
       });
     });
 
     await step('Clique no overlay fecha e devolve o foco', async () => {
-      await abrir(canvasElement);
+      await open(canvasElement);
       // `userEvent.click` e não `.click()` cru: o primitivo desta stack dispensa
       // no `pointerdown` de fora, e o `.click()` programático dispara só o
       // evento de clique — o diálogo continuava aberto.
       await userEvent.click(overlay()!);
       await waitForClosed();
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(trigger);
+        await expect(document.activeElement).toBe(triggerEl);
       });
     });
 
     await step('O botão X fecha, tem nome acessível e devolve o foco', async () => {
-      const p = await abrir(canvasElement);
+      const p = await open(canvasElement);
       const x = cantoButtonClose(p)!;
       await expect(x).toHaveAccessibleName();
       await userEvent.click(x);
       await waitForClosed();
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(trigger);
+        await expect(document.activeElement).toBe(triggerEl);
       });
     });
 
     await step('O Cancelar do rodapé fecha e avisa o callback', async () => {
-      const p = await abrir(canvasElement);
+      const p = await open(canvasElement);
       const callsBefore = spyCancelar.mock.calls.length;
-      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       // A ação primária é a última do DOM; o Cancelar é a primeira.
-      const buttons = rodape.querySelectorAll<HTMLElement>('button');
+      const buttons = footer.querySelectorAll<HTMLElement>('button');
       await userEvent.click(buttons[0]);
       await waitForClosed();
       await expect(spyCancelar.mock.calls.length).toBe(callsBefore + 1);
       await waitFor(async () => {
-        await expect(document.activeElement).toBe(trigger);
+        await expect(document.activeElement).toBe(triggerEl);
       });
     });
 
@@ -184,7 +184,7 @@ export const Playground: Story = {
       // varredura de acessibilidade medir uma página sem diálogo nenhum — o
       // conteúdo compartilhado declara os dois sobre o estado ABERTO
       // (`visual.item1`, `accessibility.item6`).
-      const p = await abrir(canvasElement);
+      const p = await open(canvasElement);
       await expect(p).toBeVisible();
       await expect(within(p).getAllByRole('button').length).toBeGreaterThan(0);
     });

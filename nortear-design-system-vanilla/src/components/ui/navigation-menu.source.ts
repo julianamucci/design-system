@@ -8,9 +8,9 @@
 import {
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { NavigationMenuOrientation } from './navigation-menu';
@@ -72,11 +72,11 @@ function objeto(lines: string[]): string {
   return `{ ${lines.map((l) => l.replace(/,$/, '')).join(', ')} }`;
 }
 
-function serializarTarget(filho: NavigationMenuChildSnippet, recuo: string): string {
-  const base = opcoes([
-    ['label', texto(filho.label)],
-    ['href', texto(filho.href)],
-    ['description', filho.description ? texto(filho.description) : undefined],
+function serializarTarget(child: NavigationMenuChildSnippet, recuo: string): string {
+  const base = options([
+    ['label', text(child.label)],
+    ['href', text(child.href)],
+    ['description', child.description ? text(child.description) : undefined],
   ]);
   const inline = `${recuo}${objeto(base)},`;
   if (inline.length <= 92) return inline;
@@ -84,10 +84,10 @@ function serializarTarget(filho: NavigationMenuChildSnippet, recuo: string): str
 }
 
 function serializarItem(item: NavigationMenuItemSnippet, recuo: string): string {
-  const base = opcoes([
-    ['label', texto(item.label)],
-    ['href', item.href ? texto(item.href) : undefined],
-    ['value', item.value ? texto(item.value) : undefined],
+  const base = options([
+    ['label', text(item.label)],
+    ['href', item.href ? text(item.href) : undefined],
+    ['value', item.value ? text(item.value) : undefined],
     // `aria-current="page"` sai daqui: é o que o leitor anuncia E o que a folha
     // usa para pintar o destaque, num atributo só.
     ['active', item.active ? 'true' : undefined],
@@ -95,39 +95,39 @@ function serializarItem(item: NavigationMenuItemSnippet, recuo: string): string 
 
   if (!item.children?.length) return `${recuo}${objeto(base)},`;
 
-  const filhos = item.children.map((f) => serializarTarget(f, `${recuo}    `)).join('\n');
+  const children = item.children.map((f) => serializarTarget(f, `${recuo}    `)).join('\n');
   return `${recuo}{
 ${base.map((l) => `${recuo}  ${l}`).join('\n')}
 ${recuo}  children: [
-${filhos}
+${children}
 ${recuo}  ],
 ${recuo}},`;
 }
 
-function serializarItems(itens: NavigationMenuItemSnippet[]): string {
-  return `[\n${itens.map((i) => serializarItem(i, '  ')).join('\n')}\n]`;
+function serializarItems(items: NavigationMenuItemSnippet[]): string {
+  return `[\n${items.map((i) => serializarItem(i, '  ')).join('\n')}\n]`;
 }
 
 /** As linhas do segundo argumento, compartilhadas pelas formas de snippet. */
 function optionLines(o: NavigationMenuSnippetOptions): string[] {
-  return opcoes([
-    ['orientation', o.orientation && o.orientation !== 'horizontal' ? texto(o.orientation) : undefined],
+  return options([
+    ['orientation', o.orientation && o.orientation !== 'horizontal' ? text(o.orientation) : undefined],
     ['delayDuration', o.delayDuration !== undefined && o.delayDuration !== 200 ? String(o.delayDuration) : undefined],
     [
       'skipDelayDuration',
       o.skipDelayDuration !== undefined && o.skipDelayDuration !== 300 ? String(o.skipDelayDuration) : undefined,
     ],
-    ['defaultValue', o.defaultValue ? texto(o.defaultValue) : undefined],
-    ['class', o.class ? texto(o.class) : undefined],
+    ['defaultValue', o.defaultValue ? text(o.defaultValue) : undefined],
+    ['class', o.class ? text(o.class) : undefined],
   ]);
 }
 
 /** O bloco que cria a barra e a nomeia — comum a todas as formas de snippet. */
-function barBlock(o: NavigationMenuSnippetOptions, itens: NavigationMenuItemSnippet[]): string {
+function barBlock(o: NavigationMenuSnippetOptions, items: NavigationMenuItemSnippet[]): string {
   const lines = optionLines(o);
   const segundo = lines.length ? `, ${objeto(lines)}` : '';
-  return `const barra = createNavigationMenu(${serializarItems(itens)}${segundo});
-barra.setAttribute('aria-label', ${texto(o.ariaLabel ?? NAME_DEFAULT)});`;
+  return `const barra = createNavigationMenu(${serializarItems(items)}${segundo});
+barra.setAttribute('aria-label', ${text(o.ariaLabel ?? NAME_DEFAULT)});`;
 }
 
 /** A chamada real de `createNavigationMenu` com a estrutura e as opções da story. */
@@ -204,7 +204,7 @@ if (painel) {
  * que permite manter a barra em sincronia com a rota ou com o resto da tela.
  */
 export function navigationMenuControlledSnippet(o: NavigationMenuSnippetOptions = {}): string {
-  const itens = o.items ?? [
+  const items = o.items ?? [
     { label: 'Início', href: '#inicio' },
     {
       label: 'Produtos',
@@ -218,12 +218,12 @@ export function navigationMenuControlledSnippet(o: NavigationMenuSnippetOptions 
 
   return snippet(
     importing('navigation-menu', 'createNavigationMenu'),
-    `const barra = createNavigationMenu(${serializarItems(itens)}, {
+    `const barra = createNavigationMenu(${serializarItems(items)}, {
   // Definir \`value\` é o que troca o modo. Vazio quer dizer "nenhum aberto".
   value: '',
   onValueChange: (valor) => registrarPedido(valor),
 });
-barra.setAttribute('aria-label', ${texto(o.ariaLabel ?? NAME_DEFAULT)});`,
+barra.setAttribute('aria-label', ${text(o.ariaLabel ?? NAME_DEFAULT)});`,
     montar('barra'),
     `// Nada se move enquanto quem controla não mandar.
 barra.setValue('produtos');

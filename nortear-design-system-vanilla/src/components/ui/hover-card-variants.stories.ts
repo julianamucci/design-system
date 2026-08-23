@@ -60,9 +60,9 @@ export const Default: Story = {
     const canvas = within(canvasElement);
 
     await step('Sem atraso escrito na chamada, o cartão usa o padrão da factory', async () => {
-      const painel = await waitForOpen();
-      await expect(painel).toBeVisible();
-      await expect(within(painel).getByText(/600ms/)).toBeVisible();
+      const panel = await waitForOpen();
+      await expect(panel).toBeVisible();
+      await expect(within(panel).getByText(/600ms/)).toBeVisible();
       await expect(canvas.getByRole('link')).toBeVisible();
     });
   },
@@ -107,7 +107,7 @@ export const WithShortDelay: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('link');
+    const trigger = canvas.getByRole('link');
 
     // Estado conhecido: a play reexecuta no mesmo DOM pelo painel Interactions.
     await userEvent.keyboard('{Escape}');
@@ -116,10 +116,10 @@ export const WithShortDelay: Story = {
     await step('O cartão abre depois da espera pedida na chamada', async () => {
       await expect(panelOpen()).toBeNull();
       const start = performance.now();
-      await userEvent.hover(gatilho);
-      const painel = await waitForOpen();
-      await expect(painel).toBeVisible();
-      await expect(within(painel).getByText('Guia de overlays acessíveis')).toBeVisible();
+      await userEvent.hover(trigger);
+      const panel = await waitForOpen();
+      await expect(panel).toBeVisible();
+      await expect(within(panel).getByText('Guia de overlays acessíveis')).toBeVisible();
 
       // O cronômetro é a prova de que a espera CHEGOU à factory: antes desta
       // revisão os tempos eram constantes internas e a opção nem existia — o

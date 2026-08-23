@@ -397,8 +397,8 @@ export const WithSubmenu: Story = {
     // Par idempotente: só clica quando o estado atual não é o desejado, então o
     // replay do painel Interactions (que roda no MESMO DOM) chega ao mesmo fim.
     const definir = async (isOpen: boolean) => {
-      const alvo = parent();
-      if (alvo.getAttribute("aria-expanded") !== String(isOpen)) await userEvent.click(alvo);
+      const target = parent();
+      if (target.getAttribute("aria-expanded") !== String(isOpen)) await userEvent.click(target);
       await waitFor(() => expect(parent()).toHaveAttribute("aria-expanded", String(isOpen)));
     };
 

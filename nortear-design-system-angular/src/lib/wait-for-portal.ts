@@ -31,14 +31,14 @@ export async function waitForPortal(
   options: { name?: string | RegExp; timeout?: number } = {},
 ): Promise<HTMLElement> {
   const { name, timeout = 4000 } = options;
-  const corpo = within(document.body);
+  const body = within(document.body);
 
   return await waitFor(
     async () => {
-      const el = name ? await corpo.findByRole(role, { name }) : await corpo.findByRole(role);
+      const el = name ? await body.findByRole(role, { name }) : await body.findByRole(role);
       const estilo = window.getComputedStyle(el);
-      const opacidade = Number.parseFloat(estilo.opacity);
-      if (estilo.opacity !== '1' && opacidade < 0.9) {
+      const opacity = Number.parseFloat(estilo.opacity);
+      if (estilo.opacity !== '1' && opacity < 0.9) {
         throw new Error(`portal ${role}: opacity=${estilo.opacity}, ainda animando`);
       }
       // `data-closed` é a marca de fechado do Radix NG (convenção do Base UI);
@@ -57,10 +57,10 @@ export async function waitForPortalVanish(
   role: 'menu' | 'dialog' | 'alertdialog' | 'listbox' | 'tooltip',
   timeout = 2000,
 ): Promise<void> {
-  const corpo = within(document.body);
+  const body = within(document.body);
   await waitFor(
     () => {
-      const encontrados = corpo.queryAllByRole(role);
+      const encontrados = body.queryAllByRole(role);
       if (encontrados.length > 0) throw new Error(`portal ${role} ainda aberto`);
     },
     { timeout, interval: 50 },

@@ -55,20 +55,20 @@ export const Bar: Story = {
     'aria-label': 'Gráfico de barras: acessos mensais no desktop',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('O desenho sai com forma de dado, não só eixo', async () => {
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
       // `datumFormas` recorta o que é preenchido E contornado: linha de grade e
       // eixo têm `fill: none` e ficam de fora sem precisar saber como a lib
       // nomeia seus grupos.
-      await expect(datumFormas(raiz).length).toBeGreaterThan(0);
+      await expect(datumFormas(root).length).toBeGreaterThan(0);
     });
 
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
       await waitFor(
         () => {
-          for (const month of MONTHS) expect(designEscreve(raiz, month)).toBe(true);
+          for (const month of MONTHS) expect(designEscreve(root, month)).toBe(true);
         },
         { timeout: 3000 },
       );
@@ -92,14 +92,14 @@ export const Line: Story = {
     'aria-label': 'Gráfico de linhas: acessos mensais por dispositivo',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('Uma linha traçada por série', async () => {
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
       // O traçado é o caminho SEM preenchimento e com espessura própria (2px do
       // tema). Eixo, marca e linha de grade também são `fill: none`, mas ficam
       // na espessura 1 — é a espessura que separa dado de moldura aqui.
-      const tracados = [...raiz.querySelectorAll<SVGPathElement>('svg path')].filter((p) => {
+      const tracados = [...root.querySelectorAll<SVGPathElement>('svg path')].filter((p) => {
         const estilo = getComputedStyle(p);
         return estilo.fill === 'none' && parseFloat(estilo.strokeWidth || '0') >= 2;
       });
@@ -111,10 +111,10 @@ export const Line: Story = {
 
     await step('A legenda nomeia cada série e o eixo mantém as categorias', async () => {
       for (const serie of SERIES_MULTI) {
-        await expect(designTexts(raiz)).toContain(serie.name);
+        await expect(designTexts(root)).toContain(serie.name);
       }
       for (const month of MONTHS) {
-        await expect(designEscreve(raiz, month)).toBe(true);
+        await expect(designEscreve(root, month)).toBe(true);
       }
     });
   },
@@ -135,13 +135,13 @@ export const Area: Story = {
     'aria-label': 'Gráfico de área: volume mensal de acessos por dispositivo',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('Cada série ganha uma região preenchida além do traçado', async () => {
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
       // A região vem com preenchimento translúcido — é o que a distingue do
       // traçado, que é `fill: none`.
-      const areas = [...raiz.querySelectorAll<SVGPathElement>('svg path[fill-opacity]')].filter(
+      const areas = [...root.querySelectorAll<SVGPathElement>('svg path[fill-opacity]')].filter(
         (p) => getComputedStyle(p).fill !== 'none',
       );
       await expect(areas.length).toBeGreaterThanOrEqual(SERIES_MULTI.length);
@@ -150,7 +150,7 @@ export const Area: Story = {
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
       await waitFor(
         () => {
-          for (const month of MONTHS) expect(designEscreve(raiz, month)).toBe(true);
+          for (const month of MONTHS) expect(designEscreve(root, month)).toBe(true);
         },
         { timeout: 3000 },
       );
@@ -174,11 +174,11 @@ export const Pie: Story = {
     'aria-label': 'Distribuição de acessos por dispositivo',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('As fatias saem desenhadas', async () => {
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
-      await expect(datumFormas(raiz).length).toBeGreaterThan(0);
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+      await expect(datumFormas(root).length).toBeGreaterThan(0);
     });
 
     await step('Cada fatia é nomeada por escrito — não só pela cor', async () => {
@@ -186,7 +186,7 @@ export const Pie: Story = {
       // some para quem não separa as cores da paleta.
       await waitFor(
         () => {
-          for (const ponto of DISPOSITIVOS) expect(designEscreve(raiz, ponto.label)).toBe(true);
+          for (const ponto of DISPOSITIVOS) expect(designEscreve(root, ponto.label)).toBe(true);
         },
         { timeout: 3000 },
       );

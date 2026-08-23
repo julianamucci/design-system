@@ -27,7 +27,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<InputOtpArgs> }
     label = 'Código de verificação',
   } = ctx.args ?? {};
 
-  const atributos = [
+  const attrs = [
     `[maxLength]="${maxLength}"`,
     mode === 'alphanumeric' ? `mode="alphanumeric"` : '',
     disabled ? '[disabled]="true"' : '',
@@ -45,7 +45,7 @@ import { NdsInputOtp } from '@/components/ui/input-otp';
   template: \`
     <span id="otp-label" class="nds-text-label">${label}</span>
     <nds-input-otp
-      ${atributos}
+      ${attrs}
     ></nds-input-otp>
   \`,
 })
@@ -135,8 +135,8 @@ export const Playground: Story = {
       // Seis campos anônimos são o defeito clássico deste componente: o leitor
       // anuncia "editar" seis vezes sem dizer de quê. O nome do grupo é o que
       // situa; o nome do slot é o que diz em qual dígito a pessoa está.
-      const grupo = canvas.getByRole('group', { name: args.label });
-      await expect(grupo).toBeTruthy();
+      const group = canvas.getByRole('group', { name: args.label });
+      await expect(group).toBeTruthy();
       await expect(slots()).toHaveLength(args.maxLength);
       await expect(slots()[2]).toHaveAttribute('aria-label', 'Dígito 3');
     });

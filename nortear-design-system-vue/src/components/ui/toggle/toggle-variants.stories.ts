@@ -143,10 +143,10 @@ export const WithLabel: Story = {
     });
 
     await step('O toggle com rótulo é mais largo que alto', async () => {
-      const caixa = canvas
+      const box = canvas
         .getByRole('button', { name: 'Mostrar ocultos' })
         .getBoundingClientRect();
-      await expect(caixa.width).toBeGreaterThan(caixa.height);
+      await expect(box.width).toBeGreaterThan(box.height);
     });
   },
 };
@@ -194,9 +194,9 @@ export const Sizes: Story = {
 
     await step('Sem texto, o toggle é ao menos quadrado e cabe no alvo de toque', async () => {
       for (const btn of [sm, md, lg]) {
-        const caixa = btn.getBoundingClientRect();
-        await expect(caixa.width).toBeGreaterThanOrEqual(caixa.height - 1);
-        await expect(caixa.height).toBeGreaterThanOrEqual(24);
+        const box = btn.getBoundingClientRect();
+        await expect(box.width).toBeGreaterThanOrEqual(box.height - 1);
+        await expect(box.height).toBeGreaterThanOrEqual(24);
       }
     });
   },

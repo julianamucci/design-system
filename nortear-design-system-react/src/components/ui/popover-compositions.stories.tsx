@@ -54,7 +54,7 @@ const wrapperStyle: React.CSSProperties = {
   position: "relative",
 };
 
-function painel(): HTMLElement {
+function panel(): HTMLElement {
   return screen.getByRole("dialog");
 }
 
@@ -168,7 +168,7 @@ export const TableFilter: Story = {
     await step("E marcar outro não fecha o painel", async () => {
       // Filtro é escolha múltipla: fechar no primeiro clique obrigaria a
       // reabrir para cada critério.
-      const pendente = within(painel()).getByLabelText(/Pendente/i) as HTMLInputElement;
+      const pendente = within(panel()).getByLabelText(/Pendente/i) as HTMLInputElement;
       if (!pendente.checked) await userEvent.click(pendente);
       await expect(pendente).toBeChecked();
       await expect(screen.queryByRole("dialog")).toBeInTheDocument();
@@ -224,7 +224,7 @@ export const ColorPicker: Story = {
     });
 
     await step("E o foco chega a cada uma por Tab", async () => {
-      const ctx = within(painel());
+      const ctx = within(panel());
       const first = ctx.getByRole("button", { name: "Primária" });
       const segunda = ctx.getByRole("button", { name: "Secundária" });
       first.focus();
@@ -332,7 +332,7 @@ export const SideTop: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole("button", { name: /Abrir acima/i });
+    const trigger = canvas.getByRole("button", { name: /Abrir acima/i });
 
     await step("O lado pedido chega ao posicionamento", async () => {
       const dialog = await waitFor(() => screen.getByRole("dialog"));
@@ -342,8 +342,8 @@ export const SideTop: Story = {
     });
 
     await step("E o sideOffset separa painel e gatilho pela medida pedida", async () => {
-      const dialog = painel();
-      const r1 = gatilho.getBoundingClientRect();
+      const dialog = panel();
+      const r1 = trigger.getBoundingClientRect();
       const r2 = dialog.getBoundingClientRect();
       const distancia =
         dialog.getAttribute("data-side") === "top" ? r1.top - r2.bottom : r2.top - r1.bottom;

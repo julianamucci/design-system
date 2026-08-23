@@ -17,7 +17,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 type PaginationArgs = {
   total: number;
-  atual: number;
+  current: number;
   textoAnterior: string;
   textoProxima: string;
 };
@@ -37,7 +37,7 @@ const LABEL_PAGE = 'Ir para página';
 function playgroundSource(_gerado: string, ctx: { args?: Partial<PaginationArgs> }): string {
   const {
     total = 5,
-    atual = 2,
+    current = 2,
     textoAnterior = 'Anterior',
     textoProxima = 'Próxima',
   } = ctx.args ?? {};
@@ -93,7 +93,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<PaginationArgs>
 export class Exemplo {
   readonly total = ${total};
   readonly paginas = Array.from({ length: this.total }, (_, i) => i + 1);
-  readonly atual = signal(${atual});
+  readonly atual = signal(${current});
 
   irPara(evento: Event, pagina: number): void {
     evento.preventDefault();
@@ -127,7 +127,7 @@ const meta: Meta<PaginationArgs> = {
       control: { type: 'number', min: 1, max: 9 },
       description: 'Quantidade de páginas exibidas na faixa numérica.',
     },
-    atual: {
+    current: {
       control: { type: 'number', min: 1, max: 9 },
       description: 'Página exibida no momento — recebe aria-current="page".',
     },
@@ -142,7 +142,7 @@ const meta: Meta<PaginationArgs> = {
   },
   args: {
     total: 5,
-    atual: 2,
+    current: 2,
     textoAnterior: 'Anterior',
     textoProxima: 'Próxima',
   },
@@ -180,9 +180,9 @@ export const Playground: Story = {
       labelPrevious: LABEL_PREVIOUS,
       labelNext: LABEL_NEXT,
       rotuloPagina: LABEL_PAGE,
-      irTo: (evento: Event, pagina: number) => {
+      irTo: (evento: Event, page: number) => {
         evento.preventDefault();
-        onPageChange(pagina);
+        onPageChange(page);
       },
     },
     template: `
@@ -194,8 +194,8 @@ export const Playground: Story = {
               href="#"
               [text]="textoAnterior"
               [label]="labelPrevious"
-              [disabled]="atual === 1"
-              (click)="irTo($event, atual - 1)"
+              [disabled]="current === 1"
+              (click)="irTo($event, current - 1)"
             ></a>
           </li>
           @for (n of pages; track n) {
@@ -203,7 +203,7 @@ export const Playground: Story = {
               <a
                 ndsPaginationLink
                 href="#"
-                [isActive]="n === atual"
+                [isActive]="n === current"
                 [attr.aria-label]="rotuloPagina + ' ' + n"
                 (click)="irTo($event, n)"
               >{{ n }}</a>
@@ -215,8 +215,8 @@ export const Playground: Story = {
               href="#"
               [text]="textoProxima"
               [label]="labelNext"
-              [disabled]="atual === total"
-              (click)="irTo($event, atual + 1)"
+              [disabled]="current === total"
+              (click)="irTo($event, current + 1)"
             ></a>
           </li>
         </ul>
@@ -236,10 +236,10 @@ export const Playground: Story = {
 
       // A faixa é uma lista: cada controle é um <li>, e a contagem sai do arg,
       // nunca de um número escrito à mão.
-      const lista = nav.querySelector('[data-slot="pagination-content"]');
-      await expect(lista?.tagName).toBe('UL');
-      await expect(lista).toHaveClass('nds-pagination-list');
-      await expect(lista!.children.length).toBe(args.total + 2);
+      const list = nav.querySelector('[data-slot="pagination-content"]');
+      await expect(list?.tagName).toBe('UL');
+      await expect(list).toHaveClass('nds-pagination-list');
+      await expect(list!.children.length).toBe(args.total + 2);
     });
 
     await step('Todo link numerado tem rótulo com contexto', async () => {
@@ -266,12 +266,12 @@ export const Playground: Story = {
       // accessibility.item4 — e prova que os inputs chegaram ao template: sem
       // AOT o binding cai em silêncio e TODOS os links ficariam ghost
       // (armadilha 1 do CLAUDE.md deste stack).
-      const active = canvas.getByRole('link', { name: `${LABEL_PAGE} ${args.atual}` });
+      const active = canvas.getByRole('link', { name: `${LABEL_PAGE} ${args.current}` });
       await expect(active).toHaveAttribute('aria-current', 'page');
       await expect(active).toHaveAttribute('data-active', 'true');
       await expect(active).toHaveClass('nds-button-outline');
 
-      const inactive = canvas.getByRole('link', { name: `${LABEL_PAGE} ${args.atual + 1}` });
+      const inactive = canvas.getByRole('link', { name: `${LABEL_PAGE} ${args.current + 1}` });
       await expect(inactive.hasAttribute('aria-current')).toBe(false);
       await expect(inactive).toHaveClass('nds-button-ghost');
     });
@@ -312,9 +312,9 @@ export const Playground: Story = {
         canvas.getByRole('link', { name: LABEL_NEXT }),
       ];
       (document.activeElement as HTMLElement | null)?.blur();
-      for (const alvo of esperados) {
+      for (const target of esperados) {
         await userEvent.tab();
-        await expect(alvo).toHaveFocus();
+        await expect(target).toHaveFocus();
       }
     });
   },

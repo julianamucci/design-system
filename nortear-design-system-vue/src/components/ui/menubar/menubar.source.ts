@@ -22,8 +22,8 @@ export type MenubarArgs = {
  * resolve.
  */
 function importa(...parts: string[]): string {
-  const lista = [...new Set(parts)].sort();
-  return `import {\n${lista.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/menubar'`;
+  const list = [...new Set(parts)].sort();
+  return `import {\n${list.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/menubar'`;
 }
 
 /** Massa do Playground: quatro categorias clássicas de barra de aplicação. */
@@ -73,7 +73,7 @@ const menus: Menu[] = [
  * fechada e a seta já dá a volta sem que ninguém peça.
  */
 export const menubarSource: SourceTransform<MenubarArgs> = (_gerado, ctx) => {
-  const raiz = attrs(
+  const root = attrs(
     attr('default-value', ctx?.args?.defaultValue),
     attrBool('loop', ctx?.args?.loop, true),
   );
@@ -88,7 +88,7 @@ export const menubarSource: SourceTransform<MenubarArgs> = (_gerado, ctx) => {
     )}
 
 ${MENUS_DO_EDITOR}`,
-    `<Menubar${raiz}>
+    `<Menubar${root}>
   <MenubarMenu v-for="m in menus" :key="m.value" :value="m.value">
     <MenubarTrigger>{{ m.label }}</MenubarTrigger>
     <MenubarContent>

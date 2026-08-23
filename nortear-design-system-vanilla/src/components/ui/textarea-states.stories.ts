@@ -213,7 +213,7 @@ export const Invalid: Story = {
         transform: textareaSourceWith({
           value: 'curto',
           ariaInvalid: true,
-          erro: 'A descrição precisa de pelo menos 20 caracteres.',
+          error: 'A descrição precisa de pelo menos 20 caracteres.',
         }),
       },
     },

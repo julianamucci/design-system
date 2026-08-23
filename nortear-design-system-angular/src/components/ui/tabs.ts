@@ -141,7 +141,7 @@ export class NdsTabsList {
   readonly activationMode = input<TabsActivationMode>('automatic');
 
   // A raiz vem do elemento pai (a lista é filha do `div[ndsTabs]`).
-  private readonly raiz = inject(RdxTabsRoot);
+  private readonly root = inject(RdxTabsRoot);
 
   constructor() {
     // ── Por que escrever no signal da raiz, e não no input do primitivo ──────
@@ -160,7 +160,7 @@ export class NdsTabsList {
     // story `Teclado` de `tabs-estados` prova a ativação automática e a story
     // `AtivacaoManual` prova a manual. Se a ordem inverter, as duas caem.
     effect(() => {
-      this.raiz.activateOnFocus.set(this.activationMode() === 'automatic');
+      this.root.activateOnFocus.set(this.activationMode() === 'automatic');
     });
   }
 }
@@ -190,11 +190,11 @@ export class NdsTabsList {
 })
 export class NdsTabsTrigger {
   private readonly aba = inject(RdxTabsTab, { self: true });
-  private readonly raiz = injectTabsRootContext();
+  private readonly root = injectTabsRootContext();
 
   /** Espelha o estado do primitivo para o `data-state` das outras stacks. */
   protected readonly state = computed(() =>
-    this.raiz.value() === this.aba.value() ? 'active' : 'inactive',
+    this.root.value() === this.aba.value() ? 'active' : 'inactive',
   );
 }
 

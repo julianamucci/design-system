@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { InputOtpMode } from './input-otp';
@@ -51,19 +51,19 @@ function separadores(o: InputOtpSnippetOptions, total: number): number[] | undef
 function otpLines(o: InputOtpSnippetOptions): string[] {
   const total = o.length ?? LENGTH_DEFAULT;
   const separatorAt = separadores(o, total);
-  const nome = o['aria-label'];
+  const name = o['aria-label'];
 
-  return opcoes([
+  return options([
     // `length` é obrigatório na fábrica: entra sempre.
     ['length', String(total)],
-    ['mode', o.mode && o.mode !== 'numeric' ? texto(o.mode) : undefined],
+    ['mode', o.mode && o.mode !== 'numeric' ? text(o.mode) : undefined],
     ['separatorAt', separatorAt ? `[${separatorAt.join(', ')}]` : undefined],
-    ['value', o.value ? texto(o.value) : undefined],
-    ['aria-label', nome && nome !== NAME_DEFAULT ? texto(nome) : undefined],
+    ['value', o.value ? text(o.value) : undefined],
+    ['aria-label', name && name !== NAME_DEFAULT ? text(name) : undefined],
     ['invalid', o.invalid ? 'true' : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
     ['autoFocus', o.autoFocus ? 'true' : undefined],
-    ['describedBy', o.describedBy ? texto(o.describedBy) : undefined],
+    ['describedBy', o.describedBy ? text(o.describedBy) : undefined],
     [
       'onComplete',
       o.onComplete
@@ -87,7 +87,7 @@ export function inputOtpSnippet(o: InputOtpSnippetOptions = {}): string {
 /** O que a composição põe EM VOLTA do campo. Nada disso é opção de fábrica. */
 export type InputOtpCompositionOptions = InputOtpSnippetOptions & {
   /** Texto visível acima do campo. */
-  rotulo?: string;
+  label?: string;
   /**
    * Liga o rótulo visível ao conjunto por `aria-labelledby`.
    *
@@ -99,7 +99,7 @@ export type InputOtpCompositionOptions = InputOtpSnippetOptions & {
   /** Texto de apoio, apontado por `describedBy`. */
   ajuda?: string;
   /** Mensagem de erro, apontada por `describedBy`. */
-  erro?: string;
+  error?: string;
   /** Acrescenta a linha com o botão de reenviar o código. */
   reenvio?: string;
 };
@@ -112,18 +112,18 @@ export type InputOtpCompositionOptions = InputOtpSnippetOptions & {
  * controle rotulável, e aqui o alvo é o CONJUNTO.
  */
 export function inputOtpCompositionSnippet(o: InputOtpCompositionOptions = {}): string {
-  const rotulo = o.rotulo ?? NAME_DEFAULT;
+  const label = o.label ?? NAME_DEFAULT;
   const idAjuda = o.ajuda ? 'otp-ajuda' : undefined;
-  const idError = o.erro ? 'otp-erro' : undefined;
+  const idError = o.error ? 'otp-erro' : undefined;
   const idLabel = o.ligarRotulo ? 'otp-rotulo' : undefined;
 
   const lines = otpLines({
     ...o,
     describedBy: o.describedBy ?? idAjuda ?? idError,
-    invalid: o.invalid ?? Boolean(o.erro),
+    invalid: o.invalid ?? Boolean(o.error),
   });
 
-  const montados = ['titulo', 'codigo', o.ajuda && 'apoio', o.erro && 'aviso', o.reenvio && 'linha']
+  const montados = ['titulo', 'codigo', o.ajuda && 'apoio', o.error && 'aviso', o.reenvio && 'linha']
     .filter((n): n is string => typeof n === 'string');
 
   return snippet(
@@ -134,28 +134,28 @@ export function inputOtpCompositionSnippet(o: InputOtpCompositionOptions = {}): 
       .filter((l): l is string => typeof l === 'string')
       .join('\n'),
     `const titulo = document.createElement('span');
-titulo.className = 'nds-text-label';${idLabel ? `\ntitulo.id = ${texto(idLabel)};` : ''}
-titulo.textContent = ${texto(rotulo)};`,
+titulo.className = 'nds-text-label';${idLabel ? `\ntitulo.id = ${text(idLabel)};` : ''}
+titulo.textContent = ${text(label)};`,
     [
       `const codigo = ${chamada('createInputOTP', lines)};`,
       ...(idLabel
         ? [
             `codigo.removeAttribute('aria-label');`,
-            `codigo.setAttribute('aria-labelledby', ${texto(idLabel)});`,
+            `codigo.setAttribute('aria-labelledby', ${text(idLabel)});`,
           ]
         : []),
     ].join('\n'),
     o.ajuda
       ? `const apoio = document.createElement('p');
-apoio.id = ${texto(idAjuda as string)};
+apoio.id = ${text(idAjuda as string)};
 apoio.className = 'nds-text-caption nds-text-muted-foreground';
-apoio.textContent = ${texto(o.ajuda)};`
+apoio.textContent = ${text(o.ajuda)};`
       : undefined,
-    o.erro
+    o.error
       ? `const aviso = document.createElement('p');
-aviso.id = ${texto(idError as string)};
+aviso.id = ${text(idError as string)};
 aviso.className = 'nds-text-caption nds-text-destructive';
-aviso.textContent = ${texto(o.erro)};`
+aviso.textContent = ${text(o.error)};`
       : undefined,
     o.reenvio
       ? `const linha = document.createElement('div');
@@ -169,10 +169,10 @@ nota.textContent = 'Não recebeu?';
 
 linha.append(nota, ${chamada(
           'createButton',
-          opcoes([
-            ['variant', texto('link')],
-            ['size', texto('sm')],
-            ['label', texto(o.reenvio)],
+          options([
+            ['variant', text('link')],
+            ['size', text('sm')],
+            ['label', text(o.reenvio)],
           ]),
         )});`
       : undefined,

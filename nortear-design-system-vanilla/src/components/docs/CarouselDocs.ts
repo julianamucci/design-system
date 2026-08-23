@@ -497,10 +497,10 @@ const carousel = createCarousel({
             dot.type = 'button';
             dot.className = 'nds-carousel-dot';
             dot.setAttribute('aria-label', `${goToLabel} ${i + 1} ${ofLabel} ${total}`);
-            const rotulo = document.createElement('span');
-            rotulo.className = 'nds-carousel-dot-label';
-            rotulo.textContent = `${slideLabel} ${i + 1}`;
-            dot.appendChild(rotulo);
+            const label = document.createElement('span');
+            label.className = 'nds-carousel-dot-label';
+            label.textContent = `${slideLabel} ${i + 1}`;
+            dot.appendChild(label);
             dots.push(dot);
             dotsRow.appendChild(dot);
           }

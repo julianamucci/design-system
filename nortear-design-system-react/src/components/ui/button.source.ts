@@ -55,18 +55,18 @@ const IMPORT = 'import { Button } from "@/components/ui/button";';
  * de verdade.
  */
 function button(
-  atributos: Array<string | false | null | undefined>,
-  conteudo: string,
+  parts: Array<string | false | null | undefined>,
+  content: string,
   header: string = IMPORT,
 ): string {
-  const abertura = `<Button${attrs(...atributos)}>`;
+  const abertura = `<Button${attrs(...parts)}>`;
   // Bloco quando há mais de uma linha ou quando o filho é um elemento: ícone
   // espremido na mesma linha do botão é justamente o que some na rolagem.
-  const inBlock = conteudo.includes('\n') || conteudo.startsWith('<');
-  const corpo = inBlock
-    ? `${abertura}\n${indentar(conteudo)}\n</Button>`
-    : `${abertura}${conteudo}</Button>`;
-  return jsxSnippet(header, corpo);
+  const inBlock = content.includes('\n') || content.startsWith('<');
+  const body = inBlock
+    ? `${abertura}\n${indentar(content)}\n</Button>`
+    : `${abertura}${content}</Button>`;
+  return jsxSnippet(header, body);
 }
 
 /** Ícone + rótulo importam do mesmo lugar; muda só qual peça do lucide entra. */
@@ -162,9 +162,9 @@ export function buttonSizeLgSource(): string {
  * nomeia o botão é o `aria-label`, e o ícone sai da árvore de acessibilidade
  * para não ser lido no lugar dele.
  */
-function iconButton(tamanho: string): string {
+function iconButton(size: string): string {
   return button(
-    [`size="${tamanho}"`, 'aria-label="Adicionar item"'],
+    [`size="${size}"`, 'aria-label="Adicionar item"'],
     '<Plus aria-hidden="true" />',
     withIcon('Plus'),
   );

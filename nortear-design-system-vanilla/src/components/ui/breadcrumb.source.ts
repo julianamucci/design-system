@@ -3,10 +3,10 @@
 import {
   importing,
   montar,
-  opcoes,
+  options,
   chamada,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -28,7 +28,7 @@ export type BreadcrumbSnippetOptions = {
   /** Rótulos dos níveis navegáveis, na ordem em que aparecem. */
   levels?: string[];
   /** Texto do último item — a página atual, que nunca é link. */
-  atual?: string;
+  current?: string;
   /**
    * Nome acessível do landmark de navegação. A opção da fábrica se chama
    * `'aria-label'`, e sem valor vale o padrão dela.
@@ -56,9 +56,9 @@ const CURRENT_DEFAULT = 'Breadcrumb';
 const DIACRITICOS = /[̀-ͯ]/g;
 
 /** `/`, `/componentes`, … — o destino que acompanha o rótulo do nível. */
-function destination(rotulo: string, indice: number): string {
-  if (indice === 0) return '/';
-  return `/${rotulo
+function destination(label: string, index: number): string {
+  if (index === 0) return '/';
+  return `/${label
     .toLowerCase()
     .normalize('NFD')
     .replace(DIACRITICOS, '')
@@ -69,7 +69,7 @@ function destination(rotulo: string, indice: number): string {
 /** A linha do separador, com ou sem desenho próprio. */
 function separator(o: BreadcrumbSnippetOptions): string {
   return o.separator
-    ? `createBreadcrumbSeparator({ content: ${texto(o.separator)} })`
+    ? `createBreadcrumbSeparator({ content: ${text(o.separator)} })`
     : 'createBreadcrumbSeparator()';
 }
 
@@ -82,7 +82,7 @@ function separator(o: BreadcrumbSnippetOptions): string {
  */
 export function breadcrumbSnippet(o: BreadcrumbSnippetOptions = {}): string {
   const levels = o.levels ?? LEVELS_DEFAULT;
-  const atual = o.atual ?? CURRENT_DEFAULT;
+  const current = o.current ?? CURRENT_DEFAULT;
 
   const names = [
     'createBreadcrumb',
@@ -94,9 +94,9 @@ export function breadcrumbSnippet(o: BreadcrumbSnippetOptions = {}): string {
   ];
   if (o.ellipsis) names.push('createBreadcrumbEllipsis');
 
-  const raiz = chamada(
+  const root = chamada(
     'createBreadcrumb',
-    opcoes([['aria-label', o['aria-label'] ? texto(o['aria-label']) : undefined]]),
+    options([['aria-label', o['aria-label'] ? text(o['aria-label']) : undefined]]),
   );
 
   const levelBody =
@@ -117,8 +117,8 @@ export function breadcrumbSnippet(o: BreadcrumbSnippetOptions = {}): string {
       : '  item.appendChild(createBreadcrumbLink({ href, text }));';
 
   const parts: string[] = [];
-  levels.forEach((rotulo, i) => {
-    parts.push(`  nivel(${texto(rotulo)}, ${texto(destination(rotulo, i))}),`);
+  levels.forEach((label, i) => {
+    parts.push(`  nivel(${text(label)}, ${text(destination(label, i))}),`);
     parts.push(`  ${separator(o)},`);
     if (o.ellipsis && i === 0) {
       parts.push('  oculto,');
@@ -131,13 +131,13 @@ export function breadcrumbSnippet(o: BreadcrumbSnippetOptions = {}): string {
     ? `const oculto = createBreadcrumbItem();
 oculto.appendChild(${chamada(
         'createBreadcrumbEllipsis',
-        opcoes([['aria-label', o.ellipsisLabel ? texto(o.ellipsisLabel) : undefined]]),
+        options([['aria-label', o.ellipsisLabel ? text(o.ellipsisLabel) : undefined]]),
       )});`
     : undefined;
 
   return snippet(
     multipleImporting('breadcrumb', names),
-    `const trilha = ${raiz};
+    `const trilha = ${root};
 const lista = createBreadcrumbList();`,
     `/** Um nível navegável da trilha. */
 const nivel = (text: string, href: string) => {
@@ -147,7 +147,7 @@ ${levelBody}
 };`,
     ellipsisBlock,
     `const atual = createBreadcrumbItem();
-atual.appendChild(createBreadcrumbPage({ text: ${texto(atual)} }));`,
+atual.appendChild(createBreadcrumbPage({ text: ${text(current)} }));`,
     `lista.append(\n${parts.join('\n')}\n);\ntrilha.appendChild(lista);`,
     montar('trilha'),
   );
@@ -174,11 +174,11 @@ export type BreadcrumbWithMenuSnippetOptions = {
   /** Rótulos dos níveis que ficaram colapsados. */
   ocultos?: string[];
   /** Nome acessível do gatilho que abre os níveis ocultos. */
-  gatilho?: string;
+  trigger?: string;
   /** Primeiro nível, o único que continua visível ao lado das reticências. */
   first?: string;
   /** Texto da página atual. */
-  atual?: string;
+  current?: string;
 };
 
 /**
@@ -192,9 +192,9 @@ export type BreadcrumbWithMenuSnippetOptions = {
  */
 export function breadcrumbWithMenuSnippet(o: BreadcrumbWithMenuSnippetOptions = {}): string {
   const ocultos = o.ocultos ?? ['Documentação', 'Guia', 'Componentes'];
-  const gatilho = o.gatilho ?? 'Expandir níveis ocultos';
+  const trigger = o.trigger ?? 'Expandir níveis ocultos';
   const first = o.first ?? 'Início';
-  const atual = o.atual ?? CURRENT_DEFAULT;
+  const current = o.current ?? CURRENT_DEFAULT;
 
   return snippet(
     [
@@ -215,7 +215,7 @@ export function breadcrumbWithMenuSnippet(o: BreadcrumbWithMenuSnippetOptions = 
 const gatilho = createButton({
   variant: 'ghost',
   size: 'icon-sm',
-  'aria-label': ${texto(gatilho)},
+  'aria-label': ${text(trigger)},
   children: createBreadcrumbEllipsis(),
 });`,
     `const oculto = createBreadcrumbItem();
@@ -223,15 +223,15 @@ oculto.appendChild(
   createDropdownMenu({
     trigger: gatilho,
     items: [
-${ocultos.map((rotulo) => `      { label: ${texto(rotulo)} },`).join('\n')}
+${ocultos.map((label) => `      { label: ${text(label)} },`).join('\n')}
     ],
   }),
 );`,
     `const primeiro = createBreadcrumbItem();
-primeiro.appendChild(createBreadcrumbLink({ href: '/', text: ${texto(first)} }));
+primeiro.appendChild(createBreadcrumbLink({ href: '/', text: ${text(first)} }));
 
 const atual = createBreadcrumbItem();
-atual.appendChild(createBreadcrumbPage({ text: ${texto(atual)} }));`,
+atual.appendChild(createBreadcrumbPage({ text: ${text(current)} }));`,
     `const trilha = createBreadcrumb();
 const lista = createBreadcrumbList();
 lista.append(

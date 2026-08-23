@@ -90,8 +90,8 @@ export const Playground: Story = {
       const img = await canvas.findByRole('img', { name: /Paisagem ao entardecer/i });
       const estilo = getComputedStyle(img);
       await expect(estilo.objectFit).toBe('cover');
-      const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]')!;
-      await expect(img.getBoundingClientRect().width).toBeCloseTo(caixa.getBoundingClientRect().width, 0);
+      const box = canvasElement.querySelector('[data-slot="aspect-ratio"]')!;
+      await expect(img.getBoundingClientRect().width).toBeCloseTo(box.getBoundingClientRect().width, 0);
     });
   },
 };

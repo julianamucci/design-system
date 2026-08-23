@@ -93,10 +93,10 @@ export class NdsCollapsible {}
 export class NdsCollapsibleTrigger {
   // O contexto da raiz, e não `inject(RdxCollapsibleRootDirective)`: a raiz está
   // em OUTRO elemento (o wrapper), então a injeção por diretiva não a alcança.
-  private readonly raiz = injectCollapsibleRootContext();
+  private readonly root = injectCollapsibleRootContext();
 
   /** Espelha o estado do primitivo para o `data-state` das outras stacks. */
-  protected readonly state = computed(() => (this.raiz.open() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.root.open() ? 'open' : 'closed'));
 }
 
 /**
@@ -126,9 +126,9 @@ export class NdsCollapsibleTrigger {
   },
 })
 export class NdsCollapsiblePanel {
-  private readonly raiz = injectCollapsibleRootContext();
+  private readonly root = injectCollapsibleRootContext();
 
-  protected readonly state = computed(() => (this.raiz.open() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.root.open() ? 'open' : 'closed'));
 }
 
 /** As três peças — conveniência para o `imports` de quem compõe. */

@@ -118,7 +118,7 @@ export const PreferenceList: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const email = canvas.getByRole('switch', { name: /Notificações por email/i });
-    const rotulo = canvas.getByText('Notificações por email');
+    const label = canvas.getByText('Notificações por email');
 
     await step('A lista tem três controles, cada um no seu estado', async () => {
       const switches = canvas.getAllByRole('switch');
@@ -130,9 +130,9 @@ export const PreferenceList: Story = {
     await step('Clicar no rótulo alterna só o controle daquela linha', async () => {
       const push = canvas.getByRole('switch', { name: /Notificações push/i });
       const beforePush = push.getAttribute('aria-checked');
-      await definir(email, true, rotulo);
+      await definir(email, true, label);
       await expect(push.getAttribute('aria-checked')).toBe(beforePush);
-      await definir(email, false, rotulo);
+      await definir(email, false, label);
     });
   },
 };
@@ -181,9 +181,9 @@ export const InForm: Story = {
     await step('O switch entra no envio nativo pelo nome do campo', async () => {
       const sw = canvas.getByRole('switch', { name: /Perfil público/i });
       await definir(sw, true);
-      const campo = canvasElement.querySelector<HTMLInputElement>('input[name="public"]');
-      await expect(campo).not.toBeNull();
-      await expect(campo!.checked).toBe(true);
+      const field = canvasElement.querySelector<HTMLInputElement>('input[name="public"]');
+      await expect(field).not.toBeNull();
+      await expect(field!.checked).toBe(true);
       await definir(sw, false);
     });
   },

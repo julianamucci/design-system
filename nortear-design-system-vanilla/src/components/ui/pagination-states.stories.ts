@@ -34,7 +34,7 @@ type Story = StoryObj;
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /** Faixa de 5 páginas com a página atual parametrizada. */
-const faixa = (label: string, current: number) => () =>
+const range = (label: string, current: number) => () =>
   wrap(
     createPagination({
       total: 5,
@@ -48,7 +48,7 @@ const faixa = (label: string, current: number) => () =>
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  render: faixa('Paginação em repouso', 3),
+  render: range('Paginação em repouso', 3),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('O link inativo está visível e não é a página atual', async () => {
@@ -61,22 +61,22 @@ export const Default: Story = {
 };
 
 export const Hover: Story = {
-  render: faixa('Paginação sob o ponteiro', 3),
+  render: range('Paginação sob o ponteiro', 3),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('O link é alcançável pelo ponteiro e se anuncia clicável', async () => {
-      const alvo = canvas.getByRole('link', { name: 'Ir para página 4' });
-      await userEvent.hover(alvo);
+      const target = canvas.getByRole('link', { name: 'Ir para página 4' });
+      await userEvent.hover(target);
       // Não se assere a cor do hover: `:hover` computado é frágil no harness. O
       // que prova a afordância é o cursor, e o que prova que o clique CHEGA é o
       // elemento devolvido no centro da caixa.
-      await expect(getComputedStyle(alvo).cursor).toBe('pointer');
-      const caixa = alvo.getBoundingClientRect();
+      await expect(getComputedStyle(target).cursor).toBe('pointer');
+      const box = target.getBoundingClientRect();
       const inCenter = document.elementFromPoint(
-        caixa.left + caixa.width / 2,
-        caixa.top + caixa.height / 2,
+        box.left + box.width / 2,
+        box.top + box.height / 2,
       );
-      await expect(alvo.contains(inCenter)).toBe(true);
+      await expect(target.contains(inCenter)).toBe(true);
     });
   },
 };
@@ -84,7 +84,7 @@ export const Hover: Story = {
 export const Active: Story = {
   name: 'Active (current page)',
   parameters: { covers: ['visual.item3'] },
-  render: faixa('Paginação com página atual', 3),
+  render: range('Paginação com página atual', 3),
   play: async ({ canvasElement, step }) => {
     await step('Exatamente um link é a página atual', async () => {
       // visual.item3
@@ -105,7 +105,7 @@ export const Active: Story = {
 export const DisabledFirst: Story = {
   name: 'Disabled (previous on first page)',
   parameters: { covers: ['functional.item2', 'visual.item4'] },
-  render: faixa('Paginação na primeira página', 1),
+  render: range('Paginação na primeira página', 1),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const previous = canvas.getByRole('link', { name: LABEL_PREVIOUS });
@@ -146,7 +146,7 @@ export const DisabledLast: Story = {
     // meta parte da primeira.
     docs: { source: { transform: paginationSourceWith({ total: 5, current: 5 }) } },
   },
-  render: faixa('Paginação na última página', 5),
+  render: range('Paginação na última página', 5),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const next = canvas.getByRole('link', { name: LABEL_NEXT });
@@ -175,7 +175,7 @@ export const DisabledLast: Story = {
 export const Focus: Story = {
   name: 'Focus (Tab)',
   parameters: { covers: ['accessibility.item3', 'functional.item4'] },
-  render: faixa('Paginação com foco', 3),
+  render: range('Paginação com foco', 3),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
@@ -188,9 +188,9 @@ export const Focus: Story = {
       ].filter((el) => el.getAttribute('tabindex') !== '-1');
 
       (document.activeElement as HTMLElement | null)?.blur();
-      for (const alvo of esperados) {
+      for (const target of esperados) {
         await userEvent.tab();
-        await expect(alvo).toHaveFocus();
+        await expect(target).toHaveFocus();
       }
     });
 
@@ -198,18 +198,18 @@ export const Focus: Story = {
       // accessibility.item3 — medir a sombra computada é o que prova que a
       // regra do CSS compartilhado chegou ao elemento. `ring-2 ring-ring`, que
       // a documentação citava, não existe.
-      const alvo = canvas.getByRole('link', { name: 'Ir para página 2' });
-      alvo.blur();
-      alvo.focus();
-      await expect(alvo).toHaveFocus();
-      await expect(getComputedStyle(alvo).boxShadow).not.toBe('none');
+      const target = canvas.getByRole('link', { name: 'Ir para página 2' });
+      target.blur();
+      target.focus();
+      await expect(target).toHaveFocus();
+      await expect(getComputedStyle(target).boxShadow).not.toBe('none');
     });
   },
 };
 
 export const Contrast: Story = {
   parameters: { covers: ['accessibility.item2', 'accessibility.item6'] },
-  render: faixa('Paginação medida por contraste', 3),
+  render: range('Paginação medida por contraste', 3),
   play: async ({ canvasElement, step }) => {
     await step('Todo link passa dos 4.5:1 exigidos para texto', async () => {
       // accessibility.item2 — o texto da faixa tem 14px, tamanho normal pela

@@ -71,9 +71,9 @@ export const Horizontal: Story = {
       // calculado aqui, fora do alcance do proxy.
       await expect(transform === carouselSource).toBe(true);
       // E o que ela devolve é a chamada da fábrica, não o `outerHTML`.
-      const código = transform('<div data-slot="carousel" role="region"></div>', {});
-      await expect(código).toContain('createCarousel({');
-      await expect(código).not.toContain('data-slot');
+      const code = transform('<div data-slot="carousel" role="region"></div>', {});
+      await expect(code).toContain('createCarousel({');
+      await expect(code).not.toContain('data-slot');
     });
 
     await step('O track deita os slides em linha', async () => {
@@ -194,8 +194,8 @@ export const Vertical: Story = {
       // apareceu de uma vez, com os quatro slides somando a altura do track.
       await expect(clip.clientHeight).toBeGreaterThan(0);
       const slide = canvas.getAllByRole('group')[0];
-      const altura = slide.getBoundingClientRect().height;
-      await expect(Math.abs(altura - clip.clientHeight)).toBeLessThan(2);
+      const height = slide.getBoundingClientRect().height;
+      await expect(Math.abs(height - clip.clientHeight)).toBeLessThan(2);
     });
 
     await step('As setas ficam acima e abaixo, não nas laterais', async () => {

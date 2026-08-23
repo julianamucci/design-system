@@ -29,10 +29,10 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const lista = (el: HTMLElement): HTMLElement =>
+const list = (el: HTMLElement): HTMLElement =>
   el.querySelector<HTMLElement>('[data-slot="tabs-list"]')!;
 
-const raiz = (el: HTMLElement): HTMLElement =>
+const root = (el: HTMLElement): HTMLElement =>
   el.querySelector<HTMLElement>('[data-slot="tabs"]')!;
 
 /**
@@ -73,7 +73,7 @@ export const SettingsPanel: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const perfil = canvas.getByRole('tab', { name: 'Perfil' });
-    const conta = canvas.getByRole('tab', { name: 'Conta' });
+    const count = canvas.getByRole('tab', { name: 'Conta' });
 
     await step('A fileira tem um nome acessível próprio da composição', async () => {
       // Sem nome, a mesma fileira aparece como "lista de abas" em toda tela que
@@ -92,8 +92,8 @@ export const SettingsPanel: Story = {
     await step('A seta caminha pelas seções', async () => {
       perfil.focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(conta).toHaveFocus();
-      await waitFor(() => expect(conta).toHaveAttribute('aria-selected', 'true'));
+      await expect(count).toHaveFocus();
+      await waitFor(() => expect(count).toHaveAttribute('aria-selected', 'true'));
       await expect(canvas.getByRole('tabpanel')).toHaveTextContent('Gerencie email');
     });
 
@@ -130,7 +130,7 @@ export const CodePreviewLine: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const l = lista(canvasElement);
+    const l = list(canvasElement);
     const preview = canvas.getByRole('tab', { name: 'Preview' });
     const code = canvas.getByRole('tab', { name: 'Código' });
 
@@ -195,9 +195,9 @@ export const VerticalNavigation: Story = {
 
     await step('A orientação chega à raiz e ao tablist', async () => {
       await waitFor(() =>
-        expect(raiz(canvasElement)).toHaveAttribute('data-orientation', 'vertical'),
+        expect(root(canvasElement)).toHaveAttribute('data-orientation', 'vertical'),
       );
-      await expect(lista(canvasElement)).toHaveAttribute('aria-orientation', 'vertical');
+      await expect(list(canvasElement)).toHaveAttribute('aria-orientation', 'vertical');
     });
 
     await step('No eixo vertical quem navega é a seta para baixo', async () => {

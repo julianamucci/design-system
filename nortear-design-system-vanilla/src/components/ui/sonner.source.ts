@@ -7,9 +7,9 @@
 import {
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { ToastPosition, ToastType } from './sonner';
@@ -52,8 +52,8 @@ const DEFAULT_TITLE: Record<ToastType, string> = {
  * semânticas vêm desligadas e o prazo é de 4000ms.
  */
 function regionBlock(o: SonnerSnippetOptions): string {
-  const lines = opcoes([
-    ['position', o.position && o.position !== 'bottom-right' ? texto(o.position) : undefined],
+  const lines = options([
+    ['position', o.position && o.position !== 'bottom-right' ? text(o.position) : undefined],
     ['richColors', o.richColors ? 'true' : undefined],
     ['closeButton', o.closeButton && !o.persistente ? 'true' : undefined],
     [
@@ -75,23 +75,23 @@ function regionBlock(o: SonnerSnippetOptions): string {
 /** `toast('…')` / `toast.success('…', { … })`, quebrando quando não couber. */
 function queueCall(type: ToastType, mensagem: string, lines: string[]): string {
   const queue = type === 'default' ? 'toast' : `toast.${type}`;
-  if (lines.length === 0) return `${queue}(${texto(mensagem)});`;
+  if (lines.length === 0) return `${queue}(${text(mensagem)});`;
 
-  const singleLine = `${queue}(${texto(mensagem)}, { ${lines
+  const singleLine = `${queue}(${text(mensagem)}, { ${lines
     .map((l) => l.replace(/,$/, ''))
     .join(', ')} });`;
   if (singleLine.length <= 78 && !singleLine.includes('\n')) return singleLine;
 
-  return `${queue}(${texto(mensagem)}, {\n${lines.map((l) => `  ${l}`).join('\n')}\n});`;
+  return `${queue}(${text(mensagem)}, {\n${lines.map((l) => `  ${l}`).join('\n')}\n});`;
 }
 
 function notificationOptions(o: SonnerSnippetOptions): string[] {
-  return opcoes([
-    ['description', o.description ? texto(o.description) : undefined],
+  return options([
+    ['description', o.description ? text(o.description) : undefined],
     [
       'action',
       o.actionLabel
-        ? `{ label: ${texto(o.actionLabel)}, onClick: () => desfazer() }`
+        ? `{ label: ${text(o.actionLabel)}, onClick: () => desfazer() }`
         : undefined,
     ],
     ['duration', o.persistente ? 'Number.POSITIVE_INFINITY' : undefined],
@@ -128,10 +128,10 @@ export function sonnerNoRegionSnippet(o: SonnerSnippetOptions = {}): string {
 
 /** Uma pilha: várias notificações vivas ao mesmo tempo, uma por chamada. */
 export function sonnerStackSnippet(
-  itens: Array<{ type?: ToastType; title?: string }>,
+  items: Array<{ type?: ToastType; title?: string }>,
   o: SonnerSnippetOptions = {},
 ): string {
-  const calls = itens.map((item) => {
+  const calls = items.map((item) => {
     const type = item.type ?? 'default';
     return queueCall(type, item.title || DEFAULT_TITLE[type], []);
   });
@@ -164,10 +164,10 @@ export function sonnerPromiseSnippet(o: SonnerSnippetOptions = {}): string {
 
 /** Transform de story para a pilha de notificações. */
 export function sonnerSourceStack(
-  itens: Array<{ type?: ToastType; title?: string }>,
+  items: Array<{ type?: ToastType; title?: string }>,
   o: SonnerSnippetOptions = {},
 ): SourceTransform<SonnerSnippetOptions> {
-  return () => sonnerStackSnippet(itens, o);
+  return () => sonnerStackSnippet(items, o);
 }
 
 /** Transform de story para o ciclo de uma promessa. */

@@ -73,13 +73,13 @@ export const Playground: Story = {
       // functional.item1 — o que faz um leitor de tela anunciar "tabela, 4
       // colunas" é a tag, não a classe. Uma grade montada com div passaria
       // visualmente e sumiria da árvore de acessibilidade.
-      const tabela = canvas.getByRole('table');
-      await expect(tabela.tagName).toBe('TABLE');
-      await expect(tabela).toHaveClass('nds-table');
-      await expect(tabela).toHaveAttribute('data-slot', 'table');
-      await expect(tabela.querySelector('thead')).toHaveAttribute('data-slot', 'table-header');
-      await expect(tabela.querySelector('tbody')).toHaveAttribute('data-slot', 'table-body');
-      await expect(tabela.querySelectorAll('tbody tr').length).toBe(5);
+      const table = canvas.getByRole('table');
+      await expect(table.tagName).toBe('TABLE');
+      await expect(table).toHaveClass('nds-table');
+      await expect(table).toHaveAttribute('data-slot', 'table');
+      await expect(table.querySelector('thead')).toHaveAttribute('data-slot', 'table-header');
+      await expect(table.querySelector('tbody')).toHaveAttribute('data-slot', 'table-body');
+      await expect(table.querySelectorAll('tbody tr').length).toBe(5);
     });
 
     await step('A região rolável é alcançável por teclado', async () => {

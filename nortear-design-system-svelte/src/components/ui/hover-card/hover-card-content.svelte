@@ -16,7 +16,7 @@
 		// quem compõe escreve `aria-label={rotulo || undefined}`, o `undefined`
 		// apagava o nome de todo painel sem rótulo explícito. O axe reprovava em
 		// `aria-dialog-name` e a causa não aparecia em lugar nenhum do markup.
-		"aria-label": rotulo,
+		"aria-label": label,
 		"aria-labelledby": labelledBy,
 		...restProps
 	}: HoverCardPrimitive.ContentProps & {
@@ -38,9 +38,9 @@
 	const contexto = usarContextoHoverCard();
 
 	const nameAutomatico = $derived(
-		rotulo || labelledBy
-			? rotulo
-			: contexto?.gatilho?.textContent?.trim() || "Prévia",
+		label || labelledBy
+			? label
+			: contexto?.trigger?.textContent?.trim() || "Prévia",
 	);
 </script>
 

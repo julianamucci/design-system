@@ -110,22 +110,22 @@ export class NdsAlertDialogContent {
         data-slot="alert-dialog-content"
         [attr.data-state]="state()"
       >
-        <ng-container [ngTemplateOutlet]="painel()!.tpl" />
+        <ng-container [ngTemplateOutlet]="panel()!.tpl" />
       </div>
     </ng-template>
   `,
 })
 export class NdsAlertDialog {
-  protected readonly painel = contentChild.required(NdsAlertDialogContent);
+  protected readonly panel = contentChild.required(NdsAlertDialogContent);
 
-  private readonly raiz = injectRdxDialogRootContext();
+  private readonly root = injectRdxDialogRootContext();
 
   /**
    * `data-state` para o contrato de markup das outras stacks e para a tabela de
    * estados do conteúdo. O par `data-open`/`data-closed` que o CSS lê continua
    * vindo do primitivo — este atributo é adição, não substituição.
    */
-  protected readonly state = computed(() => (this.raiz.isOpen() ? 'open' : 'closed'));
+  protected readonly state = computed(() => (this.root.isOpen() ? 'open' : 'closed'));
 }
 
 /** Abre o diálogo. Compõe com `ndsButton` no mesmo elemento. */

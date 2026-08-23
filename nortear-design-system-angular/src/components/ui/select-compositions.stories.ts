@@ -23,10 +23,10 @@ const STATES = [
  * justamente esse intervalo para distinguir "apertei o gatilho e arrastei até a
  * opção" de "cliquei duas vezes".
  */
-async function openWithKeyboard(gatilho: HTMLElement, nome: string): Promise<HTMLElement> {
-  gatilho.focus();
+async function openWithKeyboard(trigger: HTMLElement, name: string): Promise<HTMLElement> {
+  trigger.focus();
   await userEvent.keyboard('{Enter}');
-  return await waitForPortal('listbox', { name: nome });
+  return await waitForPortal('listbox', { name: name });
 }
 
 const meta: Meta = {
@@ -86,8 +86,8 @@ export const InForm: Story = {
         onSubmit,
         aoEnviar: (evento: Event) => {
           evento.preventDefault();
-          const dados = new FormData(evento.target as HTMLFormElement);
-          onSubmit(Object.fromEntries(dados.entries()));
+          const data = new FormData(evento.target as HTMLFormElement);
+          onSubmit(Object.fromEntries(data.entries()));
         },
       },
       template: `
@@ -113,26 +113,26 @@ export const InForm: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('combobox', { name: 'Estado' });
+    const trigger = canvas.getByRole('combobox', { name: 'Estado' });
 
     await step('O rótulo externo nomeia o gatilho', async () => {
       // `role="combobox"` não tira nome do próprio conteúdo — o conteúdo é o
       // VALOR. Sem rótulo externo o campo ficaria anônimo, mesmo mostrando texto.
-      await expect(gatilho).toHaveAccessibleName('Estado');
-      await expect(gatilho.getAttribute('aria-required')).toBe('true');
+      await expect(trigger).toHaveAccessibleName('Estado');
+      await expect(trigger.getAttribute('aria-required')).toBe('true');
     });
 
     await step('Escolher uma opção preenche o campo escondido do formulário', async () => {
-      const lista = await openWithKeyboard(gatilho, 'Estado');
+      const list = await openWithKeyboard(trigger, 'Estado');
 
-      await userEvent.click(within(lista).getByRole('option', { name: 'Minas Gerais' }));
+      await userEvent.click(within(list).getByRole('option', { name: 'Minas Gerais' }));
 
       // A espera é pelo GATILHO, não por "sumiu algum listbox do corpo do
       // documento": aqui há um campo só, e é o estado dele que interessa. O
       // desmonte do portal está provado na Playground.
-      await expect(gatilho).toHaveTextContent('Minas Gerais');
+      await expect(trigger).toHaveTextContent('Minas Gerais');
       await waitFor(async () => {
-        await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
+        await expect(trigger.getAttribute('aria-expanded')).toBe('false');
       });
     });
 
@@ -196,29 +196,29 @@ export const WithReactiveForms: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('combobox', { name: 'Estado' });
+    const trigger = canvas.getByRole('combobox', { name: 'Estado' });
     const salvar = canvas.getByRole('button', { name: 'Salvar' }) as HTMLButtonElement;
 
     await step('Vazio, o campo reprova na validação e o envio fica bloqueado', async () => {
-      await expect(gatilho.getAttribute('aria-invalid')).toBe('true');
+      await expect(trigger.getAttribute('aria-invalid')).toBe('true');
       await expect(salvar.disabled).toBe(true);
     });
 
     await step('Escolher uma opção escreve no FormControl', async () => {
-      const lista = await openWithKeyboard(gatilho, 'Estado');
+      const list = await openWithKeyboard(trigger, 'Estado');
 
-      await userEvent.click(within(lista).getByRole('option', { name: 'São Paulo' }));
+      await userEvent.click(within(list).getByRole('option', { name: 'São Paulo' }));
 
-      await expect(gatilho).toHaveTextContent('São Paulo');
+      await expect(trigger).toHaveTextContent('São Paulo');
       await waitFor(async () => {
-        await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
+        await expect(trigger.getAttribute('aria-expanded')).toBe('false');
       });
       // O valor chegou ao formulário: é o `ControlValueAccessor` da raiz que o
       // leva, e é isso que `formControlName` promete.
       await waitFor(async () => {
         await expect(salvar.disabled).toBe(false);
       });
-      await expect(gatilho.getAttribute('aria-invalid')).toBe(null);
+      await expect(trigger.getAttribute('aria-invalid')).toBe(null);
     });
   },
 };

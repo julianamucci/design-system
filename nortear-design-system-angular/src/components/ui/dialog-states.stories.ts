@@ -5,9 +5,9 @@ import { NDS_DIALOG } from './dialog';
 import { NdsButton } from './button';
 import {
   LABELS,
-  painel,
+  panel,
   overlay,
-  abrir,
+  open,
   waitForOpen,
   waitForClosed,
 } from './dialog.fixtures';
@@ -71,7 +71,7 @@ export const Closed: Story = {
       // O portal é estrutural: fechado, nem o overlay nem o painel estão no
       // DOM. Um painel escondido por CSS continuaria na ordem de tabulação e
       // seria lido pelo leitor de tela.
-      await expect(painel()).toBeNull();
+      await expect(panel()).toBeNull();
       await expect(overlay()).toBeNull();
       await expect(trigger).toBeVisible();
     });
@@ -169,7 +169,7 @@ export const WithCloseButtonHidden: Story = {
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final e o axe roda depois da
       // play — esta story existe para mostrar o painel SEM o X no canto.
-      await expect(await abrir(canvasElement)).toBeVisible();
+      await expect(await open(canvasElement)).toBeVisible();
     });
   },
 };
@@ -210,11 +210,11 @@ export const Controlled: Story = {
     spyControlled.mockClear();
 
     await step('Nasce fechado, porque o valor externo diz que sim', async () => {
-      await expect(painel()).toBeNull();
+      await expect(panel()).toBeNull();
     });
 
     await step('Interagir avisa o dono do estado, e o painel segue o valor', async () => {
-      await abrir(canvasElement);
+      await open(canvasElement);
       await expect(spyControlled).toHaveBeenLastCalledWith(true);
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });

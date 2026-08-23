@@ -67,12 +67,12 @@ export const Playground: Story = {
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement);
     const abas = () => canvas.getAllByRole("tab");
-    const aba = (nome: string) => canvas.getByRole("tab", { name: nome });
+    const aba = (name: string) => canvas.getByRole("tab", { name: name });
     // O painel que SAI continua montado (com `inert`) durante a transição de
     // entrada do novo. Nesse intervalo há DOIS `tabpanel` no DOM e a consulta
     // única casa os dois — falha intermitente que já apareceu numa rodada e
     // passou na seguinte. Esperar o assentamento estabiliza sem afrouxar.
-    const painel = async () => {
+    const panel = async () => {
       let encontrado!: HTMLElement;
       await waitFor(() => {
         encontrado = canvas.getByRole("tabpanel");
@@ -85,16 +85,16 @@ export const Playground: Story = {
     // MANTÉM ativa — o que quebra o replay é o clique cego por índice, que
     // parte de um estado que a asserção seguinte não conhece. Este par só
     // clica quando o alvo ainda não é o ativo, e espera o estado assentar.
-    const ativar = async (alvo: HTMLElement) => {
-      if (alvo.getAttribute("aria-selected") !== "true") await userEvent.click(alvo);
-      await waitFor(() => expect(alvo).toHaveAttribute("aria-selected", "true"));
+    const ativar = async (target: HTMLElement) => {
+      if (target.getAttribute("aria-selected") !== "true") await userEvent.click(target);
+      await waitFor(() => expect(target).toHaveAttribute("aria-selected", "true"));
     };
 
     await step("Os três papéis do padrão de abas estão no lugar", async () => {
       // Sem `aria-label` o leitor de tela anuncia apenas "lista de abas" — a
       // busca por nome é o que prova que a lista se identifica.
-      const lista = canvas.getByRole("tablist", { name: "Seções do componente" });
-      await expect(lista).toHaveAttribute("data-slot", "tabs-list");
+      const list = canvas.getByRole("tablist", { name: "Seções do componente" });
+      await expect(list).toHaveAttribute("data-slot", "tabs-list");
       await expect(abas()).toHaveLength(3);
       // Só o painel da aba ativa fica no DOM acessível; os outros saem dele.
       await waitFor(async () => {
@@ -115,19 +115,19 @@ export const Playground: Story = {
       // Os dois lados do par: já encontramos componente em que só um deles
       // estava escrito, e o leitor de tela perde a volta do painel para a aba.
       const ativa = abas()[0];
-      const alvo = await painel();
+      const target = await panel();
       await expect(ativa.id).not.toBe("");
-      await expect(alvo.id).not.toBe("");
-      await expect(alvo).toHaveAttribute("aria-labelledby", ativa.id);
-      await expect(ativa).toHaveAttribute("aria-controls", alvo.id);
+      await expect(target.id).not.toBe("");
+      await expect(target).toHaveAttribute("aria-labelledby", ativa.id);
+      await expect(ativa).toHaveAttribute("aria-controls", target.id);
     });
 
     await step("Clicar em uma aba troca a aba e o painel", async () => {
       const propriedades = aba("Propriedades");
       await ativar(propriedades);
-      const alvo = await painel();
-      await expect(alvo).toHaveTextContent("Lista de propriedades");
-      await expect(alvo).toHaveAttribute("aria-labelledby", propriedades.id);
+      const target = await panel();
+      await expect(target).toHaveTextContent("Lista de propriedades");
+      await expect(target).toHaveAttribute("aria-labelledby", propriedades.id);
     });
 
     await step("Só a aba ativa está no percurso do Tab", async () => {
@@ -152,7 +152,7 @@ export const Playground: Story = {
         expect(abas()[1]).toHaveAttribute("aria-selected", "true")
       );
       await expect(abas()[1]).toHaveFocus();
-      await expect(await painel()).toHaveTextContent("Lista de propriedades");
+      await expect(await panel()).toHaveTextContent("Lista de propriedades");
     });
 
     await step("End vai à última aba e Home volta à primeira", async () => {
@@ -165,7 +165,7 @@ export const Playground: Story = {
       await waitFor(() =>
         expect(abas()[0]).toHaveAttribute("aria-selected", "true")
       );
-      await expect(await painel()).toHaveTextContent("Conteúdo da visão geral");
+      await expect(await panel()).toHaveTextContent("Conteúdo da visão geral");
     });
   },
 };

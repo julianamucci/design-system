@@ -28,11 +28,11 @@ const HELPER_DEFAULT = 'Ao marcar esta opção, você concorda com os termos de 
  * Uma linha por atributo quando a fila passa da largura útil do painel — fila
  * longa demais some na barra de rolagem.
  */
-function tag(nome: string, partes: Array<string | false | ''>, recuo = ''): string {
-  const lista = partes.filter((parte): parte is string => Boolean(parte));
-  const inLine = `<${nome}${attrs(...lista)} />`;
+function tag(name: string, partes: Array<string | false | ''>, recuo = ''): string {
+  const list = partes.filter((parte): parte is string => Boolean(parte));
+  const inLine = `<${name}${attrs(...list)} />`;
   if (recuo.length + inLine.length <= 76) return inLine;
-  return `<${nome}\n${lista.map((parte) => `${recuo}  ${parte}`).join('\n')}\n${recuo}/>`;
+  return `<${name}\n${list.map((parte) => `${recuo}  ${parte}`).join('\n')}\n${recuo}/>`;
 }
 
 /**
@@ -52,11 +52,11 @@ export function checkboxSource(_gerado?: string, ctx?: { args?: Partial<Checkbox
     descriptionText = HELPER_DEFAULT,
   } = ctx?.args ?? {};
 
-  const comRotulo = withLabel || withDescription;
+  const hasLabel = withLabel || withDescription;
 
   const imports = [
     'import { Checkbox } from "@/components/ui/checkbox";',
-    comRotulo ? 'import { Label } from "@/components/ui/label";' : '',
+    hasLabel ? 'import { Label } from "@/components/ui/label";' : '',
   ]
     .filter(Boolean)
     .join('\n');
@@ -69,7 +69,7 @@ export function checkboxSource(_gerado?: string, ctx?: { args?: Partial<Checkbox
     .join('\n');
 
   const props = [
-    comRotulo ? `id="${ID}"` : '',
+    hasLabel ? `id="${ID}"` : '',
     'bind:checked={marcado}',
     indeterminate ? 'bind:indeterminate={parcial}' : '',
     disabled ? 'disabled' : '',
@@ -77,7 +77,7 @@ export function checkboxSource(_gerado?: string, ctx?: { args?: Partial<Checkbox
     withDescription ? `aria-describedby="${ID}-apoio"` : '',
     // A caixa alinha pelo topo quando o texto ao lado tem mais de uma linha.
     withDescription ? 'class="nds-mt-0-5"' : '',
-    comRotulo ? '' : `aria-label="${labelText}"`,
+    hasLabel ? '' : `aria-label="${labelText}"`,
   ];
 
   const script = `${imports}\n\n${state}`;

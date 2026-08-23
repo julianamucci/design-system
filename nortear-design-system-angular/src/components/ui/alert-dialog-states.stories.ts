@@ -109,17 +109,17 @@ export const Open: Story = {
   }),
   play: async ({ step }) => {
     await step('Nasce aberto, com backdrop', async () => {
-      const painel = await waitForPortal('alertdialog');
-      await expect(painel).toBeVisible();
+      const panel = await waitForPortal('alertdialog');
+      await expect(panel).toBeVisible();
       await expect(
         document.querySelector('[data-slot="alert-dialog-overlay"]'),
       ).not.toBeNull();
     });
 
     await step('Nome e descrição acessíveis saem do título e da descrição', async () => {
-      const painel = await waitForPortal('alertdialog');
-      await expect(painel).toHaveAccessibleName(/Excluir item/i);
-      await expect(painel).toHaveAccessibleDescription(/removido de forma definitiva/i);
+      const panel = await waitForPortal('alertdialog');
+      await expect(panel).toHaveAccessibleName(/Excluir item/i);
+      await expect(panel).toHaveAccessibleDescription(/removido de forma definitiva/i);
     });
   },
 };
@@ -185,9 +185,9 @@ export const Confirmed: Story = {
     });
 
     await step('Enter com a ação focada confirma, e o foco volta ao gatilho', async () => {
-      const gatilho = canvas.getByRole('button', { name: /^Excluir$/i });
+      const trigger = canvas.getByRole('button', { name: /^Excluir$/i });
       const antes = aoConfirmar.mock.calls.length;
-      await userEvent.click(gatilho);
+      await userEvent.click(trigger);
       await waitForPortal('alertdialog');
       const acao = within(document.body).getByTestId('confirmar');
       acao.focus();
@@ -199,7 +199,7 @@ export const Confirmed: Story = {
       // documento e a pessoa perde o lugar. O waitFor não é decoração: nesta
       // stack o foco só volta quando o portal destrói as diretivas, o que cai
       // num ciclo de detecção posterior — o Playground já esperava assim.
-      await waitFor(() => expect(gatilho).toHaveFocus());
+      await waitFor(() => expect(trigger).toHaveFocus());
     });
   },
 };
@@ -268,9 +268,9 @@ export const Cancelled: Story = {
     });
 
     await step('Space com o Cancel focado cancela, e o foco volta ao gatilho', async () => {
-      const gatilho = canvas.getByRole('button', { name: /^Excluir$/i });
+      const trigger = canvas.getByRole('button', { name: /^Excluir$/i });
       const antes = aoCancelar.mock.calls.length;
-      await userEvent.click(gatilho);
+      await userEvent.click(trigger);
       await waitForPortal('alertdialog');
       const cancelar = within(document.body).getByTestId('cancelar');
       cancelar.focus();
@@ -281,7 +281,7 @@ export const Cancelled: Story = {
       await expect(actionDestructive).not.toHaveBeenCalled();
       // Ver a nota do Confirmed: o retorno de foco vem com a destruição do
       // portal, um ciclo de detecção depois do desmonte.
-      await waitFor(() => expect(gatilho).toHaveFocus());
+      await waitFor(() => expect(trigger).toHaveFocus());
     });
   },
 };

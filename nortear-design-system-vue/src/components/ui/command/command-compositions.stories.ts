@@ -82,22 +82,22 @@ export const WithGroups: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
-    const campo = canvas.getByRole('combobox');
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
+    const field = canvas.getByRole('combobox');
 
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     await waitFor(async () => {
       // Com o campo vazio, os seis comandos dos dois grupos aparecem.
       await expect(canvas.getAllByRole('option')).toHaveLength(6);
     });
 
     await step('Cada grupo é um grupo nomeado pelo próprio cabeçalho', async () => {
-      const grupos = canvas.getAllByRole('group');
-      await expect(grupos).toHaveLength(2);
+      const groups = canvas.getAllByRole('group');
+      await expect(groups).toHaveLength(2);
       await expect(canvas.getByRole('group', { name: 'Componentes' })).toBeVisible();
       await expect(canvas.getByRole('group', { name: 'Utilitários' })).toBeVisible();
 
-      const cabecalhos = raiz.querySelectorAll<HTMLElement>('.nds-command-group-heading');
+      const cabecalhos = root.querySelectorAll<HTMLElement>('.nds-command-group-heading');
       await expect(cabecalhos).toHaveLength(2);
       await expect(cabecalhos[0]).toHaveAttribute('data-slot', 'command-group-heading');
       // Cabeçalho não é comando: ele nomeia o grupo, não executa nada.
@@ -105,7 +105,7 @@ export const WithGroups: Story = {
     });
 
     await step('O divisor não é um comando nem um filho do listbox', async () => {
-      const divisor = raiz.querySelector<HTMLElement>('[data-slot="command-separator"]')!;
+      const divisor = root.querySelector<HTMLElement>('[data-slot="command-separator"]')!;
       await expect(divisor).toHaveClass(/nds-command-separator/);
       // ARIA só admite `option` e `group` dentro de um listbox; o divisor sai da
       // árvore em vez de virar filho ilegal.
@@ -114,26 +114,26 @@ export const WithGroups: Story = {
     });
 
     await step('O filtro atravessa os dois grupos', async () => {
-      await userEvent.type(campo, 'a');
+      await userEvent.type(field, 'a');
 
       // Buscando "a": Separator, Badge e Avatar (Utilitários) e nada de
       // Componentes — o filtro não respeita fronteira de grupo.
       await waitFor(async () => {
         await expect(canvas.getAllByRole('option')).toHaveLength(3);
       });
-      const grupos = raiz.querySelectorAll<HTMLElement>('[data-slot="command-group"]');
-      await expect(grupos[0]).not.toBeVisible();
-      await expect(grupos[1]).toBeVisible();
+      const groups = root.querySelectorAll<HTMLElement>('[data-slot="command-group"]');
+      await expect(groups[0]).not.toBeVisible();
+      await expect(groups[1]).toBeVisible();
     });
 
     await step('A story termina no estado padrão — é o quadro documentado', async () => {
-      await userEvent.clear(campo);
+      await userEvent.clear(field);
       await waitFor(async () => {
         await expect(canvas.getAllByRole('option')).toHaveLength(6);
       });
-      const grupos = raiz.querySelectorAll<HTMLElement>('[data-slot="command-group"]');
-      await expect(grupos[0]).toBeVisible();
-      await expect(grupos[1]).toBeVisible();
+      const groups = root.querySelectorAll<HTMLElement>('[data-slot="command-group"]');
+      await expect(groups[0]).toBeVisible();
+      await expect(groups[1]).toBeVisible();
     });
   },
 };
@@ -191,9 +191,9 @@ export const WithShortcuts: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const campo = canvas.getByRole('combobox');
+    const field = canvas.getByRole('combobox');
 
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     await waitFor(async () => {
       // Com o campo vazio, as cinco ações aparecem.
       await expect(canvas.getAllByRole('option')).toHaveLength(5);
@@ -222,13 +222,13 @@ export const WithShortcuts: Story = {
     });
 
     await step('Buscar pelo nome reduz a lista a um único comando', async () => {
-      await userEvent.type(campo, 'desfazer');
+      await userEvent.type(field, 'desfazer');
       await waitFor(async () => {
         await expect(canvas.getAllByRole('option')).toHaveLength(1);
       });
       await expect(canvas.getByRole('option', { name: 'Desfazer ⌘Z' })).toBeVisible();
 
-      await userEvent.clear(campo);
+      await userEvent.clear(field);
       await waitFor(async () => {
         await expect(canvas.getAllByRole('option')).toHaveLength(5);
       });
@@ -322,12 +322,12 @@ export const AsCombobox: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('combobox');
+    const trigger = canvas.getByRole('combobox');
 
     // Idempotente: a play REEXECUTA no mesmo DOM, e um clique cego alternaria o
     // popover a partir do estado que a rodada anterior deixou.
-    const abrir = async (): Promise<HTMLElement> => {
-      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+    const open = async (): Promise<HTMLElement> => {
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       return await waitForPortal('dialog');
     };
 
@@ -335,20 +335,20 @@ export const AsCombobox: Story = {
       // É o que o conteúdo compartilhado cobra: o primitivo do Popover trata o
       // gatilho como botão comum, e sem estes atributos o leitor de tela não diz
       // que há uma escolha do outro lado.
-      await expect(gatilho).toHaveAttribute('role', 'combobox');
-      await expect(gatilho).toHaveAttribute('aria-haspopup', 'dialog');
-      await expect(gatilho).toHaveAttribute('aria-expanded');
+      await expect(trigger).toHaveAttribute('role', 'combobox');
+      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+      await expect(trigger).toHaveAttribute('aria-expanded');
     });
 
     await step('Abrir revela a paleta dentro do popover', async () => {
-      const painel = await abrir();
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      const panel = await open();
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
 
-      const inside = within(painel);
-      const lista = inside.getByRole('listbox');
-      await expect(lista).toBeVisible();
-      await expect(lista).toHaveClass(/nds-command-list/);
-      const search = painel.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
+      const inside = within(panel);
+      const list = inside.getByRole('listbox');
+      await expect(list).toBeVisible();
+      await expect(list).toHaveClass(/nds-command-list/);
+      const search = panel.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
       // O foco entra no campo de busca: um combobox que abre e deixa o foco no
       // gatilho obriga a pessoa a caçar o campo com Tab.
       await waitFor(async () => {
@@ -357,7 +357,7 @@ export const AsCombobox: Story = {
       // Dentro do popover o campo continua sendo uma combobox ligada à lista
       // real — o arranjo flutuante não desmonta o par de papéis.
       await expect(search).toHaveAttribute('aria-autocomplete', 'list');
-      await expect(document.getElementById(search.getAttribute('aria-controls')!)).toBe(lista);
+      await expect(document.getElementById(search.getAttribute('aria-controls')!)).toBe(list);
 
       await userEvent.clear(search);
       await waitFor(async () => {
@@ -367,9 +367,9 @@ export const AsCombobox: Story = {
     });
 
     await step('A busca filtra dentro do popover', async () => {
-      const painel = await abrir();
-      const inside = within(painel);
-      const search = painel.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
+      const panel = await open();
+      const inside = within(panel);
+      const search = panel.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
 
       await userEvent.clear(search);
       await userEvent.type(search, 'text');
@@ -381,7 +381,7 @@ export const AsCombobox: Story = {
 
       await userEvent.clear(search);
       await userEvent.type(search, 'zzz');
-      const vazio = painel.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+      const vazio = panel.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
       await waitFor(async () => {
         await expect(vazio).toHaveAttribute('data-empty', '');
       });
@@ -394,12 +394,12 @@ export const AsCombobox: Story = {
     });
 
     await step('Escolher fecha o popover e leva o valor para o gatilho', async () => {
-      const painel = await abrir();
-      await userEvent.click(within(painel).getByRole('option', { name: 'Input' }));
+      const panel = await open();
+      await userEvent.click(within(panel).getByRole('option', { name: 'Input' }));
 
       await waitForPortalGone('dialog');
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
-      await expect(gatilho).toHaveTextContent('Input');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveTextContent('Input');
     });
   },
 };
@@ -488,42 +488,42 @@ export const CommandPalette: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /Buscar/ });
+    const trigger = canvas.getByRole('button', { name: /Buscar/ });
 
     const buttonOpen = async (): Promise<HTMLElement> => {
-      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       return await waitForPortal('dialog');
     };
 
     await step('A dica do atalho fica visível no gatilho', async () => {
       // Atalho escondido é atalho que ninguém descobre — é a metade "do" do par
       // de Do & Don't deste componente.
-      const dica = gatilho.querySelector<HTMLElement>('kbd')!;
+      const dica = trigger.querySelector<HTMLElement>('kbd')!;
       await expect(dica).toHaveClass(/nds-kbd/);
       await expect(dica).toHaveTextContent('⌘K');
       await expect(dica).toBeVisible();
     });
 
     await step('O diálogo é nomeado por um título que só o leitor de tela vê', async () => {
-      const painel = await buttonOpen();
-      const idTitle = painel.getAttribute('aria-labelledby');
+      const panel = await buttonOpen();
+      const idTitle = panel.getAttribute('aria-labelledby');
       await expect(idTitle).toBeTruthy();
 
-      const titulo = document.getElementById(idTitle!)!;
-      await expect(titulo).toHaveTextContent('Command Palette');
+      const title = document.getElementById(idTitle!)!;
+      await expect(title).toHaveTextContent('Command Palette');
       // Fora da tela, mas dentro da árvore de acessibilidade: `display: none`
       // apagaria o nome do diálogo.
-      await expect(titulo.closest('.nds-sr-only')).not.toBeNull();
-      await expect(titulo.getBoundingClientRect().width).toBeLessThan(4);
+      await expect(title.closest('.nds-sr-only')).not.toBeNull();
+      await expect(title.getBoundingClientRect().width).toBeLessThan(4);
     });
 
     await step('O foco vai direto para a busca', async () => {
-      const painel = await buttonOpen();
-      const search = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
+      const panel = await buttonOpen();
+      const search = panel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       await waitFor(async () => {
         await expect(search).toHaveFocus();
       });
-      await expect(within(painel).getAllByRole('option')).toHaveLength(3);
+      await expect(within(panel).getAllByRole('option')).toHaveLength(3);
     });
 
     await step('Escape fecha o diálogo e devolve o foco ao gatilho', async () => {
@@ -531,22 +531,22 @@ export const CommandPalette: Story = {
       await userEvent.keyboard('{Escape}');
 
       await waitForPortalGone('dialog');
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
       await waitFor(async () => {
-        await expect(gatilho).toHaveFocus();
+        await expect(trigger).toHaveFocus();
       });
     });
 
     await step('Cmd+K abre a paleta de qualquer lugar da página', async () => {
       await userEvent.keyboard('{Meta>}k{/Meta}');
 
-      const painel = await waitForPortal('dialog');
-      const search = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
+      const panel = await waitForPortal('dialog');
+      const search = panel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       await waitFor(async () => {
         await expect(search).toHaveFocus();
       });
       // Os atalhos de cada comando aparecem à direita, encostados na borda.
-      const atalho = painel.querySelector<HTMLElement>(
+      const atalho = panel.querySelector<HTMLElement>(
         '[data-value="button"] [data-slot="command-shortcut"]',
       )!;
       await expect(atalho).toHaveTextContent('⌘B');
@@ -559,8 +559,8 @@ export const CommandPalette: Story = {
     });
 
     await step('Escolher um comando executa e fecha', async () => {
-      const painel = await waitForPortal('dialog');
-      await userEvent.click(within(painel).getByRole('option', { name: 'Input ⌘I' }));
+      const panel = await waitForPortal('dialog');
+      await userEvent.click(within(panel).getByRole('option', { name: 'Input ⌘I' }));
 
       await waitForPortalGone('dialog');
       await expect(canvas.getByTestId('executado')).toHaveTextContent('input');

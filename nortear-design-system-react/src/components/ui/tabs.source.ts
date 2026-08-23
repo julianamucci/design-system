@@ -18,7 +18,7 @@
  * pelo `value` com o gatilho — é esse par que a lib usa para escrever
  * `aria-controls` e `aria-labelledby`.
  */
-import { attrs, jsxSnippet, propOption, texto, type SourceTransform } from '@/lib/story-source';
+import { attrs, jsxSnippet, propOption, text, type SourceTransform } from '@/lib/story-source';
 
 export type TabsArgs = {
   orientation: 'horizontal' | 'vertical';
@@ -34,7 +34,7 @@ const IMPORT_TABS =
  * Aba canônica das stories: valor, rótulo, conteúdo do painel e — só onde a
  * composição varia — um trecho extra de atributo no gatilho.
  */
-type Aba = [valor: string, rotulo: string, conteudo: string, extra?: string];
+type Aba = [value: string, label: string, content: string, extra?: string];
 
 const SECTIONS: Aba[] = [
   ['overview', 'Visão geral', 'Conteúdo da visão geral.'],
@@ -48,25 +48,25 @@ const SECTIONS: Aba[] = [
  * volta é a mesma em todas.
  */
 function abas(
-  raiz: string,
-  lista: string,
-  itens: Aba[],
+  root: string,
+  list: string,
+  items: Aba[],
   rotuloDaLista = 'Seções do componente',
 ): string {
-  const triggers = itens
-    .map(([valor, rotulo, , extra]) => {
+  const triggers = items
+    .map(([value, label, , extra]) => {
       const abertura = extra
-        ? `<TabsTrigger value="${valor}" ${extra}>`
-        : `<TabsTrigger value="${valor}">`;
-      return `    ${abertura}${rotulo}</TabsTrigger>`;
+        ? `<TabsTrigger value="${value}" ${extra}>`
+        : `<TabsTrigger value="${value}">`;
+      return `    ${abertura}${label}</TabsTrigger>`;
     })
     .join('\n');
-  const panels = itens
-    .map(([valor, , conteudo]) => `  <TabsContent value="${valor}">${conteudo}</TabsContent>`)
+  const panels = items
+    .map(([value, , content]) => `  <TabsContent value="${value}">${content}</TabsContent>`)
     .join('\n');
 
-  return `<Tabs${raiz}>
-  <TabsList aria-label="${rotuloDaLista}"${lista}>
+  return `<Tabs${root}>
+  <TabsList aria-label="${rotuloDaLista}"${list}>
 ${triggers}
   </TabsList>
 ${panels}
@@ -84,11 +84,11 @@ ${panels}
  */
 export const tabsSource: SourceTransform<TabsArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const raiz = attrs(
+  const root = attrs(
     propOption('orientation', args.orientation, ORIENTACOES, 'horizontal'),
-    `defaultValue="${texto(args.defaultValue) ?? SECTIONS[0][0]}"`,
+    `defaultValue="${text(args.defaultValue) ?? SECTIONS[0][0]}"`,
   );
-  return jsxSnippet(IMPORT_TABS, abas(raiz, '', SECTIONS));
+  return jsxSnippet(IMPORT_TABS, abas(root, '', SECTIONS));
 };
 
 /**
@@ -132,21 +132,21 @@ export function tabsAbaDesabilitadaSource(): string {
  * escondido do leitor de tela: anunciar os dois diria a mesma coisa duas vezes.
  */
 export function tabsWithIconsSource(): string {
-  const conta: Array<[string, string, string, string]> = [
+  const count: Array<[string, string, string, string]> = [
     ['profile', 'Perfil', 'Dados do perfil.', 'User'],
     ['account', 'Conta', 'Configurações da conta.', 'Settings'],
     ['security', 'Segurança', 'Configurações de segurança.', 'Shield'],
   ];
-  const triggers = conta
+  const triggers = count
     .map(
-      ([valor, rotulo, , icone]) => `    <TabsTrigger value="${valor}">
+      ([value, label, , icone]) => `    <TabsTrigger value="${value}">
       <${icone} aria-hidden="true" />
-      ${rotulo}
+      ${label}
     </TabsTrigger>`,
     )
     .join('\n');
-  const panels = conta
-    .map(([valor, , conteudo]) => `  <TabsContent value="${valor}">${conteudo}</TabsContent>`)
+  const panels = count
+    .map(([value, , content]) => `  <TabsContent value="${value}">${content}</TabsContent>`)
     .join('\n');
 
   return jsxSnippet(

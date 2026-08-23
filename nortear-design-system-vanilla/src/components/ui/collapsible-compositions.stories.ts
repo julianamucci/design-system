@@ -59,11 +59,11 @@ function makeTriggerWithIcon(nodes: LucideIconNode[], label: string): HTMLElemen
 }
 
 // Idempotentes — ver a nota em collapsible.stories.ts.
-const abrir = async (t: HTMLElement) => {
+const open = async (t: HTMLElement) => {
   if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
 };
-const fechar = async (t: HTMLElement) => {
+const close = async (t: HTMLElement) => {
   if (t.getAttribute('aria-expanded') !== 'false') await userEvent.click(t);
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'false'));
 };
@@ -113,8 +113,8 @@ export const WithCustomButton: Story = {
     });
 
     await step('Aberto, o mesmo botão aponta para o painel', async () => {
-      await fechar(trigger);
-      await abrir(trigger);
+      await close(trigger);
+      await open(trigger);
       const id = trigger.getAttribute('aria-controls');
       await expect(id).toBeTruthy();
       await expect(document.getElementById(id!)).toBe(panelOf(canvasElement));
@@ -159,8 +159,8 @@ export const WithIconInTrigger: Story = {
     });
 
     await step('O trigger continua alternando o painel', async () => {
-      await fechar(trigger);
-      await abrir(trigger);
+      await close(trigger);
+      await open(trigger);
       await expect(canvas.getByText('Filtro por categoria')).toBeVisible();
     });
   },
@@ -242,14 +242,14 @@ export const WithRotatingChevron: Story = {
     });
 
     await step('Fechado, o ícone não está girado', async () => {
-      await fechar(trigger);
+      await close(trigger);
       // waitFor porque `.nds-chevron` tem transition: transform — medido no
       // primeiro quadro, o valor computado ainda é a matriz da animação.
       await waitFor(() => expect(getComputedStyle(chevron).transform).toBe('none'));
     });
 
     await step('Aberto, o CSS gira 180° a partir do estado no trigger', async () => {
-      await abrir(trigger);
+      await open(trigger);
       await expect(trigger).toHaveAttribute('data-state', 'open');
       // matrix(-1, 0, 0, -1, 0, 0) é a forma computada de rotate(180deg).
       await waitFor(() =>
@@ -318,8 +318,8 @@ export const WithSettingsIcon: Story = {
     const trigger = canvas.getByRole('button', { name: 'Configurações do sistema' });
 
     await step('O painel aceita controles de formulário completos', async () => {
-      await fechar(trigger);
-      await abrir(trigger);
+      await close(trigger);
+      await open(trigger);
       await expect(canvas.getAllByRole('checkbox')).toHaveLength(3);
     });
 

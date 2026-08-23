@@ -3,7 +3,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
-import { painel } from './popover.fixtures';
+import { panel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 
 // As quatro composições que o conteúdo compartilhado descreve — editar perfil,
@@ -110,10 +110,10 @@ export const TableFilter: Story = {
     await step('E marcar outro não fecha o painel', async () => {
       // Filtro é escolha múltipla: fechar no primeiro clique obrigaria a
       // reabrir para cada critério.
-      const pendente = within(painel()!).getByLabelText(/Pendente/i) as HTMLInputElement;
+      const pendente = within(panel()!).getByLabelText(/Pendente/i) as HTMLInputElement;
       if (!pendente.checked) await userEvent.click(pendente);
       await expect(pendente).toBeChecked();
-      await expect(painel()).toBeInTheDocument();
+      await expect(panel()).toBeInTheDocument();
     });
   },
 };
@@ -148,7 +148,7 @@ export const ColorPicker: Story = {
     });
 
     await step('E o foco chega a cada uma por Tab', async () => {
-      const ctx = within(painel()!);
+      const ctx = within(panel()!);
       const first = ctx.getByRole('button', { name: 'Primária' });
       const segunda = ctx.getByRole('button', { name: 'Secundária' });
       first.focus();

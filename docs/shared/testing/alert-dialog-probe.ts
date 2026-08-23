@@ -14,27 +14,27 @@
  * não no canvas da story.
  */
 
-function texto(el: Element | null): string {
+function text(el: Element | null): string {
   return (el?.textContent ?? '').trim().replace(/\s+/g, ' ');
 }
 
 /** Como o leitor identifica o elemento focado: slot, papel e nome. */
 function describeFocus(doc: Document) {
   const el = doc.activeElement as HTMLElement | null;
-  if (!el || el === doc.body) return { slot: null, tag: 'body', texto: '' };
+  if (!el || el === doc.body) return { slot: null, tag: 'body', text: '' };
   return {
     slot: el.getAttribute('data-slot'),
     tag: el.tagName.toLowerCase(),
-    texto: texto(el).slice(0, 40),
+    text: text(el).slice(0, 40),
   };
 }
 
-function caixa(el: HTMLElement | null) {
+function box(el: HTMLElement | null) {
   if (!el) return null;
   const cs = getComputedStyle(el);
   const r = el.getBoundingClientRect();
   return {
-    largura: Math.round(r.width),
+    width: Math.round(r.width),
     raio: cs.borderRadius,
     padding: cs.padding,
     background: cs.backgroundColor,
@@ -54,23 +54,23 @@ export function panelOpen(doc: Document): HTMLElement | null {
  * e ele passa por qualquer verificação de "tem o atributo".
  */
 export function measureAlertDialog(doc: Document) {
-  const painel = panelOpen(doc);
-  if (!painel) return { finding: false as const };
+  const panel = panelOpen(doc);
+  if (!panel) return { finding: false as const };
 
   const overlay = doc.querySelector<HTMLElement>('.nds-alert-dialog-overlay');
-  const titulo = painel.querySelector<HTMLElement>('.nds-alert-dialog-title');
-  const descricao = painel.querySelector<HTMLElement>('.nds-alert-dialog-description');
-  const media = painel.querySelector<HTMLElement>('.nds-alert-dialog-media');
-  const rodape = painel.querySelector<HTMLElement>('.nds-alert-dialog-footer');
-  const cancelar = painel.querySelector<HTMLElement>('[data-slot="alert-dialog-cancel"]');
-  const acao = painel.querySelector<HTMLElement>('[data-slot="alert-dialog-action"]');
+  const title = panel.querySelector<HTMLElement>('.nds-alert-dialog-title');
+  const descricao = panel.querySelector<HTMLElement>('.nds-alert-dialog-description');
+  const media = panel.querySelector<HTMLElement>('.nds-alert-dialog-media');
+  const footer = panel.querySelector<HTMLElement>('.nds-alert-dialog-footer');
+  const cancelar = panel.querySelector<HTMLElement>('[data-slot="alert-dialog-cancel"]');
+  const acao = panel.querySelector<HTMLElement>('[data-slot="alert-dialog-action"]');
 
-  const labelled = painel.getAttribute('aria-labelledby');
-  const described = painel.getAttribute('aria-describedby');
+  const labelled = panel.getAttribute('aria-labelledby');
+  const described = panel.getAttribute('aria-describedby');
 
   /** Ordem no DOM dos botões do rodapé — é ela que o Tab e o leitor seguem. */
-  const footerOrder = rodape
-    ? Array.from(rodape.querySelectorAll<HTMLElement>('[data-slot]'))
+  const footerOrder = footer
+    ? Array.from(footer.querySelectorAll<HTMLElement>('[data-slot]'))
         .map((b) => b.getAttribute('data-slot'))
         .join(' > ')
     : null;
@@ -78,8 +78,8 @@ export function measureAlertDialog(doc: Document) {
   return {
     finding: true as const,
     semantica: {
-      papel: painel.getAttribute('role'),
-      modal: painel.getAttribute('aria-modal'),
+      papel: panel.getAttribute('role'),
+      modal: panel.getAttribute('aria-modal'),
       /** Resolve? `sim` só quando o id existe no documento. */
       labelledBy: labelled ? (doc.getElementById(labelled) ? 'resolve' : 'quebrado') : 'ausente',
       describedBy: described ? (doc.getElementById(described) ? 'resolve' : 'quebrado') : 'ausente',
@@ -89,47 +89,47 @@ export function measureAlertDialog(doc: Document) {
        * divergência semântica onde não há. Mesma armadilha da sonda do accordion.
        */
       tituloComoHeading: (() => {
-        if (!titulo) return null;
-        const tag = titulo.tagName.toLowerCase();
+        if (!title) return null;
+        const tag = title.tagName.toLowerCase();
         if (/^h[1-6]$/.test(tag)) return `heading ${tag[1]} (${tag})`;
-        if (titulo.getAttribute('role') === 'heading') {
-          return `heading ${titulo.getAttribute('aria-level') ?? '?'} (${tag})`;
+        if (title.getAttribute('role') === 'heading') {
+          return `heading ${title.getAttribute('aria-level') ?? '?'} (${tag})`;
         }
         return `sem heading (${tag})`;
       })(),
       tagDaDescricao: descricao?.tagName.toLowerCase() ?? null,
       /** O ícone repete o título: tem que ficar fora da árvore de acessibilidade. */
       mediaEscondida: media ? (media.getAttribute('aria-hidden') ?? 'não') : 'sem media',
-      estadoDoPainel: painel.getAttribute('data-state')
-        ?? (painel.hasAttribute('data-open') ? 'open' : null),
+      estadoDoPainel: panel.getAttribute('data-state')
+        ?? (panel.hasAttribute('data-open') ? 'open' : null),
       estadoDoOverlay: overlay
         ? overlay.getAttribute('data-state') ?? (overlay.hasAttribute('data-open') ? 'open' : null)
         : 'sem overlay',
     },
     estrutura: {
       footerOrder,
-      textoDoCancelar: texto(cancelar),
-      textoDaAcao: texto(acao),
+      textoDoCancelar: text(cancelar),
+      textoDaAcao: text(acao),
       /** Rótulo acessível de qualquer botão de fechar sem texto. */
       rotuloDeFechar: (() => {
-        const x = painel.querySelector<HTMLElement>(
+        const x = panel.querySelector<HTMLElement>(
           '[data-slot$="-close"], [aria-label][data-slot*="close"]',
         );
-        return x ? x.getAttribute('aria-label') ?? texto(x) : 'sem botão X';
+        return x ? x.getAttribute('aria-label') ?? text(x) : 'sem botão X';
       })(),
       temMedia: media ? 'sim' : 'não',
     },
     geometria: {
-      painel: caixa(painel),
+      panel: box(panel),
       overlay: overlay
         ? { background: getComputedStyle(overlay).backgroundColor, zIndex: getComputedStyle(overlay).zIndex }
         : null,
       /** Em coluna manda `align-items`; em linha, `justify-content`. */
-      rodape: rodape
+      footer: footer
         ? {
-            direcao: getComputedStyle(rodape).flexDirection,
-            justifica: getComputedStyle(rodape).justifyContent,
-            espaco: getComputedStyle(rodape).gap,
+            direction: getComputedStyle(footer).flexDirection,
+            justifica: getComputedStyle(footer).justifyContent,
+            espaco: getComputedStyle(footer).gap,
           }
         : null,
     },
@@ -146,6 +146,6 @@ export function dialogoState(doc: Document) {
 }
 
 /** Canal de saída: o console da play não chega ao terminal do vitest. */
-export function reportAlertDialog(stack: string, cenario: string, dados: unknown): never {
-  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(dados)}`);
+export function reportAlertDialog(stack: string, cenario: string, data: unknown): never {
+  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(data)}`);
 }

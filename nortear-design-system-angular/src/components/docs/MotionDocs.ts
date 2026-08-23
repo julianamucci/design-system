@@ -51,26 +51,26 @@ const { t } = useTranslation(translations as Record<string, unknown>);
 /** Um degrau da escada de durações. `token` alimenta o `data-duration` do CSS. */
 interface DurationDegrau {
   token: string;
-  rotulo: string;
+  label: string;
 }
 
 const ESCADA: DurationDegrau[] = [
-  { token: 'instant', rotulo: 'instant — 0ms' },
-  { token: 'fast', rotulo: 'fast — 120ms' },
-  { token: 'base', rotulo: 'base — 200ms' },
-  { token: 'moderate', rotulo: 'moderate — 320ms' },
-  { token: 'slow', rotulo: 'slow — 500ms' },
-  { token: 'stately', rotulo: 'stately — 800ms' },
+  { token: 'instant', label: 'instant — 0ms' },
+  { token: 'fast', label: 'fast — 120ms' },
+  { token: 'base', label: 'base — 200ms' },
+  { token: 'moderate', label: 'moderate — 320ms' },
+  { token: 'slow', label: 'slow — 500ms' },
+  { token: 'stately', label: 'stately — 800ms' },
 ];
 
 /** Item da cascata, com o atraso já pronto como valor CSS. */
 interface ItemDaCascata {
-  rotulo: string;
+  label: string;
   delay: string;
 }
 
 const CASCATA_ITEMS: ItemDaCascata[] = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'].map(
-  (rotulo, i) => ({ rotulo, delay: `${i * 60}ms` }),
+  (label, i) => ({ label, delay: `${i * 60}ms` }),
 );
 
 // ─── Parâmetros da mola ──────────────────────────────────────────────────────
@@ -152,7 +152,7 @@ const CODIGO_PRESENCE = `<!-- animate.enter / animate.leave são do próprio Ang
                 [attr.data-duration]="degrau.token"
                 [attr.data-played]="reproduzido()"
               >
-                {{ degrau.rotulo }}
+                {{ degrau.label }}
               </div>
             </div>
           }
@@ -208,12 +208,12 @@ const CODIGO_PRESENCE = `<!-- animate.enter / animate.leave são do próprio Ang
             <ul class="nds-cluster nds-list-none" data-spacing="sm">
               <!-- A chave de track carrega a execução: mudá-la recria os <li>,
                    e é a recriação que reinicia a animação CSS. -->
-              @for (item of itensDaCascata; track execucaoDaCascata() + item.rotulo) {
+              @for (item of itensDaCascata; track execucaoDaCascata() + item.label) {
                 <li
                   [class]="classeDoItemDaCascata()"
                   [style.--nds-stagger-delay]="item.delay"
                 >
-                  {{ item.rotulo }}
+                  {{ item.label }}
                 </li>
               }
             </ul>
@@ -340,8 +340,8 @@ export class NdsMotionDocs implements OnDestroy {
   private nextFrame: number | undefined;
 
   protected aoPressionar(evento: PointerEvent): void {
-    const alvo = evento.target as HTMLElement;
-    alvo.setPointerCapture(evento.pointerId);
+    const target = evento.target as HTMLElement;
+    target.setPointerCapture(evento.pointerId);
     this.pararMola();
     this.arrastando = true;
     this.escala.set(1.05);

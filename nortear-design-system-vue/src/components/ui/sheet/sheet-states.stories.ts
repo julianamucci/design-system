@@ -142,19 +142,19 @@ export const Open: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const painel = await waitForPortal('dialog');
+    const panel = await waitForPortal('dialog');
 
     await step('Monta já aberto, com o contrato de markup completo', async () => {
-      await expect(painel).toBeVisible();
-      await expect(painel).toHaveAttribute('aria-modal', 'true');
-      await expect(painel).toHaveAccessibleName();
-      await expect(painel).toHaveAccessibleDescription();
+      await expect(panel).toBeVisible();
+      await expect(panel).toHaveAttribute('aria-modal', 'true');
+      await expect(panel).toHaveAccessibleName();
+      await expect(panel).toHaveAccessibleDescription();
       await expect(document.querySelector('[data-slot="sheet-overlay"]')).not.toBeNull();
     });
 
     await step('O foco está dentro do painel', async () => {
       await waitFor(() => {
-        if (!painel.contains(document.activeElement)) {
+        if (!panel.contains(document.activeElement)) {
           throw new Error('o foco não entrou no painel');
         }
       });
@@ -195,19 +195,19 @@ export const WithCloseButtonHidden: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const painel = await waitForPortal('dialog');
+    const panel = await waitForPortal('dialog');
 
     await step('O botão do canto não é renderizado', async () => {
-      await expect(painel).toBeVisible();
+      await expect(panel).toBeVisible();
       await expect(
-        within(painel).queryByRole('button', { name: /^Fechar$/i }),
+        within(panel).queryByRole('button', { name: /^Fechar$/i }),
       ).not.toBeInTheDocument();
     });
 
     await step('E ainda assim existe uma saída — o rodapé', async () => {
-      const rodape = painel.querySelector<HTMLElement>('[data-slot="sheet-footer"]');
-      await expect(rodape).not.toBeNull();
-      await expect(within(rodape!).getAllByRole('button').length).toBeGreaterThan(0);
+      const footer = panel.querySelector<HTMLElement>('[data-slot="sheet-footer"]');
+      await expect(footer).not.toBeNull();
+      await expect(within(footer!).getAllByRole('button').length).toBeGreaterThan(0);
     });
   },
 };
@@ -266,14 +266,14 @@ export const Controlled: Story = {
 
     await step('O estado externo abre o painel', async () => {
       await userEvent.click(externo);
-      const painel = await waitForPortal('dialog');
-      await expect(painel).toBeVisible();
-      await expect(painel).toHaveAttribute('data-slot', 'sheet-content');
+      const panel = await waitForPortal('dialog');
+      await expect(panel).toBeVisible();
+      await expect(panel).toHaveAttribute('data-slot', 'sheet-content');
     });
 
     await step('Fechar por dentro devolve o valor a quem é dono dele', async () => {
-      const painel = await waitForPortal('dialog');
-      await userEvent.click(within(painel).getByRole('button', { name: /^Cancelar$/i }));
+      const panel = await waitForPortal('dialog');
+      await userEvent.click(within(panel).getByRole('button', { name: /^Cancelar$/i }));
       await waitForPortalGone('dialog');
       // Se o evento não tivesse chegado, `open` continuaria true e o painel
       // reabriria no próximo ciclo de render.

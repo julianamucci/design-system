@@ -137,8 +137,8 @@ export const IDELayout: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("Layout IDE tem 2 grupos e 4 painéis", async () => {
-      const grupos = canvasElement.querySelectorAll('[data-slot="resizable-panel-group"]');
-      await expect(grupos).toHaveLength(2);
+      const groups = canvasElement.querySelectorAll('[data-slot="resizable-panel-group"]');
+      await expect(groups).toHaveLength(2);
       await expect(canvasElement.querySelectorAll('[data-slot="resizable-panel"]')).toHaveLength(4);
     });
 
@@ -152,18 +152,18 @@ export const IDELayout: Story = {
     });
 
     await step("A sidebar nasce estreita e o editor domina a altura", async () => {
-      const grupos = [...canvasElement.querySelectorAll('[data-slot="resizable-panel-group"]')];
-      const fatia = (grupo: Element, horizontal: boolean) => {
+      const groups = [...canvasElement.querySelectorAll('[data-slot="resizable-panel-group"]')];
+      const fatia = (group: Element, horizontal: boolean) => {
         const panels = [
-          ...grupo.querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]'),
+          ...group.querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]'),
         ];
         const measurement = (p: HTMLElement) =>
           horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height;
         const total = panels.reduce((a, p) => a + measurement(p), 0);
         return measurement(panels[0]) / total;
       };
-      await expect(fatia(grupos[0], true)).toBeCloseTo(0.2, 1);
-      await expect(fatia(grupos[1], false)).toBeCloseTo(0.7, 1);
+      await expect(fatia(groups[0], true)).toBeCloseTo(0.2, 1);
+      await expect(fatia(groups[1], false)).toBeCloseTo(0.7, 1);
     });
   },
 };

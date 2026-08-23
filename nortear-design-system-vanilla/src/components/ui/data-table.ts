@@ -601,9 +601,9 @@ export function createDataTable<TData extends RowData>(
   function marcarFixada(
     celula: HTMLElement,
     col: ReturnType<typeof table.getColumn>,
-    tipo: 'th' | 'td',
+    type: 'th' | 'td',
   ): void {
-    if (col?.getIsPinned()) celula.classList.add(`nds-data-table-${tipo}-pinned`);
+    if (col?.getIsPinned()) celula.classList.add(`nds-data-table-${type}-pinned`);
   }
 
   // ── Toolbar render ───────────────────────────────────────────────────────
@@ -888,8 +888,8 @@ export function createDataTable<TData extends RowData>(
           // O controle é criado UMA vez por coluna e reaproveitado a cada
           // render. Recriá-lo trocava o nó com foco a cada tecla: só a primeira
           // letra entrava no filtro e o resto caía fora do campo.
-          let controle = filterControls.get(col.id);
-          if (!controle) {
+          let control = filterControls.get(col.id);
+          if (!control) {
             if (meta.type === 'select') {
               const select = document.createElement('select');
               select.className = 'nds-data-table-filter-select';
@@ -907,7 +907,7 @@ export function createDataTable<TData extends RowData>(
               select.addEventListener('change', () => {
                 col.setFilterValue(select.value || undefined);
               });
-              controle = select;
+              control = select;
             } else {
               const input = createInput({
                 placeholder: meta.placeholder ?? 'Filtrar...',
@@ -917,17 +917,17 @@ export function createDataTable<TData extends RowData>(
               input.addEventListener('input', () => {
                 col.setFilterValue(input.value);
               });
-              controle = input;
+              control = input;
             }
-            filterControls.set(col.id, controle);
+            filterControls.set(col.id, control);
           }
           // Só sincroniza quando o campo NÃO está com o foco: escrever nele
           // durante a digitação moveria o cursor.
-          const valor = (col.getFilterValue() as string) ?? '';
-          if (document.activeElement !== controle && controle.value !== valor) {
-            controle.value = valor;
+          const value = (col.getFilterValue() as string) ?? '';
+          if (document.activeElement !== control && control.value !== value) {
+            control.value = value;
           }
-          th.appendChild(controle);
+          th.appendChild(control);
         }
         tr.appendChild(th);
       }

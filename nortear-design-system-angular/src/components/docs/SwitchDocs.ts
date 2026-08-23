@@ -479,12 +479,12 @@ export class NdsSwitchDocs implements AfterViewInit, OnDestroy {
   private readonly tplCompSettingsList = viewChild.required<TemplateRef<unknown>>('tplCompSettingsList');
   private readonly tplCompInForm = viewChild.required<TemplateRef<unknown>>('tplCompInForm');
 
-  protected aoAlternar(campo: string, alvo: WritableSignal<boolean>, valor: boolean): void {
-    alvo.set(valor);
+  protected aoAlternar(field: string, target: WritableSignal<boolean>, value: boolean): void {
+    target.set(value);
     track('field_change', {
       component: 'switch',
-      field_name: campo,
-      value: String(valor),
+      field_name: field,
+      value: String(value),
       location: 'docs_demo',
     });
   }
@@ -647,12 +647,12 @@ export class NdsSwitchDocs implements AfterViewInit, OnDestroy {
     // A linha `onCheckedChange` do conteúdo compartilhado descreve o callback de
     // mudança; aqui ele é o output `checkedChange`, o que também habilita a
     // forma de duas vias `[(checked)]`.
-    const line = (chave: string, nome: string, tipo?: string) => ({
-      name: nome,
-      type: tipo ?? t(`props.table.${chave}.type`),
-      defaultValue: t(`props.table.${chave}.default`),
-      required: toPlainText(t(`props.table.${chave}.required`)),
-      description: toPlainText(t(`props.table.${chave}.description`)),
+    const line = (key: string, name: string, type?: string) => ({
+      name: name,
+      type: type ?? t(`props.table.${key}.type`),
+      defaultValue: t(`props.table.${key}.default`),
+      required: toPlainText(t(`props.table.${key}.required`)),
+      description: toPlainText(t(`props.table.${key}.description`)),
     });
     return [
       {
@@ -716,10 +716,10 @@ export class NdsSwitchDocs implements AfterViewInit, OnDestroy {
       string,
       { accessibility?: { screenReader?: Record<string, string> } }
     >;
-    const bloco = byLocale[locale]?.accessibility?.screenReader ?? {};
+    const block = byLocale[locale]?.accessibility?.screenReader ?? {};
     // `title` é o cabeçalho da seção, não uma linha da lista — sem o filtro ele
     // apareceria como primeiro item, repetindo o próprio título.
-    return Object.entries(bloco).filter(([k]) => k !== 'title').map(([, v]) => v);
+    return Object.entries(block).filter(([k]) => k !== 'title').map(([, v]) => v);
   });
 
   protected readonly relatedItems = computed(() => {

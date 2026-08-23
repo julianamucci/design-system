@@ -54,14 +54,14 @@ type Story = StoryObj;
  * a mesma geometria. Agrupar pelo centro em x junta o par e devolve uma medida
  * por categoria, sem depender da ordem em que a lib emite os nós.
  */
-function categoriaAlturas(raiz: HTMLElement): number[] {
+function categoriaAlturas(root: HTMLElement): number[] {
   const byCenter = new Map<number, number>();
-  for (const forma of datumFormas(raiz)) {
+  for (const forma of datumFormas(root)) {
     const r = forma.getBoundingClientRect();
     const center = Math.round(r.x + r.width / 2);
     byCenter.set(center, Math.max(byCenter.get(center) ?? 0, r.height));
   }
-  return [...byCenter.entries()].sort((a, b) => a[0] - b[0]).map(([, altura]) => altura);
+  return [...byCenter.entries()].sort((a, b) => a[0] - b[0]).map(([, height]) => height);
 }
 
 export const Bar: Story = {
@@ -79,12 +79,12 @@ export const Bar: Story = {
     'aria-label': 'Gráfico de barras: acessos mensais no desktop',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
-    await waitForDesign(raiz);
+    const root = exigirRoot(canvasElement);
+    await waitForDesign(root);
 
     await step('Toda categoria aparece escrita no eixo', async () => {
       await waitFor(() => {
-        for (const month of MONTHS) expect(designEscreve(raiz, month)).toBe(true);
+        for (const month of MONTHS) expect(designEscreve(root, month)).toBe(true);
       }, { timeout: 3000 });
     });
 
@@ -96,7 +96,7 @@ export const Bar: Story = {
       const maiorValue = VALUES.indexOf(Math.max(...VALUES));
       const menorValue = VALUES.indexOf(Math.min(...VALUES));
       await waitFor(() => {
-        const alturas = categoriaAlturas(raiz);
+        const alturas = categoriaAlturas(root);
         expect(alturas).toHaveLength(MONTHS.length);
         expect(alturas.indexOf(Math.max(...alturas))).toBe(maiorValue);
         expect(alturas.indexOf(Math.min(...alturas))).toBe(menorValue);
@@ -120,14 +120,14 @@ export const Line: Story = {
     'aria-label': 'Gráfico de linhas: acessos mensais por dispositivo',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
-    await waitForDesign(raiz);
+    const root = exigirRoot(canvasElement);
+    await waitForDesign(root);
 
     await step('Uma linha traçada por série', async () => {
       // O traçado é o caminho SEM preenchimento; o `C` no comando separa a
       // curva da série das linhas de grade, que também são `fill: none` mas
       // vão de um ponto a outro em reta.
-      const tracos = [...raiz.querySelectorAll<SVGPathElement>('svg path')].filter(
+      const tracos = [...root.querySelectorAll<SVGPathElement>('svg path')].filter(
         (p) => getComputedStyle(p).fill === 'none' && (p.getAttribute('d') ?? '').includes('C'),
       );
       await expect(tracos).toHaveLength(SERIES_MULTI.length);
@@ -138,9 +138,9 @@ export const Line: Story = {
 
     await step('A legenda nomeia cada série, e o eixo traz as categorias', async () => {
       for (const serie of SERIES_MULTI) {
-        await expect(designEscreve(raiz, serie.name)).toBe(true);
+        await expect(designEscreve(root, serie.name)).toBe(true);
       }
-      for (const month of MONTHS) await expect(designEscreve(raiz, month)).toBe(true);
+      for (const month of MONTHS) await expect(designEscreve(root, month)).toBe(true);
     });
   },
 };
@@ -159,11 +159,11 @@ export const Area: Story = {
     'aria-label': 'Gráfico de área: volume mensal de acessos por dispositivo',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
-    await waitForDesign(raiz);
+    const root = exigirRoot(canvasElement);
+    await waitForDesign(root);
 
     await step('Cada série tem traçado E região preenchida', async () => {
-      const caminhos = [...raiz.querySelectorAll<SVGPathElement>('svg path')];
+      const caminhos = [...root.querySelectorAll<SVGPathElement>('svg path')];
       const tracos = caminhos.filter(
         (p) => getComputedStyle(p).fill === 'none' && (p.getAttribute('d') ?? '').includes('C'),
       );
@@ -173,14 +173,14 @@ export const Area: Story = {
       // para não esconder a série de baixo.
       const regioes = caminhos.filter((p) => {
         const s = getComputedStyle(p);
-        const opacidade = Number(s.fillOpacity);
-        return s.fill !== 'none' && opacidade > 0 && opacidade < 1;
+        const opacity = Number(s.fillOpacity);
+        return s.fill !== 'none' && opacity > 0 && opacity < 1;
       });
       await expect(regioes.length).toBeGreaterThanOrEqual(SERIES_MULTI.length);
     });
 
     await step('As categorias continuam escritas no eixo', async () => {
-      for (const month of MONTHS) await expect(designEscreve(raiz, month)).toBe(true);
+      for (const month of MONTHS) await expect(designEscreve(root, month)).toBe(true);
     });
   },
 };
@@ -200,19 +200,19 @@ export const Pie: Story = {
     'aria-label': 'Distribuição de acessos por dispositivo',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
-    await waitForDesign(raiz);
+    const root = exigirRoot(canvasElement);
+    await waitForDesign(root);
 
     await step('A legenda escreve o nome de cada fatia — a cor não é o único sinal', async () => {
       await waitFor(() => {
         for (const ponto of DATA_DISPOSITIVO) {
-          expect(designEscreve(raiz, ponto.label)).toBe(true);
+          expect(designEscreve(root, ponto.label)).toBe(true);
         }
       }, { timeout: 3000 });
     });
 
     await step('Uma forma desenhada por fatia, no mínimo', async () => {
-      await expect(datumFormas(raiz).length).toBeGreaterThanOrEqual(DATA_DISPOSITIVO.length);
+      await expect(datumFormas(root).length).toBeGreaterThanOrEqual(DATA_DISPOSITIVO.length);
     });
   },
 };

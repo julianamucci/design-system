@@ -183,11 +183,11 @@ export const Playground: Story = {
 
     await step("Enter abre o painel e alcança os destinos pelo teclado", async () => {
       await userEvent.keyboard("{Enter}");
-      const painel = await waitForPanel();
+      const panel = await waitForPanel();
       await expect(produtos).toHaveAttribute("aria-expanded", "true");
       await expect(args.onValueChange).toHaveBeenCalledWith("produtos");
 
-      const first = within(painel).getByRole("link", { name: "Plano Inicial" });
+      const first = within(panel).getByRole("link", { name: "Plano Inicial" });
       // Alcançável por teclado: nenhum destino do painel sai da ordem de foco.
       await expect(first).not.toHaveAttribute("tabindex", "-1");
       first.focus();
@@ -207,8 +207,8 @@ export const Playground: Story = {
 
     await step("O ponteiro abre o painel sem clique", async () => {
       await userEvent.hover(produtos);
-      const painel = await waitForPanel();
-      await expect(painel.textContent).toContain("Plano Inicial");
+      const panel = await waitForPanel();
+      await expect(panel.textContent).toContain("Plano Inicial");
     });
 
     await step("Passar de um gatilho ao outro troca o painel sem fechá-lo", async () => {
@@ -218,8 +218,8 @@ export const Playground: Story = {
       // ponteiro de verdade a atravessa em movimento, o do teste chega de uma vez.
       await userEvent.hover(solucoes, { pointerEventsCheck: 0 });
       await waitFor(async () => {
-        const painel = document.body.querySelector(".nds-navigation-menu-popup-content");
-        await expect(painel?.textContent).toContain("Para Marketing");
+        const panel = document.body.querySelector(".nds-navigation-menu-popup-content");
+        await expect(panel?.textContent).toContain("Para Marketing");
       });
       // O popup é um só e nunca desmontou: a troca é instantânea, sem reabrir
       // a espera de hover.

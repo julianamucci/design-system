@@ -76,7 +76,7 @@ export const Default: Story = {
       await expect(measurements).not.toBeNull();
       await expect(measurements!.length).toBe(2);
       for (const m of measurements!) {
-        await expect(m.texto ?? 0).toBeGreaterThanOrEqual(4.5);
+        await expect(m.text ?? 0).toBeGreaterThanOrEqual(4.5);
         await expect(m.placeholder ?? 0).toBeGreaterThanOrEqual(4.5);
         await expect(m.border ?? 0).toBeGreaterThanOrEqual(3);
       }
@@ -277,10 +277,10 @@ export const DarkPalette: Story = {
     });
 
     await step('Os três estados continuam distinguíveis no escuro', async () => {
-      const erro = canvasElement.querySelector<HTMLInputElement>('#dk-erro')!;
+      const error = canvasElement.querySelector<HTMLInputElement>('#dk-erro')!;
       const padrao = canvasElement.querySelector<HTMLInputElement>('#dk-padrao')!;
       const off = canvasElement.querySelector<HTMLInputElement>('#dk-off')!;
-      await expect(getComputedStyle(erro).borderTopColor).not.toBe(
+      await expect(getComputedStyle(error).borderTopColor).not.toBe(
         getComputedStyle(padrao).borderTopColor,
       );
       await expect(Number(getComputedStyle(off).opacity)).toBeLessThan(1);

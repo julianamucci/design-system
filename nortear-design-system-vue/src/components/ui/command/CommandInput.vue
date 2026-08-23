@@ -29,12 +29,12 @@ const { filterState, listId } = useCommand()
 // nenhum. Aqui ela SEMEIA o estado da raiz, que é onde ela faz efeito.
 watch(
   () => props.modelValue,
-  async (valor) => {
-    if (valor === undefined || valor === filterState.search) return
+  async (value) => {
+    if (value === undefined || value === filterState.search) return
     // Espera os comandos se registrarem: o filtro roda sobre o texto que cada
     // um publica ao montar, e semear antes disso filtraria uma lista vazia.
     await nextTick()
-    filterState.search = valor
+    filterState.search = value
   },
   { immediate: true },
 )
@@ -49,7 +49,7 @@ watch(
  * depois da nossa renderização, então não dá para vencê-lo por binding: a
  * limpeza é feita no elemento, no tique seguinte.
  */
-const raiz = ref<HTMLElement | null>(null)
+const root = ref<HTMLElement | null>(null)
 const noResults = computed(
   () => !!filterState.search && filterState.filtered.count === 0,
 )
@@ -58,7 +58,7 @@ watch(
   async (vazio) => {
     if (!vazio) return
     await nextTick()
-    raiz.value
+    root.value
       ?.querySelector('[data-slot="command-input"]')
       ?.removeAttribute('aria-activedescendant')
   },
@@ -77,7 +77,7 @@ watch(
 -->
 <template>
   <div
-    ref="raiz"
+    ref="root"
     data-slot="command-input-wrapper"
     class="nds-command-input-wrapper"
   >

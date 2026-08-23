@@ -10,7 +10,7 @@
   let selecionado = $state('');
 
   // Mesmos itens do exemplo "combobox" da docs page.
-  const itens = [
+  const items = [
     { value: 'button',   label: 'Button'   },
     { value: 'input',    label: 'Input'    },
     { value: 'select',   label: 'Select'   },
@@ -18,7 +18,7 @@
     { value: 'badge',    label: 'Badge'    },
   ];
 
-  const rotulo = $derived(itens.find((i) => i.value === selecionado)?.label ?? 'Selecione um item...');
+  const label = $derived(items.find((i) => i.value === selecionado)?.label ?? 'Selecione um item...');
 
   function choose(value: string) {
     selecionado = value;
@@ -46,7 +46,7 @@
         data-justify="between"
         {...props}
       >
-        <span id="combobox-story-valor">{rotulo}</span>
+        <span id="combobox-story-valor">{label}</span>
         <ChevronsUpDown class="nds-text-muted-foreground" aria-hidden="true" />
       </Button>
     {/snippet}
@@ -57,7 +57,7 @@
       <Command.List>
         <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
         <Command.Group>
-          {#each itens as item (item.value)}
+          {#each items as item (item.value)}
             <Command.Item
               value={item.value}
               checked={selecionado === item.value}

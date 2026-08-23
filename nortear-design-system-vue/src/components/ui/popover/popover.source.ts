@@ -34,15 +34,15 @@ const ALIGNMENT_DEFAULT = 'center';
  * vêm importados de fora do arquivo —, o que chega é a string vazia, que é
  * FALSA. O popover nasceria fechado num snippet que diz o contrário.
  */
-function bool(nome: string, valor: unknown, padrao: boolean): string {
-  if (typeof valor !== 'boolean' || valor === padrao) return '';
-  return `:${nome}="${valor}"`;
+function bool(name: string, value: unknown, padrao: boolean): string {
+  if (typeof value !== 'boolean' || value === padrao) return '';
+  return `:${name}="${value}"`;
 }
 
 /** Import do design system, uma peça por linha e em ordem alfabética. */
 function importa(...parts: string[]): string {
-  const lista = [...new Set(parts)].sort();
-  return `import {\n${lista.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/popover'`;
+  const list = [...new Set(parts)].sort();
+  return `import {\n${list.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/popover'`;
 }
 
 /** As peças de sempre, mais o botão que faz de gatilho. */
@@ -84,12 +84,12 @@ ${p}</PopoverContent>`;
  * gatilho, em vez de ganhar um botão em volta: dois botões aninhados são
  * markup inválido, e o de fora roubaria o clique.
  */
-function popover(opcoes: { raiz?: string; rotulo: string; painel: string }): string {
-  return `<Popover${attrs(opcoes.raiz)}>
+function popover(options: { root?: string; label: string; panel: string }): string {
+  return `<Popover${attrs(options.root)}>
   <PopoverTrigger as-child>
-    <Button variant="outline">${opcoes.rotulo}</Button>
+    <Button variant="outline">${options.label}</Button>
   </PopoverTrigger>
-${opcoes.painel}
+${options.panel}
 </Popover>`;
 }
 
@@ -101,7 +101,7 @@ ${opcoes.painel}
  * contra o gatilho.
  */
 export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
-  const raiz = attrs(
+  const root = attrs(
     bool('default-open', ctx?.args?.defaultOpen, false),
     bool('modal', ctx?.args?.modal, false),
   );
@@ -112,7 +112,7 @@ export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
 
   return vueSnippet(
     IMPORT_BASE,
-    `<Popover${raiz}>
+    `<Popover${root}>
   <PopoverTrigger as-child>
     <Button variant="outline">Abrir popover</Button>
   </PopoverTrigger>
@@ -142,9 +142,9 @@ export function popoverContentLivreSource(): string {
     `${importa('Popover', 'PopoverContent', 'PopoverTrigger')}
 import { Button } from '@/components/ui/button'`,
     popover({
-      raiz: ':default-open="true"',
-      rotulo: 'Ver atalhos',
-      painel: `  <PopoverContent align="start">
+      root: ':default-open="true"',
+      label: 'Ver atalhos',
+      panel: `  <PopoverContent align="start">
     <p class="nds-text-body">Use Ctrl + K para abrir a busca em qualquer tela.</p>
   </PopoverContent>`,
     }),
@@ -159,9 +159,9 @@ export function popoverWithTitleSource(): string {
   return vueSnippet(
     IMPORT_BASE,
     popover({
-      raiz: ':default-open="true"',
-      rotulo: 'Configuracoes',
-      painel: configPanel(),
+      root: ':default-open="true"',
+      label: 'Configuracoes',
+      panel: configPanel(),
     }),
   );
 }
@@ -184,9 +184,9 @@ import { ref } from 'vue'
 const nome = ref('Ana Ribeiro')
 const email = ref('ana@nortear.com.br')`,
     popover({
-      raiz: ':default-open="true"',
-      rotulo: 'Editar perfil',
-      painel: `  <PopoverContent align="start">
+      root: ':default-open="true"',
+      label: 'Editar perfil',
+      panel: `  <PopoverContent align="start">
     <PopoverHeader>
       <PopoverTitle>Editar perfil</PopoverTitle>
     </PopoverHeader>
@@ -208,7 +208,7 @@ const email = ref('ana@nortear.com.br')`,
  * que não está lá.
  */
 export function popoverClosedSource(): string {
-  return vueSnippet(IMPORT_BASE, popover({ rotulo: 'Abrir popover', painel: configPanel() }));
+  return vueSnippet(IMPORT_BASE, popover({ label: 'Abrir popover', panel: configPanel() }));
 }
 
 /** Estado aberto na montagem: `default-open` é a forma não-controlada de abrir. */
@@ -216,9 +216,9 @@ export function popoverOpenSource(): string {
   return vueSnippet(
     IMPORT_BASE,
     popover({
-      raiz: ':default-open="true"',
-      rotulo: 'Abrir popover',
-      painel: configPanel(),
+      root: ':default-open="true"',
+      label: 'Abrir popover',
+      panel: configPanel(),
     }),
   );
 }
@@ -233,9 +233,9 @@ export function popoverAboveSource(): string {
   return vueSnippet(
     IMPORT_BASE,
     popover({
-      raiz: ':default-open="true"',
-      rotulo: 'Abrir acima',
-      painel: `  <PopoverContent side="top" :side-offset="12">
+      root: ':default-open="true"',
+      label: 'Abrir acima',
+      panel: `  <PopoverContent side="top" :side-offset="12">
     <PopoverHeader>
       <PopoverTitle>Ancorado acima</PopoverTitle>
       <PopoverDescription>Sem espaço acima, o painel vira para baixo sozinho.</PopoverDescription>
@@ -283,9 +283,9 @@ export function popoverModalSource(): string {
   return vueSnippet(
     IMPORT_BASE,
     popover({
-      raiz: ':default-open="true" :modal="true"',
-      rotulo: 'Abrir modal',
-      painel: configPanel(),
+      root: ':default-open="true" :modal="true"',
+      label: 'Abrir modal',
+      panel: configPanel(),
     }),
   );
 }
@@ -312,9 +312,9 @@ import { ref } from 'vue'
 const nome = ref('Ana Ribeiro')
 const email = ref('ana@nortear.com.br')`,
     popover({
-      raiz: ':default-open="true"',
-      rotulo: 'Editar perfil',
-      painel: `  <PopoverContent align="start">
+      root: ':default-open="true"',
+      label: 'Editar perfil',
+      panel: `  <PopoverContent align="start">
     <PopoverHeader>
       <PopoverTitle>Editar perfil</PopoverTitle>
       <PopoverDescription>Altere o nome e o email da conta.</PopoverDescription>
@@ -360,9 +360,9 @@ const status = reactive<Record<string, boolean>>({
   Arquivado: false,
 })`,
     popover({
-      raiz: ':default-open="true"',
-      rotulo: 'Filtros',
-      painel: `  <PopoverContent align="start">
+      root: ':default-open="true"',
+      label: 'Filtros',
+      panel: `  <PopoverContent align="start">
     <PopoverHeader>
       <PopoverTitle>Filtrar por status</PopoverTitle>
       <PopoverDescription>Combine quantos status quiser na listagem.</PopoverDescription>
@@ -401,8 +401,8 @@ export function colorPopoverSelectorSource(): string {
     ['nds-bg-destructive', 'Destrutiva'],
   ]
     .map(
-      ([className, nome]) =>
-        `      <button type="button" class="nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring ${className}" aria-label="${nome}"></button>`,
+      ([className, name]) =>
+        `      <button type="button" class="nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring ${className}" aria-label="${name}"></button>`,
     )
     .join('\n');
 
@@ -417,9 +417,9 @@ export function colorPopoverSelectorSource(): string {
     )}
 import { Button } from '@/components/ui/button'`,
     popover({
-      raiz: ':default-open="true"',
-      rotulo: 'Escolher cor da etiqueta',
-      painel: `  <PopoverContent align="start">
+      root: ':default-open="true"',
+      label: 'Escolher cor da etiqueta',
+      panel: `  <PopoverContent align="start">
     <PopoverHeader>
       <PopoverTitle>Cor da etiqueta</PopoverTitle>
       <PopoverDescription>Escolha uma cor da paleta do tema.</PopoverDescription>
@@ -458,9 +458,9 @@ const preferencias = reactive<Record<string, boolean>>({
   'Modo compacto': false,
 })`,
     popover({
-      raiz: ':default-open="true"',
-      rotulo: 'Configuracoes rápidas',
-      painel: `  <PopoverContent align="start">
+      root: ':default-open="true"',
+      label: 'Configuracoes rápidas',
+      panel: `  <PopoverContent align="start">
     <PopoverHeader>
       <PopoverTitle>Preferências</PopoverTitle>
       <PopoverDescription>Cada linha vale por si — nada aqui depende do resto.</PopoverDescription>

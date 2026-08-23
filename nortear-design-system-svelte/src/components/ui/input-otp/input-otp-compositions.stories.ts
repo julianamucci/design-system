@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, userEvent, expect } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
-import { campo } from './input-otp.fixtures';
+import { field } from './input-otp.fixtures';
 import {
   inputOtpWithErrorSource,
   inputOtpWithReenvioSource,
@@ -43,9 +43,9 @@ export const WithLabel: Story = {
     await step('O rótulo visível é o nome do campo', async () => {
       // `for`/`id` e não só texto na tela: é a ligação que faz o leitor
       // anunciar o rótulo ao entrar no campo.
-      const rotulo = canvasElement.querySelector<HTMLLabelElement>('label[for]')!;
-      await expect(rotulo.textContent?.trim()).toBe('Código de verificação');
-      await expect(rotulo.htmlFor).toBe(campo(canvasElement).id);
+      const label = canvasElement.querySelector<HTMLLabelElement>('label[for]')!;
+      await expect(label.textContent?.trim()).toBe('Código de verificação');
+      await expect(label.htmlFor).toBe(field(canvasElement).id);
     });
   },
 };
@@ -60,7 +60,7 @@ export const WithHelpText: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('A ajuda é lida junto com o campo', async () => {
-      const described = campo(canvasElement).getAttribute('aria-describedby');
+      const described = field(canvasElement).getAttribute('aria-describedby');
       await expect(described).toBeTruthy();
       await expect(canvasElement.querySelector(`#${described}`)?.textContent).toContain('SMS');
     });
@@ -79,7 +79,7 @@ export const WithErrorMessage: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('Causa e ação corretiva chegam pelo mesmo caminho do erro', async () => {
-      const input = campo(canvasElement);
+      const input = field(canvasElement);
       await expect(input).toHaveAttribute('aria-invalid', 'true');
       const described = input.getAttribute('aria-describedby');
       await expect(canvasElement.querySelector(`#${described}`)?.textContent).toContain(
@@ -102,7 +102,7 @@ export const WithResendButton: Story = {
     await step('O reenvio é alcançável pelo teclado depois do campo', async () => {
       // O botão vem DEPOIS do campo na ordem do DOM: quem chega ao fim do
       // código encontra o reenvio no próximo Tab, sem voltar pelo caminho.
-      campo(canvasElement).focus();
+      field(canvasElement).focus();
       await userEvent.tab();
       await expect(canvas.getByRole('button', { name: 'Reenviar código' })).toHaveFocus();
     });

@@ -219,11 +219,11 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   /** Uma opção montada: o nó, o que ele vale e se aceita ser escolhido. */
   type Option = { el: HTMLElement; value: string; label: string; disabled: boolean };
 
-  let valor = defaultValue ?? '';
+  let value = defaultValue ?? '';
   let isOpen = false;
   let posicionador: HTMLElement | null = null;
-  let conteudo: HTMLElement | null = null;
-  let opcoes: Option[] = [];
+  let content: HTMLElement | null = null;
+  let optionList: Option[] = [];
   let active = -1;
 
   let timerClickOutside: ReturnType<typeof setTimeout> | null = null;
@@ -251,38 +251,38 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
 
   // ── Raiz ───────────────────────────────────────────────────────────────────
 
-  const raiz = document.createElement('div');
-  raiz.dataset.slot = 'select';
+  const root = document.createElement('div');
+  root.dataset.slot = 'select';
   // `display: contents` faz o gatilho ser o filho de layout de quem consome —
   // como o root das outras stacks, que não emite caixa nenhuma. Mesma forma de
   // `popover.ts` e `dropdown-menu.ts`.
-  raiz.style.display = 'contents';
+  root.style.display = 'contents';
 
   // ── Gatilho ────────────────────────────────────────────────────────────────
 
-  const gatilho = document.createElement('button');
-  gatilho.type = 'button';
-  gatilho.className = cn('nds-select-trigger', options.class);
-  gatilho.dataset.slot = 'select-trigger';
-  gatilho.dataset.size = size;
+  const trigger = document.createElement('button');
+  trigger.type = 'button';
+  trigger.className = cn('nds-select-trigger', options.class);
+  trigger.dataset.slot = 'select-trigger';
+  trigger.dataset.size = size;
   // `data-state` é o contrato de estado que a tabela de Estados do conteúdo
   // compartilhado descreve e que as demais stacks emitem pela lib headless.
-  gatilho.dataset.state = 'closed';
-  gatilho.setAttribute('role', 'combobox');
-  gatilho.setAttribute('aria-haspopup', 'listbox');
-  gatilho.setAttribute('aria-expanded', 'false');
-  if (id) gatilho.id = id;
-  if (disabled) gatilho.disabled = true;
-  if (required) gatilho.setAttribute('aria-required', 'true');
-  if (options['aria-invalid']) gatilho.setAttribute('aria-invalid', 'true');
-  if (options['aria-describedby']) gatilho.setAttribute('aria-describedby', options['aria-describedby']);
+  trigger.dataset.state = 'closed';
+  trigger.setAttribute('role', 'combobox');
+  trigger.setAttribute('aria-haspopup', 'listbox');
+  trigger.setAttribute('aria-expanded', 'false');
+  if (id) trigger.id = id;
+  if (disabled) trigger.disabled = true;
+  if (required) trigger.setAttribute('aria-required', 'true');
+  if (options['aria-invalid']) trigger.setAttribute('aria-invalid', 'true');
+  if (options['aria-describedby']) trigger.setAttribute('aria-describedby', options['aria-describedby']);
 
   const valueEl = document.createElement('span');
   valueEl.id = `nds-select-value-${seq}`;
   valueEl.className = 'nds-select-value';
   valueEl.dataset.slot = 'select-value';
 
-  gatilho.append(valueEl, createIcon(TRACO_CHEVRON, 'nds-select-trigger-icon'));
+  trigger.append(valueEl, createIcon(TRACO_CHEVRON, 'nds-select-trigger-icon'));
 
   // Nome acessível. `role="combobox"` NÃO aceita nome vindo do próprio conteúdo,
   // e o conteúdo do gatilho é justamente o valor exibido: sem `aria-label` ou
@@ -292,8 +292,8 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   // faria o axe passar num campo que ninguém rotulou — trocaria uma violação
   // visível por um defeito silencioso, e é a fábrica de referência que ditaria a
   // troca para as outras quatro stacks.
-  if (options['aria-label']) gatilho.setAttribute('aria-label', options['aria-label']);
-  if (options['aria-labelledby']) gatilho.setAttribute('aria-labelledby', options['aria-labelledby']);
+  if (options['aria-label']) trigger.setAttribute('aria-label', options['aria-label']);
+  if (options['aria-labelledby']) trigger.setAttribute('aria-labelledby', options['aria-labelledby']);
 
   // ── Campo escondido ────────────────────────────────────────────────────────
   //
@@ -306,31 +306,31 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   fieldHidden.dataset.slot = 'select-hidden-input';
   if (name) fieldHidden.name = name;
 
-  raiz.append(gatilho, fieldHidden);
+  root.append(trigger, fieldHidden);
 
   // ── Valor ──────────────────────────────────────────────────────────────────
 
   function pintarValue(): void {
-    const rotulo = rotulos.get(valor);
-    valueEl.textContent = rotulo ?? placeholder;
-    fieldHidden.value = valor;
+    const label = rotulos.get(value);
+    valueEl.textContent = label ?? placeholder;
+    fieldHidden.value = value;
     // Onde o `data-placeholder` pousa depende da lib: umas marcam o gatilho,
     // outras o elemento do valor. A folha compartilhada aceita as duas, e as
     // duas pintam o mesmo texto na mesma cor.
-    if (rotulo === undefined) {
-      gatilho.dataset.placeholder = '';
+    if (label === undefined) {
+      trigger.dataset.placeholder = '';
       valueEl.dataset.placeholder = '';
     } else {
-      delete gatilho.dataset.placeholder;
+      delete trigger.dataset.placeholder;
       delete valueEl.dataset.placeholder;
     }
   }
 
   function definirValue(novo: string): void {
-    valor = novo;
+    value = novo;
     pintarValue();
-    for (const opcao of opcoes) {
-      const escolhido = opcao.value === valor;
+    for (const opcao of optionList) {
+      const escolhido = opcao.value === value;
       opcao.el.setAttribute('aria-selected', String(escolhido));
       opcao.el.replaceChild(createIndicador(escolhido), opcao.el.lastElementChild!);
     }
@@ -342,66 +342,66 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   // ── Lista ──────────────────────────────────────────────────────────────────
 
   function mountOption(def: SelectOption, inside: HTMLElement): void {
-    const indice = opcoes.length;
+    const index = optionList.length;
     const { value, label } = def;
 
     const el = document.createElement('div');
-    el.id = `${listId}-opcao-${indice}`;
+    el.id = `${listId}-opcao-${index}`;
     el.className = 'nds-select-item';
     el.dataset.slot = 'select-item';
     el.dataset.value = value;
     el.setAttribute('role', 'option');
-    el.setAttribute('aria-selected', String(value === valor));
+    el.setAttribute('aria-selected', String(value === value));
     if (def.disabled) {
       el.dataset.disabled = '';
       el.setAttribute('aria-disabled', 'true');
     }
 
-    const texto = document.createElement('span');
-    texto.className = 'nds-select-item-text';
-    texto.dataset.slot = 'select-item-text';
+    const text = document.createElement('span');
+    text.className = 'nds-select-item-text';
+    text.dataset.slot = 'select-item-text';
     // O ícone entra DENTRO do texto, antes do rótulo, como nas demais stacks: é
     // `.nds-select-item-text` que declara o `gap` entre os dois.
-    if (def.icon) texto.appendChild(createIcon(def.icon));
-    texto.appendChild(document.createTextNode(label));
+    if (def.icon) text.appendChild(createIcon(def.icon));
+    text.appendChild(document.createTextNode(label));
 
-    el.append(texto, createIndicador(value === valor));
+    el.append(text, createIndicador(value === value));
 
     // A folha põe `pointer-events: none` no item desabilitado, então o clique
     // nem chega; a guarda existe para o caminho de teclado, que chega.
     el.addEventListener('mousemove', () => {
-      if (!def.disabled) destacar(indice);
+      if (!def.disabled) destacar(index);
     });
-    el.addEventListener('click', () => choose(indice));
+    el.addEventListener('click', () => choose(index));
 
     inside.appendChild(el);
-    opcoes.push({ el, value, label, disabled: def.disabled ?? false });
+    optionList.push({ el, value, label, disabled: def.disabled ?? false });
   }
 
   function mountContent(): HTMLElement {
-    const painel = document.createElement('div');
-    painel.id = listId;
-    painel.className = 'nds-select-content';
-    painel.dataset.slot = 'select-content';
-    painel.dataset.state = 'open';
+    const panel = document.createElement('div');
+    panel.id = listId;
+    panel.className = 'nds-select-content';
+    panel.dataset.slot = 'select-content';
+    panel.dataset.state = 'open';
     // `data-open` é o atributo (sem valor) que a animação de entrada da folha
     // compartilhada procura; `data-state` é o contrato de estado documentado.
-    painel.setAttribute('data-open', '');
+    panel.setAttribute('data-open', '');
     // O papel mora no PAINEL, e não num invólucro interno: sem botões de rolagem
     // (que a anatomia não descreve), os únicos filhos do painel são grupos,
     // opções e separadores — os filhos que a ARIA permite dentro de um
     // `listbox`. Um nível a menos é um lugar a menos para o contrato divergir, e
     // é o painel que carrega a animação: gatear a espera do teste pela opacidade
     // dele mede o que a pessoa vê, e não um filho que já nasce opaco.
-    painel.setAttribute('role', 'listbox');
-    painel.setAttribute('aria-label', listLabel);
+    panel.setAttribute('role', 'listbox');
+    panel.setAttribute('aria-label', listLabel);
 
     // O foco não pode escapar do gatilho quando o ponteiro pousa no painel: sem
     // isto o `mousedown` num `<div>` leva o foco ao `<body>`, e o Escape
     // seguinte fica sem dono.
-    painel.addEventListener('mousedown', (e) => e.preventDefault());
+    panel.addEventListener('mousedown', (e) => e.preventDefault());
 
-    opcoes = [];
+    optionList = [];
 
     for (const entry of items) {
       if (entry.type === 'separator') {
@@ -413,37 +413,37 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
         // inteira perderia a validade semântica por causa de um traço. Quem
         // separa para o leitor de tela é o grupo. Mesma decisão nas outras stacks.
         sep.setAttribute('aria-hidden', 'true');
-        painel.appendChild(sep);
+        panel.appendChild(sep);
         continue;
       }
 
       if (entry.type === 'group') {
-        const grupo = document.createElement('div');
-        grupo.className = 'nds-select-group';
-        grupo.dataset.slot = 'select-group';
-        grupo.setAttribute('role', 'group');
+        const group = document.createElement('div');
+        group.className = 'nds-select-group';
+        group.dataset.slot = 'select-group';
+        group.setAttribute('role', 'group');
 
-        const rotulo = document.createElement('div');
-        rotulo.id = `${listId}-grupo-${painel.childElementCount}`;
-        rotulo.className = 'nds-select-label';
-        rotulo.dataset.slot = 'select-label';
-        rotulo.textContent = entry.label;
+        const label = document.createElement('div');
+        label.id = `${listId}-grupo-${panel.childElementCount}`;
+        label.className = 'nds-select-label';
+        label.dataset.slot = 'select-label';
+        label.textContent = entry.label;
         // O cabeçalho NOMEIA o grupo — é o que faz o leitor de tela anunciar
         // "Sudeste" ao entrar nele, em vez de "grupo".
-        grupo.setAttribute('aria-labelledby', rotulo.id);
+        group.setAttribute('aria-labelledby', label.id);
 
-        grupo.appendChild(rotulo);
-        for (const item of entry.items) mountOption(item, grupo);
-        painel.appendChild(grupo);
+        group.appendChild(label);
+        for (const item of entry.items) mountOption(item, group);
+        panel.appendChild(group);
         continue;
       }
 
       // Lista plana: as opções são filhas diretas do `listbox`, sem grupo — um
       // grupo de um só existe para o olho e mente para o leitor de tela.
-      mountOption(entry, painel);
+      mountOption(entry, panel);
     }
 
-    return painel;
+    return panel;
   }
 
   // ── Posição ────────────────────────────────────────────────────────────────
@@ -453,9 +453,9 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
        de `fechar()`, no mesmo tique em que o painel é anulado. Um evento já
        enfileirado pelo navegador chegaria depois disso, e sem esta linha leria
        `offsetHeight` de `null`. Não há caminho de teste até a fila do navegador. */
-    if (!posicionador || !conteudo) return;
-    const r = gatilho.getBoundingClientRect();
-    const panelHeight = conteudo.offsetHeight;
+    if (!posicionador || !content) return;
+    const r = trigger.getBoundingClientRect();
+    const panelHeight = content.offsetHeight;
     const folga = 4;
 
     const espacoBelow = window.innerHeight - r.bottom - folga;
@@ -465,7 +465,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     const above = espacoBelow < panelHeight && espacoAbove > espacoBelow;
 
     posicionador.dataset.side = above ? 'top' : 'bottom';
-    conteudo.dataset.side = above ? 'top' : 'bottom';
+    content.dataset.side = above ? 'top' : 'bottom';
     posicionador.style.left = `${r.left + window.scrollX}px`;
     posicionador.style.top = above
       ? `${r.top + window.scrollY - panelHeight - folga}px`
@@ -485,21 +485,21 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   // ── Destaque ───────────────────────────────────────────────────────────────
 
   function habilitadas(): number[] {
-    return opcoes.reduce<number[]>((acc, o, i) => (o.disabled ? acc : [...acc, i]), []);
+    return optionList.reduce<number[]>((acc, o, i) => (o.disabled ? acc : [...acc, i]), []);
   }
 
-  function destacar(indice: number): void {
-    active = indice;
-    opcoes.forEach((o, i) => {
-      if (i === indice) o.el.dataset.highlighted = '';
+  function destacar(index: number): void {
+    active = index;
+    optionList.forEach((o, i) => {
+      if (i === index) o.el.dataset.highlighted = '';
       else delete o.el.dataset.highlighted;
     });
-    const alvo = opcoes[indice];
-    if (alvo) {
-      gatilho.setAttribute('aria-activedescendant', alvo.el.id);
-      alvo.el.scrollIntoView({ block: 'nearest' });
+    const target = optionList[index];
+    if (target) {
+      trigger.setAttribute('aria-activedescendant', target.el.id);
+      target.el.scrollIntoView({ block: 'nearest' });
     } else {
-      gatilho.removeAttribute('aria-activedescendant');
+      trigger.removeAttribute('aria-activedescendant');
     }
   }
 
@@ -508,26 +508,26 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
    * disponível. É o que faz reabrir a lista mostrar de onde a escolha partiu.
    */
   function highlightInitial(): number {
-    const escolhida = opcoes.findIndex((o) => o.value === valor && !o.disabled);
+    const escolhida = optionList.findIndex((o) => o.value === value && !o.disabled);
     if (escolhida !== -1) return escolhida;
     return habilitadas()[0] ?? -1;
   }
 
-  /** Anda `passo` opções, pulando as desabilitadas, sem dar a volta. */
-  function mover(passo: number): void {
-    const lista = habilitadas();
-    if (lista.length === 0) return;
-    const atual = lista.indexOf(active);
+  /** Anda `step` opções, pulando as desabilitadas, sem dar a volta. */
+  function mover(step: number): void {
+    const list = habilitadas();
+    if (list.length === 0) return;
+    const current = list.indexOf(active);
     /* v8 ignore next 4 -- o destaque nunca pousa fora da lista de habilitadas:
-       `highlightInitial` só devolve índice habilitado (ou -1, e aí `lista` está
+       `highlightInitial` só devolve índice habilitado (ou -1, e aí `list` está
        vazia e a guarda acima já saiu), e nada torna uma opção indisponível depois
        de montada. A guarda cobre a ordem de chamada, não um estado alcançável. */
-    if (atual === -1) {
-      destacar(passo > 0 ? lista[0] : lista[lista.length - 1]);
+    if (current === -1) {
+      destacar(step > 0 ? list[0] : list[list.length - 1]);
       return;
     }
-    const next = Math.min(Math.max(atual + passo, 0), lista.length - 1);
-    destacar(lista[next]);
+    const next = Math.min(Math.max(current + step, 0), list.length - 1);
+    destacar(list[next]);
   }
 
   // ── Busca por digitação ────────────────────────────────────────────────────
@@ -550,10 +550,10 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     if (timerSearch !== null) clearTimeout(timerSearch);
     timerSearch = setTimeout(clearSearch, SEARCH_MS_WINDOW);
 
-    const lista = habilitadas();
-    const partida = lista.indexOf(active);
-    const order = lista.slice(partida + 1).concat(lista.slice(0, Math.max(partida + 1, 0)));
-    return order.find((i) => opcoes[i].label.toLowerCase().startsWith(search)) ?? -1;
+    const list = habilitadas();
+    const partida = list.indexOf(active);
+    const order = list.slice(partida + 1).concat(list.slice(0, Math.max(partida + 1, 0)));
+    return order.find((i) => optionList[i].label.toLowerCase().startsWith(search)) ?? -1;
   }
 
   /** Busca com a lista FECHADA: sem painel para destacar, ela escolhe direto. */
@@ -563,12 +563,12 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     timerSearch = setTimeout(clearSearch, SEARCH_MS_WINDOW);
 
     const candidatos = [...rotulos.entries()];
-    const partida = candidatos.findIndex(([v]) => v === valor);
+    const partida = candidatos.findIndex(([v]) => v === value);
     const order = candidatos
       .slice(partida + 1)
       .concat(candidatos.slice(0, Math.max(partida + 1, 0)));
-    const finding = order.find(([, rotulo]) => rotulo.toLowerCase().startsWith(search));
-    if (finding && finding[0] !== valor) definirValue(finding[0]);
+    const finding = order.find(([, label]) => label.toLowerCase().startsWith(search));
+    if (finding && finding[0] !== value) definirValue(finding[0]);
   }
 
   // ── Abrir / fechar ─────────────────────────────────────────────────────────
@@ -583,12 +583,12 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     saindo = null;
   }
 
-  function abrir(): void {
+  function open(): void {
     /* v8 ignore next -- os dois chamadores já filtram: o `click` nativo não
        dispara em botão desabilitado, e o `keydown` sai antes por `gatilho.disabled`
        e só chama isto com a lista fechada. A guarda existe para quem chamar a
        fábrica de outro lugar amanhã. */
-    if (isOpen || gatilho.disabled) return;
+    if (isOpen || trigger.disabled) return;
     // Reabrir enquanto o painel anterior ainda desaparece deixaria DOIS
     // `role="listbox"` no documento, e o segundo com `data-state="closed"` —
     // exatamente o estado que faz a espera do teste travar.
@@ -599,19 +599,19 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     posicionador.dataset.slot = 'select-positioner';
     posicionador.style.position = 'absolute';
 
-    conteudo = mountContent();
-    posicionador.appendChild(conteudo);
+    content = mountContent();
+    posicionador.appendChild(content);
     document.body.appendChild(posicionador);
     posicionar();
 
     isOpen = true;
-    gatilho.setAttribute('aria-expanded', 'true');
-    gatilho.setAttribute('aria-controls', listId);
-    gatilho.dataset.state = 'open';
+    trigger.setAttribute('aria-expanded', 'true');
+    trigger.setAttribute('aria-controls', listId);
+    trigger.dataset.state = 'open';
 
     // O gatilho é quem comanda o teclado, então ele tem de estar com o foco —
     // um clique de mouse não o garante em toda plataforma.
-    gatilho.focus();
+    trigger.focus();
     destacar(highlightInitial());
     // Medir DE NOVO: focar o gatilho e trazer a opção destacada à vista podem
     // rolar a página, e aí a caixa lida antes de rolar aponta para o lugar
@@ -632,25 +632,25 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     onOpenChange?.(true);
   }
 
-  function fechar({ devolverFocus = true }: { devolverFocus?: boolean } = {}): void {
+  function close({ devolverFocus = true }: { devolverFocus?: boolean } = {}): void {
     /* v8 ignore next -- todos os chamadores já filtram: o `keydown` só trata
        Escape e Tab dentro do ramo de lista aberta, `onClickOutside` só existe
        enquanto ela está aberta, e `destroy()` pergunta antes. A guarda torna
        `fechar()` idempotente para quem chamar de fora amanhã. */
     if (!isOpen) return;
 
-    const painel = conteudo;
+    const panel = content;
     const portal = posicionador;
     isOpen = false;
-    conteudo = null;
+    content = null;
     posicionador = null;
-    opcoes = [];
+    optionList = [];
     active = -1;
 
-    gatilho.setAttribute('aria-expanded', 'false');
-    gatilho.removeAttribute('aria-controls');
-    gatilho.removeAttribute('aria-activedescendant');
-    gatilho.dataset.state = 'closed';
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.removeAttribute('aria-controls');
+    trigger.removeAttribute('aria-activedescendant');
+    trigger.dataset.state = 'closed';
 
     document.removeEventListener('click', onClickOutside);
     window.removeEventListener('resize', posicionar);
@@ -666,10 +666,10 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     }
     clearSearch();
 
-    if (painel && portal) {
-      painel.removeAttribute('data-open');
-      painel.setAttribute('data-closed', '');
-      painel.dataset.state = 'closed';
+    if (panel && portal) {
+      panel.removeAttribute('data-open');
+      panel.setAttribute('data-closed', '');
+      panel.dataset.state = 'closed';
       saindo = portal;
       // `prefers-reduced-motion` desliga a animação na folha, e aí `animationend`
       // NUNCA chega: o painel ficaria no documento até o prazo de segurança
@@ -680,24 +680,24 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
          roda COM animação de propósito (a emulação foi removida porque deixava o
          CI verde escondendo asserção racy), então este ramo não é alcançável aqui
          — e é justamente o que protege quem navega com movimento reduzido. */
-      if (getComputedStyle(painel).animationName === 'none') {
+      if (getComputedStyle(panel).animationName === 'none') {
         recolherOutput();
       } else {
-        painel.addEventListener('animationend', recolherOutput, { once: true });
+        panel.addEventListener('animationend', recolherOutput, { once: true });
         timerOutput = setTimeout(recolherOutput, OUTPUT_MS_DURATION);
       }
     }
 
-    if (devolverFocus) gatilho.focus();
+    if (devolverFocus) trigger.focus();
 
     onOpenChange?.(false);
   }
 
-  function choose(indice: number): void {
-    const opcao = opcoes[indice];
+  function choose(index: number): void {
+    const opcao = optionList[index];
     if (!opcao || opcao.disabled) return;
     definirValue(opcao.value);
-    fechar();
+    close();
   }
 
   // ── Teclado ────────────────────────────────────────────────────────────────
@@ -706,30 +706,30 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   // aqui. Um ouvinte de `keydown` em `document` — a forma do dropdown-menu, onde
   // o foco entra no painel — seria um segundo dono para o mesmo evento.
 
-  gatilho.addEventListener('keydown', (e) => {
+  trigger.addEventListener('keydown', (e) => {
     /* v8 ignore next -- botão desabilitado não recebe foco, e sem foco não chega
        `keydown`: o navegador fecha esse caminho antes de nós. A guarda protege
        quem trocar `disabled` por `aria-disabled` amanhã, que continua focável. */
-    if (gatilho.disabled) return;
+    if (trigger.disabled) return;
 
     if (!isOpen) {
       if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
         e.preventDefault();
-        abrir();
+        open();
         return;
       }
       if (e.key === 'ArrowUp') {
         e.preventDefault();
-        abrir();
-        const lista = habilitadas();
-        if (lista.length) destacar(lista[lista.length - 1]);
+        open();
+        const list = habilitadas();
+        if (list.length) destacar(list[list.length - 1]);
         return;
       }
       if (e.key === 'Home' || e.key === 'End') {
         e.preventDefault();
-        abrir();
-        const lista = habilitadas();
-        if (lista.length) destacar(e.key === 'Home' ? lista[0] : lista[lista.length - 1]);
+        open();
+        const list = habilitadas();
+        if (list.length) destacar(e.key === 'Home' ? list[0] : list[list.length - 1]);
         return;
       }
       if (ehImprimivel(e)) {
@@ -744,12 +744,12 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
         e.preventDefault();
         // Fecha SEM tocar no valor — e `fechar()` devolve o foco ao gatilho, que
         // nunca o perdeu.
-        fechar();
+        close();
         return;
       case 'Tab':
         // Fechar sem `preventDefault`: o Tab segue para o controle seguinte, e o
         // foco não deve voltar ao gatilho que a pessoa está deixando.
-        fechar({ devolverFocus: false });
+        close({ devolverFocus: false });
         return;
       case 'Enter':
       case ' ':
@@ -766,14 +766,14 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
         return;
       case 'Home': {
         e.preventDefault();
-        const lista = habilitadas();
-        if (lista.length) destacar(lista[0]);
+        const list = habilitadas();
+        if (list.length) destacar(list[0]);
         return;
       }
       case 'End': {
         e.preventDefault();
-        const lista = habilitadas();
-        if (lista.length) destacar(lista[lista.length - 1]);
+        const list = habilitadas();
+        if (list.length) destacar(list[list.length - 1]);
         return;
       }
     }
@@ -787,23 +787,23 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
 
   // ── Ponteiro ───────────────────────────────────────────────────────────────
 
-  gatilho.addEventListener('click', (e) => {
+  trigger.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (isOpen) fechar();
-    else abrir();
+    if (isOpen) close();
+    else open();
   });
 
   function onClickOutside(e: MouseEvent): void {
-    const alvo = e.target as Node;
-    if (!posicionador?.contains(alvo) && !gatilho.contains(alvo)) {
+    const target = e.target as Node;
+    if (!posicionador?.contains(target) && !trigger.contains(target)) {
       // O foco fica onde a pessoa o pôs: puxá-lo de volta ao gatilho seria
       // roubá-lo do controle que ela acabou de clicar. Mesma decisão do popover.
-      fechar({ devolverFocus: false });
+      close({ devolverFocus: false });
     }
   }
 
-  return tornarDestruivel(raiz, raiz, () => {
-    if (isOpen) fechar({ devolverFocus: false });
+  return tornarDestruivel(root, root, () => {
+    if (isOpen) close({ devolverFocus: false });
     // O painel pode estar tocando a saída no instante em que a raiz sai do
     // documento: sem isto ele sobreviveria por cima do conteúdo seguinte, que é
     // exatamente o vazamento que a forma compartilhada de limpeza fechou.

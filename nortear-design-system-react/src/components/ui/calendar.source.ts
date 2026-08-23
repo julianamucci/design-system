@@ -48,21 +48,21 @@ type Mode = (typeof MODOS)[number];
  */
 const STATE: Record<
   Mode,
-  { declaration: string; valor: string; handler: string; precisaDeTipo?: boolean }
+  { declaration: string; value: string; handler: string; precisaDeTipo?: boolean }
 > = {
   single: {
     declaration: 'const [data, setData] = useState(new Date());',
-    valor: 'data',
+    value: 'data',
     handler: 'onSelect={(escolhida) => escolhida && setData(escolhida)}',
   },
   multiple: {
     declaration: 'const [datas, setDatas] = useState([new Date()]);',
-    valor: 'datas',
+    value: 'datas',
     handler: 'onSelect={(escolhidas) => setDatas(escolhidas ?? [])}',
   },
   range: {
     declaration: 'const [intervalo, setIntervalo] = useState<DateRange>({ from: new Date() });',
-    valor: 'intervalo',
+    value: 'intervalo',
     handler: 'onSelect={(escolhido) => escolhido && setIntervalo(escolhido)}',
     precisaDeTipo: true,
   },
@@ -73,9 +73,9 @@ const IMPORT_LOCALE = 'import { ptBR } from "react-day-picker/locale";';
 
 /** `<Calendar />` com uma prop por linha — fila longa some na rolagem do painel. */
 function calendarWithProps(props: Array<string | false | null | undefined>): string {
-  const lista = props.filter((prop): prop is string => Boolean(prop));
-  if (lista.length <= 2) return `<Calendar ${lista.join(' ')} />`;
-  return `<Calendar\n${lista.map((prop) => `  ${prop}`).join('\n')}\n/>`;
+  const list = props.filter((prop): prop is string => Boolean(prop));
+  if (list.length <= 2) return `<Calendar ${list.join(' ')} />`;
+  return `<Calendar\n${list.map((prop) => `  ${prop}`).join('\n')}\n/>`;
 }
 
 /**
@@ -84,10 +84,10 @@ function calendarWithProps(props: Array<string | false | null | undefined>): str
  * o andaime do arquivo de story, que não existe fora dele.
  */
 function calendarControlled(
-  modo: Mode,
+  mode: Mode,
   extras: Array<string | false | null | undefined> = [],
 ): string {
-  const state = STATE[modo];
+  const state = STATE[mode];
   // O componente do design system vem primeiro, e as dependências depois: é a
   // ordem do Badge, que é o modelo destas transforms.
   const imports = [
@@ -105,9 +105,9 @@ function calendarControlled(
   return jsxSnippet(
     header,
     calendarWithProps([
-      `mode="${modo}"`,
+      `mode="${mode}"`,
       ...extras,
-      `selected={${state.valor}}`,
+      `selected={${state.value}}`,
       state.handler,
       'locale={ptBR}',
     ]),
@@ -125,7 +125,7 @@ function calendarControlled(
  */
 export const calendarSource: SourceTransform<CalendarArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const modo: Mode = (MODOS as readonly string[]).includes(args.mode as string)
+  const mode: Mode = (MODOS as readonly string[]).includes(args.mode as string)
     ? (args.mode as Mode)
     : 'single';
   const meses =
@@ -135,7 +135,7 @@ export const calendarSource: SourceTransform<CalendarArgs> = (_gerado, ctx) => {
       ? `numberOfMonths={${args.numberOfMonths}}`
       : undefined;
 
-  return calendarControlled(modo, [
+  return calendarControlled(mode, [
     propOption('captionLayout', args.captionLayout, LEGENDAS, 'label'),
     meses,
     propBool('showOutsideDays', args.showOutsideDays, true),

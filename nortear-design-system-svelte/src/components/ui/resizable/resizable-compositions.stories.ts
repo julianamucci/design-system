@@ -157,8 +157,8 @@ export const IDELayout: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('Composição IDE com 2 grupos e 4 painéis', async () => {
-      const grupos = canvasElement.querySelectorAll('[data-slot="resizable-pane-group"]');
-      await expect(grupos).toHaveLength(2);
+      const groups = canvasElement.querySelectorAll('[data-slot="resizable-pane-group"]');
+      await expect(groups).toHaveLength(2);
       const panels = canvasElement.querySelectorAll('[data-slot="resizable-panel"]');
       await expect(panels).toHaveLength(4);
     });

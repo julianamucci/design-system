@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -47,11 +47,11 @@ const ITEMS_DEFAULT: RadioGroupSnippetItem[] = [
 ];
 
 /** `items: [ … ]`, um item por linha, já recuado para dentro da chamada. */
-function blockItems(itens: RadioGroupSnippetItem[]): string {
-  const lines = itens.map((item) => {
-    const pairs = opcoes([
-      ['value', texto(item.value)],
-      ['label', texto(item.label)],
+function blockItems(items: RadioGroupSnippetItem[]): string {
+  const lines = items.map((item) => {
+    const pairs = options([
+      ['value', text(item.value)],
+      ['label', text(item.label)],
       ['disabled', item.disabled ? 'true' : undefined],
     ]);
     return `    { ${pairs.map((p) => p.replace(/,$/, '')).join(', ')} },`;
@@ -67,19 +67,19 @@ function blockItems(itens: RadioGroupSnippetItem[]): string {
  */
 function nameLines(o: RadioGroupSnippetOptions): Array<[string, string | undefined]> {
   if (!o.legend && o['aria-label']) {
-    return [['aria-label', texto(o['aria-label'])]];
+    return [['aria-label', text(o['aria-label'])]];
   }
-  return [['legend', texto(o.legend ?? 'Forma de pagamento')]];
+  return [['legend', text(o.legend ?? 'Forma de pagamento')]];
 }
 
 /** As opções da fábrica. Só o que difere do padrão entra. */
 function groupLines(o: RadioGroupSnippetOptions): string[] {
-  return opcoes([
-    ['name', texto(o.name ?? 'payment')],
+  return options([
+    ['name', text(o.name ?? 'payment')],
     ...nameLines(o),
-    ['defaultValue', o.defaultValue ? texto(o.defaultValue) : undefined],
+    ['defaultValue', o.defaultValue ? text(o.defaultValue) : undefined],
     // Vertical é como o grupo já nasce: só a linha entra no snippet.
-    ['orientation', o.orientation === 'horizontal' ? texto('horizontal') : undefined],
+    ['orientation', o.orientation === 'horizontal' ? text('horizontal') : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
     ['items', blockItems(o.items ?? ITEMS_DEFAULT)],
     ['onValueChange', o.onValueChange === false ? undefined : (o.onValueChange ?? CALLBACK_DEFAULT)],
@@ -119,27 +119,27 @@ export function radioGroupSourceWith(
  * texto fica solto ao lado, e quem usa leitor de tela nunca o ouve.
  */
 export function radioGroupWithDescriptionSnippet(
-  itens: Array<RadioGroupSnippetItem & { description: string }>,
+  items: Array<RadioGroupSnippetItem & { description: string }>,
   o: RadioGroupSnippetOptions = {},
 ): string {
-  const nome = o.name ?? 'delivery';
-  const dados = itens
+  const name = o.name ?? 'delivery';
+  const data = items
     .map(
       (i) =>
-        `  { value: ${texto(i.value)}, label: ${texto(i.label)}, description: ${texto(i.description)} },`,
+        `  { value: ${text(i.value)}, label: ${text(i.label)}, description: ${text(i.description)} },`,
     )
     .join('\n');
 
   return snippet(
     importing('radio-group', 'createRadioGroup'),
     `const escolhas = [
-${dados}
+${data}
 ];`,
     `const grupo = ${chamada(
       'createRadioGroup',
-      opcoes([
-        ['name', texto(nome)],
-        ['legend', texto(o.legend ?? 'Forma de entrega')],
+      options([
+        ['name', text(name)],
+        ['legend', text(o.legend ?? 'Forma de entrega')],
         ['items', 'escolhas.map(({ value, label }) => ({ value, label }))'],
         ['onValueChange', o.onValueChange === false ? undefined : (o.onValueChange ?? CALLBACK_DEFAULT)],
       ]),
@@ -154,7 +154,7 @@ grupo.querySelectorAll('.nds-radio-row').forEach((linha, i) => {
   rotulo.replaceWith(coluna);
 
   const auxiliar = document.createElement('p');
-  auxiliar.id = \`${nome}-\${escolhas[i].value}-desc\`;
+  auxiliar.id = \`${name}-\${escolhas[i].value}-desc\`;
   auxiliar.className = 'nds-text-caption nds-text-muted-foreground';
   auxiliar.textContent = escolhas[i].description;
 
@@ -169,10 +169,10 @@ grupo.querySelectorAll('.nds-radio-row').forEach((linha, i) => {
 
 /** Transform de story para o grupo com descrição por item. */
 export function radioGroupSourceDescription(
-  itens: Array<RadioGroupSnippetItem & { description: string }>,
+  items: Array<RadioGroupSnippetItem & { description: string }>,
   o: RadioGroupSnippetOptions = {},
 ): SourceTransform<RadioGroupArgsDaStory> {
-  return () => radioGroupWithDescriptionSnippet(itens, o);
+  return () => radioGroupWithDescriptionSnippet(items, o);
 }
 
 /**
@@ -183,21 +183,21 @@ export function radioGroupSourceDescription(
  * nada por conta própria.
  */
 export function radioGroupInvalidoSnippet(o: RadioGroupSnippetOptions = {}): string {
-  const nome = o.name ?? 'pagamento';
+  const name = o.name ?? 'pagamento';
 
   return snippet(
     importing('radio-group', 'createRadioGroup'),
-    `const grupo = ${chamada('createRadioGroup', groupLines({ ...o, name: nome }))};
+    `const grupo = ${chamada('createRadioGroup', groupLines({ ...o, name: name }))};
 
 grupo.setAttribute('aria-invalid', 'true');
-grupo.setAttribute('aria-describedby', '${nome}-erro');
+grupo.setAttribute('aria-describedby', '${name}-erro');
 // O item também: quem troca a cor da borda é a regra
 // \`.nds-radio-item[aria-invalid="true"]\` da folha compartilhada.
 grupo
   .querySelectorAll('[data-slot="radio-group-item"]')
   .forEach((item) => item.setAttribute('aria-invalid', 'true'));`,
     `const mensagem = document.createElement('p');
-mensagem.id = '${nome}-erro';
+mensagem.id = '${name}-erro';
 mensagem.className = 'nds-text-body nds-text-destructive';
 mensagem.textContent = 'Selecione uma forma de pagamento para continuar.';`,
     `document.querySelector('#app')?.append(grupo, mensagem);`,
@@ -218,10 +218,10 @@ export function radioGroupSourceInvalido(
  * que faz a escolha aparecer no `FormData` do submit, sem código de leitura.
  */
 export function formRadioGroupSnippet(o: RadioGroupSnippetOptions = {}): string {
-  const nome = o.name ?? 'payment';
+  const name = o.name ?? 'payment';
   // Dentro do formulário quem recolhe a escolha é o submit, não um callback por
   // clique — a linha do `onValueChange` sairia sobrando no snippet.
-  const grupo = chamada('createRadioGroup', groupLines({ ...o, name: nome, onValueChange: false }))
+  const group = chamada('createRadioGroup', groupLines({ ...o, name: name, onValueChange: false }))
     .split('\n')
     .map((line, i) => (i === 0 ? line : `  ${line}`))
     .join('\n');
@@ -233,14 +233,14 @@ formulario.className = 'nds-stack nds-p-4 nds-border-default nds-rounded-lg';
 formulario.dataset.spacing = 'md';
 
 formulario.append(
-  ${grupo},
+  ${group},
   createButton({ type: 'submit', label: 'Continuar' }),
 );`,
     `// O \`<input type="radio">\` nativo de cada item carrega o \`name\` do grupo —
 // a escolha chega ao \`FormData\` sem ninguém ler o DOM.
 formulario.addEventListener('submit', (e) => {
   e.preventDefault();
-  registrar(new FormData(formulario).get(${texto(nome)}));
+  registrar(new FormData(formulario).get(${text(name)}));
 });`,
     montar('formulario'),
   );

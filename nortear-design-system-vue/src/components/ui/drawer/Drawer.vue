@@ -42,15 +42,15 @@ const emits = defineEmits<DrawerRootEmits>()
 const notControlled = ref(props.defaultOpen === true)
 const isOpen = computed(() => (props.open === undefined ? notControlled.value : props.open))
 
-function onChangeAbertura(valor: boolean) {
+function onChangeAbertura(value: boolean) {
   // Guarda contra o ECO do modo controlado. Como este wrapper passa sempre um
   // `open` definido, a raiz vê a prop mudar logo depois de nós atualizarmos o
   // estado e emite `update:open` de novo — o consumidor recebia DUAS chamadas
   // por abertura. Medido contra a stack de referência, que notifica uma vez
   // por gesto: espião em 3 onde deveria estar em 2.
-  if (valor === isOpen.value) return
-  notControlled.value = valor
-  emits('update:open', valor)
+  if (value === isOpen.value) return
+  notControlled.value = value
+  emits('update:open', value)
 }
 
 // `open` e `defaultOpen` saem do repasse: quem os administra agora é este

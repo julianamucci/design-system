@@ -37,7 +37,7 @@ export const Default: Story = {
   // medição sairiam escuros e o item ficaria meio verificado.
   parameters: { covers: ['accessibility.item5'] },
   render: () =>
-    fieldLabelled({ id: 'estado-padrao', rotulo: 'Nome completo', placeholder: 'ex: João da Silva' }),
+    fieldLabelled({ id: 'estado-padrao', label: 'Nome completo', placeholder: 'ex: João da Silva' }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const input = canvas.getByLabelText('Nome completo');
@@ -63,7 +63,7 @@ export const Default: Story = {
       await expect(measurements).not.toBeNull();
       await expect(measurements!.length).toBe(2);
       for (const m of measurements!) {
-        await expect(m.texto ?? 0).toBeGreaterThanOrEqual(4.5);
+        await expect(m.text ?? 0).toBeGreaterThanOrEqual(4.5);
         await expect(m.placeholder ?? 0).toBeGreaterThanOrEqual(4.5);
         await expect(m.border ?? 0).toBeGreaterThanOrEqual(3);
       }
@@ -91,7 +91,7 @@ export const Default: Story = {
 export const Focus: Story = {
   parameters: { covers: ['functional.item2', 'visual.item2'] },
   render: () =>
-    fieldLabelled({ id: 'estado-foco', rotulo: 'Nome completo', placeholder: 'ex: João da Silva' }),
+    fieldLabelled({ id: 'estado-foco', label: 'Nome completo', placeholder: 'ex: João da Silva' }),
   play: async ({ canvasElement, step }) => {
     const input = fieldOf(canvasElement)!;
 
@@ -139,7 +139,7 @@ export const WithPlaceholder: Story = {
     },
   },
   render: () =>
-    fieldLabelled({ id: 'estado-placeholder', rotulo: 'Email', type: 'email', placeholder: 'ex: joao@empresa.com' }),
+    fieldLabelled({ id: 'estado-placeholder', label: 'Email', type: 'email', placeholder: 'ex: joao@empresa.com' }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const input = canvas.getByLabelText('Email');
@@ -172,7 +172,7 @@ export const Disabled: Story = {
     },
   },
   render: () =>
-    fieldLabelled({ id: 'estado-disabled', rotulo: 'Campo desabilitado', placeholder: 'Não disponível', disabled: true }),
+    fieldLabelled({ id: 'estado-disabled', label: 'Campo desabilitado', placeholder: 'Não disponível', disabled: true }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const input = canvas.getByLabelText('Campo desabilitado');
@@ -218,7 +218,7 @@ export const Error: Story = {
   render: () =>
     fieldLabelled({
       id: 'estado-erro',
-      rotulo: 'Email',
+      label: 'Email',
       type: 'email',
       placeholder: 'ex: joao@empresa.com',
       invalido: true,
@@ -274,15 +274,15 @@ export const DarkPalette: Story = {
     docs: { source: { transform: inputSourceWith({ temaEscuro: true }) } },
   },
   render: () => {
-    const raiz = document.createElement('div');
-    raiz.className = 'nds-stack nds-w-xs';
-    raiz.dataset.spacing = 'md';
-    raiz.append(
-      fieldLabelled({ id: 'dk-padrao', rotulo: 'Padrão', placeholder: 'ex: João da Silva' }),
-      fieldLabelled({ id: 'dk-erro', rotulo: 'Com erro', type: 'email', invalido: true, mensagem: 'Email inválido' }),
-      fieldLabelled({ id: 'dk-off', rotulo: 'Desabilitado', placeholder: 'Não disponível', disabled: true }),
+    const root = document.createElement('div');
+    root.className = 'nds-stack nds-w-xs';
+    root.dataset.spacing = 'md';
+    root.append(
+      fieldLabelled({ id: 'dk-padrao', label: 'Padrão', placeholder: 'ex: João da Silva' }),
+      fieldLabelled({ id: 'dk-erro', label: 'Com erro', type: 'email', invalido: true, mensagem: 'Email inválido' }),
+      fieldLabelled({ id: 'dk-off', label: 'Desabilitado', placeholder: 'Não disponível', disabled: true }),
     );
-    return raiz;
+    return root;
   },
   play: async ({ canvasElement, step }) => {
     await step('A paleta escura está aplicada no documento', async () => {
@@ -301,10 +301,10 @@ export const DarkPalette: Story = {
     });
 
     await step('Os três estados continuam distinguíveis no escuro', async () => {
-      const erro = canvasElement.querySelector<HTMLInputElement>('#dk-erro')!;
+      const error = canvasElement.querySelector<HTMLInputElement>('#dk-erro')!;
       const padrao = canvasElement.querySelector<HTMLInputElement>('#dk-padrao')!;
       const off = canvasElement.querySelector<HTMLInputElement>('#dk-off')!;
-      await expect(getComputedStyle(erro).borderTopColor).not.toBe(
+      await expect(getComputedStyle(error).borderTopColor).not.toBe(
         getComputedStyle(padrao).borderTopColor,
       );
       await expect(Number(getComputedStyle(off).opacity)).toBeLessThan(1);

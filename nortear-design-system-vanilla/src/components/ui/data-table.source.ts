@@ -3,9 +3,9 @@
 import {
   chamada,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -69,7 +69,7 @@ const DATA = [
 const IMPORTACAO = "import { createDataTable, type DataTableColumn } from '@/components/ui/data-table';";
 
 /** Uma linha de coluna, com o `meta` que aquele desenho pede. */
-function colunas(tipo: DataTableColumns): string {
+function colunas(type: DataTableColumns): string {
   const lines: Record<DataTableColumns, string[]> = {
     base: [
       "  { accessorKey: 'id', header: 'Fatura', size: 110, meta: { headerLabel: 'Fatura' } },",
@@ -106,7 +106,7 @@ function colunas(tipo: DataTableColumns): string {
     '// Definidas UMA vez, em escopo estável: recriar o array a cada render',
     '// zeraria ordenação, filtros e seleção.',
     'const columns: DataTableColumn<Invoice>[] = [',
-    ...lines[tipo],
+    ...lines[type],
     '];',
   ].join('\n');
 }
@@ -122,13 +122,13 @@ const LABELS = [
 ].join('\n');
 
 /** O texto do callback só entra quando é texto: nos args ele chega como função. */
-function callbackBody(valor: unknown): string | undefined {
-  return typeof valor === 'string' && valor.length > 0 ? valor : undefined;
+function callbackBody(value: unknown): string | undefined {
+  return typeof value === 'string' && value.length > 0 ? value : undefined;
 }
 
 /** A chamada real de `createDataTable` com as opções da story. */
 export function dataTableSnippet(o: DataTableSnippetOptions = {}): string {
-  const lines = opcoes([
+  const lines = options([
     ['columns', 'columns'],
     ['data', o.semDados ? '[]' : 'invoices'],
     ['enableRowSelection', o.enableRowSelection ? 'true' : undefined],
@@ -140,7 +140,7 @@ export function dataTableSnippet(o: DataTableSnippetOptions = {}): string {
     ['enableColumnPinning', o.enableColumnPinning ? 'true' : undefined],
     ['enablePagination', o.enablePagination === false ? 'false' : undefined],
     ['virtualized', o.virtualized ? 'true' : undefined],
-    ['maxHeight', o.virtualized && o.maxHeight ? texto(o.maxHeight) : undefined],
+    ['maxHeight', o.virtualized && o.maxHeight ? text(o.maxHeight) : undefined],
     ['pageSize', typeof o.pageSize === 'number' && o.pageSize !== 10 ? String(o.pageSize) : undefined],
     [
       'pageSizeOptions',
@@ -149,14 +149,14 @@ export function dataTableSnippet(o: DataTableSnippetOptions = {}): string {
     [
       'globalFilterPlaceholder',
       o.globalFilterPlaceholder && o.globalFilterPlaceholder !== SEARCH_DEFAULT
-        ? texto(o.globalFilterPlaceholder)
+        ? text(o.globalFilterPlaceholder)
         : undefined,
     ],
     [
       'emptyMessage',
-      o.emptyMessage && o.emptyMessage !== EMPTY_DEFAULT ? texto(o.emptyMessage) : undefined,
+      o.emptyMessage && o.emptyMessage !== EMPTY_DEFAULT ? text(o.emptyMessage) : undefined,
     ],
-    ['caption', texto(o.caption ?? CAPTION_DEFAULT)],
+    ['caption', text(o.caption ?? CAPTION_DEFAULT)],
     ['rowKey', '(fatura) => fatura.id'],
     ['rowLabel', callbackBody(o.rowLabel)],
     ['labels', o.labels ? LABELS : undefined],

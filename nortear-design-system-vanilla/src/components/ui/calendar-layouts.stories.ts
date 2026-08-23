@@ -47,12 +47,12 @@ export const CaptionLabel: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const legenda = () => canvasElement.querySelector('.nds-calendar-caption');
+    const caption = () => canvasElement.querySelector('.nds-calendar-caption');
 
     await step('A legenda traz mês e ano no idioma pedido', async () => {
       // functional.item6 — o idioma vale para a legenda E para o cabeçalho da
       // semana; verificar só um dos dois deixaria metade da tradução solta.
-      await expect(legenda()).toHaveTextContent(/abril 2026/i);
+      await expect(caption()).toHaveTextContent(/abril 2026/i);
       const weekDays = Array.from(canvasElement.querySelectorAll('th[scope="col"]')).map((th) =>
         th.textContent?.trim().toLowerCase(),
       );
@@ -65,11 +65,11 @@ export const CaptionLabel: Story = {
     await step('Os botões de mês trocam a legenda', async () => {
       // Cada passo estabelece a própria precondição: volta ao mês de partida
       // antes de medir, porque o painel reexecuta a play no mesmo DOM.
-      const inicial = legenda()?.textContent;
+      const inicial = caption()?.textContent;
       await userEvent.click(canvas.getByRole('button', { name: 'Ir para o próximo mês' }));
-      await expect(legenda()).toHaveTextContent(/maio 2026/i);
+      await expect(caption()).toHaveTextContent(/maio 2026/i);
       await userEvent.click(canvas.getByRole('button', { name: 'Ir para o mês anterior' }));
-      await expect(legenda()?.textContent).toBe(inicial);
+      await expect(caption()?.textContent).toBe(inicial);
     });
 
     await step('Voltar antes de janeiro vira o ano', async () => {
@@ -78,12 +78,12 @@ export const CaptionLabel: Story = {
       // navegação de um mês só alcança.
       const previous = canvas.getByRole('button', { name: 'Ir para o mês anterior' });
       for (let i = 0; i < 4; i += 1) await userEvent.click(previous);
-      await expect(legenda()).toHaveTextContent(/dezembro 2025/i);
+      await expect(caption()).toHaveTextContent(/dezembro 2025/i);
 
       // Cada passo estabelece a própria precondição: volta para abril de 2026.
       const next = canvas.getByRole('button', { name: 'Ir para o próximo mês' });
       for (let i = 0; i < 4; i += 1) await userEvent.click(next);
-      await expect(legenda()).toHaveTextContent(/abril 2026/i);
+      await expect(caption()).toHaveTextContent(/abril 2026/i);
     });
   },
 };
@@ -113,17 +113,17 @@ export const Bordered: Story = {
     await step('As classes do consumidor somam às do componente', async () => {
       // O ponto da story é a composição de classes: a moldura entra sem
       // apagar a classe base, senão o calendário perderia o próprio estilo.
-      const raiz = canvasElement.querySelector('[data-slot="calendar"]')!;
-      await expect(raiz).toHaveClass('nds-calendar-root');
-      await expect(raiz).toHaveClass('nds-border-default');
-      await expect(raiz).toHaveClass('nds-shadow-sm');
+      const root = canvasElement.querySelector('[data-slot="calendar"]')!;
+      await expect(root).toHaveClass('nds-calendar-root');
+      await expect(root).toHaveClass('nds-border-default');
+      await expect(root).toHaveClass('nds-shadow-sm');
     });
 
     await step('A borda é visível de fato', async () => {
       // Classe presente não é borda desenhada: a utilitária poderia ter sido
       // renomeada no CSS e a asserção de classe continuaria passando.
-      const raiz = canvasElement.querySelector('[data-slot="calendar"]')!;
-      const border = getComputedStyle(raiz).borderTopWidth;
+      const root = canvasElement.querySelector('[data-slot="calendar"]')!;
+      const border = getComputedStyle(root).borderTopWidth;
       await expect(parseFloat(border)).toBeGreaterThan(0);
     });
   },
@@ -141,10 +141,10 @@ export const Bare: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('Sem moldura própria quando nada é passado', async () => {
-      const raiz = canvasElement.querySelector('[data-slot="calendar"]')!;
-      await expect(raiz).toHaveClass('nds-calendar-root');
-      await expect(raiz.className.trim()).toBe('nds-calendar-root');
-      await expect(parseFloat(getComputedStyle(raiz).borderTopWidth)).toBe(0);
+      const root = canvasElement.querySelector('[data-slot="calendar"]')!;
+      await expect(root).toHaveClass('nds-calendar-root');
+      await expect(root.className.trim()).toBe('nds-calendar-root');
+      await expect(parseFloat(getComputedStyle(root).borderTopWidth)).toBe(0);
     });
   },
 };
@@ -288,10 +288,10 @@ export const TwoMonths: Story = {
         ).map((el) => el.textContent?.trim().toLowerCase() ?? '');
       // Busca dentro do bloco do mês, e não no canvas: um dia da virada aparece
       // nos DOIS grids — 28 de abril é dia real em abril e vizinho em maio.
-      const bloco = (i: number) =>
+      const block = (i: number) =>
         canvasElement.querySelectorAll<HTMLElement>('.nds-calendar-month')[i];
       const blockDay = (i: number, iso: string) =>
-        bloco(i).querySelector<HTMLButtonElement>(`.nds-calendar-day-btn[data-day="${iso}"]`)!;
+        block(i).querySelector<HTMLButtonElement>(`.nds-calendar-day-btn[data-day="${iso}"]`)!;
 
       await userEvent.click(blockDay(1, '2026-05-05'));
       await expect(rotulos()).toEqual(['abril 2026', 'maio 2026']);

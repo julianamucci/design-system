@@ -51,9 +51,9 @@ export const Rectangle: Story = {
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
 
     await step("Preenche a caixa do container na proporção de mídia", async () => {
-      const caixa = sk.getBoundingClientRect();
-      await expect(caixa.width).toBeGreaterThan(0);
-      await expect(Math.abs(caixa.width / caixa.height - 16 / 9)).toBeLessThan(0.05);
+      const box = sk.getBoundingClientRect();
+      await expect(box.width).toBeGreaterThan(0);
+      await expect(Math.abs(box.width / box.height - 16 / 9)).toBeLessThan(0.05);
     });
 
     await step("Continua fora da árvore de acessibilidade", async () => {
@@ -86,9 +86,9 @@ export const Circle: Story = {
     await step("Quadrado com medida vinda do tema", async () => {
       // Sem número mágico: a medida sai de `--size-*`, que muda por densidade.
       // Afirmar "40px" amarraria o teste ao tema padrão.
-      const caixa = sk.getBoundingClientRect();
-      await expect(caixa.width).toBeGreaterThan(0);
-      await expect(Math.round(caixa.width)).toBe(Math.round(caixa.height));
+      const box = sk.getBoundingClientRect();
+      await expect(box.width).toBeGreaterThan(0);
+      await expect(Math.round(box.width)).toBe(Math.round(box.height));
     });
 
     await step("O raio é circular, não o raio padrão do sistema", async () => {

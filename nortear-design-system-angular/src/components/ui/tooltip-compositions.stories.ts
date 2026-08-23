@@ -107,17 +107,17 @@ export const IconButtonWithShortcut: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const gatilho = within(canvasElement).getByRole('button', { name: 'Salvar' });
+    const trigger = within(canvasElement).getByRole('button', { name: 'Salvar' });
 
     await step('O nome acessível é do botão; o atalho é o extra', async () => {
       // A ordem importa: o `aria-label` sozinho já diz o que o botão faz. O
       // Tooltip acrescenta a tecla, que é conveniência, não requisito.
-      await expect(gatilho).toHaveAttribute('aria-label', 'Salvar');
-      gatilho.focus();
+      await expect(trigger).toHaveAttribute('aria-label', 'Salvar');
+      trigger.focus();
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      await expect(balaoDe(gatilho)!.querySelectorAll('kbd').length).toBe(2);
+      await expect(balaoDe(trigger)!.querySelectorAll('kbd').length).toBe(2);
     });
   },
 };
@@ -149,23 +149,23 @@ export const HelpInFormField: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'Onde encontrar o token da API' });
+    const trigger = canvas.getByRole('button', { name: 'Onde encontrar o token da API' });
 
     await step('O campo continua rotulado pelo label, não pelo Tooltip', async () => {
       // O `for`/`id` é o que nomeia o campo. O Tooltip explica ONDE achar o
       // valor — informação complementar, que pode faltar sem quebrar o
       // formulário.
-      const campo = canvas.getByLabelText('Token da API');
-      await expect(campo).toHaveAttribute('id', 'token-api');
+      const field = canvas.getByLabelText('Token da API');
+      await expect(field).toHaveAttribute('id', 'token-api');
     });
 
     await step('O ícone de ajuda é um botão focável, com nome próprio', async () => {
-      gatilho.focus();
-      await expect(gatilho).toHaveFocus();
+      trigger.focus();
+      await expect(trigger).toHaveFocus();
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      await expect(balaoDe(gatilho)!.textContent).toContain('Tokens');
+      await expect(balaoDe(trigger)!.textContent).toContain('Tokens');
     });
   },
 };
@@ -203,15 +203,15 @@ export const MetricDescription: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: 'O que é LCP' });
+    const trigger = canvas.getByRole('button', { name: 'O que é LCP' });
 
     await step('A sigla fica visível; o Tooltip só a expande', async () => {
       await expect(canvasElement.textContent).toContain('LCP');
-      gatilho.focus();
+      trigger.focus();
       await waitFor(async () => {
-        await expect(balaoDe(gatilho)).not.toBeNull();
+        await expect(balaoDe(trigger)).not.toBeNull();
       });
-      await expect(balaoDe(gatilho)!.textContent).toContain('Largest Contentful Paint');
+      await expect(balaoDe(trigger)!.textContent).toContain('Largest Contentful Paint');
     });
   },
 };

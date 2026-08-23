@@ -198,7 +198,7 @@ export const WithErrorMessage: Story = {
       source: {
         transform: textareaSourceWith({
           ariaInvalid: true,
-          erro: 'A descrição é obrigatória e deve ter pelo menos 20 caracteres.',
+          error: 'A descrição é obrigatória e deve ter pelo menos 20 caracteres.',
         }),
       },
     },

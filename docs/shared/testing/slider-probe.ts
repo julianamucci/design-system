@@ -31,29 +31,29 @@
 // ─── Peças ───────────────────────────────────────────────────────────────────
 
 /** Acha a peça pelo `data-slot`, considerando o próprio nó recebido. */
-function find(raiz: ParentNode, slot: string): HTMLElement | null {
+function find(root: ParentNode, slot: string): HTMLElement | null {
   const selector = `[data-slot="${slot}"]`;
-  if (raiz instanceof Element && raiz.matches(selector)) return raiz as HTMLElement;
-  return raiz.querySelector<HTMLElement>(selector);
+  if (root instanceof Element && root.matches(selector)) return root as HTMLElement;
+  return root.querySelector<HTMLElement>(selector);
 }
 
 /** O trilho — a caixa por onde o preenchimento corre. */
-export function sliderTrack(raiz: ParentNode): HTMLElement {
-  const el = find(raiz, 'slider-track');
+export function sliderTrack(root: ParentNode): HTMLElement {
+  const el = find(root, 'slider-track');
   if (!el) throw new Error('SONDA::slider: nenhum [data-slot="slider-track"] no canvas');
   return el;
 }
 
 /** O segmento preenchido. */
-export function preenchimentoDoSlider(raiz: ParentNode): HTMLElement {
-  const el = find(raiz, 'slider-range');
+export function preenchimentoDoSlider(root: ParentNode): HTMLElement {
+  const el = find(root, 'slider-range');
   if (!el) throw new Error('SONDA::slider: nenhum [data-slot="slider-range"] no canvas');
   return el;
 }
 
 /** As alças, na ordem em que aparecem no DOM. */
-export function alcasDoSlider(raiz: ParentNode): HTMLElement[] {
-  return [...raiz.querySelectorAll<HTMLElement>('[data-slot="slider-thumb"]')];
+export function alcasDoSlider(root: ParentNode): HTMLElement[] {
+  return [...root.querySelectorAll<HTMLElement>('[data-slot="slider-thumb"]')];
 }
 
 /**
@@ -71,8 +71,8 @@ export function handleControl(thumb: HTMLElement): HTMLElement {
   const inside = thumb.querySelector<HTMLInputElement>('input[type="range"]');
   if (inside) return inside;
   if (thumb instanceof HTMLInputElement && thumb.type === 'range') return thumb;
-  const raiz = thumb.closest<HTMLElement>('[data-slot="slider"], .nds-slider');
-  return raiz?.querySelector<HTMLInputElement>('input[type="range"]') ?? thumb;
+  const root = thumb.closest<HTMLElement>('[data-slot="slider"], .nds-slider');
+  return root?.querySelector<HTMLInputElement>('input[type="range"]') ?? thumb;
 }
 
 // ─── Valor e limites ─────────────────────────────────────────────────────────
@@ -86,19 +86,19 @@ export type HandleLimites = { min: number; max: number; agora: number };
  * `role="slider"` — as três chamadas aparecem nas stories.
  */
 export function handleLimites(elemento: HTMLElement): HandleLimites {
-  const controle = handleControl(elemento);
+  const control = handleControl(elemento);
   const numero = (aria: string, nativo: string): number => {
-    const doAria = controle.getAttribute(aria);
+    const doAria = control.getAttribute(aria);
     if (doAria !== null && doAria !== '') return Number(doAria);
     // No input nativo a fonte é a PROPRIEDADE, não o atributo: `value` não
     // reflete para o HTML, então `getAttribute('value')` devolve `null` num
     // input que mostra 50 na tela. `min` e `max` refletem, mas ler os três pela
     // mesma superfície evita depender de qual reflete e qual não.
-    if (controle instanceof HTMLInputElement) {
-      const daPropriedade = controle[nativo as 'value' | 'min' | 'max'];
+    if (control instanceof HTMLInputElement) {
+      const daPropriedade = control[nativo as 'value' | 'min' | 'max'];
       if (daPropriedade !== undefined && daPropriedade !== '') return Number(daPropriedade);
     }
-    const doNativo = controle.getAttribute(nativo);
+    const doNativo = control.getAttribute(nativo);
     if (doNativo !== null && doNativo !== '') return Number(doNativo);
     return Number.NaN;
   };
@@ -124,15 +124,15 @@ export function handleValue(elemento: HTMLElement): number {
  * input.
  */
 export function handleDesabilitada(thumb: HTMLElement): boolean {
-  const controle = handleControl(thumb);
+  const control = handleControl(thumb);
   const dataDisabled = (el: HTMLElement) => {
     const v = el.getAttribute('data-disabled');
     return v !== null && v !== 'false';
   };
   return (
-    (controle as HTMLInputElement).disabled === true ||
-    controle.getAttribute('aria-disabled') === 'true' ||
-    dataDisabled(controle) ||
+    (control as HTMLInputElement).disabled === true ||
+    control.getAttribute('aria-disabled') === 'true' ||
+    dataDisabled(control) ||
     dataDisabled(thumb)
   );
 }
@@ -151,12 +151,12 @@ function luminancia(cor: string, background: [number, number, number]): number {
 
 /** Primeiro ancestral com fundo opaco — o que o olho realmente vê por baixo. */
 function backgroundOpaco(el: HTMLElement): [number, number, number] {
-  let atual: HTMLElement | null = el;
-  while (atual) {
+  let current: HTMLElement | null = el;
+  while (current) {
     const [r = 0, g = 0, b = 0, a = 0] =
-      getComputedStyle(atual).backgroundColor.match(/[\d.]+/g)?.map(Number) ?? [];
+      getComputedStyle(current).backgroundColor.match(/[\d.]+/g)?.map(Number) ?? [];
     if (a === 1) return [r, g, b];
-    atual = atual.parentElement;
+    current = current.parentElement;
   }
   return [255, 255, 255];
 }
@@ -168,10 +168,10 @@ function backgroundOpaco(el: HTMLElement): [number, number, number] {
  * aparece na tela: ela é composta sobre o primeiro ancestral opaco antes da
  * conta. Sem isso o número sai errado e para o lado errado.
  */
-export function contrastHandleTrack(raiz: ParentNode): number {
-  const thumb = alcasDoSlider(raiz)[0];
+export function contrastHandleTrack(root: ParentNode): number {
+  const thumb = alcasDoSlider(root)[0];
   if (!thumb) throw new Error('SONDA::slider: nenhuma [data-slot="slider-thumb"] no canvas');
-  const track = sliderTrack(raiz);
+  const track = sliderTrack(root);
   const base = backgroundOpaco(track.parentElement ?? track);
 
   const a = luminancia(handleDisco(thumb).borderTopColor, base);
@@ -189,15 +189,15 @@ export function contrastHandleTrack(raiz: ParentNode): number {
  * "paleta errada" de "tema herdado de outro arquivo" de "elemento em transição".
  * Passe o retorno como MENSAGEM da asserção: ele só é lido quando ela reprova.
  */
-export function contextoHandleTrack(raiz: ParentNode): string {
-  const thumb = alcasDoSlider(raiz)[0];
+export function contextoHandleTrack(root: ParentNode): string {
+  const thumb = alcasDoSlider(root)[0];
   if (!thumb) return 'SONDA::slider: nenhuma alça';
-  const track = sliderTrack(raiz);
+  const track = sliderTrack(root);
   const partes = [
     `borda=${handleDisco(thumb).borderTopColor}`,
     `trilho=${getComputedStyle(track).backgroundColor}`,
     `base=rgb(${backgroundOpaco(track.parentElement ?? track).join(", ")})`,
-    `html="${raiz.ownerDocument?.documentElement.className ?? '?'}"`,
+    `html="${root.ownerDocument?.documentElement.className ?? '?'}"`,
   ];
   return partes.join(' ');
 }
@@ -273,17 +273,17 @@ export async function focusAssentadoRing(
   tempoMax = 2000,
 ): Promise<{ sombra: string; border: string }> {
   const limit = Date.now() + tempoMax;
-  let atual = focusAneis(thumb);
+  let current = focusAneis(thumb);
   while (Date.now() < limit) {
-    if (atual.sombra !== rest.sombra || atual.border !== rest.border) {
+    if (current.sombra !== rest.sombra || current.border !== rest.border) {
       // Mudou: deixa a transição terminar para não fotografar o meio dela.
       await new Promise((r) => setTimeout(r, 60));
       return focusAneis(thumb);
     }
     await new Promise((r) => setTimeout(r, 16));
-    atual = focusAneis(thumb);
+    current = focusAneis(thumb);
   }
-  return atual;
+  return current;
 }
 
 // ─── Teclado ─────────────────────────────────────────────────────────────────

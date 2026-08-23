@@ -90,9 +90,9 @@ export const Dragging: Story = {
       // PointerEvent construído à mão: a lib decide o arrasto por regiões de
       // acerto calculadas a partir de eventos de ponteiro reais, e descarta em
       // silêncio o que for sintético.
-      const caixa = punho.getBoundingClientRect();
-      const x = caixa.left + caixa.width / 2;
-      const y = caixa.top + caixa.height / 2;
+      const box = punho.getBoundingClientRect();
+      const x = box.left + box.width / 2;
+      const y = box.top + box.height / 2;
       const antes = firstFraction(canvasElement);
 
       await userEvent.pointer([

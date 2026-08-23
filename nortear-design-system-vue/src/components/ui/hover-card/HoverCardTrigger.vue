@@ -14,7 +14,7 @@ const referencia = ref<HTMLElement | { $el?: HTMLElement } | null>(null)
 const contexto = inject(KEY_HOVER_CARD, null)
 
 onMounted(() => {
-  if (contexto) contexto.gatilho.value = (unrefElement(referencia as never) as HTMLElement) ?? null
+  if (contexto) contexto.trigger.value = (unrefElement(referencia as never) as HTMLElement) ?? null
 })
 </script>
 

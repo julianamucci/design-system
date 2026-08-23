@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createPopover } from './popover';
-import { abrir, empilharCentrado, painel } from './popover.fixtures';
+import { open, empilharCentrado, panel } from './popover.fixtures';
 import { popoverSource, popoverSourceActions, popoverSourceWith } from './popover.source';
 import { createButton } from './button';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
@@ -59,21 +59,21 @@ export const Closed: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /abrir popover/i });
+    const trigger = canvas.getByRole('button', { name: /abrir popover/i });
 
     await step('Fechado, o painel não existe no DOM', async () => {
       // Desmontado, e não escondido: leitor de tela e busca do navegador não
       // encontram conteúdo que não está lá.
-      await expect(painel()).toBeNull();
-      await expect(gatilho).toBeVisible();
+      await expect(panel()).toBeNull();
+      await expect(trigger).toBeVisible();
     });
 
     await step('E o gatilho declara o estado nos dois contratos', async () => {
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
-      await expect(gatilho).toHaveAttribute('data-state', 'closed');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveAttribute('data-state', 'closed');
       // Sem painel não há id para apontar — o atributo some, senão o axe
       // reprovaria por aria-valid-attr-value.
-      await expect(gatilho.getAttribute('aria-controls')).toBeNull();
+      await expect(trigger.getAttribute('aria-controls')).toBeNull();
     });
   },
 };
@@ -88,21 +88,21 @@ export const Open: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /abrir popover/i });
+    const trigger = canvas.getByRole('button', { name: /abrir popover/i });
 
     // Story SEM interação de fechamento: termina aberta de propósito, porque é
     // este estado que o axe varre (contraste e ARIA do painel) e que o
     // Chromatic fotografa.
     await step('O painel está aberto e declarado nos dois contratos', async () => {
-      const p = await abrir(gatilho);
+      const p = await open(trigger);
       await expect(p).toBeVisible();
       await expect(p).toHaveAttribute('data-state', 'open');
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
-      await expect(gatilho).toHaveAttribute('data-state', 'open');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      await expect(trigger).toHaveAttribute('data-state', 'open');
     });
 
     await step('E é nomeado pelo título que ele mesmo carrega', async () => {
-      const id = painel()!.getAttribute('aria-labelledby');
+      const id = panel()!.getAttribute('aria-labelledby');
       await expect(id).toBeTruthy();
       await expect(document.getElementById(id!)?.textContent).toMatch(/Configuracoes de exibição/);
     });
@@ -134,18 +134,18 @@ export const SideTop: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /abrir acima/i });
+    const trigger = canvas.getByRole('button', { name: /abrir acima/i });
 
     await step('O painel é posicionado acima do gatilho', async () => {
-      const p = await abrir(gatilho);
-      const rg = gatilho.getBoundingClientRect();
+      const p = await open(trigger);
+      const rg = trigger.getBoundingClientRect();
       const rp = p.getBoundingClientRect();
       await expect(rp.bottom).toBeLessThanOrEqual(rg.top + 1);
     });
 
     await step('E continua alinhado ao gatilho no outro eixo', async () => {
-      const rg = gatilho.getBoundingClientRect();
-      const rp = painel()!.getBoundingClientRect();
+      const rg = trigger.getBoundingClientRect();
+      const rp = panel()!.getBoundingClientRect();
       const centerTrigger = rg.left + rg.width / 2;
       const centerPanel = rp.left + rp.width / 2;
       await expect(Math.abs(centerTrigger - centerPanel)).toBeLessThanOrEqual(2);
@@ -193,31 +193,31 @@ export const Controlled: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /abrir popover/i });
+    const trigger = canvas.getByRole('button', { name: /abrir popover/i });
     const externo = canvas.getByRole('button', { name: /toggle externo/i });
 
     await step('O botão externo abre o painel e o estado sai por onOpenChange', async () => {
-      if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.click(externo);
+      if (trigger.getAttribute('aria-expanded') === 'true') await userEvent.click(externo);
       await userEvent.click(externo);
       await waitFor(() => {
-        if (!painel()) throw new Error('popover ainda fechado');
+        if (!panel()) throw new Error('popover ainda fechado');
       }, { timeout: 1500 });
       await expect(canvas.getByTestId('estado')).toHaveTextContent('open=true');
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Clicar fora do painel fecha o popover', async () => {
-      await abrir(gatilho);
+      await open(trigger);
       await userEvent.click(canvas.getByTestId('area-externa'));
       await waitFor(() => {
-        if (painel()) throw new Error('popover ainda aberto');
+        if (panel()) throw new Error('popover ainda aberto');
       }, { timeout: 1500 });
       await expect(canvas.getByTestId('estado')).toHaveTextContent('open=false');
-      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('Estado final: painel aberto', async () => {
-      await expect(await abrir(gatilho)).toBeVisible();
+      await expect(await open(trigger)).toBeVisible();
     });
   },
 };
@@ -261,10 +261,10 @@ export const Focused: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /abrir popover/i });
+    const trigger = canvas.getByRole('button', { name: /abrir popover/i });
 
     await step('O foco entra no painel, no primeiro elemento focável', async () => {
-      const p = await abrir(gatilho);
+      const p = await open(trigger);
       await waitFor(() => {
         if (!p.contains(document.activeElement)) throw new Error('foco não entrou no painel');
       });
@@ -272,7 +272,7 @@ export const Focused: Story = {
     });
 
     await step('Tab caminha entre os controles internos', async () => {
-      const p = painel()!;
+      const p = panel()!;
       const cancelar = within(p).getByRole('button', { name: /cancelar/i });
       const confirmar = within(p).getByRole('button', { name: /confirmar/i });
       cancelar.focus();
@@ -284,7 +284,7 @@ export const Focused: Story = {
       // `:focus-visible` é a condição exata que o CSS compartilhado usa para
       // desenhar o anel — se o foco tivesse vindo do ponteiro, o navegador não
       // casaria a pseudo-classe e o anel não apareceria.
-      const confirmar = within(painel()!).getByRole('button', { name: /confirmar/i });
+      const confirmar = within(panel()!).getByRole('button', { name: /confirmar/i });
       await expect(confirmar.matches(':focus-visible')).toBe(true);
       // O anel de `.nds-button` é box-shadow, não outline — medir a propriedade
       // errada daria verde em qualquer elemento.
@@ -333,11 +333,11 @@ export const ListenerCleanup: Story = {
       probe = await sondarOuvintes({
         host: host as HTMLElement,
         montar: () => {
-          const conteudo = document.createElement('p');
-          conteudo.textContent = 'Conteúdo do popover.';
+          const content = document.createElement('p');
+          content.textContent = 'Conteúdo do popover.';
           return createPopover({
             trigger: createButton({ variant: 'outline', label: 'Abrir' }),
-            content: conteudo,
+            content: content,
           });
         },
         exercitar: (no) => no.querySelector<HTMLElement>('button')?.click(),

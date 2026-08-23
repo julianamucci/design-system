@@ -33,12 +33,12 @@ const SIZES = ['sm', 'default', 'lg'] as const;
 const IMPORT_GROUP = 'import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";';
 
 /** Um item por linha, já indentado para dentro do grupo. */
-function itens(lista: Array<[valor: string, rotulo: string, icone: string, extra?: string]>): string {
-  return lista
-    .map(([valor, rotulo, icone, extra]) => {
+function items(list: Array<[value: string, label: string, icone: string, extra?: string]>): string {
+  return list
+    .map(([value, label, icone, extra]) => {
       const abertura = extra
-        ? `<ToggleGroupItem ${extra} value="${valor}" aria-label="${rotulo}">`
-        : `<ToggleGroupItem value="${valor}" aria-label="${rotulo}">`;
+        ? `<ToggleGroupItem ${extra} value="${value}" aria-label="${label}">`
+        : `<ToggleGroupItem value="${value}" aria-label="${label}">`;
       return `  ${abertura}
     <${icone} aria-hidden="true" />
   </ToggleGroupItem>`;
@@ -68,8 +68,8 @@ const ICONS_FORMATTING = 'import { Bold, Italic, Underline } from "lucide-react"
 const ICONS_VISUALIZACAO = 'import { LayoutGrid, List } from "lucide-react";';
 
 /** Monta o grupo com os atributos que diferem do padrão e os itens dados. */
-function grupo(atributos: Array<string | undefined>, corpo: string): string {
-  return `<ToggleGroup${attrsMultilinha(atributos)}>\n${corpo}\n</ToggleGroup>`;
+function group(attrs: Array<string | undefined>, body: string): string {
+  return `<ToggleGroup${attrsMultilinha(attrs)}>\n${body}\n</ToggleGroup>`;
 }
 
 /**
@@ -84,11 +84,11 @@ function grupo(atributos: Array<string | undefined>, corpo: string): string {
 export const toggleGroupSource: SourceTransform<ToggleGroupArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const multiplo = args.type === 'multiple';
-  const rotulo = propText('aria-label', args['aria-label']) ?? 'aria-label="Alinhamento do texto"';
+  const label = propText('aria-label', args['aria-label']) ?? 'aria-label="Alinhamento do texto"';
 
   return jsxSnippet(
     `${IMPORT_GROUP}\n${ICONS_ALIGNMENT}`,
-    grupo(
+    group(
       [
         propOption('type', args.type, MODOS, 'single'),
         // A forma do valor acompanha o modo: exclusivo entrega string,
@@ -101,9 +101,9 @@ export const toggleGroupSource: SourceTransform<ToggleGroupArgs> = (_gerado, ctx
           ? propNumber('spacing', args.spacing)
           : undefined,
         propBool('disabled', args.disabled),
-        rotulo,
+        label,
       ],
-      itens(ALIGNMENT),
+      items(ALIGNMENT),
     ),
   );
 };
@@ -115,7 +115,7 @@ export const toggleGroupSource: SourceTransform<ToggleGroupArgs> = (_gerado, ctx
 export function toggleGroupExclusivoSource(): string {
   return jsxSnippet(
     `${IMPORT_GROUP}\n${ICONS_ALIGNMENT}`,
-    grupo(['defaultValue="center"', 'aria-label="Alinhamento do texto"'], itens(ALIGNMENT)),
+    group(['defaultValue="center"', 'aria-label="Alinhamento do texto"'], items(ALIGNMENT)),
   );
 }
 
@@ -126,9 +126,9 @@ export function toggleGroupExclusivoSource(): string {
 export function toggleGroupCombinadoSource(): string {
   return jsxSnippet(
     `${IMPORT_GROUP}\n${ICONS_FORMATTING}`,
-    grupo(
+    group(
       ['type="multiple"', 'defaultValue={["bold", "italic"]}', 'aria-label="Formatação"'],
-      itens(FORMATTING),
+      items(FORMATTING),
     ),
   );
 }
@@ -141,9 +141,9 @@ export function toggleGroupCombinadoSource(): string {
 export function toggleGroupVerticalSource(): string {
   return jsxSnippet(
     `${IMPORT_GROUP}\n${ICONS_VISUALIZACAO}`,
-    grupo(
+    group(
       ['orientation="vertical"', 'defaultValue="grid"', 'aria-label="Modo de visualização"'],
-      itens(VISUALIZACAO),
+      items(VISUALIZACAO),
     ),
   );
 }
@@ -152,7 +152,7 @@ export function toggleGroupVerticalSource(): string {
 export function toggleGroupEmptySource(): string {
   return jsxSnippet(
     `${IMPORT_GROUP}\n${ICONS_ALIGNMENT}`,
-    grupo(['aria-label="Alinhamento do texto"'], itens(ALIGNMENT)),
+    group(['aria-label="Alinhamento do texto"'], items(ALIGNMENT)),
   );
 }
 
@@ -160,9 +160,9 @@ export function toggleGroupEmptySource(): string {
 export function toggleGroupDisabledSource(): string {
   return jsxSnippet(
     `${IMPORT_GROUP}\n${ICONS_ALIGNMENT}`,
-    grupo(
+    group(
       ['disabled', 'defaultValue="center"', 'aria-label="Alinhamento do texto"'],
-      itens(ALIGNMENT),
+      items(ALIGNMENT),
     ),
   );
 }
@@ -174,9 +174,9 @@ export function toggleGroupDisabledSource(): string {
 export function toggleGroupItemDisabledSource(): string {
   return jsxSnippet(
     `${IMPORT_GROUP}\n${ICONS_ALIGNMENT}`,
-    grupo(
+    group(
       ['aria-label="Alinhamento do texto"'],
-      itens([
+      items([
         ['left', 'Alinhar à esquerda', 'AlignLeft'],
         ['center', 'Centralizar', 'AlignCenter', 'disabled'],
         ['right', 'Alinhar à direita', 'AlignRight'],
@@ -204,7 +204,7 @@ import { AlignCenter, AlignJustify, AlignLeft, AlignRight } from "lucide-react";
     onValueChange={(valor) => setAlinhamento(valor)}
     aria-label="Alinhamento do texto"
   >
-${itens([
+${items([
   ['left', 'Alinhar à esquerda', 'AlignLeft'],
   ['center', 'Centralizar', 'AlignCenter'],
   ['right', 'Alinhar à direita', 'AlignRight'],
@@ -240,7 +240,7 @@ ${ICONS_FORMATTING}`,
     onValueChange={(valor) => setFormatos(valor)}
     aria-label="Formatação"
   >
-${itens(FORMATTING)
+${items(FORMATTING)
   .split('\n')
   .map((line) => (line.trim() ? `  ${line}` : line))
   .join('\n')}
@@ -261,9 +261,9 @@ ${itens(FORMATTING)
 export function toggleGroupContornoEspacadoSource(): string {
   return jsxSnippet(
     `${IMPORT_GROUP}\n${ICONS_ALIGNMENT}`,
-    grupo(
+    group(
       ['spacing={1}', 'defaultValue="center"', 'aria-label="Alinhamento do texto"'],
-      itens([
+      items([
         ['left', 'Alinhar à esquerda', 'AlignLeft', 'variant="outline"'],
         ['center', 'Centralizar', 'AlignCenter', 'variant="outline"'],
         ['right', 'Alinhar à direita', 'AlignRight', 'variant="outline"'],

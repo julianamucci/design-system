@@ -39,9 +39,9 @@ type Story = StoryObj;
 // Idempotente: o painel Interactions reexecuta a play no MESMO DOM. Clicar numa
 // aba já ativa a MANTÉM ativa, então só clicamos quando o alvo ainda não é o
 // ativo — e esperamos o estado assentar antes de seguir.
-const ativar = async (alvo: HTMLElement) => {
-  if (alvo.getAttribute("aria-selected") !== "true") await userEvent.click(alvo);
-  await waitFor(() => expect(alvo).toHaveAttribute("aria-selected", "true"));
+const ativar = async (target: HTMLElement) => {
+  if (target.getAttribute("aria-selected") !== "true") await userEvent.click(target);
+  await waitFor(() => expect(target).toHaveAttribute("aria-selected", "true"));
 };
 
 // ─── Com ícones ───────────────────────────────────────────────────────────────
@@ -112,11 +112,11 @@ export const WithIcons: Story = {
     await step("O ícone não intercepta o clique na aba", async () => {
       // O ponteiro bloqueado no desenho é o que faz o clique cair sempre no
       // botão: sem isso, clicar em cima do ícone teria o próprio svg como alvo.
-      const conta = canvas.getByRole("tab", { name: "Conta" });
+      const count = canvas.getByRole("tab", { name: "Conta" });
       await expect(
-        getComputedStyle(conta.querySelector("svg")!).pointerEvents
+        getComputedStyle(count.querySelector("svg")!).pointerEvents
       ).toBe("none");
-      await ativar(conta);
+      await ativar(count);
     });
   },
 };

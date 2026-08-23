@@ -51,7 +51,7 @@ export function empilharCentrado(children: HTMLElement[], alturaMinima = '280px'
 }
 
 /** O painel aberto — `null` quando fechado, porque fechado ele não existe no DOM. */
-export function painel(): HTMLElement | null {
+export function panel(): HTMLElement | null {
   return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
 }
 
@@ -63,10 +63,10 @@ export function painel(): HTMLElement | null {
  * vez de abri-lo. Estava copiada byte a byte em três arquivos de story — mesmo
  * `timeout`, mesmo `painel()`, que os três já importavam daqui.
  */
-export async function abrir(gatilho: HTMLElement): Promise<HTMLElement> {
-  if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+export async function open(trigger: HTMLElement): Promise<HTMLElement> {
+  if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
   await waitFor(() => {
-    if (!painel()) throw new Error('popover ainda fechado');
+    if (!panel()) throw new Error('popover ainda fechado');
   }, { timeout: 1500 });
-  return painel()!;
+  return panel()!;
 }

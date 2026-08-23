@@ -100,14 +100,14 @@ function groupAvulso(delayDuration: number): GroupState {
 }
 
 export function createTooltipProvider(options: TooltipProviderOptions = {}): TooltipProvider {
-  const grupo: GroupState = {
+  const group: GroupState = {
     delayDuration: options.delayDuration ?? SHOW_DELAY,
     skipDelayDuration: options.skipDelayDuration ?? SKIP_DELAY,
     closedIn: 0,
   };
 
   return {
-    createTooltip: (opcoes: TooltipOptions) => mountTooltip(opcoes, grupo),
+    createTooltip: (options: TooltipOptions) => mountTooltip(options, group),
   };
 }
 
@@ -115,9 +115,9 @@ export function createTooltip(options: TooltipOptions): DestroyableElement {
   return mountTooltip(options, groupAvulso(options.delayDuration ?? SHOW_DELAY));
 }
 
-function mountTooltip(options: TooltipOptions, grupo: GroupState): DestroyableElement {
+function mountTooltip(options: TooltipOptions, group: GroupState): DestroyableElement {
   const { trigger, content, side = 'top' } = options;
-  const delayDuration = options.delayDuration ?? grupo.delayDuration;
+  const delayDuration = options.delayDuration ?? group.delayDuration;
 
   const id = ++_tooltipCounter;
   const tooltipId = `tooltip-${id}`;
@@ -196,7 +196,7 @@ function mountTooltip(options: TooltipOptions, grupo: GroupState): DestroyableEl
     // O grupo só é avisado quando havia mesmo um balão na tela: `hide()` também
     // é chamado por caminhos que nunca chegaram a exibir nada, e anotar ali
     // daria ao balão seguinte uma abertura instantânea que ninguém mereceu.
-    if (panelEl) grupo.closedIn = Date.now();
+    if (panelEl) group.closedIn = Date.now();
     panelEl?.remove();
     panelEl = null;
     trigger.removeAttribute('aria-describedby');
@@ -208,7 +208,7 @@ function mountTooltip(options: TooltipOptions, grupo: GroupState): DestroyableEl
     // Dentro da janela do grupo a espera é dispensada: quem já parou uma vez
     // não precisa provar de novo no ícone vizinho.
     const wait =
-      grupo.skipDelayDuration > 0 && Date.now() - grupo.closedIn < grupo.skipDelayDuration
+      group.skipDelayDuration > 0 && Date.now() - group.closedIn < group.skipDelayDuration
         ? 0
         : delayDuration;
     // Arrow literal explícito — clarifica pro SAST que setTimeout recebe

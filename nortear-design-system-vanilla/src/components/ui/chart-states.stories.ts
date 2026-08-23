@@ -53,7 +53,7 @@ export const Empty: Story = {
       // descrição do desenho — sem imagem não há o que narrar.
       source: {
         transform: chartSourceWith({
-          dados: 'vazio',
+          data: 'vazio',
           'aria-label': undefined,
           height: undefined,
           emptyLabel: FRASE_VAZIA,
@@ -72,28 +72,28 @@ export const Empty: Story = {
     emptyLabel: FRASE_VAZIA,
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('Sem dado não há desenho — há uma frase', async () => {
-      const aviso = raiz.querySelector('.nds-chart-empty');
+      const aviso = root.querySelector('.nds-chart-empty');
       await expect(aviso).not.toBeNull();
       // Frase completa e orientadora, não "Sem dados.": é a regra de UX writing
       // do próprio conteúdo do componente.
       await expect(aviso?.textContent?.trim()).toBe(FRASE_VAZIA);
-      await expect(raiz.querySelector('svg')).toBeNull();
+      await expect(root.querySelector('svg')).toBeNull();
     });
 
     await step('No vazio o bloco não se anuncia como imagem', async () => {
       // `role="img"` PODA a subárvore da árvore de acessibilidade: com o papel
       // posto, a frase que explica a ausência sumiria atrás de um rótulo
       // genérico. Sem desenho não há imagem para narrar.
-      await expect(raiz.getAttribute('role')).toBeNull();
-      await expect(raiz.getAttribute('aria-label')).toBeNull();
+      await expect(root.getAttribute('role')).toBeNull();
+      await expect(root.getAttribute('aria-label')).toBeNull();
     });
 
     await step('O bloco mantém o piso de altura', async () => {
       // Sem piso o container colapsa, e a página salta quando o dado chega.
-      await expect(raiz.getBoundingClientRect().height).toBeGreaterThan(100);
+      await expect(root.getBoundingClientRect().height).toBeGreaterThan(100);
     });
   },
 };
@@ -105,7 +105,7 @@ export const SingleSeries: Story = {
     docs: {
       // Override de story: uma série SÓ, na forma `xAxis` + `series` — é o que
       // faz a legenda desaparecer sozinha.
-      source: { transform: chartSourceWith({ dados: 'serieUnica' }) },
+      source: { transform: chartSourceWith({ data: 'serieUnica' }) },
       description: {
         story: 'Com uma série só a legenda não aparece: não há o que comparar, e a linha extra só roubaria altura do desenho.',
       },
@@ -120,20 +120,20 @@ export const SingleSeries: Story = {
     'aria-label': 'Acessos mensais no desktop, de janeiro a junho',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('O desenho sai', async () => {
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(datumFormas(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(datumFormas(root).length).toBeGreaterThan(0), { timeout: 3000 });
     });
 
     await step('A legenda some — o nome da série não é escrito em lugar nenhum', async () => {
-      await expect(designTexts(raiz)).not.toContain(SERIE_UNICA[0].name);
+      await expect(designTexts(root)).not.toContain(SERIE_UNICA[0].name);
     });
 
     await step('As categorias continuam escritas no eixo', async () => {
       for (const month of MONTHS) {
-        await expect(designEscreve(raiz, month)).toBe(true);
+        await expect(designEscreve(root, month)).toBe(true);
       }
     });
   },
@@ -148,7 +148,7 @@ export const MultiSeries: Story = {
       // Override de story: são DUAS séries, e é a contagem que acende a legenda.
       source: {
         transform: chartSourceWith({
-          dados: 'multi',
+          data: 'multi',
           'aria-label': 'Acessos mensais por dispositivo: desktop e mobile',
         }),
       },
@@ -166,22 +166,22 @@ export const MultiSeries: Story = {
     'aria-label': 'Acessos mensais por dispositivo: desktop e mobile',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('O desenho sai', async () => {
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(datumFormas(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(datumFormas(root).length).toBeGreaterThan(0), { timeout: 3000 });
     });
 
     await step('A legenda escreve o nome de cada série', async () => {
       for (const serie of SERIES_MULTI) {
-        await expect(designEscreve(raiz, serie.name)).toBe(true);
+        await expect(designEscreve(root, serie.name)).toBe(true);
       }
     });
 
     await step('Cada série usa um token de cor distinto', async () => {
       const colors = new Set(
-        datumFormas(raiz)
+        datumFormas(root)
           .map((f) => getComputedStyle(f).fill)
           .filter((cor) => !cor.startsWith('url')),
       );
@@ -197,7 +197,7 @@ export const MultiSeries: Story = {
       // afirma aqui, é que a trama chegou a alguma forma — trama declarada no
       // `<defs>` e nunca usada não cumpre nada.
       await waitFor(
-        () => expect(tramasAplicadas(raiz).size).toBeGreaterThanOrEqual(1),
+        () => expect(tramasAplicadas(root).size).toBeGreaterThanOrEqual(1),
         { timeout: 3000 },
       );
     });
@@ -212,7 +212,7 @@ export const OnePoint: Story = {
       // Override de story: o caso de borda é o dado, e é ele que o snippet
       // precisa mostrar — um ponto só.
       source: {
-        transform: chartSourceWith({ dados: 'umPonto', 'aria-label': 'Acessos de janeiro' }),
+        transform: chartSourceWith({ data: 'umPonto', 'aria-label': 'Acessos de janeiro' }),
       },
       description: {
         story: 'Série com um único ponto. Caso de borda: o desenho continua com eixo, categoria escrita e uma forma de dado.',
@@ -227,15 +227,15 @@ export const OnePoint: Story = {
     'aria-label': 'Acessos de janeiro',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('O desenho sai com uma forma de dado', async () => {
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(datumFormas(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(datumFormas(root).length).toBeGreaterThan(0), { timeout: 3000 });
     });
 
     await step('A única categoria aparece escrita no eixo', async () => {
-      await expect(designEscreve(raiz, 'Jan')).toBe(true);
+      await expect(designEscreve(root, 'Jan')).toBe(true);
     });
   },
 };
@@ -268,7 +268,7 @@ export const ThemeTokens: Story = {
       // Override de story: duas séries, na forma `xAxis` + `series`.
       source: {
         transform: chartSourceWith({
-          dados: 'multi',
+          data: 'multi',
           'aria-label': 'Acessos mensais por dispositivo, no tema em vigor',
         }),
       },
@@ -286,11 +286,11 @@ export const ThemeTokens: Story = {
     'aria-label': 'Acessos mensais por dispositivo, no tema em vigor',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('O desenho sai', async () => {
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(designTexts(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designTexts(root).length).toBeGreaterThan(0), { timeout: 3000 });
     });
 
     await step('A cor do texto do eixo é o token do tema, não um valor cravado', async () => {
@@ -298,14 +298,14 @@ export const ThemeTokens: Story = {
       // no claro e no escuro de propósito — está declarada uma vez por tema de
       // marca, sem bloco escuro. Medir a barra afirmaria que a cor muda, e ela
       // não muda em tema nenhum.
-      const rotulo = raiz.querySelector<SVGTextElement>('svg text')!;
-      await expect(getComputedStyle(rotulo).fill)
-        .toBe(tokenColor('muted-foreground', raiz));
+      const label = root.querySelector<SVGTextElement>('svg text')!;
+      await expect(getComputedStyle(label).fill)
+        .toBe(tokenColor('muted-foreground', root));
     });
 
     await step('E o desenho está inteiro', async () => {
-      await expect(datumFormas(raiz).length).toBeGreaterThan(0);
-      await expect(raiz.querySelector('.nds-chart-empty')).toBeNull();
+      await expect(datumFormas(root).length).toBeGreaterThan(0);
+      await expect(root.querySelector('.nds-chart-empty')).toBeNull();
     });
   },
 };
@@ -327,7 +327,7 @@ export const GraphicContrast: Story = {
       // Override de story: duas séries, na forma `xAxis` + `series`.
       source: {
         transform: chartSourceWith({
-          dados: 'multi',
+          data: 'multi',
           'aria-label': 'Acessos mensais por dispositivo: desktop e mobile',
         }),
       },
@@ -345,22 +345,22 @@ export const GraphicContrast: Story = {
     'aria-label': 'Acessos mensais por dispositivo: desktop e mobile',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
-    await waitFor(() => expect(datumFormas(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+    const root = exigirRoot(canvasElement);
+    await waitFor(() => expect(datumFormas(root).length).toBeGreaterThan(0), { timeout: 3000 });
     // Precondição da medida: ver o comentário de `settleTheme`.
     await settleTheme(document);
-    const background = backgroundOpacoAtras(raiz);
+    const background = backgroundOpacoAtras(root);
 
     await step('Todo contorno de forma passa de 3:1 contra o fundo', async () => {
-      for (const forma of datumFormas(raiz)) {
+      for (const forma of datumFormas(root)) {
         await expect(contraste(getComputedStyle(forma).stroke, background)).toBeGreaterThanOrEqual(3);
       }
     });
 
     await step('O texto dos eixos passa de 4.5:1 contra o mesmo fundo', async () => {
       // Marca de eixo é texto corrido pequeno: o piso é 4.5, não 3.
-      const rotulo = raiz.querySelector<SVGTextElement>('svg text')!;
-      await expect(contraste(getComputedStyle(rotulo).fill, background)).toBeGreaterThanOrEqual(4.5);
+      const label = root.querySelector<SVGTextElement>('svg text')!;
+      await expect(contraste(getComputedStyle(label).fill, background)).toBeGreaterThanOrEqual(4.5);
     });
   },
 };

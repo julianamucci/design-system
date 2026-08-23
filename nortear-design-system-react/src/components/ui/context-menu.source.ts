@@ -33,13 +33,13 @@ const LABEL_DEFAULT = 'Clique com o botão direito aqui';
 const CLASSES_DA_AREA =
   'nds-cluster nds-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default';
 
-function area(rotulo: string): string {
+function area(label: string): string {
   return `  <ContextMenuTrigger
     className="${CLASSES_DA_AREA}"
     data-align="center"
     data-justify="center"
   >
-    ${rotulo}
+    ${label}
   </ContextMenuTrigger>`;
 }
 
@@ -58,7 +58,7 @@ ${parts.map((part) => `  ${part},`).join('\n')}
  * existe para quem enxerga.
  */
 export const contextMenuSource: SourceTransform<ContextMenuArgs> = (_gerado, ctx) => {
-  const rotulo = childText(ctx?.args?.triggerLabel, LABEL_DEFAULT);
+  const label = childText(ctx?.args?.triggerLabel, LABEL_DEFAULT);
   return jsxSnippet(
     importDe(
       'ContextMenu',
@@ -70,7 +70,7 @@ export const contextMenuSource: SourceTransform<ContextMenuArgs> = (_gerado, ctx
       'ContextMenuTrigger',
     ),
     `<ContextMenu>
-${area(rotulo)}
+${area(label)}
   <ContextMenuContent>
     <ContextMenuGroup>
       <ContextMenuItem>

@@ -54,7 +54,7 @@ export const DatePicker: Story = {
       const isOpen = ref(false);
       const selecionada = ref<DateValue | undefined>(new CalendarDate(2026, 4, 12));
       const placeholder = ref<DateValue>(new CalendarDate(2026, 4, 15));
-      const rotulo = computed(() =>
+      const label = computed(() =>
         selecionada.value
           // Fuso local, e não UTC: converter em UTC e formatar no fuso de quem
           // lê devolve o dia anterior em qualquer fuso a oeste de Greenwich.
@@ -62,20 +62,20 @@ export const DatePicker: Story = {
           : 'Escolher data',
       );
 
-      function choose(valor: DateValue | undefined) {
-        selecionada.value = valor;
-        onSelect(valor);
+      function choose(value: DateValue | undefined) {
+        selecionada.value = value;
+        onSelect(value);
         // Escolhida a data, o popover não tem mais o que oferecer: mantê-lo
         // aberto obrigaria a fechá-lo à mão para ver o resultado.
         isOpen.value = false;
       }
 
-      return { isOpen, selecionada, placeholder, rotulo, choose };
+      return { isOpen, selecionada, placeholder, label, choose };
     },
     template: `
       <Popover v-model:open="isOpen">
         <PopoverTrigger as-child>
-          <Button variant="outline">{{ rotulo }}</Button>
+          <Button variant="outline">{{ label }}</Button>
         </PopoverTrigger>
         <PopoverContent>
           <Calendar
@@ -90,34 +90,34 @@ export const DatePicker: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = () => canvas.getByRole('button');
+    const trigger = () => canvas.getByRole('button');
 
-    const abrir = async () => {
-      if (gatilho().getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho());
+    const open = async () => {
+      if (trigger().getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger());
       return waitForPortal('dialog');
     };
-    const fechar = async () => {
-      if (gatilho().getAttribute('aria-expanded') === 'true') await userEvent.keyboard('{Escape}');
-      await waitFor(() => expect(gatilho()).not.toHaveAttribute('aria-expanded', 'true'));
+    const close = async () => {
+      if (trigger().getAttribute('aria-expanded') === 'true') await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(trigger()).not.toHaveAttribute('aria-expanded', 'true'));
     };
 
     await step('O botão abre o calendário', async () => {
       // Cada passo estabelece a própria precondição: o par fechar/abrir garante
       // um clique real nesta rodada, inclusive no replay do painel.
-      await fechar();
-      const painel = await abrir();
-      await expect(within(painel).getByRole('grid')).toBeInTheDocument();
+      await close();
+      const panel = await open();
+      await expect(within(panel).getByRole('grid')).toBeInTheDocument();
     });
 
     await step('Escolher um dia atualiza o botão e fecha o popover', async () => {
       // É o contrato inteiro da composição: sem a atualização do rótulo, a
       // pessoa fecha o popover e não sabe o que escolheu.
-      await fechar();
-      const painel = await abrir();
+      await close();
+      const panel = await open();
       onSelect.mockClear();
-      await userEvent.click(within(painel).getByRole('button', { name: /20 de abril de 2026/i }));
+      await userEvent.click(within(panel).getByRole('button', { name: /20 de abril de 2026/i }));
       await expect(onSelect).toHaveBeenCalledTimes(1);
-      await waitFor(() => expect(gatilho()).toHaveTextContent('20 de abril de 2026'));
+      await waitFor(() => expect(trigger()).toHaveTextContent('20 de abril de 2026'));
       await waitForPortalGone('dialog');
     });
   },

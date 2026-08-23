@@ -23,7 +23,7 @@ type NavigationMenuArgs = {
   delay: number;
   closeDelay: number;
   indicator: boolean;
-  onValueChange: (valor: string | null) => void;
+  onValueChange: (value: string | null) => void;
 };
 
 /**
@@ -38,7 +38,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<NavigationMenuA
 
   // Só o que difere do padrão entra no snippet: repetir valor default ensina
   // ruído a quem copia.
-  const raiz = ['<nav ndsNavigationMenu aria-label="Navegação principal"']
+  const root = ['<nav ndsNavigationMenu aria-label="Navegação principal"']
     .concat(orientation === 'horizontal' ? [] : [`orientation="${orientation}"`])
     .concat(align === 'start' ? [] : [`align="${align}"`])
     .concat(indicator ? ['indicator'] : [])
@@ -49,7 +49,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<NavigationMenuA
 @Component({
   imports: [...NDS_NAVIGATION_MENU],
   template: \`
-    ${raiz}
+    ${root}
       <ul ndsNavigationMenuList>
         <li ndsNavigationMenuItem>
           <a ndsNavigationMenuLink href="/" active>Início</a>
@@ -255,15 +255,15 @@ export const Playground: Story = {
 
     await step('Enter abre o painel e leva o foco para dentro dele', async () => {
       await userEvent.keyboard('{Enter}');
-      const painel = await waitForPanel();
+      const panel = await waitForPanel();
       await expect(produtos.getAttribute('aria-expanded')).toBe('true');
       await expect(args.onValueChange).toHaveBeenCalledWith('produtos');
 
       // O painel é alcançável pelo teclado: o foco entra no primeiro destino.
       await waitFor(async () => {
-        await expect(painel.contains(document.activeElement)).toBe(true);
+        await expect(panel.contains(document.activeElement)).toBe(true);
       });
-      await expect(within(painel).getByRole('link', { name: 'Plano Inicial' })).toBeTruthy();
+      await expect(within(panel).getByRole('link', { name: 'Plano Inicial' })).toBeTruthy();
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
@@ -279,15 +279,15 @@ export const Playground: Story = {
 
     await step('O ponteiro abre o painel sem clique', async () => {
       await userEvent.hover(produtos);
-      const painel = await waitForPanel();
-      await expect(painel.textContent).toContain('Plano Inicial');
+      const panel = await waitForPanel();
+      await expect(panel.textContent).toContain('Plano Inicial');
     });
 
     await step('Passar de um gatilho ao outro troca o painel sem fechá-lo', async () => {
       await userEvent.hover(solucoes);
       await waitFor(async () => {
-        const painel = document.body.querySelector(SELECTOR_PANEL);
-        await expect(painel?.textContent).toContain('Para Marketing');
+        const panel = document.body.querySelector(SELECTOR_PANEL);
+        await expect(panel?.textContent).toContain('Para Marketing');
       });
       // O popup é um só e nunca desmontou: é o que `skipDelayDuration` descreve
       // nas outras stacks — a troca é instantânea, sem reabrir a espera.

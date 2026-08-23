@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, userEvent, expect, waitFor } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
-import { campo } from './input-otp.fixtures';
+import { field } from './input-otp.fixtures';
 import { inputOtpWithSeparatorSource, inputOtpSource } from './input-otp.source';
 
 const meta: Meta = {
@@ -28,12 +28,12 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const boxes = (raiz: HTMLElement): HTMLElement[] => [
-  ...raiz.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),
+const boxes = (root: HTMLElement): HTMLElement[] => [
+  ...root.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),
 ];
 
-const texts = (raiz: HTMLElement): string[] =>
-  boxes(raiz).map((c) => c.textContent?.trim() ?? '');
+const texts = (root: HTMLElement): string[] =>
+  boxes(root).map((c) => c.textContent?.trim() ?? '');
 
 export const SixDigits: Story = {
   name: 'Six digits (SMS)',
@@ -46,11 +46,11 @@ export const SixDigits: Story = {
   play: async ({ canvasElement, step }) => {
     await step('Seis caixas, teclado numérico', async () => {
       await expect(boxes(canvasElement)).toHaveLength(6);
-      await expect(campo(canvasElement)).toHaveAttribute('inputmode', 'numeric');
+      await expect(field(canvasElement)).toHaveAttribute('inputmode', 'numeric');
     });
 
     await step('Os seis dígitos aparecem nas caixas, um em cada', async () => {
-      const input = campo(canvasElement);
+      const input = field(canvasElement);
       input.focus();
       await userEvent.clear(input);
       await userEvent.type(input, '123456');
@@ -74,7 +74,7 @@ export const FourDigits: Story = {
     });
 
     await step('O quinto caractere não entra', async () => {
-      const input = campo(canvasElement);
+      const input = field(canvasElement);
       input.focus();
       await userEvent.clear(input);
       await userEvent.type(input, '12345');
@@ -120,7 +120,7 @@ export const WithSeparator: Story = {
     });
 
     await step('Os seis dígitos se distribuem entre os dois blocos', async () => {
-      const input = campo(canvasElement);
+      const input = field(canvasElement);
       input.focus();
       await userEvent.clear(input);
       await userEvent.type(input, '123456');
@@ -139,11 +139,11 @@ export const Alphanumeric: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('O teclado do dispositivo passa a ser de texto', async () => {
-      await expect(campo(canvasElement)).toHaveAttribute('inputmode', 'text');
+      await expect(field(canvasElement)).toHaveAttribute('inputmode', 'text');
     });
 
     await step('Letra e dígito são aceitos', async () => {
-      const input = campo(canvasElement);
+      const input = field(canvasElement);
       input.focus();
       await userEvent.clear(input);
       await userEvent.type(input, 'a9');

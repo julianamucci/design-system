@@ -169,11 +169,11 @@ export const Playground: Story = {
       // <button>, controle rotulável do HTML: o clique no texto move o foco
       // para ela E dispara a ativação, sem nenhum ouvinte escrito na story.
       await step('Clicar no texto do rótulo foca a caixa E alterna o estado', async () => {
-        const rotulo = canvas.getByText(args.label);
+        const label = canvas.getByText(args.label);
         await desmarcar();                        // precondição própria
         cb.blur();
         await expect(cb).not.toHaveFocus();       // o foco tem que VIR do clique
-        await userEvent.click(rotulo);
+        await userEvent.click(label);
         await expect(cb).toHaveFocus();
         await waitFor(async () => {
           await expect(cb).toHaveAttribute('aria-checked', 'true');

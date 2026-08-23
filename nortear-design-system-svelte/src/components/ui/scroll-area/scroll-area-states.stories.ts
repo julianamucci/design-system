@@ -48,12 +48,12 @@ type Story = StoryObj;
  * Interactions — o gate é a opacidade computada.
  */
 async function waitForBar(
-  raiz: HTMLElement,
+  root: HTMLElement,
   orientation: 'vertical' | 'horizontal' = 'vertical',
 ): Promise<HTMLElement> {
   return await waitFor(
     () => {
-      const barra = raiz.querySelector<HTMLElement>(
+      const barra = root.querySelector<HTMLElement>(
         `[data-slot="scroll-area-scrollbar"][data-orientation="${orientation}"]`,
       );
       if (!barra) throw new Error('barra ainda não montada');
@@ -186,9 +186,9 @@ export const Always: Story = {
         expect(measure().deslocamento).toBeLessThan(4);
       });
 
-      const caixa = grabber.getBoundingClientRect();
-      const x = caixa.left + caixa.width / 2;
-      const y = caixa.top + caixa.height / 2;
+      const box = grabber.getBoundingClientRect();
+      const x = box.left + box.width / 2;
+      const y = box.top + box.height / 2;
       await userEvent.pointer([
         { keys: '[MouseLeft>]', target: grabber, coords: { clientX: x, clientY: y } },
         { target: grabber, coords: { clientX: x, clientY: y + 60 } },
@@ -377,8 +377,8 @@ export const NoLimit: Story = {
       // A raiz é `overflow: hidden`: sem teto ela não corta nada porque cresce
       // junto. É o que explica o sintoma — nada some, nada rola, a página é que
       // fica comprida.
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
-      const heightRoot = raiz.getBoundingClientRect().height;
+      const root = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
+      const heightRoot = root.getBoundingClientRect().height;
       const heightViewport = viewport.getBoundingClientRect().height;
       await expect(Math.abs(heightRoot - heightViewport)).toBeLessThan(2);
     });

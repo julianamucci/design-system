@@ -4,9 +4,9 @@ import {
   chamada,
   importing,
   montar,
-  opcoes,
+  options,
   snippet,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 import type { CardSize } from './card';
@@ -52,7 +52,7 @@ const WIDTH_DEFAULT = 'nds-w-sm';
  * mesmo componente envelhecerem em ritmos diferentes.
  */
 function partesDoCard(o: CardSnippetOptions): { names: string[]; blocks: string[] } {
-  const titulo = o.title ?? TITLE_DEFAULT;
+  const title = o.title ?? TITLE_DEFAULT;
   const descricao = o.description ?? DESCRIPTION_DEFAULT;
   const preco = o.price ?? PRECO_DEFAULT;
 
@@ -66,15 +66,15 @@ function partesDoCard(o: CardSnippetOptions): { names: string[]; blocks: string[
   if (o.action) names.push('createCardAction');
   if (o.showFooter) names.push('createCardFooter');
 
-  const raiz = chamada(
+  const root = chamada(
     'createCard',
-    opcoes([
-      ['size', o.size && o.size !== 'default' ? texto(o.size) : undefined],
-      ['class', texto(o.class ?? WIDTH_DEFAULT)],
+    options([
+      ['size', o.size && o.size !== 'default' ? text(o.size) : undefined],
+      ['class', text(o.class ?? WIDTH_DEFAULT)],
     ]),
   );
 
-  const blocks: string[] = [`const card = ${raiz};`];
+  const blocks: string[] = [`const card = ${root};`];
 
   if (o.image) {
     blocks.push(
@@ -93,8 +93,8 @@ foto.style.objectFit = 'cover';`,
   const header = [
     'const cabecalho = createCardHeader();',
     'cabecalho.append(',
-    `  createCardTitle({ text: ${texto(titulo)} }),`,
-    `  createCardDescription({ text: ${texto(descricao)} }),`,
+    `  createCardTitle({ text: ${text(title)} }),`,
+    `  createCardDescription({ text: ${text(descricao)} }),`,
     ');',
   ];
   if (o.action) {
@@ -108,7 +108,7 @@ foto.style.objectFit = 'cover';`,
       `    variant: 'ghost',`,
       `    size: 'sm',`,
       `    label: 'Editar',`,
-      `    'aria-label': ${texto(`Editar produto ${titulo}`)},`,
+      `    'aria-label': ${text(`Editar produto ${title}`)},`,
       '  }),',
       ');',
       'cabecalho.appendChild(acao);',
@@ -119,7 +119,7 @@ foto.style.objectFit = 'cover';`,
   blocks.push(
     `const valor = document.createElement('p');
 valor.className = 'nds-text-h4';
-valor.textContent = ${texto(preco)};
+valor.textContent = ${text(preco)};
 
 const conteudo = createCardContent();
 conteudo.appendChild(valor);`,
@@ -136,11 +136,11 @@ rodape.append(
   createButton({
     variant: 'outline',
     label: 'Cancelar',
-    'aria-label': ${texto(`Cancelar edição de ${titulo}`)},
+    'aria-label': ${text(`Cancelar edição de ${title}`)},
   }),
   createButton({
     label: 'Salvar',
-    'aria-label': ${texto(`Salvar alterações em ${titulo}`)},
+    'aria-label': ${text(`Salvar alterações em ${title}`)},
   }),
 );`,
     );
@@ -195,7 +195,7 @@ export function cardSourceWith(fixas: CardSnippetOptions): SourceTransform<CardS
  * uma área clicável que o Tab não alcança e que o teclado não aciona.
  */
 export function cardClickableSnippet(o: CardSnippetOptions = {}): string {
-  const titulo = o.title ?? TITLE_DEFAULT;
+  const title = o.title ?? TITLE_DEFAULT;
   // O `<a>` é quem recebe a largura; o Card dentro dele preenche o que sobrar.
   const { names, blocks } = partesDoCard({ ...o, class: 'nds-w-full' });
 
@@ -210,7 +210,7 @@ export function cardClickableSnippet(o: CardSnippetOptions = {}): string {
     `const destino = document.createElement('a');
 destino.href = '/produtos/cadeira-gamer-pro';
 destino.className = 'nds-block nds-w-sm nds-text-left nds-focus-ring nds-rounded-xl';
-destino.setAttribute('aria-label', ${texto(`Abrir detalhes do produto ${titulo}`)});
+destino.setAttribute('aria-label', ${text(`Abrir detalhes do produto ${title}`)});
 destino.appendChild(card);`,
     montar('destino'),
   );

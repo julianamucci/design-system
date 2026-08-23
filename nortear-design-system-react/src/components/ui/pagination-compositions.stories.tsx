@@ -312,8 +312,8 @@ export const Controlled: Story = {
       // Par idempotente: só clica quando ainda não é a página atual. O painel
       // Interactions reexecuta a play no mesmo DOM, e um clique cego partiria
       // do estado que a rodada anterior deixou.
-      const alvo = canvas.getByRole("link", { name: `Ir para página ${n}` });
-      if (alvo.getAttribute("aria-current") !== "page") await userEvent.click(alvo);
+      const target = canvas.getByRole("link", { name: `Ir para página ${n}` });
+      if (target.getAttribute("aria-current") !== "page") await userEvent.click(target);
       await expect(canvas.getByRole("link", { name: `Ir para página ${n}` })).toHaveAttribute(
         "aria-current",
         "page"
@@ -408,8 +408,8 @@ export const CompleteTable: Story = {
     });
 
     await step("O contador e a faixa dividem a mesma linha", async () => {
-      const rodape = canvasElement.querySelector(".nds-cluster") as HTMLElement;
-      await expect(getComputedStyle(rodape).justifyContent).toBe("space-between");
+      const footer = canvasElement.querySelector(".nds-cluster") as HTMLElement;
+      await expect(getComputedStyle(footer).justifyContent).toBe("space-between");
       await expect(
         canvas.getByRole("link", { name: "Ir para página 2" })
       ).toHaveAttribute("aria-current", "page");

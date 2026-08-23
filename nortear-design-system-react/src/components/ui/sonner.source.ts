@@ -31,7 +31,7 @@ import {
   propBool,
   propNumber,
   propOption,
-  texto,
+  text,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -93,9 +93,9 @@ function region(tagAttrs = ''): string {
 
 /** Chamada da fila: `toast()` para a neutra, `toast.<tipo>()` para as demais. */
 function call(type: string, title: string, options: string[] = []): string {
-  const alvo = type === 'default' ? 'toast' : `toast.${type}`;
-  if (!options.length) return `${alvo}("${title}");`;
-  return `${alvo}("${title}", {
+  const target = type === 'default' ? 'toast' : `toast.${type}`;
+  if (!options.length) return `${target}("${title}");`;
+  return `${target}("${title}", {
 ${options.map((opcao) => `  ${opcao}`).join('\n')}
 });`;
 }
@@ -139,9 +139,9 @@ export const sonnerSource: SourceTransform<SonnerArgs> = (_gerado, ctx) => {
   const title = childText(args.title, 'Alterações salvas.');
 
   const options: string[] = [];
-  const description = texto(args.description);
+  const description = text(args.description);
   if (description) options.push(`description: "${description}",`);
-  const actionLabel = texto(args.actionLabel);
+  const actionLabel = text(args.actionLabel);
   if (actionLabel) {
     options.push(
       `action: { label: "${actionLabel}", onClick: () => toast.success("Feito.") },`,

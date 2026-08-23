@@ -7,14 +7,14 @@ import {
 
 describe('toggleGroupSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML', () => {
-    const código = toggleGroupSnippet();
-    expect(código).toContain("import { createToggleGroup, type ToggleGroupItem } from '@/components/ui/toggle-group';");
-    expect(código).toContain('createToggleGroup({');
+    const code = toggleGroupSnippet();
+    expect(code).toContain("import { createToggleGroup, type ToggleGroupItem } from '@/components/ui/toggle-group';");
+    expect(code).toContain('createToggleGroup({');
     // O `[data-slot="toggle"]` que sobra é SELETOR de quem consome, não dump —
     // por isso a prova aqui é a ausência de markup renderizado.
-    expect(código).not.toContain('<div');
-    expect(código).not.toContain('role="toolbar"');
-    expect(código).not.toContain('aria-pressed="false"');
+    expect(code).not.toContain('<div');
+    expect(code).not.toContain('role="toolbar"');
+    expect(code).not.toContain('aria-pressed="false"');
   });
 
   it('nomeia o grupo — role="toolbar" sem nome não diz de que barra se trata', () => {
@@ -23,25 +23,25 @@ describe('toggleGroupSnippet', () => {
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = toggleGroupSnippet();
-    expect(código).not.toContain('type:');
-    expect(código).not.toContain('orientation:');
-    expect(código).not.toContain('spacing:');
-    expect(código).not.toContain('size:');
-    expect(código).not.toContain('disabled: true');
+    const code = toggleGroupSnippet();
+    expect(code).not.toContain('type:');
+    expect(code).not.toContain('orientation:');
+    expect(code).not.toContain('spacing:');
+    expect(code).not.toContain('size:');
+    expect(code).not.toContain('disabled: true');
   });
 
   it('mostra tipo, eixo, espaçamento e bloqueio quando a story os usa', () => {
-    const código = toggleGroupSnippet({
+    const code = toggleGroupSnippet({
       type: 'multiple',
       orientation: 'vertical',
       spacing: 1,
       disabled: true,
     });
-    expect(código).toContain("type: 'multiple'");
-    expect(código).toContain("orientation: 'vertical'");
-    expect(código).toContain('spacing: 1');
-    expect(código).toContain('disabled: true');
+    expect(code).toContain("type: 'multiple'");
+    expect(code).toContain("orientation: 'vertical'");
+    expect(code).toContain('spacing: 1');
+    expect(code).toContain('disabled: true');
   });
 
   it('o modo múltiplo leva defaultValue em array, o exclusivo em string', () => {
@@ -54,30 +54,30 @@ describe('toggleGroupSnippet', () => {
   });
 
   it('o item só de ícone leva nome acessível e children vazio', () => {
-    const código = toggleGroupSnippet();
-    expect(código).toContain("{ value: 'left', children: '', 'aria-label': 'Alinhar à esquerda' }");
+    const code = toggleGroupSnippet();
+    expect(code).toContain("{ value: 'left', children: '', 'aria-label': 'Alinhar à esquerda' }");
   });
 
   it('o item com texto visível dispensa nome acessível', () => {
-    const código = toggleGroupSnippet({
+    const code = toggleGroupSnippet({
       items: [{ value: 'grid', icon: 'LayoutGrid', children: 'Grade' }],
     });
-    expect(código).toContain("{ value: 'grid', children: 'Grade' }");
-    expect(código).not.toContain("'aria-label': 'Grade'");
+    expect(code).toContain("{ value: 'grid', children: 'Grade' }");
+    expect(code).not.toContain("'aria-label': 'Grade'");
   });
 
   it('mostra a colocação do ícone, porque `children` do item só aceita texto', () => {
-    const código = toggleGroupSnippet();
-    expect(código).toContain("import { AlignLeft, AlignCenter, AlignRight, createElement } from 'lucide';");
-    expect(código).toContain("grupo.querySelectorAll('[data-slot=\"toggle\"]')");
-    expect(código).not.toContain('injectIcons');
-    expect(código).not.toContain('buildLucideSvg');
+    const code = toggleGroupSnippet();
+    expect(code).toContain("import { AlignLeft, AlignCenter, AlignRight, createElement } from 'lucide';");
+    expect(code).toContain("grupo.querySelectorAll('[data-slot=\"toggle\"]')");
+    expect(code).not.toContain('injectIcons');
+    expect(code).not.toContain('buildLucideSvg');
   });
 
   it('sem ícone não há bloco de colocação nem import do lucide', () => {
-    const código = toggleGroupSnippet({ items: [{ value: 'grid', children: 'Grade' }] });
-    expect(código).not.toContain('lucide');
-    expect(código).not.toContain('createElement');
+    const code = toggleGroupSnippet({ items: [{ value: 'grid', children: 'Grade' }] });
+    expect(code).not.toContain('lucide');
+    expect(code).not.toContain('createElement');
   });
 });
 
@@ -100,9 +100,9 @@ describe('toggleGroupSource', () => {
 
 describe('toggleGroupSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = toggleGroupSourceWith({ orientation: 'vertical' })('', {
+    const code = toggleGroupSourceWith({ orientation: 'vertical' })('', {
       args: { orientation: 'horizontal' },
     });
-    expect(código).toContain("orientation: 'vertical'");
+    expect(code).toContain("orientation: 'vertical'");
   });
 });

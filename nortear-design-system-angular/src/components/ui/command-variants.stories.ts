@@ -50,12 +50,12 @@ export const Inline: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
 
     await step('Grupo único dispensa cabeçalho', async () => {
       // A guideline é essa: rótulo de grupo só quando há mais de um grupo,
       // senão ele repete o que o campo de busca já diz.
-      await expect(raiz.querySelectorAll('.nds-command-group-heading')).toHaveLength(0);
+      await expect(root.querySelectorAll('.nds-command-group-heading')).toHaveLength(0);
       // Os itens se registram no render seguinte ao da montagem.
       await waitFor(async () => {
         await expect(canvas.getAllByRole('option')).toHaveLength(3);
@@ -65,8 +65,8 @@ export const Inline: Story = {
     await step('A lista fica no fluxo da página, sem portal', async () => {
       // É o que separa o padrão inline dos outros dois: nada é teleportado
       // para o `body`, então a paleta rola junto com a seção onde vive.
-      const lista = canvas.getByRole('listbox');
-      await expect(raiz.contains(lista)).toBe(true);
+      const list = canvas.getByRole('listbox');
+      await expect(root.contains(list)).toBe(true);
       await expect(within(document.body).getAllByRole('listbox')).toHaveLength(1);
     });
   },
@@ -104,10 +104,10 @@ export const WithGroups: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
-    const campo = canvas.getByRole('combobox');
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
+    const field = canvas.getByRole('combobox');
 
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
 
     await step('Cada grupo é nomeado pelo próprio cabeçalho', async () => {
       // Sem o `aria-labelledby` o leitor anuncia "grupo" e a pessoa não sabe
@@ -125,7 +125,7 @@ export const WithGroups: Story = {
     });
 
     await step('O divisor é desenho, não estrutura', async () => {
-      const divisor = raiz.querySelector<HTMLElement>('[data-slot="command-separator"]')!;
+      const divisor = root.querySelector<HTMLElement>('[data-slot="command-separator"]')!;
       await expect(divisor).toHaveClass(/nds-command-separator/);
       // `role="separator"` não é filho permitido de um listbox; quem separa os
       // blocos para quem não vê a tela é o rótulo do grupo.
@@ -134,7 +134,7 @@ export const WithGroups: Story = {
     });
 
     await step('O filtro atravessa os grupos', async () => {
-      await userEvent.type(campo, 'n');
+      await userEvent.type(field, 'n');
 
       await waitFor(async () => {
         // "Button", "Input" e "cn()" — dois grupos ao mesmo tempo.
@@ -143,7 +143,7 @@ export const WithGroups: Story = {
       await expect(canvas.getByRole('group', { name: 'Componentes' })).toBeVisible();
       await expect(canvas.getByRole('group', { name: 'Utilitários' })).toBeVisible();
 
-      await userEvent.clear(campo);
+      await userEvent.clear(field);
       await waitFor(async () => {
         await expect(canvas.getAllByRole('option')).toHaveLength(5);
       });

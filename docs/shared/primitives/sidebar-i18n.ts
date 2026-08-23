@@ -22,21 +22,21 @@ type Listener = () => void;
 
 /** Store mínima: valor + assinatura, no formato que `useSyncExternalStore` pede. */
 function createLoja() {
-  let atual: Locale = negociarLocale(undefined, undefined, KEY);
+  let current: Locale = negociarLocale(undefined, undefined, KEY);
   const ouvintes = new Set<Listener>();
 
   if (typeof window !== 'undefined') {
     window.addEventListener('storage', (e) => {
       if (e.key !== KEY) return;
       const novo = negociarLocale(undefined, undefined, KEY);
-      if (novo === atual) return;
-      atual = novo;
+      if (novo === current) return;
+      current = novo;
       ouvintes.forEach((o) => o());
     });
   }
 
   return {
-    ler: () => atual,
+    ler: () => current,
     assinar: (o: Listener) => {
       ouvintes.add(o);
       return () => ouvintes.delete(o);
@@ -57,7 +57,7 @@ function createLoja() {
  */
 type ReactMinimum = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  createElement: (tipo: any, props?: any, ...filhos: any[]) => unknown;
+  createElement: (type: any, props?: any, ...children: any[]) => unknown;
   useSyncExternalStore: <T>(assinar: (o: Listener) => () => void, ler: () => T) => T;
 };
 
@@ -71,11 +71,11 @@ type ReactMinimum = {
 export function createRenderLabel(React: ReactMinimum) {
   const loja = createLoja();
 
-  function Label({ nome }: { nome: string }) {
+  function Label({ name }: { name: string }) {
     const locale = React.useSyncExternalStore(loja.assinar, loja.ler);
-    return sidebarLabel(nome, locale) as unknown as null;
+    return sidebarLabel(name, locale) as unknown as null;
   }
 
   return (item: { name?: string }) =>
-    React.createElement(Label, { nome: item?.name ?? '', key: item?.name });
+    React.createElement(Label, { name: item?.name ?? '', key: item?.name });
 }

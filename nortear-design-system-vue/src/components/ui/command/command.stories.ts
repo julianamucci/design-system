@@ -129,42 +129,42 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
-    const campo = canvas.getByRole('combobox') as HTMLInputElement;
-    const lista = canvas.getByRole('listbox');
+    const root = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
+    const field = canvas.getByRole('combobox') as HTMLInputElement;
+    const list = canvas.getByRole('listbox');
     const spy = args.onSelect as ReturnType<typeof fn>;
 
     // A busca começa sempre vazia: a play REEXECUTA no mesmo DOM.
-    await userEvent.clear(campo);
+    await userEvent.clear(field);
     await waitFor(async () => {
       await expect(canvas.getAllByRole('option')).toHaveLength(5);
     });
 
     await step('O markup é o mesmo das outras stacks', async () => {
-      await expect(raiz).toHaveClass(/nds-command/);
-      await expect(campo).toHaveClass(/nds-command-input/);
-      await expect(campo).toHaveAttribute('data-slot', 'command-input');
-      await expect(lista).toHaveClass(/nds-command-list/);
-      await expect(lista).toHaveAttribute('data-slot', 'command-list');
+      await expect(root).toHaveClass(/nds-command/);
+      await expect(field).toHaveClass(/nds-command-input/);
+      await expect(field).toHaveAttribute('data-slot', 'command-input');
+      await expect(list).toHaveClass(/nds-command-list/);
+      await expect(list).toHaveAttribute('data-slot', 'command-list');
       // A lupa é do componente, não do call site — quem escreve a paleta não
       // pode esquecê-la.
-      await expect(raiz.querySelector('.nds-command-input-wrapper > svg')).not.toBeNull();
+      await expect(root.querySelector('.nds-command-input-wrapper > svg')).not.toBeNull();
     });
 
     await step('O campo é uma combobox ligada à lista REAL', async () => {
       // É o par que separa a paleta de um menu: papel de combobox no campo,
       // papel de listbox na lista, e o `aria-controls` apontando para o id que
       // a lista tem de verdade — id órfão o axe reprova.
-      await expect(campo).toHaveAttribute('aria-autocomplete', 'list');
-      await expect(campo).toHaveAttribute('aria-expanded', 'true');
-      const controlled = campo.getAttribute('aria-controls');
+      await expect(field).toHaveAttribute('aria-autocomplete', 'list');
+      await expect(field).toHaveAttribute('aria-expanded', 'true');
+      const controlled = field.getAttribute('aria-controls');
       await expect(controlled).toBeTruthy();
-      await expect(document.getElementById(controlled!)).toBe(lista);
-      await expect(campo).toHaveAttribute('aria-label', args.placeholder);
+      await expect(document.getElementById(controlled!)).toBe(list);
+      await expect(field).toHaveAttribute('aria-label', args.placeholder);
     });
 
     await step('O rótulo do grupo vem do control, não do default', async () => {
-      const cabecalhos = raiz.querySelectorAll('.nds-command-group-heading');
+      const cabecalhos = root.querySelectorAll('.nds-command-group-heading');
       await expect(cabecalhos.length).toBe(args.showGroups ? 2 : 0);
       if (args.showGroups) {
         await expect(canvas.getByRole('group', { name: 'Componentes' })).toBeTruthy();
@@ -175,19 +175,19 @@ export const Playground: Story = {
     });
 
     await step('Cada comando é uma opção da lista', async () => {
-      const opcoes = canvas.getAllByRole('option');
-      await expect(opcoes).toHaveLength(5);
-      await expect(opcoes[0]).toHaveClass(/nds-command-item/);
-      await expect(opcoes[0]).toHaveAttribute('data-slot', 'command-item');
+      const options = canvas.getAllByRole('option');
+      await expect(options).toHaveLength(5);
+      await expect(options[0]).toHaveClass(/nds-command-item/);
+      await expect(options[0]).toHaveAttribute('data-slot', 'command-item');
       // O divisor não entra na lista de opções — ARIA só admite `option` e
       // `group` dentro de um listbox.
-      const divisor = raiz.querySelector<HTMLElement>('[data-slot="command-separator"]')!;
+      const divisor = root.querySelector<HTMLElement>('[data-slot="command-separator"]')!;
       await expect(divisor).toHaveAttribute('aria-hidden', 'true');
       await expect(divisor).not.toHaveAttribute('role', 'separator');
     });
 
     await step('Digitar filtra, e o que não casa sai da árvore', async () => {
-      await userEvent.type(campo, 'sep');
+      await userEvent.type(field, 'sep');
 
       // Buscando "sep": só "Separator" sobra.
       await waitFor(async () => {
@@ -199,15 +199,15 @@ export const Playground: Story = {
       await expect(canvas.queryByRole('option', { name: /^Button/ })).toBeNull();
       // O grupo inteiro se recolhe quando nenhum item dele passa no filtro —
       // sem isso a paleta mostraria "Utilitários" com nada embaixo.
-      const grupos = raiz.querySelectorAll<HTMLElement>('[data-slot="command-group"]');
-      await expect(grupos[1]).not.toBeVisible();
+      const groups = root.querySelectorAll<HTMLElement>('[data-slot="command-group"]');
+      await expect(groups[1]).not.toBeVisible();
     });
 
     await step('Sem resultado, a frase é ANUNCIADA e não só desenhada', async () => {
-      await userEvent.clear(campo);
-      await userEvent.type(campo, 'zzz');
+      await userEvent.clear(field);
+      await userEvent.type(field, 'zzz');
 
-      const vazio = raiz.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+      const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
       await waitFor(async () => {
         await expect(vazio).toHaveAttribute('data-empty', '');
       });
@@ -221,8 +221,8 @@ export const Playground: Story = {
     });
 
     await step('Com resultado, a região viva volta a ocupar zero', async () => {
-      await userEvent.clear(campo);
-      const vazio = raiz.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+      await userEvent.clear(field);
+      const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
       await waitFor(async () => {
         await expect(vazio).not.toHaveAttribute('data-empty');
       });
@@ -233,7 +233,7 @@ export const Playground: Story = {
     });
 
     await step('As setas percorrem a lista sem tirar o foco do campo', async () => {
-      campo.focus();
+      field.focus();
       // Home leva o destaque para o primeiro comando: a precondição é do passo,
       // não do que a rodada anterior deixou.
       await userEvent.keyboard('{Home}');
@@ -245,11 +245,11 @@ export const Playground: Story = {
       await userEvent.keyboard('{ArrowDown}');
 
       await waitFor(async () => {
-        await expect(campo.getAttribute('aria-activedescendant')).toBeTruthy();
+        await expect(field.getAttribute('aria-activedescendant')).toBeTruthy();
       });
       // O foco NÃO se move: é o que separa a paleta de um menu, e é o que
       // permite continuar digitando enquanto se navega.
-      await expect(campo).toHaveFocus();
+      await expect(field).toHaveFocus();
 
       const segundo = canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')!;
       await expect(segundo).toHaveAttribute('role', 'option');
@@ -284,11 +284,11 @@ export const Playground: Story = {
       // A busca volta ao zero para o próximo comando — o campo não pode virar
       // o nome do que acabou de rodar.
       await waitFor(async () => {
-        await expect(campo).toHaveValue('');
+        await expect(field).toHaveValue('');
         await expect(canvas.getAllByRole('option')).toHaveLength(5);
       });
       // E a lista continua aberta: a paleta não tem estado fechado.
-      await expect(campo).toHaveAttribute('aria-expanded', 'true');
+      await expect(field).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Clicar num comando também o escolhe', async () => {
@@ -300,7 +300,7 @@ export const Playground: Story = {
       });
       await expect(spy.mock.calls[antes][0]).toBe('cn');
       await waitFor(async () => {
-        await expect(campo).toHaveValue('');
+        await expect(field).toHaveValue('');
       });
     });
   },

@@ -118,9 +118,9 @@ export const FocusVisible: Story = {
       // focado, quem carrega `tabindex="0"` é o container, e o foco entra dele
       // para o item ativo. Contar só os itens daria zero e acusaria um defeito
       // que não existe — o que o contrato exige é uma parada, não onde ela mora.
-      const grupo = canvasElement.querySelector('[data-slot="toggle-group"]') as HTMLElement;
+      const group = canvasElement.querySelector('[data-slot="toggle-group"]') as HTMLElement;
       const orderItems = canvas.getAllByRole('button').filter((b) => b.tabIndex === 0);
-      const paradas = orderItems.length + (grupo.tabIndex === 0 ? 1 : 0);
+      const paradas = orderItems.length + (group.tabIndex === 0 ? 1 : 0);
       await expect(paradas).toBe(1);
     });
 

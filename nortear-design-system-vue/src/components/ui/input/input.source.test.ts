@@ -127,11 +127,11 @@ describe('transforms das stories de estado', () => {
   it('o erro liga o campo à mensagem, e a mensagem existe no snippet', () => {
     const saida = inputWithErrorSource();
     expect(saida).toContain('aria-invalid="true"');
-    const alvo = /aria-describedby="([^"]+)"/.exec(saida)?.[1];
-    expect(alvo).toBeTruthy();
+    const target = /aria-describedby="([^"]+)"/.exec(saida)?.[1];
+    expect(target).toBeTruthy();
     // O alvo do describedby precisa EXISTIR: um id que não aponta para nada
     // passa em asserção de atributo e não é lido por ninguém.
-    expect(saida).toContain(`<p id="${alvo}"`);
+    expect(saida).toContain(`<p id="${target}"`);
   });
 
   it('a paleta escura mostra os três estados e não escreve tema na marcação', () => {

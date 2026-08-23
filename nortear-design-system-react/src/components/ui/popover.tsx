@@ -58,8 +58,8 @@ function nomearPanel(el: HTMLElement | null): void {
   const trigger = el.ownerDocument.querySelector<HTMLElement>(
     '[aria-haspopup="dialog"][aria-expanded="true"]'
   )
-  const nome = trigger?.getAttribute("aria-label") || trigger?.textContent?.trim()
-  if (nome) el.setAttribute("aria-label", nome)
+  const name = trigger?.getAttribute("aria-label") || trigger?.textContent?.trim()
+  if (name) el.setAttribute("aria-label", name)
 }
 
 function PopoverContent({

@@ -25,14 +25,14 @@ export function chartRoot(insideOf: HTMLElement): HTMLElement | null {
 
 /** Idem, mas explode com mensagem útil em vez de devolver `null`. */
 export function exigirRoot(insideOf: HTMLElement): HTMLElement {
-  const raiz = chartRoot(insideOf);
-  if (!raiz) throw new Error('nenhum .nds-chart no canvas da story');
-  return raiz;
+  const root = chartRoot(insideOf);
+  if (!root) throw new Error('nenhum .nds-chart no canvas da story');
+  return root;
 }
 
 /** O desenho já saiu? `svg` no renderer padrão, `canvas` no alternativo. */
-export function designRenderizado(raiz: HTMLElement): Element | null {
-  return raiz.querySelector('svg, canvas');
+export function designRenderizado(root: HTMLElement): Element | null {
+  return root.querySelector('svg, canvas');
 }
 
 /**
@@ -48,9 +48,9 @@ export function designRenderizado(raiz: HTMLElement): Element | null {
  *
  * Por isso o marco é a primeira FORMA DE DADO, não o primeiro pixel.
  */
-export function designPintado(raiz: HTMLElement): boolean {
-  if (raiz.querySelector('canvas')) return true;
-  return datumFormas(raiz).length > 0;
+export function designPintado(root: HTMLElement): boolean {
+  if (root.querySelector('canvas')) return true;
+  return datumFormas(root).length > 0;
 }
 
 /**
@@ -60,15 +60,15 @@ export function designPintado(raiz: HTMLElement): boolean {
  * É a sonda mais estável que um gráfico tem — não depende de como a lib nomeia
  * seus grupos, e é literalmente o que a pessoa lê na tela.
  */
-export function designTexts(raiz: HTMLElement): string[] {
-  return [...raiz.querySelectorAll('svg text')]
+export function designTexts(root: HTMLElement): string[] {
+  return [...root.querySelectorAll('svg text')]
     .map((t) => (t.textContent ?? '').trim())
     .filter(Boolean);
 }
 
 /** O desenho escreve este texto em algum lugar? */
-export function designEscreve(raiz: HTMLElement, texto: string): boolean {
-  return designTexts(raiz).some((t) => t.includes(texto));
+export function designEscreve(root: HTMLElement, text: string): boolean {
+  return designTexts(root).some((t) => t.includes(text));
 }
 
 /**
@@ -78,9 +78,9 @@ export function designEscreve(raiz: HTMLElement, texto: string): boolean {
  * (WCAG 1.4.1). Medir os `<pattern>` do `<defs>` contaria trama declarada e não
  * usada; o que interessa é a que chegou a uma forma.
  */
-export function tramasAplicadas(raiz: HTMLElement): Set<string> {
+export function tramasAplicadas(root: HTMLElement): Set<string> {
   const ids = new Set<string>();
-  for (const el of raiz.querySelectorAll('svg [fill^="url(#"]')) {
+  for (const el of root.querySelectorAll('svg [fill^="url(#"]')) {
     const id = (el.getAttribute('fill') ?? '').match(/url\(#([^)]+)\)/)?.[1];
     if (id) ids.add(id);
   }
@@ -150,8 +150,8 @@ export async function settleTheme(doc: Document = document): Promise<void> {
  * `fill: none`, e por isso ficam de fora sem precisar saber o nome que cada
  * implementação dá aos seus grupos.
  */
-export function datumFormas(raiz: HTMLElement): SVGGraphicsElement[] {
-  return [...raiz.querySelectorAll<SVGGraphicsElement>('svg path, svg rect')].filter((el) => {
+export function datumFormas(root: HTMLElement): SVGGraphicsElement[] {
+  return [...root.querySelectorAll<SVGGraphicsElement>('svg path, svg rect')].filter((el) => {
     const s = getComputedStyle(el);
     return s.fill !== 'none' && s.stroke !== 'none' && parseFloat(s.strokeWidth || '0') > 0;
   });
@@ -164,12 +164,12 @@ export function datumFormas(raiz: HTMLElement): SVGGraphicsElement[] {
  * ninguém vê, e dividir por ela dá um número que não existe na tela.
  */
 export function backgroundOpacoAtras(el: Element): string {
-  let atual: Element | null = el;
-  while (atual) {
-    const cor = getComputedStyle(atual).backgroundColor;
+  let current: Element | null = el;
+  while (current) {
+    const cor = getComputedStyle(current).backgroundColor;
     const alfa = cor.match(/rgba?\([^)]*?,\s*([\d.]+)\)/);
     if (cor && cor !== 'transparent' && (!alfa || Number(alfa[1]) === 1)) return cor;
-    atual = atual.parentElement;
+    current = current.parentElement;
   }
   return 'rgb(255, 255, 255)';
 }

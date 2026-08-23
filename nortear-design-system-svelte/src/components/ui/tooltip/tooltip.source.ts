@@ -49,9 +49,9 @@ function balaoBody(variant: string, contentText: string): string {
   if (variant === 'withShortcut') {
     // O atalho sai do texto e vira tecla: `.nds-tooltip-content:has([data-slot="kbd"])`
     // é o que encurta o respiro à direita do balão.
-    const texto = contentText.replace(/\s*\([^)]*\)\s*$/, '');
+    const text = contentText.replace(/\s*\([^)]*\)\s*$/, '');
     return `
-      <span>${texto}</span>
+      <span>${text}</span>
       <kbd data-slot="kbd" class="nds-kbd">Ctrl</kbd>
       <kbd data-slot="kbd" class="nds-kbd">S</kbd>
     `;
@@ -60,35 +60,35 @@ function balaoBody(variant: string, contentText: string): string {
 }
 
 /** Monta a composição inteira: Provider, raiz, gatilho e balão. */
-function montar(opcoes: {
+function montar(options: {
   icone: IconKey;
   ariaLabel: string;
   provider: string;
-  raiz: string;
-  conteudo: string;
-  corpo: string;
+  root: string;
+  content: string;
+  body: string;
   state?: string;
 }): string {
-  const [nome, caminho] = ICONS[opcoes.icone];
+  const [name, caminho] = ICONS[options.icone];
   const script = [
-    `${IMPORT}\nimport ${nome} from "@lucide/svelte/icons/${caminho}";`,
-    opcoes.state ?? '',
+    `${IMPORT}\nimport ${name} from "@lucide/svelte/icons/${caminho}";`,
+    options.state ?? '',
   ]
     .filter(Boolean)
     .join('\n\n');
 
   return svelteSnippet(
     script,
-    `<TooltipProvider${opcoes.provider}>
-  <Tooltip${opcoes.raiz}>
+    `<TooltipProvider${options.provider}>
+  <Tooltip${options.root}>
     <TooltipTrigger>
       {#snippet child({ props })}
-        <Button variant="outline" size="icon" aria-label="${opcoes.ariaLabel}" {...props}>
-          <${nome} aria-hidden="true" class="nds-size-4" />
+        <Button variant="outline" size="icon" aria-label="${options.ariaLabel}" {...props}>
+          <${name} aria-hidden="true" class="nds-size-4" />
         </Button>
       {/snippet}
     </TooltipTrigger>
-    <TooltipContent${opcoes.conteudo}>${opcoes.corpo}</TooltipContent>
+    <TooltipContent${options.content}>${options.body}</TooltipContent>
   </Tooltip>
 </TooltipProvider>`,
   );
@@ -120,13 +120,13 @@ export function tooltipSource(_gerado?: string, ctx?: { args?: Partial<TooltipAr
     ariaLabel,
     // A espera é decisão do Provider, que a compartilha entre os vizinhos.
     provider: attrs(delayDuration ? `delayDuration={${delayDuration}}` : ''),
-    raiz: '',
-    conteudo: attrs(
+    root: '',
+    content: attrs(
       side === 'top' ? '' : `side="${side}"`,
       align === 'center' ? '' : `align="${align}"`,
       sideOffset ? `sideOffset={${sideOffset}}` : '',
     ),
-    corpo: balaoBody(variant, contentText),
+    body: balaoBody(variant, contentText),
   });
 }
 
@@ -136,9 +136,9 @@ export function tooltipOpenSource(): string {
     icone: 'salvar',
     ariaLabel: 'Salvar',
     provider: '',
-    raiz: ' defaultOpen',
-    conteudo: ' sideOffset={4}',
-    corpo: 'Salvar (Ctrl+S)',
+    root: ' defaultOpen',
+    content: ' sideOffset={4}',
+    body: 'Salvar (Ctrl+S)',
   });
 }
 
@@ -148,9 +148,9 @@ export function tooltipControlledSource(): string {
     icone: 'salvar',
     ariaLabel: 'Salvar',
     provider: '',
-    raiz: ' bind:open={aberto}',
-    conteudo: ' sideOffset={4}',
-    corpo: 'Salvar (Ctrl+S)',
+    root: ' bind:open={aberto}',
+    content: ' sideOffset={4}',
+    body: 'Salvar (Ctrl+S)',
     state: 'let aberto = $state(true);',
   });
 }

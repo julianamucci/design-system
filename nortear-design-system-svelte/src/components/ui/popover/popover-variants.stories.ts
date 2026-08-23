@@ -3,7 +3,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect, userEvent } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
-import { painel } from './popover.fixtures';
+import { panel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 
 const meta: Meta = {
@@ -53,8 +53,8 @@ export const Default: Story = {
     });
 
     await step('E carrega a classe do design system com o conteúdo livre', async () => {
-      await expect(painel()).toHaveClass(/nds-popover-content/);
-      await expect(painel()!.textContent).toMatch(/Ctrl \+ K/);
+      await expect(panel()).toHaveClass(/nds-popover-content/);
+      await expect(panel()!.textContent).toMatch(/Ctrl \+ K/);
     });
   },
 };
@@ -85,14 +85,14 @@ export const WithTitle: Story = {
       const dialog = await waitForPortal('dialog', { timeout: 2000 });
       const id = dialog.getAttribute('aria-labelledby');
       await expect(id).toBeTruthy();
-      const titulo = document.getElementById(id!)!;
-      await expect(titulo).toHaveAttribute('data-slot', 'popover-title');
-      await expect(titulo).toHaveClass(/nds-popover-title/);
+      const title = document.getElementById(id!)!;
+      await expect(title).toHaveAttribute('data-slot', 'popover-title');
+      await expect(title).toHaveClass(/nds-popover-title/);
       await expect(dialog).toHaveAccessibleName(/Configuracoes de exibição/i);
     });
 
     await step('Tab caminha entre os controles internos', async () => {
-      const ctx = within(painel()!);
+      const ctx = within(panel()!);
       const cancelar = ctx.getByRole('button', { name: 'Cancelar' });
       const salvar = ctx.getByRole('button', { name: 'Salvar' });
       cancelar.focus();
@@ -104,7 +104,7 @@ export const WithTitle: Story = {
       // `:focus-visible` é a condição exata que o CSS compartilhado usa para
       // desenhar o anel — se o foco tivesse vindo do ponteiro, o navegador não
       // casaria a pseudo-classe e o anel não apareceria.
-      const salvar = within(painel()!).getByRole('button', { name: 'Salvar' });
+      const salvar = within(panel()!).getByRole('button', { name: 'Salvar' });
       await expect(salvar.matches(':focus-visible')).toBe(true);
       // O anel de `.nds-button` é box-shadow, não outline — medir a propriedade
       // errada daria verde em qualquer elemento.
@@ -144,10 +144,10 @@ export const Form: Story = {
 
     await step('E aceitam digitação — o painel não é inerte', async () => {
       // Conteúdo interativo dentro do painel é a razão de existir do popover.
-      const nome = within(painel()!).getByLabelText(/Nome/i);
-      await userEvent.clear(nome);
-      await userEvent.type(nome, 'Bruno Lima');
-      await expect(nome).toHaveValue('Bruno Lima');
+      const name = within(panel()!).getByLabelText(/Nome/i);
+      await userEvent.clear(name);
+      await userEvent.type(name, 'Bruno Lima');
+      await expect(name).toHaveValue('Bruno Lima');
     });
   },
 };

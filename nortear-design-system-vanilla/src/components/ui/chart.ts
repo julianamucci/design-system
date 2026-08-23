@@ -254,13 +254,13 @@ export function createChart(opts: ChartOptions = {}): HTMLElement {
     let lastWidth = -1;
     let lastHeight = -1;
     const ro = new ResizeObserver((entries) => {
-      const caixa = entries[0]?.contentRect;
-      if (!caixa) return;
-      const largura = Math.round(caixa.width);
-      const altura = Math.round(caixa.height);
-      if (largura === lastWidth && altura === lastHeight) return;
-      lastWidth = largura;
-      lastHeight = altura;
+      const box = entries[0]?.contentRect;
+      if (!box) return;
+      const width = Math.round(box.width);
+      const height = Math.round(box.height);
+      if (width === lastWidth && height === lastHeight) return;
+      lastWidth = width;
+      lastHeight = height;
       chart.resize();
     });
     ro.observe(el);

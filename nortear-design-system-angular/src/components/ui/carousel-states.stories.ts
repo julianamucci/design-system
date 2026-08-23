@@ -123,7 +123,7 @@ export const LastSlide: Story = {
       // cairia num botão com `pointer-events: none` — o `userEvent` recusa, e a
       // story quebraria só na segunda rodada.
       const total = canvas.getAllByRole('group').length;
-      for (let passo = 0; passo < total; passo++) {
+      for (let step = 0; step < total; step++) {
         const button = next();
         if (button.disabled) break;
         // A rolagem é suave: mede antes, clica, e espera o viewport passar do

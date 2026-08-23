@@ -78,17 +78,17 @@ export const Playground: Story = {
     container.dataset.justify = 'center';
     container.dataset.align = 'center';
 
-    let atual = Math.min(Math.max(1, args.current), args.total);
+    let current = Math.min(Math.max(1, args.current), args.total);
 
     function remontar(): void {
       container.replaceChildren(
         createPagination({
           total: args.total,
-          current: atual,
+          current: current,
           showPrevNext: args.showPrevNext,
           'aria-label': args['aria-label'],
           onPageChange: (page) => {
-            atual = page;
+            current = page;
             onPageChange(page);
             remontar();
           },
@@ -144,12 +144,12 @@ export const Playground: Story = {
       // functional.item1 — a story remonta a faixa a cada clique, então o passo
       // VOLTA ao valor inicial no fim: o painel Interactions reexecuta a play no
       // mesmo DOM, e sem isso a segunda rodada partiria de outra página.
-      const alvo = args.current === 1 ? 2 : 1;
+      const target = args.current === 1 ? 2 : 1;
       onPageChange.mockClear();
-      await userEvent.click(canvas.getByRole('link', { name: `Ir para página ${alvo}` }));
-      await expect(onPageChange).toHaveBeenLastCalledWith(alvo);
+      await userEvent.click(canvas.getByRole('link', { name: `Ir para página ${target}` }));
+      await expect(onPageChange).toHaveBeenLastCalledWith(target);
       await expect(
-        canvas.getByRole('link', { name: `Ir para página ${alvo}` }),
+        canvas.getByRole('link', { name: `Ir para página ${target}` }),
       ).toHaveAttribute('aria-current', 'page');
 
       await userEvent.click(

@@ -19,8 +19,8 @@
 export const END_SCRIPT = '</' + 'script>';
 
 /** Indenta cada linha não vazia com dois espaços (corpo do bloco `<script>`). */
-function indentar(texto: string): string {
-  return texto
+function indentar(text: string): string {
+  return text
     .split('\n')
     .map((line) => (line.trim() ? `  ${line}` : line))
     .join('\n');
@@ -34,10 +34,10 @@ function indentar(texto: string): string {
  * HTML com classes `.nds-*` e não importa nada.
  */
 export function svelteSnippet(script: string, markup: string): string {
-  const corpo = script.trim();
+  const body = script.trim();
   const marcacao = markup.trim();
-  if (!corpo) return marcacao;
-  return `<script lang="ts">\n${indentar(corpo)}\n${END_SCRIPT}\n\n${marcacao}`;
+  if (!body) return marcacao;
+  return `<script lang="ts">\n${indentar(body)}\n${END_SCRIPT}\n\n${marcacao}`;
 }
 
 /**
@@ -49,8 +49,8 @@ export function svelteSnippet(script: string, markup: string): string {
  * ruído a quem copia.
  */
 export function attrs(...partes: Array<string | false | null | undefined>): string {
-  const lista = partes.filter((parte): parte is string => Boolean(parte) && parte !== '');
-  return lista.length ? ` ${lista.join(' ')}` : '';
+  const list = partes.filter((parte): parte is string => Boolean(parte) && parte !== '');
+  return list.length ? ` ${list.join(' ')}` : '';
 }
 
 /**
@@ -63,9 +63,9 @@ export function attrsMultilinha(
   indentacao = '  ',
   limit = 60,
 ): string {
-  const lista = partes.filter((parte): parte is string => Boolean(parte) && parte !== '');
-  if (!lista.length) return '';
-  const inLine = lista.join(' ');
+  const list = partes.filter((parte): parte is string => Boolean(parte) && parte !== '');
+  if (!list.length) return '';
+  const inLine = list.join(' ');
   if (inLine.length <= limit) return ` ${inLine}`;
-  return `\n${lista.map((parte) => `${indentacao}${parte}`).join('\n')}\n`;
+  return `\n${list.map((parte) => `${indentacao}${parte}`).join('\n')}\n`;
 }

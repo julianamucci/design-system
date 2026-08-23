@@ -48,46 +48,46 @@ const FILTERS = `    <p>Filtro avançado 1</p>
     <p>Filtro avançado 2</p>`;
 
 /** A composição inteira: raiz, gatilho com rótulo e chevron, e painel. */
-function colapsavel(opcoes: {
-  raiz?: string;
+function colapsavel(options: {
+  root?: string;
   classeRaiz?: string;
-  gatilho?: string;
+  trigger?: string;
   classeGatilho?: string;
   chevron?: string;
-  rotulo: string;
-  corpo?: string;
+  label: string;
+  body?: string;
 }): string {
   const {
-    raiz = '',
+    root = '',
     classeRaiz = 'nds-w-sm',
-    gatilho = '',
+    trigger = '',
     classeGatilho = TRIGGER_GHOST,
     chevron = CHEVRON,
-    rotulo,
-    corpo = FILTERS,
-  } = opcoes;
-  const triggerAttrs = [gatilho, `class="${classeGatilho}"`, 'data-justify="between"']
+    label,
+    body = FILTERS,
+  } = options;
+  const triggerAttrs = [trigger, `class="${classeGatilho}"`, 'data-justify="between"']
     .filter(Boolean)
     .map((atributo) => `    ${atributo}`)
     .join('\n');
-  return `<Collapsible${attrs(raiz, `class="${classeRaiz}"`)}>
+  return `<Collapsible${attrs(root, `class="${classeRaiz}"`)}>
   <CollapsibleTrigger
 ${triggerAttrs}
   >
-${rotulo}
+${label}
     <ChevronDown aria-hidden="true" class="${chevron}" />
   </CollapsibleTrigger>
   <CollapsibleContent
     class="${PANEL}"
     data-spacing="sm"
   >
-${corpo}
+${body}
   </CollapsibleContent>
 </Collapsible>`;
 }
 
 /** Rótulo simples do gatilho, já indentado para dentro dele. */
-const simpleLabel = (texto: string) => `    <span>${texto}</span>`;
+const simpleLabel = (text: string) => `    <span>${text}</span>`;
 
 /**
  * Playground: estado inicial e desabilitado saem dos controls.
@@ -99,13 +99,13 @@ const simpleLabel = (texto: string) => `    <span>${texto}</span>`;
  * apareceria no painel como se fosse o exemplo.
  */
 export const collapsibleSource: SourceTransform<CollapsibleArgs> = (_gerado, ctx) => {
-  const desabilitado = attrBool('disabled', ctx?.args?.disabled, false);
+  const disabled = attrBool('disabled', ctx?.args?.disabled, false);
   return vueSnippet(
     importing(),
     colapsavel({
-      raiz: attrs(attrBool('default-open', ctx?.args?.defaultOpen, false), desabilitado).trim(),
-      gatilho: desabilitado,
-      rotulo: simpleLabel('Exibir filtros avançados'),
+      root: attrs(attrBool('default-open', ctx?.args?.defaultOpen, false), disabled).trim(),
+      trigger: disabled,
+      label: simpleLabel('Exibir filtros avançados'),
     }),
   );
 };
@@ -117,7 +117,7 @@ export const collapsibleSource: SourceTransform<CollapsibleArgs> = (_gerado, ctx
 export function collapsibleNotControlledSource(): string {
   return vueSnippet(
     importing(),
-    colapsavel({ rotulo: simpleLabel('Exibir filtros avançados') }),
+    colapsavel({ label: simpleLabel('Exibir filtros avançados') }),
   );
 }
 
@@ -129,10 +129,10 @@ export function defaultCollapsibleOpenSource(): string {
   return vueSnippet(
     importing(),
     colapsavel({
-      raiz: 'default-open',
+      root: 'default-open',
       // O rótulo acompanha o estado inicial: "Exibir" num painel já aberto
       // descreveria o contrário do que a pessoa vê.
-      rotulo: simpleLabel('Ocultar filtros avançados'),
+      label: simpleLabel('Ocultar filtros avançados'),
     }),
   );
 }
@@ -148,10 +148,10 @@ export function defaultCollapsibleOpenSource(): string {
  * acessível ficam ambíguos na lista do leitor de tela.
  */
 export function collapsibleControlledSource(): string {
-  const bloco = colapsavel({
-    raiz: 'v-model:open="aberto"',
+  const block = colapsavel({
+    root: 'v-model:open="aberto"',
     classeRaiz: 'nds-w-full',
-    rotulo: `    <span>{{ aberto ? 'Ocultar filtros avançados' : 'Exibir filtros avançados' }}</span>`,
+    label: `    <span>{{ aberto ? 'Ocultar filtros avançados' : 'Exibir filtros avançados' }}</span>`,
   });
   return vueSnippet(
     `import { ref } from 'vue'
@@ -170,7 +170,7 @@ const aberto = ref(false)`,
       Fechar pelo estado externo
     </button>
   </div>
-${indentar(bloco, 2)}
+${indentar(block, 2)}
 </div>`,
   );
 }
@@ -184,10 +184,10 @@ export function collapsibleDisabledSource(): string {
   return vueSnippet(
     importing(),
     colapsavel({
-      raiz: 'disabled',
-      gatilho: 'disabled',
+      root: 'disabled',
+      trigger: 'disabled',
       chevron: CHEVRON_PARADO,
-      rotulo: simpleLabel('Filtros avançados (desabilitado)'),
+      label: simpleLabel('Filtros avançados (desabilitado)'),
     }),
   );
 }
@@ -202,8 +202,8 @@ export function collapsibleWithButtonSource(): string {
     importing(),
     colapsavel({
       classeGatilho: TRIGGER_OUTLINE,
-      rotulo: simpleLabel('Exibir opções avançadas'),
-      corpo: `    <p>Opção avançada 1</p>
+      label: simpleLabel('Exibir opções avançadas'),
+      body: `    <p>Opção avançada 1</p>
     <p>Opção avançada 2</p>
     <p>Opção avançada 3</p>`,
     }),
@@ -218,11 +218,11 @@ export function collapsibleWithIconSource(): string {
   return vueSnippet(
     importing('ChevronDown, Filter'),
     colapsavel({
-      rotulo: `    <span class="nds-cluster" data-spacing="sm">
+      label: `    <span class="nds-cluster" data-spacing="sm">
       <Filter aria-hidden="true" class="nds-icon nds-shrink-0 nds-text-muted-foreground" />
       Filtros avançados
     </span>`,
-      corpo: `    <p class="nds-text-muted-foreground">Filtro avançado 1</p>
+      body: `    <p class="nds-text-muted-foreground">Filtro avançado 1</p>
     <p class="nds-text-muted-foreground">Filtro avançado 2</p>`,
     }),
   );
@@ -237,8 +237,8 @@ export function collapsibleWithChevronSource(): string {
     importing(),
     colapsavel({
       classeGatilho: TRIGGER_OUTLINE,
-      rotulo: simpleLabel('Configurações avançadas'),
-      corpo: `    <div class="nds-cluster" data-justify="between">
+      label: simpleLabel('Configurações avançadas'),
+      body: `    <div class="nds-cluster" data-justify="between">
       <span class="nds-text-muted-foreground">Notificações</span>
       <span class="nds-font-medium">Ativadas</span>
     </div>

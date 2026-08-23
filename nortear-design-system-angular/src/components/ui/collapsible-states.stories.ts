@@ -115,18 +115,18 @@ export const Open: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button');
-    const painel = canvasElement.querySelector<HTMLElement>('[data-slot="collapsible-content"]')!;
+    const panel = canvasElement.querySelector<HTMLElement>('[data-slot="collapsible-content"]')!;
 
     await step('Aberto, o painel está no DOM e visível', async () => {
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
       await expect(trigger).toHaveAttribute('data-state', 'open');
-      await expect(painel).toBeVisible();
-      await expect(painel).toHaveAttribute('data-state', 'open');
+      await expect(panel).toBeVisible();
+      await expect(panel).toHaveAttribute('data-state', 'open');
       // Espera a transição de entrada assentar: `data-starting-style` é o que
       // segura a altura em zero no primeiro quadro, e medir o painel antes
       // disso mediria a animação, não o estado.
       await waitFor(async () => {
-        await expect(painel).not.toHaveAttribute('data-starting-style');
+        await expect(panel).not.toHaveAttribute('data-starting-style');
       });
     });
 
@@ -134,7 +134,7 @@ export const Open: Story = {
       // O CSS compartilhado anima `height` lendo `--collapsible-panel-height`.
       // Sem a variável, a folha cairia no fallback `auto` e o fechamento não
       // teria de onde animar — o painel sumiria de uma vez.
-      await expect(painel.style.getPropertyValue('--collapsible-panel-height')).not.toBe('');
+      await expect(panel.style.getPropertyValue('--collapsible-panel-height')).not.toBe('');
     });
   },
 };

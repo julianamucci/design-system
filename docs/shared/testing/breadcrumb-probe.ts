@@ -27,7 +27,7 @@ export interface ListMeasurement {
   tag: string | null;
   classesNds: string;
   /** Quantos `<li>` diretos — a contagem que o leitor de tela anuncia. */
-  itens: number;
+  items: number;
 }
 
 export interface SeparatorMeasurement {
@@ -35,8 +35,8 @@ export interface SeparatorMeasurement {
   classesNds: string;
   role: string | null;
   ariaHidden: string | null;
-  /** `svg` quando é ícone, `texto` quando é caractere. */
-  conteudo: 'svg' | 'texto' | 'vazio';
+  /** `svg` quando é ícone, `text` quando é caractere. */
+  content: 'svg' | 'texto' | 'vazio';
   /** Largura computada do ícone, em px — pega tamanho que não segue a densidade. */
   larguraDoIcone: number | null;
 }
@@ -46,7 +46,7 @@ export interface PageMeasurement {
   tag: string | null;
   classesNds: string;
   ariaCurrent: string | null;
-  texto: string | null;
+  text: string | null;
   /** O contrato diz "último item". `false` é achado. */
   ehUltimoItem: boolean | null;
   /** Página atual nunca é link. */
@@ -61,7 +61,7 @@ export interface EllipsisMeasurement {
   ariaLabel: string | null;
   ariaHidden: string | null;
   /** Tag do ancestral acionável, quando as reticências são gatilho de menu. */
-  gatilho: string | null;
+  trigger: string | null;
   /** Nome acessível do gatilho — é ele que nomeia o conjunto oculto. */
   nomeDoGatilho: string | null;
 }
@@ -69,29 +69,29 @@ export interface EllipsisMeasurement {
 export interface BreadcrumbMeasurement {
   cenario: string;
   nav: NavMeasurement;
-  lista: ListMeasurement;
-  links: { texto: string; href: string; classesNds: string }[];
+  list: ListMeasurement;
+  links: { text: string; href: string; classesNds: string }[];
   separadores: SeparatorMeasurement[];
-  pagina: PageMeasurement;
+  page: PageMeasurement;
   reticencias: EllipsisMeasurement;
   /** O que o leitor de tela percorre, na ordem do DOM. */
   leituraOrder: string[];
 }
 
 const NO_NAV: NavMeasurement = { presente: false, tag: null, classesNds: '', ariaLabel: null, role: null };
-const NO_LIST: ListMeasurement = { presente: false, tag: null, classesNds: '', itens: 0 };
+const NO_LIST: ListMeasurement = { presente: false, tag: null, classesNds: '', items: 0 };
 const NO_PAGE: PageMeasurement = {
-  presente: false, tag: null, classesNds: '', ariaCurrent: null, texto: null, ehUltimoItem: null, temHref: null,
+  presente: false, tag: null, classesNds: '', ariaCurrent: null, text: null, ehUltimoItem: null, temHref: null,
 };
 const NO_ELLIPSIS: EllipsisMeasurement = {
-  presente: false, tag: null, classesNds: '', role: null, ariaLabel: null, ariaHidden: null, gatilho: null, nomeDoGatilho: null,
+  presente: false, tag: null, classesNds: '', role: null, ariaLabel: null, ariaHidden: null, trigger: null, nomeDoGatilho: null,
 };
 
 function classesNds(el: Element): string {
   return Array.from(el.classList).filter((c) => c.startsWith('nds-')).sort().join(' ');
 }
 
-function texto(el: Element | null): string {
+function text(el: Element | null): string {
   return (el?.textContent ?? '').trim().replace(/\s+/g, ' ');
 }
 
@@ -104,7 +104,7 @@ function texto(el: Element | null): string {
  */
 function accessibleName(el: Element | null): string | null {
   if (!el) return null;
-  return el.getAttribute('aria-label') || texto(el) || null;
+  return el.getAttribute('aria-label') || text(el) || null;
 }
 
 /**
@@ -115,7 +115,7 @@ function accessibleName(el: Element | null): string | null {
  * dentro de um nó escondido, que foi como o texto sr-only conseguiu existir no
  * markup sem existir para ninguém.
  */
-export function leituraOrder(raiz: Element): string[] {
+export function leituraOrder(root: Element): string[] {
   const saida: string[] = [];
   const visitar = (el: Element) => {
     if (el.getAttribute('aria-hidden') === 'true') return;
@@ -137,30 +137,30 @@ export function leituraOrder(raiz: Element): string[] {
       return;
     }
     if (el.children.length === 0) {
-      const t = texto(el);
+      const t = text(el);
       if (t) saida.push(`texto:${t}`);
       return;
     }
     Array.from(el.children).forEach(visitar);
   };
-  Array.from(raiz.children).forEach(visitar);
+  Array.from(root.children).forEach(visitar);
   return saida;
 }
 
-export function measureBreadcrumb(raiz: HTMLElement, cenario = 'padrao'): BreadcrumbMeasurement {
-  const nav = raiz.querySelector<HTMLElement>('.nds-breadcrumb') ?? null;
+export function measureBreadcrumb(root: HTMLElement, cenario = 'padrao'): BreadcrumbMeasurement {
+  const nav = root.querySelector<HTMLElement>('.nds-breadcrumb') ?? null;
   // O `data-slot` é a rede: sem ele, uma stack sem a classe do contrato zeraria
   // TODOS os campos e a sonda não diria mais nada além de "não achei".
-  const slotNav = raiz.querySelector<HTMLElement>('[data-slot="breadcrumb"]');
-  const escopo = nav ?? slotNav ?? raiz;
+  const slotNav = root.querySelector<HTMLElement>('[data-slot="breadcrumb"]');
+  const escopo = nav ?? slotNav ?? root;
 
-  const lista = escopo.querySelector<HTMLElement>('.nds-breadcrumb-list, [data-slot="breadcrumb-list"]');
-  const pagina = escopo.querySelector<HTMLElement>('.nds-breadcrumb-page, [data-slot="breadcrumb-page"]');
+  const list = escopo.querySelector<HTMLElement>('.nds-breadcrumb-list, [data-slot="breadcrumb-list"]');
+  const page = escopo.querySelector<HTMLElement>('.nds-breadcrumb-page, [data-slot="breadcrumb-page"]');
   const reticencias = escopo.querySelector<HTMLElement>('.nds-breadcrumb-ellipsis, [data-slot="breadcrumb-ellipsis"]');
-  const listItems = lista ? Array.from(lista.children).filter((f) => f.tagName === 'LI') : [];
-  const pageItem = pagina?.closest('li') ?? null;
+  const listItems = list ? Array.from(list.children).filter((f) => f.tagName === 'LI') : [];
+  const pageItem = page?.closest('li') ?? null;
 
-  const gatilho = reticencias?.closest('button, a, [role="button"]') ?? null;
+  const trigger = reticencias?.closest('button, a, [role="button"]') ?? null;
 
   return {
     cenario,
@@ -170,11 +170,11 @@ export function measureBreadcrumb(raiz: HTMLElement, cenario = 'padrao'): Breadc
         // Achado explícito: o slot existe, a classe do contrato não.
         ? { presente: false, tag: slotNav.tagName.toLowerCase(), classesNds: classesNds(slotNav), ariaLabel: slotNav.getAttribute('aria-label'), role: slotNav.getAttribute('role') }
         : { ...NO_NAV },
-    lista: lista
-      ? { presente: true, tag: lista.tagName.toLowerCase(), classesNds: classesNds(lista), itens: listItems.length }
+    list: list
+      ? { presente: true, tag: list.tagName.toLowerCase(), classesNds: classesNds(list), items: listItems.length }
       : { ...NO_LIST },
     links: Array.from(escopo.querySelectorAll<HTMLAnchorElement>('.nds-breadcrumb-link, [data-slot="breadcrumb-link"]')).map((a) => ({
-      texto: texto(a),
+      text: text(a),
       href: a.getAttribute('href') ?? '',
       classesNds: classesNds(a),
     })),
@@ -185,19 +185,19 @@ export function measureBreadcrumb(raiz: HTMLElement, cenario = 'padrao'): Breadc
         classesNds: classesNds(s),
         role: s.getAttribute('role'),
         ariaHidden: s.getAttribute('aria-hidden'),
-        conteudo: svg ? 'svg' : texto(s) ? 'texto' : 'vazio',
+        content: svg ? 'svg' : text(s) ? 'texto' : 'vazio',
         larguraDoIcone: svg ? Math.round(svg.getBoundingClientRect().width * 100) / 100 : null,
       };
     }),
-    pagina: pagina
+    page: page
       ? {
           presente: true,
-          tag: pagina.tagName.toLowerCase(),
-          classesNds: classesNds(pagina),
-          ariaCurrent: pagina.getAttribute('aria-current'),
-          texto: texto(pagina),
+          tag: page.tagName.toLowerCase(),
+          classesNds: classesNds(page),
+          ariaCurrent: page.getAttribute('aria-current'),
+          text: text(page),
           ehUltimoItem: listItems.length > 0 && pageItem === listItems[listItems.length - 1],
-          temHref: pagina.hasAttribute('href'),
+          temHref: page.hasAttribute('href'),
         }
       : { ...NO_PAGE },
     reticencias: reticencias
@@ -208,8 +208,8 @@ export function measureBreadcrumb(raiz: HTMLElement, cenario = 'padrao'): Breadc
           role: reticencias.getAttribute('role'),
           ariaLabel: reticencias.getAttribute('aria-label'),
           ariaHidden: reticencias.getAttribute('aria-hidden'),
-          gatilho: gatilho ? gatilho.tagName.toLowerCase() : null,
-          nomeDoGatilho: accessibleName(gatilho),
+          trigger: trigger ? trigger.tagName.toLowerCase() : null,
+          nomeDoGatilho: accessibleName(trigger),
         }
       : { ...NO_ELLIPSIS },
     leituraOrder: leituraOrder(escopo),
@@ -220,11 +220,11 @@ export function measureBreadcrumb(raiz: HTMLElement, cenario = 'padrao'): Breadc
 export function resumirBreadcrumb(m: BreadcrumbMeasurement): string[] {
   return [
     `nav|presente=${m.nav.presente}|tag=${m.nav.tag}|classes=${m.nav.classesNds || '(nenhuma nds)'}|ariaLabel=${m.nav.ariaLabel}|role=${m.nav.role}`,
-    `lista|tag=${m.lista.tag}|classes=${m.lista.classesNds}|itens=${m.lista.itens}`,
-    `links|${m.links.map((l) => `${l.texto}->${l.href}(${l.classesNds})`).join(' , ') || 'nenhum'}`,
-    ...m.separadores.map((s, i) => `separador${i}|tag=${s.tag}|classes=${s.classesNds}|role=${s.role}|ariaHidden=${s.ariaHidden}|conteudo=${s.conteudo}|iconeLargura=${s.larguraDoIcone}`),
-    `pagina|tag=${m.pagina.tag}|classes=${m.pagina.classesNds}|ariaCurrent=${m.pagina.ariaCurrent}|texto=${m.pagina.texto}|ehUltimo=${m.pagina.ehUltimoItem}|temHref=${m.pagina.temHref}`,
-    `reticencias|presente=${m.reticencias.presente}|tag=${m.reticencias.tag}|role=${m.reticencias.role}|ariaLabel=${m.reticencias.ariaLabel}|ariaHidden=${m.reticencias.ariaHidden}|gatilho=${m.reticencias.gatilho}|nomeDoGatilho=${m.reticencias.nomeDoGatilho}`,
+    `lista|tag=${m.list.tag}|classes=${m.list.classesNds}|itens=${m.list.items}`,
+    `links|${m.links.map((l) => `${l.text}->${l.href}(${l.classesNds})`).join(' , ') || 'nenhum'}`,
+    ...m.separadores.map((s, i) => `separador${i}|tag=${s.tag}|classes=${s.classesNds}|role=${s.role}|ariaHidden=${s.ariaHidden}|conteudo=${s.content}|iconeLargura=${s.larguraDoIcone}`),
+    `pagina|tag=${m.page.tag}|classes=${m.page.classesNds}|ariaCurrent=${m.page.ariaCurrent}|texto=${m.page.text}|ehUltimo=${m.page.ehUltimoItem}|temHref=${m.page.temHref}`,
+    `reticencias|presente=${m.reticencias.presente}|tag=${m.reticencias.tag}|role=${m.reticencias.role}|ariaLabel=${m.reticencias.ariaLabel}|ariaHidden=${m.reticencias.ariaHidden}|gatilho=${m.reticencias.trigger}|nomeDoGatilho=${m.reticencias.nomeDoGatilho}`,
     `leitura|${m.leituraOrder.join(' > ')}`,
   ];
 }
@@ -249,14 +249,14 @@ export function reprovasDeBreadcrumb(m: BreadcrumbMeasurement): BreadcrumbFailur
   }
   if (m.nav.tag !== 'nav') f(`raiz é <${m.nav.tag}> e a anatomia pede <nav>`);
   if (!m.nav.ariaLabel) f('landmark <nav> sem nome acessível — dois <nav> na página ficam indistinguíveis');
-  if (m.lista.tag !== 'ol') f(`lista é <${m.lista.tag}> e a anatomia pede <ol> (a ORDEM é o que dá sentido à trilha)`);
-  if (!m.lista.classesNds.includes('nds-breadcrumb-list')) f('lista sem .nds-breadcrumb-list');
+  if (m.list.tag !== 'ol') f(`lista é <${m.list.tag}> e a anatomia pede <ol> (a ORDEM é o que dá sentido à trilha)`);
+  if (!m.list.classesNds.includes('nds-breadcrumb-list')) f('lista sem .nds-breadcrumb-list');
 
-  if (!m.pagina.presente) f('nenhum item com o papel de página atual');
+  if (!m.page.presente) f('nenhum item com o papel de página atual');
   else {
-    if (m.pagina.ariaCurrent !== 'page') f(`página atual com aria-current="${m.pagina.ariaCurrent}" em vez de "page"`);
-    if (m.pagina.ehUltimoItem === false) f('o item com aria-current="page" não é o último da lista');
-    if (m.pagina.temHref) f('página atual é um link — a anatomia diz que ela nunca é navegável');
+    if (m.page.ariaCurrent !== 'page') f(`página atual com aria-current="${m.page.ariaCurrent}" em vez de "page"`);
+    if (m.page.ehUltimoItem === false) f('o item com aria-current="page" não é o último da lista');
+    if (m.page.temHref) f('página atual é um link — a anatomia diz que ela nunca é navegável');
   }
 
   for (const [i, s] of m.separadores.entries()) {

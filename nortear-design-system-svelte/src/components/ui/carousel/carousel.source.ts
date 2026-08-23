@@ -53,7 +53,7 @@ export function carouselSource(_gerado?: string, ctx?: { args?: Partial<Carousel
   const { orientation = 'horizontal' } = ctx?.args ?? {};
   const vertical = orientation === 'vertical';
 
-  const raiz = attrs(
+  const root = attrs(
     vertical ? 'orientation="vertical"' : '',
     'aria-label="Galeria de exemplos"',
   );
@@ -65,7 +65,7 @@ export function carouselSource(_gerado?: string, ctx?: { args?: Partial<Carousel
   return svelteSnippet(
     `${IMPORT}\n\n${SLIDES}`,
     `<div class="${vertical ? 'nds-w-xs' : WIDTH_MD}">
-  <Carousel${raiz}>
+  <Carousel${root}>
     <CarouselContent${track}>
       {#each slides as numero (numero)}
         <CarouselItem aria-label="Slide {numero} de {slides.length}">

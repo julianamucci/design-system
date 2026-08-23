@@ -127,9 +127,9 @@ export const VariantSidebar: Story = {
     });
 
     await step('A variante padrão não arredonda o painel interno', async () => {
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-variant="sidebar"]')!;
-      await expect(raiz).toBeInTheDocument();
-      const interno = raiz.querySelector<HTMLElement>('.nds-sidebar-inner')!;
+      const root = canvasElement.querySelector<HTMLElement>('[data-variant="sidebar"]')!;
+      await expect(root).toBeInTheDocument();
+      const interno = root.querySelector<HTMLElement>('.nds-sidebar-inner')!;
       await expect(parseFloat(getComputedStyle(interno).borderTopLeftRadius)).toBe(0);
     });
   },
@@ -153,8 +153,8 @@ export const VariantFloating: Story = {
       // Afirma o pixel, e não só o atributo: a regra é
       // `[data-variant="floating"] .nds-sidebar-inner`, e um atributo no lugar
       // errado passaria despercebido.
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-variant="floating"]')!;
-      const interno = raiz.querySelector<HTMLElement>('.nds-sidebar-inner')!;
+      const root = canvasElement.querySelector<HTMLElement>('[data-variant="floating"]')!;
+      const interno = root.querySelector<HTMLElement>('.nds-sidebar-inner')!;
       const estilo = getComputedStyle(interno);
       await expect(parseFloat(estilo.borderTopLeftRadius)).toBeGreaterThan(0);
       await expect(parseFloat(estilo.borderTopWidth)).toBeGreaterThan(0);
@@ -177,11 +177,11 @@ export const VariantInset: Story = {
   },
   play: async ({ canvasElement, step }) => {
     await step('inset marca a variante, e o painel interno fica liso', async () => {
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-variant="inset"]')!;
-      await expect(raiz).toBeInTheDocument();
+      const root = canvasElement.querySelector<HTMLElement>('[data-variant="inset"]')!;
+      await expect(root).toBeInTheDocument();
       // O arredondamento do inset é do conteúdo adjacente, não do painel: se
       // aparecer aqui, alguém copiou a regra do floating para o lugar errado.
-      const interno = raiz.querySelector<HTMLElement>('.nds-sidebar-inner')!;
+      const interno = root.querySelector<HTMLElement>('.nds-sidebar-inner')!;
       await expect(parseFloat(getComputedStyle(interno).borderTopLeftRadius)).toBe(0);
     });
   },
@@ -193,12 +193,12 @@ export const SideRight: Story = {
     const canvas = within(canvasElement);
 
     await step('O painel encosta na direita', async () => {
-      const raiz = canvasElement.querySelector<HTMLElement>('[data-side="right"]')!;
-      await expect(raiz).toBeInTheDocument();
+      const root = canvasElement.querySelector<HTMLElement>('[data-side="right"]')!;
+      await expect(root).toBeInTheDocument();
       // Medida, não atributo: a regra que posiciona é
       // `[data-side="right"] .nds-sidebar-panel { right: 0 }`.
-      const painel = raiz.querySelector<HTMLElement>('.nds-sidebar-panel')!;
-      await expect(getComputedStyle(painel).right).toBe('0px');
+      const panel = root.querySelector<HTMLElement>('.nds-sidebar-panel')!;
+      await expect(getComputedStyle(panel).right).toBe('0px');
     });
 
     await step('O painel de contexto tem nome próprio de marco', async () => {
@@ -270,8 +270,8 @@ export const SideRight: Story = {
         transform: sidebarSourceWith({
           side: 'right',
           navLabel: 'Detalhes',
-          rodape: false,
-          grupos: [
+          footer: false,
+          groups: [
             {
               items: [
                 { label: 'Informações', href: '#', active: true },

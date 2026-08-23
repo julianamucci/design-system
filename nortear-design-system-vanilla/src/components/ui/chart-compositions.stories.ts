@@ -87,8 +87,8 @@ export const WithCard: Story = {
     await step('O cabeçalho do card traz o título em texto', async () => {
       const card = canvasElement.querySelector('[data-slot="card"]');
       await expect(card).not.toBeNull();
-      const titulo = canvasElement.querySelector('[data-slot="card-title"]');
-      await expect(titulo?.textContent?.trim()).toBe(CARD_TITLE);
+      const title = canvasElement.querySelector('[data-slot="card-title"]');
+      await expect(title?.textContent?.trim()).toBe(CARD_TITLE);
     });
 
     await step('O gráfico está DENTRO do card, não ao lado', async () => {
@@ -97,9 +97,9 @@ export const WithCard: Story = {
     });
 
     await step('E o desenho sai dentro dele', async () => {
-      const raiz = exigirRoot(canvasElement);
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(datumFormas(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+      const root = exigirRoot(canvasElement);
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(datumFormas(root).length).toBeGreaterThan(0), { timeout: 3000 });
     });
   },
 };
@@ -127,23 +127,23 @@ export const InlineTitle: Story = {
     class: 'nds-max-w-md',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRoot(canvasElement);
+    const root = exigirRoot(canvasElement);
 
     await step('O título aparece escrito dentro do desenho', async () => {
-      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(designEscreve(raiz, TITLE_INLINE)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designEscreve(root, TITLE_INLINE)).toBe(true), { timeout: 3000 });
     });
 
     await step('Sem descrição própria, o título é quem descreve o desenho', async () => {
       // O desenho continua sendo anunciado como imagem — o que muda é de onde
       // vem o rótulo. Título escrito e rótulo divergentes anunciariam ao leitor
       // de tela uma coisa e mostrariam outra.
-      await expect(raiz.getAttribute('role')).toBe('img');
-      await expect(raiz.getAttribute('aria-label')).toBe(TITLE_INLINE);
+      await expect(root.getAttribute('role')).toBe('img');
+      await expect(root.getAttribute('aria-label')).toBe(TITLE_INLINE);
     });
 
     await step('E o dado continua desenhado', async () => {
-      await expect(datumFormas(raiz).length).toBeGreaterThan(0);
+      await expect(datumFormas(root).length).toBeGreaterThan(0);
     });
   },
 };

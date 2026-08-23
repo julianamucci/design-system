@@ -60,9 +60,9 @@ const CLASSES_TRIGGER_BUTTON =
   'nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 
 /** Espera só entra no snippet quando difere do padrão do componente. */
-function propWait(nome: string, valor: unknown, padrao: number): string | undefined {
-  if (typeof valor !== 'number' || !Number.isFinite(valor) || valor === padrao) return undefined;
-  return propNumber(nome, valor);
+function propWait(name: string, value: unknown, padrao: number): string | undefined {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value === padrao) return undefined;
+  return propNumber(name, value);
 }
 
 /**
@@ -70,33 +70,33 @@ function propWait(nome: string, valor: unknown, padrao: number): string | undefi
  * cartão é ENRIQUECIMENTO, e no toque não existe hover — o clique no link
  * precisa continuar levando ao mesmo lugar.
  */
-function triggerLink(rotulo: string, href: string): string {
+function triggerLink(label: string, href: string): string {
   return `<HoverCardTrigger asChild>
   <a href="${href}" className="nds-text-primary nds-font-medium nds-hover-underline">
-    ${rotulo}
+    ${label}
   </a>
 </HoverCardTrigger>`;
 }
 
 /** Sem `type="button"` o mesmo gatilho dentro de um `<form>` enviaria o form. */
-function triggerButton(rotulo: string): string {
+function triggerButton(label: string): string {
   return `<HoverCardTrigger asChild>
   <button type="button" className="${CLASSES_TRIGGER_BUTTON}">
-    ${rotulo}
+    ${label}
   </button>
 </HoverCardTrigger>`;
 }
 
 function cartao(
   propsRaiz: string,
-  gatilho: string,
+  trigger: string,
   propsConteudo: string,
-  corpo: string,
+  body: string,
 ): string {
   return `<HoverCard${propsRaiz}>
-${indentar(gatilho)}
+${indentar(trigger)}
   <HoverCardContent${propsConteudo}>
-${indentar(corpo, '    ')}
+${indentar(body, '    ')}
   </HoverCardContent>
 </HoverCard>`;
 }
@@ -137,12 +137,12 @@ const PERFIL = `<div className="nds-cluster" data-spacing="sm" data-align="start
  */
 export const hoverCardSource: SourceTransform<HoverCardArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const raiz = attrsMultilinha([
+  const root = attrsMultilinha([
     propBool('defaultOpen', args.defaultOpen),
     propWait('openDelay', args.openDelay, WAIT_OPEN),
     propWait('closeDelay', args.closeDelay, WAIT_CLOSE),
   ]);
-  const conteudo = attrs(
+  const content = attrs(
     propOption('side', args.side, LADOS, 'bottom'),
     propOption('align', args.align, ALINHAMENTOS, 'center'),
   );
@@ -152,9 +152,9 @@ export const hoverCardSource: SourceTransform<HoverCardArgs> = (_gerado, ctx) =>
     emFrase(
       'Comentário de',
       cartao(
-        raiz,
+        root,
         triggerLink(childText(args.triggerLabel, '@joana'), '/users/joana'),
-        conteudo,
+        content,
         PERFIL,
       ),
       'há 2 horas.',
@@ -386,7 +386,7 @@ export function hoverCardLadosSource(): string {
             {rotulo}
           </button>
         </HoverCardTrigger>
-        <HoverCardContent side={lado} aria-label={\`Cartão \${rotulo} do gatilho\`}>
+        <HoverCardContent side={lado} aria-label={\`Cartão \${label} do gatilho\`}>
           <p className="nds-text-caption">Lado preferido: {rotulo}.</p>
         </HoverCardContent>
       </HoverCard>{" "}

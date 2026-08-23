@@ -135,8 +135,8 @@ export const Drag: Story = {
   play: async ({ canvasElement, step, args }) => {
     const control = canvasElement.querySelector<HTMLElement>('[data-slot="slider-control"]')!;
     const track = control.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
-    const caixa = track.getBoundingClientRect();
-    const y = caixa.top + caixa.height / 2;
+    const box = track.getBoundingClientRect();
+    const y = box.top + box.height / 2;
     const spyChange = args.onValueChange as unknown as ReturnType<typeof fn>;
     const spyCommit = args.onValueCommitted as unknown as ReturnType<typeof fn>;
 
@@ -160,8 +160,8 @@ export const Drag: Story = {
       // soltava um botão que aquela instância nunca viu apertado, e o
       // `pointerup` que fecha o arrasto nunca chegava ao componente.
       await userEvent.pointer([
-        { keys: '[MouseLeft>]', target: control, coords: { clientX: caixa.left + caixa.width * 0.2, clientY: y } },
-        { target: control, coords: { clientX: caixa.left + caixa.width * 0.8, clientY: y } },
+        { keys: '[MouseLeft>]', target: control, coords: { clientX: box.left + box.width * 0.2, clientY: y } },
+        { target: control, coords: { clientX: box.left + box.width * 0.8, clientY: y } },
         { keys: '[/MouseLeft]' },
       ]);
 

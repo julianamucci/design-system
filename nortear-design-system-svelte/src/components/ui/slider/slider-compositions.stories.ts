@@ -61,9 +61,9 @@ export const VolumeWithValue: Story = {
       // renderização, e focar no nó destacado não faz nada — o foco ficava no
       // BODY e a tecla não chegava no slider.
       const live = canvasElement.querySelector<HTMLElement>('[aria-live="polite"]')!;
-      const alvo = canvas.getByRole('slider') as HTMLElement;
-      const antes = handleValue(alvo);
-      alvo.focus();
+      const target = canvas.getByRole('slider') as HTMLElement;
+      const antes = handleValue(target);
+      target.focus();
       await userEvent.keyboard('{ArrowRight}');
       await expect(live).toHaveTextContent(`${Math.min(100, antes + 1)}%`);
     });
@@ -135,10 +135,10 @@ export const InForm: Story = {
     await step('Submeter guarda o valor corrente dos dois', async () => {
       const thumbs = canvas.getAllByRole('slider');
       const brilho = handleValue(thumbs[0]);
-      const opacidade = handleValue(thumbs[1]);
+      const opacity = handleValue(thumbs[1]);
       await userEvent.click(canvas.getByRole('button', { name: 'Salvar preset' }));
       await expect(
-        canvas.getByText(`Brilho ${brilho}% · Opacidade ${opacidade}%`),
+        canvas.getByText(`Brilho ${brilho}% · Opacidade ${opacity}%`),
       ).toBeVisible();
     });
   },
@@ -174,9 +174,9 @@ export const ThickStep: Story = {
     });
 
     await step('ArrowRight anda um passo dentro da faixa curta', async () => {
-      const alvo = canvas.getByRole('slider') as HTMLElement;
-      const antes = handleValue(alvo);
-      alvo.focus();
+      const target = canvas.getByRole('slider') as HTMLElement;
+      const antes = handleValue(target);
+      target.focus();
       await userEvent.keyboard('{ArrowRight}');
       await expect(handleValue(canvas.getByRole('slider'))).toBe(Math.min(5, antes + 1));
     });

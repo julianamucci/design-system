@@ -40,7 +40,7 @@ const RAZOES: Array<[number, string]> = [
  * da tabela (o control é um número livre) sai arredondado.
  */
 function proporcao(ratio: number): string {
-  const conhecida = RAZOES.find(([valor]) => Math.abs(valor - ratio) < 0.005);
+  const conhecida = RAZOES.find(([value]) => Math.abs(value - ratio) < 0.005);
   return conhecida ? conhecida[1] : String(Number(ratio.toFixed(2)));
 }
 
@@ -48,7 +48,7 @@ function proporcao(ratio: number): string {
  * O filho da caixa. `height: 100%` e `object-fit` são mecânicos — é assim que o
  * conteúdo cobre a caixa que a proporção reservou.
  */
-function filho(args: Pick<AspectRatioArgs, 'child' | 'alt' | 'title' | 'label'>): string {
+function renderChild(args: Pick<AspectRatioArgs, 'child' | 'alt' | 'title' | 'label'>): string {
   switch (args.child) {
     case 'iframe':
       return `<iframe
@@ -117,7 +117,7 @@ export function aspectRatioSource(
     IMPORT,
     `<div class="${width}">
   <AspectRatio ratio={${proporcao(ratio)}}>
-    ${filho({ child, alt, title, label })}
+    ${renderChild({ child, alt, title, label })}
   </AspectRatio>
 </div>`,
   );

@@ -50,13 +50,13 @@ export const formSource: SourceTransform<FormArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const hasError = typeof args.error === 'string' && args.error.trim() !== '';
 
-  const campo = attrsMultilinha([
+  const field = attrsMultilinha([
     propText('label', args.label) ?? 'label="Email"',
     propText('description', args.description),
     propText('error', args.error),
   ]);
 
-  const controle = attrs(
+  const control = attrs(
     'type="email"',
     propText('placeholder', args.placeholder) ?? 'placeholder="ex: joao@empresa.com"',
     propBool('disabled', args.disabled),
@@ -67,8 +67,8 @@ export const formSource: SourceTransform<FormArgs> = (_gerado, ctx) => {
 
   return jsxSnippet(
     IMPORT_FIELD,
-    `<FormField${campo}>
-  <Input${controle} />
+    `<FormField${field}>
+  <Input${control} />
 </FormField>`,
   );
 };

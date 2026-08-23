@@ -37,7 +37,7 @@ export default meta;
 type Story = StoryObj;
 
 /** Mesmo painel nas quatro direções — o que muda é `side` e o rótulo do título. */
-function painel(side: SheetSide, tituloKey: string) {
+function panel(side: SheetSide, tituloKey: string) {
   return () => ({
     props: {
       side,
@@ -84,7 +84,7 @@ export const Right: Story = {
       },
     },
   },
-  render: painel('right', 'rightLabel'),
+  render: panel('right', 'rightLabel'),
   play: async ({ step }) => {
     await step('O painel abre encostado na borda direita', async () => {
       const panelEl = await waitForPortal('dialog');
@@ -108,7 +108,7 @@ export const Left: Story = {
       },
     },
   },
-  render: painel('left', 'leftLabel'),
+  render: panel('left', 'leftLabel'),
   play: async ({ step }) => {
     await step('O painel abre encostado na borda esquerda', async () => {
       const panelEl = await waitForPortal('dialog');
@@ -131,7 +131,7 @@ export const Top: Story = {
       },
     },
   },
-  render: painel('top', 'topLabel'),
+  render: panel('top', 'topLabel'),
   play: async ({ step }) => {
     await step('O painel abre encostado no topo', async () => {
       const panelEl = await waitForPortal('dialog');
@@ -155,7 +155,7 @@ export const Bottom: Story = {
       },
     },
   },
-  render: painel('bottom', 'bottomLabel'),
+  render: panel('bottom', 'bottomLabel'),
   play: async ({ step }) => {
     await step('O painel abre encostado na base', async () => {
       const panelEl = await waitForPortal('dialog');

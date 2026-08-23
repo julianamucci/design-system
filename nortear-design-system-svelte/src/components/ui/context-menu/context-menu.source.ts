@@ -56,13 +56,13 @@ ${usadas.map((part) => `  ${part},`).join('\n')}
 
 /** Um item do menu, com ou sem atalho ao lado do rótulo. */
 function item(
-  rotulo: string,
-  opcoes: { atalho?: string; props?: string; indent?: string } = {},
+  label: string,
+  options: { atalho?: string; props?: string; indent?: string } = {},
 ): string {
-  const { atalho, props = '', indent = '    ' } = opcoes;
-  if (!atalho) return `${indent}<ContextMenuItem${props}>${rotulo}</ContextMenuItem>`;
+  const { atalho, props = '', indent = '    ' } = options;
+  if (!atalho) return `${indent}<ContextMenuItem${props}>${label}</ContextMenuItem>`;
   return `${indent}<ContextMenuItem${props}>
-${indent}  ${rotulo}
+${indent}  ${label}
 ${indent}  <ContextMenuShortcut>${atalho}</ContextMenuShortcut>
 ${indent}</ContextMenuItem>`;
 }
@@ -72,17 +72,17 @@ ${indent}</ContextMenuItem>`;
  *
  * O conteúdo já chega indentado com quatro espaços.
  */
-function menu(conteudo: string, rotulo = 'Clique com o botão direito aqui'): string {
+function menu(content: string, label = 'Clique com o botão direito aqui'): string {
   return `<ContextMenu>
   <ContextMenuTrigger
     class="${AREA}"
     data-align="center"
     data-justify="center"
   >
-    ${rotulo}
+    ${label}
   </ContextMenuTrigger>
   <ContextMenuContent>
-${conteudo}
+${content}
   </ContextMenuContent>
 </ContextMenu>`;
 }

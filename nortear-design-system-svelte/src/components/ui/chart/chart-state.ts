@@ -21,9 +21,9 @@ export const CHART_EMPTY_LABEL = 'Sem dados para exibir';
 /** O option descreve alguma série com dado? Decide o estado vazio. */
 export function isChartOptionEmpty(option: EChartsCoreOption): boolean {
   const series = (option as { series?: unknown }).series;
-  const lista = Array.isArray(series) ? series : series ? [series] : [];
-  if (lista.length === 0) return true;
-  return lista.every((s) => {
+  const list = Array.isArray(series) ? series : series ? [series] : [];
+  if (list.length === 0) return true;
+  return list.every((s) => {
     const data = (s as { data?: unknown[] }).data;
     return !Array.isArray(data) || data.length === 0;
   });

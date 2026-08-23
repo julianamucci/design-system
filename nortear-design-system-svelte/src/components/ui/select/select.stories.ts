@@ -95,7 +95,7 @@ export const Playground: Story = {
     // Cada passo estabelece a própria precondição: o painel Interactions
     // reexecuta a play no MESMO DOM, e um clique cego inverteria o resultado na
     // segunda rodada.
-    const abrir = async () => {
+    const open = async () => {
       if (trigger.getAttribute('aria-expanded') !== 'true') {
         // Lista fora do DOM não basta: durante a saída o overlay ainda segura
         // `pointer-events`, e o clique falha com uma mensagem que não explica
@@ -128,7 +128,7 @@ export const Playground: Story = {
     });
 
     await step('Abrir mostra a lista, e a seta anda pelas opções', async () => {
-      const listbox = await abrir();
+      const listbox = await open();
       await expect(listbox).toBeVisible();
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
       // `aria-controls` do gatilho tem de apontar para um elemento que EXISTE e
@@ -138,8 +138,8 @@ export const Playground: Story = {
       await expect(apontado?.getAttribute('role') ?? 'aria-controls aponta para id inexistente')
         .toBe('listbox');
       await expect(apontado).toBe(listbox);
-      const opcoes = within(listbox).getAllByRole('option');
-      await expect(opcoes).toHaveLength(STATES.length);
+      const options = within(listbox).getAllByRole('option');
+      await expect(options).toHaveLength(STATES.length);
       // Onde o teclado fica ao abrir varia por lib: umas movem o foco para
       // dentro do painel, outras o mantêm no campo e comandam a lista por
       // 'aria-activedescendant'. O que NÃO varia é a seta andar pela lista em
@@ -151,12 +151,12 @@ export const Playground: Story = {
       const partida = destacada();
       await userEvent.keyboard('{ArrowDown}');
       await waitFor(async () => {
-        await expect(destacada()).toBe(Math.min(partida + 1, opcoes.length - 1));
+        await expect(destacada()).toBe(Math.min(partida + 1, options.length - 1));
       });
     });
 
     await step('Digitar a inicial salta para a opção correspondente', async () => {
-      const listbox = await abrir();
+      const listbox = await open();
       await userEvent.keyboard('m');
       const minas = within(listbox).getByRole('option', { name: /Minas Gerais/i });
       await waitFor(async () => {
@@ -165,7 +165,7 @@ export const Playground: Story = {
     });
 
     await step('Enter escolhe a opção destacada, fecha e atualiza o campo', async () => {
-      await abrir();
+      await open();
       await userEvent.keyboard('{Enter}');
       await waitForPortalGone('listbox');
       await expect(spy).toHaveBeenCalledWith('mg');
@@ -174,7 +174,7 @@ export const Playground: Story = {
     });
 
     await step('Escape fecha sem trocar a escolha e devolve o foco', async () => {
-      await abrir();
+      await open();
       const callsBefore = spy.mock.calls.length;
       await userEvent.keyboard('{Escape}');
       await waitForPortalGone('listbox');
