@@ -94,11 +94,28 @@ export const OnAndOff: Story = {
       await expect(deslocamento).toBeGreaterThan(rest);
     });
 
-    await step('O trilho ligado tem pelo menos 3:1 contra o ambiente e contra o desligado', async () => {
+    // Cada estado contra o AMBIENTE, não um contra o outro.
+    //
+    // A versão anterior exigia 3:1 entre trilho ligado e desligado, e ela só era
+    // satisfeita por acidente da paleta antiga: o `--primary` do Default era
+    // quase-preto no claro e quase-branco no escuro, então qualquer neutro de
+    // meio-tom contrastava com ele de graça (5.53:1 e 4.56:1). Com uma cor de
+    // MARCA no interativo — teal, luminância média — não existe valor de
+    // `--input` que sirva: ele precisaria ser claro para diferir do teal e
+    // escuro para se ver contra a página, e a escala inteira foi varrida sem
+    // achar um. A regra impedia o design system de ter cor de marca no primary,
+    // que é medir a coisa errada.
+    //
+    // O que a WCAG 1.4.11 pede é 3:1 de cada estado contra a cor ADJACENTE — e
+    // dois estados do mesmo controle nunca são adjacentes: vê-se um de cada vez.
+    // A mudança de estado também é comunicada pela POSIÇÃO do polegar, que o
+    // passo acima assere à parte. Então não se perde sinal aqui: ganha-se a
+    // verificação do trilho desligado, que antes ninguém media.
+    await step('Cada estado do trilho tem pelo menos 3:1 contra o ambiente', async () => {
       const colorLigado = getComputedStyle(ligado).backgroundColor;
       const colorDesligado = getComputedStyle(desligado).backgroundColor;
       await expect(contraste(colorLigado, environmentBackground(ligado))).toBeGreaterThanOrEqual(3);
-      await expect(contraste(colorLigado, colorDesligado)).toBeGreaterThanOrEqual(3);
+      await expect(contraste(colorDesligado, environmentBackground(desligado))).toBeGreaterThanOrEqual(3);
     });
   },
 };

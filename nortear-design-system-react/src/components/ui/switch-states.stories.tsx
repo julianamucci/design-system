@@ -95,6 +95,17 @@ export const Unchecked: Story = {
         thumb.getBoundingClientRect().left - switchEl.getBoundingClientRect().left;
       await expect(deslocamento).toBeLessThan(switchEl.getBoundingClientRect().width / 2);
     });
+
+    // O trilho DESLIGADO também é informação: quem não o enxerga contra a
+    // página não sabe que há um controle ali. A story do ligado mede o mesmo,
+    // e é assim que a WCAG 1.4.11 pede — cada estado contra a cor adjacente,
+    // não um estado contra o outro. Dois estados do mesmo controle nunca são
+    // adjacentes: vê-se um de cada vez, e a mudança entre eles já é provada
+    // pela posição do polegar, no passo acima.
+    await step("O trilho desligado tem pelo menos 3:1 contra o ambiente", async () => {
+      const colorTrack = getComputedStyle(switchEl).backgroundColor;
+      await expect(contraste(colorTrack, environmentBackground(switchEl))).toBeGreaterThanOrEqual(3);
+    });
   },
 };
 
