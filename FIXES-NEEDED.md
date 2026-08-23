@@ -2720,33 +2720,33 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
       arquivos, e o vazamento precisa da suíte inteira dividindo a página. Medir
       com a suíte completa, uma stack por vez.
 
-- [ ] **Tradução de identificadores — 66 nomes adiados, cada um por decisão de
-      quem é dona do código.** A campanha aplicou 2329 nomes em oito lotes. O
-      que sobrou não é resto mecânico: é o que uma varredura não pode decidir.
+- [ ] **Tradução de identificadores — 11 nomes adiados, cada um por decisão de
+      quem é dona do código.** A campanha aplicou 2384 nomes em nove lotes. Os
+      55 que colidiam de escopo foram fechados corrigindo os sítios um a um; o
+      que resta não tem alvo único, e o motivo de cada um está em
+      `docs/shared/primitives/identificadores-pt.ts`.
 
-      **55 colidem de escopo** — o nome em inglês já ocupa aquele escopo no
-      mesmo arquivo. Três famílias respondem pela maioria e têm alvo óbvio, mas
-      é escolha de nome, não de varredura:
+      `padrao` e `novo` são ambíguos E o alvo natural é palavra reservada;
+      `com` nem é identificador; `estilo`, `densidade`, `canal`, `seletores`,
+      `meses` e `anos` colidem com prop de framework; `teclar` foi fundido com
+      `tipo` pela recomposição e quer `onKey`.
 
-      | nome | alvo natural | por que colide |
-      |---|---|---|
-      | `gatilho` | `triggerEl` | `trigger` é helper importado, 32 arquivos |
-      | `atributos` | `attributes` | `attrs` é helper importado, 6 arquivos |
-      | `raiz` | `rootEl` | `root` é variável local, 3 arquivos |
+      Aparecem por componente na `/quality`, pela regra `identificador_pt` —
+      quem revisa um componente vê os dele. Fechou um: renomeie e tire da
+      lista, ou mova para `MANTIDOS` com o motivo.
 
-      O resto tem uma ou duas ocorrências cada (`rotulo`→`label` em 59 arquivos
-      é o maior, mas quase sempre contra um `label` de escopo diferente — vale
-      medir caso a caso antes de escolher).
+- [ ] **Paridade de story do button: o Angular mede o mesmo probe com recorte
+      diferente.** Encontrado ao verificar as correções do último lote de
+      tradução: quatro stacks nomeiam a story `Focus Visible`, e o Angular
+      chama `ringFailures(canvasElement, 3)` de dentro de `Keyboard`. O
+      `button-variants.stories.ts` dele tem uma story só (`Variants`) contra as
+      seis chamadas de `contrastDeTextFailures` do React.
 
-      **11 não têm alvo único**, com o motivo escrito em
-      `docs/shared/primitives/identificadores-pt.ts`: `padrao` e `novo` são
-      ambíguos E o alvo natural é palavra reservada; `com` nem é identificador;
-      `estilo`, `densidade`, `canal`, `seletores`, `meses`, `anos` colidem com
-      prop de framework; `teclar` foi fundido com `tipo` pela recomposição e
-      quer `onKey`.
-
-      Estes 11 aparecem por componente na `/quality`, pela regra
-      `identificador_pt` — quem revisa um componente vê os dele.
+      A cobertura do probe existe nas cinco, então nenhum portão reclama — mas o
+      contrato `covers` e a matriz de cobertura da `/quality` comparam story a
+      story, e nesse recorte as cinco não são comparáveis. Decidir se o Angular
+      renomeia para `Focus Visible` ou se as outras quatro absorvem o caso em
+      `Keyboard`.
 
 - [ ] **~1100 identificadores em português que a campanha nunca varreu.**
       Medido em 2026-08-23, ao calibrar a regra `identificador_pt`: ligando o

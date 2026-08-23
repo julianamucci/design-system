@@ -2,7 +2,7 @@
  * Identificadores que ainda estão em português, e o motivo de cada um seguir
  * assim.
  *
- * A campanha de tradução aplicou 2384 nomes em sete lotes por varredura. O que
+ * A campanha de tradução aplicou 2384 nomes em nove lotes por varredura. O que
  * restou não é resto mecânico: é o que uma varredura não pode decidir — nome
  * cujo alvo em inglês já existe no mesmo arquivo com outro sentido, nome que
  * significa duas coisas em dois lugares, nome cujo alvo natural é palavra
