@@ -13,17 +13,13 @@ import {
   attrsMultilinha,
   jsxSnippet,
   propBool,
-  propOption,
   type SourceTransform,
 } from '@/lib/story-source';
 
 export type AccordionArgs = {
   multiple: boolean;
   disabled: boolean;
-  orientation: 'vertical' | 'horizontal';
 };
-
-const ORIENTACOES = ['vertical', 'horizontal'] as const;
 
 /**
  * As quatro peças sempre andam juntas: Root, Item, Trigger e Content. Importar
@@ -83,7 +79,7 @@ function root(attrs: string, body: string): string {
  * controls do Playground; nos arquivos que desligam os controls cai no padrão do
  * componente, que é o uso canônico: modo único, um item aberto na montagem.
  *
- * `multiple`, `disabled` e `orientation` só aparecem quando diferem do padrão —
+ * `multiple` e `disabled` só aparecem quando diferem do padrão —
  * repetir `multiple={false}` ensina ruído a quem copia.
  */
 export const accordionSource: SourceTransform<AccordionArgs> = (_gerado, ctx) => {
@@ -91,7 +87,6 @@ export const accordionSource: SourceTransform<AccordionArgs> = (_gerado, ctx) =>
   const attrs = attrsMultilinha([
     propBool('multiple', args.multiple),
     propBool('disabled', args.disabled),
-    propOption('orientation', args.orientation, ORIENTACOES, 'vertical'),
     'defaultValue={["item-1"]}',
     'className="nds-max-w-lg"',
   ]);

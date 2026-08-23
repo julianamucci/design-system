@@ -64,18 +64,16 @@ import {
 
   it('não escreve os padrões do componente — repetir padrão ensina ruído', () => {
     const saida = accordionSource('', {
-      args: { orientation: 'vertical', disabled: false, unmountOnHide: false },
+      args: { disabled: false, unmountOnHide: false },
     });
-    expect(saida).not.toContain('orientation=');
     expect(saida).not.toContain('disabled');
     expect(saida).not.toContain('unmount-on-hide');
   });
 
   it('o que difere do padrão entra, e o booleano vai na forma curta', () => {
     const saida = accordionSource('', {
-      args: { orientation: 'horizontal', disabled: true, unmountOnHide: true },
+      args: { disabled: true, unmountOnHide: true },
     });
-    expect(saida).toContain('orientation="horizontal"');
     expect(saida).toContain(' disabled');
     // Ligar isto desmonta o painel fechado e mata a busca do navegador; o
     // snippet mostra a prop, e não `:unmount-on-hide="true"`.
@@ -85,12 +83,11 @@ import {
 
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
     const saida = accordionSource('', {
-      args: { type: (() => {}) as never, orientation: (() => {}) as never },
+      args: { type: (() => {}) as never, disabled: (() => {}) as never },
     });
     expect(saida).not.toContain('function');
     // O modo cai no padrão em vez de sumir: sem `type` a raiz não monta.
     expect(saida).toContain('<Accordion type="single"');
-    expect(saida).not.toContain('orientation=');
   });
 });
 

@@ -58,11 +58,6 @@ const meta: Meta = {
       description: 'Callback disparado quando o valor muda.',
       table: { type: { summary: '(value: string | string[]) => void' } },
     },
-    orientation: {
-      control: false,
-      description: 'Eixo de navegação por teclado.',
-      table: { type: { summary: "'vertical' | 'horizontal'" }, defaultValue: { summary: "'vertical'" } },
-    },
     class: {
       control: false,
       description: 'Classes adicionais no elemento raiz. Esta stack usa class, não className.',

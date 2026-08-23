@@ -28,12 +28,15 @@ import { injectCollapsibleRootContext } from '@radix-ng/primitives/collapsible';
 // que seguram a remoção até a animação de fechamento terminar.
 //
 // O que eles NÃO trazem — e por isso está aqui: navegação por setas. O
-// `RdxAccordionRootDirective` deprecou `orientation` e `loopFocus` "seguindo a
-// atualização da APG que removeu o roving focus", então ArrowUp/ArrowDown/Home/
-// End caem no scroll da página. Vanilla, reka-ui e bits-ui implementam, o
-// conteúdo compartilhado documenta o comportamento (accessibility.keyboard.*) e
-// o React o repõe com o mesmo patch — repô-lo aqui é o que mantém as cinco
-// stacks iguais.
+// `RdxAccordionRootDirective` a removeu seguindo a atualização da APG que tirou
+// o roving focus do padrão, então ArrowUp/ArrowDown/Home/End caem no scroll da
+// página. Vanilla, reka-ui e bits-ui implementam, o conteúdo compartilhado
+// documenta o comportamento (accessibility.keyboard.*) e o React o repõe com o
+// mesmo patch — repô-lo aqui é o que mantém as cinco stacks iguais.
+//
+// O eixo é sempre VERTICAL, nas cinco. Não existe accordion horizontal neste
+// design system: o CSS compartilhado não tem regra de eixo e o Vanilla, que é a
+// referência, nunca expôs a escolha.
 //
 // Markup idêntico ao do Vanilla (a referência cross-stack):
 //

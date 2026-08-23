@@ -154,7 +154,6 @@ type AccordionProps = {
   onValueChange?: (value: string | string[]) => void;
   disabled?: boolean;                        // default: false
   loop?: boolean;                            // default: true
-  orientation?: 'vertical' | 'horizontal';   // default: 'vertical'
   class?: string;
 };`;
 
@@ -195,10 +194,6 @@ type AccordionProps = {
         'pt-BR': 'Faz a navegação por setas voltar ao primeiro item após o último.',
         en: 'Wraps arrow-key navigation from the last item back to the first.',
         es: 'Hace que la navegación por flechas vuelva al primer ítem tras el último.' } },
-      { name: 'orientation', type: "'vertical' | 'horizontal'", defaultValue: "'vertical'", description: {
-        'pt-BR': 'Eixo de navegação por teclado.',
-        en: 'Keyboard navigation axis.',
-        es: 'Eje de navegación por teclado.' } },
     ],
     trigger: [
       { name: 'level', type: '1 | 2 | 3 | 4 | 5 | 6', defaultValue: '3', description: {

@@ -35,12 +35,6 @@ const meta = {
       description: 'Desabilita todos os itens de uma vez.',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
-    orientation: {
-      control: 'select',
-      options: ['vertical', 'horizontal'],
-      description: 'Eixo de navegação por teclado.',
-      table: { type: { summary: "'vertical' | 'horizontal'" }, defaultValue: { summary: "'vertical'" } },
-    },
     unmountOnHide: {
       control: 'boolean',
       description:
@@ -71,7 +65,6 @@ const meta = {
   args: {
     type: 'single',
     disabled: false,
-    orientation: 'vertical',
     unmountOnHide: false,
     'onUpdate:modelValue': fn(),
   },

@@ -18,7 +18,6 @@ import {
 export type AccordionArgs = {
   type: 'single' | 'multiple';
   disabled: boolean;
-  orientation: 'vertical' | 'horizontal';
   unmountOnHide: boolean;
 };
 
@@ -81,9 +80,9 @@ O acesso permanece ativo até o fim do período já pago.`,
  * identifica, e o par gatilho + painel mora dentro dele.
  *
  * `type` sai sempre, mesmo igual ao control: é prop obrigatória, e um snippet
- * sem ela não monta. O resto acompanha o padrão do componente — `orientation`
- * vertical, `disabled` desligado e o painel permanecendo montado ao fechar, que
- * é o que deixa a busca do navegador achar a resposta dentro do item.
+ * sem ela não monta. O resto acompanha o padrão do componente — `disabled`
+ * desligado e o painel permanecendo montado ao fechar, que é o que deixa a
+ * busca do navegador achar a resposta dentro do item.
  */
 export const accordionSource: SourceTransform<AccordionArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
@@ -92,7 +91,6 @@ export const accordionSource: SourceTransform<AccordionArgs> = (_gerado, ctx) =>
     acordeao(
       [
         attr('type', asCode(args.type) ?? 'single'),
-        attr('orientation', args.orientation, 'vertical'),
         attrBool('disabled', args.disabled, false),
         attrBool('unmount-on-hide', args.unmountOnHide, false),
         'default-value="item-1"',

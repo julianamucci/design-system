@@ -39,12 +39,6 @@ const meta = {
       description: "Desabilita todos os itens de uma vez.",
       table: { type: { summary: "boolean" }, defaultValue: { summary: "false" } },
     },
-    orientation: {
-      control: "select",
-      options: ["vertical", "horizontal"],
-      description: "Eixo de navegação por teclado.",
-      table: { type: { summary: "'vertical' | 'horizontal'" }, defaultValue: { summary: "'vertical'" } },
-    },
     keepMounted: {
       control: false,
       description:
@@ -81,7 +75,6 @@ const meta = {
   args: {
     multiple: false,
     disabled: false,
-    orientation: "vertical",
     onValueChange: fn(),
   },
 } satisfies Meta<typeof Accordion>;

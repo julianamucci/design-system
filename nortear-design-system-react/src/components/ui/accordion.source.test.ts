@@ -28,31 +28,24 @@ describe('accordionSource', () => {
 
   it('omite as props que são o padrão do componente', () => {
     const saida = accordionSource(undefined, {
-      args: { multiple: false, disabled: false, orientation: 'vertical' },
+      args: { multiple: false, disabled: false },
     });
     expect(saida).not.toContain('multiple');
     expect(saida).not.toContain('disabled');
-    expect(saida).not.toContain('orientation');
   });
 
   it('escreve as props quando o control difere do padrão', () => {
     const saida = accordionSource(undefined, {
-      args: { multiple: true, disabled: true, orientation: 'horizontal' },
+      args: { multiple: true, disabled: true },
     });
     expect(saida).toContain('multiple');
     expect(saida).toContain('disabled');
-    expect(saida).toContain('orientation="horizontal"');
-  });
-
-  it('não inventa orientação fora da união', () => {
-    const saida = accordionSource(undefined, { args: { orientation: 'diagonal' as never } });
-    expect(saida).not.toContain('orientation');
   });
 
   it('o espião de control não vira código no painel', () => {
     const spy = () => 'CORPO_DO_MOCK';
     const saida = accordionSource(undefined, {
-      args: { multiple: spy as never, orientation: spy as never },
+      args: { multiple: spy as never, disabled: spy as never },
     });
     expect(saida).not.toContain('CORPO_DO_MOCK');
     expect(saida).not.toContain('undefined');
