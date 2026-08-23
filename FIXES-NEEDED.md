@@ -2766,3 +2766,33 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
       Ferramenta no scratchpad da sessão: `renomeia.mjs` (com as treze
       correções de máscara que oito lotes custaram), `colisao-escopo.mjs`,
       `dessincronia.mjs`, `diff-textos.mjs`, `diff-kebab.mjs`, `sonda-zona.mjs`.
+
+- [ ] **As seções compartilhadas de docs page não têm story nenhuma.** Medido em
+      2026-08-23, ao corrigir o link de relacionados: nenhuma story e nenhum
+      teste renderizam `DocsRelated`. Foi por isso que 999 links quebrados em
+      237 arquivos das cinco stacks atravessaram a campanha inteira sem uma
+      reprovação — e o defeito não era sutil, levava a pessoa para a docs page
+      crua, sem barra lateral nem toolbar.
+
+      As `sections/Docs*.{tsx,vue,svelte,ts}` são quinze containers usados por
+      **toda** docs page do design system. O que as cobre hoje é indireto: se
+      uma delas lançar, a docs page inteira quebra e alguma story acusa. O que
+      NÃO se cobre é o que elas renderizam errado sem lançar — href, `target`,
+      `data-track`, ordem de heading.
+
+      Vale uma story por seção, no mesmo formato das outras: renderiza com
+      conteúdo fixo e assere o contrato daquela seção. A de `DocsRelated`
+      assere href de manager (não de iframe) e `target="_top"`; a de
+      `DocsAnalytics` assere que cada evento declarado existe em
+      `AnalyticsEvents`; e assim por diante. É a mesma lacuna que o
+      `export_sem_story` cobra para primitivo, aqui para a camada de docs.
+
+- [ ] **`carousel-variants > Horizontal` no Angular — assinatura nova, mesma
+      família do Drag Gesture.** Apareceu em 2026-08-23 sob carga:
+
+          expected '  · trilho — o slide marcado como atual é o 4, e o que
+          está em foco é o 0' to be ''
+
+      Passa isolado. É "a posição chega antes do estado" outra vez, num sítio
+      que o commit `9051d807` não cobriu: o slide corrente e o slide com foco
+      discordam. Junta-se ao `Drag Gesture` — não fechar como "não reproduz".
