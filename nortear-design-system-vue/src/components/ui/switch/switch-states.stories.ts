@@ -3,6 +3,7 @@ import { within, userEvent, expect } from 'storybook/test';
 import { Switch } from './index';
 import { Label } from '@/components/ui/label';
 import {
+  switchDisabledLigadoSource,
   switchDisabledSource,
   switchDesligadoSource,
   switchInvalidoSource,
@@ -21,7 +22,7 @@ const meta = {
       source: { transform: switchDesligadoSource },
       description: {
         component:
-          'Estados do Switch: unchecked, checked, focus, disabled e invalid (aria-invalid).',
+          'Estados do Switch: unchecked, checked, focus, disabled, disabled-checked e invalid (aria-invalid).',
       },
     },
   },
@@ -207,6 +208,46 @@ export const Disabled: Story = {
       // "alinhada". O comportamento exigido pelo contrato é o mesmo nas cinco.
       await expect(sw).toBeDisabled();
       await expect(sw).toHaveAttribute('data-disabled');
+    });
+
+    await step('O clique não altera o estado', async () => {
+      const antes = sw.getAttribute('aria-checked');
+      await userEvent.click(sw, { pointerEventsCheck: 0 });
+      await expect(sw.getAttribute('aria-checked')).toBe(antes);
+    });
+  },
+};
+
+export const DisabledChecked: Story = {
+  parameters: {
+    docs: {
+      source: { transform: switchDisabledLigadoSource },
+      description: {
+        story:
+          'Switch desabilitado e ligado ao mesmo tempo — mostra o estado sem permitir alteração.',
+      },
+    },
+  },
+  render: () => ({
+    components: { Switch, Label },
+    setup() { return {}; },
+    template: `
+      <div class="nds-cluster" data-spacing="sm">
+        <Switch id="est-disabled-checked" :disabled="true" :default-value="true" />
+        <Label :for="'est-disabled-checked'">Modo escuro</Label>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const sw = canvas.getByRole('switch');
+
+    await step('Desabilitado não é o mesmo que desligado', async () => {
+      // Quem lê a tela precisa saber que a opção está ativa, ainda que não
+      // possa mudá-la.
+      await expect(sw).toBeDisabled();
+      await expect(sw).toHaveAttribute('aria-checked', 'true');
+      await expect(Number(getComputedStyle(sw).opacity)).toBeLessThan(1);
     });
 
     await step('O clique não altera o estado', async () => {

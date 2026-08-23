@@ -146,6 +146,14 @@ export function switchDisabledSource(): string {
 }
 
 /**
+ * Desabilitado E ligado: o par mostra que bloquear a edição não apaga o estado.
+ * Quem lê a tela precisa continuar sabendo que a opção está ativa.
+ */
+export function switchDisabledLigadoSource(): string {
+  return vueSnippet(IMPORT_PAIR, linePair('modo-escuro', 'Modo escuro', 'disabled default-value'));
+}
+
+/**
  * Erro: `aria-invalid` marca o controle e `aria-describedby` aponta para a
  * mensagem, que vive fora do rótulo — ela descreve, não nomeia.
  */

@@ -194,7 +194,7 @@ export const DisabledChecked: Story = {
     checked: true,
     disabled: true,
     withLabel: true,
-    labelText: 'Receber notificações por email',
+    labelText: 'Modo escuro',
     id: 'sw-disabled-checked',
   },
   play: async ({ canvasElement, step }) => {
