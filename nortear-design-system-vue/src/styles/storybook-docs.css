@@ -14,8 +14,7 @@
 
 /* Dark mode: bg/cor que emotion hardcoda em branco nos wrappers externos. */
 .dark .sbdocs-wrapper,
-.dark .sbdocs-content,
-.dark .docs-story {
+.dark .sbdocs-content {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
 }

@@ -493,7 +493,10 @@ interface SwitchProps {
         name: $tStore('variants.compositions.inForm.name'),
         description: $tStore('variants.compositions.inForm.description'),
         useWhen: $tStore('variants.compositions.inForm.use'),
-        code: `<form class="nds-stack nds-w-sm" data-spacing="sm" on:submit|preventDefault={handleSubmit}>\n  <div class="nds-cluster" data-spacing="sm">\n    <Switch id="sw-newsletter" name="newsletter" checked />\n    <Label for="sw-newsletter">Aceitar newsletter semanal</Label>\n  </div>\n  <Button type="submit">Salvar preferências</Button>\n</form>`,
+        // Svelte 5: atributo de evento (`onsubmit`), não diretiva (`on:submit`),
+        // e sem o modificador `|preventDefault`, que deixou de existir — quem
+        // barra o envio é o próprio handler.
+        code: `<!-- handleSubmit chama e.preventDefault() -->\n<form class="nds-stack nds-w-sm" data-spacing="sm" onsubmit={handleSubmit}>\n  <div class="nds-cluster" data-spacing="sm">\n    <Switch id="sw-newsletter" name="newsletter" checked />\n    <Label for="sw-newsletter">Aceitar newsletter semanal</Label>\n  </div>\n  <Button type="submit">Salvar preferências</Button>\n</form>`,
         preview: compInForm,
       },
     ]}
@@ -534,7 +537,7 @@ interface SwitchProps {
   {/snippet}
 
   {#snippet compInForm()}
-    <form class="nds-stack nds-w-sm" data-spacing="sm" on:submit={handleCompFormSubmit}>
+    <form class="nds-stack nds-w-sm" data-spacing="sm" onsubmit={handleCompFormSubmit}>
       <div class="nds-cluster" data-spacing="sm">
         <Switch id="comp-sw-newsletter" name="newsletter" bind:checked={compNewsletter} />
         <Label for="comp-sw-newsletter">Aceitar newsletter semanal</Label>
