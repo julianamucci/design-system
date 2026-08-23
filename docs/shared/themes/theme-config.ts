@@ -2,7 +2,7 @@
  * theme-config.ts — Configuração de temas compartilhada entre todos os stacks.
  * Importar via: import { ... } from '@shared/themes/theme-config'
  *
- * Default é o tema padrão (cinza neutro). Warm e Cold são variantes de cor.
+ * Default é o tema padrão e carrega as cores da marca Nortear. Warm e Cold são variantes de cor.
  */
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
@@ -22,7 +22,7 @@ export const themes: ThemeDefinition[] = [
   {
     id: 'default',
     label: 'Default',
-    description: 'Cinza neutro — tema padrão',
+    description: 'Cores da marca Nortear — teal, areia e Ink · tema padrão',
     cssClass: '',
   },
   {

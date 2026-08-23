@@ -82,22 +82,22 @@
   --letter-spacing-wide: 0.02em;
 
   /* Surfaces */
-  --background: 0 0% 100%;
-  --foreground: 0 0% 4%;
+  --background: 24 100% 99%;
+  --foreground: 201 22% 18%;
   --card: 0 0% 100%;
-  --card-foreground: 0 0% 4%;
+  --card-foreground: 201 22% 18%;
   --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 4%;
+  --popover-foreground: 201 22% 18%;
 
   /* Brand / Interactive */
-  --primary: 0 0% 9%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 0 0% 96%;
-  --secondary-foreground: 0 0% 4%;
-  --muted: 0 0% 96%;
-  --muted-foreground: 0 0% 40%;
-  --accent: 0 0% 96%;
-  --accent-foreground: 0 0% 9%;
+  --primary: 190 31% 34%;
+  --primary-foreground: 24 100% 99%;
+  --secondary: 36 24% 94%;
+  --secondary-foreground: 201 22% 18%;
+  --muted: 36 16% 93%;
+  --muted-foreground: 195 10% 40%;
+  --accent: 36 24% 94%;
+  --accent-foreground: 201 22% 18%;
 
   /* Feedback — a cor semântica pinta FUNDO SUAVE e borda do contêiner; ícone e
      título curtos podem carregá-la no texto quando alcançam 4.5:1.
@@ -113,24 +113,24 @@
      do sistema escreve sobre `hsl(var(--destructive))` opaco, então o contraste
      que vale é o do texto sobre o fundo suave COMPOSTO na superfície. É o que
      a story `TextoCorridoSobreFundoSuave` de `QA/Paleta de Tema` mede. */
-  --destructive: 0 74% 42%;
+  --destructive: 9 52% 38%;
   --destructive-foreground: var(--foreground);
-  --success: 142 85% 22%;
+  --success: 155 37% 28%;
   --success-foreground: var(--foreground);
-  --warning: 45 95% 36%;
+  --warning: 22 75% 42%;
   --warning-foreground: var(--foreground);
-  --info: 221 83% 43%;
+  --info: 190 55% 36%;
   --info-foreground: var(--foreground);
 
   /* Structure */
-  --border: 0 0% 90%;
+  --border: 36 16% 88%;
   /* --input é a borda do CAMPO, e o fundo do campo é o fundo da página: a borda
      é a única coisa que diz onde o campo começa. Por isso ela responde a WCAG
      1.4.11 (Non-text Contrast, 3:1) e NÃO acompanha mais --border, que é linha
      decorativa e continua em 90%. Medido: 56% sobre 100% = 3.24:1. */
-  --input: 0 0% 56%;
-  --input-background: 0 0% 100%;
-  --ring: 0 0% 45%;
+  --input: 36 16% 52%;             /* mesmo neutro do modo escuro · 3.73:1 sobre --background (WCAG 1.4.11) */
+  --input-background: 24 100% 99%;
+  --ring: 190 31% 40%;
   --ring-offset-width: 2px;
   /* Não existe `--ring-offset-color`. O anel de foco do sistema é `box-shadow`,
      não `outline`: a camada interna (o "offset") é uma sombra sólida em
@@ -203,11 +203,11 @@
   --elevation-xl: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   /* Charts */
-  --chart-1: 199 89% 65%;
-  --chart-2: 200 100% 50%;
-  --chart-3: 201 98% 48%;
-  --chart-4: 201 88% 43%;
-  --chart-5: 210 71% 23%;
+  --chart-1: 190 41% 38%;
+  --chart-2: 22 55% 62%;
+  --chart-3: 190 31% 34%;
+  --chart-4: 22 70% 70%;
+  --chart-5: 201 22% 18%;
 
   /* Radius — derivado de um radius base:
      --radius é o tamanho base global. A escala (none/xs–xl/full) deriva dele
@@ -216,7 +216,7 @@
      degrau da escala, mas temas podem sobrescrever (ver docs/shared/themes/).
 
      Valor base = 0.625rem (10px). */
-  --radius: 0.625rem;              /* 10px — base global */
+  --radius: 0.875rem;              /* 14px — base global */
   /* Escala derivada do base — compartilhada pelas 4 stacks */
   --radius-none: 0;                         /* cantos retos INTENCIONAIS (flush em grupos, fullscreen) */
   --radius-xs: calc(var(--radius) - 6px);   /* 4px — micro-controles (checkbox, close, handles) */
@@ -285,55 +285,55 @@
   --z-toast: 1080;
 
   /* Sidebar */
-  --sidebar: 0 0% 98%;
-  --sidebar-foreground: 0 0% 4%;
-  --sidebar-primary: 0 0% 9%;
-  --sidebar-primary-foreground: 0 0% 98%;
-  --sidebar-accent: 0 0% 96%;
-  --sidebar-accent-foreground: 0 0% 9%;
-  --sidebar-border: 0 0% 83%;
-  --sidebar-ring: 0 0% 45%;
+  --sidebar: 36 16% 96%;
+  --sidebar-foreground: 201 22% 18%;
+  --sidebar-primary: 190 31% 34%;
+  --sidebar-primary-foreground: 24 100% 99%;
+  --sidebar-accent: 36 24% 94%;
+  --sidebar-accent-foreground: 201 22% 18%;
+  --sidebar-border: 36 16% 85%;
+  --sidebar-ring: 190 31% 40%;
 }
 
 /* ── Dark mode ────────────────────────────────────────────────────────────── */
 .dark {
-  --background: 0 0% 9%;
-  --foreground: 0 0% 98%;
-  --card: 0 0% 9%;
-  --card-foreground: 0 0% 98%;
-  --popover: 0 0% 9%;
-  --popover-foreground: 0 0% 98%;
-  --primary: 0 0% 98%;
-  --primary-foreground: 0 0% 9%;
-  --secondary: 0 0% 15%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 0 0% 15%;
-  --muted-foreground: 0 0% 70%;
-  --accent: 0 0% 15%;
-  --accent-foreground: 0 0% 98%;
-  --destructive: 0 85% 70%;
+  --background: 201 22% 18%;
+  --foreground: 24 100% 99%;
+  --card: 201 22% 18%;
+  --card-foreground: 24 100% 99%;
+  --popover: 201 22% 18%;
+  --popover-foreground: 24 100% 99%;
+  --primary: 190 45% 60%;
+  --primary-foreground: 201 22% 18%;
+  --secondary: 199 20% 26%;
+  --secondary-foreground: 24 100% 99%;
+  --muted: 200 18% 22%;
+  --muted-foreground: 197 12% 68%;
+  --accent: 199 20% 26%;
+  --accent-foreground: 24 100% 99%;
+  --destructive: 9 65% 76%;
   --destructive-foreground: var(--foreground);
-  --success: 142 71% 55%;
+  --success: 155 45% 60%;
   --success-foreground: var(--foreground);
-  --warning: 48 95% 60%;
+  --warning: 22 75% 62%;
   --warning-foreground: var(--foreground);
-  --info: 221 83% 53%;
+  --info: 190 50% 56%;
   --info-foreground: var(--foreground);
-  --border: 0 0% 15%;
+  --border: 200 18% 24%;
   /* 41% sobre o fundo 9% = 3.25:1 (WCAG 1.4.11). Ver comentário no claro. */
-  --input: 0 0% 41%;
-  --input-background: 0 0% 9%;
-  --ring: 0 0% 45%;
+  --input: 197 12% 50%;
+  --input-background: 201 22% 18%;
+  --ring: 190 45% 52%;
   --elevation-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
   --elevation-md: 0px 4px 6px -1px rgba(0, 0, 0, 0.3), 0px 2px 4px -1px rgba(0, 0, 0, 0.2);
   --elevation-lg: 0px 10px 15px -3px rgba(0, 0, 0, 0.3), 0px 4px 6px -2px rgba(0, 0, 0, 0.2);
   --elevation-xl: 0px 20px 25px -5px rgba(0, 0, 0, 0.3), 0px 10px 10px -5px rgba(0, 0, 0, 0.1);
-  --sidebar: 0 0% 9%;
-  --sidebar-foreground: 0 0% 98%;
-  --sidebar-primary: 0 0% 98%;
-  --sidebar-primary-foreground: 0 0% 9%;
-  --sidebar-accent: 0 0% 15%;
-  --sidebar-accent-foreground: 0 0% 98%;
-  --sidebar-border: 0 0% 15%;
-  --sidebar-ring: 0 0% 45%;
+  --sidebar: 201 22% 15%;
+  --sidebar-foreground: 24 100% 99%;
+  --sidebar-primary: 190 45% 60%;
+  --sidebar-primary-foreground: 201 22% 18%;
+  --sidebar-accent: 199 20% 26%;
+  --sidebar-accent-foreground: 24 100% 99%;
+  --sidebar-border: 200 18% 24%;
+  --sidebar-ring: 190 45% 52%;
 }

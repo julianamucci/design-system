@@ -1,72 +1,140 @@
 /*
  * ─── Tema: Default ────────────────────────────────────────────────────────────
- * Tema base do sistema. Vibe: moderno, compacto, cantos suaves, densidade média-alta.
+ * Tema base do sistema, com as cores da marca Nortear (IA · Design · Tecnologia),
+ * extraídas do Nortear Brand Book v1.0.
  *
- * Radius: base 10px; componentes derivam da escala:
- *   button/input/alert: lg (=base), card: xl (+4px), badge: full (pill)
+ * Estratégia:
+ *   - Neutros com tint QUENTE de areia: matiz 24–36°, saturação 16–24% no claro
+ *     (Creme #FFFCFA como fundo de página, Areia #E5E1DB como borda/preenchimento).
+ *     No escuro o tint vira FRIO — matiz 197–201°, saturação 12–22% —, porque o
+ *     fundo escuro da marca é o Ink #233037, um quase-preto azul-esverdeado. É a
+ *     única troca de temperatura do tema, e é prescrita: a marca opõe família
+ *     fria (tecnologia) e quente (design), e usa Ink como o único chão escuro.
+ *   - Marca: --primary é o Teal Profundo #3B6770 no claro e o mesmo teal
+ *     clareado/dessaturado no escuro (190 45% 60%) — o afordamento interativo
+ *     não muda de matiz entre os modos. O Pêssego #E8A47C, que o brand book
+ *     define como acento quente sobre fundo escuro, entra na paleta de gráficos
+ *     (--chart-4), não em --primary: trocar o matiz do interativo por modo
+ *     custaria a estabilidade do link.
+ *   - Feedback: o brand book NÃO define cores de sistema. Erro e sucesso são
+ *     DERIVADOS dos pares "faça/não faça" da marca (#C2533F / #3F8A6B),
+ *     escurecidos até 4.5:1; aviso é DERIVADO do matiz da Terracota (22°) e
+ *     informação do matiz do Teal (190°). Os quatro `-foreground` valem
+ *     `var(--foreground)` — regra da casa: a cor semântica pinta fundo suave
+ *     (`/ 0.1`) e o texto corrido por cima é o foreground do tema.
+ *   - Gráficos: os cinco tokens são exatamente as cinco cores da marca
+ *     (Teal, Terracota, Teal Profundo, Pêssego, Ink), sem derivação. Declarados
+ *     só no bloco claro — gráfico não troca de paleta com o modo.
+ *   - Forma: a marca TEM identidade de forma (cantos generosos, nada vivo), então
+ *     --radius é 0.875rem (14px); a escala derivada leva o cartão a
+ *     --radius-xl = 18px, que é o raio de cartão do brand book.
+ *   - Herdado de tokens.css, não declarado aqui: espaçamento, densidade,
+ *     tipografia, movimento, sombras e a escala --radius-xs..xl.
+ *
+ * Contraste: medir contra `--background` SUPERESTIMA, e foi o que derrubou a
+ * primeira versão desta paleta. Alert, badge e callout pintam
+ * `hsl(var(--cor) / 0.1)` — uma lavagem de 10% da PRÓPRIA cor semântica. Ela
+ * puxa o fundo para o matiz do texto, então custa contraste em vez de ser
+ * neutra, e o custo cresce quando a caixa suave assenta num neutro mais escuro
+ * (Areia no claro, `--muted` no escuro) em vez da página:
+ *
+ *   success claro       4.75 sobre a página  →  3.35 sobre a pior lavagem
+ *   destructive escuro  4.81 sobre a página  →  3.60 sobre a pior lavagem
+ *
+ * Por isso as quatro cores de feedback são derivadas contra a PIOR superfície
+ * que elas pintam, não contra a página.
+ *
+ * E o mínimo NÃO é o mesmo para as quatro, porque o que elas pintam difere:
+ *
+ *   destructive, success  4.5:1 — o TÍTULO do alert carrega a cor semântica
+ *   warning, info         3:1   — o título delas é `--foreground` (ver o bloco
+ *                                 `.nds-alert-warning .nds-alert-title` em
+ *                                 alert.css e o motivo registrado lá), então a
+ *                                 cor pinta só o ícone, que é não-textual
+ *
+ * Tratar as quatro como texto escurecia `warning` e `info` sem necessidade. O
+ * único consumidor que as pintava como TEXTO era `.nds-admin-dirty-label`, um
+ * rótulo de ferramenta interna — um rótulo de admin definindo o teto de
+ * saturação de um token de marca. Ele passou a `--foreground`.
+ *
+ * Pares mais apertados, compostos, por regra:
+ *   claro  — success sobre lavagem em Areia   = 4.78:1  (min 4.5)
+ *   claro  — warning sobre lavagem em Areia   = 3.23:1  (min 3)
+ *   escuro — destructive sobre lavagem        = 4.72:1  (min 4.5)
+ *   escuro — info sobre lavagem em --muted    = 4.05:1  (min 3)
+ *
+ * `warning` e `info` do modo escuro são os valores originais do brand book:
+ * eu os havia clareado para alcançar 4.5, que não se aplicava a eles.
+ *
+ * A borda `hsl(var(--cor) / 0.3)` NÃO entra na conta: é linha de 1px e não
+ * compõe o fundo do texto. Incluí-la empurrava o escuro para quase branco.
+ *
+ * O portão de verdade é o probe de `docs/shared/testing/cor.ts`, que mede no
+ * navegador com a cor já composta; o que está aqui é a conta de conferência, e
+ * ela só vale se compuser a mesma superfície que o componente pinta.
  *
  * Os valores em :root (tokens.css) refletem Default. Este arquivo RE-DECLARA
  * os mesmos tokens dentro de `.tema-default` para garantir que, ao voltar de
  * `.tema-warm` ou `.tema-cold` no preview do Storybook, o cascade do CSS reverta
  * corretamente (sem essa re-declaração, browsers podem manter estado computado
- * mesmo após a remoção da classe override).
- *
- * Base Color: Neutral · Theme Color: Neutral · Chart Color: Neutral
+ * mesmo após a remoção da classe override). Os dois arquivos precisam dizer a
+ * mesma coisa: divergir cria dois "Default" diferentes conforme a pessoa tenha
+ * ou não trocado de tema na toolbar.
  */
 .tema-default {
-  --background: 0 0% 100%;
-  --foreground: 0 0% 4%;
+  --background: 24 100% 99%;
+  --foreground: 201 22% 18%;
   --card: 0 0% 100%;
-  --card-foreground: 0 0% 4%;
+  --card-foreground: 201 22% 18%;
   --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 4%;
+  --popover-foreground: 201 22% 18%;
 
-  --primary: 0 0% 9%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 0 0% 96%;
-  --secondary-foreground: 0 0% 4%;
-  --muted: 0 0% 96%;
-  --muted-foreground: 0 0% 40%;
-  --accent: 0 0% 96%;
-  --accent-foreground: 0 0% 9%;
+  --primary: 190 31% 34%;
+  --primary-foreground: 24 100% 99%;
+  --secondary: 36 24% 94%;
+  --secondary-foreground: 201 22% 18%;
+  --muted: 36 16% 93%;
+  --muted-foreground: 195 10% 40%;
+  --accent: 36 24% 94%;
+  --accent-foreground: 201 22% 18%;
 
   /* Os quatro `-foreground` são o texto corrido do contêiner colorido, e neste
      projeto valem `--foreground` — a regra da casa. São ponto de extensão: um
      tema derivado pode dar a cada um valor próprio. Ver tokens.css. */
-  --destructive: 0 74% 42%;
+  --destructive: 9 52% 38%;
   --destructive-foreground: var(--foreground);
-  --success: 142 85% 22%;
+  --success: 155 37% 28%;
   --success-foreground: var(--foreground);
-  --warning: 45 95% 36%;
+  --warning: 22 75% 42%;
   --warning-foreground: var(--foreground);
-  --info: 221 83% 43%;
+  --info: 190 55% 36%;
   --info-foreground: var(--foreground);
 
-  --border: 0 0% 90%;
-  --input: 0 0% 56%;                /* 3.24:1 sobre --background (WCAG 1.4.11) */
-  --input-background: 0 0% 100%;
-  --ring: 0 0% 45%;
+  --border: 36 16% 88%;
+  --input: 36 16% 52%;             /* mesmo neutro do modo escuro · 3.73:1 sobre --background (WCAG 1.4.11) */
+  --input-background: 24 100% 99%;
+  --ring: 190 31% 40%;
 
   /* Chart — sem variante dark (mesma paleta nos dois modos, como em warm/cold) */
-  --chart-1: 199 89% 65%;
-  --chart-2: 200 100% 50%;
-  --chart-3: 201 98% 48%;
-  --chart-4: 201 88% 43%;
-  --chart-5: 210 71% 23%;
+  --chart-1: 190 41% 38%;
+  --chart-2: 22 55% 62%;
+  --chart-3: 190 31% 34%;
+  --chart-4: 22 70% 70%;
+  --chart-5: 201 22% 18%;
 
-  --sidebar: 0 0% 98%;
-  --sidebar-foreground: 0 0% 4%;
-  --sidebar-primary: 0 0% 9%;
-  --sidebar-primary-foreground: 0 0% 98%;
-  --sidebar-accent: 0 0% 96%;
-  --sidebar-accent-foreground: 0 0% 9%;
-  --sidebar-border: 0 0% 83%;
-  --sidebar-ring: 0 0% 45%;
+  --sidebar: 36 16% 96%;
+  --sidebar-foreground: 201 22% 18%;
+  --sidebar-primary: 190 31% 34%;
+  --sidebar-primary-foreground: 24 100% 99%;
+  --sidebar-accent: 36 24% 94%;
+  --sidebar-accent-foreground: 201 22% 18%;
+  --sidebar-border: 36 16% 85%;
+  --sidebar-ring: 190 31% 40%;
 
   /* Radius — contrato de tema: temas podem sobrescrever --radius e os tokens
      por componente abaixo (identidade de forma). A escala --radius-xs..xl é
      geometria do raio aninhado e NUNCA é sobrescrita por tema. */
-  --radius: 0.625rem;
+  --radius: 0.875rem;
   --radius-button: var(--radius-lg);
   --radius-input: var(--radius-lg);
   --radius-alert: var(--radius-lg);
@@ -77,42 +145,42 @@
 /* Dark mode — combina `.dark.tema-default`. Espelha o `.dark` de tokens.css
    (mesmos valores; divergir aqui criaria dois darks "Default" diferentes). */
 .dark.tema-default {
-  --background: 0 0% 9%;
-  --foreground: 0 0% 98%;
-  --card: 0 0% 9%;
-  --card-foreground: 0 0% 98%;
-  --popover: 0 0% 9%;
-  --popover-foreground: 0 0% 98%;
+  --background: 201 22% 18%;
+  --foreground: 24 100% 99%;
+  --card: 201 22% 18%;
+  --card-foreground: 24 100% 99%;
+  --popover: 201 22% 18%;
+  --popover-foreground: 24 100% 99%;
 
-  --primary: 0 0% 98%;
-  --primary-foreground: 0 0% 9%;
-  --secondary: 0 0% 15%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 0 0% 15%;
-  --muted-foreground: 0 0% 70%;
-  --accent: 0 0% 15%;
-  --accent-foreground: 0 0% 98%;
+  --primary: 190 45% 60%;
+  --primary-foreground: 201 22% 18%;
+  --secondary: 199 20% 26%;
+  --secondary-foreground: 24 100% 99%;
+  --muted: 200 18% 22%;
+  --muted-foreground: 197 12% 68%;
+  --accent: 199 20% 26%;
+  --accent-foreground: 24 100% 99%;
 
-  --destructive: 0 85% 70%;
+  --destructive: 9 65% 76%;
   --destructive-foreground: var(--foreground);
-  --success: 142 71% 55%;
+  --success: 155 45% 60%;
   --success-foreground: var(--foreground);
-  --warning: 48 95% 60%;
+  --warning: 22 75% 62%;
   --warning-foreground: var(--foreground);
-  --info: 221 83% 64%;
+  --info: 190 50% 56%;
   --info-foreground: var(--foreground);
 
-  --border: 0 0% 15%;
-  --input: 0 0% 41%;                /* 3.25:1 sobre --background (WCAG 1.4.11) */
-  --input-background: 0 0% 9%;
-  --ring: 0 0% 45%;
+  --border: 200 18% 24%;
+  --input: 197 12% 50%;                /* derivado · 3.51:1 sobre --background (WCAG 1.4.11) */
+  --input-background: 201 22% 18%;
+  --ring: 190 45% 52%;
 
-  --sidebar: 0 0% 9%;
-  --sidebar-foreground: 0 0% 98%;
-  --sidebar-primary: 0 0% 98%;
-  --sidebar-primary-foreground: 0 0% 9%;
-  --sidebar-accent: 0 0% 15%;
-  --sidebar-accent-foreground: 0 0% 98%;
-  --sidebar-border: 0 0% 15%;
-  --sidebar-ring: 0 0% 45%;
+  --sidebar: 201 22% 15%;
+  --sidebar-foreground: 24 100% 99%;
+  --sidebar-primary: 190 45% 60%;
+  --sidebar-primary-foreground: 201 22% 18%;
+  --sidebar-accent: 199 20% 26%;
+  --sidebar-accent-foreground: 24 100% 99%;
+  --sidebar-border: 200 18% 24%;
+  --sidebar-ring: 190 45% 52%;
 }

@@ -394,8 +394,18 @@
   color: hsl(var(--muted-foreground));
 }
 
+/* PROVISÓRIO — a cor definitiva sai na revisão do editor.
+ *
+ * Este rótulo era o único lugar em que `--warning` pintava TEXTO, e texto exige
+ * 4.5:1 onde ícone exige 3:1. Como ele é o consumidor mais restritivo da cor, ele
+ * sozinho definia o teto de saturação do amarelo em todo o design system — um
+ * rótulo de ferramenta interna limitando um token de marca.
+ *
+ * Em `--foreground` ele para de restringir, e o sinal de "não salvo" fica por
+ * conta do texto em si até a revisão decidir o tratamento (ícone, negrito ou um
+ * token próprio de ferramenta). */
 .nds-admin-dirty-label {
-  color: hsl(var(--warning));
+  color: hsl(var(--foreground));
 }
 
 .nds-admin-error {

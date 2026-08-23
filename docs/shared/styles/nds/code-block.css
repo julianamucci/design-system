@@ -79,17 +79,22 @@
 
 /* Modo escuro — mesmo seletor .dark que os temas de cor usam. */
 .dark .nds-code-block-root {
-  --code-token-comment: hsl(0 0% 70%);
+  --code-token-comment: hsl(0 0% 74%);
   --code-token-string: hsl(145 52% 70%);
   --code-token-number: hsl(25 88% 72%);
   --code-token-keyword: hsl(265 82% 82%);
   --code-token-builtin: hsl(200 80% 72%);
   --code-token-function: hsl(215 88% 78%);
-  --code-token-tag: hsl(350 82% 76%);
+  /* Os três clareados juntos, pela mesma causa: o `--muted` escuro do Default
+     subiu de 15% para 22% quando o tema recebeu as cores da marca, e o fundo do
+     destaque — `hsl(var(--primary) / 0.12)` sobre `--muted` — clareou com ele.
+     Sobre esse fundo, `tag` caiu para 4.12:1 e `comment`/`punctuation` para
+     4.40:1. Conferido nos três temas: warm e cold melhoram, não regridem. */
+  --code-token-tag: hsl(350 82% 80%);
   --code-token-attr: hsl(288 68% 82%);
   --code-token-property: hsl(190 72% 68%);
   --code-token-operator: hsl(0 0% 82%);
-  --code-token-punctuation: hsl(0 0% 70%);
+  --code-token-punctuation: hsl(0 0% 74%);
 }
 
 /* ── Header ─────────────────────────────────────────────────────────────────
