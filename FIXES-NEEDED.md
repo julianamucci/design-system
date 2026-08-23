@@ -2720,28 +2720,49 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
       arquivos, e o vazamento precisa da suíte inteira dividindo a página. Medir
       com a suíte completa, uma stack por vez.
 
-- [ ] **Tradução de identificadores — 155 nomes adiados, cada um por decisão de
-      quem é dona do código.** A campanha aplicou 2295 nomes em seis lotes; o
-      que sobrou não é resto mecânico, é o que uma varredura não pode decidir:
+- [ ] **Tradução de identificadores — 66 nomes adiados, cada um por decisão de
+      quem é dona do código.** A campanha aplicou 2329 nomes em oito lotes. O
+      que sobrou não é resto mecânico: é o que uma varredura não pode decidir.
 
-      **149 colidem** — o nome em inglês JÁ existe no mesmo arquivo, com outro
-      sentido. `texto -> text` esbarra num `text` que já está lá em seis
-      arquivos; `regras -> rules` e `linhas -> lines` no `code-highlight.ts`. A
-      saída não é escolher outro sinônimo por fora: é olhar o arquivo e decidir
-      qual dos dois conceitos fica com o nome curto.
+      **55 colidem de escopo** — o nome em inglês já ocupa aquele escopo no
+      mesmo arquivo. Três famílias respondem pela maioria e têm alvo óbvio, mas
+      é escolha de nome, não de varredura:
 
-      **6 colidem com prop ou variável de framework** — `estilo -> style`
-      (prop do Svelte), `densidade -> density`, `canal -> channel`,
-      `seletores -> selectors` (todos no `preview.ts`), `meses -> months` e
-      `anos -> years` (no `calendar.svelte`).
+      | nome | alvo natural | por que colide |
+      |---|---|---|
+      | `gatilho` | `triggerEl` | `trigger` é helper importado, 32 arquivos |
+      | `atributos` | `attributes` | `attrs` é helper importado, 6 arquivos |
+      | `raiz` | `rootEl` | `root` é variável local, 3 arquivos |
 
-      **2 não têm alvo único:**
-      · `novo` é polissêmico — "elemento recém-montado" nas stories, e no
-        `AccordionDocs` é a chave de rótulo que significa *Novo* (Novidades).
-        `new` é palavra-chave, então não serve de qualquer forma;
-      · `com` não é identificador: aparece em comentário e dentro de
-        `figma.com`. Provavelmente é para sair do mapa de vez.
+      O resto tem uma ou duas ocorrências cada (`rotulo`→`label` em 59 arquivos
+      é o maior, mas quase sempre contra um `label` de escopo diferente — vale
+      medir caso a caso antes de escolher).
 
-      Ferramenta no scratchpad da sessão (`renomeia.mjs`, `colisao.mjs`,
-      `dessincronia.mjs`, `diff-textos.mjs`, `diff-kebab.mjs`), com as nove
-      correções de máscara que os seis lotes custaram.
+      **11 não têm alvo único**, com o motivo escrito em
+      `docs/shared/primitives/identificadores-pt.ts`: `padrao` e `novo` são
+      ambíguos E o alvo natural é palavra reservada; `com` nem é identificador;
+      `estilo`, `densidade`, `canal`, `seletores`, `meses`, `anos` colidem com
+      prop de framework; `teclar` foi fundido com `tipo` pela recomposição e
+      quer `onKey`.
+
+      Estes 11 aparecem por componente na `/quality`, pela regra
+      `identificador_pt` — quem revisa um componente vê os dele.
+
+- [ ] **~1100 identificadores em português que a campanha nunca varreu.**
+      Medido em 2026-08-23, ao calibrar a regra `identificador_pt`: ligando o
+      detector de morfologia do `story_name_not_english` sobre declarações,
+      saem 1178 achados em 50 componentes — 24 por componente.
+
+      Não são os nomes adiados acima. São uma cauda que ficou fora dos 432
+      radicais que a campanha varreu: `descricao` (38), `esperado` (22),
+      `luminancia` (21), `deslocamento` (13), `opcao` (13), `acao` (12),
+      `mensagem` (12), `desmarcado` (12).
+
+      A morfologia ficou DE FORA da regra de propósito: portão que despeja 24
+      itens por componente ensina a ignorar o portão, e junto some o achado que
+      importava. Isto é lote próprio, com a mesma ferramenta e os mesmos
+      portões — decisão de quando, não de se.
+
+      Ferramenta no scratchpad da sessão: `renomeia.mjs` (com as treze
+      correções de máscara que oito lotes custaram), `colisao-escopo.mjs`,
+      `dessincronia.mjs`, `diff-textos.mjs`, `diff-kebab.mjs`, `sonda-zona.mjs`.
