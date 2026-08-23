@@ -132,6 +132,16 @@ const scrollLockCleanupDecorator: Decorator = () => ({
 
 const preview: Preview = {
   parameters: {
+    // O seletor de cor de fundo sai da toolbar. Ele pinta o canvas com
+    // `background: … !important` e NÃO acompanha o modo claro/escuro: o
+    // resultado é texto de tema escuro sobre fundo claro fixo, o que faz o
+    // design system parecer que não se adapta — quando o que não se adapta é a
+    // ferramenta. Quem troca o modo é o seletor de tema, e ele já funciona.
+    //
+    // Só a cor de fundo sai: `grid.disable` é chave própria, então a grade e o
+    // contorno continuam disponíveis.
+    backgrounds: { disable: true },
+
     options: {
       storySort: {
         order: [
