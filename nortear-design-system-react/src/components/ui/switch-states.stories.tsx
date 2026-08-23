@@ -22,7 +22,7 @@ const meta = {
       source: { transform: switchSource },
       description: {
         component:
-          "Estados visuais e interativos do Switch: unchecked, checked, focus, disabled e invalid.",
+          "Estados visuais e interativos do Switch: unchecked, checked, focus, teclado, rótulo associado, disabled, disabled-checked e invalid.",
       },
     },
   },
@@ -76,7 +76,7 @@ export const Unchecked: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Switch id="state-unchecked" />
-      <Label htmlFor="state-unchecked">Receber notificações por email</Label>
+      <Label htmlFor="state-unchecked">Receber notificações</Label>
     </div>
   ),
   play: async ({ canvasElement, step }) => {
@@ -124,7 +124,7 @@ export const Checked: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Switch id="state-checked" defaultChecked />
-      <Label htmlFor="state-checked">Modo escuro</Label>
+      <Label htmlFor="state-checked">Receber notificações</Label>
     </div>
   ),
   play: async ({ canvasElement, step }) => {
@@ -162,7 +162,7 @@ export const FocusVisible: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Switch id="state-focus" />
-      <Label htmlFor="state-focus">Receber notificações por email</Label>
+      <Label htmlFor="state-focus">Receber notificações</Label>
     </div>
   ),
   play: async ({ canvasElement, step }) => {
@@ -184,6 +184,82 @@ export const FocusVisible: Story = {
   },
 };
 
+export const Keyboard: Story = {
+  parameters: {
+    covers: ["functional.item2"],
+    docs: {
+      description: {
+        story:
+          "Space alterna o estado com o controle focado — ida e volta, porque um atalho que só liga passaria num teste de um toque só.",
+      },
+    },
+  },
+  render: () => (
+    <div className="nds-cluster" data-spacing="sm">
+      <Switch id="state-keyboard" />
+      <Label htmlFor="state-keyboard">Receber notificações</Label>
+    </div>
+  ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const switchEl = canvas.getByRole("switch");
+
+    await step("Tab leva o foco ao controle", async () => {
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await expect(switchEl).toHaveFocus();
+    });
+
+    await step("Space liga e desliga", async () => {
+      // Ida e volta na mesma story, e é também o que torna a play idempotente:
+      // o par devolve o controle ao estado em que ele começou, então o replay
+      // do painel Interactions parte do mesmo lugar que a primeira rodada.
+      await userEvent.keyboard(" ");
+      await expect(switchEl).toHaveAttribute("aria-checked", "true");
+      await userEvent.keyboard(" ");
+      await expect(switchEl).toHaveAttribute("aria-checked", "false");
+    });
+  },
+};
+
+export const AssociatedLabel: Story = {
+  parameters: {
+    covers: ["functional.item3"],
+    docs: {
+      description: {
+        story:
+          "O rótulo nomeia o controle e alterna o estado ao ser clicado — é o htmlFor alcançando o id real.",
+      },
+    },
+  },
+  render: () => (
+    <div className="nds-cluster" data-spacing="sm">
+      <Switch id="state-associated-label" />
+      <Label htmlFor="state-associated-label">Receber notificações</Label>
+    </div>
+  ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const switchEl = canvas.getByRole("switch");
+    const label = canvasElement.querySelector<HTMLLabelElement>(
+      'label[for="state-associated-label"]',
+    )!;
+
+    await step("O rótulo dá nome acessível ao controle", async () => {
+      await expect(canvas.getByRole("switch", { name: "Receber notificações" })).toBe(switchEl);
+    });
+
+    await step("Clicar no rótulo alterna o estado", async () => {
+      // Par de ida e volta: sem ele o replay no mesmo DOM partiria do estado
+      // que a rodada anterior deixou e inverteria as duas asserções.
+      await userEvent.click(label);
+      await expect(switchEl).toHaveAttribute("aria-checked", "true");
+      await userEvent.click(label);
+      await expect(switchEl).toHaveAttribute("aria-checked", "false");
+    });
+  },
+};
+
 export const Disabled: Story = {
   parameters: {
     covers: ["functional.item4", "visual.item3"],
@@ -199,7 +275,7 @@ export const Disabled: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Switch id="state-disabled" disabled />
-      <Label htmlFor="state-disabled">Receber notificações por email</Label>
+      <Label htmlFor="state-disabled">Receber notificações</Label>
     </div>
   ),
   play: async ({ canvasElement, step }) => {
@@ -238,7 +314,7 @@ export const DisabledChecked: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Switch id="state-disabled-checked" disabled defaultChecked />
-      <Label htmlFor="state-disabled-checked">Modo escuro</Label>
+      <Label htmlFor="state-disabled-checked">Receber notificações</Label>
     </div>
   ),
   play: async ({ canvasElement, step }) => {
@@ -269,11 +345,11 @@ export const Invalid: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="xs">
       <div className="nds-cluster" data-spacing="sm">
-        <Switch id="state-invalid" aria-invalid="true" aria-describedby="state-invalid-msg" />
-        <Label htmlFor="state-invalid">Aceitar política de privacidade</Label>
+        <Switch id="state-invalid" aria-invalid="true" aria-describedby="state-invalid-erro" />
+        <Label htmlFor="state-invalid">Aceitar termos</Label>
       </div>
-      <p id="state-invalid-msg" className="nds-text-body nds-text-destructive">
-        Você precisa aceitar a política para continuar.
+      <p id="state-invalid-erro" className="nds-text-body nds-text-destructive">
+        Este campo é obrigatório.
       </p>
     </div>
   ),
@@ -283,12 +359,12 @@ export const Invalid: Story = {
 
     await step("O erro é anunciado e apontado para a mensagem", async () => {
       await expect(switchEl).toHaveAttribute("aria-invalid", "true");
-      await expect(switchEl).toHaveAttribute("aria-describedby", "state-invalid-msg");
+      await expect(switchEl).toHaveAttribute("aria-describedby", "state-invalid-erro");
     });
 
     await step("A mensagem de erro está visível", async () => {
       await expect(
-        canvas.getByText("Você precisa aceitar a política para continuar."),
+        canvas.getByText("Este campo é obrigatório."),
       ).toBeVisible();
     });
   },

@@ -55,7 +55,7 @@ export function switchSource(_gerado?: string, ctx?: { args?: Partial<SwitchArgs
     size = 'default',
     withLabel = true,
     withDescription = false,
-    labelText = 'Receber notificações por email',
+    labelText = 'Receber notificações',
     descriptionText = 'Receba novidades e promoções da plataforma.',
   } = ctx?.args ?? {};
 

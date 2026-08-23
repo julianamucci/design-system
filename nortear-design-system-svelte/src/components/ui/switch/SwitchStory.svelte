@@ -30,7 +30,7 @@
     size = 'default',
     withLabel = true,
     withDescription = false,
-    labelText = 'Receber notificações por email',
+    labelText = 'Receber notificações',
     descriptionText = 'Receba novidades e promoções da plataforma.',
     id = 'switch-story',
     name = undefined,

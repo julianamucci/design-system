@@ -72,7 +72,7 @@ export const switchSource: SourceTransform<SwitchArgs> = (_gerado, ctx) => {
     IMPORT_PAIR,
     linePair(
       'notificacoes',
-      'Receber notificações por email',
+      'Receber notificações',
       attrs(
         attr('name', args.name),
         attr('size', args.size, 'default'),
@@ -86,7 +86,7 @@ export const switchSource: SourceTransform<SwitchArgs> = (_gerado, ctx) => {
 
 /** Variante padrão: o par mínimo, sem nenhum atributo além do vínculo do id. */
 export function switchDefaultSource(): string {
-  return vueSnippet(IMPORT_PAIR, linePair('notificacoes', 'Receber notificações por email'));
+  return vueSnippet(IMPORT_PAIR, linePair('notificacoes', 'Receber notificações'));
 }
 
 /**
@@ -150,7 +150,7 @@ export function switchDisabledSource(): string {
  * Quem lê a tela precisa continuar sabendo que a opção está ativa.
  */
 export function switchDisabledLigadoSource(): string {
-  return vueSnippet(IMPORT_PAIR, linePair('modo-escuro', 'Modo escuro', 'disabled default-value'));
+  return vueSnippet(IMPORT_PAIR, linePair('notificacoes', 'Receber notificações', 'disabled default-value'));
 }
 
 /**

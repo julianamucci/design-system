@@ -31,7 +31,7 @@ export const Default: Story = {
   args: {
     checked: false,
     withLabel: true,
-    labelText: 'Receber notificações por email',
+    labelText: 'Receber notificações',
     id: 'var-default',
   },
   parameters: {
@@ -51,7 +51,7 @@ export const Default: Story = {
 
     await step('O controle nasce desligado e nomeado pelo rótulo', async () => {
       await expect(sw).toHaveAttribute('aria-checked', 'false');
-      await expect(canvas.getByRole('switch', { name: /Receber notificações por email/i }))
+      await expect(canvas.getByRole('switch', { name: /Receber notificações/i }))
         .toBe(sw);
     });
   },

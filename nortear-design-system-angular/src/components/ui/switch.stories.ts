@@ -20,7 +20,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<SwitchArgs> }):
     checked = false,
     size = 'default',
     disabled = false,
-    label = 'Receber notificações por email',
+    label = 'Receber notificações',
   } = ctx.args ?? {};
 
   const attrs = [
@@ -74,7 +74,7 @@ const meta: Meta<SwitchArgs> = {
     checked: false,
     size: 'default',
     disabled: false,
-    label: 'Receber notificações por email',
+    label: 'Receber notificações',
     onCheckedChange: fn(),
   },
 };

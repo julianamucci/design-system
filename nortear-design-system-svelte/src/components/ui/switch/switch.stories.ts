@@ -78,7 +78,7 @@ const meta: Meta = {
     size: 'default',
     withLabel: true,
     withDescription: false,
-    labelText: 'Receber notificações por email',
+    labelText: 'Receber notificações',
     onCheckedChange: fn(),
   },
 };
@@ -90,8 +90,7 @@ export const Playground: Story = {
   parameters: {
     covers: [
       'functional.item1', 'functional.item2', 'functional.item3',
-      'accessibility.item1', 'accessibility.item3',
-      'accessibility.item4', 'accessibility.item5',
+      'accessibility.item1', 'accessibility.item4', 'accessibility.item5',
     ],
   },
   render: (args) => ({
@@ -106,7 +105,7 @@ export const Playground: Story = {
     await step('O controle é anunciado como switch e nomeado pelo rótulo', async () => {
       await expect(sw).toHaveAttribute('data-slot', 'switch');
       await expect(sw).toHaveAttribute('role', 'switch');
-      await expect(canvas.getByRole('switch', { name: /Receber notificações por email/i }))
+      await expect(canvas.getByRole('switch', { name: /Receber notificações/i }))
         .toBe(sw);
     });
 
@@ -152,7 +151,7 @@ export const Playground: Story = {
     });
 
     await step('Clicar no rótulo alterna o controle associado', async () => {
-      const label = canvas.getByText('Receber notificações por email');
+      const label = canvas.getByText('Receber notificações');
       await definir(sw, false, label);
       await definir(sw, true, label);
     });

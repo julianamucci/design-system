@@ -56,16 +56,16 @@ export const WithLabel: Story = {
   args: {
     checked: false,
     withLabel: true,
-    labelText: 'Receber notificações por email',
+    labelText: 'Receber notificações',
     id: 'comp-with-label',
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
-    const label = canvas.getByText('Receber notificações por email');
+    const label = canvas.getByText('Receber notificações');
 
     await step('O rótulo nomeia o controle e está visível', async () => {
-      await expect(canvas.getByRole('switch', { name: 'Receber notificações por email' }))
+      await expect(canvas.getByRole('switch', { name: 'Receber notificações' }))
         .toBe(sw);
       await expect(label).toBeVisible();
     });

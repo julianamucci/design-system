@@ -22,7 +22,7 @@ describe('switchSnippet', () => {
     const code = switchSnippet();
     expect(code).toContain("createSwitch({ id: 'notificacoes-email' })");
     expect(code).toContain("createLabel({ htmlFor: 'notificacoes-email'");
-    expect(code).toContain("text: 'Receber notificações por email'");
+    expect(code).toContain("text: 'Receber notificações'");
   });
 
   it('sem rótulo visível, cai no nome acessível canônico', () => {

@@ -22,7 +22,7 @@ const meta = {
       source: { transform: switchDesligadoSource },
       description: {
         component:
-          'Estados do Switch: unchecked, checked, focus, disabled, disabled-checked e invalid (aria-invalid).',
+          'Estados do Switch: unchecked, checked, focus, teclado, rótulo associado, disabled, disabled-checked e invalid (aria-invalid).',
       },
     },
   },
@@ -158,7 +158,7 @@ export const FocusVisible: Story = {
     template: `
       <div class="nds-cluster" data-spacing="sm">
         <Switch id="est-focus" />
-        <Label :for="'est-focus'">Modo escuro</Label>
+        <Label :for="'est-focus'">Receber notificações</Label>
       </div>
     `,
   }),
@@ -177,6 +177,90 @@ export const FocusVisible: Story = {
       // é preciso olhar o estilo computado.
       const estilo = getComputedStyle(sw);
       await expect(estilo.outlineStyle !== 'none' || estilo.boxShadow !== 'none').toBe(true);
+    });
+  },
+};
+
+export const Keyboard: Story = {
+  parameters: {
+    covers: ['functional.item2'],
+    docs: {
+      description: {
+        story:
+          'Space alterna o estado com o controle focado — ida e volta, porque um atalho que só liga passaria num teste de um toque só.',
+      },
+    },
+  },
+  render: () => ({
+    components: { Switch, Label },
+    setup() { return {}; },
+    template: `
+      <div class="nds-cluster" data-spacing="sm">
+        <Switch id="est-keyboard" />
+        <Label :for="'est-keyboard'">Receber notificações</Label>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const sw = canvas.getByRole('switch');
+
+    await step('Tab leva o foco ao controle', async () => {
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await expect(sw).toHaveFocus();
+    });
+
+    await step('Space liga e desliga', async () => {
+      // Ida e volta na mesma story, e é também o que torna a play idempotente:
+      // o par devolve o controle ao estado em que ele começou, então o replay
+      // do painel Interactions parte do mesmo lugar que a primeira rodada.
+      await userEvent.keyboard(' ');
+      await expect(sw).toHaveAttribute('aria-checked', 'true');
+      await userEvent.keyboard(' ');
+      await expect(sw).toHaveAttribute('aria-checked', 'false');
+    });
+  },
+};
+
+export const AssociatedLabel: Story = {
+  parameters: {
+    covers: ['functional.item3'],
+    docs: {
+      description: {
+        story:
+          'O rótulo nomeia o controle e alterna o estado ao ser clicado — é o for alcançando o id real.',
+      },
+    },
+  },
+  render: () => ({
+    components: { Switch, Label },
+    setup() { return {}; },
+    template: `
+      <div class="nds-cluster" data-spacing="sm">
+        <Switch id="est-associated-label" />
+        <Label :for="'est-associated-label'">Receber notificações</Label>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const sw = canvas.getByRole('switch');
+    const label = canvasElement.querySelector<HTMLLabelElement>(
+      'label[for="est-associated-label"]',
+    )!;
+
+    await step('O rótulo dá nome acessível ao controle', async () => {
+      await expect(canvas.getByRole('switch', { name: 'Receber notificações' })).toBe(sw);
+    });
+
+    await step('Clicar no rótulo alterna o estado', async () => {
+      // Par de ida e volta: sem ele o replay no mesmo DOM partiria do estado
+      // que a rodada anterior deixou e inverteria as duas asserções.
+      await userEvent.click(label);
+      await expect(sw).toHaveAttribute('aria-checked', 'true');
+      await userEvent.click(label);
+      await expect(sw).toHaveAttribute('aria-checked', 'false');
     });
   },
 };
@@ -234,7 +318,7 @@ export const DisabledChecked: Story = {
     template: `
       <div class="nds-cluster" data-spacing="sm">
         <Switch id="est-disabled-checked" :disabled="true" :default-value="true" />
-        <Label :for="'est-disabled-checked'">Modo escuro</Label>
+        <Label :for="'est-disabled-checked'">Receber notificações</Label>
       </div>
     `,
   }),

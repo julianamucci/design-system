@@ -14,7 +14,7 @@ const meta: Meta = {
       source: { transform: switchSource },
       description: {
         component:
-          'Estados do Switch: Unchecked, Checked, Disabled, DisabledChecked, Invalid (aria-invalid) e FocusVisible. A factory expõe `role="switch"` + `aria-checked` automaticamente.',
+          'Estados do Switch: Unchecked, Checked, Keyboard, AssociatedLabel, Disabled, DisabledChecked, Invalid (aria-invalid) e FocusVisible. A factory expõe `role="switch"` + `aria-checked` automaticamente.',
       },
     },
   },
@@ -88,7 +88,7 @@ export const Unchecked: Story = {
   },
   render: () => wrapWithLabel(
     createSwitch({ checked: false }),
-    'Receber notificações por email',
+    'Receber notificações',
     'sw-unchecked',
   ),
   play: async ({ canvasElement, step }) => {
@@ -133,7 +133,7 @@ export const Checked: Story = {
   },
   render: () => wrapWithLabel(
     createSwitch({ checked: true }),
-    'Receber notificações por email',
+    'Receber notificações',
     'sw-checked',
   ),
   play: async ({ canvasElement, step }) => {
@@ -158,19 +158,87 @@ export const Checked: Story = {
   },
 };
 
+// ─── Keyboard ─────────────────────────────────────────────────────────────────
+
+export const Keyboard: Story = {
+  parameters: {
+    covers: ['functional.item2'],
+    docs: { description: { story: 'Space alterna o estado com o controle focado — ida e volta, porque um atalho que só liga passaria num teste de um toque só.' } },
+  },
+  render: () => wrapWithLabel(
+    createSwitch({}),
+    'Receber notificações',
+    'sw-keyboard',
+  ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const sw = canvas.getByRole('switch');
+
+    await step('Tab leva o foco ao controle', async () => {
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await expect(sw).toHaveFocus();
+    });
+
+    await step('Space liga e desliga', async () => {
+      // Ida e volta na mesma story, e é também o que torna a play idempotente:
+      // o par devolve o controle ao estado em que ele começou, então o replay
+      // do painel Interactions parte do mesmo lugar que a primeira rodada.
+      await userEvent.keyboard(' ');
+      await expect(sw).toHaveAttribute('aria-checked', 'true');
+      await userEvent.keyboard(' ');
+      await expect(sw).toHaveAttribute('aria-checked', 'false');
+    });
+  },
+};
+
+// ─── AssociatedLabel ──────────────────────────────────────────────────────────
+
+export const AssociatedLabel: Story = {
+  parameters: {
+    covers: ['functional.item3'],
+    docs: { description: { story: 'O rótulo nomeia o controle e alterna o estado ao ser clicado — é o `for` alcançando o `id` real.' } },
+  },
+  render: () => wrapWithLabel(
+    createSwitch({}),
+    'Receber notificações',
+    'sw-associated-label',
+  ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const sw = canvas.getByRole('switch');
+    const label = canvasElement.querySelector<HTMLLabelElement>(
+      'label[for="sw-associated-label"]',
+    )!;
+
+    await step('O rótulo dá nome acessível ao controle', async () => {
+      await expect(canvas.getByRole('switch', { name: 'Receber notificações' })).toBe(sw);
+    });
+
+    await step('Clicar no rótulo alterna o estado', async () => {
+      // Par de ida e volta: sem ele o replay no mesmo DOM partiria do estado
+      // que a rodada anterior deixou e inverteria as duas asserções.
+      await userEvent.click(label);
+      await expect(sw).toHaveAttribute('aria-checked', 'true');
+      await userEvent.click(label);
+      await expect(sw).toHaveAttribute('aria-checked', 'false');
+    });
+  },
+};
+
 // ─── Disabled ─────────────────────────────────────────────────────────────────
 
 export const Disabled: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item3'],
     docs: {
-      source: { transform: switchSourceWith({ disabled: true, label: 'Modo escuro', id: 'modo-escuro' }) },
+      source: { transform: switchSourceWith({ disabled: true, label: 'Receber notificações', id: 'notificacoes' }) },
       description: { story: 'Switch desabilitado e desligado. Opacidade reduzida, cursor bloqueado, não responde a interações.' },
     },
   },
   render: () => wrapWithLabel(
     createSwitch({ checked: false, disabled: true }),
-    'Modo escuro',
+    'Receber notificações',
     'sw-disabled',
     true,
   ),
@@ -204,8 +272,8 @@ export const DisabledChecked: Story = {
         transform: switchSourceWith({
           checked: true,
           disabled: true,
-          label: 'Modo escuro',
-          id: 'modo-escuro',
+          label: 'Receber notificações',
+          id: 'notificacoes',
         }),
       },
       description: { story: 'Switch desabilitado e ligado. Estado bloqueado para edição pelo usuário.' },
@@ -213,7 +281,7 @@ export const DisabledChecked: Story = {
   },
   render: () => wrapWithLabel(
     createSwitch({ checked: true, disabled: true }),
-    'Modo escuro',
+    'Receber notificações',
     'sw-disabled-checked',
     true,
   ),
@@ -258,7 +326,7 @@ export const Invalid: Story = {
 
     const label = document.createElement('label');
     label.htmlFor = id;
-    label.textContent = 'Aceitar termos de uso';
+    label.textContent = 'Aceitar termos';
     label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
 
     row.append(sw, label);
@@ -266,7 +334,7 @@ export const Invalid: Story = {
     const msg = document.createElement('p');
     msg.id = 'sw-invalid-msg';
     msg.className = 'nds-text-body nds-text-destructive';
-    msg.textContent = 'Você precisa ativar esta opção para continuar.';
+    msg.textContent = 'Este campo é obrigatório.';
 
     wrapper.append(row, msg);
     return wrapper;

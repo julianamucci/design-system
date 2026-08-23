@@ -32,7 +32,7 @@ export type SwitchSnippetOptions = {
 const CALLBACK_DEFAULT = '(ligado) => salvarPreferencia(ligado)';
 
 const ID_DEFAULT = 'notificacoes-email';
-const LABEL_DEFAULT = 'Receber notificações por email';
+const LABEL_DEFAULT = 'Receber notificações';
 
 function expressao(value: unknown): string | undefined {
   if (!value) return undefined;
@@ -235,8 +235,8 @@ export function switchInvalidoSnippet(
   o: { id?: string; label?: string; mensagem?: string } = {},
 ): string {
   const id = o.id ?? 'aceitar-termos';
-  const label = o.label ?? 'Aceitar termos de uso';
-  const mensagem = o.mensagem ?? 'Você precisa ativar esta opção para continuar.';
+  const label = o.label ?? 'Aceitar termos';
+  const mensagem = o.mensagem ?? 'Este campo é obrigatório.';
 
   return snippet(
     [importing('switch', 'createSwitch'), importing('label', 'createLabel')].join('\n'),

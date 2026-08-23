@@ -33,7 +33,7 @@ export const Default: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Switch id="var-default" />
-      <Label htmlFor="var-default">Receber notificações por email</Label>
+      <Label htmlFor="var-default">Receber notificações</Label>
     </div>
   ),
   parameters: {
@@ -53,7 +53,7 @@ export const Default: Story = {
     });
 
     await step("O rótulo nomeia o controle", async () => {
-      await expect(canvas.getByRole("switch", { name: /Receber notificações por email/i }))
+      await expect(canvas.getByRole("switch", { name: /Receber notificações/i }))
         .toBe(switchEl);
     });
   },

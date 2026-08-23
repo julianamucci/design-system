@@ -28,7 +28,7 @@ export const Types: Story = {
       <div class="nds-stack" data-spacing="md">
         <div class="nds-cluster" data-spacing="sm">
           <button ndsSwitch id="var-default"></button>
-          <label ndsLabel for="var-default">Receber notificações por email</label>
+          <label ndsLabel for="var-default">Receber notificações</label>
         </div>
 
         <div class="nds-cluster nds-w-sm nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
@@ -80,7 +80,7 @@ export const Types: Story = {
     await step('Cada variante tem rótulo associado ao controle', async () => {
       // A variante "com descrição" separa rótulo e texto auxiliar; só o rótulo
       // nomeia o controle, e é isso que o leitor de tela anuncia.
-      await expect(canvas.getByLabelText('Receber notificações por email')).toBe(padrao);
+      await expect(canvas.getByLabelText('Receber notificações')).toBe(padrao);
       await expect(canvas.getByLabelText('Emails de marketing')).toBe(
         canvasElement.querySelector('#var-marketing'),
       );

@@ -25,7 +25,7 @@ import { Label } from '@/components/ui/label'
 <template>
   <div class="nds-cluster" data-spacing="sm">
     <Switch id="notificacoes" />
-    <Label for="notificacoes">Receber notificações por email</Label>
+    <Label for="notificacoes">Receber notificações</Label>
   </div>
 </template>`,
     );

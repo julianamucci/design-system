@@ -14,7 +14,7 @@ describe('switchSource', () => {
 <div class="nds-cluster" data-spacing="sm">
   <Switch id="opcao" bind:checked={ligado} aria-labelledby="opcao-label" />
   <Label id="opcao-label" for="opcao" class="nds-text-body nds-font-medium">
-    Receber notificações por email
+    Receber notificações
   </Label>
 </div>`,
     );

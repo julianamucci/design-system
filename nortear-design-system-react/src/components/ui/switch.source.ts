@@ -73,7 +73,7 @@ export const switchSource: SourceTransform<SwitchArgs> = (_gerado, ctx) => {
   );
   return jsxSnippet(
     IMPORTS,
-    pairLabelled('notificacoes-email', 'Receber notificações por email', attrList),
+    pairLabelled('notificacoes', 'Receber notificações', attrList),
   );
 };
 
@@ -116,7 +116,7 @@ export function switchCompactoSource(): string {
  * aqui congelaria o interruptor no valor escrito.
  */
 export function switchLigadoSource(): string {
-  return jsxSnippet(IMPORTS, pairLabelled('modo-escuro', 'Modo escuro', ' defaultChecked'));
+  return jsxSnippet(IMPORTS, pairLabelled('notificacoes', 'Receber notificações', ' defaultChecked'));
 }
 
 /**
@@ -127,7 +127,7 @@ export function switchLigadoSource(): string {
 export function switchDisabledSource(): string {
   return jsxSnippet(
     IMPORTS,
-    pairLabelled('notificacoes-bloqueadas', 'Receber notificações por email', ' disabled'),
+    pairLabelled('notificacoes', 'Receber notificações', ' disabled'),
   );
 }
 
@@ -137,7 +137,7 @@ export function switchDisabledSource(): string {
  * e bloqueado são fatos diferentes, e o desenho sozinho não os separa.
  */
 export function switchDisabledLigadoSource(): string {
-  return jsxSnippet(IMPORTS, pairLabelled('modo-escuro-fixo', 'Modo escuro', ' disabled defaultChecked'));
+  return jsxSnippet(IMPORTS, pairLabelled('notificacoes', 'Receber notificações', ' disabled defaultChecked'));
 }
 
 /**
@@ -151,14 +151,14 @@ export function switchInvalidoSource(): string {
     `<div className="nds-stack" data-spacing="xs">
   <div className="nds-cluster" data-spacing="sm">
     <Switch
-      id="aceite-politica"
+      id="aceitar-termos"
       aria-invalid="true"
-      aria-describedby="aceite-politica-erro"
+      aria-describedby="aceitar-termos-erro"
     />
-    <Label htmlFor="aceite-politica">Aceitar política de privacidade</Label>
+    <Label htmlFor="aceitar-termos">Aceitar termos</Label>
   </div>
-  <p id="aceite-politica-erro" className="nds-text-body nds-text-destructive">
-    Você precisa aceitar a política para continuar.
+  <p id="aceitar-termos-erro" className="nds-text-body nds-text-destructive">
+    Este campo é obrigatório.
   </p>
 </div>`,
   );

@@ -37,7 +37,7 @@ export const WithLabel: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Switch id="comp-label" />
-      <Label htmlFor="comp-label">Receber notificações por email</Label>
+      <Label htmlFor="comp-label">Receber notificações</Label>
     </div>
   ),
   parameters: {
@@ -51,10 +51,10 @@ export const WithLabel: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const switchEl = canvas.getByRole("switch");
-    const label = canvas.getByText("Receber notificações por email");
+    const label = canvas.getByText("Receber notificações");
 
     await step("O rótulo nomeia o controle", async () => {
-      await expect(canvas.getByRole("switch", { name: /Receber notificações por email/i }))
+      await expect(canvas.getByRole("switch", { name: /Receber notificações/i }))
         .toBe(switchEl);
     });
 

@@ -86,7 +86,7 @@ export const Playground: Story = {
         onCheckedChange={(checked) => onCheckedChange?.(checked)}
         {...args}
       />
-      <Label htmlFor="playground-switch">Receber notificações por email</Label>
+      <Label htmlFor="playground-switch">Receber notificações</Label>
     </div>
   ),
   play: async ({ canvasElement, step, args }) => {
@@ -97,7 +97,7 @@ export const Playground: Story = {
     await step("O controle é anunciado como switch e nomeado pelo rótulo", async () => {
       await expect(switchEl).toHaveAttribute("data-slot", "switch");
       await expect(switchEl).toHaveAttribute("role", "switch");
-      await expect(canvas.getByRole("switch", { name: /Receber notificações por email/i }))
+      await expect(canvas.getByRole("switch", { name: /Receber notificações/i }))
         .toBe(switchEl);
     });
 
@@ -131,7 +131,7 @@ export const Playground: Story = {
     });
 
     await step("Clicar no rótulo alterna o controle associado", async () => {
-      const label = canvas.getByText("Receber notificações por email");
+      const label = canvas.getByText("Receber notificações");
       await definir(switchEl, false, label);
       await definir(switchEl, true, label);
     });

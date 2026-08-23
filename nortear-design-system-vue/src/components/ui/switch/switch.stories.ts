@@ -84,7 +84,7 @@ export const Playground: Story = {
     template: `
       <div class="nds-cluster" data-spacing="sm">
         <Switch id="playground-switch" :key="String(args.defaultValue)" v-bind="args" />
-        <Label :for="'playground-switch'">Receber notificações por email</Label>
+        <Label :for="'playground-switch'">Receber notificações</Label>
       </div>
     `,
   }),
@@ -96,7 +96,7 @@ export const Playground: Story = {
     await step('O controle é anunciado como switch e nomeado pelo rótulo', async () => {
       await expect(sw).toHaveAttribute('data-slot', 'switch');
       await expect(sw).toHaveAttribute('role', 'switch');
-      await expect(canvas.getByRole('switch', { name: /Receber notificações por email/i }))
+      await expect(canvas.getByRole('switch', { name: /Receber notificações/i }))
         .toBe(sw);
     });
 
@@ -130,7 +130,7 @@ export const Playground: Story = {
     });
 
     await step('Clicar no rótulo alterna o controle associado', async () => {
-      const label = canvas.getByText('Receber notificações por email');
+      const label = canvas.getByText('Receber notificações');
       await definir(sw, false, label);
       await definir(sw, true, label);
     });

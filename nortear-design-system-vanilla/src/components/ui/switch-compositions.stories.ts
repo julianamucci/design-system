@@ -50,7 +50,7 @@ export const WithLabel: Story = {
     row.className = 'nds-cluster';
     row.dataset.spacing = 'sm';
     const id = 'sw-com-label';
-    row.append(createSwitch({ id }), label(id, 'Receber notificações por email'));
+    row.append(createSwitch({ id }), label(id, 'Receber notificações'));
     return row;
   },
   parameters: {
@@ -64,10 +64,10 @@ export const WithLabel: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
-    const label = canvas.getByText('Receber notificações por email');
+    const label = canvas.getByText('Receber notificações');
 
     await step('O rótulo nomeia o controle e está visível', async () => {
-      await expect(canvas.getByRole('switch', { name: /Receber notificações por email/i }))
+      await expect(canvas.getByRole('switch', { name: /Receber notificações/i }))
         .toBe(sw);
       await expect(label).toBeVisible();
     });

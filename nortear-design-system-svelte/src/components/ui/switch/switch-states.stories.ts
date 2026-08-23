@@ -18,7 +18,7 @@ const meta: Meta = {
       source: { transform: switchSource },
       description: {
         component:
-          'Estados do Switch: unchecked, checked, focus, disabled, disabled-checked e invalid (aria-invalid).',
+          'Estados do Switch: unchecked, checked, focus, teclado, rótulo associado, disabled, disabled-checked e invalid (aria-invalid).',
       },
     },
   },
@@ -64,7 +64,7 @@ export const Unchecked: Story = {
   args: {
     checked: false,
     withLabel: true,
-    labelText: 'Receber notificações por email',
+    labelText: 'Receber notificações',
     id: 'sw-unchecked',
   },
   play: async ({ canvasElement, step }) => {
@@ -101,7 +101,7 @@ export const Checked: Story = {
   args: {
     checked: true,
     withLabel: true,
-    labelText: 'Receber notificações por email',
+    labelText: 'Receber notificações',
     id: 'sw-checked',
   },
   play: async ({ canvasElement, step }) => {
@@ -129,10 +129,11 @@ export const FocusVisible: Story = {
   args: {
     checked: false,
     withLabel: true,
-    labelText: 'Receber notificações por email',
+    labelText: 'Receber notificações',
     id: 'sw-focus',
   },
   parameters: {
+    covers: ['accessibility.item3'],
     docs: {
       description: {
         story:
@@ -159,13 +160,89 @@ export const FocusVisible: Story = {
   },
 };
 
+export const Keyboard: Story = {
+  parameters: {
+    covers: ['functional.item2'],
+    docs: {
+      description: {
+        story:
+          'Space alterna o estado com o controle focado — ida e volta, porque um atalho que só liga passaria num teste de um toque só.',
+      },
+    },
+  },
+  args: {
+    checked: false,
+    withLabel: true,
+    labelText: 'Receber notificações',
+    id: 'sw-keyboard',
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const sw = canvas.getByRole('switch');
+
+    await step('Tab leva o foco ao controle', async () => {
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await expect(sw).toHaveFocus();
+    });
+
+    await step('Space liga e desliga', async () => {
+      // Ida e volta na mesma story, e é também o que torna a play idempotente:
+      // o par devolve o controle ao estado em que ele começou, então o replay
+      // do painel Interactions parte do mesmo lugar que a primeira rodada.
+      await userEvent.keyboard(' ');
+      await expect(sw).toHaveAttribute('aria-checked', 'true');
+      await userEvent.keyboard(' ');
+      await expect(sw).toHaveAttribute('aria-checked', 'false');
+    });
+  },
+};
+
+export const AssociatedLabel: Story = {
+  parameters: {
+    covers: ['functional.item3'],
+    docs: {
+      description: {
+        story:
+          'O rótulo nomeia o controle e alterna o estado ao ser clicado — é o for alcançando o id real.',
+      },
+    },
+  },
+  args: {
+    checked: false,
+    withLabel: true,
+    labelText: 'Receber notificações',
+    id: 'sw-associated-label',
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const sw = canvas.getByRole('switch');
+    const label = canvasElement.querySelector<HTMLLabelElement>(
+      'label[for="sw-associated-label"]',
+    )!;
+
+    await step('O rótulo dá nome acessível ao controle', async () => {
+      await expect(canvas.getByRole('switch', { name: 'Receber notificações' })).toBe(sw);
+    });
+
+    await step('Clicar no rótulo alterna o estado', async () => {
+      // Par de ida e volta: sem ele o replay no mesmo DOM partiria do estado
+      // que a rodada anterior deixou e inverteria as duas asserções.
+      await userEvent.click(label);
+      await expect(sw).toHaveAttribute('aria-checked', 'true');
+      await userEvent.click(label);
+      await expect(sw).toHaveAttribute('aria-checked', 'false');
+    });
+  },
+};
+
 export const Disabled: Story = {
   parameters: { covers: ['functional.item4', 'visual.item3'] },
   args: {
     checked: false,
     disabled: true,
     withLabel: true,
-    labelText: 'Receber notificações por email',
+    labelText: 'Receber notificações',
     id: 'sw-disabled',
   },
   play: async ({ canvasElement, step }) => {
@@ -194,7 +271,7 @@ export const DisabledChecked: Story = {
     checked: true,
     disabled: true,
     withLabel: true,
-    labelText: 'Modo escuro',
+    labelText: 'Receber notificações',
     id: 'sw-disabled-checked',
   },
   play: async ({ canvasElement, step }) => {
@@ -216,7 +293,7 @@ export const Invalid: Story = {
     checked: false,
     ariaInvalid: true,
     withLabel: true,
-    labelText: 'Receber notificações por email',
+    labelText: 'Receber notificações',
     id: 'sw-invalid',
   },
   play: async ({ canvasElement, step }) => {
