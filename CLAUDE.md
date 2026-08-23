@@ -166,6 +166,23 @@ Process rules, each learned from a concrete failure. They bind the orchestrator 
 
 - **The repository is public.** Never commit measurement IDs, tokens or credentials — GA4 IDs live in `manager-head.html`, which is why that file must not carry a real ID in a commit.
 - **Close every known pendency of a component in the same pass.** When a component is under review, resolve all of its open items across the five stacks; do not record them in `FIXES-NEEDED.md` and move on. Only a decision that is genuinely the user's may stay open, and it is asked for on the spot. The goal is finishing the list with every component correct in every stack.
+- **A verificação sai da MUDANÇA, não do hábito.** Antes de rodar qualquer coisa, responda em uma frase: *que portão veria este defeito?* Rode esse, e só esse. Em 2026-08-23 troquei a URL de um link e pedi 15 portões e 9 suítes: **118 minutos** para uma mudança de seis arquivos cujo único risco real era resolução de módulo. Bastavam os cinco builds e o teste novo — sete minutos. O escopo grande não era cautela, era o reflexo de quem vinha de lotes de 1.200 arquivos com falha invisível.
+
+  | o que mudou | o que rodar |
+  |---|---|
+  | texto de `translations.json` | `audit.mjs` — texto não compila |
+  | um componente `ui/<slug>` | build da stack + a suíte **daquele slug** |
+  | CSS compartilhado `.nds-*` | as stories que usam a classe, nas cinco |
+  | módulo folha novo em `docs/shared/` | os cinco **builds** (resolução de módulo) + o teste do próprio módulo |
+  | binding de template do Angular | `npm run build` (`ngc --noEmit`) — só ele type-checka isso |
+  | renomeação em massa, mudança de contrato | tudo, e em bloco |
+
+  Suíte inteira é para mudança que atravessa o grafo. Para mudança local, suíte inteira não é rigor — é ruído caro, e some no meio dele o sinal que importava.
+
+- **Ao testar mais de uma stack, PARALELIZE em até três agentes.** Sequencial custa a soma; três em paralelo custam o máximo. O teto é três porque cinco vitest de navegador ao mesmo tempo disputam CPU e porta nesta máquina, e disputa vira o impasse descrito na regra da suíte destacada. Cada agente pega uma stack inteira (lint, build, build-storybook, suítes) e não compartilha diretório de saída com os outros.
+
+  **GPU não ajuda aqui, e vale saber por quê antes de tentar:** a suíte é limitada por processo e por E/S, não por rasterização. O `chrome-headless-shell` roda com renderização por software de propósito — habilitar GPU nele troca velocidade por instabilidade, e a VRAM não é endereçável como memória de sistema para o node. O gargalo medido nunca foi throughput: foi um impasse com os workers a 1s de CPU.
+
 - **Diagnose fully, fix everything, then test once in a block.** Read and measure the whole scope before editing; apply every fix in scope before any run; run the block once; re-fix only what failed; re-run only that. No bidirectional proofs by default, no per-page gate probes, no canary per slug, no "just to confirm" re-runs. The cost this avoids is a test suite per fix, not parallelism — fan out agents as widely as the work allows, as long as each one follows this same order inside its own scope.
 - **Portão só vale depois de saber o que ele cobre.** Declarei "build limpo nas cinco" com base no `npm run build`, que em cada stack compila o SANDBOX — não o grafo inteiro dos componentes. Três arquivos do Svelte não compilavam (`import "./rotulos"` órfão, dois `Identifier already declared`) e a dona descobriu pelo CI, não por mim. O portão que pega isso é `npm run build-storybook`, que compila cada arquivo de story e é o check obrigatório do CI. Antes de chamar um portão de verde, saiba o que ele NÃO olha: `tsc` não vê string de host binding do Angular nem `<template>` de SFC, `svelte-check` com `--threshold error` engole aviso, e `eslint` não abre arquivo que o `include` do tsconfig não alcança.
 
