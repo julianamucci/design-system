@@ -160,7 +160,7 @@ import { Label } from "@/components/ui/label";`;
 
 const codeDefault = `<div class="nds-cluster" data-spacing="sm">
   <Switch id="notifications" :model-value="enabled" @update:model-value="setEnabled" />
-  <Label :for="'notifications'">Receber notificações por email</Label>
+  <Label :for="'notifications'">Receber notificações</Label>
 </div>`;
 
 const codeWithDescription = `<div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
@@ -221,9 +221,11 @@ const variantItems = computed(() => [
 const codeCompWithLabel = `<div class="nds-cluster" data-spacing="sm">
   <Switch id="sw-email" />
   <Label for="sw-email" class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
-    Receber notificações por email
+    Receber notificações
   </Label>
 </div>`;
+
+const codeCompWithoutLabel = `<Switch id="doc-no-label" aria-label="Ativar modo escuro" />`;
 
 const codeCompSettingsList = `<div class="nds-stack nds-w-md" data-spacing="sm">
   <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
@@ -264,6 +266,12 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.withLabel.description'),
     useWhen: tContent('variants.compositions.withLabel.use'),
     code: codeCompWithLabel,
+  },
+  {
+    name: tContent('variants.compositions.withoutLabel.name'),
+    description: tContent('variants.compositions.withoutLabel.description'),
+    useWhen: tContent('variants.compositions.withoutLabel.use'),
+    code: codeCompWithoutLabel,
   },
   {
     name: tContent('variants.compositions.settingsList.name'),
@@ -635,7 +643,7 @@ const visualTestItems = computed(() => [
           data-spacing="sm"
         >
           <Switch id="variant-default" />
-          <Label :for="'variant-default'">Receber notificações por email</Label>
+          <Label :for="'variant-default'">Receber notificações</Label>
         </div>
       </template>
 
@@ -695,13 +703,21 @@ const visualTestItems = computed(() => [
             :for="'sw-email'"
             class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
           >
-            Receber notificações por email
+            Receber notificações
           </Label>
         </div>
       </template>
 
-      <!-- settingsList -->
+      <!-- withoutLabel -->
       <template #variant-preview-1>
+        <Switch
+          id="doc-no-label"
+          aria-label="Ativar modo escuro"
+        />
+      </template>
+
+      <!-- settingsList -->
+      <template #variant-preview-2>
         <div
           class="nds-stack nds-w-md"
           data-spacing="sm"
@@ -764,7 +780,7 @@ const visualTestItems = computed(() => [
       </template>
 
       <!-- inForm -->
-      <template #variant-preview-2>
+      <template #variant-preview-3>
         <form
           class="nds-stack nds-w-sm"
           data-spacing="sm"

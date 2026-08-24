@@ -408,7 +408,7 @@ export function createSwitchDocs(): HTMLElement {
 
 const label = document.createElement('label');
 label.htmlFor = 'notifications';
-label.textContent = 'Receber notificações por email';`,
+label.textContent = 'Receber notificações';`,
         });
 
       case 'variantes': {
@@ -481,7 +481,7 @@ const sw = createSwitch({ id: 'marketing' });`,
                 `const sw = createSwitch({ id: 'sw-email' });\n` +
                 `const label = document.createElement('label');\n` +
                 `label.htmlFor = 'sw-email';\n` +
-                `label.textContent = 'Receber notificações por email';\n` +
+                `label.textContent = 'Receber notificações';\n` +
                 `label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';\n` +
                 `row.append(sw, label);`,
               previewFactory: () => {
@@ -491,10 +491,27 @@ const sw = createSwitch({ id: 'marketing' });`,
                 const sw = createSwitch({ id: 'comp-sw-email' });
                 const label = document.createElement('label');
                 label.htmlFor = 'comp-sw-email';
-                label.textContent = 'Receber notificações por email';
+                label.textContent = 'Receber notificações';
                 label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
                 row.append(sw, label);
                 return row;
+              },
+            },
+            {
+              name: t('variants.compositions.withoutLabel.name'),
+              description: t('variants.compositions.withoutLabel.description'),
+              useWhen: t('variants.compositions.withoutLabel.use'),
+              code:
+                `const sw = createSwitch({\n` +
+                `  id: 'doc-no-label',\n` +
+                `  'aria-label': 'Ativar modo escuro',\n` +
+                `});`,
+              previewFactory: () => {
+                // Sem rótulo na tela: o nome acessível vem do aria-label.
+                return createSwitch({
+                  id: 'doc-no-label',
+                  'aria-label': 'Ativar modo escuro',
+                });
               },
             },
             {

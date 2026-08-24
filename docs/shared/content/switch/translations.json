@@ -13,7 +13,7 @@
     "demonstration": {
       "title": "Demonstração",
       "labels": {
-        "notifications": "Receber notificações por email",
+        "notifications": "Receber notificações",
         "marketing": "Emails de marketing",
         "marketingDesc": "Receba novidades e promoções da plataforma.",
         "darkMode": "Modo escuro",
@@ -150,7 +150,12 @@
         "withLabel": {
           "name": "Com label",
           "description": "Switch + Label inline (gap pequeno). Associação obrigatória via <code>id</code>/<code>htmlFor</code>. Label descreve o estado ATIVO da função (\"Receber notificações\", não \"Notificações\").",
-          "use": "Toda configuração isolada (notificações, lembrar usuário, modo escuro). Nunca use Switch sem label visível."
+          "use": "Toda configuração isolada (notificações, lembrar usuário, modo escuro). Nunca use Switch sem nome acessível; sem rótulo VISÍVEL, apenas quando o contexto ao redor já nomear a função."
+        },
+        "withoutLabel": {
+          "name": "Sem label visível",
+          "description": "Switch nomeado por <code>aria-label</code>, sem texto na tela. O nome acessível continua obrigatório — o que muda é onde ele vive, não se ele existe. Sem nome, o leitor de tela anuncia apenas \"botão\".",
+          "use": "Só quando o contexto ao redor já nomeia a função: célula de tabela sob um cabeçalho, linha de barra de ferramentas, item repetido numa lista já rotulada. Fora disso, o rótulo visível."
         },
         "settingsList": {
           "name": "Lista de configurações",
@@ -459,7 +464,7 @@
     "demonstration": {
       "title": "Demonstration",
       "labels": {
-        "notifications": "Receive email notifications",
+        "notifications": "Receive notifications",
         "marketing": "Marketing emails",
         "marketingDesc": "Receive news and promotions from the platform.",
         "darkMode": "Dark mode",
@@ -596,7 +601,12 @@
         "withLabel": {
           "name": "With label",
           "description": "Switch + inline Label (small gap). Required association via <code>id</code>/<code>htmlFor</code>. The label describes the ACTIVE state (\"Receive notifications\", not \"Notifications\").",
-          "use": "Every isolated setting (notifications, remember user, dark mode). Never use Switch without a visible label."
+          "use": "Every isolated setting (notifications, remember user, dark mode). Never use Switch without an accessible name; without a VISIBLE label, only when the surrounding context already names the function."
+        },
+        "withoutLabel": {
+          "name": "Without visible label",
+          "description": "Switch named by <code>aria-label</code>, with no text on screen. The accessible name is still required — what changes is where it lives, not whether it exists. Without a name, the screen reader announces only \"button\".",
+          "use": "Only when the surrounding context already names the function: a table cell under a header, a toolbar row, a repeated item in an already-labelled list. Otherwise, the visible label."
         },
         "settingsList": {
           "name": "Settings list",
@@ -905,7 +915,7 @@
     "demonstration": {
       "title": "Demostración",
       "labels": {
-        "notifications": "Recibir notificaciones por email",
+        "notifications": "Recibir notificaciones",
         "marketing": "Emails de marketing",
         "marketingDesc": "Recibe novedades y promociones de la plataforma.",
         "darkMode": "Modo oscuro",
@@ -1042,7 +1052,12 @@
         "withLabel": {
           "name": "Con label",
           "description": "Switch + Label inline (gap pequeño). Asociación obligatoria vía <code>id</code>/<code>htmlFor</code>. El label describe el estado ACTIVO (\"Recibir notificaciones\", no \"Notificaciones\").",
-          "use": "Toda configuración aislada (notificaciones, recordar usuario, modo oscuro). Nunca uses Switch sin label visible."
+          "use": "Toda configuración aislada (notificaciones, recordar usuario, modo oscuro). Nunca uses Switch sin nombre accesible; sin label VISIBLE, solo cuando el contexto alrededor ya nombre la función."
+        },
+        "withoutLabel": {
+          "name": "Sin label visible",
+          "description": "Switch nombrado por <code>aria-label</code>, sin texto en pantalla. El nombre accesible sigue siendo obligatorio — lo que cambia es dónde vive, no si existe. Sin nombre, el lector de pantalla anuncia solo \"botón\".",
+          "use": "Solo cuando el contexto alrededor ya nombra la función: celda de tabla bajo un encabezado, fila de barra de herramientas, elemento repetido en una lista ya rotulada. Fuera de eso, el label visible."
         },
         "settingsList": {
           "name": "Lista de configuraciones",

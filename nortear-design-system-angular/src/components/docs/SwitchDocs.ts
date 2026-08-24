@@ -86,7 +86,7 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 // corrigido, a estrutura mostrada aqui é a que compila.
 const ANATOMY_CODE = `<div class="nds-cluster" data-spacing="sm">
   <button ndsSwitch id="notificacoes" [(checked)]="ativo"></button>
-  <label ndsLabel for="notificacoes">Receber notificações por email</label>
+  <label ndsLabel for="notificacoes">Receber notificações</label>
 </div>`;
 
 const INTERFACE_CODE = `// <button ndsSwitch> — compõe o primitivo do Radix NG
@@ -128,7 +128,7 @@ button[ndsSwitch][data-size="sm"] { /* 24x16, knob 12 */ }`;
 const VARIANT_CODE = {
   default: `<div class="nds-cluster" data-spacing="sm">
   <button ndsSwitch id="notificacoes"></button>
-  <label ndsLabel for="notificacoes">Receber notificações por email</label>
+  <label ndsLabel for="notificacoes">Receber notificações</label>
 </div>`,
   withDescription: `<div class="nds-cluster nds-w-sm nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
   <div class="nds-stack" data-spacing="xs">
@@ -148,8 +148,9 @@ const VARIANT_CODE = {
 const COMPOSITION_CODE = {
   withLabel: `<div class="nds-cluster" data-spacing="sm">
   <button ndsSwitch id="sw-email"></button>
-  <label ndsLabel for="sw-email">Receber notificações por email</label>
+  <label ndsLabel for="sw-email">Receber notificações</label>
 </div>`,
+  withoutLabel: `<button ndsSwitch id="doc-no-label" aria-label="Ativar modo escuro"></button>`,
   settingsList: `<div class="nds-stack nds-w-sm" data-spacing="sm">
   @for (pref of preferencias(); track pref.id) {
     <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
@@ -245,6 +246,10 @@ const COMPOSITION_CODE = {
         <button ndsSwitch id="comp-label"></button>
         <label ndsLabel for="comp-label">{{ t('demonstration.labels.notifications') }}</label>
       </div>
+    </ng-template>
+    <ng-template #tplCompWithoutLabel>
+      <!-- Sem rótulo na tela: o nome acessível vem do aria-label. -->
+      <button ndsSwitch id="doc-no-label" aria-label="Ativar modo escuro"></button>
     </ng-template>
     <ng-template #tplCompSettingsList>
       <div class="nds-stack nds-w-sm" data-spacing="sm">
@@ -476,6 +481,7 @@ export class NdsSwitchDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarWithDescription = viewChild.required<TemplateRef<unknown>>('tplVarWithDescription');
   private readonly tplVarSm = viewChild.required<TemplateRef<unknown>>('tplVarSm');
   private readonly tplCompWithLabel = viewChild.required<TemplateRef<unknown>>('tplCompWithLabel');
+  private readonly tplCompWithoutLabel = viewChild.required<TemplateRef<unknown>>('tplCompWithoutLabel');
   private readonly tplCompSettingsList = viewChild.required<TemplateRef<unknown>>('tplCompSettingsList');
   private readonly tplCompInForm = viewChild.required<TemplateRef<unknown>>('tplCompInForm');
 
@@ -499,7 +505,7 @@ export class NdsSwitchDocs implements AfterViewInit, OnDestroy {
 
   /**
    * O rótulo ambíguo do primeiro "don't" é a primeira palavra do rótulo bom —
-   * "Notificações" contra "Receber notificações por email". Derivar do conteúdo
+   * "Notificações" contra "Receber notificações". Derivar do conteúdo
    * traduzido evita literal em português numa página trilíngue.
    */
   protected readonly rotuloAmbiguo = computed(() => {
@@ -602,8 +608,9 @@ export class NdsSwitchDocs implements AfterViewInit, OnDestroy {
 
   protected readonly compositionItems = computed(() => {
     dict();
-    const mapa: { key: 'withLabel' | 'settingsList' | 'inForm'; tpl: TemplateRef<unknown> }[] = [
+    const mapa: { key: 'withLabel' | 'withoutLabel' | 'settingsList' | 'inForm'; tpl: TemplateRef<unknown> }[] = [
       { key: 'withLabel',    tpl: this.tplCompWithLabel()    },
+      { key: 'withoutLabel', tpl: this.tplCompWithoutLabel() },
       { key: 'settingsList', tpl: this.tplCompSettingsList() },
       { key: 'inForm',       tpl: this.tplCompInForm()       },
     ];

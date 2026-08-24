@@ -141,7 +141,7 @@ import { Label } from "@/components/ui/label";`;
 <\/script>
 <div class="nds-cluster" data-spacing="sm">
   <Switch id="notifications" bind:checked />
-  <Label for="notifications">Receber notificações por email</Label>
+  <Label for="notifications">Receber notificações</Label>
 </div>`;
 
   const codeWithDescription = `<script lang="ts">
@@ -385,7 +385,7 @@ interface SwitchProps {
   {#snippet dd1Do()}
     <div class="nds-cluster" data-spacing="sm">
       <Switch id="dd1-do" bind:checked={dd1DoChecked} />
-      <Label for="dd1-do">Receber notificações por email</Label>
+      <Label for="dd1-do">Receber notificações</Label>
     </div>
   {/snippet}
 
@@ -448,7 +448,7 @@ interface SwitchProps {
   {#snippet variantDefault()}
     <div class="nds-cluster" data-spacing="sm">
       <Switch id="var-default" bind:checked={varDefault} />
-      <Label for="var-default">Receber notificações por email</Label>
+      <Label for="var-default">Receber notificações</Label>
     </div>
   {/snippet}
 
@@ -479,8 +479,15 @@ interface SwitchProps {
         name: $tStore('variants.compositions.withLabel.name'),
         description: $tStore('variants.compositions.withLabel.description'),
         useWhen: $tStore('variants.compositions.withLabel.use'),
-        code: `<div class="nds-cluster" data-spacing="sm">\n  <Switch id="sw-email" />\n  <Label for="sw-email">Receber notificações por email</Label>\n</div>`,
+        code: `<div class="nds-cluster" data-spacing="sm">\n  <Switch id="sw-email" />\n  <Label for="sw-email">Receber notificações</Label>\n</div>`,
         preview: compWithLabel,
+      },
+      {
+        name: $tStore('variants.compositions.withoutLabel.name'),
+        description: $tStore('variants.compositions.withoutLabel.description'),
+        useWhen: $tStore('variants.compositions.withoutLabel.use'),
+        code: `<Switch id="doc-no-label" aria-label="Ativar modo escuro" />`,
+        preview: compWithoutLabel,
       },
       {
         name: $tStore('variants.compositions.settingsList.name'),
@@ -505,8 +512,13 @@ interface SwitchProps {
   {#snippet compWithLabel()}
     <div class="nds-cluster" data-spacing="sm">
       <Switch id="comp-sw-email" bind:checked={compEmail} />
-      <Label for="comp-sw-email">Receber notificações por email</Label>
+      <Label for="comp-sw-email">Receber notificações</Label>
     </div>
+  {/snippet}
+
+  {#snippet compWithoutLabel()}
+    <!-- Sem rótulo na tela: o nome acessível vem do aria-label. -->
+    <Switch id="doc-no-label" aria-label="Ativar modo escuro" />
   {/snippet}
 
   {#snippet compSettingsList()}

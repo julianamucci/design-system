@@ -168,7 +168,7 @@ import { Label } from "@/components/ui/label";`;
 
   const codeDefault = `<div className="nds-cluster" data-spacing="sm">
   <Switch id="notifications" />
-  <Label htmlFor="notifications">Receber notificações por email</Label>
+  <Label htmlFor="notifications">Receber notificações</Label>
 </div>`;
 
   const codeWithDescription = `<div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
@@ -392,7 +392,7 @@ import { Label } from "@/components/ui/label";`;
             doPreview: (
               <div className="nds-cluster" data-spacing="sm">
                 <Switch id="dodont-1-do" defaultChecked />
-                <Label htmlFor="dodont-1-do">Receber notificações por email</Label>
+                <Label htmlFor="dodont-1-do">Receber notificações</Label>
               </div>
             ),
             dontPreview: (
@@ -446,7 +446,7 @@ import { Label } from "@/components/ui/label";`;
             preview: (
               <div className="nds-cluster" data-spacing="sm">
                 <Switch id="var-default" />
-                <Label htmlFor="var-default">Receber notificações por email</Label>
+                <Label htmlFor="var-default">Receber notificações</Label>
               </div>
             ),
           },
@@ -492,7 +492,7 @@ import { Label } from "@/components/ui/label";`;
             name: tContent("variants.compositions.withLabel.name"),
             description: tContent("variants.compositions.withLabel.description"),
             useWhen: tContent("variants.compositions.withLabel.use"),
-            code: `<div className="nds-cluster" data-spacing="sm">\n  <Switch id="sw-email" />\n  <Label htmlFor="sw-email" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">\n    Receber notificações por email\n  </Label>\n</div>`,
+            code: `<div className="nds-cluster" data-spacing="sm">\n  <Switch id="sw-email" />\n  <Label htmlFor="sw-email" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">\n    Receber notificações\n  </Label>\n</div>`,
             preview: (
               <div className="nds-cluster" data-spacing="sm">
                 <Switch id="sw-email" />
@@ -500,10 +500,17 @@ import { Label } from "@/components/ui/label";`;
                   htmlFor="sw-email"
                   className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
                 >
-                  Receber notificações por email
+                  Receber notificações
                 </Label>
               </div>
             ),
+          },
+          {
+            name: tContent("variants.compositions.withoutLabel.name"),
+            description: tContent("variants.compositions.withoutLabel.description"),
+            useWhen: tContent("variants.compositions.withoutLabel.use"),
+            code: `<Switch id="doc-no-label" aria-label="Ativar modo escuro" />`,
+            preview: <Switch id="doc-no-label" aria-label="Ativar modo escuro" />,
           },
           {
             name: tContent("variants.compositions.settingsList.name"),
