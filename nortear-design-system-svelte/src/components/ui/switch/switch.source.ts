@@ -122,27 +122,33 @@ ${tagDoSwitch(props, '  ')}
  * FORMA de cada linha, e um `#each` esconderia justamente ela.
  */
 export function switchSettingsListSource(): string {
-  const painel = (id: string, label: string, descricao: string, ligado = false) => `  <div
-    class="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
-    data-align="center"
-    data-justify="between"
-  >
-    <div class="nds-stack nds-pr-4" data-spacing="xs">
-      <Label id="${id}-label" for="${id}" class="nds-text-body nds-font-medium">${label}</Label>
-      <p class="nds-text-body">${descricao}</p>
-    </div>
-    <Switch id="${id}"${ligado ? ' checked' : ''} aria-labelledby="${id}-label" />
-  </div>`;
+  const painel = (id: string, label: string, descricao: string, ligado = false) => `    <div
+      class="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
+      data-align="center"
+      data-justify="between"
+    >
+      <div class="nds-stack nds-pr-4" data-spacing="xs">
+        <Label id="${id}-label" for="${id}" class="nds-text-body nds-font-medium">${label}</Label>
+        <p class="nds-text-body">${descricao}</p>
+      </div>
+      <Switch id="${id}"${ligado ? ' checked' : ''} aria-labelledby="${id}-label" />
+    </div>`;
 
+  // fieldset + legend, e não div + p: os três interruptores são UM grupo, e só
+  // o fieldset leva esse agrupamento para a árvore de acessibilidade (WCAG
+  // 1.3.1). O nds-stack fica no div INTERNO — fieldset com display flex/grid
+  // tem histórico de bug de layout em navegador.
   return svelteSnippet(
     `import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";`,
-    `<div class="nds-stack nds-w-md" data-spacing="sm">
-  <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
+    `<fieldset class="nds-border-none nds-p-0 nds-m-0 nds-w-md">
+  <legend class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</legend>
+  <div class="nds-stack" data-spacing="sm">
 ${painel('pref-email', 'Receber novidades por email', 'Resumo semanal sobre o produto.', true)}
 ${painel('pref-push', 'Receber notificações push', 'Alertas no dispositivo em tempo real.')}
 ${painel('pref-sms', 'Alertas por SMS', 'Eventos críticos via mensagem de texto.')}
-</div>`,
+  </div>
+</fieldset>`,
   );
 }
 

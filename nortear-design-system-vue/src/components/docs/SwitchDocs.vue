@@ -227,30 +227,38 @@ const codeCompWithLabel = `<div class="nds-cluster" data-spacing="sm">
 
 const codeCompWithoutLabel = `<Switch id="doc-no-label" aria-label="Ativar modo escuro" />`;
 
-const codeCompSettingsList = `<div class="nds-stack nds-w-md" data-spacing="sm">
-  <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
-  <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
-    <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
-      <Label for="pref-email">Receber novidades por email</Label>
-      <p class="nds-text-body">Resumo semanal sobre o produto.</p>
+// É `fieldset` + `legend`, e não `div` + `<p>`, porque os três interruptores são
+// UM grupo: só o fieldset amarra os controles ao título, e é assim que o leitor
+// de tela anuncia "Preferências de notificação" ao entrar em cada um
+// (WCAG 1.3.1). Com `<p>` o título é texto solto e os três ficam órfãos.
+// O `nds-stack` mora no div INTERNO: fieldset com display flex/grid tem
+// histórico de bug de layout em navegador.
+const codeCompSettingsList = `<fieldset class="nds-border-none nds-p-0 nds-m-0 nds-w-sm">
+  <legend class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</legend>
+  <div class="nds-stack" data-spacing="sm">
+    <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+      <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
+        <Label for="pref-email">Receber novidades por email</Label>
+        <p class="nds-text-body">Resumo semanal sobre o produto.</p>
+      </div>
+      <Switch id="pref-email" :checked="true" />
     </div>
-    <Switch id="pref-email" :checked="true" />
-  </div>
-  <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
-    <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
-      <Label for="pref-push">Receber notificações push</Label>
-      <p class="nds-text-body">Alertas no dispositivo em tempo real.</p>
+    <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+      <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
+        <Label for="pref-push">Receber notificações push</Label>
+        <p class="nds-text-body">Alertas no dispositivo em tempo real.</p>
+      </div>
+      <Switch id="pref-push" />
     </div>
-    <Switch id="pref-push" />
-  </div>
-  <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
-    <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
-      <Label for="pref-sms">Alertas por SMS</Label>
-      <p class="nds-text-body">Eventos críticos via mensagem de texto.</p>
+    <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+      <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
+        <Label for="pref-sms">Alertas por SMS</Label>
+        <p class="nds-text-body">Eventos críticos via mensagem de texto.</p>
+      </div>
+      <Switch id="pref-sms" />
     </div>
-    <Switch id="pref-sms" />
   </div>
-</div>`;
+</fieldset>`;
 
 const codeCompInForm = `<form class="nds-stack nds-w-sm" data-spacing="sm" @submit.prevent>
   <div class="nds-cluster" data-spacing="sm">
@@ -717,66 +725,81 @@ const visualTestItems = computed(() => [
       </template>
 
       <!-- settingsList -->
+      <!--
+        É `fieldset` + `legend`, e não `div` + `<p>`, porque os três interruptores
+        são UM grupo: só o fieldset amarra os controles ao título, e é assim que o
+        leitor de tela anuncia "Preferências de notificação" ao entrar em cada um
+        (WCAG 1.3.1). Com `<p>` o título é texto solto e os três ficam órfãos.
+        O `nds-stack` mora no div INTERNO: fieldset com display flex/grid tem
+        histórico de bug de layout em navegador.
+      -->
       <template #variant-preview-2>
-        <div
-          class="nds-stack nds-w-md"
-          data-spacing="sm"
-        >
-          <p class="nds-text-body nds-font-semibold nds-mb-2">
-            Preferências de notificação
-          </p>
+        <fieldset class="nds-border-none nds-p-0 nds-m-0 nds-w-sm">
+          <!--
+            Com fieldset a legend virou o NOME ACESSÍVEL do grupo, e nome acessível
+            preso a um idioma quebra nos outros dois: sai da mesma chave de conteúdo
+            que os rótulos vizinhos usam.
+          -->
+          <legend class="nds-text-body nds-font-semibold nds-mb-2">
+            {{ tContent('demonstration.labels.preferencesGroup') }}
+          </legend>
           <div
-            class="nds-cluster nds-rounded-lg nds-border-default nds-p-2"
-            data-justify="between"
+            class="nds-stack"
+            data-spacing="sm"
           >
             <div
-              class="nds-stack"
-              data-spacing="xs"
-              style="padding-right: var(--spacing-2);"
+              class="nds-cluster nds-rounded-lg nds-border-default nds-p-2"
+              data-justify="between"
             >
-              <Label :for="'pref-email'">Receber novidades por email</Label>
-              <p class="nds-text-body">
-                Resumo semanal sobre o produto.
-              </p>
+              <div
+                class="nds-stack"
+                data-spacing="xs"
+                style="padding-right: var(--spacing-2);"
+              >
+                <Label :for="'pref-email'">Receber novidades por email</Label>
+                <p class="nds-text-body">
+                  Resumo semanal sobre o produto.
+                </p>
+              </div>
+              <Switch
+                id="pref-email"
+                :model-value="true"
+              />
             </div>
-            <Switch
-              id="pref-email"
-              :model-value="true"
-            />
-          </div>
-          <div
-            class="nds-cluster nds-rounded-lg nds-border-default nds-p-2"
-            data-justify="between"
-          >
             <div
-              class="nds-stack"
-              data-spacing="xs"
-              style="padding-right: var(--spacing-2);"
+              class="nds-cluster nds-rounded-lg nds-border-default nds-p-2"
+              data-justify="between"
             >
-              <Label :for="'pref-push'">Receber notificações push</Label>
-              <p class="nds-text-body">
-                Alertas no dispositivo em tempo real.
-              </p>
+              <div
+                class="nds-stack"
+                data-spacing="xs"
+                style="padding-right: var(--spacing-2);"
+              >
+                <Label :for="'pref-push'">Receber notificações push</Label>
+                <p class="nds-text-body">
+                  Alertas no dispositivo em tempo real.
+                </p>
+              </div>
+              <Switch id="pref-push" />
             </div>
-            <Switch id="pref-push" />
-          </div>
-          <div
-            class="nds-cluster nds-rounded-lg nds-border-default nds-p-2"
-            data-justify="between"
-          >
             <div
-              class="nds-stack"
-              data-spacing="xs"
-              style="padding-right: var(--spacing-2);"
+              class="nds-cluster nds-rounded-lg nds-border-default nds-p-2"
+              data-justify="between"
             >
-              <Label :for="'pref-sms'">Alertas por SMS</Label>
-              <p class="nds-text-body">
-                Eventos críticos via mensagem de texto.
-              </p>
+              <div
+                class="nds-stack"
+                data-spacing="xs"
+                style="padding-right: var(--spacing-2);"
+              >
+                <Label :for="'pref-sms'">Alertas por SMS</Label>
+                <p class="nds-text-body">
+                  Eventos críticos via mensagem de texto.
+                </p>
+              </div>
+              <Switch id="pref-sms" />
             </div>
-            <Switch id="pref-sms" />
           </div>
-        </div>
+        </fieldset>
       </template>
 
       <!-- inForm -->

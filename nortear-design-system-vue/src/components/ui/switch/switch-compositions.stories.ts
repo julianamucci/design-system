@@ -124,23 +124,31 @@ export const SettingsList: Story = {
   render: () => ({
     components: { Switch, Label },
     setup() { return { preferencias: PREFERENCIAS }; },
+    // É `fieldset` + `legend`, e não `div` + `<p>`, porque os três interruptores
+    // são UM grupo: só o fieldset amarra os controles ao título, e é assim que o
+    // leitor de tela anuncia "Preferências de notificação" ao entrar em cada um
+    // (WCAG 1.3.1). Com `<p>` o título é texto solto e os três ficam órfãos.
+    // O `nds-stack` mora no div INTERNO: fieldset com display flex/grid tem
+    // histórico de bug de layout em navegador.
     template: `
-      <div class="nds-stack nds-w-md" data-spacing="sm">
-        <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
-        <div
-          v-for="(item, indice) in preferencias"
-          :key="item.id"
-          class="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
-          data-align="center"
-          data-justify="between"
-        >
-          <div class="nds-stack nds-pr-4" data-spacing="xs">
-            <Label :for="item.id">{{ item.label }}</Label>
-            <p class="nds-text-body">{{ item.desc }}</p>
+      <fieldset class="nds-border-none nds-p-0 nds-m-0 nds-w-md">
+        <legend class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</legend>
+        <div class="nds-stack" data-spacing="sm">
+          <div
+            v-for="(item, indice) in preferencias"
+            :key="item.id"
+            class="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
+            data-align="center"
+            data-justify="between"
+          >
+            <div class="nds-stack nds-pr-4" data-spacing="xs">
+              <Label :for="item.id">{{ item.label }}</Label>
+              <p class="nds-text-body">{{ item.desc }}</p>
+            </div>
+            <Switch :id="item.id" :default-value="indice === 0" />
           </div>
-          <Switch :id="item.id" :default-value="indice === 0" />
         </div>
-      </div>
+      </fieldset>
     `,
   }),
   play: async ({ canvasElement, step }) => {

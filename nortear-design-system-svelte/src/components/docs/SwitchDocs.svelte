@@ -493,7 +493,10 @@ interface SwitchProps {
         name: $tStore('variants.compositions.settingsList.name'),
         description: $tStore('variants.compositions.settingsList.description'),
         useWhen: $tStore('variants.compositions.settingsList.use'),
-        code: `<div class="nds-stack nds-w-md" data-spacing="sm">\n  <h3 class="nds-text-body nds-font-medium">Preferências de notificação</h3>\n  <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">\n      <Label for="sw-list-email">Email</Label>\n      <p class="nds-text-body">Receba avisos importantes por email.</p>\n    </div>\n    <Switch id="sw-list-email" checked />\n  </div>\n  <!-- demais painéis: push, sms -->\n</div>`,
+        // fieldset + legend, e não div + título solto: os interruptores da lista
+        // são UM grupo, e só o fieldset leva esse agrupamento para a árvore de
+        // acessibilidade (WCAG 1.3.1).
+        code: `<fieldset class="nds-border-none nds-p-0 nds-m-0 nds-w-sm">\n  <legend class="nds-text-body nds-font-semibold nds-mb-2">${$tStore('demonstration.labels.preferencesGroup')}</legend>\n  <div class="nds-stack" data-spacing="sm">\n    <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n      <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">\n        <Label for="sw-list-email">Email</Label>\n        <p class="nds-text-body">Receba avisos importantes por email.</p>\n      </div>\n      <Switch id="sw-list-email" checked />\n    </div>\n    <!-- demais painéis: push, sms -->\n  </div>\n</fieldset>`,
         preview: compSettingsList,
       },
       {
@@ -522,30 +525,42 @@ interface SwitchProps {
   {/snippet}
 
   {#snippet compSettingsList()}
-    <div class="nds-stack nds-w-md" data-spacing="sm">
-      <h3 class="nds-text-body nds-font-medium">Preferências de notificação</h3>
-      <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
-        <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">
-          <Label for="comp-sw-list-email">Email</Label>
-          <p class="nds-text-body">Receba avisos importantes por email.</p>
+    <!-- fieldset + legend, e não div + <h3>: os três interruptores são UM
+         grupo, e só o fieldset carrega esse agrupamento para a árvore de
+         acessibilidade — a legend nomeia o grupo e acompanha cada controle
+         (WCAG 1.3.1). Um título solto fica ao lado, não agrupa. -->
+    <fieldset class="nds-border-none nds-p-0 nds-m-0 nds-w-sm">
+      <!-- Com fieldset a legend deixou de ser decoração: é o nome acessível do
+           grupo, então sai da tradução, nunca de um literal em português. -->
+      <legend class="nds-text-body nds-font-semibold nds-mb-2">
+        {$tStore('demonstration.labels.preferencesGroup')}
+      </legend>
+      <!-- O nds-stack mora num div INTERNO: fieldset com display flex/grid tem
+           histórico de bug de layout em navegador. -->
+      <div class="nds-stack" data-spacing="sm">
+        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+          <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">
+            <Label for="comp-sw-list-email">Email</Label>
+            <p class="nds-text-body">Receba avisos importantes por email.</p>
+          </div>
+          <Switch id="comp-sw-list-email" bind:checked={compSettingsEmail} />
         </div>
-        <Switch id="comp-sw-list-email" bind:checked={compSettingsEmail} />
-      </div>
-      <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
-        <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">
-          <Label for="comp-sw-list-push">Push</Label>
-          <p class="nds-text-body">Notificações em tempo real no dispositivo.</p>
+        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+          <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">
+            <Label for="comp-sw-list-push">Push</Label>
+            <p class="nds-text-body">Notificações em tempo real no dispositivo.</p>
+          </div>
+          <Switch id="comp-sw-list-push" bind:checked={compSettingsPush} />
         </div>
-        <Switch id="comp-sw-list-push" bind:checked={compSettingsPush} />
-      </div>
-      <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
-        <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">
-          <Label for="comp-sw-list-sms">SMS</Label>
-          <p class="nds-text-body">Alertas críticos por mensagem de texto.</p>
+        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+          <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">
+            <Label for="comp-sw-list-sms">SMS</Label>
+            <p class="nds-text-body">Alertas críticos por mensagem de texto.</p>
+          </div>
+          <Switch id="comp-sw-list-sms" bind:checked={compSettingsSms} />
         </div>
-        <Switch id="comp-sw-list-sms" bind:checked={compSettingsSms} />
       </div>
-    </div>
+    </fieldset>
   {/snippet}
 
   {#snippet compInForm()}

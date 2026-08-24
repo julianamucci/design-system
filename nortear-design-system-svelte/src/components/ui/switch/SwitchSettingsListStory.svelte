@@ -25,23 +25,31 @@
   }: Props = $props();
 </script>
 
-<div class="nds-stack nds-w-md" data-spacing="sm">
-  <p class="nds-text-body nds-font-semibold nds-mb-2">{titulo}</p>
-  {#each preferencias as item (item.id)}
-    <div
-      class="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
-      data-align="center"
-      data-justify="between"
-    >
-      <div class="nds-stack nds-pr-4" data-spacing="xs">
-        <!-- A descrição fica FORA do Label: dentro dele entraria no nome
-             acessível, e a frase inteira seria anunciada a cada passagem. -->
-        <Label id="{item.id}-label" for={item.id} class="nds-text-body nds-font-medium">
-          {item.label}
-        </Label>
-        <p class="nds-text-body">{item.desc}</p>
+<!-- fieldset + legend, e não div + p: os três interruptores são UM grupo, e só
+     o fieldset carrega esse agrupamento para a árvore de acessibilidade — a
+     legend passa a nomear o grupo e é anunciada junto de cada controle
+     (WCAG 1.3.1). Um <p> é só texto ao lado, e deixa os três soltos. -->
+<fieldset class="nds-border-none nds-p-0 nds-m-0 nds-w-md">
+  <legend class="nds-text-body nds-font-semibold nds-mb-2">{titulo}</legend>
+  <!-- O nds-stack mora num div INTERNO: fieldset com display flex/grid tem
+       histórico de bug de layout em navegador. -->
+  <div class="nds-stack" data-spacing="sm">
+    {#each preferencias as item (item.id)}
+      <div
+        class="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
+        data-align="center"
+        data-justify="between"
+      >
+        <div class="nds-stack nds-pr-4" data-spacing="xs">
+          <!-- A descrição fica FORA do Label: dentro dele entraria no nome
+               acessível, e a frase inteira seria anunciada a cada passagem. -->
+          <Label id="{item.id}-label" for={item.id} class="nds-text-body nds-font-medium">
+            {item.label}
+          </Label>
+          <p class="nds-text-body">{item.desc}</p>
+        </div>
+        <Switch id={item.id} checked={item.checked ?? false} aria-labelledby="{item.id}-label" />
       </div>
-      <Switch id={item.id} checked={item.checked ?? false} aria-labelledby="{item.id}-label" />
-    </div>
-  {/each}
-</div>
+    {/each}
+  </div>
+</fieldset>

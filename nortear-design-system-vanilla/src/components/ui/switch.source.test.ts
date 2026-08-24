@@ -96,6 +96,9 @@ describe('switchPainelSnippet', () => {
     expect(code).toContain("'Receba novidades.'");
     // Só o rótulo nomeia o controle: a descrição fica fora do nome acessível.
     expect(code).not.toContain('aria-label');
+    // Um controle sozinho não é grupo: o ramo de item único não vira fieldset.
+    expect(code).not.toContain('fieldset');
+    expect(code).not.toContain('legend');
   });
 
   it('com vários itens vira uma lista, sem repetir o painel à mão', () => {
@@ -107,6 +110,12 @@ describe('switchPainelSnippet', () => {
     expect(code).toContain('preferencias.forEach');
     expect(code.match(/id: '/g)).toHaveLength(3);
     expect(code.match(/createSwitch\(/g)).toHaveLength(1);
+    // Vários interruptores relacionados são UM grupo: fieldset + legend, e o
+    // nds-stack no div interno (fieldset com flex/grid quebra layout).
+    expect(code).toContain("document.createElement('fieldset')");
+    expect(code).toContain("document.createElement('legend')");
+    expect(code).toContain("grupo.className = 'nds-border-none nds-p-0 nds-m-0 nds-w-md'");
+    expect(code).toContain("lista.className = 'nds-stack'");
   });
 });
 

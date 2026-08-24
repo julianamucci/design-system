@@ -151,17 +151,24 @@ const COMPOSITION_CODE = {
   <label ndsLabel for="sw-email">Receber notificações</label>
 </div>`,
   withoutLabel: `<button ndsSwitch id="doc-no-label" aria-label="Ativar modo escuro"></button>`,
-  settingsList: `<div class="nds-stack nds-w-sm" data-spacing="sm">
-  @for (pref of preferencias(); track pref.id) {
-    <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
-      <div class="nds-stack" data-spacing="xs">
-        <label ndsLabel [attr.for]="pref.id">{{ pref.titulo }}</label>
-        <p class="nds-text-caption nds-text-muted-foreground">{{ pref.descricao }}</p>
+  settingsList: `<!-- fieldset + legend, e não div + p: a legend nomeia os interruptores
+     como um conjunto único na árvore de acessibilidade (WCAG 1.3.1). O nds-stack
+     fica no div INTERNO: fieldset com display flex/grid tem histórico de bug de
+     layout em navegador. -->
+<fieldset class="nds-border-none nds-p-0 nds-m-0 nds-w-sm">
+  <legend class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</legend>
+  <div class="nds-stack" data-spacing="sm">
+    @for (pref of preferencias(); track pref.id) {
+      <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+        <div class="nds-stack" data-spacing="xs">
+          <label ndsLabel [attr.for]="pref.id">{{ pref.titulo }}</label>
+          <p class="nds-text-caption nds-text-muted-foreground">{{ pref.descricao }}</p>
+        </div>
+        <button ndsSwitch [id]="pref.id" [(checked)]="pref.ativo"></button>
       </div>
-      <button ndsSwitch [id]="pref.id" [(checked)]="pref.ativo"></button>
-    </div>
-  }
-</div>`,
+    }
+  </div>
+</fieldset>`,
   inForm: `<form class="nds-stack nds-w-sm" data-spacing="sm">
   <div class="nds-cluster" data-spacing="sm">
     <!-- name faz o primitivo manter um input escondido irmão: o campo
@@ -252,26 +259,33 @@ const COMPOSITION_CODE = {
       <button ndsSwitch id="doc-no-label" aria-label="Ativar modo escuro"></button>
     </ng-template>
     <ng-template #tplCompSettingsList>
-      <div class="nds-stack nds-w-sm" data-spacing="sm">
-        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
-          <div class="nds-stack" data-spacing="xs">
-            <label ndsLabel for="comp-list-a">{{ t('demonstration.labels.marketing') }}</label>
-            <p class="nds-text-caption nds-text-muted-foreground">
-              {{ t('demonstration.labels.marketingDesc') }}
-            </p>
+      <!-- fieldset + legend, e não div + p: a legend nomeia os interruptores como um
+           conjunto único na árvore de acessibilidade (WCAG 1.3.1) — um <p> apenas
+           parece um título. O nds-stack fica no div INTERNO porque fieldset com
+           display flex/grid tem histórico de bug de layout em navegador. -->
+      <fieldset class="nds-border-none nds-p-0 nds-m-0 nds-w-sm">
+        <legend class="nds-text-body nds-font-semibold nds-mb-2">{{ t('demonstration.labels.preferencesGroup') }}</legend>
+        <div class="nds-stack" data-spacing="sm">
+          <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+            <div class="nds-stack" data-spacing="xs">
+              <label ndsLabel for="comp-list-a">{{ t('demonstration.labels.marketing') }}</label>
+              <p class="nds-text-caption nds-text-muted-foreground">
+                {{ t('demonstration.labels.marketingDesc') }}
+              </p>
+            </div>
+            <button ndsSwitch id="comp-list-a" [checked]="true"></button>
           </div>
-          <button ndsSwitch id="comp-list-a" [checked]="true"></button>
-        </div>
-        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
-          <div class="nds-stack" data-spacing="xs">
-            <label ndsLabel for="comp-list-b">{{ t('demonstration.labels.darkMode') }}</label>
-            <p class="nds-text-caption nds-text-muted-foreground">
-              {{ t('demonstration.labels.darkModeDesc') }}
-            </p>
+          <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+            <div class="nds-stack" data-spacing="xs">
+              <label ndsLabel for="comp-list-b">{{ t('demonstration.labels.darkMode') }}</label>
+              <p class="nds-text-caption nds-text-muted-foreground">
+                {{ t('demonstration.labels.darkModeDesc') }}
+              </p>
+            </div>
+            <button ndsSwitch id="comp-list-b"></button>
           </div>
-          <button ndsSwitch id="comp-list-b"></button>
         </div>
-      </div>
+      </fieldset>
     </ng-template>
     <ng-template #tplCompInForm>
       <form class="nds-stack nds-w-sm" data-spacing="sm">

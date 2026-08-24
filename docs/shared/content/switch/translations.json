@@ -18,7 +18,8 @@
         "marketingDesc": "Receba novidades e promoções da plataforma.",
         "darkMode": "Modo escuro",
         "darkModeDesc": "Alterne para tema escuro automaticamente.",
-        "sm": "Tamanho compacto"
+        "sm": "Tamanho compacto",
+        "preferencesGroup": "Preferências de notificação"
       }
     },
     "anatomy": {
@@ -469,7 +470,8 @@
         "marketingDesc": "Receive news and promotions from the platform.",
         "darkMode": "Dark mode",
         "darkModeDesc": "Switch to dark theme automatically.",
-        "sm": "Compact size"
+        "sm": "Compact size",
+        "preferencesGroup": "Notification preferences"
       }
     },
     "anatomy": {
@@ -920,7 +922,8 @@
         "marketingDesc": "Recibe novedades y promociones de la plataforma.",
         "darkMode": "Modo oscuro",
         "darkModeDesc": "Cambia al tema oscuro automáticamente.",
-        "sm": "Tamaño compacto"
+        "sm": "Tamaño compacto",
+        "preferencesGroup": "Preferencias de notificación"
       }
     },
     "anatomy": {

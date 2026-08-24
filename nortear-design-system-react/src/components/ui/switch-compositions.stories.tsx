@@ -122,23 +122,33 @@ export const WithoutLabel: Story = {
 
 export const SettingsList: Story = {
   render: () => (
-    <div className="nds-stack nds-w-md" data-spacing="sm">
-      <p className="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
-      {PREFERENCIAS.map(({ id, label, desc, checked }) => (
-        <div
-          key={id}
-          className="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
-          data-align="center"
-          data-justify="between"
-        >
-          <div className="nds-stack nds-pr-4" data-spacing="xs">
-            <Label htmlFor={id}>{label}</Label>
-            <p className="nds-text-body">{desc}</p>
+    // É `fieldset` + `legend`, e não `div` + `<p>`, porque os três interruptores
+    // são UM grupo: só o fieldset amarra os controles ao título, e é assim que o
+    // leitor de tela anuncia "Preferências de notificação" ao entrar em cada um
+    // (WCAG 1.3.1). Com `<p>` o título é texto solto e os três ficam órfãos.
+    // O `nds-stack` mora no div INTERNO: fieldset com display flex/grid tem
+    // histórico de bug de layout em navegador.
+    <fieldset className="nds-border-none nds-p-0 nds-m-0 nds-w-md">
+      <legend className="nds-text-body nds-font-semibold nds-mb-2">
+        Preferências de notificação
+      </legend>
+      <div className="nds-stack" data-spacing="sm">
+        {PREFERENCIAS.map(({ id, label, desc, checked }) => (
+          <div
+            key={id}
+            className="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
+            data-align="center"
+            data-justify="between"
+          >
+            <div className="nds-stack nds-pr-4" data-spacing="xs">
+              <Label htmlFor={id}>{label}</Label>
+              <p className="nds-text-body">{desc}</p>
+            </div>
+            <Switch id={id} defaultChecked={checked} />
           </div>
-          <Switch id={id} defaultChecked={checked} />
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </fieldset>
   ),
   parameters: {
     docs: {

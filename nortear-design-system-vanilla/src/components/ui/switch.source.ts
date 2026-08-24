@@ -118,9 +118,23 @@ ${items
   .join('\n')}
 ];
 
+// fieldset + legend, e não div + <p>: vários interruptores relacionados são UM
+// grupo, e só o fieldset leva esse agrupamento para a árvore de acessibilidade
+// (WCAG 1.3.1). Um controle sozinho não é grupo — por isso só este ramo.
+const grupo = document.createElement('fieldset');
+grupo.className = 'nds-border-none nds-p-0 nds-m-0 nds-w-md';
+
+const titulo = document.createElement('legend');
+titulo.className = 'nds-text-body nds-font-semibold nds-mb-2';
+titulo.textContent = 'Preferências de notificação';
+grupo.appendChild(titulo);
+
+// O nds-stack fica no div INTERNO: fieldset com display flex/grid tem
+// histórico de bug de layout em navegador.
 const lista = document.createElement('div');
 lista.className = 'nds-stack';
 lista.dataset.spacing = 'sm';
+grupo.appendChild(lista);
 
 preferencias.forEach(({ id, label, description, checked }) => {
   const painel = document.createElement('div');
@@ -144,7 +158,7 @@ preferencias.forEach(({ id, label, description, checked }) => {
   return snippet(
     [importing('switch', 'createSwitch'), importing('label', 'createLabel')].join('\n'),
     body,
-    montar(items.length === 1 ? 'painel' : 'lista'),
+    montar(items.length === 1 ? 'painel' : 'grupo'),
   );
 }
 

@@ -198,12 +198,20 @@ export function configSwitchPanelSource(): string {
       descricao: 'Eventos críticos via mensagem de texto.',
     },
   ];
+  // É `fieldset` + `legend`, e não `div` + `<p>`, porque os três interruptores
+  // são UM grupo: só o fieldset amarra os controles ao título, e é assim que o
+  // leitor de tela anuncia "Preferências de notificação" ao entrar em cada um
+  // (WCAG 1.3.1). Com `<p>` o título é texto solto e os três ficam órfãos.
+  // O `nds-stack` mora no div INTERNO: fieldset com display flex/grid tem
+  // histórico de bug de layout em navegador.
   return vueSnippet(
     IMPORT_PAIR,
-    `<div class="nds-stack nds-w-md" data-spacing="sm">
-  <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
-${lines.map((line) => indentar(panelLine(line))).join('\n\n')}
-</div>`,
+    `<fieldset class="nds-border-none nds-p-0 nds-m-0 nds-w-md">
+  <legend class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</legend>
+  <div class="nds-stack" data-spacing="sm">
+${lines.map((line) => indentar(panelLine(line), 4)).join('\n\n')}
+  </div>
+</fieldset>`,
   );
 }
 

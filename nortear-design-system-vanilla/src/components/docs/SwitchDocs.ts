@@ -518,14 +518,21 @@ const sw = createSwitch({ id: 'marketing' });`,
               name: t('variants.compositions.settingsList.name'),
               description: t('variants.compositions.settingsList.description'),
               useWhen: t('variants.compositions.settingsList.use'),
+              // fieldset + legend, e não div + <p>: os interruptores da lista
+              // são UM grupo, e só o fieldset leva esse agrupamento para a
+              // árvore de acessibilidade (WCAG 1.3.1).
               code:
+                `const grupo = document.createElement('fieldset');\n` +
+                `grupo.className = 'nds-border-none nds-p-0 nds-m-0 nds-w-sm';\n` +
+                `const title = document.createElement('legend');\n` +
+                `title.className = 'nds-text-body nds-font-semibold nds-mb-2';\n` +
+                `title.textContent = '${t('demonstration.labels.preferencesGroup')}';\n` +
+                `grupo.appendChild(title);\n` +
+                `// nds-stack no div INTERNO: fieldset com flex/grid tem histórico de bug de layout.\n` +
                 `const wrapper = document.createElement('div');\n` +
                 `wrapper.className = 'nds-stack';\n` +
                 `wrapper.dataset.spacing = 'sm';\n` +
-                `const title = document.createElement('p');\n` +
-                `title.className = 'nds-text-body nds-font-semibold nds-mb-2';\n` +
-                `title.textContent = 'Preferências de notificação';\n` +
-                `wrapper.appendChild(title);\n` +
+                `grupo.appendChild(wrapper);\n` +
                 `const options = [\n` +
                 `  { id: 'pref-email', label: 'Receber novidades por email', desc: 'Resumo semanal sobre o produto.', checked: true },\n` +
                 `  { id: 'pref-push',  label: 'Receber notificações push',   desc: 'Alertas no dispositivo em tempo real.', checked: false },\n` +
@@ -539,13 +546,23 @@ const sw = createSwitch({ id: 'marketing' });`,
                 `  wrapper.appendChild(panel);\n` +
                 `});`,
               previewFactory: () => {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'nds-stack nds-w-md';
-                wrapper.dataset.spacing = 'sm';
-                const title = document.createElement('p');
+                // fieldset + legend, e não div + <p>: os três interruptores são
+                // UM grupo, e só o fieldset carrega esse agrupamento para a
+                // árvore de acessibilidade (WCAG 1.3.1).
+                const grupo = document.createElement('fieldset');
+                grupo.className = 'nds-border-none nds-p-0 nds-m-0 nds-w-sm';
+                const title = document.createElement('legend');
                 title.className = 'nds-text-body nds-font-semibold nds-mb-2';
-                title.textContent = 'Preferências de notificação';
-                wrapper.appendChild(title);
+                // Com fieldset a legend deixou de ser decoração: é o nome
+                // acessível do grupo, então sai da tradução, nunca de literal.
+                title.textContent = t('demonstration.labels.preferencesGroup');
+                grupo.appendChild(title);
+                // O nds-stack fica neste div INTERNO: fieldset com display
+                // flex/grid tem histórico de bug de layout em navegador.
+                const wrapper = document.createElement('div');
+                wrapper.className = 'nds-stack';
+                wrapper.dataset.spacing = 'sm';
+                grupo.appendChild(wrapper);
                 const options = [
                   { id: 'comp-pref-email', label: 'Receber novidades por email', desc: 'Resumo semanal sobre o produto.', checked: true },
                   { id: 'comp-pref-push',  label: 'Receber notificações push',   desc: 'Alertas no dispositivo em tempo real.', checked: false },
@@ -571,7 +588,7 @@ const sw = createSwitch({ id: 'marketing' });`,
                   panel.append(textGroup, sw);
                   wrapper.appendChild(panel);
                 });
-                return wrapper;
+                return grupo;
               },
             },
             {

@@ -516,38 +516,52 @@ import { Label } from "@/components/ui/label";`;
             name: tContent("variants.compositions.settingsList.name"),
             description: tContent("variants.compositions.settingsList.description"),
             useWhen: tContent("variants.compositions.settingsList.use"),
-            code: `<div className="nds-stack nds-w-md" data-spacing="sm">\n  <p className="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>\n  <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>\n      <Label htmlFor="pref-email">Receber novidades por email</Label>\n      <p className="nds-text-body">Resumo semanal sobre o produto.</p>\n    </div>\n    <Switch id="pref-email" defaultChecked />\n  </div>\n  <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>\n      <Label htmlFor="pref-push">Receber notificações push</Label>\n      <p className="nds-text-body">Alertas no dispositivo em tempo real.</p>\n    </div>\n    <Switch id="pref-push" />\n  </div>\n  <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>\n      <Label htmlFor="pref-sms">Alertas por SMS</Label>\n      <p className="nds-text-body">Eventos críticos via mensagem de texto.</p>\n    </div>\n    <Switch id="pref-sms" />\n  </div>\n</div>`,
+            code: `<fieldset className="nds-border-none nds-p-0 nds-m-0 nds-w-sm">\n  <legend className="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</legend>\n  <div className="nds-stack" data-spacing="sm">\n    <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n      <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>\n        <Label htmlFor="pref-email">Receber novidades por email</Label>\n        <p className="nds-text-body">Resumo semanal sobre o produto.</p>\n      </div>\n      <Switch id="pref-email" defaultChecked />\n    </div>\n    <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n      <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>\n        <Label htmlFor="pref-push">Receber notificações push</Label>\n        <p className="nds-text-body">Alertas no dispositivo em tempo real.</p>\n      </div>\n      <Switch id="pref-push" />\n    </div>\n    <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n      <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>\n        <Label htmlFor="pref-sms">Alertas por SMS</Label>\n        <p className="nds-text-body">Eventos críticos via mensagem de texto.</p>\n      </div>\n      <Switch id="pref-sms" />\n    </div>\n  </div>\n</fieldset>`,
             preview: (
-              <div className="nds-stack nds-w-md" data-spacing="sm">
-                <p className="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
-                <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
-                  <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>
-                    <Label htmlFor="pref-email">Receber novidades por email</Label>
-                    <p className="nds-text-body">
-                      Resumo semanal sobre o produto.
-                    </p>
+              // É `fieldset` + `legend`, e não `div` + `<p>`, porque os três
+              // interruptores são UM grupo: só o fieldset amarra os controles ao
+              // título, e é assim que o leitor de tela anuncia "Preferências de
+              // notificação" ao entrar em cada um (WCAG 1.3.1). Com `<p>` o título
+              // é texto solto e os três ficam órfãos. O `nds-stack` mora no div
+              // INTERNO: fieldset com display flex/grid tem histórico de bug de
+              // layout em navegador.
+              <fieldset className="nds-border-none nds-p-0 nds-m-0 nds-w-sm">
+                {/* Com fieldset a legend virou o NOME ACESSÍVEL do grupo, e nome
+                    acessível preso a um idioma quebra nos outros dois: sai da
+                    mesma chave de conteúdo que os rótulos vizinhos usam. */}
+                <legend className="nds-text-body nds-font-semibold nds-mb-2">
+                  {tContent("demonstration.labels.preferencesGroup")}
+                </legend>
+                <div className="nds-stack" data-spacing="sm">
+                  <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+                    <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>
+                      <Label htmlFor="pref-email">Receber novidades por email</Label>
+                      <p className="nds-text-body">
+                        Resumo semanal sobre o produto.
+                      </p>
+                    </div>
+                    <Switch id="pref-email" defaultChecked />
                   </div>
-                  <Switch id="pref-email" defaultChecked />
-                </div>
-                <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
-                  <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>
-                    <Label htmlFor="pref-push">Receber notificações push</Label>
-                    <p className="nds-text-body">
-                      Alertas no dispositivo em tempo real.
-                    </p>
+                  <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+                    <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>
+                      <Label htmlFor="pref-push">Receber notificações push</Label>
+                      <p className="nds-text-body">
+                        Alertas no dispositivo em tempo real.
+                      </p>
+                    </div>
+                    <Switch id="pref-push" />
                   </div>
-                  <Switch id="pref-push" />
-                </div>
-                <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
-                  <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>
-                    <Label htmlFor="pref-sms">Alertas por SMS</Label>
-                    <p className="nds-text-body">
-                      Eventos críticos via mensagem de texto.
-                    </p>
+                  <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+                    <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>
+                      <Label htmlFor="pref-sms">Alertas por SMS</Label>
+                      <p className="nds-text-body">
+                        Eventos críticos via mensagem de texto.
+                      </p>
+                    </div>
+                    <Switch id="pref-sms" />
                   </div>
-                  <Switch id="pref-sms" />
                 </div>
-              </div>
+              </fieldset>
             ),
           },
           {

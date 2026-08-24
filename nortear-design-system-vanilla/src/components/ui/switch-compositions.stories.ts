@@ -132,14 +132,24 @@ export const WithoutLabel: Story = {
 
 export const SettingsList: Story = {
   render: () => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'nds-stack nds-w-md';
-    wrapper.dataset.spacing = 'sm';
+    // fieldset + legend, e não div + <p>: os três interruptores são UM grupo, e
+    // só o fieldset leva esse agrupamento para a árvore de acessibilidade — a
+    // legend nomeia o grupo e acompanha cada controle (WCAG 1.3.1). Um <p> é
+    // texto ao lado, e deixa os três soltos para quem usa leitor de tela.
+    const grupo = document.createElement('fieldset');
+    grupo.className = 'nds-border-none nds-p-0 nds-m-0 nds-w-md';
 
-    const title = document.createElement('p');
+    const title = document.createElement('legend');
     title.className = 'nds-text-body nds-font-semibold nds-mb-2';
     title.textContent = 'Preferências de notificação';
-    wrapper.appendChild(title);
+    grupo.appendChild(title);
+
+    // O nds-stack fica neste div INTERNO: fieldset com display flex/grid tem
+    // histórico de bug de layout em navegador.
+    const wrapper = document.createElement('div');
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
+    grupo.appendChild(wrapper);
 
     const options = [
       { id: 'pref-email', label: 'Receber novidades por email', desc: 'Resumo semanal sobre o produto.',         checked: true  },
@@ -168,7 +178,7 @@ export const SettingsList: Story = {
       wrapper.appendChild(panel);
     });
 
-    return wrapper;
+    return grupo;
   },
   parameters: {
     docs: {

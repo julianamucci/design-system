@@ -175,26 +175,34 @@ export function switchInvalidoSource(): string {
  * importa é a FORMA de cada linha, e um `map` esconderia justamente ela.
  */
 export function switchPreferenciasSource(): string {
-  const painel = (id: string, label: string, descricao: string, ligado = false) => `  <div
-    className="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
-    data-align="center"
-    data-justify="between"
-  >
-    <div className="nds-stack nds-pr-4" data-spacing="xs">
-      <Label htmlFor="${id}">${label}</Label>
-      <p className="nds-text-body">${descricao}</p>
-    </div>
-    <Switch id="${id}"${ligado ? ' defaultChecked' : ''} />
-  </div>`;
+  const painel = (id: string, label: string, descricao: string, ligado = false) => `    <div
+      className="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
+      data-align="center"
+      data-justify="between"
+    >
+      <div className="nds-stack nds-pr-4" data-spacing="xs">
+        <Label htmlFor="${id}">${label}</Label>
+        <p className="nds-text-body">${descricao}</p>
+      </div>
+      <Switch id="${id}"${ligado ? ' defaultChecked' : ''} />
+    </div>`;
 
+  // É `fieldset` + `legend`, e não `div` + `<p>`, porque os três interruptores
+  // são UM grupo: só o fieldset amarra os controles ao título, e é assim que o
+  // leitor de tela anuncia "Preferências de notificação" ao entrar em cada um
+  // (WCAG 1.3.1). Com `<p>` o título é texto solto e os três ficam órfãos.
+  // O `nds-stack` mora no div INTERNO: fieldset com display flex/grid tem
+  // histórico de bug de layout em navegador.
   return jsxSnippet(
     IMPORTS,
-    `<div className="nds-stack nds-w-md" data-spacing="sm">
-  <p className="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
+    `<fieldset className="nds-border-none nds-p-0 nds-m-0 nds-w-md">
+  <legend className="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</legend>
+  <div className="nds-stack" data-spacing="sm">
 ${painel('pref-email', 'Receber novidades por email', 'Resumo semanal sobre o produto.', true)}
 ${painel('pref-push', 'Receber notificações push', 'Alertas no dispositivo em tempo real.')}
 ${painel('pref-sms', 'Alertas por SMS', 'Eventos críticos via mensagem de texto.')}
-</div>`,
+  </div>
+</fieldset>`,
   );
 }
 

@@ -161,45 +161,51 @@ export const SettingsList: Story = {
   },
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-md" data-spacing="sm">
-        <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
-
-        <div
-          class="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
-          data-align="center"
-          data-justify="between"
-        >
-          <div class="nds-stack nds-pr-4" data-spacing="xs">
-            <label ndsLabel for="pref-email">Receber novidades por email</label>
-            <p class="nds-text-body">Resumo semanal sobre o produto.</p>
+      <!-- fieldset + legend, e não div + p: o agrupamento precisa existir na árvore
+           de acessibilidade. A legend nomeia os três interruptores como um conjunto
+           único (WCAG 1.3.1); um <p> apenas parece um título, não agrupa nada. O
+           nds-stack fica no div INTERNO porque fieldset com display flex/grid tem
+           histórico de bug de layout em navegador. -->
+      <fieldset class="nds-border-none nds-p-0 nds-m-0 nds-w-md">
+        <legend class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</legend>
+        <div class="nds-stack" data-spacing="sm">
+          <div
+            class="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
+            data-align="center"
+            data-justify="between"
+          >
+            <div class="nds-stack nds-pr-4" data-spacing="xs">
+              <label ndsLabel for="pref-email">Receber novidades por email</label>
+              <p class="nds-text-body">Resumo semanal sobre o produto.</p>
+            </div>
+            <button ndsSwitch id="pref-email" [checked]="true"></button>
           </div>
-          <button ndsSwitch id="pref-email" [checked]="true"></button>
-        </div>
 
-        <div
-          class="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
-          data-align="center"
-          data-justify="between"
-        >
-          <div class="nds-stack nds-pr-4" data-spacing="xs">
-            <label ndsLabel for="pref-push">Receber notificações push</label>
-            <p class="nds-text-body">Alertas no dispositivo em tempo real.</p>
+          <div
+            class="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
+            data-align="center"
+            data-justify="between"
+          >
+            <div class="nds-stack nds-pr-4" data-spacing="xs">
+              <label ndsLabel for="pref-push">Receber notificações push</label>
+              <p class="nds-text-body">Alertas no dispositivo em tempo real.</p>
+            </div>
+            <button ndsSwitch id="pref-push"></button>
           </div>
-          <button ndsSwitch id="pref-push"></button>
-        </div>
 
-        <div
-          class="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
-          data-align="center"
-          data-justify="between"
-        >
-          <div class="nds-stack nds-pr-4" data-spacing="xs">
-            <label ndsLabel for="pref-sms">Alertas por SMS</label>
-            <p class="nds-text-body">Eventos críticos via mensagem de texto.</p>
+          <div
+            class="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
+            data-align="center"
+            data-justify="between"
+          >
+            <div class="nds-stack nds-pr-4" data-spacing="xs">
+              <label ndsLabel for="pref-sms">Alertas por SMS</label>
+              <p class="nds-text-body">Eventos críticos via mensagem de texto.</p>
+            </div>
+            <button ndsSwitch id="pref-sms"></button>
           </div>
-          <button ndsSwitch id="pref-sms"></button>
         </div>
-      </div>
+      </fieldset>
     `,
   }),
   play: async ({ canvasElement, step }) => {
