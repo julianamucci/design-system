@@ -1,0 +1,1856 @@
+{
+  "pt-BR": {
+    "title": "Combobox",
+    "category": "Formulário",
+    "type": "Componente",
+    "description": "Campo de texto que filtra uma lista e permite escolher um ou vários valores. No modo múltiplo os escolhidos viram chips dentro do próprio campo.",
+    "seo": {
+      "title": "Combobox — Formulário",
+      "description": "Documentação do Combobox: busca dentro do próprio campo, chips de múltipla escolha, opção ativa por aria-activedescendant e WCAG 2.2 AA.",
+      "aiSummary": "Componente Combobox: campo de busca que filtra uma lista, escolha única ou múltipla com chips removíveis, role=\"combobox\" no campo de texto e opção ativa apontada por aria-activedescendant sem tirar o foco do campo.",
+      "aiEntities": "Combobox, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, ARIA 1.2, role combobox, aria-activedescendant, chips, múltipla seleção, busca"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "countryLabel": "País",
+        "countryPlaceholder": "Buscar país",
+        "brazil": "Brasil",
+        "argentina": "Argentina",
+        "chile": "Chile",
+        "colombia": "Colômbia",
+        "mexico": "México",
+        "peru": "Peru",
+        "portugal": "Portugal",
+        "spain": "Espanha",
+        "uruguay": "Uruguai",
+        "techLabel": "Tecnologias",
+        "techPlaceholder": "Adicionar tecnologia",
+        "groupedLabel": "Ingrediente",
+        "groupedPlaceholder": "Buscar ingrediente",
+        "groupFruits": "Frutas",
+        "groupVegetables": "Legumes",
+        "apple": "Maçã",
+        "banana": "Banana",
+        "orange": "Laranja",
+        "carrot": "Cenoura",
+        "potato": "Batata",
+        "zucchini": "Abobrinha",
+        "empty": "Nenhum resultado",
+        "remove": "Remover",
+        "clear": "Limpar",
+        "openList": "Abrir lista"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Raiz</strong> — dona do estado: o valor escolhido, o texto digitado e a lista aberta ou fechada. Não desenha nada por conta própria.",
+      "item2": "<strong>Rótulo</strong> — nome acessível do campo, amarrado ao campo de texto. <code>data-slot=\"combobox-label\"</code>",
+      "item3": "<strong>Caixa do campo</strong> — o que o leitor enxerga como campo: guarda os chips e o texto, e é nela que moram a borda e o anel de foco. <code>data-slot=\"combobox-input-wrapper\"</code>",
+      "item4": "<strong>Chips</strong> — os escolhidos do modo múltiplo, dentro da própria caixa. Cada chip traz o rótulo e um botão de remover com nome próprio. <code>data-slot=\"combobox-chip\"</code>",
+      "item5": "<strong>Campo de texto</strong> — recebe o que o usuário digita e carrega <code>role=\"combobox\"</code>, <code>aria-expanded</code> e <code>aria-activedescendant</code>. <code>data-slot=\"combobox-input\"</code>",
+      "item6": "<strong>Limpar</strong> e <strong>Abrir</strong> — os dois botões à direita do texto: um zera a escolha, o outro abre e fecha a lista e carrega o chevron. <code>data-slot=\"combobox-clear\"</code>, <code>data-slot=\"combobox-trigger\"</code>",
+      "item7": "<strong>Posicionador</strong> e <strong>Popup</strong> — ancoram a caixa flutuante ao campo e a desenham acima do resto da página. <code>data-slot=\"combobox-popup\"</code>",
+      "item8": "<strong>Lista</strong> — <code>role=\"listbox\"</code>, o contêiner rolável das opções que sobreviveram ao filtro. <code>data-slot=\"combobox-list\"</code>",
+      "item9": "<strong>Opção</strong> e <strong>marca de escolhido</strong> — cada opção é <code>role=\"option\"</code> com <code>aria-selected</code>; a marca aparece só na escolhida. <code>data-slot=\"combobox-item\"</code>",
+      "item10": "<strong>Grupo</strong>, <strong>separador</strong> e <strong>mensagem de lista vazia</strong> — cabeçalho de categoria, divisor decorativo e o texto exibido quando o filtro não casa com nada. <code>data-slot=\"combobox-empty\"</code>",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": {
+        "react": "<Combobox items={paises} value={valor} onValueChange={setValor}>\n  <ComboboxLabel>País</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxInput placeholder=\"Buscar país\" />\n    <ComboboxClear aria-label=\"Limpar\" />\n    <ComboboxTrigger aria-label=\"Abrir lista\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n  <ComboboxPositioner>\n    <ComboboxPopup>\n      <ComboboxList>\n        {paises.map((item) => (\n          <ComboboxItem key={item.value} value={item.value}>\n            {item.label}\n            <ComboboxItemIndicator />\n          </ComboboxItem>\n        ))}\n      </ComboboxList>\n      <ComboboxEmpty>Nenhum resultado</ComboboxEmpty>\n    </ComboboxPopup>\n  </ComboboxPositioner>\n</Combobox>",
+        "vue": "<Combobox v-model=\"valor\">\n  <ComboboxLabel>País</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxInput placeholder=\"Buscar país\" />\n    <ComboboxClear aria-label=\"Limpar\" />\n    <ComboboxTrigger aria-label=\"Abrir lista\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n  <ComboboxPositioner>\n    <ComboboxPopup>\n      <ComboboxList>\n        <ComboboxItem\n          v-for=\"item in paises\"\n          :key=\"item.value\"\n          :value=\"item.value\"\n        >\n          {{ item.label }}\n          <ComboboxItemIndicator />\n        </ComboboxItem>\n      </ComboboxList>\n      <ComboboxEmpty>Nenhum resultado</ComboboxEmpty>\n    </ComboboxPopup>\n  </ComboboxPositioner>\n</Combobox>",
+        "svelte": "<Combobox bind:value={valor}>\n  <ComboboxLabel>País</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxInput placeholder=\"Buscar país\" />\n    <ComboboxClear aria-label=\"Limpar\" />\n    <ComboboxTrigger aria-label=\"Abrir lista\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n  <ComboboxPositioner>\n    <ComboboxPopup>\n      <ComboboxList>\n        {#each paises as item (item.value)}\n          <ComboboxItem value={item.value}>\n            {item.label}\n            <ComboboxItemIndicator />\n          </ComboboxItem>\n        {/each}\n      </ComboboxList>\n      <ComboboxEmpty>Nenhum resultado</ComboboxEmpty>\n    </ComboboxPopup>\n  </ComboboxPositioner>\n</Combobox>",
+        "angular": "<nds-combobox [(value)]=\"valor\">\n  <label ndsComboboxLabel>País</label>\n  <div ndsComboboxInputWrapper>\n    <input ndsComboboxInput placeholder=\"Buscar país\" />\n    <button ndsComboboxClear aria-label=\"Limpar\"></button>\n    <button ndsComboboxTrigger aria-label=\"Abrir lista\">\n      <svg ndsComboboxIcon></svg>\n    </button>\n  </div>\n  <ng-template ndsComboboxPopup>\n    <div ndsComboboxList>\n      @for (item of paises; track item.value) {\n        <div ndsComboboxItem [value]=\"item.value\">\n          {{ item.label }}\n          <span ndsComboboxItemIndicator></span>\n        </div>\n      }\n    </div>\n    <div ndsComboboxEmpty>Nenhum resultado</div>\n  </ng-template>\n</nds-combobox>",
+        "vanilla": "const campo = createCombobox({\n  id: 'pais',\n  name: 'pais',\n  label: 'País',\n  placeholder: 'Buscar país',\n  items: [\n    { value: 'br', label: 'Brasil' },\n    { value: 'pt', label: 'Portugal' },\n  ],\n  emptyMessage: 'Nenhum resultado',\n  clearLabel: 'Limpar',\n  triggerLabel: 'Abrir lista',\n  onValueChange: (value) => console.log(value),\n});\n\n// Solta o ouvinte de documento e o painel em portal. Idempotente.\ncampo.destroy();"
+      }
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Escolha o Combobox quando digitar chega mais rápido que rolar — na prática, a partir de umas dez opções.",
+        "item2": "Se a escolha é única, a lista é curta e ninguém precisa buscar, o componente é o <code>Select</code>: um campo de busca ali só acrescenta um passo.",
+        "item3": "Se o que a lista oferece são ações ou destinos — abrir, criar, ir para —, o componente é o <code>Command</code>. Combobox devolve um valor para um formulário; paleta de comandos executa.",
+        "item4": "Múltipla escolha é do Combobox e de mais ninguém: é o único que mostra os escolhidos como chips dentro do próprio campo.",
+        "item5": "Todo botão de remover chip precisa dizer o que remove. \"Remover\" sozinho, repetido em cinco chips, não diz qual.",
+        "item6": "A mensagem de lista vazia é obrigatória: sem ela, um filtro que não casa deixa uma caixa em branco na tela.",
+        "item7": "Rotule o campo com um <code>Label</code> visível — o papel de combobox não aceita nome vindo do próprio conteúdo."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Escolher um país entre duzentos",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Escolher entre 3 e 9 opções fixas",
+          "u": "Não",
+          "a": "Select"
+        },
+        "item3": {
+          "s": "Marcar várias tecnologias e ver quais já foram marcadas",
+          "u": "Sim, no modo múltiplo",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Abrir uma tela ou executar uma ação por atalho de teclado",
+          "u": "Não",
+          "a": "Command"
+        },
+        "item5": {
+          "s": "Aceitar um valor livre, que não está em lista nenhuma",
+          "u": "Não",
+          "a": "Input"
+        },
+        "item6": {
+          "s": "Poucas opções, todas visíveis ao mesmo tempo para comparar",
+          "u": "Não",
+          "a": "RadioGroup ou grupo de Checkbox"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "placeholder": {
+            "name": "Dica do campo de texto",
+            "format": "Verbo de busca + o que se busca",
+            "good": "\"Buscar país\", \"Adicionar tecnologia\"",
+            "bad": "\"Digite...\", \"Selecione ou digite\""
+          },
+          "itemLabel": {
+            "name": "Rótulo da opção",
+            "format": "Frase nominal, sem ponto final, estilo consistente",
+            "good": "\"Rio Grande do Sul\", \"Santa Catarina\"",
+            "bad": "Misturar \"RS\" com \"Rio Grande do Sul\""
+          },
+          "chipRemove": {
+            "name": "Botão de remover chip",
+            "format": "Verbo + o rótulo do escolhido",
+            "good": "\"Remover Brasil\"",
+            "bad": "\"Remover\", \"x\", \"Excluir item\""
+          },
+          "emptyMessage": {
+            "name": "Mensagem de lista vazia",
+            "format": "Frase curta, sem culpar quem digitou, sem ponto final",
+            "good": "\"Nenhum resultado\"",
+            "bad": "\"Erro: nada encontrado\", \"Você digitou errado\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "A lista é longa o bastante para que digitar chegue antes de rolar",
+        "item2": "O usuário precisa escolher vários valores e enxergar quais já escolheu",
+        "item3": "As opções vêm de uma base que cresce, e o campo é o único filtro disponível",
+        "item4": "As opções se organizam em categorias, e o cabeçalho de grupo ajuda a decidir"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "A lista é curta e fixa, e ninguém precisa buscar — use <code>Select</code>",
+        "item2": "A lista oferece ações ou destinos em vez de valores — use <code>Command</code>",
+        "item3": "O valor pode ser qualquer texto, fora de qualquer lista — use <code>Input</code>",
+        "item4": "Todas as opções cabem na tela e compará-las importa — use <code>RadioGroup</code> ou um grupo de <code>Checkbox</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Dar a cada botão de remover o nome do que ele remove: \"Remover Brasil\".",
+        "dont": "Repetir \"Remover\" em todos os chips: quem navega por teclado ouve cinco botões idênticos."
+      },
+      "pair2": {
+        "do": "Deixar o Backspace remover o último chip quando o campo de texto está vazio.",
+        "dont": "Exigir o mouse para desfazer uma escolha: sem o Backspace, o teclado não desfaz."
+      }
+    },
+    "import": {
+      "title": "Importação"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "single": "Escolha única",
+        "multiple": "Múltipla com chips",
+        "grouped": "Com grupos"
+      },
+      "styles": {
+        "single": "Um valor por vez — o rótulo do escolhido ocupa o campo e a busca recomeça do zero na abertura seguinte.",
+        "multiple": "Vários valores ao mesmo tempo — cada escolhido vira um chip dentro do campo, com botão de remover próprio.",
+        "grouped": "Opções organizadas por categoria, com cabeçalho de grupo e divisor entre os blocos."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "inForm": {
+          "name": "Em formulário",
+          "description": "Combobox dentro de um <code>&lt;form&gt;</code> com nome de campo definido — o valor participa do envio, e no modo múltiplo cada escolhido entra como uma entrada. Rótulo, mensagem de erro e estado inválido vêm amarrados pelo <code>Form</code>.",
+          "use": "Formulários reais com envio: cadastro, filtros salvos, marcação de temas de interesse."
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
+      },
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Estado inicial — a dica do campo aparece, a lista está fechada e o chevron aponta para baixo."
+      },
+      "open": {
+        "label": "Open",
+        "trigger": "Clique no campo, seta para baixo ou primeira tecla digitada",
+        "behavior": "Lista aberta, ancorada ao campo e desenhada acima do resto da página."
+      },
+      "filtering": {
+        "label": "Filtering",
+        "trigger": "Usuário digita no campo",
+        "behavior": "Só as opções que casam com o texto continuam na lista, e a primeira delas vira a opção ativa."
+      },
+      "selected": {
+        "label": "Selected",
+        "trigger": "Usuário confirma uma opção",
+        "behavior": "A opção passa a exibir a marca de escolhida; no modo múltiplo ela também aparece como chip dentro do campo."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab até o campo",
+        "behavior": "O anel de foco envolve a caixa inteira, chips e texto juntos — nunca só o texto."
+      },
+      "empty": {
+        "label": "Empty",
+        "trigger": "O texto digitado não casa com nenhuma opção",
+        "behavior": "A lista continua aberta e mostra a mensagem de lista vazia, sem nenhuma opção."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Quando o campo é marcado como indisponível",
+        "behavior": "Nada recebe foco, a lista não abre e os chips existentes perdem o botão de remover."
+      },
+      "readOnly": {
+        "label": "Read-only",
+        "trigger": "Quando o valor é exibido mas não pode mudar",
+        "behavior": "O campo continua alcançável pelo teclado e o valor segue no envio do formulário, mas a lista não abre e nada pode ser removido."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "Quando a validação reprova o campo",
+        "behavior": "A borda e o anel da caixa passam a usar a cor de erro, e o campo é anunciado como inválido."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "value": {
+          "type": "string | string[]",
+          "default": "—",
+          "required": "Não",
+          "description": "Valor escolhido (controlado). Em modo múltiplo é uma lista. Use junto com o callback de mudança."
+        },
+        "defaultValue": {
+          "type": "string | string[]",
+          "default": "—",
+          "required": "Não",
+          "description": "Valor inicial quando o campo administra o próprio estado."
+        },
+        "onValueChange": {
+          "type": "(value: string | string[]) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback de mudança da escolha. Dispara também quando um chip é removido ou o campo é limpo."
+        },
+        "inputValue": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Texto de busca (controlado). Sem ele o campo administra o próprio texto."
+        },
+        "onInputValueChange": {
+          "type": "(text: string) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Callback de mudança do texto digitado. É o gancho para buscar opções no servidor."
+        },
+        "multiple": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Permite escolher vários valores; os escolhidos passam a aparecer como chips dentro do campo."
+        },
+        "items": {
+          "type": "ComboboxItem[]",
+          "default": "[]",
+          "required": "Sim",
+          "description": "Opções da lista. Cada opção tem valor e rótulo; uma opção de grupo carrega o cabeçalho e os filhos."
+        },
+        "filter": {
+          "type": "(item: ComboboxItem, query: string) => boolean",
+          "default": "—",
+          "required": "Não",
+          "description": "Substitui o filtro. O padrão compara o rótulo ignorando acentos e diferença entre maiúsculas e minúsculas."
+        },
+        "placeholder": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Dica exibida no campo de texto enquanto nada foi digitado."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Torna o campo indisponível: nada recebe foco e a lista não abre."
+        },
+        "readOnly": {
+          "type": "boolean",
+          "default": "false",
+          "required": "Não",
+          "description": "Exibe o valor sem permitir mudança, mantendo o campo alcançável pelo teclado."
+        },
+        "name": {
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Nome do campo no formulário HTML. Em modo múltiplo, cada escolhido entra como uma entrada."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibilityCode": {
+        "react": "// Modo múltiplo: cada escolhido vira um chip dentro do campo\n<Combobox\n  multiple\n  items={tecnologias}\n  value={escolhidas}\n  onValueChange={setEscolhidas}\n>\n  <ComboboxLabel>Tecnologias</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxChips>\n      {escolhidas.map((item) => (\n        <ComboboxChip key={item.value} value={item.value}>\n          {item.label}\n          <ComboboxChipRemove aria-label={`Remover ${item.label}`} />\n        </ComboboxChip>\n      ))}\n    </ComboboxChips>\n    <ComboboxInput placeholder=\"Adicionar tecnologia\" />\n    <ComboboxTrigger aria-label=\"Abrir lista\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n</Combobox>",
+        "vue": "<!-- Modo múltiplo: cada escolhido vira um chip dentro do campo -->\n<Combobox v-model=\"escolhidas\" multiple>\n  <ComboboxLabel>Tecnologias</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxChips>\n      <ComboboxChip\n        v-for=\"item in escolhidas\"\n        :key=\"item.value\"\n        :value=\"item.value\"\n      >\n        {{ item.label }}\n        <ComboboxChipRemove :aria-label=\"`Remover ${item.label}`\" />\n      </ComboboxChip>\n    </ComboboxChips>\n    <ComboboxInput placeholder=\"Adicionar tecnologia\" />\n    <ComboboxTrigger aria-label=\"Abrir lista\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n</Combobox>",
+        "svelte": "<!-- Modo múltiplo: cada escolhido vira um chip dentro do campo -->\n<Combobox bind:value={escolhidas} multiple>\n  <ComboboxLabel>Tecnologias</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxChips>\n      {#each escolhidas as item (item.value)}\n        <ComboboxChip value={item.value}>\n          {item.label}\n          <ComboboxChipRemove aria-label={`Remover ${item.label}`} />\n        </ComboboxChip>\n      {/each}\n    </ComboboxChips>\n    <ComboboxInput placeholder=\"Adicionar tecnologia\" />\n    <ComboboxTrigger aria-label=\"Abrir lista\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n</Combobox>",
+        "angular": "<!-- Modo múltiplo: cada escolhido vira um chip dentro do campo -->\n<nds-combobox [(value)]=\"escolhidas\" multiple>\n  <label ndsComboboxLabel>Tecnologias</label>\n  <div ndsComboboxInputWrapper>\n    <div ndsComboboxChips>\n      @for (item of escolhidas; track item.value) {\n        <span ndsComboboxChip [value]=\"item.value\">\n          {{ item.label }}\n          <button ndsComboboxChipRemove [attr.aria-label]=\"'Remover ' + item.label\"></button>\n        </span>\n      }\n    </div>\n    <input ndsComboboxInput placeholder=\"Adicionar tecnologia\" />\n    <button ndsComboboxTrigger aria-label=\"Abrir lista\">\n      <svg ndsComboboxIcon></svg>\n    </button>\n  </div>\n</nds-combobox>",
+        "vanilla": "// Modo múltiplo: cada escolhido vira um chip dentro do campo\nconst campo = createCombobox({\n  id: 'tecnologias',\n  label: 'Tecnologias',\n  placeholder: 'Adicionar tecnologia',\n  multiple: true,\n  defaultValue: ['react', 'vue'],\n  items: [\n    { value: 'react', label: 'React' },\n    { value: 'vue', label: 'Vue' },\n    { value: 'svelte', label: 'Svelte' },\n    { value: 'angular', label: 'Angular' },\n  ],\n  // Nome próprio por chip — \"Remover\" sozinho não diz qual\n  removeLabel: (item) => `Remover ${item.label}`,\n});"
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Classe",
+        "part": "Aplicação",
+        "input": {
+          "class": ".nds-combobox-input-wrapper",
+          "part": "Borda da caixa do campo"
+        },
+        "inputBackground": {
+          "class": ".nds-combobox-input-wrapper",
+          "part": "Fundo da caixa do campo"
+        },
+        "foreground": {
+          "class": ".nds-combobox-input, .nds-combobox-label",
+          "part": "Texto digitado e rótulo do campo"
+        },
+        "mutedForeground": {
+          "class": ".nds-combobox-empty, .nds-combobox-group-label",
+          "part": "Dica do campo, cabeçalho de grupo e mensagem de lista vazia"
+        },
+        "muted": {
+          "class": ".nds-combobox-trigger",
+          "part": "Fundo dos botões internos sob o ponteiro"
+        },
+        "secondary": {
+          "class": ".nds-combobox-chip",
+          "part": "Fundo do chip"
+        },
+        "secondaryForeground": {
+          "class": ".nds-combobox-chip",
+          "part": "Texto do chip"
+        },
+        "popover": {
+          "class": ".nds-combobox-popup",
+          "part": "Fundo da caixa flutuante"
+        },
+        "popoverForeground": {
+          "class": ".nds-combobox-popup",
+          "part": "Texto dentro da caixa flutuante"
+        },
+        "accent": {
+          "class": ".nds-combobox-item[data-highlighted]",
+          "part": "Fundo da opção ativa"
+        },
+        "accentForeground": {
+          "class": ".nds-combobox-item[data-highlighted]",
+          "part": "Texto da opção ativa"
+        },
+        "primary": {
+          "class": ".nds-combobox-item-indicator",
+          "part": "Marca da opção escolhida"
+        },
+        "border": {
+          "class": ".nds-combobox-popup, .nds-combobox-separator",
+          "part": "Borda da caixa flutuante e divisor entre grupos"
+        },
+        "ring": {
+          "class": ".nds-combobox-input-wrapper:focus-within",
+          "part": "Anel de foco da caixa e dos botões internos"
+        },
+        "destructive": {
+          "class": ".nds-combobox-input-wrapper",
+          "part": "Borda e anel quando a validação reprova"
+        },
+        "radius": {
+          "class": ".nds-combobox-input-wrapper",
+          "part": "Arredondamento da caixa do campo"
+        },
+        "radiusFull": {
+          "class": ".nds-combobox-chip-remove",
+          "part": "Botão de remover chip, redondo"
+        }
+      },
+      "customizationTitle": "Customização",
+      "customizationCode": {
+        "web": "/* Lista mais larga e mais alta que o padrão */\n.nds-combobox-popup {\n  min-width: 16rem;\n}\n\n.nds-combobox-list {\n  max-height: 24rem;\n}\n\n/* Campo mais alto sem cravar altura — o crescimento vem do padding */\n.nds-combobox-input-wrapper {\n  padding-block: var(--spacing-2-5);\n}\n\n/* Chip arredondado por completo */\n.nds-combobox-chip {\n  border-radius: var(--radius-full);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Atende WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"combobox\"</code> no próprio campo de texto, e <code>role=\"listbox\"</code> na lista de opções",
+        "item2": "<code>aria-expanded</code> no campo acompanha a lista aberta ou fechada",
+        "item3": "<code>aria-activedescendant</code> aponta o identificador da opção ativa — o foco permanece no campo",
+        "item4": "<code>aria-autocomplete=\"list\"</code> avisa que digitar filtra a lista",
+        "item5": "Cada botão de remover chip carrega o rótulo do escolhido no próprio nome acessível",
+        "item6": "A remoção de um chip é anunciada por região viva, para quem não vê o campo mudar",
+        "item7": "Anel de foco visível na caixa inteira, com contraste mínimo 3:1"
+      },
+      "keyboard": {
+        "title": "Navegação por Teclado",
+        "typing": "Filtra a lista e a abre, se estiver fechada",
+        "arrowDown": "Move para a próxima opção; da última volta à primeira",
+        "arrowUp": "Move para a opção anterior; da primeira volta à última",
+        "enter": "Escolhe a opção ativa",
+        "escape": "Fecha a lista; com a lista já fechada, limpa o texto digitado",
+        "tab": "Fecha a lista e sai do campo",
+        "backspace": "Com o campo de texto vazio, remove o último chip",
+        "home": "Vai para a primeira opção",
+        "end": "Vai para a última opção"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"combobox\"</code> no campo de texto; <code>role=\"listbox\"</code> na lista e <code>role=\"option\"</code> em cada opção",
+        "expanded": "<code>aria-expanded</code> no campo reflete a lista aberta ou fechada",
+        "activedescendant": "<code>aria-activedescendant</code> no campo carrega o identificador da opção ativa; nenhuma opção recebe foco do navegador",
+        "autocomplete": "<code>aria-autocomplete=\"list\"</code> declara que a lista é filtrada pelo que se digita",
+        "selected": "<code>aria-selected=\"true\"</code> na opção escolhida",
+        "chipRemove": "<code>aria-label</code> de cada botão de remover traz o rótulo do chip que ele remove",
+        "live": "Região viva no campo anuncia o chip removido e a contagem restante",
+        "invalid": "<code>aria-invalid=\"true\"</code> quando a validação reprova o campo"
+      },
+      "screenReader": {
+        "title": "Leitor de Tela",
+        "field": "Anuncia o rótulo, o valor atual e \"combobox, expandido ou recolhido\"",
+        "navigation": "Anuncia a opção ativa a cada seta, sem mover o foco",
+        "selection": "Anuncia \"selecionado\" ao confirmar com Enter",
+        "chip": "Anuncia o chip removido e quantos escolhidos restam"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "select": {
+          "name": "Select",
+          "description": "Escolha única em lista curta, quando ninguém precisa buscar."
+        },
+        "command": {
+          "name": "Command",
+          "description": "Paleta de ações e navegação, aberta por atalho de teclado."
+        },
+        "input": {
+          "name": "Input",
+          "description": "Texto livre, quando não existe lista de valores para escolher."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Integração com validação: rótulo, mensagem de erro e estado inválido amarrados ao campo."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "item1": "<strong>O campo é a caixa, não o texto</strong> — a borda e o anel de foco moram no contêiner que envolve chips e texto. Estilizar só o campo de texto daria duas caixas assim que aparecesse o primeiro chip.",
+      "item2": "<strong>O foco não sai do texto</strong> — navegar pela lista troca a opção ativa por <code>aria-activedescendant</code>; nenhuma opção recebe foco do navegador, então digitar continua funcionando durante a navegação.",
+      "item3": "<strong>Contraste do chip</strong> — o chip pinta sobre a superfície do campo, então o contraste dele é medido contra essa superfície, e não contra o fundo da página.",
+      "item4": "<strong>Backspace é o gesto do chip</strong> — sem ele, desfazer uma escolha obriga o mouse, que é o defeito clássico deste padrão.",
+      "item5": "<strong>Lista em camada flutuante</strong> — o popup é ancorado ao campo e desenhado acima do resto da página, para não ser cortado por um contêiner com rolagem.",
+      "item6": "<strong>Filtro trocável</strong> — o filtro padrão compara o rótulo ignorando acentos e caixa. Para casar por sinônimo, código interno ou busca no servidor, troque a função de filtro."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes do componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "option_select": {
+          "trigger": "Usuário escolhe uma opção da lista",
+          "payload": "{ component: \"combobox\", field_name, value, label, location }"
+        },
+        "field_change": {
+          "trigger": "Usuário remove um chip ou limpa o campo",
+          "payload": "{ component: \"combobox\", field_name, value, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer em resposta a cada interação.",
+        "item1": {
+          "action": "Digitar no campo de texto",
+          "result": "A lista abre e mantém apenas as opções que casam com o texto",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pressionar seta para baixo com a lista aberta",
+          "result": "A opção ativa avança um item; da última, volta para a primeira",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pressionar Enter com uma opção ativa",
+          "result": "A opção ativa é escolhida e o valor do campo muda",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pressionar Backspace com o campo de texto vazio",
+          "result": "O último chip sai e a remoção é anunciada; com texto digitado, o Backspace apaga o texto e não mexe nos chips",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Acionar o botão de remover de um chip",
+          "result": "Apenas aquele chip sai, e o foco continua dentro do campo",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pressionar Escape",
+          "result": "Com a lista aberta, ela fecha sem mudar a escolha; com a lista fechada, o texto digitado é limpo",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Digitar um texto que não casa com nenhuma opção",
+          "result": "A lista exibe a mensagem de lista vazia e nenhuma opção",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios que ferramentas automatizadas devem confirmar.",
+        "item1": "Sem violações reportadas pelo axe-core",
+        "item2": "role=\"combobox\" no campo de texto, e role=\"listbox\" na lista",
+        "item3": "aria-expanded no campo acompanha a lista aberta ou fechada",
+        "item4": "aria-activedescendant aponta o identificador da opção ativa, e o foco permanece no campo",
+        "item5": "Cada botão de remover tem nome próprio, com o rótulo do chip que remove",
+        "item6": "Contraste mínimo 4.5:1 entre o texto do chip e a superfície do campo",
+        "item7": "Anel de foco visível na caixa do campo e nos botões internos"
+      },
+      "visual": {
+        "title": "Regressão Visual",
+        "description": "Estados que o Chromatic deve capturar.",
+        "required": "Obrigatório",
+        "item1": {
+          "story": "Escolha única com a lista fechada",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Múltiplo com chips no campo",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Lista aberta com opção ativa",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Lista agrupada com cabeçalho e divisor",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Lista vazia, sem resultado",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Desabilitado",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Inválido",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "compositions": "Composições",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "Combobox",
+    "category": "Form",
+    "type": "Component",
+    "description": "Text field that filters a list and lets the user pick one or several values. In multiple mode the chosen values become chips inside the field itself.",
+    "seo": {
+      "title": "Combobox — Form",
+      "description": "Combobox documentation: search inside the field itself, chips for multiple choice, active option via aria-activedescendant and WCAG 2.2 AA.",
+      "aiSummary": "Combobox component: a search field that filters a list, single or multiple choice with removable chips, role=\"combobox\" on the text field and the active option pointed at by aria-activedescendant without moving focus.",
+      "aiEntities": "Combobox, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, ARIA 1.2, role combobox, aria-activedescendant, chips, multiple selection, search"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "countryLabel": "Country",
+        "countryPlaceholder": "Search country",
+        "brazil": "Brazil",
+        "argentina": "Argentina",
+        "chile": "Chile",
+        "colombia": "Colombia",
+        "mexico": "Mexico",
+        "peru": "Peru",
+        "portugal": "Portugal",
+        "spain": "Spain",
+        "uruguay": "Uruguay",
+        "techLabel": "Technologies",
+        "techPlaceholder": "Add technology",
+        "groupedLabel": "Ingredient",
+        "groupedPlaceholder": "Search ingredient",
+        "groupFruits": "Fruit",
+        "groupVegetables": "Vegetables",
+        "apple": "Apple",
+        "banana": "Banana",
+        "orange": "Orange",
+        "carrot": "Carrot",
+        "potato": "Potato",
+        "zucchini": "Zucchini",
+        "empty": "No results",
+        "remove": "Remove",
+        "clear": "Clear",
+        "openList": "Open list"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Root</strong> — owns the state: the chosen value, the typed text and whether the list is open. It draws nothing of its own.",
+      "item2": "<strong>Label</strong> — accessible name of the field, tied to the text field. <code>data-slot=\"combobox-label\"</code>",
+      "item3": "<strong>Field box</strong> — what the reader sees as the field: it holds the chips and the text, and it carries the border and the focus ring. <code>data-slot=\"combobox-input-wrapper\"</code>",
+      "item4": "<strong>Chips</strong> — the chosen values of multiple mode, inside the box itself. Each chip carries its label and a remove button with a name of its own. <code>data-slot=\"combobox-chip\"</code>",
+      "item5": "<strong>Text field</strong> — takes what the user types and carries <code>role=\"combobox\"</code>, <code>aria-expanded</code> and <code>aria-activedescendant</code>. <code>data-slot=\"combobox-input\"</code>",
+      "item6": "<strong>Clear</strong> and <strong>Open</strong> — the two buttons to the right of the text: one wipes the choice, the other opens and closes the list and carries the chevron. <code>data-slot=\"combobox-clear\"</code>, <code>data-slot=\"combobox-trigger\"</code>",
+      "item7": "<strong>Positioner</strong> and <strong>Popup</strong> — anchor the floating box to the field and paint it above the rest of the page. <code>data-slot=\"combobox-popup\"</code>",
+      "item8": "<strong>List</strong> — <code>role=\"listbox\"</code>, the scrollable container of the options that survived the filter. <code>data-slot=\"combobox-list\"</code>",
+      "item9": "<strong>Option</strong> and <strong>chosen mark</strong> — each option is <code>role=\"option\"</code> with <code>aria-selected</code>; the mark shows only on the chosen one. <code>data-slot=\"combobox-item\"</code>",
+      "item10": "<strong>Group</strong>, <strong>separator</strong> and <strong>empty message</strong> — category heading, decorative divider and the text shown when the filter matches nothing. <code>data-slot=\"combobox-empty\"</code>",
+      "structureLabel": "Basic structure:",
+      "structureCode": {
+        "react": "<Combobox items={countries} value={value} onValueChange={setValue}>\n  <ComboboxLabel>Country</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxInput placeholder=\"Search country\" />\n    <ComboboxClear aria-label=\"Clear\" />\n    <ComboboxTrigger aria-label=\"Open list\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n  <ComboboxPositioner>\n    <ComboboxPopup>\n      <ComboboxList>\n        {countries.map((item) => (\n          <ComboboxItem key={item.value} value={item.value}>\n            {item.label}\n            <ComboboxItemIndicator />\n          </ComboboxItem>\n        ))}\n      </ComboboxList>\n      <ComboboxEmpty>No results</ComboboxEmpty>\n    </ComboboxPopup>\n  </ComboboxPositioner>\n</Combobox>",
+        "vue": "<Combobox v-model=\"value\">\n  <ComboboxLabel>Country</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxInput placeholder=\"Search country\" />\n    <ComboboxClear aria-label=\"Clear\" />\n    <ComboboxTrigger aria-label=\"Open list\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n  <ComboboxPositioner>\n    <ComboboxPopup>\n      <ComboboxList>\n        <ComboboxItem\n          v-for=\"item in countries\"\n          :key=\"item.value\"\n          :value=\"item.value\"\n        >\n          {{ item.label }}\n          <ComboboxItemIndicator />\n        </ComboboxItem>\n      </ComboboxList>\n      <ComboboxEmpty>No results</ComboboxEmpty>\n    </ComboboxPopup>\n  </ComboboxPositioner>\n</Combobox>",
+        "svelte": "<Combobox bind:value={value}>\n  <ComboboxLabel>Country</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxInput placeholder=\"Search country\" />\n    <ComboboxClear aria-label=\"Clear\" />\n    <ComboboxTrigger aria-label=\"Open list\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n  <ComboboxPositioner>\n    <ComboboxPopup>\n      <ComboboxList>\n        {#each countries as item (item.value)}\n          <ComboboxItem value={item.value}>\n            {item.label}\n            <ComboboxItemIndicator />\n          </ComboboxItem>\n        {/each}\n      </ComboboxList>\n      <ComboboxEmpty>No results</ComboboxEmpty>\n    </ComboboxPopup>\n  </ComboboxPositioner>\n</Combobox>",
+        "angular": "<nds-combobox [(value)]=\"value\">\n  <label ndsComboboxLabel>Country</label>\n  <div ndsComboboxInputWrapper>\n    <input ndsComboboxInput placeholder=\"Search country\" />\n    <button ndsComboboxClear aria-label=\"Clear\"></button>\n    <button ndsComboboxTrigger aria-label=\"Open list\">\n      <svg ndsComboboxIcon></svg>\n    </button>\n  </div>\n  <ng-template ndsComboboxPopup>\n    <div ndsComboboxList>\n      @for (item of countries; track item.value) {\n        <div ndsComboboxItem [value]=\"item.value\">\n          {{ item.label }}\n          <span ndsComboboxItemIndicator></span>\n        </div>\n      }\n    </div>\n    <div ndsComboboxEmpty>No results</div>\n  </ng-template>\n</nds-combobox>",
+        "vanilla": "const field = createCombobox({\n  id: 'pais',\n  name: 'pais',\n  label: 'Country',\n  placeholder: 'Search country',\n  items: [\n    { value: 'br', label: 'Brazil' },\n    { value: 'pt', label: 'Portugal' },\n  ],\n  emptyMessage: 'No results',\n  clearLabel: 'Clear',\n  triggerLabel: 'Open list',\n  onValueChange: (value) => console.log(value),\n});\n\n// Releases the document listener and the portalled panel. Idempotent.\nfield.destroy();"
+      }
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Mandatory Guidelines",
+        "item1": "Choose Combobox when typing gets there faster than scrolling — in practice, from about ten options onwards.",
+        "item2": "If the choice is single, the list is short and nobody needs to search, the component is <code>Select</code>: a search field there only adds a step.",
+        "item3": "If the list offers actions or destinations — open, create, go to —, the component is <code>Command</code>. Combobox returns a value to a form; a command palette runs something.",
+        "item4": "Multiple choice belongs to Combobox and to nothing else: it is the only one that shows the chosen values as chips inside the field.",
+        "item5": "Every chip remove button must say what it removes. \"Remove\" alone, repeated across five chips, does not say which one.",
+        "item6": "The empty message is mandatory: without it, a filter that matches nothing leaves a blank box on screen.",
+        "item7": "Label the field with a visible <code>Label</code> — the combobox role does not take its name from its own content."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Pick one country out of two hundred",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Pick from 3 to 9 fixed options",
+          "u": "No",
+          "a": "Select"
+        },
+        "item3": {
+          "s": "Tag several technologies and see which ones are already tagged",
+          "u": "Yes, in multiple mode",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Open a screen or run an action from a keyboard shortcut",
+          "u": "No",
+          "a": "Command"
+        },
+        "item5": {
+          "s": "Accept a free value that is on no list at all",
+          "u": "No",
+          "a": "Input"
+        },
+        "item6": {
+          "s": "Few options, all visible at once so they can be compared",
+          "u": "No",
+          "a": "RadioGroup or a Checkbox group"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "placeholder": {
+            "name": "Text field hint",
+            "format": "Search verb + what is being searched",
+            "good": "\"Search country\", \"Add technology\"",
+            "bad": "\"Type...\", \"Select or type\""
+          },
+          "itemLabel": {
+            "name": "Option label",
+            "format": "Noun phrase, no full stop, consistent style",
+            "good": "\"Rio Grande do Sul\", \"Santa Catarina\"",
+            "bad": "Mixing \"RS\" with \"Rio Grande do Sul\""
+          },
+          "chipRemove": {
+            "name": "Chip remove button",
+            "format": "Verb + the label of the chosen value",
+            "good": "\"Remove Brazil\"",
+            "bad": "\"Remove\", \"x\", \"Delete item\""
+          },
+          "emptyMessage": {
+            "name": "Empty list message",
+            "format": "Short sentence, no blaming the person who typed, no full stop",
+            "good": "\"No results\"",
+            "bad": "\"Error: nothing found\", \"You typed it wrong\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "The list is long enough that typing arrives before scrolling does",
+        "item2": "The user has to pick several values and see which ones are already picked",
+        "item3": "Options come from a growing dataset, and the field is the only filter available",
+        "item4": "Options fall into categories, and the group heading helps the decision"
+      },
+      "dont": {
+        "title": "Do not use when",
+        "item1": "The list is short and fixed, and nobody needs to search — use <code>Select</code>",
+        "item2": "The list offers actions or destinations instead of values — use <code>Command</code>",
+        "item3": "The value can be any text, outside any list — use <code>Input</code>",
+        "item4": "Every option fits on screen and comparing them matters — use <code>RadioGroup</code> or a <code>Checkbox</code> group"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Give each remove button the name of what it removes: \"Remove Brazil\".",
+        "dont": "Repeat \"Remove\" on every chip: keyboard users hear five identical buttons."
+      },
+      "pair2": {
+        "do": "Let Backspace remove the last chip while the text field is empty.",
+        "dont": "Require the mouse to undo a choice: without Backspace, the keyboard cannot undo."
+      }
+    },
+    "import": {
+      "title": "Import"
+    },
+    "variants": {
+      "title": "Variants",
+      "items": {
+        "single": "Single choice",
+        "multiple": "Multiple with chips",
+        "grouped": "With groups"
+      },
+      "styles": {
+        "single": "One value at a time — the chosen label fills the field and the search starts over on the next opening.",
+        "multiple": "Several values at once — each chosen value becomes a chip inside the field, with a remove button of its own.",
+        "grouped": "Options organised by category, with a group heading and a divider between blocks."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "inForm": {
+          "name": "In a form",
+          "description": "Combobox inside a <code>&lt;form&gt;</code> with a field name set — the value takes part in the submission, and in multiple mode each chosen value goes in as one entry. Label, error message and invalid state come tied together by <code>Form</code>.",
+          "use": "Real forms with a submit: sign-up, saved filters, tagging topics of interest."
+        }
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behaviour"
+      },
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Initial state — the field hint shows, the list is closed and the chevron points down."
+      },
+      "open": {
+        "label": "Open",
+        "trigger": "Click on the field, arrow down or the first key typed",
+        "behavior": "List open, anchored to the field and painted above the rest of the page."
+      },
+      "filtering": {
+        "label": "Filtering",
+        "trigger": "User types in the field",
+        "behavior": "Only options matching the text stay in the list, and the first of them becomes the active option."
+      },
+      "selected": {
+        "label": "Selected",
+        "trigger": "User confirms an option",
+        "behavior": "The option starts showing the chosen mark; in multiple mode it also appears as a chip inside the field."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab to the field",
+        "behavior": "The focus ring wraps the whole box, chips and text together — never the text alone."
+      },
+      "empty": {
+        "label": "Empty",
+        "trigger": "The typed text matches no option",
+        "behavior": "The list stays open and shows the empty message, with no options at all."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "When the field is marked as unavailable",
+        "behavior": "Nothing takes focus, the list does not open, and existing chips lose their remove button."
+      },
+      "readOnly": {
+        "label": "Read-only",
+        "trigger": "When the value is shown but cannot change",
+        "behavior": "The field stays reachable by keyboard and the value still goes with the form, but the list does not open and nothing can be removed."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "When validation rejects the field",
+        "behavior": "The border and ring of the box switch to the error colour, and the field is announced as invalid."
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "value": {
+          "type": "string | string[]",
+          "default": "—",
+          "required": "No",
+          "description": "Chosen value (controlled). In multiple mode it is a list. Use it together with the change callback."
+        },
+        "defaultValue": {
+          "type": "string | string[]",
+          "default": "—",
+          "required": "No",
+          "description": "Initial value when the field owns its own state."
+        },
+        "onValueChange": {
+          "type": "(value: string | string[]) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Change callback for the choice. It also fires when a chip is removed or the field is cleared."
+        },
+        "inputValue": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Search text (controlled). Without it the field owns its own text."
+        },
+        "onInputValueChange": {
+          "type": "(text: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Change callback for the typed text. It is the hook for fetching options from a server."
+        },
+        "multiple": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Allows several values to be chosen; the chosen ones start showing as chips inside the field."
+        },
+        "items": {
+          "type": "ComboboxItem[]",
+          "default": "[]",
+          "required": "Yes",
+          "description": "Options of the list. Each option has a value and a label; a group option carries the heading and its children."
+        },
+        "filter": {
+          "type": "(item: ComboboxItem, query: string) => boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Replaces the filter. The default one compares the label ignoring accents and letter case."
+        },
+        "placeholder": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Hint shown in the text field while nothing has been typed."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Makes the field unavailable: nothing takes focus and the list does not open."
+        },
+        "readOnly": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Shows the value without allowing change, keeping the field reachable by keyboard."
+        },
+        "name": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Field name in the HTML form. In multiple mode, each chosen value goes in as one entry."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibilityCode": {
+        "react": "// Multiple mode: each chosen value becomes a chip inside the field\n<Combobox\n  multiple\n  items={technologies}\n  value={chosen}\n  onValueChange={setChosen}\n>\n  <ComboboxLabel>Technologies</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxChips>\n      {chosen.map((item) => (\n        <ComboboxChip key={item.value} value={item.value}>\n          {item.label}\n          <ComboboxChipRemove aria-label={`Remove ${item.label}`} />\n        </ComboboxChip>\n      ))}\n    </ComboboxChips>\n    <ComboboxInput placeholder=\"Add technology\" />\n    <ComboboxTrigger aria-label=\"Open list\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n</Combobox>",
+        "vue": "<!-- Multiple mode: each chosen value becomes a chip inside the field -->\n<Combobox v-model=\"chosen\" multiple>\n  <ComboboxLabel>Technologies</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxChips>\n      <ComboboxChip\n        v-for=\"item in chosen\"\n        :key=\"item.value\"\n        :value=\"item.value\"\n      >\n        {{ item.label }}\n        <ComboboxChipRemove :aria-label=\"`Remove ${item.label}`\" />\n      </ComboboxChip>\n    </ComboboxChips>\n    <ComboboxInput placeholder=\"Add technology\" />\n    <ComboboxTrigger aria-label=\"Open list\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n</Combobox>",
+        "svelte": "<!-- Multiple mode: each chosen value becomes a chip inside the field -->\n<Combobox bind:value={chosen} multiple>\n  <ComboboxLabel>Technologies</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxChips>\n      {#each chosen as item (item.value)}\n        <ComboboxChip value={item.value}>\n          {item.label}\n          <ComboboxChipRemove aria-label={`Remove ${item.label}`} />\n        </ComboboxChip>\n      {/each}\n    </ComboboxChips>\n    <ComboboxInput placeholder=\"Add technology\" />\n    <ComboboxTrigger aria-label=\"Open list\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n</Combobox>",
+        "angular": "<!-- Multiple mode: each chosen value becomes a chip inside the field -->\n<nds-combobox [(value)]=\"chosen\" multiple>\n  <label ndsComboboxLabel>Technologies</label>\n  <div ndsComboboxInputWrapper>\n    <div ndsComboboxChips>\n      @for (item of chosen; track item.value) {\n        <span ndsComboboxChip [value]=\"item.value\">\n          {{ item.label }}\n          <button ndsComboboxChipRemove [attr.aria-label]=\"'Remove ' + item.label\"></button>\n        </span>\n      }\n    </div>\n    <input ndsComboboxInput placeholder=\"Add technology\" />\n    <button ndsComboboxTrigger aria-label=\"Open list\">\n      <svg ndsComboboxIcon></svg>\n    </button>\n  </div>\n</nds-combobox>",
+        "vanilla": "// Multiple mode: each chosen value becomes a chip inside the field\nconst field = createCombobox({\n  id: 'tecnologias',\n  label: 'Technologies',\n  placeholder: 'Add technology',\n  multiple: true,\n  defaultValue: ['react', 'vue'],\n  items: [\n    { value: 'react', label: 'React' },\n    { value: 'vue', label: 'Vue' },\n    { value: 'svelte', label: 'Svelte' },\n    { value: 'angular', label: 'Angular' },\n  ],\n  // One name per chip — \"Remove\" alone does not say which one\n  removeLabel: (item) => `Remove ${item.label}`,\n});"
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Class",
+        "part": "Applies to",
+        "input": {
+          "class": ".nds-combobox-input-wrapper",
+          "part": "Border of the field box"
+        },
+        "inputBackground": {
+          "class": ".nds-combobox-input-wrapper",
+          "part": "Background of the field box"
+        },
+        "foreground": {
+          "class": ".nds-combobox-input, .nds-combobox-label",
+          "part": "Typed text and field label"
+        },
+        "mutedForeground": {
+          "class": ".nds-combobox-empty, .nds-combobox-group-label",
+          "part": "Field hint, group heading and empty message"
+        },
+        "muted": {
+          "class": ".nds-combobox-trigger",
+          "part": "Background of the inner buttons under the pointer"
+        },
+        "secondary": {
+          "class": ".nds-combobox-chip",
+          "part": "Chip background"
+        },
+        "secondaryForeground": {
+          "class": ".nds-combobox-chip",
+          "part": "Chip text"
+        },
+        "popover": {
+          "class": ".nds-combobox-popup",
+          "part": "Background of the floating box"
+        },
+        "popoverForeground": {
+          "class": ".nds-combobox-popup",
+          "part": "Text inside the floating box"
+        },
+        "accent": {
+          "class": ".nds-combobox-item[data-highlighted]",
+          "part": "Background of the active option"
+        },
+        "accentForeground": {
+          "class": ".nds-combobox-item[data-highlighted]",
+          "part": "Text of the active option"
+        },
+        "primary": {
+          "class": ".nds-combobox-item-indicator",
+          "part": "Mark of the chosen option"
+        },
+        "border": {
+          "class": ".nds-combobox-popup, .nds-combobox-separator",
+          "part": "Border of the floating box and divider between groups"
+        },
+        "ring": {
+          "class": ".nds-combobox-input-wrapper:focus-within",
+          "part": "Focus ring of the box and of the inner buttons"
+        },
+        "destructive": {
+          "class": ".nds-combobox-input-wrapper",
+          "part": "Border and ring when validation rejects the field"
+        },
+        "radius": {
+          "class": ".nds-combobox-input-wrapper",
+          "part": "Corner radius of the field box"
+        },
+        "radiusFull": {
+          "class": ".nds-combobox-chip-remove",
+          "part": "Chip remove button, round"
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": "/* Wider and taller list than the default */\n.nds-combobox-popup {\n  min-width: 16rem;\n}\n\n.nds-combobox-list {\n  max-height: 24rem;\n}\n\n/* Taller field without a fixed height — growth comes from padding */\n.nds-combobox-input-wrapper {\n  padding-block: var(--spacing-2-5);\n}\n\n/* Fully rounded chip */\n.nds-combobox-chip {\n  border-radius: var(--radius-full);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Meets WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"combobox\"</code> on the text field itself, and <code>role=\"listbox\"</code> on the option list",
+        "item2": "<code>aria-expanded</code> on the field follows the list being open or closed",
+        "item3": "<code>aria-activedescendant</code> points at the id of the active option — focus stays on the field",
+        "item4": "<code>aria-autocomplete=\"list\"</code> announces that typing filters the list",
+        "item5": "Each chip remove button carries the label of the chosen value in its own accessible name",
+        "item6": "Chip removal is announced through a live region, for whoever cannot see the field change",
+        "item7": "Focus ring visible around the whole box, with a minimum contrast of 3:1"
+      },
+      "keyboard": {
+        "title": "Keyboard Navigation",
+        "typing": "Filters the list and opens it, if closed",
+        "arrowDown": "Moves to the next option; from the last one, wraps to the first",
+        "arrowUp": "Moves to the previous option; from the first one, wraps to the last",
+        "enter": "Chooses the active option",
+        "escape": "Closes the list; with the list already closed, clears the typed text",
+        "tab": "Closes the list and leaves the field",
+        "backspace": "With the text field empty, removes the last chip",
+        "home": "Goes to the first option",
+        "end": "Goes to the last option"
+      },
+      "aria": {
+        "title": "ARIA Attributes",
+        "role": "<code>role=\"combobox\"</code> on the text field; <code>role=\"listbox\"</code> on the list and <code>role=\"option\"</code> on each option",
+        "expanded": "<code>aria-expanded</code> on the field reflects the list being open or closed",
+        "activedescendant": "<code>aria-activedescendant</code> on the field carries the id of the active option; no option ever takes browser focus",
+        "autocomplete": "<code>aria-autocomplete=\"list\"</code> declares that the list is filtered by what is typed",
+        "selected": "<code>aria-selected=\"true\"</code> on the chosen option",
+        "chipRemove": "The <code>aria-label</code> of each remove button carries the label of the chip it removes",
+        "live": "A live region on the field announces the removed chip and how many are left",
+        "invalid": "<code>aria-invalid=\"true\"</code> when validation rejects the field"
+      },
+      "screenReader": {
+        "title": "Screen Reader",
+        "field": "Announces the label, the current value and \"combobox, expanded or collapsed\"",
+        "navigation": "Announces the active option on each arrow key, without moving focus",
+        "selection": "Announces \"selected\" on confirming with Enter",
+        "chip": "Announces the removed chip and how many chosen values remain"
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "items": {
+        "select": {
+          "name": "Select",
+          "description": "Single choice in a short list, when nobody needs to search."
+        },
+        "command": {
+          "name": "Command",
+          "description": "Palette of actions and navigation, opened by a keyboard shortcut."
+        },
+        "input": {
+          "name": "Input",
+          "description": "Free text, when there is no list of values to choose from."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Validation integration: label, error message and invalid state tied to the field."
+        }
+      }
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "item1": "<strong>The field is the box, not the text</strong> — the border and the focus ring live on the container that wraps chips and text. Styling the text field alone would give two boxes as soon as the first chip appeared.",
+      "item2": "<strong>Focus never leaves the text</strong> — navigating the list swaps the active option through <code>aria-activedescendant</code>; no option takes browser focus, so typing keeps working while navigating.",
+      "item3": "<strong>Chip contrast</strong> — the chip paints over the field surface, so its contrast is measured against that surface, not against the page background.",
+      "item4": "<strong>Backspace is the gesture of the chip</strong> — without it, undoing a choice forces the mouse, which is the classic defect of this pattern.",
+      "item5": "<strong>List on a floating layer</strong> — the popup is anchored to the field and painted above the rest of the page, so a scrolling container cannot clip it.",
+      "item6": "<strong>Swappable filter</strong> — the default filter compares the label ignoring accents and case. To match by synonym, internal code or a server search, swap the filter function."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Relevant events of the component.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "option_select": {
+          "trigger": "User chooses an option from the list",
+          "payload": "{ component: \"combobox\", field_name, value, label, location }"
+        },
+        "field_change": {
+          "trigger": "User removes a chip or clears the field",
+          "payload": "{ component: \"combobox\", field_name, value, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behaviour",
+        "description": "What should happen in response to each interaction.",
+        "item1": {
+          "action": "Type in the text field",
+          "result": "The list opens and keeps only the options matching the text",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Press arrow down with the list open",
+          "result": "The active option moves forward one item; from the last one, it wraps to the first",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Press Enter with an active option",
+          "result": "The active option is chosen and the field value changes",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Press Backspace with the text field empty",
+          "result": "The last chip is removed and the removal is announced; with text typed, Backspace deletes text and leaves the chips alone",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Activate the remove button of a chip",
+          "result": "Only that chip goes away, and focus stays inside the field",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Press Escape",
+          "result": "With the list open it closes without changing the choice; with the list closed the typed text is cleared",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Type text that matches no option",
+          "result": "The list shows the empty message and no options",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria automated tools must confirm.",
+        "item1": "No violations reported by axe-core",
+        "item2": "role=\"combobox\" on the text field, and role=\"listbox\" on the list",
+        "item3": "aria-expanded on the field follows the list being open or closed",
+        "item4": "aria-activedescendant points at the id of the active option, and focus stays on the field",
+        "item5": "Each remove button has a name of its own, carrying the label of the chip it removes",
+        "item6": "Minimum contrast of 4.5:1 between the chip text and the field surface",
+        "item7": "Focus ring visible on the field box and on the inner buttons"
+      },
+      "visual": {
+        "title": "Visual Regression",
+        "description": "States Chromatic must capture.",
+        "required": "Required",
+        "item1": {
+          "story": "Single choice with the list closed",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Multiple with chips in the field",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "List open with an active option",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Grouped list with heading and divider",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Empty list, no results",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Disabled",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Invalid",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "compositions": "Compositions",
+      "states": "States",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "Combobox",
+    "category": "Formulario",
+    "type": "Componente",
+    "description": "Campo de texto que filtra una lista y permite elegir uno o varios valores. En modo múltiple los elegidos se convierten en chips dentro del propio campo.",
+    "seo": {
+      "title": "Combobox — Formulario",
+      "description": "Documentación de Combobox: búsqueda dentro del propio campo, chips de elección múltiple, opción activa mediante aria-activedescendant y WCAG 2.2 AA.",
+      "aiSummary": "Componente Combobox: campo de búsqueda que filtra una lista, elección única o múltiple con chips que se pueden quitar, role=\"combobox\" en el campo de texto y opción activa señalada por aria-activedescendant sin mover el foco.",
+      "aiEntities": "Combobox, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, ARIA 1.2, role combobox, aria-activedescendant, chips, selección múltiple, búsqueda"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "countryLabel": "País",
+        "countryPlaceholder": "Buscar país",
+        "brazil": "Brasil",
+        "argentina": "Argentina",
+        "chile": "Chile",
+        "colombia": "Colombia",
+        "mexico": "México",
+        "peru": "Perú",
+        "portugal": "Portugal",
+        "spain": "España",
+        "uruguay": "Uruguay",
+        "techLabel": "Tecnologías",
+        "techPlaceholder": "Añadir tecnología",
+        "groupedLabel": "Ingrediente",
+        "groupedPlaceholder": "Buscar ingrediente",
+        "groupFruits": "Frutas",
+        "groupVegetables": "Verduras",
+        "apple": "Manzana",
+        "banana": "Plátano",
+        "orange": "Naranja",
+        "carrot": "Zanahoria",
+        "potato": "Papa",
+        "zucchini": "Calabacín",
+        "empty": "Sin resultados",
+        "remove": "Quitar",
+        "clear": "Limpiar",
+        "openList": "Abrir lista"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Raíz</strong> — dueña del estado: el valor elegido, el texto escrito y si la lista está abierta. No dibuja nada por su cuenta.",
+      "item2": "<strong>Etiqueta</strong> — nombre accesible del campo, atado al campo de texto. <code>data-slot=\"combobox-label\"</code>",
+      "item3": "<strong>Caja del campo</strong> — lo que el lector ve como campo: contiene los chips y el texto, y es la que lleva el borde y el anillo de foco. <code>data-slot=\"combobox-input-wrapper\"</code>",
+      "item4": "<strong>Chips</strong> — los elegidos del modo múltiple, dentro de la propia caja. Cada chip lleva su etiqueta y un botón de quitar con nombre propio. <code>data-slot=\"combobox-chip\"</code>",
+      "item5": "<strong>Campo de texto</strong> — recibe lo que la persona escribe y lleva <code>role=\"combobox\"</code>, <code>aria-expanded</code> y <code>aria-activedescendant</code>. <code>data-slot=\"combobox-input\"</code>",
+      "item6": "<strong>Limpiar</strong> y <strong>Abrir</strong> — los dos botones a la derecha del texto: uno borra la elección, el otro abre y cierra la lista y lleva el chevron. <code>data-slot=\"combobox-clear\"</code>, <code>data-slot=\"combobox-trigger\"</code>",
+      "item7": "<strong>Posicionador</strong> y <strong>Popup</strong> — anclan la caja flotante al campo y la dibujan por encima del resto de la página. <code>data-slot=\"combobox-popup\"</code>",
+      "item8": "<strong>Lista</strong> — <code>role=\"listbox\"</code>, el contenedor desplazable de las opciones que sobrevivieron al filtro. <code>data-slot=\"combobox-list\"</code>",
+      "item9": "<strong>Opción</strong> y <strong>marca de elegida</strong> — cada opción es <code>role=\"option\"</code> con <code>aria-selected</code>; la marca aparece solo en la elegida. <code>data-slot=\"combobox-item\"</code>",
+      "item10": "<strong>Grupo</strong>, <strong>separador</strong> y <strong>mensaje de lista vacía</strong> — encabezado de categoría, divisor decorativo y el texto que se muestra cuando el filtro no coincide con nada. <code>data-slot=\"combobox-empty\"</code>",
+      "structureLabel": "Estructura básica:",
+      "structureCode": {
+        "react": "<Combobox items={paises} value={valor} onValueChange={setValor}>\n  <ComboboxLabel>País</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxInput placeholder=\"Buscar país\" />\n    <ComboboxClear aria-label=\"Limpiar\" />\n    <ComboboxTrigger aria-label=\"Abrir lista\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n  <ComboboxPositioner>\n    <ComboboxPopup>\n      <ComboboxList>\n        {paises.map((item) => (\n          <ComboboxItem key={item.value} value={item.value}>\n            {item.label}\n            <ComboboxItemIndicator />\n          </ComboboxItem>\n        ))}\n      </ComboboxList>\n      <ComboboxEmpty>Sin resultados</ComboboxEmpty>\n    </ComboboxPopup>\n  </ComboboxPositioner>\n</Combobox>",
+        "vue": "<Combobox v-model=\"valor\">\n  <ComboboxLabel>País</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxInput placeholder=\"Buscar país\" />\n    <ComboboxClear aria-label=\"Limpiar\" />\n    <ComboboxTrigger aria-label=\"Abrir lista\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n  <ComboboxPositioner>\n    <ComboboxPopup>\n      <ComboboxList>\n        <ComboboxItem\n          v-for=\"item in paises\"\n          :key=\"item.value\"\n          :value=\"item.value\"\n        >\n          {{ item.label }}\n          <ComboboxItemIndicator />\n        </ComboboxItem>\n      </ComboboxList>\n      <ComboboxEmpty>Sin resultados</ComboboxEmpty>\n    </ComboboxPopup>\n  </ComboboxPositioner>\n</Combobox>",
+        "svelte": "<Combobox bind:value={valor}>\n  <ComboboxLabel>País</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxInput placeholder=\"Buscar país\" />\n    <ComboboxClear aria-label=\"Limpiar\" />\n    <ComboboxTrigger aria-label=\"Abrir lista\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n  <ComboboxPositioner>\n    <ComboboxPopup>\n      <ComboboxList>\n        {#each paises as item (item.value)}\n          <ComboboxItem value={item.value}>\n            {item.label}\n            <ComboboxItemIndicator />\n          </ComboboxItem>\n        {/each}\n      </ComboboxList>\n      <ComboboxEmpty>Sin resultados</ComboboxEmpty>\n    </ComboboxPopup>\n  </ComboboxPositioner>\n</Combobox>",
+        "angular": "<nds-combobox [(value)]=\"valor\">\n  <label ndsComboboxLabel>País</label>\n  <div ndsComboboxInputWrapper>\n    <input ndsComboboxInput placeholder=\"Buscar país\" />\n    <button ndsComboboxClear aria-label=\"Limpiar\"></button>\n    <button ndsComboboxTrigger aria-label=\"Abrir lista\">\n      <svg ndsComboboxIcon></svg>\n    </button>\n  </div>\n  <ng-template ndsComboboxPopup>\n    <div ndsComboboxList>\n      @for (item of paises; track item.value) {\n        <div ndsComboboxItem [value]=\"item.value\">\n          {{ item.label }}\n          <span ndsComboboxItemIndicator></span>\n        </div>\n      }\n    </div>\n    <div ndsComboboxEmpty>Sin resultados</div>\n  </ng-template>\n</nds-combobox>",
+        "vanilla": "const campo = createCombobox({\n  id: 'pais',\n  name: 'pais',\n  label: 'País',\n  placeholder: 'Buscar país',\n  items: [\n    { value: 'br', label: 'Brasil' },\n    { value: 'pt', label: 'Portugal' },\n  ],\n  emptyMessage: 'Sin resultados',\n  clearLabel: 'Limpiar',\n  triggerLabel: 'Abrir lista',\n  onValueChange: (value) => console.log(value),\n});\n\n// Suelta el oyente de documento y el panel en portal. Idempotente.\ncampo.destroy();"
+      }
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guidelines Obligatorias",
+        "item1": "Elige Combobox cuando escribir llegue antes que desplazarse — en la práctica, a partir de unas diez opciones.",
+        "item2": "Si la elección es única, la lista es corta y nadie necesita buscar, el componente es <code>Select</code>: un campo de búsqueda ahí solo añade un paso.",
+        "item3": "Si la lista ofrece acciones o destinos — abrir, crear, ir a —, el componente es <code>Command</code>. Combobox devuelve un valor a un formulario; una paleta de comandos ejecuta.",
+        "item4": "La elección múltiple es de Combobox y de nadie más: es el único que muestra los elegidos como chips dentro del propio campo.",
+        "item5": "Todo botón de quitar chip debe decir qué quita. \"Quitar\" a secas, repetido en cinco chips, no dice cuál.",
+        "item6": "El mensaje de lista vacía es obligatorio: sin él, un filtro que no coincide deja una caja en blanco en la pantalla.",
+        "item7": "Etiqueta el campo con un <code>Label</code> visible — el rol de combobox no toma su nombre del propio contenido."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Elegir un país entre doscientos",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Elegir entre 3 y 9 opciones fijas",
+          "u": "No",
+          "a": "Select"
+        },
+        "item3": {
+          "s": "Marcar varias tecnologías y ver cuáles ya están marcadas",
+          "u": "Sí, en modo múltiple",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Abrir una pantalla o ejecutar una acción con un atajo de teclado",
+          "u": "No",
+          "a": "Command"
+        },
+        "item5": {
+          "s": "Aceptar un valor libre que no está en ninguna lista",
+          "u": "No",
+          "a": "Input"
+        },
+        "item6": {
+          "s": "Pocas opciones, todas visibles a la vez para compararlas",
+          "u": "No",
+          "a": "RadioGroup o un grupo de Checkbox"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "placeholder": {
+            "name": "Pista del campo de texto",
+            "format": "Verbo de búsqueda + lo que se busca",
+            "good": "\"Buscar país\", \"Añadir tecnología\"",
+            "bad": "\"Escribe...\", \"Selecciona o escribe\""
+          },
+          "itemLabel": {
+            "name": "Etiqueta de la opción",
+            "format": "Frase nominal, sin punto final, estilo consistente",
+            "good": "\"Rio Grande do Sul\", \"Santa Catarina\"",
+            "bad": "Mezclar \"RS\" con \"Rio Grande do Sul\""
+          },
+          "chipRemove": {
+            "name": "Botón de quitar chip",
+            "format": "Verbo + la etiqueta del valor elegido",
+            "good": "\"Quitar Brasil\"",
+            "bad": "\"Quitar\", \"x\", \"Eliminar elemento\""
+          },
+          "emptyMessage": {
+            "name": "Mensaje de lista vacía",
+            "format": "Frase corta, sin culpar a quien escribió, sin punto final",
+            "good": "\"Sin resultados\"",
+            "bad": "\"Error: no se encontró nada\", \"Lo escribiste mal\""
+          }
+        }
+      },
+      "do": {
+        "title": "Usa cuando",
+        "item1": "La lista es lo bastante larga para que escribir llegue antes que desplazarse",
+        "item2": "La persona necesita elegir varios valores y ver cuáles ya eligió",
+        "item3": "Las opciones vienen de una base que crece, y el campo es el único filtro disponible",
+        "item4": "Las opciones se organizan en categorías, y el encabezado de grupo ayuda a decidir"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "La lista es corta y fija, y nadie necesita buscar — usa <code>Select</code>",
+        "item2": "La lista ofrece acciones o destinos en vez de valores — usa <code>Command</code>",
+        "item3": "El valor puede ser cualquier texto, fuera de toda lista — usa <code>Input</code>",
+        "item4": "Todas las opciones caben en la pantalla y compararlas importa — usa <code>RadioGroup</code> o un grupo de <code>Checkbox</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Dar a cada botón de quitar el nombre de lo que quita: \"Quitar Brasil\".",
+        "dont": "Repetir \"Quitar\" en todos los chips: quien navega por teclado oye cinco botones idénticos."
+      },
+      "pair2": {
+        "do": "Dejar que Retroceso quite el último chip cuando el campo de texto está vacío.",
+        "dont": "Exigir el ratón para deshacer una elección: sin Retroceso, el teclado no deshace."
+      }
+    },
+    "import": {
+      "title": "Importación"
+    },
+    "variants": {
+      "title": "Variantes",
+      "items": {
+        "single": "Elección única",
+        "multiple": "Múltiple con chips",
+        "grouped": "Con grupos"
+      },
+      "styles": {
+        "single": "Un valor a la vez — la etiqueta del elegido ocupa el campo y la búsqueda empieza de cero en la siguiente apertura.",
+        "multiple": "Varios valores a la vez — cada elegido se convierte en un chip dentro del campo, con su propio botón de quitar.",
+        "grouped": "Opciones organizadas por categoría, con encabezado de grupo y divisor entre bloques."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "inForm": {
+          "name": "En formulario",
+          "description": "Combobox dentro de un <code>&lt;form&gt;</code> con nombre de campo definido — el valor participa del envío, y en modo múltiple cada elegido entra como una entrada. Etiqueta, mensaje de error y estado inválido vienen atados por <code>Form</code>.",
+          "use": "Formularios reales con envío: registro, filtros guardados, marcado de temas de interés."
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
+      },
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Estado inicial — la pista del campo se ve, la lista está cerrada y el chevron apunta hacia abajo."
+      },
+      "open": {
+        "label": "Open",
+        "trigger": "Clic en el campo, flecha abajo o la primera tecla escrita",
+        "behavior": "Lista abierta, anclada al campo y dibujada por encima del resto de la página."
+      },
+      "filtering": {
+        "label": "Filtering",
+        "trigger": "La persona escribe en el campo",
+        "behavior": "Solo las opciones que coinciden con el texto siguen en la lista, y la primera de ellas pasa a ser la opción activa."
+      },
+      "selected": {
+        "label": "Selected",
+        "trigger": "La persona confirma una opción",
+        "behavior": "La opción pasa a mostrar la marca de elegida; en modo múltiple también aparece como chip dentro del campo."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab hasta el campo",
+        "behavior": "El anillo de foco envuelve la caja entera, chips y texto juntos — nunca solo el texto."
+      },
+      "empty": {
+        "label": "Empty",
+        "trigger": "El texto escrito no coincide con ninguna opción",
+        "behavior": "La lista sigue abierta y muestra el mensaje de lista vacía, sin ninguna opción."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Cuando el campo se marca como no disponible",
+        "behavior": "Nada recibe foco, la lista no se abre y los chips existentes pierden su botón de quitar."
+      },
+      "readOnly": {
+        "label": "Read-only",
+        "trigger": "Cuando el valor se muestra pero no puede cambiar",
+        "behavior": "El campo sigue alcanzable por teclado y el valor sigue viajando con el formulario, pero la lista no se abre y nada se puede quitar."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "Cuando la validación rechaza el campo",
+        "behavior": "El borde y el anillo de la caja pasan al color de error, y el campo se anuncia como inválido."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "table": {
+        "prop": "Prop",
+        "type": "Tipo",
+        "default": "Predeterminado",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "value": {
+          "type": "string | string[]",
+          "default": "—",
+          "required": "No",
+          "description": "Valor elegido (controlado). En modo múltiple es una lista. Úsalo junto con el callback de cambio."
+        },
+        "defaultValue": {
+          "type": "string | string[]",
+          "default": "—",
+          "required": "No",
+          "description": "Valor inicial cuando el campo administra su propio estado."
+        },
+        "onValueChange": {
+          "type": "(value: string | string[]) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback de cambio de la elección. También se dispara al quitar un chip o limpiar el campo."
+        },
+        "inputValue": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Texto de búsqueda (controlado). Sin él, el campo administra su propio texto."
+        },
+        "onInputValueChange": {
+          "type": "(text: string) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Callback de cambio del texto escrito. Es el gancho para buscar opciones en el servidor."
+        },
+        "multiple": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Permite elegir varios valores; los elegidos pasan a mostrarse como chips dentro del campo."
+        },
+        "items": {
+          "type": "ComboboxItem[]",
+          "default": "[]",
+          "required": "Sí",
+          "description": "Opciones de la lista. Cada opción tiene valor y etiqueta; una opción de grupo lleva el encabezado y sus hijos."
+        },
+        "filter": {
+          "type": "(item: ComboboxItem, query: string) => boolean",
+          "default": "—",
+          "required": "No",
+          "description": "Sustituye el filtro. El predeterminado compara la etiqueta ignorando acentos y mayúsculas."
+        },
+        "placeholder": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Pista que se muestra en el campo de texto mientras no se ha escrito nada."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Deja el campo no disponible: nada recibe foco y la lista no se abre."
+        },
+        "readOnly": {
+          "type": "boolean",
+          "default": "false",
+          "required": "No",
+          "description": "Muestra el valor sin permitir cambios, manteniendo el campo alcanzable por teclado."
+        },
+        "name": {
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Nombre del campo en el formulario HTML. En modo múltiple, cada elegido entra como una entrada."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibilityCode": {
+        "react": "// Modo múltiple: cada valor elegido se convierte en un chip dentro del campo\n<Combobox\n  multiple\n  items={tecnologias}\n  value={elegidas}\n  onValueChange={setElegidas}\n>\n  <ComboboxLabel>Tecnologías</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxChips>\n      {elegidas.map((item) => (\n        <ComboboxChip key={item.value} value={item.value}>\n          {item.label}\n          <ComboboxChipRemove aria-label={`Quitar ${item.label}`} />\n        </ComboboxChip>\n      ))}\n    </ComboboxChips>\n    <ComboboxInput placeholder=\"Añadir tecnología\" />\n    <ComboboxTrigger aria-label=\"Abrir lista\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n</Combobox>",
+        "vue": "<!-- Modo múltiple: cada valor elegido se convierte en un chip dentro del campo -->\n<Combobox v-model=\"elegidas\" multiple>\n  <ComboboxLabel>Tecnologías</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxChips>\n      <ComboboxChip\n        v-for=\"item in elegidas\"\n        :key=\"item.value\"\n        :value=\"item.value\"\n      >\n        {{ item.label }}\n        <ComboboxChipRemove :aria-label=\"`Quitar ${item.label}`\" />\n      </ComboboxChip>\n    </ComboboxChips>\n    <ComboboxInput placeholder=\"Añadir tecnología\" />\n    <ComboboxTrigger aria-label=\"Abrir lista\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n</Combobox>",
+        "svelte": "<!-- Modo múltiple: cada valor elegido se convierte en un chip dentro del campo -->\n<Combobox bind:value={elegidas} multiple>\n  <ComboboxLabel>Tecnologías</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxChips>\n      {#each elegidas as item (item.value)}\n        <ComboboxChip value={item.value}>\n          {item.label}\n          <ComboboxChipRemove aria-label={`Quitar ${item.label}`} />\n        </ComboboxChip>\n      {/each}\n    </ComboboxChips>\n    <ComboboxInput placeholder=\"Añadir tecnología\" />\n    <ComboboxTrigger aria-label=\"Abrir lista\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n</Combobox>",
+        "angular": "<!-- Modo múltiple: cada valor elegido se convierte en un chip dentro del campo -->\n<nds-combobox [(value)]=\"elegidas\" multiple>\n  <label ndsComboboxLabel>Tecnologías</label>\n  <div ndsComboboxInputWrapper>\n    <div ndsComboboxChips>\n      @for (item of elegidas; track item.value) {\n        <span ndsComboboxChip [value]=\"item.value\">\n          {{ item.label }}\n          <button ndsComboboxChipRemove [attr.aria-label]=\"'Quitar ' + item.label\"></button>\n        </span>\n      }\n    </div>\n    <input ndsComboboxInput placeholder=\"Añadir tecnología\" />\n    <button ndsComboboxTrigger aria-label=\"Abrir lista\">\n      <svg ndsComboboxIcon></svg>\n    </button>\n  </div>\n</nds-combobox>",
+        "vanilla": "// Modo múltiple: cada valor elegido se convierte en un chip dentro del campo\nconst campo = createCombobox({\n  id: 'tecnologias',\n  label: 'Tecnologías',\n  placeholder: 'Añadir tecnología',\n  multiple: true,\n  defaultValue: ['react', 'vue'],\n  items: [\n    { value: 'react', label: 'React' },\n    { value: 'vue', label: 'Vue' },\n    { value: 'svelte', label: 'Svelte' },\n    { value: 'angular', label: 'Angular' },\n  ],\n  // Un nombre por chip — \"Quitar\" a secas no dice cuál\n  removeLabel: (item) => `Quitar ${item.label}`,\n});"
+      }
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "table": {
+        "token": "Token",
+        "class": "Clase",
+        "part": "Aplicación",
+        "input": {
+          "class": ".nds-combobox-input-wrapper",
+          "part": "Borde de la caja del campo"
+        },
+        "inputBackground": {
+          "class": ".nds-combobox-input-wrapper",
+          "part": "Fondo de la caja del campo"
+        },
+        "foreground": {
+          "class": ".nds-combobox-input, .nds-combobox-label",
+          "part": "Texto escrito y etiqueta del campo"
+        },
+        "mutedForeground": {
+          "class": ".nds-combobox-empty, .nds-combobox-group-label",
+          "part": "Pista del campo, encabezado de grupo y mensaje de lista vacía"
+        },
+        "muted": {
+          "class": ".nds-combobox-trigger",
+          "part": "Fondo de los botones internos bajo el puntero"
+        },
+        "secondary": {
+          "class": ".nds-combobox-chip",
+          "part": "Fondo del chip"
+        },
+        "secondaryForeground": {
+          "class": ".nds-combobox-chip",
+          "part": "Texto del chip"
+        },
+        "popover": {
+          "class": ".nds-combobox-popup",
+          "part": "Fondo de la caja flotante"
+        },
+        "popoverForeground": {
+          "class": ".nds-combobox-popup",
+          "part": "Texto dentro de la caja flotante"
+        },
+        "accent": {
+          "class": ".nds-combobox-item[data-highlighted]",
+          "part": "Fondo de la opción activa"
+        },
+        "accentForeground": {
+          "class": ".nds-combobox-item[data-highlighted]",
+          "part": "Texto de la opción activa"
+        },
+        "primary": {
+          "class": ".nds-combobox-item-indicator",
+          "part": "Marca de la opción elegida"
+        },
+        "border": {
+          "class": ".nds-combobox-popup, .nds-combobox-separator",
+          "part": "Borde de la caja flotante y divisor entre grupos"
+        },
+        "ring": {
+          "class": ".nds-combobox-input-wrapper:focus-within",
+          "part": "Anillo de foco de la caja y de los botones internos"
+        },
+        "destructive": {
+          "class": ".nds-combobox-input-wrapper",
+          "part": "Borde y anillo cuando la validación rechaza el campo"
+        },
+        "radius": {
+          "class": ".nds-combobox-input-wrapper",
+          "part": "Redondeo de la caja del campo"
+        },
+        "radiusFull": {
+          "class": ".nds-combobox-chip-remove",
+          "part": "Botón de quitar chip, redondo"
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": "/* Lista más ancha y más alta que la predeterminada */\n.nds-combobox-popup {\n  min-width: 16rem;\n}\n\n.nds-combobox-list {\n  max-height: 24rem;\n}\n\n/* Campo más alto sin fijar altura — el crecimiento viene del padding */\n.nds-combobox-input-wrapper {\n  padding-block: var(--spacing-2-5);\n}\n\n/* Chip completamente redondeado */\n.nds-combobox-chip {\n  border-radius: var(--radius-full);\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Cumple WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
+      "items": {
+        "item1": "<code>role=\"combobox\"</code> en el propio campo de texto, y <code>role=\"listbox\"</code> en la lista de opciones",
+        "item2": "<code>aria-expanded</code> en el campo acompaña la lista abierta o cerrada",
+        "item3": "<code>aria-activedescendant</code> señala el identificador de la opción activa — el foco permanece en el campo",
+        "item4": "<code>aria-autocomplete=\"list\"</code> avisa de que escribir filtra la lista",
+        "item5": "Cada botón de quitar chip lleva la etiqueta del elegido en su propio nombre accesible",
+        "item6": "La eliminación de un chip se anuncia por región viva, para quien no ve cambiar el campo",
+        "item7": "Anillo de foco visible en la caja entera, con contraste mínimo 3:1"
+      },
+      "keyboard": {
+        "title": "Navegación por Teclado",
+        "typing": "Filtra la lista y la abre, si estaba cerrada",
+        "arrowDown": "Va a la siguiente opción; desde la última, vuelve a la primera",
+        "arrowUp": "Va a la opción anterior; desde la primera, vuelve a la última",
+        "enter": "Elige la opción activa",
+        "escape": "Cierra la lista; con la lista ya cerrada, limpia el texto escrito",
+        "tab": "Cierra la lista y sale del campo",
+        "backspace": "Con el campo de texto vacío, quita el último chip",
+        "home": "Va a la primera opción",
+        "end": "Va a la última opción"
+      },
+      "aria": {
+        "title": "Atributos ARIA",
+        "role": "<code>role=\"combobox\"</code> en el campo de texto; <code>role=\"listbox\"</code> en la lista y <code>role=\"option\"</code> en cada opción",
+        "expanded": "<code>aria-expanded</code> en el campo refleja la lista abierta o cerrada",
+        "activedescendant": "<code>aria-activedescendant</code> en el campo lleva el identificador de la opción activa; ninguna opción recibe foco del navegador",
+        "autocomplete": "<code>aria-autocomplete=\"list\"</code> declara que la lista se filtra con lo que se escribe",
+        "selected": "<code>aria-selected=\"true\"</code> en la opción elegida",
+        "chipRemove": "El <code>aria-label</code> de cada botón de quitar lleva la etiqueta del chip que quita",
+        "live": "Una región viva en el campo anuncia el chip quitado y cuántos quedan",
+        "invalid": "<code>aria-invalid=\"true\"</code> cuando la validación rechaza el campo"
+      },
+      "screenReader": {
+        "title": "Lector de Pantalla",
+        "field": "Anuncia la etiqueta, el valor actual y \"combobox, expandido o contraído\"",
+        "navigation": "Anuncia la opción activa en cada flecha, sin mover el foco",
+        "selection": "Anuncia \"seleccionado\" al confirmar con Enter",
+        "chip": "Anuncia el chip quitado y cuántos elegidos quedan"
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "items": {
+        "select": {
+          "name": "Select",
+          "description": "Elección única en lista corta, cuando nadie necesita buscar."
+        },
+        "command": {
+          "name": "Command",
+          "description": "Paleta de acciones y navegación, abierta con un atajo de teclado."
+        },
+        "input": {
+          "name": "Input",
+          "description": "Texto libre, cuando no existe una lista de valores para elegir."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Integración con validación: etiqueta, mensaje de error y estado inválido atados al campo."
+        }
+      }
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "item1": "<strong>El campo es la caja, no el texto</strong> — el borde y el anillo de foco viven en el contenedor que envuelve chips y texto. Estilizar solo el campo de texto daría dos cajas en cuanto apareciera el primer chip.",
+      "item2": "<strong>El foco no sale del texto</strong> — navegar por la lista cambia la opción activa mediante <code>aria-activedescendant</code>; ninguna opción recibe foco del navegador, así que escribir sigue funcionando durante la navegación.",
+      "item3": "<strong>Contraste del chip</strong> — el chip pinta sobre la superficie del campo, así que su contraste se mide contra esa superficie, no contra el fondo de la página.",
+      "item4": "<strong>Retroceso es el gesto del chip</strong> — sin él, deshacer una elección obliga al ratón, que es el defecto clásico de este patrón.",
+      "item5": "<strong>Lista en capa flotante</strong> — el popup se ancla al campo y se dibuja por encima del resto de la página, para que un contenedor con desplazamiento no lo recorte.",
+      "item6": "<strong>Filtro intercambiable</strong> — el filtro predeterminado compara la etiqueta ignorando acentos y mayúsculas. Para coincidir por sinónimo, código interno o búsqueda en el servidor, cambia la función de filtro."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos relevantes del componente.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Trigger",
+        "payload": "Payload",
+        "option_select": {
+          "trigger": "La persona elige una opción de la lista",
+          "payload": "{ component: \"combobox\", field_name, value, label, location }"
+        },
+        "field_change": {
+          "trigger": "La persona quita un chip o limpia el campo",
+          "payload": "{ component: \"combobox\", field_name, value, location }"
+        }
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Qué debe ocurrir en respuesta a cada interacción.",
+        "item1": {
+          "action": "Escribir en el campo de texto",
+          "result": "La lista se abre y conserva solo las opciones que coinciden con el texto",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pulsar flecha abajo con la lista abierta",
+          "result": "La opción activa avanza un elemento; desde la última, vuelve a la primera",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pulsar Enter con una opción activa",
+          "result": "La opción activa queda elegida y el valor del campo cambia",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pulsar Retroceso con el campo de texto vacío",
+          "result": "El último chip se quita y la eliminación se anuncia; con texto escrito, Retroceso borra texto y no toca los chips",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Accionar el botón de quitar de un chip",
+          "result": "Solo ese chip desaparece, y el foco permanece dentro del campo",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pulsar Escape",
+          "result": "Con la lista abierta, se cierra sin cambiar la elección; con la lista cerrada, se limpia el texto escrito",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Escribir un texto que no coincide con ninguna opción",
+          "result": "La lista muestra el mensaje de lista vacía y ninguna opción",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios que las herramientas automatizadas deben confirmar.",
+        "item1": "Sin violaciones reportadas por axe-core",
+        "item2": "role=\"combobox\" en el campo de texto, y role=\"listbox\" en la lista",
+        "item3": "aria-expanded en el campo acompaña la lista abierta o cerrada",
+        "item4": "aria-activedescendant señala el identificador de la opción activa, y el foco permanece en el campo",
+        "item5": "Cada botón de quitar tiene nombre propio, con la etiqueta del chip que quita",
+        "item6": "Contraste mínimo 4.5:1 entre el texto del chip y la superficie del campo",
+        "item7": "Anillo de foco visible en la caja del campo y en los botones internos"
+      },
+      "visual": {
+        "title": "Regresión Visual",
+        "description": "Estados que Chromatic debe capturar.",
+        "required": "Obligatorio",
+        "item1": {
+          "story": "Elección única con la lista cerrada",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Múltiple con chips en el campo",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Lista abierta con opción activa",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Lista agrupada con encabezado y divisor",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Lista vacía, sin resultados",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Deshabilitado",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Inválido",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "compositions": "Composiciones",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}

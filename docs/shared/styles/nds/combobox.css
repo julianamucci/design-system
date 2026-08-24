@@ -1,0 +1,328 @@
+/*
+ * ─── nds-combobox ────────────────────────────────────────────────────────────
+ * Campo de texto que filtra uma lista. No modo múltiplo os escolhidos viram
+ * CHIPS dentro do próprio campo.
+ *
+ * Markup (o `data-slot` de cada peça é o contrato que as cinco stacks
+ * partilham — igual ao que o `select` faz):
+ *
+ *   <div data-slot="combobox">                        ← raiz, `display: contents`
+ *     <label class="nds-combobox-label" data-slot="combobox-label">
+ *     <div class="nds-combobox-input-wrapper" data-slot="combobox-input-wrapper">
+ *       <div class="nds-combobox-chips" data-slot="combobox-chips">
+ *         <span class="nds-combobox-chip" data-slot="combobox-chip">
+ *           <span data-slot="combobox-chip-text">
+ *           <button class="nds-combobox-chip-remove" data-slot="combobox-chip-remove">
+ *       <input class="nds-combobox-input" data-slot="combobox-input" role="combobox">
+ *       <button class="nds-combobox-clear" data-slot="combobox-clear">
+ *       <button class="nds-combobox-trigger" data-slot="combobox-trigger">
+ *         <svg class="nds-combobox-icon" data-slot="combobox-icon">
+ *
+ *   <div class="nds-combobox-positioner" data-slot="combobox-positioner">
+ *     <div class="nds-combobox-popup" data-slot="combobox-popup">
+ *       <div class="nds-combobox-list" data-slot="combobox-list" role="listbox">
+ *         <div class="nds-combobox-item" data-slot="combobox-item" role="option">
+ *
+ * QUEM PARECE UM CAMPO é o `.nds-combobox-input-wrapper`, não o `<input>`. O
+ * input é transparente e sem borda por dentro dele. É o que permite os chips
+ * conviverem com o texto na mesma caixa e a borda de foco envolver o conjunto:
+ * estilizar o input e deixar os chips fora dele daria duas caixas.
+ *
+ * O foco NUNCA sai do input enquanto a lista navega — a opção ativa é apontada
+ * por `aria-activedescendant`. Por isso o anel de foco mora no WRAPPER, via
+ * `:focus-within`, e não no input.
+ *
+ * Tokens: --input, --input-background, --ring, --border, --radius, --spacing-*
+ */
+
+/* ── Campo ─────────────────────────────────────────────────────────────────── */
+
+.nds-combobox-input-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-1-5);
+
+  /* Altura é RESULTADO de padding + line-height, nunca medida fixa: o campo
+     precisa crescer com a fonte do navegador (WCAG 1.4.4) e com as linhas de
+     chip que o modo múltiplo acumula. */
+  padding-block: var(--spacing-1-5);
+  padding-inline: var(--spacing-2-5);
+
+  background-color: hsl(var(--input-background));
+  border: 1px solid hsl(var(--input, var(--border)));
+  border-radius: var(--radius);
+
+  cursor: text;
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+}
+
+/* O anel envolve o CONJUNTO — chips e texto —, porque quem tem foco de verdade
+   é sempre o input, e um anel só nele deixaria os chips visualmente de fora do
+   campo que eles habitam. */
+.nds-combobox-input-wrapper:focus-within {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
+}
+
+.nds-combobox-input-wrapper[data-disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.nds-combobox-input-wrapper[aria-invalid="true"],
+.nds-combobox-input-wrapper:has([aria-invalid="true"]) {
+  border-color: hsl(var(--destructive));
+}
+
+/* Os dois anéis convivem: o destrutivo por dentro, o de foco por fora. Mesma
+   correção já aplicada no toggle e no badge, onde o defeito foi medido: sem
+   isto, focar um campo inválido não muda nada na tela. WCAG 2.4.7. */
+.nds-combobox-input-wrapper[aria-invalid="true"]:focus-within,
+.nds-combobox-input-wrapper:has([aria-invalid="true"]):focus-within {
+  box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.4), 0 0 0 6px hsl(var(--ring) / 0.5);
+}
+
+.nds-combobox-label {
+  display: block;
+  margin-block-end: var(--spacing-1-5);
+  font-size: var(--text-control);
+  font-weight: var(--font-weight-medium, 500);
+  color: hsl(var(--foreground));
+}
+
+/* ── Input ─────────────────────────────────────────────────────────────────── */
+
+.nds-combobox-input {
+  flex: 1 1 6ch;                       /* cede espaço aos chips, mas nunca some */
+  min-width: 0;
+
+  padding: 0;
+  border: 0;
+  background: transparent;
+  outline: 0;
+
+  font-family: inherit;
+  font-size: var(--text-control);
+  line-height: 1.5;
+  color: hsl(var(--foreground));
+}
+
+.nds-combobox-input::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-combobox-input:disabled {
+  cursor: not-allowed;
+}
+
+/* ── Chips ─────────────────────────────────────────────────────────────────── */
+
+/* Gap PRÓPRIO, não `.nds-cluster`: chip não é botão, então não cai na regra do
+   piso de 16px entre botões (`button_gap_apertado`). Aqui a proximidade é o que
+   diz que os chips são um conjunto dentro do campo. */
+.nds-combobox-chips {
+  display: contents;
+}
+
+.nds-combobox-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+
+  padding-block: var(--spacing-0-5);
+  padding-inline-start: var(--spacing-2);
+  padding-inline-end: var(--spacing-1);
+
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  white-space: nowrap;
+
+  color: hsl(var(--secondary-foreground));
+  background-color: hsl(var(--secondary));
+  border-radius: var(--radius-sm);
+}
+
+.nds-combobox-chip[data-disabled] {
+  opacity: 0.6;
+}
+
+.nds-combobox-chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Sem `height`: a altura é RESULTADO do ícone mais o padding, como a
+     guideline 12 pede. A tentação aqui é fixar a medida porque a peça não
+     tem texto — mas o portão `fixed_height_on_text_primitive` isenta pelo
+     NOME (`-icon`, `-indicator`, `-thumb`), e renomear a classe só para
+     escapar dele seria trapacear o próprio portão. O ícone leva a medida. */
+  padding: var(--spacing-0-5);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  outline: 0;
+  transition: background-color var(--duration-fast);
+}
+
+.nds-combobox-chip-remove:hover {
+  background-color: hsl(var(--foreground) / 0.1);
+}
+
+.nds-combobox-chip-remove:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--ring));
+}
+
+.nds-combobox-chip-remove > svg {
+  width: var(--spacing-3);
+  height: var(--spacing-3);
+}
+
+/* ── Ações do campo ────────────────────────────────────────────────────────── */
+
+.nds-combobox-clear,
+.nds-combobox-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  /* Idem: a altura sai do ícone mais o padding. */
+  padding: var(--spacing-1);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: hsl(var(--muted-foreground));
+  cursor: pointer;
+  outline: 0;
+  transition: color var(--duration-fast), background-color var(--duration-fast);
+}
+
+.nds-combobox-clear:hover,
+.nds-combobox-trigger:hover {
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--muted));
+}
+
+.nds-combobox-clear:focus-visible,
+.nds-combobox-trigger:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--ring));
+}
+
+.nds-combobox-icon {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.nds-combobox-input-wrapper:has([aria-expanded="true"]) .nds-combobox-icon {
+  transform: rotate(180deg);
+}
+
+/* ── Popup ─────────────────────────────────────────────────────────────────── */
+
+.nds-combobox-positioner {
+  isolation: isolate;
+  z-index: var(--z-popover);
+}
+
+.nds-combobox-popup {
+  overflow: hidden;
+  /* Cadeia de fallback por lib, como no `select`: base-ui publica
+     `--anchor-width`, reka-ui publica `--reka-combobox-trigger-width`. Sem
+     ela o popup sai com a largura do CONTEÚDO, não a do campo. */
+  min-width: var(--anchor-width, var(--reka-combobox-trigger-width, 12rem));
+
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-md);
+  box-shadow:
+    0 0 0 1px hsl(var(--foreground) / 0.1),
+    var(--elevation-md);
+}
+
+.nds-combobox-list {
+  overflow-y: auto;
+  max-height: var(--available-height, var(--reka-combobox-content-available-height, 18rem));
+  padding: var(--spacing-1);
+}
+
+/* ── Itens ─────────────────────────────────────────────────────────────────── */
+
+.nds-combobox-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-2);
+
+  padding-block: var(--spacing-1-5);
+  padding-inline: var(--spacing-2);
+
+  font-size: var(--text-control);
+  line-height: 1.5;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* A opção ATIVA não tem foco — o foco vive no input, e ela é apontada por
+   `aria-activedescendant`. Por isso o realce é `[data-highlighted]`, escrito
+   por quem controla o teclado, e não `:focus`. */
+.nds-combobox-item[data-highlighted] {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-combobox-item[aria-disabled="true"] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.nds-combobox-item-indicator {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: hsl(var(--primary));
+}
+
+.nds-combobox-item-indicator > svg {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}
+
+.nds-combobox-item[aria-selected="false"] .nds-combobox-item-indicator {
+  visibility: hidden;
+}
+
+/* ── Grupo, separador e vazio ──────────────────────────────────────────────── */
+
+/* O grupo não pinta nada: existe para carregar `role="group"` e amarrar o
+   rótulo aos itens. Sem a classe, o contrato do markup mentia. */
+.nds-combobox-group {
+  display: block;
+}
+
+.nds-combobox-group-label {
+  padding-block: var(--spacing-1-5);
+  padding-inline: var(--spacing-2);
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-medium, 500);
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-combobox-separator {
+  height: 1px;
+  margin-block: var(--spacing-1);
+  background-color: hsl(var(--border));
+}
+
+.nds-combobox-empty {
+  padding-block: var(--spacing-6);
+  padding-inline: var(--spacing-2);
+  text-align: center;
+  font-size: var(--text-control);
+  color: hsl(var(--muted-foreground));
+}
