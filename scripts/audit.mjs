@@ -3473,11 +3473,52 @@ const RADICAIS_PT = [
  * Usado PELOS DOIS: pela regra e pelo gerador da linha de base. Ter dois
  * contadores é ter duas verdades, e o portão passa a comparar uma com a outra.
  */
-function identsPtNoCodigo(bruto) {
-  const codigo = stripComments(bruto)
-    .replace(/'(?:[^'\\]|\\.)*'/g, "''")
-    .replace(/"(?:[^"\\]|\\.)*"/g, '""')
+function identsPtNoCodigo(bruto, caminho = '') {
+  // Comentário de MARCAÇÃO também é comentário. O `stripComments` cobre `//` e
+  // `/* */`, que é o bastante para .ts, mas .svelte e .vue escrevem nota em
+  // `<!-- -->` — e português ali é a regra da casa, não desvio dela. Sem esta
+  // linha o portão empurrava a nota para dentro do `<script>` só para escapar
+  // dele, que é o portão mandando piorar o código.
+  const semMarcacao = bruto.replace(/<!--[\s\S]*?-->/g, ' ');
+  // O blank de literais é heurística de PAREAMENTO, e apóstrofo de prosa
+  // ("Don't", "d'água") abre uma aspa que nunca fecha: dali para a frente o
+  // pareamento inverte e texto de template passa a contar como código. Foi o
+  // que aconteceu ao descascar `<!-- -->`: um "Don't" saiu de dentro de um
+  // comentário, a paridade do arquivo virou, e 30 páginas de docs reprovaram
+  // por palavra de interface. A guarda é só esta — aspa de abertura não vem
+  // grudada em letra ou dígito. Não guardei contra quebra de linha: atributo
+  // de marcação atravessa linha por rotina (`:items="[…]"` em três linhas), e
+  // proibir isso expôs 12 nomes antigos de uma vez, medido.
+  let codigo = stripComments(semMarcacao)
+    .replace(/(^|[^\w'])'(?:[^'\\]|\\.)*'/g, "$1''")
+    .replace(/(^|[^\w"])"(?:[^"\\]|\\.)*"/g, '$1""')
     .replace(/`(?:[^`\\]|\\.)*`/g, '``');
+
+  // TEXTO ENTRE TAGS é interface, não código: `<Trigger>Item fechado</Trigger>`
+  // não declara nada. O contador lia isso, e não reprovava só por acidente —
+  // aquele mesmo "Don't" abria uma aspa que apagava metade do template. Tirado
+  // o acidente, 30 páginas de docs reprovaram por palavra de tela.
+  //
+  // Só em arquivo que É marcação (.vue, .svelte, .tsx). Em .ts puro `a > b` e
+  // `c < d` casariam o mesmo padrão e apagariam expressão real — e a marcação
+  // do Angular mora em crase, que a linha acima já apagou inteira.
+  //
+  // Duas ressalvas, e as duas são o portão inteiro:
+  //  - o corpo de `<script>` fica ENTRE `>` e `<`. Descascar sem tirá-lo de
+  //    lado cegava a regra justamente onde mora o código: `const rotuloAtivo`
+  //    dentro do `<script>` de um .svelte passava limpo. Medido.
+  //  - `{expr}` entre tags é código, não texto. Por isso o padrão recusa chave:
+  //    `<span>{rotuloAtivo}</span>` continua sendo lido.
+  if (/\.(vue|svelte|tsx)$/.test(caminho)) {
+    const scripts = [];
+    codigo = codigo
+      .replace(/<script[\s\S]*?<\/script>/gi, (bloco) => {
+        scripts.push(bloco);
+        return '<script></script>';
+      })
+      .replace(/>[^<>{}]*</g, '><');
+    codigo += '\n' + scripts.join('\n');
+  }
   const vistos = new Set();
   for (const radical of RADICAIS_PT) {
     const Cap = radical[0].toUpperCase() + radical.slice(1);
@@ -3503,7 +3544,7 @@ function gerarBaselinePt() {
       const p = join(dir, e.name);
       if (e.isDirectory()) { if (e.name !== 'node_modules') varrer(p); continue; }
       if (!/\.(tsx?|vue|svelte)$/.test(e.name)) continue;
-      const n = identsPtNoCodigo(readFile(p) || '').size;
+      const n = identsPtNoCodigo(readFile(p) || '', p).size;
       if (n) base[relative(ROOT, p).split('\\').join('/')] = n;
     }
   };
@@ -3564,7 +3605,7 @@ function auditIdentificadorPtNovo(slug) {
     for (const file of all) {
       const bruto = readFile(file);
       if (!bruto) continue;
-      const vistos = identsPtNoCodigo(bruto);
+      const vistos = identsPtNoCodigo(bruto, file);
 
       const rel = relative(ROOT, file).split('\\').join('/');
       const permitido = base[rel] ?? 0;
