@@ -1,0 +1,231 @@
+import type { Meta, StoryObj } from '@storybook/html-vite';
+import { fn, userEvent, within, expect, waitFor } from 'storybook/test';
+import { createCombobox, type ComboboxItem } from './combobox';
+import { comboboxSource } from './combobox.source';
+
+// ─── Dados fixos ──────────────────────────────────────────────────────────────
+//
+// Os mesmos rótulos que a spec de exemplos fechou, e que as outras quatro
+// stacks vão repetir. Divergir aqui é o que faz a mesma story mostrar coisas
+// diferentes em cada stack — e isso só aparece tarde, na comparação final.
+
+const PAISES: ComboboxItem[] = [
+  { value: 'brasil', label: 'Brasil' },
+  { value: 'argentina', label: 'Argentina' },
+  { value: 'chile', label: 'Chile' },
+  { value: 'colombia', label: 'Colômbia' },
+  { value: 'mexico', label: 'México' },
+  { value: 'peru', label: 'Peru' },
+  { value: 'portugal', label: 'Portugal' },
+  { value: 'espanha', label: 'Espanha' },
+  { value: 'uruguai', label: 'Uruguai' },
+];
+
+// ─── Meta ─────────────────────────────────────────────────────────────────────
+
+type ComboboxArgs = {
+  label: string;
+  placeholder: string;
+  multiple: boolean;
+  disabled: boolean;
+  readOnly: boolean;
+  invalid: boolean;
+  name: string;
+  onValueChange: (value: string[]) => void;
+};
+
+const meta: Meta<ComboboxArgs> = {
+  title: 'UI/Combobox',
+  tags: ['autodocs', 'form'],
+  parameters: {
+    layout: 'padded',
+    docs: { source: { transform: comboboxSource } },
+  },
+  argTypes: {
+    label: {
+      control: 'text',
+      description: 'Rótulo visível do campo.',
+      table: { type: { summary: 'string' } },
+    },
+    placeholder: {
+      control: 'text',
+      description: 'Texto exibido enquanto o campo está vazio.',
+      table: { type: { summary: 'string' } },
+    },
+    multiple: {
+      control: 'boolean',
+      description: 'Modo múltiplo: os escolhidos viram chips dentro do campo.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Desabilita o campo e impede a abertura da lista.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    readOnly: {
+      control: 'boolean',
+      description: 'Permite ler e navegar, mas não altera a escolha.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    invalid: {
+      control: 'boolean',
+      description: 'Marca o campo como inválido e pinta a borda de erro.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    name: {
+      control: 'text',
+      description: 'Nome do campo no formulário.',
+      table: { type: { summary: 'string' } },
+    },
+    onValueChange: {
+      action: 'valueChange',
+      description: 'Callback de mudança da escolha.',
+      table: { type: { summary: '(value: string[]) => void' } },
+    },
+  },
+  args: {
+    label: 'País',
+    placeholder: 'Buscar país',
+    multiple: false,
+    disabled: false,
+    readOnly: false,
+    invalid: false,
+    name: 'pais',
+    onValueChange: fn(),
+  },
+};
+
+export default meta;
+type Story = StoryObj<ComboboxArgs>;
+
+// ─── Playground ───────────────────────────────────────────────────────────────
+
+export const Playground: Story = {
+  render: (args) =>
+    createCombobox({
+      items: PAISES,
+      label: args.label,
+      placeholder: args.placeholder,
+      multiple: args.multiple,
+      disabled: args.disabled,
+      readOnly: args.readOnly,
+      invalid: args.invalid,
+      name: args.name,
+      onValueChange: args.onValueChange,
+    }),
+  play: async ({ canvasElement, step, args }) => {
+    const canvas = within(canvasElement);
+    const campo = canvas.getByRole('combobox');
+    const spy = args.onValueChange as unknown as ReturnType<typeof fn>;
+
+    await step('O campo é anunciado como combobox fechado', async () => {
+      // `role` no INPUT, não num wrapper: é o que faz o leitor de tela anunciar
+      // o campo como combobox e ler a opção ativa depois.
+      await expect(campo.tagName).toBe('INPUT');
+      await expect(campo).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    await step('Digitar abre a lista e filtra', async () => {
+      // `clear` e não `click`: o painel Interactions reexecuta a play no MESMO
+      // DOM, sem remontar. Na segunda rodada o campo já traz "Brasil" do último
+      // passo, e digitar por cima daria "Brasilbra" — filtro vazio, asserção
+      // invertida, suíte verde (o vitest remonta) e painel vermelho.
+      await userEvent.clear(campo);
+      await userEvent.type(campo, 'bra');
+      await waitFor(async () => {
+        await expect(campo).toHaveAttribute('aria-expanded', 'true');
+      });
+      const opcoes = canvas.getAllByRole('option');
+      await expect(opcoes).toHaveLength(1);
+      await expect(opcoes[0]).toHaveTextContent('Brasil');
+    });
+
+    await step('A opção ativa é apontada, e não focada', async () => {
+      // Sem esta medida, mover o foco para a opção passaria — e a digitação
+      // pararia de funcionar, que é o defeito clássico do padrão.
+      const ativo = canvas.getAllByRole('option')[0];
+      await expect(campo).toHaveAttribute('aria-activedescendant', ativo.id);
+      await expect(campo).toHaveFocus();
+    });
+
+    await step('Enter escolhe a opção ativa', async () => {
+      spy.mockClear();
+      await userEvent.keyboard('{Enter}');
+      await expect(spy).toHaveBeenCalledWith(['brasil']);
+      await expect(campo).toHaveValue('Brasil');
+      await expect(campo).toHaveAttribute('aria-expanded', 'false');
+    });
+  },
+};
+
+// ─── Múltiplo com chips ───────────────────────────────────────────────────────
+
+export const MultipleWithChips: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Modo múltiplo: cada escolhido vira um chip dentro do campo. Backspace com o texto vazio remove o último.',
+      },
+    },
+  },
+  args: {
+    label: 'Tecnologias',
+    placeholder: 'Adicionar tecnologia',
+    multiple: true,
+    name: 'tecnologias',
+  },
+  render: (args) =>
+    createCombobox({
+      items: [
+        { value: 'react', label: 'React' },
+        { value: 'vue', label: 'Vue' },
+        { value: 'svelte', label: 'Svelte' },
+        { value: 'angular', label: 'Angular' },
+      ],
+      label: args.label,
+      placeholder: args.placeholder,
+      multiple: true,
+      defaultValue: ['react', 'vue'],
+      name: args.name,
+      onValueChange: args.onValueChange,
+    }),
+  play: async ({ canvasElement, step, args }) => {
+    const canvas = within(canvasElement);
+    const campo = canvas.getByRole('combobox');
+    const spy = args.onValueChange as unknown as ReturnType<typeof fn>;
+    const chips = () =>
+      canvasElement.querySelectorAll('[data-slot="combobox-chip"]');
+
+    await step('Os escolhidos iniciais aparecem como chips', async () => {
+      await expect(chips()).toHaveLength(2);
+      await expect(chips()[0]).toHaveTextContent('React');
+      await expect(chips()[1]).toHaveTextContent('Vue');
+    });
+
+    await step('Cada botão de remover tem nome próprio', async () => {
+      // Cinco botões chamados "Remover" são indistinguíveis para quem navega
+      // por lista de controles — o rótulo entra no nome.
+      await expect(canvas.getByRole('button', { name: 'Remover React' })).toBeVisible();
+      await expect(canvas.getByRole('button', { name: 'Remover Vue' })).toBeVisible();
+    });
+
+    await step('Backspace com o texto vazio remove o último chip', async () => {
+      // É o gesto que define o chip: sem ele, desfazer exige o mouse.
+      spy.mockClear();
+      campo.focus();
+      await userEvent.keyboard('{Backspace}');
+      await expect(spy).toHaveBeenCalledWith(['react']);
+      await expect(chips()).toHaveLength(1);
+    });
+
+    await step('Escolher pelo teclado devolve o chip', async () => {
+      // Devolve a story ao estado que o Chromatic fotografa, e prova a ida e a
+      // volta na mesma rodada.
+      await userEvent.type(campo, 'vue');
+      await userEvent.keyboard('{Enter}');
+      await expect(chips()).toHaveLength(2);
+      await expect(campo).toHaveValue('');
+    });
+  },
+};

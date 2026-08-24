@@ -189,7 +189,8 @@
   justify-content: center;
   flex-shrink: 0;
 
-  /* Idem: a altura sai do ícone mais o padding. */
+  /* Idem: a altura sai do ícone mais o padding, e a soma dá 24px —
+     16px de ícone + 4px de cada lado. */
   padding: var(--spacing-1);
   border: 0;
   border-radius: var(--radius-sm);
@@ -211,13 +212,17 @@
   box-shadow: 0 0 0 2px hsl(var(--ring));
 }
 
-.nds-combobox-icon {
+/* Todo ícone das ações do campo, não só o do gatilho. Sem esta regra o SVG
+   do botão de limpar saía sem medida e o alvo colapsava. */
+.nds-combobox-icon,
+.nds-combobox-clear > svg,
+.nds-combobox-trigger > svg {
   width: var(--spacing-4);
   height: var(--spacing-4);
   transition: transform var(--duration-fast) var(--ease-standard);
 }
 
-.nds-combobox-input-wrapper:has([aria-expanded="true"]) .nds-combobox-icon {
+.nds-combobox-input-wrapper:has([aria-expanded="true"]) .nds-combobox-trigger > svg {
   transform: rotate(180deg);
 }
 
