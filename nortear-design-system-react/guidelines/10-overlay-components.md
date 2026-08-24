@@ -100,10 +100,11 @@ AlertDialog
 
 **API e exemplos**: `src/components/ui/command.tsx` + stories + `CommandDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Três padrões de uso**:
-- **Inline**: renderizado diretamente na página — busca local, combobox simples.
-- **Popover (Combobox)**: trigger clicável que abre uma lista pesquisável — substituto do Select com busca.
+**Dois padrões de uso**:
+- **Inline**: renderizado diretamente na página — busca local sobre uma lista de ações.
 - **Dialog (Command Palette)**: ativado por atalho de teclado — acesso rápido a ações globais.
+
+Para escolher um valor de formulário com busca, o componente é o `Combobox` (`06-form-components.md`) — não esta paleta.
 
 **Estrutura de subcomponentes**:
 ```
@@ -126,12 +127,12 @@ Command
 - Preferência: menu simples sem ícones, salvo instrução específica.
 - Sempre fechar o Dialog/Popover após `onSelect` (`setOpen(false)`).
 - **Command Palette (Cmd+K)**: o atalho **não é nativo** — implementar via `useEffect` + `addEventListener` para detectar `metaKey/ctrlKey + "k"` e alternar o estado do Dialog. Dica visual do atalho obrigatória (`<kbd>⌘K</kbd>` em botão de busca) — o usuário precisa descobrir o atalho.
-- **Combobox (Command + Popover)**: padrão substituto do `Select` com busca. Usar quando `Select` é insuficiente: listas com 10+ itens, busca por texto, seleção com preview. Para listas fixas pequenas sem busca, usar `Select`. No trigger, aplicar `role="combobox"` e `aria-expanded` no Button manualmente — nenhum dos dois primitivos envolvidos (`cmdk` no Command, `@base-ui/react` no Popover) aplica isso automaticamente.
+- **Não é escolha de valor**: lista de opções de formulário com busca é `Combobox`, que tem campo, chips, estado vazio e serialização próprios. Command é para executar ação, não para preencher campo.
 
 **Acessibilidade** (ver `11-acessibilidade.md`):
 - O filtro fuzzy e a navegação por Arrow keys são nativos.
 - `CommandShortcut` é apenas visual — a lógica do atalho deve ser implementada via `useEffect`.
-- No Combobox: `role="combobox"` e `aria-expanded` no trigger.
+- O papel de combobox fica no CAMPO DE BUSCA, ligado à lista real, com a opção ativa apontada por `aria-activedescendant` — o foco não sai do campo.
 
 ---
 
@@ -276,7 +277,7 @@ Drawer (direction)
 
 ## Dropdown Menu
 
-**Propósito**: lista de ações ativada por clique em um trigger explícito. Use em ações de linha em tabelas, menu de usuário, ações secundárias em cards. Para lista de opções de formulário, usar `Select`. Para busca com seleção, usar `Command` (Combobox).
+**Propósito**: lista de ações ativada por clique em um trigger explícito. Use em ações de linha em tabelas, menu de usuário, ações secundárias em cards. Para lista de opções de formulário, usar `Select`; com busca, `Combobox`.
 
 **API e exemplos**: `src/components/ui/dropdown-menu.tsx` + stories + `DropdownMenuDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 

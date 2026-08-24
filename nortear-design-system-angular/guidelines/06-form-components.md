@@ -290,7 +290,7 @@ div[ndsSlider]
 
 ## Select
 
-**Propósito**: escolher um valor de uma lista fechada. Para busca dentro da lista, a composição é Command dentro de Popover. Para escolha múltipla, o conteúdo compartilhado manda usar grupo de checkbox.
+**Propósito**: escolher um valor de uma lista fechada. Para busca dentro da lista, o componente é o Combobox. Para escolha múltipla, o conteúdo compartilhado manda usar grupo de checkbox.
 
 **Peças**: `nds-select`, `button[ndsSelectTrigger]`, `span[ndsSelectValue]`, `ng-template[ndsSelectContent]`, `div[ndsSelectItem]`, `div[ndsSelectGroup]`, `div[ndsSelectLabel]`, `div[ndsSelectSeparator]`, `svg[ndsSelectIcon]`.
 
@@ -321,12 +321,114 @@ Valor, aberto, desabilitado, obrigatório, inválido, nome, formulário e a fun�
 - Quando valor e rótulo diferem, a função de rótulo é obrigatória — sem ela o gatilho mostra o valor cru no primeiro quadro
 - **Escolha múltipla não é exposta** neste componente, de propósito: expor a chave sem indicador visual de vários escolhidos criaria superfície morta
 - A lista é portalizada: em teste, ela não está no canvas, e sim no corpo do documento
-- Lista longa pede busca — e busca dentro de Select não existe; a composição é outra
+- Lista longa pede busca — e busca dentro de Select não existe; o componente é o Combobox
 
 **Acessibilidade**:
 - Gatilho é `<button>` com estado de expansão
 - Setas navegam, digitar salta para a opção pela primeira letra, Escape fecha e devolve o foco
 - Opção escolhida anunciada como selecionada, não só marcada com ícone
+
+---
+
+## Combobox
+
+**Propósito**: campo de texto que filtra uma lista e devolve a opção escolhida. No modo múltiplo, os escolhidos viram chips dentro do próprio campo.
+
+**Quando usar em vez do Select**: lista com busca, 10+ itens, rótulos longos ou parecidos entre si, escolha múltipla que precisa ficar visível dentro do campo. Lista curta e fechada continua sendo Select.
+
+**Peças**: `nds-combobox`, `label[ndsComboboxLabel]`, `div[ndsComboboxInputWrapper]`, `div[ndsComboboxChips]`, `span[ndsComboboxChip]`, `button[ndsComboboxChipRemove]`, `input[ndsComboboxInput]`, `button[ndsComboboxClear]`, `button[ndsComboboxTrigger]`, `svg[ndsComboboxIcon]`, `ng-template[ndsComboboxPopup]`, `div[ndsComboboxList]`, `div[ndsComboboxItem]`, `span[ndsComboboxItemIndicator]`, `div[ndsComboboxGroup]`, `div[ndsComboboxGroupLabel]`, `div[ndsComboboxSeparator]`, `div[ndsComboboxEmpty]`. A constante `NDS_COMBOBOX` reúne a família inteira para o `imports` de quem compõe.
+
+**Estrutura** (o `data-slot` ao lado é o contrato compartilhado):
+
+```
+nds-combobox                             combobox
+├── label[ndsComboboxLabel]              combobox-label
+├── div[ndsComboboxInputWrapper]         combobox-input-wrapper  ← a caixa que parece o campo
+│   ├── div[ndsComboboxChips]            combobox-chips
+│   │   └── span[ndsComboboxChip]        combobox-chip
+│   │       ├── (texto projetado)        combobox-chip-text
+│   │       └── button[ndsComboboxChipRemove]  combobox-chip-remove
+│   ├── input[ndsComboboxInput]          combobox-input          role="combobox"
+│   ├── button[ndsComboboxClear]         combobox-clear
+│   └── button[ndsComboboxTrigger]       combobox-trigger
+│       └── svg[ndsComboboxIcon]         combobox-icon
+└── ng-template[ndsComboboxPopup]        ← miolo, instanciado dentro do popup
+    ├── div[ndsComboboxList]             combobox-list           role="listbox"
+    │   ├── div[ndsComboboxGroup]        combobox-group          role="group"
+    │   │   ├── div[ndsComboboxGroupLabel]     combobox-group-label
+    │   │   └── div[ndsComboboxItem]     combobox-item           role="option"
+    │   │       ├── (texto projetado)    combobox-item-text
+    │   │       └── span[ndsComboboxItemIndicator]  combobox-item-indicator
+    │   └── div[ndsComboboxSeparator]    combobox-separator      aria-hidden
+    └── div[ndsComboboxEmpty]            combobox-empty
+```
+
+O posicionador e o popup (`combobox-positioner` e `combobox-popup`) são montados pela própria raiz, em volta do miolo. O miolo é `<ng-template>` porque ele é instanciado DENTRO do popup a cada abertura: se viesse como elemento projetado, fechar removeria os nós sem destruir as diretivas — e é o desmonte que desregistra as opções do motor de filtragem.
+
+**Modo múltiplo**: `multiple` troca o valor exibido por chips dentro da própria caixa. Cada chip traz o rótulo do escolhido e um botão de remover. Os chips quebram linha junto com o campo de texto. Backspace com o texto vazio remove o último chip, e as setas horizontais entram na fila de chips.
+
+**Entradas da raiz** — chegam por diretiva de host do primitivo, e por isso valem no elemento `nds-combobox`:
+
+| Nome | Tipo | Padrão | Função |
+|---|---|---|---|
+| `value` | `model<string \| string[]>` | — | Escolha atual, de duas vias; lista no modo múltiplo |
+| `defaultValue` | `string \| string[]` | — | Escolha inicial quando o campo administra o próprio estado |
+| `valueChange` | `output<string \| string[]>` | — | Muda a escolha; dispara também ao remover chip e ao limpar |
+| `inputValue` | `model<string>` | `''` | Texto de busca, de duas vias |
+| `inputValueChange` | `output<string>` | — | Muda o texto digitado; é o gancho para buscar opções no servidor |
+| `open` · `defaultOpen` · `openChange` | — | — | Abertura da lista |
+| `multiple` | `boolean` | `false` | Escolhidos viram chips dentro do campo |
+| `filter` | `(value, query, itemToString) => boolean` | — | Substitui o filtro. A assinatura é a do primitivo, de três argumentos: o terceiro converte a opção em texto |
+| `locale` | `string` | — | Idioma da comparação do filtro padrão |
+| `limit` | `number` | — | Máximo de opções exibidas |
+| `disabled` · `readOnly` · `required` | `boolean` | `false` | Estados do campo |
+| `invalid` | `boolean` | `false` | Marca o campo como inválido |
+| `name` · `form` | `string` | — | Campo no formulário |
+| `loopFocus` | `boolean` | — | Da última opção a seta volta à primeira |
+| `highlightItemOnHover` | `boolean` | — | A opção sob o ponteiro vira a opção ativa |
+| `openOnInputClick` | `boolean` | — | Clicar no campo abre a lista |
+| `itemToStringLabel` · `isItemEqualToValue` | função | — | Como a opção vira texto e como duas opções se comparam |
+| `removedLabel` | `string` | `removido` | Sufixo do anúncio de remoção: "<rótulo do chip> <sufixo>" |
+
+`items` não existe: as opções são escritas no template, uma `div[ndsComboboxItem]` por opção, e o motor de filtragem as registra ao montarem.
+
+**Entradas das peças**:
+
+| Peça | Nome | Padrão | Função |
+|---|---|---|---|
+| `ndsComboboxPopup` | `side` · `align` · `sideOffset` · `alignOffset` | `bottom` / `start` / `4` / `0` | Posicionamento |
+| `ndsComboboxInput` | `id` · `invalid` | — | Identificador do campo e marca de inválido |
+| `ndsComboboxItem` | `value` · `textValue` · `disabled` | — | Opção da lista |
+| `ndsComboboxChip` | `value` | — | Qual escolhido este chip representa |
+| `ndsComboboxClear` | `disabled` | — | Desliga o botão de limpar |
+
+**Regras**:
+- A primeira opção visível fica destacada sempre que a lista filtra — é regra da raiz, não opção que se possa desligar: sem destaque, digitar e apertar Enter não escolheria nada. É contrato das cinco stacks, não preferência.
+- Os textos de interface — mensagem de vazio, nome do botão de limpar, nome do gatilho, nome do botão de remover e o sufixo de `removedLabel` — nascem em português e **têm de ser passados traduzidos** por quem monta a página. Nenhum deles muda de idioma sozinho, e o nome que o primitivo escreve no botão de remover vem fixo em inglês: o atributo do template vence, porque o Angular funde os atributos do template por último.
+- Botão de remover tem nome PRÓPRIO, um por chip: "Remover Brasil", nunca cinco botões chamados "Remover" — nome repetido em vários controles é o mesmo que nome nenhum (WCAG 4.1.2).
+- Estado vazio sempre presente: lista filtrada sem resultado nunca fica em branco.
+- O separador é decorativo e sai da árvore de acessibilidade: separador não é filho permitido de `role="listbox"`, e a lista inteira reprovaria por causa dele.
+- A lista é portalizada: em teste, ela não está no canvas, e sim no corpo do documento.
+- Chip é rótulo de opção escolhida, não texto livre. Valor digitado que vira etiqueta é outro componente.
+
+**Acessibilidade**:
+- `role="combobox"` vai no INPUT, não num wrapper nem num botão — é o padrão ARIA 1.2.
+- O foco NUNCA sai do campo de texto: a opção ativa é apontada por `aria-activedescendant` e realçada por `[data-highlighted]`. Mover o foco para a opção quebraria a digitação, que é o ponto do componente.
+- `aria-expanded` acompanha a lista aberta ou fechada; `aria-autocomplete="list"` declara que digitar filtra; `aria-selected="true"` na opção escolhida; `aria-invalid="true"` quando a validação reprova.
+- A lista precisa de nome próprio, e ela o herda do rótulo do campo — assim campo e lista dizem a mesma coisa.
+- O `<label>` leva o foco ao campo pelo `for`, e não só por `aria-labelledby`: clicar no rótulo é metade do que um rótulo existe para fazer.
+- Remover um chip não move o foco nem muda o texto do campo: quem anuncia é uma região viva `role="status"`, montada o tempo todo. Vale para os três gestos que tiram um escolhido — botão do chip, Backspace com o texto vazio e Delete sobre o chip focado.
+- No gatilho, o `aria-labelledby` do primitivo é apagado de propósito: ele vence `aria-label`, e o botão passaria a se chamar como o campo, deixando dois controles com o mesmo nome na lista do leitor de tela.
+- Teclado: digitar filtra e abre a lista; ↓ e ↑ andam pelas opções e dão a volta; Enter escolhe a ativa; Escape fecha; Tab fecha e sai do campo; Backspace com o texto vazio remove o último chip; Home e End vão à primeira e à última opção.
+- O gatilho fica fora da ordem de tabulação: quem tem foco é o campo, e o Tab tem de sair dele em vez de parar num segundo alvo que faz o que a seta já faz.
+
+**Divergências de API registradas** (divergência de framework se anota, não se alinha):
+- O contêiner de chips carrega `role="toolbar"`, que é o modelo de teclado do primitivo — chips navegáveis por seta.
+- Escape com a lista já fechada limpa o texto E a escolha, não só o texto.
+- O campo escondido do formulário é criado pelo primitivo como IRMÃO da raiz, sem `data-slot="combobox-hidden-input"`.
+- Em modo simples o valor é uma string, e não uma lista de um.
+
+**Analytics**: `option_select` com `{ component: 'combobox', field_name, value, label, location }` ao escolher uma opção; `field_change` com `{ component: 'combobox', field_name, value, location }` ao remover um chip ou limpar o campo.
 
 ---
 

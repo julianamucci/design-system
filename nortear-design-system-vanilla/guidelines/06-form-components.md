@@ -93,6 +93,104 @@ wrapper (space-y-2)
 
 ---
 
+## Combobox
+
+**Propósito**: campo de texto que filtra uma lista e devolve a opção escolhida. No modo múltiplo, os escolhidos viram chips dentro do próprio campo.
+
+**Quando usar em vez do Select**: lista com busca, 10+ itens, rótulos longos ou parecidos entre si, escolha múltipla que precisa ficar visível dentro do campo. Lista curta e fechada continua sendo Select; duas opções continuam sendo Radio Group.
+
+**API e exemplos**: `src/components/ui/combobox.ts` + stories + `ComboboxDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+
+**Estrutura** (cada `data-slot` é o contrato compartilhado; aqui não há lib por baixo, então o que sai da fábrica é o que o design system define):
+
+```
+combobox                              raiz, display: contents
+├── combobox-label
+├── combobox-input-wrapper            ← a caixa que parece o campo
+│   ├── combobox-chips                (display: contents)
+│   │   └── combobox-chip
+│   │       ├── combobox-chip-text
+│   │       └── combobox-chip-remove
+│   ├── combobox-input                role="combobox"
+│   ├── combobox-clear
+│   └── combobox-trigger
+│       └── combobox-icon
+├── combobox-positioner
+│   └── combobox-popup
+│       └── combobox-list             role="listbox"
+│           ├── combobox-group        role="group"
+│           │   └── combobox-group-label
+│           ├── combobox-item         role="option"
+│           │   ├── combobox-item-text
+│           │   └── combobox-item-indicator
+│           └── combobox-empty
+├── (região viva, role="status")
+└── combobox-hidden-input             valor serializado para o formulário
+```
+
+Quem parece um campo é o `combobox-input-wrapper`, não o `<input>`: o campo de texto é transparente por dentro dele, e é isso que deixa chips e texto conviverem na mesma caixa com um anel de foco só. O contêiner de chips é `display: contents` — ele existe na árvore, mas não gera caixa própria, então os chips quebram linha junto com o campo de texto.
+
+**Modo múltiplo**: `multiple` troca o valor exibido por chips dentro da própria caixa. Cada chip traz o rótulo do escolhido e um botão de remover. Escolher limpa o texto de busca, porque manter o filtro esconderia as opções restantes; Backspace com o texto vazio remove o último chip, que é o gesto sem o qual desfazer exigiria o mouse.
+
+**Opções da fábrica**:
+
+| Nome | Tipo | Padrão | Função |
+|---|---|---|---|
+| `items` | `ComboboxItem[]` | — | **Obrigatória**. `{ value, label, disabled?, group? }`; itens com o mesmo `group` saem sob o mesmo cabeçalho |
+| `label` | `string` | — | Rótulo visível, amarrado ao campo de texto |
+| `aria-label` | `string` | — | Nome acessível quando não há rótulo visível |
+| `placeholder` | `string` | `''` | Dica exibida enquanto nada foi digitado |
+| `multiple` | `boolean` | `false` | Escolhidos viram chips dentro do campo |
+| `value` | `string[]` | — | Escolha em modo CONTROLADO |
+| `defaultValue` | `string[]` | `[]` | Escolha inicial; em escolha única, só o primeiro conta |
+| `inputValue` | `string` | — | Texto de busca em modo CONTROLADO |
+| `filter` | `(item: ComboboxItem, query: string) => boolean` | rótulo sem acento e sem caixa | Substitui o filtro. Recebe o texto digitado CRU, para casar por sinônimo ou por código interno |
+| `disabled` | `boolean` | `false` | Campo indisponível; os chips perdem o botão de remover |
+| `invalid` | `boolean` | `false` | Marca a caixa como inválida |
+| `name` | `string` | — | Nome no formulário. O valor viaja no campo escondido, separado por vírgula |
+| `id` | `string` | gerado | Base dos identificadores internos — campo, lista e opções |
+| `emptyMessage` | `string` | `Nenhum resultado` | Texto quando o filtro não casa com nada |
+| `clearLabel` | `string` | `Limpar` | Nome do botão que zera a escolha, e o que a região viva anuncia depois de limpar |
+| `triggerLabel` | `string` | `Abrir lista` | Nome do botão que abre e fecha a lista |
+| `removeLabel` | `string` | `Remover` | Prefixo do nome de cada botão de remover: "<prefixo> <rótulo>" |
+| `removedAnnouncement` | `(label: string) => string` | "<rótulo> removido" | Frase que a região viva lê ao remover um chip |
+| `onValueChange` | `(value: string[]) => void` | — | Muda a escolha. Recebe sempre a lista inteira, também em escolha única |
+| `onInputValueChange` | `(text: string) => void` | — | Muda o texto digitado; é o gancho para buscar opções no servidor |
+| `onOpenChange` | `(isOpen: boolean) => void` | — | Avisado a cada abertura e fechamento |
+| `className` | `string` | — | Classes `.nds-*` adicionais na raiz |
+
+**O que a fábrica devolve**: a RAIZ do campo — não o campo de texto —, com quatro verbos e a limpeza:
+
+| Verbo | Função |
+|---|---|
+| `setValue(value)` | Escreve a escolha. É por aqui que o modo controlado empurra o valor novo |
+| `getValue()` | Escolha atual, sempre como lista, também em escolha única |
+| `setInputValue(text)` | Escreve o texto de busca |
+| `getInputValue()` | Texto de busca exibido agora |
+| `destroy()` | Idempotente: solta o ouvinte de clique-fora e remove a lista aberta |
+
+**Regras**:
+- **Modo controlado tem forma própria aqui**: não há re-render de framework que empurre um valor novo para dentro. Passar `value` (ou `inputValue`) faz a fábrica DEIXAR de escrever esse estado — escolher, remover chip e limpar passam a apenas anunciar pelo callback, e a tela só se move quando quem manda responde com `setValue()` ou `setInputValue()`. Sem eles, `defaultValue` é o caminho de sempre e a fábrica administra tudo.
+- A raiz é `display: contents`: quem organiza rótulo e caixa em duas linhas é o contêiner que a recebe.
+- Rótulo visível por `label`, ou nome por `aria-label` — o papel de combobox não tira nome do próprio conteúdo, e o conteúdo aqui é o texto digitado.
+- Os cinco textos de interface — `emptyMessage`, `clearLabel`, `triggerLabel`, `removeLabel` e a frase de `removedAnnouncement` — nascem em português na fábrica e **têm de ser passados traduzidos** por quem monta a página. Nenhum deles muda de idioma sozinho.
+- Botão de remover tem nome PRÓPRIO, um por chip: a fábrica monta "Remover Brasil", e nunca cinco botões chamados "Remover" — nome repetido em vários controles é o mesmo que nome nenhum (WCAG 4.1.2). É por isso que `removeLabel` é um prefixo, e não o nome inteiro.
+- `removedAnnouncement` é função, e não sufixo: o rótulo precisa poder cair em qualquer ponto da frase. Em português ele abre ("Brasil removido"), mas amarrar a posição fecharia a porta para o idioma em que não abre.
+- Chip é rótulo de opção escolhida, não texto livre. Valor digitado que vira etiqueta é outro componente.
+
+**Acessibilidade**:
+- `role="combobox"` vai no INPUT, não num wrapper nem num botão — é o padrão ARIA 1.2.
+- O foco NUNCA sai do campo de texto: a opção ativa é apontada por `aria-activedescendant` e realçada por `[data-highlighted]`. Mover o foco para a opção quebraria a digitação, que é o ponto do componente.
+- `aria-expanded` acompanha a lista aberta ou fechada; `aria-autocomplete="list"` declara que digitar filtra; `aria-selected` em cada opção; `aria-invalid="true"` quando a validação reprova.
+- Remover um chip não move o foco nem muda o texto do campo: quem anuncia é uma região viva `role="status"`, montada o tempo todo dentro da raiz. O foco volta ao campo de texto porque o botão desaparece no mesmo gesto.
+- Teclado: digitar filtra e abre a lista; ↓ e ↑ andam pelas opções, pulam as desabilitadas e dão a volta; Enter escolhe a ativa; Escape fecha e, com a lista já fechada, limpa o texto; Tab fecha e sai do campo; Backspace com o texto vazio remove o último chip; Home e End vão à primeira e à última opção.
+- O gatilho fica fora da ordem de tabulação: quem tem foco é o campo, e o Tab tem de sair dele em vez de parar num segundo alvo que faz o que a seta já faz.
+- Ícones são montados nó a nó, e não por `innerHTML` — não há conteúdo de fora para sanitizar aqui, mas `innerHTML` numa fábrica é o caminho por onde a injeção entra na próxima vez que alguém passar um rótulo por ali.
+
+**Analytics**: emitir `option_select` com `{ component: 'combobox', field_name, value, label, location }` ao escolher uma opção; `field_change` com `{ component: 'combobox', field_name, value, location }` ao remover um chip ou limpar o campo.
+
+---
+
 ## Form (HTML nativo + Zod)
 
 **Propósito**: agrupar inputs e validar via Zod. Forms em vanilla TS usam `<form>` nativo + validação manual no submit.

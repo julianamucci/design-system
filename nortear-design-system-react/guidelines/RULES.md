@@ -99,7 +99,7 @@ Nunca inventar props que não existem. Casos frequentes:
 | Label | `font-bold` | `font-medium` (padrão do design system) |
 | Sonner | posição `top-right` | padrão é `bottom-right` |
 | Drawer | prop `side` | `direction` no `<Drawer>` |
-| Select | busca integrada | usar Combobox (`Command + Popover`) |
+| Select | busca integrada | usar Combobox |
 
 `CollapsibleTrigger`, `DialogTrigger`, `SheetTrigger`, `AlertDialogTrigger`, `DropdownMenuTrigger`, `PopoverTrigger`, `TooltipTrigger`: sempre com `asChild`.
 

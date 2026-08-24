@@ -307,14 +307,94 @@ Select (value, onValueChange)
 
 ## Combobox
 
-> **Padrão composto** — não é um componente isolado. É a combinação de `Command + Popover` para criar um Select com busca integrada. A implementação completa está em `10-overlay-components.md` → "Command — Combobox".
+**Propósito**: campo de texto que filtra uma lista e devolve a opção escolhida. No modo múltiplo, os escolhidos viram chips dentro do próprio campo. É componente próprio — primitivo, stories e docs page —, não uma composição montada a partir de outras peças.
 
-**Quando usar em vez do Select**:
-- Listas com 10+ itens onde busca por texto facilita a seleção
-- Itens com nomes longos ou similares
-- Seleção com confirmação visual do item escolhido (checkmark)
+**Quando usar**: lista com busca, 10+ itens, rótulos longos ou parecidos entre si, escolha múltipla que precisa ficar visível dentro do campo. Lista curta e fechada continua sendo `Select`; duas opções continuam sendo `RadioGroup`.
 
-**Integração com FormField**: passar `field.value` como `value` selecionado e `field.onChange` como callback de seleção. Detalhes no arquivo 10.
+**API e exemplos**: `src/components/ui/combobox/` + stories + `ComboboxDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+
+**Estrutura de subcomponentes** (o `data-slot` ao lado é o contrato compartilhado):
+
+```
+Combobox                            combobox
+├── ComboboxLabel                   combobox-label
+├── ComboboxInputWrapper            combobox-input-wrapper   ← a caixa que parece o campo
+│   ├── ComboboxChips               combobox-chips           (display: contents)
+│   │   └── ComboboxChip            combobox-chip
+│   │       └── ComboboxChipRemove  combobox-chip-remove
+│   ├── ComboboxInput               combobox-input           role="combobox"
+│   ├── ComboboxClear               combobox-clear
+│   └── ComboboxTrigger             combobox-trigger
+│       └── ComboboxIcon            combobox-icon
+└── ComboboxPositioner              combobox-positioner
+    └── ComboboxPopup               combobox-popup
+        ├── ComboboxList            combobox-list            role="listbox"
+        │   ├── ComboboxGroup       combobox-group
+        │   │   ├── ComboboxGroupLabel  combobox-group-label
+        │   │   └── ComboboxItem    combobox-item            role="option"
+        │   │       └── ComboboxItemIndicator  combobox-item-indicator
+        │   └── ComboboxSeparator   combobox-separator
+        └── ComboboxEmpty           combobox-empty
+```
+
+**Modo múltiplo**: `multiple` troca o valor exibido por chips dentro da própria caixa. Cada chip traz o rótulo do escolhido e um botão de remover. A peça de chips é `display: contents`, então os chips quebram linha junto com o campo de texto em vez de formarem uma faixa própria. Backspace com o texto vazio remove o último chip.
+
+O valor tem **um dono só**: ele mora na raiz, e os chips são marcação lida desse mesmo modelo. Remover um chip escreve de volta no modelo — não há segundo estado a sincronizar, e por isso o campo de texto nunca perde o foco no gesto.
+
+**Props da raiz**:
+
+| Prop | Tipo | Padrão | Função |
+|---|---|---|---|
+| `modelValue` | `string \| string[]` | — | Escolha atual (`v-model`); lista no modo múltiplo |
+| `defaultValue` | `string \| string[]` | — | Escolha inicial quando o campo administra o próprio estado |
+| `update:modelValue` | `(value: string \| string[]) => void` | — | Evento de mudança da escolha; dispara também ao remover chip e ao limpar |
+| `inputValue` | `string` | — | Texto de busca (`v-model:input-value`) |
+| `update:inputValue` | `(text: string) => void` | — | Evento de mudança do texto digitado; é o gancho para buscar opções no servidor |
+| `filter` | `(item: ComboboxFilterItem, query: string) => boolean` | — | Substitui o filtro. Sem ele, quem filtra é o primitivo, ignorando acento e caixa |
+| `multiple` | `boolean` | `false` | Escolhidos viram chips dentro do campo |
+| `disabled` | `boolean` | `false` | Campo indisponível: nada recebe foco e a lista não abre |
+| `invalid` | `boolean` | `false` | Marca o campo como inválido |
+| `name` | `string` | — | Nome do campo no formulário |
+| `highlightOnHover` | `boolean` | `true` | A opção sob o ponteiro vira a opção ativa |
+| `openOnClick` | `boolean` | `true` | Clicar no campo abre a lista — é o que o `cursor: text` da caixa promete |
+| `resetModelValueOnClear` | `boolean` | `true` | O botão de limpar zera a escolha, e não só o texto |
+
+O texto de busca e o filtro moram na RAIZ porque as duas coisas são lidas por mais de uma peça, e a raiz é a única que todas alcançam. O tipo do item do filtro é `ComboboxFilterItem`, e não `ComboboxItem`: este último já é o nome do COMPONENTE de opção, e os dois colidiriam no mesmo import.
+
+**Props das peças**:
+
+| Peça | Prop | Função |
+|---|---|---|
+| `ComboboxInput` | `placeholder` | Dica exibida enquanto nada foi digitado |
+| `ComboboxInput` | `displayValue` | Como o escolhido vira texto no campo |
+| `ComboboxChip` | `value` | Qual escolhido este chip representa |
+| `ComboboxChipRemove` | `aria-label` | Nome próprio do botão: "Remover Brasil" |
+| `ComboboxChipRemove` | `removedAnnouncement` | Frase que a região viva lê DEPOIS da remoção: "Brasil removido" |
+| `ComboboxClear` · `ComboboxTrigger` | `aria-label` | Nome acessível do botão de limpar e do de abrir a lista |
+| `ComboboxItem` | `value` · `disabled` | Opção da lista |
+| `ComboboxEmpty` | slot padrão | Texto quando o filtro não casa com nada |
+
+**Regras**:
+- `ComboboxLabel` sempre presente. Sem rótulo visível, o nome vem de `aria-label` no campo de texto: o papel de combobox não tira nome do próprio conteúdo, e o conteúdo aqui é o texto digitado.
+- Os textos de interface — mensagem de vazio, nome do botão de limpar, nome do gatilho, nome do botão de remover e a frase do anúncio de remoção — nascem em português dentro do componente e **têm de ser passados traduzidos** por quem monta a página. Nenhum deles muda de idioma sozinho, e o nome que o primitivo escreve no gatilho vem fixo em inglês: passar `aria-label` é o que o traduz.
+- Botão de remover tem nome PRÓPRIO, um por chip: "Remover Brasil", nunca cinco botões chamados "Remover" — nome repetido em vários controles é o mesmo que nome nenhum (WCAG 4.1.2). O nome diz o COMANDO; o anúncio da região viva diz o que ACONTECEU, e por isso são dois textos e não um.
+- Estado vazio sempre presente: lista filtrada sem resultado nunca fica em branco.
+- Ao passar `filter`, o filtro do primitivo é desligado e cada opção passa a decidir a própria presença — e o grupo se esconde quando todos os filhos somem. Cabeçalho de grupo sozinho na lista é o defeito clássico de filtrar item a item.
+- Chip é rótulo de opção escolhida, não texto livre. Valor digitado que vira etiqueta é outro componente.
+
+**Acessibilidade** (ver `11-acessibilidade.md`):
+- `role="combobox"` vai no INPUT, não num wrapper nem num botão — é o padrão ARIA 1.2.
+- O foco NUNCA sai do campo de texto: a opção ativa é apontada por `aria-activedescendant` e realçada por `[data-highlighted]`. Mover o foco para a opção quebraria a digitação, que é o ponto do componente.
+- `aria-expanded` acompanha a lista aberta ou fechada; `aria-autocomplete="list"` declara que digitar filtra; `aria-selected="true"` na opção escolhida; `aria-invalid="true"` quando a validação reprova.
+- Remover um chip não move o foco nem muda o texto do campo: quem anuncia é uma região viva `role="status"`, montada o tempo todo. O foco volta ao campo de texto porque o botão desaparece no mesmo gesto.
+- Teclado: digitar filtra e abre a lista; ↓ e ↑ andam pelas opções e dão a volta; Enter escolhe a ativa; Escape fecha e, com a lista já fechada, limpa o texto; Tab fecha e sai do campo; Backspace com o texto vazio remove o último chip, em UMA tecla; Home e End vão à primeira e à última opção.
+- O gatilho fica fora da ordem de tabulação: quem tem foco é o campo, e o Tab tem de sair dele em vez de parar num segundo alvo que faz o que a seta já faz. O botão de limpar, esse, é focável — é a única forma de zerar a escolha inteira sem o mouse.
+
+**Divergências de API registradas** (divergência de framework se anota, não se alinha):
+- O chip e a opção não embrulham o texto em nós `combobox-chip-text` e `combobox-item-text`: o texto chega pelo slot padrão, lado a lado com o botão de remover ou com a marca de escolhido, que é a forma que o conteúdo compartilhado ensina. Nenhuma folha e nenhum atributo de acessibilidade dependem daqueles nós.
+- O campo escondido do formulário é emitido pelo primitivo quando a raiz tem `name`, sem `data-slot="combobox-hidden-input"`.
+
+**Analytics** (ver `21-analytics.md`): `option_select` com `{ component: "combobox", field_name, value, label, location }` ao escolher uma opção; `field_change` com `{ component: "combobox", field_name, value, location }` ao remover um chip ou limpar o campo.
 
 ---
 

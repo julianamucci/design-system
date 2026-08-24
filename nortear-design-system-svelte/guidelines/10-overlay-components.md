@@ -199,29 +199,36 @@ TooltipProvider (root do app)
 
 ---
 
-## Command (Combobox)
+## Command
 
-**Propósito**: busca e seleção de items em lista — substitui Select quando busca é necessária.
+**Propósito**: paleta de busca e execução rápida de comandos, ações ou itens, com filtro integrado. Para escolher um valor de formulário com busca, o componente é o Combobox (`06-form-components.md`) — não esta paleta.
 
 **API e exemplos**: `src/components/ui/command/command.svelte` + stories + `CommandDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Estrutura** (combobox = Popover + Command):
+**Dois modos de uso**: inline, renderizada direto na página; e em diálogo (`CommandDialog`), aberta por atalho de teclado para acesso a ações globais.
+
+**Estrutura**:
 
 ```
-Popover (bind:open)
-├── PopoverTrigger (asChild → Button role="combobox" aria-expanded)
-└── PopoverContent
-    └── Command
-        ├── CommandInput (placeholder de busca)
-        └── CommandList
-            ├── CommandEmpty
-            └── CommandGroup
-                └── CommandItem (value, onSelect)
-                    ├── Check (opacity-100 quando selecionado)
-                    └── (label)
+Command
+├── CommandInput          (campo de busca; é ele que carrega role="combobox")
+└── CommandList
+    ├── CommandLoading    (enquanto os resultados não chegam)
+    ├── CommandEmpty      (nenhum resultado)
+    ├── CommandGroup      (agrupamento com cabeçalho)
+    │   ├── CommandItem   (value, onSelect)
+    │   └── CommandLinkItem
+    ├── CommandSeparator
+    └── CommandItem
+        └── CommandShortcut  (atalho visual, dentro do item)
 ```
 
 **Regras**:
-- Trigger declara `role="combobox"` e `aria-expanded={aberto}`
-- Indicador de seleção: `Check` com `opacity-100` no item ativo, `opacity-0` nos demais (mantém layout estável)
-- Empty state obrigatório (`CommandEmpty`) — nunca lista vazia silenciosa
+- `CommandEmpty` obrigatório — sem ele, resultado vazio fica em branco
+- `CommandGroup` com cabeçalho para organizar ações relacionadas; sem cabeçalho quando há um grupo só
+- Sempre fechar o diálogo depois de escolher
+- O atalho global de abertura **não é nativo** — exige ouvinte de teclado próprio, e a dica visual do atalho é obrigatória: o usuário precisa descobrir que ele existe
+
+**Acessibilidade**:
+- O papel de combobox fica no CAMPO DE BUSCA, ligado à lista real por `aria-controls`, com a opção ativa apontada por `aria-activedescendant` — o foco não sai do campo
+- `CommandShortcut` é apenas visual; a lógica do atalho é de quem consome

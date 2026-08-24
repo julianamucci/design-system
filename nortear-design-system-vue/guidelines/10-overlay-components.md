@@ -103,13 +103,14 @@ AlertDialog
 
 **API e exemplos**: `src/components/ui/command/command.vue` + stories + `CommandDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Três padrões de uso**:
+**Dois padrões de uso**:
 
 | Padrão | Uso |
 |--------|-----|
-| **Inline** | Renderizado diretamente na página — busca local, combobox simples |
-| **Popover (Combobox)** | Trigger clicável que abre lista pesquisável — substituto do Select com busca |
+| **Inline** | Renderizado diretamente na página — busca local sobre uma lista de ações |
 | **Dialog (Command Palette)** | Ativado por atalho de teclado — acesso rápido a ações globais |
+
+Para escolher um valor de formulário com busca, o componente é o `Combobox` (`06-form-components.md`) — não esta paleta.
 
 **Estrutura de subcomponentes**:
 
@@ -134,17 +135,12 @@ Command
 - Dica visual do atalho (`<kbd>⌘K</kbd>`) obrigatória quando usar Command Palette — o usuário precisa descobrir o atalho
 - Atalho global (Cmd+K) **não é nativo** do componente — requer listener manual no `mounted`/`onMounted`
 
-**Padrão Combobox — quando usar em vez de Select**:
-- Listas com 10+ itens
-- Itens com nomes longos ou similares
-- Seleção com confirmação visual do item escolhido (checkmark)
-
-Para listas fixas pequenas sem busca, usar `Select`.
+- **Não é escolha de valor**: lista de opções de formulário com busca é `Combobox`, que tem campo, chips, estado vazio e serialização próprios. Command é para executar ação, não para preencher campo
 
 **Acessibilidade** (ver `11-acessibilidade.md`):
 - Filtro fuzzy e navegação por Arrow keys nativos do componente
 - `CommandShortcut` é apenas visual — a lógica do atalho deve ser implementada via listener global
-- No Combobox: `role="combobox"` e `aria-expanded` no trigger — aplicar manualmente no Button trigger
+- O papel de combobox fica no CAMPO DE BUSCA, ligado à lista real, com a opção ativa apontada por `aria-activedescendant` — o foco não sai do campo
 
 ---
 
@@ -302,7 +298,7 @@ Drawer (direction)
 
 **Propósito**: lista de ações ativada por clique em um trigger explícito.
 
-**Quando usar**: ações de linha em tabelas, menu de usuário, ações secundárias em cards. Para lista de opções de formulário, usar `Select`. Para busca com seleção, usar `Command` (Combobox).
+**Quando usar**: ações de linha em tabelas, menu de usuário, ações secundárias em cards. Para lista de opções de formulário, usar `Select`; com busca, `Combobox`.
 
 **API e exemplos**: `src/components/ui/dropdown-menu/dropdown-menu.vue` + stories + `DropdownMenuDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 

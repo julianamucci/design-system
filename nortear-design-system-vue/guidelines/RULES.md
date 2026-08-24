@@ -93,7 +93,7 @@ Nunca inventar props que não existem. Casos frequentes:
 | Avatar | `size` | var interna escopada: `--avatar-size` (guideline 04) |
 | Badge | `size` | `class` customizado |
 | Drawer | prop `side` | `direction` no `<Drawer>` |
-| Select | busca integrada | usar Combobox (Command + Popover) |
+| Select | busca integrada | usar Combobox |
 
 Triggers de overlays sempre com `as-child`:
 `CollapsibleTrigger`, `DialogTrigger`, `SheetTrigger`, `AlertDialogTrigger`, `DropdownMenuTrigger`, `PopoverTrigger`, `TooltipTrigger`
