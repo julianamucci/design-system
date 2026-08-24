@@ -734,8 +734,8 @@
       "item5": "<strong>Contrast</strong> — all variants meet 4.5:1 between text and background. <code>link</code> variant includes hover underline to not rely solely on color.",
       "keyboard": {
         "tab": "Receives focus in natural DOM order.",
-        "enter": "Triggers <code>onClick</code> — native <button> behavior.",
-        "space": "Triggers <code>onClick</code> — native <button> behavior.",
+        "enter": "Triggers <code>onClick</code> — native &lt;button&gt; behavior.",
+        "space": "Triggers <code>onClick</code> — native &lt;button&gt; behavior.",
         "disabled": "When <code>disabled</code>, the button is skipped in tab navigation."
       },
       "aria": {
