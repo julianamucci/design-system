@@ -30,7 +30,7 @@ export const Variants: Story = {
   render: () => ({
     props: { variantes: VARIANTS },
     template: `
-      <div class="nds-cluster" data-spacing="sm">
+      <div class="nds-cluster" data-spacing="md">
         @for (v of variantes; track v.variant) {
           <button ndsButton [variant]="v.variant">{{ v.label }}</button>
         }

@@ -145,7 +145,7 @@ export const ActionPair: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-cluster';
-    wrap.dataset.spacing = 'sm';
+    wrap.dataset.spacing = 'md';
     wrap.append(
       createButton({ variant: 'outline', label: 'Cancelar' }),
       createButton({ variant: 'default', label: 'Confirmar' }),

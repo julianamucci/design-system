@@ -186,7 +186,7 @@ describe('transforms das stories de composição', () => {
 
   it('o par de ações põe a primária à direita, com o respiro no container', () => {
     const saida = actionsButtonPairSource();
-    expect(saida).toContain('<div class="nds-cluster" data-spacing="sm">');
+    expect(saida).toContain('<div class="nds-cluster" data-spacing="md">');
     expect(saida.indexOf('Cancelar')).toBeLessThan(saida.indexOf('Confirmar'));
     // O respiro é do container: margem no botão vazaria para toda composição
     // que reusasse a variante.

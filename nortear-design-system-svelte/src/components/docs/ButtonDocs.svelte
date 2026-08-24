@@ -191,7 +191,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
         <!-- .nds-cluster já traz flex-wrap: wrap; o style inline era inerte. -->
-        <div class="nds-cluster" data-spacing="sm">
+        <div class="nds-cluster" data-spacing="md">
           <Button onclick={() => handleDemoClick('default')}>{$tStore('demonstration.labels.primary')}</Button>
           <Button variant="secondary" onclick={() => handleDemoClick('secondary')}>{$tStore('demonstration.labels.secondary')}</Button>
           <Button variant="destructive" onclick={() => handleDemoClick('destructive')}>{$tStore('demonstration.labels.destructive')}</Button>
@@ -313,13 +313,13 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
         <Button>Clique aqui</Button>
       {/snippet}
       {#snippet doPair2()}
-        <div class="nds-cluster" data-spacing="sm">
+        <div class="nds-cluster" data-spacing="md">
           <Button variant="outline">Cancelar</Button>
           <Button>Salvar</Button>
         </div>
       {/snippet}
       {#snippet dontPair2()}
-        <div class="nds-cluster" data-spacing="sm">
+        <div class="nds-cluster" data-spacing="md">
           <Button>Salvar</Button>
           <Button>Enviar</Button>
         </div>
@@ -457,7 +457,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             name: $tStore('variants.compositions.actionPair.name'),
             description: $tStore('variants.compositions.actionPair.description'),
             useWhen: $tStore('variants.compositions.actionPair.use'),
-            code: `<div class="nds-cluster" data-spacing="sm">\n  <Button variant="outline">Cancelar</Button>\n  <Button>Confirmar</Button>\n</div>`,
+            code: `<div class="nds-cluster" data-spacing="md">\n  <Button variant="outline">Cancelar</Button>\n  <Button>Confirmar</Button>\n</div>`,
             preview: compActionPair,
           },
         ]}
@@ -482,7 +482,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
         </Button>
       {/snippet}
       {#snippet compActionPair()}
-        <div class="nds-cluster" data-spacing="sm">
+        <div class="nds-cluster" data-spacing="md">
           <Button variant="outline">Cancelar</Button>
           <Button>Confirmar</Button>
         </div>

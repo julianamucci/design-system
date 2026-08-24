@@ -202,7 +202,7 @@ export function createButtonDocs(): HTMLElement {
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-cluster';
-            wrap.dataset.spacing = 'sm';
+            wrap.dataset.spacing = 'md';
             wrap.append(
               buildDemoButton('default',     t('demonstration.labels.primary'),     'docs_demo'),
               buildDemoButton('secondary',   t('demonstration.labels.secondary'),   'docs_demo'),
@@ -323,7 +323,7 @@ export function createButtonDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-cluster';
-                wrap.dataset.spacing = 'xs';
+                wrap.dataset.spacing = 'md';
                 wrap.append(
                   createButton({ variant: 'outline', label: 'Cancelar' }),
                   createButton({ variant: 'default', label: 'Confirmar' }),
@@ -333,7 +333,7 @@ export function createButtonDocs(): HTMLElement {
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-cluster';
-                wrap.dataset.spacing = 'xs';
+                wrap.dataset.spacing = 'md';
                 wrap.append(
                   createButton({ variant: 'default', label: 'Salvar' }),
                   createButton({ variant: 'default', label: 'Enviar' }),
@@ -546,7 +546,7 @@ export function createButtonDocs(): HTMLElement {
               code:
                 `const wrap = document.createElement('div');\n` +
                 `wrap.className = 'nds-cluster';\n` +
-                `wrap.dataset.spacing = 'xs';\n` +
+                `wrap.dataset.spacing = 'md';\n` +
                 `wrap.append(\n` +
                 `  createButton({ variant: 'outline', label: 'Cancelar' }),\n` +
                 `  createButton({ variant: 'default', label: 'Confirmar' }),\n` +
@@ -554,7 +554,7 @@ export function createButtonDocs(): HTMLElement {
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-cluster';
-                wrap.dataset.spacing = 'xs';
+                wrap.dataset.spacing = 'md';
                 wrap.append(
                   createButton({ variant: 'outline', label: 'Cancelar' }),
                   createButton({ variant: 'default', label: 'Confirmar' }),

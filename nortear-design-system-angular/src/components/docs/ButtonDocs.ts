@@ -148,13 +148,13 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
       <button ndsButton variant="default">Clique aqui</button>
     </ng-template>
     <ng-template #tplDoDont2Do>
-      <span class="nds-cluster" data-spacing="xs">
+      <span class="nds-cluster" data-spacing="md">
         <button ndsButton variant="outline">Cancelar</button>
         <button ndsButton variant="default">Confirmar</button>
       </span>
     </ng-template>
     <ng-template #tplDoDont2Dont>
-      <span class="nds-cluster" data-spacing="xs">
+      <span class="nds-cluster" data-spacing="md">
         <button ndsButton variant="default">Salvar</button>
         <button ndsButton variant="default">Enviar</button>
       </span>
@@ -219,7 +219,7 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
     <ng-template #tplCompActionPair>
       <!-- Rótulos literais como no Vanilla: são exemplo de composição, não
            chrome da interface, então não vivem em ui.json. -->
-      <span class="nds-cluster" data-spacing="sm">
+      <span class="nds-cluster" data-spacing="md">
         <button ndsButton variant="outline">Cancelar</button>
         <button ndsButton variant="default">Confirmar</button>
       </span>
@@ -248,7 +248,7 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
       <ng-container docsMain>
         <!-- 1. Demonstração -->
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div class="nds-cluster" data-spacing="sm">
+          <div class="nds-cluster" data-spacing="md">
             @for (v of demoVariants(); track v.variant) {
               <button
                 ndsButton

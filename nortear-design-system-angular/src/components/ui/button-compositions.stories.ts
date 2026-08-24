@@ -16,7 +16,7 @@ export const WithIconAndIconOnly: Story = {
   parameters: { covers: ['functional.item6', 'accessibility.item4', 'visual.item5'] },
   render: () => ({
     template: `
-      <div class="nds-cluster" data-spacing="sm">
+      <div class="nds-cluster" data-spacing="md">
         <button ndsButton>
           <svg ndsButtonIcon kind="download"></svg>
           Baixar relatório
@@ -61,7 +61,7 @@ export const AsLink: Story = {
     // elemento tem que ser um <a>, senão o leitor anuncia "botão" para algo
     // que muda de página e o Ctrl+clique deixa de funcionar.
     template: `
-      <div class="nds-cluster" data-spacing="sm">
+      <div class="nds-cluster" data-spacing="md">
         <a ndsButton href="#relatorios">Ver relatórios</a>
         <button ndsButton variant="secondary">Gerar agora</button>
       </div>

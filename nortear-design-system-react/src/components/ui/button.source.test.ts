@@ -184,7 +184,7 @@ describe('composições', () => {
 
   it('o par de ações deixa a primária à direita, e o respiro é do contêiner', () => {
     const saida = actionsButtonPairSource();
-    expect(saida).toContain('className="nds-cluster" data-spacing="sm"');
+    expect(saida).toContain('className="nds-cluster" data-spacing="md"');
     expect(saida.indexOf('Cancelar')).toBeLessThan(saida.indexOf('Confirmar'));
     expect(saida).toContain('<Button variant="outline">Cancelar</Button>');
     expect(saida).toContain('<Button>Confirmar</Button>');

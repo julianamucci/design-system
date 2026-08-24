@@ -148,7 +148,7 @@ describe('transforms das stories de composição', () => {
 
   it('no par de ações a primária fica à direita, com o respiro do container', () => {
     const saida = actionsButtonPairSource();
-    expect(saida).toContain('class="nds-cluster" data-spacing="sm"');
+    expect(saida).toContain('class="nds-cluster" data-spacing="md"');
     expect(saida.indexOf('Cancelar')).toBeLessThan(saida.indexOf('Confirmar'));
   });
 

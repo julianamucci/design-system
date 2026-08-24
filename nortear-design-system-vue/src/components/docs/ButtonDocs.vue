@@ -232,7 +232,7 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.actionPair.name'),
     description: tContent('variants.compositions.actionPair.description'),
     useWhen: tContent('variants.compositions.actionPair.use'),
-    code: `<div class="nds-cluster" data-spacing="sm">\n  <Button variant="outline">Cancelar</Button>\n  <Button>Confirmar</Button>\n</div>`,
+    code: `<div class="nds-cluster" data-spacing="md">\n  <Button variant="outline">Cancelar</Button>\n  <Button>Confirmar</Button>\n</div>`,
   },
 ]);
 

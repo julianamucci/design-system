@@ -207,7 +207,7 @@ export function buttonSoIconSource(): string {
 export function actionsButtonPairSource(): string {
   return vueSnippet(
     IMPORT,
-    `<div class="nds-cluster" data-spacing="sm">
+    `<div class="nds-cluster" data-spacing="md">
   <Button variant="outline">Cancelar</Button>
   <Button>Confirmar</Button>
 </div>`,

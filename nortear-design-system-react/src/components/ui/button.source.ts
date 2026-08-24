@@ -271,7 +271,7 @@ export function buttonSomenteIconSource(): string {
 export function actionsButtonPairSource(): string {
   return jsxSnippet(
     IMPORT,
-    `<div className="nds-cluster" data-spacing="sm">
+    `<div className="nds-cluster" data-spacing="md">
   <Button variant="outline">Cancelar</Button>
   <Button>Confirmar</Button>
 </div>`,

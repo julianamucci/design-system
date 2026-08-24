@@ -134,7 +134,7 @@ export const IconOnly: Story = {
 
 export const ActionPair: Story = {
   render: () => (
-    <div className="nds-cluster" data-spacing="sm">
+    <div className="nds-cluster" data-spacing="md">
       <Button variant="outline">Cancelar</Button>
       <Button>Confirmar</Button>
     </div>

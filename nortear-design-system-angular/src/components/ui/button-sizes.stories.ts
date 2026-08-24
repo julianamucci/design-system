@@ -32,12 +32,12 @@ export const Sizes: Story = {
     props: { texts: TEXTS, icons: ICONS },
     template: `
       <div class="nds-stack" data-spacing="lg">
-        <div class="nds-cluster" data-spacing="sm">
+        <div class="nds-cluster" data-spacing="md">
           @for (b of texts; track b.size) {
             <button ndsButton [size]="b.size">{{ b.label }}</button>
           }
         </div>
-        <div class="nds-cluster" data-spacing="sm">
+        <div class="nds-cluster" data-spacing="md">
           @for (b of icons; track b.size) {
             <button ndsButton [size]="b.size" [attr.aria-label]="b.label">
               <svg ndsButtonIcon kind="plus"></svg>

@@ -170,7 +170,7 @@ export function actionsButtonPairSnippet(o: ActionsSnippetOptionsButtonPair = {}
     importing('button', 'createButton'),
     `const acoes = document.createElement('div');
 acoes.className = 'nds-cluster';
-acoes.dataset.spacing = 'sm';
+acoes.dataset.spacing = 'md';
 
 // A primária fica à direita: é a última do fluxo de leitura.
 acoes.append(

@@ -26,7 +26,7 @@ export const Disabled: Story = {
   render: (args) => ({
     props: { ...args },
     template: `
-      <div class="nds-cluster" data-spacing="sm">
+      <div class="nds-cluster" data-spacing="md">
         <button ndsButton [disabled]="true" (click)="onClick($event)">Salvar</button>
         <button ndsButton variant="destructive" [disabled]="true">Excluir</button>
       </div>

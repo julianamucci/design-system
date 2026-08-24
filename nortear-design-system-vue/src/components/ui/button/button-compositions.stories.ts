@@ -129,7 +129,7 @@ export const ActionPair: Story = {
   render: () => ({
     components: { Button },
     template: `
-      <div class="nds-cluster" data-spacing="sm">
+      <div class="nds-cluster" data-spacing="md">
         <Button variant="outline">Cancelar</Button>
         <Button>Confirmar</Button>
       </div>

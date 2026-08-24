@@ -186,7 +186,7 @@ import { Plus } from "lucide-react";`;
     >
           {/* ── Demonstração ──────────────────────────────────────────── */}
           <DocsDemonstration title={tContent("demonstration.title")}>
-            <div className="nds-cluster" data-spacing="sm">
+            <div className="nds-cluster" data-spacing="md">
               {([
                 { variant: undefined,     label: tContent("demonstration.labels.primary") },
                 { variant: "secondary",   label: tContent("demonstration.labels.secondary") },
@@ -331,13 +331,13 @@ import { Plus } from "lucide-react";`;
                 doLabel: tNav("common.do"),
                 dontLabel: tNav("common.dont"),
                 doPreview: (
-                  <div className="nds-cluster" data-spacing="xs">
+                  <div className="nds-cluster" data-spacing="md">
                     <Button variant="outline">Cancelar</Button>
                     <Button>Salvar</Button>
                   </div>
                 ),
                 dontPreview: (
-                  <div className="nds-cluster" data-spacing="xs">
+                  <div className="nds-cluster" data-spacing="md">
                     <Button>Salvar</Button>
                     <Button>Enviar</Button>
                   </div>
@@ -528,9 +528,9 @@ import { Plus } from "lucide-react";`;
                 name: tContent("variants.compositions.actionPair.name"),
                 description: tContent("variants.compositions.actionPair.description"),
                 useWhen: tContent("variants.compositions.actionPair.use"),
-                code: `<div className="nds-cluster" data-spacing="xs">\n  <Button variant="outline">Cancelar</Button>\n  <Button>Confirmar</Button>\n</div>`,
+                code: `<div className="nds-cluster" data-spacing="md">\n  <Button variant="outline">Cancelar</Button>\n  <Button>Confirmar</Button>\n</div>`,
                 preview: (
-                  <div className="nds-cluster" data-spacing="xs">
+                  <div className="nds-cluster" data-spacing="md">
                     <Button variant="outline">Cancelar</Button>
                     <Button>Confirmar</Button>
                   </div>
