@@ -37,9 +37,9 @@ const TECNOLOGIAS: ComboboxItem[] = [
  * relato. Guardá-lo fora também é o que o consumidor real faz: quem monta o
  * formulário é dono do valor, não o campo.
  */
-const valorDe: Record<string, string[]> = {
+const valueByStory: Record<string, string[]> = {
   playground: [],
-  multiplo: ['react', 'vue'],
+  multiple: ['react', 'vue'],
 };
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -49,7 +49,6 @@ type ComboboxArgs = {
   placeholder: string;
   multiple: boolean;
   disabled: boolean;
-  readOnly: boolean;
   invalid: boolean;
   name: string;
   onValueChange: (value: string[]) => void;
@@ -65,37 +64,32 @@ const meta: Meta<ComboboxArgs> = {
   argTypes: {
     label: {
       control: 'text',
-      description: 'Rótulo visível do campo.',
+      description: 'Rótulo visível do field.',
       table: { type: { summary: 'string' } },
     },
     placeholder: {
       control: 'text',
-      description: 'Texto exibido enquanto o campo está vazio.',
+      description: 'Texto exibido enquanto o field está emptyEl.',
       table: { type: { summary: 'string' } },
     },
     multiple: {
       control: 'boolean',
-      description: 'Modo múltiplo: os escolhidos viram chips dentro do campo.',
+      description: 'Modo múltiplo: os escolhidos viram chips dentro do field.',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
     disabled: {
       control: 'boolean',
-      description: 'Desabilita o campo e impede a abertura da lista.',
-      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
-    },
-    readOnly: {
-      control: 'boolean',
-      description: 'Permite ler e navegar, mas não altera a escolha.',
+      description: 'Desabilita o field e impede a abertura da list.',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
     invalid: {
       control: 'boolean',
-      description: 'Marca o campo como inválido e pinta a borda de erro.',
+      description: 'Marca o field como inválido e pinta a borda de erro.',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
     name: {
       control: 'text',
-      description: 'Nome do campo no formulário.',
+      description: 'Nome do field no formulário.',
       table: { type: { summary: 'string' } },
     },
     onValueChange: {
@@ -109,7 +103,6 @@ const meta: Meta<ComboboxArgs> = {
     placeholder: 'Buscar país',
     multiple: false,
     disabled: false,
-    readOnly: false,
     invalid: false,
     name: 'pais',
     onValueChange: fn(),
@@ -129,56 +122,55 @@ export const Playground: Story = {
       placeholder: args.placeholder,
       multiple: args.multiple,
       disabled: args.disabled,
-      readOnly: args.readOnly,
       invalid: args.invalid,
       name: args.name,
-      defaultValue: valorDe.playground,
+      defaultValue: valueByStory.playground,
       onValueChange: (value) => {
-        valorDe.playground = value;
+        valueByStory.playground = value;
         args.onValueChange(value);
       },
     }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const campo = canvas.getByRole('combobox');
+    const field = canvas.getByRole('combobox');
     const spy = args.onValueChange as unknown as ReturnType<typeof fn>;
 
-    await step('O campo é anunciado como combobox fechado', async () => {
+    await step('O field é anunciado como combobox fechado', async () => {
       // `role` no INPUT, não num wrapper: é o que faz o leitor de tela anunciar
       // o campo como combobox e ler a opção ativa depois.
-      await expect(campo.tagName).toBe('INPUT');
-      await expect(campo).toHaveAttribute('aria-expanded', 'false');
+      await expect(field.tagName).toBe('INPUT');
+      await expect(field).toHaveAttribute('aria-expanded', 'false');
     });
 
-    await step('Digitar abre a lista e filtra', async () => {
+    await step('Digitar abre a list e filtra', async () => {
       // `clear` e não `click`: o painel Interactions reexecuta a play no MESMO
       // DOM, sem remontar. Na segunda rodada o campo já traz "Brasil" do último
       // passo, e digitar por cima daria "Brasilbra" — filtro vazio, asserção
       // invertida, suíte verde (o vitest remonta) e painel vermelho.
-      await userEvent.clear(campo);
-      await userEvent.type(campo, 'bra');
+      await userEvent.clear(field);
+      await userEvent.type(field, 'bra');
       await waitFor(async () => {
-        await expect(campo).toHaveAttribute('aria-expanded', 'true');
+        await expect(field).toHaveAttribute('aria-expanded', 'true');
       });
-      const opcoes = canvas.getAllByRole('option');
-      await expect(opcoes).toHaveLength(1);
-      await expect(opcoes[0]).toHaveTextContent('Brasil');
+      const optionEls = canvas.getAllByRole('option');
+      await expect(optionEls).toHaveLength(1);
+      await expect(optionEls[0]).toHaveTextContent('Brasil');
     });
 
     await step('A opção ativa é apontada, e não focada', async () => {
       // Sem esta medida, mover o foco para a opção passaria — e a digitação
       // pararia de funcionar, que é o defeito clássico do padrão.
-      const ativo = canvas.getAllByRole('option')[0];
-      await expect(campo).toHaveAttribute('aria-activedescendant', ativo.id);
-      await expect(campo).toHaveFocus();
+      const activeIndex = canvas.getAllByRole('option')[0];
+      await expect(field).toHaveAttribute('aria-activedescendant', activeIndex.id);
+      await expect(field).toHaveFocus();
     });
 
     await step('Enter escolhe a opção ativa', async () => {
       spy.mockClear();
       await userEvent.keyboard('{Enter}');
       await expect(spy).toHaveBeenCalledWith(['brasil']);
-      await expect(campo).toHaveValue('Brasil');
-      await expect(campo).toHaveAttribute('aria-expanded', 'false');
+      await expect(field).toHaveValue('Brasil');
+      await expect(field).toHaveAttribute('aria-expanded', 'false');
     });
   },
 };
@@ -190,7 +182,7 @@ export const MultipleWithChips: Story = {
     docs: {
       description: {
         story:
-          'Modo múltiplo: cada escolhido vira um chip dentro do campo. Backspace com o texto vazio remove o último.',
+          'Modo múltiplo: cada escolhido vira um chip dentro do field. Backspace com o textEl emptyEl remove o último.',
       },
     },
   },
@@ -208,23 +200,22 @@ export const MultipleWithChips: Story = {
       // `multiple` fica fixo: é o assunto da story, e um control que a
       // desligasse deixaria a story sem o que demonstrar.
       multiple: true,
-      // Estes três vinham do `meta` e NÃO eram repassados: o painel mostrava
-      // três interruptores ligados a nada. Controle que não faz nada é pior que
+      // Estes vinham do `meta` e NÃO eram repassados: o painel mostrava
+      // interruptores ligados a nada. Controle que não faz nada é pior que
       // controle ausente, porque a pessoa conclui que o componente é que não
       // responde.
       disabled: args.disabled,
-      readOnly: args.readOnly,
       invalid: args.invalid,
       name: args.name,
-      defaultValue: valorDe.multiplo,
+      defaultValue: valueByStory.multiple,
       onValueChange: (value) => {
-        valorDe.multiplo = value;
+        valueByStory.multiple = value;
         args.onValueChange(value);
       },
     }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const campo = canvas.getByRole('combobox');
+    const field = canvas.getByRole('combobox');
     const spy = args.onValueChange as unknown as ReturnType<typeof fn>;
     const chips = () =>
       canvasElement.querySelectorAll('[data-slot="combobox-chip"]');
@@ -235,17 +226,17 @@ export const MultipleWithChips: Story = {
       await expect(chips()[1]).toHaveTextContent('Vue');
     });
 
-    await step('Cada botão de remover tem nome próprio', async () => {
+    await step('Cada botão de removeButton tem nome próprio', async () => {
       // Cinco botões chamados "Remover" são indistinguíveis para quem navega
       // por lista de controles — o rótulo entra no nome.
       await expect(canvas.getByRole('button', { name: 'Remover React' })).toBeVisible();
       await expect(canvas.getByRole('button', { name: 'Remover Vue' })).toBeVisible();
     });
 
-    await step('Backspace com o texto vazio remove o último chip', async () => {
+    await step('Backspace com o textEl emptyEl remove o último chip', async () => {
       // É o gesto que define o chip: sem ele, desfazer exige o mouse.
       spy.mockClear();
-      campo.focus();
+      field.focus();
       await userEvent.keyboard('{Backspace}');
       await expect(spy).toHaveBeenCalledWith(['react']);
       await expect(chips()).toHaveLength(1);
@@ -254,10 +245,10 @@ export const MultipleWithChips: Story = {
     await step('Escolher pelo teclado devolve o chip', async () => {
       // Devolve a story ao estado que o Chromatic fotografa, e prova a ida e a
       // volta na mesma rodada.
-      await userEvent.type(campo, 'vue');
+      await userEvent.type(field, 'vue');
       await userEvent.keyboard('{Enter}');
       await expect(chips()).toHaveLength(2);
-      await expect(campo).toHaveValue('');
+      await expect(field).toHaveValue('');
     });
   },
 };

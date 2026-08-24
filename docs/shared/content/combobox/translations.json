@@ -238,11 +238,6 @@
         "trigger": "Quando o campo é marcado como indisponível",
         "behavior": "Nada recebe foco, a lista não abre e os chips existentes perdem o botão de remover."
       },
-      "readOnly": {
-        "label": "Read-only",
-        "trigger": "Quando o valor é exibido mas não pode mudar",
-        "behavior": "O campo continua alcançável pelo teclado e o valor segue no envio do formulário, mas a lista não abre e nada pode ser removido."
-      },
       "invalid": {
         "label": "Invalid",
         "trigger": "Quando a validação reprova o campo",
@@ -316,12 +311,6 @@
           "default": "false",
           "required": "Não",
           "description": "Torna o campo indisponível: nada recebe foco e a lista não abre."
-        },
-        "readOnly": {
-          "type": "boolean",
-          "default": "false",
-          "required": "Não",
-          "description": "Exibe o valor sem permitir mudança, mantendo o campo alcançável pelo teclado."
         },
         "name": {
           "type": "string",
@@ -856,11 +845,6 @@
         "trigger": "When the field is marked as unavailable",
         "behavior": "Nothing takes focus, the list does not open, and existing chips lose their remove button."
       },
-      "readOnly": {
-        "label": "Read-only",
-        "trigger": "When the value is shown but cannot change",
-        "behavior": "The field stays reachable by keyboard and the value still goes with the form, but the list does not open and nothing can be removed."
-      },
       "invalid": {
         "label": "Invalid",
         "trigger": "When validation rejects the field",
@@ -934,12 +918,6 @@
           "default": "false",
           "required": "No",
           "description": "Makes the field unavailable: nothing takes focus and the list does not open."
-        },
-        "readOnly": {
-          "type": "boolean",
-          "default": "false",
-          "required": "No",
-          "description": "Shows the value without allowing change, keeping the field reachable by keyboard."
         },
         "name": {
           "type": "string",
@@ -1474,11 +1452,6 @@
         "trigger": "Cuando el campo se marca como no disponible",
         "behavior": "Nada recibe foco, la lista no se abre y los chips existentes pierden su botón de quitar."
       },
-      "readOnly": {
-        "label": "Read-only",
-        "trigger": "Cuando el valor se muestra pero no puede cambiar",
-        "behavior": "El campo sigue alcanzable por teclado y el valor sigue viajando con el formulario, pero la lista no se abre y nada se puede quitar."
-      },
       "invalid": {
         "label": "Invalid",
         "trigger": "Cuando la validación rechaza el campo",
@@ -1552,12 +1525,6 @@
           "default": "false",
           "required": "No",
           "description": "Deja el campo no disponible: nada recibe foco y la lista no se abre."
-        },
-        "readOnly": {
-          "type": "boolean",
-          "default": "false",
-          "required": "No",
-          "description": "Muestra el valor sin permitir cambios, manteniendo el campo alcanzable por teclado."
         },
         "name": {
           "type": "string",

@@ -16,39 +16,38 @@ export type ComboboxSnippetOptions = {
   multiple?: boolean;
   defaultValue?: string[];
   disabled?: boolean;
-  readOnly?: boolean;
   invalid?: boolean;
   name?: string;
   /** Rótulos dos itens. O `value` sai do rótulo em minúsculas, como nas stories. */
-  itens?: string[];
+  items?: string[];
   /** Itens agrupados: cada chave vira um cabeçalho no popup. */
-  grupos?: Record<string, string[]>;
+  groups?: Record<string, string[]>;
 };
 
 /** Um item da lista, na forma que a fábrica recebe. */
-function item(rotulo: string, grupo?: string): string {
-  const value = rotulo.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-  const partes = [`value: ${text(value)}`, `label: ${text(rotulo)}`];
-  if (grupo) partes.push(`group: ${text(grupo)}`);
-  return `  { ${partes.join(', ')} },`;
+function item(label: string, group?: string): string {
+  const value = label.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const parts = [`value: ${text(value)}`, `label: ${text(label)}`];
+  if (group) parts.push(`group: ${text(group)}`);
+  return `  { ${parts.join(', ')} },`;
 }
 
 /** A chamada real de `createCombobox` com as opções da story. */
 export function comboboxSnippet(o: ComboboxSnippetOptions = {}): string {
-  const linhasItens: string[] = [];
+  const itemLines: string[] = [];
 
-  if (o.grupos) {
-    for (const [grupo, rotulos] of Object.entries(o.grupos)) {
-      for (const rotulo of rotulos) linhasItens.push(item(rotulo, grupo));
+  if (o.groups) {
+    for (const [group, labels] of Object.entries(o.groups)) {
+      for (const label of labels) itemLines.push(item(label, group));
     }
   } else {
-    for (const rotulo of o.itens ?? ['Brasil', 'Portugal', 'Espanha']) {
-      linhasItens.push(item(rotulo));
+    for (const label of o.items ?? ['Brasil', 'Portugal', 'Espanha']) {
+      itemLines.push(item(label));
     }
   }
 
   const lines = options([
-    ['items', 'itens'],
+    ['items', 'items'],
     ['label', o.label ? text(o.label) : undefined],
     ['placeholder', o.placeholder ? text(o.placeholder) : undefined],
     // Só o que difere do padrão da fábrica entra: escrever `multiple: false`
@@ -61,7 +60,6 @@ export function comboboxSnippet(o: ComboboxSnippetOptions = {}): string {
         : undefined,
     ],
     ['disabled', o.disabled ? 'true' : undefined],
-    ['readOnly', o.readOnly ? 'true' : undefined],
     ['invalid', o.invalid ? 'true' : undefined],
     ['name', o.name ? text(o.name) : undefined],
     ['onValueChange', '(value) => console.log(value)'],
@@ -70,7 +68,7 @@ export function comboboxSnippet(o: ComboboxSnippetOptions = {}): string {
   return snippet(
     importing('combobox', 'createCombobox'),
     '',
-    `const itens = [\n${linhasItens.join('\n')}\n];`,
+    `const items = [\n${itemLines.join('\n')}\n];`,
     '',
     chamada('createCombobox', lines),
     montar('combobox'),
@@ -85,7 +83,6 @@ export const comboboxSource: SourceTransform = (_gerado, ctx) => {
     placeholder: args.placeholder as string | undefined,
     multiple: args.multiple as boolean | undefined,
     disabled: args.disabled as boolean | undefined,
-    readOnly: args.readOnly as boolean | undefined,
     invalid: args.invalid as boolean | undefined,
     name: args.name as string | undefined,
   });
