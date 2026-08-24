@@ -10,9 +10,20 @@
  *     fundo escuro da marca é o Ink #233037, um quase-preto azul-esverdeado. É a
  *     única troca de temperatura do tema, e é prescrita: a marca opõe família
  *     fria (tecnologia) e quente (design), e usa Ink como o único chão escuro.
- *   - Marca: --primary é o Teal Profundo #3B6770 no claro e o mesmo teal
- *     clareado/dessaturado no escuro (190 45% 60%) — o afordamento interativo
- *     não muda de matiz entre os modos. O Pêssego #E8A47C, que o brand book
+ *   - Marca: --primary é o Teal Profundo #3B6770 no claro e, no escuro,
+ *     184 48% 52% (#4ab8bf). O matiz NUMÉRICO muda entre os modos — 190 no
+ *     claro, 184 no escuro — e isso é deliberado, não descuido. O matiz
+ *     PERCEBIDO desloca com a luminosidade (Bezold–Brücke): a 34% o 190 lê
+ *     verde petróleo, e a 60% o mesmo 190 lê azul claro. Manter o número
+ *     constante era justamente o que quebrava a constância percebida.
+ *     A conferência é por relação de canal: no Teal Profundo o verde fica 9
+ *     pontos abaixo do azul (G−B = −9); o escuro anterior estava em −15, mais
+ *     azul que a própria marca, e 184 48% 52% devolve −8. Quem for "corrigir"
+ *     o 184 de volta para 190 vai reintroduzir o azul.
+ *     --ring acompanha em 184 48% 46%, mantendo o anel mais escuro que o
+ *     preenchimento; 44% também passaria, mas a 3.08 contra --secondary, e
+ *     esse é o neutro mais claro do escuro — margem que qualquer ajuste
+ *     futuro naquele token derrubaria. O Pêssego #E8A47C, que o brand book
  *     define como acento quente sobre fundo escuro, entra na paleta de gráficos
  *     (--chart-4), não em --primary: trocar o matiz do interativo por modo
  *     custaria a estabilidade do link.
@@ -152,7 +163,7 @@
   --popover: 201 22% 18%;
   --popover-foreground: 24 100% 99%;
 
-  --primary: 190 45% 60%;
+  --primary: 184 48% 52%;
   --primary-foreground: 201 22% 18%;
   --secondary: 199 20% 26%;
   --secondary-foreground: 24 100% 99%;
@@ -173,14 +184,14 @@
   --border: 200 18% 24%;
   --input: 197 12% 50%;                /* derivado · 3.51:1 sobre --background (WCAG 1.4.11) */
   --input-background: 201 22% 18%;
-  --ring: 190 45% 52%;
+  --ring: 184 48% 46%;
 
   --sidebar: 201 22% 15%;
   --sidebar-foreground: 24 100% 99%;
-  --sidebar-primary: 190 45% 60%;
+  --sidebar-primary: 184 48% 52%;
   --sidebar-primary-foreground: 201 22% 18%;
   --sidebar-accent: 199 20% 26%;
   --sidebar-accent-foreground: 24 100% 99%;
   --sidebar-border: 200 18% 24%;
-  --sidebar-ring: 190 45% 52%;
+  --sidebar-ring: 184 48% 46%;
 }

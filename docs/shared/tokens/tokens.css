@@ -303,7 +303,7 @@
   --card-foreground: 24 100% 99%;
   --popover: 201 22% 18%;
   --popover-foreground: 24 100% 99%;
-  --primary: 190 45% 60%;
+  --primary: 184 48% 52%;
   --primary-foreground: 201 22% 18%;
   --secondary: 199 20% 26%;
   --secondary-foreground: 24 100% 99%;
@@ -323,17 +323,17 @@
   /* 41% sobre o fundo 9% = 3.25:1 (WCAG 1.4.11). Ver comentário no claro. */
   --input: 197 12% 50%;
   --input-background: 201 22% 18%;
-  --ring: 190 45% 52%;
+  --ring: 184 48% 46%;
   --elevation-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
   --elevation-md: 0px 4px 6px -1px rgba(0, 0, 0, 0.3), 0px 2px 4px -1px rgba(0, 0, 0, 0.2);
   --elevation-lg: 0px 10px 15px -3px rgba(0, 0, 0, 0.3), 0px 4px 6px -2px rgba(0, 0, 0, 0.2);
   --elevation-xl: 0px 20px 25px -5px rgba(0, 0, 0, 0.3), 0px 10px 10px -5px rgba(0, 0, 0, 0.1);
   --sidebar: 201 22% 15%;
   --sidebar-foreground: 24 100% 99%;
-  --sidebar-primary: 190 45% 60%;
+  --sidebar-primary: 184 48% 52%;
   --sidebar-primary-foreground: 201 22% 18%;
   --sidebar-accent: 199 20% 26%;
   --sidebar-accent-foreground: 24 100% 99%;
   --sidebar-border: 200 18% 24%;
-  --sidebar-ring: 190 45% 52%;
+  --sidebar-ring: 184 48% 46%;
 }
