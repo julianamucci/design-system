@@ -44,6 +44,7 @@ button|a[ndsButton]
 `disabled` e `type` vêm do primitivo headless aplicado ao host, e não são inputs declarados aqui.
 
 **Regras**:
+- Espaçamento entre botões: **mínimo `--spacing-4`** (16px), ou seja `data-spacing="md"` no cluster que os agrupa. Abaixo disso o par lê como um controle segmentado, e a área de erro entre dois alvos adjacentes encolhe. Vale para par de ações, fileira de variantes e barra de ferramentas; grupo emendado (`.nds-button-group`) é o caso oposto e continua sem gap, de propósito. Portão: `button_gap_apertado` no `audit.mjs`.
 - Altura **nunca** é cravada: nasce de `padding-block` mais tipografia
 - Tamanho `icon-*` exige nome acessível — sem texto visível, sem `aria-label` não há botão
 - Ícone interno é decorativo

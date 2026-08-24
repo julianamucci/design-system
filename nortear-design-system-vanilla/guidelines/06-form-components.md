@@ -30,6 +30,7 @@ button
 **Tamanhos**: `sm`, `default`, `lg`, `icon`.
 
 **Regras**:
+- Espaçamento entre botões: **mínimo `--spacing-4`** (16px), ou seja `data-spacing="md"` no cluster que os agrupa. Abaixo disso o par lê como um controle segmentado, e a área de erro entre dois alvos adjacentes encolhe. Vale para par de ações, fileira de variantes e barra de ferramentas; grupo emendado (`.nds-button-group`) é o caso oposto e continua sem gap, de propósito. Portão: `button_gap_apertado` no `audit.mjs`.
 - Padding vertical via `--spacing-*`, nunca altura fixa (ver memória "nunca usar altura fixa em primitivos")
 - Icon-only requer `aria-label` descritivo
 - Ícone interno: `aria-hidden="true"`, dimensões `h-4 w-4` (ou `h-5 w-5` em `lg`)

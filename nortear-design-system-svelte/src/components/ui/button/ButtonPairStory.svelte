@@ -12,7 +12,7 @@
   }: Props = $props();
 </script>
 
-<div class="nds-cluster" data-spacing="sm">
+<div class="nds-cluster" data-spacing="md">
   <Button variant="outline">{secondaryLabel}</Button>
   <Button>{primaryLabel}</Button>
 </div>

@@ -3585,6 +3585,93 @@ function selecaoForte(sel) {
  * todos são mecânica interna — `input` de 1px do sr-only, filete de separador,
  * tamanho de ícone —, que ninguém quer customizar.
  */
+/**
+ * Gap apertado entre botões.
+ *
+ * A guideline do Button fixa o mínimo em `--spacing-4` (16px), que no cluster é
+ * `data-spacing="md"`. Abaixo disso o par de ações lê como controle segmentado,
+ * e a faixa de erro entre dois alvos adjacentes encolhe.
+ *
+ * Vale para QUALQUER slug: par Cancelar/Confirmar aparece em rodapé de dialog,
+ * de alert-dialog e de sheet, não só nos arquivos do próprio botão.
+ *
+ * Reprova em dois casos, e o segundo é o que se erra sem perceber:
+ *   1. `data-spacing` declarado como `xs` ou `sm`
+ *   2. `data-spacing` AUSENTE — o padrão do `.nds-cluster` é 8px, abaixo do piso
+ *
+ * O escopo do cluster é achado por CASAMENTO DE TAG, não por janela de N
+ * caracteres. A janela fixa parecia bastar e não bastava: onde a docs page
+ * monta os botões por `.map()` sobre um array de dados, o `<Button>` cai
+ * centenas de caracteres abaixo da abertura, e o portão passava calado — o
+ * defeito que ele existe para pegar.
+ *
+ * O que ele NÃO alcança, declarado para não virar cobertura fantasma:
+ *   - `.nds-button-group`, que emenda os botões sem gap de propósito e é o
+ *     caso oposto, legítimo;
+ *   - cluster cujo gap venha de classe utilitária em vez de `data-spacing`.
+ */
+function auditButtonGap(slug) {
+  const violations = [];
+  // Como um botão se parece em cada stack. O Angular usa atributo em <button>.
+  const BOTAO = /<Button[\s>/]|<button[^>]*\bndsButton\b|createButton\s*\(/;
+
+  /** Conteúdo entre a abertura em `from` e a tag de fechamento que a casa. */
+  const escopoDaTag = (content, from, tag) => {
+    const marcas = new RegExp('<(/?)' + tag + '\\b', 'g');
+    marcas.lastIndex = from;
+    let profundidade = 0;
+    let m;
+    while ((m = marcas.exec(content)) !== null) {
+      profundidade += m[1] === '/' ? -1 : 1;
+      if (profundidade === 0) return content.slice(from, m.index);
+    }
+    return content.slice(from);   // sem fechamento: cai para o resto do arquivo
+  };
+
+  const acusar = (stack, file, content, index, valor) => {
+    violations.push({
+      category: 'quality', severity: 'low', slug, stack,
+      file: relative(ROOT, file), line: content.slice(0, index).split('\n').length,
+      rule: 'button_gap_apertado',
+      message: `cluster de botões com data-spacing ${valor} — o mínimo é "md" (--spacing-4, 16px); ver a regra em guidelines/06-form-components.md`,
+    });
+  };
+
+  for (const stack of STACKS) {
+    const { all } = filesForSlug(slug, stack);
+    for (const file of all) {
+      const content = readFile(file);
+      if (!content) continue;
+
+      const abertura = /<([a-zA-Z][\w-]*)[^>]*\bclass(?:Name)?=(?:"|')nds-cluster(?:\s[^"']*)?(?:"|')([^>]*)>/g;
+      let m;
+      while ((m = abertura.exec(content)) !== null) {
+        const declarado = /data-spacing=(?:"|')([a-z0-9]+)(?:"|')/.exec(m[2] || '');
+        const valor = declarado ? declarado[1] : '(ausente)';
+        if (declarado && !['xs', 'sm'].includes(valor)) continue;
+        if (!BOTAO.test(escopoDaTag(content, m.index, m[1]))) continue;
+        acusar(stack, file, content, m.index, valor);
+      }
+
+      // Vanilla monta o cluster por DOM: não há tag para casar. A heurística é
+      // a variável — o mesmo identificador que recebe o `dataset.spacing`
+      // precisa receber um botão depois.
+      if (stack === 'vanilla') {
+        const porDom = /(\w+)\.dataset\.spacing = '(xs|sm)'/g;
+        let d;
+        while ((d = porDom.exec(content)) !== null) {
+          const [, variavel, valor] = d;
+          const depois = content.slice(d.index, d.index + 900);
+          const recebeBotao = new RegExp(variavel + '\\.(append|appendChild)\\s*\\(').test(depois);
+          if (!recebeBotao || !BOTAO.test(depois)) continue;
+          acusar(stack, file, content, d.index, valor);
+        }
+      }
+    }
+  }
+  return violations;
+}
+
 function auditPromessaDeCustomizacao(slug) {
   const violations = [];
   const cssFile = join(ROOT, 'docs', 'shared', 'styles', 'nds', `${slug}.css`);
@@ -4256,6 +4343,7 @@ function runAudit(slug, category) {
     ...auditGuardrails(slug),
     ...auditSidebarVocab(slug),
     ...auditIdentificadorPt(slug),
+    ...auditButtonGap(slug),
     ...auditPromessaDeCustomizacao(slug),
     ...auditDeadClassInTokenTable(slug),
   ];

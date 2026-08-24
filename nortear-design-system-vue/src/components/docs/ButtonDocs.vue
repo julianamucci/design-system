@@ -372,7 +372,7 @@ function handleDemoClick(variant: string) {
       <!-- .nds-cluster já traz flex-wrap: wrap; o style inline era inerte. -->
       <div
         class="nds-cluster"
-        data-spacing="sm"
+        data-spacing="md"
       >
         <Button @click="handleDemoClick('default')">
           {{ tContent('demonstration.labels.primary') }}
@@ -477,7 +477,7 @@ function handleDemoClick(variant: string) {
       <template #do-preview-1>
         <div
           class="nds-cluster"
-          data-spacing="sm"
+          data-spacing="md"
         >
           <Button variant="outline">
             Cancelar
@@ -488,7 +488,7 @@ function handleDemoClick(variant: string) {
       <template #dont-preview-1>
         <div
           class="nds-cluster"
-          data-spacing="sm"
+          data-spacing="md"
         >
           <Button>Cancelar</Button>
           <Button>Confirmar</Button>
@@ -620,7 +620,7 @@ function handleDemoClick(variant: string) {
       <template #variant-preview-3>
         <div
           class="nds-cluster"
-          data-spacing="sm"
+          data-spacing="md"
         >
           <Button variant="outline">
             Cancelar

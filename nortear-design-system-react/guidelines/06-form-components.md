@@ -22,6 +22,7 @@
 **Sizes**: `default`, `sm`, `lg`, `icon` — usar sempre `default`, salvo instrução específica.
 
 **Regras**:
+- Espaçamento entre botões: **mínimo `--spacing-4`** (16px), ou seja `data-spacing="md"` no cluster que os agrupa. Abaixo disso o par lê como um controle segmentado, e a área de erro entre dois alvos adjacentes encolhe. Vale para par de ações, fileira de variantes e barra de ferramentas; grupo emendado (`.nds-button-group`) é o caso oposto e continua sem gap, de propósito. Portão: `button_gap_apertado` no `audit.mjs`.
 - Máximo 1 botão `default` (primário) por seção.
 - Ícones apenas quando essenciais ao contexto — não decorativos por padrão.
 - Estilo personalizado via classe `.btn` do tema.

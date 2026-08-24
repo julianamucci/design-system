@@ -22,6 +22,7 @@
 **Tamanhos**: `default`, `sm`, `lg`, `icon`.
 
 **Regras**:
+- Espaçamento entre botões: **mínimo `--spacing-4`** (16px), ou seja `data-spacing="md"` no cluster que os agrupa. Abaixo disso o par lê como um controle segmentado, e a área de erro entre dois alvos adjacentes encolhe. Vale para par de ações, fileira de variantes e barra de ferramentas; grupo emendado (`.nds-button-group`) é o caso oposto e continua sem gap, de propósito. Portão: `button_gap_apertado` no `audit.mjs`.
 - Botão icon-only: `aria-label` obrigatório e contextual (verbo + objeto + identificador)
 - Ícones internos: sempre `aria-hidden="true"`
 - Em submit, refletir estado de loading com `disabled` e ícone `Loader2 animate-spin`
