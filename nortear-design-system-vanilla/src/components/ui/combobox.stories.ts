@@ -42,6 +42,28 @@ const valueByStory: Record<string, string[]> = {
   multiple: ['react', 'vue'],
 };
 
+// ─── Contraste ────────────────────────────────────────────────────────────────
+//
+// O axe não mede o chip contra a superfície do CAMPO: ele compara com o fundo
+// que herda. E o chip pinta sobre `--input-background`, não sobre a página —
+// medir contra a página superestima e deixa passar um par que na tela não
+// alcança.
+
+function luminance(color: string): number {
+  const channels = (color.match(/[\d.]+/g) ?? ['0', '0', '0']).slice(0, 3).map(Number);
+  const [r, g, b] = channels.map((v) => {
+    const s = v / 255;
+    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function contrast(a: string, b: string): number {
+  const la = luminance(a);
+  const lb = luminance(b);
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 type ComboboxArgs = {
@@ -115,6 +137,17 @@ type Story = StoryObj<ComboboxArgs>;
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1',
+      'functional.item3',
+      'accessibility.item1',
+      'accessibility.item2',
+      'accessibility.item3',
+      'accessibility.item4',
+      'visual.item1',
+    ],
+  },
   render: (args) =>
     createCombobox({
       items: PAISES,
@@ -157,6 +190,12 @@ export const Playground: Story = {
       await expect(optionEls[0]).toHaveTextContent('Brasil');
     });
 
+    await step('A lista é anunciada como listbox', async () => {
+      // O item de contrato fala dos DOIS papéis; declarar sem medir o segundo
+      // deixaria o auditor mentindo com aval.
+      await expect(canvas.getByRole('listbox')).toBeVisible();
+    });
+
     await step('A opção ativa é apontada, e não focada', async () => {
       // Sem esta medida, mover o foco para a opção passaria — e a digitação
       // pararia de funcionar, que é o defeito clássico do padrão.
@@ -179,6 +218,14 @@ export const Playground: Story = {
 
 export const MultipleWithChips: Story = {
   parameters: {
+    covers: [
+      'functional.item4',
+      'functional.item5',
+      'functional.item6',
+      'accessibility.item5',
+      'accessibility.item6',
+      'visual.item2',
+    ],
     docs: {
       description: {
         story:
@@ -240,6 +287,36 @@ export const MultipleWithChips: Story = {
       await userEvent.keyboard('{Backspace}');
       await expect(spy).toHaveBeenCalledWith(['react']);
       await expect(chips()).toHaveLength(1);
+    });
+
+    await step('O botão de remover do chip funciona pelo clique', async () => {
+      // `functional.item5` é o botão; o passo anterior cobriu o Backspace, que
+      // é outro gesto para o mesmo fim.
+      spy.mockClear();
+      await userEvent.click(canvas.getByRole('button', { name: 'Remover React' }));
+      await expect(spy).toHaveBeenCalledWith([]);
+      await expect(chips()).toHaveLength(0);
+    });
+
+    await step('O texto do chip alcança 4.5:1 contra a superfície do campo', async () => {
+      // Medido contra `--input-background`, que é o que o chip pinta em cima —
+      // medir contra a página superestima e deixa passar par que não alcança.
+      await userEvent.type(field, 'react');
+      await userEvent.keyboard('{Enter}');
+      const chip = chips()[0] as HTMLElement;
+      const wrapper = canvasElement.querySelector<HTMLElement>(
+        '[data-slot="combobox-input-wrapper"]',
+      )!;
+      const razao = contrast(
+        getComputedStyle(chip).color,
+        getComputedStyle(wrapper).backgroundColor,
+      );
+      await expect(razao).toBeGreaterThanOrEqual(4.5);
+    });
+
+    await step('Escape fecha a lista sem alterar a escolha', async () => {
+      await userEvent.keyboard('{Escape}');
+      await expect(field).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('Escolher pelo teclado devolve o chip', async () => {
