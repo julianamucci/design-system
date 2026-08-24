@@ -86,7 +86,7 @@
   --foreground: 201 22% 18%;
   --card: 24 100% 99.5%;
   --card-foreground: 201 22% 18%;
-  --popover: 0 0% 100%;
+  --popover: 24 100% 99.5%;
   --popover-foreground: 201 22% 18%;
 
   /* Brand / Interactive */
@@ -129,7 +129,7 @@
      1.4.11 (Non-text Contrast, 3:1) e NÃO acompanha mais --border, que é linha
      decorativa e continua em 90%. Medido: 56% sobre 100% = 3.24:1. */
   --input: 36 16% 52%;             /* mesmo neutro do modo escuro · 3.73:1 sobre --background (WCAG 1.4.11) */
-  --input-background: 24 100% 99%;
+  --input-background: 24 100% 99.5%;
   --ring: 190 31% 40%;
   --ring-offset-width: 2px;
   /* Não existe `--ring-offset-color`. O anel de foco do sistema é `box-shadow`,

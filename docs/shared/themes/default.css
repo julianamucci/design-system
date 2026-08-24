@@ -101,7 +101,7 @@
   --foreground: 201 22% 18%;
   --card: 24 100% 99.5%;
   --card-foreground: 201 22% 18%;
-  --popover: 0 0% 100%;
+  --popover: 24 100% 99.5%;
   --popover-foreground: 201 22% 18%;
 
   --primary: 190 31% 34%;
@@ -127,7 +127,7 @@
 
   --border: 36 16% 88%;
   --input: 36 16% 52%;             /* mesmo neutro do modo escuro · 3.73:1 sobre --background (WCAG 1.4.11) */
-  --input-background: 24 100% 99%;
+  --input-background: 24 100% 99.5%;
   --ring: 190 31% 40%;
 
   /* Chart — sem variante dark (mesma paleta nos dois modos, como em warm/cold) */
