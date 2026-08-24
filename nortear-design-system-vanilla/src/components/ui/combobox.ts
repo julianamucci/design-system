@@ -28,9 +28,10 @@ import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 // `aria-activedescendant` e realçada por `[data-highlighted]`. Mover o foco para
 // a opção quebraria a digitação, que é o ponto do componente.
 //
-// Os chips são filhos DIRETOS do wrapper. O `.nds-combobox-chips` do contrato é
-// `display: contents` justamente para isso: um contêiner real criaria uma caixa
-// de flex própria e os chips deixariam de quebrar linha junto com o input.
+// Os chips vivem dentro de `.nds-combobox-chips`, que é `display: contents`:
+// o elemento existe na árvore — a anatomia publica esse slot, e as outras
+// quatro stacks o emitem — mas não gera caixa própria, então os chips seguem
+// quebrando linha junto com o input, que era o motivo de omiti-lo antes.
 
 export interface ComboboxItem {
   value: string;
@@ -63,8 +64,15 @@ export interface ComboboxOptions {
   triggerLabel?: string;
   /** Prefixo do nome acessível de cada botão de remover: "<prefixo> <rótulo>". */
   removeLabel?: string;
+  /**
+   * Frase que a região viva anuncia ao remover um chip. É função, e não sufixo,
+   * para o rótulo poder cair em qualquer ponto da frase — em pt, en e es ele
+   * abre ("React removido"), mas amarrar a posição na assinatura fecharia a
+   * porta para o idioma em que não abre.
+   */
+  removedAnnouncement?: (label: string) => string;
   onValueChange?: (value: string[]) => void;
-  onInputValueChange?: (textEl: string) => void;
+  onInputValueChange?: (text: string) => void;
   onOpenChange?: (isOpen: boolean) => void;
   className?: string;
 }
@@ -105,8 +113,8 @@ function createIcon(paths: string | string[], className?: string): SVGElement {
 }
 
 /** Comparação sem acento e sem caixa — filtrar "sao" tem de achar "São Paulo". */
-function normalize(textEl: string): string {
-  return textEl
+function normalize(text: string): string {
+  return text
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
     .toLowerCase();
@@ -125,8 +133,9 @@ export function createCombobox(options: ComboboxOptions): DestroyableElement<HTM
     id,
     emptyMessage = 'Nenhum resultado',
     clearLabel = 'Limpar',
-    triggerLabel = 'Abrir list',
+    triggerLabel = 'Abrir lista',
     removeLabel = 'Remover',
+    removedAnnouncement = (label: string) => `${label} removido`,
     onValueChange,
     onInputValueChange,
     onOpenChange,
@@ -169,6 +178,14 @@ export function createCombobox(options: ComboboxOptions): DestroyableElement<HTM
   if (disabled) wrapper.dataset.disabled = '';
   if (invalid) wrapper.setAttribute('aria-invalid', 'true');
   root.appendChild(wrapper);
+
+  // Contêiner real, como nas outras quatro e como a anatomia publica. Ele não
+  // cria caixa de flex própria — `.nds-combobox-chips` é `display: contents`,
+  // justamente para os chips continuarem quebrando linha junto com o input.
+  const chipsEl = document.createElement('div');
+  chipsEl.className = 'nds-combobox-chips';
+  chipsEl.dataset.slot = 'combobox-chips';
+  wrapper.appendChild(chipsEl);
 
   const input = document.createElement('input');
   input.id = `${baseId}-input`;
@@ -228,7 +245,7 @@ export function createCombobox(options: ComboboxOptions): DestroyableElement<HTM
   }
 
   function renderChips(): void {
-    wrapper.querySelectorAll('[data-slot="combobox-chip"]').forEach((n) => n.remove());
+    chipsEl.replaceChildren();
     if (!multiple) return;
 
     for (const value of selected) {
@@ -256,12 +273,12 @@ export function createCombobox(options: ComboboxOptions): DestroyableElement<HTM
       });
 
       chip.append(textEl, removeButton);
-      wrapper.insertBefore(chip, input);
+      chipsEl.appendChild(chip);
     }
   }
 
-  function announce(textEl: string): void {
-    liveRegion.textContent = textEl;
+  function announce(text: string): void {
+    liveRegion.textContent = text;
   }
 
   function emit(): void {
@@ -293,7 +310,7 @@ export function createCombobox(options: ComboboxOptions): DestroyableElement<HTM
     selected = selected.filter((v) => v !== value);
     if (selected.length === before) return;
     renderChips();
-    announce(`${labelOf(value)} removido`);
+    announce(removedAnnouncement(labelOf(value)));
     emit();
     input.focus();
     if (isOpen) runFilter();

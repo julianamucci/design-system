@@ -25,6 +25,7 @@ import { ChartDocs } from './ChartDocs';
 import { CheckboxDocs } from './CheckboxDocs';
 import { CodeBlockDocs } from './CodeBlockDocs';
 import { CollapsibleDocs } from './CollapsibleDocs';
+import { ComboboxDocs } from './ComboboxDocs';
 import { CommandDocs } from './CommandDocs';
 import { ContextMenuDocs } from './ContextMenuDocs';
 import { CrossStackDocs } from './CrossStackDocs';
@@ -231,6 +232,11 @@ export const CodeBlock: Story = {
 
 export const Collapsible: Story = {
   render: () => <CollapsibleDocs />,
+  play: mounted,
+};
+
+export const Combobox: Story = {
+  render: () => <ComboboxDocs />,
   play: mounted,
 };
 

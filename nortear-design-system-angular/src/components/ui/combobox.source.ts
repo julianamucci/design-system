@@ -1,0 +1,156 @@
+// Snippet do painel Code do Combobox.
+//
+// O painel imprime o `template` da story como está escrito — com o `@for` que
+// monta as opções e com `[value]` ligado a um armazém de módulo. Isso é o
+// andaime da story, não o que alguém escreve para usar o campo. Estas funções
+// devolvem o uso real, com os valores atuais dos controls já resolvidos.
+//
+// Vive num arquivo próprio, e não solto na story, porque três arquivos de story
+// mostram o mesmo componente: repetir o construtor em cada um é como as três
+// cópias divergem sem ninguém notar.
+
+export type ComboboxSnippetOptions = {
+  label?: string;
+  placeholder?: string;
+  multiple?: boolean;
+  disabled?: boolean;
+  invalid?: boolean;
+  name?: string;
+  /** Nome acessível do botão que limpa tudo. Vazio, o botão sai do snippet. */
+  clearLabel?: string;
+  /** Nome acessível do botão que abre a lista. */
+  triggerLabel?: string;
+  /** Texto da mensagem de lista vazia. */
+  emptyMessage?: string;
+  /** Rótulos das opções. O valor sai do rótulo em minúsculas, como nas stories. */
+  items?: string[];
+  /** Opções agrupadas: cada chave vira um cabeçalho na lista. */
+  groups?: Record<string, string[]>;
+};
+
+/** O valor de uma opção, derivado do rótulo — sem acento e sem caixa alta. */
+function toValue(label: string): string {
+  return label
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/\s+/g, '-');
+}
+
+/** Uma `<div ndsComboboxItem>` com a marca de escolhido, já indentada. */
+function itemLine(label: string, indent: string): string {
+  return [
+    `${indent}<div ndsComboboxItem value="${toValue(label)}">`,
+    `${indent}  ${label}`,
+    `${indent}  <span ndsComboboxItemIndicator></span>`,
+    `${indent}</div>`,
+  ].join('\n');
+}
+
+/** O miolo da lista: opções soltas, ou grupos com cabeçalho e divisor. */
+function listBody(options: ComboboxSnippetOptions): string {
+  if (options.groups) {
+    const names = Object.keys(options.groups);
+    return names
+      .map((name, index) => {
+        const heading = `        <div ndsComboboxGroup>\n          <div ndsComboboxGroupLabel>${name}</div>`;
+        const items = options.groups![name].map((label) => itemLine(label, '          ')).join('\n');
+        const separator = index < names.length - 1 ? '\n        <div ndsComboboxSeparator></div>' : '';
+        return `${heading}\n${items}\n        </div>${separator}`;
+      })
+      .join('\n');
+  }
+
+  const labels = options.items ?? ['Brasil', 'Portugal', 'Espanha'];
+  return labels.map((label) => itemLine(label, '        ')).join('\n');
+}
+
+/** O uso real do campo, com só o que difere do padrão. */
+export function comboboxSnippet(options: ComboboxSnippetOptions = {}): string {
+  const {
+    label = 'País',
+    placeholder = 'Buscar país',
+    multiple = false,
+    disabled = false,
+    invalid = false,
+    name,
+    clearLabel = 'Limpar',
+    triggerLabel = 'Abrir lista',
+    emptyMessage = 'Nenhum resultado',
+  } = options;
+
+  // Só o que difere do padrão entra: snippet que repete valor default ensina
+  // ruído a quem copia.
+  const root = ['<nds-combobox [(value)]="value"']
+    .concat(multiple ? ['multiple'] : [])
+    .concat(disabled ? ['disabled'] : [])
+    .concat(invalid ? ['invalid'] : [])
+    .concat(name ? [`name="${name}"`] : [])
+    .join(' ');
+
+  const chips = multiple
+    ? `
+    <div ndsComboboxChips>
+      @for (chosen of value(); track chosen) {
+        <span ndsComboboxChip [value]="chosen">
+          {{ labelOf(chosen) }}
+          <button ndsComboboxChipRemove [attr.aria-label]="'Remover ' + labelOf(chosen)"></button>
+        </span>
+      }
+    </div>
+`
+    : '\n';
+
+  const body = multiple
+    ? `  readonly value = signal<string[]>([]);
+
+  labelOf(value: string): string {
+    return this.items.find((item) => item.value === value)?.label ?? value;
+  }`
+    : `  readonly value = signal<string | undefined>(undefined);`;
+
+  return `import { NDS_COMBOBOX } from '@/components/ui/combobox';
+
+@Component({
+  imports: [...NDS_COMBOBOX],
+  template: \`
+    ${root}>
+      <label ndsComboboxLabel>${label}</label>
+
+      <div ndsComboboxInputWrapper>${chips}        <input ndsComboboxInput placeholder="${placeholder}" />
+        <button ndsComboboxClear aria-label="${clearLabel}"></button>
+        <button ndsComboboxTrigger aria-label="${triggerLabel}">
+          <svg ndsComboboxIcon></svg>
+        </button>
+      </div>
+
+      <ng-template ndsComboboxPopup>
+        <div ndsComboboxList>
+${listBody(options)}
+        </div>
+        <div ndsComboboxEmpty>${emptyMessage}</div>
+      </ng-template>
+    </nds-combobox>
+  \`,
+})
+export class Example {
+${body}
+}`;
+}
+
+/** Transform do `meta` — lê os controls do Playground. */
+export function comboboxSource(
+  _generated: string,
+  context: { args?: Record<string, unknown> } = {},
+): string {
+  const args = context.args ?? {};
+  return comboboxSnippet({
+    label: args['label'] as string | undefined,
+    placeholder: args['placeholder'] as string | undefined,
+    multiple: args['multiple'] as boolean | undefined,
+    disabled: args['disabled'] as boolean | undefined,
+    invalid: args['invalid'] as boolean | undefined,
+    name: args['name'] as string | undefined,
+    items: ['Brasil', 'Argentina', 'Chile'],
+  });
+}

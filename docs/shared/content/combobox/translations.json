@@ -39,7 +39,8 @@
         "empty": "Nenhum resultado",
         "remove": "Remover",
         "clear": "Limpar",
-        "openList": "Abrir lista"
+        "openList": "Abrir lista",
+        "removed": "removido"
       }
     },
     "anatomy": {
@@ -325,7 +326,7 @@
         "vue": "<!-- Modo múltiplo: cada escolhido vira um chip dentro do campo -->\n<Combobox v-model=\"escolhidas\" multiple>\n  <ComboboxLabel>Tecnologias</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxChips>\n      <ComboboxChip\n        v-for=\"item in escolhidas\"\n        :key=\"item.value\"\n        :value=\"item.value\"\n      >\n        {{ item.label }}\n        <ComboboxChipRemove :aria-label=\"`Remover ${item.label}`\" />\n      </ComboboxChip>\n    </ComboboxChips>\n    <ComboboxInput placeholder=\"Adicionar tecnologia\" />\n    <ComboboxTrigger aria-label=\"Abrir lista\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n</Combobox>",
         "svelte": "<!-- Modo múltiplo: cada escolhido vira um chip dentro do campo -->\n<Combobox bind:value={escolhidas} multiple>\n  <ComboboxLabel>Tecnologias</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxChips>\n      {#each escolhidas as item (item.value)}\n        <ComboboxChip value={item.value}>\n          {item.label}\n          <ComboboxChipRemove aria-label={`Remover ${item.label}`} />\n        </ComboboxChip>\n      {/each}\n    </ComboboxChips>\n    <ComboboxInput placeholder=\"Adicionar tecnologia\" />\n    <ComboboxTrigger aria-label=\"Abrir lista\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n</Combobox>",
         "angular": "<!-- Modo múltiplo: cada escolhido vira um chip dentro do campo -->\n<nds-combobox [(value)]=\"escolhidas\" multiple>\n  <label ndsComboboxLabel>Tecnologias</label>\n  <div ndsComboboxInputWrapper>\n    <div ndsComboboxChips>\n      @for (item of escolhidas; track item.value) {\n        <span ndsComboboxChip [value]=\"item.value\">\n          {{ item.label }}\n          <button ndsComboboxChipRemove [attr.aria-label]=\"'Remover ' + item.label\"></button>\n        </span>\n      }\n    </div>\n    <input ndsComboboxInput placeholder=\"Adicionar tecnologia\" />\n    <button ndsComboboxTrigger aria-label=\"Abrir lista\">\n      <svg ndsComboboxIcon></svg>\n    </button>\n  </div>\n</nds-combobox>",
-        "vanilla": "// Modo múltiplo: cada escolhido vira um chip dentro do campo\nconst campo = createCombobox({\n  id: 'tecnologias',\n  label: 'Tecnologias',\n  placeholder: 'Adicionar tecnologia',\n  multiple: true,\n  defaultValue: ['react', 'vue'],\n  items: [\n    { value: 'react', label: 'React' },\n    { value: 'vue', label: 'Vue' },\n    { value: 'svelte', label: 'Svelte' },\n    { value: 'angular', label: 'Angular' },\n  ],\n  // Nome próprio por chip — \"Remover\" sozinho não diz qual\n  removeLabel: (item) => `Remover ${item.label}`,\n});"
+        "vanilla": "// Modo múltiplo: cada escolhido vira um chip dentro do campo\nconst field = createCombobox({\n  id: 'tecnologias',\n  label: 'Tecnologias',\n  placeholder: 'Adicionar tecnologia',\n  multiple: true,\n  defaultValue: ['react', 'vue'],\n  items: [\n    { value: 'react', label: 'React' },\n    { value: 'vue', label: 'Vue' },\n    { value: 'svelte', label: 'Svelte' },\n    { value: 'angular', label: 'Angular' },\n  ],\n  // Prefixo do nome de cada botão: a fábrica monta \"Remover React\"\n  removeLabel: 'Remover',\n});"
       }
     },
     "tokens": {
@@ -646,7 +647,8 @@
         "empty": "No results",
         "remove": "Remove",
         "clear": "Clear",
-        "openList": "Open list"
+        "openList": "Open list",
+        "removed": "removed"
       }
     },
     "anatomy": {
@@ -932,7 +934,7 @@
         "vue": "<!-- Multiple mode: each chosen value becomes a chip inside the field -->\n<Combobox v-model=\"chosen\" multiple>\n  <ComboboxLabel>Technologies</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxChips>\n      <ComboboxChip\n        v-for=\"item in chosen\"\n        :key=\"item.value\"\n        :value=\"item.value\"\n      >\n        {{ item.label }}\n        <ComboboxChipRemove :aria-label=\"`Remove ${item.label}`\" />\n      </ComboboxChip>\n    </ComboboxChips>\n    <ComboboxInput placeholder=\"Add technology\" />\n    <ComboboxTrigger aria-label=\"Open list\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n</Combobox>",
         "svelte": "<!-- Multiple mode: each chosen value becomes a chip inside the field -->\n<Combobox bind:value={chosen} multiple>\n  <ComboboxLabel>Technologies</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxChips>\n      {#each chosen as item (item.value)}\n        <ComboboxChip value={item.value}>\n          {item.label}\n          <ComboboxChipRemove aria-label={`Remove ${item.label}`} />\n        </ComboboxChip>\n      {/each}\n    </ComboboxChips>\n    <ComboboxInput placeholder=\"Add technology\" />\n    <ComboboxTrigger aria-label=\"Open list\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n</Combobox>",
         "angular": "<!-- Multiple mode: each chosen value becomes a chip inside the field -->\n<nds-combobox [(value)]=\"chosen\" multiple>\n  <label ndsComboboxLabel>Technologies</label>\n  <div ndsComboboxInputWrapper>\n    <div ndsComboboxChips>\n      @for (item of chosen; track item.value) {\n        <span ndsComboboxChip [value]=\"item.value\">\n          {{ item.label }}\n          <button ndsComboboxChipRemove [attr.aria-label]=\"'Remove ' + item.label\"></button>\n        </span>\n      }\n    </div>\n    <input ndsComboboxInput placeholder=\"Add technology\" />\n    <button ndsComboboxTrigger aria-label=\"Open list\">\n      <svg ndsComboboxIcon></svg>\n    </button>\n  </div>\n</nds-combobox>",
-        "vanilla": "// Multiple mode: each chosen value becomes a chip inside the field\nconst field = createCombobox({\n  id: 'tecnologias',\n  label: 'Technologies',\n  placeholder: 'Add technology',\n  multiple: true,\n  defaultValue: ['react', 'vue'],\n  items: [\n    { value: 'react', label: 'React' },\n    { value: 'vue', label: 'Vue' },\n    { value: 'svelte', label: 'Svelte' },\n    { value: 'angular', label: 'Angular' },\n  ],\n  // One name per chip — \"Remove\" alone does not say which one\n  removeLabel: (item) => `Remove ${item.label}`,\n});"
+        "vanilla": "// Multiple mode: each chosen value becomes a chip inside the field\nconst field = createCombobox({\n  id: 'tecnologias',\n  label: 'Technologies',\n  placeholder: 'Add technology',\n  multiple: true,\n  defaultValue: ['react', 'vue'],\n  items: [\n    { value: 'react', label: 'React' },\n    { value: 'vue', label: 'Vue' },\n    { value: 'svelte', label: 'Svelte' },\n    { value: 'angular', label: 'Angular' },\n  ],\n  // Prefix for each button name: the factory builds \"Remove React\"\n  removeLabel: 'Remove',\n});"
       }
     },
     "tokens": {
@@ -1253,7 +1255,8 @@
         "empty": "Sin resultados",
         "remove": "Quitar",
         "clear": "Limpiar",
-        "openList": "Abrir lista"
+        "openList": "Abrir lista",
+        "removed": "quitado"
       }
     },
     "anatomy": {
@@ -1539,7 +1542,7 @@
         "vue": "<!-- Modo múltiple: cada valor elegido se convierte en un chip dentro del campo -->\n<Combobox v-model=\"elegidas\" multiple>\n  <ComboboxLabel>Tecnologías</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxChips>\n      <ComboboxChip\n        v-for=\"item in elegidas\"\n        :key=\"item.value\"\n        :value=\"item.value\"\n      >\n        {{ item.label }}\n        <ComboboxChipRemove :aria-label=\"`Quitar ${item.label}`\" />\n      </ComboboxChip>\n    </ComboboxChips>\n    <ComboboxInput placeholder=\"Añadir tecnología\" />\n    <ComboboxTrigger aria-label=\"Abrir lista\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n</Combobox>",
         "svelte": "<!-- Modo múltiple: cada valor elegido se convierte en un chip dentro del campo -->\n<Combobox bind:value={elegidas} multiple>\n  <ComboboxLabel>Tecnologías</ComboboxLabel>\n  <ComboboxInputWrapper>\n    <ComboboxChips>\n      {#each elegidas as item (item.value)}\n        <ComboboxChip value={item.value}>\n          {item.label}\n          <ComboboxChipRemove aria-label={`Quitar ${item.label}`} />\n        </ComboboxChip>\n      {/each}\n    </ComboboxChips>\n    <ComboboxInput placeholder=\"Añadir tecnología\" />\n    <ComboboxTrigger aria-label=\"Abrir lista\">\n      <ComboboxIcon />\n    </ComboboxTrigger>\n  </ComboboxInputWrapper>\n</Combobox>",
         "angular": "<!-- Modo múltiple: cada valor elegido se convierte en un chip dentro del campo -->\n<nds-combobox [(value)]=\"elegidas\" multiple>\n  <label ndsComboboxLabel>Tecnologías</label>\n  <div ndsComboboxInputWrapper>\n    <div ndsComboboxChips>\n      @for (item of elegidas; track item.value) {\n        <span ndsComboboxChip [value]=\"item.value\">\n          {{ item.label }}\n          <button ndsComboboxChipRemove [attr.aria-label]=\"'Quitar ' + item.label\"></button>\n        </span>\n      }\n    </div>\n    <input ndsComboboxInput placeholder=\"Añadir tecnología\" />\n    <button ndsComboboxTrigger aria-label=\"Abrir lista\">\n      <svg ndsComboboxIcon></svg>\n    </button>\n  </div>\n</nds-combobox>",
-        "vanilla": "// Modo múltiple: cada valor elegido se convierte en un chip dentro del campo\nconst campo = createCombobox({\n  id: 'tecnologias',\n  label: 'Tecnologías',\n  placeholder: 'Añadir tecnología',\n  multiple: true,\n  defaultValue: ['react', 'vue'],\n  items: [\n    { value: 'react', label: 'React' },\n    { value: 'vue', label: 'Vue' },\n    { value: 'svelte', label: 'Svelte' },\n    { value: 'angular', label: 'Angular' },\n  ],\n  // Un nombre por chip — \"Quitar\" a secas no dice cuál\n  removeLabel: (item) => `Quitar ${item.label}`,\n});"
+        "vanilla": "// Modo múltiple: cada valor elegido se convierte en un chip dentro del campo\nconst field = createCombobox({\n  id: 'tecnologias',\n  label: 'Tecnologías',\n  placeholder: 'Añadir tecnología',\n  multiple: true,\n  defaultValue: ['react', 'vue'],\n  items: [\n    { value: 'react', label: 'React' },\n    { value: 'vue', label: 'Vue' },\n    { value: 'svelte', label: 'Svelte' },\n    { value: 'angular', label: 'Angular' },\n  ],\n  // Prefijo del nombre de cada botón: la fábrica arma \"Quitar React\"\n  removeLabel: 'Quitar',\n});"
       }
     },
     "tokens": {
