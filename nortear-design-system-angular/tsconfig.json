@@ -34,7 +34,12 @@
   "angularCompilerOptions": {
     "strictTemplates": true,
     "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true
+    "strictInputAccessModifiers": true,
+    // Binding de host é STRING, e string nenhum portão lia: `strictTemplates`
+    // alcança `<tag [x]="…">` e para aí. Um `'[attr.data-chips]':
+    // 'combobox.chipsLayoutErrado()'` compilava limpo e falhava só na tela.
+    // Ligada com zero dívida a pagar — o repositório inteiro passa hoje.
+    "typeCheckHostBindings": true
   },
   "include": ["src/**/*.ts", ".storybook/**/*.ts", "vite.config.ts"]
 }
