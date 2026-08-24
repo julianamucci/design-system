@@ -77,7 +77,7 @@ export const WithAction: Story = {
         <h5 ndsAlertTitle>Atualização disponível</h5>
         <section ndsAlertDescription>Uma nova versão está pronta para instalação.</section>
         <div ndsAlertAction>
-          <button ndsButton variant="outline" size="sm">Atualizar</button>
+          <button ndsButton variant="default" size="sm">Atualizar</button>
         </div>
       </div>
     `,
@@ -124,7 +124,7 @@ export const AdditionalClass: Story = {
         <h5 ndsAlertTitle class="nds-w-full">Classe adicional</h5>
         <section ndsAlertDescription class="nds-w-full">A classe de quem usa convive com as do design system.</section>
         <div ndsAlertAction class="nds-w-auto">
-          <button ndsButton variant="outline" size="sm">Ação</button>
+          <button ndsButton variant="default" size="sm">Ação</button>
         </div>
       </div>
     `,

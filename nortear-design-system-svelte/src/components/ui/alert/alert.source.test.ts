@@ -108,7 +108,7 @@ describe('transforms das stories de composição', () => {
     const saida = alertWithActionSource();
     expect(saida).toContain('from "@/components/ui/button"');
     expect(saida).toContain('<AlertAction>');
-    expect(saida).toContain('<Button size="sm" variant="outline">Atualizar</Button>');
+    expect(saida).toContain('<Button size="sm" variant="default">Atualizar</Button>');
   });
 
   it('a classe adicional aparece na raiz e em cada subcomponente', () => {

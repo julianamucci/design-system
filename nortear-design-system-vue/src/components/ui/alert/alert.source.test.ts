@@ -162,7 +162,7 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain(`import { Button } from '@/components/ui/button'`);
     expect(saida).toContain(
       `    <AlertAction>
-      <Button size="sm" variant="outline">Atualizar</Button>
+      <Button size="sm" variant="default">Atualizar</Button>
     </AlertAction>`,
     );
   });

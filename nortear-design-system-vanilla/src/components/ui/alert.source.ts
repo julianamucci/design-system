@@ -131,7 +131,7 @@ export function alertWithActionSnippet(o: AlertWithActionSnippetOptions = {}): s
     ),
     [criacao, ...body].join('\n'),
     `const acao = createAlertAction();
-acao.appendChild(createButton({ label: ${text(acao)}, variant: 'outline', size: 'sm' }));
+acao.appendChild(createButton({ label: ${text(acao)}, variant: 'default', size: 'sm' }));
 alerta.appendChild(acao);`,
     montar('alerta'),
   );

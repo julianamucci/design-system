@@ -60,7 +60,7 @@ export const WithAction: Story = {
     alert.appendChild(createAlertDescription({ text: 'Uma nova versão está pronta para instalação.' }));
 
     const action = createAlertAction();
-    action.appendChild(createButton({ label: 'Atualizar', variant: 'outline', size: 'sm' }));
+    action.appendChild(createButton({ label: 'Atualizar', variant: 'default', size: 'sm' }));
     alert.appendChild(action);
 
     return alert;
@@ -123,7 +123,7 @@ export const AdditionalClass: Story = {
     }));
 
     const action = createAlertAction({ className: 'nds-w-auto' });
-    action.appendChild(createButton({ label: 'Ação', variant: 'outline', size: 'sm' }));
+    action.appendChild(createButton({ label: 'Ação', variant: 'default', size: 'sm' }));
     alert.appendChild(action);
 
     return alert;

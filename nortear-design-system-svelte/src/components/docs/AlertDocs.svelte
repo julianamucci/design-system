@@ -228,7 +228,7 @@ interface AlertTitleProps {
             <AlertTitle as="h3">{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
             <AlertDescription>{$tStore('demonstration.labels.warningDesc')}</AlertDescription>
             <AlertAction>
-              <Button size="sm" variant="outline">{$tStore('demonstration.labels.warningAction')}</Button>
+              <Button size="sm" variant="default">{$tStore('demonstration.labels.warningAction')}</Button>
             </AlertAction>
           </Alert>
         </div>
@@ -452,7 +452,7 @@ interface AlertTitleProps {
             // Slot AlertAction, igual à story ComAcao. O markup anterior
             // empilhava o botão dentro da descrição e ele caía na linha de
             // baixo — divergia da story e do "alinhado à direita" do texto.
-            code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>\n  <AlertAction>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertAction>\n</Alert>`,
+            code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>\n  <AlertAction>\n    <Button size="sm" variant="default">Salvar agora</Button>\n  </AlertAction>\n</Alert>`,
             preview: compWithAction,
           },
         ]}
@@ -471,7 +471,7 @@ interface AlertTitleProps {
           <AlertTitle as="h3">Sessão expira em 5 minutos</AlertTitle>
           <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>
           <AlertAction>
-            <Button size="sm" variant="outline">Salvar agora</Button>
+            <Button size="sm" variant="default">Salvar agora</Button>
           </AlertAction>
         </Alert>
       {/snippet}

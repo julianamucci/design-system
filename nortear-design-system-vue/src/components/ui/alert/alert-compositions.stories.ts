@@ -62,7 +62,7 @@ export const WithAction: Story = {
         <AlertTitle>Atualização disponível</AlertTitle>
         <AlertDescription>Uma nova versão está pronta para instalação.</AlertDescription>
         <AlertAction>
-          <Button size="sm" variant="outline">Atualizar</Button>
+          <Button size="sm" variant="default">Atualizar</Button>
         </AlertAction>
       </Alert>
     `,
@@ -114,7 +114,7 @@ export const AdditionalClass: Story = {
         <AlertTitle class="nds-w-full">Classe adicional</AlertTitle>
         <AlertDescription class="nds-w-full">A classe do consumidor convive com as do design system.</AlertDescription>
         <AlertAction class="nds-w-auto">
-          <Button size="sm" variant="outline">Ação</Button>
+          <Button size="sm" variant="default">Ação</Button>
         </AlertAction>
       </Alert>
     `,

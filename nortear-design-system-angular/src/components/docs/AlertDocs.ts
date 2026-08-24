@@ -199,7 +199,7 @@ const CODE_WITH_ACTION = `<div ndsAlert>
     Salve seu trabalho para não perder as alterações.
   </section>
   <div ndsAlertAction>
-    <button ndsButton variant="outline" size="sm">Salvar agora</button>
+    <button ndsButton variant="default" size="sm">Salvar agora</button>
   </div>
 </div>`;
 
@@ -344,7 +344,7 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
         <h4 ndsAlertTitle>{{ t('demonstration.labels.warningTitle') }}</h4>
         <section ndsAlertDescription>{{ t('demonstration.labels.warningDesc') }}</section>
         <div ndsAlertAction>
-          <button ndsButton variant="outline" size="sm">
+          <button ndsButton variant="default" size="sm">
             {{ t('demonstration.labels.warningAction') }}
           </button>
         </div>
@@ -398,7 +398,7 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
               <h3 ndsAlertTitle>{{ t('demonstration.labels.warningTitle') }}</h3>
               <section ndsAlertDescription>{{ t('demonstration.labels.warningDesc') }}</section>
               <div ndsAlertAction>
-                <button ndsButton variant="outline" size="sm">
+                <button ndsButton variant="default" size="sm">
                   {{ t('demonstration.labels.warningAction') }}
                 </button>
               </div>

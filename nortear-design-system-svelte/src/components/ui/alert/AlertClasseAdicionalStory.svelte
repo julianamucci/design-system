@@ -14,6 +14,6 @@
     A classe do consumidor convive com as do design system.
   </AlertDescription>
   <AlertAction class="nds-w-auto">
-    <Button size="sm" variant="outline">Ação</Button>
+    <Button size="sm" variant="default">Ação</Button>
   </AlertAction>
 </Alert>

@@ -52,7 +52,7 @@ export const WithAction: Story = {
       <AlertTitle>Atualização disponível</AlertTitle>
       <AlertDescription>Uma nova versão está pronta para instalação.</AlertDescription>
       <AlertAction>
-        <Button size="sm" variant="outline">
+        <Button size="sm" variant="default">
           Atualizar
         </Button>
       </AlertAction>
@@ -101,7 +101,7 @@ export const AdditionalClass: Story = {
         A classe do consumidor convive com as do design system.
       </AlertDescription>
       <AlertAction className="nds-w-auto">
-        <Button size="sm" variant="outline">
+        <Button size="sm" variant="default">
           Ação
         </Button>
       </AlertAction>

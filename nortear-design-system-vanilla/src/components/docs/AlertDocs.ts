@@ -95,7 +95,7 @@ function buildAlert(
     const action = createAlertAction();
     action.appendChild(createButton({
       size: 'sm',
-      variant: 'outline',
+      variant: 'default',
       label: stripHtml(t(actionKey)),
       onClick: onAction,
     }));
@@ -459,7 +459,7 @@ export function createAlertDocs(): HTMLElement {
                 `alert.appendChild(createAlertDescription({ text: 'Salve seu trabalho para não perder as alterações.' }));\n` +
                 `\n` +
                 `const action = createAlertAction();\n` +
-                `action.appendChild(createButton({ size: 'sm', variant: 'outline', label: 'Salvar agora' }));\n` +
+                `action.appendChild(createButton({ size: 'sm', variant: 'default', label: 'Salvar agora' }));\n` +
                 `alert.appendChild(action);`,
               previewFactory: () => {
                 const el = createAlert({ className: 'nds-w-full' });
@@ -467,7 +467,7 @@ export function createAlertDocs(): HTMLElement {
                 el.appendChild(createAlertTitle({ text: 'Sessão expira em 5 minutos', as: 'h3' }));
                 el.appendChild(createAlertDescription({ text: 'Salve seu trabalho para não perder as alterações.' }));
                 const action = createAlertAction();
-                action.appendChild(createButton({ size: 'sm', variant: 'outline', label: 'Salvar agora' }));
+                action.appendChild(createButton({ size: 'sm', variant: 'default', label: 'Salvar agora' }));
                 el.appendChild(action);
                 return el;
               },

@@ -9,6 +9,6 @@
   <AlertTitle>Atualização disponível</AlertTitle>
   <AlertDescription>Uma nova versão está pronta para instalação.</AlertDescription>
   <AlertAction>
-    <Button size="sm" variant="outline">Atualizar</Button>
+    <Button size="sm" variant="default">Atualizar</Button>
   </AlertAction>
 </Alert>

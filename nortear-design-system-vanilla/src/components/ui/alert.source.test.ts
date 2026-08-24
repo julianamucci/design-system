@@ -103,7 +103,7 @@ describe('alertComAcaoSnippet', () => {
     const code = alertWithActionSnippet({ acao: 'Atualizar' });
     expect(code).toContain("import { createButton } from '@/components/ui/button';");
     expect(code).toContain('createAlertAction()');
-    expect(code).toContain("createButton({ label: 'Atualizar', variant: 'outline', size: 'sm' })");
+    expect(code).toContain("createButton({ label: 'Atualizar', variant: 'default', size: 'sm' })");
     expect(code).toContain('alerta.appendChild(acao);');
   });
 

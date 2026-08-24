@@ -269,7 +269,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     page divergiu da story ComAcao, que sempre usou o slot. */}
                 <AlertDescription>{tContent("demonstration.labels.warningDesc")}</AlertDescription>
                 <AlertAction>
-                  <Button size="sm" variant="outline">
+                  <Button size="sm" variant="default">
                     {tContent("demonstration.labels.warningAction")}
                   </Button>
                 </AlertAction>
@@ -554,14 +554,14 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 // Slot AlertAction, igual à story ComAcao. O markup anterior
                 // empilhava o botão dentro da descrição e ele caía na linha de
                 // baixo — divergia da story e do "alinhado à direita" do texto.
-                code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>\n  <AlertAction>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertAction>\n</Alert>`,
+                code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>\n  <AlertAction>\n    <Button size="sm" variant="default">Salvar agora</Button>\n  </AlertAction>\n</Alert>`,
                 preview: (
                   <Alert className="nds-w-full">
                     <Info aria-hidden="true" />
                     <AlertTitle as="h3">Sessão expira em 5 minutos</AlertTitle>
                     <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>
                     <AlertAction>
-                      <Button size="sm" variant="outline">Salvar agora</Button>
+                      <Button size="sm" variant="default">Salvar agora</Button>
                     </AlertAction>
                   </Alert>
                 ),
