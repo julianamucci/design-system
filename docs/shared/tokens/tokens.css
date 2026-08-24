@@ -82,9 +82,9 @@
   --letter-spacing-wide: 0.02em;
 
   /* Surfaces */
-  --background: 24 100% 99%;
+  --background: 24 100% 99.5%;
   --foreground: 201 22% 18%;
-  --card: 0 0% 100%;
+  --card: 24 100% 99.5%;
   --card-foreground: 201 22% 18%;
   --popover: 0 0% 100%;
   --popover-foreground: 201 22% 18%;

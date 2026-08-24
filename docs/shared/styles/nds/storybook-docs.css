@@ -5,8 +5,8 @@
  * Ele fica ACIMA do `.nds-page`, então o que a pessoa vê como "fundo da página"
  * é o branco dele, não o nosso `--background`.
  *
- * No claro isso apaga o Creme da marca — `--background` é `24 100% 99%`
- * (#FFFCFA), quase branco mas quente, e o branco puro por cima remove
+ * No claro isso apaga o Creme da marca — `--background` é `24 100% 99.5%`
+ * (#FFFDFC), quase branco mas quente, e o branco puro por cima remove
  * justamente o tint de areia que o tema define. No escuro apaga o Ink inteiro.
  *
  * A alternativa seria `parameters.docs.theme` com `create()` do

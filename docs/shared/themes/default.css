@@ -5,7 +5,11 @@
  *
  * Estratégia:
  *   - Neutros com tint QUENTE de areia: matiz 24–36°, saturação 16–24% no claro
- *     (Creme #FFFCFA como fundo de página, Areia #E5E1DB como borda/preenchimento).
+ *     (Creme do brand book #FFFCFA, aberto para #FFFDFC como fundo de página;
+ *     Areia #E5E1DB como borda/preenchimento). O --card é o MESMO valor do
+ *     fundo: a diferença anterior — card branco puro sobre creme — media 1.022
+ *     de contraste, invisível. Quem sempre separou o cartão foi a borda, e
+ *     igualar torna isso explícito; o escuro já fazia assim.
  *     No escuro o tint vira FRIO — matiz 197–201°, saturação 12–22% —, porque o
  *     fundo escuro da marca é o Ink #233037, um quase-preto azul-esverdeado. É a
  *     única troca de temperatura do tema, e é prescrita: a marca opõe família
@@ -93,9 +97,9 @@
  * ou não trocado de tema na toolbar.
  */
 .tema-default {
-  --background: 24 100% 99%;
+  --background: 24 100% 99.5%;
   --foreground: 201 22% 18%;
-  --card: 0 0% 100%;
+  --card: 24 100% 99.5%;
   --card-foreground: 201 22% 18%;
   --popover: 0 0% 100%;
   --popover-foreground: 201 22% 18%;
