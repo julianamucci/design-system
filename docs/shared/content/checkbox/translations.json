@@ -42,7 +42,7 @@
         "item1": "Checkbox sempre acompanhado de <code>&lt;label&gt;</code> visível associado via <code>htmlFor</code>/<code>id</code>.",
         "item2": "Para grupos de checkboxes relacionados, envolva em <code>&lt;fieldset&gt;</code> com <code>&lt;legend&gt;</code>.",
         "item3": "Use o estado indeterminado para representar seleção parcial de um grupo — a forma de ativá-lo está na tabela de propriedades desta página.",
-        "item4": "Label descreve o estado ativo — \"Receber notificações por email\", não apenas \"Email\"."
+        "item4": "Label descreve o estado ativo — \"Receber notificações\", não apenas \"Notificações\"."
       },
       "scenarios": {
         "title": "Tabela de Cenários",
@@ -95,7 +95,7 @@
     "doDont": {
       "title": "Do & Don't",
       "pair1": {
-        "do": "Label descreve o estado ativo: \"Receber notificações por email\".",
+        "do": "Label descreve o estado ativo: \"Receber notificações\".",
         "dont": "Label genérico ou ambíguo: \"Email\" ou \"Ativar\"."
       },
       "pair2": {
@@ -438,7 +438,7 @@
         "item1": "Checkbox must always be paired with a visible <code>&lt;label&gt;</code> associated via <code>htmlFor</code>/<code>id</code>.",
         "item2": "For related checkbox groups, wrap in <code>&lt;fieldset&gt;</code> with <code>&lt;legend&gt;</code>.",
         "item3": "Use the indeterminate state to represent partial selection of a group — how to turn it on is in the properties table on this page.",
-        "item4": "Label describes the active state — \"Receive email notifications\", not just \"Email\"."
+        "item4": "Label describes the active state — \"Receive notifications\", not just \"Notifications\"."
       },
       "scenarios": {
         "title": "Scenario Table",
@@ -491,7 +491,7 @@
     "doDont": {
       "title": "Do & Don't",
       "pair1": {
-        "do": "Label describes the active state: \"Receive email notifications\".",
+        "do": "Label describes the active state: \"Receive notifications\".",
         "dont": "Generic or ambiguous label: \"Email\" or \"Enable\"."
       },
       "pair2": {
@@ -834,7 +834,7 @@
         "item1": "Checkbox siempre debe ir acompañado de un <code>&lt;label&gt;</code> visible asociado vía <code>htmlFor</code>/<code>id</code>.",
         "item2": "Para grupos de checkboxes relacionados, envuelve en <code>&lt;fieldset&gt;</code> con <code>&lt;legend&gt;</code>.",
         "item3": "Usa el estado indeterminado para representar la selección parcial de un grupo — cómo activarlo está en la tabla de propiedades de esta página.",
-        "item4": "El label describe el estado activo — \"Recibir notificaciones por correo\", no solo \"Correo\"."
+        "item4": "El label describe el estado activo — \"Recibir notificaciones\", no solo \"Notificaciones\"."
       },
       "scenarios": {
         "title": "Tabla de Escenarios",
@@ -887,7 +887,7 @@
     "doDont": {
       "title": "Do & Don't",
       "pair1": {
-        "do": "El label describe el estado activo: \"Recibir notificaciones por correo\".",
+        "do": "El label describe el estado activo: \"Recibir notificaciones\".",
         "dont": "Label genérico o ambiguo: \"Correo\" o \"Activar\"."
       },
       "pair2": {

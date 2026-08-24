@@ -382,7 +382,7 @@ export function CheckboxDocs() {
                   <div className="nds-cluster" data-spacing="xs">
                     <Checkbox id="dodont-1-do" defaultChecked />
                     <label htmlFor="dodont-1-do" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
-                      Receber notificações por email
+                      Receber notificações
                     </label>
                   </div>
                 ),
@@ -390,7 +390,7 @@ export function CheckboxDocs() {
                   <div className="nds-cluster" data-spacing="xs">
                     <Checkbox id="dodont-1-dont" defaultChecked />
                     <label htmlFor="dodont-1-dont" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
-                      Email
+                      Notificações
                     </label>
                   </div>
                 ),

@@ -370,14 +370,14 @@ import { Label } from "@/components/ui/label";`;
   {#snippet doPair1Do()}
     <div class="nds-cluster" data-spacing="xs">
       <Checkbox id="do-pair1-do" bind:checked={doPair1Checked} />
-      <Label for="do-pair1-do">Receber notificações por email</Label>
+      <Label for="do-pair1-do">Receber notificações</Label>
     </div>
   {/snippet}
 
   {#snippet doPair1Dont()}
     <div class="nds-cluster" data-spacing="xs">
       <Checkbox id="do-pair1-dont" />
-      <Label for="do-pair1-dont">Email</Label>
+      <Label for="do-pair1-dont">Notificações</Label>
     </div>
   {/snippet}
 

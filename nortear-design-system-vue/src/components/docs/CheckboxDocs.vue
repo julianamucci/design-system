@@ -546,7 +546,7 @@ const visualTestItems = computed(() => [
             for="dodont-do-1"
             class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
           >
-            Receber notificações por email
+            Receber notificações
           </label>
         </div>
       </template>
@@ -560,7 +560,7 @@ const visualTestItems = computed(() => [
             for="dodont-dont-1"
             class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
           >
-            Email
+            Notificações
           </label>
         </div>
       </template>

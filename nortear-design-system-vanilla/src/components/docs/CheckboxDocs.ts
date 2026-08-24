@@ -335,8 +335,8 @@ export function createCheckboxDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
-              doPreviewFactory: () => buildLabeledCheckbox('Receber notificações por email'),
-              dontPreviewFactory: () => buildLabeledCheckbox('Email'),
+              doPreviewFactory: () => buildLabeledCheckbox('Receber notificações'),
+              dontPreviewFactory: () => buildLabeledCheckbox('Notificações'),
             },
             {
               doLabel: tNav('common.do'),
