@@ -371,12 +371,29 @@
   display: block;
 }
 
+/*
+ * O cabeçalho ganha FAIXA, e as opções do grupo ganham RECUO. Sem os dois, o
+ * cabeçalho tinha o mesmo recuo das opções e só se distinguia pelo tamanho da
+ * letra — numa lista rolando, ele se lia como mais uma opção, e uma que não
+ * responde ao clique.
+ *
+ * O par `--muted-foreground` sobre `--muted` foi medido nos três temas e nos
+ * dois modos: o pior caso dá 4.73:1, acima do 4.5 que texto pequeno pede.
+ */
 .nds-combobox-group-label {
   padding-block: var(--spacing-1-5);
   padding-inline: var(--spacing-2);
   font-size: 0.8125rem;
   font-weight: var(--font-weight-medium, 500);
   color: hsl(var(--muted-foreground));
+  background-color: hsl(var(--muted));
+  border-radius: var(--radius-sm);
+}
+
+/* O recuo é o que diz, sem palavra nenhuma, que a opção pertence ao cabeçalho
+   de cima. Vale só dentro de grupo: lista sem grupo não tem de que recuar. */
+.nds-combobox-group .nds-combobox-item {
+  padding-inline-start: var(--spacing-4);
 }
 
 .nds-combobox-separator {
