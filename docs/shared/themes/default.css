@@ -185,7 +185,7 @@
   --info: 190 50% 56%;
   --info-foreground: var(--foreground);
 
-  --border: 200 18% 24%;
+  --border: 200 18% 35%;
   --input: 197 12% 50%;                /* derivado · 3.51:1 sobre --background (WCAG 1.4.11) */
   --input-background: 201 22% 18%;
   --ring: 184 48% 46%;

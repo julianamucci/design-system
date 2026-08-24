@@ -234,7 +234,7 @@
 
 /* Outline */
 .nds-button-outline {
-  border: 1px solid hsl(var(--border));
+  border: 2px solid hsl(var(--border));
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -253,12 +253,12 @@
  * e --border seguiu em 90% / 15% como linha decorativa. O botao fica com
  * --border, e toggle, toggle-group e button-group foram alinhados a ele.
  *
- * O fundo continua: no escuro o outline ganha uma superficie levemente
- * elevada para nao encostar na pagina. Isso e superficie, entao o token e
- * --muted — mesmo valor, nome honesto. */
-.dark .nds-button-outline {
-  background-color: hsl(var(--muted) / 0.3);
-}
+ * O FUNDO e --background nos dois modos. O escuro tinha aqui um override para
+ * `--muted / 0.3`, uma superficie levemente elevada para o botao nao encostar
+ * na pagina. Saiu: com a borda em 2px e o --border do escuro aberto de 24% para
+ * 35%, quem delimita o controle e a LINHA, nao um degrau de fundo que media
+ * menos de 1.1 de contraste contra a pagina e so existia para compensar uma
+ * borda fraca. */
 .dark .nds-button-outline:hover,
 .dark .nds-button-outline[aria-pressed="true"] {
   background-color: hsl(var(--accent) / 0.5);

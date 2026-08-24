@@ -319,7 +319,7 @@
   --warning-foreground: var(--foreground);
   --info: 190 50% 56%;
   --info-foreground: var(--foreground);
-  --border: 200 18% 24%;
+  --border: 200 18% 35%;
   /* 41% sobre o fundo 9% = 3.25:1 (WCAG 1.4.11). Ver comentário no claro. */
   --input: 197 12% 50%;
   --input-background: 201 22% 18%;
