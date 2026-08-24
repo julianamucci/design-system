@@ -21,6 +21,27 @@ const PAISES: ComboboxItem[] = [
   { value: 'uruguai', label: 'Uruguai' },
 ];
 
+const TECNOLOGIAS: ComboboxItem[] = [
+  { value: 'react', label: 'React' },
+  { value: 'vue', label: 'Vue' },
+  { value: 'svelte', label: 'Svelte' },
+  { value: 'angular', label: 'Angular' },
+];
+
+/**
+ * Valor escolhido, POR STORY, fora da fábrica.
+ *
+ * Storybook re-executa o `render` a cada mudança de control, e a fábrica é
+ * recriada com o closure limpo. Sem guardar o valor aqui, mexer em `disabled`
+ * apagaria os chips que a pessoa acabou de escolher — que foi exatamente o
+ * relato. Guardá-lo fora também é o que o consumidor real faz: quem monta o
+ * formulário é dono do valor, não o campo.
+ */
+const valorDe: Record<string, string[]> = {
+  playground: [],
+  multiplo: ['react', 'vue'],
+};
+
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 type ComboboxArgs = {
@@ -111,7 +132,11 @@ export const Playground: Story = {
       readOnly: args.readOnly,
       invalid: args.invalid,
       name: args.name,
-      onValueChange: args.onValueChange,
+      defaultValue: valorDe.playground,
+      onValueChange: (value) => {
+        valorDe.playground = value;
+        args.onValueChange(value);
+      },
     }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
@@ -177,18 +202,25 @@ export const MultipleWithChips: Story = {
   },
   render: (args) =>
     createCombobox({
-      items: [
-        { value: 'react', label: 'React' },
-        { value: 'vue', label: 'Vue' },
-        { value: 'svelte', label: 'Svelte' },
-        { value: 'angular', label: 'Angular' },
-      ],
+      items: TECNOLOGIAS,
       label: args.label,
       placeholder: args.placeholder,
+      // `multiple` fica fixo: é o assunto da story, e um control que a
+      // desligasse deixaria a story sem o que demonstrar.
       multiple: true,
-      defaultValue: ['react', 'vue'],
+      // Estes três vinham do `meta` e NÃO eram repassados: o painel mostrava
+      // três interruptores ligados a nada. Controle que não faz nada é pior que
+      // controle ausente, porque a pessoa conclui que o componente é que não
+      // responde.
+      disabled: args.disabled,
+      readOnly: args.readOnly,
+      invalid: args.invalid,
       name: args.name,
-      onValueChange: args.onValueChange,
+      defaultValue: valorDe.multiplo,
+      onValueChange: (value) => {
+        valorDe.multiplo = value;
+        args.onValueChange(value);
+      },
     }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
