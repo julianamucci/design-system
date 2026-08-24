@@ -179,6 +179,13 @@ Process rules, each learned from a concrete failure. They bind the orchestrator 
 
   Suíte inteira é para mudança que atravessa o grafo. Para mudança local, suíte inteira não é rigor — é ruído caro, e some no meio dele o sinal que importava.
 
+  **Build é o portão default; suíte de navegador só sob pedido explícito da dona.**
+  Segunda ocorrência em 2026-08-23, na revisão do switch: rodei storybook e
+  `docs-smoke` em bloco a cada correção, perto de uma hora de relógio, e ainda
+  entreguei com pendência aberta. O erro não foi escolher o portão errado — foi
+  rodar o caro POR HÁBITO depois de cada passo, em vez de corrigir tudo e medir
+  uma vez. Markup e texto não precisam de navegador: precisam compilar.
+
 - **Ao testar mais de uma stack, PARALELIZE em até três agentes.** Sequencial custa a soma; três em paralelo custam o máximo. O teto é três porque cinco vitest de navegador ao mesmo tempo disputam CPU e porta nesta máquina, e disputa vira o impasse descrito na regra da suíte destacada. Cada agente pega uma stack inteira (lint, build, build-storybook, suítes) e não compartilha diretório de saída com os outros.
 
   **GPU não ajuda aqui, e vale saber por quê antes de tentar:** a suíte é limitada por processo e por E/S, não por rasterização. O `chrome-headless-shell` roda com renderização por software de propósito — habilitar GPU nele troca velocidade por instabilidade, e a VRAM não é endereçável como memória de sistema para o node. O gargalo medido nunca foi throughput: foi um impasse com os workers a 1s de CPU.
