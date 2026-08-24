@@ -165,55 +165,36 @@ export function switchInvalidoSource(): string {
 }
 
 /**
- * Painel de configurações com o controle já ligado. Mesma anatomia do painel
- * com descrição, e a diferença é deliberada: aqui a preferência nasce ativa,
- * que é o caso comum de uma opção que o produto já entrega ligada.
- */
-export function switchPanelSource(): string {
-  return jsxSnippet(
-    IMPORTS,
-    `<div
-  className="nds-cluster nds-w-md nds-rounded-lg nds-border-default nds-p-4"
-  data-align="center"
-  data-justify="between"
->
-  <div className="nds-stack" data-spacing="xs">
-    <Label htmlFor="painel-marketing">Emails de marketing</Label>
-    <p className="nds-text-body">Receba novidades e promoções da plataforma.</p>
-  </div>
-  <Switch id="painel-marketing" defaultChecked />
-</div>`,
-  );
-}
-
-/**
- * Grupo de preferências. O `fieldset` + `legend` é o que diz que os três
- * controles pertencem ao mesmo assunto (WCAG 1.3.1) — sem ele o leitor de tela
- * anuncia três interruptores soltos, e "Receber emails" perde o "Notificações"
- * que o qualifica.
+ * Lista de configurações: painéis idênticos empilhados, um por preferência.
+ *
+ * A descrição fica FORA do `Label` de propósito — dentro dele entraria no nome
+ * acessível, e quem usa leitor de tela ouviria a frase inteira toda vez que
+ * passasse pelo controle.
  *
  * A lista é escrita por extenso, e não mapeada de um array: no snippet o que
  * importa é a FORMA de cada linha, e um `map` esconderia justamente ela.
  */
 export function switchPreferenciasSource(): string {
-  const line = (id: string, label: string, descricao: string) => `    <div className="nds-cluster" data-align="center" data-justify="between">
-      <div className="nds-stack nds-pr-4" data-spacing="xs">
-        <Label htmlFor="${id}">${label}</Label>
-        <p className="nds-text-caption nds-text-muted-foreground">${descricao}</p>
-      </div>
-      <Switch id="${id}" />
-    </div>`;
+  const painel = (id: string, label: string, descricao: string, ligado = false) => `  <div
+    className="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
+    data-align="center"
+    data-justify="between"
+  >
+    <div className="nds-stack nds-pr-4" data-spacing="xs">
+      <Label htmlFor="${id}">${label}</Label>
+      <p className="nds-text-body">${descricao}</p>
+    </div>
+    <Switch id="${id}"${ligado ? ' defaultChecked' : ''} />
+  </div>`;
 
   return jsxSnippet(
     IMPORTS,
-    `<fieldset className="nds-border-none nds-p-0 nds-m-0 nds-w-sm">
-  <legend className="nds-text-body nds-font-semibold nds-mb-2">Notificações</legend>
-  <div className="nds-stack" data-spacing="sm">
-${line('pref-email', 'Receber emails', 'Resumos diários por email.')}
-${line('pref-push', 'Notificações push', 'Alertas no navegador em tempo real.')}
-${line('pref-sms', 'SMS de segurança', 'Códigos de verificação por SMS.')}
-  </div>
-</fieldset>`,
+    `<div className="nds-stack nds-w-md" data-spacing="sm">
+  <p className="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
+${painel('pref-email', 'Receber novidades por email', 'Resumo semanal sobre o produto.', true)}
+${painel('pref-push', 'Receber notificações push', 'Alertas no dispositivo em tempo real.')}
+${painel('pref-sms', 'Alertas por SMS', 'Eventos críticos via mensagem de texto.')}
+</div>`,
   );
 }
 
@@ -241,23 +222,38 @@ const [ativo, setAtivo] = useState(false);`,
 }
 
 /**
- * Lista densa no degrau compacto — barra de configurações rápidas. O rótulo
- * vem PRIMEIRO e o controle encosta na direita: numa lista de várias linhas é a
- * coluna de interruptores alinhada que deixa o estado de todas legível de uma
- * olhada só.
+ * Sem rótulo visível: o nome vive em `aria-label`, e continua obrigatório.
+ *
+ * O snippet mostra o controle SOZINHO de propósito — é a única composição em
+ * que o par rótulo ↔ controle não aparece, e é justamente por isso que ela
+ * precisa deixar o nome explícito. Sem ele o leitor de tela anuncia "botão".
  */
-export function switchListCompactaSource(): string {
-  const line = (id: string, label: string) => `  <div className="nds-cluster" data-align="center" data-justify="between">
-    <Label htmlFor="${id}" className="nds-text-body">${label}</Label>
-    <Switch id="${id}" size="sm" />
-  </div>`;
-
+export function switchSemRotuloSource(): string {
   return jsxSnippet(
     IMPORTS,
-    `<div className="nds-stack nds-w-xs" data-spacing="sm">
-${line('rede-wifi', 'Wi-Fi')}
-${line('rede-bluetooth', 'Bluetooth')}
-${line('modo-aviao', 'Modo avião')}
-</div>`,
+    `<Switch id="modo-escuro" aria-label="Ativar modo escuro" />`,
+  );
+}
+
+/**
+ * Em formulário. O `name` é o que faz o controle participar do envio: sem ele
+ * o campo não entra no `FormData`, e o formulário submete sem a preferência.
+ *
+ * Esta stack não precisa de campo oculto escrito à mão — a lib já emite o
+ * próprio. A composição equivalente em stack sem lib sincroniza o valor num
+ * `<input type="hidden">` pelo callback de mudança, e é por isso que o texto
+ * compartilhado descreve as duas saídas em vez de prescrever uma.
+ */
+export function switchFormSource(): string {
+  return jsxSnippet(
+    `${IMPORTS}
+import { Button } from "@/components/ui/button";`,
+    `<form className="nds-stack nds-w-sm" data-spacing="sm">
+  <div className="nds-cluster" data-spacing="sm">
+    <Switch id="newsletter" name="newsletter" defaultChecked />
+    <Label htmlFor="newsletter">Aceitar newsletter semanal</Label>
+  </div>
+  <Button type="submit">Salvar preferências</Button>
+</form>`,
   );
 }

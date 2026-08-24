@@ -51,7 +51,7 @@ function panelLine(options: {
     .filter(Boolean)
     .join(' ');
   return `<div class="${classes}" data-align="center" data-justify="between">
-  <div class="nds-stack" data-spacing="xs">
+  <div class="nds-stack nds-pr-4" data-spacing="xs">
     <Label for="${id}">${label}</Label>
     <p class="nds-text-body">${descricao}</p>
   </div>
@@ -182,55 +182,28 @@ ${indentar(
 export function configSwitchPanelSource(): string {
   const lines = [
     {
-      id: 'marketing',
-      label: 'Emails de marketing',
-      descricao: 'Receba novidades e promoções da plataforma.',
+      id: 'pref-email',
+      label: 'Receber novidades por email',
+      descricao: 'Resumo semanal sobre o produto.',
       attrs: 'default-value',
     },
     {
-      id: 'seguranca',
-      label: 'Alertas de segurança',
-      descricao: 'Notificações sobre acessos suspeitos à sua conta.',
-      attrs: 'default-value',
+      id: 'pref-push',
+      label: 'Receber notificações push',
+      descricao: 'Alertas no dispositivo em tempo real.',
     },
     {
-      id: 'resumo-semanal',
-      label: 'Resumo semanal',
-      descricao: 'Receba um resumo das principais novidades toda segunda.',
+      id: 'pref-sms',
+      label: 'Alertas por SMS',
+      descricao: 'Eventos críticos via mensagem de texto.',
     },
   ];
   return vueSnippet(
     IMPORT_PAIR,
     `<div class="nds-stack nds-w-md" data-spacing="sm">
+  <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
 ${lines.map((line) => indentar(panelLine(line))).join('\n\n')}
 </div>`,
-  );
-}
-
-/**
- * Lista de preferências: a mesma ideia sem o texto de apoio, e a estrutura vira
- * lista de verdade — três itens relacionados são uma `ul`, não três `div`.
- */
-export function preferenciasSwitchListSource(): string {
-  const items = [
-    { id: 'push', label: 'Notificações push', attrs: 'default-value' },
-    { id: 'email', label: 'Notificações por email', attrs: '' },
-    { id: 'sms', label: 'SMS', attrs: '' },
-  ];
-  const lines = items
-    .map(({ id, label, attrs: extra }, i) => {
-      const border = i === 0 ? '' : ' nds-border-t';
-      return `  <li class="nds-cluster nds-p-4${border}" data-align="center" data-justify="between">
-    <Label for="${id}">${label}</Label>
-    <Switch id="${id}"${attrs(extra)} />
-  </li>`;
-    })
-    .join('\n');
-  return vueSnippet(
-    IMPORT_PAIR,
-    `<ul class="nds-w-sm nds-rounded-lg nds-border-default">
-${lines}
-</ul>`,
   );
 }
 
@@ -241,51 +214,44 @@ ${lines}
 export function formSwitchSource(): string {
   return vueSnippet(
     `${IMPORT_PAIR}
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'`,
-    `<form class="nds-stack nds-w-md" data-spacing="sm" @submit.prevent>
-  <div class="nds-stack" data-spacing="sm">
-    <Label for="email">Email</Label>
-    <Input id="email" type="email" placeholder="seu@email.com" />
-  </div>
-
-${indentar(
-  panelLine({
-    id: 'perfil-publico',
-    label: 'Perfil público',
-    descricao: 'Qualquer pessoa pode visualizar seu perfil.',
-    attrs: 'name="perfil-publico"',
-  }),
-)}
-
+    `<form class="nds-stack nds-w-sm" data-spacing="sm" @submit.prevent>
+${indentar(linePair('newsletter', 'Aceitar newsletter semanal', 'name="newsletter" default-value'))}
   <Button type="submit">Salvar preferências</Button>
 </form>`,
   );
 }
 
 /**
- * Item de menu compacto: o degrau `sm` cabe onde a linha inteira é pequena, e o
- * rótulo desce junto para a escala de legenda.
+ * Sem rótulo visível: o nome vive em `aria-label`, e continua obrigatório.
+ *
+ * É a única composição em que o par rótulo ↔ controle não aparece, e por isso
+ * a que mais precisa deixar o nome explícito — sem ele o leitor de tela anuncia
+ * apenas "botão".
  */
-export function switchItemDeMenuSource(): string {
-  const items = [
-    { id: 'modo-escuro', label: 'Modo escuro', attrs: 'size="sm"' },
-    { id: 'salvar-automaticamente', label: 'Salvar automaticamente', attrs: 'size="sm" default-value' },
-    { id: 'visualizacao-compacta', label: 'Visualização compacta', attrs: 'size="sm"' },
-  ];
-  const lines = items
-    .map(
-      ({ id, label, attrs: extra }) =>
-        `  <div class="nds-cluster nds-rounded nds-px-2 nds-py-1 nds-hover-bg-muted-40" data-align="center" data-justify="between">
-    <Label for="${id}" class="nds-text-caption">${label}</Label>
-    <Switch id="${id}"${attrs(extra)} />
-  </div>`,
-    )
-    .join('\n');
+export function switchSemRotuloSource(): string {
   return vueSnippet(
-    IMPORT_PAIR,
-    `<div class="nds-stack nds-w-xs nds-rounded-md nds-border-default nds-p-2" data-spacing="xs">
-${lines}
+    `import { Switch } from '@/components/ui/switch'`,
+    `<Switch id="modo-escuro" aria-label="Ativar modo escuro" />`,
+  );
+}
+
+/**
+ * Controlado por estado externo. O par é sempre este: o valor entra por
+ * `v-model` e volta pela mesma ligação. Passar só o valor, sem a volta, deixa
+ * o interruptor inerte — ele deixa de ser dono do próprio estado e ninguém
+ * assume o lugar.
+ */
+export function switchControlledSource(): string {
+  return vueSnippet(
+    `${IMPORT_PAIR}
+
+const ativo = ref(false)`,
+    `<div class="nds-stack nds-w-sm" data-align="start" data-spacing="sm">
+${indentar(linePair('notificacoes', 'Receber notificações', 'v-model="ativo"'))}
+  <p class="nds-text-caption nds-text-muted-foreground">
+    Estado atual: <code class="nds-font-mono">{{ ativo }}</code>
+  </p>
 </div>`,
   );
 }

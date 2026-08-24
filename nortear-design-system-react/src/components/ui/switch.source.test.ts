@@ -4,11 +4,11 @@ import {
   switchControlledSource,
   switchDisabledLigadoSource,
   switchDisabledSource,
+  switchFormSource,
   switchInvalidoSource,
   switchLigadoSource,
-  switchListCompactaSource,
-  switchPanelSource,
   switchPreferenciasSource,
+  switchSemRotuloSource,
   switchSource,
   switchWithDescriptionSource,
 } from './switch.source';
@@ -28,10 +28,10 @@ const TODOS = [
   switchInvalidoSource,
   switchWithDescriptionSource,
   switchCompactoSource,
-  switchPanelSource,
   switchPreferenciasSource,
   switchControlledSource,
-  switchListCompactaSource,
+  switchSemRotuloSource,
+  switchFormSource,
 ];
 
 describe('switchSource', () => {
@@ -106,6 +106,23 @@ describe('estados', () => {
     // O anel de erro sem mensagem apontada diz que algo falhou e não diz o quê.
     expect(saida).toContain('id="aceitar-termos-erro"');
     expect(saida).toContain('Este campo é obrigatório.');
+  });
+});
+
+describe('composições', () => {
+  it('sem rótulo visível, o nome vive em aria-label — e existe', () => {
+    const saida = switchSemRotuloSource();
+    expect(saida).toContain('aria-label="Ativar modo escuro"');
+    // É a única composição em que o par rótulo ↔ controle não aparece; se um
+    // `<Label>` voltasse aqui, o exemplo deixaria de ensinar o que se propõe.
+    expect(saida).not.toContain('<Label');
+  });
+
+  it('em formulário, o name é o que faz o campo participar do envio', () => {
+    const saida = switchFormSource();
+    expect(saida).toContain('<form');
+    expect(saida).toContain('name="newsletter"');
+    expect(saida).toContain('type="submit"');
   });
 });
 

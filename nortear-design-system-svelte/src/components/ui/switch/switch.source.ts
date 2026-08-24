@@ -114,3 +114,87 @@ ${tagDoSwitch(props, '  ')}
 
   return svelteSnippet(script, tagDoSwitch(props, ''));
 }
+
+/**
+ * Lista de configurações: painéis idênticos empilhados, um por preferência.
+ *
+ * Escrita por extenso, e não mapeada de um array: no snippet o que importa é a
+ * FORMA de cada linha, e um `#each` esconderia justamente ela.
+ */
+export function switchSettingsListSource(): string {
+  const painel = (id: string, label: string, descricao: string, ligado = false) => `  <div
+    class="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
+    data-align="center"
+    data-justify="between"
+  >
+    <div class="nds-stack nds-pr-4" data-spacing="xs">
+      <Label id="${id}-label" for="${id}" class="nds-text-body nds-font-medium">${label}</Label>
+      <p class="nds-text-body">${descricao}</p>
+    </div>
+    <Switch id="${id}"${ligado ? ' checked' : ''} aria-labelledby="${id}-label" />
+  </div>`;
+
+  return svelteSnippet(
+    `import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";`,
+    `<div class="nds-stack nds-w-md" data-spacing="sm">
+  <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
+${painel('pref-email', 'Receber novidades por email', 'Resumo semanal sobre o produto.', true)}
+${painel('pref-push', 'Receber notificações push', 'Alertas no dispositivo em tempo real.')}
+${painel('pref-sms', 'Alertas por SMS', 'Eventos críticos via mensagem de texto.')}
+</div>`,
+  );
+}
+
+/**
+ * Em formulário: o `name` é o que faz o switch entrar no envio nativo — sem ele
+ * o campo simplesmente não é enviado, e nada no visual denuncia.
+ */
+export function switchFormSource(): string {
+  return svelteSnippet(
+    `import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+
+let ligado = $state(true);`,
+    `<form class="nds-stack nds-w-sm" data-spacing="sm" onsubmit={(e) => e.preventDefault()}>
+  <div class="nds-cluster" data-spacing="sm">
+    <Switch
+      id="newsletter"
+      name="newsletter"
+      bind:checked={ligado}
+      aria-labelledby="newsletter-label"
+    />
+    <Label id="newsletter-label" for="newsletter" class="nds-text-body nds-font-medium">
+      Aceitar newsletter semanal
+    </Label>
+  </div>
+  <Button type="submit">Salvar preferências</Button>
+</form>`,
+  );
+}
+
+/**
+ * Controlado por estado externo. `bind:checked` é a ligação de ida E volta:
+ * passar só o valor deixaria o interruptor inerte — ele deixa de ser dono do
+ * próprio estado e ninguém assume o lugar.
+ */
+export function switchControlledSource(): string {
+  return svelteSnippet(
+    `import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+
+let ativo = $state(false);`,
+    `<div class="nds-stack nds-w-sm" data-align="start" data-spacing="sm">
+  <div class="nds-cluster" data-spacing="sm">
+    <Switch id="opcao" bind:checked={ativo} aria-labelledby="opcao-label" />
+    <Label id="opcao-label" for="opcao" class="nds-text-body nds-font-medium">
+      Receber notificações
+    </Label>
+  </div>
+  <p class="nds-text-caption nds-text-muted-foreground">
+    Estado atual: <code class="nds-font-mono">{ativo}</code>
+  </p>
+</div>`,
+  );
+}

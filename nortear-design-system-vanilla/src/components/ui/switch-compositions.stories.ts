@@ -1,3 +1,17 @@
+// ─── Composições do Switch ────────────────────────────────────────────────────
+//
+// O conjunto é o mesmo nas cinco stacks: WithLabel, WithoutLabel, SettingsList
+// e InForm.
+//
+// DIVERGÊNCIA REGISTRADA — `Controlled` não existe aqui, e não é lacuna.
+// As quatro stacks com lib headless têm uma story `Controlled`: nelas o estado
+// do controle pode morar FORA dele, num state ou sinal do framework que a lib
+// aceita de volta como entrada, e a story mostra esse contrato. A fábrica desta
+// stack não tem contrapartida: `createSwitch` guarda o próprio estado e só o
+// publica pelo callback de mudança — não há opção de valor que o dono de fora
+// reassuma a cada render. Uma story "controlada" aqui seria encenação, não o
+// contrato da peça. Divergência de API de framework se registra; não se alinha.
+
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createSwitch } from './switch';
@@ -5,6 +19,7 @@ import {
   switchSource,
   switchSourceForm,
   switchSourcePanel,
+  switchSourceWith,
 } from './switch.source';
 import { createButton } from './button';
 import { definir } from './switch.fixtures';
@@ -20,7 +35,7 @@ const meta: Meta = {
       source: { transform: switchSource },
       description: {
         component:
-          'Composicoes de uso do Switch: par básico Switch + Label, painel com descrição, lista de configurações e formulário com envio (sincronizando estado em `<input type="hidden">`, dado que a factory não expõe campo oculto próprio).',
+          'Composições de uso do Switch: par básico Switch + Label, controle nomeado só por `aria-label`, lista de configurações e formulário com envio (sincronizando estado em `<input type="hidden">`, dado que a factory não expõe campo oculto próprio).',
       },
     },
   },
@@ -81,59 +96,34 @@ export const WithLabel: Story = {
   },
 };
 
-// ─── WithDescription ──────────────────────────────────────────────────────────
+// ─── WithoutLabel ─────────────────────────────────────────────────────────────
 
-export const WithDescription: Story = {
-  render: () => {
-    const panel = document.createElement('div');
-    panel.className = 'nds-cluster nds-w-sm nds-rounded-lg nds-border-default nds-p-4';
-    panel.dataset.align = 'center';
-    panel.dataset.justify = 'between';
-
-    const id = 'sw-com-desc';
-    const sw = createSwitch({ id, checked: true });
-
-    const textGroup = document.createElement('div');
-    textGroup.className = 'nds-stack nds-pr-4';
-    textGroup.dataset.spacing = 'xs';
-
-    const desc = document.createElement('p');
-    desc.className = 'nds-text-body';
-    desc.textContent = 'Receba novidades e promoções da plataforma.';
-
-    textGroup.append(label(id, 'Emails de marketing'), desc);
-    panel.append(textGroup, sw);
-    return panel;
-  },
+export const WithoutLabel: Story = {
+  render: () => createSwitch({ id: 'sw-sem-rotulo', 'aria-label': 'Ativar modo escuro' }),
   parameters: {
     docs: {
       source: {
-        transform: switchSourcePanel([
-          {
-            id: 'emails-marketing',
-            label: 'Emails de marketing',
-            description: 'Receba novidades e promoções da plataforma.',
-            checked: true,
-          },
-        ]),
+        transform: switchSourceWith({ label: '', 'aria-label': 'Ativar modo escuro' }),
       },
       description: {
         story:
-          'Switch em painel — Label + descrição auxiliar à esquerda, controle à direita. Use para contextualizar o efeito da configuração.',
+          'Sem rótulo visível, o nome acessível vive em `aria-label`. Use apenas quando o contexto ao redor já nomeia a função — célula de tabela sob um cabeçalho, linha de barra de ferramentas.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const sw = canvas.getByRole('switch');
 
-    await step('O controle nasce ligado neste painel', async () => {
-      await expect(sw).toHaveAttribute('aria-checked', 'true');
+    await step('O controle continua tendo nome, ainda que invisível', async () => {
+      // Sem esta medida, um switch sem nome nenhum passaria: ele renderiza,
+      // responde ao clique, e o leitor de tela anuncia só "botão".
+      await expect(canvas.getByRole('switch', { name: 'Ativar modo escuro' })).toBeVisible();
     });
 
-    await step('Só o rótulo nomeia o controle — a descrição fica como auxiliar', async () => {
-      await expect(canvas.getByRole('switch', { name: /Emails de marketing/i })).toBe(sw);
-      await expect(canvas.getByText(/Receba novidades/)).toBeVisible();
+    await step('Nenhum texto do nome aparece na tela', async () => {
+      // É o que separa esta composição da anterior: se o texto estivesse
+      // visível, o exemplo seria WithLabel com um `aria-label` redundante.
+      await expect(canvas.queryByText('Ativar modo escuro')).toBeNull();
     });
   },
 };
@@ -216,9 +206,9 @@ export const SettingsList: Story = {
   },
 };
 
-// ─── InFormWithHidden ─────────────────────────────────────────────────────────
+// ─── InForm ───────────────────────────────────────────────────────────────────
 
-export const InFormWithHidden: Story = {
+export const InForm: Story = {
   render: () => {
     // A factory não emite campo oculto próprio: para envio em formulário,
     // sincronizamos o estado num <input type="hidden"> pelo callback de mudança.

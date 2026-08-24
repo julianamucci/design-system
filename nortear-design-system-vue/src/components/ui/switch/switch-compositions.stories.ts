@@ -1,15 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { ref } from 'vue';
 import { within, expect } from 'storybook/test';
 import { Switch } from './index';
 import { definir } from './switch.fixtures';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
-  formSwitchSource,
-  switchItemDeMenuSource,
-  preferenciasSwitchListSource,
   configSwitchPanelSource,
+  formSwitchSource,
+  switchControlledSource,
+  switchDefaultSource,
+  switchSemRotuloSource,
 } from './switch.source';
 
 const meta = {
@@ -21,10 +22,10 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: configSwitchPanelSource },
+      source: { transform: switchDefaultSource },
       description: {
         component:
-          'Padrões de composição do Switch: painel de configurações, lista de preferências, em formulário e item de menu compacto.',
+          'Composições do Switch: rótulo associado, nome sem rótulo visível, lista de configurações, formulário e estado controlado.',
       },
     },
   },
@@ -33,106 +34,140 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const SettingsPanel: Story = {
-  render: () => ({
-    components: { Switch, Label },
-    setup() { return {}; },
-    template: `
-      <div class="nds-stack nds-w-md" data-spacing="sm">
-        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between">
-          <div class="nds-stack" data-spacing="xs">
-            <Label :for="'pc-marketing'">Emails de marketing</Label>
-            <p class="nds-text-body">
-              Receba novidades e promoções da plataforma.
-            </p>
-          </div>
-          <Switch id="pc-marketing" :default-value="true" />
-        </div>
+/** Mesmas três preferências que a docs page e o snippet mostram. */
+const PREFERENCIAS = [
+  { id: 'pref-email', label: 'Receber novidades por email', desc: 'Resumo semanal sobre o produto.' },
+  { id: 'pref-push', label: 'Receber notificações push', desc: 'Alertas no dispositivo em tempo real.' },
+  { id: 'pref-sms', label: 'Alertas por SMS', desc: 'Eventos críticos via mensagem de texto.' },
+];
 
-        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between">
-          <div class="nds-stack" data-spacing="xs">
-            <Label :for="'pc-security'">Alertas de segurança</Label>
-            <p class="nds-text-body">
-              Notificações sobre acessos suspeitos à sua conta.
-            </p>
-          </div>
-          <Switch id="pc-security" :default-value="true" />
-        </div>
-
-        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between">
-          <div class="nds-stack" data-spacing="xs">
-            <Label :for="'pc-news'">Resumo semanal</Label>
-            <p class="nds-text-body">
-              Receba um resumo das principais novidades toda segunda.
-            </p>
-          </div>
-          <Switch id="pc-news" />
-        </div>
-      </div>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const switches = canvas.getAllByRole('switch');
-
-    await step('Três controles independentes no painel', async () => {
-      await expect(switches).toHaveLength(3);
-    });
-
-    await step('Cada linha nasce no seu próprio estado', async () => {
-      await expect(switches[0]).toHaveAttribute('aria-checked', 'true');
-      await expect(switches[1]).toHaveAttribute('aria-checked', 'true');
-      await expect(switches[2]).toHaveAttribute('aria-checked', 'false');
-    });
-  },
-};
-
-export const PreferenceList: Story = {
+export const WithLabel: Story = {
   parameters: {
     docs: {
-      // Três preferências relacionadas são uma lista de verdade: `ul`/`li` em
-      // vez das `div` empilhadas do painel, e sem texto de apoio.
-      source: { transform: preferenciasSwitchListSource },
+      description: {
+        story:
+          'Par obrigatório Switch + Label. A associação via for/id permite que o clique no rótulo alterne o controle.',
+      },
     },
   },
   render: () => ({
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <ul class="nds-w-sm nds-rounded-lg nds-border-default">
-        <li class="nds-cluster nds-p-4" data-align="center" data-justify="between">
-          <Label :for="'lp-push'">Notificações push</Label>
-          <Switch id="lp-push" :default-value="true" />
-        </li>
-        <li class="nds-cluster nds-p-4 nds-border-t" data-align="center" data-justify="between">
-          <Label :for="'lp-email'">Notificações por email</Label>
-          <Switch id="lp-email" />
-        </li>
-        <li class="nds-cluster nds-p-4 nds-border-t" data-align="center" data-justify="between">
-          <Label :for="'lp-sms'">SMS</Label>
-          <Switch id="lp-sms" />
-        </li>
-      </ul>
+      <div class="nds-cluster" data-spacing="sm">
+        <Switch id="comp-label" />
+        <Label :for="'comp-label'">Receber notificações</Label>
+      </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const email = canvas.getByRole('switch', { name: /Notificações por email/i });
-    const label = canvas.getByText('Notificações por email');
+    const sw = canvas.getByRole('switch');
+    const label = canvas.getByText('Receber notificações');
 
-    await step('A lista tem três controles, cada um no seu estado', async () => {
-      const switches = canvas.getAllByRole('switch');
-      await expect(switches).toHaveLength(3);
-      const ligados = switches.filter((s) => s.getAttribute('aria-checked') === 'true');
-      await expect(ligados).toHaveLength(1);
+    await step('O rótulo nomeia o controle', async () => {
+      await expect(canvas.getByRole('switch', { name: /Receber notificações/i })).toBe(sw);
     });
 
-    await step('Clicar no rótulo alterna só o controle daquela linha', async () => {
-      const push = canvas.getByRole('switch', { name: /Notificações push/i });
-      const beforePush = push.getAttribute('aria-checked');
-      await definir(email, true, label);
-      await expect(push.getAttribute('aria-checked')).toBe(beforePush);
-      await definir(email, false, label);
+    await step('Clicar no rótulo liga e desliga o controle', async () => {
+      // O par (liga e depois desliga) garante DOIS cliques reais em qualquer
+      // rodada e devolve a story ao estado que o Chromatic fotografa.
+      await definir(sw, true, label);
+      await definir(sw, false, label);
+    });
+  },
+};
+
+export const WithoutLabel: Story = {
+  parameters: {
+    docs: {
+      source: { transform: switchSemRotuloSource },
+      description: {
+        story:
+          'Sem rótulo visível, o nome acessível vive em aria-label. Use apenas quando o contexto ao redor já nomeia a função.',
+      },
+    },
+  },
+  render: () => ({
+    components: { Switch },
+    setup() { return {}; },
+    template: `<Switch id="comp-no-label" aria-label="Ativar modo escuro" />`,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('O controle continua tendo nome, ainda que invisível', async () => {
+      // Sem esta medida, um switch sem nome nenhum passaria: ele renderiza,
+      // responde ao clique, e o leitor de tela anuncia só "botão".
+      await expect(canvas.getByRole('switch', { name: 'Ativar modo escuro' })).toBeVisible();
+    });
+
+    await step('Nenhum texto do nome aparece na tela', async () => {
+      // É o que separa esta composição da anterior: se o texto estivesse
+      // visível, o exemplo seria WithLabel com um aria-label redundante.
+      await expect(canvas.queryByText('Ativar modo escuro')).toBeNull();
+    });
+  },
+};
+
+export const SettingsList: Story = {
+  parameters: {
+    docs: {
+      // Os três painéis são composição do render; o do meta imprimiria só o par.
+      source: { transform: configSwitchPanelSource },
+      description: {
+        story:
+          'Lista de configurações com vários Switches em painéis empilhados. Padrão para tela de preferências do usuário.',
+      },
+    },
+  },
+  render: () => ({
+    components: { Switch, Label },
+    setup() { return { preferencias: PREFERENCIAS }; },
+    template: `
+      <div class="nds-stack nds-w-md" data-spacing="sm">
+        <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
+        <div
+          v-for="(item, indice) in preferencias"
+          :key="item.id"
+          class="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
+          data-align="center"
+          data-justify="between"
+        >
+          <div class="nds-stack nds-pr-4" data-spacing="xs">
+            <Label :for="item.id">{{ item.label }}</Label>
+            <p class="nds-text-body">{{ item.desc }}</p>
+          </div>
+          <Switch :id="item.id" :default-value="indice === 0" />
+        </div>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('A lista tem três controles, cada um no seu estado de partida', async () => {
+      const switches = canvas.getAllByRole('switch');
+      await expect(switches).toHaveLength(3);
+      await expect(switches[0]).toHaveAttribute('aria-checked', 'true');
+      await expect(switches[1]).toHaveAttribute('aria-checked', 'false');
+      await expect(switches[2]).toHaveAttribute('aria-checked', 'false');
+    });
+
+    await step('Cada linha nomeia o próprio controle', async () => {
+      // Três interruptores com o mesmo nome seriam indistinguíveis para quem
+      // navega por lista de controles.
+      for (const { label } of PREFERENCIAS) {
+        await expect(canvas.getByRole('switch', { name: label })).toBeVisible();
+      }
+    });
+
+    await step('A descrição fica fora do nome do controle', async () => {
+      // Se ela entrasse no rótulo, o leitor de tela anunciaria a frase inteira
+      // a cada passagem pelo interruptor.
+      await expect(
+        canvas.getByRole('switch', { name: 'Receber novidades por email' }),
+      ).not.toHaveAccessibleName(/Resumo semanal/);
     });
   },
 };
@@ -140,90 +175,91 @@ export const PreferenceList: Story = {
 export const InForm: Story = {
   parameters: {
     docs: {
-      // O `form` traz outros dois componentes e o `name`, que é o que faz o
-      // switch entrar no envio nativo — nada disso está no painel do meta.
+      // O `form` traz o botão e o `name`, que é o que faz o switch entrar no
+      // envio nativo — nada disso está no par do meta.
       source: { transform: formSwitchSource },
+      description: {
+        story:
+          'Switch dentro de um form, participando do envio pelo nome do campo. O valor acompanha o estado do controle.',
+      },
     },
   },
   render: () => ({
-    components: { Switch, Label, Input, Button },
+    components: { Switch, Label, Button },
     setup() { return {}; },
     template: `
-      <form class="nds-stack nds-w-md" data-spacing="sm" @submit.prevent>
-        <div class="nds-stack" data-spacing="sm">
-          <Label :for="'form-email'">Email</Label>
-          <Input id="form-email" type="email" placeholder="seu@email.com" />
+      <form class="nds-stack nds-w-sm" data-spacing="sm" @submit.prevent>
+        <div class="nds-cluster" data-spacing="sm">
+          <Switch id="comp-newsletter" name="newsletter" :default-value="true" />
+          <Label :for="'comp-newsletter'">Aceitar newsletter semanal</Label>
         </div>
-
-        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between">
-          <div class="nds-stack" data-spacing="xs">
-            <Label :for="'form-public'">Perfil público</Label>
-            <p class="nds-text-body">
-              Qualquer pessoa pode visualizar seu perfil.
-            </p>
-          </div>
-          <Switch id="form-public" name="public" />
-        </div>
-
         <Button type="submit">Salvar preferências</Button>
       </form>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const sw = canvas.getByRole('switch');
+    const form = canvasElement.querySelector('form')!;
 
-    await step('O formulário reúne campo de texto, switch e envio', async () => {
-      await expect(canvas.getByLabelText(/Email/i)).toBeInTheDocument();
-      await expect(canvas.getByRole('switch', { name: /Perfil público/i })).toBeInTheDocument();
-      await expect(canvas.getByRole('button', { name: 'Salvar preferências' })).toBeInTheDocument();
+    await step('O formulário reúne o controle e o envio', async () => {
+      await expect(canvas.getByRole('button', { name: 'Salvar preferências' })).toBeVisible();
     });
 
-    await step('O switch entra no envio nativo pelo nome do campo', async () => {
-      const sw = canvas.getByRole('switch', { name: /Perfil público/i });
-      await definir(sw, true);
-      const field = canvasElement.querySelector<HTMLInputElement>('input[name="public"]');
-      await expect(field).not.toBeNull();
-      await expect(field!.checked).toBe(true);
+    await step('O campo entra no envio e acompanha o controle nos dois sentidos', async () => {
+      // Só a ida provaria pouco: um valor escrito uma vez passaria igual. É a
+      // volta que mostra que o envio reflete o estado a cada mudança — e o par
+      // devolve a story ao estado inicial, que é o que o Chromatic fotografa.
+      await expect(new FormData(form).get('newsletter')).not.toBeNull();
       await definir(sw, false);
+      await expect(new FormData(form).get('newsletter')).toBeNull();
+      await definir(sw, true);
+      await expect(new FormData(form).get('newsletter')).not.toBeNull();
     });
   },
 };
 
-export const CompactMenuItem: Story = {
+export const Controlled: Story = {
   parameters: {
     docs: {
-      // Degrau `sm` em todas as linhas, sem texto de apoio e com o rótulo na
-      // escala de legenda: outra densidade, outra composição.
-      source: { transform: switchItemDeMenuSource },
+      // O estado externo vive num `ref` do setup.
+      source: { transform: switchControlledSource },
+      description: {
+        story:
+          'Switch controlado — o componente pai mantém o estado e o atualiza pela ligação de mudança.',
+      },
     },
   },
   render: () => ({
     components: { Switch, Label },
-    setup() { return {}; },
+    setup() {
+      const ativo = ref(false);
+      return { ativo };
+    },
     template: `
-      <div class="nds-stack nds-w-xs nds-rounded-md nds-border-default nds-p-2" data-spacing="xs">
-        <div class="nds-cluster nds-rounded nds-px-2 nds-py-1 nds-hover-bg-muted-40" data-align="center" data-justify="between">
-          <Label :for="'menu-darkmode'" class="nds-text-caption">Modo escuro</Label>
-          <Switch id="menu-darkmode" size="sm" />
+      <div class="nds-stack nds-w-sm" data-align="start" data-spacing="sm">
+        <div class="nds-cluster" data-spacing="sm">
+          <Switch id="comp-controlled" v-model="ativo" />
+          <Label :for="'comp-controlled'">Receber notificações</Label>
         </div>
-        <div class="nds-cluster nds-rounded nds-px-2 nds-py-1 nds-hover-bg-muted-40" data-align="center" data-justify="between">
-          <Label :for="'menu-autosave'" class="nds-text-caption">Salvar automaticamente</Label>
-          <Switch id="menu-autosave" size="sm" :default-value="true" />
-        </div>
-        <div class="nds-cluster nds-rounded nds-px-2 nds-py-1 nds-hover-bg-muted-40" data-align="center" data-justify="between">
-          <Label :for="'menu-compact'" class="nds-text-caption">Visualização compacta</Label>
-          <Switch id="menu-compact" size="sm" />
-        </div>
+        <p class="nds-text-caption nds-text-muted-foreground">
+          Estado atual: <code class="nds-font-mono">{{ ativo }}</code>
+        </p>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const switches = canvas.getAllByRole('switch');
+    const sw = canvas.getByRole('switch');
 
-    await step('O menu tem três itens, todos no degrau compacto', async () => {
-      await expect(switches).toHaveLength(3);
-      for (const s of switches) await expect(s).toHaveAttribute('data-size', 'sm');
+    await step('O estado externo acompanha o controle', async () => {
+      // Ligar o valor sem a volta deixaria o interruptor inerte: ele deixa de
+      // ser dono do próprio estado e ninguém assume o lugar. É esse defeito
+      // que o texto refletido na tela denuncia.
+      await definir(sw, true);
+      await expect(canvas.getByText('true')).toBeVisible();
+      await definir(sw, false);
+      await expect(canvas.getByText('false')).toBeVisible();
     });
   },
 };

@@ -1,14 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { waitFor, within, expect } from "storybook/test";
+import { within, expect } from "storybook/test";
 import { Switch } from "./switch";
 import { definir } from "./switch.fixtures";
+import { Button } from "./button";
 import { Label } from "./label";
 import {
   switchControlledSource,
-  switchListCompactaSource,
-  switchPanelSource,
+  switchFormSource,
   switchPreferenciasSource,
+  switchSemRotuloSource,
   switchSource,
 } from "./switch.source";
 
@@ -24,7 +25,7 @@ const meta = {
       source: { transform: switchSource },
       description: {
         component:
-          "Composicoes reais do Switch: Label associado, painel de configurações, lista de preferências e controle controlado.",
+          "Composições do Switch: rótulo associado, nome sem rótulo visível, lista de configurações, formulário e estado controlado.",
       },
     },
   },
@@ -32,6 +33,28 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+/** Mesmas três preferências que a docs page e o snippet mostram. */
+const PREFERENCIAS = [
+  {
+    id: 'pref-email',
+    label: 'Receber novidades por email',
+    desc: 'Resumo semanal sobre o produto.',
+    checked: true
+  },
+  {
+    id: 'pref-push',
+    label: 'Receber notificações push',
+    desc: 'Alertas no dispositivo em tempo real.',
+    checked: false
+  },
+  {
+    id: 'pref-sms',
+    label: 'Alertas por SMS',
+    desc: 'Eventos críticos via mensagem de texto.',
+    checked: false
+  }
+] as const;
 
 export const WithLabel: Story = {
   render: () => (
@@ -67,88 +90,136 @@ export const WithLabel: Story = {
   },
 };
 
-export const SettingsPanel: Story = {
+export const WithoutLabel: Story = {
   render: () => (
-    <div
-      className="nds-cluster nds-w-md nds-rounded-lg nds-border-default nds-p-4"
-      data-align="center"
-      data-justify="between"
-    >
-      <div className="nds-stack" data-spacing="xs">
-        <Label htmlFor="comp-marketing">Emails de marketing</Label>
-        <p className="nds-text-body">Receba novidades e promoções da plataforma.</p>
-      </div>
-      <Switch id="comp-marketing" defaultChecked />
-    </div>
+    <Switch id="comp-no-label" aria-label="Ativar modo escuro" />
   ),
   parameters: {
     docs: {
-      // Painel inteiro no render, com o controle já ligado.
-      source: { transform: switchPanelSource },
+      source: { transform: switchSemRotuloSource },
       description: {
         story:
-          "Painel com Label + descrição auxiliar à esquerda e Switch à direita.",
+          "Sem rótulo visível, o nome acessível vive em aria-label. Use apenas quando o contexto ao redor já nomeia a função.",
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step("O controle nasce ligado neste painel", async () => {
-      await expect(canvas.getByRole("switch")).toHaveAttribute("aria-checked", "true");
+    await step("O controle continua tendo nome, ainda que invisível", async () => {
+      // Sem esta medida, um switch sem nome nenhum passaria: ele renderiza,
+      // responde ao clique, e o leitor de tela anuncia só "botão".
+      await expect(canvas.getByRole("switch", { name: "Ativar modo escuro" })).toBeVisible();
     });
 
-    await step("Rótulo e descrição auxiliar estão visíveis", async () => {
-      await expect(canvas.getByText("Emails de marketing")).toBeVisible();
-      await expect(
-        canvas.getByText("Receba novidades e promoções da plataforma."),
-      ).toBeVisible();
+    await step("Nenhum texto do nome aparece na tela", async () => {
+      // É o que separa esta composição da anterior: se o texto estivesse
+      // visível, o exemplo seria WithLabel com um aria-label redundante.
+      await expect(canvas.queryByText("Ativar modo escuro")).toBeNull();
     });
   },
 };
 
-export const PreferenceList: Story = {
+export const SettingsList: Story = {
   render: () => (
-    <fieldset className="nds-border-none nds-p-0 nds-m-0 nds-w-sm">
-      <legend className="nds-text-body nds-font-semibold nds-mb-2">Notificações</legend>
-      <div className="nds-stack" data-spacing="sm">
-        {[
-          { id: "pref-email", label: "Receber emails", desc: "Resumos diários por email." },
-          { id: "pref-push", label: "Notificações push", desc: "Alertas no navegador em tempo real." },
-          { id: "pref-sms", label: "SMS de segurança", desc: "Códigos de verificação por SMS." },
-        ].map(({ id, label, desc }) => (
-          <div key={id} className="nds-cluster" data-align="center" data-justify="between">
-            <div className="nds-stack nds-pr-4" data-spacing="xs">
-              <Label htmlFor={id}>{label}</Label>
-              <p className="nds-text-caption nds-text-muted-foreground">{desc}</p>
-            </div>
-            <Switch id={id} />
+    <div className="nds-stack nds-w-md" data-spacing="sm">
+      <p className="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
+      {PREFERENCIAS.map(({ id, label, desc, checked }) => (
+        <div
+          key={id}
+          className="nds-cluster nds-rounded-lg nds-border-default nds-p-4"
+          data-align="center"
+          data-justify="between"
+        >
+          <div className="nds-stack nds-pr-4" data-spacing="xs">
+            <Label htmlFor={id}>{label}</Label>
+            <p className="nds-text-body">{desc}</p>
           </div>
-        ))}
-      </div>
-    </fieldset>
+          <Switch id={id} defaultChecked={checked} />
+        </div>
+      ))}
+    </div>
   ),
   parameters: {
     docs: {
-      // O `fieldset` + `legend` é composição do render, não do componente.
+      // Os três painéis são composição do render; o do meta imprimiria só o par.
       source: { transform: switchPreferenciasSource },
       description: {
         story:
-          "Grupo de switches em fieldset + legend para agrupar preferências relacionadas (WCAG 1.3.1).",
+          "Lista de configurações com vários Switches em painéis empilhados. Padrão para tela de preferências do usuário.",
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step("O fieldset contém três controles independentes", async () => {
+    await step("A lista tem três controles, cada um no seu estado de partida", async () => {
       const switches = canvas.getAllByRole("switch");
       await expect(switches).toHaveLength(3);
-      for (const sw of switches) await expect(sw).toHaveAttribute("aria-checked", "false");
+      await expect(switches[0]).toHaveAttribute("aria-checked", "true");
+      await expect(switches[1]).toHaveAttribute("aria-checked", "false");
+      await expect(switches[2]).toHaveAttribute("aria-checked", "false");
     });
 
-    await step("A legend agrupa e está visível", async () => {
-      await expect(canvas.getByText("Notificações")).toBeVisible();
+    await step("Cada linha nomeia o próprio controle", async () => {
+      // Três interruptores com o mesmo nome seriam indistinguíveis para quem
+      // navega por lista de controles.
+      for (const { label } of PREFERENCIAS) {
+        await expect(canvas.getByRole("switch", { name: label })).toBeVisible();
+      }
+    });
+
+    await step("A descrição fica fora do nome do controle", async () => {
+      // Se ela entrasse no rótulo, o leitor de tela anunciaria a frase inteira
+      // a cada passagem pelo interruptor.
+      await expect(
+        canvas.getByRole("switch", { name: "Receber novidades por email" }),
+      ).not.toHaveAccessibleName(/Resumo semanal/);
+    });
+  },
+};
+
+export const InForm: Story = {
+  render: () => (
+    <form
+      className="nds-stack nds-w-sm"
+      data-spacing="sm"
+      onSubmit={(evento) => evento.preventDefault()}
+    >
+      <div className="nds-cluster" data-spacing="sm">
+        <Switch id="comp-newsletter" name="newsletter" defaultChecked />
+        <Label htmlFor="comp-newsletter">Aceitar newsletter semanal</Label>
+      </div>
+      <Button type="submit">Salvar preferências</Button>
+    </form>
+  ),
+  parameters: {
+    docs: {
+      source: { transform: switchFormSource },
+      description: {
+        story:
+          "Switch dentro de um form, participando do envio pelo nome do campo. O valor acompanha o estado do controle.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const switchEl = canvas.getByRole("switch");
+    const form = canvasElement.querySelector("form")!;
+
+    await step("O formulário reúne o controle e o envio", async () => {
+      await expect(canvas.getByRole("button", { name: "Salvar preferências" })).toBeVisible();
+    });
+
+    await step("O campo entra no envio e acompanha o controle nos dois sentidos", async () => {
+      // Só a ida provaria pouco: um valor escrito uma vez passaria igual. É a
+      // volta que mostra que o envio reflete o estado a cada mudança — e o par
+      // devolve a story ao estado inicial, que é o que o Chromatic fotografa.
+      await expect(new FormData(form).get("newsletter")).not.toBeNull();
+      await definir(switchEl, false);
+      await expect(new FormData(form).get("newsletter")).toBeNull();
+      await definir(switchEl, true);
+      await expect(new FormData(form).get("newsletter")).not.toBeNull();
     });
   },
 };
@@ -160,7 +231,7 @@ export const Controlled: Story = {
       <div className="nds-stack nds-w-sm" data-align="start" data-spacing="sm">
         <div className="nds-cluster" data-spacing="sm">
           <Switch id="comp-controlled" checked={enabled} onCheckedChange={setEnabled} />
-          <Label htmlFor="comp-controlled">Modo escuro</Label>
+          <Label htmlFor="comp-controlled">Receber notificações</Label>
         </div>
         <p className="nds-text-caption nds-text-muted-foreground">
           Estado atual: <code className="nds-font-mono">{String(enabled)}</code>
@@ -182,54 +253,14 @@ export const Controlled: Story = {
     const canvas = within(canvasElement);
     const switchEl = canvas.getByRole("switch");
 
-    await step("O estado externo acompanha o controle ao ligar", async () => {
+    await step("O estado externo acompanha o controle", async () => {
+      // Passar só `checked` sem o callback deixaria o interruptor inerte: ele
+      // deixa de ser dono do próprio estado e ninguém assume o lugar. É esse
+      // defeito que o texto refletido na tela denuncia.
       await definir(switchEl, true);
-      await waitFor(() => expect(canvas.getByText("true")).toBeVisible());
-    });
-
-    await step("E acompanha também ao desligar", async () => {
-      // A volta é o que prova que o estado externo é a FONTE, e não um valor
-      // escrito uma vez: um `checked` ignorado passaria só na ida.
+      await expect(canvas.getByText("true")).toBeVisible();
       await definir(switchEl, false);
-      await waitFor(() => expect(canvas.getByText("false")).toBeVisible());
-    });
-  },
-};
-
-export const CompactSize: Story = {
-  render: () => (
-    <div className="nds-stack nds-w-xs" data-spacing="sm">
-      {[
-        { id: "sm-wifi", label: "Wi-Fi" },
-        { id: "sm-bluetooth", label: "Bluetooth" },
-        { id: "sm-airplane", label: "Modo avião" },
-      ].map(({ id, label }) => (
-        <div key={id} className="nds-cluster" data-align="center" data-justify="between">
-          <Label htmlFor={id} className="nds-text-body">
-            {label}
-          </Label>
-          <Switch id={id} size="sm" />
-        </div>
-      ))}
-    </div>
-  ),
-  parameters: {
-    docs: {
-      // Lista e `size="sm"` são afirmados no render, sem control.
-      source: { transform: switchListCompactaSource },
-      description: {
-        story:
-          "Lista densa de toggles no degrau compacto — adequado para barras de configurações e menus.",
-      },
-    },
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-
-    await step("Todos os controles estão no degrau compacto", async () => {
-      const switches = canvas.getAllByRole("switch");
-      await expect(switches).toHaveLength(3);
-      for (const sw of switches) await expect(sw).toHaveAttribute("data-size", "sm");
+      await expect(canvas.getByText("false")).toBeVisible();
     });
   },
 };
