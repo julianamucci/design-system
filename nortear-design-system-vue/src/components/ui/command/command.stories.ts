@@ -33,7 +33,7 @@ const meta = {
       source: { transform: commandSource },
       description: {
         component:
-          'Interface de busca e seleção rápida com filtro por texto integrado. Suporta padrões inline, combobox e command palette.',
+          'Interface de busca e seleção rápida com filtro por texto integrado. Suporta padrões inline e command palette.',
       },
     },
   },

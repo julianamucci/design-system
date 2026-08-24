@@ -4,7 +4,6 @@ import {
   TypeIcon,
   MinusIcon,
   SearchIcon,
-  ChevronsUpDownIcon,
 } from "lucide-react";
 
 import {
@@ -18,11 +17,6 @@ import {
   CommandShortcut,
   CommandSeparator,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 
 import { useTranslation } from "@/lib/i18n";
@@ -98,71 +92,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
-// ─── Combobox demo (usado em Demonstração e Variantes) ───────────────────────
-
-const DEMO_ITEMS = [
-  { value: "react", label: "React" },
-  { value: "vue", label: "Vue" },
-  { value: "svelte", label: "Svelte" },
-  { value: "angular", label: "Angular" },
-];
-
-function ComboboxDemo({ searchPlaceholder, selectPlaceholder }: { searchPlaceholder: string; selectPlaceholder: string }) {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        {/* role="combobox" não aceita name-from-content — aria-label dá o
-            accessible name (axe button-name) sem mudar o visual. */}
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          aria-label={selectPlaceholder}
-          className="nds-w-xs"
-        >
-          {value ? DEMO_ITEMS.find((f) => f.value === value)?.label : selectPlaceholder}
-          {/* `nds-spacer-start` empurra o ícone para a borda direita.
-              `data-justify` só existe em `.nds-cluster`, não no botão. */}
-          <ChevronsUpDownIcon className="nds-spacer-start nds-text-muted-foreground" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="nds-p-0 nds-w-xs">
-        <Command>
-          <CommandInput placeholder={searchPlaceholder} />
-          <CommandList>
-            <CommandEmpty>Nenhum resultado.</CommandEmpty>
-            <CommandGroup>
-              {DEMO_ITEMS.map((item) => (
-                <CommandItem
-                  key={item.value}
-                  value={item.value}
-                  // A marca de escolhido é do próprio componente: `checked` vira
-                  // `data-checked` e a folha cuida da opacidade.
-                  checked={value === item.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue);
-                    setOpen(false);
-                    track("command_item_select", {
-                      label: item.label,
-                      group: "frameworks",
-                      pattern: "combobox",
-                    });
-                  }}
-                >
-                  {item.label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  );
-}
 
 // ─── CommandPaletteDemo ───────────────────────────────────────────────────────
 
@@ -358,20 +287,6 @@ export function CommandDocs() {
   CommandSeparator,
 } from "@/components/ui/command";`;
 
-  const codeImportWithPopover = `import {
-  Command,
-  CommandInput,
-  CommandList,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";`;
-
   const codeInline = `<Command>
   <CommandInput placeholder="Buscar componente..." />
   <CommandList>
@@ -392,42 +307,6 @@ import {
     </CommandGroup>
   </CommandList>
 </Command>`;
-
-  const codeCombobox = `const [open, setOpen] = useState(false);
-const [value, setValue] = useState("");
-
-<Popover open={open} onOpenChange={setOpen}>
-  <PopoverTrigger asChild>
-    <Button
-      variant="outline"
-      role="combobox"
-      aria-expanded={open}
-      className="nds-w-xs"
-    >
-      {value ? items.find((i) => i.value === value)?.label : "Selecione..."}
-    </Button>
-  </PopoverTrigger>
-  <PopoverContent className="nds-p-0 nds-w-xs">
-    <Command>
-      <CommandInput placeholder="Buscar item..." />
-      <CommandList>
-        <CommandEmpty>Nenhum resultado.</CommandEmpty>
-        <CommandGroup>
-          {items.map((item) => (
-            <CommandItem
-              key={item.value}
-              value={item.value}
-              checked={item.value === value}
-              onSelect={(v) => { setValue(v); setOpen(false); }}
-            >
-              {item.label}
-            </CommandItem>
-          ))}
-        </CommandGroup>
-      </CommandList>
-    </Command>
-  </PopoverContent>
-</Popover>`;
 
   const codePalette = `const [open, setOpen] = useState(false);
 
@@ -530,8 +409,6 @@ interface CommandDialogProps
     openPalette: tContent("demonstration.labels.openPalette"),
     dialogTitle: tContent("demonstration.labels.dialogTitle"),
     dialogDescription: tContent("demonstration.labels.dialogDescription"),
-    selectPlaceholder: tContent("demonstration.labels.selectPlaceholder"),
-    comboboxSearch: tContent("demonstration.labels.comboboxSearch"),
   };
 
   return (
@@ -610,17 +487,6 @@ interface CommandDialogProps
             </div>
           </div>
 
-          {/* Combobox */}
-          <div className="nds-stack" data-spacing="sm">
-            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
-              Combobox
-            </p>
-            <ComboboxDemo
-              searchPlaceholder={labels.comboboxSearch}
-              selectPlaceholder={labels.selectPlaceholder}
-            />
-          </div>
-
           {/* Command Palette */}
           <div className="nds-stack" data-spacing="sm">
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
@@ -673,7 +539,6 @@ interface CommandDialogProps
             tContent("usage.guidelines.item3"),
             tContent("usage.guidelines.item4"),
             tContent("usage.guidelines.item5"),
-            tContent("usage.guidelines.item6"),
           ],
         }}
         scenarios={{
@@ -697,7 +562,6 @@ interface CommandDialogProps
             tContent("usage.do.item1"),
             tContent("usage.do.item2"),
             tContent("usage.do.item3"),
-            tContent("usage.do.item4"),
           ],
         }}
         dont={{
@@ -788,8 +652,6 @@ interface CommandDialogProps
         code={codeImportBasic}
         secondaryDescription={tContent("import.withDialog")}
         secondaryCode={codeImportWithDialog}
-        tertiaryDescription={tContent("import.withPopover")}
-        tertiaryCode={codeImportWithPopover}
       />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
@@ -830,17 +692,6 @@ interface CommandDialogProps
                   </CommandList>
                 </Command>
               </div>
-            ),
-          },
-          {
-            name: "combobox",
-            description: stripHtml(tContent("variants.items.combobox")),
-            code: codeCombobox,
-            preview: (
-              <ComboboxDemo
-                searchPlaceholder={labels.comboboxSearch}
-                selectPlaceholder={labels.selectPlaceholder}
-              />
             ),
           },
           {
@@ -1175,7 +1026,6 @@ interface CommandDialogProps
           tContent("accessibility.item1"),
           tContent("accessibility.item2"),
           tContent("accessibility.item3"),
-          tContent("accessibility.item4"),
         ]}
         keyboardTitle={tNav("common.keyboard")}
         // As linhas de teclado escrevem textNode: toda descrição passa por
@@ -1206,11 +1056,6 @@ interface CommandDialogProps
             path: "?path=/docs/ui-dropdownmenu--docs",
           },
           {
-            name: "Popover",
-            description: toPlainText(tContent("related.popover")),
-            path: "?path=/docs/ui-popover--docs",
-          },
-          {
             name: "Dialog",
             description: toPlainText(tContent("related.dialog")),
             path: "?path=/docs/ui-dialog--docs",
@@ -1230,7 +1075,6 @@ interface CommandDialogProps
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },
           { title: "", content: tContent("notes.tip3") },
-          { title: "", content: tContent("notes.tip4") },
         ]}
       />
 
@@ -1312,11 +1156,6 @@ interface CommandDialogProps
               result: tContent("testes.functional.item6.result"),
               priority: tNav(priorityKeyMap[tContent("testes.functional.item6.priority")] ?? "common.medium"),
             },
-            {
-              action: tContent("testes.functional.item7.action"),
-              result: tContent("testes.functional.item7.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item7.priority")] ?? "common.high"),
-            },
           ],
         }}
         accessibility={{
@@ -1347,11 +1186,6 @@ interface CommandDialogProps
               level: "AA",
               how: "teclado manual",
             },
-            {
-              criterion: tContent("testes.accessibility.item5"),
-              level: "AA",
-              how: "axe-core + inspeção DOM",
-            },
           ],
         }}
         visual={{
@@ -1375,11 +1209,7 @@ interface CommandDialogProps
             },
             {
               story: tContent("testes.visual.item4.story"),
-              priority: tNav(priorityKeyMap[tContent("testes.visual.item4.priority")] ?? "common.high"),
-            },
-            {
-              story: tContent("testes.visual.item5.story"),
-              priority: tNav(priorityKeyMap[tContent("testes.visual.item5.priority")] ?? "common.medium"),
+              priority: tNav(priorityKeyMap[tContent("testes.visual.item4.priority")] ?? "common.medium"),
             },
           ],
         }}

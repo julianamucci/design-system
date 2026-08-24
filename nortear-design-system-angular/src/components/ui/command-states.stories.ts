@@ -123,7 +123,7 @@ export const EmptyState: Story = {
 // ─── Comando desabilitado ─────────────────────────────────────────────────────
 
 export const ItemDisabled: Story = {
-  parameters: { covers: ['functional.item4', 'accessibility.item4', 'visual.item5'] },
+  parameters: { covers: ['functional.item4', 'accessibility.item4', 'visual.item4'] },
   render: () => ({
     props: { last: '' },
     template: `
@@ -206,7 +206,7 @@ export const CheckedItem: Story = {
   // desabilitado está em `ItemDisabled`, o do marcado é este. Declarar só lá
   // deixava metade do item sem story declarada — e esta não interage, então o
   // Chromatic fotografa exatamente a marca acesa.
-  parameters: { covers: ['functional.item5', 'visual.item5'] },
+  parameters: { covers: ['functional.item5', 'visual.item4'] },
   render: () => ({
     template: `
       <div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">

@@ -16,7 +16,6 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 
 import DocsPageLayout    from '@/components/docs/shared/sections/DocsPageLayout.vue';
@@ -137,28 +136,6 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
-// ─── Demo: Combobox state ─────────────────────────────────────────────────────
-
-const comboboxOpen = ref(false);
-const comboboxValue = ref('');
-const comboboxItems = [
-  { value: 'button', label: 'Button' },
-  { value: 'input', label: 'Input' },
-  { value: 'select', label: 'Select' },
-  { value: 'textarea', label: 'Textarea' },
-  { value: 'badge', label: 'Badge' },
-];
-
-function comboboxSelect(value: string) {
-  comboboxValue.value = value === comboboxValue.value ? '' : value;
-  comboboxOpen.value = false;
-  track('command_item_select', {
-    label: comboboxItems.find((i) => i.value === value)?.label ?? value,
-    group: 'components',
-    pattern: 'combobox',
-  });
-}
-
 // ─── Analytics — inline demo ──────────────────────────────────────────────────
 
 function handleInlineSelect(label: string, group: string) {
@@ -217,17 +194,6 @@ const codeImportWithDialog = `import {
   CommandList,
 } from "@/components/ui/command";`;
 
-const codeImportWithPopover = `import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";`;
-
 // CommandEmpty fica FORA do CommandList: ele é uma região viva (role="status"),
 // e região viva não é filha permitida de role="listbox".
 const codeInline = `<Command>
@@ -244,37 +210,6 @@ const codeInline = `<Command>
   </CommandList>
   <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 </Command>`;
-
-const codeCombobox = `<script setup>
-const open = ref(false);
-const selected = ref('');
-<\/script>
-
-<Popover v-model:open="open">
-  <PopoverTrigger as-child>
-    <Button variant="outline" role="combobox" :aria-expanded="open">
-      {{ selected || 'Selecione...' }}
-    </Button>
-  </PopoverTrigger>
-  <PopoverContent class="nds-p-0">
-    <Command>
-      <CommandInput placeholder="Buscar item..." />
-      <CommandList>
-        <CommandGroup heading="Componentes">
-          <CommandItem
-            v-for="item in items"
-            :key="item.value"
-            :value="item.value"
-            @select="() => { selected = item.value; open = false; }"
-          >
-            {{ item.label }}
-          </CommandItem>
-        </CommandGroup>
-      </CommandList>
-      <CommandEmpty>Nenhum resultado.</CommandEmpty>
-    </Command>
-  </PopoverContent>
-</Popover>`;
 
 const codePalette = `<script setup>
 const open = ref(false);
@@ -367,7 +302,6 @@ const anatomyItems = computed(() => [
 
 const variantItems = computed(() => [
   { name: 'inline',   description: stripHtml(tContent('variants.items.inline')),   code: codeInline   },
-  { name: 'combobox', description: stripHtml(tContent('variants.items.combobox')), code: codeCombobox },
   { name: 'palette',  description: stripHtml(tContent('variants.items.palette')),  code: codePalette  },
   {
     name: tContent('variants.items.withGroups.name'),
@@ -460,7 +394,6 @@ const accessibilityItems = computed(() => [
   tContent('accessibility.item1'),
   tContent('accessibility.item2'),
   tContent('accessibility.item3'),
-  tContent('accessibility.item4'),
 ]);
 
 // A tabela de teclado escreve textNode: sem `toPlainText` o `<code>` de
@@ -478,7 +411,6 @@ const keyboardItems = computed(() => [
 const relatedItems = computed(() => [
   { name: 'Select',       description: toPlainText(tContent('related.select')),       path: '?path=/docs/ui-select--docs'       },
   { name: 'DropdownMenu', description: toPlainText(tContent('related.dropdownMenu')), path: '?path=/docs/ui-dropdownmenu--docs' },
-  { name: 'Popover',      description: toPlainText(tContent('related.popover')),      path: '?path=/docs/ui-popover--docs'      },
   { name: 'Dialog',       description: toPlainText(tContent('related.dialog')),       path: '?path=/docs/ui-dialog--docs'       },
 ]);
 
@@ -486,7 +418,6 @@ const noteItems = computed(() => [
   { title: '', content: tContent('notes.tip1') },
   { title: '', content: tContent('notes.tip2') },
   { title: '', content: tContent('notes.tip3') },
-  { title: '', content: tContent('notes.tip4') },
 ]);
 
 const analyticsItems = computed(() => [
@@ -510,7 +441,6 @@ const functionalTestItems = computed(() => [
   { action: tContent('testes.functional.item4.action'), result: tContent('testes.functional.item4.result'), priority: localPriority(tContent('testes.functional.item4.priority')) },
   { action: tContent('testes.functional.item5.action'), result: tContent('testes.functional.item5.result'), priority: localPriority(tContent('testes.functional.item5.priority')) },
   { action: tContent('testes.functional.item6.action'), result: tContent('testes.functional.item6.result'), priority: localPriority(tContent('testes.functional.item6.priority')) },
-  { action: tContent('testes.functional.item7.action'), result: tContent('testes.functional.item7.result'), priority: localPriority(tContent('testes.functional.item7.priority')) },
 ]);
 
 const a11yTestItems = computed(() => [
@@ -518,7 +448,6 @@ const a11yTestItems = computed(() => [
   { criterion: tContent('testes.accessibility.item2'), level: 'WCAG 2.2', how: 'manual' },
   { criterion: tContent('testes.accessibility.item3'), level: 'WCAG 2.2', how: 'leitor de tela' },
   { criterion: tContent('testes.accessibility.item4'), level: 'WCAG 2.2', how: 'manual' },
-  { criterion: tContent('testes.accessibility.item5'), level: 'WCAG 2.2', how: 'axe-core' },
 ]);
 
 const visualTestItems = computed(() => [
@@ -526,7 +455,6 @@ const visualTestItems = computed(() => [
   { story: tContent('testes.visual.item2.story'), priority: localPriority(tContent('testes.visual.item2.priority')) },
   { story: tContent('testes.visual.item3.story'), priority: localPriority(tContent('testes.visual.item3.priority')) },
   { story: tContent('testes.visual.item4.story'), priority: localPriority(tContent('testes.visual.item4.priority')) },
-  { story: tContent('testes.visual.item5.story'), priority: localPriority(tContent('testes.visual.item5.priority')) },
 ]);
 </script>
 
@@ -592,54 +520,6 @@ const visualTestItems = computed(() => [
               <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
             </Command>
           </div>
-        </div>
-
-        <!-- Demo 2: Combobox -->
-        <div
-          class="nds-stack"
-          data-spacing="sm"
-        >
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
-            Combobox
-          </p>
-          <Popover v-model:open="comboboxOpen">
-            <PopoverTrigger as-child>
-              <!-- role="combobox" não aceita name-from-content — aria-label dá o
-                   accessible name (axe button-name) sem mudar o visual. -->
-              <Button
-                variant="outline"
-                role="combobox"
-                :aria-expanded="comboboxOpen"
-                :aria-label="tContent('demonstration.labels.selectPlaceholder')"
-                class="nds-cluster nds-w-xs" data-spacing="md"
-                data-justify="between"
-              >
-                {{
-                  comboboxValue
-                    ? comboboxItems.find(i => i.value === comboboxValue)?.label
-                    : tContent('demonstration.labels.selectPlaceholder')
-                }}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent class="nds-p-0 nds-w-xs">
-              <Command>
-                <CommandInput :placeholder="tContent('demonstration.labels.comboboxSearch')" />
-                <CommandList>
-                  <CommandGroup :heading="tContent('demonstration.labels.groupComponents')">
-                    <CommandItem
-                      v-for="item in comboboxItems"
-                      :key="item.value"
-                      :value="item.value"
-                      @select="comboboxSelect(item.value)"
-                    >
-                      {{ item.label }}
-                    </CommandItem>
-                  </CommandGroup>
-                </CommandList>
-                <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
-              </Command>
-            </PopoverContent>
-          </Popover>
         </div>
 
         <!-- Demo 3: Command Palette -->
@@ -726,7 +606,6 @@ const visualTestItems = computed(() => [
           tContent('usage.guidelines.item3'),
           tContent('usage.guidelines.item4'),
           tContent('usage.guidelines.item5'),
-          tContent('usage.guidelines.item6'),
         ],
       }"
       :scenarios="{
@@ -744,7 +623,7 @@ const visualTestItems = computed(() => [
           { s: tContent('usage.scenarios.item5.s'), u: tContent('usage.scenarios.item5.u'), a: tContent('usage.scenarios.item5.a') },
         ],
       }"
-      :do="{ title: tContent('usage.do.title'), items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3'), tContent('usage.do.item4')] }"
+      :do="{ title: tContent('usage.do.title'), items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3')] }"
       :dont="{ title: tContent('usage.dont.title'), items: [tContent('usage.dont.item1'), tContent('usage.dont.item2'), tContent('usage.dont.item3')] }"
     />
 
@@ -863,44 +742,8 @@ const visualTestItems = computed(() => [
         </div>
       </template>
 
-      <!-- combobox preview -->
-      <template #variant-preview-1>
-        <Popover>
-          <PopoverTrigger as-child>
-            <!-- role="combobox" não aceita name-from-content — aria-label dá o
-                 accessible name (axe button-name) sem mudar o visual. -->
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded="false"
-              :aria-label="tContent('demonstration.labels.selectPlaceholder')"
-              class="nds-cluster nds-w-xs" data-spacing="md"
-              data-justify="between"
-            >
-              Selecione um item...
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent class="nds-p-0 nds-w-xs">
-            <Command>
-              <CommandInput placeholder="Buscar item..." />
-              <CommandList>
-                <CommandGroup heading="Componentes">
-                  <CommandItem value="button">
-                    Button
-                  </CommandItem>
-                  <CommandItem value="input">
-                    Input
-                  </CommandItem>
-                </CommandGroup>
-              </CommandList>
-              <CommandEmpty>Nenhum resultado.</CommandEmpty>
-            </Command>
-          </PopoverContent>
-        </Popover>
-      </template>
-
       <!-- palette preview -->
-      <template #variant-preview-2>
+      <template #variant-preview-1>
         <div
           class="nds-cluster"
           data-align="center"
@@ -917,7 +760,7 @@ const visualTestItems = computed(() => [
       </template>
 
       <!-- withGroups preview -->
-      <template #variant-preview-3>
+      <template #variant-preview-2>
         <div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
           <Command>
             <CommandInput placeholder="Buscar componente..." />

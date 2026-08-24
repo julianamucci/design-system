@@ -6,20 +6,17 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import CommandComposicaoGruposStory from './CommandComposicaoGruposStory.svelte';
 import CommandComposicaoShortcutsStory from './CommandComposicaoShortcutsStory.svelte';
 import CommandComposicaoLinkItemStory from './CommandComposicaoLinkItemStory.svelte';
-import CommandComposicaoComboboxStory from './CommandComposicaoComboboxStory.svelte';
 import CommandComposicaoPaletteStory from './CommandComposicaoPaletteStory.svelte';
 import {
   commandWithShortcutsSource,
   commandWithGroupsSource,
   commandWithLinkItemSource,
-  commandAsComboboxSource,
   commandPaletteSource,
   commandSource,
 } from './command.source';
 
 // Espiões de escopo de MÓDULO: dentro do `render` seriam inalcançáveis pela
 // play, e a aba Actions nasceria vazia.
-const onComboboxSelect = fn();
 const aoRodarComando = fn();
 
 const meta: Meta = {
@@ -37,9 +34,8 @@ const meta: Meta = {
       description: {
         component:
           'Padrões de composição do Command: com grupos e separadores, com atalhos, com ' +
-          'CommandLinkItem, dentro de um Popover (combobox) e dentro de um Dialog ' +
-          '(command palette). A paleta em si não flutua — quem flutua é o Popover e o ' +
-          'Dialog, e os dois já existem no sistema.',
+          'CommandLinkItem e dentro de um Dialog (command palette). A paleta em si não ' +
+          'flutua — quem flutua é o Dialog, que já existe no sistema.',
       },
     },
   },
@@ -225,89 +221,11 @@ export const WithLinkItem: Story = {
   },
 };
 
-// ─── Combobox (Command dentro de Popover) ─────────────────────────────────────
-
-export const AsCombobox: Story = {
-  parameters: {
-    covers: ['functional.item7', 'accessibility.item5', 'visual.item3'],
-    docs: { source: { transform: commandAsComboboxSource } },
-  },
-  render: () => ({
-    Component: CommandComposicaoComboboxStory,
-    props: { onValueChange: onComboboxSelect },
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('combobox');
-
-    // Idempotente: a play REEXECUTA no mesmo DOM, e um clique cego alternaria o
-    // popover a partir do estado que a rodada anterior deixou.
-    const open = async (): Promise<HTMLElement> => {
-      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
-      return await waitForPortal('dialog');
-    };
-
-    await step('O gatilho anuncia que abre uma lista para escolher', async () => {
-      // O primitivo do Popover trata o gatilho como botão comum: sem estes
-      // atributos o leitor de tela não diz que há uma escolha do outro lado.
-      await expect(trigger).toHaveAttribute('role', 'combobox');
-      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
-      await expect(trigger).toHaveAttribute('aria-expanded');
-      // `role="combobox"` não aceita nome vindo do conteúdo — sem o
-      // `aria-labelledby` o gatilho ficaria anônimo.
-      await expect(trigger).toHaveAccessibleName(/Componente/);
-    });
-
-    await step('Abrir revela a paleta dentro do popover', async () => {
-      const panel = await open();
-      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-
-      const inside = within(panel);
-      await expect(inside.getByRole('listbox')).toBeVisible();
-      const search = panel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
-      // Um combobox que abre e deixa o foco no gatilho obriga a pessoa a caçar
-      // o campo com Tab.
-      await waitFor(async () => {
-        await expect(search).toHaveFocus();
-      });
-    });
-
-    await step('A busca filtra dentro do popover', async () => {
-      const panel = await open();
-      const search = panel.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
-      await userEvent.clear(search);
-      await userEvent.type(search, 'text');
-      await waitFor(async () => {
-        await expect(within(panel).getAllByRole('option')).toHaveLength(1);
-      });
-      await expect(within(panel).getByRole('option', { name: 'Textarea' })).toBeVisible();
-      await userEvent.clear(search);
-      await waitFor(async () => {
-        await expect(within(panel).getAllByRole('option')).toHaveLength(5);
-      });
-    });
-
-    await step('Escolher fecha o popover e leva o valor para o gatilho', async () => {
-      const panel = await open();
-      const antes = onComboboxSelect.mock.calls.length;
-      await userEvent.click(within(panel).getByRole('option', { name: 'Input' }));
-
-      await waitForPortalGone('dialog');
-      await expect(onComboboxSelect.mock.calls.length).toBe(antes + 1);
-      await expect(onComboboxSelect.mock.calls[antes][0]).toBe('input');
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      await expect(trigger).toHaveTextContent('Input');
-      // O nome acessível acompanha o valor visível (WCAG 2.5.3).
-      await expect(trigger).toHaveAccessibleName(/Input/);
-    });
-  },
-};
-
 // ─── Command Palette (Command dentro de Dialog) ───────────────────────────────
 
 export const CommandPalette: Story = {
   parameters: {
-    covers: ['functional.item3', 'functional.item6', 'accessibility.item3', 'visual.item4'],
+    covers: ['functional.item3', 'functional.item6', 'accessibility.item3', 'visual.item3'],
     docs: { source: { transform: commandPaletteSource } },
   },
   render: () => ({

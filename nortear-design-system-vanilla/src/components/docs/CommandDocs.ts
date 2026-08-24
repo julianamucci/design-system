@@ -246,7 +246,7 @@ export function createCommandDocs(): HTMLElement {
           title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
-            items: [1, 2, 3, 4, 5, 6].map(i => t(`usage.guidelines.item${i}`)),
+            items: [1, 2, 3, 4, 5].map(i => t(`usage.guidelines.item${i}`)),
           },
           scenarios: {
             title: t('usage.scenarios.title'),
@@ -263,7 +263,7 @@ export function createCommandDocs(): HTMLElement {
           },
           do: {
             title: t('usage.do.title'),
-            items: [1, 2, 3, 4].map(i => t(`usage.do.item${i}`)),
+            items: [1, 2, 3].map(i => t(`usage.do.item${i}`)),
           },
           dont: {
             title: t('usage.dont.title'),
@@ -340,7 +340,6 @@ export function createCommandDocs(): HTMLElement {
       // ─── 6. Variantes (Padrões de Uso) ─────────────────────────────────
       case 'variantes': {
         const codeInline = `const cmd = createCommand({\n  placeholder: 'Buscar componente...',\n  emptyMessage: 'Nenhum resultado encontrado.',\n  items: [\n    { value: 'button', label: 'Button', group: 'Componentes' },\n    { value: 'input',  label: 'Input',  group: 'Componentes' },\n  ],\n  onSelect: (value) => console.log('selected:', value),\n});`;
-        const codeCombobox = `// Command inline como combobox dentro de Popover\nconst cmd = createCommand({\n  placeholder: 'Buscar item...',\n  emptyMessage: 'Nenhum resultado encontrado.',\n  items: listItems,\n  onSelect: (value) => {\n    setSelected(value);\n    closePopover();\n  },\n});`;
         const codePalette = `// Command dentro de Dialog para command palette\nconst cmd = createCommand({\n  placeholder: 'Buscar comando ou ação...',\n  emptyMessage: 'Nenhum resultado encontrado.',\n  items: [\n    { value: 'button', label: 'Button', group: 'Componentes', shortcut: '⌘B' },\n    // O traço quebra a sequência: o que vem antes e o que vem depois passam\n    // a contar como blocos distintos, e é a fronteira que o CSS desenha.\n    { type: 'separator' },\n    { value: 'novo', label: 'Novo arquivo', group: 'Ações', shortcut: '⌘N' },\n  ],\n  onSelect: (value) => {\n    executeAction(value);\n    closeDialog();\n  },\n});\n\n// Atalho global Cmd+K\nwindow.addEventListener('keydown', (e) => {\n  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {\n    e.preventDefault();\n    openDialog();\n  }\n});`;
 
         const codeWithGroups = `const wrap = document.createElement('div');
@@ -372,39 +371,6 @@ wrap.appendChild(
               description: stripHtml(t('variants.items.inline')),
               code: codeInline,
               previewFactory: () => buildDemoCommand(t('demonstration.labels.searchPlaceholder'), true),
-            },
-            {
-              name: 'combobox',
-              description: stripHtml(t('variants.items.combobox')),
-              code: codeCombobox,
-              previewFactory: () => {
-                const outer = document.createElement('div');
-                outer.className = 'nds-stack';
-                outer.dataset.spacing = 'xs';
-                outer.style.alignItems = 'flex-start';
-                const trigger = document.createElement('button');
-                trigger.className = 'nds-cluster nds-border-default nds-rounded nds-text-body nds-cursor-pointer nds-bg-background';
-                trigger.dataset.justify = 'between';
-                trigger.style.width = '12rem';
-                trigger.style.padding = '0.375rem 0.75rem';
-                trigger.innerHTML = `<span>${DOMPurify.sanitize(t('demonstration.labels.selectPlaceholder'))}</span><span class="nds-text-muted-foreground">▼</span>`;
-                const popover = document.createElement('div');
-                popover.className = 'nds-border-default nds-rounded-md nds-shadow-md nds-mt-1';
-                popover.style.width = '12rem';
-                popover.appendChild(
-                  createCommand({
-                    placeholder: t('demonstration.labels.comboboxSearch'),
-                    emptyMessage: t('demonstration.labels.emptyMessage'),
-                    items: [
-                      { value: 'button',    label: t('demonstration.labels.itemButton')    },
-                      { value: 'input',     label: t('demonstration.labels.itemInput')     },
-                      { value: 'separator', label: t('demonstration.labels.itemSeparator') },
-                    ],
-                  })
-                );
-                outer.append(trigger, popover);
-                return outer;
-              },
             },
             {
               name: 'palette',
@@ -633,7 +599,7 @@ export type CommandSeparator = { type: 'separator' };`;
           screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
-          items: [1, 2, 3, 4].map(i => t(`accessibility.item${i}`)),
+          items: [1, 2, 3].map(i => t(`accessibility.item${i}`)),
           keyboardTitle: tNav('common.keyboardNav') || 'Navegação por teclado',
           keyboardItems: [
             { key: 'Arrow Down',      description: toPlainText(t('accessibility.keyboard.arrowDown')) },
@@ -652,7 +618,6 @@ export type CommandSeparator = { type: 'separator' };`;
           items: [
             { name: 'Select',       description: toPlainText(t('related.select')),       path: '?path=/docs/ui-select--docs'        },
             { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/ui-dropdownmenu--docs'  },
-            { name: 'Popover',      description: toPlainText(t('related.popover')),      path: '?path=/docs/ui-popover--docs'       },
             { name: 'Dialog',       description: toPlainText(t('related.dialog')),       path: '?path=/docs/ui-dialog--docs'        },
           ],
         });
@@ -665,7 +630,6 @@ export type CommandSeparator = { type: 'separator' };`;
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },
             { title: '', content: t('notes.tip3') },
-            { title: '', content: t('notes.tip4') },
           ],
         });
 
@@ -718,7 +682,7 @@ export type CommandSeparator = { type: 'separator' };`;
               result:   tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5, 6, 7].map(i => ({
+            items: [1, 2, 3, 4, 5, 6].map(i => ({
               action:   t(`testes.functional.item${i}.action`),
               result:   t(`testes.functional.item${i}.result`),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
@@ -731,7 +695,7 @@ export type CommandSeparator = { type: 'separator' };`;
               level:     'WCAG',
               how:       tNav('common.howToVerify'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
+            items: [1, 2, 3, 4].map(i => ({
               criterion: t(`testes.accessibility.item${i}`),
               level:     'AA',
               how:       'axe-core / manual',
@@ -743,7 +707,7 @@ export type CommandSeparator = { type: 'separator' };`;
               story:    tNav('common.storyState'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
+            items: [1, 2, 3, 4].map(i => ({
               story:    t(`testes.visual.item${i}.story`),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),

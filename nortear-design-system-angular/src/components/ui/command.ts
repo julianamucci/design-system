@@ -68,8 +68,8 @@ import type { ComboboxItemRef } from '@radix-ng/primitives/combobox';
 // ─── O que NÃO se compõe, e por quê ───────────────────────────────────────────
 //
 //   · `RdxAutocompletePortal` / `Positioner` / `Popup`: a paleta não flutua.
-//     Quem flutua é o Dialog (padrão command palette) ou o Popover (padrão
-//     combobox), e esses já existem neste stack.
+//     Quem flutua é o Dialog (padrão command palette), e ele já existe neste
+//     stack.
 //   · `RdxAutocompleteEmpty`: é `@Component`, e `@Component` não pode ser host
 //     directive. A região viva foi reescrita — são quatro atributos.
 //   · `RdxAutocompleteSeparator`: ele emite `role="separator"`, e separador não

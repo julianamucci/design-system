@@ -4,7 +4,6 @@ import {
   commandWithShortcutsSource,
   commandWithGroupsSource,
   commandWithLinkItemSource,
-  commandAsComboboxSource,
   commandItemDisabledSource,
   commandItemCheckedSource,
   commandPaletteSource,
@@ -124,13 +123,6 @@ describe('transforms das stories de composição', () => {
     const saida = commandWithLinkItemSource();
     expect(saida).toContain('<CommandLinkItem href="/docs/button" value="docs-button">');
     expect(saida).toContain('rel="noopener noreferrer"');
-  });
-
-  it('o combobox põe a paleta dentro do Popover e nomeia o gatilho', () => {
-    const saida = commandAsComboboxSource();
-    expect(saida).toContain("from '@/components/ui/popover'");
-    expect(saida).toContain('aria-labelledby="combobox-rotulo combobox-valor"');
-    expect(saida).toContain('let aberto = $state(false);');
   });
 
   it('a paleta usa o CommandDialog e o atalho global', () => {

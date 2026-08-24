@@ -16,7 +16,6 @@ import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
 import { NDS_COMMAND, type CommandSelectDetails } from '@/components/ui/command';
-import { NDS_POPOVER } from '@/components/ui/popover';
 import { NDS_DIALOG } from '@/components/ui/dialog';
 import { NdsButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
@@ -43,37 +42,7 @@ import {
 
 const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 
-/**
- * Sobrescritas de call site.
- *
- * O conteúdo compartilhado deste slug passou a ser prosa API-neutra e absorveu
- * quase tudo o que morava aqui — dez chaves que repetiam palavra por palavra o
- * texto compartilhado saíram. Override que duplica o comum não protege nada:
- * ele só garante que, na próxima correção do conteúdo, esta página fique para
- * trás sozinha e sem erro nenhum.
- *
- * Sobra UMA chave, e por divergência real de comportamento. A guideline 6
- * afirma que nenhuma biblioteca aplica <code>role="combobox"</code> nem
- * <code>aria-expanded</code> a um botão comum. A primeira metade vale aqui; a
- * segunda não — o gatilho do Popover deste stack já mantém `aria-expanded`,
- * `aria-controls` e `aria-haspopup` sozinho (é o que a story `AsCombobox`
- * afirma), e mandar escrever à mão o que o primitivo entrega faria quem lê
- * duplicar um atributo de estado, que é como ele passa a mentir.
- */
-const { t, dict } = useTranslation(commandTranslations as Record<string, unknown>, {
-  'pt-BR': {
-    'usage.guidelines.item6':
-      'No Combobox: escreva <code>role="combobox"</code> no gatilho do Popover — o primitivo trata o gatilho como botão comum e não lhe dá papel de campo de escolha.',
-  },
-  en: {
-    'usage.guidelines.item6':
-      'In the Combobox pattern: write <code>role="combobox"</code> on the Popover trigger — the primitive treats it as a plain button and gives it no choice-field role.',
-  },
-  es: {
-    'usage.guidelines.item6':
-      'En el patrón Combobox: escribe <code>role="combobox"</code> en el trigger del Popover — el primitivo lo trata como un botón común y no le da rol de campo de elección.',
-  },
-});
+const { t, dict } = useTranslation(commandTranslations as Record<string, unknown>);
 
 const SECTION_IDS = [
   'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
@@ -176,12 +145,6 @@ import { NDS_DIALOG } from '@/components/ui/dialog';
 // moldura, e o CSS compartilhado já tem a classe que junta os dois.
 // <div ndsDialogContent class="nds-command-dialog-content" [showCloseButton]="false">`;
 
-const IMPORT_POPOVER_CODE = `import { NDS_COMMAND } from '@/components/ui/command';
-import { NDS_POPOVER } from '@/components/ui/popover';
-
-// <button ndsPopoverTrigger ndsButton role="combobox">…</button>
-// <ng-template ndsPopoverContent><nds-command>…</nds-command></ng-template>`;
-
 const CUSTOMIZATION_CODE = `/* A paleta lê os tokens do tema — personalizar é
    redefinir o token, não sobrescrever a regra. */
 .tema-compacto {
@@ -194,7 +157,7 @@ const CUSTOMIZATION_CODE = `/* A paleta lê os tokens do tema — personalizar �
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
-    ...NDS_COMMAND, ...NDS_POPOVER, ...NDS_DIALOG, NdsButton,
+    ...NDS_COMMAND, ...NDS_DIALOG, NdsButton,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
     NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,
     NdsDocsStates, NdsDocsProps, NdsDocsTokens, NdsDocsAccessibility,
@@ -254,43 +217,6 @@ const CUSTOMIZATION_CODE = `/* A paleta lê os tokens do tema — personalizar �
           </div>
           <div ndsCommandEmpty>{{ t('demonstration.labels.emptyMessage') }}</div>
         </nds-command>
-      </div>
-    </ng-template>
-
-    <ng-template #tplVarCombobox>
-      <div ndsPopover>
-        <!-- Botão puro com as classes do design system: o NdsButton liga
-             [attr.role] no host e apagaria o papel de combobox escrito aqui
-             (armadilha 11 — duas diretivas disputando o mesmo atributo).
-             E o papel de combobox não tira nome do conteúdo, então o nome vem
-             de aria-labelledby costurando finalidade e valor visível. -->
-        <span id="docs-combobox-rotulo" class="nds-sr-only">
-          {{ t('demonstration.labels.groupComponents') }}
-        </span>
-        <button
-          ndsPopoverTrigger
-          type="button"
-          class="nds-button nds-button-outline"
-          role="combobox"
-          aria-labelledby="docs-combobox-rotulo docs-combobox-valor"
-        >
-          <span id="docs-combobox-valor">
-            {{ t('demonstration.labels.selectPlaceholder') }}
-          </span>
-        </button>
-
-        <ng-template ndsPopoverContent>
-          <nds-command>
-            <input ndsCommandInput [placeholder]="t('demonstration.labels.comboboxSearch')" />
-            <div ndsCommandList>
-              <div ndsCommandGroup>
-                <div ndsCommandItem value="button">{{ t('demonstration.labels.itemButton') }}</div>
-                <div ndsCommandItem value="input">{{ t('demonstration.labels.itemInput') }}</div>
-              </div>
-            </div>
-            <div ndsCommandEmpty>{{ t('demonstration.labels.emptyMessage') }}</div>
-          </nds-command>
-        </ng-template>
       </div>
     </ng-template>
 
@@ -463,8 +389,6 @@ const CUSTOMIZATION_CODE = `/* A paleta lê os tokens do tema — personalizar �
           [code]="importCode"
           [secondaryDescription]="t('import.withDialog')"
           [secondaryCode]="importDialogCode"
-          [tertiaryDescription]="t('import.withPopover')"
-          [tertiaryCode]="importPopoverCode"
           componentSlug="command"
           language="ts"
         />
@@ -546,7 +470,6 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
   protected readonly customizationCode = CUSTOMIZATION_CODE;
   protected readonly importCode = IMPORT_CODE;
   protected readonly importDialogCode = IMPORT_DIALOG_CODE;
-  protected readonly importPopoverCode = IMPORT_POPOVER_CODE;
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
@@ -555,7 +478,6 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
   private readonly tplDoDont2Do = viewChild.required<TemplateRef<unknown>>('tplDoDont2Do');
   private readonly tplDoDont2Dont = viewChild.required<TemplateRef<unknown>>('tplDoDont2Dont');
   private readonly tplVarInline = viewChild.required<TemplateRef<unknown>>('tplVarInline');
-  private readonly tplVarCombobox = viewChild.required<TemplateRef<unknown>>('tplVarCombobox');
   private readonly tplVarPalette = viewChild.required<TemplateRef<unknown>>('tplVarPalette');
   private readonly tplVarWithGroups = viewChild.required<TemplateRef<unknown>>('tplVarWithGroups');
 
@@ -576,8 +498,6 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
     const d = dict();
     return {
       title: d['usage.guidelines.title'] ?? '',
-      // `t` porque a guideline 6 é sobrescrita no call site; `dict` devolve o
-      // texto cru do conteúdo compartilhado.
       items: numberedItems(d, 'usage.guidelines').map((_v, i) =>
         t(`usage.guidelines.item${i + 1}`),
       ),
@@ -627,12 +547,11 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
     dict();
     return [
       { key: 'inline',     tpl: this.tplVarInline()     },
-      { key: 'combobox',   tpl: this.tplVarCombobox()   },
       { key: 'palette',    tpl: this.tplVarPalette()    },
       { key: 'withGroups', tpl: this.tplVarWithGroups() },
     ].map(({ key, tpl }) => ({
-      // As chaves de `variants.items` não têm forma única: `inline`,
-      // `combobox` e `palette` são string solta; `withGroups` é objeto com
+      // As chaves de `variants.items` não têm forma única: `inline` e
+      // `palette` são string solta; `withGroups` é objeto com
       // `name`/`description`. Tentar a string primeiro e cair no objeto evita
       // a chave crua aparecendo escrita na tela.
       name: valueOuField(`variants.items.${key}`, 'name') || defaultName(key),
@@ -805,8 +724,8 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
   protected readonly a11yItems = computed(() => {
     dict();
     return [
-      ...[1, 2, 3, 4].map((i) => t(`accessibility.item${i}`)),
-      ...['roleListbox', 'roleOption', 'ariaSelected', 'roleCombobox', 'ariaExpanded', 'srOnly'].map(
+      ...[1, 2, 3].map((i) => t(`accessibility.item${i}`)),
+      ...['roleListbox', 'roleOption', 'ariaSelected', 'srOnly'].map(
         (k) => t(`accessibility.aria.${k}`),
       ),
     ];
@@ -836,7 +755,6 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
     return [
       { key: 'select',       name: 'Select',        path: '?path=/docs/ui-select--docs'       },
       { key: 'dropdownMenu', name: 'Dropdown Menu', path: '?path=/docs/ui-dropdownmenu--docs' },
-      { key: 'popover',      name: 'Popover',       path: '?path=/docs/ui-popover--docs'      },
       { key: 'dialog',       name: 'Dialog',        path: '?path=/docs/ui-dialog--docs'       },
       { key: 'inputGroup',   name: 'Input',         path: '?path=/docs/ui-input--docs'        },
     ].map(({ key, name, path }) => ({ name: name, description: t(`related.${key}`), path }));
@@ -844,7 +762,7 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
 
   protected readonly noteItems = computed(() => {
     dict();
-    return [1, 2, 3, 4].map((i) => ({ title: '', content: t(`notes.tip${i}`) }));
+    return [1, 2, 3].map((i) => ({ title: '', content: t(`notes.tip${i}`) }));
   });
 
   protected readonly analyticsCols = computed(() => {
@@ -925,7 +843,7 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
    */
   protected registrarEscolha(
     detalhe: CommandSelectDetails,
-    padrao: 'inline' | 'combobox' | 'palette',
+    padrao: 'inline' | 'palette',
   ): void {
     track('command_item_select', { label: detalhe.value, group: 'command-docs', pattern: padrao });
   }
@@ -975,10 +893,9 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
   }
 }
 
-/** Nome de exibição dos três padrões, que o conteúdo compartilhado não nomeia. */
+/** Nome de exibição dos dois padrões, que o conteúdo compartilhado não nomeia. */
 const DEFAULT_NAMES: Record<string, string> = {
   inline: 'Inline',
-  combobox: 'Combobox',
   palette: 'Command Palette',
 };
 

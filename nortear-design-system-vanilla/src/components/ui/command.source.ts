@@ -88,47 +88,6 @@ export function commandSnippet(o: CommandSnippetOptions = {}): string {
 }
 
 /**
- * A paleta dentro de um Popover — o padrão combobox.
- *
- * Forma própria porque a sub-fábrica É o assunto: a paleta não flutua sozinha,
- * e o papel de combobox é escrito por quem compõe. Para o Popover o gatilho é
- * um botão comum, e sem o papel o leitor de tela anuncia só "botão".
- */
-export function commandEmPopoverSnippet(o: CommandSnippetOptions = {}): string {
-  const lines = paletteOptions({
-    ...o,
-    onSelect: o.onSelect ??
-      "(value) => {\n    valor.textContent = value;\n    // Escolher fecha o painel: senão ele fica por cima do que a pessoa\n    // acabou de escolher.\n    if (gatilho.getAttribute('aria-expanded') === 'true') gatilho.click();\n  }",
-  });
-
-  return snippet(
-    [
-      importing('button', 'createButton'),
-      importing('command', 'createCommand'),
-      importing('popover', 'createPopover'),
-    ].join('\n'),
-    [
-      "const valor = document.createElement('span');",
-      "valor.textContent = 'Selecione um item...';",
-    ].join('\n'),
-    [
-      "const gatilho = createButton({ variant: 'outline', children: valor });",
-      '// O papel de combobox é de quem compõe: para o Popover este é um botão',
-      '// comum, e sem ele ninguém descobre que há uma lista para escolher.',
-      "gatilho.setAttribute('role', 'combobox');",
-    ].join('\n'),
-    `const paleta = ${chamada('createCommand', lines)};`,
-    `const popover = ${chamada('createPopover', options([
-      ['trigger', 'gatilho'],
-      ['content', 'paleta'],
-      ['side', text('bottom')],
-      ['align', text('start')],
-    ]))};`,
-    montar('popover'),
-  );
-}
-
-/**
  * A paleta dentro de um Dialog — o padrão command palette.
  *
  * Forma própria pelo mesmo motivo do arranjo acima, mais o atalho global: o
@@ -180,13 +139,6 @@ export function commandSourceWith(
   fixas: CommandSnippetOptions,
 ): SourceTransform<CommandSnippetOptions> {
   return (_gerado, ctx) => commandSnippet({ ...ctx.args, ...fixas });
-}
-
-/** Transform de story para a paleta dentro de um Popover. */
-export function commandEmPopoverSource(
-  fixas: CommandSnippetOptions = {},
-): SourceTransform<CommandSnippetOptions> {
-  return (_gerado, ctx) => commandEmPopoverSnippet({ ...ctx.args, ...fixas });
 }
 
 /** Transform de story para a paleta dentro de um Dialog. */

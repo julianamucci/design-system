@@ -112,7 +112,7 @@ export const EmptyState: Story = {
 export const ItemDisabled: Story = {
   name: "Disabled item",
   parameters: {
-    covers: ["functional.item4", "accessibility.item4", "visual.item5"],
+    covers: ["functional.item4", "accessibility.item4", "visual.item4"],
     // `disabled` é prop do comando, e não da paleta: sem o override o snippet
     // não ensinaria onde a prop entra.
     docs: { source: { transform: commandItemDisabledSource } },
@@ -201,7 +201,7 @@ export const ItemDisabled: Story = {
 export const CheckedItem: Story = {
   name: "Checked item",
   parameters: {
-    covers: ["functional.item5", "visual.item5"],
+    covers: ["functional.item5", "visual.item4"],
     // `checked` é prop do comando: o snippet do `meta` não declara estado de
     // escolha nenhum, que é justamente o assunto aqui.
     docs: { source: { transform: commandItemCheckedSource } },

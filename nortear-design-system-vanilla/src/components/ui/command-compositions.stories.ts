@@ -3,11 +3,9 @@ import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createCommand, type CommandEntry, type CommandItem } from './command';
 import {
   commandEmDialogSource,
-  commandEmPopoverSource,
   commandSource,
   commandSourceWith,
 } from './command.source';
-import { createPopover } from './popover';
 import { createDialog } from './dialog';
 import { createButton } from './button';
 import { open as abrirDialog, waitForClosed, panel } from './dialog.fixtures';
@@ -26,9 +24,8 @@ const meta: Meta = {
       description: {
         component:
           'As composições da paleta: com grupos, com atalhos, com itens desabilitados, ' +
-          'lista longa e os dois arranjos flutuantes. A paleta em si não flutua — quem ' +
-          'flutua é o Popover (padrão combobox) e o Dialog (padrão command palette), e os ' +
-          'dois já existem no sistema.',
+          'lista longa e a paleta dentro de um Dialog (padrão command palette). A paleta ' +
+          'em si não flutua — quem flutua é o Dialog, que já existe no sistema.',
       },
     },
   },
@@ -414,160 +411,6 @@ export const LongList: Story = {
   },
 };
 
-// ─── Combobox (Command dentro de Popover) ─────────────────────────────────────
-
-const ITEMS_COMBOBOX: CommandItem[] = [
-  { value: 'button',    label: 'Button'    },
-  { value: 'input',     label: 'Input'     },
-  { value: 'separator', label: 'Separator' },
-];
-
-const LABEL_COMBOBOX = 'demo-combobox-rotulo';
-const VALUE_COMBOBOX = 'demo-combobox-valor';
-
-/**
- * Command dentro de um Popover — o substituto do Select quando a lista é longa
- * o bastante para precisar de busca.
- *
- * O papel de combobox é escrito no call site: para o Popover o gatilho é um
- * botão comum, e sem `role="combobox"` o leitor de tela anuncia "botão" — a
- * pessoa não sabe que ali dentro há uma lista para escolher. O nome sai de
- * `aria-labelledby` costurando o rótulo invisível (a finalidade) com o valor
- * escolhido (o texto que está na tela), que é o que a WCAG 2.5.3 pede: o nome
- * contém o rótulo visível. Papel de combobox NÃO tira nome do conteúdo, ao
- * contrário de `button`.
- */
-export const AsCombobox: Story = {
-  parameters: {
-    covers: ['functional.item7', 'accessibility.item5', 'visual.item3'],
-    // Forma própria de snippet: a sub-fábrica que faz a paleta flutuar É o
-    // assunto, e a chamada sozinha a esconderia.
-    docs: {
-      source: {
-        transform: commandEmPopoverSource({
-          placeholder: 'Buscar item...',
-          emptyMessage: NO_RESULT,
-          items: ITEMS_COMBOBOX,
-        }),
-      },
-    },
-  },
-  render: () => {
-    const outer = document.createElement('div');
-    outer.className = 'nds-stack';
-    outer.dataset.spacing = 'xs';
-
-    const label = document.createElement('span');
-    label.id = LABEL_COMBOBOX;
-    label.className = 'nds-sr-only';
-    label.textContent = 'Componente';
-
-    const valueEl = document.createElement('span');
-    valueEl.id = VALUE_COMBOBOX;
-    valueEl.textContent = 'Selecione um item...';
-
-    const trigger = createButton({ variant: 'outline', class: 'nds-w-xs', children: valueEl });
-    trigger.setAttribute('role', 'combobox');
-    trigger.setAttribute('aria-labelledby', `${LABEL_COMBOBOX} ${VALUE_COMBOBOX}`);
-
-    const cmd = createCommand({
-      placeholder: 'Buscar item...',
-      emptyMessage: NO_RESULT,
-      items: ITEMS_COMBOBOX,
-      onSelect: (value) => {
-        valueEl.textContent = ITEMS_COMBOBOX.find((i) => i.value === value)?.label ?? value;
-        // Fechar aqui é a guideline: sem isso o popover fica aberto por cima do
-        // valor que a pessoa acabou de escolher. A factory de Popover alterna
-        // pelo próprio gatilho — é o mesmo caminho do clique de quem usa.
-        if (trigger.getAttribute('aria-expanded') === 'true') trigger.click();
-      },
-    });
-
-    const popover = createPopover({
-      trigger,
-      content: cmd,
-      side: 'bottom',
-      align: 'start',
-      onOpenChange: (isOpen) => {
-        // Um combobox que abre e deixa o foco no gatilho obriga a pessoa a
-        // caçar o campo com Tab.
-        if (isOpen) searchOf(cmd).focus();
-      },
-    });
-
-    outer.append(label, popover);
-    return outer;
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('combobox');
-
-    const popoverPanel = () =>
-      document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-
-    // Idempotente: a play REEXECUTA no mesmo DOM, e um clique cego alternaria o
-    // popover a partir do estado que a rodada anterior deixou.
-    const open = async (): Promise<HTMLElement> => {
-      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
-      await waitFor(() => {
-        if (!popoverPanel()) throw new Error('popover ainda fechado');
-      });
-      return popoverPanel()!;
-    };
-
-    const close = async (): Promise<void> => {
-      if (trigger.getAttribute('aria-expanded') === 'true') await userEvent.click(trigger);
-      await waitFor(() => {
-        if (popoverPanel()) throw new Error('popover ainda aberto');
-      });
-    };
-
-    await step('O gatilho anuncia que abre uma lista para escolher', async () => {
-      await close();
-      await expect(trigger).toHaveAttribute('role', 'combobox');
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
-      // O nome contém o rótulo visível (WCAG 2.5.3).
-      await expect(trigger).toHaveAccessibleName(/Componente/);
-    });
-
-    await step('Abrir revela a paleta e o foco entra na busca', async () => {
-      const panelPop = await open();
-      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-      // `aria-controls` só existe enquanto há painel — id órfão o axe reprova.
-      await expect(document.getElementById(trigger.getAttribute('aria-controls')!))
-        .toBe(panelPop);
-
-      const inside = within(panelPop);
-      await expect(inside.getByRole('listbox')).toBeVisible();
-      await expect(inside.getAllByRole('option')).toHaveLength(3);
-      await expect(searchOf(panelPop)).toHaveFocus();
-    });
-
-    await step('A busca dentro do popover filtra — buscando "inp" sobra 1', async () => {
-      const panelPop = await open();
-      const search = searchOf(panelPop);
-      await userEvent.clear(search);
-      await userEvent.type(search, 'inp');
-      await expect(within(panelPop).getAllByRole('option')).toHaveLength(1);
-      await userEvent.clear(search);
-      await expect(within(panelPop).getAllByRole('option')).toHaveLength(3);
-    });
-
-    await step('Escolher fecha o popover e leva o valor para o gatilho', async () => {
-      const panelPop = await open();
-      await userEvent.click(within(panelPop).getByRole('option', { name: 'Input' }));
-
-      await waitFor(() => {
-        if (popoverPanel()) throw new Error('popover ainda aberto');
-      });
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      await expect(trigger).toHaveTextContent('Input');
-      await expect(trigger).toHaveAccessibleName(/Input/);
-    });
-  },
-};
-
 // ─── Command Palette (Command dentro de Dialog) ───────────────────────────────
 
 const ITEMS_PALETTE: CommandItem[] = [
@@ -588,7 +431,7 @@ const aoExecutarComando = fn();
  */
 export const CommandPalette: Story = {
   parameters: {
-    covers: ['functional.item3', 'functional.item6', 'accessibility.item3', 'visual.item4'],
+    covers: ['functional.item3', 'functional.item6', 'accessibility.item3', 'visual.item3'],
     // Forma própria de snippet: o Dialog e o atalho global são o assunto, e
     // nenhum dos dois aparece na chamada da paleta sozinha.
     docs: {

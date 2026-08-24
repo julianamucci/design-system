@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
   commandWithShortcutsSource,
-  commandAsComboboxSource,
   commandItemDisabledSource,
   commandItemCheckedSource,
   commandPaletteSource,
@@ -82,22 +81,6 @@ describe('estados de cada comando', () => {
 });
 
 describe('composições', () => {
-  it('o combobox escreve o papel à mão, porque o gatilho é um botão comum', () => {
-    const saida = commandAsComboboxSource();
-    expect(saida).toContain('role="combobox"');
-    expect(saida).toContain('aria-haspopup="listbox"');
-    expect(saida).toContain('aria-label="Selecionar situação"');
-    // `aria-controls` só aponta enquanto há algo para apontar: id órfão o axe
-    // reprova.
-    expect(saida).toContain('{...(aberto ? { "aria-controls": idDaLista } : {})}');
-  });
-
-  it('o combobox fecha ao escolher, e a escolha volta marcada', () => {
-    const saida = commandAsComboboxSource();
-    expect(saida).toContain('setAberto(false);');
-    expect(saida).toContain('checked={valor === situacao.value}');
-  });
-
   it('a paleta nomeia o diálogo por title e description', () => {
     const saida = commandPaletteSource();
     expect(saida).toContain('title="Command Palette"');
@@ -117,7 +100,6 @@ describe('composições', () => {
     for (const fn of [
       commandSource,
       commandWithShortcutsSource,
-      commandAsComboboxSource,
       commandItemDisabledSource,
       commandItemCheckedSource,
       commandPaletteSource,

@@ -6,9 +6,9 @@
  * guarda que elas têm: a saída do painel não chega ao DOM durante a `play`.
  *
  * O que o painel imprimia antes era a árvore do `render`: a moldura de
- * demonstração, os espiões das actions e, nas duas composições maiores, um
- * `<ComboboxDemo />` / `<CommandPaletteDemo />` que só existe dentro do arquivo
- * de story. Quem copiava recebia uma tag sem origem.
+ * demonstração, os espiões das actions e, na composição da paleta, um
+ * `<CommandPaletteDemo />` que só existe dentro do arquivo de story. Quem
+ * copiava recebia uma tag sem origem.
  */
 import {
   attrs,
@@ -202,93 +202,6 @@ export function commandItemCheckedSource(): string {
     </CommandList>
   </Command>
 </div>`,
-  );
-}
-
-/**
- * Como combobox, dentro de um Popover.
- *
- * O papel de combobox é escrito à MÃO: para o primitivo o gatilho é um botão
- * comum, e sem `role`/`aria-haspopup` o leitor anuncia "botão" — a pessoa não
- * fica sabendo que há uma lista do outro lado. O `aria-label` nomeia o gatilho
- * no estado vazio, em que o texto visível é só um convite.
- *
- * A moldura sai daqui: o painel do Popover já traz borda, sombra e largura.
- */
-export function commandAsComboboxSource(): string {
-  return jsxSnippet(
-    `import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { ChevronsUpDownIcon } from "lucide-react";`,
-    `const SITUACOES = [
-  { value: "aberto", label: "Aberto" },
-  { value: "em-analise", label: "Em análise" },
-  { value: "aprovado", label: "Aprovado" },
-  { value: "arquivado", label: "Arquivado" },
-];
-
-function SeletorDeSituacao() {
-  const [aberto, setAberto] = useState(false);
-  const [valor, setValor] = useState("");
-  const idDaLista = "seletor-situacao-listbox";
-
-  return (
-    <Popover open={aberto} onOpenChange={setAberto}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={aberto}
-          aria-haspopup="listbox"
-          aria-label="Selecionar situação"
-          className="nds-w-xs"
-          {...(aberto ? { "aria-controls": idDaLista } : {})}
-        >
-          {valor
-            ? SITUACOES.find((s) => s.value === valor)?.label
-            : "Selecione um item..."}
-          <ChevronsUpDownIcon className="nds-spacer-start nds-opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="nds-p-0 nds-w-xs" id={idDaLista}>
-        <Command>
-          <CommandInput placeholder="Buscar item..." />
-          <CommandList>
-            <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
-            <CommandGroup>
-              {SITUACOES.map((situacao) => (
-                <CommandItem
-                  key={situacao.value}
-                  value={situacao.value}
-                  checked={valor === situacao.value}
-                  onSelect={(escolhido) => {
-                    setValor(escolhido);
-                    setAberto(false);
-                  }}
-                >
-                  {situacao.label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  );
-}`,
   );
 }
 

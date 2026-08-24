@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import {
   commandWithShortcutsSource,
   commandWithGroupsSource,
-  commandAsComboboxSource,
   commandItemDisabledSource,
   commandItemCheckedSource,
   commandPaletteSource,
@@ -142,17 +141,6 @@ describe('transforms das stories de composição', () => {
     expect(saida.match(/<CommandShortcut>/g)).toHaveLength(5);
   });
 
-  it('o combobox costura rótulo invisível e valor visível no mesmo nome', () => {
-    const saida = commandAsComboboxSource();
-    expect(saida).toContain('aria-labelledby="componente-rotulo componente-valor"');
-    expect(saida).toContain('<span id="componente-rotulo" class="nds-sr-only">Componente</span>');
-    expect(saida).toContain('role="combobox"');
-    // Fechar ao escolher: sem isso o painel cobre o valor recém-selecionado.
-    expect(saida).toContain('aberto.value = false');
-    expect(saida).toContain('v-for="item in itens"');
-    expect(saida).toContain(`import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'`);
-  });
-
   it('a palette usa o diálogo, que já traz a raiz por dentro', () => {
     const saida = commandPaletteSource();
     expect(saida).toContain('<CommandDialog');
@@ -171,7 +159,6 @@ describe('transforms das stories de composição', () => {
     for (const saida of [
       commandSource(),
       commandItemDisabledSource(),
-      commandAsComboboxSource(),
       commandPaletteSource(),
     ]) {
       expect(saida).not.toContain('style="');

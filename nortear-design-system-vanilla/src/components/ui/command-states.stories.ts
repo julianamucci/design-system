@@ -144,7 +144,7 @@ const onChooseWithDisabled = fn();
 
 export const ItemDisabled: Story = {
   parameters: {
-    covers: ['functional.item4', 'accessibility.item4', 'visual.item5'],
+    covers: ['functional.item4', 'accessibility.item4', 'visual.item4'],
     // `disabled` no item é o assunto: a lista canônica do meta não o tem.
     docs: {
       source: {
@@ -232,7 +232,7 @@ export const ItemDisabled: Story = {
 
 export const CheckedItem: Story = {
   parameters: {
-    covers: ['functional.item5', 'visual.item5'],
+    covers: ['functional.item5', 'visual.item4'],
     // `checked` e `shortcut` são o assunto, e nenhum dos dois está na lista
     // canônica do meta.
     docs: {

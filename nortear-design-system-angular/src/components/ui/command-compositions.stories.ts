@@ -3,88 +3,9 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, screen } from 'storybook/test';
 import { NDS_COMMAND, type CommandSelectDetails } from './command';
-import { NDS_POPOVER } from './popover';
 import { NDS_DIALOG } from './dialog';
 import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
-
-// ─── Combobox ─────────────────────────────────────────────────────────────────
-
-/**
- * Command dentro de um Popover — o substituto do Select quando a lista é longa
- * o bastante para precisar de busca.
- *
- * Componente de verdade (e não `props` num template solto) porque o padrão tem
- * estado: o gatilho mostra o que foi escolhido e o popover fecha na escolha.
- * Não é exportado — só a story o renderiza.
- */
-@Component({
-  selector: 'demo-command-combobox',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-  imports: [...NDS_COMMAND, ...NDS_POPOVER],
-  template: `
-    <div ndsPopover [open]="isOpen()" (openChange)="isOpen.set($event)">
-      <!--
-        O papel de combobox é escrito à mão: o gatilho do Popover é um botão
-        comum para o primitivo, e sem ele o leitor de tela anuncia "botão" — a
-        pessoa não sabe que ali dentro há uma lista para escolher. Os atributos
-        aria-expanded, aria-controls e aria-haspopup o primitivo já mantém.
-
-        Botão puro com as classes do design system, e não ndsButton: o
-        NdsButton liga [attr.role] no host para devolver o papel de link a um
-        <a href>, e esse binding APAGA o role escrito aqui (armadilha 11 — duas
-        diretivas disputando o mesmo atributo). A aparência é idêntica; o que
-        muda é quem manda no papel.
-      -->
-      <!--
-        O papel combobox NÃO tira o nome do conteúdo, ao contrário de button:
-        o texto visível deixa de nomear o gatilho no instante em que o papel
-        muda, e o axe reprova por button-name. O aria-labelledby costura o
-        rótulo invisível (a finalidade) com o valor escolhido (o texto que está
-        na tela), que é o que WCAG 2.5.3 pede: o nome contém o rótulo visível.
-      -->
-      <span id="demo-combobox-rotulo" class="nds-sr-only">Componente</span>
-      <button
-        ndsPopoverTrigger
-        type="button"
-        class="nds-button nds-button-outline"
-        role="combobox"
-        aria-labelledby="demo-combobox-rotulo demo-combobox-valor"
-      >
-        <span id="demo-combobox-valor">{{ selecionado() || 'Selecione um item...' }}</span>
-      </button>
-
-      <ng-template ndsPopoverContent>
-        <nds-command (itemSelect)="choose($event)">
-          <input ndsCommandInput placeholder="Buscar item..." />
-
-          <div ndsCommandList>
-            <div ndsCommandGroup>
-              <div ndsCommandItem value="button">Button</div>
-              <div ndsCommandItem value="input">Input</div>
-              <div ndsCommandItem value="separator">Separator</div>
-            </div>
-          </div>
-
-          <div ndsCommandEmpty>Nenhum resultado encontrado.</div>
-        </nds-command>
-      </ng-template>
-    </div>
-  `,
-})
-class DemoCommandCombobox {
-  protected readonly isOpen = signal(false);
-  protected readonly selecionado = signal('');
-
-  protected choose(detalhe: CommandSelectDetails): void {
-    this.selecionado.set(detalhe.label);
-    // Fechar aqui é a guideline: sem isso o popover fica aberto por cima do
-    // valor que a pessoa acabou de escolher.
-    this.isOpen.set(false);
-  }
-}
 
 // ─── Command Palette ──────────────────────────────────────────────────────────
 
@@ -169,7 +90,7 @@ class DemoCommandPalette {
 const meta: Meta = {
   title: 'UI/Command/Compositions',
   tags: ['overlay'],
-  decorators: [moduleMetadata({ imports: [DemoCommandCombobox, DemoCommandPalette] })],
+  decorators: [moduleMetadata({ imports: [DemoCommandPalette] })],
   parameters: {
     layout: 'centered',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
@@ -178,9 +99,9 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Os dois arranjos flutuantes. A paleta em si não flutua — quem flutua é o ' +
-          'Popover (padrão combobox) e o Dialog (padrão command palette), e os dois já ' +
-          'existem no sistema. Nenhuma peça nova entra aqui: é composição de call site.',
+          'A paleta dentro de um Dialog (padrão command palette). A paleta em si não ' +
+          'flutua — quem flutua é o Dialog, que já existe no sistema. Nenhuma peça nova ' +
+          'entra aqui: é composição de call site.',
       },
     },
   },
@@ -188,75 +109,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-// ─── Combobox ─────────────────────────────────────────────────────────────────
-
-export const AsCombobox: Story = {
-  parameters: { covers: ['functional.item7', 'accessibility.item5', 'visual.item3'] },
-  render: () => ({ template: '<demo-command-combobox />' }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('combobox');
-
-    // Par idempotente nos DOIS sentidos: a play REEXECUTA no mesmo DOM e esta
-    // story termina com o popover aberto, então nem "abrir" nem "fechar" pode
-    // ser clique cego — na segunda rodada ele inverteria o resultado.
-    const open = async (): Promise<HTMLElement> => {
-      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
-      return await waitForPortal('dialog');
-    };
-    const close = async (): Promise<void> => {
-      if (trigger.getAttribute('aria-expanded') === 'true') await userEvent.keyboard('{Escape}');
-      await waitForPortalVanish('dialog');
-    };
-
-    await step('Fechado, o gatilho anuncia que abre uma lista para escolher', async () => {
-      await close();
-      // É o que o conteúdo compartilhado cobra: o primitivo do Popover trata o
-      // gatilho como botão comum, e sem estes dois atributos o leitor de tela
-      // não diz que há uma escolha do outro lado.
-      await expect(trigger).toHaveAttribute('role', 'combobox');
-      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
-      // O estado fechado é metade do item visual — e o `aria-expanded` tem de
-      // dizer "false", não apenas existir.
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-    });
-
-    await step('Abrir revela a paleta dentro do popover', async () => {
-      const panel = await open();
-      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-
-      const inside = within(panel);
-      await expect(inside.getByRole('listbox')).toBeVisible();
-      const search = panel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
-      // O foco entra no campo de busca: um combobox que abre e deixa o foco no
-      // gatilho obriga a pessoa a caçar o campo com Tab.
-      await waitFor(async () => {
-        await expect(search).toHaveFocus();
-      });
-    });
-
-    await step('Escolher fecha o popover e leva o valor para o gatilho', async () => {
-      const panel = await open();
-      await userEvent.click(within(panel).getByRole('option', { name: 'Input' }));
-
-      await waitForPortalVanish('dialog');
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      await expect(trigger).toHaveTextContent('Input');
-    });
-
-    await step('E a story termina ABERTA — é o quadro que o Chromatic tira', async () => {
-      // O item visual pede o gatilho "fechado e aberto". Terminar depois da
-      // escolha fotografava só o fechado, e o quadro aberto — a paleta dentro
-      // do popover, que é o que este padrão tem de próprio — nunca era
-      // capturado. O gatilho segue visível no quadro, já com o valor escolhido.
-      const panel = await open();
-      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-      await expect(trigger).toHaveTextContent('Input');
-      await expect(within(panel).getByRole('listbox')).toBeVisible();
-    });
-  },
-};
 
 // ─── Command Palette ──────────────────────────────────────────────────────────
 
@@ -273,7 +125,7 @@ export const CommandPalette: Story = {
       'functional.item6',
       'accessibility.item1',
       'accessibility.item3',
-      'visual.item4',
+      'visual.item3',
     ],
   },
   render: () => ({ template: '<demo-command-palette />' }),

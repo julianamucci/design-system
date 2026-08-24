@@ -18,7 +18,7 @@ const meta: Meta = {
       source: { transform: commandSource },
       description: {
         component:
-          'Interface de busca e seleção rápida com filtro fuzzy integrado. Suporta uso inline, combobox e command palette.',
+          'Interface de busca e seleção rápida com filtro fuzzy integrado. Suporta uso inline e command palette.',
       },
     },
   },

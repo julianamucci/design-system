@@ -13,12 +13,10 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import {
   commandWithShortcutsSource,
   commandWithGroupsSource,
-  commandAsComboboxSource,
   commandPaletteSource,
 } from './command.source';
 
@@ -35,9 +33,9 @@ const meta = {
       source: { transform: commandWithGroupsSource },
       description: {
         component:
-          'Os arranjos da paleta: grupos nomeados com divisor, atalhos por comando, e os dois '
-          + 'formatos flutuantes — Popover (combobox) e Dialog (command palette). Nenhuma peça '
-          + 'nova entra aqui: é composição de call site.',
+          'Os arranjos da paleta: grupos nomeados com divisor, atalhos por comando e a paleta '
+          + 'dentro de um Dialog (command palette). Nenhuma peça nova entra aqui: é composição '
+          + 'de call site.',
       },
     },
   },
@@ -236,179 +234,11 @@ export const WithShortcuts: Story = {
   },
 };
 
-// ─── Combobox ─────────────────────────────────────────────────────────────────
-
-export const AsCombobox: Story = {
-  parameters: {
-    covers: ['functional.item7', 'accessibility.item5', 'visual.item3'],
-    // A paleta entra dentro de um Popover, com gatilho, rótulo costurado e o
-    // fechamento ao escolher: é outra composição inteira.
-    docs: { source: { transform: commandAsComboboxSource } },
-  },
-  render: () => ({
-    components: {
-      Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,
-      Popover, PopoverContent, PopoverTrigger, Button,
-    },
-    setup() {
-      const open = ref(false);
-      const selectedValue = ref('');
-      const items = [
-        { value: 'button', label: 'Button' },
-        { value: 'input', label: 'Input' },
-        { value: 'select', label: 'Select' },
-        { value: 'textarea', label: 'Textarea' },
-        { value: 'badge', label: 'Badge' },
-        { value: 'avatar', label: 'Avatar' },
-      ];
-
-      function selectItem(value: string) {
-        selectedValue.value = value;
-        // Fechar aqui é a guideline: sem isso o popover fica aberto por cima do
-        // valor que a pessoa acabou de escolher.
-        open.value = false;
-      }
-
-      return { open, selectedValue, items, selectItem };
-    },
-    template: `
-      <Popover v-model:open="open">
-        <!--
-          O papel combobox NÃO tira o nome do conteúdo, ao contrário de button: o
-          texto visível deixa de nomear o gatilho no instante em que o papel muda.
-          O aria-labelledby costura o rótulo invisível (a finalidade) com o valor
-          escolhido (o texto que está na tela), que é o que a WCAG 2.5.3 pede.
-        -->
-        <span id="demo-combobox-rotulo" class="nds-sr-only">Componente</span>
-        <PopoverTrigger as-child>
-          <Button
-            variant="outline"
-            role="combobox"
-            :aria-expanded="open"
-            aria-labelledby="demo-combobox-rotulo demo-combobox-valor"
-            class="nds-cluster nds-w-xs" data-spacing="md"
-            data-justify="between"
-          >
-            <span id="demo-combobox-valor">{{
-              selectedValue
-                ? items.find(i => i.value === selectedValue)?.label
-                : 'Selecione um item...'
-            }}</span>
-          </Button>
-        </PopoverTrigger>
-
-        <PopoverContent class="nds-p-0 nds-w-xs">
-          <Command>
-            <CommandInput placeholder="Buscar item..." />
-
-            <CommandList>
-              <CommandGroup heading="Componentes">
-                <CommandItem
-                  v-for="item in items"
-                  :key="item.value"
-                  :value="item.value"
-                  @select="selectItem(item.value)"
-                >
-                  {{ item.label }}
-                </CommandItem>
-              </CommandGroup>
-            </CommandList>
-
-            <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
-          </Command>
-        </PopoverContent>
-      </Popover>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('combobox');
-
-    // Idempotente: a play REEXECUTA no mesmo DOM, e um clique cego alternaria o
-    // popover a partir do estado que a rodada anterior deixou.
-    const open = async (): Promise<HTMLElement> => {
-      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
-      return await waitForPortal('dialog');
-    };
-
-    await step('O gatilho anuncia que abre uma lista para escolher', async () => {
-      // É o que o conteúdo compartilhado cobra: o primitivo do Popover trata o
-      // gatilho como botão comum, e sem estes atributos o leitor de tela não diz
-      // que há uma escolha do outro lado.
-      await expect(trigger).toHaveAttribute('role', 'combobox');
-      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
-      await expect(trigger).toHaveAttribute('aria-expanded');
-    });
-
-    await step('Abrir revela a paleta dentro do popover', async () => {
-      const panel = await open();
-      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-
-      const inside = within(panel);
-      const list = inside.getByRole('listbox');
-      await expect(list).toBeVisible();
-      await expect(list).toHaveClass(/nds-command-list/);
-      const search = panel.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
-      // O foco entra no campo de busca: um combobox que abre e deixa o foco no
-      // gatilho obriga a pessoa a caçar o campo com Tab.
-      await waitFor(async () => {
-        await expect(search).toHaveFocus();
-      });
-      // Dentro do popover o campo continua sendo uma combobox ligada à lista
-      // real — o arranjo flutuante não desmonta o par de papéis.
-      await expect(search).toHaveAttribute('aria-autocomplete', 'list');
-      await expect(document.getElementById(search.getAttribute('aria-controls')!)).toBe(list);
-
-      await userEvent.clear(search);
-      await waitFor(async () => {
-        // Com o campo vazio, os seis componentes aparecem.
-        await expect(inside.getAllByRole('option')).toHaveLength(6);
-      });
-    });
-
-    await step('A busca filtra dentro do popover', async () => {
-      const panel = await open();
-      const inside = within(panel);
-      const search = panel.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
-
-      await userEvent.clear(search);
-      await userEvent.type(search, 'text');
-      // Buscando "text": só "Textarea" sobra.
-      await waitFor(async () => {
-        await expect(inside.getAllByRole('option')).toHaveLength(1);
-      });
-      await expect(inside.getByRole('option', { name: 'Textarea' })).toBeVisible();
-
-      await userEvent.clear(search);
-      await userEvent.type(search, 'zzz');
-      const vazio = panel.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
-      await waitFor(async () => {
-        await expect(vazio).toHaveAttribute('data-empty', '');
-      });
-      await expect(vazio).toHaveTextContent('Nenhum resultado encontrado.');
-
-      await userEvent.clear(search);
-      await waitFor(async () => {
-        await expect(inside.getAllByRole('option')).toHaveLength(6);
-      });
-    });
-
-    await step('Escolher fecha o popover e leva o valor para o gatilho', async () => {
-      const panel = await open();
-      await userEvent.click(within(panel).getByRole('option', { name: 'Input' }));
-
-      await waitForPortalGone('dialog');
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      await expect(trigger).toHaveTextContent('Input');
-    });
-  },
-};
-
 // ─── Command Palette ──────────────────────────────────────────────────────────
 
 export const CommandPalette: Story = {
   parameters: {
-    covers: ['functional.item3', 'functional.item6', 'accessibility.item3', 'visual.item4'],
+    covers: ['functional.item3', 'functional.item6', 'accessibility.item3', 'visual.item3'],
     // `CommandDialog` já traz a raiz por dentro, e o atalho de janela é código
     // de quem consome — nada disso aparece na do meta.
     docs: { source: { transform: commandPaletteSource } },

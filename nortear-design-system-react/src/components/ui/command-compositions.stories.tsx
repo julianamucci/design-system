@@ -15,22 +15,15 @@ import {
 } from "./command";
 import {
   commandWithShortcutsSource,
-  commandAsComboboxSource,
   commandPaletteSource,
   commandSource,
 } from "./command.source";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import {
   LayoutIcon,
   TypeIcon,
   MinusIcon,
   SearchIcon,
-  ChevronsUpDownIcon,
 } from "lucide-react";
 
 const meta = {
@@ -45,7 +38,7 @@ const meta = {
       source: { transform: commandSource },
       description: {
         component:
-          "Os arranjos da paleta: com grupos e divisor, com atalhos, dentro de um Popover (combobox) e dentro de um Dialog (command palette). Nenhuma peça nova entra aqui — é composição de call site.",
+          "Os arranjos da paleta: com grupos e divisor, com atalhos, e dentro de um Dialog (command palette). Nenhuma peça nova entra aqui — é composição de call site.",
       },
     },
     // Filhos auxiliares dentro do listbox — ver PATCHES.md#command-listbox-children
@@ -232,165 +225,6 @@ export const WithShortcuts: Story = {
   },
 };
 
-// ─── Como Combobox (em Popover) ───────────────────────────────────────────────
-
-const FRAMEWORKS = [
-  { value: "react", label: "React" },
-  { value: "vue", label: "Vue" },
-  { value: "svelte", label: "Svelte" },
-  { value: "angular", label: "Angular" },
-  { value: "solid", label: "SolidJS" },
-];
-
-function ComboboxDemo() {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
-  const listboxId = "combobox-frameworks-listbox";
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        {/*
-          O papel de combobox é escrito à mão: para o primitivo o gatilho é um
-          botão comum, e sem ele o leitor anuncia "botão" — a pessoa não sabe
-          que há uma lista do outro lado. `aria-haspopup` e `aria-controls`
-          completam o par exigido pelo padrão ARIA de combobox, e o `aria-label`
-          dá nome ao gatilho no estado vazio, em que o texto visível é só um
-          placeholder. Ver PATCHES.md#command-combobox-aria.
-        */}
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          aria-haspopup="listbox"
-          aria-controls={open ? listboxId : undefined}
-          aria-label="Selecionar framework"
-          className="nds-w-xs"
-        >
-          {value
-            ? FRAMEWORKS.find((f) => f.value === value)?.label
-            : "Selecione um item..."}
-          <ChevronsUpDownIcon className="nds-spacer-start nds-opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="nds-p-0 nds-w-xs" id={listboxId}>
-        <Command>
-          <CommandInput placeholder="Buscar item..." />
-          <CommandList>
-            <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
-            <CommandGroup>
-              {FRAMEWORKS.map((framework) => (
-                <CommandItem
-                  key={framework.value}
-                  value={framework.value}
-                  checked={value === framework.value}
-                  onSelect={(escolhido) => {
-                    // Sempre define (nunca alterna): alternar faria a segunda
-                    // rodada da play desfazer a escolha da primeira.
-                    setValue(escolhido);
-                    // Fechar aqui é a guideline: sem isso o popover fica por
-                    // cima do valor que a pessoa acabou de escolher.
-                    setOpen(false);
-                  }}
-                >
-                  {framework.label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  );
-}
-
-export const AsCombobox: Story = {
-  name: "As combobox (in Popover)",
-  parameters: {
-    covers: ["functional.item7", "accessibility.item5", "visual.item3"],
-    // O conteúdo do Popover renderiza em portal, fora de `#storybook-root`, e o
-    // addon-a11y roda o axe no documento inteiro — inclusive no instante em que
-    // o painel ainda está animando. A violation residual depende do timing do
-    // clique, então a exceção não cabe numa regra só.
-    // Registro completo (com o roteiro de verificação manual que a fecha) em
-    // PATCHES.md#command-combobox-portal-flaky. O que ela NÃO deixa de proteger:
-    // `accessibility.item1` é declarado pela Playground, com o axe ligado.
-    a11y: { test: 'off' },
-    // Paleta dentro de Popover, com estado e o papel de combobox escrito à mão:
-    // é outra composição, não a paleta solta do `meta`.
-    docs: { source: { transform: commandAsComboboxSource } },
-  },
-  render: () => <ComboboxDemo />,
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const trigger = canvas.getByRole("combobox");
-
-    // Idempotente: a play REEXECUTA no mesmo DOM, e um clique cego alternaria o
-    // popover a partir do estado que a rodada anterior deixou.
-    const open = async (): Promise<HTMLElement> => {
-      if (trigger.getAttribute("aria-expanded") !== "true") await userEvent.click(trigger);
-      await waitFor(async () => {
-        await expect(trigger).toHaveAttribute("aria-expanded", "true");
-      });
-      return await waitForPortal("listbox");
-    };
-    const close = async () => {
-      if (trigger.getAttribute("aria-expanded") === "true") await userEvent.keyboard("{Escape}");
-      await waitForPortalGone("listbox");
-    };
-
-    await close();
-
-    await step("O gatilho anuncia que abre uma lista para escolher", async () => {
-      await expect(trigger).toHaveAttribute("role", "combobox");
-      await expect(trigger).toHaveAttribute("aria-haspopup", "listbox");
-      await expect(trigger).toHaveAttribute("aria-expanded", "false");
-      await expect(trigger).toHaveAccessibleName("Selecionar framework");
-    });
-
-    await step("Abrir revela a paleta dentro do popover", async () => {
-      const list = await open();
-      const panel = list.closest<HTMLElement>('[data-slot="popover-content"]')!;
-      const inside = within(panel);
-
-      await expect(inside.getAllByRole("option")).toHaveLength(5);
-      const search = panel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
-      // Um combobox que abre e deixa o foco no gatilho obriga a pessoa a caçar
-      // o campo com Tab.
-      await waitFor(async () => {
-        await expect(search).toHaveFocus();
-      });
-      // `aria-controls` só aponta para algo enquanto há algo para apontar.
-      const controlled = trigger.getAttribute("aria-controls");
-      await expect(controlled).toBeTruthy();
-      await expect(document.getElementById(controlled!)).toBe(panel);
-    });
-
-    await step("Escolher fecha o popover e leva o valor para o gatilho", async () => {
-      const list = await open();
-      await userEvent.click(within(list).getByRole("option", { name: "Vue" }));
-
-      await waitForPortalGone("listbox");
-      await expect(trigger).toHaveAttribute("aria-expanded", "false");
-      await expect(trigger).toHaveTextContent("Vue");
-    });
-
-    await step("O escolhido volta marcado quando a lista reabre", async () => {
-      const list = await open();
-      const escolhido = within(list).getByRole("option", { name: "Vue" });
-      await expect(escolhido).toHaveAttribute("data-checked", "true");
-      await expect(
-        getComputedStyle(escolhido.querySelector<HTMLElement>(".nds-command-item-check")!)
-          .opacity,
-      ).toBe("1");
-
-      // A story TERMINA fechada: é o estado de repouso do padrão, e é o que o
-      // axe do postVisit encontra.
-      await close();
-    });
-  },
-};
-
 // ─── Command Palette (em CommandDialog) ──────────────────────────────────────
 
 function CommandPaletteDemo() {
@@ -470,7 +304,7 @@ export const CommandPalette: Story = {
       "functional.item3",
       "functional.item6",
       "accessibility.item3",
-      "visual.item4",
+      "visual.item3",
     ],
     // Paleta dentro do CommandDialog, com o atalho global registrado por quem
     // consome: nada disso cabe no snippet da paleta solta.

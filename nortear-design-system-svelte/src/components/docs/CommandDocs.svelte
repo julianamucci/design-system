@@ -2,7 +2,6 @@
   import { untrack } from 'svelte';
   import * as Command from '@/components/ui/command';
   import { Button } from '@/components/ui/button';
-  import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
   import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
   import CheckIcon from '@lucide/svelte/icons/check';
   import Search from '@lucide/svelte/icons/search';
@@ -119,18 +118,6 @@ import uiTranslations from '@/i18n/ui.json';
     return tNav(priorityKeyMap[raw] ?? 'common.high');
   }
 
-  // ─── Demo combobox state ──────────────────────────────────────────────────
-
-  let comboboxOpen = $state(false);
-  let comboboxValue = $state('');
-  const comboboxItems = [
-    { value: 'button',   label: 'Button'   },
-    { value: 'input',    label: 'Input'    },
-    { value: 'select',   label: 'Select'   },
-    { value: 'textarea', label: 'Textarea' },
-    { value: 'badge',    label: 'Badge'    },
-  ];
-
   // ─── Demo palette state ───────────────────────────────────────────────────
 
   let paletteOpen = $state(false);
@@ -245,45 +232,6 @@ import uiTranslations from '@/i18n/ui.json';
     </Command.Group>
   </Command.List>
 </Command.Root>`;
-
-  const codeVariantCombobox = `<script lang="ts">
-  import * as Command from "@/components/ui/command";
-  import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-  import { Button } from "@/components/ui/button";
-
-  let open = $state(false);
-  let selected = $state('');
-  const items = [
-    { value: 'button', label: 'Button' },
-    { value: 'input', label: 'Input' },
-    { value: 'select', label: 'Select' },
-  ];
-<\/script>
-
-<Popover bind:open>
-  <PopoverTrigger>
-    {#snippet child({ props })}
-      <Button variant="outline" role="combobox" aria-expanded={open} aria-label="Selecione..." class="nds-cluster nds-w-3xs" data-spacing="md" data-justify="between" {...props}>
-        {selected ? items.find(i => i.value === selected)?.label : 'Selecione...'}
-      </Button>
-    {/snippet}
-  </PopoverTrigger>
-  <PopoverContent class="nds-p-0 nds-w-3xs">
-    <Command.Root>
-      <Command.Input placeholder="Buscar item..." />
-      <Command.List>
-        <Command.Empty>Nenhum resultado.</Command.Empty>
-        <Command.Group>
-          {#each items as item}
-            <Command.Item value={item.value} onSelect={() => { selected = item.value; open = false; }}>
-              {item.label}
-            </Command.Item>
-          {/each}
-        </Command.Group>
-      </Command.List>
-    </Command.Root>
-  </PopoverContent>
-</Popover>`;
 
   const codeVariantPalette = `<Command.Dialog bind:open title="Command Palette" description="Busque por um comando...">
   <Command.Input placeholder="Buscar comando ou ação..." />
@@ -522,7 +470,6 @@ interface CommandLoadingProps {
         $tStore('usage.guidelines.item3'),
         $tStore('usage.guidelines.item4'),
         $tStore('usage.guidelines.item5'),
-        $tStore('usage.guidelines.item6'),
       ],
     }}
     scenarios={{
@@ -546,7 +493,6 @@ interface CommandLoadingProps {
         $tStore('usage.do.item1'),
         $tStore('usage.do.item2'),
         $tStore('usage.do.item3'),
-        $tStore('usage.do.item4'),
       ],
     }}
     dont={{
@@ -649,7 +595,6 @@ interface CommandLoadingProps {
     componentSlug="command"
     items={[
       { name: 'inline',   description: stripHtml($tStore('variants.items.inline')),   code: codeVariantInline,   preview: variantInline   },
-      { name: 'combobox', description: stripHtml($tStore('variants.items.combobox')), code: codeVariantCombobox, preview: variantCombobox },
       { name: 'palette',  description: stripHtml($tStore('variants.items.palette')),  code: codeVariantPalette,  preview: variantPalette  },
       {
         name: $tStore('variants.items.withGroups.name'),
@@ -660,53 +605,6 @@ interface CommandLoadingProps {
       },
     ]}
   />
-
-  {#snippet variantCombobox()}
-    <Popover bind:open={comboboxOpen}>
-      <!-- bits-ui não tem asChild: o padrão é o snippet child (como no Tooltip);
-           asChild virava um <button> wrapper sem nome (button-name +
-           nested-interactive). role="combobox" não aceita name-from-content —
-           aria-label dá o accessible name sem mudar o visual. -->
-      <PopoverTrigger>
-        {#snippet child({ props })}
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={comboboxOpen}
-            aria-label={$tStore('demonstration.labels.selectPlaceholder')}
-            class="nds-cluster nds-w-3xs" data-spacing="md"
-            data-justify="between"
-            
-            {...props}
-          >
-            {comboboxValue ? comboboxItems.find(i => i.value === comboboxValue)?.label : $tStore('demonstration.labels.selectPlaceholder')}
-            <ChevronsUpDown class="nds-text-muted-foreground" aria-hidden="true" />
-          </Button>
-        {/snippet}
-      </PopoverTrigger>
-      <PopoverContent class="nds-p-0 nds-w-3xs">
-        <Command.Root>
-          <Command.Input placeholder={$tStore('demonstration.labels.comboboxSearch')} />
-          <Command.List>
-            <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
-            <Command.Group>
-              {#each comboboxItems as item (item.value)}
-                <Command.Item
-                  value={item.value}
-                  onSelect={() => { comboboxValue = item.value; comboboxOpen = false; }}
-                >
-                  {item.label}
-                  {#if comboboxValue === item.value}
-                    <CheckIcon class="nds-spacer-start nds-size-4" aria-hidden="true" />
-                  {/if}
-                </Command.Item>
-              {/each}
-            </Command.Group>
-          </Command.List>
-        </Command.Root>
-      </PopoverContent>
-    </Popover>
-  {/snippet}
 
   {#snippet variantInline()}
     <div class="nds-w-full nds-max-w-sm nds-rounded-md nds-border-default nds-shadow-md">
@@ -883,7 +781,6 @@ interface CommandLoadingProps {
       $tStore('accessibility.item1'),
       $tStore('accessibility.item2'),
       $tStore('accessibility.item3'),
-      $tStore('accessibility.item4'),
     ]}
     keyboardTitle="Navegação por Teclado"
     keyboardItems={[
@@ -902,7 +799,6 @@ interface CommandLoadingProps {
     items={[
       { name: 'Select',        description: $tStore('related.select'),       path: '?path=/docs/ui-select--docs'       },
       { name: 'DropdownMenu',  description: $tStore('related.dropdownMenu'), path: '?path=/docs/ui-dropdownmenu--docs' },
-      { name: 'Popover',       description: $tStore('related.popover'),      path: '?path=/docs/ui-popover--docs'      },
       { name: 'Dialog',        description: $tStore('related.dialog'),       path: '?path=/docs/ui-dialog--docs'       },
     ]}
   />
@@ -914,7 +810,6 @@ interface CommandLoadingProps {
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },
       { title: '', content: $tStore('notes.tip3') },
-      { title: '', content: $tStore('notes.tip4') },
     ]}
   />
 
@@ -952,7 +847,6 @@ interface CommandLoadingProps {
         { action: $tStore('testes.functional.item4.action'), result: $tStore('testes.functional.item4.result'), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
         { action: $tStore('testes.functional.item5.action'), result: $tStore('testes.functional.item5.result'), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
         { action: $tStore('testes.functional.item6.action'), result: $tStore('testes.functional.item6.result'), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item7.action'), result: $tStore('testes.functional.item7.result'), priority: localPriority($tStore('testes.functional.item7.priority'), $tNavStore) },
       ],
     }}
     accessibility={{
@@ -967,7 +861,6 @@ interface CommandLoadingProps {
         { criterion: $tStore('testes.accessibility.item2'), level: 'AA', how: 'Teclado manual' },
         { criterion: $tStore('testes.accessibility.item3'), level: 'AA', how: 'Leitor de tela' },
         { criterion: $tStore('testes.accessibility.item4'), level: 'AA', how: 'Teclado manual' },
-        { criterion: $tStore('testes.accessibility.item5'), level: 'AA', how: 'DOM inspection' },
       ],
     }}
     visual={{
@@ -981,7 +874,6 @@ interface CommandLoadingProps {
         { story: $tStore('testes.visual.item2.story'), priority: localPriority($tStore('testes.visual.item2.priority'), $tNavStore) },
         { story: $tStore('testes.visual.item3.story'), priority: localPriority($tStore('testes.visual.item3.priority'), $tNavStore) },
         { story: $tStore('testes.visual.item4.story'), priority: localPriority($tStore('testes.visual.item4.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item5.story'), priority: localPriority($tStore('testes.visual.item5.priority'), $tNavStore) },
       ],
     }}
   />

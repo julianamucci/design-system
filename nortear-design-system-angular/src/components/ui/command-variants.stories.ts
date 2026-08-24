@@ -16,8 +16,8 @@ const meta: Meta = {
         component:
           'A paleta não tem variante visual por prop — o que muda entre os padrões é a ' +
           'composição. Aqui ficam os dois arranjos inline: lista corrida e lista dividida ' +
-          'em grupos. Os arranjos flutuantes (combobox e command palette) estão em ' +
-          'Compositions, porque dependem do Popover e do Dialog.',
+          'em grupos. O arranjo flutuante (command palette) está em Compositions, ' +
+          'porque depende do Dialog.',
       },
     },
   },

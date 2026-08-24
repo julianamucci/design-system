@@ -122,7 +122,7 @@ export const LoadingState: Story = {
 
 export const ItemDisabled: Story = {
   parameters: {
-    covers: ['functional.item4', 'accessibility.item4', 'visual.item5'],
+    covers: ['functional.item4', 'accessibility.item4', 'visual.item4'],
     docs: { source: { transform: commandItemDisabledSource } },
   },
   render: () => ({
@@ -183,7 +183,7 @@ export const ItemDisabled: Story = {
 
 export const CheckedItem: Story = {
   parameters: {
-    covers: ['functional.item5', 'visual.item5'],
+    covers: ['functional.item5', 'visual.item4'],
     docs: { source: { transform: commandItemCheckedSource } },
   },
   render: () => ({

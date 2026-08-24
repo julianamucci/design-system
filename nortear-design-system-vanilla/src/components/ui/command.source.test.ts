@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
   commandEmDialogSnippet,
-  commandEmPopoverSnippet,
   commandSnippet,
   commandSource,
   commandSourceWith,
@@ -64,18 +63,6 @@ describe('commandSnippet', () => {
   it('nunca imprime a função que os args trazem no lugar do corpo do callback', () => {
     const code = commandSnippet({ onSelect: (() => undefined) as unknown as string });
     expect(code).not.toContain('onSelect');
-  });
-});
-
-describe('commandEmPopoverSnippet', () => {
-  it('mostra a sub-fábrica que é o assunto da composição', () => {
-    const code = commandEmPopoverSnippet();
-    expect(code).toContain("import { createPopover } from '@/components/ui/popover';");
-    expect(code).toContain('createPopover({');
-    expect(code).toContain('trigger: gatilho');
-    expect(code).toContain('content: paleta');
-    // O papel é de quem compõe: sem ele o leitor anuncia só "botão".
-    expect(code).toContain("gatilho.setAttribute('role', 'combobox');");
   });
 });
 
