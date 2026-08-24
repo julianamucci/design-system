@@ -27,6 +27,8 @@ import {
   ComboboxTrigger,
 } from '@/components/ui/combobox';
 
+import { Button } from '@/components/ui/button';
+
 import DocsPageLayout    from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
 import DocsDemonstration from '@/components/docs/shared/sections/DocsDemonstration.vue';
@@ -196,6 +198,19 @@ const ingredient = ref('');
 // outro consumiria.
 const chips = computed(() =>
   chosen.value.flatMap(value => technologies.filter(item => item.value === value)),
+);
+
+// Cada cartão de Variantes e de Composições tem o PRÓPRIO estado. A seção
+// Demonstração mostra os mesmos campos, e um `ref` partilhado faria mexer num
+// cartão mover outro do outro lado da página, sem que o leitor entendesse por
+// quê.
+const variantCountry = ref('');
+const variantChosen = ref<string[]>(['react', 'vue']);
+const variantIngredient = ref('');
+const formCountry = ref('');
+
+const variantChips = computed(() =>
+  variantChosen.value.flatMap(value => technologies.filter(item => item.value === value)),
 );
 
 function removeLabelOf(label: string): string {
@@ -761,18 +776,188 @@ const visualTestItems = computed(() => [
       :code="codeImport"
     />
 
+    <!--
+      Cada cartão mostra o campo de verdade, com os mesmos rótulos e os mesmos
+      dados da story correspondente — é a story que o Chromatic fotografa, e um
+      exemplo que divergisse dela faria a regressão visual guardar outra coisa.
+      A lista fica em fluxo e só existe aberta, então fechado o cartão mostra o
+      campo inteiro: rótulo, texto e gatilho.
+    -->
     <DocsVariants
       :title="tContent('variants.title')"
       :items="variantItems"
       component-slug="combobox"
-    />
+    >
+      <!-- Escolha única -->
+      <template #variant-preview-0>
+        <div class="nds-w-xs">
+          <Combobox v-model="variantCountry">
+            <ComboboxLabel>{{ tContent('demonstration.labels.countryLabel') }}</ComboboxLabel>
+            <ComboboxInputWrapper>
+              <ComboboxInput :placeholder="tContent('demonstration.labels.countryPlaceholder')" />
+              <ComboboxClear :aria-label="tContent('demonstration.labels.clear')" />
+              <ComboboxTrigger :aria-label="tContent('demonstration.labels.openList')">
+                <ComboboxIcon />
+              </ComboboxTrigger>
+            </ComboboxInputWrapper>
+            <ComboboxPositioner>
+              <ComboboxPopup>
+                <ComboboxList>
+                  <ComboboxItem
+                    v-for="option in countries"
+                    :key="option.value"
+                    :value="option.value"
+                  >
+                    {{ option.label }}
+                    <ComboboxItemIndicator />
+                  </ComboboxItem>
+                </ComboboxList>
+                <ComboboxEmpty>{{ tContent('demonstration.labels.empty') }}</ComboboxEmpty>
+              </ComboboxPopup>
+            </ComboboxPositioner>
+          </Combobox>
+        </div>
+      </template>
 
+      <!-- Múltipla com chips -->
+      <template #variant-preview-1>
+        <div class="nds-w-xs">
+          <Combobox
+            v-model="variantChosen"
+            multiple
+          >
+            <ComboboxLabel>{{ tContent('demonstration.labels.techLabel') }}</ComboboxLabel>
+            <ComboboxInputWrapper>
+              <ComboboxChips>
+                <ComboboxChip
+                  v-for="item in variantChips"
+                  :key="item.value"
+                  :value="item.value"
+                >
+                  {{ item.label }}
+                  <ComboboxChipRemove :aria-label="removeLabelOf(item.label)" :removed-announcement="removedAnnouncementOf(item.label)" />
+                </ComboboxChip>
+                <ComboboxInput :placeholder="tContent('demonstration.labels.techPlaceholder')" />
+              </ComboboxChips>
+              <ComboboxTrigger :aria-label="tContent('demonstration.labels.openList')">
+                <ComboboxIcon />
+              </ComboboxTrigger>
+            </ComboboxInputWrapper>
+            <ComboboxPositioner>
+              <ComboboxPopup>
+                <ComboboxList>
+                  <ComboboxItem
+                    v-for="item in technologies"
+                    :key="item.value"
+                    :value="item.value"
+                  >
+                    {{ item.label }}
+                    <ComboboxItemIndicator />
+                  </ComboboxItem>
+                </ComboboxList>
+                <ComboboxEmpty>{{ tContent('demonstration.labels.empty') }}</ComboboxEmpty>
+              </ComboboxPopup>
+            </ComboboxPositioner>
+          </Combobox>
+        </div>
+      </template>
+
+      <!-- Com grupos -->
+      <template #variant-preview-2>
+        <div class="nds-w-xs">
+          <Combobox v-model="variantIngredient">
+            <ComboboxLabel>{{ tContent('demonstration.labels.groupedLabel') }}</ComboboxLabel>
+            <ComboboxInputWrapper>
+              <ComboboxInput :placeholder="tContent('demonstration.labels.groupedPlaceholder')" />
+              <ComboboxTrigger :aria-label="tContent('demonstration.labels.openList')">
+                <ComboboxIcon />
+              </ComboboxTrigger>
+            </ComboboxInputWrapper>
+            <ComboboxPositioner>
+              <ComboboxPopup>
+                <ComboboxList>
+                  <ComboboxGroup>
+                    <ComboboxGroupLabel>{{ tContent('demonstration.labels.groupFruits') }}</ComboboxGroupLabel>
+                    <ComboboxItem
+                      v-for="item in fruits"
+                      :key="item.value"
+                      :value="item.value"
+                    >
+                      {{ item.label }}
+                      <ComboboxItemIndicator />
+                    </ComboboxItem>
+                  </ComboboxGroup>
+                  <ComboboxSeparator />
+                  <ComboboxGroup>
+                    <ComboboxGroupLabel>{{ tContent('demonstration.labels.groupVegetables') }}</ComboboxGroupLabel>
+                    <ComboboxItem
+                      v-for="item in vegetables"
+                      :key="item.value"
+                      :value="item.value"
+                    >
+                      {{ item.label }}
+                      <ComboboxItemIndicator />
+                    </ComboboxItem>
+                  </ComboboxGroup>
+                </ComboboxList>
+                <ComboboxEmpty>{{ tContent('demonstration.labels.empty') }}</ComboboxEmpty>
+              </ComboboxPopup>
+            </ComboboxPositioner>
+          </Combobox>
+        </div>
+      </template>
+    </DocsVariants>
+
+    <!--
+      O DocsCompositions repassa os slots ao DocsVariants, então o nome do slot
+      continua `variant-preview-N` também aqui.
+    -->
     <DocsCompositions
       :title="tContent('variants.compositionsTitle')"
       :use-when-label="tNav('common.useWhen')"
       component-slug="combobox"
       :items="compositionItems"
-    />
+    >
+      <!-- Em formulário -->
+      <template #variant-preview-0>
+        <form
+          class="nds-stack nds-w-xs"
+          data-spacing="md"
+          @submit.prevent
+        >
+          <Combobox
+            v-model="formCountry"
+            name="country"
+          >
+            <ComboboxLabel>{{ tContent('demonstration.labels.countryLabel') }}</ComboboxLabel>
+            <ComboboxInputWrapper>
+              <ComboboxInput :placeholder="tContent('demonstration.labels.countryPlaceholder')" />
+              <ComboboxTrigger :aria-label="tContent('demonstration.labels.openList')">
+                <ComboboxIcon />
+              </ComboboxTrigger>
+            </ComboboxInputWrapper>
+            <ComboboxPositioner>
+              <ComboboxPopup>
+                <ComboboxList>
+                  <ComboboxItem
+                    v-for="option in countries"
+                    :key="option.value"
+                    :value="option.value"
+                  >
+                    {{ option.label }}
+                    <ComboboxItemIndicator />
+                  </ComboboxItem>
+                </ComboboxList>
+                <ComboboxEmpty>{{ tContent('demonstration.labels.empty') }}</ComboboxEmpty>
+              </ComboboxPopup>
+            </ComboboxPositioner>
+          </Combobox>
+          <Button type="submit">
+            Enviar
+          </Button>
+        </form>
+      </template>
+    </DocsCompositions>
 
     <DocsStates
       :title="tContent('states.title')"

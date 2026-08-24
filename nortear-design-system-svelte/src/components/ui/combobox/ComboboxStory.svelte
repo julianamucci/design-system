@@ -3,6 +3,7 @@
 	// render function, então toda story com marcação própria mora num
 	// componente. Aqui ele monta a composição inteira do Combobox — as dezenove
 	// peças na ordem do contrato — e expõe pelos controls o que a story ajusta.
+	import { untrack } from 'svelte';
 	import {
 		Combobox,
 		ComboboxChip,
@@ -21,8 +22,10 @@
 		ComboboxPositioner,
 		ComboboxSeparator,
 		ComboboxTrigger,
+		defaultFilter,
 		filterItems,
 		type ComboboxChipsLayout,
+		type ComboboxFilter,
 		type ComboboxOption,
 	} from './index.js';
 
@@ -36,6 +39,10 @@
 		invalid?: boolean;
 		name?: string;
 		value?: string | string[];
+		/** Regra de correspondência do campo. Sem ela vale o filtro padrão. */
+		filter?: ComboboxFilter;
+		/** Classe da raiz — as stories a usam para estreitar o campo. */
+		class?: string;
 		emptyMessage?: string;
 		clearLabel?: string;
 		triggerLabel?: string;
@@ -53,6 +60,8 @@
 		invalid = false,
 		name = undefined,
 		value = undefined,
+		filter = defaultFilter,
+		class: className = undefined,
 		emptyMessage = 'Nenhum resultado',
 		clearLabel = 'Limpar',
 		triggerLabel = 'Abrir lista',
@@ -60,14 +69,54 @@
 		onValueChange,
 	}: Props = $props();
 
+	/**
+	 * A escolha no formato do modo: texto no simples, lista de textos no
+	 * múltiplo. A mesma conta serve para a entrada que vem de fora e para a troca
+	 * de modo.
+	 */
+	function toSelection(
+		next: string | string[] | undefined,
+		isMultiple: boolean,
+	): string | string[] {
+		if (isMultiple) {
+			if (Array.isArray(next)) return next;
+			return next ? [next] : [];
+		}
+		return Array.isArray(next) ? (next[0] ?? '') : (next ?? '');
+	}
+
+	/** Igualdade de conteúdo, não de referência — ver o efeito de sincronia. */
+	function sameSelection(a: string | string[], b: string | string[]): boolean {
+		if (Array.isArray(a) && Array.isArray(b)) {
+			return a.length === b.length && a.every((entry, index) => entry === b[index]);
+		}
+		return a === b;
+	}
+
 	// O valor é do ANDAIME, não da raiz: o Storybook re-executa o `render` a
 	// cada mudança de control, e um valor guardado dentro do campo se perderia
 	// junto — mexer em `disabled` apagaria os chips recém-escolhidos. Guardá-lo
 	// fora também é o que o consumidor real faz.
-	let selection = $state<string | string[]>(
-		value ?? (multiple ? [] : ''),
-	);
+	//
+	// `untrack` no inicializador: aqui a leitura é mesmo pontual — quem mantém a
+	// prop viva é o efeito logo abaixo, e não esta linha.
+	let selection = $state<string | string[]>(untrack(() => toSelection(value, multiple)));
 	let query = $state('');
+
+	// `value` é entrada VIVA: trocar o control depois de montado tem de chegar ao
+	// campo. Sem isto, o inicializador acima seria a única leitura da prop e a
+	// mudança ficaria no painel de controls sem efeito nenhum na tela.
+	//
+	// A comparação é ESTRUTURAL, e não de identidade: o Storybook recria o
+	// literal da prop a cada render, e comparar por referência devolveria a
+	// escolha do usuário ao valor inicial toda vez que outro control fosse
+	// mexido — justamente o que guardar o valor aqui fora existe para evitar.
+	// `multiple` é lido sem rastrear porque alternar o modo é assunto do efeito
+	// seguinte, que converte a FORMA sem desfazer o que já foi escolhido.
+	$effect(() => {
+		const requested = toSelection(value, untrack(() => multiple));
+		if (!sameSelection(requested, untrack(() => selection))) selection = requested;
+	});
 
 	// Alternar o modo troca o formato do valor: texto vira lista, lista vira o
 	// primeiro texto. Sem isto, ligar `multiple` deixaria a raiz com um valor da
@@ -97,9 +146,11 @@
 	});
 
 	// Um cabeçalho de grupo sem nenhuma opção embaixo é o defeito clássico de
-	// filtrar item a item — o grupo some junto com o último item que casava.
+	// filtrar item a item — o grupo some junto com o último item que casava. O
+	// filtro é o MESMO que a raiz usa: um grupo que sobrevivesse por outra conta
+	// mostraria cabeçalho sem opção assim que a story trocasse a regra.
 	const visibleGroups = $derived(
-		groups.filter((group) => filterItems(group.items, query).length > 0),
+		groups.filter((group) => filterItems(group.items, query, filter).length > 0),
 	);
 </script>
 
@@ -113,6 +164,8 @@
 		{disabled}
 		{invalid}
 		{name}
+		{filter}
+		class={className}
 		{onValueChange}
 	>
 		<ComboboxLabel>{label}</ComboboxLabel>

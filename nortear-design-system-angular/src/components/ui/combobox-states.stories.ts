@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor, userEvent } from 'storybook/test';
 import { NDS_COMBOBOX } from './combobox';
 import { comboboxSnippet } from './combobox.source';
-import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 // Mesma lista da spec de exemplos — divergir aqui faz a story mostrar coisa
 // diferente da mesma story nas outras stacks.
@@ -22,7 +22,7 @@ const meta: Meta = {
     layout: 'padded',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    actions: { disable: true },
     docs: {
       description: {
         component: 'Estados do Combobox: desabilitado, inválido e lista sem resultado.',

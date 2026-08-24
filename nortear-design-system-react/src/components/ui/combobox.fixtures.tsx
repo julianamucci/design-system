@@ -11,6 +11,7 @@
  * apareceria na sidebar como se fosse um exemplo.
  */
 import * as React from "react"
+import { noTransicao } from "@shared/testing/cor"
 
 import {
   Combobox,
@@ -148,10 +149,16 @@ export function paintedBackground(element: Element | null): string {
  */
 export function focusRingChanged(target: HTMLElement, ringOwner: Element): boolean {
   const doc = target.ownerDocument
+  const box = ringOwner as HTMLElement
+  // `box-shadow` está na lista de `transition` da caixa, junto com a borda. A
+  // leitura síncrona pegava o primeiro quadro: aqui passava por sorte, porque
+  // `none` não interpola gradualmente para um valor — mas o dia em que o anel
+  // sair de uma sombra para outra, a comparação passa a mentir em silêncio.
+  // Mesmo remédio da borda de erro, e antes de o defeito aparecer.
   ;(doc.activeElement as HTMLElement | null)?.blur()
-  const withoutFocus = getComputedStyle(ringOwner).boxShadow
+  const withoutFocus = noTransicao(box, () => getComputedStyle(box).boxShadow)
   target.focus()
-  const withFocus = getComputedStyle(ringOwner).boxShadow
+  const withFocus = noTransicao(box, () => getComputedStyle(box).boxShadow)
   return withoutFocus !== withFocus && withFocus !== "none"
 }
 
@@ -287,6 +294,76 @@ export function MultiTechCombobox({
           )}
         </ComboboxContent>
       </Combobox>
+    </ComboboxFrame>
+  )
+}
+
+/**
+ * Múltiplo com chips DEMAIS para a largura do campo.
+ *
+ * Seis escolhidos numa caixa estreita: é o transbordo que separa as duas formas
+ * de `chipsLayout`. Com dois chips as duas desenham a mesma coisa, e uma story
+ * que medisse a linha única ali passaria sem medir nada — o ramo
+ * `"single-line"` nunca chegaria a ser exercido.
+ */
+export function MultiCountryCombobox({
+  label = "Países visitados",
+  placeholder = "Adicionar país",
+  name = "paises",
+  disabled = false,
+  invalid = false,
+  chipsLayout,
+  onValueChange,
+}: ComboboxFixtureProps) {
+  const [selected, setSelected] = React.useState<ComboboxOption[]>(
+    COUNTRIES.slice(0, 6),
+  )
+
+  return (
+    <ComboboxFrame>
+      {/* Largura ESTREITA de propósito, por classe e não por `style`: é ela que
+          faz os seis chips passarem do que a caixa comporta. */}
+      <div className="nds-w-xs">
+        <Combobox
+          multiple
+          chipsLayout={chipsLayout}
+          items={COUNTRIES}
+          name={name}
+          disabled={disabled}
+          value={selected}
+          onValueChange={(value) => {
+            setSelected(Array.isArray(value) ? value : [])
+            onValueChange?.(value)
+          }}
+        >
+          <ComboboxLabel>{label}</ComboboxLabel>
+          <ComboboxInputWrapper disabled={disabled}>
+            <ComboboxChips>
+              {selected.map((country) => (
+                <ComboboxChip key={country.value}>
+                  <ComboboxChipText>{country.label}</ComboboxChipText>
+                  <ComboboxChipRemove
+                    aria-label={`${REMOVE_PREFIX} ${country.label}`}
+                  />
+                </ComboboxChip>
+              ))}
+              <ComboboxInput
+                placeholder={placeholder}
+                aria-invalid={invalid ? "true" : undefined}
+              />
+            </ComboboxChips>
+            <ComboboxClear aria-label={CLEAR_LABEL} />
+            <ComboboxTrigger aria-label={OPEN_LABEL} />
+          </ComboboxInputWrapper>
+          <ComboboxContent emptyMessage={EMPTY_MESSAGE}>
+            {(country: ComboboxOption) => (
+              <ComboboxItem key={country.value} value={country}>
+                {country.label}
+              </ComboboxItem>
+            )}
+          </ComboboxContent>
+        </Combobox>
+      </div>
     </ComboboxFrame>
   )
 }

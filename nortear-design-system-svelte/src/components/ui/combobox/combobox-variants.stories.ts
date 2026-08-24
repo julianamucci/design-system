@@ -1,7 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import ComboboxStory from './ComboboxStory.svelte';
-import { comboboxGroupedSource, comboboxOpenSource } from './combobox.source';
+import {
+	comboboxGroupedSource,
+	comboboxOpenSource,
+	comboboxSingleLineChipsSource,
+} from './combobox.source';
 import type { ComboboxOption } from './index';
 
 const COUNTRIES: ComboboxOption[] = [
@@ -19,6 +23,18 @@ const GROCERIES: ComboboxOption[] = [
 	{ value: 'cenoura', label: 'Cenoura', group: 'Legumes' },
 	{ value: 'batata', label: 'Batata', group: 'Legumes' },
 	{ value: 'abobrinha', label: 'Abobrinha', group: 'Legumes' },
+];
+
+// Lista longa de propósito: com o campo estreito, seis chips não cabem numa
+// linha só, e é o transbordo que a story de linha única existe para mostrar.
+const VISITED: ComboboxOption[] = [
+	{ value: 'brasil', label: 'Brasil' },
+	{ value: 'argentina', label: 'Argentina' },
+	{ value: 'chile', label: 'Chile' },
+	{ value: 'colombia', label: 'Colômbia' },
+	{ value: 'mexico', label: 'México' },
+	{ value: 'portugal', label: 'Portugal' },
+	{ value: 'uruguai', label: 'Uruguai' },
 ];
 
 const meta: Meta = {
@@ -175,6 +191,87 @@ export const Grouped: Story = {
 			await waitFor(async () => {
 				await expect(field).toHaveAttribute('aria-expanded', 'false');
 			});
+		});
+	},
+};
+
+// ─── Chips em linha única ─────────────────────────────────────────────────────
+
+export const SingleLineChips: Story = {
+	parameters: {
+		docs: {
+			source: { transform: comboboxSingleLineChipsSource },
+			description: {
+				story:
+					'Chips numa linha só: o conjunto rola na horizontal em vez de acumular linhas, e limpar e abrir continuam ao lado do primeiro chip.',
+			},
+		},
+	},
+	render: () => ({
+		Component: ComboboxStory,
+		props: {
+			items: VISITED,
+			label: 'Países visitados',
+			placeholder: 'Adicionar país',
+			multiple: true,
+			chipsLayout: 'single-line',
+			name: 'visitados',
+			value: ['brasil', 'argentina', 'chile', 'colombia', 'mexico', 'portugal'],
+			// Campo estreito para o transbordo acontecer em qualquer largura de tela.
+			// Classe do design system, e não medida no `style`: inline venceria a
+			// folha e levaria a story para fora do tema e da densidade.
+			class: 'nds-w-sm',
+		},
+	}),
+	play: async ({ canvasElement, step }) => {
+		const canvas = within(canvasElement);
+		const wrapper = canvasElement.querySelector<HTMLElement>(
+			'[data-slot="combobox-input-wrapper"]',
+		)!;
+		const box = canvasElement.querySelector<HTMLElement>('[data-slot="combobox-chips"]')!;
+		const chips = () => [
+			...canvasElement.querySelectorAll<HTMLElement>('[data-slot="combobox-chip"]'),
+		];
+
+		await step('O campo declara o modo de chips escolhido', async () => {
+			// A folha lê `data-chips` no WRAPPER, e não na caixa dos chips: sem o
+			// atributo ali, a regra de linha única não alcança nada e o campo volta
+			// a quebrar em linhas sem que a tela denuncie de imediato.
+			await expect(wrapper).toHaveAttribute('data-chips', 'single-line');
+		});
+
+		await step('Os escolhidos não cabem na largura do campo', async () => {
+			await waitFor(async () => {
+				await expect(chips()).toHaveLength(6);
+			});
+			// Sem transbordo a story não mede nada: com folga sobrando, quebrar
+			// linha e não quebrar desenham a mesma coisa.
+			await expect(box.scrollWidth).toBeGreaterThan(box.clientWidth);
+		});
+
+		await step('Mesmo transbordando, os chips ficam todos na primeira linha', async () => {
+			const tops = chips().map((chip) => chip.getBoundingClientRect().top);
+			for (const top of tops) {
+				await expect(Math.abs(top - tops[0])).toBeLessThanOrEqual(2);
+			}
+		});
+
+		await step('Limpar e abrir continuam na primeira linha', async () => {
+			// Era este o defeito relatado: com os chips ocupando mais de uma linha,
+			// os dois botões caíam para baixo. A conta é contra o PRIMEIRO CHIP, e
+			// não contra o wrapper — o wrapper cresce junto com a pilha, então
+			// medir por ele passaria com os botões afundados.
+			//
+			// A folga de 4px cobre a diferença de altura entre chip (28px) e botão
+			// (24px), que ficam centrados um em relação ao outro; uma linha a mais
+			// de chip empurraria os botões 28px para baixo.
+			const first = chips()[0].getBoundingClientRect().top;
+			const clear = canvas.getByRole('button', { name: 'Limpar' }).getBoundingClientRect().top;
+			const trigger = canvas
+				.getByRole('button', { name: 'Abrir lista' })
+				.getBoundingClientRect().top;
+			await expect(Math.abs(clear - first)).toBeLessThanOrEqual(4);
+			await expect(Math.abs(trigger - first)).toBeLessThanOrEqual(4);
 		});
 	},
 };

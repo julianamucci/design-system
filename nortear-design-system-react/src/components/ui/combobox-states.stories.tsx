@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
-import { FOCUS_RULE_GUARDA, waitForPortal } from "@/lib/wait-for-portal";
+import { FOCUS_RULE_GUARDA, axeRules, waitForPortal } from "@/lib/wait-for-portal";
+import { noTransicao } from "@shared/testing/cor";
 import {
   COUNTRIES,
   EMPTY_MESSAGE,
@@ -70,10 +71,10 @@ export const Default: Story = {
   },
 };
 
-export const Open: Story = {
+export const OpenWithActiveOption: Story = {
   parameters: {
     covers: ["visual.item3", "accessibility.item3"],
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       description: {
         story:
@@ -113,10 +114,10 @@ export const Open: Story = {
   },
 };
 
-export const Empty: Story = {
+export const EmptyResult: Story = {
   parameters: {
     covers: ["functional.item7", "visual.item5"],
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
       source: { transform: comboboxEmptySource },
       description: {
@@ -148,6 +149,14 @@ export const Empty: Story = {
         await expect(empty).toHaveTextContent(EMPTY_MESSAGE);
       });
       await expect(field).toHaveAttribute("aria-expanded", "true");
+    });
+
+    await step("Nenhuma opção fica apontada quando não há opção", async () => {
+      // `aria-activedescendant` apontando um id que não existe mais é o defeito
+      // clássico do padrão: o leitor de tela anuncia uma opção fantasma. As
+      // outras stacks já mediam isto; esta não, e foi assim que o mesmo defeito
+      // sobreviveu numa delas até o axe reprovar.
+      await expect(field).not.toHaveAttribute("aria-activedescendant");
     });
   },
 };
@@ -208,9 +217,15 @@ export const Invalid: Story = {
       // Medir a MUDANÇA, e não uma cor literal: a borda de erro vem de
       // `--destructive`, que troca com o tema, e cravar o valor faria a
       // asserção reprovar em toda marca nova em vez de acusar o defeito.
-      const withInvalid = getComputedStyle(box).borderColor;
+      //
+      // `noTransicao` porque a caixa tem `transition: border-color 120ms`: ler
+      // logo depois do `removeAttribute` pega o PRIMEIRO QUADRO da transição,
+      // quando o valor interpolado ainda é a cor de origem — e as duas leituras
+      // saem idênticas com o componente correto. Medido: 147,62,47 em t=0 e
+      // 152,137,113 depois de assentar.
+      const withInvalid = noTransicao(box, () => getComputedStyle(box).borderColor);
       field.removeAttribute("aria-invalid");
-      const withoutInvalid = getComputedStyle(box).borderColor;
+      const withoutInvalid = noTransicao(box, () => getComputedStyle(box).borderColor);
       field.setAttribute("aria-invalid", "true");
       await expect(withInvalid).not.toBe(withoutInvalid);
     });

@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
 import { NDS_COMBOBOX } from './combobox';
 import { comboboxSource } from './combobox.source';
-import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish } from '@/lib/wait-for-portal';
 import { NdsComboboxDocs } from '@/components/docs/ComboboxDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -13,7 +13,10 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 // stacks repetem. Divergir aqui é o que faz a mesma story mostrar coisas
 // diferentes em cada stack — e isso só aparece tarde, na comparação final.
 
-export const COUNTRIES = [
+// Sem `export`: no CSF todo export nomeado é story, e não há `excludeStories`
+// aqui. Exportada, esta lista virava uma story chamada COUNTRIES na barra
+// lateral, renderizando nada — e ainda inflava a contagem da suíte em um.
+const COUNTRIES = [
   { value: 'brasil', label: 'Brasil' },
   { value: 'argentina', label: 'Argentina' },
   { value: 'chile', label: 'Chile' },
@@ -87,7 +90,6 @@ const meta: Meta<ComboboxArgs> = {
   decorators: [moduleMetadata({ imports: [...NDS_COMBOBOX] })],
   parameters: {
     layout: 'padded',
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       page: withAutoDocsTab(NdsComboboxDocs),
       source: { transform: comboboxSource },

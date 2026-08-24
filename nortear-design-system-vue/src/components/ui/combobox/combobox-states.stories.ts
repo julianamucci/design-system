@@ -17,8 +17,10 @@ import {
   ComboboxTrigger,
 } from './index';
 import { noTransicao, resolveColor } from '@shared/testing/cor';
+import { Button } from '@/components/ui/button';
 import { COUNTRIES } from './combobox.fixtures';
 import {
+  comboboxControlledSource,
   comboboxDisabledSource,
   comboboxInvalidSource,
   comboboxSource,
@@ -157,7 +159,7 @@ export const Default: Story = {
   },
 };
 
-export const Open: Story = {
+export const OpenWithActiveOption: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
@@ -225,7 +227,7 @@ export const Open: Story = {
   },
 };
 
-export const Empty: Story = {
+export const EmptyResult: Story = {
   parameters: {
     covers: ['functional.item7', 'visual.item5'],
     docs: {
@@ -297,6 +299,14 @@ export const Empty: Story = {
       // criar a região no instante da mudança não anuncia nada.
       await expect(empty).toHaveAttribute('role', 'status');
       await expect(empty).toHaveAttribute('aria-live', 'polite');
+    });
+
+    await step('Nenhuma opção fica apontada quando não há opção', async () => {
+      // `aria-activedescendant` apontando um id que não existe mais é o defeito
+      // clássico do padrão: o leitor de tela anuncia uma opção fantasma. A lib
+      // não limpa a referência quando a opção destacada sai do DOM — quem
+      // limpa é o guarda em `ComboboxInput.vue`, e é isto que o mede.
+      await expect(field).not.toHaveAttribute('aria-activedescendant');
     });
   },
 };
@@ -436,6 +446,129 @@ export const Invalid: Story = {
       const painted = noTransicao(box, () => getComputedStyle(box).borderTopColor);
       await expect(expected).not.toBeNull();
       await expect(painted).toBe(expected);
+    });
+  },
+};
+
+export const Controlled: Story = {
+  parameters: {
+    docs: {
+      source: { transform: comboboxControlledSource },
+      description: {
+        story:
+          'Valor e texto de busca administrados por fora: a escolha entra e sai pelo modelo do campo, e o texto digitado também. Os botões acima escrevem no estado externo sem tocar no componente; a linha abaixo mostra o que esse estado guarda.',
+      },
+    },
+  },
+  render: () => ({
+    components: { ...components, Button },
+    setup() {
+      // Os dois modelos moram FORA: `country` leva a escolha, `search` leva o
+      // texto de busca. Nenhum dos dois é copiado para dentro do componente.
+      const country = ref('');
+      const search = ref('');
+      return { country, search, countries: SHORT };
+    },
+    template: `
+      <div class="nds-stack nds-w-xs nds-min-h-100" data-spacing="sm">
+        <div class="nds-cluster" data-spacing="md">
+          <Button @click="country = 'brasil'">Escolher por fora</Button>
+          <Button variant="outline" @click="search = 'arg'">Buscar por fora</Button>
+          <Button variant="ghost" @click="country = ''; search = ''">Limpar por fora</Button>
+        </div>
+        <Combobox v-model="country" v-model:input-value="search">
+          <ComboboxLabel>País</ComboboxLabel>
+          <ComboboxInputWrapper>
+            <ComboboxInput placeholder="Buscar país" />
+            <ComboboxClear aria-label="Limpar" />
+            <ComboboxTrigger aria-label="Abrir lista">
+              <ComboboxIcon />
+            </ComboboxTrigger>
+          </ComboboxInputWrapper>
+          <ComboboxPositioner>
+            <ComboboxPopup>
+              <ComboboxList>
+                <ComboboxItem
+                  v-for="option in countries"
+                  :key="option.value"
+                  :value="option.value"
+                >
+                  {{ option.label }}
+                  <ComboboxItemIndicator />
+                </ComboboxItem>
+              </ComboboxList>
+              <ComboboxEmpty>Nenhum resultado</ComboboxEmpty>
+            </ComboboxPopup>
+          </ComboboxPositioner>
+        </Combobox>
+        <p class="nds-text-caption nds-text-muted-foreground">
+          Escolhido: <code data-testid="controlled-value">{{ country || 'nenhum' }}</code> ·
+          Texto: <code data-testid="controlled-text">{{ search || 'vazio' }}</code>
+        </p>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const field = canvas.getByRole('combobox', { name: /País/i });
+    const chosenValue = () => canvas.getByTestId('controlled-value');
+    const inputText = () => canvas.getByTestId('controlled-text');
+
+    // Cada passo estabelece a própria precondição: o painel Interactions
+    // reexecuta a play no MESMO DOM, e o estado externo chega como a rodada
+    // anterior o deixou.
+    const reset = async () => {
+      await userEvent.click(canvas.getByRole('button', { name: 'Limpar por fora' }));
+      field.focus();
+      // Abrir a lista inteira uma vez publica o RÓTULO de cada opção, e é dele
+      // que o campo tira o texto quando a escolha chega de fora — o modelo
+      // guarda só o valor.
+      await userEvent.keyboard('{ArrowDown}');
+      await waitFor(async () => {
+        await expect(canvas.getAllByRole('option')).toHaveLength(SHORT.length);
+      });
+      await userEvent.keyboard('{Escape}');
+      await waitFor(async () => {
+        await expect(field).toHaveAttribute('aria-expanded', 'false');
+      });
+      await waitFor(async () => {
+        await expect(field).toHaveValue('');
+      });
+    };
+
+    await step('Escolher na lista atualiza o estado externo', async () => {
+      await reset();
+      await userEvent.type(field, 'chi');
+      await waitFor(async () => {
+        await expect(within(canvas.getByRole('listbox')).getAllByRole('option')).toHaveLength(1);
+      });
+      await userEvent.keyboard('{Enter}');
+      // O estado externo recebe o VALOR…
+      await waitFor(async () => {
+        await expect(chosenValue()).toHaveTextContent('chile');
+      });
+      // …e o texto controlado passa a ser o RÓTULO correspondente, dos dois
+      // lados: no campo e no estado de quem consome.
+      await waitFor(async () => {
+        await expect(field).toHaveValue('Chile');
+      });
+      await expect(inputText()).toHaveTextContent('Chile');
+    });
+
+    await step('Escrever no estado externo muda o que a tela mostra', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: 'Escolher por fora' }));
+      await waitFor(async () => {
+        await expect(chosenValue()).toHaveTextContent('brasil');
+      });
+      await waitFor(async () => {
+        await expect(field).toHaveValue('Brasil');
+      });
+
+      await userEvent.click(canvas.getByRole('button', { name: 'Buscar por fora' }));
+      await waitFor(async () => {
+        await expect(field).toHaveValue('arg');
+      });
+      await expect(inputText()).toHaveTextContent('arg');
     });
   },
 };

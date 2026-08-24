@@ -257,5 +257,13 @@ export const Playground: Story = {
         await expect(field).toHaveValue('');
       });
     });
+
+    await step('Lista fechada não deixa opção apontada para trás', async () => {
+      // Fechar desmonta o popup e leva junto a opção destacada. A lib mantém a
+      // referência antiga, e o campo passaria a apontar um id que não existe —
+      // opção fantasma para quem ouve a tela. O guarda vive em
+      // `ComboboxInput.vue`; esta asserção é o que o mede.
+      await expect(field).not.toHaveAttribute('aria-activedescendant');
+    });
   },
 };

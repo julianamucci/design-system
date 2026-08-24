@@ -3,7 +3,7 @@ import type { ComboboxInputProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import { ComboboxInput, injectComboboxRootContext } from 'reka-ui'
-import { watch } from 'vue'
+import { ref, watch, watchPostEffect } from 'vue'
 import { cn } from '@/lib/utils'
 import { useComboboxContext } from './index'
 
@@ -126,6 +126,32 @@ function onKeydown(event: KeyboardEvent): void {
   }
   if (event.key === 'Escape') clearWhenClosed(event)
 }
+
+/*
+ * `aria-activedescendant` é escrito AQUI, e não deixado por conta da lib.
+ *
+ * A lib publica o id de `highlightedElement` e só limpa essa referência em
+ * `onLeave` — nada a limpa quando o popup desmonta nem quando a opção destacada
+ * sai do DOM pelo filtro. O campo fica apontando para um id que não existe
+ * mais, e o leitor de tela anuncia uma opção fantasma. É o defeito clássico
+ * deste padrão, e o axe reprovou por ele em duas stories.
+ *
+ * A própria lib sabe do risco: no caminho do clique ela testa `isConnected`
+ * antes de usar a referência. O binding do atributo não testa.
+ *
+ * `watchPostEffect` porque `isConnected` só vale depois de o DOM assentar —
+ * lido durante a renderização, o nó filtrado ainda está lá. As três
+ * dependências são as três formas de a opção sumir de baixo do destaque:
+ * fechar a lista, trocar o destaque e filtrar.
+ */
+const activeDescendant = ref<string | undefined>()
+watchPostEffect(() => {
+  const isOpen = rootContext.open.value
+  const highlighted = rootContext.highlightedElement.value
+  void search.value
+  activeDescendant.value = isOpen && highlighted?.isConnected ? highlighted.id : undefined
+})
+
 </script>
 
 <template>
@@ -135,6 +161,7 @@ function onKeydown(event: KeyboardEvent): void {
     v-model="search"
     data-slot="combobox-input"
     :display-value="displayValue"
+    :aria-activedescendant="activeDescendant"
     :class="cn('nds-combobox-input', props.class)"
     @keydown="onKeydown"
   >

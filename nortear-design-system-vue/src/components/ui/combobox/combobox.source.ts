@@ -66,6 +66,26 @@ const IMPORT_MULTIPLE = importing(
   'ComboboxTrigger',
 );
 
+/* A mesma composição de chips, mais o botão de limpar do campo. */
+const IMPORT_SINGLE_LINE = importing(
+  'Combobox',
+  'ComboboxChip',
+  'ComboboxChipRemove',
+  'ComboboxChips',
+  'ComboboxClear',
+  'ComboboxEmpty',
+  'ComboboxIcon',
+  'ComboboxInput',
+  'ComboboxInputWrapper',
+  'ComboboxItem',
+  'ComboboxItemIndicator',
+  'ComboboxLabel',
+  'ComboboxList',
+  'ComboboxPopup',
+  'ComboboxPositioner',
+  'ComboboxTrigger',
+);
+
 const IMPORT_GROUPED = importing(
   'Combobox',
   'ComboboxEmpty',
@@ -96,6 +116,30 @@ const TECHNOLOGIES = `const technologies = [
   { value: 'svelte', label: 'Svelte' },
   { value: 'angular', label: 'Angular' },
 ]`;
+
+/*
+ * Os chips, um por escolhido, com o botão de remover de nome próprio e a frase
+ * que a região viva anuncia depois da remoção. Sai daqui, e não de dentro de
+ * cada transform, porque duas formas do campo os mostram — múltiplo em linhas e
+ * múltiplo em linha única — e um snippet que divergisse do outro ensinaria duas
+ * marcações para a mesma peça.
+ *
+ * Em lista de linhas, e não em template literal: o corpo carrega `{{ }}` e
+ * aspas simples, e escapá-los aqui esconderia justamente o que o leitor copia.
+ */
+const CHIPS_LOOP = [
+  '<ComboboxChip',
+  '  v-for="item in chips"',
+  '  :key="item.value"',
+  '  :value="item.value"',
+  '>',
+  '  {{ item.label }}',
+  '  <ComboboxChipRemove',
+  `    :aria-label="'Remover ' + item.label"`,
+  `    :removed-announcement="item.label + ' removido'"`,
+  '  />',
+  '</ComboboxChip>',
+].join('\n');
 
 const LOOP_ITEMS = `<ComboboxItem
   v-for="country in countries"
@@ -193,17 +237,6 @@ const country = ref('')`,
  * MESMO valor que a raiz guarda — não há segunda lista a manter em dia.
  */
 export function comboboxMultipleSource(): string {
-  const chips = [
-    '<ComboboxChip',
-    '  v-for="item in chips"',
-    '  :key="item.value"',
-    '  :value="item.value"',
-    '>',
-    '  {{ item.label }}',
-    `  <ComboboxChipRemove :aria-label="'Remover ' + item.label" />`,
-    '</ComboboxChip>',
-  ].join('\n');
-
   return vueSnippet(
     `import { computed, ref } from 'vue'
 ${IMPORT_MULTIPLE}
@@ -217,7 +250,7 @@ const chips = computed(() =>
     field({
       root: ['v-model="chosen"', 'multiple'],
       label: 'Tecnologias',
-      chips,
+      chips: CHIPS_LOOP,
       input: ['placeholder="Adicionar tecnologia"'],
       items: `<ComboboxItem
   v-for="item in technologies"
@@ -341,5 +374,98 @@ ${indentar(
 )}
   <Button type="submit">Enviar</Button>
 </form>`,
+  );
+}
+
+/**
+ * Chips numa linha só: a caixa que os guarda rola na horizontal em vez de
+ * acumular linhas, e o campo não cresce em altura. Limpar e gatilho ficam FORA
+ * dessa caixa — é o que os mantém na primeira linha nas duas formas.
+ */
+export function comboboxSingleLineSource(): string {
+  return vueSnippet(
+    `import { computed, ref } from 'vue'
+${IMPORT_SINGLE_LINE}
+
+${COUNTRIES}
+
+const chosen = ref(['brasil', 'argentina', 'chile'])
+const chips = computed(() =>
+  chosen.value.flatMap((value) => countries.filter((item) => item.value === value)),
+)`,
+    field({
+      root: ['v-model="chosen"', 'multiple', 'chips-layout="single-line"'],
+      label: 'Países',
+      chips: CHIPS_LOOP,
+      input: ['placeholder="Adicionar país"'],
+      clear: true,
+      items: LOOP_ITEMS,
+    }),
+  );
+}
+
+/**
+ * Filtro do consumidor: o predicado decide opção por opção quem fica na lista,
+ * e o filtro de dentro sai de cena por inteiro. `query` é o texto pelo qual a
+ * lista filtra, que nem sempre é o texto escrito no campo.
+ */
+export function comboboxCustomFilterSource(): string {
+  return vueSnippet(
+    `import { ref } from 'vue'
+import type { ComboboxFilter } from '@/components/ui/combobox'
+${IMPORT_SINGLE}
+
+${COUNTRIES}
+
+const country = ref('')
+
+// Casa só por INÍCIO do rótulo; o filtro padrão casa em qualquer posição.
+const startsWithLabel: ComboboxFilter = (item, query) =>
+  item.label.toLocaleLowerCase().startsWith(query.toLocaleLowerCase())`,
+    field({
+      root: ['v-model="country"', ':filter="startsWithLabel"'],
+      label: 'País',
+      input: ['placeholder="Buscar país"'],
+      clear: true,
+      items: LOOP_ITEMS,
+    }),
+  );
+}
+
+/**
+ * Valor e texto controlados por fora: `v-model` leva a escolha e
+ * `v-model:input-value` leva o texto de busca. Em Vue o par prop + evento É o
+ * callback de mudança, então os dois entram como modelo.
+ */
+export function comboboxControlledSource(): string {
+  return vueSnippet(
+    `import { ref } from 'vue'
+import { Button } from '@/components/ui/button'
+${IMPORT_SINGLE}
+
+${COUNTRIES}
+
+// O estado mora fora do componente: entra por prop, volta por evento.
+const country = ref('')
+const search = ref('')`,
+    `<div class="nds-stack nds-w-xs" data-spacing="sm">
+  <div class="nds-cluster" data-spacing="md">
+    <Button @click="country = 'brasil'">Escolher por fora</Button>
+    <Button variant="outline" @click="search = 'arg'">Buscar por fora</Button>
+    <Button variant="ghost" @click="country = ''; search = ''">Limpar por fora</Button>
+  </div>
+${indentar(
+  field({
+    root: ['v-model="country"', 'v-model:input-value="search"'],
+    label: 'País',
+    input: ['placeholder="Buscar país"'],
+    clear: true,
+    items: LOOP_ITEMS,
+  }),
+)}
+  <p class="nds-text-caption nds-text-muted-foreground">
+    Escolhido: <code>{{ country || 'nenhum' }}</code> · Texto: <code>{{ search || 'vazio' }}</code>
+  </p>
+</div>`,
   );
 }

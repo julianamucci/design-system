@@ -4,10 +4,7 @@ import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   COUNTRIES,
   MultiTechCombobox,
-  REMOVE_PREFIX,
   SingleCountryCombobox,
-  contrastRatio,
-  paintedBackground,
   toOptionValues,
 } from "./combobox.fixtures";
 import type { ComboboxChipsLayout } from "./combobox";
@@ -277,132 +274,6 @@ export const Playground: Story = {
       await expect(spy).not.toHaveBeenCalled();
       await expect(field).toHaveValue("Brasil");
       await expect(field).toHaveAttribute("aria-expanded", "false");
-    });
-  },
-};
-
-// ─── Múltiplo com chips ───────────────────────────────────────────────────────
-
-export const MultipleWithChips: Story = {
-  parameters: {
-    covers: [
-      "functional.item4",
-      "functional.item5",
-      "accessibility.item5",
-      "accessibility.item6",
-      "visual.item2",
-    ],
-    controls: { disable: true },
-    docs: {
-      description: {
-        story:
-          "Modo múltiplo: cada escolhido vira um chip dentro do campo. Backspace com o texto vazio remove o último.",
-      },
-    },
-  },
-  args: {
-    label: "Tecnologias",
-    placeholder: "Adicionar tecnologia",
-    multiple: true,
-    name: "tecnologias",
-  },
-  render: (args) => (
-    <MultiTechCombobox
-      label={args.label}
-      placeholder={args.placeholder}
-      name={args.name}
-      onValueChange={(value) => args.onValueChange(toOptionValues(value))}
-    />
-  ),
-  play: async ({ canvasElement, step, args }) => {
-    const canvas = within(canvasElement);
-    const field = canvas.getByRole("combobox") as HTMLInputElement;
-    const spy = args.onValueChange as unknown as ReturnType<typeof fn>;
-    const chips = () =>
-      canvasElement.querySelectorAll('[data-slot="combobox-chip"]');
-
-    /**
-     * Devolve a escolha ao estado de partida.
-     *
-     * A play reexecuta no MESMO DOM, sem remontar: o `useState` da fixture
-     * guarda o que o passo anterior deixou. Sem esta volta, a segunda rodada
-     * começaria com um chip a menos e o primeiro passo reprovaria.
-     */
-    const reselect = async (label: string) => {
-      await userEvent.clear(field);
-      await userEvent.type(field, label);
-      await userEvent.keyboard("{Enter}");
-      await waitFor(async () => {
-        await expect(chips()).toHaveLength(2);
-      });
-      await userEvent.clear(field);
-    };
-
-    await step("Os escolhidos iniciais aparecem como chips", async () => {
-      await expect(chips()).toHaveLength(2);
-      await expect(chips()[0]).toHaveTextContent("React");
-      await expect(chips()[1]).toHaveTextContent("Vue");
-    });
-
-    await step("Cada botão de remover tem nome próprio", async () => {
-      // Quatro botões chamados "Remover" são indistinguíveis para quem navega
-      // por lista de controles — o rótulo do chip entra no nome.
-      await expect(
-        canvas.getByRole("button", { name: `${REMOVE_PREFIX} React` }),
-      ).toBeVisible();
-      await expect(
-        canvas.getByRole("button", { name: `${REMOVE_PREFIX} Vue` }),
-      ).toBeVisible();
-    });
-
-    await step("O texto do chip alcança 4.5:1 sobre a superfície do campo", async () => {
-      // O chip pinta SOBRE a caixa do campo, não sobre a página: medir contra a
-      // página superestima e deixa passar um par que na tela não alcança.
-      const chip = chips()[0] as HTMLElement;
-      const text = chip.querySelector('[data-slot="combobox-chip-text"]');
-      await expect(text).not.toBeNull();
-      const ratio = contrastRatio(
-        getComputedStyle(text as Element).color,
-        paintedBackground(chip),
-      );
-      await expect(ratio).toBeGreaterThanOrEqual(4.5);
-    });
-
-    await step("O botão de remover tira só aquele chip", async () => {
-      spy.mockClear();
-      await userEvent.click(
-        canvas.getByRole("button", { name: `${REMOVE_PREFIX} Vue` }),
-      );
-      await waitFor(async () => {
-        await expect(chips()).toHaveLength(1);
-      });
-      await expect(chips()[0]).toHaveTextContent("React");
-      await expect(spy).toHaveBeenCalledWith(["react"]);
-      // O foco continua no campo: quem removeu por teclado precisa seguir
-      // digitando sem procurar onde o cursor foi parar.
-      await expect(field).toHaveFocus();
-      await reselect("Vue");
-    });
-
-    await step("Backspace com o campo vazio remove o último chip", async () => {
-      // É o gesto que define o chip: sem ele, desfazer exige o mouse.
-      await userEvent.clear(field);
-      await expect(field).toHaveValue("");
-      spy.mockClear();
-      await userEvent.keyboard("{Backspace}");
-      await waitFor(async () => {
-        await expect(chips()).toHaveLength(1);
-      });
-      await expect(chips()[0]).toHaveTextContent("React");
-      await expect(spy).toHaveBeenCalledWith(["react"]);
-      await reselect("Vue");
-    });
-
-    await step("A story fecha no estado que o Chromatic fotografa", async () => {
-      await userEvent.click(document.body);
-      await waitForPortalGone("listbox");
-      await expect(chips()).toHaveLength(2);
-      await expect(field).toHaveValue("");
     });
   },
 };

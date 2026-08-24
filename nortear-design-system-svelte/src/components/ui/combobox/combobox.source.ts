@@ -56,6 +56,15 @@ type Options = {
 	options?: Option[];
 	groups?: Group[];
 	/**
+	 * Como os chips ocupam o campo. Só `single-line` entra no snippet: repetir o
+	 * padrão ensina ruído a quem copia.
+	 */
+	chipsLayout?: 'wrap' | 'single-line';
+	/** Regra de correspondência própria, no lugar do filtro padrão. */
+	customFilter?: boolean;
+	/** Escolha E texto de busca controlados por fora, os dois por ligação. */
+	controlled?: boolean;
+	/**
 	 * Lista sem os rótulos, com um comentário no lugar.
 	 *
 	 * O exemplo de múltipla escolha da spec usa nomes de outras stacks como
@@ -117,17 +126,36 @@ ${optionsLiteral(group.options, '      ')}
 
 /** Estado da escolha: texto no modo simples, lista de textos no múltiplo. */
 function valueBlock(o: Options): string {
-	return o.multiple
-		? 'let value = $state<string[]>([]);'
-		: 'let value = $state("");';
+	const value = o.multiple ? 'let value = $state<string[]>([]);' : 'let value = $state("");';
+	// No modo controlado o TEXTO da busca também é do consumidor: as duas
+	// ligações saem juntas, porque controlar só a escolha deixa a busca sem dono
+	// declarado e o campo volta a administrar o próprio texto.
+	return o.controlled ? [value, 'let inputValue = $state("");'].join('\n') : value;
+}
+
+/**
+ * Regra de correspondência própria.
+ *
+ * O filtro recebe o ITEM inteiro, e não o rótulo: é o que deixa a regra olhar
+ * qualquer campo da opção. Aqui ela casa só pelo INÍCIO do rótulo, no lugar do
+ * trecho em qualquer posição que o padrão aceita.
+ */
+function filterBlock(o: Options): string {
+	if (!o.customFilter) return '';
+	return [
+		'const filter: ComboboxFilter = (item, query) =>',
+		'  item.label.toLowerCase().startsWith(query.trim().toLowerCase());',
+	].join('\n');
 }
 
 /** Atributos da raiz. Só o que difere do padrão entra no snippet. */
 function rootProps(o: Options): string {
 	return attrs(
 		'{items}',
-		'bind:value',
+		o.controlled ? 'bind:value bind:inputValue' : 'bind:value',
 		o.multiple ? 'multiple' : '',
+		o.chipsLayout === 'single-line' ? 'chipsLayout="single-line"' : '',
+		o.customFilter ? '{filter}' : '',
 		o.disabled ? 'disabled' : '',
 		o.invalid ? 'invalid' : '',
 		o.name ? `name="${o.name}"` : '',
@@ -181,12 +209,20 @@ function listBlock(o: Options): string {
 
 /** A composição completa, na ordem do contrato de markup. */
 export function comboboxSnippet(o: Options = {}): string {
-	const extra = [...(o.multiple ? IMPORT_CHIPS : []), ...(o.groups ? IMPORT_GROUPS : [])];
+	const extra = [
+		...(o.multiple ? IMPORT_CHIPS : []),
+		...(o.groups ? IMPORT_GROUPS : []),
+		// O tipo entra na MESMA importação das peças: quem escreve o próprio
+		// filtro precisa da assinatura publicada, e não de uma anotação inventada.
+		...(o.customFilter ? ['type ComboboxFilter'] : []),
+	];
 	const label = o.label ?? 'País';
 	const placeholder = o.placeholder ?? 'Buscar país';
 
 	return svelteSnippet(
-		`${importBlock(extra)}\n\n${itemsBlock(o)}\n\n${valueBlock(o)}`,
+		[importBlock(extra), itemsBlock(o), filterBlock(o), valueBlock(o)]
+			.filter(Boolean)
+			.join('\n\n'),
 		`<Combobox${rootProps(o)}>
   <ComboboxLabel>${label}</ComboboxLabel>
   <ComboboxInputWrapper>
@@ -249,6 +285,30 @@ export function comboboxOpenSource(): string {
 /** Busca sem correspondência: a mensagem de vazio toma o lugar das opções. */
 export function comboboxEmptySource(): string {
 	return comboboxSnippet();
+}
+
+/**
+ * Chips numa linha só: o conjunto rola na horizontal e limpar e gatilho não
+ * descem de linha quando os escolhidos passam da largura do campo.
+ */
+export function comboboxSingleLineChipsSource(): string {
+	return comboboxSnippet({
+		label: 'Países visitados',
+		placeholder: 'Adicionar país',
+		multiple: true,
+		chipsLayout: 'single-line',
+		name: 'visitados',
+	});
+}
+
+/** Regra de correspondência própria: casa só pelo início do rótulo. */
+export function comboboxCustomFilterSource(): string {
+	return comboboxSnippet({ customFilter: true });
+}
+
+/** Escolha e texto de busca controlados por fora, os dois por ligação. */
+export function comboboxControlledSource(): string {
+	return comboboxSnippet({ controlled: true });
 }
 
 /** Indisponível: nada recebe foco e a lista não abre. */

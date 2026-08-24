@@ -26,6 +26,7 @@ import ChartDocs from './ChartDocs.svelte';
 import CheckboxDocs from './CheckboxDocs.svelte';
 import CodeBlockDocs from './CodeBlockDocs.svelte';
 import CollapsibleDocs from './CollapsibleDocs.svelte';
+import ComboboxDocs from './ComboboxDocs.svelte';
 import CommandDocs from './CommandDocs.svelte';
 import ContextMenuDocs from './ContextMenuDocs.svelte';
 import CrossStackDocs from './CrossStackDocs.svelte';
@@ -170,6 +171,8 @@ export const Checkbox: Story = { render: page(CheckboxDocs), play: mounted, para
 export const CodeBlock: Story = { render: page(CodeBlockDocs), play: mounted };
 
 export const Collapsible: Story = { render: page(CollapsibleDocs), play: mounted };
+
+export const Combobox: Story = { render: page(ComboboxDocs), play: mounted };
 
 // axe: aria-required-attr, aria-required-children, button-name, nested-interactive, target-size — catalogado no FIXES-NEEDED
 // axe: aria-required-attr (Command.Input do bits-ui sem aria-controls),

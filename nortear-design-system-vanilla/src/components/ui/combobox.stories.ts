@@ -342,5 +342,29 @@ export const MultipleWithChips: Story = {
       await expect(chips()).toHaveLength(2);
       await expect(field).toHaveValue('');
     });
+
+    await step('Clicar no vazio do campo devolve o foco ao texto', async () => {
+      // O campo tem DOIS alvos vazios, e o `cursor: text` promete a mesma coisa
+      // nos dois: a moldura em volta (padding e as folgas até os botões) e o
+      // espaço ao lado dos chips, que pertence à caixa de chips desde que ela
+      // passou a gerar caixa própria. Medir só um deixaria o outro pedaço do
+      // campo parar de responder sem teste vermelho.
+      const wrapper = canvasElement.querySelector<HTMLElement>(
+        '[data-slot="combobox-input-wrapper"]',
+      )!;
+      const chipsEl = canvasElement.querySelector<HTMLElement>(
+        '[data-slot="combobox-chips"]',
+      )!;
+
+      // O `blur` antes de cada clique é o que dá dentes à asserção: sem ele o
+      // foco já estava no texto e passaria com o tratador removido.
+      field.blur();
+      await userEvent.click(wrapper);
+      await expect(field).toHaveFocus();
+
+      field.blur();
+      await userEvent.click(chipsEl);
+      await expect(field).toHaveFocus();
+    });
   },
 };

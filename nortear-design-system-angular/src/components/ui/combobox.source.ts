@@ -22,6 +22,11 @@ export type ComboboxSnippetOptions = {
   triggerLabel?: string;
   /** Texto da mensagem de lista vazia. */
   emptyMessage?: string;
+  /**
+   * Forma dos chips no campo. Só aparece no snippet quando difere do padrão —
+   * e só tem efeito no modo múltiplo, que é quem tem chips.
+   */
+  chipsLayout?: 'wrap' | 'single-line';
   /** Rótulos das opções. O valor sai do rótulo em minúsculas, como nas stories. */
   items?: string[];
   /** Opções agrupadas: cada chave vira um cabeçalho na lista. */
@@ -74,6 +79,7 @@ export function comboboxSnippet(options: ComboboxSnippetOptions = {}): string {
     disabled = false,
     invalid = false,
     name,
+    chipsLayout = 'wrap',
     clearLabel = 'Limpar',
     triggerLabel = 'Abrir lista',
     emptyMessage = 'Nenhum resultado',
@@ -83,6 +89,7 @@ export function comboboxSnippet(options: ComboboxSnippetOptions = {}): string {
   // ruído a quem copia.
   const root = ['<nds-combobox [(value)]="value"']
     .concat(multiple ? ['multiple'] : [])
+    .concat(chipsLayout === 'single-line' ? [`chipsLayout="${chipsLayout}"`] : [])
     .concat(disabled ? ['disabled'] : [])
     .concat(invalid ? ['invalid'] : [])
     .concat(name ? [`name="${name}"`] : [])
@@ -162,4 +169,122 @@ export function comboboxSource(
     name: args['name'] as string | undefined,
     items: ['Brasil', 'Argentina', 'Chile'],
   });
+}
+
+
+/**
+ * Os nove países da spec — a mesma lista que as stories mostram.
+ *
+ * O snippet enumera o que está na tela: reduzir a três esconderia justamente os
+ * rótulos que a story de filtro usa para separar o predicado do consumidor do
+ * comportamento de fábrica.
+ */
+const COUNTRY_LABELS = [
+  'Brasil', 'Argentina', 'Chile', 'Colômbia', 'México',
+  'Peru', 'Portugal', 'Espanha', 'Uruguai',
+];
+
+/**
+ * O campo com um filtro do CONSUMIDOR.
+ *
+ * A assinatura é a da lib desta stack, de TRÊS argumentos — o valor cru do
+ * item, o texto digitado e o resolvedor que converte valor em texto de
+ * exibição. Quem copia precisa ver os três: escrever o predicado com dois
+ * parâmetros compila, e o rótulo nunca entra na comparação.
+ */
+export function comboboxCustomFilterSnippet(): string {
+  return `import { NDS_COMBOBOX } from '@/components/ui/combobox';
+import type { ComboboxFilter } from '@radix-ng/primitives/combobox';
+
+/** Texto sem acento e em caixa baixa — a base de comparação do filtro. */
+function normalize(text: string): string {
+  return text.normalize('NFD').replace(/\\p{Diacritic}/gu, '').toLowerCase();
+}
+
+// A opção é registrada por STRING, então o primeiro argumento chega como o
+// VALOR ('argentina'), e não como o objeto com o rótulo. Quem sabe devolver o
+// texto de exibição é o \`itemToString\` que a própria lib passa.
+const startsWithFilter: ComboboxFilter = (itemValue, query, itemToString) => {
+  const label = itemToString?.(itemValue) ?? String(itemValue ?? '');
+  return normalize(label).startsWith(normalize(query));
+};
+
+@Component({
+  imports: [...NDS_COMBOBOX],
+  template: \`
+    <nds-combobox [(value)]="value" [filter]="filter">
+      <label ndsComboboxLabel>País</label>
+
+      <div ndsComboboxInputWrapper>
+        <input ndsComboboxInput placeholder="Buscar país" />
+        <button ndsComboboxClear aria-label="Limpar"></button>
+        <button ndsComboboxTrigger aria-label="Abrir lista">
+          <svg ndsComboboxIcon></svg>
+        </button>
+      </div>
+
+      <ng-template ndsComboboxPopup>
+        <div ndsComboboxList>
+${listBody({ items: COUNTRY_LABELS })}
+        </div>
+        <div ndsComboboxEmpty>Nenhum resultado</div>
+      </ng-template>
+    </nds-combobox>
+  \`,
+})
+export class Example {
+  readonly value = signal<string | undefined>(undefined);
+  readonly filter = startsWithFilter;
+}`;
+}
+
+/**
+ * O campo com a escolha E o texto de busca controlados por fora.
+ *
+ * As duas pontas são models da diretiva de host: ligadas só de ida, o campo
+ * avisa a mudança pelo evento e quem manda no que aparece é o estado de fora. É
+ * o que permite preencher a busca sem ninguém digitar.
+ */
+export function comboboxControlledSnippet(): string {
+  return `import { NDS_COMBOBOX } from '@/components/ui/combobox';
+
+@Component({
+  imports: [...NDS_COMBOBOX],
+  template: \`
+    <nds-combobox
+      name="pais"
+      [value]="chosen()"
+      (valueChange)="onValueChange($event)"
+      [inputValue]="query()"
+      (inputValueChange)="query.set($event)"
+    >
+      <label ndsComboboxLabel>País</label>
+
+      <div ndsComboboxInputWrapper>
+        <input ndsComboboxInput placeholder="Buscar país" />
+        <button ndsComboboxClear aria-label="Limpar"></button>
+        <button ndsComboboxTrigger aria-label="Abrir lista">
+          <svg ndsComboboxIcon></svg>
+        </button>
+      </div>
+
+      <ng-template ndsComboboxPopup>
+        <div ndsComboboxList>
+${listBody({ items: COUNTRY_LABELS })}
+        </div>
+        <div ndsComboboxEmpty>Nenhum resultado</div>
+      </ng-template>
+    </nds-combobox>
+  \`,
+})
+export class Example {
+  // Sinais, e não campos comuns: sem zone.js é a escrita no sinal que agenda o
+  // redesenho. Escrever num campo comum muda o estado e não muda a tela.
+  readonly chosen = signal<string | null>(null);
+  readonly query = signal('');
+
+  onValueChange(value: unknown): void {
+    this.chosen.set((value as string | null) ?? null);
+  }
+}`;
 }

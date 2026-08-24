@@ -4,7 +4,7 @@
 // falhando → parameters.a11y.test:'todo' com as rules no comentário; página
 // limpa → axe é portão.
 //
-// 64 exports: as 48 docs pages de componente mais as 16 de fundamento. A lista
+// 65 exports: as 49 docs pages de componente mais as 16 de fundamento. A lista
 // está completa — o que entrar daqui pra frente é componente novo.
 
 import type { Meta, StoryObj } from '@storybook/angular-vite';
@@ -46,6 +46,7 @@ import { NdsDropdownMenuDocs } from './DropdownMenuDocs';
 import { NdsAlertDialogDocs } from './AlertDialogDocs';
 import { NdsContextMenuDocs } from './ContextMenuDocs';
 import { NdsMenubarDocs } from './MenubarDocs';
+import { NdsComboboxDocs } from './ComboboxDocs';
 import { NdsSelectDocs } from './SelectDocs';
 import { NdsDrawerDocs } from './DrawerDocs';
 import { NdsNavigationMenuDocs } from './NavigationMenuDocs';
@@ -81,7 +82,7 @@ import { NdsCrossStackDocs } from './CrossStackDocs';
 const meta: Meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
-  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs, NdsSwitchDocs, NdsToggleDocs, NdsRadioGroupDocs, NdsSliderDocs, NdsProgressDocs, NdsAvatarDocs, NdsCodeBlockDocs, NdsAlertDocs, NdsBreadcrumbDocs, NdsAccordionDocs, NdsCollapsibleDocs, NdsTabsDocs, NdsToggleGroupDocs, NdsSidebarDocs, NdsTableDocs, NdsScrollAreaDocs, NdsPaginationDocs, NdsTooltipDocs, NdsSheetDocs, NdsDialogDocs, NdsPopoverDocs, NdsHoverCardDocs, NdsDropdownMenuDocs, NdsAlertDialogDocs, NdsContextMenuDocs, NdsMenubarDocs, NdsSelectDocs, NdsDrawerDocs, NdsNavigationMenuDocs, NdsCommandDocs, NdsFormDocs, NdsCalendarDocs, NdsCarouselDocs, NdsChartDocs, NdsDataTableDocs, NdsInputOTPDocs, NdsTextareaDocs, NdsResizableDocs, NdsSonnerDocs, NdsAboutDocs, NdsAccessibilityDocs, NdsAnalyticsCatalogDocs, NdsSeoGeoDocs, NdsToneOfVoiceDocs, NdsGettingStartedDocs, NdsTypographyDocs, NdsSpacingDocs, NdsElevationDocs, NdsMotionDocs, NdsIconsDocs, NdsThemeColorsDocs, NdsThemeSystemDocs, NdsDensitiesDocs, NdsI18nDocs, NdsCrossStackDocs] })],
+  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs, NdsSwitchDocs, NdsToggleDocs, NdsRadioGroupDocs, NdsSliderDocs, NdsProgressDocs, NdsAvatarDocs, NdsCodeBlockDocs, NdsAlertDocs, NdsBreadcrumbDocs, NdsAccordionDocs, NdsCollapsibleDocs, NdsTabsDocs, NdsToggleGroupDocs, NdsSidebarDocs, NdsTableDocs, NdsScrollAreaDocs, NdsPaginationDocs, NdsTooltipDocs, NdsSheetDocs, NdsDialogDocs, NdsPopoverDocs, NdsHoverCardDocs, NdsDropdownMenuDocs, NdsAlertDialogDocs, NdsContextMenuDocs, NdsMenubarDocs, NdsComboboxDocs, NdsSelectDocs, NdsDrawerDocs, NdsNavigationMenuDocs, NdsCommandDocs, NdsFormDocs, NdsCalendarDocs, NdsCarouselDocs, NdsChartDocs, NdsDataTableDocs, NdsInputOTPDocs, NdsTextareaDocs, NdsResizableDocs, NdsSonnerDocs, NdsAboutDocs, NdsAccessibilityDocs, NdsAnalyticsCatalogDocs, NdsSeoGeoDocs, NdsToneOfVoiceDocs, NdsGettingStartedDocs, NdsTypographyDocs, NdsSpacingDocs, NdsElevationDocs, NdsMotionDocs, NdsIconsDocs, NdsThemeColorsDocs, NdsThemeSystemDocs, NdsDensitiesDocs, NdsI18nDocs, NdsCrossStackDocs] })],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -294,6 +295,11 @@ export const ContextMenu: Story = {
 
 export const Menubar: Story = {
   render: () => ({ template: '<nds-menubar-docs />' }),
+  play,
+};
+
+export const Combobox: Story = {
+  render: () => ({ template: '<nds-combobox-docs />' }),
   play,
 };
 

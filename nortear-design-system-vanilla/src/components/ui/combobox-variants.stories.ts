@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createCombobox, type ComboboxItem } from './combobox';
-import { comboboxSnippet } from './combobox.source';
+import { comboboxSourceWith } from './combobox.source';
 
 const COUNTRIES: ComboboxItem[] = [
   { value: 'brasil', label: 'Brasil' },
@@ -20,6 +20,20 @@ const GROCERIES: ComboboxItem[] = [
   { value: 'abobrinha', label: 'Abobrinha', group: 'Legumes' },
 ];
 
+// ─── Snippet ──────────────────────────────────────────────────────────────────
+//
+// Os dados do painel Code SAEM das listas acima, e não de literais repetidos:
+// divergir aqui faria o snippet ensinar uma lista que a story não mostra.
+
+/** Rótulos da lista plana, na ordem em que aparecem. */
+const COUNTRY_LABELS = COUNTRIES.map((item) => item.label);
+
+/** Os mesmos itens agrupados, na forma que o snippet monta. */
+const GROCERY_GROUPS = GROCERIES.reduce<Record<string, string[]>>((groups, item) => {
+  (groups[item.group!] ??= []).push(item.label);
+  return groups;
+}, {});
+
 const meta: Meta = {
   title: 'UI/Combobox/Variants',
   tags: ['form'],
@@ -28,6 +42,15 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo. Sem transform no meta, o
+      // painel Code despeja o `outerHTML` do campo em vez da chamada da fábrica.
+      source: {
+        transform: comboboxSourceWith({
+          label: 'País',
+          placeholder: 'Buscar país',
+          items: COUNTRY_LABELS,
+        }),
+      },
       description: {
         component: 'Formas do Combobox: lista aberta com opção ativa e lista agrupada.',
       },
@@ -103,12 +126,11 @@ export const Grouped: Story = {
     covers: ['visual.item4'],
     docs: {
       source: {
-        transform: () =>
-          comboboxSnippet({
-            label: 'Ingrediente',
-            placeholder: 'Buscar ingrediente',
-            groups: { Frutas: ['Maçã', 'Banana', 'Laranja'], Legumes: ['Cenoura', 'Batata', 'Abobrinha'] },
-          }),
+        transform: comboboxSourceWith({
+          label: 'Ingrediente',
+          placeholder: 'Buscar ingrediente',
+          groups: GROCERY_GROUPS,
+        }),
       },
       description: {
         story: 'Itens agrupados: cada grupo traz um cabeçalho que nomeia o conjunto.',

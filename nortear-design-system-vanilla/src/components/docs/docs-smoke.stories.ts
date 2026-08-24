@@ -3,7 +3,7 @@
 // Política: crash no mount → export fica FORA (listado abaixo); axe falhando →
 // parameters.a11y.test:'todo' com as rules no comentário; página limpa → axe é portão.
 //
-// Nenhuma página fora da fumaça: as 64 montam.
+// Nenhuma página fora da fumaça: as 65 montam.
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, waitFor } from 'storybook/test';
@@ -26,6 +26,7 @@ import { createChartDocs } from './ChartDocs';
 import { createCheckboxDocs } from './CheckboxDocs';
 import { createCodeBlockDocs } from './CodeBlockDocs';
 import { createCollapsibleDocs } from './CollapsibleDocs';
+import { createComboboxDocs } from './ComboboxDocs';
 import { createCommandDocs } from './CommandDocs';
 import { createContextMenuDocs } from './ContextMenuDocs';
 import { createCrossStackDocs } from './CrossStackDocs';
@@ -200,6 +201,7 @@ export const CodeBlock: Story = { render: () => createCodeBlockDocs(), play,
   },
 };
 export const Collapsible: Story = { render: () => createCollapsibleDocs(), play };
+export const Combobox: Story = { render: () => createComboboxDocs(), play };
 export const Command: Story = { render: () => createCommandDocs(), play };
 // axe: aria-required-parent (lote de estrutura de menus) — catalogado no
 // FIXES-NEEDED. color-contrast RESOLVIDA (2026-08-01): os dois nós vinham de

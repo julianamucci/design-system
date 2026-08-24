@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createCombobox, type ComboboxItem } from './combobox';
-import { comboboxSnippet } from './combobox.source';
+import { comboboxSourceWith } from './combobox.source';
 
 // Mesma lista da spec de exemplos — divergir aqui faz a story mostrar coisa
 // diferente da mesma story nas outras stacks.
@@ -12,6 +12,19 @@ const COUNTRIES: ComboboxItem[] = [
   { value: 'portugal', label: 'Portugal' },
 ];
 
+/**
+ * Rótulos derivados da lista acima: o painel Code mostra a mesma lista que está
+ * na tela, e não um literal repetido que envelhece sozinho.
+ */
+const COUNTRY_LABELS = COUNTRIES.map((item) => item.label);
+
+/** As opções que valem para as três stories — cada uma soma o seu estado. */
+const FIELD = {
+  label: 'País',
+  placeholder: 'Buscar país',
+  items: COUNTRY_LABELS,
+};
+
 const meta: Meta = {
   title: 'UI/Combobox/States',
   tags: ['form'],
@@ -20,6 +33,10 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo — e é o que atende
+      // `EmptyResult`, cujo snippet é o campo sem estado nenhum. Sem transform
+      // no meta, o painel Code despeja o `outerHTML` do campo.
+      source: { transform: comboboxSourceWith(FIELD) },
       description: {
         component: 'Estados do Combobox: desabilitado, inválido e lista sem resultado.',
       },
@@ -34,10 +51,7 @@ export const Disabled: Story = {
   parameters: {
     covers: ['visual.item6'],
     docs: {
-      source: {
-        transform: () =>
-          comboboxSnippet({ label: 'País', placeholder: 'Buscar país', disabled: true }),
-      },
+      source: { transform: comboboxSourceWith({ ...FIELD, disabled: true }) },
       description: {
         story: 'Desabilitado: nada recebe foco e a lista não abre.',
       },
@@ -72,10 +86,7 @@ export const Invalid: Story = {
   parameters: {
     covers: ['visual.item7'],
     docs: {
-      source: {
-        transform: () =>
-          comboboxSnippet({ label: 'País', placeholder: 'Buscar país', invalid: true }),
-      },
+      source: { transform: comboboxSourceWith({ ...FIELD, invalid: true }) },
       description: {
         story: 'Inválido: o campo é anunciado com erro e a borda muda de cor.',
       },

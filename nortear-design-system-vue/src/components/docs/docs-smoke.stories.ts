@@ -22,6 +22,7 @@ import ChartDocs from '@/components/docs/ChartDocs.vue';
 import CheckboxDocs from '@/components/docs/CheckboxDocs.vue';
 import CodeBlockDocs from '@/components/docs/CodeBlockDocs.vue';
 import CollapsibleDocs from '@/components/docs/CollapsibleDocs.vue';
+import ComboboxDocs from '@/components/docs/ComboboxDocs.vue';
 import CommandDocs from '@/components/docs/CommandDocs.vue';
 import ContextMenuDocs from '@/components/docs/ContextMenuDocs.vue';
 import CrossStackDocs from '@/components/docs/CrossStackDocs.vue';
@@ -245,6 +246,11 @@ export const CodeBlock: Story = {
 
 export const Collapsible: Story = {
   render: () => ({ components: { CollapsibleDocs }, template: '<CollapsibleDocs />' }),
+  play: smokePlay,
+};
+
+export const Combobox: Story = {
+  render: () => ({ components: { ComboboxDocs }, template: '<ComboboxDocs />' }),
   play: smokePlay,
 };
 

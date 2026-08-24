@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor, userEvent } from 'storybook/test';
 import { NDS_COMBOBOX } from './combobox';
 import { comboboxSnippet } from './combobox.source';
-import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish } from '@/lib/wait-for-portal';
 
 const COUNTRIES = [
   { value: 'brasil', label: 'Brasil' },
@@ -32,6 +32,37 @@ const GROCERIES = [
   },
 ] as const;
 
+// Lista longa da spec, também igual nas cinco stacks. A story de linha única
+// precisa de MAIS escolhidos do que a caixa comporta: com dois ou três chips,
+// acumular linhas e rolar na horizontal desenham a mesma coisa, e a play
+// mediria um ramo que nunca chegou a ser exercido.
+const VISITED_COUNTRIES = [
+  { value: 'brasil', label: 'Brasil' },
+  { value: 'argentina', label: 'Argentina' },
+  { value: 'chile', label: 'Chile' },
+  { value: 'colombia', label: 'Colômbia' },
+  { value: 'mexico', label: 'México' },
+  { value: 'peru', label: 'Peru' },
+  { value: 'portugal', label: 'Portugal' },
+  { value: 'espanha', label: 'Espanha' },
+  { value: 'uruguai', label: 'Uruguai' },
+] as const;
+
+/**
+ * Escolhidos da story de linha única, POR STORY, fora do componente.
+ *
+ * Seis de nove: é o transbordo que separa as duas formas de `chipsLayout`.
+ * Guardar a escolha aqui fora é o que o consumidor real faz — quem monta o
+ * formulário é dono do valor — e é o que mantém os chips de pé quando o
+ * Storybook recria a árvore.
+ */
+const visitedStore: { values: string[] } = {
+  values: VISITED_COUNTRIES.slice(0, 6).map((country) => country.value),
+};
+
+const visitedLabel = (value: string): string =>
+  VISITED_COUNTRIES.find((country) => country.value === value)?.label ?? value;
+
 const meta: Meta = {
   title: 'UI/Combobox/Variants',
   tags: ['form'],
@@ -40,10 +71,11 @@ const meta: Meta = {
     layout: 'padded',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    actions: { disable: true },
     docs: {
       description: {
-        component: 'Formas do Combobox: lista aberta com opção ativa e lista agrupada.',
+        component:
+          'Formas do Combobox: lista aberta com opção ativa, lista agrupada e chips em linha única.',
       },
     },
   },
@@ -250,6 +282,143 @@ export const Grouped: Story = {
       await userEvent.keyboard('{Escape}');
       await waitForPortalVanish('listbox');
       await expect(field).toHaveAttribute('aria-expanded', 'false');
+    });
+  },
+};
+
+// ─── Chips em linha única ─────────────────────────────────────────────────────
+
+export const SingleLineChips: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: () =>
+          comboboxSnippet({
+            label: 'Países visitados',
+            placeholder: 'Adicionar país',
+            multiple: true,
+            name: 'paises',
+            chipsLayout: 'single-line',
+            items: VISITED_COUNTRIES.map((country) => country.label),
+          }),
+      },
+      description: {
+        story:
+          'Os chips ficam numa linha só que rola na horizontal, e o campo não cresce em altura. ' +
+          'Limpar e abrir continuam na primeira linha, ao lado do texto.',
+      },
+    },
+  },
+  render: () => ({
+    props: {
+      items: VISITED_COUNTRIES,
+      store: visitedStore,
+      visitedLabel,
+      onChange: (value: unknown) => {
+        visitedStore.values = (value as string[]) ?? [];
+      },
+    },
+    template: `
+      <!-- Largura estreita de propósito, por classe e não por \`style\`: é ela
+           que faz os seis chips passarem do que a caixa comporta. -->
+      <div class="nds-w-xs">
+        <nds-combobox
+          multiple
+          chipsLayout="single-line"
+          name="paises"
+          [value]="store.values"
+          (valueChange)="onChange($event)"
+        >
+          <label ndsComboboxLabel>Países visitados</label>
+
+          <div ndsComboboxInputWrapper>
+            <div ndsComboboxChips>
+              @for (chosen of store.values; track chosen) {
+                <span ndsComboboxChip [value]="chosen">
+                  {{ visitedLabel(chosen) }}
+                  <button
+                    ndsComboboxChipRemove
+                    [attr.aria-label]="'Remover ' + visitedLabel(chosen)"
+                  ></button>
+                </span>
+              }
+
+              <input ndsComboboxInput placeholder="Adicionar país" />
+            </div>
+
+            <button ndsComboboxClear aria-label="Limpar"></button>
+            <button ndsComboboxTrigger aria-label="Abrir lista">
+              <svg ndsComboboxIcon></svg>
+            </button>
+          </div>
+
+          <ng-template ndsComboboxPopup>
+            <div ndsComboboxList>
+              @for (item of items; track item.value) {
+                <div ndsComboboxItem [value]="item.value">
+                  {{ item.label }}
+                  <span ndsComboboxItemIndicator></span>
+                </div>
+              }
+            </div>
+            <div ndsComboboxEmpty>Nenhum resultado</div>
+          </ng-template>
+        </nds-combobox>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const box = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="combobox-input-wrapper"]',
+    )!;
+    const chipsBox = canvasElement.querySelector<HTMLElement>('[data-slot="combobox-chips"]')!;
+    const chips = () => canvasElement.querySelectorAll<HTMLElement>('[data-slot="combobox-chip"]');
+
+    await step('A caixa do campo declara a forma de linha única', async () => {
+      // `data-chips` é HOST BINDING da diretiva do wrapper — expressão de host é
+      // string, e até este portão nenhuma story a afirmava: apagar o binding
+      // deixava tudo verde e o campo voltava a quebrar linha na tela.
+      await expect(box).toHaveAttribute('data-chips', 'single-line');
+    });
+
+    await step('Há chips de sobra para o campo comportar', async () => {
+      // A medida que dá SENTIDO à story: com poucos chips, linha única e quebra
+      // desenham a mesma coisa, e o resto da play passaria sem exercer o ramo
+      // que ela existe para cobrir.
+      await waitFor(async () => {
+        await expect(chips().length).toBeGreaterThan(4);
+      });
+      await expect(chipsBox.scrollWidth).toBeGreaterThan(chipsBox.clientWidth);
+    });
+
+    await step('Limpar e abrir continuam na primeira linha', async () => {
+      // Era ESTE o defeito relatado: a caixa do campo quebrava junto com os
+      // chips e os dois controles caíam para baixo do bloco. Comparar o topo de
+      // cada um com o do primeiro chip é o que acusa a queda.
+      const firstChipTop = chips()[0].getBoundingClientRect().top;
+      const clearTop = canvas
+        .getByRole('button', { name: 'Limpar' })
+        .getBoundingClientRect().top;
+      const openTop = canvas
+        .getByRole('button', { name: 'Abrir lista' })
+        .getBoundingClientRect().top;
+
+      // Tolerância de poucos px: chip e botões têm alturas próximas, mas não
+      // iguais, e o alinhamento vertical os separa por uma fração. Uma linha
+      // inteira de queda passa dos 20px e reprova aqui.
+      await expect(Math.abs(clearTop - firstChipTop)).toBeLessThanOrEqual(6);
+      await expect(Math.abs(openTop - firstChipTop)).toBeLessThanOrEqual(6);
+    });
+
+    await step('O conjunto rola na horizontal, e o campo não cresce', async () => {
+      // Rolar é a contrapartida de não quebrar: sem ela, os chips que passam da
+      // largura ficariam inalcançáveis.
+      await expect(getComputedStyle(chipsBox).overflowX).toBe('auto');
+      // Uma linha só: a caixa não é mais alta do que o próprio chip mais a
+      // folga que o padding do campo dá aos dois lados.
+      const chipHeight = chips()[0].getBoundingClientRect().height;
+      await expect(box.getBoundingClientRect().height).toBeLessThan(chipHeight * 2);
     });
   },
 };
