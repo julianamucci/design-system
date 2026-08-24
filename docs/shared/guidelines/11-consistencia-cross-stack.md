@@ -266,6 +266,69 @@ Rode `node scripts/audit-translation-literals.mjs` para listar violações pende
 
 ---
 
+## Idioma do código
+
+**Tudo que é código é escrito em inglês. Tudo que uma pessoa lê é escrito em
+português.** A linha entre os dois não é de gosto: é onde o texto deixa de ser
+lido por uma máquina e passa a ser lido por gente.
+
+| escrito em INGLÊS | escrito em PORTUGUÊS |
+|---|---|
+| nome de variável, função, tipo, constante | comentário |
+| nome de prop, de evento, de slot | rótulo de `step()` em play function |
+| nome de arquivo e de diretório | título e descrição de story |
+| classe CSS, custom property, `data-*` | mensagem de `throw` que a dona lê |
+| chave de `translations.json` | VALOR de `translations.json` |
+| nome de teste e de `describe` | texto de interface, sempre |
+
+### Por que inglês no código
+
+Não é preferência estética — é a convenção das especificações que este design
+system implementa. HTML, CSS, ARIA e o DOM são definidos em inglês pelo W3C, e
+o código do sistema conversa com eles o tempo todo. Um `aria-expanded` ao lado
+de um `estaAberto` obriga quem lê a trocar de idioma no meio da linha, e a
+tradução mental é onde o erro entra: `selecionado` vira `selected` numa linha
+e `checked` na seguinte, e ninguém percebe até os dois divergirem.
+
+Vale também para quem chega: um componente que expõe `onValueChange` e por
+dentro chama `aoTrocarValor` tem duas APIs, uma pública e uma secreta.
+
+### Por que português no que se lê
+
+Pelo motivo simétrico. O comentário existe para explicar uma decisão a uma
+pessoa, e a pessoa que mantém este projeto pensa em português. Comentário em
+inglês aqui seria tradução de ida e volta sem ganho — e a nuance é justamente o
+que se perde nela. O mesmo vale para rótulo de passo de teste, que é lido no
+painel de Interactions, e para todo texto de interface (ver `05-tom-de-voz.md`).
+
+### Portão
+
+`identificador_pt_novo`, no `audit.mjs`. Ele funciona por CATRACA: a linha de
+base em `docs/shared/primitives/identificadores-pt-baseline.json` registra
+quantos nomes portugueses cada arquivo já tinha, e a regra reprova quem
+**cresce**. Arquivo fora da lista reprova com qualquer nome.
+
+A catraca existe porque a dívida antiga é real — 1830 nomes em 928 arquivos — e
+não se paga num commit. Uma varredura pura afogaria o sinal e seria ignorada na
+primeira semana. Assim a dívida só encolhe.
+
+Ao PAGAR dívida, regenere a linha de base para baixo:
+
+```bash
+node scripts/audit.mjs --gerar-baseline-pt
+```
+
+Rodar isso para calar uma reprovação de código novo é usar a chave de fenda como
+martelo: funciona uma vez e some com o motivo de o portão existir.
+
+**O que o portão não alcança**, e por isso continua sendo conferência de quem
+escreve: nome igual nas duas línguas (`total`, `item`, `label`, `local`) ficou
+fora da lista de radicais de propósito, porque incluí-lo geraria ruído
+garantido; e a catraca conta, não identifica — trocar um nome português por
+outro mantém o total e passa.
+
+---
+
 ## Checklist Cross-Stack
 
 - [ ] Classes `cva()` idênticas em todas as stacks (diff = 0)

@@ -426,7 +426,7 @@ export function createCombobox(options: ComboboxOptions): DestroyableElement<HTM
     target.scrollIntoView({ block: 'nearest' });
   }
 
-  function mover(step: number): void {
+  function move(step: number): void {
     if (!visible.length) return;
     let next = activeIndex;
     for (let i = 0; i < visible.length; i++) {
@@ -469,11 +469,11 @@ export function createCombobox(options: ComboboxOptions): DestroyableElement<HTM
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        isOpen ? mover(1) : open();
+        isOpen ? move(1) : open();
         break;
       case 'ArrowUp':
         e.preventDefault();
-        isOpen ? mover(-1) : open();
+        isOpen ? move(-1) : open();
         break;
       case 'Home':
         if (!isOpen) return;

@@ -23,7 +23,7 @@
 // Princípio: tudo que é grep+regex determinístico vive aqui; tudo que exige julgamento
 // fica nos agents. Isso corta ~80% dos tokens do pipeline `audit` e `new`.
 
-import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync, writeFileSync } from 'node:fs';
 import { join, relative, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -3439,6 +3439,156 @@ const DECLARA_RX = (n) =>
     'g',
   );
 
+/**
+ * Radicais portugueses que NÃO são palavra inglesa.
+ *
+ * Fora da lista de propósito: `total`, `item`, `label`, `local`, `final`,
+ * `area`, `media`, `modal`, `normal` — iguais nas duas línguas. Incluí-las
+ * geraria ruído garantido, e portão ruidoso é portão que se aprende a ignorar.
+ */
+const RADICAIS_PT = [
+  'abrir', 'fechar', 'fechado', 'aberto', 'marcar', 'desmarcar', 'filtrar', 'mover',
+  'remover', 'adicionar', 'buscar', 'criar', 'montar', 'limpar', 'salvar', 'enviar',
+  'mostrar', 'esconder', 'alternar', 'selecionar', 'escolher', 'ordenar', 'validar',
+  'calcular', 'atualizar', 'rotulo', 'gatilho', 'opcao', 'opcoes', 'itens', 'campo',
+  'valor', 'valores', 'texto', 'aviso', 'lista', 'listas', 'tamanho', 'largura',
+  'altura', 'borda', 'fundo', 'estado', 'ativo', 'ativa', 'visivel', 'visiveis',
+  'desabilitado', 'obrigatorio', 'vazio', 'cheio', 'primeiro', 'ultimo', 'proximo',
+  'anterior', 'contador', 'indice', 'chave', 'linha', 'coluna', 'tabela', 'pagina',
+  'botao', 'entrada', 'saida', 'erro', 'sucesso', 'falha', 'tentativa', 'quantidade',
+  'conteudo', 'cabecalho', 'rodape', 'corpo', 'titulo', 'descricao', 'mensagem',
+  'resposta', 'usuario', 'senha', 'nome', 'sobrenome', 'endereco', 'telefone',
+  'arquivo', 'pasta', 'caminho', 'padrao', 'tamanhos', 'cores', 'icone', 'icones',
+  'imagem', 'janela', 'painel', 'seletor', 'ancora', 'posicionador', 'recolher',
+  'expandir', 'arrastar', 'soltar', 'rolagem', 'atraso', 'duracao', 'inicio',
+  'passo', 'passos', 'nivel', 'ordem', 'grupo', 'grupos', 'filho', 'filhos',
+  'raiz', 'folha', 'peca', 'pecas', 'medida', 'medidas', 'regra', 'regras',
+  'portao', 'achado', 'achados', 'sitio', 'sitios', 'chamada',
+];
+
+/**
+ * Nomes portugueses num código, ignorando comentário e texto de interface —
+ * comentário em português é a regra da casa, não desvio dela.
+ *
+ * Usado PELOS DOIS: pela regra e pelo gerador da linha de base. Ter dois
+ * contadores é ter duas verdades, e o portão passa a comparar uma com a outra.
+ */
+function identsPtNoCodigo(bruto) {
+  const codigo = stripComments(bruto)
+    .replace(/'(?:[^'\\]|\\.)*'/g, "''")
+    .replace(/"(?:[^"\\]|\\.)*"/g, '""')
+    .replace(/`(?:[^`\\]|\\.)*`/g, '``');
+  const vistos = new Set();
+  for (const radical of RADICAIS_PT) {
+    const Cap = radical[0].toUpperCase() + radical.slice(1);
+    const re = new RegExp('\\b' + radical + '(?:[A-Z]\\w*)?\\b|\\b\\w+' + Cap + '\\b', 'g');
+    for (const nome of codigo.match(re) || []) vistos.add(nome);
+  }
+  return vistos;
+}
+
+/**
+ * Regenera a linha de base da catraca, com o MESMO contador da regra.
+ *
+ *   node scripts/audit.mjs --gerar-baseline-pt
+ *
+ * Rode depois de PAGAR dívida, para a catraca descer. Rodar para calar uma
+ * reprovação de código novo é usar a chave de fenda como martelo: funciona uma
+ * vez e some com o motivo de o portão existir.
+ */
+function gerarBaselinePt() {
+  const base = {};
+  const varrer = (dir) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const p = join(dir, e.name);
+      if (e.isDirectory()) { if (e.name !== 'node_modules') varrer(p); continue; }
+      if (!/\.(tsx?|vue|svelte)$/.test(e.name)) continue;
+      const n = identsPtNoCodigo(readFile(p) || '').size;
+      if (n) base[relative(ROOT, p).split('\\').join('/')] = n;
+    }
+  };
+  for (const stack of STACKS) {
+    varrer(join(ROOT, `nortear-design-system-${stack}`, 'src'));
+  }
+  const ordenado = Object.fromEntries(
+    Object.entries(base).sort(([a], [b]) => a.localeCompare(b)),
+  );
+  writeFileSync(
+    join(ROOT, 'docs', 'shared', 'primitives', 'identificadores-pt-baseline.json'),
+    JSON.stringify(ordenado, null, 2) + '\n',
+  );
+  const total = Object.values(ordenado).reduce((a, b) => a + b, 0);
+  console.log(`linha de base: ${Object.keys(ordenado).length} arquivos, ${total} nomes`);
+}
+
+/**
+ * Identificador em português em código NOVO.
+ *
+ * A regra `identificador_pt` compara contra uma LISTA DECLARADA de nomes
+ * conhecidos, e morfologia foi deliberadamente excluída dela. Isso a torna boa
+ * para rastrear a dívida antiga e cega para a nova: um arquivo inteiro escrito
+ * em português passa limpo, e foi o que aconteceu quando o combobox do Vanilla
+ * nasceu com trinta nomes assim.
+ *
+ * Esta regra fecha o buraco por CATRACA, não por varredura. Uma varredura
+ * acharia 1783 nomes em 934 arquivos e afogaria o sinal — a dívida antiga é
+ * real e não se paga num commit. A linha de base em
+ * `docs/shared/primitives/identificadores-pt-baseline.json` guarda quantos
+ * nomes cada arquivo já tinha; reprova quem CRESCE, e arquivo fora da lista
+ * reprova com qualquer nome.
+ *
+ * Assim a dívida só encolhe: quem paga, regenera a linha de base para baixo;
+ * quem tenta somar, é barrado.
+ *
+ * O que ela NÃO alcança, declarado para não virar cobertura fantasma:
+ *   - nome igual nas duas línguas (`total`, `item`, `label`) — fora da lista de
+ *     radicais de propósito, porque incluí-lo geraria ruído garantido;
+ *   - nome importado de módulo compartilhado que ainda carrega a dívida
+ *     (`chamada`, `montar` do `story-source`): o consumidor é acusado pelo
+ *     import, e a correção é no módulo, não nele;
+ *   - CONTAGEM, não identidade: trocar um nome português por outro mantém o
+ *     total e passa. A catraca impede crescimento, não substituição.
+ */
+function auditIdentificadorPtNovo(slug) {
+  const violations = [];
+  const basePath = join(ROOT, 'docs', 'shared', 'primitives', 'identificadores-pt-baseline.json');
+  let base = {};
+  try {
+    base = JSON.parse(readFile(basePath) || '{}');
+  } catch {
+    return violations;   // sem linha de base, a catraca não tem contra o que medir
+  }
+
+  for (const stack of STACKS) {
+    const { all } = filesForSlug(slug, stack);
+    for (const file of all) {
+      const bruto = readFile(file);
+      if (!bruto) continue;
+      const vistos = identsPtNoCodigo(bruto);
+
+      const rel = relative(ROOT, file).split('\\').join('/');
+      const permitido = base[rel] ?? 0;
+      if (vistos.size <= permitido) continue;
+
+      violations.push({
+        category: 'quality',
+        severity: 'medium',
+        slug,
+        stack,
+        file: rel,
+        rule: 'identificador_pt_novo',
+        message:
+          vistos.size + ' identificadores em português, contra ' + permitido +
+          ' na linha de base — ' + [...vistos].slice(0, 6).join(', ') +
+          '. Código é escrito em inglês — ver "Idioma do código" em' +
+          ' docs/shared/guidelines/11-consistencia-cross-stack.md. Se a dívida foi' +
+          ' PAGA, regenere docs/shared/primitives/identificadores-pt-baseline.json.',
+      });
+    }
+  }
+  return violations;
+}
+
 function auditIdentificadorPt(slug) {
   const violations = [];
   const { pendentes, mantidos } = identsPt();
@@ -4431,6 +4581,7 @@ function runAudit(slug, category) {
     ...auditGuardrails(slug),
     ...auditSidebarVocab(slug),
     ...auditIdentificadorPt(slug),
+    ...auditIdentificadorPtNovo(slug),
     ...auditButtonGap(slug),
     ...auditPromessaDeCustomizacao(slug),
     ...auditDeadClassInTokenTable(slug),
@@ -4488,6 +4639,11 @@ if (args.includes('--contract-status')) {
   }
   process.exit(0);
 }
+if (args.includes('--gerar-baseline-pt')) {
+  gerarBaselinePt();
+  process.exit(0);
+}
+
 const slug = args.find(a => !a.startsWith('--') && a !== category);
 
 if (!slug && !all) {
