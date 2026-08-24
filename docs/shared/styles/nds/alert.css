@@ -31,6 +31,10 @@
    * `success` passou a `--foreground` (ver o bloco de títulos adiante); com a
    * cor semântica eles cairiam para 3.90:1 e 3.83:1, abaixo dos 4.5 do título. */
   --alert-bg-alpha: 0.1;
+  /* A borda anda JUNTO com o preenchimento. Enquanto ela era `0.3` fixo e o
+     preenchimento variável, engrossar a lavagem apagava a borda dentro dela —
+     a 0.32 de fundo contra 0.3 de borda, o recorte simplesmente sumia. */
+  --alert-border-alpha: 0.3;
   --alert-bg: hsl(var(--muted));
   --alert-fg: hsl(var(--card-foreground));
   --alert-border: hsl(var(--border));
@@ -145,7 +149,7 @@
   --alert-bg: hsl(var(--destructive) / var(--alert-bg-alpha));
   --alert-fg: hsl(var(--destructive));
   --alert-body-fg: hsl(var(--destructive-foreground));
-  --alert-border: hsl(var(--destructive) / 0.3);
+  --alert-border: hsl(var(--destructive) / var(--alert-border-alpha));
 }
 
 /* success — verde com bg soft */
@@ -153,7 +157,7 @@
   --alert-bg: hsl(var(--success) / var(--alert-bg-alpha));
   --alert-fg: hsl(var(--success));
   --alert-body-fg: hsl(var(--success-foreground));
-  --alert-border: hsl(var(--success) / 0.3);
+  --alert-border: hsl(var(--success) / var(--alert-border-alpha));
 }
 
 /* warning — âmbar com bg soft */
@@ -161,14 +165,42 @@
   --alert-bg: hsl(var(--warning) / var(--alert-bg-alpha));
   --alert-fg: hsl(var(--warning));
   --alert-body-fg: hsl(var(--warning-foreground));
-  --alert-border: hsl(var(--warning) / 0.3);
+  --alert-border: hsl(var(--warning) / var(--alert-border-alpha));
 }
 /* info — azul no tema Default e no Cold, laranja no Warm */
 .nds-alert-info {
   --alert-bg: hsl(var(--info) / var(--alert-bg-alpha));
   --alert-fg: hsl(var(--info));
   --alert-body-fg: hsl(var(--info-foreground));
-  --alert-border: hsl(var(--info) / 0.3);
+  --alert-border: hsl(var(--info) / var(--alert-border-alpha));
+}
+
+/* ── Peso do destructive no escuro ────────────────────────────────────────────
+ *
+ * A lavagem por alfa NÃO preserva matiz de forma uniforme: o quanto sobra
+ * depende da distância entre o matiz da cor e o matiz do FUNDO. No escuro a
+ * página é o Ink azul-esverdeado, então quanto mais quente a cor semântica,
+ * mais ela se cancela. Medido a 0.2, o croma do preenchimento composto:
+ *
+ *   info 39   success 29   warning 13   destructive 3
+ *
+ * Três é cinza. `#4b484c` não tem matiz nenhum — a página azulada e o vermelho
+ * quente se anulam quase exatamente. O resultado invertia a hierarquia de
+ * severidade: a variante mais grave era a única sem cor, e o `warning` parecia
+ * pesado só por ser o único quente que sobrevivia à lavagem.
+ *
+ * O alfa próprio devolve croma 13 (igual ao `warning`) e peso 1.92 contra a
+ * página, contra 1.38–1.50 das outras três — agora ele lidera nos dois eixos,
+ * que é o que a severidade pede. A borda vai a 0.42 porque é o valor que
+ * PRESERVA a separação entre borda e preenchimento que existe nas outras
+ * (1.23); proporcional não serve, tem de ser medido.
+ *
+ * Isto é compensação de MATIZ, não gosto: qualquer variante quente que o
+ * projeto acrescente no escuro vai precisar do mesmo tratamento, e a conta é a
+ * mesma — medir o croma composto e subir o alfa até alcançar o das frias. */
+.dark .nds-alert-destructive {
+  --alert-bg-alpha: 0.32;
+  --alert-border-alpha: 0.42;
 }
 
 /* ── Títulos que NÃO podem usar a cor semântica ──────────────────────────────
