@@ -64,11 +64,6 @@ describe('toggleGroupSource', () => {
     );
   });
 
-  it('o espaçamento entre itens só aparece quando desemenda a barra', () => {
-    expect(toggleGroupSource('', { args: { spacing: 0 } })).not.toContain('spacing');
-    expect(toggleGroupSource('', { args: { spacing: 2 } })).toContain('spacing={2}');
-  });
-
   it('o desabilitado vale para o grupo inteiro, não item a item', () => {
     const saida = toggleGroupSource('', { args: { disabled: true } });
     expect(saida).toMatch(/^ {2}disabled$/m);

@@ -9,7 +9,6 @@ import {
   inject,
   input,
   model,
-  numberAttribute,
   ViewEncapsulation,
 } from '@angular/core';
 import { RdxCompositeRoot } from '@radix-ng/primitives/composite';
@@ -85,7 +84,6 @@ export type ToggleGroupValue = string | string[];
     '[attr.data-variant]': 'variant() === "default" ? null : variant()',
     '[attr.data-orientation]': 'orientation()',
     '[attr.aria-orientation]': 'orientation()',
-    '[attr.data-spacing]': 'atributoSpacing()',
     '[attr.data-disabled]': 'disabled() ? "" : null',
   },
 })
@@ -111,24 +109,8 @@ export class NdsToggleGroup {
   /** Estilo visual do conjunto. `outline` emenda os itens num container só. */
   readonly variant = input<ToggleVariant>('default');
 
-  /**
-   * Distância entre os itens. `0` emenda as bordas (visual segmentado);
-   * qualquer valor maior separa os botões.
-   *
-   * A escada fina não existe no CSS compartilhado: a regra
-   * `.nds-toggle-group[data-spacing]` calcula o gap a partir de uma custom
-   * property `--gap` que só um style inline consegue definir — e style inline
-   * é proibido neste stack. Enquanto a folha não ganhar a regra por valor
-   * (`[data-spacing="1"] { --gap: 1 }` …), o atributo só é emitido no caso
-   * `0`; acima disso ele fica de fora e vale o `gap: var(--spacing-1)` da
-   * regra base, que é o mesmo espaçamento que o Vanilla mostra.
-   */
-  readonly spacing = input(0, { transform: numberAttribute });
-
   private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly composite = inject(RdxCompositeRoot, { self: true });
-
-  protected readonly atributoSpacing = computed(() => (this.spacing() === 0 ? '0' : null));
 
   /**
    * Sempre lista, mesmo no modo exclusivo — é a forma que o `RdxToggle` lê para

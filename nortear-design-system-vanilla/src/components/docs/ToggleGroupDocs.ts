@@ -340,7 +340,6 @@ export function createToggleGroupDocs(): HTMLElement {
             t('anatomy.item1'),
             t('anatomy.item2'),
             t('anatomy.item3'),
-            t('anatomy.item4'),
           ],
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -769,7 +768,6 @@ export type ToggleGroupOptions = {
   variant?: 'default' | 'outline'; // default 'default'
   size?: 'default' | 'sm' | 'lg';
   orientation?: 'horizontal' | 'vertical';
-  spacing?: number;
   disabled?: boolean;
   items: ToggleGroupItem[];
   defaultValue?: string | string[];
@@ -866,13 +864,6 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
                   defaultValue: '"default"',
                   required: 'Não',
                   description: toPlainText(t('props.table.size.description')),
-                },
-                {
-                  name: 'spacing',
-                  type: 'number',
-                  defaultValue: '0',
-                  required: 'Não',
-                  description: toPlainText(t('props.table.spacing.description')),
                 },
                 {
                   name: 'aria-label',

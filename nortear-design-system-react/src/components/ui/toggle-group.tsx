@@ -10,13 +10,11 @@ import { toggleVariants } from "@/components/ui/toggle"
 
 const ToggleGroupContext = React.createContext<
   VariantProps<typeof toggleVariants> & {
-    spacing?: number
     orientation?: "horizontal" | "vertical"
   }
 >({
   size: "default",
   variant: "default",
-  spacing: 0,
   orientation: "horizontal",
 })
 
@@ -31,7 +29,6 @@ function ToggleGroup({
   className,
   variant,
   size,
-  spacing = 0,
   orientation = "horizontal",
   type = "single",
   value,
@@ -41,7 +38,6 @@ function ToggleGroup({
   ...props
 }: Omit<ToggleGroupPrimitive.Props, "value" | "defaultValue" | "onValueChange"> &
   VariantProps<typeof toggleVariants> & {
-    spacing?: number
     orientation?: "horizontal" | "vertical"
     type?: "single" | "multiple"
     value?: string | readonly string[]
@@ -56,7 +52,6 @@ function ToggleGroup({
       data-slot="toggle-group"
       data-variant={variant}
       data-size={size}
-      data-spacing={spacing}
       data-orientation={orientation}
       // `orientation` e `multiple` são do primitivo, não decoração: sem o
       // primeiro as setas verticais não movem o foco, e sem o segundo o grupo
@@ -71,13 +66,10 @@ function ToggleGroup({
         if (multiple) (onValueChange as ((v: string[]) => void) | undefined)?.(next)
         else (onValueChange as ((v: string) => void) | undefined)?.(next[0] ?? "")
       }}
-      style={{ "--gap": spacing } as React.CSSProperties}
       className={cn("nds-toggle-group", className)}
       {...(props as ToggleGroupPrimitive.Props)}
     >
-      <ToggleGroupContext.Provider
-        value={{ variant, size, spacing, orientation }}
-      >
+      <ToggleGroupContext.Provider value={{ variant, size, orientation }}>
         {children}
       </ToggleGroupContext.Provider>
     </ToggleGroupPrimitive>
@@ -98,10 +90,9 @@ function ToggleGroupItem({
       data-slot="toggle-group-item"
       data-variant={context.variant || variant}
       data-size={context.size || size}
-      data-spacing={context.spacing}
       className={cn(
         // Emendas, cantos e divisores do grupo vivem em toggle-group.css
-        // (seletores por data-spacing/data-orientation/data-variant).
+        // (seletores por data-orientation/data-variant).
         toggleVariants({
           variant: context.variant || variant,
           size: context.size || size,

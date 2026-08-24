@@ -38,10 +38,6 @@ const meta = {
       options: ['default', 'sm', 'lg'],
       description: 'Altura herdada pelos itens.',
     },
-    spacing: {
-      control: { type: 'number', min: 0, max: 4, step: 1 },
-      description: 'Distância entre itens. 0 conecta bordas (segmented).',
-    },
     'onUpdate:modelValue': {
       // `control: false` porque o valor é uma função: sem isso o painel
       // Controls mostrava um campo vazio e a regra `argtype_without_arg`
@@ -57,7 +53,6 @@ const meta = {
     orientation: 'horizontal',
     variant: 'default',
     size: 'default',
-    spacing: 0,
     'onUpdate:modelValue': fn(),
   },
 } satisfies Meta<typeof ToggleGroup>;
@@ -118,9 +113,8 @@ export const Playground: Story = {
       await expect(right).toHaveAttribute('aria-label', 'Alinhar à direita');
     });
 
-    await step('Orientação e espaçamento chegam ao markup', async () => {
+    await step('Orientação chega ao markup', async () => {
       await expect(group).toHaveAttribute('data-orientation', String(args.orientation));
-      await expect(group).toHaveAttribute('data-spacing', String(args.spacing));
     });
 
     await step('accessibility.item4 — aria-pressed e data-state contam a mesma história', async () => {

@@ -30,8 +30,6 @@ export type ToggleGroupOptions = {
   size?: ToggleSize;
   /** Direção do empilhamento e das setas de navegação. */
   orientation?: ToggleGroupOrientation;
-  /** Distância entre itens em unidades do grid. `0` emenda as bordas. */
-  spacing?: number;
   /** Desabilita o grupo inteiro — cada item herda. */
   disabled?: boolean;
   items: ToggleGroupItem[];
@@ -52,7 +50,6 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement {
     variant = 'default',
     size = 'default',
     orientation = 'horizontal',
-    spacing = 0,
     disabled = false,
     items,
     onValueChange,
@@ -71,14 +68,13 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement {
   root.setAttribute('role', 'toolbar');
   if (options['aria-label']) root.setAttribute('aria-label', options['aria-label']);
 
-  // A folha compartilhada lê `data-orientation` para empilhar e `data-spacing`
-  // + `--gap` para o espaçamento; `aria-orientation` conta a mesma coisa a
-  // quem ouve. Antes disso, as stories aplicavam `flex-col` — classe que não
-  // existe em CSS nenhum do projeto — e o grupo continuava horizontal.
+  // A folha compartilhada lê `data-orientation` para empilhar; `aria-orientation`
+  // conta a mesma coisa a quem ouve. Antes disso, as stories aplicavam
+  // `flex-col` — classe que não existe em CSS nenhum do projeto — e o grupo
+  // continuava horizontal. O espaço entre os itens é sempre zero: a folha fixa
+  // `gap: 0` e não há mais o que configurar aqui.
   root.dataset.orientation = orientation;
   root.setAttribute('aria-orientation', orientation);
-  root.dataset.spacing = String(spacing);
-  root.style.setProperty('--gap', String(spacing));
   if (disabled) root.dataset.disabled = '';
 
   function notifyChange(): void {

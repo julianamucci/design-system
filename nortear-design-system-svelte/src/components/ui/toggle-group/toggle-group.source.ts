@@ -29,7 +29,6 @@ export type ToggleGroupArgs = {
   orientation: 'horizontal' | 'vertical';
   variant: 'default' | 'outline';
   size: 'default' | 'sm' | 'lg';
-  spacing: number;
 };
 
 type Item = {
@@ -118,7 +117,6 @@ export function toggleGroupSource(
     orientation = 'horizontal',
     variant = 'default',
     size = 'default',
-    spacing = 0,
   } = ctx?.args ?? {};
 
   const combinado = type === 'multiple';
@@ -140,7 +138,6 @@ export function toggleGroupSource(
       variant === 'default' ? '' : `variant="${variant}"`,
       size === 'default' ? '' : `size="${size}"`,
       orientation === 'horizontal' ? '' : `orientation="${orientation}"`,
-      spacing ? `spacing={${spacing}}` : '',
       disabled ? 'disabled' : '',
     ].filter(Boolean),
   });

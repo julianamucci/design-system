@@ -14,7 +14,6 @@ type ToggleGroupArgs = {
   variant: 'default' | 'outline';
   size: 'default' | 'sm' | 'lg';
   orientation: 'horizontal' | 'vertical';
-  spacing: number;
   disabled: boolean;
   'aria-label': string;
 };
@@ -46,10 +45,6 @@ const meta: Meta<ToggleGroupArgs> = {
       options: ['horizontal', 'vertical'],
       description: 'Direção do empilhamento e das setas de navegação.',
     },
-    spacing: {
-      control: { type: 'number', min: 0, max: 3, step: 1 },
-      description: 'Distância entre items. 0 emenda as bordas (segmentado).',
-    },
     disabled: {
       control: 'boolean',
       description: 'Desabilita o grupo inteiro.',
@@ -64,7 +59,6 @@ const meta: Meta<ToggleGroupArgs> = {
     variant: 'outline',
     size: 'default',
     orientation: 'horizontal',
-    spacing: 0,
     disabled: false,
     'aria-label': 'Alinhamento do texto',
   },
@@ -102,7 +96,6 @@ export const Playground: Story = {
       variant: args.variant,
       size: args.size,
       orientation: args.orientation,
-      spacing: args.spacing,
       disabled: args.disabled,
       items,
       defaultValue: args.type === 'single' ? 'left' : ['left'],
@@ -133,11 +126,10 @@ export const Playground: Story = {
       await expect(btns.map((b) => b.getAttribute('aria-label'))).toEqual(LABELS);
     });
 
-    await step('Orientação e espaçamento chegam ao markup', async () => {
+    await step('A orientação chega ao markup', async () => {
       const group = canvas.getByRole('toolbar');
       await expect(group).toHaveAttribute('data-orientation', args.orientation);
       await expect(group).toHaveAttribute('aria-orientation', args.orientation);
-      await expect(group).toHaveAttribute('data-spacing', String(args.spacing));
     });
 
     await step('accessibility.item4 — aria-pressed e data-state contam a mesma história', async () => {

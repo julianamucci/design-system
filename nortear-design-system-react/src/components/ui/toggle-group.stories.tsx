@@ -35,10 +35,6 @@ const meta = {
       options: ["sm", "default", "lg"],
       description: "Altura herdada pelos items",
     },
-    spacing: {
-      control: { type: "number", min: 0, max: 4, step: 1 },
-      description: "Distância entre items (0 = segmented)",
-    },
     disabled: {
       control: "boolean",
       description: "Desabilita todos os items",
@@ -61,7 +57,6 @@ const meta = {
     orientation: "horizontal",
     variant: "default",
     size: "default",
-    spacing: 0,
     disabled: false,
     onValueChange: fn(),
     "aria-label": "Alinhamento do texto",
@@ -115,9 +110,8 @@ export const Playground: Story = {
       await expect(right).toHaveAttribute("aria-label", "Alinhar à direita");
     });
 
-    await step("Orientação e espaçamento chegam ao markup", async () => {
+    await step("Orientação chega ao markup", async () => {
       await expect(group).toHaveAttribute("data-orientation", args.orientation as string);
-      await expect(group).toHaveAttribute("data-spacing", String(args.spacing));
     });
 
     await step("accessibility.item4 — aria-pressed acompanha a seleção do grupo", async () => {

@@ -41,7 +41,7 @@ import {
 
 const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 
-// Quatro desvios do conteúdo compartilhado, e nenhum deles é snippet de código
+// Três desvios do conteúdo compartilhado, e nenhum deles é snippet de código
 // (snippet em override ficaria preso a um stack e invisível ao conteúdo):
 //
 // 1. `anatomy.item2` descreve o item como um subcomponente próprio. Aqui o item
@@ -52,27 +52,21 @@ const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 // 3. `notes.item4` promete variante e tamanho herdados por contexto. Quem
 //    emenda o conjunto aqui é a regra de CSS do grupo, e o tamanho é escolha de
 //    cada item.
-// 4. `props.table.spacing.description` promete uma escada fina de distância. O
-//    CSS compartilhado só resolve o caso "emendado"; acima disso vale o
-//    espaçamento único da regra base.
 const { t, dict } = useTranslation(toggleGroupTranslations as Record<string, unknown>, {
   'pt-BR': {
     'anatomy.item2': '<strong>Item</strong> — o próprio Toggle do design system com um <code>value</code> único; quem decide se ele está pressionado é o grupo.',
     'notes.item1': '<strong>Primitivos</strong>: <code>RdxCompositeRoot</code> (roving tabindex, setas, Home/End) mais o contexto de grupo que o <code>RdxToggle</code> de cada item consome.',
     'notes.item4': '<strong>Conjunto emendado</strong> — a variante do grupo é quem junta os itens numa borda só; o tamanho continua sendo escolha de cada item.',
-    'props.table.spacing.description': 'Distância entre itens. <code>0</code> emenda as bordas (segmentado); acima disso os botões ficam separados.',
   },
   en: {
     'anatomy.item2': '<strong>Item</strong> — the design system Toggle itself with a unique <code>value</code>; the group decides whether it is pressed.',
     'notes.item1': '<strong>Primitives</strong>: <code>RdxCompositeRoot</code> (roving tabindex, arrows, Home/End) plus the group context each item\'s <code>RdxToggle</code> consumes.',
     'notes.item4': '<strong>Joined set</strong> — the group variant is what merges the items into a single border; size stays a per-item choice.',
-    'props.table.spacing.description': 'Distance between items. <code>0</code> joins the borders (segmented); above that the buttons are separated.',
   },
   es: {
     'anatomy.item2': '<strong>Item</strong> — el propio Toggle del design system con un <code>value</code> único; quien decide si está presionado es el grupo.',
     'notes.item1': '<strong>Primitivos</strong>: <code>RdxCompositeRoot</code> (roving tabindex, flechas, Home/End) más el contexto de grupo que consume el <code>RdxToggle</code> de cada ítem.',
     'notes.item4': '<strong>Conjunto unido</strong> — la variante del grupo es la que junta los ítems en un solo borde; el tamaño sigue siendo elección de cada ítem.',
-    'props.table.spacing.description': 'Distancia entre ítems. <code>0</code> une los bordes (segmentado); por encima de eso los botones quedan separados.',
   },
 });
 
@@ -257,7 +251,7 @@ const INTERFACE_CODE = `// <div ndsToggleGroup> — o item é o Toggle do design
       </div>
     </ng-template>
     <ng-template #tplCompFilterWithText>
-      <div ndsToggleGroup type="multiple" [spacing]="1" [defaultValue]="['bold']" [attr.aria-label]="t('demonstration.labels.formattingLabel')">
+      <div ndsToggleGroup type="multiple" [defaultValue]="['bold']" [attr.aria-label]="t('demonstration.labels.formattingLabel')">
         <button ndsToggle variant="outline" value="bold">
           <svg ndsToggleIcon kind="bold"></svg>
           {{ t('demonstration.labels.bold') }}
@@ -313,7 +307,7 @@ const INTERFACE_CODE = `// <div ndsToggleGroup> — o item é o Toggle do design
               </button>
             </div>
 
-            <div ndsToggleGroup type="multiple" [spacing]="1" [attr.aria-label]="t('demonstration.labels.viewLabel')">
+            <div ndsToggleGroup type="multiple" [attr.aria-label]="t('demonstration.labels.viewLabel')">
               <button ndsToggle variant="outline" value="grid">
                 <svg ndsToggleGroupIcon kind="grid"></svg>
                 {{ t('demonstration.labels.grid') }}
@@ -453,7 +447,7 @@ import { NdsToggleGroup, NdsToggleGroupIcon } from '@/components/ui/toggle-group
 
   protected readonly anatomyItems = computed(() => {
     dict();
-    return [1, 2, 3, 4].map((i) => t(`anatomy.item${i}`));
+    return [1, 2, 3].map((i) => t(`anatomy.item${i}`));
   });
 
   protected readonly guidelines = computed(() => {
@@ -594,7 +588,6 @@ import { NdsToggleGroup, NdsToggleGroupIcon } from '@/components/ui/toggle-group
       { name: 'disabled',     type: 'boolean',                         k: 'disabled'      },
       { name: 'orientation',  type: '"horizontal" | "vertical"',       k: 'orientation'   },
       { name: 'variant',      type: '"default" | "outline"',           k: 'variant'       },
-      { name: 'spacing',      type: 'number',                          k: 'spacing'       },
     ];
     return [
       {

@@ -26,21 +26,18 @@ describe('toggleGroupSnippet', () => {
     const code = toggleGroupSnippet();
     expect(code).not.toContain('type:');
     expect(code).not.toContain('orientation:');
-    expect(code).not.toContain('spacing:');
     expect(code).not.toContain('size:');
     expect(code).not.toContain('disabled: true');
   });
 
-  it('mostra tipo, eixo, espaçamento e bloqueio quando a story os usa', () => {
+  it('mostra tipo, eixo e bloqueio quando a story os usa', () => {
     const code = toggleGroupSnippet({
       type: 'multiple',
       orientation: 'vertical',
-      spacing: 1,
       disabled: true,
     });
     expect(code).toContain("type: 'multiple'");
     expect(code).toContain("orientation: 'vertical'");
-    expect(code).toContain('spacing: 1');
     expect(code).toContain('disabled: true');
   });
 
@@ -85,11 +82,10 @@ describe('toggleGroupSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
     const exclusivo = toggleGroupSource('<div data-slot="toggle-group">', {});
     const multiplo = toggleGroupSource('<div data-slot="toggle-group">', {
-      args: { type: 'multiple', spacing: 2 },
+      args: { type: 'multiple' },
     });
     expect(exclusivo).not.toBe(multiplo);
     expect(multiplo).toContain("type: 'multiple'");
-    expect(multiplo).toContain('spacing: 2');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {

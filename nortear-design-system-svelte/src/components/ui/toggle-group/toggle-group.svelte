@@ -6,7 +6,6 @@
 	type ToggleVariants = VariantProps<typeof toggleVariants>;
 
 	interface ToggleGroupContext extends ToggleVariants {
-		spacing?: number;
 		orientation?: "horizontal" | "vertical";
 	}
 
@@ -28,13 +27,11 @@
 		value = $bindable(),
 		class: className,
 		size = "default",
-		spacing = 0,
 		orientation = "horizontal",
 		variant = "default",
 		...restProps
 	}: ToggleGroupPrimitive.RootProps &
 		ToggleVariants & {
-			spacing?: number;
 			orientation?: "horizontal" | "vertical";
 		} = $props();
 
@@ -44,9 +41,6 @@
 		},
 		get size() {
 			return size;
-		},
-		get spacing() {
-			return spacing;
 		},
 		get orientation() {
 			return orientation;
@@ -65,8 +59,6 @@ get along, so we shut typescript up by casting `value` to `never`.
 	data-slot="toggle-group"
 	data-variant={variant}
 	data-size={size}
-	data-spacing={spacing}
-	style={`--gap: ${spacing}`}
 	class={cn(
 		"nds-toggle-group",
 		className

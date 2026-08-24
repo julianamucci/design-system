@@ -16,7 +16,6 @@ type ToggleGroupArgs = {
   type: ToggleGroupType;
   variant: ToggleVariant;
   orientation: ToggleGroupOrientation;
-  spacing: number;
   disabled: boolean;
   ariaLabel: string;
   onValueChange?: (value: string | string[]) => void;
@@ -38,7 +37,6 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<ToggleGroupArgs
     type = 'single',
     variant = 'outline',
     orientation = 'horizontal',
-    spacing = 0,
     disabled = false,
     ariaLabel = 'Alinhamento do texto',
   } = ctx.args ?? {};
@@ -49,7 +47,6 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<ToggleGroupArgs
     type === 'single' ? '' : `type="${type}"`,
     variant === 'default' ? '' : `variant="${variant}"`,
     orientation === 'horizontal' ? '' : `orientation="${orientation}"`,
-    spacing === 0 ? '' : `[spacing]="${spacing}"`,
     disabled ? '[disabled]="true"' : '',
     type === 'single' ? `defaultValue="left"` : `[defaultValue]="['left']"`,
     // O grupo sem nome acessível anuncia só "barra de ferramentas".
@@ -107,10 +104,6 @@ const meta: Meta<ToggleGroupArgs> = {
       options: ['horizontal', 'vertical'],
       description: 'Direção do empilhamento e das setas de navegação.',
     },
-    spacing: {
-      control: { type: 'number', min: 0, max: 3 },
-      description: 'Distância entre itens. 0 emenda as bordas (segmentado).',
-    },
     disabled: { control: 'boolean', description: 'Desabilita o grupo inteiro.' },
     ariaLabel: {
       control: 'text',
@@ -128,7 +121,6 @@ const meta: Meta<ToggleGroupArgs> = {
     type: 'single',
     variant: 'outline',
     orientation: 'horizontal',
-    spacing: 0,
     disabled: false,
     ariaLabel: 'Alinhamento do texto',
     onValueChange: fn(),
@@ -163,7 +155,6 @@ export const Playground: Story = {
         [type]="type"
         [variant]="variant"
         [orientation]="orientation"
-        [spacing]="spacing"
         [disabled]="disabled"
         [defaultValue]="valueInitial"
         [attr.aria-label]="ariaLabel"
@@ -204,7 +195,6 @@ export const Playground: Story = {
       await expect(group.getAttribute('data-variant')).toBe(
         args.variant === 'default' ? null : args.variant,
       );
-      await expect(group.getAttribute('data-spacing')).toBe(args.spacing === 0 ? '0' : null);
     });
 
     await step('Cada item tem nome próprio, e o ícone não é lido', async () => {

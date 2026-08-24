@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
   toggleGroupCombinadoSource,
-  toggleGroupContornoEspacadoSource,
   toggleGroupControlledCombinadoSource,
   toggleGroupControlledExclusivoSource,
   toggleGroupDisabledSource,
@@ -22,7 +21,6 @@ const ALL = [
   toggleGroupItemDisabledSource,
   toggleGroupControlledExclusivoSource,
   toggleGroupControlledCombinadoSource,
-  toggleGroupContornoEspacadoSource,
 ];
 
 describe('toggleGroupSource', () => {
@@ -38,7 +36,6 @@ describe('toggleGroupSource', () => {
     expect(saida).not.toContain('orientation=');
     expect(saida).not.toContain('variant=');
     expect(saida).not.toContain('size=');
-    expect(saida).not.toContain('spacing=');
     expect(saida).not.toContain('disabled');
   });
 
@@ -53,21 +50,19 @@ describe('toggleGroupSource', () => {
 
   it('leva ao snippet só o que difere do padrão', () => {
     const saida = toggleGroupSource(undefined, {
-      args: { orientation: 'vertical', variant: 'outline', size: 'lg', spacing: 2, disabled: true },
+      args: { orientation: 'vertical', variant: 'outline', size: 'lg', disabled: true },
     });
     expect(saida).toContain('orientation="vertical"');
     expect(saida).toContain('variant="outline"');
     expect(saida).toContain('size="lg"');
-    expect(saida).toContain('spacing={2}');
     expect(saida).toContain('disabled');
   });
 
-  it('não inventa valor fora da união nem espaçamento que não é número', () => {
+  it('não inventa valor fora da união', () => {
     const saida = toggleGroupSource(undefined, {
-      args: { variant: 'roxo' as never, spacing: '2' as never },
+      args: { variant: 'roxo' as never },
     });
     expect(saida).not.toContain('roxo');
-    expect(saida).not.toContain('spacing');
   });
 
   it('o espião de onValueChange nunca vira código no painel', () => {
@@ -154,16 +149,6 @@ describe('controlado', () => {
   it('nenhum dos dois ensina o invólucro que a story usa para montar', () => {
     expect(toggleGroupControlledExclusivoSource()).not.toContain('Render');
     expect(toggleGroupControlledCombinadoSource()).not.toContain('Render');
-  });
-});
-
-describe('contorno com respiro', () => {
-  it('o contorno vai no item e o respiro no grupo', () => {
-    const saida = toggleGroupContornoEspacadoSource();
-    expect(saida).toContain('spacing={1}');
-    // No GRUPO o outline emendaria os botões e zeraria a borda de cada um.
-    expect(saida).not.toMatch(/<ToggleGroup\b[^>]*variant="outline"/);
-    expect(saida).toContain('<ToggleGroupItem variant="outline" value="left"');
   });
 });
 

@@ -142,6 +142,7 @@ export const FormattingBar: Story = {
     return group;
   },
   parameters: {
+    covers: ['visual.item5'],
     docs: {
       source: { transform: toggleGroupSourceWith({
           type: 'multiple',
@@ -178,6 +179,12 @@ export const FormattingBar: Story = {
       await definir(italic, false);
       await expect(ativos()).toHaveLength(1);
       await expect(bold).toHaveAttribute('data-state', 'on');
+    });
+    await step('visual.item5 — os itens são emendados, sem espaço entre eles', async () => {
+      const primeiro = bold.getBoundingClientRect();
+      const segundo = italic.getBoundingClientRect();
+      // Meio pixel de folga: o arredondamento do layout, não um gap.
+      await expect(Math.abs(segundo.left - primeiro.right)).toBeLessThanOrEqual(0.5);
     });
   },
 };
@@ -312,9 +319,6 @@ export const WithVisibleFilter: Story = {
     ];
     const group = createToggleGroup({
       type: 'multiple',
-      // Espaçamento acima de zero: os botões deixam de ser emendados e cada um
-      // mantém o próprio contorno — é o contraste do visual segmentado.
-      spacing: 1,
       items,
       defaultValue: ['compact'],
       'aria-label': 'Filtros de exibição',
@@ -331,11 +335,9 @@ export const WithVisibleFilter: Story = {
     return wrapper;
   },
   parameters: {
-    covers: ['visual.item5'],
     docs: {
       source: { transform: toggleGroupSourceWith({
           type: 'multiple',
-          spacing: 1,
           'aria-label': 'Filtros de exibição',
           defaultValue: ['compact'],
           items: [
@@ -345,26 +347,14 @@ export const WithVisibleFilter: Story = {
         }) },
       description: {
         story:
-          'Conjunto de filtros booleanos independentes com texto visível — `type="multiple"` permite combinar Ocultos + Compacto. O `aria-label` do grupo descreve a categoria geral; cada item dispensa `aria-label` porque o texto está visível. `spacing: 1` separa os botões, e o contorno passa a ser de cada item.',
+          'Conjunto de filtros booleanos independentes com texto visível — `type="multiple"` permite combinar Ocultos + Compacto. O `aria-label` do grupo descreve a categoria geral; cada item dispensa `aria-label` porque o texto está visível. O contorno é de cada item.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const group = canvas.getByRole('toolbar');
     const hidden = canvas.getByRole('button', { name: 'Ocultos' });
     const compact = canvas.getByRole('button', { name: 'Compacto' });
-
-    await step('visual.item5 — com espaçamento os botões deixam de ser emendados', async () => {
-      await expect(group).toHaveAttribute('data-spacing', '1');
-      const a = hidden.getBoundingClientRect();
-      const b = compact.getBoundingClientRect();
-      await expect(b.left).toBeGreaterThan(a.right);
-    });
-
-    await step('Separados, os itens mantêm o próprio canto arredondado', async () => {
-      await expect(parseFloat(getComputedStyle(hidden).borderTopRightRadius)).toBeGreaterThan(0);
-    });
 
     await step('Filtros independentes: um ativo não desliga o outro', async () => {
       await definir(compact, true);

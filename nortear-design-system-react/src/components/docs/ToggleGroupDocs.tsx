@@ -198,15 +198,13 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
   orientation = "horizontal",
   variant = "default",
   size = "default",
-  spacing = 0,
   ...props
 }: ToggleGroupPrimitive.Props &
   VariantProps<typeof toggleVariants> & {
-    spacing?: number;
     orientation?: "horizontal" | "vertical";
   }) {
   // Estende ToggleGroupPrimitive do @base-ui/react/toggle-group
-  // Context propaga variant/size/spacing/orientation para os Items
+  // Context propaga variant/size/orientation para os Items
 }`;
 
   return (
@@ -330,7 +328,6 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
           tContent("anatomy.item3"),
-          tContent("anatomy.item4"),
         ]}
         structureLabel={tContent("anatomy.structureLabel")}
         structureCode={tContent("anatomy.structureCode")}
@@ -730,13 +727,6 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
                 defaultValue: tContent("props.table.size.default"),
                 required: tContent("props.table.size.required"),
                 description: toPlainText(tContent("props.table.size.description")),
-              },
-              {
-                name: "spacing",
-                type: tContent("props.table.spacing.type"),
-                defaultValue: tContent("props.table.spacing.default"),
-                required: tContent("props.table.spacing.required"),
-                description: toPlainText(tContent("props.table.spacing.description")),
               },
             ],
           },

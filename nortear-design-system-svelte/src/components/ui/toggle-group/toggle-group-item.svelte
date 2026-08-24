@@ -21,7 +21,6 @@
 	data-slot="toggle-group-item"
 	data-variant={ctx.variant || variant}
 	data-size={ctx.size || size}
-	data-spacing={ctx.spacing}
 	class={cn(
 		"",
 		toggleVariants({

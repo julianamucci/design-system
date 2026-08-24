@@ -8,7 +8,6 @@
 import {
   attr,
   attrBool,
-  attrNum,
   attrs,
   attrsMultilinha,
   asCode,
@@ -22,7 +21,6 @@ export type ToggleGroupArgs = {
   orientation: 'horizontal' | 'vertical';
   variant: 'default' | 'outline';
   size: 'default' | 'sm' | 'lg';
-  spacing: number;
 };
 
 const IMPORT = `import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'`;
@@ -135,7 +133,6 @@ export const toggleGroupSource: SourceTransform<ToggleGroupArgs> = (_gerado, ctx
         attr('orientation', args.orientation, 'horizontal'),
         attr('variant', args.variant, 'default'),
         attr('size', args.size, 'default'),
-        attrNum('spacing', args.spacing, 0),
         attrBool('disabled', args.disabled, false),
         'aria-label="Alinhamento do texto"',
       ],
@@ -259,21 +256,6 @@ export function toggleGroupBarFormattingSource(): string {
     group({
       root: ['type="multiple"', `:default-value="['bold']"`, 'aria-label="Formatação"'],
       items: FORMATTING,
-    }),
-  );
-}
-
-/**
- * Itens separados: com `spacing` o grupo deixa de emendar os botões, e por isso
- * o contorno passa para o ITEM — `variant="outline"` na raiz zeraria a borda de
- * cada um para desenhar um contêiner só, o oposto do que a composição mostra.
- */
-export function toggleGroupWithSpacingSource(): string {
-  return vueSnippet(
-    script(FORMATTING),
-    group({
-      root: ['type="multiple"', ':spacing="1"', 'aria-label="Formatação"'],
-      items: FORMATTING.map((item) => ({ ...item, variant: 'outline' })),
     }),
   );
 }

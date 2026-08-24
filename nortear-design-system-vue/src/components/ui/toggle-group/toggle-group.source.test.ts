@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import {
   toggleGroupBarAlignmentSource,
   toggleGroupBarFormattingSource,
-  toggleGroupWithSpacingSource,
   toggleGroupDisabledSource,
   toggleGroupItemDisabledSource,
   toggleGroupMultipleSource,
@@ -50,14 +49,12 @@ import { AlignLeft, AlignCenter, AlignRight } from 'lucide-vue-next'
         orientation: 'horizontal',
         variant: 'default',
         size: 'default',
-        spacing: 0,
         disabled: false,
       },
     });
     expect(saida).not.toContain('orientation=');
     expect(saida).not.toContain('variant=');
     expect(saida).not.toContain('size=');
-    expect(saida).not.toContain('spacing=');
     expect(saida).not.toContain('disabled');
   });
 
@@ -68,13 +65,11 @@ import { AlignLeft, AlignCenter, AlignRight } from 'lucide-vue-next'
 
   it('os controls que diferem do padrão chegam à raiz, cada um na sua sintaxe', () => {
     const saida = toggleGroupSource('', {
-      args: { orientation: 'vertical', variant: 'outline', size: 'lg', spacing: 2, disabled: true },
+      args: { orientation: 'vertical', variant: 'outline', size: 'lg', disabled: true },
     });
     expect(saida).toContain('orientation="vertical"');
     expect(saida).toContain('variant="outline"');
     expect(saida).toContain('size="lg"');
-    // Número e booleano não são texto: um vai por ligação, o outro vai sozinho.
-    expect(saida).toContain(':spacing="2"');
     expect(saida).toContain('disabled');
     // A fila longa quebra uma linha por atributo em vez de sumir na rolagem.
     expect(saida).toContain('<ToggleGroup\n');
@@ -163,13 +158,6 @@ describe('transforms das stories de composição', () => {
     const saida = toggleGroupBarFormattingSource();
     expect(saida).toContain(`:default-value="['bold']"`);
     expect(saida).not.toContain('variant=');
-  });
-
-  it('com espaçamento o contorno muda de dono: sai da raiz e entra no item', () => {
-    const saida = toggleGroupWithSpacingSource();
-    expect(rootOf(saida)).toContain(':spacing="1"');
-    expect(rootOf(saida)).not.toContain('variant=');
-    expect(saida).toContain('<ToggleGroupItem variant="outline" value="bold" aria-label="Negrito">');
   });
 
   it('a comparação de tamanhos empilha três grupos, e o do meio sai sem size', () => {

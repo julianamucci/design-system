@@ -28,7 +28,6 @@ export type ToggleGroupSnippetOptions = {
   variant?: ToggleVariant;
   size?: ToggleSize;
   orientation?: ToggleGroupOrientation;
-  spacing?: number;
   disabled?: boolean;
   'aria-label'?: string;
   items?: ToggleGroupSnippetItem[];
@@ -85,7 +84,6 @@ export function toggleGroupSnippet(o: ToggleGroupSnippetOptions = {}): string {
       ['variant', variant !== 'default' ? text(variant) : undefined],
       ['size', o.size && o.size !== 'default' ? text(o.size) : undefined],
       ['orientation', o.orientation && o.orientation !== 'horizontal' ? text(o.orientation) : undefined],
-      ['spacing', o.spacing ? String(o.spacing) : undefined],
       ['disabled', o.disabled ? 'true' : undefined],
       ['defaultValue', padrao === undefined ? undefined : valueLiteral(padrao)],
       ['onValueChange', o.onValueChange],

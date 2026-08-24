@@ -16,13 +16,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-1);                          /* 4px entre toggles */
+  /* Zero, sempre: o grupo EMENDA os toggles, e é isso que o distingue de
+     botões soltos num cluster. Havia aqui um espaçamento configurável — um
+     `--gap` em unidades de grid multiplicado por `[data-spacing]`, alimentado
+     por uma prop `spacing` e um style inline em cada stack — para chegar ao
+     mesmo zero que todo consumidor pedia. Maquinaria inteira para o valor
+     padrão. */
+  gap: 0;
 }
 
 /* ── Variante outline (toggles emendados num único container) ────────────── */
 /* --border acompanha o toggle e o botão outline — ver nota em toggle.css. */
 .nds-toggle-group[data-variant="outline"] {
-  gap: 0;
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
@@ -51,26 +56,26 @@
   border-top: 1px solid hsl(var(--border));
 }
 
-/* ── Espaçamento configurável (--gap em unidades do grid; 0 = emendado) ───── */
-.nds-toggle-group[data-spacing] {
-  gap: calc(var(--spacing-base, 0.25rem) * var(--gap, 0));
-}
-.nds-toggle-group[data-spacing="0"] > .nds-toggle {
+/* ── Cantos do grupo emendado ────────────────────────────────────────────── */
+/* Com o gap fixo em zero, o arredondamento é do GRUPO, não de cada toggle:
+   quadrado por dentro, arredondado nas duas pontas. Antes isto dependia de
+   `[data-spacing="0"]`, que era a única configuração que alguém usava. */
+.nds-toggle-group > .nds-toggle {
   border-radius: var(--radius-none);
 }
-.nds-toggle-group[data-spacing="0"]:not([data-orientation="vertical"]) > .nds-toggle:first-child {
+.nds-toggle-group:not([data-orientation="vertical"]) > .nds-toggle:first-child {
   border-top-left-radius: var(--radius-button);
   border-bottom-left-radius: var(--radius-button);
 }
-.nds-toggle-group[data-spacing="0"]:not([data-orientation="vertical"]) > .nds-toggle:last-child {
+.nds-toggle-group:not([data-orientation="vertical"]) > .nds-toggle:last-child {
   border-top-right-radius: var(--radius-button);
   border-bottom-right-radius: var(--radius-button);
 }
-.nds-toggle-group[data-spacing="0"][data-orientation="vertical"] > .nds-toggle:first-child {
+.nds-toggle-group[data-orientation="vertical"] > .nds-toggle:first-child {
   border-top-left-radius: var(--radius-button);
   border-top-right-radius: var(--radius-button);
 }
-.nds-toggle-group[data-spacing="0"][data-orientation="vertical"] > .nds-toggle:last-child {
+.nds-toggle-group[data-orientation="vertical"] > .nds-toggle:last-child {
   border-bottom-left-radius: var(--radius-button);
   border-bottom-right-radius: var(--radius-button);
 }

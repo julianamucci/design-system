@@ -219,7 +219,6 @@ const interfaceCode = `interface ToggleGroupProps {
   orientation?: 'horizontal' | 'vertical';
   variant?: 'default' | 'outline';
   size?: 'default' | 'sm' | 'lg';
-  spacing?: number;                   // 0 = segmented (default)
   class?: string;
   // Emits
   'onUpdate:modelValue'?: (value: string | string[]) => void;
@@ -238,7 +237,6 @@ const anatomyItems = computed(() => [
   tContent('anatomy.item1'),
   tContent('anatomy.item2'),
   tContent('anatomy.item3'),
-  tContent('anatomy.item4'),
 ]);
 
 const variantItems = computed(() => [
@@ -337,7 +335,6 @@ const groupPropItems = computed(() => [
   { name: 'orientation',        type: tContent('props.table.orientation.type'),       defaultValue: tContent('props.table.orientation.default'),   required: tContent('props.table.orientation.required'),   description: toPlainText(tContent('props.table.orientation.description'))   },
   { name: 'variant',            type: tContent('props.table.variant.type'),           defaultValue: tContent('props.table.variant.default'),       required: tContent('props.table.variant.required'),       description: toPlainText(tContent('props.table.variant.description'))       },
   { name: 'size',               type: tContent('props.table.size.type'),              defaultValue: tContent('props.table.size.default'),          required: tContent('props.table.size.required'),          description: toPlainText(tContent('props.table.size.description'))          },
-  { name: 'spacing',            type: tContent('props.table.spacing.type'),           defaultValue: tContent('props.table.spacing.default'),       required: tContent('props.table.spacing.required'),       description: toPlainText(tContent('props.table.spacing.description'))       },
 ]);
 
 const itemPropItems = computed(() => [

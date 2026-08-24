@@ -115,7 +115,6 @@ export const FiltersWithText: Story = {
         ndsToggleGroup
         type="multiple"
         variant="default"
-        [spacing]="1"
         [defaultValue]="['hidden']"
         aria-label="Filtros da lista"
       >
@@ -136,17 +135,21 @@ export const FiltersWithText: Story = {
     const ocultos = canvas.getByRole('button', { name: 'Mostrar ocultos' });
     const compacta = canvas.getByRole('button', { name: 'Visão compacta' });
 
-    await step('visual.item5 — com espaçamento os botões deixam de ser emendados', async () => {
-      // O atributo `data-spacing="0"` é o que liga o visual segmentado; acima
-      // de zero ele sai de cena e vale o gap da regra base.
-      await expect(group.getAttribute('data-spacing')).toBe(null);
+    await step('visual.item5 — os itens ficam emendados, sem espaço entre eles', async () => {
+      // O espaço entre itens é zero SEMPRE, e não uma configuração: medir o gap
+      // e a distância entre os retângulos é o que prova que a folha manda.
+      await expect(parseFloat(getComputedStyle(group).columnGap || '0')).toBe(0);
       const a = ocultos.getBoundingClientRect();
       const b = compacta.getBoundingClientRect();
-      await expect(b.left).toBeGreaterThan(a.right);
+      await expect(Math.abs(b.left - a.right)).toBeLessThan(1);
     });
 
-    await step('Separados, os itens mantêm o próprio canto arredondado', async () => {
-      await expect(parseFloat(getComputedStyle(ocultos).borderTopRightRadius)).toBeGreaterThan(0);
+    await step('Emendados, só as pontas do conjunto ficam arredondadas', async () => {
+      // Primeiro item: canto de fora redondo, canto de dentro reto — é assim
+      // que o conjunto lê como uma peça só, e não como dois botões vizinhos.
+      const styles = getComputedStyle(ocultos);
+      await expect(parseFloat(styles.borderTopLeftRadius)).toBeGreaterThan(0);
+      await expect(parseFloat(styles.borderTopRightRadius)).toBe(0);
     });
 
     await step('Filtros independentes: um ativo não desliga o outro', async () => {

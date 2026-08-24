@@ -198,7 +198,6 @@ interface ToggleGroupProps {
   orientation?: "horizontal" | "vertical";
   variant?: "default" | "outline";          // herdado pelos items
   size?: "default" | "sm" | "lg";           // herdado pelos items
-  spacing?: number;                          // 0 = segmented
   'aria-label': string;                     // OBRIGATÓRIO
   class?: string;
 }
@@ -294,7 +293,6 @@ interface ToggleGroupItemProps {
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
       $tStore('anatomy.item3'),
-      $tStore('anatomy.item4'),
     ]}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -658,7 +656,6 @@ interface ToggleGroupItemProps {
           { name: 'orientation',   type: $tStore('props.table.orientation.type'),    defaultValue: $tStore('props.table.orientation.default'),    required: $tStore('props.table.orientation.required'),    description: toPlainText($tStore('props.table.orientation.description')) },
           { name: 'variant',       type: $tStore('props.table.variant.type'),        defaultValue: $tStore('props.table.variant.default'),        required: $tStore('props.table.variant.required'),        description: toPlainText($tStore('props.table.variant.description')) },
           { name: 'size',          type: $tStore('props.table.size.type'),           defaultValue: $tStore('props.table.size.default'),           required: $tStore('props.table.size.required'),           description: toPlainText($tStore('props.table.size.description')) },
-          { name: 'spacing',       type: $tStore('props.table.spacing.type'),        defaultValue: $tStore('props.table.spacing.default'),        required: $tStore('props.table.spacing.required'),        description: toPlainText($tStore('props.table.spacing.description')) },
         ],
       },
     ]}

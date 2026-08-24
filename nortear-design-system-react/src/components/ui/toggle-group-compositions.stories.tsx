@@ -9,7 +9,6 @@ import {
 import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 import { definir } from "./toggle-group.fixtures";
 import {
-  toggleGroupContornoEspacadoSource,
   toggleGroupControlledCombinadoSource,
   toggleGroupControlledExclusivoSource,
   toggleGroupSource,
@@ -27,7 +26,7 @@ const meta = {
       source: { transform: toggleGroupSource },
       description: {
         component:
-          "Composicoes reais do ToggleGroup: barra de alinhamento (single), barra de formatação (multiple), seletor vertical e versão outline/segmented.",
+          "Composicoes reais do ToggleGroup: barra de alinhamento (single), barra de formatação (multiple) e seletor vertical.",
       },
     },
   },
@@ -137,10 +136,11 @@ export const MultipleFormatting: Story = {
     );
   },
   parameters: {
+    covers: ["visual.item5"],
     docs: {
       description: {
         story:
-          "Barra de formatação Bold/Italic/Underline com seleção múltipla — o modo combinado permite ativar items independentemente.",
+          "Barra de formatação Bold/Italic/Underline com seleção múltipla — o modo combinado permite ativar items independentemente. Os botões nascem emendados: o grupo não tem espaço entre items.",
       },
       // Controlado no modo combinado: o callback recebe a lista inteira.
       source: { transform: toggleGroupControlledCombinadoSource },
@@ -162,6 +162,13 @@ export const MultipleFormatting: Story = {
       await definir(italic, false);
       await expect(italic).toHaveAttribute("aria-pressed", "false");
       await expect(bold).toHaveAttribute("aria-pressed", "true");
+    });
+
+    await step("visual.item5 — os itens são emendados, sem espaço entre eles", async () => {
+      const a = bold.getBoundingClientRect();
+      const b = italic.getBoundingClientRect();
+      // Meio pixel de folga: o arredondamento do layout, não um gap.
+      await expect(Math.abs(b.left - a.right)).toBeLessThanOrEqual(0.5);
     });
   },
 };
@@ -206,53 +213,6 @@ export const Vertical: Story = {
       const a = grid.getBoundingClientRect();
       const b = list.getBoundingClientRect();
       await expect(b.top).toBeGreaterThanOrEqual(a.bottom - 1);
-    });
-  },
-};
-
-export const OutlineSpaced: Story = {
-  render: () => (
-    // O contorno vai no ITEM, não no grupo: `variant="outline"` no grupo emenda
-    // os botões num container só e zera a borda de cada um — o oposto do que
-    // esta composição demonstra.
-    <ToggleGroup spacing={1} defaultValue="center" aria-label="Alinhamento do texto">
-      <ToggleGroupItem variant="outline" value="left" aria-label="Alinhar à esquerda">
-        <AlignLeft aria-hidden="true" />
-      </ToggleGroupItem>
-      <ToggleGroupItem variant="outline" value="center" aria-label="Centralizar">
-        <AlignCenter aria-hidden="true" />
-      </ToggleGroupItem>
-      <ToggleGroupItem variant="outline" value="right" aria-label="Alinhar à direita">
-        <AlignRight aria-hidden="true" />
-      </ToggleGroupItem>
-    </ToggleGroup>
-  ),
-  parameters: {
-    covers: ["visual.item5"],
-    docs: {
-      description: {
-        story:
-          "spacing=1 com contorno em cada item — botões separados, cada um com a própria borda. Contraste com o estilo segmented padrão (spacing=0).",
-      },
-      // O contorno vai no ITEM: no grupo ele emendaria os botões e zeraria as bordas.
-      source: { transform: toggleGroupContornoEspacadoSource },
-    },
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const left = canvas.getByRole("button", { name: "Alinhar à esquerda" });
-    const center = canvas.getByRole("button", { name: "Centralizar" });
-
-    await step("visual.item5 — com espaçamento os botões deixam de ser emendados", async () => {
-      await expect(canvas.getByRole("toolbar")).toHaveAttribute("data-spacing", "1");
-      const a = left.getBoundingClientRect();
-      const b = center.getBoundingClientRect();
-      await expect(b.left).toBeGreaterThan(a.right);
-    });
-
-    await step("Separados, os itens mantêm borda e canto próprios", async () => {
-      await expect(parseFloat(getComputedStyle(left).borderTopWidth)).toBeGreaterThan(0);
-      await expect(parseFloat(getComputedStyle(left).borderTopRightRadius)).toBeGreaterThan(0);
     });
   },
 };

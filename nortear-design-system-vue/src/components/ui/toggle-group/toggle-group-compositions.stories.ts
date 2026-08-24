@@ -10,7 +10,6 @@ import {
 import {
   toggleGroupBarAlignmentSource,
   toggleGroupBarFormattingSource,
-  toggleGroupWithSpacingSource,
   toggleGroupSizesSource,
   toggleGroupVerticalSource,
 } from './toggle-group.source';
@@ -27,7 +26,7 @@ const meta = {
       source: { transform: toggleGroupBarAlignmentSource },
       description: {
         component:
-          'Padrões de composição do ToggleGroup: barra de alinhamento (single), barra de formatação (multiple), modo de visualização vertical e variantes outline com spacing.',
+          'Padrões de composição do ToggleGroup: barra de alinhamento (single), barra de formatação (multiple), modo de visualização vertical e comparação de tamanhos.',
       },
     },
   },
@@ -78,6 +77,7 @@ export const AlignmentBar: Story = {
 
 export const FormattingBar: Story = {
   parameters: {
+    covers: ['visual.item5'],
     // Modo combinado: o valor é lista e nenhum contorno emenda os itens — a do
     // meta mostraria a barra exclusiva com contorno no grupo.
     docs: { source: { transform: toggleGroupBarFormattingSource } },
@@ -109,6 +109,12 @@ export const FormattingBar: Story = {
       await expect(bold).toHaveAttribute('aria-pressed', 'true');
       // Volta ao estado inicial para a próxima rodada começar igual a esta.
       await definir(italic, false);
+    });
+    await step('visual.item5 — os itens são emendados, sem espaço entre eles', async () => {
+      const a = bold.getBoundingClientRect();
+      const b = italic.getBoundingClientRect();
+      // Meio pixel de folga: o arredondamento do layout, não um gap.
+      await expect(Math.abs(b.left - a.right)).toBeLessThanOrEqual(0.5);
     });
   },
 };
@@ -147,47 +153,6 @@ export const VerticalViewMode: Story = {
       (grid as HTMLElement).focus();
       await userEvent.keyboard('{ArrowDown}');
       await expect(list).toHaveFocus();
-    });
-  },
-};
-
-export const WithSpacing: Story = {
-  parameters: {
-    covers: ['visual.item5'],
-    // Com espaçamento o contorno muda de dono: sai da raiz e vai para cada item.
-    // A do meta ensinaria justamente o contrário.
-    docs: { source: { transform: toggleGroupWithSpacingSource } },
-  },
-  render: () => ({
-    components: { ToggleGroup, ToggleGroupItem, Bold, Italic, Underline },
-    setup() { return {}; },
-    // O contorno vai no ITEM, não no grupo: `variant="outline"` no grupo emenda
-    // os botões num container só e zera a borda de cada um — o oposto do que
-    // esta composição demonstra.
-    template: `
-      <ToggleGroup type="multiple" :spacing="1" aria-label="Formatação">
-        <ToggleGroupItem variant="outline" value="bold" aria-label="Negrito"><Bold aria-hidden="true" /></ToggleGroupItem>
-        <ToggleGroupItem variant="outline" value="italic" aria-label="Itálico"><Italic aria-hidden="true" /></ToggleGroupItem>
-        <ToggleGroupItem variant="outline" value="underline" aria-label="Sublinhado"><Underline aria-hidden="true" /></ToggleGroupItem>
-      </ToggleGroup>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const bold = canvas.getByRole('button', { name: 'Negrito' });
-    const italic = canvas.getByRole('button', { name: 'Itálico' });
-
-    await step('visual.item5 — com espaçamento os botões deixam de ser emendados', async () => {
-      const group = canvasElement.querySelector('[data-slot="toggle-group"]');
-      await expect(group).toHaveAttribute('data-spacing', '1');
-      const a = bold.getBoundingClientRect();
-      const b = italic.getBoundingClientRect();
-      await expect(b.left).toBeGreaterThan(a.right);
-    });
-    await step('Separados, os itens mantêm borda e canto próprios', async () => {
-      await expect(canvas.getAllByRole('button')).toHaveLength(3);
-      await expect(parseFloat(getComputedStyle(bold).borderTopWidth)).toBeGreaterThan(0);
-      await expect(parseFloat(getComputedStyle(bold).borderTopRightRadius)).toBeGreaterThan(0);
     });
   },
 };

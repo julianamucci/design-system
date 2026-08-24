@@ -8,9 +8,7 @@ import { inject } from 'vue'
 import { cn } from '@/lib/utils'
 import { toggleVariants } from '@/components/ui/toggle'
 
-type ToggleGroupVariants = VariantProps<typeof toggleVariants> & {
-  spacing?: number
-}
+type ToggleGroupVariants = VariantProps<typeof toggleVariants>
 
 const props = defineProps<ToggleGroupItemProps & {
   class?: HTMLAttributes['class']
@@ -30,7 +28,6 @@ const forwardedProps = useForwardProps(delegatedProps)
     data-slot="toggle-group-item"
     :data-variant="context?.variant || variant"
     :data-size="context?.size || size"
-    :data-spacing="context?.spacing"
     v-bind="forwardedProps"
     :class="cn( toggleVariants({ variant: context?.variant || variant, size: context?.size || size, }), props.class)"
   >

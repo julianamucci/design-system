@@ -26,7 +26,6 @@
     orientation?: 'horizontal' | 'vertical';
     variant?: 'default' | 'outline';
     size?: 'default' | 'sm' | 'lg';
-    spacing?: number;
     ariaLabel?: string;
     kind?: GroupKind;
     items?: Item[];
@@ -42,7 +41,6 @@
     orientation = 'horizontal',
     variant = 'default',
     size = 'default',
-    spacing = 0,
     ariaLabel = 'Alinhamento do texto',
     kind = 'alignment',
     items,
@@ -123,7 +121,6 @@ escrito assim o repasse ao espião da story fica explícito.
     {orientation}
     {variant}
     {size}
-    {spacing}
     aria-label={ariaLabel}
   >
     {@render buttons()}
@@ -140,7 +137,6 @@ escrito assim o repasse ao espião da story fica explícito.
     {orientation}
     {variant}
     {size}
-    {spacing}
     aria-label={ariaLabel}
   >
     {@render buttons()}

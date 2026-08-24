@@ -85,6 +85,7 @@ export const FormattingToolbar: Story = {
     ariaLabel: 'Formatação',
   },
   parameters: {
+    covers: ['visual.item5'],
     docs: {
       source: { transform: toggleGroupFormattingSource },
       description: {
@@ -109,6 +110,12 @@ export const FormattingToolbar: Story = {
       await expect(items[1]).toHaveAttribute('aria-pressed', 'true');
       // Volta ao estado inicial (nenhum ativo) para a próxima rodada.
       await definir(items[1], false);
+    });
+    await step('visual.item5 — os itens são emendados, sem espaço entre eles', async () => {
+      const primeiro = items[0].getBoundingClientRect();
+      const segundo = items[1].getBoundingClientRect();
+      // Meio pixel de folga: o arredondamento do layout, não um gap.
+      await expect(Math.abs(segundo.left - primeiro.right)).toBeLessThanOrEqual(0.5);
     });
   },
 };
@@ -158,14 +165,13 @@ export const SegmentedOutline: Story = {
   args: {
     type: 'single',
     variant: 'outline',
-    spacing: 0,
     kind: 'alignment',
     ariaLabel: 'Alinhamento do texto',
   },
   parameters: {
     docs: {
       description: {
-        story: 'Visual segmented (spacing=0 + outline) — bordas conectadas, estilo barra única.',
+        story: 'Visual segmented (outline) — bordas conectadas, estilo barra única.',
       },
     },
   },
@@ -173,44 +179,8 @@ export const SegmentedOutline: Story = {
     const canvas = within(canvasElement);
     const group = canvas.getByRole('group');
 
-    await step('Grupo tem data-spacing=0', async () => {
-      await expect(group).toHaveAttribute('data-spacing', '0');
-    });
-  },
-};
-
-export const SeparatedItems: Story = {
-  args: {
-    type: 'single',
-    // Variante padrão de propósito: `variant="outline"` no grupo emenda os
-    // botões num container com borda única e zera a borda de cada um — o
-    // oposto do que esta composição demonstra.
-    spacing: 2,
-    kind: 'alignment',
-    ariaLabel: 'Alinhamento do texto',
-  },
-  parameters: {
-    covers: ['visual.item5'],
-    docs: {
-      description: {
-        story: 'Items separados (spacing > 0) — botões distintos, sem bordas conectadas.',
-      },
-    },
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const group = canvas.getByRole('group');
-    const items = canvas.getAllByRole('radio');
-
-    await step('visual.item5 — com espaçamento os botões deixam de ser emendados', async () => {
-      await expect(group).toHaveAttribute('data-spacing', '2');
-      const a = items[0].getBoundingClientRect();
-      const b = items[1].getBoundingClientRect();
-      await expect(b.left).toBeGreaterThan(a.right);
-    });
-
-    await step('Separados, os itens mantêm o próprio canto arredondado', async () => {
-      await expect(parseFloat(getComputedStyle(items[0]).borderTopRightRadius)).toBeGreaterThan(0);
+    await step('Grupo carrega a variante que emenda as bordas', async () => {
+      await expect(group).toHaveAttribute('data-variant', 'outline');
     });
   },
 };

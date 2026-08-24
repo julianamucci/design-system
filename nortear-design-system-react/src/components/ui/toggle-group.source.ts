@@ -9,7 +9,6 @@ import {
   attrsMultilinha,
   jsxSnippet,
   propBool,
-  propNumber,
   propOption,
   propText,
   type SourceTransform,
@@ -20,7 +19,6 @@ export type ToggleGroupArgs = {
   orientation: 'horizontal' | 'vertical';
   variant: 'default' | 'outline';
   size: 'sm' | 'default' | 'lg';
-  spacing: number;
   disabled: boolean;
   'aria-label': string;
 };
@@ -97,9 +95,6 @@ export const toggleGroupSource: SourceTransform<ToggleGroupArgs> = (_gerado, ctx
         propOption('orientation', args.orientation, ORIENTACOES, 'horizontal'),
         propOption('variant', args.variant, VARIANTS, 'default'),
         propOption('size', args.size, SIZES, 'default'),
-        typeof args.spacing === 'number' && args.spacing !== 0
-          ? propNumber('spacing', args.spacing)
-          : undefined,
         propBool('disabled', args.disabled),
         label,
       ],
@@ -250,24 +245,5 @@ ${items(FORMATTING)
     Ativos: <code className="nds-font-mono">[{formatos.join(", ")}]</code>
   </p>
 </div>`,
-  );
-}
-
-/**
- * Contorno com respiro. O `variant="outline"` no GRUPO emenda os botões num
- * contêiner só e zera a borda de cada um — o oposto do que esta composição
- * mostra. Para botões separados, o contorno vai no ITEM e o respiro no grupo.
- */
-export function toggleGroupContornoEspacadoSource(): string {
-  return jsxSnippet(
-    `${IMPORT_GROUP}\n${ICONS_ALIGNMENT}`,
-    group(
-      ['spacing={1}', 'defaultValue="center"', 'aria-label="Alinhamento do texto"'],
-      items([
-        ['left', 'Alinhar à esquerda', 'AlignLeft', 'variant="outline"'],
-        ['center', 'Centralizar', 'AlignCenter', 'variant="outline"'],
-        ['right', 'Alinhar à direita', 'AlignRight', 'variant="outline"'],
-      ]),
-    ),
   );
 }
