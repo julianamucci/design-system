@@ -271,20 +271,28 @@ const codeImport = `import {
   ComboboxTrigger,
 } from "@/components/ui/combobox";`;
 
-const interfaceCode = `// Combobox (raiz — dona do valor, do texto e do aberto/fechado)
+const interfaceCode = `// A opção como o filtro a enxerga
+interface ComboboxFilterItem {
+  value: string;
+  label: string;
+  disabled?: boolean;
+}
+
+// Combobox (raiz — dona do valor, do texto e do aberto/fechado)
 interface ComboboxProps {
   modelValue?: string | string[];
   defaultValue?: string | string[];
+  inputValue?: string;                 // v-model:input-value
   multiple?: boolean;
   disabled?: boolean;
   name?: string;
-  ignoreFilter?: boolean;
+  filter?: (item: ComboboxFilterItem, query: string) => boolean;
+  ignoreFilter?: boolean;              // desliga o filtro sem substituí-lo
   class?: string;
 }
 
-// ComboboxInput (texto de busca)
+// ComboboxInput (campo de texto — o texto em si é da raiz)
 interface ComboboxInputProps {
-  modelValue?: string;
   displayValue?: (value: unknown) => string;
   class?: string;
 }
@@ -362,20 +370,22 @@ const propCols = computed(() => ({
 // Os nomes de prop são os DESTA stack; as descrições vêm do conteúdo
 // compartilhado, que é escrito sem citar API de lib nenhuma.
 const rootPropItems = computed(() => [
-  { name: 'modelValue',            type: 'string | string[]',                  defaultValue: '—',     required: 'Não', description: toPlainText(tContent('props.table.value.description'))            },
-  { name: 'defaultValue',          type: 'string | string[]',                  defaultValue: '—',     required: 'Não', description: toPlainText(tContent('props.table.defaultValue.description'))     },
-  { name: 'onUpdate:modelValue',   type: '(value: string | string[]) => void', defaultValue: '—',     required: 'Não', description: toPlainText(tContent('props.table.onValueChange.description'))    },
-  { name: 'multiple',              type: 'boolean',                            defaultValue: 'false', required: 'Não', description: toPlainText(tContent('props.table.multiple.description'))        },
-  { name: 'disabled',              type: 'boolean',                            defaultValue: 'false', required: 'Não', description: toPlainText(tContent('props.table.disabled.description'))        },
-  { name: 'name',                  type: 'string',                             defaultValue: '—',     required: 'Não', description: toPlainText(tContent('props.table.name.description'))            },
-  { name: 'ignoreFilter',          type: 'boolean',                            defaultValue: 'false', required: 'Não', description: toPlainText(tContent('props.table.filter.description'))          },
+  { name: 'modelValue',            type: 'string | string[]',                  defaultValue: '—',     required: tNav('common.no'), description: toPlainText(tContent('props.table.value.description'))            },
+  { name: 'defaultValue',          type: 'string | string[]',                  defaultValue: '—',     required: tNav('common.no'), description: toPlainText(tContent('props.table.defaultValue.description'))     },
+  { name: 'onUpdate:modelValue',   type: '(value: string | string[]) => void', defaultValue: '—',     required: tNav('common.no'), description: toPlainText(tContent('props.table.onValueChange.description'))    },
+  { name: 'multiple',              type: 'boolean',                            defaultValue: 'false', required: tNav('common.no'), description: toPlainText(tContent('props.table.multiple.description'))        },
+  { name: 'disabled',              type: 'boolean',                            defaultValue: 'false', required: tNav('common.no'), description: toPlainText(tContent('props.table.disabled.description'))        },
+  { name: 'name',                  type: 'string',                             defaultValue: '—',     required: tNav('common.no'), description: toPlainText(tContent('props.table.name.description'))            },
+  // O texto de busca e o filtro moram na RAIZ desta stack: as duas coisas são
+  // lidas por mais de uma peça, e a raiz é a única que todas alcançam.
+  { name: 'inputValue',            type: 'string',                             defaultValue: '—',     required: tNav('common.no'), description: toPlainText(tContent('props.table.inputValue.description'))       },
+  { name: 'onUpdate:inputValue',   type: '(text: string) => void',             defaultValue: '—',     required: tNav('common.no'), description: toPlainText(tContent('props.table.onInputValueChange.description')) },
+  { name: 'filter',                type: '(item: ComboboxFilterItem, query: string) => boolean', defaultValue: '—', required: tNav('common.no'), description: toPlainText(tContent('props.table.filter.description')) },
 ]);
 
 const inputPropItems = computed(() => [
-  { name: 'placeholder',         type: 'string',                     defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.placeholder.description'))          },
-  { name: 'modelValue',          type: 'string',                     defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.inputValue.description'))           },
-  { name: 'onUpdate:modelValue', type: '(text: string) => void',     defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.onInputValueChange.description'))  },
-  { name: 'displayValue',        type: '(value: unknown) => string', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.items.description'))               },
+  { name: 'placeholder',         type: 'string',                     defaultValue: '—', required: tNav('common.no'), description: toPlainText(tContent('props.table.placeholder.description'))          },
+  { name: 'displayValue',        type: '(value: unknown) => string', defaultValue: '—', required: tNav('common.no'), description: toPlainText(tContent('props.table.items.description'))               },
 ]);
 
 // A coluna do meio traz SELETOR REAL, lido de

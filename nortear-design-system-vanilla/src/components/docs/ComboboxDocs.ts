@@ -42,7 +42,100 @@ function screenReaderItems(): string[] {
       ?.accessibility?.screenReader ?? {},
   );
 }
-const { t, subscribe } = createTranslation(comboboxTranslations as Record<string, unknown>);
+/**
+ * Texto que só existe nesta stack, escrito nos três idiomas.
+ *
+ * A tabela de propriedades descreve uma FÁBRICA, e não um componente de
+ * framework: linhas inteiras (`label`, `invalid`, `id`, os quatro rótulos de
+ * acessibilidade) não têm correspondente no conteúdo compartilhado, e outras
+ * somam uma frase ao que vem de lá. Cravar essas frases em português fazia a
+ * tabela sair bilíngue em `en` e em `es` — descrição traduzida ao lado de frase
+ * portuguesa. O override é o lugar sancionado para isso: o conteúdo
+ * compartilhado continua vindo do `t()`, e só a parte local mora aqui.
+ *
+ * Sufixo `.extra` é a frase que se soma à descrição compartilhada;
+ * `.description` é a linha que existe só aqui; `.default` é valor de coluna que
+ * é texto de pessoa, e não literal de código.
+ */
+const localOverrides = {
+  'pt-BR': {
+    'props.local.items.extra': 'O cabeçalho de grupo sai do próprio item: entradas com o mesmo grupo saem sob o mesmo título.',
+    'props.local.value.extra': 'A fábrica passa a só anunciar: a tela muda quando setValue() for chamado na raiz devolvida.',
+    'props.local.defaultValue.extra': 'Em escolha única, só o primeiro é considerado.',
+    'props.local.inputValue.extra': 'Digitar apenas anuncia; o texto na tela muda em setInputValue().',
+    'props.local.filter.extra': 'Recebe o texto digitado cru, para casar por sinônimo ou por código interno.',
+    'props.local.disabled.extra': 'Os chips existentes perdem o botão de remover.',
+    'props.local.name.extra': 'O valor viaja por um campo escondido dentro da raiz, separado por vírgula quando há mais de um.',
+    'props.local.onValueChange.extra': 'Recebe sempre a lista inteira, também em escolha única.',
+    'props.local.label.description': 'Rótulo visível, amarrado ao campo de texto. Sem ele, o nome acessível tem de vir por `aria-label`.',
+    'props.local.ariaLabel.description': 'Nome acessível quando não há rótulo visível. O papel de combobox não aceita nome vindo do próprio conteúdo, e o conteúdo aqui é o texto digitado.',
+    'props.local.invalid.description': 'Marca a caixa do campo como inválida. A borda e o anel de erro vêm da folha compartilhada: a página não pinta nada por fora.',
+    'props.local.id.description': 'Base dos identificadores internos — campo de texto, lista e opções. Sem ele a fábrica gera um por instância.',
+    'props.local.emptyMessage.description': 'Texto exibido quando o filtro não casa com nada. Passe sempre: o padrão da fábrica não muda de idioma.',
+    'props.local.clearLabel.description': 'Nome acessível do botão que zera a escolha, e também o que a região viva anuncia depois de limpar.',
+    'props.local.triggerLabel.description': 'Nome acessível do botão que abre e fecha a lista. O padrão da fábrica é português, então passe o rótulo em tela que muda de idioma.',
+    'props.local.removeLabel.description': 'Prefixo do nome acessível de cada botão de remover chip: a fábrica acrescenta o rótulo do escolhido, porque a palavra sozinha não diz qual chip sai.',
+    'props.local.onOpenChange.description': 'Avisado a cada abertura e fechamento da lista.',
+    'props.local.className.description': 'Classes .nds-* adicionais na raiz do campo.',
+    'props.local.filter.default': 'rótulo sem acento e sem caixa',
+    'props.local.id.default': 'gerado',
+    'import.local.factory': 'Importação da fábrica:',
+    'import.local.basicUsage': 'Uso básico:',
+  },
+  en: {
+    'props.local.items.extra': 'The group heading comes from the item itself: entries that share a group appear under the same title.',
+    'props.local.value.extra': 'The factory then only announces: the screen changes when setValue() is called on the returned root.',
+    'props.local.defaultValue.extra': 'In single choice, only the first one counts.',
+    'props.local.inputValue.extra': 'Typing only announces; the text on screen changes on setInputValue().',
+    'props.local.filter.extra': 'It gets the typed text raw, so you can match by synonym or by internal code.',
+    'props.local.disabled.extra': 'Existing chips lose their remove button.',
+    'props.local.name.extra': 'The value travels in a hidden field inside the root, comma-separated when there is more than one.',
+    'props.local.onValueChange.extra': 'It always gets the whole list, in single choice too.',
+    'props.local.label.description': 'Visible label, tied to the text field. Without it, the accessible name has to come from `aria-label`.',
+    'props.local.ariaLabel.description': 'Accessible name when there is no visible label. The combobox role does not take its name from its own content, and the content here is the typed text.',
+    'props.local.invalid.description': 'Marks the field box as invalid. The error border and ring come from the shared stylesheet: the page paints nothing of its own.',
+    'props.local.id.description': 'Base for the internal identifiers — text field, list and options. Without it the factory generates one per instance.',
+    'props.local.emptyMessage.description': 'Text shown when the filter matches nothing. Always pass it: the factory default does not change language.',
+    'props.local.clearLabel.description': 'Accessible name of the button that clears the choice, and also what the live region announces after clearing.',
+    'props.local.triggerLabel.description': 'Accessible name of the button that opens and closes the list. The factory default is written in Portuguese, so pass the label on a screen that changes language.',
+    'props.local.removeLabel.description': 'Prefix of the accessible name of every chip remove button: the factory appends the label of the chosen item, because the word on its own does not say which chip goes.',
+    'props.local.onOpenChange.description': 'Called every time the list opens and closes.',
+    'props.local.className.description': 'Extra .nds-* classes on the root of the field.',
+    'props.local.filter.default': 'label without accents or letter case',
+    'props.local.id.default': 'generated',
+    'import.local.factory': 'Importing the factory:',
+    'import.local.basicUsage': 'Basic usage:',
+  },
+  es: {
+    'props.local.items.extra': 'El encabezado de grupo sale del propio ítem: las entradas con el mismo grupo aparecen bajo el mismo título.',
+    'props.local.value.extra': 'La fábrica pasa a solo anunciar: la pantalla cambia cuando se llama a setValue() en la raíz devuelta.',
+    'props.local.defaultValue.extra': 'En elección única, solo cuenta el primero.',
+    'props.local.inputValue.extra': 'Escribir solo anuncia; el texto en pantalla cambia con setInputValue().',
+    'props.local.filter.extra': 'Recibe el texto escrito tal cual, para coincidir por sinónimo o por código interno.',
+    'props.local.disabled.extra': 'Los chips existentes pierden el botón de quitar.',
+    'props.local.name.extra': 'El valor viaja en un campo oculto dentro de la raíz, separado por comas cuando hay más de uno.',
+    'props.local.onValueChange.extra': 'Siempre recibe la lista entera, también en elección única.',
+    'props.local.label.description': 'Etiqueta visible, vinculada al campo de texto. Sin ella, el nombre accesible tiene que venir de `aria-label`.',
+    'props.local.ariaLabel.description': 'Nombre accesible cuando no hay etiqueta visible. El rol de combobox no toma el nombre de su propio contenido, y aquí el contenido es el texto escrito.',
+    'props.local.invalid.description': 'Marca la caja del campo como inválida. El borde y el anillo de error vienen de la hoja compartida: la página no pinta nada por su cuenta.',
+    'props.local.id.description': 'Base de los identificadores internos: campo de texto, lista y opciones. Sin él, la fábrica genera uno por instancia.',
+    'props.local.emptyMessage.description': 'Texto que se muestra cuando el filtro no coincide con nada. Pásalo siempre: el valor por defecto de la fábrica no cambia de idioma.',
+    'props.local.clearLabel.description': 'Nombre accesible del botón que borra la elección, y también lo que la región viva anuncia después de limpiar.',
+    'props.local.triggerLabel.description': 'Nombre accesible del botón que abre y cierra la lista. El valor por defecto de la fábrica está en portugués, así que pasa la etiqueta en pantallas que cambian de idioma.',
+    'props.local.removeLabel.description': 'Prefijo del nombre accesible de cada botón de quitar chip: la fábrica añade la etiqueta del elegido, porque la palabra sola no dice qué chip sale.',
+    'props.local.onOpenChange.description': 'Se avisa en cada apertura y cierre de la lista.',
+    'props.local.className.description': 'Clases .nds-* adicionales en la raíz del campo.',
+    'props.local.filter.default': 'etiqueta sin acentos ni mayúsculas',
+    'props.local.id.default': 'generado',
+    'import.local.factory': 'Importación de la fábrica:',
+    'import.local.basicUsage': 'Uso básico:',
+  },
+};
+
+const { t, subscribe } = createTranslation(
+  comboboxTranslations as Record<string, unknown>,
+  localOverrides,
+);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -547,9 +640,9 @@ export function createComboboxDocs(): HTMLElement {
         return createDocsImport({
           title: t('import.title'),
           componentSlug: 'combobox',
-          description: 'Importação da fábrica:',
+          description: t('import.local.factory'),
           code: `import { createCombobox, type ComboboxOptions, type ComboboxItem } from '@/components/ui/combobox';`,
-          secondaryDescription: 'Uso básico:',
+          secondaryDescription: t('import.local.basicUsage'),
           secondaryCode: `const field = createCombobox({
   id: 'country',
   name: 'country',
@@ -753,7 +846,7 @@ form.addEventListener('submit', (e) => {
         });
 
       case 'propriedades': {
-        const interfaceCode = `// createCombobox(options) → raiz com destroy()
+        const interfaceCode = `// createCombobox(options) → ComboboxElement (a raiz, com os verbos abaixo)
 export interface ComboboxItem {
   value: string;
   label: string;
@@ -768,7 +861,13 @@ export interface ComboboxOptions {
   'aria-label'?: string;
   placeholder?: string;
   multiple?: boolean;
+  /** Escolha controlada: a fábrica só anuncia, e a tela espera setValue(). */
+  value?: string[];
   defaultValue?: string[];
+  /** Texto de busca controlado: a tela espera setInputValue(). */
+  inputValue?: string;
+  /** Substitui o filtro. Recebe o texto digitado cru. */
+  filter?: (item: ComboboxItem, query: string) => boolean;
   disabled?: boolean;
   invalid?: boolean;
   name?: string;
@@ -781,7 +880,17 @@ export interface ComboboxOptions {
   onInputValueChange?: (text: string) => void;
   onOpenChange?: (isOpen: boolean) => void;
   className?: string;
-}`;
+}
+
+// Sem framework não há re-render que empurre um valor novo para dentro: o modo
+// controlado se fecha por estes verbos, no elemento devolvido.
+export type ComboboxElement = HTMLDivElement & {
+  destroy: () => void;
+  setValue: (value: string[]) => void;
+  getValue: () => string[];
+  setInputValue: (text: string) => void;
+  getInputValue: () => string;
+};`;
 
         const propsCols = {
           prop: t('props.table.prop'),
@@ -798,31 +907,41 @@ export interface ComboboxOptions {
               title: 'createCombobox(options)',
               cols: propsCols,
               items: [
-                { name: 'items', type: 'ComboboxItem[]', defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.items.description')) + ' O cabeçalho de grupo sai do próprio item: entradas com o mesmo grupo saem sob o mesmo título.' },
-                { name: 'label', type: 'string', defaultValue: '—', required: 'Não', description: 'Rótulo visível, amarrado ao campo de texto. Sem ele, o nome acessível tem de vir por `aria-label`.' },
-                { name: 'aria-label', type: 'string', defaultValue: '—', required: 'Não', description: 'Nome acessível quando não há rótulo visível. O papel de combobox não aceita nome vindo do próprio conteúdo, e o conteúdo aqui é o texto digitado.' },
-                { name: 'placeholder', type: 'string', defaultValue: '""', required: 'Não', description: toPlainText(t('props.table.placeholder.description')) },
-                { name: 'multiple', type: 'boolean', defaultValue: 'false', required: 'Não', description: toPlainText(t('props.table.multiple.description')) },
-                { name: 'defaultValue', type: 'string[]', defaultValue: '[]', required: 'Não', description: toPlainText(t('props.table.defaultValue.description')) + ' Em escolha única, só o primeiro é considerado.' },
-                { name: 'disabled', type: 'boolean', defaultValue: 'false', required: 'Não', description: toPlainText(t('props.table.disabled.description')) + ' Os chips existentes perdem o botão de remover.' },
-                { name: 'invalid', type: 'boolean', defaultValue: 'false', required: 'Não', description: 'Marca a caixa do campo como inválida. A borda e o anel de erro vêm da folha compartilhada: a página não pinta nada por fora.' },
-                { name: 'name', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.name.description')) + ' O valor viaja por um campo escondido dentro da raiz, separado por vírgula quando há mais de um.' },
-                { name: 'id', type: 'string', defaultValue: 'gerado', required: 'Não', description: 'Base dos identificadores internos — campo de texto, lista e opções. Sem ele a fábrica gera um por instância.' },
-                { name: 'emptyMessage', type: 'string', defaultValue: '"Nenhum resultado"', required: 'Não', description: 'Texto exibido quando o filtro não casa com nada. Passe sempre: o padrão da fábrica não muda de idioma.' },
-                { name: 'clearLabel', type: 'string', defaultValue: '"Limpar"', required: 'Não', description: 'Nome acessível do botão que zera a escolha, e também o que a região viva anuncia depois de limpar.' },
-                { name: 'triggerLabel', type: 'string', defaultValue: '"Abrir list"', required: 'Não', description: 'Nome acessível do botão que abre e fecha a lista. O padrão da fábrica está com erro de digitação — passe o rótulo explicitamente.' },
-                { name: 'removeLabel', type: 'string', defaultValue: '"Remover"', required: 'Não', description: 'Prefixo do nome acessível de cada botão de remover chip: a fábrica acrescenta o rótulo do escolhido, porque a palavra sozinha não diz qual chip sai.' },
-                { name: 'onValueChange', type: '(value: string[]) => void', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.onValueChange.description')) + ' Recebe sempre a lista inteira, também em escolha única.' },
-                { name: 'onInputValueChange', type: '(text: string) => void', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.onInputValueChange.description')) },
-                { name: 'onOpenChange', type: '(isOpen: boolean) => void', defaultValue: '—', required: 'Não', description: 'Avisado a cada abertura e fechamento da lista.' },
-                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: 'Classes .nds-* adicionais na raiz do campo.' },
+                { name: 'items', type: 'ComboboxItem[]', defaultValue: '—', required: tNav('common.yes'), description: toPlainText(t('props.table.items.description')) + ' ' + t('props.local.items.extra') },
+                { name: 'label', type: 'string', defaultValue: '—', required: tNav('common.no'), description: t('props.local.label.description') },
+                { name: 'aria-label', type: 'string', defaultValue: '—', required: tNav('common.no'), description: t('props.local.ariaLabel.description') },
+                { name: 'placeholder', type: 'string', defaultValue: '""', required: tNav('common.no'), description: toPlainText(t('props.table.placeholder.description')) },
+                { name: 'multiple', type: 'boolean', defaultValue: 'false', required: tNav('common.no'), description: toPlainText(t('props.table.multiple.description')) },
+                // A forma do modo controlado DIVERGE do que o tipo compartilhado
+                // sugere, e a divergência se registra em vez de se disfarçar: sem
+                // re-render de framework, quem manda escreve de volta por
+                // setValue(), no elemento devolvido.
+                { name: 'value', type: 'string[]', defaultValue: '—', required: tNav('common.no'), description: toPlainText(t('props.table.value.description')) + ' ' + t('props.local.value.extra') },
+                { name: 'defaultValue', type: 'string[]', defaultValue: '[]', required: tNav('common.no'), description: toPlainText(t('props.table.defaultValue.description')) + ' ' + t('props.local.defaultValue.extra') },
+                { name: 'inputValue', type: 'string', defaultValue: '—', required: tNav('common.no'), description: toPlainText(t('props.table.inputValue.description')) + ' ' + t('props.local.inputValue.extra') },
+                { name: 'filter', type: '(item: ComboboxItem, query: string) => boolean', defaultValue: t('props.local.filter.default'), required: tNav('common.no'), description: toPlainText(t('props.table.filter.description')) + ' ' + t('props.local.filter.extra') },
+                { name: 'disabled', type: 'boolean', defaultValue: 'false', required: tNav('common.no'), description: toPlainText(t('props.table.disabled.description')) + ' ' + t('props.local.disabled.extra') },
+                { name: 'invalid', type: 'boolean', defaultValue: 'false', required: tNav('common.no'), description: t('props.local.invalid.description') },
+                { name: 'name', type: 'string', defaultValue: '—', required: tNav('common.no'), description: toPlainText(t('props.table.name.description')) + ' ' + t('props.local.name.extra') },
+                { name: 'id', type: 'string', defaultValue: t('props.local.id.default'), required: tNav('common.no'), description: t('props.local.id.description') },
+                // Os quatro rótulos abaixo saem da fábrica em português, e o
+                // valor da coluna é o literal que o código traz — por isso não
+                // muda de idioma junto com a descrição ao lado.
+                { name: 'emptyMessage', type: 'string', defaultValue: '"Nenhum resultado"', required: tNav('common.no'), description: t('props.local.emptyMessage.description') },
+                { name: 'clearLabel', type: 'string', defaultValue: '"Limpar"', required: tNav('common.no'), description: t('props.local.clearLabel.description') },
+                { name: 'triggerLabel', type: 'string', defaultValue: '"Abrir lista"', required: tNav('common.no'), description: t('props.local.triggerLabel.description') },
+                { name: 'removeLabel', type: 'string', defaultValue: '"Remover"', required: tNav('common.no'), description: t('props.local.removeLabel.description') },
+                { name: 'onValueChange', type: '(value: string[]) => void', defaultValue: '—', required: tNav('common.no'), description: toPlainText(t('props.table.onValueChange.description')) + ' ' + t('props.local.onValueChange.extra') },
+                { name: 'onInputValueChange', type: '(text: string) => void', defaultValue: '—', required: tNav('common.no'), description: toPlainText(t('props.table.onInputValueChange.description')) },
+                { name: 'onOpenChange', type: '(isOpen: boolean) => void', defaultValue: '—', required: tNav('common.no'), description: t('props.local.onOpenChange.description') },
+                { name: 'className', type: 'string', defaultValue: '—', required: tNav('common.no'), description: t('props.local.className.description') },
               ],
             },
           ],
           interfaceCode,
           extensibilityTitle: 'Extensibilidade e limpeza',
           extensibilityNotes:
-            'A fábrica devolve a <strong>raiz</strong> do campo, e não o campo de texto: dentro dela ficam o rótulo, a caixa com chips e texto, a região viva que anuncia o chip removido e o campo escondido que serializa o valor. A raiz é <code>display: contents</code>, então quem organiza rótulo e caixa em duas linhas é o contêiner que a recebe. Três pontos que a plataforma exige e nenhuma lib resolve por aqui: (1) a raiz aceita <code>destroy()</code>, <strong>idempotente</strong>, que solta o ouvinte de clique-fora registrado em <code>document</code> e remove a lista aberta — ele também dispara sozinho quando a raiz sai do documento, então esquecer de chamá-lo não vaza; (2) a fábrica é <strong>não-controlada</strong> — passe <code>defaultValue</code> e acompanhe a escolha pelo callback de mudança; (3) o filtro é <strong>fixo</strong>: compara o rótulo ignorando acentos e diferença entre maiúsculas e minúsculas. Para casar por sinônimo ou por código interno, filtre a lista de itens antes de entregá-la.',
+            'A fábrica devolve a <strong>raiz</strong> do campo, e não o campo de texto: dentro dela ficam o rótulo, a caixa com chips e texto, a região viva que anuncia o chip removido e o campo escondido que serializa o valor. A raiz é <code>display: contents</code>, então quem organiza rótulo e caixa em duas linhas é o contêiner que a recebe. Três pontos que a plataforma exige e nenhuma lib resolve por aqui: (1) a raiz aceita <code>destroy()</code>, <strong>idempotente</strong>, que solta o ouvinte de clique-fora registrado em <code>document</code> e remove a lista aberta — ele também dispara sozinho quando a raiz sai do documento, então esquecer de chamá-lo não vaza; (2) o modo <strong>controlado</strong> tem forma própria aqui — não há re-render que empurre um valor novo para dentro, então passar <code>value</code> (ou <code>inputValue</code>) faz a fábrica deixar de escrever esse estado, e quem manda responde chamando <code>setValue()</code> ou <code>setInputValue()</code> na raiz devolvida; sem eles, <code>defaultValue</code> continua sendo o caminho e a fábrica administra tudo; (3) o filtro é <strong>substituível</strong> por <code>filter</code>, que recebe o item e o texto digitado cru — para casar por sinônimo ou por código interno, é aí que se resolve. O padrão compara o rótulo ignorando acentos e diferença entre maiúsculas e minúsculas.',
         });
       }
 

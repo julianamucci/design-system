@@ -353,7 +353,7 @@ interface ComboboxProps {
   invalid?: boolean;
   loop?: boolean;                // da última opção a seta volta à primeira
   name?: string;
-  filter?: (label: string, query: string) => boolean;
+  filter?: (item: ComboboxOption, query: string) => boolean;
   onValueChange?: (value: string | string[]) => void;
   onInputValueChange?: (text: string) => void;
 }

@@ -24,7 +24,7 @@ export interface ComboboxOption {
 }
 
 /** Decide se uma opção sobrevive ao texto digitado. */
-export type ComboboxFilter = (label: string, query: string) => boolean;
+export type ComboboxFilter = (item: ComboboxOption, query: string) => boolean;
 
 /** Comparação sem acento e sem caixa — filtrar "sao" tem de achar "São Paulo". */
 export function normalizeText(input: string): string {
@@ -35,9 +35,9 @@ export function normalizeText(input: string): string {
 }
 
 /** Filtro padrão: casa por trecho do rótulo, ignorando acento e caixa. */
-export const defaultFilter: ComboboxFilter = (label, query) => {
+export const defaultFilter: ComboboxFilter = (item, query) => {
   const needle = normalizeText(query.trim());
-  return needle === '' || normalizeText(label).includes(needle);
+  return needle === '' || normalizeText(item.label).includes(needle);
 };
 
 /**
@@ -52,7 +52,7 @@ export function filterItems(
   query: string,
   filter: ComboboxFilter = defaultFilter,
 ): ComboboxOption[] {
-  return items.filter((entry) => filter(entry.label, query));
+  return items.filter((entry) => filter(entry, query));
 }
 
 export interface ComboboxState {
@@ -67,7 +67,7 @@ export interface ComboboxState {
   readonly selected: string[];
   /** Quantas opções sobrevivem ao texto atual. Zero acende a mensagem de vazio. */
   readonly matchCount: number;
-  matches(label: string): boolean;
+  matches(item: ComboboxOption): boolean;
   labelFor(value: string): string;
   setQuery(next: string): void;
   deselect(value: string): void;

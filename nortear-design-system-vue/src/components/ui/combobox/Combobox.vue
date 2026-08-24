@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { ComboboxRootEmits, ComboboxRootProps } from 'reka-ui'
-import type { HTMLAttributes } from 'vue'
-import { reactiveOmit } from '@vueuse/core'
+import type { HTMLAttributes, Ref } from 'vue'
+import type { ComboboxFilter } from './index'
+import { reactiveOmit, useVModel } from '@vueuse/core'
 import { ComboboxRoot, useForwardPropsEmits, useId } from 'reka-ui'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { cn } from '@/lib/utils'
 import { provideComboboxContext } from './index'
 
@@ -59,8 +60,43 @@ import { provideComboboxContext } from './index'
  *   - região viva da remoção ......... `ComboboxInputWrapper.vue`
  */
 
+/*
+ * ─── TEXTO DE BUSCA E FILTRO: O QUE ESTA CAMADA ACRESCENTA ──────────────────
+ *
+ * Duas capacidades do contrato não têm equivalente na lib, e a forma que elas
+ * ganharam aqui DIVERGE do nome publicado no conteúdo compartilhado. Divergiu
+ * porque é API de framework, e API de framework não se alinha entre stacks:
+ *
+ *   texto controlado ... `v-model:input-value` (prop `inputValue` + evento
+ *                        `update:inputValue`). O conteúdo compartilhado nomeia
+ *                        `inputValue` e um callback de mudança; em Vue o par
+ *                        prop + evento É o callback, e escrever `onInputValue
+ *                        Change` como prop seria estrangeiro à linguagem.
+ *
+ *   filtro ............. prop `filter`, com a assinatura publicada. O tipo do
+ *                        primeiro parâmetro é `ComboboxFilterItem`, e não
+ *                        `ComboboxItem`: `ComboboxItem` já é o COMPONENTE de
+ *                        opção nesta stack, e um tipo com o nome do componente
+ *                        colidiria no mesmo import.
+ *
+ * Por que o filtro precisa de trabalho nosso: `reka-ui` não aceita predicado.
+ * Ela filtra por dentro, com `Intl.Collator` de sensibilidade `base`, contra um
+ * texto que guarda por opção (`ComboboxRoot.filterState`), e o único controle
+ * publicado é `ignoreFilter`, que DESLIGA esse filtro. Então, quando chega um
+ * `filter`, esta camada liga `ignoreFilter` e passa a decidir opção por opção
+ * (`ComboboxItem.vue`) e grupo por grupo (`ComboboxGroup.vue`).
+ *
+ * Sem `filter`, nada disso entra em cena: quem filtra segue sendo a lib, com o
+ * mesmo comportamento de antes — acento e caixa ignorados.
+ */
 const props = withDefaults(
-  defineProps<ComboboxRootProps & { class?: HTMLAttributes['class'] }>(),
+  defineProps<ComboboxRootProps & {
+    class?: HTMLAttributes['class']
+    /** Texto de busca controlado. Sem ele, o campo administra o próprio texto. */
+    inputValue?: string
+    /** Substitui o filtro. Sem ele, quem filtra é a lib. */
+    filter?: ComboboxFilter
+  }>(),
   {
     // A opção sob o ponteiro vira a opção ativa, como na referência Vanilla.
     highlightOnHover: true,
@@ -70,23 +106,49 @@ const props = withDefaults(
     resetModelValueOnClear: true,
   },
 )
-const emits = defineEmits<ComboboxRootEmits>()
+const emits = defineEmits<ComboboxRootEmits & {
+  'update:inputValue': [value: string]
+}>()
 
-const delegatedProps = reactiveOmit(props, 'class')
+/*
+ * `inputValue` e `filter` não descem para a lib: nenhuma das duas existe lá.
+ * Prop que a raiz não declara vira atributo no elemento, e uma função escrita
+ * como atributo sai serializada no HTML entregue.
+ */
+const delegatedProps = reactiveOmit(props, 'class', 'inputValue', 'filter')
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
+
+const filter = computed(() => props.filter)
+
+/* Com predicado do consumidor, o filtro de dentro sai de cena por inteiro. */
+const ignoreFilter = computed(() => props.ignoreFilter || props.filter !== undefined)
 
 const inputId = useId(undefined, 'nds-combobox')
 const listId = useId(undefined, 'nds-combobox-list')
 
 const labels = ref(new Map<string, string>())
-const search = ref('')
 const announcement = ref('')
+
+/*
+ * O texto de busca continua com UM dono só, e agora esse dono atende dos dois
+ * jeitos: sem `inputValue` o modelo é interno, com `inputValue` ele passa a ler
+ * da prop e a devolver cada mudança pelo evento. Quem escreve nele é sempre o
+ * mesmo grupo de peças — o campo, o botão de limpar, o Backspace e o Escape —,
+ * então controlar o texto de fora não exigiu um segundo estado para sincronizar.
+ */
+const search = useVModel(props, 'inputValue', emits, {
+  // O tipo de `passive` escolhe a sobrecarga, então ele precisa ser literal —
+  // e quem sabe se a prop chegou é a execução. O casting fixa a sobrecarga; as
+  // duas devolvem uma referência gravável, que é tudo o que esta camada usa.
+  passive: (props.inputValue === undefined) as false,
+  defaultValue: '',
+}) as Ref<string>
 
 function announce(message: string): void {
   announcement.value = message
 }
 
-provideComboboxContext({ inputId, listId, labels, search, announcement, announce })
+provideComboboxContext({ inputId, listId, labels, search, announcement, announce, filter })
 </script>
 
 <template>
@@ -94,6 +156,7 @@ provideComboboxContext({ inputId, listId, labels, search, announcement, announce
     v-slot="slotProps"
     data-slot="combobox"
     v-bind="forwarded"
+    :ignore-filter="ignoreFilter"
     :class="cn(props.class)"
   >
     <slot v-bind="slotProps" />

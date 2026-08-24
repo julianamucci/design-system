@@ -558,7 +558,7 @@ interface ComboboxProps {
   defaultValue?: ComboboxOption | ComboboxOption[] | null;
   onValueChange?: (value: ComboboxOption | ComboboxOption[] | null) => void;
   inputValue?: string;
-  onInputValueChange?: (text: string) => void;
+  onInputValueChange?: (inputValue: string) => void;
   multiple?: boolean;
   filter?: ((item: ComboboxOption, query: string) => boolean) | null;
   limit?: number;
@@ -574,6 +574,65 @@ interface ComboboxContentProps {
   align?: "start" | "center" | "end";
   sideOffset?: number;
 }`;
+
+  // A tabela de props é montada LOCALMENTE: o NOME e o TIPO são os desta stack,
+  // e só a descrição vem do conteúdo compartilhado, que é API-neutro de
+  // propósito. Aqui `value` carrega o OBJETO da opção, e não a string que o
+  // conteúdo publica — é o objeto que `<ComboboxItem value={...}>` recebe e o
+  // que volta no callback de mudança.
+  //
+  // `filter` aparece com DUAS casas, `(item, query)`: é o que a raiz entrega. A
+  // lib chama o filtro com um terceiro argumento, interno dela, e a raiz o
+  // envolve justamente para que ele não vire parte deste contrato.
+  //
+  // `placeholder` sai em tabela PRÓPRIA porque nesta stack ele é atributo do
+  // `<ComboboxInput>`, não da raiz. Listá-lo junto prometeria uma superfície que
+  // a raiz não tem.
+  const propCols = {
+    prop: tContent("props.table.prop"),
+    type: tContent("props.table.type"),
+    default: tContent("props.table.default"),
+    required: tContent("props.table.required"),
+    description: tContent("props.table.description"),
+  };
+
+  const propRow = (name: string, type: string) => ({
+    name,
+    type,
+    defaultValue: tContent(`props.table.${name}.default`),
+    required: tContent(`props.table.${name}.required`),
+    description: toPlainText(tContent(`props.table.${name}.description`)),
+  });
+
+  const propTables = [
+    {
+      title: "Combobox",
+      cols: propCols,
+      items: [
+        propRow("value", "ComboboxOption | ComboboxOption[] | null"),
+        propRow("defaultValue", "ComboboxOption | ComboboxOption[] | null"),
+        propRow(
+          "onValueChange",
+          "(value: ComboboxOption | ComboboxOption[] | null) => void",
+        ),
+        propRow("inputValue", "string"),
+        propRow("onInputValueChange", "(inputValue: string) => void"),
+        propRow("multiple", "boolean"),
+        propRow("items", "ComboboxOption[] | ComboboxOptionGroup[]"),
+        propRow(
+          "filter",
+          "((item: ComboboxOption, query: string) => boolean) | null",
+        ),
+        propRow("disabled", "boolean"),
+        propRow("name", "string"),
+      ],
+    },
+    {
+      title: "ComboboxInput",
+      cols: propCols,
+      items: [propRow("placeholder", "string")],
+    },
+  ];
 
   return (
     <DocsPageLayout
@@ -904,36 +963,7 @@ interface ComboboxContentProps {
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
         title={tContent("props.title")}
-        tables={[
-          {
-            cols: {
-              prop: tContent("props.table.prop"),
-              type: tContent("props.table.type"),
-              default: tContent("props.table.default"),
-              required: tContent("props.table.required"),
-              description: tContent("props.table.description"),
-            },
-            items: [
-              "value",
-              "defaultValue",
-              "onValueChange",
-              "inputValue",
-              "onInputValueChange",
-              "multiple",
-              "items",
-              "filter",
-              "placeholder",
-              "disabled",
-              "name",
-            ].map((name) => ({
-              name,
-              type: tContent(`props.table.${name}.type`),
-              defaultValue: tContent(`props.table.${name}.default`),
-              required: tContent(`props.table.${name}.required`),
-              description: toPlainText(tContent(`props.table.${name}.description`)),
-            })),
-          },
-        ]}
+        tables={propTables}
         interfaceCode={interfaceCode}
         extensibilityTitle={tContent("props.extensibilityTitle")}
         extensibilityCode={tContent("props.extensibilityCode")}

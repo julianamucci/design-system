@@ -139,7 +139,10 @@ export interface ComboboxProps {
    * Enter escolher sem exigir uma seta antes.
    */
   autoHighlight?: boolean
-  /** Substitui o filtro. `null` desliga a filtragem interna. */
+  /**
+   * Substitui o filtro. O padrão compara o rótulo ignorando acentos e diferença
+   * entre maiúsculas e minúsculas; `null` desliga a filtragem interna.
+   */
   filter?: ((item: ComboboxOption, query: string) => boolean) | null
   /** Máximo de opções exibidas na lista. */
   limit?: number
@@ -176,6 +179,9 @@ function Combobox({
   value,
   defaultValue,
   onValueChange,
+  inputValue,
+  onInputValueChange,
+  filter,
   autoHighlight = true,
   removedAnnouncement = (label) => `${label} removido`,
   ...props
@@ -213,12 +219,38 @@ function Combobox({
     [onValueChange, removedAnnouncement],
   )
 
+  // A lib chama o filtro com TRÊS argumentos — `(itemValue, query, itemToString)`
+  // —, e o terceiro é peça interna dela: o conversor que transforma a opção em
+  // texto. A assinatura que a tabela de props publica tem dois,
+  // `(item, query) => boolean`, e é ela que vale. Envolver aqui é o que impede o
+  // terceiro argumento de vazar: sem o embrulho, quem escrevesse um filtro de
+  // três parâmetros receberia um detalhe do `@base-ui` e a lib passaria a fazer
+  // parte do nosso contrato — justamente o que o resto deste arquivo mantém por
+  // dentro. `null` e `undefined` seguem crus, porque os dois têm significado na
+  // lib: `null` desliga a filtragem interna (a lista fica com a busca por conta
+  // de quem usa) e `undefined` deixa valer o filtro padrão, que compara o rótulo
+  // por colador de locale, ignorando acento e diferença de caixa.
+  const primitiveFilter = React.useMemo(() => {
+    if (filter == null) return filter
+    return (item: ComboboxOption, query: string) => filter(item, query)
+  }, [filter])
+
+  // Mesmo motivo, do outro lado: a lib entrega `(inputValue, eventDetails)` e o
+  // contrato publica só o texto.
+  const handleInputValueChange = React.useMemo(
+    () => onInputValueChange && ((next: string) => onInputValueChange(next)),
+    [onInputValueChange],
+  )
+
   return (
     <ComboboxFieldContext.Provider value={fieldContext}>
       <ComboboxPrimitive.Root<ComboboxOption, boolean>
         value={value}
         defaultValue={defaultValue}
         onValueChange={handleValueChange}
+        inputValue={inputValue}
+        onInputValueChange={handleInputValueChange}
+        filter={primitiveFilter}
         autoHighlight={autoHighlight}
         {...props}
       >

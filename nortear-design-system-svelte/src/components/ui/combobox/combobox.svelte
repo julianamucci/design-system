@@ -76,7 +76,7 @@
 		return value ? [value] : [];
 	});
 
-	const matchCount = $derived(items.filter((entry) => filter(entry.label, inputValue)).length);
+	const matchCount = $derived(items.filter((entry) => filter(entry, inputValue)).length);
 
 	function labelFor(target: string): string {
 		return items.find((entry) => entry.value === target)?.label ?? target;
@@ -137,7 +137,7 @@
 		get query() { return inputValue; },
 		get selected() { return selected; },
 		get matchCount() { return matchCount; },
-		matches: (label: string) => filter(label, inputValue),
+		matches: (item: ComboboxOption) => filter(item, inputValue),
 		labelFor,
 		setQuery,
 		deselect,

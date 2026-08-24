@@ -26,7 +26,11 @@
 	// Filtrar é do design system: o combobox da lib espera a lista JÁ filtrada.
 	// Cada opção decide se continua na lista, com a MESMA conta que a mensagem de
 	// vazio usa para aparecer.
-	const visible = $derived(combobox.matches(text));
+	// O item é remontado a partir das próprias props. `group` não entra: nesta
+	// composição o grupo é um INVÓLUCRO, e a peça de item não o enxerga — um
+	// filtro por grupo aqui recebe `undefined`, e é divergência de forma de
+	// composição, não de capacidade.
+	const visible = $derived(combobox.matches({ value, label: text, disabled }));
 
 	// `aria-selected="false"` é escrito por nós, depois do espalhamento: a lib
 	// OMITE o atributo quando a opção não está escolhida, e a regra de estilo

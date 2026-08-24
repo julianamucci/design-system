@@ -9,6 +9,12 @@ import { useComboboxContext } from './index'
 
 const props = defineProps<ComboboxInputProps & { class?: HTMLAttributes['class'] }>()
 
+/*
+ * `modelValue` sai do repasse: o texto de busca é da RAIZ, que o expõe em
+ * `v-model:input-value`. São o botão de limpar, o Backspace e o Escape — peças
+ * irmãs desta — que também escrevem nele, e um segundo dono aqui dentro os
+ * deixaria escrevendo em outro lugar.
+ */
 const delegatedProps = reactiveOmit(props, 'class', 'displayValue', 'modelValue')
 
 const rootContext = injectComboboxRootContext()
@@ -52,6 +58,23 @@ watch(
   },
   { deep: true },
 )
+
+/*
+ * Texto posto DE FORA — busca no servidor, rascunho restaurado — também tem de
+ * filtrar a lista. Quem filtra lê `filterSearch`, e a lib só escreve nela no
+ * evento de digitação: sem esta ponte, o campo mostraria um texto e a lista
+ * responderia a outro.
+ *
+ * Com a lista ABERTA, e só aí, porque é fechada que a lib separa as duas coisas
+ * de propósito: ao abrir, zera a busca e mantém o texto; ao escolher, troca o
+ * texto pelo rótulo do escolhido e fecha. Sincronizar nesses dois momentos
+ * refiltraria a lista pelo rótulo de quem acabou de ser escolhido.
+ */
+watch(search, (value) => {
+  if (!rootContext.open.value) return
+  if (rootContext.filterSearch.value === value) return
+  rootContext.filterSearch.value = value
+})
 
 /*
  * O nome acessível do botão de remover daquele chip é a frase que a região viva

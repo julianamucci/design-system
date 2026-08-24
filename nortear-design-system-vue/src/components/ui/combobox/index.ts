@@ -1,4 +1,4 @@
-import type { Ref } from 'vue'
+import type { ComputedRef, Ref } from 'vue'
 import { createContext } from 'reka-ui'
 
 export { default as Combobox } from './Combobox.vue'
@@ -20,6 +20,33 @@ export { default as ComboboxPopup } from './ComboboxPopup.vue'
 export { default as ComboboxPositioner } from './ComboboxPositioner.vue'
 export { default as ComboboxSeparator } from './ComboboxSeparator.vue'
 export { default as ComboboxTrigger } from './ComboboxTrigger.vue'
+
+/**
+ * A opção como o FILTRO a enxerga: valor, rótulo e disponibilidade.
+ *
+ * Não é a lista de opções do consumidor — nesta stack cada opção é um
+ * componente, e a lista não existe como dado em lugar nenhum. Esta camada monta
+ * o registro de uma opção na hora de perguntar ao filtro, com o rótulo que a
+ * própria opção publicou ao montar.
+ */
+export interface ComboboxFilterItem {
+  /** O mesmo `value` que a opção declara. */
+  value: string
+  /** Rótulo visível da opção; cai no valor enquanto a opção não montou. */
+  label: string
+  /** Opção indisponível para escolha. */
+  disabled?: boolean
+}
+
+/**
+ * Predicado que substitui o filtro padrão: verdadeiro mantém a opção na lista.
+ *
+ * `query` é o texto pelo qual a lista está filtrando, que nem sempre é o texto
+ * que aparece no campo. Ao abrir, a busca volta a vazia e a lista inteira
+ * reaparece mesmo com o rótulo do escolhido escrito no campo; ao escolher, o
+ * campo passa a mostrar esse rótulo sem que isso filtre nada.
+ */
+export type ComboboxFilter = (item: ComboboxFilterItem, query: string) => boolean
 
 /**
  * Contexto PRÓPRIO desta stack — o que a lib não carrega de uma peça à outra.
@@ -49,6 +76,14 @@ export const [useComboboxContext, provideComboboxContext] = createContext<{
   announcement: Ref<string>
   /** Publica uma frase na região viva. */
   announce: (message: string) => void
+  /**
+   * Filtro do consumidor, ou `undefined` quando quem filtra é a lib.
+   *
+   * Cada opção pergunta por aqui se continua na lista, e o grupo pergunta se
+   * ainda lhe sobrou alguma — sem isso, o cabeçalho de um grupo inteiramente
+   * filtrado ficaria de pé sobre lugar nenhum.
+   */
+  filter: ComputedRef<ComboboxFilter | undefined>
 }>('Combobox')
 
 /** Contexto de um chip — o valor que o botão de remover tira do modelo. */
@@ -56,7 +91,16 @@ export const [useComboboxChipContext, provideComboboxChipContext] = createContex
   value: Ref<string>
 }>('ComboboxChip')
 
-/** Contexto de um grupo — o `id` que amarra o cabeçalho às opções. */
+/** Contexto de um grupo — o `id` do cabeçalho e as opções que sobraram nele. */
 export const [useComboboxGroupContext, provideComboboxGroupContext] = createContext<{
+  /** `id` do cabeçalho; vira o `aria-labelledby` do grupo. */
   labelId: string
+  /**
+   * Valores das opções deste grupo que o filtro do consumidor manteve na lista.
+   *
+   * É um conjunto, e não uma contagem, porque quem escreve são as opções, cada
+   * uma por si: com contagem, uma opção que recalculasse duas vezes somaria
+   * duas, e o grupo nunca mais voltaria a zero.
+   */
+  visibleValues: Ref<Set<string>>
 }>('ComboboxGroup')

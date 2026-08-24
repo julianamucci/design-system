@@ -32,6 +32,23 @@ import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 // o elemento existe na árvore — a anatomia publica esse slot, e as outras
 // quatro stacks o emitem — mas não gera caixa própria, então os chips seguem
 // quebrando linha junto com o input, que era o motivo de omiti-lo antes.
+//
+// ── Modo controlado, na forma que uma fábrica permite ────────────────────────
+//
+// Aqui não existe re-render de framework: ninguém volta a chamar a fábrica com
+// um valor novo. Então "controlado" tem esta forma:
+//
+//   • passar `value` faz a fábrica DEIXAR de ser dona da escolha. Escolher,
+//     remover chip e limpar passam a apenas ANUNCIAR por `onValueChange`;
+//     chips, campo escondido e marcas de escolhido só se movem quando quem
+//     manda responde com `setValue()`.
+//   • passar `inputValue` faz o mesmo com o texto de busca: digitar anuncia por
+//     `onInputValueChange` e o campo devolve o texto de quem manda; a tela só
+//     muda em `setInputValue()`.
+//
+// Os dois verbos ficam no elemento devolvido, no mesmo lugar em que `destroy()`
+// mora. Sem `value` e sem `inputValue` nada disso existe: a fábrica continua
+// dona do estado e `defaultValue` é o caminho de sempre.
 
 export interface ComboboxItem {
   value: string;
@@ -49,8 +66,31 @@ export interface ComboboxOptions {
   placeholder?: string;
   /** Modo múltiplo: os escolhidos viram chips dentro do campo. */
   multiple?: boolean;
+  /**
+   * Escolha em modo CONTROLADO.
+   *
+   * Definida, a fábrica não é dona do estado: a interação só anuncia por
+   * `onValueChange`, e a tela espera por `setValue()`. Em modo simples, só o
+   * primeiro valor é considerado.
+   */
+  value?: string[];
   /** Valores iniciais. Em modo simples, só o primeiro é considerado. */
   defaultValue?: string[];
+  /**
+   * Texto de busca em modo CONTROLADO.
+   *
+   * Definido, digitar apenas anuncia por `onInputValueChange` — o campo volta a
+   * exibir o texto de quem manda, que só muda em `setInputValue()`.
+   */
+  inputValue?: string;
+  /**
+   * Substitui o filtro.
+   *
+   * Recebe o texto digitado CRU: normalizar, casar por sinônimo ou por código
+   * interno passa a ser decisão de quem filtra. O padrão compara o rótulo
+   * ignorando acento e caixa.
+   */
+  filter?: (item: ComboboxItem, query: string) => boolean;
   disabled?: boolean;
   invalid?: boolean;
   /** Nome do campo no formulário. */
@@ -76,6 +116,18 @@ export interface ComboboxOptions {
   onOpenChange?: (isOpen: boolean) => void;
   className?: string;
 }
+
+/** O que a fábrica devolve. */
+export type ComboboxElement = DestroyableElement<HTMLDivElement> & {
+  /** Escreve a escolha. É por aqui que o modo controlado empurra o valor novo. */
+  setValue: (value: string[]) => void;
+  /** Escolha atual, sempre como lista — também em modo simples. */
+  getValue: () => string[];
+  /** Escreve o texto de busca. É o caminho do modo controlado de texto. */
+  setInputValue: (text: string) => void;
+  /** Texto de busca exibido agora. */
+  getInputValue: () => string;
+};
 
 let _comboboxCounter = 0;
 
@@ -120,13 +172,22 @@ function normalize(text: string): string {
     .toLowerCase();
 }
 
-export function createCombobox(options: ComboboxOptions): DestroyableElement<HTMLDivElement> {
+/**
+ * Filtro padrão: o rótulo casa se contiver o texto digitado, sem acento e sem
+ * caixa. É o valor padrão da opção `filter`, e não um caminho separado — quem
+ * substitui o filtro substitui exatamente isto.
+ */
+const defaultFilter = (item: ComboboxItem, query: string): boolean =>
+  normalize(item.label).includes(normalize(query));
+
+export function createCombobox(options: ComboboxOptions): ComboboxElement {
   const {
     items,
     label,
     placeholder = '',
     multiple = false,
     defaultValue = [],
+    filter = defaultFilter,
     disabled = false,
     invalid = false,
     name,
@@ -146,7 +207,18 @@ export function createCombobox(options: ComboboxOptions): DestroyableElement<HTM
   const baseId = id ?? `nds-combobox-${seq}`;
   const listId = `${baseId}-list`;
 
-  let selected: string[] = multiple ? [...defaultValue] : defaultValue.slice(0, 1);
+  // `value` e `inputValue` são lidos de `options` e não desestruturados: os dois
+  // nomes já são parâmetro de meia dúzia de funções aqui dentro, e a versão
+  // desestruturada ficaria sombreada exatamente onde importa.
+  const valueControlled = options.value !== undefined;
+  const inputControlled = options.inputValue !== undefined;
+
+  /** Só o primeiro valor conta em modo simples — a lista é a forma, não o modo. */
+  const fit = (list: string[]): string[] => (multiple ? [...list] : list.slice(0, 1));
+
+  let selected: string[] = fit(valueControlled ? options.value ?? [] : defaultValue);
+  /** Texto exibido no campo. Controlado, é o texto de quem manda. */
+  let inputText = '';
   let isOpen = false;
   let activeIndex = -1;
   let positioner: HTMLElement | null = null;
@@ -281,37 +353,78 @@ export function createCombobox(options: ComboboxOptions): DestroyableElement<HTM
     liveRegion.textContent = text;
   }
 
-  function emit(): void {
+  /**
+   * Escreve a escolha na tela. É o ÚNICO caminho que mexe em `selected` — no
+   * modo controlado ele só roda a pedido de quem manda, por `setValue()`.
+   */
+  function applyValue(next: string[]): void {
+    selected = fit(next);
+    renderChips();
     syncHidden();
-    onValueChange?.([...selected]);
+    // Em escolha única o texto do campo É a escolha exibida, então ele anda
+    // junto. No múltiplo quem mostra a escolha são os chips, e o texto continua
+    // sendo do filtro.
+    if (!multiple) requestInputText(selected.length ? labelOf(selected[0]) : '');
+    if (isOpen) runFilter();
+  }
+
+  /**
+   * Intenção de mudança vinda de uma INTERAÇÃO.
+   *
+   * Controlada, ela é apenas anunciada — quem manda responde por `setValue()`.
+   * Fora do modo controlado, é aplicada na hora e anunciada depois, para quem
+   * ouve encontrar o campo escondido já com o valor novo.
+   */
+  function requestValue(next: string[]): void {
+    const wanted = fit(next);
+    if (!valueControlled) applyValue(wanted);
+    onValueChange?.([...wanted]);
+  }
+
+  /**
+   * Escreve o texto de busca na tela, venha de onde vier. Não refiltra sozinho:
+   * quem chama sabe se a lista precisa ser reconstruída no mesmo gesto, e
+   * refiltrar aqui duplicaria a varredura no caminho da digitação.
+   */
+  function applyInputText(text: string): void {
+    inputText = text;
+    input.value = text;
+  }
+
+  /**
+   * Intenção de mudança do texto de busca.
+   *
+   * Controlado, o campo devolve o texto de quem manda e só anuncia — é isso que
+   * faz `inputValue` valer contra a digitação, que já escreveu no DOM quando
+   * este caminho roda.
+   */
+  function requestInputText(text: string): void {
+    // Nada mudou de fato: não há intenção a anunciar. Sem esta cerca, limpar o
+    // campo em escolha única anunciaria o texto vazio duas vezes.
+    if (text === inputText) return;
+    if (inputControlled) input.value = inputText;
+    else applyInputText(text);
+    onInputValueChange?.(text);
   }
 
   function select(value: string): void {
     if (multiple) {
       if (selected.includes(value)) return;
-      selected.push(value);
-      renderChips();
+      requestValue([...selected, value]);
       // O texto sai do caminho: no múltiplo, escolher significa "já registrei,
       // pode digitar o próximo". Manter o filtro esconderia os itens restantes.
-      input.value = '';
-      onInputValueChange?.('');
+      requestInputText('');
     } else {
-      selected = [value];
-      input.value = labelOf(value);
-      onInputValueChange?.(input.value);
+      requestValue([value]);
       close();
     }
-    emit();
     if (isOpen) runFilter();
   }
 
   function deselect(value: string): void {
-    const before = selected.length;
-    selected = selected.filter((v) => v !== value);
-    if (selected.length === before) return;
-    renderChips();
+    if (!selected.includes(value)) return;
+    requestValue(selected.filter((v) => v !== value));
     announce(removedAnnouncement(labelOf(value)));
-    emit();
     input.focus();
     if (isOpen) runFilter();
   }
@@ -341,10 +454,10 @@ export function createCombobox(options: ComboboxOptions): DestroyableElement<HTM
 
   function runFilter(): void {
     if (!list) return;
-    const query = normalize(input.value.trim());
-    visible = query
-      ? items.filter((i) => normalize(i.label).includes(query))
-      : [...items];
+    // O texto vai CRU para o filtro: normalizar aqui esconderia do filtro de
+    // fora exatamente o que a pessoa digitou.
+    const query = input.value.trim();
+    visible = query ? items.filter((i) => filter(i, query)) : [...items];
 
     list.textContent = '';
 
@@ -477,7 +590,9 @@ export function createCombobox(options: ComboboxOptions): DestroyableElement<HTM
   // ── Teclado ────────────────────────────────────────────────────────────────
 
   input.addEventListener('input', () => {
-    onInputValueChange?.(input.value);
+    // O DOM já escreveu o texto digitado: no modo controlado é `requestInputText`
+    // que o devolve ao texto de quem manda, e por isso a leitura vem antes.
+    requestInputText(input.value);
     if (!isOpen) open();
     else runFilter();
   });
@@ -515,8 +630,7 @@ export function createCombobox(options: ComboboxOptions): DestroyableElement<HTM
           close();
         } else if (input.value) {
           e.preventDefault();
-          input.value = '';
-          onInputValueChange?.('');
+          requestInputText('');
         }
         break;
       case 'Backspace':
@@ -542,12 +656,12 @@ export function createCombobox(options: ComboboxOptions): DestroyableElement<HTM
 
   clearButton.addEventListener('mousedown', (e) => {
     e.preventDefault();
-    selected = [];
-    input.value = '';
-    renderChips();
-    onInputValueChange?.('');
+    requestValue([]);
+    // Em escolha única o texto já saiu junto da escolha, e a cerca de
+    // `requestInputText` engole a segunda chamada; no múltiplo, é esta linha que
+    // limpa o filtro.
+    requestInputText('');
     announce(clearLabel);
-    emit();
     input.focus();
     if (isOpen) runFilter();
   });
@@ -572,10 +686,32 @@ export function createCombobox(options: ComboboxOptions): DestroyableElement<HTM
 
   renderChips();
   syncHidden();
-  if (!multiple && selected.length) input.value = labelOf(selected[0]);
+  // Controlado, o texto inicial é o de quem manda — mesmo em escolha única, em
+  // que fora do modo controlado ele seria o rótulo do escolhido.
+  applyInputText(
+    inputControlled
+      ? options.inputValue ?? ''
+      : !multiple && selected.length
+        ? labelOf(selected[0])
+        : '',
+  );
 
-  return tornarDestruivel(root, root, () => {
-    document.removeEventListener('mousedown', onClickOutside);
-    close();
-  });
+  // `Object.assign` e não um `as`: os quatro verbos entram no tipo do próprio
+  // alvo, e `tornarDestruivel` devolve exatamente `ComboboxElement`.
+  return tornarDestruivel(
+    root,
+    Object.assign(root, {
+      setValue: applyValue,
+      getValue: () => [...selected],
+      setInputValue: (text: string) => {
+        applyInputText(text);
+        if (isOpen) runFilter();
+      },
+      getInputValue: () => inputText,
+    }),
+    () => {
+      document.removeEventListener('mousedown', onClickOutside);
+      close();
+    },
+  );
 }
