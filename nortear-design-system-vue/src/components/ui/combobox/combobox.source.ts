@@ -126,6 +126,13 @@ ${indentar(items, 6)}
  * A forma do campo: raiz dona do valor, rótulo amarrado ao texto, a caixa que
  * guarda chips e texto, e a lista logo abaixo. O papel de combobox, o filtro e
  * o teclado vêm do componente.
+ *
+ * `chips` recebe só os CHIPS, e é esta função que os embrulha em
+ * `<ComboboxChips>` junto com o campo de texto. Havendo chips, o texto entra
+ * ali dentro — é a caixa de chips que quebra ou rola, e limpar e gatilho ficam
+ * de fora dela para nunca caírem da primeira linha. Sem chips, o texto é filho
+ * direto do wrapper, forma que a folha também aceita. Montar aqui, e não no
+ * chamador, é o que impede o snippet publicado de divergir da marcação real.
  */
 function field(options: {
   root?: Array<string | false | null | undefined>;
@@ -136,12 +143,18 @@ function field(options: {
   items: string;
 }): string {
   const { root = [], label, chips, input = [], clear = false, items } = options;
-  const chipsBlock = chips ? `${indentar(chips, 4)}\n` : '';
+  const inputTag = `<ComboboxInput${attrs(...input)} />`;
+  const box = chips
+    ? `<ComboboxChips>
+${indentar(chips, 2)}
+${indentar(inputTag, 2)}
+</ComboboxChips>`
+    : inputTag;
   const clearBlock = clear ? '    <ComboboxClear aria-label="Limpar" />\n' : '';
   return `<Combobox${attrs(...root)}>
   <ComboboxLabel>${label}</ComboboxLabel>
   <ComboboxInputWrapper>
-${chipsBlock}    <ComboboxInput${attrs(...input)} />
+${indentar(box, 4)}
 ${clearBlock}    <ComboboxTrigger aria-label="Abrir lista">
       <ComboboxIcon />
     </ComboboxTrigger>
@@ -181,16 +194,14 @@ const country = ref('')`,
  */
 export function comboboxMultipleSource(): string {
   const chips = [
-    '<ComboboxChips>',
-    '  <ComboboxChip',
-    '    v-for="item in chips"',
-    '    :key="item.value"',
-    '    :value="item.value"',
-    '  >',
-    '    {{ item.label }}',
-    `    <ComboboxChipRemove :aria-label="'Remover ' + item.label" />`,
-    '  </ComboboxChip>',
-    '</ComboboxChips>',
+    '<ComboboxChip',
+    '  v-for="item in chips"',
+    '  :key="item.value"',
+    '  :value="item.value"',
+    '>',
+    '  {{ item.label }}',
+    `  <ComboboxChipRemove :aria-label="'Remover ' + item.label" />`,
+    '</ComboboxChip>',
   ].join('\n');
 
   return vueSnippet(

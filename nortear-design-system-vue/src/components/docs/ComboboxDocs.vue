@@ -286,6 +286,7 @@ interface ComboboxProps {
   multiple?: boolean;
   disabled?: boolean;
   name?: string;
+  chipsLayout?: 'wrap' | 'single-line';   // sai como data-chips no wrapper
   filter?: (item: ComboboxFilterItem, query: string) => boolean;
   ignoreFilter?: boolean;              // desliga o filtro sem substituí-lo
   class?: string;
@@ -376,6 +377,9 @@ const rootPropItems = computed(() => [
   { name: 'multiple',              type: 'boolean',                            defaultValue: 'false', required: tNav('common.no'), description: toPlainText(tContent('props.table.multiple.description'))        },
   { name: 'disabled',              type: 'boolean',                            defaultValue: 'false', required: tNav('common.no'), description: toPlainText(tContent('props.table.disabled.description'))        },
   { name: 'name',                  type: 'string',                             defaultValue: '—',     required: tNav('common.no'), description: toPlainText(tContent('props.table.name.description'))            },
+  // Companheira de `multiple`: é a mesma decisão de quem liga os chips, e por
+  // isso mora na raiz — o wrapper só recebe o `data-chips` que ela produz.
+  { name: 'chipsLayout',           type: `'wrap' | 'single-line'`,             defaultValue: `'wrap'`, required: tNav('common.no'), description: toPlainText(tContent('props.table.chipsLayout.description'))    },
   // O texto de busca e o filtro moram na RAIZ desta stack: as duas coisas são
   // lidas por mais de uma peça, e a raiz é a única que todas alcançam.
   { name: 'inputValue',            type: 'string',                             defaultValue: '—',     required: tNav('common.no'), description: toPlainText(tContent('props.table.inputValue.description'))       },
@@ -562,8 +566,11 @@ const visualTestItems = computed(() => [
                   {{ item.label }}
                   <ComboboxChipRemove :aria-label="removeLabelOf(item.label)" :removed-announcement="removedAnnouncementOf(item.label)" />
                 </ComboboxChip>
+                <!-- O texto mora DENTRO da caixa de chips: é ela que quebra ou
+                     rola, e é o que faz o cursor continuar depois do último
+                     chip. Limpar e gatilho ficam de fora, na primeira linha. -->
+                <ComboboxInput :placeholder="tContent('demonstration.labels.techPlaceholder')" />
               </ComboboxChips>
-              <ComboboxInput :placeholder="tContent('demonstration.labels.techPlaceholder')" />
               <ComboboxTrigger :aria-label="tContent('demonstration.labels.openList')">
                 <ComboboxIcon />
               </ComboboxTrigger>

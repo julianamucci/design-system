@@ -14,11 +14,13 @@ import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 //
 //   <div data-slot="combobox">                     ← raiz, `display: contents`
 //     <label class="nds-combobox-label" data-slot="combobox-label">
-//     <div class="nds-combobox-input-wrapper" data-slot="combobox-input-wrapper">
-//       <span class="nds-combobox-chip" data-slot="combobox-chip">
-//         <span data-slot="combobox-chip-text">
-//         <button class="nds-combobox-chip-remove" data-slot="combobox-chip-remove">
-//       <input class="nds-combobox-input" data-slot="combobox-input" role="combobox">
+//     <div class="nds-combobox-input-wrapper" data-slot="combobox-input-wrapper"
+//          data-chips="wrap | single-line">
+//       <div class="nds-combobox-chips" data-slot="combobox-chips">
+//         <span class="nds-combobox-chip" data-slot="combobox-chip">
+//           <span data-slot="combobox-chip-text">
+//           <button class="nds-combobox-chip-remove" data-slot="combobox-chip-remove">
+//         <input class="nds-combobox-input" data-slot="combobox-input" role="combobox">
 //       <button class="nds-combobox-clear" data-slot="combobox-clear">
 //       <button class="nds-combobox-trigger" data-slot="combobox-trigger">
 //     <input type="hidden" data-slot="combobox-hidden-input">
@@ -28,10 +30,16 @@ import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 // `aria-activedescendant` e realçada por `[data-highlighted]`. Mover o foco para
 // a opção quebraria a digitação, que é o ponto do componente.
 //
-// Os chips vivem dentro de `.nds-combobox-chips`, que é `display: contents`:
-// o elemento existe na árvore — a anatomia publica esse slot, e as outras
-// quatro stacks o emitem — mas não gera caixa própria, então os chips seguem
-// quebrando linha junto com o input, que era o motivo de omiti-lo antes.
+// O INPUT MORA DENTRO de `.nds-combobox-chips`, e não ao lado dela. A caixa de
+// chips é a única peça que cresce ou rola; limpar e gatilho ficam FORA dela,
+// irmãos, e por isso nunca caem para a linha de baixo. Enquanto essa caixa era
+// `display: contents`, chip, texto, limpar e gatilho eram todos irmãos no mesmo
+// flex que quebrava — enchida a primeira linha, quem sobrava ia para baixo, que
+// foi o defeito relatado.
+//
+// `chipsLayout` escolhe entre as duas formas, escrevendo `data-chips` no
+// wrapper: `wrap` acumula linhas de chip e o campo cresce em altura;
+// `single-line` mantém uma linha só, que rola na horizontal.
 //
 // ── Modo controlado, na forma que uma fábrica permite ────────────────────────
 //
@@ -50,6 +58,9 @@ import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 // mora. Sem `value` e sem `inputValue` nada disso existe: a fábrica continua
 // dona do estado e `defaultValue` é o caminho de sempre.
 
+/** Forma dos chips no campo: linhas que se acumulam, ou uma linha só que rola. */
+export type ComboboxChipsLayout = 'wrap' | 'single-line';
+
 export interface ComboboxItem {
   value: string;
   label: string;
@@ -66,6 +77,17 @@ export interface ComboboxOptions {
   placeholder?: string;
   /** Modo múltiplo: os escolhidos viram chips dentro do campo. */
   multiple?: boolean;
+  /**
+   * Como os chips ocupam o campo.
+   *
+   * `wrap` (padrão) deixa os chips acumularem LINHAS, e o campo cresce em
+   * altura. `single-line` mantém todos numa linha só, e a caixa de chips rola
+   * na horizontal — útil quando a altura do campo não pode variar.
+   *
+   * Nos dois casos os botões de limpar e de abrir a lista ficam na primeira
+   * linha: eles estão fora da caixa que quebra ou rola.
+   */
+  chipsLayout?: ComboboxChipsLayout;
   /**
    * Escolha em modo CONTROLADO.
    *
@@ -186,6 +208,7 @@ export function createCombobox(options: ComboboxOptions): ComboboxElement {
     label,
     placeholder = '',
     multiple = false,
+    chipsLayout = 'wrap',
     defaultValue = [],
     filter = defaultFilter,
     disabled = false,
@@ -247,13 +270,15 @@ export function createCombobox(options: ComboboxOptions): ComboboxElement {
   const wrapper = document.createElement('div');
   wrapper.className = 'nds-combobox-input-wrapper';
   wrapper.dataset.slot = 'combobox-input-wrapper';
+  // O seletor de que a folha compartilhada depende para escolher entre quebrar
+  // linha e rolar na horizontal.
+  wrapper.dataset.chips = chipsLayout;
   if (disabled) wrapper.dataset.disabled = '';
   if (invalid) wrapper.setAttribute('aria-invalid', 'true');
   root.appendChild(wrapper);
 
-  // Contêiner real, como nas outras quatro e como a anatomia publica. Ele não
-  // cria caixa de flex própria — `.nds-combobox-chips` é `display: contents`,
-  // justamente para os chips continuarem quebrando linha junto com o input.
+  // A caixa que CRESCE ou ROLA. Os chips e o input moram aqui dentro; limpar e
+  // gatilho ficam fora, irmãos dela, e é isso que os mantém na primeira linha.
   const chipsEl = document.createElement('div');
   chipsEl.className = 'nds-combobox-chips';
   chipsEl.dataset.slot = 'combobox-chips';
@@ -273,6 +298,10 @@ export function createCombobox(options: ComboboxOptions): ComboboxElement {
   input.setAttribute('aria-autocomplete', 'list');
   if (options['aria-label']) input.setAttribute('aria-label', options['aria-label']);
   if (invalid) input.setAttribute('aria-invalid', 'true');
+
+  // Depois dos chips, e dentro da mesma caixa: é o que faz o texto continuar
+  // fluindo a partir do último chip.
+  chipsEl.appendChild(input);
 
   const clearButton = document.createElement('button');
   clearButton.type = 'button';
@@ -294,7 +323,7 @@ export function createCombobox(options: ComboboxOptions): ComboboxElement {
   triggerIcon.setAttribute('data-slot', 'combobox-icon');
   trigger.appendChild(triggerIcon);
 
-  wrapper.append(input, clearButton, trigger);
+  wrapper.append(clearButton, trigger);
 
   // Região viva: remover um chip é mudança de estado que não move o foco, então
   // quem não vê a tela não recebe nada sem isto.
@@ -317,7 +346,10 @@ export function createCombobox(options: ComboboxOptions): ComboboxElement {
   }
 
   function renderChips(): void {
-    chipsEl.replaceChildren();
+    // Só os CHIPS saem. O input mora nesta mesma caixa, e um `replaceChildren()`
+    // o arrancaria junto: mesmo devolvendo o nó em seguida, sair do documento
+    // apaga o foco — e este caminho roda no meio da digitação, a cada escolha.
+    chipsEl.querySelectorAll('[data-slot="combobox-chip"]').forEach((n) => n.remove());
     if (!multiple) return;
 
     for (const value of selected) {
@@ -345,7 +377,9 @@ export function createCombobox(options: ComboboxOptions): ComboboxElement {
       });
 
       chip.append(textEl, removeButton);
-      chipsEl.appendChild(chip);
+      // Antes do input, sempre: os chips vêm primeiro e o texto começa depois
+      // do último deles.
+      chipsEl.insertBefore(chip, input);
     }
   }
 
@@ -667,9 +701,11 @@ export function createCombobox(options: ComboboxOptions): ComboboxElement {
   });
 
   // Clicar em qualquer canto do campo vai para o input — é o `cursor: text` do
-  // wrapper cumprindo o que promete.
+  // wrapper cumprindo o que promete. A caixa de chips entra na conta porque ela
+  // agora gera caixa própria: o vazio ao lado dos chips é alvo DELA, não do
+  // wrapper, e sem esta linha aquele pedaço do campo pararia de responder.
   wrapper.addEventListener('mousedown', (e) => {
-    if (e.target === wrapper) {
+    if (e.target === wrapper || e.target === chipsEl) {
       e.preventDefault();
       input.focus();
       if (!isOpen) open();

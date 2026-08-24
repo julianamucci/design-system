@@ -319,10 +319,11 @@ Select (value, onValueChange)
 Combobox                            combobox
 ├── ComboboxLabel                   combobox-label
 ├── ComboboxInputWrapper            combobox-input-wrapper   ← a caixa que parece o campo
-│   ├── ComboboxChips               combobox-chips           (display: contents)
-│   │   └── ComboboxChip            combobox-chip
-│   │       └── ComboboxChipRemove  combobox-chip-remove
-│   ├── ComboboxInput               combobox-input           role="combobox"
+│   │                                                         data-chips="wrap | single-line"
+│   ├── ComboboxChips               combobox-chips           ← a caixa que cresce (só no modo múltiplo)
+│   │   ├── ComboboxChip            combobox-chip
+│   │   │   └── ComboboxChipRemove  combobox-chip-remove
+│   │   └── ComboboxInput           combobox-input           role="combobox"
 │   ├── ComboboxClear               combobox-clear
 │   └── ComboboxTrigger             combobox-trigger
 │       └── ComboboxIcon            combobox-icon
@@ -337,7 +338,11 @@ Combobox                            combobox
         └── ComboboxEmpty           combobox-empty
 ```
 
-**Modo múltiplo**: `multiple` troca o valor exibido por chips dentro da própria caixa. Cada chip traz o rótulo do escolhido e um botão de remover. A peça de chips é `display: contents`, então os chips quebram linha junto com o campo de texto em vez de formarem uma faixa própria. Backspace com o texto vazio remove o último chip.
+No modo simples não há caixa de chips, e o campo de texto é filho direto do wrapper — a folha compartilhada aceita as duas formas.
+
+**Modo múltiplo**: `multiple` troca o valor exibido por chips dentro da própria caixa. Cada chip traz o rótulo do escolhido e um botão de remover. Backspace com o texto vazio remove o último chip.
+
+O campo de texto mora **dentro** de `ComboboxChips`, e não ao lado dela: é essa caixa que quebra em linhas ou rola na horizontal, e é o que faz o cursor continuar logo depois do último chip. Limpar e gatilho ficam **fora** dela, irmãos, e por isso permanecem sempre na primeira linha. A peça de chips já foi `display: contents` — sem caixa própria, chip, texto, limpar e gatilho eram irmãos no mesmo flex que quebrava, e os dois botões caíam para a linha de baixo assim que os chips enchiam a primeira. Foi o defeito que deu origem a `chipsLayout`.
 
 O valor tem **um dono só**: ele mora na raiz, e os chips são marcação lida desse mesmo modelo. Remover um chip escreve de volta no modelo — não há segundo estado a sincronizar, e por isso o campo de texto nunca perde o foco no gesto.
 
@@ -352,12 +357,15 @@ O valor tem **um dono só**: ele mora na raiz, e os chips são marcação lida d
 | `update:inputValue` | `(text: string) => void` | — | Evento de mudança do texto digitado; é o gancho para buscar opções no servidor |
 | `filter` | `(item: ComboboxFilterItem, query: string) => boolean` | — | Substitui o filtro. Sem ele, quem filtra é o primitivo, ignorando acento e caixa |
 | `multiple` | `boolean` | `false` | Escolhidos viram chips dentro do campo |
+| `chipsLayout` | `'wrap' \| 'single-line'` | `'wrap'` | Chips em várias LINHAS, com o campo crescendo em altura, ou numa linha só que rola na horizontal. Sai como `data-chips` no wrapper; limpar e gatilho ficam na primeira linha nos dois casos |
 | `disabled` | `boolean` | `false` | Campo indisponível: nada recebe foco e a lista não abre |
 | `invalid` | `boolean` | `false` | Marca o campo como inválido |
 | `name` | `string` | — | Nome do campo no formulário |
 | `highlightOnHover` | `boolean` | `true` | A opção sob o ponteiro vira a opção ativa |
 | `openOnClick` | `boolean` | `true` | Clicar no campo abre a lista — é o que o `cursor: text` da caixa promete |
 | `resetModelValueOnClear` | `boolean` | `true` | O botão de limpar zera a escolha, e não só o texto |
+
+`chipsLayout` também mora na raiz, ao lado de `multiple`: é a mesma decisão de quem liga os chips, e desce ao wrapper pelo contexto próprio desta camada. Prop no wrapper obrigaria a repetir a escolha em toda composição. Um `data-chips` escrito à mão no `ComboboxInputWrapper` ainda vence — atributo herdado é aplicado depois do declarado —, e é a saída para o caso em que a raiz não é de quem monta o campo.
 
 O texto de busca e o filtro moram na RAIZ porque as duas coisas são lidas por mais de uma peça, e a raiz é a única que todas alcançam. O tipo do item do filtro é `ComboboxFilterItem`, e não `ComboboxItem`: este último já é o nome do COMPONENTE de opção, e os dois colidiriam no mesmo import.
 

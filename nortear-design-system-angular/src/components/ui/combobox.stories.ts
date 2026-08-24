@@ -316,6 +316,11 @@ export const MultipleWithChips: Story = {
         <label ndsComboboxLabel>{{ label }}</label>
 
         <div ndsComboboxInputWrapper>
+          <!--
+            O campo de texto mora DENTRO da caixa de chips: é ela que quebra
+            linha, e limpar e gatilho ficam de fora para nunca caírem para a
+            linha de baixo quando os chips enchem a primeira.
+          -->
           <div ndsComboboxChips>
             @for (chosen of store.multiple; track chosen) {
               <span ndsComboboxChip [value]="chosen">
@@ -326,9 +331,10 @@ export const MultipleWithChips: Story = {
                 ></button>
               </span>
             }
+
+            <input ndsComboboxInput [placeholder]="placeholder" />
           </div>
 
-          <input ndsComboboxInput [placeholder]="placeholder" />
           <button ndsComboboxClear aria-label="Limpar"></button>
           <button ndsComboboxTrigger aria-label="Abrir lista">
             <svg ndsComboboxIcon></svg>

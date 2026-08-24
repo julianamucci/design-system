@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ComboboxRootEmits, ComboboxRootProps } from 'reka-ui'
 import type { HTMLAttributes, Ref } from 'vue'
-import type { ComboboxFilter } from './index'
+import type { ComboboxChipsLayout, ComboboxFilter } from './index'
 import { reactiveOmit, useVModel } from '@vueuse/core'
 import { ComboboxRoot, useForwardPropsEmits, useId } from 'reka-ui'
 import { computed, ref } from 'vue'
@@ -96,8 +96,19 @@ const props = withDefaults(
     inputValue?: string
     /** Substitui o filtro. Sem ele, quem filtra é a lib. */
     filter?: ComboboxFilter
+    /**
+     * Chips em várias linhas (o campo cresce) ou numa linha só que rola.
+     *
+     * Fica na RAIZ, ao lado de `multiple`, porque é a mesma decisão de quem
+     * liga o modo múltiplo — e desce ao wrapper pelo contexto próprio desta
+     * camada, que já existe para o que a lib não carrega.
+     */
+    chipsLayout?: ComboboxChipsLayout
   }>(),
   {
+    // Quebrar linha é o padrão: o chip que não coube continua visível, e nada
+    // do que foi escolhido some atrás de uma rolagem que ninguém pediu.
+    chipsLayout: 'wrap',
     // A opção sob o ponteiro vira a opção ativa, como na referência Vanilla.
     highlightOnHover: true,
     // Clicar no campo abre a lista — a folha promete isso com `cursor: text`.
@@ -111,14 +122,16 @@ const emits = defineEmits<ComboboxRootEmits & {
 }>()
 
 /*
- * `inputValue` e `filter` não descem para a lib: nenhuma das duas existe lá.
- * Prop que a raiz não declara vira atributo no elemento, e uma função escrita
- * como atributo sai serializada no HTML entregue.
+ * `inputValue`, `filter` e `chipsLayout` não descem para a lib: nenhuma das
+ * três existe lá. Prop que a raiz não declara vira atributo no elemento, e uma
+ * função escrita como atributo sai serializada no HTML entregue. `chipsLayout`
+ * é desenho da NOSSA caixa e sairia como um `chipslayout="wrap"` solto.
  */
-const delegatedProps = reactiveOmit(props, 'class', 'inputValue', 'filter')
+const delegatedProps = reactiveOmit(props, 'class', 'inputValue', 'filter', 'chipsLayout')
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
 const filter = computed(() => props.filter)
+const chipsLayout = computed(() => props.chipsLayout)
 
 /* Com predicado do consumidor, o filtro de dentro sai de cena por inteiro. */
 const ignoreFilter = computed(() => props.ignoreFilter || props.filter !== undefined)
@@ -148,7 +161,7 @@ function announce(message: string): void {
   announcement.value = message
 }
 
-provideComboboxContext({ inputId, listId, labels, search, announcement, announce, filter })
+provideComboboxContext({ inputId, listId, labels, search, announcement, announce, filter, chipsLayout })
 </script>
 
 <template>

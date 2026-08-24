@@ -8,15 +8,21 @@
  *
  *   <div data-slot="combobox">                        ← raiz, `display: contents`
  *     <label class="nds-combobox-label" data-slot="combobox-label">
- *     <div class="nds-combobox-input-wrapper" data-slot="combobox-input-wrapper">
+ *     <div class="nds-combobox-input-wrapper" data-slot="combobox-input-wrapper"
+ *          data-chips="wrap | single-line">
  *       <div class="nds-combobox-chips" data-slot="combobox-chips">
  *         <span class="nds-combobox-chip" data-slot="combobox-chip">
  *           <span data-slot="combobox-chip-text">
  *           <button class="nds-combobox-chip-remove" data-slot="combobox-chip-remove">
- *       <input class="nds-combobox-input" data-slot="combobox-input" role="combobox">
+ *         <input class="nds-combobox-input" data-slot="combobox-input" role="combobox">
  *       <button class="nds-combobox-clear" data-slot="combobox-clear">
  *       <button class="nds-combobox-trigger" data-slot="combobox-trigger">
  *         <svg class="nds-combobox-icon" data-slot="combobox-icon">
+ *
+ * O INPUT MORA DENTRO da caixa de chips, e não ao lado dela. É o que mantém o
+ * texto fluindo depois do último chip e, ao mesmo tempo, deixa limpar e gatilho
+ * fora do que quebra ou rola. No modo simples a caixa de chips pode não existir,
+ * e aí o input é filho direto do wrapper — as duas formas são válidas.
  *
  *   <div class="nds-combobox-positioner" data-slot="combobox-positioner">
  *     <div class="nds-combobox-popup" data-slot="combobox-popup">
@@ -39,7 +45,10 @@
 
 .nds-combobox-input-wrapper {
   display: flex;
-  flex-wrap: wrap;
+  /* NUNCA quebra. Quem quebra é a caixa dos chips, por dentro — o wrapper
+     quebrando fazia limpar e gatilho caírem para a linha de baixo assim que os
+     chips enchiam a primeira. */
+  flex-wrap: nowrap;
   align-items: center;
   gap: var(--spacing-1-5);
 
@@ -121,8 +130,55 @@
 /* Gap PRÓPRIO, não `.nds-cluster`: chip não é botão, então não cai na regra do
    piso de 16px entre botões (`button_gap_apertado`). Aqui a proximidade é o que
    diz que os chips são um conjunto dentro do campo. */
+/*
+ * A caixa que CRESCE: chips e texto moram aqui dentro; limpar e gatilho ficam
+ * de fora, irmãos dela. Era `display: contents`, e essa era a causa dos
+ * controles caírem de linha — sem caixa própria, chip, texto, limpar e gatilho
+ * eram todos irmãos no mesmo flex que quebrava, e quem sobrava ia para baixo.
+ *
+ * Duas formas, escolhidas em `data-chips` no wrapper:
+ *
+ *   wrap         (padrão) os chips acumulam LINHAS e o campo cresce em altura
+ *   single-line  os chips ficam numa linha só e a caixa rola na horizontal
+ *
+ * Nos dois casos os controles ficam na primeira linha, porque não estão aqui
+ * dentro: `align-items` do wrapper é que os alinha ao topo quando há mais de
+ * uma linha de chip.
+ */
 .nds-combobox-chips {
-  display: contents;
+  flex: 1 1 auto;
+  min-inline-size: 0;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-1-5);
+}
+
+/* Com mais de uma linha de chip, centralizar deixaria limpar e gatilho no meio
+   da PILHA. Ao topo eles ficam na primeira linha, que é onde o texto começa. */
+.nds-combobox-input-wrapper:has(.nds-combobox-chip) {
+  align-items: flex-start;
+}
+
+.nds-combobox-input-wrapper[data-chips="single-line"] .nds-combobox-chips {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  /* A barra fina não rouba altura do campo; o conjunto continua rolável por
+     teclado porque a caixa é focável por rolagem do navegador. */
+  scrollbar-width: thin;
+
+  /* `overflow-x: auto` faz `overflow-y` computar como `auto` também, e aí a
+     caixa RECORTA o que passa dela — inclusive o anel de foco do chip, que
+     desenha 2px para fora. O padding devolve a folga e a margem negativa a
+     desconta, para o campo não ficar mais alto por causa disso. */
+  padding-block: var(--spacing-0-5);
+  margin-block: calc(var(--spacing-0-5) * -1);
+}
+
+/* Linha única não tem pilha: os controles voltam ao centro. */
+.nds-combobox-input-wrapper[data-chips="single-line"] {
+  align-items: center;
 }
 
 .nds-combobox-chip {

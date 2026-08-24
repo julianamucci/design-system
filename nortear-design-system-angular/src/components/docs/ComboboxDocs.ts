@@ -91,7 +91,11 @@ const INTERFACE_CODE = `// <nds-combobox> — compõe os primitivos do Radix NG
       outputs: ['valueChange', 'inputValueChange', 'openChange'] },
   ],
 })
-export class NdsCombobox {}
+export class NdsCombobox {
+  // Forma dos chips no campo. Sai como \`data-chips\` no wrapper, e é a folha
+  // que decide entre acumular linhas e rolar na horizontal.
+  readonly chipsLayout = input<'wrap' | 'single-line'>('wrap');
+}
 
 // Uso com Reactive Forms:
 // <nds-combobox formControlName="pais"> … </nds-combobox>`;
@@ -130,8 +134,8 @@ export class NdsCombobox {}
                 ></button>
               </span>
             }
+            <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
           </div>
-          <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
           <button ndsComboboxTrigger [attr.aria-label]="t('demonstration.labels.openList')">
             <svg ndsComboboxIcon></svg>
           </button>
@@ -165,8 +169,8 @@ export class NdsCombobox {}
                 ></button>
               </span>
             }
+            <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
           </div>
-          <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
           <button ndsComboboxTrigger [attr.aria-label]="t('demonstration.labels.openList')">
             <svg ndsComboboxIcon></svg>
           </button>
@@ -199,8 +203,8 @@ export class NdsCombobox {}
                 ></button>
               </span>
             }
+            <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
           </div>
-          <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
           <button ndsComboboxTrigger [attr.aria-label]="t('demonstration.labels.openList')">
             <svg ndsComboboxIcon></svg>
           </button>
@@ -228,8 +232,8 @@ export class NdsCombobox {}
               <!-- Sem botão de remover: só o ponteiro desfaz, na lista. -->
               <span ndsComboboxChip [value]="chosen">{{ technologyLabel(chosen) }}</span>
             }
+            <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
           </div>
-          <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
           <button ndsComboboxTrigger [attr.aria-label]="t('demonstration.labels.openList')">
             <svg ndsComboboxIcon></svg>
           </button>
@@ -286,8 +290,8 @@ export class NdsCombobox {}
                 ></button>
               </span>
             }
+            <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
           </div>
-          <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
           <button ndsComboboxTrigger [attr.aria-label]="t('demonstration.labels.openList')">
             <svg ndsComboboxIcon></svg>
           </button>
@@ -419,8 +423,8 @@ export class NdsCombobox {}
                       ></button>
                     </span>
                   }
+                  <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
                 </div>
-                <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
                 <button ndsComboboxTrigger [attr.aria-label]="t('demonstration.labels.openList')">
                   <svg ndsComboboxIcon></svg>
                 </button>
@@ -805,6 +809,7 @@ export class NdsComboboxDocs implements AfterViewInit, OnDestroy {
           { name: 'inputValue',       type: 'model<string>',                             defaultValue: "''",    required: no, description: toPlainText(t('props.table.inputValue.description')) },
           { name: 'inputValueChange', type: 'output<string>',                            defaultValue: '—',     required: no, description: toPlainText(t('props.table.onInputValueChange.description')) },
           { name: 'multiple',         type: 'boolean',                                   defaultValue: 'false', required: no, description: toPlainText(t('props.table.multiple.description')) },
+          { name: 'chipsLayout',      type: "'wrap' | 'single-line'",                    defaultValue: "'wrap'", required: no, description: toPlainText(t('props.table.chipsLayout.description')) },
           { name: 'filter',           type: '(value, query, itemToString) => boolean',   defaultValue: '—',     required: no, description: toPlainText(t('props.table.filter.description')) },
           { name: 'disabled',         type: 'boolean',                                   defaultValue: 'false', required: no, description: toPlainText(t('props.table.disabled.description')) },
           { name: 'invalid',          type: 'boolean',                                   defaultValue: 'false', required: no, description: toPlainText(t('states.invalid.trigger')) },

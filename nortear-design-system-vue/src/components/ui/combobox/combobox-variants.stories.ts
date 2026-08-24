@@ -104,8 +104,10 @@ export const MultipleWithChips: Story = {
                 {{ item.label }}
                 <ComboboxChipRemove :aria-label="removeLabelOf(item.label)" :removed-announcement="removedAnnouncementOf(item.label)" />
               </ComboboxChip>
+              <!-- O texto mora DENTRO da caixa de chips: é ela que quebra ou
+                   rola. Limpar e gatilho ficam de fora, na primeira linha. -->
+              <ComboboxInput placeholder="Adicionar tecnologia" />
             </ComboboxChips>
-            <ComboboxInput placeholder="Adicionar tecnologia" />
             <ComboboxTrigger aria-label="Abrir lista">
               <ComboboxIcon />
             </ComboboxTrigger>

@@ -312,8 +312,8 @@
           <ComboboxChipRemove />
         </ComboboxChip>
       {/each}
+      <ComboboxInput placeholder="Adicionar tecnologia" />
     </ComboboxChips>
-    <ComboboxInput placeholder="Adicionar tecnologia" />
     <ComboboxTrigger aria-label="Abrir lista" />
   </ComboboxInputWrapper>
   <ComboboxPositioner>
@@ -349,6 +349,7 @@ interface ComboboxProps {
   inputValue?: string;           // $bindable — o texto de busca
   open?: boolean;                // $bindable
   multiple?: boolean;
+  chipsLayout?: "wrap" | "single-line";  // padrão "wrap": chips em linhas
   disabled?: boolean;
   invalid?: boolean;
   loop?: boolean;                // da última opção a seta volta à primeira
@@ -398,6 +399,10 @@ interface ComboboxChipProps {
   >
     <ComboboxLabel>{config.label}</ComboboxLabel>
     <ComboboxInputWrapper>
+      <!-- O campo de texto é filho da caixa de chips, não irmão dela: o texto
+           segue depois do último chip, e limpar e gatilho ficam de fora do que
+           quebra ou rola — sempre na primeira linha. Sem chips a caixa não
+           existe, e o campo é filho direto do wrapper. -->
       {#if config.multiple}
         <ComboboxChips>
           {#each chipsOf(id) as chip (chip)}
@@ -405,9 +410,11 @@ interface ComboboxChipProps {
               <ComboboxChipRemove removeLabel={labels.remove} />
             </ComboboxChip>
           {/each}
+          <ComboboxInput placeholder={config.placeholder} />
         </ComboboxChips>
+      {:else}
+        <ComboboxInput placeholder={config.placeholder} />
       {/if}
-      <ComboboxInput placeholder={config.placeholder} />
       <ComboboxClear aria-label={labels.clear} />
       <ComboboxTrigger aria-label={labels.openList} />
     </ComboboxInputWrapper>
@@ -622,8 +629,8 @@ interface ComboboxChipProps {
                 <ComboboxChipRemove removeLabel={labels.remove} />
               </ComboboxChip>
             {/each}
+            <ComboboxInput placeholder={labels.countryPlaceholder} />
           </ComboboxChips>
-          <ComboboxInput placeholder={labels.countryPlaceholder} />
           <ComboboxTrigger aria-label={labels.openList} />
         </ComboboxInputWrapper>
         <ComboboxPositioner>
@@ -658,8 +665,8 @@ interface ComboboxChipProps {
                 <ComboboxChipRemove aria-label={labels.remove} />
               </ComboboxChip>
             {/each}
+            <ComboboxInput placeholder={labels.countryPlaceholder} />
           </ComboboxChips>
-          <ComboboxInput placeholder={labels.countryPlaceholder} />
           <ComboboxTrigger aria-label={labels.openList} />
         </ComboboxInputWrapper>
         <ComboboxPositioner>
@@ -702,8 +709,8 @@ interface ComboboxChipProps {
                    lista, e o teclado perde o caminho de volta. -->
               <ComboboxChip value={chip} />
             {/each}
+            <ComboboxInput placeholder={labels.techPlaceholder} />
           </ComboboxChips>
-          <ComboboxInput placeholder={labels.techPlaceholder} />
           <ComboboxTrigger aria-label={labels.openList} />
         </ComboboxInputWrapper>
         <ComboboxPositioner>
@@ -884,6 +891,7 @@ interface ComboboxChipProps {
           { name: 'inputValue',         type: $tStore('props.table.inputValue.type'),         defaultValue: $tStore('props.table.inputValue.default'),         required: $tStore('props.table.inputValue.required'),         description: toPlainText($tStore('props.table.inputValue.description')) },
           { name: 'onInputValueChange', type: $tStore('props.table.onInputValueChange.type'), defaultValue: $tStore('props.table.onInputValueChange.default'), required: $tStore('props.table.onInputValueChange.required'), description: toPlainText($tStore('props.table.onInputValueChange.description')) },
           { name: 'multiple',           type: $tStore('props.table.multiple.type'),           defaultValue: $tStore('props.table.multiple.default'),           required: $tStore('props.table.multiple.required'),           description: toPlainText($tStore('props.table.multiple.description')) },
+          { name: 'chipsLayout',        type: $tStore('props.table.chipsLayout.type'),        defaultValue: $tStore('props.table.chipsLayout.default'),        required: $tStore('props.table.chipsLayout.required'),        description: toPlainText($tStore('props.table.chipsLayout.description')) },
           { name: 'filter',             type: $tStore('props.table.filter.type'),             defaultValue: $tStore('props.table.filter.default'),             required: $tStore('props.table.filter.required'),             description: toPlainText($tStore('props.table.filter.description')) },
           { name: 'placeholder',        type: $tStore('props.table.placeholder.type'),        defaultValue: $tStore('props.table.placeholder.default'),        required: $tStore('props.table.placeholder.required'),        description: toPlainText($tStore('props.table.placeholder.description')) },
           { name: 'disabled',           type: $tStore('props.table.disabled.type'),           defaultValue: $tStore('props.table.disabled.default'),           required: $tStore('props.table.disabled.required'),           description: toPlainText($tStore('props.table.disabled.description')) },

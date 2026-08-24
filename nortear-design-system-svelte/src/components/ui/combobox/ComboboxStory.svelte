@@ -22,6 +22,7 @@
 		ComboboxSeparator,
 		ComboboxTrigger,
 		filterItems,
+		type ComboboxChipsLayout,
 		type ComboboxOption,
 	} from './index.js';
 
@@ -30,6 +31,7 @@
 		label?: string;
 		placeholder?: string;
 		multiple?: boolean;
+		chipsLayout?: ComboboxChipsLayout;
 		disabled?: boolean;
 		invalid?: boolean;
 		name?: string;
@@ -46,6 +48,7 @@
 		label = 'País',
 		placeholder = 'Buscar país',
 		multiple = false,
+		chipsLayout = 'wrap',
 		disabled = false,
 		invalid = false,
 		name = undefined,
@@ -106,6 +109,7 @@
 		bind:value={selection}
 		bind:inputValue={query}
 		{multiple}
+		{chipsLayout}
 		{disabled}
 		{invalid}
 		{name}
@@ -113,6 +117,10 @@
 	>
 		<ComboboxLabel>{label}</ComboboxLabel>
 		<ComboboxInputWrapper>
+			<!-- O campo de texto mora DENTRO da caixa de chips: é o que faz o texto
+			     seguir depois do último chip e deixa limpar e gatilho fora do que
+			     quebra ou rola. Sem chip nenhum, a caixa não existe e o campo é filho
+			     direto do wrapper — a folha aceita as duas formas. -->
 			{#if multiple}
 				<ComboboxChips>
 					{#each chips as chip (chip)}
@@ -120,9 +128,11 @@
 							<ComboboxChipRemove {removeLabel} />
 						</ComboboxChip>
 					{/each}
+					<ComboboxInput {placeholder} />
 				</ComboboxChips>
+			{:else}
+				<ComboboxInput {placeholder} />
 			{/if}
-			<ComboboxInput {placeholder} />
 			<ComboboxClear aria-label={clearLabel} />
 			<ComboboxTrigger aria-label={triggerLabel} />
 		</ComboboxInputWrapper>

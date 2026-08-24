@@ -5,6 +5,7 @@
 	import {
 		defaultFilter,
 		setComboboxState,
+		type ComboboxChipsLayout,
 		type ComboboxFilter,
 		type ComboboxOption,
 		type ComboboxState,
@@ -29,6 +30,11 @@
 		/** Texto de busca. Sem ele o campo administra o próprio texto. */
 		inputValue?: string;
 		multiple?: boolean;
+		/**
+		 * Como os chips ocupam o campo: em linhas que se acumulam ou numa linha só
+		 * que rola na horizontal. Vale só no modo múltiplo, que é quem produz chip.
+		 */
+		chipsLayout?: ComboboxChipsLayout;
 		disabled?: boolean;
 		invalid?: boolean;
 		name?: string;
@@ -49,6 +55,7 @@
 		open = $bindable(false),
 		inputValue = $bindable(''),
 		multiple = false,
+		chipsLayout = 'wrap',
 		disabled = false,
 		invalid = false,
 		name = undefined,
@@ -131,6 +138,9 @@
 		get inputId() { return inputId; },
 		get listboxId() { return listboxId; },
 		get multiple() { return multiple; },
+		// Getter, e não valor copiado: trocar o modo de chips em runtime tem de
+		// chegar à caixa do campo sem recriar o estado, ao contrário de `multiple`.
+		get chipsLayout() { return chipsLayout; },
 		get disabled() { return disabled; },
 		get invalid() { return invalid; },
 		get open() { return open; },

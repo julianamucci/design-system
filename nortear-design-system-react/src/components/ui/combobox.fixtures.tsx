@@ -27,6 +27,7 @@ import {
   ComboboxItem,
   ComboboxLabel,
   ComboboxTrigger,
+  type ComboboxChipsLayout,
   type ComboboxOption,
   type ComboboxOptionGroup,
   type ComboboxValue,
@@ -178,6 +179,8 @@ export interface ComboboxFixtureProps {
   name?: string
   disabled?: boolean
   invalid?: boolean
+  /** Forma dos chips no campo. Só tem efeito onde há chips. */
+  chipsLayout?: ComboboxChipsLayout
   onValueChange?: (value: ComboboxValue) => void
 }
 
@@ -233,6 +236,7 @@ export function MultiTechCombobox({
   name = "tecnologias",
   disabled = false,
   invalid = false,
+  chipsLayout,
   onValueChange,
 }: ComboboxFixtureProps) {
   const [selected, setSelected] = React.useState<ComboboxOption[]>([
@@ -244,6 +248,7 @@ export function MultiTechCombobox({
     <ComboboxFrame>
       <Combobox
         multiple
+        chipsLayout={chipsLayout}
         items={TECHNOLOGIES}
         name={name}
         disabled={disabled}

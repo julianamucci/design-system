@@ -318,6 +318,12 @@
           "default": "—",
           "required": "Não",
           "description": "Nome do campo no formulário HTML. Em modo múltiplo, cada escolhido entra como uma entrada."
+        },
+        "chipsLayout": {
+          "type": "'wrap' | 'single-line'",
+          "default": "'wrap'",
+          "required": "Não",
+          "description": "Como os chips ocupam o campo. Em \"wrap\" eles acumulam linhas e o campo cresce em altura; em \"single-line\" ficam numa linha só e o conjunto rola na horizontal. Nos dois casos os botões de limpar e de abrir a lista ficam na primeira linha."
         }
       },
       "extensibilityTitle": "Extensibilidade",
@@ -926,6 +932,12 @@
           "default": "—",
           "required": "No",
           "description": "Field name in the HTML form. In multiple mode, each chosen value goes in as one entry."
+        },
+        "chipsLayout": {
+          "type": "'wrap' | 'single-line'",
+          "default": "'wrap'",
+          "required": "No",
+          "description": "How the chips fill the field. With \"wrap\" they stack into rows and the field grows taller; with \"single-line\" they stay on one row and the set scrolls sideways. Either way, the clear and open buttons stay on the first row."
         }
       },
       "extensibilityTitle": "Extensibility",
@@ -1534,6 +1546,12 @@
           "default": "—",
           "required": "No",
           "description": "Nombre del campo en el formulario HTML. En modo múltiple, cada elegido entra como una entrada."
+        },
+        "chipsLayout": {
+          "type": "'wrap' | 'single-line'",
+          "default": "'wrap'",
+          "required": "No",
+          "description": "Cómo ocupan el campo los chips. Con \"wrap\" se acumulan en filas y el campo crece en altura; con \"single-line\" quedan en una sola fila y el conjunto se desplaza en horizontal. En ambos casos los botones de limpiar y de abrir la lista quedan en la primera fila."
         }
       },
       "extensibilityTitle": "Extensibilidad",

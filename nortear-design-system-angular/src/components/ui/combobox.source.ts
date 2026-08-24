@@ -53,16 +53,16 @@ function listBody(options: ComboboxSnippetOptions): string {
     const names = Object.keys(options.groups);
     return names
       .map((name, index) => {
-        const heading = `        <div ndsComboboxGroup>\n          <div ndsComboboxGroupLabel>${name}</div>`;
-        const items = options.groups![name].map((label) => itemLine(label, '          ')).join('\n');
-        const separator = index < names.length - 1 ? '\n        <div ndsComboboxSeparator></div>' : '';
-        return `${heading}\n${items}\n        </div>${separator}`;
+        const heading = `          <div ndsComboboxGroup>\n            <div ndsComboboxGroupLabel>${name}</div>`;
+        const items = options.groups![name].map((label) => itemLine(label, '            ')).join('\n');
+        const separator = index < names.length - 1 ? '\n          <div ndsComboboxSeparator></div>' : '';
+        return `${heading}\n${items}\n          </div>${separator}`;
       })
       .join('\n');
   }
 
   const labels = options.items ?? ['Brasil', 'Portugal', 'Espanha'];
-  return labels.map((label) => itemLine(label, '        ')).join('\n');
+  return labels.map((label) => itemLine(label, '          ')).join('\n');
 }
 
 /** O uso real do campo, com só o que difere do padrão. */
@@ -88,18 +88,26 @@ export function comboboxSnippet(options: ComboboxSnippetOptions = {}): string {
     .concat(name ? [`name="${name}"`] : [])
     .join(' ');
 
-  const chips = multiple
-    ? `
-    <div ndsComboboxChips>
-      @for (chosen of value(); track chosen) {
-        <span ndsComboboxChip [value]="chosen">
-          {{ labelOf(chosen) }}
-          <button ndsComboboxChipRemove [attr.aria-label]="'Remover ' + labelOf(chosen)"></button>
-        </span>
-      }
-    </div>
-`
-    : '\n';
+  // O `<input>` mora DENTRO da caixa de chips, e não ao lado dela: é o que mantém
+  // o texto fluindo depois do último chip e deixa limpar e gatilho FORA do que
+  // quebra de linha. No modo simples não há caixa de chips, e o campo de texto é
+  // filho direto do wrapper.
+  const inputLine = (indent: string) =>
+    `${indent}<input ndsComboboxInput placeholder="${placeholder}" />`;
+
+  const field = multiple
+    ? [
+        '        <div ndsComboboxChips>',
+        '          @for (chosen of value(); track chosen) {',
+        '            <span ndsComboboxChip [value]="chosen">',
+        '              {{ labelOf(chosen) }}',
+        `              <button ndsComboboxChipRemove [attr.aria-label]="'Remover ' + labelOf(chosen)"></button>`,
+        '            </span>',
+        '          }',
+        inputLine('          '),
+        '        </div>',
+      ].join('\n')
+    : inputLine('        ');
 
   const body = multiple
     ? `  readonly value = signal<string[]>([]);
@@ -117,7 +125,8 @@ export function comboboxSnippet(options: ComboboxSnippetOptions = {}): string {
     ${root}>
       <label ndsComboboxLabel>${label}</label>
 
-      <div ndsComboboxInputWrapper>${chips}        <input ndsComboboxInput placeholder="${placeholder}" />
+      <div ndsComboboxInputWrapper>
+${field}
         <button ndsComboboxClear aria-label="${clearLabel}"></button>
         <button ndsComboboxTrigger aria-label="${triggerLabel}">
           <svg ndsComboboxIcon></svg>

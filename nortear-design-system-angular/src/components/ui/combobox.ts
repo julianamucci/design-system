@@ -55,12 +55,12 @@ import { ChevronDown } from 'lucide';
 //
 //   <nds-combobox data-slot="combobox">
 //     <label ndsComboboxLabel>
-//     <div ndsComboboxInputWrapper>
+//     <div ndsComboboxInputWrapper data-chips="wrap | single-line">
 //       <div ndsComboboxChips>
 //         <span ndsComboboxChip>
 //           <span data-slot="combobox-chip-text">
 //           <button ndsComboboxChipRemove>
-//       <input ndsComboboxInput role="combobox">
+//         <input ndsComboboxInput role="combobox">
 //       <button ndsComboboxClear>
 //       <button ndsComboboxTrigger>
 //         <svg ndsComboboxIcon>
@@ -73,6 +73,13 @@ import { ChevronDown } from 'lucide';
 //           <span ndsComboboxItemIndicator>
 //         <div ndsComboboxSeparator aria-hidden="true">
 //       <div ndsComboboxEmpty>
+//
+// O INPUT MORA DENTRO da caixa de chips, e não ao lado dela. É o que mantém o
+// texto fluindo depois do último chip e, ao mesmo tempo, deixa limpar e gatilho
+// FORA do que quebra ou rola — com o input irmão dos controles, encher a
+// primeira linha de chips empurrava os dois botões para a linha de baixo. No
+// modo simples não há caixa de chips, e aí o input é filho direto do wrapper: as
+// duas formas são válidas, e é a folha compartilhada que sustenta as duas.
 //
 // `role="combobox"` vai no INPUT, não num wrapper — é o padrão ARIA 1.2. O foco
 // NUNCA sai do input enquanto a lista navega: a opção ativa é apontada por
@@ -147,6 +154,17 @@ export type ComboboxSide = 'top' | 'right' | 'bottom' | 'left';
 
 /** Alinhamento da lista no eixo perpendicular ao `side`. */
 export type ComboboxAlign = 'start' | 'center' | 'end';
+
+/**
+ * Como os chips ocupam o campo no modo múltiplo.
+ *
+ *   wrap         os chips acumulam linhas e o campo cresce em altura
+ *   single-line  os chips ficam numa linha só e a caixa deles rola na horizontal
+ *
+ * Nos dois casos limpar e gatilho ficam na primeira linha: eles não moram na
+ * caixa dos chips, e é ela — não o wrapper — que quebra ou rola.
+ */
+export type ComboboxChipsLayout = 'wrap' | 'single-line';
 
 // ─── Ícone ────────────────────────────────────────────────────────────────────
 
@@ -385,6 +403,16 @@ export class NdsCombobox {
    */
   readonly removedLabel = input('removido');
 
+  /**
+   * Como os chips ocupam o campo — vira `data-chips` no wrapper.
+   *
+   * Mora na RAIZ, e não no wrapper, porque é decisão do campo inteiro: quem
+   * escolhe entre acumular linhas e rolar na horizontal está falando do
+   * combobox, não de uma caixa por dentro dele. O wrapper lê daqui e escreve o
+   * atributo, que é o que a folha compartilhada lê.
+   */
+  readonly chipsLayout = input<ComboboxChipsLayout>('wrap');
+
   private readonly root = injectComboboxRootContext();
 
   /**
@@ -491,6 +519,19 @@ export class NdsComboboxLabel {
  * A borda, o fundo e o anel de foco moram aqui, e não no `<input>`: o anel
  * envolve o CONJUNTO, porque quem tem foco de verdade é sempre o campo de texto
  * e um anel só nele deixaria os chips visualmente de fora da caixa que habitam.
+ *
+ * O wrapper NUNCA quebra linha — quem quebra é a caixa dos chips, por dentro. É
+ * a forma dos chips, lida da raiz, que sai daqui como `data-chips`, e é esse
+ * atributo que a folha compartilhada consulta para escolher entre acumular
+ * linhas e rolar na horizontal.
+ *
+ * `data-chips` é HOST BINDING, e não binding de template, por um motivo simples:
+ * este elemento é escrito por quem consome, no template dele. A raiz não alcança
+ * o wrapper com um binding — só a diretiva do próprio elemento alcança. A
+ * escolha tem um custo conhecido nesta stack: expressão de host é string, e o
+ * `tsc` não a confere; `[attr.data-disabled]` e `[attr.aria-invalid]` logo
+ * abaixo são a prova viva de que a forma funciona aqui, e o atributo novo foi
+ * conferido na saída compilada da diretiva antes de fechar.
  */
 @Directive({
   selector: 'div[ndsComboboxInputWrapper]',
@@ -498,24 +539,37 @@ export class NdsComboboxLabel {
   host: {
     class: 'nds-combobox-input-wrapper',
     '[attr.data-slot]': '"combobox-input-wrapper"',
+    '[attr.data-chips]': 'combobox.chipsLayout()',
     '[attr.data-disabled]': 'root.disabledState() ? "" : null',
     '[attr.aria-invalid]': 'root.validState() === false ? "true" : null',
   },
 })
 export class NdsComboboxInputWrapper {
   protected readonly root = injectComboboxRootContext();
+
+  // A raiz é injetada pelo injetor de ELEMENTO: o wrapper é escrito dentro de
+  // `<nds-combobox>` no template de quem consome, e a cadeia de injetores segue
+  // a árvore de declaração, não a de projeção. É o mesmo caminho que o chip já
+  // usa para registrar o próprio rótulo.
+  protected readonly combobox = inject(NdsCombobox);
 }
 
 // ─── Chips ────────────────────────────────────────────────────────────────────
 
 /**
- * Contêiner dos escolhidos, dentro da caixa do campo.
+ * Contêiner dos escolhidos E do campo de texto, dentro da caixa do campo.
  *
- * `display: contents` na folha: um contêiner real criaria uma caixa de flex
- * própria e os chips deixariam de quebrar linha junto com o campo de texto.
+ * É a caixa que CRESCE: é aqui que os chips quebram linha (ou rolam, em
+ * `single-line`), e é por o input morar aqui dentro que o texto continua fluindo
+ * depois do último chip. Limpar e gatilho ficam de fora, irmãos desta caixa —
+ * era isso que faltava quando ela era `display: contents`: sem caixa própria,
+ * chip, texto, limpar e gatilho eram irmãos no mesmo flex, e os dois botões
+ * caíam para a linha de baixo assim que os chips enchiam a primeira.
  *
  * O `role="toolbar"` vem do primitivo e não tem par no Vanilla — é o modelo de
- * teclado dele, com os chips navegáveis por seta. Divergência registrada.
+ * teclado dele, com os chips navegáveis por seta. As setas são ouvidas por CADA
+ * chip, não pelo contêiner, então o campo de texto por dentro dele digita
+ * normalmente. Divergência registrada.
  */
 @Directive({
   selector: 'div[ndsComboboxChips]',

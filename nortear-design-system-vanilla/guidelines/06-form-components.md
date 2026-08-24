@@ -107,11 +107,11 @@ wrapper (space-y-2)
 combobox                              raiz, display: contents
 ├── combobox-label
 ├── combobox-input-wrapper            ← a caixa que parece o campo
-│   ├── combobox-chips                (display: contents)
-│   │   └── combobox-chip
-│   │       ├── combobox-chip-text
-│   │       └── combobox-chip-remove
-│   ├── combobox-input                role="combobox"
+│   ├── combobox-chips                a caixa que quebra linha ou rola
+│   │   ├── combobox-chip
+│   │   │   ├── combobox-chip-text
+│   │   │   └── combobox-chip-remove
+│   │   └── combobox-input            role="combobox"
 │   ├── combobox-clear
 │   └── combobox-trigger
 │       └── combobox-icon
@@ -128,7 +128,9 @@ combobox                              raiz, display: contents
 └── combobox-hidden-input             valor serializado para o formulário
 ```
 
-Quem parece um campo é o `combobox-input-wrapper`, não o `<input>`: o campo de texto é transparente por dentro dele, e é isso que deixa chips e texto conviverem na mesma caixa com um anel de foco só. O contêiner de chips é `display: contents` — ele existe na árvore, mas não gera caixa própria, então os chips quebram linha junto com o campo de texto.
+Quem parece um campo é o `combobox-input-wrapper`, não o `<input>`: o campo de texto é transparente por dentro dele, e é isso que deixa chips e texto conviverem na mesma caixa com um anel de foco só.
+
+O campo de texto mora DENTRO de `combobox-chips`, e não ao lado dela. A caixa de chips é a única peça que cresce ou rola; `combobox-clear` e `combobox-trigger` ficam fora dela, irmãos, e por isso **nunca caem para a linha de baixo** quando os chips enchem a primeira. Enquanto essa caixa era `display: contents`, chip, texto, limpar e gatilho eram todos irmãos no mesmo flex que quebrava, e quem sobrava ia para baixo — era o defeito relatado. O wrapper não quebra: quem quebra, ou rola, é a caixa de chips, por dentro.
 
 **Modo múltiplo**: `multiple` troca o valor exibido por chips dentro da própria caixa. Cada chip traz o rótulo do escolhido e um botão de remover. Escolher limpa o texto de busca, porque manter o filtro esconderia as opções restantes; Backspace com o texto vazio remove o último chip, que é o gesto sem o qual desfazer exigiria o mouse.
 
@@ -141,6 +143,7 @@ Quem parece um campo é o `combobox-input-wrapper`, não o `<input>`: o campo de
 | `aria-label` | `string` | — | Nome acessível quando não há rótulo visível |
 | `placeholder` | `string` | `''` | Dica exibida enquanto nada foi digitado |
 | `multiple` | `boolean` | `false` | Escolhidos viram chips dentro do campo |
+| `chipsLayout` | `'wrap' \| 'single-line'` | `'wrap'` | Chips em várias LINHAS, com o campo crescendo em altura, ou numa linha só que rola na horizontal. Sai como `data-chips` no wrapper; limpar e gatilho ficam na primeira linha nos dois casos |
 | `value` | `string[]` | — | Escolha em modo CONTROLADO |
 | `defaultValue` | `string[]` | `[]` | Escolha inicial; em escolha única, só o primeiro conta |
 | `inputValue` | `string` | — | Texto de busca em modo CONTROLADO |

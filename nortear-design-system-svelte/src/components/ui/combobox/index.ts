@@ -64,6 +64,7 @@ export {
 	defaultFilter,
 	filterItems,
 	normalizeText,
+	type ComboboxChipsLayout,
 	type ComboboxFilter,
 	type ComboboxOption,
 } from './combobox-context.js';

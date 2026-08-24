@@ -17,15 +17,22 @@ import { cn } from "@/lib/utils"
 //
 //   <div data-slot="combobox">
 //     <label class="nds-combobox-label" data-slot="combobox-label">
-//     <div class="nds-combobox-input-wrapper" data-slot="combobox-input-wrapper">
+//     <div class="nds-combobox-input-wrapper" data-slot="combobox-input-wrapper"
+//          data-chips="wrap | single-line">
 //       <div class="nds-combobox-chips" data-slot="combobox-chips">
 //         <span class="nds-combobox-chip" data-slot="combobox-chip">
 //           <span data-slot="combobox-chip-text">
 //           <button class="nds-combobox-chip-remove" data-slot="combobox-chip-remove">
-//       <input class="nds-combobox-input" data-slot="combobox-input" role="combobox">
+//         <input class="nds-combobox-input" data-slot="combobox-input" role="combobox">
 //       <button class="nds-combobox-clear" data-slot="combobox-clear">
 //       <button class="nds-combobox-trigger" data-slot="combobox-trigger">
 //         <svg class="nds-combobox-icon" data-slot="combobox-icon">
+//
+// O INPUT MORA DENTRO da caixa de chips, e não ao lado dela. É o que mantém o
+// texto fluindo depois do último chip e, ao mesmo tempo, deixa limpar e gatilho
+// fora do que quebra ou rola. No modo simples esta stack não monta a caixa de
+// chips, e aí o input é filho direto da caixa do campo — a folha aceita as duas
+// formas.
 //
 //   <div class="nds-combobox-positioner" data-slot="combobox-positioner">
 //     <div class="nds-combobox-popup" data-slot="combobox-popup">
@@ -47,40 +54,31 @@ import { cn } from "@/lib/utils"
 //
 //  2. `Combobox.Chips` emite `role="toolbar"` quando há chips. É decisão de
 //     acessibilidade da lib (sem ele o NVDA entra em modo de leitura ao andar
-//     com as setas dentro do contêiner) e não muda o desenho, porque a folha
-//     deixa a peça em `display: contents`. Fica.
+//     com as setas dentro do contêiner) e não muda o desenho: o papel não
+//     carrega estilo nenhum, e a caixa continua sendo o flex que a folha
+//     desenha. Fica.
 //
-//  3. O `Input` mora DENTRO de `ComboboxChips` no modo múltiplo — é assim que a
-//     lib liga o Backspace do campo vazio ao último chip, por contexto de
-//     React. Como `.nds-combobox-chips` é `display: contents`, o resultado na
-//     tela é o mesmo do Vanilla, onde os chips são filhos diretos da caixa.
-//
-//  4. O popup é PORTALIZADO para o `<body>`, então o posicionador não é irmão
+//  3. O popup é PORTALIZADO para o `<body>`, então o posicionador não é irmão
 //     da caixa do campo no DOM, como é no Vanilla. É o mesmo que o `select`
 //     desta stack já faz.
 //
-//  5. `Combobox.Empty` precisa continuar montado para anunciar — a lib avisa
+//  4. `Combobox.Empty` precisa continuar montado para anunciar — a lib avisa
 //     que escondê-lo cala o anúncio. A caixa ESTILIZADA (`.nds-combobox-empty`)
 //     é filha dela e só existe quando a lista está vazia: com a classe na peça
 //     sempre montada, todo popup carregaria o `padding-block` do estado vazio.
 //
-//  6. `Escape` com a lista já fechada limpa o texto E a escolha, não só o
+//  5. `Escape` com a lista já fechada limpa o texto E a escolha, não só o
 //     texto. É o comportamento da lib, mais generoso que o do contrato, e
 //     desfazê-lo exigiria interceptar a tecla antes dela.
 //
-//  7. `Home` e `End` movem o CURSOR dentro do texto digitado, e não a opção
+//  6. `Home` e `End` movem o CURSOR dentro do texto digitado, e não a opção
 //     ativa. É o que a APG manda para combobox editável, e a lib trata a tecla
 //     antes de qualquer lista. Nenhum item do contrato de testes mede as duas.
 //
-//  8. O campo escondido do formulário é emitido pela LIB, sem
+//  7. O campo escondido do formulário é emitido pela LIB, sem
 //     `data-slot="combobox-hidden-input"`, e sai como irmão da raiz — no modo
 //     múltiplo é um campo por escolhido, que é o que faz o `FormData` carregar
 //     a lista inteira. Marcar a peça exigiria reimplementar a serialização.
-//
-//  9. `Combobox.Chip` recebe foco por seta (a lib faz navegação entre chips), e
-//     a folha compartilhada — escrita para o Vanilla, onde o chip não é
-//     focável — não tem regra `:focus-visible` para ele. O anel do chip é uma
-//     lacuna a resolver na folha, não aqui.
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -101,16 +99,32 @@ export type ComboboxValue = ComboboxOption | ComboboxOption[] | null
 
 // ─── Contexto local ───────────────────────────────────────────────────────────
 
+/** Como os chips ocupam o campo: acumulando linhas ou numa linha só que rola. */
+export type ComboboxChipsLayout = "wrap" | "single-line"
+
+interface ComboboxFieldContextValue {
+  inputId: string
+  chipsLayout: ComboboxChipsLayout
+}
+
 /**
- * O `id` do campo de texto, compartilhado entre o rótulo e o input.
+ * O que a RAIZ decide e as peças de baixo precisam saber.
  *
- * Sem ele, o `htmlFor` do rótulo teria de ser escrito à mão em cada uso — e um
+ * `inputId` é o `id` do campo de texto, compartilhado entre o rótulo e o input:
+ * sem ele, o `htmlFor` do rótulo teria de ser escrito à mão em cada uso — e um
  * rótulo que aponta para lugar nenhum é inerte para quem clica nele e mudo para
  * quem usa leitor de tela, sem nenhum sinal na tela.
+ *
+ * `chipsLayout` viaja pelo mesmo caminho, e por contexto e não por prop da
+ * caixa: quem monta o campo escreve `<ComboboxInputWrapper>` à mão, então uma
+ * prop obrigaria a repetir a escolha ao lado de `multiple`, que já mora na
+ * raiz. Duas fontes para o mesmo desenho é exatamente como elas saem de
+ * sincronia — e a divergência só apareceria com o campo cheio de chips.
  */
-const ComboboxFieldContext = React.createContext<{ inputId: string } | null>(null)
+const ComboboxFieldContext =
+  React.createContext<ComboboxFieldContextValue | null>(null)
 
-function useComboboxField(): { inputId: string } {
+function useComboboxField(): ComboboxFieldContextValue {
   const context = React.useContext(ComboboxFieldContext)
   if (!context) {
     throw new Error("As peças do Combobox precisam estar dentro de <Combobox>.")
@@ -133,6 +147,16 @@ export interface ComboboxProps {
   onInputValueChange?: (inputValue: string) => void
   /** Modo múltiplo: os escolhidos passam a aparecer como chips no campo. */
   multiple?: boolean
+  /**
+   * Como os chips ocupam o campo. Em `"wrap"` eles acumulam linhas e o campo
+   * cresce em altura; em `"single-line"` ficam numa linha só e o conjunto rola
+   * na horizontal. Nos dois casos limpar e gatilho ficam na primeira linha.
+   *
+   * `"wrap"` é o padrão porque nada fica escondido: com poucos chips as duas
+   * formas são iguais, e quando enchem, quem quebra mostra tudo de uma vez —
+   * a linha única esconde o excesso atrás de uma rolagem que ninguém pediu.
+   */
+  chipsLayout?: ComboboxChipsLayout
   /**
    * Destaca a primeira opção que casa enquanto se digita. Ligado por padrão
    * porque é o que o contrato promete em `states.filtering` — e é o que faz o
@@ -183,12 +207,19 @@ function Combobox({
   onInputValueChange,
   filter,
   autoHighlight = true,
+  chipsLayout = "wrap",
   removedAnnouncement = (label) => `${label} removido`,
   ...props
 }: ComboboxProps) {
   const generatedId = React.useId()
   const inputId = id ?? `${generatedId}combobox`
-  const fieldContext = React.useMemo(() => ({ inputId }), [inputId])
+  // `chipsLayout` fica FORA do que vai para a lib: é desenho da nossa caixa, e
+  // o `@base-ui` não conhece a peça. Desestruturado acima pelo mesmo motivo —
+  // sem isso o `...props` o entregaria à raiz da lib como atributo solto.
+  const fieldContext = React.useMemo(
+    () => ({ inputId, chipsLayout }),
+    [inputId, chipsLayout],
+  )
 
   const [announcement, setAnnouncement] = React.useState("")
   const previousRef = React.useRef<ComboboxOption[]>(
@@ -289,6 +320,10 @@ function ComboboxLabel({
  * A caixa que PARECE um campo: borda, fundo e anel de foco moram aqui, e o
  * input por dentro é transparente. É o que permite chips e texto conviverem na
  * mesma caixa, com um anel só em volta do conjunto.
+ *
+ * A caixa NUNCA quebra linha — quem quebra é `.nds-combobox-chips`, por dentro.
+ * Era o contrário, e por isso limpar e gatilho caíam para a linha de baixo
+ * assim que os chips enchiam a primeira.
  */
 function ComboboxInputWrapper({
   className,
@@ -296,6 +331,12 @@ function ComboboxInputWrapper({
   onMouseDown,
   ...props
 }: React.ComponentProps<"div"> & { disabled?: boolean }) {
+  // Vem da RAIZ por contexto, junto do `inputId`: a escolha é declarada uma vez
+  // em `<Combobox chipsLayout="...">`, ao lado de `multiple`, e não repetida
+  // aqui. O `{...props}` abaixo continua depois do atributo, então um
+  // `data-chips` escrito à mão nesta caixa ainda vence — é a saída para o caso
+  // raro de duas caixas sob a mesma raiz.
+  const { chipsLayout } = useComboboxField()
   return (
     <div
       data-slot="combobox-input-wrapper"
@@ -303,6 +344,7 @@ function ComboboxInputWrapper({
       // lib: nenhum estado dela chega até aqui. Repetir a flag é o preço de a
       // caixa não ser uma peça do `@base-ui`.
       data-disabled={disabled ? "" : undefined}
+      data-chips={chipsLayout}
       className={cn("nds-combobox-input-wrapper", className)}
       onMouseDown={(event) => {
         onMouseDown?.(event)

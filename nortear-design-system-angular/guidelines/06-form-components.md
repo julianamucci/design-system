@@ -344,11 +344,11 @@ Valor, aberto, desabilitado, obrigatório, inválido, nome, formulário e a fun�
 nds-combobox                             combobox
 ├── label[ndsComboboxLabel]              combobox-label
 ├── div[ndsComboboxInputWrapper]         combobox-input-wrapper  ← a caixa que parece o campo
-│   ├── div[ndsComboboxChips]            combobox-chips
-│   │   └── span[ndsComboboxChip]        combobox-chip
-│   │       ├── (texto projetado)        combobox-chip-text
-│   │       └── button[ndsComboboxChipRemove]  combobox-chip-remove
-│   ├── input[ndsComboboxInput]          combobox-input          role="combobox"
+│   ├── div[ndsComboboxChips]            combobox-chips          ← a caixa que quebra ou rola
+│   │   ├── span[ndsComboboxChip]        combobox-chip
+│   │   │   ├── (texto projetado)        combobox-chip-text
+│   │   │   └── button[ndsComboboxChipRemove]  combobox-chip-remove
+│   │   └── input[ndsComboboxInput]      combobox-input          role="combobox"
 │   ├── button[ndsComboboxClear]         combobox-clear
 │   └── button[ndsComboboxTrigger]       combobox-trigger
 │       └── svg[ndsComboboxIcon]         combobox-icon
@@ -363,11 +363,15 @@ nds-combobox                             combobox
     └── div[ndsComboboxEmpty]            combobox-empty
 ```
 
+O campo de texto mora DENTRO da caixa de chips, e não ao lado dela. É o que mantém o texto fluindo depois do último chip e, ao mesmo tempo, deixa limpar e gatilho FORA do que quebra ou rola: com o input irmão dos botões, encher a primeira linha de chips empurrava os dois para a linha de baixo. No modo simples não existe caixa de chips, e aí o input é filho direto do wrapper — as duas formas são válidas.
+
 O posicionador e o popup (`combobox-positioner` e `combobox-popup`) são montados pela própria raiz, em volta do miolo. O miolo é `<ng-template>` porque ele é instanciado DENTRO do popup a cada abertura: se viesse como elemento projetado, fechar removeria os nós sem destruir as diretivas — e é o desmonte que desregistra as opções do motor de filtragem.
 
-**Modo múltiplo**: `multiple` troca o valor exibido por chips dentro da própria caixa. Cada chip traz o rótulo do escolhido e um botão de remover. Os chips quebram linha junto com o campo de texto. Backspace com o texto vazio remove o último chip, e as setas horizontais entram na fila de chips.
+**Modo múltiplo**: `multiple` troca o valor exibido por chips dentro da própria caixa. Cada chip traz o rótulo do escolhido e um botão de remover. Backspace com o texto vazio remove o último chip, e as setas horizontais entram na fila de chips.
 
-**Entradas da raiz** — chegam por diretiva de host do primitivo, e por isso valem no elemento `nds-combobox`:
+**Forma dos chips**: `chipsLayout` na raiz escolhe entre as duas, e sai como `data-chips` no wrapper — em `wrap` (padrão) os chips acumulam linhas e o campo cresce em altura; em `single-line` eles ficam numa linha só e a caixa deles rola na horizontal. Nos dois casos limpar e gatilho ficam na primeira linha, porque quem quebra ou rola é a caixa dos chips, não o wrapper.
+
+**Entradas da raiz** — as do primitivo chegam por diretiva de host, as duas últimas são da própria raiz; todas valem no elemento `nds-combobox`:
 
 | Nome | Tipo | Padrão | Função |
 |---|---|---|---|
@@ -389,6 +393,7 @@ O posicionador e o popup (`combobox-positioner` e `combobox-popup`) são montado
 | `openOnInputClick` | `boolean` | — | Clicar no campo abre a lista |
 | `itemToStringLabel` · `isItemEqualToValue` | função | — | Como a opção vira texto e como duas opções se comparam |
 | `removedLabel` | `string` | `removido` | Sufixo do anúncio de remoção: "<rótulo do chip> <sufixo>" |
+| `chipsLayout` | `'wrap' \| 'single-line'` | `wrap` | Forma dos chips no campo; vira `data-chips` no wrapper |
 
 `items` não existe: as opções são escritas no template, uma `div[ndsComboboxItem]` por opção, e o motor de filtragem as registra ao montarem.
 

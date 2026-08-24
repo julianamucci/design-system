@@ -49,6 +49,16 @@ export interface ComboboxFilterItem {
 export type ComboboxFilter = (item: ComboboxFilterItem, query: string) => boolean
 
 /**
+ * Como os chips ocupam o campo no modo múltiplo.
+ *
+ * `wrap` deixa os chips acumularem LINHAS, e o campo cresce em altura;
+ * `single-line` mantém todos numa linha só, com a caixa de chips rolando na
+ * horizontal. Nos dois casos limpar e gatilho ficam na primeira linha, porque
+ * moram FORA da caixa que quebra ou rola — ver `docs/shared/styles/nds/combobox.css`.
+ */
+export type ComboboxChipsLayout = 'wrap' | 'single-line'
+
+/**
  * Contexto PRÓPRIO desta stack — o que a lib não carrega de uma peça à outra.
  *
  * `reka-ui` já é dona do valor escolhido, do que está aberto e do filtro. O que
@@ -84,6 +94,15 @@ export const [useComboboxContext, provideComboboxContext] = createContext<{
    * filtrado ficaria de pé sobre lugar nenhum.
    */
   filter: ComputedRef<ComboboxFilter | undefined>
+  /**
+   * Forma dos chips dentro do campo, escolhida na RAIZ e lida pelo wrapper.
+   *
+   * Viaja por este contexto, e não como prop do wrapper, porque quem escreve é
+   * quem monta o campo — que já declara `multiple` na raiz — e o wrapper é só
+   * onde o atributo aterrissa. Uma prop no wrapper obrigaria a repetir a
+   * escolha em toda composição, e nenhuma peça entre os dois precisa dela.
+   */
+  chipsLayout: ComputedRef<ComboboxChipsLayout>
 }>('Combobox')
 
 /** Contexto de um chip — o valor que o botão de remover tira do modelo. */

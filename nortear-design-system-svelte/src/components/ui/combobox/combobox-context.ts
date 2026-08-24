@@ -26,6 +26,17 @@ export interface ComboboxOption {
 /** Decide se uma opção sobrevive ao texto digitado. */
 export type ComboboxFilter = (item: ComboboxOption, query: string) => boolean;
 
+/**
+ * Como os chips ocupam o campo.
+ *
+ *   `wrap`         eles acumulam LINHAS e o campo cresce em altura
+ *   `single-line`  ficam numa linha só e o conjunto rola na horizontal
+ *
+ * Nos dois casos limpar e gatilho ficam na primeira linha — quem quebra ou
+ * rola é a caixa dos chips, por dentro do campo, e eles estão fora dela.
+ */
+export type ComboboxChipsLayout = 'wrap' | 'single-line';
+
 /** Comparação sem acento e sem caixa — filtrar "sao" tem de achar "São Paulo". */
 export function normalizeText(input: string): string {
   return input
@@ -59,6 +70,16 @@ export interface ComboboxState {
   readonly inputId: string;
   readonly listboxId: string;
   readonly multiple: boolean;
+  /**
+   * A escolha é da RAIZ e chega à caixa do campo por aqui, e não como prop de
+   * `ComboboxInputWrapper`.
+   *
+   * Quem lê a documentação ajusta o campo num lugar só — é onde `multiple`,
+   * `disabled` e `invalid` já moram, e os três descem por este mesmo caminho.
+   * Pedi-la na peça obrigaria a repetir a decisão em cada composição e deixaria
+   * o modo de chips solto do modo múltiplo que o produz.
+   */
+  readonly chipsLayout: ComboboxChipsLayout;
   readonly disabled: boolean;
   readonly invalid: boolean;
   readonly open: boolean;

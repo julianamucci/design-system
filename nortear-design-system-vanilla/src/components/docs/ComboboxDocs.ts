@@ -861,6 +861,8 @@ export interface ComboboxOptions {
   'aria-label'?: string;
   placeholder?: string;
   multiple?: boolean;
+  /** Chips em várias linhas, ou numa linha só que rola na horizontal. */
+  chipsLayout?: 'wrap' | 'single-line';
   /** Escolha controlada: a fábrica só anuncia, e a tela espera setValue(). */
   value?: string[];
   defaultValue?: string[];
@@ -912,6 +914,7 @@ export type ComboboxElement = HTMLDivElement & {
                 { name: 'aria-label', type: 'string', defaultValue: '—', required: tNav('common.no'), description: t('props.local.ariaLabel.description') },
                 { name: 'placeholder', type: 'string', defaultValue: '""', required: tNav('common.no'), description: toPlainText(t('props.table.placeholder.description')) },
                 { name: 'multiple', type: 'boolean', defaultValue: 'false', required: tNav('common.no'), description: toPlainText(t('props.table.multiple.description')) },
+                { name: 'chipsLayout', type: "'wrap' | 'single-line'", defaultValue: "'wrap'", required: tNav('common.no'), description: toPlainText(t('props.table.chipsLayout.description')) },
                 // A forma do modo controlado DIVERGE do que o tipo compartilhado
                 // sugere, e a divergência se registra em vez de se disfarçar: sem
                 // re-render de framework, quem manda escreve de volta por

@@ -560,6 +560,7 @@ interface ComboboxProps {
   inputValue?: string;
   onInputValueChange?: (inputValue: string) => void;
   multiple?: boolean;
+  chipsLayout?: "wrap" | "single-line";
   filter?: ((item: ComboboxOption, query: string) => boolean) | null;
   limit?: number;
   disabled?: boolean;
@@ -618,6 +619,9 @@ interface ComboboxContentProps {
         propRow("inputValue", "string"),
         propRow("onInputValueChange", "(inputValue: string) => void"),
         propRow("multiple", "boolean"),
+        // Só tem efeito no modo múltiplo, e mesmo assim mora na RAIZ: é lá que
+        // `multiple` já está, e a caixa do campo recebe a escolha por contexto.
+        propRow("chipsLayout", '"wrap" | "single-line"'),
         propRow("items", "ComboboxOption[] | ComboboxOptionGroup[]"),
         propRow(
           "filter",

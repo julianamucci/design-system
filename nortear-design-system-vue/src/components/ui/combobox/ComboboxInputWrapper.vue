@@ -8,7 +8,19 @@ const props = defineProps<{ class?: HTMLAttributes['class'] }>()
 
 const rootContext = injectComboboxRootContext()
 const listboxContext = injectListboxRootContext()
-const { announcement } = useComboboxContext()
+const { announcement, chipsLayout } = useComboboxContext()
+
+/*
+ * `data-chips` é o que a folha lê para escolher entre acumular linhas e rolar
+ * na horizontal, e ele mora AQUI porque este é o elemento que a folha consulta
+ * (`[data-chips="single-line"] .nds-combobox-chips`). A escolha em si vem da
+ * raiz, pelo contexto — ver a nota da prop em `Combobox.vue`.
+ *
+ * Escrito no template, e não por `v-bind` de fallthrough: um `data-chips`
+ * posto à mão em `<ComboboxInputWrapper data-chips="...">` ainda vence, porque
+ * o atributo herdado é aplicado depois do declarado. É a saída para o caso em
+ * que a raiz não é de quem monta o campo.
+ */
 
 /*
  * A lista da lib PARA na ponta: `onKeydownNavigation` corta a coleção a partir
@@ -64,6 +76,7 @@ function onKeydownCapture(event: KeyboardEvent): void {
 <template>
   <div
     data-slot="combobox-input-wrapper"
+    :data-chips="chipsLayout"
     :data-disabled="rootContext.disabled.value ? '' : undefined"
     :class="cn('nds-combobox-input-wrapper', props.class)"
     @keydown.capture="onKeydownCapture"

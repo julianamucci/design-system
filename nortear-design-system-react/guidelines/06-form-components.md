@@ -312,11 +312,12 @@ Select
 Combobox                            combobox
 ├── ComboboxLabel                   combobox-label
 ├── ComboboxInputWrapper            combobox-input-wrapper   ← a caixa que parece o campo
-│   ├── ComboboxChips               combobox-chips           (display: contents)
-│   │   └── ComboboxChip            combobox-chip
-│   │       ├── ComboboxChipText    combobox-chip-text
-│   │       └── ComboboxChipRemove  combobox-chip-remove
-│   ├── ComboboxInput               combobox-input           role="combobox"
+│   │                                                         data-chips="wrap | single-line"
+│   ├── ComboboxChips               combobox-chips           ← a caixa que cresce (só no modo múltiplo)
+│   │   ├── ComboboxChip            combobox-chip
+│   │   │   ├── ComboboxChipText    combobox-chip-text
+│   │   │   └── ComboboxChipRemove  combobox-chip-remove
+│   │   └── ComboboxInput           combobox-input           role="combobox"
 │   ├── ComboboxClear               combobox-clear
 │   └── ComboboxTrigger             combobox-trigger
 │       └── (chevron)               combobox-icon
@@ -333,7 +334,18 @@ Combobox                            combobox
 
 `ComboboxContent` é uma peça só e monta posicionador, popup, lista e estado vazio de uma vez: as três primeiras nunca aparecem separadas, e o vazio precisa sair IRMÃO da lista, porque região viva não é filha permitida de `role="listbox"`.
 
-**Modo múltiplo**: `multiple` troca o valor exibido por chips dentro da própria caixa. Cada chip traz o rótulo do escolhido e um botão de remover. A peça de chips é `display: contents`, então os chips quebram linha junto com o campo de texto em vez de formarem uma faixa própria. Backspace com o texto vazio remove o último chip.
+O campo de texto mora DENTRO de `ComboboxChips`, e não ao lado dela. É o que mantém o texto fluindo depois do último chip e, ao mesmo tempo, deixa limpar e gatilho fora do que quebra ou rola: só a caixa dos chips cresce, e os dois botões ficam sempre na primeira linha. No modo simples a caixa de chips não é montada, e aí `ComboboxInput` é filho direto de `ComboboxInputWrapper` — as duas formas são válidas.
+
+**Modo múltiplo**: `multiple` troca o valor exibido por chips dentro da própria caixa. Cada chip traz o rótulo do escolhido e um botão de remover. Backspace com o texto vazio remove o último chip.
+
+**Como os chips ocupam o campo**: `chipsLayout` na raiz escolhe entre as duas formas, e a escolha chega à caixa do campo como `data-chips`.
+
+| Valor | Desenho | Quando |
+|---|---|---|
+| `wrap` (padrão) | Os chips acumulam linhas e o campo cresce em altura | Padrão porque nada fica escondido: quando os chips enchem, quem quebra mostra tudo de uma vez |
+| `single-line` | Os chips ficam numa linha só e o conjunto rola na horizontal | Formulário denso, onde um campo que cresce empurra o resto da tela |
+
+Nos dois casos os botões de limpar e de abrir a lista ficam na primeira linha — foi o defeito que originou a prop, e ele não volta escolhendo `wrap`.
 
 **Props da raiz**:
 
@@ -346,6 +358,7 @@ Combobox                            combobox
 | `inputValue` | `string` | — | Texto de busca controlado |
 | `onInputValueChange` | `(inputValue: string) => void` | — | Muda o texto digitado; é o gancho para buscar opções no servidor |
 | `multiple` | `boolean` | `false` | Escolhidos viram chips dentro do campo |
+| `chipsLayout` | `"wrap" \| "single-line"` | `"wrap"` | Chips em várias linhas ou numa linha só que rola; chega à caixa do campo como `data-chips` |
 | `filter` | `((item: ComboboxOption, query: string) => boolean) \| null` | rótulo sem acento e sem caixa | Substitui o filtro; `null` desliga a filtragem interna |
 | `autoHighlight` | `boolean` | `true` | Destaca a primeira opção que casa — é o que faz o Enter escolher sem uma seta antes |
 | `limit` | `number` | — | Máximo de opções exibidas na lista |

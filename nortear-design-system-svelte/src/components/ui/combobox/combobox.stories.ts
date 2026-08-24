@@ -88,6 +88,16 @@ const meta: Meta = {
 			description: 'Modo múltiplo: os escolhidos viram chips dentro do campo.',
 			table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
 		},
+		chipsLayout: {
+			control: 'inline-radio',
+			options: ['wrap', 'single-line'],
+			description:
+				'Como os chips ocupam o campo: em linhas que se acumulam ou numa linha só que rola na horizontal. Limpar e abrir ficam na primeira linha nos dois casos.',
+			table: {
+				type: { summary: "'wrap' | 'single-line'" },
+				defaultValue: { summary: "'wrap'" },
+			},
+		},
 		disabled: {
 			control: 'boolean',
 			description: 'Torna o campo indisponível e impede a abertura da lista.',
@@ -113,6 +123,7 @@ const meta: Meta = {
 		label: 'País',
 		placeholder: 'Buscar país',
 		multiple: false,
+		chipsLayout: 'wrap',
 		disabled: false,
 		invalid: false,
 		name: 'pais',
@@ -144,6 +155,7 @@ export const Playground: Story = {
 			label: args.label,
 			placeholder: args.placeholder,
 			multiple: args.multiple,
+			chipsLayout: args.chipsLayout,
 			disabled: args.disabled,
 			invalid: args.invalid,
 			name: args.name,
@@ -254,6 +266,9 @@ export const MultipleWithChips: Story = {
 			// `multiple` fica fixo: é o assunto da story, e um control que a
 			// desligasse deixaria a story sem o que demonstrar.
 			multiple: true,
+			// A story do modo múltiplo é onde o modo de chips tem efeito visível:
+			// no simples não há chip para quebrar linha nem para rolar.
+			chipsLayout: args.chipsLayout,
 			disabled: args.disabled,
 			invalid: args.invalid,
 			name: args.name,

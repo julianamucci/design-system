@@ -134,15 +134,26 @@ function rootProps(o: Options): string {
 	);
 }
 
-function chipsBlock(): string {
+/**
+ * O miolo do campo: os chips, quando há, e sempre o campo de texto.
+ *
+ * O `<ComboboxInput>` mora DENTRO de `<ComboboxChips>`, e é por isso que os
+ * dois saem daqui juntos: publicar o campo de texto como irmão da caixa de
+ * chips faria limpar e gatilho caírem de linha na primeira vez que os chips
+ * enchessem a primeira. Sem chips não há caixa, e o campo é filho direto do
+ * wrapper — as duas formas valem na folha.
+ */
+function fieldBlock(o: Options, placeholder: string): string {
+	const input = `<ComboboxInput placeholder="${placeholder}" />`;
+	if (!o.multiple) return `    ${input}`;
 	return `    <ComboboxChips>
       {#each value as chip (chip)}
         <ComboboxChip value={chip}>
           <ComboboxChipRemove />
         </ComboboxChip>
       {/each}
-    </ComboboxChips>
-`;
+      ${input}
+    </ComboboxChips>`;
 }
 
 function listBlock(o: Options): string {
@@ -179,7 +190,7 @@ export function comboboxSnippet(o: Options = {}): string {
 		`<Combobox${rootProps(o)}>
   <ComboboxLabel>${label}</ComboboxLabel>
   <ComboboxInputWrapper>
-${o.multiple ? chipsBlock() : ''}    <ComboboxInput placeholder="${placeholder}" />
+${fieldBlock(o, placeholder)}
     <ComboboxClear aria-label="Limpar" />
     <ComboboxTrigger aria-label="Abrir lista" />
   </ComboboxInputWrapper>

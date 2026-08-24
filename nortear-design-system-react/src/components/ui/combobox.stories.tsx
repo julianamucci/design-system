@@ -10,6 +10,7 @@ import {
   paintedBackground,
   toOptionValues,
 } from "./combobox.fixtures";
+import type { ComboboxChipsLayout } from "./combobox";
 import { comboboxSource } from "./combobox.source";
 import { ComboboxDocs } from "@/components/docs/ComboboxDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
@@ -18,6 +19,7 @@ type ComboboxArgs = {
   label: string;
   placeholder: string;
   multiple: boolean;
+  chipsLayout: ComboboxChipsLayout;
   disabled: boolean;
   invalid: boolean;
   name: string;
@@ -50,6 +52,16 @@ const meta: Meta<ComboboxArgs> = {
       description: "Modo múltiplo: os escolhidos viram chips dentro do campo",
       table: { type: { summary: "boolean" }, defaultValue: { summary: "false" } },
     },
+    chipsLayout: {
+      control: "inline-radio",
+      options: ["wrap", "single-line"],
+      description:
+        "Como os chips ocupam o campo: em linhas que se acumulam ou numa linha só que rola na horizontal. Limpar e abrir ficam na primeira linha nos dois casos",
+      table: {
+        type: { summary: "'wrap' | 'single-line'" },
+        defaultValue: { summary: "'wrap'" },
+      },
+    },
     disabled: {
       control: "boolean",
       description: "Desabilita o campo e impede a abertura da lista",
@@ -77,6 +89,7 @@ const meta: Meta<ComboboxArgs> = {
     label: "País",
     placeholder: "Buscar país",
     multiple: false,
+    chipsLayout: "wrap",
     disabled: false,
     invalid: false,
     name: "pais",
@@ -108,6 +121,7 @@ export const Playground: Story = {
       <MultiTechCombobox
         label={args.label}
         placeholder={args.placeholder}
+        chipsLayout={args.chipsLayout}
         name={args.name}
         disabled={args.disabled}
         invalid={args.invalid}
