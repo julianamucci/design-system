@@ -298,7 +298,7 @@ const codeTableFilter = `<Popover>
         <input type="checkbox" class="nds-icon-sm" /> Arquivado
       </label>
     </div>
-    <div class="nds-cluster nds-pt-2" data-spacing="xs" data-justify="end">
+    <div class="nds-cluster nds-pt-2" data-spacing="sm" data-justify="end">
       <Button variant="ghost" size="sm">Limpar</Button>
       <Button size="sm">Aplicar</Button>
     </div>
@@ -543,7 +543,7 @@ const a11yCritCols = computed(() => ({
               </PopoverHeader>
               <div
                 class="nds-cluster"
-                data-spacing="xs"
+                data-spacing="sm"
                 data-justify="end"
               >
                 <Button
@@ -921,7 +921,7 @@ const a11yCritCols = computed(() => ({
               </div>
               <div
                 class="nds-cluster nds-pt-2"
-                data-spacing="xs"
+                data-spacing="sm"
                 data-justify="end"
               >
                 <Button

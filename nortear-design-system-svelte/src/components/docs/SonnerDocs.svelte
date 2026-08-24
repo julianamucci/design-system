@@ -212,7 +212,7 @@ toast.promise(promise, {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    <div style="contain: layout" class="nds-cluster" data-spacing="sm">
+    <div style="contain: layout" class="nds-cluster" data-spacing="md">
       <Button variant="outline" onclick={fireDefault}
         data-track="docs_demo_click"
         data-track-component="sonner"

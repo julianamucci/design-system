@@ -167,7 +167,7 @@ export const MobileBottomPanel: Story = {
 
     const list = document.createElement('div');
     list.className = 'nds-cluster';
-    list.dataset.spacing = 'sm';
+    list.dataset.spacing = 'md';
     for (const label of ['Compartilhar', 'Copiar link', 'Editar', 'Arquivar', 'Mover', 'Excluir']) {
       list.appendChild(createButton({ variant: 'outline', label }));
     }

@@ -60,7 +60,7 @@ function buildFooter(cancelLabel: string, actionLabel: string, destrutivo = fals
   const footer = document.createElement('div');
   footer.className = 'nds-cluster';
   footer.dataset.justify = 'end';
-  footer.dataset.spacing = 'xs';
+  footer.dataset.spacing = 'md';
   footer.append(cancel, action);
   return footer;
 }

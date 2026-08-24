@@ -99,7 +99,7 @@ export const WithResendButton: Story = {
       <div class="nds-stack" data-spacing="sm">
         <span id="comp-reenvio-label" class="nds-text-label">Código de verificação</span>
         <nds-input-otp aria-labelledby="comp-reenvio-label" [maxLength]="6"></nds-input-otp>
-        <div class="nds-cluster" data-spacing="xs" data-align="center">
+        <div class="nds-cluster" data-spacing="sm" data-align="center">
           <span class="nds-text-caption nds-text-muted-foreground">Não recebeu?</span>
           <button ndsButton variant="link" size="sm" type="button">Reenviar código</button>
         </div>

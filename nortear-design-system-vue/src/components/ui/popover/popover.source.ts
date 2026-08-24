@@ -259,7 +259,7 @@ import { ref } from 'vue'
 
 const aberto = ref(false)`,
     `<div class="nds-stack" data-spacing="sm">
-  <div class="nds-cluster" data-spacing="sm">
+  <div class="nds-cluster" data-spacing="md">
     <Button @click="aberto = true">Abrir externamente</Button>
     <Button variant="outline" @click="aberto = false">Fechar externamente</Button>
   </div>

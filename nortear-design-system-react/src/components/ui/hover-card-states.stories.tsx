@@ -201,7 +201,7 @@ export const Controlled: Story = {
       const [isOpen, setAberto] = useState(false);
       return (
         <div className="nds-stack" data-spacing="md" style={paragrafo}>
-          <div className="nds-cluster" data-spacing="xs">
+          <div className="nds-cluster" data-spacing="sm">
             {/* Nomes próprios, e não os mesmos do gatilho: dois controles com o
                 mesmo nome acessível são ambíguos em leitor de tela. */}
             <Button size="sm" variant="outline" onClick={() => setAberto(true)}>

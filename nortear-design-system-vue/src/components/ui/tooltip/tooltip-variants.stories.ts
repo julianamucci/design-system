@@ -184,7 +184,7 @@ export const LongText: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout" class="nds-cluster nds-min-h-40" data-align="center" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-min-h-40" data-spacing="md" data-align="center" data-justify="center">
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
             <Button variant="outline">Compartilhar</Button>

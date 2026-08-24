@@ -85,7 +85,7 @@ function ControlledDemo({ tContent }: { tContent: (key: string) => string }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="nds-w-full nds-max-w-sm nds-stack" data-spacing="sm">
-      <div className="nds-cluster" data-spacing="xs">
+      <div className="nds-cluster" data-spacing="sm">
         <Button size="sm" variant="outline" onClick={() => setOpen(true)}>
           {tContent("demonstration.labels.triggerClosed")}
         </Button>
@@ -108,7 +108,7 @@ function ControlledDemo({ tContent }: { tContent: (key: string) => string }) {
         <CollapsibleTrigger asChild>
           <Button
             variant="ghost"
-            className="nds-cluster nds-w-full nds-px-4" data-justify="between"
+            className="nds-cluster nds-w-full nds-px-4" data-spacing="md" data-justify="between"
             aria-label={open
               ? tContent("demonstration.labels.triggerOpen")
               : tContent("demonstration.labels.triggerClosed")
@@ -206,7 +206,7 @@ import { ChevronDown } from "lucide-react";`;
 
   const codeUncontrolled = `<Collapsible defaultOpen={false} className="nds-w-full nds-max-w-sm nds-text-body">
   <CollapsibleTrigger asChild>
-    <Button variant="ghost" className="nds-cluster nds-w-full nds-px-4" data-justify="between">
+    <Button variant="ghost" className="nds-cluster nds-w-full nds-px-4" data-spacing="md" data-justify="between">
       <span>Exibir filtros avançados</span>
       <ChevronDown aria-hidden="true" className="nds-icon nds-shrink-0 nds-transition-transform nds-chevron" />
     </Button>
@@ -223,7 +223,7 @@ import { ChevronDown } from "lucide-react";`;
   <CollapsibleTrigger asChild>
     <Button
       variant="ghost"
-      className="nds-cluster nds-w-full nds-px-4" data-justify="between"
+      className="nds-cluster nds-w-full nds-px-4" data-spacing="md" data-justify="between"
       aria-label={open ? "Ocultar filtros avançados" : "Exibir filtros avançados"}
     >
       <span>{open ? "Ocultar filtros avançados" : "Exibir filtros avançados"}</span>
@@ -286,7 +286,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
               <CollapsibleTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="nds-cluster nds-w-full nds-px-4" data-justify="between"
+                  className="nds-cluster nds-w-full nds-px-4" data-spacing="md" data-justify="between"
                   aria-label={tContent("demonstration.labels.triggerClosed")}
                 >
                   <span>{tContent("demonstration.labels.headerLabel")}</span>
@@ -320,7 +320,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
               <CollapsibleTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="nds-cluster nds-w-full nds-px-4" data-justify="between"
+                  className="nds-cluster nds-w-full nds-px-4" data-spacing="md" data-justify="between"
                   disabled
                 >
                   <span>{tContent("demonstration.labels.headerLabel")}</span>
@@ -406,7 +406,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
                 <CollapsibleTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="nds-cluster nds-w-full nds-px-4" data-justify="between"
+                    className="nds-cluster nds-w-full nds-px-4" data-spacing="md" data-justify="between"
                     aria-label="Exibir filtros avançados"
                   >
                     <span>Exibir filtros avançados</span>
@@ -424,7 +424,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
             dontPreview: (
               <Collapsible className="nds-w-full nds-max-w-xs nds-text-body">
                 <CollapsibleTrigger asChild>
-                  <Button variant="ghost" className="nds-cluster nds-w-full nds-px-4" data-justify="between">
+                  <Button variant="ghost" className="nds-cluster nds-w-full nds-px-4" data-spacing="md" data-justify="between">
                     <span>Ver mais</span>
                     <ChevronDown aria-hidden="true" className="nds-icon nds-shrink-0" />
                   </Button>
@@ -445,7 +445,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
                 <CollapsibleTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="nds-cluster nds-w-full nds-px-4" data-justify="between"
+                    className="nds-cluster nds-w-full nds-px-4" data-spacing="md" data-justify="between"
                   >
                     <span>Filtros avançados</span>
                     <ChevronDown aria-hidden="true" className="nds-icon nds-shrink-0 nds-transition-transform nds-chevron" />
@@ -461,7 +461,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
                 {[1, 2, 3].map((i) => (
                   <Collapsible key={i} className="nds-w-full nds-text-body">
                     <CollapsibleTrigger asChild>
-                      <Button variant="ghost" className="nds-cluster nds-w-full nds-px-4 nds-text-body" data-justify="between">
+                      <Button variant="ghost" className="nds-cluster nds-w-full nds-px-4 nds-text-body" data-spacing="md" data-justify="between">
                         <span>Seção {i}</span>
                         <ChevronDown aria-hidden="true" className="nds-icon-sm nds-shrink-0" />
                       </Button>
@@ -504,7 +504,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
                 <CollapsibleTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="nds-cluster nds-w-full nds-px-4" data-justify="between"
+                    className="nds-cluster nds-w-full nds-px-4" data-spacing="md" data-justify="between"
                   >
                     <span>{tContent("demonstration.labels.triggerClosed")}</span>
                     <ChevronDown

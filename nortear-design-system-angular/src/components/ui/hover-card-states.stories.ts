@@ -174,7 +174,7 @@ export const Controlled: Story = {
     props: { isOpen: false },
     template: `
       <div class="nds-stack nds-max-w-sm" data-spacing="md">
-        <div class="nds-cluster" data-spacing="xs">
+        <div class="nds-cluster" data-spacing="sm">
           <!-- Nomes próprios, e não os mesmos do gatilho: dois controles com o
                mesmo nome acessível são ambíguos em leitor de tela. -->
           <button ndsButton size="sm" variant="outline" (click)="isOpen = true">

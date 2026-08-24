@@ -41,7 +41,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<CardArgs> }): s
     : '';
   const footer = withFooter
     ? `
-    <div ndsCardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
+    <div ndsCardFooter class="nds-cluster" data-justify="end" data-spacing="md">
       <button ndsButton variant="outline" aria-label="Editar produto ${title}">Editar</button>
       <button ndsButton variant="destructive" aria-label="Excluir produto ${title}">Excluir</button>
     </div>`
@@ -136,7 +136,7 @@ export const Playground: Story = {
         </div>
         <div ndsCardContent>{{ content }}</div>
         @if (withFooter) {
-          <div ndsCardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
+          <div ndsCardFooter class="nds-cluster" data-justify="end" data-spacing="md">
             <button ndsButton variant="outline" [attr.aria-label]="'Editar produto ' + title">Editar</button>
             <button ndsButton variant="destructive" [attr.aria-label]="'Excluir produto ' + title">Excluir</button>
           </div>

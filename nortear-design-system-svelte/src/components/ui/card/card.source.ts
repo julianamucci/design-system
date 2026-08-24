@@ -51,7 +51,7 @@ export function cardSource(_gerado?: string, ctx?: { args?: Partial<CardArgs> })
   <CardContent>
     <p class="nds-text-h4">R$ 1.299,00</p>
   </CardContent>
-  <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
+  <CardFooter class="nds-cluster" data-justify="end" data-spacing="md">
     <Button variant="outline" aria-label="Editar produto Cadeira Gamer Pro">Editar</Button>
     <Button variant="destructive" aria-label="Excluir produto Cadeira Gamer Pro">Excluir</Button>
   </CardFooter>
@@ -136,7 +136,7 @@ export function cardWithFooterSource(): string {
   <CardContent>
     <p class="nds-text-h4">R$ 1.299,00</p>
   </CardContent>
-  <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
+  <CardFooter class="nds-cluster" data-justify="end" data-spacing="md">
     <Button variant="outline" aria-label="Cancelar edição de Cadeira Gamer Pro">Cancelar</Button>
     <Button aria-label="Salvar alterações em Cadeira Gamer Pro">Salvar</Button>
   </CardFooter>

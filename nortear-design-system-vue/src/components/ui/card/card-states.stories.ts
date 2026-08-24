@@ -180,7 +180,7 @@ export const WithFooter: Story = {
         <CardContent>
           <p class="nds-text-body">R$ 1.299,00</p>
         </CardContent>
-        <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
+        <CardFooter class="nds-cluster" data-justify="end" data-spacing="md">
           <Button variant="outline" aria-label="Cancelar edição de Cadeira Gamer Pro">Cancelar</Button>
           <Button aria-label="Salvar alterações em Cadeira Gamer Pro" @click="handleSave">Salvar</Button>
         </CardFooter>

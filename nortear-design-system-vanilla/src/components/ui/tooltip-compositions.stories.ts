@@ -318,7 +318,7 @@ export const ProviderWithMarkup: Story = {
   render: () => {
     const barra = document.createElement('div');
     barra.className = 'nds-cluster';
-    barra.dataset.spacing = 'xs';
+    barra.dataset.spacing = 'md';
 
     // Espera longa de propósito: é ela que torna a dispensa MENSURÁVEL. Sem a
     // janela do grupo, o segundo balão levaria três segundos para aparecer, e a

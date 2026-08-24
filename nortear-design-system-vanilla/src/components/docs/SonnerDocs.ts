@@ -162,7 +162,7 @@ function createDemoToastArea(btnConfigs: Array<{ label: string; fn: () => void }
 
   const btnsRow = document.createElement('div');
   btnsRow.className = 'nds-cluster';
-  btnsRow.dataset.spacing = 'sm';
+  btnsRow.dataset.spacing = 'md';
   btnsRow.style.flexWrap = 'wrap';
 
   for (const { label, fn } of btnConfigs) {

@@ -361,7 +361,7 @@ const action = createButton({ variant: 'default', label: 'Salvar alterações' }
 const footer = document.createElement('div');
 footer.className = 'nds-cluster';
 footer.dataset.justify = 'end';
-footer.dataset.spacing = 'xs';
+footer.dataset.spacing = 'md';
 footer.append(cancel, action);
 
 createDialog({ trigger, title: 'Editar perfil', description: '...', content, footer });`;
@@ -482,7 +482,7 @@ const action = createButton({ variant: 'default', label: 'Enviar link' });
 const footer = document.createElement('div');
 footer.className = 'nds-cluster';
 footer.dataset.justify = 'end';
-footer.dataset.spacing = 'xs';
+footer.dataset.spacing = 'md';
 footer.append(cancel, action);
 
 createDialog({

@@ -243,7 +243,7 @@ const COMPOSITION_CODE = {
     ><kbd class="nds-kbd" data-slot="kbd">S</kbd
   ></ng-template>
 </span>`,
-  formFieldHelp: `<div class="nds-cluster" data-spacing="xs">
+  formFieldHelp: `<div class="nds-cluster" data-spacing="sm">
   <label ndsLabel for="token-api">Token da API</label>
 
   <span ndsTooltip>
@@ -266,7 +266,7 @@ const COMPOSITION_CODE = {
 <input ndsInput id="token-api" placeholder="ndsk_..." />`,
   metricDescription: `<div ndsCard class="nds-p-4">
   <div ndsCardHeader>
-    <div class="nds-cluster" data-spacing="xs">
+    <div class="nds-cluster" data-spacing="sm">
       <span ndsCardTitle>LCP</span>
 
       <span ndsTooltip>
@@ -500,7 +500,7 @@ const COMPOSITION_CODE = {
 
     <ng-template #tplCompCampo>
       <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="sm">
-        <div class="nds-cluster" data-spacing="xs">
+        <div class="nds-cluster" data-spacing="sm">
           <label ndsLabel for="tooltip-token-api">{{ rotuloCampo() }}</label>
           <span ndsTooltip>
             <button
@@ -522,7 +522,7 @@ const COMPOSITION_CODE = {
     <ng-template #tplCompMetrica>
       <div ndsCard class="nds-p-4 nds-w-full nds-max-w-xs">
         <div ndsCardHeader>
-          <div class="nds-cluster" data-spacing="xs">
+          <div class="nds-cluster" data-spacing="sm">
             <span ndsCardTitle>LCP</span>
             <span ndsTooltip>
               <button

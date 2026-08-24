@@ -42,7 +42,7 @@
         variant="outline"
         role="combobox"
         aria-labelledby="combobox-story-rotulo combobox-story-valor"
-        class="nds-cluster nds-w-xs"
+        class="nds-cluster nds-w-xs" data-spacing="md"
         data-justify="between"
         {...props}
       >

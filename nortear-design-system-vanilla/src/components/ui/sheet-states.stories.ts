@@ -49,7 +49,7 @@ function buildSheet(opts: {
   const action = createButton({ variant: 'default', label: 'Aplicar filtros' });
   const footer = document.createElement('div');
   footer.className = 'nds-cluster';
-  footer.dataset.spacing = 'sm';
+  footer.dataset.spacing = 'md';
   footer.append(cancel, action);
 
   const sheet = createSheet({
@@ -169,7 +169,7 @@ export const Controlled: Story = {
     const action = createButton({ variant: 'default', label: 'Confirmar' });
     const footer = document.createElement('div');
     footer.className = 'nds-cluster';
-    footer.dataset.spacing = 'sm';
+    footer.dataset.spacing = 'md';
     footer.append(cancel, action);
 
     let isOpen = false;

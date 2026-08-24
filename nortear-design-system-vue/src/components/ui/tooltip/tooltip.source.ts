@@ -271,7 +271,7 @@ export function tooltipControlledSource(): string {
       blockWith(
         'div',
         ['class="nds-stack"', 'data-align="center"', 'data-spacing="sm"'],
-        `<div class="nds-cluster" data-spacing="sm">
+        `<div class="nds-cluster" data-spacing="md">
   <Button variant="secondary" @click="aberto = true">Abrir externamente</Button>
   <Button variant="outline" @click="aberto = false">Fechar externamente</Button>
 </div>

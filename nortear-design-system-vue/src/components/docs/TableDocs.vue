@@ -315,7 +315,7 @@ const variantItems = computed(() => [
 ]);
 
 const codeCompFilterableToolbar = `<div class="nds-stack" data-spacing="sm">
-  <div class="nds-cluster" data-align="center" data-spacing="sm">
+  <div class="nds-cluster" data-align="center" data-spacing="md">
     <Input v-model="search" placeholder="Filtrar faturas..." />
     <Button variant="outline">Status</Button>
   </div>
@@ -1020,7 +1020,7 @@ const visualTestItems = computed(() => [
           <div
             class="nds-cluster"
             data-align="center"
-            data-spacing="sm"
+            data-spacing="md"
           >
             <div
               class="nds-w-full nds-max-w-sm"

@@ -73,7 +73,7 @@ export const WithFooter: Story = {
   render: () => {
     const card = createCard({ className: 'nds-w-sm' });
     const footer = createCardFooter({ className: 'nds-cluster' });
-    footer.dataset.spacing = 'sm';
+    footer.dataset.spacing = 'md';
     footer.dataset.justify = 'end';
     footer.appendChild(
       createButton({

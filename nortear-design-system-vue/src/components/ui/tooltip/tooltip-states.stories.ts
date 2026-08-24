@@ -278,7 +278,7 @@ export const PersistenceInBubble: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout" class="nds-cluster nds-min-h-40" data-align="center" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-min-h-40" data-spacing="md" data-align="center" data-justify="center">
         <Tooltip>
           <TooltipTrigger as-child>
             <Button variant="outline">Compartilhar</Button>
@@ -333,7 +333,7 @@ export const Controlled: Story = {
     // invertido pela lib e reabriria o que acabou de fechar.
     template: `
       <div class="nds-stack nds-min-h-50" data-align="center" data-spacing="sm" style="contain: layout">
-        <div class="nds-cluster" data-spacing="sm">
+        <div class="nds-cluster" data-spacing="md">
           <Button variant="secondary" @click="open = true">Abrir externamente</Button>
           <Button variant="outline" @click="open = false">Fechar externamente</Button>
         </div>

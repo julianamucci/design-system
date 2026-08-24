@@ -55,7 +55,7 @@ export const Uncontrolled: Story = {
           ndsCollapsibleTrigger
           ndsButton
           variant="ghost"
-          class="nds-cluster nds-w-full nds-px-4"
+          class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
           data-justify="between"
         >
           <span>Exibir filtros avançados</span>
@@ -92,7 +92,7 @@ export const Controlled: Story = {
     props: { isOpen: false },
     template: `
       <div class="nds-stack nds-w-sm" data-spacing="sm">
-        <div class="nds-cluster" data-spacing="xs">
+        <div class="nds-cluster" data-spacing="sm">
           <!-- Nomes próprios, e não os mesmos do trigger: dois botões com o
                mesmo nome acessível na tela são ambíguos para quem navega por
                lista de controles no leitor de tela. -->
@@ -109,7 +109,7 @@ export const Controlled: Story = {
             ndsCollapsibleTrigger
             ndsButton
             variant="ghost"
-            class="nds-cluster nds-w-full nds-px-4"
+            class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
             data-justify="between"
             [attr.aria-label]="isOpen ? 'Ocultar filtros avançados' : 'Exibir filtros avançados'"
           >

@@ -212,7 +212,7 @@ import { Button } from "@/components/ui/button";`,
 
   return (
     <div className="nds-stack" data-spacing="sm">
-      <div className="nds-cluster" data-spacing="sm">
+      <div className="nds-cluster" data-spacing="md">
         <Button onClick={() => setAberto(true)}>Abrir externamente</Button>
         <Button variant="outline" onClick={() => setAberto(false)}>
           Fechar externamente

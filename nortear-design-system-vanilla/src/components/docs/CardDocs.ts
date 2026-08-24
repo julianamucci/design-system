@@ -89,7 +89,7 @@ function buildProductCardPreview(): HTMLElement {
 
   const footer = createCardFooter({ class: 'nds-cluster' });
   footer.dataset.justify = 'end';
-  footer.dataset.spacing = 'sm';
+  footer.dataset.spacing = 'md';
   footer.appendChild(
     createButton({
       variant: 'outline',
@@ -449,7 +449,7 @@ export function createCardDocs(): HTMLElement {
                 header.appendChild(createCardTitle({ text: t('demonstration.labels.productTitle'), level: 3 }));
                 const footer = createCardFooter({ class: 'nds-cluster' });
                 footer.dataset.justify = 'end';
-                footer.dataset.spacing = 'sm';
+                footer.dataset.spacing = 'md';
                 footer.appendChild(createButton({ variant: 'outline', label: t('demonstration.labels.actionEdit') }));
                 footer.appendChild(createButton({ variant: 'destructive', label: t('demonstration.labels.actionDelete') }));
                 card.append(header, footer);
@@ -510,7 +510,7 @@ card.append(header, content);`;
 // O pb do Card é removido automaticamente para alinhar a borda superior.
 const card = createCard();
 const footer = createCardFooter({ class: 'nds-cluster' });
-footer.dataset.spacing = 'sm';
+footer.dataset.spacing = 'md';
 footer.dataset.justify = 'end';
 card.append(header, content, footer);`;
 

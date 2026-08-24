@@ -182,7 +182,7 @@ export const Controlled: Story = {
     },
     template: `
       <div class="nds-stack" data-spacing="sm" style="contain: layout">
-        <div class="nds-cluster" data-spacing="sm">
+        <div class="nds-cluster" data-spacing="md">
           <Button @click="open = true">Abrir via estado externo</Button>
           <Button variant="outline" @click="open = false">Fechar via estado externo</Button>
         </div>

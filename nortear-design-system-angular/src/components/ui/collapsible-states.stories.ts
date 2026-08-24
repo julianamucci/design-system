@@ -55,7 +55,7 @@ export const Closed: Story = {
           ndsCollapsibleTrigger
           ndsButton
           variant="ghost"
-          class="nds-cluster nds-w-full nds-px-4"
+          class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
           data-justify="between"
         >
           <span>Exibir filtros avançados</span>
@@ -98,7 +98,7 @@ export const Open: Story = {
           ndsCollapsibleTrigger
           ndsButton
           variant="ghost"
-          class="nds-cluster nds-w-full nds-px-4"
+          class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
           data-justify="between"
         >
           <span>Ocultar filtros avançados</span>
@@ -148,7 +148,7 @@ export const OpenByDefault: Story = {
           ndsCollapsibleTrigger
           ndsButton
           variant="ghost"
-          class="nds-cluster nds-w-full nds-px-4"
+          class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
           data-justify="between"
         >
           <span>Ocultar filtros avançados</span>
@@ -196,7 +196,7 @@ export const Disabled: Story = {
           ndsCollapsibleTrigger
           ndsButton
           variant="ghost"
-          class="nds-cluster nds-w-full nds-px-4"
+          class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
           data-justify="between"
           [disabled]="true"
         >

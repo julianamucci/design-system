@@ -113,7 +113,7 @@ function buildWithTitlePopover(): HTMLElement {
 
   const actions = document.createElement('div');
   actions.className = 'nds-cluster';
-  actions.dataset.spacing = 'xs';
+  actions.dataset.spacing = 'sm';
   actions.dataset.justify = 'end';
   const cancel = createButton({ variant: 'ghost', size: 'sm', label: t('demonstration.labels.cancel') });
   const save = createButton({ variant: 'default', size: 'sm', label: t('demonstration.labels.save') });
@@ -549,7 +549,7 @@ for (const opt of ['Ativo', 'Pendente', 'Arquivado']) {
 
 const actions = document.createElement('div');
 actions.className = 'nds-cluster nds-pt-2';
-actions.dataset.spacing = 'xs';
+actions.dataset.spacing = 'sm';
 actions.dataset.justify = 'end';
 actions.append(
   createButton({ variant: 'ghost',   size: 'sm', label: 'Limpar'  }),
@@ -689,7 +689,7 @@ createPopover({ trigger, content });`;
 
           const actions = document.createElement('div');
           actions.className = 'nds-cluster nds-pt-2';
-          actions.dataset.spacing = 'xs';
+          actions.dataset.spacing = 'sm';
           actions.dataset.justify = 'end';
           actions.append(
             createButton({ variant: 'ghost',   size: 'sm', label: 'Limpar'  }),

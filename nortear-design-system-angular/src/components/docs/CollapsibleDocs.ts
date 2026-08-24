@@ -156,7 +156,7 @@ const EXTENSIBILITY_CODE = `<!-- O trigger e o botão do design system são o ME
   ndsCollapsibleTrigger
   ndsButton
   variant="ghost"
-  class="nds-cluster nds-w-full nds-px-4"
+  class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
   data-justify="between"
 >
   <span>Exibir filtros avançados</span>
@@ -180,7 +180,7 @@ const VARIANT_CODE = {
     ndsCollapsibleTrigger
     ndsButton
     variant="ghost"
-    class="nds-cluster nds-w-full nds-px-4"
+    class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
     data-justify="between"
   >
     <span>Exibir filtros avançados</span>
@@ -198,7 +198,7 @@ const VARIANT_CODE = {
     ndsCollapsibleTrigger
     ndsButton
     variant="ghost"
-    class="nds-cluster nds-w-full nds-px-4"
+    class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
     data-justify="between"
     [attr.aria-label]="aberto() ? 'Ocultar filtros avançados' : 'Exibir filtros avançados'"
   >
@@ -239,7 +239,7 @@ const COMPOSITION_CODE = {
     ndsCollapsibleTrigger
     ndsButton
     variant="outline"
-    class="nds-cluster nds-w-full nds-px-4"
+    class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
     data-justify="between"
   >
     <span>Configurações avançadas</span>
@@ -313,7 +313,7 @@ const COMPOSITION_CODE = {
           ndsCollapsibleTrigger
           ndsButton
           variant="ghost"
-          class="nds-cluster nds-w-full nds-px-4"
+          class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
           data-justify="between"
         >
           <span>{{ t('demonstration.labels.triggerClosed') }}</span>
@@ -332,7 +332,7 @@ const COMPOSITION_CODE = {
           ndsCollapsibleTrigger
           ndsButton
           variant="ghost"
-          class="nds-cluster nds-w-full nds-px-4"
+          class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
           data-justify="between"
           [attr.aria-label]="rotuloGenerico()"
         >
@@ -351,7 +351,7 @@ const COMPOSITION_CODE = {
           ndsCollapsibleTrigger
           ndsButton
           variant="ghost"
-          class="nds-cluster nds-w-full nds-px-4"
+          class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
           data-justify="between"
         >
           <span>{{ t('demonstration.labels.headerLabel') }}</span>
@@ -370,7 +370,7 @@ const COMPOSITION_CODE = {
               ndsCollapsibleTrigger
               ndsButton
               variant="ghost"
-              class="nds-cluster nds-w-full nds-px-4"
+              class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
               data-justify="between"
             >
               <span>{{ section.label }}</span>
@@ -390,7 +390,7 @@ const COMPOSITION_CODE = {
           ndsCollapsibleTrigger
           ndsButton
           variant="ghost"
-          class="nds-cluster nds-w-full nds-px-4"
+          class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
           data-justify="between"
         >
           <span>{{ t('demonstration.labels.triggerClosed') }}</span>
@@ -414,7 +414,7 @@ const COMPOSITION_CODE = {
             ndsCollapsibleTrigger
             ndsButton
             variant="ghost"
-            class="nds-cluster nds-w-full nds-px-4"
+            class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
             data-justify="between"
             [attr.aria-label]="rotuloAlternado(varControlado())"
           >
@@ -472,7 +472,7 @@ const COMPOSITION_CODE = {
           ndsCollapsibleTrigger
           ndsButton
           variant="outline"
-          class="nds-cluster nds-w-full nds-px-4"
+          class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
           data-justify="between"
         >
           <span>{{ t('demonstration.labels.headerLabel') }}</span>
@@ -541,7 +541,7 @@ const COMPOSITION_CODE = {
                 ndsCollapsibleTrigger
                 ndsButton
                 variant="ghost"
-                class="nds-cluster nds-w-full nds-px-4"
+                class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
                 data-justify="between"
               >
                 <span>{{ t('demonstration.labels.headerLabel') }}</span>
@@ -564,7 +564,7 @@ const COMPOSITION_CODE = {
                 ndsCollapsibleTrigger
                 ndsButton
                 variant="ghost"
-                class="nds-cluster nds-w-full nds-px-4"
+                class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
                 data-justify="between"
                 [attr.aria-label]="rotuloAlternado(demoControlado())"
               >
@@ -583,7 +583,7 @@ const COMPOSITION_CODE = {
                 ndsCollapsibleTrigger
                 ndsButton
                 variant="ghost"
-                class="nds-cluster nds-w-full nds-px-4"
+                class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
                 data-justify="between"
                 [disabled]="true"
               >

@@ -302,7 +302,7 @@ function escolher(value: string) {
       role="combobox"
       :aria-expanded="aberto"
       aria-labelledby="componente-rotulo componente-valor"
-      class="nds-cluster nds-w-xs"
+      class="nds-cluster nds-w-xs" data-spacing="md"
       data-justify="between"
     >
       <span id="componente-valor">{{

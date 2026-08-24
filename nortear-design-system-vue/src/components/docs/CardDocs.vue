@@ -194,7 +194,7 @@ const codeWithFooter = `<Card>
     <CardDescription>Em estoque</CardDescription>
   </CardHeader>
   <CardContent>R$ 1.299,00</CardContent>
-  <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
+  <CardFooter class="nds-cluster" data-justify="end" data-spacing="md">
     <Button variant="outline" aria-label="Cancelar edição">Cancelar</Button>
     <Button aria-label="Salvar Cadeira Gamer Pro">Salvar</Button>
   </CardFooter>

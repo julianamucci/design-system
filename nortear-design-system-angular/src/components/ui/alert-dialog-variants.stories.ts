@@ -274,7 +274,7 @@ export const Controlled: Story = {
   render: () => ({
     props: { isOpen: false },
     template: `
-      <div class="nds-cluster" data-spacing="sm">
+      <div class="nds-cluster" data-spacing="md">
         <button ndsButton variant="outline" (click)="isOpen = true" data-testid="abrir">
           Abrir de fora
         </button>

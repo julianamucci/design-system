@@ -548,7 +548,7 @@ interface TooltipTriggerProps {
         description: $tStore('variants.compositions.formFieldHelp.description'),
         useWhen: $tStore('variants.compositions.formFieldHelp.use'),
         code: `<div class="nds-stack" data-spacing="xs">
-  <div class="nds-cluster" data-spacing="xs">
+  <div class="nds-cluster" data-spacing="sm">
     <label for="api-token" class="nds-text-body nds-font-medium">Token de API</label>
     <Tooltip>
       <TooltipTrigger>
@@ -572,7 +572,7 @@ interface TooltipTriggerProps {
         description: $tStore('variants.compositions.metricDescription.description'),
         useWhen: $tStore('variants.compositions.metricDescription.use'),
         code: `<div class="nds-stack" data-spacing="xs">
-  <div class="nds-cluster" data-spacing="xs">
+  <div class="nds-cluster" data-spacing="sm">
     <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
     <Tooltip>
       <TooltipTrigger>
@@ -616,7 +616,7 @@ interface TooltipTriggerProps {
   {#snippet compFormHelp()}
     <TooltipProvider delayDuration={0}>
       <div class="nds-stack" data-spacing="xs" style="align-items: flex-start">
-        <div class="nds-cluster" data-spacing="xs">
+        <div class="nds-cluster" data-spacing="sm">
           <label for="api-token-svelte-comp" class="nds-text-body nds-font-medium">Token de API</label>
           <Tooltip>
             <TooltipTrigger>
@@ -644,7 +644,7 @@ interface TooltipTriggerProps {
   {#snippet compMetric()}
     <TooltipProvider delayDuration={0}>
       <div class="nds-stack" data-spacing="xs" style="align-items: flex-start">
-        <div class="nds-cluster" data-spacing="xs">
+        <div class="nds-cluster" data-spacing="sm">
           <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
           <Tooltip>
             <TooltipTrigger>

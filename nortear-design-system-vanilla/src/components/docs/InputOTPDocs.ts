@@ -424,7 +424,7 @@ err.textContent = 'Código incorreto. Verifique e tente novamente.';`;
 
 const row = document.createElement('div');
 row.className = 'nds-cluster';
-row.dataset.spacing = 'sm';
+row.dataset.spacing = 'md';
 row.dataset.align = 'center';
 row.dataset.justify = 'between';
 
@@ -524,7 +524,7 @@ row.append(note, btn);`;
                 const otp = createInputOTP({ length: 6 });
                 const row = document.createElement('div');
                 row.className = 'nds-cluster';
-                row.dataset.spacing = 'sm';
+                row.dataset.spacing = 'md';
                 row.dataset.align = 'center';
                 row.dataset.justify = 'between';
                 const note = document.createElement('p');

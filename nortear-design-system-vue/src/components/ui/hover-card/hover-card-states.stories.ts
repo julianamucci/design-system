@@ -190,7 +190,7 @@ export const Controlled: Story = {
     },
     template: `
       <div class="nds-stack" data-spacing="md" style="${STYLE_PARAGRAFO}">
-        <div class="nds-cluster" data-spacing="xs">
+        <div class="nds-cluster" data-spacing="sm">
           <!-- Nomes próprios, e não os mesmos do gatilho: dois controles com o
                mesmo nome acessível são ambíguos em leitor de tela. -->
           <Button size="sm" variant="outline" @click="isOpen = true">Abrir pelo estado externo</Button>

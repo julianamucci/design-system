@@ -228,7 +228,7 @@ export const Controlled: Story = {
     // reabriria o painel no mesmo gesto.
     template: `
       <div class="nds-stack" data-spacing="sm" style="contain: layout; min-height: 300px;">
-        <div class="nds-cluster" data-spacing="sm">
+        <div class="nds-cluster" data-spacing="md">
           <Button @click="open = true">Abrir externamente</Button>
           <Button variant="outline" @click="open = false">Fechar externamente</Button>
         </div>

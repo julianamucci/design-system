@@ -382,7 +382,7 @@ function escolher(value: string) {
         variant="outline"
         role="combobox"
         aria-labelledby="combobox-rotulo combobox-valor"
-        class="nds-cluster nds-w-xs"
+        class="nds-cluster nds-w-xs" data-spacing="md"
         data-justify="between"
         {...props}
       >
@@ -461,7 +461,7 @@ $effect(() => {
 });`,
     `<Button
   variant="outline"
-  class="nds-cluster nds-w-xs nds-text-muted-foreground"
+  class="nds-cluster nds-w-xs nds-text-muted-foreground" data-spacing="md"
   data-justify="between"
   onclick={() => (aberto = true)}
 >

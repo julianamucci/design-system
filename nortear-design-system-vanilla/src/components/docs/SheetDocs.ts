@@ -81,7 +81,7 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
   const apply = createButton({ variant: 'default', label: opts.applyLabel });
   const footer = document.createElement('div');
   footer.className = 'nds-cluster';
-  footer.dataset.spacing = 'xs';
+  footer.dataset.spacing = 'md';
   footer.append(cancel, apply);
 
   // Fechar ao clicar nas ações: dispara click no overlay (close interno da
@@ -465,7 +465,7 @@ const form = document.createElement('form');
 // ...campos de filtro
 const footer = document.createElement('div');
 footer.className = 'nds-cluster';
-footer.dataset.spacing = 'xs';
+footer.dataset.spacing = 'md';
 footer.append(
   createButton({ variant: 'outline', label: 'Cancelar' }),
   createButton({ variant: 'default', label: 'Aplicar filtros' }),

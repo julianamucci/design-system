@@ -27,7 +27,7 @@ export function makeFooter(
   const action = createButton({ variant: 'default', label: actionLabel });
   const footer = document.createElement('div');
   footer.className = 'nds-cluster';
-  footer.dataset.spacing = 'sm';
+  footer.dataset.spacing = 'md';
   footer.append(cancel, action);
 
   if (fecharAoClicar) {

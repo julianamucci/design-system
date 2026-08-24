@@ -77,7 +77,7 @@ function buildDrawerDemo(opts: DrawerDemoOptions): HTMLElement {
   const footer = document.createElement('div');
   footer.className = 'nds-cluster';
   footer.dataset.justify = 'end';
-  footer.dataset.spacing = 'xs';
+  footer.dataset.spacing = 'md';
   footer.append(cancel, action);
 
   const body = document.createElement('div');
@@ -456,7 +456,7 @@ const drawer = createDrawer({
                 const footer = document.createElement('div');
                 footer.className = 'nds-cluster';
                 footer.dataset.justify = 'end';
-                footer.dataset.spacing = 'xs';
+                footer.dataset.spacing = 'md';
                 footer.append(cancel, action);
                 const el = createDrawer({
                   trigger,
@@ -504,7 +504,7 @@ const action = createButton({ variant: 'default', label: 'Salvar alterações' }
 const footer = document.createElement('div');
 footer.className = 'nds-cluster';
 footer.dataset.justify = 'end';
-footer.dataset.spacing = 'xs';
+footer.dataset.spacing = 'md';
 footer.append(cancel, action);
 
 const drawer = createDrawer({
@@ -526,7 +526,7 @@ const action = createButton({ variant: 'destructive', label: 'Remover' });
 const footer = document.createElement('div');
 footer.className = 'nds-cluster';
 footer.dataset.justify = 'end';
-footer.dataset.spacing = 'xs';
+footer.dataset.spacing = 'md';
 footer.append(cancel, action);
 
 const drawer = createDrawer({
@@ -561,7 +561,7 @@ form.dataset.spacing = 'sm';
                 const footer = document.createElement('div');
                 footer.className = 'nds-cluster';
   footer.dataset.justify = 'end';
-  footer.dataset.spacing = 'xs';
+  footer.dataset.spacing = 'md';
                 footer.append(cancel, action);
                 const el = createDrawer({
                   trigger,

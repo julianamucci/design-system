@@ -202,7 +202,7 @@ export function CardDocs() {
   <CardContent>
     <p>R$ 1.299,00</p>
   </CardContent>
-  <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
+  <CardFooter className="nds-cluster" data-justify="end" data-spacing="md">
     <Button variant="outline">Cancelar</Button>
     <Button>Salvar</Button>
   </CardFooter>
@@ -265,7 +265,7 @@ interface CardProps extends React.ComponentProps<"div"> {
       <CardContent>
         <p className="nds-text-lead nds-font-semibold">{productPrice}</p>
       </CardContent>
-      <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
+      <CardFooter className="nds-cluster" data-justify="end" data-spacing="md">
         <Button
           variant="outline"
           aria-label={`${actionEdit} ${productTitle}`}
@@ -467,7 +467,7 @@ interface CardProps extends React.ComponentProps<"div"> {
                 <CardContent>
                   <p className="nds-text-body">{productPrice}</p>
                 </CardContent>
-                <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
+                <CardFooter className="nds-cluster" data-justify="end" data-spacing="md">
                   <Button
                     variant="outline"
                     aria-label={`${actionCancel} ${productTitle}`}
@@ -499,7 +499,7 @@ interface CardProps extends React.ComponentProps<"div"> {
                   <CardTitle>{productTitle}</CardTitle>
                   <CardDescription>{productStock}</CardDescription>
                 </CardHeader>
-                <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
+                <CardFooter className="nds-cluster" data-justify="end" data-spacing="md">
                   <Button
                     variant="outline"
                     aria-label={`${actionEdit} ${productTitle}`}
@@ -521,7 +521,7 @@ interface CardProps extends React.ComponentProps<"div"> {
                   <CardTitle>{productTitle}</CardTitle>
                   <CardDescription>{productStock}</CardDescription>
                 </CardHeader>
-                <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
+                <CardFooter className="nds-cluster" data-justify="end" data-spacing="md">
                   <Button variant="outline">{actionEdit}</Button>
                   <Button variant="destructive">{actionDelete}</Button>
                 </CardFooter>
@@ -591,7 +591,7 @@ interface CardProps extends React.ComponentProps<"div"> {
                 <CardContent>
                   <p className="nds-text-body">{productPrice}</p>
                 </CardContent>
-                <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
+                <CardFooter className="nds-cluster" data-justify="end" data-spacing="md">
                   <Button
                     variant="outline"
                     aria-label={`${actionCancel} ${productTitle}`}

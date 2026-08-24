@@ -91,7 +91,7 @@ function buildPlayground(args: SheetArgs): HTMLElement {
   const apply = createButton({ variant: 'default', label: args.applyLabel });
   const footer = document.createElement('div');
   footer.className = 'nds-cluster';
-  footer.dataset.spacing = 'sm';
+  footer.dataset.spacing = 'md';
   footer.append(cancel, apply);
 
   // A factory não expõe SheetClose: quem fecha por fora é o overlay, e é ele

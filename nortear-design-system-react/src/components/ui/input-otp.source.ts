@@ -345,7 +345,7 @@ import { Label } from "@/components/ui/label";`,
       </InputOTPGroup>
     </InputOTP>
   </div>
-  <div className="nds-cluster" data-spacing="xs" data-align="center">
+  <div className="nds-cluster" data-spacing="sm" data-align="center">
     <span className="nds-text-caption nds-text-muted-foreground">Não recebeu?</span>
     <Button variant="link" size="sm" type="button">
       Reenviar código

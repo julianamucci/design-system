@@ -3599,11 +3599,18 @@ function selecaoForte(sel) {
  *   1. `data-spacing` declarado como `xs` ou `sm`
  *   2. `data-spacing` AUSENTE — o padrão do `.nds-cluster` é 8px, abaixo do piso
  *
- * EXCEÇÃO: quando TODOS os botões do cluster são `size="sm"`, o piso cai para
- * `--spacing-2` (8px). Botão pequeno vive em superfície compacta — rodapé de
- * popover, de tooltip, de hover-card — onde 16px entre dois alvos pequenos é
- * mais do que a superfície comporta. Nesse caso passa `sm` e passa também o
- * `data-spacing` ausente, que é justamente 8px; só `xs` continua reprovando.
+ * EXCEÇÃO: quando TODOS os botões do cluster são `size="sm"` ou da família de
+ * ÍCONE (`icon`, `icon-sm`, `icon-lg`, `icon-xs`), o piso cai para
+ * `--spacing-2` (8px). Nesse caso passa `sm` e passa também o `data-spacing`
+ * ausente, que é justamente 8px; só `xs` continua reprovando.
+ *
+ * São dois motivos diferentes para o mesmo piso. O botão `sm` vive em
+ * superfície compacta — rodapé de popover, de tooltip, de hover-card — onde
+ * 16px entre dois alvos pequenos é mais do que a superfície comporta. O botão
+ * de ícone é outra coisa: ele é quadrado e sem texto, e uma fileira deles é
+ * uma BARRA DE FERRAMENTAS, não um par de ações. Ali a proximidade é o que
+ * comunica que os comandos pertencem ao mesmo conjunto, e vale mesmo no
+ * tamanho padrão de ícone.
  *
  * "Todos" é medido contando marcas de tamanho contra a contagem de botões:
  * cluster que mistura tamanhos cai na regra estrita, porque o alvo maior é
@@ -3616,6 +3623,13 @@ function selecaoForte(sel) {
  * defeito que ele existe para pegar.
  *
  * O que ele NÃO alcança, declarado para não virar cobertura fantasma:
+ *   - controle do Angular cujo gatilho é um <button> com diretiva PRÓPRIA
+ *     (`ndsSelectTrigger`, e afins): a regex de botão exige `ndsButton`, então
+ *     fileira de gatilho de combobox é invisível. É deliberado por ora — a
+ *     regra é do componente Button, e gatilho de combobox tem convenção
+ *     própria —, mas é um lugar onde o portão mede menos do que parece;
+ *   - cluster com MENOS de dois botões, que não tem vizinho e portanto não
+ *     tem gap a medir;
  *   - `.nds-button-group`, que emenda os botões sem gap de propósito e é o
  *     caso oposto, legítimo;
  *   - cluster cujo gap venha de classe utilitária em vez de `data-spacing`.
@@ -3625,37 +3639,46 @@ function auditButtonGap(slug) {
   // Como um botão se parece em cada stack. O Angular usa atributo em <button>.
   const BOTAO = /<Button[\s>/]|<button[^>]*\bndsButton\b|createButton\s*\(/;
   const BOTAO_G = new RegExp(BOTAO.source, 'g');
-  // `size="sm"` nas quatro stacks de markup, `size: 'sm'` na fábrica do Vanilla.
-  const TAMANHO_SM = /size=(?:"|')sm(?:"|')|size:\s*(?:"|')sm(?:"|')/g;
+  // Tamanhos que dispensam o piso de 16px: `sm` e a família de ícone
+  // (`icon`, `icon-sm`, `icon-lg`, `icon-xs`). Nas quatro stacks de markup o
+  // atributo é `size="…"`; na fábrica do Vanilla é `size: '…'`.
+  const TAMANHO_COMPACTO =
+    /size=(?:"|')(?:sm|icon(?:-[a-z]+)?)(?:"|')|size:\s*(?:"|')(?:sm|icon(?:-[a-z]+)?)(?:"|')/g;
 
   /** Conteúdo entre a abertura em `from` e a tag de fechamento que a casa. */
-  const escopoDaTag = (content, from, tag) => {
+  const escopoDaTag = (content, from, tag, inicioDoConteudo) => {
     const marcas = new RegExp('<(/?)' + tag + '\\b', 'g');
     marcas.lastIndex = from;
     let profundidade = 0;
     let m;
     while ((m = marcas.exec(content)) !== null) {
       profundidade += m[1] === '/' ? -1 : 1;
-      if (profundidade === 0) return content.slice(from, m.index);
+      if (profundidade === 0) return content.slice(inicioDoConteudo, m.index);
     }
-    return content.slice(from);   // sem fechamento: cai para o resto do arquivo
+    return '';   // sem fechamento casado, não há filhos a examinar
   };
 
-  /** Verdadeiro quando o gap declarado basta para o tamanho dos botões. */
-  const aceitavel = (escopo, valor) => {
+  /** Piso do cluster: `sm` quando todos os botões são compactos, senão `md`. */
+  const pisoDo = (escopo) => {
     const botoes = (escopo.match(BOTAO_G) || []).length;
-    const pequenos = (escopo.match(TAMANHO_SM) || []).length;
-    const todosPequenos = botoes > 0 && pequenos >= botoes;
-    // Piso do pequeno é 8px: passa `sm` e passa o ausente, que vale 8px.
-    return todosPequenos && valor !== 'xs';
+    const compactos = (escopo.match(TAMANHO_COMPACTO) || []).length;
+    return compactos >= botoes ? 'sm' : 'md';
   };
 
-  const acusar = (stack, file, content, index, valor) => {
+  /** Um botão sozinho não tem vizinho: não existe gap a medir. */
+  const agrupaBotoes = (escopo) => (escopo.match(BOTAO_G) || []).length >= 2;
+
+  /** Verdadeiro quando o gap declarado já alcança o piso do cluster. */
+  const aceitavel = (piso, valor) =>
+    // Sob o piso `sm` o ausente serve, porque o padrão do cluster é 8px.
+    piso === 'sm' && valor !== 'xs';
+
+  const acusar = (stack, file, content, index, valor, piso) => {
     violations.push({
       category: 'quality', severity: 'low', slug, stack,
       file: relative(ROOT, file), line: content.slice(0, index).split('\n').length,
       rule: 'button_gap_apertado',
-      message: `cluster de botões com data-spacing ${valor} — o mínimo é "md" (--spacing-4, 16px); ver a regra em guidelines/06-form-components.md`,
+      message: `cluster de botões com data-spacing ${valor} — use "${piso}" (${piso === 'sm' ? '--spacing-2, 8px: barra de ícones ou botões pequenos' : '--spacing-4, 16px'}); ver a regra em guidelines/06-form-components.md`,
     });
   };
 
@@ -3668,28 +3691,68 @@ function auditButtonGap(slug) {
       const abertura = /<([a-zA-Z][\w-]*)[^>]*\bclass(?:Name)?=(?:"|')nds-cluster(?:\s[^"']*)?(?:"|')([^>]*)>/g;
       let m;
       while ((m = abertura.exec(content)) !== null) {
+        // Auto-fechada não agrupa nada: `<DocsDoDont className="nds-cluster" />`
+        // não tem filhos, e sem esta guarda o escopo caía para o resto do
+        // arquivo — que contém botões, e o componente se acusava sozinho.
+        if (/\/\s*>$/.test(m[0])) continue;
         const declarado = /data-spacing=(?:"|')([a-z0-9]+)(?:"|')/.exec(m[2] || '');
         const valor = declarado ? declarado[1] : '(ausente)';
         if (declarado && !['xs', 'sm'].includes(valor)) continue;
-        const escopo = escopoDaTag(content, m.index, m[1]);
-        if (!BOTAO.test(escopo)) continue;
-        if (aceitavel(escopo, valor)) continue;
-        acusar(stack, file, content, m.index, valor);
+        // O conteúdo começa depois do `>` da abertura: sem isso, um trigger
+        // que É um botão e usa `nds-cluster` para arrumar rótulo e ícone por
+        // dentro se acusaria a si mesmo.
+        const escopo = escopoDaTag(content, m.index, m[1], m.index + m[0].length);
+        if (!agrupaBotoes(escopo)) continue;
+        const piso = pisoDo(escopo);
+        if (aceitavel(piso, valor)) continue;
+        acusar(stack, file, content, m.index, valor, piso);
       }
 
-      // Vanilla monta o cluster por DOM: não há tag para casar. A heurística é
-      // a variável — o mesmo identificador que recebe o `dataset.spacing`
-      // precisa receber um botão depois.
+      // Vanilla monta o cluster por DOM: não há tag para casar, e a janela de
+      // texto ao redor é palpite ruim — os botões podem ser criados ANTES da
+      // linha do `dataset.spacing`, e uma janela para a frente alcança a demo
+      // seguinte e conta botão de outro cluster. Em vez de adivinhar por
+      // proximidade, resolvemos os IDENTIFICADORES que entram no `append` e
+      // olhamos como cada um foi declarado.
       if (stack === 'vanilla') {
-        const porDom = /(\w+)\.dataset\.spacing = '(xs|sm)'/g;
+        const porDom = /(\w+)\.dataset\.spacing = '([a-z0-9]+)'/g;
         let d;
         while ((d = porDom.exec(content)) !== null) {
           const [, variavel, valor] = d;
-          const depois = content.slice(d.index, d.index + 900);
-          const recebeBotao = new RegExp(variavel + '\\.(append|appendChild)\\s*\\(').test(depois);
-          if (!recebeBotao || !BOTAO.test(depois)) continue;
-          if (aceitavel(depois, valor)) continue;
-          acusar(stack, file, content, d.index, valor);
+          if (!['xs', 'sm'].includes(valor)) continue;
+
+          // A mesma variável precisa ser declarada como CLUSTER. Sem isto o
+          // portão acusava `nds-stack` de ritmo vertical — rótulo e campo —
+          // como se fosse cluster de botões.
+          const ehCluster = new RegExp(
+            variavel + "\\.className\\s*=\\s*['\"`][^'\"`]*nds-cluster",
+          );
+          if (!ehCluster.test(content)) continue;
+
+          // Os filhos do cluster, pelo nome.
+          const anexo = new RegExp(variavel + '\\.(?:append|appendChild)\\s*\\(([^)]*)\\)').exec(content);
+          if (!anexo) continue;
+          const filhos = anexo[1]
+            .split(',')
+            .map((x) => x.trim())
+            .filter((x) => /^\w+$/.test(x));
+
+          // Como cada filho foi declarado decide se é botão e de que tamanho.
+          let botoes = 0;
+          let compactos = 0;
+          for (const filho of filhos) {
+            const decl = new RegExp(
+              '(?:const|let|var)\\s+' + filho + '\\s*=\\s*createButton\\s*\\(([^;]*)\\)',
+            ).exec(content);
+            if (!decl) continue;
+            botoes += 1;
+            if (/size:\s*['\"`](?:sm|icon(?:-[a-z]+)?)['\"`]/.test(decl[1])) compactos += 1;
+          }
+          if (botoes < 2) continue;
+
+          const piso = compactos >= botoes ? 'sm' : 'md';
+          if (piso === 'sm' && valor !== 'xs') continue;
+          acusar(stack, file, content, d.index, valor, piso);
         }
       }
     }

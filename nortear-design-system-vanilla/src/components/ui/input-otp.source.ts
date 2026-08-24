@@ -160,7 +160,7 @@ aviso.textContent = ${text(o.error)};`
     o.reenvio
       ? `const linha = document.createElement('div');
 linha.className = 'nds-cluster';
-linha.dataset.spacing = 'xs';
+linha.dataset.spacing = 'sm';
 linha.dataset.align = 'center';
 
 const nota = document.createElement('span');

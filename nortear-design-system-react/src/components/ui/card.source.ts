@@ -67,7 +67,7 @@ const BODY = `  <CardContent>
  * "Excluir" sozinho vira uma fileira de botões idênticos para quem navega por
  * leitor de tela.
  */
-const FOOTER = `  <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
+const FOOTER = `  <CardFooter className="nds-cluster" data-justify="end" data-spacing="md">
     <Button variant="outline" aria-label="Editar produto Cadeira Gamer Pro">
       Editar
     </Button>

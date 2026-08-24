@@ -588,7 +588,7 @@ interface TooltipContentProps {
               description: tContent("variants.compositions.formFieldHelp.description"),
               useWhen: tContent("variants.compositions.formFieldHelp.use"),
               code: `<div className="nds-stack" data-spacing="xs">
-  <div className="nds-cluster" data-spacing="xs">
+  <div className="nds-cluster" data-spacing="sm">
     <label htmlFor="api-token" className="nds-text-body nds-font-medium">Token de API</label>
     <Tooltip>
       <TooltipTrigger
@@ -607,7 +607,7 @@ interface TooltipContentProps {
 </div>`,
               preview: (
                 <div className="nds-stack" data-spacing="xs" style={{ alignItems: "flex-start" }}>
-                  <div className="nds-cluster" data-spacing="xs">
+                  <div className="nds-cluster" data-spacing="sm">
                     <label htmlFor="api-token-react-comp" className="nds-text-body nds-font-medium">
                       {locale === "en" ? "API Token" : locale === "es" ? "Token de API" : "Token de API"}
                     </label>
@@ -654,7 +654,7 @@ interface TooltipContentProps {
               description: tContent("variants.compositions.metricDescription.description"),
               useWhen: tContent("variants.compositions.metricDescription.use"),
               code: `<div className="nds-stack" data-spacing="xs">
-  <div className="nds-cluster" data-spacing="xs">
+  <div className="nds-cluster" data-spacing="sm">
     <p className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
     <Tooltip>
       <TooltipTrigger
@@ -673,7 +673,7 @@ interface TooltipContentProps {
 </div>`,
               preview: (
                 <div className="nds-stack" data-spacing="xs" style={{ alignItems: 'flex-start' }}>
-                  <div className="nds-cluster" data-spacing="xs">
+                  <div className="nds-cluster" data-spacing="sm">
                     <p className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
                     <Tooltip>
                       <TooltipTrigger

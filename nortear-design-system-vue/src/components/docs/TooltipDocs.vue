@@ -246,7 +246,7 @@ const codeCompIconShortcut = `<Tooltip>
 </Tooltip>`;
 
 const codeCompFormHelp = `<div class="nds-stack" data-spacing="xs">
-  <div class="nds-cluster" data-spacing="xs">
+  <div class="nds-cluster" data-spacing="sm">
     <label for="api-token" class="nds-text-body nds-font-medium">Token de API</label>
     <Tooltip>
       <TooltipTrigger as-child>
@@ -263,7 +263,7 @@ const codeCompFormHelp = `<div class="nds-stack" data-spacing="xs">
 </div>`;
 
 const codeCompMetric = `<div class="nds-stack" data-spacing="xs">
-  <div class="nds-cluster" data-spacing="xs">
+  <div class="nds-cluster" data-spacing="sm">
     <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
     <Tooltip>
       <TooltipTrigger as-child>
@@ -839,7 +839,7 @@ const a11yCritCols = computed(() => ({
             >
               <div
                 class="nds-cluster"
-                data-spacing="xs"
+                data-spacing="sm"
               >
                 <label
                   for="api-token-vue-comp"
@@ -887,7 +887,7 @@ const a11yCritCols = computed(() => ({
             >
               <div
                 class="nds-cluster"
-                data-spacing="xs"
+                data-spacing="sm"
               >
                 <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
                   LCP

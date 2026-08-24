@@ -179,7 +179,7 @@ export const WithResendButton: Story = {
 
     const row = document.createElement('div');
     row.className = 'nds-cluster';
-    row.dataset.spacing = 'xs';
+    row.dataset.spacing = 'sm';
     row.dataset.align = 'center';
 
     const note = document.createElement('span');

@@ -526,7 +526,7 @@ createTooltip({
 
           const labelRow = document.createElement('div');
           labelRow.className = 'nds-cluster';
-          labelRow.dataset.spacing = 'xs';
+          labelRow.dataset.spacing = 'sm';
 
           const label = document.createElement('label');
           label.className = 'nds-text-body nds-font-medium';
@@ -568,7 +568,7 @@ createTooltip({
 
           const headerRow = document.createElement('div');
           headerRow.className = 'nds-cluster';
-          headerRow.dataset.spacing = 'xs';
+          headerRow.dataset.spacing = 'sm';
 
           const title = document.createElement('p');
           title.className = 'nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider';

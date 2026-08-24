@@ -180,7 +180,7 @@ const CODE_ACTION = `<div ndsCardHeader>
         </div>
         <div ndsCardContent>
           {{ t('demonstration.labels.profileDescription') }}
-          <div class="nds-cluster nds-mt-4" data-spacing="sm">
+          <div class="nds-cluster nds-mt-4" data-spacing="md">
             <button ndsButton variant="outline">{{ t('demonstration.labels.actionCancel') }}</button>
             <button ndsButton>{{ t('demonstration.labels.actionSave') }}</button>
           </div>

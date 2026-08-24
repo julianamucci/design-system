@@ -203,7 +203,7 @@ import { Button } from '@/components/ui/button'
 
 const aberto = ref(false)`,
     `<div class="nds-stack nds-max-w-sm" data-spacing="md">
-  <div class="nds-cluster" data-spacing="xs">
+  <div class="nds-cluster" data-spacing="sm">
     <Button size="sm" variant="outline" @click="aberto = true">Abrir pelo estado externo</Button>
     <Button size="sm" variant="outline" @click="aberto = false">Fechar pelo estado externo</Button>
   </div>

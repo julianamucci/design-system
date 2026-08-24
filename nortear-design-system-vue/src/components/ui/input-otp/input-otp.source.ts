@@ -355,7 +355,7 @@ const codigo = ref('')`,
       label: 'Código de verificação',
       modelo: 'codigo',
       depois: [
-        `<div class="nds-cluster" data-align="center" data-spacing="xs">
+        `<div class="nds-cluster" data-align="center" data-spacing="sm">
   <span class="nds-text-caption nds-text-muted-foreground">Não recebeu?</span>
   <Button variant="link" size="sm" type="button">Reenviar código</Button>
 </div>`,

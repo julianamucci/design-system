@@ -203,7 +203,7 @@ import { Button } from "@/components/ui/button";${state()}`,
         'inputmode="numeric"',
         'autocomplete="one-time-code"',
       ],
-      helper: `  <div class="nds-cluster" data-align="center" data-spacing="xs">
+      helper: `  <div class="nds-cluster" data-align="center" data-spacing="sm">
     <span class="nds-text-caption nds-text-muted-foreground">Não recebeu?</span>
     <Button variant="link" size="sm" type="button">Reenviar código</Button>
   </div>`,

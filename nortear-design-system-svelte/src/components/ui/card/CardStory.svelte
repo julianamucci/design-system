@@ -91,7 +91,7 @@
     <CardContent>
       <p class="nds-text-h4">{productPrice}</p>
     </CardContent>
-    <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
+    <CardFooter class="nds-cluster" data-justify="end" data-spacing="md">
       <Button variant="outline" aria-label={`Editar produto ${title}`}>Editar</Button>
       <Button variant="destructive" aria-label={`Excluir produto ${title}`}>Excluir</Button>
     </CardFooter>
@@ -105,7 +105,7 @@
     <CardContent>
       <p class="nds-text-h4">{productPrice}</p>
     </CardContent>
-    <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
+    <CardFooter class="nds-cluster" data-justify="end" data-spacing="md">
       <Button variant="outline" aria-label={`Cancelar edição de ${title}`}>Cancelar</Button>
       <Button aria-label={`Salvar alterações em ${title}`} onclick={() => onPrimaryAction?.()}>
         Salvar

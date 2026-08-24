@@ -286,7 +286,7 @@ export const AsCombobox: Story = {
             role="combobox"
             :aria-expanded="open"
             aria-labelledby="demo-combobox-rotulo demo-combobox-valor"
-            class="nds-cluster nds-w-xs"
+            class="nds-cluster nds-w-xs" data-spacing="md"
             data-justify="between"
           >
             <span id="demo-combobox-valor">{{

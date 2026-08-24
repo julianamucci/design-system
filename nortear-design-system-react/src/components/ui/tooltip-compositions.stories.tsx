@@ -81,7 +81,7 @@ export const IconBarToolbar: Story = {
       style={wrapperStyle}
       className="nds-cluster nds-rounded-md nds-border-default nds-p-1 nds-bg-card"
       data-align="center"
-      data-spacing="xs"
+      data-spacing="sm"
     >
       <Tooltip>
         <TooltipTrigger
@@ -140,7 +140,7 @@ export const WithKeyboardShortcut: Story = {
     },
   },
   render: () => (
-    <div style={wrapperStyle} className="nds-cluster" data-align="center" data-spacing="xs">
+    <div style={wrapperStyle} className="nds-cluster" data-align="center" data-spacing="sm">
       <Tooltip>
         <TooltipTrigger
           render={(props) => (

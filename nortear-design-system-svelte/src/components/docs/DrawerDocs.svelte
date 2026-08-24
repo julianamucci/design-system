@@ -201,7 +201,7 @@ interface TriggerProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="sm" style="contain: layout">
+    <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="contain: layout">
       <Drawer direction="bottom">
         <DrawerTrigger>
           {#snippet child({ props })}

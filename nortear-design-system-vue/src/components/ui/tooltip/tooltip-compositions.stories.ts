@@ -108,7 +108,7 @@ export const ActionBar: Story = {
     components: sharedComponents,
     template: `
       <div style="contain: layout" class="nds-cluster nds-min-h-30" data-align="center" data-justify="center">
-        <div role="toolbar" aria-label="Ações do documento" class="nds-cluster nds-rounded-md nds-border-default nds-bg-card nds-p-1" data-align="center" data-spacing="xs">
+        <div role="toolbar" aria-label="Ações do documento" class="nds-cluster nds-rounded-md nds-border-default nds-bg-card nds-p-1" data-align="center" data-spacing="sm">
           <Tooltip>
             <TooltipTrigger as-child>
               <Button variant="ghost" size="icon" aria-label="Salvar">

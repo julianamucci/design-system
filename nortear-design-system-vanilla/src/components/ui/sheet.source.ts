@@ -80,7 +80,7 @@ function bodyActions(): Body {
     imports: [importing('button', 'createButton')],
     block: `const corpo = document.createElement('div');
 corpo.className = 'nds-cluster';
-corpo.dataset.spacing = 'sm';
+corpo.dataset.spacing = 'md';
 for (const rotulo of ['Compartilhar', 'Copiar link', 'Editar', 'Arquivar']) {
   corpo.appendChild(createButton({ variant: 'outline', label: rotulo }));
 }`,

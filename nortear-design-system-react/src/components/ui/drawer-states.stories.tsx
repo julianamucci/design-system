@@ -171,7 +171,7 @@ export const Controlled: Story = {
       const [open, setOpen] = useState(false);
       return (
         <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
-          <div className="nds-cluster" data-spacing="sm">
+          <div className="nds-cluster" data-spacing="md">
             <Button onClick={() => setOpen(true)}>Abrir externamente</Button>
             <Button variant="outline" onClick={() => setOpen(false)}>
               Fechar externamente

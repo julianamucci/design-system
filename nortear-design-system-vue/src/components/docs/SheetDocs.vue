@@ -422,7 +422,7 @@ const a11yCritCols = computed(() => ({
       <div
         class="nds-cluster nds-w-full"
         data-justify="center"
-        data-spacing="sm"
+        data-spacing="md"
       >
         <Sheet @update:open="(o: boolean) => handleDemoOpenChange(o, 'right')">
           <SheetTrigger as-child>

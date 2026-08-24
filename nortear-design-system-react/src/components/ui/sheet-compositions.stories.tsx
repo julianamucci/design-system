@@ -179,7 +179,7 @@ export const BottomPanel: Story = {
           </SheetDescription>
         </SheetHeader>
         <SheetBody>
-          <div className="nds-cluster" data-spacing="sm">
+          <div className="nds-cluster" data-spacing="md">
             <Button variant="outline">Compartilhar</Button>
             <Button variant="outline">Duplicar</Button>
             <Button variant="destructive">Excluir</Button>

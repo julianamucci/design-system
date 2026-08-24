@@ -513,7 +513,7 @@ const ITEMS_DEMO = ['perfil', 'configuracoes', 'sair'] as const;
 
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div class="nds-cluster" data-gap="sm">
+          <div class="nds-cluster" data-spacing="md">
             <nds-dropdown-menu (openChange)="onOpenChange('acoes', $event)">
               <button ndsDropdownMenuTrigger ndsButton variant="outline">
                 {{ t('demonstration.labels.basic') }}

@@ -128,7 +128,7 @@ export const Controlled: Story = {
   render: () => ({
     props: { isOpen: false },
     template: `
-      <div class="nds-cluster" data-gap="sm">
+      <div class="nds-cluster" data-spacing="md">
         <button ndsButton variant="secondary" (click)="isOpen = !isOpen">
           {{ isOpen ? 'Fechar pelo estado' : 'Abrir pelo estado' }}
         </button>

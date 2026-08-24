@@ -611,7 +611,7 @@ const visualTestItems = computed(() => [
                 role="combobox"
                 :aria-expanded="comboboxOpen"
                 :aria-label="tContent('demonstration.labels.selectPlaceholder')"
-                class="nds-cluster nds-w-xs"
+                class="nds-cluster nds-w-xs" data-spacing="md"
                 data-justify="between"
               >
                 {{
@@ -653,7 +653,7 @@ const visualTestItems = computed(() => [
           <div
             class="nds-cluster"
             data-align="center"
-            data-spacing="sm"
+            data-spacing="md"
           >
             <Button
               variant="outline"
@@ -874,7 +874,7 @@ const visualTestItems = computed(() => [
               role="combobox"
               aria-expanded="false"
               :aria-label="tContent('demonstration.labels.selectPlaceholder')"
-              class="nds-cluster nds-w-xs"
+              class="nds-cluster nds-w-xs" data-spacing="md"
               data-justify="between"
             >
               Selecione um item...

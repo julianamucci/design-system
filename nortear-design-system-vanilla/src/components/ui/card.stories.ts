@@ -94,7 +94,7 @@ function buildPlaygroundCard(args: CardArgs): HTMLElement {
 
   if (args.showFooter) {
     const footer = createCardFooter({ className: 'nds-cluster' });
-    footer.dataset.spacing = 'sm';
+    footer.dataset.spacing = 'md';
     footer.dataset.justify = 'end';
     footer.appendChild(
       createButton({

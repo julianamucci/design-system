@@ -232,7 +232,7 @@ interface DrawerProps {
         <div
           className="nds-cluster nds-w-full"
           data-justify="center"
-          data-spacing="sm"
+          data-spacing="md"
           style={{ contain: "layout", flexWrap: "wrap", minHeight: "140px" }}
         >
           {directions.map((dir) => (

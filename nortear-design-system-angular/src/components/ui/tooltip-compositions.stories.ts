@@ -126,7 +126,7 @@ export const HelpInFormField: Story = {
   render: () => ({
     template: `
       <div ndsTooltipProvider [delay]="0" class="nds-stack nds-p-8 nds-w-sm" data-spacing="sm">
-        <div class="nds-cluster" data-spacing="xs">
+        <div class="nds-cluster" data-spacing="sm">
           <label ndsLabel for="token-api">Token da API</label>
           <span ndsTooltip>
             <button
@@ -176,7 +176,7 @@ export const MetricDescription: Story = {
       <div ndsTooltipProvider [delay]="0" class="nds-p-8">
         <div ndsCard class="nds-p-4 nds-w-sm">
           <div ndsCardHeader>
-            <div class="nds-cluster" data-spacing="xs">
+            <div class="nds-cluster" data-spacing="sm">
               <span ndsCardTitle>LCP</span>
               <span ndsTooltip>
                 <button

@@ -341,7 +341,7 @@ ${IMPORT_BUTTON}`,
       ' side="bottom"',
       `${header('Ações rápidas', 'Escolha uma das ações disponíveis para este item.')}
     <SheetBody>
-      <div className="nds-cluster" data-spacing="sm">
+      <div className="nds-cluster" data-spacing="md">
         <Button variant="outline">Compartilhar</Button>
         <Button variant="outline">Duplicar</Button>
         <Button variant="destructive">Excluir</Button>

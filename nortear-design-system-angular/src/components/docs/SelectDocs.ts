@@ -566,7 +566,7 @@ const CODE_IN_FORM = `<form [formGroup]="form">
 
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div class="nds-cluster" data-gap="sm">
+          <div class="nds-cluster" data-spacing="sm">
             <nds-select (valueChange)="onValueChange('estado', $event)">
               <button ndsSelectTrigger [attr.aria-label]="t('demonstration.labels.stateLabel')">
                 <span ndsSelectValue [placeholder]="t('demonstration.labels.placeholder')"></span>

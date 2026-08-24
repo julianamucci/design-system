@@ -668,7 +668,7 @@ interface TableRowProps {
             description: $tStore('variants.compositions.filterableToolbar.description'),
             useWhen: $tStore('variants.compositions.filterableToolbar.use'),
             code: `<div class="nds-stack" data-spacing="sm">
-  <div class="nds-cluster" data-align="center" data-spacing="sm">
+  <div class="nds-cluster" data-align="center" data-spacing="md">
     <Input placeholder="Filtrar faturas..." />
     <Button variant="outline">Status</Button>
   </div>
@@ -744,7 +744,7 @@ interface TableRowProps {
 
       {#snippet compFilterableToolbar()}
         <div class="nds-w-full nds-stack" data-spacing="sm">
-          <div class="nds-cluster" data-align="center" data-spacing="sm">
+          <div class="nds-cluster" data-align="center" data-spacing="md">
             <div class="nds-w-full nds-max-w-sm" style="position: relative">
               <Search class="nds-icon-input-start nds-icon nds-text-muted-foreground" aria-hidden="true" />
               <Input placeholder="Filtrar faturas..." style="padding-left: 2rem" />

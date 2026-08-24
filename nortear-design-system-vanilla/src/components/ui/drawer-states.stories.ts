@@ -51,7 +51,7 @@ function buildBase(opts: BaseOptions): HTMLElement {
   const footer = document.createElement('div');
   footer.className = 'nds-cluster';
   footer.dataset.justify = 'end';
-  footer.dataset.spacing = 'xs';
+  footer.dataset.spacing = 'md';
   footer.append(cancel, action);
 
   const content = document.createElement('div');
@@ -197,7 +197,7 @@ export const Controlled: Story = {
     const footer = document.createElement('div');
     footer.className = 'nds-cluster';
     footer.dataset.justify = 'end';
-    footer.dataset.spacing = 'xs';
+    footer.dataset.spacing = 'md';
     footer.append(cancel, createButton({ variant: 'default', label: 'Confirmar' }));
 
     const drawer = createDrawer({

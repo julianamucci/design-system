@@ -39,7 +39,7 @@
        aciona nada (WCAG 2.5.3, Label in Name). O nome vem do texto. -->
   <Button
     variant="outline"
-    class="nds-cluster nds-w-xs nds-text-muted-foreground"
+    class="nds-cluster nds-w-xs nds-text-muted-foreground" data-spacing="md"
     data-justify="between"
     onclick={() => { open = true; }}
   >

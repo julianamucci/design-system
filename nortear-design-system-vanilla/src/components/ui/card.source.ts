@@ -130,7 +130,7 @@ conteudo.appendChild(valor);`,
       `// O Card zera o próprio respiro de baixo quando o rodapé é filho DIRETO —
 // um wrapper no meio mataria a regra sem mudar nada visível.
 const rodape = createCardFooter({ class: 'nds-cluster' });
-rodape.dataset.spacing = 'sm';
+rodape.dataset.spacing = 'md';
 rodape.dataset.justify = 'end';
 rodape.append(
   createButton({

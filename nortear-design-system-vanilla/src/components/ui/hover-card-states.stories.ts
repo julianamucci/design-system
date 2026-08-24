@@ -183,7 +183,7 @@ export const Controlled: Story = {
 
     const controles = document.createElement('div');
     controles.className = 'nds-cluster';
-    controles.dataset.spacing = 'xs';
+    controles.dataset.spacing = 'sm';
     controles.append(open, close);
 
     root.append(controles, emFrase(cartao, 'Comentário de', 'há 2 horas.'), espelho);

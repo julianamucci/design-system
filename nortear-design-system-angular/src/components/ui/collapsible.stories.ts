@@ -54,7 +54,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<CollapsibleArgs
     .join(' ');
   const trigger = [
     '<button ndsCollapsibleTrigger ndsButton variant="ghost"',
-    'class="nds-cluster nds-w-full nds-px-4" data-justify="between"',
+    'class="nds-cluster nds-w-full nds-px-4" data-spacing="md" data-justify="between"',
     disabled ? '[disabled]="true"' : '',
   ].filter(Boolean).join(' ');
 
@@ -165,7 +165,7 @@ export const Playground: Story = {
           ndsCollapsibleTrigger
           ndsButton
           variant="ghost"
-          class="nds-cluster nds-w-full nds-px-4"
+          class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
           data-justify="between"
           [disabled]="disabled"
         >

@@ -107,7 +107,7 @@ function footerBlock(actions: DrawerSnippetAction[]): string | undefined {
     `const rodape = document.createElement('div');`,
     `rodape.className = 'nds-cluster';`,
     `rodape.dataset.justify = 'end';`,
-    `rodape.dataset.spacing = 'xs';`,
+    `rodape.dataset.spacing = 'md';`,
     `rodape.append(${args});`,
   );
 

@@ -273,7 +273,7 @@ const TOKENS_MAP: { key: string; token: string }[] = [
         <!-- Só o botão: a nota "Não recebeu?" que a descrição cita não existe
              como chave no conteúdo compartilhado, e escrevê-la aqui a deixaria
              em português nos três idiomas. -->
-        <div class="nds-cluster" data-spacing="xs" data-align="center">
+        <div class="nds-cluster" data-spacing="sm" data-align="center">
           <button ndsButton variant="link" size="sm" type="button">
             {{ t('usage.uxWriting.table.resend.good') }}
           </button>

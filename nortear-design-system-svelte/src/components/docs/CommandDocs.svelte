@@ -263,7 +263,7 @@ import uiTranslations from '@/i18n/ui.json';
 <Popover bind:open>
   <PopoverTrigger>
     {#snippet child({ props })}
-      <Button variant="outline" role="combobox" aria-expanded={open} aria-label="Selecione..." class="nds-cluster nds-w-3xs" data-justify="between" {...props}>
+      <Button variant="outline" role="combobox" aria-expanded={open} aria-label="Selecione..." class="nds-cluster nds-w-3xs" data-spacing="md" data-justify="between" {...props}>
         {selected ? items.find(i => i.value === selected)?.label : 'Selecione...'}
       </Button>
     {/snippet}
@@ -444,7 +444,7 @@ interface CommandLoadingProps {
         <p class="nds-text-body nds-font-medium">Command Palette</p>
         <Button
           variant="outline"
-          class="nds-cluster nds-text-muted-foreground"
+          class="nds-cluster nds-text-muted-foreground" data-spacing="md"
           data-justify="between"
           style="width: 280px"
           onclick={() => { paletteOpen = true; track('command_palette_open', { trigger: 'button' }); }}
@@ -611,7 +611,7 @@ interface CommandLoadingProps {
   {#snippet doPair2()}
     <Button
       variant="outline"
-      class="nds-cluster nds-w-full nds-text-muted-foreground"
+      class="nds-cluster nds-w-full nds-text-muted-foreground" data-spacing="md"
       data-justify="between"
     >
       <span class="nds-cluster" data-spacing="sm">
@@ -674,7 +674,7 @@ interface CommandLoadingProps {
             role="combobox"
             aria-expanded={comboboxOpen}
             aria-label={$tStore('demonstration.labels.selectPlaceholder')}
-            class="nds-cluster nds-w-3xs"
+            class="nds-cluster nds-w-3xs" data-spacing="md"
             data-justify="between"
             
             {...props}

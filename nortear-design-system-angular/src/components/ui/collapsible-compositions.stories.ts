@@ -127,7 +127,7 @@ export const RotatingChevron: Story = {
           ndsCollapsibleTrigger
           ndsButton
           variant="outline"
-          class="nds-cluster nds-w-full nds-px-4"
+          class="nds-cluster nds-w-full nds-px-4" data-spacing="md"
           data-justify="between"
         >
           <span>Configurações avançadas</span>

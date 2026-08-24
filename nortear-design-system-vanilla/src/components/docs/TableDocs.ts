@@ -542,7 +542,7 @@ container.dataset.spacing = 'sm';
 
 const toolbar = document.createElement('div');
 toolbar.className = 'nds-cluster';
-toolbar.dataset.spacing = 'xs';
+toolbar.dataset.spacing = 'md';
 
 const input = createInput({ placeholder: 'Filtrar faturas...' });
 toolbar.appendChild(input);
@@ -601,7 +601,7 @@ container.appendChild(pagination);`;
 
           const toolbar = document.createElement('div');
           toolbar.className = 'nds-cluster';
-          toolbar.dataset.spacing = 'xs';
+          toolbar.dataset.spacing = 'md';
           const input = createInput({ placeholder: 'Filtrar faturas...', class: 'nds-max-w-sm' });
           toolbar.appendChild(input);
           const filterBtn = createButton({ variant: 'outline', label: 'Status' });

@@ -765,7 +765,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             description: tContent("variants.compositions.filterableToolbar.description"),
             useWhen: tContent("variants.compositions.filterableToolbar.use"),
             code: `<div className="nds-stack" data-spacing="sm">
-  <div className="nds-cluster" data-align="center" data-spacing="sm">
+  <div className="nds-cluster" data-align="center" data-spacing="md">
     <div className="nds-w-full nds-max-w-sm" style={{ position: "relative" }}>
       <Search className="nds-icon-input-start nds-icon nds-text-muted-foreground" aria-hidden="true" />
       <Input placeholder="Filtrar faturas..." style={{ paddingLeft: "2rem" }} />
@@ -794,7 +794,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
 </div>`,
             preview: (
               <div className="nds-w-full nds-stack" data-spacing="sm">
-                <div className="nds-cluster" data-align="center" data-spacing="sm">
+                <div className="nds-cluster" data-align="center" data-spacing="md">
                   <div className="nds-w-full nds-max-w-sm" style={{ position: "relative" }}>
                     <Search className="nds-icon-input-start nds-icon nds-text-muted-foreground" aria-hidden="true" />
                     <Input placeholder="Filtrar faturas..." style={{ paddingLeft: "2rem" }} />

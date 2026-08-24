@@ -65,7 +65,12 @@ const PRECO = `<CardContent>
  * quem navega por leitor de tela.
  */
 function footer(...buttons: string[]): string {
-  return `<CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
+  // O piso do cluster cai para `sm` (8px) só quando TODOS os botões são
+  // compactos — `size="sm"` ou da família de ícone. Misturando tamanhos, quem
+  // manda é o alvo maior, e o piso volta a `md` (16px). Ver a regra do Button
+  // em guidelines/06-form-components.md.
+  const compacto = buttons.every((b) => /size="(?:sm|icon(?:-[a-z]+)?)"/.test(b));
+  return `<CardFooter class="nds-cluster" data-justify="end" data-spacing="${compacto ? 'sm' : 'md'}">
 ${buttons.map((button) => `  ${button}`).join('\n')}
 </CardFooter>`;
 }
