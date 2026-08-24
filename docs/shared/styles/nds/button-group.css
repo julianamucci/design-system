@@ -64,7 +64,9 @@
   /* --border para emendar com os botões vizinhos, que usam --border. --input
    * agora é a borda de 3:1 dos campos e deixaria uma costura visível no meio
    * do grupo. Ver nota em toggle.css. */
-  border: 1px solid hsl(var(--border));
+  /* 2px como os botões: o chip fica na MESMA linha que eles dentro do grupo,
+   * e uma borda mais fina deixaria a costura desalinhada e o chip mais baixo. */
+  border: 2px solid hsl(var(--border));
   border-radius: var(--radius);
   font-size: var(--text-control);
   font-weight: var(--font-weight-medium, 500);
