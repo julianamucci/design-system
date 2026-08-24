@@ -22,7 +22,11 @@
 **Tamanhos**: `default`, `sm`, `lg`, `icon`.
 
 **Regras**:
-- Espaçamento entre botões: **mínimo `--spacing-4`** (16px), ou seja `data-spacing="md"` no cluster que os agrupa. Abaixo disso o par lê como um controle segmentado, e a área de erro entre dois alvos adjacentes encolhe. Vale para par de ações, fileira de variantes e barra de ferramentas; grupo emendado (`.nds-button-group`) é o caso oposto e continua sem gap, de propósito. Portão: `button_gap_apertado` no `audit.mjs`.
+- Espaçamento entre botões: **mínimo `--spacing-4`** (16px), ou seja `data-spacing="md"` no cluster que os agrupa. Abaixo disso o par lê como um controle segmentado, e a área de erro entre dois alvos adjacentes encolhe. Vale para par de ações, fileira de variantes e barra de ferramentas.
+  - **Exceção — botão `sm`**: quando TODOS os botões do cluster são `size="sm"`, o piso cai para `--spacing-2` (8px). Botão pequeno vive em superfície compacta — rodapé de popover, de tooltip, de hover-card — onde 16px entre dois alvos pequenos é mais do que a superfície comporta. Como 8px é o padrão do `.nds-cluster`, aí o `data-spacing` também pode ser omitido; só `xs` (4px) continua apertado demais.
+  - Cluster que MISTURA tamanhos cai na regra estrita: o alvo maior é quem define a distância confortável.
+  - Grupo emendado (`.nds-button-group`) é o caso oposto e continua sem gap, de propósito.
+  - Portão: `button_gap_apertado` no `audit.mjs`.
 - Botão icon-only: `aria-label` obrigatório e contextual (verbo + objeto + identificador)
 - Ícones internos: sempre `aria-hidden="true"`
 - Em submit, refletir estado de loading com `disabled` e ícone `Loader2 animate-spin`

@@ -3599,6 +3599,16 @@ function selecaoForte(sel) {
  *   1. `data-spacing` declarado como `xs` ou `sm`
  *   2. `data-spacing` AUSENTE — o padrão do `.nds-cluster` é 8px, abaixo do piso
  *
+ * EXCEÇÃO: quando TODOS os botões do cluster são `size="sm"`, o piso cai para
+ * `--spacing-2` (8px). Botão pequeno vive em superfície compacta — rodapé de
+ * popover, de tooltip, de hover-card — onde 16px entre dois alvos pequenos é
+ * mais do que a superfície comporta. Nesse caso passa `sm` e passa também o
+ * `data-spacing` ausente, que é justamente 8px; só `xs` continua reprovando.
+ *
+ * "Todos" é medido contando marcas de tamanho contra a contagem de botões:
+ * cluster que mistura tamanhos cai na regra estrita, porque o alvo maior é
+ * quem define a distância confortável.
+ *
  * O escopo do cluster é achado por CASAMENTO DE TAG, não por janela de N
  * caracteres. A janela fixa parecia bastar e não bastava: onde a docs page
  * monta os botões por `.map()` sobre um array de dados, o `<Button>` cai
@@ -3614,6 +3624,9 @@ function auditButtonGap(slug) {
   const violations = [];
   // Como um botão se parece em cada stack. O Angular usa atributo em <button>.
   const BOTAO = /<Button[\s>/]|<button[^>]*\bndsButton\b|createButton\s*\(/;
+  const BOTAO_G = new RegExp(BOTAO.source, 'g');
+  // `size="sm"` nas quatro stacks de markup, `size: 'sm'` na fábrica do Vanilla.
+  const TAMANHO_SM = /size=(?:"|')sm(?:"|')|size:\s*(?:"|')sm(?:"|')/g;
 
   /** Conteúdo entre a abertura em `from` e a tag de fechamento que a casa. */
   const escopoDaTag = (content, from, tag) => {
@@ -3626,6 +3639,15 @@ function auditButtonGap(slug) {
       if (profundidade === 0) return content.slice(from, m.index);
     }
     return content.slice(from);   // sem fechamento: cai para o resto do arquivo
+  };
+
+  /** Verdadeiro quando o gap declarado basta para o tamanho dos botões. */
+  const aceitavel = (escopo, valor) => {
+    const botoes = (escopo.match(BOTAO_G) || []).length;
+    const pequenos = (escopo.match(TAMANHO_SM) || []).length;
+    const todosPequenos = botoes > 0 && pequenos >= botoes;
+    // Piso do pequeno é 8px: passa `sm` e passa o ausente, que vale 8px.
+    return todosPequenos && valor !== 'xs';
   };
 
   const acusar = (stack, file, content, index, valor) => {
@@ -3649,7 +3671,9 @@ function auditButtonGap(slug) {
         const declarado = /data-spacing=(?:"|')([a-z0-9]+)(?:"|')/.exec(m[2] || '');
         const valor = declarado ? declarado[1] : '(ausente)';
         if (declarado && !['xs', 'sm'].includes(valor)) continue;
-        if (!BOTAO.test(escopoDaTag(content, m.index, m[1]))) continue;
+        const escopo = escopoDaTag(content, m.index, m[1]);
+        if (!BOTAO.test(escopo)) continue;
+        if (aceitavel(escopo, valor)) continue;
         acusar(stack, file, content, m.index, valor);
       }
 
@@ -3664,6 +3688,7 @@ function auditButtonGap(slug) {
           const depois = content.slice(d.index, d.index + 900);
           const recebeBotao = new RegExp(variavel + '\\.(append|appendChild)\\s*\\(').test(depois);
           if (!recebeBotao || !BOTAO.test(depois)) continue;
+          if (aceitavel(depois, valor)) continue;
           acusar(stack, file, content, d.index, valor);
         }
       }
