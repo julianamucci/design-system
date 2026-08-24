@@ -18,6 +18,24 @@ import { within, waitFor } from "storybook/test";
 export const FOCUS_RULE_GUARDA = { id: "aria-hidden-focus", enabled: false } as const;
 
 /**
+ * Regras do axe de uma story que precisa de guarda — **use isto, nunca um array
+ * cru**.
+ *
+ * O Storybook SUBSTITUI array ao mesclar parâmetro, em vez de concatenar. Então
+ * `a11y: { config: { rules: [FOCUS_RULE_GUARDA] } }` numa story apaga o `rules`
+ * global do `preview.ts`, que é onde `target-size` (WCAG 2.5.8) está ligado —
+ * o axe não roda regra 2.2 por default. A story deixa de medir alvo de toque, e
+ * nada acusa: o painel fica verde por medir menos.
+ *
+ * Medido no repositório inteiro: 82 usos em 66 arquivos, em quatro stacks, e
+ * nenhum preservava a regra global.
+ */
+export const axeRules = (...guards: ReadonlyArray<{ id: string; enabled: boolean }>) => [
+  { id: "target-size", enabled: true },
+  ...guards,
+];
+
+/**
  * Regra do axe desligada nas stories que terminam com um MENU ANINHADO aberto.
  *
  * Ao abrir um popup filho, o `@base-ui/react` deixa no menu pai um

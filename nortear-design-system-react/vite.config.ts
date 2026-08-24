@@ -23,6 +23,20 @@ export default defineConfig({
       "@shared": path.resolve(dirname, "../docs/shared"),
     }
   },
+  /*
+   * Pré-empacotar as entradas do base-ui que a suíte usa.
+   *
+   * Sem isto, o optimizer descobre um subcaminho novo NO MEIO da rodada,
+   * reotimiza e recarrega — e o Vite invalida as URLs dos módulos já
+   * importados. Medido em cache frio no combobox: as doze stories falharam
+   * juntas com `Failed to fetch dynamically imported module`, e passaram na
+   * segunda rodada só porque o cache já estava quente. Num CI com
+   * `node_modules/.cache` limpo, isso é a suíte inteira reprovando por infra —
+   * e a leitura fácil seria culpar o componente novo.
+   */
+  optimizeDeps: {
+    include: ["@base-ui/react/combobox"],
+  },
   test: {
     coverage: {
       provider: 'v8',

@@ -77,6 +77,10 @@ const OTHER_STACK = /\b(Vue|Svelte|Angular|Vanilla|reka-ui|bits-ui|@radix-ng|rad
  */
 const HELPERS = new Set(['ratioExpr']);
 
+/** `./combobox.source.ts` -> `combobox`, a chave de `slugExportados`. */
+const slugDoCaminho = (caminho: string) =>
+  caminho.replace(/^\.\//, '').replace(/\.source\.ts$/, '');
+
 /** Andaime de story por forma do nome — pega o que ainda não foi escrito. */
 const FORMA_SCAFFOLD =
   /\b(?:[A-Z][A-Za-z0-9]*(?:Story|Stories|Demo|Render|Preview|Fixture|Wrapper)|Demo[A-Z][A-Za-z0-9]*|Controlled[A-Z][A-Za-z0-9]*)\b/;
@@ -197,8 +201,20 @@ describe('transforms do painel Code', () => {
           // A lib headless é detalhe de implementação: quem lê importa do
           // design system, nunca dela.
           expect(text).not.toContain('@base-ui');
-          // Andaime de story, por forma do nome.
-          expect(text).not.toMatch(FORMA_SCAFFOLD);
+          // Andaime de story, por forma do nome — MENOS o que o próprio módulo
+          // do componente exporta. `ComboboxInputWrapper` é peça publicada e
+          // casa a forma `*Wrapper`: o snippet a cita porque quem copia precisa
+          // dela, não porque vazou andaime. Sem este filtro a regra reprovava
+          // os SETE snippets do combobox por causa de uma peça legítima — e o
+          // conserto errado seria renomear o componente nas cinco stacks.
+          const publicados = slugExportados.get(slugDoCaminho(caminho)) ?? new Set<string>();
+          const andaimes = [...text.matchAll(new RegExp(FORMA_SCAFFOLD.source, 'g'))]
+            .map((achado) => achado[0])
+            .filter((nome) => !publicados.has(nome));
+          expect(
+            andaimes,
+            `${name}: nome de andaime de story no snippet publicado`,
+          ).toEqual([]);
           // Módulo que só existe para as stories montarem.
           expect(text).not.toContain('fixtures');
           // O `{...args}` da story não é composição que alguém escreva.
