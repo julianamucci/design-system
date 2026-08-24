@@ -36,20 +36,21 @@
   gap: var(--spacing-2);
   padding-inline: var(--spacing-4);
   padding-block: var(--spacing-2);
-  /* A borda de 2px existe em TODAS as variantes, na cor do próprio
-   * preenchimento — é ela que iguala a altura entre elas. Só o `outline`
-   * pinta a borda de cor diferente do fundo; nas outras a linha é invisível e
-   * serve de calço.
+  /* A borda de 2px existe em TODAS as variantes e é TRANSPARENTE em todas
+   * menos no `outline`. Ela não desenha nada: é calço, e existe só para que a
+   * altura do `outline` — que precisa de borda visível — seja a mesma dos
+   * irmãos, sem compensar padding.
    *
-   * As duas saem de `--button-bg`, e é isso que impede a deriva: cada variante
-   * e cada estado trocam UMA declaração, e a borda acompanha sozinha. Repetir a
-   * cor em background-color e border-color daria doze pares para manter em
-   * sincronia, e o hover de qualquer um deles viraria um anel visível no dia em
-   * que alguém mexesse só num lado. */
-  --button-bg: transparent;
-  border: 2px solid var(--button-bg);
+   * Transparente, e NÃO a cor do próprio preenchimento. Pintar a borda com a
+   * cor do fundo parece equivalente e não é, porque o `background-color` já
+   * pinta até a caixa da BORDA (`background-clip: border-box` é o padrão).
+   * Onde o preenchimento tem alfa, a região da borda recebe as duas camadas e
+   * compõe mais denso: no `destructive`, fundo e borda a `/0.1` davam ~0.19
+   * ali, um anel visível em volta do botão. Com a borda transparente o fundo
+   * translúcido atravessa a borda e a superfície fica uniforme. */
+  border: 2px solid transparent;
   border-radius: var(--radius-button);
-  background-color: var(--button-bg);
+  background-color: transparent;
   color: inherit;
   font-family: var(--font-family, inherit);
   font-size: var(--text-control);                          /* 14px — text-sm */
@@ -221,31 +222,31 @@
 
 /* Default = primary (filled) */
 .nds-button-default {
-  --button-bg: hsl(var(--primary));
+  background-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 }
 .nds-button-default:hover {
-  --button-bg: hsl(var(--primary) / 0.9);
+  background-color: hsl(var(--primary) / 0.9);
 }
 .nds-button-default[aria-pressed="true"] {
-  --button-bg: hsl(var(--primary) / 0.9);
+  background-color: hsl(var(--primary) / 0.9);
 }
 
 /* Secondary */
 .nds-button-secondary {
-  --button-bg: hsl(var(--secondary));
+  background-color: hsl(var(--secondary));
   color: hsl(var(--secondary-foreground));
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 }
 .nds-button-secondary:hover,
 .nds-button-secondary[aria-pressed="true"] {
-  --button-bg: hsl(var(--secondary) / 0.8);
+  background-color: hsl(var(--secondary) / 0.8);
 }
 
 /* Outline */
 .nds-button-outline {
-  --button-bg: hsl(var(--background));
+  background-color: hsl(var(--background));
   border-color: hsl(var(--border));
   color: hsl(var(--foreground));
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -253,7 +254,7 @@
 .nds-button-outline:hover,
 .nds-button-outline[aria-pressed="true"],
 .nds-button-outline[aria-expanded="true"] {
-  --button-bg: hsl(var(--accent));
+  background-color: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
 }
 /* A linha `border-color: hsl(var(--input))` foi REMOVIDA daqui: era residuo de
@@ -272,7 +273,7 @@
  * borda fraca. */
 .dark .nds-button-outline:hover,
 .dark .nds-button-outline[aria-pressed="true"] {
-  --button-bg: hsl(var(--accent) / 0.5);
+  background-color: hsl(var(--accent) / 0.5);
 }
 
 /* Ghost */
@@ -282,12 +283,12 @@
 .nds-button-ghost:hover,
 .nds-button-ghost[aria-pressed="true"],
 .nds-button-ghost[aria-expanded="true"] {
-  --button-bg: hsl(var(--accent));
+  background-color: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
 }
 .dark .nds-button-ghost:hover,
 .dark .nds-button-ghost[aria-pressed="true"] {
-  --button-bg: hsl(var(--accent) / 0.5);
+  background-color: hsl(var(--accent) / 0.5);
 }
 
 /* Link */
@@ -309,22 +310,22 @@
 
 /* Destructive (soft style, alinhada ao restante do projeto) */
 .nds-button-destructive {
-  --button-bg: hsl(var(--destructive) / 0.1);
+  background-color: hsl(var(--destructive) / 0.1);
   color: hsl(var(--destructive));
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 }
 .nds-button-destructive:hover,
 .nds-button-destructive[aria-pressed="true"] {
-  --button-bg: hsl(var(--destructive) / 0.15);
+  background-color: hsl(var(--destructive) / 0.15);
 }
 .nds-button-destructive:focus-visible {
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive));
 }
 .dark .nds-button-destructive {
-  --button-bg: hsl(var(--destructive) / 0.15);
+  background-color: hsl(var(--destructive) / 0.15);
 }
 .dark .nds-button-destructive:hover {
-  --button-bg: hsl(var(--destructive) / 0.25);
+  background-color: hsl(var(--destructive) / 0.25);
 }
 
 /* ── Spin (loading) ─────────────────────────────────────────────────────────── */
