@@ -1,0 +1,27 @@
+/* ─── Chrome do Docs do Storybook ────────────────────────────────────────────
+ *
+ * O contêiner da aba Documentação NÃO é nosso: é chrome do Storybook, pintado
+ * por emotion a partir de `theme.background.content`, que vale `#FFFFFF` fixo.
+ * Ele fica ACIMA do `.nds-page`, então o que a pessoa vê como "fundo da página"
+ * é o branco dele, não o nosso `--background`.
+ *
+ * No claro isso apaga o Creme da marca — `--background` é `24 100% 99%`
+ * (#FFFCFA), quase branco mas quente, e o branco puro por cima remove
+ * justamente o tint de areia que o tema define. No escuro apaga o Ink inteiro.
+ *
+ * A alternativa seria `parameters.docs.theme` com `create()` do
+ * `@storybook/theming`, mas aquilo é estático: fixaria um dos dois modos e
+ * pararia de acompanhar a toolbar. Aqui a regra lê o token, então segue
+ * light/dark, marca, densidade — tudo o que o `<html>` já carrega.
+ *
+ * Escopo deliberadamente estreito: só o contêiner da PÁGINA. O bloco de
+ * preview de cada story (`.docs-story`) tem fundo próprio e é assunto do
+ * seletor de modo, que a dona pediu para manter como único controle de fundo
+ * depois que o addon de backgrounds saiu. Se um dia ele também aparecer branco,
+ * é aqui que a regra entra — e junto com a medida de qual superfície ele deve
+ * pintar, não por reflexo.
+ * ────────────────────────────────────────────────────────────────────────── */
+
+.sbdocs.sbdocs-wrapper {
+  background-color: hsl(var(--background));
+}

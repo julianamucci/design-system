@@ -115,3 +115,7 @@
 /* Seção de docs, depois das utilidades: sobrescreve a borda do `.nds-card`
    do preview sem depender de especificidade extra. */
 @import "./do-dont.css";
+
+/* Chrome do Docs do Storybook, por último: sobrescreve o branco fixo que o
+   emotion do próprio Storybook aplica no contêiner da página. */
+@import "./storybook-docs.css";
