@@ -2834,6 +2834,11 @@ const INLINE_MECHANICAL_VALUE =
   /^(0|0px|0rem|auto|none|inherit|initial|unset|revert|100%|fit-content|max-content|min-content|currentcolor|transparent)$/i;
 // Só interessa quantidade concreta: 2rem, 16px, 50%, #fff, hsl(...).
 const INLINE_QUANTITY = /(^|[\s(])-?\d*\.?\d+(px|rem|em|ch|vh|vw|%)|^#[0-9a-f]{3,8}$|^(rgb|hsl)a?\(/i;
+// Propriedades em que número PURO é a forma correta, e não px implícito.
+const INLINE_UNITLESS_OK = new Set([
+  'line-height', 'font-weight', 'opacity', 'z-index', 'order',
+  'flex', 'flex-grow', 'flex-shrink', 'aspect-ratio',
+]);
 // Valor vindo de prop/estado/token não é literal cravado.
 const INLINE_DYNAMIC = /\$\{|\{[^}]*\}|`|v-bind|\bprops\.|\bargs\.|var\(/;
 
@@ -2941,6 +2946,19 @@ function inlineStyleDecls(content) {
     for (const m of txt.matchAll(/([a-zA-Z-]+)\s*:\s*(["'])([^"']*)\2/g)) push(m[1], m[3], delta + m.index);
   };
 
+  // Em objeto JSX o número vai SEM aspas e SEM unidade — `minHeight: 120`, que
+  // o React renderiza como `120px`. O casamento acima exige aspas, então esse
+  // valor nunca chegava a ser lido: um `minHeight: 120` em docs page passou
+  // pelo portão três vezes no mesmo arquivo. Não vale para `line-height` e
+  // companhia, onde número puro é a forma correta.
+  const paresJsx = (txt, delta) => {
+    pares(txt, delta);
+    for (const m of txt.matchAll(/([a-zA-Z-]+)\s*:\s*(-?\d*\.?\d+)\s*[,}]/g)) {
+      if (INLINE_UNITLESS_OK.has(kebab(m[1]))) continue;
+      push(m[1], m[2] + 'px', delta + m.index);
+    }
+  };
+
   // style={{ … }} — jsx, com o objeto numa linha ou quebrado em várias.
   //
   // A primeira versão varria linha a linha e só enxergava o objeto inteiro numa
@@ -2956,7 +2974,7 @@ function inlineStyleDecls(content) {
       else if (src[i] === '}') prof--;
       i++;
     }
-    pares(src.slice(m.index, i), m.index);
+    paresJsx(src.slice(m.index, i), m.index);
   }
 
   // style={`width: 1.5rem; background: ${cor}`} — svelte com literal de gabarito.

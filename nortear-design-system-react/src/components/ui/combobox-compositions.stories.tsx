@@ -55,7 +55,7 @@ function SubmittedCountryForm() {
   const [submitted, setSubmitted] = useState("");
 
   return (
-    <div style={{ contain: "layout", minHeight: 320, position: "relative" }}>
+    <div className="nds-min-h-80" style={{ contain: "layout", position: "relative" }}>
       <form
         className="nds-stack nds-w-sm nds-p-4 nds-border-default nds-rounded-lg"
         data-spacing="md"

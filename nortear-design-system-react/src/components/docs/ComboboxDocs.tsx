@@ -147,7 +147,7 @@ function DemoSingleField({
   const [chosen, setChosen] = useState<ComboboxOption | null>(null);
 
   return (
-    <div style={{ contain: "layout", minHeight: 120, position: "relative" }}>
+    <div className="nds-min-h-30" style={{ contain: "layout", position: "relative" }}>
       <Combobox
         items={items}
         name={fieldName}
@@ -219,7 +219,7 @@ function DemoMultipleField({
   const [chosen, setChosen] = useState<ComboboxOption[]>(() => items.slice(0, 2));
 
   return (
-    <div style={{ contain: "layout", minHeight: 120, position: "relative" }}>
+    <div className="nds-min-h-30" style={{ contain: "layout", position: "relative" }}>
       <Combobox
         multiple
         items={items}
@@ -284,7 +284,7 @@ function DemoGroupedField({
   fieldName,
 }: DemoFieldProps & { groups: ComboboxOptionGroup[] }) {
   return (
-    <div style={{ contain: "layout", minHeight: 120, position: "relative" }}>
+    <div className="nds-min-h-30" style={{ contain: "layout", position: "relative" }}>
       <Combobox
         items={groups}
         name={fieldName}

@@ -166,7 +166,7 @@ export function focusRingChanged(target: HTMLElement, ringOwner: Element): boole
  */
 export function ComboboxFrame({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ contain: "layout", minHeight: 300, position: "relative" }}>
+    <div className="nds-min-h-80" style={{ contain: "layout", position: "relative" }}>
       {children}
     </div>
   )
