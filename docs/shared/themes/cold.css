@@ -3,13 +3,60 @@
  * Variante de cores frias do tema Default.
  *
  * Estratégia:
- *   - Neutros (background, foreground, primary, secondary, muted, accent, border)
- *     ganham tint azul/cyan sutil (matiz ~210°, saturação 8–15%) — continuam
- *     "quase cinzas", mas a tela tem temperatura fria.
- *   - Feedback colors (destructive/success/warning/info) deslocam suavemente
- *     para o lado frio do espectro mantendo contraste WCAG AA.
- *   - Charts trocam paleta padrão por azul/cyan/teal.
+ *   - Neutros (background, foreground, secondary, muted, accent, border) ganham
+ *     tint azul/cyan sutil (matiz ~210°, saturação 8–15%) — continuam "quase
+ *     cinzas", mas a tela tem temperatura fria. É aqui que mora a identidade do
+ *     tema.
+ *   - Marca: #38cdff, um cyan claro.
+ *
+ *     E ele NÃO pode ser o `--primary` do modo claro. O sistema lê esse token
+ *     como TEXTO em 13 regras e como BORDA em 7, e #38cdff mede 1.81:1 contra a
+ *     página clara — um link ali é ilegível. Como preenchimento com texto
+ *     escuro ele dá 10.02:1, ou seja, o problema não é a cor, é o uso.
+ *
+ *     Então o primary muda de luminosidade entre os modos, como o Default já
+ *     faz: no ESCURO é #38cdff literal; no CLARO é o mesmo cyan escurecido
+ *     (195 90% 32%), a 3° de matiz da marca em OKLCH. Quem "corrigir" o claro
+ *     para o hex da marca reintroduz o defeito.
+ *   - Status: não seguem o semáforo, e é o ESPELHO do que o Warm faz. Lá a
+ *     marca tomou o vermelho e o ERRO teve de sair; aqui a marca toma o cyan e
+ *     quem sai é o INFO, que vai para violeta. O erro VOLTA a ser vermelho
+ *     justamente porque pode — a marca não disputa aquele matiz. O princípio é
+ *     o mesmo nos dois temas: a cor da marca decide qual convenção ainda cabe.
+ *
+ *     O warning também sai do azul e vira âmbar. Ele era 200°, ou seja, azul —
+ *     e com a marca em cyan viraria a própria marca.
+ *   - Charts: cinco séries espalhadas pela roda, ancoradas na marca.
  *   - Radius, dimensões e shadows herdam de tokens.css (Default).
+ *
+ * O que este arquivo dizia antes, e o que a medição mostrou: "feedback colors
+ * deslocam suavemente para o lado frio do espectro". Deslocavam, e chegaram
+ * todos no mesmo lugar — `primary × info` a 0° de matiz NOS DOIS MODOS (a cor
+ * de informação era o matiz da marca), `primary × warning` a 18°/14°, e ainda
+ * `success` reprovando o piso de 4.5 no claro (4.46) e `destructive` no escuro
+ * (4.07). Hoje a menor separação entre os cinco é 48° no claro e 62° no escuro.
+ *
+ * Contraste, mesma conta do Default — contraste(cor, composição(cor a 10%,
+ * superfície)), sobre a página e sobre `--muted`, o pior dos dois:
+ *
+ *   claro   destructive 5.06 · success 4.80  (min 4.5)
+ *           warning     3.68 · info    5.60  (min 3)
+ *   escuro  destructive 5.13 · success 6.47  (min 4.5)
+ *           warning     7.23 · info    5.37  (min 3)
+ *
+ * primary como texto na página: 5.02 no claro, 9.83 no escuro. Preenchido
+ * contra o próprio foreground: 4.91 e 9.64.
+ *
+ * A paleta de gráficos era o pior caso do repositório: QUATRO das cinco séries
+ * abaixo de 3:1 contra a página clara, e o par mais próximo a 4°. Como o tema
+ * declara `--chart-*` só no bloco claro, a mesma cor é desenhada sobre a página
+ * quase branca e sobre o fundo quase preto — é essa janela estreita que manda
+ * na escolha. As novas ficam em 3.15 no pior caso claro e 3.22 no escuro, com
+ * 50° entre as mais próximas.
+ *
+ * O âmbar do claro é escuro (32%) pelo mesmo motivo do Warm: a página é quase
+ * branca, ele precisa de 3:1, e amarelo escurecido dessatura para oliva — por
+ * isso ele fica na faixa laranja-âmbar.
  *
  * Aplicado via classe `.tema-cold` no <html>. Dark mode combina com `.dark`.
  */
@@ -24,50 +71,52 @@
   --popover-foreground: 215 25% 8%;
 
   /* Brand / Interactive — primary azul royal saturado; secondary/accent azul-gelo */
-  --primary: 215 80% 38%;           /* azul royal */
+  --primary: 195 90% 32%;           /* #08769b — a marca escurecida até passar como TEXTO */
   --primary-foreground: 210 30% 98%;
   --secondary: 205 55% 92%;         /* azul-gelo claro */
-  --secondary-foreground: 215 70% 25%;
+  --secondary-foreground: 195 80% 22%;
   --muted: 210 20% 95%;
   --muted-foreground: 215 12% 42%;
   --accent: 205 55% 92%;            /* espelha secondary */
-  --accent-foreground: 215 70% 25%;
+  --accent-foreground: 195 80% 22%;
 
   /* Feedback — paleta fria */
   /* Os quatro `-foreground` são o texto corrido do contêiner colorido, e neste
      projeto valem `--foreground` — a regra da casa. São ponto de extensão: um
      tema derivado pode dar a cada um valor próprio. Ver tokens.css. */
-  --destructive: 350 75% 42%;
+  --destructive: 352 78% 40%;   /* #b6162c */
   --destructive-foreground: var(--foreground);
-  --success: 165 75% 26%;
+  --success: 150 75% 25%;       /* #107040 */
   --success-foreground: var(--foreground);
-  --warning: 200 95% 35%;
+  --warning: 38 100% 32%;       /* #a36700 */
   --warning-foreground: var(--foreground);
-  --info: 215 85% 45%;
+  --info: 280 60% 42%;          /* #812bab */
   --info-foreground: var(--foreground);
 
   /* Structure */
   --border: 210 18% 88%;
   --input: 210 18% 56%;             /* 3.27:1 sobre --background; matiz frio preservado */
   --input-background: 210 30% 99%;
-  --ring: 215 80% 48%;              /* alinhado com primary */
+  --ring: 195 90% 38%;              /* acompanha o primary, mais claro */
 
-  /* Charts — paleta azul/cyan/teal */
-  --chart-1: 210 90% 60%;
-  --chart-2: 195 85% 50%;
-  --chart-3: 180 75% 40%;
-  --chart-4: 225 80% 55%;
-  --chart-5: 240 70% 45%;
+  /* Charts — espalhadas pela roda, ancoradas na marca. Antes eram cinco azuis
+     entre 180° e 240°: quatro ficavam ABAIXO de 3:1 contra a página clara e o
+     par mais próximo estava a 4°, distinguível só por luminosidade. */
+  --chart-1: 195 85% 42%;           /* #1099c6 — família da marca */
+  --chart-2: 280 55% 50%;           /* #9739c6 */
+  --chart-3: 150 65% 34%;           /* #1e8f57 */
+  --chart-4: 352 70% 50%;           /* #d9263e */
+  --chart-5: 38 95% 40%;            /* #c78005 */
 
   /* Sidebar — tint frio */
   --sidebar: 210 30% 98%;
   --sidebar-foreground: 215 25% 8%;
-  --sidebar-primary: 215 80% 38%;
+  --sidebar-primary: 195 90% 32%;
   --sidebar-primary-foreground: 210 30% 98%;
   --sidebar-accent: 205 55% 92%;
-  --sidebar-accent-foreground: 215 70% 25%;
+  --sidebar-accent-foreground: 195 80% 22%;
   --sidebar-border: 210 18% 85%;
-  --sidebar-ring: 215 80% 48%;
+  --sidebar-ring: 195 90% 38%;
 
   /* Radius — este tema PODE sobrescrever --radius e os tokens por componente
      (--radius-button/card/badge/input/alert) para mudar a identidade de forma.
@@ -82,7 +131,7 @@
   --card-foreground: 210 25% 96%;
   --popover: 215 25% 9%;
   --popover-foreground: 210 25% 96%;
-  --primary: 210 90% 62%;           /* azul vibrante no dark */
+  --primary: 195 100% 61%;          /* #38cdff — a marca, literal */
   --primary-foreground: 215 30% 10%;
   --secondary: 215 25% 18%;         /* azul-marinho escuro */
   --secondary-foreground: 205 55% 90%;
@@ -90,24 +139,24 @@
   --muted-foreground: 210 12% 70%;
   --accent: 215 25% 18%;
   --accent-foreground: 205 55% 90%;
-  --destructive: 350 80% 65%;
+  --destructive: 356 90% 74%;   /* #f88189 */
   --destructive-foreground: var(--foreground);
-  --success: 165 70% 50%;
+  --success: 148 60% 58%;       /* #54d490 */
   --success-foreground: var(--foreground);
-  --warning: 200 92% 55%;
+  --warning: 45 92% 56%;        /* #f6c228 */
   --warning-foreground: var(--foreground);
-  --info: 215 85% 60%;
+  --info: 282 85% 76%;          /* #d78ef6 */
   --info-foreground: var(--foreground);
   --border: 215 15% 16%;
   --input: 215 15% 42%;             /* 3.22:1 sobre --background; matiz frio preservado */
   --input-background: 215 25% 9%;
-  --ring: 210 90% 58%;
+  --ring: 195 100% 56%;
   --sidebar: 215 25% 9%;
   --sidebar-foreground: 210 25% 96%;
-  --sidebar-primary: 210 90% 62%;
+  --sidebar-primary: 195 100% 61%;
   --sidebar-primary-foreground: 215 30% 10%;
   --sidebar-accent: 215 25% 18%;
   --sidebar-accent-foreground: 205 55% 90%;
   --sidebar-border: 215 15% 16%;
-  --sidebar-ring: 210 90% 58%;
+  --sidebar-ring: 195 100% 56%;
 }

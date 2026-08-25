@@ -39,7 +39,7 @@ export const themes: ThemeDefinition[] = [
   {
     id: 'cold',
     label: 'Cold',
-    description: 'Cores frias — tint azul nos neutros, paleta cyan/teal',
+    description: 'Cores frias — tint azul nos neutros, marca cyan e status fora do semáforo',
     cssClass: 'tema-cold',
   },
 ];
