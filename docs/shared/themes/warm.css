@@ -3,13 +3,54 @@
  * Variante de cores quentes do tema Default.
  *
  * Estratégia:
- *   - Neutros (background, foreground, primary, secondary, muted, accent, border)
- *     ganham tint âmbar/marrom sutil (matiz ~30°, saturação 8–15%) — continuam
- *     "quase cinzas", mas a tela tem temperatura quente.
- *   - Feedback colors (destructive/success/warning/info) deslocam suavemente
- *     para o lado quente do espectro mantendo contraste WCAG AA.
- *   - Charts trocam paleta azul por paleta âmbar/laranja.
+ *   - Neutros (background, foreground, secondary, muted, accent, border) ganham
+ *     tint âmbar/marrom sutil (matiz ~30°, saturação 8–15%) — continuam "quase
+ *     cinzas", mas a tela tem temperatura quente. É AQUI que mora a identidade
+ *     do tema, e é por isso que ela sobrevive a status frios.
+ *   - Marca: `--primary` é vermelho vivo.
+ *   - Status: NÃO seguem o semáforo, e não por estilo. Com a marca ocupando o
+ *     vermelho, o alarme não pode ficar lá — o vermelho passa a ser a cor mais
+ *     frequente da tela (botão, link, foco, estado ativo), e alarme que aparece
+ *     o tempo todo deixa de ser alarme. O erro migra para MAGENTA; o info sai do
+ *     laranja e vai para AZUL; sucesso (verde) e aviso (âmbar) ficam, porque não
+ *     disputam nada com um primary vermelho e trocá-los custaria compreensão
+ *     sem comprar separação.
+ *
+ *     A semântica não fica pendurada na convenção de matiz: todo contêiner de
+ *     feedback pareia cor com ÍCONE e TÍTULO, e é por isso que `warning` e
+ *     `info` têm piso de 3:1 em vez de 4.5 — a cor deles pinta o ícone, não o
+ *     texto corrido. O que a cor precisa ser é inconfundível, e o critério
+ *     passa a ser distância, não costume.
+ *
+ *     Três status ficam FRIOS num tema de neutros quentes, e isso é a favor:
+ *     eles viram a única coisa fria da tela, que é a saliência que um alerta
+ *     precisa ter.
+ *   - Charts: cinco séries espalhadas pela roda, ancoradas na marca.
  *   - Radius, dimensões e shadows herdam de tokens.css (Default).
+ *
+ * O que ESTE arquivo dizia antes, e por que estava errado: "feedback colors
+ * deslocam suavemente para o lado quente do espectro". Deslocavam — e o
+ * resultado medido era `warning × info` a 4° de matiz no claro e `primary ×
+ * info` a 2° no ESCURO, ou seja, a cor de informação era a cor da marca.
+ * Quatro significados num arco de 24°. Hoje a menor separação entre os cinco é
+ * 37° no claro e 42° no escuro.
+ *
+ * Contraste, mesma conta do Default — contraste(cor, composição(cor a 10%,
+ * superfície)), sobre a página e sobre `--muted`, o pior dos dois:
+ *
+ *   claro   destructive 5.33 · success 4.65  (min 4.5)
+ *           warning     3.70 · info    5.43  (min 3)
+ *   escuro  destructive 4.69 · success 6.26  (min 4.5)
+ *           warning     7.02 · info    4.74  (min 3)
+ *
+ * Como traço de 2px da badge, contra a página, todos entre 4.55 e 10.84 — piso
+ * de 3:1 (WCAG 1.4.11). Botão preenchido, primary × primary-foreground: 5.42 no
+ * claro e 5.45 no escuro.
+ *
+ * Dois limites que a medição impôs, e que parecem arbitrários sem eles: o âmbar
+ * do claro é ESCURO (32%) porque a página é quase branca e ele precisa de 3:1 —
+ * sete âmbares mais claros foram testados e todos reprovam. E ele fica na faixa
+ * laranja-âmbar, não no amarelo: amarelo escurecido dessatura para oliva.
  *
  * Aplicado via classe `.tema-warm` no <html>. Dark mode combina com `.dark`.
  */
@@ -24,50 +65,50 @@
   --popover-foreground: 25 20% 8%;
 
   /* Brand / Interactive — primary terracota saturado; secondary/accent creme âmbar */
-  --primary: 18 75% 35%;            /* terracota / laranja queimado */
+  --primary: 4 78% 44%;             /* #c82419 — vermelho vivo da marca */
   --primary-foreground: 30 30% 98%;
   --secondary: 35 55% 92%;          /* creme âmbar claro */
-  --secondary-foreground: 18 60% 22%;
+  --secondary-foreground: 4 55% 24%;
   --muted: 30 20% 95%;
   --muted-foreground: 25 12% 42%;
   --accent: 35 55% 92%;             /* espelha secondary */
-  --accent-foreground: 18 60% 22%;
+  --accent-foreground: 4 55% 24%;
 
   /* Feedback — paleta quente */
   /* Os quatro `-foreground` são o texto corrido do contêiner colorido, e neste
      projeto valem `--foreground` — a regra da casa. São ponto de extensão: um
      tema derivado pode dar a cada um valor próprio. Ver tokens.css. */
-  --destructive: 0 74% 42%;
+  --destructive: 326 72% 38%;   /* #a71b6a */
   --destructive-foreground: var(--foreground);
-  --success: 130 60% 28%;
+  --success: 155 72% 26%;       /* #13724a */
   --success-foreground: var(--foreground);
-  --warning: 28 95% 38%;
+  --warning: 38 100% 32%;       /* #a36700 */
   --warning-foreground: var(--foreground);
-  --info: 24 85% 45%;
+  --info: 214 80% 38%;          /* #1357ae */
   --info-foreground: var(--foreground);
 
   /* Structure */
   --border: 30 15% 88%;
   --input: 30 15% 54%;              /* 3.27:1 sobre --background; matiz quente preservado */
   --input-background: 30 25% 99%;
-  --ring: 18 75% 45%;               /* alinhado com primary */
+  --ring: 4 78% 50%;                /* acompanha o primary, meio ponto mais claro */
 
   /* Charts — paleta âmbar/laranja */
-  --chart-1: 32 95% 60%;
-  --chart-2: 24 90% 50%;
-  --chart-3: 18 85% 45%;
-  --chart-4: 36 75% 55%;
-  --chart-5: 14 70% 40%;
+  --chart-1: 6 72% 52%;             /* #dd3e2c — família da marca */
+  --chart-2: 36 95% 40%;            /* #c77905 */
+  --chart-3: 152 60% 36%;           /* #25935f */
+  --chart-4: 198 80% 40%;           /* #1487b8 */
+  --chart-5: 286 45% 52%;           /* #a24ebc */
 
   /* Sidebar — tint quente */
   --sidebar: 30 25% 98%;
   --sidebar-foreground: 25 20% 8%;
-  --sidebar-primary: 18 75% 35%;
+  --sidebar-primary: 4 78% 44%;
   --sidebar-primary-foreground: 30 30% 98%;
   --sidebar-accent: 35 55% 92%;
-  --sidebar-accent-foreground: 18 60% 22%;
+  --sidebar-accent-foreground: 4 55% 24%;
   --sidebar-border: 30 15% 85%;
-  --sidebar-ring: 18 75% 45%;
+  --sidebar-ring: 4 78% 50%;
 
   /* Radius — este tema PODE sobrescrever --radius e os tokens por componente
      (--radius-button/card/badge/input/alert) para mudar a identidade de forma.
@@ -82,7 +123,7 @@
   --card-foreground: 30 20% 96%;
   --popover: 25 15% 9%;
   --popover-foreground: 30 20% 96%;
-  --primary: 22 85% 60%;            /* laranja vibrante no dark */
+  --primary: 8 88% 62%;             /* #f36049 */
   --primary-foreground: 25 30% 10%;
   --secondary: 25 20% 18%;          /* marrom escuro saturado */
   --secondary-foreground: 35 55% 90%;
@@ -90,24 +131,24 @@
   --muted-foreground: 30 12% 70%;
   --accent: 25 20% 18%;
   --accent-foreground: 35 55% 90%;
-  --destructive: 0 80% 65%;
+  --destructive: 328 82% 70%;   /* #f174b7 */
   --destructive-foreground: var(--foreground);
-  --success: 130 60% 55%;
+  --success: 155 60% 56%;       /* #4bd29a */
   --success-foreground: var(--foreground);
-  --warning: 35 92% 55%;
+  --warning: 45 92% 56%;        /* #f6c228 */
   --warning-foreground: var(--foreground);
-  --info: 24 85% 58%;
+  --info: 212 85% 66%;          /* #5fa3f2 */
   --info-foreground: var(--foreground);
   --border: 25 10% 16%;
   --input: 25 10% 41%;              /* 3.26:1 sobre --background; matiz quente preservado */
   --input-background: 25 15% 9%;
-  --ring: 22 85% 55%;
+  --ring: 8 88% 56%;
   --sidebar: 25 15% 9%;
   --sidebar-foreground: 30 20% 96%;
-  --sidebar-primary: 22 85% 60%;
+  --sidebar-primary: 8 88% 62%;
   --sidebar-primary-foreground: 25 30% 10%;
   --sidebar-accent: 25 20% 18%;
   --sidebar-accent-foreground: 35 55% 90%;
   --sidebar-border: 25 10% 16%;
-  --sidebar-ring: 22 85% 55%;
+  --sidebar-ring: 8 88% 56%;
 }

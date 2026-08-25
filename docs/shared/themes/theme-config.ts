@@ -33,7 +33,7 @@ export const themes: ThemeDefinition[] = [
   {
     id: 'warm',
     label: 'Warm',
-    description: 'Cores quentes — tint âmbar nos neutros, paleta laranja/marrom',
+    description: 'Cores quentes — tint âmbar nos neutros, marca vermelha e status fora do semáforo',
     cssClass: 'tema-warm',
   },
   {
