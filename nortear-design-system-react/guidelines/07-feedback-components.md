@@ -88,23 +88,38 @@ O ícone é o **filho direto** do `.nds-alert`, antes do título. O seletor `.nd
 
 **API e exemplos**: `src/components/ui/badge.tsx` + stories + `BadgeDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Variantes nativas** (únicas disponíveis via prop `variant`):
+**A etiqueta não é preenchida.** Fundo e texto são sempre neutros — `--background` e `--foreground` —, e quem carrega a variante é a **borda, de 2px sólidos**. Foi decisão de desenho para separar a etiqueta do botão, que continua preenchido: duas formas parecidas na mesma tela faziam o badge parecer clicável. Em 1px a diferença entre duas cores próximas some na tela, e por isso a espessura dobrou. Efeito colateral bem-vindo: o texto sai do par semântico, e o contraste do rótulo deixa de depender da variante escolhida.
 
-| Variante | Uso |
-|----------|-----|
-| `default` | Destaque principal — categoria, tag ativa |
-| `secondary` | Informativo secundário — categoria neutra |
-| `destructive` | Estado de erro ou alerta crítico |
-| `outline` | Sutil, sem preenchimento — tag opcional |
+**Variantes nativas** (únicas disponíveis via prop `variant`) — cada uma reaponta uma coisa só, a cor da borda:
 
-> O Badge **não tem prop `size`** (tamanho via `className` customizado) e **não tem variantes `success`/`warning`** — nem como prop nem como classe `.nds-badge-*`. Caso pontual sobrescreve as vars internas escopadas (`--badge-bg` etc., guideline 04 §Tokens de Componente); demanda recorrente vira patch de API, como o #alert-five-variants.
+| Variante | Cor da borda | Uso |
+|----------|--------------|-----|
+| `default` | `--primary` | Destaque principal — categoria, tag ativa |
+| `secondary` | `--muted-foreground` | Informativo secundário — categoria neutra |
+| `destructive` | `--destructive` | Estado de erro ou alerta crítico |
+| `warning` | `--warning` | Pendência ou risco que ainda não é erro |
+| `success` | `--success` | Estado concluído ou aprovado |
+| `info` | `--info` | Contexto neutro que merece cor |
+| `outline` | `--border` | Baixa ênfase — a borda mais discreta do conjunto |
+
+> `secondary` usa `--muted-foreground` e não `--secondary`: medido, `--secondary` como traço fica entre 1,12:1 e 1,38:1 contra a página e a variante sumiria. `--secondary` é cor de fundo, não de contorno.
+
+**Subpeça**:
+
+| Peça | Marcação | Função |
+|------|----------|--------|
+| `BadgeCounter` | `data-slot="badge-counter"`, classe `.nds-badge-counter` | Número à direita do rótulo, dentro da mesma etiqueta |
+
+> O contador é **neutro de propósito** (fundo `--secondary`, texto `--foreground`) e não é uma variante: qualquer variante o aceita. Preenchê-lo com a cor da variante derruba o número abaixo de 4,5:1 em parte dos temas — contra `--warning` do tema warm nenhum dos dois neutros alcança o piso. A cor não se perde: quem a carrega é a borda, ao redor.
+
+> O Badge **não tem prop `size`** (tamanho via `className` customizado). Caso pontual sobrescreve as vars internas escopadas (`--badge-border` etc., guideline 04 §Tokens de Componente); demanda recorrente vira patch de API, como o #alert-five-variants.
 
 **Regras**:
 - Texto máximo: 2 palavras — para mais contexto, usar outro componente.
 - **Cor não é o único indicador de estado** — sempre acompanhar cor de status com ícone ou texto descritivo (ver arquivo 11, seção daltonismo).
-- Contadores: limitar exibição a "99+" — não exibir números exatos acima de 99.
+- Contadores: limitar exibição a "99+" — não exibir números exatos acima de 99. Vale para o `BadgeCounter` e para a etiqueta que é só um número.
 - Consistência obrigatória: mesma semântica de cor em todo o produto (não usar `destructive` para promoções).
-- Badge clicável (link ou filtro): usar `asChild` com `<a>` ou `<button>` para semântica correta.
+- Badge clicável (link ou filtro): **nunca** pôr o manipulador de clique no Badge — envolvê-lo em `<a>` ou `<button>`, que é quem recebe foco, teclado e nome acessível.
 
 **Acessibilidade** (ver `11-acessibilidade.md`):
 - Badge puramente decorativo (repetindo informação já visível): `aria-hidden="true"`.

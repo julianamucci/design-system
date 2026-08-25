@@ -15,7 +15,7 @@ import { track } from '@/lib/analytics';
 import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
-import { NdsBadge, type BadgeVariant } from '@/components/ui/badge';
+import { NdsBadge, NdsBadgeCounter, type BadgeVariant } from '@/components/ui/badge';
 import { NdsButton, NdsButtonIcon } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import badgeTranslations from '@shared/content/badge/translations.json';
@@ -98,7 +98,15 @@ export class NdsBadge {
   readonly variant = input<BadgeVariant>('default');
 }
 
-// class e o rótulo são nativos do <span>.`;
+// class e o rótulo são nativos do <span>.
+
+// <span ndsBadgeCounter> — subpeça: o número à direita do rótulo, dentro da
+// mesma etiqueta. Diretiva, não componente: não há markup próprio a montar.
+@Directive({
+  selector: 'span[ndsBadgeCounter]',
+  host: { class: 'nds-badge-counter', '[attr.data-slot]': '"badge-counter"' },
+})
+export class NdsBadgeCounter {}`;
 
 const VARIANTS: BadgeVariant[] = [
   'default', 'secondary', 'destructive', 'warning', 'success', 'info', 'outline',
@@ -110,7 +118,7 @@ const VARIANTS: BadgeVariant[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
-    NdsBadge, NdsButton, NdsButtonIcon,
+    NdsBadge, NdsBadgeCounter, NdsButton, NdsButtonIcon,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
     NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,
     NdsDocsCompositions, NdsDocsStates, NdsDocsProps, NdsDocsTokens,
@@ -156,6 +164,12 @@ const VARIANTS: BadgeVariant[] = [
     </ng-template>
     <ng-template #tplCompCount>
       <span ndsBadge variant="destructive">{{ t('demonstration.labels.countLabel') }}</span>
+    </ng-template>
+    <ng-template #tplCompCounter>
+      <span ndsBadge variant="destructive">
+        {{ t('demonstration.labels.destructiveLabel') }}
+        <span ndsBadgeCounter>{{ t('demonstration.labels.countLabel') }}</span>
+      </span>
     </ng-template>
     <ng-template #tplCompLink>
       <a href="?path=/docs/ui-badge--docs">
@@ -311,6 +325,7 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarOutline = viewChild.required<TemplateRef<unknown>>('tplVarOutline');
   private readonly tplCompIcon = viewChild.required<TemplateRef<unknown>>('tplCompIcon');
   private readonly tplCompCount = viewChild.required<TemplateRef<unknown>>('tplCompCount');
+  private readonly tplCompCounter = viewChild.required<TemplateRef<unknown>>('tplCompCounter');
   private readonly tplCompLink = viewChild.required<TemplateRef<unknown>>('tplCompLink');
   private readonly tplCompTrigger = viewChild.required<TemplateRef<unknown>>('tplCompTrigger');
 
@@ -427,6 +442,9 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
     const mapa: { key: string; tpl: TemplateRef<unknown> }[] = [
       { key: 'withIcon',  tpl: this.tplCompIcon()    },
       { key: 'count',     tpl: this.tplCompCount()   },
+      // A peça é subpeça, não prop: qualquer variante a aceita, e o conteúdo
+      // nem sempre é número puro ("99+").
+      { key: 'withCounter', tpl: this.tplCompCounter() },
       { key: 'asLink',    tpl: this.tplCompLink()    },
       { key: 'asTrigger', tpl: this.tplCompTrigger() },
     ];
@@ -496,17 +514,30 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '--primary',              className: '.nds-badge',             k: 'primary'              },
-      { token: '--primary-foreground',   className: '.nds-badge',             k: 'primaryForeground'    },
-      { token: '--secondary',            className: '.nds-badge-secondary',   k: 'secondary'            },
-      { token: '--destructive',          className: '.nds-badge-destructive', k: 'destructive'          },
-      { token: '--warning',              className: '.nds-badge-warning',     k: 'warning'              },
-      { token: '--success',              className: '.nds-badge-success',     k: 'success'              },
-      { token: '--info',                 className: '.nds-badge-info',        k: 'info'                 },
-      { token: '--border',               className: '.nds-badge-outline',     k: 'badgeBorder'          },
-    ].map(({ token, className, k }) => ({
+      // A tabela segue a folha: cada variante reaponta UMA coisa, a cor da
+      // borda. As linhas de `-foreground` por variante saíram junto com o
+      // preenchimento, e os dois alfas (`--badge-alpha-bg` e
+      // `--badge-alpha-border`) não existem mais no CSS — as chaves
+      // correspondentes sumiram do conteúdo compartilhado, e mantê-las aqui
+      // faria a página imprimir o nome da chave na tela.
+      { token: '--primary',          value: 'border-color: hsl(var(--primary))',            k: 'primary'          },
+      { token: '--muted-foreground', value: 'border-color: hsl(var(--muted-foreground))',   k: 'mutedForeground'  },
+      { token: '--destructive',      value: 'border-color: hsl(var(--destructive))',        k: 'destructive'      },
+      { token: '--warning',          value: 'border-color: hsl(var(--warning))',            k: 'warning'          },
+      { token: '--success',          value: 'border-color: hsl(var(--success))',            k: 'success'          },
+      { token: '--info',             value: 'border-color: hsl(var(--info))',               k: 'info'             },
+      { token: '--border',           value: 'border-color: hsl(var(--border))',             k: 'border'           },
+      { token: '--secondary',        value: 'background-color: hsl(var(--secondary))',      k: 'secondary'        },
+      { token: '--foreground',       value: 'color: hsl(var(--foreground))',                k: 'foreground'       },
+      { token: '--background',       value: 'background-color: hsl(var(--background))',     k: 'background'       },
+      { token: '--ring',             value: 'box-shadow: 0 0 0 5px hsl(var(--ring) / 0.5)', k: 'ring'             },
+      // As três vars internas, que é o que o override escopado alcança.
+      { token: '--badge-bg',         value: 'hsl(var(--background))',                       k: 'badgeBg'          },
+      { token: '--badge-fg',         value: 'hsl(var(--foreground))',                       k: 'badgeFg'          },
+      { token: '--badge-border',     value: 'hsl(var(--primary))',                          k: 'badgeBorder'      },
+    ].map(({ token, value, k }) => ({
       token,
-      value: className,
+      value,
       description: toPlainText(t(`tokens.table.${k}`)),
     }));
   });

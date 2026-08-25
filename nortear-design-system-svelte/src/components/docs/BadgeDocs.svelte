@@ -1,6 +1,6 @@
 <script lang="ts">
   import { untrack } from 'svelte';
-  import { Badge } from '@/components/ui/badge';
+  import { Badge, BadgeCounter } from '@/components/ui/badge';
   import Check from '@lucide/svelte/icons/check';
   import TagIcon from '@lucide/svelte/icons/tag';
   import Bell from '@lucide/svelte/icons/bell';
@@ -128,9 +128,14 @@ import Check from '@lucide/svelte/icons/check';`;
 </button>`;
 
   const interfaceCode = `// Badge
-interface BadgeProps extends HTMLAnchorAttributes {
+interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   variant?: 'default' | 'secondary' | 'destructive' | 'warning' | 'success' | 'info' | 'outline';
-  href?: string;
+  class?: string;
+  children?: Snippet;
+}
+
+// BadgeCounter — número à direita do texto, dentro da mesma etiqueta
+interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
   class?: string;
   children?: Snippet;
 }`;
@@ -342,6 +347,13 @@ interface BadgeProps extends HTMLAnchorAttributes {
         preview: compCount,
       },
       {
+        name: $tStore('variants.compositions.withCounter.name'),
+        description: $tStore('variants.compositions.withCounter.description'),
+        useWhen: $tStore('variants.compositions.withCounter.use'),
+        code: `<Badge variant="destructive">\n  Urgente\n  <BadgeCounter>12</BadgeCounter>\n</Badge>`,
+        preview: compWithCounter,
+      },
+      {
         name: $tStore('variants.compositions.asLink.name'),
         description: $tStore('variants.compositions.asLink.description'),
         useWhen: $tStore('variants.compositions.asLink.use'),
@@ -369,6 +381,12 @@ interface BadgeProps extends HTMLAnchorAttributes {
       <Bell class="nds-icon-lg" aria-hidden="true" />
       <Badge variant="destructive">12</Badge>
     </span>
+  {/snippet}
+  {#snippet compWithCounter()}
+    <Badge variant="destructive">
+      Urgente
+      <BadgeCounter>12</BadgeCounter>
+    </Badge>
   {/snippet}
   {#snippet compAsLink()}
     <a href="#design" aria-label="Ver todos os itens da categoria Design" class="nds-cluster">
@@ -428,23 +446,20 @@ interface BadgeProps extends HTMLAnchorAttributes {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--primary',               value: 'bg-primary',               description: $tStore('tokens.table.primary')              },
-      { token: '--primary-foreground',    value: 'text-primary-foreground',  description: $tStore('tokens.table.primaryForeground')    },
-      { token: '--secondary',             value: 'bg-secondary',             description: $tStore('tokens.table.secondary')            },
-      { token: '--secondary-foreground',  value: 'text-secondary-foreground',description: $tStore('tokens.table.secondaryForeground')  },
-      { token: '--destructive',           value: 'bg-destructive',           description: $tStore('tokens.table.destructive')          },
-      { token: '--destructive-foreground',value: 'text-destructive-foreground', description: $tStore('tokens.table.destructiveForeground') },
-      { token: '--warning',               value: 'hsl(var(--warning) / var(--badge-alpha-bg))', description: $tStore('tokens.table.warning') },
-      { token: '--success',               value: 'hsl(var(--success) / var(--badge-alpha-bg))', description: $tStore('tokens.table.success') },
-      { token: '--info',                  value: 'hsl(var(--info) / var(--badge-alpha-bg))',    description: $tStore('tokens.table.info')    },
-      { token: '--foreground',            value: 'text-foreground',          description: $tStore('tokens.table.foreground')           },
-      { token: '--ring',                  value: 'focus:ring-ring',          description: $tStore('tokens.table.ring')                 },
-      { token: '--background',            value: 'focus:ring-offset-background', description: $tStore('tokens.table.background')      },
-      { token: '--badge-bg',              value: 'hsl(var(--primary))',      description: $tStore('tokens.table.badgeBg')              },
-      { token: '--badge-fg',              value: 'hsl(var(--primary-foreground))', description: $tStore('tokens.table.badgeFg')        },
-      { token: '--badge-border',          value: 'transparent',              description: $tStore('tokens.table.badgeBorder')          },
-      { token: '--badge-alpha-bg',        value: '0.12 · 0.18 no escuro',    description: $tStore('tokens.table.badgeAlphaBg')         },
-      { token: '--badge-alpha-border',    value: '0.35',                     description: $tStore('tokens.table.badgeAlphaBorder')     },
+      { token: '--primary',          value: '--badge-border: hsl(var(--primary))',          description: $tStore('tokens.table.primary')          },
+      { token: '--muted-foreground', value: '--badge-border: hsl(var(--muted-foreground))', description: $tStore('tokens.table.mutedForeground') },
+      { token: '--destructive',      value: '--badge-border: hsl(var(--destructive))',      description: $tStore('tokens.table.destructive')      },
+      { token: '--warning',          value: '--badge-border: hsl(var(--warning))',          description: $tStore('tokens.table.warning')          },
+      { token: '--success',          value: '--badge-border: hsl(var(--success))',          description: $tStore('tokens.table.success')          },
+      { token: '--info',             value: '--badge-border: hsl(var(--info))',             description: $tStore('tokens.table.info')             },
+      { token: '--border',           value: '--badge-border: hsl(var(--border))',           description: $tStore('tokens.table.border')           },
+      { token: '--background',       value: '--badge-bg: hsl(var(--background))',           description: $tStore('tokens.table.background')       },
+      { token: '--foreground',       value: '--badge-fg: hsl(var(--foreground))',           description: $tStore('tokens.table.foreground')       },
+      { token: '--secondary',        value: 'background-color: hsl(var(--secondary))',      description: $tStore('tokens.table.secondary')        },
+      { token: '--ring',             value: 'box-shadow: 0 0 0 5px hsl(var(--ring) / 0.5)', description: $tStore('tokens.table.ring')             },
+      { token: '--badge-bg',         value: 'hsl(var(--background))',                       description: $tStore('tokens.table.badgeBg')          },
+      { token: '--badge-fg',         value: 'hsl(var(--foreground))',                       description: $tStore('tokens.table.badgeFg')          },
+      { token: '--badge-border',     value: 'hsl(var(--primary))',                          description: $tStore('tokens.table.badgeBorder')      },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}
@@ -523,6 +538,7 @@ interface BadgeProps extends HTMLAnchorAttributes {
         { action: $tStore('testes.functional.item4.action'), result: $tStore('testes.functional.item4.result'), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
         { action: $tStore('testes.functional.item5.action'), result: $tStore('testes.functional.item5.result'), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
         { action: $tStore('testes.functional.item6.action'), result: $tStore('testes.functional.item6.result'), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item7.action'), result: $tStore('testes.functional.item7.result'), priority: localPriority($tStore('testes.functional.item7.priority'), $tNavStore) },
       ],
     }}
     accessibility={{
@@ -550,6 +566,8 @@ interface BadgeProps extends HTMLAnchorAttributes {
         { story: $tStore('testes.visual.item2.story'), priority: localPriority($tStore('testes.visual.item2.priority'), $tNavStore) },
         { story: $tStore('testes.visual.item3.story'), priority: localPriority($tStore('testes.visual.item3.priority'), $tNavStore) },
         { story: $tStore('testes.visual.item4.story'), priority: localPriority($tStore('testes.visual.item4.priority'), $tNavStore) },
+        { story: $tStore('testes.visual.item5.story'), priority: localPriority($tStore('testes.visual.item5.priority'), $tNavStore) },
+        { story: $tStore('testes.visual.item6.story'), priority: localPriority($tStore('testes.visual.item6.priority'), $tNavStore) },
       ],
     }}
   />

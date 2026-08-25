@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { Badge } from '@/components/ui/badge';
+import { Badge, BadgeCounter } from '@/components/ui/badge';
 import { Check, Bell } from 'lucide-vue-next';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
@@ -170,6 +170,12 @@ const compositionItems = computed(() => [
     code: `<span role="status" aria-label="12 notificações não lidas" class="nds-cluster" data-spacing="sm">\n  <Bell class="nds-icon-lg" aria-hidden="true" />\n  <Badge variant="destructive">12</Badge>\n</span>`,
   },
   {
+    name: tContent('variants.compositions.withCounter.name'),
+    description: tContent('variants.compositions.withCounter.description'),
+    useWhen: tContent('variants.compositions.withCounter.use'),
+    code: `<Badge variant="destructive">\n  Urgente\n  <BadgeCounter>12</BadgeCounter>\n</Badge>`,
+  },
+  {
     name: tContent('variants.compositions.asLink.name'),
     description: tContent('variants.compositions.asLink.description'),
     useWhen: tContent('variants.compositions.asLink.use'),
@@ -199,24 +205,32 @@ const badgePropItems = computed(() => [
   { name: 'default slot', type: 'VNode',                                               defaultValue: '—',         required: 'Sim', description: toPlainText(tContent('props.table.children')) },
 ]);
 
+/**
+ * A etiqueta deixou de ser preenchida, e a tabela seguiu o desenho.
+ *
+ * Saíram as duas linhas de alfa: `--badge-alpha-bg` e `--badge-alpha-border`
+ * não existem mais no CSS, e token que não existe faz a customização copiada
+ * daqui não mudar nada — é o que a regra `unknown_token_reference` cobra.
+ * Saíram também os três `*-foreground` de par semântico: o texto é sempre
+ * `--foreground`, então nenhum deles chega ao componente.
+ *
+ * A coluna do meio passou a nomear o SELETOR que lê o token, no lugar do
+ * vocabulário do utilitário que saiu do projeto — quem customiza precisa saber
+ * onde a variável é lida, e `bg-primary` não diz isso.
+ */
 const tokenRows = computed(() => [
-  { token: '--primary',               value: 'bg-primary',                description: tContent('tokens.table.primary')             },
-  { token: '--primary-foreground',    value: 'text-primary-foreground',   description: tContent('tokens.table.primaryForeground')   },
-  { token: '--secondary',             value: 'bg-secondary',              description: tContent('tokens.table.secondary')           },
-  { token: '--secondary-foreground',  value: 'text-secondary-foreground', description: tContent('tokens.table.secondaryForeground') },
-  { token: '--destructive',           value: 'bg-destructive',            description: tContent('tokens.table.destructive')         },
-  { token: '--destructive-foreground',value: 'text-destructive-foreground', description: tContent('tokens.table.destructiveForeground') },
-  { token: '--warning',               value: 'hsl(var(--warning) / var(--badge-alpha-bg))', description: tContent('tokens.table.warning') },
-  { token: '--success',               value: 'hsl(var(--success) / var(--badge-alpha-bg))', description: tContent('tokens.table.success') },
-  { token: '--info',                  value: 'hsl(var(--info) / var(--badge-alpha-bg))',    description: tContent('tokens.table.info')    },
-  { token: '--foreground',            value: 'text-foreground',           description: tContent('tokens.table.foreground')          },
-  { token: '--ring',                  value: 'focus:ring-ring',           description: tContent('tokens.table.ring')                },
-  { token: '--background',            value: 'focus:ring-offset-background', description: tContent('tokens.table.background')      },
-  { token: '--badge-bg',              value: 'hsl(var(--primary))',           description: tContent('tokens.table.badgeBg')         },
-  { token: '--badge-fg',              value: 'hsl(var(--primary-foreground))', description: tContent('tokens.table.badgeFg')        },
-  { token: '--badge-border',          value: 'transparent',                   description: tContent('tokens.table.badgeBorder')     },
-  { token: '--badge-alpha-bg',        value: '0.12 · 0.18 no escuro',         description: tContent('tokens.table.badgeAlphaBg')    },
-  { token: '--badge-alpha-border',    value: '0.35',                          description: tContent('tokens.table.badgeAlphaBorder') },
+  { token: '--primary',      value: '.nds-badge-default',      description: tContent('tokens.table.primary')     },
+  { token: '--secondary',    value: '.nds-badge-counter',      description: tContent('tokens.table.secondary')   },
+  { token: '--destructive',  value: '.nds-badge-destructive',  description: tContent('tokens.table.destructive') },
+  { token: '--warning',      value: '.nds-badge-warning',      description: tContent('tokens.table.warning')     },
+  { token: '--success',      value: '.nds-badge-success',      description: tContent('tokens.table.success')     },
+  { token: '--info',         value: '.nds-badge-info',         description: tContent('tokens.table.info')        },
+  { token: '--foreground',   value: '.nds-badge',              description: tContent('tokens.table.foreground')  },
+  { token: '--background',   value: '.nds-badge',              description: tContent('tokens.table.background')  },
+  { token: '--ring',         value: '.nds-badge:focus-visible', description: tContent('tokens.table.ring')       },
+  { token: '--badge-bg',     value: 'hsl(var(--background))',  description: tContent('tokens.table.badgeBg')     },
+  { token: '--badge-fg',     value: 'hsl(var(--foreground))',  description: tContent('tokens.table.badgeFg')     },
+  { token: '--badge-border', value: 'hsl(var(--primary))',     description: tContent('tokens.table.badgeBorder') },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -501,6 +515,12 @@ const visualTestItems = computed(() => [
         </span>
       </template>
       <template #variant-preview-2>
+        <Badge variant="destructive">
+          Urgente
+          <BadgeCounter>12</BadgeCounter>
+        </Badge>
+      </template>
+      <template #variant-preview-3>
         <a
           href="#design"
           aria-label="Ver todos os itens da categoria Design"
@@ -509,7 +529,7 @@ const visualTestItems = computed(() => [
           <Badge variant="secondary">Design</Badge>
         </a>
       </template>
-      <template #variant-preview-3>
+      <template #variant-preview-4>
         <button
           type="button"
           aria-label="Filtrar por React"

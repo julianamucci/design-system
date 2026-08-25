@@ -2,11 +2,14 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect } from 'storybook/test';
+import { backgroundEffective, noTransicao, ratio } from '@shared/testing/cor';
 import { Badge } from './index';
 import BadgeStory from './BadgeStory.svelte';
+import BadgeWithCounterStory from './BadgeWithCounterStory.svelte';
 import {
   badgeWithIconSource,
   badgeCounterSource,
+  badgeWithCounterSource,
   buttonBadgeSource,
   badgeEmLinkSource,
   badgeSource,
@@ -27,7 +30,7 @@ const meta: Meta = {
       source: { transform: badgeSource },
       description: {
         component:
-          'Configuracoes contextuais do Badge: combinado com ícone, como contador numérico, envolvido em <a> para navegação ou em <button> para trigger clicável.',
+          'Configuracoes contextuais do Badge: combinado com ícone, com contador dentro da própria etiqueta, como contador numérico ao lado de outro elemento, envolvido em <a> para navegação ou em <button> para trigger clicável.',
       },
     },
   },
@@ -50,20 +53,20 @@ export const WithIcon: Story = {
     const badge = canvas.getByText('Ativo');
 
     // accessibility.item2 — o ícone é reforço visual: quem nomeia é o texto.
-    const icone = badge.querySelector('svg');
-    await expect(icone).not.toBeNull();
-    await expect(icone).toHaveAttribute('aria-hidden', 'true');
+    const icon = badge.querySelector('svg');
+    await expect(icon).not.toBeNull();
+    await expect(icon).toHaveAttribute('aria-hidden', 'true');
     await expect(badge.textContent?.trim()).toBe('Ativo');
 
     // functional.item5 — o espaço entre ícone e texto é do container, não uma
     // margem na story: o .nds-badge declara gap, e o data-icon encurta o padding
     // daquele lado. Margem manual somaria ao gap e dobraria o respiro.
-    const estilo = getComputedStyle(badge);
-    await expect(estilo.display).toBe('inline-flex');
-    await expect(parseFloat(estilo.columnGap)).toBeGreaterThan(0);
-    await expect(getComputedStyle(icone!).marginRight).toBe('0px');
-    await expect(parseFloat(estilo.paddingInlineStart)).toBeLessThan(
-      parseFloat(estilo.paddingInlineEnd),
+    const styles = getComputedStyle(badge);
+    await expect(styles.display).toBe('inline-flex');
+    await expect(parseFloat(styles.columnGap)).toBeGreaterThan(0);
+    await expect(getComputedStyle(icon!).marginRight).toBe('0px');
+    await expect(parseFloat(styles.paddingInlineStart)).toBeLessThan(
+      parseFloat(styles.paddingInlineEnd),
     );
   },
 };
@@ -97,6 +100,75 @@ export const CountBadge: Story = {
     // Quem carrega o significado é o rótulo do container: "12" sozinho não diz
     // do que é a contagem.
     await expect(badge).toHaveAttribute('data-slot', 'badge');
+  },
+};
+
+/**
+ * Contador DENTRO da etiqueta, à direita do texto — o outro contador desta
+ * página fica ao lado de um ícone, e as duas formas resolvem coisas
+ * diferentes: aqui o rótulo já diz de que é a contagem.
+ */
+export const WithCounter: Story = {
+  parameters: {
+    covers: ['visual.item6'],
+    docs: {
+      source: { transform: badgeWithCounterSource },
+      description: {
+        story:
+          'O contador é neutro de propósito: a cor da variante fica na borda ao redor. Pintá-lo com ela derrubaria o número abaixo de 4.5:1 em parte dos temas.',
+      },
+    },
+  },
+  render: () => ({ Component: BadgeWithCounterStory }),
+  play: async ({ canvasElement }) => {
+    const badge = canvasElement.querySelector<HTMLElement>('[data-slot="badge"]');
+    await expect(badge).not.toBeNull();
+    const counter = badge!.querySelector<HTMLElement>('[data-slot="badge-counter"]');
+
+    // A peça sai com o slot E com a classe da folha compartilhada: sem a classe
+    // o número renderiza como texto solto e nada mais na play notaria.
+    await expect(counter).not.toBeNull();
+    await expect(counter!.classList.contains('nds-badge-counter')).toBe(true);
+
+    // Dentro da etiqueta, e não ao lado dela.
+    await expect(badge!.contains(counter!)).toBe(true);
+
+    // À DIREITA do texto. O rótulo é um nó de texto solto, sem elemento próprio
+    // para medir, então o retângulo sai de um Range sobre ele — comparar com o
+    // retângulo da etiqueta inteira não distinguiria antes de depois.
+    const labelNode = [...badge!.childNodes].find(
+      (n) => n.nodeType === Node.TEXT_NODE && (n.textContent ?? '').trim().length > 0,
+    );
+    await expect(labelNode).toBeDefined();
+    const range = document.createRange();
+    range.selectNodeContents(labelNode!);
+    const labelRect = range.getBoundingClientRect();
+    const counterRect = counter!.getBoundingClientRect();
+    await expect(labelRect.width).toBeGreaterThan(0);
+    await expect(counterRect.width).toBeGreaterThan(0);
+    await expect(counterRect.left).toBeGreaterThanOrEqual(labelRect.right - 1);
+
+    // O número é LIDO: fica no texto acessível da etiqueta, sem aria-hidden.
+    // "Urgente 12" se lê inteiro, e é por isso que o número não pede rótulo.
+    await expect(counter!.hasAttribute('aria-hidden')).toBe(false);
+    await expect(counter!.textContent?.trim()).toBe('12');
+    await expect(badge!.textContent?.replace(/\s+/g, ' ').trim()).toBe('Urgente 12');
+
+    // A pílula precisa se separar do fundo da etiqueta para existir na tela.
+    const counterStyles = getComputedStyle(counter!);
+    await expect(counterStyles.backgroundColor).not.toBe(
+      getComputedStyle(badge!).backgroundColor,
+    );
+
+    // E o número precisa alcançar 4.5:1 CONTRA O FUNDO DA PRÓPRIA PEÇA — é o
+    // número que a decisão de mantê-la neutra comprou. Pintá-la com a cor da
+    // variante reprova aqui, que é o ponto.
+    const contrast = noTransicao(counter!, () => {
+      const background = backgroundEffective(counter!);
+      return background ? ratio(counterStyles.color, background) : null;
+    });
+    await expect(contrast).not.toBeNull();
+    await expect(contrast!.ratio).toBeGreaterThanOrEqual(4.5);
   },
 };
 

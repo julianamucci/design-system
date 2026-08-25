@@ -86,27 +86,53 @@ Alert (variant)
 
 **Propósito**: rótulo compacto para indicar status, categoria, contagem ou atributo de um elemento.
 
-**API e exemplos**: `src/components/ui/badge/badge.vue` + stories + `BadgeDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**API e exemplos**: `src/components/ui/badge/` (`Badge.vue`, `BadgeCounter.vue`) + stories + `BadgeDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Variantes**:
+**Desenho**: a etiqueta **não é preenchida**. Fundo e texto são sempre
+neutros (`--background` e `--foreground`), e quem carrega a variante é a
+**borda**, de 2px sólidos. Foi decisão de desenho para separá-la do botão, que
+continua preenchido — duas formas parecidas na mesma tela faziam a etiqueta
+parecer clicável. Efeito colateral bem-vindo: o contraste do texto deixou de
+depender da variante escolhida.
 
-| Variante | Implementação | Uso |
-|----------|---------------|-----|
-| `default` | nativa | Destaque principal — categoria, tag ativa |
-| `secondary` | nativa | Informativo secundário — categoria neutra |
-| `destructive` | nativa | Estado de erro ou alerta crítico |
-| `outline` | nativa | Sutil, sem preenchimento — tag opcional |
+**Variantes** — cada uma escreve UMA coisa, a cor da borda:
 
-> O Badge **não tem prop `size`** (tamanho via `class` customizado) e **não tem
-> variantes `success`/`warning`** — nem como prop nem como classe `.nds-badge-*`.
-> Caso pontual sobrescreve as vars internas escopadas (`--badge-bg` etc.,
+| Variante | Borda | Uso |
+|----------|-------|-----|
+| `default` | `--primary` | Destaque principal — categoria, tag ativa |
+| `secondary` | `--muted-foreground` | Informativo secundário — categoria neutra |
+| `destructive` | `--destructive` | Estado de erro ou alerta crítico |
+| `warning` | `--warning` | Pendência ou risco que ainda não é erro |
+| `success` | `--success` | Estado concluído ou aprovado |
+| `info` | `--info` | Contexto neutro que merece cor |
+| `outline` | `--border` | A borda mais discreta — rascunho, status secundário |
+
+> `secondary` usa `--muted-foreground` e **não** `--secondary`: medido, como
+> traço o token de fundo fica em ~1.1:1 contra a página e a variante sumiria.
+
+> O Badge **não tem prop `size`** — a dimensão é única. Caso pontual sobrescreve
+> as vars internas escopadas (`--badge-bg`, `--badge-fg`, `--badge-border`;
 > guideline 04 §Tokens de Componente); demanda recorrente vira patch de API,
 > como o #alert-five-variants.
+
+**Subpartes**:
+
+| Subparte | Slot | Papel |
+|----------|------|-------|
+| `Badge` | `badge` | A etiqueta. Elemento inline (`<span>`), para caber em frase e em célula |
+| `BadgeCounter` | `badge-counter` | Número à direita do texto, dentro da mesma etiqueta |
+
+> O contador é **neutro de propósito** — fundo `--secondary`, texto
+> `--foreground` — em qualquer variante. Pintá-lo com a cor da variante derruba
+> o número abaixo de 4.5:1 em parte dos temas; a cor não se perde, porque quem a
+> carrega é a borda ao redor. E **não é variante**: é peça que qualquer variante
+> aceita, e tratá-la como variante dobraria as combinações para dizer o mesmo.
 
 **Regras**:
 - Texto máximo: 2 palavras — para mais contexto, usar outro componente
 - **Cor não é o único indicador de estado** — sempre acompanhar cor de status com ícone ou texto descritivo
-- Contadores: limitar exibição a "99+" — não exibir números exatos acima de 99
+- Contadores: limitar exibição a "99+" — não exibir números exatos acima de 99. O truncamento é da aplicação; `BadgeCounter` não trata isso
+- Número dentro da etiqueta usa `BadgeCounter`, nunca a classe escrita à mão nem um segundo Badge aninhado
 - Consistência obrigatória: mesma semântica de cor em todo o produto (não usar `destructive` para promoções)
 - Badge clicável (link ou filtro): usar `asChild` com `<a>` ou `<button>` para semântica correta
 

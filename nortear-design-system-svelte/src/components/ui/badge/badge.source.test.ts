@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   badgeWithIconSource,
   badgeCounterSource,
+  badgeWithCounterSource,
   badgeDestructiveSource,
   buttonBadgeSource,
   badgeEmLinkSource,
@@ -59,6 +60,17 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('role="status"');
     expect(saida).toContain('aria-label="12 notificações não lidas"');
     expect(saida).toContain('<Badge variant="destructive">12</Badge>');
+  });
+
+  it('o contador dentro da etiqueta sai como peça, não como número solto', () => {
+    const saida = badgeWithCounterSource();
+    // A peça precisa aparecer no import: sem ela o leitor copia o snippet e o
+    // número renderiza como texto, sem a pílula.
+    expect(saida).toContain('import { Badge, BadgeCounter } from "@/components/ui/badge";');
+    expect(saida).toContain('<BadgeCounter>12</BadgeCounter>');
+    // À direita do texto, dentro da mesma etiqueta.
+    expect(saida.indexOf('Urgente')).toBeLessThan(saida.indexOf('<BadgeCounter>'));
+    expect(saida.indexOf('<BadgeCounter>')).toBeLessThan(saida.indexOf('</Badge>'));
   });
 
   it('na navegação, quem envolve a etiqueta é o link', () => {

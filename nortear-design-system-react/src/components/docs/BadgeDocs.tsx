@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { CheckCircle2, Check, Bell } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Badge, BadgeCounter } from "@/components/ui/badge";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -134,6 +134,7 @@ interface BadgeProps
   extends React.HTMLAttributes<HTMLSpanElement>,
     VariantProps<typeof badgeVariants> {}
 
+// A variante reaponta uma coisa só: a cor da borda.
 const badgeVariants = cva(
   "nds-badge",
   {
@@ -142,12 +143,18 @@ const badgeVariants = cva(
         default: "nds-badge-default",
         secondary: "nds-badge-secondary",
         destructive: "nds-badge-destructive",
+        warning: "nds-badge-warning",
+        success: "nds-badge-success",
+        info: "nds-badge-info",
         outline: "nds-badge-outline",
       },
     },
     defaultVariants: { variant: "default" },
   }
-);`;
+);
+
+// BadgeCounter — peça que qualquer variante aceita, não uma variante a mais.
+interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
 
   return (
     <DocsPageLayout
@@ -390,6 +397,20 @@ const badgeVariants = cva(
             ),
           },
           {
+            name: tContent("variants.compositions.withCounter.name"),
+            description: tContent("variants.compositions.withCounter.description"),
+            useWhen: tContent("variants.compositions.withCounter.use"),
+            // A peça é subcomponente, não prop: qualquer variante a aceita, e o
+            // conteúdo nem sempre é número puro ("99+").
+            code: `<Badge variant="destructive">\n  Urgente\n  <BadgeCounter>12</BadgeCounter>\n</Badge>`,
+            preview: (
+              <Badge variant="destructive">
+                Urgente
+                <BadgeCounter>12</BadgeCounter>
+              </Badge>
+            ),
+          },
+          {
             name: tContent("variants.compositions.asLink.name"),
             description: tContent("variants.compositions.asLink.description"),
             useWhen: tContent("variants.compositions.asLink.use"),
@@ -514,23 +535,28 @@ const badgeVariants = cva(
           description: tContent("tokens.table.part"),
         }}
         items={[
-          { token: "--primary", value: "bg-primary", description: tContent("tokens.table.primary") },
-          { token: "--primary-foreground", value: "text-primary-foreground", description: tContent("tokens.table.primaryForeground") },
-          { token: "--secondary", value: "bg-secondary", description: tContent("tokens.table.secondary") },
-          { token: "--secondary-foreground", value: "text-secondary-foreground", description: tContent("tokens.table.secondaryForeground") },
-          { token: "--destructive", value: "bg-destructive", description: tContent("tokens.table.destructive") },
-          { token: "--destructive-foreground", value: "text-destructive-foreground", description: tContent("tokens.table.destructiveForeground") },
-          { token: "--warning", value: "hsl(var(--warning) / var(--badge-alpha-bg))", description: tContent("tokens.table.warning") },
-          { token: "--success", value: "hsl(var(--success) / var(--badge-alpha-bg))", description: tContent("tokens.table.success") },
-          { token: "--info", value: "hsl(var(--info) / var(--badge-alpha-bg))", description: tContent("tokens.table.info") },
-          { token: "--foreground", value: "text-foreground", description: tContent("tokens.table.foreground") },
-          { token: "--ring", value: "focus:ring-ring", description: tContent("tokens.table.ring") },
-          { token: "--background", value: "focus:ring-offset-background", description: tContent("tokens.table.background") },
-          { token: "--badge-bg", value: "hsl(var(--primary))", description: tContent("tokens.table.badgeBg") },
-          { token: "--badge-fg", value: "hsl(var(--primary-foreground))", description: tContent("tokens.table.badgeFg") },
-          { token: "--badge-border", value: "transparent", description: tContent("tokens.table.badgeBorder") },
-          { token: "--badge-alpha-bg", value: "0.12 · 0.18 no escuro", description: tContent("tokens.table.badgeAlphaBg") },
-          { token: "--badge-alpha-border", value: "0.35", description: tContent("tokens.table.badgeAlphaBorder") },
+          // Cada linha diz onde o token entra HOJE. A variante mora na BORDA;
+          // fundo e texto são neutros em todas elas, e a única peça preenchida
+          // é o contador. Os pares `-foreground` saíram da tabela junto com o
+          // preenchimento: a badge não consome mais nenhum deles.
+          { token: "--primary", value: "border-color: hsl(var(--primary))", description: tContent("tokens.table.primary") },
+          { token: "--muted-foreground", value: "border-color: hsl(var(--muted-foreground))", description: tContent("tokens.table.mutedForeground") },
+          { token: "--destructive", value: "border-color: hsl(var(--destructive))", description: tContent("tokens.table.destructive") },
+          { token: "--warning", value: "border-color: hsl(var(--warning))", description: tContent("tokens.table.warning") },
+          { token: "--success", value: "border-color: hsl(var(--success))", description: tContent("tokens.table.success") },
+          { token: "--info", value: "border-color: hsl(var(--info))", description: tContent("tokens.table.info") },
+          { token: "--border", value: "border-color: hsl(var(--border))", description: tContent("tokens.table.border") },
+          { token: "--secondary", value: "background-color: hsl(var(--secondary))", description: tContent("tokens.table.secondary") },
+          { token: "--foreground", value: "color: hsl(var(--foreground))", description: tContent("tokens.table.foreground") },
+          { token: "--background", value: "background-color: hsl(var(--background))", description: tContent("tokens.table.background") },
+          { token: "--ring", value: "box-shadow: 0 0 0 5px hsl(var(--ring) / 0.5)", description: tContent("tokens.table.ring") },
+          // Fundo e texto não se movem mais entre variantes: quem cada uma
+          // reaponta é só `--badge-border`. Os dois alfas saíram da folha junto
+          // com o preenchimento — documentá-los seria ensinar uma customização
+          // que não muda nada na tela.
+          { token: "--badge-bg", value: "hsl(var(--background))", description: tContent("tokens.table.badgeBg") },
+          { token: "--badge-fg", value: "hsl(var(--foreground))", description: tContent("tokens.table.badgeFg") },
+          { token: "--badge-border", value: "hsl(var(--primary))", description: tContent("tokens.table.badgeBorder") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={tContent("tokens.customizationCode")}

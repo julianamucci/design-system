@@ -10,6 +10,7 @@ import {
   badgeSecondarySource,
   badgeSemanticasSource,
   badgeSource,
+  badgeWithCounterSource,
 } from './badge.source';
 
 describe('badgeSource', () => {
@@ -87,6 +88,19 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('role="status"');
     expect(saida).toContain('aria-label="12 notificações não lidas"');
     expect(saida).toContain('<Badge variant="destructive">12</Badge>');
+  });
+
+  it('o contador dentro da etiqueta vem do subcomponente, sem classe à mão', () => {
+    const saida = badgeWithCounterSource();
+    expect(saida).toContain(`import { Badge, BadgeCounter } from '@/components/ui/badge'`);
+    expect(saida).toContain('<BadgeCounter>12</BadgeCounter>');
+    // O número fica DEPOIS do texto: é o que a composição promete.
+    expect(saida.indexOf('Urgente')).toBeLessThan(saida.indexOf('<BadgeCounter>'));
+    // A peça já traz a própria classe; escrevê-la no snippet ensinaria a
+    // contornar o componente.
+    expect(saida).not.toContain('nds-badge-counter');
+    // O contador é neutro em qualquer variante — nada de variante nele.
+    expect(saida).not.toMatch(/<BadgeCounter[^>]*variant=/);
   });
 
   it('dentro de link e de botão, quem recebe o foco é o elemento de fora', () => {

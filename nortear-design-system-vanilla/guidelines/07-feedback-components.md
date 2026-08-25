@@ -58,36 +58,84 @@ div role=(alert | status | note — default alert)
 
 ## Badge
 
-**Propósito**: rótulo curto para status, contagem ou categoria.
+**Propósito**: rótulo compacto para indicar status, categoria, contagem ou atributo de um elemento.
 
-**API e exemplos**: `src/components/ui/badge.ts` + stories + `BadgeDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**API e exemplos**: `src/components/ui/badge.ts` (`createBadge`, `createBadgeCounter`) + stories + `BadgeDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+
+**Desenho**: a etiqueta **não é preenchida**. Fundo e texto são sempre neutros
+(`--background` e `--foreground`), e quem carrega a variante é a **borda**, de
+2px sólidos. Foi decisão de desenho para separá-la do botão, que continua
+preenchido — duas formas parecidas na mesma tela faziam a etiqueta parecer
+clicável. Efeito colateral bem-vindo: o contraste do texto deixou de depender da
+variante escolhida.
 
 **Estrutura**:
 
 ```
-span (inline-flex, rounded-full)
-└── label (texto curto)
+span[data-slot="badge"] (inline-flex, borda de 2px, radius-badge)
+├── ícone opcional (aria-hidden, antes do rótulo)
+├── rótulo (texto curto)
+└── span[data-slot="badge-counter"] (opcional, à direita do rótulo)
 ```
 
-**Variantes**:
+**Variantes** — cada uma escreve UMA coisa, a cor da borda:
 
-| Variante | Uso |
-|---|---|
-| `default` | Destaque primário |
-| `secondary` | Categoria neutra |
-| `outline` | Baixo destaque |
-| `destructive` | Status negativo |
+| Variante | Borda | Uso |
+|---|---|---|
+| `default` | `--primary` | Destaque principal — categoria, tag ativa |
+| `secondary` | `--muted-foreground` | Informativo secundário — categoria neutra |
+| `destructive` | `--destructive` | Estado de erro ou alerta crítico |
+| `warning` | `--warning` | Pendência ou risco que ainda não é erro |
+| `success` | `--success` | Estado concluído ou aprovado |
+| `info` | `--info` | Contexto neutro que merece cor |
+| `outline` | `--border` | A borda mais discreta — rascunho, status secundário |
+
+> `secondary` usa `--muted-foreground` e **não** `--secondary`: medido, como
+> traço o token de fundo fica em ~1.1:1 contra a página e a variante sumiria.
+
+> O Badge **não tem opção `size`** — a dimensão é única. Caso pontual sobrescreve
+> as vars internas escopadas (`--badge-bg`, `--badge-fg`, `--badge-border`;
+> guideline 04 §Tokens de Componente); demanda recorrente vira patch de API,
+> como o #alert-five-variants.
+
+**Subpeças** — subfábrica própria, como `createAlertTitle` e `createCardTitle`:
+
+| Subpeça | Fábrica | Slot | Papel |
+|---|---|---|---|
+| Etiqueta | `createBadge` | `badge` | Elemento inline (`<span>`), para caber em frase e em célula |
+| Contador | `createBadgeCounter` | `badge-counter` | Número à direita do texto, dentro da mesma etiqueta |
+
+> O contador é **neutro de propósito** — fundo `--secondary`, texto
+> `--foreground` — em qualquer variante. Pintá-lo com a cor da variante derruba
+> o número abaixo de 4.5:1 em parte dos temas; a cor não se perde, porque quem a
+> carrega é a borda ao redor. E **não é variante**: é peça que qualquer variante
+> aceita, e tratá-la como variante dobraria as combinações para dizer o mesmo.
+> O elemento devolvido entra na lista `children` de `createBadge`, junto do
+> rótulo — a fábrica da etiqueta não ganha ramo novo por causa dele.
 
 **Regras**:
-- Padding horizontal em `--spacing-2.5`, vertical em `--spacing-0.5`; nunca altura fixa
-- `rounded-full` para badges de status; `rounded-md` para chips de categoria
-- Font-weight `semibold` para legibilidade em tamanho pequeno
-- Variantes semânticas do Alert (success/warning/info) são opção `variant` da factory (PATCHES.md#alert-five-variants); no Badge não existem — caso pontual sobrescreve as vars internas escopadas (guideline 04 §Tokens de Componente)
-- Não usar emojis dentro do badge — usar ícone lucide (`h-3 w-3`) antes do label se necessário
+- Padding horizontal em `--spacing-2`, vertical em `--spacing-0-5`; nunca altura fixa
+- Texto máximo: 2 palavras — para mais contexto, usar outro componente
+- **Cor não é o único indicador de estado** — sempre acompanhar cor de status com ícone ou texto descritivo
+- Contadores: limitar exibição a "99+" — não exibir números exatos acima de 99. O truncamento é da aplicação; `createBadgeCounter` recebe o texto já formatado e não trata isso
+- Número dentro da etiqueta usa `createBadgeCounter`, nunca a classe escrita à mão nem um segundo badge aninhado
+- Consistência obrigatória: mesma semântica de cor em todo o produto (não usar `destructive` para promoções)
+- Não usar emojis dentro do badge — usar ícone lucide antes do rótulo se necessário; o tamanho vem de `.nds-badge > svg`
+- Badge clicável (link ou filtro): envolver em `<a>` ou `<button>`; nunca pendurar handler de clique no elemento devolvido pela fábrica
 
 **Acessibilidade**:
-- Se o badge representa status visualmente colorido, garantir 4.5:1 e incluir texto descritivo
-- Badge informativo (ex: "3 novas mensagens"): usar `aria-label` no elemento pai quando apenas o número for visível
+- Badge puramente decorativo (repetindo informação já visível): `aria-hidden="true"`
+- Badge de status sem contexto visual adjacente: `aria-label` descritivo — ex: `aria-label="Status: Ativo"`
+- Badge informativo em que só o número é visível: `aria-label` no elemento pai, dizendo do que é a contagem
+- Ícones dentro do badge: `aria-hidden="true"` — o texto do badge já descreve o estado
+- Quem recebe foco é o `<a>` ou o `<button>` em volta, e é dele o nome acessível
+
+**UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
+- Adjetivo ou substantivo de estado, 1–2 palavras, sem verbo, sem ponto final
+- Correto: "Ativo", "Pendente", "Em análise", "Novo", "Pro"
+- Incorreto: "Está ativo", "Aguardando análise", "É novo"
+
+**Analytics**: Badge sem ação não dispara eventos. Badge clicável (filtro, tag): `button_click` com `label`.
 
 ---
 

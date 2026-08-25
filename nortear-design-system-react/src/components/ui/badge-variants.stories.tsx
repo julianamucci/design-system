@@ -1,6 +1,7 @@
 import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
+import { resolveColor } from "@shared/testing/cor";
 import { Badge } from "./badge";
 import {
   badgeDefaultSource,
@@ -37,6 +38,11 @@ type Story = StoryObj<typeof meta>;
  * O que a variante promete é o desenho, e desenho se mede: cor de fundo, cor de
  * texto e borda. As plays antigas só perguntavam se o texto estava na tela —
  * passavam com as quatro variantes renderizando idênticas.
+ *
+ * O que cada variante promete MUDOU: a etiqueta deixou de ser preenchida, e
+ * quem carrega a variante agora é a borda, de 2px. Fundo e texto são neutros em
+ * todas — medir "fundo diferente entre variantes", como estas plays faziam,
+ * hoje reprovaria o desenho correto.
  */
 const pintura = (el: HTMLElement) => {
   const s = getComputedStyle(el);
@@ -47,7 +53,22 @@ const pintura = (el: HTMLElement) => {
     larguraBorda: s.borderTopWidth,
   };
 };
-const transparente = (cor: string) => cor === "rgba(0, 0, 0, 0)" || cor === "transparent";
+
+/**
+ * Cor que o TEMA VIGENTE dá ao token, medida de um elemento vivo — nunca um
+ * `rgb()` cravado: trocar de tema não pode reprovar o teste, mas trocar a
+ * regra pode.
+ */
+const token = (root: HTMLElement, tokenName: string) =>
+  resolveColor(root, `hsl(var(${tokenName}))`);
+
+/*
+ * O trio "fundo neutro, texto neutro, borda de 2px" se repete em toda play, e
+ * é de propósito que ele NÃO virou função: a contagem de asserções por story
+ * (`coverage_divergence`) lê o corpo do play, e asserção escondida atrás de
+ * uma chamada some da conta — a stack passaria a parecer sub-coberta ao lado
+ * das outras quatro, com o mesmo teste.
+ */
 
 export const Default: Story = {
   // O arquivo desliga os controls, então o `meta` não tem args de onde ler a
@@ -61,11 +82,13 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     const badge = canvas.getByText("Novo");
     await expect(badge).toHaveAttribute("data-variant", "default");
-    // functional.item1 — fundo preenchido, texto contrastante, borda invisível.
-    const { background, text, border } = pintura(badge);
-    await expect(transparente(background)).toBe(false);
-    await expect(background).not.toBe(text);
-    await expect(transparente(border)).toBe(true);
+    // functional.item1 — a ênfase alta vem da borda em --primary; fundo e texto
+    // ficam neutros, como em todas as outras.
+    const { background, text, border, larguraBorda } = pintura(badge);
+    await expect(border).toBe(token(canvasElement, "--primary"));
+    await expect(background).toBe(token(canvasElement, "--background"));
+    await expect(text).toBe(token(canvasElement, "--foreground"));
+    await expect(parseFloat(larguraBorda)).toBeGreaterThanOrEqual(2);
   },
 };
 
@@ -79,18 +102,25 @@ export const Secondary: Story = {
     const canvas = within(canvasElement);
     const badge = canvas.getByText("Beta");
     await expect(badge).toHaveAttribute("data-variant", "secondary");
-    // functional.item2 — preenchida como a default, mas em outra cor: é isso
-    // que faz a hierarquia entre as duas existir.
-    const { background, border } = pintura(badge);
-    await expect(transparente(background)).toBe(false);
-    await expect(transparente(border)).toBe(true);
+    const { background, text, border, larguraBorda } = pintura(badge);
+    // functional.item2 — o neutro que se VÊ: a borda é --muted-foreground, e
+    // não --secondary. Medido, --secondary como traço não chega a 1.4:1 contra
+    // a página e a variante sumiria — é a única cujo token de borda não tem o
+    // nome da variante, e é por isso que o teste cobra os dois lados.
+    await expect(border).toBe(token(canvasElement, "--muted-foreground"));
+    await expect(border).not.toBe(token(canvasElement, "--secondary"));
+    await expect(background).toBe(token(canvasElement, "--background"));
+    await expect(text).toBe(token(canvasElement, "--foreground"));
+    await expect(parseFloat(larguraBorda)).toBeGreaterThanOrEqual(2);
 
+    // A hierarquia entre secondary e default continua existindo — na borda,
+    // que é onde ela passou a morar.
     const referencia = document.createElement("span");
     referencia.className = "nds-badge nds-badge-default";
     canvasElement.appendChild(referencia);
-    const backgroundDefault = getComputedStyle(referencia).backgroundColor;
+    const defaultBorder = getComputedStyle(referencia).borderTopColor;
     referencia.remove();
-    await expect(background).not.toBe(backgroundDefault);
+    await expect(border).not.toBe(defaultBorder);
   },
 };
 
@@ -104,19 +134,22 @@ export const Destructive: Story = {
     const canvas = within(canvasElement);
     const badge = canvas.getByText("Urgente");
     await expect(badge).toHaveAttribute("data-variant", "destructive");
-    // functional.item3 — fundo suave E borda colorida, com o texto no
-    // --foreground. É a combinação que sustenta os 4.5:1 documentados: cor
-    // sinaliza, contraste vem do texto neutro.
-    const { background, text, border } = pintura(badge);
-    await expect(transparente(background)).toBe(false);
-    await expect(transparente(border)).toBe(false);
+    // functional.item3 — a cor sinaliza pela borda e o contraste vem do texto
+    // neutro: com fundo e texto fora do par semântico, os 4.5:1 do rótulo não
+    // dependem mais de qual variante se escolheu.
+    const { background, text, border, larguraBorda } = pintura(badge);
+    await expect(border).toBe(token(canvasElement, "--destructive"));
+    await expect(background).toBe(token(canvasElement, "--background"));
+    await expect(parseFloat(larguraBorda)).toBeGreaterThanOrEqual(2);
 
+    // O texto neutro é medido de uma referência viva, e não cravado em rgb().
     const referencia = document.createElement("span");
     referencia.className = "nds-badge nds-badge-outline";
     canvasElement.appendChild(referencia);
     const neutralText = getComputedStyle(referencia).color;
     referencia.remove();
     await expect(text).toBe(neutralText);
+    await expect(text).toBe(token(canvasElement, "--foreground"));
   },
 };
 
@@ -130,11 +163,15 @@ export const Outline: Story = {
     const canvas = within(canvasElement);
     const badge = canvas.getByText("Rascunho");
     await expect(badge).toHaveAttribute("data-variant", "outline");
-    // functional.item4 — só borda: sem fundo é o que a diferencia das outras.
-    const { background, border, larguraBorda } = pintura(badge);
-    await expect(transparente(background)).toBe(true);
-    await expect(transparente(border)).toBe(false);
-    await expect(parseFloat(larguraBorda)).toBeGreaterThan(0);
+    // functional.item4 — a borda mais discreta do conjunto: a hairline neutra
+    // que input e card já desenham. O que a diferencia não é a ausência de
+    // fundo (nenhuma variante tem preenchimento), e sim a ausência de cor.
+    const { background, text, border, larguraBorda } = pintura(badge);
+    await expect(border).toBe(token(canvasElement, "--border"));
+    await expect(border).not.toBe(token(canvasElement, "--primary"));
+    await expect(background).toBe(token(canvasElement, "--background"));
+    await expect(text).toBe(token(canvasElement, "--foreground"));
+    await expect(parseFloat(larguraBorda)).toBeGreaterThanOrEqual(2);
   },
 };
 
@@ -179,20 +216,23 @@ export const Semantics: Story = {
     const neutralText = getComputedStyle(referencia).color;
     referencia.remove();
 
-    const fundos: string[] = [];
+    const borders: string[] = [];
     for (const [name, badge] of Object.entries(badges)) {
       await expect(badge).toHaveAttribute("data-variant", name);
-      const { background, text, border } = pintura(badge);
-      // functional.item7 — cor vem do fundo e da borda; o texto fica neutro,
-      // que é o que sustenta 4.5:1 sem depender da variante escolhida.
-      await expect(transparente(background)).toBe(false);
-      await expect(transparente(border)).toBe(false);
+      const { background, text, border, larguraBorda } = pintura(badge);
+      // functional.item7 — a cor vem da borda; o texto fica neutro, que é o que
+      // sustenta 4.5:1 sem depender da variante escolhida.
+      await expect(border).toBe(token(canvasElement, `--${name}`));
       await expect(text).toBe(neutralText);
-      fundos.push(background);
+      await expect(background).toBe(token(canvasElement, "--background"));
+      await expect(parseFloat(larguraBorda)).toBeGreaterThanOrEqual(2);
+      borders.push(border);
     }
 
     // Três cores, e não três nomes para a mesma: sem isto, copiar o bloco do
-    // destructive nas três passaria.
-    await expect(new Set(fundos).size).toBe(3);
+    // destructive nas três passaria. A checagem migrou do fundo para a borda —
+    // hoje as três compartilham o mesmo fundo neutro, e comparar fundos
+    // reprovaria o desenho correto.
+    await expect(new Set(borders).size).toBe(3);
   },
 };

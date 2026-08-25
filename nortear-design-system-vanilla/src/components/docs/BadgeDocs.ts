@@ -3,7 +3,7 @@ import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { X, Star } from 'lucide';
-import { createBadge, type BadgeVariant } from '@/components/ui/badge';
+import { createBadge, createBadgeCounter, type BadgeVariant } from '@/components/ui/badge';
 import uiTranslations from '@/i18n/ui.json';
 import badgeTranslations from '@shared/content/badge/translations.json';
 
@@ -463,6 +463,21 @@ export function createBadgeDocs(): HTMLElement {
               },
             },
             {
+              name: t('variants.compositions.withCounter.name'),
+              description: t('variants.compositions.withCounter.description'),
+              useWhen: t('variants.compositions.withCounter.use'),
+              code:
+                `const etiqueta = createBadge({\n` +
+                `  variant: 'destructive',\n` +
+                `  children: ['Urgente', createBadgeCounter({ text: '12' })],\n` +
+                `});`,
+              previewFactory: () =>
+                createBadge({
+                  variant: 'destructive',
+                  children: ['Urgente', createBadgeCounter({ text: '12' })],
+                }),
+            },
+            {
               name: t('variants.compositions.asLink.name'),
               description: t('variants.compositions.asLink.description'),
               useWhen: t('variants.compositions.asLink.use'),
@@ -569,23 +584,24 @@ export interface BadgeOptions {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--primary',               value: 'bg-primary',               description: t('tokens.table.primary')               },
-            { token: '--primary-foreground',    value: 'text-primary-foreground',  description: t('tokens.table.primaryForeground')    },
-            { token: '--secondary',             value: 'bg-secondary',             description: t('tokens.table.secondary')             },
-            { token: '--secondary-foreground',  value: 'text-secondary-foreground',description: t('tokens.table.secondaryForeground')  },
-            { token: '--destructive',           value: 'bg-destructive',           description: t('tokens.table.destructive')           },
-            { token: '--destructive-foreground',value: 'text-destructive-foreground', description: t('tokens.table.destructiveForeground') },
-            { token: '--warning',               value: 'hsl(var(--warning) / var(--badge-alpha-bg))', description: t('tokens.table.warning') },
-            { token: '--success',               value: 'hsl(var(--success) / var(--badge-alpha-bg))', description: t('tokens.table.success') },
-            { token: '--info',                  value: 'hsl(var(--info) / var(--badge-alpha-bg))',    description: t('tokens.table.info')    },
-            { token: '--foreground',            value: 'text-foreground',          description: t('tokens.table.foreground')            },
-            { token: '--ring',                  value: 'focus:ring-ring',          description: t('tokens.table.ring')                  },
-            { token: '--background',            value: 'focus:ring-offset-2',      description: t('tokens.table.background')            },
-            { token: '--badge-bg',              value: 'hsl(var(--primary))',      description: t('tokens.table.badgeBg')               },
-            { token: '--badge-fg',              value: 'hsl(var(--primary-foreground))', description: t('tokens.table.badgeFg')         },
-            { token: '--badge-border',          value: 'transparent',              description: t('tokens.table.badgeBorder')           },
-            { token: '--badge-alpha-bg',        value: '0.12 · 0.18 no escuro',    description: t('tokens.table.badgeAlphaBg')          },
-            { token: '--badge-alpha-border',    value: '0.35',                     description: t('tokens.table.badgeAlphaBorder')      },
+            // A coluna do meio diz ONDE o token é lido, e não uma classe de
+            // utilitária: o par semântico (`--primary-foreground` e companhia)
+            // saiu do badge junto com o preenchimento, e as duas vars de alfa
+            // deixaram de existir na folha.
+            { token: '--primary',          value: '.nds-badge-default',       description: t('tokens.table.primary')         },
+            { token: '--muted-foreground', value: '.nds-badge-secondary',     description: t('tokens.table.mutedForeground') },
+            { token: '--destructive',      value: '.nds-badge-destructive',   description: t('tokens.table.destructive')     },
+            { token: '--warning',          value: '.nds-badge-warning',       description: t('tokens.table.warning')         },
+            { token: '--success',          value: '.nds-badge-success',       description: t('tokens.table.success')         },
+            { token: '--info',             value: '.nds-badge-info',          description: t('tokens.table.info')            },
+            { token: '--border',           value: '.nds-badge-outline',       description: t('tokens.table.border')          },
+            { token: '--secondary',        value: '.nds-badge-counter',       description: t('tokens.table.secondary')       },
+            { token: '--foreground',       value: '.nds-badge',               description: t('tokens.table.foreground')      },
+            { token: '--background',       value: '.nds-badge',               description: t('tokens.table.background')      },
+            { token: '--ring',             value: '.nds-badge:focus-visible', description: t('tokens.table.ring')            },
+            { token: '--badge-bg',         value: 'hsl(var(--background))',   description: t('tokens.table.badgeBg')         },
+            { token: '--badge-fg',         value: 'hsl(var(--foreground))',   description: t('tokens.table.badgeFg')         },
+            { token: '--badge-border',     value: 'hsl(var(--primary))',      description: t('tokens.table.badgeBorder')     },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),

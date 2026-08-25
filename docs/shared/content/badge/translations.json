@@ -31,7 +31,7 @@
       "item1": "<strong>Badge</strong> — container <code>&lt;span&gt;</code>. Etiqueta inline: cabe dentro de frase, título e célula de tabela sem quebrar a linha.",
       "item2": "<strong>Conteúdo</strong> — texto curto ou número. Ideal: 1 a 3 palavras ou valores numéricos compactos.",
       "item3": "<strong>Ícone (opcional)</strong> — usado antes do texto para reforçar status. Deve ter <code>aria-hidden=\"true\"</code>.",
-      "item4": "<strong>Variante</strong> — definida via prop <code>variant</code>: default, secondary, destructive ou outline.",
+      "item4": "<strong>Variante</strong> — definida via prop <code>variant</code>: default, secondary, destructive, warning, success, info ou outline. Ela escolhe a COR DA BORDA; fundo e texto não mudam.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<Badge variant=\"default\">   {/* Container inline-flex */}\n  <Icon />              {/* Ícone opcional, aria-hidden */}\n  Texto                 {/* Rótulo curto */}\n</Badge>",
@@ -146,13 +146,13 @@
       "visualTitle": "Variantes Disponíveis",
       "note": "O Badge oferece 4 variantes nativas via prop <code>variant</code>. Não possui prop <code>size</code> — a dimensão é única (texto pequeno semibold com padding compacto, definidos no CSS do componente).",
       "items": {
-        "default": "Destaque principal. Fundo <code>primary</code>, ideal para itens novos ou ações em evidência.",
-        "secondary": "Neutro informativo. Fundo <code>secondary</code>, ideal para categorias e tags.",
-        "destructive": "Alerta ou erro. Fundo <code>destructive</code>, uso restrito a estados críticos.",
+        "default": "Destaque principal. Borda em <code>primary</code>, ideal para itens novos ou ações em evidência.",
+        "secondary": "Neutro informativo. Borda cinza legível, ideal para categorias e tags sem carga semântica.",
+        "destructive": "Alerta ou erro. Borda em <code>destructive</code>, uso restrito a estados críticos.",
         "warning": "Atenção. Sinaliza pendência ou risco que ainda não é erro — prazo próximo, revisão necessária.",
         "success": "Confirmação. Estado concluído ou aprovado, como pagamento compensado ou publicação no ar.",
         "info": "Informativo. Contexto neutro que merece cor, como etiqueta de novidade ou nível baixo de prioridade.",
-        "outline": "Baixa ênfase. Apenas borda e texto, sem fundo, ideal para rascunhos ou status secundários."
+        "outline": "Baixa ênfase. A borda mais discreta do conjunto, para rascunhos e status secundários que não devem competir por atenção."
       },
       "compositionsTitle": "Composições",
       "compositions": {
@@ -175,6 +175,11 @@
           "name": "Como trigger clicável",
           "description": "Badge envolvido em <code>&lt;button&gt;</code>. O botão gerencia foco, teclado e eventos; o Badge é apenas a aparência.",
           "use": "Filtros, chips ativáveis, trigger de menu. Nunca aplique <code>onClick</code> direto no Badge — sempre envolva em botão."
+        },
+        "withCounter": {
+          "name": "Com contador",
+          "description": "A etiqueta compõe rótulo + <code>BadgeCounter</code>: o número fica à direita do texto, dentro da mesma borda. O contador é neutro de propósito — preenchê-lo com a cor da variante deixaria o número sem contraste em parte dos temas, e a cor já é dada pela borda ao redor.",
+          "use": "Etiqueta que soma quantidade ao rótulo — \"Urgente 12\", \"Em revisão 3\". Quando o número sozinho basta, use o contador simples em vez desta composição."
         }
       }
     },
@@ -214,27 +219,24 @@
         "token": "Token CSS",
         "class": "Aplicação no tema",
         "part": "Parte do componente",
-        "primary": "Fundo (variante default)",
-        "primaryForeground": "Texto (variante default)",
-        "secondary": "Fundo (variante secondary)",
-        "secondaryForeground": "Texto (variante secondary)",
-        "destructive": "Fundo (variante destructive)",
-        "destructiveForeground": "Texto (variante destructive)",
-        "foreground": "Texto (variante outline)",
+        "primary": "Borda (variante default)",
+        "secondary": "Fundo do contador",
+        "destructive": "Borda (variante destructive)",
+        "foreground": "Texto de TODAS as variantes",
         "ring": "Cor do foco visível",
-        "background": "Offset do anel de foco",
-        "badgeBg": "Fundo — var interna, re-apontada por cada variante",
-        "badgeFg": "Texto — var interna",
-        "badgeBorder": "Borda — var interna",
-        "warning": "Fundo e borda (variante warning)",
-        "success": "Fundo e borda (variante success)",
-        "info": "Fundo e borda (variante info)",
-        "badgeAlphaBg": "Alfa do fundo nas variantes de fundo suave — sobe no tema escuro",
-        "badgeAlphaBorder": "Alfa da borda nas variantes de fundo suave"
+        "background": "Fundo de todas as variantes, e offset do anel de foco",
+        "badgeBg": "Fundo — var interna, hoje sempre neutra",
+        "badgeFg": "Texto — var interna, hoje sempre neutro",
+        "badgeBorder": "Borda — var interna, a ÚNICA que cada variante re-aponta",
+        "warning": "Borda (variante warning)",
+        "success": "Borda (variante success)",
+        "info": "Borda (variante info)",
+        "mutedForeground": "Borda (variante secondary)",
+        "border": "Borda (variante outline)"
       },
       "customizationTitle": "Como personalizar via tema:",
       "customizationCode": {
-        "web": "/* Override escopado — as vars nascem no próprio .nds-badge. */\n.meu-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* Nas variantes de fundo suave o alfa é o knob: a cor vem do token semântico,\n   e a intensidade sai daqui. O tema escuro redeclara só o alfa do fundo. */\n.meu-tema .nds-badge-warning {\n  --badge-alpha-bg: 0.2;\n  --badge-alpha-border: 0.45;\n}"
+        "web": "/* Override escopado — as vars nascem no próprio .nds-badge. */\n.meu-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* Cada variante re-aponta UMA coisa: a cor da borda. */\n.meu-tema .nds-badge-warning {\n  --badge-border: hsl(var(--warning));\n}"
       }
     },
     "accessibility": {
@@ -307,22 +309,22 @@
         "description": "O que deve acontecer para cada configuração do Badge.",
         "item1": {
           "action": "Renderizar variante default",
-          "result": "Container usa --primary no fundo, --primary-foreground no texto e borda transparente",
+          "result": "Borda de 2px em --primary, com fundo --background e texto --foreground",
           "priority": "high"
         },
         "item2": {
           "action": "Renderizar variante secondary",
-          "result": "Fundo em --secondary com texto em --secondary-foreground",
+          "result": "Borda de 2px em --muted-foreground, neutra e legível contra a página",
           "priority": "high"
         },
         "item3": {
           "action": "Renderizar variante destructive",
-          "result": "Fundo soft em --destructive com texto em --foreground (contraste 4.5:1)",
+          "result": "Borda de 2px em --destructive, com o mesmo fundo e texto das demais",
           "priority": "high"
         },
         "item4": {
           "action": "Renderizar variante outline",
-          "result": "Apenas borda padrão e texto em --foreground, sem fundo",
+          "result": "Borda de 2px em --border, a mais discreta do conjunto",
           "priority": "high"
         },
         "item5": {
@@ -337,7 +339,7 @@
         },
         "item7": {
           "action": "Renderizar as variantes semânticas warning, success e info",
-          "result": "Cada uma com fundo e borda na própria cor semântica e o texto em --foreground; as três diferentes entre si",
+          "result": "Cada uma com a borda na própria cor; fundo e texto não mudam entre variantes",
           "priority": "high"
         }
       },
@@ -387,6 +389,10 @@
         "item5": {
           "story": "Variantes — as três semânticas (warning, success, info)",
           "priority": "high"
+        },
+        "item6": {
+          "story": "Composições — etiqueta com contador à direita do texto",
+          "priority": "medium"
         }
       }
     },
@@ -443,7 +449,7 @@
       "item1": "<strong>Badge</strong> — <code>&lt;span&gt;</code> container. An inline label: it fits inside a sentence, a heading, or a table cell without breaking the line.",
       "item2": "<strong>Content</strong> — short text or number. Ideal: 1 to 3 words or compact numeric values.",
       "item3": "<strong>Icon (optional)</strong> — placed before text to reinforce status. Must have <code>aria-hidden=\"true\"</code>.",
-      "item4": "<strong>Variant</strong> — set via the <code>variant</code> prop: default, secondary, destructive, or outline.",
+      "item4": "<strong>Variant</strong> — set via the <code>variant</code> prop: default, secondary, destructive, warning, success, info or outline. It picks the BORDER COLOUR; fill and text do not change.",
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<Badge variant=\"default\">   {/* inline-flex container */}\n  <Icon />              {/* Optional icon, aria-hidden */}\n  Text                  {/* Short label */}\n</Badge>",
@@ -558,13 +564,13 @@
       "visualTitle": "Available Variants",
       "note": "Badge offers 4 native variants via the <code>variant</code> prop. It has no <code>size</code> prop — the dimension is fixed (small semibold text with compact padding, defined in the component's CSS).",
       "items": {
-        "default": "Primary emphasis. <code>primary</code> background, ideal for new items or highlighted actions.",
-        "secondary": "Neutral informational. <code>secondary</code> background, ideal for categories and tags.",
-        "destructive": "Alert or error. <code>destructive</code> background, reserved for critical states only.",
+        "default": "Primary emphasis. <code>primary</code> border, ideal for new items or highlighted actions.",
+        "secondary": "Neutral informational. Readable grey border, ideal for categories and tags with no semantic weight.",
+        "destructive": "Alert or error. <code>destructive</code> border, reserved for critical states only.",
         "warning": "Attention. Flags something pending or risky that is not yet an error — an approaching deadline, a review due.",
         "success": "Confirmation. A finished or approved state, such as a cleared payment or a published item.",
         "info": "Informational. Neutral context that still deserves colour, such as a new tag or a low priority level.",
-        "outline": "Low emphasis. Border and text only, no background, ideal for drafts or secondary statuses."
+        "outline": "Low emphasis. The quietest border of the set, for drafts and secondary statuses that should not compete for attention."
       },
       "compositionsTitle": "Compositions",
       "compositions": {
@@ -587,6 +593,11 @@
           "name": "As clickable trigger",
           "description": "Badge wrapped in <code>&lt;button&gt;</code>. The button handles focus, keyboard, and events; the Badge is just the appearance.",
           "use": "Filters, toggleable chips, menu triggers. Never apply <code>onClick</code> directly to the Badge — always wrap in a button."
+        },
+        "withCounter": {
+          "name": "With counter",
+          "description": "The badge composes a label + <code>BadgeCounter</code>: the number sits to the right of the text, inside the same border. The counter is deliberately neutral — filling it with the variant colour would leave the number without contrast in some themes, and the colour is already carried by the border around it.",
+          "use": "A label that adds a quantity to the text — \"Urgent 12\", \"In review 3\". When the number alone is enough, use the plain counter instead of this composition."
         }
       }
     },
@@ -626,27 +637,24 @@
         "token": "CSS Token",
         "class": "Theme application",
         "part": "Component Part",
-        "primary": "Background (default variant)",
-        "primaryForeground": "Text (default variant)",
-        "secondary": "Background (secondary variant)",
-        "secondaryForeground": "Text (secondary variant)",
-        "destructive": "Background (destructive variant)",
-        "destructiveForeground": "Text (destructive variant)",
-        "foreground": "Text (outline variant)",
-        "ring": "Visible focus color",
-        "background": "Focus ring offset",
-        "badgeBg": "Background — internal var, re-pointed by each variant",
-        "badgeFg": "Text — internal var",
-        "badgeBorder": "Border — internal var",
-        "warning": "Background and border (warning variant)",
-        "success": "Background and border (success variant)",
-        "info": "Background and border (info variant)",
-        "badgeAlphaBg": "Background alpha on the soft-background variants — raised in dark theme",
-        "badgeAlphaBorder": "Border alpha on the soft-background variants"
+        "primary": "Border (default variant)",
+        "secondary": "Counter fill",
+        "destructive": "Border (destructive variant)",
+        "foreground": "Text of EVERY variant",
+        "ring": "Visible focus colour",
+        "background": "Fill of every variant, and focus-ring offset",
+        "badgeBg": "Fill — internal var, always neutral today",
+        "badgeFg": "Text — internal var, always neutral today",
+        "badgeBorder": "Border — internal var, the ONLY one each variant re-points",
+        "warning": "Border (warning variant)",
+        "success": "Border (success variant)",
+        "info": "Border (info variant)",
+        "mutedForeground": "Border (secondary variant)",
+        "border": "Border (outline variant)"
       },
       "customizationTitle": "How to customize via theme:",
       "customizationCode": {
-        "web": "/* Scoped override — the vars are born on .nds-badge itself. */\n.my-theme .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* On the soft-background variants the alpha is the knob: the colour comes from\n   the semantic token, the intensity from here. Dark theme redeclares only the\n   background alpha. */\n.my-theme .nds-badge-warning {\n  --badge-alpha-bg: 0.2;\n  --badge-alpha-border: 0.45;\n}"
+        "web": "/* Scoped override — the vars are born on .nds-badge itself. */\n.my-theme .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* Each variant re-points ONE thing: the border colour. */\n.my-theme .nds-badge-warning {\n  --badge-border: hsl(var(--warning));\n}"
       }
     },
     "accessibility": {
@@ -718,23 +726,23 @@
         "title": "Functional Behavior",
         "description": "What should happen for each Badge configuration.",
         "item1": {
-          "action": "Render default variant",
-          "result": "Container uses --primary background, --primary-foreground text, and transparent border",
+          "action": "Render the default variant",
+          "result": "2px border in --primary, with --background fill and --foreground text",
           "priority": "high"
         },
         "item2": {
-          "action": "Render secondary variant",
-          "result": "Background in --secondary with text in --secondary-foreground",
+          "action": "Render the secondary variant",
+          "result": "2px border in --muted-foreground, neutral and legible against the page",
           "priority": "high"
         },
         "item3": {
-          "action": "Render destructive variant",
-          "result": "Soft background in --destructive with text in --foreground (4.5:1 contrast)",
+          "action": "Render the destructive variant",
+          "result": "2px border in --destructive, with the same fill and text as the others",
           "priority": "high"
         },
         "item4": {
-          "action": "Render outline variant",
-          "result": "Only default border and --foreground text, no background",
+          "action": "Render the outline variant",
+          "result": "2px border in --border, the quietest of the set",
           "priority": "high"
         },
         "item5": {
@@ -749,7 +757,7 @@
         },
         "item7": {
           "action": "Render the semantic variants warning, success and info",
-          "result": "Each with background and border in its own semantic colour and text in --foreground; the three distinct from one another",
+          "result": "Each with its own border colour; fill and text do not change between variants",
           "priority": "high"
         }
       },
@@ -799,6 +807,10 @@
         "item5": {
           "story": "Variants — the three semantic ones (warning, success, info)",
           "priority": "high"
+        },
+        "item6": {
+          "story": "Compositions — badge with a counter to the right of the text",
+          "priority": "medium"
         }
       }
     },
@@ -855,7 +867,7 @@
       "item1": "<strong>Badge</strong> — contenedor <code>&lt;span&gt;</code>. Etiqueta inline: cabe dentro de una frase, un título o una celda de tabla sin romper la línea.",
       "item2": "<strong>Contenido</strong> — texto corto o número. Ideal: 1 a 3 palabras o valores numéricos compactos.",
       "item3": "<strong>Ícono (opcional)</strong> — colocado antes del texto para reforzar el estado. Debe tener <code>aria-hidden=\"true\"</code>.",
-      "item4": "<strong>Variante</strong> — definida vía prop <code>variant</code>: default, secondary, destructive u outline.",
+      "item4": "<strong>Variante</strong> — definida vía prop <code>variant</code>: default, secondary, destructive, warning, success, info u outline. Elige el COLOR DEL BORDE; fondo y texto no cambian.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<Badge variant=\"default\">   {/* Contenedor inline-flex */}\n  <Icon />              {/* Ícono opcional, aria-hidden */}\n  Texto                 {/* Etiqueta corta */}\n</Badge>",
@@ -970,13 +982,13 @@
       "visualTitle": "Variantes Disponibles",
       "note": "Badge ofrece 4 variantes nativas vía la prop <code>variant</code>. No tiene prop <code>size</code> — la dimensión es única (texto pequeño semibold con padding compacto, definidos en el CSS del componente).",
       "items": {
-        "default": "Énfasis principal. Fondo <code>primary</code>, ideal para ítems nuevos o acciones destacadas.",
-        "secondary": "Neutro informativo. Fondo <code>secondary</code>, ideal para categorías y tags.",
-        "destructive": "Alerta o error. Fondo <code>destructive</code>, reservado para estados críticos.",
+        "default": "Énfasis principal. Borde en <code>primary</code>, ideal para ítems nuevos o acciones destacadas.",
+        "secondary": "Neutro informativo. Borde gris legible, ideal para categorías y tags sin carga semántica.",
+        "destructive": "Alerta o error. Borde en <code>destructive</code>, reservado para estados críticos.",
         "warning": "Atención. Señala algo pendiente o riesgoso que aún no es un error: un plazo cercano, una revisión necesaria.",
         "success": "Confirmación. Estado concluido o aprobado, como un pago acreditado o una publicación en línea.",
         "info": "Informativo. Contexto neutro que merece color, como una etiqueta de novedad o un nivel bajo de prioridad.",
-        "outline": "Baja énfasis. Solo borde y texto, sin fondo, ideal para borradores o estados secundarios."
+        "outline": "Baja énfasis. El borde más discreto del conjunto, para borradores y estados secundarios que no deben competir por atención."
       },
       "compositionsTitle": "Composiciones",
       "compositions": {
@@ -999,6 +1011,11 @@
           "name": "Como trigger clickeable",
           "description": "Badge envuelto en <code>&lt;button&gt;</code>. El botón gestiona foco, teclado y eventos; el Badge es solo apariencia.",
           "use": "Filtros, chips activables, trigger de menú. Nunca apliques <code>onClick</code> directamente al Badge — envuelve siempre en un botón."
+        },
+        "withCounter": {
+          "name": "Con contador",
+          "description": "La etiqueta compone rótulo + <code>BadgeCounter</code>: el número queda a la derecha del texto, dentro del mismo borde. El contador es neutro a propósito — rellenarlo con el color de la variante dejaría el número sin contraste en algunos temas, y el color ya lo da el borde alrededor.",
+          "use": "Etiqueta que suma cantidad al rótulo — \"Urgente 12\", \"En revisión 3\". Cuando el número solo basta, usa el contador simple en lugar de esta composición."
         }
       }
     },
@@ -1038,27 +1055,24 @@
         "token": "Token CSS",
         "class": "Aplicación en el tema",
         "part": "Parte del componente",
-        "primary": "Fondo (variante default)",
-        "primaryForeground": "Texto (variante default)",
-        "secondary": "Fondo (variante secondary)",
-        "secondaryForeground": "Texto (variante secondary)",
-        "destructive": "Fondo (variante destructive)",
-        "destructiveForeground": "Texto (variante destructive)",
-        "foreground": "Texto (variante outline)",
+        "primary": "Borde (variante default)",
+        "secondary": "Fondo del contador",
+        "destructive": "Borde (variante destructive)",
+        "foreground": "Texto de TODAS las variantes",
         "ring": "Color del foco visible",
-        "background": "Offset del anillo de foco",
-        "badgeBg": "Fondo — var interna, reasignada por cada variante",
-        "badgeFg": "Texto — var interna",
-        "badgeBorder": "Borde — var interna",
-        "warning": "Fondo y borde (variante warning)",
-        "success": "Fondo y borde (variante success)",
-        "info": "Fondo y borde (variante info)",
-        "badgeAlphaBg": "Alfa del fondo en las variantes de fondo suave — sube en el tema oscuro",
-        "badgeAlphaBorder": "Alfa del borde en las variantes de fondo suave"
+        "background": "Fondo de todas las variantes, y desplazamiento del anillo de foco",
+        "badgeBg": "Fondo — var interna, hoy siempre neutra",
+        "badgeFg": "Texto — var interna, hoy siempre neutro",
+        "badgeBorder": "Borde — var interna, la ÚNICA que cada variante reapunta",
+        "warning": "Borde (variante warning)",
+        "success": "Borde (variante success)",
+        "info": "Borde (variante info)",
+        "mutedForeground": "Borde (variante secondary)",
+        "border": "Borde (variante outline)"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
       "customizationCode": {
-        "web": "/* Override con alcance — las vars nacen en el propio .nds-badge. */\n.mi-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* En las variantes de fondo suave el alfa es la perilla: el color viene del\n   token semántico y la intensidad de aquí. El tema oscuro redeclara solo el\n   alfa del fondo. */\n.mi-tema .nds-badge-warning {\n  --badge-alpha-bg: 0.2;\n  --badge-alpha-border: 0.45;\n}"
+        "web": "/* Override con alcance — las vars nacen en el propio .nds-badge. */\n.mi-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* Cada variante reapunta UNA cosa: el color del borde. */\n.mi-tema .nds-badge-warning {\n  --badge-border: hsl(var(--warning));\n}"
       }
     },
     "accessibility": {
@@ -1130,23 +1144,23 @@
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Badge.",
         "item1": {
-          "action": "Renderizar variante default",
-          "result": "Contenedor usa --primary de fondo, --primary-foreground en el texto y borde transparente",
+          "action": "Renderizar la variante default",
+          "result": "Borde de 2px en --primary, con fondo --background y texto --foreground",
           "priority": "high"
         },
         "item2": {
-          "action": "Renderizar variante secondary",
-          "result": "Fondo en --secondary con texto en --secondary-foreground",
+          "action": "Renderizar la variante secondary",
+          "result": "Borde de 2px en --muted-foreground, neutro y legible contra la página",
           "priority": "high"
         },
         "item3": {
-          "action": "Renderizar variante destructive",
-          "result": "Fondo soft en --destructive con texto en --foreground (contraste 4.5:1)",
+          "action": "Renderizar la variante destructive",
+          "result": "Borde de 2px en --destructive, con el mismo fondo y texto que las demás",
           "priority": "high"
         },
         "item4": {
-          "action": "Renderizar variante outline",
-          "result": "Solo borde predeterminado y texto en --foreground, sin fondo",
+          "action": "Renderizar la variante outline",
+          "result": "Borde de 2px en --border, el más discreto del conjunto",
           "priority": "high"
         },
         "item5": {
@@ -1161,7 +1175,7 @@
         },
         "item7": {
           "action": "Renderizar las variantes semánticas warning, success e info",
-          "result": "Cada una con fondo y borde en su propio color semántico y el texto en --foreground; las tres distintas entre sí",
+          "result": "Cada una con su propio color de borde; fondo y texto no cambian entre variantes",
           "priority": "high"
         }
       },
@@ -1211,6 +1225,10 @@
         "item5": {
           "story": "Variantes — las tres semánticas (warning, success, info)",
           "priority": "high"
+        },
+        "item6": {
+          "story": "Composiciones — etiqueta con contador a la derecha del texto",
+          "priority": "medium"
         }
       }
     },

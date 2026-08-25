@@ -99,6 +99,45 @@ export function badgeEmGrupoSourceCom(
   return (_gerado, ctx) => badgeEmGrupoSnippet({ ...ctx.args, ...fixas });
 }
 
+// ─── Contador dentro da etiqueta ─────────────────────────────────────────────
+
+export type BadgeWithCounterSnippetOptions = {
+  variant?: BadgeVariant;
+  label?: string;
+  /** Número já formatado — acima de 99, a aplicação passa `'99+'`. */
+  count?: string;
+};
+
+/**
+ * FORMA diferente: o `children` recebe a LISTA rótulo + contador, e o contador
+ * vem de uma subfábrica própria. Escrever a classe `.nds-badge-counter` à mão
+ * na story ensinaria o leitor a ignorar a peça publicada — e é ela que carrega
+ * o `data-slot`.
+ *
+ * O contador é neutro em qualquer variante: a cor da etiqueta vem da borda ao
+ * redor, e pintar o número derrubaria o contraste dele em parte dos temas.
+ */
+export function badgeWithCounterSnippet(o: BadgeWithCounterSnippetOptions = {}): string {
+  const variant = o.variant ?? 'destructive';
+  const label = o.label ?? 'Urgente';
+  const count = o.count ?? '12';
+
+  return snippet(
+    importing('badge', 'createBadge', 'createBadgeCounter'),
+    `const etiqueta = ${chamada('createBadge', [
+      `variant: ${text(variant)},`,
+      `children: [${text(label)}, createBadgeCounter({ text: ${text(count)} })],`,
+    ])};`,
+    montar('etiqueta'),
+  );
+}
+
+export function badgeWithCounterSourceCom(
+  fixas: BadgeWithCounterSnippetOptions,
+): SourceTransform<BadgeWithCounterSnippetOptions> {
+  return (_gerado, ctx) => badgeWithCounterSnippet({ ...ctx.args, ...fixas });
+}
+
 // ─── Dentro de um alvo clicável ──────────────────────────────────────────────
 
 export type BadgeEmGatilhoSnippetOptions = BadgeSnippetOptions & {

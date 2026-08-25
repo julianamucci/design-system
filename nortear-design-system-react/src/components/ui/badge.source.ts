@@ -119,6 +119,22 @@ import { Bell } from "lucide-react";`,
 }
 
 /**
+ * Com contador: o número mora DENTRO da etiqueta, à direita do texto. Quem
+ * nomeia a contagem é o rótulo ao lado, então o número não precisa de contexto
+ * próprio — e a peça é neutra de propósito, porque a cor da variante fica na
+ * borda ao redor.
+ */
+export function badgeWithCounterSource(): string {
+  return jsxSnippet(
+    'import { Badge, BadgeCounter } from "@/components/ui/badge";',
+    `<Badge variant="destructive">
+  Urgente
+  <BadgeCounter>12</BadgeCounter>
+</Badge>`,
+  );
+}
+
+/**
  * Dentro de link: o badge NÃO vira o elemento clicável. Quem recebe foco e
  * nome acessível é a âncora; o badge fica decorativo dentro dela, sem
  * `tabindex` próprio para não competir pelo foco.

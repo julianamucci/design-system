@@ -11,15 +11,22 @@
  * Acessibilidade: badge não tem semântica nativa. Use texto descritivo
  * ou aria-label se conteúdo for crítico (ex.: "5 mensagens não lidas").
  *
- * Tokens: --primary, --secondary, --destructive/-foreground,
- *         --warning/-foreground, --success/-foreground, --info/-foreground,
- *         --foreground, --background, --border, --ring, --accent, --spacing-*
+ * Tokens: --background e --foreground (fundo e texto de TODAS as variantes),
+ *         --primary, --muted-foreground, --destructive, --warning, --success,
+ *         --info, --border (cor da borda, uma por variante),
+ *         --secondary (fundo do contador), --ring, --spacing-*
  */
 
 .nds-badge {
-  --badge-bg: transparent;
+  /* A badge deixou de ser preenchida: fundo e texto são SEMPRE neutros, e quem
+     carrega a variante é a borda. Foi decisão de desenho para separá-la do
+     botão, que continua preenchido — duas formas parecidas na mesma tela faziam
+     a etiqueta parecer clicável.
+     Efeito colateral bem-vindo: o texto sai do par semântico e passa a ter
+     sempre o mesmo contraste, então ele não depende mais da variante. */
+  --badge-bg: hsl(var(--background));
   --badge-fg: hsl(var(--foreground));
-  --badge-border: transparent;
+  --badge-border: hsl(var(--border));
 
   display: inline-flex;
   width: fit-content;
@@ -29,7 +36,9 @@
   gap: var(--spacing-1);                        /* 4px */
   overflow: hidden;
 
-  border: 1px solid var(--badge-border);
+  /* 2px porque a borda passou a ser o ÚNICO portador da variante: em 1px a
+     diferença entre duas cores próximas some na tela. */
+  border: 2px solid var(--badge-border);
   border-radius: var(--radius-badge);
   padding-inline: var(--spacing-2);             /* 8px */
   padding-block: var(--spacing-0-5);            /* 2px */
@@ -73,107 +82,97 @@
 
 
 /* ── Variantes ─────────────────────────────────────────────────────────────── */
+/*
+ * Cada variante escreve UMA coisa: a cor da borda. Fundo e texto não se movem.
+ *
+ * Contraste medido nos três temas e nos dois modos, contra `--background`, com
+ * piso de 3:1 (WCAG 1.4.11 — a borda é o contorno que identifica a variante):
+ * as cinco cores semânticas passam; `--secondary` NÃO (1.12 a 1.38), e por isso
+ * a variante secundária usa `--muted-foreground` (5.15 a 8.69). A `outline`
+ * segue na hairline neutra do projeto, `--border` (1.22 a 1.99) — abaixo do
+ * piso, e mantida porque é a mesma borda que input e card já desenham: mudar
+ * isso é assunto da paleta, não do badge.
+ */
 
-/* Default = primary (filled) */
+/* Default = primary */
 .nds-badge,
 .nds-badge-default,
 .nds-badge-primary {
-  --badge-bg: hsl(var(--primary));
-  --badge-fg: hsl(var(--primary-foreground));
-  --badge-border: transparent;
+  --badge-border: hsl(var(--primary));
 }
 
-/* Secondary */
+/* Secondary — neutro VISÍVEL. `--secondary` é fundo, não traço: como borda ele
+   não chega a 1.4:1 contra a página e a variante sumiria. */
 .nds-badge-secondary {
-  --badge-bg: hsl(var(--secondary));
-  --badge-fg: hsl(var(--secondary-foreground));
-  --badge-border: transparent;
+  --badge-border: hsl(var(--muted-foreground));
 }
 
-/* Destructive (soft style alinhado ao restante do projeto)
- * WCAG: bg colorido + border colorida + texto no par `-foreground` da cor.
- *
- * O texto não escreve `--foreground` direto: escreve
- * `hsl(var(--destructive-foreground))`, que neste projeto VALE `--foreground` e
- * portanto pinta a mesma cor. A indireção é o ponto de extensão — um projeto
- * derivado redefine o token no tema e muda o texto das quatro variantes
- * semânticas sem tocar nesta folha. Ver tokens.css.
- *
- * O alfa mora em `--badge-alpha-bg` / `--badge-alpha-border` porque muda no tema
- * escuro E porque o Figma o vincula numa variável de opacidade. Com custom
- * property os dois lados leem o mesmo número; com literal seriam dois números
- * parecidos, que divergem sem ninguém notar. A substituição de var() acontece no
- * uso, então redeclarar só o alfa no `.dark` já recalcula `--badge-bg`. */
-.nds-badge-destructive {
-  --badge-alpha-bg: 0.1;
-  --badge-alpha-border: 0.3;
-  --badge-bg: hsl(var(--destructive) / var(--badge-alpha-bg));
-  --badge-fg: hsl(var(--destructive-foreground));
-  --badge-border: hsl(var(--destructive) / var(--badge-alpha-border));
+.nds-badge-destructive { --badge-border: hsl(var(--destructive)); }
+.nds-badge-warning     { --badge-border: hsl(var(--warning)); }
+.nds-badge-success     { --badge-border: hsl(var(--success)); }
+.nds-badge-info        { --badge-border: hsl(var(--info)); }
+
+/* Outline — a borda neutra mais discreta, para etiqueta sem valor semântico. */
+.nds-badge-outline {
+  --badge-border: hsl(var(--border));
 }
-.dark .nds-badge-destructive {
-  --badge-alpha-bg: 0.15;
-}
+
+/* O anel de foco continua sendo o da variante: ele é transitório e não compete
+   com o texto, então cor semântica ali não tem o problema de contraste que
+   tirou a cor do preenchimento. */
 .nds-badge-destructive:focus-visible {
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive) / 0.4);
-}
-
-/* Warning, success e info — mesmo desenho do destructive: fundo e borda dão a
- * cor, o texto fica no par `-foreground` dela (que é `--foreground` aqui). Cor
- * semântica no texto corrido não passa em 4.5:1 nas três, e a regra do projeto
- * é que o contraste não dependa da variante escolhida.
- *
- * Existiam antes como `-high`, `-medium` e `-low`, um trio criado só para a
- * tabela de prioridade das docs pages — cor semântica com nome de uso, que
- * ninguém achava ao procurar por "warning" e que o componente não expunha como
- * variante. Agora são variantes de verdade, e a prioridade escolhe uma delas. */
-.nds-badge-warning {
-  --badge-alpha-bg: 0.12;
-  --badge-alpha-border: 0.35;
-  --badge-bg: hsl(var(--warning) / var(--badge-alpha-bg));
-  --badge-fg: hsl(var(--warning-foreground));
-  --badge-border: hsl(var(--warning) / var(--badge-alpha-border));
-}
-.dark .nds-badge-warning {
-  --badge-alpha-bg: 0.18;
 }
 .nds-badge-warning:focus-visible {
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--warning) / 0.4);
 }
-
-.nds-badge-success {
-  --badge-alpha-bg: 0.12;
-  --badge-alpha-border: 0.35;
-  --badge-bg: hsl(var(--success) / var(--badge-alpha-bg));
-  --badge-fg: hsl(var(--success-foreground));
-  --badge-border: hsl(var(--success) / var(--badge-alpha-border));
-}
-.dark .nds-badge-success {
-  --badge-alpha-bg: 0.18;
-}
 .nds-badge-success:focus-visible {
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--success) / 0.4);
-}
-
-.nds-badge-info {
-  --badge-alpha-bg: 0.12;
-  --badge-alpha-border: 0.35;
-  --badge-bg: hsl(var(--info) / var(--badge-alpha-bg));
-  --badge-fg: hsl(var(--info-foreground));
-  --badge-border: hsl(var(--info) / var(--badge-alpha-border));
-}
-.dark .nds-badge-info {
-  --badge-alpha-bg: 0.18;
 }
 .nds-badge-info:focus-visible {
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--info) / 0.4);
 }
 
-/* Outline */
-.nds-badge-outline {
-  --badge-bg: transparent;
-  --badge-fg: hsl(var(--foreground));
-  --badge-border: hsl(var(--border));
+/* ── Contador ──────────────────────────────────────────────────────────────── */
+/*
+ * Número à direita do texto, dentro da mesma etiqueta:
+ *
+ *   <span class="nds-badge nds-badge-info">
+ *     Azul
+ *     <span class="nds-badge-counter" data-slot="badge-counter">3</span>
+ *   </span>
+ *
+ * Ele é NEUTRO de propósito, e isso foi medido antes de desenhar. Preenchê-lo
+ * com a cor da variante — que é o que a referência faz — deixa o número sem
+ * contraste: contra `--warning` do tema warm, nem `--background` (4.40) nem
+ * `--foreground` (4.07) alcançam os 4.5 que texto pequeno exige, e a cor é de
+ * luminância média demais para qualquer um dos dois. Neutro dá 9.48 no pior
+ * caso dos três temas.
+ *
+ * A regra da casa é que o contraste não pode depender da variante escolhida —
+ * e a cor não se perde: quem a carrega é a borda da etiqueta, ao redor.
+ *
+ * Não é variante separada: é peça que QUALQUER variante aceita. Fosse variante,
+ * o número de combinações dobrava para dizer a mesma coisa.
+ */
+.nds-badge-counter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  /* Largura mínima igual à altura para um dígito só sair redondo, e o padding
+     assume a partir de dois — sem isso "1" vira uma cápsula estreita. */
+  min-width: 1.25rem;
+  padding-inline: var(--spacing-1);
+  margin-inline-end: calc(var(--spacing-1) * -1);
+
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--foreground));
+  border-radius: var(--radius-full, 9999px);
+  font-size: var(--text-control-sm);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
 }
 
 /* Ghost e link saíram daqui: eram estilos de badge INTERATIVO, e a orientação
@@ -195,9 +194,11 @@
  * enquanto as três cores já estavam desenhadas ali dentro. */
 
 /* Hover em link wrapping badge */
+/* Sem preenchimento, escurecer o brilho não muda quase nada: o que reage ao
+   ponteiro é o fundo, que sai do neutro para a superfície suave. */
 a > .nds-badge:hover,
 a.nds-badge:hover {
-  filter: brightness(0.95);
+  background-color: hsl(var(--secondary));
 }
 
 /* ── prefers-reduced-motion ────────────────────────────────────────────────── */

@@ -12,6 +12,7 @@ export type BadgeArgs = {
 };
 
 const IMPORT = `import { Badge } from '@/components/ui/badge'`;
+const IMPORT_WITH_COUNTER = `import { Badge, BadgeCounter } from '@/components/ui/badge'`;
 
 /** Import do ícone. Ele é reforço visual; quem nomeia o badge é o texto. */
 function importIcon(...names: string[]): string {
@@ -34,25 +35,25 @@ function badge(variant: string | undefined, content: string): string {
 export const badgeSource: SourceTransform<BadgeArgs> = (_gerado, ctx) =>
   vueSnippet(IMPORT, badge(ctx?.args?.variant, 'Novo'));
 
-/** Ênfase máxima: fundo cheio, para o que precisa ser visto primeiro. */
+/** Ênfase máxima: a borda em `primary`, para o que precisa ser visto primeiro. */
 export function badgeDefaultSource(): string {
   return vueSnippet(IMPORT, badge('default', 'Novo'));
 }
 
-/** Ênfase média: preenchida, mas em cor neutra — informa sem disputar. */
+/** Ênfase média: borda neutra legível — informa sem disputar atenção. */
 export function badgeSecondarySource(): string {
   return vueSnippet(IMPORT, badge('secondary', 'Beta'));
 }
 
 /**
- * Alerta: fundo suave e borda colorida, com o texto neutro. É a combinação que
- * sustenta os 4.5:1 — a cor sinaliza, o contraste vem do texto.
+ * Alerta: a borda em `destructive`, com o texto neutro. É a combinação que
+ * sustenta os 4.5:1 — a cor sinaliza no contorno, o contraste vem do texto.
  */
 export function badgeDestructiveSource(): string {
   return vueSnippet(IMPORT, badge('destructive', 'Urgente'));
 }
 
-/** Ênfase mínima: só contorno, sem fundo, para o que é rascunho ou opcional. */
+/** Ênfase mínima: a borda mais discreta do conjunto, para rascunho ou opcional. */
 export function badgeOutlineSource(): string {
   return vueSnippet(IMPORT, badge('outline', 'Rascunho'));
 }
@@ -107,6 +108,24 @@ export function badgeCounterSource(): string {
   <Bell aria-hidden="true" class="nds-text-foreground nds-icon-lg" />
   ${badge('destructive', '12')}
 </span>`,
+  );
+}
+
+/**
+ * Contador DENTRO da etiqueta: o número fica à direita do texto, na mesma
+ * caixa. O rótulo diz de que é a contagem, então aqui o container não precisa
+ * de `role="status"` — quem lê ouve "Urgente 12".
+ *
+ * O contador é neutro em qualquer variante: a cor da etiqueta vem da borda ao
+ * redor, e pintar o número derrubaria o contraste dele em parte dos temas.
+ */
+export function badgeWithCounterSource(): string {
+  return vueSnippet(
+    IMPORT_WITH_COUNTER,
+    `<Badge variant="destructive">
+  Urgente
+  <BadgeCounter>12</BadgeCounter>
+</Badge>`,
   );
 }
 

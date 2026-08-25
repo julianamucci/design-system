@@ -25,17 +25,17 @@ export function badgeSource(_gerado?: string, ctx?: { args?: Partial<BadgeArgs> 
   return etiqueta(variant, 'Novo');
 }
 
-/** Variante secundária: preenchida como a padrão, em outra cor. */
+/** Variante secundária: borda cinza legível, para etiqueta sem carga semântica. */
 export function badgeSecundarioSource(): string {
   return etiqueta('secondary', 'Beta');
 }
 
-/** Variante destrutiva: fundo suave, borda colorida e texto neutro. */
+/** Variante destrutiva: a borda em `destructive`; o texto fica neutro, como em todas. */
 export function badgeDestructiveSource(): string {
   return etiqueta('destructive', 'Urgente');
 }
 
-/** Variante de baixa ênfase: só borda, sem preenchimento. */
+/** Variante de baixa ênfase: a borda mais discreta do conjunto. */
 export function badgeOutlineSource(): string {
   return etiqueta('outline', 'Rascunho');
 }
@@ -83,6 +83,21 @@ import Bell from "@lucide/svelte/icons/bell";`,
   <Bell aria-hidden="true" class="nds-text-foreground nds-icon-lg" />
   <Badge variant="destructive">12</Badge>
 </span>`,
+  );
+}
+
+/**
+ * Composição com contador: o número entra DENTRO da etiqueta, à direita do
+ * texto. A peça é neutra de propósito — quem carrega a variante é a borda ao
+ * redor, e preencher o número com a cor da variante o deixaria sem contraste.
+ */
+export function badgeWithCounterSource(): string {
+  return svelteSnippet(
+    `import { Badge, BadgeCounter } from "@/components/ui/badge";`,
+    `<Badge variant="destructive">
+  Urgente
+  <BadgeCounter>12</BadgeCounter>
+</Badge>`,
   );
 }
 

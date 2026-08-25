@@ -72,6 +72,25 @@ export const Playground: Story = {
       await expect(badge).toHaveClass(/nds-badge/);
     });
 
+    await step('Etiqueta inline, não bloco', async () => {
+      // accessibility.item1 — o badge mora dentro de frase e de célula: se
+      // virasse bloco, quebraria a linha do texto que o acompanha.
+      const badge = canvasElement.querySelector<HTMLElement>('[data-slot="badge"]')!;
+      const style = getComputedStyle(badge);
+      await expect(style.display).toBe('inline-flex');
+      await expect(style.whiteSpace).toBe('nowrap');
+    });
+
+    await step('Tipografia compacta do componente', async () => {
+      // A etiqueta é rótulo curto: o corpo de 12px e o peso médio são o que a
+      // separam do texto ao redor — e a altura nasce daí, nunca de um valor
+      // cravado (WCAG 1.4.4).
+      const badge = canvasElement.querySelector<HTMLElement>('[data-slot="badge"]')!;
+      const style = getComputedStyle(badge);
+      await expect(style.fontSize).toBe('12px');
+      await expect(Number(style.fontWeight)).toBeGreaterThanOrEqual(500);
+    });
+
     await step('Não é focável — é rótulo, não controle', async () => {
       // Se um dia alguém puser tabindex aqui, o Tab passaria a parar num
       // elemento sem ação, que é ruído de navegação por teclado.

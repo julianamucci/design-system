@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent } from 'storybook/test';
-import { NdsBadge } from './badge';
+import { backgroundEffective, noTransicao, ratio, resolveColor } from '@shared/testing/cor';
+import { NdsBadge, NdsBadgeCounter } from './badge';
 import { NdsButton, NdsButtonIcon } from './button';
 
 const meta: Meta = {
   title: 'UI/Badge/Compositions',
-  decorators: [moduleMetadata({ imports: [NdsBadge, NdsButton, NdsButtonIcon] })],
+  decorators: [moduleMetadata({ imports: [NdsBadge, NdsBadgeCounter, NdsButton, NdsButtonIcon] })],
   parameters: { layout: 'padded', controls: { disable: true } },
 };
 
@@ -37,6 +38,94 @@ export const WithIconAndCounter: Story = {
     await step('O contador é só número, sem rótulo redundante', async () => {
       const counter = canvasElement.querySelectorAll('[data-slot="badge"]')[1];
       await expect(counter.textContent?.trim()).toMatch(/^\d+$/);
+    });
+  },
+};
+
+/**
+ * Contador DENTRO da etiqueta — a peça que qualquer variante aceita. Não se
+ * confunde com a story acima: lá o badge inteiro é o número, ao lado do texto;
+ * aqui o número entra na etiqueta, à direita do rótulo que lhe dá sentido.
+ */
+export const WithCounter: Story = {
+  parameters: { covers: ['visual.item6'] },
+  render: () => ({
+    template: `
+      <span ndsBadge variant="destructive">
+        Urgente
+        <span ndsBadgeCounter>12</span>
+      </span>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const counter = canvas.getByText('12');
+    const badge = counter.closest<HTMLElement>('[data-slot="badge"]')!;
+
+    await step('A peça sai com a classe e o slot que a folha documenta', async () => {
+      // A peça publicada, e não uma classe solta na story: sem a diretiva o
+      // <span> viraria texto sem estilo e a composição sumiria da tela.
+      await expect(counter).toHaveAttribute('data-slot', 'badge-counter');
+      await expect(counter).toHaveClass(/nds-badge-counter/);
+      await expect(badge.contains(counter)).toBe(true);
+    });
+
+    await step('O número fica à direita do rótulo, na mesma linha', async () => {
+      // O rótulo é nó de texto, não elemento: quem dá a caixa dele é um Range.
+      // Comparar com a caixa do BADGE não provaria nada — o contador está
+      // dentro dele de qualquer jeito.
+      const label = Array.from(badge.childNodes).find(
+        (node) => node.nodeType === Node.TEXT_NODE && (node.textContent ?? '').trim().length > 0,
+      );
+      await expect(label, 'o rótulo da etiqueta precisa ser texto próprio').toBeTruthy();
+      const range = document.createRange();
+      range.selectNodeContents(label!);
+      const labelBox = range.getBoundingClientRect();
+      const counterBox = counter.getBoundingClientRect();
+
+      await expect(counterBox.left).toBeGreaterThanOrEqual(labelBox.right - 1);
+      // Sobreposição vertical em vez de tolerância em pixel: prova a mesma
+      // linha sem depender de arredondamento, e ainda reprova se o contador
+      // quebrar para baixo do rótulo.
+      await expect(counterBox.top).toBeLessThan(labelBox.bottom);
+      await expect(labelBox.top).toBeLessThan(counterBox.bottom);
+    });
+
+    await step('O número é lido, não desenhado', async () => {
+      // Texto de verdade no DOM, dentro do rótulo e sem aria-hidden: contador
+      // desenhado por `content:` do CSS ou escondido do leitor reprova aqui.
+      await expect(counter.textContent?.trim()).toBe('12');
+      await expect(counter.hasAttribute('aria-hidden')).toBe(false);
+      // Regex e não igualdade literal: o Angular colapsa o espaço do template,
+      // e o que a asserção prova é a ORDEM do rótulo e do número, não quantos
+      // espaços sobraram entre eles.
+      await expect((badge.textContent ?? '').replace(/\s+/g, ' ').trim()).toMatch(/^Urgente ?12$/);
+    });
+
+    await step('O número alcança 4.5:1 contra o fundo do próprio contador', async () => {
+      // A transição sai do caminho antes de medir: ler no primeiro quadro
+      // devolve a cor anterior, e é assim que se inventa um contraste de ~1.0.
+      const contrast = noTransicao(counter, () => {
+        const counterBackgroundColor = backgroundEffective(counter);
+        return counterBackgroundColor
+          ? ratio(getComputedStyle(counter).color, counterBackgroundColor)
+          : null;
+      });
+      await expect(contrast, 'não deu para medir a cor do contador').not.toBeNull();
+      await expect(
+        contrast!.ratio,
+        `número do contador em ${contrast!.ratio}:1 sobre ${contrast!.background}`,
+      ).toBeGreaterThanOrEqual(4.5);
+    });
+
+    await step('O contador é neutro, e não tingido pela variante', async () => {
+      // É a decisão medida da folha: preencher o contador com a cor da
+      // variante deixa o número abaixo de 4.5:1 em parte dos temas.
+      const counterBackground = getComputedStyle(counter).backgroundColor;
+      await expect(counterBackground).toBe(resolveColor(canvasElement, 'hsl(var(--secondary))'));
+      await expect(counterBackground).not.toBe(
+        resolveColor(canvasElement, 'hsl(var(--destructive))'),
+      );
     });
   },
 };

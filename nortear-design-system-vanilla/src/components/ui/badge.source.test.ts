@@ -5,6 +5,7 @@ import {
   badgeSnippet,
   badgeSource,
   badgeSourceCom,
+  badgeWithCounterSnippet,
 } from './badge.source';
 
 describe('badgeSnippet', () => {
@@ -87,6 +88,24 @@ describe('badgeEmGrupoSnippet', () => {
     expect(code).toContain("createBadge({ variant: 'success', children: 'Aprovado' }),");
     expect(code).toContain("createBadge({ variant: 'info', children: 'Novidade' }),");
     expect(code).toContain("grupo.className = 'nds-cluster';");
+  });
+});
+
+describe('badgeWithCounterSnippet', () => {
+  it('monta o contador pela subfábrica, dentro do children da etiqueta', () => {
+    const code = badgeWithCounterSnippet({ variant: 'destructive', label: 'Urgente', count: '12' });
+    expect(code).toContain(
+      "import { createBadge, createBadgeCounter } from '@/components/ui/badge';",
+    );
+    expect(code).toContain("children: ['Urgente', createBadgeCounter({ text: '12' })],");
+    // A classe escrita à mão ensinaria a ignorar a peça publicada, que é quem
+    // carrega o data-slot.
+    expect(code).not.toContain('nds-badge-counter');
+  });
+
+  it('acima de 99 quem trunca é a aplicação — a peça recebe o texto pronto', () => {
+    const code = badgeWithCounterSnippet({ count: '99+' });
+    expect(code).toContain("createBadgeCounter({ text: '99+' })");
   });
 });
 

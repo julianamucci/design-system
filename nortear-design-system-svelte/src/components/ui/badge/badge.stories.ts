@@ -63,15 +63,15 @@ export const Playground: Story = {
     await step('Etiqueta inline, não bloco', async () => {
       // accessibility.item1 — o badge mora dentro de frase e de célula: se
       // virasse bloco, quebraria a linha do texto que o acompanha.
-      const estilo = getComputedStyle(badge);
-      await expect(estilo.display).toBe('inline-flex');
-      await expect(estilo.whiteSpace).toBe('nowrap');
+      const styles = getComputedStyle(badge);
+      await expect(styles.display).toBe('inline-flex');
+      await expect(styles.whiteSpace).toBe('nowrap');
     });
 
     await step('Tipografia compacta do componente', async () => {
-      const estilo = getComputedStyle(badge);
-      await expect(estilo.fontSize).toBe('12px');
-      await expect(Number(estilo.fontWeight)).toBeGreaterThanOrEqual(500);
+      const styles = getComputedStyle(badge);
+      await expect(styles.fontSize).toBe('12px');
+      await expect(Number(styles.fontWeight)).toBeGreaterThanOrEqual(500);
     });
   },
 };

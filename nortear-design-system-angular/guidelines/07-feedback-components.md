@@ -68,34 +68,61 @@ div[ndsAlert]                       (role configurável)
 
 **Propósito**: rótulo curto para status, contagem ou categoria.
 
-**Componente**: `span[ndsBadge]`.
+**Peças**: `span[ndsBadge]`, `span[ndsBadgeCounter]`.
+
+**A etiqueta não é preenchida.** Fundo e texto são sempre neutros — `--background` e `--foreground` —, e quem carrega a variante é a **borda, de 2px sólidos**. Foi decisão de desenho para separar a etiqueta do botão, que continua preenchido: duas formas parecidas na mesma tela faziam o badge parecer clicável. Em 1px a diferença entre duas cores próximas some na tela, e por isso a espessura dobrou. Efeito colateral bem-vindo: o texto sai do par semântico, e o contraste do rótulo deixa de depender da variante escolhida.
 
 **Estrutura**:
 
 ```
 span[ndsBadge]
-├── svg          (opcional, decorativo)
-└── rótulo (texto curto)
+├── svg                       (opcional, decorativo)
+├── rótulo (texto curto)
+└── span[ndsBadgeCounter]     (opcional — número à direita do rótulo)
 ```
 
-**Variantes**: `default`, `secondary`, `destructive`, `warning`, `success`, `info`, `outline`.
+**Variantes** — cada uma reaponta uma coisa só, a cor da borda:
+
+| Variante | Cor da borda | Uso |
+|---|---|---|
+| `default` | `--primary` | Destaque principal |
+| `secondary` | `--muted-foreground` | Informativo secundário |
+| `destructive` | `--destructive` | Erro ou alerta crítico |
+| `warning` | `--warning` | Pendência ou risco que ainda não é erro |
+| `success` | `--success` | Concluído ou aprovado |
+| `info` | `--info` | Contexto neutro que merece cor |
+| `outline` | `--border` | Baixa ênfase — a borda mais discreta do conjunto |
+
+> `secondary` usa `--muted-foreground` e não `--secondary`: medido, `--secondary` como traço fica entre 1,12:1 e 1,38:1 contra a página e a variante sumiria. `--secondary` é cor de fundo, não de contorno.
 
 **Entradas**:
 
 | Nome | Default | Função |
 |---|---|---|
-| `variant` | `default` | Variante visual |
+| `variant` | `default` | Cor da borda |
+
+**Subpeça**:
+
+| Peça | Marcação | Função |
+|---|---|---|
+| `NdsBadgeCounter` | `span[ndsBadgeCounter]` — classe `.nds-badge-counter`, `data-slot="badge-counter"` | Número à direita do rótulo, dentro da mesma etiqueta |
+
+> `@Directive` e não `@Component`: o número já é conteúdo do próprio `<span>`, não há markup a montar nem nada a projetar — mesma escolha de `NdsAlertTitle`. O seletor exige `span` porque o contador mora dentro de uma etiqueta inline.
+
+> O contador é **neutro de propósito** (fundo `--secondary`, texto `--foreground`) e não é variante: qualquer variante o aceita. Preenchê-lo com a cor da variante derruba o número abaixo de 4,5:1 em parte dos temas — contra `--warning` do tema warm nenhum dos dois neutros alcança o piso. A cor não se perde: quem a carrega é a borda, ao redor.
 
 **Regras**:
 - Altura não é cravada: nasce de `padding-block` mais tipografia
 - Sem `size`: um badge só tem um tamanho no sistema
 - Não é interativo. Para clicável, envolva num `<button>` ou `<a>` — o badge não recebe foco por conta própria
 - Sem emoji dentro: o ícone vem do conjunto do design system
-- Texto corrido colorido é limitado ao rótulo curto, que é o que o badge é — e ainda assim precisa dos 4.5:1
+- Contador acima de 99 exibe `99+`, e não o número exato — vale para o `ndsBadgeCounter` e para a etiqueta que é só um número
+- Ajuste pontual sobrescreve as vars internas escopadas (`--badge-border`, `--badge-bg`, `--badge-fg`); a que cada variante reaponta é só a primeira
 
 **Acessibilidade**:
 - Badge que representa status precisa que o **texto** diga o status ("Ativo"), não só a cor
 - Badge de contagem visível só como número precisa de nome acessível no elemento pai que dê o significado
+- O número do contador é texto no DOM, nunca desenho de `content:` do CSS — leitor de tela precisa alcançá-lo
 
 ---
 

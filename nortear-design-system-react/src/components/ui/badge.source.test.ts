@@ -10,6 +10,7 @@ import {
   badgeSecundarioSource,
   badgeSemanticasSource,
   badgeSource,
+  badgeWithCounterSource,
 } from './badge.source';
 
 describe('badgeSource', () => {
@@ -70,6 +71,14 @@ describe('composições', () => {
     const saida = badgeCounterSource();
     expect(saida).toContain('role="status"');
     expect(saida).toContain('aria-label="12 notificações não lidas"');
+  });
+
+  it('o contador de dentro da etiqueta vem da peça publicada, não de uma classe solta', () => {
+    const saida = badgeWithCounterSource();
+    expect(saida).toContain('import { Badge, BadgeCounter } from "@/components/ui/badge";');
+    expect(saida).toContain('<BadgeCounter>12</BadgeCounter>');
+    // O número fica DENTRO da etiqueta: fora dela seria a outra composição.
+    expect(saida.indexOf('<BadgeCounter>')).toBeGreaterThan(saida.indexOf('<Badge variant'));
   });
 
   it('quem recebe o foco é o elemento que envolve — o badge não ganha tabindex', () => {

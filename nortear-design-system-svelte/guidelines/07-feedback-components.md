@@ -54,18 +54,47 @@ Alert (variant)
 
 **API e exemplos**: `src/components/ui/badge/badge.svelte` + stories + `BadgeDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Variantes**:
+**Estrutura**:
 
-| Variante | Fonte |
-|---|---|
-| `default`, `secondary`, `outline`, `destructive` | cva nativa |
-| `success` / `warning` | **não existem** — nem prop nem classe `.nds-badge-*`; caso pontual = vars internas escopadas (guideline 04) |
+```
+Badge                      <span data-slot="badge">
+├── ícone (opcional)       aria-hidden="true"
+├── texto                  1 a 3 palavras, ou um número
+└── BadgeCounter           <span data-slot="badge-counter"> — opcional
+```
+
+**A badge NÃO é preenchida**. Fundo é sempre `--background` e texto sempre `--foreground`; quem carrega a variante é a **borda**, de 2px sólidos. Foi decisão de desenho para separá-la do botão, que continua preenchido — duas formas parecidas na mesma tela faziam a etiqueta parecer clicável. Efeito colateral bem-vindo: o texto saiu do par semântico e passou a ter sempre o mesmo contraste, então ele não depende mais da variante escolhida.
+
+**Variantes** — cada uma escreve UMA coisa, a cor da borda:
+
+| Variante | Cor da borda | Nota |
+|---|---|---|
+| `default` | `--primary` | também é o que `.nds-badge` sozinho pinta |
+| `secondary` | `--muted-foreground` | **não** `--secondary`: como traço ele não chega a 1.4:1 contra a página e a variante sumiria |
+| `destructive` | `--destructive` | |
+| `warning` | `--warning` | |
+| `success` | `--success` | |
+| `info` | `--info` | |
+| `outline` | `--border` | a hairline neutra do projeto; abaixo do piso de 3:1 de propósito, porque é a mesma borda que input e card desenham |
+
+O piso das demais é 3:1 contra `--background` (WCAG 1.4.11): a borda é o contorno que identifica a variante, e desde o redesenho é a única coisa que a identifica.
+
+**Subpartes**:
+
+| Peça | Exportada como | `data-slot` | Classe |
+|---|---|---|---|
+| raiz | `Badge` / `Root` | `badge` | `.nds-badge` |
+| contador | `BadgeCounter` / `Counter` | `badge-counter` | `.nds-badge-counter` |
+
+O contador é o número à direita do texto, **dentro** da mesma etiqueta. Ele é neutro de propósito — fundo `--secondary`, texto `--foreground` — e isso foi medido: preenchê-lo com a cor da variante derruba o número abaixo dos 4.5:1 que texto pequeno exige em parte dos temas. Não é variante, é peça que **qualquer** variante aceita; fosse variante, o número de combinações dobrava para dizer a mesma coisa.
 
 **Regras**:
 - Máximo 2-3 palavras — badges são rótulos, não frases
 - Nunca usar prop `size` (não existe) — customizar tamanho via `class`
 - Cor nunca é o único indicador de estado — incluir texto significativo
 - Nunca altura fixa em primitivos (WCAG 1.4.4)
+- Nunca pintar o contador com a cor da variante — a cor já está na borda ao redor
+- Nunca pôr `onclick` na etiqueta: envolver em `<button>` ou `<a>`, que é quem recebe o foco
 
 ---
 

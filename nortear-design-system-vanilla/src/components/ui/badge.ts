@@ -72,3 +72,54 @@ export function createBadge(options: BadgeOptions = {}): HTMLElement {
 
   return el;
 }
+
+// ─── Contador ────────────────────────────────────────────────────────────────
+
+export interface BadgeCounterOptions {
+  /**
+   * Número exibido, já formatado. Acima de 99 a orientação é mostrar `'99+'` —
+   * o truncamento é da aplicação, e por isso o valor entra como texto e não
+   * como número: a peça não formata nada.
+   */
+  text?: string;
+  /** Classes adicionais concatenadas ao className base. */
+  className?: string;
+}
+
+/**
+ * Contador da etiqueta — o número à direita do texto, DENTRO do badge.
+ *
+ * Escolha de forma: SUBFÁBRICA (`createBadgeCounter`), e não uma opção `count`
+ * de `createBadge`. É a mesma forma que `createAlertTitle` e `createCardTitle`
+ * já usam para subpeça nesta stack: fábrica própria, `data-slot` explícito,
+ * `cn()` com a classe base. Três razões medidas contra o que a folha define:
+ *
+ * 1. O conteúdo não é só número — `'99+'` é a orientação da própria
+ *    documentação, e opção numérica obrigaria a fábrica a formatar.
+ * 2. A peça não é variante: QUALQUER variante a aceita. Como opção, cada
+ *    combinação teria de existir na assinatura; como filho, a composição fica
+ *    onde ela é lida — o elemento devolvido entra no `children` do badge, que
+ *    já aceita lista de texto e elemento.
+ * 3. `createBadge` não ganha ramo novo: a fábrica segue sem condicional de
+ *    conteúdo, e o contador é montado por quem compõe.
+ *
+ * Ele é NEUTRO por decisão de contraste (fundo `--secondary`, texto
+ * `--foreground`), em qualquer variante: a cor fica na borda da etiqueta, ao
+ * redor. Pintá-lo com a cor da variante derruba o número abaixo de 4.5:1 em
+ * parte dos temas.
+ */
+export function createBadgeCounter(options: BadgeCounterOptions = {}): HTMLElement {
+  const { text = '', className } = options;
+
+  // <span>, como o próprio badge: a peça mora dentro da etiqueta, que é
+  // inline-flex — um elemento de bloco ali quebraria a linha do rótulo.
+  const el = document.createElement('span');
+  el.dataset.slot = 'badge-counter';
+  el.className = cn('nds-badge-counter', className);
+  // `textContent` e não innerHTML: o número é dado da aplicação (XSS-safe).
+  // Sem `if`: com o default `''` a atribuição já é inócua, e o ramo existiria
+  // só para ser marcado `v8 ignore` — foi o que aconteceu nas outras subpeças.
+  el.textContent = text;
+
+  return el;
+}
