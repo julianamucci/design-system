@@ -1,6 +1,14 @@
 /*
  * ─── Temas de Marca ───────────────────────────────────────────────────────────
- * Default é o tema padrão (sem classe). Warm e Cold são variantes de cor.
+ * Default, Warm e Cold. Cada um declara os 39 tokens de cor dentro de
+ * `.tema-<id>` e `.dark.tema-<id>`; `tokens.css` não tem cor nenhuma.
+ *
+ * O Default NÃO é ausência de classe — foi, e a duplicação que isso exigia
+ * acabou divergindo. Sem uma classe `tema-*` no `<html>`, não há cor.
+ *
+ * A ORDEM importa menos do que parece, e é bom que continue assim: nenhum
+ * consumidor deve depender de duas classes de tema conviverem no mesmo
+ * elemento. Quem aplica remove a anterior antes de somar a nova.
  *
  * Todos os projetos importam via: @import "@shared/themes/index.css"
  */

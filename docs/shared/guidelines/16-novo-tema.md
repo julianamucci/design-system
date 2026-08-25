@@ -92,7 +92,18 @@ divergir do corpo da página. Costuma ser `--background` levemente deslocado.
 `--radius-input`, `--radius-alert`, `--radius-card`, `--radius-badge`.
 
 Só declare se a marca pede identidade de forma diferente. `warm` e `cold` não
-declaram — herdam de `tokens.css`. O `default` declara porque é a referência.
+declaram — herdam de `tokens.css`, que é o único token de tema que continua com
+valor lá, justamente porque nem todo tema o declara. O `default` declara porque
+a marca tem identidade de forma.
+
+**Cor é diferente de raio, e a assimetria é proposital:** os 39 tokens de cor
+NÃO existem em `tokens.css`. Cada tema declara os 39, e o Default é um tema como
+os outros — `cssClass: 'tema-default'`, não string vazia. A consequência prática
+é que **a classe `tema-*` no `<html>` é obrigatória**: sem ela não há cor, a
+página abre em preto sobre branco, e nem build nem type-check veem. Quem aplica
+dentro do repositório é `applyTheme()`, o `preview-head.html` de cada stack e o
+`<html>` do sandbox, guardados pela regra `tema_ausente_no_ponto_de_entrada`.
+Quem consumir o pacote fora daqui aplica por conta.
 Se declarar, use a escala derivada (`var(--radius-lg)`, `var(--radius-xl)`,
 `var(--radius-full)`), nunca um valor em px solto.
 
@@ -252,10 +263,15 @@ tema" de "mudou o tema e quebrou dois componentes".
 
 - **Declarar cor com a função**: `--primary: hsl(210 40% 50%)` quebra
   `hsl(var(--primary) / 0.1)` em todo lugar que usa versão suave. É `210 40% 50%`.
-- **Esquecer o bloco `.tema-<id>` de re-declaração**: sem ele, voltar ao tema
-  pela toolbar pode não reverter — o navegador mantém valor computado depois de
-  a classe sair. É por isso que existe `.tema-default` mesmo o `:root` já tendo
-  os mesmos valores.
+- **Achar que a duplicação protege a troca de tema**: durante meses esta lista
+  dizia que sem re-declarar em `.tema-default` a toolbar podia não reverter,
+  porque "o navegador mantém valor computado depois de a classe sair". Isso não
+  acontece — remover classe recomputa a cascata. O defeito real era o renderer
+  não REMOVER a classe ao voltar para o `defaultValue` (ver a regra do listener
+  de canal no `CLAUDE.md`), e o contorno sobreviveu ao conserto. Custou o que
+  duplicação sempre custa: os dois arquivos divergiram, e por um momento `.dark`
+  e `.dark.tema-default` deram cores diferentes para o mesmo tema. Hoje cada
+  tema tem UM lugar e o Default não é especial.
 - **Auto-referência em token**: `--ring-offset-color: hsl(var(--ring-offset-color))`
   sobreviveu meses porque o `.dark` redeclarava e quebrava o ciclo — no claro o
   swatch ficava sem cor e ninguém via. O portão da paleta existe por causa disso.

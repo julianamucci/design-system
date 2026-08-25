@@ -81,56 +81,52 @@
   --letter-spacing-normal: 0em;
   --letter-spacing-wide: 0.02em;
 
-  /* Surfaces */
-  --background: 24 100% 99.5%;
-  --foreground: 201 22% 18%;
-  --card: 24 100% 99.5%;
-  --card-foreground: 201 22% 18%;
-  --popover: 24 100% 99.5%;
-  --popover-foreground: 201 22% 18%;
+  /* ─── Cor: NÃO mora aqui ───────────────────────────────────────────────────
+   *
+   * Os 39 tokens de cor do contrato de tema — superfícies, marca, feedback,
+   * estrutura, gráfico e sidebar — são declarados por TEMA, em
+   * `docs/shared/themes/{default,warm,cold}.css`, dentro de `.tema-<id>` e
+   * `.dark.tema-<id>`. Nenhum deles tem valor neste arquivo.
+   *
+   * Antes, o Default vivia aqui e era RE-DECLARADO em `default.css`; os mesmos
+   * 39 valores em dois lugares, mantidos iguais à mão, com um comentário
+   * pedindo que ninguém os deixasse divergir. Divergiram: uma passada aliasou
+   * um dos arquivos e não o outro, e por um momento `.dark` e `.dark.tema-default`
+   * davam cores diferentes para o mesmo tema. Agora cada tema tem UM lugar, e o
+   * Default deixou de ser especial.
+   *
+   * O CUSTO, explícito porque é real: sem uma classe `tema-*` no `<html>` não
+   * há cor nenhuma. `applyTheme()` em `themes/theme-config.ts` aplica sempre,
+   * inclusive `tema-default`, e o `preview-head.html` de cada stack faz o mesmo
+   * antes da primeira pintura. Quem consumir o pacote fora desse caminho
+   * precisa aplicar a classe — está escrito em `16-novo-tema.md`, e a regra
+   * `tema_ausente_no_ponto_de_entrada` do `audit.mjs` guarda os pontos de
+   * entrada do repositório.
+   *
+   * O que continua aqui embaixo é o que NÃO depende de tema: escala de
+   * tipografia, espaçamento, raio, elevação, z-index e medidas.
+   *
+   * Dois contratos que valem para os três temas, e por isso ficam registrados
+   * aqui e não na folha de um deles:
+   *
+   * 1. Cada cor de feedback tem par `-foreground`, e nos três temas ele vale
+   *    `var(--foreground)` — a regra da casa para texto corrido em contêiner
+   *    colorido. O par existe como TOKEN, em vez de `--foreground` cravado na
+   *    folha do componente, para ser ponto de extensão: um projeto derivado
+   *    redefine `--destructive-foreground` e ganha um par semântico próprio sem
+   *    tocar em alert, badge nem toast.
+   *    Não confundir com "texto sobre a cor CHEIA": nenhuma regra do sistema
+   *    escreve sobre `hsl(var(--destructive))` opaco, então o contraste que vale
+   *    é o do texto sobre o fundo suave COMPOSTO na superfície — o que a story
+   *    `TextoCorridoSobreFundoSuave` de `QA/Paleta de Tema` mede.
+   *
+   * 2. `--input` é a borda do CAMPO, e o fundo do campo é o fundo da página: a
+   *    borda é a única coisa que diz onde o campo começa. Por isso ela responde
+   *    a WCAG 1.4.11 (Non-text Contrast, 3:1) e NÃO acompanha `--border`, que é
+   *    linha decorativa. Cada tema mede o próprio valor e registra a razão ao
+   *    lado dele.
+   */
 
-  /* Brand / Interactive */
-  --primary: 190 31% 34%;
-  --primary-foreground: 24 100% 99%;
-  --secondary: 36 24% 94%;
-  --secondary-foreground: 201 22% 18%;
-  --muted: 36 16% 93%;
-  --muted-foreground: 195 10% 40%;
-  --accent: 36 24% 94%;
-  --accent-foreground: 201 22% 18%;
-
-  /* Feedback — a cor semântica pinta FUNDO SUAVE e borda do contêiner; ícone e
-     título curtos podem carregá-la no texto quando alcançam 4.5:1.
-
-     O par `-foreground` é o texto corrido DENTRO desse contêiner, e neste
-     projeto ele vale `--foreground` — que é exatamente o que a regra da casa
-     manda para texto corrido em contêiner colorido. Existir como token, em vez
-     de `--foreground` cravado na folha do componente, é o PONTO DE EXTENSÃO:
-     um projeto derivado redefine `--destructive-foreground` e ganha um par
-     semântico próprio sem tocar em alert, badge nem toast.
-
-     Não confundir com o par clássico "texto sobre a cor CHEIA": nenhuma regra
-     do sistema escreve sobre `hsl(var(--destructive))` opaco, então o contraste
-     que vale é o do texto sobre o fundo suave COMPOSTO na superfície. É o que
-     a story `TextoCorridoSobreFundoSuave` de `QA/Paleta de Tema` mede. */
-  --destructive: 9 52% 38%;
-  --destructive-foreground: var(--foreground);
-  --success: 155 37% 28%;
-  --success-foreground: var(--foreground);
-  --warning: 22 75% 42%;
-  --warning-foreground: var(--foreground);
-  --info: 190 55% 36%;
-  --info-foreground: var(--foreground);
-
-  /* Structure */
-  --border: 36 16% 88%;
-  /* --input é a borda do CAMPO, e o fundo do campo é o fundo da página: a borda
-     é a única coisa que diz onde o campo começa. Por isso ela responde a WCAG
-     1.4.11 (Non-text Contrast, 3:1) e NÃO acompanha mais --border, que é linha
-     decorativa e continua em 90%. Medido: 56% sobre 100% = 3.24:1. */
-  --input: 36 16% 52%;             /* mesmo neutro do modo escuro · 3.73:1 sobre --background (WCAG 1.4.11) */
-  --input-background: 24 100% 99.5%;
-  --ring: 190 31% 40%;
   --ring-offset-width: 2px;
   /* Não existe `--ring-offset-color`. O anel de foco do sistema é `box-shadow`,
      não `outline`: a camada interna (o "offset") é uma sombra sólida em
@@ -202,12 +198,8 @@
   --elevation-lg: 0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05);
   --elevation-xl: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04);
 
-  /* Charts */
-  --chart-1: 190 41% 38%;
-  --chart-2: 22 55% 62%;
-  --chart-3: 190 31% 34%;
-  --chart-4: 22 70% 70%;
-  --chart-5: 201 22% 18%;
+  /* Charts — os cinco vivem em `themes/*.css`, como o resto da cor. Cada tema
+     os declara só no bloco claro: gráfico não troca de paleta com o modo. */
 
   /* Radius — derivado de um radius base:
      --radius é o tamanho base global. A escala (none/xs–xl/full) deriva dele
@@ -284,56 +276,20 @@
   /* Topo da escada: nada pode cobrir aviso nem atalho de navegação. */
   --z-toast: 1080;
 
-  /* Sidebar */
-  --sidebar: 36 16% 96%;
-  --sidebar-foreground: 201 22% 18%;
-  --sidebar-primary: 190 31% 34%;
-  --sidebar-primary-foreground: 24 100% 99%;
-  --sidebar-accent: 36 24% 94%;
-  --sidebar-accent-foreground: 201 22% 18%;
-  --sidebar-border: 36 16% 85%;
-  --sidebar-ring: 190 31% 40%;
+  /* Sidebar — os oito também são cor, e vivem em `themes/*.css`. */
 }
 
 /* ── Dark mode ────────────────────────────────────────────────────────────── */
 .dark {
-  --background: 201 22% 18%;
-  --foreground: 24 100% 99%;
-  --card: 201 22% 18%;
-  --card-foreground: 24 100% 99%;
-  --popover: 201 22% 18%;
-  --popover-foreground: 24 100% 99%;
-  --primary: 184 48% 52%;
-  --primary-foreground: 201 22% 18%;
-  --secondary: 199 20% 26%;
-  --secondary-foreground: 24 100% 99%;
-  --muted: 200 18% 22%;
-  --muted-foreground: 197 12% 68%;
-  --accent: 199 20% 26%;
-  --accent-foreground: 24 100% 99%;
-  --destructive: 9 65% 76%;
-  --destructive-foreground: var(--foreground);
-  --success: 155 45% 60%;
-  --success-foreground: var(--foreground);
-  --warning: 22 75% 62%;
-  --warning-foreground: var(--foreground);
-  --info: 190 50% 56%;
-  --info-foreground: var(--foreground);
-  --border: 200 18% 35%;
-  /* 41% sobre o fundo 9% = 3.25:1 (WCAG 1.4.11). Ver comentário no claro. */
-  --input: 197 12% 50%;
-  --input-background: 201 22% 18%;
-  --ring: 184 48% 46%;
+  /* Só elevação. A cor do modo escuro é do TEMA, e mora em
+     `themes/*.css`, no bloco `.dark.tema-<id>`.
+
+     A sombra fica aqui porque depende do MODO e não do tema: no escuro ela
+     precisa de mais alfa para existir sobre um fundo escuro, e esse ajuste vale
+     igual para Default, Warm e Cold. Token que muda com o modo mas não com o
+     tema é exatamente o que este arquivo guarda. */
   --elevation-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
   --elevation-md: 0px 4px 6px -1px rgba(0, 0, 0, 0.3), 0px 2px 4px -1px rgba(0, 0, 0, 0.2);
   --elevation-lg: 0px 10px 15px -3px rgba(0, 0, 0, 0.3), 0px 4px 6px -2px rgba(0, 0, 0, 0.2);
   --elevation-xl: 0px 20px 25px -5px rgba(0, 0, 0, 0.3), 0px 10px 10px -5px rgba(0, 0, 0, 0.1);
-  --sidebar: 201 22% 15%;
-  --sidebar-foreground: 24 100% 99%;
-  --sidebar-primary: 184 48% 52%;
-  --sidebar-primary-foreground: 201 22% 18%;
-  --sidebar-accent: 199 20% 26%;
-  --sidebar-accent-foreground: 24 100% 99%;
-  --sidebar-border: 200 18% 24%;
-  --sidebar-ring: 184 48% 46%;
 }

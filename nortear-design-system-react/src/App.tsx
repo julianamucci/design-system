@@ -50,16 +50,18 @@ export default function App() {
   const isAdminRoute = new URLSearchParams(window.location.search).get('view') === 'admin';
 
   useEffect(() => {
-    // Remove todas as possíveis classes de tema
-    const themeClassNames = Object.keys(themeDisplayNames)
-      .filter((id) => id !== 'default')
-      .map((id) => `tema-${id}`);
+    // Remove todas as classes de tema — o default INCLUÍDO. Ele era filtrado
+    // daqui quando "Default" significava ausência de classe; hoje é um tema
+    // como os outros, e deixá-lo de fora fazia a classe do index.html
+    // sobreviver à troca. O resultado ainda era o certo, mas por acidente:
+    // `default.css` é importado ANTES de warm/cold, então warm ganhava quando
+    // as duas classes conviviam. Mudar a ordem dos @import inverteria isso sem
+    // aviso.
+    const themeClassNames = Object.keys(themeDisplayNames).map((id) => `tema-${id}`);
     document.documentElement.classList.remove('dark', ...themeClassNames);
 
-    // Aplica o tema atual (Default é o padrão e não tem classe)
-    if (currentTheme !== 'default') {
-      document.documentElement.classList.add(`tema-${currentTheme}`);
-    }
+    // Sempre aplica: os 39 tokens de cor só existem dentro de `.tema-<id>`.
+    document.documentElement.classList.add(`tema-${currentTheme}`);
 
     // Aplica dark mode
     if (isDark) {

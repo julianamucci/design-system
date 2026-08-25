@@ -23,7 +23,12 @@ export const themes: ThemeDefinition[] = [
     id: 'default',
     label: 'Default',
     description: 'Cores da marca Nortear — teal, areia e Ink · tema padrão',
-    cssClass: '',
+    // `tema-default`, e não string vazia. Enquanto o Default era ausência de
+    // classe, os 39 tokens de cor dele precisavam viver em `:root` — e viviam
+    // ali E em `default.css`, os mesmos valores em dois lugares mantidos iguais
+    // à mão. Divergiram. Agora cada tema tem um lugar só, e o preço é que a
+    // classe passou a ser obrigatória: sem ela não há cor.
+    cssClass: 'tema-default',
   },
   {
     id: 'warm',

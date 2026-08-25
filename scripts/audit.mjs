@@ -3695,6 +3695,82 @@ function auditGuardrails(slug) {
  * `/iframe.html`, porque `location.pathname` do iframe é invariante. E o
  * repositório é público, então ID de medição commitado é vazamento.
  */
+/**
+ * `tema_incompleto` — todo tema tem de declarar os 39 tokens de cor, no claro,
+ * e no escuro tudo que MUDA de valor.
+ *
+ * Isto virou fatal quando a cor saiu do `:root`. Antes, o tema que esquecia um
+ * token caía no valor do Default e ninguém via; hoje o token fica sem valor
+ * nenhum, e `hsl(var(--primary))` não pinta nada. O sintoma é cor faltando na
+ * tela — coisa que nem build nem type-check enxergam, e que a suíte só pegaria
+ * se houvesse story daquele tema exercitando aquele componente.
+ *
+ * O bloco claro `.tema-<id>` casa também com o `<html>` em modo escuro, porque a
+ * classe está lá. Por isso o escuro só precisa declarar a diferença — e por isso
+ * a conferência do escuro é feita sobre a UNIÃO dos dois blocos, não sobre o
+ * bloco escuro sozinho. Os cinco `--chart-*` são o caso normal disso: nenhum
+ * tema os redeclara no escuro, de propósito.
+ */
+const TOKENS_DE_TEMA = [
+  'background', 'foreground', 'card', 'card-foreground', 'popover', 'popover-foreground',
+  'primary', 'primary-foreground', 'secondary', 'secondary-foreground',
+  'muted', 'muted-foreground', 'accent', 'accent-foreground',
+  'destructive', 'destructive-foreground', 'success', 'success-foreground',
+  'warning', 'warning-foreground', 'info', 'info-foreground',
+  'border', 'input', 'input-background', 'ring',
+  'chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5',
+  'sidebar', 'sidebar-foreground', 'sidebar-primary', 'sidebar-primary-foreground',
+  'sidebar-accent', 'sidebar-accent-foreground', 'sidebar-border', 'sidebar-ring',
+].map((t) => `--${t}`);
+
+function auditTemasCompletos() {
+  const violations = [];
+  const dir = join(ROOT, 'docs', 'shared', 'themes');
+  if (!existsSync(dir)) return violations;
+
+  for (const arquivo of readdirSync(dir).filter((f) => /\.css$/.test(f))) {
+    const conteudo = readFile(join(dir, arquivo)) || '';
+    const id = arquivo.replace(/\.css$/, '');
+    // Só arquivo que DECLARA um tema entra; `index`, `densities`, `fonts` e
+    // `typescale` não são tema e não têm bloco `.tema-<id>`.
+    if (!new RegExp(`\\.tema-${id}\\b`).test(conteudo)) continue;
+
+    const declaradosEm = (seletor) => {
+      const set = new Set();
+      // `(?<![\w-])` é obrigatório: sem ele, `.tema-cold` casa DENTRO de
+      // `.dark.tema-cold`, o bloco claro passa a incluir o escuro, e a regra
+      // deixa de ver token que só o claro perdeu. Verificado reintroduzindo o
+      // defeito — na primeira versão o portão ficou verde com o token removido.
+      const rx = new RegExp(
+        `(?<![\\w-])${seletor.replace(/[.\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`,
+        'g',
+      );
+      for (const m of conteudo.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(rx)) {
+        for (const d of m[1].matchAll(/(--[A-Za-z0-9-]+)\s*:/g)) set.add(d[1]);
+      }
+      return set;
+    };
+
+    const claro = declaradosEm(`.tema-${id}`);
+    const escuro = new Set([...claro, ...declaradosEm(`.dark.tema-${id}`)]);
+
+    const faltando = TOKENS_DE_TEMA.filter((t) => !claro.has(t));
+    const faltandoEscuro = TOKENS_DE_TEMA.filter((t) => !escuro.has(t));
+    const ausentes = [...new Set([...faltando, ...faltandoEscuro])];
+    if (!ausentes.length) continue;
+
+    violations.push({
+      category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+      file: relative(ROOT, join(dir, arquivo)), rule: 'tema_incompleto',
+      message:
+        `o tema \`${id}\` não declara ${ausentes.length} token(s) de cor ` +
+        `(${ausentes.slice(0, 5).join(', ')}) — e desde que a cor saiu do \`:root\` ` +
+        'não há valor de reserva: o token fica indefinido e a propriedade não pinta',
+    });
+  }
+  return violations;
+}
+
 function auditStorybookInfra() {
   const violations = [];
   for (const stack of STACKS) {
@@ -3708,6 +3784,49 @@ function auditStorybookInfra() {
         file: relative(ROOT, previewHead), rule: 'ga4_in_preview_head',
         message: 'GA4 carregado no preview-head — o iframe tem pathname invariante e 100% dos page_view colidem em /iframe.html; o lugar é manager-head.html',
       });
+    }
+
+    // ── Classe de tema no ponto de entrada ───────────────────────────────
+    //
+    // Os 39 tokens de cor deixaram o `:root` e passaram a viver só nos temas
+    // (`docs/shared/themes/*.css`), um bloco por tema. Enquanto o Default era
+    // "ausência de classe", os valores dele precisavam existir em DOIS lugares
+    // — `tokens.css` e `default.css` — mantidos iguais à mão. Divergiram.
+    //
+    // O preço da correção é que a classe virou obrigatória: sem `tema-*` no
+    // `<html>`, não há cor nenhuma. Isso falha de forma feia e silenciosa — a
+    // página renderiza, o build passa, e o que aparece é texto preto sobre
+    // branco com as bordas invisíveis. Nenhum portão de tipo veria.
+    if (existsSync(previewHead)) {
+      const conteudo = readFile(previewHead) || '';
+      // O bloco da marca condicionava a classe ao valor não ser o default.
+      // Densidade, fonte e escala seguem fazendo isso, e está certo: os
+      // defaults DELAS continuam no `:root`. Só a cor mudou de contrato.
+      if (/globals\.brand\s*(?:!==|!=)\s*['"]default['"]/.test(conteudo)) {
+        violations.push({
+          category: 'quality', severity: 'high', slug: '_infra', stack,
+          file: relative(ROOT, previewHead), rule: 'tema_ausente_no_ponto_de_entrada',
+          message:
+            'o preview-head só aplica `tema-*` quando a marca NÃO é o default — e o' +
+            ' Default deixou de ser ausência de classe. Sem classe não há cor, e como' +
+            ' este script roda antes da primeira pintura, o efeito é a página abrir sem' +
+            ' tema. Aplique sempre: `tema-` + (globals.brand || "default")',
+        });
+      }
+    }
+
+    const indexHtml = join(ROOT, stackDir(stack), 'index.html');
+    if (existsSync(indexHtml)) {
+      const abertura = (readFile(indexHtml) || '').match(/<html\b[^>]*>/i);
+      if (abertura && !/tema-/.test(abertura[0])) {
+        violations.push({
+          category: 'quality', severity: 'high', slug: '_infra', stack,
+          file: relative(ROOT, indexHtml), rule: 'tema_ausente_no_ponto_de_entrada',
+          message:
+            'o `<html>` do sandbox não traz classe `tema-*`. Mesmo que o código aplique' +
+            ' o tema depois, a primeira pintura sai sem cor — e se não aplicar, nunca vem',
+        });
+      }
     }
 
     for (const nome of ['manager-head.html', 'preview-head.html']) {
@@ -5201,7 +5320,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditKeyframesDuplicado()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditKeyframesDuplicado()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

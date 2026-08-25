@@ -19,7 +19,7 @@
       return result;
     };
 
-    const BRAND_CLASSES = ['tema-warm', 'tema-cold'];
+    const BRAND_CLASSES = ['tema-default', 'tema-warm', 'tema-cold'];
     const DENSITY_CLASSES = ['densidade-condensado', 'densidade-confortavel'];
     const FONT_CLASSES = ['fonte-lexend', 'fonte-pt-serif', 'fonte-lxgw-wenkai'];
 
@@ -36,11 +36,12 @@
         html.style.colorScheme = 'light';
       }
 
-      // Brand / Theme (Default = sem classe; Warm/Cold via .tema-<id>)
+      // Brand / Theme — SEMPRE aplica uma classe, inclusive tema-default.
+      // Os 39 tokens de cor vivem só em themes/{default,warm,cold}.css,
+      // dentro de .tema-<id>; :root não tem cor nenhuma. Sem classe, sem
+      // cor — daí o fallback para 'default' quando a URL não traz globals.
       html.classList.remove(...BRAND_CLASSES);
-      if (globals.brand && globals.brand !== 'default') {
-        html.classList.add('tema-' + globals.brand);
-      }
+      html.classList.add('tema-' + (globals.brand || 'default'));
 
       // Density (Default = sem classe; Condensado/Confortável via .densidade-<id>)
       html.classList.remove(...DENSITY_CLASSES);

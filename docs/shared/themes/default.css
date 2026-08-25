@@ -88,13 +88,29 @@
  * navegador com a cor já composta; o que está aqui é a conta de conferência, e
  * ela só vale se compuser a mesma superfície que o componente pinta.
  *
- * Os valores em :root (tokens.css) refletem Default. Este arquivo RE-DECLARA
- * os mesmos tokens dentro de `.tema-default` para garantir que, ao voltar de
- * `.tema-warm` ou `.tema-cold` no preview do Storybook, o cascade do CSS reverta
- * corretamente (sem essa re-declaração, browsers podem manter estado computado
- * mesmo após a remoção da classe override). Os dois arquivos precisam dizer a
- * mesma coisa: divergir cria dois "Default" diferentes conforme a pessoa tenha
- * ou não trocado de tema na toolbar.
+ * Este arquivo é o ÚNICO lugar onde as cores do Default existem. O `tokens.css`
+ * não declara token de cor nenhum: ele guarda o que não depende de tema —
+ * tipografia, espaçamento, elevação, raio e z-index.
+ *
+ * Não era assim. O Default vivia em `:root` e era RE-DECLARADO aqui, os mesmos
+ * 39 valores em dois arquivos, mantidos iguais à mão. O comentário que pedia
+ * isso justificava-se com "browsers podem manter estado computado mesmo após a
+ * remoção da classe override", o que não é verdade: remover classe recomputa a
+ * cascata. O defeito real era outro, e está registrado no CLAUDE.md — em
+ * react/vue/svelte, aplicar `tema-*` só por decorator nunca voltava para o
+ * Default, porque o renderer pula o re-render quando a toolbar retorna ao
+ * `defaultValue`, e a classe `tema-warm` simplesmente NÃO era removida. O
+ * conserto de verdade (assinar `GLOBALS_UPDATED`/`SET_GLOBALS` no nível do
+ * módulo) veio depois; a duplicação ficou, e um dia divergiu — uma passada
+ * aliasou um arquivo e não o outro.
+ *
+ * O preço da correção, explícito porque é real: `tema-default` deixou de ser
+ * ausência de classe. Sem uma classe `tema-*` no `<html>` não há cor nenhuma —
+ * a página abre em preto sobre branco, sem borda visível, e nenhum portão de
+ * tipo ou de build vê isso. Quem aplica: `applyTheme()` em `theme-config.ts`, o
+ * `preview-head.html` de cada stack (antes da primeira pintura) e o `<html>` do
+ * sandbox. A regra `tema_ausente_no_ponto_de_entrada` do `audit.mjs` guarda
+ * esses pontos; consumidor externo do pacote precisa aplicar por conta.
  */
 .tema-default {
   --background: 24 100% 99.5%;

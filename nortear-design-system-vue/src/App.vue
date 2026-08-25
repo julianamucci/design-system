@@ -28,9 +28,12 @@ const currentComponent = shallowRef<ReturnType<typeof defineAsyncComponent> | nu
 
 watch([currentPage, isDark, currentTheme], () => {
   const html = document.documentElement
-  html.classList.remove('dark', 'tema-warm', 'tema-cold')
+  // `tema-default` entra na remoção e a aplicação é incondicional: os 39
+  // tokens de cor só existem dentro de `.tema-<id>`, e o default deixou de ser
+  // ausência de classe. Antes funcionava por acidente da ordem dos @import.
+  html.classList.remove('dark', 'tema-default', 'tema-warm', 'tema-cold')
   if (isDark.value) html.classList.add('dark')
-  if (currentTheme.value !== 'default') html.classList.add(`tema-${currentTheme.value}`)
+  html.classList.add(`tema-${currentTheme.value}`)
 
   if (currentPage.value !== 'home' && lazyDocs[currentPage.value]) {
     currentComponent.value = lazyDocs[currentPage.value]

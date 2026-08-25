@@ -96,5 +96,14 @@ export interface ComponentDocs {
 }
 
 // ─── Tema ─────────────────────────────────────────────────────────────────────
-
-export type ThemeId = 'default' | 'tema-um' | 'tema-dois' | 'tema-tres';
+//
+// `ThemeId` NÃO mora aqui. Este arquivo declarava
+// `'default' | 'tema-um' | 'tema-dois' | 'tema-tres'` — nomes que nunca
+// existiram —, ninguém o importava, e ele contradizia o tipo de verdade.
+// Segunda declaração do mesmo conceito é como a duplicação do tema Default
+// começou: uma das duas para de ser lida e deriva em silêncio.
+//
+// O catálogo de temas, com o tipo, está em `docs/shared/themes/theme-config.ts`.
+// Não re-exporto daqui: o `tsconfig` de uma das stacks não alcança aquele
+// diretório, e criar a ponte só para manter um nome que ninguém usa trocaria
+// um tipo morto por um acoplamento vivo.
