@@ -174,9 +174,18 @@ Fase F (serial):
 
 **Spec de exemplos — obrigatória.** Uma lista fechada de qual conteúdo cada demo, story e composição renderiza, derivada de `demonstration.*` e `variants.*` do `translations.json`:
 
-- para cada story a criar: nome exportado, chave de tradução dos rótulos, e estado inicial (aberto/fechado, selecionado, disabled)
+- para cada story a criar: nome exportado, **o ARQUIVO em que ela mora**, chave de tradução dos rótulos, e estado inicial (aberto/fechado, selecionado, disabled)
 - para cada composição: quais elementos compõem (ícone? badge? qual?) e a chave do rótulo
 - classes `.nds-*` do wrapper de cada exemplo
+
+**O arquivo é parte do contrato, não detalhe de organização.** Ele decide o
+grupo da barra lateral, e os cinco dev-agents rodam em paralelo sem se ver: o
+que a spec não fixa, cada um decide sozinho e as cinco árvores de menu divergem.
+Não quebra teste, não aparece no build — só quem abre o Storybook vê. Medido no
+repositório: 45 stories em grupos diferentes conforme a stack, cinco delas no
+mesmo componente, com todos os portões verdes. O critério de qual arquivo está
+em `_dev-shared.md` → "Em qual arquivo a story entra"; a regra que cobra é
+`story_group_divergent`.
 
 **Cubra TODAS as seções que renderizam exemplo — não só Demonstração, Variantes e
 Composições.** O buraco recorrente é o **Do & Don't**: a seção é obrigatória, os

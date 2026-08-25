@@ -695,6 +695,19 @@ const STORY_VARIANT_SUFFIXES = [
 ];
 
 /** Divide o arquivo por `export const <Nome>` e devolve [nome, corpo]. */
+/**
+ * Grupo da barra lateral, lido do NOME DO ARQUIVO.
+ *
+ * É o arquivo que decide, não o `title`: o `title` do sufixo é sempre
+ * `UI/<Slug>/<Grupo>` e repete a informação. Ler do nome dispensa parsear o
+ * `meta` e funciona igual nas cinco stacks.
+ */
+function grupoDaStory(caminhoRelativo) {
+  const base = basename(caminhoRelativo).replace(/\.stories\.[a-z]+$/, '');
+  const m = base.match(/-(variants|states|compositions|sizes|modes|layouts)$/);
+  return m ? m[1] : 'raiz';
+}
+
 function splitStories(content) {
   const out = [];
   const parts = content.split(/^export const (\w+)/m);
@@ -861,6 +874,8 @@ function auditStoryQuality(slug) {
   const violations = [];
   /** story → { stack → nº de expects } — base da comparação cross-stack. */
   const coverage = {};
+  /** story -> stack -> grupo da barra lateral. Ver `story_group_divergent`. */
+  const grupos = {};
 
   /**
    * `play: nomeDaFuncao` não tem expect no corpo da story — ele mora na função
@@ -940,6 +955,12 @@ function auditStoryQuality(slug) {
       const rel = relative(ROOT, file);
 
       for (const [name, body] of splitStories(content)) {
+        // O GRUPO é lido antes do filtro de `play`: story sem play já reprova
+        // por outra regra, e deixá-la fora daqui esconderia a divergência de
+        // barra lateral justamente no caso mais malfeito.
+        if (/\.stories\.[a-z]+$/.test(rel)) {
+          (grupos[name] ??= {})[stack] = grupoDaStory(rel);
+        }
         if (!/\bplay:/.test(body)) continue;
         const corpoPlay = corpoEfetivoDoPlay(body, content);
         const expects = (corpoPlay.match(/\bexpect\(/g) || []).length;
@@ -999,6 +1020,36 @@ function auditStoryQuality(slug) {
         }
       }
     }
+  }
+
+  // Mesma story em GRUPOS diferentes da barra lateral conforme a stack.
+  //
+  // Cinco pessoas leem "uma story por variante" e classificam igual; cinco
+  // AGENTES em paralelo, que não se veem, classificam diferente — e o que sai
+  // é o mesmo componente com cinco árvores de menu. Medido no combobox:
+  // `MultipleWithChips` na raiz em três stacks e em variantes em duas,
+  // `SingleLineChips` em composições numa e em variantes em quatro,
+  // `CustomFilter` e `Controlled` cada uma em dois grupos.
+  //
+  // Nenhum portão via isso. `coverage_divergence` compara CONTAGEM de asserção
+  // da mesma story e precisa que o nome exista dos dois lados; `contract_
+  // divergent` compara item de contrato. Em que arquivo a story mora — que é o
+  // que decide o grupo — não era medido por ninguém, e a árvore divergia com
+  // tudo verde.
+  for (const [name, byStack] of Object.entries(grupos)) {
+    const presentes = Object.entries(byStack);
+    if (presentes.length < 2) continue;
+    const distintos = new Set(presentes.map(([, g]) => g));
+    if (distintos.size < 2) continue;
+    const detalhe = presentes.map(([s, g]) => `${s}:${g}`).join(' ');
+    violations.push({
+      category: 'quality', severity: 'medium', slug, stack: 'cross-stack',
+      file: `stories/${slug}`, rule: 'story_group_divergent',
+      message:
+        `story ${name} aparece em grupos diferentes da barra lateral conforme a stack (${detalhe})` +
+        ' — quem lê a documentação de uma stack encontra a mesma story em outro lugar. O grupo sai do' +
+        ' ARQUIVO: raiz é só o Playground, e o resto vai para -variants, -states ou -compositions',
+    });
   }
 
   violations.push(...auditTextSurfaces(slug));

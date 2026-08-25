@@ -83,12 +83,43 @@ Padrões de foundation pages (header, seções, items): `docs/shared/guidelines/
 
 | Arquivo | Conteúdo |
 |---------|----------|
-| `<slug>.stories.<ext>` | Playground + `tags: ['autodocs']` + `withAutoDocsTab` + play functions |
-| `<slug>-variants.stories.<ext>` | Uma story por variante (sem play functions complexas) |
+| `<slug>.stories.<ext>` | **Só o Playground** + `tags: ['autodocs']` + `withAutoDocsTab` |
+| `<slug>-variants.stories.<ext>` | Uma story por FORMA do componente |
 | `<slug>-sizes.stories.<ext>` | Uma story por tamanho (se aplicável) |
-| `<slug>-states.stories.<ext>` | Disabled, Loading, Error — com play functions |
-| `<slug>-compositions.stories.<ext>` | Com ícone, asChild, em formulário etc. |
+| `<slug>-states.stories.<ext>` | Uma story por SITUAÇÃO em que ele pode estar |
+| `<slug>-compositions.stories.<ext>` | Uma story por MODO DE USO, com o componente montado por fora |
 | `<Slug>Docs.<ext>` | Docs page completa com todas as 16 seções |
+
+**O arquivo é o que decide o grupo da barra lateral**, porque o `title` sai dele.
+Story no arquivo errado aparece no lugar errado do menu, e isso não quebra teste
+nenhum — só quem abre o Storybook vê.
+
+### Em qual arquivo a story entra — critério, não exemplo
+
+A versão anterior desta tabela descrevia os arquivos por EXEMPLO ("Disabled,
+Loading, Error", "Com ícone, asChild, em formulário"). Exemplo resolve o caso
+igual ao exemplo e abandona quem tem um caso novo — e as cinco dev-skills rodam
+em PARALELO, sem se ver. Medido: 45 stories do repositório aparecem em grupos
+diferentes conforme a stack, cinco delas no mesmo componente. Regra `story_group_divergent`.
+
+Pergunte, nesta ordem:
+
+1. **Muda a FORMA do componente?** (escolha única × múltipla, com grupos, chips
+   em linha única, lista aberta com opção ativa) → `-variants`.
+2. **É uma SITUAÇÃO em que ele cai?** (desabilitado, inválido, sem resultado,
+   carregando) → `-states`. Situação é algo que acontece COM ele; forma é algo
+   que ele É.
+3. **É um MODO DE USO, com fiação por fora?** (dentro de formulário, valor
+   controlado por quem consome, predicado de filtro trocado) → `-compositions`.
+4. **Nada disso, é o campo de brincar com os controls?** → o arquivo raiz. E é
+   a ÚNICA coisa que mora ali.
+
+Na dúvida entre 1 e 2, o teste é: se a pessoa escolhe aquilo ao montar o
+componente, é forma; se acontece durante o uso, é situação.
+
+**Antes de criar story nova, olhe onde a mesma story mora nas outras stacks** —
+`grep -rl "^export const <Nome>" nortear-design-system-*/src/components/ui/`.
+Divergir do que já existe é o defeito; seguir é grátis.
 
 ---
 
