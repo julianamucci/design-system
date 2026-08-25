@@ -557,9 +557,8 @@ export function createCombobox(options: ComboboxOptions): ComboboxElement {
         // a escolha acontecer, e o campo fecharia por blur no meio do gesto.
         e.preventDefault();
         if (item.disabled) return;
-        selected.includes(item.value) && multiple
-          ? deselect(item.value)
-          : select(item.value);
+        if (multiple && selected.includes(item.value)) deselect(item.value);
+        else select(item.value);
       });
       option.addEventListener('mouseenter', () => highlight(index));
 
@@ -635,11 +634,13 @@ export function createCombobox(options: ComboboxOptions): ComboboxElement {
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        isOpen ? move(1) : open();
+        if (isOpen) move(1);
+        else open();
         break;
       case 'ArrowUp':
         e.preventDefault();
-        isOpen ? move(-1) : open();
+        if (isOpen) move(-1);
+        else open();
         break;
       case 'Home':
         if (!isOpen) return;
@@ -684,7 +685,8 @@ export function createCombobox(options: ComboboxOptions): ComboboxElement {
 
   trigger.addEventListener('mousedown', (e) => {
     e.preventDefault();
-    isOpen ? close() : open();
+    if (isOpen) close();
+    else open();
     input.focus();
   });
 
