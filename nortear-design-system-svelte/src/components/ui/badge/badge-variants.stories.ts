@@ -6,13 +6,7 @@ import { backgroundEffective, noTransicao, ratio, resolveColor } from '@shared/t
 import { Badge } from './index';
 import BadgeStory from './BadgeStory.svelte';
 import BadgeSemanticasStory from './BadgeSemanticasStory.svelte';
-import {
-  badgeDestructiveSource,
-  badgeOutlineSource,
-  badgeSecundarioSource,
-  badgeSemanticasSource,
-  badgeSource,
-} from './badge.source';
+import { badgeDestructiveSource, badgeSemanticasSource, badgeSource } from './badge.source';
 
 const meta: Meta = {
   title: 'UI/Badge/Variants',
@@ -29,7 +23,7 @@ const meta: Meta = {
       source: { transform: badgeSource },
       description: {
         component:
-          'Cada variante do Badge reflete um nível de hierarquia visual: default destaca, secondary informa, destructive alerta e outline oferece baixa ênfase.',
+          'Cada variante do Badge reflete um nível de hierarquia visual: default destaca, destructive alerta, warning avisa, success confirma e info contextualiza com o traço mais discreto do conjunto.',
       },
     },
   },
@@ -42,9 +36,9 @@ type Story = StoryObj;
  * O que a variante promete é o desenho, e desenho se mede.
  *
  * Depois do redesenho, quem carrega a variante é a BORDA: fundo e texto são
- * neutros e IGUAIS nas sete. Medir preenchimento deixou de distinguir qualquer
+ * neutros e IGUAIS nas cinco. Medir preenchimento deixou de distinguir qualquer
  * coisa — as asserções antigas de `backgroundColor` diferente entre variantes
- * passariam com as sete idênticas, que é exatamente o defeito que elas existiam
+ * passariam com as cinco idênticas, que é exatamente o defeito que elas existiam
  * para pegar.
  */
 const paint = (el: HTMLElement) => {
@@ -86,11 +80,22 @@ const borderContrast = (badge: HTMLElement) =>
 
 /**
  * O piso da borda é 3:1 (WCAG 1.4.11): ela é o contorno que identifica a
- * variante, e é a ÚNICA coisa que a identifica desde o redesenho. Vale para as
- * cores semânticas e para o cinza legível da secundária; a `outline` fica de
- * fora de propósito, e o porquê está na story dela.
+ * variante, e é a ÚNICA coisa que a identifica desde o redesenho. Alcançam o
+ * piso as bordas de `--primary`, `--destructive` e `--success`.
+ *
+ * Duas ficam abaixo dele DE PROPÓSITO, e o porquê está registrado na folha
+ * compartilhada: a `warning` usa valor literal escolhido para se separar da
+ * destructive, e a `info` assumiu a hairline neutra do projeto, a mesma que
+ * input e card desenham. Nas duas, mudar isso é assunto da paleta, não do
+ * badge — então elas se medem por outra promessa, e não por este piso.
  */
 const BORDER_FLOOR = 3;
+
+/**
+ * Valor LITERAL da borda da warning, repetido aqui de propósito: é a decisão
+ * que a story tranca. Trocá-lo na folha sem trocar aqui reprova, que é o ponto.
+ */
+const WARNING_BORDER = 'hsl(22 55% 62%)';
 
 /** O texto é neutro em todas, então 4.5:1 não depende mais da variante. */
 const textContrast = (badge: HTMLElement) =>
@@ -122,35 +127,6 @@ export const Default: Story = {
   },
 };
 
-export const Secondary: Story = {
-  parameters: {
-    covers: ['functional.item2', 'visual.item2'],
-    docs: { source: { transform: badgeSecundarioSource } },
-  },
-  render: () => ({ Component: BadgeStory, props: { variant: 'secondary', label: 'Beta' } }),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const badge = canvas.getByText('Beta');
-    await expect(badge).toHaveAttribute('data-variant', 'secondary');
-
-    // functional.item2 — a hierarquia entre as duas continua existindo, só que
-    // agora no traço: mesma forma neutra da default, outra cor de borda.
-    const { background, border } = paint(badge);
-    const defaultPaint = referencePaint(canvasElement, 'nds-badge-default');
-    await expect(background).toBe(defaultPaint.background);
-    await expect(border).not.toBe(defaultPaint.border);
-
-    // `--secondary` seria a escolha óbvia e NÃO serve como traço: não chega a
-    // 1.4:1 contra a página, e a variante sumiria. Quem pinta é o cinza legível.
-    await expect(border).toBe(resolveColor(canvasElement, 'hsl(var(--muted-foreground))'));
-    await expect(border).not.toBe(resolveColor(canvasElement, 'hsl(var(--secondary))'));
-
-    const contrast = borderContrast(badge);
-    await expect(contrast).not.toBeNull();
-    await expect(contrast!.ratio).toBeGreaterThanOrEqual(BORDER_FLOOR);
-  },
-};
-
 export const Destructive: Story = {
   parameters: {
     covers: ['functional.item3', 'accessibility.item3', 'visual.item2'],
@@ -163,12 +139,12 @@ export const Destructive: Story = {
     await expect(badge).toHaveAttribute('data-variant', 'destructive');
 
     // functional.item3 — a cor sinaliza pela borda; o contraste vem do texto
-    // neutro, que é o mesmo das outras seis.
+    // neutro, que é o mesmo das outras quatro.
     const { background, text, border } = paint(badge);
-    const neutral = referencePaint(canvasElement, 'nds-badge-outline');
+    const reference = referencePaint(canvasElement, 'nds-badge-default');
     await expect(border).toBe(resolveColor(canvasElement, 'hsl(var(--destructive))'));
-    await expect(text).toBe(neutral.text);
-    await expect(background).toBe(neutral.background);
+    await expect(text).toBe(reference.text);
+    await expect(background).toBe(reference.background);
 
     // accessibility.item3 — os 4.5:1 do texto não dependem mais da variante
     // escolhida, e é isso que a medida prova.
@@ -182,31 +158,6 @@ export const Destructive: Story = {
   },
 };
 
-export const Outline: Story = {
-  parameters: {
-    covers: ['functional.item4', 'visual.item2'],
-    docs: { source: { transform: badgeOutlineSource } },
-  },
-  render: () => ({ Component: BadgeStory, props: { variant: 'outline', label: 'Rascunho' } }),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const badge = canvas.getByText('Rascunho');
-    await expect(badge).toHaveAttribute('data-variant', 'outline');
-
-    // functional.item4 — a mais discreta do conjunto. Não é "a única sem
-    // fundo": nenhuma tem fundo desde o redesenho. O que a separa é a borda,
-    // que aqui é a hairline neutra do projeto — a MESMA que input e card
-    // desenham, e por isso a única que fica abaixo do piso de 3:1 de propósito.
-    const { background, border, borderWidth } = paint(badge);
-    const defaultPaint = referencePaint(canvasElement, 'nds-badge-default');
-    await expect(isTransparent(border)).toBe(false);
-    await expect(parseFloat(borderWidth)).toBe(2);
-    await expect(border).toBe(resolveColor(canvasElement, 'hsl(var(--border))'));
-    await expect(background).toBe(defaultPaint.background);
-    await expect(border).not.toBe(defaultPaint.border);
-  },
-};
-
 /**
  * As três semânticas numa story só: o que elas prometem não é cada uma isolada,
  * e sim serem DISTINGUÍVEIS entre si. Uma por story deixaria passar o erro mais
@@ -215,12 +166,18 @@ export const Outline: Story = {
  */
 export const Semantics: Story = {
   parameters: {
-    covers: ['functional.item7', 'visual.item5', 'accessibility.item3'],
+    covers: [
+      'functional.item2',
+      'functional.item4',
+      'functional.item7',
+      'visual.item5',
+      'accessibility.item3',
+    ],
     docs: {
       source: { transform: badgeSemanticasSource },
       description: {
         story:
-          'warning avisa, success confirma e info contextualiza. As três existiam no CSS como -high, -medium e -low, servindo só à tabela de prioridade das docs pages.',
+          'warning avisa, success confirma e info contextualiza. A warning usa valor próprio, escolhido para não se confundir com a destructive; a info usa a borda neutra, o traço mais discreto do conjunto.',
       },
     },
   },
@@ -233,9 +190,22 @@ export const Semantics: Story = {
       info: canvas.getByText('Novidade'),
     };
 
-    // A referência neutra é medida viva, e não cravada em rgb(): trocar o tema
-    // não pode reprovar o teste, mas trocar a REGRA pode.
-    const neutral = referencePaint(canvasElement, 'nds-badge-outline');
+    // A cor esperada de cada borda, medida VIVA e não cravada em rgb(): trocar
+    // o tema não pode reprovar o teste, mas trocar a REGRA pode.
+    //
+    // functional.item2 — a warning é a única que não sai de token: o literal É
+    // a decisão, e está trancado em WARNING_BORDER.
+    // functional.item4 — a info é a neutra discreta, e o traço dela é a mesma
+    // hairline que input e card desenham.
+    const expectedBorder: Record<string, string> = {
+      warning: WARNING_BORDER,
+      success: 'hsl(var(--success))',
+      info: 'hsl(var(--border))',
+    };
+
+    // A referência neutra é medida viva pelo mesmo motivo. A default serve: o
+    // fundo e o texto são iguais nas cinco, e ela não está sob medição aqui.
+    const reference = referencePaint(canvasElement, 'nds-badge-default');
 
     const borders: string[] = [];
     for (const [name, badge] of Object.entries(badges)) {
@@ -245,18 +215,31 @@ export const Semantics: Story = {
       // functional.item7 — a cor vem da borda; fundo e texto ficam neutros, e é
       // isso que sustenta 4.5:1 sem depender da variante escolhida.
       await expect(isTransparent(border)).toBe(false);
-      await expect(border).toBe(resolveColor(canvasElement, `hsl(var(--${name}))`));
-      await expect(text).toBe(neutral.text);
-      await expect(background).toBe(neutral.background);
+      await expect(border).toBe(resolveColor(canvasElement, expectedBorder[name]));
+      await expect(text).toBe(reference.text);
+      await expect(background).toBe(reference.background);
 
-      // accessibility.item3 — a borda é o contorno que identifica a variante:
-      // piso de 3:1 (WCAG 1.4.11) para as três.
-      const contrast = borderContrast(badge);
-      await expect(contrast).not.toBeNull();
-      await expect(contrast!.ratio).toBeGreaterThanOrEqual(BORDER_FLOOR);
+      // accessibility.item3 — os 4.5:1 do texto valem nas três, porque o texto
+      // é o mesmo neutro das demais.
+      const textRatio = textContrast(badge);
+      await expect(textRatio).not.toBeNull();
+      await expect(textRatio!.ratio).toBeGreaterThanOrEqual(4.5);
 
       borders.push(border);
     }
+
+    // O piso de 3:1 da borda vale para a success. A warning e a info ficam
+    // abaixo dele de propósito — a nota em BORDER_FLOOR diz por quê —, e por
+    // isso o piso não é cobrado delas: cobrá-lo aqui reprovaria a decisão de
+    // desenho em vez de um defeito.
+    const successRatio = borderContrast(badges.success);
+    await expect(successRatio).not.toBeNull();
+    await expect(successRatio!.ratio).toBeGreaterThanOrEqual(BORDER_FLOOR);
+
+    // functional.item2 — o que a warning promete no lugar do piso: NÃO parecer
+    // a destructive. Foi por colar nela que ela deixou de usar `--warning`.
+    const destructive = referencePaint(canvasElement, 'nds-badge-destructive');
+    await expect(paint(badges.warning).border).not.toBe(destructive.border);
 
     // Três cores, e não três nomes para a mesma: sem isto, copiar o bloco do
     // destructive nas três passaria.

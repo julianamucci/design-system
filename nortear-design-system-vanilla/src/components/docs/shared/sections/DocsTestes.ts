@@ -27,7 +27,7 @@ function createSubsectionDescription(text: string): HTMLParagraphElement {
 
 // A prioridade escolhe uma VARIANTE do badge — alta é destructive, média é
 // warning, baixa é info. O mapa antigo listava só português e inglês, então em
-// espanhol "Media" e "Baja" caíam no outline e a prioridade sumia da tabela.
+// espanhol "Media" e "Baja" caíam no padrão e a prioridade sumia da tabela.
 
 export function createDocsTestes(props: DocsTestesProps): HTMLElement {
   const section = document.createElement('section');

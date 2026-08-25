@@ -109,7 +109,7 @@ export class NdsBadge {
 export class NdsBadgeCounter {}`;
 
 const VARIANTS: BadgeVariant[] = [
-  'default', 'secondary', 'destructive', 'warning', 'success', 'info', 'outline',
+  'default', 'destructive', 'warning', 'success', 'info',
 ];
 
 @Component({
@@ -143,18 +143,16 @@ const VARIANTS: BadgeVariant[] = [
       <span class="nds-cluster" data-spacing="xs">
         <span ndsBadge variant="warning">{{ t('demonstration.labels.warningLabel') }}</span>
         <span ndsBadge variant="info">{{ t('demonstration.labels.infoLabel') }}</span>
-        <span ndsBadge variant="secondary">{{ t('demonstration.labels.categoryLabel') }}</span>
+        <span ndsBadge variant="success">{{ t('demonstration.labels.successLabel') }}</span>
         <span ndsBadge variant="destructive">{{ t('demonstration.labels.destructiveLabel') }}</span>
       </span>
     </ng-template>
 
     <ng-template #tplVarDefault><span ndsBadge>{{ t('demonstration.labels.defaultLabel') }}</span></ng-template>
-    <ng-template #tplVarSecondary><span ndsBadge variant="secondary">{{ t('demonstration.labels.secondaryLabel') }}</span></ng-template>
     <ng-template #tplVarDestructive><span ndsBadge variant="destructive">{{ t('demonstration.labels.destructiveLabel') }}</span></ng-template>
     <ng-template #tplVarWarning><span ndsBadge variant="warning">{{ t('demonstration.labels.warningLabel') }}</span></ng-template>
     <ng-template #tplVarSuccess><span ndsBadge variant="success">{{ t('demonstration.labels.successLabel') }}</span></ng-template>
     <ng-template #tplVarInfo><span ndsBadge variant="info">{{ t('demonstration.labels.infoLabel') }}</span></ng-template>
-    <ng-template #tplVarOutline><span ndsBadge variant="outline">{{ t('demonstration.labels.outlineLabel') }}</span></ng-template>
 
     <ng-template #tplCompIcon>
       <span ndsBadge variant="success">
@@ -162,23 +160,15 @@ const VARIANTS: BadgeVariant[] = [
         {{ t('demonstration.labels.statusLabel') }}
       </span>
     </ng-template>
-    <ng-template #tplCompCount>
-      <span ndsBadge variant="destructive">{{ t('demonstration.labels.countLabel') }}</span>
-    </ng-template>
     <ng-template #tplCompCounter>
       <span ndsBadge variant="destructive">
         {{ t('demonstration.labels.destructiveLabel') }}
-        <span ndsBadgeCounter>{{ t('demonstration.labels.countLabel') }}</span>
+        <span ndsBadgeCounter>12</span>
       </span>
-    </ng-template>
-    <ng-template #tplCompLink>
-      <a href="?path=/docs/ui-badge--docs">
-        <span ndsBadge variant="secondary">{{ t('demonstration.labels.tagLabel') }}</span>
-      </a>
     </ng-template>
     <ng-template #tplCompTrigger>
       <button ndsButton variant="ghost" size="sm" aria-label="Filtrar por categoria">
-        <span ndsBadge variant="outline">{{ t('demonstration.labels.categoryLabel') }}</span>
+        <span ndsBadge variant="info">{{ t('demonstration.labels.categoryLabel') }}</span>
       </button>
     </ng-template>
 
@@ -317,16 +307,12 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
   private readonly tplDoDont2Do = viewChild.required<TemplateRef<unknown>>('tplDoDont2Do');
   private readonly tplDoDont2Dont = viewChild.required<TemplateRef<unknown>>('tplDoDont2Dont');
   private readonly tplVarDefault = viewChild.required<TemplateRef<unknown>>('tplVarDefault');
-  private readonly tplVarSecondary = viewChild.required<TemplateRef<unknown>>('tplVarSecondary');
   private readonly tplVarDestructive = viewChild.required<TemplateRef<unknown>>('tplVarDestructive');
   private readonly tplVarWarning = viewChild.required<TemplateRef<unknown>>('tplVarWarning');
   private readonly tplVarSuccess = viewChild.required<TemplateRef<unknown>>('tplVarSuccess');
   private readonly tplVarInfo = viewChild.required<TemplateRef<unknown>>('tplVarInfo');
-  private readonly tplVarOutline = viewChild.required<TemplateRef<unknown>>('tplVarOutline');
   private readonly tplCompIcon = viewChild.required<TemplateRef<unknown>>('tplCompIcon');
-  private readonly tplCompCount = viewChild.required<TemplateRef<unknown>>('tplCompCount');
   private readonly tplCompCounter = viewChild.required<TemplateRef<unknown>>('tplCompCounter');
-  private readonly tplCompLink = viewChild.required<TemplateRef<unknown>>('tplCompLink');
   private readonly tplCompTrigger = viewChild.required<TemplateRef<unknown>>('tplCompTrigger');
 
   protected rotuloDaVariante(v: BadgeVariant): string {
@@ -422,12 +408,10 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
     dict();
     const tpls: Record<BadgeVariant, TemplateRef<unknown>> = {
       default: this.tplVarDefault(),
-      secondary: this.tplVarSecondary(),
       destructive: this.tplVarDestructive(),
       warning: this.tplVarWarning(),
       success: this.tplVarSuccess(),
       info: this.tplVarInfo(),
-      outline: this.tplVarOutline(),
     };
     return VARIANTS.map((v) => ({
       name: t(`variants.items.${v}`),
@@ -441,11 +425,10 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
     dict();
     const mapa: { key: string; tpl: TemplateRef<unknown> }[] = [
       { key: 'withIcon',  tpl: this.tplCompIcon()    },
-      { key: 'count',     tpl: this.tplCompCount()   },
       // A peça é subpeça, não prop: qualquer variante a aceita, e o conteúdo
-      // nem sempre é número puro ("99+").
+      // nem sempre é número puro ("99+"). O contador AVULSO — badge que era só
+      // um número ao lado de um ícone solto — saiu por ser redundante com ela.
       { key: 'withCounter', tpl: this.tplCompCounter() },
-      { key: 'asLink',    tpl: this.tplCompLink()    },
       { key: 'asTrigger', tpl: this.tplCompTrigger() },
     ];
     return mapa.map(({ key, tpl }) => ({
@@ -521,11 +504,16 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
       // correspondentes sumiram do conteúdo compartilhado, e mantê-las aqui
       // faria a página imprimir o nome da chave na tela.
       { token: '--primary',          value: 'border-color: hsl(var(--primary))',            k: 'primary'          },
-      { token: '--muted-foreground', value: 'border-color: hsl(var(--muted-foreground))',   k: 'mutedForeground'  },
       { token: '--destructive',      value: 'border-color: hsl(var(--destructive))',        k: 'destructive'      },
-      { token: '--warning',          value: 'border-color: hsl(var(--warning))',            k: 'warning'          },
+      // Duas semânticas deixaram de ler o token de mesmo nome, e a tabela
+      // registra as duas pontas: `--warning` continua na lista porque é o token
+      // que se esperaria ali, com a coluna dizendo que a folha usa valor
+      // literal; `--info` fica com a aplicação vazia porque a badge não o lê
+      // mais; e `--border` — a hairline que era da outline — é quem pinta a
+      // variante info hoje.
+      { token: '--warning',          value: 'border-color: hsl(22 55% 62%)',                k: 'warning'          },
       { token: '--success',          value: 'border-color: hsl(var(--success))',            k: 'success'          },
-      { token: '--info',             value: 'border-color: hsl(var(--info))',               k: 'info'             },
+      { token: '--info',             value: '—',                                            k: 'info'             },
       { token: '--border',           value: 'border-color: hsl(var(--border))',             k: 'border'           },
       { token: '--secondary',        value: 'background-color: hsl(var(--secondary))',      k: 'secondary'        },
       { token: '--foreground',       value: 'color: hsl(var(--foreground))',                k: 'foreground'       },

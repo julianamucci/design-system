@@ -551,7 +551,7 @@ type AccordionProps = {
   <AccordionItem value="beta">
     <AccordionTrigger>
       Funcionalidades em beta
-      <Badge variant="secondary">Beta</Badge>
+      <Badge variant="info">Beta</Badge>
     </AccordionTrigger>
     <AccordionContent>Recursos experimentais.</AccordionContent>
   </AccordionItem>
@@ -655,7 +655,7 @@ type AccordionProps = {
           </AccordionItem>
           <AccordionItem value="beta">
             <AccordionTrigger>
-              <span class="nds-cluster" data-spacing="xs">Funcionalidades em beta <Badge variant="secondary">Beta</Badge></span>
+              <span class="nds-cluster" data-spacing="xs">Funcionalidades em beta <Badge variant="info">Beta</Badge></span>
             </AccordionTrigger>
             <AccordionContent>Recursos experimentais.</AccordionContent>
           </AccordionItem>

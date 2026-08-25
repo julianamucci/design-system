@@ -369,7 +369,7 @@ import { Badge } from '@/components/ui/badge'`,
         ),
         item(
           'beta',
-          withBadge('Funcionalidades em beta', 'secondary', 'Beta'),
+          withBadge('Funcionalidades em beta', 'info', 'Beta'),
           'Funcionalidades em beta podem mudar. Comentários são bem-vindos.',
         ),
       ],

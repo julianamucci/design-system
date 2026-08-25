@@ -707,7 +707,7 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
                 data-spacing="xs"
               >
                 Funcionalidades em teste
-                <Badge variant="secondary">Beta</Badge>
+                <Badge variant="info">Beta</Badge>
               </span>
             </AccordionTrigger>
             <AccordionContent>Recursos disponíveis para usuários do programa beta.</AccordionContent>

@@ -142,10 +142,10 @@
     <!-- ── Header ──────────────────────────────────────────────────────── -->
     <header class="nds-stack nds-border-b-soft nds-pb-8">
       <div class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
-        <Badge variant="secondary" class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium">
+        <Badge variant="info" class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium">
           {$tStore('category')}
         </Badge>
-        <Badge variant="outline" class="nds-text-muted-foreground nds-font-normal">
+        <Badge variant="info" class="nds-text-muted-foreground nds-font-normal">
           {$tStore('type')}
         </Badge>
         <div class="nds-spacer-start">

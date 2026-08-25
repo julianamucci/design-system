@@ -235,13 +235,13 @@ track('docs_page_view', {
           data-align="center"
         >
           <Badge
-            variant="secondary"
+            variant="info"
             class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium"
           >
             {{ t('category') }}
           </Badge>
           <Badge
-            variant="outline"
+            variant="info"
             class="nds-text-muted-foreground nds-font-normal"
           >
             {{ t('type') }}

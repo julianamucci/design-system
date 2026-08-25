@@ -13,10 +13,10 @@
 
 <header class="ds-docs nds-stack nds-border-b-soft" data-spacing="md" style="padding-bottom: var(--spacing-6)">
   <div class="nds-cluster" data-spacing="sm">
-    <Badge variant="secondary" class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium">
+    <Badge variant="info" class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium">
       {category}
     </Badge>
-    <Badge variant="outline" class="nds-text-muted-foreground nds-font-normal">
+    <Badge variant="info" class="nds-text-muted-foreground nds-font-normal">
       {type}
     </Badge>
     <div class="nds-spacer-start">

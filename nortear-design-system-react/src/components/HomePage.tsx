@@ -148,7 +148,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Badge variant="secondary">1</Badge>
+                  <Badge variant="info">1</Badge>
                   Sidebar de Navegação
                 </CardTitle>
               </CardHeader>
@@ -163,7 +163,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Badge variant="secondary">2</Badge>
+                  <Badge variant="info">2</Badge>
                   Estrutura das Páginas
                 </CardTitle>
               </CardHeader>
@@ -178,7 +178,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Badge variant="secondary">3</Badge>
+                  <Badge variant="info">3</Badge>
                   Código Pronto para Usar
                 </CardTitle>
               </CardHeader>
@@ -193,7 +193,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Badge variant="secondary">4</Badge>
+                  <Badge variant="info">4</Badge>
                   Guidelines Obrigatórias
                 </CardTitle>
               </CardHeader>

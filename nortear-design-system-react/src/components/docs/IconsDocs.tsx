@@ -115,13 +115,13 @@ export function IconsDocs() {
         <header className="nds-stack nds-border-b-soft nds-pb-8">
           <div className="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
             <Badge
-              variant="secondary"
+              variant="default"
               className="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium"
             >
               {t('category')}
             </Badge>
             <Badge
-              variant="outline"
+              variant="info"
               className="nds-text-muted-foreground nds-font-normal"
             >
               {t('type')}

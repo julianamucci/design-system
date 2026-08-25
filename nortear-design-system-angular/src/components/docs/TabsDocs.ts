@@ -382,7 +382,7 @@ const ABAS_DEMO = ['overview', 'properties', 'examples'] as const;
           <button ndsTabsTrigger value="overview">{{ t('demonstration.labels.overview') }}</button>
           <button ndsTabsTrigger value="properties">
             {{ t('demonstration.labels.properties') }}
-            <span ndsBadge variant="secondary">12</span>
+            <span ndsBadge variant="info">12</span>
           </button>
           <button ndsTabsTrigger value="examples">
             {{ t('demonstration.labels.examples') }}

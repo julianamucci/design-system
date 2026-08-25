@@ -83,15 +83,27 @@ span[data-slot="badge"] (inline-flex, borda de 2px, radius-badge)
 | Variante | Borda | Uso |
 |---|---|---|
 | `default` | `--primary` | Destaque principal — categoria, tag ativa |
-| `secondary` | `--muted-foreground` | Informativo secundário — categoria neutra |
 | `destructive` | `--destructive` | Estado de erro ou alerta crítico |
-| `warning` | `--warning` | Pendência ou risco que ainda não é erro |
+| `warning` | `hsl(22 55% 62%)` | Pendência ou risco que ainda não é erro |
 | `success` | `--success` | Estado concluído ou aprovado |
-| `info` | `--info` | Contexto neutro que merece cor |
-| `outline` | `--border` | A borda mais discreta — rascunho, status secundário |
+| `info` | `--border` | A borda mais discreta — contexto que não compete por atenção |
 
-> `secondary` usa `--muted-foreground` e **não** `--secondary`: medido, como
-> traço o token de fundo fica em ~1.1:1 contra a página e a variante sumiria.
+> Duas das cinco **não** leem o token de mesmo nome, e é decisão registrada na
+> folha. `warning` traz um **valor literal**: com `--warning` o traço de 2px
+> ficava a menos de 3:1 de distância da destructive, e duas etiquetas de
+> significado oposto tinham a mesma cara. É literal porque a decisão de paleta
+> ainda não foi tomada — quando for, vira token de tema. `info` assumiu a
+> **hairline neutra** `--border`, a mesma que input e card desenham. O anel de
+> foco acompanha: o da `warning` usa o mesmo literal, e o da `info` usa
+> `--ring`, porque hairline não desenha foco visível.
+
+**Composições** — três, e nenhuma delas é variante:
+
+| Composição | Forma | Quando |
+|---|---|---|
+| Com ícone | SVG `aria-hidden` antes do rótulo, no mesmo `children` | Status que ganha com reforço icônico |
+| Como gatilho clicável | Etiqueta dentro de `<button>` | Filtro, chip ativável, gatilho de menu |
+| Com contador | `createBadgeCounter` à direita do rótulo, no mesmo `children` | Etiqueta que soma quantidade ao rótulo |
 
 > O Badge **não tem opção `size`** — a dimensão é única. Caso pontual sobrescreve
 > as vars internas escopadas (`--badge-bg`, `--badge-fg`, `--badge-border`;
@@ -121,14 +133,14 @@ span[data-slot="badge"] (inline-flex, borda de 2px, radius-badge)
 - Número dentro da etiqueta usa `createBadgeCounter`, nunca a classe escrita à mão nem um segundo badge aninhado
 - Consistência obrigatória: mesma semântica de cor em todo o produto (não usar `destructive` para promoções)
 - Não usar emojis dentro do badge — usar ícone lucide antes do rótulo se necessário; o tamanho vem de `.nds-badge > svg`
-- Badge clicável (link ou filtro): envolver em `<a>` ou `<button>`; nunca pendurar handler de clique no elemento devolvido pela fábrica
+- Badge clicável (filtro, chip ativável): envolver em `<button>`; nunca pendurar handler de clique no elemento devolvido pela fábrica
 
 **Acessibilidade**:
 - Badge puramente decorativo (repetindo informação já visível): `aria-hidden="true"`
 - Badge de status sem contexto visual adjacente: `aria-label` descritivo — ex: `aria-label="Status: Ativo"`
 - Badge informativo em que só o número é visível: `aria-label` no elemento pai, dizendo do que é a contagem
 - Ícones dentro do badge: `aria-hidden="true"` — o texto do badge já descreve o estado
-- Quem recebe foco é o `<a>` ou o `<button>` em volta, e é dele o nome acessível
+- Quem recebe foco é o `<button>` em volta, e é dele o nome acessível
 
 **UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):
 - Adjetivo ou substantivo de estado, 1–2 palavras, sem verbo, sem ponto final

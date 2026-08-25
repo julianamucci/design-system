@@ -134,11 +134,11 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
   topRow.dataset.align = 'center';
 
   const badgeCategory = createBadge({
-    variant: 'secondary',
+    variant: 'default',
     className: 'nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium',
   });
   const badgeType = createBadge({
-    variant: 'outline',
+    variant: 'info',
     className: 'nds-text-muted-foreground nds-font-normal',
   });
   const switcher = createLanguageSwitcher();

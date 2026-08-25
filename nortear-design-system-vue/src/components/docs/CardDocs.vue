@@ -404,7 +404,7 @@ const visualTestItems = computed(() =>
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
             <CardDescription>{{ tContent('demonstration.labels.productDescription') }}</CardDescription>
             <CardAction>
-              <Badge variant="secondary">
+              <Badge variant="info">
                 {{ tContent('demonstration.labels.productStock') }}
               </Badge>
             </CardAction>

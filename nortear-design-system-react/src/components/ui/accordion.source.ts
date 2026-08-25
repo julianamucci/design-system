@@ -258,7 +258,7 @@ export function accordionWithBadgeSource(): string {
   const body = [
     { value: 'novo', label: 'Novidades da versão 3.0', variant: 'default', badge: 'Novo',
       resposta: 'Use badges para sinalizar status sem alterar o gatilho textual.' },
-    { value: 'beta', label: 'Funcionalidades em beta', variant: 'secondary', badge: 'Beta',
+    { value: 'beta', label: 'Funcionalidades em beta', variant: 'info', badge: 'Beta',
       resposta: 'Funcionalidades beta podem mudar. Feedback é bem-vindo.' },
   ]
     .map(({ value, label, variant, badge, resposta }) =>

@@ -523,7 +523,7 @@ export function createAccordionDocs(): HTMLElement {
                 root.className = 'nds-w-full nds-max-w-lg';
                 const badgeItems = [
                   { value: 'novo', label: 'Novidades da versão 3.0', badge: 'Novo', variant: 'default' as const,   content: 'Conteúdo das novidades. Use badges para sinalizar status sem alterar o trigger textual.' },
-                  { value: 'beta', label: 'Funcionalidades em beta', badge: 'Beta', variant: 'secondary' as const, content: 'Funcionalidades beta podem mudar. Feedback é bem-vindo.' },
+                  { value: 'beta', label: 'Funcionalidades em beta', badge: 'Beta', variant: 'info' as const, content: 'Funcionalidades beta podem mudar. Feedback é bem-vindo.' },
                 ];
                 const accordion = createAccordion({
                   type: 'single', items: badgeItems.map(({ value, label, content }) => ({ value, trigger: label, content })),

@@ -103,7 +103,7 @@ describe('transforms das stories de tamanho, estado e composição', () => {
   it('o card de produto junta imagem, status no header e ações no rodapé', () => {
     const saida = productCardSource();
     expect(saida).toContain('from "@/components/ui/badge"');
-    expect(saida).toContain('<Badge variant="secondary">Em estoque</Badge>');
+    expect(saida).toContain('<Badge variant="success">Em estoque</Badge>');
     expect(saida.indexOf('<img')).toBeLessThan(saida.indexOf('<CardHeader>'));
     expect(saida).toContain('<CardFooter');
   });

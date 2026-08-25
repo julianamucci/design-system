@@ -226,7 +226,7 @@ import { Button } from "@/components/ui/button";`,
     <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
     <CardDescription>Estrutura ergonômica com ajuste de altura e apoio lombar.</CardDescription>
     <CardAction>
-      <Badge variant="secondary">Em estoque</Badge>
+      <Badge variant="success">Em estoque</Badge>
     </CardAction>
   </CardHeader>
   <CardContent>

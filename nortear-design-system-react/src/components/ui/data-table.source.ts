@@ -56,9 +56,9 @@ const FORMATOS = `const currency = new Intl.NumberFormat("pt-BR", {
   currency: "BRL",
 });
 
-const statusVariant: Record<string, "default" | "secondary" | "destructive"> = {
+const statusVariant: Record<string, "default" | "warning" | "destructive"> = {
   Pago: "default",
-  Pendente: "secondary",
+  Pendente: "warning",
   Cancelado: "destructive",
 };`;
 

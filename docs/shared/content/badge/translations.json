@@ -6,21 +6,18 @@
     "description": "Rótulo visual compacto para destacar status, contagens ou categorias inline com outros elementos.",
     "seo": {
       "title": "Badge — Feedback",
-      "description": "Documentação do Badge: 4 variantes (default, secondary, destructive, outline), uso inline para status, contagens e categorias com tokens semânticos.",
-      "aiSummary": "Componente Badge com 4 variantes (default, secondary, destructive, outline), sem size prop, não interativo por padrão, baseado em div com suporte a HTMLAttributes.",
+      "description": "Documentação do Badge: 5 variantes (default, destructive, warning, success, info), uso inline para status, contagens e categorias com tokens semânticos.",
+      "aiSummary": "Componente Badge com 5 variantes (default, destructive, warning, success, info), sem size prop, não interativo por padrão, contornado em vez de preenchido — a variante escolhe a cor da borda.",
       "aiEntities": "Badge, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, status indicator, tag, pill"
     },
     "demonstration": {
       "title": "Demonstração",
       "labels": {
         "defaultLabel": "Novo",
-        "secondaryLabel": "Beta",
         "destructiveLabel": "Urgente",
         "warningLabel": "Vence hoje",
         "successLabel": "Aprovado",
         "infoLabel": "Novidade",
-        "outlineLabel": "Rascunho",
-        "countLabel": "12",
         "statusLabel": "Ativo",
         "categoryLabel": "Design",
         "tagLabel": "React"
@@ -31,7 +28,7 @@
       "item1": "<strong>Badge</strong> — container <code>&lt;span&gt;</code>. Etiqueta inline: cabe dentro de frase, título e célula de tabela sem quebrar a linha.",
       "item2": "<strong>Conteúdo</strong> — texto curto ou número. Ideal: 1 a 3 palavras ou valores numéricos compactos.",
       "item3": "<strong>Ícone (opcional)</strong> — usado antes do texto para reforçar status. Deve ter <code>aria-hidden=\"true\"</code>.",
-      "item4": "<strong>Variante</strong> — definida via prop <code>variant</code>: default, secondary, destructive, warning, success, info ou outline. Ela escolhe a COR DA BORDA; fundo e texto não mudam.",
+      "item4": "<strong>Variante</strong> — definida via prop <code>variant</code>: default, destructive, warning, success ou info. Ela escolhe a COR DA BORDA; fundo e texto não mudam.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<Badge variant=\"default\">   {/* Container inline-flex */}\n  <Icon />              {/* Ícone opcional, aria-hidden */}\n  Texto                 {/* Rótulo curto */}\n</Badge>",
@@ -46,7 +43,7 @@
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para rótulos curtos — status, contagens, categorias ou tags. Nunca para frases completas.",
-        "item2": "Escolha a variante pela hierarquia: <code>default</code> destaca, <code>secondary</code> informa, <code>destructive</code> alerta, <code>outline</code> é neutro.",
+        "item2": "Escolha a variante pela hierarquia: <code>default</code> destaca, <code>destructive</code> alerta, <code>warning</code> avisa, <code>success</code> confirma, <code>info</code> é o neutro discreto.",
         "item3": "Nunca use cor como único indicador — combine com texto claro ou ícone semântico.",
         "item4": "Badge não é interativo por padrão. Para tornar clicável, envolva em <code>&lt;button&gt;</code> ou <code>&lt;a&gt;</code>."
       },
@@ -59,7 +56,7 @@
         },
         "item1": {
           "s": "Status curto em tabela ou card",
-          "u": "Sim, variant default ou secondary",
+          "u": "Sim, variante default ou info",
           "a": "-"
         },
         "item2": {
@@ -144,15 +141,13 @@
     "variants": {
       "title": "Variantes",
       "visualTitle": "Variantes Disponíveis",
-      "note": "O Badge oferece 4 variantes nativas via prop <code>variant</code>. Não possui prop <code>size</code> — a dimensão é única (texto pequeno semibold com padding compacto, definidos no CSS do componente).",
+      "note": "O Badge oferece 5 variantes nativas via prop <code>variant</code>, e todas mudam apenas a COR DA BORDA — fundo e texto são sempre neutros. Não possui prop <code>size</code>: a dimensão é única.",
       "items": {
         "default": "Destaque principal. Borda em <code>primary</code>, ideal para itens novos ou ações em evidência.",
-        "secondary": "Neutro informativo. Borda cinza legível, ideal para categorias e tags sem carga semântica.",
         "destructive": "Alerta ou erro. Borda em <code>destructive</code>, uso restrito a estados críticos.",
         "warning": "Atenção. Sinaliza pendência ou risco que ainda não é erro — prazo próximo, revisão necessária.",
         "success": "Confirmação. Estado concluído ou aprovado, como pagamento compensado ou publicação no ar.",
-        "info": "Informativo. Contexto neutro que merece cor, como etiqueta de novidade ou nível baixo de prioridade.",
-        "outline": "Baixa ênfase. A borda mais discreta do conjunto, para rascunhos e status secundários que não devem competir por atenção."
+        "info": "Neutro discreto. A borda mais silenciosa do conjunto, para contexto que não deve competir por atenção."
       },
       "compositionsTitle": "Composições",
       "compositions": {
@@ -160,16 +155,6 @@
           "name": "Com ícone",
           "description": "Ícone SVG como filho do Badge, antes do texto. Reforça visualmente o status (ex.: <code>Check</code> para ativo, <code>Bell</code> para notificação).",
           "use": "Status visuais que se beneficiam de reforço icônico. Sempre marque o ícone com <code>aria-hidden=\"true\"</code>."
-        },
-        "count": {
-          "name": "Contador",
-          "description": "Badge numérico ao lado de outro elemento (ex.: ícone de sino) sinalizando contagem de itens não lidos. Envolva no container com <code>role=\"status\"</code> e <code>aria-label</code> descritivo.",
-          "use": "Contagem de notificações, mensagens, pendências. Para valores acima de 99, exiba <code>99+</code>."
-        },
-        "asLink": {
-          "name": "Como link",
-          "description": "Badge envolvido em <code>&lt;a&gt;</code>. O link é focável e navegável; o Badge permanece decorativo dentro dele.",
-          "use": "Tags clicáveis em listas ou cards (categoria, autor, hashtag). Inclua <code>aria-label</code> descritivo no link."
         },
         "asTrigger": {
           "name": "Como trigger clicável",
@@ -206,7 +191,7 @@
         "default": "Padrão",
         "required": "Obrigatório",
         "description": "Descrição",
-        "variant": "Variante visual: <code>\"default\" | \"secondary\" | \"destructive\" | \"outline\"</code>.",
+        "variant": "Variante visual: <code>\"default\" | \"destructive\" | \"warning\" | \"success\" | \"info\"</code>. Escolhe a cor da borda.",
         "className": "Classes CSS adicionais para customizações pontuais (ex: cor semântica custom via token do tema).",
         "children": "Conteúdo do Badge: texto curto, número ou ícone + texto."
       },
@@ -228,11 +213,10 @@
         "badgeBg": "Fundo — var interna, hoje sempre neutra",
         "badgeFg": "Texto — var interna, hoje sempre neutro",
         "badgeBorder": "Borda — var interna, a ÚNICA que cada variante re-aponta",
-        "warning": "Borda (variante warning)",
+        "warning": "Borda da variante warning — hoje um valor PRÓPRIO na folha, não este token",
         "success": "Borda (variante success)",
-        "info": "Borda (variante info)",
-        "mutedForeground": "Borda (variante secondary)",
-        "border": "Borda (variante outline)"
+        "info": "Não é lido pela badge: a variante info usa a borda neutra",
+        "border": "Borda da variante info (a neutra discreta)"
       },
       "customizationTitle": "Como personalizar via tema:",
       "customizationCode": {
@@ -313,8 +297,8 @@
           "priority": "high"
         },
         "item2": {
-          "action": "Renderizar variante secondary",
-          "result": "Borda de 2px em --muted-foreground, neutra e legível contra a página",
+          "action": "Renderizar variante warning",
+          "result": "Borda de 2px em cor própria, escolhida para não se confundir com a destructive",
           "priority": "high"
         },
         "item3": {
@@ -323,8 +307,8 @@
           "priority": "high"
         },
         "item4": {
-          "action": "Renderizar variante outline",
-          "result": "Borda de 2px em --border, a mais discreta do conjunto",
+          "action": "Renderizar variante info",
+          "result": "Borda de 2px na neutra discreta, para contexto que não compete por atenção",
           "priority": "high"
         },
         "item5": {
@@ -375,15 +359,15 @@
           "priority": "high"
         },
         "item2": {
-          "story": "Variantes — default, secondary, destructive, outline",
+          "story": "Variantes — as cinco: default, destructive, warning, success e info",
           "priority": "high"
         },
         "item3": {
-          "story": "Configurações — com ícone e contador",
+          "story": "Composições — com ícone antes do texto",
           "priority": "medium"
         },
         "item4": {
-          "story": "Composições — envolvido em link e em botão",
+          "story": "Composições — etiqueta como gatilho clicável",
           "priority": "medium"
         },
         "item5": {
@@ -424,21 +408,18 @@
     "description": "Compact visual label for highlighting status, counts, or categories inline with other elements.",
     "seo": {
       "title": "Badge — Feedback",
-      "description": "Documentation for Badge: 4 variants (default, secondary, destructive, outline), inline use for status, counts, and categories with semantic tokens.",
-      "aiSummary": "Badge component with 4 variants (default, secondary, destructive, outline), no size prop, non-interactive by default, built on div with HTMLAttributes support.",
+      "description": "Badge documentation: 5 variants (default, destructive, warning, success, info), inline use for status, counts, and categories with semantic tokens.",
+      "aiSummary": "Badge component with 5 variants (default, destructive, warning, success, info), no size prop, non-interactive by default, outlined rather than filled — the variant picks the border colour.",
       "aiEntities": "Badge, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, status indicator, tag, pill"
     },
     "demonstration": {
       "title": "Demonstration",
       "labels": {
         "defaultLabel": "New",
-        "secondaryLabel": "Beta",
         "destructiveLabel": "Urgent",
         "warningLabel": "Due today",
         "successLabel": "Approved",
         "infoLabel": "What's new",
-        "outlineLabel": "Draft",
-        "countLabel": "12",
         "statusLabel": "Active",
         "categoryLabel": "Design",
         "tagLabel": "React"
@@ -449,7 +430,7 @@
       "item1": "<strong>Badge</strong> — <code>&lt;span&gt;</code> container. An inline label: it fits inside a sentence, a heading, or a table cell without breaking the line.",
       "item2": "<strong>Content</strong> — short text or number. Ideal: 1 to 3 words or compact numeric values.",
       "item3": "<strong>Icon (optional)</strong> — placed before text to reinforce status. Must have <code>aria-hidden=\"true\"</code>.",
-      "item4": "<strong>Variant</strong> — set via the <code>variant</code> prop: default, secondary, destructive, warning, success, info or outline. It picks the BORDER COLOUR; fill and text do not change.",
+      "item4": "<strong>Variant</strong> — set via the <code>variant</code> prop: default, destructive, warning, success or info. It picks the BORDER COLOUR; fill and text do not change.",
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<Badge variant=\"default\">   {/* inline-flex container */}\n  <Icon />              {/* Optional icon, aria-hidden */}\n  Text                  {/* Short label */}\n</Badge>",
@@ -464,7 +445,7 @@
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use for short labels — status, counts, categories, or tags. Never for full sentences.",
-        "item2": "Choose the variant by hierarchy: <code>default</code> highlights, <code>secondary</code> informs, <code>destructive</code> alerts, <code>outline</code> stays neutral.",
+        "item2": "Choose the variant by hierarchy: <code>default</code> highlights, <code>destructive</code> alerts, <code>warning</code> cautions, <code>success</code> confirms, <code>info</code> is the quiet neutral.",
         "item3": "Never rely on color alone — combine with clear text or a semantic icon.",
         "item4": "Badge is not interactive by default. To make it clickable, wrap it in a <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code>."
       },
@@ -477,7 +458,7 @@
         },
         "item1": {
           "s": "Short status in a table or card",
-          "u": "Yes, default or secondary variant",
+          "u": "Yes, default or info variant",
           "a": "-"
         },
         "item2": {
@@ -562,15 +543,13 @@
     "variants": {
       "title": "Variants",
       "visualTitle": "Available Variants",
-      "note": "Badge offers 4 native variants via the <code>variant</code> prop. It has no <code>size</code> prop — the dimension is fixed (small semibold text with compact padding, defined in the component's CSS).",
+      "note": "Badge offers 5 native variants via the <code>variant</code> prop, and all of them change only the BORDER COLOUR — fill and text are always neutral. It has no <code>size</code> prop: the dimension is fixed.",
       "items": {
         "default": "Primary emphasis. <code>primary</code> border, ideal for new items or highlighted actions.",
-        "secondary": "Neutral informational. Readable grey border, ideal for categories and tags with no semantic weight.",
         "destructive": "Alert or error. <code>destructive</code> border, reserved for critical states only.",
         "warning": "Attention. Flags something pending or risky that is not yet an error — an approaching deadline, a review due.",
         "success": "Confirmation. A finished or approved state, such as a cleared payment or a published item.",
-        "info": "Informational. Neutral context that still deserves colour, such as a new tag or a low priority level.",
-        "outline": "Low emphasis. The quietest border of the set, for drafts and secondary statuses that should not compete for attention."
+        "info": "Quiet neutral. The subtlest border of the set, for context that should not compete for attention."
       },
       "compositionsTitle": "Compositions",
       "compositions": {
@@ -578,16 +557,6 @@
           "name": "With icon",
           "description": "SVG icon as a child of the Badge, before the text. Visually reinforces status (e.g., <code>Check</code> for active, <code>Bell</code> for notification).",
           "use": "Visual statuses that benefit from icon reinforcement. Always mark the icon with <code>aria-hidden=\"true\"</code>."
-        },
-        "count": {
-          "name": "Counter",
-          "description": "Numeric Badge next to another element (e.g., bell icon) signaling unread count. Wrap the container with <code>role=\"status\"</code> and a descriptive <code>aria-label</code>.",
-          "use": "Notification, message, or pending-item counts. For values above 99, display <code>99+</code>."
-        },
-        "asLink": {
-          "name": "As link",
-          "description": "Badge wrapped in <code>&lt;a&gt;</code>. The link is focusable and navigable; the Badge stays decorative inside it.",
-          "use": "Clickable tags in lists or cards (category, author, hashtag). Include a descriptive <code>aria-label</code> on the link."
         },
         "asTrigger": {
           "name": "As clickable trigger",
@@ -624,7 +593,7 @@
         "default": "Default",
         "required": "Required",
         "description": "Description",
-        "variant": "Visual variant: <code>\"default\" | \"secondary\" | \"destructive\" | \"outline\"</code>.",
+        "variant": "Visual variant: <code>\"default\" | \"destructive\" | \"warning\" | \"success\" | \"info\"</code>. Picks the border colour.",
         "className": "Additional CSS classes for targeted customization (e.g., custom semantic color via theme token).",
         "children": "Badge content: short text, number, or icon + text."
       },
@@ -646,11 +615,10 @@
         "badgeBg": "Fill — internal var, always neutral today",
         "badgeFg": "Text — internal var, always neutral today",
         "badgeBorder": "Border — internal var, the ONLY one each variant re-points",
-        "warning": "Border (warning variant)",
+        "warning": "Warning variant border — today a literal in the sheet, not this token",
         "success": "Border (success variant)",
-        "info": "Border (info variant)",
-        "mutedForeground": "Border (secondary variant)",
-        "border": "Border (outline variant)"
+        "info": "Not read by the badge: the info variant uses the neutral border",
+        "border": "Border of the info variant (the quiet neutral)"
       },
       "customizationTitle": "How to customize via theme:",
       "customizationCode": {
@@ -731,8 +699,8 @@
           "priority": "high"
         },
         "item2": {
-          "action": "Render the secondary variant",
-          "result": "2px border in --muted-foreground, neutral and legible against the page",
+          "action": "Render the warning variant",
+          "result": "2px border in its own colour, chosen so it is not mistaken for destructive",
           "priority": "high"
         },
         "item3": {
@@ -741,8 +709,8 @@
           "priority": "high"
         },
         "item4": {
-          "action": "Render the outline variant",
-          "result": "2px border in --border, the quietest of the set",
+          "action": "Render the info variant",
+          "result": "2px border in the quiet neutral, for context that should not compete for attention",
           "priority": "high"
         },
         "item5": {
@@ -793,15 +761,15 @@
           "priority": "high"
         },
         "item2": {
-          "story": "Variants — default, secondary, destructive, outline",
+          "story": "Variants — all five: default, destructive, warning, success and info",
           "priority": "high"
         },
         "item3": {
-          "story": "Configurations — with icon and counter",
+          "story": "Compositions — with an icon before the text",
           "priority": "medium"
         },
         "item4": {
-          "story": "Compositions — wrapped in a link and in a button",
+          "story": "Compositions — badge as a clickable trigger",
           "priority": "medium"
         },
         "item5": {
@@ -842,21 +810,18 @@
     "description": "Etiqueta visual compacta para destacar estados, conteos o categorías inline junto a otros elementos.",
     "seo": {
       "title": "Badge — Feedback",
-      "description": "Documentación del Badge: 4 variantes (default, secondary, destructive, outline), uso inline para estados, conteos y categorías con tokens semánticos.",
-      "aiSummary": "Componente Badge con 4 variantes (default, secondary, destructive, outline), sin prop size, no interactivo por defecto, basado en div con soporte para HTMLAttributes.",
+      "description": "Documentación del Badge: 5 variantes (default, destructive, warning, success, info), uso inline para estados, conteos y categorías con tokens semánticos.",
+      "aiSummary": "Componente Badge con 5 variantes (default, destructive, warning, success, info), sin prop size, no interactivo por defecto, con contorno en vez de relleno — la variante elige el color del borde.",
       "aiEntities": "Badge, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, status indicator, tag, pill"
     },
     "demonstration": {
       "title": "Demostración",
       "labels": {
         "defaultLabel": "Nuevo",
-        "secondaryLabel": "Beta",
         "destructiveLabel": "Urgente",
         "warningLabel": "Vence hoy",
         "successLabel": "Aprobado",
         "infoLabel": "Novedad",
-        "outlineLabel": "Borrador",
-        "countLabel": "12",
         "statusLabel": "Activo",
         "categoryLabel": "Diseño",
         "tagLabel": "React"
@@ -867,7 +832,7 @@
       "item1": "<strong>Badge</strong> — contenedor <code>&lt;span&gt;</code>. Etiqueta inline: cabe dentro de una frase, un título o una celda de tabla sin romper la línea.",
       "item2": "<strong>Contenido</strong> — texto corto o número. Ideal: 1 a 3 palabras o valores numéricos compactos.",
       "item3": "<strong>Ícono (opcional)</strong> — colocado antes del texto para reforzar el estado. Debe tener <code>aria-hidden=\"true\"</code>.",
-      "item4": "<strong>Variante</strong> — definida vía prop <code>variant</code>: default, secondary, destructive, warning, success, info u outline. Elige el COLOR DEL BORDE; fondo y texto no cambian.",
+      "item4": "<strong>Variante</strong> — definida vía prop <code>variant</code>: default, destructive, warning, success o info. Elige el COLOR DEL BORDE; fondo y texto no cambian.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<Badge variant=\"default\">   {/* Contenedor inline-flex */}\n  <Icon />              {/* Ícono opcional, aria-hidden */}\n  Texto                 {/* Etiqueta corta */}\n</Badge>",
@@ -882,7 +847,7 @@
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Úsalo para etiquetas cortas — estados, conteos, categorías o tags. Nunca para frases completas.",
-        "item2": "Elige la variante según la jerarquía: <code>default</code> destaca, <code>secondary</code> informa, <code>destructive</code> alerta, <code>outline</code> es neutro.",
+        "item2": "Elige la variante según la jerarquía: <code>default</code> destaca, <code>destructive</code> alerta, <code>warning</code> advierte, <code>success</code> confirma, <code>info</code> es el neutro discreto.",
         "item3": "Nunca uses el color como único indicador — combínalo con texto claro o ícono semántico.",
         "item4": "Badge no es interactivo por defecto. Para hacerlo clicable, envuélvelo en <code>&lt;button&gt;</code> o <code>&lt;a&gt;</code>."
       },
@@ -895,7 +860,7 @@
         },
         "item1": {
           "s": "Estado corto en tabla o card",
-          "u": "Sí, variante default o secondary",
+          "u": "Sí, variante default o info",
           "a": "-"
         },
         "item2": {
@@ -980,15 +945,13 @@
     "variants": {
       "title": "Variantes",
       "visualTitle": "Variantes Disponibles",
-      "note": "Badge ofrece 4 variantes nativas vía la prop <code>variant</code>. No tiene prop <code>size</code> — la dimensión es única (texto pequeño semibold con padding compacto, definidos en el CSS del componente).",
+      "note": "Badge ofrece 5 variantes nativas vía la prop <code>variant</code>, y todas cambian solo el COLOR DEL BORDE — fondo y texto son siempre neutros. No tiene prop <code>size</code>: la dimensión es única.",
       "items": {
         "default": "Énfasis principal. Borde en <code>primary</code>, ideal para ítems nuevos o acciones destacadas.",
-        "secondary": "Neutro informativo. Borde gris legible, ideal para categorías y tags sin carga semántica.",
         "destructive": "Alerta o error. Borde en <code>destructive</code>, reservado para estados críticos.",
         "warning": "Atención. Señala algo pendiente o riesgoso que aún no es un error: un plazo cercano, una revisión necesaria.",
         "success": "Confirmación. Estado concluido o aprobado, como un pago acreditado o una publicación en línea.",
-        "info": "Informativo. Contexto neutro que merece color, como una etiqueta de novedad o un nivel bajo de prioridad.",
-        "outline": "Baja énfasis. El borde más discreto del conjunto, para borradores y estados secundarios que no deben competir por atención."
+        "info": "Neutro discreto. El borde más silencioso del conjunto, para contexto que no debe competir por atención."
       },
       "compositionsTitle": "Composiciones",
       "compositions": {
@@ -996,16 +959,6 @@
           "name": "Con ícono",
           "description": "Ícono SVG como hijo del Badge, antes del texto. Refuerza visualmente el estado (ej.: <code>Check</code> para activo, <code>Bell</code> para notificación).",
           "use": "Estados visuales que se benefician de refuerzo icónico. Marca siempre el ícono con <code>aria-hidden=\"true\"</code>."
-        },
-        "count": {
-          "name": "Contador",
-          "description": "Badge numérico junto a otro elemento (ej.: ícono de campana) que indica cantidad no leída. Envuelve el contenedor con <code>role=\"status\"</code> y un <code>aria-label</code> descriptivo.",
-          "use": "Conteo de notificaciones, mensajes, pendientes. Para valores sobre 99, muestra <code>99+</code>."
-        },
-        "asLink": {
-          "name": "Como enlace",
-          "description": "Badge envuelto en <code>&lt;a&gt;</code>. El enlace es focalizable y navegable; el Badge permanece decorativo dentro.",
-          "use": "Tags clickeables en listas o cards (categoría, autor, hashtag). Incluye <code>aria-label</code> descriptivo en el enlace."
         },
         "asTrigger": {
           "name": "Como trigger clickeable",
@@ -1042,7 +995,7 @@
         "default": "Por defecto",
         "required": "Obligatorio",
         "description": "Descripción",
-        "variant": "Variante visual: <code>\"default\" | \"secondary\" | \"destructive\" | \"outline\"</code>.",
+        "variant": "Variante visual: <code>\"default\" | \"destructive\" | \"warning\" | \"success\" | \"info\"</code>. Elige el color del borde.",
         "className": "Clases CSS adicionales para personalizaciones puntuales (ej: color semántico custom vía token del tema).",
         "children": "Contenido del Badge: texto corto, número o ícono + texto."
       },
@@ -1064,11 +1017,10 @@
         "badgeBg": "Fondo — var interna, hoy siempre neutra",
         "badgeFg": "Texto — var interna, hoy siempre neutro",
         "badgeBorder": "Borde — var interna, la ÚNICA que cada variante reapunta",
-        "warning": "Borde (variante warning)",
+        "warning": "Borde de la variante warning — hoy un valor propio en la hoja, no este token",
         "success": "Borde (variante success)",
-        "info": "Borde (variante info)",
-        "mutedForeground": "Borde (variante secondary)",
-        "border": "Borde (variante outline)"
+        "info": "No lo lee la badge: la variante info usa el borde neutro",
+        "border": "Borde de la variante info (el neutro discreto)"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
       "customizationCode": {
@@ -1149,8 +1101,8 @@
           "priority": "high"
         },
         "item2": {
-          "action": "Renderizar la variante secondary",
-          "result": "Borde de 2px en --muted-foreground, neutro y legible contra la página",
+          "action": "Renderizar la variante warning",
+          "result": "Borde de 2px en color propio, elegido para no confundirse con destructive",
           "priority": "high"
         },
         "item3": {
@@ -1159,8 +1111,8 @@
           "priority": "high"
         },
         "item4": {
-          "action": "Renderizar la variante outline",
-          "result": "Borde de 2px en --border, el más discreto del conjunto",
+          "action": "Renderizar la variante info",
+          "result": "Borde de 2px en el neutro discreto, para contexto que no compite por atención",
           "priority": "high"
         },
         "item5": {
@@ -1211,15 +1163,15 @@
           "priority": "high"
         },
         "item2": {
-          "story": "Variantes — default, secondary, destructive, outline",
+          "story": "Variantes — las cinco: default, destructive, warning, success e info",
           "priority": "high"
         },
         "item3": {
-          "story": "Configuraciones — con ícono y contador",
+          "story": "Composiciones — con ícono antes del texto",
           "priority": "medium"
         },
         "item4": {
-          "story": "Composiciones — envuelto en link y en botón",
+          "story": "Composiciones — etiqueta como disparador clicable",
           "priority": "medium"
         },
         "item5": {

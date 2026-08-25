@@ -193,11 +193,11 @@ export function createBadgeDocs(): HTMLElement {
             wrap.dataset.spacing = 'sm';
             wrap.append(
               buildLabelBadge('default',     t('demonstration.labels.defaultLabel')),
-              buildLabelBadge('secondary',   t('demonstration.labels.secondaryLabel')),
               buildLabelBadge('destructive', t('demonstration.labels.destructiveLabel')),
-              buildLabelBadge('outline',     t('demonstration.labels.outlineLabel')),
-              buildIconBadge('default',    buildStarIcon(),  t('demonstration.labels.statusLabel')),
-              buildLabelBadge('destructive', t('demonstration.labels.countLabel')),
+              buildLabelBadge('warning',     t('demonstration.labels.warningLabel')),
+              buildLabelBadge('success',     t('demonstration.labels.successLabel')),
+              buildLabelBadge('info',        t('demonstration.labels.infoLabel')),
+              buildIconBadge('default',      buildStarIcon(), t('demonstration.labels.statusLabel')),
             );
             return wrap;
           },
@@ -284,9 +284,9 @@ export function createBadgeDocs(): HTMLElement {
                 wrap.className = 'nds-cluster';
                 wrap.dataset.spacing = 'xs';
                 wrap.append(
-                  buildLabelBadge('default',   'Novo'),
-                  buildLabelBadge('secondary', 'Beta'),
-                  buildLabelBadge('outline',   'Rascunho'),
+                  buildLabelBadge('default', 'Novo'),
+                  buildLabelBadge('info',    'Beta'),
+                  buildLabelBadge('success', 'Aprovado'),
                 );
                 return wrap;
               },
@@ -337,12 +337,10 @@ export function createBadgeDocs(): HTMLElement {
 
       case 'variantes': {
         const codeDefault = `const badge = createBadge({ variant: 'default', children: 'Novo' });`;
-        const codeSecondary = `const badge = createBadge({ variant: 'secondary', children: 'Beta' });`;
         const codeDestructive = `const badge = createBadge({ variant: 'destructive', children: 'Urgente' });`;
-        const codeWarning = `const el = createBadge({ variant: 'warning', text: 'Vence hoje' });`;
-        const codeSuccess = `const el = createBadge({ variant: 'success', text: 'Aprovado' });`;
-        const codeInfo = `const el = createBadge({ variant: 'info', text: 'Novidade' });`;
-        const codeOutline = `const badge = createBadge({ variant: 'outline', children: 'Rascunho' });`;
+        const codeWarning = `const badge = createBadge({ variant: 'warning', children: 'Vence hoje' });`;
+        const codeSuccess = `const badge = createBadge({ variant: 'success', children: 'Aprovado' });`;
+        const codeInfo = `const badge = createBadge({ variant: 'info', children: 'Novidade' });`;
 
         return createDocsVariants({
           title: t('variants.title'),
@@ -352,12 +350,6 @@ export function createBadgeDocs(): HTMLElement {
               description: stripHtml(t('variants.items.default')),
               code: codeDefault,
               previewFactory: () => buildLabelBadge('default', t('demonstration.labels.defaultLabel')),
-            },
-            {
-              name: 'secondary',
-              description: stripHtml(t('variants.items.secondary')),
-              code: codeSecondary,
-              previewFactory: () => buildLabelBadge('secondary', t('demonstration.labels.secondaryLabel')),
             },
             {
               name: 'destructive',
@@ -383,12 +375,6 @@ export function createBadgeDocs(): HTMLElement {
               code: codeInfo,
               previewFactory: () => buildLabelBadge('info', t('demonstration.labels.infoLabel')),
             },
-            {
-              name: 'outline',
-              description: stripHtml(t('variants.items.outline')),
-              code: codeOutline,
-              previewFactory: () => buildLabelBadge('outline', t('demonstration.labels.outlineLabel')),
-            },
           ],
         });
       }
@@ -408,23 +394,6 @@ export function createBadgeDocs(): HTMLElement {
           return svg;
         }
 
-        function createBellSvg(): SVGSVGElement {
-          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-          svg.setAttribute('viewBox', '0 0 24 24');
-          svg.setAttribute('width', '20'); svg.setAttribute('height', '20');
-          svg.setAttribute('fill', 'none'); svg.setAttribute('stroke', 'currentColor');
-          svg.setAttribute('stroke-width', '2'); svg.setAttribute('stroke-linecap', 'round'); svg.setAttribute('stroke-linejoin', 'round');
-          svg.setAttribute('aria-hidden', 'true');
-          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-          path.setAttribute('d', 'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9');
-          svg.appendChild(path);
-          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-          circle.setAttribute('d', 'M10 21a2 2 0 0 0 4 0');
-          svg.appendChild(circle);
-          return svg;
-        }
-
         return createDocsCompositions({
           title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
@@ -438,29 +407,6 @@ export function createBadgeDocs(): HTMLElement {
                 `const checkSvg = createCheckSvg();\n` +
                 `const badge = createBadge({ variant: 'default', children: [checkSvg, 'Ativo'] });`,
               previewFactory: () => createBadge({ variant: 'default', children: [createCheckSvg() as unknown as HTMLElement, 'Ativo'] }),
-            },
-            {
-              name: t('variants.compositions.count.name'),
-              description: t('variants.compositions.count.description'),
-              useWhen: t('variants.compositions.count.use'),
-              code:
-                `const wrap = document.createElement('span');\n` +
-                `wrap.setAttribute('role', 'status');\n` +
-                `wrap.setAttribute('aria-label', '12 notificações não lidas');\n` +
-                `wrap.style.display = 'inline-flex';\n` +
-                `wrap.style.alignItems = 'center';\n` +
-                `wrap.style.gap = 'var(--spacing-2)';\n` +
-                `wrap.append(createBellSvg(), createBadge({ variant: 'destructive', children: '12' }));`,
-              previewFactory: () => {
-                const wrap = document.createElement('span');
-                wrap.setAttribute('role', 'status');
-                wrap.setAttribute('aria-label', '12 notificações não lidas');
-                wrap.style.display = 'inline-flex';
-                wrap.style.alignItems = 'center';
-                wrap.style.gap = 'var(--spacing-2)';
-                wrap.append(createBellSvg(), createBadge({ variant: 'destructive', children: '12' }));
-                return wrap;
-              },
             },
             {
               name: t('variants.compositions.withCounter.name'),
@@ -478,25 +424,6 @@ export function createBadgeDocs(): HTMLElement {
                 }),
             },
             {
-              name: t('variants.compositions.asLink.name'),
-              description: t('variants.compositions.asLink.description'),
-              useWhen: t('variants.compositions.asLink.use'),
-              code:
-                `const link = document.createElement('a');\n` +
-                `link.href = '#design';\n` +
-                `link.setAttribute('aria-label', 'Ver todos os itens da categoria Design');\n` +
-                `link.style.display = 'inline-flex';\n` +
-                `link.appendChild(createBadge({ variant: 'secondary', children: 'Design' }));`,
-              previewFactory: () => {
-                const link = document.createElement('a');
-                link.href = '#design';
-                link.setAttribute('aria-label', 'Ver todos os itens da categoria Design');
-                link.style.display = 'inline-flex';
-                link.appendChild(createBadge({ variant: 'secondary', children: 'Design' }));
-                return link;
-              },
-            },
-            {
               name: t('variants.compositions.asTrigger.name'),
               description: t('variants.compositions.asTrigger.description'),
               useWhen: t('variants.compositions.asTrigger.use'),
@@ -508,7 +435,7 @@ export function createBadgeDocs(): HTMLElement {
                 `btn.style.display = 'inline-flex';\n` +
                 `btn.style.padding = '0';\n` +
                 `btn.style.border = '0';\n` +
-                `btn.appendChild(createBadge({ variant: 'outline', children: 'React' }));`,
+                `btn.appendChild(createBadge({ variant: 'info', children: 'React' }));`,
               previewFactory: () => {
                 const btn = document.createElement('button');
                 btn.type = 'button';
@@ -517,7 +444,7 @@ export function createBadgeDocs(): HTMLElement {
                 btn.style.display = 'inline-flex';
                 btn.style.padding = '0';
                 btn.style.border = '0';
-                btn.appendChild(createBadge({ variant: 'outline', children: 'React' }));
+                btn.appendChild(createBadge({ variant: 'info', children: 'React' }));
                 return btn;
               },
             },
@@ -540,7 +467,7 @@ export function createBadgeDocs(): HTMLElement {
 
       case 'propriedades': {
         const interfaceCode = `// createBadge(options)
-export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'warning' | 'success' | 'info' | 'outline';
+export type BadgeVariant = 'default' | 'destructive' | 'warning' | 'success' | 'info';
 
 export interface BadgeOptions {
   variant?: BadgeVariant;
@@ -563,7 +490,7 @@ export interface BadgeOptions {
               title: t('props.badgeTitle'),
               cols: propsCols,
               items: [
-                { name: 'variant',   type: '"default" | "secondary" | "destructive" | "warning" | "success" | "info" | "outline"', defaultValue: '"default"', required: 'Não', description: toPlainText(t('props.table.variant')) },
+                { name: 'variant',   type: '"default" | "destructive" | "warning" | "success" | "info"', defaultValue: '"default"', required: 'Não', description: toPlainText(t('props.table.variant')) },
                 { name: 'children',  type: 'string | HTMLElement | Array<string | HTMLElement>',  defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.children')) },
                 { name: 'className', type: 'string',                                               defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.className')) },
               ],
@@ -588,13 +515,17 @@ export interface BadgeOptions {
             // utilitária: o par semântico (`--primary-foreground` e companhia)
             // saiu do badge junto com o preenchimento, e as duas vars de alfa
             // deixaram de existir na folha.
+            // `--warning` e `--info` continuam na tabela sem regra que os leia, e é
+            // de propósito: quem procura o token de mesmo nome da variante tem de
+            // descobrir AQUI que a badge não o consome — a warning traz valor
+            // próprio na folha e a info usa `--border`. Travessão na coluna do
+            // meio quer dizer exatamente isso: nenhuma regra o lê hoje.
             { token: '--primary',          value: '.nds-badge-default',       description: t('tokens.table.primary')         },
-            { token: '--muted-foreground', value: '.nds-badge-secondary',     description: t('tokens.table.mutedForeground') },
             { token: '--destructive',      value: '.nds-badge-destructive',   description: t('tokens.table.destructive')     },
-            { token: '--warning',          value: '.nds-badge-warning',       description: t('tokens.table.warning')         },
+            { token: '--warning',          value: '—',                        description: t('tokens.table.warning')         },
             { token: '--success',          value: '.nds-badge-success',       description: t('tokens.table.success')         },
-            { token: '--info',             value: '.nds-badge-info',          description: t('tokens.table.info')            },
-            { token: '--border',           value: '.nds-badge-outline',       description: t('tokens.table.border')          },
+            { token: '--info',             value: '—',                        description: t('tokens.table.info')            },
+            { token: '--border',           value: '.nds-badge-info',          description: t('tokens.table.border')          },
             { token: '--secondary',        value: '.nds-badge-counter',       description: t('tokens.table.secondary')       },
             { token: '--foreground',       value: '.nds-badge',               description: t('tokens.table.foreground')      },
             { token: '--background',       value: '.nds-badge',               description: t('tokens.table.background')      },

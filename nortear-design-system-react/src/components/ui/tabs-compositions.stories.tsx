@@ -142,7 +142,7 @@ export const WithBadge: Story = {
         <TabsTrigger value="overview">Visão geral</TabsTrigger>
         <TabsTrigger value="inbox">
           Inbox
-          <Badge variant="secondary">12</Badge>
+          <Badge variant="info">12</Badge>
         </TabsTrigger>
         <TabsTrigger value="archived">Arquivados</TabsTrigger>
       </TabsList>

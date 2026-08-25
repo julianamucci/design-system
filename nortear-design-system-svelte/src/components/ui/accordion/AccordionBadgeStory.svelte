@@ -9,7 +9,7 @@
 
   const items = [
     { value: 'novo',  label: 'Novidades da versão 3.0',    badge: 'Novo',  badgeVariant: 'default' as const,    content: 'Conteúdo das novidades. Use badges para sinalizar status sem alterar o trigger textual.' },
-    { value: 'beta',  label: 'Funcionalidades em beta',     badge: 'Beta',  badgeVariant: 'secondary' as const,  content: 'Funcionalidades beta podem mudar. Feedback é bem-vindo.' },
+    { value: 'beta',  label: 'Funcionalidades em beta',     badge: 'Beta',  badgeVariant: 'info' as const,       content: 'Funcionalidades beta podem mudar. Feedback é bem-vindo.' },
   ];
 </script>
 

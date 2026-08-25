@@ -163,13 +163,13 @@ export function ThemeColorsDocs() {
           <div className="nds-cluster" data-justify="between">
             <div className="nds-cluster" data-spacing="sm" data-align="center">
               <Badge
-                variant="secondary"
+                variant="default"
                 className="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium"
               >
                 {t('category')}
               </Badge>
               <Badge
-                variant="outline"
+                variant="info"
                 className="nds-text-muted-foreground nds-font-normal"
               >
                 {t('type')}

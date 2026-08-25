@@ -1,14 +1,7 @@
 import { cn } from '@/lib/utils';
 // ─── Badge ───────────────────────────────────────────────────────────────────
 
-export type BadgeVariant =
-  | 'default'
-  | 'secondary'
-  | 'destructive'
-  | 'warning'
-  | 'success'
-  | 'info'
-  | 'outline';
+export type BadgeVariant = 'default' | 'destructive' | 'warning' | 'success' | 'info';
 
 export interface BadgeOptions {
   /** Variante visual nativa do Badge. */
@@ -25,19 +18,17 @@ export interface BadgeOptions {
 }
 
 /**
- * Tabela em vez de cadeia de ternários: com sete variantes a cadeia vira sete
+ * Tabela em vez de cadeia de ternários: com cinco variantes a cadeia vira cinco
  * ramos, e o último é sempre inalcançável (o tipo já esgotou os valores), o que
  * obrigava a marcar `v8 ignore` na própria implementação. O mapa não tem ramo
  * nenhum, então não há o que cobrir nem o que ignorar.
  */
 const VARIANT_CLASSNAME: Record<BadgeVariant, string> = {
   default: '',
-  secondary: 'nds-badge-secondary',
   destructive: 'nds-badge-destructive',
   warning: 'nds-badge-warning',
   success: 'nds-badge-success',
   info: 'nds-badge-info',
-  outline: 'nds-badge-outline',
 };
 
 function badgeClass(variant: BadgeVariant = 'default'): string {

@@ -93,8 +93,8 @@ export function createIconsDocs(): HTMLElement {
   topRow.dataset.spacing = 'sm';
   topRow.dataset.align = 'center';
 
-  const badgeCategory = createBadge({ variant: 'secondary', className: 'nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium' });
-  const badgeType = createBadge({ variant: 'outline', className: 'nds-text-muted-foreground nds-font-normal' });
+  const badgeCategory = createBadge({ variant: 'default', className: 'nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium' });
+  const badgeType = createBadge({ variant: 'info', className: 'nds-text-muted-foreground nds-font-normal' });
   const switcher = createLanguageSwitcher();
   switcher.classList.add('nds-spacer-start');
 

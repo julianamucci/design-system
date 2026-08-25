@@ -225,7 +225,7 @@ interface CardPartProps {
           <CardTitle>{$tStore('demonstration.labels.productTitle')}</CardTitle>
           <CardDescription>{$tStore('demonstration.labels.productDescription')}</CardDescription>
           <CardAction>
-            <Badge variant="secondary">{$tStore('demonstration.labels.productStock')}</Badge>
+            <Badge variant="success">{$tStore('demonstration.labels.productStock')}</Badge>
           </CardAction>
         </CardHeader>
         <CardContent>

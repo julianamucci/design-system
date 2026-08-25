@@ -30,8 +30,8 @@ export function createDocsHeader(props: DocsHeaderProps): HTMLElement {
   const top = document.createElement('div');
   top.className = 'nds-cluster';
   top.dataset.spacing = 'sm';
-  top.appendChild(createBadge({ text: props.category, variant: 'secondary', className: 'nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium' }));
-  top.appendChild(createBadge({ text: props.type, variant: 'outline', className: 'nds-text-muted-foreground nds-font-normal' }));
+  top.appendChild(createBadge({ text: props.category, variant: 'default', className: 'nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium' }));
+  top.appendChild(createBadge({ text: props.type, variant: 'info', className: 'nds-text-muted-foreground nds-font-normal' }));
   const switcher = createLanguageSwitcher();
   switcher.classList.add('nds-spacer-start');
   top.appendChild(switcher);

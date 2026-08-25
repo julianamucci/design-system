@@ -36,7 +36,7 @@ const meta: Meta<BadgeArgs> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'secondary', 'destructive', 'warning', 'success', 'info', 'outline'],
+      options: ['default', 'destructive', 'warning', 'success', 'info'],
       description: 'Variante visual do Badge.',
     },
     label: { control: 'text', description: 'Rótulo curto exibido no Badge.' },

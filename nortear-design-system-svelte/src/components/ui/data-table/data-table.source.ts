@@ -49,7 +49,7 @@ const APRESENTACAO = `const moeda = new Intl.NumberFormat('pt-BR', { style: 'cur
 
 const varianteDoStatus = {
   Pago: 'default',
-  Pendente: 'secondary',
+  Pendente: 'warning',
   Cancelado: 'destructive',
 } as const;`;
 

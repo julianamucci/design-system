@@ -218,7 +218,7 @@ ${importCard('CardAction', 'CardContent', 'CardDescription', 'CardFooter', 'Card
       Estrutura ergonômica com ajuste de altura e apoio lombar.
     </CardDescription>
     <CardAction>
-      <Badge variant="secondary">Em estoque</Badge>
+      <Badge variant="info">Em estoque</Badge>
     </CardAction>
   </CardHeader>
 ${BODY}

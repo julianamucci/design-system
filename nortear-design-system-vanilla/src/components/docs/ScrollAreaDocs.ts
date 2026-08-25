@@ -68,7 +68,7 @@ function buildTagList(count: number): HTMLElement {
     row.style.paddingBottom = 'var(--spacing-2)';
     const left = document.createElement('span');
     left.textContent = `${tagLabel} ${i}`;
-    const badge = createBadge({ variant: 'secondary', text: `#${String(i).padStart(2, '0')}` });
+    const badge = createBadge({ variant: 'info', text: `#${String(i).padStart(2, '0')}` });
     row.append(left, badge);
     list.appendChild(row);
   }

@@ -40,7 +40,7 @@ function tagItem(label: string, count: string): HTMLElement {
   const left = document.createElement('span');
   left.className = 'nds-text-body';
   left.textContent = label;
-  const badge = createBadge({ variant: 'secondary', text: count });
+  const badge = createBadge({ variant: 'info', text: count });
   row.append(left, badge);
   return row;
 }

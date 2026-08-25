@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { CheckCircle2, Check, Bell } from "lucide-react";
+import { CheckCircle2, Check } from "lucide-react";
 import { Badge, BadgeCounter } from "@/components/ui/badge";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
@@ -122,12 +122,10 @@ export function BadgeDocs() {
 import { CheckCircle2 } from "lucide-react";`;
 
   const codeDefault = `<Badge variant="default">Novo</Badge>`;
-  const codeSecondary = `<Badge variant="secondary">Beta</Badge>`;
   const codeDestructive = `<Badge variant="destructive">Urgente</Badge>`;
   const codeWarning = `<Badge variant="warning">Vence hoje</Badge>`;
   const codeSuccess = `<Badge variant="success">Aprovado</Badge>`;
   const codeInfo = `<Badge variant="info">Novidade</Badge>`;
-  const codeOutline = `<Badge variant="outline">Rascunho</Badge>`;
 
   const interfaceCode = `// Badge
 interface BadgeProps
@@ -141,12 +139,10 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default: "nds-badge-default",
-        secondary: "nds-badge-secondary",
         destructive: "nds-badge-destructive",
         warning: "nds-badge-warning",
         success: "nds-badge-success",
         info: "nds-badge-info",
-        outline: "nds-badge-outline",
       },
     },
     defaultVariants: { variant: "default" },
@@ -173,11 +169,11 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
       <DocsDemonstration title={tContent("demonstration.title")}>
         <div className="nds-cluster" data-spacing="sm">
           <Badge variant="default">{tContent("demonstration.labels.defaultLabel")}</Badge>
-          <Badge variant="secondary">{tContent("demonstration.labels.secondaryLabel")}</Badge>
           <Badge variant="destructive">{tContent("demonstration.labels.destructiveLabel")}</Badge>
-          <Badge variant="outline">{tContent("demonstration.labels.outlineLabel")}</Badge>
-          <Badge variant="destructive">{tContent("demonstration.labels.countLabel")}</Badge>
-          <Badge variant="secondary">
+          <Badge variant="warning">{tContent("demonstration.labels.warningLabel")}</Badge>
+          <Badge variant="success">{tContent("demonstration.labels.successLabel")}</Badge>
+          <Badge variant="info">{tContent("demonstration.labels.infoLabel")}</Badge>
+          <Badge variant="success">
             <CheckCircle2 aria-hidden="true" />
             {tContent("demonstration.labels.statusLabel")}
           </Badge>
@@ -324,12 +320,6 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
             preview: <Badge variant="default">{tContent("demonstration.labels.defaultLabel")}</Badge>,
           },
           {
-            name: "secondary",
-            description: stripHtml(tContent("variants.items.secondary")),
-            code: codeSecondary,
-            preview: <Badge variant="secondary">{tContent("demonstration.labels.secondaryLabel")}</Badge>,
-          },
-          {
             name: "destructive",
             description: stripHtml(tContent("variants.items.destructive")),
             code: codeDestructive,
@@ -353,12 +343,6 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
             code: codeInfo,
             preview: <Badge variant="info">{tContent("demonstration.labels.infoLabel")}</Badge>,
           },
-          {
-            name: "outline",
-            description: stripHtml(tContent("variants.items.outline")),
-            code: codeOutline,
-            preview: <Badge variant="outline">{tContent("demonstration.labels.outlineLabel")}</Badge>,
-          },
         ]}
       />
 
@@ -381,22 +365,6 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
             ),
           },
           {
-            name: tContent("variants.compositions.count.name"),
-            description: tContent("variants.compositions.count.description"),
-            useWhen: tContent("variants.compositions.count.use"),
-            // `nds-cluster` + `nds-icon-lg` em vez de style inline: é o que as
-            // outras quatro docs pages já mostravam, e o snippet aqui é o que a
-            // pessoa copia — ensinar estilo inline num design system tokenizado
-            // é ensinar a sair do tema, da densidade e da escala.
-            code: `<span role="status" aria-label="12 notificações não lidas" className="nds-cluster" data-spacing="sm">\n  <Bell className="nds-icon-lg" aria-hidden="true" />\n  <Badge variant="destructive">12</Badge>\n</span>`,
-            preview: (
-              <span role="status" aria-label="12 notificações não lidas" className="nds-cluster" data-spacing="sm">
-                <Bell className="nds-icon-lg" aria-hidden="true" />
-                <Badge variant="destructive">12</Badge>
-              </span>
-            ),
-          },
-          {
             name: tContent("variants.compositions.withCounter.name"),
             description: tContent("variants.compositions.withCounter.description"),
             useWhen: tContent("variants.compositions.withCounter.use"),
@@ -411,39 +379,13 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
             ),
           },
           {
-            name: tContent("variants.compositions.asLink.name"),
-            description: tContent("variants.compositions.asLink.description"),
-            useWhen: tContent("variants.compositions.asLink.use"),
-            // `nds-cluster` em vez de style inline, e a mesma classe que a
-            // story usa — o exemplo da docs page e a story são o mesmo caso, e
-            // divergir faz a regressão visual proteger outra coisa.
-            code: `<a href="#design" aria-label="Ver todos os itens da categoria Design" className="nds-cluster">\n  <Badge variant="secondary">Design</Badge>\n</a>`,
-            preview: (
-              <a
-                href="#design"
-                aria-label="Ver todos os itens da categoria Design"
-                className="nds-cluster"
-                onClick={() =>
-                  track("badge_click", {
-                    component: "badge",
-                    label: "Design",
-                    variant: "secondary",
-                    location: "docs_demo",
-                  })
-                }
-              >
-                <Badge variant="secondary">Design</Badge>
-              </a>
-            ),
-          },
-          {
             name: tContent("variants.compositions.asTrigger.name"),
             description: tContent("variants.compositions.asTrigger.description"),
             useWhen: tContent("variants.compositions.asTrigger.use"),
             // `padding` e `border` a zero continuam inline: são o RESET do
             // <button>, não valor de design. O que saiu foi o `display`, que a
             // classe já dá — e é a mesma que a story usa.
-            code: `<button type="button" aria-label="Filtrar por React" className="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent" style={{ padding: 0, border: 0 }}>\n  <Badge variant="outline">React</Badge>\n</button>`,
+            code: `<button type="button" aria-label="Filtrar por React" className="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent" style={{ padding: 0, border: 0 }}>\n  <Badge variant="info">React</Badge>\n</button>`,
             preview: (
               <button
                 type="button"
@@ -454,12 +396,12 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
                   track("badge_click", {
                     component: "badge",
                     label: "React",
-                    variant: "outline",
+                    variant: "info",
                     location: "docs_demo",
                   })
                 }
               >
-                <Badge variant="outline">React</Badge>
+                <Badge variant="info">React</Badge>
               </button>
             ),
           },
@@ -499,7 +441,7 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
             items: [
               {
                 name: "variant",
-                type: '"default" | "secondary" | "destructive" | "warning" | "success" | "info" | "outline"',
+                type: '"default" | "destructive" | "warning" | "success" | "info"',
                 defaultValue: '"default"',
                 required: "Não",
                 description: toPlainText(tContent("props.table.variant")),
@@ -540,11 +482,16 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
           // é o contador. Os pares `-foreground` saíram da tabela junto com o
           // preenchimento: a badge não consome mais nenhum deles.
           { token: "--primary", value: "border-color: hsl(var(--primary))", description: tContent("tokens.table.primary") },
-          { token: "--muted-foreground", value: "border-color: hsl(var(--muted-foreground))", description: tContent("tokens.table.mutedForeground") },
           { token: "--destructive", value: "border-color: hsl(var(--destructive))", description: tContent("tokens.table.destructive") },
-          { token: "--warning", value: "border-color: hsl(var(--warning))", description: tContent("tokens.table.warning") },
+          // Duas semânticas NÃO leem o token de mesmo nome, e a coluna de valor
+          // tem de dizer isso em vez de fingir uma aplicação que não existe:
+          // `--warning` foi substituída por um literal na folha — que aparece
+          // aqui porque não há outra linha onde ele caiba —, e `--info` não é
+          // lido por ninguém: quem pinta a variante info é `--border`, na linha
+          // logo abaixo.
+          { token: "--warning", value: "border-color: hsl(22 55% 62%)", description: tContent("tokens.table.warning") },
           { token: "--success", value: "border-color: hsl(var(--success))", description: tContent("tokens.table.success") },
-          { token: "--info", value: "border-color: hsl(var(--info))", description: tContent("tokens.table.info") },
+          { token: "--info", value: "—", description: tContent("tokens.table.info") },
           { token: "--border", value: "border-color: hsl(var(--border))", description: tContent("tokens.table.border") },
           { token: "--secondary", value: "background-color: hsl(var(--secondary))", description: tContent("tokens.table.secondary") },
           { token: "--foreground", value: "color: hsl(var(--foreground))", description: tContent("tokens.table.foreground") },

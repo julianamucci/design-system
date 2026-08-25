@@ -35,7 +35,7 @@ describe('dataTableSource', () => {
 
   const varianteDoStatus = {
     Pago: 'default',
-    Pendente: 'secondary',
+    Pendente: 'warning',
     Cancelado: 'destructive',
   } as const;
 

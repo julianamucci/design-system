@@ -224,7 +224,7 @@ import { Badge } from '@/components/ui/badge'`,
   class="nds-w-full nds-aspect-16-9"
   style="object-fit: cover"
 />`,
-      header(PRODUCT, DESCRIPTION_PRODUCT, `<Badge variant="secondary">Em estoque</Badge>`),
+      header(PRODUCT, DESCRIPTION_PRODUCT, `<Badge variant="info">Em estoque</Badge>`),
       PRECO,
       footer(
         `<Button variant="outline" size="sm" aria-label="Editar produto ${PRODUCT}">Editar</Button>`,

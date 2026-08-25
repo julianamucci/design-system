@@ -99,7 +99,7 @@ describe('composições', () => {
   it('o badge no gatilho vem do design system, não de markup solto', () => {
     const saida = accordionWithBadgeSource();
     expect(saida).toContain('import { Badge } from "@/components/ui/badge";');
-    expect(saida).toContain('<Badge variant="secondary">Beta</Badge>');
+    expect(saida).toContain('<Badge variant="info">Beta</Badge>');
   });
 
   it('conteúdo rico usa tabela de verdade — o grid colapsa dentro do painel', () => {

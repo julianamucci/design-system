@@ -95,14 +95,24 @@ O ícone é o **filho direto** do `.nds-alert`, antes do título. O seletor `.nd
 | Variante | Cor da borda | Uso |
 |----------|--------------|-----|
 | `default` | `--primary` | Destaque principal — categoria, tag ativa |
-| `secondary` | `--muted-foreground` | Informativo secundário — categoria neutra |
 | `destructive` | `--destructive` | Estado de erro ou alerta crítico |
-| `warning` | `--warning` | Pendência ou risco que ainda não é erro |
+| `warning` | `hsl(22 55% 62%)` | Pendência ou risco que ainda não é erro |
 | `success` | `--success` | Estado concluído ou aprovado |
-| `info` | `--info` | Contexto neutro que merece cor |
-| `outline` | `--border` | Baixa ênfase — a borda mais discreta do conjunto |
+| `info` | `--border` | Baixa ênfase — a borda mais discreta do conjunto |
 
-> `secondary` usa `--muted-foreground` e não `--secondary`: medido, `--secondary` como traço fica entre 1,12:1 e 1,38:1 contra a página e a variante sumiria. `--secondary` é cor de fundo, não de contorno.
+> São **cinco**. `secondary` saiu por ser quase indistinguível da `default`, e `outline` saiu porque a `info` passou a fazer o mesmo trabalho — a hairline neutra que input e card já desenham.
+
+> `warning` é a única com **valor literal** em vez de token de tema: `--warning` é escuro e saturado a ponto de, como traço de 2px, ficar a menos de 3:1 de distância da `destructive` — duas etiquetas de significado oposto com a mesma cara. Está medido e registrado na própria regra do CSS: o literal separa as duas no claro, mas fica em 2,57–2,60 contra o fundo (abaixo do piso de 3:1 do WCAG 1.4.11) e no escuro volta a colar na destructive. É literal porque a decisão de paleta ainda não foi tomada; quando for, vira token de tema e passa a variar por modo, como as outras.
+
+> `info` **não lê `--info`**: ela assumiu a borda neutra `--border` que era da `outline`. Mede 1,22–1,99 contra o fundo, também abaixo do piso — é contorno de baixa ênfase por decisão, não por descuido. O anel de foco dela usa `--ring`, e não a cor da variante, porque não existe cor de variante a usar.
+
+**Composições** (três, e nenhuma delas é variante):
+
+| Composição | Forma | Quando |
+|------------|-------|--------|
+| Com ícone | SVG `aria-hidden="true"` antes do texto, com `data-icon="inline-start"` | Status que ganha com reforço visual; quem nomeia continua sendo o texto |
+| Como gatilho clicável | Badge dentro de `<button>` | Filtro, chip ativável, gatilho de menu — o botão gerencia foco, teclado e evento |
+| Com contador | Rótulo + `BadgeCounter` dentro da mesma borda | Etiqueta que soma quantidade ao rótulo — "Urgente 12" |
 
 **Subpeça**:
 

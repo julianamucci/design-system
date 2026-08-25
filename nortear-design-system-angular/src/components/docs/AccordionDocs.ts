@@ -404,7 +404,7 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
           <button ndsAccordionTrigger>
             <span class="nds-cluster" data-spacing="xs">
               {{ rotulos().recursosBeta }}
-              <span ndsBadge variant="secondary">Beta</span>
+              <span ndsBadge variant="info">Beta</span>
             </span>
           </button>
           <div ndsAccordionContent>{{ rotulos().betaTexto }}</div>

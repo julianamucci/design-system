@@ -259,7 +259,7 @@ interface CardProps extends React.ComponentProps<"div"> {
         <CardTitle>{productTitle}</CardTitle>
         <CardDescription>{productDescription}</CardDescription>
         <CardAction>
-          <Badge variant="secondary">{productStock}</Badge>
+          <Badge variant="info">{productStock}</Badge>
         </CardAction>
       </CardHeader>
       <CardContent>

@@ -18,7 +18,7 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'secondary', 'destructive', 'outline'],
+      options: ['default', 'destructive', 'warning', 'success', 'info'],
       description: 'Variante visual nativa do Badge',
     },
   },

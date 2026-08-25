@@ -52,9 +52,9 @@ const sampleInvoices: Invoice[] = [
   { id: "INV-005", customer: "Eva Oliveira", status: "Pendente",  method: "Transferência",     amount: 200 },
 ];
 
-const statusVariantMap: Record<Invoice["status"], "default" | "secondary" | "destructive"> = {
+const statusVariantMap: Record<Invoice["status"], "default" | "warning" | "destructive"> = {
   Pago: "default",
-  Pendente: "secondary",
+  Pendente: "warning",
   Cancelado: "destructive",
 };
 

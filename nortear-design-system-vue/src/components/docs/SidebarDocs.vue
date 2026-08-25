@@ -549,13 +549,13 @@ const compositionItems = computed(() => [
       >
         <template #badges>
           <Badge
-            variant="secondary"
+            variant="info"
             class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium"
           >
             {{ tContent('category') }}
           </Badge>
           <Badge
-            variant="secondary"
+            variant="info"
             class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium"
           >
             {{ tContent('type') }}

@@ -138,36 +138,27 @@ export function badgeWithCounterSourceCom(
   return (_gerado, ctx) => badgeWithCounterSnippet({ ...ctx.args, ...fixas });
 }
 
-// ─── Dentro de um alvo clicável ──────────────────────────────────────────────
+// ─── Dentro de um botão clicável ─────────────────────────────────────────────
 
 export type BadgeEmGatilhoSnippetOptions = BadgeSnippetOptions & {
-  /** O elemento que recebe o clique e o foco. */
-  como?: 'link' | 'botao';
-  href?: string;
   /** Nome acessível do alvo — o texto da etiqueta é curto demais para servir. */
   accessibleName?: string;
 };
 
 /**
  * FORMA diferente: a etiqueta não é um alvo. Ela não recebe foco, não tem papel
- * e não aceita `tabindex` — quem clica é o link ou o botão em volta, e é dele o
- * nome acessível.
+ * e não aceita `tabindex` — quem clica é o botão em volta, e é dele o nome
+ * acessível.
  */
 export function badgeEmGatilhoSnippet(o: BadgeEmGatilhoSnippetOptions = {}): string {
-  const button = o.como === 'botao';
-  const label = o.label ?? (button ? 'React' : 'Design');
-  const variant = o.variant ?? (button ? 'outline' : 'secondary');
-  const name = o.accessibleName ?? (button ? 'Filtrar por React' : 'Ver todos os itens da categoria Design');
-
-  const target = button
-    ? `const alvo = document.createElement('button');
-alvo.type = 'button';`
-    : `const alvo = document.createElement('a');
-alvo.href = ${text(o.href ?? '#design')};`;
+  const label = o.label ?? 'React';
+  const variant = o.variant ?? 'info';
+  const name = o.accessibleName ?? 'Filtrar por React';
 
   return snippet(
     importing('badge', 'createBadge'),
-    `${target}
+    `const alvo = document.createElement('button');
+alvo.type = 'button';
 alvo.className = 'nds-cluster nds-rounded-md nds-focus-ring-inset';
 alvo.setAttribute('aria-label', ${text(name)});
 alvo.appendChild(createBadge({ variant: ${text(variant)}, children: ${text(label)} }));`,

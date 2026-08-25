@@ -3,7 +3,6 @@
   import { Badge, BadgeCounter } from '@/components/ui/badge';
   import Check from '@lucide/svelte/icons/check';
   import TagIcon from '@lucide/svelte/icons/tag';
-  import Bell from '@lucide/svelte/icons/bell';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -92,44 +91,27 @@
 import Check from '@lucide/svelte/icons/check';`;
 
   const codeDefault = `<Badge variant="default">Novo</Badge>`;
-  const codeSecondary = `<Badge variant="secondary">Beta</Badge>`;
   const codeDestructive = `<Badge variant="destructive">Urgente</Badge>`;
   const codeWarning = `<Badge variant="warning">Vence hoje</Badge>`;
   const codeSuccess = `<Badge variant="success">Aprovado</Badge>`;
   const codeInfo = `<Badge variant="info">Novidade</Badge>`;
-  const codeOutline = `<Badge variant="outline">Rascunho</Badge>`;
 
   const codeWithIcon = `<Badge variant="default">
   <Check aria-hidden="true" />
   Ativo
 </Badge>`;
 
-  const codeCountBadge = `<Badge
-  variant="destructive"
-  aria-label="12 notificações não lidas"
->
-  12
-</Badge>`;
-
-  const codeAsLink = `<a
-  href="/categoria/design"
-  aria-label="Filtrar por categoria Design"
-  class="nds-cluster nds-rounded-md nds-focus-ring-inset"
->
-  <Badge variant="secondary">Design</Badge>
-</a>`;
-
   const codeAsTrigger = `<button
   type="button"
-  aria-label="Filtrar por tag React"
-  onclick={() => applyFilter('react')}
+  aria-label="Filtrar por acessibilidade"
+  onclick={() => applyFilter('acessibilidade')}
 >
-  <Badge variant="outline">React</Badge>
+  <Badge variant="info">Acessibilidade</Badge>
 </button>`;
 
   const interfaceCode = `// Badge
 interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
-  variant?: 'default' | 'secondary' | 'destructive' | 'warning' | 'success' | 'info' | 'outline';
+  variant?: 'default' | 'destructive' | 'warning' | 'success' | 'info';
   class?: string;
   children?: Snippet;
 }
@@ -155,19 +137,20 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div class="nds-cluster" data-spacing="sm" style="flex-wrap: wrap">
       <Badge variant="default">{$tStore('demonstration.labels.defaultLabel')}</Badge>
-      <Badge variant="secondary">{$tStore('demonstration.labels.secondaryLabel')}</Badge>
       <Badge variant="destructive">{$tStore('demonstration.labels.destructiveLabel')}</Badge>
-      <Badge variant="outline">{$tStore('demonstration.labels.outlineLabel')}</Badge>
+      <Badge variant="warning">{$tStore('demonstration.labels.warningLabel')}</Badge>
+      <Badge variant="info">{$tStore('demonstration.labels.infoLabel')}</Badge>
       <Badge variant="default">
         <Check aria-hidden="true" />
         {$tStore('demonstration.labels.statusLabel')}
       </Badge>
-      <Badge variant="secondary">
+      <Badge variant="info">
         <TagIcon aria-hidden="true" />
         {$tStore('demonstration.labels.tagLabel')}
       </Badge>
-      <Badge variant="destructive" aria-label="12 notificações não lidas">
-        {$tStore('demonstration.labels.countLabel')}
+      <Badge variant="destructive">
+        {$tStore('demonstration.labels.destructiveLabel')}
+        <BadgeCounter>12</BadgeCounter>
       </Badge>
     </div>
   </DocsDemonstration>
@@ -295,20 +278,15 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
     title={$tStore('variants.title')}
     items={[
       { name: 'default',     description: stripHtml($tStore('variants.items.default')),     code: codeDefault,     preview: variantDefault     },
-      { name: 'secondary',   description: stripHtml($tStore('variants.items.secondary')),   code: codeSecondary,   preview: variantSecondary   },
       { name: 'destructive', description: stripHtml($tStore('variants.items.destructive')), code: codeDestructive, preview: variantDestructive },
       { name: 'warning',     description: stripHtml($tStore('variants.items.warning')),     code: codeWarning,     preview: variantWarning     },
       { name: 'success',     description: stripHtml($tStore('variants.items.success')),     code: codeSuccess,     preview: variantSuccess     },
       { name: 'info',        description: stripHtml($tStore('variants.items.info')),        code: codeInfo,        preview: variantInfo        },
-      { name: 'outline',     description: stripHtml($tStore('variants.items.outline')),     code: codeOutline,     preview: variantOutline     },
     ]}
   />
 
   {#snippet variantDefault()}
     <Badge variant="default">{$tStore('demonstration.labels.defaultLabel')}</Badge>
-  {/snippet}
-  {#snippet variantSecondary()}
-    <Badge variant="secondary">{$tStore('demonstration.labels.secondaryLabel')}</Badge>
   {/snippet}
   {#snippet variantDestructive()}
     <Badge variant="destructive">{$tStore('demonstration.labels.destructiveLabel')}</Badge>
@@ -321,9 +299,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
   {/snippet}
   {#snippet variantInfo()}
     <Badge variant="info">{$tStore('demonstration.labels.infoLabel')}</Badge>
-  {/snippet}
-  {#snippet variantOutline()}
-    <Badge variant="outline">{$tStore('demonstration.labels.outlineLabel')}</Badge>
   {/snippet}
 
   <!-- ── Composições ──────────────────────────────────────────────── -->
@@ -340,13 +315,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
         preview: compWithIcon,
       },
       {
-        name: $tStore('variants.compositions.count.name'),
-        description: $tStore('variants.compositions.count.description'),
-        useWhen: $tStore('variants.compositions.count.use'),
-        code: `<span role="status" aria-label="12 notificações não lidas" class="nds-cluster" data-spacing="sm">\n  <Bell class="nds-icon-lg" aria-hidden="true" />\n  <Badge variant="destructive">12</Badge>\n</span>`,
-        preview: compCount,
-      },
-      {
         name: $tStore('variants.compositions.withCounter.name'),
         description: $tStore('variants.compositions.withCounter.description'),
         useWhen: $tStore('variants.compositions.withCounter.use'),
@@ -354,17 +322,10 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
         preview: compWithCounter,
       },
       {
-        name: $tStore('variants.compositions.asLink.name'),
-        description: $tStore('variants.compositions.asLink.description'),
-        useWhen: $tStore('variants.compositions.asLink.use'),
-        code: `<a href="#design" aria-label="Ver todos os itens da categoria Design" class="nds-cluster">\n  <Badge variant="secondary">Design</Badge>\n</a>`,
-        preview: compAsLink,
-      },
-      {
         name: $tStore('variants.compositions.asTrigger.name'),
         description: $tStore('variants.compositions.asTrigger.description'),
         useWhen: $tStore('variants.compositions.asTrigger.use'),
-        code: `<button type="button" aria-label="Filtrar por React" class="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent" style="padding: 0; border: 0">\n  <Badge variant="outline">React</Badge>\n</button>`,
+        code: `<button type="button" aria-label="Filtrar por acessibilidade" class="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent" style="padding: 0; border: 0">\n  <Badge variant="info">Acessibilidade</Badge>\n</button>`,
         preview: compAsTrigger,
       },
     ]}
@@ -376,26 +337,15 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
       Ativo
     </Badge>
   {/snippet}
-  {#snippet compCount()}
-    <span role="status" aria-label="12 notificações não lidas" class="nds-cluster" data-spacing="sm">
-      <Bell class="nds-icon-lg" aria-hidden="true" />
-      <Badge variant="destructive">12</Badge>
-    </span>
-  {/snippet}
   {#snippet compWithCounter()}
     <Badge variant="destructive">
       Urgente
       <BadgeCounter>12</BadgeCounter>
     </Badge>
   {/snippet}
-  {#snippet compAsLink()}
-    <a href="#design" aria-label="Ver todos os itens da categoria Design" class="nds-cluster">
-      <Badge variant="secondary">Design</Badge>
-    </a>
-  {/snippet}
   {#snippet compAsTrigger()}
-    <button type="button" aria-label="Filtrar por React" class="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent" style="padding: 0; border: 0">
-      <Badge variant="outline">React</Badge>
+    <button type="button" aria-label="Filtrar por acessibilidade" class="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent" style="padding: 0; border: 0">
+      <Badge variant="info">Acessibilidade</Badge>
     </button>
   {/snippet}
 
@@ -426,7 +376,7 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'variant',  type: '"default" | "secondary" | "destructive" | "warning" | "success" | "info" | "outline"', defaultValue: '"default"', required: 'Não', description: toPlainText($tStore('props.table.variant')) },
+          { name: 'variant',  type: '"default" | "destructive" | "warning" | "success" | "info"', defaultValue: '"default"', required: 'Não', description: toPlainText($tStore('props.table.variant')) },
           { name: 'class',    type: 'string',  defaultValue: '—', required: 'Não', description: $tStore('props.table.className') },
           { name: 'children', type: 'Snippet', defaultValue: '—', required: 'Não', description: $tStore('props.table.children')  },
         ],
@@ -447,11 +397,10 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
     }}
     items={[
       { token: '--primary',          value: '--badge-border: hsl(var(--primary))',          description: $tStore('tokens.table.primary')          },
-      { token: '--muted-foreground', value: '--badge-border: hsl(var(--muted-foreground))', description: $tStore('tokens.table.mutedForeground') },
       { token: '--destructive',      value: '--badge-border: hsl(var(--destructive))',      description: $tStore('tokens.table.destructive')      },
-      { token: '--warning',          value: '--badge-border: hsl(var(--warning))',          description: $tStore('tokens.table.warning')          },
+      { token: '--warning',          value: '--badge-border: hsl(22 55% 62%)',              description: $tStore('tokens.table.warning')          },
       { token: '--success',          value: '--badge-border: hsl(var(--success))',          description: $tStore('tokens.table.success')          },
-      { token: '--info',             value: '--badge-border: hsl(var(--info))',             description: $tStore('tokens.table.info')             },
+      { token: '--info',             value: '—',                                            description: $tStore('tokens.table.info')             },
       { token: '--border',           value: '--badge-border: hsl(var(--border))',           description: $tStore('tokens.table.border')           },
       { token: '--background',       value: '--badge-bg: hsl(var(--background))',           description: $tStore('tokens.table.background')       },
       { token: '--foreground',       value: '--badge-fg: hsl(var(--foreground))',           description: $tStore('tokens.table.foreground')       },

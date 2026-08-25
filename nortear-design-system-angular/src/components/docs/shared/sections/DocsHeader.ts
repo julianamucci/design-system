@@ -30,12 +30,12 @@ export const DOCS_PAGE_TITLE_ID = 'docs-page-title';
       <div class="nds-cluster" data-spacing="sm">
         <span
           ndsBadge
-          variant="secondary"
+          variant="default"
           class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium"
         >{{ category() }}</span>
         <span
           ndsBadge
-          variant="outline"
+          variant="info"
           class="nds-text-muted-foreground nds-font-normal"
         >{{ type() }}</span>
         <nds-language-switcher class="nds-spacer-start" />

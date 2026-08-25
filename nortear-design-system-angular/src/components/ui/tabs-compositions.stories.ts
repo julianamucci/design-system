@@ -98,7 +98,7 @@ export const WithBadge: Story = {
           <button ndsTabsTrigger value="overview">Visão geral</button>
           <button ndsTabsTrigger value="properties">
             Propriedades
-            <span ndsBadge variant="secondary">12</span>
+            <span ndsBadge variant="info">12</span>
           </button>
           <button ndsTabsTrigger value="examples">
             Exemplos

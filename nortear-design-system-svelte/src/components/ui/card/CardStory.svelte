@@ -170,7 +170,7 @@
       <CardTitle as="h3">{title}</CardTitle>
       <CardDescription>{description}</CardDescription>
       <CardAction>
-        <Badge variant="secondary">Em estoque</Badge>
+        <Badge variant="success">Em estoque</Badge>
       </CardAction>
     </CardHeader>
     <CardContent>

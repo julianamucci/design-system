@@ -8,7 +8,7 @@
 import { attr, attrs, indentar, vueSnippet, type SourceTransform } from '@/lib/story-source';
 
 export type BadgeArgs = {
-  variant: 'default' | 'secondary' | 'destructive' | 'warning' | 'success' | 'info' | 'outline';
+  variant: 'default' | 'destructive' | 'warning' | 'success' | 'info';
 };
 
 const IMPORT = `import { Badge } from '@/components/ui/badge'`;
@@ -40,22 +40,12 @@ export function badgeDefaultSource(): string {
   return vueSnippet(IMPORT, badge('default', 'Novo'));
 }
 
-/** Ênfase média: borda neutra legível — informa sem disputar atenção. */
-export function badgeSecondarySource(): string {
-  return vueSnippet(IMPORT, badge('secondary', 'Beta'));
-}
-
 /**
  * Alerta: a borda em `destructive`, com o texto neutro. É a combinação que
  * sustenta os 4.5:1 — a cor sinaliza no contorno, o contraste vem do texto.
  */
 export function badgeDestructiveSource(): string {
   return vueSnippet(IMPORT, badge('destructive', 'Urgente'));
-}
-
-/** Ênfase mínima: a borda mais discreta do conjunto, para rascunho ou opcional. */
-export function badgeOutlineSource(): string {
-  return vueSnippet(IMPORT, badge('outline', 'Rascunho'));
 }
 
 /**
@@ -92,29 +82,8 @@ export function badgeWithIconSource(): string {
 }
 
 /**
- * Contador: o número sozinho não diz de que é a contagem, então quem carrega o
- * significado é o rótulo do contêiner. O badge fica ao lado do ícone, e não
- * sobreposto a ele.
- */
-export function badgeCounterSource(): string {
-  return vueSnippet(
-    `${IMPORT}\n${importIcon('Bell')}`,
-    `<span
-  class="nds-cluster"
-  data-spacing="sm"
-  role="status"
-  aria-label="12 notificações não lidas"
->
-  <Bell aria-hidden="true" class="nds-text-foreground nds-icon-lg" />
-  ${badge('destructive', '12')}
-</span>`,
-  );
-}
-
-/**
  * Contador DENTRO da etiqueta: o número fica à direita do texto, na mesma
- * caixa. O rótulo diz de que é a contagem, então aqui o container não precisa
- * de `role="status"` — quem lê ouve "Urgente 12".
+ * caixa. O rótulo diz de que é a contagem, então quem lê ouve "Urgente 12".
  *
  * O contador é neutro em qualquer variante: a cor da etiqueta vem da borda ao
  * redor, e pintar o número derrubaria o contraste dele em parte dos temas.
@@ -130,25 +99,9 @@ export function badgeWithCounterSource(): string {
 }
 
 /**
- * Badge dentro de link: quem é focável e clicável é o LINK — o badge não vira
- * controle. É por isso que o anel de foco mora no elemento de fora.
- */
-export function badgeAsLinkSource(): string {
-  return vueSnippet(
-    IMPORT,
-    `<a
-  href="#design"
-  aria-label="Ver todos os itens da categoria Design"
-  class="nds-cluster nds-rounded-md nds-focus-ring-inset"
->
-  ${badge('secondary', 'Design')}
-</a>`,
-  );
-}
-
-/**
- * Badge dentro de botão: mesma divisão de papéis do link. O badge continua
- * decorativo, sem tabulação própria, e o botão é quem recebe o foco.
+ * Badge dentro de botão: quem é focável e clicável é o BOTÃO — o badge não vira
+ * controle. É por isso que o anel de foco mora no elemento de fora, e o badge
+ * continua sem tabulação própria.
  */
 export function badgeAsButtonSource(): string {
   return vueSnippet(
@@ -158,7 +111,7 @@ export function badgeAsButtonSource(): string {
   aria-label="Filtrar por acessibilidade"
   class="nds-cluster nds-rounded-md nds-focus-ring-inset"
 >
-  ${badge('outline', 'Acessibilidade')}
+  ${badge('info', 'Acessibilidade')}
 </button>`,
   );
 }

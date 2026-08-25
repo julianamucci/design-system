@@ -171,10 +171,10 @@
     <header class="nds-stack nds-pb-8">
       <div class="nds-cluster" data-justify="between">
         <div class="nds-cluster" data-spacing="sm" data-align="center">
-          <Badge variant="secondary" class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium">
+          <Badge variant="info" class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium">
             {$tStore('category')}
           </Badge>
-          <Badge variant="outline" class="nds-text-muted-foreground nds-font-normal">
+          <Badge variant="info" class="nds-text-muted-foreground nds-font-normal">
             {$tStore('type')}
           </Badge>
         </div>

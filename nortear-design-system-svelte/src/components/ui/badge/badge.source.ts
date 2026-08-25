@@ -8,7 +8,7 @@
 import { attrs, attrsMultilinha, svelteSnippet } from '@/lib/story-source';
 
 export type BadgeArgs = {
-  variant: 'default' | 'secondary' | 'destructive' | 'warning' | 'success' | 'info' | 'outline';
+  variant: 'default' | 'destructive' | 'warning' | 'success' | 'info';
 };
 
 const IMPORT = `import { Badge } from "@/components/ui/badge";`;
@@ -25,19 +25,9 @@ export function badgeSource(_gerado?: string, ctx?: { args?: Partial<BadgeArgs> 
   return etiqueta(variant, 'Novo');
 }
 
-/** Variante secundária: borda cinza legível, para etiqueta sem carga semântica. */
-export function badgeSecundarioSource(): string {
-  return etiqueta('secondary', 'Beta');
-}
-
 /** Variante destrutiva: a borda em `destructive`; o texto fica neutro, como em todas. */
 export function badgeDestructiveSource(): string {
   return etiqueta('destructive', 'Urgente');
-}
-
-/** Variante de baixa ênfase: a borda mais discreta do conjunto. */
-export function badgeOutlineSource(): string {
-  return etiqueta('outline', 'Rascunho');
 }
 
 /** As três semânticas juntas — o que elas prometem é serem distinguíveis. */
@@ -67,25 +57,6 @@ import Check from "@lucide/svelte/icons/check";`,
   );
 }
 
-/** Composição de contador: quem nomeia a contagem é o container. */
-export function badgeCounterSource(): string {
-  const props = attrsMultilinha([
-    'class="nds-cluster"',
-    'data-spacing="sm"',
-    'role="status"',
-    'aria-label="12 notificações não lidas"',
-  ]);
-
-  return svelteSnippet(
-    `${IMPORT}
-import Bell from "@lucide/svelte/icons/bell";`,
-    `<span${props}>
-  <Bell aria-hidden="true" class="nds-text-foreground nds-icon-lg" />
-  <Badge variant="destructive">12</Badge>
-</span>`,
-  );
-}
-
 /**
  * Composição com contador: o número entra DENTRO da etiqueta, à direita do
  * texto. A peça é neutra de propósito — quem carrega a variante é a borda ao
@@ -101,22 +72,6 @@ export function badgeWithCounterSource(): string {
   );
 }
 
-/** Composição navegável: o badge é envolvido pelo link, e não vira o link. */
-export function badgeEmLinkSource(): string {
-  const props = attrsMultilinha([
-    'href="/categorias/design"',
-    'aria-label="Ver todos os itens da categoria Design"',
-    'class="nds-cluster nds-rounded-md nds-focus-ring-inset"',
-  ]);
-
-  return svelteSnippet(
-    IMPORT,
-    `<a${props}>
-  <Badge variant="secondary">Design</Badge>
-</a>`,
-  );
-}
-
 /** Composição clicável: quem recebe o foco é o botão que envolve a etiqueta. */
 export function buttonBadgeSource(): string {
   const props = attrsMultilinha([
@@ -128,7 +83,7 @@ export function buttonBadgeSource(): string {
   return svelteSnippet(
     IMPORT,
     `<button${props}>
-  <Badge variant="outline">Acessibilidade</Badge>
+  <Badge variant="info">Acessibilidade</Badge>
 </button>`,
   );
 }

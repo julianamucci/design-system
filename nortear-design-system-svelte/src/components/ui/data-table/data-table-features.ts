@@ -42,7 +42,7 @@ type DataTableColumnMeta<TData extends RowData, TValue> = {
   /** Formata o valor da célula como string. */
   format?: (value: TValue, row: TData) => string;
   /** Envolve o valor da célula em <Badge> com a variant retornada. */
-  badgeVariant?: (value: TValue, row: TData) => 'default' | 'secondary' | 'destructive' | 'outline';
+  badgeVariant?: (value: TValue, row: TData) => 'default' | 'destructive' | 'warning' | 'success' | 'info';
   /** Classes .nds-* extras aplicadas no <td> de cada célula da coluna. */
   cellClass?: string;
 };

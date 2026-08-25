@@ -188,7 +188,7 @@ export const WithBadgeInTrigger: Story = {
       { value: 'spam',   label: 'Spam',             content: makeRichPanel('Spam',             '3 mensagens marcadas como spam.') },
       { value: 'trash',  label: 'Lixeira',          content: makeRichPanel('Lixeira',          'Itens excluídos nos últimos 30 dias.') },
     ];
-    const badgeMap: Record<string, { text: string; variant: 'default' | 'secondary' | 'destructive' }> = {
+    const badgeMap: Record<string, { text: string; variant: 'default' | 'destructive' }> = {
       inbox: { text: '12', variant: 'default' },
       spam:  { text: '3',  variant: 'destructive' },
     };

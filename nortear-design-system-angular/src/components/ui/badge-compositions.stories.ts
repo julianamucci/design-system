@@ -14,38 +14,62 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const WithIconAndCounter: Story = {
-  parameters: { covers: ['functional.item5', 'visual.item3'] },
+export const WithIcon: Story = {
+  parameters: { covers: ['functional.item5', 'accessibility.item2', 'visual.item3'] },
   render: () => ({
+    // Variante default e rótulo curto: o assunto da story é o ícone dentro da
+    // etiqueta, e uma cor semântica aqui só acrescentaria variável.
     template: `
-      <div class="nds-cluster" data-spacing="md">
-        <span ndsBadge variant="success">
-          <svg ndsButtonIcon kind="check" size="sm"></svg>
-          Publicado
-        </span>
-        <span ndsBadge variant="destructive">12</span>
-      </div>
+      <span ndsBadge>
+        <svg ndsButtonIcon kind="check" size="sm" data-icon="inline-start"></svg>
+        Ativo
+      </span>
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const badge = canvas.getByText('Ativo');
+
     await step('O ícone é decorativo — quem nomeia é o texto', async () => {
-      // Ícone sem aria-hidden dentro de um badge faz o leitor anunciar um
-      // gráfico sem nome antes do rótulo.
-      const svg = canvasElement.querySelector<SVGElement>('.nds-badge svg')!;
-      await expect(svg).toHaveAttribute('aria-hidden', 'true');
+      // accessibility.item2 — ícone sem aria-hidden dentro de um badge faz o
+      // leitor anunciar um gráfico sem nome antes do rótulo. E o nome acessível
+      // da etiqueta é o texto e só ele: se o ícone virasse conteúdo lido, o
+      // rótulo deixaria de ser `Ativo`.
+      const icon = badge.querySelector('svg');
+      await expect(icon).not.toBeNull();
+      await expect(icon).toHaveAttribute('aria-hidden', 'true');
+      await expect(badge.textContent?.trim()).toBe('Ativo');
     });
 
-    await step('O contador é só número, sem rótulo redundante', async () => {
-      const counter = canvasElement.querySelectorAll('[data-slot="badge"]')[1];
-      await expect(counter.textContent?.trim()).toMatch(/^\d+$/);
+    await step('O respiro entre ícone e rótulo é do container', async () => {
+      // functional.item5 — o espaço entre ícone e texto é do container, não uma
+      // margem na story: o .nds-badge declara gap, e o data-icon encurta o
+      // padding daquele lado. Margem manual somaria ao gap e dobraria o respiro.
+      const icon = badge.querySelector('svg')!;
+      const style = getComputedStyle(badge);
+      await expect(style.display).toBe('inline-flex');
+      await expect(parseFloat(style.columnGap)).toBeGreaterThan(0);
+      await expect(getComputedStyle(icon).marginRight).toBe('0px');
+      await expect(parseFloat(style.paddingInlineStart)).toBeLessThan(
+        parseFloat(style.paddingInlineEnd),
+      );
+    });
+
+    await step('O ícone vem ANTES do rótulo', async () => {
+      // A ordem é o que a composição promete: ícone à esquerda reforçando o
+      // texto. Invertida, o leitor de tela continua igual e só a tela acusa.
+      await expect(badge.firstElementChild).toBe(badge.querySelector('svg'));
     });
   },
 };
 
 /**
- * Contador DENTRO da etiqueta — a peça que qualquer variante aceita. Não se
- * confunde com a story acima: lá o badge inteiro é o número, ao lado do texto;
- * aqui o número entra na etiqueta, à direita do rótulo que lhe dá sentido.
+ * Contador DENTRO da etiqueta — a peça que qualquer variante aceita: o número
+ * entra na etiqueta, à direita do rótulo que lhe dá sentido.
+ *
+ * A composição do contador AVULSO — o badge que era só um número ao lado de um
+ * ícone solto — saiu do sistema por ser redundante com esta: o número sem
+ * rótulo já dependia de um `aria-label` no pai para significar alguma coisa.
  */
 export const WithCounter: Story = {
   parameters: { covers: ['visual.item6'] },
@@ -130,19 +154,16 @@ export const WithCounter: Story = {
   },
 };
 
-export const InLinkAndButton: Story = {
+export const AsTrigger: Story = {
   parameters: { covers: ['functional.item6', 'visual.item4', 'accessibility.item1'] },
   render: () => ({
-    // O Badge não vira o controle: quem carrega a interação é o <a> ou o
-    // <button> em volta. O badge segue sendo rótulo, e o Tab alcança um
-    // elemento com semântica de verdade.
+    // O Badge não vira o controle: quem carrega a interação é o <button> em
+    // volta. O badge segue sendo rótulo, e o Tab alcança um elemento com
+    // semântica de verdade.
     template: `
       <div class="nds-cluster" data-spacing="md">
-        <a href="#tag-design">
-          <span ndsBadge variant="secondary">design</span>
-        </a>
         <button ndsButton variant="ghost" size="sm" aria-label="Filtrar por categoria Frontend">
-          <span ndsBadge variant="outline">Frontend</span>
+          <span ndsBadge variant="info">Frontend</span>
         </button>
       </div>
     `,
@@ -150,9 +171,7 @@ export const InLinkAndButton: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('O Tab alcança o link e o botão, não o badge', async () => {
-      await userEvent.tab();
-      await expect(canvas.getByRole('link')).toHaveFocus();
+    await step('O Tab alcança o botão, não o badge', async () => {
       await userEvent.tab();
       await expect(canvas.getByRole('button')).toHaveFocus();
     });

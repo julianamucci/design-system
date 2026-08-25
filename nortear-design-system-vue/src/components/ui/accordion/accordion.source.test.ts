@@ -170,7 +170,7 @@ describe('transforms das stories de composição', () => {
     const saida = accordionWithBadgeSource();
     expect(saida).toContain(`import { Badge } from '@/components/ui/badge'`);
     expect(saida).toContain('<Badge>Novo</Badge>');
-    expect(saida).toContain('<Badge variant="secondary">Beta</Badge>');
+    expect(saida).toContain('<Badge variant="info">Beta</Badge>');
     expect(saida).not.toContain('variant="default"');
   });
 

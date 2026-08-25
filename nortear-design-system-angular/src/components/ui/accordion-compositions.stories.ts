@@ -149,7 +149,7 @@ export const WithBadgeInTrigger: Story = {
           <button ndsAccordionTrigger>
             <span class="nds-cluster" data-spacing="xs">
               Funcionalidades em beta
-              <span ndsBadge variant="secondary">Beta</span>
+              <span ndsBadge variant="info">Beta</span>
             </span>
           </button>
           <div ndsAccordionContent>Recursos em teste — sujeitos a mudanças.</div>

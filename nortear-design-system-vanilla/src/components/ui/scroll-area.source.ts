@@ -169,7 +169,7 @@ for (let i = 1; i <= ${total}; i++) {
   const nome = document.createElement('span');
   nome.className = 'nds-text-body';
   nome.textContent = \`v\${i}.0.0\`;
-  linha.append(nome, createBadge({ variant: 'secondary', text: String(i * 12) }));
+  linha.append(nome, createBadge({ variant: 'info', text: String(i * 12) }));
   versoes.appendChild(linha);
 }`,
   };

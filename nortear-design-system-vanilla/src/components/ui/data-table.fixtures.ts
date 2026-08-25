@@ -41,9 +41,10 @@ export const labelsInvoice: Partial<DataTableLabels> = {
   rowsSelected: (s, n) => `${s} de ${n} fatura(s) selecionada(s).`,
 };
 
-export const statusVariant: Record<Invoice['status'], 'default' | 'secondary' | 'destructive'> = {
+export const statusVariant: Record<Invoice['status'], 'default' | 'warning' | 'destructive'> = {
   Pago: 'default',
-  Pendente: 'secondary',
+  // Pendência tem variante própria desde que a `secondary` saiu.
+  Pendente: 'warning',
   Cancelado: 'destructive',
 };
 

@@ -8,12 +8,10 @@ export const badgeVariants = cva('nds-badge', {
   variants: {
     variant: {
       default: 'nds-badge-default',
-      secondary: 'nds-badge-secondary',
       destructive: 'nds-badge-destructive',
       warning: 'nds-badge-warning',
       success: 'nds-badge-success',
       info: 'nds-badge-info',
-      outline: 'nds-badge-outline',
     },
   },
   defaultVariants: {

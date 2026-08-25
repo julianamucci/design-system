@@ -24,12 +24,12 @@ export function DocsHeader({ title, description, category, type, installNote, la
     <header className="ds-docs nds-stack nds-border-b-soft" data-spacing="md" style={{ paddingBottom: 'var(--spacing-6)' }}>
       <div className="nds-cluster" data-spacing="sm">
         <Badge
-          variant="secondary"
+          variant="default"
           className="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium"
         >
           {category}
         </Badge>
-        <Badge variant="outline" className="nds-text-muted-foreground nds-font-normal">
+        <Badge variant="info" className="nds-text-muted-foreground nds-font-normal">
           {type}
         </Badge>
         <div className="nds-spacer-start">{languageSwitcher ?? <LanguageSwitcher />}</div>

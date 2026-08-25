@@ -70,14 +70,20 @@ Badge                      <span data-slot="badge">
 | Variante | Cor da borda | Nota |
 |---|---|---|
 | `default` | `--primary` | também é o que `.nds-badge` sozinho pinta |
-| `secondary` | `--muted-foreground` | **não** `--secondary`: como traço ele não chega a 1.4:1 contra a página e a variante sumiria |
 | `destructive` | `--destructive` | |
-| `warning` | `--warning` | |
+| `warning` | `hsl(22 55% 62%)` | **valor próprio, e não `--warning`**: o token do tema é escuro e saturado demais e a variante ficava a menos de 3:1 de distância da destructive — duas etiquetas de significado oposto com a mesma cara. Literal porque a decisão de paleta ainda não foi tomada |
 | `success` | `--success` | |
-| `info` | `--info` | |
-| `outline` | `--border` | a hairline neutra do projeto; abaixo do piso de 3:1 de propósito, porque é a mesma borda que input e card desenham |
+| `info` | `--border` | a hairline neutra do projeto, a mesma que input e card desenham; é o traço mais discreto do conjunto |
 
-O piso das demais é 3:1 contra `--background` (WCAG 1.4.11): a borda é o contorno que identifica a variante, e desde o redesenho é a única coisa que a identifica.
+O piso é 3:1 contra `--background` (WCAG 1.4.11): a borda é o contorno que identifica a variante, e desde o redesenho é a única coisa que a identifica. Alcançam o piso a `default`, a `destructive` e a `success`. A `warning` e a `info` ficam abaixo dele de propósito, medidas e registradas na própria regra da folha compartilhada — mudar isso é assunto da paleta, não do badge. Em troca, a `warning` responde por outra promessa: não se confundir com a `destructive`.
+
+**Composições** — três, e nenhuma delas é variante:
+
+| Composição | Forma | Nota |
+|---|---|---|
+| com ícone | ícone `aria-hidden="true"` antes do texto, dentro da etiqueta | o respiro é do container (`gap` + `data-icon`), nunca margem à mão |
+| com contador | `BadgeCounter` à direita do texto, dentro da mesma etiqueta | o rótulo já diz de que é a contagem, então o número não pede nome próprio |
+| como gatilho | etiqueta envolvida em `<button>` | quem recebe o foco é o botão; a etiqueta fica decorativa dentro dele |
 
 **Subpartes**:
 
@@ -94,7 +100,8 @@ O contador é o número à direita do texto, **dentro** da mesma etiqueta. Ele �
 - Cor nunca é o único indicador de estado — incluir texto significativo
 - Nunca altura fixa em primitivos (WCAG 1.4.4)
 - Nunca pintar o contador com a cor da variante — a cor já está na borda ao redor
-- Nunca pôr `onclick` na etiqueta: envolver em `<button>` ou `<a>`, que é quem recebe o foco
+- Nunca pôr `onclick` na etiqueta: envolver em `<button>`, que é quem recebe o foco
+- Nunca trocar o literal da `warning` por `--warning` sem medir a distância dela para a `destructive`
 
 ---
 

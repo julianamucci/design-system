@@ -6,13 +6,21 @@ import { NdsBadge, type BadgeVariant } from './badge';
 
 const VARIANTS: { variant: BadgeVariant; label: string }[] = [
   { variant: 'default',     label: 'Default'     },
-  { variant: 'secondary',   label: 'Secondary'   },
   { variant: 'destructive', label: 'Destructive' },
   { variant: 'warning',     label: 'Warning'     },
   { variant: 'success',     label: 'Success'     },
   { variant: 'info',        label: 'Info'        },
-  { variant: 'outline',     label: 'Outline'     },
 ];
+
+/**
+ * Valor LITERAL da borda da warning, copiado da folha compartilhada.
+ *
+ * Não é `--warning`: o token do tema fica a menos de 3:1 de distância da
+ * destructive, e duas etiquetas de significado oposto ficavam com a mesma cara.
+ * Enquanto a decisão de paleta não vem, o literal é o contrato — e é por isso
+ * que ele aparece aqui e não um token.
+ */
+const WARNING_BORDER = 'hsl(22 55% 62%)';
 
 const meta: Meta = {
   title: 'UI/Badge/Variants',
@@ -25,8 +33,12 @@ type Story = StoryObj;
 
 export const Variants: Story = {
   parameters: {
-    // Uma story cobre as sete variantes de uma vez: é o conjunto lado a lado
+    // Uma story cobre as cinco variantes de uma vez: é o conjunto lado a lado
     // que a regressão visual compara, e é nele que a diferença de cor aparece.
+    //
+    // Os itens 2 e 4 descrevem a warning de cor própria e a info na neutra
+    // discreta — as duas medidas nos passos abaixo, uma delas com passo
+    // dedicado.
     covers: [
       'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
       'functional.item7', 'visual.item1', 'visual.item2', 'visual.item5',
@@ -47,7 +59,7 @@ export const Variants: Story = {
     const canvas = within(canvasElement);
 
     await step('Cada variante recebe a própria classe', async () => {
-      // Sem AOT o binding cai em silêncio no default e as sete ficariam
+      // Sem AOT o binding cai em silêncio no default e as cinco ficariam
       // iguais — esta é a asserção que impede o NG0303 de voltar despercebido.
       for (const { variant, label } of VARIANTS) {
         const badge = canvas.getByText(label);
@@ -60,17 +72,20 @@ export const Variants: Story = {
 
     await step('Cada variante pinta a BORDA, e só ela', async () => {
       // O desenho mudou: a etiqueta deixou de ser preenchida. Fundo e texto são
-      // neutros nas SETE, e quem carrega a variante é a borda de 2px. Medir
+      // neutros nas CINCO, e quem carrega a variante é a borda de 2px. Medir
       // "fundo diferente por variante", como esta play fazia, hoje reprovaria o
       // desenho correto — a correção é medir a borda, não afrouxar o teste.
-      const BORDER_TOKEN: Record<BadgeVariant, string> = {
-        default: '--primary',
-        secondary: '--muted-foreground',
-        destructive: '--destructive',
-        warning: '--warning',
-        success: '--success',
-        info: '--info',
-        outline: '--border',
+      //
+      // Nem toda variante aponta para o token de mesmo nome, e é de propósito:
+      // a `warning` usa valor literal para não colar na destructive, e a `info`
+      // assumiu a hairline neutra `--border`. Por isso a tabela guarda a
+      // EXPRESSÃO de cor, e não o nome do token.
+      const BORDER_COLOR: Record<BadgeVariant, string> = {
+        default: 'hsl(var(--primary))',
+        destructive: 'hsl(var(--destructive))',
+        warning: WARNING_BORDER,
+        success: 'hsl(var(--success))',
+        info: 'hsl(var(--border))',
       };
       // Cor que o TEMA VIGENTE dá ao token, lida de um elemento vivo — nunca um
       // rgb() cravado: trocar de tema não pode reprovar o teste.
@@ -79,7 +94,7 @@ export const Variants: Story = {
       for (const { variant, label } of VARIANTS) {
         const style = getComputedStyle(canvas.getByText(label));
         await expect(style.borderTopColor).toBe(
-          resolveColor(canvasElement, `hsl(var(${BORDER_TOKEN[variant]}))`),
+          resolveColor(canvasElement, BORDER_COLOR[variant]),
         );
         await expect(parseFloat(style.borderTopWidth)).toBeGreaterThanOrEqual(2);
         await expect(style.backgroundColor).toBe(background);
@@ -87,25 +102,27 @@ export const Variants: Story = {
       }
     });
 
-    await step('A secondary usa o neutro que se VÊ', async () => {
-      // `--secondary` é cor de fundo, não de traço: medido, como borda não
-      // chega a 1.4:1 contra a página e a variante sumiria. É a única cujo
-      // token não tem o nome da variante, e por isso o teste cobra os dois
-      // lados — o que ela É e o que ela não pode ser.
-      const secondaryBorder = getComputedStyle(canvas.getByText('Secondary')).borderTopColor;
-      await expect(secondaryBorder).toBe(resolveColor(canvasElement, 'hsl(var(--muted-foreground))'));
-      await expect(secondaryBorder).not.toBe(resolveColor(canvasElement, 'hsl(var(--secondary))'));
+    await step('A warning tem cor PRÓPRIA, e não a do tema', async () => {
+      // É o motivo de a variante existir com valor literal: com `--warning` o
+      // traço ficava a menos de 3:1 da destructive e as duas se confundiam na
+      // tela. O teste cobra os dois lados — o que ela É e o que ela não pode
+      // voltar a ser, porque reapontar para o token é o erro que retorna.
+      const warningBorder = getComputedStyle(canvas.getByText('Warning')).borderTopColor;
+      await expect(warningBorder).toBe(resolveColor(canvasElement, WARNING_BORDER));
+      await expect(warningBorder).not.toBe(resolveColor(canvasElement, 'hsl(var(--warning))'));
     });
 
     await step('As variantes semânticas não repetem a mesma cor', async () => {
       // O que separa warning de success de destructive é a cor da BORDA. Se um
       // token sumir do CSS, as classes continuam certas e só a medição acusa.
+      // A `info` fica de fora: ela deixou de ser semântica e usa a hairline
+      // neutra, medida no passo que percorre todas as variantes.
       const colors = new Set(
-        ['Destructive', 'Warning', 'Success', 'Info'].map((l) =>
+        ['Destructive', 'Warning', 'Success'].map((l) =>
           getComputedStyle(canvas.getByText(l)).borderTopColor,
         ),
       );
-      await expect(colors.size).toBe(4);
+      await expect(colors.size).toBe(3);
     });
   },
 };

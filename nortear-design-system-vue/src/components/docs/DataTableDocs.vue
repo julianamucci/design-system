@@ -142,9 +142,9 @@ const demoData = ref<Invoice[]>([
 ]);
 
 const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
-const statusVariant: Record<Invoice['status'], 'default' | 'secondary' | 'destructive'> = {
+const statusVariant: Record<Invoice['status'], 'default' | 'warning' | 'destructive'> = {
   Pago: 'default',
-  Pendente: 'secondary',
+  Pendente: 'warning',
   Cancelado: 'destructive',
 };
 

@@ -142,7 +142,7 @@ container (data-slot="chart", class .nds-chart, role="img", descrição)
 | `filter` | `{ type: 'text' \| 'select'; options?: string[] }` | Input/select por coluna |
 | `editable` | `boolean` | Marca a coluna como editável inline |
 | `format` | `(value, row) => string` | Formata o texto da célula (sem JSX/snippet) |
-| `badgeVariant` | `(value, row) => 'default' \| 'secondary' \| 'destructive' \| 'outline'` | Envolve a célula em `<Badge>` com a variant retornada — substituto do `cell` renderer das outras stacks |
+| `badgeVariant` | `(value, row) => 'default' \| 'destructive' \| 'warning' \| 'success' \| 'info'` | Envolve a célula em `<Badge>` com a variant retornada — substituto do `cell` renderer das outras stacks |
 | `cellClass` | `string` | Classes utilitárias extras no `<td>` |
 
 

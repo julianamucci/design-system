@@ -8,12 +8,12 @@
  *
  * A tabela mora no compartilhado porque as quatro stacks a repetiam inline — e
  * as quatro repetiam junto o mesmo defeito: o mapa listava só os rótulos em
- * português e inglês, então em espanhol "Media" e "Baja" caíam no `outline` e a
+ * português e inglês, então em espanhol "Media" e "Baja" caíam no padrão e a
  * prioridade sumia da tabela. Normalizar antes de casar resolve os três idiomas
  * de uma vez, e ainda cobre variação de caixa.
  */
 
-export type PrioridadeVariant = 'destructive' | 'warning' | 'info' | 'outline';
+export type PrioridadeVariant = 'destructive' | 'warning' | 'info';
 
 /** alta · média · baixa, nos três idiomas do design system. */
 const LABEL_VARIANT: Record<string, PrioridadeVariant> = {
@@ -40,5 +40,8 @@ function normalizar(label: string): string {
 }
 
 export function prioridadeVariant(label: string): PrioridadeVariant {
-  return LABEL_VARIANT[normalizar(label)] ?? 'outline';
+  // Rótulo desconhecido cai na variante discreta. Era `outline`, que deixou
+  // de existir quando a badge enxugou para cinco variantes — e `info` herdou
+  // exatamente a borda neutra que era dela, então a tela não muda.
+  return LABEL_VARIANT[normalizar(label)] ?? 'info';
 }

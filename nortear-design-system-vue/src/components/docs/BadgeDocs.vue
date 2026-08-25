@@ -5,7 +5,7 @@ import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import { Badge, BadgeCounter } from '@/components/ui/badge';
-import { Check, Bell } from 'lucide-vue-next';
+import { Check } from 'lucide-vue-next';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
 import badgeTranslations from '@shared/content/badge/translations.json';
@@ -122,16 +122,14 @@ const codeImportWithIcon = `import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-vue-next";`;
 
 const codeDefault = `<Badge>Novo</Badge>`;
-const codeSecondary = `<Badge variant="secondary">Beta</Badge>`;
 const codeDestructive = `<Badge variant="destructive">Urgente</Badge>`;
 const codeWarning = `<Badge variant="warning">Vence hoje</Badge>`;
 const codeSuccess = `<Badge variant="success">Aprovado</Badge>`;
 const codeInfo = `<Badge variant="info">Novidade</Badge>`;
-const codeOutline = `<Badge variant="outline">Rascunho</Badge>`;
 
 const interfaceCode = `// Badge
 interface BadgeProps {
-  variant?: 'default' | 'secondary' | 'destructive' | 'warning' | 'success' | 'info' | 'outline';
+  variant?: 'default' | 'destructive' | 'warning' | 'success' | 'info';
   class?: string;
 }
 
@@ -148,12 +146,10 @@ const anatomyItems = computed(() => [
 
 const variantItems = computed(() => [
   { name: 'default',     description: stripHtml(tContent('variants.items.default')),     code: codeDefault     },
-  { name: 'secondary',   description: stripHtml(tContent('variants.items.secondary')),   code: codeSecondary   },
   { name: 'destructive', description: stripHtml(tContent('variants.items.destructive')), code: codeDestructive },
   { name: 'warning',     description: stripHtml(tContent('variants.items.warning')),     code: codeWarning     },
   { name: 'success',     description: stripHtml(tContent('variants.items.success')),     code: codeSuccess     },
   { name: 'info',        description: stripHtml(tContent('variants.items.info')),        code: codeInfo        },
-  { name: 'outline',     description: stripHtml(tContent('variants.items.outline')),     code: codeOutline     },
 ]);
 
 const compositionItems = computed(() => [
@@ -164,28 +160,16 @@ const compositionItems = computed(() => [
     code: `<Badge>\n  <Check class="nds-icon-sm" aria-hidden="true" />\n  Ativo\n</Badge>`,
   },
   {
-    name: tContent('variants.compositions.count.name'),
-    description: tContent('variants.compositions.count.description'),
-    useWhen: tContent('variants.compositions.count.use'),
-    code: `<span role="status" aria-label="12 notificações não lidas" class="nds-cluster" data-spacing="sm">\n  <Bell class="nds-icon-lg" aria-hidden="true" />\n  <Badge variant="destructive">12</Badge>\n</span>`,
-  },
-  {
     name: tContent('variants.compositions.withCounter.name'),
     description: tContent('variants.compositions.withCounter.description'),
     useWhen: tContent('variants.compositions.withCounter.use'),
     code: `<Badge variant="destructive">\n  Urgente\n  <BadgeCounter>12</BadgeCounter>\n</Badge>`,
   },
   {
-    name: tContent('variants.compositions.asLink.name'),
-    description: tContent('variants.compositions.asLink.description'),
-    useWhen: tContent('variants.compositions.asLink.use'),
-    code: `<a href="#design" aria-label="Ver todos os itens da categoria Design" class="nds-cluster">\n  <Badge variant="secondary">Design</Badge>\n</a>`,
-  },
-  {
     name: tContent('variants.compositions.asTrigger.name'),
     description: tContent('variants.compositions.asTrigger.description'),
     useWhen: tContent('variants.compositions.asTrigger.use'),
-    code: `<button type="button" aria-label="Filtrar por React" class="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent" style="padding: 0; border: 0">\n  <Badge variant="outline">React</Badge>\n</button>`,
+    code: `<button type="button" aria-label="Filtrar por acessibilidade" class="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent" style="padding: 0; border: 0">\n  <Badge variant="info">Acessibilidade</Badge>\n</button>`,
   },
 ]);
 
@@ -200,9 +184,9 @@ const propCols = computed(() => ({
 }));
 
 const badgePropItems = computed(() => [
-  { name: 'variant',      type: '"default" | "secondary" | "destructive" | "warning" | "success" | "info" | "outline"', defaultValue: '"default"', required: 'Não', description: toPlainText(tContent('props.table.variant'))  },
-  { name: 'class',        type: 'string',                                              defaultValue: '—',         required: 'Não', description: toPlainText(tContent('props.table.className')) },
-  { name: 'default slot', type: 'VNode',                                               defaultValue: '—',         required: 'Sim', description: toPlainText(tContent('props.table.children')) },
+  { name: 'variant',      type: '"default" | "destructive" | "warning" | "success" | "info"', defaultValue: '"default"', required: 'Não', description: toPlainText(tContent('props.table.variant'))  },
+  { name: 'class',        type: 'string',                                    defaultValue: '—',         required: 'Não', description: toPlainText(tContent('props.table.className')) },
+  { name: 'default slot', type: 'VNode',                                     defaultValue: '—',         required: 'Sim', description: toPlainText(tContent('props.table.children')) },
 ]);
 
 /**
@@ -222,9 +206,10 @@ const tokenRows = computed(() => [
   { token: '--primary',      value: '.nds-badge-default',      description: tContent('tokens.table.primary')     },
   { token: '--secondary',    value: '.nds-badge-counter',      description: tContent('tokens.table.secondary')   },
   { token: '--destructive',  value: '.nds-badge-destructive',  description: tContent('tokens.table.destructive') },
-  { token: '--warning',      value: '.nds-badge-warning',      description: tContent('tokens.table.warning')     },
+  { token: '--warning',      value: '—',                       description: tContent('tokens.table.warning')     },
   { token: '--success',      value: '.nds-badge-success',      description: tContent('tokens.table.success')     },
-  { token: '--info',         value: '.nds-badge-info',         description: tContent('tokens.table.info')        },
+  { token: '--info',         value: '—',                       description: tContent('tokens.table.info')        },
+  { token: '--border',       value: '.nds-badge-info',         description: tContent('tokens.table.border')      },
   { token: '--foreground',   value: '.nds-badge',              description: tContent('tokens.table.foreground')  },
   { token: '--background',   value: '.nds-badge',              description: tContent('tokens.table.background')  },
   { token: '--ring',         value: '.nds-badge:focus-visible', description: tContent('tokens.table.ring')       },
@@ -319,17 +304,17 @@ const visualTestItems = computed(() => [
         style="flex-wrap: wrap"
       >
         <Badge>{{ tContent('demonstration.labels.defaultLabel') }}</Badge>
-        <Badge variant="secondary">
-          {{ tContent('demonstration.labels.secondaryLabel') }}
-        </Badge>
         <Badge variant="destructive">
           {{ tContent('demonstration.labels.destructiveLabel') }}
         </Badge>
-        <Badge variant="outline">
-          {{ tContent('demonstration.labels.outlineLabel') }}
+        <Badge variant="warning">
+          {{ tContent('demonstration.labels.warningLabel') }}
         </Badge>
-        <Badge variant="destructive">
-          {{ tContent('demonstration.labels.countLabel') }}
+        <Badge variant="success">
+          {{ tContent('demonstration.labels.successLabel') }}
+        </Badge>
+        <Badge variant="info">
+          {{ tContent('demonstration.labels.infoLabel') }}
         </Badge>
         <Badge>
           <Check
@@ -449,37 +434,32 @@ const visualTestItems = computed(() => [
       :title="tContent('variants.title')"
       :items="variantItems"
     >
+      <!--
+        Os slots são POSICIONAIS: cada índice casa com a linha de mesma posição
+        em `variantItems`. Ao tirar uma variante, o índice tem de ser renumerado
+        junto — deixar um buraco faz o cartão seguinte renderizar vazio.
+      -->
       <template #variant-preview-0>
         <Badge>{{ tContent('demonstration.labels.defaultLabel') }}</Badge>
       </template>
       <template #variant-preview-1>
-        <Badge variant="secondary">
-          {{ tContent('demonstration.labels.secondaryLabel') }}
-        </Badge>
-      </template>
-      <template #variant-preview-2>
         <Badge variant="destructive">
           {{ tContent('demonstration.labels.destructiveLabel') }}
         </Badge>
       </template>
-      <template #variant-preview-3>
+      <template #variant-preview-2>
         <Badge variant="warning">
           {{ tContent('demonstration.labels.warningLabel') }}
         </Badge>
       </template>
-      <template #variant-preview-4>
+      <template #variant-preview-3>
         <Badge variant="success">
           {{ tContent('demonstration.labels.successLabel') }}
         </Badge>
       </template>
-      <template #variant-preview-5>
+      <template #variant-preview-4>
         <Badge variant="info">
           {{ tContent('demonstration.labels.infoLabel') }}
-        </Badge>
-      </template>
-      <template #variant-preview-6>
-        <Badge variant="outline">
-          {{ tContent('demonstration.labels.outlineLabel') }}
         </Badge>
       </template>
     </DocsVariants>
@@ -501,43 +481,20 @@ const visualTestItems = computed(() => [
         </Badge>
       </template>
       <template #variant-preview-1>
-        <span
-          role="status"
-          aria-label="12 notificações não lidas"
-          class="nds-cluster"
-          data-spacing="sm"
-        >
-          <Bell
-            class="nds-icon-lg"
-            aria-hidden="true"
-          />
-          <Badge variant="destructive">12</Badge>
-        </span>
-      </template>
-      <template #variant-preview-2>
         <Badge variant="destructive">
           Urgente
           <BadgeCounter>12</BadgeCounter>
         </Badge>
       </template>
-      <template #variant-preview-3>
-        <a
-          href="#design"
-          aria-label="Ver todos os itens da categoria Design"
-          class="nds-cluster"
-        >
-          <Badge variant="secondary">Design</Badge>
-        </a>
-      </template>
-      <template #variant-preview-4>
+      <template #variant-preview-2>
         <button
           type="button"
-          aria-label="Filtrar por React"
+          aria-label="Filtrar por acessibilidade"
           class="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent"
           style="padding: 0; border: 0"
         >
-          <Badge variant="outline">
-            React
+          <Badge variant="info">
+            Acessibilidade
           </Badge>
         </button>
       </template>

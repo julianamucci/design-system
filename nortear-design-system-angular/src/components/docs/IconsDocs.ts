@@ -127,11 +127,11 @@ const REGRAS_DE_ACESSIBILIDADE = [
           <div class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
             <span
               ndsBadge
-              variant="secondary"
+              variant="default"
               class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium"
               >{{ t('category') }}</span
             >
-            <span ndsBadge variant="outline" class="nds-text-muted-foreground nds-font-normal">{{
+            <span ndsBadge variant="info" class="nds-text-muted-foreground nds-font-normal">{{
               t('type')
             }}</span>
             <div class="nds-spacer-start">

@@ -22,13 +22,13 @@ defineProps<{
       data-spacing="sm"
     >
       <Badge
-        variant="secondary"
+        variant="info"
         class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium"
       >
         {{ category }}
       </Badge>
       <Badge
-        variant="outline"
+        variant="info"
         class="nds-text-muted-foreground nds-font-normal"
       >
         {{ type }}

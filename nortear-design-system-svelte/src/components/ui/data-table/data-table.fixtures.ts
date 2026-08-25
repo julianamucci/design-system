@@ -41,9 +41,9 @@ export const labelsInvoice: Partial<DataTableLabels> = {
 
 export const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
-export const statusVariant: Record<Invoice['status'], 'default' | 'secondary' | 'destructive'> = {
+export const statusVariant: Record<Invoice['status'], 'default' | 'warning' | 'destructive'> = {
   Pago: 'default',
-  Pendente: 'secondary',
+  Pendente: 'warning',
   Cancelado: 'destructive',
 };
 

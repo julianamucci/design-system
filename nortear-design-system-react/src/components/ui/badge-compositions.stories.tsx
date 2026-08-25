@@ -1,14 +1,12 @@
 import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
-import { Check, Bell } from "lucide-react";
+import { Check } from "lucide-react";
 import { backgroundEffective, noTransicao, ratio, resolveColor } from "@shared/testing/cor";
 import { Badge, BadgeCounter } from "./badge";
 import {
   badgeWithIconSource,
   badgeAsButtonSource,
-  badgeAsLinkSource,
-  badgeCounterSource,
   badgeWithCounterSource,
   badgeSource,
 } from "./badge.source";
@@ -26,7 +24,7 @@ const meta = {
       source: { transform: badgeSource },
       description: {
         component:
-          "Configuracoes contextuais do Badge: combinado com ícone, como contador numérico, envolvido em <a> para navegação ou em <button> para trigger clicável.",
+          "Configurações contextuais do Badge: combinado com ícone, com contador dentro da etiqueta ou envolvido em <button> para virar gatilho clicável.",
       },
     },
   },
@@ -70,45 +68,10 @@ export const WithIcon: Story = {
   },
 };
 
-export const CountBadge: Story = {
-  parameters: {
-    covers: ["visual.item3"],
-    // O que se ensina aqui é o contêiner que dá significado ao número.
-    docs: { source: { transform: badgeCounterSource } },
-  },
-  render: () => (
-    <span
-      className="nds-cluster"
-      data-spacing="sm"
-      role="status"
-      aria-label="12 notificações não lidas"
-    >
-      <Bell aria-hidden="true" className="nds-text-foreground nds-icon-lg" />
-      <Badge variant="destructive">12</Badge>
-    </span>
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    // O contador fica AO LADO do sino, como a documentação descreve — e não
-    // sobreposto: as classes de deslocamento usadas antes eram do Tailwind, que
-    // saiu do projeto, então o badge nunca chegou a subir para o canto.
-    const status = canvas.getByRole("status", { name: /12 notificações não lidas/i });
-    const badge = canvas.getByText("12");
-    const sino = status.querySelector("svg")!;
-    await expect(status.contains(badge)).toBe(true);
-    await expect(sino.getBoundingClientRect().right).toBeLessThanOrEqual(
-      badge.getBoundingClientRect().left + 1,
-    );
-    // Quem carrega o significado é o rótulo do container: "12" sozinho não diz
-    // do que é a contagem.
-    await expect(badge).toHaveAttribute("data-slot", "badge");
-  },
-};
-
 /**
- * Contador DENTRO da etiqueta — a peça que qualquer variante aceita. Não se
- * confunde com a story acima: lá o badge inteiro é o número, ao lado do sino;
- * aqui o número entra na etiqueta, à direita do rótulo que lhe dá sentido.
+ * Contador DENTRO da etiqueta — a peça que qualquer variante aceita. O número
+ * entra na etiqueta, à direita do rótulo que lhe dá sentido: "12" sozinho não
+ * diz de quê, e é o rótulo ao lado que carrega o significado.
  */
 export const WithCounter: Story = {
   parameters: {
@@ -189,38 +152,10 @@ export const WithCounter: Story = {
   },
 };
 
-export const AsLink: Story = {
-  parameters: {
-    covers: ["functional.item6", "accessibility.item4", "visual.item4"],
-    // O badge NÃO vira o elemento clicável — quem envolve é que recebe o foco.
-    docs: { source: { transform: badgeAsLinkSource } },
-  },
-  render: () => (
-    <a
-      href="#design"
-      aria-label="Ver todos os itens da categoria Design"
-      className="nds-cluster nds-rounded-md nds-focus-ring-inset"
-    >
-      <Badge variant="secondary">Design</Badge>
-    </a>
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const link = canvas.getByRole("link", { name: /Ver todos os itens da categoria Design/i });
-    // accessibility.item4 — quem é focável é o link; o badge fica decorativo
-    // dentro dele, que é exatamente o que a documentação pede.
-    const badge = link.querySelector('[data-slot="badge"]');
-    await expect(badge).not.toBeNull();
-    await expect(badge!.hasAttribute("tabindex")).toBe(false);
-    link.focus();
-    await expect(document.activeElement).toBe(link);
-  },
-};
-
 export const AsButton: Story = {
   parameters: {
     covers: ["functional.item6", "accessibility.item4", "visual.item4"],
-    // Mesma regra do link, com o botão no lugar da âncora.
+    // O badge NÃO vira o elemento clicável — quem envolve é que recebe o foco.
     docs: { source: { transform: badgeAsButtonSource } },
   },
   render: () => (
@@ -229,7 +164,7 @@ export const AsButton: Story = {
       aria-label="Filtrar por React"
       className="nds-cluster nds-rounded-md nds-focus-ring-inset"
     >
-      <Badge variant="outline">React</Badge>
+      <Badge variant="info">React</Badge>
     </button>
   ),
   play: async ({ canvasElement }) => {

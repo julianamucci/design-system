@@ -589,7 +589,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
     <AccordionTrigger>
       <span className="nds-cluster" data-spacing="xs">
         Funcionalidades em beta
-        <Badge variant="secondary">Beta</Badge>
+        <Badge variant="info">Beta</Badge>
       </span>
     </AccordionTrigger>
     <AccordionContent>Recursos em testes — sujeitos a mudanças.</AccordionContent>
@@ -610,7 +610,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                       <AccordionTrigger>
                         <span className="nds-cluster" data-spacing="xs">
                           Funcionalidades em beta
-                          <Badge variant="secondary">Beta</Badge>
+                          <Badge variant="info">Beta</Badge>
                         </span>
                       </AccordionTrigger>
                       <AccordionContent>Recursos em testes — sujeitos a mudanças.</AccordionContent>

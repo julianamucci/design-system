@@ -115,7 +115,7 @@ describe('composições', () => {
     const saida = cardProductSource();
     expect(saida).toContain('import { Badge } from "@/components/ui/badge";');
     const acao = saida.indexOf('<CardAction>');
-    expect(saida.indexOf('<Badge variant="secondary">')).toBeGreaterThan(acao);
+    expect(saida.indexOf('<Badge variant="info">')).toBeGreaterThan(acao);
     expect(saida).toContain('<CardFooter');
   });
 

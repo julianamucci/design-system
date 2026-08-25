@@ -64,9 +64,11 @@ type Invoice = {
   amount: number;
 };
 
-const STATUS_VARIANT: Record<string, 'default' | 'secondary' | 'destructive'> = {
+const STATUS_VARIANT: Record<string, 'default' | 'warning' | 'destructive'> = {
   Pago: 'default', Paid: 'default', Pagado: 'default',
-  Pendente: 'secondary', Pending: 'secondary', Pendiente: 'secondary',
+  // Pendência tem variante própria desde que a `secondary` saiu: `warning`
+  // diz o que o estado é, e não só que ele é menos importante que o pago.
+  Pendente: 'warning', Pending: 'warning', Pendiente: 'warning',
   Cancelado: 'destructive', Canceled: 'destructive',
 };
 

@@ -10,23 +10,22 @@ import { cn } from '@/lib/utils';
 
 export type BadgeVariant =
   | 'default'
-  | 'secondary'
   | 'destructive'
   | 'warning'
   | 'success'
-  | 'info'
-  | 'outline';
+  | 'info';
 
-// Tabela em vez de cadeia de ternários — mesma decisão do Vanilla: com sete
+// Tabela em vez de cadeia de ternários — mesma decisão do Vanilla: com cinco
 // variantes o último ramo é inalcançável e vira ruído de cobertura.
+//
+// `secondary` e `outline` saíram: a primeira era quase indistinguível da
+// default, e a borda neutra que era da outline passou a ser a da `info`.
 const VARIANT_CLASSNAME: Record<BadgeVariant, string> = {
   default: '',
-  secondary: 'nds-badge-secondary',
   destructive: 'nds-badge-destructive',
   warning: 'nds-badge-warning',
   success: 'nds-badge-success',
   info: 'nds-badge-info',
-  outline: 'nds-badge-outline',
 };
 
 /**

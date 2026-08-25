@@ -17,7 +17,7 @@ const meta: Meta = {
       source: { transform: badgeSource },
       description: {
         component:
-          'As 4 variantes nativas do Badge renderizadas via createBadge({ variant, children }). ' +
+          'As 5 variantes nativas do Badge renderizadas via createBadge({ variant, children }). ' +
           'Cada variante aplica classes CSS distintas para hierarquia visual — sem prop size.',
       },
     },
@@ -55,6 +55,21 @@ const pintura = (el: HTMLElement) => {
 const token = (root: HTMLElement, tokenName: string) =>
   resolveColor(root, `hsl(var(${tokenName}))`);
 
+/**
+ * Borda que a folha compartilhada declara para cada variante semântica.
+ *
+ * Não é `--${variante}` para as três: `warning` usa um valor LITERAL, escolhido
+ * porque o token do tema deixava a etiqueta quase idêntica à destructive, e
+ * `info` assumiu a hairline neutra `--border`. Escrever a regra aqui é o que
+ * faz a play reprovar se alguém devolver os tokens homônimos por simetria — que
+ * é justamente o erro que a folha registra ter evitado.
+ */
+const EXPECTED_BORDER: Record<string, string> = {
+  warning: 'hsl(22 55% 62%)',
+  success: 'hsl(var(--success))',
+  info: 'hsl(var(--border))',
+};
+
 /*
  * O trio "fundo neutro, texto neutro, borda de 2px" se repete em toda play, e
  * é de propósito que ele NÃO virou função: a contagem de asserções por story
@@ -66,7 +81,9 @@ const token = (root: HTMLElement, tokenName: string) =>
 // ─── Variantes ────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  parameters: { covers: ['functional.item1', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item1', 'visual.item2'],
+  },
   render: () => createBadge({ variant: 'default', children: 'Novo' }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -82,43 +99,9 @@ export const Default: Story = {
   },
 };
 
-export const Secondary: Story = {
+export const Destructive: Story = {
   // Override de story: a variante não passa por control neste arquivo, e o
   // snippet do meta mostraria `default` onde a story renderiza outra.
-  parameters: {
-    covers: ['functional.item2', 'visual.item2'],
-    docs: {
-      source: { transform: badgeSourceCom({ variant: 'secondary', label: 'Beta' }) },
-    },
-  },
-  render: () => createBadge({ variant: 'secondary', children: 'Beta' }),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const badge = canvas.getByText('Beta');
-    await expect(badge).toHaveAttribute('data-variant', 'secondary');
-    const { background, text, border, larguraBorda } = pintura(badge);
-    // functional.item2 — o neutro que se VÊ: a borda é --muted-foreground, e
-    // não --secondary. Medido, --secondary como traço não chega a 1.4:1 contra
-    // a página e a variante sumiria — é a única cujo token de borda não tem o
-    // nome da variante, e é por isso que o teste cobra os dois lados.
-    await expect(border).toBe(token(canvasElement, '--muted-foreground'));
-    await expect(border).not.toBe(token(canvasElement, '--secondary'));
-    await expect(background).toBe(token(canvasElement, '--background'));
-    await expect(text).toBe(token(canvasElement, '--foreground'));
-    await expect(parseFloat(larguraBorda)).toBeGreaterThanOrEqual(2);
-
-    // A hierarquia entre secondary e default continua existindo — na borda,
-    // que é onde ela passou a morar.
-    const referencia = createBadge({ variant: 'default' });
-    canvasElement.appendChild(referencia);
-    const defaultBorder = getComputedStyle(referencia).borderTopColor;
-    referencia.remove();
-    await expect(border).not.toBe(defaultBorder);
-  },
-};
-
-export const Destructive: Story = {
-  // Override de story: mesma razão da Secondary — a variante é o assunto.
   parameters: {
     covers: ['functional.item3', 'accessibility.item3', 'visual.item2'],
     docs: {
@@ -139,37 +122,13 @@ export const Destructive: Story = {
     await expect(parseFloat(larguraBorda)).toBeGreaterThanOrEqual(2);
 
     // O texto neutro é medido de uma referência viva, e não cravado em rgb().
-    const referencia = createBadge({ variant: 'outline' });
+    // Serve qualquer variante: nenhuma delas pinta o texto — é essa a promessa.
+    const referencia = createBadge({ variant: 'default' });
     canvasElement.appendChild(referencia);
     const neutralText = getComputedStyle(referencia).color;
     referencia.remove();
     await expect(text).toBe(neutralText);
     await expect(text).toBe(token(canvasElement, '--foreground'));
-  },
-};
-
-export const Outline: Story = {
-  // Override de story: mesma razão da Secondary — a variante é o assunto.
-  parameters: {
-    covers: ['functional.item4', 'visual.item2'],
-    docs: {
-      source: { transform: badgeSourceCom({ variant: 'outline', label: 'Rascunho' }) },
-    },
-  },
-  render: () => createBadge({ variant: 'outline', children: 'Rascunho' }),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const badge = canvas.getByText('Rascunho');
-    await expect(badge).toHaveAttribute('data-variant', 'outline');
-    // functional.item4 — a borda mais discreta do conjunto: a hairline neutra
-    // que input e card já desenham. O que a diferencia não é a ausência de
-    // fundo (nenhuma variante tem preenchimento), e sim a ausência de cor.
-    const { background, text, border, larguraBorda } = pintura(badge);
-    await expect(border).toBe(token(canvasElement, '--border'));
-    await expect(border).not.toBe(token(canvasElement, '--primary'));
-    await expect(background).toBe(token(canvasElement, '--background'));
-    await expect(text).toBe(token(canvasElement, '--foreground'));
-    await expect(parseFloat(larguraBorda)).toBeGreaterThanOrEqual(2);
   },
 };
 
@@ -181,7 +140,20 @@ export const Outline: Story = {
  */
 export const Semantics: Story = {
   parameters: {
-    covers: ['functional.item7', 'visual.item5', 'accessibility.item3'],
+    /*
+     * Seis itens numa story só, e não é excesso: `functional.item2` (warning) e
+     * `functional.item4` (info) pedem a borda de CADA uma, e é justamente por
+     * estarem lado a lado que dá para provar que as duas não se confundem —
+     * com a destructive, no caso da warning, e com a ênfase alta, no da info.
+     */
+    covers: [
+      'functional.item2',
+      'functional.item4',
+      'functional.item7',
+      'visual.item2',
+      'visual.item5',
+      'accessibility.item3',
+    ],
     // Override de story: o assunto é o CONJUNTO — uma etiqueta sozinha não
     // mostra o que as três variantes semânticas prometem, ser distinguíveis.
     docs: {
@@ -196,7 +168,7 @@ export const Semantics: Story = {
       },
       description: {
         story:
-          'warning avisa, success confirma e info contextualiza. As três existiam no CSS como -high, -medium e -low, servindo só à tabela de prioridade das docs pages.',
+          'warning avisa, success confirma e info contextualiza — esta última com a borda neutra mais silenciosa do conjunto, a mesma que input e card já desenham.',
       },
     },
   },
@@ -221,7 +193,7 @@ export const Semantics: Story = {
 
     // O texto neutro é medido de uma referência viva, e não cravado em rgb():
     // trocar o tema não pode reprovar o teste, mas trocar a REGRA pode.
-    const referencia = createBadge({ variant: 'outline' });
+    const referencia = createBadge({ variant: 'default' });
     canvasElement.appendChild(referencia);
     const neutralText = getComputedStyle(referencia).color;
     referencia.remove();
@@ -230,14 +202,28 @@ export const Semantics: Story = {
     for (const [name, badge] of Object.entries(badges)) {
       await expect(badge).toHaveAttribute('data-variant', name);
       const { background, text, border, larguraBorda } = pintura(badge);
-      // functional.item7 — a cor vem da borda; o texto fica neutro, que é o que
+      // functional.item2 (warning), functional.item4 (info) e functional.item7 —
+      // a cor vem da borda, cada uma na sua; o texto fica neutro, que é o que
       // sustenta 4.5:1 sem depender da variante escolhida.
-      await expect(border).toBe(token(canvasElement, `--${name}`));
+      await expect(border).toBe(resolveColor(canvasElement, EXPECTED_BORDER[name]));
       await expect(text).toBe(neutralText);
       await expect(background).toBe(token(canvasElement, '--background'));
       await expect(parseFloat(larguraBorda)).toBeGreaterThanOrEqual(2);
       borders.push(border);
     }
+
+    // functional.item2 — o que a warning promete não é "ser laranja", é NÃO se
+    // confundir com a destructive: foi por colar nela que o token do tema saiu.
+    // A cor da vizinha vem de uma etiqueta viva, e não de um rgb() cravado.
+    const destructiva = createBadge({ variant: 'destructive' });
+    canvasElement.appendChild(destructiva);
+    const destructiveBorder = getComputedStyle(destructiva).borderTopColor;
+    destructiva.remove();
+    await expect(pintura(badges.warning).border).not.toBe(destructiveBorder);
+
+    // functional.item4 — a info é a etiqueta silenciosa: a hairline neutra, e
+    // não a ênfase alta. Confundir as duas some no olho e aparece aqui.
+    await expect(pintura(badges.info).border).not.toBe(token(canvasElement, '--primary'));
 
     // Três cores, e não três nomes para a mesma: sem isto, copiar o bloco do
     // destructive nas três passaria. A checagem migrou do fundo para a borda —

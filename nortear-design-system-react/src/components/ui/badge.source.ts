@@ -8,19 +8,11 @@
 import { attrs, childText, jsxSnippet, propOption, type SourceTransform } from '@/lib/story-source';
 
 export type BadgeArgs = {
-  variant: 'default' | 'secondary' | 'destructive' | 'warning' | 'success' | 'info' | 'outline';
+  variant: 'default' | 'destructive' | 'warning' | 'success' | 'info';
   children: string;
 };
 
-const VARIANTS = [
-  'default',
-  'secondary',
-  'destructive',
-  'warning',
-  'success',
-  'info',
-  'outline',
-] as const;
+const VARIANTS = ['default', 'destructive', 'warning', 'success', 'info'] as const;
 
 const IMPORT = 'import { Badge } from "@/components/ui/badge";';
 
@@ -51,19 +43,9 @@ export function badgeDefaultSource(): string {
   return badgeSnippet('default', 'Novo');
 }
 
-/** Ênfase de apoio, para o que informa sem competir com o conteúdo. */
-export function badgeSecundarioSource(): string {
-  return badgeSnippet('secondary', 'Beta');
-}
-
 /** Ênfase de alerta, reservada ao que exige reação. */
 export function badgeDestructiveSource(): string {
   return badgeSnippet('destructive', 'Urgente');
-}
-
-/** Ênfase mínima: só contorno, para o que apenas rotula. */
-export function badgeOutlineSource(): string {
-  return badgeSnippet('outline', 'Rascunho');
 }
 
 /**
@@ -99,26 +81,6 @@ import { Check } from "lucide-react";`,
 }
 
 /**
- * Contador: "12" sozinho não diz de quê. Quem carrega o significado é o rótulo
- * do contêiner, que também é quem se anuncia como região de status.
- */
-export function badgeCounterSource(): string {
-  return jsxSnippet(
-    `${IMPORT}
-import { Bell } from "lucide-react";`,
-    `<span
-  className="nds-cluster"
-  data-spacing="sm"
-  role="status"
-  aria-label="12 notificações não lidas"
->
-  <Bell aria-hidden="true" className="nds-text-foreground nds-icon-lg" />
-  <Badge variant="destructive">12</Badge>
-</span>`,
-  );
-}
-
-/**
  * Com contador: o número mora DENTRO da etiqueta, à direita do texto. Quem
  * nomeia a contagem é o rótulo ao lado, então o número não precisa de contexto
  * próprio — e a peça é neutra de propósito, porque a cor da variante fica na
@@ -135,33 +97,19 @@ export function badgeWithCounterSource(): string {
 }
 
 /**
- * Dentro de link: o badge NÃO vira o elemento clicável. Quem recebe foco e
- * nome acessível é a âncora; o badge fica decorativo dentro dela, sem
+ * Dentro de botão: o badge NÃO vira o elemento clicável. Quem recebe foco,
+ * teclado e nome acessível é o botão; o badge fica decorativo dentro dele, sem
  * `tabindex` próprio para não competir pelo foco.
  */
-export function badgeAsLinkSource(): string {
-  return jsxSnippet(
-    IMPORT,
-    `<a
-  href="#design"
-  aria-label="Ver todos os itens da categoria Design"
-  className="nds-cluster nds-rounded-md nds-focus-ring-inset"
->
-  <Badge variant="secondary">Design</Badge>
-</a>`,
-  );
-}
-
-/** Mesma regra do link, com o botão no lugar da âncora. */
 export function badgeAsButtonSource(): string {
   return jsxSnippet(
     IMPORT,
     `<button
   type="button"
-  aria-label="Filtrar por categoria Design"
+  aria-label="Filtrar por React"
   className="nds-cluster nds-rounded-md nds-focus-ring-inset"
 >
-  <Badge variant="outline">Design</Badge>
+  <Badge variant="info">React</Badge>
 </button>`,
   );
 }

@@ -2,13 +2,11 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import { Badge, BadgeCounter } from './index';
-import { Check, Bell } from 'lucide-vue-next';
+import { Check } from 'lucide-vue-next';
 import { backgroundEffective, ratio } from '@shared/testing/cor';
 import {
   badgeWithIconSource,
   badgeAsButtonSource,
-  badgeAsLinkSource,
-  badgeCounterSource,
   badgeWithCounterSource,
 } from './badge.source';
 
@@ -25,7 +23,7 @@ const meta = {
       source: { transform: badgeWithIconSource },
       description: {
         component:
-          'Configuracoes contextuais do Badge: combinado com ícone, com contador dentro da própria etiqueta, como contador numérico ao lado de um ícone, envolvido em <a> para navegação ou em <button> para trigger clicável.',
+          'Configurações contextuais do Badge: combinado com ícone, com contador dentro da própria etiqueta e envolvido em <button> para virar gatilho clicável.',
       },
     },
   },
@@ -68,50 +66,11 @@ export const WithIcon: Story = {
   },
 };
 
-export const CountBadge: Story = {
-  parameters: {
-    covers: ['visual.item3'],
-    // O assunto está FORA do badge: o contêiner com papel e rótulo que dá
-    // sentido ao número. A do meta mostra o badge sozinho.
-    docs: { source: { transform: badgeCounterSource } },
-  },
-  render: () => ({
-    components: { Badge, Bell },
-    template: `
-      <span
-        class="nds-cluster"
-        data-spacing="sm"
-        role="status"
-        aria-label="12 notificações não lidas"
-      >
-        <Bell aria-hidden="true" class="nds-text-foreground nds-icon-lg" />
-        <Badge variant="destructive">12</Badge>
-      </span>
-    `,
-  }),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    // O contador fica AO LADO do sino, como a documentação descreve — e não
-    // sobreposto: as classes de deslocamento usadas antes eram do Tailwind, que
-    // saiu do projeto, então o badge nunca chegou a subir para o canto.
-    const status = canvas.getByRole('status', { name: /12 notificações não lidas/i });
-    const badge = canvas.getByText('12');
-    const sino = status.querySelector('svg')!;
-    await expect(status.contains(badge)).toBe(true);
-    await expect(sino.getBoundingClientRect().right).toBeLessThanOrEqual(
-      badge.getBoundingClientRect().left + 1,
-    );
-    // Quem carrega o significado é o rótulo do container: "12" sozinho não diz
-    // do que é a contagem.
-    await expect(badge).toHaveAttribute('data-slot', 'badge');
-  },
-};
-
 /**
  * Contador DENTRO da etiqueta — a peça `.nds-badge-counter`, que qualquer
- * variante aceita. Não confundir com a `CountBadge` acima: lá o badge inteiro
- * É o número, ao lado de um ícone; aqui o número acompanha um rótulo, na mesma
- * caixa.
+ * variante aceita. O número acompanha um rótulo, na mesma caixa: é a única
+ * forma de contador que o design system oferece, depois que o contador avulso
+ * ao lado de um ícone saiu por dizer a mesma coisa com mais peças.
  */
 export const WithCounter: Story = {
   parameters: {
@@ -177,43 +136,17 @@ export const WithCounter: Story = {
   },
 };
 
-export const AsLink: Story = {
-  parameters: {
-    covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
-    // Quem é focável é o elemento de FORA: o snippet precisa mostrar o link em
-    // volta, que a do meta não tem.
-    docs: { source: { transform: badgeAsLinkSource } },
-  },
-  render: () => ({
-    components: { Badge },
-    template: `
-      <a
-        href="#design"
-        aria-label="Ver todos os itens da categoria Design"
-        class="nds-cluster nds-rounded-md nds-focus-ring-inset"
-      >
-        <Badge variant="secondary">Design</Badge>
-      </a>
-    `,
-  }),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const link = canvas.getByRole('link', { name: /Ver todos os itens da categoria Design/i });
-    // accessibility.item4 — quem é focável é o link; o badge fica decorativo
-    // dentro dele, que é exatamente o que a documentação pede.
-    const badge = link.querySelector('[data-slot="badge"]');
-    await expect(badge).not.toBeNull();
-    await expect(badge!.hasAttribute('tabindex')).toBe(false);
-    link.focus();
-    await expect(document.activeElement).toBe(link);
-  },
-};
-
+/**
+ * A etiqueta como GATILHO clicável — a única forma interativa que restou. O
+ * envoltório em `<a>` saiu: as duas composições ensinavam a mesma divisão de
+ * papéis, e o que importa aqui é que o badge NÃO vira controle, seja qual for o
+ * elemento por fora.
+ */
 export const AsButton: Story = {
   parameters: {
     covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
-    // Mesma divisão de papéis do link, com o botão por fora — e o snippet troca
-    // o rótulo de exemplo, que aqui cita o nome de outra stack.
+    // Quem é focável é o elemento de FORA: o snippet precisa mostrar o botão em
+    // volta, que a do meta não tem.
     docs: { source: { transform: badgeAsButtonSource } },
   },
   render: () => ({
@@ -221,16 +154,16 @@ export const AsButton: Story = {
     template: `
       <button
         type="button"
-        aria-label="Filtrar por React"
+        aria-label="Filtrar por acessibilidade"
         class="nds-cluster nds-rounded-md nds-focus-ring-inset"
       >
-        <Badge variant="outline">React</Badge>
+        <Badge variant="info">Acessibilidade</Badge>
       </button>
     `,
   }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const button = canvas.getByRole('button', { name: /Filtrar por React/i });
+    const button = canvas.getByRole('button', { name: /Filtrar por acessibilidade/i });
     // functional.item6 — o pai recebe o foco e o badge não compete por ele.
     const badge = button.querySelector('[data-slot="badge"]');
     await expect(badge).not.toBeNull();

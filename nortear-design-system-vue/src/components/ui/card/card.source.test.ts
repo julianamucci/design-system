@@ -133,7 +133,7 @@ describe('transforms das stories de composição', () => {
       expect(saida).toContain(`  ${part},`);
     }
     const header = saida.slice(saida.indexOf('<CardHeader>'), saida.indexOf('</CardHeader>'));
-    expect(header).toContain('<Badge variant="secondary">Em estoque</Badge>');
+    expect(header).toContain('<Badge variant="info">Em estoque</Badge>');
   });
 
   it('na métrica o título nomeia e o corpo carrega o valor', () => {

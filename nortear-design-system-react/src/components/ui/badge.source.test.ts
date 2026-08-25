@@ -2,12 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
   badgeWithIconSource,
   badgeAsButtonSource,
-  badgeAsLinkSource,
-  badgeCounterSource,
   badgeDefaultSource,
   badgeDestructiveSource,
-  badgeOutlineSource,
-  badgeSecundarioSource,
   badgeSemanticasSource,
   badgeSource,
   badgeWithCounterSource,
@@ -46,9 +42,7 @@ describe('badgeSource', () => {
 describe('variantes', () => {
   it('cada uma diz a sua, porque o arquivo desliga os controls', () => {
     expect(badgeDefaultSource()).toContain('<Badge>Novo</Badge>');
-    expect(badgeSecundarioSource()).toContain('<Badge variant="secondary">Beta</Badge>');
     expect(badgeDestructiveSource()).toContain('<Badge variant="destructive">Urgente</Badge>');
-    expect(badgeOutlineSource()).toContain('<Badge variant="outline">Rascunho</Badge>');
   });
 
   it('as semânticas aparecem juntas, que é o que a story afirma', () => {
@@ -67,32 +61,24 @@ describe('composições', () => {
     expect(saida).toContain('data-icon="inline-start"');
   });
 
-  it('o contador ganha significado do contêiner, não do número', () => {
-    const saida = badgeCounterSource();
-    expect(saida).toContain('role="status"');
-    expect(saida).toContain('aria-label="12 notificações não lidas"');
-  });
-
   it('o contador de dentro da etiqueta vem da peça publicada, não de uma classe solta', () => {
     const saida = badgeWithCounterSource();
     expect(saida).toContain('import { Badge, BadgeCounter } from "@/components/ui/badge";');
     expect(saida).toContain('<BadgeCounter>12</BadgeCounter>');
-    // O número fica DENTRO da etiqueta: fora dela seria a outra composição.
+    // O número fica DENTRO da etiqueta, à direita do rótulo que lhe dá sentido.
     expect(saida.indexOf('<BadgeCounter>')).toBeGreaterThan(saida.indexOf('<Badge variant'));
   });
 
-  it('quem recebe o foco é o elemento que envolve — o badge não ganha tabindex', () => {
-    for (const saida of [badgeAsLinkSource(), badgeAsButtonSource()]) {
-      expect(saida).toContain('nds-focus-ring-inset');
-      expect(saida).not.toContain('tabindex');
-      expect(saida).not.toContain('tabIndex');
-    }
-    expect(badgeAsLinkSource()).toContain('<a');
-    expect(badgeAsButtonSource()).toContain('type="button"');
+  it('quem recebe o foco é o botão que envolve — o badge não ganha tabindex', () => {
+    const saida = badgeAsButtonSource();
+    expect(saida).toContain('nds-focus-ring-inset');
+    expect(saida).not.toContain('tabindex');
+    expect(saida).not.toContain('tabIndex');
+    expect(saida).toContain('type="button"');
   });
 
   it('nenhum snippet ensina o andaime da story', () => {
-    for (const fn of [badgeWithIconSource, badgeCounterSource, badgeAsLinkSource, badgeAsButtonSource]) {
+    for (const fn of [badgeWithIconSource, badgeWithCounterSource, badgeAsButtonSource]) {
       expect(fn()).not.toContain('fixtures');
     }
   });

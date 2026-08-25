@@ -125,7 +125,7 @@ export const WithBadgeInTrigger: Story = {
           <AccordionTrigger>
             <span class="nds-cluster" data-spacing="sm">
               Funcionalidades em beta
-              <Badge variant="secondary">Beta</Badge>
+              <Badge variant="info">Beta</Badge>
             </span>
           </AccordionTrigger>
           <AccordionContent>

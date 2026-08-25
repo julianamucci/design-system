@@ -100,15 +100,22 @@ depender da variante escolhida.
 | Variante | Borda | Uso |
 |----------|-------|-----|
 | `default` | `--primary` | Destaque principal — categoria, tag ativa |
-| `secondary` | `--muted-foreground` | Informativo secundário — categoria neutra |
 | `destructive` | `--destructive` | Estado de erro ou alerta crítico |
-| `warning` | `--warning` | Pendência ou risco que ainda não é erro |
+| `warning` | valor próprio (`hsl(22 55% 62%)`) | Pendência ou risco que ainda não é erro |
 | `success` | `--success` | Estado concluído ou aprovado |
-| `info` | `--info` | Contexto neutro que merece cor |
-| `outline` | `--border` | A borda mais discreta — rascunho, status secundário |
+| `info` | `--border` | A borda mais silenciosa — contexto que não disputa atenção |
 
-> `secondary` usa `--muted-foreground` e **não** `--secondary`: medido, como
-> traço o token de fundo fica em ~1.1:1 contra a página e a variante sumiria.
+> **São cinco.** `secondary` saiu por ficar quase idêntica à `default`, e
+> `outline` saiu porque, com a etiqueta já sendo toda de contorno, "sem
+> preenchimento" deixou de distinguir coisa alguma. Quem herdou a borda neutra
+> da `outline` foi a `info`.
+
+> `warning` usa **valor literal**, e não `--warning`: o token do tema é escuro e
+> saturado demais, e como traço de 2px ficava a menos de 3:1 de distância da
+> `destructive` — duas etiquetas de significado oposto com a mesma cara. É
+> literal porque a decisão de paleta ainda não foi tomada; quando for, vira
+> token de tema. O anel de foco da variante acompanha o mesmo valor, e o da
+> `info` passou a usar `--ring`.
 
 > O Badge **não tem prop `size`** — a dimensão é única. Caso pontual sobrescreve
 > as vars internas escopadas (`--badge-bg`, `--badge-fg`, `--badge-border`;
@@ -128,13 +135,26 @@ depender da variante escolhida.
 > carrega é a borda ao redor. E **não é variante**: é peça que qualquer variante
 > aceita, e tratá-la como variante dobraria as combinações para dizer o mesmo.
 
+**Composições** — são três, e nenhuma delas é variante:
+
+| Composição | Forma | Uso |
+|------------|-------|-----|
+| Com ícone | Ícone decorativo como primeiro filho da etiqueta | Status que ganha reforço visual; o ícone leva `aria-hidden` e quem nomeia é o texto |
+| Como gatilho clicável | Etiqueta envolvida em `<button>` | Filtro, chip ativável, gatilho de menu — o botão é quem tem foco, teclado e evento |
+| Com contador | Rótulo + `BadgeCounter` na mesma borda | Etiqueta que soma quantidade ao rótulo — "Urgente 12" |
+
+> **Saíram duas.** O contador avulso ao lado de um ícone solto dizia o mesmo que
+> "com contador", com mais peças e sem rótulo próprio. E o envoltório em `<a>`
+> ensinava a mesma divisão de papéis do gatilho: a etiqueta nunca vira controle,
+> seja qual for o elemento por fora.
+
 **Regras**:
 - Texto máximo: 2 palavras — para mais contexto, usar outro componente
 - **Cor não é o único indicador de estado** — sempre acompanhar cor de status com ícone ou texto descritivo
 - Contadores: limitar exibição a "99+" — não exibir números exatos acima de 99. O truncamento é da aplicação; `BadgeCounter` não trata isso
 - Número dentro da etiqueta usa `BadgeCounter`, nunca a classe escrita à mão nem um segundo Badge aninhado
 - Consistência obrigatória: mesma semântica de cor em todo o produto (não usar `destructive` para promoções)
-- Badge clicável (link ou filtro): usar `asChild` com `<a>` ou `<button>` para semântica correta
+- Badge clicável (filtro, chip, gatilho): envolver a etiqueta em `<button>`, nunca pendurar clique na própria etiqueta — quem tem foco, teclado e evento é o elemento de fora
 
 **Acessibilidade** (ver `11-acessibilidade.md`):
 - Badge puramente decorativo (repetindo informação já visível): `aria-hidden="true"`

@@ -51,16 +51,16 @@ describe('badgeSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
     const noArgs = badgeSource('<span data-slot="badge">', {});
     const withArgs = badgeSource('<span data-slot="badge">', {
-      args: { variant: 'outline', label: 'Rascunho' },
+      args: { variant: 'info', label: 'Novidade' },
     });
     expect(noArgs).not.toBe(withArgs);
-    expect(withArgs).toContain("variant: 'outline'");
-    expect(withArgs).toContain("children: 'Rascunho'");
+    expect(withArgs).toContain("variant: 'info'");
+    expect(withArgs).toContain("children: 'Novidade'");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
-    expect(badgeSource('<span data-slot="badge" data-variant="secondary">', {})).not.toContain(
-      'secondary',
+    expect(badgeSource('<span data-slot="badge" data-variant="warning">', {})).not.toContain(
+      'warning',
     );
   });
 });
@@ -110,28 +110,23 @@ describe('badgeWithCounterSnippet', () => {
 });
 
 describe('badgeEmGatilhoSnippet', () => {
-  it('o link em volta é quem recebe o clique, o foco e o nome acessível', () => {
+  it('o botão em volta é quem recebe o clique, o foco e o nome acessível', () => {
     const code = badgeEmGatilhoSnippet({
-      como: 'link',
-      href: '#design',
-      variant: 'secondary',
-      label: 'Design',
-      accessibleName: 'Ver todos os itens da categoria Design',
+      variant: 'info',
+      label: 'React',
+      accessibleName: 'Filtrar por React',
     });
-    expect(code).toContain("document.createElement('a')");
-    expect(code).toContain("alvo.href = '#design';");
-    expect(code).toContain(
-      "alvo.setAttribute('aria-label', 'Ver todos os itens da categoria Design');",
-    );
-    expect(code).toContain("createBadge({ variant: 'secondary', children: 'Design' })");
+    expect(code).toContain("document.createElement('button')");
+    expect(code).toContain("alvo.type = 'button';");
+    expect(code).toContain("alvo.setAttribute('aria-label', 'Filtrar por React');");
+    expect(code).toContain("createBadge({ variant: 'info', children: 'React' })");
     // A etiqueta não compete pelo foco.
     expect(code).not.toContain('tabindex');
   });
 
-  it('o botão segue a mesma forma, sem virar um link', () => {
-    const code = badgeEmGatilhoSnippet({ como: 'botao', label: 'React' });
-    expect(code).toContain("document.createElement('button')");
-    expect(code).toContain("alvo.type = 'button';");
+  it('não monta link: a etiqueta clicável é sempre um botão', () => {
+    const code = badgeEmGatilhoSnippet({ label: 'React' });
+    expect(code).not.toContain("document.createElement('a')");
     expect(code).not.toContain('alvo.href');
   });
 });

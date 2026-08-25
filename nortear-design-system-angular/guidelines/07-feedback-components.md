@@ -86,14 +86,16 @@ span[ndsBadge]
 | Variante | Cor da borda | Uso |
 |---|---|---|
 | `default` | `--primary` | Destaque principal |
-| `secondary` | `--muted-foreground` | Informativo secundário |
 | `destructive` | `--destructive` | Erro ou alerta crítico |
-| `warning` | `--warning` | Pendência ou risco que ainda não é erro |
+| `warning` | `hsl(22 55% 62%)` — valor próprio | Pendência ou risco que ainda não é erro |
 | `success` | `--success` | Concluído ou aprovado |
-| `info` | `--info` | Contexto neutro que merece cor |
-| `outline` | `--border` | Baixa ênfase — a borda mais discreta do conjunto |
+| `info` | `--border` | Contexto neutro que não deve competir por atenção |
 
-> `secondary` usa `--muted-foreground` e não `--secondary`: medido, `--secondary` como traço fica entre 1,12:1 e 1,38:1 contra a página e a variante sumiria. `--secondary` é cor de fundo, não de contorno.
+> São **cinco**. `secondary` saiu por ficar quase idêntica à default, e `outline` saiu porque a borda neutra dela passou a ser a da `info`.
+
+> A `warning` é a única que **não** aponta para um token do tema: `--warning` é escuro e saturado demais e, como traço de 2px, ficava a menos de 3:1 de distância da `destructive` — duas etiquetas de significado oposto com a mesma cara. O literal está registrado na própria regra do CSS compartilhado, junto com o que ele custa: 2,57 a 2,60 contra o fundo, abaixo do piso de 3:1 do WCAG 1.4.11, e no modo escuro ele volta a colar na destructive. Vira token de tema quando a decisão de paleta for tomada. O anel de foco acompanha o literal.
+
+> A `info` usa `--border`, a mesma hairline que input e card já desenham (1,22 a 1,99 contra o fundo, também abaixo do piso). Por não ter cor própria, o anel de foco dela é o `--ring` do sistema, e não o da variante.
 
 **Entradas**:
 
@@ -110,6 +112,16 @@ span[ndsBadge]
 > `@Directive` e não `@Component`: o número já é conteúdo do próprio `<span>`, não há markup a montar nem nada a projetar — mesma escolha de `NdsAlertTitle`. O seletor exige `span` porque o contador mora dentro de uma etiqueta inline.
 
 > O contador é **neutro de propósito** (fundo `--secondary`, texto `--foreground`) e não é variante: qualquer variante o aceita. Preenchê-lo com a cor da variante derruba o número abaixo de 4,5:1 em parte dos temas — contra `--warning` do tema warm nenhum dos dois neutros alcança o piso. A cor não se perde: quem a carrega é a borda, ao redor.
+
+**Composições** — são **três**, e nenhuma delas é prop:
+
+| Composição | Como se monta | Quando usar |
+|---|---|---|
+| Com ícone | `svg` decorativo como primeiro filho, antes do rótulo | Status que ganha com reforço icônico; o ícone é sempre `aria-hidden="true"` |
+| Com contador | Rótulo + `span[ndsBadgeCounter]` dentro da mesma borda | Etiqueta que soma quantidade ao rótulo — "Urgente 12" |
+| Como trigger | Etiqueta dentro de um `<button>` | Filtro, chip ativável, gatilho de menu — o botão é quem tem foco, teclado e evento |
+
+> O contador **avulso** — badge que era só um número ao lado de um ícone solto — saiu do sistema: era redundante com a composição do contador, e o número sem rótulo já dependia de um `aria-label` no elemento pai para significar alguma coisa. A composição "como link" também saiu; a etiqueta clicável é o gatilho em `<button>`. Envolver num `<a>` continua sendo markup válido, e é o que a linha do `Enter` na tabela de teclado descreve — só não é mais uma composição documentada.
 
 **Regras**:
 - Altura não é cravada: nasce de `padding-block` mais tipografia

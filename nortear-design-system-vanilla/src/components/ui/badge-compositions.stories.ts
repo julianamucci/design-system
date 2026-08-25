@@ -1,7 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
-import { Check, Bell } from 'lucide';
+import { Check } from 'lucide';
 import { backgroundEffective, noTransicao, ratio, resolveColor } from '@shared/testing/cor';
 import { createBadge, createBadgeCounter } from './badge';
 import {
@@ -23,8 +23,8 @@ const meta: Meta = {
       source: { transform: badgeSource },
       description: {
         component:
-          'Configuracoes contextuais do Badge: combinado com ícone, como contador numérico, ' +
-          'envolvido em <a> para navegação ou em <button> para trigger clicável.',
+          'Configuracoes contextuais do Badge: combinado com ícone, com contador à direita do ' +
+          'rótulo, ou envolvido em <button> para trigger clicável.',
       },
     },
   },
@@ -96,50 +96,10 @@ export const WithIcon: Story = {
   },
 };
 
-export const CountBadge: Story = {
-  // Override de story: a variante e o número mudam, e o significado da contagem
-  // vive no rótulo do container — não na etiqueta.
-  parameters: {
-    covers: ['visual.item3'],
-    docs: {
-      source: { transform: badgeSourceCom({ variant: 'destructive', label: '12' }) },
-    },
-  },
-  render: () => {
-    const wrap = document.createElement('span');
-    wrap.setAttribute('role', 'status');
-    wrap.setAttribute('aria-label', '12 notificações não lidas');
-    wrap.className = 'nds-cluster';
-    wrap.dataset.spacing = 'sm';
-
-    const sino = createIcon(Bell as unknown as LucideIconNode[]);
-    // A utilitaria de 20px em vez de style inline: inline vence a folha e sai
-    // do tema, da densidade e da escala. E as docs pages ja usam esta classe.
-    sino.setAttribute('class', 'nds-text-foreground nds-icon-lg');
-
-    wrap.append(sino, createBadge({ variant: 'destructive', children: '12' }));
-    return wrap;
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    // O contador fica AO LADO do sino, como a documentação descreve.
-    const status = canvas.getByRole('status', { name: /12 notificações não lidas/i });
-    const badge = canvas.getByText('12');
-    const sino = status.querySelector('svg')!;
-    await expect(status.contains(badge)).toBe(true);
-    await expect(sino.getBoundingClientRect().right).toBeLessThanOrEqual(
-      badge.getBoundingClientRect().left + 1,
-    );
-    // Quem carrega o significado é o rótulo do container: "12" sozinho não diz
-    // do que é a contagem.
-    await expect(badge).toHaveAttribute('data-slot', 'badge');
-  },
-};
-
 /**
- * Contador DENTRO da etiqueta — a peça que qualquer variante aceita. Não se
- * confunde com a story acima: lá o badge inteiro é o número, ao lado do sino;
- * aqui o número entra na etiqueta, à direita do rótulo que lhe dá sentido.
+ * Contador DENTRO da etiqueta — a peça que qualquer variante aceita. O número
+ * entra na etiqueta, à direita do rótulo que lhe dá sentido: número solto, sem
+ * rótulo em volta, não diz de que é a contagem.
  */
 export const WithCounter: Story = {
   // Override de story: a FORMA é outra — `children` recebe a lista rótulo +
@@ -227,46 +187,9 @@ export const WithCounter: Story = {
   },
 };
 
-export const AsLink: Story = {
-  // Override de story: quem recebe o clique e o foco é o link em volta, e é
-  // dele o nome acessível — outra FORMA de snippet.
-  parameters: {
-    covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
-    docs: {
-      source: {
-        transform: triggerSourceWithBadge({
-          como: 'link',
-          href: '#design',
-          variant: 'secondary',
-          label: 'Design',
-          accessibleName: 'Ver todos os itens da categoria Design',
-        }),
-      },
-    },
-  },
-  render: () => {
-    const link = document.createElement('a');
-    link.href = '#design';
-    link.className = 'nds-cluster nds-rounded-md nds-focus-ring-inset';
-    link.setAttribute('aria-label', 'Ver todos os itens da categoria Design');
-    link.appendChild(createBadge({ variant: 'secondary', children: 'Design' }));
-    return link;
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const link = canvas.getByRole('link', { name: /Ver todos os itens da categoria Design/i });
-    // accessibility.item4 — quem é focável é o link; o badge fica decorativo
-    // dentro dele, que é exatamente o que a documentação pede.
-    const badge = link.querySelector('[data-slot="badge"]');
-    await expect(badge).not.toBeNull();
-    await expect(badge!.hasAttribute('tabindex')).toBe(false);
-    link.focus();
-    await expect(document.activeElement).toBe(link);
-  },
-};
-
 export const AsButton: Story = {
-  // Override de story: mesma FORMA da AsLink, com o botão no lugar do link.
+  // Override de story: quem recebe o clique e o foco é o botão em volta, e é
+  // dele o nome acessível — outra FORMA de snippet.
   // A reinicialização da aparência do <button> que esta story faz em `style`
   // não entra no snippet: não existe utilitária .nds-* para ela (relatado).
   parameters: {
@@ -274,8 +197,7 @@ export const AsButton: Story = {
     docs: {
       source: {
         transform: triggerSourceWithBadge({
-          como: 'botao',
-          variant: 'outline',
+          variant: 'info',
           label: 'React',
           accessibleName: 'Filtrar por React',
         }),
@@ -290,7 +212,7 @@ export const AsButton: Story = {
     btn.style.border = '0';
     btn.style.padding = '0';
     btn.setAttribute('aria-label', 'Filtrar por React');
-    btn.appendChild(createBadge({ variant: 'outline', children: 'React' }));
+    btn.appendChild(createBadge({ variant: 'info', children: 'React' }));
     return btn;
   },
   play: async ({ canvasElement }) => {
