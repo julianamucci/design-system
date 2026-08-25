@@ -1026,9 +1026,12 @@ function auditStoryQuality(slug) {
   //
   // Cinco pessoas leem "uma story por variante" e classificam igual; cinco
   // AGENTES em paralelo, que não se veem, classificam diferente — e o que sai
-  // é o mesmo componente com cinco árvores de menu. Medido no combobox:
-  // `MultipleWithChips` na raiz em três stacks e em variantes em duas,
-  // `SingleLineChips` em composições numa e em variantes em quatro,
+  // é o mesmo componente com cinco árvores de menu.
+  //
+  // O caso que originou a regra, e que JÁ FOI CORRIGIDO — fica como registro do
+  // que ela mede, não como descrição do estado de hoje: no combobox,
+  // `MultipleWithChips` estava na raiz em três stacks e em variantes em duas,
+  // `SingleLineChips` em composições numa e em variantes em quatro, e
   // `CustomFilter` e `Controlled` cada uma em dois grupos.
   //
   // Nenhum portão via isso. `coverage_divergence` compara CONTAGEM de asserção
