@@ -3,8 +3,7 @@ import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import ComboboxStory from './ComboboxStory.svelte';
 import ComboboxDocs from '@/components/docs/ComboboxDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
-import { comboboxMultipleSource, comboboxSource } from './combobox.source';
+import { comboboxSource } from './combobox.source';
 import type { ComboboxOption } from './index';
 
 // ─── Dados fixos ──────────────────────────────────────────────────────────────
@@ -24,28 +23,6 @@ const COUNTRIES: ComboboxOption[] = [
 	{ value: 'espanha', label: 'Espanha' },
 	{ value: 'uruguai', label: 'Uruguai' },
 ];
-
-// ─── Contraste ────────────────────────────────────────────────────────────────
-//
-// O axe não mede o chip contra a superfície do CAMPO: ele compara com o fundo
-// que herda. E o chip pinta sobre `--input-background`, não sobre a página —
-// medir contra a página superestima e deixa passar um par que na tela não
-// alcança.
-
-function luminance(color: string): number {
-	const channels = (color.match(/[\d.]+/g) ?? ['0', '0', '0']).slice(0, 3).map(Number);
-	const [r, g, b] = channels.map((channel) => {
-		const scaled = channel / 255;
-		return scaled <= 0.03928 ? scaled / 12.92 : ((scaled + 0.055) / 1.055) ** 2.4;
-	});
-	return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-}
-
-function contrast(first: string, second: string): number {
-	const a = luminance(first);
-	const b = luminance(second);
-	return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
-}
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -217,147 +194,6 @@ export const Playground: Story = {
 				await expect(field).toHaveValue('Brasil');
 				await expect(field).toHaveAttribute('aria-expanded', 'false');
 			});
-		});
-	},
-};
-
-// ─── Múltiplo com chips ───────────────────────────────────────────────────────
-
-export const MultipleWithChips: Story = {
-	parameters: {
-		covers: [
-			'functional.item4',
-			'functional.item5',
-			'functional.item6',
-			'accessibility.item5',
-			'accessibility.item6',
-			'visual.item2',
-		],
-		// A story mexe na lista aberta antes de fechar; ver o motivo do guarda de
-		// foco em `wait-for-portal`.
-		a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
-		docs: {
-			source: { transform: comboboxMultipleSource },
-			description: {
-				story:
-					'Modo múltiplo: cada escolhido vira um chip dentro do campo. Backspace com o texto vazio remove o último.',
-			},
-		},
-	},
-	args: {
-		label: 'Países',
-		placeholder: 'Adicionar país',
-		multiple: true,
-		name: 'paises',
-	},
-	render: (args) => ({
-		Component: ComboboxStory,
-		props: {
-			items: COUNTRIES,
-			label: args.label,
-			placeholder: args.placeholder,
-			// `multiple` fica fixo: é o assunto da story, e um control que a
-			// desligasse deixaria a story sem o que demonstrar.
-			multiple: true,
-			// A story do modo múltiplo é onde o modo de chips tem efeito visível:
-			// no simples não há chip para quebrar linha nem para rolar.
-			chipsLayout: args.chipsLayout,
-			disabled: args.disabled,
-			invalid: args.invalid,
-			name: args.name,
-			value: ['brasil', 'argentina'],
-			onValueChange: args.onValueChange,
-		},
-	}),
-	play: async ({ canvasElement, step, args }) => {
-		const canvas = within(canvasElement);
-		const field = canvas.getByRole('combobox') as HTMLInputElement;
-		const spy = args.onValueChange as unknown as ReturnType<typeof fn>;
-		const chips = () => canvasElement.querySelectorAll('[data-slot="combobox-chip"]');
-
-		const chooseByKeyboard = async (text: string) => {
-			await userEvent.clear(field);
-			await userEvent.type(field, text);
-			await waitFor(async () => {
-				await expect(within(document.body).getAllByRole('option').length).toBeGreaterThan(0);
-			});
-			await userEvent.keyboard('{Enter}');
-		};
-
-		await step('Os escolhidos iniciais aparecem como chips', async () => {
-			await waitFor(async () => {
-				await expect(chips()).toHaveLength(2);
-			});
-			await expect(chips()[0]).toHaveTextContent('Brasil');
-			await expect(chips()[1]).toHaveTextContent('Argentina');
-		});
-
-		await step('Cada botão de remover tem nome próprio', async () => {
-			// Cinco botões chamados "Remover" são indistinguíveis para quem navega
-			// por lista de controles — o rótulo entra no nome.
-			await expect(canvas.getByRole('button', { name: 'Remover Brasil' })).toBeVisible();
-			await expect(canvas.getByRole('button', { name: 'Remover Argentina' })).toBeVisible();
-		});
-
-		await step('Backspace com o texto vazio remove o último chip', async () => {
-			// É o gesto que define o chip: sem ele, desfazer exige o mouse.
-			spy.mockClear();
-			await userEvent.clear(field);
-			field.focus();
-			await userEvent.keyboard('{Backspace}');
-			await expect(spy).toHaveBeenCalledWith(['brasil']);
-			await waitFor(async () => {
-				await expect(chips()).toHaveLength(1);
-			});
-		});
-
-		await step('O botão de remover do chip funciona pelo clique', async () => {
-			// O passo anterior cobriu o Backspace, que é outro gesto para o mesmo
-			// fim; este cobre o botão, e prova que o foco fica no campo.
-			spy.mockClear();
-			await userEvent.click(canvas.getByRole('button', { name: 'Remover Brasil' }));
-			await expect(spy).toHaveBeenCalledWith([]);
-			await waitFor(async () => {
-				await expect(chips()).toHaveLength(0);
-			});
-			await expect(field).toHaveFocus();
-		});
-
-		await step('O texto do chip alcança 4.5:1 contra a superfície do campo', async () => {
-			await chooseByKeyboard('brasil');
-			const chip = (await waitFor(() => {
-				const first = chips()[0] as HTMLElement | undefined;
-				if (!first) throw new Error('chip ainda não montou');
-				return first;
-			})) as HTMLElement;
-			const wrapper = canvasElement.querySelector<HTMLElement>(
-				'[data-slot="combobox-input-wrapper"]',
-			)!;
-			const ratio = contrast(
-				getComputedStyle(chip).color,
-				getComputedStyle(wrapper).backgroundColor,
-			);
-			await expect(ratio).toBeGreaterThanOrEqual(4.5);
-		});
-
-		await step('Escolher pelo teclado devolve o segundo chip', async () => {
-			// Devolve a story ao estado que o Chromatic fotografa, e prova a ida e a
-			// volta na mesma rodada.
-			await chooseByKeyboard('argentina');
-			await waitFor(async () => {
-				await expect(chips()).toHaveLength(2);
-			});
-			// Escolher no múltiplo limpa a busca: manter o filtro esconderia as
-			// opções restantes atrás de um texto que ninguém digitou.
-			await expect(field).toHaveValue('');
-		});
-
-		await step('Escape fecha a lista sem alterar a escolha', async () => {
-			await userEvent.keyboard('{Escape}');
-			await waitFor(async () => {
-				await expect(field).toHaveAttribute('aria-expanded', 'false');
-			});
-			await expect(chips()).toHaveLength(2);
 		});
 	},
 };

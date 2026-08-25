@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { within, expect, waitFor, userEvent } from 'storybook/test';
+import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
 import { NDS_COMBOBOX } from './combobox';
-import { comboboxSnippet } from './combobox.source';
+import { comboboxSnippet, comboboxSource } from './combobox.source';
 import { waitForPortal, waitForPortalVanish } from '@/lib/wait-for-portal';
 
 const COUNTRIES = [
@@ -32,11 +32,12 @@ const GROCERIES = [
   },
 ] as const;
 
-// Lista longa da spec, também igual nas cinco stacks. A story de linha única
-// precisa de MAIS escolhidos do que a caixa comporta: com dois ou três chips,
-// acumular linhas e rolar na horizontal desenham a mesma coisa, e a play
-// mediria um ramo que nunca chegou a ser exercido.
-const VISITED_COUNTRIES = [
+// Lista longa da spec, também igual nas cinco stacks. É a lista das duas
+// stories de chip: a de linha única precisa de MAIS escolhidos do que a caixa
+// comporta — com dois ou três chips, acumular linhas e rolar na horizontal
+// desenham a mesma coisa, e a play mediria um ramo que nunca chegou a ser
+// exercido.
+const ALL_COUNTRIES = [
   { value: 'brasil', label: 'Brasil' },
   { value: 'argentina', label: 'Argentina' },
   { value: 'chile', label: 'Chile' },
@@ -57,11 +58,44 @@ const VISITED_COUNTRIES = [
  * Storybook recria a árvore.
  */
 const visitedStore: { values: string[] } = {
-  values: VISITED_COUNTRIES.slice(0, 6).map((country) => country.value),
+  values: ALL_COUNTRIES.slice(0, 6).map((country) => country.value),
 };
 
-const visitedLabel = (value: string): string =>
-  VISITED_COUNTRIES.find((country) => country.value === value)?.label ?? value;
+const countryLabel = (value: string): string =>
+  ALL_COUNTRIES.find((country) => country.value === value)?.label ?? value;
+
+/**
+ * Escolhidos da story de múltipla escolha, POR STORY, fora do componente.
+ *
+ * Mesmo motivo do armazém acima: o `render` do Angular não fecha sobre estado, e
+ * um estado interno nasceria limpo a cada vez que o Storybook recria a árvore —
+ * os dois chips iniciais sumiriam. Quem monta o formulário é dono do valor.
+ */
+const multipleStore: { multiple: string[] } = {
+  multiple: ['brasil', 'argentina'],
+};
+
+// ─── Contraste ────────────────────────────────────────────────────────────────
+//
+// O axe não mede o chip contra a superfície do CAMPO: ele compara com o fundo
+// que herda. E o chip pinta sobre `--input-background`, não sobre a página —
+// medir contra a página superestima e deixa passar um par que na tela não
+// alcança.
+
+function luminance(color: string): number {
+  const channels = (color.match(/[\d.]+/g) ?? ['0', '0', '0']).slice(0, 3).map(Number);
+  const [r, g, b] = channels.map((raw) => {
+    const scaled = raw / 255;
+    return scaled <= 0.03928 ? scaled / 12.92 : ((scaled + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function contrast(first: string, second: string): number {
+  const a = luminance(first);
+  const b = luminance(second);
+  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+}
 
 const meta: Meta = {
   title: 'UI/Combobox/Variants',
@@ -75,7 +109,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Formas do Combobox: lista aberta com opção ativa, lista agrupada e chips em linha única.',
+          'Formas do Combobox: lista aberta com opção ativa, múltipla escolha com chips, lista agrupada e chips em linha única.',
       },
     },
   },
@@ -175,6 +209,206 @@ export const OpenWithActiveOption: Story = {
       await userEvent.keyboard('{Escape}');
       await waitForPortalVanish('listbox');
       await expect(field).toHaveAttribute('aria-expanded', 'false');
+    });
+  },
+};
+
+// ─── Múltiplo com chips ───────────────────────────────────────────────────────
+
+export const MultipleWithChips: Story = {
+  parameters: {
+    covers: [
+      'functional.item4',
+      'functional.item5',
+      'functional.item6',
+      'accessibility.item5',
+      'accessibility.item6',
+      'visual.item2',
+    ],
+    docs: {
+      source: {
+        transform: () =>
+          comboboxSource('', {
+            args: {
+              label: 'Países',
+              placeholder: 'Adicionar país',
+              multiple: true,
+              name: 'paises',
+            },
+          }),
+      },
+      description: {
+        story:
+          'Modo múltiplo: cada escolhido vira um chip dentro do campo. Backspace com o ' +
+          'texto vazio remove o último.',
+      },
+    },
+  },
+  // Função em `args` sem entrada em `argTypes` NÃO chega ao `render` no
+  // renderer Angular: o espião chegaria `undefined` e o `(valueChange)` ficaria
+  // ligado a nada. `control: false` mais `table.disable` deixam a entrada
+  // invisível, que é o que esta meta — sem controls e sem actions — pede.
+  argTypes: {
+    onValueChange: { control: false, table: { disable: true } },
+  },
+  // Esta meta não tem `args` — ela desliga controls e actions de propósito. A
+  // story declara TUDO o que o próprio template lê, `disabled` e `invalid`
+  // inclusive: binding a nome inexistente não é erro no Angular, é `undefined`
+  // silencioso. O espião de mudança também nasce aqui, porque a play mede as
+  // chamadas dele.
+  args: {
+    label: 'Países',
+    placeholder: 'Adicionar país',
+    name: 'paises',
+    disabled: false,
+    invalid: false,
+    onValueChange: fn(),
+  },
+  render: (args) => ({
+    props: {
+      ...args,
+      items: ALL_COUNTRIES,
+      store: multipleStore,
+      countryLabel,
+      onChange: (value: unknown) => {
+        multipleStore.multiple = (value as string[]) ?? [];
+        args.onValueChange(value);
+      },
+    },
+    template: `
+      <nds-combobox
+        multiple
+        [value]="store.multiple"
+        [disabled]="disabled"
+        [invalid]="invalid"
+        [name]="name"
+        (valueChange)="onChange($event)"
+      >
+        <label ndsComboboxLabel>{{ label }}</label>
+
+        <div ndsComboboxInputWrapper>
+          <!--
+            O campo de texto mora DENTRO da caixa de chips: é ela que quebra
+            linha, e limpar e gatilho ficam de fora para nunca caírem para a
+            linha de baixo quando os chips enchem a primeira.
+          -->
+          <div ndsComboboxChips>
+            @for (chosen of store.multiple; track chosen) {
+              <span ndsComboboxChip [value]="chosen">
+                {{ countryLabel(chosen) }}
+                <button
+                  ndsComboboxChipRemove
+                  [attr.aria-label]="'Remover ' + countryLabel(chosen)"
+                ></button>
+              </span>
+            }
+
+            <input ndsComboboxInput [placeholder]="placeholder" />
+          </div>
+
+          <button ndsComboboxClear aria-label="Limpar"></button>
+          <button ndsComboboxTrigger aria-label="Abrir lista">
+            <svg ndsComboboxIcon></svg>
+          </button>
+        </div>
+
+        <ng-template ndsComboboxPopup>
+          <div ndsComboboxList>
+            @for (item of items; track item.value) {
+              <div ndsComboboxItem [value]="item.value">
+                {{ item.label }}
+                <span ndsComboboxItemIndicator></span>
+              </div>
+            }
+          </div>
+          <div ndsComboboxEmpty>Nenhum resultado</div>
+        </ng-template>
+      </nds-combobox>
+    `,
+  }),
+  play: async ({ canvasElement, step, args }) => {
+    const canvas = within(canvasElement);
+    const field = canvas.getByRole('combobox') as HTMLInputElement;
+    const spy = args.onValueChange as unknown as ReturnType<typeof fn>;
+    const chips = () => canvasElement.querySelectorAll('[data-slot="combobox-chip"]');
+
+    await step('Os escolhidos iniciais aparecem como chips', async () => {
+      await waitFor(async () => {
+        await expect(chips()).toHaveLength(2);
+      });
+      await expect(chips()[0]).toHaveTextContent('Brasil');
+      await expect(chips()[1]).toHaveTextContent('Argentina');
+    });
+
+    await step('Cada botão de remover tem nome próprio', async () => {
+      // Cinco botões chamados "Remover" são indistinguíveis para quem navega
+      // por lista de controles — o rótulo entra no nome.
+      await expect(canvas.getByRole('button', { name: 'Remover Brasil' })).toBeVisible();
+      await expect(canvas.getByRole('button', { name: 'Remover Argentina' })).toBeVisible();
+    });
+
+    await step('Backspace com o texto vazio remove o último chip', async () => {
+      // É o gesto que define o chip: sem ele, desfazer exige o mouse.
+      spy.mockClear();
+      field.focus();
+      await userEvent.keyboard('{Backspace}');
+      await expect(spy).toHaveBeenCalledWith(['brasil']);
+      await waitFor(async () => {
+        await expect(chips()).toHaveLength(1);
+      });
+    });
+
+    await step('O botão de remover do chip funciona pelo clique', async () => {
+      // `functional.item5` é o botão; o passo anterior cobriu o Backspace, que
+      // é outro gesto para o mesmo fim. O foco continua no campo, e é isso que
+      // permite escolher o próximo sem tocar no mouse de novo.
+      spy.mockClear();
+      await userEvent.click(canvas.getByRole('button', { name: 'Remover Brasil' }));
+      await expect(spy).toHaveBeenCalledWith([]);
+      await waitFor(async () => {
+        await expect(chips()).toHaveLength(0);
+      });
+      await expect(field).toHaveFocus();
+    });
+
+    await step('O texto do chip alcança 4.5:1 contra a superfície do campo', async () => {
+      // Medido contra `--input-background`, que é o que o chip pinta em cima —
+      // medir contra a página superestima e deixa passar par que não alcança.
+      await userEvent.type(field, 'brasil');
+      await waitForPortal('listbox', { name: 'Países' });
+      await userEvent.keyboard('{Enter}');
+      await waitFor(async () => {
+        await expect(chips()).toHaveLength(1);
+      });
+
+      const chip = chips()[0] as HTMLElement;
+      const wrapper = canvasElement.querySelector<HTMLElement>(
+        '[data-slot="combobox-input-wrapper"]',
+      )!;
+      const ratio = contrast(
+        getComputedStyle(chip).color,
+        getComputedStyle(wrapper).backgroundColor,
+      );
+      await expect(ratio).toBeGreaterThanOrEqual(4.5);
+    });
+
+    await step('Escape fecha a lista sem alterar a escolha', async () => {
+      await userEvent.keyboard('{Escape}');
+      await waitForPortalVanish('listbox');
+      await expect(field).toHaveAttribute('aria-expanded', 'false');
+      await expect(chips()).toHaveLength(1);
+    });
+
+    await step('Escolher pelo teclado devolve o chip', async () => {
+      // Devolve a story ao estado que o Chromatic fotografa, e prova a ida e a
+      // volta na mesma rodada.
+      await userEvent.type(field, 'argentina');
+      await waitForPortal('listbox', { name: 'Países' });
+      await userEvent.keyboard('{Enter}');
+      await waitFor(async () => {
+        await expect(chips()).toHaveLength(2);
+      });
+      await expect(field).toHaveValue('');
     });
   },
 };
@@ -299,7 +533,7 @@ export const SingleLineChips: Story = {
             multiple: true,
             name: 'paises',
             chipsLayout: 'single-line',
-            items: VISITED_COUNTRIES.map((country) => country.label),
+            items: ALL_COUNTRIES.map((country) => country.label),
           }),
       },
       description: {
@@ -311,9 +545,9 @@ export const SingleLineChips: Story = {
   },
   render: () => ({
     props: {
-      items: VISITED_COUNTRIES,
+      items: ALL_COUNTRIES,
       store: visitedStore,
-      visitedLabel,
+      countryLabel,
       onChange: (value: unknown) => {
         visitedStore.values = (value as string[]) ?? [];
       },
@@ -335,10 +569,10 @@ export const SingleLineChips: Story = {
             <div ndsComboboxChips>
               @for (chosen of store.values; track chosen) {
                 <span ndsComboboxChip [value]="chosen">
-                  {{ visitedLabel(chosen) }}
+                  {{ countryLabel(chosen) }}
                   <button
                     ndsComboboxChipRemove
-                    [attr.aria-label]="'Remover ' + visitedLabel(chosen)"
+                    [attr.aria-label]="'Remover ' + countryLabel(chosen)"
                   ></button>
                 </span>
               }

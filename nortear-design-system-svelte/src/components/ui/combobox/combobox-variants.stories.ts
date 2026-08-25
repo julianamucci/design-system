@@ -1,8 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import ComboboxStory from './ComboboxStory.svelte';
+import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import {
 	comboboxGroupedSource,
+	comboboxMultipleSource,
 	comboboxOpenSource,
 	comboboxSingleLineChipsSource,
 } from './combobox.source';
@@ -13,6 +15,21 @@ const COUNTRIES: ComboboxOption[] = [
 	{ value: 'argentina', label: 'Argentina' },
 	{ value: 'chile', label: 'Chile' },
 	{ value: 'portugal', label: 'Portugal' },
+];
+
+// Lista inteira da spec de exemplos, a mesma que o Playground usa: a story de
+// chips escolhe entre os nove, e não entre os quatro que bastam às formas de
+// escolha única deste arquivo.
+const MULTIPLE_COUNTRIES: ComboboxOption[] = [
+	{ value: 'brasil', label: 'Brasil' },
+	{ value: 'argentina', label: 'Argentina' },
+	{ value: 'chile', label: 'Chile' },
+	{ value: 'colombia', label: 'Colômbia' },
+	{ value: 'mexico', label: 'México' },
+	{ value: 'peru', label: 'Peru' },
+	{ value: 'portugal', label: 'Portugal' },
+	{ value: 'espanha', label: 'Espanha' },
+	{ value: 'uruguai', label: 'Uruguai' },
 ];
 
 // Grupos da spec de exemplos: Frutas e Legumes.
@@ -37,6 +54,28 @@ const VISITED: ComboboxOption[] = [
 	{ value: 'uruguai', label: 'Uruguai' },
 ];
 
+// ─── Contraste ────────────────────────────────────────────────────────────────
+//
+// O axe não mede o chip contra a superfície do CAMPO: ele compara com o fundo
+// que herda. E o chip pinta sobre `--input-background`, não sobre a página —
+// medir contra a página superestima e deixa passar um par que na tela não
+// alcança.
+
+function luminance(color: string): number {
+	const channels = (color.match(/[\d.]+/g) ?? ['0', '0', '0']).slice(0, 3).map(Number);
+	const [r, g, b] = channels.map((channel) => {
+		const scaled = channel / 255;
+		return scaled <= 0.03928 ? scaled / 12.92 : ((scaled + 0.055) / 1.055) ** 2.4;
+	});
+	return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function contrast(first: string, second: string): number {
+	const a = luminance(first);
+	const b = luminance(second);
+	return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+}
+
 const meta: Meta = {
 	title: 'UI/Combobox/Variants',
 	tags: ['form'],
@@ -47,7 +86,8 @@ const meta: Meta = {
 		docs: {
 			source: { transform: comboboxOpenSource },
 			description: {
-				component: 'Formas do Combobox: lista aberta com opção ativa e lista agrupada.',
+				component:
+					'Formas do Combobox: lista aberta com opção ativa, múltipla com chips e lista agrupada.',
 			},
 		},
 	},
@@ -133,6 +173,146 @@ export const OpenWithActiveOption: Story = {
 		});
 	},
 };
+
+// ─── Múltiplo com chips ───────────────────────────────────────────────────────
+
+// O espião mora no ESCOPO DO MÓDULO. Criado dentro do `render`, a play não teria
+// como alcançá-lo — e o meta deste arquivo não tem `args`, que era de onde ele
+// vinha enquanto a story morava junto do Playground.
+const multipleValueChange = fn();
+
+export const MultipleWithChips: Story = {
+	parameters: {
+		covers: [
+			'functional.item4',
+			'functional.item5',
+			'functional.item6',
+			'accessibility.item5',
+			'accessibility.item6',
+			'visual.item2',
+		],
+		// A story mexe na lista aberta antes de fechar; ver o motivo do guarda de
+		// foco em `wait-for-portal`.
+		a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+		docs: {
+			source: { transform: comboboxMultipleSource },
+			description: {
+				story:
+					'Modo múltiplo: cada escolhido vira um chip dentro do campo. Backspace com o texto vazio remove o último.',
+			},
+		},
+	},
+	render: () => ({
+		Component: ComboboxStory,
+		props: {
+			items: MULTIPLE_COUNTRIES,
+			label: 'Países',
+			placeholder: 'Adicionar país',
+			// `multiple` fica fixo: é o assunto da story, e desligá-lo a deixaria
+			// sem o que demonstrar.
+			multiple: true,
+			// Chips em linhas que se acumulam, que é o padrão do campo; a linha
+			// única tem story própria logo abaixo.
+			chipsLayout: 'wrap',
+			name: 'paises',
+			value: ['brasil', 'argentina'],
+			onValueChange: multipleValueChange,
+		},
+	}),
+	play: async ({ canvasElement, step }) => {
+		const canvas = within(canvasElement);
+		const field = canvas.getByRole('combobox') as HTMLInputElement;
+		const spy = multipleValueChange;
+		const chips = () => canvasElement.querySelectorAll('[data-slot="combobox-chip"]');
+
+		const chooseByKeyboard = async (text: string) => {
+			await userEvent.clear(field);
+			await userEvent.type(field, text);
+			await waitFor(async () => {
+				await expect(within(document.body).getAllByRole('option').length).toBeGreaterThan(0);
+			});
+			await userEvent.keyboard('{Enter}');
+		};
+
+		await step('Os escolhidos iniciais aparecem como chips', async () => {
+			await waitFor(async () => {
+				await expect(chips()).toHaveLength(2);
+			});
+			await expect(chips()[0]).toHaveTextContent('Brasil');
+			await expect(chips()[1]).toHaveTextContent('Argentina');
+		});
+
+		await step('Cada botão de remover tem nome próprio', async () => {
+			// Cinco botões chamados "Remover" são indistinguíveis para quem navega
+			// por lista de controles — o rótulo entra no nome.
+			await expect(canvas.getByRole('button', { name: 'Remover Brasil' })).toBeVisible();
+			await expect(canvas.getByRole('button', { name: 'Remover Argentina' })).toBeVisible();
+		});
+
+		await step('Backspace com o texto vazio remove o último chip', async () => {
+			// É o gesto que define o chip: sem ele, desfazer exige o mouse.
+			spy.mockClear();
+			await userEvent.clear(field);
+			field.focus();
+			await userEvent.keyboard('{Backspace}');
+			await expect(spy).toHaveBeenCalledWith(['brasil']);
+			await waitFor(async () => {
+				await expect(chips()).toHaveLength(1);
+			});
+		});
+
+		await step('O botão de remover do chip funciona pelo clique', async () => {
+			// O passo anterior cobriu o Backspace, que é outro gesto para o mesmo
+			// fim; este cobre o botão, e prova que o foco fica no campo.
+			spy.mockClear();
+			await userEvent.click(canvas.getByRole('button', { name: 'Remover Brasil' }));
+			await expect(spy).toHaveBeenCalledWith([]);
+			await waitFor(async () => {
+				await expect(chips()).toHaveLength(0);
+			});
+			await expect(field).toHaveFocus();
+		});
+
+		await step('O texto do chip alcança 4.5:1 contra a superfície do campo', async () => {
+			await chooseByKeyboard('brasil');
+			const chip = (await waitFor(() => {
+				const first = chips()[0] as HTMLElement | undefined;
+				if (!first) throw new Error('chip ainda não montou');
+				return first;
+			})) as HTMLElement;
+			const wrapper = canvasElement.querySelector<HTMLElement>(
+				'[data-slot="combobox-input-wrapper"]',
+			)!;
+			const ratio = contrast(
+				getComputedStyle(chip).color,
+				getComputedStyle(wrapper).backgroundColor,
+			);
+			await expect(ratio).toBeGreaterThanOrEqual(4.5);
+		});
+
+		await step('Escolher pelo teclado devolve o segundo chip', async () => {
+			// Devolve a story ao estado que o Chromatic fotografa, e prova a ida e a
+			// volta na mesma rodada.
+			await chooseByKeyboard('argentina');
+			await waitFor(async () => {
+				await expect(chips()).toHaveLength(2);
+			});
+			// Escolher no múltiplo limpa a busca: manter o filtro esconderia as
+			// opções restantes atrás de um texto que ninguém digitou.
+			await expect(field).toHaveValue('');
+		});
+
+		await step('Escape fecha a lista sem alterar a escolha', async () => {
+			await userEvent.keyboard('{Escape}');
+			await waitFor(async () => {
+				await expect(field).toHaveAttribute('aria-expanded', 'false');
+			});
+			await expect(chips()).toHaveLength(2);
+		});
+	},
+};
+
+// ─── Com grupos ───────────────────────────────────────────────────────────────
 
 export const Grouped: Story = {
 	parameters: {
