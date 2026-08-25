@@ -87,13 +87,13 @@ span[ndsBadge]
 |---|---|---|
 | `default` | `--primary` | Destaque principal |
 | `destructive` | `--destructive` | Erro ou alerta crítico |
-| `warning` | `hsl(22 55% 62%)` — valor próprio | Pendência ou risco que ainda não é erro |
+| `warning` | `--warning` | Pendência ou risco que ainda não é erro |
 | `success` | `--success` | Concluído ou aprovado |
 | `info` | `--border` | Contexto neutro que não deve competir por atenção |
 
 > São **cinco**. `secondary` saiu por ficar quase idêntica à default, e `outline` saiu porque a borda neutra dela passou a ser a da `info`.
 
-> A `warning` é a única que **não** aponta para um token do tema: `--warning` é escuro e saturado demais e, como traço de 2px, ficava a menos de 3:1 de distância da `destructive` — duas etiquetas de significado oposto com a mesma cara. O literal está registrado na própria regra do CSS compartilhado, junto com o que ele custa: 2,57 a 2,60 contra o fundo, abaixo do piso de 3:1 do WCAG 1.4.11, e no modo escuro ele volta a colar na destructive. Vira token de tema quando a decisão de paleta for tomada. O anel de foco acompanha o literal.
+> A `warning` **aponta para `--warning`**, como as demais. Já apontou para um valor literal, escolhido quando o traço de 2px ficava a menos de 3:1 de distância da `destructive` — duas etiquetas de significado oposto com a mesma cara. O CSS compartilhado registra o que a exceção custava: o literal estava a 5° de matiz do próprio `--warning` no claro e a 1° no escuro, e media 2,61:1 contra a página, abaixo do piso de 3:1 do WCAG 1.4.11, enquanto o token mede 4,66:1. A separação veio da paleta: o `--destructive` do tema Default ganhou croma e 23° a 32° de distância de matiz. O anel de foco acompanha o token da variante.
 
 > A `info` usa `--border`, a mesma hairline que input e card já desenham (1,22 a 1,99 contra o fundo, também abaixo do piso). Por não ter cor própria, o anel de foco dela é o `--ring` do sistema, e não o da variante.
 

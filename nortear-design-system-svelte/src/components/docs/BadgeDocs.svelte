@@ -389,10 +389,9 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
 
   <!-- ── Tokens ───────────────────────────────────────────────────
        A tabela lista o que a folha LÊ, e a coluna do meio nomeia o SELETOR
-       que lê. `--warning` e `--info` não têm linha porque a folha não lê
-       nenhum dos dois: a warning usa valor literal — o motivo está na nota de
-       customização abaixo da tabela — e a variante info é pintada por
-       `--border`. -->
+       que lê. `--info` não tem linha porque a folha não o lê: a variante
+       info é pintada por `--border`, e linha com travessão só ocuparia
+       espaço dizendo que o token não faz nada aqui. -->
   <DocsTokens
     title={$tStore('tokens.title')}
     cols={{
@@ -404,6 +403,7 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
       { token: '--primary',          value: '.nds-badge-default',      description: $tStore('tokens.table.primary')     },
       { token: '--destructive',      value: '.nds-badge-destructive',  description: $tStore('tokens.table.destructive') },
       { token: '--success',          value: '.nds-badge-success',      description: $tStore('tokens.table.success')     },
+      { token: '--warning',          value: '.nds-badge-warning',      description: $tStore('tokens.table.warning')     },
       { token: '--border',           value: '.nds-badge-info',         description: $tStore('tokens.table.border')      },
       { token: '--secondary',        value: '.nds-badge-counter',      description: $tStore('tokens.table.secondary')   },
       { token: '--foreground',       value: '.nds-badge',              description: $tStore('tokens.table.foreground')  },

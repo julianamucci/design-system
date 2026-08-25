@@ -193,15 +193,15 @@ const badgePropItems = computed(() => [
  * A tabela lista o que a folha LÊ, e a coluna do meio nomeia o SELETOR que lê
  * — quem customiza precisa saber onde a variável é lida.
  *
- * `--warning` e `--info` não têm linha: a folha não lê nenhum dos dois. A
- * warning usa um valor literal, cujo motivo está na nota de customização
- * abaixo da tabela, e a variante info é pintada por `--border`. Linha com
- * travessão só ocuparia espaço dizendo que o token não faz nada aqui.
+ * `--info` não tem linha: a folha não o lê. A variante info é pintada por
+ * `--border`, e linha com travessão só ocuparia espaço dizendo que o token
+ * não faz nada aqui.
  */
 const tokenRows = computed(() => [
   { token: '--primary',      value: '.nds-badge-default',      description: tContent('tokens.table.primary')     },
   { token: '--destructive',  value: '.nds-badge-destructive',  description: tContent('tokens.table.destructive') },
   { token: '--success',      value: '.nds-badge-success',      description: tContent('tokens.table.success')     },
+  { token: '--warning',      value: '.nds-badge-warning',      description: tContent('tokens.table.warning')     },
   { token: '--border',       value: '.nds-badge-info',         description: tContent('tokens.table.border')      },
   { token: '--secondary',    value: '.nds-badge-counter',      description: tContent('tokens.table.secondary')   },
   { token: '--foreground',   value: '.nds-badge',              description: tContent('tokens.table.foreground')  },

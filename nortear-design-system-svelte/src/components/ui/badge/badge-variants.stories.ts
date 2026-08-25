@@ -81,21 +81,15 @@ const borderContrast = (badge: HTMLElement) =>
 /**
  * O piso da borda é 3:1 (WCAG 1.4.11): ela é o contorno que identifica a
  * variante, e é a ÚNICA coisa que a identifica desde o redesenho. Alcançam o
- * piso as bordas de `--primary`, `--destructive` e `--success`.
+ * piso as bordas cromáticas: `--primary`, `--destructive`, `--warning` e
+ * `--success`.
  *
- * Duas ficam abaixo dele DE PROPÓSITO, e o porquê está registrado na folha
- * compartilhada: a `warning` usa valor literal escolhido para se separar da
- * destructive, e a `info` assumiu a hairline neutra do projeto, a mesma que
- * input e card desenham. Nas duas, mudar isso é assunto da paleta, não do
- * badge — então elas se medem por outra promessa, e não por este piso.
+ * Uma fica abaixo dele DE PROPÓSITO, e o porquê está registrado na folha
+ * compartilhada: a `info` assumiu a hairline neutra do projeto, a mesma que
+ * input e card desenham. Mudar isso é assunto da paleta, não do badge — então
+ * ela se mede por outra promessa, e não por este piso.
  */
 const BORDER_FLOOR = 3;
-
-/**
- * Valor LITERAL da borda da warning, repetido aqui de propósito: é a decisão
- * que a story tranca. Trocá-lo na folha sem trocar aqui reprova, que é o ponto.
- */
-const WARNING_BORDER = 'hsl(22 55% 62%)';
 
 /** O texto é neutro em todas, então 4.5:1 não depende mais da variante. */
 const textContrast = (badge: HTMLElement) =>
@@ -177,7 +171,7 @@ export const Semantics: Story = {
       source: { transform: badgeSemanticasSource },
       description: {
         story:
-          'warning avisa, success confirma e info contextualiza. A warning usa valor próprio, escolhido para não se confundir com a destructive; a info usa a borda neutra, o traço mais discreto do conjunto.',
+          'warning avisa, success confirma e info contextualiza. A warning é distinta da destructive, para que aviso e erro não se confundam; a info usa a borda neutra, o traço mais discreto do conjunto.',
       },
     },
   },
@@ -193,12 +187,12 @@ export const Semantics: Story = {
     // A cor esperada de cada borda, medida VIVA e não cravada em rgb(): trocar
     // o tema não pode reprovar o teste, mas trocar a REGRA pode.
     //
-    // functional.item2 — a warning é a única que não sai de token: o literal É
-    // a decisão, e está trancado em WARNING_BORDER.
-    // functional.item4 — a info é a neutra discreta, e o traço dela é a mesma
-    // hairline que input e card desenham.
+    // functional.item2 — a warning lê `--warning`, e a play reprova quem trocar
+    // isso por um valor de fora da paleta.
+    // functional.item4 — a info NÃO usa `--info`: ela é a neutra discreta, e o
+    // traço dela é a mesma hairline que input e card desenham.
     const expectedBorder: Record<string, string> = {
-      warning: WARNING_BORDER,
+      warning: 'hsl(var(--warning))',
       success: 'hsl(var(--success))',
       info: 'hsl(var(--border))',
     };
@@ -228,16 +222,19 @@ export const Semantics: Story = {
       borders.push(border);
     }
 
-    // O piso de 3:1 da borda vale para a success. A warning e a info ficam
-    // abaixo dele de propósito — a nota em BORDER_FLOOR diz por quê —, e por
-    // isso o piso não é cobrado delas: cobrá-lo aqui reprovaria a decisão de
-    // desenho em vez de um defeito.
-    const successRatio = borderContrast(badges.success);
-    await expect(successRatio).not.toBeNull();
-    await expect(successRatio!.ratio).toBeGreaterThanOrEqual(BORDER_FLOOR);
+    // O piso de 3:1 da borda vale para as duas cromáticas desta story, success
+    // e warning. Só a info fica abaixo dele de propósito — a nota em
+    // BORDER_FLOOR diz por quê —, e por isso o piso não é cobrado dela:
+    // cobrá-lo aqui reprovaria a decisão de desenho em vez de um defeito.
+    for (const cromatica of [badges.success, badges.warning]) {
+      const borderRatio = borderContrast(cromatica);
+      await expect(borderRatio).not.toBeNull();
+      await expect(borderRatio!.ratio).toBeGreaterThanOrEqual(BORDER_FLOOR);
+    }
 
-    // functional.item2 — o que a warning promete no lugar do piso: NÃO parecer
-    // a destructive. Foi por colar nela que ela deixou de usar `--warning`.
+    // functional.item2 — além do piso, a warning promete NÃO parecer a
+    // destructive: as duas já colaram na tela, e o que as separa é a distância
+    // entre os dois tokens da paleta.
     const destructive = referencePaint(canvasElement, 'nds-badge-destructive');
     await expect(paint(badges.warning).border).not.toBe(destructive.border);
 

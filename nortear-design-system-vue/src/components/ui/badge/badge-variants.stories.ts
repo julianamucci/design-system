@@ -202,9 +202,10 @@ export const Semantics: Story = {
       borders.push(border);
     }
 
-    // functional.item2 — a warning tem cor PRÓPRIA justamente para não se
-    // confundir com a destructive: o token do tema as deixava com a mesma cara,
-    // e são significados opostos. Sem esta medição, voltar ao token passaria.
+    // functional.item2 — o que a warning promete não é "ser laranja", é NÃO se
+    // confundir com a destructive: são significados opostos, as duas já colaram
+    // na tela, e o que as separa é a distância entre os dois tokens da paleta.
+    // Sem esta medição, encostar uma na outra de novo passaria.
     const destructive = referencePainting(canvasElement, 'nds-badge-destructive');
     await expect(painting(badges.warning).border).not.toBe(destructive.border);
 

@@ -101,7 +101,7 @@ depender da variante escolhida.
 |----------|-------|-----|
 | `default` | `--primary` | Destaque principal — categoria, tag ativa |
 | `destructive` | `--destructive` | Estado de erro ou alerta crítico |
-| `warning` | valor próprio (`hsl(22 55% 62%)`) | Pendência ou risco que ainda não é erro |
+| `warning` | `--warning` | Pendência ou risco que ainda não é erro |
 | `success` | `--success` | Estado concluído ou aprovado |
 | `info` | `--border` | A borda mais silenciosa — contexto que não disputa atenção |
 
@@ -110,12 +110,13 @@ depender da variante escolhida.
 > preenchimento" deixou de distinguir coisa alguma. Quem herdou a borda neutra
 > da `outline` foi a `info`.
 
-> `warning` usa **valor literal**, e não `--warning`: o token do tema é escuro e
-> saturado demais, e como traço de 2px ficava a menos de 3:1 de distância da
-> `destructive` — duas etiquetas de significado oposto com a mesma cara. É
-> literal porque a decisão de paleta ainda não foi tomada; quando for, vira
-> token de tema. O anel de foco da variante acompanha o mesmo valor, e o da
-> `info` passou a usar `--ring`.
+> `warning` usa **`--warning`**, como as outras. Já usou valor literal,
+> escolhido quando o traço de 2px ficava a menos de 3:1 de distância da
+> `destructive` — duas etiquetas de significado oposto com a mesma cara —, e a
+> exceção trocava uma cor conforme por uma que reprovava: o literal media
+> 2,61:1 contra a página, abaixo do piso de 3:1, e o token mede 4,66:1. A
+> separação das duas veio da paleta, e não do componente. O anel de foco da
+> variante acompanha o token, e o da `info` usa `--ring`.
 
 > O Badge **não tem prop `size`** — a dimensão é única. Caso pontual sobrescreve
 > as vars internas escopadas (`--badge-bg`, `--badge-fg`, `--badge-border`;

@@ -499,14 +499,13 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
     return [
       // A tabela lista o que a folha LÊ, e a coluna do meio nomeia o SELETOR
       // que lê. Cada variante reaponta UMA coisa: a cor da borda.
-      // `--warning` e `--info` não têm linha porque a folha não lê nenhum dos
-      // dois — a warning usa valor literal, cujo motivo está na nota de
-      // customização abaixo da tabela, e a variante info é pintada por
-      // `--border`. Linha com travessão só ocuparia espaço dizendo que o token
-      // não faz nada aqui.
+      // `--info` não tem linha porque a folha não o lê — a variante info é
+      // pintada por `--border`. Linha com travessão só ocuparia espaço dizendo
+      // que o token não faz nada aqui.
       { token: '--primary',          value: '.nds-badge-default',       k: 'primary'          },
       { token: '--destructive',      value: '.nds-badge-destructive',   k: 'destructive'      },
       { token: '--success',          value: '.nds-badge-success',       k: 'success'          },
+      { token: '--warning',          value: '.nds-badge-warning',       k: 'warning'          },
       { token: '--border',           value: '.nds-badge-info',          k: 'border'           },
       { token: '--secondary',        value: '.nds-badge-counter',       k: 'secondary'        },
       { token: '--foreground',       value: '.nds-badge',               k: 'foreground'       },

@@ -214,12 +214,13 @@
         "badgeFg": "Texto — var interna, hoje sempre neutro",
         "badgeBorder": "Borda — var interna, a ÚNICA que cada variante re-aponta",
         "success": "Borda (variante success)",
+        "warning": "Borda (variante warning)",
         "border": "Borda da variante info (a neutra discreta)",
         "radius": "Arredondamento da etiqueta"
       },
       "customizationTitle": "Como personalizar via tema:",
       "customizationCode": {
-        "web": "/* Override escopado — as vars nascem no próprio .nds-badge. */\n.meu-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* Cada variante re-aponta UMA coisa: a cor da borda.\n   A warning é a única que não lê o token de mesmo nome: a folha usa um valor\n   literal porque o token do tema, em traço de 2px, fica perto demais da\n   destructive. Para devolvê-la ao tema, re-aponte aqui. */\n.meu-tema .nds-badge-warning {\n  --badge-border: hsl(var(--warning));\n}"
+        "web": "/* Override escopado — as vars nascem no próprio .nds-badge. */\n.meu-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* Cada variante re-aponta UMA coisa: a cor da borda, sempre a partir do\n   token de mesmo nome. */\n.meu-tema .nds-badge-warning {\n  --badge-border: hsl(var(--warning));\n}"
       }
     },
     "accessibility": {
@@ -297,7 +298,7 @@
         },
         "item2": {
           "action": "Renderizar variante warning",
-          "result": "Borda de 2px em cor própria, escolhida para não se confundir com a destructive",
+          "result": "Borda de 2px na cor de aviso do tema, distinguível da destructive",
           "priority": "high"
         },
         "item3": {
@@ -615,12 +616,13 @@
         "badgeFg": "Text — internal var, always neutral today",
         "badgeBorder": "Border — internal var, the ONLY one each variant re-points",
         "success": "Border (success variant)",
+        "warning": "Border (warning variant)",
         "border": "Border of the info variant (the quiet neutral)",
         "radius": "Badge corner radius"
       },
       "customizationTitle": "How to customize via theme:",
       "customizationCode": {
-        "web": "/* Scoped override — the vars are born on .nds-badge itself. */\n.my-theme .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* Each variant re-points ONE thing: the border colour.\n   Warning is the only one that does not read the token of the same name: the\n   sheet uses a literal because the theme token, as a 2px stroke, sits too\n   close to destructive. To hand it back to the theme, re-point it here. */\n.my-theme .nds-badge-warning {\n  --badge-border: hsl(var(--warning));\n}"
+        "web": "/* Scoped override — the vars are born on .nds-badge itself. */\n.my-theme .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* Each variant re-points ONE thing: the border colour, always from the\n   token of the same name. */\n.my-theme .nds-badge-warning {\n  --badge-border: hsl(var(--warning));\n}"
       }
     },
     "accessibility": {
@@ -698,7 +700,7 @@
         },
         "item2": {
           "action": "Render the warning variant",
-          "result": "2px border in its own colour, chosen so it is not mistaken for destructive",
+          "result": "2px border in the theme's caution colour, distinguishable from destructive",
           "priority": "high"
         },
         "item3": {
@@ -1016,12 +1018,13 @@
         "badgeFg": "Texto — var interna, hoy siempre neutro",
         "badgeBorder": "Borde — var interna, la ÚNICA que cada variante reapunta",
         "success": "Borde (variante success)",
+        "warning": "Borde (variante warning)",
         "border": "Borde de la variante info (el neutro discreto)",
         "radius": "Redondeo de la etiqueta"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
       "customizationCode": {
-        "web": "/* Override con alcance — las vars nacen en el propio .nds-badge. */\n.mi-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* Cada variante reapunta UNA cosa: el color del borde.\n   La warning es la única que no lee el token del mismo nombre: la hoja usa un\n   valor literal porque el token del tema, en trazo de 2px, queda demasiado\n   cerca de destructive. Para devolverla al tema, reapúntala aquí. */\n.mi-tema .nds-badge-warning {\n  --badge-border: hsl(var(--warning));\n}"
+        "web": "/* Override con alcance — las vars nacen en el propio .nds-badge. */\n.mi-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* Cada variante reapunta UNA cosa: el color del borde, siempre desde el\n   token del mismo nombre. */\n.mi-tema .nds-badge-warning {\n  --badge-border: hsl(var(--warning));\n}"
       }
     },
     "accessibility": {
@@ -1099,7 +1102,7 @@
         },
         "item2": {
           "action": "Renderizar la variante warning",
-          "result": "Borde de 2px en color propio, elegido para no confundirse con destructive",
+          "result": "Borde de 2px en el color de aviso del tema, distinguible de destructive",
           "priority": "high"
         },
         "item3": {

@@ -171,17 +171,15 @@ export const Semantics: Story = {
 
     /*
      * Nem toda semântica lê o token de mesmo nome, e a play tem de dizer o que
-     * a folha faz — não o que o nome sugere:
+     * a folha faz — não o que o nome sugere: `info` NÃO usa `--info`, e sim a
+     * hairline neutra `--border`, que era da variante outline antes de ela
+     * sair.
      *
-     * · `warning` usa VALOR LITERAL, e não `--warning`: o token do tema é
-     *   escuro e saturado a ponto de a etiqueta ficar com a cara da
-     *   destructive. Está cravado aqui porque está cravado na folha; quando
-     *   virar token de tema, os dois mudam juntos.
-     * · `info` assumiu a hairline neutra `--border`, que era da variante
-     *   outline antes de ela sair.
+     * Escrever a regra aqui é o que faz a play reprovar quem devolver os
+     * tokens homônimos por simetria.
      */
     const expectedBorder: Record<string, string | null> = {
-      warning: resolveColor(canvasElement, "hsl(22 55% 62%)"),
+      warning: token(canvasElement, "--warning"),
       success: token(canvasElement, "--success"),
       info: token(canvasElement, "--border"),
     };
@@ -208,8 +206,8 @@ export const Semantics: Story = {
 
     // functional.item2 — o que a warning promete não é "ser laranja", é NÃO se
     // confundir com a destructive. Distinguir-se das outras duas semânticas já
-    // está provado acima; contra a destructive é preciso dizer, porque foi
-    // exatamente essa colisão que tirou a warning do token do tema.
+    // está provado acima; contra a destructive é preciso dizer, porque as duas
+    // já colaram uma vez e a separação vive na paleta, não aqui.
     await expect(expectedBorder.warning).not.toBe(token(canvasElement, "--destructive"));
 
     // functional.item4 — a info é a discreta: ela não pode carregar nenhuma das

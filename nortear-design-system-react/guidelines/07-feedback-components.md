@@ -96,13 +96,13 @@ O ícone é o **filho direto** do `.nds-alert`, antes do título. O seletor `.nd
 |----------|--------------|-----|
 | `default` | `--primary` | Destaque principal — categoria, tag ativa |
 | `destructive` | `--destructive` | Estado de erro ou alerta crítico |
-| `warning` | `hsl(22 55% 62%)` | Pendência ou risco que ainda não é erro |
+| `warning` | `--warning` | Pendência ou risco que ainda não é erro |
 | `success` | `--success` | Estado concluído ou aprovado |
 | `info` | `--border` | Baixa ênfase — a borda mais discreta do conjunto |
 
 > São **cinco**. `secondary` saiu por ser quase indistinguível da `default`, e `outline` saiu porque a `info` passou a fazer o mesmo trabalho — a hairline neutra que input e card já desenham.
 
-> `warning` é a única com **valor literal** em vez de token de tema: `--warning` é escuro e saturado a ponto de, como traço de 2px, ficar a menos de 3:1 de distância da `destructive` — duas etiquetas de significado oposto com a mesma cara. Está medido e registrado na própria regra do CSS: o literal separa as duas no claro, mas fica em 2,57–2,60 contra o fundo (abaixo do piso de 3:1 do WCAG 1.4.11) e no escuro volta a colar na destructive. É literal porque a decisão de paleta ainda não foi tomada; quando for, vira token de tema e passa a variar por modo, como as outras.
+> `warning` **lê `--warning`**, como as outras. Já teve valor literal, escolhido quando o traço de 2px da variante ficava a menos de 3:1 de distância da `destructive` — duas etiquetas de significado oposto com a mesma cara —, e a própria regra do CSS registra por que a exceção resolvia o problema errado: o literal estava a 5° de matiz do próprio `--warning` no claro e a 1° no escuro (o mesmo laranja, só mais claro e menos cromático) e, como traço de 2px, media 2,61:1 contra a página — abaixo do piso de 3:1 do WCAG 1.4.11 —, enquanto o token mede 4,66:1 e passa. A separação veio de onde tinha de vir, da paleta: o `--destructive` do tema Default ganhou croma e 23° a 32° de distância de matiz.
 
 > `info` **não lê `--info`**: ela assumiu a borda neutra `--border` que era da `outline`. Mede 1,22–1,99 contra o fundo, também abaixo do piso — é contorno de baixa ênfase por decisão, não por descuido. O anel de foco dela usa `--ring`, e não a cor da variante, porque não existe cor de variante a usar.
 

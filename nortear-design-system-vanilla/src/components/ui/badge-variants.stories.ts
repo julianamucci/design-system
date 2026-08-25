@@ -58,14 +58,12 @@ const token = (root: HTMLElement, tokenName: string) =>
 /**
  * Borda que a folha compartilhada declara para cada variante semântica.
  *
- * Não é `--${variante}` para as três: `warning` usa um valor LITERAL, escolhido
- * porque o token do tema deixava a etiqueta quase idêntica à destructive, e
- * `info` assumiu a hairline neutra `--border`. Escrever a regra aqui é o que
- * faz a play reprovar se alguém devolver os tokens homônimos por simetria — que
- * é justamente o erro que a folha registra ter evitado.
+ * Não é `--${variante}` para as três: `info` NÃO usa `--info`, e sim a hairline
+ * neutra `--border`. Escrever a regra aqui é o que faz a play reprovar se
+ * alguém devolver os tokens homônimos por simetria.
  */
 const EXPECTED_BORDER: Record<string, string> = {
-  warning: 'hsl(22 55% 62%)',
+  warning: 'hsl(var(--warning))',
   success: 'hsl(var(--success))',
   info: 'hsl(var(--border))',
 };
@@ -213,8 +211,9 @@ export const Semantics: Story = {
     }
 
     // functional.item2 — o que a warning promete não é "ser laranja", é NÃO se
-    // confundir com a destructive: foi por colar nela que o token do tema saiu.
-    // A cor da vizinha vem de uma etiqueta viva, e não de um rgb() cravado.
+    // confundir com a destructive: as duas já colaram uma vez, e a separação
+    // vive na paleta. A cor da vizinha vem de uma etiqueta viva, e não de um
+    // rgb() cravado.
     const destructiva = createBadge({ variant: 'destructive' });
     canvasElement.appendChild(destructiva);
     const destructiveBorder = getComputedStyle(destructiva).borderTopColor;

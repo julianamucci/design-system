@@ -513,14 +513,13 @@ export interface BadgeOptions {
           items: [
             // A tabela lista o que a folha LÊ, e a coluna do meio diz ONDE:
             // o SELETOR que lê o token.
-            // `--warning` e `--info` não têm linha porque a folha não lê
-            // nenhum dos dois — a warning usa valor literal, cujo motivo está
-            // na nota de customização abaixo da tabela, e a variante info é
-            // pintada por `--border`. Linha com travessão só ocuparia espaço
-            // dizendo que o token não faz nada aqui.
+            // `--info` não tem linha porque a folha não o lê — a variante
+            // info é pintada por `--border`. Linha com travessão só ocuparia
+            // espaço dizendo que o token não faz nada aqui.
             { token: '--primary',          value: '.nds-badge-default',       description: t('tokens.table.primary')         },
             { token: '--destructive',      value: '.nds-badge-destructive',   description: t('tokens.table.destructive')     },
             { token: '--success',          value: '.nds-badge-success',       description: t('tokens.table.success')         },
+            { token: '--warning',          value: '.nds-badge-warning',       description: t('tokens.table.warning')         },
             { token: '--border',           value: '.nds-badge-info',          description: t('tokens.table.border')          },
             { token: '--secondary',        value: '.nds-badge-counter',       description: t('tokens.table.secondary')       },
             { token: '--foreground',       value: '.nds-badge',               description: t('tokens.table.foreground')      },

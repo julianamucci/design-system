@@ -71,7 +71,7 @@ Badge                      <span data-slot="badge">
 |---|---|---|
 | `default` | `--primary` | também é o que `.nds-badge` sozinho pinta |
 | `destructive` | `--destructive` | |
-| `warning` | `hsl(22 55% 62%)` | **valor próprio, e não `--warning`**: o token do tema é escuro e saturado demais e a variante ficava a menos de 3:1 de distância da destructive — duas etiquetas de significado oposto com a mesma cara. Literal porque a decisão de paleta ainda não foi tomada |
+| `warning` | `--warning` | já foi um literal, escolhido quando a variante colava na destructive; o conserto veio da paleta, e não do componente — como traço de 2px o literal media 2.61:1 contra a página, abaixo do piso de 3:1, e o token mede 4.66:1 |
 | `success` | `--success` | |
 | `info` | `--border` | a hairline neutra do projeto, a mesma que input e card desenham; é o traço mais discreto do conjunto |
 
@@ -101,7 +101,7 @@ O contador é o número à direita do texto, **dentro** da mesma etiqueta. Ele �
 - Nunca altura fixa em primitivos (WCAG 1.4.4)
 - Nunca pintar o contador com a cor da variante — a cor já está na borda ao redor
 - Nunca pôr `onclick` na etiqueta: envolver em `<button>`, que é quem recebe o foco
-- Nunca trocar o literal da `warning` por `--warning` sem medir a distância dela para a `destructive`
+- Nunca aproximar a `warning` da `destructive`: a distância entre as duas é decisão de paleta, e exceção no componente já foi tentada — reprovava o piso de 3:1 que o token cumpre
 
 ---
 

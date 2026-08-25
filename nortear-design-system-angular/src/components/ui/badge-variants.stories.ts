@@ -12,16 +12,6 @@ const VARIANTS: { variant: BadgeVariant; label: string }[] = [
   { variant: 'info',        label: 'Info'        },
 ];
 
-/**
- * Valor LITERAL da borda da warning, copiado da folha compartilhada.
- *
- * Não é `--warning`: o token do tema fica a menos de 3:1 de distância da
- * destructive, e duas etiquetas de significado oposto ficavam com a mesma cara.
- * Enquanto a decisão de paleta não vem, o literal é o contrato — e é por isso
- * que ele aparece aqui e não um token.
- */
-const WARNING_BORDER = 'hsl(22 55% 62%)';
-
 const meta: Meta = {
   title: 'UI/Badge/Variants',
   decorators: [moduleMetadata({ imports: [NdsBadge] })],
@@ -36,9 +26,9 @@ export const Variants: Story = {
     // Uma story cobre as cinco variantes de uma vez: é o conjunto lado a lado
     // que a regressão visual compara, e é nele que a diferença de cor aparece.
     //
-    // Os itens 2 e 4 descrevem a warning de cor própria e a info na neutra
-    // discreta — as duas medidas nos passos abaixo, uma delas com passo
-    // dedicado.
+    // Os itens 2 e 4 descrevem a warning que se separa da destructive e a info
+    // na neutra discreta — as duas medidas nos passos abaixo, uma delas com
+    // passo dedicado.
     covers: [
       'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
       'functional.item7', 'visual.item1', 'visual.item2', 'visual.item5',
@@ -77,13 +67,13 @@ export const Variants: Story = {
       // desenho correto — a correção é medir a borda, não afrouxar o teste.
       //
       // Nem toda variante aponta para o token de mesmo nome, e é de propósito:
-      // a `warning` usa valor literal para não colar na destructive, e a `info`
-      // assumiu a hairline neutra `--border`. Por isso a tabela guarda a
-      // EXPRESSÃO de cor, e não o nome do token.
+      // a `info` NÃO usa `--info`, e sim a hairline neutra `--border`. Por isso
+      // a tabela guarda a EXPRESSÃO de cor, e não o nome do token — e é ela que
+      // reprova quem devolver os tokens homônimos por simetria.
       const BORDER_COLOR: Record<BadgeVariant, string> = {
         default: 'hsl(var(--primary))',
         destructive: 'hsl(var(--destructive))',
-        warning: WARNING_BORDER,
+        warning: 'hsl(var(--warning))',
         success: 'hsl(var(--success))',
         info: 'hsl(var(--border))',
       };
@@ -102,14 +92,16 @@ export const Variants: Story = {
       }
     });
 
-    await step('A warning tem cor PRÓPRIA, e não a do tema', async () => {
-      // É o motivo de a variante existir com valor literal: com `--warning` o
-      // traço ficava a menos de 3:1 da destructive e as duas se confundiam na
-      // tela. O teste cobra os dois lados — o que ela É e o que ela não pode
-      // voltar a ser, porque reapontar para o token é o erro que retorna.
+    await step('A warning não se confunde com a destructive', async () => {
+      // O que a warning promete não é "ser laranja", é NÃO parecer um erro: as
+      // duas já colaram na tela, e o que as separa é a distância entre os dois
+      // tokens da paleta. O teste cobra os dois lados — o token que ela lê e a
+      // vizinha de quem ela precisa se afastar.
       const warningBorder = getComputedStyle(canvas.getByText('Warning')).borderTopColor;
-      await expect(warningBorder).toBe(resolveColor(canvasElement, WARNING_BORDER));
-      await expect(warningBorder).not.toBe(resolveColor(canvasElement, 'hsl(var(--warning))'));
+      await expect(warningBorder).toBe(resolveColor(canvasElement, 'hsl(var(--warning))'));
+      await expect(warningBorder).not.toBe(
+        resolveColor(canvasElement, 'hsl(var(--destructive))'),
+      );
     });
 
     await step('As variantes semânticas não repetem a mesma cor', async () => {

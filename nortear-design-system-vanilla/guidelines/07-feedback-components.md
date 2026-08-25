@@ -84,18 +84,18 @@ span[data-slot="badge"] (inline-flex, borda de 2px, radius-badge)
 |---|---|---|
 | `default` | `--primary` | Destaque principal — categoria, tag ativa |
 | `destructive` | `--destructive` | Estado de erro ou alerta crítico |
-| `warning` | `hsl(22 55% 62%)` | Pendência ou risco que ainda não é erro |
+| `warning` | `--warning` | Pendência ou risco que ainda não é erro |
 | `success` | `--success` | Estado concluído ou aprovado |
 | `info` | `--border` | A borda mais discreta — contexto que não compete por atenção |
 
-> Duas das cinco **não** leem o token de mesmo nome, e é decisão registrada na
-> folha. `warning` traz um **valor literal**: com `--warning` o traço de 2px
-> ficava a menos de 3:1 de distância da destructive, e duas etiquetas de
-> significado oposto tinham a mesma cara. É literal porque a decisão de paleta
-> ainda não foi tomada — quando for, vira token de tema. `info` assumiu a
-> **hairline neutra** `--border`, a mesma que input e card desenham. O anel de
-> foco acompanha: o da `warning` usa o mesmo literal, e o da `info` usa
-> `--ring`, porque hairline não desenha foco visível.
+> Uma das cinco **não** lê o token de mesmo nome, e é decisão registrada na
+> folha: `info` assumiu a **hairline neutra** `--border`, a mesma que input e
+> card desenham. A `warning` já trouxe um valor literal, escolhido quando o
+> traço de 2px ficava a menos de 3:1 de distância da destructive — e a exceção
+> reprovava o piso que o token cumpre: 2,61:1 contra a página, contra 4,66:1 do
+> `--warning`. A separação das duas veio da paleta. O anel de foco acompanha: o
+> da `warning` usa o token da variante, e o da `info` usa `--ring`, porque
+> hairline não desenha foco visível.
 
 **Composições** — três, e nenhuma delas é variante:
 

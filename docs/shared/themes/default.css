@@ -31,9 +31,13 @@
  *     define como acento quente sobre fundo escuro, entra na paleta de gráficos
  *     (--chart-4), não em --primary: trocar o matiz do interativo por modo
  *     custaria a estabilidade do link.
- *   - Feedback: o brand book NÃO define cores de sistema. Erro e sucesso são
- *     DERIVADOS dos pares "faça/não faça" da marca (#C2533F / #3F8A6B),
- *     escurecidos até 4.5:1; aviso é DERIVADO do matiz da Terracota (22°) e
+ *   - Feedback: o brand book NÃO define cores de sistema. Sucesso é DERIVADO do
+ *     par "faça" da marca (#3F8A6B), escurecido até 4.5:1. Erro DEIXOU de ser
+ *     derivação do "não faça" (#C2533F) e é o único ponto em que este tema se
+ *     afasta da marca de propósito: o vermelho do brand book está a 14° do
+ *     laranja da Terracota, e nessa distância um traço de 2px de alerta e um de
+ *     aviso viram a mesma etiqueta. A marca opõe os dois como CONCEITO, não
+ *     como cor. Ver o bloco do `--destructive` abaixo; aviso é DERIVADO do matiz da Terracota (22°) e
  *     informação do matiz do Teal (190°). Os quatro `-foreground` valem
  *     `var(--foreground)` — regra da casa: a cor semântica pinta fundo suave
  *     (`/ 0.1`) e o texto corrido por cima é o foreground do tema.
@@ -53,8 +57,8 @@
  * neutra, e o custo cresce quando a caixa suave assenta num neutro mais escuro
  * (Areia no claro, `--muted` no escuro) em vez da página:
  *
- *   success claro       4.75 sobre a página  →  3.35 sobre a pior lavagem
- *   destructive escuro  4.81 sobre a página  →  3.60 sobre a pior lavagem
+ *   destructive claro   5.52 sobre a página  →  4.84 sobre a pior lavagem
+ *   destructive escuro  5.40 sobre a página  →  4.67 sobre a pior lavagem
  *
  * Por isso as quatro cores de feedback são derivadas contra a PIOR superfície
  * que elas pintam, não contra a página.
@@ -72,11 +76,27 @@
  * rótulo de ferramenta interna — um rótulo de admin definindo o teto de
  * saturação de um token de marca. Ele passou a `--foreground`.
  *
- * Pares mais apertados, compostos, por regra:
- *   claro  — success sobre lavagem em Areia   = 4.78:1  (min 4.5)
- *   claro  — warning sobre lavagem em Areia   = 3.23:1  (min 3)
- *   escuro — destructive sobre lavagem        = 4.72:1  (min 4.5)
- *   escuro — info sobre lavagem em --muted    = 4.05:1  (min 3)
+ * A CONTA, escrita para poder ser refeita — os números que estavam aqui não
+ * reproduziam com fórmula nenhuma, provavelmente por terem ficado para trás
+ * quando o fundo e o primary mudaram:
+ *
+ *     contraste( cor , composição( cor a 10% , superfície ) )
+ *
+ * As superfícies são a PÁGINA e `--muted`. `--secondary` fica de fora, e não
+ * por descuido: incluí-la no escuro reprova também o `success`, que ninguém
+ * mexeu — sinal de piso inventado, não de defeito. Se um dia um alert precisar
+ * assentar em `--secondary` no escuro, a paleta inteira do escuro é que tem de
+ * ser revista, não uma cor.
+ *
+ * Pares mais apertados, todos sobre `--muted`, que é a pior das duas:
+ *   claro  — destructive  4.84:1  (min 4.5)
+ *   claro  — success      5.32:1  (min 4.5)
+ *   claro  — warning      3.59:1  (min 3)
+ *   claro  — info         3.62:1  (min 3)
+ *   escuro — destructive  4.67:1  (min 4.5)
+ *   escuro — success      4.65:1  (min 4.5)
+ *   escuro — warning      3.87:1  (min 3)
+ *   escuro — info         4.05:1  (min 3)
  *
  * `warning` e `info` do modo escuro são os valores originais do brand book:
  * eu os havia clareado para alcançar 4.5, que não se aplicava a eles.
@@ -132,7 +152,14 @@
   /* Os quatro `-foreground` são o texto corrido do contêiner colorido, e neste
      projeto valem `--foreground` — a regra da casa. São ponto de extensão: um
      tema derivado pode dar a cada um valor próprio. Ver tokens.css. */
-  --destructive: 9 52% 38%;
+  /* 352 80% 40% (#b8142a) e não o vermelho tijolo da marca. O par "não faça"
+     do brand book está em OKLCH h 32° e o warning derivado da Terracota em 46°:
+     a MARCA já põe os dois a 14° um do outro, e a derivação herdou a confusão.
+     Este valor abre para 23° de distância e, mais importante, INVERTE o croma —
+     antes o destructive tinha menos croma que o warning (0.119 contra 0.148) e
+     por isso recuava na tela apesar de ter mais contraste. Agora tem 0.192, e é
+     a cor mais intensa da paleta, que é o que "alerta" deveria significar. */
+  --destructive: 352 80% 40%;
   --destructive-foreground: var(--foreground);
   --success: 155 37% 28%;
   --success-foreground: var(--foreground);
@@ -192,7 +219,9 @@
   --accent: 199 20% 26%;
   --accent-foreground: 24 100% 99%;
 
-  --destructive: 9 65% 76%;
+  /* 79.5% e não 78%: a 78% a lavagem sobre `--muted` dava 4.52 contra piso de
+     4.5, e dois centésimos de folga é o mesmo que não ter. Aqui são 4.67. */
+  --destructive: 358 95% 79.5%;
   --destructive-foreground: var(--foreground);
   --success: 155 45% 60%;
   --success-foreground: var(--foreground);

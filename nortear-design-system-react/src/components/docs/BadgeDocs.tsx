@@ -480,13 +480,13 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
           // A tabela lista o que a folha LÊ, e a coluna do meio nomeia o
           // seletor que lê. A variante mora na BORDA; fundo e texto são
           // neutros em todas elas, e a única peça preenchida é o contador.
-          // `--warning` e `--info` não têm linha porque a folha não lê nenhum
-          // dos dois: warning usa um valor literal (o motivo está na nota de
-          // customização, logo abaixo) e a variante info é pintada por
-          // `--border`.
+          // `--info` não tem linha porque a folha não o lê: a variante info é
+          // pintada por `--border`. Linha com travessão só ocuparia espaço
+          // dizendo que o token não faz nada aqui.
           { token: "--primary", value: ".nds-badge-default", description: tContent("tokens.table.primary") },
           { token: "--destructive", value: ".nds-badge-destructive", description: tContent("tokens.table.destructive") },
           { token: "--success", value: ".nds-badge-success", description: tContent("tokens.table.success") },
+          { token: "--warning", value: ".nds-badge-warning", description: tContent("tokens.table.warning") },
           { token: "--border", value: ".nds-badge-info", description: tContent("tokens.table.border") },
           { token: "--secondary", value: ".nds-badge-counter", description: tContent("tokens.table.secondary") },
           { token: "--foreground", value: ".nds-badge", description: tContent("tokens.table.foreground") },

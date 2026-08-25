@@ -11,12 +11,12 @@
  * ou aria-label se conteúdo for crítico (ex.: "5 mensagens não lidas").
  *
  * Tokens: --background e --foreground (fundo e texto de TODAS as variantes),
- *         --primary, --destructive, --success, --border (cor da borda, uma por
- *         variante — a warning traz valor LITERAL, ver a regra mais abaixo),
+ *         --primary, --destructive, --success, --warning, --border (cor da
+ *         borda, uma por variante),
  *         --secondary (fundo do contador e do hover dentro de link),
  *         --ring, --radius-badge, --spacing-*
  *
- *         --warning e --info NÃO são lidos aqui.
+ *         --info NÃO é lido aqui.
  */
 
 .nds-badge {
@@ -89,10 +89,16 @@
  *
  * Contraste medido nos três temas e nos dois modos, contra `--background`, com
  * piso de 3:1 (WCAG 1.4.11 — a borda é o contorno que identifica a variante):
- * `--primary`, `--destructive` e `--success` passam. Duas ficam abaixo do piso
- * e estão registradas na própria regra: `warning`, com valor literal escolhido
- * para se separar da destructive, e `info`, que assumiu a hairline neutra.
- * Mudar isso é assunto da paleta, não do badge.
+ * `--primary`, `--destructive`, `--success` e `--warning` passam — o warning a
+ * 4.66:1 no claro e 5.22:1 no escuro. Só `info` fica abaixo, porque assumiu a
+ * hairline neutra `--border` (1.22 a 1.99), a mesma que input e card desenham;
+ * está registrado na própria regra.
+ *
+ * O badge não tem mais nenhuma cor literal. Teve, no warning, e a lição está
+ * escrita ali: quando duas variantes colam, o conserto é na paleta. Exceção por
+ * componente esconde o defeito num lugar onde só aquele componente melhora — e
+ * naquele caso nem melhorava, porque o literal reprovava um piso que o token
+ * cumpria.
  */
 
 /* Default = primary */
@@ -105,15 +111,17 @@
 .nds-badge-destructive { --badge-border: hsl(var(--destructive)); }
 .nds-badge-success     { --badge-border: hsl(var(--success)); }
 
-/* Warning com valor PRÓPRIO, e não `--warning`: o token do tema é escuro e
-   saturado demais, e como traço de 2px ficava a menos de 3:1 de distância da
-   destructive — duas etiquetas de significado oposto com a mesma cara.
-   MEDIDO e registrado: este valor separa as duas no claro (2.4 a 2.7), mas
-   fica em 2.57 a 2.60 contra o fundo, abaixo do piso de 3:1 do WCAG 1.4.11, e
-   no ESCURO volta a colar na destructive (1.23 a 1.31). É literal porque a
-   decisão de paleta ainda não foi tomada: quando for, vira token de tema e
-   passa a variar por modo, como as outras. */
-.nds-badge-warning     { --badge-border: hsl(22 55% 62%); }
+/* Warning voltou ao token. Ele já foi um literal `hsl(22 55% 62%)`, escolhido
+   para se afastar da destructive quando as duas colavam — e a exceção resolveu
+   o problema errado: aquele valor estava a 5° de matiz do próprio `--warning`
+   no claro e a 1° no escuro (era o mesmo laranja, só mais claro e menos
+   cromático), e como traço de 2px media 2.61:1 contra a página, ABAIXO do piso
+   de 3:1 do WCAG 1.4.11, enquanto o token media 4.66:1 e passava. Trocou-se
+   uma cor conforme por uma que reprovava.
+   A separação veio de onde tinha de vir, da paleta: o `--destructive` do tema
+   Default passou a 352 80% 40% no claro e 358 95% 79.5% no escuro, com croma
+   maior que o do warning e 23° a 32° de distância de matiz. */
+.nds-badge-warning     { --badge-border: hsl(var(--warning)); }
 
 /* Info assumiu a borda neutra que era da outline. Ela mede 1.22 a 1.99 contra
    o fundo — abaixo do piso de 3:1 —, e é a mesma hairline que input e card já
@@ -127,7 +135,7 @@
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive) / 0.4);
 }
 .nds-badge-warning:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(22 55% 62% / 0.4);
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--warning) / 0.4);
 }
 .nds-badge-success:focus-visible {
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--success) / 0.4);
