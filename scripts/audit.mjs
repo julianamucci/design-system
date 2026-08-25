@@ -745,8 +745,36 @@ function blockBody(content, name) {
  * control sem valor inicial que não existe. Crase em comentário era pior ainda
  * — abria uma string que só fechava linhas adiante, comendo o resto do objeto.
  */
+/**
+ * Palavras depois das quais uma `/` abre EXPRESSÃO REGULAR, e não divisão.
+ *
+ * Sem esta lista, `return /x/.test(s)` seria lido como divisão, porque o
+ * caractere anterior é letra.
+ */
+const ANTES_DE_REGEX = new Set([
+  'return', 'typeof', 'instanceof', 'in', 'of', 'new', 'delete', 'void',
+  'case', 'do', 'else', 'yield', 'await', 'throw',
+]);
+
+/** A `/` nesta posição abre regex, ou é divisão? */
+function abreRegex(anterior, palavraAnterior) {
+  if (!anterior) return true;                       // começo do arquivo
+  if (ANTES_DE_REGEX.has(palavraAnterior)) return true;
+  // Depois de valor — identificador, número, `)`, `]`, `}` — só pode ser
+  // divisão. Depois de operador ou abre-delimitador, só pode ser regex.
+  return !/[\w$)\]}]/.test(anterior);
+}
+
 function stripComments(src) {
   let out = '', inStr = null, i = 0;
+  // Último caractere significativo e a última palavra, para decidir se `/`
+  // abre regex.
+  let anterior = '', palavra = '';
+  const registrar = (c) => {
+    if (/\s/.test(c)) { palavra = ''; return; }
+    anterior = c;
+    palavra = /[\w$]/.test(c) ? palavra + c : '';
+  };
   while (i < src.length) {
     const c = src[i];
     if (inStr) {
@@ -756,7 +784,7 @@ function stripComments(src) {
       i++;
       continue;
     }
-    if (c === '"' || c === "'" || c === '`') { inStr = c; out += c; i++; continue; }
+    if (c === '"' || c === "'" || c === '`') { inStr = c; out += c; registrar(c); i++; continue; }
     if (c === '/' && src[i + 1] === '/') {
       while (i < src.length && src[i] !== '\n') { out += ' '; i++; }
       continue;
@@ -767,7 +795,42 @@ function stripComments(src) {
       for (; i < ate; i++) out += src[i] === '\n' ? '\n' : ' ';
       continue;
     }
+    /*
+     * LITERAL DE EXPRESSÃO REGULAR, copiado inteiro sem passar pelo rastreio de
+     * aspas.
+     *
+     * `/variant="([^"]+)"/g` tem TRÊS aspas duplas. Sem este ramo, a segunda
+     * fechava a string aberta pela primeira e a terceira abria outra que nunca
+     * fechava — daí para a frente tudo virava "dentro de string", e o `//` da
+     * linha seguinte deixava de ser reconhecido como comentário. O comentário
+     * sobrevivia e virava código para quem consome esta função: medido, um
+     * comentário em português passou a contar como seis identificadores.
+     *
+     * É o mesmo mecanismo do apóstrofo em `Don't`, agora por outra porta.
+     */
+    if (c === '/' && abreRegex(anterior, palavra)) {
+      let j = i + 1, emClasse = false, fechou = false;
+      while (j < src.length) {
+        const d = src[j];
+        if (d === '\\') { j += 2; continue; }
+        if (d === '\n') break;                       // regex não atravessa linha
+        if (emClasse) { if (d === ']') emClasse = false; j++; continue; }
+        if (d === '[') { emClasse = true; j++; continue; }
+        if (d === '/') { fechou = true; break; }
+        j++;
+      }
+      if (fechou) {
+        j++;
+        while (j < src.length && /[dgimsuvy]/.test(src[j])) j++;   // sinalizadores
+        out += src.slice(i, j);                      // offsets preservados
+        anterior = '/'; palavra = '';
+        i = j;
+        continue;
+      }
+      // Não fechou na linha: era divisão mesmo. Segue o fluxo normal.
+    }
     out += c;
+    registrar(c);
     i++;
   }
   return out;
