@@ -17,10 +17,8 @@ import {
   ComboboxTrigger,
 } from './index';
 import { noTransicao, resolveColor } from '@shared/testing/cor';
-import { Button } from '@/components/ui/button';
-import { COUNTRIES } from './combobox.fixtures';
+import { COUNTRIES, SHORT_COUNTRIES } from './combobox.fixtures';
 import {
-  comboboxControlledSource,
   comboboxDisabledSource,
   comboboxInvalidSource,
   comboboxSource,
@@ -38,7 +36,7 @@ const meta = {
       source: { transform: comboboxSource },
       description: {
         component:
-          'Fechado, aberto, sem resultado, bloqueado e reprovado. O teclado, o filtro e o foco vêm do primitivo — o que estas stories provam é que a composição não desfaz nada disso.',
+          'Fechado, sem resultado, bloqueado e reprovado. O teclado, o filtro e o foco vêm do primitivo — o que estas stories provam é que a composição não desfaz nada disso.',
       },
     },
   },
@@ -62,9 +60,6 @@ const components = {
   ComboboxPositioner,
   ComboboxTrigger,
 };
-
-/** As três primeiras da lista: curta o bastante para a caixa aberta não rolar. */
-const SHORT = COUNTRIES.slice(0, 3);
 
 export const Default: Story = {
   parameters: {
@@ -159,74 +154,6 @@ export const Default: Story = {
   },
 };
 
-export const OpenWithActiveOption: Story = {
-  parameters: {
-    covers: ['visual.item3'],
-    docs: {
-      description: {
-        story:
-          'Lista aberta, ancorada ao campo. A opção ativa é apontada por aria-activedescendant e realçada por data-highlighted — nenhuma opção recebe foco do navegador.',
-      },
-    },
-  },
-  render: () => ({
-    components,
-    setup() {
-      const country = ref('');
-      return { country, countries: SHORT };
-    },
-    template: `
-      <div class="nds-w-xs nds-min-h-70">
-        <Combobox v-model="country" :default-open="true">
-          <ComboboxLabel>País</ComboboxLabel>
-          <ComboboxInputWrapper>
-            <ComboboxInput placeholder="Buscar país" />
-            <ComboboxTrigger aria-label="Abrir lista">
-              <ComboboxIcon />
-            </ComboboxTrigger>
-          </ComboboxInputWrapper>
-          <ComboboxPositioner>
-            <ComboboxPopup>
-              <ComboboxList>
-                <ComboboxItem
-                  v-for="option in countries"
-                  :key="option.value"
-                  :value="option.value"
-                >
-                  {{ option.label }}
-                  <ComboboxItemIndicator />
-                </ComboboxItem>
-              </ComboboxList>
-              <ComboboxEmpty>Nenhum resultado</ComboboxEmpty>
-            </ComboboxPopup>
-          </ComboboxPositioner>
-        </Combobox>
-      </div>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const field = canvas.getByRole('combobox', { name: /País/i });
-
-    await step('A lista está aberta e o campo anuncia isso', async () => {
-      await expect(field).toHaveAttribute('aria-expanded', 'true');
-      const listbox = canvas.getByRole('listbox');
-      await expect(within(listbox).getAllByRole('option')).toHaveLength(SHORT.length);
-    });
-
-    await step('A seta destaca uma opção sem tirar o foco do campo', async () => {
-      field.focus();
-      await userEvent.keyboard('{Home}');
-      const options = canvas.getAllByRole('option');
-      await waitFor(async () => {
-        await expect(field).toHaveAttribute('aria-activedescendant', options[0].id);
-      });
-      await expect(options[0]).toHaveAttribute('data-highlighted');
-      await expect(field).toHaveFocus();
-    });
-  },
-};
-
 export const EmptyResult: Story = {
   parameters: {
     covers: ['functional.item7', 'visual.item5'],
@@ -241,7 +168,7 @@ export const EmptyResult: Story = {
     components,
     setup() {
       const country = ref('');
-      return { country, countries: SHORT };
+      return { country, countries: SHORT_COUNTRIES };
     },
     template: `
       <div class="nds-w-xs nds-min-h-70">
@@ -326,7 +253,7 @@ export const Disabled: Story = {
     components,
     setup() {
       const country = ref('brasil');
-      return { country, countries: SHORT };
+      return { country, countries: SHORT_COUNTRIES };
     },
     template: `
       <div class="nds-w-xs">
@@ -395,7 +322,7 @@ export const Invalid: Story = {
     components,
     setup() {
       const country = ref('');
-      return { country, countries: SHORT };
+      return { country, countries: SHORT_COUNTRIES };
     },
     template: `
       <div class="nds-w-xs nds-stack" data-spacing="sm">
@@ -446,129 +373,6 @@ export const Invalid: Story = {
       const painted = noTransicao(box, () => getComputedStyle(box).borderTopColor);
       await expect(expected).not.toBeNull();
       await expect(painted).toBe(expected);
-    });
-  },
-};
-
-export const Controlled: Story = {
-  parameters: {
-    docs: {
-      source: { transform: comboboxControlledSource },
-      description: {
-        story:
-          'Valor e texto de busca administrados por fora: a escolha entra e sai pelo modelo do campo, e o texto digitado também. Os botões acima escrevem no estado externo sem tocar no componente; a linha abaixo mostra o que esse estado guarda.',
-      },
-    },
-  },
-  render: () => ({
-    components: { ...components, Button },
-    setup() {
-      // Os dois modelos moram FORA: `country` leva a escolha, `search` leva o
-      // texto de busca. Nenhum dos dois é copiado para dentro do componente.
-      const country = ref('');
-      const search = ref('');
-      return { country, search, countries: SHORT };
-    },
-    template: `
-      <div class="nds-stack nds-w-xs nds-min-h-100" data-spacing="sm">
-        <div class="nds-cluster" data-spacing="md">
-          <Button @click="country = 'brasil'">Escolher por fora</Button>
-          <Button variant="outline" @click="search = 'arg'">Buscar por fora</Button>
-          <Button variant="ghost" @click="country = ''; search = ''">Limpar por fora</Button>
-        </div>
-        <Combobox v-model="country" v-model:input-value="search">
-          <ComboboxLabel>País</ComboboxLabel>
-          <ComboboxInputWrapper>
-            <ComboboxInput placeholder="Buscar país" />
-            <ComboboxClear aria-label="Limpar" />
-            <ComboboxTrigger aria-label="Abrir lista">
-              <ComboboxIcon />
-            </ComboboxTrigger>
-          </ComboboxInputWrapper>
-          <ComboboxPositioner>
-            <ComboboxPopup>
-              <ComboboxList>
-                <ComboboxItem
-                  v-for="option in countries"
-                  :key="option.value"
-                  :value="option.value"
-                >
-                  {{ option.label }}
-                  <ComboboxItemIndicator />
-                </ComboboxItem>
-              </ComboboxList>
-              <ComboboxEmpty>Nenhum resultado</ComboboxEmpty>
-            </ComboboxPopup>
-          </ComboboxPositioner>
-        </Combobox>
-        <p class="nds-text-caption nds-text-muted-foreground">
-          Escolhido: <code data-testid="controlled-value">{{ country || 'nenhum' }}</code> ·
-          Texto: <code data-testid="controlled-text">{{ search || 'vazio' }}</code>
-        </p>
-      </div>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const field = canvas.getByRole('combobox', { name: /País/i });
-    const chosenValue = () => canvas.getByTestId('controlled-value');
-    const inputText = () => canvas.getByTestId('controlled-text');
-
-    // Cada passo estabelece a própria precondição: o painel Interactions
-    // reexecuta a play no MESMO DOM, e o estado externo chega como a rodada
-    // anterior o deixou.
-    const reset = async () => {
-      await userEvent.click(canvas.getByRole('button', { name: 'Limpar por fora' }));
-      field.focus();
-      // Abrir a lista inteira uma vez publica o RÓTULO de cada opção, e é dele
-      // que o campo tira o texto quando a escolha chega de fora — o modelo
-      // guarda só o valor.
-      await userEvent.keyboard('{ArrowDown}');
-      await waitFor(async () => {
-        await expect(canvas.getAllByRole('option')).toHaveLength(SHORT.length);
-      });
-      await userEvent.keyboard('{Escape}');
-      await waitFor(async () => {
-        await expect(field).toHaveAttribute('aria-expanded', 'false');
-      });
-      await waitFor(async () => {
-        await expect(field).toHaveValue('');
-      });
-    };
-
-    await step('Escolher na lista atualiza o estado externo', async () => {
-      await reset();
-      await userEvent.type(field, 'chi');
-      await waitFor(async () => {
-        await expect(within(canvas.getByRole('listbox')).getAllByRole('option')).toHaveLength(1);
-      });
-      await userEvent.keyboard('{Enter}');
-      // O estado externo recebe o VALOR…
-      await waitFor(async () => {
-        await expect(chosenValue()).toHaveTextContent('chile');
-      });
-      // …e o texto controlado passa a ser o RÓTULO correspondente, dos dois
-      // lados: no campo e no estado de quem consome.
-      await waitFor(async () => {
-        await expect(field).toHaveValue('Chile');
-      });
-      await expect(inputText()).toHaveTextContent('Chile');
-    });
-
-    await step('Escrever no estado externo muda o que a tela mostra', async () => {
-      await userEvent.click(canvas.getByRole('button', { name: 'Escolher por fora' }));
-      await waitFor(async () => {
-        await expect(chosenValue()).toHaveTextContent('brasil');
-      });
-      await waitFor(async () => {
-        await expect(field).toHaveValue('Brasil');
-      });
-
-      await userEvent.click(canvas.getByRole('button', { name: 'Buscar por fora' }));
-      await waitFor(async () => {
-        await expect(field).toHaveValue('arg');
-      });
-      await expect(inputText()).toHaveTextContent('arg');
     });
   },
 };

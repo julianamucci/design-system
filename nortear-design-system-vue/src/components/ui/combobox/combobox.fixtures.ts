@@ -27,6 +27,9 @@ export const COUNTRIES: ComboboxOption[] = [
   { value: 'uruguai', label: 'Uruguai' },
 ];
 
+/** As três primeiras da lista: curta o bastante para a caixa aberta não rolar. */
+export const SHORT_COUNTRIES: ComboboxOption[] = COUNTRIES.slice(0, 3);
+
 export const FRUITS: ComboboxOption[] = [
   { value: 'maca', label: 'Maçã' },
   { value: 'banana', label: 'Banana' },

@@ -13,13 +13,12 @@ import {
 
 // ─── Dados fixos ──────────────────────────────────────────────────────────────
 //
-// Os mesmos rótulos que as outras quatro stacks vão repetir nestas três stories.
+// Os mesmos rótulos que as outras quatro stacks vão repetir nestas duas stories.
 // Divergir aqui é o que faz a mesma story mostrar coisas diferentes em cada
 // stack — e isso só aparece tarde, na comparação final.
 
-// Nove rótulos. Com o campo estreito, os seis escolhidos já passam da largura
-// da caixa: é esse transbordo que a forma de linha única tem de ROLAR em vez de
-// quebrar, e sem ele a story não teria o que medir.
+// Nove rótulos: lista longa o bastante para o filtro próprio ter o que recusar
+// e para o campo controlado ter mais de uma escolha a anunciar.
 const COUNTRIES: ComboboxItem[] = [
   { value: 'brasil', label: 'Brasil' },
   { value: 'argentina', label: 'Argentina' },
@@ -32,18 +31,6 @@ const COUNTRIES: ComboboxItem[] = [
   { value: 'uruguai', label: 'Uruguai' },
 ];
 
-/**
- * Folga em pixels ao comparar a borda de cima de dois CHIPS.
- *
- * Chips têm a mesma altura e vivem na mesma linha do flex: a diferença real é
- * zero, e poucos px só absorvem arredondamento de subpixel. A linha seguinte
- * ficaria a uma altura de chip mais o gap daqui — fora de qualquer folga.
- */
-const LINE_TOLERANCE = 4;
-
-/** Borda de cima da peça, em coordenadas de tela. */
-const topOf = (element: Element): number => element.getBoundingClientRect().top;
-
 /** Sem acento e sem caixa — a mesma normalização que o filtro padrão faz. */
 const withoutAccent = (text: string): string =>
   text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
@@ -52,9 +39,6 @@ const withoutAccent = (text: string): string =>
 
 /** Rótulos derivados da lista: o snippet mostra o que está na tela. */
 const COUNTRY_LABELS = COUNTRIES.map((item) => item.label);
-
-/** Os seis já escolhidos, que são o que faz a caixa de chips transbordar. */
-const SINGLE_LINE_VALUE = ['brasil', 'argentina', 'chile', 'colombia', 'mexico', 'peru'];
 
 const meta: Meta = {
   title: 'UI/Combobox/Compositions',
@@ -66,7 +50,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      // Piso do arquivo: as três composições declaram a sua, porque cada uma
+      // Piso do arquivo: as duas composições declaram a sua, porque cada uma
       // tem forma própria de chamada. Sem transform aqui, uma story nova
       // entraria despejando `outerHTML` no painel Code — em silêncio.
       source: {
@@ -80,7 +64,7 @@ const meta: Meta = {
       },
       description: {
         component:
-          'Composições do Combobox: chips em linha única, filtro substituído e campo controlado por quem o usa.',
+          'Composições do Combobox: filtro substituído e campo controlado por quem o usa.',
       },
     },
   },
@@ -88,93 +72,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-// ─── Chips em linha única ─────────────────────────────────────────────────────
-
-export const SingleLineChips: Story = {
-  parameters: {
-    docs: {
-      // O snippet mostra `chipsLayout: 'single-line'`, que é o assunto — e não
-      // a largura estreita, que é andaime para forçar o transbordo aqui.
-      source: {
-        transform: comboboxSourceWith({
-          label: 'Países',
-          placeholder: 'Adicionar país',
-          multiple: true,
-          chipsLayout: 'single-line',
-          name: 'paises',
-          items: COUNTRY_LABELS,
-          defaultValue: SINGLE_LINE_VALUE,
-        }),
-      },
-      description: {
-        story:
-          'Chips numa linha só: a caixa dos chips rola na horizontal em vez de crescer em altura, e os botões de limpar e de abrir continuam na primeira linha.',
-      },
-    },
-  },
-  render: () =>
-    createCombobox({
-      items: COUNTRIES,
-      label: 'Países',
-      placeholder: 'Adicionar país',
-      multiple: true,
-      chipsLayout: 'single-line',
-      // Campo estreito de propósito: é o que garante o transbordo. A medida sai
-      // de uma utilitária compartilhada, não de um style inline.
-      className: 'nds-w-2xs',
-      name: 'paises',
-      defaultValue: SINGLE_LINE_VALUE,
-    }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const wrapper = canvasElement.querySelector<HTMLElement>(
-      '[data-slot="combobox-input-wrapper"]',
-    )!;
-    const chipsBox = canvasElement.querySelector<HTMLElement>(
-      '[data-slot="combobox-chips"]',
-    )!;
-    const chips = () => [
-      ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="combobox-chip"]'),
-    ];
-
-    await step('O campo declara a forma de linha única', async () => {
-      // É o seletor de que a folha compartilhada depende. Sem o atributo, a
-      // regra de CSS não alcança nada e as duas formas viram uma só.
-      await expect(wrapper).toHaveAttribute('data-chips', 'single-line');
-      await expect(chips()).toHaveLength(6);
-    });
-
-    await step('Os chips transbordam sem sair da primeira linha', async () => {
-      // As duas metades da promessa, e nenhuma sozinha basta: a caixa tem de
-      // ROLAR (transbordou de verdade) e os chips têm de dividir a MESMA borda
-      // de cima (não quebraram). Apagar `flex-wrap: nowrap` faz esta segunda
-      // metade reprovar, que é justamente o que a story existe para guardar.
-      await expect(chipsBox.scrollWidth).toBeGreaterThan(chipsBox.clientWidth);
-      const firstTop = topOf(chips()[0]);
-      for (const chip of chips()) {
-        await expect(Math.abs(topOf(chip) - firstTop)).toBeLessThanOrEqual(LINE_TOLERANCE);
-      }
-    });
-
-    await step('Limpar e abrir continuam na primeira linha', async () => {
-      // O defeito relatado: com os controles DENTRO da caixa que quebra ou rola,
-      // eles desciam junto com os chips. Ficam fora dela, irmãos, e por isso a
-      // borda de cima deles empata com a do primeiro chip.
-      //
-      // A folga aqui é a ALTURA DO PRÓPRIO CHIP, e não um número escolhido a
-      // dedo: chip e botão não têm a mesma altura, a barra de rolagem da caixa
-      // rouba alguns px do alinhamento ao centro, e as duas diferenças mudam com
-      // a densidade e com a fonte. Uma segunda linha começaria uma altura de chip
-      // MAIS o gap abaixo — bem fora desta folga, que é a distinção que importa.
-      const first = chips()[0].getBoundingClientRect();
-      const clear = canvas.getByRole('button', { name: 'Limpar' });
-      const trigger = canvas.getByRole('button', { name: 'Abrir lista' });
-      await expect(Math.abs(topOf(clear) - first.top)).toBeLessThan(first.height);
-      await expect(Math.abs(topOf(trigger) - first.top)).toBeLessThan(first.height);
-    });
-  },
-};
 
 // ─── Filtro substituído ───────────────────────────────────────────────────────
 

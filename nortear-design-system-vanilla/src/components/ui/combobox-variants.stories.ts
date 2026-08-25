@@ -22,6 +22,10 @@ const GROCERIES: ComboboxItem[] = [
 
 // Lista da escolha múltipla: os mesmos rótulos que a spec de exemplos fechou
 // para o campo de países, e que as outras stacks repetem.
+//
+// Nove rótulos. Com o campo estreito da forma de linha única, os seis já
+// escolhidos passam da largura da caixa: é esse transbordo que ela tem de ROLAR
+// em vez de quebrar, e sem ele aquela story não teria o que medir.
 const MULTI_COUNTRIES: ComboboxItem[] = [
   { value: 'brasil', label: 'Brasil' },
   { value: 'argentina', label: 'Argentina' },
@@ -41,6 +45,12 @@ const MULTI_COUNTRIES: ComboboxItem[] = [
 
 /** Rótulos da lista plana, na ordem em que aparecem. */
 const COUNTRY_LABELS = COUNTRIES.map((item) => item.label);
+
+/** Rótulos da lista longa, usados pelo snippet da forma de linha única. */
+const MULTI_COUNTRY_LABELS = MULTI_COUNTRIES.map((item) => item.label);
+
+/** Os seis já escolhidos, que são o que faz a caixa de chips transbordar. */
+const SINGLE_LINE_VALUE = ['brasil', 'argentina', 'chile', 'colombia', 'mexico', 'peru'];
 
 /** Os mesmos itens agrupados, na forma que o snippet monta. */
 const GROCERY_GROUPS = GROCERIES.reduce<Record<string, string[]>>((groups, item) => {
@@ -66,7 +76,8 @@ const meta: Meta = {
         }),
       },
       description: {
-        component: 'Formas do Combobox: lista aberta com opção ativa e lista agrupada.',
+        component:
+          'Formas do Combobox: lista aberta com opção ativa, escolha múltipla em chips, chips em linha única e lista agrupada.',
       },
     },
   },
@@ -312,6 +323,109 @@ export const MultipleWithChips: Story = {
       field.blur();
       await userEvent.click(chipsEl);
       await expect(field).toHaveFocus();
+    });
+  },
+};
+
+// ─── Chips em linha única ─────────────────────────────────────────────────────
+//
+// Medida de LINHA, e não de cor: os dois ajudantes abaixo existem só para esta
+// story, e é por eles que a play distingue "transbordou e rolou" de "quebrou em
+// duas linhas".
+
+/**
+ * Folga em pixels ao comparar a borda de cima de dois CHIPS.
+ *
+ * Chips têm a mesma altura e vivem na mesma linha do flex: a diferença real é
+ * zero, e poucos px só absorvem arredondamento de subpixel. A linha seguinte
+ * ficaria a uma altura de chip mais o gap daqui — fora de qualquer folga.
+ */
+const LINE_TOLERANCE = 4;
+
+/** Borda de cima da peça, em coordenadas de tela. */
+const topOf = (element: Element): number => element.getBoundingClientRect().top;
+
+export const SingleLineChips: Story = {
+  parameters: {
+    docs: {
+      // O snippet mostra `chipsLayout: 'single-line'`, que é o assunto — e não
+      // a largura estreita, que é andaime para forçar o transbordo aqui.
+      source: {
+        transform: comboboxSourceWith({
+          label: 'Países',
+          placeholder: 'Adicionar país',
+          multiple: true,
+          chipsLayout: 'single-line',
+          name: 'paises',
+          items: MULTI_COUNTRY_LABELS,
+          defaultValue: SINGLE_LINE_VALUE,
+        }),
+      },
+      description: {
+        story:
+          'Chips numa linha só: a caixa dos chips rola na horizontal em vez de crescer em altura, e os botões de limpar e de abrir continuam na primeira linha.',
+      },
+    },
+  },
+  render: () =>
+    createCombobox({
+      items: MULTI_COUNTRIES,
+      label: 'Países',
+      placeholder: 'Adicionar país',
+      multiple: true,
+      chipsLayout: 'single-line',
+      // Campo estreito de propósito: é o que garante o transbordo. A medida sai
+      // de uma utilitária compartilhada, não de um style inline.
+      className: 'nds-w-2xs',
+      name: 'paises',
+      defaultValue: SINGLE_LINE_VALUE,
+    }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const wrapper = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="combobox-input-wrapper"]',
+    )!;
+    const chipsBox = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="combobox-chips"]',
+    )!;
+    const chips = () => [
+      ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="combobox-chip"]'),
+    ];
+
+    await step('O campo declara a forma de linha única', async () => {
+      // É o seletor de que a folha compartilhada depende. Sem o atributo, a
+      // regra de CSS não alcança nada e as duas formas viram uma só.
+      await expect(wrapper).toHaveAttribute('data-chips', 'single-line');
+      await expect(chips()).toHaveLength(6);
+    });
+
+    await step('Os chips transbordam sem sair da primeira linha', async () => {
+      // As duas metades da promessa, e nenhuma sozinha basta: a caixa tem de
+      // ROLAR (transbordou de verdade) e os chips têm de dividir a MESMA borda
+      // de cima (não quebraram). Apagar `flex-wrap: nowrap` faz esta segunda
+      // metade reprovar, que é justamente o que a story existe para guardar.
+      await expect(chipsBox.scrollWidth).toBeGreaterThan(chipsBox.clientWidth);
+      const firstTop = topOf(chips()[0]);
+      for (const chip of chips()) {
+        await expect(Math.abs(topOf(chip) - firstTop)).toBeLessThanOrEqual(LINE_TOLERANCE);
+      }
+    });
+
+    await step('Limpar e abrir continuam na primeira linha', async () => {
+      // O defeito relatado: com os controles DENTRO da caixa que quebra ou rola,
+      // eles desciam junto com os chips. Ficam fora dela, irmãos, e por isso a
+      // borda de cima deles empata com a do primeiro chip.
+      //
+      // A folga aqui é a ALTURA DO PRÓPRIO CHIP, e não um número escolhido a
+      // dedo: chip e botão não têm a mesma altura, a barra de rolagem da caixa
+      // rouba alguns px do alinhamento ao centro, e as duas diferenças mudam com
+      // a densidade e com a fonte. Uma segunda linha começaria uma altura de chip
+      // MAIS o gap abaixo — bem fora desta folga, que é a distinção que importa.
+      const first = chips()[0].getBoundingClientRect();
+      const clear = canvas.getByRole('button', { name: 'Limpar' });
+      const trigger = canvas.getByRole('button', { name: 'Abrir lista' });
+      await expect(Math.abs(topOf(clear) - first.top)).toBeLessThan(first.height);
+      await expect(Math.abs(topOf(trigger) - first.top)).toBeLessThan(first.height);
     });
   },
 };

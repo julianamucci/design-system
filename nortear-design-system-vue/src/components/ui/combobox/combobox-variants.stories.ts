@@ -22,14 +22,20 @@ import {
   ComboboxSeparator,
   ComboboxTrigger,
 } from './index';
-import type { ComboboxFilter } from './index';
 import { backgroundEffective, noTransicao, ratio } from '@shared/testing/cor';
-import { COUNTRIES, FRUITS, VEGETABLES, removeLabelOf, removedAnnouncementOf } from './combobox.fixtures';
 import {
-  comboboxCustomFilterSource,
+  COUNTRIES,
+  FRUITS,
+  SHORT_COUNTRIES,
+  VEGETABLES,
+  removeLabelOf,
+  removedAnnouncementOf,
+} from './combobox.fixtures';
+import {
   comboboxGroupedSource,
   comboboxMultipleSource,
   comboboxSingleLineSource,
+  comboboxSource,
 } from './combobox.source';
 
 const meta = {
@@ -44,7 +50,7 @@ const meta = {
       source: { transform: comboboxMultipleSource },
       description: {
         component:
-          'Múltipla escolha com chips dentro do próprio campo, e lista organizada por categoria. As duas formas partilham a mesma raiz: o que muda é o que a caixa do campo mostra e como as opções se agrupam.',
+          'Escolha única com a lista aberta, múltipla escolha com chips dentro do próprio campo e lista organizada por categoria. As formas partilham a mesma raiz: o que muda é o que a caixa do campo mostra e como as opções se agrupam.',
       },
     },
   },
@@ -52,6 +58,88 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const OpenWithActiveOption: Story = {
+  parameters: {
+    covers: ['visual.item3'],
+    docs: {
+      source: { transform: comboboxSource },
+      description: {
+        story:
+          'Lista aberta, ancorada ao campo. A opção ativa é apontada por aria-activedescendant e realçada por data-highlighted — nenhuma opção recebe foco do navegador.',
+      },
+    },
+  },
+  render: () => ({
+    components: {
+      Combobox,
+      ComboboxEmpty,
+      ComboboxIcon,
+      ComboboxInput,
+      ComboboxInputWrapper,
+      ComboboxItem,
+      ComboboxItemIndicator,
+      ComboboxLabel,
+      ComboboxList,
+      ComboboxPopup,
+      ComboboxPositioner,
+      ComboboxTrigger,
+    },
+    setup() {
+      const country = ref('');
+      return { country, countries: SHORT_COUNTRIES };
+    },
+    template: `
+      <div class="nds-w-xs nds-min-h-70">
+        <Combobox v-model="country" :default-open="true">
+          <ComboboxLabel>País</ComboboxLabel>
+          <ComboboxInputWrapper>
+            <ComboboxInput placeholder="Buscar país" />
+            <ComboboxTrigger aria-label="Abrir lista">
+              <ComboboxIcon />
+            </ComboboxTrigger>
+          </ComboboxInputWrapper>
+          <ComboboxPositioner>
+            <ComboboxPopup>
+              <ComboboxList>
+                <ComboboxItem
+                  v-for="option in countries"
+                  :key="option.value"
+                  :value="option.value"
+                >
+                  {{ option.label }}
+                  <ComboboxItemIndicator />
+                </ComboboxItem>
+              </ComboboxList>
+              <ComboboxEmpty>Nenhum resultado</ComboboxEmpty>
+            </ComboboxPopup>
+          </ComboboxPositioner>
+        </Combobox>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const field = canvas.getByRole('combobox', { name: /País/i });
+
+    await step('A lista está aberta e o campo anuncia isso', async () => {
+      await expect(field).toHaveAttribute('aria-expanded', 'true');
+      const listbox = canvas.getByRole('listbox');
+      await expect(within(listbox).getAllByRole('option')).toHaveLength(SHORT_COUNTRIES.length);
+    });
+
+    await step('A seta destaca uma opção sem tirar o foco do campo', async () => {
+      field.focus();
+      await userEvent.keyboard('{Home}');
+      const options = canvas.getAllByRole('option');
+      await waitFor(async () => {
+        await expect(field).toHaveAttribute('aria-activedescendant', options[0].id);
+      });
+      await expect(options[0]).toHaveAttribute('data-highlighted');
+      await expect(field).toHaveFocus();
+    });
+  },
+};
 
 export const MultipleWithChips: Story = {
   parameters: {
@@ -467,128 +555,6 @@ export const SingleLineChips: Story = {
       await expect(
         Math.abs(trigger.getBoundingClientRect().top - first),
       ).toBeLessThanOrEqual(TOLERANCE_PX);
-    });
-  },
-};
-
-/**
- * O predicado do consumidor: casa só por INÍCIO do rótulo.
- *
- * O filtro padrão casa em QUALQUER posição e ignora acento — "ru" acharia Peru
- * e Uruguai. Este não acha nenhum dos dois, e é essa diferença que a play mede.
- */
-const startsWithLabel: ComboboxFilter = (item, query) =>
-  item.label.toLocaleLowerCase().startsWith(query.toLocaleLowerCase());
-
-export const CustomFilter: Story = {
-  parameters: {
-    docs: {
-      source: { transform: comboboxCustomFilterSource },
-      description: {
-        story:
-          'Filtro próprio no lugar do padrão: aqui a busca casa só pelo começo do rótulo. Com um predicado à mão, cada opção decide a própria presença na lista, e o filtro de dentro sai de cena por inteiro.',
-      },
-    },
-  },
-  render: () => ({
-    components: {
-      Combobox,
-      ComboboxClear,
-      ComboboxEmpty,
-      ComboboxIcon,
-      ComboboxInput,
-      ComboboxInputWrapper,
-      ComboboxItem,
-      ComboboxItemIndicator,
-      ComboboxLabel,
-      ComboboxList,
-      ComboboxPopup,
-      ComboboxPositioner,
-      ComboboxTrigger,
-    },
-    setup() {
-      const country = ref('');
-      return { country, countries: COUNTRIES, startsWithLabel };
-    },
-    template: `
-      <div class="nds-w-xs nds-min-h-100">
-        <Combobox v-model="country" :filter="startsWithLabel">
-          <ComboboxLabel>País</ComboboxLabel>
-          <ComboboxInputWrapper>
-            <ComboboxInput placeholder="Buscar país" />
-            <ComboboxClear aria-label="Limpar" />
-            <ComboboxTrigger aria-label="Abrir lista">
-              <ComboboxIcon />
-            </ComboboxTrigger>
-          </ComboboxInputWrapper>
-          <ComboboxPositioner>
-            <ComboboxPopup>
-              <ComboboxList>
-                <ComboboxItem
-                  v-for="item in countries"
-                  :key="item.value"
-                  :value="item.value"
-                >
-                  {{ item.label }}
-                  <ComboboxItemIndicator />
-                </ComboboxItem>
-              </ComboboxList>
-              <ComboboxEmpty>Nenhum resultado</ComboboxEmpty>
-            </ComboboxPopup>
-          </ComboboxPositioner>
-        </Combobox>
-      </div>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const field = canvas.getByRole('combobox', { name: /País/i });
-
-    // Cada passo estabelece a própria precondição: o painel Interactions
-    // reexecuta a play no MESMO DOM, e digitar por cima do que ficou daria
-    // outro filtro.
-    const reset = async () => {
-      field.focus();
-      await userEvent.clear(field);
-      await userEvent.keyboard('{Escape}');
-      await waitFor(async () => {
-        await expect(field).toHaveAttribute('aria-expanded', 'false');
-      });
-    };
-
-    await step('Sem busca, a lista inteira aparece', async () => {
-      await reset();
-      await userEvent.keyboard('{ArrowDown}');
-      const listbox = await waitFor(() => canvas.getByRole('listbox'));
-      await waitFor(async () => {
-        await expect(within(listbox).getAllByRole('option')).toHaveLength(COUNTRIES.length);
-      });
-      // Os dois rótulos que carregam "ru" no MEIO: é o que o filtro padrão
-      // acharia, e é contra eles que o passo seguinte mede.
-      await expect(within(listbox).getByRole('option', { name: /^Peru$/ })).toBeVisible();
-      await expect(within(listbox).getByRole('option', { name: /^Uruguai$/ })).toBeVisible();
-    });
-
-    await step('O que só casa no meio não sobra na lista', async () => {
-      await reset();
-      await userEvent.type(field, 'ru');
-      await waitFor(async () => {
-        await expect(field).toHaveAttribute('aria-expanded', 'true');
-      });
-      await waitFor(async () => {
-        await expect(canvas.queryAllByRole('option')).toHaveLength(0);
-      });
-      const empty = canvasElement.querySelector('[data-slot="combobox-empty"]');
-      await expect(empty).toHaveTextContent('Nenhum resultado');
-    });
-
-    await step('A contagem de opções obedece ao predicado', async () => {
-      await reset();
-      await userEvent.type(field, 'co');
-      await waitFor(async () => {
-        await expect(canvas.getAllByRole('option')).toHaveLength(1);
-      });
-      await expect(canvas.getByRole('option')).toHaveTextContent('Colômbia');
     });
   },
 };

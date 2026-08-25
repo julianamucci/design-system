@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
-import { FOCUS_RULE_GUARDA, axeRules, waitForPortal } from "@/lib/wait-for-portal";
+import { FOCUS_RULE_GUARDA, axeRules } from "@/lib/wait-for-portal";
 import { noTransicao } from "@shared/testing/cor";
 import {
-  COUNTRIES,
   EMPTY_MESSAGE,
   SingleCountryCombobox,
   focusRingChanged,
@@ -28,7 +27,7 @@ const meta: Meta = {
       source: { transform: comboboxSource },
       description: {
         component:
-          "Estados do Combobox: fechado, aberto com opção ativa, lista vazia, desabilitado, inválido e com foco.",
+          "Estados do Combobox: fechado, lista vazia, desabilitado, inválido e com foco.",
       },
     },
   },
@@ -67,49 +66,6 @@ export const Default: Story = {
       // continuaria no percurso do leitor de tela.
       await expect(within(document.body).queryAllByRole("listbox")).toHaveLength(0);
       await expect(within(document.body).queryAllByRole("option")).toHaveLength(0);
-    });
-  },
-};
-
-export const OpenWithActiveOption: Story = {
-  parameters: {
-    covers: ["visual.item3", "accessibility.item3"],
-    a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
-    docs: {
-      description: {
-        story:
-          "Lista aberta, ancorada ao campo e desenhada acima do resto da página, com a opção ativa em destaque.",
-      },
-    },
-  },
-  render: () => <SingleCountryCombobox />,
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const field = canvas.getByRole("combobox") as HTMLInputElement;
-    const body = within(document.body);
-
-    await step("O gatilho abre a lista inteira", async () => {
-      // Idempotente: a play reexecuta no mesmo DOM, e um clique cego fecharia
-      // a lista na segunda rodada.
-      if (field.getAttribute("aria-expanded") !== "true") {
-        await userEvent.click(canvas.getByRole("button", { name: "Abrir lista" }));
-      }
-      await waitForPortal("listbox");
-      await expect(field).toHaveAttribute("aria-expanded", "true");
-      await expect(body.queryAllByRole("option")).toHaveLength(COUNTRIES.length);
-    });
-
-    await step("A seta destaca uma opção sem tirar o foco do campo", async () => {
-      if (!body.queryAllByRole("option").some((o) => o.hasAttribute("data-highlighted"))) {
-        await userEvent.keyboard("{ArrowDown}");
-      }
-      await waitFor(async () => {
-        const highlighted = body
-          .queryAllByRole("option")
-          .filter((option) => option.hasAttribute("data-highlighted"));
-        await expect(highlighted).toHaveLength(1);
-      });
-      await expect(field).toHaveFocus();
     });
   },
 };
