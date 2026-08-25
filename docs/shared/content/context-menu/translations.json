@@ -28,7 +28,7 @@
       "title": "Anatomia",
       "item1": "<strong>ContextMenu</strong> — raiz que gerencia estado de abertura e posicionamento do menu.",
       "item2": "<strong>ContextMenuTrigger</strong> — área que captura o right-click para abrir o menu.",
-      "item3": "<strong>ContextMenuContent</strong> — painel flutuante com os itens; usa <code>bg-popover</code>.",
+      "item3": "<strong>ContextMenuContent</strong> — painel flutuante com os itens; fundo de popover (<code>--popover</code>) e texto em <code>--popover-foreground</code>.",
       "item4": "<strong>ContextMenuGroup</strong> — agrupa itens relacionados semanticamente.",
       "item5": "<strong>ContextMenuLabel</strong> — rótulo não interativo de grupo; aceita <code>inset</code>.",
       "item6": "<strong>ContextMenuItem</strong> — item de ação padrão; variante <code>default</code> ou <code>destructive</code>.",
@@ -52,7 +52,7 @@
         "title": "Guidelines Obrigatórias",
         "item1": "Nunca use como único ponto de acesso: right-click não é descobrível em touch e não é óbvio para todos os usuários.",
         "item2": "Sempre ofereça alternativa explícita (botão, DropdownMenu) para as mesmas ações do menu.",
-        "item3": "Item destrutivo usa <code>className=\"text-destructive focus:text-destructive\"</code> — sem prop de variante.",
+        "item3": "Item destrutivo usa a variante <code>destructive</code>, que aplica a cor de alerta (<code>--destructive</code>) — nunca escreva essa cor à mão no item.",
         "item4": "Evite submenus: aumentam carga cognitiva e dificultam navegação por teclado.",
         "item5": "<code>ContextMenuShortcut</code> é apenas visual — implemente o atalho real via <code>useEffect</code> + listener."
       },
@@ -105,7 +105,7 @@
         "dont": "Usar o Context Menu como único acesso a funcionalidades críticas."
       },
       "pair2": {
-        "do": "Item destrutivo com className text-destructive separado dos demais por Separator.",
+        "do": "Item destrutivo na variante destructive, separado dos demais por um Separator.",
         "dont": "Aninhar múltiplos níveis de submenu — aumenta carga cognitiva."
       },
       "pair3": {
@@ -123,8 +123,8 @@
       "title": "Variantes",
       "note": "O <code>ContextMenuItem</code> tem 2 variantes via prop <code>variant</code>. Os demais subcomponentes não possuem variante de prop.",
       "items": {
-        "default": "Item de ação padrão. Foco com <code>bg-accent text-accent-foreground</code>.",
-        "destructive": "Ação destrutiva irreversível (ex: excluir). Texto vermelho com <code>text-destructive</code>; foco com <code>bg-destructive/10</code>.",
+        "default": "Item de ação padrão. Em foco, recebe o fundo de destaque (<code>--accent</code>) e texto em <code>--accent-foreground</code>.",
+        "destructive": "Ação destrutiva irreversível (ex: excluir). Texto na cor de alerta (<code>--destructive</code>); em foco, um fundo com 10% dessa mesma cor.",
         "withCheckbox": {
           "name": "Menu com checkboxes",
           "description": "Grupo de <code>CheckboxItem</code> sob um <code>Label</code> (ex.: \"Aparência\"). Cada item mantém estado booleano independente — múltiplas opções podem coexistir.",
@@ -168,7 +168,7 @@
       "focused": {
         "label": "Focado",
         "trigger": "Arrow keys ou Tab após abertura",
-        "behavior": "Item com foco recebe bg-accent text-accent-foreground"
+        "behavior": "Item com foco recebe o fundo de destaque (<code>--accent</code>) e texto em <code>--accent-foreground</code>"
       },
       "disabled": {
         "label": "Desabilitado",
@@ -183,7 +183,7 @@
       "subOpen": {
         "label": "Submenu aberto",
         "trigger": "Foco ou hover no SubTrigger",
-        "behavior": "SubContent aparece à direita; SubTrigger com bg-accent"
+        "behavior": "SubContent aparece à direita; o SubTrigger fica com o fundo de destaque (<code>--accent</code>)"
       }
     },
     "props": {
@@ -289,9 +289,9 @@
     "notes": {
       "title": "Notas de Implementação",
       "tip1": "<code>ContextMenuShortcut</code> é visual: para funcionar, implemente o atalho real via <code>useEffect</code> + <code>addEventListener('keydown')</code>.",
-      "tip2": "Item destrutivo: use <code>className=\"text-destructive focus:text-destructive\"</code> — não existe prop <code>variant=\"destructive\"</code> no componente base.",
+      "tip2": "Item destrutivo: use a variante <code>destructive</code> do item — ela pinta o texto com a cor de alerta (<code>--destructive</code>) e, no foco, um fundo com 10% dessa cor. Não escreva essas cores à mão.",
       "tip3": "Submenus aumentam a carga cognitiva: use apenas quando o agrupamento for essencial e nunca aninhe mais de um nível.",
-      "tip4": "O popup usa <code>bg-popover text-popover-foreground</code> — não sobrescreva com <code>bg-card</code>, que é reservado para painéis de conteúdo (Dialog, Sheet).",
+      "tip4": "O popup usa <code>--popover</code> e <code>--popover-foreground</code> — não troque por <code>--card</code>, que é reservado para painéis de conteúdo (Dialog, Sheet).",
       "tip5": "Para indicar ao usuário que a área tem menu de contexto, exiba uma dica sutil na interface (ex: texto auxiliar ou tooltip no hover)."
     },
     "analytics": {
@@ -472,7 +472,7 @@
       "title": "Anatomy",
       "item1": "<strong>ContextMenu</strong> — root that manages open state and menu positioning.",
       "item2": "<strong>ContextMenuTrigger</strong> — area that captures the right-click to open the menu.",
-      "item3": "<strong>ContextMenuContent</strong> — floating panel with items; uses <code>bg-popover</code>.",
+      "item3": "<strong>ContextMenuContent</strong> — floating panel with items; popover background (<code>--popover</code>) and text in <code>--popover-foreground</code>.",
       "item4": "<strong>ContextMenuGroup</strong> — semantically groups related items.",
       "item5": "<strong>ContextMenuLabel</strong> — non-interactive group label; accepts <code>inset</code>.",
       "item6": "<strong>ContextMenuItem</strong> — standard action item; <code>default</code> or <code>destructive</code> variant.",
@@ -496,7 +496,7 @@
         "title": "Required Guidelines",
         "item1": "Never use as the only access point: right-click is not discoverable on touch and not obvious to all users.",
         "item2": "Always provide an explicit alternative (button, DropdownMenu) for the same actions.",
-        "item3": "Destructive item uses <code>className=\"text-destructive focus:text-destructive\"</code> — no variant prop.",
+        "item3": "A destructive item uses the <code>destructive</code> variant, which applies the alert colour (<code>--destructive</code>) — never hand-write that colour on the item.",
         "item4": "Avoid submenus: they increase cognitive load and hinder keyboard navigation.",
         "item5": "<code>ContextMenuShortcut</code> is visual only — implement the real shortcut via <code>useEffect</code> + listener."
       },
@@ -549,7 +549,7 @@
         "dont": "Use Context Menu as the only access point to critical features."
       },
       "pair2": {
-        "do": "Destructive item with className text-destructive, separated by a Separator.",
+        "do": "Destructive item in the destructive variant, separated from the rest by a Separator.",
         "dont": "Nesting multiple submenu levels — increases cognitive load."
       },
       "pair3": {
@@ -567,8 +567,8 @@
       "title": "Variants",
       "note": "<code>ContextMenuItem</code> has 2 variants via the <code>variant</code> prop. Other subcomponents have no variant prop.",
       "items": {
-        "default": "Standard action item. Focus state: <code>bg-accent text-accent-foreground</code>.",
-        "destructive": "Irreversible destructive action (e.g., delete). Red text with <code>text-destructive</code>; focus with <code>bg-destructive/10</code>.",
+        "default": "Standard action item. On focus it takes the highlight background (<code>--accent</code>) and text in <code>--accent-foreground</code>.",
+        "destructive": "Irreversible destructive action (e.g., delete). Text in the alert colour (<code>--destructive</code>); on focus, a background at 10% of that same colour.",
         "withCheckbox": {
           "name": "Menu with checkboxes",
           "description": "Group of <code>CheckboxItem</code> under a <code>Label</code> (e.g., \"Appearance\"). Each item holds an independent boolean state — multiple options can coexist.",
@@ -612,7 +612,7 @@
       "focused": {
         "label": "Focused",
         "trigger": "Arrow keys or Tab after opening",
-        "behavior": "Focused item receives bg-accent text-accent-foreground"
+        "behavior": "The focused item receives the highlight background (<code>--accent</code>) and text in <code>--accent-foreground</code>"
       },
       "disabled": {
         "label": "Disabled",
@@ -627,7 +627,7 @@
       "subOpen": {
         "label": "Submenu open",
         "trigger": "Focus or hover on SubTrigger",
-        "behavior": "SubContent appears to the right; SubTrigger receives bg-accent"
+        "behavior": "SubContent appears to the right; the SubTrigger takes the highlight background (<code>--accent</code>)"
       }
     },
     "props": {
@@ -733,9 +733,9 @@
     "notes": {
       "title": "Implementation Notes",
       "tip1": "<code>ContextMenuShortcut</code> is visual only: to work, implement the real shortcut via <code>useEffect</code> + <code>addEventListener('keydown')</code>.",
-      "tip2": "Destructive item: use <code>className=\"text-destructive focus:text-destructive\"</code> — there is no <code>variant=\"destructive\"</code> prop on the base component.",
+      "tip2": "Destructive item: use the destructive variant of the item — it paints the text in the alert colour (<code>--destructive</code>) and, on focus, a background at 10% of that colour. Do not hand-write these colours.",
       "tip3": "Submenus increase cognitive load: use only when grouping is essential and never nest more than one level.",
-      "tip4": "The popup uses <code>bg-popover text-popover-foreground</code> — do not override with <code>bg-card</code>, which is reserved for content panels (Dialog, Sheet).",
+      "tip4": "The popup uses <code>--popover</code> and <code>--popover-foreground</code> — do not swap in <code>--card</code>, which is reserved for content panels (Dialog, Sheet).",
       "tip5": "To indicate to the user that an area has a context menu, display a subtle hint in the interface (e.g., helper text or hover tooltip)."
     },
     "analytics": {
@@ -916,7 +916,7 @@
       "title": "Anatomía",
       "item1": "<strong>ContextMenu</strong> — raíz que gestiona el estado de apertura y posicionamiento del menú.",
       "item2": "<strong>ContextMenuTrigger</strong> — área que captura el clic derecho para abrir el menú.",
-      "item3": "<strong>ContextMenuContent</strong> — panel flotante con los ítems; usa <code>bg-popover</code>.",
+      "item3": "<strong>ContextMenuContent</strong> — panel flotante con los ítems; fondo de popover (<code>--popover</code>) y texto en <code>--popover-foreground</code>.",
       "item4": "<strong>ContextMenuGroup</strong> — agrupa ítems relacionados semánticamente.",
       "item5": "<strong>ContextMenuLabel</strong> — etiqueta no interactiva de grupo; acepta <code>inset</code>.",
       "item6": "<strong>ContextMenuItem</strong> — ítem de acción estándar; variante <code>default</code> o <code>destructive</code>.",
@@ -940,7 +940,7 @@
         "title": "Guías Obligatorias",
         "item1": "Nunca uses como único punto de acceso: el clic derecho no es descubrible en touch y no es obvio para todos los usuarios.",
         "item2": "Siempre ofrece una alternativa explícita (botón, DropdownMenu) para las mismas acciones.",
-        "item3": "El ítem destructivo usa <code>className=\"text-destructive focus:text-destructive\"</code> — sin prop de variante.",
+        "item3": "El ítem destructivo usa la variante <code>destructive</code>, que aplica el color de alerta (<code>--destructive</code>) — nunca escribas ese color a mano en el ítem.",
         "item4": "Evita submenús: aumentan la carga cognitiva y dificultan la navegación por teclado.",
         "item5": "<code>ContextMenuShortcut</code> es solo visual — implementa el atajo real vía <code>useEffect</code> + listener."
       },
@@ -993,7 +993,7 @@
         "dont": "Usar el Context Menu como único acceso a funcionalidades críticas."
       },
       "pair2": {
-        "do": "Ítem destructivo con className text-destructive, separado por un Separator.",
+        "do": "Ítem destructivo en la variante destructive, separado de los demás por un Separator.",
         "dont": "Anidar múltiples niveles de submenú — aumenta la carga cognitiva."
       },
       "pair3": {
@@ -1011,8 +1011,8 @@
       "title": "Variantes",
       "note": "<code>ContextMenuItem</code> tiene 2 variantes vía la prop <code>variant</code>. Los demás subcomponentes no tienen prop de variante.",
       "items": {
-        "default": "Ítem de acción estándar. Estado de foco: <code>bg-accent text-accent-foreground</code>.",
-        "destructive": "Acción destructiva irreversible (ej: eliminar). Texto rojo con <code>text-destructive</code>; foco con <code>bg-destructive/10</code>.",
+        "default": "Ítem de acción estándar. Al enfocarse toma el fondo de realce (<code>--accent</code>) y texto en <code>--accent-foreground</code>.",
+        "destructive": "Acción destructiva irreversible (ej: eliminar). Texto en el color de alerta (<code>--destructive</code>); al enfocarse, un fondo con el 10% de ese mismo color.",
         "withCheckbox": {
           "name": "Menú con checkboxes",
           "description": "Grupo de <code>CheckboxItem</code> bajo un <code>Label</code> (ej.: \"Apariencia\"). Cada ítem mantiene un estado booleano independiente — múltiples opciones pueden coexistir.",
@@ -1056,7 +1056,7 @@
       "focused": {
         "label": "Enfocado",
         "trigger": "Arrow keys o Tab después de abrir",
-        "behavior": "El ítem enfocado recibe bg-accent text-accent-foreground"
+        "behavior": "El ítem enfocado recibe el fondo de realce (<code>--accent</code>) y texto en <code>--accent-foreground</code>"
       },
       "disabled": {
         "label": "Deshabilitado",
@@ -1071,7 +1071,7 @@
       "subOpen": {
         "label": "Submenú abierto",
         "trigger": "Foco o hover en SubTrigger",
-        "behavior": "SubContent aparece a la derecha; SubTrigger recibe bg-accent"
+        "behavior": "SubContent aparece a la derecha; el SubTrigger toma el fondo de realce (<code>--accent</code>)"
       }
     },
     "props": {
@@ -1177,9 +1177,9 @@
     "notes": {
       "title": "Notas de Implementación",
       "tip1": "<code>ContextMenuShortcut</code> es solo visual: para funcionar, implementa el atajo real vía <code>useEffect</code> + <code>addEventListener('keydown')</code>.",
-      "tip2": "Ítem destructivo: usa <code>className=\"text-destructive focus:text-destructive\"</code> — no existe prop <code>variant=\"destructive\"</code> en el componente base.",
+      "tip2": "Ítem destructivo: usa la variante <code>destructive</code> del ítem — pinta el texto con el color de alerta (<code>--destructive</code>) y, al enfocarse, un fondo con el 10% de ese color. No escribas esos colores a mano.",
       "tip3": "Los submenús aumentan la carga cognitiva: úsalos solo cuando el agrupamiento sea esencial y nunca anides más de un nivel.",
-      "tip4": "El popup usa <code>bg-popover text-popover-foreground</code> — no sobrescribas con <code>bg-card</code>, que es para paneles de contenido (Dialog, Sheet).",
+      "tip4": "El popup usa <code>--popover</code> y <code>--popover-foreground</code> — no lo cambies por <code>--card</code>, que es para paneles de contenido (Dialog, Sheet).",
       "tip5": "Para indicar al usuario que el área tiene menú de contexto, muestra una pista sutil en la interfaz (ej: texto auxiliar o tooltip al pasar el cursor)."
     },
     "analytics": {

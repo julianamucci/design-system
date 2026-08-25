@@ -995,10 +995,14 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
     return [
       { token: '--border',  className: 'nds-border-default', k: 'border'       },
       { token: '--muted',   className: 'nds-bg-muted-soft',  k: 'background'   },
-      { token: '--radius',  className: 'nds-rounded-md',     k: 'radius'       },
+      // `.nds-rounded-md` lê `--radius-md`, não `--radius`.
+      { token: '--radius-md', className: 'nds-rounded-md',   k: 'radius'       },
+      // O trigger é um Button ghost: hover e foco vêm de `button.css`. O
+      // utilitário `.nds-focus-ring` existe, mas não é ele que o trigger usa.
       { token: '--accent',  className: 'nds-button-ghost',   k: 'triggerHover' },
-      { token: '--ring',    className: 'nds-focus-ring',     k: 'triggerFocus' },
-      { token: '--duration-base', className: 'nds-collapsible', k: 'transition' },
+      { token: '--ring',    className: 'nds-button:focus-visible', k: 'triggerFocus' },
+      // A transição de altura está no painel, não na raiz.
+      { token: '--duration-base', className: 'nds-collapsible [data-slot="collapsible-content"]', k: 'transition' },
     ].map(({ token, className, k }) => ({
       token,
       value: className,

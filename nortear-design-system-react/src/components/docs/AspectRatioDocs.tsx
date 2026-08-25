@@ -545,9 +545,9 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
           description: tContent("tokens.table.part"),
         }}
         items={[
-          { token: "--radius", value: "rounded-md", description: tContent("tokens.table.radius") },
-          { token: "--border", value: "border border-border", description: tContent("tokens.table.border") },
-          { token: "--muted", value: "bg-muted", description: tContent("tokens.table.muted") },
+          { token: "--radius-md", value: ".nds-rounded-md", description: tContent("tokens.table.radius") },
+          { token: "--border", value: ".nds-border-default", description: tContent("tokens.table.border") },
+          { token: "--muted", value: ".nds-bg-muted", description: tContent("tokens.table.muted") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={codeCustomizationTokens}

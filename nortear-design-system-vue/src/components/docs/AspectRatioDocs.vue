@@ -221,8 +221,11 @@ const slotPropItems = computed(() => [
 
 const tokenRows = computed(() => [
   { token: '—',         value: '—',            description: tContent('tokens.table.radius')  },
-  { token: '--border',  value: 'border',       description: tContent('tokens.table.border')  },
-  { token: '--muted',   value: 'bg-muted',     description: tContent('tokens.table.muted')   },
+  // A coluna do meio nomeia o SELETOR que lê o token, não a classe utilitária
+  // da era anterior. `nds/aspect-ratio.css` só lê `--ratio`: o container não
+  // tem cor própria, e o placeholder se veste com utilitários de `colors.css`.
+  { token: '--border',  value: '.nds-border-default', description: tContent('tokens.table.border')  },
+  { token: '--muted',   value: '.nds-bg-muted',       description: tContent('tokens.table.muted')   },
 ]);
 
 const accessibilityItems = computed(() => [

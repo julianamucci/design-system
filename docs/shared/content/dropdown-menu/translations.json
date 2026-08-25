@@ -424,7 +424,7 @@
         "item3": "Content tem role=menu (WCAG 4.1.2)",
         "item4": "Items têm role=menuitem/menuitemcheckbox/menuitemradio corretos",
         "item5": "Foco retorna ao trigger ao fechar via ESC ou seleção (WCAG 2.4.3)",
-        "item6": "Contraste mínimo 4.5:1 entre texto do item e bg-popover (WCAG 1.4.3)"
+        "item6": "Contraste mínimo 4.5:1 entre o texto do item e o fundo do menu (--popover-foreground sobre --popover) (WCAG 1.4.3)"
       },
       "visual": {
         "title": "Regressão Visual",
@@ -899,7 +899,7 @@
         "item3": "Content has role=menu (WCAG 4.1.2)",
         "item4": "Items have correct role=menuitem/menuitemcheckbox/menuitemradio",
         "item5": "Focus returns to trigger on close via ESC or selection (WCAG 2.4.3)",
-        "item6": "Minimum 4.5:1 contrast between item text and bg-popover (WCAG 1.4.3)"
+        "item6": "Minimum 4.5:1 contrast between item text and the menu background (--popover-foreground over --popover) (WCAG 1.4.3)"
       },
       "visual": {
         "title": "Visual Regression",
@@ -1374,7 +1374,7 @@
         "item3": "Content tiene role=menu (WCAG 4.1.2)",
         "item4": "Items tienen role=menuitem/menuitemcheckbox/menuitemradio correctos",
         "item5": "Foco vuelve al trigger al cerrar vía ESC o selección (WCAG 2.4.3)",
-        "item6": "Contraste mínimo 4.5:1 entre texto del item y bg-popover (WCAG 1.4.3)"
+        "item6": "Contraste mínimo 4.5:1 entre el texto del ítem y el fondo del menú (--popover-foreground sobre --popover) (WCAG 1.4.3)"
       },
       "visual": {
         "title": "Regresión Visual",

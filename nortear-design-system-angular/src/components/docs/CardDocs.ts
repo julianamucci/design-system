@@ -600,8 +600,11 @@ export class NdsCardDocs implements AfterViewInit, OnDestroy {
       { token: '--card-foreground', value: '.nds-card',             description: toPlainText(t('tokens.table.cardForeground')) },
       { token: '--muted',           value: '.nds-card-footer',      description: toPlainText(t('tokens.table.muted'))          },
       { token: '--muted-foreground', value: '.nds-card-description', description: toPlainText(t('tokens.table.mutedForeground')) },
-      { token: '--foreground',      value: '.nds-card-title',       description: toPlainText(t('tokens.table.foreground'))     },
-      { token: '--border',          value: '.nds-card',             description: toPlainText(t('tokens.table.border'))         },
+      // `--foreground` é lido em `.nds-card`, que o usa a 10% para o anel de
+      // contorno (`--card-ring`); o title só tem margin, tamanho e peso. E
+      // `--border` é do rodapé — é ele que tem `border-top`, não a raiz.
+      { token: '--foreground',      value: '.nds-card',             description: toPlainText(t('tokens.table.foreground'))     },
+      { token: '--border',          value: '.nds-card-footer',      description: toPlainText(t('tokens.table.border'))         },
     ];
   });
 

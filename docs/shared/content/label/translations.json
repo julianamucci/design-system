@@ -128,7 +128,7 @@
       "required": {
         "label": "Required",
         "trigger": "Campo obrigatório — asterisco adicionado pelo código consumidor",
-        "behavior": "<code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> em <code>text-destructive</code> como filho do Label"
+        "behavior": "<code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> em <code>nds-text-destructive</code> como filho do Label"
       }
     },
     "props": {
@@ -406,7 +406,7 @@
       "required": {
         "label": "Required",
         "trigger": "Required field — asterisk added by the consumer",
-        "behavior": "<code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> in <code>text-destructive</code> as a child of Label"
+        "behavior": "<code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> in <code>nds-text-destructive</code> as a child of Label"
       }
     },
     "props": {
@@ -684,7 +684,7 @@
       "required": {
         "label": "Required",
         "trigger": "Campo obligatorio — asterisco agregado por el código consumidor",
-        "behavior": "<code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> en <code>text-destructive</code> como hijo del Label"
+        "behavior": "<code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> en <code>nds-text-destructive</code> como hijo del Label"
       }
     },
     "props": {

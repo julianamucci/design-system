@@ -1237,15 +1237,15 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
           description: tContent("tokens.table.part"),
         }}
         items={[
-          { token: "--sidebar", value: "bg-sidebar", description: tContent("tokens.sidebarBg") },
-          { token: "--sidebar-foreground", value: "text-sidebar-foreground", description: tContent("tokens.sidebarFg") },
-          { token: "--sidebar-border", value: "border-sidebar-border", description: tContent("tokens.sidebarBorder") },
-          { token: "--sidebar-accent", value: "bg-sidebar-accent", description: tContent("tokens.sidebarAccent") },
-          { token: "--sidebar-accent-foreground", value: "text-sidebar-accent-foreground", description: tContent("tokens.sidebarAccentFg") },
-          { token: "--sidebar-ring", value: "ring-sidebar-ring", description: tContent("tokens.sidebarRing") },
-          { token: "--sidebar-width", value: "w-(--sidebar-width)", description: tContent("tokens.sidebarWidth") },
-          { token: "--sidebar-width-icon", value: "w-(--sidebar-width-icon)", description: tContent("tokens.sidebarWidthIcon") },
-          { token: "--sidebar-width-mobile", value: "w-(--sidebar-width-mobile)", description: tContent("tokens.sidebarWidthMobile") },
+          { token: "--sidebar", value: ".nds-sidebar-inner", description: tContent("tokens.sidebarBg") },
+          { token: "--sidebar-foreground", value: ".nds-sidebar-root", description: tContent("tokens.sidebarFg") },
+          { token: "--sidebar-border", value: ".nds-sidebar-panel, .nds-sidebar-separator", description: tContent("tokens.sidebarBorder") },
+          { token: "--sidebar-accent", value: ".nds-sidebar-menu-button", description: tContent("tokens.sidebarAccent") },
+          { token: "--sidebar-accent-foreground", value: ".nds-sidebar-menu-button", description: tContent("tokens.sidebarAccentFg") },
+          { token: "--sidebar-ring", value: ".nds-sidebar-menu-button:focus-visible", description: tContent("tokens.sidebarRing") },
+          { token: "--sidebar-width", value: ".nds-sidebar-wrapper", description: tContent("tokens.sidebarWidth") },
+          { token: "--sidebar-width-icon", value: ".nds-sidebar-wrapper", description: tContent("tokens.sidebarWidthIcon") },
+          { token: "--sidebar-width-mobile", value: ".nds-sidebar-mobile", description: tContent("tokens.sidebarWidthMobile") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={codeCustomizationTokens}

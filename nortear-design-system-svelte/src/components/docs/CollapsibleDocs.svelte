@@ -732,12 +732,12 @@ interface CollapsibleContentProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--border',     value: 'border',                    description: $tStore('tokens.table.border')       },
-      { token: '--background', value: 'bg-background',             description: $tStore('tokens.table.background')   },
-      { token: '--radius',     value: 'rounded-md',                description: $tStore('tokens.table.radius')       },
-      { token: '--accent',     value: 'nds-hover-bg-accent',           description: $tStore('tokens.table.triggerHover') },
-      { token: '--ring',       value: 'nds-focus-ring',      description: $tStore('tokens.table.triggerFocus') },
-      { token: '--duration-base', value: '.nds-collapsible',        description: $tStore('tokens.table.transition')   },
+      { token: '--border',     value: '.nds-border-default',        description: $tStore('tokens.table.border')       },
+      { token: '--background', value: '.nds-bg-background',         description: $tStore('tokens.table.background')   },
+      { token: '--radius',     value: '.nds-rounded-md',            description: $tStore('tokens.table.radius')       },
+      { token: '--accent',     value: '.nds-button-ghost:hover',    description: $tStore('tokens.table.triggerHover') },
+      { token: '--ring',       value: '.nds-button:focus-visible',  description: $tStore('tokens.table.triggerFocus') },
+      { token: '--duration-base', value: '.nds-collapsible [data-slot="collapsible-content"]', description: $tStore('tokens.table.transition')   },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={codeCustomizationTokens}

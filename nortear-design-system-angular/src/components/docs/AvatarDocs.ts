@@ -695,10 +695,14 @@ export class NdsAvatarDocs implements AfterViewInit, OnDestroy {
       { token: '--radius-full',      value: '.nds-avatar',             k: 'radius'          },
       { token: '--muted',            value: '.nds-avatar-fallback',    k: 'muted'           },
       { token: '--muted-foreground', value: '.nds-avatar-fallback',    k: 'mutedForeground' },
-      { token: '--background',       value: '.nds-avatar-group',       k: 'background'      },
-      { token: '--border',           value: '.nds-avatar',             k: 'border'          },
+      // O contorno do agrupamento é do filho, não do container.
+      { token: '--background',       value: '.nds-avatar-group > .nds-avatar', k: 'background' },
+      // `avatar.css` não tem regra de borda nem de foco: a "borda" do grupo é
+      // a linha acima, em `--background`, e o avatar não é focável — não há
+      // `:focus-visible` em lugar nenhum da folha. Travessão nos dois.
+      { token: '--border',           value: '—',                       k: 'border'          },
       { token: '--primary',          value: '.nds-avatar-badge',       k: 'primary'         },
-      { token: '--ring',             value: '.nds-focus-ring',         k: 'ring'            },
+      { token: '--ring',             value: '—',                       k: 'ring'            },
     ].map(({ token, value, k }) => ({
       token,
       value,

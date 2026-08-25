@@ -671,14 +671,14 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
           description: tContent("tokens.table.part"),
         }}
         items={[
-          { token: "--muted",             value: "bg-muted",                 description: tContent("tokens.table.muted") },
-          { token: "--muted-foreground",  value: "nds-text-muted-foreground",    description: tContent("tokens.table.mutedForeground") },
-          { token: "--background",        value: "ring-background",          description: toPlainText(tContent("tokens.table.background")) },
-          { token: "--border",            value: "border",                   description: tContent("tokens.table.border") },
-          { token: "--primary",           value: "bg-primary",               description: tContent("tokens.table.primary") },
+          { token: "--muted",             value: ".nds-avatar-fallback",     description: tContent("tokens.table.muted") },
+          { token: "--muted-foreground",  value: ".nds-avatar-fallback",     description: tContent("tokens.table.mutedForeground") },
+          { token: "--background",        value: ".nds-avatar-group > .nds-avatar", description: toPlainText(tContent("tokens.table.background")) },
+          { token: "--border",            value: "—",                        description: tContent("tokens.table.border") },
+          { token: "--primary",           value: ".nds-avatar-badge",        description: tContent("tokens.table.primary") },
           { token: "--avatar-size",       value: "var(--spacing-8)",         description: tContent("tokens.table.avatarSize") },
-          { token: "--radius",            value: "rounded-full",             description: toPlainText(tContent("tokens.table.radius")) },
-          { token: "--ring",              value: "nds-focus-ring",  description: tContent("tokens.table.ring") },
+          { token: "--radius-full",       value: ".nds-avatar",              description: toPlainText(tContent("tokens.table.radius")) },
+          { token: "--ring",              value: "—",                        description: tContent("tokens.table.ring") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={tContent("tokens.customizationCode")}

@@ -790,8 +790,12 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
       { token: '--sidebar-accent',            k: 'sidebarAccent',      target: '.nds-sidebar-menu-button' },
       { token: '--sidebar-accent-foreground', k: 'sidebarAccentFg',    target: '.nds-sidebar-menu-button' },
       { token: '--sidebar-ring',              k: 'sidebarRing',        target: '.nds-sidebar-menu-button' },
-      { token: '--sidebar-width',             k: 'sidebarWidth',       target: '.nds-sidebar-wrapper' },
-      { token: '--sidebar-width-icon',        k: 'sidebarWidthIcon',   target: '.nds-sidebar-wrapper' },
+      // `.nds-sidebar-wrapper` DECLARA as duas larguras; quem as consome é o
+      // painel (e o vão que reserva o espaço dele). A coluna diz onde o valor
+      // é aplicado, então é o painel que entra aqui — a customização por
+      // sobrescrita no wrapper está no bloco de código abaixo da tabela.
+      { token: '--sidebar-width',             k: 'sidebarWidth',       target: '.nds-sidebar-panel' },
+      { token: '--sidebar-width-icon',        k: 'sidebarWidthIcon',   target: '.nds-sidebar-root[data-collapsible="icon"] .nds-sidebar-panel' },
       { token: '--sidebar-width-mobile',      k: 'sidebarWidthMobile', target: '.nds-sidebar-mobile' },
     ].map(({ token, k, target }) => ({
       token,

@@ -540,14 +540,27 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '--primary',          k: 'primary',         target: '.nds-calendar-day' },
-      { token: '--muted',            k: 'muted',           target: '.nds-calendar-day' },
+      // Seletores lidos de `docs/shared/styles/nds/calendar.css`. Nem
+      // `.nds-calendar-day` nem `.nds-calendar` existem na folha: a raiz é
+      // `.nds-calendar-root` e o dia é `.nds-calendar-day-btn`.
+      { token: '--primary',          k: 'primary',         target: '.nds-calendar-day-btn[data-selected]' },
+      // A folha não lê `--muted` em regra nenhuma: hoje e o meio do intervalo
+      // são pintados com `--accent`. A linha nomeia o token que de fato pinta,
+      // e não um travessão sob `--muted` — que deixava a descrição ao lado
+      // ("fundo de hoje e do meio do intervalo") contradizendo a própria linha.
+      // A chave de conteúdo continua `muted` por ser nome interno.
+      { token: '--accent',           k: 'muted',           target: '.nds-calendar-day-btn[data-today] · .nds-calendar-range-middle' },
       { token: '--muted-foreground', k: 'mutedForeground', target: '.nds-calendar-weekday' },
-      { token: '--foreground',       k: 'foreground',      target: '.nds-calendar' },
-      { token: '--ring',             k: 'ring',            target: '.nds-calendar-day' },
-      { token: '--radius',           k: 'cellRadius',      target: '.nds-calendar-day' },
-      { token: '--size-default',     k: 'cellSize',        target: '.nds-calendar-day-cell' },
-      { token: '--accent',           k: 'pickerItem',      target: '.nds-calendar-caption' },
+      // `--foreground` só aparece nas setas de navegação; as datas herdam a cor.
+      { token: '--foreground',       k: 'foreground',      target: '.nds-calendar-nav-btn' },
+      { token: '--ring',             k: 'ring',            target: '.nds-calendar-day-btn:focus-visible' },
+      // O raio da célula é `--nds-cell-radius`, declarado na raiz a partir de
+      // `--radius-md` — é esse o token que se sobrescreve, não `--radius`.
+      { token: '--radius-md',        k: 'cellRadius',      target: '.nds-calendar-root' },
+      { token: '--size-default',     k: 'cellSize',        target: '.nds-calendar-root' },
+      // A altura do item da lista é valor literal numa var local declarada no
+      // próprio select, sem passar por `--accent`.
+      { token: '--nds-picker-item',  k: 'pickerItem',      target: '.nds-calendar-select' },
     ].map(({ token, k, target }) => ({
       token,
       value: target,

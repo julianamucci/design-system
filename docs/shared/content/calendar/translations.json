@@ -182,32 +182,32 @@
       "default": {
         "label": "Padrão",
         "trigger": "Sem <code>selected</code> ou com data válida",
-        "behavior": "Grid do mês atual; dia de hoje destacado com <code>bg-muted</code>"
+        "behavior": "Grade do mês atual; o dia de hoje aparece com o fundo de destaque (<code>--accent</code>)"
       },
       "selected": {
         "label": "Selecionado",
         "trigger": "Prop <code>selected</code> contém a data",
-        "behavior": "Célula com <code>bg-primary</code> e <code>text-primary-foreground</code>; <code>aria-selected=\"true\"</code>"
+        "behavior": "Botão do dia com o fundo da ação principal (<code>--primary</code>) e texto em <code>--primary-foreground</code>; a data é anunciada como selecionada"
       },
       "disabled": {
         "label": "Desabilitado",
         "trigger": "Date casa com <code>disabled</code> (Date, array, função ou <code>{ before, after }</code>)",
-        "behavior": "<code>opacity-50</code>, <code>pointer-events-none</code>; <code>aria-disabled=\"true\"</code>"
+        "behavior": "Opacidade reduzida à metade e sem resposta ao ponteiro; <code>aria-disabled=\"true\"</code>"
       },
       "today": {
         "label": "Hoje",
         "trigger": "Automático na data do dia",
-        "behavior": "<code>bg-muted</code> para destacar; sobrescrito se também estiver selecionada"
+        "behavior": "Fundo de destaque (<code>--accent</code>) com texto em <code>--accent-foreground</code>; cede o lugar quando o dia também está selecionado"
       },
       "outside": {
         "label": "Fora do mês",
         "trigger": "<code>showOutsideDays</code> ativo (padrão)",
-        "behavior": "<code>text-muted-foreground</code> — dias do mês anterior/próximo ficam apagados"
+        "behavior": "Texto em <code>--muted-foreground</code> — os dias do mês anterior e do próximo ficam apagados, salvo quando também estão selecionados"
       },
       "rangeMiddle": {
         "label": "Meio do intervalo",
         "trigger": "<code>mode=\"range\"</code> com <code>from</code> e <code>to</code> definidos",
-        "behavior": "Dias entre início e fim recebem <code>bg-muted</code>; extremos mantêm <code>bg-primary</code>"
+        "behavior": "A célula dos dias entre início e fim recebe o fundo de destaque (<code>--accent</code>); os extremos mantêm o fundo da ação principal (<code>--primary</code>)"
       }
     },
     "props": {
@@ -630,32 +630,32 @@
       "default": {
         "label": "Default",
         "trigger": "No <code>selected</code> or valid date",
-        "behavior": "Current month grid; today highlighted with <code>bg-muted</code>"
+        "behavior": "Current month grid; today gets the highlight background (<code>--accent</code>)"
       },
       "selected": {
         "label": "Selected",
         "trigger": "<code>selected</code> prop contains the date",
-        "behavior": "Cell with <code>bg-primary</code> and <code>text-primary-foreground</code>; <code>aria-selected=\"true\"</code>"
+        "behavior": "Day button with the primary action background (<code>--primary</code>) and text in <code>--primary-foreground</code>; the date is announced as selected"
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "Date matches <code>disabled</code> (Date, array, function or <code>{ before, after }</code>)",
-        "behavior": "<code>opacity-50</code>, <code>pointer-events-none</code>; <code>aria-disabled=\"true\"</code>"
+        "behavior": "Opacity halved and no pointer response; <code>aria-disabled=\"true\"</code>"
       },
       "today": {
         "label": "Today",
         "trigger": "Automatic on the current day",
-        "behavior": "<code>bg-muted</code> for emphasis; overridden when also selected"
+        "behavior": "Highlight background (<code>--accent</code>) with text in <code>--accent-foreground</code>; gives way when the day is also selected"
       },
       "outside": {
         "label": "Outside month",
         "trigger": "<code>showOutsideDays</code> enabled (default)",
-        "behavior": "<code>text-muted-foreground</code> — previous/next month days fade"
+        "behavior": "Text in <code>--muted-foreground</code> — previous and next month days fade, unless they are also selected"
       },
       "rangeMiddle": {
         "label": "Range middle",
         "trigger": "<code>mode=\"range\"</code> with both <code>from</code> and <code>to</code>",
-        "behavior": "Middle days get <code>bg-muted</code>; endpoints keep <code>bg-primary</code>"
+        "behavior": "The cell of the days between start and end gets the highlight background (<code>--accent</code>); the endpoints keep the primary action background (<code>--primary</code>)"
       }
     },
     "props": {
@@ -1078,32 +1078,32 @@
       "default": {
         "label": "Predeterminado",
         "trigger": "Sin <code>selected</code> o con fecha válida",
-        "behavior": "Grid del mes actual; hoy destacado con <code>bg-muted</code>"
+        "behavior": "Cuadrícula del mes actual; hoy aparece con el fondo de realce (<code>--accent</code>)"
       },
       "selected": {
         "label": "Seleccionado",
         "trigger": "La prop <code>selected</code> contiene la fecha",
-        "behavior": "Celda con <code>bg-primary</code> y <code>text-primary-foreground</code>; <code>aria-selected=\"true\"</code>"
+        "behavior": "Botón del día con el fondo de la acción principal (<code>--primary</code>) y texto en <code>--primary-foreground</code>; la fecha se anuncia como seleccionada"
       },
       "disabled": {
         "label": "Deshabilitado",
         "trigger": "La fecha coincide con <code>disabled</code> (Date, array, función o <code>{ before, after }</code>)",
-        "behavior": "<code>opacity-50</code>, <code>pointer-events-none</code>; <code>aria-disabled=\"true\"</code>"
+        "behavior": "Opacidad reducida a la mitad y sin respuesta al puntero; <code>aria-disabled=\"true\"</code>"
       },
       "today": {
         "label": "Hoy",
         "trigger": "Automático en el día actual",
-        "behavior": "<code>bg-muted</code> para destacar; sobrescrito si también está seleccionado"
+        "behavior": "Fondo de realce (<code>--accent</code>) con texto en <code>--accent-foreground</code>; cede el lugar cuando el día también está seleccionado"
       },
       "outside": {
         "label": "Fuera del mes",
         "trigger": "<code>showOutsideDays</code> activo (predeterminado)",
-        "behavior": "<code>text-muted-foreground</code> — los días del mes anterior/próximo aparecen atenuados"
+        "behavior": "Texto en <code>--muted-foreground</code> — los días del mes anterior y del próximo aparecen atenuados, salvo cuando también están seleccionados"
       },
       "rangeMiddle": {
         "label": "Medio del rango",
         "trigger": "<code>mode=\"range\"</code> con <code>from</code> y <code>to</code>",
-        "behavior": "Los días intermedios reciben <code>bg-muted</code>; los extremos mantienen <code>bg-primary</code>"
+        "behavior": "La celda de los días entre el inicio y el fin recibe el fondo de realce (<code>--accent</code>); los extremos mantienen el fondo de la acción principal (<code>--primary</code>)"
       }
     },
     "props": {

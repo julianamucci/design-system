@@ -1095,12 +1095,17 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
     // A coluna do meio é SELETOR real desta stack, não a classe utilitária da
     // era anterior que o conteúdo compartilhado ainda guarda ao lado do token.
     return [
-      { token: '--border',           k: 'borderPart',           parte: '.nds-data-table-th'              },
-      { token: '--muted',            k: 'mutedPart',            parte: '.nds-data-table-tr'              },
+      // `.nds-data-table-th` não lê `--border`: a moldura da área rolável é
+      // `.nds-data-table-scroll`, e o filete entre as linhas vem de
+      // `table.css`, que a tabela de dados compõe.
+      { token: '--border',           k: 'borderPart',           parte: '.nds-data-table-scroll · .nds-table tbody tr' },
+      { token: '--muted',            k: 'mutedPart',            parte: '.nds-data-table-tr:hover'        },
       { token: '--muted-foreground', k: 'mutedForegroundPart',  parte: '.nds-data-table-pagination-count' },
-      { token: '--primary',          k: 'primaryPart',          parte: '.nds-data-table-sort-btn'        },
-      { token: '--background',       k: 'backgroundPart',       parte: '.nds-data-table-toolbar'         },
-      { token: '--ring',             k: 'ringPart',             parte: '.nds-data-table-edit-btn'        },
+      { token: '--primary',          k: 'primaryPart',          parte: '.nds-data-table-sort-btn:hover'  },
+      // A barra de ferramentas não tem fundo próprio; quem cobre o conteúdo
+      // durante a rolagem horizontal são as células fixadas.
+      { token: '--background',       k: 'backgroundPart',       parte: '.nds-data-table-th-pinned, .nds-data-table-td-pinned' },
+      { token: '--ring',             k: 'ringPart',             parte: '.nds-data-table-edit-btn:focus-visible' },
     ].map(({ token, k, parte }) => ({
       token,
       value: parte,

@@ -1029,11 +1029,19 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
+    // As duas linhas de animação levam token cravado aqui: o conteúdo
+    // compartilhado ainda nomeia `--duration-moderate · --ease-entrance` e
+    // `--duration-base · --ease-exit`, e `accordion.css` não lê nenhum dos
+    // três — as duas animações usam `--duration-panel` e `--ease-size`.
+    const TOKEN_LOCAL: Record<string, string> = {
+      animateExpand: '--duration-panel · --ease-size',
+      animateCollapse: '--duration-panel · --ease-size',
+    };
     return [
       'border', 'foreground', 'mutedForeground', 'ring', 'spacing',
       'animateExpand', 'animateCollapse',
     ].map((k) => ({
-      token: t(`tokens.items.${k}.token`),
+      token: TOKEN_LOCAL[k] ?? t(`tokens.items.${k}.token`),
       value: toPlainText(t(`tokens.items.${k}.class`)),
       description: toPlainText(t(`tokens.items.${k}.part`)),
     }));

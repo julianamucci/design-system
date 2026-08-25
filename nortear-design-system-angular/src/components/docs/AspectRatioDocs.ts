@@ -476,13 +476,18 @@ export class NdsAspectRatioDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
+    // `.nds-aspect-ratio` não lê token de tema nenhum: a folha só declara
+    // `aspect-ratio: var(--ratio, 1)` na raiz e `position: absolute` nos
+    // filhos. Raio, borda e fundo de placeholder são decisão de quem usa o
+    // container — a aplicação fica em travessão, porque apontar
+    // `.nds-aspect-ratio` mandaria a pessoa procurar uma regra inexistente.
     return [
       { token: '--radius', k: 'radius' },
       { token: '--border', k: 'border' },
       { token: '--muted',  k: 'muted'  },
     ].map(({ token, k }) => ({
       token,
-      value: '.nds-aspect-ratio',
+      value: '—',
       description: toPlainText(t(`tokens.table.${k}`)),
     }));
   });

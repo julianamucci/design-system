@@ -511,7 +511,9 @@ export class NdsCheckboxDocs implements AfterViewInit, OnDestroy {
     // pinta uma regra diferente, não `.nds-checkbox` para todas as seis.
     return [
       { token: '--primary',            value: '.nds-checkbox[data-state="checked"]', k: 'primary'           },
-      { token: '--primary-foreground', value: '.nds-checkbox-indicator',             k: 'primaryForeground' },
+      // O indicador herda a cor: a regra dele é `color: currentColor`, e quem
+      // lê `--primary-foreground` é a caixa no estado marcado.
+      { token: '--primary-foreground', value: '.nds-checkbox[data-state="checked"]', k: 'primaryForeground' },
       { token: '--input',              value: '.nds-checkbox',                       k: 'input'             },
       { token: '--ring',               value: '.nds-checkbox:focus-visible',         k: 'ring'              },
       { token: '--destructive',        value: '.nds-checkbox[aria-invalid="true"]',  k: 'destructive'       },

@@ -349,11 +349,15 @@ const contentPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--border',     value: 'border-input',       description: tContent('tokens.table.border')      },
-  { token: '--muted',      value: 'bg-muted',           description: tContent('tokens.table.background')  },
-  { token: '--radius',     value: 'rounded-md',         description: tContent('tokens.table.radius')      },
-  { token: '--accent',     value: 'nds-hover-bg-accent',    description: tContent('tokens.table.triggerHover') },
-  { token: '--ring',       value: 'ring-ring',          description: tContent('tokens.table.triggerFocus') },
+  // A coluna do meio nomeia o SELETOR que lê o token, não a classe utilitária
+  // da era anterior. A folha `nds/collapsible.css` só lê `--duration-base`: o
+  // painel se veste com utilitários (`colors.css`, `utilities.css`) e o trigger
+  // é um Button ghost, então cada linha aponta a regra que de fato lê o token.
+  { token: '--border',     value: '.nds-border-default',    description: tContent('tokens.table.border')      },
+  { token: '--muted',      value: '.nds-bg-muted-soft',     description: tContent('tokens.table.background')  },
+  { token: '--radius-md',  value: '.nds-rounded-md',        description: tContent('tokens.table.radius')      },
+  { token: '--accent',     value: '.nds-button-ghost:hover', description: tContent('tokens.table.triggerHover') },
+  { token: '--ring',       value: '.nds-button:focus-visible', description: tContent('tokens.table.triggerFocus') },
   { token: '--duration-base', value: '.nds-collapsible',  description: tContent('tokens.table.transition')  },
 ]);
 

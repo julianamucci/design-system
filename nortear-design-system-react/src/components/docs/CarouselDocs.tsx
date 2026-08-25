@@ -994,13 +994,13 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
           description: tContent("tokens.table.part"),
         }}
         items={[
-          { token: "--background",    value: "bg-background",  description: tContent("tokens.table.background") },
-          { token: "--foreground",    value: "text-foreground", description: tContent("tokens.table.foreground") },
-          { token: "--border",        value: "border",          description: tContent("tokens.table.border") },
-          { token: "--accent",        value: "nds-hover-bg-accent", description: tContent("tokens.table.accent") },
-          { token: "--ring",          value: "nds-focus-ring", description: tContent("tokens.table.ring") },
-          { token: "--radius-button", value: "rounded-(--radius-button)", description: tContent("tokens.table.radiusButton") },
-          { token: "--primary",       value: "bg-primary",      description: tContent("tokens.table.primary") },
+          { token: "--background",    value: ".nds-button-outline", description: tContent("tokens.table.background") },
+          { token: "--foreground",    value: ".nds-button-outline", description: tContent("tokens.table.foreground") },
+          { token: "--border",        value: ".nds-button-outline", description: tContent("tokens.table.border") },
+          { token: "--accent",        value: ".nds-button-outline:hover", description: tContent("tokens.table.accent") },
+          { token: "--ring",          value: ".nds-carousel-dot:focus-visible", description: tContent("tokens.table.ring") },
+          { token: "--radius-full",   value: ".nds-carousel-arrow", description: tContent("tokens.table.radiusButton") },
+          { token: "--primary",       value: ".nds-carousel-dot[aria-current=\"true\"]", description: tContent("tokens.table.primary") },
           { token: "--nds-carousel-slide-scale", value: ".nds-carousel-slide", description: tContent("tokens.table.slideScale") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}

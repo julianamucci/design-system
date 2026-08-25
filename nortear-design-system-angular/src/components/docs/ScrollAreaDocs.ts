@@ -232,10 +232,15 @@ const TECLAS: Record<string, string> = {
 // barra CUSTOMIZADA, e aqui a barra é a nativa do navegador. O filtro em
 // `tokenItems` derruba a chave que não está neste mapa, então documentar peça
 // que não existe na página deixa de ser possível.
+// Medido em `docs/shared/styles/nds/scroll-area.css`: a folha lê `--ring` no
+// viewport com foco e `--muted-foreground` no pegador. `--background` e
+// `--foreground` não entram em regra nenhuma — o fundo e o texto do viewport
+// são herdados de quem usa o container —, então a aplicação fica em travessão.
 const TOKENS: Record<string, { token: string; target: string }> = {
+  thumb:      { token: '--muted-foreground', target: '.nds-scroll-area-thumb' },
   ring:       { token: '--ring',       target: '.nds-scroll-area-viewport:focus-visible' },
-  background: { token: '--background', target: '.nds-scroll-area' },
-  foreground: { token: '--foreground', target: '.nds-scroll-area-viewport' },
+  background: { token: '--background', target: '—' },
+  foreground: { token: '--foreground', target: '—' },
 };
 
 const CAMINHOS: Record<string, string> = {

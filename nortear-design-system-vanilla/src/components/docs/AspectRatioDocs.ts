@@ -488,9 +488,9 @@ export interface AspectRatioOptions {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--radius',      value: 'rounded-md',  description: t('tokens.table.radius') },
-            { token: '--border',      value: 'border',      description: t('tokens.table.border') },
-            { token: '--muted',       value: 'bg-muted',    description: t('tokens.table.muted') },
+            { token: '--radius',      value: '.nds-rounded-md', description: t('tokens.table.radius') },
+            { token: '--border',      value: '—',               description: t('tokens.table.border') },
+            { token: '--muted',       value: '.nds-bg-muted',   description: t('tokens.table.muted') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,

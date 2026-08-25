@@ -735,14 +735,14 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--popover',            value: 'bg-popover',            description: $tStore('tokens.table.popover')           },
-      { token: '--popover-foreground', value: 'text-popover-foreground', description: $tStore('tokens.table.popoverForeground') },
-      { token: '--foreground',         value: 'ring-foreground/10',    description: $tStore('tokens.table.foreground')        },
-      { token: '--muted',              value: 'nds-bg-muted-50',           description: $tStore('tokens.table.muted')             },
-      { token: '--border',             value: 'border-t',              description: $tStore('tokens.table.border')            },
-      { token: '--radius-xl',          value: 'rounded-xl',            description: $tStore('tokens.table.radius')            },
-      { token: 'z-50',                 value: 'z-50',                  description: $tStore('tokens.table.zIndex')            },
-      { token: 'duration-100',         value: 'duration-100',          description: $tStore('tokens.table.duration')          },
+      { token: '--popover',            value: '.nds-dialog-content',   description: $tStore('tokens.table.popover')           },
+      { token: '--popover-foreground', value: '.nds-dialog-content',   description: $tStore('tokens.table.popoverForeground') },
+      { token: '--foreground',         value: '.nds-dialog-content, .nds-dialog-title', description: $tStore('tokens.table.foreground') },
+      { token: '--muted',              value: '.nds-dialog-footer',    description: $tStore('tokens.table.muted')             },
+      { token: '--border',             value: '.nds-dialog-footer',    description: $tStore('tokens.table.border')            },
+      { token: '--radius-card',        value: '.nds-dialog-content',   description: $tStore('tokens.table.radius')            },
+      { token: '--z-modal',            value: '.nds-dialog-content',   description: $tStore('tokens.table.zIndex')            },
+      { token: '--duration-base',      value: '.nds-dialog-content',   description: $tStore('tokens.table.duration')          },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={codeCustomizationTokens}

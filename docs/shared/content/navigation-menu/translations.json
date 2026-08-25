@@ -189,7 +189,7 @@
       "active": {
         "label": "Ativo (página atual)",
         "trigger": "aria-current=\"page\"",
-        "behavior": "Link da página atual com <code>aria-current=\"page\"</code> e estilo destacado (<code>bg-accent</code>)."
+        "behavior": "Link da página atual com <code>aria-current=\"page\"</code> — fundo em <code>--accent</code> a 50% de opacidade e peso semibold, que passa a opacidade total no hover e no foco."
       },
       "cols": {
         "state": "Estado",
@@ -651,7 +651,7 @@
       "active": {
         "label": "Active (current page)",
         "trigger": "aria-current=\"page\"",
-        "behavior": "Current page Link with <code>aria-current=\"page\"</code> and highlighted style (<code>bg-accent</code>)."
+        "behavior": "Current page link with <code>aria-current=\"page\"</code> — background in <code>--accent</code> at 50% opacity plus semibold weight, going to full opacity on hover and focus."
       },
       "cols": {
         "state": "State",
@@ -1113,7 +1113,7 @@
       "active": {
         "label": "Activo (página actual)",
         "trigger": "aria-current=\"page\"",
-        "behavior": "Link de la página actual con <code>aria-current=\"page\"</code> y estilo destacado (<code>bg-accent</code>)."
+        "behavior": "Enlace de la página actual con <code>aria-current=\"page\"</code> — fondo en <code>--accent</code> al 50% de opacidad y peso semibold, que pasa a opacidad total en hover y foco."
       },
       "cols": {
         "state": "Estado",

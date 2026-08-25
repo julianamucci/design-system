@@ -858,13 +858,13 @@ interface CarouselNavProps extends ButtonProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--background',    value: 'bg-background',        description: $tStore('tokens.table.background')   },
-      { token: '--foreground',    value: 'text-foreground',      description: $tStore('tokens.table.foreground')   },
-      { token: '--border',        value: 'border',               description: $tStore('tokens.table.border')       },
-      { token: '--accent',        value: 'nds-hover-bg-accent',      description: $tStore('tokens.table.accent')       },
-      { token: '--ring',          value: 'nds-focus-ring',        description: $tStore('tokens.table.ring')         },
-      { token: '--radius-button', value: 'rounded-(--radius-button)', description: $tStore('tokens.table.radiusButton') },
-      { token: '--primary',       value: 'bg-primary',           description: $tStore('tokens.table.primary')      },
+      { token: '--background',    value: '.nds-button-outline',       description: $tStore('tokens.table.background')   },
+      { token: '--foreground',    value: '.nds-button-outline',       description: $tStore('tokens.table.foreground')   },
+      { token: '--border',        value: '.nds-button-outline',       description: $tStore('tokens.table.border')       },
+      { token: '--accent',        value: '.nds-button-outline:hover', description: $tStore('tokens.table.accent')       },
+      { token: '--ring',          value: '.nds-button:focus-visible', description: $tStore('tokens.table.ring')         },
+      { token: '--radius-button', value: '.nds-button',               description: $tStore('tokens.table.radiusButton') },
+      { token: '--primary',       value: '.nds-carousel-dot[aria-current="true"]', description: $tStore('tokens.table.primary') },
       { token: '--nds-carousel-slide-scale', value: '.nds-carousel-slide', description: $tStore('tokens.table.slideScale') },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}

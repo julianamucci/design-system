@@ -687,8 +687,11 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
       { token: '--destructive',        value: '.nds-button-destructive', description: t('tokens.table.destructive')       },
       { token: '--accent',             value: '.nds-button-ghost',       description: t('tokens.table.accent')            },
       { token: '--border',             value: '.nds-button-outline',     description: t('tokens.table.border')            },
-      { token: '--ring',               value: ':focus-visible',          description: t('tokens.table.ring')              },
-      { token: '--radius',             value: '.nds-button',             description: t('tokens.table.radius')            },
+      // O raio do botão tem token próprio: `.nds-button` lê `--radius-button`,
+      // não `--radius`. E o anel de foco mora no seletor completo, não num
+      // pseudo solto — que sozinho não é seletor do design system.
+      { token: '--ring',               value: '.nds-button:focus-visible', description: t('tokens.table.ring')            },
+      { token: '--radius-button',      value: '.nds-button',             description: t('tokens.table.radius')            },
     ];
   });
 

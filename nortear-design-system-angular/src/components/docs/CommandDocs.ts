@@ -713,7 +713,10 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
       { token: '--accent',             k: 'selectedBg',  target: '.nds-command-item[aria-selected="true"]' },
       { token: '--accent-foreground',  k: 'selectedFg',  target: '.nds-command-item[aria-selected="true"]' },
       { token: '--border',             k: 'border',      target: '.nds-command-separator' },
-      { token: '--radius',             k: 'radius',      target: '.nds-command · .nds-command-item' },
+      // Só o container lê `--radius`. O item usa `--radius-sm`, calculado como
+      // raio interno (raio externo menos o inset), então citá-lo aqui daria a
+      // entender que os dois seguem o mesmo token.
+      { token: '--radius',             k: 'radius',      target: '.nds-command' },
     ].map(({ token, k, target }) => ({
       token,
       value: target,

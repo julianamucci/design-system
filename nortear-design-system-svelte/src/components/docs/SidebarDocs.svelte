@@ -1209,15 +1209,15 @@ interface SidebarMenuButtonProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--sidebar',               value: 'bg-sidebar',               description: $tStore('tokens.sidebarBg')         },
-      { token: '--sidebar-foreground',    value: 'text-sidebar-foreground',  description: $tStore('tokens.sidebarFg')         },
-      { token: '--sidebar-border',        value: 'border-sidebar-border',    description: $tStore('tokens.sidebarBorder')     },
-      { token: '--sidebar-accent',        value: 'bg-sidebar-accent',        description: $tStore('tokens.sidebarAccent')     },
-      { token: '--sidebar-accent-foreground', value: 'text-sidebar-accent-foreground', description: $tStore('tokens.sidebarAccentFg') },
-      { token: '--sidebar-ring',          value: 'ring-sidebar-ring',        description: $tStore('tokens.sidebarRing')       },
-      { token: '--sidebar-width',         value: '—',                        description: $tStore('tokens.sidebarWidth')      },
-      { token: '--sidebar-width-icon',    value: '—',                        description: $tStore('tokens.sidebarWidthIcon')  },
-      { token: '--sidebar-width-mobile',  value: '—',                        description: $tStore('tokens.sidebarWidthMobile') },
+      { token: '--sidebar',               value: '.nds-sidebar-inner',       description: $tStore('tokens.sidebarBg')         },
+      { token: '--sidebar-foreground',    value: '.nds-sidebar-root',        description: $tStore('tokens.sidebarFg')         },
+      { token: '--sidebar-border',        value: '.nds-sidebar-panel',       description: $tStore('tokens.sidebarBorder')     },
+      { token: '--sidebar-accent',        value: '.nds-sidebar-menu-button:hover', description: $tStore('tokens.sidebarAccent') },
+      { token: '--sidebar-accent-foreground', value: '.nds-sidebar-menu-button:hover', description: $tStore('tokens.sidebarAccentFg') },
+      { token: '--sidebar-ring',          value: '.nds-sidebar-menu-button:focus-visible', description: $tStore('tokens.sidebarRing') },
+      { token: '--sidebar-width',         value: '.nds-sidebar-panel',       description: $tStore('tokens.sidebarWidth')      },
+      { token: '--sidebar-width-icon',    value: '.nds-sidebar-root[data-state="collapsed"] .nds-sidebar-panel', description: $tStore('tokens.sidebarWidthIcon') },
+      { token: '--sidebar-width-mobile',  value: '.nds-sidebar-mobile',      description: $tStore('tokens.sidebarWidthMobile') },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={codeCustomizationTokens}

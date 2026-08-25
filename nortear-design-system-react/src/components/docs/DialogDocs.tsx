@@ -883,14 +883,14 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
           description: tContent("tokens.table.part"),
         }}
         items={[
-          { token: "--popover",            value: "bg-popover",            description: tContent("tokens.table.popover") },
-          { token: "--popover-foreground", value: "text-popover-foreground", description: tContent("tokens.table.popoverForeground") },
-          { token: "--foreground",         value: "ring-foreground/10",    description: tContent("tokens.table.foreground") },
-          { token: "--muted",              value: "nds-bg-muted-50",           description: tContent("tokens.table.muted") },
-          { token: "--border",             value: "border-t",              description: tContent("tokens.table.border") },
-          { token: "--radius",             value: "rounded-xl",            description: tContent("tokens.table.radius") },
-          { token: "z-index",              value: "z-50",                  description: tContent("tokens.table.zIndex") },
-          { token: "duration",             value: "duration-100",          description: tContent("tokens.table.duration") },
+          { token: "--popover",            value: ".nds-dialog-content",   description: tContent("tokens.table.popover") },
+          { token: "--popover-foreground", value: ".nds-dialog-content",   description: tContent("tokens.table.popoverForeground") },
+          { token: "--foreground",         value: ".nds-dialog-content",   description: tContent("tokens.table.foreground") },
+          { token: "--muted",              value: ".nds-dialog-footer",    description: tContent("tokens.table.muted") },
+          { token: "--border",             value: ".nds-dialog-footer",    description: tContent("tokens.table.border") },
+          { token: "--radius-card",        value: ".nds-dialog-content",   description: tContent("tokens.table.radius") },
+          { token: "--z-modal",            value: ".nds-dialog-content",   description: tContent("tokens.table.zIndex") },
+          { token: "--duration-base",      value: ".nds-dialog-content",   description: tContent("tokens.table.duration") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={codeCustomizationTokens}

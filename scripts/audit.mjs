@@ -1123,6 +1123,7 @@ function auditStoryQuality(slug) {
   violations.push(...auditDeadClassInComponent(slug));
   violations.push(...auditUnknownClass(slug));
   violations.push(...auditExportSemStory(slug));
+  violations.push(...auditTailwindUtility(slug));
 
   // Contrato resolvido = todo item de testes.* está coberto ou dispensado com
   // motivo, nas 4 stacks. É o que autoriza aposentar a comparação por contagem.
@@ -1981,6 +1982,124 @@ function contractStatus() {
  *
  * Só olha export de VALOR (componente/factory). Tipo não renderiza nada.
  */
+/**
+ * Nome de utilitário do Tailwind numa docs page — lib que saiu do projeto.
+ *
+ * `dead_lib_reference` procura o NOME da lib ("Tailwind", "shadcn", "Radix").
+ * Isto procura a FORMA do utilitário, que é como o vocabulário sobreviveu: a
+ * coluna "Aplicação no tema" da tabela de tokens dizia `bg-primary` ao lado de
+ * "Borda (variante default)" — instrução errada, não resíduo inerte, porque a
+ * coluna existe para dizer ONDE o token entra e quem copiar `bg-primary` não
+ * muda nada.
+ *
+ * Medido na primeira rodada: 104 ocorrências em 38 páginas, em quatro stacks.
+ * A quinta já estava limpa e é a referência da forma certa — a coluna nomeia o
+ * seletor `.nds-*` que lê o token.
+ *
+ * Só casa prefixo de utilitário seguido de nome de TOKEN do design system:
+ * `border-radius` e `border-top` são CSS de verdade e ficam de fora. Snippet
+ * exibido ao leitor também fica: dentro de crase é código que a página ENSINA,
+ * e pode legitimamente mostrar markup de outra época.
+ */
+const TAILWIND_TOKEN =
+  '(foreground|background|primary|secondary|muted|accent|destructive|warning|success|info|border|ring|card|popover|sidebar|input)';
+const TAILWIND_UTILITY_RX = new RegExp(
+  `['"](?:hover:|focus:|focus-visible:|dark:|group-hover:)?` +
+    `(?:bg|text|border|ring|ring-offset|fill|stroke)-${TAILWIND_TOKEN}[a-z0-9/-]*['"]`,
+  'g',
+);
+
+/**
+ * Mesma varredura, no CONTEÚDO COMPARTILHADO. Precisa de regex própria porque
+ * ali a utilitária não vem delimitada por aspas — vem dentro de prosa
+ * (`recebe <code>bg-accent</code>`) ou no meio de um atributo já escapado do
+ * snippet. A aspa do outro regex servia de âncora à esquerda; aqui a âncora
+ * tem de ser explícita.
+ *
+ * `(?<![\w-])` é o ponto todo desta regra. Sem ela, `nds-text-muted-foreground`
+ * — a classe VIVA, o alvo da correção — casa no sufixo e entra na conta como
+ * morta. Medido nesta campanha: a varredura sem âncora acusou 53 chaves em 13
+ * componentes; com âncora, 31 em 10, e as 22 diferenças eram todas classe já
+ * corrigida. Portão que conta o consertado como quebrado manda gente reescrever
+ * texto que estava certo, e é o terceiro erro de medição desta mesma varredura
+ * — os outros dois foram regex só de aspas simples (escondeu uma stack
+ * inteira) e `lastIndex` compartilhado entre `.test()` e `matchAll`.
+ *
+ * Aqui NÃO há máscara de snippet. Na docs page, crase é código que a página
+ * ENSINA e pode mostrar markup de outra época; no conteúdo compartilhado, a
+ * chave `*Code` É o snippet recomendado, copiado pelo leitor nas cinco stacks
+ * de uma vez. É o caso mais grave, não a exceção.
+ */
+const TAILWIND_UTILITY_CONTEUDO_RX = new RegExp(
+  `(?<![\\w-])(?:hover:|focus:|focus-visible:|dark:|group-hover:)?` +
+    `(?:bg|text|border|ring|ring-offset|fill|stroke)-${TAILWIND_TOKEN}[a-z0-9/-]*(?![\\w-])`,
+  'g',
+);
+
+function auditTailwindUtility(slug) {
+  const violations = [];
+  for (const stack of STACKS) {
+    const { docs } = filesForSlug(slug, stack);
+    for (const file of docs) {
+      const content = readFile(file);
+      if (!content) continue;
+      // Pré-filtro no texto CRU: descascar comentário e montar a máscara de
+      // snippet custa uma varredura cada, e a maioria das páginas não tem
+      // ocorrência nenhuma. Sem esta linha o `--all` passava de dois minutos.
+      TAILWIND_UTILITY_RX.lastIndex = 0;
+      const temAlgo = TAILWIND_UTILITY_RX.test(content);
+      // `.test()` num regex GLOBAL avança `lastIndex`, e `matchAll` COPIA esse
+      // índice — sem zerar aqui, a varredura começava depois do primeiro
+      // achado. Efeito: todo arquivo relatava n−1 ocorrências, e arquivo com
+      // exatamente UMA sumia do relatório. Medido: duas páginas do Vue ficaram
+      // invisíveis, e o portão dizia 26 quando eram 28.
+      TAILWIND_UTILITY_RX.lastIndex = 0;
+      if (!temAlgo) continue;
+
+      const src = stripComments(content);
+      const mask = snippetMask(src);
+      const achados = new Set();
+      for (const m of src.matchAll(TAILWIND_UTILITY_RX)) {
+        if (mask[m.index]) continue;              // dentro de crase: é snippet
+        achados.add(m[0].slice(1, -1));
+      }
+      if (!achados.size) continue;
+      violations.push({
+        category: 'quality', severity: 'medium', slug, stack,
+        file: relative(ROOT, file), rule: 'tailwind_utility_in_docs',
+        message:
+          `${achados.size} nome(s) de utilitário do Tailwind na docs page (${[...achados].slice(0, 4).join(', ')})` +
+          ' — a lib saiu do projeto. Na tabela de tokens, a coluna do meio nomeia o SELETOR' +
+          ' `.nds-*` que lê o token; quem copiar `bg-primary` não muda nada',
+      });
+    }
+  }
+
+  // O conteúdo compartilhado renderiza nas CINCO stacks de uma vez, nas três
+  // línguas — é a forma mais cara do mesmo defeito, e ficava fora do alcance
+  // porque a regra só olhava docs page. Varre o arquivo cru: as três línguas
+  // carregam o mesmo snippet, e o Set já colapsa a repetição.
+  const conteudo = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  const bruto = readFile(conteudo);
+  if (bruto) {
+    TAILWIND_UTILITY_CONTEUDO_RX.lastIndex = 0;
+    const achados = new Set(bruto.match(TAILWIND_UTILITY_CONTEUDO_RX) || []);
+    if (achados.size) {
+      violations.push({
+        category: 'quality', severity: 'high', slug, stack: 'shared',
+        file: relative(ROOT, conteudo), rule: 'tailwind_utility_in_docs',
+        message:
+          `${achados.size} nome(s) de utilitário do Tailwind no conteúdo COMPARTILHADO ` +
+          `(${[...achados].slice(0, 4).join(', ')}) — renderiza nas cinco stacks. ` +
+          'Em prosa, descreva o efeito e nomeie o TOKEN (`--accent`); em chave `*Code`,' +
+          ' use a classe `.nds-*` que existe na folha — o leitor copia o snippet',
+      });
+    }
+  }
+
+  return violations;
+}
+
 function auditExportSemStory(slug) {
   const violations = [];
   const RAIZ_RX = new RegExp(`^${slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase())}$`, 'i');

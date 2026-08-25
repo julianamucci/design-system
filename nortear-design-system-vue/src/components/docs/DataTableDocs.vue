@@ -342,12 +342,17 @@ const columnMetaItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: 'border-input',          value: toPlainText(tContent('tokens.table.border')),           description: tContent('tokens.table.borderPart')           },
-  { token: 'nds-bg-muted-50',           value: toPlainText(tContent('tokens.table.muted')),            description: tContent('tokens.table.mutedPart')            },
-  { token: 'nds-text-muted-foreground', value: toPlainText(tContent('tokens.table.mutedForeground')),  description: tContent('tokens.table.mutedForegroundPart')  },
-  { token: 'text-primary',          value: toPlainText(tContent('tokens.table.primary')),          description: tContent('tokens.table.primaryPart')          },
-  { token: 'bg-background',         value: toPlainText(tContent('tokens.table.background')),       description: tContent('tokens.table.backgroundPart')       },
-  { token: 'ring-ring/50',          value: toPlainText(tContent('tokens.table.ring')),             description: tContent('tokens.table.ringPart')             },
+  // A primeira coluna é o TOKEN e a do meio é o SELETOR real que o lê — não a
+  // classe utilitária da era anterior, que o conteúdo compartilhado ainda
+  // guarda em `tokens.table.<token>` ao lado do texto de uso. Os separadores de
+  // linha vêm do primitivo composto (`nds/table.css`); o resto, de
+  // `nds/data-table.css`.
+  { token: '--border',           value: '.nds-table tbody tr',            description: tContent('tokens.table.borderPart')           },
+  { token: '--muted',            value: '.nds-data-table-tr:hover',       description: tContent('tokens.table.mutedPart')            },
+  { token: '--muted-foreground', value: '.nds-data-table-pagination-count', description: tContent('tokens.table.mutedForegroundPart') },
+  { token: '--primary',          value: '.nds-data-table-sort-btn:hover', description: tContent('tokens.table.primaryPart')          },
+  { token: '--background',       value: '.nds-data-table-td-pinned',      description: tContent('tokens.table.backgroundPart')       },
+  { token: '--ring',             value: '.nds-data-table-edit-btn:focus-visible', description: tContent('tokens.table.ringPart')     },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -594,7 +599,7 @@ const visualTestItems = computed(() => [
     <!-- ── Tokens ────────────────────────────────────────────────── -->
     <DocsTokens
       :title="tContent('tokens.title')"
-      :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
+      :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.part'), description: tContent('tokens.table.class') }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
       :customization-code="codeCustomizationTokens"

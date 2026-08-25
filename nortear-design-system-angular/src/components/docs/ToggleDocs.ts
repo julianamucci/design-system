@@ -590,7 +590,10 @@ export class NdsToggleDocs implements AfterViewInit, OnDestroy {
       { token: '--accent',            k: 'accent'           },
       { token: '--accent-foreground', k: 'accentForeground' },
       { token: '--muted',             k: 'muted'            },
-      { token: '--input',             k: 'input'            },
+      // A borda da variante outline é `--border`; `--input` não entra em
+      // regra nenhuma de `toggle.css`. A chave do conteúdo continua `input`
+      // porque é o nome da linha, não o nome do token.
+      { token: '--border',            k: 'input'            },
       { token: '--ring',              k: 'ring'             },
       { token: '--destructive',       k: 'destructive'      },
       { token: '--radius-button',     k: 'radius'           },

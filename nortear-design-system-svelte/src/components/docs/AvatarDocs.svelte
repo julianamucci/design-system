@@ -493,14 +493,14 @@ interface AvatarFallbackProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--muted',            value: 'bg-muted',             description: $tStore('tokens.table.muted')           },
-      { token: '--muted-foreground', value: 'nds-text-muted-foreground', description: $tStore('tokens.table.mutedForeground') },
-      { token: '--background',       value: 'ring-background',      description: toPlainText($tStore('tokens.table.background')) },
-      { token: '--border',           value: 'border',               description: $tStore('tokens.table.border')          },
-      { token: '--primary',          value: 'bg-primary',           description: $tStore('tokens.table.primary')         },
-      { token: '--avatar-size',      value: 'var(--spacing-8)',     description: $tStore('tokens.table.avatarSize')      },
-      { token: '--radius',           value: 'rounded-full',         description: toPlainText($tStore('tokens.table.radius')) },
-      { token: '--ring',             value: 'ring-ring',            description: $tStore('tokens.table.ring')            },
+      { token: '--muted',            value: '.nds-avatar-fallback', description: $tStore('tokens.table.muted')           },
+      { token: '--muted-foreground', value: '.nds-avatar-fallback', description: $tStore('tokens.table.mutedForeground') },
+      { token: '--background',       value: '.nds-avatar-group > .nds-avatar', description: toPlainText($tStore('tokens.table.background')) },
+      { token: '--border',           value: '—',                    description: $tStore('tokens.table.border')          },
+      { token: '--primary',          value: '.nds-avatar-badge',    description: $tStore('tokens.table.primary')         },
+      { token: '--avatar-size',      value: '.nds-avatar',          description: $tStore('tokens.table.avatarSize')      },
+      { token: '--radius-full',      value: '.nds-avatar',          description: toPlainText($tStore('tokens.table.radius')) },
+      { token: '--ring',             value: '—',                    description: $tStore('tokens.table.ring')            },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}

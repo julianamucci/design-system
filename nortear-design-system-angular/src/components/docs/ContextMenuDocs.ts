@@ -656,8 +656,10 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
       { token: '--popover-foreground',   k: 'popoverFg',        target: '.nds-dropdown-menu-content' },
       { token: '--accent',               k: 'accentBg',         target: '.nds-dropdown-menu-item' },
       { token: '--accent-foreground',    k: 'accentFg',         target: '.nds-dropdown-menu-item' },
-      { token: '--destructive',          k: 'destructive',      target: '[data-variant="destructive"]' },
-      { token: '--destructive',          k: 'destructiveFocus', target: '[data-variant="destructive"]' },
+      // O atributo sozinho não é seletor da folha: a regra é sempre a classe
+      // do item mais o atributo.
+      { token: '--destructive',          k: 'destructive',      target: '.nds-dropdown-menu-item[data-variant="destructive"]' },
+      { token: '--destructive',          k: 'destructiveFocus', target: '.nds-dropdown-menu-item[data-variant="destructive"]:focus' },
       { token: '--muted-foreground',     k: 'mutedFg',          target: '.nds-dropdown-menu-shortcut' },
       // Medido no navegador: o separador é `--muted` (245,245,245), não
       // `--border` (230,230,230) — este último pinta a BORDA do popup, que

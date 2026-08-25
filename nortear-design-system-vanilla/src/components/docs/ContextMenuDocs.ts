@@ -326,7 +326,7 @@ export function createContextMenuDocs(): HTMLElement {
                   li.setAttribute('role', 'menuitem');
                   li.className = [
                     'nds-cluster nds-rounded-sm nds-px-2 nds-text-body',
-                    destructive ? 'text-destructive' : '',
+                    destructive ? 'nds-text-destructive' : '',
                   ].join(' ');
                   li.textContent = label;
                   return li;
@@ -538,7 +538,7 @@ li.append(label, sc);`;
           li.setAttribute('role', 'menuitem');
           li.className = [
             'nds-cluster nds-rounded-sm nds-px-2 nds-text-body',
-            opts?.destructive ? 'text-destructive' : '',
+            opts?.destructive ? 'nds-text-destructive' : '',
           ].join(' ');
           li.textContent = text;
           return li;
@@ -658,7 +658,7 @@ li.append(label, sc);`;
           li.setAttribute('role', 'menuitem');
           li.className = [
             'nds-cluster nds-rounded-sm nds-px-2 nds-text-body',
-            destructive ? 'text-destructive' : '',
+            destructive ? 'nds-text-destructive' : '',
           ].join(' ');
           const lbl = document.createElement('span');
           lbl.className = 'nds-flex-1';

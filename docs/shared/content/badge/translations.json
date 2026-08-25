@@ -237,7 +237,7 @@
       "noFocus": "Badge por padrão não recebe foco via <kbd>Tab</kbd> — é apenas visual.",
       "wrappedInButton": "Quando envolvido em <code>&lt;button&gt;</code>: recebe foco com <kbd>Tab</kbd> e ativa com <kbd>Enter</kbd> ou <kbd>Space</kbd>.",
       "wrappedInLink": "Quando envolvido em <code>&lt;a&gt;</code>: recebe foco com <kbd>Tab</kbd> e ativa com <kbd>Enter</kbd>.",
-      "focusRing": "Foco visível via <code>focus:ring-2 focus:ring-ring focus:ring-offset-2</code> herdado do elemento interativo pai."
+      "focusRing": "Foco visível em dois anéis desenhados por <code>box-shadow</code>: um halo de 2px na cor do fundo, que separa o anel da etiqueta, e um anel externo de 5px em <code>--ring</code> a 50% de opacidade. As variantes destructive, warning e success trocam o anel externo pela própria cor. Quando a etiqueta é envolvida por <code>&lt;button&gt;</code> ou <code>&lt;a&gt;</code>, quem recebe o foco é o elemento pai."
     },
     "aria": {
       "ariaHidden": "<code>aria-hidden=\"true\"</code> — em ícones decorativos dentro do Badge.",
@@ -639,7 +639,7 @@
       "noFocus": "Badge does not receive focus via <kbd>Tab</kbd> by default — it is purely visual.",
       "wrappedInButton": "When wrapped in a <code>&lt;button&gt;</code>: receives focus with <kbd>Tab</kbd> and activates with <kbd>Enter</kbd> or <kbd>Space</kbd>.",
       "wrappedInLink": "When wrapped in an <code>&lt;a&gt;</code>: receives focus with <kbd>Tab</kbd> and activates with <kbd>Enter</kbd>.",
-      "focusRing": "Visible focus via <code>focus:ring-2 focus:ring-ring focus:ring-offset-2</code> inherited from the interactive parent."
+      "focusRing": "Visible focus as two rings drawn with <code>box-shadow</code>: a 2px halo in the background color, which separates the ring from the label, and a 5px outer ring in <code>--ring</code> at 50% opacity. The destructive, warning and success variants swap the outer ring for their own color. When the label is wrapped in a <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code>, the parent element is the one that receives focus."
     },
     "aria": {
       "ariaHidden": "<code>aria-hidden=\"true\"</code> — on decorative icons inside the Badge.",
@@ -1041,7 +1041,7 @@
       "noFocus": "Badge por defecto no recibe foco vía <kbd>Tab</kbd> — es solo visual.",
       "wrappedInButton": "Cuando se envuelve en <code>&lt;button&gt;</code>: recibe foco con <kbd>Tab</kbd> y se activa con <kbd>Enter</kbd> o <kbd>Space</kbd>.",
       "wrappedInLink": "Cuando se envuelve en <code>&lt;a&gt;</code>: recibe foco con <kbd>Tab</kbd> y se activa con <kbd>Enter</kbd>.",
-      "focusRing": "Foco visible vía <code>focus:ring-2 focus:ring-ring focus:ring-offset-2</code> heredado del elemento interactivo padre."
+      "focusRing": "Foco visible en dos anillos dibujados con <code>box-shadow</code>: un halo de 2px en el color del fondo, que separa el anillo de la etiqueta, y un anillo externo de 5px en <code>--ring</code> al 50% de opacidad. Las variantes destructive, warning y success cambian el anillo externo por su propio color. Cuando la etiqueta se envuelve en <code>&lt;button&gt;</code> o <code>&lt;a&gt;</code>, quien recibe el foco es el elemento padre."
     },
     "aria": {
       "ariaHidden": "<code>aria-hidden=\"true\"</code> — en íconos decorativos dentro del Badge.",

@@ -362,15 +362,19 @@ const menuSkeletonPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--sidebar',                 value: 'bg-sidebar',                        description: tContent('tokens.sidebarBg')         },
-  { token: '--sidebar-foreground',      value: 'text-sidebar-foreground',           description: tContent('tokens.sidebarFg')         },
-  { token: '--sidebar-border',          value: 'border-sidebar-border',             description: tContent('tokens.sidebarBorder')     },
-  { token: '--sidebar-accent',          value: 'bg-sidebar-accent',                 description: tContent('tokens.sidebarAccent')     },
-  { token: '--sidebar-accent-foreground', value: 'text-sidebar-accent-foreground', description: tContent('tokens.sidebarAccentFg')   },
-  { token: '--sidebar-ring',            value: 'ring-sidebar-ring',                 description: tContent('tokens.sidebarRing')       },
-  { token: '--sidebar-width',           value: '—',                                 description: tContent('tokens.sidebarWidth')      },
-  { token: '--sidebar-width-icon',      value: '—',                                 description: tContent('tokens.sidebarWidthIcon')  },
-  { token: '--sidebar-width-mobile',    value: '—',                                 description: tContent('tokens.sidebarWidthMobile')},
+  // A coluna do meio nomeia o SELETOR que lê o token na folha `nds/sidebar.css`,
+  // não a classe utilitária da era anterior. As três larguras são DECLARADAS
+  // em `.nds-sidebar-wrapper` (desktop) e `.nds-sidebar-mobile` (gaveta) — é lá
+  // que um tema as sobrescreve, e por isso deixaram de ser travessão.
+  { token: '--sidebar',                 value: '.nds-sidebar-inner',                description: tContent('tokens.sidebarBg')         },
+  { token: '--sidebar-foreground',      value: '.nds-sidebar-root',                 description: tContent('tokens.sidebarFg')         },
+  { token: '--sidebar-border',          value: '.nds-sidebar-panel',                description: tContent('tokens.sidebarBorder')     },
+  { token: '--sidebar-accent',          value: '.nds-sidebar-menu-button',          description: tContent('tokens.sidebarAccent')     },
+  { token: '--sidebar-accent-foreground', value: '.nds-sidebar-menu-button',        description: tContent('tokens.sidebarAccentFg')   },
+  { token: '--sidebar-ring',            value: '.nds-sidebar-menu-button:focus-visible', description: tContent('tokens.sidebarRing')  },
+  { token: '--sidebar-width',           value: '.nds-sidebar-wrapper',              description: tContent('tokens.sidebarWidth')      },
+  { token: '--sidebar-width-icon',      value: '.nds-sidebar-wrapper',              description: tContent('tokens.sidebarWidthIcon')  },
+  { token: '--sidebar-width-mobile',    value: '.nds-sidebar-mobile',               description: tContent('tokens.sidebarWidthMobile')},
 ]);
 
 const accessibilityItems = computed(() => [

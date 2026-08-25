@@ -534,12 +534,12 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--primary',          value: 'data-[selected]:bg-primary',     description: $tStore('tokens.table.primary')         },
-      { token: '--primary-foreground', value: 'data-[selected]:text-primary-foreground', description: 'Texto da data selecionada'  },
-      { token: '--accent',           value: '[&[data-today]]:bg-accent',      description: toPlainText($tStore('tokens.table.muted')) },
-      { token: '--muted-foreground', value: 'nds-text-muted-foreground',          description: toPlainText($tStore('tokens.table.mutedForeground')) },
-      { token: '--foreground',       value: 'text-foreground',                description: $tStore('tokens.table.foreground')      },
-      { token: '--ring',             value: 'focus:ring-ring/50',             description: $tStore('tokens.table.ring')            },
+      { token: '--primary',          value: '.nds-calendar-day-btn[data-selected]', description: $tStore('tokens.table.primary')  },
+      { token: '--primary-foreground', value: '.nds-calendar-day-btn[data-selected]', description: 'Texto da data selecionada'   },
+      { token: '--accent',           value: '.nds-calendar-day-btn[data-today], .nds-calendar-range-middle', description: toPlainText($tStore('tokens.table.muted')) },
+      { token: '--muted-foreground', value: '.nds-calendar-weekday',          description: toPlainText($tStore('tokens.table.mutedForeground')) },
+      { token: '--foreground',       value: '.nds-calendar-nav-btn',          description: $tStore('tokens.table.foreground')      },
+      { token: '--ring',             value: '.nds-calendar-day-btn:focus-visible', description: $tStore('tokens.table.ring')       },
       { token: '--nds-cell-radius',  value: 'var(--radius-md)',               description: toPlainText($tStore('tokens.table.cellRadius')) },
       { token: '--nds-picker-item',  value: '1.75rem',                        description: toPlainText($tStore('tokens.table.pickerItem')) },
       { token: '--nds-cell-size',    value: '2rem',                           description: toPlainText($tStore('tokens.table.cellSize')) },

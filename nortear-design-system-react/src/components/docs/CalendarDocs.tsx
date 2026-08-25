@@ -645,11 +645,14 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
           description: tContent("tokens.table.part"),
         }}
         items={[
-          { token: "--primary",            value: "bg-primary text-primary-foreground", description: tContent("tokens.table.primary") },
-          { token: "--muted",              value: "bg-muted",                           description: tContent("tokens.table.muted") },
-          { token: "--muted-foreground",   value: "nds-text-muted-foreground",              description: tContent("tokens.table.mutedForeground") },
-          { token: "--foreground",         value: "text-foreground",                    description: tContent("tokens.table.foreground") },
-          { token: "--ring",               value: "ring-ring",                          description: tContent("tokens.table.ring") },
+          { token: "--primary",            value: ".nds-calendar-day-btn[data-selected]", description: tContent("tokens.table.primary") },
+          // A folha não lê `--muted` em regra nenhuma: hoje e o meio do intervalo
+          // são pintados com `--accent`. A chave de conteúdo continua `muted` por
+          // ser nome interno — o leitor vê o token da coluna, não a chave.
+          { token: "--accent",             value: ".nds-calendar-day-btn[data-today], .nds-calendar-range-middle", description: tContent("tokens.table.muted") },
+          { token: "--muted-foreground",   value: ".nds-calendar-weekday, .nds-calendar-outside", description: tContent("tokens.table.mutedForeground") },
+          { token: "--foreground",         value: ".nds-calendar-nav-btn",              description: tContent("tokens.table.foreground") },
+          { token: "--ring",               value: ".nds-calendar-day-btn:focus-visible", description: tContent("tokens.table.ring") },
           { token: "--nds-cell-size",      value: "2rem",                               description: toPlainText(tContent("tokens.table.cellSize")) },
           { token: "--nds-cell-radius",    value: "var(--radius-md)",                   description: toPlainText(tContent("tokens.table.cellRadius")) },
           { token: "--nds-picker-item",    value: "1.75rem",                            description: toPlainText(tContent("tokens.table.pickerItem")) },

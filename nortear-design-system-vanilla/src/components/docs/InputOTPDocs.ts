@@ -371,7 +371,9 @@ const otp = createInputOTP({ length: 6 });`;
           const inputs = Array.from(otp.querySelectorAll('input')) as HTMLInputElement[];
           for (const input of inputs) {
             input.setAttribute('aria-invalid', 'true');
-            input.classList.add('nds-border-destructive', 'ring-destructive/20'); input.style.boxShadow = '0 0 0 2px var(--nds-ring, currentColor)';
+            // Borda e halo de erro vêm da folha: `.nds-input-otp-slot[aria-invalid="true"]`
+            // pinta a borda e a variante `:focus` acrescenta o halo de 2px. Nada a
+            // aplicar aqui — o atributo acima já é o gatilho.
           }
         }
 

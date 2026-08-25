@@ -166,7 +166,7 @@
       "focus": {
         "label": "Focus",
         "trigger": "Tab",
-        "behavior": "Viewport focado via Tab — anel <code>ring-[3px] ring-ring/50</code>."
+        "behavior": "Viewport focado via Tab — anel interno (<code>inset</code>) de 3px em <code>--ring</code> a 50% de opacidade."
       },
       "cols": {
         "state": "Estado",
@@ -262,7 +262,7 @@
         "item2": "Setas (↑/↓/←/→) e PageUp/PageDown rolam o conteúdo quando o viewport tem foco",
         "item3": "<code>tabIndex={0}</code> no viewport para scroll horizontal navegável por teclado",
         "item4": "Não esconde conteúdo de tecnologias assistivas — apenas estiliza a scrollbar",
-        "item5": "Anel de foco visível no viewport com <code>ring-[3px] ring-ring/50</code>",
+        "item5": "Anel de foco visível no viewport: 3px internos em <code>--ring</code> a 50% de opacidade",
         "item6": "Mobile: scroll nativo preservado, gestos de swipe funcionam"
       },
       "keyboard": {
@@ -575,7 +575,7 @@
       "focus": {
         "label": "Focus",
         "trigger": "Tab",
-        "behavior": "Viewport focused via Tab — <code>ring-[3px] ring-ring/50</code>."
+        "behavior": "Viewport focused via Tab — 3px inner (<code>inset</code>) ring in <code>--ring</code> at 50% opacity."
       },
       "cols": {
         "state": "State",
@@ -671,7 +671,7 @@
         "item2": "Arrow keys (↑/↓/←/→) and PageUp/PageDown scroll content when viewport is focused",
         "item3": "<code>tabIndex={0}</code> on viewport for keyboard-navigable horizontal scroll",
         "item4": "Doesn't hide content from assistive technologies — only styles the scrollbar",
-        "item5": "Visible focus ring on viewport with <code>ring-[3px] ring-ring/50</code>",
+        "item5": "Visible focus ring on the viewport: 3px inset in <code>--ring</code> at 50% opacity",
         "item6": "Mobile: native scroll preserved, swipe gestures work"
       },
       "keyboard": {
@@ -984,7 +984,7 @@
       "focus": {
         "label": "Focus",
         "trigger": "Tab",
-        "behavior": "Viewport enfocado vía Tab — <code>ring-[3px] ring-ring/50</code>."
+        "behavior": "Viewport enfocado vía Tab — anillo interno (<code>inset</code>) de 3px en <code>--ring</code> al 50% de opacidad."
       },
       "cols": {
         "state": "Estado",
@@ -1080,7 +1080,7 @@
         "item2": "Flechas (↑/↓/←/→) y PageUp/PageDown desplazan el contenido cuando el viewport tiene foco",
         "item3": "<code>tabIndex={0}</code> en el viewport para scroll horizontal navegable por teclado",
         "item4": "No oculta contenido de tecnologías asistivas — solo estiliza la scrollbar",
-        "item5": "Anillo de foco visible en el viewport con <code>ring-[3px] ring-ring/50</code>",
+        "item5": "Anillo de foco visible en el viewport: 3px internos en <code>--ring</code> al 50% de opacidad",
         "item6": "Móvil: scroll nativo preservado, gestos de swipe funcionan"
       },
       "keyboard": {

@@ -621,7 +621,9 @@ import { NdsToggleGroup, NdsToggleGroupIcon } from '@/components/ui/toggle-group
     return [
       { token: '--muted',         k: 'muted'       },
       { token: '--accent',        k: 'accent'      },
-      { token: '--input',         k: 'input'       },
+      // `toggle-group.css` desenha a borda do conjunto com `--border`;
+      // `--input` não aparece na folha. A chave `input` é o nome da linha.
+      { token: '--border',        k: 'input'       },
       { token: '--ring',          k: 'ring'        },
       { token: '--destructive',   k: 'destructive' },
       { token: '--radius-button', k: 'radius'      },

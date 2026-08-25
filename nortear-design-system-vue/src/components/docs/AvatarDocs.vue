@@ -226,14 +226,18 @@ const avatarFallbackPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--muted',            value: 'bg-muted',               description: tContent('tokens.table.muted')           },
-  { token: '--muted-foreground', value: 'nds-text-muted-foreground',  description: tContent('tokens.table.mutedForeground') },
-  { token: '--background',       value: 'ring-background',        description: toPlainText(tContent('tokens.table.background')) },
-  { token: '--border',           value: 'border',                 description: tContent('tokens.table.border')          },
-  { token: '--primary',          value: 'bg-primary',             description: tContent('tokens.table.primary')         },
-  { token: '--avatar-size',      value: 'var(--spacing-8)',       description: tContent('tokens.table.avatarSize')      },
-  { token: '--radius',           value: 'rounded-full',           description: toPlainText(tContent('tokens.table.radius')) },
-  { token: '--ring',             value: 'ring',                   description: tContent('tokens.table.ring')            },
+  // A coluna do meio nomeia o SELETOR que lê o token na folha `nds/avatar.css`,
+  // não a classe utilitária da era anterior. Travessão onde a folha não lê o
+  // token em regra nenhuma — `--border` e `--ring` estão nesse caso: o anel do
+  // agrupamento é `--background`, e o avatar não é focável.
+  { token: '--muted',            value: '.nds-avatar-fallback',   description: tContent('tokens.table.muted')           },
+  { token: '--muted-foreground', value: '.nds-avatar-fallback',   description: tContent('tokens.table.mutedForeground') },
+  { token: '--background',       value: '.nds-avatar-group',      description: toPlainText(tContent('tokens.table.background')) },
+  { token: '--border',           value: '—',                      description: tContent('tokens.table.border')          },
+  { token: '--primary',          value: '.nds-avatar-badge',      description: tContent('tokens.table.primary')         },
+  { token: '--avatar-size',      value: '.nds-avatar',            description: tContent('tokens.table.avatarSize')      },
+  { token: '--radius-full',      value: '.nds-avatar',            description: toPlainText(tContent('tokens.table.radius')) },
+  { token: '--ring',             value: '—',                      description: tContent('tokens.table.ring')            },
 ]);
 
 const accessibilityItems = computed(() => [

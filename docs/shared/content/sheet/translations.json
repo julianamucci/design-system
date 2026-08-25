@@ -207,7 +207,7 @@
       "focused": {
         "label": "Focused",
         "trigger": "tab em elemento interno",
-        "behavior": "Elemento interno focado — anel <code>ring-2 ring-ring</code>."
+        "behavior": "O painel não impõe estilo de foco aos elementos internos: cada um traz o próprio. O botão de fechar do painel recebe anel de 2px em <code>--ring</code> a 50% de opacidade."
       },
       "cols": {
         "state": "Estado",
@@ -678,7 +678,7 @@
       "focused": {
         "label": "Focused",
         "trigger": "Tab to an inner element",
-        "behavior": "Internal element focused — <code>ring-2 ring-ring</code>."
+        "behavior": "The panel does not impose a focus style on internal elements: each brings its own. The panel close button gets a 2px ring in <code>--ring</code> at 50% opacity."
       },
       "cols": {
         "state": "State",
@@ -1149,7 +1149,7 @@
       "focused": {
         "label": "Focused",
         "trigger": "Tab en un elemento interno",
-        "behavior": "Elemento interno enfocado — <code>ring-2 ring-ring</code>."
+        "behavior": "El panel no impone estilo de foco a los elementos internos: cada uno trae el suyo. El botón de cerrar del panel recibe un anillo de 2px en <code>--ring</code> al 50% de opacidad."
       },
       "cols": {
         "state": "Estado",

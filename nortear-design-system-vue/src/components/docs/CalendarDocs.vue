@@ -339,14 +339,17 @@ const cellTriggerPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--primary',            value: 'bg-primary / text-primary-foreground', description: tContent('tokens.table.primary')         },
-  { token: '--muted',              value: 'bg-accent / bg-muted',                  description: tContent('tokens.table.muted')           },
-  { token: '--muted-foreground',   value: 'nds-text-muted-foreground',                 description: tContent('tokens.table.mutedForeground') },
-  { token: '--foreground',         value: 'text-foreground',                       description: tContent('tokens.table.foreground')      },
-  { token: '--ring',               value: 'nds-focus-ring',            description: tContent('tokens.table.ring')            },
-  { token: '--nds-cell-size',      value: '2rem',                                  description: toPlainText(tContent('tokens.table.cellSize'))   },
-  { token: '--nds-cell-radius',    value: 'var(--radius-md)',                      description: toPlainText(tContent('tokens.table.cellRadius')) },
-  { token: '--nds-picker-item',    value: '1.75rem',                               description: toPlainText(tContent('tokens.table.pickerItem')) },
+  // A coluna do meio nomeia o SELETOR que lê o token na folha `nds/calendar.css`,
+  // não a classe utilitária da era anterior. Hoje e meio do intervalo são
+  // `--accent`, não `--muted`: a folha não lê `--muted` em regra nenhuma.
+  { token: '--primary',            value: '.nds-calendar-day-btn[data-selected]', description: tContent('tokens.table.primary')         },
+  { token: '--accent',             value: '.nds-calendar-day-btn[data-today], .nds-calendar-range-middle', description: tContent('tokens.table.muted')           },
+  { token: '--muted-foreground',   value: '.nds-calendar-weekday',               description: tContent('tokens.table.mutedForeground') },
+  { token: '--foreground',         value: '.nds-calendar-nav-btn',               description: tContent('tokens.table.foreground')      },
+  { token: '--ring',               value: '.nds-calendar-day-btn:focus-visible', description: tContent('tokens.table.ring')            },
+  { token: '--nds-cell-size',      value: '.nds-calendar-root',                  description: toPlainText(tContent('tokens.table.cellSize'))   },
+  { token: '--nds-cell-radius',    value: '.nds-calendar-root',                  description: toPlainText(tContent('tokens.table.cellRadius')) },
+  { token: '--nds-picker-item',    value: '.nds-calendar-select',                description: toPlainText(tContent('tokens.table.pickerItem')) },
 ]);
 
 const accessibilityItems = computed(() => [

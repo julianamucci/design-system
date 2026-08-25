@@ -1122,13 +1122,17 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '--background', k: 'background',   target: '.nds-carousel-arrow' },
-      { token: '--foreground', k: 'foreground',   target: '.nds-carousel-arrow' },
-      { token: '--border',     k: 'border',       target: '.nds-carousel-arrow' },
-      { token: '--accent',     k: 'accent',       target: '.nds-carousel-arrow' },
-      { token: '--ring',       k: 'ring',         target: '.nds-carousel-arrow' },
-      { token: '--radius',     k: 'radiusButton', target: '.nds-carousel-arrow' },
-      { token: '--primary',    k: 'primary',      target: '.nds-carousel' },
+      // A seta é um Button outline: `.nds-carousel-arrow` só põe posição
+      // absoluta e `--radius-full`. Quem lê a cor é `button.css`, e é esse o
+      // seletor que a pessoa precisa abrir para mudá-la.
+      { token: '--background', k: 'background',   target: '.nds-button-outline' },
+      { token: '--foreground', k: 'foreground',   target: '.nds-button-outline' },
+      { token: '--border',     k: 'border',       target: '.nds-button-outline' },
+      { token: '--accent',     k: 'accent',       target: '.nds-button-outline:hover' },
+      { token: '--ring',       k: 'ring',         target: '.nds-button:focus-visible' },
+      // A seta sobrescreve o raio do botão: círculo, não o raio de controle.
+      { token: '--radius-full', k: 'radiusButton', target: '.nds-carousel-arrow' },
+      { token: '--primary',    k: 'primary',      target: '.nds-carousel-dot[aria-current="true"]' },
       { token: '--nds-carousel-slide-scale', k: 'slideScale', target: '.nds-carousel-slide' },
     ].map(({ token, k, target }) => ({
       token,

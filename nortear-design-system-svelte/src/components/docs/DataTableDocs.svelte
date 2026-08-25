@@ -459,12 +459,12 @@ const columns: DataTableColumn<Invoice>[] = [
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--border',           value: 'border-input',                description: toPlainText($tStore('tokens.table.borderPart'))          },
-      { token: '--muted',            value: 'nds-bg-muted-50',                 description: toPlainText($tStore('tokens.table.mutedPart'))           },
-      { token: '--muted-foreground', value: 'nds-text-muted-foreground',       description: toPlainText($tStore('tokens.table.mutedForegroundPart')) },
-      { token: '--primary',          value: 'text-primary',                description: toPlainText($tStore('tokens.table.primaryPart'))         },
-      { token: '--background',       value: 'bg-background',               description: toPlainText($tStore('tokens.table.backgroundPart'))      },
-      { token: '--ring',             value: 'ring-ring/50',                description: toPlainText($tStore('tokens.table.ringPart'))            },
+      { token: '--border',           value: '.nds-data-table-scroll, .nds-table thead tr, .nds-table tbody tr', description: toPlainText($tStore('tokens.table.borderPart')) },
+      { token: '--muted',            value: '.nds-data-table-tr:hover',    description: toPlainText($tStore('tokens.table.mutedPart'))           },
+      { token: '--muted-foreground', value: '.nds-data-table-pagination-count', description: toPlainText($tStore('tokens.table.mutedForegroundPart')) },
+      { token: '--primary',          value: '.nds-data-table-sort-btn:hover', description: toPlainText($tStore('tokens.table.primaryPart'))       },
+      { token: '--background',       value: '.nds-data-table-th-pinned, .nds-data-table-td-pinned', description: toPlainText($tStore('tokens.table.backgroundPart')) },
+      { token: '--ring',             value: '.nds-data-table-sort-btn:focus-visible', description: toPlainText($tStore('tokens.table.ringPart'))    },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={codeCustomizationTokens}

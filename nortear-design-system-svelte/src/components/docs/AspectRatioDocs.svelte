@@ -412,9 +412,9 @@
           description: $tStore('tokens.table.part'),
         }}
         items={[
-          { token: '--radius', value: 'rounded-md',    description: $tStore('tokens.table.radius') },
-          { token: '--border', value: 'border',        description: $tStore('tokens.table.border') },
-          { token: '--muted',  value: 'bg-muted',      description: $tStore('tokens.table.muted')  },
+          { token: '--radius', value: '.nds-rounded-md', description: $tStore('tokens.table.radius') },
+          { token: '--border', value: '—',               description: $tStore('tokens.table.border') },
+          { token: '--muted',  value: '.nds-bg-muted',   description: $tStore('tokens.table.muted')  },
         ]}
         customizationTitle={$tStore('tokens.customizationTitle')}
         customizationCode={codeCustomizationTokens}

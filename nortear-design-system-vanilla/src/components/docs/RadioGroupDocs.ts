@@ -82,8 +82,9 @@ function buildRadioGroupWithLegend(opts: {
   if (ariaInvalid) {
     group.setAttribute('aria-invalid', 'true');
     group.querySelectorAll<HTMLButtonElement>('[data-slot="radio-group-item"]').forEach((btn) => {
+      // A borda vermelha é da folha: `.nds-radio-item[aria-invalid="true"]` pinta
+      // `border-color` sozinha. Classe extra aqui só duplicaria a regra.
       btn.setAttribute('aria-invalid', 'true');
-      btn.classList.add('nds-border-destructive', 'ring-destructive/20');
     });
   }
 
