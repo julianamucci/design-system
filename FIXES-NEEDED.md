@@ -34,7 +34,7 @@
 foram descobertos — então `grep -c "^- \[ \]"` conta 23, não 11. O log é
 histórico; a lista de cima é o que está por fazer.
 
-## Aberto de verdade — 8 itens
+## Aberto de verdade — 9 itens
 
 ### Precisam de decisão da dona (2)
 
@@ -43,11 +43,38 @@ histórico; a lista de cima é o que está por fazer.
 - [ ] **Motor de múltiplos itens no carrossel Vanilla.** A fábrica desliza um slide por vez e não expõe base fracionária, com `coversNotApplicable` declarado. Trocar o motor, ou tirar o item do contrato das cinco.
 - [x] **Dots do carrossel no Angular são botões numerados**; as outras quatro usam `.nds-carousel-dot`, classe que não aparece em arquivo nenhum do Angular. Alinhar muda a foto do Chromatic. **Resolvido (2026-08-18), junto com o redesenho da paginação aprovado pela dona.** O Angular passou a usar `.nds-carousel-dot` na story de composições E na docs page; as cinco montam a MESMA fileira. O padrão novo: o slide atual vira uma pílula rotulada ("Slide N") na própria posição da fileira, os demais continuam pontos, e a mudança de forma anima por `grid-template-columns: 0fr → 1fr` com `--duration-base`/`--ease-size` (mesmo mecanismo do painel do accordion, sem biblioteca de animação). Contrato novo nas cinco: `testes.functional.item8` e `testes.accessibility.item6`.
 
-### Dívida de fundação, sem dono de componente (3)
+### Dívida de fundação, sem dono de componente (4)
 
 - [ ] **Keyframes de dialog e select duplicam `nds-animate-in/out`.** Mesmo desenho (`opacity` + `scale(0.95)`), nomes distintos — por isso a regra de keyframes duplicadas não os pega. **Atenção: o timing difere.** As compartilhadas usam `--duration-spring`/`--ease-spring`; dialog usa `--duration-base`/`--ease-entrance` e select `--duration-fast`. Migrar **muda o movimento**, não só remove duplicação.
 - [ ] **Classes de movimento não documentadas na foundation page de Motion.** `nds-animate-in`, `nds-animate-out`, `--ease-spring` e `--duration-spring` não aparecem no conteúdo compartilhado em nenhum dos três idiomas. Pior: o texto atual diz que spring existe "apenas via biblioteca", o que contradiz por omissão o token que o sistema passou a ter.
 - [ ] **`test:coverage` fora do CI.** A justificativa antiga — "passaria vazio ou falharia por threshold" — **está obsoleta**: as quatro suítes de navegador estão 100% verdes (react 694, vue 685, svelte 693, vanilla 716 testes). Há duas ações destravadas no mesmo lugar: pôr `test:coverage` no CI, e remover o `continue-on-error: true` de `test.yml`, cujo próprio comentário diz "quando todas chegarem a 100%".
+- [ ] **69 snippets ensinam a sobrescrever token de tema em `:root`, e o lugar mudou.** (Aberto em 2026-08-25, na medição do tema Warm.)
+
+  Desde `e3347f0bd` os 39 tokens de cor não existem mais em `:root`: cada tema declara os seus em `.tema-<id>` e `.dark.tema-<id>`. Os snippets de customização das docs pages continuam ensinando `:root { --primary: … }`.
+
+  **Como falha, exatamente** — e a parte que interessa é que ela falha DIFERENTE nos dois modos:
+
+  - `:root` é pseudo-classe, especificidade (0,1,0); `.tema-default` é classe, também (0,1,0). Empate: decide a ordem de origem. O override de um consumidor que importa o design system e declara depois ainda vence — mas por ordem, não por regra, e a classe do tema agora está SEMPRE aplicada, o que antes não acontecia (o Default era ausência de classe).
+  - `.dark.tema-<id>` é (0,2,0) e **vence `:root` de qualquer jeito**. Ou seja, o override pega no claro e some no escuro, em silêncio. Essa metade já era verdade antes do refactor — o que mudou foi o claro deixar de ser limpo.
+
+  A forma correta de ensinar passa a ser a classe do tema (`.tema-default { … }`), ou um seletor que a inclua. Enquanto o texto disser `:root`, quem seguir vai concluir que o design system ignora o tema — no escuro.
+
+  **Medido**, por stack e por página (o número é de páginas, e o mesmo componente aparece em mais de uma):
+
+  | stack | n | páginas |
+  |---|---|---|
+  | react | 13 | AlertDialog, Breadcrumb, Button, Carousel, Chart, Checkbox, Command, ContextMenu, DataTable, Dialog, Input, Sidebar, Switch |
+  | vue | 16 | as do react + Sheet, Sonner, Table |
+  | svelte | 15 | as do react + Collapsible, Sonner, Table, − Switch |
+  | vanilla | 17 | as do react + Collapsible, Form, Label, Sonner, Table, − Switch |
+  | angular | 8 | Collapsible, Dialog, Drawer, Form, HoverCard, Sheet, Switch, Tooltip |
+
+  São **22 componentes distintos**, e a cobertura é MUITO desigual: o Angular ensina em 8 páginas e o Vanilla em 17. Ou seja, além da forma errada, há divergência cross-stack — o mesmo componente ensina customização numa stack e não ensina na outra. Vale decidir as duas coisas na mesma passada.
+
+  **Nenhum portão vê isto**: não é erro de tipo, não é erro de build, e o CSS é válido. Se virar regra, o alvo é snippet de customização com `:root {` contendo token de tema — o `tabela-tokens.mjs` já sabe quais são os 39.
+
+  **Para verificar o conserto**: sobrescreva um token no seletor novo, abra no escuro, e confirme que pega. Foi o modo escuro que expôs a diferença.
+
 - [x] **A cobertura de `markup_in_text_surface` foi medida — os 10 prefixos bastam.** (Aberto e fechado em 2026-08-17.)
 
   Nasceu como "a regra não cobre `import.*`, `demonstration.*` e header, então está a zero por não olhar, não por medir". Hipótese razoável, e **falsa nos dois pontos**.
