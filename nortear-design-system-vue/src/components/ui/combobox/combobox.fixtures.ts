@@ -27,13 +27,6 @@ export const COUNTRIES: ComboboxOption[] = [
   { value: 'uruguai', label: 'Uruguai' },
 ];
 
-export const TECHNOLOGIES: ComboboxOption[] = [
-  { value: 'react', label: 'React' },
-  { value: 'vue', label: 'Vue' },
-  { value: 'svelte', label: 'Svelte' },
-  { value: 'angular', label: 'Angular' },
-];
-
 export const FRUITS: ComboboxOption[] = [
   { value: 'maca', label: 'Maçã' },
   { value: 'banana', label: 'Banana' },

@@ -110,13 +110,6 @@ const COUNTRIES = `const countries = [
   { value: 'chile', label: 'Chile' },
 ]`;
 
-const TECHNOLOGIES = `const technologies = [
-  { value: 'react', label: 'React' },
-  { value: 'vue', label: 'Vue' },
-  { value: 'svelte', label: 'Svelte' },
-  { value: 'angular', label: 'Angular' },
-]`;
-
 /*
  * Os chips, um por escolhido, com o botão de remover de nome próprio e a frase
  * que a região viva anuncia depois da remoção. Sai daqui, e não de dentro de
@@ -241,25 +234,18 @@ export function comboboxMultipleSource(): string {
     `import { computed, ref } from 'vue'
 ${IMPORT_MULTIPLE}
 
-${TECHNOLOGIES}
+${COUNTRIES}
 
-const chosen = ref(['react', 'vue'])
+const chosen = ref(['brasil', 'argentina'])
 const chips = computed(() =>
-  chosen.value.flatMap((value) => technologies.filter((item) => item.value === value)),
+  chosen.value.flatMap((value) => countries.filter((item) => item.value === value)),
 )`,
     field({
       root: ['v-model="chosen"', 'multiple'],
-      label: 'Tecnologias',
+      label: 'Países',
       chips: CHIPS_LOOP,
-      input: ['placeholder="Adicionar tecnologia"'],
-      items: `<ComboboxItem
-  v-for="item in technologies"
-  :key="item.value"
-  :value="item.value"
->
-  {{ item.label }}
-  <ComboboxItemIndicator />
-</ComboboxItem>`,
+      input: ['placeholder="Adicionar país"'],
+      items: LOOP_ITEMS,
     }),
   );
 }

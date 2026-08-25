@@ -3,7 +3,7 @@ import { fn, userEvent, within, expect, waitFor } from "storybook/test";
 import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   COUNTRIES,
-  MultiTechCombobox,
+  MultiCountryCombobox,
   SingleCountryCombobox,
   toOptionValues,
 } from "./combobox.fixtures";
@@ -115,7 +115,7 @@ export const Playground: Story = {
   },
   render: (args) =>
     args.multiple ? (
-      <MultiTechCombobox
+      <MultiCountryCombobox
         label={args.label}
         placeholder={args.placeholder}
         chipsLayout={args.chipsLayout}

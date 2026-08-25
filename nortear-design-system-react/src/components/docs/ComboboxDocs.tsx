@@ -209,7 +209,7 @@ function DemoMultipleField({
 }: DemoFieldProps & {
   items: ComboboxOption[];
   removeLabel: string;
-  /** Sufixo do que a região viva anuncia DEPOIS de remover: "React removido". */
+  /** Sufixo do que a região viva anuncia DEPOIS de remover: "Brasil removido". */
   removedLabel: string;
   /** Contraexemplo: todo botão de remover com o MESMO nome. */
   genericRemove?: boolean;
@@ -402,17 +402,6 @@ export function ComboboxDocs() {
     [tContent],
   );
 
-  // Rótulos de tecnologia são nomes próprios: não passam por tradução.
-  const technologies = useMemo<ComboboxOption[]>(
-    () => [
-      { value: "react", label: "React" },
-      { value: "vue", label: "Vue" },
-      { value: "svelte", label: "Svelte" },
-      { value: "angular", label: "Angular" },
-    ],
-    [],
-  );
-
   const ingredients = useMemo<ComboboxOptionGroup[]>(
     () => [
       {
@@ -477,25 +466,25 @@ export function ComboboxDocs() {
   </ComboboxContent>
 </Combobox>`;
 
-  const codeMultiple = `<Combobox multiple items={itens} value={escolhidos} onValueChange={setEscolhidos}>
-  <ComboboxLabel>Tecnologias</ComboboxLabel>
+  const codeMultiple = `<Combobox multiple items={paises} value={escolhidos} onValueChange={setEscolhidos}>
+  <ComboboxLabel>Países</ComboboxLabel>
   <ComboboxInputWrapper>
     <ComboboxChips>
-      {escolhidos.map((item) => (
-        <ComboboxChip key={item.value}>
-          <ComboboxChipText>{item.label}</ComboboxChipText>
-          <ComboboxChipRemove aria-label={"Remover " + item.label} />
+      {escolhidos.map((pais) => (
+        <ComboboxChip key={pais.value}>
+          <ComboboxChipText>{pais.label}</ComboboxChipText>
+          <ComboboxChipRemove aria-label={"Remover " + pais.label} />
         </ComboboxChip>
       ))}
-      <ComboboxInput placeholder="Adicionar tecnologia" />
+      <ComboboxInput placeholder="Adicionar país" />
     </ComboboxChips>
     <ComboboxClear aria-label="Limpar" />
     <ComboboxTrigger aria-label="Abrir lista" />
   </ComboboxInputWrapper>
   <ComboboxContent emptyMessage="Nenhum resultado">
-    {(item) => (
-      <ComboboxItem key={item.value} value={item}>
-        {item.label}
+    {(pais) => (
+      <ComboboxItem key={pais.value} value={pais}>
+        {pais.label}
       </ComboboxItem>
     )}
   </ComboboxContent>
@@ -673,10 +662,10 @@ interface ComboboxContentProps {
               {tContent("variants.items.multiple")}
             </p>
             <DemoMultipleField
-              items={technologies}
-              fieldName="technologies"
-              label={tContent("demonstration.labels.techLabel")}
-              placeholder={tContent("demonstration.labels.techPlaceholder")}
+              items={countries}
+              fieldName="countries"
+              label={tContent("demonstration.labels.countriesLabel")}
+              placeholder={tContent("demonstration.labels.countriesPlaceholder")}
               removeLabel={tContent("demonstration.labels.remove")}
               removedLabel={tContent("demonstration.labels.removed")}
               {...shared}
@@ -794,10 +783,10 @@ interface ComboboxContentProps {
             dontLabel: tNav("common.dont"),
             doPreview: (
               <DemoMultipleField
-                items={technologies}
+                items={countries}
                 fieldName="dodont_named_remove"
-                label={tContent("demonstration.labels.techLabel")}
-                placeholder={tContent("demonstration.labels.techPlaceholder")}
+                label={tContent("demonstration.labels.countriesLabel")}
+                placeholder={tContent("demonstration.labels.countriesPlaceholder")}
                 removeLabel={tContent("demonstration.labels.remove")}
                 removedLabel={tContent("demonstration.labels.removed")}
                 {...shared}
@@ -805,10 +794,10 @@ interface ComboboxContentProps {
             ),
             dontPreview: (
               <DemoMultipleField
-                items={technologies}
+                items={countries}
                 fieldName="dodont_generic_remove"
-                label={tContent("demonstration.labels.techLabel")}
-                placeholder={tContent("demonstration.labels.techPlaceholder")}
+                label={tContent("demonstration.labels.countriesLabel")}
+                placeholder={tContent("demonstration.labels.countriesPlaceholder")}
                 // O contraexemplo mora AQUI: o mesmo campo, com todo botão de
                 // remover chamado igual. Na tela não muda nada — é por isso
                 // que o defeito sobrevive tanto tempo sem ninguém ver.
@@ -826,10 +815,10 @@ interface ComboboxContentProps {
             dontLabel: tNav("common.dont"),
             doPreview: (
               <DemoMultipleField
-                items={technologies}
+                items={countries}
                 fieldName="dodont_backspace"
-                label={tContent("demonstration.labels.techLabel")}
-                placeholder={tContent("demonstration.labels.techPlaceholder")}
+                label={tContent("demonstration.labels.countriesLabel")}
+                placeholder={tContent("demonstration.labels.countriesPlaceholder")}
                 removeLabel={tContent("demonstration.labels.remove")}
                 removedLabel={tContent("demonstration.labels.removed")}
                 {...shared}
@@ -837,10 +826,10 @@ interface ComboboxContentProps {
             ),
             dontPreview: (
               <DemoMultipleField
-                items={technologies}
+                items={countries}
                 fieldName="dodont_no_backspace"
-                label={tContent("demonstration.labels.techLabel")}
-                placeholder={tContent("demonstration.labels.techPlaceholder")}
+                label={tContent("demonstration.labels.countriesLabel")}
+                placeholder={tContent("demonstration.labels.countriesPlaceholder")}
                 removeLabel={tContent("demonstration.labels.remove")}
                 removedLabel={tContent("demonstration.labels.removed")}
                 // Chip sem caminho de saída: quem escolheu por engano fica com
@@ -883,10 +872,10 @@ interface ComboboxContentProps {
             code: codeMultiple,
             preview: (
               <DemoMultipleField
-                items={technologies}
+                items={countries}
                 fieldName="variant_multiple"
-                label={tContent("demonstration.labels.techLabel")}
-                placeholder={tContent("demonstration.labels.techPlaceholder")}
+                label={tContent("demonstration.labels.countriesLabel")}
+                placeholder={tContent("demonstration.labels.countriesPlaceholder")}
                 removeLabel={tContent("demonstration.labels.remove")}
                 removedLabel={tContent("demonstration.labels.removed")}
                 {...shared}

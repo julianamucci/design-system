@@ -25,13 +25,6 @@ const COUNTRIES: ComboboxOption[] = [
 	{ value: 'uruguai', label: 'Uruguai' },
 ];
 
-const TECHNOLOGIES: ComboboxOption[] = [
-	{ value: 'react', label: 'React' },
-	{ value: 'vue', label: 'Vue' },
-	{ value: 'svelte', label: 'Svelte' },
-	{ value: 'angular', label: 'Angular' },
-];
-
 // ─── Contraste ────────────────────────────────────────────────────────────────
 //
 // O axe não mede o chip contra a superfície do CAMPO: ele compara com o fundo
@@ -252,15 +245,15 @@ export const MultipleWithChips: Story = {
 		},
 	},
 	args: {
-		label: 'Tecnologias',
-		placeholder: 'Adicionar tecnologia',
+		label: 'Países',
+		placeholder: 'Adicionar país',
 		multiple: true,
-		name: 'tecnologias',
+		name: 'paises',
 	},
 	render: (args) => ({
 		Component: ComboboxStory,
 		props: {
-			items: TECHNOLOGIES,
+			items: COUNTRIES,
 			label: args.label,
 			placeholder: args.placeholder,
 			// `multiple` fica fixo: é o assunto da story, e um control que a
@@ -272,7 +265,7 @@ export const MultipleWithChips: Story = {
 			disabled: args.disabled,
 			invalid: args.invalid,
 			name: args.name,
-			value: ['react', 'vue'],
+			value: ['brasil', 'argentina'],
 			onValueChange: args.onValueChange,
 		},
 	}),
@@ -295,15 +288,15 @@ export const MultipleWithChips: Story = {
 			await waitFor(async () => {
 				await expect(chips()).toHaveLength(2);
 			});
-			await expect(chips()[0]).toHaveTextContent('React');
-			await expect(chips()[1]).toHaveTextContent('Vue');
+			await expect(chips()[0]).toHaveTextContent('Brasil');
+			await expect(chips()[1]).toHaveTextContent('Argentina');
 		});
 
 		await step('Cada botão de remover tem nome próprio', async () => {
 			// Cinco botões chamados "Remover" são indistinguíveis para quem navega
 			// por lista de controles — o rótulo entra no nome.
-			await expect(canvas.getByRole('button', { name: 'Remover React' })).toBeVisible();
-			await expect(canvas.getByRole('button', { name: 'Remover Vue' })).toBeVisible();
+			await expect(canvas.getByRole('button', { name: 'Remover Brasil' })).toBeVisible();
+			await expect(canvas.getByRole('button', { name: 'Remover Argentina' })).toBeVisible();
 		});
 
 		await step('Backspace com o texto vazio remove o último chip', async () => {
@@ -312,7 +305,7 @@ export const MultipleWithChips: Story = {
 			await userEvent.clear(field);
 			field.focus();
 			await userEvent.keyboard('{Backspace}');
-			await expect(spy).toHaveBeenCalledWith(['react']);
+			await expect(spy).toHaveBeenCalledWith(['brasil']);
 			await waitFor(async () => {
 				await expect(chips()).toHaveLength(1);
 			});
@@ -322,7 +315,7 @@ export const MultipleWithChips: Story = {
 			// O passo anterior cobriu o Backspace, que é outro gesto para o mesmo
 			// fim; este cobre o botão, e prova que o foco fica no campo.
 			spy.mockClear();
-			await userEvent.click(canvas.getByRole('button', { name: 'Remover React' }));
+			await userEvent.click(canvas.getByRole('button', { name: 'Remover Brasil' }));
 			await expect(spy).toHaveBeenCalledWith([]);
 			await waitFor(async () => {
 				await expect(chips()).toHaveLength(0);
@@ -331,7 +324,7 @@ export const MultipleWithChips: Story = {
 		});
 
 		await step('O texto do chip alcança 4.5:1 contra a superfície do campo', async () => {
-			await chooseByKeyboard('react');
+			await chooseByKeyboard('brasil');
 			const chip = (await waitFor(() => {
 				const first = chips()[0] as HTMLElement | undefined;
 				if (!first) throw new Error('chip ainda não montou');
@@ -350,7 +343,7 @@ export const MultipleWithChips: Story = {
 		await step('Escolher pelo teclado devolve o segundo chip', async () => {
 			// Devolve a story ao estado que o Chromatic fotografa, e prova a ida e a
 			// volta na mesma rodada.
-			await chooseByKeyboard('vue');
+			await chooseByKeyboard('argentina');
 			await waitFor(async () => {
 				await expect(chips()).toHaveLength(2);
 			});

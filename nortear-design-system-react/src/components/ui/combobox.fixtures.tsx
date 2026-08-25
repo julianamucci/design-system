@@ -54,13 +54,6 @@ export const COUNTRIES: ComboboxOption[] = [
   { value: "uruguai", label: "Uruguai" },
 ]
 
-export const TECHNOLOGIES: ComboboxOption[] = [
-  { value: "react", label: "React" },
-  { value: "vue", label: "Vue" },
-  { value: "svelte", label: "Svelte" },
-  { value: "angular", label: "Angular" },
-]
-
 export const INGREDIENTS: ComboboxOptionGroup[] = [
   {
     value: "Frutas",
@@ -237,18 +230,18 @@ export function SingleCountryCombobox({
  * que faz o Storybook manter os chips quando um control muda e o `render`
  * roda de novo.
  */
-export function MultiTechCombobox({
-  label = "Tecnologias",
-  placeholder = "Adicionar tecnologia",
-  name = "tecnologias",
+export function MultiCountryCombobox({
+  label = "Países",
+  placeholder = "Adicionar país",
+  name = "paises",
   disabled = false,
   invalid = false,
   chipsLayout,
   onValueChange,
 }: ComboboxFixtureProps) {
   const [selected, setSelected] = React.useState<ComboboxOption[]>([
-    TECHNOLOGIES[0],
-    TECHNOLOGIES[1],
+    COUNTRIES[0],
+    COUNTRIES[1],
   ])
 
   return (
@@ -256,7 +249,7 @@ export function MultiTechCombobox({
       <Combobox
         multiple
         chipsLayout={chipsLayout}
-        items={TECHNOLOGIES}
+        items={COUNTRIES}
         name={name}
         disabled={disabled}
         value={selected}
@@ -268,13 +261,13 @@ export function MultiTechCombobox({
         <ComboboxLabel>{label}</ComboboxLabel>
         <ComboboxInputWrapper disabled={disabled}>
           <ComboboxChips>
-            {selected.map((technology) => (
-              <ComboboxChip key={technology.value}>
-                <ComboboxChipText>{technology.label}</ComboboxChipText>
-                {/* Nome PRÓPRIO: quatro botões chamados "Remover" são
+            {selected.map((country) => (
+              <ComboboxChip key={country.value}>
+                <ComboboxChipText>{country.label}</ComboboxChipText>
+                {/* Nome PRÓPRIO: vários botões chamados "Remover" são
                     indistinguíveis para quem navega por lista de controles. */}
                 <ComboboxChipRemove
-                  aria-label={`${REMOVE_PREFIX} ${technology.label}`}
+                  aria-label={`${REMOVE_PREFIX} ${country.label}`}
                 />
               </ComboboxChip>
             ))}
@@ -287,9 +280,9 @@ export function MultiTechCombobox({
           <ComboboxTrigger aria-label={OPEN_LABEL} />
         </ComboboxInputWrapper>
         <ComboboxContent emptyMessage={EMPTY_MESSAGE}>
-          {(technology: ComboboxOption) => (
-            <ComboboxItem key={technology.value} value={technology}>
-              {technology.label}
+          {(country: ComboboxOption) => (
+            <ComboboxItem key={country.value} value={country}>
+              {country.label}
             </ComboboxItem>
           )}
         </ComboboxContent>
@@ -306,10 +299,10 @@ export function MultiTechCombobox({
  * que medisse a linha única ali passaria sem medir nada — o ramo
  * `"single-line"` nunca chegaria a ser exercido.
  */
-export function MultiCountryCombobox({
+export function OverflowingChipsCombobox({
   label = "Países visitados",
   placeholder = "Adicionar país",
-  name = "paises",
+  name = "paises-visitados",
   disabled = false,
   invalid = false,
   chipsLayout,

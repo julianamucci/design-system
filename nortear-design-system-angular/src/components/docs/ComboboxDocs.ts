@@ -122,19 +122,19 @@ export class NdsCombobox {
 
     <ng-template #tplDoDont1Do>
       <nds-combobox multiple [removedLabel]="t('demonstration.labels.removed')" [value]="doDont1DoValue()" (valueChange)="setMultiple(doDont1DoValue, $event)" class="nds-w-full">
-        <label ndsComboboxLabel>{{ t('demonstration.labels.techLabel') }}</label>
+        <label ndsComboboxLabel>{{ t('demonstration.labels.countriesLabel') }}</label>
         <div ndsComboboxInputWrapper>
           <div ndsComboboxChips>
             @for (chosen of doDont1DoValue(); track chosen) {
               <span ndsComboboxChip [value]="chosen">
-                {{ technologyLabel(chosen) }}
+                {{ countryLabel(chosen) }}
                 <button
                   ndsComboboxChipRemove
-                  [attr.aria-label]="removeLabel(technologyLabel(chosen))"
+                  [attr.aria-label]="removeLabel(countryLabel(chosen))"
                 ></button>
               </span>
             }
-            <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
+            <input ndsComboboxInput [placeholder]="t('demonstration.labels.countriesPlaceholder')" />
           </div>
           <button ndsComboboxTrigger [attr.aria-label]="t('demonstration.labels.openList')">
             <svg ndsComboboxIcon></svg>
@@ -142,7 +142,7 @@ export class NdsCombobox {
         </div>
         <ng-template ndsComboboxPopup>
           <div ndsComboboxList>
-            @for (item of technologies(); track item.value) {
+            @for (item of countries(); track item.value) {
               <div ndsComboboxItem [value]="item.value">
                 {{ item.label }}
                 <span ndsComboboxItemIndicator></span>
@@ -156,12 +156,12 @@ export class NdsCombobox {
 
     <ng-template #tplDoDont1Dont>
       <nds-combobox multiple [removedLabel]="t('demonstration.labels.removed')" [value]="doDont1DontValue()" (valueChange)="setMultiple(doDont1DontValue, $event)" class="nds-w-full">
-        <label ndsComboboxLabel>{{ t('demonstration.labels.techLabel') }}</label>
+        <label ndsComboboxLabel>{{ t('demonstration.labels.countriesLabel') }}</label>
         <div ndsComboboxInputWrapper>
           <div ndsComboboxChips>
             @for (chosen of doDont1DontValue(); track chosen) {
               <span ndsComboboxChip [value]="chosen">
-                {{ technologyLabel(chosen) }}
+                {{ countryLabel(chosen) }}
                 <!-- Todos com o mesmo nome: é o defeito que o par ilustra. -->
                 <button
                   ndsComboboxChipRemove
@@ -169,7 +169,7 @@ export class NdsCombobox {
                 ></button>
               </span>
             }
-            <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
+            <input ndsComboboxInput [placeholder]="t('demonstration.labels.countriesPlaceholder')" />
           </div>
           <button ndsComboboxTrigger [attr.aria-label]="t('demonstration.labels.openList')">
             <svg ndsComboboxIcon></svg>
@@ -177,7 +177,7 @@ export class NdsCombobox {
         </div>
         <ng-template ndsComboboxPopup>
           <div ndsComboboxList>
-            @for (item of technologies(); track item.value) {
+            @for (item of countries(); track item.value) {
               <div ndsComboboxItem [value]="item.value">
                 {{ item.label }}
                 <span ndsComboboxItemIndicator></span>
@@ -191,19 +191,19 @@ export class NdsCombobox {
 
     <ng-template #tplDoDont2Do>
       <nds-combobox multiple [removedLabel]="t('demonstration.labels.removed')" [value]="doDont2DoValue()" (valueChange)="setMultiple(doDont2DoValue, $event)" class="nds-w-full">
-        <label ndsComboboxLabel>{{ t('demonstration.labels.techLabel') }}</label>
+        <label ndsComboboxLabel>{{ t('demonstration.labels.countriesLabel') }}</label>
         <div ndsComboboxInputWrapper>
           <div ndsComboboxChips>
             @for (chosen of doDont2DoValue(); track chosen) {
               <span ndsComboboxChip [value]="chosen">
-                {{ technologyLabel(chosen) }}
+                {{ countryLabel(chosen) }}
                 <button
                   ndsComboboxChipRemove
-                  [attr.aria-label]="removeLabel(technologyLabel(chosen))"
+                  [attr.aria-label]="removeLabel(countryLabel(chosen))"
                 ></button>
               </span>
             }
-            <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
+            <input ndsComboboxInput [placeholder]="t('demonstration.labels.countriesPlaceholder')" />
           </div>
           <button ndsComboboxTrigger [attr.aria-label]="t('demonstration.labels.openList')">
             <svg ndsComboboxIcon></svg>
@@ -211,7 +211,7 @@ export class NdsCombobox {
         </div>
         <ng-template ndsComboboxPopup>
           <div ndsComboboxList>
-            @for (item of technologies(); track item.value) {
+            @for (item of countries(); track item.value) {
               <div ndsComboboxItem [value]="item.value">
                 {{ item.label }}
                 <span ndsComboboxItemIndicator></span>
@@ -225,14 +225,14 @@ export class NdsCombobox {
 
     <ng-template #tplDoDont2Dont>
       <nds-combobox multiple [removedLabel]="t('demonstration.labels.removed')" [value]="doDont2DontValue()" (valueChange)="setMultiple(doDont2DontValue, $event)" class="nds-w-full">
-        <label ndsComboboxLabel>{{ t('demonstration.labels.techLabel') }}</label>
+        <label ndsComboboxLabel>{{ t('demonstration.labels.countriesLabel') }}</label>
         <div ndsComboboxInputWrapper>
           <div ndsComboboxChips>
             @for (chosen of doDont2DontValue(); track chosen) {
               <!-- Sem botão de remover: só o ponteiro desfaz, na lista. -->
-              <span ndsComboboxChip [value]="chosen">{{ technologyLabel(chosen) }}</span>
+              <span ndsComboboxChip [value]="chosen">{{ countryLabel(chosen) }}</span>
             }
-            <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
+            <input ndsComboboxInput [placeholder]="t('demonstration.labels.countriesPlaceholder')" />
           </div>
           <button ndsComboboxTrigger [attr.aria-label]="t('demonstration.labels.openList')">
             <svg ndsComboboxIcon></svg>
@@ -240,7 +240,7 @@ export class NdsCombobox {
         </div>
         <ng-template ndsComboboxPopup>
           <div ndsComboboxList>
-            @for (item of technologies(); track item.value) {
+            @for (item of countries(); track item.value) {
               <div ndsComboboxItem [value]="item.value">
                 {{ item.label }}
                 <span ndsComboboxItemIndicator></span>
@@ -278,19 +278,19 @@ export class NdsCombobox {
 
     <ng-template #tplVarMultiple>
       <nds-combobox multiple [removedLabel]="t('demonstration.labels.removed')" [value]="varMultipleValue()" (valueChange)="setMultiple(varMultipleValue, $event)" class="nds-w-full">
-        <label ndsComboboxLabel>{{ t('demonstration.labels.techLabel') }}</label>
+        <label ndsComboboxLabel>{{ t('demonstration.labels.countriesLabel') }}</label>
         <div ndsComboboxInputWrapper>
           <div ndsComboboxChips>
             @for (chosen of varMultipleValue(); track chosen) {
               <span ndsComboboxChip [value]="chosen">
-                {{ technologyLabel(chosen) }}
+                {{ countryLabel(chosen) }}
                 <button
                   ndsComboboxChipRemove
-                  [attr.aria-label]="removeLabel(technologyLabel(chosen))"
+                  [attr.aria-label]="removeLabel(countryLabel(chosen))"
                 ></button>
               </span>
             }
-            <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
+            <input ndsComboboxInput [placeholder]="t('demonstration.labels.countriesPlaceholder')" />
           </div>
           <button ndsComboboxTrigger [attr.aria-label]="t('demonstration.labels.openList')">
             <svg ndsComboboxIcon></svg>
@@ -298,7 +298,7 @@ export class NdsCombobox {
         </div>
         <ng-template ndsComboboxPopup>
           <div ndsComboboxList>
-            @for (item of technologies(); track item.value) {
+            @for (item of countries(); track item.value) {
               <div ndsComboboxItem [value]="item.value">
                 {{ item.label }}
                 <span ndsComboboxItemIndicator></span>
@@ -411,19 +411,19 @@ export class NdsCombobox {
             </nds-combobox>
 
             <nds-combobox multiple [removedLabel]="t('demonstration.labels.removed')" [value]="demoMultipleValue()" (valueChange)="setMultiple(demoMultipleValue, $event)" class="nds-w-full">
-              <label ndsComboboxLabel>{{ t('demonstration.labels.techLabel') }}</label>
+              <label ndsComboboxLabel>{{ t('demonstration.labels.countriesLabel') }}</label>
               <div ndsComboboxInputWrapper>
                 <div ndsComboboxChips>
                   @for (chosen of demoMultipleValue(); track chosen) {
                     <span ndsComboboxChip [value]="chosen">
-                      {{ technologyLabel(chosen) }}
+                      {{ countryLabel(chosen) }}
                       <button
                         ndsComboboxChipRemove
-                        [attr.aria-label]="removeLabel(technologyLabel(chosen))"
+                        [attr.aria-label]="removeLabel(countryLabel(chosen))"
                       ></button>
                     </span>
                   }
-                  <input ndsComboboxInput [placeholder]="t('demonstration.labels.techPlaceholder')" />
+                  <input ndsComboboxInput [placeholder]="t('demonstration.labels.countriesPlaceholder')" />
                 </div>
                 <button ndsComboboxTrigger [attr.aria-label]="t('demonstration.labels.openList')">
                   <svg ndsComboboxIcon></svg>
@@ -431,7 +431,7 @@ export class NdsCombobox {
               </div>
               <ng-template ndsComboboxPopup>
                 <div ndsComboboxList>
-                  @for (item of technologies(); track item.value) {
+                  @for (item of countries(); track item.value) {
                     <div ndsComboboxItem [value]="item.value">
                       {{ item.label }}
                       <span ndsComboboxItemIndicator></span>
@@ -552,13 +552,13 @@ export class NdsComboboxDocs implements AfterViewInit, OnDestroy {
   // ── Estado dos exemplos vivos ──────────────────────────────────────────────
 
   protected readonly demoSingleValue = signal<string | null>(null);
-  protected readonly demoMultipleValue = signal<string[]>(['react', 'vue']);
-  protected readonly doDont1DoValue = signal<string[]>(['react']);
-  protected readonly doDont1DontValue = signal<string[]>(['react']);
-  protected readonly doDont2DoValue = signal<string[]>(['react', 'vue']);
-  protected readonly doDont2DontValue = signal<string[]>(['react', 'vue']);
+  protected readonly demoMultipleValue = signal<string[]>(['brasil', 'argentina']);
+  protected readonly doDont1DoValue = signal<string[]>(['brasil']);
+  protected readonly doDont1DontValue = signal<string[]>(['brasil']);
+  protected readonly doDont2DoValue = signal<string[]>(['brasil', 'argentina']);
+  protected readonly doDont2DontValue = signal<string[]>(['brasil', 'argentina']);
   protected readonly varSingleValue = signal<string | null>(null);
-  protected readonly varMultipleValue = signal<string[]>(['react', 'vue']);
+  protected readonly varMultipleValue = signal<string[]>(['brasil', 'argentina']);
   protected readonly varGroupedValue = signal<string | null>(null);
   protected readonly compFormValue = signal<string | null>(null);
 
@@ -579,17 +579,6 @@ export class NdsComboboxDocs implements AfterViewInit, OnDestroy {
       { value: 'portugal',  label: t('demonstration.labels.portugal')  },
       { value: 'espanha',   label: t('demonstration.labels.spain')     },
       { value: 'uruguai',   label: t('demonstration.labels.uruguay')   },
-    ];
-  });
-
-  protected readonly technologies = computed(() => {
-    dict();
-    // Nomes de tecnologia não se traduzem — é a mesma lista da spec de exemplos.
-    return [
-      { value: 'react',   label: 'React'   },
-      { value: 'vue',     label: 'Vue'     },
-      { value: 'svelte',  label: 'Svelte'  },
-      { value: 'angular', label: 'Angular' },
     ];
   });
 
@@ -633,8 +622,8 @@ export class NdsComboboxDocs implements AfterViewInit, OnDestroy {
     target.set(Array.isArray(value) ? value.map((entry) => String(entry)) : []);
   }
 
-  protected technologyLabel(value: string): string {
-    return this.technologies().find((item) => item.value === value)?.label ?? value;
+  protected countryLabel(value: string): string {
+    return this.countries().find((item) => item.value === value)?.label ?? value;
   }
 
   /** "Remover <rótulo>" — o nome PRÓPRIO que cada botão de chip precisa ter. */

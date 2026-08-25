@@ -170,13 +170,6 @@ const countries = computed(() => [
   { value: 'uruguai',   label: tContent('demonstration.labels.uruguay')   },
 ]);
 
-const technologies = [
-  { value: 'react',   label: 'React'   },
-  { value: 'vue',     label: 'Vue'     },
-  { value: 'svelte',  label: 'Svelte'  },
-  { value: 'angular', label: 'Angular' },
-];
-
 const fruits = computed(() => [
   { value: 'maca',    label: tContent('demonstration.labels.apple')  },
   { value: 'banana',  label: tContent('demonstration.labels.banana') },
@@ -190,14 +183,14 @@ const vegetables = computed(() => [
 ]);
 
 const country = ref('');
-const chosen = ref<string[]>(['react', 'vue']);
+const chosen = ref<string[]>(['brasil', 'argentina']);
 const ingredient = ref('');
 
 // Os chips saem do MESMO valor que a raiz guarda — a página de docs é o
 // primeiro consumidor real deste componente, e monta os chips como qualquer
 // outro consumiria.
 const chips = computed(() =>
-  chosen.value.flatMap(value => technologies.filter(item => item.value === value)),
+  chosen.value.flatMap(value => countries.value.filter(item => item.value === value)),
 );
 
 // Cada cartão de Variantes e de Composições tem o PRÓPRIO estado. A seção
@@ -205,12 +198,12 @@ const chips = computed(() =>
 // cartão mover outro do outro lado da página, sem que o leitor entendesse por
 // quê.
 const variantCountry = ref('');
-const variantChosen = ref<string[]>(['react', 'vue']);
+const variantChosen = ref<string[]>(['brasil', 'argentina']);
 const variantIngredient = ref('');
 const formCountry = ref('');
 
 const variantChips = computed(() =>
-  variantChosen.value.flatMap(value => technologies.filter(item => item.value === value)),
+  variantChosen.value.flatMap(value => countries.value.filter(item => item.value === value)),
 );
 
 function removeLabelOf(label: string): string {
@@ -247,7 +240,7 @@ function onChosenChange(raw: unknown): void {
   if (added) {
     track('option_select', {
       component: 'combobox',
-      field_name: 'tecnologias',
+      field_name: 'paises',
       value: values[values.length - 1],
       location: 'demonstracao',
     });
@@ -256,7 +249,7 @@ function onChosenChange(raw: unknown): void {
   // Sair de um chip ou limpar o campo é mudança do campo, não escolha.
   track('field_change', {
     component: 'combobox',
-    field_name: 'tecnologias',
+    field_name: 'paises',
     value: String(values.length),
     location: 'demonstracao',
   });
@@ -567,10 +560,10 @@ const visualTestItems = computed(() => [
           <Combobox
             v-model="chosen"
             multiple
-            name="tecnologias"
+            name="paises"
             @update:model-value="onChosenChange"
           >
-            <ComboboxLabel>{{ tContent('demonstration.labels.techLabel') }}</ComboboxLabel>
+            <ComboboxLabel>{{ tContent('demonstration.labels.countriesLabel') }}</ComboboxLabel>
             <ComboboxInputWrapper>
               <ComboboxChips>
                 <ComboboxChip
@@ -584,7 +577,7 @@ const visualTestItems = computed(() => [
                 <!-- O texto mora DENTRO da caixa de chips: é ela que quebra ou
                      rola, e é o que faz o cursor continuar depois do último
                      chip. Limpar e gatilho ficam de fora, na primeira linha. -->
-                <ComboboxInput :placeholder="tContent('demonstration.labels.techPlaceholder')" />
+                <ComboboxInput :placeholder="tContent('demonstration.labels.countriesPlaceholder')" />
               </ComboboxChips>
               <ComboboxTrigger :aria-label="tContent('demonstration.labels.openList')">
                 <ComboboxIcon />
@@ -594,7 +587,7 @@ const visualTestItems = computed(() => [
               <ComboboxPopup>
                 <ComboboxList>
                   <ComboboxItem
-                    v-for="item in technologies"
+                    v-for="item in countries"
                     :key="item.value"
                     :value="item.value"
                   >
@@ -733,11 +726,11 @@ const visualTestItems = computed(() => [
     >
       <template #do-preview-0>
         <span class="nds-combobox-chip">
-          <span>React</span>
+          <span>Brasil</span>
           <button
             type="button"
             class="nds-combobox-chip-remove"
-            aria-label="Remover React"
+            aria-label="Remover Brasil"
           >
             <span aria-hidden="true">&times;</span>
           </button>
@@ -745,7 +738,7 @@ const visualTestItems = computed(() => [
       </template>
       <template #dont-preview-0>
         <span class="nds-combobox-chip">
-          <span>React</span>
+          <span>Brasil</span>
           <button
             type="button"
             class="nds-combobox-chip-remove"
@@ -826,7 +819,7 @@ const visualTestItems = computed(() => [
             v-model="variantChosen"
             multiple
           >
-            <ComboboxLabel>{{ tContent('demonstration.labels.techLabel') }}</ComboboxLabel>
+            <ComboboxLabel>{{ tContent('demonstration.labels.countriesLabel') }}</ComboboxLabel>
             <ComboboxInputWrapper>
               <ComboboxChips>
                 <ComboboxChip
@@ -837,7 +830,7 @@ const visualTestItems = computed(() => [
                   {{ item.label }}
                   <ComboboxChipRemove :aria-label="removeLabelOf(item.label)" :removed-announcement="removedAnnouncementOf(item.label)" />
                 </ComboboxChip>
-                <ComboboxInput :placeholder="tContent('demonstration.labels.techPlaceholder')" />
+                <ComboboxInput :placeholder="tContent('demonstration.labels.countriesPlaceholder')" />
               </ComboboxChips>
               <ComboboxTrigger :aria-label="tContent('demonstration.labels.openList')">
                 <ComboboxIcon />
@@ -847,7 +840,7 @@ const visualTestItems = computed(() => [
               <ComboboxPopup>
                 <ComboboxList>
                   <ComboboxItem
-                    v-for="item in technologies"
+                    v-for="item in countries"
                     :key="item.value"
                     :value="item.value"
                   >

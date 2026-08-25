@@ -64,15 +64,6 @@ type Options = {
 	customFilter?: boolean;
 	/** Escolha E texto de busca controlados por fora, os dois por ligação. */
 	controlled?: boolean;
-	/**
-	 * Lista sem os rótulos, com um comentário no lugar.
-	 *
-	 * O exemplo de múltipla escolha da spec usa nomes de outras stacks como
-	 * DADO, e a regra da casa é que a documentação de uma stack não cite outra —
-	 * quem lê a página do Svelte não deve topar com o nome do vizinho. O que o
-	 * snippet ensina ali é a composição dos chips, não a lista.
-	 */
-	elideOptions?: boolean;
 };
 
 const IMPORT_BASE = [
@@ -105,9 +96,6 @@ function optionsLiteral(options: Option[], indent = '  '): string {
 }
 
 function itemsBlock(o: Options): string {
-	if (o.elideOptions) {
-		return 'const items = [\n  // { value, label } de cada opção da lista\n];';
-	}
 	if (o.groups) {
 		const body = o.groups
 			.map(
@@ -246,25 +234,16 @@ export function comboboxSource(
 	ctx?: { args?: Partial<ComboboxArgs> },
 ): string {
 	const { label, placeholder, multiple, disabled, invalid, name } = ctx?.args ?? {};
-	return comboboxSnippet({
-		label,
-		placeholder,
-		multiple,
-		disabled,
-		invalid,
-		name,
-		elideOptions: multiple,
-	});
+	return comboboxSnippet({ label, placeholder, multiple, disabled, invalid, name });
 }
 
 /** Múltipla escolha: cada escolhido vira um chip dentro do campo. */
 export function comboboxMultipleSource(): string {
 	return comboboxSnippet({
-		label: 'Tecnologias',
-		placeholder: 'Adicionar tecnologia',
+		label: 'Países',
+		placeholder: 'Adicionar país',
 		multiple: true,
-		name: 'tecnologias',
-		elideOptions: true,
+		name: 'paises',
 	});
 }
 

@@ -23,13 +23,6 @@ const PAISES: ComboboxItem[] = [
   { value: 'uruguai', label: 'Uruguai' },
 ];
 
-const TECNOLOGIAS: ComboboxItem[] = [
-  { value: 'react', label: 'React' },
-  { value: 'vue', label: 'Vue' },
-  { value: 'svelte', label: 'Svelte' },
-  { value: 'angular', label: 'Angular' },
-];
-
 /**
  * Valor escolhido, POR STORY, fora da fábrica.
  *
@@ -41,7 +34,7 @@ const TECNOLOGIAS: ComboboxItem[] = [
  */
 const valueByStory: Record<string, string[]> = {
   playground: [],
-  multiple: ['react', 'vue'],
+  multiple: ['brasil', 'argentina'],
 };
 
 // ─── Contraste ────────────────────────────────────────────────────────────────
@@ -249,14 +242,14 @@ export const MultipleWithChips: Story = {
     },
   },
   args: {
-    label: 'Tecnologias',
-    placeholder: 'Adicionar tecnologia',
+    label: 'Países',
+    placeholder: 'Adicionar país',
     multiple: true,
-    name: 'tecnologias',
+    name: 'paises',
   },
   render: (args) =>
     createCombobox({
-      items: TECNOLOGIAS,
+      items: PAISES,
       label: args.label,
       placeholder: args.placeholder,
       // `multiple` fica fixo: é o assunto da story, e um control que a
@@ -284,15 +277,15 @@ export const MultipleWithChips: Story = {
 
     await step('Os escolhidos iniciais aparecem como chips', async () => {
       await expect(chips()).toHaveLength(2);
-      await expect(chips()[0]).toHaveTextContent('React');
-      await expect(chips()[1]).toHaveTextContent('Vue');
+      await expect(chips()[0]).toHaveTextContent('Brasil');
+      await expect(chips()[1]).toHaveTextContent('Argentina');
     });
 
     await step('Cada botão de remover tem nome próprio', async () => {
       // Cinco botões chamados "Remover" são indistinguíveis para quem navega
       // por lista de controles — o rótulo entra no nome.
-      await expect(canvas.getByRole('button', { name: 'Remover React' })).toBeVisible();
-      await expect(canvas.getByRole('button', { name: 'Remover Vue' })).toBeVisible();
+      await expect(canvas.getByRole('button', { name: 'Remover Brasil' })).toBeVisible();
+      await expect(canvas.getByRole('button', { name: 'Remover Argentina' })).toBeVisible();
     });
 
     await step('Backspace com o texto vazio remove o último chip', async () => {
@@ -300,7 +293,7 @@ export const MultipleWithChips: Story = {
       spy.mockClear();
       field.focus();
       await userEvent.keyboard('{Backspace}');
-      await expect(spy).toHaveBeenCalledWith(['react']);
+      await expect(spy).toHaveBeenCalledWith(['brasil']);
       await expect(chips()).toHaveLength(1);
     });
 
@@ -308,7 +301,7 @@ export const MultipleWithChips: Story = {
       // `functional.item5` é o botão; o passo anterior cobriu o Backspace, que
       // é outro gesto para o mesmo fim.
       spy.mockClear();
-      await userEvent.click(canvas.getByRole('button', { name: 'Remover React' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'Remover Brasil' }));
       await expect(spy).toHaveBeenCalledWith([]);
       await expect(chips()).toHaveLength(0);
     });
@@ -316,7 +309,7 @@ export const MultipleWithChips: Story = {
     await step('O texto do chip alcança 4.5:1 contra a superfície do campo', async () => {
       // Medido contra `--input-background`, que é o que o chip pinta em cima —
       // medir contra a página superestima e deixa passar par que não alcança.
-      await userEvent.type(field, 'react');
+      await userEvent.type(field, 'brasil');
       await userEvent.keyboard('{Enter}');
       const chip = chips()[0] as HTMLElement;
       const wrapper = canvasElement.querySelector<HTMLElement>(
@@ -337,7 +330,7 @@ export const MultipleWithChips: Story = {
     await step('Escolher pelo teclado devolve o chip', async () => {
       // Devolve a story ao estado que o Chromatic fotografa, e prova a ida e a
       // volta na mesma rodada.
-      await userEvent.type(field, 'vue');
+      await userEvent.type(field, 'argentina');
       await userEvent.keyboard('{Enter}');
       await expect(chips()).toHaveLength(2);
       await expect(field).toHaveValue('');

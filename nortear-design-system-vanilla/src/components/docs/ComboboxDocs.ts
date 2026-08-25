@@ -196,18 +196,6 @@ function countryItems(): ComboboxItem[] {
   }));
 }
 
-/**
- * As quatro tecnologias do exemplo múltiplo. Ficam no código, e não no conteúdo
- * compartilhado, porque são nomes próprios: não mudam de idioma, e uma chave de
- * tradução por nome próprio só acrescentaria um lugar onde divergir.
- */
-const TECHNOLOGY_ITEMS: ComboboxItem[] = [
-  { value: 'react', label: 'React' },
-  { value: 'vue', label: 'Vue' },
-  { value: 'svelte', label: 'Svelte' },
-  { value: 'angular', label: 'Angular' },
-];
-
 /** Frutas e Legumes — o exemplo agrupado da spec. */
 const GROCERY_KEYS: { value: string; key: string; groupKey: string }[] = [
   { value: 'maca', key: 'apple', groupKey: 'groupFruits' },
@@ -243,10 +231,6 @@ const TRACK_LABELS: Record<string, string> = {
   portugal: 'Portugal',
   espanha: 'Spain',
   uruguai: 'Uruguay',
-  react: 'React',
-  vue: 'Vue',
-  svelte: 'Svelte',
-  angular: 'Angular',
 };
 
 /**
@@ -434,23 +418,23 @@ export function createComboboxDocs(): HTMLElement {
             // O modo múltiplo entrega a lista INTEIRA a cada mudança, então quem
             // separa "escolheu" de "removeu" é a comparação com a lista anterior.
             // Sem ela, remover um chip sairia no relatório como uma escolha.
-            let previousTechnologies: string[] = ['react', 'vue'];
+            let previousCountries: string[] = ['brasil', 'argentina'];
 
-            const technologyField = buildField({
-              id: 'demo-technologies',
-              name: 'technologies',
-              labelText: t('demonstration.labels.techLabel'),
-              placeholder: t('demonstration.labels.techPlaceholder'),
-              items: TECHNOLOGY_ITEMS,
+            const countriesField = buildField({
+              id: 'demo-countries',
+              name: 'countries',
+              labelText: t('demonstration.labels.countriesLabel'),
+              placeholder: t('demonstration.labels.countriesPlaceholder'),
+              items: countryItems(),
               multiple: true,
-              defaultValue: [...previousTechnologies],
+              defaultValue: [...previousCountries],
               onValueChange: (value) => {
-                const added = value.find((entry) => !previousTechnologies.includes(entry));
-                previousTechnologies = [...value];
+                const added = value.find((entry) => !previousCountries.includes(entry));
+                previousCountries = [...value];
                 if (added) {
                   track('option_select', {
                     component: 'combobox',
-                    field_name: 'technologies',
+                    field_name: 'countries',
                     value: added,
                     label: TRACK_LABELS[added],
                     location: 'docs_demo',
@@ -459,13 +443,13 @@ export function createComboboxDocs(): HTMLElement {
                 }
                 track('field_change', {
                   component: 'combobox',
-                  field_name: 'technologies',
+                  field_name: 'countries',
                   value: value.join(','),
                   location: 'docs_demo',
                 });
               },
             });
-            wrap.appendChild(technologyField);
+            wrap.appendChild(countriesField);
 
             return wrap;
           },
@@ -584,11 +568,11 @@ export function createComboboxDocs(): HTMLElement {
         /** O lado certo do gesto: o Backspace da fábrica remove o último chip. */
         const buildBackspaceWorks = () =>
           buildField({
-            labelText: t('demonstration.labels.techLabel'),
-            placeholder: t('demonstration.labels.techPlaceholder'),
-            items: TECHNOLOGY_ITEMS,
+            labelText: t('demonstration.labels.countriesLabel'),
+            placeholder: t('demonstration.labels.countriesPlaceholder'),
+            items: countryItems(),
             multiple: true,
-            defaultValue: ['react', 'vue'],
+            defaultValue: ['brasil', 'argentina'],
           });
 
         /**
@@ -700,27 +684,27 @@ field.destroy();`,
               description: stripHtml(t('variants.styles.multiple')),
               trackId: 'multiple',
               code: `createCombobox({
-  label: 'Tecnologias',
-  placeholder: 'Adicionar tecnologia',
+  label: 'Países',
+  placeholder: 'Adicionar país',
   multiple: true,
-  defaultValue: ['react', 'vue'],
+  defaultValue: ['brasil', 'argentina'],
   // Prefixo do nome de cada botão de remover: a fábrica acrescenta o rótulo do
   // chip, porque "Remover" repetido cinco vezes não diz qual sai.
   removeLabel: 'Remover',
   items: [
-    { value: 'react', label: 'React' },
-    { value: 'vue', label: 'Vue' },
-    { value: 'svelte', label: 'Svelte' },
-    { value: 'angular', label: 'Angular' },
+    { value: 'brasil', label: 'Brasil' },
+    { value: 'argentina', label: 'Argentina' },
+    { value: 'chile', label: 'Chile' },
+    { value: 'colombia', label: 'Colômbia' },
   ],
 });`,
               previewFactory: () =>
                 buildField({
-                  labelText: t('demonstration.labels.techLabel'),
-                  placeholder: t('demonstration.labels.techPlaceholder'),
-                  items: TECHNOLOGY_ITEMS,
+                  labelText: t('demonstration.labels.countriesLabel'),
+                  placeholder: t('demonstration.labels.countriesPlaceholder'),
+                  items: countryItems(),
                   multiple: true,
-                  defaultValue: ['react', 'vue'],
+                  defaultValue: ['brasil', 'argentina'],
                 }),
             },
             {

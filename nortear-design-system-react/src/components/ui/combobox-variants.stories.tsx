@@ -6,8 +6,8 @@ import {
   GroupedIngredientCombobox,
   INGREDIENTS,
   MultiCountryCombobox,
-  MultiTechCombobox,
   OPEN_LABEL,
+  OverflowingChipsCombobox,
   REMOVE_PREFIX,
   SingleCountryCombobox,
   contrastRatio,
@@ -104,7 +104,7 @@ export const MultipleWithChips: Story = {
     },
   },
   render: () => (
-    <MultiTechCombobox
+    <MultiCountryCombobox
       onValueChange={(value) => multipleValueChange(toOptionValues(value))}
     />
   ),
@@ -133,8 +133,8 @@ export const MultipleWithChips: Story = {
 
     await step("Os escolhidos ocupam a caixa como chips", async () => {
       await expect(chips()).toHaveLength(2);
-      await expect(chips()[0]).toHaveTextContent("React");
-      await expect(chips()[1]).toHaveTextContent("Vue");
+      await expect(chips()[0]).toHaveTextContent("Brasil");
+      await expect(chips()[1]).toHaveTextContent("Argentina");
       // Os chips moram DENTRO da caixa do campo, e não ao lado dela: é isso
       // que faz o anel de foco envolver o conjunto.
       const box = canvasElement.querySelector('[data-slot="combobox-input-wrapper"]');
@@ -142,13 +142,13 @@ export const MultipleWithChips: Story = {
     });
 
     await step("Cada botão de remover tem nome próprio", async () => {
-      // Quatro botões chamados "Remover" são indistinguíveis para quem navega
+      // Botões todos chamados "Remover" são indistinguíveis para quem navega
       // por lista de controles — o rótulo do chip entra no nome.
       await expect(
-        canvas.getByRole("button", { name: `${REMOVE_PREFIX} React` }),
+        canvas.getByRole("button", { name: `${REMOVE_PREFIX} Brasil` }),
       ).toBeVisible();
       await expect(
-        canvas.getByRole("button", { name: `${REMOVE_PREFIX} Vue` }),
+        canvas.getByRole("button", { name: `${REMOVE_PREFIX} Argentina` }),
       ).toBeVisible();
     });
 
@@ -180,17 +180,17 @@ export const MultipleWithChips: Story = {
     await step("O botão de remover tira só aquele chip", async () => {
       multipleValueChange.mockClear();
       await userEvent.click(
-        canvas.getByRole("button", { name: `${REMOVE_PREFIX} Vue` }),
+        canvas.getByRole("button", { name: `${REMOVE_PREFIX} Argentina` }),
       );
       await waitFor(async () => {
         await expect(chips()).toHaveLength(1);
       });
-      await expect(chips()[0]).toHaveTextContent("React");
-      await expect(multipleValueChange).toHaveBeenCalledWith(["react"]);
+      await expect(chips()[0]).toHaveTextContent("Brasil");
+      await expect(multipleValueChange).toHaveBeenCalledWith(["brasil"]);
       // O foco continua no campo: quem removeu por teclado precisa seguir
       // digitando sem procurar onde o cursor foi parar.
       await expect(field).toHaveFocus();
-      await reselect("Vue");
+      await reselect("Argentina");
     });
 
     await step("Backspace com o campo vazio remove o último chip", async () => {
@@ -202,9 +202,9 @@ export const MultipleWithChips: Story = {
       await waitFor(async () => {
         await expect(chips()).toHaveLength(1);
       });
-      await expect(chips()[0]).toHaveTextContent("React");
-      await expect(multipleValueChange).toHaveBeenCalledWith(["react"]);
-      await reselect("Vue");
+      await expect(chips()[0]).toHaveTextContent("Brasil");
+      await expect(multipleValueChange).toHaveBeenCalledWith(["brasil"]);
+      await reselect("Argentina");
     });
 
     await step("A story fecha no estado que o Chromatic fotografa", async () => {
@@ -233,7 +233,7 @@ export const SingleLineChips: Story = {
       },
     },
   },
-  render: () => <MultiCountryCombobox chipsLayout="single-line" />,
+  render: () => <OverflowingChipsCombobox chipsLayout="single-line" />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const box = canvasElement.querySelector(

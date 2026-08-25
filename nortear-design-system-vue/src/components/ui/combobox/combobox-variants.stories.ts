@@ -24,7 +24,7 @@ import {
 } from './index';
 import type { ComboboxFilter } from './index';
 import { backgroundEffective, noTransicao, ratio } from '@shared/testing/cor';
-import { COUNTRIES, FRUITS, TECHNOLOGIES, VEGETABLES, removeLabelOf, removedAnnouncementOf } from './combobox.fixtures';
+import { COUNTRIES, FRUITS, VEGETABLES, removeLabelOf, removedAnnouncementOf } from './combobox.fixtures';
 import {
   comboboxCustomFilterSource,
   comboboxGroupedSource,
@@ -89,18 +89,18 @@ export const MultipleWithChips: Story = {
       ComboboxTrigger,
     },
     setup() {
-      const chosen = ref<string[]>(['react', 'vue']);
+      const chosen = ref<string[]>(['brasil', 'argentina']);
       // Os chips saem do MESMO valor que a raiz guarda — não há segunda lista a
       // manter em dia. É o que a nota de ponte em `Combobox.vue` explica.
       const chips = computed(() =>
-        chosen.value.flatMap((value) => TECHNOLOGIES.filter((item) => item.value === value)),
+        chosen.value.flatMap((value) => COUNTRIES.filter((item) => item.value === value)),
       );
-      return { chosen, chips, technologies: TECHNOLOGIES, removeLabelOf, removedAnnouncementOf };
+      return { chosen, chips, countries: COUNTRIES, removeLabelOf, removedAnnouncementOf };
     },
     template: `
       <div class="nds-w-xs nds-min-h-90">
-        <Combobox v-model="chosen" multiple name="tecnologias">
-          <ComboboxLabel>Tecnologias</ComboboxLabel>
+        <Combobox v-model="chosen" multiple name="paises">
+          <ComboboxLabel>Países</ComboboxLabel>
           <ComboboxInputWrapper>
             <ComboboxChips>
               <ComboboxChip
@@ -113,7 +113,7 @@ export const MultipleWithChips: Story = {
               </ComboboxChip>
               <!-- O texto mora DENTRO da caixa de chips: é ela que quebra ou
                    rola. Limpar e gatilho ficam de fora, na primeira linha. -->
-              <ComboboxInput placeholder="Adicionar tecnologia" />
+              <ComboboxInput placeholder="Adicionar país" />
             </ComboboxChips>
             <ComboboxTrigger aria-label="Abrir lista">
               <ComboboxIcon />
@@ -123,7 +123,7 @@ export const MultipleWithChips: Story = {
             <ComboboxPopup>
               <ComboboxList>
                 <ComboboxItem
-                  v-for="item in technologies"
+                  v-for="item in countries"
                   :key="item.value"
                   :value="item.value"
                 >
@@ -140,7 +140,7 @@ export const MultipleWithChips: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const field = canvas.getByRole('combobox', { name: /Tecnologias/i });
+    const field = canvas.getByRole('combobox', { name: /Países/i });
     const chips = () =>
       Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-slot="combobox-chip"]'));
     // A região viva do CAMPO, e não qualquer `role="status"`: a mensagem de
@@ -166,15 +166,15 @@ export const MultipleWithChips: Story = {
       await waitFor(async () => {
         await expect(chips()).toHaveLength(2);
       });
-      await expect(chips()[0]).toHaveTextContent('React');
-      await expect(chips()[1]).toHaveTextContent('Vue');
+      await expect(chips()[0]).toHaveTextContent('Brasil');
+      await expect(chips()[1]).toHaveTextContent('Argentina');
     });
 
     await step('Cada botão de remover tem nome próprio', async () => {
       // Cinco botões chamados "Remover" são indistinguíveis para quem navega
       // por lista de controles — o rótulo entra no nome.
-      await expect(canvas.getByRole('button', { name: 'Remover React' })).toBeVisible();
-      await expect(canvas.getByRole('button', { name: 'Remover Vue' })).toBeVisible();
+      await expect(canvas.getByRole('button', { name: 'Remover Brasil' })).toBeVisible();
+      await expect(canvas.getByRole('button', { name: 'Remover Argentina' })).toBeVisible();
     });
 
     await step('O texto do chip mantém contraste sobre a superfície do campo', async () => {
@@ -198,14 +198,14 @@ export const MultipleWithChips: Story = {
       await waitFor(async () => {
         await expect(chips()).toHaveLength(1);
       });
-      await expect(chips()[0]).toHaveTextContent('React');
+      await expect(chips()[0]).toHaveTextContent('Brasil');
       // A saída do chip não move o foco, então quem não vê a tela só recebe a
       // mudança pela região viva.
-      await expect(liveRegion()).toHaveTextContent('Remover Vue');
+      await expect(liveRegion()).toHaveTextContent('Remover Argentina');
     });
 
     await step('O botão de remover tira só aquele chip, e o foco fica no campo', async () => {
-      await userEvent.click(canvas.getByRole('button', { name: 'Remover React' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'Remover Brasil' }));
       await waitFor(async () => {
         await expect(chips()).toHaveLength(0);
       });
@@ -217,12 +217,12 @@ export const MultipleWithChips: Story = {
     await step('Escolher pelo teclado devolve os dois chips', async () => {
       // Devolve a story ao estado que o Chromatic fotografa, e prova a ida e a
       // volta na mesma rodada.
-      await choose('React');
-      await choose('Vue');
+      await choose('Brasil');
+      await choose('Argentina');
       await waitFor(async () => {
         await expect(chips()).toHaveLength(2);
       });
-      await expect(chips()[1]).toHaveTextContent('Vue');
+      await expect(chips()[1]).toHaveTextContent('Argentina');
     });
   },
 };

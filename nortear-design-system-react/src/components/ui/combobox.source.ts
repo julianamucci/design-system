@@ -15,11 +15,12 @@
  * que sai a filtragem e é dela que sai a mensagem de lista vazia. Um snippet
  * sem ela ensinaria um campo que não filtra nada.
  *
- * A lista do exemplo múltiplo é a MESMA dos países, e não a de tecnologias que
- * a story mostra. O guarda transversal `source-snippets.test.ts` proíbe nome de
- * outra stack no que o leitor vê, e os rótulos daquela story — fechados pela
- * spec de exemplos — são justamente nomes de framework. O que o snippet precisa
- * ensinar é o modo múltiplo com chips, e a lista de países ensina isso inteiro.
+ * A lista do exemplo múltiplo é a MESMA dos países que a story mostra, e uma
+ * lista só serve à página inteira. Antes eram duas — a story trazia nomes de
+ * framework, que o guarda transversal `source-snippets.test.ts` proíbe no que o
+ * leitor vê, e o snippet já corrigia por conta própria. Divergir assim ensina
+ * um campo que ninguém vê rodando: o que o snippet precisa mostrar é o modo
+ * múltiplo com chips, e a lista de países mostra isso inteiro.
  */
 import {
   attrs,
@@ -182,7 +183,7 @@ const [escolhidos, setEscolhidos] = useState([PAISES[0], PAISES[1]]);`,
   value={escolhidos}
   onValueChange={(valor) => setEscolhidos(valor)}
 >
-  <ComboboxLabel>Países visitados</ComboboxLabel>
+  <ComboboxLabel>Países</ComboboxLabel>
   <ComboboxInputWrapper>
     <ComboboxChips>
       {escolhidos.map((pais) => (

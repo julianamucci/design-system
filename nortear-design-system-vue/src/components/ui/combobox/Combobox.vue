@@ -36,7 +36,7 @@ import { provideComboboxContext } from './index'
  *
  *   3. O botão de remover perde o nome próprio. `TagsInputItemDelete` escreve
  *      `aria-labelledby` apontando para o texto da tag, e `aria-labelledby`
- *      vence `aria-label`. O nome sairia "React", nunca "Remover React" — que é
+ *      vence `aria-label`. O nome sairia "Brasil", nunca "Remover Brasil" — que é
  *      justamente o item de acessibilidade do contrato.
  *
  *   4. Dois donos do mesmo valor. `TagsInputRoot` tem `modelValue`, `name`,

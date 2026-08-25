@@ -39,13 +39,13 @@ describe('comboboxSnippet', () => {
     const code = comboboxSnippet({
       multiple: true,
       chipsLayout: 'single-line',
-      defaultValue: ['react', 'vue'],
-      name: 'tecnologias',
+      defaultValue: ['brasil', 'argentina'],
+      name: 'paises',
     });
     expect(code).toContain('multiple: true');
     expect(code).toContain("chipsLayout: 'single-line'");
-    expect(code).toContain("defaultValue: ['react', 'vue']");
-    expect(code).toContain("name: 'tecnologias'");
+    expect(code).toContain("defaultValue: ['brasil', 'argentina']");
+    expect(code).toContain("name: 'paises'");
 
     expect(comboboxSnippet({ disabled: true })).toContain('disabled: true');
     expect(comboboxSnippet({ invalid: true })).toContain('invalid: true');
@@ -58,7 +58,7 @@ describe('comboboxSnippet', () => {
     expect(code).toContain("{ value: 'colombia', label: 'Colômbia' },");
     expect(code).not.toContain('COUNTRIES');
     expect(code).not.toContain('PAISES');
-    expect(code).not.toContain('FRAMEWORKS');
+    expect(code).not.toContain('COUNTRY_LABELS');
   });
 
   it('leva o rótulo do grupo para cada item quando a lista é agrupada', () => {
@@ -104,7 +104,7 @@ describe('controlledComboboxSnippet', () => {
 
   it('passa `value` e `inputValue`, que é o que tira a posse do estado', () => {
     const code = controlledComboboxSnippet();
-    expect(code).toContain("let value = ['react'];");
+    expect(code).toContain("let value = ['brasil'];");
     expect(code).toContain("let inputValue = '';");
     expect(code).toContain('value: value,');
     expect(code).toContain('inputValue: inputValue,');
@@ -124,12 +124,12 @@ describe('comboboxSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
     const plain = comboboxSource('<div data-slot="combobox">', {});
     const withChips = comboboxSource('<div data-slot="combobox">', {
-      args: { multiple: true, chipsLayout: 'single-line', name: 'tecnologias' },
+      args: { multiple: true, chipsLayout: 'single-line', name: 'paises' },
     });
     expect(plain).not.toBe(withChips);
     expect(withChips).toContain('multiple: true');
     expect(withChips).toContain("chipsLayout: 'single-line'");
-    expect(withChips).toContain("name: 'tecnologias'");
+    expect(withChips).toContain("name: 'paises'");
   });
 
   it('ignora o HTML gerado pelo renderer', () => {

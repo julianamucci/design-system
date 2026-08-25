@@ -154,12 +154,12 @@ export function filterComboboxSnippet(o: ComboboxSnippetOptions = {}): string {
  */
 export function controlledComboboxSnippet(o: ComboboxSnippetOptions = {}): string {
   const opts: ComboboxSnippetOptions = {
-    label: 'Tecnologias',
-    placeholder: 'Adicionar tecnologia',
+    label: 'Países',
+    placeholder: 'Adicionar país',
     multiple: true,
-    name: 'tecnologias',
-    items: ['React', 'Vue', 'Svelte', 'Angular'],
-    value: ['react'],
+    name: 'paises',
+    items: ['Brasil', 'Argentina', 'Chile', 'Colômbia'],
+    value: ['brasil'],
     inputValue: '',
     ...o,
   };

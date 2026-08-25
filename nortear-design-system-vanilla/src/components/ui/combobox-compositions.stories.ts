@@ -17,20 +17,9 @@ import {
 // Divergir aqui é o que faz a mesma story mostrar coisas diferentes em cada
 // stack — e isso só aparece tarde, na comparação final.
 
-// Oito rótulos curtos. Com o campo estreito, os seis escolhidos já passam da
-// largura da caixa: é esse transbordo que a forma de linha única tem de ROLAR
-// em vez de quebrar, e sem ele a story não teria o que medir.
-const FRAMEWORKS: ComboboxItem[] = [
-  { value: 'react', label: 'React' },
-  { value: 'vue', label: 'Vue' },
-  { value: 'svelte', label: 'Svelte' },
-  { value: 'angular', label: 'Angular' },
-  { value: 'solid', label: 'Solid' },
-  { value: 'preact', label: 'Preact' },
-  { value: 'ember', label: 'Ember' },
-  { value: 'lit', label: 'Lit' },
-];
-
+// Nove rótulos. Com o campo estreito, os seis escolhidos já passam da largura
+// da caixa: é esse transbordo que a forma de linha única tem de ROLAR em vez de
+// quebrar, e sem ele a story não teria o que medir.
 const COUNTRIES: ComboboxItem[] = [
   { value: 'brasil', label: 'Brasil' },
   { value: 'argentina', label: 'Argentina' },
@@ -41,13 +30,6 @@ const COUNTRIES: ComboboxItem[] = [
   { value: 'portugal', label: 'Portugal' },
   { value: 'espanha', label: 'Espanha' },
   { value: 'uruguai', label: 'Uruguai' },
-];
-
-const TECHNOLOGIES: ComboboxItem[] = [
-  { value: 'react', label: 'React' },
-  { value: 'vue', label: 'Vue' },
-  { value: 'svelte', label: 'Svelte' },
-  { value: 'angular', label: 'Angular' },
 ];
 
 /**
@@ -68,13 +50,11 @@ const withoutAccent = (text: string): string =>
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
-/** Rótulos derivados das listas: o snippet mostra o que está na tela. */
-const FRAMEWORK_LABELS = FRAMEWORKS.map((item) => item.label);
+/** Rótulos derivados da lista: o snippet mostra o que está na tela. */
 const COUNTRY_LABELS = COUNTRIES.map((item) => item.label);
-const TECHNOLOGY_LABELS = TECHNOLOGIES.map((item) => item.label);
 
 /** Os seis já escolhidos, que são o que faz a caixa de chips transbordar. */
-const SINGLE_LINE_VALUE = ['react', 'vue', 'svelte', 'angular', 'solid', 'preact'];
+const SINGLE_LINE_VALUE = ['brasil', 'argentina', 'chile', 'colombia', 'mexico', 'peru'];
 
 const meta: Meta = {
   title: 'UI/Combobox/Compositions',
@@ -91,11 +71,11 @@ const meta: Meta = {
       // entraria despejando `outerHTML` no painel Code — em silêncio.
       source: {
         transform: comboboxSourceWith({
-          label: 'Tecnologias',
-          placeholder: 'Adicionar tecnologia',
+          label: 'Países',
+          placeholder: 'Adicionar país',
           multiple: true,
-          name: 'tecnologias',
-          items: FRAMEWORK_LABELS,
+          name: 'paises',
+          items: COUNTRY_LABELS,
         }),
       },
       description: {
@@ -118,12 +98,12 @@ export const SingleLineChips: Story = {
       // a largura estreita, que é andaime para forçar o transbordo aqui.
       source: {
         transform: comboboxSourceWith({
-          label: 'Tecnologias',
-          placeholder: 'Adicionar tecnologia',
+          label: 'Países',
+          placeholder: 'Adicionar país',
           multiple: true,
           chipsLayout: 'single-line',
-          name: 'tecnologias',
-          items: FRAMEWORK_LABELS,
+          name: 'paises',
+          items: COUNTRY_LABELS,
           defaultValue: SINGLE_LINE_VALUE,
         }),
       },
@@ -135,15 +115,15 @@ export const SingleLineChips: Story = {
   },
   render: () =>
     createCombobox({
-      items: FRAMEWORKS,
-      label: 'Tecnologias',
-      placeholder: 'Adicionar tecnologia',
+      items: COUNTRIES,
+      label: 'Países',
+      placeholder: 'Adicionar país',
       multiple: true,
       chipsLayout: 'single-line',
       // Campo estreito de propósito: é o que garante o transbordo. A medida sai
       // de uma utilitária compartilhada, não de um style inline.
       className: 'nds-w-2xs',
-      name: 'tecnologias',
+      name: 'paises',
       defaultValue: SINGLE_LINE_VALUE,
     }),
   play: async ({ canvasElement, step }) => {
@@ -275,7 +255,7 @@ export const Controlled: Story = {
     docs: {
       // Forma própria: sem `setValue` e `setInputValue` no snippet, quem copia
       // monta um campo que anuncia a intenção e nunca se move.
-      source: { transform: controlledComboboxSource({ items: TECHNOLOGY_LABELS }) },
+      source: { transform: controlledComboboxSource({ items: COUNTRY_LABELS }) },
       description: {
         story:
           'Campo controlado: a interação apenas ANUNCIA a intenção, e a tela só se move quando quem manda responde escrevendo a escolha e o texto de volta.',
@@ -284,13 +264,13 @@ export const Controlled: Story = {
   },
   render: () =>
     createCombobox({
-      items: TECHNOLOGIES,
-      label: 'Tecnologias',
-      placeholder: 'Adicionar tecnologia',
+      items: COUNTRIES,
+      label: 'Países',
+      placeholder: 'Adicionar país',
       multiple: true,
-      name: 'tecnologias',
+      name: 'paises',
       // Os dois modos controlados ao mesmo tempo: a escolha e o texto de busca.
-      value: ['react'],
+      value: ['brasil'],
       inputValue: '',
       onValueChange: controlledValueSpy,
       onInputValueChange: controlledInputSpy,
@@ -312,8 +292,8 @@ export const Controlled: Story = {
 
     await step('A escolha exibida é a de quem manda', async () => {
       await expect(chips()).toHaveLength(1);
-      await expect(chips()[0]).toHaveTextContent('React');
-      await expect(element.getValue()).toEqual(['react']);
+      await expect(chips()[0]).toHaveTextContent('Brasil');
+      await expect(element.getValue()).toEqual(['brasil']);
     });
 
     await step('Escolher ANUNCIA, e a tela não se move', async () => {
@@ -325,41 +305,41 @@ export const Controlled: Story = {
       await waitFor(async () => {
         await expect(field).toHaveAttribute('aria-expanded', 'true');
       });
-      // Da primeira opção (React, já escolhida) para a segunda (Vue).
+      // Da primeira opção (Brasil, já escolhida) para a segunda (Argentina).
       await userEvent.keyboard('{ArrowDown}{Enter}');
-      await expect(controlledValueSpy).toHaveBeenCalledWith(['react', 'vue']);
+      await expect(controlledValueSpy).toHaveBeenCalledWith(['brasil', 'argentina']);
       await expect(chips()).toHaveLength(1);
       // O campo do formulário também não anda: quem envia continua enviando o
       // valor de quem manda, não o que a interação pediu.
-      await expect(hidden.value).toBe('react');
+      await expect(hidden.value).toBe('brasil');
     });
 
     await step('setValue escreve a escolha nova na tela', async () => {
-      element.setValue(['react', 'vue']);
+      element.setValue(['brasil', 'argentina']);
       await expect(chips()).toHaveLength(2);
-      await expect(chips()[1]).toHaveTextContent('Vue');
-      await expect(hidden.value).toBe('react,vue');
+      await expect(chips()[1]).toHaveTextContent('Argentina');
+      await expect(hidden.value).toBe('brasil,argentina');
     });
 
     await step('Digitar ANUNCIA, e o campo volta ao texto de quem manda', async () => {
       controlledInputSpy.mockClear();
-      await userEvent.type(field, 'v');
-      await expect(controlledInputSpy).toHaveBeenCalledWith('v');
+      await userEvent.type(field, 'a');
+      await expect(controlledInputSpy).toHaveBeenCalledWith('a');
       await expect(field).toHaveValue('');
     });
 
     await step('setInputValue escreve o texto e refiltra a lista', async () => {
-      element.setInputValue('vu');
-      await expect(field).toHaveValue('vu');
+      element.setInputValue('arg');
+      await expect(field).toHaveValue('arg');
       const options = canvas.getAllByRole('option');
       await expect(options).toHaveLength(1);
-      await expect(options[0]).toHaveTextContent('Vue');
+      await expect(options[0]).toHaveTextContent('Argentina');
     });
 
     await step('Quem manda devolve a story ao estado inicial', async () => {
       // Idempotência pelo mesmo caminho do modo controlado: a play não desfaz
       // nada por fora, ela pede a quem manda que reescreva o estado de partida.
-      element.setValue(['react']);
+      element.setValue(['brasil']);
       element.setInputValue('');
       await userEvent.keyboard('{Escape}');
       await expect(chips()).toHaveLength(1);

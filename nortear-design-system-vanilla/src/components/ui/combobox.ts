@@ -129,7 +129,7 @@ export interface ComboboxOptions {
   /**
    * Frase que a região viva anuncia ao remover um chip. É função, e não sufixo,
    * para o rótulo poder cair em qualquer ponto da frase — em pt, en e es ele
-   * abre ("React removido"), mas amarrar a posição na assinatura fecharia a
+   * abre ("Brasil removido"), mas amarrar a posição na assinatura fecharia a
    * porta para o idioma em que não abre.
    */
   removedAnnouncement?: (label: string) => string;

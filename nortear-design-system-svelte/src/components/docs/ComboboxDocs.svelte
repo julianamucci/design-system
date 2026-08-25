@@ -125,8 +125,8 @@
     return {
       country: t('demonstration.labels.countryLabel'),
       countryPlaceholder: t('demonstration.labels.countryPlaceholder'),
-      tech: t('demonstration.labels.techLabel'),
-      techPlaceholder: t('demonstration.labels.techPlaceholder'),
+      countries: t('demonstration.labels.countriesLabel'),
+      countriesPlaceholder: t('demonstration.labels.countriesPlaceholder'),
       grouped: t('demonstration.labels.groupedLabel'),
       groupedPlaceholder: t('demonstration.labels.groupedPlaceholder'),
       empty: t('demonstration.labels.empty'),
@@ -152,14 +152,6 @@
     ] satisfies ComboboxOption[];
   });
 
-  // Rótulos de tecnologia são nomes próprios: não passam pelo dicionário.
-  const techItems: ComboboxOption[] = [
-    { value: 'react', label: 'React' },
-    { value: 'vue', label: 'Vue' },
-    { value: 'svelte', label: 'Svelte' },
-    { value: 'angular', label: 'Angular' },
-  ];
-
   const groceryItems = $derived.by(() => {
     const t = $tStore;
     const fruits = t('demonstration.labels.groupFruits');
@@ -182,10 +174,10 @@
 
   const values = $state<Record<string, string | string[]>>({
     demoSingle: '',
-    demoMultiple: ['react', 'vue'],
+    demoMultiple: ['brasil', 'argentina'],
     demoGrouped: '',
     varSingle: '',
-    varMultiple: ['react'],
+    varMultiple: ['brasil'],
     varGrouped: '',
     dd1Do: '',
     dd1Dont: '',
@@ -304,7 +296,7 @@
 </Combobox>`;
 
   const codeMultiple = `<Combobox {items} bind:value multiple>
-  <ComboboxLabel>Tecnologias</ComboboxLabel>
+  <ComboboxLabel>Países</ComboboxLabel>
   <ComboboxInputWrapper>
     <ComboboxChips>
       {#each value as chip (chip)}
@@ -312,7 +304,7 @@
           <ComboboxChipRemove />
         </ComboboxChip>
       {/each}
-      <ComboboxInput placeholder="Adicionar tecnologia" />
+      <ComboboxInput placeholder="Adicionar país" />
     </ComboboxChips>
     <ComboboxTrigger aria-label="Abrir lista" />
   </ComboboxInputWrapper>
@@ -467,11 +459,11 @@ interface ComboboxChipProps {
       </div>
 
       <div style="contain: layout">
-        {@render comboboxField('demoMultiple', techItems, {
-          label: labels.tech,
-          placeholder: labels.techPlaceholder,
+        {@render comboboxField('demoMultiple', countryItems, {
+          label: labels.countries,
+          placeholder: labels.countriesPlaceholder,
           multiple: true,
-          name: 'tecnologias',
+          name: 'paises',
         })}
       </div>
 
@@ -685,9 +677,9 @@ interface ComboboxChipProps {
 
   {#snippet dd2Do()}
     <div style="contain: layout">
-      {@render comboboxField('dd2Do', techItems, {
-        label: labels.tech,
-        placeholder: labels.techPlaceholder,
+      {@render comboboxField('dd2Do', countryItems, {
+        label: labels.countries,
+        placeholder: labels.countriesPlaceholder,
         multiple: true,
       })}
     </div>
@@ -696,12 +688,12 @@ interface ComboboxChipProps {
   {#snippet dd2Dont()}
     <div style="contain: layout">
       <Combobox
-        items={techItems}
+        items={countryItems}
         bind:value={values.dd2Dont}
         bind:inputValue={queries.dd2Dont}
         multiple
       >
-        <ComboboxLabel>{labels.tech}</ComboboxLabel>
+        <ComboboxLabel>{labels.countries}</ComboboxLabel>
         <ComboboxInputWrapper>
           <ComboboxChips>
             {#each chipsOf('dd2Dont') as chip (chip)}
@@ -709,14 +701,14 @@ interface ComboboxChipProps {
                    lista, e o teclado perde o caminho de volta. -->
               <ComboboxChip value={chip} />
             {/each}
-            <ComboboxInput placeholder={labels.techPlaceholder} />
+            <ComboboxInput placeholder={labels.countriesPlaceholder} />
           </ComboboxChips>
           <ComboboxTrigger aria-label={labels.openList} />
         </ComboboxInputWrapper>
         <ComboboxPositioner>
           <ComboboxPopup>
             <ComboboxList>
-              {#each techItems as entry (entry.value)}
+              {#each countryItems as entry (entry.value)}
                 <ComboboxItem value={entry.value} label={entry.label} />
               {/each}
             </ComboboxList>
@@ -774,9 +766,9 @@ interface ComboboxChipProps {
 
   {#snippet variantMultiple()}
     <div style="contain: layout">
-      {@render comboboxField('varMultiple', techItems, {
-        label: labels.tech,
-        placeholder: labels.techPlaceholder,
+      {@render comboboxField('varMultiple', countryItems, {
+        label: labels.countries,
+        placeholder: labels.countriesPlaceholder,
         multiple: true,
       })}
     </div>

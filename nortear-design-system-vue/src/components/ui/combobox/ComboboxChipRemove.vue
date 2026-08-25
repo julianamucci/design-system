@@ -9,7 +9,7 @@ import { useComboboxChipContext, useComboboxContext } from './index'
 const props = defineProps<{
   class?: HTMLAttributes['class']
   /**
-   * Frase que a região viva anuncia DEPOIS de remover ("React removido").
+   * Frase que a região viva anuncia DEPOIS de remover ("Brasil removido").
    * Ausente, cai no nome acessível do próprio botão — que diz o comando, não o
    * que aconteceu.
    */
@@ -29,8 +29,8 @@ const disabled = computed(() => rootContext.disabled.value)
  * `Combobox.vue`.
  *
  * A região viva anuncia `removedAnnouncement` — o que ACONTECEU, como nas
- * outras quatro stacks ("React removido"). Sem ele sobra o nome acessível do
- * botão ("Remover React"), que é o comando: lido depois que o chip sumiu, soa
+ * outras quatro stacks ("Brasil removido"). Sem ele sobra o nome acessível do
+ * botão ("Remover Brasil"), que é o comando: lido depois que o chip sumiu, soa
  * como pedido pendente. O texto vem de fora porque quem
  * consome já o escreveu traduzido, e repeti-lo aqui criaria uma segunda fonte
  * de texto para dizer a mesma coisa.
