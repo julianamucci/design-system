@@ -1124,6 +1124,7 @@ function auditStoryQuality(slug) {
   violations.push(...auditUnknownClass(slug));
   violations.push(...auditExportSemStory(slug));
   violations.push(...auditTailwindUtility(slug));
+  violations.push(...auditTokenTableRow(slug));
 
   // Contrato resolvido = todo item de testes.* está coberto ou dispensado com
   // motivo, nas 4 stacks. É o que autoriza aposentar a comparação por contagem.
@@ -2097,6 +2098,187 @@ function auditTailwindUtility(slug) {
     }
   }
 
+  return violations;
+}
+
+/**
+ * `token_table_row_incoerente` — a linha da tabela de tokens traz DUAS colunas
+ * que precisam fechar entre si: o token, e o seletor `.nds-*` que o lê. A regra
+ * pergunta se a regra CSS daquele seletor declara aquele token. As duas pontas
+ * saem do mesmo objeto literal, então é verificação fechada, sem heurística de
+ * composição.
+ *
+ * Medido: 11 achados em 594 linhas, nas cinco stacks, e os quatro grupos
+ * conferidos na folha um a um. O pior deles ensinava o oposto de uma decisão
+ * registrada — a tabela do alert-dialog mandava sobrescrever
+ * `--destructive-foreground`, e o `button.css` diz por escrito que esse token
+ * não entra ali porque a variante destrutiva é soft.
+ *
+ * A versão LARGA desta ideia — "a folha do slug lê o token?" — foi medida e
+ * DESCARTADA: 46 achados, 25% de precisão. Reprovava a seta do carrossel (que é
+ * um `.nds-button`, e quem lê é `button.css`), a paleta do gráfico (que chega
+ * por `getComputedStyle`, não por CSS) e toda utilitária `.nds-text-*`. Portão
+ * que reprova três quartos do que aponta ensina a ignorar o portão, e junto some
+ * o achado que importava.
+ *
+ * Três armadilhas, todas medidas ao construir isto:
+ *
+ * 1. A coluna do meio CONTÉM aspas: `.nds-checkbox[data-state="checked"]`.
+ *    Fechar a captura em qualquer aspa trunca o seletor no meio do atributo e a
+ *    linha vira "seletor inexistente" — 40 falsos positivos, todos iguais.
+ * 2. `--radius-md: calc(var(--radius) - 2px)`. A linha nomeia `--radius` e o
+ *    seletor lê `--radius-md`, e mesmo assim a linha é VERDADEIRA: sobrescrever
+ *    `--radius` move o raio. Sem resolver a derivação, o portão mandaria trocar
+ *    o token de cima pelo de baixo, que é o ponto de customização PIOR.
+ * 3. A classe pode estar em qualquer posição do seletor: quem lê
+ *    `--sidebar-border` é `.nds-sidebar-root[…] .nds-sidebar-panel`, com a
+ *    classe da linha no FIM. Casar só pelo início reprovava quatro linhas
+ *    corretas de uma vez.
+ *
+ * Duas exigências de higiene, deliberadas:
+ *
+ * - Travessão na coluna do meio é declaração EXPLÍCITA de ausência e PASSA.
+ *   Duas stacks já usavam a convenção por conta própria; formalizar vale mais
+ *   que reinventar.
+ * - Tabela cuja coluna do meio não é seletor CSS — a do chart tem cabeçalho
+ *   "Uso no componente" e valores como `axisPointer` — sai por AUSÊNCIA DE
+ *   `.nds-` no próprio valor, que é declaração no dado, não filtro por nome de
+ *   arquivo. Filtro por nome é o defeito do `source-snippets.test.ts`: a
+ *   contagem encolheu e a suíte seguiu verde medindo menos.
+ */
+const LINHA_TABELA_RX = new RegExp(
+  String.raw`\{[^{}]*?\btoken:\s*(['"\`])(--[A-Za-z0-9-]+)\1` +
+    String.raw`[^{}]*?\b(?:value|target):\s*(['"\`])((?:\\.|(?!\3)[^\\])*)\3`,
+  'g',
+);
+
+let _indiceFolhas = null;
+
+function indiceFolhas() {
+  if (_indiceFolhas) return _indiceFolhas;
+
+  const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
+  const porSeletor = new Map();
+  const derivaDe = new Map();
+
+  const regrasDe = (css) => {
+    const limpo = css.replace(/\/\*[\s\S]*?\*\//g, '');
+    const regras = [];
+    const pilha = [];
+    let buf = '';
+    for (const ch of limpo) {
+      if (ch === '{') { pilha.push(buf.trim()); buf = ''; }
+      else if (ch === '}') { regras.push({ sel: pilha.pop() ?? '', body: buf }); buf = ''; }
+      else buf += ch;
+    }
+    return regras;
+  };
+
+  for (const f of readdirSync(dir).filter((x) => x.endsWith('.css'))) {
+    for (const { sel, body } of regrasDe(readFileSync(join(dir, f), 'utf8'))) {
+      if (!sel || sel.startsWith('@')) continue;
+      const tokens = new Set();
+      for (const m of body.matchAll(/var\(\s*(--[A-Za-z0-9-]+)/g)) tokens.add(m[1]);
+      for (const m of body.matchAll(/(?:^|[;{\s])(--[A-Za-z0-9-]+)\s*:/g)) tokens.add(m[1]);
+      if (!tokens.size) continue;
+      for (const peca of sel.split(',')) {
+        const p = peca.trim();
+        if (!p) continue;
+        if (!porSeletor.has(p)) porSeletor.set(p, new Set());
+        for (const t of tokens) porSeletor.get(p).add(t);
+      }
+    }
+  }
+
+  const tokensCss = join(ROOT, 'docs', 'shared', 'tokens', 'tokens.css');
+  if (existsSync(tokensCss)) {
+    const css = readFileSync(tokensCss, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+    for (const m of css.matchAll(/(--[A-Za-z0-9-]+)\s*:\s*([^;]+);/g)) {
+      const pais = [...m[2].matchAll(/var\(\s*(--[A-Za-z0-9-]+)/g)].map((x) => x[1]);
+      if (!pais.length) continue;
+      if (!derivaDe.has(m[1])) derivaDe.set(m[1], new Set());
+      for (const pai of pais) derivaDe.get(m[1]).add(pai);
+    }
+  }
+
+  _indiceFolhas = { porSeletor, derivaDe };
+  return _indiceFolhas;
+}
+
+function seletorCasa(peca, nomeado) {
+  const COMBINADOR = [' ', '>', '+', '~'];
+  let i = peca.indexOf(nomeado);
+  while (i !== -1) {
+    const antes = i === 0 ? '' : peca[i - 1];
+    const depois = peca[i + nomeado.length] ?? '';
+    const abre = antes === '' || COMBINADOR.includes(antes);
+    const fecha = depois === '' || depois === ':' || depois === '[' || COMBINADOR.includes(depois);
+    if (abre && fecha) return true;
+    i = peca.indexOf(nomeado, i + 1);
+  }
+  return false;
+}
+
+function auditTokenTableRow(slug) {
+  const violations = [];
+  const { porSeletor, derivaDe } = indiceFolhas();
+
+  const comAncestrais = (tokens) => {
+    const saida = new Set(tokens);
+    const fila = [...tokens];
+    while (fila.length) {
+      const t = fila.pop();
+      for (const pai of derivaDe.get(t) || []) {
+        if (saida.has(pai)) continue;
+        saida.add(pai);
+        fila.push(pai);
+      }
+    }
+    return saida;
+  };
+
+  const tokensDe = (nomeado) => {
+    const achados = new Set();
+    for (const [peca, tokens] of porSeletor) {
+      if (!seletorCasa(peca, nomeado)) continue;
+      for (const t of tokens) achados.add(t);
+    }
+    return achados;
+  };
+
+  for (const stack of STACKS) {
+    const { docs } = filesForSlug(slug, stack);
+    for (const file of docs) {
+      const content = readFile(file);
+      if (!content) continue;
+      LINHA_TABELA_RX.lastIndex = 0;
+      for (const m of content.matchAll(LINHA_TABELA_RX)) {
+        const token = m[2];
+        const valor = m[4].replace(/\\(['"`])/g, '$1').trim();
+
+        if (!valor || valor === '—' || valor === '-') continue;   // ausência declarada
+        if (!valor.includes('.nds-')) continue;                    // coluna não é seletor
+
+        const nomeados = valor.split(/·|,/).map((s) => s.trim()).filter((s) => s.startsWith('.nds-'));
+        if (!nomeados.length) continue;
+
+        const lidos = new Set();
+        for (const n of nomeados) for (const t of comAncestrais(tokensDe(n))) lidos.add(t);
+        if (lidos.has(token)) continue;
+
+        const orfao = nomeados.every((n) => tokensDe(n).size === 0);
+        violations.push({
+          category: 'quality', severity: 'medium', slug, stack,
+          file: relative(ROOT, file), rule: 'token_table_row_incoerente',
+          message:
+            `a tabela diz que \`${valor}\` lê \`${token}\`, e a regra desse seletor não o declara` +
+            (orfao ? ' — e esse seletor não existe em folha nenhuma' : '') +
+            '. Quem seguir a linha sobrescreve um token que não chega ao componente:' +
+            ' nomeie o seletor que de fato lê, ou `—` se nada ler',
+        });
+      }
+    }
+  }
   return violations;
 }
 

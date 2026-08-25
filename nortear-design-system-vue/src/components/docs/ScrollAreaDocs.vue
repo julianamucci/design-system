@@ -243,9 +243,16 @@ const scrollBarPropItems = computed(() => [
 const tokenRows = computed(() => [
   { token: '--muted-foreground', value: tContent('tokens.table.thumb.class'),      description: tContent('tokens.table.thumb.part')      },
   { token: '--ring',             value: tContent('tokens.table.ring.class'),       description: tContent('tokens.table.ring.part')       },
+  // Fundo e texto do viewport são HERDADOS de quem usa o container: a folha
+  // compartilhada não escreve `background-color` em regra nenhuma nem `color`
+  // no viewport, então a aplicação fica em travessão — não há seletor para
+  // abrir e mudar.
   { token: '--background',       value: tContent('tokens.table.background.class'), description: tContent('tokens.table.background.part') },
   { token: '--foreground',       value: tContent('tokens.table.foreground.class'), description: tContent('tokens.table.foreground.part') },
-  { token: '--muted',            value: tContent('tokens.table.muted.class'),      description: tContent('tokens.table.muted.part')      },
+  // Sem linha de `--muted`: a trilha da barra é transparente — a regra
+  // `.nds-scroll-area-scrollbar` nunca declara `background-color` —, e prometer
+  // um ponto de customização que ninguém lê manda quem lê procurar por um
+  // seletor que não existe.
 ]);
 
 const accessibilityItems = computed(() => [

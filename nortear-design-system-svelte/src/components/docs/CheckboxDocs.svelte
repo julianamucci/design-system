@@ -619,7 +619,9 @@ import { Label } from "@/components/ui/label";`;
     }}
     items={[
       { token: '--primary',            value: '.nds-checkbox[data-state="checked"]', description: $tStore('tokens.table.primary') },
-      { token: '--primary-foreground', value: '.nds-checkbox-indicator',             description: $tStore('tokens.table.primaryForeground') },
+      // O indicador herda a cor: a regra dele é `color: currentColor`, e quem
+      // lê `--primary-foreground` é a caixa no estado marcado (e no misto).
+      { token: '--primary-foreground', value: '.nds-checkbox[data-state="checked"]', description: $tStore('tokens.table.primaryForeground') },
       { token: '--input',              value: '.nds-checkbox',                       description: $tStore('tokens.table.input') },
       { token: '--ring',               value: '.nds-checkbox:focus-visible',         description: toPlainText($tStore('tokens.table.ring')) },
       { token: '--destructive',        value: '.nds-checkbox[aria-invalid="true"]',  description: $tStore('tokens.table.destructive') },

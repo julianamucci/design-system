@@ -497,32 +497,26 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      // A tabela segue a folha: cada variante reaponta UMA coisa, a cor da
-      // borda. As linhas de `-foreground` por variante saíram junto com o
-      // preenchimento, e os dois alfas (`--badge-alpha-bg` e
-      // `--badge-alpha-border`) não existem mais no CSS — as chaves
-      // correspondentes sumiram do conteúdo compartilhado, e mantê-las aqui
-      // faria a página imprimir o nome da chave na tela.
-      { token: '--primary',          value: 'border-color: hsl(var(--primary))',            k: 'primary'          },
-      { token: '--destructive',      value: 'border-color: hsl(var(--destructive))',        k: 'destructive'      },
-      // Duas semânticas deixaram de ler o token de mesmo nome, e a tabela
-      // registra as duas pontas: `--warning` continua na lista porque é o token
-      // que se esperaria ali, com a coluna dizendo que a folha usa valor
-      // literal; `--info` fica com a aplicação vazia porque a badge não o lê
-      // mais; e `--border` — a hairline que era da outline — é quem pinta a
-      // variante info hoje.
-      { token: '--warning',          value: 'border-color: hsl(22 55% 62%)',                k: 'warning'          },
-      { token: '--success',          value: 'border-color: hsl(var(--success))',            k: 'success'          },
-      { token: '--info',             value: '—',                                            k: 'info'             },
-      { token: '--border',           value: 'border-color: hsl(var(--border))',             k: 'border'           },
-      { token: '--secondary',        value: 'background-color: hsl(var(--secondary))',      k: 'secondary'        },
-      { token: '--foreground',       value: 'color: hsl(var(--foreground))',                k: 'foreground'       },
-      { token: '--background',       value: 'background-color: hsl(var(--background))',     k: 'background'       },
-      { token: '--ring',             value: 'box-shadow: 0 0 0 5px hsl(var(--ring) / 0.5)', k: 'ring'             },
+      // A tabela lista o que a folha LÊ, e a coluna do meio nomeia o SELETOR
+      // que lê. Cada variante reaponta UMA coisa: a cor da borda.
+      // `--warning` e `--info` não têm linha porque a folha não lê nenhum dos
+      // dois — a warning usa valor literal, cujo motivo está na nota de
+      // customização abaixo da tabela, e a variante info é pintada por
+      // `--border`. Linha com travessão só ocuparia espaço dizendo que o token
+      // não faz nada aqui.
+      { token: '--primary',          value: '.nds-badge-default',       k: 'primary'          },
+      { token: '--destructive',      value: '.nds-badge-destructive',   k: 'destructive'      },
+      { token: '--success',          value: '.nds-badge-success',       k: 'success'          },
+      { token: '--border',           value: '.nds-badge-info',          k: 'border'           },
+      { token: '--secondary',        value: '.nds-badge-counter',       k: 'secondary'        },
+      { token: '--foreground',       value: '.nds-badge',               k: 'foreground'       },
+      { token: '--background',       value: '.nds-badge',               k: 'background'       },
+      { token: '--ring',             value: '.nds-badge:focus-visible', k: 'ring'             },
+      { token: '--radius-badge',     value: '.nds-badge',               k: 'radius'           },
       // As três vars internas, que é o que o override escopado alcança.
-      { token: '--badge-bg',         value: 'hsl(var(--background))',                       k: 'badgeBg'          },
-      { token: '--badge-fg',         value: 'hsl(var(--foreground))',                       k: 'badgeFg'          },
-      { token: '--badge-border',     value: 'hsl(var(--primary))',                          k: 'badgeBorder'      },
+      { token: '--badge-bg',         value: 'hsl(var(--background))',   k: 'badgeBg'          },
+      { token: '--badge-fg',         value: 'hsl(var(--foreground))',   k: 'badgeFg'          },
+      { token: '--badge-border',     value: 'hsl(var(--primary))',      k: 'badgeBorder'      },
     ].map(({ token, value, k }) => ({
       token,
       value,

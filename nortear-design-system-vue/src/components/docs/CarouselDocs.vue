@@ -183,7 +183,6 @@ const codeCustomizationTokens = `/* Em globals.css — personalizar tokens usado
   --border: 214 32% 91%;
   --accent: 210 40% 96%;
   --ring:   221 83% 53%;
-  --radius-button: 0.5rem;
 }
 
 .dark {

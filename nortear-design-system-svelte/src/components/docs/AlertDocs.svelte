@@ -568,9 +568,11 @@ interface AlertTitleProps {
           { token: '--info',         value: '.nds-alert-info',               description: $tStore('tokens.table.info')              },
           { token: '--radius-alert', value: 'var(--radius-alert)',           description: $tStore('tokens.table.radius')            },
           { token: '--alert-bg',     value: 'hsl(var(--muted))',             description: $tStore('tokens.table.alertBg')           },
+          { token: '--alert-bg-alpha', value: '0.1',                         description: $tStore('tokens.table.alertBgAlpha')      },
           { token: '--alert-fg',     value: 'hsl(var(--card-foreground))',   description: $tStore('tokens.table.alertFg')           },
           { token: '--alert-body-fg', value: 'hsl(var(--foreground))',       description: $tStore('tokens.table.alertBodyFg')       },
           { token: '--alert-border', value: 'hsl(var(--border))',            description: $tStore('tokens.table.alertBorder')       },
+          { token: '--alert-border-alpha', value: '0.3',                     description: $tStore('tokens.table.alertBorderAlpha')  },
           { token: '--alert-glow',   value: 'hsl(var(--border))',            description: $tStore('tokens.table.alertGlow')         },
         ]}
         customizationTitle={$tStore('tokens.customizationTitle')}

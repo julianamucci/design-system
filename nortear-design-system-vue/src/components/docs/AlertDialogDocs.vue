@@ -303,8 +303,10 @@ const tokenRows = computed(() => [
   { token: '--muted-foreground',       value: '.nds-alert-dialog-description', description: tContent('tokens.table.mutedForeground')       },
   { token: '--muted',                  value: '.nds-alert-dialog-media',       description: tContent('tokens.table.mediaBg')               },
   // A ação herda o tom do Button: o tom destrutivo vem da variante, não deste CSS.
+  // `--destructive-foreground` não tem linha porque não tem leitor: a variante
+  // destrutiva é soft (fundo suave com o rótulo na PRÓPRIA cor semântica), e
+  // nenhuma regra de button.css lê o par `-foreground`. Ver button.css:16-18.
   { token: '--destructive',            value: '.nds-button-destructive',       description: tContent('tokens.table.destructive')           },
-  { token: '--destructive-foreground', value: '.nds-button-destructive',       description: tContent('tokens.table.destructiveForeground') },
 ]);
 
 const accessibilityItems = computed(() => [

@@ -765,7 +765,7 @@ interface MenubarRadioGroupProps {
       { token: '--border',             value: $tStore('tokens.table.menubarBorder.class'), description: $tStore('tokens.table.menubarBorder.part') },
       { token: '--accent',             value: $tStore('tokens.table.triggerHover.class'),  description: $tStore('tokens.table.triggerHover.part')  },
       { token: '--popover',            value: $tStore('tokens.table.contentBg.class'),     description: $tStore('tokens.table.contentBg.part')     },
-      { token: '--foreground',         value: $tStore('tokens.table.contentBorder.class'), description: $tStore('tokens.table.contentBorder.part') },
+      { token: '--border',             value: $tStore('tokens.table.contentBorder.class'), description: $tStore('tokens.table.contentBorder.part') },
       { token: '--radius',             value: $tStore('tokens.table.rounded.class'),       description: $tStore('tokens.table.rounded.part')       },
       { token: '--accent',             value: $tStore('tokens.table.itemHover.class'),     description: $tStore('tokens.table.itemHover.part')     },
       { token: '--destructive',        value: $tStore('tokens.table.destructive.class'),   description: $tStore('tokens.table.destructive.part')   },

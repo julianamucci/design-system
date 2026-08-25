@@ -743,7 +743,9 @@ export type CheckboxOptions = {
           },
           items: [
             { token: '--primary',            value: '.nds-checkbox[data-state="checked"]', description: t('tokens.table.primary') },
-            { token: '--primary-foreground', value: '.nds-checkbox-indicator',              description: t('tokens.table.primaryForeground') },
+            // O indicador herda a cor: a regra dele é `color: currentColor`, e quem
+            // lê `--primary-foreground` é a caixa no estado marcado (e no misto).
+            { token: '--primary-foreground', value: '.nds-checkbox[data-state="checked"]', description: t('tokens.table.primaryForeground') },
             { token: '--input',              value: '.nds-checkbox',                        description: t('tokens.table.input') },
             { token: '--ring',               value: '.nds-checkbox:focus-visible',          description: toPlainText(t('tokens.table.ring')) },
             { token: '--destructive',        value: '.nds-checkbox[aria-invalid="true"]',   description: t('tokens.table.destructive') },

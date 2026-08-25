@@ -205,7 +205,7 @@
         "class": "Aplicação no tema",
         "part": "Parte do componente",
         "primary": "Borda (variante default)",
-        "secondary": "Fundo do contador",
+        "secondary": "Fundo do contador e do hover quando a etiqueta está dentro de um link",
         "destructive": "Borda (variante destructive)",
         "foreground": "Texto de TODAS as variantes",
         "ring": "Cor do foco visível",
@@ -213,14 +213,13 @@
         "badgeBg": "Fundo — var interna, hoje sempre neutra",
         "badgeFg": "Texto — var interna, hoje sempre neutro",
         "badgeBorder": "Borda — var interna, a ÚNICA que cada variante re-aponta",
-        "warning": "Borda da variante warning — hoje um valor PRÓPRIO na folha, não este token",
         "success": "Borda (variante success)",
-        "info": "Não é lido pela badge: a variante info usa a borda neutra",
-        "border": "Borda da variante info (a neutra discreta)"
+        "border": "Borda da variante info (a neutra discreta)",
+        "radius": "Arredondamento da etiqueta"
       },
       "customizationTitle": "Como personalizar via tema:",
       "customizationCode": {
-        "web": "/* Override escopado — as vars nascem no próprio .nds-badge. */\n.meu-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* Cada variante re-aponta UMA coisa: a cor da borda. */\n.meu-tema .nds-badge-warning {\n  --badge-border: hsl(var(--warning));\n}"
+        "web": "/* Override escopado — as vars nascem no próprio .nds-badge. */\n.meu-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* Cada variante re-aponta UMA coisa: a cor da borda.\n   A warning é a única que não lê o token de mesmo nome: a folha usa um valor\n   literal porque o token do tema, em traço de 2px, fica perto demais da\n   destructive. Para devolvê-la ao tema, re-aponte aqui. */\n.meu-tema .nds-badge-warning {\n  --badge-border: hsl(var(--warning));\n}"
       }
     },
     "accessibility": {
@@ -607,7 +606,7 @@
         "class": "Theme application",
         "part": "Component Part",
         "primary": "Border (default variant)",
-        "secondary": "Counter fill",
+        "secondary": "Counter fill, and the hover fill when the badge sits inside a link",
         "destructive": "Border (destructive variant)",
         "foreground": "Text of EVERY variant",
         "ring": "Visible focus colour",
@@ -615,14 +614,13 @@
         "badgeBg": "Fill — internal var, always neutral today",
         "badgeFg": "Text — internal var, always neutral today",
         "badgeBorder": "Border — internal var, the ONLY one each variant re-points",
-        "warning": "Warning variant border — today a literal in the sheet, not this token",
         "success": "Border (success variant)",
-        "info": "Not read by the badge: the info variant uses the neutral border",
-        "border": "Border of the info variant (the quiet neutral)"
+        "border": "Border of the info variant (the quiet neutral)",
+        "radius": "Badge corner radius"
       },
       "customizationTitle": "How to customize via theme:",
       "customizationCode": {
-        "web": "/* Scoped override — the vars are born on .nds-badge itself. */\n.my-theme .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* Each variant re-points ONE thing: the border colour. */\n.my-theme .nds-badge-warning {\n  --badge-border: hsl(var(--warning));\n}"
+        "web": "/* Scoped override — the vars are born on .nds-badge itself. */\n.my-theme .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* Each variant re-points ONE thing: the border colour.\n   Warning is the only one that does not read the token of the same name: the\n   sheet uses a literal because the theme token, as a 2px stroke, sits too\n   close to destructive. To hand it back to the theme, re-point it here. */\n.my-theme .nds-badge-warning {\n  --badge-border: hsl(var(--warning));\n}"
       }
     },
     "accessibility": {
@@ -1009,7 +1007,7 @@
         "class": "Aplicación en el tema",
         "part": "Parte del componente",
         "primary": "Borde (variante default)",
-        "secondary": "Fondo del contador",
+        "secondary": "Fondo del contador y del hover cuando la etiqueta está dentro de un enlace",
         "destructive": "Borde (variante destructive)",
         "foreground": "Texto de TODAS las variantes",
         "ring": "Color del foco visible",
@@ -1017,14 +1015,13 @@
         "badgeBg": "Fondo — var interna, hoy siempre neutra",
         "badgeFg": "Texto — var interna, hoy siempre neutro",
         "badgeBorder": "Borde — var interna, la ÚNICA que cada variante reapunta",
-        "warning": "Borde de la variante warning — hoy un valor propio en la hoja, no este token",
         "success": "Borde (variante success)",
-        "info": "No lo lee la badge: la variante info usa el borde neutro",
-        "border": "Borde de la variante info (el neutro discreto)"
+        "border": "Borde de la variante info (el neutro discreto)",
+        "radius": "Redondeo de la etiqueta"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
       "customizationCode": {
-        "web": "/* Override con alcance — las vars nacen en el propio .nds-badge. */\n.mi-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* Cada variante reapunta UNA cosa: el color del borde. */\n.mi-tema .nds-badge-warning {\n  --badge-border: hsl(var(--warning));\n}"
+        "web": "/* Override con alcance — las vars nacen en el propio .nds-badge. */\n.mi-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* Cada variante reapunta UNA cosa: el color del borde.\n   La warning es la única que no lee el token del mismo nombre: la hoja usa un\n   valor literal porque el token del tema, en trazo de 2px, queda demasiado\n   cerca de destructive. Para devolverla al tema, reapúntala aquí. */\n.mi-tema .nds-badge-warning {\n  --badge-border: hsl(var(--warning));\n}"
       }
     },
     "accessibility": {

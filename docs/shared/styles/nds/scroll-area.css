@@ -62,12 +62,16 @@
  * controla o overflow via style inline; aqui só aparência.
  */
 
+/* A trilha é transparente: nenhuma regra desta folha, nem de qualquer outra,
+ * declara `background-color` aqui. Havia uma `transition: background-color`
+ * animando o que nunca existiu — resíduo da migração, que transcreveu UMA
+ * propriedade da utilitária guarda-chuva `transition-colors` da era anterior.
+ * A regra nasceu assim, sem fundo, em todas as versões do arquivo. */
 .nds-scroll-area-scrollbar {
   display: flex;
   padding: 1px;
   touch-action: none;
   user-select: none;
-  transition: background-color var(--duration-fast);
 }
 
 .nds-scroll-area-scrollbar[data-orientation="vertical"] {
@@ -127,8 +131,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nds-scroll-area-viewport,
-  .nds-scroll-area-scrollbar {
+  /* Só o viewport: a trilha não transiciona nada desde que a transição morta
+   * saiu, e desligar o que não anima é regra que envelhece sozinha. */
+  .nds-scroll-area-viewport {
     transition: none;
   }
 }

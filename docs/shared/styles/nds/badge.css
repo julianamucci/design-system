@@ -11,9 +11,12 @@
  * ou aria-label se conteúdo for crítico (ex.: "5 mensagens não lidas").
  *
  * Tokens: --background e --foreground (fundo e texto de TODAS as variantes),
- *         --primary, --muted-foreground, --destructive, --warning, --success,
- *         --info, --border (cor da borda, uma por variante),
- *         --secondary (fundo do contador), --ring, --spacing-*
+ *         --primary, --destructive, --success, --border (cor da borda, uma por
+ *         variante — a warning traz valor LITERAL, ver a regra mais abaixo),
+ *         --secondary (fundo do contador e do hover dentro de link),
+ *         --ring, --radius-badge, --spacing-*
+ *
+ *         --warning e --info NÃO são lidos aqui.
  */
 
 .nds-badge {

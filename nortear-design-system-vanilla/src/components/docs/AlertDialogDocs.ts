@@ -582,8 +582,10 @@ export interface AlertDialogOptions {
             { token: '--muted-foreground',       value: '.nds-alert-dialog-description', description: t('tokens.table.mutedForeground') },
             { token: '--muted',                  value: '.nds-alert-dialog-media',       description: t('tokens.table.mediaBg') },
             // A ação herda o tom do Button: o destrutivo vem da variante, não deste CSS.
+            // `--destructive-foreground` não tem linha porque não tem leitor: a variante
+            // destrutiva é soft (fundo suave com o rótulo na PRÓPRIA cor semântica), e
+            // nenhuma regra de button.css lê o par `-foreground`. Ver button.css:16-18.
             { token: '--destructive',            value: '.nds-button-destructive',       description: t('tokens.table.destructive') },
-            { token: '--destructive-foreground', value: '.nds-button-destructive',       description: t('tokens.table.destructiveForeground') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,

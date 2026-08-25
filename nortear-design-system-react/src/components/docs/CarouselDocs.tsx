@@ -310,7 +310,6 @@ import Autoplay from "embla-carousel-autoplay";`;
 :root {
   --primary: 222.2 47.4% 11.2%;
   --ring: 222.2 84% 4.9%;
-  --radius-button: 0.5rem;
 }
 
 .dark {

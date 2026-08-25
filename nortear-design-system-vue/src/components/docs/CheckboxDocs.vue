@@ -290,7 +290,9 @@ const checkboxPropItems = computed(() => [
 
 const tokenRows = computed(() => [
   { token: '--primary',            value: '.nds-checkbox[data-state="checked"]', description: tContent('tokens.table.primary')            },
-  { token: '--primary-foreground', value: '.nds-checkbox-indicator',             description: tContent('tokens.table.primaryForeground')  },
+  // O indicador herda a cor: a regra dele é `color: currentColor`, e quem
+  // lê `--primary-foreground` é a caixa no estado marcado (e no misto).
+  { token: '--primary-foreground', value: '.nds-checkbox[data-state="checked"]', description: tContent('tokens.table.primaryForeground')  },
   { token: '--input',              value: '.nds-checkbox',                       description: tContent('tokens.table.input')              },
   { token: '--ring',               value: '.nds-checkbox:focus-visible',         description: toPlainText(tContent('tokens.table.ring'))  },
   { token: '--destructive',        value: '.nds-checkbox[aria-invalid="true"]',  description: tContent('tokens.table.destructive')        },

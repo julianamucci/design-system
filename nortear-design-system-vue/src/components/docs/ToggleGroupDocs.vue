@@ -346,7 +346,10 @@ const itemPropItems = computed(() => [
 const tokenRows = computed(() => [
   { token: '--muted',         value: tContent('tokens.table.muted.class'),       description: tContent('tokens.table.muted.part')       },
   { token: '--accent',        value: tContent('tokens.table.accent.class'),      description: tContent('tokens.table.accent.part')      },
-  { token: '--input',         value: tContent('tokens.table.input.class'),       description: tContent('tokens.table.input.part')       },
+  // A borda do conjunto outline sai de `--border`, a mesma do toggle de
+  // contorno; `--input` não entra em regra nenhuma da folha. A chave `input`
+  // é o nome da linha, não o nome do token.
+  { token: '--border',        value: tContent('tokens.table.input.class'),       description: tContent('tokens.table.input.part')       },
   { token: '--ring',          value: tContent('tokens.table.ring.class'),        description: tContent('tokens.table.ring.part')        },
   { token: '--destructive',   value: tContent('tokens.table.destructive.class'), description: tContent('tokens.table.destructive.part') },
   { token: '--radius-button', value: tContent('tokens.table.radius.class'),      description: tContent('tokens.table.radius.part')      },

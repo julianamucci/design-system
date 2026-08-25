@@ -22,12 +22,11 @@ import {
 //      cabeçalho da folha compartilhada). O primitivo injeta um `<style>` que
 //      esconde a barra nativa e desenha uma própria; adotá-lo trocaria o
 //      contrato visual do design system pelo da lib.
-//   2. O thumb do primitivo é posicionado por `transform` e DIMENSIONADO por
-//      `--scroll-area-thumb-height` / `--scroll-area-thumb-width` (convenção do
-//      Base UI). O `.nds-scroll-area-thumb` compartilhado não consome nenhuma
-//      das duas — ele é `flex: 1` —, então o pegador ocuparia a trilha inteira e
-//      deslizaria para fora ao rolar. Fazer funcionar exigiria regra nova no CSS
-//      compartilhado, que não é escopo deste componente.
+//   2. (caducou) Este item dizia que o `.nds-scroll-area-thumb` compartilhado
+//      era `flex: 1` e ignorava `--scroll-area-thumb-height` /
+//      `--scroll-area-thumb-width`, de modo que o pegador ocuparia a trilha
+//      inteira. A folha foi corrigida depois disto: hoje ela é `flex: 0 0 auto`
+//      e consome as duas medidas. O motivo abaixo é que sustenta a decisão.
 //   3. `RdxScrollAreaViewport` grava `role="presentation"` estático no elemento
 //      rolável. Papel de apresentação apaga a semântica: uma região com rolagem
 //      não teria como receber nome acessível, e o par `role="presentation"` +

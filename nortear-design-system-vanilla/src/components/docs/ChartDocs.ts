@@ -670,12 +670,10 @@ export interface ChartOptions {
   --chart-4: 280 65% 60%;
   --chart-5: 340 75% 55%;
   --primary: 222 47% 11%;
-  --secondary: 210 40% 96%;
-  --muted: 210 40% 96%;
   --muted-foreground: 215 20% 65%;
   --border: 214 32% 91%;
-  --background: 0 0% 100%;
   --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
 }
 
 .dark {
@@ -692,6 +690,17 @@ export interface ChartOptions {
           },
           // A tabela de tokens escreve textNode: `toPlainText` para a marcação
           // do conteúdo não chegar literal à tela.
+          //
+          // A lista é a dos tokens que o tema do ECharts LÊ, e nada além disso:
+          // `src/lib/echarts-theme.ts` consome `--chart-1` a `--chart-5`,
+          // `--primary` (axisPointer), `--muted-foreground` (axisLabel e
+          // legenda), `--border` (axisLine, tick e splitLine), `--foreground`
+          // (tooltip, título e contorno de série) e `--card` (fundo do
+          // tooltip). Havia aqui mais três linhas — `--secondary`, `--muted` e
+          // `--background` — descritas como "reservado para customizações":
+          // nenhuma delas entra no tema, e `backgroundColor` é a string
+          // 'transparent', não um token. Ponto de customização que ninguém lê
+          // não é reserva, é promessa falsa.
           items: ([
             ['--chart-1', 'chart1'],
             ['--chart-2', 'chart2'],
@@ -699,12 +708,10 @@ export interface ChartOptions {
             ['--chart-4', 'chart4'],
             ['--chart-5', 'chart5'],
             ['--primary', 'primary'],
-            ['--secondary', 'secondary'],
-            ['--muted', 'muted'],
             ['--muted-foreground', 'mutedForeground'],
             ['--border', 'border'],
-            ['--background', 'background'],
             ['--foreground', 'foreground'],
+            ['--card', 'card'],
           ] as const).map(([token, key]) => ({
             token,
             value: `hsl(var(${token}))`,

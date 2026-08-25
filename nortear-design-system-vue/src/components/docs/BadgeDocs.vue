@@ -190,29 +190,24 @@ const badgePropItems = computed(() => [
 ]);
 
 /**
- * A etiqueta deixou de ser preenchida, e a tabela seguiu o desenho.
+ * A tabela lista o que a folha LÊ, e a coluna do meio nomeia o SELETOR que lê
+ * — quem customiza precisa saber onde a variável é lida.
  *
- * Saíram as duas linhas de alfa: `--badge-alpha-bg` e `--badge-alpha-border`
- * não existem mais no CSS, e token que não existe faz a customização copiada
- * daqui não mudar nada — é o que a regra `unknown_token_reference` cobra.
- * Saíram também os três `*-foreground` de par semântico: o texto é sempre
- * `--foreground`, então nenhum deles chega ao componente.
- *
- * A coluna do meio passou a nomear o SELETOR que lê o token, no lugar do
- * vocabulário do utilitário que saiu do projeto — quem customiza precisa saber
- * onde a variável é lida, e `bg-primary` não diz isso.
+ * `--warning` e `--info` não têm linha: a folha não lê nenhum dos dois. A
+ * warning usa um valor literal, cujo motivo está na nota de customização
+ * abaixo da tabela, e a variante info é pintada por `--border`. Linha com
+ * travessão só ocuparia espaço dizendo que o token não faz nada aqui.
  */
 const tokenRows = computed(() => [
   { token: '--primary',      value: '.nds-badge-default',      description: tContent('tokens.table.primary')     },
-  { token: '--secondary',    value: '.nds-badge-counter',      description: tContent('tokens.table.secondary')   },
   { token: '--destructive',  value: '.nds-badge-destructive',  description: tContent('tokens.table.destructive') },
-  { token: '--warning',      value: '—',                       description: tContent('tokens.table.warning')     },
   { token: '--success',      value: '.nds-badge-success',      description: tContent('tokens.table.success')     },
-  { token: '--info',         value: '—',                       description: tContent('tokens.table.info')        },
   { token: '--border',       value: '.nds-badge-info',         description: tContent('tokens.table.border')      },
+  { token: '--secondary',    value: '.nds-badge-counter',      description: tContent('tokens.table.secondary')   },
   { token: '--foreground',   value: '.nds-badge',              description: tContent('tokens.table.foreground')  },
   { token: '--background',   value: '.nds-badge',              description: tContent('tokens.table.background')  },
   { token: '--ring',         value: '.nds-badge:focus-visible', description: tContent('tokens.table.ring')       },
+  { token: '--radius-badge', value: '.nds-badge',              description: tContent('tokens.table.radius')      },
   { token: '--badge-bg',     value: 'hsl(var(--background))',  description: tContent('tokens.table.badgeBg')     },
   { token: '--badge-fg',     value: 'hsl(var(--foreground))',  description: tContent('tokens.table.badgeFg')     },
   { token: '--badge-border', value: 'hsl(var(--primary))',     description: tContent('tokens.table.badgeBorder') },

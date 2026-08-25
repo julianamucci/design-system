@@ -354,8 +354,10 @@ const tokenRows = computed(() => [
   { token: '--border',             value: tContent('tokens.table.menubarBorder.class'), description: tContent('tokens.table.menubarBorder.part') },
   { token: '--accent',             value: tContent('tokens.table.triggerHover.class'),  description: tContent('tokens.table.triggerHover.part')  },
   { token: '--popover',            value: tContent('tokens.table.contentBg.class'),     description: tContent('tokens.table.contentBg.part')     },
-  { token: '--foreground',         value: tContent('tokens.table.contentBorder.class'), description: tContent('tokens.table.contentBorder.part') },
-  { token: '--radius-lg',          value: tContent('tokens.table.rounded.class'),       description: tContent('tokens.table.rounded.part')       },
+  { token: '--border',             value: tContent('tokens.table.contentBorder.class'), description: tContent('tokens.table.contentBorder.part') },
+  // `--radius`, não `--radius-lg`: o painel lê o token base, e `--radius-lg`
+  // é derivado dele — sobrescrever o derivado não muda arredondamento algum.
+  { token: '--radius',             value: tContent('tokens.table.rounded.class'),       description: tContent('tokens.table.rounded.part')       },
   { token: '--accent (item)',      value: tContent('tokens.table.itemHover.class'),     description: tContent('tokens.table.itemHover.part')     },
   { token: '--destructive',        value: tContent('tokens.table.destructive.class'),   description: tContent('tokens.table.destructive.part')   },
 ]);

@@ -570,10 +570,14 @@ export interface ScrollAreaOptions {
           // desenhados por nós, então as duas linhas que descrevem essas peças
           // (`thumb` e `muted`) não têm alvo nesta stack e ficam de fora.
           // Documentar peça que não está na página manda quem lê procurar por ela.
+          // `--background` e `--foreground` ficam em travessão pelo mesmo motivo,
+          // medido em `docs/shared/styles/nds/scroll-area.css`: a folha não
+          // escreve `background-color` em regra nenhuma nem `color` no viewport
+          // — fundo e texto são herdados de quem usa o container.
           items: [
             { token: '--ring',       value: '.nds-scroll-area-viewport:focus-visible', description: toPlainText(t('tokens.table.ring.part')) },
-            { token: '--background', value: '.nds-scroll-area',                        description: toPlainText(t('tokens.table.background.part')) },
-            { token: '--foreground', value: '.nds-scroll-area-viewport',               description: toPlainText(t('tokens.table.foreground.part')) },
+            { token: '--background', value: '—',                                       description: toPlainText(t('tokens.table.background.part')) },
+            { token: '--foreground', value: '—',                                       description: toPlainText(t('tokens.table.foreground.part')) },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),

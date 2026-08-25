@@ -306,9 +306,11 @@ const tokenRows = computed(() => [
   { token: '--info',         value: '.nds-alert-info',                  description: tContent('tokens.table.info')              },
   { token: '--radius-alert', value: 'var(--radius-alert)',              description: tContent('tokens.table.radius')            },
   { token: '--alert-bg',     value: 'hsl(var(--muted))',                description: tContent('tokens.table.alertBg')           },
+  { token: '--alert-bg-alpha', value: '0.1',                            description: tContent('tokens.table.alertBgAlpha')      },
   { token: '--alert-fg',     value: 'hsl(var(--card-foreground))',      description: tContent('tokens.table.alertFg')           },
   { token: '--alert-body-fg', value: 'hsl(var(--foreground))',          description: tContent('tokens.table.alertBodyFg')       },
   { token: '--alert-border', value: 'hsl(var(--border))',               description: tContent('tokens.table.alertBorder')       },
+  { token: '--alert-border-alpha', value: '0.3',                        description: tContent('tokens.table.alertBorderAlpha')  },
   { token: '--alert-glow',   value: 'hsl(var(--border))',               description: tContent('tokens.table.alertGlow')         },
 ]);
 

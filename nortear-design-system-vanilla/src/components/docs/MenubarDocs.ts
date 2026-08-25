@@ -735,7 +735,7 @@ export function createMenubar(
             { token: '--border',             value: t('tokens.table.menubarBorder.class'), description: t('tokens.table.menubarBorder.part') },
             { token: '--accent',             value: t('tokens.table.triggerHover.class'),  description: t('tokens.table.triggerHover.part')  },
             { token: '--popover',            value: t('tokens.table.contentBg.class'),     description: t('tokens.table.contentBg.part')     },
-            { token: '--foreground',         value: t('tokens.table.contentBorder.class'), description: t('tokens.table.contentBorder.part') },
+            { token: '--border',             value: t('tokens.table.contentBorder.class'), description: t('tokens.table.contentBorder.part') },
             { token: '--radius',             value: t('tokens.table.rounded.class'),       description: t('tokens.table.rounded.part')       },
             { token: '--accent',             value: t('tokens.table.itemHover.class'),     description: t('tokens.table.itemHover.part')     },
             { token: '--destructive',        value: t('tokens.table.destructive.class'),   description: t('tokens.table.destructive.part')   },

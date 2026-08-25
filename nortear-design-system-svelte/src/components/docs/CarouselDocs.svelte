@@ -308,7 +308,6 @@ interface CarouselNavProps extends ButtonProps {
   --border: 240 5.9% 90%;
   --accent: 240 4.8% 95.9%;
   --ring: 240 5% 64.9%;
-  --radius-button: 0.5rem;
   --primary: 240 5.9% 10%;
 }`;
 </script>
@@ -858,12 +857,16 @@ interface CarouselNavProps extends ButtonProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
+      // A coluna do meio nomeia o SELETOR que lê o token. A seta é
+      // `.nds-carousel-arrow` COMPONDO o Button outline: cor, borda e hover
+      // entram por `.nds-button-outline`; o raio é sobrescrito na própria seta,
+      // com `--radius-full` — a folha do carrossel entra depois da do botão.
       { token: '--background',    value: '.nds-button-outline',       description: $tStore('tokens.table.background')   },
       { token: '--foreground',    value: '.nds-button-outline',       description: $tStore('tokens.table.foreground')   },
       { token: '--border',        value: '.nds-button-outline',       description: $tStore('tokens.table.border')       },
       { token: '--accent',        value: '.nds-button-outline:hover', description: $tStore('tokens.table.accent')       },
       { token: '--ring',          value: '.nds-button:focus-visible', description: $tStore('tokens.table.ring')         },
-      { token: '--radius-button', value: '.nds-button',               description: $tStore('tokens.table.radiusButton') },
+      { token: '--radius-full',   value: '.nds-carousel-arrow',       description: $tStore('tokens.table.radiusButton') },
       { token: '--primary',       value: '.nds-carousel-dot[aria-current="true"]', description: $tStore('tokens.table.primary') },
       { token: '--nds-carousel-slide-scale', value: '.nds-carousel-slide', description: $tStore('tokens.table.slideScale') },
     ]}

@@ -688,7 +688,10 @@ import { Bold } from "lucide-react";`;
           { token: "--accent",            k: "accent" },
           { token: "--accent-foreground", k: "accentForeground" },
           { token: "--muted",             k: "muted" },
-          { token: "--input",             k: "input" },
+          // A borda da variante outline é `--border`: o toggle acompanha o
+          // botão de contorno, e `--input` ficou reservado à borda de campo.
+          // A chave `input` é o nome da linha, não o nome do token.
+          { token: "--border",            k: "input" },
           { token: "--ring",              k: "ring" },
           { token: "--destructive",       k: "destructive" },
           { token: "--radius-button",     k: "radius" },

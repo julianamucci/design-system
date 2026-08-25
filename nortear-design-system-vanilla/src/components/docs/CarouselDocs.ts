@@ -754,7 +754,6 @@ export type CarouselOptions = {
   --accent: 210 40% 96%;
   --ring: 215 20% 65%;
   --primary: 222 47% 11%;
-  --radius-button: 0.5rem;
 }
 
 .dark {
@@ -769,13 +768,18 @@ export type CarouselOptions = {
             value: t('tokens.table.class'),
             description: t('tokens.table.part'),
           },
+          // A coluna do meio nomeia o SELETOR que lê o token. A seta é
+          // `.nds-carousel-arrow` COMPONDO o Button outline: cor, borda e hover
+          // entram por `.nds-button-outline`; o raio é sobrescrito na própria
+          // seta, com `--radius-full` — a folha do carrossel entra depois da do
+          // botão na cascata, com a mesma especificidade.
           items: [
             { token: '--background', value: '.nds-button-outline', description: t('tokens.table.background') },
             { token: '--foreground', value: '.nds-button-outline', description: t('tokens.table.foreground') },
             { token: '--border', value: '.nds-button-outline', description: t('tokens.table.border') },
             { token: '--accent', value: '.nds-button-outline:hover', description: t('tokens.table.accent') },
             { token: '--ring', value: '.nds-button:focus-visible', description: t('tokens.table.ring') },
-            { token: '--radius-button', value: '.nds-button', description: t('tokens.table.radiusButton') },
+            { token: '--radius-full', value: '.nds-carousel-arrow', description: t('tokens.table.radiusButton') },
             { token: '--primary', value: '.nds-carousel-dot[aria-current="true"]', description: t('tokens.table.primary') },
             { token: '--nds-carousel-slide-scale', value: '.nds-carousel-slide', description: t('tokens.table.slideScale') },
           ],

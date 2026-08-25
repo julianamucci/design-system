@@ -387,7 +387,12 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
     extensibilityNotes={$tStore('props.extensibility')}
   />
 
-  <!-- ── Tokens ─────────────────────────────────────────────────── -->
+  <!-- ── Tokens ───────────────────────────────────────────────────
+       A tabela lista o que a folha LÊ, e a coluna do meio nomeia o SELETOR
+       que lê. `--warning` e `--info` não têm linha porque a folha não lê
+       nenhum dos dois: a warning usa valor literal — o motivo está na nota de
+       customização abaixo da tabela — e a variante info é pintada por
+       `--border`. -->
   <DocsTokens
     title={$tStore('tokens.title')}
     cols={{
@@ -396,19 +401,18 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--primary',          value: '--badge-border: hsl(var(--primary))',          description: $tStore('tokens.table.primary')          },
-      { token: '--destructive',      value: '--badge-border: hsl(var(--destructive))',      description: $tStore('tokens.table.destructive')      },
-      { token: '--warning',          value: '--badge-border: hsl(22 55% 62%)',              description: $tStore('tokens.table.warning')          },
-      { token: '--success',          value: '--badge-border: hsl(var(--success))',          description: $tStore('tokens.table.success')          },
-      { token: '--info',             value: '—',                                            description: $tStore('tokens.table.info')             },
-      { token: '--border',           value: '--badge-border: hsl(var(--border))',           description: $tStore('tokens.table.border')           },
-      { token: '--background',       value: '--badge-bg: hsl(var(--background))',           description: $tStore('tokens.table.background')       },
-      { token: '--foreground',       value: '--badge-fg: hsl(var(--foreground))',           description: $tStore('tokens.table.foreground')       },
-      { token: '--secondary',        value: 'background-color: hsl(var(--secondary))',      description: $tStore('tokens.table.secondary')        },
-      { token: '--ring',             value: 'box-shadow: 0 0 0 5px hsl(var(--ring) / 0.5)', description: $tStore('tokens.table.ring')             },
-      { token: '--badge-bg',         value: 'hsl(var(--background))',                       description: $tStore('tokens.table.badgeBg')          },
-      { token: '--badge-fg',         value: 'hsl(var(--foreground))',                       description: $tStore('tokens.table.badgeFg')          },
-      { token: '--badge-border',     value: 'hsl(var(--primary))',                          description: $tStore('tokens.table.badgeBorder')      },
+      { token: '--primary',          value: '.nds-badge-default',      description: $tStore('tokens.table.primary')     },
+      { token: '--destructive',      value: '.nds-badge-destructive',  description: $tStore('tokens.table.destructive') },
+      { token: '--success',          value: '.nds-badge-success',      description: $tStore('tokens.table.success')     },
+      { token: '--border',           value: '.nds-badge-info',         description: $tStore('tokens.table.border')      },
+      { token: '--secondary',        value: '.nds-badge-counter',      description: $tStore('tokens.table.secondary')   },
+      { token: '--foreground',       value: '.nds-badge',              description: $tStore('tokens.table.foreground')  },
+      { token: '--background',       value: '.nds-badge',              description: $tStore('tokens.table.background')  },
+      { token: '--ring',             value: '.nds-badge:focus-visible', description: $tStore('tokens.table.ring')       },
+      { token: '--radius-badge',     value: '.nds-badge',              description: $tStore('tokens.table.radius')      },
+      { token: '--badge-bg',         value: 'hsl(var(--background))',  description: $tStore('tokens.table.badgeBg')     },
+      { token: '--badge-fg',         value: 'hsl(var(--foreground))',  description: $tStore('tokens.table.badgeFg')     },
+      { token: '--badge-border',     value: 'hsl(var(--primary))',     description: $tStore('tokens.table.badgeBorder') },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}

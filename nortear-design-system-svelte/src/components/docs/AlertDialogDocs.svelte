@@ -484,8 +484,10 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
       { token: '--spacing-6',              value: '.nds-alert-dialog-content',     description: $tStore('tokens.table.padding')               },
       { token: '--muted-foreground',       value: '.nds-alert-dialog-description', description: $tStore('tokens.table.mutedForeground')       },
       { token: '--muted',                  value: '.nds-alert-dialog-media',       description: $tStore('tokens.table.mediaBg')               },
+      // `--destructive-foreground` não tem linha porque não tem leitor: a variante
+      // destrutiva é soft (fundo suave com o rótulo na PRÓPRIA cor semântica), e
+      // nenhuma regra de button.css lê o par `-foreground`. Ver button.css:16-18.
       { token: '--destructive',            value: '.nds-button-destructive',       description: $tStore('tokens.table.destructive')           },
-      { token: '--destructive-foreground', value: '.nds-button-destructive',       description: $tStore('tokens.table.destructiveForeground') },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={codeCustomizationTokens}

@@ -506,7 +506,7 @@ Componentes como **AlertDialog** (implementação vanilla-TS com foco-trap manua
 2. **`DocsAnatomy`** — 10 items: Root (wrapper), Trigger (button), Content (dialog), Header, Title (`h2`), Description (`p`, **opcional**), Footer, Cancel (button), Action (button), Media (bloco de ícone, opcional). `structureCode` mostra a estrutura HTML gerada.
 3. **`DocsStates`** — `closed`, `open`, `confirmed`, `cancelled`, `controlled`. Omitir `loading`/`disabled`.
 4. **`DocsProps`** — 5 tables: `createAlertDialog({ trigger, title, description?, media?, cancelButton, actionButton, defaultOpen?, onOpenChange?, class? })`, `createAlertDialogTrigger`, `createAlertDialogContent({ className })`, `createAlertDialogAction({ onClick, className })`, `createAlertDialogCancel({ onClick, className })`. `description` é **opcional**: sem ela o painel não declara `aria-describedby`.
-5. **`DocsTokens`** — 7 tokens: overlayBg, contentBg, contentForeground, border, mutedForeground, destructive, destructiveForeground, radius.
+5. **`DocsTokens`** — 7 tokens: overlayBg, contentBg, contentForeground, border, mutedForeground, destructive, radius.
 6. **`DocsNotes`** — overlay **não** fecha ao clicar fora (diferença do Dialog). Documentar em nota dedicada.
 7. **`DocsAccessibility`** — `role="alertdialog"` + `aria-modal="true"` aplicados pela factory. Focus trap manual via listeners `keydown` em Tab/Shift+Tab. Foco inicial no Cancel; `Escape` fecha.
 8. **Stories** — omitir `alert-dialog-tamanhos` e `alert-dialog-variantes`. Abrir programaticamente com `queueMicrotask(() => trigger.click())` nas stories que precisam do modal visível para Chromatic. Arquivos: `.stories.ts`, `-composicoes`, `-estados`.

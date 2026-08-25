@@ -237,16 +237,12 @@
           "part": "Anel de foco no viewport"
         },
         "background": {
-          "class": ".nds-scroll-area",
+          "class": "—",
           "part": "Fundo do viewport (consumidor define)"
         },
         "foreground": {
-          "class": ".nds-scroll-area-viewport",
+          "class": "—",
           "part": "Texto dentro do viewport"
-        },
-        "muted": {
-          "class": ".nds-scroll-area-scrollbar",
-          "part": "Fundo da trilha da scrollbar (raro)"
         }
       },
       "customizationTitle": "Customização",
@@ -646,16 +642,12 @@
           "part": "Viewport focus ring"
         },
         "background": {
-          "class": ".nds-scroll-area",
+          "class": "—",
           "part": "Viewport background (consumer defines)"
         },
         "foreground": {
-          "class": ".nds-scroll-area-viewport",
+          "class": "—",
           "part": "Text inside viewport"
-        },
-        "muted": {
-          "class": ".nds-scroll-area-scrollbar",
-          "part": "Scrollbar track background (rare)"
         }
       },
       "customizationTitle": "Customization",
@@ -1055,16 +1047,12 @@
           "part": "Anillo de foco en el viewport"
         },
         "background": {
-          "class": ".nds-scroll-area",
+          "class": "—",
           "part": "Fondo del viewport (el consumidor define)"
         },
         "foreground": {
-          "class": ".nds-scroll-area-viewport",
+          "class": "—",
           "part": "Texto dentro del viewport"
-        },
-        "muted": {
-          "class": ".nds-scroll-area-scrollbar",
-          "part": "Fondo de la pista de la scrollbar (raro)"
         }
       },
       "customizationTitle": "Personalización",

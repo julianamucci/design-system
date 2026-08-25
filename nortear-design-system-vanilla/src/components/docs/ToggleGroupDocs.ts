@@ -904,7 +904,10 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
           items: [
             { token: '--muted',         value: toPlainText(t('tokens.table.muted.class')),       description: toPlainText(t('tokens.table.muted.part'))       },
             { token: '--accent',        value: toPlainText(t('tokens.table.accent.class')),      description: toPlainText(t('tokens.table.accent.part'))      },
-            { token: '--input',         value: toPlainText(t('tokens.table.input.class')),       description: toPlainText(t('tokens.table.input.part'))       },
+            // A borda do conjunto outline sai de `--border`, a mesma do toggle
+            // de contorno; `--input` não entra em regra nenhuma da folha. A
+            // chave `input` é o nome da linha, não o nome do token.
+            { token: '--border',        value: toPlainText(t('tokens.table.input.class')),       description: toPlainText(t('tokens.table.input.part'))       },
             { token: '--ring',          value: toPlainText(t('tokens.table.ring.class')),        description: toPlainText(t('tokens.table.ring.part'))        },
             { token: '--destructive',   value: toPlainText(t('tokens.table.destructive.class')), description: toPlainText(t('tokens.table.destructive.part')) },
             { token: '--radius-button', value: toPlainText(t('tokens.table.radius.class')),      description: toPlainText(t('tokens.table.radius.part'))      },

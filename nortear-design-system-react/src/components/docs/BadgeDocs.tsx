@@ -477,30 +477,23 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
           description: tContent("tokens.table.part"),
         }}
         items={[
-          // Cada linha diz onde o token entra HOJE. A variante mora na BORDA;
-          // fundo e texto são neutros em todas elas, e a única peça preenchida
-          // é o contador. Os pares `-foreground` saíram da tabela junto com o
-          // preenchimento: a badge não consome mais nenhum deles.
-          { token: "--primary", value: "border-color: hsl(var(--primary))", description: tContent("tokens.table.primary") },
-          { token: "--destructive", value: "border-color: hsl(var(--destructive))", description: tContent("tokens.table.destructive") },
-          // Duas semânticas NÃO leem o token de mesmo nome, e a coluna de valor
-          // tem de dizer isso em vez de fingir uma aplicação que não existe:
-          // `--warning` foi substituída por um literal na folha — que aparece
-          // aqui porque não há outra linha onde ele caiba —, e `--info` não é
-          // lido por ninguém: quem pinta a variante info é `--border`, na linha
-          // logo abaixo.
-          { token: "--warning", value: "border-color: hsl(22 55% 62%)", description: tContent("tokens.table.warning") },
-          { token: "--success", value: "border-color: hsl(var(--success))", description: tContent("tokens.table.success") },
-          { token: "--info", value: "—", description: tContent("tokens.table.info") },
-          { token: "--border", value: "border-color: hsl(var(--border))", description: tContent("tokens.table.border") },
-          { token: "--secondary", value: "background-color: hsl(var(--secondary))", description: tContent("tokens.table.secondary") },
-          { token: "--foreground", value: "color: hsl(var(--foreground))", description: tContent("tokens.table.foreground") },
-          { token: "--background", value: "background-color: hsl(var(--background))", description: tContent("tokens.table.background") },
-          { token: "--ring", value: "box-shadow: 0 0 0 5px hsl(var(--ring) / 0.5)", description: tContent("tokens.table.ring") },
-          // Fundo e texto não se movem mais entre variantes: quem cada uma
-          // reaponta é só `--badge-border`. Os dois alfas saíram da folha junto
-          // com o preenchimento — documentá-los seria ensinar uma customização
-          // que não muda nada na tela.
+          // A tabela lista o que a folha LÊ, e a coluna do meio nomeia o
+          // seletor que lê. A variante mora na BORDA; fundo e texto são
+          // neutros em todas elas, e a única peça preenchida é o contador.
+          // `--warning` e `--info` não têm linha porque a folha não lê nenhum
+          // dos dois: warning usa um valor literal (o motivo está na nota de
+          // customização, logo abaixo) e a variante info é pintada por
+          // `--border`.
+          { token: "--primary", value: ".nds-badge-default", description: tContent("tokens.table.primary") },
+          { token: "--destructive", value: ".nds-badge-destructive", description: tContent("tokens.table.destructive") },
+          { token: "--success", value: ".nds-badge-success", description: tContent("tokens.table.success") },
+          { token: "--border", value: ".nds-badge-info", description: tContent("tokens.table.border") },
+          { token: "--secondary", value: ".nds-badge-counter", description: tContent("tokens.table.secondary") },
+          { token: "--foreground", value: ".nds-badge", description: tContent("tokens.table.foreground") },
+          { token: "--background", value: ".nds-badge", description: tContent("tokens.table.background") },
+          { token: "--ring", value: ".nds-badge:focus-visible", description: tContent("tokens.table.ring") },
+          { token: "--radius-badge", value: ".nds-badge", description: tContent("tokens.table.radius") },
+          // As três vars internas, que é o que o override escopado alcança.
           { token: "--badge-bg", value: "hsl(var(--background))", description: tContent("tokens.table.badgeBg") },
           { token: "--badge-fg", value: "hsl(var(--foreground))", description: tContent("tokens.table.badgeFg") },
           { token: "--badge-border", value: "hsl(var(--primary))", description: tContent("tokens.table.badgeBorder") },

@@ -660,6 +660,10 @@ interface ScrollBarProps {
             description: tContent("tokens.table.ring.part"),
           },
           {
+            // Fundo e texto do viewport são HERDADOS de quem usa o container:
+            // a folha compartilhada não escreve `background-color` em regra
+            // nenhuma nem `color` no viewport. A aplicação fica em travessão
+            // porque não há seletor para abrir e mudar.
             token: "--background",
             value: tContent("tokens.table.background.class"),
             description: tContent("tokens.table.background.part"),
@@ -669,11 +673,10 @@ interface ScrollBarProps {
             value: tContent("tokens.table.foreground.class"),
             description: tContent("tokens.table.foreground.part"),
           },
-          {
-            token: "--muted",
-            value: tContent("tokens.table.muted.class"),
-            description: tContent("tokens.table.muted.part"),
-          },
+          // Sem linha de `--muted`: a trilha da barra é transparente — a regra
+          // `.nds-scroll-area-scrollbar` nunca declara `background-color` —, e
+          // prometer um ponto de customização que ninguém lê manda quem lê
+          // procurar por um seletor que não existe.
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={tContent("tokens.customizationCode")}

@@ -472,7 +472,7 @@ Componentes como **AlertDialog** (implementado sobre bits-ui) são overlays de d
 2. **`DocsAnatomy`** — 9 items: Root, Trigger, Content, Header, Title, Description, Footer, Cancel, Action. `structureCode` mostra a estrutura aninhada.
 3. **`DocsStates`** — `closed`, `open`, `confirmed`, `cancelled`, `controlled`. Omitir `loading`/`disabled`.
 4. **`DocsProps`** — 5 tables: Root (`open`, `defaultOpen`, `onOpenChange`), Trigger (`asChild` via `<AlertDialogTrigger asChild let:builder>`), Content (`class`), Action (`on:click`, `class`), Cancel (`on:click`, `class`). Em Svelte 5, `defaultOpen` é uncontrolled; passar `open` força modo controlado.
-5. **`DocsTokens`** — 7 tokens: overlayBg, contentBg, contentForeground, border, mutedForeground, destructive, destructiveForeground, radius.
+5. **`DocsTokens`** — 7 tokens: overlayBg, contentBg, contentForeground, border, mutedForeground, destructive, radius.
 6. **`DocsNotes`** — overlay **não** fecha ao clicar fora (diferença do Dialog). Documentar em nota dedicada.
 7. **`DocsAccessibility`** — `role="alertdialog"` anuncia imediatamente. Foco inicial no Cancel.
 8. **Stories** — omitir `alert-dialog-tamanhos` e `alert-dialog-variantes`. Usar `AlertDialogStory.svelte` wrapper com prop `defaultOpen` para Chromatic capturar o modal visível. Arquivos: `.stories.ts`, `-composicoes`, `-estados`.

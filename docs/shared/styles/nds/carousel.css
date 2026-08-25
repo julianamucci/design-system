@@ -26,12 +26,20 @@
  * ninguém via, porque as duas rendem um círculo com um chevron dentro.
  *
  * A direção da unificação não foi votada por maioria: o conteúdo compartilhado
- * descreve estes controles como "Button de navegação (variante outline)" e
- * documenta `--radius-button` como o raio deles. Quem compõe `.nds-button` está
- * cumprindo o que está escrito; quem redeclarava, não.
+ * descreve estes controles como "Button de navegação (variante outline)". Quem
+ * compõe `.nds-button` está cumprindo o que está escrito; quem redeclarava, não.
+ *
+ * O que NÃO se herda do botão é o raio. Até 2026-08-25 estas linhas afirmavam
+ * que o conteúdo compartilhado documenta `--radius-button` como o raio das
+ * setas, e a afirmação era falsa: `.nds-carousel-arrow` crava
+ * `border-radius: var(--radius-full)` mais abaixo neste mesmo arquivo, e
+ * `carousel.css` entra DEPOIS de `button.css` em `index.css` com a mesma
+ * especificidade — a seta é um CÍRCULO, não o raio de controle. Duas tabelas de
+ * tokens seguiram o comentário e publicaram `--radius-button` / `.nds-button`,
+ * um ponto de customização que não muda nada na seta.
  *
  * Tokens: --background, --foreground, --border, --ring, --accent,
- *         --accent-foreground, --radius, --spacing-*, --duration-base,
+ *         --accent-foreground, --radius-full, --spacing-*, --duration-base,
  *         --ease-size
  */
 

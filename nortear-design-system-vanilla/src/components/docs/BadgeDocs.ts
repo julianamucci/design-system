@@ -511,25 +511,22 @@ export interface BadgeOptions {
             description: t('tokens.table.part'),
           },
           items: [
-            // A coluna do meio diz ONDE o token é lido, e não uma classe de
-            // utilitária: o par semântico (`--primary-foreground` e companhia)
-            // saiu do badge junto com o preenchimento, e as duas vars de alfa
-            // deixaram de existir na folha.
-            // `--warning` e `--info` continuam na tabela sem regra que os leia, e é
-            // de propósito: quem procura o token de mesmo nome da variante tem de
-            // descobrir AQUI que a badge não o consome — a warning traz valor
-            // próprio na folha e a info usa `--border`. Travessão na coluna do
-            // meio quer dizer exatamente isso: nenhuma regra o lê hoje.
+            // A tabela lista o que a folha LÊ, e a coluna do meio diz ONDE:
+            // o SELETOR que lê o token.
+            // `--warning` e `--info` não têm linha porque a folha não lê
+            // nenhum dos dois — a warning usa valor literal, cujo motivo está
+            // na nota de customização abaixo da tabela, e a variante info é
+            // pintada por `--border`. Linha com travessão só ocuparia espaço
+            // dizendo que o token não faz nada aqui.
             { token: '--primary',          value: '.nds-badge-default',       description: t('tokens.table.primary')         },
             { token: '--destructive',      value: '.nds-badge-destructive',   description: t('tokens.table.destructive')     },
-            { token: '--warning',          value: '—',                        description: t('tokens.table.warning')         },
             { token: '--success',          value: '.nds-badge-success',       description: t('tokens.table.success')         },
-            { token: '--info',             value: '—',                        description: t('tokens.table.info')            },
             { token: '--border',           value: '.nds-badge-info',          description: t('tokens.table.border')          },
             { token: '--secondary',        value: '.nds-badge-counter',       description: t('tokens.table.secondary')       },
             { token: '--foreground',       value: '.nds-badge',               description: t('tokens.table.foreground')      },
             { token: '--background',       value: '.nds-badge',               description: t('tokens.table.background')      },
             { token: '--ring',             value: '.nds-badge:focus-visible', description: t('tokens.table.ring')            },
+            { token: '--radius-badge',     value: '.nds-badge',               description: t('tokens.table.radius')          },
             { token: '--badge-bg',         value: 'hsl(var(--background))',   description: t('tokens.table.badgeBg')         },
             { token: '--badge-fg',         value: 'hsl(var(--foreground))',   description: t('tokens.table.badgeFg')         },
             { token: '--badge-border',     value: 'hsl(var(--primary))',      description: t('tokens.table.badgeBorder')     },

@@ -1005,7 +1005,10 @@ interface CommandDialogProps
           { token: "--popover", value: ".nds-command", description: toPlainText(tContent("tokens.table.popoverBg")) },
           { token: "--popover-foreground", value: ".nds-command", description: toPlainText(tContent("tokens.table.popoverFg")) },
           { token: "--muted-foreground", value: ".nds-command-group-heading", description: toPlainText(tContent("tokens.table.mutedFg")) },
-          { token: "--popover", value: ".nds-command-input", description: toPlainText(tContent("tokens.table.inputBg")) },
+          // `inputBg` ficou de fora: `.nds-command-input` declara `background:
+          // transparent` e quem pinta é o container. Uma linha dizendo que o campo
+          // tem fundo próprio seria falsa, e repetir `.nds-command` duplicaria a
+          // primeira linha da tabela.
           { token: "--border", value: ".nds-command-input-wrapper", description: toPlainText(tContent("tokens.table.inputBorder")) },
           { token: "--accent", value: '.nds-command-item[aria-selected="true"]', description: toPlainText(tContent("tokens.table.selectedBg")) },
           { token: "--accent-foreground", value: '.nds-command-item[aria-selected="true"]', description: toPlainText(tContent("tokens.table.selectedFg")) },

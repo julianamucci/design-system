@@ -673,7 +673,10 @@ interface ToggleGroupItemProps {
     items={[
       { token: '--muted',         value: $tStore('tokens.table.muted.class'),       description: $tStore('tokens.table.muted.part') },
       { token: '--accent',        value: $tStore('tokens.table.accent.class'),      description: $tStore('tokens.table.accent.part') },
-      { token: '--input',         value: $tStore('tokens.table.input.class'),       description: $tStore('tokens.table.input.part') },
+      // A borda do conjunto outline sai de `--border`, a mesma do toggle de
+      // contorno; `--input` não entra em regra nenhuma da folha. A chave
+      // `input` é o nome da linha, não o nome do token.
+      { token: '--border',        value: $tStore('tokens.table.input.class'),       description: $tStore('tokens.table.input.part') },
       { token: '--ring',          value: $tStore('tokens.table.ring.class'),        description: $tStore('tokens.table.ring.part') },
       { token: '--destructive',   value: $tStore('tokens.table.destructive.class'), description: $tStore('tokens.table.destructive.part') },
       { token: '--radius-button', value: $tStore('tokens.table.radius.class'),      description: $tStore('tokens.table.radius.part') },
