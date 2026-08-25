@@ -62,6 +62,8 @@ Em qualquer um dos casos, é este scan que decide se a skill é acionada pelo pi
 | `dead_lib_reference` | menciona Radix/shadcn/Basecoat/Tailwind — libs que saíram do projeto. **Radix NG é exceção**: `@radix-ng/primitives` é a lib ATUAL do Angular, e a regra a distingue por lookahead. "Radix" solto continua sendo o morto |
 | `dead_lib_in_infra` | mesmo vocabulário nas skills, guidelines, skill-refs e CSS compartilhado. Sai sob a chave `_infra` (slug-independente): é a infra que **gera** componente novo, e o vocabulário sumia do código para sobreviver nas instruções que o recriam. Menção que registra a remoção ("resíduo do shadcn", "nenhuma lib atual expõe") não conta; dívida já mapeada usa `<!-- audit-ignore: dead-lib — motivo -->` no próprio arquivo |
 | `unknown_token_reference` | token documentado que não existe em nenhum CSS — customização inerte |
+| `token_table_row_incoerente` | a linha da tabela de tokens traz DUAS colunas que têm de fechar entre si — o token e o seletor `.nds-*` que o lê —, e a regra daquele seletor não declara aquele token. Verificação fechada: as duas pontas saem do mesmo objeto literal, sem heurística de composição. Travessão na coluna do meio é ausência DECLARADA e passa; coluna que não é seletor (a do chart é "Uso no componente", com valores como `axisPointer`) sai por não conter `.nds-` no próprio dado — nunca por filtro por nome de arquivo, que é o defeito do `source-snippets.test.ts`. A versão larga da ideia ("a folha do slug lê o token?") foi medida e DESCARTADA com 25% de precisão: reprovava a seta do carrossel, que é um `.nds-button`, e a paleta do gráfico, que chega por `getComputedStyle`. Aprofundamento e os outros dois sentidos do cruzamento: Passo **3d** |
+| `tailwind_utility_in_docs` | nome de utilitária do Tailwind — lib que saiu — em docs page ou no conteúdo COMPARTILHADO. Na docs page, snippet dentro de crase não conta: é código que a página ENSINA, e pode mostrar markup de outra época. No conteúdo compartilhado conta sempre, e é **high**: a chave `*Code` é o snippet recomendado, copiado pelo leitor, e renderiza nas cinco stacks de uma vez. O regex do conteúdo tem âncora à esquerda de propósito — sem ela `nds-text-muted-foreground`, a classe VIVA, casa no sufixo e o portão conta como quebrado o que já foi consertado |
 | `story_name_not_english` · `sidebar_label_untranslated` | vocabulário do menu do Storybook. O primeiro pega nome de story com cara de português (morfologia `-ado/-cao/-mento/-vel`, conectivo `De/Com/Sem/Por`, `E` isolado entre palavras) e rótulo `name:` com acento — só em PascalCase, porque `IMG_QUEBRADA` e `DIAMETER` são constante de fixture e o indexador do Storybook não as publica. O segundo pega seção, subseção ou título de fundamento que não está em `docs/shared/primitives/sidebar-labels.ts`: **traduza, ou declare em `SEM_TRADUCAO` com o motivo** — decisão declarada vale mais que inferida. As duas existem porque o menu regride sozinho: o Angular reintroduziu `Colapsado` no dia seguinte à normalização |
 | `identificador_pt` | identificador que a campanha de tradução **não pôde** traduzir por varredura, declarado com motivo em `docs/shared/primitives/identificadores-pt.ts`. Só DECLARAÇÃO conta, e só fora de comentário: o detector de colisão da campanha era cego às duas coisas e inflou o backlog em quatro vezes — `esperar` entrou como conflito em seis arquivos quando é declarado UMA vez no repositório. **Renomeie e tire da lista, ou mova para `MANTIDOS` com o motivo**; `MANTIDOS` vence `PENDENTES`, então declarar já basta. A morfologia de `pareceProtugues` fica DE FORA de propósito: ligada, ela dá 1178 achados em 50 componentes contra os 168 da lista declarada, porque pega uma cauda que a campanha nunca varreu (`descricao`, `luminancia`, `deslocamento`). Portão que despeja backlog ensina a ignorar o portão, e junto some o achado que importava — essa cauda é lote próprio, não pedaço avulso no meio da revisão de outro assunto |
 | **Guardas de regra escrita** | nove regras que viviam só no CLAUDE.md e passaram a ter detector. Todas verdes hoje — são guarda de regressão, e cada uma já custou caro uma vez: `emoji_in_translation` (glifo de status no conteúdo, que a docs page já renderiza como pill+ícone — setas de prosa não contam), `seo_title_suffix` (`· Design System` no JSON, que `useSeoEffect` já acrescenta), `fixed_height_on_text_primitive` (altura fixa na raiz de primitivo com texto, WCAG 1.4.4 — ícone, indicador e medida da lib headless são exceção), `gtag_direct_call`, `vue_locale_from_store` (locale de Pinia já derrubou docs page em runtime), `ga4_in_preview_head` (o iframe registrou 863 de 863 page_view em `/iframe.html`), `measurement_id_committed` (repositório público), `theme_channel_missing` (só react/vue/svelte: o renderer html re-roda sozinho), `code_in_component_guideline` (só as 04–10 de cada stack; as transversais podem ilustrar regra) |
@@ -532,7 +534,59 @@ Inspecione cada stack em **uma única passagem** por arquivo (não releia).
 
 **3c. Props table** (5 colunas + extensibilidade): referencia `props.table.required` e `extensibilityTitle`. Tipos explícitos (não `VariantProps<...>`).
 
-**3d. Tokens table**: referencia tokens completos + `customizationTitle`.
+**3d. Tokens table** — presença NÃO basta, e por muito tempo foi só isso que
+este passo pedia. A tabela existe para dizer ao leitor **quais tokens ele pode
+redefinir para mudar este componente**; linha que nomeia o token errado ensina a
+sobrescrever o que não chega, e quem segue conclui que o design system não
+responde. Medido em agosto de 2026: 11 linhas incoerentes em 594, e 48 linhas
+erradas só na coluna de seletor de uma stack — contra as ~10 que a amostragem
+manual tinha achado. Amostrar não serve aqui; cruze.
+
+Rode uma vez, no começo do passo:
+
+```bash
+node scripts/tabela-tokens.mjs <slug>
+```
+
+Ele cruza a tabela das cinco docs pages com as folhas de
+`docs/shared/styles/nds/`, nos dois sentidos, e já resolve as armadilhas que
+custaram uma medição errada cada (aspas dentro da coluna, classe no fim de um
+descendente, `--radius-md` derivado de `--radius`, `.nds-card` que não é
+`.nds-card-footer`). **Não reconstrua o parser** — foi refeito três vezes numa
+sessão, com um erro diferente a cada vez.
+
+O que fazer com cada seção:
+
+| seção | o que é | ação |
+|---|---|---|
+| **1. não fecham** | a regra do seletor nomeado não declara o token nomeado | **defeito**, sempre. Nomeie o seletor que de fato lê, ou `—` se nada ler. Também sai como `token_table_row_incoerente` no Passo 0 |
+| **2. token do componente sem linha** | a folha lê, nenhuma tabela lista | **julgue lendo a regra**. Costuma ser linha que faltou — mas nem todo token lido é ponto de customização útil |
+| **2b. escala global** | `--spacing-*`, `--font-*`, `--duration-*` | **não é defeito deste componente**. Redefinir qualquer uma muda o sistema inteiro. Não decida por página |
+| **3. divergência** | as cinco não dizem a mesma coisa | alinhe — e **não pela maioria**: quem já corrigiu costuma ser minoria de uma stack só |
+
+**O que o script NÃO faz, e é onde estavam os piores defeitos: conferir se a
+DESCRIÇÃO diz a verdade.** Isso é leitura, e é sua. Para cada linha, abra a
+regra que o seletor aponta e confirme o fato:
+
+- `alert-dialog` documentava `--destructive-foreground` como o texto do botão
+  destrutivo, e o `button.css` diz **por escrito** que esse token não entra ali,
+  porque a variante é soft. A tabela ensinava o oposto de uma decisão registrada;
+- `calendar` prometia `--muted` como o fundo de hoje e do meio do intervalo, e a
+  folha não lê `--muted` em regra nenhuma — quem pinta é `--accent`, e o próprio
+  CSS trazia um comentário registrando isso como bug já corrigido;
+- `avatar` descrevia `--background` como cor de um anel de foco, e `avatar.css`
+  não tem uma ocorrência de `ring`;
+- `dialog` diz "z-index 50 no Overlay e Content" onde são dois tokens distintos.
+
+A descrição mora no conteúdo compartilhado e renderiza nas **cinco stacks**:
+corrigir é nas três línguas, e o texto é API-neutro — descreva o efeito e nomeie
+o TOKEN (`o fundo de destaque (--accent)`), nunca a classe utilitária de uma
+lib que saiu.
+
+Confira também `customizationTitle` e o snippet de customização abaixo da
+tabela: knob que a folha não lê mais é pior que knob ausente, porque quem segue
+o exemplo conclui que o componente ignora o tema. O snippet do carrossel ensinava
+`--radius-button` numa seta arredondada por `--radius-full`.
 
 **3e. Semântica HTML**:
 - Headings: `<h2>` seções, `<h3>` sub-divisões, nunca pular nível, nunca `<h1>`

@@ -60,6 +60,7 @@ node scripts/audit-translation-literals.mjs --only cobertura   # chaves *Code se
 node scripts/audit-translation-literals.mjs --only plataforma  # texto preso a navegador (custo de portar)
 node scripts/audit-translation-literals.mjs --only soltos      # snippet preso em override de stack
 node scripts/paridade-nome-acessivel.mjs <slug>   # nome acessível igual nas 5? (instrumento, não portão)
+node scripts/tabela-tokens.mjs <slug>            # tabela de tokens × folha CSS, nos dois sentidos (instrumento)
 npm run core:pack                                # empacota docs/shared como @nortear/ds-core
 ```
 
