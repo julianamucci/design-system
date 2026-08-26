@@ -6,6 +6,7 @@ import {
   buildAreaOption,
   buildPieOption,
   buildFunnelOption,
+  buildRadarOption,
 } from "@/components/ui/chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslation } from "@/lib/i18n";
@@ -66,6 +67,23 @@ const funnelStages = [
   { label: 'Cadastros', value: 2400 },
   { label: 'Carrinho',  value: 1200 },
   { label: 'Compra',    value: 480 },
+];
+
+// Cinco grandezas do mesmo item, cada uma com o SEU teto. Os tetos diferentes
+// são o exemplo, não um detalhe: é por eles que a tabela do radar traz uma
+// coluna de máximo — sem ela, o 9 de um eixo que vai a 10 e o 96 de um que vai a
+// 100 sairiam como dois números soltos.
+const radarAxes = [
+  { label: 'Desempenho',     max: 100 },
+  { label: 'Acessibilidade', max: 100 },
+  { label: 'Boas práticas',  max: 10  },
+  { label: 'SEO',            max: 100 },
+  { label: 'Conteúdo',       max: 5   },
+];
+
+const radarSeries = [
+  { name: 'Antes',  data: [72, 64, 6, 88, 2] },
+  { name: 'Depois', data: [94, 97, 9, 96, 4] },
 ];
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
@@ -172,6 +190,7 @@ export function ChartDocs() {
   buildAreaOption,
   buildPieOption,
   buildFunnelOption,
+  buildRadarOption,
 } from "@/components/ui/chart";`;
 
   const codeBar = `const xMonths = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"];
@@ -223,6 +242,27 @@ const series = [
   aria-label="Funil de conversão: da visita à compra"
 />`;
 
+  const codeRadar = `const eixos = [
+  { label: "Desempenho",     max: 100 },
+  { label: "Acessibilidade", max: 100 },
+  { label: "Boas práticas",  max: 10  },
+  { label: "SEO",            max: 100 },
+  { label: "Conteúdo",       max: 5   },
+];
+
+const medicoes = [
+  { name: "Antes",  data: [72, 64, 6, 88, 2] },
+  { name: "Depois", data: [94, 97, 9, 96, 4] },
+];
+
+<ChartContainer
+  option={buildRadarOption({ axes: eixos, series: medicoes })}
+  height={320}
+  categoryLabel="Eixo"
+  maxLabel="Máximo"
+  aria-label="Radar de qualidade: cinco grandezas, antes e depois"
+/>`;
+
   const codeTokens = `/* Personalização de tokens no tema */
 :root {
   --chart-1: 220 70% 50%;
@@ -251,6 +291,8 @@ interface ChartContainerProps extends React.ComponentProps<"div"> {
   categoryLabel?: string;
   valueLabel?: string;
   shareLabel?: string;
+  /** Cabeçalho da coluna de máximo do eixo — só o radar a tem. */
+  maxLabel?: string;
 }
 
 /** Frase padrão do estado vazio, exportada para reuso. */
@@ -275,7 +317,19 @@ declare function buildBarOption(o: OptionsBase): EChartsCoreOption;
 declare function buildLineOption(o: OptionsBase): EChartsCoreOption;
 declare function buildAreaOption(o: OptionsBase): EChartsCoreOption;
 declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;
-declare function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;`;
+declare function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;
+
+// O radar recebe os EIXOS (nome mais teto) além das séries: o teto é a única
+// informação dele que não está em nenhum outro lugar, e é o que a coluna de
+// máximo da tabela escreve.
+export interface ChartRadarAxis { label: string; max: number }
+
+declare function buildRadarOption(o: {
+  axes: ChartRadarAxis[];
+  series: ChartSeries[];
+  title?: string;
+  showLegend?: boolean;
+}): EChartsCoreOption;`;
 
   return (
     <DocsPageLayout
@@ -538,6 +592,26 @@ declare function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string }
             ),
           },
           {
+            name: "radar",
+            description: stripHtml(tContent("variants.items.radar")),
+            code: codeRadar,
+            preview: (
+              // No radar a primeira coluna da tabela não nomeia uma categoria:
+              // nomeia o EIXO, e a segunda traz o teto dele. Os dois títulos vêm
+              // do conteúdo compartilhado para acompanharem o idioma da página —
+              // com o rótulo padrão, a tabela ficaria em português no meio de uma
+              // página em espanhol.
+              <ChartContainer
+                option={buildRadarOption({ axes: radarAxes, series: radarSeries })}
+                className="nds-w-full nds-max-w-sm"
+                height={280}
+                categoryLabel={stripHtml(tContent("demonstration.labels.radarAxis"))}
+                maxLabel={stripHtml(tContent("demonstration.labels.radarMax"))}
+                aria-label="Radar de qualidade do site: cinco grandezas, antes e depois da revisão"
+               />
+            ),
+          },
+          {
             name: tContent("variants.items.smallInline.name"),
             description: tContent("variants.items.smallInline.description"),
             useWhen: tContent("variants.items.smallInline.use"),
@@ -724,7 +798,7 @@ declare function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string }
               {
                 // Nesta stack o tipo do gráfico não é uma propriedade: é a
                 // escolha de qual builder monta o objeto de configuração.
-                name: "buildBarOption · buildLineOption · buildAreaOption · buildPieOption · buildFunnelOption",
+                name: "buildBarOption · buildLineOption · buildAreaOption · buildPieOption · buildFunnelOption · buildRadarOption",
                 type: "(o: OptionsBase) => EChartsCoreOption",
                 defaultValue: "—",
                 required: "Sim",

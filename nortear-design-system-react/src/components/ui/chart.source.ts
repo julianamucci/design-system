@@ -184,6 +184,42 @@ const etapas = [
 }
 
 /**
+ * Radar: duas listas, e o snippet mostra as duas porque nenhuma delas se deduz
+ * da outra.
+ *
+ * Os EIXOS trazem nome e teto — é o teto que a coluna de máximo da tabela
+ * escreve —, e as séries trazem os valores na ordem dos eixos. Os rótulos das
+ * duas primeiras colunas entram escritos porque no radar a primeira não nomeia
+ * uma categoria qualquer: nomeia o eixo, e a segunda traz o teto dele.
+ */
+export function chartRadarSource(): string {
+  return jsxSnippet(
+    `${importChart('buildRadarOption')}
+
+const eixos = [
+  { label: "Desempenho", max: 100 },
+  { label: "Acessibilidade", max: 100 },
+  { label: "Boas práticas", max: 10 },
+  { label: "SEO", max: 100 },
+  { label: "Conteúdo", max: 5 },
+];
+
+const medicoes = [
+  { name: "Antes", data: [72, 64, 6, 88, 2] },
+  { name: "Depois", data: [94, 97, 9, 96, 4] },
+];`,
+    `<ChartContainer
+  option={buildRadarOption({ axes: eixos, series: medicoes })}
+  className="nds-max-w-md"
+  height={320}
+  categoryLabel="Eixo"
+  maxLabel="Máximo"
+  aria-label="Radar de qualidade do site: cinco grandezas, antes e depois da revisão"
+/>`,
+  );
+}
+
+/**
  * Multi-série: a legenda nasce sozinha da segunda série em diante, e cada série
  * ganha trama própria. Tirando a cor, a hachura ainda separa as séries — é o
  * que cumpre a WCAG 1.4.1 quando a cor sai de cena.

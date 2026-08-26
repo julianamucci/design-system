@@ -243,3 +243,50 @@ export function hatchedShapes(root: HTMLElement): SVGGraphicsElement[] {
   return [...root.querySelectorAll<SVGGraphicsElement>('svg path[fill^="url("], svg rect[fill^="url("]')]
     .filter((shape) => isDatumShape(shape, box));
 }
+
+// ─── Coletores do radar ───────────────────────────────────────────────────────
+//
+// O radar desenha MAIS de uma forma preenchida por série, e é por isso que ele
+// precisa dos seus: além da área fechada, cada vértice é um símbolo, também
+// preenchido com a cor da série. Medido no DOM real, cinco eixos e duas séries:
+// 51 `<path>` no total, dos quais 2 são a área, 10 são símbolo, 2 são o traçado
+// do contorno (sem preenchimento) e o resto é grade, eixo, legenda e o interior
+// dos dois `<pattern>`. `filledShapes` devolveria doze formas para duas séries —
+// todas legítimas, nenhuma delas o que a story do radar promete contar.
+//
+// O que separa a área do resto é a TRANSLUCIDEZ, e ela não é acidente de
+// desenho: a área do radar é translúcida DE PROPÓSITO, para que um polígono não
+// apague o que está embaixo dele — que é justamente a comparação que o radar
+// existe para mostrar. Símbolo, ícone de legenda e molde de trama saem opacos. É
+// o mesmo critério que o tipo `area` já usa na story dele, e ele reprova por
+// onde tem de reprovar: sem `areaStyle` a lib não desenha a área nenhuma, e a
+// contagem cai a zero em vez de escorregar para outra forma.
+//
+// Uma advertência para quem for procurar por elemento: o motor de tela emite
+// `<polygon>` e `<polyline>` para a área e para o contorno, mas o painter que
+// roda no navegador reduz TUDO a `<path>` — medido, zero `<polygon>` no DOM
+// real. Seletor de elemento aqui devolve lista vazia, e lista vazia num coletor
+// é o portão que passa a medir nada.
+
+/** Preenchimento translúcido — nem apagado, nem opaco. */
+function isTranslucent(shape: SVGGraphicsElement): boolean {
+  const opacity = Number.parseFloat(getComputedStyle(shape).fillOpacity || '1');
+  return opacity > 0 && opacity < 1;
+}
+
+/** A área fechada de cada série do radar — a camada de cor. */
+export function radarPolygons(root: HTMLElement): SVGGraphicsElement[] {
+  return filledShapes(root).filter(isTranslucent);
+}
+
+/**
+ * A trama de CADA área do radar — a camada de cima.
+ *
+ * O gêmeo hachurado herda o estilo do original, translucidez inclusive, então o
+ * mesmo critério separa a trama da área da trama dos símbolos. Contá-la ao lado
+ * de `radarPolygons`, com o mesmo número esperado, é o que impede um coletor
+ * que exclui demais de ficar verde medindo menos.
+ */
+export function radarHatches(root: HTMLElement): SVGGraphicsElement[] {
+  return hatchedShapes(root).filter(isTranslucent);
+}

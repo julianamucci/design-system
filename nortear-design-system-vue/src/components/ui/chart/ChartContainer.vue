@@ -6,10 +6,10 @@
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue';
 import VChart from 'vue-echarts';
 import * as echarts from 'echarts/core';
-import { BarChart, LineChart, PieChart, FunnelChart } from 'echarts/charts';
+import { BarChart, LineChart, PieChart, FunnelChart, RadarChart } from 'echarts/charts';
 import {
   TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
-  AriaComponent,
+  AriaComponent, RadarComponent,
 } from 'echarts/components';
 import { SVGRenderer, CanvasRenderer } from 'echarts/renderers';
 import { cn } from '@/lib/utils';
@@ -21,10 +21,25 @@ import type { HTMLAttributes } from 'vue';
 // `AriaComponent` não é enfeite: sem ele o bloco `aria` do option é ignorado em
 // silêncio, e a trama sobreposta a cada série — que é o que cumpre a WCAG 1.4.1
 // quando a cor sai de cena — nunca chega a ser desenhada.
+//
+// O radar entra por DUAS portas, e é a única série daqui assim: `RadarChart` é
+// o desenho, `RadarComponent` é o SISTEMA DE COORDENADAS em que ele desenha.
+// Barra e linha desenham no cartesiano do `GridComponent`; rosca e funil não
+// desenham em coordenada nenhuma. O radar traz a sua, e ela é um componente
+// próprio — o option tem um bloco `radar` no primeiro nível, ao lado de
+// `series`, e não dentro dela.
+//
+// A segunda porta está declarada, e a medição diz que hoje ela não é
+// obrigatória: nesta versão o instalador de `RadarChart` já puxa o do
+// componente, e removendo `RadarComponent` daqui o desenho continua saindo.
+// Fica escrita mesmo assim, e não por precaução vaga — o que este `use` diz é
+// de que módulos o componente depende, e o sistema de coordenadas é um deles.
+// Inferir a dependência do detalhe de empacotamento de uma versão é como o
+// registro some no dia em que o detalhe muda.
 echarts.use([
-  BarChart, LineChart, PieChart, FunnelChart,
+  BarChart, LineChart, PieChart, FunnelChart, RadarChart,
   TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
-  AriaComponent,
+  AriaComponent, RadarComponent,
   SVGRenderer, CanvasRenderer,
 ]);
 
@@ -70,6 +85,14 @@ const props = defineProps<{
    * aquilo representa.
    */
   shareLabel?: string;
+  /**
+   * Rótulo da coluna de máximo do eixo — só o radar a tem.
+   *
+   * Existe pelo mesmo motivo da coluna de participação: o desenho comunica uma
+   * RAZÃO, e o valor sozinho não a carrega. A diferença é o denominador, que
+   * aqui muda de eixo para eixo e por isso precisa de uma célula por linha.
+   */
+  maxLabel?: string;
 }>();
 
 const containerRef = ref<HTMLDivElement | null>(null);
@@ -179,6 +202,54 @@ function buildTheme() {
     // nela, e nenhuma medida contra o fundo cobre isso. A chave é o próprio
     // nome do tipo de série — é assim que a lib casa tema com série.
     funnel: { itemStyle: { borderColor: fg, borderWidth: 1 } },
+    // O radar traz EIXOS PRÓPRIOS, e é por isso que ele precisa de bloco aqui.
+    //
+    // Os outros tipos desenham no cartesiano ou não desenham em eixo nenhum, e
+    // `categoryAxis`/`valueAxis` acima já os cobrem. O radar tem os seus, com
+    // nomes de chave só dele (`axisName`, `axisLine`, `splitLine`,
+    // `splitArea`), e sem esta entrada eles saem com o padrão da lib: cinzas
+    // fixos, alheios ao tema, ao modo e à fonte. Um gráfico do design system
+    // com eixos que não são do design system.
+    //
+    // Um bloco só serve a duas coisas: `radar` é nome de série E nome de
+    // componente na lib, e a resolução de tema cai no mesmo lugar para os dois.
+    // Cada um lê o que lhe diz respeito — o componente pega eixo, grade e nome
+    // do eixo; a série pega o contorno do símbolo —, e o que sobra de um lado é
+    // ignorado do outro.
+    //
+    // O NOME DO EIXO é texto, então segue a regra do texto: cor de
+    // `--muted-foreground`, como o rótulo do eixo cartesiano e a legenda, e
+    // tamanho no mesmo degrau MEDIDO — nunca pixel escolhido, senão ele para de
+    // crescer com a fonte do navegador (WCAG 1.4.4).
+    //
+    // A GRADE e o EIXO usam `--border`, nas mesmas duas intensidades do
+    // cartesiano: o traço que sai do centro é o eixo (0.6), os anéis são grade
+    // (0.3). Assim o radar e o gráfico de barras ao lado dele desenham a mesma
+    // malha.
+    //
+    // SPLITAREA DESLIGADO, e por dois motivos que se somam. O primeiro é de
+    // desenho: o padrão da lib alterna DUAS faixas cinza entre os anéis, cores
+    // cravadas que não vêm de token nenhum — sobre o fundo claro elas viram um
+    // degrau que disputa com o preenchimento translúcido do polígono, e sobre o
+    // fundo escuro viram uma lavagem clara por baixo do desenho inteiro. A
+    // malha que informa já está nos anéis, em `--border`; a faixa não acrescenta
+    // leitura, só um segundo fundo que o tema não escolheu. É a mesma decisão
+    // que o eixo cartesiano aqui em cima já toma. O segundo é de medição, e foi
+    // verificado plantando o defeito: uma das duas faixas sai com
+    // `fill-opacity="0"`, e essa marca é justamente como as stories reconhecem
+    // o fundo da legenda. Com a faixa ligada há DOIS retângulos transparentes
+    // na tela e a espera de assentamento nunca fecha.
+    radar: {
+      axisName: { color: muted, fontSize: bodySize },
+      axisLine: { lineStyle: { color: hsl('border', 0.6) } },
+      splitLine: { lineStyle: { color: hsl('border', 0.3) } },
+      splitArea: { show: false, areaStyle: { color: ['transparent'] } },
+      // Contorno do símbolo de vértice, pela mesma porta do traçado: no radar,
+      // como na linha, a forma de dado é o VÉRTICE — o polígono já é delimitado
+      // pelo próprio traço, na cor da série, e é o vértice que precisa se
+      // separar do que está por baixo dele.
+      itemStyle: { borderColor: fg, borderWidth: 2 },
+    },
   };
 }
 
@@ -275,6 +346,7 @@ const table = computed(() =>
     category: props.categoryLabel ?? CHART_TABLE_LABELS.category,
     value: props.valueLabel ?? CHART_TABLE_LABELS.value,
     share: props.shareLabel ?? CHART_TABLE_LABELS.share,
+    max: props.maxLabel ?? CHART_TABLE_LABELS.max,
   }),
 );
 

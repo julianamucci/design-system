@@ -167,8 +167,80 @@ describe('buildChartTable', () => {
     expect(table.header).toEqual(['Etapa', 'Pessoas', 'Share']);
   });
 
+  it('o radar escreve o MÁXIMO de cada eixo, entre o nome e as séries', () => {
+    // O que o radar comunica é a distância do vértice ao centro, e essa
+    // distância é o valor sobre o teto DAQUELE eixo. Sem a coluna do meio, o 9
+    // de um eixo que vai a 10 e o 96 de um eixo que vai a 100 sairiam como dois
+    // números soltos, e a tabela deixaria de descrever o polígono desenhado.
+    const table = buildChartTable({
+      type: 'radar',
+      radarAxes: [
+        { label: 'Boas práticas', max: 10 },
+        { label: 'SEO', max: 100 },
+      ],
+      series: [
+        { name: 'Antes', data: [6, 88] },
+        { name: 'Depois', data: [9, 96] },
+      ],
+    });
+    expect(table.header).toEqual(['Categoria', 'Máximo', 'Antes', 'Depois']);
+    expect(table.lines).toEqual([
+      ['Boas práticas', '10', '6', '9'],
+      ['SEO', '100', '88', '96'],
+    ]);
+  });
+
+  it('o radar aceita cabeçalhos autorais no eixo e no máximo', () => {
+    const table = buildChartTable({
+      type: 'radar',
+      radarAxes: [{ label: 'SEO', max: 100 }],
+      series: [{ name: 'Antes', data: [88] }],
+      categoryLabel: 'Eixo',
+      maxLabel: 'Teto',
+    });
+    expect(table.header).toEqual(['Eixo', 'Teto', 'Antes']);
+  });
+
+  it('sem eixos declarados, o radar divide um teto só — o maior valor do conjunto', () => {
+    // Derivar um teto POR eixo faria todo vértice encostar no anel de fora
+    // quando há uma série só: correto na aritmética, vazio na leitura. O teto
+    // compartilhado é uma escala de verdade, e é ele que a coluna escreve.
+    const table = buildChartTable({
+      type: 'radar',
+      xAxis: ['Jan', 'Feb', 'Mar'],
+      series: [{ name: 'Desktop', data: [186, 305, 237] }],
+    });
+    expect(table.header).toEqual(['Categoria', 'Máximo', 'Desktop']);
+    expect(table.lines).toEqual([
+      ['Jan', '305', '186'],
+      ['Feb', '305', '305'],
+      ['Mar', '305', '237'],
+    ]);
+  });
+
+  it('no radar, série mais curta que os eixos deixa a célula vazia', () => {
+    // Mesma regra da tabela cartesiana: o eixo existe e aquela série não o
+    // preenche. Apagar a linha esconderia o valor das OUTRAS séries junto.
+    const table = buildChartTable({
+      type: 'radar',
+      radarAxes: [
+        { label: 'Desempenho', max: 100 },
+        { label: 'SEO', max: 100 },
+      ],
+      series: [
+        { name: 'Antes', data: [72, 88] },
+        { name: 'Depois', data: [94] },
+      ],
+    });
+    expect(table.lines).toEqual([
+      ['Desempenho', '100', '72', '94'],
+      ['SEO', '100', '88', '—'],
+    ]);
+  });
+
   it('sem dado nenhum, a tabela nasce sem linha', () => {
     expect(buildChartTable({}).lines).toEqual([]);
     expect(buildChartTable({ type: 'funnel' }).lines).toEqual([]);
+    expect(buildChartTable({ type: 'radar' }).lines).toEqual([]);
   });
 });

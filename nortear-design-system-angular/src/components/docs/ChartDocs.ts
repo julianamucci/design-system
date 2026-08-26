@@ -19,6 +19,8 @@ import { NdsChart } from '@/components/ui/chart';
 import {
   DATA_DISPOSITIVO,
   FUNNEL_STAGES,
+  RADAR_AXES,
+  RADAR_SERIES,
   MONTHS,
   SERIES_MULTI,
   SERIES_TRIO,
@@ -86,8 +88,9 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'variants.items.area.name': 'Área',
     'variants.items.pie.name': 'Pizza',
     'variants.items.funnel.name': 'Funil',
+    'variants.items.radar.name': 'Radar',
     'variants.note':
-      'O Chart não tem variantes de estilo: o tipo é o DADO, não a aparência. Uma entrada escolhe entre barras, linhas, área, pizza e funil, e a mesma tabela de dados acompanha o desenho em qualquer um deles.',
+      'O Chart não tem variantes de estilo: o tipo é o DADO, não a aparência. Uma entrada escolhe entre barras, linhas, área, pizza, funil e radar, e a mesma tabela de dados acompanha o desenho em qualquer um deles.',
     'accessibility.summary':
       'O Chart atende WCAG 2.2 AA por quatro caminhos: descrição obrigatória do gráfico, uma tabela de dados equivalente que existe sempre, trama e símbolo por série (a informação nunca vive só na cor) e contorno em cima de cada forma, que é o que garante os 3:1 de objeto gráfico.',
     'accessibility.item2':
@@ -103,13 +106,17 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'notes.tip4':
       '<strong>Altura pela proporção</strong>: o desenho não tem altura cravada. A altura nasce da proporção do desenho aplicada à largura do container, e o piso vem do próprio bloco — por isso a página não salta quando o dado chega.',
     'props.extensibility':
-      'Para tipos de gráfico não cobertos (dispersão, radar, mapa de calor), o caminho é estender o componente, não passar um objeto de configuração: quem traduz entrada em configuração é o próprio componente. Cores e tipografia continuam vindo do tema em qualquer caso.',
+      'Para tipos de gráfico não cobertos (dispersão, mapa de calor, cascata), o caminho é estender o componente, não passar um objeto de configuração: quem traduz entrada em configuração é o próprio componente. Cores e tipografia continuam vindo do tema em qualquer caso.',
     'props.table.showData': 'Torna visível para todo mundo a tabela de dados que já existe para leitor de tela.',
     'props.table.compact':
       'Mini gráfico inline: sem eixos, grade, legenda ou rótulo de valor, e com proporção achatada. Serve de indicador de tendência ao lado de um número.',
     'props.table.categoryLabel': 'Cabeçalho da primeira coluna da tabela de dados.',
     'props.table.valueLabel': 'Nome da série quando os dados vêm na forma simples de rótulo e valor.',
     'props.table.shareLabel': 'Cabeçalho da coluna de participação, na tabela de dados dos tipos que desenham proporção.',
+    'props.table.radarAxes': 'Radar: os eixos e o teto de cada um, na ordem em que aparecem no polígono. Sem a lista, o nome do eixo vem do eixo de categorias e todos passam a dividir um teto só.',
+    'props.table.maxLabel': 'Cabeçalho da coluna de máximo do eixo, na tabela de dados do radar.',
+    'props.table.radarAxisLabel': 'Nome do eixo — aparece em volta do polígono e na primeira coluna da tabela.',
+    'props.table.radarAxisMax': 'Teto da escala daquele eixo: é ele que divide o valor para dar a distância do vértice ao centro.',
     'props.table.className':
       'Classes extras vão no atributo class do próprio elemento — o Angular as mescla com as do design system.',
     'props.table.pointLabel': 'Rótulo da categoria — vira a marca do eixo e a primeira coluna da tabela.',
@@ -131,8 +138,9 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'variants.items.area.name': 'Area',
     'variants.items.pie.name': 'Pie',
     'variants.items.funnel.name': 'Funnel',
+    'variants.items.radar.name': 'Radar',
     'variants.note':
-      'The Chart has no style variants: the type is the DATA, not the look. One input chooses between bars, lines, area, pie and funnel, and the same data table follows the drawing in all of them.',
+      'The Chart has no style variants: the type is the DATA, not the look. One input chooses between bars, lines, area, pie, funnel and radar, and the same data table follows the drawing in all of them.',
     'accessibility.summary':
       'The Chart meets WCAG 2.2 AA through four paths: a mandatory chart description, an equivalent data table that always exists, a pattern and a symbol per series (information never lives in colour alone) and an outline on every shape, which is what secures the 3:1 for graphical objects.',
     'accessibility.item2':
@@ -148,13 +156,17 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'notes.tip4':
       '<strong>Height from the aspect ratio</strong>: the drawing has no hard-coded height. Height comes from the drawing ratio applied to the container width, and the floor comes from the block itself — which is why the page does not jump when the data arrives.',
     'props.extensibility':
-      'For chart types not covered (scatter, radar, heatmap), the path is extending the component, not passing a configuration object: turning inputs into configuration happens inside the component. Colours and typography still come from the theme either way.',
+      'For chart types not covered (scatter, heatmap, waterfall), the path is extending the component, not passing a configuration object: turning inputs into configuration happens inside the component. Colours and typography still come from the theme either way.',
     'props.table.showData': 'Makes the data table that already exists for screen readers visible to everyone.',
     'props.table.compact':
       'Inline mini chart: no axes, grid, legend or value labels, and a flattened ratio. Works as a trend indicator next to a number.',
     'props.table.categoryLabel': 'Header of the first column of the data table.',
     'props.table.valueLabel': 'Series name when the data comes in the simple label/value shape.',
     'props.table.shareLabel': 'Header of the share column, in the data table of the types that draw a proportion.',
+    'props.table.radarAxes': 'Radar: the axes and the ceiling of each one, in the order they appear around the polygon. Without the list, axis names come from the category axis and every axis shares a single ceiling.',
+    'props.table.maxLabel': 'Header of the axis maximum column, in the radar data table.',
+    'props.table.radarAxisLabel': 'Axis name — shows around the polygon and in the first column of the table.',
+    'props.table.radarAxisMax': 'Ceiling of that axis scale: it is what divides the value to give the distance from the vertex to the centre.',
     'props.table.className':
       'Extra classes go on the class attribute of the element itself — Angular merges them with the design system ones.',
     'props.table.pointLabel': 'Category label — becomes the axis tick and the first column of the table.',
@@ -176,8 +188,9 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'variants.items.area.name': 'Área',
     'variants.items.pie.name': 'Circular',
     'variants.items.funnel.name': 'Embudo',
+    'variants.items.radar.name': 'Radar',
     'variants.note':
-      'El Chart no tiene variantes de estilo: el tipo es el DATO, no la apariencia. Una entrada elige entre barras, líneas, área, circular y embudo, y la misma tabla de datos acompaña al dibujo en todos ellos.',
+      'El Chart no tiene variantes de estilo: el tipo es el DATO, no la apariencia. Una entrada elige entre barras, líneas, área, circular, embudo y radar, y la misma tabla de datos acompaña al dibujo en todos ellos.',
     'accessibility.summary':
       'El Chart cumple WCAG 2.2 AA por cuatro caminos: descripción obligatoria del gráfico, una tabla de datos equivalente que existe siempre, trama y símbolo por serie (la información nunca vive solo en el color) y contorno sobre cada forma, que es lo que garantiza los 3:1 de objeto gráfico.',
     'accessibility.item2':
@@ -193,13 +206,17 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'notes.tip4':
       '<strong>Altura por proporción</strong>: el dibujo no tiene altura fija. La altura nace de la proporción del dibujo aplicada al ancho del contenedor, y el piso viene del propio bloque — por eso la página no salta cuando llega el dato.',
     'props.extensibility':
-      'Para tipos de gráfico no cubiertos (dispersión, radar, mapa de calor), el camino es extender el componente, no pasar un objeto de configuración: quien traduce entradas en configuración es el propio componente. Los colores y la tipografía siguen viniendo del tema en cualquier caso.',
+      'Para tipos de gráfico no cubiertos (dispersión, mapa de calor, cascada), el camino es extender el componente, no pasar un objeto de configuración: quien traduce entradas en configuración es el propio componente. Los colores y la tipografía siguen viniendo del tema en cualquier caso.',
     'props.table.showData': 'Hace visible para todos la tabla de datos que ya existe para lectores de pantalla.',
     'props.table.compact':
       'Mini gráfico en línea: sin ejes, rejilla, leyenda ni etiquetas de valor, y con proporción achatada. Sirve de indicador de tendencia junto a un número.',
     'props.table.categoryLabel': 'Encabezado de la primera columna de la tabla de datos.',
     'props.table.valueLabel': 'Nombre de la serie cuando los datos vienen en la forma simple de rótulo y valor.',
     'props.table.shareLabel': 'Encabezado de la columna de participación, en la tabla de datos de los tipos que dibujan proporción.',
+    'props.table.radarAxes': 'Radar: los ejes y el techo de cada uno, en el orden en que aparecen en el polígono. Sin la lista, el nombre del eje viene del eje de categorías y todos pasan a compartir un solo techo.',
+    'props.table.maxLabel': 'Encabezado de la columna de máximo del eje, en la tabla de datos del radar.',
+    'props.table.radarAxisLabel': 'Nombre del eje — aparece alrededor del polígono y en la primera columna de la tabla.',
+    'props.table.radarAxisMax': 'Techo de la escala de ese eje: es lo que divide el valor para dar la distancia del vértice al centro.',
     'props.table.className':
       'Las clases extra van en el atributo class del propio elemento — Angular las combina con las del design system.',
     'props.table.pointLabel': 'Rótulo de la categoría — se convierte en la marca del eje y en la primera columna de la tabla.',
@@ -298,6 +315,19 @@ const CODE_FUNNEL = `<!-- O funil também só aceita a forma simples, e a ORDEM 
   shareLabel="Participação"
 ></div>`;
 
+const CODE_RADAR = `<!-- O radar tem DUAS listas, e nenhuma se deduz da outra: os eixos trazem
+     nome e teto (é o teto que a coluna de máximo da tabela escreve), e as
+     séries trazem os valores na ordem dos eixos. -->
+<div
+  ndsChart
+  type="radar"
+  [radarAxes]="eixos"
+  [series]="medicoes"
+  label="Radar de qualidade do site: cinco grandezas, antes e depois da revisão"
+  categoryLabel="Eixo"
+  maxLabel="Máximo"
+></div>`;
+
 const CODE_COMPACT = `<!-- Indicador ao lado de um número: sem eixos, sem legenda, proporção
      achatada. O valor exato continua na tabela de dados. -->
 <div class="nds-cluster" data-spacing="sm" data-align="center">
@@ -319,11 +349,12 @@ const INTERFACE_CODE = `// Um componente só, com entradas declarativas — sem 
 // sem builders. O tipo é o dado, não o estilo.
 @Component({ selector: 'div[ndsChart]' })
 export class NdsChart {
-  readonly type = input<ChartType>('bar');          // 'bar' | 'line' | 'area' | 'pie' | 'funnel'
+  readonly type = input<ChartType>('bar');          // 'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar'
   readonly label = input.required<string>();        // descrição do gráfico
   readonly data = input<ChartDataPoint[] | undefined>(undefined);
   readonly xAxis = input<string[] | undefined>(undefined);
   readonly series = input<ChartSeries[] | undefined>(undefined);
+  readonly radarAxes = input<ChartRadarAxis[] | undefined>(undefined);
   readonly chartTitle = input<string>('');
   readonly showLegend = input<boolean | undefined>(undefined);
   readonly showData = input<boolean>(false);
@@ -332,11 +363,15 @@ export class NdsChart {
   readonly categoryLabel = input<string>('Categoria');
   readonly valueLabel = input<string>('Valor');
   readonly shareLabel = input<string>('Participação');
+  readonly maxLabel = input<string>('Máximo');
   readonly emptyLabel = input<string>('Sem dados para exibir');
 }
 
 interface ChartDataPoint { label: string; value: number }
-interface ChartSeries { name: string; data: number[]; color?: string }`;
+interface ChartSeries { name: string; data: number[]; color?: string }
+
+/** Radar: o nome do eixo e o TETO da escala dele — andam juntos. */
+interface ChartRadarAxis { label: string; max: number }`;
 
 const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das séries.
    Personalizar a paleta é redefinir os tokens — o desenho acompanha. */
@@ -462,6 +497,18 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
         [categoryLabel]="t('demonstration.labels.funnelStage')"
         [valueLabel]="t('demonstration.labels.funnelPeople')"
         [shareLabel]="t('demonstration.labels.funnelShare')"
+      ></div>
+    </ng-template>
+
+    <ng-template #tplVarRadar>
+      <div
+        ndsChart
+        type="radar"
+        [radarAxes]="radarAxes"
+        [series]="radarSeries"
+        [label]="label(t('variants.items.radar.name'))"
+        [categoryLabel]="t('demonstration.labels.radarAxis')"
+        [maxLabel]="t('demonstration.labels.radarMax')"
       ></div>
     </ng-template>
 
@@ -674,6 +721,8 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
   protected readonly seriesTrio = SERIES_TRIO;
   protected readonly dataDispositivo = DATA_DISPOSITIVO;
   protected readonly funnelStages = FUNNEL_STAGES;
+  protected readonly radarAxes = RADAR_AXES;
+  protected readonly radarSeries = RADAR_SERIES;
   protected readonly tendencia = TENDENCIA;
 
   /** Total do mini gráfico — derivado da série, nunca escrito à mão. */
@@ -690,6 +739,7 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarArea = viewChild.required<TemplateRef<unknown>>('tplVarArea');
   private readonly tplVarPie = viewChild.required<TemplateRef<unknown>>('tplVarPie');
   private readonly tplVarFunnel = viewChild.required<TemplateRef<unknown>>('tplVarFunnel');
+  private readonly tplVarRadar = viewChild.required<TemplateRef<unknown>>('tplVarRadar');
   private readonly tplVarCompact = viewChild.required<TemplateRef<unknown>>('tplVarCompact');
   private readonly tplCompInCard = viewChild.required<TemplateRef<unknown>>('tplCompInCard');
 
@@ -789,6 +839,7 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
       { key: 'area',        code: CODE_AREA,    tpl: this.tplVarArea()    },
       { key: 'pie',         code: CODE_PIE,     tpl: this.tplVarPie()     },
       { key: 'funnel',      code: CODE_FUNNEL,  tpl: this.tplVarFunnel()  },
+      { key: 'radar',       code: CODE_RADAR,   tpl: this.tplVarRadar()   },
       { key: 'smallInline', code: CODE_COMPACT, tpl: this.tplVarCompact() },
     ].map(({ key, code, tpl }) => ({
       // `.name` existe no conteúdo só para `smallInline`; para os quatro tipos
@@ -868,11 +919,12 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
         title: t('props.containerTitle'),
         cols,
         items: [
-          line('type', 'chartType', `'bar' | 'line' | 'area' | 'pie' | 'funnel'`, `'bar'`),
+          line('type', 'chartType', `'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar'`, `'bar'`),
           line('label', 'ariaLabel', 'string', '—', sim),
           line('data', 'data', 'ChartDataPoint[]', '—'),
           line('xAxis', 'xAxis', 'string[]', '—'),
           line('series', 'series', 'ChartSeries[]', '—'),
+          line('radarAxes', 'radarAxes', 'ChartRadarAxis[]', '—'),
           line('chartTitle', 'title', 'string', `''`),
           line('showLegend', 'showLegend', 'boolean', '—'),
           line('showData', 'showData', 'boolean', 'false'),
@@ -880,6 +932,7 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
           line('categoryLabel', 'categoryLabel', 'string', `'Categoria'`),
           line('valueLabel', 'valueLabel', 'string', `'Valor'`),
           line('shareLabel', 'shareLabel', 'string', `'Participação'`),
+          line('maxLabel', 'maxLabel', 'string', `'Máximo'`),
           line('emptyLabel', 'emptyLabel', 'string', `'Sem dados para exibir'`),
           line('class', 'className', 'string', '—'),
         ],
@@ -893,6 +946,8 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
           line('ChartSeries.name', 'seriesName', 'string', '—', sim),
           line('ChartSeries.data', 'seriesData', 'number[]', '—', sim),
           line('ChartSeries.color', 'seriesColor', 'string', '—'),
+          line('ChartRadarAxis.label', 'radarAxisLabel', 'string', '—', sim),
+          line('ChartRadarAxis.max', 'radarAxisMax', 'number', '—', sim),
         ],
       },
     ];

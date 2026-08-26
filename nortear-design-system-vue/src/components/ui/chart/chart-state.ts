@@ -99,12 +99,22 @@ export interface ChartTableLabels {
   category: string;
   value: string;
   share: string;
+  /**
+   * Cabeçalho da coluna de máximo do eixo — só o radar a tem.
+   *
+   * Mesma família da coluna de participação, e pelo mesmo motivo: o desenho
+   * comunica uma RAZÃO (o vértice sobre o raio), e o valor sozinho não a
+   * carrega. A diferença é que aqui o denominador muda de eixo para eixo, então
+   * ele não cabe num rodapé — precisa de uma célula por linha.
+   */
+  max: string;
 }
 
 export const CHART_TABLE_LABELS: ChartTableLabels = {
   category: 'Categoria',
   value: 'Valor',
   share: 'Participação',
+  max: 'Máximo',
 };
 
 /** Célula sem dado: a categoria existe, aquela série não a preenche. */
@@ -176,6 +186,31 @@ function axisLabelOf(item: unknown, index: number): string {
   return String(index + 1);
 }
 
+/**
+ * Os eixos do radar, lidos do `indicator` do próprio option.
+ *
+ * Mesma fonte que a lib usa para desenhar os anéis e escrever o nome de cada
+ * eixo, pela mesma razão de `categoriesOf`: o teto que a escala usa e o teto que
+ * a coluna escreve têm de ser o MESMO número. Uma lista paralela passada ao
+ * container seria uma segunda verdade sobre a mesma escala, e as duas divergem
+ * no primeiro dado que mudar.
+ *
+ * Sem nome escrito, a posição vira o rótulo; sem teto, a célula sai com
+ * travessão em vez de inventar um número.
+ */
+function radarAxesOf(option: EChartsCoreOption): { label: string; max: number | undefined }[] {
+  const block = (option as { radar?: unknown }).radar;
+  const first = Array.isArray(block) ? block[0] : block;
+  const indicator = (first as { indicator?: unknown } | undefined)?.indicator;
+  if (!Array.isArray(indicator)) return [];
+  return indicator.map((entry, index) => {
+    const shape = (entry ?? {}) as { name?: unknown; max?: unknown };
+    const name = typeof shape.name === 'string' && shape.name ? shape.name : String(index + 1);
+    const max = typeof shape.max === 'number' && Number.isFinite(shape.max) ? shape.max : undefined;
+    return { label: name, max };
+  });
+}
+
 /** Categorias do eixo. Sem eixo escrito, a posição é o rótulo da linha. */
 function categoriesOf(option: EChartsCoreOption, count: number): string[] {
   const axis = (option as { xAxis?: unknown }).xAxis;
@@ -208,6 +243,41 @@ export function chartTable(
   labels: ChartTableLabels = CHART_TABLE_LABELS,
 ): ChartTable {
   const series = seriesOf(option);
+
+  // O radar é o único tipo com uma coluna ENTRE a categoria e as séries, e ela
+  // é o teto do eixo.
+  //
+  // A razão é a mesma que deu ao funil a coluna de participação — quando a
+  // informação mora numa dimensão visual, o texto precisa carregá-la —, mas
+  // aqui o denominador não é um só: cada eixo tem a sua escala. Um 7 num eixo
+  // que vai a 10 é um vértice quase no anel de fora; o mesmo 7 num eixo que vai
+  // a 100 quase encosta no centro. Sem esta coluna, as duas linhas escreveriam
+  // "7" e a tabela deixaria de descrever o polígono que está na tela.
+  //
+  // Uma linha por EIXO, e não por série: é o eixo que tem nome próprio e teto
+  // próprio, e cada série ocupa uma coluna à direita — a mesma forma da tabela
+  // de barra e linha, com uma coluna a mais no começo.
+  if (series.length > 0 && series[0].type === 'radar') {
+    const axes = radarAxesOf(option);
+    const polygons = Array.isArray(series[0].data) ? (series[0].data as unknown[]) : [];
+    return {
+      header: [
+        labels.category,
+        labels.max,
+        ...polygons.map((polygon, index) => sliceLabelOf(polygon, index)),
+      ],
+      rows: axes.map((axis, row) => [
+        axis.label,
+        cellOf(axis.max),
+        ...polygons.map((polygon) => {
+          const values = polygon && typeof polygon === 'object'
+            ? (polygon as { value?: unknown }).value
+            : undefined;
+          return Array.isArray(values) ? cellOf(values[row]) : NO_DATA;
+        }),
+      ]),
+    };
+  }
 
   if (series.length > 0 && series[0].type === 'pie') {
     const slices = Array.isArray(series[0].data) ? (series[0].data as unknown[]) : [];

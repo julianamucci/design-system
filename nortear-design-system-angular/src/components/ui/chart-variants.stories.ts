@@ -8,6 +8,8 @@ import {
   SERIES_MULTI,
   DATA_DISPOSITIVO,
   FUNNEL_STAGES,
+  RADAR_AXES,
+  RADAR_SERIES,
   contrastRatio,
   desenhoDe,
   drawingSettled,
@@ -15,6 +17,8 @@ import {
   formasPreenchidas,
   mesmaCor,
   optionOf,
+  radarHatches,
+  radarPolygons,
   rgbColor,
   rgbToken,
   textosDoDesenho,
@@ -349,6 +353,126 @@ export const Funnel: Story = {
       // última é a queda que o funil existe para mostrar.
       await expect(cells[0]).toEqual(['Visitas', '4000', '100%']);
       await expect(cells[3]).toEqual(['Compra', '480', '12%']);
+    });
+  },
+};
+
+export const Radar: Story = {
+  parameters: {
+    covers: ['functional.item8', 'visual.item6'],
+  },
+  render: () => ({
+    props: { axes: RADAR_AXES, measurements: RADAR_SERIES },
+    template: `
+      <div ndsChart
+        type="radar"
+        [radarAxes]="axes"
+        [series]="measurements"
+        label="Radar de qualidade do site: cinco grandezas, antes e depois da revisão"
+        categoryLabel="Eixo"
+        maxLabel="Máximo"
+      ></div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
+    const desenho = desenhoDe(chart);
+    // Duas esperas, e cada uma responde por uma coisa. A primeira só pergunta
+    // se JÁ HÁ desenho — antes do primeiro quadro o coletor devolve zero, e
+    // zero não contradiz invariante nenhuma. A segunda espera a animação de
+    // entrada fechar, e é ela que faz a contagem valer.
+    await waitFor(() => expect(radarPolygons(desenho).length).toBeGreaterThan(0));
+    await drawingSettled(desenho);
+
+    await step('Um polígono por série — nem um a mais', async () => {
+      // Igualdade. Com "no mínimo", passariam tanto a contagem dobrada pela
+      // trama quanto a inchada pelos dez símbolos de vértice; o portão só
+      // reprovaria com o desenho vazio.
+      //
+      // E a faixa alternada do padrão da lib é pega um passo acima, na espera:
+      // uma das duas sai com `fill-opacity="0"`, que é a marca pela qual o
+      // coletor reconhece o fundo da legenda. Com ela ligada há DOIS retângulos
+      // transparentes na tela e `drawingSettled` não fecha — medido, plantando
+      // o defeito. `splitArea` desligado no tema não é preferência de gosto.
+      //
+      // Dentro de `waitFor` porque o polígono entra CRESCENDO a partir do
+      // centro: a marca de opacidade que `drawingSettled` observa fecha antes
+      // de a geometria assentar, e `radarPolygons` exige caixa não-zero. Só
+      // leitura aqui dentro — nada que mexa no DOM.
+      await waitFor(async () => {
+        await expect(radarPolygons(desenho).length).toBe(RADAR_SERIES.length);
+      });
+    });
+
+    await step('Cada eixo aparece escrito em volta do polígono', async () => {
+      // O nome do eixo é a única pista de QUE grandeza cada vértice mede.
+      const texts = textosDoDesenho(desenho);
+      for (const axis of RADAR_AXES) {
+        await expect(texts.some((text) => text.includes(axis.label))).toBe(true);
+      }
+    });
+
+    await step('A legenda nomeia cada série por escrito', async () => {
+      // Os eixos nomeiam as grandezas, não as séries: sem a legenda, a única
+      // pista de qual polígono é qual seria a cor.
+      const texts = textosDoDesenho(desenho);
+      for (const serie of RADAR_SERIES) {
+        await expect(texts.some((text) => text.includes(serie.name))).toBe(true);
+      }
+    });
+
+    await step('Os eixos do radar saem do TEMA, e não do padrão da lib', async () => {
+      // O radar é o único tipo com eixos PRÓPRIOS, e sem bloco de tema eles
+      // nascem nos cinzas cravados da lib: um gráfico do design system com
+      // eixos que não são do design system. Este passo é o que impede isso de
+      // voltar calado.
+      //
+      // O token é lido do valor bruto e convertido — sem pendurar sonda no DOM,
+      // que dentro de uma espera provocaria a própria retentativa.
+      const muted = rgbToken('--muted-foreground')!;
+      const axisName = [...desenho.querySelectorAll<SVGTextElement>('svg text')]
+        .find((no) => (no.textContent ?? '').trim() === 'SEO');
+      await expect(axisName).toBeDefined();
+      // O nome do eixo é TEXTO, então segue a cor de texto secundário do tema.
+      const painted = rgbColor(getComputedStyle(axisName!).fill)!;
+      await expect(mesmaCor(painted, muted)).toBe(true);
+      // E o tamanho é MEDIDO, não cravado: o degrau de 0.75 sobre a fonte raiz
+      // — o mesmo do rótulo do eixo cartesiano. Com pixel escolhido, o nome
+      // pararia de crescer quando a pessoa aumenta a fonte do navegador
+      // (WCAG 1.4.4), enquanto o resto da página cresce ao lado.
+      const rootSize = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+      await expect(getComputedStyle(axisName!).fontSize)
+        .toBe(`${Math.round(rootSize * 0.75)}px`);
+    });
+
+    await step('Cada polígono recebe uma trama por cima do preenchimento', async () => {
+      // WCAG 1.4.1 — retirando a cor, um polígono continua distinguível do
+      // outro. Uma trama POR polígono, e não "pelo menos uma": com o limite
+      // inferior, um desenho em que a hachura alcançasse só a primeira série
+      // passava igual.
+      await waitFor(async () => {
+        await expect(radarHatches(desenho).length).toBe(RADAR_SERIES.length);
+      });
+    });
+
+    await step('A tabela traz eixo, máximo do eixo e o valor de cada série', async () => {
+      // A coluna do meio é o que separa esta tabela da do gráfico de barras, e
+      // ela existe porque o desenho comunica uma RAZÃO: o vértice é o valor
+      // sobre o teto DAQUELE eixo. Sem o teto escrito, "9" e "96" seriam dois
+      // números soltos e o polígono na tela não teria explicação.
+      const header = [...chart.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
+      await expect(header).toEqual(['Eixo', 'Máximo', ...RADAR_SERIES.map((s) => s.name)]);
+
+      const rows = [...chart.querySelectorAll<HTMLTableRowElement>('tbody tr')];
+      await expect(rows).toHaveLength(RADAR_AXES.length);
+      const cells = rows.map((row) =>
+        [row.querySelector('th'), ...row.querySelectorAll('td')]
+          .map((c) => c?.textContent?.trim()),
+      );
+      // Duas linhas com tetos diferentes: é o par que mostra por que a coluna
+      // existe — 9 sobre 10 e 96 sobre 100 desenham vértices vizinhos.
+      await expect(cells[2]).toEqual(['Boas práticas', '10', '6', '9']);
+      await expect(cells[3]).toEqual(['SEO', '100', '88', '96']);
     });
   },
 };

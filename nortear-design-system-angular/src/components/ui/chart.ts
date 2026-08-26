@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 
 import * as echarts from 'echarts/core';
-import { BarChart, FunnelChart, LineChart, PieChart } from 'echarts/charts';
+import { BarChart, FunnelChart, LineChart, PieChart, RadarChart } from 'echarts/charts';
 import {
   TitleComponent,
   TooltipComponent,
@@ -19,6 +19,7 @@ import {
   GridComponent,
   DatasetComponent,
   AriaComponent,
+  RadarComponent,
 } from 'echarts/components';
 import { SVGRenderer } from 'echarts/renderers';
 
@@ -89,9 +90,9 @@ import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 //
 // 4. CONTRASTE (WCAG 1.4.11). Toda forma de dado — barra, fatia, faixa,
 //    símbolo — é contornada com `hsl(var(--foreground))`, que passa de 3:1
-//    contra o fundo em qualquer tema. O contorno vem do tema (`bar/line/pie.
-//    itemStyle.borderColor` em `@/lib/echarts-theme`); o funil, que não tem
-//    entrada no tema, declara o seu no próprio option, e o option é
+//    contra o fundo em qualquer tema. O contorno vem do tema (`bar/line/pie/
+//    radar.itemStyle.borderColor` em `@/lib/echarts-theme`); o funil, que não
+//    tem entrada no tema, declara o seu no próprio option, e o option é
 //    recalculado a cada troca de tema. É ele que delimita o objeto
 //    gráfico, e não a cor de série. O contorno nasceu quando a paleta ia de
 //    2.07 a 13.23 no claro e de 1.00 a 6.41 no escuro — uma das cores ERA o
@@ -113,21 +114,49 @@ import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 // `AriaComponent` não é enfeite: sem ele o bloco `aria` do option é ignorado em
 // silêncio, e a trama sobreposta a cada série — que é o que cumpre a WCAG 1.4.1
 // quando a cor sai de cena — nunca chega a ser desenhada.
+//
+// O radar entra por DUAS portas, e é a única série daqui assim: `RadarChart` é
+// o desenho, `RadarComponent` é o SISTEMA DE COORDENADAS em que ele desenha.
+// Barra e linha desenham no cartesiano do `GridComponent`; rosca e funil não
+// desenham em coordenada nenhuma. O radar traz a sua, e ela é um componente
+// próprio — o option tem um bloco `radar` no primeiro nível, ao lado de
+// `series`, e não dentro dela.
+//
+// A segunda porta está declarada, e a medição diz que hoje ela não é
+// obrigatória: nesta versão o instalador de `RadarChart` já puxa o do
+// componente, e removendo `RadarComponent` daqui o desenho continua saindo.
+// Fica escrita mesmo assim, e não por precaução vaga — o que este `use` diz é
+// de que módulos o componente depende, e o sistema de coordenadas é um deles.
+// Inferir a dependência do detalhe de empacotamento de uma versão é como o
+// registro some no dia em que o detalhe muda.
 echarts.use([
-  BarChart, LineChart, PieChart, FunnelChart,
+  BarChart, LineChart, PieChart, FunnelChart, RadarChart,
   TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
-  AriaComponent,
+  AriaComponent, RadarComponent,
   SVGRenderer,
 ]);
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'funnel';
+export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar';
 
 /** Forma simples: 1 série, rótulo + valor. */
 export interface ChartDataPoint {
   label: string;
   value: number;
+}
+
+/**
+ * Um eixo do radar: o nome dele e o TETO da escala.
+ *
+ * Nome e teto andam juntos porque no radar eles não são separáveis: o que a
+ * pessoa lê é a distância do vértice ao centro, e essa distância é o valor
+ * DIVIDIDO pelo teto daquele eixo. Um 7 num eixo que vai a 10 e um 7 num eixo
+ * que vai a 100 caem em pontos opostos do mesmo raio.
+ */
+export interface ChartRadarAxis {
+  label: string;
+  max: number;
 }
 
 /** Forma multi-série: N séries com valores alinhados ao eixo de categorias. */
@@ -271,6 +300,17 @@ export class NdsChart {
   /** Multi-série. Tem precedência sobre `data` em bar/line/area. */
   readonly series = input<ChartSeries[] | undefined>(undefined);
 
+  /**
+   * Radar: os eixos e o TETO de cada um, na ordem em que aparecem no polígono.
+   *
+   * Declarar é o caminho recomendado, porque é aqui que mora a única informação
+   * do radar que não está em nenhum outro lugar. Sem a lista, o nome do eixo sai
+   * do eixo de categorias (ou da posição) e TODOS os eixos passam a dividir um
+   * teto só — o maior valor do conjunto —, que é uma escala honesta mas outra
+   * leitura.
+   */
+  readonly radarAxes = input<ChartRadarAxis[] | undefined>(undefined);
+
   /** Título desenhado acima dos eixos. `chartTitle` e não `title` para não
    *  disputar o atributo nativo `title` do elemento hospedeiro. */
   readonly chartTitle = input<string>('');
@@ -291,6 +331,15 @@ export class NdsChart {
   readonly categoryLabel = input<string>('Categoria');
   readonly valueLabel = input<string>('Valor');
   readonly shareLabel = input<string>('Participação');
+  /**
+   * Cabeçalho da coluna de máximo do eixo — só o radar a tem.
+   *
+   * Mesma família da coluna de participação, e pelo mesmo motivo: o desenho
+   * comunica uma RAZÃO (o vértice sobre o raio), e o valor sozinho não a
+   * carrega. A diferença é que aqui o denominador muda de eixo para eixo, então
+   * ele não cabe num rodapé — precisa de uma célula por linha.
+   */
+  readonly maxLabel = input<string>('Máximo');
   readonly emptyLabel = input<string>('Sem dados para exibir');
 
   private readonly desenho = viewChild<ElementRef<HTMLElement>>('desenho');
@@ -307,11 +356,21 @@ export class NdsChart {
    */
   private readonly temaVersao = signal(0);
 
-  /** Tem eixo de categorias e eixo de valor. Rosca e funil não têm. */
+  /**
+   * Tem eixo de categorias e eixo de valor.
+   *
+   * Rosca e funil não desenham em eixo nenhum; o radar desenha nos SEUS, que não
+   * são estes — daí ele ficar de fora junto, mesmo tendo eixo. O que esta
+   * pergunta decide é a forma do option e a forma da tabela, e nas duas o radar
+   * é caso próprio.
+   */
   protected readonly cartesiano = computed(() => {
     const type = this.type();
-    return type !== 'pie' && type !== 'funnel';
+    return type !== 'pie' && type !== 'funnel' && type !== 'radar';
   });
+
+  /** O radar lê SÉRIES, como o cartesiano; rosca e funil leem a lista simples. */
+  protected readonly radarType = computed(() => this.type() === 'radar');
 
   protected readonly ratio = computed(() => (this.compact() ? RATIO_COMPACT : RATIO));
 
@@ -342,8 +401,30 @@ export class NdsChart {
    */
   protected readonly simpleData = computed<ChartDataPoint[]>(() => this.data() ?? []);
 
+  /**
+   * Os eixos do radar: os declarados, ou uns derivados do próprio dado.
+   *
+   * Um só produtor para o desenho e para a tabela: o teto que a escala usa e o
+   * teto que a coluna escreve têm de ser o MESMO número, e duas derivações
+   * separadas seriam duas verdades sobre a mesma escala.
+   *
+   * Sem lista declarada, todos os eixos dividem um teto só — o maior valor do
+   * conjunto. Derivar um teto POR eixo (o maior valor daquele eixo) daria um
+   * polígono que toca o anel de fora em todos os vértices sempre que houver uma
+   * série só: verdadeiro na aritmética e vazio na leitura.
+   */
+  protected readonly radarAxesNorm = computed<ChartRadarAxis[]>(() => {
+    const declared = this.radarAxes();
+    if (declared && declared.length > 0) return declared;
+    const ceiling = this.serieNorm().reduce(
+      (max, s) => s.data.reduce((inner, value) => Math.max(inner, value), max),
+      0,
+    );
+    return this.categorias().map((label) => ({ label, max: ceiling }));
+  });
+
   protected readonly vazio = computed(() => {
-    if (!this.cartesiano()) return this.simpleData().length === 0;
+    if (!this.cartesiano() && !this.radarType()) return this.simpleData().length === 0;
     const series = this.serieNorm();
     return series.length === 0 || series.every((s) => s.data.length === 0);
   });
@@ -351,7 +432,10 @@ export class NdsChart {
   protected readonly legendaVisivel = computed(() => {
     if (this.compact()) return false;
     // Nem a rosca nem o funil escrevem o nome dentro da forma: a legenda é o
-    // rótulo, e é ela que carrega nome, valor e participação por escrito.
+    // rótulo, e é ela que carrega nome, valor e participação por escrito. No
+    // radar vale o mesmo por outro caminho: os eixos nomeiam as GRANDEZAS, não
+    // as séries, então sem legenda a única pista de qual polígono é qual seria
+    // a cor.
     if (!this.cartesiano()) return true;
     return this.showLegend() ?? this.serieNorm().length > 1;
   });
@@ -383,8 +467,73 @@ export class NdsChart {
 
     if (this.type() === 'pie') return this.optionPizza(title, aria, animar, dur);
     if (this.type() === 'funnel') return this.optionFunnel(title, aria, animar, dur);
+    if (this.type() === 'radar') return this.optionRadar(title, aria, animar, dur);
     return this.optionCartesiano(title, aria, animar, dur, compact);
   });
+
+  /**
+   * Radar: um eixo por grandeza, um polígono fechado por série.
+   *
+   * É o único tipo deste componente que traz SISTEMA DE COORDENADAS próprio — o
+   * bloco `radar` ao lado de `series`, e não dentro dela. Quem descreve os eixos
+   * é o `indicator`; a série só carrega os valores, na ordem deles.
+   *
+   * Nada de reserva em pixel aqui: o centro e o raio são proporção, então o nome
+   * de cada eixo — que é texto e cresce com a fonte do navegador — continua
+   * cabendo por fora do último anel (WCAG 1.4.4).
+   */
+  private optionRadar(
+    title: unknown,
+    aria: unknown,
+    animar: boolean,
+    dur: number,
+  ): echarts.EChartsCoreOption {
+    const axes = this.radarAxesNorm();
+    const series = this.serieNorm();
+    return {
+      title,
+      tooltip: { trigger: 'item' },
+      legend: this.legendaVisivel()
+        ? { bottom: 0, icon: 'roundRect', itemWidth: 12, itemHeight: 8 }
+        : undefined,
+      radar: {
+        indicator: axes.map((axis) => ({ name: axis.label, max: axis.max })),
+        // Polígono, e não círculo: são os vértices que dizem em que grandeza o
+        // item é forte, e num anel eles somem.
+        shape: 'polygon',
+        center: ['50%', this.chartTitle() ? '54%' : '48%'],
+        radius: '58%',
+      },
+      // Uma série de radar só, com um item de dado por série do chamador: é
+      // assim que a lib desenha vários polígonos no mesmo sistema de eixos.
+      series: [{
+        type: 'radar',
+        data: series.map((serie, i) => ({
+          name: serie.name,
+          value: serie.data,
+          // Símbolo e traço próprios, o mesmo vocabulário de forma do traçado:
+          // sem a cor, um polígono ainda se separa do outro (WCAG 1.4.1).
+          symbol: SIMBOLOS[i % SIMBOLOS.length],
+          symbolSize: 9,
+          lineStyle: {
+            type: TRACOS[i % TRACOS.length],
+            ...(serie.color ? { color: serie.color } : {}),
+          },
+          // A área preenchida é o que faz a trama alcançar o radar: a hachura é
+          // de PREENCHIMENTO, e sem `areaStyle` a lib desenha só o contorno do
+          // polígono — não haveria o que hachurar. Translúcida porque os
+          // polígonos se sobrepõem de propósito: opaco, o de cima apagaria o de
+          // baixo, que é justamente a comparação que o radar existe para
+          // mostrar.
+          areaStyle: { opacity: 0.3 },
+          ...(serie.color ? { itemStyle: { color: serie.color } } : {}),
+        })),
+      }],
+      animation: animar,
+      animationDuration: dur,
+      aria,
+    };
+  }
 
   private optionPizza(
     title: unknown,
@@ -657,6 +806,31 @@ export class NdsChart {
   // ─── Alternativa textual ───────────────────────────────────────────────────
 
   protected readonly table = computed<{ header: string[]; lines: string[][] }>(() => {
+    // O radar é o único tipo com uma coluna ENTRE a categoria e as séries, e ela
+    // é o teto do eixo.
+    //
+    // A razão é a mesma que deu ao funil a coluna de participação — quando a
+    // informação mora numa dimensão visual, o texto precisa carregá-la —, mas
+    // aqui o denominador não é um só: cada eixo tem a sua escala. Um 7 num eixo
+    // que vai a 10 é um vértice quase no anel de fora; o mesmo 7 num eixo que
+    // vai a 100 quase encosta no centro. Sem esta coluna, as duas linhas
+    // escreveriam "7" e a tabela deixaria de descrever o polígono que está na
+    // tela.
+    //
+    // Uma linha por EIXO, e não por série: é o eixo que tem nome próprio e teto
+    // próprio, e cada série ocupa uma coluna à direita.
+    if (this.radarType()) {
+      const series = this.serieNorm();
+      return {
+        header: [this.categoryLabel(), this.maxLabel(), ...series.map((s) => s.name)],
+        lines: this.radarAxesNorm().map((axis, iAxis) => [
+          axis.label,
+          formatarValue(axis.max),
+          ...series.map((s) =>
+            (s.data[iAxis] === undefined ? '—' : formatarValue(s.data[iAxis]))),
+        ]),
+      };
+    }
     if (!this.cartesiano()) {
       // Rosca e funil compartilham a forma da tabela — três colunas, sendo a
       // terceira a proporção que o desenho comunica e o texto não carrega

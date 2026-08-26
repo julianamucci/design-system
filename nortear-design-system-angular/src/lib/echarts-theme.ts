@@ -36,6 +36,26 @@ export interface NortearChartTheme {
   line: { itemStyle: { borderColor: string; borderWidth: number }; lineStyle: { width: number } };
   bar: { itemStyle: { borderColor: string; borderWidth: number } };
   pie: { itemStyle: { borderColor: string; borderWidth: number } };
+  radar: ChartRadarStyle;
+}
+
+/**
+ * O bloco do radar — e ele responde por DUAS coisas ao mesmo tempo.
+ *
+ * `radar` é nome de série e nome de componente na lib, e a resolução de tema usa
+ * chaves diferentes para cada um: a série procura o tipo dela (`radar`), o
+ * componente procura o tipo dele (`radar`). Cai no mesmo lugar. Medido: o mesmo
+ * bloco chega aos dois, e cada um lê o que lhe diz respeito — o componente pega
+ * eixo, grade e nome do eixo, a série pega o contorno do símbolo; o que sobra de
+ * um lado é ignorado do outro. Por isso os dois vivem aqui, e não em dois blocos
+ * que a lib não saberia distinguir.
+ */
+interface ChartRadarStyle {
+  axisName: { color: string; fontSize: number };
+  axisLine: { lineStyle: { color: string } };
+  splitLine: { lineStyle: { color: string } };
+  splitArea: { show: boolean; areaStyle: { color: string[] } };
+  itemStyle: { borderColor: string; borderWidth: number };
 }
 
 interface ChartAxisStyle {
@@ -148,6 +168,49 @@ export function buildNortearTheme(): NortearChartTheme {
     line: { itemStyle: { borderColor: fg, borderWidth: 2 }, lineStyle: { width: 2 } },
     bar: { itemStyle: { borderColor: fg, borderWidth: 1 } },
     pie: { itemStyle: { borderColor: fg, borderWidth: 1 } },
+    // O radar traz EIXOS PRÓPRIOS, e é por isso que ele precisa de bloco aqui.
+    //
+    // Os outros tipos desenham no cartesiano ou não desenham em eixo nenhum, e
+    // `categoryAxis`/`valueAxis` acima já os cobrem. O radar tem os seus, com
+    // nomes de chave só dele (`axisName`, `splitLine`, `axisLine`,
+    // `splitArea`), e sem esta entrada eles saem com o padrão da lib: cinzas
+    // fixos, alheios ao tema, ao modo e à fonte. Um gráfico do design system com
+    // eixos que não são do design system.
+    //
+    // O NOME DO EIXO é texto, então segue a regra do texto: cor de
+    // `--muted-foreground`, como o rótulo do eixo cartesiano e a legenda, e
+    // tamanho no mesmo degrau MEDIDO — nunca pixel escolhido, senão ele para de
+    // crescer com a fonte do navegador (WCAG 1.4.4).
+    //
+    // A GRADE e o EIXO usam `--border`, nas mesmas duas intensidades do
+    // cartesiano: o traço que sai do centro é o eixo (0.6), os anéis são grade
+    // (0.3). Assim o radar e o gráfico de barras ao lado dele desenham a mesma
+    // malha.
+    //
+    // SPLITAREA DESLIGADO, e por dois motivos que se somam. O primeiro é de
+    // desenho: o padrão da lib alterna DUAS faixas cinza entre os anéis, cores
+    // cravadas que não vêm de token nenhum — sobre o fundo claro elas viram um
+    // degrau que disputa com o preenchimento translúcido do polígono, e sobre o
+    // fundo escuro viram uma lavagem clara por baixo do desenho inteiro. A malha
+    // que informa já está nos anéis, em `--border`; a faixa não acrescenta
+    // leitura, só um segundo fundo que o tema não escolheu. É a mesma decisão
+    // que o eixo cartesiano aqui em cima já toma. O segundo é de medição, e foi
+    // verificado plantando o defeito: uma das duas faixas sai com
+    // `fill-opacity="0"`, e essa marca é justamente como as stories reconhecem o
+    // fundo da legenda. Com a faixa ligada há DOIS retângulos transparentes na
+    // tela, a espera de assentamento não fecha ("expected 2 to be less than or
+    // equal to 1") e o coletor passaria a excluir a área errada.
+    radar: {
+      axisName: { color: muted, fontSize: bodySize },
+      axisLine: { lineStyle: { color: hsl('border', 0.6) } },
+      splitLine: { lineStyle: { color: hsl('border', 0.3) } },
+      splitArea: { show: false, areaStyle: { color: ['transparent'] } },
+      // Contorno do símbolo de vértice, pela mesma porta do traçado: no radar,
+      // como na linha, a forma de dado é o ponto — o polígono já é delimitado
+      // pelo próprio traço, na cor da série, e é o vértice que precisa se
+      // separar do que está por baixo dele.
+      itemStyle: { borderColor: fg, borderWidth: 2 },
+    },
   };
 }
 

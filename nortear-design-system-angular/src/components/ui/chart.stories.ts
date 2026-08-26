@@ -62,7 +62,7 @@ const meta: Meta<ChartArgs> = {
   argTypes: {
     type: {
       control: { type: 'inline-radio' },
-      options: ['bar', 'line', 'area', 'pie', 'funnel'] satisfies ChartType[],
+      options: ['bar', 'line', 'area', 'pie', 'funnel', 'radar'] satisfies ChartType[],
       description: 'Tipo do gráfico. O tipo é o dado, não um estilo.',
     },
     label: {

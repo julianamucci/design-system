@@ -1,6 +1,6 @@
 <script lang="ts">
   import { untrack } from 'svelte';
-  import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption } from '@/components/ui/chart';
+  import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption, buildRadarOption } from '@/components/ui/chart';
   import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
@@ -134,6 +134,22 @@
     { label: 'Carrinho',  value: 260 },
     { label: 'Compra',    value: 90 },
   ];
+  // Cinco grandezas do mesmo item, cada uma com o SEU teto. Os tetos diferentes
+  // são o exemplo, não um detalhe: é por eles que a tabela do radar traz uma
+  // coluna de máximo — sem ela, o 9 de um eixo que vai a 10 e o 96 de um que vai
+  // a 100 sairiam como dois números soltos.
+  const radarAxes = [
+    { label: 'Desempenho',     max: 100 },
+    { label: 'Acessibilidade', max: 100 },
+    { label: 'Boas práticas',  max: 10  },
+    { label: 'SEO',            max: 100 },
+    { label: 'Conteúdo',       max: 5   },
+  ];
+
+  const radarSeries = [
+    { name: 'Antes',  data: [72, 64, 6, 88, 2] },
+    { name: 'Depois', data: [94, 97, 9, 96, 4] },
+  ];
 
   
 
@@ -154,6 +170,7 @@
   buildAreaOption,
   buildPieOption,
   buildFunnelOption,
+  buildRadarOption,
 } from '@/components/ui/chart';`;
 
   const codeBar = `<ChartContainer
@@ -185,6 +202,31 @@
   class="nds-w-full" height={220}
   shareLabel="Participação"
   aria-label="Funil de conversão: visitas, cadastros, carrinho e compra"
+/>`;
+
+  // O radar recebe duas listas: os EIXOS (nome mais teto) e as séries com os
+  // valores na ordem deles. Os rótulos das duas primeiras colunas da tabela
+  // entram escritos porque aqui a primeira não nomeia uma categoria qualquer —
+  // nomeia o eixo, e a segunda traz o teto dele.
+  const codeRadar = `const eixos = [
+  { label: 'Desempenho', max: 100 },
+  { label: 'Acessibilidade', max: 100 },
+  { label: 'Boas práticas', max: 10 },
+  { label: 'SEO', max: 100 },
+  { label: 'Conteúdo', max: 5 },
+];
+
+const medicoes = [
+  { name: 'Antes', data: [72, 64, 6, 88, 2] },
+  { name: 'Depois', data: [94, 97, 9, 96, 4] },
+];
+
+<ChartContainer
+  option={buildRadarOption({ axes: eixos, series: medicoes })}
+  class="nds-w-full" height={280}
+  categoryLabel="Eixo"
+  maxLabel="Máximo"
+  aria-label="Radar de qualidade: cinco grandezas, antes e depois"
 />`;
 
   const codeMulti = `<ChartContainer
@@ -221,7 +263,19 @@ declare function buildBarOption(o: OptionsBase): EChartsCoreOption;
 declare function buildLineOption(o: OptionsBase): EChartsCoreOption;
 declare function buildAreaOption(o: OptionsBase): EChartsCoreOption;
 declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;
-declare function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;`;
+declare function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;
+
+// O radar recebe os EIXOS (nome mais teto) além das séries: o teto é a única
+// informação dele que não está em nenhum outro lugar, e é o que a coluna de
+// máximo da tabela escreve.
+export interface ChartRadarAxis { label: string; max: number }
+
+declare function buildRadarOption(o: {
+  axes: ChartRadarAxis[];
+  series: ChartSeries[];
+  title?: string;
+  showLegend?: boolean;
+}): EChartsCoreOption;`;
 
   const codeTokens = `/* Em globals.css — personalizar as cores das séries */
 :root {
@@ -431,6 +485,7 @@ declare function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string }
       { name: 'Area',  description: stripHtml($tStore('variants.items.area')), code: codeArea, preview: variantArea },
       { name: 'Pie',   description: stripHtml($tStore('variants.items.pie')),  code: codePie,  preview: variantPie  },
       { name: 'Funil', description: stripHtml($tStore('variants.items.funnel')), code: codeFunnel, preview: variantFunnel },
+      { name: 'Radar', description: stripHtml($tStore('variants.items.radar')), code: codeRadar, preview: variantRadar },
       {
         name: $tStore('variants.items.smallInline.name'),
         description: $tStore('variants.items.smallInline.description'),
@@ -486,6 +541,18 @@ declare function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string }
       categoryLabel={stripHtml($tStore('demonstration.labels.funnelStage'))}
       shareLabel={stripHtml($tStore('demonstration.labels.funnelShare'))}
       aria-label="Funil de conversão: visitas, cadastros, carrinho e compra"
+    />
+  {/snippet}
+  {#snippet variantRadar()}
+    <!-- No radar a primeira coluna da tabela não nomeia uma categoria: nomeia o
+         EIXO, e a segunda traz o teto dele. Os dois títulos vêm do conteúdo
+         compartilhado para acompanharem o idioma da página. -->
+    <ChartContainer
+      option={buildRadarOption({ axes: radarAxes, series: radarSeries })}
+      height={280} class="nds-w-full"
+      categoryLabel={stripHtml($tStore('demonstration.labels.radarAxis'))}
+      maxLabel={stripHtml($tStore('demonstration.labels.radarMax'))}
+      aria-label="Radar de qualidade do site: cinco grandezas, antes e depois da revisão"
     />
   {/snippet}
   {#snippet variantSmallInline()}
@@ -590,7 +657,7 @@ declare function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string }
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'buildBarOption | buildLineOption | buildAreaOption | buildPieOption', type: '(o: OptionsBase) => EChartsCoreOption', defaultValue: '—', required: 'Sim', description: toPlainText($tStore('props.table.chartType')) },
+          { name: 'buildBarOption | buildLineOption | buildAreaOption | buildPieOption | buildFunnelOption | buildRadarOption', type: '(o: OptionsBase) => EChartsCoreOption', defaultValue: '—', required: 'Sim', description: toPlainText($tStore('props.table.chartType')) },
           { name: 'data',       type: '{ label: string; value: number }[]',           defaultValue: '—',    required: 'Não', description: toPlainText($tStore('props.table.data'))       },
           { name: 'xAxis',      type: '(string | number)[]',                          defaultValue: '—',    required: 'Não', description: toPlainText($tStore('props.table.xAxis'))      },
           { name: 'series',     type: '{ name: string; data: number[]; color?: string }[]', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.series')) },

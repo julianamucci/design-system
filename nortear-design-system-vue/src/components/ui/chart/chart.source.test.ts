@@ -11,6 +11,7 @@ import {
   chartMultiSerieSource,
   chartFunnelSource,
   chartPieSource,
+  chartRadarSource,
   chartSerieUnicaSource,
   chartSource,
   designChartTitleSource,
@@ -97,6 +98,20 @@ describe('transforms das stories de variante', () => {
     expect(saida).toContain(':option="buildFunnelOption({ data: etapas })"');
     expect(saida).toContain(`{ label: 'Visitas', value: 4000 },`);
     // Sem eixo: aqui não há categoria contínua, há uma ordem de etapas.
+    expect(saida).not.toContain('xAxis');
+  });
+
+  it('o radar traz as DUAS listas — os eixos com teto e as séries na ordem deles', () => {
+    const saida = chartRadarSource();
+    expect(saida).toContain(`:option="buildRadarOption({ axes: eixos, series: medicoes })"`);
+    // O teto é a única informação do radar que não está em nenhum outro lugar:
+    // sem ele, o vértice na tela não tem denominador.
+    expect(saida).toContain(`{ label: 'Boas práticas', max: 10 },`);
+    expect(saida).toContain(`{ name: 'Antes', data: [72, 64, 6, 88, 2] },`);
+    // A primeira coluna da tabela nomeia o EIXO, e a segunda traz o teto dele.
+    expect(saida).toContain(`category-label="Eixo"`);
+    expect(saida).toContain(`max-label="Máximo"`);
+    // Sem eixo cartesiano: as grandezas não são categorias de um eixo x.
     expect(saida).not.toContain('xAxis');
   });
 

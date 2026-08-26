@@ -11,7 +11,7 @@ import { expect, waitFor } from 'storybook/test';
 import { getInstanceByDom } from 'echarts/core';
 import type { ECharts } from 'echarts/core';
 
-import type { ChartDataPoint, ChartSeries } from './chart';
+import type { ChartDataPoint, ChartRadarAxis, ChartSeries } from './chart';
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 
@@ -49,6 +49,28 @@ export const FUNNEL_STAGES: ChartDataPoint[] = [
   { label: 'Cadastros', value: 2400 },
   { label: 'Carrinho', value: 1200 },
   { label: 'Compra', value: 480 },
+];
+
+/**
+ * Cinco grandezas de um mesmo item, uma por eixo.
+ *
+ * Os tetos são DIFERENTES de propósito — 100, 100, 10, 100 e 5. É essa diferença
+ * que a coluna de máximo existe para escrever: o 9 de "Boas práticas" é um
+ * vértice quase no anel de fora, e o 96 de "SEO" também; só a tabela pode dizer
+ * que um vale 9 e o outro 96 sem que o polígono tenha mentido.
+ */
+export const RADAR_AXES: ChartRadarAxis[] = [
+  { label: 'Desempenho', max: 100 },
+  { label: 'Acessibilidade', max: 100 },
+  { label: 'Boas práticas', max: 10 },
+  { label: 'SEO', max: 100 },
+  { label: 'Conteúdo', max: 5 },
+];
+
+/** Duas medições do mesmo site, para o desenho ser uma comparação. */
+export const RADAR_SERIES: ChartSeries[] = [
+  { name: 'Antes', data: [72, 64, 6, 88, 2] },
+  { name: 'Depois', data: [94, 97, 9, 96, 4] },
 ];
 
 /** Uma série curta, para o mini gráfico ao lado de um número. */
@@ -302,6 +324,52 @@ export function formasComTrama(root: ParentNode): SVGPathElement[] {
   return [...root.querySelectorAll<SVGPathElement>('path[fill^="url("]')].filter(
     (forma) => !emDefs(forma) && !naLegenda(forma, legenda) && temArea(forma),
   );
+}
+
+// ─── Coletores do radar ───────────────────────────────────────────────────────
+//
+// O radar desenha MAIS de uma forma preenchida por série, e é por isso que ele
+// precisa dos seus: além da área fechada, cada vértice é um símbolo, também
+// preenchido com a cor da série. Medido no DOM real, cinco eixos e duas séries:
+// 2 caminhos de área, 10 de símbolo, 2 de traçado (sem preenchimento) e o resto
+// é grade, eixo, legenda e o interior dos `<pattern>`. `formasPreenchidas`
+// devolveria doze formas para duas séries — todas legítimas, nenhuma delas o que
+// a story do radar promete contar.
+//
+// O que separa a área do resto é a TRANSLUCIDEZ, e ela não é acidente de
+// desenho: a área do radar é translúcida DE PROPÓSITO, para que um polígono não
+// apague o que está embaixo dele — que é justamente a comparação que o radar
+// existe para mostrar. Símbolo, ícone de legenda e molde de trama saem opacos. E
+// o critério reprova por onde tem de reprovar: sem `areaStyle` a lib não desenha
+// área nenhuma, e a contagem cai a zero em vez de escorregar para outra forma.
+//
+// Uma advertência para quem for procurar por elemento: o motor de tela emite
+// `<polygon>` e `<polyline>` para a área e para o contorno, mas o painter que
+// roda no navegador reduz TUDO a `<path>` — medido, zero `<polygon>` no DOM
+// real. Seletor de elemento aqui devolve lista vazia, e lista vazia num coletor
+// é o portão que passa a medir nada.
+
+/** Preenchimento translúcido — nem apagado, nem opaco. */
+function translucida(forma: SVGGraphicsElement): boolean {
+  const opacidade = Number.parseFloat(getComputedStyle(forma).fillOpacity || '1');
+  return opacidade > 0 && opacidade < 1;
+}
+
+/** A área fechada de cada série do radar — a camada de cor. */
+export function radarPolygons(root: ParentNode): SVGPathElement[] {
+  return formasPreenchidas(root).filter(translucida);
+}
+
+/**
+ * A trama de CADA área do radar — a camada de cima.
+ *
+ * O gêmeo hachurado herda o estilo do original, translucidez inclusive, então o
+ * mesmo critério separa a trama da área da trama dos símbolos. Contá-la ao lado
+ * de `radarPolygons`, com o mesmo número esperado, é o que impede um coletor que
+ * exclui demais de ficar verde medindo menos.
+ */
+export function radarHatches(root: ParentNode): SVGPathElement[] {
+  return formasComTrama(root).filter(translucida);
 }
 
 /** Traçados de série: sem preenchimento e mais grossos que eixo e grade. */

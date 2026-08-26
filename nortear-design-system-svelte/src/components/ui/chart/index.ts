@@ -13,6 +13,16 @@ export { ChartContainer };
 export interface ChartDataPoint { label: string; value: number }
 export interface ChartSeries { name: string; data: number[]; color?: string }
 
+/**
+ * Um eixo do radar: o nome dele e o TETO da escala.
+ *
+ * Nome e teto andam juntos porque no radar eles não são separáveis: o que a
+ * pessoa lê no desenho é a distância do vértice ao centro, e essa distância é o
+ * valor DIVIDIDO pelo teto daquele eixo. Um 7 num eixo que vai a 10 e um 7 num
+ * eixo que vai a 100 caem em pontos opostos do mesmo raio.
+ */
+export interface ChartRadarAxis { label: string; max: number }
+
 // ─── Vocabulário do desenho ──────────────────────────────────────────────────
 //
 // A trama do `decal` cumpre a WCAG 1.4.1 onde há ÁREA para tramar — barra,
@@ -177,6 +187,77 @@ export function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): E
     }],
     // Preferência de movimento respeitada com o mesmo helper e os mesmos tokens
     // de duração do resto do design system — o gráfico animava sempre.
+    animation: !prefersReducedMotion(),
+    animationDuration: Math.round(motionDuration('moderate') * 1000),
+    aria: ARIA,
+  };
+}
+
+/**
+ * Radar: um eixo por grandeza, um polígono fechado por série.
+ *
+ * É o único construtor desta stack que emite SISTEMA DE COORDENADAS próprio —
+ * o bloco `radar` ao lado de `series`, e não dentro dela. Quem descreve os
+ * eixos é o `indicator`; a série só carrega os valores, na ordem deles. É
+ * também a única fonte do nome e do teto de cada eixo, e é de lá que a coluna
+ * de máximo da alternativa textual os lê (ver `chartTable`): uma segunda lista
+ * de eixos passada à parte seria uma segunda verdade sobre a mesma escala.
+ */
+export function buildRadarOption(o: {
+  axes: ChartRadarAxis[];
+  series: ChartSeries[];
+  title?: string;
+  showLegend?: boolean;
+}): EChartsCoreOption {
+  const seriesData = o.series;
+  const showLegend = o.showLegend ?? seriesData.length > 0;
+  return {
+    // Sem `textStyle`: o tamanho do título é medido a partir da fonte raiz e
+    // vive no tema do container — ver `buildAxisOption` acima.
+    title: o.title ? { text: o.title, left: 'left' } : undefined,
+    tooltip: { trigger: 'item' },
+    // O polígono não tem eixo que o nomeie — os eixos nomeiam as GRANDEZAS,
+    // não as séries —, então a legenda aparece sempre que há série, como na
+    // rosca e no funil. Sem ela, a única pista de qual polígono é qual seria a
+    // cor.
+    legend: showLegend
+      ? { bottom: 0, icon: 'roundRect', itemWidth: 12, itemHeight: 8 }
+      : undefined,
+    radar: {
+      indicator: o.axes.map((axis) => ({ name: axis.label, max: axis.max })),
+      // Polígono, e não círculo: são os vértices que dizem em que grandeza o
+      // item é forte, e num anel eles somem.
+      shape: 'polygon',
+      // Sobe o centro e encolhe o raio para caber o nome de cada eixo por fora
+      // do último anel — o nome é texto e cresce com a fonte do navegador
+      // (WCAG 1.4.4), então a folga é proporcional, nunca em pixel.
+      center: ['50%', o.title ? '54%' : '48%'],
+      radius: '58%',
+    },
+    // Uma série de radar só, com um item de dado por série do chamador: é assim
+    // que a lib desenha vários polígonos no mesmo sistema de eixos.
+    series: [{
+      type: 'radar',
+      data: seriesData.map((s, i) => ({
+        name: s.name,
+        value: s.data,
+        // Símbolo e traço próprios, o mesmo vocabulário de forma do traçado:
+        // sem a cor, um polígono ainda se separa do outro (WCAG 1.4.1).
+        symbol: CHART_SYMBOLS[i % CHART_SYMBOLS.length],
+        symbolSize: 9,
+        lineStyle: {
+          type: CHART_LINE_DASHES[i % CHART_LINE_DASHES.length],
+          ...(s.color ? { color: s.color } : {}),
+        },
+        // A área preenchida é o que faz a trama alcançar o radar: a hachura é
+        // de PREENCHIMENTO, e sem `areaStyle` a lib desenha só o contorno do
+        // polígono — não haveria o que hachurar. Translúcida porque os
+        // polígonos se sobrepõem de propósito: opaco, o de cima apagaria o de
+        // baixo, que é justamente a comparação que o radar existe para mostrar.
+        areaStyle: { opacity: 0.3 },
+        ...(s.color ? { itemStyle: { color: s.color } } : {}),
+      })),
+    }],
     animation: !prefersReducedMotion(),
     animationDuration: Math.round(motionDuration('moderate') * 1000),
     aria: ARIA,

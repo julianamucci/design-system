@@ -10,6 +10,7 @@ import {
   chartMultiSerieSource,
   chartPizzaSource,
   chartFunnelSource,
+  chartRadarSource,
   chartSource,
   designChartTitleSource,
   chartEmptySource,
@@ -66,6 +67,7 @@ describe('transforms das stories de variação, estado e composição', () => {
     expect(chartAreaSource()).toContain('option={buildAreaOption({ xAxis: meses, series })}');
     expect(chartPizzaSource()).toContain('option={buildPieOption({ data: dispositivos })}');
     expect(chartFunnelSource()).toContain('option={buildFunnelOption({ data: etapas })}');
+    expect(chartRadarSource()).toContain('option={buildRadarOption({ axes: eixos, series: medicoes })}');
   });
 
   it('o funil ensina o rótulo da coluna de participação junto do desenho', () => {
@@ -77,6 +79,19 @@ describe('transforms das stories de variação, estado e composição', () => {
     // A entrada vem primeiro: a ordem da lista é o percurso, e é a primeira
     // linha que serve de referência à participação.
     expect(saida.indexOf("'Visitas'")).toBeLessThan(saida.indexOf("'Compra'"));
+  });
+
+  it('o radar traz as DUAS listas — os eixos com teto e as séries na ordem deles', () => {
+    const saida = chartRadarSource();
+    // O teto é a única informação do radar que não está em nenhum outro lugar:
+    // sem ele, o vértice na tela não tem denominador.
+    expect(saida).toContain("{ label: 'Boas práticas', max: 10 },");
+    expect(saida).toContain("{ name: 'Antes', data: [72, 64, 6, 88, 2] },");
+    // A primeira coluna da tabela nomeia o EIXO, e a segunda traz o teto dele.
+    expect(saida).toContain('categoryLabel="Eixo"');
+    expect(saida).toContain('maxLabel="Máximo"');
+    // Sem eixo cartesiano: as grandezas não são categorias de um eixo x.
+    expect(saida).not.toContain('xAxis');
   });
 
   it('o estado vazio não escreve rótulo de imagem — a frase é o conteúdo', () => {

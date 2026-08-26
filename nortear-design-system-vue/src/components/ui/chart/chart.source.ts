@@ -75,6 +75,27 @@ const FUNNEL_STAGES = `const etapas = [
 ]`;
 
 /**
+ * Cinco grandezas do mesmo item, cada uma com o SEU teto.
+ *
+ * Os tetos diferentes são o exemplo, não um detalhe: é por eles que a tabela do
+ * radar traz uma coluna de máximo — sem ela, o 9 de um eixo que vai a 10 e o 96
+ * de um que vai a 100 sairiam como dois números soltos.
+ */
+const RADAR_AXES = `const eixos = [
+  { label: 'Desempenho', max: 100 },
+  { label: 'Acessibilidade', max: 100 },
+  { label: 'Boas práticas', max: 10 },
+  { label: 'SEO', max: 100 },
+  { label: 'Conteúdo', max: 5 },
+]`;
+
+/** Duas medições do mesmo item, para o desenho ser uma comparação. */
+const RADAR_SERIES = `const medicoes = [
+  { name: 'Antes', data: [72, 64, 6, 88, 2] },
+  { name: 'Depois', data: [94, 97, 9, 96, 4] },
+]`;
+
+/**
  * O container, com os atributos em uma linha cada quando a fila fica longa —
  * atributo em linha comprida some na barra de rolagem do painel.
  *
@@ -88,6 +109,8 @@ function container(options: {
   className?: string;
   renderer?: unknown;
   emptyLabel?: unknown;
+  categoryLabel?: string;
+  maxLabel?: string;
 }): string {
   const partes = attrsMultilinha([
     `:option="${options.option}"`,
@@ -95,6 +118,8 @@ function container(options: {
     attr('renderer', options.renderer, 'svg'),
     options.label ? attr('aria-label', options.label) : '',
     attr('empty-label', options.emptyLabel, CHART_EMPTY_LABEL),
+    options.categoryLabel ? attr('category-label', options.categoryLabel) : '',
+    options.maxLabel ? attr('max-label', options.maxLabel) : '',
     options.className ? attr('class', options.className) : '',
   ]);
   return partes.startsWith('\n')
@@ -185,6 +210,28 @@ export function chartFunnelSource(): string {
       option: 'buildFunnelOption({ data: etapas })',
       height: 300,
       label: 'Funil de conversão: da visita à compra',
+    }),
+  );
+}
+
+/**
+ * Radar: duas listas, e o snippet mostra as duas porque nenhuma delas se deduz
+ * da outra.
+ *
+ * Os EIXOS trazem nome e teto — é o teto que a coluna de máximo da tabela
+ * escreve —, e as séries trazem os valores na ordem dos eixos. Os rótulos das
+ * duas primeiras colunas entram escritos porque no radar a primeira não nomeia
+ * uma categoria qualquer: nomeia o eixo, e a segunda traz o teto dele.
+ */
+export function chartRadarSource(): string {
+  return vueSnippet(
+    `${importing('buildRadarOption')}\n\n${RADAR_AXES}\n${RADAR_SERIES}`,
+    container({
+      option: 'buildRadarOption({ axes: eixos, series: medicoes })',
+      height: 320,
+      label: 'Radar de qualidade do site: cinco grandezas, antes e depois da revisão',
+      categoryLabel: 'Eixo',
+      maxLabel: 'Máximo',
     }),
   );
 }

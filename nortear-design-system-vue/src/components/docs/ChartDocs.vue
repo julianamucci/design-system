@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption } from '@/components/ui/chart';
+import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption, buildRadarOption } from '@/components/ui/chart';
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
@@ -158,6 +158,23 @@ const funnelStages = [
   { label: 'Compra',    value: 480 },
 ];
 
+// Cinco grandezas do mesmo item, cada uma com o SEU teto. Os tetos diferentes
+// são o exemplo, não um detalhe: é por eles que a tabela do radar traz uma
+// coluna de máximo — sem ela, o 9 de um eixo que vai a 10 e o 96 de um que vai a
+// 100 sairiam como dois números soltos.
+const radarAxes = [
+  { label: 'Desempenho',     max: 100 },
+  { label: 'Acessibilidade', max: 100 },
+  { label: 'Boas práticas',  max: 10  },
+  { label: 'SEO',            max: 100 },
+  { label: 'Conteúdo',       max: 5   },
+];
+
+const radarSeries = [
+  { name: 'Antes',  data: [72, 64, 6, 88, 2] },
+  { name: 'Depois', data: [94, 97, 9, 96, 4] },
+];
+
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import { ChartContainer } from "@/components/ui/chart";`;
@@ -169,6 +186,7 @@ const codeImportSecondary = `import {
   buildAreaOption,
   buildPieOption,
   buildFunnelOption,
+  buildRadarOption,
 } from "@/components/ui/chart";`;
 
 // A altura é prop, não classe: a única forma documentada antes era uma classe
@@ -182,6 +200,31 @@ const codeAreaChart = `<ChartContainer :option="buildAreaOption({ xAxis: xMonths
 const codePieChart = `<ChartContainer :option="buildPieOption({ data: pieData })" :height="300" aria-label="Distribuição de acessos por dispositivo" />`;
 
 const codeFunnelChart = `<ChartContainer :option="buildFunnelOption({ data: funnelStages })" :height="300" aria-label="Funil de conversão: da visita à compra" />`;
+
+// O radar recebe duas listas: os EIXOS (nome mais teto) e as séries com os
+// valores na ordem deles. Os rótulos das duas primeiras colunas da tabela
+// entram escritos porque aqui a primeira não nomeia uma categoria qualquer —
+// nomeia o eixo, e a segunda traz o teto dele.
+const codeRadarChart = `const eixos = [
+  { label: "Desempenho",     max: 100 },
+  { label: "Acessibilidade", max: 100 },
+  { label: "Boas práticas",  max: 10  },
+  { label: "SEO",            max: 100 },
+  { label: "Conteúdo",       max: 5   },
+];
+
+const medicoes = [
+  { name: "Antes",  data: [72, 64, 6, 88, 2] },
+  { name: "Depois", data: [94, 97, 9, 96, 4] },
+];
+
+<ChartContainer
+  :option="buildRadarOption({ axes: eixos, series: medicoes })"
+  :height="320"
+  category-label="Eixo"
+  max-label="Máximo"
+  aria-label="Radar de qualidade: cinco grandezas, antes e depois"
+/>`;
 
 const codeCustomizationTokens = `/* Em globals.css — personalizar tokens de cor das séries */
 :root {
@@ -230,7 +273,19 @@ declare function buildBarOption(o: OptionsBase): EChartsCoreOption;
 declare function buildLineOption(o: OptionsBase): EChartsCoreOption;
 declare function buildAreaOption(o: OptionsBase): EChartsCoreOption;
 declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;
-declare function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;`;
+declare function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;
+
+// O radar recebe os EIXOS (nome mais teto) além das séries: o teto é a única
+// informação dele que não está em nenhum outro lugar, e é o que a coluna de
+// máximo da tabela escreve.
+export interface ChartRadarAxis { label: string; max: number }
+
+declare function buildRadarOption(o: {
+  axes: ChartRadarAxis[];
+  series: ChartSeries[];
+  title?: string;
+  showLegend?: boolean;
+}): EChartsCoreOption;`;
 
 // ─── Computed data ────────────────────────────────────────────────────────────
 
@@ -247,6 +302,7 @@ const variantItems = computed(() => [
   { name: 'area', description: stripHtml(tContent('variants.items.area')), code: codeAreaChart },
   { name: 'pie',  description: stripHtml(tContent('variants.items.pie')),  code: codePieChart  },
   { name: 'funnel', description: stripHtml(tContent('variants.items.funnel')), code: codeFunnelChart },
+  { name: 'radar', description: stripHtml(tContent('variants.items.radar')), code: codeRadarChart },
   {
     name: tContent('variants.items.smallInline.name'),
     description: tContent('variants.items.smallInline.description'),
@@ -321,7 +377,7 @@ const legendPropItems = computed(() => [
   // Nesta stack o tipo do gráfico não é uma prop: é a escolha do builder que
   // monta o `option`. A linha existe porque a pergunta "como escolho o tipo?"
   // continua sendo a primeira de quem chega.
-  { name: 'buildBarOption | buildLineOption | buildAreaOption | buildPieOption | buildFunnelOption', type: '(options) => EChartsCoreOption', defaultValue: '—', required: 'Sim', description: toPlainText(tContent('props.table.chartType')) },
+  { name: 'buildBarOption | buildLineOption | buildAreaOption | buildPieOption | buildFunnelOption | buildRadarOption', type: '(options) => EChartsCoreOption', defaultValue: '—', required: 'Sim', description: toPlainText(tContent('props.table.chartType')) },
   { name: 'data',       type: '{ label: string; value: number }[]',           defaultValue: '—',    required: 'Não', description: toPlainText(tContent('props.table.data'))       },
   { name: 'xAxis',      type: '(string | number)[]',                          defaultValue: '—',    required: 'Não', description: toPlainText(tContent('props.table.xAxis'))      },
   { name: 'series',     type: '{ name: string; data: number[]; color?: string }[]', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.series')) },
@@ -701,8 +757,27 @@ const visualTestItems = computed(() => [
           />
         </div>
       </template>
-      <!-- Small inline (sparkline) -->
+      <!-- Radar chart -->
       <template #variant-preview-5>
+        <div
+          class="nds-stack nds-p-4"
+          data-spacing="sm"
+        >
+          <!-- No radar a primeira coluna da tabela não nomeia uma categoria:
+               nomeia o EIXO, e a segunda traz o teto dele. Os dois títulos vêm
+               do conteúdo compartilhado para acompanharem o idioma da página. -->
+          <ChartContainer
+            :option="buildRadarOption({ axes: radarAxes, series: radarSeries })"
+            class="nds-w-full nds-max-w-sm"
+            :height="280"
+            :category-label="stripHtml(tContent('demonstration.labels.radarAxis'))"
+            :max-label="stripHtml(tContent('demonstration.labels.radarMax'))"
+            aria-label="Radar de qualidade do site: cinco grandezas, antes e depois da revisão"
+          />
+        </div>
+      </template>
+      <!-- Small inline (sparkline) -->
+      <template #variant-preview-6>
         <div
           class="nds-cluster nds-rounded-md nds-border-default nds-p-4"
           data-spacing="md"

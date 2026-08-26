@@ -25,7 +25,7 @@ import type { ChartType } from './chart';
  * delas, e o snippet precisa mostrar a que ela usa.
  */
 export type ChartSnippetData =
-  | 'simples' | 'umPonto' | 'serieUnica' | 'multi' | 'rosca' | 'funnel' | 'vazio';
+  | 'simples' | 'umPonto' | 'serieUnica' | 'multi' | 'rosca' | 'funnel' | 'radar' | 'vazio';
 
 /** O que as stories usam da `ChartOptions` e que o snippet precisa mostrar. */
 export type ChartSnippetOptions = {
@@ -122,6 +122,27 @@ ${serie('Mobile', '[120, 190, 165, 98, 174, 158]')}
   { label: 'Compra', value: 90 },
 ];`,
         pairs: [['data', 'etapas']],
+      };
+
+    case 'radar':
+      // O radar tem duas listas, e o snippet mostra as duas porque nenhuma
+      // delas se deduz da outra: os EIXOS trazem nome e teto (é o teto que a
+      // coluna de máximo da tabela escreve), e as séries trazem os valores na
+      // ordem dos eixos.
+      return {
+        block: `const eixos = [
+  { label: 'Desempenho', max: 100 },
+  { label: 'Acessibilidade', max: 100 },
+  { label: 'Boas práticas', max: 10 },
+  { label: 'SEO', max: 100 },
+  { label: 'Conteúdo', max: 5 },
+];
+
+const medicoes = [
+  { name: 'Antes', data: [72, 64, 6, 88, 2] },
+  { name: 'Depois', data: [94, 97, 9, 96, 4] },
+];`,
+        pairs: [['radarAxes', 'eixos'], ['series', 'medicoes']],
       };
 
     case 'vazio':

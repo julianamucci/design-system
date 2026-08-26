@@ -67,6 +67,23 @@ const funnelStages = [
   { label: 'Compra', value: 90 },
 ];
 
+// Cinco grandezas do mesmo item, cada uma com o SEU teto. Os tetos diferentes
+// são o exemplo, não um detalhe: é por eles que a tabela do radar traz uma
+// coluna de máximo — sem ela, o 9 de um eixo que vai a 10 e o 96 de um que vai a
+// 100 sairiam como dois números soltos.
+const radarAxes = [
+  { label: 'Desempenho', max: 100 },
+  { label: 'Acessibilidade', max: 100 },
+  { label: 'Boas práticas', max: 10 },
+  { label: 'SEO', max: 100 },
+  { label: 'Conteúdo', max: 5 },
+];
+
+const radarSeries = [
+  { name: 'Antes', data: [72, 64, 6, 88, 2] },
+  { name: 'Depois', data: [94, 97, 9, 96, 4] },
+];
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
@@ -119,6 +136,23 @@ function buildFunnelPreview(): HTMLElement {
     categoryLabel: stripHtml(t('demonstration.labels.funnelStage')),
     shareLabel: stripHtml(t('demonstration.labels.funnelShare')),
     'aria-label': 'Funil de conversão: visitas, cadastros, carrinho e compra',
+  });
+}
+
+// No radar a primeira coluna da tabela não nomeia uma categoria: nomeia o EIXO,
+// e a segunda traz o teto dele. Os dois títulos vêm do conteúdo compartilhado
+// para acompanharem o idioma da página — com o rótulo padrão da factory, a
+// tabela ficaria em português no meio de uma página em espanhol.
+function buildRadarPreview(): HTMLElement {
+  return createChart({
+    radarAxes,
+    series: radarSeries,
+    type: 'radar',
+    height: 280,
+    class: 'nds-w-full nds-max-w-md',
+    categoryLabel: stripHtml(t('demonstration.labels.radarAxis')),
+    maxLabel: stripHtml(t('demonstration.labels.radarMax')),
+    'aria-label': 'Radar de qualidade do site: cinco grandezas, antes e depois da revisão',
   });
 }
 
@@ -383,7 +417,7 @@ const el = createChart({
     { label: 'Feb', value: 305 },
     { label: 'Mar', value: 237 },
   ],
-  type: 'bar',   // 'bar' | 'line' | 'area' | 'pie' | 'funnel'
+  type: 'bar',   // 'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar'
   height: 200,
   // Vira o role="img" + aria-label do desenho, e a legenda da tabela de dados
   // que acompanha. Sem ele, o desenho é conteúdo perdido para quem usa leitor
@@ -425,7 +459,32 @@ const el = createChart({
   'aria-label': 'Funil de conversão: visitas, cadastros, carrinho e compra',
 });`;
 
-        const codeSmallInline = `const wrap = document.createElement('div');
+        const codeRadar = `const eixos = [
+  { label: 'Desempenho', max: 100 },
+  { label: 'Acessibilidade', max: 100 },
+  { label: 'Boas práticas', max: 10 },
+  { label: 'SEO', max: 100 },
+  { label: 'Conteúdo', max: 5 },
+];
+
+const medicoes = [
+  { name: 'Antes', data: [72, 64, 6, 88, 2] },
+  { name: 'Depois', data: [94, 97, 9, 96, 4] },
+];
+
+const el = createChart({
+  radarAxes: eixos,
+  series: medicoes,
+  type: 'radar',
+  height: 280,
+  // Cabeçalhos da tabela de dados: a primeira coluna nomeia o eixo, e a
+  // segunda traz o teto dele — que é o denominador do vértice desenhado.
+  categoryLabel: 'Eixo',
+  maxLabel: 'Máximo',
+  'aria-label': 'Radar de qualidade do site: cinco grandezas, antes e depois da revisão',
+});`;
+
+        const codeSmallInline =`const wrap = document.createElement('div');
 wrap.className = 'nds-cluster nds-rounded-md nds-border-default nds-p-4';
 wrap.dataset.spacing = 'md';
 wrap.style.width = 'fit-content';
@@ -468,6 +527,12 @@ wrap.appendChild(spark);`;
               description: stripHtml(t('variants.items.funnel')),
               code: codeFunnel,
               previewFactory: () => buildFunnelPreview(),
+            },
+            {
+              name: 'radar',
+              description: stripHtml(t('variants.items.radar')),
+              code: codeRadar,
+              previewFactory: () => buildRadarPreview(),
             },
             {
               name: stripHtml(t('variants.items.smallInline.name')),
@@ -573,7 +638,7 @@ card.appendChild(content);`;
 
       case 'propriedades': {
         const interfaceCode = `// createChart(options) → HTMLElement
-export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'funnel';
+export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar';
 
 export interface ChartDataPoint {
   label: string;
@@ -587,6 +652,12 @@ export interface ChartSeries {
   color?: string;
 }
 
+/** Radar: o nome do eixo e o TETO da escala dele — andam juntos. */
+export interface ChartRadarAxis {
+  label: string;
+  max: number;
+}
+
 export interface ChartOptions {
   type?: ChartType;
   /** Dataset simples (1 série). Use \`series\` para multi-série. */
@@ -595,6 +666,8 @@ export interface ChartOptions {
   xAxis?: Array<string | number>;
   /** Multi-série: séries com dados alinhados ao xAxis. */
   series?: ChartSeries[];
+  /** Radar: os eixos e o teto de cada um, na ordem do polígono. */
+  radarAxes?: ChartRadarAxis[];
   /** Altura do container em px. Sem valor, vale o piso do bloco. */
   height?: number;
   /** Tecnologia de desenho. */
@@ -615,6 +688,8 @@ export interface ChartOptions {
   valueLabel?: string;
   /** Cabeçalho da coluna de participação — só a rosca e o funil a têm. */
   shareLabel?: string;
+  /** Cabeçalho da coluna de máximo do eixo — só o radar a tem. */
+  maxLabel?: string;
 }`;
 
         const propsCols = {
@@ -657,7 +732,7 @@ export interface ChartOptions {
                 },
                 {
                   name: 'type',
-                  type: "'bar' | 'line' | 'area' | 'pie' | 'funnel'",
+                  type: "'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar'",
                   defaultValue: "'bar'",
                   required: 'Não',
                   description: toPlainText(t('props.table.chartType')),

@@ -1,6 +1,6 @@
 // ─── Chart — ECharts factory ─────────────────────────────────────────────────
 // Container responsivo wrappando Apache ECharts. Suporta bar / line / area /
-// pie / funnel.
+// pie / funnel / radar.
 //
 // API (mantém shape próximo ao anterior pra compat com stories):
 //   createChart({ type, data, height, ... }) → HTMLElement
@@ -31,8 +31,8 @@
 //
 // 3. A INFORMAÇÃO NÃO VIVE NA COR. `aria.decal.show` sobrepõe uma trama a cada
 //    série, e a legenda traz o nome escrito. A trama alcança toda forma
-//    PREENCHIDA — barra, fatia e faixa de funil —, porque é o preenchimento que
-//    ela hachura. A trama é DESENHADA AQUI, na cor
+//    PREENCHIDA — barra, fatia, faixa de funil e polígono de radar —, porque é
+//    o preenchimento que ela hachura. A trama é DESENHADA AQUI, na cor
 //    do fundo — a lista padrão da lib nasce em preto translúcido e mal se
 //    separa do próprio preenchimento (medido entre 1.26 e 1.57 contra as oito
 //    cores de série, nos três temas): declarada, e não entregue. Na cor do
@@ -45,7 +45,8 @@
 // 4. CONTRASTE (WCAG 1.4.11). Toda forma de dado — barra, fatia, faixa,
 //    símbolo — é
 //    contornada com `hsl(var(--foreground))`, que passa de 3:1 contra o fundo
-//    em qualquer tema. O contorno vem do tema (`bar`/`line`/`pie`/`funnel` em
+//    em qualquer tema. O contorno vem do tema
+//    (`bar`/`line`/`pie`/`funnel`/`radar` em
 //    `@/lib/echarts-theme`) e é ele que delimita o objeto gráfico, e não a cor
 //    de série. Ele nasceu quando a paleta ficava em torno de 2:1 contra o
 //    fundo; com `--chart-1` a `--chart-8` por modo, o pior caso passou a 7.32
@@ -53,7 +54,7 @@
 //    VIZINHA — coisa que a medida contra o fundo não cobre.
 
 import * as echarts from 'echarts/core';
-import { BarChart, FunnelChart, LineChart, PieChart } from 'echarts/charts';
+import { BarChart, FunnelChart, LineChart, PieChart, RadarChart } from 'echarts/charts';
 import {
   TitleComponent,
   TooltipComponent,
@@ -61,6 +62,7 @@ import {
   GridComponent,
   DatasetComponent,
   AriaComponent,
+  RadarComponent,
 } from 'echarts/components';
 import { SVGRenderer, CanvasRenderer } from 'echarts/renderers';
 
@@ -72,10 +74,25 @@ import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 // `AriaComponent` não é enfeite: sem ele o bloco `aria` do option é ignorado em
 // silêncio, e a trama sobreposta a cada série — que é o que cumpre a WCAG 1.4.1
 // quando a cor sai de cena — nunca chega a ser desenhada.
+//
+// O radar entra por DUAS portas, e é a única série daqui assim: `RadarChart` é
+// o desenho, `RadarComponent` é o SISTEMA DE COORDENADAS em que ele desenha.
+// Barra e linha desenham no cartesiano do `GridComponent`; rosca e funil não
+// desenham em coordenada nenhuma. O radar traz a sua, e ela é um componente
+// próprio — o option tem um bloco `radar` no primeiro nível, ao lado de
+// `series`, e não dentro dela.
+//
+// A segunda porta está declarada, e a medição diz que hoje ela não é
+// obrigatória: nesta versão o instalador de `RadarChart` já puxa o do
+// componente, e removendo `RadarComponent` daqui o desenho continua saindo.
+// Fica escrita mesmo assim, e não por precaução vaga — o que este `use` diz é
+// de que módulos o componente depende, e o sistema de coordenadas é um deles.
+// Inferir a dependência do detalhe de empacotamento de uma versão é como o
+// registro some no dia em que o detalhe muda.
 echarts.use([
-  BarChart, LineChart, PieChart, FunnelChart,
+  BarChart, LineChart, PieChart, FunnelChart, RadarChart,
   TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
-  AriaComponent,
+  AriaComponent, RadarComponent,
   SVGRenderer, CanvasRenderer,
 ]);
 
@@ -132,6 +149,7 @@ export const CHART_EMPTY_LABEL = 'Sem dados para exibir';
 export const CHART_CATEGORY_LABEL = 'Categoria';
 export const CHART_VALUE_LABEL = 'Valor';
 export const CHART_SHARE_LABEL = 'Participação';
+export const CHART_MAX_LABEL = 'Máximo';
 
 /** Célula sem dado: a categoria existe, aquela série não a preenche. */
 const NO_VALUE = '—';
@@ -149,12 +167,25 @@ const DASHES: readonly (string | number[])[] = [
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'funnel';
+export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar';
 
 /** Forma simples: 1 série, label + value (compat com stories antigas). */
 export interface ChartDataPoint {
   label: string;
   value: number;
+}
+
+/**
+ * Um eixo do radar: o nome dele e o TETO da escala.
+ *
+ * Nome e teto andam juntos porque no radar eles não são separáveis: o que a
+ * pessoa lê no desenho é a distância do vértice ao centro, e essa distância é o
+ * valor DIVIDIDO pelo teto daquele eixo. Um 7 num eixo que vai a 10 e um 7 num
+ * eixo que vai a 100 caem em pontos opostos do mesmo raio.
+ */
+export interface ChartRadarAxis {
+  label: string;
+  max: number;
 }
 
 /** Forma multi-série: x-axis + N séries com array de valores. */
@@ -173,6 +204,15 @@ export interface ChartOptions {
   xAxis?: Array<string | number>;
   /** Multi-série: séries com dados alinhados ao xAxis. */
   series?: ChartSeries[];
+  /**
+   * Radar: os eixos e o TETO de cada um, na ordem em que aparecem no polígono.
+   *
+   * Declarar é o caminho recomendado, porque é aqui que mora a única informação
+   * do radar que não está em nenhum outro lugar. Sem a lista, o nome do eixo sai
+   * de `xAxis` (ou da posição) e TODOS os eixos passam a dividir um teto só — o
+   * maior valor do conjunto —, que é uma escala honesta mas outra leitura.
+   */
+  radarAxes?: ChartRadarAxis[];
   /** Altura em px do desenho. Sem valor, vale o piso de `.nds-chart`. */
   height?: number;
   /** Renderer. Default 'svg' (alinha com o resto da stack standalone). */
@@ -218,6 +258,15 @@ export interface ChartOptions {
    * `shareOf`.
    */
   shareLabel?: string;
+  /**
+   * Cabeçalho da coluna de máximo — só o radar a tem.
+   *
+   * Mesma família da coluna de participação, e pelo mesmo motivo: o desenho
+   * comunica uma RAZÃO (o vértice sobre o raio), e o valor sozinho não a
+   * carrega. A diferença é que aqui o denominador muda de eixo para eixo, então
+   * ele não cabe num rodapé — precisa de uma célula por linha.
+   */
+  maxLabel?: string;
 }
 
 // ─── Normalização (uma só, para o desenho e para a tabela) ───────────────────
@@ -245,6 +294,29 @@ function categoriesOf(opts: ChartOptions): string[] {
   if (simple && simple.length > 0) return simple.map((d) => d.label);
   const longest = seriesOf(opts).reduce((max, s) => Math.max(max, s.data.length), 0);
   return Array.from({ length: longest }, (_, i) => String(i + 1));
+}
+
+/**
+ * Os eixos do radar: os declarados, ou uns derivados do próprio dado.
+ *
+ * Uma só função para o desenho e para a tabela, pela mesma razão de
+ * `seriesOf`/`categoriesOf`: o teto que a escala usa e o teto que a coluna
+ * escreve têm de ser o MESMO número, e duas derivações separadas seriam duas
+ * verdades sobre a mesma escala.
+ *
+ * Sem lista declarada, todos os eixos dividem um teto só — o maior valor do
+ * conjunto. Derivar um teto POR eixo (o maior valor daquele eixo) daria um
+ * polígono que toca o anel de fora em todos os vértices sempre que houver uma
+ * série só: verdadeiro na aritmética e vazio na leitura.
+ */
+function radarAxesOf(opts: ChartOptions): ChartRadarAxis[] {
+  const declared = opts.radarAxes;
+  if (declared && declared.length > 0) return declared;
+  const ceiling = seriesOf(opts).reduce(
+    (max, s) => s.data.reduce((inner, value) => Math.max(inner, value), max),
+    0,
+  );
+  return categoriesOf(opts).map((label) => ({ label, max: ceiling }));
 }
 
 // ─── Funções puras ────────────────────────────────────────────────────────────
@@ -286,6 +358,39 @@ export interface ChartTable {
 export function buildChartTable(opts: ChartOptions): ChartTable {
   const categoryLabel = opts.categoryLabel ?? CHART_CATEGORY_LABEL;
   const type = opts.type ?? 'bar';
+
+  // O radar é o único tipo com uma coluna ENTRE a categoria e as séries, e ela
+  // é o teto do eixo.
+  //
+  // A razão é a mesma que deu ao funil a coluna de participação — quando a
+  // informação mora numa dimensão visual, o texto precisa carregá-la —, mas
+  // aqui o denominador não é um só: cada eixo tem a sua escala. Um 7 num eixo
+  // que vai a 10 é um vértice quase no anel de fora; o mesmo 7 num eixo que vai
+  // a 100 quase encosta no centro. Sem esta coluna, as duas linhas escreveriam
+  // "7" e a tabela deixaria de descrever o polígono que está na tela.
+  //
+  // Uma linha por EIXO, e não por série: é o eixo que tem nome próprio e teto
+  // próprio, e cada série ocupa uma coluna à direita — a mesma forma da tabela
+  // de barra e linha, com uma coluna a mais no começo.
+  if (type === 'radar') {
+    const axes = radarAxesOf(opts);
+    const series = seriesOf(opts);
+    return {
+      header: [
+        categoryLabel,
+        opts.maxLabel ?? CHART_MAX_LABEL,
+        ...series.map((s) => s.name),
+      ],
+      lines: axes.map((axis, index) => [
+        axis.label,
+        formatValue(axis.max),
+        ...series.map((s) => {
+          const value = s.data[index];
+          return value === undefined ? NO_VALUE : formatValue(value);
+        }),
+      ]),
+    };
+  }
 
   // O funil também não tem eixo: cada linha é uma etapa, na ordem do processo, e
   // a terceira coluna é a participação em relação à PRIMEIRA etapa.
@@ -347,6 +452,65 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
 
   const seriesData = seriesOf(opts);
   const showLegend = opts.showLegend ?? seriesData.length > 1;
+
+  // Radar: um eixo por grandeza, um polígono fechado por série.
+  //
+  // É o único tipo desta fábrica que traz SISTEMA DE COORDENADAS próprio — o
+  // bloco `radar` ao lado de `series`, e não dentro dela. Quem descreve os
+  // eixos é o `indicator`; a série só carrega os valores, na ordem deles.
+  if (type === 'radar') {
+    const axes = radarAxesOf(opts);
+    return {
+      title: opts.title ? { text: opts.title, left: 'left' } : undefined,
+      tooltip: { trigger: 'item' },
+      // O polígono não tem eixo que o nomeie — os eixos nomeiam as GRANDEZAS,
+      // não as séries —, então a legenda aparece sempre que há série, como na
+      // rosca e no funil. Sem ela, a única pista de qual polígono é qual seria
+      // a cor.
+      legend: showLegend || seriesData.length > 0
+        ? { bottom: 0, icon: 'roundRect', itemWidth: 12, itemHeight: 8 }
+        : undefined,
+      radar: {
+        indicator: axes.map((axis) => ({ name: axis.label, max: axis.max })),
+        // Polígono, e não círculo: são os vértices que dizem em que grandeza o
+        // item é forte, e num anel eles somem.
+        shape: 'polygon',
+        // Sobe o centro e encolhe o raio para caber o nome de cada eixo por
+        // fora do último anel — o nome é texto e cresce com a fonte do
+        // navegador (WCAG 1.4.4), então a folga é proporcional, nunca em pixel.
+        center: ['50%', opts.title ? '54%' : '48%'],
+        radius: '58%',
+      },
+      // Uma série de radar só, com um item de dado por série do chamador: é
+      // assim que a lib desenha vários polígonos no mesmo sistema de eixos.
+      series: [{
+        type: 'radar',
+        data: seriesData.map((s, index) => ({
+          name: s.name,
+          value: s.data,
+          // Símbolo e traço próprios, o mesmo vocabulário de forma do traçado:
+          // sem a cor, um polígono ainda se separa do outro (WCAG 1.4.1).
+          symbol: SYMBOLS[index % SYMBOLS.length],
+          symbolSize: 9,
+          lineStyle: {
+            type: DASHES[index % DASHES.length],
+            ...(s.color ? { color: s.color } : {}),
+          },
+          // A área preenchida é o que faz a trama alcançar o radar: a hachura é
+          // de PREENCHIMENTO, e sem `areaStyle` a lib desenha só o contorno do
+          // polígono — não haveria o que hachurar. Translúcida porque os
+          // polígonos se sobrepõem de propósito: opaco, o de cima apagaria o de
+          // baixo, que é justamente a comparação que o radar existe para
+          // mostrar.
+          areaStyle: { opacity: 0.3 },
+          ...(s.color ? { itemStyle: { color: s.color } } : {}),
+        })),
+      }],
+      animation: !prefersReducedMotion(),
+      animationDuration: Math.round(motionDuration('moderate') * 1000),
+      aria: ariaBlock(),
+    };
+  }
 
   // Funil: sem eixo, uma faixa por etapa, na ordem em que o processo acontece.
   if (type === 'funnel') {

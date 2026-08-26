@@ -20,7 +20,9 @@
         "dataLabel": "Mês",
         "tooltipLabel": "Total de acessos",
         "funnelShare": "Participação",
-        "funnelStage": "Etapa"
+        "funnelStage": "Etapa",
+        "radarMax": "Máximo",
+        "radarAxis": "Eixo"
       }
     },
     "anatomy": {
@@ -154,13 +156,14 @@
     "variants": {
       "title": "Tipos de Gráfico",
       "visualTitle": "Tipos Disponíveis",
-      "note": "O Chart não tem variantes de estilo. O tipo de gráfico — barras, linhas, área, pizza — vem da configuração, não de uma classe: é um campo do próprio objeto que descreve o desenho.",
+      "note": "O Chart não tem variantes de estilo. O tipo de gráfico vem da configuração, não de uma classe: é um campo do próprio objeto que descreve o desenho. A lista de tipos cobertos está logo acima — e é ela, não este parágrafo, que se mantém em dia.",
       "items": {
         "bar": "Comparação entre categorias discretas. Mais claro para dados não contínuos.",
         "line": "Tendência contínua ao longo do tempo. Ideal para séries temporais.",
         "area": "Tendência com ênfase no volume acumulado. Variante visual do gráfico de linhas.",
         "pie": "Proporção de partes em relação ao todo. Limite a 5–6 fatias para legibilidade.",
         "funnel": "Etapas de um processo que afunila, da maior para a menor. Cada faixa é uma etapa, e a largura mostra quanto sobrou dela. Use quando a ordem das etapas for fixa e a perda entre elas for a informação.",
+        "radar": "Compara várias grandezas de um mesmo item, uma por eixo, num polígono fechado. Serve quando o desenho do conjunto importa mais que cada número — o formato mostra em que o item é forte e em que é fraco. Cada eixo tem escala própria, então dois eixos com o mesmo número podem estar em pontos diferentes.",
         "smallInline": {
           "name": "Mini gráfico inline",
           "description": "Versão compacta sem eixos visíveis, altura reduzida e largura limitada — usada como indicador de tendência ao lado de um número ou KPI. Configure passando objeto customizado que oculta eixos e grid.",
@@ -240,7 +243,7 @@
         "emptyLabel": "Frase exibida no lugar do desenho quando não há dados. Use uma frase completa que oriente a próxima ação."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "Para chart types não cobertos pelos builders (scatter, radar, heatmap, candlestick, sankey...), construa o objeto de configuração diretamente. A biblioteca de visualização aceita o objeto completo via <code>option</code>; cores e tipografia continuam vindo do tema do design system automaticamente."
+      "extensibility": "Para tipos de gráfico que o componente ainda não cobre — mapa de calor, candlestick, sankey e outros —, construa o objeto de configuração diretamente. A biblioteca de visualização aceita o objeto completo, e cores e tipografia continuam vindo do tema do design system."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -307,7 +310,7 @@
       "title": "Notas de Implementação",
       "tip1": "<strong>Lib upstream</strong>: o componente é um wrapper sobre Apache ECharts. Instale separadamente: <code>npm install echarts</code> (e o wrapper específico da stack quando aplicável).",
       "tip2": "<strong>API declarativa</strong>: você passa um único objeto de configuração descrevendo todo o gráfico (séries, eixos, tooltip, legenda) em vez de compor JSX. Isso unifica a API entre as 4 stacks do design system.",
-      "tip3": "<strong>Tree-shake</strong>: apenas os tipos de chart usados são incluídos no bundle. Os builders auxiliares cobrem bar, line, area e pie. Para outros tipos (scatter, radar, heatmap...), registre o módulo extra antes de usar.",
+      "tip3": "<strong>Tree-shake</strong>: só os tipos de gráfico usados entram no pacote final. Os tipos que o componente cobre estão listados na seção de variantes; para qualquer outro, registre o módulo da biblioteca antes de usar.",
       "tip4": "<strong>Renderer</strong>: SVG é o padrão e melhor para print, exportação e poucos elementos. Canvas é melhor para datasets grandes (>10.000 pontos) ou animações pesadas.",
       "tip5": "<strong>Tema reativo</strong>: o container observa mudanças na classe do <code>&lt;html&gt;</code> e re-aplica o tema. Trocar tema de marca, dark mode, densidade ou fonte recolore o gráfico automaticamente, sem reload."
     },
@@ -368,6 +371,11 @@
           "action": "Renderizar o tipo funil com quatro etapas",
           "result": "Uma faixa por etapa, em ordem decrescente, com a tabela equivalente trazendo etapa, valor e participação em relação à primeira",
           "priority": "high"
+        },
+        "item8": {
+          "action": "Renderizar o tipo radar com cinco eixos e duas séries",
+          "result": "Um polígono por série, com trama própria, e a tabela equivalente trazendo o eixo, o máximo dele e o valor de cada série",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -416,6 +424,10 @@
         "item5": {
           "story": "Funil — quatro etapas com legenda e tabela",
           "priority": "medium"
+        },
+        "item6": {
+          "story": "Radar — cinco eixos, duas séries sobrepostas",
+          "priority": "medium"
         }
       }
     },
@@ -461,7 +473,9 @@
         "dataLabel": "Month",
         "tooltipLabel": "Total visits",
         "funnelShare": "Share",
-        "funnelStage": "Stage"
+        "funnelStage": "Stage",
+        "radarMax": "Maximum",
+        "radarAxis": "Axis"
       }
     },
     "anatomy": {
@@ -595,13 +609,14 @@
     "variants": {
       "title": "Chart Types",
       "visualTitle": "Available Types",
-      "note": "Chart has no style variants. The chart type — bar, line, area, pie — comes from the configuration, not from a class: it is a field of the object that describes the drawing.",
+      "note": "Chart has no style variants. The chart type comes from the configuration, not from a class: it is a field of the object that describes the drawing. The list of covered types is right above — and it, not this paragraph, is what stays current.",
       "items": {
         "bar": "Comparison across discrete categories. Best for non-continuous data.",
         "line": "Continuous trend over time. Ideal for time series.",
         "area": "Trend with emphasis on cumulative volume. Visual variant of the line chart.",
         "pie": "Proportion of parts relative to a whole. Limit to 5–6 slices for readability.",
         "funnel": "Stages of a process that narrows, from widest to narrowest. Each band is a stage, and its width shows how much of it remains. Use it when the stage order is fixed and the drop between them is the information.",
+        "radar": "Compares several magnitudes of one item, one per axis, in a closed polygon. Use it when the shape of the whole matters more than each number — the outline shows where the item is strong and where it is weak. Each axis has its own scale, so two axes showing the same number can sit at different points.",
         "smallInline": {
           "name": "Small inline chart",
           "description": "Compact version without visible axes, reduced height, and constrained width — used as a trend indicator next to a headline number or KPI. Configure by passing a custom object that hides axes and grid.",
@@ -681,7 +696,7 @@
         "emptyLabel": "Sentence shown in place of the drawing when there is no data. Use a complete sentence that guides the next action."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "For chart types not covered by the builders (scatter, radar, heatmap, candlestick, sankey...), build the configuration object directly. The visualization library accepts the full object via <code>option</code>; colors and typography still come from the design-system theme automatically."
+      "extensibility": "For chart types the component does not cover yet — heatmap, candlestick, sankey and others — build the configuration object directly. The visualization library accepts the full object, and colours and typography still come from the design system theme."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -748,7 +763,7 @@
       "title": "Implementation Notes",
       "tip1": "<strong>Upstream lib</strong>: the component is a wrapper over Apache ECharts. Install separately: <code>npm install echarts</code> (plus the stack-specific wrapper where applicable).",
       "tip2": "<strong>Declarative API</strong>: you pass a single configuration object describing the whole chart (series, axes, tooltip, legend) instead of composing JSX. This unifies the API across the 4 design-system stacks.",
-      "tip3": "<strong>Tree-shake</strong>: only the chart types you use are bundled. The auxiliary builders cover bar, line, area, and pie. For other types (scatter, radar, heatmap...), register the extra module before using it.",
+      "tip3": "<strong>Tree-shake</strong>: only the chart types you use end up in the bundle. The types the component covers are listed in the variants section; for any other, register the library module before using it.",
       "tip4": "<strong>Renderer</strong>: SVG is the default and better for print, export, and few elements. Canvas is better for large datasets (>10,000 points) or heavy animations.",
       "tip5": "<strong>Reactive theme</strong>: the container observes changes on the <code>&lt;html&gt;</code> class and re-applies the theme. Switching brand theme, dark mode, density, or font recolors the chart automatically without reload."
     },
@@ -809,6 +824,11 @@
           "action": "Render the funnel type with four stages",
           "result": "One band per stage, in descending order, with the equivalent table carrying stage, value and share relative to the first",
           "priority": "high"
+        },
+        "item8": {
+          "action": "Render the radar type with five axes and two series",
+          "result": "One polygon per series, each with its own weave, and the equivalent table carrying the axis, its maximum and each series value",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -857,6 +877,10 @@
         "item5": {
           "story": "Funnel — four stages with legend and table",
           "priority": "medium"
+        },
+        "item6": {
+          "story": "Radar — five axes, two overlapping series",
+          "priority": "medium"
         }
       }
     },
@@ -902,7 +926,9 @@
         "dataLabel": "Mes",
         "tooltipLabel": "Total de visitas",
         "funnelShare": "Participación",
-        "funnelStage": "Etapa"
+        "funnelStage": "Etapa",
+        "radarMax": "Máximo",
+        "radarAxis": "Eje"
       }
     },
     "anatomy": {
@@ -1036,13 +1062,14 @@
     "variants": {
       "title": "Tipos de Gráfico",
       "visualTitle": "Tipos Disponibles",
-      "note": "El Chart no tiene variantes de estilo. El tipo de gráfico — barras, líneas, área, tarta — viene de la configuración, no de una clase: es un campo del propio objeto que describe el dibujo.",
+      "note": "El Chart no tiene variantes de estilo. El tipo de gráfico viene de la configuración, no de una clase: es un campo del propio objeto que describe el dibujo. La lista de tipos cubiertos está justo arriba — y es ella, no este párrafo, la que se mantiene al día.",
       "items": {
         "bar": "Comparación entre categorías discretas. Más claro para datos no continuos.",
         "line": "Tendencia continua en el tiempo. Ideal para series temporales.",
         "area": "Tendencia con énfasis en el volumen acumulado. Variante visual del gráfico de líneas.",
         "pie": "Proporción de partes respecto al todo. Limita a 5–6 porciones para legibilidad.",
         "funnel": "Etapas de un proceso que se estrecha, de la mayor a la menor. Cada franja es una etapa, y su ancho muestra cuánto queda de ella. Úsalo cuando el orden de las etapas sea fijo y la pérdida entre ellas sea la información.",
+        "radar": "Compara varias magnitudes de un mismo elemento, una por eje, en un polígono cerrado. Sirve cuando la forma del conjunto importa más que cada número — el contorno muestra en qué el elemento es fuerte y en qué es débil. Cada eje tiene escala propia, así que dos ejes con el mismo número pueden estar en puntos distintos.",
         "smallInline": {
           "name": "Mini gráfico inline",
           "description": "Versión compacta sin ejes visibles, altura reducida y ancho limitado — usada como indicador de tendencia junto a un número o KPI. Configura pasando un objeto custom que oculta ejes y grid.",
@@ -1122,7 +1149,7 @@
         "emptyLabel": "Frase que se muestra en lugar del dibujo cuando no hay datos. Usa una frase completa que oriente la próxima acción."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "Para tipos de chart no cubiertos por los builders (scatter, radar, heatmap, candlestick, sankey...), construye el objeto de configuración directamente. La librería de visualización acepta el objeto completo vía <code>option</code>; colores y tipografía siguen viniendo del tema del design system automáticamente."
+      "extensibility": "Para tipos de gráfico que el componente aún no cubre — mapa de calor, candlestick, sankey y otros —, construye el objeto de configuración directamente. La biblioteca de visualización acepta el objeto completo, y los colores y la tipografía siguen viniendo del tema del design system."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1189,7 +1216,7 @@
       "title": "Notas de Implementación",
       "tip1": "<strong>Lib upstream</strong>: el componente es un wrapper sobre Apache ECharts. Instálalo aparte: <code>npm install echarts</code> (y el wrapper específico de la stack cuando aplique).",
       "tip2": "<strong>API declarativa</strong>: pasas un único objeto de configuración describiendo todo el gráfico (series, ejes, tooltip, leyenda) en vez de componer JSX. Esto unifica la API entre las 4 stacks del design system.",
-      "tip3": "<strong>Tree-shake</strong>: solo los tipos de chart que usas entran al bundle. Los builders auxiliares cubren bar, line, area y pie. Para otros tipos (scatter, radar, heatmap...), registra el módulo extra antes de usarlo.",
+      "tip3": "<strong>Tree-shake</strong>: solo los tipos de gráfico usados entran en el paquete final. Los tipos que el componente cubre están listados en la sección de variantes; para cualquier otro, registra el módulo de la biblioteca antes de usarlo.",
       "tip4": "<strong>Renderer</strong>: SVG es el default y mejor para print, exportación y pocos elementos. Canvas es mejor para datasets grandes (>10.000 puntos) o animaciones pesadas.",
       "tip5": "<strong>Tema reactivo</strong>: el container observa cambios en la clase del <code>&lt;html&gt;</code> y re-aplica el tema. Cambiar tema de marca, dark mode, densidad o fuente recolorea el gráfico automáticamente, sin reload."
     },
@@ -1250,6 +1277,11 @@
           "action": "Renderizar el tipo embudo con cuatro etapas",
           "result": "Una franja por etapa, en orden descendente, con la tabla equivalente trayendo etapa, valor y participación respecto a la primera",
           "priority": "high"
+        },
+        "item8": {
+          "action": "Renderizar el tipo radar con cinco ejes y dos series",
+          "result": "Un polígono por serie, con trama propia, y la tabla equivalente trayendo el eje, su máximo y el valor de cada serie",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1297,6 +1329,10 @@
         },
         "item5": {
           "story": "Embudo — cuatro etapas con leyenda y tabla",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Radar — cinco ejes, dos series superpuestas",
           "priority": "medium"
         }
       }

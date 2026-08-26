@@ -3,10 +3,11 @@ import { expect, waitFor } from 'storybook/test';
 import {
   ChartContainer,
   buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption,
+  buildRadarOption,
 } from './index';
-import { designEscreve, exigirRoot } from '@shared/testing/chart-probe';
+import { designEscreve, exigirRoot, settleTheme, tokenColor } from '@shared/testing/chart-probe';
 import {
-  drawingSettled, filledShapes, hatchedShapes, waitForDesign,
+  drawingSettled, filledShapes, hatchedShapes, radarHatches, radarPolygons, waitForDesign,
 } from './chart.fixtures';
 import {
   chartAreaSource,
@@ -14,6 +15,7 @@ import {
   chartFunnelSource,
   chartLinesSource,
   chartPizzaSource,
+  chartRadarSource,
   chartSource,
 } from './chart.source';
 
@@ -406,6 +408,149 @@ export const Funnel: Story = {
         () => expect(hatchedShapes(root)).toHaveLength(FUNNEL_STAGES.length),
         { timeout: 3000 },
       );
+    });
+  },
+};
+
+/**
+ * Cinco grandezas de um mesmo item, uma por eixo.
+ *
+ * Os tetos são DIFERENTES de propósito — 100, 100, 10, 100 e 5. É essa
+ * diferença que a coluna de máximo existe para escrever: o 9 de "Boas práticas"
+ * é um vértice quase no anel de fora, e o 96 de "SEO" também; só a tabela pode
+ * dizer que um vale 9 e o outro 96 sem que o polígono tenha mentido.
+ */
+const RADAR_AXES = [
+  { label: 'Desempenho', max: 100 },
+  { label: 'Acessibilidade', max: 100 },
+  { label: 'Boas práticas', max: 10 },
+  { label: 'SEO', max: 100 },
+  { label: 'Conteúdo', max: 5 },
+];
+
+/** Duas medições do mesmo site, para o desenho ser uma comparação. */
+const RADAR_SERIES = [
+  { name: 'Antes', data: [72, 64, 6, 88, 2] },
+  { name: 'Depois', data: [94, 97, 9, 96, 4] },
+];
+
+export const Radar: Story = {
+  parameters: {
+    covers: ['functional.item8', 'visual.item6'],
+    docs: {
+      // O radar não tem eixo de categorias nem lista simples: o dado dele são
+      // os EIXOS (nome mais teto) de um lado e as séries do outro — e é essa
+      // forma que o snippet precisa ensinar.
+      source: { transform: chartRadarSource },
+      description: {
+        story: 'Radar — várias grandezas de um mesmo item, uma por eixo, num polígono fechado. Cada eixo tem escala própria, e a tabela traz o máximo de cada um.',
+      },
+    },
+  },
+  args: {
+    option: buildRadarOption({ axes: RADAR_AXES, series: RADAR_SERIES }),
+    height: 320,
+    class: 'nds-w-full',
+    categoryLabel: 'Eixo',
+    maxLabel: 'Máximo',
+    'aria-label': 'Radar de qualidade do site: cinco grandezas, antes e depois da revisão',
+  },
+  play: async ({ canvasElement, step }) => {
+    const root = exigirRoot(canvasElement);
+    await waitForDesign(root);
+    // Contar formas exige a animação de entrada fechada: ver `drawingSettled`.
+    // Ela também é o que garante que os anéis do radar não deixaram um retângulo
+    // transparente extra na tela — a faixa alternada do padrão da lib fica
+    // DESLIGADA no tema exatamente por isso.
+    await drawingSettled(root);
+
+    await step('O desenho sai com um polígono por série — nem um a mais', async () => {
+      // Igualdade. Com "no mínimo", passariam tanto a contagem dobrada pela
+      // trama quanto a inchada pelos dez símbolos de vértice — o portão só
+      // reprovaria com o desenho vazio.
+      //
+      // `waitFor`: a geometria assenta DEPOIS da marca de opacidade que
+      // `drawingSettled` observa, e o polígono do radar entra crescendo a partir
+      // do centro. Só leitura aqui dentro; nada que mexa no DOM.
+      await waitFor(
+        () => expect(radarPolygons(root)).toHaveLength(RADAR_SERIES.length),
+        { timeout: 3000 },
+      );
+    });
+
+    await step('Cada eixo aparece escrito em volta do polígono', async () => {
+      // O nome do eixo é a única pista de QUE grandeza cada vértice mede.
+      for (const axis of RADAR_AXES) {
+        await expect(designEscreve(root, axis.label)).toBe(true);
+      }
+    });
+
+    await step('A legenda nomeia cada série por escrito', async () => {
+      // Os eixos nomeiam as grandezas, não as séries: sem a legenda, a única
+      // pista de qual polígono é qual seria a cor.
+      for (const serie of RADAR_SERIES) {
+        await expect(designEscreve(root, serie.name)).toBe(true);
+      }
+    });
+
+    await step('E a cor não é o único sinal: a trama alcança CADA polígono', async () => {
+      // WCAG 1.4.1 — o polígono é forma PREENCHIDA, então a hachura chega nele
+      // como chega à barra e à fatia. Uma trama por polígono, e não "pelo menos
+      // uma": com o limite inferior, um desenho em que a hachura alcançasse só
+      // a primeira série passava igual.
+      await waitFor(
+        () => expect(radarHatches(root)).toHaveLength(RADAR_SERIES.length),
+        { timeout: 3000 },
+      );
+    });
+
+    await step('A tabela traz eixo, máximo do eixo e o valor de cada série', async () => {
+      // A coluna do meio é o que separa esta tabela da do gráfico de barras, e
+      // ela existe porque o desenho comunica uma RAZÃO: o vértice é o valor
+      // sobre o teto DAQUELE eixo. Sem o teto escrito, "9" e "96" seriam dois
+      // números soltos e o polígono na tela não teria explicação.
+      const columns = [...root.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
+      await expect(columns).toEqual(['Eixo', 'Máximo', ...RADAR_SERIES.map((s) => s.name)]);
+
+      const rows = [...root.querySelectorAll<HTMLTableRowElement>('tbody tr')];
+      await expect(rows).toHaveLength(RADAR_AXES.length);
+      for (const [i, row] of rows.entries()) {
+        await expect(row.querySelector('th')?.textContent?.trim()).toBe(RADAR_AXES[i].label);
+        const cells = [...row.querySelectorAll('td')].map((c) => c.textContent?.trim());
+        await expect(cells).toEqual([
+          String(RADAR_AXES[i].max),
+          ...RADAR_SERIES.map((s) => String(s.data[i])),
+        ]);
+      }
+    });
+
+    // Precondição da medida de cor: ver o comentário de `settleTheme`.
+    await settleTheme(document);
+
+    await step('Os eixos do radar saem do TEMA, e não do padrão da lib', async () => {
+      // O radar é o único tipo com eixos PRÓPRIOS, e sem bloco de tema eles
+      // nascem nos cinzas cravados da lib: um gráfico do design system com
+      // eixos que não são do design system. Este passo é o que impede isso de
+      // voltar calado.
+      //
+      // A sonda de token é resolvida AQUI, fora de qualquer espera:
+      // `tokenColor` pendura um elemento no `<body>`, e leitura que mexe no DOM
+      // dentro de `waitFor` provoca a própria retentativa — o prazo nunca chega
+      // e a aba morre sem reprovar.
+      const mutedForeground = tokenColor('muted-foreground', root);
+
+      const axisName = [...root.querySelectorAll<SVGTextElement>('svg text')]
+        .find((node) => (node.textContent ?? '').trim() === 'SEO');
+      await expect(axisName).toBeDefined();
+      // O nome do eixo é TEXTO, então segue a cor de texto secundário do tema.
+      await expect(getComputedStyle(axisName!).fill).toBe(mutedForeground);
+      // E o tamanho é MEDIDO, não cravado: o degrau de 0.75 sobre a fonte raiz
+      // — o mesmo do rótulo do eixo cartesiano. Com pixel escolhido, o nome
+      // pararia de crescer quando a pessoa aumenta a fonte do navegador
+      // (WCAG 1.4.4), enquanto o resto da página cresce ao lado.
+      const rootSize = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+      await expect(getComputedStyle(axisName!).fontSize)
+        .toBe(`${Math.round(rootSize * 0.75)}px`);
     });
   },
 };
