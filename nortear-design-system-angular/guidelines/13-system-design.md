@@ -12,6 +12,7 @@ Browser
 ├── @radix-ng/primitives — comportamento headless (Root/Trigger/Positioner/Popup)
 ├── @floating-ui/dom — posicionamento de overlay (vem com o headless)
 ├── @angular/forms — NgControl, para o estado de validação do campo
+├── echarts — motor do Chart, renderizador SVG
 ├── @internationalized/date e /number — datas e números do Calendar
 ├── CSS .nds-* compartilhado — nenhum framework de utilitário
 ├── lucide (pacote agnóstico) — ícones
@@ -20,7 +21,7 @@ Browser
 └── @storybook/angular-vite — documentação e testes
 ```
 
-**Não há biblioteca de gráfico nem de tabela headless neste pacote.** Chart desenha SVG próprio; DataTable tem motor em signals. Ver `08-display-components.md`.
+**Não há biblioteca de tabela headless neste pacote**: o DataTable tem motor em signals. O Chart, sim, usa lib — `echarts`, a mesma das outras quatro stacks, com o renderizador SVG. Ver `08-display-components.md`.
 
 ---
 

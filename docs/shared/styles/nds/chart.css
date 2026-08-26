@@ -1,9 +1,11 @@
 /*
  * ─── nds-chart ──────────────────────────────────────────────────────────────
- * Container responsivo para gráficos SVG. Cores e tipo (bar/line) vêm da factory.
+ * Container responsivo para gráficos. Cores e tipo (bar/line) vêm da factory.
  *
  *   <div class="nds-chart">
- *     <svg viewBox="…">…</svg>
+ *     <div class="nds-chart-canvas">   ← onde a lib desenha (opcional)
+ *       <svg>…</svg>
+ *     </div>
  *   </div>
  *
  * Tokens: cores delegadas à factory (--primary, --secondary, etc).
@@ -26,6 +28,20 @@
 .nds-chart svg {
   display: block;
   width: 100%;
+}
+
+/* Elemento em que a lib de gráfico desenha.
+ *
+ * A lib precisa de uma caixa MEDIDA para iniciar — sem altura resolvida ela
+ * desenha em zero e avisa no console. Aqui a altura nasce da proporção aplicada
+ * à largura, que é o mesmo caminho do `viewBox` de um SVG responsivo: nenhum
+ * pixel cravado, e o piso continua sendo o `min-height` do bloco acima.
+ *
+ * A proporção entra por custom property (`style="--ratio: 640 / 140"`) porque
+ * ela é dado do gráfico — o modo compacto é achatado —, não decisão de tema. */
+.nds-chart-canvas {
+  width: 100%;
+  aspect-ratio: var(--ratio, 640 / 320);
 }
 
 .nds-chart-empty {

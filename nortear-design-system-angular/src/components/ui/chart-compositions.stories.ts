@@ -1,8 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { NdsChart } from './chart';
-import { MONTHS, SERIES_TRIO, SERIE_UNICA } from './chart.fixtures';
+import {
+  MONTHS,
+  SERIES_TRIO,
+  SERIE_UNICA,
+  desenhoDe,
+  textosDoDesenho,
+} from './chart.fixtures';
 import {
   NdsCard,
   NdsCardContent,
@@ -76,7 +82,8 @@ export const WithCard: Story = {
 
     await step('O desenho e a tabela sobrevivem à moldura', async () => {
       const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
-      await expect(chart.querySelector('svg')).not.toBeNull();
+      const desenho = desenhoDe(chart);
+      await waitFor(() => expect(desenho.querySelector('svg')).not.toBeNull());
       await expect([...chart.querySelectorAll('tbody tr')]).toHaveLength(MONTHS.length);
     });
   },
@@ -105,18 +112,20 @@ export const InlineTitle: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
+    const desenho = desenhoDe(chart);
+    await waitFor(() => expect(desenho.querySelector('svg')).not.toBeNull());
 
     await step('O título aparece escrito no desenho', async () => {
-      const texts = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
-      await expect(texts).toContain('Vendas mensais');
+      await waitFor(async () => {
+        await expect(textosDoDesenho(desenho)).toContain('Vendas mensais');
+      });
     });
 
     await step('O título não rouba o lugar da descrição do gráfico', async () => {
       // São duas coisas diferentes: o título é decoração desenhada, a descrição
       // é o que o leitor de tela anuncia. Trocar um pelo outro deixaria a
       // legenda da tabela de dados dizendo apenas "Vendas mensais".
-      const svg = chart.querySelector('svg')!;
-      await expect(svg.getAttribute('aria-label'))
+      await expect(desenho.getAttribute('aria-label'))
         .toBe('Vendas mensais no desktop, de janeiro a junho');
       await expect(chart.querySelector('caption')?.textContent?.trim())
         .toBe('Vendas mensais no desktop, de janeiro a junho');

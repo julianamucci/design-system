@@ -108,7 +108,7 @@ Nunca inventar input, output ou diretiva que não existe. Casos frequentes neste
 | Ler input na inicialização | ler no `constructor` | ler em `ngOnInit` |
 | Validação de formulário por schema | biblioteca de schema | `@angular/forms` + `ndsFormMessage` |
 | Redimensionar coluna de DataTable | flag de resize | **não existe neste stack** — ver `08-display-components.md` |
-| Gráfico por biblioteca de dados | importar lib de gráfico | `<div ndsChart>` desenha SVG próprio — ver `08-display-components.md` |
+| Gráfico | montar `echarts` na página, ou passar `option` pronta | `<div ndsChart type="bar" [xAxis] [series] label>` — a lib é interna ao componente; ver `08-display-components.md` |
 
 Gatilho de overlay é sempre uma **diretiva de atributo** no elemento nativo: `ndsDialogTrigger`, `ndsSheetTrigger`, `ndsDrawerTrigger`, `ndsAlertDialogTrigger`, `ndsDropdownMenuTrigger`, `ndsPopoverTrigger`, `ndsTooltipTrigger`, `ndsCollapsibleTrigger`.
 

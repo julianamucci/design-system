@@ -49,7 +49,7 @@ Justificativa: os tokens são consumidos como `hsl(var(--token))`, então o form
 
 Biblioteca que desenha fora do CSS recebe cor por objeto de configuração, e ali `var(--chart-1)` chega como string literal e **não é resolvido**. Leia o token do `<html>` e passe o valor computado.
 
-Neste stack o caso é raro: o Chart desenha SVG dentro do próprio template, então as cores entram como `hsl(var(--chart-1))` no atributo `fill` — resolvidas pelo CSS, como qualquer outra propriedade. Ver `08-display-components.md`.
+É o caso do Chart: `src/lib/echarts-theme.ts` lê os tokens do `<html>` por `getComputedStyle` e monta o tema que a lib recebe. Um `MutationObserver` na classe do `<html>` relê e reaplica, para que trocar tema, modo escuro, densidade ou fonte recolora o desenho sem remontar. Ver `08-display-components.md`.
 
 ### Texto corrido em container colorido
 

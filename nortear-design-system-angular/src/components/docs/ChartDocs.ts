@@ -51,17 +51,22 @@ const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 
 // ─── Overrides ────────────────────────────────────────────────────────────────
 //
-// O conteúdo compartilhado do Chart descreve um wrapper sobre o ECharts: objeto
-// de configuração único, `buildBarOption`, `aria.enabled`, `aria.decal.show`,
-// escolha de renderer svg/canvas. Nada disso existe aqui — esta stack não tem
-// echarts nas dependências e o componente DESENHA o SVG (ver o cabeçalho de
-// `src/components/ui/chart.ts`). Manter o texto compartilhado seria documentar
-// uma API que não compila.
+// O motor de desenho é o mesmo das outras quatro stacks (Apache ECharts), então
+// tudo que o conteúdo compartilhado diz sobre a LIB voltou a valer aqui: tema
+// reativo, trama por série, tree-shake dos tipos usados.
 //
-// O que fica sobrescrito, então, é só o que é factualmente falso nesta stack,
-// mais os rótulos que o conteúdo não tem porque descrevem entradas que só
-// existem aqui (`showData`, `compact`, os rótulos da tabela de dados). Nenhum
-// snippet `*Code` entra em override — ele ficaria preso a esta stack.
+// O que continua divergente é a FORMA DA API — e divergência de API de
+// framework se registra, não se alinha. As outras stacks separam
+// `ChartContainer` + `buildXOption` e passam um objeto de configuração único;
+// aqui é um componente só, com entradas declarativas. Daí sai a lista abaixo: a
+// anatomia, a nota da API, a extensibilidade e os rótulos de entradas que só
+// existem nesta stack (`showData`, `compact`, os rótulos da tabela de dados).
+//
+// Duas sobrescritas são de acessibilidade, não de API, e valem a leitura: o
+// papel de imagem vai no DESENHO e não no container (no container a tabela
+// ficaria podada junto), e os tamanhos de texto nascem da fonte raiz medida em
+// vez de número cravado. Nenhum snippet `*Code` entra em override — ele ficaria
+// preso a esta stack.
 const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>, {
   '*': {
     // "ChartContainer" é o nome do wrapper das outras stacks; aqui a peça é uma
@@ -69,6 +74,12 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'props.containerTitle': 'Chart',
   },
   'pt-BR': {
+    'anatomy.item1':
+      '<strong>Container</strong> — o bloco do design system: carrega a classe, o tipo do gráfico e, ao lado do desenho, a tabela de dados equivalente.',
+    'anatomy.item2':
+      '<strong>Elemento do desenho</strong> — onde a lib de visualização desenha. É ele que leva a marcação de imagem e a descrição, para que a tabela ao lado continue na árvore de acessibilidade.',
+    'anatomy.item3':
+      '<strong>Tabela de dados equivalente</strong> — os mesmos números do desenho em uma tabela de verdade, com cabeçalho por série e uma linha por categoria. Existe sempre; uma entrada a torna visível.',
     'usage.guidelines.item2':
       'Uma entrada escolhe o tipo do gráfico; o que muda entre um e outro é o dado, não a montagem.',
     'variants.items.bar.name': 'Barras',
@@ -87,16 +98,14 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
       '<strong>Papel de imagem no desenho, não no container</strong> — a marcação de imagem fica no próprio desenho, e não no bloco que o envolve: no container ela podaria a tabela de dados junto, e a alternativa textual sumiria da árvore de acessibilidade.',
     'accessibility.item6':
       '<strong>Contraste</strong> — quem sustenta os 3:1 de objeto gráfico (WCAG 1.4.11) é o contorno de cada forma, não a cor de série: as cores de série do tema padrão ficam em torno de 2:1 contra o fundo. O texto dos eixos usa a cor de texto secundário, com 4.5:1.',
-    'notes.tip1':
-      '<strong>Sem lib de gráfico</strong>: o desenho é SVG montado pelo próprio componente. Não há dependência para instalar, nem bundle de biblioteca de visualização somado à página.',
     'notes.tip2':
       '<strong>API declarativa</strong>: em vez de um objeto de configuração único, as entradas são declarativas — tipo, dados, eixo de categorias, séries e título. O que muda entre um gráfico e outro é o dado, não a montagem.',
     'notes.tip3':
-      '<strong>Tipografia que cresce</strong>: nenhum texto do desenho tem tamanho fixo. O SVG herda a tipografia do container, então aumentar a fonte do navegador aumenta o rótulo do eixo junto (WCAG 1.4.4).',
+      '<strong>Tipografia que cresce</strong>: os tamanhos do desenho não são números escolhidos — nascem do tamanho de fonte raiz medido, e o tema é relido quando ele muda. Aumentar a fonte do navegador aumenta o rótulo do eixo junto (WCAG 1.4.4).',
     'notes.tip4':
       '<strong>Altura pela proporção</strong>: o desenho não tem altura cravada. A altura nasce da proporção do desenho aplicada à largura do container, e o piso vem do próprio bloco — por isso a página não salta quando o dado chega.',
     'props.extensibility':
-      'Para tipos de gráfico não cobertos (dispersão, radar, mapa de calor), o caminho é estender o componente, não passar um objeto de configuração: o desenho é montado aqui. Cores e tipografia continuam vindo do tema em qualquer caso.',
+      'Para tipos de gráfico não cobertos (dispersão, radar, mapa de calor), o caminho é estender o componente, não passar um objeto de configuração: quem traduz entrada em configuração é o próprio componente. Cores e tipografia continuam vindo do tema em qualquer caso.',
     'props.table.showData': 'Torna visível para todo mundo a tabela de dados que já existe para leitor de tela.',
     'props.table.compact':
       'Mini gráfico inline: sem eixos, grade, legenda ou rótulo de valor, e com proporção achatada. Serve de indicador de tendência ao lado de um número.',
@@ -112,10 +121,18 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'props.table.seriesColor': 'Cor explícita da série; sobrescreve o token da posição.',
     'tokens.table.background':
       'Traço da trama sobreposta a cada série — é ele que separa a hachura do preenchimento.',
+    'tokens.table.foreground':
+      'Contorno de toda forma de dado — é ele que sustenta os 3:1 de objeto gráfico — e a cor do texto do título e da dica.',
     'demonstration.labels.pie': 'Pizza',
     'demonstration.labels.dataTable': 'Tabela de dados equivalente, visível',
   },
   en: {
+    'anatomy.item1':
+      '<strong>Container</strong> — the design system block: it carries the class, the chart type and, beside the drawing, the equivalent data table.',
+    'anatomy.item2':
+      '<strong>Drawing element</strong> — where the visualization library draws. It is the one carrying the image marking and the description, so the table beside it stays in the accessibility tree.',
+    'anatomy.item3':
+      '<strong>Equivalent data table</strong> — the same numbers as the drawing in a real table, one header per series and one row per category. It always exists; one input makes it visible.',
     'usage.guidelines.item2':
       'One input picks the chart type; what changes between one chart and another is the data, not the assembly.',
     'variants.items.bar.name': 'Bars',
@@ -134,16 +151,14 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
       '<strong>Image role on the drawing, not on the container</strong> — the image marking sits on the drawing itself, not on the block around it: on the container it would prune the data table along with it, and the text alternative would vanish from the accessibility tree.',
     'accessibility.item6':
       '<strong>Contrast</strong> — what secures the 3:1 for graphical objects (WCAG 1.4.11) is the outline of each shape, not the series colour: the default theme series colours sit around 2:1 against the background. Axis text uses the secondary text colour, at 4.5:1.',
-    'notes.tip1':
-      '<strong>No charting library</strong>: the drawing is SVG built by the component itself. There is no dependency to install and no visualization bundle added to the page.',
     'notes.tip2':
       '<strong>Declarative API</strong>: instead of a single configuration object, the inputs are declarative — type, data, category axis, series and title. What changes between one chart and another is the data, not the wiring.',
     'notes.tip3':
-      '<strong>Type that grows</strong>: no text in the drawing has a fixed size. The SVG inherits the container typography, so raising the browser font size raises the axis label with it (WCAG 1.4.4).',
+      '<strong>Type that grows</strong>: the drawing sizes are not hand-picked numbers — they come from the measured root font size, and the theme is re-read when it changes. Raising the browser font size raises the axis label with it (WCAG 1.4.4).',
     'notes.tip4':
       '<strong>Height from the aspect ratio</strong>: the drawing has no hard-coded height. Height comes from the drawing ratio applied to the container width, and the floor comes from the block itself — which is why the page does not jump when the data arrives.',
     'props.extensibility':
-      'For chart types not covered (scatter, radar, heatmap), the path is extending the component, not passing a configuration object: the drawing is built here. Colours and typography still come from the theme either way.',
+      'For chart types not covered (scatter, radar, heatmap), the path is extending the component, not passing a configuration object: turning inputs into configuration happens inside the component. Colours and typography still come from the theme either way.',
     'props.table.showData': 'Makes the data table that already exists for screen readers visible to everyone.',
     'props.table.compact':
       'Inline mini chart: no axes, grid, legend or value labels, and a flattened ratio. Works as a trend indicator next to a number.',
@@ -159,10 +174,18 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'props.table.seriesColor': 'Explicit series colour; overrides the token for that position.',
     'tokens.table.background':
       'Stroke of the pattern laid over each series — it is what separates the hatching from the fill.',
+    'tokens.table.foreground':
+      'Outline of every data shape — what secures the 3:1 for graphical objects — and the colour of the title and tooltip text.',
     'demonstration.labels.pie': 'Pie',
     'demonstration.labels.dataTable': 'Equivalent data table, visible',
   },
   es: {
+    'anatomy.item1':
+      '<strong>Contenedor</strong> — el bloque del design system: lleva la clase, el tipo de gráfico y, junto al dibujo, la tabla de datos equivalente.',
+    'anatomy.item2':
+      '<strong>Elemento del dibujo</strong> — donde dibuja la librería de visualización. Es el que lleva la marca de imagen y la descripción, para que la tabla a su lado siga en el árbol de accesibilidad.',
+    'anatomy.item3':
+      '<strong>Tabla de datos equivalente</strong> — los mismos números del dibujo en una tabla real, con un encabezado por serie y una fila por categoría. Existe siempre; una entrada la hace visible.',
     'usage.guidelines.item2':
       'Una entrada elige el tipo de gráfico; lo que cambia entre uno y otro es el dato, no el armado.',
     'variants.items.bar.name': 'Barras',
@@ -181,16 +204,14 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
       '<strong>Rol de imagen en el dibujo, no en el contenedor</strong> — la marca de imagen va en el propio dibujo, no en el bloque que lo envuelve: en el contenedor podaría también la tabla de datos, y la alternativa textual desaparecería del árbol de accesibilidad.',
     'accessibility.item6':
       '<strong>Contraste</strong> — quien sostiene los 3:1 de objeto gráfico (WCAG 1.4.11) es el contorno de cada forma, no el color de serie: los colores de serie del tema por defecto rondan los 2:1 contra el fondo. El texto de los ejes usa el color de texto secundario, con 4.5:1.',
-    'notes.tip1':
-      '<strong>Sin librería de gráficos</strong>: el dibujo es SVG montado por el propio componente. No hay dependencia que instalar ni bundle de visualización sumado a la página.',
     'notes.tip2':
       '<strong>API declarativa</strong>: en lugar de un objeto de configuración único, las entradas son declarativas — tipo, datos, eje de categorías, series y título. Lo que cambia entre un gráfico y otro es el dato, no el montaje.',
     'notes.tip3':
-      '<strong>Tipografía que crece</strong>: ningún texto del dibujo tiene tamaño fijo. El SVG hereda la tipografía del contenedor, así que aumentar la fuente del navegador aumenta la etiqueta del eje con ella (WCAG 1.4.4).',
+      '<strong>Tipografía que crece</strong>: los tamaños del dibujo no son números elegidos — nacen del tamaño de fuente raíz medido, y el tema se relee cuando cambia. Aumentar la fuente del navegador aumenta la etiqueta del eje (WCAG 1.4.4).',
     'notes.tip4':
       '<strong>Altura por proporción</strong>: el dibujo no tiene altura fija. La altura nace de la proporción del dibujo aplicada al ancho del contenedor, y el piso viene del propio bloque — por eso la página no salta cuando llega el dato.',
     'props.extensibility':
-      'Para tipos de gráfico no cubiertos (dispersión, radar, mapa de calor), el camino es extender el componente, no pasar un objeto de configuración: el dibujo se monta aquí. Los colores y la tipografía siguen viniendo del tema en cualquier caso.',
+      'Para tipos de gráfico no cubiertos (dispersión, radar, mapa de calor), el camino es extender el componente, no pasar un objeto de configuración: quien traduce entradas en configuración es el propio componente. Los colores y la tipografía siguen viniendo del tema en cualquier caso.',
     'props.table.showData': 'Hace visible para todos la tabla de datos que ya existe para lectores de pantalla.',
     'props.table.compact':
       'Mini gráfico en línea: sin ejes, rejilla, leyenda ni etiquetas de valor, y con proporción achatada. Sirve de indicador de tendencia junto a un número.',
@@ -206,6 +227,8 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'props.table.seriesColor': 'Color explícito de la serie; sobrescribe el token de la posición.',
     'tokens.table.background':
       'Trazo de la trama superpuesta a cada serie — es lo que separa el rayado del relleno.',
+    'tokens.table.foreground':
+      'Contorno de toda forma de dato — es lo que sostiene los 3:1 de objeto gráfico — y color del texto del título y de la ayuda emergente.',
     'demonstration.labels.pie': 'Circular',
     'demonstration.labels.dataTable': 'Tabla de datos equivalente, visible',
   },
@@ -245,10 +268,10 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 
 // ─── Snippets ─────────────────────────────────────────────────────────────────
 //
-// O `anatomy.structureCode.angular` do conteúdo compartilhado anuncia
-// "ngx-echarts sobre a mesma option do buildBarOption" e passa `[option]`. Não
-// existe: não há echarts nesta stack e o componente não tem entrada `option`.
-// Os snippets abaixo são o que compila — divergência registrada no relatório.
+// A lib é a mesma das outras stacks, a API não: aqui não há entrada `option` e
+// não há `buildBarOption`. Os snippets abaixo são o uso que compila, e a
+// variante `angular` de `anatomy.structureCode` no conteúdo compartilhado diz
+// o mesmo — a divergência é de API de framework, e está registrada.
 
 const IMPORT_CODE = `import { NdsChart } from '@/components/ui/chart';`;
 
@@ -877,17 +900,22 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      // A coluna do meio é SELETOR, não texto traduzido: escrever "Série 1" ali
-      // deixaria português cravado nas três versões da página.
-      { token: '--chart-1',          k: 'chart1',          parte: '[data-series="0"]'     },
-      { token: '--chart-2',          k: 'chart2',          parte: '[data-series="1"]'     },
-      { token: '--chart-3',          k: 'chart3',          parte: '[data-series="2"]'     },
-      { token: '--chart-4',          k: 'chart4',          parte: '[data-series="3"]'     },
-      { token: '--chart-5',          k: 'chart5',          parte: '[data-series="4"]'     },
-      { token: '--foreground',       k: 'foreground',      parte: '.nds-chart svg [stroke]' },
-      { token: '--muted-foreground', k: 'mutedForeground', parte: '.nds-chart svg text'   },
-      { token: '--border',           k: 'border',          parte: '.nds-chart svg line'   },
-      { token: '--background',       k: 'background',      parte: '.nds-chart pattern'    },
+      // A coluna do meio é CAMINHO NA CONFIGURAÇÃO, não texto traduzido:
+      // escrever "Série 1" ali deixaria português cravado nas três versões da
+      // página. Era seletor de CSS enquanto o desenho era montado à mão; com a
+      // lib, o que endereça a parte é o caminho da option — e é ele que a
+      // pessoa edita se quiser trocar a cor de um pedaço.
+      { token: '--chart-1',          k: 'chart1',          parte: 'series[0]'                   },
+      { token: '--chart-2',          k: 'chart2',          parte: 'series[1]'                   },
+      { token: '--chart-3',          k: 'chart3',          parte: 'series[2]'                   },
+      { token: '--chart-4',          k: 'chart4',          parte: 'series[3]'                   },
+      { token: '--chart-5',          k: 'chart5',          parte: 'series[4]'                   },
+      { token: '--foreground',       k: 'foreground',      parte: 'itemStyle.borderColor'       },
+      { token: '--muted-foreground', k: 'mutedForeground', parte: 'axisLabel.color'             },
+      { token: '--border',           k: 'border',          parte: 'splitLine.lineStyle.color'   },
+      { token: '--background',       k: 'background',      parte: 'aria.decal.decals[].color'   },
+      { token: '--card',             k: 'card',            parte: 'tooltip.backgroundColor'     },
+      { token: '--primary',          k: 'primary',         parte: 'axisPointer.lineStyle.color' },
     ].map(({ token, k, parte }) => ({
       token,
       value: parte,

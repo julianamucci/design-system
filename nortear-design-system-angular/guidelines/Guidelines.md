@@ -64,7 +64,7 @@ Registradas aqui para que ninguém procure seção que não existe:
 |---|---|
 | `02-…-caracteres-especiais` | Cobre também os blocos `@` e a interpolação `{{ }}`, que são exclusivos do Angular. A parte de `<`/`>`/`&` é a mesma das outras |
 | Componente **Stepper** | Não existe neste stack. Só o Vue o tem, e o CSS compartilhado (`nds/stepper.css`) está lá aguardando. Por isso `05-navigation-components.md` não traz a seção |
-| Componente **Chart** | Desenha SVG próprio, sem biblioteca de gráfico. A seção em `08-display-components.md` descreve esse caminho, não o das outras stacks |
+| Componente **Chart** | Mesma lib das outras stacks (`echarts`), API diferente: um componente com entradas declarativas, sem `ChartContainer` + `buildXOption`. A seção em `08-display-components.md` descreve a forma daqui |
 | **DataTable** | Motor de tabela escrito em signals, sem biblioteca de tabela headless. Quatro recursos que o Vanilla tem não existem aqui — listados na própria seção |
 | **Validação de formulário** | `@angular/forms`, sem biblioteca de schema. `06-form-components.md` descreve o que existe |
 | `12-block-components.md` | Arquivo vazio, como nas outras quatro stacks. Mantido para o conjunto ficar comparável; não há conteúdo de blocos em nenhuma stack |

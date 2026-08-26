@@ -177,18 +177,22 @@ Neste stack os textos com marcador são **templates de string** (`'Ordenar por {
 
 **Componente**: `div[ndsChart]`.
 
-> **Este stack desenha SVG próprio, sem biblioteca de gráfico.** As guidelines das outras stacks descrevem uma camada de tema sobre uma biblioteca de dados; aqui não há dependência de gráfico no pacote. O CSS compartilhado (`docs/shared/styles/nds/chart.css`) foi escrito para exatamente este caminho — container responsivo para SVG, sem altura cravada — e é esse contrato que o componente cumpre. **Não documente, nem importe, biblioteca de gráfico neste stack.**
+> **O motor é o mesmo das outras quatro stacks: Apache ECharts, com o renderizador SVG.** Foi SVG desenhado à mão até a migração, e o motivo era circunstancial — não havia `echarts` nas dependências daqui. O que diverge, e continua divergindo, é a **forma da API**: lá é `ChartContainer` + `buildXOption` com um objeto de configuração único; aqui é um componente só, com entradas declarativas. Divergência de API de framework se registra, não se alinha.
+>
+> O renderizador é o SVG, e não o de tela, porque cada forma precisa continuar sendo nó do DOM: é assim que as stories medem contraste e trama em vez de afirmá-los.
 
 **Estrutura**:
 
 ```
 div[ndsChart]
 ├── frase de estado vazio           (quando nenhuma série tem dado)
-├── svg                             (role="img" + nome acessível VÃO AQUI)
-│   ├── eixos e grade
-│   ├── formas de dado              (barra, traçado, área, fatia) com trama
-│   │                                 sobreposta e contorno em --foreground
-│   └── legenda
+├── div[data-slot=chart-canvas]     (role="img" + nome acessível VÃO AQUI)
+│   └── svg                         (desenhado pela lib)
+│       ├── eixos e grade
+│       ├── formas de dado          (barra, traçado, área, fatia), cada uma em
+│       │                             duas camadas: cor e trama, com contorno
+│       │                             em --foreground
+│       └── legenda
 └── table                           (alternativa textual — sr-only por padrão)
     ├── caption                     (a descrição do gráfico)
     ├── th por série
@@ -218,10 +222,14 @@ div[ndsChart]
 | `--foreground` | contorno das formas e texto do título |
 | `--muted-foreground` | texto de eixo e de legenda |
 | `--border` | linhas de grade e de eixo |
+| `--background` | traço da trama (`decal`) sobreposta a cada série |
+| `--card` | fundo da dica sob o ponteiro |
+| `--primary` | indicador de posição no eixo |
 
 **Regras**:
-- Altura nasce da proporção do `viewBox` aplicada à largura do container, com piso no CSS. Não cravar altura
-- **Sem tamanho de fonte no desenho**: o SVG herda a tipografia do container, então aumentar a fonte do navegador aumenta o rótulo de eixo junto (WCAG 1.4.4). Cravar tamanho congelaria o texto
+- Altura nasce da proporção (`.nds-chart-canvas` no elemento do desenho, proporção por `--ratio`) aplicada à largura do container, com piso no CSS. Não cravar altura
+- **Nenhum tamanho de fonte escolhido à mão**: a lib exige número em pixel, então o número é MEDIDO — sai da fonte raiz resolvida, e o tema é relido quando ela muda. Aumentar a fonte do navegador aumenta o rótulo de eixo junto (WCAG 1.4.4)
+- **A trama (`aria.decal`) exige o módulo `AriaComponent` registrado**: sem ele o bloco `aria` é ignorado em silêncio e a trama nunca é desenhada
 - Legenda aparece quando há mais de uma série; com uma só ela some, porque não há o que comparar
 - Estado vazio é frase completa com orientação para a próxima ação, nunca "Sem dados."
 - Tipo não coberto (dispersão, radar, mapa de calor) **não se documenta**: prometer desenho que não sai é pior que omitir
@@ -229,9 +237,9 @@ div[ndsChart]
 
 **Acessibilidade** — as quatro decisões deste componente:
 1. **Alternativa textual equivalente sempre presente.** O componente emite uma tabela de verdade com os mesmos números, com legenda e cabeçalho por série e por categoria. Fora da tela por padrão; visível com `showData`. Um desenho mudo é conteúdo perdido — a tabela **é** o conteúdo
-2. **`role="img"` e o nome acessível vão no `<svg>`, não no container.** Isso diverge do texto do conteúdo compartilhado, e a divergência é deliberada: `role="img"` poda a subárvore da árvore de acessibilidade, então no container a tabela de dados ficaria escondida junto e a alternativa textual sumiria
-3. **A informação não vive na cor** (WCAG 1.4.1). Cada série recebe uma trama sobreposta ao preenchimento, e em linha também um símbolo de ponto próprio. Retirando toda a cor, o gráfico continua legível. A legenda nomeia cada série por escrito
-4. **Contraste de objeto gráfico** (WCAG 1.4.11) vem do **contorno** das formas em `--foreground`, não da cor de série: os tokens de série ficam em torno de 2:1 contra o fundo e entre vizinhos, e sozinhos não sustentam o critério
+2. **`role="img"` e o nome acessível vão no elemento do DESENHO, não no container.** Isso diverge do texto do conteúdo compartilhado, e a divergência é deliberada: `role="img"` poda a subárvore da árvore de acessibilidade, então no container a tabela de dados ficaria escondida junto e a alternativa textual sumiria. É também por isso que a lib monta num elemento interno, e não no bloco `.nds-chart`
+3. **A informação não vive na cor** (WCAG 1.4.1). Cada série recebe uma trama sobreposta ao preenchimento (`aria.decal`), e em linha também um símbolo de ponto e um desenho de traço próprios. Retirando toda a cor, o gráfico continua legível. A legenda nomeia cada série por escrito
+4. **Contraste de objeto gráfico** (WCAG 1.4.11) vem do **contorno** das formas em `--foreground`, não da cor de série: no tema Default as cinco cores ficam entre 2.07 e 13.23 no claro e entre 1.00 e 6.41 no escuro — o `--chart-5` do escuro **é** o fundo, com contraste 1.00. Sem contorno, essa série some. O contorno vem do tema, em `src/lib/echarts-theme.ts`
 
 - Gráfico denso ou dado crítico pede resumo textual à parte, com pico, mínimo e tendência
 - **Lacuna registrada**: `--chart-1` a `--chart-5` não têm variante escura em nenhum tema — o próprio tema padrão diz isso. A recoloração no modo escuro hoje alcança o texto dos eixos, que tem variante; a paleta de série é decisão de design pendente

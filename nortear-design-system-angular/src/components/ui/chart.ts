@@ -1,28 +1,50 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   ViewEncapsulation,
   computed,
+  effect,
   input,
+  signal,
+  viewChild,
 } from '@angular/core';
+
+import * as echarts from 'echarts/core';
+import { BarChart, LineChart, PieChart } from 'echarts/charts';
+import {
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  GridComponent,
+  DatasetComponent,
+  AriaComponent,
+} from 'echarts/components';
+import { SVGRenderer } from 'echarts/renderers';
+
+import { THEME_NAME, rootFontSize, hsl, registerNortearTheme, watchTheme } from '@/lib/echarts-theme';
+import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 
 // ─── Chart ────────────────────────────────────────────────────────────────────
 //
-// CAMINHO DE RENDERIZAÇÃO ESCOLHIDO: **SVG puro, desenhado aqui**.
+// CAMINHO DE RENDERIZAÇÃO: **Apache ECharts**, com o renderizador SVG.
 //
-// Por quê: o `package.json` deste pacote não tem echarts nem wrapper de gráfico,
-// e instalar dependência está fora do escopo. O Vanilla — referência cross-stack
-// — hoje usa echarts, mas o CSS compartilhado que ele consome
-// (`docs/shared/styles/nds/chart.css`) foi escrito para exatamente este caminho:
-// "Container responsivo para gráficos SVG. Cores e tipo (bar/line) vêm da
-// factory", com `.nds-chart > svg { display: block; width: 100% }`. É esse
-// contrato que o componente cumpre: o SVG tem `viewBox` e nenhuma altura
-// cravada — a altura nasce da proporção do viewBox aplicada à largura do
-// container, e o `min-height` do `.nds-chart` segura o piso.
+// Foi SVG desenhado à mão até esta migração, e o motivo era circunstancial: não
+// havia echarts nas dependências desta stack. Havia nas outras quatro, e o
+// conteúdo compartilhado descrevia a lib que só aqui não existia. Com a
+// dependência instalada, o motor passa a ser o mesmo das cinco; o que NÃO muda
+// é nada do contrato de acessibilidade abaixo, que era o valor real do desenho
+// à mão e continua sendo cumprido, item por item, sobre o novo motor.
 //
-// Sem `font-size` em nenhum `<text>`: o SVG herda a tipografia do container, de
-// modo que aumentar a fonte do navegador aumenta o texto do gráfico junto
-// (WCAG 1.4.4). Cravar `font-size="12"` congelaria o rótulo do eixo.
+// O renderizador é o SVG (e não o de tela): as formas continuam sendo nós do
+// DOM, então cor, contorno e trama seguem mensuráveis por `getComputedStyle`
+// nas stories de contraste — que é como este componente prova a WCAG 1.4.11 em
+// vez de afirmá-la.
+//
+// A altura continua nascendo da PROPORÇÃO aplicada à largura do container:
+// o elemento em que a lib desenha é um `.nds-chart-canvas`, e o `min-height` do
+// `.nds-chart` segue sendo o piso. O ECharts precisa de uma caixa medida para
+// iniciar, e é a proporção que a fornece sem cravar pixel nenhum.
 //
 // ─── Acessibilidade: as quatro decisões ──────────────────────────────────────
 //
@@ -30,39 +52,53 @@ import {
 //    `<table>` de verdade com os mesmos números do desenho: cabeçalho por
 //    série, `<th scope="row">` por categoria, `<caption>` com a descrição do
 //    gráfico. Por padrão ela é `.nds-sr-only` (existe para leitor de tela e
-//    para quem lê o DOM); `showData` a torna visível para todo mundo. Um
-//    `<svg>` mudo seria conteúdo perdido — a tabela é o conteúdo.
+//    para quem lê o DOM); `showData` a torna visível para todo mundo. O ECharts
+//    NÃO gera essa tabela — `aria.label` produz uma frase em inglês, dentro de
+//    um elemento que o próprio `role="img"` poda. A tabela é do componente, e
+//    continua sendo.
 //
-// 2. `role="img"` + `aria-label` vão no **`<svg>`**, não no `<div>` container.
-//    Isto diverge do texto do conteúdo compartilhado, que fala em
+// 2. `role="img"` + `aria-label` vão no elemento do **DESENHO**, não no `<div>`
+//    container. Isto diverge do texto do conteúdo compartilhado, que fala em
 //    `div[data-slot=chart]`, e a divergência é deliberada: `role="img"` poda a
 //    subárvore da árvore de acessibilidade. No container, a tabela de dados
-//    ficaria escondida junto — a alternativa textual sumiria. No `<svg>`, o
-//    desenho é anunciado como uma imagem com rótulo e a tabela continua
-//    exposta, lado a lado.
+//    ficaria escondida junto — a alternativa textual sumiria. No elemento em
+//    que a lib desenha, o desenho é anunciado como uma imagem com rótulo e a
+//    tabela continua exposta, lado a lado. (É também por isso que a lib monta
+//    num elemento INTERNO, e não no bloco `.nds-chart`.)
 //
-// 3. A INFORMAÇÃO NÃO VIVE NA COR. Cada série recebe uma trama (hachura
-//    diagonal, pontos, grade…) sobreposta ao preenchimento — o equivalente ao
-//    `decal` do ECharts que o conteúdo compartilhado promete — e a legenda
-//    traz o nome escrito. Em `line`, além da cor, cada série tem símbolo de
-//    ponto próprio (círculo, quadrado, triângulo, losango, cruz). Retirando
-//    toda a cor, o gráfico continua legível.
+// 3. A INFORMAÇÃO NÃO VIVE NA COR. `aria.decal.show` sobrepõe uma trama a cada
+//    série — hachura diagonal, pontos, grade… — e a legenda traz o nome
+//    escrito. Em `line`/`area`, além da cor, cada série tem símbolo de ponto
+//    próprio (círculo, quadrado, triângulo, losango, seta) e desenho de traço
+//    próprio. Retirando toda a cor, o gráfico continua legível.
 //
-// 4. CONTRASTE (WCAG 1.4.11). Toda forma de dado — barra, fatia, símbolo —
-//    é contornada com `hsl(var(--foreground))`, que passa de 3:1 contra o
-//    fundo em qualquer tema. É o contorno que delimita o objeto gráfico, e
-//    não a cor de série: os tokens `--chart-1` a `--chart-5` do tema padrão
-//    ficam entre 2.0:1 e 2.9:1 contra o fundo branco e entre 1.14:1 e 1.29:1
-//    entre vizinhos, ou seja, sozinhos não sustentam o critério.
+// 4. CONTRASTE (WCAG 1.4.11). Toda forma de dado — barra, fatia, símbolo — é
+//    contornada com `hsl(var(--foreground))`, que passa de 3:1 contra o fundo
+//    em qualquer tema. O contorno vem do tema (`bar/line/pie.itemStyle.
+//    borderColor` em `@/lib/echarts-theme`) e é ele que delimita o objeto
+//    gráfico, não a cor de série: no tema Default as cinco cores ficam entre
+//    2.07 e 13.23 no claro e entre 1.00 e 6.41 no escuro — o `--chart-5` do
+//    escuro É o fundo, contraste 1.00. Sem contorno, essa série some.
 //
-// SEM TOOLTIP POR PONTEIRO. Cada forma leva um `<title>` (dica nativa do
-// navegador ao passar o mouse), mas nenhuma informação existe só ali: o mesmo
-// par categoria/valor está na tabela, alcançável sem ponteiro e sem foco.
+// A DICA SOB O PONTEIRO agora existe (a lib a desenha), e continua sem carregar
+// informação exclusiva: o mesmo par categoria/valor está na tabela, alcançável
+// sem ponteiro e sem foco.
 //
 // Divergência de API registrada (não "alinhada"): as outras stacks separam
 // `ChartContainer` + `buildXOption`. Aqui é um componente só, com inputs
-// declarativos — Angular não teria o que ganhar montando um objeto de
-// configuração para repassar a si mesmo.
+// declarativos — a troca de motor não mexeu na API pública.
+
+// Bootstrap dos módulos — idempotente. Tree-shake friendly.
+//
+// `AriaComponent` não é enfeite: sem ele o bloco `aria` do option é ignorado em
+// silêncio, e a trama sobreposta a cada série — que é o que cumpre a WCAG 1.4.1
+// quando a cor sai de cena — nunca chega a ser desenhada.
+echarts.use([
+  BarChart, LineChart, PieChart,
+  TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
+  AriaComponent,
+  SVGRenderer,
+]);
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -82,111 +118,46 @@ export interface ChartSeries {
   color?: string;
 }
 
-// ─── Geometria (unidades do viewBox, não pixels) ─────────────────────────────
-//
-// Tudo abaixo é dado virando desenho: `x`, `y`, `width`, `d`, `points`. Não é
-// CSS inline — cor e tipografia continuam vindo de token.
+// ─── Vocabulário do desenho ──────────────────────────────────────────────────
 
-const VB_L = 640;
-const VB_A = 320;
-const MARGEM = { esq: 72, dir: 24, topo: 24, base: 44 };
-const ALT_TITLE = 26;
-const ALT_CAPTION = 34;
-const DIVISOES_Y = 4;
-const RAIO_SIMBOLO = 5;
+/**
+ * Tramas do decal, uma por posição de série; a 6ª volta à 1ª.
+ *
+ * O ECharts tem uma lista padrão, e ela não serve: as tramas nascem em preto
+ * translúcido, que sobre a paleta escura fica invisível. Estas repetem os cinco
+ * desenhos que o SVG à mão traçava — diagonal ascendente, pontos, diagonal
+ * descendente, horizontais, grade — no traço do FUNDO, que é o que separa a
+ * hachura do preenchimento em qualquer tema.
+ */
+function tramas(cor: string): Record<string, unknown>[] {
+  return [
+    { color: cor, dashArrayX: [1, 0], dashArrayY: [4, 3], rotation: Math.PI / 4 },
+    { color: cor, symbol: 'circle', dashArrayX: [[8, 8], [0, 8, 8, 0]], dashArrayY: [6, 0], symbolSize: 0.8 },
+    { color: cor, dashArrayX: [1, 0], dashArrayY: [4, 3], rotation: -Math.PI / 4 },
+    { color: cor, dashArrayX: [1, 0], dashArrayY: [4, 3], rotation: 0 },
+    { color: cor, dashArrayX: [[1, 0], [1, 6]], dashArrayY: [1, 0, 6, 0], rotation: Math.PI / 4 },
+  ];
+}
 
-/** Tramas do decal. Uma por posição de série; o 6º volta ao 1º. */
-const TRAMAS: readonly string[] = [
-  'M0 8 L8 0 M-2 2 L2 -2 M6 10 L10 6', // diagonal ascendente
-  'M2 2 L2 2 M6 6 L6 6',               // pontos (stroke-linecap round)
-  'M0 0 L8 8 M-2 6 L2 10 M6 -2 L10 2', // diagonal descendente
-  'M0 2 L8 2 M0 6 L8 6',               // horizontais
-  'M0 4 L8 4 M4 0 L4 8',               // grade
+/** Símbolo de ponto, na ordem das séries — a série se distingue sem a cor. */
+const SIMBOLOS: readonly string[] = ['circle', 'rect', 'triangle', 'diamond', 'arrow'];
+
+/** Desenho do traço, na ordem das séries. `solid` e quatro tracejados. */
+const TRACOS: readonly (string | number[])[] = [
+  'solid', [10, 5], [2, 4], [12, 4, 2, 4], [6, 3, 2, 3],
 ];
 
-/** Traços de linha — a série se distingue sem depender da cor. */
-const TRACOS: readonly string[] = ['0', '10 5', '2 4', '12 4 2 4', '6 3 2 3'];
-
-/** Formas de símbolo, na ordem das séries. */
-type FormaSimbolo = 'circulo' | 'quadrado' | 'triangulo' | 'losango' | 'cruz';
-const FORMAS: readonly FormaSimbolo[] = ['circulo', 'quadrado', 'triangulo', 'losango', 'cruz'];
-
-export interface GridY { y: number; label: string }
-export interface MarcaX { x: number; label: string }
-export interface FormaDatum {
-  /** `d` de path ou geometria de rect, conforme o consumidor. */
-  x: number; y: number; w: number; h: number;
-  cor: string; trama: string; serie: number; title: string;
-}
-export interface TracadoLine { d: string; cor: string; traco: string; serie: number }
-export interface AreaPreenchida { d: string; cor: string; trama: string; serie: number }
-export interface SimboloPonto { d: string; cor: string; serie: number; title: string }
-export interface FatiaPizza { d: string; cor: string; trama: string; serie: number; title: string }
-export interface LabelValue { x: number; y: number; text: string }
-export interface ItemCaption {
-  x: number; y: number; cor: string; trama: string; traco: string;
-  simbolo: string; text: string;
-}
+/** Proporção do desenho: a mesma do viewBox anterior, cheia e achatada. */
+const RATIO = '640 / 320';
+const RATIO_COMPACT = '640 / 140';
 
 // ─── Funções puras ────────────────────────────────────────────────────────────
-
-/** Escada "redonda" para o eixo Y: 0, passo, 2·passo… até cobrir o máximo. */
-function escalaY(maximo: number): { topo: number; step: number } {
-  if (!(maximo > 0)) return { topo: 1, step: 1 / DIVISOES_Y };
-  const raw = maximo / DIVISOES_Y;
-  const magnitude = Math.pow(10, Math.floor(Math.log10(raw)));
-  const normalizado = raw / magnitude;
-  const fator = normalizado <= 1 ? 1 : normalizado <= 2 ? 2 : normalizado <= 5 ? 5 : 10;
-  const step = fator * magnitude;
-  return { topo: Math.ceil(maximo / step) * step, step };
-}
 
 /** Número curto o bastante para caber no eixo, sem depender de locale. */
 export function formatarValue(value: number): string {
   if (Number.isInteger(value)) return String(value);
   return String(Math.round(value * 100) / 100);
 }
-
-/** Cor da série: a explícita, ou o token da posição (ciclo de 5). */
-function serieColor(index: number, explicita?: string): string {
-  return explicita ?? `hsl(var(--chart-${(index % 5) + 1}))`;
-}
-
-function caminhoSimbolo(forma: FormaSimbolo, cx: number, cy: number, r: number): string {
-  switch (forma) {
-    case 'quadrado':
-      return `M${cx - r} ${cy - r} H${cx + r} V${cy + r} H${cx - r} Z`;
-    case 'triangulo':
-      return `M${cx} ${cy - r} L${cx + r} ${cy + r} L${cx - r} ${cy + r} Z`;
-    case 'losango':
-      return `M${cx} ${cy - r} L${cx + r} ${cy} L${cx} ${cy + r} L${cx - r} ${cy} Z`;
-    case 'cruz':
-      return `M${cx - r} ${cy - r} L${cx + r} ${cy + r} M${cx + r} ${cy - r} L${cx - r} ${cy + r}`;
-    default:
-      // Círculo por dois arcos — mantém tudo como `d` de path.
-      return `M${cx - r} ${cy} a${r} ${r} 0 1 0 ${r * 2} 0 a${r} ${r} 0 1 0 ${-r * 2} 0`;
-  }
-}
-
-/** Setor de rosca entre dois ângulos (radianos, 0 = topo, sentido horário). */
-function caminhoFatia(
-  cx: number, cy: number, raio: number, raioInterno: number,
-  de: number, ate: number,
-): string {
-  // 2π quebra o arco (início e fim coincidem): corta um fio de ângulo.
-  const end = ate - de >= Math.PI * 2 ? de + Math.PI * 2 - 0.0001 : ate;
-  const grande = end - de > Math.PI ? 1 : 0;
-  const p = (ang: number, r: number) => `${cx + r * Math.sin(ang)} ${cy - r * Math.cos(ang)}`;
-  return [
-    `M${p(de, raio)}`,
-    `A${raio} ${raio} 0 ${grande} 1 ${p(end, raio)}`,
-    `L${p(end, raioInterno)}`,
-    `A${raioInterno} ${raioInterno} 0 ${grande} 0 ${p(de, raioInterno)}`,
-    'Z',
-  ].join(' ');
-}
-
-let sequencia = 0;
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 
@@ -202,179 +173,24 @@ let sequencia = 0;
   },
   template: `
     @if (vazio()) {
+      <!-- Sem \`role="img"\` aqui de propósito: o papel PODA a subárvore da
+           árvore de acessibilidade, e a frase que explica a ausência de dado é
+           justamente o conteúdo — ficaria escondida atrás de um rótulo
+           genérico. -->
       <p class="nds-chart-empty">{{ emptyLabel() }}</p>
     } @else {
-      <svg
-        [attr.viewBox]="'0 0 ' + VB_L + ' ' + vbA()"
-        preserveAspectRatio="xMidYMid meet"
+      <!-- O elemento em que a lib desenha. É ele — e não o bloco em volta — que
+           leva o papel de imagem, para que a tabela abaixo continue na árvore
+           de acessibilidade (decisão 2). A proporção é custom property, e a
+           altura nasce dela aplicada à largura do container. -->
+      <div
+        #desenho
+        class="nds-chart-canvas"
+        [style.--ratio]="ratio()"
+        data-slot="chart-canvas"
         role="img"
         [attr.aria-label]="label()"
-      >
-        <defs>
-          @for (trama of tramas(); track trama.id) {
-            <pattern
-              [attr.id]="trama.id"
-              patternUnits="userSpaceOnUse"
-              width="8"
-              height="8"
-            >
-              <path
-                [attr.d]="trama.d"
-                fill="none"
-                stroke="hsl(var(--background))"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              />
-            </pattern>
-          }
-        </defs>
-
-        @if (chartTitle()) {
-          <text x="8" y="18" fill="hsl(var(--foreground))">{{ chartTitle() }}</text>
-        }
-
-        @if (cartesiano()) {
-          <!-- Grade + rótulos do eixo Y. As linhas são decorativas; o número
-               ao lado é que carrega a informação. -->
-          @for (line of gradeY(); track line.y) {
-            <line
-              [attr.x1]="plot().x"
-              [attr.y1]="line.y"
-              [attr.x2]="plot().x + plot().w"
-              [attr.y2]="line.y"
-              stroke="hsl(var(--border))"
-              stroke-width="1"
-            />
-            <text
-              [attr.x]="plot().x - 10"
-              [attr.y]="line.y"
-              text-anchor="end"
-              dominant-baseline="middle"
-              fill="hsl(var(--muted-foreground))"
-            >{{ line.label }}</text>
-          }
-
-          @for (marca of marcasX(); track marca.label) {
-            <text
-              [attr.x]="marca.x"
-              [attr.y]="plot().y + plot().h + 20"
-              text-anchor="middle"
-              dominant-baseline="hanging"
-              fill="hsl(var(--muted-foreground))"
-            >{{ marca.label }}</text>
-          }
-        }
-
-        <!-- Áreas primeiro: ficam atrás da linha e dos símbolos. -->
-        @for (area of areas(); track $index) {
-          <path [attr.d]="area.d" [attr.fill]="area.cor" fill-opacity="0.2" stroke="none" />
-          <path [attr.d]="area.d" [attr.fill]="'url(#' + area.trama + ')'" fill-opacity="0.5" stroke="none" />
-        }
-
-        <!-- Barras: retângulo de cor + retângulo de trama com o contorno. -->
-        @for (barra of barras(); track $index) {
-          <rect
-            [attr.x]="barra.x" [attr.y]="barra.y"
-            [attr.width]="barra.w" [attr.height]="barra.h"
-            [attr.fill]="barra.cor"
-            [attr.data-series]="barra.serie"
-            stroke="none"
-          ><title>{{ barra.title }}</title></rect>
-          <rect
-            [attr.x]="barra.x" [attr.y]="barra.y"
-            [attr.width]="barra.w" [attr.height]="barra.h"
-            [attr.fill]="'url(#' + barra.trama + ')'"
-            stroke="hsl(var(--foreground))"
-            stroke-width="1"
-          />
-        }
-
-        @for (line of lines(); track $index) {
-          <path
-            [attr.d]="line.d"
-            fill="none"
-            [attr.stroke]="line.cor"
-            [attr.stroke-dasharray]="line.traco"
-            [attr.data-series]="line.serie"
-            stroke-width="2.5"
-            stroke-linejoin="round"
-            stroke-linecap="round"
-          />
-        }
-
-        @for (simbolo of simbolos(); track $index) {
-          <path
-            [attr.d]="simbolo.d"
-            [attr.fill]="simbolo.cor"
-            [attr.data-series]="simbolo.serie"
-            stroke="hsl(var(--foreground))"
-            stroke-width="1"
-          ><title>{{ simbolo.title }}</title></path>
-        }
-
-        @for (fatia of fatias(); track $index) {
-          <path
-            [attr.d]="fatia.d"
-            [attr.fill]="fatia.cor"
-            [attr.data-series]="fatia.serie"
-            stroke="none"
-          ><title>{{ fatia.title }}</title></path>
-          <path
-            [attr.d]="fatia.d"
-            [attr.fill]="'url(#' + fatia.trama + ')'"
-            stroke="hsl(var(--foreground))"
-            stroke-width="1"
-          />
-        }
-
-        <!-- Valor legível junto do dado — só na série única, onde cabe. -->
-        @for (label of rotulosValor(); track $index) {
-          <text
-            [attr.x]="label.x"
-            [attr.y]="label.y"
-            text-anchor="middle"
-            fill="hsl(var(--foreground))"
-          >{{ label.text }}</text>
-        }
-
-        @for (item of caption(); track item.text) {
-          @if (tipoLegendaLinha()) {
-            <path
-              [attr.d]="'M' + item.x + ' ' + (item.y + 7) + ' h22'"
-              fill="none"
-              [attr.stroke]="item.cor"
-              [attr.stroke-dasharray]="item.traco"
-              stroke-width="2.5"
-            />
-            <path
-              [attr.d]="item.simbolo"
-              [attr.fill]="item.cor"
-              stroke="hsl(var(--foreground))"
-              stroke-width="1"
-            />
-          } @else {
-            <rect
-              [attr.x]="item.x" [attr.y]="item.y"
-              width="14" height="14"
-              [attr.fill]="item.cor"
-              stroke="none"
-            />
-            <rect
-              [attr.x]="item.x" [attr.y]="item.y"
-              width="14" height="14"
-              [attr.fill]="'url(#' + item.trama + ')'"
-              stroke="hsl(var(--foreground))"
-              stroke-width="1"
-            />
-          }
-          <text
-            [attr.x]="item.x + 30"
-            [attr.y]="item.y + 7"
-            dominant-baseline="middle"
-            fill="hsl(var(--foreground))"
-          >{{ item.text }}</text>
-        }
-      </svg>
+      ></div>
 
       <!-- Alternativa textual equivalente. Não é enfeite: é o mesmo dado, em
            forma que leitor de tela, busca e cópia alcançam.
@@ -421,7 +237,7 @@ export class NdsChart {
 
   /**
    * Descrição do gráfico. Obrigatório de propósito: vira o `aria-label` do
-   * `<svg>` e a `<caption>` da tabela. Sem ele o desenho é conteúdo perdido,
+   * desenho e a `<caption>` da tabela. Sem ele o desenho é conteúdo perdido,
    * então o compilador cobra.
    */
   readonly label = input.required<string>();
@@ -457,16 +273,23 @@ export class NdsChart {
   readonly shareLabel = input<string>('Participação');
   readonly emptyLabel = input<string>('Sem dados para exibir');
 
-  // O contexto de template não tem globais — as constantes viram campos.
-  protected readonly VB_L = VB_L;
+  private readonly desenho = viewChild<ElementRef<HTMLElement>>('desenho');
 
-  /** Altura do viewBox: achatada no modo compacto. */
-  protected readonly vbA = computed(() => (this.compact() ? 140 : VB_A));
+  /** Instância viva da lib. Signal para que o efeito de option a acompanhe. */
+  private readonly instancia = signal<echarts.ECharts | null>(null);
 
-  /** Ids de `<pattern>` precisam ser únicos no documento inteiro. */
-  private readonly uid = `nds-chart-${++sequencia}`;
+  /**
+   * Contador de troca de tema.
+   *
+   * O option carrega cores RESOLVIDAS (a trama do decal sai de `--background`),
+   * e `setTheme` relê só o registro do tema — não o option. Sem este sinal, a
+   * trama ficaria com a cor do tema anterior depois da troca.
+   */
+  private readonly temaVersao = signal(0);
 
   protected readonly cartesiano = computed(() => this.type() !== 'pie');
+
+  protected readonly ratio = computed(() => (this.compact() ? RATIO_COMPACT : RATIO));
 
   protected readonly serieNorm = computed<ChartSeries[]>(() => {
     const multi = this.series();
@@ -502,226 +325,233 @@ export class NdsChart {
     return this.showLegend() ?? this.serieNorm().length > 1;
   });
 
-  protected readonly tipoLegendaLinha = computed(() => this.type() === 'line');
-
-  protected readonly tramas = computed(() =>
-    TRAMAS.map((d, i) => ({ id: `${this.uid}-trama-${i}`, d })),
-  );
-
-  protected readonly plot = computed(() => {
-    // No modo compacto não há eixo para rotular: a margem some e o traçado
-    // ocupa a caixa inteira.
-    if (this.compact()) return { x: 6, y: 6, w: VB_L - 12, h: this.vbA() - 12 };
-    const y = MARGEM.topo + (this.chartTitle() ? ALT_TITLE : 0);
-    const base = this.vbA() - MARGEM.base - (this.legendaVisivel() ? ALT_CAPTION : 0);
-    return { x: MARGEM.esq, y, w: VB_L - MARGEM.esq - MARGEM.dir, h: Math.max(1, base - y) };
-  });
-
-  private readonly escala = computed(() => {
-    const maximo = this.serieNorm().reduce(
-      (max, s) => s.data.reduce((m, v) => Math.max(m, v), max),
-      0,
-    );
-    return escalaY(maximo);
-  });
-
-  protected readonly gradeY = computed<GridY[]>(() => {
-    if (!this.cartesiano() || this.compact()) return [];
-    const { y, h } = this.plot();
-    const { topo } = this.escala();
-    return Array.from({ length: DIVISOES_Y + 1 }, (_, i) => {
-      const fraction = i / DIVISOES_Y;
-      return { y: y + h - fraction * h, label: formatarValue(topo * fraction) };
-    });
-  });
-
-  private readonly banda = computed(() => {
-    const total = Math.max(1, this.categorias().length);
-    return this.plot().w / total;
-  });
-
-  protected readonly marcasX = computed<MarcaX[]>(() => {
-    if (!this.cartesiano() || this.compact()) return [];
-    const { x } = this.plot();
-    const banda = this.banda();
-    return this.categorias().map((label, i) => ({ x: x + (i + 0.5) * banda, label }));
-  });
-
-  /** y de um valor dentro da área de plotagem. */
-  private posY(value: number): number {
-    const { y, h } = this.plot();
-    const { topo } = this.escala();
-    return y + h - (Math.max(0, value) / topo) * h;
-  }
-
-  protected readonly barras = computed<FormaDatum[]>(() => {
-    if (this.type() !== 'bar') return [];
-    const series = this.serieNorm();
-    const banda = this.banda();
-    const { x, y, h } = this.plot();
-    const group = banda * 0.68;
-    const width = group / Math.max(1, series.length);
-    const saida: FormaDatum[] = [];
-    this.categorias().forEach((categoria, iCat) => {
-      series.forEach((serie, iSerie) => {
-        const value = serie.data[iCat];
-        if (value === undefined) return;
-        const topoBar = this.posY(value);
-        saida.push({
-          x: x + iCat * banda + (banda - group) / 2 + iSerie * width,
-          y: topoBar,
-          w: width,
-          h: Math.max(0, y + h - topoBar),
-          cor: serieColor(iSerie, serie.color),
-          trama: `${this.uid}-trama-${iSerie % TRAMAS.length}`,
-          serie: iSerie,
-          title: `${serie.name}, ${categoria}: ${formatarValue(value)}`,
-        });
-      });
-    });
-    return saida;
-  });
-
-  private readonly pontos = computed(() => {
-    if (this.type() !== 'line' && this.type() !== 'area') return [];
-    const banda = this.banda();
-    const { x } = this.plot();
-    return this.serieNorm().map((serie, iSerie) => ({
-      serie: iSerie,
-      cor: serieColor(iSerie, serie.color),
-      name: serie.name,
-      coords: this.categorias().flatMap((categoria, iCat) => {
-        const value = serie.data[iCat];
-        if (value === undefined) return [];
-        return [{
-          cx: x + (iCat + 0.5) * banda,
-          cy: this.posY(value),
-          title: `${serie.name}, ${categoria}: ${formatarValue(value)}`,
-        }];
-      }),
-    }));
-  });
-
-  protected readonly lines = computed<TracadoLine[]>(() =>
-    this.pontos()
-      .filter((s) => s.coords.length > 0)
-      .map((s) => ({
-        d: s.coords.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.cx} ${p.cy}`).join(' '),
-        cor: s.cor,
-        traco: TRACOS[s.serie % TRACOS.length],
-        serie: s.serie,
-      })),
-  );
-
-  protected readonly areas = computed<AreaPreenchida[]>(() => {
-    if (this.type() !== 'area') return [];
-    const base = this.plot().y + this.plot().h;
-    return this.pontos()
-      .filter((s) => s.coords.length > 0)
-      .map((s) => ({
-        d: [
-          s.coords.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.cx} ${p.cy}`).join(' '),
-          `L${s.coords[s.coords.length - 1].cx} ${base}`,
-          `L${s.coords[0].cx} ${base}`,
-          'Z',
-        ].join(' '),
-        cor: s.cor,
-        trama: `${this.uid}-trama-${s.serie % TRAMAS.length}`,
-        serie: s.serie,
-      }));
-  });
-
-  protected readonly simbolos = computed<SimboloPonto[]>(() =>
-    this.pontos().flatMap((s) =>
-      s.coords.map((p) => ({
-        d: caminhoSimbolo(FORMAS[s.serie % FORMAS.length], p.cx, p.cy, RAIO_SIMBOLO),
-        cor: s.cor,
-        serie: s.serie,
-        title: p.title,
-      })),
-    ),
-  );
-
   private readonly totalPizza = computed(() =>
     this.fatiasDados().reduce((sum, p) => sum + Math.max(0, p.value), 0),
   );
 
-  protected readonly fatias = computed<FatiaPizza[]>(() => {
-    if (this.cartesiano()) return [];
+  // ─── Option ────────────────────────────────────────────────────────────────
+
+  private readonly option = computed<echarts.EChartsCoreOption>(() => {
+    // Depende da troca de tema porque carrega cor resolvida (ver `temaVersao`).
+    this.temaVersao();
+
+    const compact = this.compact();
+    const animar = !prefersReducedMotion();
+    const dur = Math.round(motionDuration('moderate') * 1000);
+    const aria = {
+      enabled: true,
+      // A descrição gerada pela lib fica desligada de propósito: nasce em inglês
+      // e mora num elemento que o `role="img"` do desenho poda. Quem carrega a
+      // alternativa textual é o `aria-label` autoral, mais a tabela.
+      label: { enabled: false },
+      decal: { show: true, decals: tramas(hsl('background')) },
+    };
+    const title = this.chartTitle() && !compact
+      ? { text: this.chartTitle(), left: 'left' }
+      : undefined;
+
+    if (!this.cartesiano()) return this.optionPizza(title, aria, animar, dur);
+    return this.optionCartesiano(title, aria, animar, dur, compact);
+  });
+
+  private optionPizza(
+    title: unknown,
+    aria: unknown,
+    animar: boolean,
+    dur: number,
+  ): echarts.EChartsCoreOption {
     const pontos = this.fatiasDados();
-    const total = this.totalPizza();
-    if (total <= 0) return [];
-    const { x, y, w, h } = this.plot();
-    const cx = x + w / 2;
-    const cy = y + h / 2;
-    const raio = (Math.min(w, h) / 2) * 0.92;
-    let angulo = 0;
-    return pontos.map((ponto, i) => {
-      const fraction = Math.max(0, ponto.value) / total;
-      const de = angulo;
-      angulo += fraction * Math.PI * 2;
-      return {
-        d: caminhoFatia(cx, cy, raio, raio * 0.55, de, angulo),
-        cor: serieColor(i, undefined),
-        trama: `${this.uid}-trama-${i % TRAMAS.length}`,
-        serie: i,
-        title: `${ponto.label}: ${formatarValue(ponto.value)} (${this.percentual(ponto.value)})`,
-      };
-    });
-  });
+    // A legenda da pizza é o rótulo da fatia: sem nome, valor e participação
+    // escritos, a única pista de qual fatia é qual seria a cor.
+    const legendText = new Map(
+      pontos.map((p) => [
+        p.label,
+        `${p.label} — ${formatarValue(p.value)} (${this.percentual(p.value)})`,
+      ]),
+    );
+    return {
+      title,
+      tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+      legend: this.legendaVisivel()
+        ? {
+          bottom: 0,
+          icon: 'roundRect',
+          itemWidth: 12,
+          itemHeight: 8,
+          formatter: (name: string) => legendText.get(name) ?? name,
+        }
+        : undefined,
+      series: [{
+        type: 'pie',
+        radius: ['40%', '70%'],
+        center: ['50%', this.chartTitle() ? '52%' : '45%'],
+        avoidLabelOverlap: true,
+        label: { show: false },
+        labelLine: { show: false },
+        itemStyle: { borderRadius: 4 },
+        data: pontos.map((p) => ({ name: p.label, value: p.value })),
+      }],
+      animation: animar,
+      animationDuration: dur,
+      aria,
+    };
+  }
 
-  protected readonly rotulosValor = computed<LabelValue[]>(() => {
-    // Só na série única: com duas séries os números se sobrepõem e a tabela
-    // já entrega o valor exato.
+  private optionCartesiano(
+    title: unknown,
+    aria: unknown,
+    animar: boolean,
+    dur: number,
+    compact: boolean,
+  ): echarts.EChartsCoreOption {
+    const type = this.type();
     const series = this.serieNorm();
-    if (!this.cartesiano() || this.compact() || series.length !== 1) return [];
-    const values = series[0].data;
-    if (this.type() === 'bar') {
-      return this.barras().map((barra, i) => ({
-        x: barra.x + barra.w / 2,
-        y: barra.y - 6,
-        text: formatarValue(values[i] ?? 0),
-      }));
-    }
-    const banda = this.banda();
-    const { x } = this.plot();
-    return this.categorias().flatMap((_, i) => {
-      const value = values[i];
-      if (value === undefined) return [];
-      return [{
-        x: x + (i + 0.5) * banda,
-        y: this.posY(value) - RAIO_SIMBOLO - 6,
-        text: formatarValue(value),
-      }];
-    });
-  });
+    const legenda = this.legendaVisivel();
+    // Com uma série só não há números se sobrepondo: o valor exato cabe junto
+    // do dado. Com duas ou mais, quem entrega o número é a tabela.
+    const labelValues = series.length === 1 && !compact;
 
-  protected readonly caption = computed<ItemCaption[]>(() => {
-    if (!this.legendaVisivel()) return [];
-    const names = this.cartesiano()
-      ? this.serieNorm().map((s, i) => ({ text: s.name, cor: serieColor(i, s.color), i }))
-      : this.fatiasDados().map((p, i) => ({
-        text: `${p.label} — ${formatarValue(p.value)} (${this.percentual(p.value)})`,
-        cor: serieColor(i, undefined),
-        i,
-      }));
-    if (names.length === 0) return [];
-    const vaga = Math.min(220, VB_L / names.length);
-    const start = (VB_L - vaga * names.length) / 2;
-    const y = this.vbA() - ALT_CAPTION + 8;
-    return names.map((n) => {
-      const x = start + n.i * vaga;
-      return {
-        x,
-        y,
-        cor: n.cor,
-        trama: `${this.uid}-trama-${n.i % TRAMAS.length}`,
-        traco: TRACOS[n.i % TRACOS.length],
-        simbolo: caminhoSimbolo(FORMAS[n.i % FORMAS.length], x + 11, y + 7, RAIO_SIMBOLO),
-        text: n.text,
-      };
+    return {
+      title,
+      tooltip: { trigger: 'axis', axisPointer: { type: type === 'bar' ? 'shadow' : 'line' } },
+      legend: legenda
+        ? {
+          data: series.map((s) => s.name),
+          bottom: 0,
+          // No gráfico de linhas a legenda herda o símbolo da própria série —
+          // é a mesma pista de forma que separa as séries no desenho.
+          ...(type === 'bar' ? { icon: 'roundRect', itemHeight: 8 } : {}),
+          itemWidth: 14,
+        }
+        : undefined,
+      grid: compact
+        ? { left: 2, right: 2, top: 2, bottom: 2, containLabel: false }
+        : {
+          left: 16,
+          right: 16,
+          top: title ? 48 : 24,
+          bottom: legenda ? 48 : 24,
+          containLabel: true,
+        },
+      xAxis: {
+        type: 'category',
+        data: this.categorias(),
+        boundaryGap: type === 'bar',
+        show: !compact,
+      },
+      yAxis: { type: 'value', show: !compact },
+      series: series.map((serie, i) => ({
+        name: serie.name,
+        type: type === 'area' ? 'line' : type,
+        data: serie.data,
+        ...(type === 'bar'
+          ? { barMaxWidth: '68%' }
+          : {
+            smooth: false,
+            showSymbol: !compact,
+            // Símbolo próprio por série: a forma distingue sem depender da cor.
+            symbol: SIMBOLOS[i % SIMBOLOS.length],
+            symbolSize: 9,
+            lineStyle: {
+              type: TRACOS[i % TRACOS.length],
+              ...(serie.color ? { color: serie.color } : {}),
+            },
+          }),
+        ...(type === 'area' ? { areaStyle: { opacity: 0.2 } } : {}),
+        ...(serie.color || type === 'bar'
+          ? {
+            itemStyle: {
+              ...(serie.color ? { color: serie.color } : {}),
+              ...(type === 'bar' ? { borderRadius: [4, 4, 0, 0] } : {}),
+            },
+          }
+          : {}),
+        label: labelValues
+          ? { show: true, position: 'top', formatter: (p: { value: number }) => formatarValue(p.value) }
+          : { show: false },
+      })),
+      animation: animar,
+      animationDuration: dur,
+      animationEasing: 'cubicOut',
+      aria,
+    };
+  }
+
+  // ─── Ciclo de vida da instância ────────────────────────────────────────────
+
+  constructor() {
+    effect((onCleanup) => {
+      const el = this.desenho()?.nativeElement;
+      if (!el) return;
+
+      registerNortearTheme();
+      const chart = echarts.init(el, THEME_NAME, { renderer: 'svg' });
+      this.instancia.set(chart);
+
+      // Só redimensiona quando a caixa MUDA de tamanho.
+      //
+      // `chart.resize()` repinta, repintar mexe no layout, e mexer no layout
+      // notifica o observador de novo: sem esta guarda, toda repintura vira uma
+      // volta a mais. Com a troca de tema — que repinta cada gráfico da tela —
+      // o laço deixava de fechar, e a suíte de estados passava de dez minutos
+      // sem terminar.
+      let lastWidth = -1;
+      let lastHeight = -1;
+      let lastFontSize = rootFontSize();
+      const ro = new ResizeObserver((entries) => {
+        const box = entries[0]?.contentRect;
+        if (!box) return;
+        const width = Math.round(box.width);
+        const height = Math.round(box.height);
+        if (width === lastWidth && height === lastHeight) return;
+        lastWidth = width;
+        lastHeight = height;
+        // Aumentar a fonte do navegador muda a caixa, e é aqui que dá para
+        // perceber: os tamanhos do desenho saem da fonte raiz (WCAG 1.4.4), e
+        // sem reler o tema o rótulo do eixo ficaria com o tamanho antigo.
+        const fontSize = rootFontSize();
+        if (fontSize !== lastFontSize) {
+          lastFontSize = fontSize;
+          registerNortearTheme();
+          chart.setTheme(THEME_NAME);
+        }
+        chart.resize();
+      });
+      ro.observe(el);
+
+      const unwatch = watchTheme(() => {
+        registerNortearTheme();
+        // `registerTheme` só atualiza o REGISTRO global. A instância guarda o
+        // tema já resolvido desde o `init`, e `setOption` sem `notMerge`
+        // reaproveita esse model — trocar a classe do documento não mudava cor
+        // nenhuma do desenho, e no tema escuro o gráfico ficava com a paleta
+        // clara. Quem relê o registro é `setTheme`, e ele recolore no lugar,
+        // sem remontar: é o "não pisca nem requer reload" que a documentação
+        // promete.
+        chart.setTheme(THEME_NAME);
+        lastFontSize = rootFontSize();
+        this.temaVersao.update((v) => v + 1);
+      });
+
+      onCleanup(() => {
+        ro.disconnect();
+        unwatch();
+        chart.dispose();
+        this.instancia.set(null);
+      });
     });
-  });
+
+    effect(() => {
+      const chart = this.instancia();
+      const option = this.option();
+      if (!chart) return;
+      // `notMerge` porque trocar o TIPO troca a forma do option inteiro (a
+      // pizza não tem eixo); mesclar deixaria eixo órfão de um tipo no outro.
+      chart.setOption(option, { notMerge: true });
+    });
+  }
+
+  // ─── Alternativa textual ───────────────────────────────────────────────────
 
   protected readonly table = computed<{ header: string[]; lines: string[][] }>(() => {
     if (!this.cartesiano()) {

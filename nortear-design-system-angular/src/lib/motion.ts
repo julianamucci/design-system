@@ -10,9 +10,9 @@
 //
 // ── Por que este arquivo existe nesta stack ──────────────────────────────────
 // Nas outras quatro o único consumidor é o Chart, que passa duração e liga/
-// desliga animação no ECharts. O Chart daqui desenha SVG estático, sem opção de
-// animação para configurar — se fosse só por ele, este arquivo não teria razão
-// de ser. Ele existe por `prefersReducedMotion()`: dois pontos deste pacote já
+// desliga animação no ECharts — e agora aqui também, desde que o Chart passou a
+// usar a mesma lib. Mas não é só por ele que este arquivo existe: existe por
+// `prefersReducedMotion()`, porque dois pontos deste pacote já
 // precisavam da resposta e cada um tinha escrito a sua (`carousel.ts` e
 // `MotionDocs.ts`), sendo que a segunda esquecia o override `data-reduced-motion`
 // do toolbar do Storybook e por isso a mola continuava correndo com o

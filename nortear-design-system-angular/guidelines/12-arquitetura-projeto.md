@@ -100,7 +100,7 @@ O conteúdo das docs pages **não** mora aqui: vem de `docs/shared/content/<slug
 
 `src/lib/motion.ts` lê os tokens de `motion.css` (duração, easing, offset) e responde `prefersReducedMotion()` pelas **duas** vias que o projeto reconhece: a preferência real do sistema e o override `data-reduced-motion` que o toolbar "Motion" do Storybook escreve no `<html>`. Quem for animar em JS pergunta a ele; ninguém reescreve a checagem localmente. Já custou uma vez: a mola da página de fundamento de Motion perguntava só pela media query e continuava correndo com o toolbar em movimento reduzido.
 
-Divergência medida das outras stacks: lá o consumidor do módulo é o Chart, que passa duração e liga/desliga a animação do ECharts. O Chart daqui desenha SVG estático e não tem animação para configurar — os consumidores desta stack são o carrossel e a página de Motion.
+Os consumidores são o Chart — que passa duração e liga/desliga a animação do ECharts, como nas outras stacks —, o carrossel e a página de Motion.
 
 ---
 

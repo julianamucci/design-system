@@ -1,14 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { NdsChart } from './chart';
 import {
   MONTHS,
   SERIE_UNICA,
   SERIES_MULTI,
   DATA_DISPOSITIVO,
+  desenhoDe,
+  formasComTrama,
+  formasPreenchidas,
+  mesmaCor,
+  optionOf,
   rgbColor,
   rgbToken,
+  textosDoDesenho,
+  tracadosDeSerie,
 } from './chart.fixtures';
 
 const meta: Meta = {
@@ -38,10 +45,15 @@ export const Bar: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
+    const desenho = desenhoDe(chart);
+    // Uma série só: não há legenda, então toda forma preenchida no desenho é
+    // barra — a contagem vale sem filtro extra.
+    await waitFor(() =>
+      expect(formasPreenchidas(desenho).length).toBe(SERIE_UNICA[0].data.length),
+    );
 
     await step('Uma barra por mês, com altura proporcional ao valor', async () => {
-      const barras = [...chart.querySelectorAll<SVGRectElement>('rect[data-series]')];
-      await expect(barras).toHaveLength(MONTHS.length);
+      const barras = formasPreenchidas(desenho);
       const alturas = barras.map((b) => b.getBoundingClientRect().height);
       const values = SERIE_UNICA[0].data;
       // Maior valor → maior barra. Compara ordem, não pixel: o desenho é
@@ -51,23 +63,24 @@ export const Bar: Story = {
       await expect(maiorHeight).toBe(maiorValue);
     });
 
-    await step('Cada forma carrega categoria e valor em texto', async () => {
-      // É a dica nativa do ponteiro — e nada existe só nela: o mesmo par
-      // categoria/valor está na tabela, alcançável sem mouse.
-      const barras = [...chart.querySelectorAll<SVGRectElement>('rect[data-series]')];
-      barras.forEach((barra, i) => {
-        const title = barra.querySelector('title')?.textContent ?? '';
-        expect(title).toContain(MONTHS[i]);
-        expect(title).toContain(String(SERIE_UNICA[0].data[i]));
-      });
-
+    await step('O par categoria/valor está na tabela, sem depender do ponteiro', async () => {
+      // A dica sob o ponteiro existe, e nada existe só nela: o mesmo par
+      // categoria/valor está na tabela, alcançável sem mouse e sem foco.
+      const linhas = [...chart.querySelectorAll<HTMLTableRowElement>('tbody tr')];
+      await expect(linhas.map((l) => l.querySelector('th')?.textContent?.trim())).toEqual(MONTHS);
       const celulas = [...chart.querySelectorAll<HTMLTableCellElement>('tbody td')];
       await expect(celulas.map((c) => c.textContent?.trim()))
         .toEqual(SERIE_UNICA[0].data.map(String));
     });
 
+    await step('Cada barra recebe uma trama por cima do preenchimento', async () => {
+      // A camada de trama (WCAG 1.4.1) é um segundo caminho sobre a forma, com
+      // preenchimento por padrão em vez de cor.
+      await expect(formasComTrama(desenho).length).toBe(SERIE_UNICA[0].data.length);
+    });
+
     await step('Com uma série só, o valor também fica escrito no desenho', async () => {
-      const texts = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
+      const texts = textosDoDesenho(desenho);
       for (const value of SERIE_UNICA[0].data) {
         await expect(texts).toContain(String(value));
       }
@@ -92,54 +105,56 @@ export const Line: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
+    const desenho = desenhoDe(chart);
+    await waitFor(() =>
+      expect(tracadosDeSerie(desenho).length).toBeGreaterThanOrEqual(SERIES_MULTI.length),
+    );
 
     await step('Uma linha traçada por série', async () => {
-      const tracos = [...chart.querySelectorAll<SVGPathElement>('path[data-series]')]
-        .filter((p) => p.getAttribute('fill') === 'none');
-      await expect(tracos).toHaveLength(SERIES_MULTI.length);
+      const tracos = tracadosDeSerie(desenho);
+      await expect(tracos.length).toBeGreaterThanOrEqual(SERIES_MULTI.length);
       for (const traco of tracos) {
         await expect(traco.getTotalLength()).toBeGreaterThan(0);
       }
     });
 
-    await step('A primeira série sai no primeiro token da paleta', async () => {
+    await step('A paleta do tema chega ao traçado', async () => {
       // A segunda metade do item de contrato: não basta existir traçado, ele
-      // tem de sair em --chart-1. Comparar o token RESOLVIDO, e não o texto
-      // "hsl(var(--chart-1))", é o que prova que a cascata chegou ao desenho.
-      const first = [...chart.querySelectorAll<SVGPathElement>('path[data-series="0"]')]
-        .find((p) => p.getAttribute('fill') === 'none')!;
-      const desenhada = rgbColor(getComputedStyle(first).stroke)!;
-      const esperada = rgbToken('--chart-1')!;
-      for (const canal of [0, 1, 2]) {
-        await expect(Math.abs(desenhada[canal] - esperada[canal])).toBeLessThan(0.01);
+      // tem de sair nos tokens da paleta. Comparar o token RESOLVIDO, e não o
+      // texto "hsl(var(--chart-1))", é o que prova que a cascata chegou ao
+      // desenho. Compara por conjunto, não por posição: a legenda também
+      // desenha um traço, e a ordem no DOM não é contrato.
+      const desenhadas = tracadosDeSerie(desenho)
+        .map((t) => rgbColor(getComputedStyle(t).stroke))
+        .filter((cor): cor is [number, number, number] => cor !== null);
+      for (const token of ['--chart-1', '--chart-2']) {
+        const esperada = rgbToken(token)!;
+        await expect(desenhadas.some((cor) => mesmaCor(cor, esperada))).toBe(true);
       }
     });
 
     await step('As séries se distinguem por forma, não só por cor', async () => {
-      // Retirando toda a cor o gráfico continua legível: traço com desenho
-      // próprio e símbolo de ponto próprio por série (WCAG 1.4.1).
-      const tracos = [...chart.querySelectorAll<SVGPathElement>('path[data-series]')]
-        .filter((p) => p.getAttribute('fill') === 'none');
-      const desenhosDeTraco = tracos.map((t) => t.getAttribute('stroke-dasharray'));
-      await expect(new Set(desenhosDeTraco).size).toBe(SERIES_MULTI.length);
+      // Retirando toda a cor o gráfico continua legível: símbolo de ponto
+      // próprio e desenho de traço próprio por série (WCAG 1.4.1).
+      const series = optionOf(desenho).series;
+      await expect(series).toHaveLength(SERIES_MULTI.length);
+      const simbolos = series.map((s) => String(s['symbol']));
+      await expect(new Set(simbolos).size).toBe(SERIES_MULTI.length);
+      const tracos = series.map((s) =>
+        JSON.stringify((s['lineStyle'] as { type?: unknown } | undefined)?.type),
+      );
+      await expect(new Set(tracos).size).toBe(SERIES_MULTI.length);
+    });
 
-      const simbolos = [...chart.querySelectorAll<SVGPathElement>('path[data-series] > title')]
-        .map((t) => t.parentElement as unknown as SVGPathElement);
-      const formaDaSerie = new Map<string, Set<string>>();
-      for (const simbolo of simbolos) {
-        const serie = simbolo.getAttribute('data-series')!;
-        // Normaliza o `d` tirando as coordenadas: sobra o formato do comando,
-        // que é o que diferencia círculo de quadrado de triângulo.
-        const forma = (simbolo.getAttribute('d') ?? '').replace(/-?[\d.]+/g, '');
-        if (!formaDaSerie.has(serie)) formaDaSerie.set(serie, new Set());
-        formaDaSerie.get(serie)!.add(forma);
-      }
-      const formas = [...formaDaSerie.values()].map((s) => [...s][0]);
-      await expect(new Set(formas).size).toBe(SERIES_MULTI.length);
+    await step('E o traço distinto chega ao desenho, não fica só na configuração', async () => {
+      // Option verde com desenho errado é portão sem dentes: a série tracejada
+      // tem de sair com `stroke-dasharray` no nó.
+      const desenhos = tracadosDeSerie(desenho).map((t) => t.getAttribute('stroke-dasharray'));
+      await expect(new Set(desenhos).size).toBeGreaterThanOrEqual(SERIES_MULTI.length);
     });
 
     await step('A legenda nomeia cada série por escrito', async () => {
-      const texts = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
+      const texts = textosDoDesenho(desenho);
       for (const serie of SERIES_MULTI) {
         await expect(texts).toContain(serie.name);
       }
@@ -162,14 +177,23 @@ export const Area: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
+    const desenho = desenhoDe(chart);
+    await waitFor(() => expect(desenho.querySelector('svg')).not.toBeNull());
 
-    await step('Cada série ganha uma área fechada sob a linha', async () => {
-      const areas = [...chart.querySelectorAll<SVGPathElement>('svg > path[fill-opacity]')];
-      // Duas camadas por série: a cor e a trama sobreposta.
-      await expect(areas).toHaveLength(SERIES_MULTI.length * 2);
-      for (const area of areas) {
-        await expect((area.getAttribute('d') ?? '').endsWith('Z')).toBe(true);
+    await step('Cada série ganha uma área preenchida sob a linha', async () => {
+      const series = optionOf(desenho).series;
+      await expect(series).toHaveLength(SERIES_MULTI.length);
+      for (const serie of series) {
+        await expect(serie['areaStyle']).toBeTruthy();
       }
+      await waitFor(async () => {
+        await expect(formasPreenchidas(desenho).length)
+          .toBeGreaterThanOrEqual(SERIES_MULTI.length);
+      });
+    });
+
+    await step('A trama acompanha o preenchimento — a cor não é o único sinal', async () => {
+      await expect(formasComTrama(desenho).length).toBeGreaterThanOrEqual(SERIES_MULTI.length);
     });
   },
 };
@@ -188,14 +212,21 @@ export const Pie: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
+    const desenho = desenhoDe(chart);
+    await waitFor(() =>
+      expect(formasPreenchidas(desenho).length).toBeGreaterThanOrEqual(DATA_DISPOSITIVO.length),
+    );
 
-    await step('Uma fatia por item', async () => {
-      const fatias = [...chart.querySelectorAll<SVGPathElement>('path[data-series]')];
-      await expect(fatias).toHaveLength(DATA_DISPOSITIVO.length);
+    await step('Uma fatia por item, cada uma com sua cor', async () => {
+      const fatias = formasPreenchidas(desenho);
+      // Fatia e ícone de legenda dividem a cor: o que o item promete é uma cor
+      // POR ITEM, e é isso que o conjunto mede.
+      const colors = new Set(fatias.map((f) => getComputedStyle(f).fill));
+      await expect(colors.size).toBe(DATA_DISPOSITIVO.length);
     });
 
     await step('A legenda traz nome, valor e participação — não só a cor', async () => {
-      const texts = [...chart.querySelectorAll('svg text')].map((t) => t.textContent ?? '');
+      const texts = textosDoDesenho(desenho);
       for (const ponto of DATA_DISPOSITIVO) {
         await expect(texts.some((text) => text.includes(ponto.label)
           && text.includes(String(ponto.value))

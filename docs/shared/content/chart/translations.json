@@ -33,7 +33,7 @@
         "vue": "<ChartContainer\n  :option=\"buildBarOption({\n    xAxis: ['Jan', 'Fev', 'Mar'],\n    series: [{ name: 'Vendas', data: [186, 305, 237] }],\n  })\"\n  :height=\"300\"\n  aria-label=\"Vendas trimestrais\"\n/>",
         "svelte": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Jan', 'Fev', 'Mar'],\n    series: [{ name: 'Vendas', data: [186, 305, 237] }]\n  })}\n  height={300}\n  aria-label=\"Vendas trimestrais\"\n/>",
         "vanilla": "const el = createChart({\n  type: 'bar',\n  xAxis: ['Jan', 'Fev', 'Mar'],\n  series: [{ name: 'Vendas', data: [186, 305, 237] }],\n  height: 300,\n  'aria-label': 'Vendas trimestrais',\n});",
-        "angular": "<!-- Sem lib de gráficos: o SVG é desenhado pelo próprio componente -->\n<div\n  ndsChart\n  type=\"bar\"\n  label=\"Vendas trimestrais\"\n  [xAxis]=\"['Jan', 'Fev', 'Mar']\"\n  [series]=\"[{ name: 'Vendas', data: [186, 305, 237] }]\"\n></div>"
+        "angular": "<!-- Mesma lib das outras stacks; a API é que diverge: entradas declarativas, sem objeto de configuração -->\n<div\n  ndsChart\n  type=\"bar\"\n  label=\"Vendas trimestrais\"\n  [xAxis]=\"['Jan', 'Fev', 'Mar']\"\n  [series]=\"[{ name: 'Vendas', data: [186, 305, 237] }]\"\n></div>"
       }
     },
     "usage": {
@@ -459,7 +459,7 @@
         "vue": "<ChartContainer\n  :option=\"buildBarOption({\n    xAxis: ['Jan', 'Feb', 'Mar'],\n    series: [{ name: 'Sales', data: [186, 305, 237] }],\n  })\"\n  :height=\"300\"\n  aria-label=\"Quarterly sales\"\n/>",
         "svelte": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Jan', 'Feb', 'Mar'],\n    series: [{ name: 'Sales', data: [186, 305, 237] }]\n  })}\n  height={300}\n  aria-label=\"Quarterly sales\"\n/>",
         "vanilla": "const el = createChart({\n  type: 'bar',\n  xAxis: ['Jan', 'Feb', 'Mar'],\n  series: [{ name: 'Sales', data: [186, 305, 237] }],\n  height: 300,\n  'aria-label': 'Quarterly sales',\n});",
-        "angular": "<!-- No charting library: the component draws the SVG itself -->\n<div\n  ndsChart\n  type=\"bar\"\n  label=\"Quarterly sales\"\n  [xAxis]=\"['Jan', 'Feb', 'Mar']\"\n  [series]=\"[{ name: 'Sales', data: [186, 305, 237] }]\"\n></div>"
+        "angular": "<!-- Same library as the other stacks; the API is what differs: declarative inputs, no configuration object -->\n<div\n  ndsChart\n  type=\"bar\"\n  label=\"Quarterly sales\"\n  [xAxis]=\"['Jan', 'Feb', 'Mar']\"\n  [series]=\"[{ name: 'Sales', data: [186, 305, 237] }]\"\n></div>"
       }
     },
     "usage": {
@@ -885,7 +885,7 @@
         "vue": "<ChartContainer\n  :option=\"buildBarOption({\n    xAxis: ['Ene', 'Feb', 'Mar'],\n    series: [{ name: 'Ventas', data: [186, 305, 237] }],\n  })\"\n  :height=\"300\"\n  aria-label=\"Ventas trimestrales\"\n/>",
         "svelte": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Ene', 'Feb', 'Mar'],\n    series: [{ name: 'Ventas', data: [186, 305, 237] }]\n  })}\n  height={300}\n  aria-label=\"Ventas trimestrales\"\n/>",
         "vanilla": "const el = createChart({\n  type: 'bar',\n  xAxis: ['Ene', 'Feb', 'Mar'],\n  series: [{ name: 'Ventas', data: [186, 305, 237] }],\n  height: 300,\n  'aria-label': 'Ventas trimestrales',\n});",
-        "angular": "<!-- Sin librería de gráficos: el SVG lo dibuja el propio componente -->\n<div\n  ndsChart\n  type=\"bar\"\n  label=\"Ventas trimestrales\"\n  [xAxis]=\"['Ene', 'Feb', 'Mar']\"\n  [series]=\"[{ name: 'Ventas', data: [186, 305, 237] }]\"\n></div>"
+        "angular": "<!-- La misma librería que las otras stacks; la API es lo que difiere: entradas declarativas, sin objeto de configuración -->\n<div\n  ndsChart\n  type=\"bar\"\n  label=\"Ventas trimestrales\"\n  [xAxis]=\"['Ene', 'Feb', 'Mar']\"\n  [series]=\"[{ name: 'Ventas', data: [186, 305, 237] }]\"\n></div>"
       }
     },
     "usage": {

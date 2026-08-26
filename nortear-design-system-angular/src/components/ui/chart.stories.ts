@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { NdsChart, type ChartType } from './chart';
-import { MONTHS, SERIE_UNICA } from './chart.fixtures';
+import { MONTHS, SERIE_UNICA, desenhoDe, formasPreenchidas } from './chart.fixtures';
 import { NdsChartDocs } from '@/components/docs/ChartDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -119,25 +119,33 @@ export const Playground: Story = {
     // Procura pela classe, não pelo data-slot: é o que o CSS compartilhado
     // define e o que não some se outra diretiva dividir o mesmo host.
     const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
+    const desenho = desenhoDe(chart);
+
+    // A lib monta a instância num efeito e anima a entrada das formas: sem
+    // esperar, a primeira medição pega o elemento ainda vazio.
+    await waitFor(() => expect(desenho.querySelector('svg')).not.toBeNull());
 
     await step('O desenho é anunciado como imagem, com descrição', async () => {
-      const svg = chart.querySelector('svg')!;
-      await expect(svg).toHaveAttribute('role', 'img');
-      await expect(svg.getAttribute('aria-label')).toBe(args.label);
+      // O papel vai no elemento do DESENHO, não no bloco em volta: no bloco ele
+      // podaria a tabela de dados junto, e a alternativa textual sumiria da
+      // árvore de acessibilidade.
+      await expect(desenho).toHaveAttribute('role', 'img');
+      await expect(desenho.getAttribute('aria-label')).toBe(args.label);
+      await expect(chart.getAttribute('role')).toBeNull();
     });
 
-    await step('As barras existem e têm área — o SVG não é casca vazia', async () => {
-      // Também guarda o namespace: elemento SVG criado fora do namespace certo
-      // fica no DOM e mede zero.
-      const formas = [...chart.querySelectorAll<SVGRectElement>('rect[data-series]')];
-      await expect(formas).toHaveLength(SERIE_UNICA[0].data.length);
-      for (const forma of formas) {
-        await expect(forma.getBoundingClientRect().width).toBeGreaterThan(0);
-      }
+    await step('As barras existem e têm área — o desenho não é casca vazia', async () => {
+      await waitFor(async () => {
+        const formas = formasPreenchidas(desenho);
+        await expect(formas.length).toBeGreaterThanOrEqual(SERIE_UNICA[0].data.length);
+        for (const forma of formas) {
+          await expect(forma.getBoundingClientRect().width).toBeGreaterThan(0);
+        }
+      });
     });
 
     await step('A alternativa textual traz os mesmos números', async () => {
-      // O <svg> sozinho é conteúdo perdido: a tabela é o que leitor de tela lê.
+      // O desenho sozinho é conteúdo perdido: a tabela é o que leitor de tela lê.
       const lines = [...chart.querySelectorAll<HTMLTableRowElement>('tbody tr')];
       await expect(lines).toHaveLength(MONTHS.length);
       await expect(lines[0].querySelector('th')?.textContent?.trim()).toBe(MONTHS[0]);
