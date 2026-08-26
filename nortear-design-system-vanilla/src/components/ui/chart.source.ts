@@ -34,6 +34,8 @@ export type ChartSnippetOptions = {
   /** Título desenhado acima dos eixos. */
   title?: string;
   showLegend?: boolean;
+  /** Torna visível a tabela de dados que a fábrica emite sempre. */
+  showData?: boolean;
   height?: number;
   renderer?: 'svg' | 'canvas';
   /** O arg do Playground se chama `className`; a opção da fábrica é `class`. */
@@ -137,6 +139,9 @@ export function chartSnippet(o: ChartSnippetOptions = {}): string {
     ['aria-label', o['aria-label'] ? text(o['aria-label']) : undefined],
     ['title', o.title ? text(o.title) : undefined],
     ['showLegend', o.showLegend === undefined ? undefined : String(o.showLegend)],
+    // Só aparece quando ligado: a tabela é emitida de qualquer jeito, e um
+    // `showData: false` no snippet ensinaria que ela depende da opção.
+    ['showData', o.showData ? 'true' : undefined],
     ['height', o.height ? String(o.height) : undefined],
     ['renderer', o.renderer && o.renderer !== 'svg' ? text(o.renderer) : undefined],
     ['class', o.className ? text(o.className) : undefined],

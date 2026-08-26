@@ -88,7 +88,7 @@ export function buildNortearTheme(): NortearChartTheme {
     // WCAG 1.4.11 pede 3:1 do objeto gráfico contra o que está em volta, e as
     // cores de série (--chart-1 a --chart-5) ficam em torno de 2:1 contra o fundo:
     // sozinhas não sustentam o critério. Quem sustenta é o CONTORNO em
-    // --foreground, o mesmo caminho que o Angular desenha à mão. O nome anterior
+    // --foreground, que passa de 3:1 em qualquer tema. O nome anterior
     // (barBorderColor/barBorderWidth) é da v4 do ECharts e não tinha efeito
     // nenhum na v5 — o contorno documentado nunca chegou a ser desenhado.
     line: { itemStyle: { borderColor: fg, borderWidth: 2 }, lineStyle: { width: 2 } },

@@ -4,7 +4,7 @@ import { ChartContainer, buildBarOption } from './index';
 import {
   designEscreve, exigirRoot, datumFormas,
 } from '@shared/testing/chart-probe';
-import { waitForDesign } from './chart.fixtures';
+import { drawingOf, waitForDesign } from './chart.fixtures';
 import {
   chartBarrasSource,
   chartWithCaptionSource,
@@ -82,21 +82,26 @@ export const WithTooltip: Story = {
     const apontarTo = (i: number) =>
       fireEvent.mouseMove(svg, { clientX: centros[i].x, clientY: centros[i].y, bubbles: true });
 
+    // A sonda é o texto do DESENHO, não o do bloco: a alternativa textual
+    // escreve categoria e valor, e uma busca no bloco inteiro passaria com a
+    // dica fechada — e a medição negativa do segundo passo reprovaria sempre.
+    const design = drawingOf(root);
+
     await step('A dica traz a categoria e o valor da coluna apontada', async () => {
       // 305 e 73 não aparecem em marca de eixo nenhuma (as marcas vão de 50 em
-      // 50): achar o número no container é prova de que a dica escreveu.
+      // 50): achar o número no desenho é prova de que a dica escreveu.
       await apontarTo(1);
       await waitFor(() => {
-        expect(root.textContent).toContain('Fev');
-        expect(root.textContent).toContain('305');
+        expect(design.textContent).toContain('Fev');
+        expect(design.textContent).toContain('305');
       }, { timeout: 3000 });
     });
 
     await step('E acompanha o ponteiro — a dica é do ponto apontado, não a primeira que abriu', async () => {
       await apontarTo(3);
       await waitFor(() => {
-        expect(root.textContent).toContain('73');
-        expect(root.textContent).not.toContain('305');
+        expect(design.textContent).toContain('73');
+        expect(design.textContent).not.toContain('305');
       }, { timeout: 3000 });
     });
   },

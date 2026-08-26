@@ -15,10 +15,22 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
-const chartData = MONTHS.map((label, i) => ({
-  label,
-  value: [186, 305, 237, 73, 209, 214][i],
-}));
+const ACESSOS = [186, 305, 237, 73, 209, 214];
+
+const chartData = MONTHS.map((label, i) => ({ label, value: ACESSOS[i] }));
+
+/**
+ * O elemento em que a lib desenha.
+ *
+ * É ele — e não o bloco em volta — que leva o papel de imagem e o rótulo: o
+ * papel poda a subárvore da árvore de acessibilidade, e no bloco ele esconderia
+ * a tabela de dados junto.
+ */
+function canvasOf(root: HTMLElement): HTMLElement {
+  const canvas = root.querySelector<HTMLElement>('[data-slot="chart-canvas"]');
+  if (!canvas) throw new Error('nenhum [data-slot="chart-canvas"] dentro do .nds-chart');
+  return canvas;
+}
 
 // ─── Args ─────────────────────────────────────────────────────────────────────
 
@@ -27,6 +39,7 @@ type ChartArgs = {
   'aria-label': string;
   title: string;
   showLegend: boolean | undefined;
+  showData: boolean;
   height: number;
   renderer: 'svg' | 'canvas';
   className: string;
@@ -75,6 +88,11 @@ const meta: Meta<ChartArgs> = {
       description: 'Força mostrar ou esconder a legenda. Sem valor, ela aparece com mais de uma série.',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'mais de uma série' } },
     },
+    showData: {
+      control: 'boolean',
+      description: 'Torna a tabela de dados visível para todo mundo. Ela é emitida sempre — para leitor de tela, para a busca da página e para cópia —, e esta opção só decide se ela aparece na tela.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
     height: {
       control: { type: 'range', min: 120, max: 480, step: 10 },
       description: 'Altura do container em pixels. Sem valor, vale o piso de altura do próprio bloco.',
@@ -98,6 +116,7 @@ const meta: Meta<ChartArgs> = {
     'aria-label': 'Acessos mensais no desktop, de janeiro a junho',
     title: '',
     showLegend: undefined,
+    showData: false,
     height: 240,
     renderer: 'svg',
     className: 'nds-max-w-md',
@@ -126,6 +145,7 @@ export const Playground: Story = {
       'aria-label': args['aria-label'],
       title: args.title || undefined,
       showLegend: args.showLegend,
+      showData: args.showData,
       height: args.height,
       renderer: args.renderer,
       class: args.className || undefined,
@@ -137,10 +157,16 @@ export const Playground: Story = {
 
     await step('O desenho é anunciado como imagem, com a descrição da story', async () => {
       await expect(root.dataset.slot).toBe('chart');
-      await expect(root.getAttribute('role')).toBe('img');
+      // O papel vai no elemento do DESENHO, e não no bloco: no bloco ele
+      // podaria a tabela de dados junto, e a alternativa textual sumiria da
+      // árvore de acessibilidade.
+      const canvas = canvasOf(root);
+      await expect(canvas.getAttribute('role')).toBe('img');
       // A descrição EXATA, não "existe o atributo": um aria-label vazio ou
       // genérico passaria pelo teste de presença e não descreveria nada.
-      await expect(root.getAttribute('aria-label')).toBe(args['aria-label']);
+      await expect(canvas.getAttribute('aria-label')).toBe(args['aria-label']);
+      await expect(root.getAttribute('role')).toBeNull();
+      await expect(root.getAttribute('aria-label')).toBeNull();
     });
 
     await step('O desenho sai — e sai com forma, não como casca vazia', async () => {
@@ -154,14 +180,14 @@ export const Playground: Story = {
       // entrou para o primeiro, e o antigo ficou como apelido — apagá-lo
       // quebraria chamador em silêncio, e sem asserção isso é só promessa.
       const antigo = createChart({ data: chartData, label: 'Acessos mensais' });
-      await expect(antigo.getAttribute('aria-label')).toBe('Acessos mensais');
+      await expect(canvasOf(antigo).getAttribute('aria-label')).toBe('Acessos mensais');
 
       const both = createChart({
         data: chartData,
         label: 'Antigo',
         'aria-label': 'Canônico',
       });
-      await expect(both.getAttribute('aria-label')).toBe('Canônico');
+      await expect(canvasOf(both).getAttribute('aria-label')).toBe('Canônico');
 
       // E `title` não disputa o nome acessível: ele é o ÚLTIMO recurso, não um
       // sinônimo — quem descreve o desenho ganha dele.
@@ -170,7 +196,36 @@ export const Playground: Story = {
         title: 'Título visível',
         'aria-label': 'Descrição do desenho',
       });
-      await expect(withTitle.getAttribute('aria-label')).toBe('Descrição do desenho');
+      await expect(canvasOf(withTitle).getAttribute('aria-label')).toBe('Descrição do desenho');
+    });
+
+    await step('A alternativa textual traz os mesmos números do desenho', async () => {
+      // O desenho sozinho é conteúdo perdido: a tabela É o conteúdo, e é ela
+      // que leitor de tela, busca da página e cópia alcançam. Ela existe
+      // sempre — aqui, com `showData` desligado, fora da tela.
+      const data = root.querySelector<HTMLElement>('[data-slot="chart-data"]');
+      await expect(data).not.toBeNull();
+      await expect(data!.classList.contains('nds-sr-only')).toBe(true);
+      await expect(data!.getAttribute('tabindex')).toBeNull();
+
+      // A legenda da tabela é a MESMA frase que descreve o desenho: divergir
+      // anunciaria uma coisa e escreveria outra.
+      await expect(root.querySelector('caption')?.textContent?.trim()).toBe(args['aria-label']);
+
+      // Cabeçalho de coluna por série, cabeçalho de LINHA por categoria: é o
+      // par de escopos que faz o leitor de tela anunciar "Jan, Valor, 186" em
+      // vez de recitar números soltos.
+      const columns = [...root.querySelectorAll<HTMLTableCellElement>('thead th')];
+      await expect(columns.every((c) => c.getAttribute('scope') === 'col')).toBe(true);
+
+      const lines = [...root.querySelectorAll<HTMLTableRowElement>('tbody tr')];
+      await expect(lines).toHaveLength(MONTHS.length);
+      for (const [i, line] of lines.entries()) {
+        const category = line.querySelector<HTMLTableCellElement>('th');
+        await expect(category?.getAttribute('scope')).toBe('row');
+        await expect(category?.textContent?.trim()).toBe(MONTHS[i]);
+        await expect(line.querySelector('td')?.textContent?.trim()).toBe(String(ACESSOS[i]));
+      }
     });
 
     await step('Toda categoria do dado aparece escrita no eixo', async () => {

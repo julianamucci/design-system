@@ -9,6 +9,38 @@
 //
 // Para uso avançado (multi-série, customização full do option), passar
 // `series` em vez de `data`.
+//
+// ─── Acessibilidade: as quatro decisões ──────────────────────────────────────
+//
+// 1. ALTERNATIVA TEXTUAL EQUIVALENTE — a fábrica emite, SEMPRE, uma `<table>`
+//    de verdade com os mesmos números do desenho: `<th scope="col">` por série,
+//    `<th scope="row">` por categoria, `<caption>` com a descrição do gráfico.
+//    Por padrão ela é `.nds-sr-only` — existe para leitor de tela, para a busca
+//    da página e para quem lê o DOM; `showData` a torna visível para todo
+//    mundo. A lib NÃO gera essa tabela: o que ela oferece é `aria.label`, uma
+//    frase montada em inglês e escrita num elemento que o próprio `role="img"`
+//    poda. Um desenho mudo é conteúdo perdido — a tabela É o conteúdo.
+//
+// 2. `role="img"` + `aria-label` vão no elemento do DESENHO, não no bloco
+//    `.nds-chart` em volta. O papel de imagem PODA a subárvore da árvore de
+//    acessibilidade: posto no bloco, ele esconderia a tabela junto e a
+//    alternativa textual sumiria. Posto no elemento em que a lib desenha, o
+//    desenho é anunciado como uma imagem com rótulo e a tabela continua
+//    exposta, ao lado dele.
+//
+// 3. A INFORMAÇÃO NÃO VIVE NA COR. `aria.decal.show` sobrepõe uma trama a cada
+//    série, e a legenda traz o nome escrito. Em `line`/`area` isso não basta —
+//    a trama é de preenchimento, e traçado não tem preenchimento —, então cada
+//    série ganha símbolo de ponto próprio (círculo, quadrado, triângulo,
+//    losango, seta) e desenho de traço próprio. Retirando toda a cor, o gráfico
+//    continua legível (WCAG 1.4.1).
+//
+// 4. CONTRASTE (WCAG 1.4.11). Toda forma de dado — barra, fatia, símbolo — é
+//    contornada com `hsl(var(--foreground))`, que passa de 3:1 contra o fundo
+//    em qualquer tema. O contorno vem do tema (`bar`/`line`/`pie` em
+//    `@/lib/echarts-theme`) e é ele que delimita o objeto gráfico, não a cor de
+//    série: os tokens `--chart-1` a `--chart-5` ficam em torno de 2:1 contra o
+//    fundo e sozinhos não sustentam o critério.
 
 import * as echarts from 'echarts/core';
 import { BarChart, LineChart, PieChart } from 'echarts/charts';
@@ -41,14 +73,33 @@ echarts.use([
  * Bloco `aria` comum aos dois formatos de option.
  *
  * `label.enabled: false` desliga a descrição gerada pela lib de propósito: ela
- * nasce em inglês e mora num elemento interno que o `role="img"` do container
+ * nasce em inglês e mora num elemento interno que o `role="img"` do desenho
  * poda da árvore de acessibilidade. Quem carrega a alternativa textual é o
- * `aria-label` autoral, no idioma da página.
+ * `aria-label` autoral, no idioma da página, mais a tabela de dados.
  */
 const ARIA = { enabled: true, label: { enabled: false }, decal: { show: true } } as const;
 
 /** Frase padrão do estado vazio — a mesma nas cinco stacks. */
 export const CHART_EMPTY_LABEL = 'Sem dados para exibir';
+
+/** Cabeçalhos padrão da tabela de dados, quando o chamador não os informa. */
+export const CHART_CATEGORY_LABEL = 'Categoria';
+export const CHART_VALUE_LABEL = 'Valor';
+export const CHART_SHARE_LABEL = 'Participação';
+
+/** Célula sem dado: a categoria existe, aquela série não a preenche. */
+const NO_VALUE = '—';
+
+/**
+ * Símbolo de ponto, na ordem das séries — a série se distingue sem a cor.
+ * A sexta volta à primeira.
+ */
+const SYMBOLS: readonly string[] = ['circle', 'rect', 'triangle', 'diamond', 'arrow'];
+
+/** Desenho do traço, na ordem das séries. `solid` e quatro tracejados. */
+const DASHES: readonly (string | number[])[] = [
+  'solid', [10, 5], [2, 4], [12, 4, 2, 4], [6, 3, 2, 3],
+];
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -76,7 +127,7 @@ export interface ChartOptions {
   xAxis?: Array<string | number>;
   /** Multi-série: séries com dados alinhados ao xAxis. */
   series?: ChartSeries[];
-  /** Altura em px do container. Sem valor, vale o piso de `.nds-chart`. */
+  /** Altura em px do desenho. Sem valor, vale o piso de `.nds-chart`. */
   height?: number;
   /** Renderer. Default 'svg' (alinha com o resto da stack standalone). */
   renderer?: 'svg' | 'canvas';
@@ -89,10 +140,16 @@ export interface ChartOptions {
   title?: string;
   /** Mostrar legenda (default: true se >1 série). */
   showLegend?: boolean;
+  /**
+   * Torna a tabela de dados visível para todo mundo, não só para leitor de
+   * tela. A tabela é emitida de qualquer jeito — isto decide se ela aparece.
+   */
+  showData?: boolean;
   /** Classe extra no container. */
   class?: string;
   /**
-   * Descrição do gráfico: vira o nome acessível do container.
+   * Descrição do gráfico: vira o nome acessível do desenho e a legenda
+   * (`<caption>`) da tabela de dados.
    *
    * Um desenho sem descrição é conteúdo perdido — a factory não emitia
    * `role`/`aria-label` nenhum, e cada consumidor colava os dois à mão.
@@ -102,6 +159,97 @@ export interface ChartOptions {
   label?: string;
   /** Frase mostrada no lugar do gráfico quando não há dado. */
   emptyLabel?: string;
+  /** Cabeçalho da primeira coluna da tabela de dados. */
+  categoryLabel?: string;
+  /** Nome da série na tabela quando o dado chega na forma simples. */
+  valueLabel?: string;
+  /** Cabeçalho da coluna de participação — só a rosca a tem. */
+  shareLabel?: string;
+}
+
+// ─── Normalização (uma só, para o desenho e para a tabela) ───────────────────
+//
+// Desenho e tabela leem daqui os MESMOS números. Duas normalizações separadas
+// seriam duas verdades sobre o mesmo dado, e a divergência apareceria como uma
+// tabela que não confere com o que está na tela.
+
+/** Séries do gráfico. A forma simples vira uma série só, nomeada. */
+function seriesOf(opts: ChartOptions): ChartSeries[] {
+  const multi = opts.series;
+  if (multi && multi.length > 0) return multi;
+  const simple = opts.data;
+  if (simple && simple.length > 0) {
+    return [{ name: opts.valueLabel ?? CHART_VALUE_LABEL, data: simple.map((d) => d.value) }];
+  }
+  return [];
+}
+
+/** Categorias do eixo. Sem rótulo declarado, a posição vira o rótulo. */
+function categoriesOf(opts: ChartOptions): string[] {
+  const axis = opts.xAxis;
+  if (axis && axis.length > 0) return axis.map(String);
+  const simple = opts.data;
+  if (simple && simple.length > 0) return simple.map((d) => d.label);
+  const longest = seriesOf(opts).reduce((max, s) => Math.max(max, s.data.length), 0);
+  return Array.from({ length: longest }, (_, i) => String(i + 1));
+}
+
+// ─── Funções puras ────────────────────────────────────────────────────────────
+
+/** Número curto o bastante para caber na célula, sem depender de locale. */
+export function formatValue(value: number): string {
+  if (Number.isInteger(value)) return String(value);
+  return String(Math.round(value * 100) / 100);
+}
+
+/** Participação da fatia no total, em uma casa decimal. */
+function shareOf(value: number, total: number): string {
+  if (total <= 0) return NO_VALUE;
+  return `${Math.round((Math.max(0, value) / total) * 1000) / 10}%`;
+}
+
+/** A alternativa textual, em dado: cabeçalho e linhas prontos para a `<table>`. */
+export interface ChartTable {
+  header: string[];
+  lines: string[][];
+}
+
+/**
+ * Os mesmos números do desenho, em forma de tabela.
+ *
+ * Pura de propósito: o que a tabela DIZ é verificável sem navegador, e o que
+ * vira nó do DOM continua sendo medido no DOM.
+ */
+export function buildChartTable(opts: ChartOptions): ChartTable {
+  const categoryLabel = opts.categoryLabel ?? CHART_CATEGORY_LABEL;
+
+  // A rosca não tem eixo: cada linha é uma fatia, e a participação no total é a
+  // informação que o desenho passa pela ÁREA — a única que não sobrevive em
+  // texto se ninguém a escrever.
+  if ((opts.type ?? 'bar') === 'pie') {
+    const points = opts.data ?? [];
+    const total = points.reduce((sum, p) => sum + Math.max(0, p.value), 0);
+    return {
+      header: [
+        categoryLabel,
+        opts.valueLabel ?? CHART_VALUE_LABEL,
+        opts.shareLabel ?? CHART_SHARE_LABEL,
+      ],
+      lines: points.map((p) => [p.label, formatValue(p.value), shareOf(p.value, total)]),
+    };
+  }
+
+  const series = seriesOf(opts);
+  return {
+    header: [categoryLabel, ...series.map((s) => s.name)],
+    lines: categoriesOf(opts).map((category, index) => [
+      category,
+      ...series.map((s) => {
+        const value = s.data[index];
+        return value === undefined ? NO_VALUE : formatValue(value);
+      }),
+    ]),
+  };
 }
 
 // ─── Option builder (puro) ───────────────────────────────────────────────────
@@ -109,13 +257,7 @@ export interface ChartOptions {
 export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption {
   const type = opts.type ?? 'bar';
 
-  // Normaliza dado simples → xAxis + 1 série.
-  const xAxisData =
-    opts.xAxis ?? opts.data?.map((d) => d.label) ?? [];
-  const seriesData: ChartSeries[] =
-    opts.series ??
-    (opts.data ? [{ name: 'value', data: opts.data.map((d) => d.value) }] : []);
-
+  const seriesData = seriesOf(opts);
   const showLegend = opts.showLegend ?? seriesData.length > 1;
 
   // Pie tem shape diferente — xAxis/yAxis vão fora.
@@ -148,9 +290,11 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
     legend: showLegend ? {
       data: seriesData.map((s) => s.name),
       bottom: 0,
-      icon: 'roundRect',
+      // No traçado a legenda HERDA o símbolo da própria série — é a mesma pista
+      // de forma que separa as séries no desenho, e forçar um ícone genérico
+      // aqui jogaria fora justamente onde essa pista é explicada.
+      ...(type === 'bar' ? { icon: 'roundRect', itemHeight: 4 } : {}),
       itemWidth: 12,
-      itemHeight: 4,
     } : undefined,
     grid: {
       left: 16, right: 16,
@@ -158,24 +302,96 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
       bottom: showLegend ? 48 : 24,
       containLabel: true,
     },
-    xAxis: { type: 'category', data: xAxisData, boundaryGap: type === 'bar' },
+    xAxis: { type: 'category', data: categoriesOf(opts), boundaryGap: type === 'bar' },
     yAxis: { type: 'value' },
-    series: seriesData.map((s) => ({
+    series: seriesData.map((s, index) => ({
       name: s.name,
       type: type === 'area' ? 'line' : type,
       data: s.data,
       smooth: type !== 'bar',
-      symbol: type === 'bar' ? undefined : 'circle',
-      symbolSize: 6,
-      ...(s.color ? { itemStyle: { color: s.color }, lineStyle: { color: s.color } } : {}),
+      ...(type === 'bar'
+        ? { itemStyle: { borderRadius: [4, 4, 0, 0], ...(s.color ? { color: s.color } : {}) } }
+        : {
+          // Símbolo e traço próprios por série: sem a cor, a forma ainda separa
+          // uma linha da outra (WCAG 1.4.1). O tamanho é 9 porque triângulo e
+          // losango a 6px chegam indistinguíveis do círculo.
+          symbol: SYMBOLS[index % SYMBOLS.length],
+          symbolSize: 9,
+          lineStyle: {
+            type: DASHES[index % DASHES.length],
+            ...(s.color ? { color: s.color } : {}),
+          },
+          ...(s.color ? { itemStyle: { color: s.color } } : {}),
+        }),
       ...(type === 'area' ? { areaStyle: { opacity: 0.18 } } : {}),
-      ...(type === 'bar' ? { itemStyle: { borderRadius: [4, 4, 0, 0], ...(s.color ? { color: s.color } : {}) } } : {}),
     })),
     animation: !prefersReducedMotion(),
     animationDuration: Math.round(motionDuration('moderate') * 1000),
     animationEasing: 'cubicOut',
     aria: ARIA,
   };
+}
+
+// ─── Alternativa textual ─────────────────────────────────────────────────────
+
+/**
+ * A `<table>` com os mesmos números do desenho.
+ *
+ * A caixa que rola só existe quando a tabela está À VISTA, e aí ela é
+ * alcançável por teclado — como no primitivo Table. Fora da tela a tabela mede
+ * 1px, então o `overflow-x` automático a tornaria uma região rolável sem foco
+ * (`scrollable-region-focusable`), sem nada para rolar: colunas que só existem
+ * para quem usa mouse, num elemento que ninguém enxerga.
+ */
+function createChartTable(opts: ChartOptions, describes: string): HTMLElement {
+  const { header, lines } = buildChartTable(opts);
+  const showData = opts.showData ?? false;
+
+  const wrapper = document.createElement('div');
+  wrapper.dataset.slot = 'chart-data';
+  wrapper.className = showData ? 'nds-table-wrapper' : 'nds-sr-only';
+  if (showData) wrapper.tabIndex = 0;
+
+  const table = document.createElement('table');
+  table.className = 'nds-table';
+
+  // A mesma frase do `aria-label` do desenho: são a mesma descrição, e deixá-las
+  // divergir anunciaria uma coisa e escreveria outra.
+  const caption = document.createElement('caption');
+  caption.textContent = describes;
+  table.appendChild(caption);
+
+  const head = document.createElement('thead');
+  const headLine = document.createElement('tr');
+  for (const column of header) {
+    const cell = document.createElement('th');
+    cell.scope = 'col';
+    cell.textContent = column;
+    headLine.appendChild(cell);
+  }
+  head.appendChild(headLine);
+  table.appendChild(head);
+
+  const body = document.createElement('tbody');
+  for (const line of lines) {
+    const row = document.createElement('tr');
+    // A primeira célula é CABEÇALHO de linha, não dado: é ela que nomeia a
+    // categoria, e é por ela que o leitor de tela anuncia cada valor seguinte.
+    const first = document.createElement('th');
+    first.scope = 'row';
+    first.textContent = line[0];
+    row.appendChild(first);
+    for (const value of line.slice(1)) {
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      row.appendChild(cell);
+    }
+    body.appendChild(row);
+  }
+  table.appendChild(body);
+
+  wrapper.appendChild(table);
+  return wrapper;
 }
 
 // ─── Factory ──────────────────────────────────────────────────────────────────
@@ -188,14 +404,13 @@ export function createChart(opts: ChartOptions = {}): HTMLElement {
   const el = document.createElement('div');
   el.dataset.slot = 'chart';
   el.className = ['nds-chart', opts.class].filter(Boolean).join(' ');
-  // Largura e piso de altura vêm de `.nds-chart`; só a altura pedida é inline.
-  if (opts.height !== undefined) el.style.height = `${opts.height}px`;
 
   // Estado vazio — sem dados, mostra mensagem em vez de chart.
   //
   // Sem `role="img"` aqui de propósito: o papel PODA a subárvore da árvore de
   // acessibilidade, e a frase que explica a ausência de dado é justamente o
-  // conteúdo — ficaria escondida atrás de um rótulo genérico.
+  // conteúdo — ficaria escondida atrás de um rótulo genérico. Sem desenho
+  // também não há tabela: não há número para repetir.
   const isEmpty =
     (!opts.data || opts.data.length === 0) &&
     (!opts.series || opts.series.length === 0);
@@ -207,15 +422,10 @@ export function createChart(opts: ChartOptions = {}): HTMLElement {
     return el;
   }
 
-  // Com desenho, o papel de imagem é o que autoriza o `aria-label` num <div>
-  // (sem ele o axe aponta aria-prohibited-attr) e o que substitui, para o leitor
-  // de tela, um SVG que ele não teria como narrar. A factory não emitia nenhum
-  // dos dois, e cada docs page vinha colando os atributos à mão.
-  el.setAttribute('role', 'img');
   // `label` continua aceito como apelido do nome acessível; o canônico vence.
   // `title` só entra depois dos dois: ele é texto visível, e serve de último
   // recurso, não de sinônimo.
-  el.setAttribute('aria-label', opts['aria-label'] ?? opts.label ?? opts.title ?? 'Gráfico');
+  const describes = opts['aria-label'] ?? opts.label ?? opts.title ?? 'Gráfico';
 
   // Init deferida — espera el estar conectado pra echarts.init() funcionar.
   const mountWhenReady = (cb: () => void) => {
@@ -230,14 +440,26 @@ export function createChart(opts: ChartOptions = {}): HTMLElement {
   //
   // Antes ela era montada no próprio `.nds-chart`, que tem `overflow: hidden` —
   // e a dica sob o ponteiro, que a lib insere ao lado do desenho, nascia
-  // recortada pelo bloco. Nas outras stacks o wrapper já cria um elemento
-  // interno, e por isso só aqui a dica não aparecia. O bloco continua sendo o
-  // que carrega classe, papel e rótulo.
+  // recortada pelo bloco. O bloco continua sendo o que carrega classe.
+  //
+  // É este elemento — e não o bloco em volta — que leva o papel de imagem e o
+  // rótulo (decisão 2 do cabeçalho): o papel poda a subárvore, e no bloco ele
+  // esconderia a tabela de dados junto. O papel de imagem também é o que
+  // autoriza o `aria-label` num `<div>` (sem ele o axe aponta
+  // `aria-prohibited-attr`) e o que substitui, para o leitor de tela, um SVG
+  // que ele não teria como narrar.
   const design = document.createElement('div');
   design.dataset.slot = 'chart-canvas';
+  design.setAttribute('role', 'img');
+  design.setAttribute('aria-label', describes);
   design.style.width = '100%';
-  design.style.height = '100%';
+  // A altura pedida é do DESENHO, não do bloco: com a tabela à vista o bloco
+  // precisa crescer para caber os dois, e um bloco de altura cravada com
+  // `overflow: hidden` recortaria a alternativa textual.
+  design.style.height = opts.height !== undefined ? `${opts.height}px` : '100%';
   el.appendChild(design);
+
+  el.appendChild(createChartTable(opts, describes));
 
   mountWhenReady(() => {
     registerNortearTheme();
@@ -263,7 +485,10 @@ export function createChart(opts: ChartOptions = {}): HTMLElement {
       lastHeight = height;
       chart.resize();
     });
-    ro.observe(el);
+    // Observa o DESENHO, não o bloco: com a tabela à vista o bloco muda de
+    // altura por causa dela, e redimensionar o gráfico por isso seria repintar
+    // por um motivo que não é dele.
+    ro.observe(design);
 
     const unwatch = watchTheme(() => {
       // Gráfico que saiu da página se recolhe sozinho.

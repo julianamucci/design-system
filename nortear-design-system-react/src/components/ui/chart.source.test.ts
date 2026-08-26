@@ -11,6 +11,7 @@ import {
   chartSource,
   chartTitleNoLabelSource,
   chartEmptySource,
+  chartVisibleDataSource,
 } from './chart.source';
 
 const ALL = [
@@ -25,6 +26,7 @@ const ALL = [
   chartEmptySource,
   chartEmCardSource,
   chartDoisDesenhosSource,
+  chartVisibleDataSource,
 ];
 
 describe('chartSource', () => {
@@ -95,6 +97,15 @@ describe('chartSource', () => {
     expect(chartSource(undefined, { args: { height: 420 } })).toContain('height={420}');
     expect(chartSource()).toContain('height={300}');
     expect(chartSource(undefined, { args: { height: 'alto' as never } })).toContain('height={300}');
+  });
+
+  it('a tabela à vista só entra no snippet quando o control a LIGA', () => {
+    // A tabela é emitida sempre; a entrada decide se ela aparece. Escrever
+    // `showData={false}` no padrão ensinaria que a alternativa textual depende
+    // dela — e quem copiasse o trecho acharia que desligá-la a remove.
+    expect(chartSource(undefined, { args: { showData: false } })).not.toContain('showData');
+    expect(chartSource()).not.toContain('showData');
+    expect(chartSource(undefined, { args: { showData: true } })).toContain('showData');
   });
 
   it('a classe só entra quando existe — string vazia não vira atributo', () => {
@@ -169,6 +180,21 @@ describe('estados e composição', () => {
     // e um rótulo genérico a esconderia. Nada no snippet força o contrário.
     expect(saida).not.toContain('aria-label');
     expect(saida).not.toContain('role=');
+  });
+
+  it('a tabela à vista aparece escrita na chamada — a entrada é o assunto', () => {
+    const saida = chartVisibleDataSource();
+    expect(saida).toContain('showData');
+    // O rótulo continua obrigatório: ele é a `<caption>` da tabela, não só o
+    // nome acessível do desenho.
+    expect(saida).toContain('aria-label="Acessos mensais por dispositivo');
+  });
+
+  it('nenhum outro snippet liga a tabela à vista — o padrão é escondida', () => {
+    for (const fn of ALL) {
+      if (fn === chartVisibleDataSource) continue;
+      expect(fn()).not.toContain('showData');
+    }
   });
 
   it('no Card o gráfico fica DENTRO do corpo, e a altura é do gráfico', () => {

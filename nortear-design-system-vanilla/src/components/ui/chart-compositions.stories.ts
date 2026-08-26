@@ -138,8 +138,16 @@ export const InlineTitle: Story = {
       // O desenho continua sendo anunciado como imagem — o que muda é de onde
       // vem o rótulo. Título escrito e rótulo divergentes anunciariam ao leitor
       // de tela uma coisa e mostrariam outra.
-      await expect(root.getAttribute('role')).toBe('img');
-      await expect(root.getAttribute('aria-label')).toBe(TITLE_INLINE);
+      //
+      // O papel mora no elemento do DESENHO: no bloco em volta ele podaria a
+      // tabela de dados da árvore de acessibilidade.
+      const canvas = root.querySelector<HTMLElement>('[data-slot="chart-canvas"]')!;
+      await expect(canvas.getAttribute('role')).toBe('img');
+      await expect(canvas.getAttribute('aria-label')).toBe(TITLE_INLINE);
+      await expect(root.getAttribute('role')).toBeNull();
+      // E a legenda da tabela acompanha a mesma frase — o desenho e a
+      // alternativa textual dele não descrevem coisas diferentes.
+      await expect(root.querySelector('caption')?.textContent?.trim()).toBe(TITLE_INLINE);
     });
 
     await step('E o dado continua desenhado', async () => {

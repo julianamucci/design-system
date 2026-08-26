@@ -11,7 +11,7 @@ import {
   designEscreve,
   datumFormas,
 } from '@shared/testing/chart-probe';
-import { designPronto } from './chart.fixtures';
+import { designPronto, headerOf, optionOf, rowsOf } from './chart.fixtures';
 import {
   chartAreaSource,
   chartLineSource,
@@ -130,12 +130,40 @@ export const Line: Story = {
       }
     });
 
+    await step('Cada série tem símbolo de ponto e traço próprios', async () => {
+      // Aqui não há área a hachurar: a trama do `decal` cobre barra e fatia, e
+      // numa linha ela não tem onde pousar. O que separa as séries quando a cor
+      // sai de cena (WCAG 1.4.1) é a FORMA do ponto e o desenho do traço.
+      //
+      // A medida sai da option resolvida pela lib, e não do DOM: símbolo e
+      // traço são decisão de configuração, e no `<svg>` do zrender o símbolo de
+      // ponto sai com contorno de 0.44px — indistinguível de decoração por
+      // qualquer filtro que se tente escrever sobre o desenho.
+      const series = optionOf(root).series;
+      await expect(series).toHaveLength(seriesMulti.length);
+
+      const symbols = series.map((s) => String(s.symbol));
+      await expect(new Set(symbols).size).toBe(seriesMulti.length);
+
+      const dashes = series.map((s) => JSON.stringify((s.lineStyle as { type?: unknown })?.type));
+      await expect(new Set(dashes).size).toBe(seriesMulti.length);
+    });
+
     await step('A legenda nomeia cada série por escrito', async () => {
       for (const serie of seriesMulti) await expect(designEscreve(root, serie.name)).toBe(true);
     });
 
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
       for (const month of meses) await expect(designEscreve(root, month)).toBe(true);
+    });
+
+    await step('A tabela traz uma coluna por série e uma linha por categoria', async () => {
+      await expect(headerOf(root)).toEqual(['Categoria', ...seriesMulti.map((s) => s.name)]);
+      const rows = rowsOf(root);
+      await expect(rows.map((row) => row[0])).toEqual(meses);
+      for (const [iSeries, serie] of seriesMulti.entries()) {
+        await expect(rows.map((row) => row[iSeries + 1])).toEqual(serie.data.map(String));
+      }
     });
   },
 };
@@ -166,7 +194,7 @@ export const Area: Story = {
 
     await step('E há região preenchida sob a linha, não só o símbolo do ponto', async () => {
       const svg = root.querySelector('svg')!;
-      // Metade da largura do desenho: o símbolo de ponto tem 6px, a região sob
+      // Metade da largura do desenho: o símbolo de ponto tem 9px, a região sob
       // a linha atravessa o gráfico. A comparação é relativa porque o desenho é
       // responsivo e o número absoluto muda com a largura do container.
       const meiaWidth = svg.getBoundingClientRect().width / 2;
@@ -212,6 +240,22 @@ export const Pie: Story = {
       await expect(formas.length).toBeGreaterThanOrEqual(dataDispositivo.length);
       const preenchimentos = new Set(formas.map((f) => getComputedStyle(f).fill));
       await expect(preenchimentos.size).toBeGreaterThanOrEqual(dataDispositivo.length);
+    });
+
+    await step('A tabela escreve valor E participação — o ângulo vira número', async () => {
+      // A pizza comunica parte contra o todo pelo ÂNGULO, e ângulo não se lê
+      // sem enxergar. Sem a coluna de participação a alternativa textual
+      // contaria menos que o desenho.
+      await expect(headerOf(root)).toEqual(['Categoria', 'Valor', 'Participação']);
+
+      const rows = rowsOf(root);
+      await expect(rows.map((row) => row[0])).toEqual(dataDispositivo.map((p) => p.label));
+      await expect(rows.map((row) => row[1])).toEqual(dataDispositivo.map((p) => String(p.value)));
+
+      const total = dataDispositivo.reduce((sum, p) => sum + p.value, 0);
+      await expect(rows.map((row) => row[2])).toEqual(
+        dataDispositivo.map((p) => `${Math.round((p.value / total) * 1000) / 10}%`),
+      );
     });
   },
 };

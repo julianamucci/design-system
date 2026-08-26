@@ -13,7 +13,7 @@ import {
 } from 'echarts/components';
 import { SVGRenderer, CanvasRenderer } from 'echarts/renderers';
 import { cn } from '@/lib/utils';
-import { CHART_EMPTY_LABEL, isChartOptionEmpty } from './chart-state';
+import { CHART_EMPTY_LABEL, CHART_TABLE_LABELS, chartTable, isChartOptionEmpty } from './chart-state';
 import type { HTMLAttributes } from 'vue';
 
 // `AriaComponent` não é enfeite: sem ele o bloco `aria` do option é ignorado em
@@ -52,6 +52,17 @@ const props = defineProps<{
    * pousava no `div` mesmo sem imagem alguma para nomear.
    */
   ariaLabel?: string;
+  /**
+   * Torna a alternativa textual visível para todo mundo, não só para leitor de
+   * tela. Sem ela a tabela continua no DOM — o que muda é quem a enxerga.
+   */
+  showData?: boolean;
+  /** Rótulo da coluna de categorias na alternativa textual. */
+  categoryLabel?: string;
+  /** Rótulo da coluna de valores quando a série não tem nome próprio. */
+  valueLabel?: string;
+  /** Rótulo da coluna de participação — só a pizza a escreve. */
+  shareLabel?: string;
 }>();
 
 const containerRef = ref<HTMLDivElement | null>(null);
@@ -131,10 +142,20 @@ const mountTheme = buildTheme();
  * silêncio significa gráfico que não recolore — foi assim que uma story mediu
  * contraste de 1.04:1, com o desenho ainda na paleta do tema anterior. O
  * registro da lib é por elemento, e o elemento nós temos.
+ *
+ * A busca varre a subárvore do desenho em vez de pegar o primeiro filho: o
+ * wrapper monta a lib num elemento INTERNO ao que ele próprio renderiza, então
+ * perguntar ao primeiro nó devolvia `undefined` — e `undefined` aqui é
+ * exatamente o gráfico que não recolore, calado.
  */
 function instanciaDoGrafico(): echarts.ECharts | undefined {
-  const target = containerRef.value?.querySelector<HTMLElement>('*');
-  return target ? echarts.getInstanceByDom(target) : undefined;
+  const root = containerRef.value;
+  if (!root) return undefined;
+  for (const node of root.querySelectorAll<HTMLElement>('[data-slot="chart-canvas"] *')) {
+    const instance = echarts.getInstanceByDom(node);
+    if (instance) return instance;
+  }
+  return undefined;
 }
 
 let observer: MutationObserver | null = null;
@@ -145,6 +166,30 @@ onMounted(() => {
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 });
 onBeforeUnmount(() => observer?.disconnect());
+
+/**
+ * Os números do desenho em forma de tabela.
+ *
+ * Sai do MESMO option que a lib desenha: uma segunda fonte divergiria já no
+ * primeiro dado atualizado, e a alternativa textual passaria a descrever um
+ * gráfico que não está na tela.
+ */
+const table = computed(() =>
+  chartTable(props.option, {
+    category: props.categoryLabel ?? CHART_TABLE_LABELS.category,
+    value: props.valueLabel ?? CHART_TABLE_LABELS.value,
+    share: props.shareLabel ?? CHART_TABLE_LABELS.share,
+  }),
+);
+
+/**
+ * A caixa que rola só existe quando a tabela está À VISTA, e aí ela é
+ * alcançável por teclado — como no primitivo Table. Fora da tela a tabela mede
+ * 1px, então o `overflow-x` automático a tornaria uma região rolável sem foco
+ * (scrollable-region-focusable) e sem nada para rolar: colunas que só existem
+ * para quem usa mouse, num elemento que ninguém enxerga.
+ */
+const dataClass = computed(() => (props.showData ? 'nds-table-wrapper' : 'nds-sr-only'));
 
 const containerClass = computed(() => cn('nds-chart', props.class));
 const rendererName = computed(() => props.renderer ?? 'svg');
@@ -166,35 +211,74 @@ const accessibleLabel = computed(() => {
 // Vanilla (referência) e no Angular.
 const vazio = computed(() => isChartOptionEmpty(props.option));
 const emptyText = computed(() => props.emptyLabel ?? CHART_EMPTY_LABEL);
-const containerStyle = computed(() =>
+/**
+ * Altura pedida. Veste o elemento do DESENHO quando há desenho — o bloco em
+ * volta cresce com ele e ainda cabe a tabela abaixo sem ser recortada — e o
+ * próprio bloco no estado vazio, onde não há desenho e o piso é o que impede a
+ * página de saltar quando o dado chega.
+ */
+const heightStyle = computed(() =>
   props.height === undefined ? undefined : { height: `${props.height}px` },
 );
 </script>
 
 <template>
   <!--
-    `role="img"` PODA a subárvore da árvore de acessibilidade. Com desenho isso é
-    o que se quer: o rótulo substitui um SVG que o leitor de tela não teria como
-    narrar. No estado vazio seria o contrário — a frase que explica a ausência de
-    dado é justamente o conteúdo, e ficaria escondida atrás de um rótulo
-    genérico. Sem papel, ela é lida.
+    O bloco em volta NÃO leva papel nenhum.
+
+    `role="img"` poda a subárvore da árvore de acessibilidade. No bloco ele
+    podaria a tabela de dados junto, e a alternativa textual sumiria — o papel
+    vai no elemento do desenho, logo abaixo, e a tabela fica ao lado dele, na
+    árvore. No estado vazio não há papel em lugar nenhum: a frase que explica a
+    ausência de dado é justamente o conteúdo, e atrás de um rótulo genérico ela
+    não seria lida.
   -->
   <div
     ref="containerRef"
     data-slot="chart"
-    :role="vazio ? undefined : 'img'"
-    :aria-label="vazio ? undefined : accessibleLabel"
     :class="containerClass"
-    :style="containerStyle"
+    :style="vazio ? heightStyle : undefined"
   >
     <p v-if="vazio" class="nds-chart-empty">{{ emptyText }}</p>
-    <VChart
-      v-else
-      :option="option"
-      :theme="mountTheme"
-      :init-options="{ renderer: rendererName }"
-      autoresize
-      style="width: 100%; height: 100%;"
-    />
+    <template v-else>
+      <!-- O elemento em que a lib desenha. A altura nasce da proporção aplicada
+           à largura do container quando não vem pedida em pixel. -->
+      <div
+        class="nds-chart-canvas"
+        data-slot="chart-canvas"
+        role="img"
+        :aria-label="accessibleLabel"
+        :style="heightStyle"
+      >
+        <VChart
+          :option="option"
+          :theme="mountTheme"
+          :init-options="{ renderer: rendererName }"
+          autoresize
+          style="width: 100%; height: 100%;"
+        />
+      </div>
+
+      <!-- Alternativa textual equivalente. Não é enfeite: é o mesmo dado, em
+           forma que leitor de tela, busca e cópia alcançam. -->
+      <div :class="dataClass" :tabindex="showData ? 0 : undefined" data-slot="chart-data">
+        <table class="nds-table">
+          <caption>{{ accessibleLabel }}</caption>
+          <thead>
+            <tr>
+              <!-- Chaveado pela POSIÇÃO: duas séries podem ter o mesmo nome, e
+                   chave repetida numa lista é chave que não distingue. -->
+              <th v-for="(column, place) of table.header" :key="place" scope="col">{{ column }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, index) of table.rows" :key="index">
+              <th scope="row">{{ row[0] }}</th>
+              <td v-for="(cell, position) of row.slice(1)" :key="position">{{ cell }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </template>
   </div>
 </template>

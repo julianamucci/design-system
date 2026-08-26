@@ -8,6 +8,7 @@ import {
 } from '@shared/testing/chart-probe';
 import { ChartContainer, buildBarOption } from './index';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { drawingOf } from './chart.fixtures';
 import { chartWithCardSource, designChartTitleSource } from './chart.source';
 
 const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
@@ -105,7 +106,10 @@ export const InlineTitle: Story = {
       // A ordem do container é: rótulo passado, título do option, palavra
       // genérica. A story não passa rótulo, então o degrau do meio é o que vale
       // — e um desenho nunca fica mudo para leitor de tela.
-      await expect(root.getAttribute('aria-label')).toBe(DESIGN_TITLE);
+      await expect(drawingOf(root).getAttribute('aria-label')).toBe(DESIGN_TITLE);
+      // E a legenda da tabela repete o mesmo texto, para não haver duas
+      // descrições do mesmo gráfico.
+      await expect(root.querySelector('caption')?.textContent?.trim()).toBe(DESIGN_TITLE);
     });
   },
 };

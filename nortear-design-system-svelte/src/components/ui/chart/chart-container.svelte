@@ -13,7 +13,9 @@
     AriaComponent,
   } from 'echarts/components';
   import { SVGRenderer, CanvasRenderer } from 'echarts/renderers';
-  import { CHART_EMPTY_LABEL, isChartOptionEmpty } from './chart-state.js';
+  import {
+    CHART_EMPTY_LABEL, CHART_TABLE_LABELS, chartTable, isChartOptionEmpty,
+  } from './chart-state.js';
 
   // `AriaComponent` não é enfeite: sem ele o bloco `aria` do option é ignorado
   // em silêncio, e a trama sobreposta a cada série — que é o que cumpre a WCAG
@@ -34,6 +36,10 @@
     height,
     emptyLabel = CHART_EMPTY_LABEL,
     'aria-label': ariaLabel = 'Gráfico',
+    showData = false,
+    categoryLabel = CHART_TABLE_LABELS.category,
+    valueLabel = CHART_TABLE_LABELS.value,
+    shareLabel = CHART_TABLE_LABELS.share,
     ...restProps
   }: HTMLAttributes<HTMLDivElement> & {
     option: echarts.EChartsCoreOption;
@@ -48,13 +54,52 @@
     height?: number;
     /** Frase mostrada no lugar do gráfico quando não há série com dado. */
     emptyLabel?: string;
+    /**
+     * Torna a alternativa textual visível para todo mundo, não só para leitor
+     * de tela. Sem ela a tabela continua no DOM — o que muda é quem a enxerga.
+     */
+    showData?: boolean;
+    /** Rótulo da coluna de categorias na alternativa textual. */
+    categoryLabel?: string;
+    /** Rótulo da coluna de valores quando a série não tem nome próprio. */
+    valueLabel?: string;
+    /** Rótulo da coluna de participação — só a pizza a escreve. */
+    shareLabel?: string;
   } = $props();
 
   let containerEl: HTMLDivElement | undefined = $state();
 
   // Sem série com dado não existe desenho a anunciar: entra a frase, como no
-  // Vanilla (referência) e no Angular.
+  // Vanilla, a stack de referência.
   const vazio = $derived(isChartOptionEmpty(option));
+
+  /**
+   * Os números do desenho em forma de tabela.
+   *
+   * Sai do MESMO option que a lib desenha: uma segunda fonte divergiria já no
+   * primeiro dado atualizado, e a alternativa textual passaria a descrever um
+   * gráfico que não está na tela.
+   */
+  const table = $derived(
+    chartTable(option, { category: categoryLabel, value: valueLabel, share: shareLabel }),
+  );
+
+  /**
+   * A caixa que rola só existe quando a tabela está À VISTA, e aí ela é
+   * alcançável por teclado — como no primitivo Table. Fora da tela a tabela
+   * mede 1px, então o `overflow-x` automático a tornaria uma região rolável sem
+   * foco (scrollable-region-focusable) e sem nada para rolar: colunas que só
+   * existem para quem usa mouse, num elemento que ninguém enxerga.
+   */
+  const dataClass = $derived(showData ? 'nds-table-wrapper' : 'nds-sr-only');
+
+  /**
+   * Altura pedida, em CSS. Veste o elemento do DESENHO quando há desenho — o
+   * bloco em volta cresce com ele e ainda cabe a tabela abaixo sem recorte — e
+   * o próprio bloco no estado vazio, onde não há desenho e o piso é o que
+   * impede a página de saltar quando o dado chega.
+   */
+  const heightStyle = $derived(height === undefined ? undefined : `height: ${height}px`);
 
   function hsl(token: string, alpha = 1): string {
     if (typeof document === 'undefined') return 'transparent';
@@ -154,19 +199,55 @@
   <div
     data-slot="chart"
     class={cn('nds-chart', className)}
-    style={height === undefined ? undefined : `height: ${height}px`}
+    style={heightStyle}
     {...restProps}
   >
     <p class="nds-chart-empty">{emptyLabel}</p>
   </div>
 {:else}
-  <div
-    bind:this={containerEl}
-    data-slot="chart"
-    role="img"
-    aria-label={ariaLabel}
-    class={cn('nds-chart', className)}
-    style={height === undefined ? undefined : `height: ${height}px`}
-    {...restProps}
-  ></div>
+  <!--
+    O bloco em volta NÃO leva papel nenhum: `role="img"` poda a subárvore, e
+    aqui embaixo mora a tabela de dados. No bloco, o papel a podaria junto e a
+    alternativa textual sumiria da árvore de acessibilidade — por isso ele vai
+    no elemento do desenho, e a tabela fica ao lado, não dentro.
+  -->
+  <div data-slot="chart" class={cn('nds-chart', className)} {...restProps}>
+    <!-- O elemento em que a lib desenha. A altura nasce da proporção aplicada à
+         largura do container quando não vem pedida em pixel. -->
+    <div
+      bind:this={containerEl}
+      class="nds-chart-canvas"
+      data-slot="chart-canvas"
+      role="img"
+      aria-label={ariaLabel}
+      style={heightStyle}
+    ></div>
+
+    <!-- Alternativa textual equivalente. Não é enfeite: é o mesmo dado, em
+         forma que leitor de tela, busca e cópia alcançam. -->
+    <div class={dataClass} tabindex={showData ? 0 : undefined} data-slot="chart-data">
+      <table class="nds-table">
+        <caption>{ariaLabel}</caption>
+        <thead>
+          <tr>
+            <!-- Chaveado pela POSIÇÃO: duas séries podem ter o mesmo nome, e
+                 chave repetida num each chaveado é erro em tempo de execução. -->
+            {#each table.header as column, place (place)}
+              <th scope="col">{column}</th>
+            {/each}
+          </tr>
+        </thead>
+        <tbody>
+          {#each table.rows as row, index (index)}
+            <tr>
+              <th scope="row">{row[0]}</th>
+              {#each row.slice(1) as cell, position (position)}
+                <td>{cell}</td>
+              {/each}
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </div>
+  </div>
 {/if}

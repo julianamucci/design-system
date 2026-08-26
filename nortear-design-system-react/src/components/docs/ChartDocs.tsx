@@ -218,10 +218,16 @@ const series = [
 interface ChartContainerProps extends React.ComponentProps<"div"> {
   option: EChartsCoreOption;
   renderer?: "svg" | "canvas";
-  /** Altura do container em px. Sem valor, vale o piso do próprio bloco. */
+  /** Altura do desenho em px. Sem valor, vale o piso do próprio bloco. */
   height?: number;
   /** Frase mostrada no lugar do desenho quando nenhuma série tem dado. */
   emptyLabel?: string;
+  /** Mostra a tabela de dados para todo mundo — emitida sempre, escondida por padrão. */
+  showData?: boolean;
+  /** Cabeçalhos da tabela de dados. */
+  categoryLabel?: string;
+  valueLabel?: string;
+  shareLabel?: string;
 }
 
 /** Frase padrão do estado vazio, exportada para reuso. */

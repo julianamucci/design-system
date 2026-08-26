@@ -71,8 +71,9 @@ function priorityLabel(raw: string): string {
 }
 
 // Cada preview leva a SUA descrição: a opção `'aria-label'` vira o `role="img"`
-// e o atributo do container dentro da própria factory. Antes disso cada preview colava os
-// dois atributos à mão — e os que esqueciam ficavam mudos para o leitor de tela.
+// e o atributo do elemento em que a lib desenha, e a legenda da tabela de dados,
+// tudo dentro da própria factory. Antes disso cada preview colava os atributos à
+// mão — e os que esqueciam ficavam mudos para o leitor de tela.
 function buildBarPreview(): HTMLElement {
   return createChart({
     data: chartData,
@@ -356,8 +357,9 @@ const el = createChart({
   ],
   type: 'bar',   // 'bar' | 'line' | 'area' | 'pie'
   height: 200,
-  // Vira o role="img" + aria-label do container. Sem ele, o desenho é
-  // conteúdo perdido para quem usa leitor de tela.
+  // Vira o role="img" + aria-label do desenho, e a legenda da tabela de dados
+  // que acompanha. Sem ele, o desenho é conteúdo perdido para quem usa leitor
+  // de tela.
   'aria-label': 'Acessos mensais de janeiro a março',
 });
 document.body.appendChild(el);`,

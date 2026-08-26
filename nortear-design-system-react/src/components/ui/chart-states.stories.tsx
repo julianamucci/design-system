@@ -74,12 +74,21 @@ export const Empty: Story = {
       await expect(aviso?.textContent?.trim()).toBe(FRASE_VAZIA);
     });
 
-    await step('Sem desenho, o container não se anuncia como imagem', async () => {
+    await step('Sem desenho, nada se anuncia como imagem', async () => {
       // `role="img"` poda a subárvore da árvore de acessibilidade: com a frase
       // no lugar do gráfico, ela é justamente o conteúdo a ser lido, e ficaria
-      // escondida atrás de um rótulo genérico.
-      await expect(root.getAttribute('role')).toBeNull();
+      // escondida atrás de um rótulo genérico. Sem desenho não há nem elemento
+      // para levar o papel.
+      await expect(root.querySelector('[data-slot="chart-canvas"]')).toBeNull();
+      await expect(root.querySelector('[role="img"]')).toBeNull();
       await expect(root.getAttribute('aria-label')).toBeNull();
+    });
+
+    await step('E não há tabela de dados — não há número a tabular', async () => {
+      // A alternativa textual existe para o que ESTÁ desenhado. Uma tabela de
+      // cabeçalho só, sem uma linha, anunciaria dado onde não há.
+      await expect(root.querySelector('[data-slot="chart-data"]')).toBeNull();
+      await expect(root.querySelector('table')).toBeNull();
     });
 
     await step('O container mantém o piso de altura', async () => {

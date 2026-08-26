@@ -15,6 +15,7 @@
 import {
   attrsMultilinha,
   jsxSnippet,
+  propBool,
   propNumber,
   propOption,
   propText,
@@ -25,6 +26,7 @@ import {
 export type ChartArgs = {
   renderer: 'svg' | 'canvas';
   height: number;
+  showData: boolean;
   emptyLabel: string;
   className: string;
   'aria-label': string;
@@ -73,6 +75,9 @@ export const chartSource: SourceTransform<ChartArgs> = (_gerado, ctx) => {
       'option={buildBarOption({ xAxis: meses, series })}',
       propNumber('height', args.height) ?? 'height={300}',
       propOption('renderer', args.renderer, RENDERIZADORES, 'svg'),
+      // Só entra quando LIGADA. A tabela sai do container de qualquer jeito, e
+      // um `showData={false}` no snippet ensinaria que ela depende da entrada.
+      propBool('showData', args.showData),
       frase && frase !== FRASE_VAZIA_DEFAULT ? `emptyLabel="${frase}"` : undefined,
       propText('className', args.className),
       `aria-label="${text(args['aria-label']) ?? LABEL_DEFAULT}"`,
@@ -169,6 +174,29 @@ ${SERIES_MULTI}`,
   option={buildBarOption({ xAxis: meses, series })}
   className="nds-max-w-lg"
   height={280}
+  aria-label="Acessos mensais por dispositivo: desktop, mobile e tablet"
+/>`,
+  );
+}
+
+/**
+ * Tabela de dados à vista.
+ *
+ * A tabela sai SEMPRE — o container a emite escondida, para leitor de tela e
+ * para quem lê o DOM. A entrada mostrada aqui não a cria: ela decide que quem
+ * enxerga também a veja, e é por isso que o snippet precisa trazê-la escrita.
+ */
+export function chartVisibleDataSource(): string {
+  return jsxSnippet(
+    `${importChart('buildBarOption')}
+
+${DATA_MENSAIS}
+${SERIES_MULTI}`,
+    `<ChartContainer
+  option={buildBarOption({ xAxis: meses, series })}
+  className="nds-max-w-lg"
+  height={260}
+  showData
   aria-label="Acessos mensais por dispositivo: desktop, mobile e tablet"
 />`,
   );

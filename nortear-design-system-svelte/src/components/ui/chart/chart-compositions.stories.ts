@@ -3,6 +3,7 @@ import { expect, waitFor } from 'storybook/test';
 import { ChartContainer, buildBarOption } from './index';
 import ChartCardStory from './ChartCardStory.svelte';
 import { designEscreve, designPintado, exigirRoot } from '@shared/testing/chart-probe';
+import { drawingOf } from './chart.fixtures';
 import { chartEmCardSource, chartSource, designChartTitleSource } from './chart.source';
 
 const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr'];
@@ -88,8 +89,12 @@ export const InlineTitle: Story = {
       // O padrão é uma palavra genérica de propósito: ela mantém o papel de
       // imagem coerente, e não finge descrever o gráfico. Quem descreve é o
       // `aria-label` autoral — todas as outras stories passam um.
-      await expect(root).toHaveAttribute('role', 'img');
-      await expect(root.getAttribute('aria-label')).toBe('Gráfico');
+      const design = drawingOf(root);
+      await expect(design).toHaveAttribute('role', 'img');
+      await expect(design.getAttribute('aria-label')).toBe('Gráfico');
+      // E a legenda da tabela repete o mesmo texto, para não haver duas
+      // descrições do mesmo gráfico.
+      await expect(root.querySelector('caption')?.textContent?.trim()).toBe('Gráfico');
     });
   },
 };

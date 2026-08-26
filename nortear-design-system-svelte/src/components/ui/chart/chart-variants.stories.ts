@@ -136,6 +136,31 @@ export const Line: Story = {
       }
     });
 
+    await step('As séries se distinguem por FORMA, não só por cor', async () => {
+      // A trama do decal cumpre a WCAG 1.4.1 onde há área para tramar — barra e
+      // fatia. A linha não tem área, e é aqui que a outra metade do critério se
+      // cumpre: símbolo de ponto próprio e desenho de traço próprio por série.
+      // Retirada toda a cor, o gráfico continua legível.
+      const option = buildLineOption({ xAxis: MONTHS, series: SERIES_MULTI }) as {
+        series: { symbol?: unknown; lineStyle?: { type?: unknown } }[];
+      };
+      const symbols = option.series.map((one) => String(one.symbol));
+      await expect(new Set(symbols).size).toBe(SERIES_MULTI.length);
+      const dashes = option.series.map((one) => JSON.stringify(one.lineStyle?.type));
+      await expect(new Set(dashes).size).toBe(SERIES_MULTI.length);
+    });
+
+    await step('E o traço distinto chega ao desenho, não fica só na configuração', async () => {
+      // Configuração verde com desenho errado é portão sem dentes: a série
+      // tracejada tem de sair com stroke-dasharray no nó. getComputedStyle, e
+      // não o atributo: o desenho do traço pode chegar por atributo ou por
+      // estilo, e ler só um dos dois é medir meio caminho.
+      const drawn = [...root.querySelectorAll<SVGPathElement>('svg path')]
+        .filter((p) => getComputedStyle(p).fill === 'none')
+        .map((p) => getComputedStyle(p).strokeDasharray);
+      await expect(new Set(drawn).size).toBeGreaterThanOrEqual(SERIES_MULTI.length);
+    });
+
     await step('A legenda nomeia cada série, e o eixo traz as categorias', async () => {
       for (const serie of SERIES_MULTI) {
         await expect(designEscreve(root, serie.name)).toBe(true);

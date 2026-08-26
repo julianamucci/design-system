@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, waitFor } from 'storybook/test';
 import { ChartContainer, buildBarOption, CHART_EMPTY_LABEL } from './index';
+import { dataOf, drawingOf } from './chart.fixtures';
 import {
   designEscreve, designPintado, exigirRoot, datumFormas,
 } from '@shared/testing/chart-probe';
@@ -52,6 +53,12 @@ const meta: Meta = {
         'Altura do container em pixels. Sem valor, vale o piso de altura do próprio bloco (200px, no CSS compartilhado).',
       table: { type: { summary: 'number' }, defaultValue: { summary: '—' } },
     },
+    showData: {
+      control: 'boolean',
+      description:
+        'Mostra a tabela de dados para todo mundo. Ela existe sempre, com os mesmos números do desenho; sem esta opção, existe só para leitor de tela e para quem lê o DOM.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
     emptyLabel: {
       control: 'text',
       description:
@@ -75,6 +82,7 @@ const meta: Meta = {
     option: buildBarOption({ xAxis: MONTHS, series: SERIE_UNICA }),
     renderer: 'svg' as const,
     height: 300,
+    showData: false,
     emptyLabel: CHART_EMPTY_LABEL,
     class: 'nds-w-full',
     'aria-label': LABEL,
@@ -100,10 +108,36 @@ export const Playground: Story = {
     const root = exigirRoot(canvasElement);
 
     await step('O desenho é anunciado como imagem, com a descrição da story', async () => {
-      await expect(root).toHaveAttribute('role', 'img');
+      // O papel vai no elemento do DESENHO, não no bloco em volta: no bloco ele
+      // podaria a tabela de dados junto, e a alternativa textual sumiria da
+      // árvore de acessibilidade.
+      const design = drawingOf(root);
+      await expect(design).toHaveAttribute('role', 'img');
       // O valor exato, não só a presença do atributo: rótulo vazio ou genérico
       // passa em "tem aria-label" e não descreve nada.
-      await expect(root.getAttribute('aria-label')).toBe(args['aria-label']);
+      await expect(design.getAttribute('aria-label')).toBe(args['aria-label']);
+      await expect(root.getAttribute('role')).toBeNull();
+    });
+
+    await step('A alternativa textual traz os mesmos números do desenho', async () => {
+      // Um desenho mudo é conteúdo perdido: quem lê com leitor de tela, quem
+      // busca na página e quem copia o dado alcançam a TABELA, não o desenho.
+      const lines = [...root.querySelectorAll<HTMLTableRowElement>('tbody tr')];
+      await expect(lines).toHaveLength(MONTHS.length);
+      await expect(lines[0].querySelector('th')?.getAttribute('scope')).toBe('row');
+      await expect(lines[0].querySelector('th')?.textContent?.trim()).toBe(MONTHS[0]);
+      await expect(lines[0].querySelector('td')?.textContent?.trim())
+        .toBe(String(SERIE_UNICA[0].data[0]));
+      // A legenda da tabela é o mesmo texto que nomeia o desenho: uma descrição
+      // para os dois, e nenhuma chance de descreverem coisas diferentes.
+      await expect(root.querySelector('caption')?.textContent?.trim()).toBe(args['aria-label']);
+      await expect(root.querySelector('thead th')?.getAttribute('scope')).toBe('col');
+    });
+
+    await step('E, por padrão, ela existe só para quem lê o DOM', async () => {
+      // Visível é escolha do consumidor (showData); presente é contrato.
+      await expect(dataOf(root)).toHaveClass('nds-sr-only');
+      await expect(dataOf(root).getAttribute('tabindex')).toBeNull();
     });
 
     await step('O desenho sai', async () => {

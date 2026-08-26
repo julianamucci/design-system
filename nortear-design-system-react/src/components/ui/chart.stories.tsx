@@ -5,6 +5,7 @@ import { chartSource } from './chart.source';
 import { ChartDocs } from '@/components/docs/ChartDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { designEscreve, designPintado, exigirRoot } from '@shared/testing/chart-probe';
+import { dataOf, drawingOf, headerOf, rowsOf } from './chart.fixtures';
 
 // Dados do Playground. Ficam sem `export` de propósito: em CSF todo export
 // nomeado do arquivo vira story, e uma constante de dados apareceria na sidebar
@@ -44,6 +45,12 @@ const meta = {
         'Altura do container em pixels. Sem valor, vale o piso de altura do próprio bloco — a altura é dado do consumidor, por isso é entrada e não classe.',
       table: { type: { summary: 'number' }, defaultValue: { summary: 'piso do bloco (200px)' } },
     },
+    showData: {
+      control: 'boolean',
+      description:
+        'Mostra a tabela de dados para todo mundo. Ela é emitida sempre — escondida, existe para leitor de tela, para a busca do navegador e para quem copia; ligada, aparece abaixo do desenho.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
     emptyLabel: {
       control: 'text',
       description:
@@ -66,6 +73,7 @@ const meta = {
     option: buildBarOption({ xAxis: meses, series }),
     renderer: 'svg',
     height: 300,
+    showData: false,
     emptyLabel: CHART_EMPTY_LABEL,
     className: '',
     'aria-label': LABEL,
@@ -92,10 +100,15 @@ export const Playground: Story = {
 
     await step('O desenho é anunciado como imagem, com a descrição autoral', async () => {
       await expect(root).toHaveAttribute('data-slot', 'chart');
-      await expect(root).toHaveAttribute('role', 'img');
+      // O papel e o rótulo ficam no DESENHO, não no bloco. `role="img"` poda a
+      // subárvore da árvore de acessibilidade: no bloco, a tabela de dados
+      // ficaria escondida junto e a alternativa textual sumiria.
+      await expect(root.getAttribute('role')).toBeNull();
+      const drawing = drawingOf(root);
+      await expect(drawing).toHaveAttribute('role', 'img');
       // Não basta "o atributo existe": o que o leitor de tela lê é o texto, e
       // um rótulo vazio passaria por qualquer verificação de presença.
-      await expect(root.getAttribute('aria-label')).toBe(args['aria-label']);
+      await expect(drawing.getAttribute('aria-label')).toBe(args['aria-label']);
     });
 
     await step('O desenho sai — o container não é casca vazia', async () => {
@@ -111,6 +124,39 @@ export const Playground: Story = {
         },
         { timeout: 3000 },
       );
+    });
+
+    await step('E a tabela de dados repete, em texto, os números do desenho', async () => {
+      // Um `<svg>` mudo é conteúdo perdido: a tabela É o conteúdo, e ela sai
+      // sempre — escondida para quem enxerga, presente para leitor de tela,
+      // para a busca do navegador e para quem copia.
+      const data = dataOf(root);
+      await expect(data.className).toContain('nds-sr-only');
+      // Escondida, ela não é região rolável: sem foco e sem nada para rolar,
+      // seria uma armadilha de teclado anunciada a quem nem a enxerga.
+      await expect(data.getAttribute('tabindex')).toBeNull();
+
+      const caption = data.querySelector('caption');
+      await expect(caption?.textContent?.trim()).toBe(args['aria-label']);
+
+      // Cabeçalho de coluna por série, e a categoria na primeira coluna.
+      await expect(headerOf(root)).toEqual(['Categoria', series[0].name]);
+
+      // O número da tabela é o número desenhado — as duas leituras saem do
+      // mesmo dado, e é isso que impede a alternativa textual de divergir.
+      const rows = rowsOf(root);
+      await expect(rows).toHaveLength(meses.length);
+      await expect(rows.map((row) => row[0])).toEqual(meses);
+      await expect(rows.map((row) => row[1])).toEqual(series[0].data.map(String));
+
+      // Cada linha é nomeada por um `th scope="row"`; o resto é célula comum.
+      for (const tr of data.querySelectorAll('tbody tr')) {
+        await expect(tr.firstElementChild?.tagName).toBe('TH');
+        await expect(tr.firstElementChild).toHaveAttribute('scope', 'row');
+      }
+      for (const th of data.querySelectorAll('thead th')) {
+        await expect(th).toHaveAttribute('scope', 'col');
+      }
     });
 
     await step('A altura pedida é a altura entregue', async () => {

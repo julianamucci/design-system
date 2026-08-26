@@ -8,6 +8,7 @@ import {
   datumFormas,
 } from '@shared/testing/chart-probe';
 import { ChartContainer, buildBarOption } from './index';
+import { dataOf, drawingOf } from './chart.fixtures';
 import ChartDocs from '@/components/docs/ChartDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { chartSource } from './chart.source';
@@ -61,6 +62,12 @@ const meta = {
         'Altura do container em pixels. Sem valor, vale o piso de altura do próprio bloco.',
       table: { type: { summary: 'number' }, defaultValue: { summary: '—' } },
     },
+    showData: {
+      control: 'boolean',
+      description:
+        'Mostra a tabela de dados para todo mundo. Ela existe sempre, com os mesmos números do desenho; sem esta opção, existe só para leitor de tela e para quem lê o DOM.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
     emptyLabel: {
       control: 'text',
       description:
@@ -86,6 +93,7 @@ const meta = {
   args: {
     renderer: 'svg' as const,
     height: HEIGHT,
+    showData: false,
     emptyLabel: 'Nenhum dado disponível para o período selecionado.',
   },
 } satisfies Meta<typeof ChartContainer>;
@@ -113,9 +121,14 @@ export const Playground: Story = {
     const root = exigirRoot(canvasElement);
 
     await step('O desenho é anunciado como imagem, com descrição', async () => {
-      await expect(root).toHaveAttribute('role', 'img');
+      // O papel vai no elemento do DESENHO, não no bloco em volta: no bloco ele
+      // podaria a tabela de dados junto, e a alternativa textual sumiria da
+      // árvore de acessibilidade.
+      const design = drawingOf(root);
+      await expect(design).toHaveAttribute('role', 'img');
       // O valor, não só a presença: rótulo errado passa em "tem o atributo".
-      await expect(root.getAttribute('aria-label')).toBe(LABEL);
+      await expect(design.getAttribute('aria-label')).toBe(LABEL);
+      await expect(root.getAttribute('role')).toBeNull();
     });
 
     await step('O desenho sai, e não é casca vazia', async () => {
@@ -133,6 +146,27 @@ export const Playground: Story = {
         },
         { timeout: 3000 },
       );
+    });
+
+    await step('A alternativa textual traz os mesmos números do desenho', async () => {
+      // Um `<svg>` mudo é conteúdo perdido: quem lê com leitor de tela, quem
+      // busca na página e quem copia o dado alcançam a TABELA, não o desenho.
+      const lines = [...root.querySelectorAll<HTMLTableRowElement>('tbody tr')];
+      await expect(lines).toHaveLength(MONTHS.length);
+      await expect(lines[0].querySelector('th')?.getAttribute('scope')).toBe('row');
+      await expect(lines[0].querySelector('th')?.textContent?.trim()).toBe(MONTHS[0]);
+      await expect(lines[0].querySelector('td')?.textContent?.trim())
+        .toBe(String(SERIE_UNICA[0].data[0]));
+      // A legenda da tabela é o mesmo texto que nomeia o desenho: uma descrição
+      // para os dois, e nenhuma chance de descreverem coisas diferentes.
+      await expect(root.querySelector('caption')?.textContent?.trim()).toBe(LABEL);
+      await expect(root.querySelector('thead th')?.getAttribute('scope')).toBe('col');
+    });
+
+    await step('E, por padrão, ela existe só para quem lê o DOM', async () => {
+      // Visível é escolha do consumidor (`showData`); presente é contrato.
+      await expect(dataOf(root)).toHaveClass('nds-sr-only');
+      await expect(dataOf(root).getAttribute('tabindex')).toBeNull();
     });
 
     await step('A altura pedida é a altura entregue', async () => {

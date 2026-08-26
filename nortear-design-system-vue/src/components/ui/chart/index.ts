@@ -3,7 +3,7 @@
 // Builders puros pra montar `option` por tipo de chart.
 
 import type { EChartsCoreOption } from 'echarts/core';
-import { ARIA } from './chart-state';
+import { ARIA, CHART_TABLE_LABELS } from './chart-state';
 import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 
 export { default as ChartContainer } from './ChartContainer.vue';
@@ -11,6 +11,21 @@ export { CHART_EMPTY_LABEL, isChartOptionEmpty } from './chart-state';
 
 export interface ChartDataPoint { label: string; value: number }
 export interface ChartSeries { name: string; data: number[]; color?: string }
+
+// ─── Vocabulário do desenho ──────────────────────────────────────────────────
+//
+// A trama do `decal` cumpre a WCAG 1.4.1 onde há ÁREA para tramar — barra e
+// fatia. A linha não tem área: uma série vira um traço de um pixel e meio, e a
+// trama não chega nela. O que resta ali é a forma do ponto e o desenho do
+// traço, e sem os dois duas séries só se distinguem pela cor.
+
+/** Símbolo de ponto, na ordem das séries; o 6º volta ao 1º. */
+const CHART_SYMBOLS: readonly string[] = ['circle', 'rect', 'triangle', 'diamond', 'arrow'];
+
+/** Desenho do traço, na ordem das séries. `solid` e quatro tracejados. */
+const CHART_LINE_DASHES: readonly (string | number[])[] = [
+  'solid', [10, 5], [2, 4], [12, 4, 2, 4], [6, 3, 2, 3],
+];
 
 interface OptionsBase {
   data?: ChartDataPoint[];
@@ -23,7 +38,7 @@ interface OptionsBase {
 function buildAxisOption(type: 'bar' | 'line' | 'area', o: OptionsBase): EChartsCoreOption {
   const xAxisData = o.xAxis ?? o.data?.map((d) => d.label) ?? [];
   const seriesData: ChartSeries[] =
-    o.series ?? (o.data ? [{ name: 'value', data: o.data.map((d) => d.value) }] : []);
+    o.series ?? (o.data ? [{ name: CHART_TABLE_LABELS.value, data: o.data.map((d) => d.value) }] : []);
   const showLegend = o.showLegend ?? seriesData.length > 1;
   return {
     title: o.title ? { text: o.title, left: 'left', textStyle: { fontSize: 14 } } : undefined,
@@ -34,16 +49,31 @@ function buildAxisOption(type: 'bar' | 'line' | 'area', o: OptionsBase): ECharts
     grid: { left: 16, right: 16, top: o.title ? 48 : 16, bottom: showLegend ? 48 : 24, containLabel: true },
     xAxis: { type: 'category', data: xAxisData, boundaryGap: type === 'bar' },
     yAxis: { type: 'value' },
-    series: seriesData.map((s) => ({
+    series: seriesData.map((s, i) => ({
       name: s.name,
       type: type === 'area' ? 'line' : type,
       data: s.data,
       smooth: type !== 'bar',
-      symbol: type === 'bar' ? undefined : 'circle',
-      symbolSize: 6,
-      ...(s.color ? { itemStyle: { color: s.color }, lineStyle: { color: s.color } } : {}),
+      ...(type === 'bar'
+        ? {}
+        : {
+          // Símbolo e traço próprios por série: a forma distingue sem a cor.
+          symbol: CHART_SYMBOLS[i % CHART_SYMBOLS.length],
+          symbolSize: 9,
+          lineStyle: {
+            type: CHART_LINE_DASHES[i % CHART_LINE_DASHES.length],
+            ...(s.color ? { color: s.color } : {}),
+          },
+        }),
       ...(type === 'area' ? { areaStyle: { opacity: 0.18 } } : {}),
-      ...(type === 'bar' ? { itemStyle: { borderRadius: [4, 4, 0, 0], ...(s.color ? { color: s.color } : {}) } } : {}),
+      ...(s.color || type === 'bar'
+        ? {
+          itemStyle: {
+            ...(s.color ? { color: s.color } : {}),
+            ...(type === 'bar' ? { borderRadius: [4, 4, 0, 0] } : {}),
+          },
+        }
+        : {}),
     })),
     // Preferência de movimento respeitada com o mesmo helper e os mesmos tokens
     // de duração do resto do design system — o gráfico animava sempre.

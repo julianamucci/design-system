@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, waitFor } from 'storybook/test';
+import { getInstanceByDom } from 'echarts/core';
 import {
   designEscreve,
   designPintado,
@@ -27,6 +28,21 @@ const pieData = [
   { label: 'Mobile', value: 420 },
   { label: 'Tablet', value: 180 },
 ];
+
+/**
+ * Séries já resolvidas pela lib, lidas da instância montada no desenho.
+ *
+ * Serve para o que é decisão de configuração e não vira nó do DOM: o símbolo de
+ * ponto de cada série. O que vira pixel continua sendo medido no DOM logo
+ * abaixo — option verde com desenho errado é exatamente o portão sem dentes.
+ */
+function resolvedSeries(root: HTMLElement): Record<string, unknown>[] {
+  const canvas = root.querySelector<HTMLElement>('[data-slot="chart-canvas"]');
+  if (!canvas) throw new Error('nenhum [data-slot="chart-canvas"] dentro do .nds-chart');
+  const instance = getInstanceByDom(canvas);
+  if (!instance) throw new Error('a lib ainda não montou a instância no desenho');
+  return (instance.getOption() as unknown as { series: Record<string, unknown>[] }).series;
+}
 
 /** Traçado: caminho sem preenchimento e com espessura de série (o eixo usa 1px). */
 function tracados(root: HTMLElement): SVGPathElement[] {
@@ -149,6 +165,24 @@ export const Line: Story = {
       }
     });
 
+    await step('As séries se distinguem por FORMA, não só por cor', async () => {
+      // WCAG 1.4.1 — retirando toda a cor, a linha de cima ainda se separa da
+      // de baixo. A trama do decal não alcança traçado (ela é de
+      // preenchimento), então quem carrega a distinção aqui é o símbolo de
+      // ponto próprio de cada série.
+      const series = resolvedSeries(root);
+      await expect(series).toHaveLength(SERIES_MULTI.length);
+      const symbols = series.map((s) => String(s['symbol']));
+      await expect(new Set(symbols).size).toBe(SERIES_MULTI.length);
+    });
+
+    await step('E o traço próprio chega ao desenho, não fica só na configuração', async () => {
+      // Option verde com desenho errado é portão sem dentes: a série tracejada
+      // tem de sair com `stroke-dasharray` no nó.
+      const dashes = tracados(root).map((t) => t.getAttribute('stroke-dasharray'));
+      await expect(new Set(dashes).size).toBeGreaterThanOrEqual(SERIES_MULTI.length);
+    });
+
     await step('A legenda nomeia cada série por escrito', async () => {
       for (const serie of SERIES_MULTI) {
         await expect(designEscreve(root, serie.name)).toBe(true);
@@ -159,6 +193,18 @@ export const Line: Story = {
       for (const month of MONTHS) {
         await expect(designEscreve(root, month)).toBe(true);
       }
+    });
+
+    await step('E a tabela repete os mesmos números, série por série', async () => {
+      // Uma coluna por série mais a das categorias: o desenho e a alternativa
+      // textual saem da mesma normalização, e é isso que os mantém iguais.
+      const columns = [...root.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
+      await expect(columns).toEqual(['Categoria', ...SERIES_MULTI.map((s) => s.name)]);
+
+      const lines = [...root.querySelectorAll<HTMLTableRowElement>('tbody tr')];
+      await expect(lines).toHaveLength(MONTHS.length);
+      const values = [...lines[0].querySelectorAll('td')].map((c) => c.textContent?.trim());
+      await expect(values).toEqual(SERIES_MULTI.map((s) => String(s.data[0])));
     });
   },
 };
@@ -263,6 +309,24 @@ export const Pie: Story = {
       // única pista da categoria seria a cor.
       for (const ponto of pieData) {
         await expect(designEscreve(root, ponto.label)).toBe(true);
+      }
+    });
+
+    await step('A tabela traz valor E participação de cada fatia', async () => {
+      // Numa rosca a informação está na ÁREA da fatia, e área não se lê em
+      // texto: sem a coluna de participação, a alternativa textual perderia
+      // justamente o que o desenho comunica.
+      const columns = [...root.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
+      await expect(columns).toEqual(['Categoria', 'Valor', 'Participação']);
+
+      const total = pieData.reduce((sum, p) => sum + p.value, 0);
+      const lines = [...root.querySelectorAll<HTMLTableRowElement>('tbody tr')];
+      await expect(lines).toHaveLength(pieData.length);
+      for (const [i, line] of lines.entries()) {
+        await expect(line.querySelector('th')?.textContent?.trim()).toBe(pieData[i].label);
+        const cells = [...line.querySelectorAll('td')].map((c) => c.textContent?.trim());
+        await expect(cells[0]).toBe(String(pieData[i].value));
+        await expect(cells[1]).toBe(`${Math.round((pieData[i].value / total) * 1000) / 10}%`);
       }
     });
 

@@ -18,6 +18,11 @@ const ACESSOS = [186, 305, 237, 73, 209, 214];
 
 const chartData = MONTHS.map((label, i) => ({ label, value: ACESSOS[i] }));
 
+const SERIES_MULTI = [
+  { name: 'Desktop', data: ACESSOS },
+  { name: 'Mobile', data: [120, 190, 165, 98, 174, 158] },
+];
+
 /** Cor autoral da série. Fora da paleta `--chart-*`, para não se confundir com ela. */
 const ROXO = '#7c3aed';
 const ROXO_RGB = 'rgb(124, 58, 237)';
@@ -87,6 +92,76 @@ export const SeriesColor: Story = {
       for (const month of MONTHS) {
         await expect(designEscreve(root, month)).toBe(true);
       }
+    });
+  },
+};
+
+// ─── Tabela de dados à vista ──────────────────────────────────────────────────
+
+/**
+ * A alternativa textual existe SEMPRE — em toda story do componente ela está no
+ * DOM, fora da tela. Esta é a que a mostra para todo mundo.
+ *
+ * Não é um extra de acessibilidade: é o mesmo dado do desenho, em forma que a
+ * busca da página encontra, que dá para copiar e que o leitor de tela lê. Um
+ * `<svg>` mudo é conteúdo perdido.
+ */
+export const VisibleData: Story = {
+  parameters: {
+    docs: {
+      // Override de story: são duas séries, e a opção que a story exercita.
+      source: {
+        transform: chartSourceWith({
+          data: 'multi',
+          showData: true,
+          'aria-label': 'Acessos mensais por dispositivo: desktop e mobile',
+        }),
+      },
+      description: {
+        story: 'A tabela de dados à vista, embaixo do desenho. Ela é emitida sempre — para leitor de tela, busca da página e cópia —, e esta opção só decide se ela aparece na tela.',
+      },
+    },
+  },
+  render: () => createChart({
+    xAxis: MONTHS,
+    series: SERIES_MULTI,
+    type: 'bar',
+    height: 240,
+    showData: true,
+    class: 'nds-max-w-md',
+    'aria-label': 'Acessos mensais por dispositivo: desktop e mobile',
+  }),
+  play: async ({ canvasElement, step }) => {
+    const root = exigirRoot(canvasElement);
+    const data = root.querySelector<HTMLElement>('[data-slot="chart-data"]')!;
+
+    await step('A tabela sai da condição de leitor de tela e aparece', async () => {
+      await expect(data.classList.contains('nds-sr-only')).toBe(false);
+      await expect(data.classList.contains('nds-table-wrapper')).toBe(true);
+      // Fora da tela ela mede 1px de altura; à vista, mede a tabela inteira.
+      await expect(data.getBoundingClientRect().height).toBeGreaterThan(1);
+    });
+
+    await step('A caixa que rola é alcançável por teclado', async () => {
+      // `.nds-table-wrapper` rola na horizontal, e região rolável sem foco é
+      // conteúdo que só existe para quem usa mouse. Fora da tela o `tabindex`
+      // não entra: não há nada para rolar, e ele seria uma parada de tabulação
+      // num elemento que ninguém enxerga.
+      await expect(data.getAttribute('tabindex')).toBe('0');
+    });
+
+    await step('O bloco cresce para caber os dois — nada é recortado', async () => {
+      // `.nds-chart` recorta o que transborda. Com a altura cravada no BLOCO,
+      // e não no desenho, a tabela ficaria escondida atrás da borda de baixo.
+      await expect(data.getBoundingClientRect().bottom)
+        .toBeLessThanOrEqual(root.getBoundingClientRect().bottom + 1);
+      await expect(root.getBoundingClientRect().height)
+        .toBeGreaterThan(data.getBoundingClientRect().height);
+    });
+
+    await step('E o desenho continua desenhado, em cima dela', async () => {
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(datumFormas(root).length).toBeGreaterThan(0), { timeout: 3000 });
     });
   },
 };

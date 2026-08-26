@@ -3,7 +3,7 @@ import { expect } from 'storybook/test';
 import { ChartContainer, buildBarOption } from './chart';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './card';
 import { designEscreve } from '@shared/testing/chart-probe';
-import { designPronto } from './chart.fixtures';
+import { dataOf, designPronto, drawingOf } from './chart.fixtures';
 import { chartEmCardSource, chartSource, chartTitleNoLabelSource } from './chart.source';
 
 const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
@@ -103,9 +103,17 @@ export const InlineTitle: Story = {
 
     await step('Sem rótulo autoral, o título vira a descrição do desenho', async () => {
       // A rede de segurança do container: um gráfico sem `aria-label` não fica
-      // mudo, cai no título que já está na tela.
-      await expect(root).toHaveAttribute('role', 'img');
-      await expect(root.getAttribute('aria-label')).toBe(DESIGN_TITLE);
+      // mudo, cai no título que já está na tela. Papel e rótulo ficam no
+      // DESENHO — no bloco, `role="img"` podaria a tabela de dados junto.
+      const drawing = drawingOf(root);
+      await expect(drawing).toHaveAttribute('role', 'img');
+      await expect(drawing.getAttribute('aria-label')).toBe(DESIGN_TITLE);
+    });
+
+    await step('E a mesma descrição legenda a tabela de dados', async () => {
+      // `<caption>` e nome acessível saem do MESMO texto: a tabela é a
+      // alternativa do desenho, não uma tabela avulsa que caiu ali.
+      await expect(dataOf(root).querySelector('caption')?.textContent?.trim()).toBe(DESIGN_TITLE);
     });
   },
 };

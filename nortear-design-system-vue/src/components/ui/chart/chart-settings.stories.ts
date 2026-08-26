@@ -9,6 +9,7 @@ import {
   designTexts,
 } from '@shared/testing/chart-probe';
 import { ChartContainer, buildBarOption } from './index';
+import { drawingOf } from './chart.fixtures';
 import {
   chartWithDicaSource,
   chartWithCaptionSource,
@@ -72,9 +73,12 @@ export const WithTooltip: Story = {
 
       await waitFor(
         () => {
-          const text = root.textContent ?? '';
+          // A sonda é o texto do DESENHO, não o do bloco: a alternativa textual
+          // escreve nome de série e valor, e uma busca no bloco inteiro passaria
+          // com a dica fechada — portão sem dentes.
+          const text = drawingOf(root).textContent ?? '';
           // Com uma série só não há legenda: o nome da série não está escrito em
-          // nenhum outro lugar da tela, então encontrá-lo prova que é a dica.
+          // nenhum outro lugar do desenho, então encontrá-lo prova que é a dica.
           expect(text).toContain(SERIE_UNICA[0].name);
           // E os valores não coincidem com nenhuma marca do eixo, que é redonda.
           expect(SERIE_UNICA[0].data.some((v) => text.includes(String(v)))).toBe(true);

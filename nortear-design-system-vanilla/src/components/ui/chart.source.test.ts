@@ -31,6 +31,9 @@ describe('chartSnippet', () => {
     expect(code).not.toContain('renderer:');
     expect(code).not.toContain('showLegend');
     expect(code).not.toContain('title:');
+    // A tabela de dados é emitida SEMPRE. Um `showData: false` no snippet
+    // ensinaria que ela depende da opção — e quem copia dali adota o que leu.
+    expect(code).not.toContain('showData');
     expect(chartSnippet({ 'aria-label': 'X', type: 'bar', renderer: 'svg' })).toBe(code);
   });
 
@@ -40,6 +43,7 @@ describe('chartSnippet', () => {
       type: 'line',
       title: 'Vendas mensais',
       showLegend: false,
+      showData: true,
       height: 320,
       renderer: 'canvas',
       className: 'nds-max-w-md',
@@ -47,6 +51,7 @@ describe('chartSnippet', () => {
     expect(code).toContain("type: 'line'");
     expect(code).toContain("title: 'Vendas mensais'");
     expect(code).toContain('showLegend: false');
+    expect(code).toContain('showData: true');
     expect(code).toContain('height: 320');
     expect(code).toContain("renderer: 'canvas'");
     // O arg do Playground se chama `className`; a opção da fábrica é `class`.
