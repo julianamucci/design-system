@@ -8,6 +8,7 @@ import {
   buildPieOption,
   buildFunnelOption,
   buildRadarOption,
+  buildPieNestOption,
   buildScatterOption,
 } from "@/components/ui/chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -250,6 +251,32 @@ const series = [
   // 92 a 98 vezes em 100 — enquanto a tabela, que sai de função pura,
   // descreveria outro agrupamento.
   const scatterSeries = CHART_SCATTER_CLUSTERS.map((c) => ({ name: c.name, points: c.points }));
+
+  // Cada ponto declara o GRUPO a que pertence, e o anel de dentro sai da soma —
+  // não se declara. Declarar os dois abriria a porta para eles discordarem, e o
+  // desenho mentiria sem nada acusar.
+  const nestData = [
+  { label: 'Orgânica',  value: 300, group: 'Busca'  },
+  { label: 'Paga',      value: 100, group: 'Busca'  },
+  { label: 'Instagram', value: 200, group: 'Social' },
+  { label: 'LinkedIn',  value: 150, group: 'Social' },
+  { label: 'App',       value: 250, group: 'Direto' },
+  ];
+
+  const codeNest = `const canais = [
+  { label: 'Orgânica',  value: 300, group: 'Busca'  },
+  { label: 'Paga',      value: 100, group: 'Busca'  },
+  { label: 'Instagram', value: 200, group: 'Social' },
+  { label: 'LinkedIn',  value: 150, group: 'Social' },
+  { label: 'App',       value: 250, group: 'Direto' },
+];
+
+<ChartContainer
+  option={buildPieNestOption({ data: canais })}
+  groupLabel="Canal"
+  categoryLabel="Origem"
+  aria-label="Sessões por canal e origem, em dois anéis"
+/>`;
 
   const codeScatter = `const sessoes = [
   { name: "Grupo 1", points: [[1.5, 1.1], [1.9, 1.8], [3, 1.6]] },
@@ -633,6 +660,24 @@ declare function buildRadarOption(o: {
                 categoryLabel={stripHtml(tContent("demonstration.labels.radarAxis"))}
                 maxLabel={stripHtml(tContent("demonstration.labels.radarMax"))}
                 aria-label="Radar de qualidade do site: cinco grandezas, antes e depois da revisão"
+               />
+            ),
+          },
+          {
+            name: "pie-nest",
+            description: stripHtml(tContent("variants.items.pieNest")),
+            code: codeNest,
+            preview: (
+              // A primeira coluna da tabela nomeia o GRUPO e a segunda a parte;
+              // os dois títulos vêm do conteúdo compartilhado para acompanharem
+              // o idioma da página.
+              <ChartContainer
+                option={buildPieNestOption({ data: nestData })}
+                className="nds-w-full nds-max-w-sm"
+                height={280}
+                groupLabel={stripHtml(tContent("demonstration.labels.nestGroup"))}
+                categoryLabel={stripHtml(tContent("demonstration.labels.nestPart"))}
+                aria-label="Sessões por canal e origem: três canais abertos em suas origens, em dois anéis"
                />
             ),
           },

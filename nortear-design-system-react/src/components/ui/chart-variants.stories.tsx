@@ -8,11 +8,13 @@ import {
   buildPieOption,
   buildFunnelOption,
   buildRadarOption,
+  buildPieNestOption,
   buildScatterOption,
 } from './chart';
 import {
   designEscreve,
   distinctShapes,
+  waitForStableCount,
   datumFormas,
   settleTheme,
   tokenColor,
@@ -23,6 +25,7 @@ import {
   drawingSettled,
   filledShapes,
   hatchColors,
+  hatchedShapes,
   headerOf,
   optionOf,
   radarHatches,
@@ -35,6 +38,7 @@ import {
   chartLineSource,
   chartPizzaSource,
   chartRadarSource,
+  chartPieNestSource,
   chartScatterSource,
   chartSource,
 } from './chart.source';
@@ -437,6 +441,88 @@ const radarSeries = [
   { name: 'Antes', data: [72, 64, 6, 88, 2] },
   { name: 'Depois', data: [94, 97, 9, 96, 4] },
 ];
+
+/**
+ * Sessões por canal e origem — o dado da rosca aninhada.
+ *
+ * Cada ponto declara o GRUPO; o anel de dentro é derivado da soma. Três grupos e
+ * cinco partes fazem 8 fatias na tela, e é essa contagem que a play mede: se a
+ * derivação quebrar e o anel interno passar a ter um arco por PONTO, o número vai
+ * a 10 e a story reprova.
+ */
+const nestData = [
+  { label: 'Orgânica', value: 300, group: 'Busca' },
+  { label: 'Paga', value: 100, group: 'Busca' },
+  { label: 'Instagram', value: 200, group: 'Social' },
+  { label: 'LinkedIn', value: 150, group: 'Social' },
+  { label: 'App', value: 250, group: 'Direto' },
+];
+const nestGroups = [...new Set(nestData.map((d) => d.group))];
+const nestSlices = nestGroups.length + nestData.length;
+
+export const PieNest: Story = {
+  parameters: {
+    covers: ['functional.item11', 'visual.item8'],
+    docs: {
+      source: { transform: chartPieNestSource },
+      description: {
+        story: 'Dois anéis sobre o mesmo total. O de dentro reúne os canais, o de fora abre cada um em suas origens, e cada fatia externa cai no vão do seu canal.',
+      },
+    },
+  },
+  render: () => (
+    <ChartContainer
+      option={buildPieNestOption({ data: nestData })}
+      className="nds-max-w-md"
+      height={320}
+      showData
+      groupLabel="Canal"
+      categoryLabel="Origem"
+      aria-label="Sessões por canal e origem: três canais abertos em suas origens, em dois anéis"
+     />
+  ),
+  play: async ({ canvasElement, step }) => {
+    const root = await designPronto(canvasElement);
+
+    await step('Os dois anéis saem na tela — um arco por grupo, um por parte', async () => {
+      // `drawingSettled` NÃO alcança a varredura da rosca: ele espera o
+      // retângulo transparente da legenda ficar sozinho, o que já vale no
+      // primeiro quadro, enquanto as fatias entram em ângulo zero. Medido aqui:
+      // no instante em que ele volta, as oito fatias medem largura ZERO, e só
+      // aos 1,5s chegam ao tamanho real.
+      //
+      // A espera é por RELÓGIO, e não `waitFor`: a leitura chama `getBBox()`,
+      // que força layout, e condição que força layout dentro de `waitFor` se
+      // realimenta pelo observador de mutação. Medido: dentro de `waitFor` a
+      // asserção reprovou com ZERO forma depois de três segundos.
+      await waitForStableCount(() => filledShapes(root).length);
+      // Igualdade, e o número é o que prova a DERIVAÇÃO: três grupos mais cinco
+      // partes. Se o anel de dentro passasse a ter um arco por ponto — o que
+      // acontece quando alguém troca a soma por um mapa direto —, seriam dez.
+      await expect(filledShapes(root)).toHaveLength(nestSlices);
+    });
+
+    await step('Cada fatia carrega uma trama — a cor não é o único sinal', async () => {
+      // A rosca aninhada é de PREENCHIMENTO, então a trama alcança (ao contrário
+      // da dispersão). Contar a hachura ao lado das formas, com o mesmo número
+      // esperado, impede um coletor que exclui demais de ficar verde medindo
+      // menos: se a exclusão comesse forma de dado, os dois números caem juntos.
+      await expect(hatchedShapes(root)).toHaveLength(nestSlices);
+    });
+
+    await step('A legenda nomeia os dois níveis', async () => {
+      for (const group of nestGroups) await expect(designEscreve(root, group)).toBe(true);
+      for (const point of nestData) await expect(designEscreve(root, point.label)).toBe(true);
+    });
+
+    await step('A tabela traz as duas colunas de nome, uma linha por parte', async () => {
+      await expect(headerOf(root)).toEqual(['Canal', 'Origem', 'Valor', 'Participação']);
+      // Uma linha por PARTE. O grupo não ganha linha própria porque a
+      // participação dele é derivável — soma das partes, na mesma coluna.
+      await expect(rowsOf(root)).toHaveLength(nestData.length);
+    });
+  },
+};
 
 export const Scatter: Story = {
   parameters: {

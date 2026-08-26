@@ -25,7 +25,9 @@
         "radarAxis": "Eixo",
         "scatterSeries": "Grupo",
         "scatterX": "Minutos na página",
-        "scatterY": "Páginas vistas"
+        "scatterY": "Páginas vistas",
+        "nestGroup": "Canal",
+        "nestPart": "Origem"
       }
     },
     "anatomy": {
@@ -165,6 +167,7 @@
         "line": "Tendência contínua ao longo do tempo. Ideal para séries temporais.",
         "area": "Tendência com ênfase no volume acumulado. Variante visual do gráfico de linhas.",
         "pie": "Proporção de partes em relação ao todo. Limite a 5–6 fatias para legibilidade.",
+        "pieNest": "Dois anéis sobre o mesmo total: o de dentro reúne os grupos, o de fora abre cada grupo em suas partes. Cada fatia externa ocupa o vão do grupo a que pertence, e é essa posição que mostra a hierarquia. Use quando as partes só fizerem sentido dentro do conjunto que integram.",
         "funnel": "Etapas de um processo que afunila, da maior para a menor. Cada faixa é uma etapa, e a largura mostra quanto sobrou dela. Use quando a ordem das etapas for fixa e a perda entre elas for a informação.",
         "radar": "Compara várias grandezas de um mesmo item, uma por eixo, num polígono fechado. Serve quando o desenho do conjunto importa mais que cada número — o formato mostra em que o item é forte e em que é fraco. Cada eixo tem escala própria, então dois eixos com o mesmo número podem estar em pontos diferentes.",
         "scatter": "Espalha pontos em duas grandezas, uma em cada eixo, sem categoria no meio. Serve para mostrar como as duas se relacionam e onde o conjunto se concentra ou se separa. Quando os pontos formam grupos, cada grupo entra como uma série própria, com forma e nome — a leitura não depende da cor.",
@@ -390,6 +393,11 @@
           "action": "Renderizar o tipo dispersão com três grupos de pontos",
           "result": "Uma forma distinta por grupo, com a legenda nomeando cada um, e a tabela equivalente trazendo uma linha por ponto com o grupo e as duas grandezas",
           "priority": "high"
+        },
+        "item11": {
+          "action": "Renderizar a rosca aninhada com três grupos abertos em partes",
+          "result": "Dois anéis somando o mesmo total, com cada parte caindo no vão do seu grupo, e a tabela equivalente trazendo o grupo, a parte, o valor e a participação",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -446,6 +454,10 @@
         "item7": {
           "story": "Dispersão — três grupos, uma forma para cada",
           "priority": "medium"
+        },
+        "item8": {
+          "story": "Rosca aninhada — três grupos e suas partes, em dois anéis",
+          "priority": "medium"
         }
       }
     },
@@ -496,7 +508,9 @@
         "radarAxis": "Axis",
         "scatterSeries": "Group",
         "scatterX": "Minutes on page",
-        "scatterY": "Pages viewed"
+        "scatterY": "Pages viewed",
+        "nestGroup": "Channel",
+        "nestPart": "Source"
       }
     },
     "anatomy": {
@@ -636,6 +650,7 @@
         "line": "Continuous trend over time. Ideal for time series.",
         "area": "Trend with emphasis on cumulative volume. Visual variant of the line chart.",
         "pie": "Proportion of parts relative to a whole. Limit to 5–6 slices for readability.",
+        "pieNest": "Two rings over the same total: the inner one gathers the groups, the outer one opens each group into its parts. Every outer slice sits within the span of the group it belongs to, and that position is what shows the hierarchy. Use it when the parts only make sense inside the whole they belong to.",
         "funnel": "Stages of a process that narrows, from widest to narrowest. Each band is a stage, and its width shows how much of it remains. Use it when the stage order is fixed and the drop between them is the information.",
         "radar": "Compares several magnitudes of one item, one per axis, in a closed polygon. Use it when the shape of the whole matters more than each number — the outline shows where the item is strong and where it is weak. Each axis has its own scale, so two axes showing the same number can sit at different points.",
         "scatter": "Spreads points across two magnitudes, one per axis, with no category in between. Use it to show how the two relate and where the set clusters or splits. When the points form groups, each group becomes its own series, with a marker shape and a name — reading it does not depend on colour.",
@@ -861,6 +876,11 @@
           "action": "Render the scatter type with three groups of points",
           "result": "A distinct marker shape per group, with the legend naming each one, and the equivalent table carrying one row per point with its group and both magnitudes",
           "priority": "high"
+        },
+        "item11": {
+          "action": "Render the nested donut with three groups opened into parts",
+          "result": "Two rings adding up to the same total, with each part falling within the span of its group, and the equivalent table carrying the group, the part, the value and the share",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -917,6 +937,10 @@
         "item7": {
           "story": "Scatter — three groups, one marker shape for each",
           "priority": "medium"
+        },
+        "item8": {
+          "story": "Nested donut — three groups and their parts, in two rings",
+          "priority": "medium"
         }
       }
     },
@@ -967,7 +991,9 @@
         "radarAxis": "Eje",
         "scatterSeries": "Grupo",
         "scatterX": "Minutos en la página",
-        "scatterY": "Páginas vistas"
+        "scatterY": "Páginas vistas",
+        "nestGroup": "Canal",
+        "nestPart": "Origen"
       }
     },
     "anatomy": {
@@ -1107,6 +1133,7 @@
         "line": "Tendencia continua en el tiempo. Ideal para series temporales.",
         "area": "Tendencia con énfasis en el volumen acumulado. Variante visual del gráfico de líneas.",
         "pie": "Proporción de partes respecto al todo. Limita a 5–6 porciones para legibilidad.",
+        "pieNest": "Dos anillos sobre el mismo total: el de dentro reúne los grupos, el de fuera abre cada grupo en sus partes. Cada porción externa ocupa el hueco del grupo al que pertenece, y es esa posición la que muestra la jerarquía. Úsalo cuando las partes solo tengan sentido dentro del conjunto que integran.",
         "funnel": "Etapas de un proceso que se estrecha, de la mayor a la menor. Cada franja es una etapa, y su ancho muestra cuánto queda de ella. Úsalo cuando el orden de las etapas sea fijo y la pérdida entre ellas sea la información.",
         "radar": "Compara varias magnitudes de un mismo elemento, una por eje, en un polígono cerrado. Sirve cuando la forma del conjunto importa más que cada número — el contorno muestra en qué el elemento es fuerte y en qué es débil. Cada eje tiene escala propia, así que dos ejes con el mismo número pueden estar en puntos distintos.",
         "scatter": "Reparte puntos en dos magnitudes, una por eje, sin categoría en medio. Sirve para mostrar cómo se relacionan las dos y dónde el conjunto se concentra o se separa. Cuando los puntos forman grupos, cada grupo entra como una serie propia, con forma y nombre — la lectura no depende del color.",
@@ -1332,6 +1359,11 @@
           "action": "Renderizar el tipo dispersión con tres grupos de puntos",
           "result": "Una forma distinta por grupo, con la leyenda nombrando cada uno, y la tabla equivalente trayendo una línea por punto con su grupo y las dos magnitudes",
           "priority": "high"
+        },
+        "item11": {
+          "action": "Renderizar la rosca anidada con tres grupos abiertos en partes",
+          "result": "Dos anillos sumando el mismo total, con cada parte cayendo en el hueco de su grupo, y la tabla equivalente trayendo el grupo, la parte, el valor y la participación",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1387,6 +1419,10 @@
         },
         "item7": {
           "story": "Dispersión — tres grupos, una forma para cada uno",
+          "priority": "medium"
+        },
+        "item8": {
+          "story": "Rosca anidada — tres grupos y sus partes, en dos anillos",
           "priority": "medium"
         }
       }

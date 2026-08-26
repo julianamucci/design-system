@@ -68,6 +68,25 @@ export const FUNNEL_STAGES: ChartDataPoint[] = [
  * mudar sozinho entre rodadas — medido, a partição se repete de 92 a 98 vezes em
  * 100 — e a tabela equivalente descreveria outro agrupamento.
  */
+/**
+ * Sessões por canal e origem — o dado da rosca aninhada.
+ *
+ * Cada ponto declara o GRUPO; o anel de dentro é derivado da soma. Três grupos e
+ * cinco partes fazem 8 fatias na tela, e é essa contagem que a play mede: se a
+ * derivação quebrar e o anel interno passar a ter um arco por PONTO, o número
+ * vai a 10 e a story reprova.
+ */
+export const NEST_DATA: ChartDataPoint[] = [
+  { label: 'Orgânica', value: 300, group: 'Busca' },
+  { label: 'Paga', value: 100, group: 'Busca' },
+  { label: 'Instagram', value: 200, group: 'Social' },
+  { label: 'LinkedIn', value: 150, group: 'Social' },
+  { label: 'App', value: 250, group: 'Direto' },
+];
+
+export const NEST_GROUPS = [...new Set(NEST_DATA.map((d) => d.group as string))];
+export const NEST_SLICES = NEST_GROUPS.length + NEST_DATA.length;
+
 export const SCATTER_SERIES = CHART_SCATTER_CLUSTERS.map((c) => ({
   name: c.name,
   points: c.points,

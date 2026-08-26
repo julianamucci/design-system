@@ -118,6 +118,14 @@ export interface ChartTableLabels {
    * ele divergir.
    */
   series: string;
+  /**
+   * Cabeçalho da coluna de grupo — só a rosca aninhada a tem.
+   *
+   * Não reaproveita `category` porque as duas coexistem na mesma tabela: uma
+   * nomeia o anel de dentro e a outra o de fora, e chamar as duas de "Categoria"
+   * deixaria a tabela ambígua exatamente onde ela precisa ser precisa.
+   */
+  group: string;
 }
 
 export const CHART_TABLE_LABELS: ChartTableLabels = {
@@ -126,6 +134,7 @@ export const CHART_TABLE_LABELS: ChartTableLabels = {
   share: 'Participação',
   max: 'Máximo',
   series: 'Série',
+  group: 'Grupo',
 };
 
 /** Célula sem dado: a categoria existe, aquela série não a preenche. */
@@ -304,6 +313,48 @@ export function chartTable(
           return [String(s.name ?? ''), cellOf(pair[0]), cellOf(pair[1])];
         }),
       ),
+    };
+  }
+
+  // A rosca ANINHADA tem duas colunas de nome: o grupo, que é o anel de dentro,
+  // e a categoria, que é o de fora.
+  //
+  // Vem ANTES do ramo da rosca simples de propósito: o desenho aninhado tem DUAS
+  // séries `pie`, e o teste `series[0].type === 'pie'` lá embaixo pegaria a
+  // primeira — o anel de dentro — e montaria uma tabela com os grupos no lugar
+  // das partes, calada.
+  //
+  // O que identifica a aninhada é o dado carregar `group`, e não a contagem de
+  // séries: um option montado à mão com dois anéis sem grupo cai no ramo simples,
+  // que é a degradação sensata. A marca está no DADO porque é dele que a coluna
+  // sai.
+  //
+  // Uma linha por ponto do anel EXTERNO. A participação do grupo não precisa de
+  // linha própria porque é DERIVÁVEL — soma das participações dos pontos dele, na
+  // mesma coluna. Foi o teste que o radar não passou: lá o teto de cada eixo não
+  // saía de nenhuma outra célula, e por isso virou coluna.
+  const nested = series.find(
+    (serie) => serie.type === 'pie'
+      && (Array.isArray(serie.data) ? (serie.data as unknown[]) : []).some(
+        (item) => item !== null && typeof item === 'object' && 'group' in (item as object),
+      ),
+  );
+  if (nested) {
+    const nestPoints = Array.isArray(nested.data) ? (nested.data as unknown[]) : [];
+    const nestTotal = nestPoints.reduce<number>(
+      (sum, item) => sum + Math.max(0, valueOf(item) ?? 0), 0,
+    );
+    const field = (item: unknown, key: 'name' | 'group') =>
+      (item !== null && typeof item === 'object'
+        ? String((item as Record<string, unknown>)[key] ?? '')
+        : '');
+    return {
+      header: [labels.group, labels.category, labels.value, labels.share],
+      rows: nestPoints.map((item) => {
+        const v = Math.max(0, valueOf(item) ?? 0);
+        const share = nestTotal > 0 ? `${Math.round((v / nestTotal) * 1000) / 10}%` : NO_DATA;
+        return [field(item, 'group'), field(item, 'name'), cellOf(item), share];
+      }),
     };
   }
 

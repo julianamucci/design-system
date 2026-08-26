@@ -1,6 +1,6 @@
 <script lang="ts">
   import { untrack } from 'svelte';
-  import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption, buildRadarOption, buildScatterOption } from '@/components/ui/chart';
+  import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption, buildRadarOption, buildScatterOption, buildPieNestOption } from '@/components/ui/chart';
   import { CHART_SCATTER_CLUSTERS } from '@shared/primitives/chart-scatter-clusters';
   import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
   import { locale, useTranslation } from '@/lib/i18n';
@@ -215,6 +215,32 @@
   // repete de 92 a 98 vezes em 100 — enquanto a tabela, que sai de função
   // pura, descreveria outro agrupamento.
   const scatterSeries = CHART_SCATTER_CLUSTERS.map((c) => ({ name: c.name, points: c.points }));
+
+  // Cada ponto declara o GRUPO a que pertence, e o anel de dentro sai da soma —
+  // não se declara. Declarar os dois abriria a porta para eles discordarem, e o
+  // desenho mentiria sem nada acusar.
+  const nestData = [
+  { label: 'Orgânica',  value: 300, group: 'Busca'  },
+  { label: 'Paga',      value: 100, group: 'Busca'  },
+  { label: 'Instagram', value: 200, group: 'Social' },
+  { label: 'LinkedIn',  value: 150, group: 'Social' },
+  { label: 'App',       value: 250, group: 'Direto' },
+  ];
+
+  const codeNest = `const canais = [
+  { label: 'Orgânica',  value: 300, group: 'Busca'  },
+  { label: 'Paga',      value: 100, group: 'Busca'  },
+  { label: 'Instagram', value: 200, group: 'Social' },
+  { label: 'LinkedIn',  value: 150, group: 'Social' },
+  { label: 'App',       value: 250, group: 'Direto' },
+];
+
+<ChartContainer
+  option={buildPieNestOption({ data: canais })}
+  groupLabel="Canal"
+  categoryLabel="Origem"
+  aria-label="Sessões por canal e origem, em dois anéis"
+/>`;
 
   const codeScatter = `const sessoes = [
   { name: 'Grupo 1', points: [[1.5, 1.1], [1.9, 1.8], [3, 1.6]] },
@@ -511,6 +537,7 @@ declare function buildRadarOption(o: {
       { name: 'Funil', description: stripHtml($tStore('variants.items.funnel')), code: codeFunnel, preview: variantFunnel },
       { name: 'Radar', description: stripHtml($tStore('variants.items.radar')), code: codeRadar, preview: variantRadar },
       { name: 'Dispersão', description: stripHtml($tStore('variants.items.scatter')), code: codeScatter, preview: variantScatter },
+      { name: 'Rosca aninhada', description: stripHtml($tStore('variants.items.pieNest')), code: codeNest, preview: variantNest },
       {
         name: $tStore('variants.items.smallInline.name'),
         description: $tStore('variants.items.smallInline.description'),
@@ -578,6 +605,17 @@ declare function buildRadarOption(o: {
       categoryLabel={stripHtml($tStore('demonstration.labels.radarAxis'))}
       maxLabel={stripHtml($tStore('demonstration.labels.radarMax'))}
       aria-label="Radar de qualidade do site: cinco grandezas, antes e depois da revisão"
+    />
+  {/snippet}
+  {#snippet variantNest()}
+    <!-- A primeira coluna da tabela nomeia o GRUPO e a segunda a parte; os dois
+         títulos vêm do conteúdo compartilhado para acompanharem o idioma. -->
+    <ChartContainer
+      option={buildPieNestOption({ data: nestData })}
+      height={280} class="nds-w-full"
+      groupLabel={stripHtml($tStore('demonstration.labels.nestGroup'))}
+      categoryLabel={stripHtml($tStore('demonstration.labels.nestPart'))}
+      aria-label="Sessões por canal e origem: três canais abertos em suas origens, em dois anéis"
     />
   {/snippet}
   {#snippet variantScatter()}

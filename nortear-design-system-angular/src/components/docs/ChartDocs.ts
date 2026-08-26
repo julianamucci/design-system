@@ -11,7 +11,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { applySeo } from '@/lib/use-seo';
-import { SCATTER_SERIES } from '@/components/ui/chart.fixtures';
+import { NEST_DATA, SCATTER_SERIES } from '@/components/ui/chart.fixtures';
 import { track } from '@/lib/analytics';
 import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
@@ -91,6 +91,7 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'variants.items.funnel.name': 'Funil',
     'variants.items.radar.name': 'Radar',
     'variants.items.scatter.name': 'Dispersão',
+    'variants.items.pieNest.name': 'Rosca aninhada',
     'variants.note':
       'O Chart não tem variantes de estilo: o tipo é o DADO, não a aparência. Uma entrada escolhe o tipo entre os listados acima, e a mesma tabela de dados acompanha o desenho em qualquer um deles.',
     'accessibility.summary':
@@ -142,6 +143,7 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'variants.items.funnel.name': 'Funnel',
     'variants.items.radar.name': 'Radar',
     'variants.items.scatter.name': 'Scatter',
+    'variants.items.pieNest.name': 'Nested donut',
     'variants.note':
       'The Chart has no style variants: the type is the DATA, not the look. One input chooses between bars, lines, area, pie, funnel and radar, and the same data table follows the drawing in all of them.',
     'accessibility.summary':
@@ -193,6 +195,7 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'variants.items.funnel.name': 'Embudo',
     'variants.items.radar.name': 'Radar',
     'variants.items.scatter.name': 'Dispersión',
+    'variants.items.pieNest.name': 'Rosca anidada',
     'variants.note':
       'El Chart no tiene variantes de estilo: el tipo es el DATO, no la apariencia. Una entrada elige entre barras, líneas, área, circular, embudo y radar, y la misma tabla de datos acompaña al dibujo en todos ellos.',
     'accessibility.summary':
@@ -317,6 +320,18 @@ const CODE_FUNNEL = `<!-- O funil também só aceita a forma simples, e a ORDEM 
   categoryLabel="Etapa"
   valueLabel="Pessoas"
   shareLabel="Participação"
+></div>`;
+
+const CODE_NEST = `<!-- Cada ponto declara o GRUPO a que pertence, e o anel de dentro sai
+     da soma — não se declara. Declarar os dois abriria a porta para eles
+     discordarem, e o desenho mentiria sem nada acusar. -->
+<div
+  ndsChart
+  type="pie-nest"
+  [data]="canais"
+  groupLabel="Canal"
+  categoryLabel="Origem"
+  label="Sessões por canal e origem, em dois anéis"
 ></div>`;
 
 const CODE_SCATTER = `<!-- A dispersão traz PARES, e o snippet mostra poucos de propósito:
@@ -527,6 +542,20 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
         [label]="label(t('variants.items.radar.name'))"
         [categoryLabel]="t('demonstration.labels.radarAxis')"
         [maxLabel]="t('demonstration.labels.radarMax')"
+      ></div>
+    </ng-template>
+
+    <ng-template #tplVarNest>
+      <!-- A primeira coluna da tabela nomeia o GRUPO e a segunda a parte; os
+           dois títulos vêm do conteúdo compartilhado para acompanharem o
+           idioma da página. -->
+      <div
+        ndsChart
+        type="pie-nest"
+        [data]="nestData"
+        [label]="label(t('variants.items.pieNest.name'))"
+        [groupLabel]="t('demonstration.labels.nestGroup')"
+        [categoryLabel]="t('demonstration.labels.nestPart')"
       ></div>
     </ng-template>
 
@@ -781,6 +810,9 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
 
   private readonly tplVarRadar = viewChild.required<TemplateRef<unknown>>('tplVarRadar');
   private readonly tplVarScatter = viewChild.required<TemplateRef<unknown>>('tplVarScatter');
+  private readonly tplVarNest = viewChild.required<TemplateRef<unknown>>('tplVarNest');
+
+  protected readonly nestData = NEST_DATA;
   private readonly tplVarCompact = viewChild.required<TemplateRef<unknown>>('tplVarCompact');
   private readonly tplCompInCard = viewChild.required<TemplateRef<unknown>>('tplCompInCard');
 
@@ -882,6 +914,7 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
       { key: 'funnel',      code: CODE_FUNNEL,  tpl: this.tplVarFunnel()  },
       { key: 'radar',       code: CODE_RADAR,   tpl: this.tplVarRadar()   },
       { key: 'scatter',     code: CODE_SCATTER, tpl: this.tplVarScatter() },
+      { key: 'pieNest',     code: CODE_NEST,    tpl: this.tplVarNest()    },
       { key: 'smallInline', code: CODE_COMPACT, tpl: this.tplVarCompact() },
     ].map(({ key, code, tpl }) => ({
       // `.name` existe no conteúdo só para `smallInline`; para os quatro tipos

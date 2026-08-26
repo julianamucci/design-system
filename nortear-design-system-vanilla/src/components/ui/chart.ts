@@ -161,6 +161,8 @@ export const CHART_MAX_LABEL = 'Máximo';
 export const CHART_SERIES_LABEL = 'Série';
 export const CHART_X_LABEL = 'X';
 export const CHART_Y_LABEL = 'Y';
+/** Cabeçalho da coluna de grupo — só a rosca aninhada a tem. */
+export const CHART_GROUP_LABEL = 'Grupo';
 
 /** Célula sem dado: a categoria existe, aquela série não a preenche. */
 const NO_VALUE = '—';
@@ -178,12 +180,22 @@ const DASHES: readonly (string | number[])[] = [
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar' | 'scatter';
+export type ChartType =
+  | 'bar' | 'line' | 'area' | 'pie' | 'pie-nest' | 'funnel' | 'radar' | 'scatter';
 
 /** Forma simples: 1 série, label + value (compat com stories antigas). */
 export interface ChartDataPoint {
   label: string;
   value: number;
+  /**
+   * A que grupo este ponto pertence — só a rosca ANINHADA usa.
+   *
+   * É o que torna a hierarquia declarável pelo lado de baixo: o anel de dentro
+   * não é informado, é DERIVADO da soma dos pontos de cada grupo. Declarar os
+   * dois abriria a porta para eles discordarem — um anel interno que não é a
+   * soma do que está por fora —, e o desenho mentiria sem nada acusar.
+   */
+  group?: string;
 }
 
 /**
@@ -299,6 +311,15 @@ export interface ChartOptions {
    */
   seriesLabel?: string;
   /**
+   * Cabeçalho da coluna de grupo — só a rosca aninhada a tem.
+   *
+   * Não reaproveita `categoryLabel` porque as duas coexistem na mesma tabela:
+   * uma nomeia o anel de dentro e a outra o de fora, e chamar as duas de
+   * "Categoria" deixaria a tabela ambígua exatamente onde ela precisa ser
+   * precisa.
+   */
+  groupLabel?: string;
+  /**
    * Nomes das duas grandezas da dispersão — no eixo e na tabela.
    *
    * São a informação que o desenho passa pela POSIÇÃO, e posição não se lê em
@@ -336,6 +357,30 @@ function seriesOf(opts: ChartOptions): ChartSeries[] {
  */
 function pointsOf(serie: ChartSeries): [number, number][] {
   return serie.points ?? [];
+}
+
+/**
+ * O anel de DENTRO da rosca aninhada: um arco por grupo, com a soma dos pontos.
+ *
+ * Derivado, nunca declarado — ver `ChartDataPoint.group`. A ordem é a de
+ * PRIMEIRA APARIÇÃO dos pontos, e não a do tamanho: é ela que faz cada arco
+ * externo cair dentro do arco do seu grupo. Reordenar por valor quebraria o
+ * alinhamento angular, que é justamente o que comunica a hierarquia sem
+ * depender da cor.
+ *
+ * Ponto sem grupo cai num grupo com o próprio rótulo: o desenho continua
+ * somando o mesmo total, e o anel de dentro passa a ter um arco só para ele —
+ * honesto, e visivelmente diferente de um agrupamento que ninguém declarou.
+ */
+function nestedGroupsOf(points: ChartDataPoint[]): ChartDataPoint[] {
+  const order: string[] = [];
+  const sums = new Map<string, number>();
+  for (const point of points) {
+    const group = point.group ?? point.label;
+    if (!sums.has(group)) order.push(group);
+    sums.set(group, (sums.get(group) ?? 0) + Math.max(0, point.value));
+  }
+  return order.map((label) => ({ label, value: sums.get(label) ?? 0 }));
 }
 
 /** Categorias do eixo. Sem rótulo declarado, a posição vira o rótulo. */
@@ -495,6 +540,33 @@ export function buildChartTable(opts: ChartOptions): ChartTable {
         opts.shareLabel ?? CHART_SHARE_LABEL,
       ],
       lines: stages.map((p) => [p.label, formatValue(p.value), shareOf(p.value, entry)]),
+    };
+  }
+
+  // A rosca ANINHADA tem duas colunas de nome: o grupo, que é o anel de dentro,
+  // e a categoria, que é o de fora.
+  //
+  // Uma linha por ponto do anel EXTERNO, e não duas tabelas nem um bloco por
+  // grupo. A participação do grupo não precisa de linha própria porque ela é
+  // DERIVÁVEL — é a soma das participações dos pontos dele, que estão logo ali
+  // na mesma coluna. Foi o teste que o radar não passou: lá o teto de cada eixo
+  // não saía de nenhuma outra célula, e por isso virou coluna.
+  if (type === 'pie-nest') {
+    const points = opts.data ?? [];
+    const total = points.reduce((sum, p) => sum + Math.max(0, p.value), 0);
+    return {
+      header: [
+        opts.groupLabel ?? CHART_GROUP_LABEL,
+        categoryLabel,
+        opts.valueLabel ?? CHART_VALUE_LABEL,
+        opts.shareLabel ?? CHART_SHARE_LABEL,
+      ],
+      lines: points.map((p) => [
+        p.group ?? p.label,
+        p.label,
+        formatValue(p.value),
+        shareOf(p.value, total),
+      ]),
     };
   }
 
@@ -726,6 +798,59 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
         itemStyle: { borderRadius: 4 },
         data: points.map((p) => ({ name: p.label, value: p.value })),
       }],
+      animation: !prefersReducedMotion(),
+      animationDuration: Math.round(motionDuration('moderate') * 1000),
+      aria: ariaBlock(),
+    };
+  }
+
+  // Rosca ANINHADA: dois anéis concêntricos sobre o mesmo total.
+  //
+  // O de dentro é derivado (ver `nestedGroupsOf`), e é essa derivação que faz o
+  // desenho ser verdadeiro: como os dois anéis somam o MESMO total e percorrem
+  // a mesma ordem, cada fatia externa cai dentro do vão angular do seu grupo.
+  // É a POSIÇÃO que comunica a hierarquia — não a cor, que aqui repete entre os
+  // anéis porque as duas séries leem a mesma paleta desde o índice zero.
+  //
+  // Duas séries `pie` e não uma com `levels`: a lib não tem nível em rosca, e
+  // `sunburst` — que tem — traz um sistema de coordenadas próprio e um contrato
+  // de dado em árvore, que é outro componente, não outro modo deste.
+  if (type === 'pie-nest') {
+    const points = opts.data ?? [];
+    const groups = nestedGroupsOf(points);
+    const center: [string, string] = ['50%', opts.title ? '52%' : '45%'];
+    return {
+      title: opts.title ? { text: opts.title, left: 'left' } : undefined,
+      tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+      // A legenda nomeia os dois anéis. Sem ela, a fatia de dentro não teria
+      // nome nenhum: o rótulo escrito por dentro do arco não cabe em fatia
+      // pequena, e a lib o esconde sem avisar.
+      legend: showLegend || points.length > 0
+        ? { bottom: 0, icon: 'roundRect', itemWidth: 12, itemHeight: 8 }
+        : undefined,
+      series: [
+        {
+          type: 'pie',
+          // Disco cheio no miolo, e não um segundo anel: dois anéis de mesma
+          // espessura leem-se como duas roscas empilhadas, e a hierarquia
+          // some. O miolo cheio diz "isto contém aquilo".
+          radius: [0, '30%'],
+          center,
+          avoidLabelOverlap: true,
+          label: { show: false },
+          itemStyle: { borderRadius: 2 },
+          data: groups.map((g) => ({ name: g.label, value: g.value })),
+        },
+        {
+          type: 'pie',
+          radius: ['45%', '70%'],
+          center,
+          avoidLabelOverlap: true,
+          label: { show: false },
+          itemStyle: { borderRadius: 4 },
+          data: points.map((p) => ({ name: p.label, value: p.value })),
+        },
+      ],
       animation: !prefersReducedMotion(),
       animationDuration: Math.round(motionDuration('moderate') * 1000),
       aria: ariaBlock(),

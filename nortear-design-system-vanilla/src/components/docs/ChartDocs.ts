@@ -150,6 +150,29 @@ function buildFunnelPreview(): HTMLElement {
 // aqui faria o desenho mudar sozinho entre visitas — a partição se repete de 92
 // a 98 vezes em 100 — enquanto a tabela, que sai de função pura, descreveria
 // outro agrupamento.
+// Cada ponto declara o GRUPO a que pertence, e o anel de dentro sai da soma —
+// não se declara. Declarar os dois abriria a porta para eles discordarem, e o
+// desenho mentiria sem nada acusar.
+const nestData = [
+  { label: 'Orgânica',  value: 300, group: 'Busca'  },
+  { label: 'Paga',      value: 100, group: 'Busca'  },
+  { label: 'Instagram', value: 200, group: 'Social' },
+  { label: 'LinkedIn',  value: 150, group: 'Social' },
+  { label: 'App',       value: 250, group: 'Direto' },
+];
+
+function buildNestPreview(): HTMLElement {
+  return createChart({
+    data: nestData,
+    type: 'pie-nest',
+    height: 280,
+    class: 'nds-w-full nds-max-w-md',
+    groupLabel: stripHtml(t('demonstration.labels.nestGroup')),
+    categoryLabel: stripHtml(t('demonstration.labels.nestPart')),
+    'aria-label': 'Sessões por canal e origem: três canais abertos em suas origens, em dois anéis',
+  });
+}
+
 function buildScatterPreview(): HTMLElement {
   return createChart({
     series: CHART_SCATTER_CLUSTERS.map((c) => ({ name: c.name, points: c.points })),
@@ -483,6 +506,22 @@ const el = createChart({
   'aria-label': 'Funil de conversão: visitas, cadastros, carrinho e compra',
 });`;
 
+        const codeNest = `const canais = [
+  { label: 'Orgânica',  value: 300, group: 'Busca'  },
+  { label: 'Paga',      value: 100, group: 'Busca'  },
+  { label: 'Instagram', value: 200, group: 'Social' },
+  { label: 'LinkedIn',  value: 150, group: 'Social' },
+  { label: 'App',       value: 250, group: 'Direto' },
+];
+
+const grafico = createChart({
+  type: 'pie-nest',
+  data: canais,
+  groupLabel: 'Canal',
+  categoryLabel: 'Origem',
+  'aria-label': 'Sessões por canal e origem, em dois anéis',
+});`;
+
         const codeScatter = `const sessoes = [
   { name: 'Grupo 1', points: [[1.5, 1.1], [1.9, 1.8], [3, 1.6]] },
   { name: 'Grupo 2', points: [[7, 4.1], [8, 4.8], [9, 3.8]] },
@@ -572,6 +611,12 @@ wrap.appendChild(spark);`;
               description: stripHtml(t('variants.items.radar')),
               code: codeRadar,
               previewFactory: () => buildRadarPreview(),
+            },
+            {
+              name: 'pie-nest',
+              description: stripHtml(t('variants.items.pieNest')),
+              code: codeNest,
+              previewFactory: () => buildNestPreview(),
             },
             {
               name: 'scatter',

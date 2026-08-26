@@ -4,10 +4,11 @@ import {
   ChartContainer,
   buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption,
   buildRadarOption,
+  buildPieNestOption,
   buildScatterOption,
 } from './index';
 import {
-  designEscreve, distinctShapes, exigirRoot, settleTheme, tokenColor,
+  designEscreve, distinctShapes, exigirRoot, settleTheme, tokenColor, waitForStableCount,
 } from '@shared/testing/chart-probe';
 import { CHART_SCATTER_CLUSTERS } from '@shared/primitives/chart-scatter-clusters';
 import {
@@ -452,6 +453,81 @@ const SCATTER_SERIES = CHART_SCATTER_CLUSTERS.map((c) => ({ name: c.name, points
 const SCATTER_POINTS = SCATTER_SERIES.reduce((n, s) => n + s.points.length, 0);
 const SCATTER_X = 'Minutos na página';
 const SCATTER_Y = 'Páginas vistas';
+
+/**
+ * Sessões por canal e origem — o dado da rosca aninhada.
+ *
+ * Cada ponto declara o GRUPO; o anel de dentro é derivado da soma. Três grupos e
+ * cinco partes fazem 8 fatias na tela, e é essa contagem que a play mede: se a
+ * derivação quebrar e o anel interno passar a ter um arco por PONTO, o número
+ * vai a 10 e a story reprova.
+ */
+const NEST_DATA = [
+  { label: 'Orgânica', value: 300, group: 'Busca' },
+  { label: 'Paga', value: 100, group: 'Busca' },
+  { label: 'Instagram', value: 200, group: 'Social' },
+  { label: 'LinkedIn', value: 150, group: 'Social' },
+  { label: 'App', value: 250, group: 'Direto' },
+];
+const NEST_GROUPS = [...new Set(NEST_DATA.map((d) => d.group))];
+const NEST_SLICES = NEST_GROUPS.length + NEST_DATA.length;
+
+export const PieNest: Story = {
+  parameters: {
+    covers: ['functional.item11', 'visual.item8'],
+    docs: {
+      description: {
+        story: 'Dois anéis sobre o mesmo total. O de dentro reúne os canais, o de fora abre cada um em suas origens, e cada fatia externa cai no vão do seu canal.',
+      },
+    },
+  },
+  args: {
+    option: buildPieNestOption({ data: NEST_DATA }),
+    height: 320,
+    class: 'nds-w-full',
+    showData: true,
+    groupLabel: 'Canal',
+    categoryLabel: 'Origem',
+    'aria-label': 'Sessões por canal e origem: três canais abertos em suas origens, em dois anéis',
+  },
+  play: async ({ canvasElement, step }) => {
+    const root = exigirRoot(canvasElement);
+    await waitForDesign(root);
+
+    await step('Os dois anéis saem na tela — um arco por grupo, um por parte', async () => {
+      // `drawingSettled` NÃO alcança a varredura da rosca: ele espera o
+      // retângulo transparente da legenda ficar sozinho, o que já vale no
+      // primeiro quadro, enquanto as fatias entram em ângulo zero. A espera é
+      // por RELÓGIO porque a leitura força layout — ver `waitForStableCount`.
+      await waitForStableCount(() => filledShapes(root).length);
+      // Igualdade, e o número é o que prova a DERIVAÇÃO: três grupos mais cinco
+      // partes. Se o anel de dentro passasse a ter um arco por ponto — o que
+      // acontece quando alguém troca a soma por um mapa direto —, seriam dez.
+      await expect(filledShapes(root)).toHaveLength(NEST_SLICES);
+    });
+
+    await step('Cada fatia carrega uma trama — a cor não é o único sinal', async () => {
+      // A rosca aninhada é de PREENCHIMENTO, então a trama alcança (ao contrário
+      // da dispersão). Contar a hachura ao lado das formas, com o mesmo número
+      // esperado, impede um coletor que exclui demais de ficar verde medindo
+      // menos: se a exclusão comesse forma de dado, os dois números caem juntos.
+      await expect(hatchedShapes(root)).toHaveLength(NEST_SLICES);
+    });
+
+    await step('A legenda nomeia os dois níveis', async () => {
+      for (const group of NEST_GROUPS) await expect(designEscreve(root, group)).toBe(true);
+      for (const point of NEST_DATA) await expect(designEscreve(root, point.label)).toBe(true);
+    });
+
+    await step('A tabela traz as duas colunas de nome, uma linha por parte', async () => {
+      await expect(headerOf(root)).toEqual(['Canal', 'Origem', 'Valor', 'Participação']);
+      // Uma linha por PARTE. O grupo não ganha linha própria porque a
+      // participação dele é derivável — soma das partes, na mesma coluna.
+      const data = root.querySelector('[data-slot="chart-data"]');
+      await expect(data?.querySelectorAll('tbody tr')).toHaveLength(NEST_DATA.length);
+    });
+  },
+};
 
 export const Scatter: Story = {
   parameters: {

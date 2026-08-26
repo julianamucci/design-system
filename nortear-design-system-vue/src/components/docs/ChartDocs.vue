@@ -5,7 +5,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption, buildRadarOption, buildScatterOption } from '@/components/ui/chart';
+import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption, buildRadarOption, buildScatterOption, buildPieNestOption } from '@/components/ui/chart';
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
@@ -305,6 +305,32 @@ const anatomyItems = computed(() => [
 // outro agrupamento.
 const scatterSeries = CHART_SCATTER_CLUSTERS.map((c) => ({ name: c.name, points: c.points }));
 
+// Cada ponto declara o GRUPO a que pertence, e o anel de dentro sai da soma —
+// não se declara. Declarar os dois abriria a porta para eles discordarem, e o
+// desenho mentiria sem nada acusar.
+const nestData = [
+  { label: 'Orgânica',  value: 300, group: 'Busca'  },
+  { label: 'Paga',      value: 100, group: 'Busca'  },
+  { label: 'Instagram', value: 200, group: 'Social' },
+  { label: 'LinkedIn',  value: 150, group: 'Social' },
+  { label: 'App',       value: 250, group: 'Direto' },
+];
+
+const codeNestChart = `const canais = [
+  { label: 'Orgânica',  value: 300, group: 'Busca'  },
+  { label: 'Paga',      value: 100, group: 'Busca'  },
+  { label: 'Instagram', value: 200, group: 'Social' },
+  { label: 'LinkedIn',  value: 150, group: 'Social' },
+  { label: 'App',       value: 250, group: 'Direto' },
+];
+
+<ChartContainer
+  :option="buildPieNestOption({ data: canais })"
+  group-label="Canal"
+  category-label="Origem"
+  aria-label="Sessões por canal e origem, em dois anéis"
+/>`;
+
 const codeScatterChart = `const sessoes = [
   { name: 'Grupo 1', points: [[1.5, 1.1], [1.9, 1.8], [3, 1.6]] },
   { name: 'Grupo 2', points: [[7, 4.1], [8, 4.8], [9, 3.8]] },
@@ -329,6 +355,7 @@ const variantItems = computed(() => [
   { name: 'funnel', description: stripHtml(tContent('variants.items.funnel')), code: codeFunnelChart },
   { name: 'radar', description: stripHtml(tContent('variants.items.radar')), code: codeRadarChart },
   { name: 'scatter', description: stripHtml(tContent('variants.items.scatter')), code: codeScatterChart },
+  { name: 'pie-nest', description: stripHtml(tContent('variants.items.pieNest')), code: codeNestChart },
   {
     name: tContent('variants.items.smallInline.name'),
     description: tContent('variants.items.smallInline.description'),
@@ -824,8 +851,24 @@ const visualTestItems = computed(() => [
           />
         </div>
       </template>
-      <!-- Small inline (sparkline) -->
+      <!-- Rosca aninhada -->
       <template #variant-preview-7>
+        <div class="nds-stack nds-p-4" data-spacing="sm">
+          <!-- A primeira coluna da tabela nomeia o GRUPO e a segunda a parte;
+               os dois títulos vêm do conteúdo compartilhado para acompanharem o
+               idioma da página. -->
+          <ChartContainer
+            :option="buildPieNestOption({ data: nestData })"
+            class="nds-w-full nds-max-w-sm"
+            :height="280"
+            :group-label="stripHtml(tContent('demonstration.labels.nestGroup'))"
+            :category-label="stripHtml(tContent('demonstration.labels.nestPart'))"
+            aria-label="Sessões por canal e origem: três canais abertos em suas origens, em dois anéis"
+          />
+        </div>
+      </template>
+      <!-- Small inline (sparkline) -->
+      <template #variant-preview-8>
         <div
           class="nds-cluster nds-rounded-md nds-border-default nds-p-4"
           data-spacing="md"

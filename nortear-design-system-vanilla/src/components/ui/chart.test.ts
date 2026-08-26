@@ -8,7 +8,7 @@
 // continua sendo medido no DOM, pelas play functions.
 
 import { describe, expect, it } from 'vitest';
-import { buildChartTable, formatValue } from './chart';
+import { buildChartOption, buildChartTable, formatValue } from './chart';
 
 describe('formatValue', () => {
   it('não enfeita inteiro nem depende de locale', () => {
@@ -278,6 +278,111 @@ describe('buildChartTable', () => {
     expect(table.lines).toEqual([['Grupo 1', '1', '2']]);
   });
 
+  it('a rosca aninhada traz o grupo e a categoria, uma linha por ponto', () => {
+    const canais = [
+      { label: 'Orgânica', value: 300, group: 'Busca' },
+      { label: 'Paga', value: 100, group: 'Busca' },
+      { label: 'Instagram', value: 200, group: 'Social' },
+      { label: 'LinkedIn', value: 150, group: 'Social' },
+      { label: 'App', value: 250, group: 'Direto' },
+    ];
+    const table = buildChartTable({ type: 'pie-nest', data: canais });
+    expect(table.header).toEqual(['Grupo', 'Categoria', 'Valor', 'Participação']);
+    // Uma linha por ponto do anel EXTERNO. O grupo não ganha linha própria
+    // porque a participação dele é DERIVÁVEL — soma das participações dos
+    // pontos, que estão na mesma coluna. Foi o teste que o radar não passou.
+    expect(table.lines).toEqual([
+      ['Busca', 'Orgânica', '300', '30%'],
+      ['Busca', 'Paga', '100', '10%'],
+      ['Social', 'Instagram', '200', '20%'],
+      ['Social', 'LinkedIn', '150', '15%'],
+      ['Direto', 'App', '250', '25%'],
+    ]);
+  });
+
+  it('a rosca aninhada aceita cabeçalhos autorais nas quatro colunas', () => {
+    const table = buildChartTable({
+      type: 'pie-nest',
+      groupLabel: 'Canal',
+      categoryLabel: 'Origem',
+      valueLabel: 'Sessões',
+      shareLabel: 'Fatia',
+      data: [{ label: 'Orgânica', value: 1, group: 'Busca' }],
+    });
+    expect(table.header).toEqual(['Canal', 'Origem', 'Sessões', 'Fatia']);
+  });
+
+  it('ponto sem grupo vira grupo de si mesmo, e o total não muda', () => {
+    const table = buildChartTable({
+      type: 'pie-nest',
+      data: [
+        { label: 'Orgânica', value: 300, group: 'Busca' },
+        { label: 'Avulso', value: 100 },
+      ],
+    });
+    expect(table.lines).toEqual([
+      ['Busca', 'Orgânica', '300', '75%'],
+      ['Avulso', 'Avulso', '100', '25%'],
+    ]);
+  });
+});
+
+describe('buildChartOption — rosca aninhada', () => {
+  const canais = [
+    { label: 'Orgânica', value: 300, group: 'Busca' },
+    { label: 'Paga', value: 100, group: 'Busca' },
+    { label: 'Instagram', value: 200, group: 'Social' },
+    { label: 'LinkedIn', value: 150, group: 'Social' },
+    { label: 'App', value: 250, group: 'Direto' },
+  ];
+  const rings = (opts: Parameters<typeof buildChartOption>[0]) =>
+    (buildChartOption(opts) as { series: { data: { name: string; value: number }[] }[] }).series;
+
+  it('o anel de dentro é DERIVADO: um arco por grupo, com a soma dos pontos', () => {
+    const [inner, outer] = rings({ type: 'pie-nest', data: canais });
+    expect(inner.data).toEqual([
+      { name: 'Busca', value: 400 },
+      { name: 'Social', value: 350 },
+      { name: 'Direto', value: 250 },
+    ]);
+    expect(outer.data.map((d) => d.name)).toEqual(
+      ['Orgânica', 'Paga', 'Instagram', 'LinkedIn', 'App'],
+    );
+  });
+
+  it('a ordem do anel de dentro é a de PRIMEIRA APARIÇÃO, não a de tamanho', () => {
+    // É esta ordem que faz cada fatia externa cair dentro do arco do seu
+    // grupo. O caso que separa uma regra da outra é um grupo PEQUENO declarado
+    // antes de um grande: por tamanho ele iria para o fim, e o alinhamento
+    // angular com o anel de fora quebraria.
+    const [inner] = rings({
+      type: 'pie-nest',
+      data: [
+        { label: 'a', value: 1, group: 'Pequeno' },
+        { label: 'b', value: 99, group: 'Grande' },
+      ],
+    });
+    expect(inner.data.map((d) => d.name)).toEqual(['Pequeno', 'Grande']);
+  });
+
+  it('os dois anéis somam o MESMO total — é o que garante o alinhamento', () => {
+    // O invariante que sustenta o desenho: mesma soma e mesma ordem fazem cada
+    // fatia externa cair no vão angular do seu grupo. É a POSIÇÃO que comunica
+    // a hierarquia, e não a cor — que aqui repete entre os anéis, porque as
+    // duas séries leem a mesma paleta desde o índice zero.
+    const [inner, outer] = rings({ type: 'pie-nest', data: canais });
+    const total = (d: { value: number }[]) => d.reduce((n, x) => n + x.value, 0);
+    expect(total(inner.data)).toBe(total(outer.data));
+  });
+
+  it('sem dado, a rosca aninhada não inventa arco', () => {
+    const [inner, outer] = rings({ type: 'pie-nest', data: [] });
+    expect(inner.data).toEqual([]);
+    expect(outer.data).toEqual([]);
+  });
+});
+
+describe('buildChartTable — casos de borda', () => {
   it('sem dado nenhum, a tabela nasce sem linha', () => {
     expect(buildChartTable({}).lines).toEqual([]);
     expect(buildChartTable({ type: 'funnel' }).lines).toEqual([]);

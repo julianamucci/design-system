@@ -56,6 +56,7 @@
     shareLabel = CHART_TABLE_LABELS.share,
     maxLabel = CHART_TABLE_LABELS.max,
     seriesLabel = CHART_TABLE_LABELS.series,
+    groupLabel = CHART_TABLE_LABELS.group,
     ...restProps
   }: HTMLAttributes<HTMLDivElement> & {
     option: echarts.EChartsCoreOption;
@@ -98,6 +99,8 @@
     maxLabel?: string;
     /** Cabeçalho da primeira coluna da dispersão — ver `ChartTableLabels`. */
     seriesLabel?: string;
+    /** Cabeçalho da coluna de grupo da rosca aninhada — ver `ChartTableLabels`. */
+    groupLabel?: string;
   } = $props();
 
   let containerEl: HTMLDivElement | undefined = $state();
@@ -116,7 +119,7 @@
   const table = $derived(
     chartTable(option, {
       category: categoryLabel, value: valueLabel, share: shareLabel, max: maxLabel,
-      series: seriesLabel,
+      series: seriesLabel, group: groupLabel,
     }),
   );
 

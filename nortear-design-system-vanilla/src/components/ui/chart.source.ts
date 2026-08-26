@@ -25,7 +25,8 @@ import type { ChartType } from './chart';
  * delas, e o snippet precisa mostrar a que ela usa.
  */
 export type ChartSnippetData =
-  | 'simples' | 'umPonto' | 'serieUnica' | 'multi' | 'rosca' | 'funnel' | 'radar' | 'scatter'
+  | 'simples' | 'umPonto' | 'serieUnica' | 'multi' | 'rosca' | 'roscaAninhada'
+  | 'funnel' | 'radar' | 'scatter'
   | 'vazio';
 
 /** O que as stories usam da `ChartOptions` e que o snippet precisa mostrar. */
@@ -144,6 +145,25 @@ const medicoes = [
   { name: 'Depois', data: [94, 97, 9, 96, 4] },
 ];`,
         pairs: [['radarAxes', 'eixos'], ['series', 'medicoes']],
+      };
+
+    case 'roscaAninhada':
+      // Cada ponto declara o GRUPO a que pertence, e o anel de dentro sai da
+      // soma — não se declara. É o que o snippet precisa ensinar: quem copiar
+      // não procura por onde informar o anel interno, porque não há.
+      return {
+        block: `const canais = [
+  { label: 'Orgânica',  value: 300, group: 'Busca'  },
+  { label: 'Paga',      value: 100, group: 'Busca'  },
+  { label: 'Instagram', value: 200, group: 'Social' },
+  { label: 'LinkedIn',  value: 150, group: 'Social' },
+  { label: 'App',       value: 250, group: 'Direto' },
+];`,
+        pairs: [
+          ['data', 'canais'],
+          ['groupLabel', "'Canal'"],
+          ['categoryLabel', "'Origem'"],
+        ],
       };
 
     case 'scatter':

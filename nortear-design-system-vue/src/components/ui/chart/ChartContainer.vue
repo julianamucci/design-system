@@ -95,6 +95,8 @@ const props = defineProps<{
   maxLabel?: string;
   /** Cabeçalho da primeira coluna da dispersão — ver `ChartTableLabels`. */
   seriesLabel?: string;
+  /** Cabeçalho da coluna de grupo da rosca aninhada — ver `ChartTableLabels`. */
+  groupLabel?: string;
 }>();
 
 const containerRef = ref<HTMLDivElement | null>(null);
@@ -365,6 +367,7 @@ const table = computed(() =>
     share: props.shareLabel ?? CHART_TABLE_LABELS.share,
     max: props.maxLabel ?? CHART_TABLE_LABELS.max,
     series: props.seriesLabel ?? CHART_TABLE_LABELS.series,
+    group: props.groupLabel ?? CHART_TABLE_LABELS.group,
   }),
 );
 

@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, waitFor } from 'storybook/test';
-import { designEscreve, distinctShapes } from '@shared/testing/chart-probe';
+import {
+  designEscreve, distinctShapes, waitForStableCount,
+} from '@shared/testing/chart-probe';
 import { NdsChart } from './chart';
 import {
   MONTHS,
@@ -11,6 +13,9 @@ import {
   FUNNEL_STAGES,
   RADAR_AXES,
   RADAR_SERIES,
+  NEST_DATA,
+  NEST_GROUPS,
+  NEST_SLICES,
   SCATTER_POINTS,
   SCATTER_SERIES,
   SCATTER_X,
@@ -358,6 +363,66 @@ export const Funnel: Story = {
       // última é a queda que o funil existe para mostrar.
       await expect(cells[0]).toEqual(['Visitas', '4000', '100%']);
       await expect(cells[3]).toEqual(['Compra', '480', '12%']);
+    });
+  },
+};
+
+export const PieNest: Story = {
+  parameters: {
+    covers: ['functional.item11', 'visual.item8'],
+  },
+  render: () => ({
+    props: { dados: NEST_DATA },
+    template: `
+      <div ndsChart
+        type="pie-nest"
+        [data]="dados"
+        [showData]="true"
+        groupLabel="Canal"
+        categoryLabel="Origem"
+        label="Sessões por canal e origem: três canais abertos em suas origens, em dois anéis"
+      ></div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
+    const desenho = desenhoDe(chart);
+
+    await step('Os dois anéis saem na tela — um arco por grupo, um por parte', async () => {
+      // `drawingSettled` NÃO alcança a varredura da rosca: ele espera o
+      // retângulo transparente da legenda ficar sozinho, o que já vale no
+      // primeiro quadro, enquanto as fatias entram em ângulo zero. A espera é
+      // por RELÓGIO porque a leitura força layout — ver `waitForStableCount`.
+      await waitForStableCount(() => formasPreenchidas(desenho).length);
+      // Igualdade, e o número é o que prova a DERIVAÇÃO: três grupos mais cinco
+      // partes. Se o anel de dentro passasse a ter um arco por ponto — o que
+      // acontece quando alguém troca a soma por um mapa direto —, seriam dez.
+      await expect(formasPreenchidas(desenho)).toHaveLength(NEST_SLICES);
+    });
+
+    await step('Cada fatia carrega uma trama — a cor não é o único sinal', async () => {
+      // A rosca aninhada é de PREENCHIMENTO, então a trama alcança (ao contrário
+      // da dispersão). Contar a hachura ao lado das formas, com o mesmo número
+      // esperado, impede um coletor que exclui demais de ficar verde medindo
+      // menos: se a exclusão comesse forma de dado, os dois números caem juntos.
+      await expect(formasComTrama(desenho)).toHaveLength(NEST_SLICES);
+    });
+
+    await step('A legenda nomeia os dois níveis', async () => {
+      for (const group of NEST_GROUPS) {
+        await expect(designEscreve(desenho, group)).toBe(true);
+      }
+      for (const point of NEST_DATA) {
+        await expect(designEscreve(desenho, point.label)).toBe(true);
+      }
+    });
+
+    await step('A tabela traz as duas colunas de nome, uma linha por parte', async () => {
+      const header = [...chart.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
+      await expect(header).toEqual(['Canal', 'Origem', 'Valor', 'Participação']);
+      // Uma linha por PARTE. O grupo não ganha linha própria porque a
+      // participação dele é derivável — soma das partes, na mesma coluna.
+      await expect(chart.querySelectorAll('tbody tr')).toHaveLength(NEST_DATA.length);
     });
   },
 };

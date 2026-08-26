@@ -387,6 +387,19 @@ export interface ChartSeries { name: string; data: number[]; color?: string }
  * categorias do eixo, e um ponto de dispersão não tem categoria — as duas
  * coordenadas são medidas, e é a posição no plano que carrega a informação.
  */
+/**
+ * Ponto da rosca ANINHADA: além do valor, a que grupo ele pertence.
+ *
+ * É o que torna a hierarquia declarável pelo lado de baixo — o anel de dentro
+ * não é informado, é DERIVADO da soma dos pontos de cada grupo. Declarar os dois
+ * abriria a porta para eles discordarem, e o desenho mentiria sem nada acusar.
+ */
+export interface ChartNestedPoint {
+  label: string;
+  value: number;
+  group: string;
+}
+
 export interface ChartScatterSeries {
   name: string;
   points: [number, number][];
@@ -589,6 +602,86 @@ export function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string })
  * O nome de cada eixo entra no option porque é dali que a tabela equivalente o
  * lê — mesma escolha do teto do radar, que sai do `indicator`.
  */
+/**
+ * Rosca ANINHADA: dois anéis concêntricos sobre o mesmo total.
+ *
+ * O de dentro é derivado da soma por grupo, e é essa derivação que faz o desenho
+ * ser verdadeiro: como os dois anéis somam o MESMO total e percorrem a mesma
+ * ordem, cada fatia externa cai dentro do vão angular do seu grupo. É a POSIÇÃO
+ * que comunica a hierarquia — não a cor, que aqui repete entre os anéis porque
+ * as duas séries leem a mesma paleta desde o índice zero.
+ *
+ * Duas séries `pie` e não uma com níveis: a lib não tem nível em rosca, e
+ * `sunburst` — que tem — traz sistema de coordenadas próprio e contrato de dado
+ * em árvore, que é outro componente, não outro modo deste.
+ *
+ * Cada item do anel externo LEVA o grupo junto. É de lá que a tabela equivalente
+ * o lê: ela nasce do option, e sem o grupo no dado ela não teria como reconstruir
+ * a coluna que nomeia o anel de dentro.
+ */
+export function buildPieNestOption(o: {
+  data: ChartNestedPoint[];
+  title?: string;
+  showLegend?: boolean;
+}): echarts.EChartsCoreOption {
+  const points = o.data;
+  const showLegend = o.showLegend ?? points.length > 0;
+
+  // Ordem de PRIMEIRA APARIÇÃO, não de tamanho: é ela que alinha cada fatia
+  // externa ao arco do seu grupo. Um grupo pequeno declarado antes de um grande
+  // iria para o fim se a ordem fosse por valor, e o alinhamento quebraria.
+  const order: string[] = [];
+  const sums = new Map<string, number>();
+  for (const point of points) {
+    if (!sums.has(point.group)) order.push(point.group);
+    sums.set(point.group, (sums.get(point.group) ?? 0) + Math.max(0, point.value));
+  }
+
+  const center: [string, string] = ['50%', o.title ? '52%' : '45%'];
+  return {
+    title: o.title ? { text: o.title, left: 'left' } : undefined,
+    tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+    // A legenda nomeia os dois anéis. Sem ela o de dentro fica mudo: o rótulo
+    // escrito dentro do arco não cabe em fatia pequena, e a lib o esconde sem
+    // avisar.
+    legend: showLegend
+      ? { bottom: 0, icon: 'roundRect', itemWidth: 12, itemHeight: 8 }
+      : undefined,
+    series: [
+      {
+        type: 'pie',
+        // Disco cheio no miolo, e não um segundo anel: dois anéis de mesma
+        // espessura leem-se como duas roscas empilhadas, e a hierarquia some.
+        radius: [0, '30%'],
+        center,
+        avoidLabelOverlap: true,
+        label: { show: false },
+        itemStyle: { borderRadius: 2 },
+        data: order.map((name) => ({ name, value: sums.get(name) ?? 0 })),
+      },
+      {
+        type: 'pie',
+        radius: ['45%', '70%'],
+        center,
+        avoidLabelOverlap: true,
+        label: { show: false },
+        itemStyle: { borderRadius: 4 },
+        data: points.map((point) => ({
+          name: point.label,
+          value: point.value,
+          group: point.group,
+        })),
+      },
+    ],
+    animation: !prefersReducedMotion(),
+    animationDuration: Math.round(motionDuration('moderate') * 1000),
+    // A rosca aninhada é de PREENCHIMENTO, então a trama alcança — ao contrário
+    // da dispersão, onde ela é desligada. Sem este bloco, `withHatchPatterns`
+    // não injeta nada e a WCAG 1.4.1 volta a depender só da cor.
+    aria: ARIA,
+  };
+}
+
 export function buildScatterOption(o: {
   series: ChartScatterSeries[];
   xLabel?: string;
@@ -737,6 +830,15 @@ export interface ChartTableLabels {
    * lugares para ele divergir.
    */
   seriesLabel: string;
+  /**
+   * Cabeçalho da coluna de grupo — só a rosca aninhada a tem.
+   *
+   * Não reaproveita `categoryLabel` porque as duas coexistem na mesma tabela:
+   * uma nomeia o anel de dentro e a outra o de fora, e chamar as duas de
+   * "Categoria" deixaria a tabela ambígua exatamente onde ela precisa ser
+   * precisa.
+   */
+  groupLabel: string;
 }
 
 /** Cabeçalho e linhas já formatados — a primeira célula de cada linha é o `th`. */
@@ -910,6 +1012,45 @@ export function chartTableFromOption(
     };
   }
 
+  // A rosca ANINHADA tem duas colunas de nome: o grupo, que é o anel de dentro,
+  // e a categoria, que é o de fora.
+  //
+  // Vem ANTES do ramo da rosca simples de propósito: o desenho aninhado tem DUAS
+  // séries `pie`, e o `find` lá embaixo acharia a primeira — o anel de dentro —
+  // e montaria uma tabela com os grupos no lugar das partes, calada.
+  //
+  // O que identifica a aninhada é o dado carregar `group`, e não a contagem de
+  // séries: um option montado à mão com dois anéis sem grupo cai no ramo simples,
+  // que é a degradação sensata. A marca está no DADO porque é dele que a coluna
+  // sai.
+  //
+  // Uma linha por ponto do anel EXTERNO. A participação do grupo não precisa de
+  // linha própria porque é DERIVÁVEL — soma das participações dos pontos dele, na
+  // mesma coluna. Foi o teste que o radar não passou: lá o teto de cada eixo não
+  // saía de nenhuma outra célula, e por isso virou coluna.
+  const nested = series.find(
+    (serie) => serie.type === 'pie'
+      && ((serie.data ?? []) as unknown[]).some(
+        (item) => item !== null && typeof item === 'object' && 'group' in (item as object),
+      ),
+  );
+  if (nested) {
+    const points = (nested.data ?? []) as unknown[];
+    const total = points.reduce<number>((sum, point) => sum + Math.max(0, numberOf(point) ?? 0), 0);
+    const field = (point: unknown, key: 'name' | 'group') =>
+      (point !== null && typeof point === 'object'
+        ? String((point as Record<string, unknown>)[key] ?? '')
+        : '');
+    return {
+      header: [labels.groupLabel, labels.categoryLabel, labels.valueLabel, labels.shareLabel],
+      rows: points.map((point) => {
+        const value = Math.max(0, numberOf(point) ?? 0);
+        const share = total > 0 ? `${Math.round((value / total) * 1000) / 10}%` : '—';
+        return [field(point, 'group'), field(point, 'name'), cellOf(point), share];
+      }),
+    };
+  }
+
   // A pizza mede parte contra o todo: a coluna de participação é o que a fatia
   // comunica pelo ângulo, e sem ela a tabela contaria menos que o desenho.
   const pie = series.find((s) => s.type === 'pie');
@@ -1010,6 +1151,8 @@ export interface ChartContainerProps extends React.ComponentProps<'div'> {
   maxLabel?: string;
   /** Cabeçalho da primeira coluna da dispersão — ver `ChartTableLabels`. */
   seriesLabel?: string;
+  /** Cabeçalho da coluna de grupo da rosca aninhada — ver `ChartTableLabels`. */
+  groupLabel?: string;
 }
 
 export function ChartContainer({
@@ -1023,6 +1166,7 @@ export function ChartContainer({
   shareLabel = 'Participação',
   maxLabel = 'Máximo',
   seriesLabel = 'Série',
+  groupLabel = 'Grupo',
   className,
   style,
   // Desestruturado, e não deixado no `rest`, porque o rótulo NÃO vai mais no
@@ -1106,8 +1250,10 @@ export function ChartContainer({
   const ariaLabel = ariaLabelProp ?? derivedLabel ?? 'Gráfico';
 
   const table = React.useMemo(
-    () => chartTableFromOption(option, { categoryLabel, valueLabel, shareLabel, maxLabel, seriesLabel }),
-    [option, categoryLabel, valueLabel, shareLabel, maxLabel, seriesLabel],
+    () => chartTableFromOption(option, {
+      categoryLabel, valueLabel, shareLabel, maxLabel, seriesLabel, groupLabel,
+    }),
+    [option, categoryLabel, valueLabel, shareLabel, maxLabel, seriesLabel, groupLabel],
   );
 
   // A trama entra AQUI, e não no construtor: é o container que sabe qual tema

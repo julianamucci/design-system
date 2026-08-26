@@ -138,12 +138,22 @@ echarts.use([
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar' | 'scatter';
+export type ChartType =
+  | 'bar' | 'line' | 'area' | 'pie' | 'pie-nest' | 'funnel' | 'radar' | 'scatter';
 
 /** Forma simples: 1 série, rótulo + valor. */
 export interface ChartDataPoint {
   label: string;
   value: number;
+  /**
+   * A que grupo este ponto pertence — só a rosca ANINHADA usa.
+   *
+   * É o que torna a hierarquia declarável pelo lado de baixo: o anel de dentro
+   * não é informado, é DERIVADO da soma dos pontos de cada grupo. Declarar os
+   * dois abriria a porta para eles discordarem — um anel interno que não é a
+   * soma do que está por fora —, e o desenho mentiria sem nada acusar.
+   */
+  group?: string;
 }
 
 /**
@@ -369,6 +379,15 @@ export class NdsChart {
    */
   readonly xLabel = input<string>('X');
   readonly yLabel = input<string>('Y');
+  /**
+   * Cabeçalho da coluna de grupo — só a rosca aninhada a tem.
+   *
+   * Não reaproveita `categoryLabel` porque as duas coexistem na mesma tabela:
+   * uma nomeia o anel de dentro e a outra o de fora, e chamar as duas de
+   * "Categoria" deixaria a tabela ambígua exatamente onde ela precisa ser
+   * precisa.
+   */
+  readonly groupLabel = input<string>('Grupo');
   readonly emptyLabel = input<string>('Sem dados para exibir');
 
   private readonly desenho = viewChild<ElementRef<HTMLElement>>('desenho');
@@ -397,11 +416,37 @@ export class NdsChart {
     const type = this.type();
     // A dispersão TEM eixo, e ainda assim fica de fora: os dois eixos dela são
     // de valor, e o que esta pergunta decide é a forma do option e a forma da
-    // tabela — nas duas ela é caso próprio, como o radar.
-    return type !== 'pie' && type !== 'funnel' && type !== 'radar' && type !== 'scatter';
+    // tabela — nas duas ela é caso próprio, como o radar. A rosca aninhada não
+    // desenha em eixo nenhum, como a simples.
+    return type !== 'pie' && type !== 'pie-nest' && type !== 'funnel'
+      && type !== 'radar' && type !== 'scatter';
   });
 
   protected readonly scatterType = computed(() => this.type() === 'scatter');
+  protected readonly nestedType = computed(() => this.type() === 'pie-nest');
+
+  /**
+   * O anel de DENTRO da rosca aninhada: um arco por grupo, com a soma dos pontos.
+   *
+   * Derivado, nunca declarado. A ordem é a de PRIMEIRA APARIÇÃO, e não a do
+   * tamanho: é ela que faz cada arco externo cair dentro do arco do seu grupo.
+   * Reordenar por valor quebraria o alinhamento angular, que é justamente o que
+   * comunica a hierarquia sem depender da cor.
+   *
+   * Ponto sem grupo cai num grupo com o próprio rótulo: o total não muda, e o
+   * anel de dentro passa a ter um arco só para ele — honesto, e visivelmente
+   * diferente de um agrupamento que ninguém declarou.
+   */
+  protected readonly nestedGroups = computed<ChartDataPoint[]>(() => {
+    const order: string[] = [];
+    const sums = new Map<string, number>();
+    for (const point of this.simpleData()) {
+      const group = point.group ?? point.label;
+      if (!sums.has(group)) order.push(group);
+      sums.set(group, (sums.get(group) ?? 0) + Math.max(0, point.value));
+    }
+    return order.map((label) => ({ label, value: sums.get(label) ?? 0 }));
+  });
 
   /** O radar lê SÉRIES, como o cartesiano; rosca e funil leem a lista simples. */
   protected readonly radarType = computed(() => this.type() === 'radar');
@@ -514,6 +559,7 @@ export class NdsChart {
     if (this.type() === 'funnel') return this.optionFunnel(title, aria, animar, dur);
     if (this.type() === 'radar') return this.optionRadar(title, aria, animar, dur);
     if (this.type() === 'scatter') return this.optionScatter(title, animar, dur);
+    if (this.type() === 'pie-nest') return this.optionPieNest(title, aria, animar, dur);
     return this.optionCartesiano(title, aria, animar, dur, compact);
   });
 
@@ -543,6 +589,68 @@ export class NdsChart {
    * O bloco de acessibilidade continua — o desenho segue anunciado —, só a trama
    * sai.
    */
+  /**
+   * Rosca ANINHADA: dois anéis concêntricos sobre o mesmo total.
+   *
+   * O de dentro é derivado da soma por grupo, e é essa derivação que faz o
+   * desenho ser verdadeiro: como os dois anéis somam o MESMO total e percorrem a
+   * mesma ordem, cada fatia externa cai dentro do vão angular do seu grupo. É a
+   * POSIÇÃO que comunica a hierarquia — não a cor, que aqui repete entre os
+   * anéis porque as duas séries leem a mesma paleta desde o índice zero.
+   *
+   * Duas séries `pie` e não uma com níveis: a lib não tem nível em rosca, e
+   * `sunburst` — que tem — traz sistema de coordenadas próprio e contrato de
+   * dado em árvore, que é outro componente, não outro modo deste.
+   *
+   * Recebe `aria` porque aqui a trama ALCANÇA: a rosca é de preenchimento, ao
+   * contrário da dispersão.
+   */
+  private optionPieNest(
+    title: unknown,
+    aria: unknown,
+    animar: boolean,
+    dur: number,
+  ): echarts.EChartsCoreOption {
+    const points = this.simpleData();
+    const groups = this.nestedGroups();
+    const center: [string, string] = ['50%', title ? '52%' : '45%'];
+    return {
+      title,
+      tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+      // A legenda nomeia os dois anéis. Sem ela o de dentro fica mudo: o rótulo
+      // escrito dentro do arco não cabe em fatia pequena, e a lib o esconde sem
+      // avisar.
+      legend: points.length > 0
+        ? { bottom: 0, icon: 'roundRect', itemWidth: 12, itemHeight: 8 }
+        : undefined,
+      series: [
+        {
+          type: 'pie',
+          // Disco cheio no miolo, e não um segundo anel: dois anéis de mesma
+          // espessura leem-se como duas roscas empilhadas, e a hierarquia some.
+          radius: [0, '30%'],
+          center,
+          avoidLabelOverlap: true,
+          label: { show: false },
+          itemStyle: { borderRadius: 2 },
+          data: groups.map((g) => ({ name: g.label, value: g.value })),
+        },
+        {
+          type: 'pie',
+          radius: ['45%', '70%'],
+          center,
+          avoidLabelOverlap: true,
+          label: { show: false },
+          itemStyle: { borderRadius: 4 },
+          data: points.map((p) => ({ name: p.label, value: p.value })),
+        },
+      ],
+      animation: animar,
+      animationDuration: dur,
+      aria,
+    };
+  }
+
   private optionScatter(
     title: unknown,
     animar: boolean,
@@ -927,6 +1035,32 @@ export class NdsChart {
     //
     // A primeira coluna nomeia a SÉRIE e se repete a cada linha do mesmo grupo —
     // é ela que diz, ponto a ponto, a que grupo ele pertence.
+    // A rosca ANINHADA tem duas colunas de nome: o grupo, que é o anel de dentro,
+    // e a categoria, que é o de fora.
+    //
+    // Uma linha por ponto do anel EXTERNO. A participação do grupo não precisa
+    // de linha própria porque é DERIVÁVEL — soma das participações dos pontos
+    // dele, na mesma coluna. Foi o teste que o radar não passou: lá o teto de
+    // cada eixo não saía de nenhuma outra célula, e por isso virou coluna.
+    if (this.nestedType()) {
+      const points = this.simpleData();
+      const total = points.reduce((sum, p) => sum + Math.max(0, p.value), 0);
+      return {
+        header: [
+          this.groupLabel(),
+          this.categoryLabel(),
+          this.valueLabel(),
+          this.shareLabel(),
+        ],
+        lines: points.map((p) => [
+          p.group ?? p.label,
+          p.label,
+          formatarValue(p.value),
+          total > 0 ? `${Math.round((Math.max(0, p.value) / total) * 1000) / 10}%` : '—',
+        ]),
+      };
+    }
+
     if (this.scatterType()) {
       return {
         header: [this.seriesLabel(), this.xLabel(), this.yLabel()],

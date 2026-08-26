@@ -192,6 +192,28 @@ const etapas = [
  * duas primeiras colunas entram escritos porque no radar a primeira não nomeia
  * uma categoria qualquer: nomeia o eixo, e a segunda traz o teto dele.
  */
+export function chartPieNestSource(): string {
+  return jsxSnippet(
+    `${importChart('buildPieNestOption')}
+
+const canais = [
+  { label: "Orgânica",  value: 300, group: "Busca"  },
+  { label: "Paga",      value: 100, group: "Busca"  },
+  { label: "Instagram", value: 200, group: "Social" },
+  { label: "LinkedIn",  value: 150, group: "Social" },
+  { label: "App",       value: 250, group: "Direto" },
+];`,
+    `<ChartContainer
+  option={buildPieNestOption({ data: canais })}
+  className="nds-max-w-md"
+  height={320}
+  groupLabel="Canal"
+  categoryLabel="Origem"
+  aria-label="Sessões por canal e origem, em dois anéis"
+/>`,
+  );
+}
+
 export function chartScatterSource(): string {
   return jsxSnippet(
     `${importChart('buildScatterOption')}

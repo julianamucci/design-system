@@ -197,3 +197,51 @@ export function shapeSignature(shape: Element): string {
 export function distinctShapes(shapes: Element[]): Set<string> {
   return new Set(shapes.map(shapeSignature));
 }
+
+/**
+ * Espera a contagem de formas PARAR DE MUDAR, por laço de relógio.
+ *
+ * Existe porque `drawingSettled` não alcança a varredura da rosca. Ele espera o
+ * retângulo transparente da legenda ficar sozinho, o que acontece no primeiro
+ * quadro; a rosca, porém, entra com as fatias em ângulo ZERO e as abre ao longo
+ * da animação. Medido no react, com a rosca aninhada: no instante em que
+ * `drawingSettled` volta, as oito fatias medem `0x48` e `0x40` — largura zero —
+ * e só aos 1,5s chegam ao tamanho real.
+ *
+ * E o laço é de RELÓGIO, não `waitFor`, pelo motivo que o CLAUDE.md registra: a
+ * leitura aqui chama `getBBox()`, que força layout. `waitFor` reagenda por
+ * observador de mutação, então uma condição que força layout provoca a própria
+ * reexecução — o prazo não chega e a animação não avança no meio. Medido: a
+ * mesma asserção dentro de `waitFor` reprovou com ZERO forma depois de três
+ * segundos, enquanto a leitura por relógio via as oito em 1,5s.
+ *
+ * Não afirma nada: devolve a última contagem e deixa a asserção para quem
+ * chamou, que é quem sabe o número esperado.
+ */
+export async function waitForStableCount(
+  read: () => number,
+  { timeout = 4000, interval = 100, stableReads = 3 }: {
+    timeout?: number;
+    interval?: number;
+    stableReads?: number;
+  } = {},
+): Promise<number> {
+  const deadline = Date.now() + timeout;
+  let previous = -1;
+  let repeats = 0;
+  let current = read();
+  while (Date.now() < deadline) {
+    current = read();
+    // Zero não conta como estável: antes do primeiro quadro TODA leitura devolve
+    // zero, e três zeros seguidos encerrariam a espera num desenho que ainda não
+    // existe — portão verde medindo tela vazia.
+    if (current > 0 && current === previous) {
+      if (++repeats >= stableReads) return current;
+    } else {
+      previous = current;
+      repeats = 0;
+    }
+    await new Promise((resolve) => setTimeout(resolve, interval));
+  }
+  return current;
+}

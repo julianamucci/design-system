@@ -5,6 +5,7 @@ import {
   designEscreve,
   designPintado,
   distinctShapes,
+  waitForStableCount,
   exigirRoot,
 } from '@shared/testing/chart-probe';
 import { resolveColor } from '@shared/testing/cor';
@@ -88,6 +89,25 @@ const SCATTER_SERIES = CHART_SCATTER_CLUSTERS.map((c) => ({
 }));
 
 const SCATTER_POINTS = SCATTER_SERIES.reduce((n, s) => n + s.points.length, 0);
+
+/**
+ * Sessões por canal e origem — o dado da rosca aninhada.
+ *
+ * Cada ponto declara o GRUPO; o anel de dentro é derivado da soma. Três grupos
+ * e cinco partes fazem 8 fatias na tela, e é essa contagem que a play mede: se
+ * a derivação quebrar e o anel interno passar a ter um arco por PONTO, o número
+ * vai a 10 e a story reprova.
+ */
+const NEST_DATA = [
+  { label: 'Orgânica', value: 300, group: 'Busca' },
+  { label: 'Paga', value: 100, group: 'Busca' },
+  { label: 'Instagram', value: 200, group: 'Social' },
+  { label: 'LinkedIn', value: 150, group: 'Social' },
+  { label: 'App', value: 250, group: 'Direto' },
+];
+
+const NEST_GROUPS = [...new Set(NEST_DATA.map((d) => d.group))];
+const NEST_SLICES = NEST_GROUPS.length + NEST_DATA.length;
 
 const SCATTER_X = 'Minutos na página';
 const SCATTER_Y = 'Páginas vistas';
@@ -592,6 +612,83 @@ export const Funnel: Story = {
         () => expect(hatchedShapes(root)).toHaveLength(FUNNEL_STAGES.length),
         { timeout: 3000 },
       );
+    });
+  },
+};
+
+// ─── Rosca aninhada ───────────────────────────────────────────────────────────
+
+export const PieNest: Story = {
+  parameters: {
+    covers: ['functional.item11', 'visual.item8'],
+    docs: {
+      source: {
+        transform: chartSourceWith({
+          type: 'pie-nest',
+          data: 'roscaAninhada',
+          height: 320,
+          'aria-label': 'Sessões por canal e origem: três canais abertos em suas origens, em dois anéis',
+        }),
+      },
+      description: {
+        story: 'Rosca aninhada — dois anéis sobre o mesmo total. O de dentro reúne os canais, o de fora abre cada um em suas origens, e cada fatia externa cai no vão do seu canal.',
+      },
+    },
+  },
+  render: () => createChart({
+    type: 'pie-nest',
+    data: NEST_DATA,
+    height: 320,
+    class: 'nds-max-w-md',
+    groupLabel: 'Canal',
+    categoryLabel: 'Origem',
+    'aria-label': 'Sessões por canal e origem: três canais abertos em suas origens, em dois anéis',
+  }),
+  play: async ({ canvasElement, step }) => {
+    const root = exigirRoot(canvasElement);
+
+    await step('Os dois anéis saem na tela — um arco por grupo, um por parte', async () => {
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+      // `drawingSettled` NÃO alcança a varredura da rosca: ele espera o
+      // retângulo transparente da legenda ficar sozinho, o que já vale no
+      // primeiro quadro, enquanto as fatias entram em ângulo zero. A espera é
+      // por RELÓGIO porque a leitura força layout — ver `waitForStableCount`.
+      await waitForStableCount(() => filledShapes(root).length);
+      // Igualdade, e o número é o que prova a DERIVAÇÃO: três grupos mais cinco
+      // partes. Se o anel de dentro passasse a ter um arco por ponto — que é o
+      // que acontece quando alguém troca a soma por um mapa direto —, seriam
+      // dez, e este passo reprova.
+      await expect(filledShapes(root)).toHaveLength(NEST_SLICES);
+    });
+
+    await step('Cada fatia carrega uma trama — a cor não é o único sinal', async () => {
+      // A rosca aninhada é de PREENCHIMENTO, então a trama alcança (ao contrário
+      // da dispersão). Contar a hachura ao lado das formas, com o mesmo número
+      // esperado, é o que impede um coletor que exclui demais de ficar verde
+      // medindo menos: se a exclusão passasse a comer forma de dado, os dois
+      // números caem juntos.
+      await expect(hatchedShapes(root)).toHaveLength(NEST_SLICES);
+    });
+
+    await step('A legenda nomeia os dois níveis', async () => {
+      // Sem ela o anel de dentro fica mudo: o rótulo escrito por dentro do arco
+      // não cabe em fatia pequena, e a lib o esconde sem avisar.
+      for (const group of NEST_GROUPS) {
+        await expect(designEscreve(root, group)).toBe(true);
+      }
+      for (const point of NEST_DATA) {
+        await expect(designEscreve(root, point.label)).toBe(true);
+      }
+    });
+
+    await step('A tabela traz as duas colunas de nome, uma linha por parte', async () => {
+      const data = root.querySelector<HTMLElement>('[data-slot="chart-data"]');
+      await expect(data).not.toBeNull();
+      const header = [...data!.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
+      await expect(header).toEqual(['Canal', 'Origem', 'Valor', 'Participação']);
+      // Uma linha por PARTE. O grupo não ganha linha própria porque a
+      // participação dele é derivável — soma das partes, na mesma coluna.
+      await expect(data!.querySelectorAll('tbody tr')).toHaveLength(NEST_DATA.length);
     });
   },
 };
