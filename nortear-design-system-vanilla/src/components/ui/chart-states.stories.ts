@@ -28,6 +28,55 @@ const SERIES_MULTI = [
 
 const FRASE_VAZIA = 'Nenhum dado disponível para o período selecionado.';
 
+// ─── Sondas locais ────────────────────────────────────────────────────────────
+
+/**
+ * Cor com que a trama de `id` foi TRAÇADA, no formato do navegador.
+ *
+ * O colhedor compartilhado responde quais tramas chegaram a alguma forma; o que
+ * se mede aqui é a cor de dentro do `<pattern>`, que é o que separa a hachura do
+ * preenchimento. A lista padrão da lib desenha em preto translúcido, e contra a
+ * paleta de série isso fica entre 1.26 e 1.57 — trama declarada e não entregue.
+ */
+function decalColor(root: HTMLElement, id: string): string {
+  const pattern = root.querySelector(`pattern[id="${CSS.escape(id)}"]`);
+  if (!pattern) throw new Error(`nenhum <pattern id="${id}"> no desenho`);
+  // Só o ATRIBUTO `fill` serve de sonda. Conteúdo de `<pattern>` não é
+  // renderizado, e `getComputedStyle` de um nó não renderizado devolve o
+  // inicial do SVG — preto — para quem não declarou nada: o `<g>` que embrulha
+  // a trama passaria por "trama preta" e a asserção acusaria defeito onde não
+  // há.
+  for (const painted of pattern.querySelectorAll('[fill]')) {
+    const color = painted.getAttribute('fill') ?? '';
+    if (color && color !== 'none') return normalizedColor(color, root);
+  }
+  throw new Error(`o <pattern id="${id}"> não desenha nada com cor`);
+}
+
+/** Qualquer notação de cor CSS reduzida ao formato que `getComputedStyle` devolve. */
+function normalizedColor(value: string, near: HTMLElement): string {
+  const doc = near.ownerDocument;
+  const probe = doc.createElement('span');
+  probe.style.color = value;
+  // Fora do fluxo e no <body>, pelo mesmo motivo do colhedor compartilhado:
+  // pendurar a sonda ao lado do gráfico reflui o bloco e repinta o desenho.
+  probe.style.position = 'absolute';
+  probe.style.visibility = 'hidden';
+  doc.body.appendChild(probe);
+  try {
+    return getComputedStyle(probe).color;
+  } finally {
+    probe.remove();
+  }
+}
+
+/** Tamanho do texto do desenho, em pixels inteiros. */
+function labelFontSize(root: HTMLElement): number {
+  const label = root.querySelector<SVGTextElement>('svg text');
+  if (!label) throw new Error('o desenho ainda não escreveu texto nenhum');
+  return Math.round(Number.parseFloat(getComputedStyle(label).fontSize));
+}
+
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
@@ -201,6 +250,19 @@ export const MultiSeries: Story = {
         { timeout: 3000 },
       );
     });
+
+    await step('E a trama é traçada na cor do fundo, não em preto translúcido', async () => {
+      // Trama existir não é trama enxergar. A lista padrão da lib desenha em
+      // `rgba(0, 0, 0, 0.2)`, que sobre a paleta de série mede entre 1.26 e
+      // 1.57 contra o PRÓPRIO preenchimento — no pior caso, imperceptível: o
+      // sinal que substitui a cor (WCAG 1.4.1) ficava declarado e não entregue.
+      // Na cor do fundo a mesma hachura mede de 6.83 a 11.02, e é por isso que
+      // a asserção é de IGUALDADE com `--background`, e não "existe alguma cor".
+      const background = tokenColor('background', root);
+      for (const id of tramasAplicadas(root)) {
+        await expect(decalColor(root, id)).toBe(background);
+      }
+    });
   },
 };
 
@@ -294,13 +356,48 @@ export const ThemeTokens: Story = {
     });
 
     await step('A cor do texto do eixo é o token do tema, não um valor cravado', async () => {
-      // A sonda é o TEXTO do eixo, e não a barra: a paleta de série é a mesma
-      // no claro e no escuro de propósito — está declarada uma vez por tema de
-      // marca, sem bloco escuro. Medir a barra afirmaria que a cor muda, e ela
-      // não muda em tema nenhum.
+      // A sonda é o TEXTO do eixo, e não a barra, porque é a mais estável: não
+      // depende de qual série a lib pintou primeiro nem de a forma já ter sido
+      // desenhada. A paleta de série também sai do token — `--chart-1` a
+      // `--chart-8`, com variante por modo —, e quem a mede contra o fundo é a
+      // story de contraste, logo abaixo.
       const label = root.querySelector<SVGTextElement>('svg text')!;
       await expect(getComputedStyle(label).fill)
         .toBe(tokenColor('muted-foreground', root));
+    });
+
+    await step('O tamanho do texto sai da fonte raiz, e cresce junto com ela', async () => {
+      // WCAG 1.4.4. A lib só aceita número em pixel para tamanho de texto, e
+      // número escolhido à mão fica surdo ao navegador: o desenho ficava em 12
+      // (o padrão da lib) com o título cravado em 14, enquanto a frase do
+      // estado vazio, que é CSS, crescia ao lado no mesmo componente.
+      //
+      // Medir com a fonte parada não provaria nada — na base 16 o valor certo
+      // dá os mesmos 12 de antes. Por isso a fonte raiz MUDA aqui: 20px pede
+      // 15 (0.75 × 20), que o número cravado nunca alcança.
+      //
+      // A mudança entra por FOLHA, e não por `style` inline: é assim que a
+      // preferência de fonte do navegador chega ao documento, e é o caminho
+      // que se quer medir. Inline também venceria a folha do tema, que é
+      // justamente o que o design system proíbe.
+      const doc = root.ownerDocument;
+      const base = () => Number.parseFloat(getComputedStyle(doc.documentElement).fontSize);
+      const fontPreference = doc.createElement('style');
+      fontPreference.textContent = ':root { font-size: 20px }';
+
+      await expect(labelFontSize(root)).toBe(Math.round(base() * 0.75));
+      try {
+        doc.head.appendChild(fontPreference);
+        await waitFor(() => expect(labelFontSize(root)).toBe(15), { timeout: 3000 });
+      } finally {
+        // Repõe o que ENCONTROU: as stories dividem o mesmo documento, e uma
+        // fonte raiz esquecida em 20px envenena a próxima.
+        fontPreference.remove();
+      }
+      await waitFor(
+        () => expect(labelFontSize(root)).toBe(Math.round(base() * 0.75)),
+        { timeout: 3000 },
+      );
     });
 
     await step('E o desenho está inteiro', async () => {
@@ -315,10 +412,12 @@ export const ThemeTokens: Story = {
 /**
  * WCAG 1.4.11: objeto gráfico precisa de 3:1 contra o que está em volta.
  *
- * Quem sustenta o critério é o CONTORNO das formas, não a cor de série: os
- * tokens `--chart-1` a `--chart-5` ficam em torno de 2:1 contra o fundo, e
- * sozinhos não passariam. O contorno em `--foreground` delimita cada objeto
- * qualquer que seja a paleta escolhida.
+ * Quem sustenta o critério é o CONTORNO das formas. Ele nasceu quando a paleta
+ * ficava em torno de 2:1 contra o fundo e sozinha não passaria; com
+ * `--chart-1` a `--chart-8` por modo, o pior caso medido é 7.32 no claro e 6.83
+ * no escuro. O contorno em `--foreground` fica porque delimita cada objeto
+ * contra o VIZINHO, que a medida contra o fundo não cobre — e qualquer que seja
+ * a paleta escolhida.
  */
 export const GraphicContrast: Story = {
   parameters: {

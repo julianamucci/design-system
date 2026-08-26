@@ -8,7 +8,7 @@ import {
   tokenColor, designEscreve, designPintado, exigirRoot, datumFormas,
   backgroundOpacoAtras, designTexts, tramasAplicadas,
 } from '@shared/testing/chart-probe';
-import { waitForDesign } from './chart.fixtures';
+import { decalColors, waitForDesign } from './chart.fixtures';
 import {
   chartBarrasSource,
   chartDoisTypesSource,
@@ -148,17 +148,42 @@ export const MultiSeries: Story = {
         { timeout: 3000 },
       );
     });
+
+    await step('E a trama é traçada no fundo — não em preto translúcido', async () => {
+      // Trama que não se enxerga é WCAG 1.4.1 declarada e não entregue: a lista
+      // padrão da lib desenha em `rgba(0, 0, 0, 0.2)`, que contra a paleta se
+      // destaca do próprio preenchimento entre 1.14 e 1.54. Traçada no fundo,
+      // ela se destaca tanto quanto a série se destaca do fundo — 7.32 no pior
+      // caso claro, 6.83 no escuro.
+      //
+      // A medida sai de DENTRO do `<pattern>`, que é onde a cor da hachura
+      // existe: contar tramas, como o passo acima, não distingue uma hachura
+      // visível de uma invisível.
+      // Sem `waitFor` aqui, e o motivo custou dez minutos de relógio: a leitura
+      // normaliza cor com um elemento de sonda, e criar esse elemento MEXE no
+      // `<body>`. Dentro de um `waitFor`, mexer no DOM acorda o observador de
+      // mutação que ele usa para reagendar — a tentativa que falha provoca a
+      // próxima, e o laço nunca chega ao prazo: o navegador gira a 100% e a
+      // suíte não termina nem acusa. Aqui não é preciso esperar: o passo acima
+      // já esperou a trama CHEGAR à forma, e a cor dela nasce junto com o
+      // padrão.
+      const pageBackground = tokenColor('background', root);
+      const painted = decalColors(root);
+      await expect(painted.length).toBeGreaterThan(0);
+      for (const one of painted) await expect(one).toBe(pageBackground);
+    });
   },
 };
 
 /**
  * Tema escuro.
  *
- * A cor do texto do eixo é a sonda da recolorização, não a cor das barras: a
- * paleta de série (`--chart-1` a `--chart-5`) é a mesma nos dois modos de
- * propósito — está declarada só em `:root` e nos temas de marca, sem bloco
- * `.dark`. Medir a barra afirmaria que a cor muda, e ela não muda em tema
- * nenhum.
+ * A cor do texto do eixo é a sonda da recolorização, não a cor das barras. A
+ * paleta de série (`--chart-1` a `--chart-8`) passou a ter variante por modo, e
+ * a barra também muda — mas o texto continua sendo a sonda porque o alvo dele é
+ * um token EXATO (`--muted-foreground`), enquanto a cor de uma barra depende de
+ * que posição da paleta a lib deu àquela série: sonda que precisa adivinhar a
+ * posição mede a lib, não o tema.
  */
 export const ThemeTokens: Story = {
   parameters: {
@@ -225,10 +250,12 @@ export const ThemeTokens: Story = {
 /**
  * WCAG 1.4.11: objeto gráfico precisa de 3:1 contra o que está ao redor.
  *
- * Quem sustenta o critério é o CONTORNO das formas, não a cor de série: os
- * tokens `--chart-1` a `--chart-5` ficam em torno de 2:1 contra o fundo e mais
- * perto ainda entre vizinhos. O contorno em `--foreground` delimita cada objeto
- * qualquer que seja a paleta escolhida.
+ * Quem sustenta o critério é o CONTORNO das formas, e não a cor de série. Os
+ * oito tokens `--chart-*` ganharam variante por modo e hoje passam de 3:1 contra
+ * o fundo por conta própria — 7.32 no pior caso claro, 6.83 no escuro —, mas
+ * isso mede cada série contra o FUNDO, não contra a série vizinha, e nada disso
+ * vale para um tema derivado que escolha a própria paleta. O contorno em
+ * `--foreground` delimita cada objeto em qualquer dos dois casos.
  */
 export const GraphicContrast: Story = {
   parameters: {

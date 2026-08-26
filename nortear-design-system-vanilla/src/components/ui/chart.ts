@@ -29,18 +29,24 @@
 //    exposta, ao lado dele.
 //
 // 3. A INFORMAÇÃO NÃO VIVE NA COR. `aria.decal.show` sobrepõe uma trama a cada
-//    série, e a legenda traz o nome escrito. Em `line`/`area` isso não basta —
-//    a trama é de preenchimento, e traçado não tem preenchimento —, então cada
-//    série ganha símbolo de ponto próprio (círculo, quadrado, triângulo,
+//    série, e a legenda traz o nome escrito. A trama é DESENHADA AQUI, na cor
+//    do fundo — a lista padrão da lib nasce em preto translúcido e mal se
+//    separa do próprio preenchimento (medido entre 1.26 e 1.57 contra as oito
+//    cores de série, nos três temas): declarada, e não entregue. Na cor do
+//    fundo a mesma hachura mede de 6.83 a 11.02. Em `line`/`area` a trama não
+//    alcança — é de preenchimento, e traçado não tem preenchimento —, então
+//    cada série ganha símbolo de ponto próprio (círculo, quadrado, triângulo,
 //    losango, seta) e desenho de traço próprio. Retirando toda a cor, o gráfico
 //    continua legível (WCAG 1.4.1).
 //
 // 4. CONTRASTE (WCAG 1.4.11). Toda forma de dado — barra, fatia, símbolo — é
 //    contornada com `hsl(var(--foreground))`, que passa de 3:1 contra o fundo
 //    em qualquer tema. O contorno vem do tema (`bar`/`line`/`pie` em
-//    `@/lib/echarts-theme`) e é ele que delimita o objeto gráfico, não a cor de
-//    série: os tokens `--chart-1` a `--chart-5` ficam em torno de 2:1 contra o
-//    fundo e sozinhos não sustentam o critério.
+//    `@/lib/echarts-theme`) e é ele que delimita o objeto gráfico, e não a cor
+//    de série. Ele nasceu quando a paleta ficava em torno de 2:1 contra o
+//    fundo; com `--chart-1` a `--chart-8` por modo, o pior caso passou a 7.32
+//    no claro e 6.83 no escuro, e o contorno fica porque separa uma forma da
+//    VIZINHA — coisa que a medida contra o fundo não cobre.
 
 import * as echarts from 'echarts/core';
 import { BarChart, LineChart, PieChart } from 'echarts/charts';
@@ -54,7 +60,7 @@ import {
 } from 'echarts/components';
 import { SVGRenderer, CanvasRenderer } from 'echarts/renderers';
 
-import { THEME_NAME, registerNortearTheme, watchTheme } from '@/lib/echarts-theme';
+import { THEME_NAME, hsl, registerNortearTheme, rootFontSize, watchTheme } from '@/lib/echarts-theme';
 import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 
 // Bootstrap dos módulos — idempotente. Tree-shake friendly.
@@ -70,14 +76,50 @@ echarts.use([
 ]);
 
 /**
+ * Tramas do decal, uma por posição de série; a 6ª volta à 1ª.
+ *
+ * A lista padrão da lib não serve, e o número diz por quê: as tramas dela
+ * nascem em `rgba(0, 0, 0, 0.2)`, que sobre as oito cores de série mede entre
+ * 1.26 e 1.57 contra o PRÓPRIO preenchimento, nos três temas — no pior caso,
+ * imperceptível. A hachura é o que mantém a série distinguível quando a cor sai
+ * de cena (WCAG 1.4.1); com esse contraste ela estava declarada e não entregue.
+ * Traçada na cor do FUNDO, a mesma hachura mede de 6.83 a 11.02.
+ *
+ * São CINCO desenhos — diagonal ascendente, pontos, diagonal descendente,
+ * horizontais, grade — para OITO cores, e a 6ª posição recomeça a lista. Não é
+ * descuido: forma sem cor é um vocabulário de três listas que andam juntas
+ * (trama, símbolo de ponto, desenho de traço), e as outras duas também têm
+ * cinco entradas. Estender só esta faria a série 6 se distinguir da 1 no
+ * gráfico de barras e não no de linhas — a paleta cresceu para 8 por causa de
+ * contraste contra o fundo, não para autorizar 8 séries. Passar de cinco é uma
+ * decisão de desenho, e vale para as três listas ao mesmo tempo.
+ */
+function tramas(cor: string): Record<string, unknown>[] {
+  return [
+    { color: cor, dashArrayX: [1, 0], dashArrayY: [4, 3], rotation: Math.PI / 4 },
+    { color: cor, symbol: 'circle', dashArrayX: [[8, 8], [0, 8, 8, 0]], dashArrayY: [6, 0], symbolSize: 0.8 },
+    { color: cor, dashArrayX: [1, 0], dashArrayY: [4, 3], rotation: -Math.PI / 4 },
+    { color: cor, dashArrayX: [1, 0], dashArrayY: [4, 3], rotation: 0 },
+    { color: cor, dashArrayX: [[1, 0], [1, 6]], dashArrayY: [1, 0, 6, 0], rotation: Math.PI / 4 },
+  ];
+}
+
+/**
  * Bloco `aria` comum aos dois formatos de option.
  *
  * `label.enabled: false` desliga a descrição gerada pela lib de propósito: ela
  * nasce em inglês e mora num elemento interno que o `role="img"` do desenho
  * poda da árvore de acessibilidade. Quem carrega a alternativa textual é o
  * `aria-label` autoral, no idioma da página, mais a tabela de dados.
+ *
+ * É função, e não constante, porque a trama carrega uma cor RESOLVIDA: o valor
+ * de `--background` no momento em que o option é montado. Congelá-lo numa
+ * constante de módulo deixaria a hachura com a cor do tema que estava em vigor
+ * quando o arquivo carregou.
  */
-const ARIA = { enabled: true, label: { enabled: false }, decal: { show: true } } as const;
+function ariaBlock(): Record<string, unknown> {
+  return { enabled: true, label: { enabled: false }, decal: { show: true, decals: tramas(hsl('background')) } };
+}
 
 /** Frase padrão do estado vazio — a mesma nas cinco stacks. */
 export const CHART_EMPTY_LABEL = 'Sem dados para exibir';
@@ -264,7 +306,7 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
   if (type === 'pie') {
     const points = opts.data ?? [];
     return {
-      title: opts.title ? { text: opts.title, left: 'left', textStyle: { fontSize: 14 } } : undefined,
+      title: opts.title ? { text: opts.title, left: 'left' } : undefined,
       tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
       legend: showLegend || points.length > 0
         ? { bottom: 0, icon: 'roundRect', itemWidth: 12, itemHeight: 8 }
@@ -279,13 +321,13 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
       }],
       animation: !prefersReducedMotion(),
       animationDuration: Math.round(motionDuration('moderate') * 1000),
-      aria: ARIA,
+      aria: ariaBlock(),
     };
   }
 
   // bar / line / area — eixo cartesiano.
   return {
-    title: opts.title ? { text: opts.title, left: 'left', textStyle: { fontSize: 14 } } : undefined,
+    title: opts.title ? { text: opts.title, left: 'left' } : undefined,
     tooltip: { trigger: 'axis', axisPointer: { type: type === 'bar' ? 'shadow' : 'line' } },
     legend: showLegend ? {
       data: seriesData.map((s) => s.name),
@@ -328,7 +370,7 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
     animation: !prefersReducedMotion(),
     animationDuration: Math.round(motionDuration('moderate') * 1000),
     animationEasing: 'cubicOut',
-    aria: ARIA,
+    aria: ariaBlock(),
   };
 }
 
@@ -475,6 +517,7 @@ export function createChart(opts: ChartOptions = {}): HTMLElement {
     // terminar.
     let lastWidth = -1;
     let lastHeight = -1;
+    let lastFontSize = rootFontSize();
     const ro = new ResizeObserver((entries) => {
       const box = entries[0]?.contentRect;
       if (!box) return;
@@ -483,6 +526,16 @@ export function createChart(opts: ChartOptions = {}): HTMLElement {
       if (width === lastWidth && height === lastHeight) return;
       lastWidth = width;
       lastHeight = height;
+      // Aumentar a fonte do navegador muda a caixa, e é aqui que dá para
+      // perceber: os tamanhos de texto do desenho saem da fonte raiz (WCAG
+      // 1.4.4), e sem reler o tema o rótulo do eixo ficaria com o tamanho
+      // antigo enquanto o resto da página cresce.
+      const fontSize = rootFontSize();
+      if (fontSize !== lastFontSize) {
+        lastFontSize = fontSize;
+        registerNortearTheme();
+        chart.setTheme(THEME_NAME);
+      }
       chart.resize();
     });
     // Observa o DESENHO, não o bloco: com a tabela à vista o bloco muda de
@@ -512,6 +565,14 @@ export function createChart(opts: ChartOptions = {}): HTMLElement {
       // clara. Quem relê o registro é `setTheme`, e ele recolore no lugar, sem
       // remontar: é o "não pisca nem requer reload" que a documentação promete.
       chart.setTheme(THEME_NAME);
+      lastFontSize = rootFontSize();
+      // O option também carrega cor RESOLVIDA — a trama do decal sai de
+      // `--background` —, e `setTheme` relê só o registro do tema, nunca o
+      // option. Sem esta remontagem a hachura ficaria com a cor do tema
+      // anterior: no escuro, uma trama clara desenhada com o branco da página.
+      // `notMerge` porque o option é reconstruído inteiro a partir das mesmas
+      // opções, e mesclar deixaria resto do anterior.
+      chart.setOption(buildChartOption(opts), { notMerge: true });
     });
 
     (el as HTMLElement & { __chartCleanup?: () => void }).__chartCleanup = () => {

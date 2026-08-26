@@ -13,7 +13,9 @@ import {
 } from 'echarts/components';
 import { SVGRenderer, CanvasRenderer } from 'echarts/renderers';
 import { cn } from '@/lib/utils';
-import { CHART_EMPTY_LABEL, CHART_TABLE_LABELS, chartTable, isChartOptionEmpty } from './chart-state';
+import {
+  CHART_EMPTY_LABEL, CHART_TABLE_LABELS, chartDecals, chartTable, isChartOptionEmpty,
+} from './chart-state';
 import type { HTMLAttributes } from 'vue';
 
 // `AriaComponent` não é enfeite: sem ele o bloco `aria` do option é ignorado em
@@ -78,35 +80,90 @@ function cssToken(name: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
+/**
+ * Tamanho de fonte raiz, em pixels.
+ *
+ * A lib exige NÚMERO em pixel para todo texto do desenho — não aceita `rem`,
+ * nem `calc()`, nem custom property. Cravar 12 e 14 era o caminho curto, e o
+ * preço era o texto do gráfico não crescer quando a pessoa aumenta a fonte do
+ * navegador (WCAG 1.4.4, texto a 200%), no MESMO componente cujo
+ * `.nds-chart-empty` cresce porque usa `var(--text-control)`. Então o número
+ * não é escolhido, é medido.
+ *
+ * Não dá para ler `--text-control` e usar direto: o token é um `calc()`, e
+ * `getComputedStyle` de custom property devolve a expressão, não o resultado. O
+ * que é mensurável — e o que de fato muda quando a fonte do navegador cresce ou
+ * a barra de ferramentas troca a família — é o `font-size` resolvido do
+ * `<html>`.
+ */
+function rootFontSize(): number {
+  if (typeof document === 'undefined') return 16;
+  const measured = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+  return Number.isFinite(measured) && measured > 0 ? measured : 16;
+}
+
+/** Degrau tipográfico do desenho, em pixels, relativo à fonte raiz. */
+function scaled(step: number): number {
+  return Math.round(rootFontSize() * step);
+}
+
 function buildTheme() {
   const fontFamily = cssToken('--font-family-active') || cssToken('--font-family') || 'sans-serif';
   const fg = hsl('foreground');
   const muted = hsl('muted-foreground');
   const card = hsl('card');
   const border = hsl('border');
+
+  // 0.75 = 12px na base 16, o degrau `--text-control-sm`, que a lib usa como
+  // padrão em rótulo de eixo, legenda e dica; 0.875 = 14px, o `--text-control`,
+  // que é o tamanho do título. Na base 16 o desenho não muda de aparência —
+  // muda o fato de que agora ele ACOMPANHA a fonte raiz.
+  const bodySize = scaled(0.75);
+  const titleSize = scaled(0.875);
+
   const axisStyle = {
     axisLine: { show: true, lineStyle: { color: hsl('border', 0.6) } },
     axisTick: { show: true, lineStyle: { color: hsl('border', 0.6) } },
-    axisLabel: { show: true, color: muted },
+    axisLabel: { show: true, color: muted, fontSize: bodySize },
     splitLine: { show: true, lineStyle: { color: hsl('border', 0.3) } },
     splitArea: { show: false, areaStyle: { color: ['transparent'] } },
   };
   return {
-    color: [hsl('chart-1'), hsl('chart-2'), hsl('chart-3'), hsl('chart-4'), hsl('chart-5')],
+    // Oito séries, na ordem numérica dos tokens. A ordem é o desenho: cada cor
+    // é a que MAIS se afasta das anteriores em matiz — 38° de separação mínima
+    // dentro das cinco primeiras, 20° dentro das oito. Reordenar aqui aproxima
+    // séries vizinhas e desfaz a escolha feita no tema.
+    color: [
+      hsl('chart-1'), hsl('chart-2'), hsl('chart-3'), hsl('chart-4'),
+      hsl('chart-5'), hsl('chart-6'), hsl('chart-7'), hsl('chart-8'),
+    ],
     backgroundColor: 'transparent',
-    textStyle: { color: fg, fontFamily },
-    title: { textStyle: { color: fg, fontFamily, fontWeight: 600 } },
-    legend: { textStyle: { color: muted } },
-    tooltip: { backgroundColor: card, borderColor: border, textStyle: { color: fg } },
+    textStyle: { color: fg, fontFamily, fontSize: bodySize },
+    title: { textStyle: { color: fg, fontFamily, fontWeight: 600, fontSize: titleSize } },
+    legend: { textStyle: { color: muted, fontSize: bodySize } },
+    tooltip: {
+      backgroundColor: card,
+      borderColor: border,
+      textStyle: { color: fg, fontSize: bodySize },
+    },
     axisPointer: { lineStyle: { color: hsl('primary', 0.5) } },
     categoryAxis: axisStyle,
     valueAxis: axisStyle,
     logAxis: axisStyle,
     timeAxis: axisStyle,
-    // WCAG 1.4.11 pede 3:1 do objeto gráfico contra o que está em volta, e as
-    // cores de série (--chart-1 a --chart-5) ficam em torno de 2:1 contra o fundo:
-    // sozinhas não sustentam o critério. Quem sustenta é o CONTORNO em
-    // --foreground, o mesmo caminho que o Angular desenha à mão. O nome anterior
+    // A trama do decal entra pelo TEMA, e não pelo option, porque a cor dela é
+    // valor de tema: traçada no fundo da página, ela é recolorida por
+    // `setTheme` junto com a paleta. No option ficaria congelada na cor do tema
+    // em que o desenho nasceu. O porquê de não usar a lista padrão da lib está
+    // em `chartDecals` — em resumo, a trama dela é preto a 20% e se destaca do
+    // preenchimento entre 1.14 e 1.54.
+    aria: { decal: { decals: chartDecals(hsl('background')) } },
+    // WCAG 1.4.11 pede 3:1 do objeto gráfico contra o que está em volta. A
+    // paleta de série passa disso por conta própria desde que ganhou variante
+    // por modo — pior caso medido, 7.32 no claro e 6.83 no escuro —, mas o
+    // CONTORNO em --foreground continua: é ele que delimita o objeto seja qual
+    // for a paleta que um tema derivado escolher, e é ele que separa duas
+    // formas VIZINHAS, que o contraste contra o fundo não mede. O nome anterior
     // (barBorderColor/barBorderWidth) é da v4 do ECharts e não tinha efeito
     // nenhum na v5 — o contorno documentado nunca chegou a ser desenhado.
     line: { itemStyle: { borderColor: fg, borderWidth: 2 }, lineStyle: { width: 2 } },
@@ -131,7 +188,7 @@ const mountTheme = buildTheme();
 //
 // A instância guarda o tema resolvido desde a criação, e nem uma nova opção nem
 // uma re-renderização o relêem. O caminho anterior era remontar o gráfico
-// inteiro por uma chave de React/Vue, o que recolore mas PISCA — e a
+// inteiro trocando a chave de renderização, o que recolore mas PISCA — e a
 // documentação promete o contrário. Repintar a instância no lugar não recria nó
 // nenhum.
 /**
@@ -159,13 +216,42 @@ function instanciaDoGrafico(): echarts.ECharts | undefined {
 }
 
 let observer: MutationObserver | null = null;
+let fontObserver: ResizeObserver | null = null;
 onMounted(() => {
+  let lastFontSize = rootFontSize();
+
   observer = new MutationObserver(() => {
     instanciaDoGrafico()?.setTheme(buildTheme() as Record<string, unknown>);
+    // A barra de ferramentas troca a fonte por classe, e a classe já passou por
+    // aqui: anotar a medida evita que o observador de tamanho, logo abaixo,
+    // repita o mesmo trabalho no quadro seguinte.
+    lastFontSize = rootFontSize();
   });
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+  // Aumentar a fonte do navegador NÃO escreve classe no `<html>`, então o
+  // observador acima não a vê. O que ela muda é a CAIXA do documento, e é isso
+  // que este observa. Sem ele, os tamanhos medidos em `buildTheme` ficariam
+  // congelados no valor do primeiro desenho: o rótulo do eixo continuaria no
+  // corpo antigo depois do zoom de texto, que é exatamente a falha que a WCAG
+  // 1.4.4 cobra.
+  //
+  // Divergência de API de framework, registrada: o redimensionamento do desenho
+  // é do wrapper (`autoresize`), então aqui o observador serve só à MEDIDA da
+  // fonte — a outra stack, que inicia a lib na mão, mede a fonte no mesmo
+  // observador que já chama `resize()`. O contrato é o mesmo nas duas.
+  fontObserver = new ResizeObserver(() => {
+    const fontSize = rootFontSize();
+    if (fontSize === lastFontSize) return;
+    lastFontSize = fontSize;
+    instanciaDoGrafico()?.setTheme(buildTheme() as Record<string, unknown>);
+  });
+  fontObserver.observe(document.documentElement);
 });
-onBeforeUnmount(() => observer?.disconnect());
+onBeforeUnmount(() => {
+  observer?.disconnect();
+  fontObserver?.disconnect();
+});
 
 /**
  * Os números do desenho em forma de tabela.
@@ -207,8 +293,8 @@ const accessibleLabel = computed(() => {
   return doOption ?? 'Gráfico';
 });
 
-// Sem série com dado não existe desenho a anunciar: entra a frase, como no
-// Vanilla (referência) e no Angular.
+// Sem série com dado não existe desenho a anunciar: entra a frase. É contrato
+// do componente, não detalhe desta implementação.
 const vazio = computed(() => isChartOptionEmpty(props.option));
 const emptyText = computed(() => props.emptyLabel ?? CHART_EMPTY_LABEL);
 /**

@@ -19,6 +19,11 @@ export interface ChartSeries { name: string; data: number[]; color?: string }
 // fatia. A linha não tem área: uma série vira um traço de um pixel e meio, e a
 // trama não chega nela. O que resta ali é a forma do ponto e o desenho do
 // traço, e sem os dois duas séries só se distinguem pela cor.
+//
+// Símbolo, traço e trama vão até CINCO; a paleta de cor vai até oito. Da sexta
+// série em diante os três recomeçam, e o que volta a separar a sexta da
+// primeira é a cor — o motivo de o teto ser cinco está em `chartDecals`, no
+// arquivo de estado.
 
 /** Símbolo de ponto, na ordem das séries; o 6º volta ao 1º. */
 const CHART_SYMBOLS: readonly string[] = ['circle', 'rect', 'triangle', 'diamond', 'arrow'];
@@ -42,7 +47,16 @@ function buildAxisOption(type: 'bar' | 'line' | 'area', o: OptionsBase): ECharts
     o.series ?? (o.data ? [{ name: CHART_TABLE_LABELS.value, data: o.data.map((d) => d.value) }] : []);
   const showLegend = o.showLegend ?? seriesData.length > 1;
   return {
-    title: o.title ? { text: o.title, left: 'left', textStyle: { fontSize: 14 } } : undefined,
+    // Sem `textStyle` aqui de propósito.
+    //
+    // O tamanho do título era `14` cravado, e cravado no option ele congela:
+    // aumentar a fonte do navegador crescia a frase de estado vazio do mesmo
+    // componente — que usa `var(--text-control)` — e deixava o título do
+    // desenho para trás (WCAG 1.4.4). A lib só aceita número em pixel, então o
+    // número passou a ser MEDIDO a partir da fonte raiz, e mora no tema do
+    // container junto com o do rótulo de eixo e o da legenda: lá `setTheme` o
+    // recalcula quando a raiz muda, sem que ninguém remonte o option.
+    title: o.title ? { text: o.title, left: 'left' } : undefined,
     tooltip: { trigger: 'axis', axisPointer: { type: type === 'bar' ? 'shadow' : 'line' } },
     legend: showLegend
       ? { data: seriesData.map((s) => s.name), bottom: 0, icon: 'roundRect', itemWidth: 12, itemHeight: 4 }
@@ -91,7 +105,9 @@ export const buildAreaOption = (o: OptionsBase): EChartsCoreOption => buildAxisO
 
 export function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption {
   return {
-    title: o.title ? { text: o.title, left: 'left', textStyle: { fontSize: 14 } } : undefined,
+    // Sem `textStyle`: o tamanho do título é medido a partir da fonte raiz e
+    // vive no tema do container — ver `buildAxisOption` acima.
+    title: o.title ? { text: o.title, left: 'left' } : undefined,
     tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
     legend: { bottom: 0, icon: 'roundRect', itemWidth: 12, itemHeight: 8 },
     series: [{

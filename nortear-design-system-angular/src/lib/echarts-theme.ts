@@ -1,19 +1,17 @@
 // ─── ECharts theme builder ────────────────────────────────────────────────────
 // Bridge entre tokens CSS do Nortear e o sistema de tema do ECharts.
 //
-// Espelha `nortear-design-system-vanilla/src/lib/echarts-theme.ts` — a stack de
-// referência. Responsabilidades:
+// Responsabilidades:
 //   1. buildNortearTheme()      → JSON do tema lido dos tokens resolvidos no <html>.
 //   2. registerNortearTheme()   → registra o tema no echarts core.
 //   3. watchTheme(callback)     → MutationObserver no <html> dispara callback
 //      quando classe muda (tema/dark/densidade/fonte) — consumer re-aplica.
 //
-// UMA divergência deliberada em relação ao Vanilla, e ela é de acessibilidade:
-// os tamanhos de texto NÃO são números cravados (o Vanilla escreve `fontSize: 14`
-// no title). Aqui eles nascem do tamanho de fonte RAIZ resolvido, porque o
-// componente que este tema serve prometia, desde o desenho em SVG à mão, que
-// "aumentar a fonte do navegador aumenta o rótulo do eixo junto" (WCAG 1.4.4).
-// O ECharts exige número em pixel — então o número é medido, não escolhido.
+// Os tamanhos de texto NÃO são números cravados: nascem do tamanho de fonte
+// RAIZ resolvido, porque o componente que este tema serve prometia, desde o
+// desenho em SVG à mão, que "aumentar a fonte do navegador aumenta o rótulo do
+// eixo junto" (WCAG 1.4.4). O ECharts exige número em pixel — então o número é
+// medido, não escolhido.
 
 import * as echarts from 'echarts/core';
 
@@ -94,7 +92,7 @@ export function buildNortearTheme(): NortearChartTheme {
   const card = hsl('card');
 
   // 0.75 = 12px na base 16, o degrau `--text-control-sm`; 0.875 = 14px, o
-  // `--text-control`, que é o tamanho do título nas outras stacks.
+  // `--text-control`, que é o tamanho do título.
   const bodySize = scaled(0.75);
   const titleSize = scaled(0.875);
 
@@ -107,7 +105,14 @@ export function buildNortearTheme(): NortearChartTheme {
   };
 
   return {
-    color: [hsl('chart-1'), hsl('chart-2'), hsl('chart-3'), hsl('chart-4'), hsl('chart-5')],
+    // Oito séries, e a ORDEM não é decorativa: cada posição é a cor que mais se
+    // afasta em matiz das anteriores — a menor separação é de 38° dentro das
+    // cinco primeiras e de 20° dentro das oito. Reordenar aproxima matizes
+    // vizinhas e devolve ao desenho o problema que a ordem resolve.
+    color: [
+      hsl('chart-1'), hsl('chart-2'), hsl('chart-3'), hsl('chart-4'),
+      hsl('chart-5'), hsl('chart-6'), hsl('chart-7'), hsl('chart-8'),
+    ],
     backgroundColor: 'transparent',
     textStyle: { color: fg, fontFamily, fontSize: bodySize },
     title: { textStyle: { color: fg, fontFamily, fontWeight: 600, fontSize: titleSize } },
@@ -122,13 +127,17 @@ export function buildNortearTheme(): NortearChartTheme {
     valueAxis: axisStyle,
     logAxis: axisStyle,
     timeAxis: axisStyle,
-    // WCAG 1.4.11 pede 3:1 do objeto gráfico contra o que está em volta, e as
-    // cores de série (--chart-1 a --chart-5) ficam entre 2.07 e 13.23 no claro e
-    // entre 1.00 e 6.41 no escuro — o --chart-5 do tema escuro É o fundo, com
-    // contraste 1.00: sozinhas não sustentam o critério, e uma delas some.
-    // Quem sustenta é o CONTORNO em --foreground, que passa de 3:1 em qualquer
-    // tema. É o mesmo contorno que o desenho em SVG à mão traçava, e o motivo de
-    // ele existir não mudou com a troca de motor.
+    // WCAG 1.4.11 pede 3:1 do objeto gráfico contra o que está em volta, e quem
+    // sustenta isso é o CONTORNO em --foreground, que passa de 3:1 em qualquer
+    // tema. Ele nasceu quando as cores de série iam de 2.07 a 13.23 no claro e
+    // de 1.00 a 6.41 no escuro — uma delas ERA o fundo, com contraste 1.00, e
+    // sumia. Com a paleta por modo o pior caso passou a 7.32 no claro e 6.83 no
+    // escuro, nos três temas, e a cor sozinha já sustentaria o critério; o
+    // contorno fica porque a medida contra o FUNDO não diz nada sobre a
+    // fronteira entre duas formas VIZINHAS — barras encostadas, fatias
+    // adjacentes —, e é essa fronteira que o traço delimita. É o mesmo contorno
+    // que o desenho em SVG à mão traçava, e o motivo de ele existir não mudou
+    // com a troca de motor.
     line: { itemStyle: { borderColor: fg, borderWidth: 2 }, lineStyle: { width: 2 } },
     bar: { itemStyle: { borderColor: fg, borderWidth: 1 } },
     pie: { itemStyle: { borderColor: fg, borderWidth: 1 } },

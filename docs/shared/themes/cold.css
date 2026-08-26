@@ -26,7 +26,9 @@
  *
  *     O warning também sai do azul e vira âmbar. Ele era 200°, ou seja, azul —
  *     e com a marca em cyan viraria a própria marca.
- *   - Charts: cinco séries espalhadas pela roda, ancoradas na marca.
+ *   - Charts: oito séries da paleta de sintaxe do code-block, com variante por
+ *     modo. Não saem mais da paleta deste tema — a razão está no bloco
+ *     `--chart-*`, e é de contraste, não de estilo.
  *   - Radius, dimensões e shadows herdam de tokens.css (Default).
  *
  * O que este arquivo dizia antes, e o que a medição mostrou: "feedback colors
@@ -47,12 +49,16 @@
  * primary como texto na página: 5.02 no claro, 9.83 no escuro. Preenchido
  * contra o próprio foreground: 4.91 e 9.64.
  *
- * A paleta de gráficos era o pior caso do repositório: QUATRO das cinco séries
- * abaixo de 3:1 contra a página clara, e o par mais próximo a 4°. Como o tema
- * declara `--chart-*` só no bloco claro, a mesma cor é desenhada sobre a página
- * quase branca e sobre o fundo quase preto — é essa janela estreita que manda
- * na escolha. As novas ficam em 3.15 no pior caso claro e 3.22 no escuro, com
- * 50° entre as mais próximas.
+ * A paleta de gráficos deste tema já foi o pior caso do repositório: QUATRO das
+ * cinco séries abaixo de 3:1 contra a página clara, e o par mais próximo a 4°.
+ * Foi corrigida uma vez dentro da própria família fria e depois SUBSTITUÍDA — a
+ * paleta de gráfico deixou de derivar da marca de cada tema e passou a ser a de
+ * sintaxe do code-block, que tem variante por modo.
+ *
+ * A causa raiz era essa: uma paleta só, declarada no claro, servindo a dois
+ * fundos opostos. Enquanto ela existisse, cada tema resolveria de novo o mesmo
+ * problema — e o Default nem tinha resolvido, com uma série a 1.00 contra o
+ * fundo escuro.
  *
  * O âmbar do claro é escuro (32%) pelo mesmo motivo do Warm: a página é quase
  * branca, ele precisa de 3:1, e amarelo escurecido dessatura para oliva — por
@@ -99,14 +105,36 @@
   --input-background: 210 30% 99%;
   --ring: 195 90% 38%;              /* acompanha o primary, mais claro */
 
-  /* Charts — espalhadas pela roda, ancoradas na marca. Antes eram cinco azuis
-     entre 180° e 240°: quatro ficavam ABAIXO de 3:1 contra a página clara e o
-     par mais próximo estava a 4°, distinguível só por luminosidade. */
-  --chart-1: 195 85% 42%;           /* #1099c6 — família da marca */
-  --chart-2: 280 55% 50%;           /* #9739c6 */
-  --chart-3: 150 65% 34%;           /* #1e8f57 */
-  --chart-4: 352 70% 50%;           /* #d9263e */
-  --chart-5: 38 95% 40%;            /* #c78005 */
+  /* Charts — oito séries, com variante por MODO (o bloco escuro fica no fim do
+     `.dark.tema-*`).
+
+     Vêm da paleta de sintaxe do code-block, e a escolha é estrutural: ela já
+     tinha valores por modo, enquanto a paleta de gráfico antiga era declarada só
+     no claro e a MESMA cor precisava servir à página quase branca e ao fundo
+     quase preto. Nessa janela, uma das séries do Default acabava com contraste
+     1.00 contra o fundo escuro — a cor do próprio fundo, invisível.
+
+     Medido nos três temas: pior contraste 7.32 no claro e 6.83 no escuro. A
+     ordem não é arbitrária — cada série é a que MAIS se afasta das anteriores em
+     matiz, então a menor separação dentro das cinco primeiras é 38°, e dentro
+     das oito, 20°, que é o limite da paleta. Reordenar aproxima séries vizinhas.
+
+     Os graus são de matiz em OKLCH, não em HSL. Dizer isso não é preciosismo:
+     recalcular a partir dos números HSL declarados acima dá outros valores, e
+     quem tentar conferir vai concluir que a conta está errada. HSL não é
+     perceptualmente uniforme — 20° de matiz ali significam distâncias muito
+     diferentes dependendo de onde se está na roda.
+
+     Ficam no TEMA, e não em tokens.css: um tema derivado pode querer paleta
+     própria de gráfico, e o contrato de tema é o lugar dessa liberdade. */
+  --chart-1: 350 72% 36%;
+  --chart-2: 190 88% 23%;
+  --chart-3: 265 64% 41%;
+  --chart-4: 145 62% 23%;
+  --chart-5: 215 72% 34%;
+  --chart-6: 25 88% 28%;
+  --chart-7: 288 52% 36%;
+  --chart-8: 200 85% 26%;
 
   /* Sidebar — tint frio */
   --sidebar: 210 30% 98%;
@@ -159,4 +187,17 @@
   --sidebar-accent-foreground: 205 55% 90%;
   --sidebar-border: 215 15% 16%;
   --sidebar-ring: 195 100% 56%;
+
+  /* Charts — agora COM variante escura. Antes eram declarados só no bloco
+     claro, e a mesma cor tinha de servir à página quase branca e ao fundo
+     quase preto: no Default isso deixava uma série com contraste 1.00, a cor
+     do próprio fundo. */
+  --chart-1: 350 82% 80%;
+  --chart-2: 190 72% 68%;
+  --chart-3: 265 82% 82%;
+  --chart-4: 145 52% 70%;
+  --chart-5: 215 88% 78%;
+  --chart-6: 25 88% 72%;
+  --chart-7: 288 68% 82%;
+  --chart-8: 200 80% 72%;
 }

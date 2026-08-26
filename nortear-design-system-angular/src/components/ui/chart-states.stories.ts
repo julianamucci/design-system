@@ -210,11 +210,11 @@ export const DarkTheme: Story = {
     });
 
     await step('Trocar o tema recolore sem remontar', async () => {
-      // A sonda da recolorização é o TEXTO do eixo, não a barra: a paleta de
-      // série (--chart-1 a --chart-5) é a mesma nos dois modos de propósito —
-      // está declarada só em :root e nos três temas de marca, sem bloco .dark, e
-      // o comentário em themes/default.css diz isso com todas as letras. Medir a
-      // barra afirmaria que a cor muda, e ela não muda em tema nenhum.
+      // A sonda da recolorização é o TEXTO do eixo, não a barra. Serve às duas
+      // eras da paleta: hoje --chart-1 a --chart-8 têm variante por modo, então
+      // a barra também mudaria — mas o texto do eixo é a sonda estável, porque
+      // não depende de qual série a lib pintou primeiro nem de a forma já ter
+      // sido desenhada.
       const idAntes = instanciaDe(desenho).id;
       const corDoEixo = () => getComputedStyle(desenho.querySelector('text')!).fill;
       try {
@@ -259,10 +259,11 @@ export const DarkTheme: Story = {
 /**
  * WCAG 1.4.11: objeto gráfico precisa de 3:1 contra o que está ao redor.
  *
- * Quem sustenta o critério aqui é o CONTORNO das formas, não a cor de série:
- * no tema Default as cinco cores ficam entre 2.07 e 13.23 no claro e entre 1.00
- * e 6.41 no escuro — o `--chart-5` do escuro É o fundo, com contraste 1.00.
- * O contorno em `--foreground` delimita cada objeto independentemente da paleta.
+ * Quem sustenta o critério aqui é o CONTORNO das formas. Ele nasceu quando a
+ * paleta ia de 2.07 a 13.23 no claro e de 1.00 a 6.41 no escuro — uma das cores
+ * ERA o fundo, com contraste 1.00. Com as oito cores por modo o pior caso passou
+ * a 7.32 no claro e 6.83 no escuro, e o contorno em `--foreground` continua
+ * delimitando cada objeto independentemente da paleta escolhida.
  */
 export const GraphicContrast: Story = {
   parameters: { covers: ['accessibility.item3'], controls: { disable: true } },

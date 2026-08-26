@@ -694,7 +694,7 @@ export interface ChartOptions {
           // do conteúdo não chegar literal à tela.
           //
           // A lista é a dos tokens que o tema do ECharts LÊ, e nada além disso:
-          // `src/lib/echarts-theme.ts` consome `--chart-1` a `--chart-5`,
+          // `src/lib/echarts-theme.ts` consome `--chart-1` a `--chart-8`,
           // `--primary` (axisPointer), `--muted-foreground` (axisLabel e
           // legenda), `--border` (axisLine, tick e splitLine), `--foreground`
           // (tooltip, título e contorno de série) e `--card` (fundo do
@@ -703,6 +703,13 @@ export interface ChartOptions {
           // nenhuma delas entra no tema, e `backgroundColor` é a string
           // 'transparent', não um token. Ponto de customização que ninguém lê
           // não é reserva, é promessa falsa.
+          //
+          // PENDENTE, e a lista está a menos: a paleta cresceu para `--chart-8`
+          // (com variante por modo) e a trama do decal passou a ler
+          // `--background` para se separar do preenchimento. As quatro linhas
+          // que faltam dependem de chaves novas no conteúdo compartilhado
+          // (`tokens.table.chart6`, `chart7`, `chart8`, `background`), que este
+          // arquivo não pode inventar sozinho.
           items: ([
             ['--chart-1', 'chart1'],
             ['--chart-2', 'chart2'],

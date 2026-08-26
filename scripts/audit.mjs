@@ -3718,7 +3718,13 @@ const TOKENS_DE_TEMA = [
   'destructive', 'destructive-foreground', 'success', 'success-foreground',
   'warning', 'warning-foreground', 'info', 'info-foreground',
   'border', 'input', 'input-background', 'ring',
-  'chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5',
+  // Oito, e não cinco: a paleta de gráfico passou a vir da paleta de sintaxe do
+  // code-block, que tem oito matizes e — o que resolveu o defeito — variante por
+  // MODO. Antes os cinco eram declarados só no bloco claro e a mesma cor servia
+  // à página quase branca e ao fundo quase preto; no Default isso deixava uma
+  // série com contraste 1.00, a cor do próprio fundo.
+  'chart-1', 'chart-2', 'chart-3', 'chart-4',
+  'chart-5', 'chart-6', 'chart-7', 'chart-8',
   'sidebar', 'sidebar-foreground', 'sidebar-primary', 'sidebar-primary-foreground',
   'sidebar-accent', 'sidebar-accent-foreground', 'sidebar-border', 'sidebar-ring',
 ].map((t) => `--${t}`);

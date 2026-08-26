@@ -13,7 +13,7 @@ import {
   designTexts,
   tramasAplicadas,
 } from '@shared/testing/chart-probe';
-import { designPronto } from './chart.fixtures';
+import { designPronto, drawingPalette, hatchColors } from './chart.fixtures';
 import {
   chartDoisDesenhosSource,
   chartMultiSerieSource,
@@ -172,6 +172,39 @@ export const MultiSeries: Story = {
       await expect(tramas.size).toBeGreaterThanOrEqual(seriesMulti.length);
     });
 
+    await step('E a trama sai na cor do fundo — hachura que não se vê não separa nada', async () => {
+      // O passo acima conta trama APLICADA; este mede se ela chega a existir
+      // para os olhos. A lista padrão da lib traça em preto a 20% sobre o
+      // próprio preenchimento, e contra a paleta de gráfico isso se destaca
+      // entre 1.14 e 1.54 — no pior caso a trama está declarada e não
+      // entregue, que é o modo mais silencioso de a WCAG 1.4.1 falhar.
+      //
+      // Traçada no fundo da página, a hachura herda a distância que a paleta já
+      // tem dele: 7.32 no pior caso no claro, 6.83 no escuro. Por isso a
+      // asserção é IGUALDADE com o token, e não um piso de contraste — o piso
+      // deixaria passar qualquer cinza que por acaso medisse bem num tema e
+      // sumisse no outro.
+      //
+      // Sem `waitFor`: o passo anterior já provou que a trama chegou às formas,
+      // e a cor sai do mesmo desenho. Repetir a medida sob espera só daria à
+      // falha quinze chances de custar caro antes de aparecer.
+      const pageBackground = tokenColor('background', root);
+      const painted = hatchColors(root);
+      // Sem esta linha a comparação abaixo seria vácuo: lista vazia é igual a
+      // lista vazia, e um desenho sem trama nenhuma passaria.
+      await expect(painted.length).toBeGreaterThan(0);
+      await expect(painted).toEqual([pageBackground]);
+    });
+
+    await step('A paleta entregue ao desenho são os OITO tokens, na ordem em que são declarados', async () => {
+      // A ordem não é enfeite: cada posição é a cor que mais se afasta em matiz
+      // das anteriores, então reordenar aproxima séries vizinhas. Comparar a
+      // lista inteira, e não um conjunto, é o que faz uma troca de posição
+      // reprovar.
+      const expected = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => tokenColor(`chart-${n}`, root));
+      await expect(drawingPalette(root)).toEqual(expected);
+    });
+
     await step('E uma cor própria por série, sobre uma forma por categoria', async () => {
       const formas = datumFormas(root);
       await expect(formas.length).toBeGreaterThanOrEqual(meses.length * seriesMulti.length);
@@ -238,9 +271,11 @@ export const ThemeTokens: Story = {
     });
 
     await step('A cor do desenho é o token do tema, não um valor cravado', async () => {
-      // A sonda é o TEXTO do eixo, e não a barra: a paleta de série é a mesma
-      // nos dois modos de propósito — está declarada uma vez por tema de marca,
-      // sem bloco escuro. Medir a barra afirmaria uma mudança que não existe.
+      // A sonda é o TEXTO do eixo, e não a barra: o texto sai de um token só
+      // (--muted-foreground), enquanto a barra depende de qual posição da
+      // paleta a lib deu àquela série — o que o passo de paleta do MultiSeries
+      // já mede, e por inteiro. Aqui o que se prova é que o desenho lê o tema
+      // do documento, e para isso um token basta.
       //
       // A story monta no escuro pelo `globals`, então o token em vigor é o
       // escuro: um desenho que ignorasse o tema reprovaria aqui.

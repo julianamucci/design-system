@@ -28,9 +28,10 @@
  *     preenchimento; 44% também passaria, mas a 3.08 contra --secondary, e
  *     esse é o neutro mais claro do escuro — margem que qualquer ajuste
  *     futuro naquele token derrubaria. O Pêssego #E8A47C, que o brand book
- *     define como acento quente sobre fundo escuro, entra na paleta de gráficos
- *     (--chart-4), não em --primary: trocar o matiz do interativo por modo
- *     custaria a estabilidade do link.
+ *     define como acento quente sobre fundo escuro, não entra em --primary:
+ *     trocar o matiz do interativo por modo custaria a estabilidade do link.
+ *     (Ele já esteve em `--chart-4`; a paleta de gráfico deixou de sair da
+ *     marca — ver o bloco `--chart-*`.)
  *   - Feedback: o brand book NÃO define cores de sistema. Sucesso é DERIVADO do
  *     par "faça" da marca (#3F8A6B), escurecido até 4.5:1. Erro DEIXOU de ser
  *     derivação do "não faça" (#C2533F) e é o único ponto em que este tema se
@@ -41,9 +42,13 @@
  *     informação do matiz do Teal (190°). Os quatro `-foreground` valem
  *     `var(--foreground)` — regra da casa: a cor semântica pinta fundo suave
  *     (`/ 0.1`) e o texto corrido por cima é o foreground do tema.
- *   - Gráficos: os cinco tokens são exatamente as cinco cores da marca
- *     (Teal, Terracota, Teal Profundo, Pêssego, Ink), sem derivação. Declarados
- *     só no bloco claro — gráfico não troca de paleta com o modo.
+ *   - Gráficos: DEIXARAM de ser as cinco cores da marca. Eram Teal, Terracota,
+ *     Teal Profundo, Pêssego e Ink, sem derivação e declaradas só no bloco
+ *     claro — e a medição mostrou que essa combinação não se sustenta: as cinco
+ *     reprovavam 3:1 em um dos dois modos, e o Ink, sendo o próprio fundo
+ *     escuro, ficava com contraste 1.00. Invisível.
+ *     Hoje são oito, da paleta de sintaxe do code-block, com variante por modo.
+ *     Ver o bloco `--chart-*` mais abaixo.
  *   - Forma: a marca TEM identidade de forma (cantos generosos, nada vivo), então
  *     --radius é 0.875rem (14px); a escala derivada leva o cartão a
  *     --radius-xl = 18px, que é o raio de cartão do brand book.
@@ -173,12 +178,36 @@
   --input-background: 24 100% 99.5%;
   --ring: 190 31% 40%;
 
-  /* Chart — sem variante dark (mesma paleta nos dois modos, como em warm/cold) */
-  --chart-1: 190 41% 38%;
-  --chart-2: 22 55% 62%;
-  --chart-3: 190 31% 34%;
-  --chart-4: 22 70% 70%;
-  --chart-5: 201 22% 18%;
+  /* Charts — oito séries, com variante por MODO (o bloco escuro fica no fim do
+     `.dark.tema-*`).
+
+     Vêm da paleta de sintaxe do code-block, e a escolha é estrutural: ela já
+     tinha valores por modo, enquanto a paleta de gráfico antiga era declarada só
+     no claro e a MESMA cor precisava servir à página quase branca e ao fundo
+     quase preto. Nessa janela, uma das séries do Default acabava com contraste
+     1.00 contra o fundo escuro — a cor do próprio fundo, invisível.
+
+     Medido nos três temas: pior contraste 7.32 no claro e 6.83 no escuro. A
+     ordem não é arbitrária — cada série é a que MAIS se afasta das anteriores em
+     matiz, então a menor separação dentro das cinco primeiras é 38°, e dentro
+     das oito, 20°, que é o limite da paleta. Reordenar aproxima séries vizinhas.
+
+     Os graus são de matiz em OKLCH, não em HSL. Dizer isso não é preciosismo:
+     recalcular a partir dos números HSL declarados acima dá outros valores, e
+     quem tentar conferir vai concluir que a conta está errada. HSL não é
+     perceptualmente uniforme — 20° de matiz ali significam distâncias muito
+     diferentes dependendo de onde se está na roda.
+
+     Ficam no TEMA, e não em tokens.css: um tema derivado pode querer paleta
+     própria de gráfico, e o contrato de tema é o lugar dessa liberdade. */
+  --chart-1: 350 72% 36%;
+  --chart-2: 190 88% 23%;
+  --chart-3: 265 64% 41%;
+  --chart-4: 145 62% 23%;
+  --chart-5: 215 72% 34%;
+  --chart-6: 25 88% 28%;
+  --chart-7: 288 52% 36%;
+  --chart-8: 200 85% 26%;
 
   --sidebar: 36 16% 96%;
   --sidebar-foreground: 201 22% 18%;
@@ -243,4 +272,17 @@
   --sidebar-accent-foreground: 24 100% 99%;
   --sidebar-border: 200 18% 24%;
   --sidebar-ring: 184 48% 46%;
+
+  /* Charts — agora COM variante escura. Antes eram declarados só no bloco
+     claro, e a mesma cor tinha de servir à página quase branca e ao fundo
+     quase preto: no Default isso deixava uma série com contraste 1.00, a cor
+     do próprio fundo. */
+  --chart-1: 350 82% 80%;
+  --chart-2: 190 72% 68%;
+  --chart-3: 265 82% 82%;
+  --chart-4: 145 52% 70%;
+  --chart-5: 215 88% 78%;
+  --chart-6: 25 88% 72%;
+  --chart-7: 288 68% 82%;
+  --chart-8: 200 80% 72%;
 }

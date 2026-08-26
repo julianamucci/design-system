@@ -76,9 +76,12 @@ import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 //    contornada com `hsl(var(--foreground))`, que passa de 3:1 contra o fundo
 //    em qualquer tema. O contorno vem do tema (`bar/line/pie.itemStyle.
 //    borderColor` em `@/lib/echarts-theme`) e é ele que delimita o objeto
-//    gráfico, não a cor de série: no tema Default as cinco cores ficam entre
-//    2.07 e 13.23 no claro e entre 1.00 e 6.41 no escuro — o `--chart-5` do
-//    escuro É o fundo, contraste 1.00. Sem contorno, essa série some.
+//    gráfico, e não a cor de série. O contorno nasceu quando a paleta ia de
+//    2.07 a 13.23 no claro e de 1.00 a 6.41 no escuro — uma das cores ERA o
+//    fundo, contraste 1.00, e sem contorno aquela série sumia. Com as oito
+//    cores por modo o pior caso passou a 7.32 no claro e 6.83 no escuro; o
+//    contorno fica porque separa uma forma da VIZINHA, coisa que a medida
+//    contra o fundo não cobre.
 //
 // A DICA SOB O PONTEIRO agora existe (a lib a desenha), e continua sem carregar
 // informação exclusiva: o mesmo par categoria/valor está na tabela, alcançável

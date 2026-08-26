@@ -12,8 +12,57 @@ import type { EChartsCoreOption } from 'echarts/core';
  * de propósito: ela nasce em inglês e mora num elemento interno que o
  * `role="img"` do container poda da árvore de acessibilidade; quem carrega a
  * alternativa textual é o `aria-label` autoral, no idioma da página.
+ *
+ * O que NÃO está aqui é o desenho da trama: ele sai de `chartDecals()` e entra
+ * pelo TEMA, montado pelo container. O motivo é a cor — a trama é traçada no
+ * fundo da página, e fundo é valor de tema. No option ela ficaria congelada na
+ * cor do tema em que o desenho nasceu; no tema, `setTheme` a recolore junto com
+ * a paleta, sem remontar nada.
  */
 export const ARIA = { enabled: true, label: { enabled: false }, decal: { show: true } } as const;
+
+/**
+ * Tramas do decal, uma por posição de série, traçadas em `color`.
+ *
+ * A lista PADRÃO da lib não serve, e o motivo é medido: as tramas dela nascem
+ * em `rgba(0, 0, 0, 0.2)` — preto a 20% por cima do próprio preenchimento —, e
+ * contra a paleta de gráfico do tema Default isso separa a hachura do
+ * preenchimento entre 1.14 e 1.54. No pior caso, imperceptível: a trama é o que
+ * faz o gráfico continuar legível SEM cor (WCAG 1.4.1), e declarada sem ser
+ * enxergada ela não cumpre nada.
+ *
+ * O traço sai do FUNDO da página, que é a única cor que separa a hachura do
+ * preenchimento em qualquer tema — a trama passa a se destacar do preenchimento
+ * exatamente tanto quanto a série se destaca do fundo: 7.32 no pior caso claro
+ * e 6.83 no escuro, nos três temas.
+ *
+ * CINCO desenhos para OITO séries. Da sexta em diante a lista recomeça, porque
+ * a lib cicla a paleta de trama como cicla a de cor: a sexta série repete o
+ * desenho da primeira, e o que volta a separá-las é a cor. É o mesmo teto que
+ * os cinco símbolos de ponto e os cinco desenhos de traço já tinham. Não se
+ * inventou um sexto desenho aqui de propósito — desenho de trama se MEDE (a
+ * densidade e a orientação precisam continuar distinguíveis lado a lado, em
+ * mais de um tamanho de fonte), e além da quinta série a leitura sem cor se
+ * apoia na legenda escrita e na tabela de dados, que nomeiam cada série.
+ *
+ * Mora aqui, e não junto dos símbolos e traços do barrel, porque quem a chama é
+ * o CONTAINER: o barrel exporta o próprio componente, e importar de lá fecharia
+ * um ciclo.
+ */
+export function chartDecals(color: string): Record<string, unknown>[] {
+  return [
+    // diagonal ascendente
+    { color, dashArrayX: [1, 0], dashArrayY: [4, 3], rotation: Math.PI / 4 },
+    // pontos
+    { color, symbol: 'circle', dashArrayX: [[8, 8], [0, 8, 8, 0]], dashArrayY: [6, 0], symbolSize: 0.8 },
+    // diagonal descendente
+    { color, dashArrayX: [1, 0], dashArrayY: [4, 3], rotation: -Math.PI / 4 },
+    // horizontais
+    { color, dashArrayX: [1, 0], dashArrayY: [4, 3], rotation: 0 },
+    // grade
+    { color, dashArrayX: [[1, 0], [1, 6]], dashArrayY: [1, 0, 6, 0], rotation: Math.PI / 4 },
+  ];
+}
 
 /** Frase padrão do estado vazio — a mesma nas cinco stacks. */
 export const CHART_EMPTY_LABEL = 'Sem dados para exibir';

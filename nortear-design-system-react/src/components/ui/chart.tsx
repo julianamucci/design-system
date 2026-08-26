@@ -23,10 +23,11 @@
 //    bloco a tabela ficaria escondida junto — a alternativa textual sumiria.
 //
 // 3. A INFORMAÇÃO NÃO VIVE NA COR. `aria.decal.show` sobrepõe uma trama a cada
-//    série e a legenda traz o nome escrito. Em linha e área, onde não há área a
-//    hachurar, cada série tem símbolo de ponto próprio (círculo, quadrado,
-//    triângulo, losango, seta) e desenho de traço próprio. Retirando toda a
-//    cor, o gráfico continua legível (WCAG 1.4.1).
+//    série e a legenda traz o nome escrito. A trama é traçada na cor do FUNDO,
+//    e não na da lib — ver `hatchPatterns`, onde está o número que explica por
+//    quê. Em linha e área, sem área a hachurar, cada série tem símbolo de ponto
+//    próprio (círculo, quadrado, triângulo, losango, seta) e desenho de traço
+//    próprio. Retirando toda a cor, o gráfico continua legível (WCAG 1.4.1).
 //
 // 4. NENHUM TAMANHO DE TEXTO CRAVADO. A lib exige número em pixel, então o
 //    número é MEDIDO a partir da fonte raiz e re-medido quando ela muda — o
@@ -70,8 +71,65 @@ echarts.use([
  * elemento que o `role="img"` do desenho poda da árvore de acessibilidade —
  * quem carrega a alternativa textual é o `aria-label` autoral, no idioma da
  * página, mais a tabela de dados que o container emite sempre.
+ *
+ * A COR da trama não entra aqui: ela sai do tema em vigor e é o container quem
+ * a pinta, em `withHatchPatterns`. Um construtor puro não pode carregar cor resolvida,
+ * porque a cor muda depois — na troca de marca e na troca de claro/escuro.
  */
 const ARIA = { enabled: true, label: { enabled: false }, decal: { show: true } } as const;
+
+/**
+ * Tramas do decal, uma por posição de série, traçadas na cor recebida.
+ *
+ * POR QUE RECOLORIR, e o número que impede de "simplificar" isto de volta para
+ * a lista da lib: as tramas padrão do ECharts nascem em `rgba(0, 0, 0, 0.2)` —
+ * preto a 20% sobre o próprio preenchimento. Medido contra a paleta de gráfico
+ * do tema Default, esse desenho se destaca do preenchimento que hachura entre
+ * apenas 1.14 e 1.54; no pior caso ninguém o enxerga. A trama é justamente o
+ * que mantém o gráfico legível QUANDO A COR SAI DE CENA (WCAG 1.4.1), então uma
+ * trama invisível é o critério declarado e não entregue.
+ *
+ * Traçadas na cor do FUNDO da página, elas herdam a distância que a paleta já
+ * tem dele: 7.32 no pior caso no claro e 6.83 no escuro, nos três temas de
+ * marca. É por isso que a cor é parâmetro e não constante — o fundo do modo
+ * escuro é outro, e uma trama cravada serviria a um modo só.
+ *
+ * São CINCO desenhos — diagonal ascendente, pontos, diagonal descendente,
+ * horizontais, grade — para OITO séries. Da 6ª em diante a lib repete a lista
+ * do começo (`paletteIdx = (paletteIdx + 1) % decals.length`), então a 6ª volta
+ * à 1ª, a 7ª à 2ª e a 8ª à 3ª. É o mesmo giro de `SYMBOLS` e `DASHES`, e é
+ * deliberado: três desenhos novos só entram com uma medida de quanto se
+ * distinguem dos cinco atuais, e essa medida ainda não existe. Enquanto não
+ * existir, o que separa a 1ª da 6ª é a cor mais a posição na legenda escrita.
+ */
+function hatchPatterns(color: string): Record<string, unknown>[] {
+  return [
+    { color, dashArrayX: [1, 0], dashArrayY: [4, 3], rotation: Math.PI / 4 },
+    { color, symbol: 'circle', dashArrayX: [[8, 8], [0, 8, 8, 0]], dashArrayY: [6, 0], symbolSize: 0.8 },
+    { color, dashArrayX: [1, 0], dashArrayY: [4, 3], rotation: -Math.PI / 4 },
+    { color, dashArrayX: [1, 0], dashArrayY: [4, 3], rotation: 0 },
+    { color, dashArrayX: [[1, 0], [1, 6]], dashArrayY: [1, 0, 6, 0], rotation: Math.PI / 4 },
+  ];
+}
+
+/**
+ * O mesmo option, com a trama do decal já pintada na cor do fundo em vigor.
+ *
+ * Mora no container, e não no construtor, porque o construtor roda uma vez e a
+ * cor muda depois: `setTheme` relê o REGISTRO do tema, nunca o option, então
+ * uma trama resolvida na construção ficaria com o fundo do tema anterior — no
+ * escuro, uma hachura quase branca sobre um desenho que já era escuro.
+ *
+ * Vale também para quem monta o `option` à mão: basta `aria.decal.show`.
+ */
+function withHatchPatterns(option: echarts.EChartsCoreOption): echarts.EChartsCoreOption {
+  const aria = (option as { aria?: { decal?: { show?: boolean } } }).aria;
+  if (!aria?.decal?.show) return option;
+  return {
+    ...option,
+    aria: { ...aria, decal: { ...aria.decal, decals: hatchPatterns(hsl('background')) } },
+  };
+}
 
 /** Frase padrão do estado vazio — a mesma nas cinco stacks. */
 export const CHART_EMPTY_LABEL = 'Sem dados para exibir';
@@ -149,7 +207,14 @@ function buildNortearTheme() {
     splitArea: { show: false, areaStyle: { color: ['transparent'] } },
   };
   return {
-    color: [hsl('chart-1'), hsl('chart-2'), hsl('chart-3'), hsl('chart-4'), hsl('chart-5')],
+    // Oito séries, e a ORDEM não é arbitrária: cada posição é a cor que mais se
+    // afasta em matiz de todas as anteriores. Reordenar não troca "só a cor" —
+    // aproxima séries vizinhas e derruba a distância que separa uma da outra.
+    // Por isso a lista segue a numeração dos tokens, sem exceção.
+    color: [
+      hsl('chart-1'), hsl('chart-2'), hsl('chart-3'), hsl('chart-4'),
+      hsl('chart-5'), hsl('chart-6'), hsl('chart-7'), hsl('chart-8'),
+    ],
     backgroundColor: 'transparent',
     textStyle: { color: fg, fontFamily, fontSize: bodySize },
     title: { textStyle: { color: fg, fontFamily, fontWeight: 600, fontSize: titleSize } },
@@ -164,10 +229,13 @@ function buildNortearTheme() {
     valueAxis: axisStyle,
     logAxis: axisStyle,
     timeAxis: axisStyle,
-    // WCAG 1.4.11 pede 3:1 do objeto gráfico contra o que está em volta, e as
-    // cores de série (--chart-1 a --chart-5) ficam em torno de 2:1 contra o fundo:
-    // sozinhas não sustentam o critério. Quem sustenta é o CONTORNO em
-    // --foreground, o mesmo caminho que o Angular desenha à mão. O nome anterior
+    // WCAG 1.4.11 pede 3:1 do objeto gráfico contra o que está em volta. A
+    // paleta antiga tinha de servir à página quase branca E ao fundo quase preto
+    // com a mesma cor, e ficava em torno de 2:1 contra o fundo — sozinha não
+    // sustentava o critério. Com variante por modo (7.32 no pior caso no claro,
+    // 6.83 no escuro), a cor de série já passa. O CONTORNO em --foreground fica
+    // assim mesmo, e por outro motivo: é ele que separa duas formas ADJACENTES
+    // uma da outra, o que nenhuma medida contra o fundo cobre. O nome anterior
     // (barBorderColor/barBorderWidth) é da v4 do ECharts e não tinha efeito
     // nenhum na v5 — o contorno documentado nunca chegou a ser desenhado.
     line: { itemStyle: { borderColor: fg, borderWidth: 2 }, lineStyle: { width: 2 } },
@@ -469,6 +537,14 @@ export function ChartContainer({
   const chartRef = React.useRef<ReactECharts>(null);
   const canvasRef = React.useRef<HTMLDivElement>(null);
 
+  // Contador de troca de tema.
+  //
+  // O option carrega UMA cor resolvida — a da trama do decal, que sai de
+  // `--background` — e `setTheme` relê só o registro do tema, nunca o option.
+  // Sem este contador a trama ficaria com o fundo do tema anterior depois da
+  // troca, que é o mesmo defeito de sempre num lugar novo.
+  const [themeVersion, setThemeVersion] = React.useState(0);
+
   // Sem série com dado não existe desenho a anunciar: entra a frase, como no
   // Vanilla (referência). O `min-height` de `.nds-chart` segura o bloco, e é
   // por isso que a página não salta quando o dado chega.
@@ -488,6 +564,8 @@ export function ChartContainer({
     const repaint = () => {
       applyTheme();
       chartRef.current?.getEchartsInstance()?.setTheme(THEME_NAME);
+      // Repõe a trama na cor do fundo NOVO: `setTheme` não a alcança.
+      setThemeVersion((v) => v + 1);
     };
     const observer = new MutationObserver(repaint);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
@@ -529,6 +607,15 @@ export function ChartContainer({
     [option, categoryLabel, valueLabel, shareLabel],
   );
 
+  // A trama entra AQUI, e não no construtor: é o container que sabe qual tema
+  // está no documento agora. `themeVersion` é dependência de propósito — ela é o
+  // único sinal de que o fundo mudou.
+  const hatchedOption = React.useMemo(
+    () => withHatchPatterns(option),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [option, themeVersion],
+  );
+
   return (
     <div data-slot="chart" className={cn('nds-chart', className)} style={style} {...rest}>
       {vazio ? (
@@ -553,7 +640,7 @@ export function ChartContainer({
           >
             <ReactECharts
               ref={chartRef}
-              option={option}
+              option={hatchedOption}
               theme={THEME_NAME}
               opts={{ renderer }}
               style={{ width: '100%', height: '100%' }}

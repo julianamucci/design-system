@@ -25,7 +25,9 @@
  *     Três status ficam FRIOS num tema de neutros quentes, e isso é a favor:
  *     eles viram a única coisa fria da tela, que é a saliência que um alerta
  *     precisa ter.
- *   - Charts: cinco séries espalhadas pela roda, ancoradas na marca.
+ *   - Charts: oito séries da paleta de sintaxe do code-block, com variante por
+ *     modo. Não saem mais da paleta deste tema — a razão está no bloco
+ *     `--chart-*`, e é de contraste, não de estilo.
  *   - Radius, dimensões e shadows herdam de tokens.css (Default).
  *
  * O que ESTE arquivo dizia antes, e por que estava errado: "feedback colors
@@ -93,12 +95,36 @@
   --input-background: 30 25% 99%;
   --ring: 4 78% 50%;                /* acompanha o primary, meio ponto mais claro */
 
-  /* Charts — paleta âmbar/laranja */
-  --chart-1: 6 72% 52%;             /* #dd3e2c — família da marca */
-  --chart-2: 36 95% 40%;            /* #c77905 */
-  --chart-3: 152 60% 36%;           /* #25935f */
-  --chart-4: 198 80% 40%;           /* #1487b8 */
-  --chart-5: 286 45% 52%;           /* #a24ebc */
+  /* Charts — oito séries, com variante por MODO (o bloco escuro fica no fim do
+     `.dark.tema-*`).
+
+     Vêm da paleta de sintaxe do code-block, e a escolha é estrutural: ela já
+     tinha valores por modo, enquanto a paleta de gráfico antiga era declarada só
+     no claro e a MESMA cor precisava servir à página quase branca e ao fundo
+     quase preto. Nessa janela, uma das séries do Default acabava com contraste
+     1.00 contra o fundo escuro — a cor do próprio fundo, invisível.
+
+     Medido nos três temas: pior contraste 7.32 no claro e 6.83 no escuro. A
+     ordem não é arbitrária — cada série é a que MAIS se afasta das anteriores em
+     matiz, então a menor separação dentro das cinco primeiras é 38°, e dentro
+     das oito, 20°, que é o limite da paleta. Reordenar aproxima séries vizinhas.
+
+     Os graus são de matiz em OKLCH, não em HSL. Dizer isso não é preciosismo:
+     recalcular a partir dos números HSL declarados acima dá outros valores, e
+     quem tentar conferir vai concluir que a conta está errada. HSL não é
+     perceptualmente uniforme — 20° de matiz ali significam distâncias muito
+     diferentes dependendo de onde se está na roda.
+
+     Ficam no TEMA, e não em tokens.css: um tema derivado pode querer paleta
+     própria de gráfico, e o contrato de tema é o lugar dessa liberdade. */
+  --chart-1: 350 72% 36%;
+  --chart-2: 190 88% 23%;
+  --chart-3: 265 64% 41%;
+  --chart-4: 145 62% 23%;
+  --chart-5: 215 72% 34%;
+  --chart-6: 25 88% 28%;
+  --chart-7: 288 52% 36%;
+  --chart-8: 200 85% 26%;
 
   /* Sidebar — tint quente */
   --sidebar: 30 25% 98%;
@@ -151,4 +177,17 @@
   --sidebar-accent-foreground: 35 55% 90%;
   --sidebar-border: 25 10% 16%;
   --sidebar-ring: 8 88% 56%;
+
+  /* Charts — agora COM variante escura. Antes eram declarados só no bloco
+     claro, e a mesma cor tinha de servir à página quase branca e ao fundo
+     quase preto: no Default isso deixava uma série com contraste 1.00, a cor
+     do próprio fundo. */
+  --chart-1: 350 82% 80%;
+  --chart-2: 190 72% 68%;
+  --chart-3: 265 82% 82%;
+  --chart-4: 145 52% 70%;
+  --chart-5: 215 88% 78%;
+  --chart-6: 25 88% 72%;
+  --chart-7: 288 68% 82%;
+  --chart-8: 200 80% 72%;
 }
