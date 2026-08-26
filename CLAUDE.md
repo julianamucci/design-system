@@ -25,7 +25,7 @@ Per-stack guidelines live in `nortear-design-system-<stack>/guidelines/` and eac
 
 **Creating a new stack**: follow `docs/shared/guidelines/15-nova-stack.md` — measured inventory of what to copy, what to reference from `docs/shared/` instead of copying, and how to verify the new stack is complete. Write `guidelines/` and the pointer `CLAUDE.md` **before** the components, not after: building 47 components first is exactly how Angular ended up with zero guidelines.
 
-**Creating a new brand theme**: follow `docs/shared/guidelines/16-novo-tema.md` — the 39 required colour tokens, the contrast rules the palette gate enforces, and the 21 files a theme has to be registered in. The one that matters most is `docs/shared/testing/cor.ts`: every contrast probe iterates its `TEMAS` list, so adding the theme there is what makes six gate stories measure it automatically, in both modes.
+**Creating a new brand theme**: follow `docs/shared/guidelines/16-novo-tema.md` — the 42 required colour tokens (in BOTH modes — the chart palette stopped being light-only), the contrast rules the palette gate enforces, and the 21 files a theme has to be registered in. The one that matters most is `docs/shared/testing/cor.ts`: every contrast probe iterates its `TEMAS` list, so adding the theme there is what makes six gate stories measure it automatically, in both modes.
 
 ## Common Commands
 

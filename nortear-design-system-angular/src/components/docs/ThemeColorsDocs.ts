@@ -47,13 +47,15 @@ import themeColorsTranslations from '@shared/content/theme-colors/translations.j
  * fixo. Um MutationObserver na classe do `<html>` mantém isso em dia — e
  * aproveita para reler os valores HSL dos swatches, que só existem resolvidos.
  *
- * ─── Pendência de conteúdo ──────────────────────────────────────────────────
+ * ─── O grupo "Gráficos" ─────────────────────────────────────────────────────
  *
- * `--chart-1` a `--chart-5` não têm variante escura em lugar nenhum (nem no
- * `:root`, nem nas três marcas). No tema escuro o grupo "Gráficos" desta página
- * mostra os mesmos valores do tema claro, e `--chart-5` (210 71% 23%) fica
- * quase invisível sobre fundo escuro. Não é defeito desta página: é decisão de
- * design pendente, registrada no CLAUDE.md desta stack.
+ * A paleta de gráfico é `--chart-1` a `--chart-8` e TEM variante por modo: um
+ * bloco no `.tema-*` e outro no `.dark.tema-*`, nos três temas. Por isso o
+ * grupo troca de valores junto com o resto da página quando o modo muda — o
+ * mesmo MutationObserver acima já dá conta. A paleta anterior tinha de servir
+ * aos dois fundos com a MESMA cor e não cabia na janela: no tema Default as
+ * cinco reprovavam o piso de 3:1 em um dos modos, e o `--chart-5` de então era
+ * o Ink da marca — exatamente o fundo escuro, contraste 1.00.
  */
 const { t } = useTranslation(themeColorsTranslations as Record<string, unknown>);
 
@@ -107,7 +109,10 @@ const PALETTE_GROUPS: PaletteGroup[] = [
   {
     key: 'chart',
     label: 'palette.groups.chart',
-    tokens: ['chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5'],
+    tokens: [
+      'chart-1', 'chart-2', 'chart-3', 'chart-4',
+      'chart-5', 'chart-6', 'chart-7', 'chart-8',
+    ],
   },
 ];
 

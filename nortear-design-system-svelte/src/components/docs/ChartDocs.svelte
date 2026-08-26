@@ -587,9 +587,13 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
       { token: '--chart-3',          value: 'color série 3',  description: $tStore('tokens.table.chart3')         },
       { token: '--chart-4',          value: 'color série 4',  description: $tStore('tokens.table.chart4')         },
       { token: '--chart-5',          value: 'color série 5',  description: $tStore('tokens.table.chart5')         },
+      { token: '--chart-6',          value: 'color série 6',  description: $tStore('tokens.table.chart6')         },
+      { token: '--chart-7',          value: 'color série 7',  description: $tStore('tokens.table.chart7')         },
+      { token: '--chart-8',          value: 'color série 8',  description: $tStore('tokens.table.chart8')         },
       { token: '--primary',          value: 'axisPointer',    description: toPlainText($tStore('tokens.table.primary')) },
       { token: '--muted-foreground', value: 'axisLabel',      description: $tStore('tokens.table.mutedForeground') },
       { token: '--border',           value: 'axisLine + grid', description: $tStore('tokens.table.border')        },
+      { token: '--background',       value: 'aria.decal',     description: $tStore('tokens.table.background')     },
       { token: '--foreground',       value: 'title + tooltip', description: $tStore('tokens.table.foreground')    },
       { token: '--card',             value: 'tooltip bg',     description: $tStore('tokens.table.card')           },
     ]}

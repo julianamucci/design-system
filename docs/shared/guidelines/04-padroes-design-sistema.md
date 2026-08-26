@@ -1068,10 +1068,17 @@ com cinco valores que nenhum tema usava.
 | `--chart-3` | terceira série |
 | `--chart-4` | quarta série |
 | `--chart-5` | quinta série |
+| `--chart-6` | sexta série |
+| `--chart-7` | sétima série |
+| `--chart-8` | oitava série |
 
-Os cinco são declarados nos blocos de tema de marca, **sem bloco `.dark`**:
-a paleta de série é a mesma nos dois modos de propósito. O que muda no escuro é o
-fundo e o texto em volta.
+Os oito são declarados nos blocos de tema de marca, **nos DOIS modos**.
+
+Já foram cinco, e sem bloco `.dark` — "a paleta de série é a mesma nos dois
+modos de propósito", dizia aqui. A medição derrubou: uma cor só não alcança 3:1
+contra a página quase branca E contra o fundo quase preto. No tema Default as
+cinco reprovavam o piso em um dos modos, e a quinta era o Ink da marca,
+exatamente o fundo escuro — contraste 1.00.
 
 ### Como as séries consomem os tokens
 

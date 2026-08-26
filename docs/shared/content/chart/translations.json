@@ -7,8 +7,8 @@
     "seo": {
       "title": "Chart — Display",
       "description": "Documentação do Chart: gráficos bar, line, area e pie via objeto declarativo, tema reativo por tokens e acessibilidade WCAG.",
-      "aiSummary": "Componente Chart com ChartContainer e helpers buildBarOption/buildLineOption/buildAreaOption/buildPieOption. API declarativa de opções. Tokens --chart-1 a --chart-5 para cores de séries.",
-      "aiEntities": "Chart, React, Vue, Svelte, Vanilla, Angular, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.2, aria-label, decal pattern"
+      "aiSummary": "Componente Chart com API declarativa de opções e alternativa textual sempre presente. Oito tokens de cor de série, com variante por modo claro e escuro.",
+      "aiEntities": "Chart, React, Vue, Svelte, Vanilla, Angular, SVG, Canvas, WCAG 2.2, aria-label, série, legenda, eixo, trama, alternativa textual"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -23,9 +23,9 @@
     },
     "anatomy": {
       "title": "Anatomia",
-      "item1": "<strong>Container</strong> — wrapper que recebe a configuração e injeta o tema do design system (cores, tipografia, eixos).",
-      "item2": "<strong>Objeto de configuração</strong> — descrição declarativa única: séries, eixos, tooltip, legenda e animação em um objeto.",
-      "item3": "<strong>Builders auxiliares</strong> — funções que montam o objeto para os casos típicos (bar, line, area, pie) a partir de dados simples.",
+      "item1": "<strong>Container</strong> — o bloco do design system: carrega a classe, o tipo do gráfico e, ao lado do desenho, a tabela de dados equivalente.",
+      "item2": "<strong>Elemento do desenho</strong> — onde a lib de visualização desenha. É ele que leva a marcação de imagem e a descrição, para que a tabela ao lado continue na árvore de acessibilidade.",
+      "item3": "<strong>Tabela de dados equivalente</strong> — os mesmos números do desenho em uma tabela de verdade, com cabeçalho por série e uma linha por categoria. Existe sempre; uma entrada a torna visível.",
       "item4": "<strong>Tema reativo</strong> — cores e tipografia recalculam quando a classe do <code>&lt;html&gt;</code> muda (tema, dark mode, densidade, fonte).",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
@@ -152,7 +152,7 @@
     "variants": {
       "title": "Tipos de Gráfico",
       "visualTitle": "Tipos Disponíveis",
-      "note": "O Chart não tem variantes <code>cva</code>. O tipo de gráfico vem do builder usado (<code>buildBarOption</code>, <code>buildLineOption</code>, <code>buildAreaOption</code>, <code>buildPieOption</code>) ou do campo <code>series.type</code> dentro do objeto de configuração.",
+      "note": "O Chart não tem variantes de estilo. O tipo de gráfico — barras, linhas, área, pizza — vem da configuração, não de uma classe: é um campo do próprio objeto que descreve o desenho.",
       "items": {
         "bar": "Comparação entre categorias discretas. Mais claro para dados não contínuos.",
         "line": "Tendência contínua ao longo do tempo. Ideal para séries temporais.",
@@ -198,7 +198,7 @@
       "multiSeries": {
         "label": "Multi-séries",
         "trigger": "Mais de uma série na configuração",
-        "behavior": "Legenda visível por padrão. Cada série usa um token de cor distinto (<code>--chart-1</code> a <code>--chart-5</code>) na ordem em que aparece."
+        "behavior": "Legenda visível por padrão. Cada série usa um token de cor distinto (<code>--chart-1</code> a <code>--chart-8</code>) na ordem em que aparece, e a nona volta ao primeiro."
       },
       "withEmptyState": {
         "label": "Com estado vazio",
@@ -214,7 +214,7 @@
     "props": {
       "title": "Propriedades",
       "interface": "Interface TypeScript",
-      "containerTitle": "ChartContainer",
+      "containerTitle": "Contêiner",
       "tooltipTitle": "Helpers (builders)",
       "legendTitle": "Tipos de Dados",
       "table": {
@@ -250,15 +250,18 @@
         "chart3": "Terceira série",
         "chart4": "Quarta série",
         "chart5": "Quinta série",
+        "chart6": "Sexta série",
+        "chart7": "Sétima série",
+        "chart8": "Oitava série",
         "primary": "Cor do indicador de hover (<code>axisPointer</code>)",
         "mutedForeground": "Texto dos ticks de eixo e labels secundários",
         "border": "Linhas de grade e bordas de eixo",
-        "background": "Reservado (fundo do container — transparente por padrão)",
+        "background": "Traço da trama sobreposta a cada série — é ele que separa a hachura do preenchimento",
         "foreground": "Texto do tooltip e do título",
         "card": "Fundo do tooltip"
       },
       "customizationTitle": "Como personalizar via tema:",
-      "note": "As cores das séries vêm automaticamente dos tokens <code>--chart-1</code> a <code>--chart-5</code> na ordem de declaração. Para sobrescrever pontualmente, passe <code>color</code> no item de <code>series</code>. Para mudar a paleta global, edite os tokens em <code>themes/*.css</code>; o gráfico re-aplica as cores no próximo render."
+      "note": "As cores das séries vêm automaticamente dos tokens <code>--chart-1</code> a <code>--chart-8</code> na ordem de declaração. Para sobrescrever pontualmente, passe <code>color</code> no item de <code>series</code>. Para mudar a paleta global, edite os tokens em <code>themes/*.css</code>; o gráfico re-aplica as cores no próximo render."
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -269,7 +272,7 @@
       "item3": "<strong>Padrões para daltonismo</strong> — <code>aria.decal.show</code> adiciona padrões visuais sobrepostos às séries; complemento à cor para distinguir multi-séries (WCAG 1.4.1).",
       "item4": "<strong>Texto alternativo sr-only</strong> — para gráficos críticos ou com muitos pontos, inclua <code>&lt;p className=\"sr-only\"&gt;</code> com resumo dos dados principais e identificação de pico/mínimo.",
       "item5": "<strong>Legenda automática em multi-séries</strong> — nunca diferencie séries apenas por cor (WCAG 1.4.1). A legenda aparece automaticamente; use nomes descritivos em <code>series.name</code>.",
-      "item6": "<strong>Contraste</strong> — tokens <code>--chart-1</code> a <code>--chart-5</code> atendem contraste mínimo 3:1 para elementos gráficos (WCAG 1.4.11). Texto de eixos usa <code>--muted-foreground</code> com 4.5:1 mínimo.",
+      "item6": "<strong>Contraste</strong> — os oito tokens de série alcançam o mínimo de 3:1 para elementos gráficos (WCAG 1.4.11) contra o fundo, nos dois modos. Além disso, cada forma é contornada: é o contorno que separa uma série da VIZINHA, o que contraste contra o fundo não garante. Texto de eixos usa <code>--muted-foreground</code>, com 4.5:1 mínimo.",
       "keyboard": {
         "tab": "Foca o container do gráfico — leitor de tela anuncia o <code>aria-label</code> e a descrição gerada.",
         "arrowRight": "Sem navegação granular por padrão entre pontos de dados. Para datasets críticos, forneça resumo textual <code>sr-only</code>.",
@@ -375,7 +378,7 @@
         "item3": {
           "criterion": "Contraste mínimo 3:1 nos elementos gráficos",
           "level": "AA",
-          "how": "axe-core / Lighthouse com tokens --chart-1 a --chart-5"
+          "how": "axe-core / Lighthouse com os oito tokens de série, nos dois modos"
         },
         "item4": {
           "criterion": "Sem violações axe-core no estado padrão",
@@ -433,8 +436,8 @@
     "seo": {
       "title": "Chart — Display",
       "description": "Chart documentation: bar, line, area, and pie via declarative object, reactive theme through tokens, and WCAG accessibility.",
-      "aiSummary": "Chart component with ChartContainer and buildBarOption/buildLineOption/buildAreaOption/buildPieOption helpers. Declarative option API. Tokens --chart-1 to --chart-5 for series colors.",
-      "aiEntities": "Chart, React, Vue, Svelte, Vanilla, Angular, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.2, aria-label, decal pattern"
+      "aiSummary": "Chart component with a declarative options API and an always-present textual alternative. Eight series colour tokens, with a variant per light and dark mode.",
+      "aiEntities": "Chart, React, Vue, Svelte, Vanilla, Angular, SVG, Canvas, WCAG 2.2, aria-label, series, legend, axis, decal, textual alternative"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -449,9 +452,9 @@
     },
     "anatomy": {
       "title": "Anatomy",
-      "item1": "<strong>Container</strong> — wrapper that receives the configuration and injects the design-system theme (colors, typography, axes).",
-      "item2": "<strong>Configuration object</strong> — single declarative description: series, axes, tooltip, legend, and animation in one object.",
-      "item3": "<strong>Auxiliary builders</strong> — functions that assemble the object for typical cases (bar, line, area, pie) from simple data.",
+      "item1": "<strong>Container</strong> — the design system block: it carries the class, the chart type and, beside the drawing, the equivalent data table.",
+      "item2": "<strong>Drawing element</strong> — where the visualization library draws. It is the one carrying the image marking and the description, so the table beside it stays in the accessibility tree.",
+      "item3": "<strong>Equivalent data table</strong> — the same numbers as the drawing in a real table, one header per series and one row per category. It always exists; one input makes it visible.",
       "item4": "<strong>Reactive theme</strong> — colors and typography recompute when the <code>&lt;html&gt;</code> class changes (theme, dark mode, density, font).",
       "structureLabel": "Basic structure:",
       "structureCode": {
@@ -578,7 +581,7 @@
     "variants": {
       "title": "Chart Types",
       "visualTitle": "Available Types",
-      "note": "Chart has no <code>cva</code> variants. The chart type comes from the builder you use (<code>buildBarOption</code>, <code>buildLineOption</code>, <code>buildAreaOption</code>, <code>buildPieOption</code>) or from the <code>series.type</code> field inside the configuration object.",
+      "note": "Chart has no style variants. The chart type — bar, line, area, pie — comes from the configuration, not from a class: it is a field of the object that describes the drawing.",
       "items": {
         "bar": "Comparison across discrete categories. Best for non-continuous data.",
         "line": "Continuous trend over time. Ideal for time series.",
@@ -624,7 +627,7 @@
       "multiSeries": {
         "label": "Multi-series",
         "trigger": "More than one series in the configuration",
-        "behavior": "Legend visible by default. Each series uses a distinct color token (<code>--chart-1</code> to <code>--chart-5</code>) in the order it appears."
+        "behavior": "Legend visible by default. Each series uses a distinct colour token (<code>--chart-1</code> to <code>--chart-8</code>) in the order it appears, and the ninth wraps back to the first."
       },
       "withEmptyState": {
         "label": "With empty state",
@@ -640,7 +643,7 @@
     "props": {
       "title": "Properties",
       "interface": "TypeScript Interface",
-      "containerTitle": "ChartContainer",
+      "containerTitle": "Container",
       "tooltipTitle": "Helpers (builders)",
       "legendTitle": "Data Types",
       "table": {
@@ -676,15 +679,18 @@
         "chart3": "Third series",
         "chart4": "Fourth series",
         "chart5": "Fifth series",
+        "chart6": "Sixth series",
+        "chart7": "Seventh series",
+        "chart8": "Eighth series",
         "primary": "Hover indicator color (<code>axisPointer</code>)",
         "mutedForeground": "Axis tick text and secondary labels",
         "border": "Grid lines and axis borders",
-        "background": "Reserved (container background — transparent by default)",
+        "background": "Stroke of the pattern laid over each series — it is what separates the hatching from the fill",
         "foreground": "Tooltip text and title",
         "card": "Tooltip background"
       },
       "customizationTitle": "How to customize via theme:",
-      "note": "Series colors come automatically from tokens <code>--chart-1</code> to <code>--chart-5</code> in declaration order. To override a single series, pass <code>color</code> on the series item. To change the global palette, edit the tokens in <code>themes/*.css</code>; the chart re-applies the colors on the next render."
+      "note": "Series colors come automatically from tokens <code>--chart-1</code> to <code>--chart-8</code> in declaration order. To override a single series, pass <code>color</code> on the series item. To change the global palette, edit the tokens in <code>themes/*.css</code>; the chart re-applies the colors on the next render."
     },
     "accessibility": {
       "title": "Accessibility",
@@ -695,7 +701,7 @@
       "item3": "<strong>Patterns for color blindness</strong> — <code>aria.decal.show</code> adds visual patterns over series; complements color to distinguish multi-series (WCAG 1.4.1).",
       "item4": "<strong>sr-only alternative text</strong> — for critical or many-point charts, include a <code>&lt;p className=\"sr-only\"&gt;</code> with a summary of main data and identifiable peaks/minimums.",
       "item5": "<strong>Automatic legend in multi-series</strong> — never differentiate series by color alone (WCAG 1.4.1). The legend appears automatically; use descriptive names in <code>series.name</code>.",
-      "item6": "<strong>Contrast</strong> — tokens <code>--chart-1</code> to <code>--chart-5</code> meet minimum 3:1 contrast for graphical elements (WCAG 1.4.11). Axis text uses <code>--muted-foreground</code> with a 4.5:1 minimum.",
+      "item6": "<strong>Contrast</strong> — the eight series tokens reach the 3:1 minimum for graphical objects (WCAG 1.4.11) against the background, in both modes. On top of that, every shape is outlined: the outline is what separates one series from its NEIGHBOUR, which contrast against the background does not guarantee. Axis text uses <code>--muted-foreground</code>, at a 4.5:1 minimum.",
       "keyboard": {
         "tab": "Focuses the chart container — screen reader announces the <code>aria-label</code> and the generated description.",
         "arrowRight": "No granular point-by-point navigation by default. For critical datasets, provide an <code>sr-only</code> textual summary.",
@@ -801,7 +807,7 @@
         "item3": {
           "criterion": "Minimum 3:1 contrast on graphical elements",
           "level": "AA",
-          "how": "axe-core / Lighthouse with --chart-1 to --chart-5 tokens"
+          "how": "axe-core / Lighthouse with the eight series tokens, in both modes"
         },
         "item4": {
           "criterion": "No axe-core violations in default state",
@@ -859,8 +865,8 @@
     "seo": {
       "title": "Chart — Display",
       "description": "Documentación de Chart: gráficos bar, line, area y pie mediante objeto declarativo, tema reactivo por tokens y accesibilidad WCAG.",
-      "aiSummary": "Componente Chart con ChartContainer y helpers buildBarOption/buildLineOption/buildAreaOption/buildPieOption. API declarativa de opciones. Tokens --chart-1 a --chart-5 para colores de series.",
-      "aiEntities": "Chart, React, Vue, Svelte, Vanilla, Angular, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.2, aria-label, decal pattern"
+      "aiSummary": "Componente Chart con API declarativa de opciones y alternativa textual siempre presente. Ocho tokens de color de serie, con variante por modo claro y oscuro.",
+      "aiEntities": "Chart, React, Vue, Svelte, Vanilla, Angular, SVG, Canvas, WCAG 2.2, aria-label, serie, leyenda, eje, trama, alternativa textual"
     },
     "demonstration": {
       "title": "Demostración",
@@ -875,9 +881,9 @@
     },
     "anatomy": {
       "title": "Anatomía",
-      "item1": "<strong>Container</strong> — wrapper que recibe la configuración e inyecta el tema del design system (colores, tipografía, ejes).",
-      "item2": "<strong>Objeto de configuración</strong> — descripción declarativa única: series, ejes, tooltip, leyenda y animación en un objeto.",
-      "item3": "<strong>Builders auxiliares</strong> — funciones que arman el objeto para los casos típicos (bar, line, area, pie) a partir de datos simples.",
+      "item1": "<strong>Contenedor</strong> — el bloque del design system: lleva la clase, el tipo de gráfico y, junto al dibujo, la tabla de datos equivalente.",
+      "item2": "<strong>Elemento del dibujo</strong> — donde dibuja la librería de visualización. Es el que lleva la marca de imagen y la descripción, para que la tabla a su lado siga en el árbol de accesibilidad.",
+      "item3": "<strong>Tabla de datos equivalente</strong> — los mismos números del dibujo en una tabla real, con un encabezado por serie y una fila por categoría. Existe siempre; una entrada la hace visible.",
       "item4": "<strong>Tema reactivo</strong> — colores y tipografía se recalculan cuando la clase del <code>&lt;html&gt;</code> cambia (tema, dark mode, densidad, fuente).",
       "structureLabel": "Estructura básica:",
       "structureCode": {
@@ -1004,7 +1010,7 @@
     "variants": {
       "title": "Tipos de Gráfico",
       "visualTitle": "Tipos Disponibles",
-      "note": "Chart no tiene variantes <code>cva</code>. El tipo de gráfico viene del builder que uses (<code>buildBarOption</code>, <code>buildLineOption</code>, <code>buildAreaOption</code>, <code>buildPieOption</code>) o del campo <code>series.type</code> dentro del objeto de configuración.",
+      "note": "El Chart no tiene variantes de estilo. El tipo de gráfico — barras, líneas, área, tarta — viene de la configuración, no de una clase: es un campo del propio objeto que describe el dibujo.",
       "items": {
         "bar": "Comparación entre categorías discretas. Más claro para datos no continuos.",
         "line": "Tendencia continua en el tiempo. Ideal para series temporales.",
@@ -1050,7 +1056,7 @@
       "multiSeries": {
         "label": "Multi-series",
         "trigger": "Más de una serie en la configuración",
-        "behavior": "Leyenda visible por defecto. Cada serie usa un token de color distinto (<code>--chart-1</code> a <code>--chart-5</code>) en el orden en que aparece."
+        "behavior": "Leyenda visible por defecto. Cada serie usa un token de color distinto (<code>--chart-1</code> a <code>--chart-8</code>) en el orden en que aparece, y la novena vuelve al primero."
       },
       "withEmptyState": {
         "label": "Con estado vacío",
@@ -1066,7 +1072,7 @@
     "props": {
       "title": "Propiedades",
       "interface": "Interfaz TypeScript",
-      "containerTitle": "ChartContainer",
+      "containerTitle": "Contenedor",
       "tooltipTitle": "Helpers (builders)",
       "legendTitle": "Tipos de Datos",
       "table": {
@@ -1102,15 +1108,18 @@
         "chart3": "Tercera serie",
         "chart4": "Cuarta serie",
         "chart5": "Quinta serie",
+        "chart6": "Sexta serie",
+        "chart7": "Séptima serie",
+        "chart8": "Octava serie",
         "primary": "Color del indicador de hover (<code>axisPointer</code>)",
         "mutedForeground": "Texto de ticks de eje y labels secundarios",
         "border": "Líneas de grid y bordes de eje",
-        "background": "Reservado (fondo del container — transparente por defecto)",
+        "background": "Trazo de la trama superpuesta a cada serie — es lo que separa el rayado del relleno",
         "foreground": "Texto del tooltip y título",
         "card": "Fondo del tooltip"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
-      "note": "Los colores de las series vienen automáticamente de los tokens <code>--chart-1</code> a <code>--chart-5</code> en orden de declaración. Para sobrescribir puntualmente, pasa <code>color</code> en el item de <code>series</code>. Para cambiar la paleta global, edita los tokens en <code>themes/*.css</code>; el gráfico re-aplica los colores en el próximo render."
+      "note": "Los colores de las series vienen automáticamente de los tokens <code>--chart-1</code> a <code>--chart-8</code> en orden de declaración. Para sobrescribir puntualmente, pasa <code>color</code> en el item de <code>series</code>. Para cambiar la paleta global, edita los tokens en <code>themes/*.css</code>; el gráfico re-aplica los colores en el próximo render."
     },
     "accessibility": {
       "title": "Accesibilidad",
@@ -1121,7 +1130,7 @@
       "item3": "<strong>Patrones para daltonismo</strong> — <code>aria.decal.show</code> agrega patrones visuales sobre las series; complemento al color para distinguir multi-series (WCAG 1.4.1).",
       "item4": "<strong>Texto alternativo sr-only</strong> — para gráficos críticos o con muchos puntos, incluye <code>&lt;p className=\"sr-only\"&gt;</code> con resumen de los datos principales e identificación de pico/mínimo.",
       "item5": "<strong>Leyenda automática en multi-series</strong> — nunca diferencies series solo por color (WCAG 1.4.1). La leyenda aparece automáticamente; usa nombres descriptivos en <code>series.name</code>.",
-      "item6": "<strong>Contraste</strong> — tokens <code>--chart-1</code> a <code>--chart-5</code> cumplen contraste mínimo 3:1 para elementos gráficos (WCAG 1.4.11). Texto de ejes usa <code>--muted-foreground</code> con 4.5:1 mínimo.",
+      "item6": "<strong>Contraste</strong> — los ocho tokens de serie alcanzan el mínimo de 3:1 para elementos gráficos (WCAG 1.4.11) contra el fondo, en ambos modos. Además, cada forma lleva contorno: es el contorno el que separa una serie de la VECINA, algo que el contraste contra el fondo no garantiza. El texto de los ejes usa <code>--muted-foreground</code>, con 4.5:1 mínimo.",
       "keyboard": {
         "tab": "Enfoca el container del gráfico — lector de pantalla anuncia el <code>aria-label</code> y la descripción generada.",
         "arrowRight": "Sin navegación granular por defecto entre puntos. Para datasets críticos, proporciona resumen textual <code>sr-only</code>.",
@@ -1227,7 +1236,7 @@
         "item3": {
           "criterion": "Contraste mínimo 3:1 en elementos gráficos",
           "level": "AA",
-          "how": "axe-core / Lighthouse con tokens --chart-1 a --chart-5"
+          "how": "axe-core / Lighthouse con los ocho tokens de serie, en ambos modos"
         },
         "item4": {
           "criterion": "Sin violaciones axe-core en estado por defecto",

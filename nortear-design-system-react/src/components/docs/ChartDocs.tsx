@@ -745,9 +745,13 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
           { token: "--chart-3",          value: "color série 3",  description: toPlainText(tContent("tokens.table.chart3")) },
           { token: "--chart-4",          value: "color série 4",  description: toPlainText(tContent("tokens.table.chart4")) },
           { token: "--chart-5",          value: "color série 5",  description: toPlainText(tContent("tokens.table.chart5")) },
+          { token: "--chart-6",          value: "color série 6",  description: toPlainText(tContent("tokens.table.chart6")) },
+          { token: "--chart-7",          value: "color série 7",  description: toPlainText(tContent("tokens.table.chart7")) },
+          { token: "--chart-8",          value: "color série 8",  description: toPlainText(tContent("tokens.table.chart8")) },
           { token: "--primary",          value: "axisPointer",    description: toPlainText(tContent("tokens.table.primary")) },
           { token: "--muted-foreground", value: "axisLabel",      description: toPlainText(tContent("tokens.table.mutedForeground")) },
           { token: "--border",           value: "axisLine + grid", description: toPlainText(tContent("tokens.table.border")) },
+          { token: "--background",       value: "aria.decal",     description: toPlainText(tContent("tokens.table.background")) },
           { token: "--foreground",       value: "title + tooltip", description: toPlainText(tContent("tokens.table.foreground")) },
           { token: "--card",             value: "tooltip bg",     description: toPlainText(tContent("tokens.table.card")) },
         ]}

@@ -153,14 +153,29 @@ function comAncestrais(tokens) {
 
 /* ── Linhas declaradas nas cinco docs pages ────────────────────────────── */
 
+// `parte` entra ao lado de `value` e `target`: cada stack batizou a coluna do
+// meio à sua maneira, e faltando um nome o script dá a linha por inexistente.
 const LINHA_RX = new RegExp(
   String.raw`\{[^{}]*?\btoken:\s*(['"\`])(--[A-Za-z0-9-]+)\1` +
-    String.raw`[^{}]*?\b(?:value|target):\s*(['"\`])((?:\\.|(?!\3)[^\\])*)\3`,
+    String.raw`[^{}]*?\b(?:value|target|parte):\s*(['"\`])((?:\\.|(?!\3)[^\\])*)\3`,
   'g',
 );
 
+/**
+ * Há uma forma que este script NÃO lê, e é melhor declarar do que fingir: a
+ * tabela montada a partir de TUPLAS (`['--chart-1', 'chart1']`) que só viram
+ * objeto depois, num `.map()`. Ali a linha existe e o seletor nasce fora do
+ * literal, então não há o que casar.
+ *
+ * Sem esta distinção o relatório dizia "sem linha" para stacks que listam o
+ * token — ou seja, "não sei ler" saía como "não tem". É a mesma classe de
+ * defeito que este script existe para pegar, e ele a cometia.
+ */
+const TOKEN_SOLTO_RX = /(['"`])(--[A-Za-z0-9-]+)\1/g;
+
 const pascal = slug.replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase());
 const linhasPorStack = {};
+const naoLidos = {};   // stack -> quantos tokens ficaram fora do alcance do regex
 
 for (const stack of STACKS) {
   const dir = join(ROOT, `nortear-design-system-${stack}`, 'src', 'components', 'docs');
@@ -180,6 +195,18 @@ for (const stack of STACKS) {
     });
   }
   linhasPorStack[stack] = linhas;
+
+  // Se o arquivo NOMEIA tokens que a varredura de linha não alcançou, a forma
+  // dele é uma que este script não lê (tupla + `.map()`). Registrar isso é o que
+  // separa "não tem linha" de "não sei ler" — sem a distinção, o relatório
+  // acusava de ausente uma tabela completa.
+  TOKEN_SOLTO_RX.lastIndex = 0;
+  const nomeados = new Set([...src.matchAll(TOKEN_SOLTO_RX)].map((m) => m[2]));
+  const lidos = new Set(linhas.map((l) => l.token));
+  const foraDeAlcance = [...nomeados].filter((t) => !lidos.has(t) && /^--(chart|primary|muted|border|foreground|background|card|ring)/.test(t));
+  if (foraDeAlcance.length > 2 && linhas.length < foraDeAlcance.length) {
+    naoLidos[stack] = foraDeAlcance.length;
+  }
 }
 
 /* ── Sentido 1: cada linha declarada fecha com a folha? ────────────────── */
@@ -328,7 +355,10 @@ if (!divergentes.length) console.log('   nenhuma');
 for (const d of divergentes) {
   console.log(`   ${d.token}`);
   for (const [s, v] of Object.entries(d.porStack)) console.log(`      ${s.padEnd(8)} ${v}`);
-  if (d.faltando.length) console.log(`      sem linha: ${d.faltando.join(', ')}`);
+  const semLeitura = d.faltando.filter((s) => naoLidos[s]);
+  const semLinha = d.faltando.filter((s) => !naoLidos[s]);
+  if (semLinha.length) console.log(`      sem linha: ${semLinha.join(", ")}`);
+  if (semLeitura.length) console.log(`      forma não lida por este script: ${semLeitura.join(", ")}`);
 }
 
 console.log('\nnão coberto por este script: token que chega por JS ou atributo SVG,');

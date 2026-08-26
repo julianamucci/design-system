@@ -89,7 +89,7 @@
         },
         "chart": {
           "name": "Gráficos",
-          "tokens": "--chart-1 a --chart-5 (paleta categórica)"
+          "tokens": "--chart-1 a --chart-8 (paleta categórica, com variante por modo)"
         },
         "sidebar": {
           "name": "Sidebar",
@@ -222,7 +222,7 @@
         },
         "chart": {
           "name": "Charts",
-          "tokens": "--chart-1 through --chart-5 (categorical palette)"
+          "tokens": "--chart-1 through --chart-8 (categorical palette, with a per-mode variant)"
         },
         "sidebar": {
           "name": "Sidebar",
@@ -355,7 +355,7 @@
         },
         "chart": {
           "name": "Gráficos",
-          "tokens": "--chart-1 a --chart-5 (paleta categórica)"
+          "tokens": "--chart-1 a --chart-8 (paleta categórica, con variante por modo)"
         },
         "sidebar": {
           "name": "Sidebar",

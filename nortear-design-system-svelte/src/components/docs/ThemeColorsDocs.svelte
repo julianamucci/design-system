@@ -45,7 +45,10 @@
     },
     {
       key: 'chart',
-      tokens: ['chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5'],
+      tokens: [
+        'chart-1', 'chart-2', 'chart-3', 'chart-4',
+        'chart-5', 'chart-6', 'chart-7', 'chart-8',
+      ],
     },
   ];
 

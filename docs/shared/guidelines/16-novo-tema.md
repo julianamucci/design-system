@@ -26,11 +26,15 @@ tamanho de fonte quebra as outras cinco dimensões.
 
 ---
 
-## Os 39 tokens obrigatórios
+## Os 42 tokens obrigatórios
 
-Todo tema declara **os 39 abaixo no modo claro** e **34 deles no escuro** (os
-cinco de `--chart-*` herdam do claro, e é assim de propósito: gráfico não muda
-de paleta com o modo).
+Todo tema declara **os 42 abaixo nos DOIS modos**.
+
+Já foram 39, com os cinco de `--chart-*` herdando do claro — "gráfico não muda de
+paleta com o modo", dizia aqui. A medição derrubou: uma cor só, servindo à página
+quase branca e ao fundo quase preto, não alcança 3:1 nos dois. No tema Default as
+cinco reprovavam o piso em um dos modos, e o `--chart-5` era o Ink da marca,
+exatamente o fundo escuro — contraste **1.00**, série invisível.
 
 O valor é **HSL sem a função** — `210 40% 96%`, não `hsl(210 40% 96%)`. O
 sistema aplica `hsl(var(--token))` no ponto de uso, e é isso que permite
@@ -72,10 +76,20 @@ própria. Motivo na seção de contraste, e é regra dura.
 | `--input-background` | fundo do campo |
 | `--ring` | anel de foco — alinhar com `--primary` |
 
-### Gráficos (5)
+### Gráficos (8)
 
-`--chart-1` a `--chart-5`. Cinco matizes distinguíveis entre si, na paleta da
-marca. Só no bloco claro.
+`--chart-1` a `--chart-8`, **nos dois blocos**. Oito matizes distinguíveis entre
+si, e a ordem não é livre: cada posição é a que mais se afasta das anteriores em
+matiz OKLCH. A menor separação dentro das cinco primeiras é 38°, dentro das oito
+é 20°, que é o limite da paleta — reordenar aproxima séries vizinhas.
+
+Os graus são OKLCH, não HSL. Recalcular a partir dos números HSL declarados dá
+outros valores, porque HSL não é perceptualmente uniforme.
+
+Os três temas de hoje usam a mesma paleta de gráfico, tirada da paleta de sintaxe
+do code-block — ela já nascia com variante por modo. Um tema novo **pode** ter
+paleta própria: é por isso que estes tokens ficam no tema e não em `tokens.css`.
+Se tiver, meça contra a página de CADA modo, com piso de 3:1 (WCAG 1.4.11).
 
 ### Sidebar (8)
 
@@ -94,18 +108,18 @@ divergir do corpo da página. Costuma ser `--background` levemente deslocado.
 Só declare se a marca pede identidade de forma diferente. `warm` e `cold` não
 declaram — herdam de `tokens.css`, que é o único token de tema que continua com
 valor lá, justamente porque nem todo tema o declara. O `default` declara porque
-a marca tem identidade de forma.
+a marca tem identidade de forma. Se declarar, use a escala derivada
+(`var(--radius-lg)`, `var(--radius-xl)`, `var(--radius-full)`), nunca um valor
+em px solto.
 
-**Cor é diferente de raio, e a assimetria é proposital:** os 39 tokens de cor
-NÃO existem em `tokens.css`. Cada tema declara os 39, e o Default é um tema como
+**Cor é diferente de raio, e a assimetria é proposital:** os 42 tokens de cor
+NÃO existem em `tokens.css`. Cada tema declara os 42, e o Default é um tema como
 os outros — `cssClass: 'tema-default'`, não string vazia. A consequência prática
 é que **a classe `tema-*` no `<html>` é obrigatória**: sem ela não há cor, a
 página abre em preto sobre branco, e nem build nem type-check veem. Quem aplica
 dentro do repositório é `applyTheme()`, o `preview-head.html` de cada stack e o
 `<html>` do sandbox, guardados pela regra `tema_ausente_no_ponto_de_entrada`.
 Quem consumir o pacote fora daqui aplica por conta.
-Se declarar, use a escala derivada (`var(--radius-lg)`, `var(--radius-xl)`,
-`var(--radius-full)`), nunca um valor em px solto.
 
 ---
 

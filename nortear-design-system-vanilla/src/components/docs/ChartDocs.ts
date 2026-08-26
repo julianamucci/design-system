@@ -698,27 +698,26 @@ export interface ChartOptions {
           // `--primary` (axisPointer), `--muted-foreground` (axisLabel e
           // legenda), `--border` (axisLine, tick e splitLine), `--foreground`
           // (tooltip, título e contorno de série) e `--card` (fundo do
-          // tooltip). Havia aqui mais três linhas — `--secondary`, `--muted` e
-          // `--background` — descritas como "reservado para customizações":
-          // nenhuma delas entra no tema, e `backgroundColor` é a string
-          // 'transparent', não um token. Ponto de customização que ninguém lê
-          // não é reserva, é promessa falsa.
+          // tooltip). Havia aqui mais duas linhas — `--secondary` e `--muted` —
+          // descritas como "reservado para customizações": nenhuma delas entra
+          // no tema, e `backgroundColor` é a string 'transparent', não um token.
+          // Ponto de customização que ninguém lê não é reserva, é promessa falsa.
           //
-          // PENDENTE, e a lista está a menos: a paleta cresceu para `--chart-8`
-          // (com variante por modo) e a trama do decal passou a ler
-          // `--background` para se separar do preenchimento. As quatro linhas
-          // que faltam dependem de chaves novas no conteúdo compartilhado
-          // (`tokens.table.chart6`, `chart7`, `chart8`, `background`), que este
-          // arquivo não pode inventar sozinho.
+          // `--background` está na lista por outro motivo: a trama do decal é
+          // traçada nele, para se separar do preenchimento da série.
           items: ([
             ['--chart-1', 'chart1'],
             ['--chart-2', 'chart2'],
             ['--chart-3', 'chart3'],
             ['--chart-4', 'chart4'],
             ['--chart-5', 'chart5'],
+            ['--chart-6', 'chart6'],
+            ['--chart-7', 'chart7'],
+            ['--chart-8', 'chart8'],
             ['--primary', 'primary'],
             ['--muted-foreground', 'mutedForeground'],
             ['--border', 'border'],
+            ['--background', 'background'],
             ['--foreground', 'foreground'],
             ['--card', 'card'],
           ] as const).map(([token, key]) => ({

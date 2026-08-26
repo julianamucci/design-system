@@ -59,8 +59,12 @@ const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 // framework se registra, não se alinha. As outras stacks separam
 // `ChartContainer` + `buildXOption` e passam um objeto de configuração único;
 // aqui é um componente só, com entradas declarativas. Daí sai a lista abaixo: a
-// anatomia, a nota da API, a extensibilidade e os rótulos de entradas que só
-// existem nesta stack (`showData`, `compact`, os rótulos da tabela de dados).
+// nota da API, a extensibilidade e os rótulos de entradas que só existem nesta
+// stack (`showData`, `compact`, os rótulos da tabela de dados).
+//
+// A ANATOMIA saiu daqui: ela descreve o que é EMITIDO — container, elemento do
+// desenho e tabela de dados equivalente —, e isso passou a valer nas cinco.
+// Está no conteúdo compartilhado; override que virou regra é duplicação.
 //
 // Duas sobrescritas são de acessibilidade, não de API, e valem a leitura: o
 // papel de imagem vai no DESENHO e não no container (no container a tabela
@@ -74,12 +78,6 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'props.containerTitle': 'Chart',
   },
   'pt-BR': {
-    'anatomy.item1':
-      '<strong>Container</strong> — o bloco do design system: carrega a classe, o tipo do gráfico e, ao lado do desenho, a tabela de dados equivalente.',
-    'anatomy.item2':
-      '<strong>Elemento do desenho</strong> — onde a lib de visualização desenha. É ele que leva a marcação de imagem e a descrição, para que a tabela ao lado continue na árvore de acessibilidade.',
-    'anatomy.item3':
-      '<strong>Tabela de dados equivalente</strong> — os mesmos números do desenho em uma tabela de verdade, com cabeçalho por série e uma linha por categoria. Existe sempre; uma entrada a torna visível.',
     'usage.guidelines.item2':
       'Uma entrada escolhe o tipo do gráfico; o que muda entre um e outro é o dado, não a montagem.',
     'variants.items.bar.name': 'Barras',
@@ -96,8 +94,6 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
       '<strong>A informação não vive na cor</strong> — cada série recebe uma trama sobreposta ao preenchimento, e nas linhas também um traço e um símbolo de ponto próprios. Retirando toda a cor, o gráfico continua legível (WCAG 1.4.1).',
     'accessibility.item4':
       '<strong>Papel de imagem no desenho, não no container</strong> — a marcação de imagem fica no próprio desenho, e não no bloco que o envolve: no container ela podaria a tabela de dados junto, e a alternativa textual sumiria da árvore de acessibilidade.',
-    'accessibility.item6':
-      '<strong>Contraste</strong> — quem sustenta os 3:1 de objeto gráfico (WCAG 1.4.11) é o contorno de cada forma, não a cor de série: as cores de série do tema padrão ficam em torno de 2:1 contra o fundo. O texto dos eixos usa a cor de texto secundário, com 4.5:1.',
     'notes.tip2':
       '<strong>API declarativa</strong>: em vez de um objeto de configuração único, as entradas são declarativas — tipo, dados, eixo de categorias, séries e título. O que muda entre um gráfico e outro é o dado, não a montagem.',
     'notes.tip3':
@@ -119,20 +115,12 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'props.table.seriesName': 'Nome da série — aparece na legenda e no cabeçalho da coluna da tabela.',
     'props.table.seriesData': 'Valores da série, alinhados ao eixo de categorias.',
     'props.table.seriesColor': 'Cor explícita da série; sobrescreve o token da posição.',
-    'tokens.table.background':
-      'Traço da trama sobreposta a cada série — é ele que separa a hachura do preenchimento.',
     'tokens.table.foreground':
       'Contorno de toda forma de dado — é ele que sustenta os 3:1 de objeto gráfico — e a cor do texto do título e da dica.',
     'demonstration.labels.pie': 'Pizza',
     'demonstration.labels.dataTable': 'Tabela de dados equivalente, visível',
   },
   en: {
-    'anatomy.item1':
-      '<strong>Container</strong> — the design system block: it carries the class, the chart type and, beside the drawing, the equivalent data table.',
-    'anatomy.item2':
-      '<strong>Drawing element</strong> — where the visualization library draws. It is the one carrying the image marking and the description, so the table beside it stays in the accessibility tree.',
-    'anatomy.item3':
-      '<strong>Equivalent data table</strong> — the same numbers as the drawing in a real table, one header per series and one row per category. It always exists; one input makes it visible.',
     'usage.guidelines.item2':
       'One input picks the chart type; what changes between one chart and another is the data, not the assembly.',
     'variants.items.bar.name': 'Bars',
@@ -149,8 +137,6 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
       '<strong>Information does not live in colour</strong> — every series gets a pattern over its fill, and lines also get their own dash and point symbol. Strip all colour and the chart is still readable (WCAG 1.4.1).',
     'accessibility.item4':
       '<strong>Image role on the drawing, not on the container</strong> — the image marking sits on the drawing itself, not on the block around it: on the container it would prune the data table along with it, and the text alternative would vanish from the accessibility tree.',
-    'accessibility.item6':
-      '<strong>Contrast</strong> — what secures the 3:1 for graphical objects (WCAG 1.4.11) is the outline of each shape, not the series colour: the default theme series colours sit around 2:1 against the background. Axis text uses the secondary text colour, at 4.5:1.',
     'notes.tip2':
       '<strong>Declarative API</strong>: instead of a single configuration object, the inputs are declarative — type, data, category axis, series and title. What changes between one chart and another is the data, not the wiring.',
     'notes.tip3':
@@ -172,20 +158,12 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'props.table.seriesName': 'Series name — shows in the legend and in the table column header.',
     'props.table.seriesData': 'Series values, aligned to the category axis.',
     'props.table.seriesColor': 'Explicit series colour; overrides the token for that position.',
-    'tokens.table.background':
-      'Stroke of the pattern laid over each series — it is what separates the hatching from the fill.',
     'tokens.table.foreground':
       'Outline of every data shape — what secures the 3:1 for graphical objects — and the colour of the title and tooltip text.',
     'demonstration.labels.pie': 'Pie',
     'demonstration.labels.dataTable': 'Equivalent data table, visible',
   },
   es: {
-    'anatomy.item1':
-      '<strong>Contenedor</strong> — el bloque del design system: lleva la clase, el tipo de gráfico y, junto al dibujo, la tabla de datos equivalente.',
-    'anatomy.item2':
-      '<strong>Elemento del dibujo</strong> — donde dibuja la librería de visualización. Es el que lleva la marca de imagen y la descripción, para que la tabla a su lado siga en el árbol de accesibilidad.',
-    'anatomy.item3':
-      '<strong>Tabla de datos equivalente</strong> — los mismos números del dibujo en una tabla real, con un encabezado por serie y una fila por categoría. Existe siempre; una entrada la hace visible.',
     'usage.guidelines.item2':
       'Una entrada elige el tipo de gráfico; lo que cambia entre uno y otro es el dato, no el armado.',
     'variants.items.bar.name': 'Barras',
@@ -202,8 +180,6 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
       '<strong>La información no vive en el color</strong> — cada serie recibe una trama sobre el relleno, y en las líneas también un trazo y un símbolo de punto propios. Quitando todo el color, el gráfico sigue siendo legible (WCAG 1.4.1).',
     'accessibility.item4':
       '<strong>Rol de imagen en el dibujo, no en el contenedor</strong> — la marca de imagen va en el propio dibujo, no en el bloque que lo envuelve: en el contenedor podaría también la tabla de datos, y la alternativa textual desaparecería del árbol de accesibilidad.',
-    'accessibility.item6':
-      '<strong>Contraste</strong> — quien sostiene los 3:1 de objeto gráfico (WCAG 1.4.11) es el contorno de cada forma, no el color de serie: los colores de serie del tema por defecto rondan los 2:1 contra el fondo. El texto de los ejes usa el color de texto secundario, con 4.5:1.',
     'notes.tip2':
       '<strong>API declarativa</strong>: en lugar de un objeto de configuración único, las entradas son declarativas — tipo, datos, eje de categorías, series y título. Lo que cambia entre un gráfico y otro es el dato, no el montaje.',
     'notes.tip3':
@@ -225,8 +201,6 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'props.table.seriesName': 'Nombre de la serie — aparece en la leyenda y en el encabezado de la columna.',
     'props.table.seriesData': 'Valores de la serie, alineados al eje de categorías.',
     'props.table.seriesColor': 'Color explícito de la serie; sobrescribe el token de la posición.',
-    'tokens.table.background':
-      'Trazo de la trama superpuesta a cada serie — es lo que separa el rayado del relleno.',
     'tokens.table.foreground':
       'Contorno de toda forma de dato — es lo que sostiene los 3:1 de objeto gráfico — y color del texto del título y de la ayuda emergente.',
     'demonstration.labels.pie': 'Circular',
@@ -910,6 +884,9 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
       { token: '--chart-3',          k: 'chart3',          parte: 'series[2]'                   },
       { token: '--chart-4',          k: 'chart4',          parte: 'series[3]'                   },
       { token: '--chart-5',          k: 'chart5',          parte: 'series[4]'                   },
+      { token: '--chart-6',          k: 'chart6',          parte: 'series[5]'                   },
+      { token: '--chart-7',          k: 'chart7',          parte: 'series[6]'                   },
+      { token: '--chart-8',          k: 'chart8',          parte: 'series[7]'                   },
       { token: '--foreground',       k: 'foreground',      parte: 'itemStyle.borderColor'       },
       { token: '--muted-foreground', k: 'mutedForeground', parte: 'axisLabel.color'             },
       { token: '--border',           k: 'border',          parte: 'splitLine.lineStyle.color'   },
