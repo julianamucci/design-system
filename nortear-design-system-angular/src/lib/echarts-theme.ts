@@ -76,8 +76,15 @@ export function rootFontSize(): number {
   return Number.isFinite(medida) && medida > 0 ? medida : 16;
 }
 
-/** Degrau tipográfico do desenho, em pixels, relativo à fonte raiz. */
-function scaled(fator: number): number {
+/**
+ * Degrau tipográfico do desenho, em pixels, relativo à fonte raiz.
+ *
+ * Exportado porque o espaço que o desenho reserva para título e legenda é
+ * medido no MESMO degrau do texto que vai ali dentro: cravar 48px reserva
+ * espaço para a fonte de hoje e corta o rótulo quando a pessoa aumenta a do
+ * navegador (WCAG 1.4.4). Quem precisa de pixel pede o degrau, não o número.
+ */
+export function scaled(fator: number): number {
   return Math.round(rootFontSize() * fator);
 }
 

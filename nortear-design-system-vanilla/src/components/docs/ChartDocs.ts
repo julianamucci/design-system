@@ -58,6 +58,15 @@ const multiSeries = [
   { name: 'Mobile', data: [120, 190, 165, 98, 174, 158] },
 ];
 
+// Etapas de um processo, da entrada à saída. A ordem é o percurso, não o valor:
+// é a primeira etapa que serve de referência à coluna de participação.
+const funnelStages = [
+  { label: 'Visitas', value: 1000 },
+  { label: 'Cadastros', value: 620 },
+  { label: 'Carrinho', value: 260 },
+  { label: 'Compra', value: 90 },
+];
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
@@ -91,6 +100,25 @@ function buildLinePreview(): HTMLElement {
     height: 200,
     class: 'nds-w-full nds-max-w-md',
     'aria-label': 'Gráfico de linhas: tendência dos acessos de janeiro a junho',
+  });
+}
+
+// A coluna de participação do funil é a que escreve o que a LARGURA da faixa
+// comunica, e o título dela vem do conteúdo compartilhado — sem ele a tabela
+// sairia com o rótulo padrão da factory, que não acompanha o idioma da página.
+//
+// Pela mesma razão a primeira coluna é nomeada aqui: no funil ela não traz uma
+// categoria qualquer, e sim a ETAPA do processo. O rótulo genérico serve a
+// barra e a linha, onde a coluna nomeia mesmo uma categoria.
+function buildFunnelPreview(): HTMLElement {
+  return createChart({
+    data: funnelStages,
+    type: 'funnel',
+    height: 220,
+    class: 'nds-w-full nds-max-w-md',
+    categoryLabel: stripHtml(t('demonstration.labels.funnelStage')),
+    shareLabel: stripHtml(t('demonstration.labels.funnelShare')),
+    'aria-label': 'Funil de conversão: visitas, cadastros, carrinho e compra',
   });
 }
 
@@ -355,7 +383,7 @@ const el = createChart({
     { label: 'Feb', value: 305 },
     { label: 'Mar', value: 237 },
   ],
-  type: 'bar',   // 'bar' | 'line' | 'area' | 'pie'
+  type: 'bar',   // 'bar' | 'line' | 'area' | 'pie' | 'funnel'
   height: 200,
   // Vira o role="img" + aria-label do desenho, e a legenda da tabela de dados
   // que acompanha. Sem ele, o desenho é conteúdo perdido para quem usa leitor
@@ -378,6 +406,23 @@ document.body.appendChild(el);`,
   type: 'line',
   height: 200,
   'aria-label': 'Gráfico de linhas: tendência dos acessos de janeiro a junho',
+});`;
+
+        const codeFunnel = `const etapas = [
+  { label: 'Visitas', value: 1000 },
+  { label: 'Cadastros', value: 620 },
+  { label: 'Carrinho', value: 260 },
+  { label: 'Compra', value: 90 },
+];
+
+const el = createChart({
+  data: etapas,
+  type: 'funnel',
+  height: 220,
+  // Cabeçalho da terceira coluna da tabela de dados: a participação de cada
+  // etapa em relação à primeira, que é o que a largura da faixa desenha.
+  shareLabel: 'Participação',
+  'aria-label': 'Funil de conversão: visitas, cadastros, carrinho e compra',
 });`;
 
         const codeSmallInline = `const wrap = document.createElement('div');
@@ -417,6 +462,12 @@ wrap.appendChild(spark);`;
               description: stripHtml(t('variants.items.line')),
               code: codeLine,
               previewFactory: () => buildLinePreview(),
+            },
+            {
+              name: 'funnel',
+              description: stripHtml(t('variants.items.funnel')),
+              code: codeFunnel,
+              previewFactory: () => buildFunnelPreview(),
             },
             {
               name: stripHtml(t('variants.items.smallInline.name')),
@@ -522,7 +573,7 @@ card.appendChild(content);`;
 
       case 'propriedades': {
         const interfaceCode = `// createChart(options) → HTMLElement
-export type ChartType = 'bar' | 'line' | 'area' | 'pie';
+export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'funnel';
 
 export interface ChartDataPoint {
   label: string;
@@ -558,6 +609,12 @@ export interface ChartOptions {
   'aria-label'?: string;
   /** Frase exibida no lugar do desenho quando não há dado. */
   emptyLabel?: string;
+  /** Cabeçalho da primeira coluna da tabela de dados. */
+  categoryLabel?: string;
+  /** Nome da série na tabela quando o dado chega na forma simples. */
+  valueLabel?: string;
+  /** Cabeçalho da coluna de participação — só a rosca e o funil a têm. */
+  shareLabel?: string;
 }`;
 
         const propsCols = {
@@ -600,7 +657,7 @@ export interface ChartOptions {
                 },
                 {
                   name: 'type',
-                  type: "'bar' | 'line' | 'area' | 'pie'",
+                  type: "'bar' | 'line' | 'area' | 'pie' | 'funnel'",
                   defaultValue: "'bar'",
                   required: 'Não',
                   description: toPlainText(t('props.table.chartType')),

@@ -15,9 +15,9 @@ export interface ChartSeries { name: string; data: number[]; color?: string }
 
 // ─── Vocabulário do desenho ──────────────────────────────────────────────────
 //
-// A trama do `decal` cumpre a WCAG 1.4.1 onde há ÁREA para tramar — barra e
-// fatia. A linha não tem área: uma série vira um traço de um pixel e meio, e a
-// trama não chega nela. O que resta ali é a forma do ponto e o desenho do
+// A trama do `decal` cumpre a WCAG 1.4.1 onde há ÁREA para tramar — barra,
+// fatia e faixa de funil. A linha não tem área: uma série vira um traço de um
+// pixel e meio, e a trama não chega nela. O que resta ali é a forma do ponto e o desenho do
 // traço, e sem os dois duas séries só se distinguem pela cor.
 //
 // Símbolo, traço e trama vão até CINCO; a paleta de cor vai até oito. Da sexta
@@ -102,6 +102,63 @@ function buildAxisOption(type: 'bar' | 'line' | 'area', o: OptionsBase): ECharts
 export const buildBarOption  = (o: OptionsBase): EChartsCoreOption => buildAxisOption('bar',  o);
 export const buildLineOption = (o: OptionsBase): EChartsCoreOption => buildAxisOption('line', o);
 export const buildAreaOption = (o: OptionsBase): EChartsCoreOption => buildAxisOption('area', o);
+
+/**
+ * Funil: etapas de um processo que afunila, uma faixa por etapa.
+ *
+ * A ordem da lista é a do PERCURSO, e o desenho a respeita — ver `sort` abaixo.
+ * É essa ordem que dá sentido à terceira coluna da alternativa textual: a
+ * participação de cada etapa em relação à primeira, que é exatamente o que a
+ * largura da faixa desenha.
+ */
+export function buildFunnelOption(o: {
+  data: ChartDataPoint[];
+  title?: string;
+}): EChartsCoreOption {
+  return {
+    // Sem `textStyle`: o tamanho do título é medido a partir da fonte raiz e
+    // vive no tema do container — ver `buildAxisOption` acima.
+    title: o.title ? { text: o.title, left: 'left' } : undefined,
+    tooltip: { trigger: 'item', formatter: '{b}: {c}' },
+    // A faixa não tem eixo que a nomeie e não leva rótulo escrito por dentro
+    // (ver `label`): sem a legenda, a única pista de qual etapa é qual seria a
+    // cor.
+    legend: { bottom: 0, icon: 'roundRect', itemWidth: 12, itemHeight: 8 },
+    series: [{
+      type: 'funnel',
+      // A ordem é a do PROCESSO, não a do valor. `descending`, que é o padrão da
+      // lib, reordena as etapas pelo tamanho: bastaria uma etapa que recupera
+      // volume para o desenho contar outra história, e para a coluna de
+      // participação passar a se referir a uma etapa que não é a entrada.
+      sort: 'none',
+      // A largura da faixa É a informação, então ela não pode depender do menor
+      // valor do conjunto. Com `min: 0` e a faixa indo de 0% a 100% da caixa, a
+      // largura de cada etapa é o valor dela sobre o da maior — o mesmo número
+      // que a coluna de participação escreve.
+      min: 0,
+      minSize: '0%',
+      maxSize: '100%',
+      left: '10%',
+      right: '10%',
+      top: o.title ? 48 : 16,
+      bottom: 48,
+      // Um respiro entre as faixas: sem ele o contorno de uma encosta no da
+      // vizinha e as duas viram um bloco só.
+      gap: 2,
+      // Sem rótulo desenhado por dentro da faixa: ele nasceria em branco fixo
+      // sobre a cor da série — contraste que muda com a etapa e com o tema —, e
+      // a mesma informação já está na legenda, em texto de tema, e na tabela.
+      label: { show: false },
+      labelLine: { show: false },
+      data: o.data.map((p) => ({ name: p.label, value: p.value })),
+    }],
+    // Preferência de movimento respeitada com o mesmo helper e os mesmos tokens
+    // de duração do resto do design system — o gráfico animava sempre.
+    animation: !prefersReducedMotion(),
+    animationDuration: Math.round(motionDuration('moderate') * 1000),
+    aria: ARIA,
+  };
+}
 
 export function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption {
   return {

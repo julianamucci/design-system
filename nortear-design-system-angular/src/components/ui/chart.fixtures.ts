@@ -7,6 +7,7 @@
 // (WCAG 1.4.11 pede 3:1) e "olhar e achar bonito" não a verifica. As play
 // functions resolvem o token no navegador e medem.
 
+import { expect, waitFor } from 'storybook/test';
 import { getInstanceByDom } from 'echarts/core';
 import type { ECharts } from 'echarts/core';
 
@@ -34,6 +35,20 @@ export const DATA_DISPOSITIVO: ChartDataPoint[] = [
   { label: 'Desktop', value: 1224 },
   { label: 'Mobile', value: 860 },
   { label: 'Tablet', value: 320 },
+];
+
+/**
+ * Quatro etapas de um processo que afunila.
+ *
+ * Os valores dão participações redondas em relação à primeira etapa — 100%,
+ * 60%, 30% e 12% — porque é essa coluna que a tabela do funil repete, e um
+ * número redondo torna a asserção legível sem arredondamento no meio.
+ */
+export const FUNNEL_STAGES: ChartDataPoint[] = [
+  { label: 'Visitas', value: 4000 },
+  { label: 'Cadastros', value: 2400 },
+  { label: 'Carrinho', value: 1200 },
+  { label: 'Compra', value: 480 },
 ];
 
 /** Uma série curta, para o mini gráfico ao lado de um número. */
@@ -144,6 +159,31 @@ function rgbHsl(h: number, s: number, l: number): RGB {
 // Corolário para quem for "simplificar" isto: as contagens esperadas nas stories
 // são o NÚMERO DE DADOS (6 barras, 3 fatias, 2 séries). Se um coletor voltar a
 // divergir, o número esperado não é o que se ajusta.
+
+/**
+ * Espera a ANIMAÇÃO DE ENTRADA fechar. Precondição de todo coletor abaixo.
+ *
+ * "O desenho pintou" é cedo demais para quem vai CONTAR formas: enquanto a
+ * entrada corre, cada forma sai com `fill-opacity="0"` e sobe até 1. E isso
+ * não borra a medida — mede outra coisa. O único elemento que TERMINA em
+ * `fill-opacity="0"` é o fundo da legenda, e é justamente por essa marca que
+ * `caixaDaLegenda` o encontra; no meio da animação há um candidato por forma
+ * desenhada, o primeiro deles uma faixa do funil, e a caixa da legenda sai
+ * sendo a primeira faixa. Nada mais é excluído como legenda, e um funil de
+ * quatro etapas devolve oito formas.
+ *
+ * Por isso a condição de parada é a própria invariante que o coletor assume:
+ * no máximo UM `fill-opacity="0"` no desenho. Sem legenda o número é zero e a
+ * espera passa direto; com `prefers-reduced-motion` não há animação e também
+ * não há o que esperar.
+ */
+export async function drawingSettled(root: ParentNode): Promise<void> {
+  await waitFor(
+    () => expect(root.querySelectorAll('svg path[fill-opacity="0"]').length)
+      .toBeLessThanOrEqual(1),
+    { timeout: 3000 },
+  );
+}
 
 /** Molde e recorte referenciados por `url(#…)`: vocabulário, não desenho. */
 function emDefs(forma: Element): boolean {

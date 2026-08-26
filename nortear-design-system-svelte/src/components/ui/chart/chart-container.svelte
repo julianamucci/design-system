@@ -7,7 +7,7 @@
   import type { HTMLAttributes } from 'svelte/elements';
   import { cn } from '@/lib/utils.js';
   import * as echarts from 'echarts/core';
-  import { BarChart, LineChart, PieChart } from 'echarts/charts';
+  import { BarChart, FunnelChart, LineChart, PieChart } from 'echarts/charts';
   import {
     TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
     AriaComponent,
@@ -21,7 +21,7 @@
   // em silêncio, e a trama sobreposta a cada série — que é o que cumpre a WCAG
   // 1.4.1 quando a cor sai de cena — nunca chega a ser desenhada.
   echarts.use([
-    BarChart, LineChart, PieChart,
+    BarChart, LineChart, PieChart, FunnelChart,
     TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
     AriaComponent,
     SVGRenderer, CanvasRenderer,
@@ -63,7 +63,13 @@
     categoryLabel?: string;
     /** Rótulo da coluna de valores quando a série não tem nome próprio. */
     valueLabel?: string;
-    /** Rótulo da coluna de participação — só a pizza a escreve. */
+    /**
+     * Rótulo da coluna de participação — só a pizza e o funil a escrevem.
+     *
+     * É um rótulo só porque é uma COLUNA só; o que muda entre os dois não é o
+     * título, é a referência da conta, e ela vem do desenho: na pizza a fatia é
+     * parte de um total, no funil a etapa é o que sobrou da primeira.
+     */
     shareLabel?: string;
   } = $props();
 
@@ -202,6 +208,12 @@
       line: { itemStyle: { borderColor: fg, borderWidth: 2 }, lineStyle: { width: 2 } },
       bar: { itemStyle: { borderColor: fg, borderWidth: 1 } },
       pie: { itemStyle: { borderColor: fg, borderWidth: 1 } },
+      // O funil entra pela mesma porta que as outras séries de área: o contorno
+      // é do TEMA, não do option. É o que faz a troca de tema recolorir o traço
+      // no lugar, por `setTheme`, sem remontar o desenho — no option ele
+      // ficaria congelado na cor do tema em que a instância nasceu. E é ele que
+      // separa uma faixa da seguinte, que aqui se tocam de perto.
+      funnel: { itemStyle: { borderColor: fg, borderWidth: 1 } },
     };
   }
 

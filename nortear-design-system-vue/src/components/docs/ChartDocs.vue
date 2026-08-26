@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption } from '@/components/ui/chart';
+import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption } from '@/components/ui/chart';
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
@@ -150,6 +150,13 @@ const pieData = [
   { label: 'Mobile',  value: 860 },
   { label: 'Tablet',  value: 320 },
 ];
+// Quatro etapas de um processo que afunila, da mais larga para a mais estreita.
+const funnelStages = [
+  { label: 'Visitas',   value: 4000 },
+  { label: 'Cadastros', value: 2400 },
+  { label: 'Carrinho',  value: 1200 },
+  { label: 'Compra',    value: 480 },
+];
 
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
@@ -161,6 +168,7 @@ const codeImportSecondary = `import {
   buildLineOption,
   buildAreaOption,
   buildPieOption,
+  buildFunnelOption,
 } from "@/components/ui/chart";`;
 
 // A altura é prop, não classe: a única forma documentada antes era uma classe
@@ -172,6 +180,8 @@ const codeLineChart = `<ChartContainer :option="buildLineOption({ xAxis: xMonths
 const codeAreaChart = `<ChartContainer :option="buildAreaOption({ xAxis: xMonths, series: multiSeries })" :height="300" aria-label="Volume de acessos por dispositivo" />`;
 
 const codePieChart = `<ChartContainer :option="buildPieOption({ data: pieData })" :height="300" aria-label="Distribuição de acessos por dispositivo" />`;
+
+const codeFunnelChart = `<ChartContainer :option="buildFunnelOption({ data: funnelStages })" :height="300" aria-label="Funil de conversão: da visita à compra" />`;
 
 const codeCustomizationTokens = `/* Em globals.css — personalizar tokens de cor das séries */
 :root {
@@ -219,7 +229,8 @@ interface OptionsBase {
 declare function buildBarOption(o: OptionsBase): EChartsCoreOption;
 declare function buildLineOption(o: OptionsBase): EChartsCoreOption;
 declare function buildAreaOption(o: OptionsBase): EChartsCoreOption;
-declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;`;
+declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;
+declare function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;`;
 
 // ─── Computed data ────────────────────────────────────────────────────────────
 
@@ -235,6 +246,7 @@ const variantItems = computed(() => [
   { name: 'line', description: stripHtml(tContent('variants.items.line')), code: codeLineChart },
   { name: 'area', description: stripHtml(tContent('variants.items.area')), code: codeAreaChart },
   { name: 'pie',  description: stripHtml(tContent('variants.items.pie')),  code: codePieChart  },
+  { name: 'funnel', description: stripHtml(tContent('variants.items.funnel')), code: codeFunnelChart },
   {
     name: tContent('variants.items.smallInline.name'),
     description: tContent('variants.items.smallInline.description'),
@@ -309,7 +321,7 @@ const legendPropItems = computed(() => [
   // Nesta stack o tipo do gráfico não é uma prop: é a escolha do builder que
   // monta o `option`. A linha existe porque a pergunta "como escolho o tipo?"
   // continua sendo a primeira de quem chega.
-  { name: 'buildBarOption | buildLineOption | buildAreaOption | buildPieOption', type: '(options) => EChartsCoreOption', defaultValue: '—', required: 'Sim', description: toPlainText(tContent('props.table.chartType')) },
+  { name: 'buildBarOption | buildLineOption | buildAreaOption | buildPieOption | buildFunnelOption', type: '(options) => EChartsCoreOption', defaultValue: '—', required: 'Sim', description: toPlainText(tContent('props.table.chartType')) },
   { name: 'data',       type: '{ label: string; value: number }[]',           defaultValue: '—',    required: 'Não', description: toPlainText(tContent('props.table.data'))       },
   { name: 'xAxis',      type: '(string | number)[]',                          defaultValue: '—',    required: 'Não', description: toPlainText(tContent('props.table.xAxis'))      },
   { name: 'series',     type: '{ name: string; data: number[]; color?: string }[]', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.series')) },
@@ -667,8 +679,30 @@ const visualTestItems = computed(() => [
           />
         </div>
       </template>
-      <!-- Small inline (sparkline) -->
+      <!-- Funnel chart. O recuo e a largura vêm de utilitário `.nds-*`, e não de
+           `style`: inline vence a folha e a peça sai do tema, da densidade e da
+           escala tipográfica. Os previews vizinhos ainda trazem a dívida que o
+           `inline_style_design_value` mede; este não a aumenta. -->
       <template #variant-preview-4>
+        <div
+          class="nds-stack nds-p-4"
+          data-spacing="sm"
+        >
+          <!-- A primeira coluna da tabela do funil não é uma categoria
+               qualquer: é a ETAPA do processo, e é esse o nome que a pessoa lê.
+               O rótulo genérico serve a barra e a linha, onde a coluna nomeia
+               mesmo uma categoria. -->
+          <ChartContainer
+            :option="buildFunnelOption({ data: funnelStages })"
+            class="nds-w-full nds-max-w-sm"
+            :height="200"
+            :category-label="stripHtml(tContent('demonstration.labels.funnelStage'))"
+            aria-label="Funil de conversão: da visita à compra"
+          />
+        </div>
+      </template>
+      <!-- Small inline (sparkline) -->
+      <template #variant-preview-5>
         <div
           class="nds-cluster nds-rounded-md nds-border-default nds-p-4"
           data-spacing="md"

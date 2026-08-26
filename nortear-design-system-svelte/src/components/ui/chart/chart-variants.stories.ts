@@ -2,15 +2,16 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, waitFor } from 'storybook/test';
 import {
   ChartContainer,
-  buildBarOption, buildLineOption, buildAreaOption, buildPieOption,
+  buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption,
 } from './index';
 import {
-  designEscreve, exigirRoot, datumFormas,
+  designEscreve, exigirRoot, datumFormas, tramasAplicadas,
 } from '@shared/testing/chart-probe';
-import { waitForDesign } from './chart.fixtures';
+import { drawingSettled, waitForDesign } from './chart.fixtures';
 import {
   chartAreaSource,
   chartBarrasSource,
+  chartFunnelSource,
   chartLinesSource,
   chartPizzaSource,
   chartSource,
@@ -27,6 +28,19 @@ const DATA_DISPOSITIVO = [
   { label: 'Desktop', value: 580 },
   { label: 'Mobile', value: 420 },
   { label: 'Tablet', value: 180 },
+];
+
+/**
+ * Etapas de um processo, da entrada à saída.
+ *
+ * A ordem é a do percurso, não a do valor, e é ela que dá sentido à coluna de
+ * participação: 100%, 62%, 26% e 9% da PRIMEIRA etapa.
+ */
+const FUNNEL_STAGES = [
+  { label: 'Visitas', value: 1000 },
+  { label: 'Cadastros', value: 620 },
+  { label: 'Carrinho', value: 260 },
+  { label: 'Compra', value: 90 },
 ];
 
 const meta: Meta = {
@@ -62,6 +76,36 @@ function categoriaAlturas(root: HTMLElement): number[] {
     byCenter.set(center, Math.max(byCenter.get(center) ?? 0, r.height));
   }
   return [...byCenter.entries()].sort((a, b) => a[0] - b[0]).map(([, height]) => height);
+}
+
+/**
+ * Largura de cada faixa do funil, de cima para baixo.
+ *
+ * Cada faixa chega ao DOM como DUAS formas sobrepostas — a cor e a trama —, com
+ * a mesma geometria; agrupar pelo centro em y junta o par e devolve uma medida
+ * por etapa, sem depender da ordem em que a lib emite os nós.
+ *
+ * Os ícones da legenda entram na mesma varredura de propósito: o `<svg>` do
+ * zrender é PLANO, a legenda não é subárvore, e filtrá-los por tamanho seria
+ * cravar um limiar. Eles são desenhados abaixo do funil (`legend.bottom: 0`
+ * contra `series.bottom: 48`), então ordenar por y e tomar as `count` primeiras
+ * faixas deixa a fileira de ícones de fora sem precisar reconhecê-la.
+ *
+ * `getBoundingClientRect` e não `getBBox`: os caminhos de dentro do `<pattern>`
+ * da trama também casam o seletor, e só o primeiro os enxerga como zero.
+ */
+function bandWidths(root: HTMLElement, count: number): number[] {
+  const byCenter = new Map<number, number>();
+  for (const forma of datumFormas(root)) {
+    const box = forma.getBoundingClientRect();
+    if (box.width === 0) continue;
+    const center = Math.round(box.y + box.height / 2);
+    byCenter.set(center, Math.max(byCenter.get(center) ?? 0, box.width));
+  }
+  return [...byCenter.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .slice(0, count)
+    .map(([, width]) => width);
 }
 
 export const Bar: Story = {
@@ -238,6 +282,87 @@ export const Pie: Story = {
 
     await step('Uma forma desenhada por fatia, no mínimo', async () => {
       await expect(datumFormas(root).length).toBeGreaterThanOrEqual(DATA_DISPOSITIVO.length);
+    });
+  },
+};
+
+export const Funnel: Story = {
+  parameters: {
+    covers: ['functional.item7', 'visual.item5'],
+    docs: {
+      source: { transform: chartFunnelSource },
+      description: {
+        story: 'Funil — etapas de um processo que afunila. A largura de cada faixa é a participação dela em relação à primeira etapa.',
+      },
+    },
+  },
+  args: {
+    option: buildFunnelOption({ data: FUNNEL_STAGES }),
+    height: 280,
+    class: 'nds-w-full',
+    shareLabel: 'Participação',
+    'aria-label': 'Funil de conversão: visitas, cadastros, carrinho e compra',
+  },
+  play: async ({ canvasElement, step }) => {
+    const root = exigirRoot(canvasElement);
+    await waitForDesign(root);
+    // Contar formas exige a animação de entrada fechada: ver `drawingSettled`.
+    await drawingSettled(root);
+
+    await step('A legenda escreve o nome de CADA etapa', async () => {
+      // A faixa não tem eixo que a nomeie e não leva rótulo por dentro: sem a
+      // legenda escrita, a única pista da etapa seria a cor.
+      await waitFor(() => {
+        for (const stage of FUNNEL_STAGES) {
+          expect(designEscreve(root, stage.label)).toBe(true);
+        }
+      }, { timeout: 3000 });
+    });
+
+    await step('Uma faixa desenhada por etapa, no mínimo', async () => {
+      await expect(datumFormas(root).length).toBeGreaterThanOrEqual(FUNNEL_STAGES.length);
+    });
+
+    await step('As faixas afunilam, e a largura de cada uma é a participação', async () => {
+      // A largura é o que o desenho comunica, e a coluna de participação é o
+      // que a escreve — as duas medidas têm de ser a MESMA. Dentro de um
+      // `waitFor` porque as faixas crescem: a lib as anima, e enquanto a
+      // animação corre a largura medida ainda não é a final.
+      const entry = FUNNEL_STAGES[0].value;
+      await waitFor(() => {
+        const widths = bandWidths(root, FUNNEL_STAGES.length);
+        expect(widths).toHaveLength(FUNNEL_STAGES.length);
+        for (const [i, stage] of FUNNEL_STAGES.entries()) {
+          if (i > 0) expect(widths[i]).toBeLessThan(widths[i - 1]);
+          // Tolerância de uma casa: o contorno de 1px engorda a caixa medida
+          // nas duas pontas, e a comparação é de proporção, não de pixel.
+          expect(widths[i] / widths[0]).toBeCloseTo(stage.value / entry, 1);
+        }
+      }, { timeout: 3000 });
+    });
+
+    await step('A tabela traz etapa, valor e participação em relação à primeira', async () => {
+      const columns = [...root.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
+      await expect(columns).toEqual(['Categoria', 'Valor', 'Participação']);
+
+      const entry = FUNNEL_STAGES[0].value;
+      const rows = [...root.querySelectorAll<HTMLTableRowElement>('tbody tr')];
+      await expect(rows).toHaveLength(FUNNEL_STAGES.length);
+      for (const [i, row] of rows.entries()) {
+        await expect(row.querySelector('th')?.textContent?.trim()).toBe(FUNNEL_STAGES[i].label);
+        const cells = [...row.querySelectorAll('td')].map((c) => c.textContent?.trim());
+        await expect(cells[0]).toBe(String(FUNNEL_STAGES[i].value));
+        await expect(cells[1]).toBe(`${Math.round((FUNNEL_STAGES[i].value / entry) * 1000) / 10}%`);
+      }
+    });
+
+    await step('E a cor não é o único sinal: a trama alcança a faixa', async () => {
+      // WCAG 1.4.1 — a faixa é forma PREENCHIDA, então a hachura chega nela
+      // como chega à barra e à fatia. Aqui se mede que ela chegou; que ela é
+      // traçada na cor do fundo, e não na lista padrão da lib, é propriedade do
+      // tema compartilhado pelos tipos e está medida na story de contraste
+      // gráfico.
+      await expect(tramasAplicadas(root).size).toBeGreaterThanOrEqual(1);
     });
   },
 };

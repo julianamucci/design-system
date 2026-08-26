@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 
 import * as echarts from 'echarts/core';
-import { BarChart, LineChart, PieChart } from 'echarts/charts';
+import { BarChart, FunnelChart, LineChart, PieChart } from 'echarts/charts';
 import {
   TitleComponent,
   TooltipComponent,
@@ -22,7 +22,14 @@ import {
 } from 'echarts/components';
 import { SVGRenderer } from 'echarts/renderers';
 
-import { THEME_NAME, rootFontSize, hsl, registerNortearTheme, watchTheme } from '@/lib/echarts-theme';
+import {
+  THEME_NAME,
+  rootFontSize,
+  scaled,
+  hsl,
+  registerNortearTheme,
+  watchTheme,
+} from '@/lib/echarts-theme';
 import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 
 // ─── Chart ────────────────────────────────────────────────────────────────────
@@ -57,6 +64,14 @@ import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 //    um elemento que o próprio `role="img"` poda. A tabela é do componente, e
 //    continua sendo.
 //
+//    Corolário para todo tipo em que o desenho comunica uma PROPORÇÃO: a
+//    tabela ganha uma terceira coluna com esse número. O ângulo da fatia e a
+//    largura da faixa do funil não se leem em texto — sem a coluna, a
+//    alternativa textual traria menos informação que o desenho, e aí deixaria
+//    de ser equivalente. A base da conta muda com o tipo: na rosca é o total,
+//    no funil é a PRIMEIRA etapa, porque o que o funil mostra é quanto sobrou
+//    de onde o processo começou.
+//
 // 2. `role="img"` + `aria-label` vão no elemento do **DESENHO**, não no `<div>`
 //    container. Isto diverge do texto do conteúdo compartilhado, que fala em
 //    `div[data-slot=chart]`, e a divergência é deliberada: `role="img"` poda a
@@ -72,10 +87,12 @@ import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 //    próprio (círculo, quadrado, triângulo, losango, seta) e desenho de traço
 //    próprio. Retirando toda a cor, o gráfico continua legível.
 //
-// 4. CONTRASTE (WCAG 1.4.11). Toda forma de dado — barra, fatia, símbolo — é
-//    contornada com `hsl(var(--foreground))`, que passa de 3:1 contra o fundo
-//    em qualquer tema. O contorno vem do tema (`bar/line/pie.itemStyle.
-//    borderColor` em `@/lib/echarts-theme`) e é ele que delimita o objeto
+// 4. CONTRASTE (WCAG 1.4.11). Toda forma de dado — barra, fatia, faixa,
+//    símbolo — é contornada com `hsl(var(--foreground))`, que passa de 3:1
+//    contra o fundo em qualquer tema. O contorno vem do tema (`bar/line/pie.
+//    itemStyle.borderColor` em `@/lib/echarts-theme`); o funil, que não tem
+//    entrada no tema, declara o seu no próprio option, e o option é
+//    recalculado a cada troca de tema. É ele que delimita o objeto
 //    gráfico, e não a cor de série. O contorno nasceu quando a paleta ia de
 //    2.07 a 13.23 no claro e de 1.00 a 6.41 no escuro — uma das cores ERA o
 //    fundo, contraste 1.00, e sem contorno aquela série sumia. Com as oito
@@ -97,7 +114,7 @@ import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 // silêncio, e a trama sobreposta a cada série — que é o que cumpre a WCAG 1.4.1
 // quando a cor sai de cena — nunca chega a ser desenhada.
 echarts.use([
-  BarChart, LineChart, PieChart,
+  BarChart, LineChart, PieChart, FunnelChart,
   TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
   AriaComponent,
   SVGRenderer,
@@ -105,7 +122,7 @@ echarts.use([
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export type ChartType = 'bar' | 'line' | 'area' | 'pie';
+export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'funnel';
 
 /** Forma simples: 1 série, rótulo + valor. */
 export interface ChartDataPoint {
@@ -245,7 +262,7 @@ export class NdsChart {
    */
   readonly label = input.required<string>();
 
-  /** Dataset simples de uma série — e a única forma aceita por `pie`. */
+  /** Dataset simples de uma série — e a única forma aceita por `pie` e `funnel`. */
   readonly data = input<ChartDataPoint[] | undefined>(undefined);
 
   /** Rótulos do eixo de categorias quando há multi-série. */
@@ -290,7 +307,11 @@ export class NdsChart {
    */
   private readonly temaVersao = signal(0);
 
-  protected readonly cartesiano = computed(() => this.type() !== 'pie');
+  /** Tem eixo de categorias e eixo de valor. Rosca e funil não têm. */
+  protected readonly cartesiano = computed(() => {
+    const type = this.type();
+    return type !== 'pie' && type !== 'funnel';
+  });
 
   protected readonly ratio = computed(() => (this.compact() ? RATIO_COMPACT : RATIO));
 
@@ -313,23 +334,30 @@ export class NdsChart {
     return Array.from({ length: maior }, (_, i) => String(i + 1));
   });
 
-  /** Fatias da pizza — só a forma simples faz sentido aqui. */
-  protected readonly fatiasDados = computed<ChartDataPoint[]>(() => this.data() ?? []);
+  /**
+   * Rótulo e valor, na ordem declarada — a forma que rosca e funil aceitam.
+   *
+   * A ordem é do dado e não da lib: no funil ela é a ordem do PROCESSO, e o
+   * desenho não reordena por valor (ver `optionFunnel`).
+   */
+  protected readonly simpleData = computed<ChartDataPoint[]>(() => this.data() ?? []);
 
   protected readonly vazio = computed(() => {
-    if (!this.cartesiano()) return this.fatiasDados().length === 0;
+    if (!this.cartesiano()) return this.simpleData().length === 0;
     const series = this.serieNorm();
     return series.length === 0 || series.every((s) => s.data.length === 0);
   });
 
   protected readonly legendaVisivel = computed(() => {
     if (this.compact()) return false;
-    if (!this.cartesiano()) return true; // a pizza não rotula fatia: a legenda é o rótulo
+    // Nem a rosca nem o funil escrevem o nome dentro da forma: a legenda é o
+    // rótulo, e é ela que carrega nome, valor e participação por escrito.
+    if (!this.cartesiano()) return true;
     return this.showLegend() ?? this.serieNorm().length > 1;
   });
 
   private readonly totalPizza = computed(() =>
-    this.fatiasDados().reduce((sum, p) => sum + Math.max(0, p.value), 0),
+    this.simpleData().reduce((sum, p) => sum + Math.max(0, p.value), 0),
   );
 
   // ─── Option ────────────────────────────────────────────────────────────────
@@ -353,7 +381,8 @@ export class NdsChart {
       ? { text: this.chartTitle(), left: 'left' }
       : undefined;
 
-    if (!this.cartesiano()) return this.optionPizza(title, aria, animar, dur);
+    if (this.type() === 'pie') return this.optionPizza(title, aria, animar, dur);
+    if (this.type() === 'funnel') return this.optionFunnel(title, aria, animar, dur);
     return this.optionCartesiano(title, aria, animar, dur, compact);
   });
 
@@ -363,7 +392,7 @@ export class NdsChart {
     animar: boolean,
     dur: number,
   ): echarts.EChartsCoreOption {
-    const pontos = this.fatiasDados();
+    const pontos = this.simpleData();
     // A legenda da pizza é o rótulo da fatia: sem nome, valor e participação
     // escritos, a única pista de qual fatia é qual seria a cor.
     const legendText = new Map(
@@ -393,6 +422,77 @@ export class NdsChart {
         labelLine: { show: false },
         itemStyle: { borderRadius: 4 },
         data: pontos.map((p) => ({ name: p.label, value: p.value })),
+      }],
+      animation: animar,
+      animationDuration: dur,
+      aria,
+    };
+  }
+
+  private optionFunnel(
+    title: unknown,
+    aria: unknown,
+    animar: boolean,
+    dur: number,
+  ): echarts.EChartsCoreOption {
+    const stages = this.simpleData();
+    // Mesma razão da rosca, e uma a mais: no funil a faixa só carrega cor e
+    // largura. Nome, valor e participação ficam escritos na legenda — o texto
+    // não vai DENTRO da faixa porque ali ele cairia sobre a cor de série, que
+    // é escolhida para 3:1 de objeto gráfico e não para os 4.5:1 que texto
+    // exige. Sobre o fundo da página, o mesmo texto passa em qualquer tema.
+    const legendText = new Map(
+      stages.map((stage) => [
+        stage.label,
+        `${stage.label} — ${formatarValue(stage.value)} (${this.shareOfFirst(stage.value)})`,
+      ]),
+    );
+    const legenda = this.legendaVisivel();
+    // O espaço reservado acima e abaixo do desenho nasce do degrau de texto
+    // medido, não de pixel escolhido: título e legenda crescem com a fonte do
+    // navegador, e reserva cravada os cortaria (WCAG 1.4.4).
+    const topRoom = this.chartTitle() ? scaled(3) : scaled(1.5);
+    const bottomRoom = legenda ? scaled(3) : scaled(1.5);
+
+    return {
+      title,
+      tooltip: { trigger: 'item', formatter: '{b}: {c}' },
+      legend: legenda
+        ? {
+          bottom: 0,
+          icon: 'roundRect',
+          itemWidth: 12,
+          itemHeight: 8,
+          formatter: (name: string) => legendText.get(name) ?? name,
+        }
+        : undefined,
+      series: [{
+        type: 'funnel',
+        top: topRoom,
+        bottom: bottomRoom,
+        left: '10%',
+        width: '80%',
+        // A ordem é a do PROCESSO, não a do valor. Reordenar por valor
+        // desenharia um funil bonito a partir de etapas fora de ordem, e o
+        // desenho passaria a contar uma história que o dado não conta.
+        sort: 'none',
+        // Sem piso de largura: a largura da faixa É a participação, e um piso
+        // engordaria a última etapa exatamente onde a queda é a informação.
+        // É também a coluna que a tabela repete em número — as duas leituras
+        // têm de fechar.
+        minSize: '0%',
+        maxSize: '100%',
+        // Fio de separação entre faixas vizinhas, da mesma ordem do contorno.
+        gap: 2,
+        label: { show: false },
+        labelLine: { show: false },
+        // Decisão 4 do cabeçalho: é o contorno em `--foreground` que delimita
+        // o objeto gráfico e separa uma faixa da vizinha, e não a cor de
+        // série. O tema traz o contorno de barra, linha e rosca; o funil
+        // declara o seu aqui, resolvido no tema ativo — e o option é
+        // recalculado a cada troca de tema (ver `temaVersao`).
+        itemStyle: { borderColor: hsl('foreground'), borderWidth: 1 },
+        data: stages.map((stage) => ({ name: stage.label, value: stage.value })),
       }],
       animation: animar,
       animationDuration: dur,
@@ -558,12 +658,19 @@ export class NdsChart {
 
   protected readonly table = computed<{ header: string[]; lines: string[][] }>(() => {
     if (!this.cartesiano()) {
+      // Rosca e funil compartilham a forma da tabela — três colunas, sendo a
+      // terceira a proporção que o desenho comunica e o texto não carrega
+      // sozinho. O que muda é a BASE: total das fatias na rosca, primeira
+      // etapa no funil, que é o que a largura da faixa desenha.
+      const share = this.type() === 'funnel'
+        ? (value: number) => this.shareOfFirst(value)
+        : (value: number) => this.percentual(value);
       return {
         header: [this.categoryLabel(), this.valueLabel(), this.shareLabel()],
-        lines: this.fatiasDados().map((p) => [
+        lines: this.simpleData().map((p) => [
           p.label,
           formatarValue(p.value),
-          this.percentual(p.value),
+          share(p.value),
         ]),
       };
     }
@@ -581,5 +688,19 @@ export class NdsChart {
     const total = this.totalPizza();
     if (total <= 0) return '—';
     return `${Math.round((Math.max(0, value) / total) * 1000) / 10}%`;
+  }
+
+  /**
+   * Quanto sobrou da PRIMEIRA etapa, em por cento.
+   *
+   * É o número que a largura da faixa desenha, e a razão de a tabela do funil
+   * ter três colunas: largura não se lê em texto. A base é a primeira etapa e
+   * não o total porque somar etapas de um mesmo processo conta a mesma pessoa
+   * quantas vezes ela avançou — o total não significa nada aqui.
+   */
+  private shareOfFirst(value: number): string {
+    const first = this.simpleData()[0]?.value ?? 0;
+    if (first <= 0) return '—';
+    return `${Math.round((Math.max(0, value) / first) * 1000) / 10}%`;
   }
 }

@@ -69,9 +69,12 @@ const meta: Meta<ChartArgs> = {
   argTypes: {
     type: {
       control: 'inline-radio',
-      options: ['bar', 'line', 'area', 'pie'] satisfies ChartType[],
+      options: ['bar', 'line', 'area', 'pie', 'funnel'] satisfies ChartType[],
       description: 'Tipo do gráfico. Quem escolhe é o dado, não o estilo.',
-      table: { type: { summary: "'bar' | 'line' | 'area' | 'pie'" }, defaultValue: { summary: "'bar'" } },
+      table: {
+        type: { summary: "'bar' | 'line' | 'area' | 'pie' | 'funnel'" },
+        defaultValue: { summary: "'bar'" },
+      },
     },
     'aria-label': {
       control: 'text',

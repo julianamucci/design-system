@@ -1,5 +1,6 @@
 // ─── Chart — ECharts factory ─────────────────────────────────────────────────
-// Container responsivo wrappando Apache ECharts. Suporta bar / line / area / pie.
+// Container responsivo wrappando Apache ECharts. Suporta bar / line / area /
+// pie / funnel.
 //
 // API (mantém shape próximo ao anterior pra compat com stories):
 //   createChart({ type, data, height, ... }) → HTMLElement
@@ -29,7 +30,9 @@
 //    exposta, ao lado dele.
 //
 // 3. A INFORMAÇÃO NÃO VIVE NA COR. `aria.decal.show` sobrepõe uma trama a cada
-//    série, e a legenda traz o nome escrito. A trama é DESENHADA AQUI, na cor
+//    série, e a legenda traz o nome escrito. A trama alcança toda forma
+//    PREENCHIDA — barra, fatia e faixa de funil —, porque é o preenchimento que
+//    ela hachura. A trama é DESENHADA AQUI, na cor
 //    do fundo — a lista padrão da lib nasce em preto translúcido e mal se
 //    separa do próprio preenchimento (medido entre 1.26 e 1.57 contra as oito
 //    cores de série, nos três temas): declarada, e não entregue. Na cor do
@@ -39,9 +42,10 @@
 //    losango, seta) e desenho de traço próprio. Retirando toda a cor, o gráfico
 //    continua legível (WCAG 1.4.1).
 //
-// 4. CONTRASTE (WCAG 1.4.11). Toda forma de dado — barra, fatia, símbolo — é
+// 4. CONTRASTE (WCAG 1.4.11). Toda forma de dado — barra, fatia, faixa,
+//    símbolo — é
 //    contornada com `hsl(var(--foreground))`, que passa de 3:1 contra o fundo
-//    em qualquer tema. O contorno vem do tema (`bar`/`line`/`pie` em
+//    em qualquer tema. O contorno vem do tema (`bar`/`line`/`pie`/`funnel` em
 //    `@/lib/echarts-theme`) e é ele que delimita o objeto gráfico, e não a cor
 //    de série. Ele nasceu quando a paleta ficava em torno de 2:1 contra o
 //    fundo; com `--chart-1` a `--chart-8` por modo, o pior caso passou a 7.32
@@ -49,7 +53,7 @@
 //    VIZINHA — coisa que a medida contra o fundo não cobre.
 
 import * as echarts from 'echarts/core';
-import { BarChart, LineChart, PieChart } from 'echarts/charts';
+import { BarChart, FunnelChart, LineChart, PieChart } from 'echarts/charts';
 import {
   TitleComponent,
   TooltipComponent,
@@ -69,7 +73,7 @@ import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 // silêncio, e a trama sobreposta a cada série — que é o que cumpre a WCAG 1.4.1
 // quando a cor sai de cena — nunca chega a ser desenhada.
 echarts.use([
-  BarChart, LineChart, PieChart,
+  BarChart, LineChart, PieChart, FunnelChart,
   TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
   AriaComponent,
   SVGRenderer, CanvasRenderer,
@@ -145,7 +149,7 @@ const DASHES: readonly (string | number[])[] = [
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export type ChartType = 'bar' | 'line' | 'area' | 'pie';
+export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'funnel';
 
 /** Forma simples: 1 série, label + value (compat com stories antigas). */
 export interface ChartDataPoint {
@@ -205,7 +209,14 @@ export interface ChartOptions {
   categoryLabel?: string;
   /** Nome da série na tabela quando o dado chega na forma simples. */
   valueLabel?: string;
-  /** Cabeçalho da coluna de participação — só a rosca a tem. */
+  /**
+   * Cabeçalho da coluna de participação — só a rosca e o funil a têm.
+   *
+   * É uma opção só porque é uma COLUNA só; o que muda entre os dois tipos não é
+   * o título, é a referência da conta, e ela vem do desenho: na rosca a fatia é
+   * parte de um total, no funil a etapa é o que sobrou da PRIMEIRA. Ver
+   * `shareOf`.
+   */
   shareLabel?: string;
 }
 
@@ -244,10 +255,20 @@ export function formatValue(value: number): string {
   return String(Math.round(value * 100) / 100);
 }
 
-/** Participação da fatia no total, em uma casa decimal. */
-function shareOf(value: number, total: number): string {
-  if (total <= 0) return NO_VALUE;
-  return `${Math.round((Math.max(0, value) / total) * 1000) / 10}%`;
+/**
+ * Participação de um valor sobre a REFERÊNCIA da leitura, em uma casa decimal.
+ *
+ * A conta é a mesma; a referência é que muda com o tipo, e é o desenho que a
+ * escolhe. Na rosca a fatia é parte de um TOTAL — o círculo inteiro está na
+ * tela, e é contra ele que a área de cada fatia se lê. No funil não há total à
+ * vista: o que está na tela é a largura de cada faixa comparada à da PRIMEIRA,
+ * e é essa razão que a coluna precisa escrever. Passar o total das etapas como
+ * referência daria um número correto de aritmética e falso de leitura — não
+ * descreveria faixa nenhuma.
+ */
+function shareOf(value: number, reference: number): string {
+  if (reference <= 0) return NO_VALUE;
+  return `${Math.round((Math.max(0, value) / reference) * 1000) / 10}%`;
 }
 
 /** A alternativa textual, em dado: cabeçalho e linhas prontos para a `<table>`. */
@@ -264,11 +285,36 @@ export interface ChartTable {
  */
 export function buildChartTable(opts: ChartOptions): ChartTable {
   const categoryLabel = opts.categoryLabel ?? CHART_CATEGORY_LABEL;
+  const type = opts.type ?? 'bar';
+
+  // O funil também não tem eixo: cada linha é uma etapa, na ordem do processo, e
+  // a terceira coluna é a participação em relação à PRIMEIRA etapa.
+  //
+  // Essa coluna existe pelo mesmo motivo da participação da rosca: o que o
+  // desenho comunica aqui é a LARGURA da faixa, e largura não se lê em texto. A
+  // correspondência é exata, não aproximada — o construtor de option fixa
+  // `min: 0` e a faixa vai de `minSize` a `maxSize` sobre a maior etapa, então a
+  // largura de cada faixa dividida pela da primeira é o número desta coluna.
+  if (type === 'funnel') {
+    const stages = opts.data ?? [];
+    // A entrada do processo é a primeira ETAPA, não a maior: reordenar por valor
+    // trocaria qual etapa serve de referência, e o funil descreve um percurso,
+    // não um ranking. É a mesma razão de `sort: 'none'` no desenho.
+    const entry = stages[0]?.value ?? 0;
+    return {
+      header: [
+        categoryLabel,
+        opts.valueLabel ?? CHART_VALUE_LABEL,
+        opts.shareLabel ?? CHART_SHARE_LABEL,
+      ],
+      lines: stages.map((p) => [p.label, formatValue(p.value), shareOf(p.value, entry)]),
+    };
+  }
 
   // A rosca não tem eixo: cada linha é uma fatia, e a participação no total é a
   // informação que o desenho passa pela ÁREA — a única que não sobrevive em
   // texto se ninguém a escrever.
-  if ((opts.type ?? 'bar') === 'pie') {
+  if (type === 'pie') {
     const points = opts.data ?? [];
     const total = points.reduce((sum, p) => sum + Math.max(0, p.value), 0);
     return {
@@ -301,6 +347,57 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
 
   const seriesData = seriesOf(opts);
   const showLegend = opts.showLegend ?? seriesData.length > 1;
+
+  // Funil: sem eixo, uma faixa por etapa, na ordem em que o processo acontece.
+  if (type === 'funnel') {
+    const stages = opts.data ?? [];
+    return {
+      title: opts.title ? { text: opts.title, left: 'left' } : undefined,
+      tooltip: { trigger: 'item', formatter: '{b}: {c}' },
+      // A faixa não tem eixo que a nomeie e não leva rótulo escrito por dentro
+      // (ver `label` abaixo): sem a legenda, a única pista de qual etapa é qual
+      // seria a cor. Por isso ela aparece sempre que há etapa, como na rosca.
+      legend: showLegend || stages.length > 0
+        ? { bottom: 0, icon: 'roundRect', itemWidth: 12, itemHeight: 8 }
+        : undefined,
+      series: [{
+        type: 'funnel',
+        // A ordem é a do PROCESSO, não a do valor. `descending`, que é o padrão
+        // da lib, reordena as etapas pelo tamanho: bastaria uma etapa que
+        // recupera volume para o desenho passar a contar outra história, e para
+        // a coluna de participação passar a se referir a uma etapa que não é a
+        // entrada.
+        sort: 'none',
+        // A largura da faixa É a informação, então ela não pode depender do
+        // menor valor do conjunto. Com `min: 0` e a faixa indo de 0% a 100% da
+        // caixa, a largura de cada etapa é o valor dela sobre o da maior — o
+        // mesmo número que a coluna de participação escreve. Deixar `min` no
+        // padrão (o menor valor, quando ele é negativo) esticaria a escala e
+        // desfaria essa correspondência.
+        min: 0,
+        minSize: '0%',
+        maxSize: '100%',
+        left: '10%',
+        right: '10%',
+        top: opts.title ? 48 : 16,
+        bottom: 48,
+        // Um respiro entre as faixas: sem ele o contorno de uma encosta no da
+        // vizinha e as duas viram um bloco só.
+        gap: 2,
+        // Sem rótulo desenhado por dentro da faixa. Ele nasceria em branco
+        // fixo sobre a cor da série — contraste que muda com a etapa e com o
+        // tema —, e a mesma informação já está na legenda, em texto de tema, e
+        // na tabela. Quem lê o número exato lê na tabela; quem lê a proporção
+        // lê na largura.
+        label: { show: false },
+        labelLine: { show: false },
+        data: stages.map((p) => ({ name: p.label, value: p.value })),
+      }],
+      animation: !prefersReducedMotion(),
+      animationDuration: Math.round(motionDuration('moderate') * 1000),
+      aria: ariaBlock(),
+    };
+  }
 
   // Pie tem shape diferente — xAxis/yAxis vão fora.
   if (type === 'pie') {

@@ -5,6 +5,7 @@ import {
   buildLineOption,
   buildAreaOption,
   buildPieOption,
+  buildFunnelOption,
 } from "@/components/ui/chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslation } from "@/lib/i18n";
@@ -57,6 +58,14 @@ const pieData = [
   { label: 'Desktop', value: 1224 },
   { label: 'Mobile',  value: 860 },
   { label: 'Tablet',  value: 320 },
+];
+
+// Quatro etapas de um processo que afunila, da mais larga para a mais estreita.
+const funnelStages = [
+  { label: 'Visitas',   value: 4000 },
+  { label: 'Cadastros', value: 2400 },
+  { label: 'Carrinho',  value: 1200 },
+  { label: 'Compra',    value: 480 },
 ];
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
@@ -162,6 +171,7 @@ export function ChartDocs() {
   buildLineOption,
   buildAreaOption,
   buildPieOption,
+  buildFunnelOption,
 } from "@/components/ui/chart";`;
 
   const codeBar = `const xMonths = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"];
@@ -198,6 +208,19 @@ const series = [
   option={buildPieOption({ data: pieData })}
   height={300}
   aria-label="Gráfico de pizza: distribuição por dispositivo"
+/>`;
+
+  const codeFunnel = `const funnelStages = [
+  { label: "Visitas",   value: 4000 },
+  { label: "Cadastros", value: 2400 },
+  { label: "Carrinho",  value: 1200 },
+  { label: "Compra",    value: 480 },
+];
+
+<ChartContainer
+  option={buildFunnelOption({ data: funnelStages })}
+  height={300}
+  aria-label="Funil de conversão: da visita à compra"
 />`;
 
   const codeTokens = `/* Personalização de tokens no tema */
@@ -251,7 +274,8 @@ interface OptionsBase {
 declare function buildBarOption(o: OptionsBase): EChartsCoreOption;
 declare function buildLineOption(o: OptionsBase): EChartsCoreOption;
 declare function buildAreaOption(o: OptionsBase): EChartsCoreOption;
-declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;`;
+declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;
+declare function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;`;
 
   return (
     <DocsPageLayout
@@ -496,6 +520,24 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             ),
           },
           {
+            name: "funnel",
+            description: stripHtml(tContent("variants.items.funnel")),
+            code: codeFunnel,
+            preview: (
+              // A primeira coluna da tabela do funil não é uma categoria
+              // qualquer: é a ETAPA do processo, e é esse o nome que a pessoa
+              // lê. O rótulo genérico serve a barra e a linha, onde a coluna
+              // nomeia mesmo uma categoria.
+              <ChartContainer
+                option={buildFunnelOption({ data: funnelStages })}
+                className="nds-w-full nds-max-w-sm"
+                height={250}
+                categoryLabel={stripHtml(tContent("demonstration.labels.funnelStage"))}
+                aria-label="Funil de conversão: da visita à compra"
+               />
+            ),
+          },
+          {
             name: tContent("variants.items.smallInline.name"),
             description: tContent("variants.items.smallInline.description"),
             useWhen: tContent("variants.items.smallInline.use"),
@@ -682,7 +724,7 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
               {
                 // Nesta stack o tipo do gráfico não é uma propriedade: é a
                 // escolha de qual builder monta o objeto de configuração.
-                name: "buildBarOption · buildLineOption · buildAreaOption · buildPieOption",
+                name: "buildBarOption · buildLineOption · buildAreaOption · buildPieOption · buildFunnelOption",
                 type: "(o: OptionsBase) => EChartsCoreOption",
                 defaultValue: "—",
                 required: "Sim",

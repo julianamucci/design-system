@@ -66,6 +66,14 @@ const DISPOSITIVOS = `const dispositivos = [
   { label: 'Tablet', value: 180 },
 ]`;
 
+/** Quatro etapas de um processo que afunila, da mais larga para a mais estreita. */
+const FUNNEL_STAGES = `const etapas = [
+  { label: 'Visitas', value: 4000 },
+  { label: 'Cadastros', value: 2400 },
+  { label: 'Carrinho', value: 1200 },
+  { label: 'Compra', value: 480 },
+]`;
+
 /**
  * O container, com os atributos em uma linha cada quando a fila fica longa —
  * atributo em linha comprida some na barra de rolagem do painel.
@@ -161,6 +169,22 @@ export function chartPieSource(): string {
       option: 'buildPieOption({ data: dispositivos })',
       height: 280,
       label: 'Distribuição de acessos por dispositivo',
+    }),
+  );
+}
+
+/**
+ * Funil: mesma FORMA de dado da rosca — pares de rótulo e valor, sem eixo —,
+ * porque aqui também não há categoria contínua, e sim uma ordem de etapas. A
+ * ordem em que os pares são escritos é a ordem do funil.
+ */
+export function chartFunnelSource(): string {
+  return vueSnippet(
+    `${importing('buildFunnelOption')}\n\n${FUNNEL_STAGES}`,
+    container({
+      option: 'buildFunnelOption({ data: etapas })',
+      height: 300,
+      label: 'Funil de conversão: da visita à compra',
     }),
   );
 }

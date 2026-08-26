@@ -138,6 +138,35 @@ export function chartPizzaSource(): string {
 }
 
 /**
+ * Variação `Funnel`: etapas de um processo que afunila.
+ *
+ * A lista sai da entrada para a saída — a ordem é o percurso, e é ela que dá
+ * sentido à coluna de participação da tabela, que se refere à primeira linha.
+ */
+export function chartFunnelSource(): string {
+  return svelteSnippet(
+    script(
+      ['buildFunnelOption'],
+      `const etapas = [
+  { label: 'Visitas', value: 1000 },
+  { label: 'Cadastros', value: 620 },
+  { label: 'Carrinho', value: 260 },
+  { label: 'Compra', value: 90 },
+];`,
+    ),
+    grafico([
+      'option={buildFunnelOption({ data: etapas })}',
+      'height={280}',
+      'class="nds-w-full"',
+      // Cabeçalho da terceira coluna da tabela de dados: a participação de cada
+      // etapa em relação à primeira, que é o que a largura da faixa desenha.
+      'shareLabel="Participação"',
+      'aria-label="Funil de conversão: visitas, cadastros, carrinho e compra"',
+    ]),
+  );
+}
+
+/**
  * Estado `Empty`: sem série com dado entra a frase no lugar do desenho.
  *
  * Sem `aria-label` de propósito — sem desenho não há papel de imagem, e a frase

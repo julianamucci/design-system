@@ -67,6 +67,96 @@ export function rowsOf(chart: HTMLElement): string[][] {
   );
 }
 
+/**
+ * Espera a ANIMAÇÃO DE ENTRADA terminar.
+ *
+ * `designPronto` marca a primeira forma de dado pintada, que é cedo demais para
+ * quem vai medir a forma: enquanto a entrada corre, cada forma sai com
+ * `fill-opacity="0"` e vai subindo até 1. Medido no funil, aos 57ms: as quatro
+ * faixas e as quatro tramas ainda em zero.
+ *
+ * Isso não é só uma medida borrada — é uma medida ERRADA de outra coisa. O
+ * único elemento que TERMINA em `fill-opacity="0"` é o fundo da legenda, e é
+ * justamente por essa marca que `legendBox` o encontra; no meio da animação
+ * havia nove candidatos, o primeiro deles uma faixa, e a caixa da legenda saía
+ * sendo a primeira faixa do funil. O resultado foi um coletor devolvendo oito
+ * formas onde há quatro.
+ *
+ * Por isso a condição de parada é essa mesma invariante: no máximo UM
+ * `fill-opacity="0"` no desenho. Sem legenda o número é zero e a espera passa
+ * direto; com `prefers-reduced-motion` não há animação e também não há espera.
+ */
+export async function drawingSettled(chart: HTMLElement): Promise<void> {
+  await waitFor(
+    () => expect(chart.querySelectorAll('svg path[fill-opacity="0"]').length)
+      .toBeLessThanOrEqual(1),
+    { timeout: 3000 },
+  );
+}
+
+/**
+ * A caixa da legenda, lida do retângulo transparente que a própria lib desenha
+ * como fundo dela. `null` quando o desenho não tem legenda.
+ *
+ * A legenda NÃO é subárvore: o `<svg>` do zrender é plano, e eixo, série e
+ * legenda são todos irmãos. O que a delimita é esse fundo — o único
+ * `<path fill-opacity="0">` do desenho —, e é ele que define, operacionalmente,
+ * "o que está dentro da legenda".
+ */
+function legendBox(chart: HTMLElement): DOMRect | null {
+  const background = chart.querySelector<SVGGraphicsElement>('svg path[fill-opacity="0"]');
+  return background ? background.getBoundingClientRect() : null;
+}
+
+/** Cabe inteiro na caixa da legenda — a folga de 1px cobre arredondamento. */
+function insideLegend(shape: SVGGraphicsElement, box: DOMRect | null): boolean {
+  if (!box) return false;
+  const r = shape.getBoundingClientRect();
+  return r.left >= box.left - 1 && r.right <= box.right + 1
+    && r.top >= box.top - 1 && r.bottom <= box.bottom + 1;
+}
+
+/**
+ * As formas de dado preenchidas com COR DE SÉRIE — barra, fatia, faixa de
+ * funil. A camada de baixo; a trama por cima fica de fora, e a legenda também.
+ *
+ * Duas populações são excluídas de propósito, e nenhuma das duas por acidente
+ * de layout:
+ *
+ * 1. O INTERIOR DE `<defs>`. A trama exige um `<pattern>`, e o interior dele é
+ *    feito de `<path>` de cor chapada; o recorte de série põe outro dentro de
+ *    um `<clipPath>`. Nada disso é desenhado — é vocabulário referenciado por
+ *    `url(#…)`. Eles atravessam qualquer filtro de tamanho porque `getBBox()`
+ *    devolve a geometria própria do caminho mesmo sem renderização, enquanto
+ *    `getBoundingClientRect()` devolve 0x0. A exclusão é ESTRUTURAL: depender
+ *    do 0x0 seria excluir por efeito colateral, e o dia em que o navegador
+ *    mudasse esse detalhe o defeito voltaria calado.
+ * 2. A LEGENDA — o fundo dela mais os ícones que cabem nele. Sem isso, contar
+ *    "as formas do gráfico" contaria também a decoração da lib, e um desenho de
+ *    quatro faixas devolveria nove nós.
+ *
+ * A tentação óbvia era filtrar por `stroke-width` (dado sai em 1px, ícone de
+ * legenda em 2px). Não serve: o símbolo de ponto de `line` sai em 0.44px, e o
+ * filtro passaria a excluir forma de dado de verdade — portão verde medindo
+ * menos.
+ *
+ * PRECONDIÇÃO: `drawingSettled`. Antes de a animação de entrada fechar, a marca
+ * que identifica a legenda está em toda forma do desenho — ver lá.
+ */
+export function filledShapes(chart: HTMLElement): SVGGraphicsElement[] {
+  const box = legendBox(chart);
+  return [...chart.querySelectorAll<SVGGraphicsElement>('svg path[fill], svg rect[fill]')].filter(
+    (shape) => {
+      const fill = shape.getAttribute('fill') ?? 'none';
+      if (fill === 'none' || fill.startsWith('url(')) return false;
+      if (shape.closest('defs') !== null) return false;
+      if (insideLegend(shape, box)) return false;
+      const bbox = shape.getBBox();
+      return bbox.width > 0 && bbox.height > 0;
+    },
+  );
+}
+
 /** Option resolvida: as séries e a PALETA que o tema entregou ao desenho. */
 export interface ChartOption {
   series: Record<string, unknown>[];

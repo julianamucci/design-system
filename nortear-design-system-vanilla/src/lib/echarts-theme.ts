@@ -30,6 +30,7 @@ export interface NortearChartTheme {
   line: { itemStyle: { borderColor: string; borderWidth: number }; lineStyle: { width: number } };
   bar: { itemStyle: { borderColor: string; borderWidth: number } };
   pie: { itemStyle: { borderColor: string; borderWidth: number } };
+  funnel: { itemStyle: { borderColor: string; borderWidth: number } };
 }
 
 interface ChartAxisStyle {
@@ -148,6 +149,12 @@ export function buildNortearTheme(): NortearChartTheme {
     line: { itemStyle: { borderColor: fg, borderWidth: 2 }, lineStyle: { width: 2 } },
     bar: { itemStyle: { borderColor: fg, borderWidth: 1 } },
     pie: { itemStyle: { borderColor: fg, borderWidth: 1 } },
+    // O funil entra pela mesma porta que as outras séries de área: o contorno é
+    // do TEMA, não do option. É o que faz a troca de tema recolorir o traço no
+    // lugar, por `setTheme`, sem remontar o desenho — no option ele ficaria
+    // congelado na cor do tema em que a instância nasceu. E é o contorno que
+    // separa uma faixa da seguinte, que aqui se tocam de perto.
+    funnel: { itemStyle: { borderColor: fg, borderWidth: 1 } },
   };
 }
 

@@ -9,6 +9,7 @@ import {
   chartDuasSeriesSource,
   chartLineSource,
   chartMultiSerieSource,
+  chartFunnelSource,
   chartPieSource,
   chartSerieUnicaSource,
   chartSource,
@@ -88,6 +89,14 @@ describe('transforms das stories de variante', () => {
     const saida = chartPieSource();
     expect(saida).toContain(':option="buildPieOption({ data: dispositivos })"');
     expect(saida).toContain(`{ label: 'Desktop', value: 580 },`);
+    expect(saida).not.toContain('xAxis');
+  });
+
+  it('o funil recebe pares de rótulo e valor, na ordem das etapas', () => {
+    const saida = chartFunnelSource();
+    expect(saida).toContain(':option="buildFunnelOption({ data: etapas })"');
+    expect(saida).toContain(`{ label: 'Visitas', value: 4000 },`);
+    // Sem eixo: aqui não há categoria contínua, há uma ordem de etapas.
     expect(saida).not.toContain('xAxis');
   });
 

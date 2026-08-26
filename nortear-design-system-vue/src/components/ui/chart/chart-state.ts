@@ -155,7 +155,10 @@ function cellOf(item: unknown): string {
   return value === undefined ? NO_DATA : formatChartValue(value);
 }
 
-/** Nome de uma fatia. Sem nome escrito, a posição é o que resta de rótulo. */
+/**
+ * Nome de um ponto rotulado — a fatia da rosca, a etapa do funil. Sem nome
+ * escrito, a posição é o que resta de rótulo.
+ */
 function sliceLabelOf(item: unknown, index: number): string {
   if (item && typeof item === 'object') {
     const raw = (item as { name?: unknown }).name;
@@ -182,10 +185,17 @@ function categoriesOf(option: EChartsCoreOption, count: number): string[] {
   return Array.from({ length: count }, (_, index) => String(index + 1));
 }
 
-/** Participação da fatia no total, com uma casa. `—` quando não há total. */
-function shareOf(value: number, total: number): string {
-  if (total <= 0) return NO_DATA;
-  return `${Math.round((Math.max(0, value) / total) * 1000) / 10}%`;
+/**
+ * Participação com uma casa decimal. `—` quando a base é zero.
+ *
+ * Serve às duas leituras de proporção que o componente escreve, e a diferença
+ * está no denominador: na rosca a base é o TOTAL das fatias, no funil é a
+ * PRIMEIRA etapa. Em ambos o que a coluna repõe é uma pista que o desenho dá
+ * pela forma — ângulo ali, largura aqui — e que texto nenhum carrega sozinho.
+ */
+function shareOf(value: number, base: number): string {
+  if (base <= 0) return NO_DATA;
+  return `${Math.round((Math.max(0, value) / base) * 1000) / 10}%`;
 }
 
 /**
@@ -211,6 +221,22 @@ export function chartTable(
         sliceLabelOf(item, index),
         cellOf(item),
         shareOf(valueOf(item) ?? 0, total),
+      ]),
+    };
+  }
+
+  // O funil mede cada etapa contra a PRIMEIRA, e não contra a soma: o que o
+  // desenho comunica é a largura da faixa, que nasce da razão para o topo do
+  // funil. Largura não se lê em texto, então ela vira coluna.
+  if (series.length > 0 && series[0].type === 'funnel') {
+    const stages = Array.isArray(series[0].data) ? (series[0].data as unknown[]) : [];
+    const first = Math.max(0, valueOf(stages[0]) ?? 0);
+    return {
+      header: [labels.category, labels.value, labels.share],
+      rows: stages.map((item, index) => [
+        sliceLabelOf(item, index),
+        cellOf(item),
+        shareOf(valueOf(item) ?? 0, first),
       ]),
     };
   }

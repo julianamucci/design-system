@@ -24,7 +24,8 @@ import type { ChartType } from './chart';
  * `xAxis` + `series` (várias séries alinhadas ao eixo). Cada story exercita uma
  * delas, e o snippet precisa mostrar a que ela usa.
  */
-export type ChartSnippetData = 'simples' | 'umPonto' | 'serieUnica' | 'multi' | 'rosca' | 'vazio';
+export type ChartSnippetData =
+  | 'simples' | 'umPonto' | 'serieUnica' | 'multi' | 'rosca' | 'funnel' | 'vazio';
 
 /** O que as stories usam da `ChartOptions` e que o snippet precisa mostrar. */
 export type ChartSnippetOptions = {
@@ -107,6 +108,20 @@ ${serie('Mobile', '[120, 190, 165, 98, 174, 158]')}
   { label: 'Tablet', value: 180 },
 ];`,
         pairs: [['data', 'acessosPorDispositivo']],
+      };
+
+    case 'funnel':
+      // A ordem das etapas é o processo, e é ela que o snippet ensina: a lista
+      // sai da entrada para a saída, e a coluna de participação da tabela se
+      // refere à primeira linha.
+      return {
+        block: `const etapas = [
+  { label: 'Visitas', value: 1000 },
+  { label: 'Cadastros', value: 620 },
+  { label: 'Carrinho', value: 260 },
+  { label: 'Compra', value: 90 },
+];`,
+        pairs: [['data', 'etapas']],
       };
 
     case 'vazio':

@@ -6,14 +6,27 @@ import {
   buildLineOption,
   buildAreaOption,
   buildPieOption,
+  buildFunnelOption,
 } from './chart';
 import {
   designEscreve,
   datumFormas,
+  settleTheme,
+  tokenColor,
 } from '@shared/testing/chart-probe';
-import { designPronto, headerOf, optionOf, rowsOf } from './chart.fixtures';
+import {
+  designPronto,
+  drawingOf,
+  drawingSettled,
+  filledShapes,
+  hatchColors,
+  headerOf,
+  optionOf,
+  rowsOf,
+} from './chart.fixtures';
 import {
   chartAreaSource,
+  chartFunnelSource,
   chartLineSource,
   chartPizzaSource,
   chartSource,
@@ -31,6 +44,20 @@ const dataDispositivo = [
   { label: 'Mobile', value: 860 },
   { label: 'Tablet', value: 320 },
 ];
+
+/** Quatro etapas de um processo que afunila, da mais larga para a mais estreita. */
+const funnelStages = [
+  { label: 'Visitas', value: 4000 },
+  { label: 'Cadastros', value: 2400 },
+  { label: 'Carrinho', value: 1200 },
+  { label: 'Compra', value: 480 },
+];
+
+/** A participação que a tabela escreve: cada etapa contra a PRIMEIRA. */
+function shareOfFirst(value: number): string {
+  const first = funnelStages[0].value;
+  return `${Math.round((value / first) * 1000) / 10}%`;
+}
 
 const meta: Meta = {
   title: 'UI/Chart/Types',
@@ -256,6 +283,112 @@ export const Pie: Story = {
       await expect(rows.map((row) => row[2])).toEqual(
         dataDispositivo.map((p) => `${Math.round((p.value / total) * 1000) / 10}%`),
       );
+    });
+  },
+};
+
+/**
+ * Funil: as etapas de um processo que afunila.
+ *
+ * O que o desenho comunica é a LARGURA de cada faixa em relação à primeira, e
+ * largura não se lê em texto — daí a terceira coluna da tabela, pelo mesmo
+ * raciocínio da participação da rosca. A story mede as cinco promessas do
+ * contrato: a tabela equivalente, o papel de imagem no desenho (e não no
+ * bloco), a trama na cor do fundo, o contorno em `--foreground` e o texto
+ * medido a partir da fonte raiz.
+ */
+export const Funnel: Story = {
+  parameters: {
+    covers: ['functional.item7', 'visual.item5'],
+    docs: {
+      // O funil recebe a mesma FORMA de dado da rosca — pares de rótulo e
+      // valor, sem eixo —, então o snippet do meta ensinaria uma chamada que
+      // aqui nem compila.
+      source: { transform: chartFunnelSource },
+      description: { story: 'Etapas de um processo, na ordem em que acontecem.' },
+    },
+  },
+  render: () => (
+    <ChartContainer
+      option={buildFunnelOption({ data: funnelStages })}
+      className="nds-max-w-sm"
+      height={300}
+      aria-label="Funil de conversão: da visita à compra"
+    />
+  ),
+  play: async ({ canvasElement, step }) => {
+    const root = await designPronto(canvasElement);
+    // A medida de forma exige a animação fechada: ver `drawingSettled`.
+    await drawingSettled(root);
+
+    await step('A legenda nomeia cada etapa por escrito', async () => {
+      // O rótulo não é desenhado DENTRO da faixa de propósito: ali ele ficaria
+      // por cima de uma cor de série que muda a cada posição. Quem nomeia a
+      // etapa é a legenda, sobre o fundo da página.
+      for (const stage of funnelStages) {
+        await expect(designEscreve(root, stage.label)).toBe(true);
+      }
+    });
+
+    await step('Uma faixa por etapa, na ordem em que as etapas foram declaradas', async () => {
+      const bands = filledShapes(root)
+        .map((band) => band.getBoundingClientRect())
+        .sort((a, b) => a.top - b.top);
+      await expect(bands).toHaveLength(funnelStages.length);
+      // A ordenação sai da POSIÇÃO na tela, e não da ordem do documento: o que
+      // a story promete é o que a pessoa vê, e não em que ordem a lib emitiu os
+      // nós. O desenho NÃO reordena — a queda medida aqui é a das etapas como
+      // foram declaradas, e é por isso que a mesma ordem sai na tabela abaixo.
+      // A comparação é estrita: duas faixas de mesma largura já não contam a
+      // perda entre as etapas.
+      for (let i = 1; i < bands.length; i += 1) {
+        await expect(bands[i].width).toBeLessThan(bands[i - 1].width);
+      }
+    });
+
+    await step('A tabela escreve etapa, valor e participação na primeira', async () => {
+      await expect(headerOf(root)).toEqual(['Categoria', 'Valor', 'Participação']);
+
+      const rows = rowsOf(root);
+      await expect(rows.map((row) => row[0])).toEqual(funnelStages.map((s) => s.label));
+      await expect(rows.map((row) => row[1])).toEqual(funnelStages.map((s) => String(s.value)));
+      // Contra a PRIMEIRA etapa, e não contra a soma: a largura da faixa nasce
+      // da razão para o topo do funil, e é essa leitura que o texto precisa
+      // repor. A primeira linha, portanto, é sempre 100%.
+      await expect(rows.map((row) => row[2])).toEqual(
+        funnelStages.map((s) => shareOfFirst(s.value)),
+      );
+      await expect(rows[0][2]).toBe('100%');
+    });
+
+    await step('O papel de imagem e o rótulo vão no desenho, não no bloco', async () => {
+      const drawing = drawingOf(root);
+      await expect(drawing.getAttribute('role')).toBe('img');
+      await expect(drawing.getAttribute('aria-label')).toBe('Funil de conversão: da visita à compra');
+      // No bloco, `role="img"` podaria a tabela junto e a alternativa textual
+      // sumiria da árvore de acessibilidade.
+      await expect(root.getAttribute('role')).toBeNull();
+    });
+
+    // Precondição das duas medidas de cor: ver o comentário de `settleTheme`.
+    await settleTheme(document);
+
+    await step('A trama sai na cor do fundo — não na lista padrão da lib', async () => {
+      // Fora de qualquer `waitFor`: a sonda de cor mexe no `<body>`, e isso
+      // acorda o observador de mutação que o `waitFor` usa para reagendar. O
+      // prazo nunca chega, e o portão pendura em vez de reprovar.
+      const hatches = hatchColors(root);
+      await expect(hatches.length).toBeGreaterThan(0);
+      await expect([...new Set(hatches)]).toEqual([tokenColor('background', root)]);
+    });
+
+    await step('Cada faixa é contornada em --foreground', async () => {
+      const bands = filledShapes(root);
+      await expect(bands.length).toBe(funnelStages.length);
+      const foreground = tokenColor('foreground', root);
+      for (const band of bands) {
+        await expect(getComputedStyle(band).stroke).toBe(foreground);
+      }
     });
   },
 };

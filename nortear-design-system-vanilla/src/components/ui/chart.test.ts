@@ -105,7 +105,70 @@ describe('buildChartTable', () => {
     expect(table.lines).toEqual([['Desktop', '0', '—']]);
   });
 
+  it('o funil escreve a participação em relação à PRIMEIRA etapa', () => {
+    // O que o funil comunica é a LARGURA da faixa, e largura não se lê em
+    // texto. A largura de cada faixa é o valor dela sobre o da entrada, então é
+    // essa razão — e não a fatia de um total — que a coluna precisa trazer.
+    const table = buildChartTable({
+      type: 'funnel',
+      data: [
+        { label: 'Visitas', value: 1000 },
+        { label: 'Cadastros', value: 620 },
+        { label: 'Compras', value: 90 },
+      ],
+    });
+    expect(table.header).toEqual(['Categoria', 'Valor', 'Participação']);
+    expect(table.lines).toEqual([
+      ['Visitas', '1000', '100%'],
+      ['Cadastros', '620', '62%'],
+      ['Compras', '90', '9%'],
+    ]);
+  });
+
+  it('no funil a referência é a primeira etapa, não a maior', () => {
+    // A ordem é a do processo, não a do valor. Uma etapa que recupera volume
+    // passa dos 100% — o que é a leitura certa, e some se a conta trocar a
+    // referência pelo maior valor do conjunto.
+    const table = buildChartTable({
+      type: 'funnel',
+      data: [
+        { label: 'Visitas', value: 400 },
+        { label: 'Retorno', value: 500 },
+      ],
+    });
+    expect(table.lines).toEqual([
+      ['Visitas', '400', '100%'],
+      ['Retorno', '500', '125%'],
+    ]);
+  });
+
+  it('funil com entrada zerada não divide por zero', () => {
+    const table = buildChartTable({
+      type: 'funnel',
+      data: [
+        { label: 'Visitas', value: 0 },
+        { label: 'Compras', value: 0 },
+      ],
+    });
+    expect(table.lines).toEqual([
+      ['Visitas', '0', '—'],
+      ['Compras', '0', '—'],
+    ]);
+  });
+
+  it('o funil aceita cabeçalhos autorais nas três colunas', () => {
+    const table = buildChartTable({
+      type: 'funnel',
+      data: [{ label: 'Visitas', value: 1000 }],
+      categoryLabel: 'Etapa',
+      valueLabel: 'Pessoas',
+      shareLabel: 'Share',
+    });
+    expect(table.header).toEqual(['Etapa', 'Pessoas', 'Share']);
+  });
+
   it('sem dado nenhum, a tabela nasce sem linha', () => {
     expect(buildChartTable({}).lines).toEqual([]);
+    expect(buildChartTable({ type: 'funnel' }).lines).toEqual([]);
   });
 });

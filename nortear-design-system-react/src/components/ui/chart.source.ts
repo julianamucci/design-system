@@ -160,6 +160,30 @@ const dados = [
 }
 
 /**
+ * Funil: mesma FORMA de dado da rosca — pares de rótulo e valor, sem eixo —,
+ * porque aqui também não há categoria contínua, e sim uma ordem de etapas. A
+ * ordem em que os pares são escritos é a ordem do funil.
+ */
+export function chartFunnelSource(): string {
+  return jsxSnippet(
+    `${importChart('buildFunnelOption')}
+
+const etapas = [
+  { label: "Visitas", value: 4000 },
+  { label: "Cadastros", value: 2400 },
+  { label: "Carrinho", value: 1200 },
+  { label: "Compra", value: 480 },
+];`,
+    `<ChartContainer
+  option={buildFunnelOption({ data: etapas })}
+  className="nds-max-w-sm"
+  height={300}
+  aria-label="Funil de conversão: da visita à compra"
+/>`,
+  );
+}
+
+/**
  * Multi-série: a legenda nasce sozinha da segunda série em diante, e cada série
  * ganha trama própria. Tirando a cor, a hachura ainda separa as séries — é o
  * que cumpre a WCAG 1.4.1 quando a cor sai de cena.

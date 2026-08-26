@@ -18,7 +18,9 @@
         "area": "Área",
         "chartTitle": "Acessos mensais",
         "dataLabel": "Mês",
-        "tooltipLabel": "Total de acessos"
+        "tooltipLabel": "Total de acessos",
+        "funnelShare": "Participação",
+        "funnelStage": "Etapa"
       }
     },
     "anatomy": {
@@ -158,6 +160,7 @@
         "line": "Tendência contínua ao longo do tempo. Ideal para séries temporais.",
         "area": "Tendência com ênfase no volume acumulado. Variante visual do gráfico de linhas.",
         "pie": "Proporção de partes em relação ao todo. Limite a 5–6 fatias para legibilidade.",
+        "funnel": "Etapas de um processo que afunila, da maior para a menor. Cada faixa é uma etapa, e a largura mostra quanto sobrou dela. Use quando a ordem das etapas for fixa e a perda entre elas for a informação.",
         "smallInline": {
           "name": "Mini gráfico inline",
           "description": "Versão compacta sem eixos visíveis, altura reduzida e largura limitada — usada como indicador de tendência ao lado de um número ou KPI. Configure passando objeto customizado que oculta eixos e grid.",
@@ -360,6 +363,11 @@
           "action": "Troca de tema do &lt;html&gt;",
           "result": "Cores e tipografia recalculam automaticamente; gráfico não pisca nem requer reload",
           "priority": "medium"
+        },
+        "item7": {
+          "action": "Renderizar o tipo funil com quatro etapas",
+          "result": "Uma faixa por etapa, em ordem decrescente, com a tabela equivalente trazendo etapa, valor e participação em relação à primeira",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -404,6 +412,10 @@
         "item4": {
           "story": "Dark mode — bar e line com tokens de tema",
           "priority": "medium"
+        },
+        "item5": {
+          "story": "Funil — quatro etapas com legenda e tabela",
+          "priority": "medium"
         }
       }
     },
@@ -447,7 +459,9 @@
         "area": "Area",
         "chartTitle": "Monthly visits",
         "dataLabel": "Month",
-        "tooltipLabel": "Total visits"
+        "tooltipLabel": "Total visits",
+        "funnelShare": "Share",
+        "funnelStage": "Stage"
       }
     },
     "anatomy": {
@@ -587,6 +601,7 @@
         "line": "Continuous trend over time. Ideal for time series.",
         "area": "Trend with emphasis on cumulative volume. Visual variant of the line chart.",
         "pie": "Proportion of parts relative to a whole. Limit to 5–6 slices for readability.",
+        "funnel": "Stages of a process that narrows, from widest to narrowest. Each band is a stage, and its width shows how much of it remains. Use it when the stage order is fixed and the drop between them is the information.",
         "smallInline": {
           "name": "Small inline chart",
           "description": "Compact version without visible axes, reduced height, and constrained width — used as a trend indicator next to a headline number or KPI. Configure by passing a custom object that hides axes and grid.",
@@ -789,6 +804,11 @@
           "action": "Theme change on &lt;html&gt;",
           "result": "Colors and typography recompute automatically; chart does not flash nor require reload",
           "priority": "medium"
+        },
+        "item7": {
+          "action": "Render the funnel type with four stages",
+          "result": "One band per stage, in descending order, with the equivalent table carrying stage, value and share relative to the first",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -833,6 +853,10 @@
         "item4": {
           "story": "Dark mode — bar and line with theme tokens",
           "priority": "medium"
+        },
+        "item5": {
+          "story": "Funnel — four stages with legend and table",
+          "priority": "medium"
         }
       }
     },
@@ -876,7 +900,9 @@
         "area": "Área",
         "chartTitle": "Visitas mensuales",
         "dataLabel": "Mes",
-        "tooltipLabel": "Total de visitas"
+        "tooltipLabel": "Total de visitas",
+        "funnelShare": "Participación",
+        "funnelStage": "Etapa"
       }
     },
     "anatomy": {
@@ -1016,6 +1042,7 @@
         "line": "Tendencia continua en el tiempo. Ideal para series temporales.",
         "area": "Tendencia con énfasis en el volumen acumulado. Variante visual del gráfico de líneas.",
         "pie": "Proporción de partes respecto al todo. Limita a 5–6 porciones para legibilidad.",
+        "funnel": "Etapas de un proceso que se estrecha, de la mayor a la menor. Cada franja es una etapa, y su ancho muestra cuánto queda de ella. Úsalo cuando el orden de las etapas sea fijo y la pérdida entre ellas sea la información.",
         "smallInline": {
           "name": "Mini gráfico inline",
           "description": "Versión compacta sin ejes visibles, altura reducida y ancho limitado — usada como indicador de tendencia junto a un número o KPI. Configura pasando un objeto custom que oculta ejes y grid.",
@@ -1218,6 +1245,11 @@
           "action": "Cambio de tema en &lt;html&gt;",
           "result": "Colores y tipografía se recalculan automáticamente; el gráfico no parpadea ni requiere reload",
           "priority": "medium"
+        },
+        "item7": {
+          "action": "Renderizar el tipo embudo con cuatro etapas",
+          "result": "Una franja por etapa, en orden descendente, con la tabla equivalente trayendo etapa, valor y participación respecto a la primera",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1261,6 +1293,10 @@
         },
         "item4": {
           "story": "Dark mode — bar y line con tokens de tema",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Embudo — cuatro etapas con leyenda y tabla",
           "priority": "medium"
         }
       }

@@ -7,7 +7,10 @@ import {
   SERIE_UNICA,
   SERIES_MULTI,
   DATA_DISPOSITIVO,
+  FUNNEL_STAGES,
+  contrastRatio,
   desenhoDe,
+  drawingSettled,
   formasComTrama,
   formasPreenchidas,
   mesmaCor,
@@ -239,6 +242,108 @@ export const Pie: Story = {
       await expect(header).toHaveLength(3);
       const first = [...chart.querySelectorAll('tbody tr')][0];
       await expect(first.textContent).toContain('%');
+    });
+  },
+};
+
+export const Funnel: Story = {
+  parameters: {
+    covers: ['functional.item7', 'visual.item5'],
+  },
+  render: () => ({
+    props: { stages: FUNNEL_STAGES },
+    template: `
+      <div ndsChart
+        type="funnel"
+        [data]="stages"
+        label="Funil de conversão: da visita à compra"
+        categoryLabel="Etapa"
+        valueLabel="Pessoas"
+        shareLabel="Participação"
+      ></div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
+    const desenho = desenhoDe(chart);
+    // Duas esperas, e cada uma responde por uma coisa.
+    //
+    // A primeira só pergunta se JÁ HÁ desenho: o coletor devolve zero antes do
+    // primeiro quadro, e zero não contradiz nenhuma invariante — quem esperasse
+    // só pela invariante passaria por cima de um gráfico que ainda não existe.
+    //
+    // A segunda espera a ANIMAÇÃO DE ENTRADA fechar, e é ela que faz a contagem
+    // abaixo valer: enquanto a entrada corre, TODA forma carrega a marca pela
+    // qual o coletor reconhece o fundo da legenda, a primeira faixa passa por
+    // legenda, e a legenda inteira deixa de ser excluída — quatro etapas
+    // devolvem oito formas. Ver `drawingSettled`.
+    //
+    // A contagem em si fica FORA de `waitFor` de propósito: dentro de um laço
+    // de repetição ela esperaria a animação por acidente e o guarda perderia os
+    // dentes — passaria a dar certo mesmo removido.
+    await waitFor(() => expect(formasPreenchidas(desenho).length).toBeGreaterThan(0));
+    await drawingSettled(desenho);
+    await expect(formasPreenchidas(desenho).length).toBe(FUNNEL_STAGES.length);
+
+    await step('Uma faixa por etapa, e a largura cai com o valor', async () => {
+      // A largura da faixa É a participação em relação à primeira etapa, e a
+      // conferência é de PROPORÇÃO, não de pixel: o desenho é responsivo.
+      // Medir dentro do `waitFor` é o que espera a animação de entrada
+      // assentar — no primeiro quadro toda faixa mede zero, e ali qualquer
+      // razão passaria.
+      await waitFor(async () => {
+        const widths = formasPreenchidas(desenho).map((f) => f.getBoundingClientRect().width);
+        await expect(widths).toHaveLength(FUNNEL_STAGES.length);
+        for (let i = 1; i < widths.length; i += 1) {
+          await expect(widths[i]).toBeLessThan(widths[i - 1]);
+        }
+        const esperado = FUNNEL_STAGES[3].value / FUNNEL_STAGES[0].value;
+        await expect(Math.abs(widths[3] / widths[0] - esperado)).toBeLessThan(0.03);
+      });
+    });
+
+    await step('Cada faixa recebe uma trama por cima do preenchimento', async () => {
+      // Retirando a cor, a faixa continua distinguível da vizinha (WCAG 1.4.1).
+      await expect(formasComTrama(desenho).length).toBe(FUNNEL_STAGES.length);
+    });
+
+    await step('Toda faixa tem contorno, e ele passa de 3:1 contra o fundo', async () => {
+      // O contorno em --foreground é o que delimita o objeto gráfico e separa
+      // uma faixa da vizinha — a cor de série não cobre essa fronteira.
+      const background = rgbToken('--background')!;
+      const contornos = formasComTrama(desenho);
+      for (const contorno of contornos) {
+        await expect(getComputedStyle(contorno).strokeWidth).toBe('1px');
+      }
+      const cor = rgbColor(getComputedStyle(contornos[0]).stroke)!;
+      await expect(contrastRatio(cor, background)).toBeGreaterThanOrEqual(3);
+    });
+
+    await step('A legenda nomeia cada etapa com valor e participação', async () => {
+      // A faixa não escreve o nome dentro de si: sobre a cor de série o texto
+      // não alcança os 4.5:1 que precisa. Quem rotula é a legenda.
+      const texts = textosDoDesenho(desenho);
+      for (const stage of FUNNEL_STAGES) {
+        await expect(texts.some((text) => text.includes(stage.label)
+          && text.includes(String(stage.value))
+          && text.includes('%'))).toBe(true);
+      }
+    });
+
+    await step('A tabela traz etapa, valor e participação em relação à primeira', async () => {
+      const header = [...chart.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
+      await expect(header).toEqual(['Etapa', 'Pessoas', 'Participação']);
+
+      const rows = [...chart.querySelectorAll<HTMLTableRowElement>('tbody tr')];
+      await expect(rows).toHaveLength(FUNNEL_STAGES.length);
+      const cells = rows.map((row) =>
+        [row.querySelector('th'), ...row.querySelectorAll('td')]
+          .map((c) => c?.textContent?.trim()),
+      );
+      // A primeira etapa é a base da conta, então vale 100% por definição; a
+      // última é a queda que o funil existe para mostrar.
+      await expect(cells[0]).toEqual(['Visitas', '4000', '100%']);
+      await expect(cells[3]).toEqual(['Compra', '480', '12%']);
     });
   },
 };

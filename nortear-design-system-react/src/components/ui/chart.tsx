@@ -36,7 +36,7 @@
 import * as React from 'react';
 import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts/core';
-import { BarChart, LineChart, PieChart } from 'echarts/charts';
+import { BarChart, LineChart, PieChart, FunnelChart } from 'echarts/charts';
 import {
   TitleComponent,
   TooltipComponent,
@@ -57,7 +57,7 @@ import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 // quando a cor sai de cena — nunca chega a ser desenhada. O componente ficou
 // meses fora desta lista enquanto a documentação prometia o `decal`.
 echarts.use([
-  BarChart, LineChart, PieChart,
+  BarChart, LineChart, PieChart, FunnelChart,
   TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
   AriaComponent,
   SVGRenderer, CanvasRenderer,
@@ -241,6 +241,11 @@ function buildNortearTheme() {
     line: { itemStyle: { borderColor: fg, borderWidth: 2 }, lineStyle: { width: 2 } },
     bar: { itemStyle: { borderColor: fg, borderWidth: 1 } },
     pie: { itemStyle: { borderColor: fg, borderWidth: 1 } },
+    // A faixa do funil é forma cheia como a barra e a fatia, e pelo mesmo
+    // motivo leva contorno: ele separa uma etapa da ETAPA VIZINHA, que encosta
+    // nela, e nenhuma medida contra o fundo cobre isso. A chave é o próprio
+    // nome do tipo de série — é assim que a lib casa tema com série.
+    funnel: { itemStyle: { borderColor: fg, borderWidth: 1 } },
   };
 }
 
@@ -251,7 +256,7 @@ function applyTheme() {
 }
 
 // ─── Option builders ─────────────────────────────────────────────────────────
-// Helpers para os 4 tipos cobertos pelas stories. Para mais customização,
+// Helpers para os cinco tipos cobertos pelas stories. Para mais customização,
 // passar `option` direto.
 
 export interface ChartDataPoint { label: string; value: number }
@@ -352,6 +357,61 @@ export function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): e
       radius: ['40%', '70%'],
       center: ['50%', o.title ? '52%' : '45%'],
       avoidLabelOverlap: true,
+      itemStyle: { borderRadius: 4 },
+      data: o.data.map((p) => ({ name: p.label, value: p.value })),
+    }],
+    // Preferência de movimento respeitada com o mesmo helper e os mesmos tokens
+    // de duração do resto do design system — o gráfico animava sempre.
+    animation: !prefersReducedMotion(),
+    animationDuration: Math.round(motionDuration('moderate') * 1000),
+    aria: ARIA,
+  };
+}
+
+/**
+ * Funil: as etapas de um processo, desenhadas na ordem em que acontecem.
+ *
+ * Recebe a MESMA forma de dado da pizza — pares de rótulo e valor, sem eixo —,
+ * porque aqui também não há categoria contínua: há uma ordem de etapas. O que
+ * o desenho comunica é a LARGURA de cada faixa em relação à primeira, e largura
+ * não se lê em texto: por isso a alternativa textual ganha a terceira coluna
+ * (ver `chartTableFromOption`), pelo mesmo raciocínio da participação da rosca.
+ *
+ * Três decisões que não são estilo:
+ *
+ * - `sort: 'none'` fica ESCRITO, e CONTRA o padrão da lib, que reordena as
+ *   faixas por valor. A ordem aqui é a do PERCURSO, não a do tamanho: o funil
+ *   descreve um caminho, e não um ranking. Reordenando, um dado fora de ordem
+ *   sairia desenhado em ordem — o desenho ficaria bonito, e a coluna de
+ *   participação passaria a se referir a uma etapa que não é a de entrada. Com
+ *   `none`, dado fora de ordem aparece fora de ordem, que é o que quem
+ *   escreveu o dado precisa ver; e é essa mesma ordem que a tabela repete
+ *   linha a linha.
+ * - `label.show: false` — o rótulo padrão do funil é escrito DENTRO da faixa,
+ *   por cima de uma cor de série que muda a cada posição. Contraste que depende
+ *   de qual cor a posição sorteou é contraste que não se garante; quem nomeia
+ *   cada etapa por escrito é a legenda, sobre o fundo da página.
+ * - Nada de `textStyle`: o tamanho do texto vem do tema, que o MEDE a partir da
+ *   fonte raiz. Um número cravado aqui venceria a medição e o desenho pararia
+ *   de crescer com a fonte do navegador (WCAG 1.4.4).
+ */
+export function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string }): echarts.EChartsCoreOption {
+  return {
+    title: o.title ? { text: o.title, left: 'left' } : undefined,
+    tooltip: { trigger: 'item', formatter: '{b}: {c}' },
+    legend: { bottom: 0, icon: 'roundRect', itemWidth: 12, itemHeight: 8 },
+    series: [{
+      type: 'funnel',
+      top: o.title ? 48 : 16,
+      bottom: 48,
+      left: '8%',
+      width: '84%',
+      minSize: '24%',
+      maxSize: '100%',
+      sort: 'none',
+      gap: 2,
+      label: { show: false },
+      labelLine: { show: false },
       itemStyle: { borderRadius: 4 },
       data: o.data.map((p) => ({ name: p.label, value: p.value })),
     }],
@@ -464,6 +524,27 @@ export function chartTableFromOption(
     };
   }
 
+  // O funil mede cada etapa contra a PRIMEIRA, e não contra a soma: o que o
+  // desenho comunica é a largura da faixa, que nasce da razão para o topo do
+  // funil. Largura não se lê em texto, então ela vira coluna — é o mesmo
+  // raciocínio da participação da rosca, com outro denominador.
+  const funnel = series.find((s) => s.type === 'funnel');
+  if (funnel) {
+    const stages = (funnel.data ?? []) as unknown[];
+    const first = Math.max(0, numberOf(stages[0]) ?? 0);
+    return {
+      header: [labels.categoryLabel, labels.valueLabel, labels.shareLabel],
+      rows: stages.map((stage) => {
+        const value = Math.max(0, numberOf(stage) ?? 0);
+        const name = stage !== null && typeof stage === 'object'
+          ? String((stage as { name?: unknown }).name ?? '')
+          : '';
+        const share = first > 0 ? `${Math.round((value / first) * 1000) / 10}%` : '—';
+        return [name, cellOf(stage), share];
+      }),
+    };
+  }
+
   const columns = series.reduce((max, s) => Math.max(max, s.data?.length ?? 0), 0);
   return {
     header: [
@@ -507,7 +588,12 @@ export interface ChartContainerProps extends React.ComponentProps<'div'> {
   categoryLabel?: string;
   /** Cabeçalho da coluna de valor quando a série não tem nome próprio. */
   valueLabel?: string;
-  /** Cabeçalho da coluna de participação, exclusiva da pizza. */
+  /**
+   * Cabeçalho da coluna de participação — a que escreve o que o desenho diz
+   * pela forma. Na rosca é a fatia contra o todo; no funil, a etapa contra a
+   * primeira. O rótulo é o mesmo porque a leitura é a mesma: quanto disto
+   * aquilo representa.
+   */
   shareLabel?: string;
 }
 

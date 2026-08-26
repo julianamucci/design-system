@@ -155,7 +155,10 @@ function cellOf(item: unknown): string {
   return value === undefined ? NO_DATA : formatChartValue(value);
 }
 
-/** Nome de uma fatia. Sem nome escrito, a posição é o que resta de rótulo. */
+/**
+ * Nome de uma parte nomeada — fatia da pizza, etapa do funil. Sem nome escrito,
+ * a posição é o que resta de rótulo.
+ */
 function sliceLabelOf(item: unknown, index: number): string {
   if (item && typeof item === 'object') {
     const raw = (item as { name?: unknown }).name;
@@ -182,22 +185,55 @@ function categoriesOf(option: EChartsCoreOption, count: number): string[] {
   return Array.from({ length: count }, (_, index) => String(index + 1));
 }
 
-/** Participação da fatia no total, com uma casa. `—` quando não há total. */
-function shareOf(value: number, total: number): string {
-  if (total <= 0) return NO_DATA;
-  return `${Math.round((Math.max(0, value) / total) * 1000) / 10}%`;
+/**
+ * Participação de um valor sobre a REFERÊNCIA da leitura, com uma casa.
+ *
+ * A conta é a mesma; a referência muda com o tipo, e quem a escolhe é o
+ * desenho. Na pizza a fatia é parte de um TOTAL — o círculo inteiro está na
+ * tela, e é contra ele que a área de cada fatia se lê. No funil não há total à
+ * vista: o que está na tela é a largura de cada faixa comparada à da PRIMEIRA
+ * etapa, e é essa razão que a coluna precisa escrever. `—` quando a referência
+ * não é positiva, que é onde a divisão deixaria de significar alguma coisa.
+ */
+function shareOf(value: number, reference: number): string {
+  if (reference <= 0) return NO_DATA;
+  return `${Math.round((Math.max(0, value) / reference) * 1000) / 10}%`;
 }
 
 /**
  * Os números do desenho em forma de tabela: uma coluna por série, uma linha por
- * categoria — e, na pizza, a participação de cada fatia, que é a leitura que o
- * desenho dá de graça e o texto precisa escrever.
+ * categoria — e, na pizza e no funil, a participação de cada parte, que é a
+ * leitura que o desenho dá de graça e o texto precisa escrever.
  */
 export function chartTable(
   option: EChartsCoreOption,
   labels: ChartTableLabels = CHART_TABLE_LABELS,
 ): ChartTable {
   const series = seriesOf(option);
+
+  // O funil não tem eixo: cada linha é uma etapa, na ordem do processo, e a
+  // terceira coluna é a participação em relação à PRIMEIRA etapa.
+  //
+  // Existe pelo mesmo motivo da participação da pizza: o que o desenho comunica
+  // aqui é a LARGURA da faixa, e largura não se lê em texto. A correspondência é
+  // exata — o montador fixa `min: 0` e a faixa vai de `minSize` a `maxSize`
+  // sobre a maior etapa, então a largura de cada faixa dividida pela da primeira
+  // é o número desta coluna.
+  if (series.length > 0 && series[0].type === 'funnel') {
+    const stages = Array.isArray(series[0].data) ? (series[0].data as unknown[]) : [];
+    // A entrada do processo é a primeira ETAPA, não a maior: reordenar por valor
+    // trocaria qual etapa serve de referência, e o funil descreve um percurso,
+    // não um ranking. É a mesma razão de `sort: 'none'` no desenho.
+    const entry = valueOf(stages[0]) ?? 0;
+    return {
+      header: [labels.category, labels.value, labels.share],
+      rows: stages.map((item, index) => [
+        sliceLabelOf(item, index),
+        cellOf(item),
+        shareOf(valueOf(item) ?? 0, entry),
+      ]),
+    };
+  }
 
   if (series.length > 0 && series[0].type === 'pie') {
     const slices = Array.isArray(series[0].data) ? (series[0].data as unknown[]) : [];

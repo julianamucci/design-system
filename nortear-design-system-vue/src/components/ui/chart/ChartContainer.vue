@@ -6,7 +6,7 @@
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue';
 import VChart from 'vue-echarts';
 import * as echarts from 'echarts/core';
-import { BarChart, LineChart, PieChart } from 'echarts/charts';
+import { BarChart, LineChart, PieChart, FunnelChart } from 'echarts/charts';
 import {
   TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
   AriaComponent,
@@ -22,7 +22,7 @@ import type { HTMLAttributes } from 'vue';
 // silêncio, e a trama sobreposta a cada série — que é o que cumpre a WCAG 1.4.1
 // quando a cor sai de cena — nunca chega a ser desenhada.
 echarts.use([
-  BarChart, LineChart, PieChart,
+  BarChart, LineChart, PieChart, FunnelChart,
   TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
   AriaComponent,
   SVGRenderer, CanvasRenderer,
@@ -63,7 +63,12 @@ const props = defineProps<{
   categoryLabel?: string;
   /** Rótulo da coluna de valores quando a série não tem nome próprio. */
   valueLabel?: string;
-  /** Rótulo da coluna de participação — só a pizza a escreve. */
+  /**
+   * Rótulo da coluna de participação — a que escreve o que o desenho diz pela
+   * forma. Na rosca é a fatia contra o todo; no funil, a etapa contra a
+   * primeira. O rótulo é o mesmo porque a leitura é a mesma: quanto disto
+   * aquilo representa.
+   */
   shareLabel?: string;
 }>();
 
@@ -169,6 +174,11 @@ function buildTheme() {
     line: { itemStyle: { borderColor: fg, borderWidth: 2 }, lineStyle: { width: 2 } },
     bar: { itemStyle: { borderColor: fg, borderWidth: 1 } },
     pie: { itemStyle: { borderColor: fg, borderWidth: 1 } },
+    // A faixa do funil é forma cheia como a barra e a fatia, e pelo mesmo
+    // motivo leva contorno: ele separa uma etapa da ETAPA VIZINHA, que encosta
+    // nela, e nenhuma medida contra o fundo cobre isso. A chave é o próprio
+    // nome do tipo de série — é assim que a lib casa tema com série.
+    funnel: { itemStyle: { borderColor: fg, borderWidth: 1 } },
   };
 }
 

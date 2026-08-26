@@ -23,6 +23,31 @@ export async function waitForDesign(root: HTMLElement): Promise<void> {
 }
 
 /**
+ * Espera a ANIMAÇÃO DE ENTRADA fechar — precondição de toda CONTAGEM de formas.
+ *
+ * `waitForDesign` marca a primeira forma de dado pintada, que é cedo demais
+ * para quem vai contar: enquanto a entrada corre, cada forma sai com
+ * `fill-opacity="0"` e sobe até 1. E isso não borra a medida — mede outra
+ * coisa. O único elemento que TERMINA em `fill-opacity="0"` é o fundo da
+ * legenda, e é por essa marca que um coletor a reconhece para excluí-la; no
+ * meio da animação há um candidato por forma desenhada, o primeiro deles uma
+ * faixa do funil, e a caixa da legenda sai sendo a primeira faixa. Nada mais é
+ * excluído como legenda, e um funil de quatro etapas devolve oito formas.
+ *
+ * Por isso a condição de parada é a própria invariante: no máximo UM
+ * `fill-opacity="0"` no desenho. Sem legenda o número é zero e a espera passa
+ * direto; com `prefers-reduced-motion` não há animação e também não há o que
+ * esperar.
+ */
+export async function drawingSettled(root: HTMLElement): Promise<void> {
+  await waitFor(
+    () => expect(root.querySelectorAll('svg path[fill-opacity="0"]').length)
+      .toBeLessThanOrEqual(1),
+    { timeout: 3000 },
+  );
+}
+
+/**
  * O elemento em que a lib desenha.
  *
  * É ele — e não o bloco `.nds-chart` em volta — que leva `role="img"` e o

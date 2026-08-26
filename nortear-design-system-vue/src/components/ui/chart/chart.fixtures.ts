@@ -4,7 +4,35 @@
 // função auxiliar exportada apareceria na barra lateral do Storybook como se
 // fosse um exemplo do componente.
 
+import { expect, waitFor } from 'storybook/test';
 import { tramasAplicadas } from '@shared/testing/chart-probe';
+
+/**
+ * Espera a ANIMAÇÃO DE ENTRADA terminar.
+ *
+ * "A primeira forma de dado pintada" é cedo demais para quem vai medir a forma:
+ * enquanto a entrada corre, cada forma sai com `fill-opacity="0"` e vai subindo
+ * até 1. Medido no funil, aos 57ms: as quatro faixas e as quatro tramas ainda
+ * em zero.
+ *
+ * Isso não é só uma medida borrada — é uma medida ERRADA de outra coisa. O
+ * único elemento que TERMINA em `fill-opacity="0"` é o fundo da legenda, e é
+ * justamente por essa marca que `legendBox` o encontra; no meio da animação
+ * havia nove candidatos, o primeiro deles uma faixa, e a caixa da legenda saía
+ * sendo a primeira faixa do funil. O resultado foi um coletor devolvendo oito
+ * formas onde há quatro.
+ *
+ * Por isso a condição de parada é essa mesma invariante: no máximo UM
+ * `fill-opacity="0"` no desenho. Sem legenda o número é zero e a espera passa
+ * direto; com `prefers-reduced-motion` não há animação e também não há espera.
+ */
+export async function drawingSettled(root: HTMLElement): Promise<void> {
+  await waitFor(
+    () => expect(root.querySelectorAll('svg path[fill-opacity="0"]').length)
+      .toBeLessThanOrEqual(1),
+    { timeout: 3000 },
+  );
+}
 
 /**
  * O elemento em que a lib desenha.
@@ -29,6 +57,87 @@ export function dataOf(root: HTMLElement): HTMLElement {
   const data = root.querySelector<HTMLElement>('[data-slot="chart-data"]');
   if (!data) throw new Error('nenhum [data-slot="chart-data"] dentro do .nds-chart');
   return data;
+}
+
+/** Os textos do cabeçalho da tabela, na ordem das colunas. */
+export function headerOf(root: HTMLElement): string[] {
+  return [...dataOf(root).querySelectorAll('thead th')].map((th) => (th.textContent ?? '').trim());
+}
+
+/**
+ * As linhas da tabela, célula a célula — o `th` de categoria incluído.
+ *
+ * A célula de categoria é `th scope="row"` e não `td`: é ela que nomeia a linha
+ * para quem navega a tabela por leitor de tela. Lê `th, td` na ordem do
+ * documento justamente para que uma troca por `td` apareça na comparação.
+ */
+export function rowsOf(root: HTMLElement): string[][] {
+  return [...dataOf(root).querySelectorAll('tbody tr')].map((tr) =>
+    [...tr.querySelectorAll('th, td')].map((cell) => (cell.textContent ?? '').trim()),
+  );
+}
+
+/**
+ * A caixa da legenda, lida do retângulo transparente que a própria lib desenha
+ * como fundo dela. `null` quando o desenho não tem legenda.
+ *
+ * A legenda NÃO é subárvore: o `<svg>` do zrender é plano, e eixo, série e
+ * legenda são todos irmãos. O que a delimita é esse fundo — o único
+ * `<path fill-opacity="0">` do desenho —, e é ele que define, operacionalmente,
+ * "o que está dentro da legenda".
+ */
+function legendBox(root: HTMLElement): DOMRect | null {
+  const background = root.querySelector<SVGGraphicsElement>('svg path[fill-opacity="0"]');
+  return background ? background.getBoundingClientRect() : null;
+}
+
+/** Cabe inteiro na caixa da legenda — a folga de 1px cobre arredondamento. */
+function insideLegend(shape: SVGGraphicsElement, box: DOMRect | null): boolean {
+  if (!box) return false;
+  const rect = shape.getBoundingClientRect();
+  return rect.left >= box.left - 1 && rect.right <= box.right + 1
+    && rect.top >= box.top - 1 && rect.bottom <= box.bottom + 1;
+}
+
+/**
+ * As formas de dado preenchidas com COR DE SÉRIE — barra, fatia, faixa de
+ * funil. A camada de baixo; a trama por cima fica de fora, e a legenda também.
+ *
+ * Duas populações são excluídas de propósito, e nenhuma das duas por acidente
+ * de layout:
+ *
+ * 1. O INTERIOR DE `<defs>`. A trama exige um `<pattern>`, e o interior dele é
+ *    feito de `<path>` de cor chapada; o recorte de série põe outro dentro de
+ *    um `<clipPath>`. Nada disso é desenhado — é vocabulário referenciado por
+ *    `url(#…)`. Eles atravessam qualquer filtro de tamanho porque `getBBox()`
+ *    devolve a geometria própria do caminho mesmo sem renderização, enquanto
+ *    `getBoundingClientRect()` devolve 0x0. A exclusão é ESTRUTURAL: depender
+ *    do 0x0 seria excluir por efeito colateral, e o dia em que o navegador
+ *    mudasse esse detalhe o defeito voltaria calado.
+ * 2. A LEGENDA — o fundo dela mais os ícones que cabem nele. Sem isso, contar
+ *    "as formas do gráfico" contaria também a decoração da lib, e um desenho de
+ *    quatro faixas devolveria nove nós.
+ *
+ * A tentação óbvia era filtrar por `stroke-width` (dado sai em 1px, ícone de
+ * legenda em 2px). Não serve: o símbolo de ponto de `line` sai em 0.44px, e o
+ * filtro passaria a excluir forma de dado de verdade — portão verde medindo
+ * menos.
+ *
+ * PRECONDIÇÃO: `drawingSettled`. Antes de a animação de entrada fechar, a marca
+ * que identifica a legenda está em toda forma do desenho — ver lá.
+ */
+export function filledShapes(root: HTMLElement): SVGGraphicsElement[] {
+  const box = legendBox(root);
+  return [...root.querySelectorAll<SVGGraphicsElement>('svg path[fill], svg rect[fill]')].filter(
+    (shape) => {
+      const fill = shape.getAttribute('fill') ?? 'none';
+      if (fill === 'none' || fill.startsWith('url(')) return false;
+      if (shape.closest('defs') !== null) return false;
+      if (insideLegend(shape, box)) return false;
+      const bbox = shape.getBBox();
+      return bbox.width > 0 && bbox.height > 0;
+    },
+  );
 }
 
 /**

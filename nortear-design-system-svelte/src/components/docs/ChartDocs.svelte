@@ -1,6 +1,6 @@
 <script lang="ts">
   import { untrack } from 'svelte';
-  import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption } from '@/components/ui/chart';
+  import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption } from '@/components/ui/chart';
   import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
@@ -126,6 +126,14 @@
     { label: 'Mobile',  value: 860 },
     { label: 'Tablet',  value: 320 },
   ];
+  // Etapas de um processo, da entrada à saída. A ordem é o percurso, não o
+  // valor: é a primeira etapa que serve de referência à coluna de participação.
+  const funnelStages = [
+    { label: 'Visitas',   value: 1000 },
+    { label: 'Cadastros', value: 620 },
+    { label: 'Carrinho',  value: 260 },
+    { label: 'Compra',    value: 90 },
+  ];
 
   
 
@@ -145,6 +153,7 @@
   buildLineOption,
   buildAreaOption,
   buildPieOption,
+  buildFunnelOption,
 } from '@/components/ui/chart';`;
 
   const codeBar = `<ChartContainer
@@ -169,6 +178,13 @@
   option={buildPieOption({ data: pieData })}
   class="nds-w-full" height={280}
   aria-label="Gráfico de pizza: distribuição por dispositivo"
+/>`;
+
+  const codeFunnel = `<ChartContainer
+  option={buildFunnelOption({ data: funnelStages })}
+  class="nds-w-full" height={220}
+  shareLabel="Participação"
+  aria-label="Funil de conversão: visitas, cadastros, carrinho e compra"
 />`;
 
   const codeMulti = `<ChartContainer
@@ -204,7 +220,8 @@ interface OptionsBase {
 declare function buildBarOption(o: OptionsBase): EChartsCoreOption;
 declare function buildLineOption(o: OptionsBase): EChartsCoreOption;
 declare function buildAreaOption(o: OptionsBase): EChartsCoreOption;
-declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;`;
+declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;
+declare function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption;`;
 
   const codeTokens = `/* Em globals.css — personalizar as cores das séries */
 :root {
@@ -413,6 +430,7 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
       { name: 'Linha', description: stripHtml($tStore('variants.items.line')), code: codeLine, preview: variantLine },
       { name: 'Area',  description: stripHtml($tStore('variants.items.area')), code: codeArea, preview: variantArea },
       { name: 'Pie',   description: stripHtml($tStore('variants.items.pie')),  code: codePie,  preview: variantPie  },
+      { name: 'Funil', description: stripHtml($tStore('variants.items.funnel')), code: codeFunnel, preview: variantFunnel },
       {
         name: $tStore('variants.items.smallInline.name'),
         description: $tStore('variants.items.smallInline.description'),
@@ -455,6 +473,19 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
       option={buildPieOption({ data: pieData })}
       height={200} style="width: 220px"
       aria-label="Gráfico de pizza: distribuição por dispositivo"
+    />
+  {/snippet}
+  {#snippet variantFunnel()}
+    <!-- Sem largura cravada em `style`: a caixa fica por conta da grade da
+         seção, e os rótulos das colunas vêm do conteúdo compartilhado, para
+         acompanhar o idioma da página. A primeira coluna não é uma categoria
+         qualquer: é a ETAPA do processo, e é esse o nome que a pessoa lê. -->
+    <ChartContainer
+      option={buildFunnelOption({ data: funnelStages })}
+      height={220} class="nds-w-full"
+      categoryLabel={stripHtml($tStore('demonstration.labels.funnelStage'))}
+      shareLabel={stripHtml($tStore('demonstration.labels.funnelShare'))}
+      aria-label="Funil de conversão: visitas, cadastros, carrinho e compra"
     />
   {/snippet}
   {#snippet variantSmallInline()}

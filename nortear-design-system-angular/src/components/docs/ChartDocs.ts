@@ -18,6 +18,7 @@ import { stripHtml, toPlainText } from '@/lib/strip-html';
 import { NdsChart } from '@/components/ui/chart';
 import {
   DATA_DISPOSITIVO,
+  FUNNEL_STAGES,
   MONTHS,
   SERIES_MULTI,
   SERIES_TRIO,
@@ -84,8 +85,9 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'variants.items.line.name': 'Linhas',
     'variants.items.area.name': 'Área',
     'variants.items.pie.name': 'Pizza',
+    'variants.items.funnel.name': 'Funil',
     'variants.note':
-      'O Chart não tem variantes de estilo: o tipo é o DADO, não a aparência. Uma entrada escolhe entre barras, linhas, área e pizza, e a mesma tabela de dados acompanha o desenho em qualquer um deles.',
+      'O Chart não tem variantes de estilo: o tipo é o DADO, não a aparência. Uma entrada escolhe entre barras, linhas, área, pizza e funil, e a mesma tabela de dados acompanha o desenho em qualquer um deles.',
     'accessibility.summary':
       'O Chart atende WCAG 2.2 AA por quatro caminhos: descrição obrigatória do gráfico, uma tabela de dados equivalente que existe sempre, trama e símbolo por série (a informação nunca vive só na cor) e contorno em cima de cada forma, que é o que garante os 3:1 de objeto gráfico.',
     'accessibility.item2':
@@ -107,7 +109,7 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
       'Mini gráfico inline: sem eixos, grade, legenda ou rótulo de valor, e com proporção achatada. Serve de indicador de tendência ao lado de um número.',
     'props.table.categoryLabel': 'Cabeçalho da primeira coluna da tabela de dados.',
     'props.table.valueLabel': 'Nome da série quando os dados vêm na forma simples de rótulo e valor.',
-    'props.table.shareLabel': 'Cabeçalho da coluna de participação, na tabela de dados da pizza.',
+    'props.table.shareLabel': 'Cabeçalho da coluna de participação, na tabela de dados dos tipos que desenham proporção.',
     'props.table.className':
       'Classes extras vão no atributo class do próprio elemento — o Angular as mescla com as do design system.',
     'props.table.pointLabel': 'Rótulo da categoria — vira a marca do eixo e a primeira coluna da tabela.',
@@ -118,6 +120,7 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'tokens.table.foreground':
       'Contorno de toda forma de dado — é ele que sustenta os 3:1 de objeto gráfico — e a cor do texto do título e da dica.',
     'demonstration.labels.pie': 'Pizza',
+    'demonstration.labels.funnelPeople': 'Pessoas',
     'demonstration.labels.dataTable': 'Tabela de dados equivalente, visível',
   },
   en: {
@@ -127,8 +130,9 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'variants.items.line.name': 'Lines',
     'variants.items.area.name': 'Area',
     'variants.items.pie.name': 'Pie',
+    'variants.items.funnel.name': 'Funnel',
     'variants.note':
-      'The Chart has no style variants: the type is the DATA, not the look. One input chooses between bars, lines, area and pie, and the same data table follows the drawing in all of them.',
+      'The Chart has no style variants: the type is the DATA, not the look. One input chooses between bars, lines, area, pie and funnel, and the same data table follows the drawing in all of them.',
     'accessibility.summary':
       'The Chart meets WCAG 2.2 AA through four paths: a mandatory chart description, an equivalent data table that always exists, a pattern and a symbol per series (information never lives in colour alone) and an outline on every shape, which is what secures the 3:1 for graphical objects.',
     'accessibility.item2':
@@ -150,7 +154,7 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
       'Inline mini chart: no axes, grid, legend or value labels, and a flattened ratio. Works as a trend indicator next to a number.',
     'props.table.categoryLabel': 'Header of the first column of the data table.',
     'props.table.valueLabel': 'Series name when the data comes in the simple label/value shape.',
-    'props.table.shareLabel': 'Header of the share column in the pie data table.',
+    'props.table.shareLabel': 'Header of the share column, in the data table of the types that draw a proportion.',
     'props.table.className':
       'Extra classes go on the class attribute of the element itself — Angular merges them with the design system ones.',
     'props.table.pointLabel': 'Category label — becomes the axis tick and the first column of the table.',
@@ -161,6 +165,7 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'tokens.table.foreground':
       'Outline of every data shape — what secures the 3:1 for graphical objects — and the colour of the title and tooltip text.',
     'demonstration.labels.pie': 'Pie',
+    'demonstration.labels.funnelPeople': 'People',
     'demonstration.labels.dataTable': 'Equivalent data table, visible',
   },
   es: {
@@ -170,8 +175,9 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'variants.items.line.name': 'Líneas',
     'variants.items.area.name': 'Área',
     'variants.items.pie.name': 'Circular',
+    'variants.items.funnel.name': 'Embudo',
     'variants.note':
-      'El Chart no tiene variantes de estilo: el tipo es el DATO, no la apariencia. Una entrada elige entre barras, líneas, área y circular, y la misma tabla de datos acompaña al dibujo en todos ellos.',
+      'El Chart no tiene variantes de estilo: el tipo es el DATO, no la apariencia. Una entrada elige entre barras, líneas, área, circular y embudo, y la misma tabla de datos acompaña al dibujo en todos ellos.',
     'accessibility.summary':
       'El Chart cumple WCAG 2.2 AA por cuatro caminos: descripción obligatoria del gráfico, una tabla de datos equivalente que existe siempre, trama y símbolo por serie (la información nunca vive solo en el color) y contorno sobre cada forma, que es lo que garantiza los 3:1 de objeto gráfico.',
     'accessibility.item2':
@@ -193,7 +199,7 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
       'Mini gráfico en línea: sin ejes, rejilla, leyenda ni etiquetas de valor, y con proporción achatada. Sirve de indicador de tendencia junto a un número.',
     'props.table.categoryLabel': 'Encabezado de la primera columna de la tabla de datos.',
     'props.table.valueLabel': 'Nombre de la serie cuando los datos vienen en la forma simple de rótulo y valor.',
-    'props.table.shareLabel': 'Encabezado de la columna de participación, en la tabla de datos del circular.',
+    'props.table.shareLabel': 'Encabezado de la columna de participación, en la tabla de datos de los tipos que dibujan proporción.',
     'props.table.className':
       'Las clases extra van en el atributo class del propio elemento — Angular las combina con las del design system.',
     'props.table.pointLabel': 'Rótulo de la categoría — se convierte en la marca del eje y en la primera columna de la tabla.',
@@ -204,6 +210,7 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'tokens.table.foreground':
       'Contorno de toda forma de dato — es lo que sostiene los 3:1 de objeto gráfico — y color del texto del título y de la ayuda emergente.',
     'demonstration.labels.pie': 'Circular',
+    'demonstration.labels.funnelPeople': 'Personas',
     'demonstration.labels.dataTable': 'Tabla de datos equivalente, visible',
   },
 });
@@ -277,6 +284,20 @@ const CODE_AREA = `<div ndsChart type="area" [xAxis]="meses" [series]="series" l
 const CODE_PIE = `<!-- A pizza só aceita a forma simples: um rótulo e um valor por fatia. -->
 <div ndsChart type="pie" [data]="dados" label="Distribuição de acessos por dispositivo"></div>`;
 
+const CODE_FUNNEL = `<!-- O funil também só aceita a forma simples, e a ORDEM é a do processo:
+     o desenho não reordena por valor. A tabela que acompanha traz etapa,
+     valor e participação em relação à PRIMEIRA etapa — a largura da faixa é
+     esse número, e largura não se lê em texto. -->
+<div
+  ndsChart
+  type="funnel"
+  [data]="etapas"
+  label="Funil de conversão: da visita à compra"
+  categoryLabel="Etapa"
+  valueLabel="Pessoas"
+  shareLabel="Participação"
+></div>`;
+
 const CODE_COMPACT = `<!-- Indicador ao lado de um número: sem eixos, sem legenda, proporção
      achatada. O valor exato continua na tabela de dados. -->
 <div class="nds-cluster" data-spacing="sm" data-align="center">
@@ -298,7 +319,7 @@ const INTERFACE_CODE = `// Um componente só, com entradas declarativas — sem 
 // sem builders. O tipo é o dado, não o estilo.
 @Component({ selector: 'div[ndsChart]' })
 export class NdsChart {
-  readonly type = input<ChartType>('bar');          // 'bar' | 'line' | 'area' | 'pie'
+  readonly type = input<ChartType>('bar');          // 'bar' | 'line' | 'area' | 'pie' | 'funnel'
   readonly label = input.required<string>();        // descrição do gráfico
   readonly data = input<ChartDataPoint[] | undefined>(undefined);
   readonly xAxis = input<string[] | undefined>(undefined);
@@ -429,6 +450,18 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
         [label]="label(t('variants.items.pie.name'))"
         [categoryLabel]="t('demonstration.labels.dataLabel')"
         [valueLabel]="t('demonstration.labels.tooltipLabel')"
+      ></div>
+    </ng-template>
+
+    <ng-template #tplVarFunnel>
+      <div
+        ndsChart
+        type="funnel"
+        [data]="funnelStages"
+        [label]="label(t('variants.items.funnel.name'))"
+        [categoryLabel]="t('demonstration.labels.funnelStage')"
+        [valueLabel]="t('demonstration.labels.funnelPeople')"
+        [shareLabel]="t('demonstration.labels.funnelShare')"
       ></div>
     </ng-template>
 
@@ -640,6 +673,7 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
   protected readonly seriesMulti = SERIES_MULTI;
   protected readonly seriesTrio = SERIES_TRIO;
   protected readonly dataDispositivo = DATA_DISPOSITIVO;
+  protected readonly funnelStages = FUNNEL_STAGES;
   protected readonly tendencia = TENDENCIA;
 
   /** Total do mini gráfico — derivado da série, nunca escrito à mão. */
@@ -655,6 +689,7 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarLine = viewChild.required<TemplateRef<unknown>>('tplVarLine');
   private readonly tplVarArea = viewChild.required<TemplateRef<unknown>>('tplVarArea');
   private readonly tplVarPie = viewChild.required<TemplateRef<unknown>>('tplVarPie');
+  private readonly tplVarFunnel = viewChild.required<TemplateRef<unknown>>('tplVarFunnel');
   private readonly tplVarCompact = viewChild.required<TemplateRef<unknown>>('tplVarCompact');
   private readonly tplCompInCard = viewChild.required<TemplateRef<unknown>>('tplCompInCard');
 
@@ -753,6 +788,7 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
       { key: 'line',        code: CODE_LINE,    tpl: this.tplVarLine()    },
       { key: 'area',        code: CODE_AREA,    tpl: this.tplVarArea()    },
       { key: 'pie',         code: CODE_PIE,     tpl: this.tplVarPie()     },
+      { key: 'funnel',      code: CODE_FUNNEL,  tpl: this.tplVarFunnel()  },
       { key: 'smallInline', code: CODE_COMPACT, tpl: this.tplVarCompact() },
     ].map(({ key, code, tpl }) => ({
       // `.name` existe no conteúdo só para `smallInline`; para os quatro tipos
@@ -832,7 +868,7 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
         title: t('props.containerTitle'),
         cols,
         items: [
-          line('type', 'chartType', `'bar' | 'line' | 'area' | 'pie'`, `'bar'`),
+          line('type', 'chartType', `'bar' | 'line' | 'area' | 'pie' | 'funnel'`, `'bar'`),
           line('label', 'ariaLabel', 'string', '—', sim),
           line('data', 'data', 'ChartDataPoint[]', '—'),
           line('xAxis', 'xAxis', 'string[]', '—'),

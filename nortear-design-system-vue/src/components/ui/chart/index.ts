@@ -124,3 +124,58 @@ export function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): E
     aria: ARIA,
   };
 }
+
+/**
+ * Funil: as etapas de um processo, desenhadas na ordem em que acontecem.
+ *
+ * Recebe a MESMA forma de dado da rosca — pares de rótulo e valor, sem eixo —,
+ * porque aqui também não há categoria contínua: há uma ordem de etapas. O que
+ * o desenho comunica é a LARGURA de cada faixa em relação à primeira, e largura
+ * não se lê em texto: por isso a alternativa textual ganha a terceira coluna
+ * (ver `chartTable`), pelo mesmo raciocínio da participação da rosca.
+ *
+ * Três decisões que não são estilo:
+ *
+ * - `sort: 'none'` fica ESCRITO, e CONTRA o padrão da lib, que reordena as
+ *   faixas por valor. A ordem aqui é a do PERCURSO, não a do tamanho: o funil
+ *   descreve um caminho, e não um ranking. Reordenando, um dado fora de ordem
+ *   sairia desenhado em ordem — o desenho ficaria bonito, e a coluna de
+ *   participação passaria a se referir a uma etapa que não é a de entrada. Com
+ *   `none`, dado fora de ordem aparece fora de ordem, que é o que quem
+ *   escreveu o dado precisa ver; e é essa mesma ordem que a tabela repete
+ *   linha a linha.
+ * - `label.show: false` — o rótulo padrão do funil é escrito DENTRO da faixa,
+ *   por cima de uma cor de série que muda a cada posição. Contraste que depende
+ *   de qual cor a posição sorteou é contraste que não se garante; quem nomeia
+ *   cada etapa por escrito é a legenda, sobre o fundo da página.
+ * - Nada de `textStyle`: o tamanho do texto é MEDIDO a partir da fonte raiz e
+ *   vive no tema do container. Um número cravado aqui venceria a medição e o
+ *   desenho pararia de crescer com a fonte do navegador (WCAG 1.4.4).
+ */
+export function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string }): EChartsCoreOption {
+  return {
+    title: o.title ? { text: o.title, left: 'left' } : undefined,
+    tooltip: { trigger: 'item', formatter: '{b}: {c}' },
+    legend: { bottom: 0, icon: 'roundRect', itemWidth: 12, itemHeight: 8 },
+    series: [{
+      type: 'funnel',
+      top: o.title ? 48 : 16,
+      bottom: 48,
+      left: '8%',
+      width: '84%',
+      minSize: '24%',
+      maxSize: '100%',
+      sort: 'none',
+      gap: 2,
+      label: { show: false },
+      labelLine: { show: false },
+      itemStyle: { borderRadius: 4 },
+      data: o.data.map((p) => ({ name: p.label, value: p.value })),
+    }],
+    // Preferência de movimento respeitada com o mesmo helper e os mesmos tokens
+    // de duração do resto do design system — o gráfico animava sempre.
+    animation: !prefersReducedMotion(),
+    animationDuration: Math.round(motionDuration('moderate') * 1000),
+    aria: ARIA,
+  };
+}

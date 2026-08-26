@@ -9,6 +9,7 @@ import {
   chartLinesSource,
   chartMultiSerieSource,
   chartPizzaSource,
+  chartFunnelSource,
   chartSource,
   designChartTitleSource,
   chartEmptySource,
@@ -64,6 +65,18 @@ describe('transforms das stories de variação, estado e composição', () => {
     expect(chartLinesSource()).toContain('option={buildLineOption({ xAxis: meses, series })}');
     expect(chartAreaSource()).toContain('option={buildAreaOption({ xAxis: meses, series })}');
     expect(chartPizzaSource()).toContain('option={buildPieOption({ data: dispositivos })}');
+    expect(chartFunnelSource()).toContain('option={buildFunnelOption({ data: etapas })}');
+  });
+
+  it('o funil ensina o rótulo da coluna de participação junto do desenho', () => {
+    // Sem `shareLabel` a tabela sai com o rótulo padrão do container, que não
+    // acompanha o idioma da página — e quem copia o snippet adota o que leu.
+    const saida = chartFunnelSource();
+    expect(saida).toContain('shareLabel="Participação"');
+    expect(saida).toContain("{ label: 'Visitas', value: 1000 },");
+    // A entrada vem primeiro: a ordem da lista é o percurso, e é a primeira
+    // linha que serve de referência à participação.
+    expect(saida.indexOf("'Visitas'")).toBeLessThan(saida.indexOf("'Compra'"));
   });
 
   it('o estado vazio não escreve rótulo de imagem — a frase é o conteúdo', () => {
