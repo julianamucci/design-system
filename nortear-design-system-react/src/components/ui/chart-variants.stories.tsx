@@ -8,9 +8,11 @@ import {
   buildPieOption,
   buildFunnelOption,
   buildRadarOption,
+  buildScatterOption,
 } from './chart';
 import {
   designEscreve,
+  distinctShapes,
   datumFormas,
   settleTheme,
   tokenColor,
@@ -33,10 +35,27 @@ import {
   chartLineSource,
   chartPizzaSource,
   chartRadarSource,
+  chartScatterSource,
   chartSource,
 } from './chart.source';
 
+import { CHART_SCATTER_CLUSTERS } from '@shared/primitives/chart-scatter-clusters';
+
 const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
+
+/**
+ * Séries da dispersão: um grupo do agrupamento compartilhado por série.
+ *
+ * O agrupamento vem PRONTO de `docs/shared/primitives`, gerado uma vez por
+ * `scripts/gerar-agrupamento-scatter.mjs`. Rodar o k-means aqui faria o desenho
+ * mudar sozinho entre rodadas — medido, a partição se repete de 92 a 98 vezes em
+ * 100 —, e a tabela equivalente descreveria um agrupamento diferente do que está
+ * na tela.
+ */
+const scatterSeries = CHART_SCATTER_CLUSTERS.map((c) => ({ name: c.name, points: c.points }));
+const scatterPoints = scatterSeries.reduce((n, s) => n + s.points.length, 0);
+const SCATTER_X = 'Minutos na página';
+const SCATTER_Y = 'Páginas vistas';
 const serieUnica = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
 const seriesMulti = [
   { name: 'Desktop', data: [186, 305, 237, 73, 209, 214] },
@@ -418,6 +437,71 @@ const radarSeries = [
   { name: 'Antes', data: [72, 64, 6, 88, 2] },
   { name: 'Depois', data: [94, 97, 9, 96, 4] },
 ];
+
+export const Scatter: Story = {
+  parameters: {
+    covers: ['functional.item10', 'visual.item7'],
+    docs: {
+      source: { transform: chartScatterSource },
+      description: {
+        story: 'Duas grandezas, uma em cada eixo, sem categoria no meio. Cada grupo é uma série, com forma própria: sem a cor, os grupos continuam separados.',
+      },
+    },
+  },
+  render: () => (
+    <ChartContainer
+      option={buildScatterOption({ series: scatterSeries, xLabel: SCATTER_X, yLabel: SCATTER_Y })}
+      className="nds-max-w-md"
+      height={320}
+      showData
+      seriesLabel="Grupo"
+      aria-label="Dispersão de sessões de leitura: minutos na página por páginas vistas, em três grupos"
+    />
+  ),
+  play: async ({ canvasElement, step }) => {
+    const root = await designPronto(canvasElement);
+
+    await step('O desenho sai com um ponto por par — nem um a mais', async () => {
+      // Contar formas exige a animação de entrada fechada: ver `drawingSettled`.
+      await drawingSettled(root);
+      // Igualdade, não piso: com "no mínimo", uma contagem inchada pelo ícone da
+      // legenda passaria igual, e o portão só reprovaria com a tela vazia.
+      await waitFor(() => expect(filledShapes(root)).toHaveLength(scatterPoints), { timeout: 3000 });
+    });
+
+    await step('Cada grupo tem uma FORMA própria — é ela que separa sem a cor', async () => {
+      // O passo que a dispersão exige e os outros tipos não.
+      //
+      // Nos tipos de área a WCAG 1.4.1 é cumprida pela trama, e há portão para
+      // ela. Aqui a trama não serve — num símbolo de 14px cabe uma repetição do
+      // ladrilho, e duas tramas diferentes saem iguais —, então quem separa é a
+      // forma, e é a forma que precisa ser medida.
+      //
+      // Medida no DOM, não no option: o option provaria que a forma foi PEDIDA.
+      // A assinatura é a sequência de letras de comando do `d`, invariante à
+      // posição — circle sai `MAA`, rect `MlllZ`, triangle `MLLZ`.
+      await expect(distinctShapes(filledShapes(root)).size).toBe(scatterSeries.length);
+    });
+
+    await step('A legenda amarra cada forma ao nome do grupo', async () => {
+      for (const serie of scatterSeries) {
+        await expect(designEscreve(root, serie.name)).toBe(true);
+      }
+    });
+
+    await step('Os dois eixos aparecem nomeados — posição sem grandeza não informa', async () => {
+      await expect(designEscreve(root, SCATTER_X)).toBe(true);
+      await expect(designEscreve(root, SCATTER_Y)).toBe(true);
+    });
+
+    await step('A tabela equivalente traz uma linha por ponto, com o grupo', async () => {
+      // O cabeçalho das duas colunas de número sai do NOME DO EIXO do option —
+      // o mesmo texto que a lib desenha ao lado do eixo, num lugar só.
+      await expect(headerOf(root)).toEqual(['Grupo', SCATTER_X, SCATTER_Y]);
+      await expect(rowsOf(root)).toHaveLength(scatterPoints);
+    });
+  },
+};
 
 export const Radar: Story = {
   parameters: {

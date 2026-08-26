@@ -30,6 +30,7 @@ export interface NortearChartTheme {
   line: { itemStyle: { borderColor: string; borderWidth: number }; lineStyle: { width: number } };
   bar: { itemStyle: { borderColor: string; borderWidth: number } };
   pie: { itemStyle: { borderColor: string; borderWidth: number } };
+  scatter: { itemStyle: { borderColor: string; borderWidth: number } };
   funnel: { itemStyle: { borderColor: string; borderWidth: number } };
   radar: ChartRadarStyle;
 }
@@ -57,6 +58,8 @@ interface ChartAxisStyle {
   axisLine: { show: boolean; lineStyle: { color: string } };
   axisTick: { show: boolean; lineStyle: { color: string } };
   axisLabel: { show: boolean; color: string; fontSize: number };
+  nameGap: number;
+  nameTextStyle: { color: string; fontSize: number };
   splitLine: { show: boolean; lineStyle: { color: string[] | string } };
   splitArea: { show: boolean; areaStyle: { color: string[] } };
 }
@@ -125,6 +128,20 @@ export function buildNortearTheme(): NortearChartTheme {
     axisLine: { show: true, lineStyle: { color: hsl('border', 0.6) } },
     axisTick: { show: true, lineStyle: { color: hsl('border', 0.6) } },
     axisLabel: { show: true, color: muted, fontSize: bodySize },
+    // O NOME do eixo — a grandeza que a posição mede. Só a dispersão o usa
+    // hoje; nos tipos de categoria não há nome a colocar, e estas duas linhas
+    // não têm efeito.
+    //
+    // A folga mora no TEMA, e não no construtor de option, por dois motivos que
+    // andam juntos. O primeiro é que o nome é texto e cresce com a fonte do
+    // navegador (WCAG 1.4.4): cravado em pixel, ele encostaria nos números do
+    // eixo no primeiro degrau de aumento, e o tema é o que já se reconstrói
+    // quando a fonte raiz muda — é dele que sai o `fontSize` de todo o resto.
+    // O segundo é que ler a fonte raiz exige o DOM, e os construtores de option
+    // são PUROS de propósito: uma folga calculada lá dentro tornaria impura uma
+    // função que hoje se verifica sem navegador.
+    nameGap: Math.round(bodySize * 2.2),
+    nameTextStyle: { color: muted, fontSize: bodySize },
     splitLine: { show: true, lineStyle: { color: hsl('border', 0.3) } },
     splitArea: { show: false, areaStyle: { color: ['transparent'] } },
   };
@@ -169,6 +186,11 @@ export function buildNortearTheme(): NortearChartTheme {
     line: { itemStyle: { borderColor: fg, borderWidth: 2 }, lineStyle: { width: 2 } },
     bar: { itemStyle: { borderColor: fg, borderWidth: 1 } },
     pie: { itemStyle: { borderColor: fg, borderWidth: 1 } },
+    // O símbolo da dispersão é a única marca do tipo, e é pequeno: sem contorno
+    // ele se perde contra o fundo e contra o símbolo vizinho. Traço de 1px, como
+    // barra e fatia — o de 2px do traçado existe porque lá a linha é o objeto, e
+    // aqui engrossar comeria a forma por dentro, que é justamente a pista.
+    scatter: { itemStyle: { borderColor: fg, borderWidth: 1 } },
     // O funil entra pela mesma porta que as outras séries de área: o contorno é
     // do TEMA, não do option. É o que faz a troca de tema recolorir o traço no
     // lugar, por `setTheme`, sem remontar o desenho — no option ele ficaria

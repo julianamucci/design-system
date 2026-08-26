@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue';
+import { CHART_SCATTER_CLUSTERS } from '@shared/primitives/chart-scatter-clusters';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption, buildRadarOption } from '@/components/ui/chart';
+import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption, buildRadarOption, buildScatterOption } from '@/components/ui/chart';
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
@@ -187,6 +188,7 @@ const codeImportSecondary = `import {
   buildPieOption,
   buildFunnelOption,
   buildRadarOption,
+  buildScatterOption,
 } from "@/components/ui/chart";`;
 
 // A altura é prop, não classe: a única forma documentada antes era uma classe
@@ -296,6 +298,29 @@ const anatomyItems = computed(() => [
   tContent('anatomy.item4'),
 ]);
 
+// O agrupamento vem PRONTO de `docs/shared/primitives`, gerado uma vez por
+// `scripts/gerar-agrupamento-scatter.mjs`: k-means sorteia o início, e rodá-lo
+// aqui faria o desenho mudar sozinho entre visitas — a partição se repete de 92
+// a 98 vezes em 100 — enquanto a tabela, que sai de função pura, descreveria
+// outro agrupamento.
+const scatterSeries = CHART_SCATTER_CLUSTERS.map((c) => ({ name: c.name, points: c.points }));
+
+const codeScatterChart = `const sessoes = [
+  { name: 'Grupo 1', points: [[1.5, 1.1], [1.9, 1.8], [3, 1.6]] },
+  { name: 'Grupo 2', points: [[7, 4.1], [8, 4.8], [9, 3.8]] },
+  { name: 'Grupo 3', points: [[12.7, 2.4], [13.4, 2.7], [14.9, 1.9]] },
+];
+
+<ChartContainer
+  :option="buildScatterOption({
+    series: sessoes,
+    xLabel: 'Minutos na página',
+    yLabel: 'Páginas vistas',
+  })"
+  series-label="Grupo"
+  aria-label="Dispersão de sessões de leitura, em três grupos"
+/>`;
+
 const variantItems = computed(() => [
   { name: 'bar',  description: stripHtml(tContent('variants.items.bar')),  code: codeBarChart  },
   { name: 'line', description: stripHtml(tContent('variants.items.line')), code: codeLineChart },
@@ -303,6 +328,7 @@ const variantItems = computed(() => [
   { name: 'pie',  description: stripHtml(tContent('variants.items.pie')),  code: codePieChart  },
   { name: 'funnel', description: stripHtml(tContent('variants.items.funnel')), code: codeFunnelChart },
   { name: 'radar', description: stripHtml(tContent('variants.items.radar')), code: codeRadarChart },
+  { name: 'scatter', description: stripHtml(tContent('variants.items.scatter')), code: codeScatterChart },
   {
     name: tContent('variants.items.smallInline.name'),
     description: tContent('variants.items.smallInline.description'),
@@ -776,8 +802,30 @@ const visualTestItems = computed(() => [
           />
         </div>
       </template>
-      <!-- Small inline (sparkline) -->
+      <!-- Scatter -->
       <template #variant-preview-6>
+        <div
+          class="nds-stack nds-p-4"
+          data-spacing="sm"
+        >
+          <!-- A primeira coluna da tabela nomeia o GRUPO, e as duas de número
+               nomeiam as GRANDEZAS que o desenho põe nos eixos — sem elas a
+               tabela diria onde o ponto está e não o que ele mede. -->
+          <ChartContainer
+            :option="buildScatterOption({
+              series: scatterSeries,
+              xLabel: stripHtml(tContent('demonstration.labels.scatterX')),
+              yLabel: stripHtml(tContent('demonstration.labels.scatterY')),
+            })"
+            class="nds-w-full nds-max-w-sm"
+            :height="280"
+            :series-label="stripHtml(tContent('demonstration.labels.scatterSeries'))"
+            aria-label="Dispersão de sessões de leitura: minutos na página por páginas vistas, em três grupos"
+          />
+        </div>
+      </template>
+      <!-- Small inline (sparkline) -->
+      <template #variant-preview-7>
         <div
           class="nds-cluster nds-rounded-md nds-border-default nds-p-4"
           data-spacing="md"

@@ -13,6 +13,20 @@ export interface ChartDataPoint { label: string; value: number }
 export interface ChartSeries { name: string; data: number[]; color?: string }
 
 /**
+ * Série de dispersão: pares `[x, y]`, sem categoria no meio.
+ *
+ * Tipo próprio, e não um `data` que aceita duas formas, porque as duas
+ * respondem perguntas diferentes: `ChartSeries.data` é uma lista ALINHADA às
+ * categorias do eixo, e um ponto de dispersão não tem categoria — as duas
+ * coordenadas são medidas, e é a posição no plano que carrega a informação.
+ */
+export interface ChartScatterSeries {
+  name: string;
+  points: [number, number][];
+  color?: string;
+}
+
+/**
  * Um eixo do radar: o nome dele e o TETO da escala.
  *
  * Nome e teto andam juntos porque no radar eles não são separáveis: o que a
@@ -200,6 +214,56 @@ export function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string })
  * de máximo da alternativa textual os lê (ver `chartTable`): uma segunda lista
  * de eixos passada à parte seria uma segunda verdade sobre a mesma escala.
  */
+/**
+ * Dispersão: dois eixos de valor, um ponto por par, uma FORMA por série.
+ *
+ * É o tipo em que a trama do decal não serve, e por isso ela é desligada aqui.
+ * A hachura é um ladrilho que se repete; num símbolo de 14px cabe uma repetição
+ * ou duas, e duas tramas diferentes saem indistinguíveis — declarada, aplicada,
+ * e ainda assim sem separar nada. Quem separa as séries é a forma do símbolo, e
+ * aqui ela é o sinal PRIMÁRIO, não o reforço: é a única marca que o tipo
+ * desenha. Por isso o símbolo é maior que o do traçado (14 contra 9), onde ele
+ * apenas marca pontos sobre uma linha que já tem desenho próprio de traço.
+ *
+ * O nome de cada eixo entra no option porque é dali que a tabela equivalente o
+ * lê — mesma escolha do teto do radar, que sai do `indicator`.
+ */
+export function buildScatterOption(o: {
+  series: ChartScatterSeries[];
+  xLabel?: string;
+  yLabel?: string;
+  title?: string;
+  showLegend?: boolean;
+}): EChartsCoreOption {
+  const showLegend = o.showLegend ?? o.series.length > 1;
+  return {
+    title: o.title ? { text: o.title, left: 'left' } : undefined,
+    tooltip: { trigger: 'item' },
+    // A legenda amarra a forma ao nome da série. Sem ela o desenho teria formas
+    // distintas e nenhuma pista do que cada uma significa.
+    legend: showLegend ? { bottom: 0, itemWidth: 14 } : undefined,
+    grid: {
+      left: 16, right: 16,
+      top: o.title ? 48 : 16,
+      bottom: showLegend ? 48 : 24,
+      containLabel: true,
+    },
+    // A folga do nome do eixo vem do TEMA — ver `nameGap` lá.
+    xAxis: { type: 'value', name: o.xLabel, nameLocation: 'middle', scale: true },
+    yAxis: { type: 'value', name: o.yLabel, nameLocation: 'middle', scale: true },
+    series: o.series.map((serie, i) => ({
+      name: serie.name,
+      type: 'scatter',
+      data: serie.points,
+      symbol: CHART_SYMBOLS[i % CHART_SYMBOLS.length],
+      symbolSize: 14,
+      ...(serie.color ? { itemStyle: { color: serie.color } } : {}),
+    })),
+    animation: !prefersReducedMotion(),
+    animationDuration: Math.round(motionDuration('moderate') * 1000),
+  };
+}
+
 export function buildRadarOption(o: {
   axes: ChartRadarAxis[];
   series: ChartSeries[];

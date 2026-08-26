@@ -4,6 +4,7 @@ import { getInstanceByDom } from 'echarts/core';
 import {
   designEscreve,
   designPintado,
+  distinctShapes,
   exigirRoot,
 } from '@shared/testing/chart-probe';
 import { resolveColor } from '@shared/testing/cor';
@@ -16,6 +17,7 @@ import {
   radarPolygons,
 } from './chart.fixtures';
 import { chartSource, chartSourceWith } from './chart.source';
+import { CHART_SCATTER_CLUSTERS } from '@shared/primitives/chart-scatter-clusters';
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 
@@ -70,6 +72,25 @@ const RADAR_SERIES = [
   { name: 'Antes', data: [72, 64, 6, 88, 2] },
   { name: 'Depois', data: [94, 97, 9, 96, 4] },
 ];
+
+/**
+ * Séries da dispersão: um grupo do agrupamento compartilhado por série.
+ *
+ * O agrupamento vem PRONTO de `docs/shared/primitives`, gerado uma vez por
+ * `scripts/gerar-agrupamento-scatter.mjs`. Rodar o k-means aqui faria o desenho
+ * mudar sozinho entre rodadas — medido, a partição se repete de 92 a 98 vezes
+ * em 100 —, e a tabela equivalente, que nasce de função pura, descreveria um
+ * agrupamento diferente do que está na tela.
+ */
+const SCATTER_SERIES = CHART_SCATTER_CLUSTERS.map((c) => ({
+  name: c.name,
+  points: c.points,
+}));
+
+const SCATTER_POINTS = SCATTER_SERIES.reduce((n, s) => n + s.points.length, 0);
+
+const SCATTER_X = 'Minutos na página';
+const SCATTER_Y = 'Páginas vistas';
 
 /**
  * Séries já resolvidas pela lib, lidas da instância montada no desenho.
@@ -571,6 +592,91 @@ export const Funnel: Story = {
         () => expect(hatchedShapes(root)).toHaveLength(FUNNEL_STAGES.length),
         { timeout: 3000 },
       );
+    });
+  },
+};
+
+// ─── Dispersão ────────────────────────────────────────────────────────────────
+
+export const Scatter: Story = {
+  parameters: {
+    covers: ['functional.item10', 'visual.item7'],
+    docs: {
+      source: {
+        transform: chartSourceWith({
+          type: 'scatter',
+          data: 'scatter',
+          height: 320,
+          'aria-label': 'Dispersão de sessões de leitura: minutos na página por páginas vistas, em três grupos',
+        }),
+      },
+      description: {
+        story: 'Tipo dispersão — duas grandezas, uma em cada eixo, sem categoria no meio. Cada grupo é uma série, com forma própria: sem a cor, os grupos continuam separados.',
+      },
+    },
+  },
+  render: () => createChart({
+    type: 'scatter',
+    series: SCATTER_SERIES,
+    height: 320,
+    class: 'nds-max-w-md',
+    seriesLabel: 'Grupo',
+    xLabel: SCATTER_X,
+    yLabel: SCATTER_Y,
+    'aria-label': 'Dispersão de sessões de leitura: minutos na página por páginas vistas, em três grupos',
+  }),
+  play: async ({ canvasElement, step }) => {
+    const root = exigirRoot(canvasElement);
+
+    await step('O desenho sai com um ponto por par — nem um a mais', async () => {
+      await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+      // Contar formas exige a animação de entrada fechada: ver `drawingSettled`.
+      await drawingSettled(root);
+      // Igualdade, não piso: com "no mínimo", uma contagem inchada pelo ícone
+      // da legenda passaria igual, e o portão só reprovaria com a tela vazia.
+      await waitFor(
+        () => expect(filledShapes(root)).toHaveLength(SCATTER_POINTS),
+        { timeout: 3000 },
+      );
+    });
+
+    await step('Cada grupo tem uma FORMA própria — é ela que separa sem a cor', async () => {
+      // Este é o passo que a dispersão exige e os outros tipos não.
+      //
+      // Nos tipos de área a WCAG 1.4.1 é cumprida pela trama, e há portão para
+      // ela. Aqui a trama não serve — num símbolo de 14px cabe uma repetição do
+      // ladrilho, e duas tramas diferentes saem iguais —, então quem separa é a
+      // forma, e é a forma que precisa ser medida.
+      //
+      // Medida no DOM e não no option: o option provaria que a forma foi
+      // PEDIDA. A assinatura é só a sequência de letras de comando do `d`, que
+      // não muda com a posição do ponto — circle sai `MAA`, rect `MlllZ`,
+      // triangle `MLLZ`.
+      const formas = distinctShapes(filledShapes(root));
+      await expect(formas.size).toBe(SCATTER_SERIES.length);
+    });
+
+    await step('A legenda amarra cada forma ao nome do grupo', async () => {
+      // Sem ela o desenho teria três formas e nenhuma pista do que significam,
+      // e a pessoa teria de ir à tabela — que é a alternativa, não a leitura.
+      for (const serie of SCATTER_SERIES) {
+        await expect(designEscreve(root, serie.name)).toBe(true);
+      }
+    });
+
+    await step('Os dois eixos aparecem nomeados — posição sem grandeza não informa', async () => {
+      await expect(designEscreve(root, SCATTER_X)).toBe(true);
+      await expect(designEscreve(root, SCATTER_Y)).toBe(true);
+    });
+
+    await step('A tabela equivalente traz uma linha por ponto, com o grupo', async () => {
+      const data = root.querySelector<HTMLElement>('[data-slot="chart-data"]');
+      await expect(data).not.toBeNull();
+      const header = [...data!.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
+      await expect(header).toEqual(['Grupo', SCATTER_X, SCATTER_Y]);
+      // Uma linha por ponto: resumo por grupo descreveria a nuvem, e a tabela
+      // precisa CARREGÁ-LA — é onde a posição de cada ponto sobrevive em texto.
+      await expect(data!.querySelectorAll('tbody tr')).toHaveLength(SCATTER_POINTS);
     });
   },
 };

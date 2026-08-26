@@ -192,6 +192,29 @@ const etapas = [
  * duas primeiras colunas entram escritos porque no radar a primeira não nomeia
  * uma categoria qualquer: nomeia o eixo, e a segunda traz o teto dele.
  */
+export function chartScatterSource(): string {
+  return jsxSnippet(
+    `${importChart('buildScatterOption')}
+
+const sessoes = [
+  { name: "Grupo 1", points: [[1.5, 1.1], [1.9, 1.8], [3, 1.6]] },
+  { name: "Grupo 2", points: [[7, 4.1], [8, 4.8], [9, 3.8]] },
+  { name: "Grupo 3", points: [[12.7, 2.4], [13.4, 2.7], [14.9, 1.9]] },
+];`,
+    `<ChartContainer
+  option={buildScatterOption({
+    series: sessoes,
+    xLabel: "Minutos na página",
+    yLabel: "Páginas vistas",
+  })}
+  className="nds-max-w-md"
+  height={320}
+  seriesLabel="Grupo"
+  aria-label="Dispersão de sessões de leitura: minutos na página por páginas vistas, em três grupos"
+/>`,
+  );
+}
+
 export function chartRadarSource(): string {
   return jsxSnippet(
     `${importChart('buildRadarOption')}

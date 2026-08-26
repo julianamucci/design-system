@@ -108,6 +108,15 @@ export interface ChartTableLabels {
    * ele não cabe num rodapé — precisa de uma célula por linha.
    */
   max: string;
+  /**
+   * Cabeçalho da primeira coluna da dispersão: qual série o ponto integra.
+   *
+   * Não reaproveita `category` porque não é categoria — a dispersão não tem
+   * eixo de categorias, e a coluna nomeia a SÉRIE. Os nomes das duas grandezas
+   * NÃO vêm daqui: saem do `name` de cada eixo do próprio option, que é de onde
+   * a lib os desenha.
+   */
+  series: string;
 }
 
 export const CHART_TABLE_LABELS: ChartTableLabels = {
@@ -115,6 +124,7 @@ export const CHART_TABLE_LABELS: ChartTableLabels = {
   value: 'Valor',
   share: 'Participação',
   max: 'Máximo',
+  series: 'Série',
 };
 
 /** Célula sem dado: a categoria existe, aquela série não a preenche. */
@@ -240,11 +250,49 @@ function radarAxesOf(option: EChartsCoreOption): { label: string; max: number | 
  * categoria — e, na pizza e no funil, a participação de cada parte, que é a
  * leitura que o desenho dá de graça e o texto precisa escrever.
  */
+/**
+ * O nome escrito num eixo do option — o cabeçalho das duas colunas de número da
+ * dispersão.
+ *
+ * Lê do option, e não de um rótulo à parte, porque é o mesmo texto que a lib
+ * desenha ao lado do eixo: dois lugares para ele seriam dois lugares para ele
+ * divergir.
+ */
+function axisNameOf(option: EChartsCoreOption, eixo: 'xAxis' | 'yAxis'): string {
+  const raw = (option as Record<string, unknown>)[eixo];
+  const axis = Array.isArray(raw) ? raw[0] : raw;
+  const name = axis !== null && typeof axis === 'object'
+    ? (axis as { name?: unknown }).name
+    : undefined;
+  return typeof name === 'string' ? name : '';
+}
+
 export function chartTable(
   option: EChartsCoreOption,
   labels: ChartTableLabels = CHART_TABLE_LABELS,
 ): ChartTable {
   const series = seriesOf(option);
+
+  // A dispersão não tem eixo de categorias: cada linha é um PONTO, e as duas
+  // colunas de número são as duas grandezas que o desenho põe no plano.
+  //
+  // Uma linha por ponto, e não um resumo por série, porque resumo não é
+  // equivalente: quem lê a tabela perderia exatamente o que o desenho mostra,
+  // que é ONDE cada ponto caiu. A primeira coluna nomeia a SÉRIE e se repete a
+  // cada linha do mesmo grupo — é ela que diz, ponto a ponto, a que grupo ele
+  // pertence.
+  const scatter = series.filter((s) => s.type === 'scatter');
+  if (scatter.length > 0) {
+    return {
+      header: [labels.series, axisNameOf(option, 'xAxis'), axisNameOf(option, 'yAxis')],
+      rows: scatter.flatMap((s) =>
+        (Array.isArray(s.data) ? (s.data as unknown[]) : []).map((point) => {
+          const pair = Array.isArray(point) ? point : [];
+          return [String(s.name ?? ''), cellOf(pair[0]), cellOf(pair[1])];
+        }),
+      ),
+    };
+  }
 
   // O radar é o único tipo com uma coluna ENTRE a categoria e as séries, e ela
   // é o teto do eixo.

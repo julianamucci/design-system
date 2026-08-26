@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
+import { CHART_SCATTER_CLUSTERS } from '@shared/primitives/chart-scatter-clusters';
 import {
   ChartContainer,
   buildBarOption,
@@ -7,6 +8,7 @@ import {
   buildPieOption,
   buildFunnelOption,
   buildRadarOption,
+  buildScatterOption,
 } from "@/components/ui/chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslation } from "@/lib/i18n";
@@ -240,6 +242,29 @@ const series = [
   option={buildFunnelOption({ data: funnelStages })}
   height={300}
   aria-label="Funil de conversão: da visita à compra"
+/>`;
+
+  // O agrupamento vem PRONTO de `docs/shared/primitives`, gerado uma vez por
+  // `scripts/gerar-agrupamento-scatter.mjs`: k-means sorteia o início, e rodá-lo
+  // aqui faria o desenho mudar sozinho entre visitas — a partição se repete de
+  // 92 a 98 vezes em 100 — enquanto a tabela, que sai de função pura,
+  // descreveria outro agrupamento.
+  const scatterSeries = CHART_SCATTER_CLUSTERS.map((c) => ({ name: c.name, points: c.points }));
+
+  const codeScatter = `const sessoes = [
+  { name: "Grupo 1", points: [[1.5, 1.1], [1.9, 1.8], [3, 1.6]] },
+  { name: "Grupo 2", points: [[7, 4.1], [8, 4.8], [9, 3.8]] },
+  { name: "Grupo 3", points: [[12.7, 2.4], [13.4, 2.7], [14.9, 1.9]] },
+];
+
+<ChartContainer
+  option={buildScatterOption({
+    series: sessoes,
+    xLabel: "Minutos na página",
+    yLabel: "Páginas vistas",
+  })}
+  seriesLabel="Grupo"
+  aria-label="Dispersão de sessões de leitura, em três grupos"
 />`;
 
   const codeRadar = `const eixos = [
@@ -608,6 +633,29 @@ declare function buildRadarOption(o: {
                 categoryLabel={stripHtml(tContent("demonstration.labels.radarAxis"))}
                 maxLabel={stripHtml(tContent("demonstration.labels.radarMax"))}
                 aria-label="Radar de qualidade do site: cinco grandezas, antes e depois da revisão"
+               />
+            ),
+          },
+          {
+            name: "scatter",
+            description: stripHtml(tContent("variants.items.scatter")),
+            code: codeScatter,
+            preview: (
+              // A primeira coluna da tabela nomeia o GRUPO, e as duas de número
+              // nomeiam as GRANDEZAS que o desenho põe nos eixos — sem elas a
+              // tabela diria onde o ponto está e não o que ele mede. Os três
+              // títulos vêm do conteúdo compartilhado para acompanharem o idioma
+              // da página.
+              <ChartContainer
+                option={buildScatterOption({
+                  series: scatterSeries,
+                  xLabel: stripHtml(tContent("demonstration.labels.scatterX")),
+                  yLabel: stripHtml(tContent("demonstration.labels.scatterY")),
+                })}
+                className="nds-w-full nds-max-w-sm"
+                height={280}
+                seriesLabel={stripHtml(tContent("demonstration.labels.scatterSeries"))}
+                aria-label="Dispersão de sessões de leitura: minutos na página por páginas vistas, em três grupos"
                />
             ),
           },

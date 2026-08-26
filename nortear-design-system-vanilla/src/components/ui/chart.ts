@@ -42,6 +42,13 @@
 //    losango, seta) e desenho de traço próprio. Retirando toda a cor, o gráfico
 //    continua legível (WCAG 1.4.1).
 //
+//    Em `scatter` a trama ALCANÇA o símbolo e mesmo assim é desligada, que é o
+//    caso mais sutil dos três. A hachura é um ladrilho que se repete; num
+//    símbolo de 14px cabe uma repetição ou duas, e duas tramas diferentes saem
+//    indistinguíveis — declarada, aplicada, e ainda assim sem separar nada.
+//    Ali quem separa as séries é a forma do símbolo, e ela é o sinal primário,
+//    não o reforço: é a única marca que o tipo desenha.
+//
 // 4. CONTRASTE (WCAG 1.4.11). Toda forma de dado — barra, fatia, faixa,
 //    símbolo — é
 //    contornada com `hsl(var(--foreground))`, que passa de 3:1 contra o fundo
@@ -54,7 +61,7 @@
 //    VIZINHA — coisa que a medida contra o fundo não cobre.
 
 import * as echarts from 'echarts/core';
-import { BarChart, FunnelChart, LineChart, PieChart, RadarChart } from 'echarts/charts';
+import { BarChart, FunnelChart, LineChart, PieChart, RadarChart, ScatterChart } from 'echarts/charts';
 import {
   TitleComponent,
   TooltipComponent,
@@ -90,7 +97,7 @@ import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 // Inferir a dependência do detalhe de empacotamento de uma versão é como o
 // registro some no dia em que o detalhe muda.
 echarts.use([
-  BarChart, LineChart, PieChart, FunnelChart, RadarChart,
+  BarChart, LineChart, PieChart, FunnelChart, RadarChart, ScatterChart,
   TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
   AriaComponent, RadarComponent,
   SVGRenderer, CanvasRenderer,
@@ -150,6 +157,10 @@ export const CHART_CATEGORY_LABEL = 'Categoria';
 export const CHART_VALUE_LABEL = 'Valor';
 export const CHART_SHARE_LABEL = 'Participação';
 export const CHART_MAX_LABEL = 'Máximo';
+/** Cabeçalhos da dispersão: a série que o ponto integra e as duas grandezas. */
+export const CHART_SERIES_LABEL = 'Série';
+export const CHART_X_LABEL = 'X';
+export const CHART_Y_LABEL = 'Y';
 
 /** Célula sem dado: a categoria existe, aquela série não a preenche. */
 const NO_VALUE = '—';
@@ -167,7 +178,7 @@ const DASHES: readonly (string | number[])[] = [
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar';
+export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar' | 'scatter';
 
 /** Forma simples: 1 série, label + value (compat com stories antigas). */
 export interface ChartDataPoint {
@@ -191,7 +202,19 @@ export interface ChartRadarAxis {
 /** Forma multi-série: x-axis + N séries com array de valores. */
 export interface ChartSeries {
   name: string;
-  data: number[];
+  /** Valores alinhados às categorias do eixo. A dispersão usa `points`. */
+  data?: number[];
+  /**
+   * Pares `[x, y]` — a forma que a DISPERSÃO usa, no lugar de `data`.
+   *
+   * Existe como campo próprio, e não como outro formato aceito por `data`,
+   * porque as duas formas respondem perguntas diferentes: `data` é uma lista de
+   * valores ALINHADA a uma categoria do eixo, e um ponto de dispersão não tem
+   * categoria — as duas coordenadas são medidas, e é a posição no plano que
+   * carrega a informação. Um campo por forma deixa o tipo dizer isso, em vez de
+   * uma união que o chamador precisa desempatar na cabeça.
+   */
+  points?: [number, number][];
   /** Cor explícita (sobrescreve token --chart-{n}). */
   color?: string;
 }
@@ -267,6 +290,24 @@ export interface ChartOptions {
    * ele não cabe num rodapé — precisa de uma célula por linha.
    */
   maxLabel?: string;
+  /**
+   * Cabeçalho da primeira coluna da dispersão: qual série o ponto integra.
+   *
+   * Não reaproveita `categoryLabel` porque não é categoria — a dispersão não
+   * tem eixo de categorias, e a coluna nomeia a SÉRIE. Chamá-la de "Categoria"
+   * ensinaria errado quem lê a tabela por leitor de tela.
+   */
+  seriesLabel?: string;
+  /**
+   * Nomes das duas grandezas da dispersão — no eixo e na tabela.
+   *
+   * São a informação que o desenho passa pela POSIÇÃO, e posição não se lê em
+   * texto. Sem eles a tabela sairia com duas colunas chamadas X e Y, que dizem
+   * onde o ponto está e não o que ele mede. É a mesma família da coluna de
+   * participação da rosca e da de máximo do radar.
+   */
+  xLabel?: string;
+  yLabel?: string;
 }
 
 // ─── Normalização (uma só, para o desenho e para a tabela) ───────────────────
@@ -286,13 +327,24 @@ function seriesOf(opts: ChartOptions): ChartSeries[] {
   return [];
 }
 
+/**
+ * Os pares `[x, y]` de uma série de dispersão.
+ *
+ * Existe pelo mesmo motivo de `seriesOf` e `radarAxesOf`: o desenho e a tabela
+ * leem daqui os MESMOS pontos. Duas leituras separadas seriam duas verdades
+ * sobre o mesmo dado.
+ */
+function pointsOf(serie: ChartSeries): [number, number][] {
+  return serie.points ?? [];
+}
+
 /** Categorias do eixo. Sem rótulo declarado, a posição vira o rótulo. */
 function categoriesOf(opts: ChartOptions): string[] {
   const axis = opts.xAxis;
   if (axis && axis.length > 0) return axis.map(String);
   const simple = opts.data;
   if (simple && simple.length > 0) return simple.map((d) => d.label);
-  const longest = seriesOf(opts).reduce((max, s) => Math.max(max, s.data.length), 0);
+  const longest = seriesOf(opts).reduce((max, s) => Math.max(max, (s.data ?? []).length), 0);
   return Array.from({ length: longest }, (_, i) => String(i + 1));
 }
 
@@ -313,7 +365,7 @@ function radarAxesOf(opts: ChartOptions): ChartRadarAxis[] {
   const declared = opts.radarAxes;
   if (declared && declared.length > 0) return declared;
   const ceiling = seriesOf(opts).reduce(
-    (max, s) => s.data.reduce((inner, value) => Math.max(inner, value), max),
+    (max, s) => (s.data ?? []).reduce((inner, value) => Math.max(inner, value), max),
     0,
   );
   return categoriesOf(opts).map((label) => ({ label, max: ceiling }));
@@ -385,10 +437,40 @@ export function buildChartTable(opts: ChartOptions): ChartTable {
         axis.label,
         formatValue(axis.max),
         ...series.map((s) => {
-          const value = s.data[index];
+          const value = s.data?.[index];
           return value === undefined ? NO_VALUE : formatValue(value);
         }),
       ]),
+    };
+  }
+
+  // A dispersão não tem eixo de categorias: cada linha é um PONTO, e as duas
+  // colunas de número são as duas grandezas que o desenho põe no plano.
+  //
+  // Uma linha por ponto, e não um resumo por grupo (quantos pontos, onde fica o
+  // centro), porque resumo não é equivalente: quem lê a tabela perderia
+  // exatamente o que o desenho mostra, que é ONDE cada ponto caiu. O resumo
+  // descreveria a nuvem; a tabela precisa carregá-la.
+  //
+  // A primeira coluna nomeia a SÉRIE, e ela se repete a cada linha do mesmo
+  // grupo — é o `<th scope="row">` que diz, ponto a ponto, a que grupo ele
+  // pertence. Sem essa coluna a tabela viraria uma lista de pares sem dono, e o
+  // agrupamento — que é a informação do desenho — sumiria do texto.
+  if (type === 'scatter') {
+    const series = seriesOf(opts);
+    return {
+      header: [
+        opts.seriesLabel ?? CHART_SERIES_LABEL,
+        opts.xLabel ?? CHART_X_LABEL,
+        opts.yLabel ?? CHART_Y_LABEL,
+      ],
+      lines: series.flatMap((serie) =>
+        pointsOf(serie).map((ponto) => [
+          serie.name,
+          formatValue(ponto[0]),
+          formatValue(ponto[1]),
+        ]),
+      ),
     };
   }
 
@@ -438,7 +520,7 @@ export function buildChartTable(opts: ChartOptions): ChartTable {
     lines: categoriesOf(opts).map((category, index) => [
       category,
       ...series.map((s) => {
-        const value = s.data[index];
+        const value = s.data?.[index];
         return value === undefined ? NO_VALUE : formatValue(value);
       }),
     ]),
@@ -487,7 +569,7 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
         type: 'radar',
         data: seriesData.map((s, index) => ({
           name: s.name,
-          value: s.data,
+          value: s.data ?? [],
           // Símbolo e traço próprios, o mesmo vocabulário de forma do traçado:
           // sem a cor, um polígono ainda se separa do outro (WCAG 1.4.1).
           symbol: SYMBOLS[index % SYMBOLS.length],
@@ -509,6 +591,70 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
       animation: !prefersReducedMotion(),
       animationDuration: Math.round(motionDuration('moderate') * 1000),
       aria: ariaBlock(),
+    };
+  }
+
+  // Dispersão: dois eixos de valor, um ponto por par, uma forma por série.
+  //
+  // É o tipo em que a trama do decal NÃO SERVE, e é por isso que ela é desligada
+  // logo abaixo. A hachura é feita de um ladrilho que se repete; num símbolo de
+  // 14px cabe uma repetição ou duas, e o que sai não é padrão, é ruído — duas
+  // tramas diferentes chegam indistinguíveis, e o sinal que deveria substituir a
+  // cor passa a não substituir nada. O caso é o mesmo do traçado (decisão 3 do
+  // cabeçalho): sem trama que alcance, quem separa as séries é a FORMA do
+  // símbolo, e ela é o sinal primário aqui, não o reforço.
+  //
+  // Por isso o símbolo é maior que o do traçado (14 contra 9): ali ele marca
+  // pontos sobre uma linha que já tem desenho próprio de traço; aqui ele é a
+  // única marca que existe, e é nele que a distinção inteira se apoia.
+  if (type === 'scatter') {
+    return {
+      title: opts.title ? { text: opts.title, left: 'left' } : undefined,
+      tooltip: { trigger: 'item' },
+      // A legenda é o que amarra a forma ao nome do grupo. Sem ela o desenho
+      // teria cinco formas e nenhuma pista do que cada uma significa, e a
+      // pessoa teria de ir à tabela para descobrir — o que é a alternativa, não
+      // a leitura principal.
+      legend: showLegend || seriesData.length > 1
+        ? { bottom: 0, itemWidth: 14 }
+        : undefined,
+      grid: {
+        left: 16, right: 16,
+        top: opts.title ? 48 : 16,
+        bottom: showLegend || seriesData.length > 1 ? 48 : 24,
+        containLabel: true,
+      },
+      // Os dois eixos são de VALOR — é o que distingue a dispersão do traçado,
+      // onde o x é categoria. O nome de cada eixo é o que diz o que a posição
+      // mede; sem ele o desenho mostra números sem grandeza.
+      xAxis: {
+        type: 'value',
+        name: opts.xLabel,
+        nameLocation: 'middle',
+        // A folga do nome vem do TEMA (`nameGap` em `axisStyle`), que se
+        // reconstrói quando a fonte raiz muda. Calculá-la aqui exigiria ler o
+        // DOM, e este construtor é puro.
+        scale: true,
+      },
+      yAxis: {
+        type: 'value',
+        name: opts.yLabel,
+        nameLocation: 'middle',
+        scale: true,
+      },
+      series: seriesData.map((serie, index) => ({
+        name: serie.name,
+        type: 'scatter',
+        data: pointsOf(serie),
+        symbol: SYMBOLS[index % SYMBOLS.length],
+        symbolSize: 14,
+        ...(serie.color ? { itemStyle: { color: serie.color } } : {}),
+      })),
+      animation: !prefersReducedMotion(),
+      animationDuration: Math.round(motionDuration('moderate') * 1000),
+      // Trama desligada — ver o comentário acima. O resto do bloco continua: o
+      // desenho segue anunciado, e é a forma do símbolo que cumpre a 1.4.1.
+      aria: { ...ariaBlock(), decal: { show: false } },
     };
   }
 
@@ -610,7 +756,7 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
     series: seriesData.map((s, index) => ({
       name: s.name,
       type: type === 'area' ? 'line' : type,
-      data: s.data,
+      data: s.data ?? [],
       smooth: type !== 'bar',
       ...(type === 'bar'
         ? { itemStyle: { borderRadius: [4, 4, 0, 0], ...(s.color ? { color: s.color } : {}) } }

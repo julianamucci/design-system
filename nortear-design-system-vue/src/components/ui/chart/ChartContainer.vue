@@ -6,7 +6,7 @@
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue';
 import VChart from 'vue-echarts';
 import * as echarts from 'echarts/core';
-import { BarChart, LineChart, PieChart, FunnelChart, RadarChart } from 'echarts/charts';
+import { BarChart, LineChart, PieChart, FunnelChart, RadarChart, ScatterChart } from 'echarts/charts';
 import {
   TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
   AriaComponent, RadarComponent,
@@ -37,7 +37,7 @@ import type { HTMLAttributes } from 'vue';
 // Inferir a dependência do detalhe de empacotamento de uma versão é como o
 // registro some no dia em que o detalhe muda.
 echarts.use([
-  BarChart, LineChart, PieChart, FunnelChart, RadarChart,
+  BarChart, LineChart, PieChart, FunnelChart, RadarChart, ScatterChart,
   TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
   AriaComponent, RadarComponent,
   SVGRenderer, CanvasRenderer,
@@ -93,6 +93,8 @@ const props = defineProps<{
    * aqui muda de eixo para eixo e por isso precisa de uma célula por linha.
    */
   maxLabel?: string;
+  /** Cabeçalho da primeira coluna da dispersão — ver `ChartTableLabels`. */
+  seriesLabel?: string;
 }>();
 
 const containerRef = ref<HTMLDivElement | null>(null);
@@ -153,6 +155,16 @@ function buildTheme() {
     axisLine: { show: true, lineStyle: { color: hsl('border', 0.6) } },
     axisTick: { show: true, lineStyle: { color: hsl('border', 0.6) } },
     axisLabel: { show: true, color: muted, fontSize: bodySize },
+    // O NOME do eixo — a grandeza que a posição mede. Só a dispersão o usa hoje;
+    // nos tipos de categoria não há nome a colocar, e estas duas linhas não têm
+    // efeito.
+    //
+    // A folga mora no TEMA, e não no construtor de option: o nome é texto e
+    // cresce com a fonte do navegador (WCAG 1.4.4), e o tema é o que já se
+    // reconstrói quando a fonte raiz muda. Calculá-la no construtor exigiria ler
+    // o DOM, e os construtores são puros de propósito.
+    nameGap: Math.round(bodySize * 2.2),
+    nameTextStyle: { color: muted, fontSize: bodySize },
     splitLine: { show: true, lineStyle: { color: hsl('border', 0.3) } },
     splitArea: { show: false, areaStyle: { color: ['transparent'] } },
   };
@@ -197,6 +209,11 @@ function buildTheme() {
     line: { itemStyle: { borderColor: fg, borderWidth: 2 }, lineStyle: { width: 2 } },
     bar: { itemStyle: { borderColor: fg, borderWidth: 1 } },
     pie: { itemStyle: { borderColor: fg, borderWidth: 1 } },
+    // O símbolo da dispersão é a única marca do tipo, e é pequeno: sem contorno
+    // ele se perde contra o fundo e contra o vizinho. Traço de 1px, como barra e
+    // fatia — o de 2px do traçado existe porque lá a linha é o objeto, e aqui
+    // engrossar comeria a forma por dentro, que é justamente a pista.
+    scatter: { itemStyle: { borderColor: fg, borderWidth: 1 } },
     // A faixa do funil é forma cheia como a barra e a fatia, e pelo mesmo
     // motivo leva contorno: ele separa uma etapa da ETAPA VIZINHA, que encosta
     // nela, e nenhuma medida contra o fundo cobre isso. A chave é o próprio
@@ -347,6 +364,7 @@ const table = computed(() =>
     value: props.valueLabel ?? CHART_TABLE_LABELS.value,
     share: props.shareLabel ?? CHART_TABLE_LABELS.share,
     max: props.maxLabel ?? CHART_TABLE_LABELS.max,
+    series: props.seriesLabel ?? CHART_TABLE_LABELS.series,
   }),
 );
 

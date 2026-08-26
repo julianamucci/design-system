@@ -1,4 +1,5 @@
 import { applySeo } from '@/lib/use-seo';
+import { CHART_SCATTER_CLUSTERS } from '@shared/primitives/chart-scatter-clusters';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
@@ -136,6 +137,29 @@ function buildFunnelPreview(): HTMLElement {
     categoryLabel: stripHtml(t('demonstration.labels.funnelStage')),
     shareLabel: stripHtml(t('demonstration.labels.funnelShare')),
     'aria-label': 'Funil de conversão: visitas, cadastros, carrinho e compra',
+  });
+}
+
+// Na dispersão a primeira coluna da tabela nomeia o GRUPO, e as duas de número
+// nomeiam as GRANDEZAS que o desenho põe nos eixos — sem elas a tabela diria
+// onde o ponto está e não o que ele mede. Os três títulos vêm do conteúdo
+// compartilhado para acompanharem o idioma da página.
+//
+// O agrupamento vem PRONTO de `docs/shared/primitives`, gerado uma vez por
+// `scripts/gerar-agrupamento-scatter.mjs`: k-means sorteia o início, e rodá-lo
+// aqui faria o desenho mudar sozinho entre visitas — a partição se repete de 92
+// a 98 vezes em 100 — enquanto a tabela, que sai de função pura, descreveria
+// outro agrupamento.
+function buildScatterPreview(): HTMLElement {
+  return createChart({
+    series: CHART_SCATTER_CLUSTERS.map((c) => ({ name: c.name, points: c.points })),
+    type: 'scatter',
+    height: 280,
+    class: 'nds-w-full nds-max-w-md',
+    seriesLabel: stripHtml(t('demonstration.labels.scatterSeries')),
+    xLabel: stripHtml(t('demonstration.labels.scatterX')),
+    yLabel: stripHtml(t('demonstration.labels.scatterY')),
+    'aria-label': 'Dispersão de sessões de leitura: minutos na página por páginas vistas, em três grupos',
   });
 }
 
@@ -417,7 +441,7 @@ const el = createChart({
     { label: 'Feb', value: 305 },
     { label: 'Mar', value: 237 },
   ],
-  type: 'bar',   // 'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar'
+  type: 'bar',   // os tipos cobertos estão listados na seção de variantes
   height: 200,
   // Vira o role="img" + aria-label do desenho, e a legenda da tabela de dados
   // que acompanha. Sem ele, o desenho é conteúdo perdido para quem usa leitor
@@ -457,6 +481,21 @@ const el = createChart({
   // etapa em relação à primeira, que é o que a largura da faixa desenha.
   shareLabel: 'Participação',
   'aria-label': 'Funil de conversão: visitas, cadastros, carrinho e compra',
+});`;
+
+        const codeScatter = `const sessoes = [
+  { name: 'Grupo 1', points: [[1.5, 1.1], [1.9, 1.8], [3, 1.6]] },
+  { name: 'Grupo 2', points: [[7, 4.1], [8, 4.8], [9, 3.8]] },
+  { name: 'Grupo 3', points: [[12.7, 2.4], [13.4, 2.7], [14.9, 1.9]] },
+];
+
+const grafico = createChart({
+  type: 'scatter',
+  series: sessoes,
+  seriesLabel: 'Grupo',
+  xLabel: 'Minutos na página',
+  yLabel: 'Páginas vistas',
+  'aria-label': 'Dispersão de sessões de leitura, em três grupos',
 });`;
 
         const codeRadar = `const eixos = [
@@ -533,6 +572,12 @@ wrap.appendChild(spark);`;
               description: stripHtml(t('variants.items.radar')),
               code: codeRadar,
               previewFactory: () => buildRadarPreview(),
+            },
+            {
+              name: 'scatter',
+              description: stripHtml(t('variants.items.scatter')),
+              code: codeScatter,
+              previewFactory: () => buildScatterPreview(),
             },
             {
               name: stripHtml(t('variants.items.smallInline.name')),
@@ -638,7 +683,7 @@ card.appendChild(content);`;
 
       case 'propriedades': {
         const interfaceCode = `// createChart(options) → HTMLElement
-export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar';
+export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar' | 'scatter';
 
 export interface ChartDataPoint {
   label: string;
@@ -732,7 +777,7 @@ export interface ChartOptions {
                 },
                 {
                   name: 'type',
-                  type: "'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar'",
+                  type: "'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar' | 'scatter'",
                   defaultValue: "'bar'",
                   required: 'Não',
                   description: toPlainText(t('props.table.chartType')),

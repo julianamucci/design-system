@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, waitFor } from 'storybook/test';
+import { designEscreve, distinctShapes } from '@shared/testing/chart-probe';
 import { NdsChart } from './chart';
 import {
   MONTHS,
@@ -10,6 +11,10 @@ import {
   FUNNEL_STAGES,
   RADAR_AXES,
   RADAR_SERIES,
+  SCATTER_POINTS,
+  SCATTER_SERIES,
+  SCATTER_X,
+  SCATTER_Y,
   contrastRatio,
   desenhoDe,
   drawingSettled,
@@ -353,6 +358,76 @@ export const Funnel: Story = {
       // última é a queda que o funil existe para mostrar.
       await expect(cells[0]).toEqual(['Visitas', '4000', '100%']);
       await expect(cells[3]).toEqual(['Compra', '480', '12%']);
+    });
+  },
+};
+
+export const Scatter: Story = {
+  parameters: {
+    covers: ['functional.item10', 'visual.item7'],
+  },
+  render: () => ({
+    props: { series: SCATTER_SERIES, xLabel: SCATTER_X, yLabel: SCATTER_Y },
+    template: `
+      <div ndsChart
+        type="scatter"
+        [series]="series"
+        [xLabel]="xLabel"
+        [yLabel]="yLabel"
+        [showData]="true"
+        seriesLabel="Grupo"
+        label="Dispersão de sessões de leitura: minutos na página por páginas vistas, em três grupos"
+      ></div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
+    const desenho = desenhoDe(chart);
+    // Duas esperas, e cada uma responde por uma coisa. A primeira só pergunta se
+    // JÁ HÁ desenho — antes do primeiro quadro o coletor devolve zero, e zero
+    // não contradiz invariante nenhuma. A segunda espera a animação de entrada
+    // fechar, e é ela que faz a contagem valer.
+    await waitFor(() => expect(formasPreenchidas(desenho).length).toBeGreaterThan(0));
+    await drawingSettled(desenho);
+
+    await step('Um ponto por par — nem um a mais', async () => {
+      // Igualdade, não piso: com "no mínimo", uma contagem inchada pelo ícone da
+      // legenda passaria igual, e o portão só reprovaria com a tela vazia.
+      await expect(formasPreenchidas(desenho)).toHaveLength(SCATTER_POINTS);
+    });
+
+    await step('Cada grupo tem uma FORMA própria — é ela que separa sem a cor', async () => {
+      // O passo que a dispersão exige e os outros tipos não.
+      //
+      // Nos tipos de área a WCAG 1.4.1 é cumprida pela trama, e há portão para
+      // ela. Aqui a trama não serve — num símbolo de 14px cabe uma repetição do
+      // ladrilho, e duas tramas diferentes saem iguais —, então quem separa é a
+      // forma, e é a forma que precisa ser medida.
+      //
+      // Medida no DOM, não no option: o option provaria que a forma foi PEDIDA.
+      // A assinatura é a sequência de letras de comando do \`d\`, invariante à
+      // posição — circle sai \`MAA\`, rect \`MlllZ\`, triangle \`MLLZ\`.
+      await expect(distinctShapes(formasPreenchidas(desenho)).size)
+        .toBe(SCATTER_SERIES.length);
+    });
+
+    await step('A legenda amarra cada forma ao nome do grupo', async () => {
+      for (const serie of SCATTER_SERIES) {
+        await expect(designEscreve(desenho, serie.name)).toBe(true);
+      }
+    });
+
+    await step('Os dois eixos aparecem nomeados — posição sem grandeza não informa', async () => {
+      await expect(designEscreve(desenho, SCATTER_X)).toBe(true);
+      await expect(designEscreve(desenho, SCATTER_Y)).toBe(true);
+    });
+
+    await step('A tabela equivalente traz uma linha por ponto, com o grupo', async () => {
+      const header = [...chart.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
+      await expect(header).toEqual(['Grupo', SCATTER_X, SCATTER_Y]);
+      // Uma linha por ponto: resumo por grupo descreveria a nuvem, e a tabela
+      // precisa CARREGÁ-LA — é onde a posição de cada ponto sobrevive em texto.
+      await expect(chart.querySelectorAll('tbody tr')).toHaveLength(SCATTER_POINTS);
     });
   },
 };

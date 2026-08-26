@@ -173,3 +173,27 @@ export function backgroundOpacoAtras(el: Element): string {
   }
   return 'rgb(255, 255, 255)';
 }
+
+/**
+ * A assinatura de FORMA de um caminho: só as letras de comando do atributo `d`.
+ *
+ * Serve para contar quantas formas DIFERENTES um desenho põe na tela sem
+ * depender da posição de cada uma — as coordenadas mudam a cada ponto, as
+ * letras não. Medido contra o que a lib emite:
+ *
+ *   circle `MAA` · rect `MlllZ` · triangle `MLLZ` · diamond `MLLLZ` · arrow `MLLLLZ`
+ *
+ * Existe por causa da dispersão, o tipo em que a forma do símbolo é o sinal
+ * PRIMÁRIO e não o reforço: ali a trama não serve (ver a decisão 3 no cabeçalho
+ * do componente), então é a forma que cumpre a WCAG 1.4.1 e é ela que precisa
+ * ser medida no DOM. Ler a forma do option provaria só que ela foi PEDIDA.
+ */
+export function shapeSignature(shape: Element): string {
+  const d = shape.getAttribute('d') ?? '';
+  return (d.match(/[A-Za-z]/g) ?? []).join('');
+}
+
+/** Quantas formas distintas há num conjunto de caminhos já filtrado. */
+export function distinctShapes(shapes: Element[]): Set<string> {
+  return new Set(shapes.map(shapeSignature));
+}

@@ -111,6 +111,7 @@ function container(options: {
   emptyLabel?: unknown;
   categoryLabel?: string;
   maxLabel?: string;
+  seriesLabel?: string;
 }): string {
   const partes = attrsMultilinha([
     `:option="${options.option}"`,
@@ -120,6 +121,7 @@ function container(options: {
     attr('empty-label', options.emptyLabel, CHART_EMPTY_LABEL),
     options.categoryLabel ? attr('category-label', options.categoryLabel) : '',
     options.maxLabel ? attr('max-label', options.maxLabel) : '',
+    options.seriesLabel ? attr('series-label', options.seriesLabel) : '',
     options.className ? attr('class', options.className) : '',
   ]);
   return partes.startsWith('\n')
@@ -223,6 +225,27 @@ export function chartFunnelSource(): string {
  * duas primeiras colunas entram escritos porque no radar a primeira não nomeia
  * uma categoria qualquer: nomeia o eixo, e a segunda traz o teto dele.
  */
+/** Três grupos de pontos — o snippet mostra poucos, para ensinar a FORMA do dado. */
+const SCATTER_SERIES = `const sessoes = [
+  { name: 'Grupo 1', points: [[1.5, 1.1], [1.9, 1.8], [3, 1.6]] },
+  { name: 'Grupo 2', points: [[7, 4.1], [8, 4.8], [9, 3.8]] },
+  { name: 'Grupo 3', points: [[12.7, 2.4], [13.4, 2.7], [14.9, 1.9]] },
+]`;
+
+export function chartScatterSource(): string {
+  return vueSnippet(
+    `${importing('buildScatterOption')}
+
+${SCATTER_SERIES}`,
+    container({
+      option: "buildScatterOption({ series: sessoes, xLabel: 'Minutos na página', yLabel: 'Páginas vistas' })",
+      height: 320,
+      label: 'Dispersão de sessões de leitura: minutos na página por páginas vistas, em três grupos',
+      seriesLabel: 'Grupo',
+    }),
+  );
+}
+
 export function chartRadarSource(): string {
   return vueSnippet(
     `${importing('buildRadarOption')}\n\n${RADAR_AXES}\n${RADAR_SERIES}`,

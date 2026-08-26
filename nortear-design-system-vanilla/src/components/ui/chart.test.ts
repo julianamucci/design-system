@@ -238,6 +238,46 @@ describe('buildChartTable', () => {
     ]);
   });
 
+  it('a dispersão escreve uma linha por PONTO, com a série na primeira coluna', () => {
+    const table = buildChartTable({
+      type: 'scatter',
+      series: [
+        { name: 'Grupo 1', points: [[1.5, 2], [3, 4.25]] },
+        { name: 'Grupo 2', points: [[8, 5]] },
+      ],
+    });
+    expect(table.header).toEqual(['Série', 'X', 'Y']);
+    // Uma linha por ponto, na ordem das séries — não um resumo por grupo: o
+    // resumo descreveria a nuvem, e a tabela precisa carregá-la.
+    expect(table.lines).toEqual([
+      ['Grupo 1', '1.5', '2'],
+      ['Grupo 1', '3', '4.25'],
+      ['Grupo 2', '8', '5'],
+    ]);
+  });
+
+  it('a dispersão aceita cabeçalhos autorais nas três colunas', () => {
+    const table = buildChartTable({
+      type: 'scatter',
+      seriesLabel: 'Grupo',
+      xLabel: 'Minutos na página',
+      yLabel: 'Páginas vistas',
+      series: [{ name: 'Grupo 1', points: [[2, 3]] }],
+    });
+    expect(table.header).toEqual(['Grupo', 'Minutos na página', 'Páginas vistas']);
+  });
+
+  it('série de dispersão sem ponto nenhum não inventa linha', () => {
+    const table = buildChartTable({
+      type: 'scatter',
+      series: [
+        { name: 'Grupo 1', points: [[1, 2]] },
+        { name: 'Vazio', points: [] },
+      ],
+    });
+    expect(table.lines).toEqual([['Grupo 1', '1', '2']]);
+  });
+
   it('sem dado nenhum, a tabela nasce sem linha', () => {
     expect(buildChartTable({}).lines).toEqual([]);
     expect(buildChartTable({ type: 'funnel' }).lines).toEqual([]);

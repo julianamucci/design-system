@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 
 import * as echarts from 'echarts/core';
-import { BarChart, FunnelChart, LineChart, PieChart, RadarChart } from 'echarts/charts';
+import { BarChart, FunnelChart, LineChart, PieChart, RadarChart, ScatterChart } from 'echarts/charts';
 import {
   TitleComponent,
   TooltipComponent,
@@ -130,7 +130,7 @@ import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 // Inferir a dependência do detalhe de empacotamento de uma versão é como o
 // registro some no dia em que o detalhe muda.
 echarts.use([
-  BarChart, LineChart, PieChart, FunnelChart, RadarChart,
+  BarChart, LineChart, PieChart, FunnelChart, RadarChart, ScatterChart,
   TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
   AriaComponent, RadarComponent,
   SVGRenderer,
@@ -138,7 +138,7 @@ echarts.use([
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar';
+export type ChartType = 'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar' | 'scatter';
 
 /** Forma simples: 1 série, rótulo + valor. */
 export interface ChartDataPoint {
@@ -162,7 +162,18 @@ export interface ChartRadarAxis {
 /** Forma multi-série: N séries com valores alinhados ao eixo de categorias. */
 export interface ChartSeries {
   name: string;
-  data: number[];
+  /** Valores alinhados às categorias do eixo. A dispersão usa `points`. */
+  data?: number[];
+  /**
+   * Pares `[x, y]` — a forma que a DISPERSÃO usa, no lugar de `data`.
+   *
+   * Existe como campo próprio, e não como outro formato aceito por `data`,
+   * porque as duas formas respondem perguntas diferentes: `data` é uma lista de
+   * valores ALINHADA a uma categoria do eixo, e um ponto de dispersão não tem
+   * categoria — as duas coordenadas são medidas, e é a posição no plano que
+   * carrega a informação.
+   */
+  points?: [number, number][];
   /** Cor explícita; sobrescreve o token `--chart-{n}` da posição. */
   color?: string;
 }
@@ -340,6 +351,24 @@ export class NdsChart {
    * ele não cabe num rodapé — precisa de uma célula por linha.
    */
   readonly maxLabel = input<string>('Máximo');
+  /**
+   * Cabeçalho da primeira coluna da dispersão: qual série o ponto integra.
+   *
+   * Não reaproveita `categoryLabel` porque não é categoria — a dispersão não
+   * tem eixo de categorias, e a coluna nomeia a SÉRIE. Chamá-la de "Categoria"
+   * ensinaria errado quem lê a tabela por leitor de tela.
+   */
+  readonly seriesLabel = input<string>('Série');
+  /**
+   * Nomes das duas grandezas da dispersão — no eixo e na tabela.
+   *
+   * São a informação que o desenho passa pela POSIÇÃO, e posição não se lê em
+   * texto. Sem eles a tabela sairia com duas colunas chamadas X e Y, que dizem
+   * onde o ponto está e não o que ele mede. É a mesma família da coluna de
+   * participação da rosca e da de máximo do radar.
+   */
+  readonly xLabel = input<string>('X');
+  readonly yLabel = input<string>('Y');
   readonly emptyLabel = input<string>('Sem dados para exibir');
 
   private readonly desenho = viewChild<ElementRef<HTMLElement>>('desenho');
@@ -366,8 +395,13 @@ export class NdsChart {
    */
   protected readonly cartesiano = computed(() => {
     const type = this.type();
-    return type !== 'pie' && type !== 'funnel' && type !== 'radar';
+    // A dispersão TEM eixo, e ainda assim fica de fora: os dois eixos dela são
+    // de valor, e o que esta pergunta decide é a forma do option e a forma da
+    // tabela — nas duas ela é caso próprio, como o radar.
+    return type !== 'pie' && type !== 'funnel' && type !== 'radar' && type !== 'scatter';
   });
+
+  protected readonly scatterType = computed(() => this.type() === 'scatter');
 
   /** O radar lê SÉRIES, como o cartesiano; rosca e funil leem a lista simples. */
   protected readonly radarType = computed(() => this.type() === 'radar');
@@ -389,7 +423,7 @@ export class NdsChart {
     if (eixo && eixo.length > 0) return eixo;
     const simple = this.data();
     if (simple && simple.length > 0) return simple.map((p) => p.label);
-    const maior = this.serieNorm().reduce((max, s) => Math.max(max, s.data.length), 0);
+    const maior = this.serieNorm().reduce((max, s) => Math.max(max, (s.data ?? []).length), 0);
     return Array.from({ length: maior }, (_, i) => String(i + 1));
   });
 
@@ -417,16 +451,27 @@ export class NdsChart {
     const declared = this.radarAxes();
     if (declared && declared.length > 0) return declared;
     const ceiling = this.serieNorm().reduce(
-      (max, s) => s.data.reduce((inner, value) => Math.max(inner, value), max),
+      (max, s) => (s.data ?? []).reduce((inner, value) => Math.max(inner, value), max),
       0,
     );
     return this.categorias().map((label) => ({ label, max: ceiling }));
   });
 
   protected readonly vazio = computed(() => {
-    if (!this.cartesiano() && !this.radarType()) return this.simpleData().length === 0;
+    // Rosca e funil — e SÓ eles — leem a lista simples. A dispersão também não
+    // é cartesiana nem radar, e sem nomeá-la aqui ela caía neste ramo: media
+    // `data()`, que na dispersão é vazio por definição, e o container trocava um
+    // desenho cheio pela frase de estado vazio. O build passou limpo; quem viu
+    // foi a suíte.
+    if (!this.cartesiano() && !this.radarType() && !this.scatterType()) {
+      return this.simpleData().length === 0;
+    }
     const series = this.serieNorm();
-    return series.length === 0 || series.every((s) => s.data.length === 0);
+    // Na dispersão o que enche o desenho são os PARES, não `data`: sem esta
+    // segunda leitura um gráfico de dispersão cheio seria julgado vazio e o
+    // container trocaria o desenho pela frase de estado vazio.
+    return series.length === 0
+      || series.every((s) => (s.data ?? []).length === 0 && (s.points ?? []).length === 0);
   });
 
   protected readonly legendaVisivel = computed(() => {
@@ -468,6 +513,7 @@ export class NdsChart {
     if (this.type() === 'pie') return this.optionPizza(title, aria, animar, dur);
     if (this.type() === 'funnel') return this.optionFunnel(title, aria, animar, dur);
     if (this.type() === 'radar') return this.optionRadar(title, aria, animar, dur);
+    if (this.type() === 'scatter') return this.optionScatter(title, animar, dur);
     return this.optionCartesiano(title, aria, animar, dur, compact);
   });
 
@@ -482,6 +528,59 @@ export class NdsChart {
    * de cada eixo — que é texto e cresce com a fonte do navegador — continua
    * cabendo por fora do último anel (WCAG 1.4.4).
    */
+  /**
+   * Dispersão: dois eixos de valor, um ponto por par, uma FORMA por série.
+   *
+   * Não recebe `aria` como os outros ramos, e é de propósito: é o tipo em que a
+   * trama do decal não serve. A hachura é um ladrilho que se repete; num símbolo
+   * de 14px cabe uma repetição ou duas, e duas tramas diferentes saem
+   * indistinguíveis — declarada, aplicada, e ainda assim sem separar nada. Quem
+   * separa as séries aqui é a FORMA do símbolo, e ela é o sinal primário, não o
+   * reforço: é a única marca que o tipo desenha. Por isso o símbolo é maior que
+   * o do traçado (14 contra 9), onde ele apenas marca pontos sobre uma linha que
+   * já tem desenho próprio de traço.
+   *
+   * O bloco de acessibilidade continua — o desenho segue anunciado —, só a trama
+   * sai.
+   */
+  private optionScatter(
+    title: unknown,
+    animar: boolean,
+    dur: number,
+  ): echarts.EChartsCoreOption {
+    const series = this.serieNorm();
+    const legenda = this.legendaVisivel() || series.length > 1;
+    return {
+      title,
+      tooltip: { trigger: 'item' },
+      // A legenda amarra a forma ao nome da série. Sem ela o desenho teria
+      // formas distintas e nenhuma pista do que cada uma significa.
+      legend: legenda ? { bottom: 0, itemWidth: 14 } : undefined,
+      grid: {
+        left: 16, right: 16,
+        top: title ? 48 : 16,
+        bottom: legenda ? 48 : 24,
+        containLabel: true,
+      },
+      // A folga do nome do eixo vem do TEMA (`nameGap`), que se reconstrói
+      // quando a fonte raiz muda — o nome é texto e cresce com ela (WCAG 1.4.4).
+      xAxis: { type: 'value', name: this.xLabel(), nameLocation: 'middle', scale: true },
+      yAxis: { type: 'value', name: this.yLabel(), nameLocation: 'middle', scale: true },
+      series: series.map((serie, index) => ({
+        name: serie.name,
+        type: 'scatter',
+        data: serie.points ?? [],
+        symbol: SIMBOLOS[index % SIMBOLOS.length],
+        symbolSize: 14,
+        ...(serie.color ? { itemStyle: { color: serie.color } } : {}),
+      })),
+      animation: animar,
+      animationDuration: dur,
+      // Trama desligada — ver o comentário acima.
+      aria: { enabled: true, label: { enabled: false }, decal: { show: false } },
+    };
+  }
+
   private optionRadar(
     title: unknown,
     aria: unknown,
@@ -510,7 +609,7 @@ export class NdsChart {
         type: 'radar',
         data: series.map((serie, i) => ({
           name: serie.name,
-          value: serie.data,
+          value: serie.data ?? [],
           // Símbolo e traço próprios, o mesmo vocabulário de forma do traçado:
           // sem a cor, um polígono ainda se separa do outro (WCAG 1.4.1).
           symbol: SIMBOLOS[i % SIMBOLOS.length],
@@ -695,7 +794,7 @@ export class NdsChart {
       series: series.map((serie, i) => ({
         name: serie.name,
         type: type === 'area' ? 'line' : type,
-        data: serie.data,
+        data: serie.data ?? [],
         ...(type === 'bar'
           ? { barMaxWidth: '68%' }
           : {
@@ -819,6 +918,27 @@ export class NdsChart {
     //
     // Uma linha por EIXO, e não por série: é o eixo que tem nome próprio e teto
     // próprio, e cada série ocupa uma coluna à direita.
+    // A dispersão não tem eixo de categorias: cada linha é um PONTO, e as duas
+    // colunas de número são as duas grandezas que o desenho põe no plano.
+    //
+    // Uma linha por ponto, e não um resumo por série (quantos pontos, onde fica
+    // o centro), porque resumo não é equivalente: quem lê a tabela perderia
+    // exatamente o que o desenho mostra, que é ONDE cada ponto caiu.
+    //
+    // A primeira coluna nomeia a SÉRIE e se repete a cada linha do mesmo grupo —
+    // é ela que diz, ponto a ponto, a que grupo ele pertence.
+    if (this.scatterType()) {
+      return {
+        header: [this.seriesLabel(), this.xLabel(), this.yLabel()],
+        lines: this.serieNorm().flatMap((serie) =>
+          (serie.points ?? []).map((ponto) => [
+            serie.name,
+            formatarValue(ponto[0]),
+            formatarValue(ponto[1]),
+          ])),
+      };
+    }
+
     if (this.radarType()) {
       const series = this.serieNorm();
       return {
@@ -827,7 +947,7 @@ export class NdsChart {
           axis.label,
           formatarValue(axis.max),
           ...series.map((s) =>
-            (s.data[iAxis] === undefined ? '—' : formatarValue(s.data[iAxis]))),
+            (s.data?.[iAxis] === undefined ? '—' : formatarValue(s.data[iAxis]!))),
         ]),
       };
     }
@@ -853,7 +973,7 @@ export class NdsChart {
       header: [this.categoryLabel(), ...series.map((s) => s.name)],
       lines: this.categorias().map((categoria, iCat) => [
         categoria,
-        ...series.map((s) => (s.data[iCat] === undefined ? '—' : formatarValue(s.data[iCat]))),
+        ...series.map((s) => (s.data?.[iCat] === undefined ? '—' : formatarValue(s.data[iCat]!))),
       ]),
     };
   });

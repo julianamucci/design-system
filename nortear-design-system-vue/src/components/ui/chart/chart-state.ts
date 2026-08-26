@@ -108,6 +108,16 @@ export interface ChartTableLabels {
    * ele não cabe num rodapé — precisa de uma célula por linha.
    */
   max: string;
+  /**
+   * Cabeçalho da primeira coluna da dispersão: qual série o ponto integra.
+   *
+   * Não reaproveita `category` porque não é categoria — a dispersão não tem
+   * eixo de categorias, e a coluna nomeia a SÉRIE. Os nomes das duas grandezas
+   * NÃO vêm daqui: saem do `name` de cada eixo do próprio option, que é de onde
+   * a lib os desenha. Dois lugares para o mesmo texto seriam dois lugares para
+   * ele divergir.
+   */
+  series: string;
 }
 
 export const CHART_TABLE_LABELS: ChartTableLabels = {
@@ -115,6 +125,7 @@ export const CHART_TABLE_LABELS: ChartTableLabels = {
   value: 'Valor',
   share: 'Participação',
   max: 'Máximo',
+  series: 'Série',
 };
 
 /** Célula sem dado: a categoria existe, aquela série não a preenche. */
@@ -238,6 +249,23 @@ function shareOf(value: number, base: number): string {
  * categoria — e, na pizza, a participação de cada fatia, que é a leitura que o
  * desenho dá de graça e o texto precisa escrever.
  */
+/**
+ * O nome escrito num eixo do option — o cabeçalho das duas colunas de número da
+ * dispersão.
+ *
+ * Lê do option, e não de um rótulo à parte, porque é o mesmo texto que a lib
+ * desenha ao lado do eixo: dois lugares para ele seriam dois lugares para ele
+ * divergir, e a tabela passaria a nomear uma grandeza que o desenho não nomeia.
+ */
+function axisNameOf(option: EChartsCoreOption, eixo: 'xAxis' | 'yAxis'): string {
+  const raw = (option as Record<string, unknown>)[eixo];
+  const axis = Array.isArray(raw) ? raw[0] : raw;
+  const name = axis !== null && typeof axis === 'object'
+    ? (axis as { name?: unknown }).name
+    : undefined;
+  return typeof name === 'string' ? name : '';
+}
+
 export function chartTable(
   option: EChartsCoreOption,
   labels: ChartTableLabels = CHART_TABLE_LABELS,
@@ -257,6 +285,28 @@ export function chartTable(
   // Uma linha por EIXO, e não por série: é o eixo que tem nome próprio e teto
   // próprio, e cada série ocupa uma coluna à direita — a mesma forma da tabela
   // de barra e linha, com uma coluna a mais no começo.
+  // A dispersão não tem eixo de categorias: cada linha é um PONTO, e as duas
+  // colunas de número são as duas grandezas que o desenho põe no plano.
+  //
+  // Uma linha por ponto, e não um resumo por série (quantos pontos, onde fica o
+  // centro), porque resumo não é equivalente: quem lê a tabela perderia
+  // exatamente o que o desenho mostra, que é ONDE cada ponto caiu.
+  //
+  // A primeira coluna nomeia a SÉRIE e se repete a cada linha do mesmo grupo — é
+  // ela que diz, ponto a ponto, a que grupo ele pertence.
+  const scatter = series.filter((s) => s.type === 'scatter');
+  if (scatter.length > 0) {
+    return {
+      header: [labels.series, axisNameOf(option, 'xAxis'), axisNameOf(option, 'yAxis')],
+      rows: scatter.flatMap((s) =>
+        (Array.isArray(s.data) ? (s.data as unknown[]) : []).map((point) => {
+          const pair = Array.isArray(point) ? point : [];
+          return [String(s.name ?? ''), cellOf(pair[0]), cellOf(pair[1])];
+        }),
+      ),
+    };
+  }
+
   if (series.length > 0 && series[0].type === 'radar') {
     const axes = radarAxesOf(option);
     const polygons = Array.isArray(series[0].data) ? (series[0].data as unknown[]) : [];

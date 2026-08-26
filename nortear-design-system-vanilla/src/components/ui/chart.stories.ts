@@ -72,7 +72,7 @@ const meta: Meta<ChartArgs> = {
       options: ['bar', 'line', 'area', 'pie', 'funnel', 'radar'] satisfies ChartType[],
       description: 'Tipo do gráfico. Quem escolhe é o dado, não o estilo.',
       table: {
-        type: { summary: "'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar'" },
+        type: { summary: "'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar' | 'scatter'" },
         defaultValue: { summary: "'bar'" },
       },
     },

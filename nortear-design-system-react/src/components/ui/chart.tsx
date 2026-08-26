@@ -72,7 +72,7 @@ import * as React from 'react';
 // não o build — o mesmo par de sempre, um vendo o que o outro não vê.
 import ReactEChartsCore from 'echarts-for-react/esm/core';
 import * as echarts from 'echarts/core';
-import { BarChart, LineChart, PieChart, FunnelChart, RadarChart } from 'echarts/charts';
+import { BarChart, LineChart, PieChart, FunnelChart, RadarChart, ScatterChart } from 'echarts/charts';
 import {
   TitleComponent,
   TooltipComponent,
@@ -109,7 +109,7 @@ import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 // Inferir a dependência do detalhe de empacotamento de uma versão é como o
 // registro some no dia em que o detalhe muda.
 echarts.use([
-  BarChart, LineChart, PieChart, FunnelChart, RadarChart,
+  BarChart, LineChart, PieChart, FunnelChart, RadarChart, ScatterChart,
   TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
   AriaComponent, RadarComponent,
   SVGRenderer, CanvasRenderer,
@@ -255,6 +255,18 @@ function buildNortearTheme() {
     axisLine: { show: true, lineStyle: { color: hsl('border', 0.6) } },
     axisTick: { show: true, lineStyle: { color: hsl('border', 0.6) } },
     axisLabel: { show: true, color: muted, fontSize: bodySize },
+    // O NOME do eixo — a grandeza que a posição mede. Só a dispersão o usa hoje;
+    // nos tipos de categoria não há nome a colocar, e estas duas linhas não têm
+    // efeito.
+    //
+    // A folga mora no TEMA, e não no construtor de option, por dois motivos que
+    // andam juntos. O nome é texto e cresce com a fonte do navegador (WCAG
+    // 1.4.4): cravado em pixel, encostaria nos números do eixo no primeiro
+    // degrau de aumento, e o tema é o que já se reconstrói quando a fonte raiz
+    // muda. E ler a fonte raiz exige o DOM, enquanto os construtores de option
+    // são puros de propósito.
+    nameGap: Math.round(bodySize * 2.2),
+    nameTextStyle: { color: muted, fontSize: bodySize },
     splitLine: { show: true, lineStyle: { color: hsl('border', 0.3) } },
     splitArea: { show: false, areaStyle: { color: ['transparent'] } },
   };
@@ -293,6 +305,11 @@ function buildNortearTheme() {
     line: { itemStyle: { borderColor: fg, borderWidth: 2 }, lineStyle: { width: 2 } },
     bar: { itemStyle: { borderColor: fg, borderWidth: 1 } },
     pie: { itemStyle: { borderColor: fg, borderWidth: 1 } },
+    // O símbolo da dispersão é a única marca do tipo, e é pequeno: sem contorno
+    // ele se perde contra o fundo e contra o vizinho. Traço de 1px, como barra e
+    // fatia — o de 2px do traçado existe porque lá a linha é o objeto, e aqui
+    // engrossar comeria a forma por dentro, que é justamente a pista.
+    scatter: { itemStyle: { borderColor: fg, borderWidth: 1 } },
     // A faixa do funil é forma cheia como a barra e a fatia, e pelo mesmo
     // motivo leva contorno: ele separa uma etapa da ETAPA VIZINHA, que encosta
     // nela, e nenhuma medida contra o fundo cobre isso. A chave é o próprio
@@ -361,6 +378,20 @@ function applyTheme() {
 
 export interface ChartDataPoint { label: string; value: number }
 export interface ChartSeries { name: string; data: number[]; color?: string }
+
+/**
+ * Série de dispersão: pares `[x, y]`, sem categoria no meio.
+ *
+ * Tipo próprio, e não um `data` que aceita duas formas, porque as duas
+ * respondem perguntas diferentes: `ChartSeries.data` é uma lista ALINHADA às
+ * categorias do eixo, e um ponto de dispersão não tem categoria — as duas
+ * coordenadas são medidas, e é a posição no plano que carrega a informação.
+ */
+export interface ChartScatterSeries {
+  name: string;
+  points: [number, number][];
+  color?: string;
+}
 
 /**
  * Um eixo do radar: o nome dele e o TETO da escala.
@@ -544,6 +575,69 @@ export function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string })
  * segunda lista de eixos passada à parte seria uma segunda verdade sobre a
  * mesma escala.
  */
+/**
+ * Dispersão: dois eixos de valor, um ponto por par, uma FORMA por série.
+ *
+ * É o tipo em que a trama do decal não serve, e por isso ela é desligada aqui.
+ * A hachura é um ladrilho que se repete; num símbolo de 14px cabe uma repetição
+ * ou duas, e duas tramas diferentes saem indistinguíveis — declarada, aplicada,
+ * e ainda assim sem separar nada. Quem separa as séries é a forma do símbolo, e
+ * aqui ela é o sinal PRIMÁRIO, não o reforço: é a única marca que o tipo
+ * desenha. Por isso o símbolo é maior que o do traçado (14 contra 9), onde ele
+ * apenas marca pontos sobre uma linha que já tem desenho próprio de traço.
+ *
+ * O nome de cada eixo entra no option porque é dali que a tabela equivalente o
+ * lê — mesma escolha do teto do radar, que sai do `indicator`.
+ */
+export function buildScatterOption(o: {
+  series: ChartScatterSeries[];
+  xLabel?: string;
+  yLabel?: string;
+  title?: string;
+  showLegend?: boolean;
+}): echarts.EChartsCoreOption {
+  const seriesData = o.series;
+  const showLegend = o.showLegend ?? seriesData.length > 1;
+  return {
+    title: o.title ? { text: o.title, left: 'left' } : undefined,
+    tooltip: { trigger: 'item' },
+    // A legenda é o que amarra a forma ao nome da série. Sem ela o desenho teria
+    // formas distintas e nenhuma pista do que cada uma significa.
+    legend: showLegend ? { bottom: 0, itemWidth: 14 } : undefined,
+    grid: {
+      left: 16, right: 16,
+      top: o.title ? 48 : 16,
+      bottom: showLegend ? 48 : 24,
+      containLabel: true,
+    },
+    xAxis: {
+      type: 'value',
+      name: o.xLabel,
+      nameLocation: 'middle',
+      // A folga do nome vem do TEMA (`nameGap` em `axisStyle`), que se
+      // reconstrói quando a fonte raiz muda. Calculá-la aqui exigiria ler o DOM,
+      // e este construtor é puro como os outros deste arquivo.
+      scale: true,
+    },
+    yAxis: {
+      type: 'value',
+      name: o.yLabel,
+      nameLocation: 'middle',
+      scale: true,
+    },
+    series: seriesData.map((serie, index) => ({
+      name: serie.name,
+      type: 'scatter',
+      data: serie.points,
+      symbol: SYMBOLS[index % SYMBOLS.length],
+      symbolSize: 14,
+      ...(serie.color ? { itemStyle: { color: serie.color } } : {}),
+    })),
+    animation: !prefersReducedMotion(),
+    animationDuration: Math.round(motionDuration('moderate') * 1000),
+  };
+}
+
 export function buildRadarOption(o: {
   axes: ChartRadarAxis[];
   series: ChartSeries[];
@@ -630,6 +724,19 @@ export interface ChartTableLabels {
    * ele não cabe num rodapé — precisa de uma célula por linha.
    */
   maxLabel: string;
+  /**
+   * Cabeçalho da primeira coluna da dispersão: qual série o ponto integra.
+   *
+   * Não reaproveita `categoryLabel` porque não é categoria — a dispersão não
+   * tem eixo de categorias, e a coluna nomeia a SÉRIE. Chamá-la de "Categoria"
+   * ensinaria errado quem lê a tabela por leitor de tela.
+   *
+   * Os nomes das duas grandezas NÃO vêm daqui: saem do `name` de cada eixo do
+   * próprio option, que é de onde a lib os desenha — mesma escolha do teto do
+   * radar, que sai do `indicator`. Dois lugares para o mesmo texto seriam dois
+   * lugares para ele divergir.
+   */
+  seriesLabel: string;
 }
 
 /** Cabeçalho e linhas já formatados — a primeira célula de cada linha é o `th`. */
@@ -649,6 +756,23 @@ type RawSeries = { name?: string; type?: string; data?: unknown[] };
 function seriesOf(option: echarts.EChartsCoreOption): RawSeries[] {
   const series = (option as { series?: unknown }).series;
   return (Array.isArray(series) ? series : series ? [series] : []) as RawSeries[];
+}
+
+/**
+ * O nome escrito num eixo do option — o que a tabela da dispersão usa de
+ * cabeçalho nas duas colunas de número.
+ *
+ * Lê do option, e não de uma prop do container, porque é o mesmo texto que a lib
+ * desenha ao lado do eixo: dois lugares para ele seriam dois lugares para ele
+ * divergir, e a tabela passaria a nomear uma grandeza que o desenho não nomeia.
+ */
+function axisNameOf(option: echarts.EChartsCoreOption, eixo: 'xAxis' | 'yAxis'): string {
+  const raw = (option as Record<string, unknown>)[eixo];
+  const axis = Array.isArray(raw) ? raw[0] : raw;
+  const name = axis !== null && typeof axis === 'object'
+    ? (axis as { name?: unknown }).name
+    : undefined;
+  return typeof name === 'string' ? name : '';
 }
 
 /** O número que a lib desenharia — a entrada aceita número cru ou objeto. */
@@ -762,6 +886,30 @@ export function chartTableFromOption(
     };
   }
 
+  // A dispersão não tem eixo de categorias: cada linha é um PONTO, e as duas
+  // colunas de número são as duas grandezas que o desenho põe no plano.
+  //
+  // Uma linha por ponto, e não um resumo por série (quantos pontos, onde fica o
+  // centro), porque resumo não é equivalente: quem lê a tabela perderia
+  // exatamente o que o desenho mostra, que é ONDE cada ponto caiu.
+  //
+  // A primeira coluna nomeia a SÉRIE e se repete a cada linha do mesmo grupo — é
+  // ela que diz, ponto a ponto, a que grupo ele pertence. Os nomes das duas
+  // grandezas saem do `name` de cada eixo do option, que é de onde a lib os
+  // desenha: um texto só, num lugar só.
+  const scatter = series.filter((serie) => serie.type === 'scatter');
+  if (scatter.length > 0) {
+    return {
+      header: [labels.seriesLabel, axisNameOf(option, 'xAxis'), axisNameOf(option, 'yAxis')],
+      rows: scatter.flatMap((serie) =>
+        ((serie.data ?? []) as unknown[]).map((point) => {
+          const pair = Array.isArray(point) ? point : [];
+          return [String(serie.name ?? ''), cellOf(pair[0]), cellOf(pair[1])];
+        }),
+      ),
+    };
+  }
+
   // A pizza mede parte contra o todo: a coluna de participação é o que a fatia
   // comunica pelo ângulo, e sem ela a tabela contaria menos que o desenho.
   const pie = series.find((s) => s.type === 'pie');
@@ -860,6 +1008,8 @@ export interface ChartContainerProps extends React.ComponentProps<'div'> {
    * aqui muda de eixo para eixo e por isso precisa de uma célula por linha.
    */
   maxLabel?: string;
+  /** Cabeçalho da primeira coluna da dispersão — ver `ChartTableLabels`. */
+  seriesLabel?: string;
 }
 
 export function ChartContainer({
@@ -872,6 +1022,7 @@ export function ChartContainer({
   valueLabel = 'Valor',
   shareLabel = 'Participação',
   maxLabel = 'Máximo',
+  seriesLabel = 'Série',
   className,
   style,
   // Desestruturado, e não deixado no `rest`, porque o rótulo NÃO vai mais no
@@ -955,8 +1106,8 @@ export function ChartContainer({
   const ariaLabel = ariaLabelProp ?? derivedLabel ?? 'Gráfico';
 
   const table = React.useMemo(
-    () => chartTableFromOption(option, { categoryLabel, valueLabel, shareLabel, maxLabel }),
-    [option, categoryLabel, valueLabel, shareLabel, maxLabel],
+    () => chartTableFromOption(option, { categoryLabel, valueLabel, shareLabel, maxLabel, seriesLabel }),
+    [option, categoryLabel, valueLabel, shareLabel, maxLabel, seriesLabel],
   );
 
   // A trama entra AQUI, e não no construtor: é o container que sabe qual tema

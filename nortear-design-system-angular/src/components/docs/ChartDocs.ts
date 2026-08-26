@@ -11,6 +11,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { applySeo } from '@/lib/use-seo';
+import { SCATTER_SERIES } from '@/components/ui/chart.fixtures';
 import { track } from '@/lib/analytics';
 import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
@@ -89,8 +90,9 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'variants.items.pie.name': 'Pizza',
     'variants.items.funnel.name': 'Funil',
     'variants.items.radar.name': 'Radar',
+    'variants.items.scatter.name': 'Dispersão',
     'variants.note':
-      'O Chart não tem variantes de estilo: o tipo é o DADO, não a aparência. Uma entrada escolhe entre barras, linhas, área, pizza, funil e radar, e a mesma tabela de dados acompanha o desenho em qualquer um deles.',
+      'O Chart não tem variantes de estilo: o tipo é o DADO, não a aparência. Uma entrada escolhe o tipo entre os listados acima, e a mesma tabela de dados acompanha o desenho em qualquer um deles.',
     'accessibility.summary':
       'O Chart atende WCAG 2.2 AA por quatro caminhos: descrição obrigatória do gráfico, uma tabela de dados equivalente que existe sempre, trama e símbolo por série (a informação nunca vive só na cor) e contorno em cima de cada forma, que é o que garante os 3:1 de objeto gráfico.',
     'accessibility.item2':
@@ -139,6 +141,7 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'variants.items.pie.name': 'Pie',
     'variants.items.funnel.name': 'Funnel',
     'variants.items.radar.name': 'Radar',
+    'variants.items.scatter.name': 'Scatter',
     'variants.note':
       'The Chart has no style variants: the type is the DATA, not the look. One input chooses between bars, lines, area, pie, funnel and radar, and the same data table follows the drawing in all of them.',
     'accessibility.summary':
@@ -189,6 +192,7 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'variants.items.pie.name': 'Circular',
     'variants.items.funnel.name': 'Embudo',
     'variants.items.radar.name': 'Radar',
+    'variants.items.scatter.name': 'Dispersión',
     'variants.note':
       'El Chart no tiene variantes de estilo: el tipo es el DATO, no la apariencia. Una entrada elige entre barras, líneas, área, circular, embudo y radar, y la misma tabla de datos acompaña al dibujo en todos ellos.',
     'accessibility.summary':
@@ -315,6 +319,20 @@ const CODE_FUNNEL = `<!-- O funil também só aceita a forma simples, e a ORDEM 
   shareLabel="Participação"
 ></div>`;
 
+const CODE_SCATTER = `<!-- A dispersão traz PARES, e o snippet mostra poucos de propósito:
+     quem copia precisa ver a FORMA do dado, não os 24 pontos da tela. Os nomes
+     das grandezas entram porque é o que a tabela escreve nas duas colunas de
+     número — sem eles as colunas diriam onde o ponto está, não o que mede. -->
+<div
+  ndsChart
+  type="scatter"
+  [series]="sessoes"
+  seriesLabel="Grupo"
+  xLabel="Minutos na página"
+  yLabel="Páginas vistas"
+  label="Dispersão de sessões de leitura, em três grupos"
+></div>`;
+
 const CODE_RADAR = `<!-- O radar tem DUAS listas, e nenhuma se deduz da outra: os eixos trazem
      nome e teto (é o teto que a coluna de máximo da tabela escreve), e as
      séries trazem os valores na ordem dos eixos. -->
@@ -349,7 +367,7 @@ const INTERFACE_CODE = `// Um componente só, com entradas declarativas — sem 
 // sem builders. O tipo é o dado, não o estilo.
 @Component({ selector: 'div[ndsChart]' })
 export class NdsChart {
-  readonly type = input<ChartType>('bar');          // 'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar'
+  readonly type = input<ChartType>('bar');          // 'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar' | 'scatter'
   readonly label = input.required<string>();        // descrição do gráfico
   readonly data = input<ChartDataPoint[] | undefined>(undefined);
   readonly xAxis = input<string[] | undefined>(undefined);
@@ -509,6 +527,21 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
         [label]="label(t('variants.items.radar.name'))"
         [categoryLabel]="t('demonstration.labels.radarAxis')"
         [maxLabel]="t('demonstration.labels.radarMax')"
+      ></div>
+    </ng-template>
+
+    <ng-template #tplVarScatter>
+      <!-- A primeira coluna da tabela nomeia o GRUPO, e as duas de número
+           nomeiam as GRANDEZAS que o desenho põe nos eixos — sem elas a tabela
+           diria onde o ponto está e não o que ele mede. -->
+      <div
+        ndsChart
+        type="scatter"
+        [series]="scatterSeries"
+        [label]="label(t('variants.items.scatter.name'))"
+        [seriesLabel]="t('demonstration.labels.scatterSeries')"
+        [xLabel]="t('demonstration.labels.scatterX')"
+        [yLabel]="t('demonstration.labels.scatterY')"
       ></div>
     </ng-template>
 
@@ -739,7 +772,15 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarArea = viewChild.required<TemplateRef<unknown>>('tplVarArea');
   private readonly tplVarPie = viewChild.required<TemplateRef<unknown>>('tplVarPie');
   private readonly tplVarFunnel = viewChild.required<TemplateRef<unknown>>('tplVarFunnel');
+  // O agrupamento vem PRONTO de `docs/shared/primitives`, gerado uma vez por
+  // `scripts/gerar-agrupamento-scatter.mjs`: k-means sorteia o início, e
+  // rodá-lo aqui faria o desenho mudar sozinho entre visitas — a partição se
+  // repete de 92 a 98 vezes em 100 — enquanto a tabela, que sai de função
+  // pura, descreveria outro agrupamento.
+  protected readonly scatterSeries = SCATTER_SERIES;
+
   private readonly tplVarRadar = viewChild.required<TemplateRef<unknown>>('tplVarRadar');
+  private readonly tplVarScatter = viewChild.required<TemplateRef<unknown>>('tplVarScatter');
   private readonly tplVarCompact = viewChild.required<TemplateRef<unknown>>('tplVarCompact');
   private readonly tplCompInCard = viewChild.required<TemplateRef<unknown>>('tplCompInCard');
 
@@ -840,6 +881,7 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
       { key: 'pie',         code: CODE_PIE,     tpl: this.tplVarPie()     },
       { key: 'funnel',      code: CODE_FUNNEL,  tpl: this.tplVarFunnel()  },
       { key: 'radar',       code: CODE_RADAR,   tpl: this.tplVarRadar()   },
+      { key: 'scatter',     code: CODE_SCATTER, tpl: this.tplVarScatter() },
       { key: 'smallInline', code: CODE_COMPACT, tpl: this.tplVarCompact() },
     ].map(({ key, code, tpl }) => ({
       // `.name` existe no conteúdo só para `smallInline`; para os quatro tipos
@@ -919,7 +961,7 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
         title: t('props.containerTitle'),
         cols,
         items: [
-          line('type', 'chartType', `'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar'`, `'bar'`),
+          line('type', 'chartType', `'bar' | 'line' | 'area' | 'pie' | 'funnel' | 'radar' | 'scatter'`, `'bar'`),
           line('label', 'ariaLabel', 'string', '—', sim),
           line('data', 'data', 'ChartDataPoint[]', '—'),
           line('xAxis', 'xAxis', 'string[]', '—'),

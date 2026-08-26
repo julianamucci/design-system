@@ -25,7 +25,8 @@ import type { ChartType } from './chart';
  * delas, e o snippet precisa mostrar a que ela usa.
  */
 export type ChartSnippetData =
-  | 'simples' | 'umPonto' | 'serieUnica' | 'multi' | 'rosca' | 'funnel' | 'radar' | 'vazio';
+  | 'simples' | 'umPonto' | 'serieUnica' | 'multi' | 'rosca' | 'funnel' | 'radar' | 'scatter'
+  | 'vazio';
 
 /** O que as stories usam da `ChartOptions` e que o snippet precisa mostrar. */
 export type ChartSnippetOptions = {
@@ -143,6 +144,28 @@ const medicoes = [
   { name: 'Depois', data: [94, 97, 9, 96, 4] },
 ];`,
         pairs: [['radarAxes', 'eixos'], ['series', 'medicoes']],
+      };
+
+    case 'scatter':
+      // A dispersão traz PARES, e o snippet mostra poucos de propósito: quem
+      // copia precisa ver a FORMA do dado — `[x, y]` por ponto, agrupados por
+      // série —, não os 24 pontos do exemplo da tela.
+      //
+      // Os nomes das grandezas entram como opção porque é o que a tabela
+      // escreve nas duas colunas de número: sem eles as colunas diriam onde o
+      // ponto está, e não o que ele mede.
+      return {
+        block: `const sessoes = [
+  { name: 'Grupo 1', points: [[1.5, 1.1], [1.9, 1.8], [3, 1.6]] },
+  { name: 'Grupo 2', points: [[7, 4.1], [8, 4.8], [9, 3.8]] },
+  { name: 'Grupo 3', points: [[12.7, 2.4], [13.4, 2.7], [14.9, 1.9]] },
+];`,
+        pairs: [
+          ['series', 'sessoes'],
+          ['seriesLabel', "'Grupo'"],
+          ['xLabel', "'Minutos na página'"],
+          ['yLabel', "'Páginas vistas'"],
+        ],
       };
 
     case 'vazio':

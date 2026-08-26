@@ -1,6 +1,7 @@
 <script lang="ts">
   import { untrack } from 'svelte';
-  import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption, buildRadarOption } from '@/components/ui/chart';
+  import { ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption, buildRadarOption, buildScatterOption } from '@/components/ui/chart';
+  import { CHART_SCATTER_CLUSTERS } from '@shared/primitives/chart-scatter-clusters';
   import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
@@ -208,6 +209,29 @@
   // valores na ordem deles. Os rótulos das duas primeiras colunas da tabela
   // entram escritos porque aqui a primeira não nomeia uma categoria qualquer —
   // nomeia o eixo, e a segunda traz o teto dele.
+  // O agrupamento vem PRONTO de `docs/shared/primitives`, gerado uma vez por
+  // `scripts/gerar-agrupamento-scatter.mjs`: k-means sorteia o início, e
+  // rodá-lo aqui faria o desenho mudar sozinho entre visitas — a partição se
+  // repete de 92 a 98 vezes em 100 — enquanto a tabela, que sai de função
+  // pura, descreveria outro agrupamento.
+  const scatterSeries = CHART_SCATTER_CLUSTERS.map((c) => ({ name: c.name, points: c.points }));
+
+  const codeScatter = `const sessoes = [
+  { name: 'Grupo 1', points: [[1.5, 1.1], [1.9, 1.8], [3, 1.6]] },
+  { name: 'Grupo 2', points: [[7, 4.1], [8, 4.8], [9, 3.8]] },
+  { name: 'Grupo 3', points: [[12.7, 2.4], [13.4, 2.7], [14.9, 1.9]] },
+];
+
+<ChartContainer
+  option={buildScatterOption({
+    series: sessoes,
+    xLabel: 'Minutos na página',
+    yLabel: 'Páginas vistas',
+  })}
+  seriesLabel="Grupo"
+  aria-label="Dispersão de sessões de leitura, em três grupos"
+/>`;
+
   const codeRadar = `const eixos = [
   { label: 'Desempenho', max: 100 },
   { label: 'Acessibilidade', max: 100 },
@@ -486,6 +510,7 @@ declare function buildRadarOption(o: {
       { name: 'Pie',   description: stripHtml($tStore('variants.items.pie')),  code: codePie,  preview: variantPie  },
       { name: 'Funil', description: stripHtml($tStore('variants.items.funnel')), code: codeFunnel, preview: variantFunnel },
       { name: 'Radar', description: stripHtml($tStore('variants.items.radar')), code: codeRadar, preview: variantRadar },
+      { name: 'Dispersão', description: stripHtml($tStore('variants.items.scatter')), code: codeScatter, preview: variantScatter },
       {
         name: $tStore('variants.items.smallInline.name'),
         description: $tStore('variants.items.smallInline.description'),
@@ -553,6 +578,21 @@ declare function buildRadarOption(o: {
       categoryLabel={stripHtml($tStore('demonstration.labels.radarAxis'))}
       maxLabel={stripHtml($tStore('demonstration.labels.radarMax'))}
       aria-label="Radar de qualidade do site: cinco grandezas, antes e depois da revisão"
+    />
+  {/snippet}
+  {#snippet variantScatter()}
+    <!-- A primeira coluna da tabela nomeia o GRUPO, e as duas de número nomeiam
+         as GRANDEZAS que o desenho põe nos eixos — sem elas a tabela diria onde
+         o ponto está e não o que ele mede. -->
+    <ChartContainer
+      option={buildScatterOption({
+        series: scatterSeries,
+        xLabel: stripHtml($tStore('demonstration.labels.scatterX')),
+        yLabel: stripHtml($tStore('demonstration.labels.scatterY')),
+      })}
+      height={280} class="nds-w-full"
+      seriesLabel={stripHtml($tStore('demonstration.labels.scatterSeries'))}
+      aria-label="Dispersão de sessões de leitura: minutos na página por páginas vistas, em três grupos"
     />
   {/snippet}
   {#snippet variantSmallInline()}

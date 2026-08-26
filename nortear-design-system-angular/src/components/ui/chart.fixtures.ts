@@ -8,6 +8,7 @@
 // functions resolvem o token no navegador e medem.
 
 import { expect, waitFor } from 'storybook/test';
+import { CHART_SCATTER_CLUSTERS } from '@shared/primitives/chart-scatter-clusters';
 import { getInstanceByDom } from 'echarts/core';
 import type { ECharts } from 'echarts/core';
 
@@ -17,19 +18,19 @@ import type { ChartDataPoint, ChartRadarAxis, ChartSeries } from './chart';
 
 export const MONTHS: string[] = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 
-export const SERIE_UNICA: ChartSeries[] = [
+export const SERIE_UNICA = [
   { name: 'Desktop', data: [186, 305, 237, 73, 209, 214] },
-];
+] satisfies ChartSeries[];
 
-export const SERIES_MULTI: ChartSeries[] = [
+export const SERIES_MULTI = [
   { name: 'Desktop', data: [186, 305, 237, 73, 209, 214] },
   { name: 'Mobile', data: [80, 200, 120, 190, 130, 140] },
-];
+] satisfies ChartSeries[];
 
-export const SERIES_TRIO: ChartSeries[] = [
+export const SERIES_TRIO = [
   ...SERIES_MULTI,
   { name: 'Tablet', data: [40, 60, 55, 48, 70, 66] },
-];
+] satisfies ChartSeries[];
 
 export const DATA_DISPOSITIVO: ChartDataPoint[] = [
   { label: 'Desktop', value: 1224 },
@@ -59,6 +60,23 @@ export const FUNNEL_STAGES: ChartDataPoint[] = [
  * vértice quase no anel de fora, e o 96 de "SEO" também; só a tabela pode dizer
  * que um vale 9 e o outro 96 sem que o polígono tenha mentido.
  */
+/**
+ * Séries da dispersão: um grupo do agrupamento compartilhado por série.
+ *
+ * O agrupamento vem PRONTO de `docs/shared/primitives`, gerado uma vez por
+ * `scripts/gerar-agrupamento-scatter.mjs`. Rodar o k-means aqui faria o desenho
+ * mudar sozinho entre rodadas — medido, a partição se repete de 92 a 98 vezes em
+ * 100 — e a tabela equivalente descreveria outro agrupamento.
+ */
+export const SCATTER_SERIES = CHART_SCATTER_CLUSTERS.map((c) => ({
+  name: c.name,
+  points: c.points,
+})) satisfies ChartSeries[];
+
+export const SCATTER_POINTS = SCATTER_SERIES.reduce((n, s) => n + s.points.length, 0);
+export const SCATTER_X = 'Minutos na página';
+export const SCATTER_Y = 'Páginas vistas';
+
 export const RADAR_AXES: ChartRadarAxis[] = [
   { label: 'Desempenho', max: 100 },
   { label: 'Acessibilidade', max: 100 },
@@ -68,15 +86,15 @@ export const RADAR_AXES: ChartRadarAxis[] = [
 ];
 
 /** Duas medições do mesmo site, para o desenho ser uma comparação. */
-export const RADAR_SERIES: ChartSeries[] = [
+export const RADAR_SERIES = [
   { name: 'Antes', data: [72, 64, 6, 88, 2] },
   { name: 'Depois', data: [94, 97, 9, 96, 4] },
-];
+] satisfies ChartSeries[];
 
 /** Uma série curta, para o mini gráfico ao lado de um número. */
-export const TENDENCIA: ChartSeries[] = [
+export const TENDENCIA = [
   { name: 'Acessos', data: [120, 160, 140, 190, 210, 260] },
-];
+] satisfies ChartSeries[];
 
 /**
  * Cor autoral de série. Fora da paleta `--chart-*` de propósito: se saísse dela,
@@ -88,10 +106,10 @@ export const AUTHOR_COLOR = '#7c3aed';
 export const AUTHOR_COLOR_PAINTED = 'rgb(124, 58, 237)';
 
 /** Primeira série com cor autoral; a segunda continua saindo do tema. */
-export const SERIES_AUTHOR_COLOR: ChartSeries[] = [
+export const SERIES_AUTHOR_COLOR = [
   { name: 'Desktop', data: [186, 305, 237, 73, 209, 214], color: AUTHOR_COLOR },
   { name: 'Mobile', data: [80, 200, 120, 190, 130, 140] },
-];
+] satisfies ChartSeries[];
 
 /**
  * Dado imperfeito, na forma em que ele chega de uma API de verdade.
@@ -101,10 +119,10 @@ export const SERIES_AUTHOR_COLOR: ChartSeries[] = [
  * CURTA que o eixo de categorias — três meses sem medição, que a tabela precisa
  * declarar como ausentes em vez de escrever zero.
  */
-export const SERIES_PARTIAL: ChartSeries[] = [
+export const SERIES_PARTIAL = [
   { name: 'Desktop', data: [12.5, 3.456, 42.375, 9.99, 20, 31] },
   { name: 'Mobile', data: [8, 11, 6] },
-];
+] satisfies ChartSeries[];
 
 /** O que a tabela deve escrever para a série decimal acima. */
 export const PARTIAL_FORMATTED = ['12.5', '3.46', '42.38', '9.99', '20', '31'];

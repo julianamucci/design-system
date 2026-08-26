@@ -7,7 +7,7 @@
   import type { HTMLAttributes } from 'svelte/elements';
   import { cn } from '@/lib/utils.js';
   import * as echarts from 'echarts/core';
-  import { BarChart, FunnelChart, LineChart, PieChart, RadarChart } from 'echarts/charts';
+  import { BarChart, FunnelChart, LineChart, PieChart, RadarChart, ScatterChart } from 'echarts/charts';
   import {
     TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
     AriaComponent, RadarComponent,
@@ -35,7 +35,7 @@
   // Inferir a dependência do detalhe de empacotamento de uma versão é como o
   // registro some no dia em que o detalhe muda.
   echarts.use([
-    BarChart, LineChart, PieChart, FunnelChart, RadarChart,
+    BarChart, LineChart, PieChart, FunnelChart, RadarChart, ScatterChart,
     TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
     AriaComponent, RadarComponent,
     SVGRenderer, CanvasRenderer,
@@ -55,6 +55,7 @@
     valueLabel = CHART_TABLE_LABELS.value,
     shareLabel = CHART_TABLE_LABELS.share,
     maxLabel = CHART_TABLE_LABELS.max,
+    seriesLabel = CHART_TABLE_LABELS.series,
     ...restProps
   }: HTMLAttributes<HTMLDivElement> & {
     option: echarts.EChartsCoreOption;
@@ -95,6 +96,8 @@
      * linha.
      */
     maxLabel?: string;
+    /** Cabeçalho da primeira coluna da dispersão — ver `ChartTableLabels`. */
+    seriesLabel?: string;
   } = $props();
 
   let containerEl: HTMLDivElement | undefined = $state();
@@ -113,6 +116,7 @@
   const table = $derived(
     chartTable(option, {
       category: categoryLabel, value: valueLabel, share: shareLabel, max: maxLabel,
+      series: seriesLabel,
     }),
   );
 
@@ -189,6 +193,15 @@
       axisLine: { show: true, lineStyle: { color: hsl('border', 0.6) } },
       axisTick: { show: true, lineStyle: { color: hsl('border', 0.6) } },
       axisLabel: { show: true, color: muted, fontSize: bodySize },
+      // O NOME do eixo — a grandeza que a posição mede. Só a dispersão o usa
+      // hoje; nos tipos de categoria não há nome a colocar.
+      //
+      // A folga mora no TEMA, e não no construtor de option: o nome é texto e
+      // cresce com a fonte do navegador (WCAG 1.4.4), e o tema é o que já se
+      // reconstrói quando a fonte raiz muda. Calculá-la no construtor exigiria
+      // ler o DOM, e os construtores são puros de propósito.
+      nameGap: Math.round(bodySize * 2.2),
+      nameTextStyle: { color: muted, fontSize: bodySize },
       splitLine: { show: true, lineStyle: { color: hsl('border', 0.3) } },
       splitArea: { show: false, areaStyle: { color: ['transparent'] } },
     };
@@ -234,6 +247,11 @@
       line: { itemStyle: { borderColor: fg, borderWidth: 2 }, lineStyle: { width: 2 } },
       bar: { itemStyle: { borderColor: fg, borderWidth: 1 } },
       pie: { itemStyle: { borderColor: fg, borderWidth: 1 } },
+      // O símbolo da dispersão é a única marca do tipo, e é pequeno: sem
+      // contorno ele se perde contra o fundo e contra o vizinho. Traço de 1px,
+      // como barra e fatia — o de 2px do traçado existe porque lá a linha é o
+      // objeto, e aqui engrossar comeria a forma por dentro, que é a pista.
+      scatter: { itemStyle: { borderColor: fg, borderWidth: 1 } },
       // O funil entra pela mesma porta que as outras séries de área: o contorno
       // é do TEMA, não do option. É o que faz a troca de tema recolorir o traço
       // no lugar, por `setTheme`, sem remontar o desenho — no option ele

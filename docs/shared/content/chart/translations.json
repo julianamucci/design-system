@@ -22,7 +22,10 @@
         "funnelShare": "Participação",
         "funnelStage": "Etapa",
         "radarMax": "Máximo",
-        "radarAxis": "Eixo"
+        "radarAxis": "Eixo",
+        "scatterSeries": "Grupo",
+        "scatterX": "Minutos na página",
+        "scatterY": "Páginas vistas"
       }
     },
     "anatomy": {
@@ -164,6 +167,7 @@
         "pie": "Proporção de partes em relação ao todo. Limite a 5–6 fatias para legibilidade.",
         "funnel": "Etapas de um processo que afunila, da maior para a menor. Cada faixa é uma etapa, e a largura mostra quanto sobrou dela. Use quando a ordem das etapas for fixa e a perda entre elas for a informação.",
         "radar": "Compara várias grandezas de um mesmo item, uma por eixo, num polígono fechado. Serve quando o desenho do conjunto importa mais que cada número — o formato mostra em que o item é forte e em que é fraco. Cada eixo tem escala própria, então dois eixos com o mesmo número podem estar em pontos diferentes.",
+        "scatter": "Espalha pontos em duas grandezas, uma em cada eixo, sem categoria no meio. Serve para mostrar como as duas se relacionam e onde o conjunto se concentra ou se separa. Quando os pontos formam grupos, cada grupo entra como uma série própria, com forma e nome — a leitura não depende da cor.",
         "smallInline": {
           "name": "Mini gráfico inline",
           "description": "Versão compacta sem eixos visíveis, altura reduzida e largura limitada — usada como indicador de tendência ao lado de um número ou KPI. Configure passando objeto customizado que oculta eixos e grid.",
@@ -381,6 +385,11 @@
           "action": "Atualizar o gráfico com um conjunto que tem uma série a menos que o anterior",
           "result": "A série removida sai do desenho e da tabela equivalente ao mesmo tempo — nenhum resto do conjunto anterior permanece desenhado",
           "priority": "high"
+        },
+        "item10": {
+          "action": "Renderizar o tipo dispersão com três grupos de pontos",
+          "result": "Uma forma distinta por grupo, com a legenda nomeando cada um, e a tabela equivalente trazendo uma linha por ponto com o grupo e as duas grandezas",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -433,6 +442,10 @@
         "item6": {
           "story": "Radar — cinco eixos, duas séries sobrepostas",
           "priority": "medium"
+        },
+        "item7": {
+          "story": "Dispersão — três grupos, uma forma para cada",
+          "priority": "medium"
         }
       }
     },
@@ -480,7 +493,10 @@
         "funnelShare": "Share",
         "funnelStage": "Stage",
         "radarMax": "Maximum",
-        "radarAxis": "Axis"
+        "radarAxis": "Axis",
+        "scatterSeries": "Group",
+        "scatterX": "Minutes on page",
+        "scatterY": "Pages viewed"
       }
     },
     "anatomy": {
@@ -622,6 +638,7 @@
         "pie": "Proportion of parts relative to a whole. Limit to 5–6 slices for readability.",
         "funnel": "Stages of a process that narrows, from widest to narrowest. Each band is a stage, and its width shows how much of it remains. Use it when the stage order is fixed and the drop between them is the information.",
         "radar": "Compares several magnitudes of one item, one per axis, in a closed polygon. Use it when the shape of the whole matters more than each number — the outline shows where the item is strong and where it is weak. Each axis has its own scale, so two axes showing the same number can sit at different points.",
+        "scatter": "Spreads points across two magnitudes, one per axis, with no category in between. Use it to show how the two relate and where the set clusters or splits. When the points form groups, each group becomes its own series, with a marker shape and a name — reading it does not depend on colour.",
         "smallInline": {
           "name": "Small inline chart",
           "description": "Compact version without visible axes, reduced height, and constrained width — used as a trend indicator next to a headline number or KPI. Configure by passing a custom object that hides axes and grid.",
@@ -839,6 +856,11 @@
           "action": "Update the chart with a set that has one series fewer than the previous one",
           "result": "The removed series leaves the drawing and the equivalent table at the same time — no residue of the previous set stays drawn",
           "priority": "high"
+        },
+        "item10": {
+          "action": "Render the scatter type with three groups of points",
+          "result": "A distinct marker shape per group, with the legend naming each one, and the equivalent table carrying one row per point with its group and both magnitudes",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -891,6 +913,10 @@
         "item6": {
           "story": "Radar — five axes, two overlapping series",
           "priority": "medium"
+        },
+        "item7": {
+          "story": "Scatter — three groups, one marker shape for each",
+          "priority": "medium"
         }
       }
     },
@@ -938,7 +964,10 @@
         "funnelShare": "Participación",
         "funnelStage": "Etapa",
         "radarMax": "Máximo",
-        "radarAxis": "Eje"
+        "radarAxis": "Eje",
+        "scatterSeries": "Grupo",
+        "scatterX": "Minutos en la página",
+        "scatterY": "Páginas vistas"
       }
     },
     "anatomy": {
@@ -1080,6 +1109,7 @@
         "pie": "Proporción de partes respecto al todo. Limita a 5–6 porciones para legibilidad.",
         "funnel": "Etapas de un proceso que se estrecha, de la mayor a la menor. Cada franja es una etapa, y su ancho muestra cuánto queda de ella. Úsalo cuando el orden de las etapas sea fijo y la pérdida entre ellas sea la información.",
         "radar": "Compara varias magnitudes de un mismo elemento, una por eje, en un polígono cerrado. Sirve cuando la forma del conjunto importa más que cada número — el contorno muestra en qué el elemento es fuerte y en qué es débil. Cada eje tiene escala propia, así que dos ejes con el mismo número pueden estar en puntos distintos.",
+        "scatter": "Reparte puntos en dos magnitudes, una por eje, sin categoría en medio. Sirve para mostrar cómo se relacionan las dos y dónde el conjunto se concentra o se separa. Cuando los puntos forman grupos, cada grupo entra como una serie propia, con forma y nombre — la lectura no depende del color.",
         "smallInline": {
           "name": "Mini gráfico inline",
           "description": "Versión compacta sin ejes visibles, altura reducida y ancho limitado — usada como indicador de tendencia junto a un número o KPI. Configura pasando un objeto custom que oculta ejes y grid.",
@@ -1297,6 +1327,11 @@
           "action": "Actualizar el gráfico con un conjunto que tiene una serie menos que el anterior",
           "result": "La serie eliminada sale del dibujo y de la tabla equivalente al mismo tiempo — ningún resto del conjunto anterior permanece dibujado",
           "priority": "high"
+        },
+        "item10": {
+          "action": "Renderizar el tipo dispersión con tres grupos de puntos",
+          "result": "Una forma distinta por grupo, con la leyenda nombrando cada uno, y la tabla equivalente trayendo una línea por punto con su grupo y las dos magnitudes",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1348,6 +1383,10 @@
         },
         "item6": {
           "story": "Radar — cinco ejes, dos series superpuestas",
+          "priority": "medium"
+        },
+        "item7": {
+          "story": "Dispersión — tres grupos, una forma para cada uno",
           "priority": "medium"
         }
       }
