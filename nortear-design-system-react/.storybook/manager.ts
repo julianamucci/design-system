@@ -3,7 +3,6 @@
 import React from 'react';
 import { addons } from 'storybook/manager-api';
 import { create } from 'storybook/theming';
-// @ts-expect-error — Storybook manager builder serve SVG como URL string em runtime
 import brandImage from './brand-logo.svg';
 import { createRenderLabel } from '../../docs/shared/primitives/sidebar-i18n';
 

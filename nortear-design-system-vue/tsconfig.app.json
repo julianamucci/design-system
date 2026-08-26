@@ -10,7 +10,13 @@
     // Mesma razão: as stories importam @shared/figma/design-links.
     "../docs/shared/figma/**/*.ts",
     // E as sondas de comparação cross-stack, que medem o mesmo nas quatro.
-    "../docs/shared/testing/**/*.ts"
+    "../docs/shared/testing/**/*.ts",
+    // E os temas, que o `preview.ts` lê para decidir o tema inicial.
+    "../docs/shared/themes/**/*.ts",
+    // A pasta do Storybook entra pelo mesmo motivo que `src`: é código que o
+    // projeto entrega. É nela que mora o listener de canal da toolbar de tema,
+    // e sem ela um erro de tipo ali passava pelo build sem uma palavra.
+    ".storybook/**/*.ts"
   ],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {

@@ -177,6 +177,7 @@ const preview: Preview = {
           { value: 'warm', title: 'Warm' },
           { value: 'cold', title: 'Cold' },
         ],
+        // @ts-expect-error — showName is valid at runtime but missing in some type definitions
         showName: true,
       },
     },
@@ -191,6 +192,7 @@ const preview: Preview = {
           { value: 'default', title: 'Default' },
           { value: 'confortavel', title: 'Confortável' },
         ],
+        // @ts-expect-error — showName is valid at runtime but missing in some type definitions
         showName: true,
       },
     },
@@ -206,6 +208,7 @@ const preview: Preview = {
           { value: 'pt-serif', title: 'PT Serif' },
           { value: 'lxgw-wenkai', title: 'LXGW WenKai TC' },
         ],
+        // @ts-expect-error — showName is valid at runtime but missing in some type definitions
         showName: true,
       },
     },
@@ -225,6 +228,7 @@ const preview: Preview = {
           { value: 'perfect-fifth', title: '1.500 — Perfect Fifth' },
           { value: 'golden', title: '1.618 — Golden Ratio' },
         ],
+        // @ts-expect-error — showName is valid at runtime but missing in some type definitions
         showName: true,
       },
     },
@@ -239,6 +243,7 @@ const preview: Preview = {
           { value: 'm', title: 'M — 1rem (padrão)' },
           { value: 'l', title: 'L — 1.125rem' },
         ],
+        // @ts-expect-error — showName is valid at runtime but missing in some type definitions
         showName: true,
       },
     },
@@ -252,6 +257,7 @@ const preview: Preview = {
           { value: 'default', title: 'Respeita SO' },
           { value: 'reduce', title: 'Reduzido (forçado)' },
         ],
+        // @ts-expect-error — showName is valid at runtime but missing in some type definitions
         showName: true,
       },
     },

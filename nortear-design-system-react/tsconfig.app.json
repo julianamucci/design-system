@@ -22,5 +22,8 @@
       "@shared/*": ["../docs/shared/*"]
     }
   },
-  "include": ["src"]
+  // A pasta do Storybook entra pelo mesmo motivo que `src`: é código que o
+  // projeto entrega. É nela que mora o listener de canal da toolbar de tema, e
+  // sem ela um erro de tipo ali passava pelo build sem uma palavra.
+  "include": ["src", ".storybook/**/*.ts"]
 }
