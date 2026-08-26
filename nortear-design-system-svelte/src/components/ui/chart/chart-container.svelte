@@ -358,7 +358,14 @@
   $effect(() => {
     if (!containerEl) return;
     const inst = echarts.getInstanceByDom(containerEl);
-    inst?.setOption(option, { notMerge: false, lazyUpdate: true });
+    // `notMerge` porque o option é reconstruído INTEIRO a cada mudança, a
+    // partir das mesmas opções — mesclar deixa resto do anterior. Medido: com
+    // a mesclagem, uma resposta com três séries seguida de outra com duas
+    // mantém a TERCEIRA na tela, com o dado velho, enquanto a tabela acessível
+    // — que sai das props novas — lista só as duas. Desenho e alternativa
+    // textual discordando é a única coisa que este componente existe para não
+    // fazer. O Vanilla, que é a referência, já dizia isto por escrito.
+    inst?.setOption(option, { notMerge: true, lazyUpdate: true });
   });
 </script>
 

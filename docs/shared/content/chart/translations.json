@@ -376,6 +376,11 @@
           "action": "Renderizar o tipo radar com cinco eixos e duas séries",
           "result": "Um polígono por série, com trama própria, e a tabela equivalente trazendo o eixo, o máximo dele e o valor de cada série",
           "priority": "high"
+        },
+        "item9": {
+          "action": "Atualizar o gráfico com um conjunto que tem uma série a menos que o anterior",
+          "result": "A série removida sai do desenho e da tabela equivalente ao mesmo tempo — nenhum resto do conjunto anterior permanece desenhado",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -829,6 +834,11 @@
           "action": "Render the radar type with five axes and two series",
           "result": "One polygon per series, each with its own weave, and the equivalent table carrying the axis, its maximum and each series value",
           "priority": "high"
+        },
+        "item9": {
+          "action": "Update the chart with a set that has one series fewer than the previous one",
+          "result": "The removed series leaves the drawing and the equivalent table at the same time — no residue of the previous set stays drawn",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1281,6 +1291,11 @@
         "item8": {
           "action": "Renderizar el tipo radar con cinco ejes y dos series",
           "result": "Un polígono por serie, con trama propia, y la tabla equivalente trayendo el eje, su máximo y el valor de cada serie",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Actualizar el gráfico con un conjunto que tiene una serie menos que el anterior",
+          "result": "La serie eliminada sale del dibujo y de la tabla equivalente al mismo tiempo — ningún resto del conjunto anterior permanece dibujado",
           "priority": "high"
         }
       },

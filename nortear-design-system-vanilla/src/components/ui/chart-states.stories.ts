@@ -193,6 +193,19 @@ export const SingleSeries: Story = {
 export const MultiSeries: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item2'],
+    coversNotApplicable: {
+      // O item fala do conjunto que ENCOLHE entre duas leituras, e esta stack
+      // não tem por onde entregar a segunda: createChart monta o elemento uma
+      // vez e a instância da lib fica no closure da fábrica — nada é exposto no
+      // nó devolvido para receber dado novo. As outras quatro stacks recebem o
+      // conjunto por entrada reativa e cobrem o item.
+      //
+      // Não é diferença idiomática de framework: é uma lacuna da fábrica, e
+      // está registrada como tal no FIXES-NEEDED.md. Quando ela fechar, este
+      // item vira story aqui também.
+      'functional.item9':
+        'createChart monta o elemento uma vez e não expõe caminho de atualização — a fábrica não recebe um conjunto novo depois de montada (lacuna registrada, não diferença de framework)',
+    },
     docs: {
       // Override de story: são DUAS séries, e é a contagem que acende a legenda.
       source: {

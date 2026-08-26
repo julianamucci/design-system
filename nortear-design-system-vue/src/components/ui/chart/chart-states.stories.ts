@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect, waitFor } from 'storybook/test';
-import { h } from 'vue';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { defineComponent, h, ref } from 'vue';
 import {
   settleTheme,
   contraste,
@@ -13,7 +13,8 @@ import {
   tramasAplicadas,
 } from '@shared/testing/chart-probe';
 import { ChartContainer, buildBarOption, buildLineOption } from './index';
-import { decalColors } from './chart.fixtures';
+import { Button } from '../button';
+import { decalColors, drawingSettled, filledShapes, headerOf } from './chart.fixtures';
 import {
   chartContrastSource,
   chartDuasSeriesSource,
@@ -371,6 +372,102 @@ export const GraphicContrast: Story = {
       const label = root.querySelector<SVGTextElement>('svg text');
       await expect(label).not.toBeNull();
       await expect(contraste(getComputedStyle(label!).fill, background)).toBeGreaterThanOrEqual(4.5);
+    });
+  },
+};
+
+/** Três séries na primeira leitura — a local `SERIES_MULTI` tem só duas. */
+const SERIES_THREE = [
+  ...SERIES_MULTI,
+  { name: 'Tablet', data: [40, 90, 60, 100] },
+];
+/** A série que sai do conjunto entre a primeira leitura e a segunda. */
+const REMOVED_SERIES = 'Tablet';
+const REDUCED_SERIES = SERIES_THREE.filter((s) => s.name !== REMOVED_SERIES);
+const RELOAD_LABEL = 'Reler do servidor';
+
+/**
+ * Uma série SAI do conjunto — o caso que separa gráfico de valor fixo de
+ * gráfico alimentado por uma API.
+ *
+ * A resposta seguinte de um servidor raramente tem a forma da anterior: uma
+ * série é descontinuada, um filtro corta um recorte, o período muda. Aqui a
+ * segunda leitura traz duas séries onde a primeira trazia três.
+ *
+ * O que esta story guarda não é a opção de biblioteca que resolve isso — é o
+ * INVARIANTE: o desenho e a tabela contam a mesma história. Mesclando o
+ * conjunto novo sobre o anterior, a série removida continua pintada com o dado
+ * velho enquanto a tabela, que nasce das props novas, já não a lista. As duas
+ * metades do componente passariam a discordar, e a alternativa textual deixaria
+ * de ser equivalente.
+ *
+ * A asserção que pega isso é a do NÚMERO DE FORMAS, e não a do texto da
+ * legenda: medido, a legenda e a tabela já concordam em duas séries enquanto as
+ * barras ainda mostram três. Portão que só lesse texto passaria com o defeito.
+ */
+export const SeriesRemoved: Story = {
+  parameters: {
+    covers: ['functional.item9'],
+    docs: {
+      description: {
+        story:
+          'Quando a leitura seguinte traz uma série a menos, ela sai do desenho e da tabela ao mesmo tempo — nenhum resto do conjunto anterior fica pintado.',
+      },
+    },
+  },
+  render: () =>
+    defineComponent({
+      setup() {
+        // DEFINE o conjunto reduzido — não alterna entre dois. O painel
+        // Interactions reexecuta a play no MESMO DOM, sem remontar: um botão
+        // que alternasse levaria a segunda rodada de volta ao conjunto cheio.
+        const series = ref(SERIES_THREE);
+        return () =>
+          h('div', { class: 'nds-stack nds-max-w-lg', 'data-spacing': 'sm' }, [
+            h(
+              Button,
+              {
+                variant: 'outline',
+                size: 'sm',
+                onClick: () => {
+                  series.value = REDUCED_SERIES;
+                },
+              },
+              () => RELOAD_LABEL,
+            ),
+            h(ChartContainer, {
+              option: buildBarOption({ xAxis: MONTHS, series: series.value }),
+              height: 280,
+              showData: true,
+              'aria-label': 'Acessos mensais por dispositivo',
+            }),
+          ]);
+      },
+    }),
+  play: async ({ canvasElement, step }) => {
+    const root = exigirRoot(canvasElement);
+    await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
+
+    await step('A leitura seguinte traz uma série a menos', async () => {
+      await userEvent.click(
+        await within(canvasElement).findByRole('button', { name: RELOAD_LABEL }),
+      );
+    });
+
+    await step('A série removida sai do DESENHO — nada do conjunto anterior fica pintado', async () => {
+      // Só leitura pura aqui dentro. `waitFor` reagenda por observador de
+      // mutação: condição que MEXE no DOM se realimenta e pendura sem reportar.
+      await waitFor(() => expect(designTexts(root)).not.toContain(REMOVED_SERIES));
+    });
+
+    await step('E a tabela equivalente conta a mesma história', async () => {
+      await expect(headerOf(root).some((c) => c.includes(REMOVED_SERIES))).toBe(false);
+      await expect(headerOf(root)).toHaveLength(1 + REDUCED_SERIES.length);
+    });
+
+    await step('E sobrou no desenho exatamente a forma das séries que restaram', async () => {
+      await drawingSettled(root);
+      await expect(filledShapes(root)).toHaveLength(REDUCED_SERIES.length * MONTHS.length);
     });
   },
 };

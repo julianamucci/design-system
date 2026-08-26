@@ -77,6 +77,11 @@ export function dataOf(root: HTMLElement): HTMLElement {
   return data;
 }
 
+/** O cabeçalho da tabela equivalente: a coluna de categoria e uma por série. */
+export function headerOf(root: HTMLElement): string[] {
+  return [...dataOf(root).querySelectorAll('thead th')].map((th) => (th.textContent ?? '').trim());
+}
+
 /**
  * Com que COR a trama do decal foi traçada, lida de dentro do `<pattern>`.
  *

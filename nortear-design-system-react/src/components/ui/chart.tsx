@@ -999,7 +999,16 @@ export function ChartContainer({
               theme={THEME_NAME}
               opts={{ renderer }}
               style={{ width: '100%', height: '100%' }}
-              notMerge={false}
+              // `notMerge` porque o option é reconstruído INTEIRO a cada
+              // mudança de prop, a partir das mesmas opções — mesclar deixa
+              // resto do anterior. Medido: com a mesclagem, uma resposta que
+              // traz três séries seguida de outra com duas mantém a TERCEIRA
+              // na tela, com o dado velho. E a tabela acessível, que sai das
+              // props novas, lista só as duas: o desenho e a alternativa
+              // textual passariam a discordar, que é a única coisa que este
+              // componente existe para nunca fazer. O Vanilla, que é a
+              // referência, já dizia isto por escrito.
+              notMerge
               lazyUpdate
             />
           </div>

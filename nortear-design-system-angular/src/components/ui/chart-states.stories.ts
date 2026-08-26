@@ -1,12 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { expect, waitFor } from 'storybook/test';
+import { signal } from '@angular/core';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { NdsChart } from './chart';
+import { NdsButton } from './button';
 import {
   MONTHS,
   PARTIAL_FORMATTED,
   SERIE_UNICA,
   SERIES_MULTI,
+  SERIES_TRIO,
   SERIES_PARTIAL,
   SINGLE_POINT,
   ZERO_TOTAL,
@@ -582,6 +585,100 @@ export const ZeroTotal: Story = {
         await expect(textosDoDesenho(desenho).some((text) => text.includes(point.label)))
           .toBe(true);
       }
+    });
+  },
+};
+
+/** A série que sai do conjunto entre a primeira leitura e a segunda. */
+const REMOVED_SERIES = 'Tablet';
+const REDUCED_SERIES = SERIES_TRIO.filter((s) => s.name !== REMOVED_SERIES);
+const RELOAD_LABEL = 'Reler do servidor';
+
+/**
+ * Uma série SAI do conjunto — o caso que separa gráfico de valor fixo de
+ * gráfico alimentado por uma API.
+ *
+ * A resposta seguinte de um servidor raramente tem a forma da anterior: uma
+ * série é descontinuada, um filtro corta um recorte, o período muda. Aqui a
+ * segunda leitura traz duas séries onde a primeira trazia três.
+ *
+ * O que esta story guarda não é a opção de biblioteca que resolve isso — é o
+ * INVARIANTE: o desenho e a tabela contam a mesma história. Mesclando o
+ * conjunto novo sobre o anterior, a série removida continua pintada com o dado
+ * velho enquanto a tabela, que nasce das entradas novas, já não a lista.
+ *
+ * A asserção que pega isso é a do NÚMERO DE FORMAS, e não a do texto da
+ * legenda: medido nas outras stacks, a legenda e a tabela já concordam em duas
+ * séries enquanto as barras ainda mostram três. Portão que só lesse texto
+ * passaria com o defeito de pé.
+ */
+export const SeriesRemoved: Story = {
+  parameters: { covers: ['functional.item9'] },
+  // A diretiva do botão precisa entrar no `imports` desta story: o `meta` só
+  // traz a do gráfico, e diretiva ausente não é erro — o atributo simplesmente
+  // não faz nada, e o botão sai sem estilo nenhum.
+  decorators: [moduleMetadata({ imports: [NdsChart, NdsButton] })],
+  render: () => {
+    // O sinal nasce NO RENDER, e não no módulo: um sinal de módulo sobreviveria
+    // entre montagens e a story abriria já reduzida.
+    //
+    // E ele DEFINE o conjunto reduzido, não alterna entre dois — o painel
+    // Interactions reexecuta a play no mesmo DOM, e alternar inverteria a
+    // asserção na segunda rodada.
+    const series = signal(SERIES_TRIO);
+    return {
+      props: {
+        meses: MONTHS,
+        series,
+        buttonLabel: RELOAD_LABEL,
+        reload: () => series.set(REDUCED_SERIES),
+      },
+      template: `
+        <div class="nds-stack nds-max-w-lg" data-spacing="sm">
+          <button ndsButton variant="outline" size="sm" type="button" (click)="reload()">
+            {{ buttonLabel }}
+          </button>
+          <div ndsChart
+            type="bar"
+            [xAxis]="meses"
+            [series]="series()"
+            [showData]="true"
+            label="Acessos mensais por dispositivo"
+          ></div>
+        </div>
+      `,
+    };
+  },
+  play: async ({ canvasElement, step }) => {
+    const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
+    const desenho = desenhoDe(chart);
+    await waitFor(() =>
+      expect(formasPreenchidas(desenho).length)
+        .toBeGreaterThanOrEqual(MONTHS.length * SERIES_TRIO.length),
+    );
+
+    await step('A leitura seguinte traz uma série a menos', async () => {
+      await userEvent.click(
+        await within(canvasElement).findByRole('button', { name: RELOAD_LABEL }),
+      );
+    });
+
+    await step('A série removida sai do DESENHO — nada do conjunto anterior fica pintado', async () => {
+      // Só leitura pura aqui dentro. `waitFor` reagenda por observador de
+      // mutação: condição que MEXE no DOM se realimenta e pendura sem reportar.
+      await waitFor(() => expect(textosDoDesenho(desenho)).not.toContain(REMOVED_SERIES));
+    });
+
+    await step('E a tabela equivalente conta a mesma história', async () => {
+      const header = [...chart.querySelectorAll('thead th')].map((c) => c.textContent?.trim() ?? '');
+      await expect(header.some((c) => c.includes(REMOVED_SERIES))).toBe(false);
+      await expect(header).toHaveLength(1 + REDUCED_SERIES.length);
+    });
+
+    await step('E sobrou no desenho exatamente a forma das séries que restaram', async () => {
+      await drawingSettled(desenho);
+      await expect(formasPreenchidas(desenho))
+        .toHaveLength(REDUCED_SERIES.length * MONTHS.length);
     });
   },
 };

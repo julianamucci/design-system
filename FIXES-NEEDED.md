@@ -43,7 +43,15 @@ histórico; a lista de cima é o que está por fazer.
 - [ ] **Motor de múltiplos itens no carrossel Vanilla.** A fábrica desliza um slide por vez e não expõe base fracionária, com `coversNotApplicable` declarado. Trocar o motor, ou tirar o item do contrato das cinco.
 - [x] **Dots do carrossel no Angular são botões numerados**; as outras quatro usam `.nds-carousel-dot`, classe que não aparece em arquivo nenhum do Angular. Alinhar muda a foto do Chromatic. **Resolvido (2026-08-18), junto com o redesenho da paginação aprovado pela dona.** O Angular passou a usar `.nds-carousel-dot` na story de composições E na docs page; as cinco montam a MESMA fileira. O padrão novo: o slide atual vira uma pílula rotulada ("Slide N") na própria posição da fileira, os demais continuam pontos, e a mudança de forma anima por `grid-template-columns: 0fr → 1fr` com `--duration-base`/`--ease-size` (mesmo mecanismo do painel do accordion, sem biblioteca de animação). Contrato novo nas cinco: `testes.functional.item8` e `testes.accessibility.item6`.
 
-### Dívida de fundação, sem dono de componente (5)
+### Dívida de fundação, sem dono de componente (6)
+
+- [ ] **A fábrica do Chart no Vanilla não recebe dado novo depois de montada.** (Aberto em 2026-08-26, ao gatear o conjunto que encolhe.) `createChart(opts)` monta o elemento uma vez e a instância da lib fica no closure — nada é exposto no nó devolvido para entregar um conjunto novo. Trocar o dado hoje significa **reconstruir o elemento inteiro**: perde a dica sob o ponteiro e remonta a `<table>`.
+
+  Consequência medida: das cinco stacks, é a única que não cobre `functional.item9` (conjunto que encolhe entre duas leituras) — declarada em `coversNotApplicable` na story MultiSeries, com o motivo. **Não é diferença idiomática de framework**, que seria fecho legítimo; é lacuna da fábrica, e a declaração existe para não virar contrato por omissão.
+
+  O que destrava: expor um caminho de atualização no nó devolvido (o `__chartCleanup` já é precedente de propriedade anexada ao elemento) e trocar a exceção por story. As outras quatro recebem o conjunto por entrada reativa e já estão gateadas.
+
+  Fica junto de duas lacunas irmãs, achadas na mesma investigação e ainda sem dono: **não existe estado de CARREGANDO nem de ERRO** em nenhuma das cinco. Quem plugar uma API improvisa os dois, e é aí que `aria-busy` e o anúncio da falha costumam ficar de fora.
 
 - [ ] **Keyframes de dialog e select duplicam `nds-animate-in/out`.** Mesmo desenho (`opacity` + `scale(0.95)`), nomes distintos — por isso a regra de keyframes duplicadas não os pega. **Atenção: o timing difere.** As compartilhadas usam `--duration-spring`/`--ease-spring`; dialog usa `--duration-base`/`--ease-entrance` e select `--duration-fast`. Migrar **muda o movimento**, não só remove duplicação.
 - [ ] **Classes de movimento não documentadas na foundation page de Motion.** `nds-animate-in`, `nds-animate-out`, `--ease-spring` e `--duration-spring` não aparecem no conteúdo compartilhado em nenhum dos três idiomas. Pior: o texto atual diz que spring existe "apenas via biblioteca", o que contradiz por omissão o token que o sistema passou a ter.
