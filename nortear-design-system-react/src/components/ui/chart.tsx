@@ -34,7 +34,43 @@
 //    rótulo do eixo cresce com a fonte do navegador (WCAG 1.4.4).
 
 import * as React from 'react';
-import ReactECharts from 'echarts-for-react';
+// A PORTA É `/core`, e não `echarts-for-react` direto — e as duas medidas
+// abaixo são o que impede de "simplificar" o import de volta.
+//
+// `echarts-for-react/lib/index.js` faz `require("echarts")`: o PACOTE INTEIRO,
+// que se registra sozinho na importação, e é com ESSA instância que ele desenha.
+// O `echarts.use([...])` daqui de baixo registra em `echarts/core`, que é OUTRA
+// instância — não é quem pinta. Duas consequências, e elas se somavam:
+//
+// 1. TAMANHO. O pedaço `chart-*.js` do `build-storybook` media 1.186.694 bytes
+//    (1159K) e passou a 650.783 (636K) — 536K a menos, quase METADE do pedaço.
+//    O que saiu foram séries, componentes e renderizadores que página nenhuma
+//    daqui usa, arrastados pelo pacote inteiro; o que sobrou é o conjunto que a
+//    lista abaixo registra, mais uma vez só.
+//
+//    O PORTÃO QUE MEDE ISTO É `build-storybook`, e não `npm run build`: o
+//    segundo compila o sandbox, que não importa o Chart — o `dist/` desta stack
+//    sai byte a byte idêntico antes e depois, sem uma ocorrência de `echarts`
+//    dentro. Quem for conferir o número pelo `dist/` vai concluir que a troca
+//    não fez efeito.
+// 2. O REGISTRO ERA DECORATIVO. Plantando o defeito — tirar `RadarChart` da
+//    lista abaixo — a suíte PASSAVA, porque o pacote inteiro já havia
+//    registrado a série; nas outras stacks a mesma remoção reprova com
+//    `[ECharts] Series radar is used but not imported`. Uma classe inteira de
+//    asserção não valia aqui, e não valia para barra, linha, rosca, funil nem
+//    radar. Medido de novo depois da troca: reprova, com essa mensagem.
+//
+// `ReactEChartsCore` recebe a instância por prop (`echarts={echarts}` no JSX lá
+// embaixo). O que desenha passa a ser exatamente o que a lista registrou.
+//
+// E é `esm/core`, não `lib/core`. O pacote publica a mesma classe duas vezes —
+// `lib/` em CommonJS, `esm/` em módulo, ambas com `.d.ts` — e o `module` do
+// package.json aponta para `esm/`. Pela porta CJS o build de produção passa,
+// mas o pipeline de desenvolvimento e de teste entrega o NAMESPACE do módulo no
+// lugar do `default`, e o React recebe um objeto onde espera um componente:
+// `Element type is invalid: … but got: object`. Portão que pega isso é a suíte,
+// não o build — o mesmo par de sempre, um vendo o que o outro não vê.
+import ReactEChartsCore from 'echarts-for-react/esm/core';
 import * as echarts from 'echarts/core';
 import { BarChart, LineChart, PieChart, FunnelChart, RadarChart } from 'echarts/charts';
 import {
@@ -850,7 +886,7 @@ export function ChartContainer({
   // relêem. O caminho anterior era remontar o gráfico inteiro por uma `key`, o
   // que recolore mas PISCA — e a documentação promete o contrário. `setTheme`
   // relê o registro e repinta no lugar, sem recriar nó nenhum.
-  const chartRef = React.useRef<ReactECharts>(null);
+  const chartRef = React.useRef<ReactEChartsCore>(null);
   const canvasRef = React.useRef<HTMLDivElement>(null);
 
   // Contador de troca de tema.
@@ -954,8 +990,11 @@ export function ChartContainer({
             aria-label={ariaLabel}
             style={{ width: '100%', height: height === undefined ? '100%' : height }}
           >
-            <ReactECharts
+            <ReactEChartsCore
               ref={chartRef}
+              // A instância que DESENHA é esta — a mesma que `echarts.use()`
+              // registrou lá em cima. Ver o comentário do import.
+              echarts={echarts}
               option={hatchedOption}
               theme={THEME_NAME}
               opts={{ renderer }}

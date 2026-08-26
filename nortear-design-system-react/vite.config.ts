@@ -35,7 +35,14 @@ export default defineConfig({
    * e a leitura fácil seria culpar o componente novo.
    */
   optimizeDeps: {
-    include: ["@base-ui/react/combobox"],
+    // `echarts-for-react/esm/core` entra pelo mesmo motivo: é subcaminho de
+    // pacote, e o Chart passou a importá-lo em vez do `echarts-for-react` raiz
+    // (ver o comentário do import em `ui/chart.tsx`). Medido: na primeira
+    // rodada depois da troca o otimizador o descobriu no meio da suíte, avisou
+    // `optimized dependencies changed. reloading` e a story do radar reprovou
+    // com `Failed to fetch dynamically imported module` — o mesmo defeito de
+    // infra do combobox, num pacote novo.
+    include: ["@base-ui/react/combobox", "echarts-for-react/esm/core"],
   },
   test: {
     coverage: {
