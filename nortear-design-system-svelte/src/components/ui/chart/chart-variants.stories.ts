@@ -4,10 +4,10 @@ import {
   ChartContainer,
   buildBarOption, buildLineOption, buildAreaOption, buildPieOption, buildFunnelOption,
 } from './index';
+import { designEscreve, exigirRoot } from '@shared/testing/chart-probe';
 import {
-  designEscreve, exigirRoot, datumFormas, tramasAplicadas,
-} from '@shared/testing/chart-probe';
-import { drawingSettled, waitForDesign } from './chart.fixtures';
+  drawingSettled, filledShapes, hatchedShapes, waitForDesign,
+} from './chart.fixtures';
 import {
   chartAreaSource,
   chartBarrasSource,
@@ -64,48 +64,43 @@ type Story = StoryObj;
 /**
  * Alturas das colunas de barra, na ordem do eixo.
  *
- * Cada barra chega ao DOM como DUAS formas sobrepostas — a cor e a trama —, com
- * a mesma geometria. Agrupar pelo centro em x junta o par e devolve uma medida
- * por categoria, sem depender da ordem em que a lib emite os nós.
+ * Uma entrada por coluna: `filledShapes` devolve só a camada de cor, e a trama
+ * — que sai com a mesma geometria por cima — fica de fora. A ordenação sai da
+ * POSIÇÃO em x, e não da ordem do documento: o que a story promete é o que a
+ * pessoa vê, não em que ordem a lib emitiu os nós.
  */
 function categoriaAlturas(root: HTMLElement): number[] {
-  const byCenter = new Map<number, number>();
-  for (const forma of datumFormas(root)) {
-    const r = forma.getBoundingClientRect();
-    const center = Math.round(r.x + r.width / 2);
-    byCenter.set(center, Math.max(byCenter.get(center) ?? 0, r.height));
-  }
-  return [...byCenter.entries()].sort((a, b) => a[0] - b[0]).map(([, height]) => height);
+  return filledShapes(root)
+    .map((forma) => forma.getBoundingClientRect())
+    .sort((a, b) => a.x - b.x)
+    .map((r) => r.height);
+}
+
+/**
+ * Os traçados de série — a curva de cada linha.
+ *
+ * O traçado é o caminho SEM preenchimento; o `C` no comando separa a curva da
+ * série das linhas de grade, que também são `fill: none` mas vão de um ponto a
+ * outro em reta.
+ */
+function seriesStrokes(root: HTMLElement): SVGPathElement[] {
+  return [...root.querySelectorAll<SVGPathElement>('svg path')].filter(
+    (p) => getComputedStyle(p).fill === 'none' && (p.getAttribute('d') ?? '').includes('C'),
+  );
 }
 
 /**
  * Largura de cada faixa do funil, de cima para baixo.
  *
- * Cada faixa chega ao DOM como DUAS formas sobrepostas — a cor e a trama —, com
- * a mesma geometria; agrupar pelo centro em y junta o par e devolve uma medida
- * por etapa, sem depender da ordem em que a lib emite os nós.
- *
- * Os ícones da legenda entram na mesma varredura de propósito: o `<svg>` do
- * zrender é PLANO, a legenda não é subárvore, e filtrá-los por tamanho seria
- * cravar um limiar. Eles são desenhados abaixo do funil (`legend.bottom: 0`
- * contra `series.bottom: 48`), então ordenar por y e tomar as `count` primeiras
- * faixas deixa a fileira de ícones de fora sem precisar reconhecê-la.
- *
- * `getBoundingClientRect` e não `getBBox`: os caminhos de dentro do `<pattern>`
- * da trama também casam o seletor, e só o primeiro os enxerga como zero.
+ * Uma entrada por etapa, pelo mesmo motivo de `categoriaAlturas`: a camada de
+ * cor sozinha. Nada de recortar as `count` primeiras — a fileira de ícones que
+ * obrigava a esse corte já não entra, porque o coletor exclui a legenda.
  */
-function bandWidths(root: HTMLElement, count: number): number[] {
-  const byCenter = new Map<number, number>();
-  for (const forma of datumFormas(root)) {
-    const box = forma.getBoundingClientRect();
-    if (box.width === 0) continue;
-    const center = Math.round(box.y + box.height / 2);
-    byCenter.set(center, Math.max(byCenter.get(center) ?? 0, box.width));
-  }
-  return [...byCenter.entries()]
-    .sort((a, b) => a[0] - b[0])
-    .slice(0, count)
-    .map(([, width]) => width);
+function bandWidths(root: HTMLElement): number[] {
+  return filledShapes(root)
+    .map((forma) => forma.getBoundingClientRect())
+    .sort((a, b) => a.y - b.y)
+    .map((r) => r.width);
 }
 
 export const Bar: Story = {
@@ -125,6 +120,8 @@ export const Bar: Story = {
   play: async ({ canvasElement, step }) => {
     const root = exigirRoot(canvasElement);
     await waitForDesign(root);
+    // Contar formas exige a animação de entrada fechada: ver `drawingSettled`.
+    await drawingSettled(root);
 
     await step('Toda categoria aparece escrita no eixo', async () => {
       await waitFor(() => {
@@ -133,10 +130,12 @@ export const Bar: Story = {
     });
 
     await step('Uma coluna por mês, com altura proporcional ao valor', async () => {
-      // Dentro do `waitFor` porque as barras CRESCEM: a lib anima a altura a
-      // partir da linha de base, e enquanto a animação corre a ordem medida
-      // ainda não é a ordem final. Compara ORDEM, não pixel — o desenho é
-      // responsivo e o número absoluto muda com a largura do container.
+      // Igualdade, e não "pelo menos": o desenho tem uma coluna POR CATEGORIA, e
+      // um limite inferior deixaria passar a contagem dobrada pela trama ou
+      // inchada pela decoração da lib. Dentro do `waitFor` porque as barras
+      // CRESCEM: a lib anima a altura a partir da linha de base, e enquanto a
+      // animação corre a ordem medida ainda não é a final. Compara ORDEM, não
+      // pixel — o desenho é responsivo e o número absoluto muda com a largura.
       const maiorValue = VALUES.indexOf(Math.max(...VALUES));
       const menorValue = VALUES.indexOf(Math.min(...VALUES));
       await waitFor(() => {
@@ -145,6 +144,16 @@ export const Bar: Story = {
         expect(alturas.indexOf(Math.max(...alturas))).toBe(maiorValue);
         expect(alturas.indexOf(Math.min(...alturas))).toBe(menorValue);
       }, { timeout: 3000 });
+    });
+
+    await step('E a cor não é o único sinal: a trama alcança CADA coluna', async () => {
+      // WCAG 1.4.1. Medir a trama com o mesmo número esperado da camada de cor é
+      // o que impede um coletor que exclui demais de ficar verde medindo menos:
+      // se a exclusão comesse forma de dado, os dois números cairiam juntos.
+      await waitFor(
+        () => expect(hatchedShapes(root)).toHaveLength(MONTHS.length),
+        { timeout: 3000 },
+      );
     });
   },
 };
@@ -168,14 +177,8 @@ export const Line: Story = {
     await waitForDesign(root);
 
     await step('Uma linha traçada por série', async () => {
-      // O traçado é o caminho SEM preenchimento; o `C` no comando separa a
-      // curva da série das linhas de grade, que também são `fill: none` mas
-      // vão de um ponto a outro em reta.
-      const tracos = [...root.querySelectorAll<SVGPathElement>('svg path')].filter(
-        (p) => getComputedStyle(p).fill === 'none' && (p.getAttribute('d') ?? '').includes('C'),
-      );
-      await expect(tracos).toHaveLength(SERIES_MULTI.length);
-      for (const traco of tracos) {
+      await expect(seriesStrokes(root)).toHaveLength(SERIES_MULTI.length);
+      for (const traco of seriesStrokes(root)) {
         await expect(traco.getTotalLength()).toBeGreaterThan(0);
       }
     });
@@ -199,10 +202,13 @@ export const Line: Story = {
       // tracejada tem de sair com stroke-dasharray no nó. getComputedStyle, e
       // não o atributo: o desenho do traço pode chegar por atributo ou por
       // estilo, e ler só um dos dois é medir meio caminho.
-      const drawn = [...root.querySelectorAll<SVGPathElement>('svg path')]
-        .filter((p) => getComputedStyle(p).fill === 'none')
-        .map((p) => getComputedStyle(p).strokeDasharray);
-      await expect(new Set(drawn).size).toBeGreaterThanOrEqual(SERIES_MULTI.length);
+      //
+      // A varredura é a das CURVAS de série, não a de todo caminho sem
+      // preenchimento: contando grade e eixo junto, um desenho de duas séries
+      // com o mesmo traço ainda somaria dois valores distintos e passaria por um
+      // limite inferior. Aqui são tantos traços distintos quantas séries.
+      const drawn = seriesStrokes(root).map((p) => getComputedStyle(p).strokeDasharray);
+      await expect(new Set(drawn).size).toBe(SERIES_MULTI.length);
     });
 
     await step('A legenda nomeia cada série, e o eixo traz as categorias', async () => {
@@ -230,22 +236,26 @@ export const Area: Story = {
   play: async ({ canvasElement, step }) => {
     const root = exigirRoot(canvasElement);
     await waitForDesign(root);
+    // Contar formas exige a animação de entrada fechada: ver `drawingSettled`.
+    await drawingSettled(root);
 
     await step('Cada série tem traçado E região preenchida', async () => {
-      const caminhos = [...root.querySelectorAll<SVGPathElement>('svg path')];
-      const tracos = caminhos.filter(
-        (p) => getComputedStyle(p).fill === 'none' && (p.getAttribute('d') ?? '').includes('C'),
-      );
-      await expect(tracos).toHaveLength(SERIES_MULTI.length);
+      await expect(seriesStrokes(root)).toHaveLength(SERIES_MULTI.length);
 
       // A região é o que distingue a área da linha: preenchida, e translúcida
-      // para não esconder a série de baixo.
-      const regioes = caminhos.filter((p) => {
-        const s = getComputedStyle(p);
-        const opacity = Number(s.fillOpacity);
-        return s.fill !== 'none' && opacity > 0 && opacity < 1;
-      });
-      await expect(regioes.length).toBeGreaterThanOrEqual(SERIES_MULTI.length);
+      // para não esconder a série de baixo. Uma por série, em igualdade: o
+      // coletor já deixou de fora o vocabulário do `<defs>` e a legenda, então
+      // não sobra nada a que um limite inferior servisse de folga.
+      // `waitFor`: a geometria da forma assenta DEPOIS da marca de opacidade
+      // que `drawingSettled` observa — ver o coletor. A igualdade continua com
+      // dentes: contagem inflada não converge, porque nenhuma forma some.
+      await waitFor(() => {
+        const regioes = filledShapes(root).filter((forma) => {
+          const opacity = Number(getComputedStyle(forma).fillOpacity);
+          return opacity > 0 && opacity < 1;
+        });
+        expect(regioes).toHaveLength(SERIES_MULTI.length);
+      }, { timeout: 3000 });
     });
 
     await step('As categorias continuam escritas no eixo', async () => {
@@ -271,6 +281,8 @@ export const Pie: Story = {
   play: async ({ canvasElement, step }) => {
     const root = exigirRoot(canvasElement);
     await waitForDesign(root);
+    // Contar formas exige a animação de entrada fechada: ver `drawingSettled`.
+    await drawingSettled(root);
 
     await step('A legenda escreve o nome de cada fatia — a cor não é o único sinal', async () => {
       await waitFor(() => {
@@ -280,8 +292,26 @@ export const Pie: Story = {
       }, { timeout: 3000 });
     });
 
-    await step('Uma forma desenhada por fatia, no mínimo', async () => {
-      await expect(datumFormas(root).length).toBeGreaterThanOrEqual(DATA_DISPOSITIVO.length);
+    await step('Uma fatia desenhada por dado — nem uma a mais', async () => {
+      // Igualdade. Com "no mínimo", a contagem dobrada pela trama e a inchada
+      // pelos ícones da legenda passavam as duas: o portão só reprovava se o
+      // desenho saísse VAZIO.
+      // `waitFor`: a geometria da forma assenta DEPOIS da marca de opacidade
+      // que `drawingSettled` observa — ver o coletor. A igualdade continua com
+      // dentes: contagem inflada não converge, porque nenhuma forma some.
+      await waitFor(
+        () => expect(filledShapes(root)).toHaveLength(DATA_DISPOSITIVO.length),
+        { timeout: 3000 },
+      );
+    });
+
+    await step('E a cor não é o único sinal: a trama alcança CADA fatia', async () => {
+      // WCAG 1.4.1. O mesmo número esperado da camada de cor: se a exclusão do
+      // coletor passasse a comer forma de dado, os dois números cairiam juntos.
+      await waitFor(
+        () => expect(hatchedShapes(root)).toHaveLength(DATA_DISPOSITIVO.length),
+        { timeout: 3000 },
+      );
     });
   },
 };
@@ -319,8 +349,17 @@ export const Funnel: Story = {
       }, { timeout: 3000 });
     });
 
-    await step('Uma faixa desenhada por etapa, no mínimo', async () => {
-      await expect(datumFormas(root).length).toBeGreaterThanOrEqual(FUNNEL_STAGES.length);
+    await step('Uma faixa desenhada por etapa — nem uma a mais', async () => {
+      // Igualdade. Com "no mínimo", quatro etapas passavam com o dobro de formas
+      // na conta — a trama de cada faixa mais os ícones da legenda —, e o portão
+      // só reprovava se o desenho saísse vazio.
+      // `waitFor`: a geometria da forma assenta DEPOIS da marca de opacidade
+      // que `drawingSettled` observa — ver o coletor. A igualdade continua com
+      // dentes: contagem inflada não converge, porque nenhuma forma some.
+      await waitFor(
+        () => expect(filledShapes(root)).toHaveLength(FUNNEL_STAGES.length),
+        { timeout: 3000 },
+      );
     });
 
     await step('As faixas afunilam, e a largura de cada uma é a participação', async () => {
@@ -330,7 +369,7 @@ export const Funnel: Story = {
       // animação corre a largura medida ainda não é a final.
       const entry = FUNNEL_STAGES[0].value;
       await waitFor(() => {
-        const widths = bandWidths(root, FUNNEL_STAGES.length);
+        const widths = bandWidths(root);
         expect(widths).toHaveLength(FUNNEL_STAGES.length);
         for (const [i, stage] of FUNNEL_STAGES.entries()) {
           if (i > 0) expect(widths[i]).toBeLessThan(widths[i - 1]);
@@ -356,13 +395,17 @@ export const Funnel: Story = {
       }
     });
 
-    await step('E a cor não é o único sinal: a trama alcança a faixa', async () => {
+    await step('E a cor não é o único sinal: a trama alcança CADA faixa', async () => {
       // WCAG 1.4.1 — a faixa é forma PREENCHIDA, então a hachura chega nela
-      // como chega à barra e à fatia. Aqui se mede que ela chegou; que ela é
-      // traçada na cor do fundo, e não na lista padrão da lib, é propriedade do
-      // tema compartilhado pelos tipos e está medida na story de contraste
-      // gráfico.
-      await expect(tramasAplicadas(root).size).toBeGreaterThanOrEqual(1);
+      // como chega à barra e à fatia. Uma trama por faixa, e não "pelo menos
+      // uma": com o limite inferior, um desenho em que a hachura alcançasse só a
+      // primeira etapa passava igual. Que ela é traçada na cor do fundo, e não
+      // na lista padrão da lib, é propriedade do tema compartilhado pelos tipos
+      // e está medida na story de contraste gráfico.
+      await waitFor(
+        () => expect(hatchedShapes(root)).toHaveLength(FUNNEL_STAGES.length),
+        { timeout: 3000 },
+      );
     });
   },
 };

@@ -34,7 +34,7 @@
 foram descobertos — então `grep -c "^- \[ \]"` conta 23, não 11. O log é
 histórico; a lista de cima é o que está por fazer.
 
-## Aberto de verdade — 9 itens
+## Aberto de verdade — 10 itens
 
 ### Precisam de decisão da dona (2)
 
@@ -43,11 +43,29 @@ histórico; a lista de cima é o que está por fazer.
 - [ ] **Motor de múltiplos itens no carrossel Vanilla.** A fábrica desliza um slide por vez e não expõe base fracionária, com `coversNotApplicable` declarado. Trocar o motor, ou tirar o item do contrato das cinco.
 - [x] **Dots do carrossel no Angular são botões numerados**; as outras quatro usam `.nds-carousel-dot`, classe que não aparece em arquivo nenhum do Angular. Alinhar muda a foto do Chromatic. **Resolvido (2026-08-18), junto com o redesenho da paginação aprovado pela dona.** O Angular passou a usar `.nds-carousel-dot` na story de composições E na docs page; as cinco montam a MESMA fileira. O padrão novo: o slide atual vira uma pílula rotulada ("Slide N") na própria posição da fileira, os demais continuam pontos, e a mudança de forma anima por `grid-template-columns: 0fr → 1fr` com `--duration-base`/`--ease-size` (mesmo mecanismo do painel do accordion, sem biblioteca de animação). Contrato novo nas cinco: `testes.functional.item8` e `testes.accessibility.item6`.
 
-### Dívida de fundação, sem dono de componente (4)
+### Dívida de fundação, sem dono de componente (5)
 
 - [ ] **Keyframes de dialog e select duplicam `nds-animate-in/out`.** Mesmo desenho (`opacity` + `scale(0.95)`), nomes distintos — por isso a regra de keyframes duplicadas não os pega. **Atenção: o timing difere.** As compartilhadas usam `--duration-spring`/`--ease-spring`; dialog usa `--duration-base`/`--ease-entrance` e select `--duration-fast`. Migrar **muda o movimento**, não só remove duplicação.
 - [ ] **Classes de movimento não documentadas na foundation page de Motion.** `nds-animate-in`, `nds-animate-out`, `--ease-spring` e `--duration-spring` não aparecem no conteúdo compartilhado em nenhum dos três idiomas. Pior: o texto atual diz que spring existe "apenas via biblioteca", o que contradiz por omissão o token que o sistema passou a ter.
 - [ ] **`test:coverage` fora do CI.** A justificativa antiga — "passaria vazio ou falharia por threshold" — **está obsoleta**: as quatro suítes de navegador estão 100% verdes (react 694, vue 685, svelte 693, vanilla 716 testes). Há duas ações destravadas no mesmo lugar: pôr `test:coverage` no CI, e remover o `continue-on-error: true` de `test.yml`, cujo próprio comentário diz "quando todas chegarem a 100%".
+- [ ] **O Angular não tem faixa de teste unitário — no repositório inteiro.** (Aberto em 2026-08-26, ao abrir o que os números de suíte significam.)
+
+  | stack | projetos vitest | arquivos `*.test.ts` |
+  |---|---|---|
+  | react | `unit` + `storybook` | 32 |
+  | vue | `unit` + `storybook` | 50 |
+  | svelte | `unit` + `storybook` | 50 |
+  | vanilla | `unit` + `storybook` | 51 |
+  | **angular** | **só `storybook`** | **0** |
+
+  O `vite.config` do Angular declara um projeto só. **Um `*.test.ts` escrito ali hoje não roda** — e isso é pior que a ausência, porque a contagem melhora sem executar nada. Foi essa a razão de um agente se recusar a criar `chart.test.ts` na stack e cobrir os casos de borda por story; a decisão foi certa, e deixa a lacuna à vista.
+
+  **Como isso passou despercebido:** nenhuma regra do auditor compara FAIXAS de teste. O `contract_uncovered` mede itens de `testes.*` cobertos, e eles podem ser cobertos por story; `coverage_divergence` compara contagem de asserção e se auto-suprime quando o contrato está declarado. Nenhuma pergunta "esta stack tem onde rodar teste de função pura?".
+
+  **O que se perde na prática:** lógica pura com casos de borda que nenhuma story alcança. No chart, as outras stacks testam ali a derivação da tabela — casa decimal, célula faltando, participação, rosca de total zero. No Angular esses casos ou viram story (mais caros, e só o que o navegador alcança) ou não existem.
+
+  **Antes de decidir, note o custo escondido:** parte da lógica do Angular vive dentro de `computed` privados de componente. Cobrir por unidade exigiria exportar função, ou seja, mudar o desenho do componente para caber num portão — que é justamente o que não se deve fazer. A decisão real é: **onde a lógica pura desta stack deve morar**, e não "escrever 50 arquivos de teste".
+
 - [ ] **69 snippets ensinam a sobrescrever token de tema em `:root`, e o lugar mudou.** (Aberto em 2026-08-25, na medição do tema Warm.)
 
   Desde `e3347f0bd` os 39 tokens de cor não existem mais em `:root`: cada tema declara os seus em `.tema-<id>` e `.dark.tema-<id>`. Os snippets de customização das docs pages continuam ensinando `:root { --primary: … }`.

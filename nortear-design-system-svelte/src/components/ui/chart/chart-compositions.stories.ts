@@ -3,7 +3,7 @@ import { expect, waitFor } from 'storybook/test';
 import { ChartContainer, buildBarOption } from './index';
 import ChartCardStory from './ChartCardStory.svelte';
 import { designEscreve, designPintado, exigirRoot } from '@shared/testing/chart-probe';
-import { drawingOf } from './chart.fixtures';
+import { drawingOf, drawingSettled, filledShapes } from './chart.fixtures';
 import { chartEmCardSource, chartSource, designChartTitleSource } from './chart.source';
 
 const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr'];
@@ -59,6 +59,15 @@ export const WithCard: Story = {
       const inside = canvasElement.querySelector<HTMLElement>('[data-slot="card"] [data-slot="chart"]');
       await expect(inside).not.toBeNull();
       await waitFor(() => expect(designPintado(inside!)).toBe(true), { timeout: 3000 });
+      // Contar formas exige a animação de entrada fechada: ver `drawingSettled`.
+      await drawingSettled(inside!);
+      // Uma coluna POR CATEGORIA, dentro do card: o desenho não perde nem ganha
+      // dado por estar embrulhado. Igualdade, não "alguma forma pintada" — este
+      // passo era o que sobrava de portão sobre o conteúdo do desenho aqui.
+      await waitFor(
+        () => expect(filledShapes(inside!)).toHaveLength(MONTHS.length),
+        { timeout: 3000 },
+      );
     });
   },
 };

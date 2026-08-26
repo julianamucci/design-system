@@ -4,18 +4,42 @@ import { expect, waitFor } from 'storybook/test';
 import { NdsChart } from './chart';
 import {
   MONTHS,
+  PARTIAL_FORMATTED,
   SERIE_UNICA,
   SERIES_MULTI,
+  SERIES_PARTIAL,
+  SINGLE_POINT,
+  ZERO_TOTAL,
   contrastRatio,
   desenhoDe,
+  drawingSettled,
   formasComTrama,
   formasPreenchidas,
   instanciaDe,
+  mesmaCor,
   rgbColor,
   rgbToken,
   textosDoDesenho,
   tracadosDeSerie,
 } from './chart.fixtures';
+
+/**
+ * Degrau tipográfico com que a lib escreveu o texto do desenho, em pixels.
+ *
+ * Relê o nó a cada chamada de propósito: recolorir o tema recria os textos, e
+ * uma referência guardada mediria um elemento que saiu da tela.
+ */
+function drawnTextSize(desenho: HTMLElement): number {
+  const label = desenho.querySelector<SVGTextElement>('svg text');
+  if (!label) throw new Error('o desenho ainda não escreveu texto nenhum');
+  return Math.round(Number.parseFloat(getComputedStyle(label).fontSize));
+}
+
+/** As células de uma linha da tabela, do cabeçalho de linha à última coluna. */
+function rowCells(row: HTMLTableRowElement): (string | undefined)[] {
+  return [row.querySelector('th'), ...row.querySelectorAll('td')]
+    .map((cell) => cell?.textContent?.trim());
+}
 
 const meta: Meta = {
   title: 'UI/Chart/States',
@@ -257,6 +281,95 @@ export const DarkTheme: Story = {
 };
 
 /**
+ * O desenho lê o TEMA, e não valores cravados.
+ *
+ * A story vizinha prova que trocar a classe do documento recolore no lugar; o
+ * que fica aqui é a outra metade, que a troca não alcança: de ONDE saem a cor e
+ * o degrau tipográfico do texto que a lib escreve. Por isso ela não declara
+ * item de contrato nenhum — quem responde pela troca é a `DarkTheme`, e
+ * reivindicar o mesmo item duas vezes faria a contagem dizer que duas coisas
+ * estão medidas onde há uma.
+ *
+ * O tamanho é a parte que mais quer envelhecer: a lib só aceita número em
+ * pixel, e número escolhido à mão fica surdo ao navegador. Medir com a fonte
+ * parada não provaria nada — na base 16 o valor certo dá os mesmos 12 do padrão
+ * da lib —, então a fonte raiz MUDA no meio da story.
+ *
+ * A largura do bloco sai de uma classe em `rem`, e isso não é enfeite: é ela
+ * que faz a caixa do desenho mudar quando a fonte raiz muda, que é por onde o
+ * componente percebe a preferência do navegador (WCAG 1.4.4).
+ */
+export const ThemeTokens: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => ({
+    props: { months: MONTHS, series: SERIES_MULTI },
+    template: `
+      <div ndsChart
+        class="nds-max-w-md"
+        type="bar"
+        [xAxis]="months"
+        [series]="series"
+        label="Acessos mensais por dispositivo, no tema em vigor"
+      ></div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
+    const desenho = desenhoDe(chart);
+    const doc = chart.ownerDocument;
+    const base = () => Number.parseFloat(getComputedStyle(doc.documentElement).fontSize);
+    await waitFor(() => expect(textosDoDesenho(desenho).length).toBeGreaterThan(0));
+
+    await step('A cor do texto do desenho é o token do tema', async () => {
+      // A sonda é o TEXTO, e não a barra: o texto sai de um token só, enquanto a
+      // barra depende de qual posição da paleta a lib deu àquela série — o que
+      // a story de multi-série já mede, e por inteiro. Comparar o token
+      // RESOLVIDO, e não a string do CSS, é o que prova que a cascata chegou ao
+      // desenho.
+      //
+      // A espera não é enfeite: a lib congela o tema resolvido no momento em
+      // que monta, e relê o registro só no quadro seguinte à troca da classe do
+      // documento. A story anterior deste arquivo abre no escuro, então há uma
+      // janela em que o token já é o do claro e o desenho ainda está pintado
+      // com o escuro. Sem `waitFor` a medida cai dentro dessa janela — e reprova
+      // por ordem de execução, que é a intermitência mais cara de diagnosticar.
+      await waitFor(async () => {
+        const label = desenho.querySelector<SVGTextElement>('svg text')!;
+        const painted = rgbColor(getComputedStyle(label).fill)!;
+        await expect(mesmaCor(painted, rgbToken('--muted-foreground')!)).toBe(true);
+      });
+    });
+
+    await step('E o degrau tipográfico nasce da fonte raiz', async () => {
+      await expect(drawnTextSize(desenho)).toBe(Math.round(base() * 0.75));
+    });
+
+    await step('Aumentar a fonte do navegador aumenta o texto do desenho junto', async () => {
+      // WCAG 1.4.4. A preferência entra por FOLHA, que é o caminho por onde ela
+      // chega ao documento de verdade; inline também venceria a folha do tema,
+      // que é justamente o que o design system proíbe.
+      //
+      // 20px de fonte raiz pedem 15 (0.75 × 20), que um número cravado nunca
+      // alcança — nem o 12 do padrão da lib, nem o 12 que a base 16 produz.
+      const fontPreference = doc.createElement('style');
+      fontPreference.textContent = ':root { font-size: 20px }';
+      try {
+        doc.head.appendChild(fontPreference);
+        await waitFor(() => expect(drawnTextSize(desenho)).toBe(15), { timeout: 3000 });
+      } finally {
+        // Repõe o que ENCONTROU: as stories dividem o mesmo documento, e uma
+        // fonte raiz esquecida em 20px envenena a próxima.
+        fontPreference.remove();
+      }
+      await waitFor(
+        () => expect(drawnTextSize(desenho)).toBe(Math.round(base() * 0.75)),
+        { timeout: 3000 },
+      );
+    });
+  },
+};
+
+/**
  * WCAG 1.4.11: objeto gráfico precisa de 3:1 contra o que está ao redor.
  *
  * Quem sustenta o critério aqui é o CONTORNO das formas. Ele nasceu quando a
@@ -312,6 +425,162 @@ export const GraphicContrast: Story = {
       for (const axisText of axisTexts) {
         const cor = rgbColor(getComputedStyle(axisText).fill)!;
         await expect(contrastRatio(cor, background)).toBeGreaterThanOrEqual(4.5);
+      }
+    });
+  },
+};
+
+// ─── Bordas do dado ──────────────────────────────────────────────────────────
+//
+// As três stories abaixo existem por um motivo que vale escrito: a lógica que
+// monta a alternativa textual — arredondamento, célula ausente, participação —
+// vive DENTRO do componente, num `computed`, e não há aqui uma função pura
+// exportada para cobrir com teste de unidade. Extrair uma só para testá-la
+// seria mudar o desenho do componente por conta do portão.
+//
+// Então a borda é medida por onde ela é observável: pelo que a tabela escreve.
+// A story tem uma vantagem sobre o teste de unidade neste caso — ela também
+// fotografa, e o número errado na célula é visível na foto.
+
+/**
+ * Um ponto só.
+ *
+ * O menor dataset que ainda é um gráfico. Não é o estado vazio, e a diferença
+ * importa: vazio é ausência de medição, um ponto é medição que ainda não tem
+ * com o que ser comparada.
+ */
+export const OnePoint: Story = {
+  render: () => ({
+    props: { points: SINGLE_POINT },
+    template: `
+      <div ndsChart
+        type="bar"
+        [data]="points"
+        label="Acessos de janeiro"
+      ></div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
+    const desenho = desenhoDe(chart);
+    await waitFor(() => expect(formasPreenchidas(desenho).length).toBe(1));
+
+    await step('Um ponto ainda desenha, e não cai no estado vazio', async () => {
+      await expect(chart.querySelector('.nds-chart-empty')).toBeNull();
+      const bar = formasPreenchidas(desenho)[0];
+      await expect(bar.getBoundingClientRect().height).toBeGreaterThan(0);
+    });
+
+    await step('A única categoria aparece escrita no eixo', async () => {
+      await expect(textosDoDesenho(desenho)).toContain(SINGLE_POINT[0].label);
+    });
+
+    await step('E a tabela tem exatamente uma linha', async () => {
+      const rows = [...chart.querySelectorAll<HTMLTableRowElement>('tbody tr')];
+      await expect(rows).toHaveLength(1);
+      await expect(rowCells(rows[0]))
+        .toEqual([SINGLE_POINT[0].label, String(SINGLE_POINT[0].value)]);
+    });
+  },
+};
+
+/**
+ * Dado imperfeito, como ele chega de uma API de verdade.
+ *
+ * Duas bordas ao mesmo tempo, e as duas só se veem na alternativa textual: a
+ * casa decimal, que o eixo arredonda e a tabela não pode arredondar junto, e o
+ * mês sem medição, que a tabela precisa declarar ausente.
+ */
+export const PartialData: Story = {
+  render: () => ({
+    props: { months: MONTHS, series: SERIES_PARTIAL },
+    template: `
+      <div ndsChart
+        type="bar"
+        [xAxis]="months"
+        [series]="series"
+        label="Acessos mensais por dispositivo, com medição incompleta no mobile"
+      ></div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
+    const desenho = desenhoDe(chart);
+    await waitFor(() => expect(desenho.querySelector('svg')).not.toBeNull());
+    const rows = [...chart.querySelectorAll<HTMLTableRowElement>('tbody tr')];
+
+    await step('A casa decimal chega inteira à tabela', async () => {
+      // O eixo arredonda para caber, a tabela não: ela é o lugar onde o número
+      // exato continua alcançável.
+      await expect(rows).toHaveLength(MONTHS.length);
+      await expect(rows.map((row) => rowCells(row)[1])).toEqual(PARTIAL_FORMATTED);
+    });
+
+    await step('O mês sem medição é declarado ausente, e não escrito como zero', async () => {
+      // Zero é um valor; ausência não é. Preencher com zero faria a alternativa
+      // textual afirmar uma medição que ninguém fez — e o desenho, que
+      // simplesmente não traça o ponto, passaria a discordar dela.
+      const mobile = rows.map((row) => rowCells(row)[2]);
+      await expect(mobile.slice(0, 3)).toEqual(SERIES_PARTIAL[1].data.map(String));
+      await expect(mobile.slice(3)).toEqual(['—', '—', '—']);
+    });
+
+    await step('E o desenho traça só o que existe', async () => {
+      // Nove barras, e não doze: os três meses sem medição não viram forma
+      // nenhuma. A contagem fica FORA do `waitFor` de propósito — dentro dele
+      // ela esperaria a animação por acidente, e o guarda passaria a dar certo
+      // mesmo removido.
+      const desenhadas = SERIES_PARTIAL[0].data.length + SERIES_PARTIAL[1].data.length;
+      await waitFor(() => expect(formasPreenchidas(desenho).length).toBeGreaterThan(0));
+      await drawingSettled(desenho);
+      await expect(formasPreenchidas(desenho).length).toBe(desenhadas);
+    });
+  },
+};
+
+/**
+ * Rosca cujas fatias somam zero.
+ *
+ * Também não é o estado vazio: há três categorias, elas só não tiveram
+ * movimento no período. A participação de cada uma é indefinida, e a coluna que
+ * a carrega precisa dizer isso — a conta que a produz divide pelo total.
+ */
+export const ZeroTotal: Story = {
+  render: () => ({
+    props: { points: ZERO_TOTAL },
+    template: `
+      <div ndsChart
+        type="pie"
+        [data]="points"
+        label="Distribuição de acessos por dispositivo, em um período sem movimento"
+      ></div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
+    const desenho = desenhoDe(chart);
+    await waitFor(() => expect(textosDoDesenho(desenho).length).toBeGreaterThan(0));
+
+    await step('Categoria sem movimento não é categoria ausente', async () => {
+      await expect(chart.querySelector('.nds-chart-empty')).toBeNull();
+      await expect(chart.querySelector('[data-slot="chart-canvas"]')).not.toBeNull();
+    });
+
+    await step('A participação indefinida é declarada, e não inventada', async () => {
+      const rows = [...chart.querySelectorAll<HTMLTableRowElement>('tbody tr')];
+      await expect(rows).toHaveLength(ZERO_TOTAL.length);
+      await expect(rows.map((row) => rowCells(row)[1])).toEqual(ZERO_TOTAL.map(() => '0'));
+      await expect(rows.map((row) => rowCells(row)[2])).toEqual(ZERO_TOTAL.map(() => '—'));
+    });
+
+    await step('E a divisão por zero não vaza para a tela', async () => {
+      // A conta da participação divide pelo total das fatias. Sem a guarda, o
+      // que sai é `NaN%` — escrito na tabela e repetido na legenda, que é a
+      // forma mais barata de o componente mentir sobre o próprio dado.
+      await expect(chart.textContent ?? '').not.toContain('NaN');
+      for (const point of ZERO_TOTAL) {
+        await expect(textosDoDesenho(desenho).some((text) => text.includes(point.label)))
+          .toBe(true);
       }
     });
   },

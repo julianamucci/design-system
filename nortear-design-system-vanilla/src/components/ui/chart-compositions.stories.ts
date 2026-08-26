@@ -4,9 +4,9 @@ import {
   designEscreve,
   designPintado,
   exigirRoot,
-  datumFormas,
 } from '@shared/testing/chart-probe';
 import { createChart } from './chart';
+import { drawingSettled, filledShapes } from './chart.fixtures';
 import { cardSourceWithChart, chartSource, chartSourceWith } from './chart.source';
 import {
   createCard,
@@ -96,10 +96,20 @@ export const WithCard: Story = {
       await expect(inside).not.toBeNull();
     });
 
-    await step('E o desenho sai dentro dele', async () => {
+    await step('E o desenho sai dentro dele, com uma coluna por categoria', async () => {
       const root = exigirRoot(canvasElement);
       await waitFor(() => expect(designPintado(root)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(datumFormas(root).length).toBeGreaterThan(0), { timeout: 3000 });
+      // Contar formas exige a animação de entrada fechada: ver `drawingSettled`.
+      await drawingSettled(root);
+      // Igualdade: o desenho não perde nem ganha dado por estar embrulhado no
+      // card. Com "mais de zero", este passo passava com qualquer número.
+      // `waitFor`: a geometria da forma assenta DEPOIS da marca de opacidade
+      // que `drawingSettled` observa — ver o coletor. A igualdade continua com
+      // dentes: contagem inflada não converge, porque nenhuma forma some.
+      await waitFor(
+        () => expect(filledShapes(root)).toHaveLength(chartData.length),
+        { timeout: 3000 },
+      );
     });
   },
 };
@@ -150,8 +160,18 @@ export const InlineTitle: Story = {
       await expect(root.querySelector('caption')?.textContent?.trim()).toBe(TITLE_INLINE);
     });
 
-    await step('E o dado continua desenhado', async () => {
-      await expect(datumFormas(root).length).toBeGreaterThan(0);
+    await step('E o dado continua desenhado, categoria por categoria', async () => {
+      // Contar formas exige a animação de entrada fechada: ver `drawingSettled`.
+      await drawingSettled(root);
+      // Igualdade: o título desenhado ocupa espaço acima dos eixos, e o que este
+      // passo promete é que nenhuma coluna se perdeu para ele.
+      // `waitFor`: a geometria da forma assenta DEPOIS da marca de opacidade
+      // que `drawingSettled` observa — ver o coletor. A igualdade continua com
+      // dentes: contagem inflada não converge, porque nenhuma forma some.
+      await waitFor(
+        () => expect(filledShapes(root)).toHaveLength(chartData.length),
+        { timeout: 3000 },
+      );
     });
   },
 };

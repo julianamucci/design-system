@@ -31,9 +31,14 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// `functional.item4` é o PONTEIRO sobre o ponto de dado, e esta story nunca
+// aproxima o ponteiro de coisa nenhuma: o que ela mede é que o mesmo par está
+// na tabela, sem depender dele. A declaração foi para a story que abre a dica
+// de verdade (Settings/WithTooltip) — portão sem dentes vale menos que portão
+// nenhum, e é o mesmo defeito que `visual.item2` já teve aqui ao lado.
 export const Bar: Story = {
   parameters: {
-    covers: ['functional.item2', 'functional.item4', 'visual.item1'],
+    covers: ['functional.item2', 'visual.item1'],
   },
   render: () => ({
     props: { meses: MONTHS, series: SERIE_UNICA },

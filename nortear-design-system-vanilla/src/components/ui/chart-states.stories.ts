@@ -322,9 +322,14 @@ export const OnePoint: Story = {
  */
 export const ThemeTokens: Story = {
   parameters: {
+    covers: ['functional.item6'],
     coversNotApplicable: {
-      'functional.item6': 'montar ou alternar o tema com o gráfico da lib vivo fecha a aba nesta stack — verificação em aberto',
-      'visual.item4': 'a foto no tema escuro depende do mesmo caminho — verificação em aberto',
+      // A foto sai no escuro — o `globals` abaixo garante isso. O que falta é
+      // o outro tipo de desenho: o item de regressão pede barras E linhas na
+      // mesma tela, e esta story desenha só barras. Enquanto for um desenho
+      // só, metade do item ficaria fotografada por ninguém, e reivindicá-lo
+      // seria declarar cobertura que não existe.
+      'visual.item4': 'a story desenha só barras, e o item cobra barras e linhas na mesma foto',
     },
     docs: {
       // Override de story: duas séries, na forma `xAxis` + `series`.
@@ -339,6 +344,10 @@ export const ThemeTokens: Story = {
       },
     },
   },
+  // O modo escuro é declarado ANTES da montagem. É a diferença que fez esta
+  // verificação sair do papel: o desenho nasce com a paleta que se quer medir,
+  // em vez de a story ter de alcançá-la trocando a classe enquanto a lib monta.
+  globals: { theme: 'dark' },
   render: () => createChart({
     xAxis: MONTHS,
     series: SERIES_MULTI,
@@ -361,9 +370,24 @@ export const ThemeTokens: Story = {
       // desenhada. A paleta de série também sai do token — `--chart-1` a
       // `--chart-8`, com variante por modo —, e quem a mede contra o fundo é a
       // story de contraste, logo abaixo.
-      const label = root.querySelector<SVGTextElement>('svg text')!;
-      await expect(getComputedStyle(label).fill)
-        .toBe(tokenColor('muted-foreground', root));
+      //
+      // A espera é de RELÓGIO, e o token é lido UMA vez, fora dela. `tokenColor`
+      // monta um elemento de sonda no `<body>`: dentro de um `waitFor` ele mexe
+      // no DOM a cada tentativa e acorda o observador de mutação que a espera
+      // usa para reagendar — a tentativa que falha provoca a próxima, o prazo
+      // nunca chega, e o navegador gira a 100% até a aba morrer sem resultado.
+      // Abrindo no escuro há o que esperar: a classe do documento chega antes de
+      // o desenho repintar.
+      const expectedColor = tokenColor('muted-foreground', root);
+      const labelColor = () => {
+        const label = root.querySelector<SVGTextElement>('svg text');
+        return label ? getComputedStyle(label).fill : '';
+      };
+      const deadline = Date.now() + 3000;
+      while (labelColor() !== expectedColor && Date.now() < deadline) {
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }
+      await expect(labelColor()).toBe(expectedColor);
     });
 
     await step('O tamanho do texto sai da fonte raiz, e cresce junto com ela', async () => {
@@ -403,6 +427,65 @@ export const ThemeTokens: Story = {
     await step('E o desenho está inteiro', async () => {
       await expect(datumFormas(root).length).toBeGreaterThan(0);
       await expect(root.querySelector('.nds-chart-empty')).toBeNull();
+    });
+
+    await step('Trocar o tema recolore no lugar, sem remontar o desenho', async () => {
+      // O item de contrato fala da TROCA, não do modo escuro parado: os passos
+      // acima provam que o desenho LÊ o token; este prova que ele o relê quando
+      // o documento muda de modo.
+      //
+      // A cor de partida é lida ANTES de mexer na classe. Lida depois, no mesmo
+      // tique, a releitura ainda não aconteceu e a sonda devolve a cor ANTIGA:
+      // a comparação seguinte viraria "escuro contra escuro", que nunca difere
+      // e só sabe expirar.
+      //
+      // A espera é de RELÓGIO, e não `waitFor`. Medido: com a recolorização
+      // desligada de propósito, o `waitFor` não reprovava — reobservava o
+      // documento a cada mutação, o desenho se repintava a cada volta, e o
+      // navegador girava em 100% de CPU até a aba morrer sem resultado, que é o
+      // motivo pelo qual esta verificação ficou anos declarada como não feita.
+      // O laço abaixo termina sozinho e a cor que sobrou é comparada UMA vez:
+      // sem recolorização ele REPROVA, em dois segundos.
+      const html = root.ownerDocument.documentElement;
+      const wasDark = html.classList.contains('dark');
+      const canvasBox = root.querySelector<HTMLElement>('[data-slot="chart-canvas"]');
+      const axisColor = () => {
+        const label = root.querySelector<SVGTextElement>('svg text');
+        return label ? getComputedStyle(label).fill : '';
+      };
+      const axisColorAfterLeaving = async (from: string) => {
+        const deadline = Date.now() + 2000;
+        let current = axisColor();
+        while (current === from && Date.now() < deadline) {
+          await new Promise((resolve) => setTimeout(resolve, 50));
+          current = axisColor();
+        }
+        return current;
+      };
+
+      try {
+        const initial = axisColor();
+        // Sem esta linha o resto seria vácuo: desenho sem texto compara '' com
+        // '' e passa.
+        await expect(initial).not.toBe('');
+
+        // Ida.
+        html.classList.toggle('dark');
+        const swapped = await axisColorAfterLeaving(initial);
+        await expect(swapped).not.toBe(initial);
+
+        // Volta: a promessa é recolorir a CADA troca, não uma vez só.
+        html.classList.toggle('dark');
+        await expect(await axisColorAfterLeaving(swapped)).not.toBe(swapped);
+
+        // Mesmo nó de desenho antes e depois: recoloriu no lugar, não foi
+        // descartado e recriado — é o "não pisca nem requer reload".
+        await expect(root.querySelector('[data-slot="chart-canvas"]')).toBe(canvasBox);
+      } finally {
+        // Repõe o que a story ENCONTROU: o escuro do `globals` é o que o teste
+        // visual fotografa, e na suíte as stories dividem o mesmo documento.
+        html.classList.toggle('dark', wasDark);
+      }
     });
   },
 };

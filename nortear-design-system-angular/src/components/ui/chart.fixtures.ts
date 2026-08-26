@@ -56,6 +56,53 @@ export const TENDENCIA: ChartSeries[] = [
   { name: 'Acessos', data: [120, 160, 140, 190, 210, 260] },
 ];
 
+/**
+ * Cor autoral de série. Fora da paleta `--chart-*` de propósito: se saísse dela,
+ * a story não conseguiria distinguir "veio do autor" de "veio do tema".
+ */
+export const AUTHOR_COLOR = '#7c3aed';
+
+/** A mesma cor como o navegador a devolve em estilo calculado. */
+export const AUTHOR_COLOR_PAINTED = 'rgb(124, 58, 237)';
+
+/** Primeira série com cor autoral; a segunda continua saindo do tema. */
+export const SERIES_AUTHOR_COLOR: ChartSeries[] = [
+  { name: 'Desktop', data: [186, 305, 237, 73, 209, 214], color: AUTHOR_COLOR },
+  { name: 'Mobile', data: [80, 200, 120, 190, 130, 140] },
+];
+
+/**
+ * Dado imperfeito, na forma em que ele chega de uma API de verdade.
+ *
+ * Duas bordas de uma vez, e as duas moram na alternativa textual: casa decimal
+ * (o desenho arredonda no eixo, a tabela não pode inventar dígito) e SÉRIE MAIS
+ * CURTA que o eixo de categorias — três meses sem medição, que a tabela precisa
+ * declarar como ausentes em vez de escrever zero.
+ */
+export const SERIES_PARTIAL: ChartSeries[] = [
+  { name: 'Desktop', data: [12.5, 3.456, 42.375, 9.99, 20, 31] },
+  { name: 'Mobile', data: [8, 11, 6] },
+];
+
+/** O que a tabela deve escrever para a série decimal acima. */
+export const PARTIAL_FORMATTED = ['12.5', '3.46', '42.38', '9.99', '20', '31'];
+
+/**
+ * Rosca cujas fatias somam zero.
+ *
+ * O período sem nenhum acesso existe, e não é o estado vazio: há três
+ * categorias, elas só não tiveram movimento. A participação de cada uma é
+ * indefinida, e é isso que a coluna precisa dizer.
+ */
+export const ZERO_TOTAL: ChartDataPoint[] = [
+  { label: 'Desktop', value: 0 },
+  { label: 'Mobile', value: 0 },
+  { label: 'Tablet', value: 0 },
+];
+
+/** Um ponto só — o menor dataset que ainda é um gráfico, e não o estado vazio. */
+export const SINGLE_POINT: ChartDataPoint[] = [{ label: 'Jan', value: 186 }];
+
 // ─── Contraste ────────────────────────────────────────────────────────────────
 
 export type RGB = [number, number, number];
@@ -176,11 +223,21 @@ function rgbHsl(h: number, s: number, l: number): RGB {
  * no máximo UM `fill-opacity="0"` no desenho. Sem legenda o número é zero e a
  * espera passa direto; com `prefers-reduced-motion` não há animação e também
  * não há o que esperar.
+ *
+ * O TÍTULO desenhado é a exceção medida, e por isso o número é parâmetro: ele
+ * traz o próprio retângulo transparente de fundo, e um gráfico com título e
+ * legenda estabiliza em DOIS — a espera fixa em um nunca fechava. Quem passa
+ * outro número declara o que há na tela; o padrão continua sendo o caso comum.
+ *
+ * Corolário para quem depender de `formasPreenchidas` junto de um título: com
+ * dois retângulos transparentes, `caixaDaLegenda` pode pegar o do título, e aí
+ * os ícones da legenda deixam de ser excluídos. Contagem exata de formas e
+ * título desenhado não combinam — meça posição, não quantidade.
  */
-export async function drawingSettled(root: ParentNode): Promise<void> {
+export async function drawingSettled(root: ParentNode, transparentes = 1): Promise<void> {
   await waitFor(
     () => expect(root.querySelectorAll('svg path[fill-opacity="0"]').length)
-      .toBeLessThanOrEqual(1),
+      .toBeLessThanOrEqual(transparentes),
     { timeout: 3000 },
   );
 }
@@ -197,6 +254,18 @@ function emDefs(forma: Element): boolean {
 function caixaDaLegenda(root: ParentNode): DOMRect | null {
   const background = root.querySelector<SVGGraphicsElement>('svg path[fill-opacity="0"]');
   return background ? background.getBoundingClientRect() : null;
+}
+
+/**
+ * Há legenda desenhada?
+ *
+ * Lê o mesmo retângulo transparente que serve de caixa a ela, então responde
+ * pela definição operacional dos coletores abaixo — e não por um seletor
+ * paralelo que poderia discordar deles. Exige o desenho ASSENTADO: no meio da
+ * animação toda forma carrega a marca, e a resposta seria sempre `true`.
+ */
+export function hasLegend(root: ParentNode): boolean {
+  return caixaDaLegenda(root) !== null;
 }
 
 /** Cabe inteiro na caixa da legenda — a folga de 1px cobre arredondamento. */
