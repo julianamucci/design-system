@@ -21,9 +21,11 @@ const LABELS: EditorLabels = {
   groups: {
     marks: 'Marcas de texto',
     headings: 'Títulos',
+    align: 'Alinhamento',
     lists: 'Listas',
     blocks: 'Blocos',
     actions: 'Ações',
+    table: 'Tabela',
   },
   actions: {
     bold: 'Negrito',
@@ -31,18 +33,32 @@ const LABELS: EditorLabels = {
     underline: 'Sublinhado',
     strike: 'Tachado',
     code: 'Código',
+    highlight: 'Destaque',
     h1: 'Título 1',
     h2: 'Título 2',
     h3: 'Título 3',
+    alignLeft: 'Alinhar à esquerda',
+    alignCenter: 'Centralizar',
+    alignRight: 'Alinhar à direita',
+    alignJustify: 'Justificar',
     bulletList: 'Lista com marcadores',
     orderedList: 'Lista numerada',
+    taskList: 'Lista de tarefas',
     blockquote: 'Citação',
     codeBlock: 'Bloco de código',
     link: 'Link',
+    image: 'Inserir imagem',
+    table: 'Inserir tabela',
     horizontalRule: 'Linha divisória',
     undo: 'Desfazer',
     redo: 'Refazer',
     formula: 'Inserir fórmula',
+    rowAfter: 'Inserir linha abaixo',
+    columnAfter: 'Inserir coluna à direita',
+    deleteRow: 'Excluir linha',
+    deleteColumn: 'Excluir coluna',
+    headerRow: 'Alternar linha de cabeçalho',
+    deleteTable: 'Excluir tabela',
   },
   fields: {
     formula: 'Fórmula em LaTeX',
@@ -164,9 +180,9 @@ export const Playground: Story = {
       // O salto que importa: do último botão do grupo de marcas para o primeiro
       // do grupo de títulos. É por isso que os grupos abrem mão do teclado — com
       // `role="toolbar"` neles, a navegação morreria na borda do primeiro grupo.
-      const codigo = canvas.getByRole('button', { name: LABELS.actions.code });
+      const ultimoDasMarcas = canvas.getByRole('button', { name: LABELS.actions.highlight });
       const titulo1 = canvas.getByRole('button', { name: LABELS.actions.h1 });
-      codigo.focus();
+      ultimoDasMarcas.focus();
       await userEvent.keyboard('{ArrowRight}');
       await expect(titulo1).toHaveFocus();
 
@@ -266,6 +282,90 @@ export const Playground: Story = {
       const lista = root.querySelector('ul') as HTMLElement;
       await expect(getComputedStyle(lista).paddingInlineStart).not.toBe('0px');
       await expect(getComputedStyle(lista).marginInlineStart).toBe('0px');
+    });
+
+    await step('Destaque, alinhamento e lista de tarefas', async () => {
+      root.editor.commands.setContent('<p>massa e energia</p>');
+
+      const destaque = canvas.getByRole('button', { name: LABELS.actions.highlight });
+      root.editor.chain().selectAll().setHighlight().run();
+      await expect(destaque).toHaveAttribute('aria-pressed', 'true');
+      const marca = root.querySelector('mark') as HTMLElement;
+      // O `<mark>` do navegador é amarelo fixo, que ignora o tema e ainda crava
+      // o texto em preto. Aqui ele usa o realce do sistema.
+      await expect(getComputedStyle(marca).backgroundColor).toBe(corDoToken(root, '--accent'));
+      root.editor.chain().selectAll().unsetHighlight().run();
+
+      // Alinhamento é ATRIBUTO do bloco, e escolha única: centralizar desliga
+      // "à esquerda" sem que ninguém precise desligá-lo.
+      const centro = canvas.getByRole('button', { name: LABELS.actions.alignCenter });
+      const direita = canvas.getByRole('button', { name: LABELS.actions.alignRight });
+      root.editor.chain().setTextSelection(2).setTextAlign('center').run();
+      await expect(centro).toHaveAttribute('aria-pressed', 'true');
+      await expect(direita).toHaveAttribute('aria-pressed', 'false');
+      root.editor.chain().setTextSelection(2).setTextAlign('left').run();
+
+      const tarefas = canvas.getByRole('button', { name: LABELS.actions.taskList });
+      root.editor.chain().setTextSelection(2).toggleTaskList().run();
+      await expect(tarefas).toHaveAttribute('aria-pressed', 'true');
+      // A caixa é do navegador, e é ela que marca — o marcador de lista sai de
+      // cena para não haver dois sinais para a mesma coisa.
+      const item = root.querySelector('ul[data-type="taskList"] li') as HTMLElement;
+      await expect(item.querySelector('input[type="checkbox"]')).toBeInTheDocument();
+      await expect(getComputedStyle(item.parentElement as HTMLElement).listStyleType).toBe('none');
+    });
+
+    await step('Tabela: os botões de linha e coluna só existem dentro dela', async () => {
+      root.editor.commands.setContent('<p>massa e energia</p>');
+
+      const inserir = canvas.getByRole('button', { name: LABELS.actions.table });
+      const caixa = root.querySelector('[data-slot="editor-toolbar-context"]') as HTMLElement;
+      await expect(getComputedStyle(caixa).display).toBe('none');
+
+      await userEvent.click(inserir);
+      await expect(root.querySelector('table')).toBeInTheDocument();
+      // 3×3 com cabeçalho: três linhas no total, a primeira delas de <th>.
+      await expect(root.querySelectorAll('table tr')).toHaveLength(3);
+      await expect(root.querySelectorAll('table th')).toHaveLength(3);
+      await expect(getComputedStyle(caixa).display).not.toBe('none');
+
+      const novaLinha = canvas.getByRole('button', { name: LABELS.actions.rowAfter });
+      await userEvent.click(novaLinha);
+      await expect(root.querySelectorAll('table tr')).toHaveLength(4);
+
+      const cabecalho = root.querySelector('table th') as HTMLElement;
+      await expect(getComputedStyle(cabecalho).backgroundColor).toBe(corDoToken(root, '--muted'));
+
+      await userEvent.click(canvas.getByRole('button', { name: LABELS.actions.deleteTable }));
+      await expect(root.querySelector('table')).toBeNull();
+      await expect(getComputedStyle(caixa).display).toBe('none');
+    });
+
+    await step('Imagem: o armazenamento é de quem consome, e base64 é só o padrão', async () => {
+      root.editor.commands.setContent('<p>massa e energia</p>');
+
+      // Um PNG de 1×1 transparente, montado byte a byte — nada baixado.
+      const bytes = Uint8Array.from(
+        atob(
+          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk'
+            + 'YPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+        ),
+        (c) => c.charCodeAt(0),
+      );
+      const arquivo = new File([bytes], 'ponto.png', { type: 'image/png' });
+
+      await expect(await root.insertImage(arquivo)).toBe(true);
+      const imagem = root.querySelector('img') as HTMLImageElement;
+      await expect(imagem).toBeInTheDocument();
+      // O resolvedor PADRÃO embute o arquivo. É o que faz o Playground
+      // funcionar sem servidor nenhum — e não é o que se leva para produção.
+      await expect(imagem.getAttribute('src')).toContain('data:image/png;base64,');
+
+      // `allowBase64` é FALSE por padrão na lib: sem ligá-lo, o esquema descarta
+      // o `src` que não reconhece e a imagem SOME na releitura do documento.
+      // Este é o portão desse ajuste, e ele passaria despercebido sem ele.
+      root.editor.commands.setContent(root.editor.getHTML());
+      await expect(root.querySelector('img')).toBeInTheDocument();
     });
 
     await step('Desfazer nasce indisponível e acende quando há o que desfazer', async () => {
@@ -418,6 +518,50 @@ export const Playground: Story = {
       root.editor.chain().setTextSelection(2).insertInlineMath({ latex: 'E = mc^2' }).run();
       await expect(root.querySelector('.inline-math-error')).toBeNull();
       await expect(root.querySelectorAll('[data-type="inline-math"]')).toHaveLength(1);
+    });
+  },
+};
+
+/**
+ * A costura de armazenamento: quem consome decide de onde sai o `src`.
+ *
+ * O padrão embute o arquivo em base64, que é o que faz o Playground funcionar
+ * sem servidor nenhum. Aqui o resolvedor é outro — um envio fingido que devolve
+ * a URL de um CDN, e que RECUSA arquivo acima de um limite. Os dois caminhos
+ * são o que uma aplicação de verdade precisa.
+ */
+export const CustomImageStorage: Story = {
+  parameters: { controls: { disable: true }, actions: { disable: true } },
+  render: (args) =>
+    createEditor({
+      content: '<p>O armazenamento da imagem é decisão de quem consome.</p>',
+      editable: args.editable,
+      preset: 'advanced',
+      labels: LABELS,
+      resolveImage: async (file) => {
+        // Recusa é `null`, e não exceção: arquivo grande demais, formato fora
+        // da política, envio negado. A barra não insere nada e segue.
+        if (file.size > 1024) return null;
+        return `https://cdn.exemplo.com/${file.name}`;
+      },
+    }),
+  play: async ({ canvasElement, step }) => {
+    const root = canvasElement.querySelector('[data-slot="editor"]') as EditorRoot;
+    root.editor.commands.setContent('<p>armazenamento próprio</p>');
+
+    await step('O `src` vem do resolvedor, não do arquivo', async () => {
+      const pequeno = new File([new Uint8Array(10)], 'logo.png', { type: 'image/png' });
+      await expect(await root.insertImage(pequeno)).toBe(true);
+      const imagem = root.querySelector('img') as HTMLImageElement;
+      await expect(imagem.getAttribute('src')).toBe('https://cdn.exemplo.com/logo.png');
+      // Nada de base64: o arquivo não entrou no documento.
+      await expect(imagem.getAttribute('src')).not.toContain('data:');
+    });
+
+    await step('Recusar não insere nada — e não é erro', async () => {
+      const grande = new File([new Uint8Array(2048)], 'foto.png', { type: 'image/png' });
+      await expect(await root.insertImage(grande)).toBe(false);
+      await expect(root.querySelectorAll('img')).toHaveLength(1);
     });
   },
 };

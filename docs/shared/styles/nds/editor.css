@@ -263,6 +263,130 @@
   padding: 0.1em 0.3em;
 }
 
+/* Destaque (`<mark>`) — o navegador desenha amarelo fixo, que ignora o tema e
+ * ainda por cima crava a cor do texto em preto.
+ *
+ * `--accent` é o realce do sistema, e vem com `--accent-foreground` medido para
+ * ele. Sem a cor do texto declarada junto, o par depende de qual tema está
+ * ligado — que é exatamente o que a regra dos contêineres coloridos proíbe. */
+.nds-editor-content .ProseMirror mark {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+  border-radius: var(--radius-xs);
+  padding: 0.1em 0.2em;
+}
+
+/* Lista de tarefas.
+ *
+ * A lib monta `<li><label><input type=checkbox></label><div>texto</div></li>`.
+ * O marcador some (quem marca é a caixa) e o recuo também: com `padding` de
+ * lista, a caixa ficaria deslocada do texto do documento.
+ *
+ * `align-items: flex-start` e não `center`: item de duas linhas com a caixa
+ * centralizada deixa a caixa no meio do parágrafo, longe da primeira linha que
+ * ela marca. */
+.nds-editor-content .ProseMirror ul[data-type="taskList"] {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+.nds-editor-content .ProseMirror ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-2);
+}
+
+/* O `<label>` não encolhe nem cresce: ele guarda a caixa, e o texto ao lado é
+ * que ocupa o resto. Sem `flex-shrink: 0`, item longo espreme a caixa. */
+.nds-editor-content .ProseMirror ul[data-type="taskList"] li > label {
+  flex-shrink: 0;
+  /* Alinha a caixa com a primeira LINHA do texto, não com o topo da caixa de
+   * texto: `line-height` do corpo menos a altura da caixa, dividido por dois. */
+  margin-block-start: calc((1.5em - var(--spacing-4)) / 2);
+}
+
+.nds-editor-content .ProseMirror ul[data-type="taskList"] li > div {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Item marcado fica esmaecido — o mesmo sinal de "concluído" que o resto do
+ * sistema usa. Só o TEXTO: a caixa continua em contraste cheio, porque é ela
+ * que se opera. */
+.nds-editor-content .ProseMirror ul[data-type="taskList"] li[data-checked="true"] > div {
+  color: hsl(var(--muted-foreground));
+  text-decoration: line-through;
+}
+
+/* Tabela.
+ *
+ * `border-collapse` para a grade não virar linha dupla entre células, e
+ * `table-layout: fixed` porque é o que a coluna redimensionável exige — sem
+ * ele o navegador reparte a largura pelo conteúdo e ignora a medida arrastada.
+ *
+ * A tabela ROLA dentro de um envelope próprio, e não empurra a moldura: é o
+ * mesmo motivo do bloco de código. */
+.nds-editor-content .ProseMirror table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.nds-editor-content .ProseMirror :is(td, th) {
+  border: 1px solid hsl(var(--border));
+  padding: var(--spacing-2) var(--spacing-3);
+  vertical-align: top;
+  /* `position: relative` sustenta a alça de redimensionar, que é absoluta
+   * dentro da célula. Sem isto ela se ancora na página e some da coluna. */
+  position: relative;
+}
+
+.nds-editor-content .ProseMirror th {
+  background-color: hsl(var(--muted));
+  font-weight: var(--font-weight-semi-bold);
+  text-align: start;
+}
+
+/* Célula selecionada — o realce do sistema, com o texto que vem medido para
+ * ele. A lib marca a seleção com esta classe. */
+.nds-editor-content .ProseMirror .selectedCell {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+/* A alça de arrastar a coluna. Larga o bastante para o ponteiro acertar, e
+ * visível só enquanto se arrasta — parada, ela seria uma linha grossa
+ * permanente sobre a borda da tabela. */
+.nds-editor-content .ProseMirror .column-resize-handle {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: -2px;
+  width: 4px;
+  background-color: hsl(var(--primary));
+  pointer-events: none;
+}
+
+.nds-editor-content .ProseMirror.resize-cursor {
+  cursor: col-resize;
+}
+
+/* Imagem — nunca maior que a moldura, e sem deformar. */
+.nds-editor-content .ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+
+/* Imagem selecionada usa o mesmo anel de foco do resto, e não uma borda
+ * própria: é a mesma pergunta ("o que está selecionado?") e merece o mesmo
+ * sinal. */
+.nds-editor-content .ProseMirror img.ProseMirror-selectednode {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
 /* Link — cor da marca e sublinhado.
  *
  * O sublinhado NÃO é enfeite: sem ele, a única pista de que há link é a cor, e

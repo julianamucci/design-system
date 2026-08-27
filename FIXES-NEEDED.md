@@ -43,7 +43,7 @@ histórico; a lista de cima é o que está por fazer.
 - [ ] **Motor de múltiplos itens no carrossel Vanilla.** A fábrica desliza um slide por vez e não expõe base fracionária, com `coversNotApplicable` declarado. Trocar o motor, ou tirar o item do contrato das cinco.
 - [x] **Dots do carrossel no Angular são botões numerados**; as outras quatro usam `.nds-carousel-dot`, classe que não aparece em arquivo nenhum do Angular. Alinhar muda a foto do Chromatic. **Resolvido (2026-08-18), junto com o redesenho da paginação aprovado pela dona.** O Angular passou a usar `.nds-carousel-dot` na story de composições E na docs page; as cinco montam a MESMA fileira. O padrão novo: o slide atual vira uma pílula rotulada ("Slide N") na própria posição da fileira, os demais continuam pontos, e a mudança de forma anima por `grid-template-columns: 0fr → 1fr` com `--duration-base`/`--ease-size` (mesmo mecanismo do painel do accordion, sem biblioteca de animação). Contrato novo nas cinco: `testes.functional.item8` e `testes.accessibility.item6`.
 
-### Dívida de fundação, sem dono de componente (10)
+### Dívida de fundação, sem dono de componente (11)
 - [ ] **O `toggle-group` do Vanilla ganhou três capacidades que as outras quatro stacks não têm.** (Aberto em 2026-08-27, ao montar a barra do protótipo de editor.) Vanilla é a referência, então a divergência é dívida de porte, não decisão:
 
   | capacidade | por que existe |
@@ -53,6 +53,10 @@ histórico; a lista de cima é o que está por fazer.
   | `setValue(value)` no nó devolvido | barra que ESPELHA estado de fora. Numa barra de formatação, mover o cursor para dentro de um negrito tem de acender o botão sem clique. Não dispara `onValueChange` — é sincronização, não escolha |
 
   Junto vem uma limpeza que ficou por fazer: as três stories de composição do `toggle-group` no Vanilla ainda usam `children: ''` mais `injectIcons`, que o `children` de elemento tornou desnecessário.
+
+- [ ] **Imagem do editor entra sem texto alternativo de verdade.** (Aberto em 2026-08-27, ao ligar a extensão de imagem no protótipo.) O `alt` recebe o NOME DO ARQUIVO — `ponto.png` descreve o arquivo, não a imagem. Passa no axe (o atributo existe) e não serve a ninguém que dependa dele.
+
+  Não é bug de código, é fluxo que falta: pedir a descrição exige decidir QUANDO se pergunta (antes de inserir, depois, num painel lateral) e o que fazer com quem pula. A linha de entrada da fórmula e do link já é a peça pronta para isso — falta a decisão.
 
 - [ ] **`hidden` não esconde nada em classe `.nds-*` que declare `display` — quarta ocorrência.** (Aberto em 2026-08-27, ao esconder o botão de tirar link no protótipo de editor.) O `[hidden] { display: none }` é regra da FOLHA DO AGENTE, e qualquer declaração de autor a vence. Quem escreve `elemento.hidden = true` recebe o atributo no DOM, o leitor de tela concorda, o `toBeVisible` do jest-dom concorda — e o elemento continua na tela.
 

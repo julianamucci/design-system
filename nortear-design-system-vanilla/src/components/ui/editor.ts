@@ -23,10 +23,23 @@
 import { Editor } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import { Mathematics } from '@tiptap/extension-mathematics';
+import { TaskList } from '@tiptap/extension-task-list';
+import { TaskItem } from '@tiptap/extension-task-item';
+import { TableKit } from '@tiptap/extension-table';
+import { Image } from '@tiptap/extension-image';
+import { Highlight } from '@tiptap/extension-highlight';
+import { TextAlign } from '@tiptap/extension-text-align';
 import DOMPurify from 'dompurify';
 import {
+  AlignCenter,
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
   Bold,
   Code,
+  Columns3,
+  Highlighter,
+  Image as ImageIcon,
   Heading1,
   Heading2,
   Heading3,
@@ -34,12 +47,17 @@ import {
   Link as LinkIcon,
   List,
   ListOrdered,
+  ListTodo,
   Minus,
+  PanelTop,
   Quote,
   Redo2,
+  Rows3,
   Sigma,
   SquareCode,
   Strikethrough,
+  Table as TableIcon,
+  Trash2,
   Underline,
   Undo2,
   Unlink,
@@ -64,18 +82,33 @@ export type EditorAction =
   | 'h1'
   | 'h2'
   | 'h3'
+  | 'highlight'
+  | 'alignLeft'
+  | 'alignCenter'
+  | 'alignRight'
+  | 'alignJustify'
   | 'bulletList'
   | 'orderedList'
+  | 'taskList'
   | 'blockquote'
   | 'codeBlock'
   | 'link'
+  | 'image'
+  | 'table'
   | 'horizontalRule'
   | 'undo'
   | 'redo'
-  | 'formula';
+  | 'formula'
+  // Só existem com o cursor DENTRO de uma tabela.
+  | 'rowAfter'
+  | 'columnAfter'
+  | 'deleteRow'
+  | 'deleteColumn'
+  | 'headerRow'
+  | 'deleteTable';
 
 /** Blocos visuais da barra. Cada um vira um grupo com nome próprio. */
-export type EditorGroup = 'marks' | 'headings' | 'lists' | 'blocks' | 'actions';
+export type EditorGroup = 'marks' | 'headings' | 'align' | 'lists' | 'blocks' | 'actions' | 'table';
 
 /**
  * Conjuntos de botões.
@@ -132,9 +165,38 @@ export type EditorOptions = {
   editable?: boolean;
   /** Conjunto de botões. Padrão `advanced`. */
   preset?: EditorPreset;
+  /**
+   * De onde sai o `src` da imagem — a decisão de ARMAZENAMENTO, que é de quem
+   * consome o design system, não dele.
+   *
+   * Recebe o arquivo escolhido e devolve a URL a gravar no documento: envio a
+   * um bucket, a um CDN, a uma rota da própria aplicação. Devolver `null`
+   * cancela a inserção (envio recusado, arquivo grande demais, formato fora da
+   * política).
+   *
+   * O padrão é `data:` em base64, que não depende de servidor nenhum e é o que
+   * faz o Playground funcionar sozinho. NÃO é o padrão para produção: base64
+   * infla o documento em cerca de um terço do tamanho do arquivo, e o conteúdo
+   * inteiro passa a trafegar e a ser guardado junto do texto a cada gravação.
+   */
+  resolveImage?: (file: File) => Promise<string | null>;
   labels: EditorLabels;
   class?: string;
 };
+
+/**
+ * O resolvedor padrão: o próprio arquivo, embutido no documento.
+ *
+ * Serve para demonstrar e para prototipar. Ver a ressalva em `resolveImage`.
+ */
+export function imageAsDataUrl(file: File): Promise<string | null> {
+  return new Promise((resolve) => {
+    const leitor = new FileReader();
+    leitor.addEventListener('load', () => resolve(leitor.result as string));
+    leitor.addEventListener('error', () => resolve(null));
+    leitor.readAsDataURL(file);
+  });
+}
 
 /**
  * A raiz devolvida carrega a instância da lib.
@@ -142,7 +204,19 @@ export type EditorOptions = {
  * Sem isso, story e teste só alcançariam o editor pelo DOM — e o estado que
  * importa (marca ativa, documento, transação) vive na instância, não no DOM.
  */
-export type EditorRoot = DestroyableElement<HTMLDivElement> & { editor: Editor };
+export type EditorRoot = DestroyableElement<HTMLDivElement> & {
+  editor: Editor;
+  /**
+   * Insere um arquivo de imagem passando pelo `resolveImage` configurado.
+   *
+   * É o mesmo caminho do botão, exposto: colar e arrastar um arquivo para
+   * dentro do editor vão querer exatamente isto, e é o que permite verificar a
+   * costura de armazenamento sem abrir o seletor de arquivo do sistema.
+   *
+   * Devolve `false` quando o resolvedor recusa.
+   */
+  insertImage: (file: File) => Promise<boolean>;
+};
 
 // ─── Tabela de ações ─────────────────────────────────────────────────────────
 //
@@ -188,6 +262,34 @@ const ACOES: Record<EditorAction, Acao> = {
     ativa: (e) => e.isActive('code'),
     executar: (e) => void e.chain().focus().toggleCode().run(),
   },
+  highlight: {
+    icon: ico(Highlighter),
+    ativa: (e) => e.isActive('highlight'),
+    executar: (e) => void e.chain().focus().toggleHighlight().run(),
+  },
+  // Alinhamento é ATRIBUTO do bloco, não marca: por isso `isActive` recebe
+  // `{ textAlign }` e não um nome de nó. O grupo é `single` — um parágrafo tem
+  // um alinhamento só.
+  alignLeft: {
+    icon: ico(AlignLeft),
+    ativa: (e) => e.isActive({ textAlign: 'left' }),
+    executar: (e) => void e.chain().focus().setTextAlign('left').run(),
+  },
+  alignCenter: {
+    icon: ico(AlignCenter),
+    ativa: (e) => e.isActive({ textAlign: 'center' }),
+    executar: (e) => void e.chain().focus().setTextAlign('center').run(),
+  },
+  alignRight: {
+    icon: ico(AlignRight),
+    ativa: (e) => e.isActive({ textAlign: 'right' }),
+    executar: (e) => void e.chain().focus().setTextAlign('right').run(),
+  },
+  alignJustify: {
+    icon: ico(AlignJustify),
+    ativa: (e) => e.isActive({ textAlign: 'justify' }),
+    executar: (e) => void e.chain().focus().setTextAlign('justify').run(),
+  },
   h1: {
     icon: ico(Heading1),
     ativa: (e) => e.isActive('heading', { level: 1 }),
@@ -213,6 +315,11 @@ const ACOES: Record<EditorAction, Acao> = {
     ativa: (e) => e.isActive('orderedList'),
     executar: (e) => void e.chain().focus().toggleOrderedList().run(),
   },
+  taskList: {
+    icon: ico(ListTodo),
+    ativa: (e) => e.isActive('taskList'),
+    executar: (e) => void e.chain().focus().toggleTaskList().run(),
+  },
   blockquote: {
     icon: ico(Quote),
     ativa: (e) => e.isActive('blockquote'),
@@ -237,8 +344,45 @@ const ACOES: Record<EditorAction, Acao> = {
     executar: (e) => void e.chain().focus().redo().run(),
     pode: (e) => e.can().redo(),
   },
-  // As duas que não agem sozinhas: abrem uma linha e esperam texto.
+  table: {
+    icon: ico(TableIcon),
+    // 3×3 com cabeçalho: uma tabela de exemplo grande o bastante para mostrar
+    // o que ela é, e pequena o bastante para caber no que já está escrito.
+    executar: (e) =>
+      void e.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
+  },
+
+  // ─── Só com o cursor dentro de uma tabela ───────────────────────────────────
+  rowAfter: {
+    icon: ico(Rows3),
+    executar: (e) => void e.chain().focus().addRowAfter().run(),
+  },
+  columnAfter: {
+    icon: ico(Columns3),
+    executar: (e) => void e.chain().focus().addColumnAfter().run(),
+  },
+  deleteRow: {
+    icon: ico(Minus),
+    executar: (e) => void e.chain().focus().deleteRow().run(),
+  },
+  deleteColumn: {
+    icon: ico(Minus),
+    executar: (e) => void e.chain().focus().deleteColumn().run(),
+  },
+  headerRow: {
+    icon: ico(PanelTop),
+    executar: (e) => void e.chain().focus().toggleHeaderRow().run(),
+  },
+  deleteTable: {
+    icon: ico(Trash2),
+    executar: (e) => void e.chain().focus().deleteTable().run(),
+  },
+
+  // As três que não agem sozinhas: abrem uma linha, um seletor de arquivo, e
+  // esperam. `executar` fica de fora porque a ação depende da fábrica — do
+  // resolvedor de imagem que quem consome escolheu, ou do texto da linha.
   link: { icon: ico(LinkIcon), ativa: (e) => e.isActive('link') },
+  image: { icon: ico(ImageIcon) },
   formula: { icon: ico(Sigma) },
 };
 
@@ -246,7 +390,14 @@ const ACOES: Record<EditorAction, Acao> = {
 
 type Bloco =
   | { grupo: EditorGroup; type: 'single' | 'multiple'; acoes: EditorAction[] }
-  | { botoes: EditorAction[] };
+  | {
+      botoes: EditorAction[];
+      /**
+       * Nó que precisa estar sob o cursor para o bloco aparecer. Ausente = o
+       * bloco está sempre lá.
+       */
+      contextual?: string;
+    };
 
 /**
  * O que cada conjunto mostra.
@@ -262,11 +413,27 @@ const PRESETS: Record<EditorPreset, Bloco[]> = {
     { botoes: ['link', 'undo', 'redo'] },
   ],
   advanced: [
-    { grupo: 'marks', type: 'multiple', acoes: ['bold', 'italic', 'underline', 'strike', 'code'] },
+    {
+      grupo: 'marks',
+      type: 'multiple',
+      acoes: ['bold', 'italic', 'underline', 'strike', 'code', 'highlight'],
+    },
     { grupo: 'headings', type: 'single', acoes: ['h1', 'h2', 'h3'] },
-    { grupo: 'lists', type: 'single', acoes: ['bulletList', 'orderedList'] },
+    {
+      grupo: 'align',
+      type: 'single',
+      acoes: ['alignLeft', 'alignCenter', 'alignRight', 'alignJustify'],
+    },
+    { grupo: 'lists', type: 'single', acoes: ['bulletList', 'orderedList', 'taskList'] },
     { grupo: 'blocks', type: 'multiple', acoes: ['blockquote', 'codeBlock'] },
-    { botoes: ['link', 'horizontalRule', 'undo', 'redo'] },
+    { botoes: ['link', 'image', 'table', 'horizontalRule', 'undo', 'redo'] },
+    // Bloco CONTEXTUAL: seis botões que só existem dentro de uma tabela. Fora
+    // dela some inteiro — barra com seis botões inertes é ruído permanente
+    // para uma capacidade que a maioria dos documentos nunca usa.
+    {
+      contextual: 'table',
+      botoes: ['rowAfter', 'columnAfter', 'deleteRow', 'deleteColumn', 'headerRow', 'deleteTable'],
+    },
   ],
 };
 
@@ -388,6 +555,7 @@ function criarLinhaDeEntrada(
 
 export function createEditor(options: EditorOptions): EditorRoot {
   const { labels, editable = true, preset = 'advanced' } = options;
+  const resolverImagem = options.resolveImage ?? imageAsDataUrl;
 
   const root = document.createElement('div');
   root.dataset.slot = 'editor';
@@ -414,6 +582,21 @@ export function createEditor(options: EditorOptions): EditorRoot {
         },
       }),
       Mathematics,
+      TaskList,
+      // Lista de tarefas dentro de lista de tarefas: é como se escreve subitem,
+      // e sem isto o Enter no meio de um item cria irmão em vez de filho.
+      TaskItem.configure({ nested: true }),
+      TableKit.configure({ table: { resizable: true } }),
+      // `allowBase64` é FALSE por padrão, e sem ele a imagem embutida some na
+      // releitura do documento: o esquema descarta o `src` que não reconhece.
+      // Como o resolvedor padrão devolve `data:`, ligar aqui é o que faz o
+      // caminho de demonstração sobreviver a um `setContent`.
+      Image.configure({ allowBase64: true }),
+      Highlight,
+      // `types` diz em QUE nós o atributo pode pousar. Sem parágrafo e título
+      // na lista, os botões de alinhamento não fazem nada — e nada na tela
+      // explica por quê.
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
     ],
     // O caminho suportado para escrever atributo no elemento editável: a lib
     // recria esse nó, e `setAttribute` de fora seria desfeito.
@@ -428,6 +611,7 @@ export function createEditor(options: EditorOptions): EditorRoot {
 
   const grupos: Array<{ grupo: ToggleGroupElement; acoes: EditorAction[] }> = [];
   const simples: Array<{ botao: HTMLButtonElement; acao: EditorAction }> = [];
+  const contextuais: Array<{ caixa: HTMLElement; node: string }> = [];
 
   function separador(): HTMLElement {
     const s = document.createElement('span');
@@ -451,7 +635,24 @@ export function createEditor(options: EditorOptions): EditorRoot {
   const blocos = [...PRESETS[preset], { botoes: ['formula'] as EditorAction[] }];
 
   blocos.forEach((bloco, i) => {
-    if (i > 0) toolbar.appendChild(separador());
+    // Bloco contextual mora numa caixa própria, com o separador DENTRO dela: se
+    // o separador ficasse na barra, sumir o bloco deixaria uma barrinha órfã
+    // pendurada no fim.
+    const contextual = 'botoes' in bloco ? bloco.contextual : undefined;
+    let destino: HTMLElement = toolbar;
+    if (contextual) {
+      const caixa = document.createElement('span');
+      caixa.dataset.slot = 'editor-toolbar-context';
+      caixa.dataset.node = contextual;
+      caixa.className = 'nds-editor-toolbar-context';
+      caixa.hidden = true;
+      caixa.appendChild(separador());
+      toolbar.appendChild(caixa);
+      contextuais.push({ caixa, node: contextual });
+      destino = caixa;
+    } else if (i > 0) {
+      toolbar.appendChild(separador());
+    }
 
     if ('grupo' in bloco) {
       // `role: 'group'` porque o grupo está ANINHADO nesta barra, ao lado de
@@ -469,14 +670,14 @@ export function createEditor(options: EditorOptions): EditorRoot {
         })),
       });
       grupos.push({ grupo, acoes: bloco.acoes });
-      toolbar.appendChild(grupo);
+      destino.appendChild(grupo);
       return;
     }
 
     for (const acao of bloco.botoes) {
       const btn = botaoSimples(acao);
       simples.push({ botao: btn, acao });
-      toolbar.appendChild(btn);
+      destino.appendChild(btn);
     }
   });
 
@@ -604,6 +805,7 @@ export function createEditor(options: EditorOptions): EditorRoot {
     // Tirar o link só existe quando há link: botão que não faz nada é ruído, e
     // desabilitado seria pior — anuncia uma ação e nega logo em seguida.
     botaoTirarLink.hidden = !editor.isActive('link');
+    for (const { caixa, node } of contextuais) caixa.hidden = !editor.isActive(node);
     botaoFormula.setAttribute('aria-expanded', String(formula.aberta()));
     if (alvoLink) botaoLink.setAttribute('aria-expanded', String(link.aberta()));
   }
@@ -622,6 +824,40 @@ export function createEditor(options: EditorOptions): EditorRoot {
     if (executar) botao.addEventListener('click', () => executar(editor));
   }
 
+  // ─── Imagem ────────────────────────────────────────────────────────────────
+  //
+  // O seletor de arquivo é criado a cada clique e descartado depois: um input
+  // guardado entre usos mantém o arquivo anterior, e escolher o MESMO arquivo
+  // duas vezes seguidas não dispara `change`.
+  async function inserirImagem(arquivo: File): Promise<boolean> {
+    const src = await resolverImagem(arquivo);
+    // `null` é recusa de quem consome — envio negado, arquivo grande demais,
+    // formato fora da política. Não é erro, e não vira alerta.
+    if (!src) return false;
+    // `alt` com o nome do arquivo é PLACEHOLDER, não texto alternativo de
+    // verdade: descreve o arquivo, não a imagem. Está no FIXES-NEEDED — pedir a
+    // descrição é decisão de fluxo, e imagem sem `alt` nenhum reprovaria no axe.
+    editor.chain().focus().setImage({ src, alt: arquivo.name }).run();
+    return true;
+  }
+
+  const alvoImagem = simples.find((s) => s.acao === 'image');
+  if (alvoImagem) {
+    alvoImagem.botao.addEventListener('click', () => {
+      // O seletor é criado a cada clique e descartado depois: um input guardado
+      // entre usos mantém o arquivo anterior, e escolher o MESMO arquivo duas
+      // vezes seguidas não dispara `change`.
+      const escolha = document.createElement('input');
+      escolha.type = 'file';
+      escolha.accept = 'image/*';
+      escolha.addEventListener('change', () => {
+        const arquivo = escolha.files?.[0];
+        if (arquivo) void inserirImagem(arquivo);
+      });
+      escolha.click();
+    });
+  }
+
   // ─── Navegação por seta na barra ──────────────────────────────────────────
   //
   // `role="toolbar"` promete uma parada de tabulação só, com as setas andando
@@ -629,7 +865,12 @@ export function createEditor(options: EditorOptions): EditorRoot {
   // justamente para isto. Sem a navegação, a barra promete um contrato que não
   // cumpre, e o leitor de tela anuncia o papel de qualquer jeito.
   const foco = (): HTMLButtonElement[] =>
-    Array.from(toolbar.querySelectorAll<HTMLButtonElement>('button')).filter((b) => !b.disabled);
+    Array.from(toolbar.querySelectorAll<HTMLButtonElement>('button')).filter(
+      // `offsetParent` nulo cobre o botão escondido E o bloco contextual
+      // fechado em volta dele — perguntar só pelo `hidden` do próprio botão
+      // deixaria as setas pousarem nos seis botões de tabela fora da tabela.
+      (b) => !b.disabled && b.offsetParent !== null,
+    );
 
   function rover(alvo: HTMLButtonElement): void {
     for (const b of toolbar.querySelectorAll<HTMLButtonElement>('button')) {
@@ -667,5 +908,6 @@ export function createEditor(options: EditorOptions): EditorRoot {
     editor.destroy();
   }) as EditorRoot;
   raiz.editor = editor;
+  raiz.insertImage = inserirImagem;
   return raiz;
 }
