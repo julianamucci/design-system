@@ -3,7 +3,7 @@
 // Política: crash no mount → export fica FORA (listado abaixo); axe falhando →
 // parameters.a11y.test:'todo' com as rules no comentário; página limpa → axe é portão.
 //
-// Nenhuma página fora da fumaça: as 65 montam.
+// Nenhuma página fora da fumaça: as 66 montam.
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, waitFor } from 'storybook/test';
@@ -35,6 +35,7 @@ import { createDensitiesDocs } from './DensitiesDocs';
 import { createDialogDocs } from './DialogDocs';
 import { createDrawerDocs } from './DrawerDocs';
 import { createDropdownMenuDocs } from './DropdownMenuDocs';
+import { createEditorDocs } from './EditorDocs';
 import { createElevationDocs } from './ElevationDocs';
 import { createFormDocs } from './FormDocs';
 import { createGettingStartedDocs } from './GettingStartedDocs';
@@ -223,6 +224,7 @@ export const DropdownMenu: Story = {
   play,
   parameters: { a11y: { test: 'todo' } },
 };
+export const Editor: Story = { render: () => createEditorDocs(), play };
 export const Elevation: Story = { render: () => createElevationDocs(), play };
 export const Form: Story = { render: () => createFormDocs(), play };
 export const GettingStarted: Story = { render: () => createGettingStartedDocs(), play };
