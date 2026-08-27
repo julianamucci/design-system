@@ -49,6 +49,7 @@ const CATEGORY_BY_SLUG: Record<string, string> = {
   label: "form",
   toggle: "form",
   "toggle-group": "form",
+  editor: "form",
 
   // feedback
   alert: "feedback",

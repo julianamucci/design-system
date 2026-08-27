@@ -34,6 +34,7 @@ import { DensitiesDocs } from './DensitiesDocs';
 import { DialogDocs } from './DialogDocs';
 import { DrawerDocs } from './DrawerDocs';
 import { DropdownMenuDocs } from './DropdownMenuDocs';
+import { EditorDocs } from './EditorDocs';
 import { ElevationDocs } from './ElevationDocs';
 import { GettingStartedDocs } from './GettingStartedDocs';
 import { HoverCardDocs } from './HoverCardDocs';
@@ -285,6 +286,11 @@ export const DropdownMenu: Story = {
   render: () => <DropdownMenuDocs />,
   play: mounted,
   parameters: { a11y: { test: 'todo' } },
+};
+
+export const Editor: Story = {
+  render: () => <EditorDocs />,
+  play: mounted,
 };
 
 export const Elevation: Story = {
