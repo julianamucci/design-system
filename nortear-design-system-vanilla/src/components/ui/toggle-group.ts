@@ -4,12 +4,21 @@
 // Tipo (single/multiple) via lógica TS; variante via data-variant.
 
 import { cn } from '@/lib/utils';
-import { createToggle, type ToggleSize, type ToggleVariant } from './toggle';
+import { createToggle, type ToggleChild, type ToggleSize, type ToggleVariant } from './toggle';
 
 export type ToggleGroupItem = {
   value: string;
   label?: string;
-  children?: string;
+  /**
+   * Conteúdo do item. Aceita elemento, e não só texto.
+   *
+   * O caso mais comum do grupo é item só de ícone — o próprio docblock de
+   * `aria-label` logo abaixo diz isso —, e enquanto aqui só cabia `string` o
+   * ícone tinha de ser injetado DEPOIS de construir, percorrendo os botões e
+   * casando ícone com posição. Cada story de composição carregava a sua cópia
+   * desse laço, e a fixture `injectIcons` existe só por causa disso.
+   */
+  children?: ToggleChild | ToggleChild[];
   disabled?: boolean;
   /**
    * Nome acessível do item. OBRIGATÓRIO quando o item é só ícone — o caso mais
@@ -42,9 +51,37 @@ export type ToggleGroupOptions = {
    */
   'aria-label'?: string;
   class?: string;
+  /**
+   * Papel do grupo. `toolbar` (padrão) é o grupo solto na página: ele declara
+   * `role="toolbar"` e é dono da navegação por seta.
+   *
+   * `group` é para o grupo ANINHADO dentro de uma barra maior, ao lado de
+   * controles que não são alternadores. Ali `toolbar` dentro de `toolbar` seria
+   * um papel dentro do mesmo papel, e duas rovings disputando o mesmo Tab: quem
+   * navega ficaria preso no trio de marcas sem alcançar o resto da barra. Com
+   * `group`, o grupo abre mão do teclado e quem contém assume.
+   */
+  role?: 'toolbar' | 'group';
 };
 
-export function createToggleGroup(options: ToggleGroupOptions): HTMLElement {
+/**
+ * O grupo devolvido aceita estado de FORA.
+ *
+ * Sem isto o estado só muda no próprio clique, o que serve à barra que é dona
+ * da verdade e não serve à barra que a espelha — numa barra de formatação,
+ * mover o cursor para dentro de um trecho em negrito tem de acender o botão sem
+ * clique nenhum.
+ */
+export type ToggleGroupElement = HTMLElement & {
+  /**
+   * Escreve o estado dos itens. NÃO dispara `onValueChange`: é sincronização
+   * vinda de quem manda, não escolha de quem usa — notificar aqui devolveria o
+   * eco a quem acabou de mandar.
+   */
+  setValue: (value: string | string[]) => void;
+};
+
+export function createToggleGroup(options: ToggleGroupOptions): ToggleGroupElement {
   const {
     type = 'single',
     variant = 'default',
@@ -65,7 +102,8 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement {
   root.className = cn('nds-toggle-group', options.class);
   if (variant !== 'default') root.dataset.variant = variant;
   if (size !== 'default') root.dataset.size = size;
-  root.setAttribute('role', 'toolbar');
+  const papel = options.role ?? 'toolbar';
+  root.setAttribute('role', papel);
   if (options['aria-label']) root.setAttribute('aria-label', options['aria-label']);
 
   // A folha compartilhada lê `data-orientation` para empilhar; `aria-orientation`
@@ -74,7 +112,10 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement {
   // continuava horizontal. O espaço entre os itens é sempre zero: a folha fixa
   // `gap: 0` e não há mais o que configurar aqui.
   root.dataset.orientation = orientation;
-  root.setAttribute('aria-orientation', orientation);
+  // `aria-orientation` só vale em papel que navega — `toolbar` está na lista da
+  // ARIA, `group` não. Em `group` o atributo seria "aria-allowed-attr" para o
+  // axe, e é o CONTENEDOR quem responde pela orientação de qualquer forma.
+  if (papel === 'toolbar') root.setAttribute('aria-orientation', orientation);
   if (disabled) root.dataset.disabled = '';
 
   function notifyChange(): void {
@@ -103,18 +144,15 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement {
             activeValues.clear();
             activeValues.add(item.value);
           }
-          root.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]').forEach((b) => {
-            const v = b.dataset.value!;
-            const active = activeValues.has(v);
-            b.setAttribute('aria-pressed', String(active));
-            b.dataset.state = active ? 'on' : 'off';
-          });
         } else {
           if (isActive) activeValues.delete(item.value);
           else activeValues.add(item.value);
-          btn.setAttribute('aria-pressed', String(!isActive));
-          btn.dataset.state = !isActive ? 'on' : 'off';
         }
+        // Os dois ramos terminam no mesmo lugar: `activeValues` decide, e a
+        // pintura vem dele. Antes cada ramo escrevia nos botões do seu jeito, e
+        // o `pressed` que a fábrica do toggle guarda no fecho ficava defasado
+        // sem que se visse — o grupo sobrescrevia logo depois.
+        pintarEstado();
         notifyChange();
       },
     });
@@ -145,6 +183,29 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement {
     next.focus();
   }
 
+  /** Escreve nos botões o que `activeValues` diz. Uma origem só de verdade. */
+  function pintarEstado(): void {
+    buttons().forEach((b) => {
+      const active = activeValues.has(b.dataset.value!);
+      b.setAttribute('aria-pressed', String(active));
+      b.dataset.state = active ? 'on' : 'off';
+    });
+  }
+
+  const setValue = (value: string | string[]): void => {
+    activeValues.clear();
+    for (const v of Array.isArray(value) ? value : [value]) {
+      if (v !== '') activeValues.add(v);
+    }
+    pintarEstado();
+  };
+
+  const raiz: ToggleGroupElement = Object.assign(root, { setValue });
+
+  // Daqui para baixo, o contrato do papel de barra. Em `group` quem contém é o
+  // dono do teclado, e instalar isto aqui criaria a segunda roving.
+  if (papel !== 'toolbar') return raiz;
+
   root.addEventListener('keydown', (event) => {
     const KEYS = ['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp', 'Home', 'End'];
     if (!KEYS.includes(event.key)) return;
@@ -171,5 +232,5 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement {
     buttons().find((b) => !b.disabled);
   if (initial) setRovingTarget(initial);
 
-  return root;
+  return raiz;
 }

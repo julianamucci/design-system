@@ -35,7 +35,7 @@ export type ToggleOptions = {
   children?: ToggleChild | ToggleChild[];
 };
 
-type ToggleChild = HTMLElement | SVGElement | string;
+export type ToggleChild = HTMLElement | SVGElement | string;
 
 export function createToggle(options: ToggleOptions = {}): HTMLButtonElement {
   const { disabled = false, variant = 'default', size = 'default', onClick } = options;

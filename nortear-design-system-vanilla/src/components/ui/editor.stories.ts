@@ -16,6 +16,7 @@ type EditorArgs = {
 
 const LABELS = {
   toolbar: 'Formatação',
+  marks: 'Marcas de texto',
   bold: 'Negrito',
   italic: 'Itálico',
   strike: 'Tachado',

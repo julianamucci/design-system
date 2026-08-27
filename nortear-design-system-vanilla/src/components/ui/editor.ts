@@ -23,6 +23,7 @@ import { Bold, Italic, Strikethrough, Sigma } from 'lucide';
 import 'katex/dist/katex.min.css';
 
 import { cn } from '@/lib/utils';
+import { createToggleGroup } from './toggle-group';
 import { createInput } from './input';
 import { createButton } from './button';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
@@ -35,6 +36,13 @@ export type EditorMark = 'bold' | 'italic' | 'strike';
 export type EditorLabels = {
   /** Nome acessível da barra inteira. */
   toolbar: string;
+  /**
+   * Nome acessível do GRUPO das três marcas.
+   *
+   * Grupo dentro de barra sem nome próprio é anunciado como "grupo" e mais
+   * nada — e esta barra tem dois blocos, o das marcas e o da fórmula.
+   */
+  marks: string;
   bold: string;
   italic: string;
   strike: string;
@@ -101,29 +109,6 @@ function icone(nodes: LucideIconNode[]): SVGSVGElement {
   return svg;
 }
 
-/**
- * Botão da barra, construído aqui em vez de vir de `createToggle`.
- *
- * A fábrica do toggle guarda `pressed` num fecho e só o troca no próprio
- * clique: não há setter público. Aqui quem manda no estado é o editor — mover o
- * cursor para dentro de um trecho em negrito acende o botão sem clique nenhum —
- * e escrever `aria-pressed` por fora deixaria o fecho defasado, invertendo o
- * clique seguinte. Reaproveitar a fábrica exigiria dar a ela um setter;
- * enquanto ele não existe, o que se reaproveita é a classe `.nds-toggle`.
- */
-function botaoDeMarca(mark: EditorMark, label: string): HTMLButtonElement {
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.dataset.slot = 'editor-mark';
-  btn.dataset.mark = mark;
-  btn.className = 'nds-toggle';
-  btn.setAttribute('aria-label', label);
-  btn.setAttribute('aria-pressed', 'false');
-  btn.dataset.state = 'off';
-  btn.appendChild(icone(MARK_ICONS[mark]));
-  return btn;
-}
-
 export function createEditor(options: EditorOptions): EditorRoot {
   const { labels, editable = true } = options;
 
@@ -139,7 +124,24 @@ export function createEditor(options: EditorOptions): EditorRoot {
   toolbar.setAttribute('aria-label', labels.toolbar);
 
   const marcas: EditorMark[] = ['bold', 'italic', 'strike'];
-  const botoes = marcas.map((m) => botaoDeMarca(m, labels[m]));
+
+  // As três marcas são um GRUPO, não três botões soltos: elas se aplicam ao
+  // mesmo trecho e acumulam (negrito E itálico), que é exatamente `multiple`.
+  //
+  // `role: 'group'` porque o grupo está ANINHADO nesta barra, ao lado do botão
+  // de fórmula, que não é alternador. Assim quem navega alcança a barra inteira
+  // com as setas, em vez de ficar preso no trio.
+  const grupo = createToggleGroup({
+    type: 'multiple',
+    role: 'group',
+    'aria-label': labels.marks,
+    items: marcas.map((m) => ({
+      value: m,
+      'aria-label': labels[m],
+      children: icone(MARK_ICONS[m]),
+    })),
+  });
+  const botoes = Array.from(grupo.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]'));
 
   const separador = document.createElement('span');
   separador.className = 'nds-editor-toolbar-separator';
@@ -153,7 +155,7 @@ export function createEditor(options: EditorOptions): EditorRoot {
   botaoFormula.setAttribute('aria-expanded', 'false');
   botaoFormula.appendChild(icone(Sigma as unknown as LucideIconNode[]));
 
-  toolbar.append(...botoes, separador, botaoFormula);
+  toolbar.append(grupo, separador, botaoFormula);
 
   // ─── Linha da fórmula ─────────────────────────────────────────────────────
   const linha = document.createElement('div');
@@ -193,19 +195,14 @@ export function createEditor(options: EditorOptions): EditorRoot {
   // documento, mas muda a marca ativa. Ligar só em `update` deixava o botão
   // aceso depois de sair de um trecho em negrito.
   function sincronizar(): void {
-    for (const btn of botoes) {
-      const mark = btn.dataset.mark as EditorMark;
-      const ativo = editor.isActive(mark);
-      btn.setAttribute('aria-pressed', String(ativo));
-      btn.dataset.state = ativo ? 'on' : 'off';
-    }
+    grupo.setValue(marcas.filter((m) => editor.isActive(m)));
   }
   editor.on('transaction', sincronizar);
   sincronizar();
 
   for (const btn of botoes) {
     btn.addEventListener('click', () => {
-      const mark = btn.dataset.mark as EditorMark;
+      const mark = btn.dataset.value as EditorMark;
       const chain = editor.chain().focus();
       if (mark === 'bold') chain.toggleBold().run();
       else if (mark === 'italic') chain.toggleItalic().run();
