@@ -31,6 +31,7 @@ import DensitiesDocs from '@/components/docs/DensitiesDocs.vue';
 import DialogDocs from '@/components/docs/DialogDocs.vue';
 import DrawerDocs from '@/components/docs/DrawerDocs.vue';
 import DropdownMenuDocs from '@/components/docs/DropdownMenuDocs.vue';
+import EditorDocs from '@/components/docs/EditorDocs.vue';
 import ElevationDocs from '@/components/docs/ElevationDocs.vue';
 import GettingStartedDocs from '@/components/docs/GettingStartedDocs.vue';
 import HoverCardDocs from '@/components/docs/HoverCardDocs.vue';
@@ -312,6 +313,11 @@ export const Drawer: Story = {
 
 export const DropdownMenu: Story = {
   render: () => ({ components: { DropdownMenuDocs }, template: '<DropdownMenuDocs />' }),
+  play: smokePlay,
+};
+
+export const Editor: Story = {
+  render: () => ({ components: { EditorDocs }, template: '<EditorDocs />' }),
   play: smokePlay,
 };
 

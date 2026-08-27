@@ -3,11 +3,18 @@ import { Card } from '@/components/ui/card';
 import { CodeBlock } from '@/components/ui/code-block';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
-interface DocsTokenItem { token: string; value: string; description: string }
+interface DocsTokenItem { token: string; value?: string; description: string }
 
 withDefaults(defineProps<{
   title: string;
-  cols: { token: string; value: string; description: string };
+  /**
+   * A coluna do meio é OPCIONAL — mesma forma da coluna de regras na tabela de
+   * UX writing.
+   *
+   * Nem todo conteúdo compartilhado descreve token e CLASSE: o editor lista
+   * token e uso, e um cabeçalho sem célula embaixo é coluna morta.
+   */
+  cols: { token: string; value?: string; description: string };
   items: DocsTokenItem[];
   customizationTitle?: string;
   customizationCode?: string;
@@ -36,7 +43,10 @@ withDefaults(defineProps<{
               <TableHead class="nds-p-2 nds-font-semibold">
                 {{ cols.token }}
               </TableHead>
-              <TableHead class="nds-p-2 nds-font-semibold">
+              <TableHead
+                v-if="cols.value"
+                class="nds-p-2 nds-font-semibold"
+              >
                 {{ cols.value }}
               </TableHead>
               <TableHead class="nds-p-2 nds-font-semibold">
@@ -54,7 +64,11 @@ withDefaults(defineProps<{
               <TableCell lang="en" class="nds-p-2 nds-font-mono nds-text-primary">
                 {{ item.token }}
               </TableCell>
-              <TableCell lang="en" class="nds-p-2 nds-font-mono nds-text-muted-foreground">
+              <TableCell
+                v-if="cols.value"
+                lang="en"
+                class="nds-p-2 nds-font-mono nds-text-muted-foreground"
+              >
                 {{ item.value }}
               </TableCell>
               <TableCell class="nds-p-2 nds-text-muted-foreground">

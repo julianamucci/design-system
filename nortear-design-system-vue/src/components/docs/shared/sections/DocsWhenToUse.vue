@@ -9,7 +9,15 @@ interface DocsWhenToUseUXRow { element: string; do: string; dont: string; rules?
 const props = defineProps<{
   title: string;
   guidelines: { title: string; items: string[] };
-  scenarios: {
+  /**
+   * Tabela de cenários — OPCIONAL, como a de UX writing logo abaixo.
+   *
+   * Nem todo conteúdo compartilhado tem a tripla cenário/uso/alternativa: o
+   * editor traz os cenários como frases soltas, e uma tabela de três colunas
+   * com duas vazias não é rigor, é cabeçalho sem conteúdo embaixo. Quem não
+   * tem a tripla passa os cenários na lista de diretrizes.
+   */
+  scenarios?: {
     title?: string;
     cols: { scenario: string; use: string; alternative: string };
     items: DocsWhenToUseScenario[];
@@ -54,24 +62,27 @@ const props = defineProps<{
       </Card>
 
       <!-- Cenários -->
-      <Card class="nds-overflow-x nds-p-4">
+      <Card
+        v-if="scenarios"
+        class="nds-overflow-x nds-p-4"
+      >
         <Table class="nds-w-full nds-border-collapse nds-text-body">
           <TableHeader>
             <TableRow class="nds-border-b nds-bg-muted-soft nds-font-medium">
               <TableHead class="nds-p-2">
-                {{ scenarios.cols.scenario }}
+                {{ scenarios!.cols.scenario }}
               </TableHead>
               <TableHead class="nds-p-2">
-                {{ scenarios.cols.use }}
+                {{ scenarios!.cols.use }}
               </TableHead>
               <TableHead class="nds-p-2">
-                {{ scenarios.cols.alternative }}
+                {{ scenarios!.cols.alternative }}
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow
-              v-for="(item, i) in scenarios.items"
+              v-for="(item, i) in scenarios!.items"
               :key="i"
               class="nds-border-b nds-hover-bg-muted-faint"
             >

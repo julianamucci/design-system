@@ -6,6 +6,13 @@ interface DocsDoDontPair {
   dontLabel: string;
   doCaption: string;
   dontCaption: string;
+  /**
+   * Por que o par é assim — OPCIONAL, e rendido abaixo das duas colunas.
+   *
+   * A legenda de cada lado diz o QUE fazer; o motivo diz por quê, e vale para o
+   * par inteiro. Repeti-lo nas duas legendas seria a mesma frase duas vezes.
+   */
+  reason?: string;
 }
 
 defineProps<{
@@ -27,66 +34,77 @@ defineProps<{
         <div
           v-for="(pair, index) in pairs"
           :key="index"
-          class="nds-grid"
-          data-cols="2"
-          data-spacing="lg"
+          class="nds-stack"
+          data-spacing="sm"
         >
-          <!-- DO -->
           <div
-            class="nds-stack"
-            data-spacing="sm"
+            class="nds-grid"
+            data-cols="2"
+            data-spacing="lg"
           >
+            <!-- DO -->
             <div
-              class="nds-cluster nds-text-success"
+              class="nds-stack"
               data-spacing="sm"
             >
-              <span
-                class="nds-pill"
-                data-tone="success"
-              >✓</span>
-              <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">{{ pair.doLabel }}</span>
+              <div
+                class="nds-cluster nds-text-success"
+                data-spacing="sm"
+              >
+                <span
+                  class="nds-pill"
+                  data-tone="success"
+                >✓</span>
+                <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">{{ pair.doLabel }}</span>
+              </div>
+              <!-- `nds-cluster` + `data-justify` é o mesmo par que centraliza o
+                   preview em DocsVariants e em ComponentDemo. Sem ele o Card herda
+                   a coluna do `.nds-card` e encosta tudo à esquerda — visível em
+                   qualquer componente de largura própria. -->
+              <Card
+                class="nds-cluster nds-shadow-none nds-p-4"
+                data-justify="center"
+                data-docs-preview="do"
+              >
+                <slot :name="`do-preview-${index}`" />
+              </Card>
+              <p class="nds-text-body nds-italic nds-px-1">
+                {{ pair.doCaption }}
+              </p>
             </div>
-            <!-- `nds-cluster` + `data-justify` é o mesmo par que centraliza o
-                 preview em DocsVariants e em ComponentDemo. Sem ele o Card herda
-                 a coluna do `.nds-card` e encosta tudo à esquerda — visível em
-                 qualquer componente de largura própria. -->
-            <Card
-              class="nds-cluster nds-shadow-none nds-p-4"
-              data-justify="center"
-              data-docs-preview="do"
-            >
-              <slot :name="`do-preview-${index}`" />
-            </Card>
-            <p class="nds-text-body nds-italic nds-px-1">
-              {{ pair.doCaption }}
-            </p>
-          </div>
-          <!-- DON'T -->
-          <div
-            class="nds-stack"
-            data-spacing="sm"
-          >
+            <!-- DON'T -->
             <div
-              class="nds-cluster nds-text-destructive"
+              class="nds-stack"
               data-spacing="sm"
             >
-              <span
-                class="nds-pill"
-                data-tone="destructive"
-              >✗</span>
-              <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">{{ pair.dontLabel }}</span>
+              <div
+                class="nds-cluster nds-text-destructive"
+                data-spacing="sm"
+              >
+                <span
+                  class="nds-pill"
+                  data-tone="destructive"
+                >✗</span>
+                <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">{{ pair.dontLabel }}</span>
+              </div>
+              <Card
+                class="nds-cluster nds-shadow-none nds-p-4"
+                data-justify="center"
+                data-docs-preview="dont"
+              >
+                <slot :name="`dont-preview-${index}`" />
+              </Card>
+              <p class="nds-text-body nds-italic nds-px-1">
+                {{ pair.dontCaption }}
+              </p>
             </div>
-            <Card
-              class="nds-cluster nds-shadow-none nds-p-4"
-              data-justify="center"
-              data-docs-preview="dont"
-            >
-              <slot :name="`dont-preview-${index}`" />
-            </Card>
-            <p class="nds-text-body nds-italic nds-px-1">
-              {{ pair.dontCaption }}
-            </p>
           </div>
+          <p
+            v-if="pair.reason"
+            class="nds-text-body nds-text-muted-foreground nds-px-1"
+          >
+            {{ pair.reason }}
+          </p>
         </div>
       </div>
     </Card>

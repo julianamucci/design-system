@@ -2,11 +2,19 @@
 import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
-interface DocsStateItem { label: string; trigger: string; behavior: string }
+interface DocsStateItem { label: string; trigger: string; behavior?: string }
 
 defineProps<{
   title: string;
-  cols: { state: string; trigger: string; behavior: string };
+  /**
+   * A terceira coluna é OPCIONAL — mesma forma da coluna de regras na tabela de
+   * UX writing.
+   *
+   * Nem todo conteúdo compartilhado separa "quando ocorre" de "comportamento":
+   * o editor descreve cada estado numa frase só, e um cabeçalho sem célula
+   * embaixo é coluna morta, não rigor.
+   */
+  cols: { state: string; trigger: string; behavior?: string };
   items: DocsStateItem[];
 }>();
 </script>
@@ -26,7 +34,10 @@ defineProps<{
             <TableHead class="nds-p-2 nds-font-semibold">
               {{ cols.trigger }}
             </TableHead>
-            <TableHead class="nds-p-2 nds-font-semibold">
+            <TableHead
+              v-if="cols.behavior"
+              class="nds-p-2 nds-font-semibold"
+            >
               {{ cols.behavior }}
             </TableHead>
           </TableRow>
@@ -43,7 +54,10 @@ defineProps<{
             <TableCell class="nds-p-2 nds-text-muted-foreground">
               {{ item.trigger }}
             </TableCell>
-            <TableCell class="nds-p-2 nds-text-muted-foreground">
+            <TableCell
+              v-if="cols.behavior"
+              class="nds-p-2 nds-text-muted-foreground"
+            >
               {{ item.behavior }}
             </TableCell>
           </TableRow>
