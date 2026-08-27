@@ -32,6 +32,7 @@ import { TextAlign } from '@tiptap/extension-text-align';
 import DOMPurify from 'dompurify';
 import {
   AlignCenter,
+  ArrowDownRightFromSquare,
   AlignJustify,
   AlignLeft,
   AlignRight,
@@ -580,7 +581,12 @@ const ImagemAjustavel = Image.extend({
       // A alça é decoração de ponteiro: quem navega por teclado usa os botões
       // da barra, que é o caminho exigido pelo critério de arrasto (WCAG 2.5.7)
       // e o único que existe para quem não usa mouse.
+      //
+      // Por ser decoração, o `aria-hidden` vale para a alça INTEIRA — o ícone
+      // dentro dela não precisa do seu, e um segundo `aria-hidden` aninhado só
+      // repetiria o que o pai já diz.
       alca.setAttribute('aria-hidden', 'true');
+      alca.appendChild(icone(ico(ArrowDownRightFromSquare)));
       dom.append(img, alca);
 
       const pintar = (n: typeof node): void => {

@@ -795,6 +795,14 @@ export const AiImageDescription: Story = {
       // ─ Arraste: a alça existe só com a imagem selecionada, e move a largura.
       const alca = root.querySelector('.nds-editor-image-handle') as HTMLElement;
       await expect(getComputedStyle(alca).opacity).toBe('1');
+      // O ícone é DECORAÇÃO, e quem carrega o `aria-hidden` é a alça inteira —
+      // um segundo, aninhado, só repetiria o que o pai já diz. E ele não pode
+      // receber ponteiro: o gesto tem de nascer na alça, senão o
+      // `setPointerCapture` captura num alvo que o `pointermove` não escuta.
+      const iconeDaAlca = alca.querySelector('svg') as SVGElement;
+      await expect(iconeDaAlca).not.toBeNull();
+      await expect(alca).toHaveAttribute('aria-hidden', 'true');
+      await expect(getComputedStyle(iconeDaAlca).pointerEvents).toBe('none');
       const antes = Math.round(
         (root.querySelector('img') as HTMLElement).getBoundingClientRect().width,
       );

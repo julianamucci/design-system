@@ -413,15 +413,33 @@
   position: absolute;
   inset-block-end: var(--spacing-1);
   inset-inline-end: var(--spacing-1);
-  width: var(--spacing-4);
-  height: var(--spacing-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 20px, e não 16: a alça passou a carregar um ícone, e no quadrado anterior
+   * ele ficava do tamanho do próprio traço. A medida também é o alvo de
+   * ponteiro, e 20px é o piso confortável para acertar sem mira. */
+  width: var(--spacing-5);
+  height: var(--spacing-5);
   border: 2px solid hsl(var(--background));
   border-radius: var(--radius-xs);
   background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
   cursor: nwse-resize;
   /* Escondida por opacidade, e não por `display`: o alvo de ponteiro continua
    * lá, e não há reflow ao aparecer. */
   opacity: 0;
+  pointer-events: none;
+}
+
+/* O ícone da alça: `currentColor` já vem do `stroke` que a fábrica escreve, e a
+ * medida é a do quadrado menos a borda. `pointer-events: none` para o gesto
+ * nascer sempre na ALÇA — sem isso o `pointerdown` sai do `<svg>`, e o
+ * `setPointerCapture` passa a capturar num alvo que o `pointermove` não escuta.
+ */
+.nds-editor-content .nds-editor-image-handle > svg {
+  width: var(--spacing-3);
+  height: var(--spacing-3);
   pointer-events: none;
 }
 
