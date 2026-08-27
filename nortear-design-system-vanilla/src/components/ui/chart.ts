@@ -82,6 +82,7 @@ import {
   valueLabelStyle,
   type NestLabelTokens,
 } from '@shared/primitives/chart-nest-labels';
+import { HATCH_OPACITY } from '@shared/primitives/chart-hatch';
 
 // Bootstrap dos módulos — idempotente. Tree-shake friendly.
 //
@@ -153,7 +154,7 @@ function tramas(cor: string): Record<string, unknown>[] {
  * quando o arquivo carregou.
  */
 function ariaBlock(): Record<string, unknown> {
-  return { enabled: true, label: { enabled: false }, decal: { show: true, decals: tramas(hsl('background')) } };
+  return { enabled: true, label: { enabled: false }, decal: { show: true, decals: tramas(hsl('background', HATCH_OPACITY)) } };
 }
 
 /**

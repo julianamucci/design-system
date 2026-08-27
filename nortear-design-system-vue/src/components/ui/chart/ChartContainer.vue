@@ -9,6 +9,7 @@ import {
   withNestLabelTokens,
   type NestLabelTokens,
 } from '@shared/primitives/chart-nest-labels';
+import { HATCH_OPACITY } from '@shared/primitives/chart-hatch';
 import * as echarts from 'echarts/core';
 import { BarChart, LineChart, PieChart, FunnelChart, RadarChart, ScatterChart } from 'echarts/charts';
 import {
@@ -251,7 +252,7 @@ function buildTheme() {
     // em que o desenho nasceu. O porquê de não usar a lista padrão da lib está
     // em `chartDecals` — em resumo, a trama dela é preto a 20% e se destaca do
     // preenchimento entre 1.14 e 1.54.
-    aria: { decal: { decals: chartDecals(hsl('background')) } },
+    aria: { decal: { decals: chartDecals(hsl('background', HATCH_OPACITY)) } },
     // WCAG 1.4.11 pede 3:1 do objeto gráfico contra o que está em volta. A
     // paleta de série passa disso por conta própria desde que ganhou variante
     // por modo — pior caso medido, 7.32 no claro e 6.83 no escuro —, mas o

@@ -96,11 +96,14 @@ export function tramasAplicadas(root: HTMLElement): Set<string> {
  * Esperar o desenho chegar a este valor é determinístico — bem melhor que
  * esperar um tempo fixo e torcer.
  */
-export function tokenColor(token: string, perto: HTMLElement): string {
+export function tokenColor(token: string, perto: HTMLElement, alpha = 1): string {
   const doc = perto.ownerDocument;
   const canais = getComputedStyle(doc.documentElement).getPropertyValue(`--${token}`).trim();
   const probe = doc.createElement('span');
-  probe.style.color = `hsl(${canais})`;
+  // O alfa serve à hachura, que é traçada na cor do fundo com opacidade: sem
+  // ele, a comparação com o que foi pintado exigiria compor a cor à mão no
+  // teste — e conta feita à mão no teste é outra fonte de verdade.
+  probe.style.color = alpha === 1 ? `hsl(${canais})` : `hsl(${canais} / ${alpha})`;
   // FORA DO FLUXO, e no <body>, não ao lado do gráfico.
   //
   // A primeira versão pendurava a sonda no irmão do gráfico. Dentro de um

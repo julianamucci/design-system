@@ -12,6 +12,7 @@ import {
   designTexts,
   tramasAplicadas,
 } from '@shared/testing/chart-probe';
+import { HATCH_OPACITY } from '@shared/primitives/chart-hatch';
 import { ChartContainer, buildBarOption, buildLineOption } from './index';
 import { Button } from '../button';
 import { decalColors, drawingSettled, filledShapes, headerOf } from './chart.fixtures';
@@ -175,7 +176,7 @@ export const MultiSeries: Story = {
       // suíte não termina nem acusa. Aqui não é preciso esperar: o passo acima
       // já esperou a trama CHEGAR à forma, e a cor dela nasce junto com o
       // padrão.
-      const pageBackground = tokenColor('background', root);
+      const pageBackground = tokenColor('background', root, HATCH_OPACITY);
       const painted = decalColors(root);
       await expect(painted.length).toBeGreaterThan(0);
       for (const one of painted) await expect(one).toBe(pageBackground);

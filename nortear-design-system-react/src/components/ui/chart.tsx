@@ -93,6 +93,7 @@ import {
   withNestLabelTokens,
   type NestLabelTokens,
 } from '@shared/primitives/chart-nest-labels';
+import { HATCH_OPACITY } from '@shared/primitives/chart-hatch';
 
 // Bootstrap dos módulos — idempotente, tree-shake friendly.
 //
@@ -198,7 +199,7 @@ function withHatchPatterns(option: echarts.EChartsCoreOption): echarts.EChartsCo
   if (!aria?.decal?.show) return withLabels;
   return {
     ...withLabels,
-    aria: { ...aria, decal: { ...aria.decal, decals: hatchPatterns(hsl('background')) } },
+    aria: { ...aria, decal: { ...aria.decal, decals: hatchPatterns(hsl('background', HATCH_OPACITY)) } },
   };
 }
 

@@ -14,6 +14,7 @@ import {
   designTexts,
   tramasAplicadas,
 } from '@shared/testing/chart-probe';
+import { HATCH_OPACITY } from '@shared/primitives/chart-hatch';
 import { Button } from './button';
 import {
   designPronto,
@@ -197,7 +198,7 @@ export const MultiSeries: Story = {
       // Sem `waitFor`: o passo anterior já provou que a trama chegou às formas,
       // e a cor sai do mesmo desenho. Repetir a medida sob espera só daria à
       // falha quinze chances de custar caro antes de aparecer.
-      const pageBackground = tokenColor('background', root);
+      const pageBackground = tokenColor('background', root, HATCH_OPACITY);
       const painted = hatchColors(root);
       // Sem esta linha a comparação abaixo seria vácuo: lista vazia é igual a
       // lista vazia, e um desenho sem trama nenhuma passaria.

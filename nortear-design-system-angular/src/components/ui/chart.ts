@@ -39,6 +39,7 @@ import {
   valueLabelStyle,
   type NestLabelTokens,
 } from '@shared/primitives/chart-nest-labels';
+import { HATCH_OPACITY } from '@shared/primitives/chart-hatch';
 
 // ─── Chart ────────────────────────────────────────────────────────────────────
 //
@@ -577,7 +578,7 @@ export class NdsChart {
       // e mora num elemento que o `role="img"` do desenho poda. Quem carrega a
       // alternativa textual é o `aria-label` autoral, mais a tabela.
       label: { enabled: false },
-      decal: { show: true, decals: tramas(hsl('background')) },
+      decal: { show: true, decals: tramas(hsl('background', HATCH_OPACITY)) },
     };
     const title = this.chartTitle() && !compact
       ? { text: this.chartTitle(), left: 'left' }

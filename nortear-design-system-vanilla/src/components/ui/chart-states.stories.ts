@@ -12,6 +12,7 @@ import {
   designTexts,
   tramasAplicadas,
 } from '@shared/testing/chart-probe';
+import { HATCH_OPACITY } from '@shared/primitives/chart-hatch';
 import { createChart } from './chart';
 import { chartSource, chartSourceWith } from './chart.source';
 
@@ -271,7 +272,7 @@ export const MultiSeries: Story = {
       // sinal que substitui a cor (WCAG 1.4.1) ficava declarado e não entregue.
       // Na cor do fundo a mesma hachura mede de 6.83 a 11.02, e é por isso que
       // a asserção é de IGUALDADE com `--background`, e não "existe alguma cor".
-      const background = tokenColor('background', root);
+      const background = tokenColor('background', root, HATCH_OPACITY);
       for (const id of tramasAplicadas(root)) {
         await expect(decalColor(root, id)).toBe(background);
       }

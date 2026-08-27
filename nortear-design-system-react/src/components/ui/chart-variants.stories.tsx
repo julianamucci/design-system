@@ -22,6 +22,7 @@ import {
   settleTheme,
   tokenColor,
 } from '@shared/testing/chart-probe';
+import { HATCH_OPACITY } from '@shared/primitives/chart-hatch';
 import {
   designPronto,
   drawingOf,
@@ -436,7 +437,7 @@ export const Funnel: Story = {
       // prazo nunca chega, e o portão pendura em vez de reprovar.
       const hatches = hatchColors(root);
       await expect(hatches.length).toBeGreaterThan(0);
-      await expect([...new Set(hatches)]).toEqual([tokenColor('background', root)]);
+      await expect([...new Set(hatches)]).toEqual([tokenColor('background', root, HATCH_OPACITY)]);
     });
 
     await step('Cada faixa é contornada em --foreground', async () => {
