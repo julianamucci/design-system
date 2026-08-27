@@ -1,7 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, fn } from 'storybook/test';
-import { EditorComponent, type EditorHostElement, type EditorPreset } from './editor';
+import {
+  EditorComponent,
+  type EditorHostElement,
+  type EditorLabels,
+  type EditorPreset,
+} from './editor';
 import {
   EDITOR_CONTENT,
   EDITOR_LABELS,
@@ -11,6 +16,7 @@ import {
   rowIsPainted,
   selectFormula,
 } from './editor.fixtures';
+import { editorSource } from './editor.source';
 import { NdsEditorDocs } from '@/components/docs/EditorDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -18,39 +24,15 @@ type EditorArgs = {
   content: string;
   editable: boolean;
   preset: EditorPreset;
+  labels: EditorLabels;
   changed?: (html: string) => void;
+  // As duas costuras de imagem entram no tipo para que a API Reference as liste:
+  // `argTypes` só aceita chave que exista nos args, e sem elas a tabela ficava
+  // com quatro linhas de sete. O Playground não as liga — quem as demonstra são
+  // as stories de Compositions.
+  resolveImage?: (file: File) => Promise<string | null>;
+  describeImage?: (file: File | null, src: string) => Promise<string | null>;
 };
-
-/**
- * O painel Code imprime o `template` da story como está escrito — com os
- * bindings ligados aos args. Isso é andaime, não o que alguém escreve para
- * usar o componente. O `transform` devolve o uso real, montado dos args atuais.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<EditorArgs> }): string {
-  const { preset = 'advanced', editable = true } = ctx.args ?? {};
-
-  // Só o que difere do default entra: snippet que repete valor padrão ensina
-  // ruído.
-  const attrs = [
-    '[labels]="labels"',
-    '[content]="html"',
-    preset === 'advanced' ? '' : `preset="${preset}"`,
-    editable ? '' : '[editable]="false"',
-    '(changed)="html = $event"',
-  ].filter(Boolean);
-
-  return `import { EditorComponent } from '@/components/ui/editor';
-
-@Component({
-  imports: [EditorComponent],
-  template: \`
-    <nds-editor
-      ${attrs.join('\n      ')}
-    />
-  \`,
-})
-export class Exemplo {}`;
-}
 
 const meta: Meta<EditorArgs> = {
   title: 'UI/Editor',
@@ -60,13 +42,15 @@ const meta: Meta<EditorArgs> = {
     // `padded` e não `centered`: o editor é `width: 100%`, e sob `centered` a
     // caixa encolhe até o texto.
     layout: 'padded',
-    docs: { page: withAutoDocsTab(NdsEditorDocs) },
+    // O `transform` do meta cobre a story do Playground; as outras sete
+    // declaram o seu, no arquivo de story de cada uma.
+    docs: { page: withAutoDocsTab(NdsEditorDocs), source: { transform: editorSource } },
   },
   argTypes: {
     content: {
       control: 'text',
       description: 'Conteúdo inicial em HTML. É sanitizado antes de chegar à biblioteca.',
-      table: { type: { summary: 'string' } },
+      table: { type: { summary: 'string' }, defaultValue: { summary: '—' } },
     },
     editable: {
       control: 'boolean',
@@ -83,18 +67,50 @@ const meta: Meta<EditorArgs> = {
         defaultValue: { summary: '"advanced"' },
       },
     },
+    // `labels` é a única prop OBRIGATÓRIA: todos os botões são só de ícone, e
+    // sem ela a barra não tem nome acessível nenhum. `control: false` porque um
+    // objeto de 50 chaves no painel Controls é ilegível — o que importa é que a
+    // API Reference a liste como obrigatória.
+    labels: {
+      control: false,
+      description:
+        'Nome acessível da barra, da área editável, de cada bloco, de cada botão e dos '
+        + 'campos de entrada. Não há texto visível de onde deduzi-los.',
+      table: { type: { summary: 'EditorLabels' }, defaultValue: { summary: '—' } },
+    },
     // Sem entrada em argTypes o renderer Angular não repassa a função em
     // `props`, e o `(changed)` do template fica ligado a nada — sem erro.
     changed: {
       control: false,
       description: 'Emitido a cada mudança do conteúdo, com o HTML atual.',
-      table: { type: { summary: '(html: string) => void' } },
+      table: { type: { summary: '(html: string) => void' }, defaultValue: { summary: '—' } },
+    },
+    resolveImage: {
+      control: false,
+      description:
+        'Decide de onde vem o endereço da imagem escolhida. Devolver nulo recusa a '
+        + 'inserção, sem erro.',
+      table: {
+        type: { summary: '(file: File) => Promise<string | null>' },
+        defaultValue: { summary: 'arquivo embutido em base64' },
+      },
+    },
+    describeImage: {
+      control: false,
+      description:
+        'Escreve o texto alternativo a partir da imagem. Recebe o arquivo quando existe: '
+        + 'imagem colada de outra página chega só como endereço.',
+      table: {
+        type: { summary: '(file: File | null, src: string) => Promise<string | null>' },
+        defaultValue: { summary: '—' },
+      },
     },
   },
   args: {
     content: EDITOR_CONTENT.playground,
     editable: true,
     preset: 'advanced',
+    labels: EDITOR_LABELS,
     changed: fn(),
   },
 };
@@ -104,7 +120,6 @@ type Story = StoryObj<EditorArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
     covers: [
       'functional.item1',
       'functional.item2',
@@ -118,8 +133,10 @@ export const Playground: Story = {
       'accessibility.item3',
     ],
   },
+  // `labels` já vem dos args — declará-la em `argTypes` é o que a faz aparecer
+  // na API Reference, e reescrevê-la aqui esconderia um arg do que a story usa.
   render: (args) => ({
-    props: { ...args, labels: EDITOR_LABELS },
+    props: { ...args },
     template: `
       <div class="nds-w-full">
         <nds-editor

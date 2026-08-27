@@ -3,6 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect } from 'storybook/test';
 import { EditorComponent, type EditorHostElement } from './editor';
 import { EDITOR_CONTENT, EDITOR_LABELS, waitUntil } from './editor.fixtures';
+import { editorBasicSource, editorAdvancedSource } from './editor.source';
 
 const meta: Meta = {
   title: 'UI/Editor/Variants',
@@ -37,7 +38,10 @@ function toggleValues(root: HTMLElement): string[] {
 }
 
 export const Basic: Story = {
-  parameters: { covers: ['visual.item1'] },
+  parameters: {
+    covers: ['visual.item1'],
+    docs: { source: { transform: editorBasicSource } },
+  },
   render: () => ({
     props: { labels: EDITOR_LABELS, content: EDITOR_CONTENT.basic },
     template: `
@@ -80,7 +84,10 @@ export const Basic: Story = {
 };
 
 export const Advanced: Story = {
-  parameters: { covers: ['visual.item1'] },
+  parameters: {
+    covers: ['visual.item1'],
+    docs: { source: { transform: editorAdvancedSource } },
+  },
   render: () => ({
     props: { labels: EDITOR_LABELS, content: EDITOR_CONTENT.advanced },
     template: `

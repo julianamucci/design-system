@@ -17,7 +17,7 @@ import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
 import { NdsButton } from '@/components/ui/button';
 import { EditorComponent, type EditorLabels, type EditorPreset } from '@/components/ui/editor';
-import { EDITOR_CONTENT, EDITOR_LABELS } from '@/components/ui/editor.fixtures';
+import { EDITOR_CONTENT } from '@/components/ui/editor.fixtures';
 import uiTranslations from '@/i18n/ui.json';
 import editorTranslations from '@shared/content/editor/translations.json';
 
@@ -124,21 +124,99 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 ];
 
 /**
- * Rótulos do par 1 do Do & Don't.
+ * Os nomes acessíveis da barra, vindos do CONTEÚDO COMPARTILHADO.
  *
- * O contraste é só de RÓTULO: os dois editores são o mesmo conjunto básico, e o
- * que muda são os nomes acessíveis do link e da tabela — verbo da ação de um
- * lado, nome da marcação do outro. É o que o texto do par diz.
+ * Todos os botões do editor são só de ícone: o rótulo é o único texto que o
+ * leitor de tela tem, e a demonstração de uma docs page trilíngue não pode
+ * anunciá-lo em pt-BR enquanto a página inteira está em inglês. A fonte é
+ * `labels.*` do `translations.json` — o objeto de `editor.fixtures.ts` continua
+ * servindo às stories, que rodam num idioma só.
+ *
+ * O literal é escrito à mão, chave por chave, de propósito: `EditorLabels` exige
+ * cada grupo, cada ação e cada campo, então uma chave que o conteúdo deixe de
+ * declarar reprova no `ngc`, e não em silêncio na tela.
  */
-function withLabels(link: string, table: string): EditorLabels {
+function labelsFromContent(): EditorLabels {
   return {
-    ...EDITOR_LABELS,
-    actions: { ...EDITOR_LABELS.actions, link, table },
+    toolbar: t('labels.toolbar'),
+    editorField: t('labels.editorField'),
+    groups: {
+      marks: t('labels.groups.marks'),
+      headings: t('labels.groups.headings'),
+      align: t('labels.groups.align'),
+      lists: t('labels.groups.lists'),
+      blocks: t('labels.groups.blocks'),
+      actions: t('labels.groups.actions'),
+      table: t('labels.groups.table'),
+    },
+    actions: {
+      bold: t('labels.actions.bold'),
+      italic: t('labels.actions.italic'),
+      underline: t('labels.actions.underline'),
+      strike: t('labels.actions.strike'),
+      code: t('labels.actions.code'),
+      highlight: t('labels.actions.highlight'),
+      h1: t('labels.actions.h1'),
+      h2: t('labels.actions.h2'),
+      h3: t('labels.actions.h3'),
+      alignLeft: t('labels.actions.alignLeft'),
+      alignCenter: t('labels.actions.alignCenter'),
+      alignRight: t('labels.actions.alignRight'),
+      alignJustify: t('labels.actions.alignJustify'),
+      bulletList: t('labels.actions.bulletList'),
+      orderedList: t('labels.actions.orderedList'),
+      taskList: t('labels.actions.taskList'),
+      blockquote: t('labels.actions.blockquote'),
+      codeBlock: t('labels.actions.codeBlock'),
+      link: t('labels.actions.link'),
+      image: t('labels.actions.image'),
+      table: t('labels.actions.table'),
+      horizontalRule: t('labels.actions.horizontalRule'),
+      undo: t('labels.actions.undo'),
+      redo: t('labels.actions.redo'),
+      formula: t('labels.actions.formula'),
+      imageAlt: t('labels.actions.imageAlt'),
+      imageSmaller: t('labels.actions.imageSmaller'),
+      imageLarger: t('labels.actions.imageLarger'),
+      imageNatural: t('labels.actions.imageNatural'),
+      rowAfter: t('labels.actions.rowAfter'),
+      columnAfter: t('labels.actions.columnAfter'),
+      deleteRow: t('labels.actions.deleteRow'),
+      deleteColumn: t('labels.actions.deleteColumn'),
+      headerRow: t('labels.actions.headerRow'),
+      deleteTable: t('labels.actions.deleteTable'),
+    },
+    fields: {
+      formula: t('labels.fields.formula'),
+      formulaConfirm: t('labels.fields.formulaConfirm'),
+      link: t('labels.fields.link'),
+      linkConfirm: t('labels.fields.linkConfirm'),
+      linkRemove: t('labels.fields.linkRemove'),
+      alt: t('labels.fields.alt'),
+      altConfirm: t('labels.fields.altConfirm'),
+    },
   };
 }
 
-const VERB_LABELS = withLabels('Inserir link', 'Inserir tabela');
-const NOUN_LABELS = withLabels('Link', 'Tabela');
+/**
+ * Os mesmos rótulos, com o SUBSTANTIVO no lugar do verbo — o lado errado do par
+ * 1 do Do & Don't.
+ *
+ * Os dois lados saem do conteúdo: `labels.actions.link` é "Inserir link" e
+ * `labels.nouns.link` é "Link". Escrever o contraste à mão na docs page o
+ * congelaria em pt-BR justamente na seção que existe para ensinar o rótulo.
+ */
+function nounLabelsFromContent(base: EditorLabels): EditorLabels {
+  return {
+    ...base,
+    actions: {
+      ...base.actions,
+      link: t('labels.nouns.link'),
+      image: t('labels.nouns.image'),
+      table: t('labels.nouns.table'),
+    },
+  };
+}
 
 /** Conteúdo curto dos quatro previews do Do & Don't. */
 const DO_DONT_CONTENT = '<p>Ótimo trabalho, obrigado!</p>';
@@ -162,23 +240,23 @@ const DO_DONT_CONTENT = '<p>Ótimo trabalho, obrigado!</p>';
       change detection), não DOM montado à mão.
     -->
     <ng-template #tplDoDont1Do>
-      <nds-editor [labels]="verbLabels" [content]="doDontContent" preset="basic" />
+      <nds-editor [labels]="verbLabels()" [content]="doDontContent" preset="basic" />
     </ng-template>
     <ng-template #tplDoDont1Dont>
-      <nds-editor [labels]="nounLabels" [content]="doDontContent" preset="basic" />
+      <nds-editor [labels]="nounLabels()" [content]="doDontContent" preset="basic" />
     </ng-template>
     <ng-template #tplDoDont2Do>
-      <nds-editor [labels]="labels" [content]="doDontContent" preset="basic" />
+      <nds-editor [labels]="labels()" [content]="doDontContent" preset="basic" />
     </ng-template>
     <ng-template #tplDoDont2Dont>
-      <nds-editor [labels]="labels" [content]="doDontContent" preset="advanced" />
+      <nds-editor [labels]="labels()" [content]="doDontContent" preset="advanced" />
     </ng-template>
 
     <ng-template #tplVarBasic>
-      <nds-editor [labels]="labels" [content]="basicContent" preset="basic" />
+      <nds-editor [labels]="labels()" [content]="basicContent" preset="basic" />
     </ng-template>
     <ng-template #tplVarAdvanced>
-      <nds-editor [labels]="labels" [content]="advancedContent" preset="advanced" />
+      <nds-editor [labels]="labels()" [content]="advancedContent" preset="advanced" />
     </ng-template>
 
     <nds-docs-page-layout
@@ -199,19 +277,32 @@ const DO_DONT_CONTENT = '<p>Ótimo trabalho, obrigado!</p>';
         <!-- 1. Demonstração -->
         <nds-docs-demonstration [title]="t('demonstration.title')">
           <div class="nds-stack nds-w-full" data-spacing="md">
-            <div class="nds-cluster" data-spacing="sm">
+            <!--
+              Papel de grupo COM NOME: os três controles mudam o mesmo editor, e
+              sem o agrupamento eles chegam ao leitor de tela como três botões
+              soltos entre o título da seção e a moldura.
+            -->
+            <div
+              class="nds-cluster"
+              data-spacing="sm"
+              role="group"
+              [attr.aria-label]="t('demonstration.title')"
+            >
               @for (control of demoControls(); track control.id) {
                 <button
                   ndsButton
                   variant="outline"
                   type="button"
                   [attr.aria-pressed]="control.pressed"
+                  data-track="demo"
+                  [attr.data-track-id]="'editor:demonstracao:' + control.id"
+                  [attr.data-track-label]="control.label"
                   (click)="onDemoClick(control.id)"
                 >{{ control.label }}</button>
               }
             </div>
             <nds-editor
-              [labels]="labels"
+              [labels]="labels()"
               [content]="demoContent"
               [preset]="demoPreset()"
               [editable]="!demoReadOnly()"
@@ -334,11 +425,20 @@ export class NdsEditorDocs implements AfterViewInit, OnDestroy {
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
-  // Os rótulos do editor não vêm do conteúdo compartilhado — não há chave
-  // `labels.*` em idioma nenhum. Ver a nota em `editor.fixtures.ts`.
-  protected readonly labels = EDITOR_LABELS;
-  protected readonly verbLabels = VERB_LABELS;
-  protected readonly nounLabels = NOUN_LABELS;
+  // Os rótulos vêm de `labels.*` do conteúdo compartilhado, e por isso são
+  // `computed`: trocar de idioma na toolbar renomeia os botões da demonstração
+  // junto com o texto da página.
+  protected readonly labels = computed(() => {
+    dict();
+    return labelsFromContent();
+  });
+
+  /** O lado CERTO do par 1: o verbo da ação, como o conteúdo o declara. */
+  protected readonly verbLabels = this.labels;
+
+  /** O lado errado: o nome da marcação no lugar do verbo. */
+  protected readonly nounLabels = computed(() => nounLabelsFromContent(this.labels()));
+
   protected readonly doDontContent = DO_DONT_CONTENT;
   protected readonly basicContent = EDITOR_CONTENT.basic;
   protected readonly advancedContent = EDITOR_CONTENT.advanced;
@@ -384,12 +484,21 @@ export class NdsEditorDocs implements AfterViewInit, OnDestroy {
     ];
   });
 
+  /**
+   * O clique só muda o estado — o evento sai dos `data-track*` do próprio botão.
+   *
+   * Chamar `track('docs_demo_click', …)` aqui disparava DOIS eventos: a seção
+   * `nds-docs-demonstration` é um container auto-instrumentado
+   * (`data-track-container`), e o `closest('[data-track]')` do observador subia
+   * até ela quando o botão não se marcava. O segundo evento saía com
+   * `element_id` derivado do TEXTO do botão — rótulo traduzido, que parte um
+   * evento em três no GA4. Marcado o botão, o `closest` para nele e o
+   * `element_id` é a chave estável do id estruturado. É o desenho do Vanilla e
+   * do React.
+   */
   protected onDemoClick(id: string): void {
     if (id === 'readOnly') this.demoReadOnly.update((v) => !v);
     else this.demoPreset.set(id as EditorPreset);
-    // Payload com valor ESTÁVEL, nunca o texto traduzido: o rótulo dividiria um
-    // evento em três no GA4.
-    track('docs_demo_click', { component: SLUG, element_id: id });
   }
 
   // ── Anatomia ─────────────────────────────────────────────────────────────
@@ -400,29 +509,25 @@ export class NdsEditorDocs implements AfterViewInit, OnDestroy {
 
   // ── Quando usar ──────────────────────────────────────────────────────────
   //
-  // O conteúdo do editor traz `usage.guidelines` como parágrafo único e os
-  // cenários como frases soltas — sem as colunas "usar?" e "alternativa" que
-  // todos os outros componentes declaram. O container é de três colunas, então a
-  // resposta e a alternativa saem do que existe: o cenário é um caso de uso do
-  // próprio componente, e não há alternativa por linha a nomear.
+  // As três colunas da tabela de cenários e as guidelines numeradas vêm do
+  // conteúdo compartilhado. Antes a página inventava a resposta e a alternativa
+  // de cada linha — "Sim" fixo e um travessão — porque o conteúdo trazia só a
+  // frase do cenário.
   protected readonly guidelines = computed(() => {
-    dict();
-    return { title: t('usage.title'), items: [t('usage.guidelines'), t('usage.uxWriting')] };
+    const d = dict();
+    return { title: t('usage.guidelines.title'), items: listFromDict(d, 'usage.guidelines') };
   });
 
   protected readonly scenarios = computed(() => {
     const d = dict();
     return {
+      title: t('usage.scenarios.title'),
       cols: {
-        scenario: t('usage.title'),
-        use: t('title'),
-        alternative: t('related.alternatives'),
+        scenario: t('usage.scenarios.cols.scenario'),
+        use: t('usage.scenarios.cols.use'),
+        alternative: t('usage.scenarios.cols.alternative'),
       },
-      items: listFromDict(d, 'usage.scenarios').map((s) => ({
-        s,
-        u: tNav('common.yes'),
-        a: '—',
-      })),
+      items: itemsFromDict(d, 'usage.scenarios', ['s', 'u', 'a'] as const),
     };
   });
 
@@ -482,32 +587,26 @@ export class NdsEditorDocs implements AfterViewInit, OnDestroy {
 
   // ── Estados ──────────────────────────────────────────────────────────────
   //
-  // O conteúdo declara duas colunas (`states.cols`), e o container tem três. A
-  // terceira recebe o rótulo genérico do `ui.json` e a marca de "não se aplica"
-  // — a mesma que as tabelas de propriedades usam para valor ausente.
+  // As três colunas do container têm as três do conteúdo. Antes a página partia
+  // uma frase única no travessão para adivinhar nome e gatilho, e enchia a
+  // terceira coluna com a marca de "não se aplica".
   protected readonly statesCols = computed(() => {
     dict();
     return {
       state: t('states.cols.state'),
-      trigger: t('states.cols.description'),
-      behavior: tNav('common.stateBehavior'),
+      trigger: t('states.cols.trigger'),
+      behavior: t('states.cols.behavior'),
     };
   });
 
   protected readonly stateItems = computed(() => {
     dict();
     return ['editing', 'readOnly', 'imageSelected', 'inTable', 'fieldOpen', 'invalidValue'].map(
-      (key) => {
-        const line = t(`states.${key}`);
-        // "Editando — o padrão. A barra reflete…": o nome do estado vem antes do
-        // travessão, a descrição depois. É a forma que o conteúdo usa nas seis.
-        const [stateName, ...rest] = line.split(' — ');
-        return {
-          label: stateName,
-          trigger: rest.join(' — ') || line,
-          behavior: '—',
-        };
-      },
+      (key) => ({
+        label: t(`states.${key}.label`),
+        trigger: t(`states.${key}.trigger`),
+        behavior: t(`states.${key}.behavior`),
+      }),
     );
   });
 
@@ -545,28 +644,24 @@ export class NdsEditorDocs implements AfterViewInit, OnDestroy {
     dict();
     return {
       token: t('tokens.table.token'),
-      value: tNav('common.cssClass'),
-      description: t('tokens.table.usage'),
+      value: t('tokens.table.value'),
+      description: t('tokens.table.description'),
     };
   });
 
+  // A coluna do meio é a PROPRIEDADE CSS que o token alimenta, e ela vem do
+  // conteúdo. Antes a página escrevia à mão a folha `.nds-*` de cada linha, e
+  // essa lista envelhecia sozinha: o CSS compartilhado muda sem passar por aqui.
   protected readonly tokenItems = computed(() => {
     dict();
-    const rows: { key: string; cssClass: string }[] = [
-      { key: 'border',          cssClass: '.nds-editor'         },
-      { key: 'background',      cssClass: '.nds-editor'         },
-      { key: 'muted',           cssClass: '.nds-editor-toolbar' },
-      { key: 'mutedForeground', cssClass: '.nds-editor-content' },
-      { key: 'foreground',      cssClass: '.nds-editor-content' },
-      { key: 'primary',         cssClass: '.nds-editor-content' },
-      { key: 'accent',          cssClass: '.nds-editor-content' },
-      { key: 'ring',            cssClass: '.nds-editor'         },
-      { key: 'textH1',          cssClass: '.nds-editor-content' },
+    const keys = [
+      'border', 'background', 'muted', 'mutedForeground',
+      'foreground', 'primary', 'accent', 'ring', 'textH1',
     ];
-    return rows.map(({ key, cssClass }) => ({
-      token: t(`tokens.table.${key}.name`),
-      value: cssClass,
-      description: t(`tokens.table.${key}.usage`),
+    return keys.map((key) => ({
+      token: t(`tokens.table.${key}.token`),
+      value: t(`tokens.table.${key}.value`),
+      description: t(`tokens.table.${key}.description`),
     }));
   });
 

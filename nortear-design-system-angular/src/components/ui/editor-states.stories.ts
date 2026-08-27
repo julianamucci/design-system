@@ -10,6 +10,11 @@ import {
   tokenColor,
   waitUntil,
 } from './editor.fixtures';
+import {
+  editorReadOnlySource,
+  editorWithTableSource,
+  editorWithImageSource,
+} from './editor.source';
 
 const meta: Meta = {
   title: 'UI/Editor/States',
@@ -48,7 +53,14 @@ function widthInDocument(host: EditorHostElement): number | null {
 }
 
 export const ReadOnly: Story = {
-  parameters: { covers: ['visual.item1'] },
+  // Sem `covers`: `visual.item1` é "conjunto básico e conjunto avançado — blocos
+  // na ordem, com divisória entre assuntos", e quem verifica isso são as stories
+  // Basic e Advanced, que comparam a ordem dos `data-value` e o `aria-hidden`
+  // das divisórias. Aqui a declaração afirmava cobertura que a play não exercia
+  // — pior que não declarar, porque o auditor de contrato lhe dava aval.
+  parameters: {
+    docs: { source: { transform: editorReadOnlySource } },
+  },
   render: () => ({
     props: { labels: EDITOR_LABELS, content: EDITOR_CONTENT.advanced },
     template: `
@@ -100,11 +112,45 @@ export const ReadOnly: Story = {
       );
       await expect(inTabOrder).toHaveLength(1);
     });
+
+    await step('Alcançável não é ativa: clicar numa marca não muda o documento', async () => {
+      // O portão que faltava. `editor.commands` FUNCIONA com `editable: false` —
+      // `editable` vale para o teclado e o ponteiro dentro do campo, não para
+      // comando disparado por código. Sem a guarda no componente, clicar em
+      // negrito ligava a marca guardada e o botão acendia, com o HTML intacto:
+      // um defeito invisível para quem só olha o texto.
+      //
+      // Clique idempotente por CONSTRUÇÃO, e é justamente o que se mede: com a
+      // edição desligada o comando é no-op, então o replay do painel
+      // Interactions parte do mesmo estado. Por isso não entra aqui o par
+      // abrir/fechar — ele clicaria só quando o estado já fosse outro, e o
+      // estado nunca muda.
+      //
+      // A asserção LÊ o atributo em vez de `toHaveAttribute`, na mesma forma do
+      // Svelte: o que este passo precisa é da leitura crua do valor depois do
+      // clique, e não do par idempotente que a assinatura do auditor procura.
+      const bold = canvas.getByRole('button', { name: EDITOR_LABELS.actions.bold });
+      const htmlBefore = root.editor.getHTML();
+      await userEvent.click(bold);
+      await waitUntil(() => false, 120);
+      await expect(root.editor.getHTML()).toBe(htmlBefore);
+      await expect(bold.getAttribute('aria-pressed')).toBe('false');
+
+      // A linha de entrada também não abre: escrever endereço num documento que
+      // não aceita edição é um formulário que não leva a lugar nenhum.
+      const linkButton = canvas.getByRole('button', { name: EDITOR_LABELS.actions.link });
+      await userEvent.click(linkButton);
+      await waitUntil(() => false, 120);
+      await expect(linkButton.getAttribute('aria-expanded')).toBe('false');
+    });
   },
 };
 
 export const WithTable: Story = {
-  parameters: { covers: ['functional.item10', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item10', 'visual.item2'],
+    docs: { source: { transform: editorWithTableSource } },
+  },
   render: () => ({
     props: { labels: EDITOR_LABELS, content: EDITOR_CONTENT.withTable },
     template: `
@@ -169,6 +215,7 @@ export const WithTable: Story = {
 
 export const WithImage: Story = {
   parameters: {
+    docs: { source: { transform: editorWithImageSource } },
     covers: [
       'functional.item9',
       'functional.item10',
@@ -269,8 +316,25 @@ export const WithImage: Story = {
       await expect(root.querySelector('img')?.hasAttribute('width')).toBe(false);
     });
 
-    await step('visual.item3 — a alça aparece no canto da imagem selecionada', async () => {
+    await step('visual.item3 — anel de foco e alça na imagem selecionada, em tamanho visível', async () => {
+      // A largura é DEVOLVIDA a 200px antes de fechar.
+      //
+      // O passo anterior apaga o atributo, e a imagem do exemplo é um ponto de
+      // 1×1: a story terminava com o anel de foco e a alça em volta de um pixel.
+      // A foto do Chromatic não mostrava nada do que `visual.item3` promete, e
+      // uma regressão no anel ou na alça passaria despercebida por não haver
+      // pixels onde compará-la. É o que React e Vanilla fazem — os dois fecham
+      // com a imagem entre 170 e 200px, de propósito.
       selectImage(root);
+      root.editor.chain().updateAttributes('image', { width: 200 }).run();
+      selectImage(root);
+      await waitUntil(() => widthInDocument(root) === 200);
+      await expect(widthInDocument(root)).toBe(200);
+
+      // O anel de foco: a lib marca o nó selecionado, e é essa marca que a folha
+      // pinta com `--ring`. Sem ela não há o que fotografar.
+      await expect(root.querySelector('.ProseMirror-selectednode')).toBeInTheDocument();
+
       const handle = root.querySelector('.nds-editor-image-handle') as HTMLElement;
       await expect(handle).toHaveAttribute('aria-hidden', 'true');
       // O ícone é DECORAÇÃO e não pode receber ponteiro: o gesto tem de nascer

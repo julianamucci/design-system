@@ -8,11 +8,15 @@ import type { EditorHostElement, EditorLabels } from './editor';
  * constante ou função auxiliar exportada apareceria na barra lateral do
  * Storybook como se fosse um exemplo do componente.
  *
- * Os textos são os mesmos do Vanilla, que é a referência cross-stack. Eles NÃO
- * vêm do `translations.json`: o conteúdo compartilhado descreve os rótulos
- * (`props.table.labels`) mas não os declara — não há chave `labels.actions.*`
- * em idioma nenhum. Enquanto não houver, os nomes acessíveis do editor são os
- * daqui, em pt-BR, nas cinco stacks.
+ * Os textos são os mesmos do Vanilla, que é a referência cross-stack, e ficam
+ * em pt-BR de propósito: a suíte roda num idioma só, e as asserções procuram os
+ * botões PELO NOME ACESSÍVEL. Amarrá-las ao `labels.*` do conteúdo
+ * compartilhado faria uma reescrita de texto reprovar trinta asserções que não
+ * têm nada a ver com o texto.
+ *
+ * A DOCS PAGE não usa este objeto: ela monta os rótulos a partir de
+ * `labels.*` do `translations.json`, porque a demonstração muda de idioma com a
+ * página. Ver `labelsFromContent` em `EditorDocs.ts`.
  */
 export const EDITOR_LABELS: EditorLabels = {
   toolbar: 'Formatação',

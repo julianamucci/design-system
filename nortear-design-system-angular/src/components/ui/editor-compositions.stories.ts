@@ -11,6 +11,10 @@ import {
   selectImage,
   waitForAlt,
 } from './editor.fixtures';
+import {
+  editorCustomImageStorageSource,
+  editorAiImageDescriptionSource,
+} from './editor.source';
 
 const meta: Meta = {
   title: 'UI/Editor/Compositions',
@@ -41,7 +45,10 @@ type Story = StoryObj;
  * o que uma aplicação de verdade precisa.
  */
 export const CustomImageStorage: Story = {
-  parameters: { covers: ['functional.item7'] },
+  parameters: {
+    covers: ['functional.item7'],
+    docs: { source: { transform: editorCustomImageStorageSource } },
+  },
   render: () => ({
     props: {
       labels: EDITOR_LABELS,
@@ -81,6 +88,84 @@ export const CustomImageStorage: Story = {
       await expect(await root.insertImage(pngFile('foto.png', 2048))).toBe(false);
       await expect(root.querySelectorAll('img')).toHaveLength(1);
     });
+
+    await step('functional.item7 — COLAR e ARRASTAR passam pelo MESMO resolvedor', async () => {
+      // Este passo é o que a declaração de `functional.item7` promete: "colar ou
+      // arrastar entra pelo mesmo caminho do botão, com armazenamento e
+      // descrição". Antes a story declarava o item e só chamava `insertImage` —
+      // nenhum `ClipboardEvent`, nenhum `DragEvent`. O auditor de contrato dava
+      // aval a uma cobertura que não existia.
+      //
+      // A metade da DESCRIÇÃO é de `AiImageDescription`; aqui se mede a do
+      // ARMAZENAMENTO: o `src` dos dois gestos tem de sair do resolvedor de quem
+      // consome, e não do embutido em base64 que é o padrão.
+      const pm = root.querySelector('.ProseMirror') as HTMLElement;
+
+      root.editor.commands.setContent('<p>colar</p>');
+      const pasteData = new DataTransfer();
+      pasteData.items.add(pngFile('colada.png', 10));
+      pm.dispatchEvent(
+        new ClipboardEvent('paste', { clipboardData: pasteData, bubbles: true, cancelable: true }),
+      );
+      await waitUntil(
+        () => root.querySelector('img')?.getAttribute('src')
+          === 'https://cdn.exemplo.com/colada.png',
+      );
+      await expect(root.querySelector('img')?.getAttribute('src')).toBe(
+        'https://cdn.exemplo.com/colada.png',
+      );
+
+      root.editor.commands.setContent('<p>arrastar</p>');
+      const dragData = new DataTransfer();
+      dragData.items.add(pngFile('solta.png', 10));
+      // COM coordenadas dentro do editor: o `prosemirror-view` abandona o `drop`
+      // antes de chamar o gancho quando `posAtCoords` não resolve, e um evento
+      // sintético em (0, 0) cai fora da caixa.
+      const box = pm.getBoundingClientRect();
+      pm.dispatchEvent(
+        new DragEvent('drop', {
+          dataTransfer: dragData,
+          bubbles: true,
+          cancelable: true,
+          clientX: box.left + box.width / 2,
+          clientY: box.top + 10,
+        }),
+      );
+      await waitUntil(
+        () => root.querySelector('img')?.getAttribute('src')
+          === 'https://cdn.exemplo.com/solta.png',
+      );
+      await expect(root.querySelector('img')?.getAttribute('src')).toBe(
+        'https://cdn.exemplo.com/solta.png',
+      );
+
+      // E a RECUSA vale para os dois gestos: arquivo acima do limite não entra
+      // por arrastar, do mesmo jeito que não entra pelo botão.
+      root.editor.commands.setContent(EDITOR_CONTENT.customStorage);
+      const bigData = new DataTransfer();
+      bigData.items.add(pngFile('enorme.png', 2048));
+      pm.dispatchEvent(
+        new DragEvent('drop', {
+          dataTransfer: bigData,
+          bubbles: true,
+          cancelable: true,
+          clientX: box.left + box.width / 2,
+          clientY: box.top + 10,
+        }),
+      );
+      await waitUntil(() => false, 200);
+      await expect(root.querySelectorAll('img')).toHaveLength(0);
+    });
+
+    await step('A story fecha no exemplo, com a imagem que o resolvedor aceitou', async () => {
+      // O que a play deixa é o que a pessoa VÊ ao abrir a story, e é o que o
+      // Chromatic fotografa — não o `<p>arrastar</p>` de um passo intermediário.
+      root.editor.commands.setContent(EDITOR_CONTENT.customStorage);
+      await expect(await root.insertImage(pngFile('logo.png', 10))).toBe(true);
+      await expect(root.querySelector('img')?.getAttribute('src')).toBe(
+        'https://cdn.exemplo.com/logo.png',
+      );
+    });
   },
 };
 
@@ -93,7 +178,10 @@ export const CustomImageStorage: Story = {
  * escreveu.
  */
 export const AiImageDescription: Story = {
-  parameters: { covers: ['functional.item7', 'functional.item8'] },
+  parameters: {
+    covers: ['functional.item7', 'functional.item8'],
+    docs: { source: { transform: editorAiImageDescriptionSource } },
+  },
   render: () => ({
     props: {
       labels: EDITOR_LABELS,
@@ -231,15 +319,31 @@ export const AiImageDescription: Story = {
     });
 
     await step('E a pessoa corrige o que a IA escreveu', async () => {
-      root.editor.commands.setContent('<p>correção</p>');
+      // A partida é o CONTEÚDO DO EXEMPLO, e não um `<p>correção</p>` de
+      // rascunho: este é o último passo, então o que ele deixa é o que a pessoa
+      // vê ao abrir a story e o que o Chromatic fotografa. A palavra solta de
+      // teste era sobra do passo anterior, e contradizia a frase da story.
+      root.editor.commands.setContent(EDITOR_CONTENT.aiDescription);
       await expect(await root.insertImage(file)).toBe(true);
       await waitForAlt(root, 'Descrição automática de grafico.png');
 
       // O botão só existe com a imagem selecionada — é o mesmo desenho dos
       // botões de tabela.
+      //
+      // A espera vem ANTES do `getByRole`, e não depois: o bloco de imagem nasce
+      // com `[hidden]`, e elemento escondido está FORA da árvore de
+      // acessibilidade — `getByRole` não o encontra, ele não fica invisível. A
+      // seleção do nó dispara uma transação, a revisão sobe e a detecção de
+      // mudanças repinta o `[hidden]` num tique posterior; procurar o botão no
+      // mesmo tique da seleção reprovava com "Unable to find an accessible
+      // element". A espera é de RELÓGIO, sobre o `display` computado da caixa,
+      // que é o que a story de imagem já faz.
       selectImage(root);
+      const box = root.querySelector(
+        '[data-slot="editor-toolbar-context"][data-node="image"]',
+      ) as HTMLElement;
+      await waitUntil(() => getComputedStyle(box).display !== 'none');
       const openButton = canvas.getByRole('button', { name: EDITOR_LABELS.actions.imageAlt });
-      await waitUntil(() => getComputedStyle(openButton).display !== 'none');
       await openRow(openButton);
 
       const field = canvas.getByRole('textbox', { name: EDITOR_LABELS.fields.alt }) as HTMLInputElement;

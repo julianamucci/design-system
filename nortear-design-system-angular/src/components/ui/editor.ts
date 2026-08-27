@@ -1215,18 +1215,37 @@ export class EditorComponent implements AfterViewInit, OnDestroy {
 
   // ─── Ações da barra ────────────────────────────────────────────────────────
 
+  /**
+   * Com a edição desligada, a barra DEIXA DE AGIR.
+   *
+   * A guarda é aqui, e não na lib: `editor.commands` continua funcionando num
+   * editor em leitura — `editable` vale para o que o teclado e o ponteiro fazem
+   * no campo, não para comando disparado por código. Medido: clicar em negrito
+   * numa demonstração somente-leitura ligava a marca guardada e o botão acendia,
+   * enquanto o HTML nem mudava. O defeito ficava invisível para quem só olha o
+   * texto.
+   *
+   * A barra segue habilitada e alcançável — ver `groupDisabled`. "Não posso
+   * agora" e "não existe" são coisas diferentes, e desabilitar tudo apagaria a
+   * diferença.
+   */
+  private get acts(): boolean {
+    return this.editable();
+  }
+
   /** Chamada pelos alternadores, pelo contexto de grupo. */
   runAction(action: EditorAction): void {
     const editor = this.editor;
-    if (!editor) return;
+    if (!editor || !this.acts) return;
     ACTIONS[action].run?.(editor);
     // A barra desenha o que o EDITOR diz, e o comando pode não se aplicar
-    // (somente leitura, seleção sem bloco). Subir a revisão aqui garante que a
-    // pintura seja recalculada mesmo quando nada mudou no documento.
+    // (seleção sem bloco). Subir a revisão aqui garante que a pintura seja
+    // recalculada mesmo quando nada mudou no documento.
     this.revision.update((n) => n + 1);
   }
 
   protected onButtonClick(action: EditorAction): void {
+    if (!this.acts) return;
     const row = rowOf(action);
     if (row) {
       this.toggleRow(row);
