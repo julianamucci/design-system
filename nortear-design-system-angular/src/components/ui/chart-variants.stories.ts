@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, waitFor } from 'storybook/test';
 import {
-  designEscreve, designTexts, distinctShapes, isPainted, pointerOver, waitForStableCount,
+  designEscreve, designTextsOutsideLegend, designTexts, distinctShapes, isPainted, pointerOver, waitForStableCount,
 } from '@shared/testing/chart-probe';
 import { NdsChart } from './chart';
 import {
@@ -319,6 +319,18 @@ export const Pie: Story = {
       await expect(header).toHaveLength(3);
       const first = [...chart.querySelectorAll('tbody tr')][0];
       await expect(first.textContent).toContain('%');
+    });
+    await step('Cada fatia é nomeada AO LADO dela, não só no rodapé', async () => {
+      // O nome aparece em dois lugares — na legenda e no rótulo da fatia —, e
+      // por isso a leitura é a de FORA da caixa da legenda. Procurar o nome no
+      // desenho inteiro passaria com o rótulo desligado, que foi o defeito:
+      // numa stack a pizza vinha sem rótulo nenhum e a única pista era a
+      // legenda no rodapé, obrigando quem lê a casar cor com nome a cada
+      // olhada.
+      const fora = designTextsOutsideLegend(desenho);
+      for (const ponto of DATA_DISPOSITIVO) {
+        await expect(fora).toContain(ponto.label);
+      }
     });
   },
 };

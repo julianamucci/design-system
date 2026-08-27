@@ -3,11 +3,12 @@
 
 import type { EChartsCoreOption } from 'echarts/core';
 import ChartContainer from './chart-container.svelte';
-import { ARIA, CHART_TABLE_LABELS } from './chart-state.js';
+import { ARIA, CHART_TABLE_LABELS, formatChartValue } from './chart-state.js';
 import {
   nestInnerLabel,
   nestLabelLine,
   nestOuterLabel,
+  valueLabelStyle,
   type NestLabelTokens,
 } from '@shared/primitives/chart-nest-labels';
 import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion.js';
@@ -82,6 +83,17 @@ interface OptionsBase {
   series?: ChartSeries[];
   title?: string;
   showLegend?: boolean;
+  /**
+   * Escrever o valor junto do dado.
+   *
+   * Sem valor declarado, aparece quando há UMA série só: com duas ou mais os
+   * números se sobrepõem, e aí quem entrega o valor exato é a tabela.
+   *
+   * Existe como opção por causa do mini gráfico de tendência — ali o desenho é
+   * adjetivo de um número já escrito ao lado, e repetir o valor dentro de 48px
+   * de altura só suja.
+   */
+  showValues?: boolean;
 }
 
 function buildAxisOption(type: 'bar' | 'line' | 'area', o: OptionsBase): EChartsCoreOption {
@@ -89,6 +101,9 @@ function buildAxisOption(type: 'bar' | 'line' | 'area', o: OptionsBase): ECharts
   const seriesData: ChartSeries[] =
     o.series ?? (o.data ? [{ name: CHART_TABLE_LABELS.value, data: o.data.map((d) => d.value) }] : []);
   const showLegend = o.showLegend ?? seriesData.length > 1;
+  // O valor escrito junto do dado aparece com UMA série só: com duas ou mais
+  // os números se sobrepõem, e aí quem o entrega é a tabela.
+  const showValueLabels = o.showValues ?? seriesData.length === 1;
   return {
     // Sem `textStyle` aqui de propósito.
     //
@@ -111,6 +126,22 @@ function buildAxisOption(type: 'bar' | 'line' | 'area', o: OptionsBase): ECharts
       name: s.name,
       type: type === 'area' ? 'line' : type,
       data: s.data,
+      // O estilo do rótulo viaja no OPTION, e não no tema: medido, um bloco
+      // `bar: { label: … }` registrado no tema sai IGNORADO — o rótulo desenha
+      // idêntico com e sem ele. Sem estas declarações a lib usa cinza `#333`
+      // fixo, halo branco de 2px e corpo de 12px cravado, e no modo escuro o
+      // texto mede 1.06 contra o fundo: o número vira o próprio contorno.
+      //
+      // As cores aqui são de PARTIDA; quem as troca pelas do tema em vigor é o
+      // container, no mesmo ponto em que injeta a trama do decal.
+      label: showValueLabels
+        ? {
+          show: true,
+          position: 'top',
+          formatter: (point: { value: number }) => formatChartValue(point.value),
+          ...valueLabelStyle(NEST_LABEL_FALLBACK),
+        }
+        : { show: false },
       smooth: type !== 'bar',
       ...(type === 'bar'
         ? {}

@@ -809,8 +809,16 @@ export class NdsChart {
         radius: ['40%', '70%'],
         center: ['50%', this.chartTitle() ? '52%' : '45%'],
         avoidLabelOverlap: true,
-        label: { show: false },
-        labelLine: { show: false },
+        // Rótulo e linha-guia LIGADOS, como nas outras quatro. Estavam
+        // desligados aqui e só aqui: a fatia ficava sem nome ao lado dela, e a
+        // única pista era a legenda no rodapé — quem lê tinha de casar cor com
+        // nome a cada olhada.
+        //
+        // Ao contrário do rótulo de VALOR do cartesiano, este não precisa de
+        // estilo declarado: medido, ele já sai em --muted-foreground, sem halo
+        // e no corpo do tema, e mede de 5.15 a 8.69 contra a página nos três
+        // temas e nos dois modos. A lib trata rótulo de pizza e de barra por
+        // caminhos diferentes, e só o segundo cai no cinza fixo dela.
         itemStyle: { borderRadius: 4 },
         data: pontos.map((p) => ({ name: p.label, value: p.value })),
       }],

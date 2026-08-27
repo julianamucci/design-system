@@ -64,7 +64,10 @@ export const WithTooltip: Story = {
     },
   },
   args: {
-    option: buildBarOption({ xAxis: MONTHS, series: SERIE_UNICA }),
+    // Sem rótulo de valor: esta story é sobre a DICA, e a medida dela usa a
+    // ausência do número no desenho como precondição — achá-lo depois é o que
+    // prova que a dica abriu. Com o rótulo ligado, a precondição cai.
+    option: buildBarOption({ xAxis: MONTHS, series: SERIE_UNICA, showValues: false }),
     height: 240,
     class: 'nds-w-full',
     'aria-label': 'Gráfico de barras: acessos mensais no desktop',

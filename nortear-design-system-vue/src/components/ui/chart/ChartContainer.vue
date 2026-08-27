@@ -326,6 +326,13 @@ function buildTheme() {
 }
 
 /**
+ * Conta as trocas de tema. É a dependência que faz o rótulo ser remontado —
+ * sem ela o computed abaixo nunca reavaliaria, porque `props.option` não muda
+ * quando só a classe do documento muda.
+ */
+const themeVersion = ref(0);
+
+/**
  * Tema desta instância, calculado AGORA.
  *
  * De propósito não passa pelo registro global da lib: o registro guarda o
@@ -335,7 +342,27 @@ function buildTheme() {
  * critério de objeto gráfico por acidente de ordem, não por escolha de cor.
  * Tema por instância não tem esse acidente.
  */
-const mountTheme = buildTheme();
+/**
+ * O tema entregue ao wrapper — recalculado a cada troca, e não fotografado na
+ * montagem.
+ *
+ * Era `buildTheme()` uma vez só, e isso abria uma janela silenciosa: o
+ * observador de classe faz `instanciaDoGrafico()?.setTheme(…)`, com
+ * encadeamento opcional, então quando a classe muda ANTES de a lib criar a
+ * instância a atualização é descartada sem aviso — e o desenho nasce depois com
+ * o tema da foto. Medido: a story de contraste desenhava com a paleta ESCURA
+ * enquanto o documento estava no claro, e o portão acusou 1.02 porque media o
+ * traço quase branco contra a página branca.
+ *
+ * Reativo, o caminho deixa de depender do instante: o wrapper observa a prop,
+ * chama `setTheme` por conta e reaplica o option. E some a diferença entre um
+ * gráfico que sofre `setOption` na troca de tema e um que não — que era o que
+ * fazia o defeito aparecer só com rótulo de valor ligado.
+ */
+const mountTheme = computed(() => {
+  themeVersion.value;
+  return buildTheme() as Record<string, unknown>;
+});
 
 // Recolore quando o tema do <html> muda (marca / escuro / densidade / fonte).
 //
@@ -367,13 +394,6 @@ function instanciaDoGrafico(): echarts.ECharts | undefined {
   }
   return undefined;
 }
-
-/**
- * Conta as trocas de tema. É a dependência que faz o rótulo ser remontado —
- * sem ela o computed abaixo nunca reavaliaria, porque `props.option` não muda
- * quando só a classe do documento muda.
- */
-const themeVersion = ref(0);
 
 const optionWithLabels = computed(() => {
   themeVersion.value;

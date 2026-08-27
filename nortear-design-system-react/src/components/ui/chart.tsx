@@ -90,7 +90,8 @@ import {
   nestInnerLabel,
   nestLabelLine,
   nestOuterLabel,
-  withNestLabelTokens,
+  valueLabelStyle,
+  withChartLabelTokens,
   type NestLabelTokens,
 } from '@shared/primitives/chart-nest-labels';
 import { HATCH_OPACITY } from '@shared/primitives/chart-hatch';
@@ -190,7 +191,7 @@ function withHatchPatterns(option: echarts.EChartsCoreOption): echarts.EChartsCo
   //
   // Vem antes do curto-circuito do decal porque a rosca aninhada tem rótulo
   // mesmo quando a trama está desligada.
-  const withLabels = withNestLabelTokens(
+  const withLabels = withChartLabelTokens(
     option as Record<string, unknown>,
     nestLabelTokens(),
   ) as echarts.EChartsCoreOption;
@@ -517,6 +518,17 @@ interface OptionsBase {
   series?: ChartSeries[];
   title?: string;
   showLegend?: boolean;
+  /**
+   * Escrever o valor junto do dado.
+   *
+   * Sem valor declarado, aparece quando há UMA série só: com duas ou mais os
+   * números se sobrepõem, e aí quem entrega o valor exato é a tabela.
+   *
+   * Existe como opção por causa do mini gráfico de tendência — ali o desenho é
+   * adjetivo de um número já escrito ao lado, e repetir o valor dentro de 48px
+   * de altura só suja.
+   */
+  showValues?: boolean;
 }
 
 function buildAxisOption(type: 'bar' | 'line' | 'area', o: OptionsBase): echarts.EChartsCoreOption {
@@ -524,6 +536,9 @@ function buildAxisOption(type: 'bar' | 'line' | 'area', o: OptionsBase): echarts
   const seriesData: ChartSeries[] =
     o.series ?? (o.data ? [{ name: DEFAULT_SERIES_NAME, data: o.data.map((d) => d.value) }] : []);
   const showLegend = o.showLegend ?? seriesData.length > 1;
+  // O valor escrito junto do dado aparece com UMA série só: com duas ou mais
+  // os números se sobrepõem, e aí quem o entrega é a tabela.
+  const showValueLabels = o.showValues ?? seriesData.length === 1;
   return {
     // Sem `textStyle` cravado: o tamanho do título vem do tema, que o mede a
     // partir da fonte raiz. Um `fontSize: 14` aqui venceria a medição e o texto
@@ -540,6 +555,22 @@ function buildAxisOption(type: 'bar' | 'line' | 'area', o: OptionsBase): echarts
       name: s.name,
       type: type === 'area' ? 'line' : type,
       data: s.data,
+      // O estilo do rótulo viaja no OPTION, e não no tema: medido, um bloco
+      // `bar: { label: … }` registrado no tema sai IGNORADO — o rótulo desenha
+      // idêntico com e sem ele. Sem estas declarações a lib usa cinza `#333`
+      // fixo, halo branco de 2px e corpo de 12px cravado, e no modo escuro o
+      // texto mede 1.06 contra o fundo: o número vira o próprio contorno.
+      //
+      // As cores aqui são de PARTIDA; quem as troca pelas do tema em vigor é o
+      // container, no mesmo ponto em que injeta a trama do decal.
+      label: showValueLabels
+        ? {
+          show: true,
+          position: 'top',
+          formatter: (point: { value: number }) => formatChartValue(point.value),
+          ...valueLabelStyle(NEST_LABEL_FALLBACK),
+        }
+        : { show: false },
       smooth: type !== 'bar',
       // Símbolo e traço próprios por posição de série: tirando toda a cor, a
       // forma do ponto e o desenho do traço continuam separando as séries.

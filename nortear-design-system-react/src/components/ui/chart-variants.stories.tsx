@@ -13,6 +13,7 @@ import {
 } from './chart';
 import {
   designEscreve,
+  designTextsOutsideLegend,
   designTexts,
   distinctShapes,
   isPainted,
@@ -181,6 +182,29 @@ export const Bar: Story = {
       await expect(trama).not.toBeNull();
       await expect(isPainted(trama!)).toBe(true);
     });
+    await step('O rótulo de valor sai do TEMA, e sem halo', async () => {
+      // Com uma série só, este tipo escreve o valor em cima da coluna. O que a
+      // lib desenha ali por padrão é cinza `#333` fixo, halo branco de 2px e
+      // corpo de 12px cravado — nenhum dos três conhece o tema.
+      //
+      // Medido contra o fundo da página: no claro o `#333` dá 12.46 e o halo
+      // 1.01, então funcionava POR ACIDENTE; no escuro o texto cai para 1.06 e
+      // o halo sobe para 13.36 — o número vira o próprio contorno, borrado.
+      //
+      // Por isso a asserção é de IGUALDADE com o token, e não de contraste: a
+      // story roda no modo claro, onde a cor errada passaria sem dificuldade e
+      // um portão de contraste ficaria verde com o defeito de pé.
+      const valueLabel = [...root.querySelectorAll<SVGTextElement>('svg text')]
+        .find((t) => t.textContent === '305');
+      await expect(valueLabel).toBeDefined();
+
+      const pintura = getComputedStyle(valueLabel!);
+      await expect(pintura.fill).toBe(tokenColor('foreground', root));
+
+      // A medida é a COR do traço, e não a largura: sem traço, `strokeWidth`
+      // computado devolve 1, que é o valor inicial do SVG e não pinta nada.
+      await expect(['none', 'rgba(0, 0, 0, 0)']).toContain(pintura.stroke);
+    });
   },
 };
 
@@ -306,7 +330,11 @@ export const Pie: Story = {
   render: () => (
     <ChartContainer
       option={buildPieOption({ data: dataDispositivo })}
-      className="nds-max-w-sm"
+      // Sem estreitar: a chamada de cada fatia é escrita POR FORA do anel, e
+      // num contêiner apertado a lib trunca o nome — "Desktop" saía "Des…".
+      // As outras quatro stacks não limitam a largura aqui, e o portão do
+      // rótulo passou a cobrar isso nas cinco.
+      className="nds-w-full"
       height={280}
       aria-label="Distribuição de acessos por dispositivo"
     />
@@ -341,6 +369,18 @@ export const Pie: Story = {
       await expect(rows.map((row) => row[2])).toEqual(
         dataDispositivo.map((p) => `${Math.round((p.value / total) * 1000) / 10}%`),
       );
+    });
+    await step('Cada fatia é nomeada AO LADO dela, não só no rodapé', async () => {
+      // O nome aparece em dois lugares — na legenda e no rótulo da fatia —, e
+      // por isso a leitura é a de FORA da caixa da legenda. Procurar o nome no
+      // desenho inteiro passaria com o rótulo desligado, que foi o defeito:
+      // numa stack a pizza vinha sem rótulo nenhum e a única pista era a
+      // legenda no rodapé, obrigando quem lê a casar cor com nome a cada
+      // olhada.
+      const fora = designTextsOutsideLegend(root);
+      for (const ponto of dataDispositivo) {
+        await expect(fora).toContain(ponto.label);
+      }
     });
   },
 };

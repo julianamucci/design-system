@@ -296,3 +296,30 @@ export function isPainted(shape: Element): boolean {
   const fill = shape.getAttribute('fill') ?? 'none';
   return fill !== 'none' && fill !== 'transparent';
 }
+
+/**
+ * Os textos que o desenho escreve FORA da caixa da legenda.
+ *
+ * Existe porque `designTexts` não distingue os dois, e há asserção que precisa
+ * distinguir: o nome de uma fatia aparece na legenda E no rótulo ao lado dela.
+ * Procurar o nome no desenho inteiro passaria com o rótulo desligado, que foi
+ * exatamente o defeito — numa stack a pizza vinha sem rótulo nenhum e a única
+ * pista era a legenda no rodapé.
+ *
+ * A caixa da legenda é lida do retângulo transparente que a própria lib desenha
+ * como fundo dela — a mesma definição operacional que os coletores de forma
+ * usam, e não um seletor paralelo que poderia discordar deles.
+ */
+export function designTextsOutsideLegend(root: HTMLElement): string[] {
+  const fundo = root.querySelector<SVGGraphicsElement>('svg path[fill-opacity="0"]');
+  const caixa = fundo ? fundo.getBoundingClientRect() : null;
+  return [...root.querySelectorAll<SVGTextElement>('svg text')]
+    .filter((texto) => {
+      if (!caixa) return true;
+      const r = texto.getBoundingClientRect();
+      const dentro = r.left >= caixa.left - 1 && r.right <= caixa.right + 1
+        && r.top >= caixa.top - 1 && r.bottom <= caixa.bottom + 1;
+      return !dentro;
+    })
+    .map((texto) => (texto.textContent ?? '').trim());
+}

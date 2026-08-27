@@ -42,7 +42,10 @@ export const WithTooltip: Story = {
   },
   render: () => (
     <ChartContainer
-      option={buildBarOption({ xAxis: meses, series: serieUnica })}
+      // Sem rótulo de valor: esta story é sobre a DICA, e a medida dela usa a
+      // ausência do número no desenho como precondição — achá-lo depois é o
+      // que prova que a dica abriu. Com o rótulo ligado, a precondição cai.
+      option={buildBarOption({ xAxis: meses, series: serieUnica, showValues: false })}
       className="nds-max-w-lg"
       height={260}
       aria-label="Acessos mensais no desktop"

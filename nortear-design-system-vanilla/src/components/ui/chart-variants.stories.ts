@@ -3,6 +3,7 @@ import { expect, waitFor } from 'storybook/test';
 import { getInstanceByDom } from 'echarts/core';
 import {
   designEscreve,
+  designTextsOutsideLegend,
   designPintado,
   designTexts,
   distinctShapes,
@@ -562,6 +563,18 @@ export const Pie: Story = {
       // fatias, sem repetir e sem sobrar a cor de nenhuma decoração.
       const colors = new Set(filledShapes(root).map((f) => getComputedStyle(f).fill));
       await expect(colors.size).toBe(pieData.length);
+    });
+    await step('Cada fatia é nomeada AO LADO dela, não só no rodapé', async () => {
+      // O nome aparece em dois lugares — na legenda e no rótulo da fatia —, e
+      // por isso a leitura é a de FORA da caixa da legenda. Procurar o nome no
+      // desenho inteiro passaria com o rótulo desligado, que foi o defeito:
+      // numa stack a pizza vinha sem rótulo nenhum e a única pista era a
+      // legenda no rodapé, obrigando quem lê a casar cor com nome a cada
+      // olhada.
+      const fora = designTextsOutsideLegend(root);
+      for (const ponto of pieData) {
+        await expect(fora).toContain(ponto.label);
+      }
     });
   },
 };
