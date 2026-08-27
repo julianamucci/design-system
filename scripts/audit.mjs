@@ -2508,12 +2508,35 @@ function auditTextSurfaces(slug) {
   let json;
   try { json = JSON.parse(readFile(tPath) || '{}'); } catch { return violations; }
 
+  /**
+   * `<…>` que é TAG, e não genérico de TypeScript.
+   *
+   * `Promise<string | null>` casava com `<[a-z][^>]*>` e virava achado: o `s`
+   * de `string` faz as vezes de nome de tag. A correção que a regra sugere
+   * (`toPlainText()`) APAGARIA `<string | null>`, e a tabela de props passaria
+   * a mentir o tipo — pior que o falso positivo.
+   *
+   * O que separa os dois é o conteúdo: tipo carrega `|`, `=>` ou vírgula, e
+   * nome de tag é uma palavra seguida de atributo ou do fecho. `code-block` e
+   * `skeleton` também declaram genérico em `props.table.*.type`.
+   */
+  const temTag = (texto) => {
+    if (/&lt;|&gt;/.test(texto)) return true;
+    for (const m of texto.matchAll(/<([a-z][^>]*)>/g)) {
+      const dentro = m[1];
+      if (/[|,]|=>/.test(dentro)) continue;          // genérico, não tag
+      if (!/^[a-z][a-z0-9-]*(\s|\/|$)/.test(dentro)) continue;
+      return true;
+    }
+    return false;
+  };
+
   // chave -> tem markup em algum idioma
   const comMarkup = new Set();
   for (const locale of Object.keys(json)) {
     (function varre(node, caminho) {
       if (typeof node === 'string') {
-        if (/<[a-z][^>]*>|&lt;|&gt;/.test(node)) comMarkup.add(caminho.replace(/^\./, ''));
+        if (temTag(node)) comMarkup.add(caminho.replace(/^\./, ''));
         return;
       }
       if (node && typeof node === 'object') {

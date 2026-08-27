@@ -323,8 +323,11 @@
 }
 
 /* O `<label>` não encolhe nem cresce: ele guarda a caixa, e o texto ao lado é
- * que ocupa o resto. Sem `flex-shrink: 0`, item longo espreme a caixa. */
+ * que ocupa o resto. Sem `flex-shrink: 0`, item longo espreme a caixa.
+ *
+ * `position: relative` sustenta a área de toque expandida logo abaixo. */
 .nds-editor-content .ProseMirror ul[data-type="taskList"] li > label {
+  position: relative;
   flex-shrink: 0;
   /* Alinha a caixa com a primeira LINHA do texto, não com o topo da caixa de
    * texto: `line-height` do corpo menos a altura da caixa, dividido por dois. */
@@ -334,6 +337,23 @@
 .nds-editor-content .ProseMirror ul[data-type="taskList"] li > div {
   flex: 1 1 auto;
   min-width: 0;
+}
+
+/* Área de toque expandida da caixa, sem mexer no tamanho visual.
+ *
+ * A caixa que o navegador desenha mede 13×13, e o mínimo de WCAG 2.5.8 é 24×24
+ * — o axe reprova, e a regra está LIGADA no `preview.ts` das cinco stacks
+ * (`target-size`), porque o axe não roda critérios 2.2 por padrão.
+ *
+ * A saída é a mesma que `.nds-checkbox` já pratica: um `::after` invisível que
+ * cresce a área clicável sem afetar layout nem desenho. Inflar a caixa para
+ * 24px seria mais simples e desalinharia a lista do resto do texto — e o
+ * tamanho visual da caixa não é o que o critério mede. */
+.nds-editor-content .ProseMirror ul[data-type="taskList"] li > label::after {
+  content: "";
+  position: absolute;
+  /* A caixa nativa tem cerca de 13px; -6px de cada lado leva o alvo a ~25px. */
+  inset: -6px;
 }
 
 /* Item marcado fica esmaecido — o mesmo sinal de "concluído" que o resto do

@@ -5,8 +5,8 @@
     "type": "Componente",
     "description": "Campo de texto rico com barra de formatação. Escreve estrutura — títulos, listas, tabelas, imagens e fórmulas — dentro de um campo de formulário, e devolve HTML a cada mudança.",
     "seo": {
-      "title": "Editor de texto rico",
-      "description": "Campo de texto rico com barra de formatação, tabelas, imagens com texto alternativo e fórmulas matemáticas. Acessível por teclado, com armazenamento de imagem plugável.",
+      "title": "Editor — Formulário",
+      "description": "Documentação do Editor: campo de texto rico, barra em blocos, tabelas, imagens com texto alternativo, fórmulas e acesso por teclado.",
       "aiSummary": "O Editor é o campo de texto rico do design system. A barra é organizada em blocos por assunto, com navegação por seta e uma única parada de tabulação. Aceita conteúdo inicial em HTML, emite o HTML atual a cada mudança e deixa duas decisões de produto abertas: de onde vem a URL da imagem e quem escreve o texto alternativo.",
       "aiEntities": "editor de texto rico, campo de formulário, barra de formatação, texto alternativo, fórmula matemática, tabela, acessibilidade por teclado"
     },
@@ -35,14 +35,52 @@
     },
     "usage": {
       "title": "Quando usar",
-      "guidelines": "Use quando o texto precisa de estrutura que um campo simples não guarda: ênfase, títulos, listas, links, imagens ou tabelas. Para uma linha de texto sem formatação, o campo de texto comum é mais barato e mais previsível.",
-      "scenarios": {
-        "item1": "Descrição de produto, artigo e base de conhecimento, onde título e lista fazem parte do conteúdo.",
-        "item2": "Comentário e resposta longa, com o conjunto básico: ênfase, lista e link bastam.",
-        "item3": "Conteúdo técnico com fórmula matemática ou trecho de código dentro do texto corrido.",
-        "item4": "Formulário que grava HTML e o exibe depois em outro lugar do produto."
+      "guidelines": {
+        "title": "Guidelines obrigatórias",
+        "item1": "Use quando o texto precisa de estrutura que um campo simples não guarda: ênfase, títulos, listas, links, imagens ou tabelas. Para uma linha de texto sem formatação, o campo de texto comum é mais barato e mais previsível.",
+        "item2": "O rótulo de cada botão é o nome acessível: sem texto visível, é ele que o leitor de tela anuncia. Prefira o verbo da ação ao nome da marcação.",
+        "item3": "Trate o HTML devolvido como dado de terceiro ao gravá-lo e ao exibi-lo fora do editor.",
+        "item4": "Ofereça um caminho para revisar o texto alternativo das imagens antes de publicar.",
+        "item5": "Decida o armazenamento da imagem antes de liberar o editor em produção."
       },
-      "uxWriting": "O rótulo de cada botão é o nome acessível: sem texto visível, é ele que o leitor de tela anuncia. Prefira o verbo da ação ao nome da marcação — \"Inserir imagem\" diz o que acontece, \"Imagem\" não.",
+      "scenarios": {
+        "title": "Tabela de cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Descrição de produto, artigo ou base de conhecimento",
+          "u": "Sim",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Comentário e resposta longa",
+          "u": "Sim, no conjunto básico",
+          "a": "—"
+        },
+        "item3": {
+          "s": "Conteúdo técnico com fórmula ou trecho de código",
+          "u": "Sim",
+          "a": "—"
+        },
+        "item4": {
+          "s": "Uma linha de texto sem formatação",
+          "u": "Não",
+          "a": "Input"
+        },
+        "item5": {
+          "s": "Texto de várias linhas sem estrutura",
+          "u": "Não",
+          "a": "Textarea"
+        },
+        "item6": {
+          "s": "Exibir trecho de código já pronto",
+          "u": "Não",
+          "a": "CodeBlock"
+        }
+      },
       "do": {
         "item1": "Escolha o conjunto pelo tipo de conteúdo, não pelo espaço disponível na tela.",
         "item2": "Trate o HTML devolvido como dado de terceiro ao gravá-lo e ao exibi-lo fora do editor.",
@@ -59,14 +97,12 @@
     "doDont": {
       "title": "Boas práticas",
       "pair1": {
-        "do": "Rótulo de botão com o verbo da ação: \"Inserir tabela\", \"Tirar o link\".",
-        "dont": "Rótulo com o nome da marcação: \"Tabela\", \"Link\".",
-        "reason": "Todos os botões são só de ícone. O rótulo é o que se ouve, e ouvir um substantivo não diz o que o clique faz."
+        "do": "Rótulo de botão com o verbo da ação: \"Inserir link\". Todos os botões são só de ícone, e o rótulo é o que o leitor de tela anuncia.",
+        "dont": "Rótulo com o nome da marcação: \"Link\". Ouvir um substantivo não diz o que o clique faz."
       },
       "pair2": {
-        "do": "Conjunto básico em comentário e campo de formulário.",
-        "dont": "Conjunto avançado em toda tela, por padrão.",
-        "reason": "Trinta botões num campo de comentário são ruído: a maioria nunca é usada, e a barra ocupa mais espaço que o texto."
+        "do": "Conjunto básico em comentário e campo de formulário, onde ênfase, lista e link bastam.",
+        "dont": "Conjunto avançado em toda tela por padrão: trinta botões num campo de comentário são ruído, e a barra ocupa mais espaço que o texto."
       }
     },
     "import": {
@@ -75,7 +111,7 @@
       "basicCode": {
         "react": "import { Editor } from \"@/components/ui/editor\";",
         "vue": "import { Editor } from \"@/components/ui/editor\";",
-        "svelte": "import { Editor } from \"$lib/components/ui/editor\";",
+        "svelte": "import { Editor } from \"@/components/ui/editor\";",
         "vanilla": "import { createEditor } from \"@/components/ui/editor\";",
         "angular": "import { EditorComponent } from \"@/components/ui/editor\";"
       },
@@ -105,13 +141,41 @@
     },
     "states": {
       "title": "Estados",
-      "cols": { "state": "Estado", "description": "Descrição" },
-      "editing": "Editando — o padrão. A barra reflete o que está sob o cursor a cada movimento, sem clique.",
-      "readOnly": "Somente leitura — o conteúdo continua visível e navegável, e a edição fica desligada.",
-      "imageSelected": "Imagem selecionada — o bloco de imagem revela texto alternativo e tamanho, e a alça de redimensionar aparece.",
-      "inTable": "Cursor na tabela — o bloco de tabela revela linha, coluna, cabeçalho e exclusão.",
-      "fieldOpen": "Linha de entrada aberta — fórmula, link ou descrição, com o valor atual já preenchido e selecionado.",
-      "invalidValue": "Valor recusado — endereço fora dos esquemas aceitos marca o campo como inválido e a linha não fecha."
+      "cols": {
+        "state": "Estado",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "editing": {
+        "label": "Editando",
+        "trigger": "Padrão",
+        "behavior": "A barra reflete o que está sob o cursor a cada movimento, sem clique."
+      },
+      "readOnly": {
+        "label": "Somente leitura",
+        "trigger": "Edição desligada",
+        "behavior": "O conteúdo continua visível e navegável; a barra não aplica comando."
+      },
+      "imageSelected": {
+        "label": "Imagem selecionada",
+        "trigger": "Clique na imagem",
+        "behavior": "O bloco de imagem revela texto alternativo e tamanho, e a alça aparece."
+      },
+      "inTable": {
+        "label": "Cursor na tabela",
+        "trigger": "Cursor dentro de uma célula",
+        "behavior": "O bloco de tabela revela linha, coluna, cabeçalho e exclusão."
+      },
+      "fieldOpen": {
+        "label": "Linha de entrada aberta",
+        "trigger": "Botão de fórmula, link ou texto alternativo",
+        "behavior": "O campo abre com o valor atual, já selecionado."
+      },
+      "invalidValue": {
+        "label": "Valor recusado",
+        "trigger": "Endereço fora dos esquemas aceitos",
+        "behavior": "O campo é marcado como inválido e a linha não fecha."
+      }
     },
     "props": {
       "title": "Propriedades",
@@ -175,25 +239,64 @@
       "extensibilityTitle": "Inserção por código",
       "extensibility": "A raiz devolvida aceita um arquivo de imagem pelo mesmo caminho do botão, com o armazenamento e a descrição configurados. É o que colar e arrastar usam por dentro.",
       "extensibilityCode": {
-        "vanilla": "const entrou = await editor.insertImage(arquivo);"
+        "react": "const inserted = await editorRef.current?.insertImage(file);",
+        "vue": "const inserted = await editorRef.value?.insertImage(file);",
+        "svelte": "const inserted = await editor.insertImage(file);",
+        "vanilla": "const inserted = await editor.insertImage(file);",
+        "angular": "const inserted = await this.editor().insertImage(file);"
       }
     },
     "tokens": {
       "title": "Tokens",
-      "surfaceTitle": "Moldura e barra",
-      "contentTitle": "Conteúdo",
       "table": {
         "token": "Token",
-        "usage": "Uso",
-        "border": { "name": "--border", "usage": "Borda da moldura, divisórias da tabela e linha divisória" },
-        "background": { "name": "--background", "usage": "Fundo da moldura" },
-        "muted": { "name": "--muted", "usage": "Fundo da barra, do bloco de código e do cabeçalho da tabela" },
-        "mutedForeground": { "name": "--muted-foreground", "usage": "Texto de item de tarefa concluído" },
-        "foreground": { "name": "--foreground", "usage": "Texto do conteúdo" },
-        "primary": { "name": "--primary", "usage": "Barra lateral da citação, cor do link e alça de redimensionar" },
-        "accent": { "name": "--accent", "usage": "Destaque de texto e célula selecionada" },
-        "ring": { "name": "--ring", "usage": "Anel de foco da moldura e da imagem selecionada" },
-        "textH1": { "name": "--text-h1 a --text-h4", "usage": "Escala dos títulos dentro do conteúdo" }
+        "value": "Propriedade CSS",
+        "description": "Uso",
+        "border": {
+          "token": "--border",
+          "value": "border-color",
+          "description": "Borda da moldura, divisórias da tabela e linha divisória"
+        },
+        "background": {
+          "token": "--background",
+          "value": "background-color",
+          "description": "Fundo da moldura"
+        },
+        "muted": {
+          "token": "--muted",
+          "value": "background-color",
+          "description": "Fundo da barra, do bloco de código e do cabeçalho da tabela"
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": "color",
+          "description": "Texto de item de tarefa concluído"
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": "color",
+          "description": "Texto do conteúdo"
+        },
+        "primary": {
+          "token": "--primary",
+          "value": "border-inline-start, color",
+          "description": "Barra lateral da citação, cor do link e alça de redimensionar"
+        },
+        "accent": {
+          "token": "--accent",
+          "value": "background-color",
+          "description": "Destaque de texto e célula selecionada"
+        },
+        "ring": {
+          "token": "--ring",
+          "value": "outline-color",
+          "description": "Anel de foco da moldura e da imagem selecionada"
+        },
+        "textH1": {
+          "token": "--text-h1 … --text-h4",
+          "value": "font-size",
+          "description": "Escala dos títulos dentro do conteúdo"
+        }
       },
       "customizationTitle": "Personalização",
       "customizationCode": {
@@ -214,11 +317,26 @@
       "keyboard": {
         "key": "Tecla",
         "action": "Ação",
-        "tab": { "key": "Tab", "action": "Entra na barra e sai dela — a barra inteira é uma parada" },
-        "arrows": { "key": "Setas", "action": "Anda entre os botões da barra, atravessando os blocos" },
-        "homeEnd": { "key": "Home / End", "action": "Primeiro e último botão da barra" },
-        "enter": { "key": "Enter", "action": "Confirma o valor da linha de entrada aberta" },
-        "escape": { "key": "Esc", "action": "Fecha a linha de entrada e devolve o foco ao botão que a abriu" }
+        "tab": {
+          "key": "Tab",
+          "action": "Entra na barra e sai dela — a barra inteira é uma parada"
+        },
+        "arrows": {
+          "key": "Setas",
+          "action": "Anda entre os botões da barra, atravessando os blocos"
+        },
+        "homeEnd": {
+          "key": "Home / End",
+          "action": "Primeiro e último botão da barra"
+        },
+        "enter": {
+          "key": "Enter",
+          "action": "Confirma o valor da linha de entrada aberta"
+        },
+        "escape": {
+          "key": "Esc",
+          "action": "Fecha a linha de entrada e devolve o foco ao botão que a abriu"
+        }
       }
     },
     "related": {
@@ -262,33 +380,109 @@
       "functional": {
         "title": "Comportamento funcional",
         "description": "O que deve acontecer em cada caminho do editor.",
-        "item1": { "action": "Mover o cursor para dentro de um trecho com marca", "result": "O botão da marca acende sem clique nenhum", "priority": "high" },
-        "item2": { "action": "Andar pela barra com as setas", "result": "O foco atravessa os blocos e volta ao início no fim", "priority": "high" },
-        "item3": { "action": "Abrir a linha de link com o cursor num link", "result": "O campo abre com o endereço atual, selecionado", "priority": "high" },
-        "item4": { "action": "Confirmar a linha de link com o campo vazio", "result": "O link sai do trecho", "priority": "medium" },
-        "item5": { "action": "Confirmar um endereço fora dos esquemas aceitos", "result": "O campo é marcado como inválido e a linha não fecha", "priority": "high" },
-        "item6": { "action": "Confirmar uma fórmula com o cursor sobre outra", "result": "A fórmula existente é atualizada, e não duplicada", "priority": "medium" },
-        "item7": { "action": "Colar ou arrastar um arquivo de imagem", "result": "A imagem entra pelo mesmo caminho do botão, com armazenamento e descrição", "priority": "high" },
-        "item8": { "action": "Inserir imagem com serviço de descrição ligado", "result": "A imagem entra na hora e a descrição substitui o valor provisório quando chega", "priority": "high" },
-        "item9": { "action": "Redimensionar a imagem pelos botões", "result": "A largura muda em passos e respeita o piso mínimo", "priority": "medium" },
-        "item10": { "action": "Selecionar uma imagem ou pôr o cursor numa tabela", "result": "Os botões daquele assunto aparecem no bloco correspondente", "priority": "medium" },
-        "item11": { "action": "Editar o conteúdo", "result": "O callback de mudança recebe o HTML atual", "priority": "high" }
+        "item1": {
+          "action": "Mover o cursor para dentro de um trecho com marca",
+          "result": "O botão da marca acende sem clique nenhum",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Andar pela barra com as setas",
+          "result": "O foco atravessa os blocos e volta ao início no fim",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Abrir a linha de link com o cursor num link",
+          "result": "O campo abre com o endereço atual, selecionado",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Confirmar a linha de link com o campo vazio",
+          "result": "O link sai do trecho",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Confirmar um endereço fora dos esquemas aceitos",
+          "result": "O campo é marcado como inválido e a linha não fecha",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Confirmar uma fórmula com o cursor sobre outra",
+          "result": "A fórmula existente é atualizada, e não duplicada",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Colar ou arrastar um arquivo de imagem",
+          "result": "A imagem entra pelo mesmo caminho do botão, com armazenamento e descrição",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Inserir imagem com serviço de descrição ligado",
+          "result": "A imagem entra na hora e a descrição substitui o valor provisório quando chega",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Redimensionar a imagem pelos botões",
+          "result": "A largura muda em passos e respeita o piso mínimo",
+          "priority": "medium"
+        },
+        "item10": {
+          "action": "Selecionar uma imagem ou pôr o cursor numa tabela",
+          "result": "Os botões daquele assunto aparecem no bloco correspondente",
+          "priority": "medium"
+        },
+        "item11": {
+          "action": "Editar o conteúdo",
+          "result": "O callback de mudança recebe o HTML atual",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade",
         "description": "O que a verificação automática e a navegação por teclado precisam encontrar.",
-        "item1": { "action": "Inspecionar a barra", "result": "Papel de barra de ferramentas com nome, e um nome próprio em cada bloco", "priority": "high" },
-        "item2": { "action": "Inspecionar a área editável", "result": "Nome acessível presente no campo de texto", "priority": "high" },
-        "item3": { "action": "Percorrer com Tab", "result": "A barra inteira é uma parada só", "priority": "high" },
-        "item4": { "action": "Redimensionar imagem sem ponteiro", "result": "Os botões do bloco de imagem fazem o mesmo que a alça", "priority": "high" },
-        "item5": { "action": "Rodar a verificação automática no conteúdo", "result": "Nenhuma violação, incluindo imagem com texto alternativo", "priority": "high" }
+        "item1": {
+          "action": "Inspecionar a barra",
+          "result": "Papel de barra de ferramentas com nome, e um nome próprio em cada bloco",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Inspecionar a área editável",
+          "result": "Nome acessível presente no campo de texto",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Percorrer com Tab",
+          "result": "A barra inteira é uma parada só",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Redimensionar imagem sem ponteiro",
+          "result": "Os botões do bloco de imagem fazem o mesmo que a alça",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Rodar a verificação automática no conteúdo",
+          "result": "Nenhuma violação, incluindo imagem com texto alternativo",
+          "priority": "high"
+        }
       },
       "visual": {
         "title": "Visual",
         "description": "O que a comparação de imagem precisa cobrir.",
-        "item1": { "action": "Conjunto básico e conjunto avançado", "result": "Blocos na ordem, com divisória entre assuntos", "priority": "medium" },
-        "item2": { "action": "Conteúdo com citação, bloco de código, tabela e lista de tarefas", "result": "Cada um com o desenho do tema ativo, nos dois modos", "priority": "high" },
-        "item3": { "action": "Imagem selecionada", "result": "Anel de foco na imagem e alça visível no canto", "priority": "medium" }
+        "item1": {
+          "action": "Conjunto básico e conjunto avançado",
+          "result": "Blocos na ordem, com divisória entre assuntos",
+          "priority": "medium"
+        },
+        "item2": {
+          "action": "Conteúdo com citação, bloco de código, tabela e lista de tarefas",
+          "result": "Cada um com o desenho do tema ativo, nos dois modos",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Imagem selecionada",
+          "result": "Anel de foco na imagem e alça visível no canto",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -308,17 +502,80 @@
       "notes": "Notas",
       "analytics": "Analytics",
       "testes": "Testes"
+    },
+    "labels": {
+      "toolbar": "Formatação",
+      "editorField": "Corpo do texto",
+      "groups": {
+        "marks": "Marcas de texto",
+        "headings": "Títulos",
+        "align": "Alinhamento",
+        "lists": "Listas",
+        "blocks": "Blocos",
+        "actions": "Ações",
+        "table": "Tabela"
+      },
+      "actions": {
+        "bold": "Negrito",
+        "italic": "Itálico",
+        "underline": "Sublinhado",
+        "strike": "Tachado",
+        "code": "Código",
+        "highlight": "Destaque",
+        "h1": "Título 1",
+        "h2": "Título 2",
+        "h3": "Título 3",
+        "alignLeft": "Alinhar à esquerda",
+        "alignCenter": "Centralizar",
+        "alignRight": "Alinhar à direita",
+        "alignJustify": "Justificar",
+        "bulletList": "Lista com marcadores",
+        "orderedList": "Lista numerada",
+        "taskList": "Lista de tarefas",
+        "blockquote": "Citação",
+        "codeBlock": "Bloco de código",
+        "link": "Inserir link",
+        "image": "Inserir imagem",
+        "table": "Inserir tabela",
+        "horizontalRule": "Linha divisória",
+        "undo": "Desfazer",
+        "redo": "Refazer",
+        "formula": "Inserir fórmula",
+        "imageAlt": "Texto alternativo",
+        "imageSmaller": "Diminuir a imagem",
+        "imageLarger": "Aumentar a imagem",
+        "imageNatural": "Tamanho natural",
+        "rowAfter": "Inserir linha abaixo",
+        "columnAfter": "Inserir coluna à direita",
+        "deleteRow": "Excluir linha",
+        "deleteColumn": "Excluir coluna",
+        "headerRow": "Alternar linha de cabeçalho",
+        "deleteTable": "Excluir tabela"
+      },
+      "fields": {
+        "formula": "Fórmula em LaTeX",
+        "formulaConfirm": "Inserir",
+        "link": "Endereço do link",
+        "linkConfirm": "Aplicar",
+        "linkRemove": "Tirar o link",
+        "alt": "Descrição da imagem",
+        "altConfirm": "Salvar descrição"
+      },
+      "nouns": {
+        "link": "Link",
+        "image": "Imagem",
+        "table": "Tabela"
+      }
     }
   },
-
   "en": {
     "title": "Editor",
     "category": "Form",
     "type": "Component",
     "description": "Rich text field with a formatting toolbar. Writes structure — headings, lists, tables, images and formulas — inside a form field, and returns HTML on every change.",
     "seo": {
-      "title": "Rich text editor",
-      "description": "Rich text field with a formatting toolbar, tables, images with alternative text and mathematical formulas. Keyboard accessible, with pluggable image storage.",
+      "title": "Editor — Form",
+      "description": "Documentation for Editor: rich text field, block toolbar, tables, images with alternative text, formulas and keyboard access.",
       "aiSummary": "The Editor is the design system's rich text field. The toolbar is organised in blocks by subject, with arrow navigation and a single tab stop. It accepts initial HTML, emits the current HTML on every change, and leaves two product decisions open: where the image URL comes from and who writes the alternative text.",
       "aiEntities": "rich text editor, form field, formatting toolbar, alternative text, mathematical formula, table, keyboard accessibility"
     },
@@ -347,14 +604,52 @@
     },
     "usage": {
       "title": "When to use",
-      "guidelines": "Use it when the text needs structure a plain field cannot hold: emphasis, headings, lists, links, images or tables. For a single line of unformatted text, the plain text field is cheaper and more predictable.",
-      "scenarios": {
-        "item1": "Product description, article and knowledge base, where headings and lists are part of the content.",
-        "item2": "Comment and long reply, with the basic set: emphasis, list and link are enough.",
-        "item3": "Technical content with a mathematical formula or a code snippet inside running text.",
-        "item4": "A form that stores HTML and displays it elsewhere in the product."
+      "guidelines": {
+        "title": "Required guidelines",
+        "item1": "Use it when the text needs structure a plain field cannot hold: emphasis, headings, lists, links, images or tables. For a single line of unformatted text, the plain text field is cheaper and more predictable.",
+        "item2": "Each button label is its accessible name: with no visible text, it is what the screen reader announces. Prefer the action verb over the markup name.",
+        "item3": "Treat the returned HTML as third-party data when storing it and when displaying it outside the editor.",
+        "item4": "Offer a path to review the images' alternative text before publishing.",
+        "item5": "Decide image storage before releasing the editor to production."
       },
-      "uxWriting": "Each button's label is its accessible name: with no visible text, it is what the screen reader announces. Prefer the action verb over the markup name — \"Insert image\" says what happens, \"Image\" does not.",
+      "scenarios": {
+        "title": "Scenario table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Product description, article or knowledge base",
+          "u": "Yes",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Comment and long reply",
+          "u": "Yes, in the basic set",
+          "a": "—"
+        },
+        "item3": {
+          "s": "Technical content with a formula or code snippet",
+          "u": "Yes",
+          "a": "—"
+        },
+        "item4": {
+          "s": "A single line of unformatted text",
+          "u": "No",
+          "a": "Input"
+        },
+        "item5": {
+          "s": "Multi-line text with no structure",
+          "u": "No",
+          "a": "Textarea"
+        },
+        "item6": {
+          "s": "Display a ready-made code snippet",
+          "u": "No",
+          "a": "CodeBlock"
+        }
+      },
       "do": {
         "item1": "Choose the set by the kind of content, not by the space available on screen.",
         "item2": "Treat the returned HTML as third-party data when storing it and when displaying it outside the editor.",
@@ -371,14 +666,12 @@
     "doDont": {
       "title": "Best practices",
       "pair1": {
-        "do": "Button label with the action verb: \"Insert table\", \"Remove link\".",
-        "dont": "Label with the markup name: \"Table\", \"Link\".",
-        "reason": "Every button is icon-only. The label is what gets heard, and hearing a noun does not say what the click does."
+        "do": "Button label with the action verb: \"Insert link\". Every button is icon-only, and the label is what the screen reader announces.",
+        "dont": "Label with the markup name: \"Link\". Hearing a noun does not say what the click does."
       },
       "pair2": {
-        "do": "Basic set in comments and form fields.",
-        "dont": "Advanced set on every screen, by default.",
-        "reason": "Thirty buttons in a comment field are noise: most are never used, and the toolbar takes more room than the text."
+        "do": "Basic set in comments and form fields, where emphasis, list and link are enough.",
+        "dont": "Advanced set on every screen by default: thirty buttons in a comment field are noise, and the toolbar takes more room than the text."
       }
     },
     "import": {
@@ -387,7 +680,7 @@
       "basicCode": {
         "react": "import { Editor } from \"@/components/ui/editor\";",
         "vue": "import { Editor } from \"@/components/ui/editor\";",
-        "svelte": "import { Editor } from \"$lib/components/ui/editor\";",
+        "svelte": "import { Editor } from \"@/components/ui/editor\";",
         "vanilla": "import { createEditor } from \"@/components/ui/editor\";",
         "angular": "import { EditorComponent } from \"@/components/ui/editor\";"
       },
@@ -417,13 +710,41 @@
     },
     "states": {
       "title": "States",
-      "cols": { "state": "State", "description": "Description" },
-      "editing": "Editing — the default. The toolbar reflects what is under the cursor on every move, with no click.",
-      "readOnly": "Read only — the content stays visible and navigable, and editing is off.",
-      "imageSelected": "Image selected — the image block reveals alternative text and size, and the resize handle appears.",
-      "inTable": "Cursor in a table — the table block reveals row, column, header and deletion.",
-      "fieldOpen": "Input row open — formula, link or description, with the current value already filled in and selected.",
-      "invalidValue": "Value refused — an address outside the accepted schemes marks the field invalid and the row stays open."
+      "cols": {
+        "state": "State",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
+      },
+      "editing": {
+        "label": "Editing",
+        "trigger": "Default",
+        "behavior": "The toolbar reflects what is under the cursor on every move, with no click."
+      },
+      "readOnly": {
+        "label": "Read only",
+        "trigger": "Editing switched off",
+        "behavior": "The content stays visible and navigable; the toolbar applies no command."
+      },
+      "imageSelected": {
+        "label": "Image selected",
+        "trigger": "Click the image",
+        "behavior": "The image block reveals alternative text and size, and the handle appears."
+      },
+      "inTable": {
+        "label": "Cursor in a table",
+        "trigger": "Cursor inside a cell",
+        "behavior": "The table block reveals row, column, header and deletion."
+      },
+      "fieldOpen": {
+        "label": "Input row open",
+        "trigger": "Formula, link or alternative text button",
+        "behavior": "The field opens with the current value, already selected."
+      },
+      "invalidValue": {
+        "label": "Value refused",
+        "trigger": "Address outside the accepted schemes",
+        "behavior": "The field is marked invalid and the row stays open."
+      }
     },
     "props": {
       "title": "Props",
@@ -487,25 +808,64 @@
       "extensibilityTitle": "Insertion from code",
       "extensibility": "The returned root accepts an image file through the same path as the button, with the configured storage and description. It is what paste and drag use underneath.",
       "extensibilityCode": {
-        "vanilla": "const inserted = await editor.insertImage(file);"
+        "react": "const inserted = await editorRef.current?.insertImage(file);",
+        "vue": "const inserted = await editorRef.value?.insertImage(file);",
+        "svelte": "const inserted = await editor.insertImage(file);",
+        "vanilla": "const inserted = await editor.insertImage(file);",
+        "angular": "const inserted = await this.editor().insertImage(file);"
       }
     },
     "tokens": {
       "title": "Tokens",
-      "surfaceTitle": "Frame and toolbar",
-      "contentTitle": "Content",
       "table": {
         "token": "Token",
-        "usage": "Usage",
-        "border": { "name": "--border", "usage": "Frame border, table dividers and the horizontal rule" },
-        "background": { "name": "--background", "usage": "Frame background" },
-        "muted": { "name": "--muted", "usage": "Toolbar, code block and table header background" },
-        "mutedForeground": { "name": "--muted-foreground", "usage": "Text of a completed task item" },
-        "foreground": { "name": "--foreground", "usage": "Content text" },
-        "primary": { "name": "--primary", "usage": "Quote side bar, link colour and resize handle" },
-        "accent": { "name": "--accent", "usage": "Text highlight and selected cell" },
-        "ring": { "name": "--ring", "usage": "Focus ring of the frame and of the selected image" },
-        "textH1": { "name": "--text-h1 to --text-h4", "usage": "Heading scale inside the content" }
+        "value": "CSS property",
+        "description": "Usage",
+        "border": {
+          "token": "--border",
+          "value": "border-color",
+          "description": "Frame border, table dividers and the horizontal rule"
+        },
+        "background": {
+          "token": "--background",
+          "value": "background-color",
+          "description": "Frame background"
+        },
+        "muted": {
+          "token": "--muted",
+          "value": "background-color",
+          "description": "Toolbar, code block and table header background"
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": "color",
+          "description": "Text of a completed task item"
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": "color",
+          "description": "Content text"
+        },
+        "primary": {
+          "token": "--primary",
+          "value": "border-inline-start, color",
+          "description": "Quote side bar, link colour and resize handle"
+        },
+        "accent": {
+          "token": "--accent",
+          "value": "background-color",
+          "description": "Text highlight and selected cell"
+        },
+        "ring": {
+          "token": "--ring",
+          "value": "outline-color",
+          "description": "Focus ring of the frame and of the selected image"
+        },
+        "textH1": {
+          "token": "--text-h1 … --text-h4",
+          "value": "font-size",
+          "description": "Heading scale inside the content"
+        }
       },
       "customizationTitle": "Customisation",
       "customizationCode": {
@@ -526,11 +886,26 @@
       "keyboard": {
         "key": "Key",
         "action": "Action",
-        "tab": { "key": "Tab", "action": "Enters and leaves the toolbar — the whole toolbar is one stop" },
-        "arrows": { "key": "Arrows", "action": "Moves between toolbar buttons, across blocks" },
-        "homeEnd": { "key": "Home / End", "action": "First and last button of the toolbar" },
-        "enter": { "key": "Enter", "action": "Confirms the value of the open input row" },
-        "escape": { "key": "Esc", "action": "Closes the input row and returns focus to the button that opened it" }
+        "tab": {
+          "key": "Tab",
+          "action": "Enters and leaves the toolbar — the whole toolbar is one stop"
+        },
+        "arrows": {
+          "key": "Arrows",
+          "action": "Moves between toolbar buttons, across blocks"
+        },
+        "homeEnd": {
+          "key": "Home / End",
+          "action": "First and last button of the toolbar"
+        },
+        "enter": {
+          "key": "Enter",
+          "action": "Confirms the value of the open input row"
+        },
+        "escape": {
+          "key": "Esc",
+          "action": "Closes the input row and returns focus to the button that opened it"
+        }
       }
     },
     "related": {
@@ -574,33 +949,109 @@
       "functional": {
         "title": "Functional behaviour",
         "description": "What must happen on each path through the editor.",
-        "item1": { "action": "Move the cursor into a marked span", "result": "The mark's button lights up with no click at all", "priority": "high" },
-        "item2": { "action": "Walk the toolbar with the arrows", "result": "Focus crosses the blocks and wraps at the end", "priority": "high" },
-        "item3": { "action": "Open the link row with the cursor on a link", "result": "The field opens with the current address, selected", "priority": "high" },
-        "item4": { "action": "Confirm the link row with an empty field", "result": "The link is removed from the span", "priority": "medium" },
-        "item5": { "action": "Confirm an address outside the accepted schemes", "result": "The field is marked invalid and the row stays open", "priority": "high" },
-        "item6": { "action": "Confirm a formula with the cursor on another", "result": "The existing formula is updated, not duplicated", "priority": "medium" },
-        "item7": { "action": "Paste or drag an image file", "result": "The image enters through the same path as the button, with storage and description", "priority": "high" },
-        "item8": { "action": "Insert an image with a description service wired", "result": "The image enters at once and the description replaces the provisional value when it arrives", "priority": "high" },
-        "item9": { "action": "Resize the image with the buttons", "result": "The width changes in steps and honours the minimum floor", "priority": "medium" },
-        "item10": { "action": "Select an image or put the cursor in a table", "result": "That subject's buttons appear in the matching block", "priority": "medium" },
-        "item11": { "action": "Edit the content", "result": "The change callback receives the current HTML", "priority": "high" }
+        "item1": {
+          "action": "Move the cursor into a marked span",
+          "result": "The mark's button lights up with no click at all",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Walk the toolbar with the arrows",
+          "result": "Focus crosses the blocks and wraps at the end",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Open the link row with the cursor on a link",
+          "result": "The field opens with the current address, selected",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Confirm the link row with an empty field",
+          "result": "The link is removed from the span",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Confirm an address outside the accepted schemes",
+          "result": "The field is marked invalid and the row stays open",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Confirm a formula with the cursor on another",
+          "result": "The existing formula is updated, not duplicated",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Paste or drag an image file",
+          "result": "The image enters through the same path as the button, with storage and description",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Insert an image with a description service wired",
+          "result": "The image enters at once and the description replaces the provisional value when it arrives",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Resize the image with the buttons",
+          "result": "The width changes in steps and honours the minimum floor",
+          "priority": "medium"
+        },
+        "item10": {
+          "action": "Select an image or put the cursor in a table",
+          "result": "That subject's buttons appear in the matching block",
+          "priority": "medium"
+        },
+        "item11": {
+          "action": "Edit the content",
+          "result": "The change callback receives the current HTML",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Accessibility",
         "description": "What the automated check and keyboard navigation must find.",
-        "item1": { "action": "Inspect the toolbar", "result": "Toolbar role with a name, and a name of its own on every block", "priority": "high" },
-        "item2": { "action": "Inspect the editable area", "result": "Accessible name present on the text field", "priority": "high" },
-        "item3": { "action": "Walk through with Tab", "result": "The whole toolbar is a single stop", "priority": "high" },
-        "item4": { "action": "Resize an image without a pointer", "result": "The image block buttons do what the handle does", "priority": "high" },
-        "item5": { "action": "Run the automated check on the content", "result": "No violations, including images with alternative text", "priority": "high" }
+        "item1": {
+          "action": "Inspect the toolbar",
+          "result": "Toolbar role with a name, and a name of its own on every block",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Inspect the editable area",
+          "result": "Accessible name present on the text field",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Walk through with Tab",
+          "result": "The whole toolbar is a single stop",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Resize an image without a pointer",
+          "result": "The image block buttons do what the handle does",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Run the automated check on the content",
+          "result": "No violations, including images with alternative text",
+          "priority": "high"
+        }
       },
       "visual": {
         "title": "Visual",
         "description": "What image comparison must cover.",
-        "item1": { "action": "Basic set and advanced set", "result": "Blocks in order, with a divider between subjects", "priority": "medium" },
-        "item2": { "action": "Content with quote, code block, table and task list", "result": "Each with the active theme's drawing, in both modes", "priority": "high" },
-        "item3": { "action": "Selected image", "result": "Focus ring on the image and handle visible in the corner", "priority": "medium" }
+        "item1": {
+          "action": "Basic set and advanced set",
+          "result": "Blocks in order, with a divider between subjects",
+          "priority": "medium"
+        },
+        "item2": {
+          "action": "Content with quote, code block, table and task list",
+          "result": "Each with the active theme's drawing, in both modes",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Selected image",
+          "result": "Focus ring on the image and handle visible in the corner",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -620,17 +1071,80 @@
       "notes": "Notes",
       "analytics": "Analytics",
       "testes": "Tests"
+    },
+    "labels": {
+      "toolbar": "Formatting",
+      "editorField": "Body text",
+      "groups": {
+        "marks": "Text marks",
+        "headings": "Headings",
+        "align": "Alignment",
+        "lists": "Lists",
+        "blocks": "Blocks",
+        "actions": "Actions",
+        "table": "Table"
+      },
+      "actions": {
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "strike": "Strikethrough",
+        "code": "Code",
+        "highlight": "Highlight",
+        "h1": "Heading 1",
+        "h2": "Heading 2",
+        "h3": "Heading 3",
+        "alignLeft": "Align left",
+        "alignCenter": "Align centre",
+        "alignRight": "Align right",
+        "alignJustify": "Justify",
+        "bulletList": "Bulleted list",
+        "orderedList": "Numbered list",
+        "taskList": "Task list",
+        "blockquote": "Quote",
+        "codeBlock": "Code block",
+        "link": "Insert link",
+        "image": "Insert image",
+        "table": "Insert table",
+        "horizontalRule": "Horizontal rule",
+        "undo": "Undo",
+        "redo": "Redo",
+        "formula": "Insert formula",
+        "imageAlt": "Alternative text",
+        "imageSmaller": "Shrink the image",
+        "imageLarger": "Enlarge the image",
+        "imageNatural": "Natural size",
+        "rowAfter": "Insert row below",
+        "columnAfter": "Insert column after",
+        "deleteRow": "Delete row",
+        "deleteColumn": "Delete column",
+        "headerRow": "Toggle header row",
+        "deleteTable": "Delete table"
+      },
+      "fields": {
+        "formula": "LaTeX formula",
+        "formulaConfirm": "Insert",
+        "link": "Link address",
+        "linkConfirm": "Apply",
+        "linkRemove": "Remove the link",
+        "alt": "Image description",
+        "altConfirm": "Save description"
+      },
+      "nouns": {
+        "link": "Link",
+        "image": "Image",
+        "table": "Table"
+      }
     }
   },
-
   "es": {
     "title": "Editor",
     "category": "Formulario",
     "type": "Componente",
     "description": "Campo de texto enriquecido con barra de formato. Escribe estructura — títulos, listas, tablas, imágenes y fórmulas — dentro de un campo de formulario, y devuelve HTML en cada cambio.",
     "seo": {
-      "title": "Editor de texto enriquecido",
-      "description": "Campo de texto enriquecido con barra de formato, tablas, imágenes con texto alternativo y fórmulas matemáticas. Accesible por teclado, con almacenamiento de imagen conectable.",
+      "title": "Editor — Formulario",
+      "description": "Documentación del Editor: campo de texto enriquecido, barra en bloques, tablas, imágenes con texto alternativo, fórmulas y acceso por teclado.",
       "aiSummary": "El Editor es el campo de texto enriquecido del sistema de diseño. La barra se organiza en bloques por asunto, con navegación por flechas y una única parada de tabulación. Acepta contenido inicial en HTML, emite el HTML actual en cada cambio y deja abiertas dos decisiones de producto: de dónde viene la URL de la imagen y quién escribe el texto alternativo.",
       "aiEntities": "editor de texto enriquecido, campo de formulario, barra de formato, texto alternativo, fórmula matemática, tabla, accesibilidad por teclado"
     },
@@ -659,14 +1173,52 @@
     },
     "usage": {
       "title": "Cuándo usar",
-      "guidelines": "Úsalo cuando el texto necesita estructura que un campo simple no guarda: énfasis, títulos, listas, enlaces, imágenes o tablas. Para una línea de texto sin formato, el campo de texto común es más barato y más previsible.",
-      "scenarios": {
-        "item1": "Descripción de producto, artículo y base de conocimiento, donde título y lista son parte del contenido.",
-        "item2": "Comentario y respuesta larga, con el conjunto básico: énfasis, lista y enlace bastan.",
-        "item3": "Contenido técnico con fórmula matemática o fragmento de código dentro del texto corrido.",
-        "item4": "Formulario que guarda HTML y lo muestra después en otro lugar del producto."
+      "guidelines": {
+        "title": "Guidelines obligatorias",
+        "item1": "Úsalo cuando el texto necesita estructura que un campo simple no guarda: énfasis, títulos, listas, enlaces, imágenes o tablas. Para una línea de texto sin formato, el campo de texto común es más barato y más previsible.",
+        "item2": "La etiqueta de cada botón es su nombre accesible: sin texto visible, es lo que anuncia el lector de pantalla. Prefiere el verbo de la acción al nombre del marcado.",
+        "item3": "Trata el HTML devuelto como dato de terceros al guardarlo y al mostrarlo fuera del editor.",
+        "item4": "Ofrece un camino para revisar el texto alternativo de las imágenes antes de publicar.",
+        "item5": "Decide el almacenamiento de la imagen antes de liberar el editor en producción."
       },
-      "uxWriting": "La etiqueta de cada botón es su nombre accesible: sin texto visible, es lo que anuncia el lector de pantalla. Prefiere el verbo de la acción al nombre del marcado — \"Insertar imagen\" dice qué ocurre, \"Imagen\" no.",
+      "scenarios": {
+        "title": "Tabla de escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Descripción de producto, artículo o base de conocimiento",
+          "u": "Sí",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Comentario y respuesta larga",
+          "u": "Sí, en el conjunto básico",
+          "a": "—"
+        },
+        "item3": {
+          "s": "Contenido técnico con fórmula o fragmento de código",
+          "u": "Sí",
+          "a": "—"
+        },
+        "item4": {
+          "s": "Una línea de texto sin formato",
+          "u": "No",
+          "a": "Input"
+        },
+        "item5": {
+          "s": "Texto de varias líneas sin estructura",
+          "u": "No",
+          "a": "Textarea"
+        },
+        "item6": {
+          "s": "Mostrar un fragmento de código ya listo",
+          "u": "No",
+          "a": "CodeBlock"
+        }
+      },
       "do": {
         "item1": "Elige el conjunto por el tipo de contenido, no por el espacio disponible en pantalla.",
         "item2": "Trata el HTML devuelto como dato de terceros al guardarlo y al mostrarlo fuera del editor.",
@@ -683,14 +1235,12 @@
     "doDont": {
       "title": "Buenas prácticas",
       "pair1": {
-        "do": "Etiqueta de botón con el verbo de la acción: \"Insertar tabla\", \"Quitar el enlace\".",
-        "dont": "Etiqueta con el nombre del marcado: \"Tabla\", \"Enlace\".",
-        "reason": "Todos los botones son solo de icono. La etiqueta es lo que se oye, y oír un sustantivo no dice qué hace el clic."
+        "do": "Etiqueta de botón con el verbo de la acción: \"Insertar enlace\". Todos los botones son solo de icono, y la etiqueta es lo que anuncia el lector de pantalla.",
+        "dont": "Etiqueta con el nombre del marcado: \"Enlace\". Oír un sustantivo no dice qué hace el clic."
       },
       "pair2": {
-        "do": "Conjunto básico en comentarios y campos de formulario.",
-        "dont": "Conjunto avanzado en toda pantalla, por defecto.",
-        "reason": "Treinta botones en un campo de comentario son ruido: la mayoría nunca se usa, y la barra ocupa más espacio que el texto."
+        "do": "Conjunto básico en comentarios y campos de formulario, donde énfasis, lista y enlace bastan.",
+        "dont": "Conjunto avanzado en toda pantalla por defecto: treinta botones en un campo de comentario son ruido, y la barra ocupa más espacio que el texto."
       }
     },
     "import": {
@@ -699,7 +1249,7 @@
       "basicCode": {
         "react": "import { Editor } from \"@/components/ui/editor\";",
         "vue": "import { Editor } from \"@/components/ui/editor\";",
-        "svelte": "import { Editor } from \"$lib/components/ui/editor\";",
+        "svelte": "import { Editor } from \"@/components/ui/editor\";",
         "vanilla": "import { createEditor } from \"@/components/ui/editor\";",
         "angular": "import { EditorComponent } from \"@/components/ui/editor\";"
       },
@@ -729,13 +1279,41 @@
     },
     "states": {
       "title": "Estados",
-      "cols": { "state": "Estado", "description": "Descripción" },
-      "editing": "Editando — el valor por defecto. La barra refleja lo que está bajo el cursor en cada movimiento, sin clic.",
-      "readOnly": "Solo lectura — el contenido sigue visible y navegable, y la edición queda apagada.",
-      "imageSelected": "Imagen seleccionada — el bloque de imagen revela texto alternativo y tamaño, y aparece el tirador de redimensionado.",
-      "inTable": "Cursor en la tabla — el bloque de tabla revela fila, columna, encabezado y eliminación.",
-      "fieldOpen": "Fila de entrada abierta — fórmula, enlace o descripción, con el valor actual ya rellenado y seleccionado.",
-      "invalidValue": "Valor rechazado — una dirección fuera de los esquemas aceptados marca el campo como inválido y la fila no se cierra."
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "editing": {
+        "label": "Editando",
+        "trigger": "Por defecto",
+        "behavior": "La barra refleja lo que está bajo el cursor en cada movimiento, sin clic."
+      },
+      "readOnly": {
+        "label": "Solo lectura",
+        "trigger": "Edición apagada",
+        "behavior": "El contenido sigue visible y navegable; la barra no aplica comandos."
+      },
+      "imageSelected": {
+        "label": "Imagen seleccionada",
+        "trigger": "Clic en la imagen",
+        "behavior": "El bloque de imagen revela texto alternativo y tamaño, y aparece el tirador."
+      },
+      "inTable": {
+        "label": "Cursor en la tabla",
+        "trigger": "Cursor dentro de una celda",
+        "behavior": "El bloque de tabla revela fila, columna, encabezado y eliminación."
+      },
+      "fieldOpen": {
+        "label": "Fila de entrada abierta",
+        "trigger": "Botón de fórmula, enlace o texto alternativo",
+        "behavior": "El campo abre con el valor actual, ya seleccionado."
+      },
+      "invalidValue": {
+        "label": "Valor rechazado",
+        "trigger": "Dirección fuera de los esquemas aceptados",
+        "behavior": "El campo se marca inválido y la fila no se cierra."
+      }
     },
     "props": {
       "title": "Propiedades",
@@ -799,25 +1377,64 @@
       "extensibilityTitle": "Inserción por código",
       "extensibility": "La raíz devuelta acepta un archivo de imagen por el mismo camino del botón, con el almacenamiento y la descripción configurados. Es lo que pegar y arrastrar usan por dentro.",
       "extensibilityCode": {
-        "vanilla": "const entro = await editor.insertImage(archivo);"
+        "react": "const inserted = await editorRef.current?.insertImage(file);",
+        "vue": "const inserted = await editorRef.value?.insertImage(file);",
+        "svelte": "const inserted = await editor.insertImage(file);",
+        "vanilla": "const inserted = await editor.insertImage(file);",
+        "angular": "const inserted = await this.editor().insertImage(file);"
       }
     },
     "tokens": {
       "title": "Tokens",
-      "surfaceTitle": "Marco y barra",
-      "contentTitle": "Contenido",
       "table": {
         "token": "Token",
-        "usage": "Uso",
-        "border": { "name": "--border", "usage": "Borde del marco, divisorias de la tabla y línea divisoria" },
-        "background": { "name": "--background", "usage": "Fondo del marco" },
-        "muted": { "name": "--muted", "usage": "Fondo de la barra, del bloque de código y del encabezado de la tabla" },
-        "mutedForeground": { "name": "--muted-foreground", "usage": "Texto de un ítem de tarea completado" },
-        "foreground": { "name": "--foreground", "usage": "Texto del contenido" },
-        "primary": { "name": "--primary", "usage": "Barra lateral de la cita, color del enlace y tirador" },
-        "accent": { "name": "--accent", "usage": "Resaltado de texto y celda seleccionada" },
-        "ring": { "name": "--ring", "usage": "Anillo de foco del marco y de la imagen seleccionada" },
-        "textH1": { "name": "--text-h1 a --text-h4", "usage": "Escala de los títulos dentro del contenido" }
+        "value": "Propiedad CSS",
+        "description": "Uso",
+        "border": {
+          "token": "--border",
+          "value": "border-color",
+          "description": "Borde del marco, divisorias de la tabla y línea divisoria"
+        },
+        "background": {
+          "token": "--background",
+          "value": "background-color",
+          "description": "Fondo del marco"
+        },
+        "muted": {
+          "token": "--muted",
+          "value": "background-color",
+          "description": "Fondo de la barra, del bloque de código y del encabezado de la tabla"
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": "color",
+          "description": "Texto de un ítem de tarea completado"
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": "color",
+          "description": "Texto del contenido"
+        },
+        "primary": {
+          "token": "--primary",
+          "value": "border-inline-start, color",
+          "description": "Barra lateral de la cita, color del enlace y tirador"
+        },
+        "accent": {
+          "token": "--accent",
+          "value": "background-color",
+          "description": "Resaltado de texto y celda seleccionada"
+        },
+        "ring": {
+          "token": "--ring",
+          "value": "outline-color",
+          "description": "Anillo de foco del marco y de la imagen seleccionada"
+        },
+        "textH1": {
+          "token": "--text-h1 … --text-h4",
+          "value": "font-size",
+          "description": "Escala de los títulos dentro del contenido"
+        }
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
@@ -838,11 +1455,26 @@
       "keyboard": {
         "key": "Tecla",
         "action": "Acción",
-        "tab": { "key": "Tab", "action": "Entra y sale de la barra — toda la barra es una parada" },
-        "arrows": { "key": "Flechas", "action": "Recorre los botones de la barra, atravesando los bloques" },
-        "homeEnd": { "key": "Inicio / Fin", "action": "Primer y último botón de la barra" },
-        "enter": { "key": "Enter", "action": "Confirma el valor de la fila de entrada abierta" },
-        "escape": { "key": "Esc", "action": "Cierra la fila de entrada y devuelve el foco al botón que la abrió" }
+        "tab": {
+          "key": "Tab",
+          "action": "Entra y sale de la barra — toda la barra es una parada"
+        },
+        "arrows": {
+          "key": "Flechas",
+          "action": "Recorre los botones de la barra, atravesando los bloques"
+        },
+        "homeEnd": {
+          "key": "Inicio / Fin",
+          "action": "Primer y último botón de la barra"
+        },
+        "enter": {
+          "key": "Enter",
+          "action": "Confirma el valor de la fila de entrada abierta"
+        },
+        "escape": {
+          "key": "Esc",
+          "action": "Cierra la fila de entrada y devuelve el foco al botón que la abrió"
+        }
       }
     },
     "related": {
@@ -886,33 +1518,109 @@
       "functional": {
         "title": "Comportamiento funcional",
         "description": "Qué debe ocurrir en cada camino del editor.",
-        "item1": { "action": "Mover el cursor dentro de un fragmento con marca", "result": "El botón de la marca se enciende sin ningún clic", "priority": "high" },
-        "item2": { "action": "Recorrer la barra con las flechas", "result": "El foco atraviesa los bloques y vuelve al inicio al final", "priority": "high" },
-        "item3": { "action": "Abrir la fila de enlace con el cursor en un enlace", "result": "El campo abre con la dirección actual, seleccionada", "priority": "high" },
-        "item4": { "action": "Confirmar la fila de enlace con el campo vacío", "result": "El enlace sale del fragmento", "priority": "medium" },
-        "item5": { "action": "Confirmar una dirección fuera de los esquemas aceptados", "result": "El campo se marca inválido y la fila no se cierra", "priority": "high" },
-        "item6": { "action": "Confirmar una fórmula con el cursor sobre otra", "result": "La fórmula existente se actualiza, no se duplica", "priority": "medium" },
-        "item7": { "action": "Pegar o arrastrar un archivo de imagen", "result": "La imagen entra por el mismo camino del botón, con almacenamiento y descripción", "priority": "high" },
-        "item8": { "action": "Insertar imagen con servicio de descripción conectado", "result": "La imagen entra al momento y la descripción sustituye el valor provisional cuando llega", "priority": "high" },
-        "item9": { "action": "Redimensionar la imagen con los botones", "result": "El ancho cambia por pasos y respeta el mínimo", "priority": "medium" },
-        "item10": { "action": "Seleccionar una imagen o poner el cursor en una tabla", "result": "Los botones de ese asunto aparecen en el bloque correspondiente", "priority": "medium" },
-        "item11": { "action": "Editar el contenido", "result": "El callback de cambio recibe el HTML actual", "priority": "high" }
+        "item1": {
+          "action": "Mover el cursor dentro de un fragmento con marca",
+          "result": "El botón de la marca se enciende sin ningún clic",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Recorrer la barra con las flechas",
+          "result": "El foco atraviesa los bloques y vuelve al inicio al final",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Abrir la fila de enlace con el cursor en un enlace",
+          "result": "El campo abre con la dirección actual, seleccionada",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Confirmar la fila de enlace con el campo vacío",
+          "result": "El enlace sale del fragmento",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Confirmar una dirección fuera de los esquemas aceptados",
+          "result": "El campo se marca inválido y la fila no se cierra",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Confirmar una fórmula con el cursor sobre otra",
+          "result": "La fórmula existente se actualiza, no se duplica",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Pegar o arrastrar un archivo de imagen",
+          "result": "La imagen entra por el mismo camino del botón, con almacenamiento y descripción",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Insertar imagen con servicio de descripción conectado",
+          "result": "La imagen entra al momento y la descripción sustituye el valor provisional cuando llega",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Redimensionar la imagen con los botones",
+          "result": "El ancho cambia por pasos y respeta el mínimo",
+          "priority": "medium"
+        },
+        "item10": {
+          "action": "Seleccionar una imagen o poner el cursor en una tabla",
+          "result": "Los botones de ese asunto aparecen en el bloque correspondiente",
+          "priority": "medium"
+        },
+        "item11": {
+          "action": "Editar el contenido",
+          "result": "El callback de cambio recibe el HTML actual",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad",
         "description": "Qué deben encontrar la verificación automática y la navegación por teclado.",
-        "item1": { "action": "Inspeccionar la barra", "result": "Rol de barra de herramientas con nombre, y un nombre propio en cada bloque", "priority": "high" },
-        "item2": { "action": "Inspeccionar el área editable", "result": "Nombre accesible presente en el campo de texto", "priority": "high" },
-        "item3": { "action": "Recorrer con Tab", "result": "Toda la barra es una única parada", "priority": "high" },
-        "item4": { "action": "Redimensionar imagen sin puntero", "result": "Los botones del bloque de imagen hacen lo mismo que el tirador", "priority": "high" },
-        "item5": { "action": "Ejecutar la verificación automática en el contenido", "result": "Ninguna violación, incluida imagen con texto alternativo", "priority": "high" }
+        "item1": {
+          "action": "Inspeccionar la barra",
+          "result": "Rol de barra de herramientas con nombre, y un nombre propio en cada bloque",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Inspeccionar el área editable",
+          "result": "Nombre accesible presente en el campo de texto",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Recorrer con Tab",
+          "result": "Toda la barra es una única parada",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Redimensionar imagen sin puntero",
+          "result": "Los botones del bloque de imagen hacen lo mismo que el tirador",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Ejecutar la verificación automática en el contenido",
+          "result": "Ninguna violación, incluida imagen con texto alternativo",
+          "priority": "high"
+        }
       },
       "visual": {
         "title": "Visual",
         "description": "Qué debe cubrir la comparación de imagen.",
-        "item1": { "action": "Conjunto básico y conjunto avanzado", "result": "Bloques en orden, con divisoria entre asuntos", "priority": "medium" },
-        "item2": { "action": "Contenido con cita, bloque de código, tabla y lista de tareas", "result": "Cada uno con el dibujo del tema activo, en ambos modos", "priority": "high" },
-        "item3": { "action": "Imagen seleccionada", "result": "Anillo de foco en la imagen y tirador visible en la esquina", "priority": "medium" }
+        "item1": {
+          "action": "Conjunto básico y conjunto avanzado",
+          "result": "Bloques en orden, con divisoria entre asuntos",
+          "priority": "medium"
+        },
+        "item2": {
+          "action": "Contenido con cita, bloque de código, tabla y lista de tareas",
+          "result": "Cada uno con el dibujo del tema activo, en ambos modos",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Imagen seleccionada",
+          "result": "Anillo de foco en la imagen y tirador visible en la esquina",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -932,6 +1640,70 @@
       "notes": "Notas",
       "analytics": "Analytics",
       "testes": "Pruebas"
+    },
+    "labels": {
+      "toolbar": "Formato",
+      "editorField": "Cuerpo del texto",
+      "groups": {
+        "marks": "Marcas de texto",
+        "headings": "Títulos",
+        "align": "Alineación",
+        "lists": "Listas",
+        "blocks": "Bloques",
+        "actions": "Acciones",
+        "table": "Tabla"
+      },
+      "actions": {
+        "bold": "Negrita",
+        "italic": "Cursiva",
+        "underline": "Subrayado",
+        "strike": "Tachado",
+        "code": "Código",
+        "highlight": "Resaltado",
+        "h1": "Título 1",
+        "h2": "Título 2",
+        "h3": "Título 3",
+        "alignLeft": "Alinear a la izquierda",
+        "alignCenter": "Centrar",
+        "alignRight": "Alinear a la derecha",
+        "alignJustify": "Justificar",
+        "bulletList": "Lista con viñetas",
+        "orderedList": "Lista numerada",
+        "taskList": "Lista de tareas",
+        "blockquote": "Cita",
+        "codeBlock": "Bloque de código",
+        "link": "Insertar enlace",
+        "image": "Insertar imagen",
+        "table": "Insertar tabla",
+        "horizontalRule": "Línea divisoria",
+        "undo": "Deshacer",
+        "redo": "Rehacer",
+        "formula": "Insertar fórmula",
+        "imageAlt": "Texto alternativo",
+        "imageSmaller": "Reducir la imagen",
+        "imageLarger": "Ampliar la imagen",
+        "imageNatural": "Tamaño natural",
+        "rowAfter": "Insertar fila debajo",
+        "columnAfter": "Insertar columna a la derecha",
+        "deleteRow": "Eliminar fila",
+        "deleteColumn": "Eliminar columna",
+        "headerRow": "Alternar fila de encabezado",
+        "deleteTable": "Eliminar tabla"
+      },
+      "fields": {
+        "formula": "Fórmula en LaTeX",
+        "formulaConfirm": "Insertar",
+        "link": "Dirección del enlace",
+        "linkConfirm": "Aplicar",
+        "linkRemove": "Quitar el enlace",
+        "alt": "Descripción de la imagen",
+        "altConfirm": "Guardar descripción"
+      },
+      "nouns": {
+        "link": "Enlace",
+        "image": "Imagen",
+        "table": "Tabla"
+      }
     }
   }
 }
