@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
-import { createEditor, type EditorPreset, type EditorRoot } from './editor';
+import {
+  createEditor,
+  type EditorOptions,
+  type EditorPreset,
+  type EditorRoot,
+} from './editor';
 import { LABELS, PLAYGROUND_CONTENT, createDotPngFile, fluidBox } from './editor.fixtures';
 import {
   closeRow,
@@ -14,11 +19,19 @@ import { editorSource } from './editor.source';
 import { createEditorDocs } from '@/components/docs/EditorDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
+// As sete do contrato, e não as quatro que o Playground controla: a aba API
+// Reference é gerada a partir de `argTypes`, então o que não aparece aqui não
+// existe para quem lê a documentação. As três últimas não são encaminhadas pelo
+// `render` — vão com `control: false`, que é o que impede o painel Controls de
+// prometer um botão que não muda nada.
 type EditorArgs = {
   content: string;
   editable: boolean;
   preset: EditorPreset;
   onChange: (html: string) => void;
+  labels?: EditorOptions['labels'];
+  resolveImage?: EditorOptions['resolveImage'];
+  describeImage?: EditorOptions['describeImage'];
 };
 
 const meta: Meta<EditorArgs> = {
@@ -58,7 +71,37 @@ const meta: Meta<EditorArgs> = {
     onChange: {
       control: false,
       description: 'Chamado a cada mudança do documento, com o HTML atual.',
-      table: { type: { summary: '(html: string) => void' } },
+      table: { type: { summary: '(html: string) => void' }, defaultValue: { summary: '—' } },
+    },
+    labels: {
+      control: false,
+      type: { name: 'object', value: {}, required: true },
+      description:
+        'Nome acessível da barra, da área editável, de cada bloco, de cada botão '
+        + 'e dos campos de entrada. É a única propriedade obrigatória: todo botão '
+        + 'é só de ícone, e não há texto visível de onde deduzir o nome.',
+      table: { type: { summary: 'EditorLabels' }, defaultValue: { summary: '—' } },
+    },
+    resolveImage: {
+      control: false,
+      description:
+        'Decide de onde vem o endereço da imagem escolhida — a decisão de '
+        + 'armazenamento, que é de quem consome. Devolver nulo recusa a inserção, '
+        + 'sem erro.',
+      table: {
+        type: { summary: '(file: File) => Promise<string | null>' },
+        defaultValue: { summary: 'arquivo embutido em base64' },
+      },
+    },
+    describeImage: {
+      control: false,
+      description:
+        'Escreve o texto alternativo a partir da imagem. Recebe o arquivo quando '
+        + 'existe: imagem colada de outra página chega só como endereço.',
+      table: {
+        type: { summary: '(file: File | null, src: string) => Promise<string | null>' },
+        defaultValue: { summary: '—' },
+      },
     },
   },
   args: {

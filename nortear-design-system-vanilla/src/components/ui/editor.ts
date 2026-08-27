@@ -263,6 +263,21 @@ export type EditorRoot = DestroyableElement<HTMLDivElement> & {
    * Devolve `false` quando o resolvedor recusa.
    */
   insertImage: (file: File) => Promise<boolean>;
+  /**
+   * Liga e desliga a edição depois de montado.
+   *
+   * `editable` é opção de montagem nas outras stacks porque lá o framework
+   * reage à prop. Aqui não há prop: sem este método, trocar de estado exigia
+   * refazer a fábrica — e refazer leva junto o documento.
+   */
+  setEditable: (value: boolean) => void;
+  /**
+   * Troca o conjunto de botões depois de montado.
+   *
+   * Refaz a BARRA, e só ela: o documento, o histórico e a instância da lib
+   * seguem os mesmos.
+   */
+  setPreset: (preset: EditorPreset) => void;
 };
 
 // ─── Tabela de ações ─────────────────────────────────────────────────────────
@@ -870,9 +885,12 @@ export function createEditor(options: EditorOptions): EditorRoot {
   // Um bloco por grupo, separador entre blocos. O separador é decorativo: quem
   // ouve recebe a divisão pelo nome de cada grupo, não por uma barrinha.
 
-  const groups: Array<{ group: ToggleGroupElement; actions: EditorAction[] }> = [];
-  const plain: Array<{ button: HTMLButtonElement; action: EditorAction }> = [];
-  const contextBoxes: Array<{ box: HTMLElement; node: string }> = [];
+  // Mutáveis porque a barra se REFAZ ao trocar de conjunto: o documento e a
+  // instância da lib sobrevivem, os botões não. Ver `setPreset`.
+  let currentPreset: EditorPreset = preset;
+  let groups: Array<{ group: ToggleGroupElement; actions: EditorAction[] }> = [];
+  let plain: Array<{ button: HTMLButtonElement; action: EditorAction }> = [];
+  let contextBoxes: Array<{ box: HTMLElement; node: string }> = [];
 
   function divider(): HTMLElement {
     const s = document.createElement('span');
@@ -893,9 +911,28 @@ export function createEditor(options: EditorOptions): EditorRoot {
     return btn;
   }
 
-  const blocks = [...PRESETS[preset], { buttons: ['formula'] as EditorAction[] }];
+  let formulaButton!: HTMLButtonElement;
+  let linkButton!: HTMLButtonElement;
+  let altButton: HTMLButtonElement | undefined;
+  let hasLinkButton = false;
 
-  blocks.forEach((block, i) => {
+  /**
+   * Monta a barra inteira do conjunto pedido, e liga os cliques.
+   *
+   * É chamada uma vez na criação e de novo a cada `setPreset`. Tudo que ela
+   * escreve é DESCARTÁVEL — os botões, os grupos, as caixas contextuais —, e
+   * nada do que o documento guarda passa por aqui: a instância da lib, o
+   * conteúdo, o histórico e as três linhas de entrada vivem fora dela.
+   */
+  function buildToolbar(): void {
+    toolbar.replaceChildren();
+    groups = [];
+    plain = [];
+    contextBoxes = [];
+
+    const blocks = [...PRESETS[currentPreset], { buttons: ['formula'] as EditorAction[] }];
+
+    blocks.forEach((block, i) => {
     if (i > 0) toolbar.appendChild(divider());
     const target: HTMLElement = toolbar;
 
@@ -944,12 +981,16 @@ export function createEditor(options: EditorOptions): EditorRoot {
     }
     toolbar.appendChild(box);
     contextBoxes.push({ box, node: block.contextual.node });
-  });
+    });
 
-  const formulaButton = plain.find((s) => s.action === 'formula')!.button;
-  const linkTarget = plain.find((s) => s.action === 'link');
-  const linkButton = linkTarget ? linkTarget.button : formulaButton;
-  const altButton = plain.find((s) => s.action === 'imageAlt')?.button;
+    formulaButton = plain.find((s) => s.action === 'formula')!.button;
+    const linkTarget = plain.find((s) => s.action === 'link');
+    hasLinkButton = linkTarget !== undefined;
+    linkButton = linkTarget ? linkTarget.button : formulaButton;
+    altButton = plain.find((s) => s.action === 'imageAlt')?.button;
+
+    wireToolbar();
+  }
 
   // ─── Linhas de entrada ─────────────────────────────────────────────────────
 
@@ -1068,14 +1109,77 @@ export function createEditor(options: EditorOptions): EditorRoot {
     linkButton.focus();
   }
 
-  for (const [button, row] of [
-    [formulaButton, formula],
-    ...(linkTarget ? [[linkButton, link] as const] : []),
-    ...(altButton ? [[altButton, alt] as const] : []),
-  ] as Array<[HTMLButtonElement, FieldRow]>) {
-    button.setAttribute('aria-expanded', 'false');
-    button.setAttribute('aria-controls', row.row.id);
-    button.addEventListener('click', () => openRow(row.isOpen() ? null : row));
+  /**
+   * Com a edição desligada, a barra DEIXA DE AGIR.
+   *
+   * A guarda é aqui, e não na lib: `editor.commands` continua funcionando num
+   * editor em leitura — `editable` vale para o que o teclado e o ponteiro fazem
+   * no campo, não para comando disparado por código. Medido: clicar em Negrito
+   * numa demonstração somente-leitura marcava o documento, o botão acendia, e o
+   * estado contradizia o que a própria página promete em `states.readOnly`.
+   */
+  function acts(): boolean {
+    return editor.isEditable;
+  }
+
+  /**
+   * Liga os cliques dos botões que a montagem acabou de criar.
+   *
+   * Roda junto de cada `buildToolbar`: os ouvintes morrem com os elementos que
+   * a montagem descarta, e não há o que desligar à mão.
+   */
+  function wireToolbar(): void {
+    for (const { group, actions } of groups) {
+      for (const btn of group.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]')) {
+        btn.addEventListener('click', () => {
+          const action = btn.dataset.value as EditorAction;
+          if (!actions.includes(action)) return;
+          // O grupo pinta o próprio estado no clique, ANTES deste ouvinte. Com
+          // a edição desligada o comando não roda, o documento não muda, e sem
+          // este `sync` o botão ficaria aceso mentindo sobre ele.
+          if (!acts()) return sync();
+          ACTIONS[action].run?.(editor);
+        });
+      }
+    }
+
+    for (const { button, action } of plain) {
+      const run = ACTIONS[action].run;
+      if (run) button.addEventListener('click', () => { if (acts()) run(editor); });
+    }
+
+    for (const [button, row] of [
+      [formulaButton, formula],
+      ...(hasLinkButton ? [[linkButton, link] as const] : []),
+      ...(altButton ? [[altButton, alt] as const] : []),
+    ] as Array<[HTMLButtonElement, FieldRow]>) {
+      button.setAttribute('aria-expanded', 'false');
+      button.setAttribute('aria-controls', row.row.id);
+      button.addEventListener('click', () => {
+        if (!acts()) return;
+        openRow(row.isOpen() ? null : row);
+      });
+    }
+
+    const imageTarget = plain.find((s) => s.action === 'image');
+    imageTarget?.button.addEventListener('click', () => {
+      if (!acts()) return;
+      // O seletor é criado a cada clique e descartado depois: um input guardado
+      // entre usos mantém o arquivo anterior, e escolher o MESMO arquivo duas
+      // vezes seguidas não dispara `change`.
+      const picker = document.createElement('input');
+      picker.type = 'file';
+      picker.accept = 'image/*';
+      picker.addEventListener('change', () => {
+        const file = picker.files?.[0];
+        if (file) void insertImageFile(file);
+      });
+      picker.click();
+    });
+
+    sync();
+    const firstFocusable = focusables()[0];
+    if (firstFocusable) setRoving(firstFocusable);
   }
 
   root.append(toolbar, formula.row, link.row, alt.row, clipboard);
@@ -1099,7 +1203,7 @@ export function createEditor(options: EditorOptions): EditorRoot {
     unlinkButton.hidden = !editor.isActive('link');
     for (const { box, node } of contextBoxes) box.hidden = !editor.isActive(node);
     formulaButton.setAttribute('aria-expanded', String(formula.isOpen()));
-    if (linkTarget) linkButton.setAttribute('aria-expanded', String(link.isOpen()));
+    if (hasLinkButton) linkButton.setAttribute('aria-expanded', String(link.isOpen()));
     altButton?.setAttribute('aria-expanded', String(alt.isOpen()));
   }
   editor.on('transaction', sync);
@@ -1112,24 +1216,7 @@ export function createEditor(options: EditorOptions): EditorRoot {
     editor.on('update', () => emitChange(editor.getHTML()));
   }
 
-  for (const { group, actions } of groups) {
-    for (const btn of group.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]')) {
-      btn.addEventListener('click', () => {
-        const action = btn.dataset.value as EditorAction;
-        if (actions.includes(action)) ACTIONS[action].run?.(editor);
-      });
-    }
-  }
-  for (const { button, action } of plain) {
-    const run = ACTIONS[action].run;
-    if (run) button.addEventListener('click', () => run(editor));
-  }
-
   // ─── Imagem ────────────────────────────────────────────────────────────────
-  //
-  // O seletor de arquivo é criado a cada clique e descartado depois: um input
-  // guardado entre usos mantém o arquivo anterior, e escolher o MESMO arquivo
-  // duas vezes seguidas não dispara `change`.
   /**
    * Escreve o `alt` da imagem de um `src` conhecido, onde quer que ela esteja.
    *
@@ -1228,11 +1315,14 @@ export function createEditor(options: EditorOptions): EditorRoot {
 
   for (const event of ['dragenter', 'dragover'] as const) {
     root.addEventListener(event, (e) => {
-      if (isFileDrag((e as DragEvent).dataTransfer)) e.preventDefault();
+      // Em leitura o arrasto NÃO é aceito: cancelar o padrão aqui prometeria
+      // que a moldura recebe o arquivo, e receber é escrever no documento.
+      if (acts() && isFileDrag((e as DragEvent).dataTransfer)) e.preventDefault();
     });
   }
 
   root.addEventListener('drop', (e) => {
+    if (!acts()) return;
     // Solto DENTRO do editável, quem já tratou foi a lib, pelo `handleDrop`
     // acima — ela previne o padrão, e é essa marca que evita inserir duas vezes.
     if (e.defaultPrevented) return;
@@ -1244,23 +1334,6 @@ export function createEditor(options: EditorOptions): EditorRoot {
     editor.commands.focus('end');
     for (const file of files) void insertImageFile(file);
   });
-
-  const imageTarget = plain.find((s) => s.action === 'image');
-  if (imageTarget) {
-    imageTarget.button.addEventListener('click', () => {
-      // O seletor é criado a cada clique e descartado depois: um input guardado
-      // entre usos mantém o arquivo anterior, e escolher o MESMO arquivo duas
-      // vezes seguidas não dispara `change`.
-      const picker = document.createElement('input');
-      picker.type = 'file';
-      picker.accept = 'image/*';
-      picker.addEventListener('change', () => {
-        const file = picker.files?.[0];
-        if (file) void insertImageFile(file);
-      });
-      picker.click();
-    });
-  }
 
   // ─── Navegação por seta na barra ──────────────────────────────────────────
   //
@@ -1304,14 +1377,47 @@ export function createEditor(options: EditorOptions): EditorRoot {
     if (btn && !btn.disabled) setRoving(btn);
   });
 
-  sync();
-  const firstFocusable = focusables()[0];
-  if (firstFocusable) setRoving(firstFocusable);
+  // A barra só existe a partir daqui: `buildToolbar` fecha sobre as linhas de
+  // entrada e sobre `insertImageFile`, e chamá-la antes deles pegaria as
+  // constantes na zona morta.
+  buildToolbar();
+
+  /**
+   * Liga e desliga a edição sem refazer nada.
+   *
+   * `setEditable` não emite transação, então a barra precisa ser avisada à mão
+   * — e a linha de entrada aberta tem de fechar: ela pede um texto para uma
+   * ação que a barra acabou de deixar de aplicar.
+   */
+  function setEditable(value: boolean): void {
+    if (editor.isEditable === value) return;
+    editor.setEditable(value);
+    if (!value) openRow(null);
+    else sync();
+  }
+
+  /**
+   * Troca o conjunto de botões sem remontar o editor.
+   *
+   * O que muda é a BARRA; o documento, o histórico e o foco seguem intactos. A
+   * fábrica inteira era a única saída antes disso, e ela leva junto o texto que
+   * a pessoa acabou de escrever — na demonstração da docs page, cada clique num
+   * controle apagava o que estava na tela.
+   */
+  function setPreset(next: EditorPreset): void {
+    if (next === currentPreset) return;
+    currentPreset = next;
+    // A linha aberta pode pertencer a um botão que o conjunto novo não tem.
+    openRow(null);
+    buildToolbar();
+  }
 
   const root2 = tornarDestruivel(root, root, () => {
     editor.destroy();
   }) as EditorRoot;
   root2.editor = editor;
   root2.insertImage = insertImageFile;
+  root2.setEditable = setEditable;
+  root2.setPreset = setPreset;
   return root2;
 }

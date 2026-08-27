@@ -48,7 +48,7 @@ const LABELS_BLOCK = [
   "  toolbar: 'Formatação',",
   "  editorField: 'Corpo do texto',",
   "  groups: { marks: 'Marcas de texto', headings: 'Títulos', /* … */ },",
-  "  actions: { bold: 'Negrito', link: 'Link', table: 'Inserir tabela', /* … */ },",
+  "  actions: { bold: 'Negrito', link: 'Inserir link', table: 'Inserir tabela', /* … */ },",
   "  fields: { link: 'Endereço do link', linkConfirm: 'Aplicar', /* … */ },",
   '};',
 ].join('\n');

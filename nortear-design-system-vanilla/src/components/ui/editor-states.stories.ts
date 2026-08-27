@@ -62,6 +62,7 @@ export const ReadOnly: Story = {
       }),
     ),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const root = canvasElement.querySelector('[data-slot="editor"]') as EditorRoot;
 
     await step('A edição fica desligada, e o conteúdo permanece', async () => {
@@ -76,6 +77,27 @@ export const ReadOnly: Story = {
     await step('O texto segue selecionável — leitura não é imagem', async () => {
       const field = root.querySelector('.ProseMirror') as HTMLElement;
       await expect(getComputedStyle(field).userSelect).not.toBe('none');
+    });
+
+    await step('A barra NÃO aplica comando, e o botão não mente sobre isso', async () => {
+      // O caso que o `contenteditable` acima não cobre: `editor.commands`
+      // continua funcionando num editor em leitura — `editable` vale para o
+      // teclado e o ponteiro dentro do campo, não para comando disparado por
+      // código. Sem a guarda, clicar em Negrito marcava o documento, o botão
+      // acendia, e o estado contradizia o que a página promete em
+      // `states.readOnly`.
+      const bold = canvas.getByRole('button', { name: LABELS.actions.bold });
+      const before = root.editor.getHTML();
+
+      root.editor.commands.selectAll();
+      await userEvent.click(bold);
+
+      await expect(root.querySelector('.ProseMirror strong')).toBeNull();
+      await expect(root.editor.getHTML()).toBe(before);
+      // O grupo pinta o próprio estado no clique, ANTES de o editor ser
+      // consultado: sem a correção que vem logo depois, o botão ficaria aceso
+      // sobre um documento que não mudou.
+      await expect(bold).toHaveAttribute('aria-pressed', 'false');
     });
   },
 };

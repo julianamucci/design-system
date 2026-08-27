@@ -6,18 +6,23 @@ export interface DocsWhenToUseScenario { s: string; u: string; a: string }
 export interface DocsWhenToUseUXRow { element: string; do: string; dont: string; rules?: string }
 
 /**
- * `guidelines.title` e o bloco `scenarios` são opcionais porque nem todo
- * conteúdo compartilhado os declara: o do editor traz `usage.guidelines` como
- * parágrafo e `usage.scenarios.itemN` como frases soltas, sem rótulo de coluna
- * e sem título de bloco. Com os dois obrigatórios, a página teria de inventar
- * rótulo — e rótulo inventado numa docs page trilíngue fica em português nos
- * três idiomas. Com o título e o bloco presentes, nada muda para as páginas
- * existentes.
+ * `guidelines.title` e o bloco `scenarios` são obrigatórios — e voltaram a ser.
+ *
+ * Ficaram opcionais por um dia, para acomodar o conteúdo do editor, que trazia
+ * `usage.guidelines` como parágrafo e `usage.scenarios.itemN` como frases
+ * soltas, sem rótulo de coluna e sem título de bloco. A opcionalidade custa
+ * mais do que resolve: com ela, a seção "quando usar" de uma página podia
+ * perder a tabela de cenários inteira sem que nada reprovasse. O conteúdo do
+ * editor foi corrigido na raiz — `usage.guidelines.title` e
+ * `usage.scenarios.cols` existem —, então a exceção não tem mais quem a use.
+ *
+ * `scenarios.title` segue opcional, e sempre foi: a tabela se explica pelos
+ * rótulos das colunas.
  */
 export interface DocsWhenToUseProps {
   title: string;
-  guidelines: { title?: string; items: string[] };
-  scenarios?: { title?: string; cols: { scenario: string; use: string; alternative: string }; items: DocsWhenToUseScenario[] };
+  guidelines: { title: string; items: string[] };
+  scenarios: { title?: string; cols: { scenario: string; use: string; alternative: string }; items: DocsWhenToUseScenario[] };
   uxWriting?: { title: string; cols: { element: string; do: string; dont: string; rules?: string }; items: DocsWhenToUseUXRow[] };
   do: { title: string; items: string[] };
   dont: { title: string; items: string[] };
@@ -37,12 +42,10 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   // ── Guidelines ───────────────────────────────────────────────────────────────
   const guidelinesBlock = createCard({ className: 'nds-bg-muted-soft nds-border-soft nds-p-4 nds-stack' });
   guidelinesBlock.dataset.spacing = 'sm';
-  if (props.guidelines.title) {
-    const guidelinesTitle = document.createElement('h3');
-    guidelinesTitle.className = 'nds-font-medium nds-text-body';
-    guidelinesTitle.textContent = props.guidelines.title;
-    guidelinesBlock.appendChild(guidelinesTitle);
-  }
+  const guidelinesTitle = document.createElement('h3');
+  guidelinesTitle.className = 'nds-font-medium nds-text-body';
+  guidelinesTitle.textContent = props.guidelines.title;
+  guidelinesBlock.appendChild(guidelinesTitle);
 
   const guidelinesList = document.createElement('ul');
   guidelinesList.className = 'nds-list-disc nds-stack nds-text-body nds-text-muted-foreground';
@@ -54,33 +57,29 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   });
   guidelinesBlock.appendChild(guidelinesList);
 
-  // ── Scenarios table (optional) ────────────────────────────────────────────────
-  let scenariosBlock: HTMLElement | null = null;
-  if (props.scenarios) {
-    const scenarios = props.scenarios;
-    scenariosBlock = createCard({ className: 'nds-overflow-x nds-p-4' });
+  // ── Scenarios table ───────────────────────────────────────────────────────────
+  const scenariosBlock = createCard({ className: 'nds-overflow-x nds-p-4' });
 
-    const { wrapper: scenariosTableWrapper, table: scenariosTable } = createTable('nds-w-full nds-border-collapse nds-text-body');
+  const { wrapper: scenariosTableWrapper, table: scenariosTable } = createTable('nds-w-full nds-border-collapse nds-text-body');
 
-    const scenariosThead = createTableHeader();
-    const scenariosHeaderRow = createTableRow('nds-border-b nds-bg-muted-soft nds-font-medium');
-    scenariosHeaderRow.appendChild(createTableHead(scenarios.cols.scenario, 'nds-p-2'));
-    scenariosHeaderRow.appendChild(createTableHead(scenarios.cols.use, 'nds-p-2'));
-    scenariosHeaderRow.appendChild(createTableHead(scenarios.cols.alternative, 'nds-p-2'));
-    scenariosThead.appendChild(scenariosHeaderRow);
+  const scenariosThead = createTableHeader();
+  const scenariosHeaderRow = createTableRow('nds-border-b nds-bg-muted-soft nds-font-medium');
+  scenariosHeaderRow.appendChild(createTableHead(props.scenarios.cols.scenario, 'nds-p-2'));
+  scenariosHeaderRow.appendChild(createTableHead(props.scenarios.cols.use, 'nds-p-2'));
+  scenariosHeaderRow.appendChild(createTableHead(props.scenarios.cols.alternative, 'nds-p-2'));
+  scenariosThead.appendChild(scenariosHeaderRow);
 
-    const scenariosTbody = createTableBody();
-    scenarios.items.forEach(item => {
-      const row = createTableRow('nds-border-b nds-hover-bg-muted-faint');
-      row.appendChild(createTableCell(item.s, 'nds-p-2'));
-      row.appendChild(createTableCell(item.u, 'nds-p-2 nds-font-medium nds-text-primary'));
-      row.appendChild(createTableCell(item.a, 'nds-p-2 nds-text-muted-foreground'));
-      scenariosTbody.appendChild(row);
-    });
+  const scenariosTbody = createTableBody();
+  props.scenarios.items.forEach(item => {
+    const row = createTableRow('nds-border-b nds-hover-bg-muted-faint');
+    row.appendChild(createTableCell(item.s, 'nds-p-2'));
+    row.appendChild(createTableCell(item.u, 'nds-p-2 nds-font-medium nds-text-primary'));
+    row.appendChild(createTableCell(item.a, 'nds-p-2 nds-text-muted-foreground'));
+    scenariosTbody.appendChild(row);
+  });
 
-    scenariosTable.append(scenariosThead, scenariosTbody);
-    scenariosBlock.appendChild(scenariosTableWrapper);
-  }
+  scenariosTable.append(scenariosThead, scenariosTbody);
+  scenariosBlock.appendChild(scenariosTableWrapper);
 
   // ── UX Writing table (optional) ───────────────────────────────────────────────
   let uxBlock: HTMLElement | null = null;
@@ -173,8 +172,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
 
   doBlock.append(doCard, dontCard);
 
-  card.append(guidelinesBlock);
-  if (scenariosBlock) card.append(scenariosBlock);
+  card.append(guidelinesBlock, scenariosBlock);
   if (uxBlock) card.append(uxBlock);
   card.append(doBlock);
   section.append(h2, card);

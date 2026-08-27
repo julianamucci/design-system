@@ -8,8 +8,8 @@ import {
   ADVANCED_CONTENT,
   BASIC_CONTENT,
   DO_DONT_CONTENT,
-  LABELS,
-  NOUN_LABELS,
+  editorLabels,
+  nounLabels,
   PLAYGROUND_CONTENT,
 } from '@/components/ui/editor.fixtures';
 import uiTranslations from '@/i18n/ui.json';
@@ -37,17 +37,19 @@ import {
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 //
-// Sem overrides: o `translations.json` do editor já descreve a API em
-// nomenclatura neutra, e nesta stack os nomes coincidem — `content`, `editable`,
-// `preset`, `labels`, `onChange`, `resolveImage`, `describeImage`.
+// Quase sem overrides: o `translations.json` do editor descreve a API em
+// nomenclatura neutra, e nesta stack os nomes coincidem — `content`,
+// `editable`, `preset`, `labels`, `resolveImage`, `describeImage`.
 //
-// Os 38 RÓTULOS de ação não têm chave no conteúdo compartilhado (só os quatro
-// controles da demonstração têm). Enquanto não tiverem, a demonstração usa os
-// mesmos rótulos das stories, de `editor.fixtures.ts`, e o único que troca de
-// idioma é o nome acessível da área editável.
+// A exceção é `onChange`. O conteúdo compartilhado o nomeia "callback de
+// mudança" porque o nome REAL muda de stack para stack, e a tabela de
+// propriedades desta página promete o nome que se digita aqui. Só o `name`
+// muda: tipo, padrão e descrição valem nos cinco.
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
-const { t, subscribe } = createTranslation(editorTranslations as Record<string, unknown>);
+const { t, subscribe } = createTranslation(editorTranslations as Record<string, unknown>, {
+  '*': { 'props.table.onChange.name': 'onChange' },
+});
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -62,17 +64,22 @@ function priorityLabel(raw: string): string {
 }
 
 /**
- * Editor de preview, com os rótulos das stories e o nome do campo traduzido.
+ * Editor de preview, com os rótulos no idioma da página.
  *
  * Toda instância desta página passa por aqui: são vários editores na mesma
  * página (demonstração, dois pares de Do & Don't, dois cards de conjunto), e
- * cada um precisa dos 38 rótulos para montar a barra.
+ * cada um precisa dos 38 rótulos para montar a barra. Eles saem do conteúdo
+ * compartilhado, e não de uma constante em pt-BR: o rótulo é o NOME ACESSÍVEL
+ * de um botão só de ícone, e uma barra em português numa página em espanhol é
+ * ilegível para quem ouve.
+ *
+ * Como a página refaz as seções a cada troca de idioma, e `editorLabels()`
+ * resolve no idioma corrente, a barra troca junto com o texto em volta.
  */
 function previewEditor(options: Omit<EditorOptions, 'labels'> & { labels?: EditorOptions['labels'] }): EditorRoot {
-  const base = options.labels ?? LABELS;
   return createEditor({
     ...options,
-    labels: { ...base, editorField: t('demonstration.labels.content') },
+    labels: options.labels ?? editorLabels(),
     class: ['nds-w-full', options.class].filter(Boolean).join(' '),
   });
 }
@@ -82,13 +89,10 @@ const PROP_KEYS = [
   'content', 'editable', 'preset', 'labels', 'onChange', 'resolveImage', 'describeImage',
 ];
 
-/** Chaves da tabela de tokens, agrupadas por assunto. */
-const TOKEN_GROUPS: Array<{ titleKey: string; keys: string[] }> = [
-  { titleKey: 'tokens.surfaceTitle', keys: ['border', 'background', 'muted', 'ring'] },
-  {
-    titleKey: 'tokens.contentTitle',
-    keys: ['foreground', 'mutedForeground', 'primary', 'accent', 'textH1'],
-  },
+/** Chaves da tabela de tokens, na ordem em que o conteúdo as declara. */
+const TOKEN_KEYS = [
+  'border', 'background', 'muted', 'mutedForeground', 'foreground',
+  'primary', 'accent', 'ring', 'textH1',
 ];
 
 /** Estados descritos pelo conteúdo compartilhado, na ordem em que ele os lista. */
@@ -206,10 +210,11 @@ export function createEditorDocs(): HTMLElement {
 
   // ── Demonstração ─────────────────────────────────────────────────────────
   //
-  // O estado vive fora do editor porque trocar de conjunto ou desligar a edição
-  // é opção de MONTAGEM: a barra é montada uma vez, a partir do conjunto. Cada
-  // troca remonta a instância, e a anterior é destruída — sem isso, cada clique
-  // deixaria um editor vivo escutando o documento.
+  // Uma instância só, do primeiro clique ao último. Trocar de conjunto refaz a
+  // BARRA, e desligar a edição não refaz nada — as duas coisas passam por
+  // método da raiz. A versão anterior remontava a fábrica a cada clique de
+  // controle: o texto que a pessoa acabava de escrever na demonstração sumia,
+  // que é o oposto do que uma demonstração existe para mostrar.
 
   type DemoState = { preset: 'basic' | 'advanced'; editable: boolean };
 
@@ -229,16 +234,16 @@ export function createEditorDocs(): HTMLElement {
     const slot = document.createElement('div');
     slot.className = 'nds-w-full';
 
-    let current: EditorRoot | null = null;
+    const current: EditorRoot = previewEditor({
+      content: PLAYGROUND_CONTENT,
+      preset: state.preset,
+      editable: state.editable,
+    });
+    slot.replaceChildren(current);
 
-    function mountEditor() {
-      current?.destroy?.();
-      current = previewEditor({
-        content: PLAYGROUND_CONTENT,
-        preset: state.preset,
-        editable: state.editable,
-      });
-      slot.replaceChildren(current);
+    function applyState() {
+      current.setPreset(state.preset);
+      current.setEditable(state.editable);
     }
 
     const buttons: Array<{ key: string; el: HTMLButtonElement; on: () => boolean }> = [];
@@ -256,7 +261,7 @@ export function createEditorDocs(): HTMLElement {
         label,
         onClick: () => {
           apply();
-          mountEditor();
+          applyState();
           syncControls();
         },
       });
@@ -288,7 +293,6 @@ export function createEditorDocs(): HTMLElement {
       () => { state.editable = !state.editable; },
     );
 
-    mountEditor();
     syncControls();
     wrap.append(controls, slot);
     return wrap;
@@ -323,19 +327,24 @@ export function createEditorDocs(): HTMLElement {
         });
 
       case 'quando-usar':
-        // O conteúdo compartilhado do editor traz `guidelines` como parágrafo e
-        // `scenarios` como frases soltas — sem título de bloco e sem rótulo de
-        // coluna. Os seis textos entram na mesma lista, na ordem em que o
-        // conteúdo os declara; inventar título aqui deixaria a página em
-        // português nos três idiomas.
         return createDocsWhenToUse({
           title: t('usage.title'),
           guidelines: {
-            items: [
-              t('usage.guidelines'),
-              ...[1, 2, 3, 4].map(i => t(`usage.scenarios.item${i}`)),
-              t('usage.uxWriting'),
-            ],
+            title: t('usage.guidelines.title'),
+            items: [1, 2, 3, 4, 5].map(i => t(`usage.guidelines.item${i}`)),
+          },
+          scenarios: {
+            title: t('usage.scenarios.title'),
+            cols: {
+              scenario: t('usage.scenarios.cols.scenario'),
+              use: t('usage.scenarios.cols.use'),
+              alternative: t('usage.scenarios.cols.alternative'),
+            },
+            items: [1, 2, 3, 4, 5, 6].map(i => ({
+              s: t(`usage.scenarios.item${i}.s`),
+              u: t(`usage.scenarios.item${i}.u`),
+              a: t(`usage.scenarios.item${i}.a`),
+            })),
           },
           do: {
             title: tNav('common.do'),
@@ -356,19 +365,21 @@ export function createEditorDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
-              // Os dois editores são o MESMO conjunto e o MESMO conteúdo: só os
-              // rótulos de "link" e "tabela" mudam, porque é deles que o par
-              // fala. Trocar qualquer outra coisa daria à comparação uma
-              // segunda variável.
+              // Os dois editores são o MESMO conjunto e o MESMO conteúdo: muda
+              // UM rótulo, o do botão de link — `labels.actions.link`
+              // ("Inserir link") de um lado, `labels.nouns.link` ("Link") do
+              // outro, os dois vindos do conteúdo. É exatamente o que a legenda
+              // deste par contrasta, e um segundo texto diferente daria à
+              // comparação uma segunda variável.
               doPreviewFactory: () => previewEditor({
                 content: BASIC_CONTENT,
                 preset: 'basic',
-                labels: LABELS,
+                labels: editorLabels(),
               }),
               dontPreviewFactory: () => previewEditor({
                 content: BASIC_CONTENT,
                 preset: 'basic',
-                labels: NOUN_LABELS,
+                labels: nounLabels(),
               }),
             },
             {
@@ -419,21 +430,18 @@ export function createEditorDocs(): HTMLElement {
         });
 
       case 'estados':
-        // Duas colunas, e não três: o conteúdo compartilhado do editor declara
-        // só `state` e `description` em `states.cols`.
         return createDocsStates({
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.description'),
+            trigger: t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
           },
-          items: STATE_KEYS.map(key => {
-            const full = toPlainText(t(`states.${key}`));
-            const dash = full.indexOf(' — ');
-            return dash < 0
-              ? { label: full, trigger: '' }
-              : { label: full.slice(0, dash), trigger: full.slice(dash + 3) };
-          }),
+          items: STATE_KEYS.map(key => ({
+            label: t(`states.${key}.label`),
+            trigger: t(`states.${key}.trigger`),
+            behavior: toPlainText(t(`states.${key}.behavior`)),
+          })),
         });
 
       case 'propriedades':
@@ -468,16 +476,14 @@ export function createEditorDocs(): HTMLElement {
           title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
-            value: t('tokens.surfaceTitle'),
-            description: t('tokens.table.usage'),
+            value: t('tokens.table.value'),
+            description: t('tokens.table.description'),
           },
-          items: TOKEN_GROUPS.flatMap(group =>
-            group.keys.map(key => ({
-              token: t(`tokens.table.${key}.name`),
-              value: t(group.titleKey),
-              description: t(`tokens.table.${key}.usage`),
-            })),
-          ),
+          items: TOKEN_KEYS.map(key => ({
+            token: t(`tokens.table.${key}.token`),
+            value: t(`tokens.table.${key}.value`),
+            description: t(`tokens.table.${key}.description`),
+          })),
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),
         });

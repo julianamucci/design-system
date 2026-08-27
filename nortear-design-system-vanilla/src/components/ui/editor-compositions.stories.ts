@@ -253,6 +253,11 @@ export const AiImageDescription: Story = {
         'alt',
         'Gráfico de barras da receita por trimestre',
       );
+
+      // O que a play DEIXA é o que a pessoa vê ao abrir a story pela sidebar, e
+      // é o que o Chromatic fotografa. O documento aqui era `<p>correção</p>` —
+      // precondição de um passo de teste, que não explica nada a quem chega.
+      root.editor.commands.setContent(AI_DESCRIPTION_CONTENT);
     });
   },
 };

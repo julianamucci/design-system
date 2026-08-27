@@ -16,86 +16,94 @@
  * `expect` moram em `editor.play-helpers.ts`.
  */
 
-import type { EditorLabels } from './editor';
+import { createTranslation } from '@/lib/i18n';
+import editorTranslations from '@shared/content/editor/translations.json';
+import type { EditorAction, EditorGroup, EditorLabels } from './editor';
+
+const { t } = createTranslation(editorTranslations as Record<string, unknown>);
+
+// As três listas são EXAUSTIVAS por construção, e é o `satisfies` que garante:
+// uma ação nova no tipo sem entrada aqui não compila. Uma lista solta, com
+// `as`, deixaria o botão novo sair da barra com o nome da própria chave por
+// nome acessível — defeito silencioso, e só visível para quem ouve.
+const GROUP_KEYS = Object.keys({
+  marks: 1, headings: 1, align: 1, lists: 1, blocks: 1, actions: 1, table: 1,
+} satisfies Record<EditorGroup, 1>) as EditorGroup[];
+
+const ACTION_KEYS = Object.keys({
+  bold: 1, italic: 1, underline: 1, strike: 1, code: 1, highlight: 1,
+  h1: 1, h2: 1, h3: 1,
+  alignLeft: 1, alignCenter: 1, alignRight: 1, alignJustify: 1,
+  bulletList: 1, orderedList: 1, taskList: 1,
+  blockquote: 1, codeBlock: 1,
+  link: 1, image: 1, imageAlt: 1, imageSmaller: 1, imageLarger: 1, imageNatural: 1,
+  table: 1, horizontalRule: 1, undo: 1, redo: 1, formula: 1,
+  rowAfter: 1, columnAfter: 1, deleteRow: 1, deleteColumn: 1, headerRow: 1, deleteTable: 1,
+} satisfies Record<EditorAction, 1>) as EditorAction[];
+
+type FieldKey = keyof EditorLabels['fields'];
+
+const FIELD_KEYS = Object.keys({
+  formula: 1, formulaConfirm: 1, link: 1, linkConfirm: 1, linkRemove: 1,
+  alt: 1, altConfirm: 1,
+} satisfies Record<FieldKey, 1>) as FieldKey[];
 
 /**
- * Rótulos de toda demonstração do Editor.
+ * Monta os rótulos a partir do conteúdo compartilhado, no idioma da página.
  *
- * Vivem aqui, e não no `translations.json` compartilhado, porque o conteúdo
- * compartilhado não declara chave para os 38 nomes de ação — só para os quatro
- * controles da demonstração. Ver a nota do relatório desta stack.
+ * Os textos vinham escritos aqui, em pt-BR, porque o `translations.json` do
+ * editor não tinha chave para eles. Tem: `labels.toolbar`, `labels.editorField`,
+ * `labels.groups`, `labels.actions` e `labels.fields`, nos três idiomas. Estes
+ * textos são o NOME ACESSÍVEL de cada botão — todos são só de ícone —, e o
+ * nome acessível é conteúdo: uma barra em português numa página em espanhol é
+ * ilegível para quem ouve, e invisível para quem só olha os ícones.
+ *
+ * É função, e não constante, porque `t()` resolve no idioma corrente: a docs
+ * page refaz as seções a cada troca de idioma, e a barra troca junto.
  */
-export const LABELS: EditorLabels = {
-  toolbar: 'Formatação',
-  editorField: 'Corpo do texto',
-  groups: {
-    marks: 'Marcas de texto',
-    headings: 'Títulos',
-    align: 'Alinhamento',
-    lists: 'Listas',
-    blocks: 'Blocos',
-    actions: 'Ações',
-    table: 'Tabela',
-  },
-  actions: {
-    bold: 'Negrito',
-    italic: 'Itálico',
-    underline: 'Sublinhado',
-    strike: 'Tachado',
-    code: 'Código',
-    highlight: 'Destaque',
-    h1: 'Título 1',
-    h2: 'Título 2',
-    h3: 'Título 3',
-    alignLeft: 'Alinhar à esquerda',
-    alignCenter: 'Centralizar',
-    alignRight: 'Alinhar à direita',
-    alignJustify: 'Justificar',
-    bulletList: 'Lista com marcadores',
-    orderedList: 'Lista numerada',
-    taskList: 'Lista de tarefas',
-    blockquote: 'Citação',
-    codeBlock: 'Bloco de código',
-    link: 'Link',
-    image: 'Inserir imagem',
-    imageAlt: 'Texto alternativo',
-    imageSmaller: 'Diminuir a imagem',
-    imageLarger: 'Aumentar a imagem',
-    imageNatural: 'Tamanho natural',
-    table: 'Inserir tabela',
-    horizontalRule: 'Linha divisória',
-    undo: 'Desfazer',
-    redo: 'Refazer',
-    formula: 'Inserir fórmula',
-    rowAfter: 'Inserir linha abaixo',
-    columnAfter: 'Inserir coluna à direita',
-    deleteRow: 'Excluir linha',
-    deleteColumn: 'Excluir coluna',
-    headerRow: 'Alternar linha de cabeçalho',
-    deleteTable: 'Excluir tabela',
-  },
-  fields: {
-    formula: 'Fórmula em LaTeX',
-    formulaConfirm: 'Inserir',
-    link: 'Endereço do link',
-    linkConfirm: 'Aplicar',
-    linkRemove: 'Tirar o link',
-    alt: 'Descrição da imagem',
-    altConfirm: 'Salvar descrição',
-  },
-};
+export function editorLabels(): EditorLabels {
+  return {
+    toolbar: t('labels.toolbar'),
+    editorField: t('labels.editorField'),
+    groups: Object.fromEntries(
+      GROUP_KEYS.map((key) => [key, t(`labels.groups.${key}`)]),
+    ) as Record<EditorGroup, string>,
+    actions: Object.fromEntries(
+      ACTION_KEYS.map((key) => [key, t(`labels.actions.${key}`)]),
+    ) as Record<EditorAction, string>,
+    fields: Object.fromEntries(
+      FIELD_KEYS.map((key) => [key, t(`labels.fields.${key}`)]),
+    ) as EditorLabels['fields'],
+  };
+}
+
+/**
+ * Os rótulos das stories, resolvidos uma vez na carga do módulo.
+ *
+ * A story não troca de idioma no meio da execução, e a play precisa do MESMO
+ * texto que a barra recebeu para encontrar o botão por nome acessível. Resolver
+ * uma vez é o que garante isso; a docs page, que troca, chama `editorLabels()`
+ * a cada montagem.
+ */
+export const LABELS: EditorLabels = editorLabels();
 
 /**
  * Rótulos do par Do & Don't: o mesmo botão nomeado pelo VERBO e pelo
  * SUBSTANTIVO.
  *
  * Todo botão da barra é só de ícone, então o rótulo é o que o leitor de tela
- * anuncia — e ouvir "Tabela" não diz o que o clique faz.
+ * anuncia — e ouvir "Link" não diz o que o clique faz. Os dois textos saem do
+ * conteúdo compartilhado (`labels.actions.link` e `labels.nouns.link`): é o par
+ * que a legenda do primeiro Do & Don't cita, e escrevê-los aqui deixaria a
+ * comparação em português numa página em inglês.
+ *
+ * Muda UM rótulo, e só ele: um segundo texto diferente daria à comparação uma
+ * segunda variável.
  */
-export const NOUN_LABELS: EditorLabels = {
-  ...LABELS,
-  actions: { ...LABELS.actions, table: 'Tabela', link: 'Link' },
-};
+export function nounLabels(): EditorLabels {
+  const base = editorLabels();
+  return { ...base, actions: { ...base.actions, link: t('labels.nouns.link') } };
+}
 
 /** Um PNG de 1×1 transparente, montado byte a byte — nada baixado. */
 export const DOT_PNG_BASE64 =
