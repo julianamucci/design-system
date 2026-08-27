@@ -7,7 +7,7 @@
  *     <div class="nds-editor-toolbar" role="toolbar">   ← marcas e fórmula
  *       <button class="nds-toggle">…</button>
  *     </div>
- *     <div class="nds-editor-formula">                  ← só quando aberta
+ *     <div class="nds-editor-field-row">                ← fórmula ou link
  *       <input class="nds-input"> <button class="nds-button">…</button>
  *     </div>
  *     <div class="nds-editor-content">                  ← a lib monta aqui
@@ -54,12 +54,14 @@
   background-color: hsl(var(--border));
 }
 
-/* A linha da fórmula: campo de LaTeX e confirmação.
+/* A linha que pede um texto antes de agir: LaTeX da fórmula ou endereço do
+ * link. Uma só regra para as duas — elas ocupam o mesmo lugar na moldura e
+ * nunca aparecem juntas.
  *
- * Fica na moldura, e não num diálogo, porque escrever fórmula é edição de
- * texto: um modal tiraria o texto de vista justamente enquanto se decide o que
- * a fórmula diz. */
-.nds-editor-formula {
+ * Fica na moldura, e não num diálogo, porque escrever fórmula ou endereço é
+ * edição de texto: um modal tiraria o texto de vista justamente enquanto se
+ * decide o que a fórmula diz ou para onde o link vai. */
+.nds-editor-field-row {
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
@@ -77,11 +79,11 @@
  *
  * Vale para toda regra `.nds-*` que declare `display` num elemento que alguém
  * esconde por atributo. */
-.nds-editor-formula[hidden] {
+.nds-editor-field-row[hidden] {
   display: none;
 }
 
-.nds-editor-formula > .nds-input {
+.nds-editor-field-row > .nds-input {
   flex: 1 1 auto;
   min-width: 0;
   /* A mesma pilha monoespaçada que o bloco de código usa: LaTeX é código, e

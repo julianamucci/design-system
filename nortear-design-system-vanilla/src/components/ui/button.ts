@@ -25,7 +25,15 @@ export type ButtonOptions = {
   type?: 'button' | 'submit' | 'reset';
   onClick?: (e: MouseEvent) => void;
   class?: string;
-  children?: HTMLElement | string;
+  /**
+   * Filho do botão. Aceita SVG, e não só `HTMLElement`.
+   *
+   * Botão só de ícone é caso corrente aqui (`size: 'icon-*'` existe para ele), e
+   * ícone é `SVGSVGElement` — que não é `HTMLElement`. Enquanto o tipo não o
+   * aceitava, cada chamada construía o botão e dava `appendChild` depois; o
+   * `code-block` ainda faz assim.
+   */
+  children?: HTMLElement | SVGElement | string;
 };
 
 // ─── btnClass ─────────────────────────────────────────────────────────────────

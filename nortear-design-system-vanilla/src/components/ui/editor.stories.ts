@@ -7,23 +7,49 @@
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
-import { createEditor, type EditorRoot } from './editor';
+import { createEditor, type EditorLabels, type EditorPreset, type EditorRoot } from './editor';
 
 type EditorArgs = {
   content: string;
   editable: boolean;
+  preset: EditorPreset;
 };
 
-const LABELS = {
+const LABELS: EditorLabels = {
   toolbar: 'Formatação',
-  marks: 'Marcas de texto',
-  bold: 'Negrito',
-  italic: 'Itálico',
-  strike: 'Tachado',
   editorField: 'Corpo do texto',
-  formula: 'Inserir fórmula',
-  formulaField: 'Fórmula em LaTeX',
-  formulaConfirm: 'Inserir',
+  groups: {
+    marks: 'Marcas de texto',
+    headings: 'Títulos',
+    lists: 'Listas',
+    blocks: 'Blocos',
+    actions: 'Ações',
+  },
+  actions: {
+    bold: 'Negrito',
+    italic: 'Itálico',
+    underline: 'Sublinhado',
+    strike: 'Tachado',
+    code: 'Código',
+    h1: 'Título 1',
+    h2: 'Título 2',
+    h3: 'Título 3',
+    bulletList: 'Lista com marcadores',
+    orderedList: 'Lista numerada',
+    blockquote: 'Citação',
+    codeBlock: 'Bloco de código',
+    link: 'Link',
+    horizontalRule: 'Linha divisória',
+    undo: 'Desfazer',
+    redo: 'Refazer',
+    formula: 'Inserir fórmula',
+  },
+  fields: {
+    formula: 'Fórmula em LaTeX',
+    formulaConfirm: 'Inserir',
+    link: 'Endereço do link',
+    linkConfirm: 'Aplicar',
+  },
 };
 
 const meta: Meta<EditorArgs> = {
@@ -39,24 +65,32 @@ const meta: Meta<EditorArgs> = {
       description: 'Quando falso, o conteúdo vira leitura.',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
     },
+    preset: {
+      control: { type: 'inline-radio' },
+      options: ['basic', 'advanced'],
+      description:
+        'Conjunto de botões. Muda o que a barra expõe, não o que o documento aceita.',
+      table: { type: { summary: '"basic" | "advanced"' }, defaultValue: { summary: '"advanced"' } },
+    },
   },
   args: {
     content: '<p>Escreva aqui. A energia de repouso é <strong>E = mc²</strong>.</p>',
     editable: true,
+    preset: 'advanced',
   },
 };
 
 /**
- * A linha da fórmula está desenhada?
+ * A linha de entrada está desenhada?
  *
  * Lê o `display` COMPUTADO, e não o atributo `hidden`. O `toBeVisible` do
  * jest-dom trata `hidden` como prova de invisibilidade — e era justamente o
- * atributo que estava certo enquanto a linha ficava na tela: `display: flex`
- * de autor vence o `[hidden] { display: none }` do navegador. A asserção que
- * confia no atributo concorda com o bug.
+ * atributo que estava certo enquanto a linha ficava na tela: `display: flex` de
+ * autor vence o `[hidden] { display: none }` do navegador. A asserção que confia
+ * no atributo concorda com o bug.
  */
-function linhaDesenhada(root: HTMLElement): boolean {
-  const linha = root.querySelector('[data-slot="editor-formula"]') as HTMLElement;
+function linhaDesenhada(root: HTMLElement, slot: string): boolean {
+  const linha = root.querySelector(`[data-slot="${slot}"]`) as HTMLElement;
   return getComputedStyle(linha).display !== 'none';
 }
 
@@ -65,7 +99,12 @@ type Story = StoryObj<EditorArgs>;
 
 export const Playground: Story = {
   render: (args) =>
-    createEditor({ content: args.content, editable: args.editable, labels: LABELS }),
+    createEditor({
+      content: args.content,
+      editable: args.editable,
+      preset: args.preset,
+      labels: LABELS,
+    }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const root = canvasElement.querySelector('[data-slot="editor"]') as EditorRoot;
@@ -74,57 +113,117 @@ export const Playground: Story = {
     //
     // O painel Interactions reexecuta no mesmo DOM, sem remontar: sem este
     // reinício, a segunda rodada acharia a fórmula que a primeira inseriu e a
-    // contagem de "uma fórmula" passaria a mentir. O reinício também dá à
-    // asserção de negrito uma seleção previsível.
+    // contagem de "uma fórmula" passaria a mentir. O reinício também dá às
+    // asserções de marca e de título uma seleção previsível.
     root.editor.commands.setContent('<p>massa e energia</p>');
 
-    await step('A barra se anuncia como barra, e o campo mora dentro da moldura', async () => {
-      const toolbar = canvas.getByRole('toolbar', { name: LABELS.toolbar });
-      await expect(toolbar).toBeInTheDocument();
+    await step('A barra se anuncia, e cada bloco tem nome próprio', async () => {
+      await expect(canvas.getByRole('toolbar', { name: LABELS.toolbar })).toBeInTheDocument();
+      for (const nome of [LABELS.groups.marks, LABELS.groups.headings, LABELS.groups.lists]) {
+        await expect(canvas.getByRole('group', { name: nome })).toBeInTheDocument();
+      }
       await expect(root.querySelector('.ProseMirror')).toBeInTheDocument();
     });
 
-    await step('Uma única parada de tabulação na barra, com as setas andando dentro', async () => {
-      const negrito = canvas.getByRole('button', { name: LABELS.bold });
-      const italico = canvas.getByRole('button', { name: LABELS.italic });
+    await step('Uma parada de tabulação só, e as setas ATRAVESSAM os grupos', async () => {
+      const negrito = canvas.getByRole('button', { name: LABELS.actions.bold });
+      const italico = canvas.getByRole('button', { name: LABELS.actions.italic });
       negrito.focus();
       await userEvent.keyboard('{ArrowRight}');
       await expect(italico).toHaveFocus();
       await expect(italico.tabIndex).toBe(0);
       await expect(negrito.tabIndex).toBe(-1);
+
+      // O salto que importa: do último botão do grupo de marcas para o primeiro
+      // do grupo de títulos. É por isso que os grupos abrem mão do teclado — com
+      // `role="toolbar"` neles, a navegação morreria na borda do primeiro grupo.
+      const codigo = canvas.getByRole('button', { name: LABELS.actions.code });
+      const titulo1 = canvas.getByRole('button', { name: LABELS.actions.h1 });
+      codigo.focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await expect(titulo1).toHaveFocus();
+
       // Volta ao início para que a rodada seguinte encontre o mesmo estado.
       await userEvent.keyboard('{Home}');
       await expect(negrito).toHaveFocus();
     });
 
-    await step('O botão de marca reflete o estado do EDITOR, não o próprio clique', async () => {
-      const negrito = canvas.getByRole('button', { name: LABELS.bold });
+    await step('Os botões refletem o estado do EDITOR, não o próprio clique', async () => {
+      const negrito = canvas.getByRole('button', { name: LABELS.actions.bold });
       // Sem clique nenhum: a marca é ligada pela instância, e o botão tem de
-      // acender. É o que distingue um botão preso ao editor de um alternador
-      // com estado próprio — e o motivo de esta barra não usar `createToggle`.
+      // acender. É o que distingue uma barra presa ao editor de uma com estado
+      // próprio, e o motivo de o grupo precisar de `setValue`.
       root.editor.chain().selectAll().setBold().run();
       await expect(negrito).toHaveAttribute('aria-pressed', 'true');
-
       root.editor.chain().selectAll().unsetBold().run();
       await expect(negrito).toHaveAttribute('aria-pressed', 'false');
     });
 
+    await step('Título é escolha única: ligar o H2 desliga o H1', async () => {
+      const h1 = canvas.getByRole('button', { name: LABELS.actions.h1 });
+      const h2 = canvas.getByRole('button', { name: LABELS.actions.h2 });
+      // CURSOR, não `selectAll`. A barra reflete o bloco onde o cursor está, e
+      // `selectAll` abrange também o parágrafo vazio que a lib mantém no fim do
+      // documento: com dois blocos de tipos diferentes na seleção, `isActive`
+      // responde falso — medido, com o HTML já em `<h1>`. Selecionar tudo aqui
+      // testaria uma pergunta que a barra não faz.
+      root.editor.chain().setTextSelection(2).setHeading({ level: 1 }).run();
+      await expect(h1).toHaveAttribute('aria-pressed', 'true');
+      await expect(h2).toHaveAttribute('aria-pressed', 'false');
+
+      root.editor.chain().setTextSelection(2).setHeading({ level: 2 }).run();
+      await expect(h1).toHaveAttribute('aria-pressed', 'false');
+      await expect(h2).toHaveAttribute('aria-pressed', 'true');
+
+      root.editor.chain().setTextSelection(2).setParagraph().run();
+      await expect(h2).toHaveAttribute('aria-pressed', 'false');
+    });
+
+    await step('Desfazer nasce indisponível e acende quando há o que desfazer', async () => {
+      const desfazer = canvas.getByRole('button', { name: LABELS.actions.undo });
+      // `setContent` da própria play já criou histórico, então o estado ligado é
+      // o esperado aqui — o que se verifica é que o botão SEGUE o editor.
+      await expect(desfazer.hasAttribute('disabled')).toBe(root.editor.can().undo() === false);
+    });
+
+    await step('O link só aceita esquema da lista, e vazio desfaz', async () => {
+      const abrir = canvas.getByRole('button', { name: LABELS.actions.link });
+      await expect(linhaDesenhada(root, 'editor-link')).toBe(false);
+      await userEvent.click(abrir);
+      await expect(linhaDesenhada(root, 'editor-link')).toBe(true);
+
+      const campo = canvas.getByRole('textbox', { name: LABELS.fields.link });
+      await expect(campo).toHaveFocus();
+
+      // `javascript:` é o caso que a lista de esquemas existe para barrar. O
+      // campo fica marcado como inválido e a linha NÃO fecha.
+      await userEvent.type(campo, 'javascript:alert(1){Enter}');
+      await expect(campo).toHaveAttribute('aria-invalid', 'true');
+      await expect(linhaDesenhada(root, 'editor-link')).toBe(true);
+      await expect(root.querySelector('a')).toBeNull();
+
+      await userEvent.clear(campo);
+      root.editor.chain().selectAll().run();
+      await userEvent.type(campo, 'exemplo.com{Enter}');
+      const ancora = root.querySelector('a');
+      await expect(ancora).toBeInTheDocument();
+      // Endereço sem esquema é o que a pessoa digita; quem completa é a barra.
+      await expect(ancora).toHaveAttribute('href', 'https://exemplo.com');
+      await expect(linhaDesenhada(root, 'editor-link')).toBe(false);
+      await expect(abrir).toHaveFocus();
+    });
+
     await step('A fórmula entra pelo botão e é renderizada pelo KaTeX', async () => {
-      const abrir = canvas.getByRole('button', { name: LABELS.formula });
+      const abrir = canvas.getByRole('button', { name: LABELS.actions.formula });
       await expect(abrir).toHaveAttribute('aria-expanded', 'false');
-      // A linha nasce FECHADA — e isto se verifica olhando a tela, não o
-      // atributo. `aria-expanded` correto com a linha visível foi o defeito:
-      // `display: flex` de autor vence o `[hidden]` do navegador, e o atributo
-      // seguia certo enquanto o campo ficava aberto na cara de quem lê.
-      await expect(linhaDesenhada(root)).toBe(false);
       await userEvent.click(abrir);
       await expect(abrir).toHaveAttribute('aria-expanded', 'true');
-      await expect(linhaDesenhada(root)).toBe(true);
+      await expect(linhaDesenhada(root, 'editor-formula')).toBe(true);
 
-      const campo = canvas.getByRole('textbox', { name: LABELS.formulaField });
+      const campo = canvas.getByRole('textbox', { name: LABELS.fields.formula });
       await expect(campo).toHaveFocus();
       await userEvent.type(campo, 'E = mc^2');
-      await userEvent.click(canvas.getByRole('button', { name: LABELS.formulaConfirm }));
+      await userEvent.click(canvas.getByRole('button', { name: LABELS.fields.formulaConfirm }));
 
       const formulas = root.querySelectorAll('[data-type="inline-math"]');
       await expect(formulas).toHaveLength(1);
@@ -137,27 +236,24 @@ export const Playground: Story = {
       // value must be an HTMLElement", que parece ausência e é tipo. Medido aqui.
       const mathml = formulas[0].querySelector('math');
       await expect(mathml).not.toBeNull();
-      // O LaTeX de origem viaja dentro do MathML, e é o que a tecnologia
-      // assistiva lê quando prefere a notação à árvore visual.
       await expect(mathml?.textContent).toContain('E');
 
       // A linha fecha e devolve o foco a quem a abriu.
       await expect(abrir).toHaveAttribute('aria-expanded', 'false');
-      await expect(linhaDesenhada(root)).toBe(false);
+      await expect(linhaDesenhada(root, 'editor-formula')).toBe(false);
       await expect(abrir).toHaveFocus();
 
       // E o mesmo botão abre e FECHA, sem inserir nada.
       await userEvent.click(abrir);
-      await expect(linhaDesenhada(root)).toBe(true);
+      await expect(linhaDesenhada(root, 'editor-formula')).toBe(true);
       await userEvent.click(abrir);
-      await expect(linhaDesenhada(root)).toBe(false);
-      await expect(abrir).toHaveAttribute('aria-expanded', 'false');
+      await expect(linhaDesenhada(root, 'editor-formula')).toBe(false);
     });
 
     await step('LaTeX inválido não some: fica visível e marcado como erro', async () => {
-      const abrir = canvas.getByRole('button', { name: LABELS.formula });
+      const abrir = canvas.getByRole('button', { name: LABELS.actions.formula });
       await userEvent.click(abrir);
-      const campo = canvas.getByRole('textbox', { name: LABELS.formulaField });
+      const campo = canvas.getByRole('textbox', { name: LABELS.fields.formula });
       // Sem chaves de propósito: no `userEvent.type`, `{` abre descritor de
       // tecla, e um LaTeX cheio de chaves testaria mais a escapagem do teclado
       // sintético que o editor. Comando inexistente erra igual.
