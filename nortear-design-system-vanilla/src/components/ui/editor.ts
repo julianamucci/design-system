@@ -476,10 +476,15 @@ type Bloco =
   | {
       botoes: EditorAction[];
       /**
-       * Nó que precisa estar sob o cursor para o bloco aparecer. Ausente = o
-       * bloco está sempre lá.
+       * Botões que só aparecem com um nó sob o cursor, DENTRO deste mesmo
+       * bloco.
+       *
+       * Ficam no mesmo bloco de propósito: inserir imagem e editar imagem são o
+       * mesmo assunto, e separá-los deixava "excluir linha" e "desfazer" no
+       * meio do caminho. Como a caixa contextual não traz separador próprio, o
+       * bloco continua sendo UM bloco — com ou sem os botões extras.
        */
-      contextual?: string;
+      contextual?: { node: string; botoes: EditorAction[] };
     };
 
 /**
@@ -509,17 +514,26 @@ const PRESETS: Record<EditorPreset, Bloco[]> = {
     },
     { grupo: 'lists', type: 'single', acoes: ['bulletList', 'orderedList', 'taskList'] },
     { grupo: 'blocks', type: 'multiple', acoes: ['blockquote', 'codeBlock'] },
-    { botoes: ['link', 'image', 'table', 'horizontalRule', 'undo', 'redo'] },
-    // Bloco CONTEXTUAL: seis botões que só existem dentro de uma tabela. Fora
-    // dela some inteiro — barra com seis botões inertes é ruído permanente
-    // para uma capacidade que a maioria dos documentos nunca usa.
+    // Um bloco por ASSUNTO. Inserir e editar imagem andam juntos, e o mesmo
+    // vale para a tabela: antes, "linha divisória", "desfazer" e o próprio
+    // botão de tabela caíam ENTRE o de inserir imagem e os de editá-la.
+    { botoes: ['link', 'horizontalRule', 'undo', 'redo'] },
     {
-      contextual: 'image',
-      botoes: ['imageAlt', 'imageSmaller', 'imageLarger', 'imageNatural'],
+      botoes: ['image'],
+      contextual: {
+        node: 'image',
+        botoes: ['imageAlt', 'imageSmaller', 'imageLarger', 'imageNatural'],
+      },
     },
+    // Os seis da tabela só existem dentro de uma: barra com seis botões inertes
+    // é ruído permanente para uma capacidade que a maioria dos documentos nunca
+    // usa.
     {
-      contextual: 'table',
-      botoes: ['rowAfter', 'columnAfter', 'deleteRow', 'deleteColumn', 'headerRow', 'deleteTable'],
+      botoes: ['table'],
+      contextual: {
+        node: 'table',
+        botoes: ['rowAfter', 'columnAfter', 'deleteRow', 'deleteColumn', 'headerRow', 'deleteTable'],
+      },
     },
   ],
 };
@@ -870,24 +884,8 @@ export function createEditor(options: EditorOptions): EditorRoot {
   const blocos = [...PRESETS[preset], { botoes: ['formula'] as EditorAction[] }];
 
   blocos.forEach((bloco, i) => {
-    // Bloco contextual mora numa caixa própria, com o separador DENTRO dela: se
-    // o separador ficasse na barra, sumir o bloco deixaria uma barrinha órfã
-    // pendurada no fim.
-    const contextual = 'botoes' in bloco ? bloco.contextual : undefined;
-    let destino: HTMLElement = toolbar;
-    if (contextual) {
-      const caixa = document.createElement('span');
-      caixa.dataset.slot = 'editor-toolbar-context';
-      caixa.dataset.node = contextual;
-      caixa.className = 'nds-editor-toolbar-context';
-      caixa.hidden = true;
-      caixa.appendChild(separador());
-      toolbar.appendChild(caixa);
-      contextuais.push({ caixa, node: contextual });
-      destino = caixa;
-    } else if (i > 0) {
-      toolbar.appendChild(separador());
-    }
+    if (i > 0) toolbar.appendChild(separador());
+    const destino: HTMLElement = toolbar;
 
     if ('grupo' in bloco) {
       // `role: 'group'` porque o grupo está ANINHADO nesta barra, ao lado de
@@ -914,6 +912,26 @@ export function createEditor(options: EditorOptions): EditorRoot {
       simples.push({ botao: btn, acao });
       destino.appendChild(btn);
     }
+
+    if (!bloco.contextual) return;
+
+    // A caixa contextual entra no MESMO bloco, sem separador próprio: os botões
+    // extras pertencem ao assunto que o bloco já trata. Ela existe como caixa,
+    // e não como botões soltos com `hidden` cada um, para que aparecer e sumir
+    // seja um atributo só — e para que a barra não fique com buracos quando
+    // parte do bloco some.
+    const caixa = document.createElement('span');
+    caixa.dataset.slot = 'editor-toolbar-context';
+    caixa.dataset.node = bloco.contextual.node;
+    caixa.className = 'nds-editor-toolbar-context';
+    caixa.hidden = true;
+    for (const acao of bloco.contextual.botoes) {
+      const btn = botaoSimples(acao);
+      simples.push({ botao: btn, acao });
+      caixa.appendChild(btn);
+    }
+    toolbar.appendChild(caixa);
+    contextuais.push({ caixa, node: bloco.contextual.node });
   });
 
   const botaoFormula = simples.find((s) => s.acao === 'formula')!.botao;

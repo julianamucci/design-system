@@ -53,6 +53,25 @@
   background-color: hsl(var(--muted));
 }
 
+/* A caixa dos botões contextuais — os que só existem com uma imagem ou uma
+ * tabela sob o cursor.
+ *
+ * `display: contents` faz a caixa desaparecer do layout e os botões dela
+ * participarem do `gap` da barra como qualquer outro: sem isso eles se
+ * espremeriam num bloco inline, com espaçamento diferente do resto.
+ *
+ * E a guarda de `[hidden]` de novo, pelo mesmo motivo de sempre: `contents` é
+ * declaração de autor e vence o `[hidden] { display: none }` do navegador. Sem
+ * ela, esconder a caixa não esconderia nada — quarta vez que esta armadilha
+ * aparece neste arquivo. */
+.nds-editor-toolbar-context {
+  display: contents;
+}
+
+.nds-editor-toolbar-context[hidden] {
+  display: none;
+}
+
 /* Separador entre grupos da barra — marcas de um lado, fórmula do outro. */
 .nds-editor-toolbar-separator {
   width: 1px;

@@ -760,6 +760,23 @@ export const AiImageDescription: Story = {
       await expect(await root.insertImage(arquivo)).toBe(true);
       selecionarImagem(root);
 
+      // Tudo que é de imagem fica JUNTO, sem nada de outro assunto no meio.
+      // Antes, "linha divisória", "desfazer" e o botão de tabela caíam entre o
+      // de inserir e os de editar — e a leitura da barra sugeria que aqueles
+      // quatro pertenciam à tabela.
+      const barra = root.querySelector('[data-slot="editor-toolbar"]') as HTMLElement;
+      const acoes = Array.from(barra.querySelectorAll<HTMLElement>('[data-action]')).map(
+        (b) => b.dataset.action,
+      );
+      const daImagem = acoes.indexOf('image');
+      await expect(acoes.slice(daImagem, daImagem + 5)).toEqual([
+        'image',
+        'imageAlt',
+        'imageSmaller',
+        'imageLarger',
+        'imageNatural',
+      ]);
+
       const img = root.querySelector('img') as HTMLImageElement;
       const partida = Math.round(img.getBoundingClientRect().width);
 
