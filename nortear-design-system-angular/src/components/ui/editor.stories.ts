@@ -251,6 +251,58 @@ export const Playground: Story = {
       await expect(h2).toHaveAttribute('aria-pressed', 'false');
     });
 
+    await step('A caixa da lista de tarefas é alvo de toque, e senta na primeira linha', async () => {
+      root.editor.commands.setContent('<p>massa e energia</p>');
+
+      const taskButton = canvas.getByRole('button', { name: EDITOR_LABELS.actions.taskList });
+      root.editor.chain().setTextSelection(2).toggleTaskList().run();
+      await waitUntil(() => taskButton.getAttribute('aria-pressed') === 'true');
+      await expect(taskButton).toHaveAttribute('aria-pressed', 'true');
+
+      // A caixa é do navegador, e é ela que marca — o marcador de lista sai de
+      // cena para não haver dois sinais para a mesma coisa.
+      const listItem = root.querySelector('ul[data-type="taskList"] li') as HTMLElement;
+      const taskBox = listItem.querySelector('input[type="checkbox"]') as HTMLElement;
+      await expect(taskBox).toBeInTheDocument();
+      await expect(
+        getComputedStyle(listItem.parentElement as HTMLElement).listStyleType,
+      ).toBe('none');
+
+      // PRENDE o alvo mínimo de WCAG 2.5.8, e mede o RETÂNGULO DO PRÓPRIO
+      // `<input>` porque é ele que a regra `target-size` lê — ligada no
+      // `preview.ts` das cinco stacks. A caixa que o navegador desenha sozinho
+      // mede 13×13, e uma tentativa de crescer o alvo por um `::after` no
+      // `<label>` não entra nesta conta e passou batido no axe.
+      const boxRect = taskBox.getBoundingClientRect();
+      await expect(boxRect.width).toBeGreaterThanOrEqual(24);
+      await expect(boxRect.height).toBeGreaterThanOrEqual(24);
+
+      // E a caixa de 24px não pode empurrar a marca para fora da primeira linha
+      // do texto: os dois centros verticais coincidem. É a folha compartilhada
+      // que fecha essa conta, declarando `line-height: 1.5` no conteúdo e
+      // zerando o `margin-block` do `<p>` dentro do item — com linha de 24px e
+      // caixa de 24px, o recuo `(1.5em - var(--spacing-6)) / 2` vale ZERO de
+      // propósito, e topo com topo já é centro com centro.
+      //
+      // O texto do item cabe numa linha só, e por isso o retângulo do `<p>` É a
+      // primeira linha — medida direta, que não depende de ler `line-height`
+      // computado (ele volta a `normal` se a declaração sair da folha, e aí a
+      // conta mentiria em vez de reprovar).
+      //
+      // A folga é de 1px, e não de 2, porque 2 NÃO teria dentes: sem
+      // `line-height: 1.5` a linha volta a 20px e o desencontro é de EXATAMENTE
+      // 2px, que `toBeLessThanOrEqual(2)` deixaria passar. Sem o reset de
+      // margem do `<p>`, são 16px, que qualquer folga pega.
+      const lineRect = (listItem.querySelector('div p') as HTMLElement).getBoundingClientRect();
+      await expect(lineRect.height).toBeLessThan(40);
+      await expect(
+        Math.abs(boxRect.top + boxRect.height / 2 - (lineRect.top + lineRect.height / 2)),
+      ).toBeLessThanOrEqual(1);
+
+      root.editor.chain().setTextSelection(2).toggleTaskList().run();
+      await waitUntil(() => taskButton.getAttribute('aria-pressed') === 'false');
+    });
+
     await step('functional.item11 — a saída de mudança recebe o HTML atual', async () => {
       root.editor.commands.setContent('<p>massa e energia</p>');
       await expect(args.changed).toHaveBeenCalled();
