@@ -144,6 +144,13 @@
   outline: none;
   color: hsl(var(--foreground));
   font-size: var(--text-p);
+  /* Declarada, e não herdada como `normal`.
+   *
+   * Sem isto a linha do corpo media 20px enquanto o alinhamento da lista de
+   * tarefas calculava sobre 1.5em (24px) — medido, e o desencontro de 14px
+   * entre a caixa e a primeira linha saía daqui. Altura de linha do texto
+   * corrido é decisão de design, e ficar no padrão do navegador é não decidir. */
+  line-height: 1.5;
 }
 
 .nds-editor-content .ProseMirror > * + * {
@@ -255,6 +262,16 @@
 .nds-editor-content .ProseMirror :is(ul, ol) {
   margin-inline: 0;
   padding-inline-start: var(--spacing-6);
+}
+
+/* Parágrafo dentro de item de lista não leva a margem do navegador.
+ *
+ * O `margin-block: 1em` do agente empurrava o texto 16px para baixo dentro do
+ * item, e nada o desfazia: `.ProseMirror > * + *` só alcança irmãos de primeiro
+ * nível. Na lista de tarefas isso jogava a linha para longe da caixa; nas
+ * outras listas, afastava o texto do marcador. */
+.nds-editor-content .ProseMirror li p {
+  margin-block: 0;
 }
 
 .nds-editor-content .ProseMirror li + li {
