@@ -37,6 +37,7 @@ import {
   AlignRight,
   Bold,
   Captions,
+  Expand,
   Code,
   Columns3,
   Highlighter,
@@ -53,7 +54,9 @@ import {
   PanelTop,
   Quote,
   Redo2,
+  RotateCcw,
   Rows3,
+  Shrink,
   Sigma,
   SquareCode,
   Strikethrough,
@@ -102,6 +105,9 @@ export type EditorAction =
   | 'formula'
   // Só existe com uma imagem selecionada.
   | 'imageAlt'
+  | 'imageSmaller'
+  | 'imageLarger'
+  | 'imageNatural'
   // Só existem com o cursor DENTRO de uma tabela.
   | 'rowAfter'
   | 'columnAfter'
@@ -264,6 +270,25 @@ type Acao = {
 
 const ico = (n: unknown): LucideIconNode[] => n as LucideIconNode[];
 
+/**
+ * Largura da imagem selecionada, em pixels.
+ *
+ * O atributo quando existe; a medida na TELA quando não. A segunda leitura é o
+ * que dá um ponto de partida ao primeiro clique — imagem recém-inserida não tem
+ * `width` gravado, e um passo sobre `null` teria de inventar um número.
+ */
+function larguraAtual(e: Editor): number {
+  const gravada = e.getAttributes('image').width as number | null | undefined;
+  if (typeof gravada === 'number') return gravada;
+  const img = e.view.dom.querySelector('.ProseMirror-selectednode img');
+  return img ? Math.round(img.getBoundingClientRect().width) : 0;
+}
+
+function ajustarLargura(e: Editor, passo: number): void {
+  const nova = Math.max(LARGURA_MINIMA, larguraAtual(e) + passo);
+  e.chain().focus().updateAttributes('image', { width: nova }).run();
+}
+
 const ACOES: Record<EditorAction, Acao> = {
   bold: {
     icon: ico(Bold),
@@ -412,6 +437,34 @@ const ACOES: Record<EditorAction, Acao> = {
   link: { icon: ico(LinkIcon), ativa: (e) => e.isActive('link') },
   image: { icon: ico(ImageIcon) },
   imageAlt: { icon: ico(Captions) },
+
+  // ─── Tamanho da imagem, pelo teclado ────────────────────────────────────────
+  //
+  // A alça de arrastar sozinha reprovaria em WCAG 2.5.7 (Movimentos de
+  // arrasto): toda ação de arrastar precisa de um caminho por ponteiro único.
+  // Estes três botões SÃO esse caminho, e de quebra são o único jeito de
+  // redimensionar sem mouse.
+  //
+  // O passo parte da largura RENDERIZADA quando ainda não há `width` gravado:
+  // sem isso, a primeira diminuição saltaria de "o tamanho natural, que pode
+  // ser 900px" para um valor arbitrário.
+  imageSmaller: {
+    icon: ico(Shrink),
+    executar: (e) => ajustarLargura(e, -PASSO_DE_LARGURA),
+    pode: (e) => larguraAtual(e) > LARGURA_MINIMA,
+  },
+  imageLarger: {
+    icon: ico(Expand),
+    executar: (e) => ajustarLargura(e, PASSO_DE_LARGURA),
+  },
+  imageNatural: {
+    icon: ico(RotateCcw),
+    // Volta ao tamanho natural apagando o atributo, e não gravando a medida
+    // original: gravada, ela congelaria a imagem no tamanho de HOJE, e a folha
+    // deixaria de poder encolhê-la numa moldura estreita.
+    executar: (e) => void e.chain().focus().updateAttributes('image', { width: null }).run(),
+    pode: (e) => e.getAttributes('image').width != null,
+  },
   formula: { icon: ico(Sigma) },
 };
 
@@ -459,7 +512,10 @@ const PRESETS: Record<EditorPreset, Bloco[]> = {
     // Bloco CONTEXTUAL: seis botões que só existem dentro de uma tabela. Fora
     // dela some inteiro — barra com seis botões inertes é ruído permanente
     // para uma capacidade que a maioria dos documentos nunca usa.
-    { contextual: 'image', botoes: ['imageAlt'] },
+    {
+      contextual: 'image',
+      botoes: ['imageAlt', 'imageSmaller', 'imageLarger', 'imageNatural'],
+    },
     {
       contextual: 'table',
       botoes: ['rowAfter', 'columnAfter', 'deleteRow', 'deleteColumn', 'headerRow', 'deleteTable'],
@@ -476,6 +532,112 @@ const PRESETS: Record<EditorPreset, Bloco[]> = {
  * design system. Aqui a lista é a mínima que serve.
  */
 const ESQUEMAS_DE_LINK = ['http', 'https', 'mailto'];
+
+/**
+ * Menor largura de imagem, em pixels.
+ *
+ * Abaixo disto a alça de arrastar cobre a própria imagem, e o que sobra não
+ * mostra mais nada — mas continua ocupando uma linha do documento. Um piso é o
+ * que impede o clique acidental que reduz a imagem a um ponto irrecuperável.
+ */
+const LARGURA_MINIMA = 48;
+
+/** Passo do redimensionamento por teclado, em pixels. */
+const PASSO_DE_LARGURA = 40;
+
+/**
+ * Imagem com largura ajustável.
+ *
+ * A largura vai no ATRIBUTO `width` do `<img>`, e não em `style` inline. É HTML
+ * válido, sobrevive a qualquer sanitização razoável do lado de quem grava, e
+ * continua submetido ao `max-width: 100%` da folha — imagem larga demais encolhe
+ * na moldura estreita em vez de vazar.
+ */
+const ImagemAjustavel = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      width: {
+        default: null,
+        parseHTML: (el) => {
+          const bruto = (el as HTMLElement).getAttribute('width');
+          const n = bruto ? Number.parseInt(bruto, 10) : Number.NaN;
+          return Number.isFinite(n) ? n : null;
+        },
+        renderHTML: (attrs) => (attrs.width ? { width: String(attrs.width) } : {}),
+      },
+    };
+  },
+
+  addNodeView() {
+    return ({ node, editor, getPos }) => {
+      const dom = document.createElement('div');
+      dom.className = 'nds-editor-image';
+
+      const img = document.createElement('img');
+      const alca = document.createElement('span');
+      alca.className = 'nds-editor-image-handle';
+      // A alça é decoração de ponteiro: quem navega por teclado usa os botões
+      // da barra, que é o caminho exigido pelo critério de arrasto (WCAG 2.5.7)
+      // e o único que existe para quem não usa mouse.
+      alca.setAttribute('aria-hidden', 'true');
+      dom.append(img, alca);
+
+      const pintar = (n: typeof node): void => {
+        img.src = n.attrs.src as string;
+        img.alt = (n.attrs.alt as string | null) ?? '';
+        if (n.attrs.width) img.setAttribute('width', String(n.attrs.width));
+        else img.removeAttribute('width');
+      };
+      pintar(node);
+
+      alca.addEventListener('pointerdown', (evento) => {
+        // `preventDefault` mata o arrasto NATIVO do nó: `draggable: true` está no
+        // próprio nó de imagem, e sem isto puxar a alça arrastaria a imagem para
+        // outro ponto do documento em vez de redimensioná-la.
+        evento.preventDefault();
+        const partiuDe = evento.clientX;
+        const larguraInicial = img.getBoundingClientRect().width;
+        alca.setPointerCapture(evento.pointerId);
+
+        const arrastar = (e: PointerEvent): void => {
+          const nova = Math.max(LARGURA_MINIMA, Math.round(larguraInicial + (e.clientX - partiuDe)));
+          // Durante o arrasto só o DOM muda. Gravar no documento a cada quadro
+          // encheria o histórico de passos intermediários, e desfazer teria de
+          // ser apertado dezenas de vezes para voltar ao tamanho anterior.
+          img.setAttribute('width', String(nova));
+        };
+
+        const soltar = (): void => {
+          alca.removeEventListener('pointermove', arrastar);
+          alca.removeEventListener('pointerup', soltar);
+          alca.removeEventListener('pointercancel', soltar);
+          const posicao = typeof getPos === 'function' ? getPos() : undefined;
+          const largura = Number.parseInt(img.getAttribute('width') ?? '', 10);
+          if (posicao === undefined || !Number.isFinite(largura)) return;
+          editor.view.dispatch(editor.state.tr.setNodeAttribute(posicao, 'width', largura));
+        };
+
+        alca.addEventListener('pointermove', arrastar);
+        alca.addEventListener('pointerup', soltar);
+        alca.addEventListener('pointercancel', soltar);
+      });
+
+      return {
+        dom,
+        update: (novo) => {
+          if (novo.type.name !== 'image') return false;
+          pintar(novo);
+          return true;
+        },
+        // O `width` que o arrasto escreve no `<img>` é mutação de DOM que a lib
+        // não provocou. Sem isto ela conclui que o nodeView saiu de sincronia e
+        // o remonta no meio do arrasto.
+        ignoreMutation: () => true,
+      };
+    };
+  },
+});
 
 /** Só os arquivos de imagem de uma área de transferência ou de um arrasto. */
 function imagensDe(dt: DataTransfer | null): File[] {
@@ -628,7 +790,7 @@ export function createEditor(options: EditorOptions): EditorRoot {
       // releitura do documento: o esquema descarta o `src` que não reconhece.
       // Como o resolvedor padrão devolve `data:`, ligar aqui é o que faz o
       // caminho de demonstração sobreviver a um `setContent`.
-      Image.configure({ allowBase64: true }),
+      ImagemAjustavel.configure({ allowBase64: true }),
       Highlight,
       // `types` diz em QUE nós o atributo pode pousar. Sem parágrafo e título
       // na lista, os botões de alinhamento não fazem nada — e nada na tela

@@ -379,17 +379,61 @@
   cursor: col-resize;
 }
 
-/* Imagem — nunca maior que a moldura, e sem deformar. */
+/* Imagem — nunca maior que a moldura, e sem deformar.
+ *
+ * `max-width: 100%` continua valendo por cima da largura ajustada: a medida
+ * escolhida é um DESEJO, e numa moldura estreita a imagem encolhe em vez de
+ * vazar. É o motivo de a largura ir no atributo `width` e não em `style`
+ * inline — inline venceria a folha e levaria esse limite embora. */
 .nds-editor-content .ProseMirror img {
+  display: block;
   max-width: 100%;
   height: auto;
   border-radius: var(--radius-md);
 }
 
+/* O envelope da imagem ajustável.
+ *
+ * `width: fit-content` faz a caixa acompanhar a imagem, e não a linha inteira:
+ * sem isso a alça ficaria na borda direita do documento, longe da imagem que
+ * ela redimensiona. */
+.nds-editor-content .nds-editor-image {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+}
+
+/* A alça de arrastar, no canto inferior de saída da imagem.
+ *
+ * Só aparece com a imagem SELECIONADA — uma alça permanente em cada imagem
+ * poluiria a leitura de um documento que tem muitas. E ela é decoração: quem
+ * navega por teclado usa os botões da barra, que existem justamente porque
+ * arrastar não pode ser o único caminho (WCAG 2.5.7). */
+.nds-editor-content .nds-editor-image-handle {
+  position: absolute;
+  inset-block-end: var(--spacing-1);
+  inset-inline-end: var(--spacing-1);
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+  border: 2px solid hsl(var(--background));
+  border-radius: var(--radius-xs);
+  background-color: hsl(var(--primary));
+  cursor: nwse-resize;
+  /* Escondida por opacidade, e não por `display`: o alvo de ponteiro continua
+   * lá, e não há reflow ao aparecer. */
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nds-editor-content .nds-editor-image.ProseMirror-selectednode .nds-editor-image-handle {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* Imagem selecionada usa o mesmo anel de foco do resto, e não uma borda
  * própria: é a mesma pergunta ("o que está selecionado?") e merece o mesmo
- * sinal. */
-.nds-editor-content .ProseMirror img.ProseMirror-selectednode {
+ * sinal. O anel vai no ENVELOPE, que é quem a lib marca como selecionado. */
+.nds-editor-content .ProseMirror .nds-editor-image.ProseMirror-selectednode {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
 }

@@ -49,6 +49,9 @@ const LABELS: EditorLabels = {
     link: 'Link',
     image: 'Inserir imagem',
     imageAlt: 'Texto alternativo',
+    imageSmaller: 'Diminuir a imagem',
+    imageLarger: 'Aumentar a imagem',
+    imageNatural: 'Tamanho natural',
     table: 'Inserir tabela',
     horizontalRule: 'Linha divisória',
     undo: 'Desfazer',
@@ -156,6 +159,21 @@ async function esperarAlt(root: HTMLElement, esperado: string): Promise<void> {
     await new Promise((r) => setTimeout(r, 30));
   }
   await expect(atual).toBe(esperado);
+}
+
+/**
+ * Põe a seleção na imagem do documento.
+ *
+ * A posição vem de uma VARREDURA, e não de aritmética sobre o tamanho do
+ * documento: um parágrafo a mais ou a menos desloca a conta em silêncio. E é
+ * repetido a cada passo porque escrever atributo refaz a seleção.
+ */
+function selecionarImagem(root: EditorRoot): void {
+  let posicao = -1;
+  root.editor.state.doc.descendants((node, pos) => {
+    if (node.type.name === 'image') posicao = pos;
+  });
+  if (posicao >= 0) root.editor.commands.setNodeSelection(posicao);
 }
 
 export default meta;
@@ -735,6 +753,79 @@ export const AiImageDescription: Story = {
         new ClipboardEvent('paste', { clipboardData: area, bubbles: true, cancelable: true }),
       );
       await esperarAlt(root, 'Descrição automática de diagrama.png');
+    });
+
+    await step('A imagem se redimensiona por teclado E por arraste', async () => {
+      root.editor.commands.setContent('<p>tamanho</p>');
+      await expect(await root.insertImage(arquivo)).toBe(true);
+      selecionarImagem(root);
+
+      const img = root.querySelector('img') as HTMLImageElement;
+      const partida = Math.round(img.getBoundingClientRect().width);
+
+      // ─ Teclado: o caminho que existe porque arrastar não pode ser o único
+      // (WCAG 2.5.7, Movimentos de arrasto).
+      const diminuir = canvas.getByRole('button', { name: LABELS.actions.imageSmaller });
+      await userEvent.click(diminuir);
+      selecionarImagem(root);
+      await expect(Number(root.querySelector('img')?.getAttribute('width'))).toBe(partida - 40);
+
+      const aumentar = canvas.getByRole('button', { name: LABELS.actions.imageLarger });
+      await userEvent.click(aumentar);
+      selecionarImagem(root);
+      await expect(Number(root.querySelector('img')?.getAttribute('width'))).toBe(partida);
+
+      // ─ Piso: cliques demais não podem reduzir a imagem a um ponto.
+      for (let i = 0; i < 40; i++) {
+        const botao = canvas.queryByRole('button', { name: LABELS.actions.imageSmaller });
+        if (!botao || (botao as HTMLButtonElement).disabled) break;
+        await userEvent.click(botao);
+        selecionarImagem(root);
+      }
+      const noPiso = Number(root.querySelector('img')?.getAttribute('width'));
+      await expect(noPiso).toBe(48);
+
+      // ─ Volta ao natural: APAGA o atributo, não grava a medida de hoje. Com a
+      // medida gravada, a folha perderia o direito de encolher a imagem numa
+      // moldura estreita.
+      await userEvent.click(canvas.getByRole('button', { name: LABELS.actions.imageNatural }));
+      selecionarImagem(root);
+      await expect(root.querySelector('img')?.hasAttribute('width')).toBe(false);
+
+      // ─ Arraste: a alça existe só com a imagem selecionada, e move a largura.
+      const alca = root.querySelector('.nds-editor-image-handle') as HTMLElement;
+      await expect(getComputedStyle(alca).opacity).toBe('1');
+      const antes = Math.round(
+        (root.querySelector('img') as HTMLElement).getBoundingClientRect().width,
+      );
+      const caixaAlca = alca.getBoundingClientRect();
+      const ponteiro = { pointerId: 1, bubbles: true, cancelable: true } as const;
+      alca.setPointerCapture = () => {};
+      alca.releasePointerCapture = () => {};
+      alca.dispatchEvent(
+        new PointerEvent('pointerdown', { ...ponteiro, clientX: caixaAlca.left, clientY: caixaAlca.top }),
+      );
+      alca.dispatchEvent(
+        new PointerEvent('pointermove', {
+          ...ponteiro,
+          clientX: caixaAlca.left - 30,
+          clientY: caixaAlca.top,
+        }),
+      );
+      alca.dispatchEvent(new PointerEvent('pointerup', ponteiro));
+      // A leitura é do DOCUMENTO, não do `<img>`.
+      //
+      // Durante o arrasto a largura é escrita direto no DOM de propósito —
+      // gravar a cada quadro encheria o histórico, e desfazer exigiria dezenas
+      // de toques para voltar um tamanho. Só ao SOLTAR ela vira transação. Uma
+      // asserção sobre o atributo do `<img>` passaria com a gravação removida,
+      // porque o arrasto já a escreveu ali: medido, ficou verde com o defeito
+      // plantado.
+      let gravada: unknown = null;
+      root.editor.state.doc.descendants((node) => {
+        if (node.type.name === 'image') gravada = node.attrs.width;
+      });
+      await expect(gravada).toBe(antes - 30);
     });
 
     await step('E a pessoa corrige o que a IA escreveu', async () => {
