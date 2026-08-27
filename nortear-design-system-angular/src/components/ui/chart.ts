@@ -36,6 +36,7 @@ import {
   nestInnerLabel,
   nestLabelLine,
   nestOuterLabel,
+  valueLabelStyle,
   type NestLabelTokens,
 } from '@shared/primitives/chart-nest-labels';
 
@@ -982,9 +983,10 @@ export class NdsChart {
             show: true,
             position: 'top',
             formatter: (p: { value: number }) => formatarValue(p.value),
-            color: hsl('foreground'),
-            textBorderWidth: 0,
-            fontSize: Math.round(rootFontSize() * 0.75),
+            ...valueLabelStyle({
+              foreground: hsl('foreground'),
+              fontSize: Math.round(rootFontSize() * 0.75),
+            }),
           }
           : { show: false },
       })),

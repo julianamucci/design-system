@@ -79,6 +79,7 @@ import {
   nestInnerLabel,
   nestLabelLine,
   nestOuterLabel,
+  valueLabelStyle,
   type NestLabelTokens,
 } from '@shared/primitives/chart-nest-labels';
 
@@ -346,6 +347,17 @@ export interface ChartOptions {
    * precisa.
    */
   groupLabel?: string;
+  /**
+   * Escrever o valor junto do dado, nos tipos de eixo.
+   *
+   * Sem valor declarado, aparece quando há UMA série só: com duas ou mais os
+   * números se sobrepõem, e aí quem entrega o valor exato é a tabela.
+   *
+   * Existe como opção por causa do mini gráfico de tendência — ali o desenho é
+   * adjetivo de um número que já está escrito ao lado, e repetir o valor dentro
+   * de 48px de altura só suja.
+   */
+  showValues?: boolean;
   /**
    * Nomes das duas grandezas da dispersão — no eixo e na tabela.
    *
@@ -890,6 +902,10 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
   }
 
   // bar / line / area — eixo cartesiano.
+  //
+  // O valor escrito junto do dado aparece com UMA série só: com duas ou mais os
+  // números se sobrepõem, e aí quem o entrega é a tabela.
+  const showValueLabels = opts.showValues ?? seriesData.length === 1;
   return {
     title: opts.title ? { text: opts.title, left: 'left' } : undefined,
     tooltip: { trigger: 'axis', axisPointer: { type: type === 'bar' ? 'shadow' : 'line' } },
@@ -914,6 +930,22 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
       name: s.name,
       type: type === 'area' ? 'line' : type,
       data: s.data ?? [],
+      // O estilo do rótulo viaja no OPTION, e não no tema: medido, um bloco
+      // `bar: { label: … }` registrado no tema sai ignorado — o rótulo desenha
+      // idêntico com e sem ele. Sem estas declarações a lib usa cinza `#333`
+      // fixo, halo branco de 2px e corpo de 12px cravado, e no modo escuro o
+      // texto mede 1.06 contra o fundo: o número vira o próprio contorno.
+      label: showValueLabels
+        ? {
+          show: true,
+          position: 'top',
+          formatter: (ponto: { value: number }) => formatValue(ponto.value),
+          ...valueLabelStyle({
+            foreground: hsl('foreground'),
+            fontSize: Math.round(rootFontSize() * 0.75),
+          }),
+        }
+        : { show: false },
       smooth: type !== 'bar',
       ...(type === 'bar'
         ? { itemStyle: { borderRadius: [4, 4, 0, 0], ...(s.color ? { color: s.color } : {}) } }

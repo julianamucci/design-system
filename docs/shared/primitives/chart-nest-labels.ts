@@ -172,3 +172,72 @@ export function withNestLabelTokens(
     }),
   };
 }
+
+/**
+ * Reaplica as cores dos rótulos de um option já montado — os dois tipos.
+ *
+ * A rosca aninhada tem o rótulo SUBSTITUÍDO: posição, texto rico e placa são
+ * nossos, e o construtor os emitiu com cores de partida. As demais séries têm o
+ * rótulo MESCLADO: ali o que é nosso são as três declarações de estilo, e
+ * `show`, `position` e `formatter` continuam vindo de quem montou o option.
+ *
+ * Existe porque três stacks montam o option em construtor PURO e resolvem token
+ * no container — é lá que a trama do decal é injetada, e o rótulo precisa do
+ * mesmo tratamento pelo mesmo motivo: os dois carregam cor RESOLVIDA, e
+ * `setTheme` relê o registro do tema, nunca o option.
+ */
+export function withChartLabelTokens(
+  option: Record<string, unknown>,
+  tokens: NestLabelTokens,
+): Record<string, unknown> {
+  const comRosca = withNestLabelTokens(option, tokens);
+  const series = comRosca.series;
+  if (!Array.isArray(series)) return comRosca;
+
+  const estilo = valueLabelStyle(tokens);
+  let mexeu = false;
+  const novas = series.map((serie) => {
+    const s = serie as { type?: unknown; label?: { show?: unknown } };
+    // A rosca já foi tratada acima; aqui é o rótulo de valor do cartesiano.
+    if (s.type === 'pie' || s.label?.show !== true) return serie;
+    mexeu = true;
+    return { ...(serie as object), label: { ...s.label, ...estilo } };
+  });
+  // Devolve o MESMO objeto quando não há o que mexer: em svelte a identidade
+  // decide se o efeito reaplica o option, e reaplicar reseta o desenho.
+  return mexeu ? { ...comRosca, series: novas } : comRosca;
+}
+
+// ─── Rótulo de valor ─────────────────────────────────────────────────────────
+//
+// O número escrito junto do dado, quando há uma série só. Com duas ou mais os
+// números se sobrepõem e quem entrega o valor exato é a tabela.
+//
+// As três declarações abaixo NÃO são enfeite, e o tema não pode carregá-las:
+// medido, um bloco `bar: { label: … }` registrado no tema sai ignorado — o
+// rótulo desenha idêntico com e sem ele. O estilo tem de viajar no option.
+//
+// Sem elas a lib usa os padrões dela: cinza `#333` fixo, halo branco de 2px e
+// corpo de 12px cravado. Medido contra o fundo da página, nos três temas:
+//
+//   claro   `#333` 12.46 · halo branco  1.01
+//   escuro  `#333`  1.06 · halo branco 13.36
+//
+// No claro funcionava por ACIDENTE — texto escuro, halo invisível. No escuro o
+// texto sumia e sobrava o halo: o número virava o próprio contorno, grosso e
+// borrado. Com `--foreground` mede de 13.08 a 18.04 nos dois modos, e aí o halo
+// perde a função — ele existe para socorrer uma cor que não conhece o tema, e é
+// ele que empasta o texto no corpo pequeno.
+
+/** O que o rótulo de valor precisa do tema. */
+export interface ValueLabelTokens {
+  /** `--foreground`: mede de 13.08 a 18.04 contra o fundo, nos dois modos. */
+  foreground: string;
+  /** Degrau do corpo, já derivado da fonte raiz (WCAG 1.4.4). */
+  fontSize: number;
+}
+
+/** As três declarações de estilo. Mescla com `show`, `position` e `formatter`. */
+export function valueLabelStyle(t: ValueLabelTokens): Record<string, unknown> {
+  return { color: t.foreground, fontSize: t.fontSize, textBorderWidth: 0 };
+}

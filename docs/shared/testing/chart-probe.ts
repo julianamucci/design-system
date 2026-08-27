@@ -152,6 +152,17 @@ export async function settleTheme(doc: Document = document): Promise<void> {
  */
 export function datumFormas(root: HTMLElement): SVGGraphicsElement[] {
   return [...root.querySelectorAll<SVGGraphicsElement>('svg path, svg rect')].filter((el) => {
+    // O interior de `<defs>` fica de FORA. A trama exige um `<pattern>`, e o
+    // interior dele é feito de caminhos traçados na cor do FUNDO — vocabulário
+    // referenciado por `url(#…)`, não desenho. Medido: a story de contraste do
+    // Vue reprovou com 1.02 porque recolhia essas linhas e as media contra o
+    // fundo, que é justamente a cor delas.
+    //
+    // Elas só apareceram quando o helper de tema passou a emitir a sintaxe de
+    // cor que a lib consegue ler: antes a trama não chegava a ser desenhada. O
+    // coletor sempre teve o buraco — o que faltava era o desenho existir. As
+    // fixtures de cada stack já excluíam `defs`, e pelo mesmo motivo.
+    if (el.closest('defs') !== null) return false;
     const s = getComputedStyle(el);
     return s.fill !== 'none' && s.stroke !== 'none' && parseFloat(s.strokeWidth || '0') > 0;
   });

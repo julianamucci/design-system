@@ -8,6 +8,7 @@ import {
   distinctShapes,
   isPainted,
   pointerOver,
+  tokenColor,
   waitForStableCount,
   exigirRoot,
 } from '@shared/testing/chart-probe';
@@ -290,6 +291,29 @@ export const Bar: Story = {
       await expect(isPainted(alvo)).toBe(true);
       await expect(trama).not.toBeNull();
       await expect(isPainted(trama!)).toBe(true);
+    });
+    await step('O rótulo de valor sai do TEMA, e sem halo', async () => {
+      // Com uma série só, este tipo escreve o valor em cima da coluna. O que a
+      // lib desenha ali por padrão é cinza `#333` fixo, halo branco de 2px e
+      // corpo de 12px cravado — nenhum dos três conhece o tema.
+      //
+      // Medido contra o fundo da página: no claro o `#333` dá 12.46 e o halo
+      // 1.01, então funcionava POR ACIDENTE; no escuro o texto cai para 1.06 e
+      // o halo sobe para 13.36 — o número vira o próprio contorno, borrado.
+      //
+      // Por isso a asserção é de IGUALDADE com o token, e não de contraste: a
+      // story roda no modo claro, onde a cor errada passaria sem dificuldade e
+      // um portão de contraste ficaria verde com o defeito de pé.
+      const valueLabel = [...root.querySelectorAll<SVGTextElement>('svg text')]
+        .find((t) => t.textContent === '305');
+      await expect(valueLabel).toBeDefined();
+
+      const pintura = getComputedStyle(valueLabel!);
+      await expect(pintura.fill).toBe(tokenColor('foreground', root));
+
+      // A medida é a COR do traço, e não a largura: sem traço, `strokeWidth`
+      // computado devolve 1, que é o valor inicial do SVG e não pinta nada.
+      await expect(['none', 'rgba(0, 0, 0, 0)']).toContain(pintura.stroke);
     });
   },
 };

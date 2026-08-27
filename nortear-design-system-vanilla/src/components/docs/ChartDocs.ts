@@ -577,6 +577,9 @@ const spark = createChart({
   data: chartData,
   type: 'line',
   height: 48,
+  // O desenho aqui é adjetivo do número que está escrito ao lado: repetir o
+  // valor dentro de 48px de altura só sujaria.
+  showValues: false,
   'aria-label': 'Tendência de acessos nos últimos seis meses',
 });
 spark.style.width = '120px';
@@ -651,6 +654,9 @@ wrap.appendChild(spark);`;
                   data: chartData,
                   type: 'line',
                   height: 48,
+                  // O desenho é adjetivo do número ao lado; repetir o valor
+                  // dentro de 48px de altura só sujaria.
+                  showValues: false,
                   'aria-label': 'Tendência de acessos nos últimos seis meses',
                 });
                 spark.style.width = '120px';
