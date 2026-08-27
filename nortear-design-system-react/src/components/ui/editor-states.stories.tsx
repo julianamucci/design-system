@@ -181,18 +181,30 @@ export const WithTable: Story = {
       await expect(rect.width).toBeGreaterThanOrEqual(24);
       await expect(rect.height).toBeGreaterThanOrEqual(24);
 
-      // O ALINHAMENTO ainda não fecha, e a medida fica escrita porque a
-      // correção é da folha compartilhada, não desta story. Medido em
-      // 2026-08-27, neste mesmo item: `li` e `<label>` começam em 122, a caixa
-      // vai de 122 a 146 (centro 134), e o `<p>` ao lado começa em 138 com 20px
-      // de altura (centro 148) — a marca fica 14px ACIMA do centro da primeira
-      // linha. Duas premissas do recuo `(1.5em - var(--spacing-6)) / 2` não se
-      // sustentam: com a caixa em 24px o cálculo dá ZERO, e a linha do texto
-      // não mede 1.5em, porque o conteúdo não declara `line-height` (vem
-      // `normal`, 20px). Some-se o `margin-block: 1em` que o navegador põe no
-      // `<p>` e que nenhuma regra desfaz dentro do item — são os 16px que
-      // empurram o texto para baixo. Antes desta correção o desencontro era de
-      // ~15px, então ele não nasceu aqui; a caixa maior só o deixou visível.
+      // E a caixa de 24px não pode empurrar a marca para fora da primeira linha
+      // do texto: os dois centros verticais coincidem. Medido em 2026-08-27,
+      // depois de a folha compartilhada declarar `line-height: 1.5` no conteúdo
+      // e zerar o `margin-block` do `<p>` dentro do item — caixa de 122 a 146 e
+      // linha de 122 a 146, centro 134 nos dois. É essa coincidência que faz o
+      // recuo `(1.5em - var(--spacing-6)) / 2` valer ZERO de propósito: linha
+      // de 24px e caixa de 24px alinham topo com topo.
+      //
+      // O texto do item cabe numa linha só, e por isso o retângulo do `<p>` É a
+      // primeira linha — medida direta, que não depende de ler `line-height`
+      // computado (ele volta a `normal` se a declaração sair da folha, e aí a
+      // conta mentiria em vez de reprovar).
+      //
+      // A folga é de 1px, e não de 2, porque 2 NÃO teria dentes: medi os dois
+      // defeitos plantando cada um na folha. Sem `line-height: 1.5`, a linha
+      // volta a 20px e o desencontro é de EXATAMENTE 2px — em cima da folga, e
+      // `toBeLessThanOrEqual(2)` deixaria passar. Sem o reset de margem do
+      // `<p>`, são 16px, que qualquer folga pega. O desencontro real hoje é
+      // zero, então 1px cobre arredondamento de subpixel e nada mais.
+      const line = (item.querySelector('div p') as HTMLElement).getBoundingClientRect();
+      await expect(line.height).toBeLessThan(40);
+      await expect(
+        Math.abs(rect.top + rect.height / 2 - (line.top + line.height / 2)),
+      ).toBeLessThanOrEqual(1);
     });
 
     await step('O documento fecha com os blocos que a foto precisa ver', async () => {
