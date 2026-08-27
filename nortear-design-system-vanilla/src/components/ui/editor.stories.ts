@@ -189,9 +189,16 @@ async function openRow(button: HTMLElement): Promise<void> {
   await expect(button).toHaveAttribute('aria-expanded', 'true');
 }
 
-/** O par da anterior: fecha só se estiver aberta. */
+/**
+ * O par da anterior, escrito na MESMA forma: clique só se ainda não estiver no
+ * estado desejado.
+ *
+ * `!== 'false'` e não `=== 'true'` — é a mesma condição, e é a forma que diz o
+ * que a regra é ("se ainda não é o alvo, aja"), em vez de descrever o estado de
+ * partida. As duas metades do par ficam simétricas.
+ */
 async function closeRow(button: HTMLElement): Promise<void> {
-  if (button.getAttribute('aria-expanded') === 'true') await userEvent.click(button);
+  if (button.getAttribute('aria-expanded') !== 'false') await userEvent.click(button);
   await expect(button).toHaveAttribute('aria-expanded', 'false');
 }
 
