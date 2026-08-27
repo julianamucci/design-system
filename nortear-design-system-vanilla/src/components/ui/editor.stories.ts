@@ -674,6 +674,54 @@ export const AiImageDescription: Story = {
       await esperarAlt(root, 'Descrição automática de solta.png');
     });
 
+    await step('Soltar na MOLDURA, fora do texto, também insere', async () => {
+      // O relato: arrastar abria uma aba nova. O `dragover` que a lib previne
+      // cobre só o elemento editável, que tem a altura do texto — o respiro
+      // abaixo da última linha é moldura, e soltar ali escapava para o
+      // navegador. Aqui a solta é no RODAPÉ da moldura, longe do texto.
+      root.editor.commands.setContent('<p>moldura</p>');
+      const caixa = root.getBoundingClientRect();
+      const arrasto = new DataTransfer();
+      arrasto.items.add(new File([new Uint8Array([10, 11])], 'moldura.png', { type: 'image/png' }));
+
+      // O `dragover` vem PRIMEIRO, e é ele que decide o caso: só se o padrão
+      // for cancelado ali o navegador entrega o `drop` à página — senão ele
+      // trata o arquivo como navegação e abre numa aba.
+      //
+      // Esta asserção existe porque a de baixo NÃO cobre isso: um `drop`
+      // sintético é entregue de qualquer jeito, então plantar o defeito no
+      // `dragover` deixava o teste verde com o bug de volta. Medido.
+      const sobrevoo = new DragEvent('dragover', {
+        dataTransfer: arrasto,
+        bubbles: true,
+        cancelable: true,
+      });
+      root.dispatchEvent(sobrevoo);
+      await expect(sobrevoo.defaultPrevented).toBe(true);
+
+      const solta = new DragEvent('drop', {
+        dataTransfer: arrasto,
+        bubbles: true,
+        cancelable: true,
+        clientX: caixa.left + caixa.width / 2,
+        clientY: caixa.bottom - 4,
+      });
+      root.dispatchEvent(solta);
+      // O padrão PRECISA ser cancelado: é ele que faz o navegador abrir o
+      // arquivo. Asserção separada porque a imagem entrar não prova isso.
+      await expect(solta.defaultPrevented).toBe(true);
+      await esperarAlt(root, 'Descrição automática de moldura.png');
+    });
+
+    await step('A barra QUEBRA em linhas, e nada fica fora da vista', async () => {
+      const barra = root.querySelector('[data-slot="editor-toolbar"]') as HTMLElement;
+      await expect(getComputedStyle(barra).flexWrap).toBe('wrap');
+      // Sem rolagem horizontal: com ela, o botão contextual que acabou de
+      // aparecer nascia além da borda, e a única pista de que existia era
+      // arrastar a barra para o lado.
+      await expect(barra.scrollWidth).toBe(barra.clientWidth);
+    });
+
     await step('Imagem COLADA de outra página também é descrita', async () => {
       // Este era o caminho do relato: colar de um site insere `<img src>` sem
       // `alt` nenhum, montado pelo ProseMirror a partir do HTML da área de

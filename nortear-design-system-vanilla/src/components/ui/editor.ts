@@ -1011,6 +1011,38 @@ export function createEditor(options: EditorOptions): EditorRoot {
     for (const src of pendentes) descrever(null, src);
   }
 
+  // ─── Arrastar para QUALQUER lugar da moldura ───────────────────────────────
+  //
+  // O `dragover` que a lib previne cobre só o elemento editável, e ele tem a
+  // altura do TEXTO — o respiro abaixo da última linha, a barra e a borda são
+  // moldura, não campo. Soltar ali escapava do editor e o navegador abria o
+  // arquivo numa aba nova, que foi o relato.
+  //
+  // Durante o arrasto o navegador esconde os arquivos por segurança:
+  // `dataTransfer.files` vem VAZIO no `dragover`, e só em `drop` é que aparece.
+  // Por isso a pergunta aqui é por `types`, e não pela lista.
+  const arrastaArquivo = (dt: DataTransfer | null): boolean =>
+    !!dt && Array.from(dt.types).includes('Files');
+
+  for (const evento of ['dragenter', 'dragover'] as const) {
+    root.addEventListener(evento, (e) => {
+      if (arrastaArquivo((e as DragEvent).dataTransfer)) e.preventDefault();
+    });
+  }
+
+  root.addEventListener('drop', (e) => {
+    // Solto DENTRO do editável, quem já tratou foi a lib, pelo `handleDrop`
+    // acima — ela previne o padrão, e é essa marca que evita inserir duas vezes.
+    if (e.defaultPrevented) return;
+    const arquivos = imagensDe((e as DragEvent).dataTransfer);
+    if (arquivos.length === 0) return;
+    e.preventDefault();
+    // Solto fora do texto, a imagem vai para o fim do documento — é o lugar
+    // mais próximo do que se apontou, e o único definido.
+    editor.commands.focus('end');
+    for (const arquivo of arquivos) void inserirImagem(arquivo);
+  });
+
   const alvoImagem = simples.find((s) => s.acao === 'image');
   if (alvoImagem) {
     alvoImagem.botao.addEventListener('click', () => {

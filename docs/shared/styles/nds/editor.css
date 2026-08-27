@@ -30,20 +30,27 @@
   overflow: hidden;
 }
 
-/* A barra rola em telas estreitas em vez de quebrar a moldura.
+/* A barra QUEBRA em várias linhas. Antes ela rolava na horizontal, e a decisão
+ * foi revertida depois de a dona não achar um botão na tela.
  *
- * `flex-wrap` seria a alternativa, e foi descartada: a barra tem papel de
- * `toolbar` e navegação por seta, e uma segunda linha faz a seta para a direita
- * saltar visualmente para baixo — a ordem do teclado deixa de casar com a
- * ordem que se enxerga. */
+ * O argumento contra quebrar era que a seta para a direita passaria a saltar
+ * visualmente para baixo, desalinhando teclado e olho. O argumento não se
+ * sustenta: a navegação por seta segue a ordem do DOM, e a quebra preserva essa
+ * ordem — a seta continua indo para o PRÓXIMO botão, que no fim da linha é o
+ * primeiro da linha seguinte. É como toda barra que quebra se comporta.
+ *
+ * O que a rolagem fazia de fato era esconder botão sem avisar. Com blocos
+ * CONTEXTUAIS — os da tabela e o da imagem, que entram no fim da barra —, o
+ * botão que acabou de aparecer nascia fora da área visível, e a única pista de
+ * que ele existia era arrastar a barra para o lado. */
 .nds-editor-toolbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--spacing-1);
   padding: var(--spacing-2);
   border-bottom: 1px solid hsl(var(--border));
   background-color: hsl(var(--muted));
-  overflow-x: auto;
 }
 
 /* Separador entre grupos da barra — marcas de um lado, fórmula do outro. */
