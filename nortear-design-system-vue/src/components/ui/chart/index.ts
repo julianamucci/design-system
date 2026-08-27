@@ -4,6 +4,12 @@
 
 import type { EChartsCoreOption } from 'echarts/core';
 import { ARIA, CHART_TABLE_LABELS } from './chart-state';
+import {
+  nestInnerLabel,
+  nestLabelLine,
+  nestOuterLabel,
+  type NestLabelTokens,
+} from '@shared/primitives/chart-nest-labels';
 import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 
 export { default as ChartContainer } from './ChartContainer.vue';
@@ -258,6 +264,24 @@ export function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string })
  * o lê: ela nasce do option, e sem o grupo no dado não teria como reconstruir a
  * coluna que nomeia o anel de dentro.
  */
+/**
+ * Cores de PARTIDA do rótulo, para o construtor continuar puro.
+ *
+ * Não são as que aparecem na tela: o container reaplica os tokens do tema em
+ * vigor, e volta a reaplicá-los quando a classe do documento muda. Existem para
+ * que um option montado e usado FORA do container ainda desenhe um rótulo
+ * legível — `currentColor` herda do documento, e a placa transparente faz o pior
+ * caso virar "sem placa" em vez de "texto invisível".
+ */
+const NEST_LABEL_FALLBACK: NestLabelTokens = {
+  foreground: 'currentColor',
+  background: 'transparent',
+  border: 'transparent',
+  muted: 'transparent',
+  mutedForeground: 'currentColor',
+  fontSize: 12,
+};
+
 export function buildPieNestOption(o: {
   data: ChartNestedPoint[];
   title?: string;
@@ -291,19 +315,20 @@ export function buildPieNestOption(o: {
         type: 'pie',
         // Disco cheio no miolo, e não um segundo anel: dois anéis de mesma
         // espessura leem-se como duas roscas empilhadas, e a hierarquia some.
-        radius: [0, '30%'],
+        radius: [0, '28%'],
         center,
         avoidLabelOverlap: true,
-        label: { show: false },
+        label: nestInnerLabel(NEST_LABEL_FALLBACK),
         itemStyle: { borderRadius: 2 },
         data: order.map((name) => ({ name, value: sums.get(name) ?? 0 })),
       },
       {
         type: 'pie',
-        radius: ['45%', '70%'],
+        radius: ['42%', '58%'],
         center,
         avoidLabelOverlap: true,
-        label: { show: false },
+        label: nestOuterLabel(NEST_LABEL_FALLBACK),
+        labelLine: nestLabelLine(NEST_LABEL_FALLBACK),
         itemStyle: { borderRadius: 4 },
         data: points.map((point) => ({
           name: point.label,

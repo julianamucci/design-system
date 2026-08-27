@@ -32,6 +32,12 @@ import {
   watchTheme,
 } from '@/lib/echarts-theme';
 import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
+import {
+  nestInnerLabel,
+  nestLabelLine,
+  nestOuterLabel,
+  type NestLabelTokens,
+} from '@shared/primitives/chart-nest-labels';
 
 // ─── Chart ────────────────────────────────────────────────────────────────────
 //
@@ -426,6 +432,27 @@ export class NdsChart {
   protected readonly nestedType = computed(() => this.type() === 'pie-nest');
 
   /**
+   * As cores e o degrau do rótulo da rosca aninhada, do tema em vigor.
+   *
+   * Lê `temaVersao` como o `option` lê: é o sinal que faz as duas coisas serem
+   * recalculadas quando a classe do documento muda. A trama do decal segue o
+   * mesmo caminho neste componente, e pelo mesmo motivo — as duas carregam cor
+   * RESOLVIDA, e `setTheme` relê o registro do tema, nunca o option.
+   *
+   * O degrau sai da fonte raiz, não de pixel cravado (WCAG 1.4.4).
+   */
+  private nestLabelTokens(): NestLabelTokens {
+    return {
+      foreground: hsl('foreground'),
+      background: hsl('background'),
+      border: hsl('border'),
+      muted: hsl('muted'),
+      mutedForeground: hsl('muted-foreground'),
+      fontSize: Math.round(rootFontSize() * 0.75),
+    };
+  }
+
+  /**
    * O anel de DENTRO da rosca aninhada: um arco por grupo, com a soma dos pontos.
    *
    * Derivado, nunca declarado. A ordem é a de PRIMEIRA APARIÇÃO, e não a do
@@ -613,7 +640,12 @@ export class NdsChart {
   ): echarts.EChartsCoreOption {
     const points = this.simpleData();
     const groups = this.nestedGroups();
-    const center: [string, string] = ['50%', title ? '52%' : '45%'];
+    const labelTokens = this.nestLabelTokens();
+    // O centro sobe e os raios encolhem para caber o rótulo e a linha-guia por
+    // fora do anel externo. Sem a folga a lib desenha o rótulo, mas cortado pela
+    // borda do desenho — que é pior que não desenhar, porque parece defeito de
+    // dado.
+    const center: [string, string] = ['50%', title ? '50%' : '44%'];
     return {
       title,
       tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
@@ -628,19 +660,20 @@ export class NdsChart {
           type: 'pie',
           // Disco cheio no miolo, e não um segundo anel: dois anéis de mesma
           // espessura leem-se como duas roscas empilhadas, e a hierarquia some.
-          radius: [0, '30%'],
+          radius: [0, '28%'],
           center,
           avoidLabelOverlap: true,
-          label: { show: false },
+          label: nestInnerLabel(labelTokens),
           itemStyle: { borderRadius: 2 },
           data: groups.map((g) => ({ name: g.label, value: g.value })),
         },
         {
           type: 'pie',
-          radius: ['45%', '70%'],
+          radius: ['42%', '58%'],
           center,
           avoidLabelOverlap: true,
-          label: { show: false },
+          label: nestOuterLabel(labelTokens),
+          labelLine: nestLabelLine(labelTokens),
           itemStyle: { borderRadius: 4 },
           data: points.map((p) => ({ name: p.label, value: p.value })),
         },

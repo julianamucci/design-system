@@ -215,6 +215,7 @@ function insideLegend(shape: SVGGraphicsElement, box: DOMRect | null): boolean {
 /** É forma DESENHADA de dado: fora do vocabulário, fora da legenda, com área. */
 function isDatumShape(shape: SVGGraphicsElement, box: DOMRect | null): boolean {
   if (shape.closest('defs') !== null) return false;
+  if (shape.getAttribute('paint-order') === 'stroke') return false;
   if (insideLegend(shape, box)) return false;
   const bbox = shape.getBBox();
   return bbox.width > 0 && bbox.height > 0;

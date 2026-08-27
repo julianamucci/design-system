@@ -4,6 +4,7 @@ import { getInstanceByDom } from 'echarts/core';
 import {
   designEscreve,
   designPintado,
+  designTexts,
   distinctShapes,
   waitForStableCount,
   exigirRoot,
@@ -681,6 +682,22 @@ export const PieNest: Story = {
       }
     });
 
+
+    await step('O rótulo escreve o valor e a participação, em trechos próprios', async () => {
+      // É este passo que prova o TEXTO RICO. O nome sozinho não provaria nada:
+      // ele também está na legenda, e a asserção passaria com o rótulo
+      // desligado. O valor e a porcentagem não aparecem em nenhum outro lugar
+      // do desenho — se estão lá, o rótulo foi desenhado.
+      await expect(designEscreve(root, '300')).toBe(true);
+      await expect(designTexts(root).some((t) => t.includes('%'))).toBe(true);
+
+      // E o nome do grupo é escrito DENTRO do anel de dentro, que sem isto
+      // ficaria mudo: a legenda nomeia os dois níveis de uma vez, sem dizer
+      // qual arco é de qual.
+      for (const group of NEST_GROUPS) {
+        await expect(designEscreve(root, group)).toBe(true);
+      }
+    });
     await step('A tabela traz as duas colunas de nome, uma linha por parte', async () => {
       const data = root.querySelector<HTMLElement>('[data-slot="chart-data"]');
       await expect(data).not.toBeNull();

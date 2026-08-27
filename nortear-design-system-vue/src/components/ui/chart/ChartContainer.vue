@@ -5,6 +5,10 @@
 <script setup lang="ts">
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue';
 import VChart from 'vue-echarts';
+import {
+  withNestLabelTokens,
+  type NestLabelTokens,
+} from '@shared/primitives/chart-nest-labels';
 import * as echarts from 'echarts/core';
 import { BarChart, LineChart, PieChart, FunnelChart, RadarChart, ScatterChart } from 'echarts/charts';
 import {
@@ -128,6 +132,27 @@ function cssToken(name: string): string {
  * a barra de ferramentas troca a família — é o `font-size` resolvido do
  * `<html>`.
  */
+/**
+ * As cores e o degrau do rótulo da rosca aninhada, do tema em vigor.
+ *
+ * A trama do decal mora no TEMA e é recolorida sozinha por `setTheme`. O
+ * rótulo não cabe lá — posição e texto rico diferem entre os dois anéis, e o
+ * tema não distingue um do outro, porque as duas séries são `pie`. Ele viaja
+ * no option, e por isso precisa ser REAPLICADO quando o tema muda.
+ *
+ * O degrau sai da fonte raiz, não de pixel cravado (WCAG 1.4.4).
+ */
+function nestLabelTokens(): NestLabelTokens {
+  return {
+    foreground: hsl('foreground'),
+    background: hsl('background'),
+    border: hsl('border'),
+    muted: hsl('muted'),
+    mutedForeground: hsl('muted-foreground'),
+    fontSize: Math.round(rootFontSize() * 0.75),
+  };
+}
+
 function rootFontSize(): number {
   if (typeof document === 'undefined') return 16;
   const measured = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
@@ -315,6 +340,18 @@ function instanciaDoGrafico(): echarts.ECharts | undefined {
   return undefined;
 }
 
+/**
+ * Conta as trocas de tema. É a dependência que faz o rótulo ser remontado —
+ * sem ela o computed abaixo nunca reavaliaria, porque `props.option` não muda
+ * quando só a classe do documento muda.
+ */
+const themeVersion = ref(0);
+
+const optionWithLabels = computed(() => {
+  themeVersion.value;
+  return withNestLabelTokens(props.option as Record<string, unknown>, nestLabelTokens());
+});
+
 let observer: MutationObserver | null = null;
 let fontObserver: ResizeObserver | null = null;
 onMounted(() => {
@@ -322,6 +359,7 @@ onMounted(() => {
 
   observer = new MutationObserver(() => {
     instanciaDoGrafico()?.setTheme(buildTheme() as Record<string, unknown>);
+    themeVersion.value += 1;
     // A barra de ferramentas troca a fonte por classe, e a classe já passou por
     // aqui: anotar a medida evita que o observador de tamanho, logo abaixo,
     // repita o mesmo trabalho no quadro seguinte.
@@ -345,6 +383,7 @@ onMounted(() => {
     if (fontSize === lastFontSize) return;
     lastFontSize = fontSize;
     instanciaDoGrafico()?.setTheme(buildTheme() as Record<string, unknown>);
+    themeVersion.value += 1;
   });
   fontObserver.observe(document.documentElement);
 });
@@ -440,7 +479,7 @@ const heightStyle = computed(() =>
         :style="heightStyle"
       >
         <VChart
-          :option="option"
+          :option="optionWithLabels"
           :theme="mountTheme"
           :init-options="{ renderer: rendererName }"
           autoresize

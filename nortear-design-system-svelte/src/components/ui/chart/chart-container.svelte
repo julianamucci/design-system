@@ -16,6 +16,10 @@
   import {
     CHART_EMPTY_LABEL, CHART_TABLE_LABELS, chartDecals, chartTable, isChartOptionEmpty,
   } from './chart-state.js';
+  import {
+    withNestLabelTokens,
+    type NestLabelTokens,
+  } from '@shared/primitives/chart-nest-labels';
 
   // `AriaComponent` não é enfeite: sem ele o bloco `aria` do option é ignorado
   // em silêncio, e a trama sobreposta a cada série — que é o que cumpre a WCAG
@@ -167,6 +171,38 @@
    * cresce ou a barra de ferramentas troca a família — é o `font-size`
    * resolvido do `<html>`.
    */
+  /**
+   * As cores e o degrau do rótulo da rosca aninhada, do tema em vigor.
+   *
+   * O rótulo não cabe inteiro no tema como a trama cabe: posição e texto rico
+   * diferem entre os dois anéis, e o tema não distingue um do outro — as duas
+   * séries são `pie`. Por isso ele viaja no option, e por isso precisa ser
+   * REAPLICADO quando a classe do documento muda; a trama, que mora no tema, se
+   * recolore sozinha em `setTheme`.
+   *
+   * O degrau sai da fonte raiz, não de pixel cravado (WCAG 1.4.4).
+   */
+  function nestLabelTokens(): NestLabelTokens {
+    return {
+      foreground: hsl('foreground'),
+      background: hsl('background'),
+      border: hsl('border'),
+      muted: hsl('muted'),
+      mutedForeground: hsl('muted-foreground'),
+      fontSize: Math.round(rootFontSize() * 0.75),
+    };
+  }
+  /**
+   * Conta as trocas de tema.
+   *
+   * A trama do decal mora no TEMA e é recolorida sozinha por `setTheme`. O
+   * rótulo da rosca aninhada não cabe lá — posição e texto rico diferem
+   * entre os dois anéis, e o tema não distingue um do outro, porque as duas
+   * séries são `pie`. Ele viaja no option, e por isso precisa de um sinal
+   * que acorde o efeito que o reaplica.
+   */
+  let themeVersion = $state(0);
+
   function rootFontSize(): number {
     if (typeof document === 'undefined') return 16;
     const measured = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
@@ -344,6 +380,7 @@
         lastFontSize = fontSize;
         applyTheme();
         chart.setTheme(THEME_NAME);
+        themeVersion += 1;
       }
       // Redimensionar continua sendo assunto da caixa do DESENHO. A raiz é
       // observada só pela medida da fonte: repintar por causa dela realimentaria
@@ -362,6 +399,7 @@
       // clara. Quem relê o registro é `setTheme`, e ele recolore no lugar, sem
       // remontar: é o "não pisca nem requer reload" que a documentação promete.
       chart.setTheme(THEME_NAME);
+      themeVersion += 1;
       // A barra de ferramentas troca a fonte por classe, e a classe passou por
       // aqui: anotar a medida evita que o observador de tamanho refaça o mesmo
       // trabalho no quadro seguinte.
@@ -386,7 +424,19 @@
     // — que sai das props novas — lista só as duas. Desenho e alternativa
     // textual discordando é a única coisa que este componente existe para não
     // fazer. O Vanilla, que é a referência, já dizia isto por escrito.
-    inst?.setOption(option, { notMerge: true, lazyUpdate: true });
+    const withLabels = withNestLabelTokens(
+      option as Record<string, unknown>,
+      nestLabelTokens(),
+    );
+    // O contador é lido SÓ quando há rosca aninhada, e a condição é a própria
+    // resposta da reaplicação: sem aninhamento ela devolve o mesmo objeto.
+    //
+    // Depender dele sempre fazia TODO gráfico reaplicar o option a cada troca
+    // de tema, e `notMerge` reseta o desenho — reset fecha a dica sob o
+    // ponteiro. Foi assim que a story do tooltip reprovou, e o sintoma não
+    // apontava para cá: ela acusou o texto do eixo sem o valor da dica.
+    if (withLabels !== option) themeVersion;
+    inst?.setOption(withLabels, { notMerge: true, lazyUpdate: true });
   });
 </script>
 

@@ -307,6 +307,22 @@ function emDefs(forma: Element): boolean {
 }
 
 /**
+ * Cromo de RÓTULO: a placa atrás do texto e a pílula de participação.
+ *
+ * A lib as desenha como caminho preenchido, com área e fora da legenda, então
+ * elas atravessam os outros filtros — o portão da rosca aninhada acusou 21
+ * formas onde havia 8. A marca é `paint-order="stroke"`, que o desenhador põe em
+ * todo fundo de texto COM BORDA para o traço ficar atrás do preenchimento; forma
+ * de dado nunca a recebe.
+ *
+ * Exclusão ESTRUTURAL, e não por cor: filtrar pelo tom do fundo quebraria na
+ * série que traz cor autoral.
+ */
+function labelChrome(forma: Element): boolean {
+  return forma.getAttribute('paint-order') === 'stroke';
+}
+
+/**
  * A caixa da legenda, lida do retângulo transparente que a própria lib desenha
  * como fundo dela. `null` quando o gráfico não tem legenda.
  */
@@ -351,7 +367,7 @@ export function formasPreenchidas(root: ParentNode): SVGPathElement[] {
   return [...root.querySelectorAll<SVGPathElement>('path[fill]')].filter((forma) => {
     const fill = forma.getAttribute('fill') ?? 'none';
     if (fill === 'none' || fill.startsWith('url(')) return false;
-    return !emDefs(forma) && !naLegenda(forma, legenda) && temArea(forma);
+    return !emDefs(forma) && !labelChrome(forma) && !naLegenda(forma, legenda) && temArea(forma);
   });
 }
 
@@ -359,7 +375,7 @@ export function formasPreenchidas(root: ParentNode): SVGPathElement[] {
 export function formasComTrama(root: ParentNode): SVGPathElement[] {
   const legenda = caixaDaLegenda(root);
   return [...root.querySelectorAll<SVGPathElement>('path[fill^="url("]')].filter(
-    (forma) => !emDefs(forma) && !naLegenda(forma, legenda) && temArea(forma),
+    (forma) => !emDefs(forma) && !labelChrome(forma) && !naLegenda(forma, legenda) && temArea(forma),
   );
 }
 
@@ -413,7 +429,7 @@ export function radarHatches(root: ParentNode): SVGPathElement[] {
 export function tracadosDeSerie(root: ParentNode): SVGPathElement[] {
   const legenda = caixaDaLegenda(root);
   return [...root.querySelectorAll<SVGPathElement>('path[fill="none"]')].filter((forma) => {
-    if (emDefs(forma) || naLegenda(forma, legenda)) return false;
+    if (emDefs(forma) || labelChrome(forma) || naLegenda(forma, legenda)) return false;
     const grossura = Number.parseFloat(getComputedStyle(forma).strokeWidth);
     return grossura >= 2 && forma.getTotalLength() > 0;
   });

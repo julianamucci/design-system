@@ -86,6 +86,13 @@ import { SVGRenderer, CanvasRenderer } from 'echarts/renderers';
 
 import { cn } from '@/lib/utils';
 import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
+import {
+  nestInnerLabel,
+  nestLabelLine,
+  nestOuterLabel,
+  withNestLabelTokens,
+  type NestLabelTokens,
+} from '@shared/primitives/chart-nest-labels';
 
 // Bootstrap dos módulos — idempotente, tree-shake friendly.
 //
@@ -175,11 +182,40 @@ function hatchPatterns(color: string): Record<string, unknown>[] {
  * Vale também para quem monta o `option` à mão: basta `aria.decal.show`.
  */
 function withHatchPatterns(option: echarts.EChartsCoreOption): echarts.EChartsCoreOption {
-  const aria = (option as { aria?: { decal?: { show?: boolean } } }).aria;
-  if (!aria?.decal?.show) return option;
+  // O rótulo da rosca aninhada entra pelo mesmo caminho da trama, e pelo mesmo
+  // motivo: os dois carregam cor RESOLVIDA, e `setTheme` relê o registro do
+  // tema, nunca o option. Sem esta passada, trocar para o modo escuro deixaria a
+  // placa branca com texto quase invisível.
+  //
+  // Vem antes do curto-circuito do decal porque a rosca aninhada tem rótulo
+  // mesmo quando a trama está desligada.
+  const withLabels = withNestLabelTokens(
+    option as Record<string, unknown>,
+    nestLabelTokens(),
+  ) as echarts.EChartsCoreOption;
+
+  const aria = (withLabels as { aria?: { decal?: { show?: boolean } } }).aria;
+  if (!aria?.decal?.show) return withLabels;
   return {
-    ...option,
+    ...withLabels,
     aria: { ...aria, decal: { ...aria.decal, decals: hatchPatterns(hsl('background')) } },
+  };
+}
+
+/**
+ * As cores e o degrau do rótulo da rosca aninhada, resolvidos do tema em vigor.
+ *
+ * O degrau sai da fonte raiz, não de um pixel cravado — o rótulo é texto e
+ * cresce com a fonte do navegador (WCAG 1.4.4).
+ */
+function nestLabelTokens(): NestLabelTokens {
+  return {
+    foreground: hsl('foreground'),
+    background: hsl('background'),
+    border: hsl('border'),
+    muted: hsl('muted'),
+    mutedForeground: hsl('muted-foreground'),
+    fontSize: Math.round(rootFontSize() * 0.75),
   };
 }
 
@@ -619,6 +655,28 @@ export function buildFunnelOption(o: { data: ChartDataPoint[]; title?: string })
  * o lê: ela nasce do option, e sem o grupo no dado ela não teria como reconstruir
  * a coluna que nomeia o anel de dentro.
  */
+/**
+ * Cores de PARTIDA do rótulo, para o construtor continuar puro.
+ *
+ * Elas não são as que aparecem na tela: o container reaplica os tokens do tema
+ * em vigor com `withNestLabelTokens`, no mesmo ponto em que injeta a trama do
+ * decal, e pelo mesmo motivo — as duas carregam cor resolvida, e `setTheme` relê
+ * o registro do tema, nunca o option.
+ *
+ * Existem para que um option montado e usado FORA do container ainda desenhe um
+ * rótulo legível em vez de um sem cor nenhuma. Saem de `currentColor`, que herda
+ * do documento, e de `transparent` na placa — o pior caso vira "sem placa", não
+ * "texto invisível".
+ */
+const NEST_LABEL_FALLBACK: NestLabelTokens = {
+  foreground: 'currentColor',
+  background: 'transparent',
+  border: 'transparent',
+  muted: 'transparent',
+  mutedForeground: 'currentColor',
+  fontSize: 12,
+};
+
 export function buildPieNestOption(o: {
   data: ChartNestedPoint[];
   title?: string;
@@ -652,19 +710,20 @@ export function buildPieNestOption(o: {
         type: 'pie',
         // Disco cheio no miolo, e não um segundo anel: dois anéis de mesma
         // espessura leem-se como duas roscas empilhadas, e a hierarquia some.
-        radius: [0, '30%'],
+        radius: [0, '28%'],
         center,
         avoidLabelOverlap: true,
-        label: { show: false },
+        label: nestInnerLabel(NEST_LABEL_FALLBACK),
         itemStyle: { borderRadius: 2 },
         data: order.map((name) => ({ name, value: sums.get(name) ?? 0 })),
       },
       {
         type: 'pie',
-        radius: ['45%', '70%'],
+        radius: ['42%', '58%'],
         center,
         avoidLabelOverlap: true,
-        label: { show: false },
+        label: nestOuterLabel(NEST_LABEL_FALLBACK),
+        labelLine: nestLabelLine(NEST_LABEL_FALLBACK),
         itemStyle: { borderRadius: 4 },
         data: points.map((point) => ({
           name: point.label,

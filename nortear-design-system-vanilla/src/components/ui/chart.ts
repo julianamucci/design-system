@@ -75,6 +75,12 @@ import { SVGRenderer, CanvasRenderer } from 'echarts/renderers';
 
 import { THEME_NAME, hsl, registerNortearTheme, rootFontSize, watchTheme } from '@/lib/echarts-theme';
 import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
+import {
+  nestInnerLabel,
+  nestLabelLine,
+  nestOuterLabel,
+  type NestLabelTokens,
+} from '@shared/primitives/chart-nest-labels';
 
 // Bootstrap dos módulos — idempotente. Tree-shake friendly.
 //
@@ -147,6 +153,27 @@ function tramas(cor: string): Record<string, unknown>[] {
  */
 function ariaBlock(): Record<string, unknown> {
   return { enabled: true, label: { enabled: false }, decal: { show: true, decals: tramas(hsl('background')) } };
+}
+
+/**
+ * As cores e o degrau do rótulo da rosca aninhada, resolvidos do tema em vigor.
+ *
+ * Vive ao lado de `ariaBlock`, que resolve a cor da trama pelo mesmo caminho e
+ * no mesmo momento: os dois leem o tema que está no documento AGORA, e por isso
+ * o option é reconstruído quando o tema muda.
+ *
+ * O degrau tipográfico sai da fonte raiz, não de um pixel cravado — o rótulo é
+ * texto e cresce com a fonte do navegador (WCAG 1.4.4).
+ */
+function nestLabelTokens(): NestLabelTokens {
+  return {
+    foreground: hsl('foreground'),
+    background: hsl('background'),
+    border: hsl('border'),
+    muted: hsl('muted'),
+    mutedForeground: hsl('muted-foreground'),
+    fontSize: Math.round(rootFontSize() * 0.75),
+  };
 }
 
 /** Frase padrão do estado vazio — a mesma nas cinco stacks. */
@@ -818,7 +845,11 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
   if (type === 'pie-nest') {
     const points = opts.data ?? [];
     const groups = nestedGroupsOf(points);
-    const center: [string, string] = ['50%', opts.title ? '52%' : '45%'];
+    const labelTokens = nestLabelTokens();
+    // O anel externo recua para caber o rótulo e a linha-guia por fora dele.
+    // Sem esta folga a lib desenha o rótulo, mas cortado pela borda do desenho —
+    // que é pior que não desenhar, porque parece defeito de dado.
+    const center: [string, string] = ['50%', opts.title ? '50%' : '44%'];
     return {
       title: opts.title ? { text: opts.title, left: 'left' } : undefined,
       tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
@@ -834,19 +865,20 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
           // Disco cheio no miolo, e não um segundo anel: dois anéis de mesma
           // espessura leem-se como duas roscas empilhadas, e a hierarquia
           // some. O miolo cheio diz "isto contém aquilo".
-          radius: [0, '30%'],
+          radius: [0, '28%'],
           center,
           avoidLabelOverlap: true,
-          label: { show: false },
+          label: nestInnerLabel(labelTokens),
           itemStyle: { borderRadius: 2 },
           data: groups.map((g) => ({ name: g.label, value: g.value })),
         },
         {
           type: 'pie',
-          radius: ['45%', '70%'],
+          radius: ['42%', '58%'],
           center,
           avoidLabelOverlap: true,
-          label: { show: false },
+          label: nestOuterLabel(labelTokens),
+          labelLine: nestLabelLine(labelTokens),
           itemStyle: { borderRadius: 4 },
           data: points.map((p) => ({ name: p.label, value: p.value })),
         },
