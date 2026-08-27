@@ -35,6 +35,7 @@ import DensitiesDocs from './DensitiesDocs.svelte';
 import DialogDocs from './DialogDocs.svelte';
 import DrawerDocs from './DrawerDocs.svelte';
 import DropdownMenuDocs from './DropdownMenuDocs.svelte';
+import EditorDocs from './EditorDocs.svelte';
 import ElevationDocs from './ElevationDocs.svelte';
 import GettingStartedDocs from './GettingStartedDocs.svelte';
 import HoverCardDocs from './HoverCardDocs.svelte';
@@ -206,6 +207,8 @@ export const Dialog: Story = { render: page(DialogDocs), play: mounted, paramete
 export const Drawer: Story = { render: page(DrawerDocs), play: mounted };
 
 export const DropdownMenu: Story = { render: page(DropdownMenuDocs), play: mounted };
+
+export const Editor: Story = { render: page(EditorDocs), play: mounted };
 
 export const Elevation: Story = { render: page(ElevationDocs), play: mounted };
 

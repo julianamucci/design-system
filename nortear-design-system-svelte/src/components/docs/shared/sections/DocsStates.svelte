@@ -2,11 +2,20 @@
   import { Card } from '@/components/ui/card';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
-  interface DocsStateItem { label: string; trigger: string; behavior: string }
+  interface DocsStateItem { label: string; trigger?: string; behavior: string }
 
+  /**
+   * A coluna do meio ("quando ocorre") é OPCIONAL.
+   *
+   * Nem todo conteúdo compartilhado a tem: há componente cujo `translations.json`
+   * descreve o estado em duas colunas — nome e descrição —, e exigir a terceira
+   * obrigaria a inventar um cabeçalho que ninguém escreveu. Omitindo `trigger`
+   * em `cols`, a tabela sai com duas colunas; as páginas que passam as três
+   * seguem idênticas.
+   */
   const { title, cols, items }: {
     title: string;
-    cols: { state: string; trigger: string; behavior: string };
+    cols: { state: string; trigger?: string; behavior: string };
     items: DocsStateItem[];
   } = $props();
 </script>
@@ -18,7 +27,9 @@
         <TableHeader>
           <TableRow class="nds-border-b nds-bg-muted-soft">
             <TableHead class="nds-p-2 nds-font-semibold">{cols.state}</TableHead>
-            <TableHead class="nds-p-2 nds-font-semibold">{cols.trigger}</TableHead>
+            {#if cols.trigger}
+              <TableHead class="nds-p-2 nds-font-semibold">{cols.trigger}</TableHead>
+            {/if}
             <TableHead class="nds-p-2 nds-font-semibold">{cols.behavior}</TableHead>
           </TableRow>
         </TableHeader>
@@ -26,7 +37,9 @@
           {#each items as item, i (i)}
             <TableRow class="nds-border-b nds-hover-bg-muted-faint">
               <TableCell class="nds-p-2 nds-font-medium">{item.label}</TableCell>
-              <TableCell class="nds-p-2 nds-text-muted-foreground">{item.trigger}</TableCell>
+              {#if cols.trigger}
+                <TableCell class="nds-p-2 nds-text-muted-foreground">{item.trigger}</TableCell>
+              {/if}
               <TableCell class="nds-p-2 nds-text-muted-foreground">{item.behavior}</TableCell>
             </TableRow>
           {/each}

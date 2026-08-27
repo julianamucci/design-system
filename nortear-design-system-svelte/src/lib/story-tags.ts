@@ -25,6 +25,7 @@ const CATEGORY_MAP: Record<string, string> = {
   textarea: "form",
   select: "form",
   "date-picker": "form",
+  editor: "form",
   calendar: "form",
   checkbox: "form",
   "radio-group": "form",
