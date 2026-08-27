@@ -3,19 +3,11 @@
   import { CodeBlock } from '@/components/ui/code-block';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
-  interface DocsTokenItem { token: string; value?: string; description: string }
+  interface DocsTokenItem { token: string; value: string; description: string }
 
-  /**
-   * A coluna do meio (a classe `.nds-*` que consome o token) é OPCIONAL.
-   *
-   * Há conteúdo compartilhado que descreve o token em duas colunas — nome e uso
-   * —, e exigir a terceira obrigaria a inventar um cabeçalho que ninguém
-   * escreveu. Omitindo `value` em `cols`, a tabela sai com duas colunas; as
-   * páginas que passam as três seguem idênticas.
-   */
   const { title, cols, items, customizationTitle, customizationCode, language = 'css', copyLabel, copiedLabel }: {
     title: string;
-    cols: { token: string; value?: string; description: string };
+    cols: { token: string; value: string; description: string };
     items: DocsTokenItem[];
     customizationTitle?: string;
     customizationCode?: string;
@@ -33,9 +25,7 @@
           <TableHeader>
             <TableRow class="nds-border-b nds-bg-muted-soft">
               <TableHead class="nds-p-2 nds-font-semibold">{cols.token}</TableHead>
-              {#if cols.value}
-                <TableHead class="nds-p-2 nds-font-semibold">{cols.value}</TableHead>
-              {/if}
+              <TableHead class="nds-p-2 nds-font-semibold">{cols.value}</TableHead>
               <TableHead class="nds-p-2 nds-font-semibold">{cols.description}</TableHead>
             </TableRow>
           </TableHeader>
@@ -44,9 +34,7 @@
               <TableRow class="nds-border-b nds-hover-bg-muted-faint">
                 <!-- lang="en": token e seletor são identificadores CSS. WCAG 3.1.2. -->
                 <TableCell lang="en" class="nds-p-2 nds-font-mono nds-text-primary">{item.token}</TableCell>
-                {#if cols.value}
-                  <TableCell lang="en" class="nds-p-2 nds-font-mono nds-text-muted-foreground">{item.value}</TableCell>
-                {/if}
+                <TableCell lang="en" class="nds-p-2 nds-font-mono nds-text-muted-foreground">{item.value}</TableCell>
                 <TableCell class="nds-p-2 nds-text-muted-foreground">{item.description}</TableCell>
               </TableRow>
             {/each}

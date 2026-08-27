@@ -6,22 +6,10 @@
   interface Scenario { s: string; u: string; a: string }
   interface UXRow { element: string; do: string; dont: string; rules?: string }
 
-  /**
-   * O bloco de cenários é OPCIONAL, como o de UX Writing já era.
-   *
-   * A tabela pede três colunas — cenário, o que usar, alternativa — e há
-   * conteúdo compartilhado que descreve os cenários como uma lista simples. Sem
-   * a opção, ou se inventava dois cabeçalhos e duas colunas vazias, ou a página
-   * saía com uma tabela só de cabeçalho. Quem passa `scenarios` segue idêntico.
-   *
-   * `guidelines.title` também é opcional pelo mesmo motivo: nem todo
-   * `translations.json` tem um título para o bloco, e repetir o `<h2>` da seção
-   * num `<h3>` logo abaixo não informa nada.
-   */
   const { title, guidelines, scenarios, uxWriting, do: doBlock, dont: dontBlock }: {
     title: string;
-    guidelines: { title?: string; items: string[] };
-    scenarios?: { title?: string; cols: { scenario: string; use: string; alternative: string }; items: Scenario[] };
+    guidelines: { title: string; items: string[] };
+    scenarios: { title?: string; cols: { scenario: string; use: string; alternative: string }; items: Scenario[] };
     uxWriting?: { title: string; cols: { element: string; do: string; dont: string; rules?: string }; items: UXRow[] };
     do: { title: string; items: string[] };
     dont: { title: string; items: string[] };
@@ -34,9 +22,7 @@
 
       <!-- Guidelines -->
       <Card class="nds-bg-muted-soft nds-border-soft nds-p-4 nds-stack" data-spacing="sm">
-          {#if guidelines.title}
-            <h3 class="nds-font-medium nds-text-body">{guidelines.title}</h3>
-          {/if}
+          <h3 class="nds-font-medium nds-text-body">{guidelines.title}</h3>
           <ul class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
             {#each guidelines.items as item, i (i)}
               <li>{@html DOMPurify.sanitize(item)}</li>
@@ -45,7 +31,6 @@
       </Card>
 
       <!-- Cenários -->
-      {#if scenarios}
       <Card class="nds-overflow-x nds-p-4">
         <Table class="nds-w-full nds-border-collapse nds-text-body">
           <TableHeader>
@@ -66,7 +51,6 @@
           </TableBody>
         </Table>
       </Card>
-      {/if}
 
       <!-- UX Writing -->
       {#if uxWriting}

@@ -162,27 +162,45 @@ export const WithTable: Story = {
     });
 
     await step('A lista de tarefas desenha caixa no lugar do marcador', async () => {
-      // Ela é exercitada aqui e NÃO fica no quadro final, e a razão é MEDIDA,
-      // não suposta: em 2026-08-27 a folha compartilhada passou a expandir a
-      // área de toque por `::after`, e o axe continuou reprovando a story —
-      // "13px by 13px, should be at least 24px" e "safe clickable space has a
-      // diameter of 13px". Pseudo-elemento não entra no `getBoundingClientRect`
-      // do alvo, então a regra `target-size` não o enxerga; quem tem de crescer
-      // é a caixa do próprio `<input>`. É defeito da folha compartilhada, e não
-      // desta story — escrever CSS aqui só mudaria o lugar do defeito.
       editor.commands.setContent(TASK_LIST_CONTENT);
       const item = root.querySelector('ul[data-type="taskList"] li') as HTMLElement;
-      await expect(item.querySelector('input[type="checkbox"]')).toBeInTheDocument();
+      const checkbox = item.querySelector('input[type="checkbox"]') as HTMLElement;
+      await expect(checkbox).toBeInTheDocument();
       // A caixa é quem marca — o marcador de lista sai de cena para não haver
       // dois sinais para a mesma coisa.
       await expect(getComputedStyle(item.parentElement as HTMLElement).listStyleType).toBe('none');
+
+      // PRENDE o alvo mínimo de WCAG 2.5.8, e mede o RETÂNGULO DO PRÓPRIO
+      // `<input>` porque é ele que a regra `target-size` lê — ligada no
+      // `preview.ts` das cinco stacks. A caixa que o navegador desenha sozinho
+      // mede 13×13; a primeira correção tentou crescer o alvo por um `::after`
+      // no `<label>`, que não entra nesta conta e passou batido. Se a folha
+      // compartilhada encolher a caixa de novo, esta asserção reprova antes do
+      // axe, e dizendo o número.
+      const rect = checkbox.getBoundingClientRect();
+      await expect(rect.width).toBeGreaterThanOrEqual(24);
+      await expect(rect.height).toBeGreaterThanOrEqual(24);
+
+      // O ALINHAMENTO ainda não fecha, e a medida fica escrita porque a
+      // correção é da folha compartilhada, não desta story. Medido em
+      // 2026-08-27, neste mesmo item: `li` e `<label>` começam em 122, a caixa
+      // vai de 122 a 146 (centro 134), e o `<p>` ao lado começa em 138 com 20px
+      // de altura (centro 148) — a marca fica 14px ACIMA do centro da primeira
+      // linha. Duas premissas do recuo `(1.5em - var(--spacing-6)) / 2` não se
+      // sustentam: com a caixa em 24px o cálculo dá ZERO, e a linha do texto
+      // não mede 1.5em, porque o conteúdo não declara `line-height` (vem
+      // `normal`, 20px). Some-se o `margin-block: 1em` que o navegador põe no
+      // `<p>` e que nenhuma regra desfaz dentro do item — são os 16px que
+      // empurram o texto para baixo. Antes desta correção o desencontro era de
+      // ~15px, então ele não nasceu aqui; a caixa maior só o deixou visível.
     });
 
     await step('O documento fecha com os blocos que a foto precisa ver', async () => {
       editor.commands.setContent(
         TABLE_CONTENT
           + '<blockquote><p>A citação leva barra lateral na cor da marca.</p></blockquote>'
-          + '<pre><code>const c = 299792458;</code></pre>',
+          + '<pre><code>const c = 299792458;</code></pre>'
+          + TASK_LIST_CONTENT,
       );
       const quote = root.querySelector('blockquote') as HTMLElement;
       // A barra lateral é o sinal, e é ela que carrega a cor da marca — o texto
@@ -191,6 +209,13 @@ export const WithTable: Story = {
       await expect(getComputedStyle(quote).borderInlineStartWidth).not.toBe('0px');
       await expect(root.querySelector('pre')).toBeInTheDocument();
       await expect(root.querySelector('table')).toBeInTheDocument();
+      // A lista de tarefas VOLTOU ao quadro final. Ela saíra daqui enquanto a
+      // caixa media 13×13 e reprovava `target-size`; agora que a caixa cresce
+      // de verdade, o quadro mostra o bloco outra vez — e é este quadro que o
+      // axe varre no fim da encenação.
+      await expect(
+        root.querySelector('ul[data-type="taskList"] input[type="checkbox"]'),
+      ).toBeInTheDocument();
     });
   },
 };
