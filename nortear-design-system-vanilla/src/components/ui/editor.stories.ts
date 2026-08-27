@@ -49,6 +49,7 @@ const LABELS: EditorLabels = {
     formulaConfirm: 'Inserir',
     link: 'Endereço do link',
     linkConfirm: 'Aplicar',
+    linkRemove: 'Tirar o link',
   },
 };
 
@@ -311,8 +312,25 @@ export const Playground: Story = {
       await userEvent.click(abrir);
       await expect(campo).toHaveValue('https://exemplo.com');
 
-      // E apagar o texto é como se TIRA o link: não há botão separado para
-      // isso, então o caminho precisa estar visível ao abrir.
+      // O botão de tirar só existe quando há link — botão que não faz nada é
+      // ruído, e desabilitado seria pior: anuncia a ação e nega em seguida.
+      const tirar = canvas.getByRole('button', { name: LABELS.fields.linkRemove });
+      await expect(getComputedStyle(tirar).display).not.toBe('none');
+      await userEvent.click(tirar);
+      await expect(root.querySelector('a')).toBeNull();
+
+      // Sem link no trecho, ele some. A asserção lê o `display` COMPUTADO: o
+      // `.nds-button` declara `display: inline-flex`, e declaração de autor
+      // vence o `[hidden]` do navegador — o atributo sozinho não esconde nada,
+      // e a asserção que confia nele concorda com o bug.
+      await userEvent.click(abrir);
+      await expect(getComputedStyle(tirar).display).toBe('none');
+
+      // Apagar o campo e confirmar continua tirando o link — o caminho antigo,
+      // que agora é atalho e não a única porta.
+      await userEvent.type(campo, 'exemplo.com{Enter}');
+      await expect(root.querySelector('a')).toBeInTheDocument();
+      await userEvent.click(abrir);
       await userEvent.clear(campo);
       await userEvent.keyboard('{Enter}');
       await expect(root.querySelector('a')).toBeNull();

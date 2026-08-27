@@ -43,7 +43,7 @@ histórico; a lista de cima é o que está por fazer.
 - [ ] **Motor de múltiplos itens no carrossel Vanilla.** A fábrica desliza um slide por vez e não expõe base fracionária, com `coversNotApplicable` declarado. Trocar o motor, ou tirar o item do contrato das cinco.
 - [x] **Dots do carrossel no Angular são botões numerados**; as outras quatro usam `.nds-carousel-dot`, classe que não aparece em arquivo nenhum do Angular. Alinhar muda a foto do Chromatic. **Resolvido (2026-08-18), junto com o redesenho da paginação aprovado pela dona.** O Angular passou a usar `.nds-carousel-dot` na story de composições E na docs page; as cinco montam a MESMA fileira. O padrão novo: o slide atual vira uma pílula rotulada ("Slide N") na própria posição da fileira, os demais continuam pontos, e a mudança de forma anima por `grid-template-columns: 0fr → 1fr` com `--duration-base`/`--ease-size` (mesmo mecanismo do painel do accordion, sem biblioteca de animação). Contrato novo nas cinco: `testes.functional.item8` e `testes.accessibility.item6`.
 
-### Dívida de fundação, sem dono de componente (9)
+### Dívida de fundação, sem dono de componente (10)
 - [ ] **O `toggle-group` do Vanilla ganhou três capacidades que as outras quatro stacks não têm.** (Aberto em 2026-08-27, ao montar a barra do protótipo de editor.) Vanilla é a referência, então a divergência é dívida de porte, não decisão:
 
   | capacidade | por que existe |
@@ -53,6 +53,15 @@ histórico; a lista de cima é o que está por fazer.
   | `setValue(value)` no nó devolvido | barra que ESPELHA estado de fora. Numa barra de formatação, mover o cursor para dentro de um negrito tem de acender o botão sem clique. Não dispara `onValueChange` — é sincronização, não escolha |
 
   Junto vem uma limpeza que ficou por fazer: as três stories de composição do `toggle-group` no Vanilla ainda usam `children: ''` mais `injectIcons`, que o `children` de elemento tornou desnecessário.
+
+- [ ] **`hidden` não esconde nada em classe `.nds-*` que declare `display` — quarta ocorrência.** (Aberto em 2026-08-27, ao esconder o botão de tirar link no protótipo de editor.) O `[hidden] { display: none }` é regra da FOLHA DO AGENTE, e qualquer declaração de autor a vence. Quem escreve `elemento.hidden = true` recebe o atributo no DOM, o leitor de tela concorda, o `toBeVisible` do jest-dom concorda — e o elemento continua na tela.
+
+  Três remendos pontuais já existem, cada um escrito depois do defeito aparecer: `.nds-accordion-content[hidden]`, `.nds-command-item[hidden]` e `.nds-editor-field-row [hidden]`. O caso geral segue aberto: **`.nds-button` declara `display: inline-flex` e não tem guarda**, e é o primitivo mais usado do sistema.
+
+  Duas ações, e a segunda é a que fecha o assunto:
+
+  1. `[hidden]` em `.nds-button` (e no que mais declarar `display`) na folha compartilhada — muda as cinco stacks, então pede a varredura das stories que usam a classe.
+  2. Regra de auditoria: classe `.nds-*` que declara `display` diferente de `none` **e** cujo componente escreve `hidden` em algum lugar tem de declarar a guarda. É detecção por grep, e é o único jeito de a quinta ocorrência não acontecer — as quatro primeiras foram todas descobertas na tela, nunca por portão.
 
 - [ ] **`createToggle` (solto) continua sem setter público de `pressed`.** (Aberto em 2026-08-27; o grupo foi resolvido, o toggle avulso não.) A fábrica guarda `pressed` num fecho e só o troca no próprio clique, então o toggle avulso não serve a nada que espelhe estado externo. Dentro do grupo isso não morde — o grupo é a autoridade e repinta os botões a cada mudança —, mas quem usar `createToggle` direto numa barra dirigida por fora esbarra na mesma parede.
 

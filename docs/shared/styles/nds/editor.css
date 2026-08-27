@@ -83,6 +83,19 @@
   display: none;
 }
 
+/* Guarda de `[hidden]` para o que a linha esconde por atributo — hoje, o botão
+ * de tirar o link, que só aparece quando há link no trecho.
+ *
+ * `.nds-button` declara `display: inline-flex`, e declaração de autor vence o
+ * `[hidden] { display: none }` do navegador: sem esta regra o botão fica na
+ * tela com o atributo escrito, exatamente como aconteceu com a própria linha
+ * da fórmula. A guarda mora AQUI, e não em `button.css`, para não mexer no
+ * primitivo das cinco stacks por causa de um protótipo — a lacuna geral está
+ * no FIXES-NEEDED. */
+.nds-editor-field-row [hidden] {
+  display: none;
+}
+
 .nds-editor-field-row > .nds-input {
   flex: 1 1 auto;
   min-width: 0;

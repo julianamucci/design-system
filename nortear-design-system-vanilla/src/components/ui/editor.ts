@@ -42,6 +42,7 @@ import {
   Strikethrough,
   Underline,
   Undo2,
+  Unlink,
 } from 'lucide';
 import 'katex/dist/katex.min.css';
 
@@ -109,6 +110,14 @@ export type EditorLabels = {
     formulaConfirm: string;
     link: string;
     linkConfirm: string;
+    /**
+     * Botão que TIRA o link do trecho.
+     *
+     * Aparece só quando há link sob o cursor. Apagar o campo e confirmar
+     * continua tirando — mas esse caminho depende de a pessoa deduzir, e
+     * quem não deduz não descobre que dá para remover.
+     */
+    linkRemove: string;
   };
 };
 
@@ -499,6 +508,24 @@ export function createEditor(options: EditorOptions): EditorRoot {
     () => (editor.getAttributes('link').href as string | undefined) ?? '',
   );
 
+  const botaoTirarLink = createButton({
+    variant: 'ghost',
+    size: 'icon-sm',
+    'aria-label': labels.fields.linkRemove,
+    children: icone(ico(Unlink)),
+  });
+  botaoTirarLink.dataset.action = 'unlink';
+  botaoTirarLink.hidden = true;
+  botaoTirarLink.addEventListener('click', () => {
+    // `extendMarkRange` primeiro: o cursor costuma estar NO MEIO do link, e sem
+    // estender o trecho a marca sairia só do pedaço sob o cursor — partindo o
+    // link em dois em vez de removê-lo.
+    editor.chain().extendMarkRange('link').unsetLink().run();
+    abrirLinha(null);
+    botaoLink.focus();
+  });
+  link.linha.appendChild(botaoTirarLink);
+
   /** Só uma linha aberta por vez — as duas ocupam o mesmo lugar na moldura. */
   function abrirLinha(qual: LinhaDeEntrada | null): void {
     for (const l of [formula, link]) l.abrir(l === qual);
@@ -574,6 +601,9 @@ export function createEditor(options: EditorOptions): EditorRoot {
       if (pode) botao.disabled = !pode(editor);
       if (ativa) botao.dataset.state = ativa(editor) ? 'on' : 'off';
     }
+    // Tirar o link só existe quando há link: botão que não faz nada é ruído, e
+    // desabilitado seria pior — anuncia uma ação e nega logo em seguida.
+    botaoTirarLink.hidden = !editor.isActive('link');
     botaoFormula.setAttribute('aria-expanded', String(formula.aberta()));
     if (alvoLink) botaoLink.setAttribute('aria-expanded', String(link.aberta()));
   }
