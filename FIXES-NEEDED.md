@@ -43,7 +43,12 @@ histórico; a lista de cima é o que está por fazer.
 - [ ] **Motor de múltiplos itens no carrossel Vanilla.** A fábrica desliza um slide por vez e não expõe base fracionária, com `coversNotApplicable` declarado. Trocar o motor, ou tirar o item do contrato das cinco.
 - [x] **Dots do carrossel no Angular são botões numerados**; as outras quatro usam `.nds-carousel-dot`, classe que não aparece em arquivo nenhum do Angular. Alinhar muda a foto do Chromatic. **Resolvido (2026-08-18), junto com o redesenho da paginação aprovado pela dona.** O Angular passou a usar `.nds-carousel-dot` na story de composições E na docs page; as cinco montam a MESMA fileira. O padrão novo: o slide atual vira uma pílula rotulada ("Slide N") na própria posição da fileira, os demais continuam pontos, e a mudança de forma anima por `grid-template-columns: 0fr → 1fr` com `--duration-base`/`--ease-size` (mesmo mecanismo do painel do accordion, sem biblioteca de animação). Contrato novo nas cinco: `testes.functional.item8` e `testes.accessibility.item6`.
 
-### Dívida de fundação, sem dono de componente (7)
+### Dívida de fundação, sem dono de componente (8)
+- [ ] **`createToggle` não tem setter público de `pressed`.** (Aberto em 2026-08-27, ao montar a barra do protótipo de editor no Vanilla.) A fábrica guarda `pressed` num fecho e só o troca no próprio clique. Isso serve ao toggle solto, e não serve a **barra dirigida por estado externo**: numa barra de formatação, mover o cursor para dentro de um trecho em negrito tem de acender o botão sem clique nenhum.
+
+  Escrever `aria-pressed` de fora não resolve — deixa o fecho defasado e o clique seguinte sai invertido. Sem setter, a saída é reconstruir o botão à mão e reaproveitar só a classe `.nds-toggle`, que foi o que o protótipo fez (`nortear-design-system-vanilla/src/components/ui/editor.ts`).
+
+  O que destrava: um `setPressed(next: boolean)` no nó devolvido — o `EditorRoot` do protótipo é precedente de propriedade anexada ao elemento, e a fábrica do Chart tem a mesma lacuna pelo mesmo motivo (estado preso no fecho, sem caminho de atualização).
 
 - [ ] **20 dos 49 módulos de snippet do React não têm teste próprio.** (Aberto em 2026-08-27, ao abrir por que a contagem de testes difere tanto entre as stacks.) A campanha de teste por módulo parou no meio, e os que faltam são alfabeticamente contíguos — de `combobox` a `toggle`:
 

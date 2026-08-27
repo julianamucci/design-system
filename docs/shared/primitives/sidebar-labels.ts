@@ -26,6 +26,8 @@ const STRUCTURE: Record<string, Traducao> = {
   UI: { 'pt-BR': 'UI', es: 'UI' },
   Foundations: { 'pt-BR': 'Fundamentos', es: 'Fundamentos' },
   About: { 'pt-BR': 'Sobre', es: 'Acerca de' },
+  // Fora de UI de propósito: o que está aqui ainda não é componente entregue.
+  Prototypes: { 'pt-BR': 'Protótipos', es: 'Prototipos' },
 
   // Nível 3 — as pastas dentro de cada componente
   Compositions: { 'pt-BR': 'Composições', es: 'Composiciones' },

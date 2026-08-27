@@ -1,0 +1,148 @@
+/*
+ * ─── nds-editor ─────────────────────────────────────────────────────────────
+ * Editor de texto rico. O conteúdo é editável pelo navegador; a barra e a
+ * moldura são do design system.
+ *
+ *   <div class="nds-editor">
+ *     <div class="nds-editor-toolbar" role="toolbar">   ← marcas e fórmula
+ *       <button class="nds-toggle">…</button>
+ *     </div>
+ *     <div class="nds-editor-formula">                  ← só quando aberta
+ *       <input class="nds-input"> <button class="nds-button">…</button>
+ *     </div>
+ *     <div class="nds-editor-content">                  ← a lib monta aqui
+ *       <div contenteditable="true">…</div>
+ *     </div>
+ *   </div>
+ *
+ * NENHUMA ALTURA FIXA em parte que carrega texto. A altura sai de
+ * `padding-block` mais `line-height`, para o editor crescer com a fonte do
+ * navegador (WCAG 1.4.4) — a mesma regra dos primitivos de texto.
+ */
+
+.nds-editor {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-md);
+  background-color: hsl(var(--background));
+  overflow: hidden;
+}
+
+/* A barra rola em telas estreitas em vez de quebrar a moldura.
+ *
+ * `flex-wrap` seria a alternativa, e foi descartada: a barra tem papel de
+ * `toolbar` e navegação por seta, e uma segunda linha faz a seta para a direita
+ * saltar visualmente para baixo — a ordem do teclado deixa de casar com a
+ * ordem que se enxerga. */
+.nds-editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  padding: var(--spacing-2);
+  border-bottom: 1px solid hsl(var(--border));
+  background-color: hsl(var(--muted));
+  overflow-x: auto;
+}
+
+/* Separador entre grupos da barra — marcas de um lado, fórmula do outro. */
+.nds-editor-toolbar-separator {
+  width: 1px;
+  align-self: stretch;
+  margin-inline: var(--spacing-1);
+  background-color: hsl(var(--border));
+}
+
+/* A linha da fórmula: campo de LaTeX e confirmação.
+ *
+ * Fica na moldura, e não num diálogo, porque escrever fórmula é edição de
+ * texto: um modal tiraria o texto de vista justamente enquanto se decide o que
+ * a fórmula diz. */
+.nds-editor-formula {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2);
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.nds-editor-formula > .nds-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  /* A mesma pilha monoespaçada que o bloco de código usa: LaTeX é código, e
+   * alinhar chave com chave importa para quem digita. */
+  font-family: ui-monospace, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
+}
+
+.nds-editor-content {
+  padding: var(--spacing-4);
+  /* Piso, não altura: o editor cresce com o que se escreve, e um teto fixo
+   * cortaria o texto no primeiro degrau de aumento de fonte. */
+  min-height: 8rem;
+  overflow-y: auto;
+}
+
+/* O elemento editável que a lib cria. Descendente, não filho direto: a lib
+ * decide quantas camadas põe entre a moldura e o campo. */
+.nds-editor-content .ProseMirror {
+  outline: none;
+  color: hsl(var(--foreground));
+  font-size: var(--text-p);
+}
+
+.nds-editor-content .ProseMirror > * + * {
+  margin-block-start: var(--spacing-3);
+}
+
+/* O anel de foco vai na MOLDURA, e não no campo editável.
+ *
+ * O campo é `contenteditable` e ocupa a área inteira; um anel nele encostaria
+ * no texto. Na moldura, o editor foca como um campo de formulário — que é o que
+ * ele é para quem navega por teclado. */
+.nds-editor:focus-within {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* A fórmula renderizada, em linha e em bloco.
+ *
+ * O gancho é `data-type`, e não classe: a lib escreve `data-type="inline-math"`
+ * e `data-type="block-math"` na raiz de cada nó, e essa é a única marca que
+ * distingue os dois — a classe (`tiptap-mathematics-render`) é a MESMA nos dois,
+ * e separar por `span` contra `div` amarraria a folha à tag que a lib escolheu.
+ *
+ * O KaTeX não crava cor nenhuma na folha dele — medido, zero declaração de
+ * `color` — então a fórmula herda `currentColor` e acompanha o tema sozinha. E
+ * os tamanhos dele são em `em` (121 declarações contra uma única em `px`), de
+ * modo que ela cresce junto com o texto em volta. */
+.nds-editor-content [data-type="inline-math"] {
+  display: inline-block;
+  padding-inline: var(--spacing-1);
+  border-radius: var(--radius-sm);
+}
+
+.nds-editor-content [data-type="block-math"] {
+  display: block;
+  padding-block: var(--spacing-2);
+  text-align: center;
+}
+
+/* Fórmula que o KaTeX não conseguiu montar.
+ *
+ * A lib troca o conteúdo pelo LaTeX cru e marca com a classe de erro. Sem
+ * estilo, o resultado fica indistinguível de texto comum, e quem escreveu não
+ * descobre que errou uma chave. A cor vai na BORDA, não no texto: LaTeX cru é
+ * texto corrido, e cor semântica sobre fundo claro não alcança os 4.5:1 que
+ * texto corrido exige. */
+.nds-editor-content .inline-math-error,
+.nds-editor-content .block-math-error {
+  border-block-end: 2px solid hsl(var(--destructive));
+  font-family: ui-monospace, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
+}
+
+/* Selecionada, a fórmula usa o mesmo realce do resto da seleção. */
+.nds-editor-content .ProseMirror-selectednode {
+  background-color: hsl(var(--accent));
+  border-radius: var(--radius-sm);
+}
