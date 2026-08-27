@@ -110,6 +110,16 @@ function corDoToken(root: HTMLElement, token: string): string {
   return cor;
 }
 
+/** O mesmo, para medida: quanto vale `--text-h1` em pixels nesta página. */
+function medidaDoToken(root: HTMLElement, token: string): string {
+  const sonda = document.createElement('span');
+  sonda.style.fontSize = `var(${token})`;
+  root.appendChild(sonda);
+  const medida = getComputedStyle(sonda).fontSize;
+  sonda.remove();
+  return medida;
+}
+
 export default meta;
 type Story = StoryObj<EditorArgs>;
 
@@ -221,6 +231,42 @@ export const Playground: Story = {
       await expect(getComputedStyle(dentro).backgroundColor).toBe('rgba(0, 0, 0, 0)');
     });
 
+    await step('Título, link, código e divisória saem na escala do sistema', async () => {
+      root.editor.commands.setContent(
+        '<h1>título</h1>'
+          + '<p>texto com <a href="https://exemplo.com">link</a> e <code>trecho</code>.</p>'
+          + '<hr>'
+          + '<ul><li>item</li></ul>',
+      );
+
+      // O que se compara é com o TOKEN, não com um número escrito à mão: número
+      // à mão passa a mentir no dia em que a escada muda de base, e é a escada
+      // que o portão existe para guardar.
+      const titulo = root.querySelector('h1') as HTMLElement;
+      await expect(getComputedStyle(titulo).fontSize).toBe(medidaDoToken(root, '--text-h1'));
+
+      const link = root.querySelector('a') as HTMLElement;
+      const estiloLink = getComputedStyle(link);
+      await expect(estiloLink.color).toBe(corDoToken(root, '--primary'));
+      // Sublinhado não é enfeite: sem ele a única pista de que há link é a cor,
+      // e quem não distingue as duas cores fica sem pista (WCAG 1.4.1).
+      await expect(estiloLink.textDecorationLine).toContain('underline');
+
+      const trecho = root.querySelector('p code') as HTMLElement;
+      await expect(getComputedStyle(trecho).backgroundColor).toBe(corDoToken(root, '--muted'));
+
+      const divisoria = root.querySelector('hr') as HTMLElement;
+      await expect(getComputedStyle(divisoria).borderBlockStartColor).toBe(
+        corDoToken(root, '--border'),
+      );
+
+      // A lista recua pelo token, e o marcador fica DENTRO do recuo — com o
+      // marcador fora da caixa, ele desalinha do texto em volta.
+      const lista = root.querySelector('ul') as HTMLElement;
+      await expect(getComputedStyle(lista).paddingInlineStart).not.toBe('0px');
+      await expect(getComputedStyle(lista).marginInlineStart).toBe('0px');
+    });
+
     await step('Desfazer nasce indisponível e acende quando há o que desfazer', async () => {
       const desfazer = canvas.getByRole('button', { name: LABELS.actions.undo });
       // `setContent` da própria play já criou histórico, então o estado ligado é
@@ -229,6 +275,11 @@ export const Playground: Story = {
     });
 
     await step('O link só aceita esquema da lista, e vazio desfaz', async () => {
+      // Precondição própria: o passo anterior deixa um documento com link, e
+      // "nenhuma âncora ainda" é o que este verifica primeiro. Herdar o estado
+      // do vizinho é o mesmo erro que o replay do painel Interactions provoca.
+      root.editor.commands.setContent('<p>massa e energia</p>');
+
       const abrir = canvas.getByRole('button', { name: LABELS.actions.link });
       await expect(linhaDesenhada(root, 'editor-link')).toBe(false);
       await userEvent.click(abrir);

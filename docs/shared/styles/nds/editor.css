@@ -127,7 +127,10 @@
  * `margin-inline: 0` desfaz os 40px que o navegador põe por conta própria: com
  * eles, a barra ficaria deslocada para dentro, longe da margem do texto. */
 .nds-editor-content .ProseMirror blockquote {
-  margin-inline: 0;
+  /* O recuo é do FORMATO da citação, e fica. O que muda é a origem: o navegador
+   * crava 40px, e `--spacing-10` vale os mesmos 40px na densidade padrão — mas
+   * acompanha a densidade, como todo o resto. */
+  margin-inline: var(--spacing-10);
   border-inline-start: 3px solid hsl(var(--primary));
   padding-inline-start: var(--spacing-4);
   color: hsl(var(--foreground));
@@ -154,8 +157,109 @@
  * apareceria duas vezes, um dentro do outro. */
 .nds-editor-content .ProseMirror pre code {
   background: none;
+  border: 0;
   padding: 0;
   font-size: inherit;
+  white-space: inherit;
+}
+
+/* ─── O resto do conteúdo, na escala do design system ───────────────────────
+ *
+ * Sem estas regras o navegador desenha tudo isto por conta própria — título,
+ * lista, divisória, código em linha e link. Fica VISÍVEL, e por isso não
+ * parecia defeito; mas o H1 do editor não era o H1 do sistema, e o texto do
+ * editor era o único lugar do produto onde a escada de tipos não valia.
+ *
+ * Os valores não são novos: são os mesmos dos papéis `.nds-text-h*` de
+ * `typography.css`. Aplicar a classe não serve — quem escreve o markup aqui é
+ * a lib, a partir do documento —, então a regra casa pela TAG e repete o papel.
+ * Divergir daqui é divergir da tipografia do sistema. */
+.nds-editor-content .ProseMirror h1 {
+  font-size: var(--text-h1);
+  line-height: 1.2;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.025em;
+}
+
+.nds-editor-content .ProseMirror h2 {
+  font-size: var(--text-h2);
+  line-height: 1.4;
+  font-weight: var(--font-weight-semi-bold);
+}
+
+.nds-editor-content .ProseMirror h3 {
+  font-size: var(--text-h3);
+  line-height: 1.5;
+  font-weight: var(--font-weight-semi-bold);
+}
+
+/* H4 em diante compartilham o menor degrau da escada: a escada tem quatro
+ * degraus e o documento aceita seis níveis (texto colado traz H5 e H6). Sem
+ * isto, os dois últimos caem no padrão do navegador — e ficam MENORES que o
+ * corpo do texto, que é como o navegador desenha H5 e H6. */
+.nds-editor-content .ProseMirror :is(h4, h5, h6) {
+  font-size: var(--text-h4);
+  line-height: 1.5;
+  font-weight: var(--font-weight-semi-bold);
+}
+
+/* Título pede mais respiro acima do que o intervalo entre parágrafos — é o que
+ * separa uma seção da anterior. Abaixo não: o título já está colado no que
+ * introduz. */
+.nds-editor-content .ProseMirror > * + :is(h1, h2, h3, h4, h5, h6) {
+  margin-block-start: var(--spacing-6);
+}
+
+/* Listas. O recuo vem do token, e o marcador fica DENTRO dele — com
+ * `list-style-position: outside` (o padrão) mais recuo em `margin`, o marcador
+ * escapa da caixa e desalinha do texto em volta. */
+.nds-editor-content .ProseMirror :is(ul, ol) {
+  margin-inline: 0;
+  padding-inline-start: var(--spacing-6);
+}
+
+.nds-editor-content .ProseMirror li + li {
+  margin-block-start: var(--spacing-1);
+}
+
+/* Lista aninhada não ganha o intervalo de bloco: ela pertence ao item acima. */
+.nds-editor-content .ProseMirror li > :is(ul, ol) {
+  margin-block-start: var(--spacing-1);
+}
+
+/* Divisória — a mesma cor de borda do resto do sistema, e sem o entalhe 3D que
+ * o navegador ainda desenha por padrão. */
+.nds-editor-content .ProseMirror hr {
+  border: 0;
+  border-block-start: 1px solid hsl(var(--border));
+  margin-block: var(--spacing-6);
+}
+
+/* Código em linha — mesmo desenho de `.nds-code-inline`, pelo mesmo motivo dos
+ * títulos: aqui não há classe a aplicar. `0.85em`, e não um token de tamanho,
+ * porque ele acompanha o texto em volta — código dentro de um H2 acompanha o
+ * H2. Sem `white-space: nowrap`, ao contrário da classe: dentro do editor a
+ * pessoa escreve trechos longos, e um que não quebra empurra a moldura. */
+.nds-editor-content .ProseMirror code {
+  font-family: ui-monospace, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
+  font-size: 0.85em;
+  background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border) / 0.5);
+  border-radius: var(--radius-xs);
+  padding: 0.1em 0.3em;
+}
+
+/* Link — cor da marca e sublinhado.
+ *
+ * O sublinhado NÃO é enfeite: sem ele, a única pista de que há link é a cor, e
+ * quem não distingue as duas cores não recebe pista nenhuma (WCAG 1.4.1, Uso
+ * de cor). `--primary` como TEXTO mede de 5,03 a 9,81 contra o fundo nos três
+ * temas e nos dois modos, então passa também o 4.5:1 de texto corrido. */
+.nds-editor-content .ProseMirror a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* O anel de foco vai na MOLDURA, e não no campo editável.
