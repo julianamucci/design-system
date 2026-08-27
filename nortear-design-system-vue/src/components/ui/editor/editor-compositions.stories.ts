@@ -9,6 +9,16 @@ type EditorInstance = InstanceType<typeof Editor>;
 
 let editorApi: EditorInstance | null = null;
 
+/**
+ * O texto com que a story de descrição automática abre — e FECHA.
+ *
+ * Cada passo da play troca o documento por uma palavra de andaime ("colar",
+ * "arrastar") para separar um caso do outro. O último passo repõe esta frase:
+ * quem abre a story pela barra lateral, e a foto da comparação visual, veem o
+ * exemplo do componente, não a sobra do teste anterior.
+ */
+const AI_CONTENT = '<p>A IA propõe a descrição; quem publica confere.</p>';
+
 const meta = {
   title: 'UI/Editor/Compositions',
   component: Editor,
@@ -139,7 +149,7 @@ export const AiImageDescription: Story = {
         args,
         editorRef,
         describeImage,
-        content: '<p>A IA propõe a descrição; quem publica confere.</p>',
+        content: AI_CONTENT,
       };
     },
     template: `
@@ -237,7 +247,7 @@ export const AiImageDescription: Story = {
     });
 
     await step('E quem publica corrige o que foi proposto', async () => {
-      instance.commands.setContent('<p>correção</p>');
+      instance.commands.setContent(AI_CONTENT);
       await settle();
       await expect(await api.insertImage(file)).toBe(true);
       await waitForAlt(root, 'Descrição automática de grafico.png');

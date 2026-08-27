@@ -3,18 +3,22 @@ import { Card } from '@/components/ui/card';
 import { CodeBlock } from '@/components/ui/code-block';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
-interface DocsTokenItem { token: string; value?: string; description: string }
+interface DocsTokenItem { token: string; value: string; description: string }
 
+/**
+ * As três colunas são OBRIGATÓRIAS: token, propriedade CSS, uso.
+ *
+ * Em 2026-08-27 `value` ficou opcional por um dia, para acomodar o conteúdo do
+ * editor, que listava token e uso só. Quatro dev-agents afrouxaram este mesmo
+ * contrato em paralelo, sem se ver — e é esse o diagnóstico: o desvio estava no
+ * CONTEÚDO, não na leitura de cada um. Afrouxado, o container passava a aceitar
+ * tabela de tokens sem dizer o que cada token pinta em qualquer componente
+ * novo, e nenhum portão reclamaria. Corrigido o conteúdo (`f5f2ef555`), o
+ * contrato volta ao que as 66 páginas já praticam.
+ */
 withDefaults(defineProps<{
   title: string;
-  /**
-   * A coluna do meio é OPCIONAL — mesma forma da coluna de regras na tabela de
-   * UX writing.
-   *
-   * Nem todo conteúdo compartilhado descreve token e CLASSE: o editor lista
-   * token e uso, e um cabeçalho sem célula embaixo é coluna morta.
-   */
-  cols: { token: string; value?: string; description: string };
+  cols: { token: string; value: string; description: string };
   items: DocsTokenItem[];
   customizationTitle?: string;
   customizationCode?: string;
@@ -43,10 +47,7 @@ withDefaults(defineProps<{
               <TableHead class="nds-p-2 nds-font-semibold">
                 {{ cols.token }}
               </TableHead>
-              <TableHead
-                v-if="cols.value"
-                class="nds-p-2 nds-font-semibold"
-              >
+              <TableHead class="nds-p-2 nds-font-semibold">
                 {{ cols.value }}
               </TableHead>
               <TableHead class="nds-p-2 nds-font-semibold">
@@ -64,11 +65,7 @@ withDefaults(defineProps<{
               <TableCell lang="en" class="nds-p-2 nds-font-mono nds-text-primary">
                 {{ item.token }}
               </TableCell>
-              <TableCell
-                v-if="cols.value"
-                lang="en"
-                class="nds-p-2 nds-font-mono nds-text-muted-foreground"
-              >
+              <TableCell lang="en" class="nds-p-2 nds-font-mono nds-text-muted-foreground">
                 {{ item.value }}
               </TableCell>
               <TableCell class="nds-p-2 nds-text-muted-foreground">

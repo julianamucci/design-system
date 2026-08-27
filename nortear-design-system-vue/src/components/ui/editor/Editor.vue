@@ -887,9 +887,27 @@ function onFieldKeydown(event: KeyboardEvent, name: RowName): void {
 
 // ─── Cliques da barra ───────────────────────────────────────────────────────
 
+/**
+ * Com a edição desligada, a barra DEIXA DE AGIR.
+ *
+ * A guarda é aqui, e não na lib: `editor.commands` continua funcionando num
+ * editor em leitura — `editable` vale para o que o teclado e o ponteiro fazem
+ * no CAMPO, não para comando disparado por código. Medido: clicar em Negrito
+ * numa demonstração somente-leitura ligava a marca guardada, e o documento não
+ * mudava uma vírgula — a barra afirmando uma edição que o texto não tem, e
+ * contradizendo o que `states.readOnly` promete na própria página.
+ *
+ * O alternador não precisa de correção de estado depois do clique: o
+ * `ToggleGroup` desta stack recebe `model-value` do editor e nenhum ouvinte de
+ * `update`, então é CONTROLADO — o botão só acende se o documento mudar.
+ */
+function acts(): boolean {
+  return props.editable !== false;
+}
+
 function runAction(action: EditorAction): void {
   const instance = editor.value;
-  if (!instance) return;
+  if (!instance || !acts()) return;
   ACTIONS[action].run?.(instance);
 }
 
@@ -908,6 +926,7 @@ function openFilePicker(): void {
 }
 
 function onPlainClick(action: EditorAction): void {
+  if (!acts()) return;
   const row = rowOf(action);
   if (row) {
     void openRow(openRowName.value === row ? null : row);
@@ -979,10 +998,13 @@ async function resetRoving(): Promise<void> {
 // arquivo numa aba nova.
 
 function onFrameDrag(event: DragEvent): void {
-  if (isFileDrag(event.dataTransfer)) event.preventDefault();
+  // Em leitura o arrasto NÃO é aceito: cancelar o padrão aqui prometeria que a
+  // moldura recebe o arquivo, e receber é escrever no documento.
+  if (acts() && isFileDrag(event.dataTransfer)) event.preventDefault();
 }
 
 function onFrameDrop(event: DragEvent): void {
+  if (!acts()) return;
   // Solto DENTRO do editável, quem já tratou foi a biblioteca, pelo `handleDrop`
   // — ela previne o padrão, e é essa marca que evita inserir duas vezes.
   if (event.defaultPrevented) return;
@@ -1129,11 +1151,19 @@ defineExpose({ editor, insertImage: insertImageFile });
           <!-- `data-value` explícito: o alternador desta stack encaminha `value`
                como atributo nativo do botão, e a barra identifica cada botão
                pelo par `data-action`/`data-value` — é ele que carrega a parada
-               de tabulação de um botão para o outro. -->
+               de tabulação de um botão para o outro.
+
+               `data-slot="toggle"` porque a barra do Vanilla — a régua
+               cross-stack — nomeia assim cada alternador do grupo, e é o mesmo
+               nome que React, Svelte e Angular escrevem. Aqui o
+               `ToggleGroupItem` da stack assina `toggle-group-item` no próprio
+               template, e o atributo de repasse vence o do filho: o alternador
+               da barra do editor fica com o nome que as cinco compartilham. -->
           <ToggleGroupItem
             v-for="action in part.actions"
             :key="action"
             :value="action"
+            data-slot="toggle"
             :data-value="action"
             :aria-label="props.labels.actions[action]"
             :tabindex="rovingKey === action ? 0 : -1"

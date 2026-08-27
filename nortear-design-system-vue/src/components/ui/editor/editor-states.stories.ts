@@ -74,20 +74,27 @@ export const ReadOnly: Story = {
   render: (args) => ({
     components: { Editor },
     setup() {
-      return { args, content: REPORT_CONTENT };
+      const editorRef = ref<EditorInstance | null>(null);
+      onMounted(() => {
+        editorApi = editorRef.value;
+      });
+      return { args, editorRef, content: REPORT_CONTENT };
     },
     template: `
       <div class="nds-w-full">
-        <Editor v-bind="args" :content="content" :editable="false" />
+        <Editor ref="editorRef" v-bind="args" :content="content" :editable="false" />
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const instance = editorApi?.editor;
+    if (!instance) throw new Error('a instância do editor não chegou à story');
     const field = canvasElement.querySelector('.ProseMirror') as HTMLElement;
 
     await step('A edição fica desligada, e o conteúdo segue visível', async () => {
       await expect(field).toHaveAttribute('contenteditable', 'false');
+      await expect(instance.isEditable).toBe(false);
       await expect(field.textContent).toContain('Relatório');
       await expect(canvasElement.querySelector('h2')).toBeInTheDocument();
     });
@@ -95,6 +102,36 @@ export const ReadOnly: Story = {
     await step('A barra continua anunciada, com nome próprio em cada bloco', async () => {
       await expect(canvas.getByRole('toolbar', { name: LABELS.toolbar })).toBeInTheDocument();
       await expect(canvas.getByRole('group', { name: LABELS.groups.marks })).toBeInTheDocument();
+    });
+
+    await step('E a barra NÃO aplica comando', async () => {
+      // `editor.commands` funciona num editor em leitura: `editable` vale para o
+      // CAMPO, não para comando disparado por código. Sem a guarda da barra,
+      // clicar em Negrito ligava a marca guardada e acendia o botão sem mudar
+      // uma vírgula do HTML — a barra afirmando uma edição que o documento não
+      // tem, e contradizendo o que `states.readOnly` promete nesta mesma página.
+      const bold = canvas.getByRole('button', { name: LABELS.actions.bold });
+      const before = instance.getHTML();
+      instance.commands.setTextSelection({ from: 1, to: 6 });
+      await userEvent.click(bold);
+      await settle();
+
+      // A asserção com DENTES é esta: sem a guarda a marca fica ativa na mesma
+      // volta do laço, antes de qualquer redesenho — não há corrida a esperar, e
+      // a ausência de efeito se lê no estado da instância.
+      await expect(instance.isActive('bold')).toBe(false);
+      await expect(instance.getHTML()).toBe(before);
+      await expect(bold).toHaveAttribute('aria-pressed', 'false');
+    });
+
+    await step('Os alternadores da barra usam o mesmo data-slot das cinco stacks', async () => {
+      // Vanilla é a régua cross-stack, e lá cada alternador do grupo é
+      // `[data-slot="toggle"]` — o mesmo nome que React, Svelte e Angular
+      // escrevem. O `ToggleGroupItem` desta stack assina `toggle-group-item` no
+      // próprio template, e quem alinha é o atributo de repasse da barra.
+      const group = canvasElement.querySelector('[data-slot="toggle-group"]') as HTMLElement;
+      await expect(group.querySelectorAll('[data-slot="toggle"]').length).toBeGreaterThan(0);
+      await expect(canvasElement.querySelector('[data-slot="toggle-group-item"]')).toBeNull();
     });
   },
 };
@@ -238,32 +275,43 @@ export const WithImage: Story = {
     });
 
     await step('functional.item9 e accessibility.item4 — os botões redimensionam sem ponteiro', async () => {
+      // A largura de partida é ESCRITA pela play, e não herdada do exemplo: o
+      // conteúdo é um ponto de 1×1, e a partir dele o primeiro passo cai no piso
+      // de 48px — `48 >= 48` é asserção que não pode reprovar, e portão sem
+      // dentes é pior que portão nenhum. Com um valor de partida acima do piso,
+      // cada clique tem de mover exatamente um passo, para os dois lados.
+      const START = 200;
+      selectNode(instance, 'image');
+      instance.chain().updateAttributes('image', { width: START }).run();
+      selectNode(instance, 'image');
+      await settle();
+      await expect(Number(storedWidth())).toBe(START);
+
       // Cada passo reencontra a seleção: escrever atributo a refaz.
-      await userEvent.click(canvas.getByRole('button', { name: LABELS.actions.imageLarger }));
-      selectNode(instance, 'image');
-      await settle();
-      const first = Number(storedWidth());
-      await expect(first).toBeGreaterThanOrEqual(48);
-
-      await userEvent.click(canvas.getByRole('button', { name: LABELS.actions.imageLarger }));
-      selectNode(instance, 'image');
-      await settle();
-      await expect(Number(storedWidth())).toBe(first + 40);
-
       await userEvent.click(canvas.getByRole('button', { name: LABELS.actions.imageSmaller }));
       selectNode(instance, 'image');
       await settle();
-      await expect(Number(storedWidth())).toBe(first);
+      await expect(Number(storedWidth())).toBe(START - 40);
+
+      await userEvent.click(canvas.getByRole('button', { name: LABELS.actions.imageLarger }));
+      selectNode(instance, 'image');
+      await settle();
+      await expect(Number(storedWidth())).toBe(START);
     });
 
     await step('O piso de 48px é anunciado pelo próprio botão, que se desliga', async () => {
       // Com a largura no piso, diminuir deixa de ser possível — e o botão diz
       // isso antes do clique, em vez de aceitar e não fazer nada.
-      const smaller = canvas.getByRole('button', {
-        name: LABELS.actions.imageSmaller,
-      }) as HTMLButtonElement;
+      const smaller = () =>
+        canvas.getByRole('button', { name: LABELS.actions.imageSmaller }) as HTMLButtonElement;
+      for (let i = 0; i < 40; i += 1) {
+        if (smaller().disabled) break;
+        await userEvent.click(smaller());
+        selectNode(instance, 'image');
+        await settle();
+      }
       await expect(Number(storedWidth())).toBe(48);
-      await expect(smaller.disabled).toBe(true);
+      await expect(smaller().disabled).toBe(true);
     });
 
     await step('Voltar ao natural APAGA o atributo, e não grava a medida de hoje', async () => {
@@ -274,6 +322,25 @@ export const WithImage: Story = {
       await settle();
       await expect(storedWidth()).toBeNull();
       await expect(canvasElement.querySelector('img')?.hasAttribute('width')).toBe(false);
+    });
+
+    await step('visual.item3 — a story FECHA com a imagem selecionada e visível', async () => {
+      // O passo anterior deixa a imagem na largura natural, que aqui é 1×1: a
+      // foto da comparação visual mostraria um ponto, e o anel de foco e a alça
+      // que `visual.item3` promete não teriam onde caber. Fecha num tamanho em
+      // que os dois se veem.
+      selectNode(instance, 'image');
+      instance.chain().updateAttributes('image', { width: 200 }).run();
+      selectNode(instance, 'image');
+      await settle();
+
+      const image = canvasElement.querySelector('img') as HTMLImageElement;
+      await expect(Math.round(image.getBoundingClientRect().width)).toBe(200);
+      await expect(
+        canvasElement.querySelector('.nds-editor-image.ProseMirror-selectednode'),
+      ).toBeInTheDocument();
+      const handle = canvasElement.querySelector('.nds-editor-image-handle') as HTMLElement;
+      await expect(getComputedStyle(handle).opacity).toBe('1');
     });
   },
 };

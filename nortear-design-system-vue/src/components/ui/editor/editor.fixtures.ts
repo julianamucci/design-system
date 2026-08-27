@@ -10,6 +10,7 @@ import { expect, userEvent } from 'storybook/test';
 import { nextTick } from 'vue';
 import type { Editor as TiptapEditor } from '@tiptap/core';
 import type { EditorLabels } from './index';
+import { editorLabelsFor } from './editor.labels';
 
 /**
  * Deixa o framework repintar antes de a asserção medir.
@@ -27,71 +28,25 @@ export async function settle(): Promise<void> {
 }
 
 /**
- * Os nomes acessíveis do editor.
+ * Os nomes acessíveis do editor, vindos do CONTEÚDO COMPARTILHADO.
  *
- * Todo botão é só de ícone: o rótulo É o nome que o leitor de tela anuncia, e
- * por isso ele carrega o VERBO da ação — "Inserir tabela" diz o que acontece,
- * "Tabela" não.
+ * Todo botão é só de ícone: o rótulo É o nome que o leitor de tela anuncia, e é
+ * por ele que toda play encontra o que clicar. Até 2026-08-27 estes 51 textos
+ * eram um objeto local em pt-BR — e um deles JÁ divergia do conteúdo, porque
+ * cópia divergida não avisa: o botão de link chamava-se "Link", o substantivo
+ * que o primeiro Do & Don't da própria página ensina a NÃO usar. O conteúdo diz
+ * "Inserir link", e o conteúdo é o contrato.
+ *
+ * Resolvido UMA VEZ, na carga do módulo, e em pt-BR: a suíte roda num idioma
+ * só, e a play precisa do MESMO texto que a barra recebeu para encontrar o
+ * botão pelo nome acessível. A docs page, que troca de idioma no seletor, chama
+ * `editorLabelsFor(locale)` a cada mudança.
+ *
+ * O portão de rótulo ausente — ou de idioma que ficou para trás na tradução —
+ * é a anotação de tipo dentro de `editor.labels.ts`, e ele reprova no
+ * `vue-tsc`, não na tela.
  */
-export const LABELS: EditorLabels = {
-  toolbar: 'Formatação',
-  editorField: 'Corpo do texto',
-  groups: {
-    marks: 'Marcas de texto',
-    headings: 'Títulos',
-    align: 'Alinhamento',
-    lists: 'Listas',
-    blocks: 'Blocos',
-    actions: 'Ações',
-    table: 'Tabela',
-  },
-  actions: {
-    bold: 'Negrito',
-    italic: 'Itálico',
-    underline: 'Sublinhado',
-    strike: 'Tachado',
-    code: 'Código',
-    highlight: 'Destaque',
-    h1: 'Título 1',
-    h2: 'Título 2',
-    h3: 'Título 3',
-    alignLeft: 'Alinhar à esquerda',
-    alignCenter: 'Centralizar',
-    alignRight: 'Alinhar à direita',
-    alignJustify: 'Justificar',
-    bulletList: 'Lista com marcadores',
-    orderedList: 'Lista numerada',
-    taskList: 'Lista de tarefas',
-    blockquote: 'Citação',
-    codeBlock: 'Bloco de código',
-    link: 'Link',
-    image: 'Inserir imagem',
-    imageAlt: 'Texto alternativo',
-    imageSmaller: 'Diminuir a imagem',
-    imageLarger: 'Aumentar a imagem',
-    imageNatural: 'Tamanho natural',
-    table: 'Inserir tabela',
-    horizontalRule: 'Linha divisória',
-    undo: 'Desfazer',
-    redo: 'Refazer',
-    formula: 'Inserir fórmula',
-    rowAfter: 'Inserir linha abaixo',
-    columnAfter: 'Inserir coluna à direita',
-    deleteRow: 'Excluir linha',
-    deleteColumn: 'Excluir coluna',
-    headerRow: 'Alternar linha de cabeçalho',
-    deleteTable: 'Excluir tabela',
-  },
-  fields: {
-    formula: 'Fórmula em LaTeX',
-    formulaConfirm: 'Inserir',
-    link: 'Endereço do link',
-    linkConfirm: 'Aplicar',
-    linkRemove: 'Tirar o link',
-    alt: 'Descrição da imagem',
-    altConfirm: 'Salvar descrição',
-  },
-};
+export const LABELS: EditorLabels = editorLabelsFor('pt-BR');
 
 /** Um PNG de 1×1 transparente, montado byte a byte — nada baixado. */
 export const PIXEL_PNG_BASE64 =

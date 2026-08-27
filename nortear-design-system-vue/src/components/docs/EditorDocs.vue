@@ -4,9 +4,9 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { Editor, type EditorLabels, type EditorPreset } from '@/components/ui/editor';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { Toggle } from '@/components/ui/toggle';
+import { Editor, type EditorPreset } from '@/components/ui/editor';
+import { editorLabelsFor, nounLabelsFor } from '@/components/ui/editor/editor.labels';
+import { Button } from '@/components/ui/button';
 import {
   editorAdvancedSource,
   editorBasicSource,
@@ -45,85 +45,25 @@ const { t: tContent, locale } = useTranslation(componentTranslations, {
 
 // ─── Rótulos das demonstrações ────────────────────────────────────────────────
 //
-// Todo botão do editor é só de ícone: o rótulo É o nome acessível, e o
-// componente exige o objeto inteiro porque não há texto visível de onde
-// deduzi-lo. O conteúdo compartilhado nomeia apenas o campo, então os nomes de
-// ação são os mesmos que o design system já usa.
+// Os rótulos da barra vêm do CONTEÚDO COMPARTILHADO, no idioma da página.
+//
+// Todo botão do editor é só de ícone: o rótulo É o nome acessível, e nome
+// acessível é conteúdo. Antes eram um objeto de 51 entradas escrito aqui, em
+// pt-BR — a página trocava de idioma e a interface que ela demonstra, não.
+// A leitura é tipada em `editor.labels.ts`: rótulo ausente reprova no
+// `vue-tsc`, e não em silêncio na tela.
 
-const ACTION_LABELS: EditorLabels['actions'] = {
-  bold: 'Negrito',
-  italic: 'Itálico',
-  underline: 'Sublinhado',
-  strike: 'Tachado',
-  code: 'Código',
-  highlight: 'Destaque',
-  h1: 'Título 1',
-  h2: 'Título 2',
-  h3: 'Título 3',
-  alignLeft: 'Alinhar à esquerda',
-  alignCenter: 'Centralizar',
-  alignRight: 'Alinhar à direita',
-  alignJustify: 'Justificar',
-  bulletList: 'Lista com marcadores',
-  orderedList: 'Lista numerada',
-  taskList: 'Lista de tarefas',
-  blockquote: 'Citação',
-  codeBlock: 'Bloco de código',
-  link: 'Link',
-  image: 'Inserir imagem',
-  imageAlt: 'Texto alternativo',
-  imageSmaller: 'Diminuir a imagem',
-  imageLarger: 'Aumentar a imagem',
-  imageNatural: 'Tamanho natural',
-  table: 'Inserir tabela',
-  horizontalRule: 'Linha divisória',
-  undo: 'Desfazer',
-  redo: 'Refazer',
-  formula: 'Inserir fórmula',
-  rowAfter: 'Inserir linha abaixo',
-  columnAfter: 'Inserir coluna à direita',
-  deleteRow: 'Excluir linha',
-  deleteColumn: 'Excluir coluna',
-  headerRow: 'Alternar linha de cabeçalho',
-  deleteTable: 'Excluir tabela',
-};
+const baseLabels = computed(() => editorLabelsFor(locale.value));
 
-const baseLabels = computed<EditorLabels>(() => ({
-  toolbar: 'Formatação',
-  // O único nome que o conteúdo compartilhado traz: é o campo, e é o que muda
-  // de idioma junto com a página.
-  editorField: tContent('demonstration.labels.content'),
-  groups: {
-    marks: 'Marcas de texto',
-    headings: 'Títulos',
-    align: 'Alinhamento',
-    lists: 'Listas',
-    blocks: 'Blocos',
-    actions: 'Ações',
-    table: 'Tabela',
-  },
-  actions: ACTION_LABELS,
-  fields: {
-    formula: 'Fórmula em LaTeX',
-    formulaConfirm: 'Inserir',
-    link: 'Endereço do link',
-    linkConfirm: 'Aplicar',
-    linkRemove: 'Tirar o link',
-    alt: 'Descrição da imagem',
-    altConfirm: 'Salvar descrição',
-  },
-}));
-
-/** O par do primeiro Do & Don't: o verbo da ação contra o nome da marcação. */
-const verbLabels = computed<EditorLabels>(() => ({
-  ...baseLabels.value,
-  actions: { ...ACTION_LABELS, link: 'Inserir link', table: 'Inserir tabela' },
-}));
-
-const nounLabels = computed<EditorLabels>(() => ({
-  ...baseLabels.value,
-  actions: { ...ACTION_LABELS, link: 'Link', table: 'Tabela' },
-}));
+/**
+ * O lado errado do primeiro Do & Don't: o SUBSTANTIVO no lugar do verbo.
+ *
+ * Muda um rótulo só, o do botão de link — `labels.actions.link` ("Inserir
+ * link") contra `labels.nouns.link` ("Link"), os dois vindos do conteúdo. É
+ * exatamente o que a legenda do par contrasta, e um segundo texto diferente
+ * daria à comparação uma segunda variável.
+ */
+const nounLabels = computed(() => nounLabelsFor(locale.value));
 
 // ─── Conteúdo dos exemplos ────────────────────────────────────────────────────
 
@@ -165,22 +105,37 @@ watch(locale, (newLocale) => {
 const demoPreset = ref<EditorPreset>('advanced');
 const demoReadOnly = ref(false);
 
-/** O payload carrega a CHAVE do controle, nunca o texto traduzido — texto
- *  traduzido partiria o mesmo evento em três no GA4. */
-function trackDemo(elementId: string): void {
-  track('docs_demo_click', { component: 'editor', element_id: elementId });
-}
-
-function handlePresetChange(value: unknown): void {
-  if (value !== 'basic' && value !== 'advanced') return;
-  demoPreset.value = value;
-  trackDemo(value);
-}
-
-function handleReadOnlyChange(value: unknown): void {
-  demoReadOnly.value = Boolean(value);
-  trackDemo('readOnly');
-}
+/**
+ * Os três controles da demonstração, cada um marcado para o observer.
+ *
+ * O evento sai do PRÓPRIO botão. A seção de demonstração é um container
+ * auto-instrumentado (`data-track-container`), e o observer resolve por
+ * `.closest('[data-track]')`: um controle sem marcação própria fazia o clique
+ * subir até a seção, e o container disparava um SEGUNDO `docs_demo_click` com
+ * `element_id` tirado do texto traduzido — o mesmo clique virava dois eventos
+ * no GA4, e um deles partido em três idiomas. Marcado o botão, o `closest` para
+ * nele: um evento, com a chave estável na terceira parte do id.
+ */
+const demoControls = computed(() => [
+  {
+    key: 'basic',
+    label: tContent('demonstration.labels.basic'),
+    pressed: demoPreset.value === 'basic',
+    apply: () => { demoPreset.value = 'basic'; },
+  },
+  {
+    key: 'advanced',
+    label: tContent('demonstration.labels.advanced'),
+    pressed: demoPreset.value === 'advanced',
+    apply: () => { demoPreset.value = 'advanced'; },
+  },
+  {
+    key: 'readOnly',
+    label: tContent('demonstration.labels.readOnly'),
+    pressed: demoReadOnly.value,
+    apply: () => { demoReadOnly.value = !demoReadOnly.value; },
+  },
+]);
 
 // ─── Navegação ────────────────────────────────────────────────────────────────
 
@@ -243,17 +198,28 @@ function localPriority(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
-/**
- * Cada estado do conteúdo compartilhado vem numa frase só, no formato
- * "Nome — descrição": é a mesma tabela de duas colunas que `states.cols`
- * declara. A quebra é pelo travessão, e não por chave nova, porque o conteúdo é
- * o contrato.
- */
-function stateRow(key: string): { label: string; trigger: string } {
-  const raw = toPlainText(tContent(`states.${key}`));
-  const [label, ...rest] = raw.split(' — ');
-  return { label, trigger: rest.join(' — ') };
-}
+/** Estados do conteúdo compartilhado, na ordem em que ele os declara. */
+const STATE_KEYS = [
+  'editing',
+  'readOnly',
+  'imageSelected',
+  'inTable',
+  'fieldOpen',
+  'invalidValue',
+];
+
+/** Chaves da tabela de tokens, na ordem em que o conteúdo as declara. */
+const TOKEN_KEYS = [
+  'border',
+  'background',
+  'muted',
+  'mutedForeground',
+  'foreground',
+  'primary',
+  'accent',
+  'ring',
+  'textH1',
+];
 
 // ─── Código exibido ───────────────────────────────────────────────────────────
 
@@ -281,14 +247,17 @@ const anatomyItems = computed(() => [
   tContent('anatomy.item7'),
 ]);
 
-const usageItems = computed(() => [
-  tContent('usage.guidelines'),
-  tContent('usage.scenarios.item1'),
-  tContent('usage.scenarios.item2'),
-  tContent('usage.scenarios.item3'),
-  tContent('usage.scenarios.item4'),
-  tContent('usage.uxWriting'),
-]);
+const guidelineItems = computed(() =>
+  [1, 2, 3, 4, 5].map((i) => tContent(`usage.guidelines.item${i}`)),
+);
+
+const scenarioItems = computed(() =>
+  [1, 2, 3, 4, 5, 6].map((i) => ({
+    s: tContent(`usage.scenarios.item${i}.s`),
+    u: tContent(`usage.scenarios.item${i}.u`),
+    a: tContent(`usage.scenarios.item${i}.a`),
+  })),
+);
 
 const variantItems = computed(() => [
   {
@@ -307,7 +276,11 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() =>
-  ['editing', 'readOnly', 'imageSelected', 'inTable', 'fieldOpen', 'invalidValue'].map(stateRow),
+  STATE_KEYS.map((key) => ({
+    label: tContent(`states.${key}.label`),
+    trigger: tContent(`states.${key}.trigger`),
+    behavior: toPlainText(tContent(`states.${key}.behavior`)),
+  })),
 );
 
 const propItems = computed(() =>
@@ -323,19 +296,10 @@ const propItems = computed(() =>
 );
 
 const tokenRows = computed(() =>
-  [
-    'border',
-    'background',
-    'muted',
-    'mutedForeground',
-    'foreground',
-    'primary',
-    'accent',
-    'ring',
-    'textH1',
-  ].map((key) => ({
-    token: tContent(`tokens.table.${key}.name`),
-    description: tContent(`tokens.table.${key}.usage`),
+  TOKEN_KEYS.map((key) => ({
+    token: tContent(`tokens.table.${key}.token`),
+    value: tContent(`tokens.table.${key}.value`),
+    description: tContent(`tokens.table.${key}.description`),
   })),
 );
 
@@ -442,28 +406,25 @@ const visualTestItems = computed(() =>
         <div
           class="nds-cluster"
           data-spacing="sm"
+          role="group"
+          :aria-label="tContent('demonstration.title')"
         >
-          <ToggleGroup
-            type="single"
+          <!-- O observer resolve por `.closest('[data-track]')`, e a terceira
+               parte do id estruturado vira `element_id`. -->
+          <Button
+            v-for="control in demoControls"
+            :key="control.key"
+            type="button"
             variant="outline"
-            :model-value="demoPreset"
-            :aria-label="tContent('variants.title')"
-            @update:model-value="handlePresetChange"
+            size="sm"
+            :aria-pressed="control.pressed"
+            data-track="demo"
+            :data-track-id="`editor:demonstracao:${control.key}`"
+            :data-track-label="control.label"
+            @click="control.apply"
           >
-            <ToggleGroupItem value="basic">
-              {{ tContent('demonstration.labels.basic') }}
-            </ToggleGroupItem>
-            <ToggleGroupItem value="advanced">
-              {{ tContent('demonstration.labels.advanced') }}
-            </ToggleGroupItem>
-          </ToggleGroup>
-          <Toggle
-            variant="outline"
-            :model-value="demoReadOnly"
-            @update:model-value="handleReadOnlyChange"
-          >
-            {{ tContent('demonstration.labels.readOnly') }}
-          </Toggle>
+            {{ control.label }}
+          </Button>
         </div>
 
         <Editor
@@ -487,7 +448,16 @@ const visualTestItems = computed(() =>
     <!-- ── Quando Usar ──────────────────────────────────────────────── -->
     <DocsWhenToUse
       :title="tContent('usage.title')"
-      :guidelines="{ title: tNav('nav.usage'), items: usageItems }"
+      :guidelines="{ title: tContent('usage.guidelines.title'), items: guidelineItems }"
+      :scenarios="{
+        title: tContent('usage.scenarios.title'),
+        cols: {
+          scenario: tContent('usage.scenarios.cols.scenario'),
+          use: tContent('usage.scenarios.cols.use'),
+          alternative: tContent('usage.scenarios.cols.alternative'),
+        },
+        items: scenarioItems,
+      }"
       :do="{
         title: tNav('common.do'),
         items: [
@@ -517,21 +487,21 @@ const visualTestItems = computed(() =>
           dontLabel: tNav('common.dont'),
           doCaption: toPlainText(tContent('doDont.pair1.do')),
           dontCaption: toPlainText(tContent('doDont.pair1.dont')),
-          reason: toPlainText(tContent('doDont.pair1.reason')),
         },
         {
           doLabel: tNav('common.do'),
           dontLabel: tNav('common.dont'),
           doCaption: toPlainText(tContent('doDont.pair2.do')),
           dontCaption: toPlainText(tContent('doDont.pair2.dont')),
-          reason: toPlainText(tContent('doDont.pair2.reason')),
         },
       ]"
     >
-      <!-- Par 1: o verbo da ação contra o nome da marcação -->
+      <!-- Par 1: o verbo da ação contra o nome da marcação.
+           MESMO conjunto e MESMO conteúdo nos dois lados: muda um rótulo só, o
+           do botão de link — e é dele que a legenda fala. -->
       <template #do-preview-0>
         <Editor
-          :labels="verbLabels"
+          :labels="baseLabels"
           :content="THANKS_CONTENT"
           preset="basic"
         />
@@ -599,7 +569,8 @@ const visualTestItems = computed(() =>
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.description'),
+        trigger: tContent('states.cols.trigger'),
+        behavior: tContent('states.cols.behavior'),
       }"
       :items="stateItems"
     />
@@ -632,7 +603,8 @@ const visualTestItems = computed(() =>
       :title="tContent('tokens.title')"
       :cols="{
         token: tContent('tokens.table.token'),
-        description: tContent('tokens.table.usage'),
+        value: tContent('tokens.table.value'),
+        description: tContent('tokens.table.description'),
       }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"

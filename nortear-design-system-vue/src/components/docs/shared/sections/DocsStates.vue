@@ -2,19 +2,24 @@
 import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
-interface DocsStateItem { label: string; trigger: string; behavior?: string }
+interface DocsStateItem { label: string; trigger: string; behavior: string }
 
+/**
+ * As três colunas são OBRIGATÓRIAS, e é assim que 48 dos 49 conteúdos as
+ * declaram: estado, como ativar, comportamento.
+ *
+ * Em 2026-08-27 `behavior` ficou opcional por um dia, para acomodar o conteúdo
+ * do editor, que descrevia o estado numa coluna só. Quatro dev-agents
+ * afrouxaram este mesmo contrato em paralelo, sem se ver — e é esse o
+ * diagnóstico: o desvio estava no CONTEÚDO, não na leitura de cada um.
+ * Afrouxado, o container passava a aceitar tabela de estados sem gatilho nem
+ * comportamento em qualquer componente novo, e nenhum portão reclamaria.
+ * Corrigido o conteúdo (`f5f2ef555`), o contrato volta ao que as 66 páginas já
+ * praticam.
+ */
 defineProps<{
   title: string;
-  /**
-   * A terceira coluna é OPCIONAL — mesma forma da coluna de regras na tabela de
-   * UX writing.
-   *
-   * Nem todo conteúdo compartilhado separa "quando ocorre" de "comportamento":
-   * o editor descreve cada estado numa frase só, e um cabeçalho sem célula
-   * embaixo é coluna morta, não rigor.
-   */
-  cols: { state: string; trigger: string; behavior?: string };
+  cols: { state: string; trigger: string; behavior: string };
   items: DocsStateItem[];
 }>();
 </script>
@@ -34,10 +39,7 @@ defineProps<{
             <TableHead class="nds-p-2 nds-font-semibold">
               {{ cols.trigger }}
             </TableHead>
-            <TableHead
-              v-if="cols.behavior"
-              class="nds-p-2 nds-font-semibold"
-            >
+            <TableHead class="nds-p-2 nds-font-semibold">
               {{ cols.behavior }}
             </TableHead>
           </TableRow>
@@ -54,10 +56,7 @@ defineProps<{
             <TableCell class="nds-p-2 nds-text-muted-foreground">
               {{ item.trigger }}
             </TableCell>
-            <TableCell
-              v-if="cols.behavior"
-              class="nds-p-2 nds-text-muted-foreground"
-            >
+            <TableCell class="nds-p-2 nds-text-muted-foreground">
               {{ item.behavior }}
             </TableCell>
           </TableRow>

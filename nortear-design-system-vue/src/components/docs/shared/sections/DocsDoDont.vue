@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import { Card } from '@/components/ui/card';
 
+/**
+ * Um par tem DUAS legendas, e nada além delas.
+ *
+ * Em 2026-08-27 acrescentei aqui um `reason` opcional por par, porque o
+ * conteúdo do editor trazia `doDont.pairN.reason` e só ele. Quatro dev-agents
+ * mexeram nos containers em paralelo, sem se ver, e o diagnóstico é o mesmo dos
+ * outros três: o desvio estava no CONTEÚDO, não na leitura de cada um. Um campo
+ * que uma página só preenche vira terceiro parágrafo fantasma em todas as
+ * outras. Corrigido o conteúdo (`f5f2ef555`), o motivo foi DOBRADO no texto de
+ * cada lado — que é onde ele já morava nas 66 páginas — e a chave saiu.
+ */
 interface DocsDoDontPair {
   doLabel: string;
   dontLabel: string;
   doCaption: string;
   dontCaption: string;
-  /**
-   * Por que o par é assim — OPCIONAL, e rendido abaixo das duas colunas.
-   *
-   * A legenda de cada lado diz o QUE fazer; o motivo diz por quê, e vale para o
-   * par inteiro. Repeti-lo nas duas legendas seria a mesma frase duas vezes.
-   */
-  reason?: string;
 }
 
 defineProps<{
@@ -34,77 +38,66 @@ defineProps<{
         <div
           v-for="(pair, index) in pairs"
           :key="index"
-          class="nds-stack"
-          data-spacing="sm"
+          class="nds-grid"
+          data-cols="2"
+          data-spacing="lg"
         >
+          <!-- DO -->
           <div
-            class="nds-grid"
-            data-cols="2"
-            data-spacing="lg"
+            class="nds-stack"
+            data-spacing="sm"
           >
-            <!-- DO -->
             <div
-              class="nds-stack"
+              class="nds-cluster nds-text-success"
               data-spacing="sm"
             >
-              <div
-                class="nds-cluster nds-text-success"
-                data-spacing="sm"
-              >
-                <span
-                  class="nds-pill"
-                  data-tone="success"
-                >✓</span>
-                <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">{{ pair.doLabel }}</span>
-              </div>
-              <!-- `nds-cluster` + `data-justify` é o mesmo par que centraliza o
-                   preview em DocsVariants e em ComponentDemo. Sem ele o Card herda
-                   a coluna do `.nds-card` e encosta tudo à esquerda — visível em
-                   qualquer componente de largura própria. -->
-              <Card
-                class="nds-cluster nds-shadow-none nds-p-4"
-                data-justify="center"
-                data-docs-preview="do"
-              >
-                <slot :name="`do-preview-${index}`" />
-              </Card>
-              <p class="nds-text-body nds-italic nds-px-1">
-                {{ pair.doCaption }}
-              </p>
+              <span
+                class="nds-pill"
+                data-tone="success"
+              >✓</span>
+              <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">{{ pair.doLabel }}</span>
             </div>
-            <!-- DON'T -->
-            <div
-              class="nds-stack"
-              data-spacing="sm"
+            <!-- `nds-cluster` + `data-justify` é o mesmo par que centraliza o
+                 preview em DocsVariants e em ComponentDemo. Sem ele o Card herda
+                 a coluna do `.nds-card` e encosta tudo à esquerda — visível em
+                 qualquer componente de largura própria. -->
+            <Card
+              class="nds-cluster nds-shadow-none nds-p-4"
+              data-justify="center"
+              data-docs-preview="do"
             >
-              <div
-                class="nds-cluster nds-text-destructive"
-                data-spacing="sm"
-              >
-                <span
-                  class="nds-pill"
-                  data-tone="destructive"
-                >✗</span>
-                <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">{{ pair.dontLabel }}</span>
-              </div>
-              <Card
-                class="nds-cluster nds-shadow-none nds-p-4"
-                data-justify="center"
-                data-docs-preview="dont"
-              >
-                <slot :name="`dont-preview-${index}`" />
-              </Card>
-              <p class="nds-text-body nds-italic nds-px-1">
-                {{ pair.dontCaption }}
-              </p>
-            </div>
+              <slot :name="`do-preview-${index}`" />
+            </Card>
+            <p class="nds-text-body nds-italic nds-px-1">
+              {{ pair.doCaption }}
+            </p>
           </div>
-          <p
-            v-if="pair.reason"
-            class="nds-text-body nds-text-muted-foreground nds-px-1"
+          <!-- DON'T -->
+          <div
+            class="nds-stack"
+            data-spacing="sm"
           >
-            {{ pair.reason }}
-          </p>
+            <div
+              class="nds-cluster nds-text-destructive"
+              data-spacing="sm"
+            >
+              <span
+                class="nds-pill"
+                data-tone="destructive"
+              >✗</span>
+              <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">{{ pair.dontLabel }}</span>
+            </div>
+            <Card
+              class="nds-cluster nds-shadow-none nds-p-4"
+              data-justify="center"
+              data-docs-preview="dont"
+            >
+              <slot :name="`dont-preview-${index}`" />
+            </Card>
+            <p class="nds-text-body nds-italic nds-px-1">
+              {{ pair.dontCaption }}
+            </p>
+          </div>
         </div>
       </div>
     </Card>

@@ -6,18 +6,25 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@
 interface DocsWhenToUseScenario { s?: string; u?: string; a?: string; scenario?: string; use?: string; alternative?: string }
 interface DocsWhenToUseUXRow { element: string; do: string; dont: string; rules?: string }
 
+/**
+ * O bloco `scenarios` é OBRIGATÓRIO: lista de diretrizes mais tabela de
+ * cenários é a forma que o conteúdo compartilhado pratica em todas as páginas.
+ *
+ * Em 2026-08-27 ele ficou opcional por um dia, para acomodar o conteúdo do
+ * editor, que trazia os cenários como frases soltas sem coluna. Quatro
+ * dev-agents afrouxaram este mesmo contrato em paralelo, sem se ver — e é esse
+ * o diagnóstico: o desvio estava no CONTEÚDO, não na leitura de cada um.
+ * Afrouxado, o container passava a aceitar "Quando usar" sem cenário nenhum em
+ * qualquer componente novo, e nenhum portão reclamaria. Corrigido o conteúdo
+ * (`f5f2ef555`), o contrato volta ao que as 66 páginas já praticam.
+ *
+ * `uxWriting` continua opcional, e sempre foi: é seção que só alguns
+ * componentes têm.
+ */
 const props = defineProps<{
   title: string;
   guidelines: { title: string; items: string[] };
-  /**
-   * Tabela de cenários — OPCIONAL, como a de UX writing logo abaixo.
-   *
-   * Nem todo conteúdo compartilhado tem a tripla cenário/uso/alternativa: o
-   * editor traz os cenários como frases soltas, e uma tabela de três colunas
-   * com duas vazias não é rigor, é cabeçalho sem conteúdo embaixo. Quem não
-   * tem a tripla passa os cenários na lista de diretrizes.
-   */
-  scenarios?: {
+  scenarios: {
     title?: string;
     cols: { scenario: string; use: string; alternative: string };
     items: DocsWhenToUseScenario[];
@@ -62,27 +69,24 @@ const props = defineProps<{
       </Card>
 
       <!-- Cenários -->
-      <Card
-        v-if="scenarios"
-        class="nds-overflow-x nds-p-4"
-      >
+      <Card class="nds-overflow-x nds-p-4">
         <Table class="nds-w-full nds-border-collapse nds-text-body">
           <TableHeader>
             <TableRow class="nds-border-b nds-bg-muted-soft nds-font-medium">
               <TableHead class="nds-p-2">
-                {{ scenarios!.cols.scenario }}
+                {{ scenarios.cols.scenario }}
               </TableHead>
               <TableHead class="nds-p-2">
-                {{ scenarios!.cols.use }}
+                {{ scenarios.cols.use }}
               </TableHead>
               <TableHead class="nds-p-2">
-                {{ scenarios!.cols.alternative }}
+                {{ scenarios.cols.alternative }}
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow
-              v-for="(item, i) in scenarios!.items"
+              v-for="(item, i) in scenarios.items"
               :key="i"
               class="nds-border-b nds-hover-bg-muted-faint"
             >
