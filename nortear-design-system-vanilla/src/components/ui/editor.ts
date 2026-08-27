@@ -324,6 +324,15 @@ function criarLinhaDeEntrada(
   confirmLabel: string,
   aoConfirmar: () => void,
   aoFechar: () => void,
+  /**
+   * O que o campo mostra ao abrir.
+   *
+   * É o que torna a linha EDITÁVEL e não só um formulário de inserção: com o
+   * cursor dentro de um link, abrir mostra o endereço atual — dá para corrigir,
+   * e dá para apagar o texto e confirmar, que é como se tira o link. Abrindo em
+   * branco, o botão só sabia criar, e nada na tela dizia o que já existia.
+   */
+  valorAoAbrir: () => string,
 ): LinhaDeEntrada {
   const linha = document.createElement('div');
   linha.dataset.slot = slot;
@@ -342,7 +351,14 @@ function criarLinhaDeEntrada(
 
   const abrir = (proxima: boolean): void => {
     linha.hidden = !proxima;
-    if (proxima) campo.focus();
+    if (!proxima) return;
+    // O campo é remontado a cada abertura, e não guardado entre uma e outra:
+    // texto abandonado por Escape reapareceria na abertura seguinte, aplicado a
+    // outro trecho do documento.
+    campo.value = valorAoAbrir();
+    campo.removeAttribute('aria-invalid');
+    campo.focus();
+    campo.select();
   };
 
   confirmar.addEventListener('click', aoConfirmar);
@@ -468,6 +484,9 @@ export function createEditor(options: EditorOptions): EditorRoot {
     labels.fields.formulaConfirm,
     () => inserirFormula(),
     () => botaoFormula.focus(),
+    // Com o cursor numa fórmula, abrir mostra o LaTeX dela — é o único caminho
+    // para corrigir uma: o que se vê na tela é o resultado renderizado.
+    () => (editor.isActive('inlineMath') ? (editor.getAttributes('inlineMath').latex ?? '') : ''),
   );
 
   const link = criarLinhaDeEntrada(
@@ -477,6 +496,7 @@ export function createEditor(options: EditorOptions): EditorRoot {
     labels.fields.linkConfirm,
     () => aplicarLink(),
     () => botaoLink.focus(),
+    () => (editor.getAttributes('link').href as string | undefined) ?? '',
   );
 
   /** Só uma linha aberta por vez — as duas ocupam o mesmo lugar na moldura. */
@@ -497,8 +517,13 @@ export function createEditor(options: EditorOptions): EditorRoot {
     // botão rodava primeiro e a lib o tomava de volta em seguida, deixando o
     // foco no texto quando a linha acabara de fechar. A inserção não precisa do
     // foco: a seleção guardada no documento é o ponto de entrada.
-    editor.chain().insertInlineMath({ latex }).run();
-    formula.campo.value = '';
+    // Fórmula sob o cursor se ATUALIZA; fora dela, insere. Sem esta distinção,
+    // corrigir uma fórmula criava uma segunda ao lado da errada.
+    if (editor.isActive('inlineMath')) {
+      editor.chain().updateInlineMath({ latex }).run();
+    } else {
+      editor.chain().insertInlineMath({ latex }).run();
+    }
     abrirLinha(null);
     botaoFormula.focus();
   }
@@ -520,7 +545,6 @@ export function createEditor(options: EditorOptions): EditorRoot {
       link.campo.removeAttribute('aria-invalid');
       editor.chain().extendMarkRange('link').setLink({ href: url }).run();
     }
-    link.campo.value = '';
     abrirLinha(null);
     botaoLink.focus();
   }

@@ -304,6 +304,18 @@ export const Playground: Story = {
       await expect(ancora).toHaveAttribute('href', 'https://exemplo.com');
       await expect(linhaDesenhada(root, 'editor-link')).toBe(false);
       await expect(abrir).toHaveFocus();
+
+      // Com o cursor no link, abrir mostra o endereço ATUAL — é o que torna a
+      // linha editável em vez de só um formulário de inserção. Abrindo em
+      // branco, nada na tela dizia o que já existia.
+      await userEvent.click(abrir);
+      await expect(campo).toHaveValue('https://exemplo.com');
+
+      // E apagar o texto é como se TIRA o link: não há botão separado para
+      // isso, então o caminho precisa estar visível ao abrir.
+      await userEvent.clear(campo);
+      await userEvent.keyboard('{Enter}');
+      await expect(root.querySelector('a')).toBeNull();
     });
 
     await step('A fórmula entra pelo botão e é renderizada pelo KaTeX', async () => {
@@ -341,6 +353,24 @@ export const Playground: Story = {
       await expect(linhaDesenhada(root, 'editor-formula')).toBe(true);
       await userEvent.click(abrir);
       await expect(linhaDesenhada(root, 'editor-formula')).toBe(false);
+
+      // Fórmula sob o cursor se EDITA, não duplica. O que se vê na tela é o
+      // resultado renderizado, então abrir com o LaTeX de volta é o único
+      // caminho para corrigir uma.
+      let posicao = -1;
+      root.editor.state.doc.descendants((node, pos) => {
+        if (node.type.name === 'inlineMath') posicao = pos;
+      });
+      root.editor.commands.setNodeSelection(posicao);
+
+      await userEvent.click(abrir);
+      await expect(campo).toHaveValue('E = mc^2');
+      await userEvent.clear(campo);
+      await userEvent.type(campo, 'a^2 + b^2{Enter}');
+
+      const depois = root.querySelectorAll('[data-type="inline-math"]');
+      await expect(depois).toHaveLength(1);
+      await expect(depois[0]).toHaveAttribute('data-latex', 'a^2 + b^2');
     });
 
     await step('LaTeX inválido não some: fica visível e marcado como erro', async () => {
