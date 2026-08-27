@@ -245,3 +245,40 @@ export async function waitForStableCount(
   }
   return current;
 }
+
+/**
+ * Passa o ponteiro pelo MEIO de uma forma e espera o realce assentar.
+ *
+ * Existe porque nenhuma suíte daqui exercitava o ponteiro, e foi ali que um
+ * defeito visível ao usuário viveu sem portão: ao passar o mouse, a forma sob
+ * ele desaparecia — junto com a trama — e só voltava se o cursor caísse
+ * exatamente sobre uma linha da hachura.
+ *
+ * A causa não estava no desenho e sim na COR. O helper de tema emitia
+ * `hsl(350 72% 36%)`, a sintaxe CSS moderna separada por espaço; o navegador a
+ * entende, e por isso o desenho parado pintava certo. O analisador de cor da
+ * lib entende só a forma com vírgula, e devolvia `undefined` — com ele, todo
+ * cálculo de cor, inclusive o realce do ponteiro, que caía em `fill: none`.
+ *
+ * Dispara os dois eventos porque a lib escuta os dois: `mouseover` marca o
+ * alvo, `mousemove` é o que dispara o estado de ênfase.
+ */
+export async function pointerOver(shape: Element, assentar = 400): Promise<void> {
+  const box = shape.getBoundingClientRect();
+  const evento = {
+    bubbles: true,
+    clientX: Math.round(box.left + box.width / 2),
+    clientY: Math.round(box.top + box.height / 2),
+  };
+  shape.dispatchEvent(new MouseEvent('mouseover', evento));
+  shape.dispatchEvent(new MouseEvent('mousemove', evento));
+  // Espera de RELÓGIO: o realce é repintura da lib, e `waitFor` reagenda por
+  // observador de mutação — a leitura seguinte força layout e se realimentaria.
+  await new Promise((resolve) => setTimeout(resolve, assentar));
+}
+
+/** A forma está pintada? `none` e `transparent` contam como apagada. */
+export function isPainted(shape: Element): boolean {
+  const fill = shape.getAttribute('fill') ?? 'none';
+  return fill !== 'none' && fill !== 'transparent';
+}

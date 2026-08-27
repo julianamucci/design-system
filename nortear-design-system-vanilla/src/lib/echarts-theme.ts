@@ -16,7 +16,7 @@ export interface NortearChartTheme {
   backgroundColor: string;
   textStyle: { color: string; fontFamily: string; fontSize: number };
   title: { textStyle: { color: string; fontFamily: string; fontWeight: number; fontSize: number } };
-  legend: { textStyle: { color: string; fontSize: number } };
+  legend: { textStyle: { color: string; fontSize: number }; itemGap: number };
   tooltip: {
     backgroundColor: string;
     borderColor: string;
@@ -71,7 +71,23 @@ export function hsl(token: string, alpha = 1): string {
   if (typeof document === 'undefined') return 'transparent';
   const raw = getComputedStyle(document.documentElement).getPropertyValue(`--${token}`).trim();
   if (!raw) return 'transparent';
-  return alpha === 1 ? `hsl(${raw})` : `hsla(${raw} / ${alpha})`;
+  // Sintaxe com VÍRGULA, e não a moderna separada por espaço.
+  //
+  // O navegador entende as duas; o analisador de cor da lib entende só esta.
+  // Medido contra `zrender/lib/tool/color`:
+  //
+  //   parse("hsl(350 72% 36%)")   → undefined
+  //   parse("hsl(350, 72%, 36%)") → [158, 26, 48, 1]
+  //
+  // O desenho PARADO pintava certo, porque quem lê o atributo ali é o
+  // navegador. O defeito aparecia quando a lib precisava CALCULAR uma cor — e
+  // o realce do ponteiro é exatamente isso: sem conseguir ler a base, ela
+  // devolvia `fill: none`, e a forma sob o mouse desaparecia junto com a trama
+  // dela. Valia para todo tipo de gráfico e para as cinco stacks.
+  const partes = raw.split(/\s+/);
+  if (partes.length < 3) return alpha === 1 ? `hsl(${raw})` : `hsla(${raw} / ${alpha})`;
+  const [h, s, l] = partes;
+  return alpha === 1 ? `hsl(${h}, ${s}, ${l})` : `hsla(${h}, ${s}, ${l}, ${alpha})`;
 }
 
 function cssToken(name: string): string {
@@ -162,7 +178,18 @@ export function buildNortearTheme(): NortearChartTheme {
     backgroundColor: 'transparent',
     textStyle: { color: fg, fontFamily, fontSize: bodySize },
     title: { textStyle: { color: fg, fontFamily, fontWeight: 600, fontSize: titleSize } },
-    legend: { textStyle: { color: muted, fontSize: bodySize } },
+    legend: {
+      textStyle: { color: muted, fontSize: bodySize },
+      // A folga ENTRE os itens da legenda sai da fonte, não de um pixel cravado.
+      // O padrão da lib é 10px fixos, e com o nome de cada série ao lado do
+      // ícone os itens encostam — em legenda de muitos itens, como a da rosca
+      // aninhada, a lista lê como um bloco só.
+      //
+      // Derivada do corpo, ela cresce junto com o texto quando a pessoa aumenta
+      // a fonte do navegador (WCAG 1.4.4): cravada, a folga encolheria em
+      // proporção a cada degrau de aumento, que é o oposto do que se quer.
+      itemGap: Math.round(bodySize * 2),
+    },
     tooltip: {
       backgroundColor: card,
       borderColor: border,

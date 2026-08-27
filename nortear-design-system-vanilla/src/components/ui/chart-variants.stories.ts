@@ -6,6 +6,8 @@ import {
   designPintado,
   designTexts,
   distinctShapes,
+  isPainted,
+  pointerOver,
   waitForStableCount,
   exigirRoot,
 } from '@shared/testing/chart-probe';
@@ -261,6 +263,33 @@ export const Bar: Story = {
         () => expect(hatchedShapes(root)).toHaveLength(chartData.length),
         { timeout: 3000 },
       );
+    });
+    await step('A forma sob o ponteiro continua pintada — realce não pode apagá-la', async () => {
+      // Nenhuma suíte daqui exercitava o ponteiro, e foi ali que um defeito
+      // visível ao usuário viveu sem portão: ao passar o mouse, a forma sob ele
+      // desaparecia junto com a trama, e só voltava se o cursor caísse
+      // exatamente sobre uma linha da hachura.
+      //
+      // A causa não estava no desenho e sim na COR: o helper de tema emitia a
+      // sintaxe CSS separada por espaço, que o navegador entende e o analisador
+      // da lib não. Sem conseguir ler a base, o realce virava `fill: none`.
+      //
+      // A asserção é sobre a FORMA e sobre a TRAMA dela: as duas apagavam
+      // juntas, e medir só uma deixaria metade do defeito passar.
+      // O passo estabelece a PRÓPRIA precondição — não pode depender de onde
+      // foi enfiado na play nem do que o passo anterior deixou. A espera é por
+      // relógio porque a leitura força layout.
+      await waitForStableCount(() => filledShapes(root).length);
+      const antes = filledShapes(root);
+      await expect(antes.length).toBeGreaterThan(1);
+      const alvo = antes[1];
+      const trama = alvo.nextElementSibling;
+
+      await pointerOver(alvo);
+
+      await expect(isPainted(alvo)).toBe(true);
+      await expect(trama).not.toBeNull();
+      await expect(isPainted(trama!)).toBe(true);
     });
   },
 };
