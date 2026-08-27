@@ -67,6 +67,20 @@
   border-bottom: 1px solid hsl(var(--border));
 }
 
+/* Quem declara `display` tem de declarar também o estado escondido.
+ *
+ * O `[hidden] { display: none }` do navegador é regra de FOLHA DO AGENTE, e
+ * qualquer declaração de autor a vence — inclusive o `display: flex` logo
+ * acima. Sem esta linha, `elemento.hidden = true` fica escrito no DOM, sai
+ * certo em leitor de tela e em `toBeVisible`, e a linha continua desenhada na
+ * tela: o botão de fórmula parecia não fechar.
+ *
+ * Vale para toda regra `.nds-*` que declare `display` num elemento que alguém
+ * esconde por atributo. */
+.nds-editor-formula[hidden] {
+  display: none;
+}
+
 .nds-editor-formula > .nds-input {
   flex: 1 1 auto;
   min-width: 0;

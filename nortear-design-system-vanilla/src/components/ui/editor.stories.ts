@@ -45,6 +45,20 @@ const meta: Meta<EditorArgs> = {
   },
 };
 
+/**
+ * A linha da fórmula está desenhada?
+ *
+ * Lê o `display` COMPUTADO, e não o atributo `hidden`. O `toBeVisible` do
+ * jest-dom trata `hidden` como prova de invisibilidade — e era justamente o
+ * atributo que estava certo enquanto a linha ficava na tela: `display: flex`
+ * de autor vence o `[hidden] { display: none }` do navegador. A asserção que
+ * confia no atributo concorda com o bug.
+ */
+function linhaDesenhada(root: HTMLElement): boolean {
+  const linha = root.querySelector('[data-slot="editor-formula"]') as HTMLElement;
+  return getComputedStyle(linha).display !== 'none';
+}
+
 export default meta;
 type Story = StoryObj<EditorArgs>;
 
@@ -97,8 +111,14 @@ export const Playground: Story = {
     await step('A fórmula entra pelo botão e é renderizada pelo KaTeX', async () => {
       const abrir = canvas.getByRole('button', { name: LABELS.formula });
       await expect(abrir).toHaveAttribute('aria-expanded', 'false');
+      // A linha nasce FECHADA — e isto se verifica olhando a tela, não o
+      // atributo. `aria-expanded` correto com a linha visível foi o defeito:
+      // `display: flex` de autor vence o `[hidden]` do navegador, e o atributo
+      // seguia certo enquanto o campo ficava aberto na cara de quem lê.
+      await expect(linhaDesenhada(root)).toBe(false);
       await userEvent.click(abrir);
       await expect(abrir).toHaveAttribute('aria-expanded', 'true');
+      await expect(linhaDesenhada(root)).toBe(true);
 
       const campo = canvas.getByRole('textbox', { name: LABELS.formulaField });
       await expect(campo).toHaveFocus();
@@ -122,7 +142,15 @@ export const Playground: Story = {
 
       // A linha fecha e devolve o foco a quem a abriu.
       await expect(abrir).toHaveAttribute('aria-expanded', 'false');
+      await expect(linhaDesenhada(root)).toBe(false);
       await expect(abrir).toHaveFocus();
+
+      // E o mesmo botão abre e FECHA, sem inserir nada.
+      await userEvent.click(abrir);
+      await expect(linhaDesenhada(root)).toBe(true);
+      await userEvent.click(abrir);
+      await expect(linhaDesenhada(root)).toBe(false);
+      await expect(abrir).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('LaTeX inválido não some: fica visível e marcado como erro', async () => {
@@ -133,11 +161,21 @@ export const Playground: Story = {
       // tecla, e um LaTeX cheio de chaves testaria mais a escapagem do teclado
       // sintético que o editor. Comando inexistente erra igual.
       // O `{Enter}` no fim também cobre o caminho de confirmar pelo teclado.
-      await userEvent.type(campo, '\\notacommand{Enter}');
+      await userEvent.type(campo, '\\comandoquenaoexiste{Enter}');
 
       const erro = root.querySelector('.inline-math-error');
       await expect(erro).toBeInTheDocument();
-      await expect(erro?.textContent).toContain('\\notacommand');
+      await expect(erro?.textContent).toContain('\\comandoquenaoexiste');
+
+      // Devolve o documento ao estado de demonstração.
+      //
+      // O que a play deixa é o que a pessoa VÊ ao abrir a story, e é o que o
+      // Chromatic fotografa. Sem isto, a última coisa na tela era o comando
+      // inválido do teste — que não explica nada a quem chega pela sidebar.
+      root.editor.commands.setContent('<p>massa e energia</p>');
+      root.editor.chain().insertInlineMath({ latex: 'E = mc^2' }).run();
+      await expect(root.querySelector('.inline-math-error')).toBeNull();
+      await expect(root.querySelectorAll('[data-type="inline-math"]')).toHaveLength(1);
     });
   },
 };
