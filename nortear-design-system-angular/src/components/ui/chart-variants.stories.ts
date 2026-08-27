@@ -134,6 +134,37 @@ export const Bar: Story = {
       await expect(trama).not.toBeNull();
       await expect(isPainted(trama!)).toBe(true);
     });
+    await step('O rótulo de valor sai do TEMA, e sem halo', async () => {
+      // Com uma série só, este tipo escreve o valor em cima da coluna. O que
+      // a lib desenha por padrão ali é cinza `#333` fixo, halo branco de 2px e
+      // corpo de 12px cravado — nenhum dos três conhece o tema.
+      //
+      // Medido contra o fundo da página: no claro o `#333` dá 12.46 e o halo
+      // 1.01, então funcionava POR ACIDENTE; no escuro o texto cai para 1.06 e
+      // o halo sobe para 13.36 — o número vira o próprio contorno, grosso e
+      // borrado.
+      //
+      // Por isso a asserção é de IGUALDADE com o token, e não de contraste: a
+      // story roda no modo claro, onde a cor errada passaria de 4.5:1 sem
+      // dificuldade. Igualdade reprova nos dois modos.
+      const valueLabel = [...desenho.querySelectorAll<SVGTextElement>('svg text')]
+        .find((t) => t.textContent === '305');
+      await expect(valueLabel).toBeDefined();
+
+      const pintura = getComputedStyle(valueLabel!);
+      const cor = rgbColor(pintura.fill);
+      const esperada = rgbToken('--foreground', desenho);
+      await expect(cor).not.toBeNull();
+      await expect(esperada).not.toBeNull();
+      await expect(mesmaCor(cor!, esperada!)).toBe(true);
+
+      // O halo só existe para socorrer uma cor que não conhece o tema, e é ele
+      // que empasta o número no corpo pequeno.
+      // A medida é a COR do traço, não a largura: sem traço, `strokeWidth`
+      // computado devolve 1, que é o valor inicial do SVG e não pinta nada.
+      // Medir a largura reprovaria com o halo já removido.
+      await expect(['none', 'rgba(0, 0, 0, 0)']).toContain(pintura.stroke);
+    });
   },
 };
 

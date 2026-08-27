@@ -958,8 +958,34 @@ export class NdsChart {
             },
           }
           : {}),
+        // O rótulo de valor precisa das TRÊS declarações abaixo, e nenhuma é
+        // enfeite: sem elas a lib usa os padrões dela, que são cinza `#333`
+        // fixo, halo branco de 2px e corpo de 12px cravado.
+        //
+        // Medido contra o fundo da página, nos três temas:
+        //
+        //   claro   `#333` 12.46 · halo branco  1.01
+        //   escuro  `#333`  1.06 · halo branco 13.36
+        //
+        // No claro funcionava por ACIDENTE — texto escuro, halo invisível. No
+        // escuro o texto sumia e o que sobrava era o halo: o número aparecia
+        // grosso e borrado, que foi como o defeito chegou. `--foreground` mede
+        // de 13.08 a 18.04 nos dois modos, e com ele o halo deixa de ter função
+        // — ele existe para socorrer uma cor fixa que não conhece o tema, e é o
+        // que empasta o texto no corpo pequeno.
+        //
+        // O corpo sai da fonte raiz porque o rótulo é TEXTO e cresce com a
+        // fonte do navegador (WCAG 1.4.4); 12px cravado encolheria em proporção
+        // a cada degrau de aumento.
         label: labelValues
-          ? { show: true, position: 'top', formatter: (p: { value: number }) => formatarValue(p.value) }
+          ? {
+            show: true,
+            position: 'top',
+            formatter: (p: { value: number }) => formatarValue(p.value),
+            color: hsl('foreground'),
+            textBorderWidth: 0,
+            fontSize: Math.round(rootFontSize() * 0.75),
+          }
           : { show: false },
       })),
       animation: animar,
