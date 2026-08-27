@@ -36,6 +36,7 @@ import {
   AlignLeft,
   AlignRight,
   Bold,
+  Captions,
   Code,
   Columns3,
   Highlighter,
@@ -99,6 +100,8 @@ export type EditorAction =
   | 'undo'
   | 'redo'
   | 'formula'
+  // Só existe com uma imagem selecionada.
+  | 'imageAlt'
   // Só existem com o cursor DENTRO de uma tabela.
   | 'rowAfter'
   | 'columnAfter'
@@ -151,6 +154,9 @@ export type EditorLabels = {
      * quem não deduz não descobre que dá para remover.
      */
     linkRemove: string;
+    /** Rótulo do campo de texto alternativo da imagem. */
+    alt: string;
+    altConfirm: string;
   };
 };
 
@@ -180,6 +186,24 @@ export type EditorOptions = {
    * inteiro passa a trafegar e a ser guardado junto do texto a cada gravação.
    */
   resolveImage?: (file: File) => Promise<string | null>;
+  /**
+   * Escreve o texto alternativo a partir da imagem — o lugar de ligar um modelo
+   * de visão, uma API de descrição, um serviço próprio.
+   *
+   * Recebe o arquivo e o `src` já resolvido (nem todo serviço aceita bytes:
+   * muitos querem uma URL alcançável). Devolve a descrição, ou `null` para
+   * dizer "não consegui" — e aí o `alt` provisório continua onde está.
+   *
+   * É chamado DEPOIS de inserir, nunca antes: descrever leva segundos e às
+   * vezes falha, e prender a imagem esperando por isso trocaria uma lacuna de
+   * acessibilidade por uma de responsividade. A imagem entra, a descrição
+   * chega quando chegar.
+   *
+   * NÃO dispensa revisão. Descrição automática erra de formas que quem enxerga
+   * a imagem percebe na hora, e por isso o botão de texto alternativo aparece
+   * com a imagem selecionada — a IA propõe, a pessoa confere.
+   */
+  describeImage?: (file: File, src: string) => Promise<string | null>;
   labels: EditorLabels;
   class?: string;
 };
@@ -383,6 +407,7 @@ const ACOES: Record<EditorAction, Acao> = {
   // resolvedor de imagem que quem consome escolheu, ou do texto da linha.
   link: { icon: ico(LinkIcon), ativa: (e) => e.isActive('link') },
   image: { icon: ico(ImageIcon) },
+  imageAlt: { icon: ico(Captions) },
   formula: { icon: ico(Sigma) },
 };
 
@@ -430,6 +455,7 @@ const PRESETS: Record<EditorPreset, Bloco[]> = {
     // Bloco CONTEXTUAL: seis botões que só existem dentro de uma tabela. Fora
     // dela some inteiro — barra com seis botões inertes é ruído permanente
     // para uma capacidade que a maioria dos documentos nunca usa.
+    { contextual: 'image', botoes: ['imageAlt'] },
     {
       contextual: 'table',
       botoes: ['rowAfter', 'columnAfter', 'deleteRow', 'deleteColumn', 'headerRow', 'deleteTable'],
@@ -556,6 +582,7 @@ function criarLinhaDeEntrada(
 export function createEditor(options: EditorOptions): EditorRoot {
   const { labels, editable = true, preset = 'advanced' } = options;
   const resolverImagem = options.resolveImage ?? imageAsDataUrl;
+  const descreverImagem = options.describeImage;
 
   const root = document.createElement('div');
   root.dataset.slot = 'editor';
@@ -684,6 +711,7 @@ export function createEditor(options: EditorOptions): EditorRoot {
   const botaoFormula = simples.find((s) => s.acao === 'formula')!.botao;
   const alvoLink = simples.find((s) => s.acao === 'link');
   const botaoLink = alvoLink ? alvoLink.botao : botaoFormula;
+  const botaoAlt = simples.find((s) => s.acao === 'imageAlt')?.botao;
 
   // ─── Linhas de entrada ─────────────────────────────────────────────────────
 
@@ -709,6 +737,22 @@ export function createEditor(options: EditorOptions): EditorRoot {
     () => (editor.getAttributes('link').href as string | undefined) ?? '',
   );
 
+  /**
+   * A linha do texto alternativo — onde a proposta da IA é conferida.
+   *
+   * Abre com o que a imagem tem hoje: o nome do arquivo enquanto a descrição
+   * não chegou, a descrição depois. Ver o texto é o que permite julgá-lo.
+   */
+  const alt = criarLinhaDeEntrada(
+    'editor-alt',
+    labels.fields.alt,
+    labels.fields.alt,
+    labels.fields.altConfirm,
+    () => aplicarAlt(),
+    () => botaoAlt?.focus(),
+    () => (editor.getAttributes('image').alt as string | undefined) ?? '',
+  );
+
   const botaoTirarLink = createButton({
     variant: 'ghost',
     size: 'icon-sm',
@@ -727,10 +771,19 @@ export function createEditor(options: EditorOptions): EditorRoot {
   });
   link.linha.appendChild(botaoTirarLink);
 
-  /** Só uma linha aberta por vez — as duas ocupam o mesmo lugar na moldura. */
+  /** Só uma linha aberta por vez — as três ocupam o mesmo lugar na moldura. */
   function abrirLinha(qual: LinhaDeEntrada | null): void {
-    for (const l of [formula, link]) l.abrir(l === qual);
+    for (const l of [formula, link, alt]) l.abrir(l === qual);
     sincronizar();
+  }
+
+  function aplicarAlt(): void {
+    // Aqui `updateAttributes` é o certo, ao contrário do caminho da IA: a
+    // imagem está selecionada AGORA, é ela que se edita, e o texto é de quem
+    // está olhando para ela.
+    editor.chain().focus().updateAttributes('image', { alt: alt.campo.value.trim() }).run();
+    abrirLinha(null);
+    botaoAlt?.focus();
   }
 
   function inserirFormula(): void {
@@ -780,13 +833,14 @@ export function createEditor(options: EditorOptions): EditorRoot {
   for (const [botao, linha] of [
     [botaoFormula, formula],
     ...(alvoLink ? [[botaoLink, link] as const] : []),
+    ...(botaoAlt ? [[botaoAlt, alt] as const] : []),
   ] as Array<[HTMLButtonElement, LinhaDeEntrada]>) {
     botao.setAttribute('aria-expanded', 'false');
     botao.setAttribute('aria-controls', linha.linha.id);
     botao.addEventListener('click', () => abrirLinha(linha.aberta() ? null : linha));
   }
 
-  root.append(toolbar, formula.linha, link.linha, area);
+  root.append(toolbar, formula.linha, link.linha, alt.linha, area);
 
   // ─── Estado ────────────────────────────────────────────────────────────────
   //
@@ -808,6 +862,7 @@ export function createEditor(options: EditorOptions): EditorRoot {
     for (const { caixa, node } of contextuais) caixa.hidden = !editor.isActive(node);
     botaoFormula.setAttribute('aria-expanded', String(formula.aberta()));
     if (alvoLink) botaoLink.setAttribute('aria-expanded', String(link.aberta()));
+    botaoAlt?.setAttribute('aria-expanded', String(alt.aberta()));
   }
   editor.on('transaction', sincronizar);
 
@@ -829,15 +884,48 @@ export function createEditor(options: EditorOptions): EditorRoot {
   // O seletor de arquivo é criado a cada clique e descartado depois: um input
   // guardado entre usos mantém o arquivo anterior, e escolher o MESMO arquivo
   // duas vezes seguidas não dispara `change`.
+  /**
+   * Escreve o `alt` da imagem de um `src` conhecido, onde quer que ela esteja.
+   *
+   * Não usa `updateAttributes`, que age sobre a SELEÇÃO: quando a descrição
+   * chega, segundos depois, o cursor já andou — e o atributo iria parar em
+   * outra imagem, ou em lugar nenhum. Aqui a imagem é reencontrada pelo `src`.
+   * Some do documento nesse meio-tempo? A função não faz nada, que é o certo.
+   */
+  function definirAltPorSrc(src: string, alt: string): void {
+    const { state } = editor;
+    let posicao = -1;
+    state.doc.descendants((node, pos) => {
+      if (node.type.name === 'image' && node.attrs.src === src) posicao = pos;
+    });
+    if (posicao < 0) return;
+    editor.view.dispatch(state.tr.setNodeAttribute(posicao, 'alt', alt));
+  }
+
   async function inserirImagem(arquivo: File): Promise<boolean> {
     const src = await resolverImagem(arquivo);
     // `null` é recusa de quem consome — envio negado, arquivo grande demais,
     // formato fora da política. Não é erro, e não vira alerta.
     if (!src) return false;
-    // `alt` com o nome do arquivo é PLACEHOLDER, não texto alternativo de
-    // verdade: descreve o arquivo, não a imagem. Está no FIXES-NEEDED — pedir a
-    // descrição é decisão de fluxo, e imagem sem `alt` nenhum reprovaria no axe.
+
+    // O `alt` provisório é o nome do arquivo: descreve o arquivo, não a imagem.
+    // É o que segura a vaga até a descrição chegar — e o que fica se ela não
+    // vier. Imagem sem `alt` nenhum reprovaria no axe e sumiria do leitor de
+    // tela sem deixar rastro.
     editor.chain().focus().setImage({ src, alt: arquivo.name }).run();
+
+    // A descrição é assíncrona e NÃO segura a inserção. Modelo de visão leva
+    // segundos e às vezes falha; prender a imagem esperando trocaria uma lacuna
+    // de acessibilidade por uma de responsividade.
+    if (descreverImagem) {
+      void descreverImagem(arquivo, src)
+        .then((descricao) => {
+          if (descricao) definirAltPorSrc(src, descricao);
+        })
+        // Falha de quem descreve não derruba a edição: a imagem já está lá com
+        // o `alt` provisório, e o botão de texto alternativo segue à mão.
+        .catch(() => {});
+    }
     return true;
   }
 

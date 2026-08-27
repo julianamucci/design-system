@@ -48,6 +48,7 @@ const LABELS: EditorLabels = {
     codeBlock: 'Bloco de código',
     link: 'Link',
     image: 'Inserir imagem',
+    imageAlt: 'Texto alternativo',
     table: 'Inserir tabela',
     horizontalRule: 'Linha divisória',
     undo: 'Desfazer',
@@ -66,6 +67,8 @@ const LABELS: EditorLabels = {
     link: 'Endereço do link',
     linkConfirm: 'Aplicar',
     linkRemove: 'Tirar o link',
+    alt: 'Descrição da imagem',
+    altConfirm: 'Salvar descrição',
   },
 };
 
@@ -319,7 +322,12 @@ export const Playground: Story = {
       root.editor.commands.setContent('<p>massa e energia</p>');
 
       const inserir = canvas.getByRole('button', { name: LABELS.actions.table });
-      const caixa = root.querySelector('[data-slot="editor-toolbar-context"]') as HTMLElement;
+      // Pelo NÓ, não pela posição: há mais de um bloco contextual agora (o da
+      // imagem vem antes), e o primeiro do documento deixaria de ser o da tabela
+      // sem que nada na asserção mudasse.
+      const caixa = root.querySelector(
+        '[data-slot="editor-toolbar-context"][data-node="table"]',
+      ) as HTMLElement;
       await expect(getComputedStyle(caixa).display).toBe('none');
 
       await userEvent.click(inserir);
@@ -562,6 +570,87 @@ export const CustomImageStorage: Story = {
       const grande = new File([new Uint8Array(2048)], 'foto.png', { type: 'image/png' });
       await expect(await root.insertImage(grande)).toBe(false);
       await expect(root.querySelectorAll('img')).toHaveLength(1);
+    });
+  },
+};
+
+/**
+ * A costura de DESCRIÇÃO: quem consome liga um modelo de visão.
+ *
+ * Aqui o "modelo" é um dublê que demora e devolve uma frase fixa. O que a story
+ * verifica não é a qualidade da descrição — é o contrato em volta dela: a imagem
+ * entra na hora, a descrição chega depois, e a pessoa pode corrigir o que a IA
+ * escreveu.
+ */
+export const AiImageDescription: Story = {
+  parameters: { controls: { disable: true }, actions: { disable: true } },
+  render: (args) =>
+    createEditor({
+      content: '<p>A IA propõe a descrição; quem publica confere.</p>',
+      editable: args.editable,
+      preset: 'advanced',
+      labels: LABELS,
+      describeImage: async (file, src) => {
+        // O dublê recebe as duas coisas que um serviço real pede: os bytes e
+        // uma URL alcançável. Devolver `null` seria "não consegui".
+        await new Promise((r) => setTimeout(r, 50));
+        return src.startsWith('data:') ? `Descrição automática de ${file.name}` : null;
+      },
+    }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const root = canvasElement.querySelector('[data-slot="editor"]') as EditorRoot;
+    root.editor.commands.setContent('<p>descrição automática</p>');
+
+    const arquivo = new File([new Uint8Array(8)], 'grafico.png', { type: 'image/png' });
+
+    await step('A imagem entra NA HORA, com o alt provisório', async () => {
+      await expect(await root.insertImage(arquivo)).toBe(true);
+      const imagem = root.querySelector('img') as HTMLImageElement;
+      // Sem esperar nada: o nome do arquivo segura a vaga. Prender a imagem até
+      // a descrição chegar trocaria uma lacuna de acessibilidade por uma de
+      // responsividade — e um serviço fora do ar travaria a edição.
+      await expect(imagem.getAttribute('alt')).toBe('grafico.png');
+    });
+
+    await step('A descrição chega depois e substitui o provisório', async () => {
+      // Espera de RELÓGIO, não `waitFor`: a condição aqui é leitura pura, mas o
+      // laço com prazo é o que distingue "demorou" de "não veio" — `waitFor`
+      // que nunca satisfaz pendura a aba sem reprovar.
+      const prazo = Date.now() + 3000;
+      let descrito = '';
+      while (Date.now() < prazo) {
+        descrito = root.querySelector('img')?.getAttribute('alt') ?? '';
+        if (descrito !== 'grafico.png') break;
+        await new Promise((r) => setTimeout(r, 50));
+      }
+      await expect(descrito).toBe('Descrição automática de grafico.png');
+    });
+
+    await step('E a pessoa corrige o que a IA escreveu', async () => {
+      // O botão só existe com a imagem selecionada — é o mesmo desenho dos
+      // botões de tabela.
+      // A posição do nó vem de uma varredura, não de aritmética sobre o tamanho
+      // do documento: um parágrafo a mais ou a menos desloca a conta em silêncio.
+      let posicao = -1;
+      root.editor.state.doc.descendants((node, pos) => {
+        if (node.type.name === 'image') posicao = pos;
+      });
+      root.editor.commands.setNodeSelection(posicao);
+
+      const abrir = canvas.getByRole('button', { name: LABELS.actions.imageAlt });
+      await userEvent.click(abrir);
+
+      const campo = canvas.getByRole('textbox', { name: LABELS.fields.alt });
+      // Abre com o que está lá: ver o texto é o que permite julgá-lo.
+      await expect(campo).toHaveValue('Descrição automática de grafico.png');
+
+      await userEvent.clear(campo);
+      await userEvent.type(campo, 'Gráfico de barras da receita por trimestre{Enter}');
+      await expect(root.querySelector('img')).toHaveAttribute(
+        'alt',
+        'Gráfico de barras da receita por trimestre',
+      );
     });
   },
 };

@@ -54,9 +54,11 @@ histórico; a lista de cima é o que está por fazer.
 
   Junto vem uma limpeza que ficou por fazer: as três stories de composição do `toggle-group` no Vanilla ainda usam `children: ''` mais `injectIcons`, que o `children` de elemento tornou desnecessário.
 
-- [ ] **Imagem do editor entra sem texto alternativo de verdade.** (Aberto em 2026-08-27, ao ligar a extensão de imagem no protótipo.) O `alt` recebe o NOME DO ARQUIVO — `ponto.png` descreve o arquivo, não a imagem. Passa no axe (o atributo existe) e não serve a ninguém que dependa dele.
+- [ ] **O texto alternativo nasce provisório, e nada na tela avisa.** (Aberto em 2026-08-27; a costura de descrição por IA resolveu metade.) Sem um `describeImage` ligado, o `alt` fica com o NOME DO ARQUIVO — `grafico.png` descreve o arquivo, não a imagem. Passa no axe (o atributo existe) e não serve a quem depende dele.
 
-  Não é bug de código, é fluxo que falta: pedir a descrição exige decidir QUANDO se pergunta (antes de inserir, depois, num painel lateral) e o que fazer com quem pula. A linha de entrada da fórmula e do link já é a peça pronta para isso — falta a decisão.
+  O que já existe: o botão de texto alternativo aparece com a imagem selecionada e abre a linha com o texto atual, então corrigir é um clique. O que falta é o AVISO — nada distingue uma imagem descrita de uma que ficou com o nome do arquivo, e quem revisa um documento longo teria de abrir uma por uma.
+
+  Duas saídas, e a segunda é mais barata: marcar o nó com a origem do `alt` (arquivo, automática, humana) e desenhar o estado provisório; ou uma contagem de imagens sem descrição perto de onde se publica. Nenhuma das duas é decisão do design system sozinho.
 
 - [ ] **`hidden` não esconde nada em classe `.nds-*` que declare `display` — quarta ocorrência.** (Aberto em 2026-08-27, ao esconder o botão de tirar link no protótipo de editor.) O `[hidden] { display: none }` é regra da FOLHA DO AGENTE, e qualquer declaração de autor a vence. Quem escreve `elemento.hidden = true` recebe o atributo no DOM, o leitor de tela concorda, o `toBeVisible` do jest-dom concorda — e o elemento continua na tela.
 
