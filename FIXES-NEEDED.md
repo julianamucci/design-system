@@ -43,7 +43,25 @@ histórico; a lista de cima é o que está por fazer.
 - [ ] **Motor de múltiplos itens no carrossel Vanilla.** A fábrica desliza um slide por vez e não expõe base fracionária, com `coversNotApplicable` declarado. Trocar o motor, ou tirar o item do contrato das cinco.
 - [x] **Dots do carrossel no Angular são botões numerados**; as outras quatro usam `.nds-carousel-dot`, classe que não aparece em arquivo nenhum do Angular. Alinhar muda a foto do Chromatic. **Resolvido (2026-08-18), junto com o redesenho da paginação aprovado pela dona.** O Angular passou a usar `.nds-carousel-dot` na story de composições E na docs page; as cinco montam a MESMA fileira. O padrão novo: o slide atual vira uma pílula rotulada ("Slide N") na própria posição da fileira, os demais continuam pontos, e a mudança de forma anima por `grid-template-columns: 0fr → 1fr` com `--duration-base`/`--ease-size` (mesmo mecanismo do painel do accordion, sem biblioteca de animação). Contrato novo nas cinco: `testes.functional.item8` e `testes.accessibility.item6`.
 
-### Dívida de fundação, sem dono de componente (6)
+### Dívida de fundação, sem dono de componente (7)
+
+- [ ] **20 dos 49 módulos de snippet do React não têm teste próprio.** (Aberto em 2026-08-27, ao abrir por que a contagem de testes difere tanto entre as stacks.) A campanha de teste por módulo parou no meio, e os que faltam são alfabeticamente contíguos — de `combobox` a `toggle`:
+
+  `combobox` `menubar` `navigation-menu` `pagination` `popover` `progress` `radio-group` `resizable` `scroll-area` `select` `separator` `sheet` `sidebar` `skeleton` `slider` `sonner` `table` `tabs` `textarea` `toggle`
+
+  | stack | módulos `*.source.ts` | com teste próprio | varredura gerada |
+  |---|---|---|---|
+  | react | 49 | **29 (59%)** | 2081 testes |
+  | vue | 49 | 48 (97%) | 668 |
+  | svelte | 49 | 48 (97%) | 513 |
+  | vanilla | 49 | **49 (100%)** | nenhuma |
+  | angular | 1 | 1 | nenhuma |
+
+  **Não é o mesmo buraco que a contagem sugere.** A diferença de total entre as stacks — react 3306 contra vanilla 1809 — vem quase toda de UM arquivo gerado, `source-snippets.test.ts`, que sozinho vale 2081 testes no react, 63% do total da stack. Ele não existe no vanilla nem no angular.
+
+  E a ausência dele no vanilla NÃO é lacuna: as três checagens que ele faz são específicas de JSX (toda tag de inicial maiúscula tem origem; todo nome importado de `@/components/ui` existe lá; espião de control não vaza interpolado). Vanilla, Vue e Svelte não escrevem JSX em snippet. O vanilla cobre o mesmo terreno por outro caminho — teste à mão em 100% dos módulos.
+
+  A lacuna real é a do react: 20 módulos cujo snippet só é visto pela varredura de JSX, sem ninguém verificando o que ele ENSINA — se a prop existe, se o exemplo compõe o que a docs page mostra, se o rótulo confere.
 
 - [ ] **A fábrica do Chart no Vanilla não recebe dado novo depois de montada.** (Aberto em 2026-08-26, ao gatear o conjunto que encolhe.) `createChart(opts)` monta o elemento uma vez e a instância da lib fica no closure — nada é exposto no nó devolvido para entregar um conjunto novo. Trocar o dado hoje significa **reconstruir o elemento inteiro**: perde a dica sob o ponteiro e remonta a `<table>`.
 
