@@ -140,6 +140,24 @@ function medidaDoToken(root: HTMLElement, token: string): string {
   return medida;
 }
 
+/**
+ * Espera o `alt` da imagem chegar ao valor pedido.
+ *
+ * Laço de RELÓGIO, não `waitFor`: com prazo, "demorou" e "não veio" são
+ * resultados diferentes, e o segundo REPROVA. `waitFor` cuja condição nunca
+ * satisfaz pendura a aba sem reportar nada.
+ */
+async function esperarAlt(root: HTMLElement, esperado: string): Promise<void> {
+  const prazo = Date.now() + 3000;
+  let atual = '';
+  while (Date.now() < prazo) {
+    atual = root.querySelector('img')?.getAttribute('alt') ?? '';
+    if (atual === esperado) break;
+    await new Promise((r) => setTimeout(r, 30));
+  }
+  await expect(atual).toBe(esperado);
+}
+
 export default meta;
 type Story = StoryObj<EditorArgs>;
 
@@ -591,10 +609,12 @@ export const AiImageDescription: Story = {
       preset: 'advanced',
       labels: LABELS,
       describeImage: async (file, src) => {
-        // O dublê recebe as duas coisas que um serviço real pede: os bytes e
-        // uma URL alcançável. Devolver `null` seria "não consegui".
+        // O dublê recebe as duas coisas que um serviço real pede: os bytes,
+        // QUANDO existem, e uma URL. Imagem colada de outra página chega sem
+        // arquivo — e um serviço que trabalha por URL descreve os dois casos.
         await new Promise((r) => setTimeout(r, 50));
-        return src.startsWith('data:') ? `Descrição automática de ${file.name}` : null;
+        if (file) return `Descrição automática de ${file.name}`;
+        return `Descrição automática de ${src.slice(src.lastIndexOf('/') + 1)}`;
       },
     }),
   play: async ({ canvasElement, step }) => {
@@ -602,7 +622,7 @@ export const AiImageDescription: Story = {
     const root = canvasElement.querySelector('[data-slot="editor"]') as EditorRoot;
     root.editor.commands.setContent('<p>descrição automática</p>');
 
-    const arquivo = new File([new Uint8Array(8)], 'grafico.png', { type: 'image/png' });
+    const arquivo = new File([new Uint8Array([1, 2, 3])], 'grafico.png', { type: 'image/png' });
 
     await step('A imagem entra NA HORA, com o alt provisório', async () => {
       await expect(await root.insertImage(arquivo)).toBe(true);
@@ -617,17 +637,63 @@ export const AiImageDescription: Story = {
       // Espera de RELÓGIO, não `waitFor`: a condição aqui é leitura pura, mas o
       // laço com prazo é o que distingue "demorou" de "não veio" — `waitFor`
       // que nunca satisfaz pendura a aba sem reprovar.
-      const prazo = Date.now() + 3000;
-      let descrito = '';
-      while (Date.now() < prazo) {
-        descrito = root.querySelector('img')?.getAttribute('alt') ?? '';
-        if (descrito !== 'grafico.png') break;
-        await new Promise((r) => setTimeout(r, 50));
-      }
-      await expect(descrito).toBe('Descrição automática de grafico.png');
+      await esperarAlt(root, 'Descrição automática de grafico.png');
+    });
+
+    await step('COLAR e ARRASTAR arquivo passam pelo mesmo caminho', async () => {
+      const pm = root.querySelector('.ProseMirror') as HTMLElement;
+
+      // Medido antes de existir: colar arquivo não fazia NADA, e arrastar
+      // também não. Quem usa não descobre que há um botão para o que o resto da
+      // web resolve arrastando.
+      root.editor.commands.setContent('<p>colar</p>');
+      const areaColar = new DataTransfer();
+      areaColar.items.add(new File([new Uint8Array([4, 5, 6])], 'colada.png', { type: 'image/png' }));
+      pm.dispatchEvent(
+        new ClipboardEvent('paste', { clipboardData: areaColar, bubbles: true, cancelable: true }),
+      );
+      await esperarAlt(root, 'Descrição automática de colada.png');
+
+      root.editor.commands.setContent('<p>arrastar</p>');
+      const arrasto = new DataTransfer();
+      arrasto.items.add(new File([new Uint8Array([7, 8, 9])], 'solta.png', { type: 'image/png' }));
+      // COM coordenadas dentro do editor: o ProseMirror abandona o `drop` antes
+      // de chamar o gancho quando `posAtCoords` não resolve, e um evento
+      // sintético em (0, 0) cai fora da caixa. Medido — sem isto o teste
+      // acusaria "arrastar não funciona" com o código certo.
+      const caixaPm = pm.getBoundingClientRect();
+      pm.dispatchEvent(
+        new DragEvent('drop', {
+          dataTransfer: arrasto,
+          bubbles: true,
+          cancelable: true,
+          clientX: caixaPm.left + caixaPm.width / 2,
+          clientY: caixaPm.top + 10,
+        }),
+      );
+      await esperarAlt(root, 'Descrição automática de solta.png');
+    });
+
+    await step('Imagem COLADA de outra página também é descrita', async () => {
+      // Este era o caminho do relato: colar de um site insere `<img src>` sem
+      // `alt` nenhum, montado pelo ProseMirror a partir do HTML da área de
+      // transferência — sem passar pela fábrica. A varredura por `update` é o
+      // que o alcança, e ali não há arquivo: só o endereço.
+      root.editor.commands.setContent('<p>colada de fora</p>');
+      const pm = root.querySelector('.ProseMirror') as HTMLElement;
+      const area = new DataTransfer();
+      area.setData('text/html', '<img src="https://exemplo.com/diagrama.png">');
+      pm.dispatchEvent(
+        new ClipboardEvent('paste', { clipboardData: area, bubbles: true, cancelable: true }),
+      );
+      await esperarAlt(root, 'Descrição automática de diagrama.png');
     });
 
     await step('E a pessoa corrige o que a IA escreveu', async () => {
+      root.editor.commands.setContent('<p>correção</p>');
+      await expect(await root.insertImage(arquivo)).toBe(true);
+      await esperarAlt(root, 'Descrição automática de grafico.png');
+
       // O botão só existe com a imagem selecionada — é o mesmo desenho dos
       // botões de tabela.
       // A posição do nó vem de uma varredura, não de aritmética sobre o tamanho

@@ -190,9 +190,13 @@ export type EditorOptions = {
    * Escreve o texto alternativo a partir da imagem — o lugar de ligar um modelo
    * de visão, uma API de descrição, um serviço próprio.
    *
-   * Recebe o arquivo e o `src` já resolvido (nem todo serviço aceita bytes:
-   * muitos querem uma URL alcançável). Devolve a descrição, ou `null` para
-   * dizer "não consegui" — e aí o `alt` provisório continua onde está.
+   * Recebe o `src` já gravado no documento e o arquivo, QUANDO existe: imagem
+   * colada de outra página chega só como endereço, sem bytes nenhum. Serviço
+   * que precisa dos bytes devolve `null` nesse caso; serviço que aceita URL
+   * descreve os dois casos com o mesmo código.
+   *
+   * Devolve a descrição, ou `null` para dizer "não consegui" — e aí o `alt`
+   * continua como está.
    *
    * É chamado DEPOIS de inserir, nunca antes: descrever leva segundos e às
    * vezes falha, e prender a imagem esperando por isso trocaria uma lacuna de
@@ -203,7 +207,7 @@ export type EditorOptions = {
    * a imagem percebe na hora, e por isso o botão de texto alternativo aparece
    * com a imagem selecionada — a IA propõe, a pessoa confere.
    */
-  describeImage?: (file: File, src: string) => Promise<string | null>;
+  describeImage?: (file: File | null, src: string) => Promise<string | null>;
   labels: EditorLabels;
   class?: string;
 };
@@ -473,6 +477,12 @@ const PRESETS: Record<EditorPreset, Bloco[]> = {
  */
 const ESQUEMAS_DE_LINK = ['http', 'https', 'mailto'];
 
+/** Só os arquivos de imagem de uma área de transferência ou de um arrasto. */
+function imagensDe(dt: DataTransfer | null): File[] {
+  if (!dt) return [];
+  return Array.from(dt.files).filter((f) => f.type.startsWith("image/"));
+}
+
 function linkPermitido(url: string): boolean {
   try {
     // Sem base: endereço sem esquema estoura aqui, e é o que se quer — quem
@@ -625,9 +635,39 @@ export function createEditor(options: EditorOptions): EditorRoot {
       // explica por quê.
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
     ],
-    // O caminho suportado para escrever atributo no elemento editável: a lib
-    // recria esse nó, e `setAttribute` de fora seria desfeito.
-    editorProps: { attributes: { 'aria-label': labels.editorField } },
+    editorProps: {
+      // O caminho suportado para escrever atributo no elemento editável: a lib
+      // recria esse nó, e `setAttribute` de fora seria desfeito.
+      attributes: { 'aria-label': labels.editorField },
+
+      // Colar e ARRASTAR arquivo de imagem passam pelo mesmo caminho do botão —
+      // mesmo `resolveImage`, mesma descrição, mesmo `alt`. Sem isto, medido:
+      // colar arquivo não fazia nada e arrastar também não. Quem usa não sabe
+      // que existe um botão para uma coisa que o resto da web resolve
+      // arrastando.
+      handlePaste: (_view, evento) => {
+        const arquivos = imagensDe(evento.clipboardData);
+        if (arquivos.length === 0) return false;
+        for (const arquivo of arquivos) void inserirImagem(arquivo);
+        return true;
+      },
+
+      handleDrop: (view, evento, _slice, movido) => {
+        // `movido` é arrasto INTERNO — alguém remanejando o que já está no
+        // documento. Interceptar isso apagaria o recurso de reordenar.
+        if (movido) return false;
+        const arquivos = imagensDe((evento as DragEvent).dataTransfer);
+        if (arquivos.length === 0) return false;
+        // A imagem entra ONDE se soltou, não onde o cursor estava.
+        const alvo = view.posAtCoords({
+          left: (evento as DragEvent).clientX,
+          top: (evento as DragEvent).clientY,
+        });
+        if (alvo) editor.commands.setTextSelection(alvo.pos);
+        for (const arquivo of arquivos) void inserirImagem(arquivo);
+        return true;
+      },
+    },
     content: options.content ? DOMPurify.sanitize(options.content) : undefined,
   });
 
@@ -865,6 +905,10 @@ export function createEditor(options: EditorOptions): EditorRoot {
     botaoAlt?.setAttribute('aria-expanded', String(alt.aberta()));
   }
   editor.on('transaction', sincronizar);
+  // Imagem colada entra por fora da fábrica, então a varredura é o que a
+  // alcança. `update` e não `transaction`: só mudança de DOCUMENTO traz imagem
+  // nova, e `transaction` dispara também a cada movimento de cursor.
+  editor.on('update', descreverPendentes);
 
   for (const { grupo, acoes } of grupos) {
     for (const btn of grupo.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]')) {
@@ -914,19 +958,57 @@ export function createEditor(options: EditorOptions): EditorRoot {
     // tela sem deixar rastro.
     editor.chain().focus().setImage({ src, alt: arquivo.name }).run();
 
-    // A descrição é assíncrona e NÃO segura a inserção. Modelo de visão leva
-    // segundos e às vezes falha; prender a imagem esperando trocaria uma lacuna
-    // de acessibilidade por uma de responsividade.
-    if (descreverImagem) {
-      void descreverImagem(arquivo, src)
-        .then((descricao) => {
-          if (descricao) definirAltPorSrc(src, descricao);
-        })
-        // Falha de quem descreve não derruba a edição: a imagem já está lá com
-        // o `alt` provisório, e o botão de texto alternativo segue à mão.
-        .catch(() => {});
-    }
+    descrever(arquivo, src);
     return true;
+  }
+
+  /**
+   * Imagens já COM `src` e sem descrição — as que chegaram por colagem.
+   *
+   * Colar uma imagem de outra página insere `<img src>` sem `alt` nenhum, por
+   * um caminho que não passa pela fábrica: quem monta o nó é o próprio
+   * ProseMirror, a partir do HTML da área de transferência. Medido — era o
+   * caminho mais provável de quem usa, e o único que ficava de fora.
+   *
+   * O cache é por `src` e guarda a PROMESSA, não o fato de ter tentado. A
+   * diferença aparece na mesma imagem inserida duas vezes: com um conjunto de
+   * "já tentadas", a segunda ficava para sempre com o `alt` provisório, porque
+   * o pedido fora feito e o resultado tinha ido para a primeira. Guardando a
+   * promessa, a segunda cópia recebe a MESMA descrição sem um segundo pedido —
+   * mesma imagem, mesma descrição, uma chamada só ao serviço.
+   */
+  const descricoes = new Map<string, Promise<string | null>>();
+
+  function descrever(arquivo: File | null, src: string): void {
+    if (!descreverImagem) return;
+    let pedido = descricoes.get(src);
+    if (!pedido) {
+      // A descrição é assíncrona e NÃO segura a inserção. Modelo de visão leva
+      // segundos e às vezes falha; prender a imagem esperando trocaria uma
+      // lacuna de acessibilidade por uma de responsividade.
+      //
+      // A falha vira `null` aqui, e não uma promessa rejeitada: quem descreve
+      // não derruba a edição, e a imagem segue com o `alt` provisório e o botão
+      // de texto alternativo à mão.
+      pedido = descreverImagem(arquivo, src).catch(() => null);
+      descricoes.set(src, pedido);
+    }
+    void pedido.then((descricao) => {
+      if (descricao) definirAltPorSrc(src, descricao);
+    });
+  }
+
+  function descreverPendentes(): void {
+    if (!descreverImagem) return;
+    const pendentes: string[] = [];
+    editor.state.doc.descendants((node) => {
+      const { src, alt } = node.attrs as { src?: string; alt?: string };
+      // `descricoes.has` corta a reentrada: escrever o `alt` dispara outra
+      // atualização, e uma recusa não pode virar pedido a cada tecla digitada.
+      if (node.type.name === 'image' && src && !alt && !descricoes.has(src)) pendentes.push(src);
+    });
+    // Sem arquivo: a imagem colada de outra página tem endereço e nada mais.
+    for (const src of pendentes) descrever(null, src);
   }
 
   const alvoImagem = simples.find((s) => s.acao === 'image');
