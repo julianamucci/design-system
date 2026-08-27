@@ -94,6 +94,22 @@ function linhaDesenhada(root: HTMLElement, slot: string): boolean {
   return getComputedStyle(linha).display !== 'none';
 }
 
+/**
+ * A cor que um token vale nesta página, resolvida pelo navegador.
+ *
+ * A sonda é montada, lida e removida ANTES de qualquer asserção — nunca dentro
+ * de um `waitFor`. Condição que mexe no DOM reagenda o próprio `waitFor` por
+ * observador de mutação, e o prazo nunca chega: a aba trava sem reprovar.
+ */
+function corDoToken(root: HTMLElement, token: string): string {
+  const sonda = document.createElement('span');
+  sonda.style.color = `hsl(var(${token}))`;
+  root.appendChild(sonda);
+  const cor = getComputedStyle(sonda).color;
+  sonda.remove();
+  return cor;
+}
+
 export default meta;
 type Story = StoryObj<EditorArgs>;
 
@@ -177,6 +193,32 @@ export const Playground: Story = {
 
       root.editor.chain().setTextSelection(2).setParagraph().run();
       await expect(h2).toHaveAttribute('aria-pressed', 'false');
+    });
+
+    await step('Citação e bloco de código se distinguem do texto comum', async () => {
+      // Conteúdo escrito pela play, e não alternado por comando: `setContent` é
+      // idempotente, e o painel Interactions reexecuta no mesmo DOM.
+      root.editor.commands.setContent(
+        '<blockquote><p>citação</p></blockquote><pre><code>codigo()</code></pre>',
+      );
+
+      const primaria = corDoToken(root, '--primary');
+      const apoio = corDoToken(root, '--muted');
+
+      const citacao = root.querySelector('blockquote') as HTMLElement;
+      const estiloCitacao = getComputedStyle(citacao);
+      // A barra lateral é o sinal, e é ELA que carrega a cor da marca — o texto
+      // fica em --foreground, porque cor semântica em texto corrido não alcança
+      // os 4.5:1 que texto corrido exige.
+      await expect(estiloCitacao.borderInlineStartWidth).not.toBe('0px');
+      await expect(estiloCitacao.borderInlineStartColor).toBe(primaria);
+
+      const bloco = root.querySelector('pre') as HTMLElement;
+      await expect(getComputedStyle(bloco).backgroundColor).toBe(apoio);
+      // O <code> de dentro não repete o fundo: a lib sempre escreve
+      // <pre><code>, e dois realces encaixados apareceriam um dentro do outro.
+      const dentro = bloco.querySelector('code') as HTMLElement;
+      await expect(getComputedStyle(dentro).backgroundColor).toBe('rgba(0, 0, 0, 0)');
     });
 
     await step('Desfazer nasce indisponível e acende quando há o que desfazer', async () => {
@@ -269,8 +311,12 @@ export const Playground: Story = {
       // O que a play deixa é o que a pessoa VÊ ao abrir a story, e é o que o
       // Chromatic fotografa. Sem isto, a última coisa na tela era o comando
       // inválido do teste — que não explica nada a quem chega pela sidebar.
-      root.editor.commands.setContent('<p>massa e energia</p>');
-      root.editor.chain().insertInlineMath({ latex: 'E = mc^2' }).run();
+      root.editor.commands.setContent(
+        '<p>massa e energia</p>'
+          + '<blockquote><p>A citação leva barra lateral na cor da marca.</p></blockquote>'
+          + '<pre><code>const c = 299792458;</code></pre>',
+      );
+      root.editor.chain().setTextSelection(2).insertInlineMath({ latex: 'E = mc^2' }).run();
       await expect(root.querySelector('.inline-math-error')).toBeNull();
       await expect(root.querySelectorAll('[data-type="inline-math"]')).toHaveLength(1);
     });
