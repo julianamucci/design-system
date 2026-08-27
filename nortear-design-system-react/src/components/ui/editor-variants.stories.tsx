@@ -6,7 +6,7 @@ import {
   ADVANCED_CONTENT,
   BASIC_CONTENT,
   EditorCanvas,
-  LABELS,
+  editorLabels,
   editorHandle,
 } from './editor.fixtures';
 
@@ -28,9 +28,10 @@ const meta = {
       },
     },
   },
-  // `labels` é a única prop obrigatória, e é a mesma nas três stories: sem ela
-  // a barra não tem nome acessível nenhum. Declarada no meta, cada story herda.
-  args: { labels: LABELS },
+  // Os rótulos vêm do conteúdo compartilhado, no idioma corrente: `labels` é
+  // prop OBRIGATÓRIA e por isso está nos args, mas quem a resolve na tela é o
+  // canvas — args são avaliados na carga do módulo e não veem troca de idioma.
+  args: { labels: editorLabels() },
 } satisfies Meta<typeof Editor>;
 
 export default meta;
@@ -66,13 +67,14 @@ export const Basic: Story = {
       },
     },
   },
-  render: () => <EditorCanvas preset="basic" content={BASIC_CONTENT} labels={LABELS} />,
+  render: () => <EditorCanvas preset="basic" content={BASIC_CONTENT} />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const toolbar = canvas.getByRole('toolbar', { name: LABELS.toolbar });
+    const L = editorLabels();
+    const toolbar = canvas.getByRole('toolbar', { name: L.toolbar });
 
     await step('Só os blocos do conjunto básico, na ordem, com divisória entre eles', async () => {
-      await expect(groupNames(toolbar)).toEqual([LABELS.groups.marks, LABELS.groups.lists]);
+      await expect(groupNames(toolbar)).toEqual([L.groups.marks, L.groups.lists]);
       await expect(actionOrder(toolbar)).toEqual(['link', 'undo', 'redo', 'formula']);
       // Quatro blocos, três divisórias: marcas · listas · ações · fórmula.
       await expect(dividerCount(toolbar)).toBe(3);
@@ -80,10 +82,10 @@ export const Basic: Story = {
 
     await step('O que o conjunto avançado acrescenta não está aqui', async () => {
       for (const name of [
-        LABELS.actions.h1,
-        LABELS.actions.table,
-        LABELS.actions.image,
-        LABELS.actions.highlight,
+        L.actions.h1,
+        L.actions.table,
+        L.actions.image,
+        L.actions.highlight,
       ]) {
         await expect(canvas.queryByRole('button', { name })).toBeNull();
       }
@@ -111,18 +113,19 @@ export const Advanced: Story = {
       },
     },
   },
-  render: () => <EditorCanvas preset="advanced" content={ADVANCED_CONTENT} labels={LABELS} />,
+  render: () => <EditorCanvas preset="advanced" content={ADVANCED_CONTENT} />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const toolbar = canvas.getByRole('toolbar', { name: LABELS.toolbar });
+    const L = editorLabels();
+    const toolbar = canvas.getByRole('toolbar', { name: L.toolbar });
 
     await step('Os blocos saem na ordem contratada, um por assunto', async () => {
       await expect(groupNames(toolbar)).toEqual([
-        LABELS.groups.marks,
-        LABELS.groups.headings,
-        LABELS.groups.align,
-        LABELS.groups.lists,
-        LABELS.groups.blocks,
+        L.groups.marks,
+        L.groups.headings,
+        L.groups.align,
+        L.groups.lists,
+        L.groups.blocks,
       ]);
       // Tudo que é de imagem fica JUNTO, e tudo que é de tabela também. Antes,
       // "linha divisória", "desfazer" e o botão de tabela caíam ENTRE o de

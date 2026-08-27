@@ -5,9 +5,8 @@ import {
   ADVANCED_CONTENT,
   BASIC_CONTENT,
   DO_DONT_CONTENT,
-  LABELS,
-  NOUN_LABELS,
   PLAYGROUND_CONTENT,
+  useEditorLabels,
 } from "@/components/ui/editor.fixtures";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
@@ -36,14 +35,19 @@ import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes"
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 //
-// Sem overrides: o `translations.json` do editor descreve a API em nomenclatura
-// neutra, e nesta stack os nomes coincidem — `content`, `editable`, `preset`,
-// `labels`, `onChange`, `resolveImage`, `describeImage`.
+// O `translations.json` do editor descreve a API em nomenclatura NEUTRA, e nesta
+// stack os nomes coincidem em seis das sete props — `content`, `editable`,
+// `preset`, `labels`, `resolveImage`, `describeImage`. A sétima é o callback de
+// mudança, que o conteúdo não pode nomear: cada stack o chama de um jeito.
+// Override é exatamente para isso, e vale para os três idiomas: nome de prop não
+// se traduz.
 //
-// Os 38 RÓTULOS de ação não têm chave no conteúdo compartilhado (só os quatro
-// controles da demonstração têm). Enquanto não tiverem, a página usa os mesmos
-// rótulos das stories, e o único que troca de idioma é o nome acessível da área
-// editável.
+// Objeto de MÓDULO, e não literal no corpo do componente: `useTranslation` o
+// recebe na lista de dependências do `useMemo` que achata o dicionário, e um
+// literal novo a cada renderização reachataria as 373 chaves em cada desenho.
+const PROP_OVERRIDES = {
+  "*": { "props.table.onChange.name": "onChange" },
+};
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -64,13 +68,17 @@ const PROP_KEYS = [
   "describeImage",
 ];
 
-/** Chaves da tabela de tokens, agrupadas por assunto. */
-const TOKEN_GROUPS: Array<{ titleKey: string; keys: string[] }> = [
-  { titleKey: "tokens.surfaceTitle", keys: ["border", "background", "muted", "ring"] },
-  {
-    titleKey: "tokens.contentTitle",
-    keys: ["foreground", "mutedForeground", "primary", "accent", "textH1"],
-  },
+/** Chaves da tabela de tokens, na ordem em que o conteúdo as declara. */
+const TOKEN_KEYS = [
+  "border",
+  "background",
+  "muted",
+  "mutedForeground",
+  "foreground",
+  "primary",
+  "accent",
+  "ring",
+  "textH1",
 ];
 
 /** Estados descritos pelo conteúdo compartilhado, na ordem em que ele os lista. */
@@ -143,7 +151,7 @@ const getNavGroups = (t: (key: string) => string) => [
 
 export function EditorDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
-  const { t: tContent, locale } = useTranslation(editorTranslations);
+  const { t: tContent, locale } = useTranslation(editorTranslations, PROP_OVERRIDES);
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -200,16 +208,38 @@ export function EditorDocs() {
   const [demoPreset, setDemoPreset] = useState<"basic" | "advanced">("advanced");
   const [demoEditable, setDemoEditable] = useState(true);
 
+  // Os 51 rótulos da barra, do conteúdo compartilhado, no idioma da página.
+  // Antes vinham de um objeto local em pt-BR: a página trocava de idioma e a
+  // interface que ela demonstra ficava em português.
+  const barLabels = useEditorLabels();
+
   /**
-   * Editor de preview, com os rótulos das stories e o nome do campo traduzido.
+   * Os mesmos rótulos com o SUBSTANTIVO no lugar do verbo — o "não faça" do
+   * primeiro par de Do & Don't.
+   *
+   * Uma ação só muda, e de propósito: a comparação precisa de uma variável só.
+   * Os dois textos moram no conteúdo (`labels.actions.link` e
+   * `labels.nouns.link`), então o par contrasta em cada idioma o que o texto do
+   * par afirma — e não uma tradução inventada aqui.
+   */
+  const nounLabels = useMemo<EditorLabels>(
+    () => ({
+      ...barLabels,
+      actions: { ...barLabels.actions, link: tContent("labels.nouns.link") },
+    }),
+    [barLabels, tContent],
+  );
+
+  /**
+   * Editor de preview, com os rótulos do conteúdo e o nome do campo traduzido.
    *
    * Toda instância desta página passa por aqui: são vários editores na mesma
    * página (demonstração, dois pares de Do & Don't, dois cards de conjunto), e
-   * cada um precisa dos 38 rótulos para montar a barra.
+   * cada um precisa dos 51 rótulos para montar a barra.
    */
   const previewEditor = useCallback(
     (props: Omit<EditorProps, "labels" | "ref"> & { labels?: EditorLabels }) => {
-      const base = props.labels ?? LABELS;
+      const base = props.labels ?? barLabels;
       return (
         <Editor
           {...props}
@@ -218,7 +248,7 @@ export function EditorDocs() {
         />
       );
     },
-    [tContent],
+    [barLabels, tContent],
   );
 
   /** Um controle da demonstração. O evento sai do próprio botão. */
@@ -306,19 +336,24 @@ export function EditorDocs() {
       />
 
       {/* ── Quando Usar ─────────────────────────────────────────────── */}
-      {/* O conteúdo compartilhado do editor traz `guidelines` como parágrafo e
-          `scenarios` como frases soltas — sem título de bloco e sem rótulo de
-          coluna. Os seis textos entram na mesma lista, na ordem em que o
-          conteúdo os declara; inventar título aqui deixaria a página em
-          português nos três idiomas. */}
       <DocsWhenToUse
         title={tContent("usage.title")}
         guidelines={{
-          items: [
-            tContent("usage.guidelines"),
-            ...[1, 2, 3, 4].map((i) => tContent(`usage.scenarios.item${i}`)),
-            tContent("usage.uxWriting"),
-          ],
+          title: tContent("usage.guidelines.title"),
+          items: [1, 2, 3, 4, 5].map((i) => tContent(`usage.guidelines.item${i}`)),
+        }}
+        scenarios={{
+          title: tContent("usage.scenarios.title"),
+          cols: {
+            scenario: tContent("usage.scenarios.cols.scenario"),
+            use: tContent("usage.scenarios.cols.use"),
+            alternative: tContent("usage.scenarios.cols.alternative"),
+          },
+          items: [1, 2, 3, 4, 5, 6].map((i) => ({
+            s: tContent(`usage.scenarios.item${i}.s`),
+            u: tContent(`usage.scenarios.item${i}.u`),
+            a: tContent(`usage.scenarios.item${i}.a`),
+          })),
         }}
         do={{
           title: tNav("common.do"),
@@ -339,19 +374,22 @@ export function EditorDocs() {
             dontLabel: tNav("common.dont"),
             doCaption: toPlainText(tContent("doDont.pair1.do")),
             dontCaption: toPlainText(tContent("doDont.pair1.dont")),
-            // Os dois editores são o MESMO conjunto e o MESMO conteúdo: só os
-            // rótulos de "link" e "tabela" mudam, porque é deles que o par
-            // fala. Trocar qualquer outra coisa daria à comparação uma segunda
-            // variável.
+            // Os dois editores são o MESMO conjunto e o MESMO conteúdo: só o
+            // rótulo do botão de link muda, porque é dele que o par fala —
+            // "Inserir link" contra "Link". Trocar qualquer outra coisa daria à
+            // comparação uma segunda variável.
+            //
+            // O link, e não a tabela: o botão de tabela não existe no conjunto
+            // básico, então o contra-exemplo não teria como ser renderizado.
             doPreview: previewEditor({
               content: BASIC_CONTENT,
               preset: "basic",
-              labels: LABELS,
+              labels: barLabels,
             }),
             dontPreview: previewEditor({
               content: BASIC_CONTENT,
               preset: "basic",
-              labels: NOUN_LABELS,
+              labels: nounLabels,
             }),
           },
           {
@@ -396,21 +434,18 @@ export function EditorDocs() {
       />
 
       {/* ── Estados ─────────────────────────────────────────────────── */}
-      {/* Duas colunas, e não três: o conteúdo compartilhado do editor declara
-          só `state` e `description` em `states.cols`. */}
       <DocsStates
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.description"),
+          trigger: tContent("states.cols.trigger"),
+          behavior: tContent("states.cols.behavior"),
         }}
-        items={STATE_KEYS.map((key) => {
-          const full = toPlainText(tContent(`states.${key}`));
-          const dash = full.indexOf(" — ");
-          return dash < 0
-            ? { label: full, trigger: "" }
-            : { label: full.slice(0, dash), trigger: full.slice(dash + 3) };
-        })}
+        items={STATE_KEYS.map((key) => ({
+          label: tContent(`states.${key}.label`),
+          trigger: tContent(`states.${key}.trigger`),
+          behavior: toPlainText(tContent(`states.${key}.behavior`)),
+        }))}
       />
 
       {/* ── Propriedades ────────────────────────────────────────────── */}
@@ -445,16 +480,14 @@ export function EditorDocs() {
         title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
-          value: tContent("tokens.surfaceTitle"),
-          description: tContent("tokens.table.usage"),
+          value: tContent("tokens.table.value"),
+          description: tContent("tokens.table.description"),
         }}
-        items={TOKEN_GROUPS.flatMap((group) =>
-          group.keys.map((key) => ({
-            token: tContent(`tokens.table.${key}.name`),
-            value: tContent(group.titleKey),
-            description: tContent(`tokens.table.${key}.usage`),
-          })),
-        )}
+        items={TOKEN_KEYS.map((key) => ({
+          token: tContent(`tokens.table.${key}.token`),
+          value: tContent(`tokens.table.${key}.value`),
+          description: tContent(`tokens.table.${key}.description`),
+        }))}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={tContent("tokens.customizationCode")}
       />

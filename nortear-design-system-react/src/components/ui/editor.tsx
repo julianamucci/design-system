@@ -1263,8 +1263,21 @@ export function Editor({
     imageAlt: 'alt',
   };
 
+  /**
+   * Com a edição desligada, a barra DEIXA DE AGIR.
+   *
+   * A guarda é aqui, e não na lib: `editor.commands` continua funcionando num
+   * editor em leitura — `editable` vale para o que o teclado e o ponteiro fazem
+   * no CAMPO, não para comando disparado por código. Medido: clicar em negrito
+   * numa demonstração somente-leitura ligava a marca guardada e acendia o botão
+   * sem mudar uma vírgula do HTML, contradizendo o que `states.readOnly`
+   * promete — e o defeito ficava invisível para quem só olha o texto.
+   *
+   * Um ponto só porque a barra tem um despachante só: alternadores e botões
+   * simples passam ambos por aqui, e as três linhas de entrada só abrem daqui.
+   */
   const runAction = (action: EditorAction): void => {
-    if (!editor) return;
+    if (!editor || !editable) return;
     const row = rowOf[action];
     if (row) {
       setOpenRow(openRow === row ? null : row);

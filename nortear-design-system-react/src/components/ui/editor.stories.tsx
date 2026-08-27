@@ -4,7 +4,7 @@ import { Editor } from './editor';
 import { editorSource } from './editor.source';
 import {
   EditorCanvas,
-  LABELS,
+  editorLabels,
   PLAYGROUND_CONTENT,
   closeRow,
   editorHandle,
@@ -90,7 +90,11 @@ const meta = {
     content: PLAYGROUND_CONTENT,
     editable: true,
     preset: 'advanced',
-    labels: LABELS,
+    // `labels` está aqui porque é prop OBRIGATÓRIA, e é a API Reference que a
+    // documenta — não porque o render a consuma. Quem resolve os rótulos é o
+    // canvas, lendo o conteúdo compartilhado no idioma CORRENTE: os args são
+    // avaliados uma vez, na carga do módulo, e não veriam a troca de idioma.
+    labels: editorLabels(),
     onChange: fn(),
   },
 } satisfies Meta<typeof Editor>;
@@ -118,7 +122,6 @@ export const Playground: Story = {
       content={args.content}
       editable={args.editable}
       preset={args.preset}
-      labels={args.labels}
       onChange={args.onChange}
     />
   ),
@@ -127,6 +130,9 @@ export const Playground: Story = {
     const handle = editorHandle(canvasElement);
     const editor = handle.editor!;
     const root = handle.root!;
+    // Do conteúdo compartilhado, no idioma corrente — a mesma leitura que o
+    // canvas faz para desenhar a barra.
+    const L = editorLabels();
 
     // A play parte de um documento CONHECIDO, escrito por ela.
     //
@@ -136,8 +142,8 @@ export const Playground: Story = {
     editor.commands.setContent('<p>massa e energia</p>');
 
     await step('A barra se anuncia, e cada bloco tem nome próprio', async () => {
-      await expect(canvas.getByRole('toolbar', { name: LABELS.toolbar })).toBeInTheDocument();
-      for (const name of [LABELS.groups.marks, LABELS.groups.headings, LABELS.groups.lists]) {
+      await expect(canvas.getByRole('toolbar', { name: L.toolbar })).toBeInTheDocument();
+      for (const name of [L.groups.marks, L.groups.headings, L.groups.lists]) {
         await expect(canvas.getByRole('group', { name })).toBeInTheDocument();
       }
     });
@@ -146,17 +152,17 @@ export const Playground: Story = {
       // A lib dá `role="textbox"` ao elemento editável, e campo com papel de
       // campo e sem nome é violação de nome acessível de campo. Não há rótulo
       // visível a que apontar: a moldura inteira é o campo.
-      const field = canvas.getByRole('textbox', { name: LABELS.editorField });
+      const field = canvas.getByRole('textbox', { name: L.editorField });
       await expect(field).toHaveClass('ProseMirror');
     });
 
     await step('Uma parada de tabulação só, e as setas ATRAVESSAM os grupos', async () => {
-      const toolbar = canvas.getByRole('toolbar', { name: LABELS.toolbar });
+      const toolbar = canvas.getByRole('toolbar', { name: L.toolbar });
       const stops = Array.from(toolbar.querySelectorAll('button')).filter((b) => b.tabIndex === 0);
       await expect(stops).toHaveLength(1);
 
-      const boldButton = canvas.getByRole('button', { name: LABELS.actions.bold });
-      const italicButton = canvas.getByRole('button', { name: LABELS.actions.italic });
+      const boldButton = canvas.getByRole('button', { name: L.actions.bold });
+      const italicButton = canvas.getByRole('button', { name: L.actions.italic });
       boldButton.focus();
       await userEvent.keyboard('{ArrowRight}');
       await expect(italicButton).toHaveFocus();
@@ -166,8 +172,8 @@ export const Playground: Story = {
       // O salto que importa: do último botão do grupo de marcas para o primeiro
       // do grupo de títulos. É por isso que os grupos são `role="group"` — com
       // barra dentro de barra, a navegação morreria na borda do primeiro grupo.
-      const lastMarkButton = canvas.getByRole('button', { name: LABELS.actions.highlight });
-      const headingOne = canvas.getByRole('button', { name: LABELS.actions.h1 });
+      const lastMarkButton = canvas.getByRole('button', { name: L.actions.highlight });
+      const headingOne = canvas.getByRole('button', { name: L.actions.h1 });
       lastMarkButton.focus();
       await userEvent.keyboard('{ArrowRight}');
       await expect(headingOne).toHaveFocus();
@@ -178,7 +184,7 @@ export const Playground: Story = {
     });
 
     await step('Os botões refletem o estado do EDITOR, não o próprio clique', async () => {
-      const boldButton = canvas.getByRole('button', { name: LABELS.actions.bold });
+      const boldButton = canvas.getByRole('button', { name: L.actions.bold });
       // Sem clique nenhum: a marca é ligada pela instância, e o botão tem de
       // acender. É o que distingue uma barra presa ao editor de uma com estado
       // próprio.
@@ -195,8 +201,8 @@ export const Playground: Story = {
     });
 
     await step('Título é escolha única: ligar o H2 desliga o H1', async () => {
-      const h1 = canvas.getByRole('button', { name: LABELS.actions.h1 });
-      const h2 = canvas.getByRole('button', { name: LABELS.actions.h2 });
+      const h1 = canvas.getByRole('button', { name: L.actions.h1 });
+      const h2 = canvas.getByRole('button', { name: L.actions.h2 });
       // CURSOR, não `selectAll`. A barra reflete o bloco onde o cursor está, e
       // `selectAll` abrange também o parágrafo vazio que a lib mantém no fim do
       // documento: com dois blocos de tipos diferentes na seleção, `isActive`
@@ -225,12 +231,12 @@ export const Playground: Story = {
     await step('O link só aceita esquema da lista, e vazio desfaz', async () => {
       editor.commands.setContent('<p>massa e energia</p>');
 
-      const open = canvas.getByRole('button', { name: LABELS.actions.link });
+      const open = canvas.getByRole('button', { name: L.actions.link });
       await expect(rowIsPainted(root, 'editor-link')).toBe(false);
       await openRow(open);
       await expect(rowIsPainted(root, 'editor-link')).toBe(true);
 
-      const field = canvas.getByRole('textbox', { name: LABELS.fields.link });
+      const field = canvas.getByRole('textbox', { name: L.fields.link });
       await expect(field).toHaveFocus();
 
       // `javascript:` é o caso que a lista de esquemas existe para barrar. O
@@ -260,7 +266,7 @@ export const Playground: Story = {
 
       // O botão de tirar só existe quando há link — botão que não faz nada é
       // ruído, e desabilitado seria pior: anuncia a ação e nega em seguida.
-      const unlink = canvas.getByRole('button', { name: LABELS.fields.linkRemove });
+      const unlink = canvas.getByRole('button', { name: L.fields.linkRemove });
       await expect(getComputedStyle(unlink).display).not.toBe('none');
       await userEvent.click(unlink);
       await expect(root.querySelector('a')).toBeNull();
@@ -282,15 +288,15 @@ export const Playground: Story = {
     });
 
     await step('A fórmula entra pelo botão e é renderizada pelo KaTeX', async () => {
-      const open = canvas.getByRole('button', { name: LABELS.actions.formula });
+      const open = canvas.getByRole('button', { name: L.actions.formula });
       await expect(open).toHaveAttribute('aria-expanded', 'false');
       await openRow(open);
       await expect(rowIsPainted(root, 'editor-formula')).toBe(true);
 
-      const field = canvas.getByRole('textbox', { name: LABELS.fields.formula });
+      const field = canvas.getByRole('textbox', { name: L.fields.formula });
       await expect(field).toHaveFocus();
       await userEvent.type(field, 'E = mc^2');
-      await userEvent.click(canvas.getByRole('button', { name: LABELS.fields.formulaConfirm }));
+      await userEvent.click(canvas.getByRole('button', { name: L.fields.formulaConfirm }));
 
       const formulas = root.querySelectorAll('[data-type="inline-math"]');
       await expect(formulas).toHaveLength(1);
@@ -336,9 +342,9 @@ export const Playground: Story = {
     });
 
     await step('LaTeX inválido não some: fica visível e marcado como erro', async () => {
-      const open = canvas.getByRole('button', { name: LABELS.actions.formula });
+      const open = canvas.getByRole('button', { name: L.actions.formula });
       await openRow(open);
-      const field = canvas.getByRole('textbox', { name: LABELS.fields.formula });
+      const field = canvas.getByRole('textbox', { name: L.fields.formula });
       // Sem chaves de propósito: no `userEvent.type`, `{` abre descritor de
       // tecla, e um LaTeX cheio de chaves testaria mais a escapagem do teclado
       // sintético que o editor. Comando inexistente erra igual.

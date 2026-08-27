@@ -9,88 +9,48 @@
 // Fica fora dos `*.stories.tsx` porque no CSF TODO export nomeado é lido como
 // story: `export const LABELS` num arquivo de story apareceria na sidebar.
 
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { userEvent, expect } from 'storybook/test';
 import { Editor, type EditorHandle, type EditorLabels, type EditorProps } from './editor';
+import { useI18nStore, type Locale } from '@/lib/i18n';
+import editorTranslations from '@shared/content/editor/translations.json';
 
 /**
- * Rótulos da barra.
+ * Os rótulos da barra vêm do CONTEÚDO COMPARTILHADO, nos três idiomas.
  *
  * Todos os botões são só de ícone, então o rótulo É o nome acessível: é ele que
- * o leitor de tela anuncia, e é por ele que a play encontra cada botão. O verbo
- * da ação vem antes do nome da marcação — "Inserir tabela" diz o que acontece,
- * "Tabela" não.
+ * o leitor de tela anuncia, e é por ele que a play encontra cada botão. Até
+ * 2026-08-27 esta constante era um objeto local em pt-BR, e a barra aparecia em
+ * português também em en e es — a página trocava de idioma e a interface que ela
+ * demonstra, não.
+ *
+ * A anotação de tipo é o portão: `labels` é lido como `EditorLabels` em cada um
+ * dos três idiomas, então rótulo que sumir do JSON — ou idioma que ficar para
+ * trás — reprova no `tsc`, e não na tela.
  */
-export const LABELS: EditorLabels = {
-  toolbar: 'Formatação',
-  editorField: 'Corpo do texto',
-  groups: {
-    marks: 'Marcas de texto',
-    headings: 'Títulos',
-    align: 'Alinhamento',
-    lists: 'Listas',
-    blocks: 'Blocos',
-    actions: 'Ações',
-    table: 'Tabela',
-  },
-  actions: {
-    bold: 'Negrito',
-    italic: 'Itálico',
-    underline: 'Sublinhado',
-    strike: 'Tachado',
-    code: 'Código',
-    highlight: 'Destaque',
-    h1: 'Título 1',
-    h2: 'Título 2',
-    h3: 'Título 3',
-    alignLeft: 'Alinhar à esquerda',
-    alignCenter: 'Centralizar',
-    alignRight: 'Alinhar à direita',
-    alignJustify: 'Justificar',
-    bulletList: 'Lista com marcadores',
-    orderedList: 'Lista numerada',
-    taskList: 'Lista de tarefas',
-    blockquote: 'Citação',
-    codeBlock: 'Bloco de código',
-    link: 'Link',
-    image: 'Inserir imagem',
-    imageAlt: 'Texto alternativo',
-    imageSmaller: 'Diminuir a imagem',
-    imageLarger: 'Aumentar a imagem',
-    imageNatural: 'Tamanho natural',
-    table: 'Inserir tabela',
-    horizontalRule: 'Linha divisória',
-    undo: 'Desfazer',
-    redo: 'Refazer',
-    formula: 'Inserir fórmula',
-    rowAfter: 'Inserir linha abaixo',
-    columnAfter: 'Inserir coluna à direita',
-    deleteRow: 'Excluir linha',
-    deleteColumn: 'Excluir coluna',
-    headerRow: 'Alternar linha de cabeçalho',
-    deleteTable: 'Excluir tabela',
-  },
-  fields: {
-    formula: 'Fórmula em LaTeX',
-    formulaConfirm: 'Inserir',
-    link: 'Endereço do link',
-    linkConfirm: 'Aplicar',
-    linkRemove: 'Tirar o link',
-    alt: 'Descrição da imagem',
-    altConfirm: 'Salvar descrição',
-  },
-};
+const CONTENT: Record<Locale, { labels: EditorLabels }> = editorTranslations;
+
+/** Os rótulos de um idioma. */
+export function editorLabelsFor(locale: Locale): EditorLabels {
+  return CONTENT[locale].labels;
+}
 
 /**
- * Os mesmos rótulos com o SUBSTANTIVO no lugar do verbo — o "não faça" do
- * primeiro par de Do & Don't.
+ * Os rótulos fora do React — `args` e `play` não são componente.
  *
- * Só duas ações mudam, e de propósito: a comparação precisa de uma variável só.
+ * Lê a MESMA store de locale que o `useTranslation` da página (mesmo padrão de
+ * `sheet.stories.tsx`), então o rótulo que a play procura é sempre o que a barra
+ * mostra.
  */
-export const NOUN_LABELS: EditorLabels = {
-  ...LABELS,
-  actions: { ...LABELS.actions, table: 'Tabela', link: 'Link' },
-};
+export function editorLabels(): EditorLabels {
+  return editorLabelsFor(useI18nStore.getState().locale);
+}
+
+/** A versão reativa, para dentro do render e da docs page. */
+export function useEditorLabels(): EditorLabels {
+  const locale = useI18nStore((state) => state.locale);
+  return useMemo(() => editorLabelsFor(locale), [locale]);
+}
 
 /** Um PNG de 1×1 transparente, escrito byte a byte — nada baixado. */
 export const DOT_PNG_BASE64 =
@@ -205,13 +165,21 @@ export function editorHandle(canvasElement: HTMLElement): EditorHandle {
  * O editor é `width: 100%`, e sob `layout: 'padded'` o container do canvas já
  * tem largura definida — o wrapper só declara que a caixa ocupa tudo.
  */
-export function EditorCanvas(props: Omit<EditorProps, 'ref'>) {
+export function EditorCanvas({
+  labels,
+  ...props
+}: Omit<EditorProps, 'ref' | 'labels'> & { labels?: EditorLabels }) {
   const register = useCallback((handle: EditorHandle | null) => {
     if (handle?.root) handles.set(handle.root, handle);
   }, []);
+  // Sem `labels` explícitos, o canvas resolve os do idioma CORRENTE: quem troca
+  // de idioma no seletor da página vê a barra trocar junto. A story que precisa
+  // de um rótulo diferente do contrato — o "não faça" do Do & Don't — continua
+  // passando o seu.
+  const fallback = useEditorLabels();
   return (
     <div className="nds-w-full">
-      <Editor {...props} ref={register} />
+      <Editor {...props} labels={labels ?? fallback} ref={register} />
     </div>
   );
 }

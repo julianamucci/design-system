@@ -23,21 +23,28 @@ export interface DocsWhenToUseUXRow {
 }
 
 /**
- * `guidelines.title` e o bloco `scenarios` são opcionais porque nem todo
- * conteúdo compartilhado os declara: o do editor traz `usage.guidelines` como
- * parágrafo e `usage.scenarios.itemN` como frases soltas, sem rótulo de coluna
- * e sem título de bloco. Com os dois obrigatórios, a página teria de inventar
- * rótulo — e rótulo inventado numa docs page trilíngue fica em português nos
- * três idiomas. Com o título e o bloco presentes, nada muda para as páginas
- * existentes.
+ * `guidelines.title` e o bloco `scenarios` são OBRIGATÓRIOS: título de bloco
+ * mais tabela de cenários é a forma que o conteúdo compartilhado pratica.
+ *
+ * Em 2026-08-27 os dois ficaram opcionais por um dia, para acomodar o conteúdo
+ * do editor, que trazia as guidelines como parágrafo solto e os cenários como
+ * frases sem coluna. Quatro dev-agents afrouxaram este mesmo contrato em
+ * paralelo, sem se ver — e o diagnóstico é justamente esse: o desvio estava no
+ * conteúdo, não na leitura de cada um. Afrouxado, o container passava a aceitar
+ * "Quando usar" sem cenário nenhum em qualquer componente NOVO, e nenhum portão
+ * reclamaria. Corrigido o conteúdo (`f5f2ef555`), o contrato volta ao que as 66
+ * páginas já praticam.
+ *
+ * `uxWriting` continua opcional, e sempre foi: é seção que só alguns
+ * componentes têm.
  */
 export interface DocsWhenToUseProps {
   title: string;
   guidelines: {
-    title?: string;
+    title: string;
     items: string[];
   };
-  scenarios?: {
+  scenarios: {
     title?: string;
     cols: { scenario: string; use: string; alternative: string };
     items: DocsWhenToUseScenario[];
@@ -59,9 +66,7 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
 
         {/* Guidelines */}
         <Card className="nds-bg-muted-soft nds-border-soft nds-p-4 nds-stack" data-spacing="sm">
-          {guidelines.title && (
-            <h3 className="nds-font-medium nds-text-body">{guidelines.title}</h3>
-          )}
+          <h3 className="nds-font-medium nds-text-body">{guidelines.title}</h3>
           <ul className="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
             {guidelines.items.map((item, i) => (
               <li key={i} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item) }} />
@@ -69,29 +74,27 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
           </ul>
         </Card>
 
-        {/* Cenários (opcional) */}
-        {scenarios && (
-          <Card className="nds-overflow-x nds-p-4">
-            <Table className="nds-w-full nds-border-collapse nds-text-body">
-              <TableHeader>
-                <TableRow className="nds-border-b nds-bg-muted-soft nds-font-medium">
-                  <TableHead className="nds-p-2">{scenarios.cols.scenario}</TableHead>
-                  <TableHead className="nds-p-2">{scenarios.cols.use}</TableHead>
-                  <TableHead className="nds-p-2">{scenarios.cols.alternative}</TableHead>
+        {/* Cenários */}
+        <Card className="nds-overflow-x nds-p-4">
+          <Table className="nds-w-full nds-border-collapse nds-text-body">
+            <TableHeader>
+              <TableRow className="nds-border-b nds-bg-muted-soft nds-font-medium">
+                <TableHead className="nds-p-2">{scenarios.cols.scenario}</TableHead>
+                <TableHead className="nds-p-2">{scenarios.cols.use}</TableHead>
+                <TableHead className="nds-p-2">{scenarios.cols.alternative}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {scenarios.items.map((item, i) => (
+                <TableRow key={i} className="nds-border-b nds-hover-bg-muted-faint">
+                  <TableCell className="nds-p-2">{item.s}</TableCell>
+                  <TableCell className="nds-p-2 nds-font-medium nds-text-primary">{item.u}</TableCell>
+                  <TableCell className="nds-p-2 nds-text-muted-foreground">{item.a}</TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {scenarios.items.map((item, i) => (
-                  <TableRow key={i} className="nds-border-b nds-hover-bg-muted-faint">
-                    <TableCell className="nds-p-2">{item.s}</TableCell>
-                    <TableCell className="nds-p-2 nds-font-medium nds-text-primary">{item.u}</TableCell>
-                    <TableCell className="nds-p-2 nds-text-muted-foreground">{item.a}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Card>
-        )}
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
 
         {/* UX Writing */}
         {uxWriting && (

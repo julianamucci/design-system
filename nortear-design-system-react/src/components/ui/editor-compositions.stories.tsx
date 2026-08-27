@@ -10,7 +10,7 @@ import {
   AI_DESCRIPTION_CONTENT,
   CUSTOM_STORAGE_CONTENT,
   EditorCanvas,
-  LABELS,
+  editorLabels,
   createPngFile,
   describeWithFakeAi,
   editorHandle,
@@ -38,9 +38,10 @@ const meta = {
       },
     },
   },
-  // `labels` é a única prop obrigatória, e é a mesma nas três stories: sem ela
-  // a barra não tem nome acessível nenhum. Declarada no meta, cada story herda.
-  args: { labels: LABELS },
+  // Os rótulos vêm do conteúdo compartilhado, no idioma corrente: `labels` é
+  // prop OBRIGATÓRIA e por isso está nos args, mas quem a resolve na tela é o
+  // canvas — args são avaliados na carga do módulo e não veem troca de idioma.
+  args: { labels: editorLabels() },
 } satisfies Meta<typeof Editor>;
 
 export default meta;
@@ -59,7 +60,6 @@ export const CustomImageStorage: Story = {
   render: () => (
     <EditorCanvas
       content={CUSTOM_STORAGE_CONTENT}
-      labels={LABELS}
       resolveImage={resolveToCdn}
     />
   ),
@@ -98,7 +98,6 @@ export const AiImageDescription: Story = {
   render: () => (
     <EditorCanvas
       content={AI_DESCRIPTION_CONTENT}
-      labels={LABELS}
       describeImage={describeWithFakeAi}
     />
   ),
@@ -107,6 +106,7 @@ export const AiImageDescription: Story = {
     const handle = editorHandle(canvasElement);
     const editor = handle.editor!;
     const root = handle.root!;
+    const L = editorLabels();
     editor.commands.setContent('<p>descrição automática</p>');
 
     const file = createPngFile('grafico.png');
@@ -207,7 +207,11 @@ export const AiImageDescription: Story = {
     });
 
     await step('E a pessoa corrige o que a IA escreveu', async () => {
-      editor.commands.setContent('<p>correção</p>');
+      // O conteúdo da DEMONSTRAÇÃO, e não mais `<p>correção</p>`: este é o
+      // último passo, e o que a play deixa é o que a pessoa vê ao abrir a story
+      // pela barra lateral — e o que o Chromatic fotografa. Uma palavra solta de
+      // teste não explica nada a quem chega aqui.
+      editor.commands.setContent(AI_DESCRIPTION_CONTENT);
       await expect(await handle.insertImage(file)).toBe(true);
       await waitForAlt(root, 'Descrição automática de grafico.png');
 
@@ -222,14 +226,14 @@ export const AiImageDescription: Story = {
       // O botão só existe com a imagem selecionada, e quem o revela é o desenho
       // seguinte: procurá-lo antes dele não acharia nada.
       await waitUntil(
-        () => canvas.queryByRole('button', { name: LABELS.actions.imageAlt }) !== null,
+        () => canvas.queryByRole('button', { name: L.actions.imageAlt }) !== null,
         'o botão de texto alternativo aparecer',
       );
 
-      const open = canvas.getByRole('button', { name: LABELS.actions.imageAlt });
+      const open = canvas.getByRole('button', { name: L.actions.imageAlt });
       await openRow(open);
 
-      const field = canvas.getByRole('textbox', { name: LABELS.fields.alt });
+      const field = canvas.getByRole('textbox', { name: L.fields.alt });
       // Abre com o que está lá: ver o texto é o que permite julgá-lo.
       await expect(field).toHaveValue('Descrição automática de grafico.png');
 
