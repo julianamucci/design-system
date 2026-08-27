@@ -112,9 +112,9 @@ const meta: Meta<EditorArgs> = {
  * autor vence o `[hidden] { display: none }` do navegador. A asserção que confia
  * no atributo concorda com o bug.
  */
-function linhaDesenhada(root: HTMLElement, slot: string): boolean {
-  const linha = root.querySelector(`[data-slot="${slot}"]`) as HTMLElement;
-  return getComputedStyle(linha).display !== 'none';
+function rowIsPainted(root: HTMLElement, slot: string): boolean {
+  const row = root.querySelector(`[data-slot="${slot}"]`) as HTMLElement;
+  return getComputedStyle(row).display !== 'none';
 }
 
 /**
@@ -124,23 +124,23 @@ function linhaDesenhada(root: HTMLElement, slot: string): boolean {
  * de um `waitFor`. Condição que mexe no DOM reagenda o próprio `waitFor` por
  * observador de mutação, e o prazo nunca chega: a aba trava sem reprovar.
  */
-function corDoToken(root: HTMLElement, token: string): string {
-  const sonda = document.createElement('span');
-  sonda.style.color = `hsl(var(${token}))`;
-  root.appendChild(sonda);
-  const cor = getComputedStyle(sonda).color;
-  sonda.remove();
-  return cor;
+function tokenColor(root: HTMLElement, token: string): string {
+  const probe = document.createElement('span');
+  probe.style.color = `hsl(var(${token}))`;
+  root.appendChild(probe);
+  const color = getComputedStyle(probe).color;
+  probe.remove();
+  return color;
 }
 
 /** O mesmo, para medida: quanto vale `--text-h1` em pixels nesta página. */
-function medidaDoToken(root: HTMLElement, token: string): string {
-  const sonda = document.createElement('span');
-  sonda.style.fontSize = `var(${token})`;
-  root.appendChild(sonda);
-  const medida = getComputedStyle(sonda).fontSize;
-  sonda.remove();
-  return medida;
+function tokenSize(root: HTMLElement, token: string): string {
+  const probe = document.createElement('span');
+  probe.style.fontSize = `var(${token})`;
+  root.appendChild(probe);
+  const size = getComputedStyle(probe).fontSize;
+  probe.remove();
+  return size;
 }
 
 /**
@@ -150,15 +150,15 @@ function medidaDoToken(root: HTMLElement, token: string): string {
  * resultados diferentes, e o segundo REPROVA. `waitFor` cuja condição nunca
  * satisfaz pendura a aba sem reportar nada.
  */
-async function esperarAlt(root: HTMLElement, esperado: string): Promise<void> {
-  const prazo = Date.now() + 3000;
-  let atual = '';
-  while (Date.now() < prazo) {
-    atual = root.querySelector('img')?.getAttribute('alt') ?? '';
-    if (atual === esperado) break;
+async function waitForAlt(root: HTMLElement, expected: string): Promise<void> {
+  const deadline = Date.now() + 3000;
+  let current = '';
+  while (Date.now() < deadline) {
+    current = root.querySelector('img')?.getAttribute('alt') ?? '';
+    if (current === expected) break;
     await new Promise((r) => setTimeout(r, 30));
   }
-  await expect(atual).toBe(esperado);
+  await expect(current).toBe(expected);
 }
 
 /**
@@ -168,12 +168,31 @@ async function esperarAlt(root: HTMLElement, esperado: string): Promise<void> {
  * documento: um parágrafo a mais ou a menos desloca a conta em silêncio. E é
  * repetido a cada passo porque escrever atributo refaz a seleção.
  */
-function selecionarImagem(root: EditorRoot): void {
-  let posicao = -1;
+function selectImage(root: EditorRoot): void {
+  let position = -1;
   root.editor.state.doc.descendants((node, pos) => {
-    if (node.type.name === 'image') posicao = pos;
+    if (node.type.name === 'image') position = pos;
   });
-  if (posicao >= 0) root.editor.commands.setNodeSelection(posicao);
+  if (position >= 0) root.editor.commands.setNodeSelection(position);
+}
+
+/**
+ * Abre uma linha de entrada, clicando SÓ se ela ainda não estiver aberta.
+ *
+ * O painel Interactions reexecuta a play no mesmo DOM: um clique cego parte do
+ * estado que a rodada anterior deixou e fecha o que deveria abrir. Cada passo
+ * estabelece a própria precondição — é a mesma disciplina do `setContent` no
+ * início da play.
+ */
+async function openRow(button: HTMLElement): Promise<void> {
+  if (button.getAttribute('aria-expanded') !== 'true') await userEvent.click(button);
+  await expect(button).toHaveAttribute('aria-expanded', 'true');
+}
+
+/** O par da anterior: fecha só se estiver aberta. */
+async function closeRow(button: HTMLElement): Promise<void> {
+  if (button.getAttribute('aria-expanded') === 'true') await userEvent.click(button);
+  await expect(button).toHaveAttribute('aria-expanded', 'false');
 }
 
 export default meta;
@@ -199,46 +218,46 @@ export const Playground: Story = {
     // asserções de marca e de título uma seleção previsível.
     root.editor.commands.setContent('<p>massa e energia</p>');
 
-    await step('A barra se anuncia, e cada bloco tem nome próprio', async () => {
+    await step('A barra se anuncia, e cada bloco tem name próprio', async () => {
       await expect(canvas.getByRole('toolbar', { name: LABELS.toolbar })).toBeInTheDocument();
-      for (const nome of [LABELS.groups.marks, LABELS.groups.headings, LABELS.groups.lists]) {
-        await expect(canvas.getByRole('group', { name: nome })).toBeInTheDocument();
+      for (const name of [LABELS.groups.marks, LABELS.groups.headings, LABELS.groups.lists]) {
+        await expect(canvas.getByRole('group', { name: name })).toBeInTheDocument();
       }
       await expect(root.querySelector('.ProseMirror')).toBeInTheDocument();
     });
 
     await step('Uma parada de tabulação só, e as setas ATRAVESSAM os grupos', async () => {
-      const negrito = canvas.getByRole('button', { name: LABELS.actions.bold });
-      const italico = canvas.getByRole('button', { name: LABELS.actions.italic });
-      negrito.focus();
+      const boldButton = canvas.getByRole('button', { name: LABELS.actions.bold });
+      const italicButton = canvas.getByRole('button', { name: LABELS.actions.italic });
+      boldButton.focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(italico).toHaveFocus();
-      await expect(italico.tabIndex).toBe(0);
-      await expect(negrito.tabIndex).toBe(-1);
+      await expect(italicButton).toHaveFocus();
+      await expect(italicButton.tabIndex).toBe(0);
+      await expect(boldButton.tabIndex).toBe(-1);
 
       // O salto que importa: do último botão do grupo de marcas para o primeiro
       // do grupo de títulos. É por isso que os grupos abrem mão do teclado — com
       // `role="toolbar"` neles, a navegação morreria na borda do primeiro grupo.
-      const ultimoDasMarcas = canvas.getByRole('button', { name: LABELS.actions.highlight });
-      const titulo1 = canvas.getByRole('button', { name: LABELS.actions.h1 });
-      ultimoDasMarcas.focus();
+      const lastMarkButton = canvas.getByRole('button', { name: LABELS.actions.highlight });
+      const headingOne = canvas.getByRole('button', { name: LABELS.actions.h1 });
+      lastMarkButton.focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(titulo1).toHaveFocus();
+      await expect(headingOne).toHaveFocus();
 
       // Volta ao início para que a rodada seguinte encontre o mesmo estado.
       await userEvent.keyboard('{Home}');
-      await expect(negrito).toHaveFocus();
+      await expect(boldButton).toHaveFocus();
     });
 
     await step('Os botões refletem o estado do EDITOR, não o próprio clique', async () => {
-      const negrito = canvas.getByRole('button', { name: LABELS.actions.bold });
+      const boldButton = canvas.getByRole('button', { name: LABELS.actions.bold });
       // Sem clique nenhum: a marca é ligada pela instância, e o botão tem de
       // acender. É o que distingue uma barra presa ao editor de uma com estado
       // próprio, e o motivo de o grupo precisar de `setValue`.
       root.editor.chain().selectAll().setBold().run();
-      await expect(negrito).toHaveAttribute('aria-pressed', 'true');
+      await expect(boldButton).toHaveAttribute('aria-pressed', 'true');
       root.editor.chain().selectAll().unsetBold().run();
-      await expect(negrito).toHaveAttribute('aria-pressed', 'false');
+      await expect(boldButton).toHaveAttribute('aria-pressed', 'false');
     });
 
     await step('Título é escolha única: ligar o H2 desliga o H1', async () => {
@@ -268,23 +287,23 @@ export const Playground: Story = {
         '<blockquote><p>citação</p></blockquote><pre><code>codigo()</code></pre>',
       );
 
-      const primaria = corDoToken(root, '--primary');
-      const apoio = corDoToken(root, '--muted');
+      const primaryColor = tokenColor(root, '--primary');
+      const mutedColor = tokenColor(root, '--muted');
 
-      const citacao = root.querySelector('blockquote') as HTMLElement;
-      const estiloCitacao = getComputedStyle(citacao);
+      const quote = root.querySelector('blockquote') as HTMLElement;
+      const quoteStyle = getComputedStyle(quote);
       // A barra lateral é o sinal, e é ELA que carrega a cor da marca — o texto
       // fica em --foreground, porque cor semântica em texto corrido não alcança
       // os 4.5:1 que texto corrido exige.
-      await expect(estiloCitacao.borderInlineStartWidth).not.toBe('0px');
-      await expect(estiloCitacao.borderInlineStartColor).toBe(primaria);
+      await expect(quoteStyle.borderInlineStartWidth).not.toBe('0px');
+      await expect(quoteStyle.borderInlineStartColor).toBe(primaryColor);
 
-      const bloco = root.querySelector('pre') as HTMLElement;
-      await expect(getComputedStyle(bloco).backgroundColor).toBe(apoio);
+      const block = root.querySelector('pre') as HTMLElement;
+      await expect(getComputedStyle(block).backgroundColor).toBe(mutedColor);
       // O <code> de dentro não repete o fundo: a lib sempre escreve
       // <pre><code>, e dois realces encaixados apareceriam um dentro do outro.
-      const dentro = bloco.querySelector('code') as HTMLElement;
-      await expect(getComputedStyle(dentro).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+      const innerCode = block.querySelector('code') as HTMLElement;
+      await expect(getComputedStyle(innerCode).backgroundColor).toBe('rgba(0, 0, 0, 0)');
     });
 
     await step('Título, link, código e divisória saem na escala do sistema', async () => {
@@ -298,91 +317,91 @@ export const Playground: Story = {
       // O que se compara é com o TOKEN, não com um número escrito à mão: número
       // à mão passa a mentir no dia em que a escada muda de base, e é a escada
       // que o portão existe para guardar.
-      const titulo = root.querySelector('h1') as HTMLElement;
-      await expect(getComputedStyle(titulo).fontSize).toBe(medidaDoToken(root, '--text-h1'));
+      const headingEl = root.querySelector('h1') as HTMLElement;
+      await expect(getComputedStyle(headingEl).fontSize).toBe(tokenSize(root, '--text-h1'));
 
       const link = root.querySelector('a') as HTMLElement;
       const estiloLink = getComputedStyle(link);
-      await expect(estiloLink.color).toBe(corDoToken(root, '--primary'));
+      await expect(estiloLink.color).toBe(tokenColor(root, '--primary'));
       // Sublinhado não é enfeite: sem ele a única pista de que há link é a cor,
       // e quem não distingue as duas cores fica sem pista (WCAG 1.4.1).
       await expect(estiloLink.textDecorationLine).toContain('underline');
 
-      const trecho = root.querySelector('p code') as HTMLElement;
-      await expect(getComputedStyle(trecho).backgroundColor).toBe(corDoToken(root, '--muted'));
+      const inlineCode = root.querySelector('p code') as HTMLElement;
+      await expect(getComputedStyle(inlineCode).backgroundColor).toBe(tokenColor(root, '--muted'));
 
-      const divisoria = root.querySelector('hr') as HTMLElement;
-      await expect(getComputedStyle(divisoria).borderBlockStartColor).toBe(
-        corDoToken(root, '--border'),
+      const ruleEl = root.querySelector('hr') as HTMLElement;
+      await expect(getComputedStyle(ruleEl).borderBlockStartColor).toBe(
+        tokenColor(root, '--border'),
       );
 
       // A lista recua pelo token, e o marcador fica DENTRO do recuo — com o
       // marcador fora da caixa, ele desalinha do texto em volta.
-      const lista = root.querySelector('ul') as HTMLElement;
-      await expect(getComputedStyle(lista).paddingInlineStart).not.toBe('0px');
-      await expect(getComputedStyle(lista).marginInlineStart).toBe('0px');
+      const listEl = root.querySelector('ul') as HTMLElement;
+      await expect(getComputedStyle(listEl).paddingInlineStart).not.toBe('0px');
+      await expect(getComputedStyle(listEl).marginInlineStart).toBe('0px');
     });
 
     await step('Destaque, alinhamento e lista de tarefas', async () => {
       root.editor.commands.setContent('<p>massa e energia</p>');
 
-      const destaque = canvas.getByRole('button', { name: LABELS.actions.highlight });
+      const highlightButton = canvas.getByRole('button', { name: LABELS.actions.highlight });
       root.editor.chain().selectAll().setHighlight().run();
-      await expect(destaque).toHaveAttribute('aria-pressed', 'true');
+      await expect(highlightButton).toHaveAttribute('aria-pressed', 'true');
       const marca = root.querySelector('mark') as HTMLElement;
       // O `<mark>` do navegador é amarelo fixo, que ignora o tema e ainda crava
       // o texto em preto. Aqui ele usa o realce do sistema.
-      await expect(getComputedStyle(marca).backgroundColor).toBe(corDoToken(root, '--accent'));
+      await expect(getComputedStyle(marca).backgroundColor).toBe(tokenColor(root, '--accent'));
       root.editor.chain().selectAll().unsetHighlight().run();
 
       // Alinhamento é ATRIBUTO do bloco, e escolha única: centralizar desliga
       // "à esquerda" sem que ninguém precise desligá-lo.
-      const centro = canvas.getByRole('button', { name: LABELS.actions.alignCenter });
-      const direita = canvas.getByRole('button', { name: LABELS.actions.alignRight });
+      const centerButton = canvas.getByRole('button', { name: LABELS.actions.alignCenter });
+      const rightButton = canvas.getByRole('button', { name: LABELS.actions.alignRight });
       root.editor.chain().setTextSelection(2).setTextAlign('center').run();
-      await expect(centro).toHaveAttribute('aria-pressed', 'true');
-      await expect(direita).toHaveAttribute('aria-pressed', 'false');
+      await expect(centerButton).toHaveAttribute('aria-pressed', 'true');
+      await expect(rightButton).toHaveAttribute('aria-pressed', 'false');
       root.editor.chain().setTextSelection(2).setTextAlign('left').run();
 
-      const tarefas = canvas.getByRole('button', { name: LABELS.actions.taskList });
+      const taskButton = canvas.getByRole('button', { name: LABELS.actions.taskList });
       root.editor.chain().setTextSelection(2).toggleTaskList().run();
-      await expect(tarefas).toHaveAttribute('aria-pressed', 'true');
+      await expect(taskButton).toHaveAttribute('aria-pressed', 'true');
       // A caixa é do navegador, e é ela que marca — o marcador de lista sai de
       // cena para não haver dois sinais para a mesma coisa.
-      const item = root.querySelector('ul[data-type="taskList"] li') as HTMLElement;
-      await expect(item.querySelector('input[type="checkbox"]')).toBeInTheDocument();
-      await expect(getComputedStyle(item.parentElement as HTMLElement).listStyleType).toBe('none');
+      const listItem = root.querySelector('ul[data-type="taskList"] li') as HTMLElement;
+      await expect(listItem.querySelector('input[type="checkbox"]')).toBeInTheDocument();
+      await expect(getComputedStyle(listItem.parentElement as HTMLElement).listStyleType).toBe('none');
     });
 
     await step('Tabela: os botões de linha e coluna só existem dentro dela', async () => {
       root.editor.commands.setContent('<p>massa e energia</p>');
 
-      const inserir = canvas.getByRole('button', { name: LABELS.actions.table });
+      const insertButton = canvas.getByRole('button', { name: LABELS.actions.table });
       // Pelo NÓ, não pela posição: há mais de um bloco contextual agora (o da
       // imagem vem antes), e o primeiro do documento deixaria de ser o da tabela
       // sem que nada na asserção mudasse.
-      const caixa = root.querySelector(
+      const box = root.querySelector(
         '[data-slot="editor-toolbar-context"][data-node="table"]',
       ) as HTMLElement;
-      await expect(getComputedStyle(caixa).display).toBe('none');
+      await expect(getComputedStyle(box).display).toBe('none');
 
-      await userEvent.click(inserir);
+      await userEvent.click(insertButton);
       await expect(root.querySelector('table')).toBeInTheDocument();
       // 3×3 com cabeçalho: três linhas no total, a primeira delas de <th>.
       await expect(root.querySelectorAll('table tr')).toHaveLength(3);
       await expect(root.querySelectorAll('table th')).toHaveLength(3);
-      await expect(getComputedStyle(caixa).display).not.toBe('none');
+      await expect(getComputedStyle(box).display).not.toBe('none');
 
-      const novaLinha = canvas.getByRole('button', { name: LABELS.actions.rowAfter });
-      await userEvent.click(novaLinha);
+      const addRowButton = canvas.getByRole('button', { name: LABELS.actions.rowAfter });
+      await userEvent.click(addRowButton);
       await expect(root.querySelectorAll('table tr')).toHaveLength(4);
 
-      const cabecalho = root.querySelector('table th') as HTMLElement;
-      await expect(getComputedStyle(cabecalho).backgroundColor).toBe(corDoToken(root, '--muted'));
+      const headerCell = root.querySelector('table th') as HTMLElement;
+      await expect(getComputedStyle(headerCell).backgroundColor).toBe(tokenColor(root, '--muted'));
 
       await userEvent.click(canvas.getByRole('button', { name: LABELS.actions.deleteTable }));
       await expect(root.querySelector('table')).toBeNull();
-      await expect(getComputedStyle(caixa).display).toBe('none');
+      await expect(getComputedStyle(box).display).toBe('none');
     });
 
     await step('Imagem: o armazenamento é de quem consome, e base64 é só o padrão', async () => {
@@ -396,14 +415,14 @@ export const Playground: Story = {
         ),
         (c) => c.charCodeAt(0),
       );
-      const arquivo = new File([bytes], 'ponto.png', { type: 'image/png' });
+      const file = new File([bytes], 'ponto.png', { type: 'image/png' });
 
-      await expect(await root.insertImage(arquivo)).toBe(true);
-      const imagem = root.querySelector('img') as HTMLImageElement;
-      await expect(imagem).toBeInTheDocument();
+      await expect(await root.insertImage(file)).toBe(true);
+      const imageEl = root.querySelector('img') as HTMLImageElement;
+      await expect(imageEl).toBeInTheDocument();
       // O resolvedor PADRÃO embute o arquivo. É o que faz o Playground
       // funcionar sem servidor nenhum — e não é o que se leva para produção.
-      await expect(imagem.getAttribute('src')).toContain('data:image/png;base64,');
+      await expect(imageEl.getAttribute('src')).toContain('data:image/png;base64,');
 
       // `allowBase64` é FALSE por padrão na lib: sem ligá-lo, o esquema descarta
       // o `src` que não reconhece e a imagem SOME na releitura do documento.
@@ -425,71 +444,71 @@ export const Playground: Story = {
       // do vizinho é o mesmo erro que o replay do painel Interactions provoca.
       root.editor.commands.setContent('<p>massa e energia</p>');
 
-      const abrir = canvas.getByRole('button', { name: LABELS.actions.link });
-      await expect(linhaDesenhada(root, 'editor-link')).toBe(false);
-      await userEvent.click(abrir);
-      await expect(linhaDesenhada(root, 'editor-link')).toBe(true);
+      const open = canvas.getByRole('button', { name: LABELS.actions.link });
+      await expect(rowIsPainted(root, 'editor-link')).toBe(false);
+      await openRow(open);
+      await expect(rowIsPainted(root, 'editor-link')).toBe(true);
 
-      const campo = canvas.getByRole('textbox', { name: LABELS.fields.link });
-      await expect(campo).toHaveFocus();
+      const field = canvas.getByRole('textbox', { name: LABELS.fields.link });
+      await expect(field).toHaveFocus();
 
       // `javascript:` é o caso que a lista de esquemas existe para barrar. O
       // campo fica marcado como inválido e a linha NÃO fecha.
-      await userEvent.type(campo, 'javascript:alert(1){Enter}');
-      await expect(campo).toHaveAttribute('aria-invalid', 'true');
-      await expect(linhaDesenhada(root, 'editor-link')).toBe(true);
+      await userEvent.type(field, 'javascript:alert(1){Enter}');
+      await expect(field).toHaveAttribute('aria-invalid', 'true');
+      await expect(rowIsPainted(root, 'editor-link')).toBe(true);
       await expect(root.querySelector('a')).toBeNull();
 
-      await userEvent.clear(campo);
+      await userEvent.clear(field);
       root.editor.chain().selectAll().run();
-      await userEvent.type(campo, 'exemplo.com{Enter}');
-      const ancora = root.querySelector('a');
-      await expect(ancora).toBeInTheDocument();
+      await userEvent.type(field, 'exemplo.com{Enter}');
+      const anchor = root.querySelector('a');
+      await expect(anchor).toBeInTheDocument();
       // Endereço sem esquema é o que a pessoa digita; quem completa é a barra.
-      await expect(ancora).toHaveAttribute('href', 'https://exemplo.com');
-      await expect(linhaDesenhada(root, 'editor-link')).toBe(false);
-      await expect(abrir).toHaveFocus();
+      await expect(anchor).toHaveAttribute('href', 'https://exemplo.com');
+      await expect(rowIsPainted(root, 'editor-link')).toBe(false);
+      await expect(open).toHaveFocus();
 
       // Com o cursor no link, abrir mostra o endereço ATUAL — é o que torna a
       // linha editável em vez de só um formulário de inserção. Abrindo em
       // branco, nada na tela dizia o que já existia.
-      await userEvent.click(abrir);
-      await expect(campo).toHaveValue('https://exemplo.com');
+      await openRow(open);
+      await expect(field).toHaveValue('https://exemplo.com');
 
       // O botão de tirar só existe quando há link — botão que não faz nada é
       // ruído, e desabilitado seria pior: anuncia a ação e nega em seguida.
-      const tirar = canvas.getByRole('button', { name: LABELS.fields.linkRemove });
-      await expect(getComputedStyle(tirar).display).not.toBe('none');
-      await userEvent.click(tirar);
+      const unlink = canvas.getByRole('button', { name: LABELS.fields.linkRemove });
+      await expect(getComputedStyle(unlink).display).not.toBe('none');
+      await userEvent.click(unlink);
       await expect(root.querySelector('a')).toBeNull();
 
       // Sem link no trecho, ele some. A asserção lê o `display` COMPUTADO: o
       // `.nds-button` declara `display: inline-flex`, e declaração de autor
       // vence o `[hidden]` do navegador — o atributo sozinho não esconde nada,
       // e a asserção que confia nele concorda com o bug.
-      await userEvent.click(abrir);
-      await expect(getComputedStyle(tirar).display).toBe('none');
+      await openRow(open);
+      await expect(getComputedStyle(unlink).display).toBe('none');
 
       // Apagar o campo e confirmar continua tirando o link — o caminho antigo,
       // que agora é atalho e não a única porta.
-      await userEvent.type(campo, 'exemplo.com{Enter}');
+      await userEvent.type(field, 'exemplo.com{Enter}');
       await expect(root.querySelector('a')).toBeInTheDocument();
-      await userEvent.click(abrir);
-      await userEvent.clear(campo);
+      await openRow(open);
+      await userEvent.clear(field);
       await userEvent.keyboard('{Enter}');
       await expect(root.querySelector('a')).toBeNull();
     });
 
     await step('A fórmula entra pelo botão e é renderizada pelo KaTeX', async () => {
-      const abrir = canvas.getByRole('button', { name: LABELS.actions.formula });
-      await expect(abrir).toHaveAttribute('aria-expanded', 'false');
-      await userEvent.click(abrir);
-      await expect(abrir).toHaveAttribute('aria-expanded', 'true');
-      await expect(linhaDesenhada(root, 'editor-formula')).toBe(true);
+      const open = canvas.getByRole('button', { name: LABELS.actions.formula });
+      await expect(open).toHaveAttribute('aria-expanded', 'false');
+      await openRow(open);
+      await expect(open).toHaveAttribute('aria-expanded', 'true');
+      await expect(rowIsPainted(root, 'editor-formula')).toBe(true);
 
-      const campo = canvas.getByRole('textbox', { name: LABELS.fields.formula });
-      await expect(campo).toHaveFocus();
-      await userEvent.type(campo, 'E = mc^2');
+      const field = canvas.getByRole('textbox', { name: LABELS.fields.formula });
+      await expect(field).toHaveFocus();
+      await userEvent.type(field, 'E = mc^2');
       await userEvent.click(canvas.getByRole('button', { name: LABELS.fields.formulaConfirm }));
 
       const formulas = root.querySelectorAll('[data-type="inline-math"]');
@@ -506,48 +525,48 @@ export const Playground: Story = {
       await expect(mathml?.textContent).toContain('E');
 
       // A linha fecha e devolve o foco a quem a abriu.
-      await expect(abrir).toHaveAttribute('aria-expanded', 'false');
-      await expect(linhaDesenhada(root, 'editor-formula')).toBe(false);
-      await expect(abrir).toHaveFocus();
+      await expect(open).toHaveAttribute('aria-expanded', 'false');
+      await expect(rowIsPainted(root, 'editor-formula')).toBe(false);
+      await expect(open).toHaveFocus();
 
       // E o mesmo botão abre e FECHA, sem inserir nada.
-      await userEvent.click(abrir);
-      await expect(linhaDesenhada(root, 'editor-formula')).toBe(true);
-      await userEvent.click(abrir);
-      await expect(linhaDesenhada(root, 'editor-formula')).toBe(false);
+      await openRow(open);
+      await expect(rowIsPainted(root, 'editor-formula')).toBe(true);
+      await closeRow(open);
+      await expect(rowIsPainted(root, 'editor-formula')).toBe(false);
 
       // Fórmula sob o cursor se EDITA, não duplica. O que se vê na tela é o
       // resultado renderizado, então abrir com o LaTeX de volta é o único
       // caminho para corrigir uma.
-      let posicao = -1;
+      let position = -1;
       root.editor.state.doc.descendants((node, pos) => {
-        if (node.type.name === 'inlineMath') posicao = pos;
+        if (node.type.name === 'inlineMath') position = pos;
       });
-      root.editor.commands.setNodeSelection(posicao);
+      root.editor.commands.setNodeSelection(position);
 
-      await userEvent.click(abrir);
-      await expect(campo).toHaveValue('E = mc^2');
-      await userEvent.clear(campo);
-      await userEvent.type(campo, 'a^2 + b^2{Enter}');
+      await openRow(open);
+      await expect(field).toHaveValue('E = mc^2');
+      await userEvent.clear(field);
+      await userEvent.type(field, 'a^2 + b^2{Enter}');
 
-      const depois = root.querySelectorAll('[data-type="inline-math"]');
-      await expect(depois).toHaveLength(1);
-      await expect(depois[0]).toHaveAttribute('data-latex', 'a^2 + b^2');
+      const after = root.querySelectorAll('[data-type="inline-math"]');
+      await expect(after).toHaveLength(1);
+      await expect(after[0]).toHaveAttribute('data-latex', 'a^2 + b^2');
     });
 
     await step('LaTeX inválido não some: fica visível e marcado como erro', async () => {
-      const abrir = canvas.getByRole('button', { name: LABELS.actions.formula });
-      await userEvent.click(abrir);
-      const campo = canvas.getByRole('textbox', { name: LABELS.fields.formula });
+      const open = canvas.getByRole('button', { name: LABELS.actions.formula });
+      await openRow(open);
+      const field = canvas.getByRole('textbox', { name: LABELS.fields.formula });
       // Sem chaves de propósito: no `userEvent.type`, `{` abre descritor de
       // tecla, e um LaTeX cheio de chaves testaria mais a escapagem do teclado
       // sintético que o editor. Comando inexistente erra igual.
       // O `{Enter}` no fim também cobre o caminho de confirmar pelo teclado.
-      await userEvent.type(campo, '\\comandoquenaoexiste{Enter}');
+      await userEvent.type(field, '\\comandoquenaoexiste{Enter}');
 
-      const erro = root.querySelector('.inline-math-error');
-      await expect(erro).toBeInTheDocument();
-      await expect(erro?.textContent).toContain('\\comandoquenaoexiste');
+      const errorNode = root.querySelector('.inline-math-error');
+      await expect(errorNode).toBeInTheDocument();
+      await expect(errorNode?.textContent).toContain('\\comandoquenaoexiste');
 
       // Devolve o documento ao estado de demonstração.
       //
@@ -594,17 +613,17 @@ export const CustomImageStorage: Story = {
     root.editor.commands.setContent('<p>armazenamento próprio</p>');
 
     await step('O `src` vem do resolvedor, não do arquivo', async () => {
-      const pequeno = new File([new Uint8Array(10)], 'logo.png', { type: 'image/png' });
-      await expect(await root.insertImage(pequeno)).toBe(true);
-      const imagem = root.querySelector('img') as HTMLImageElement;
-      await expect(imagem.getAttribute('src')).toBe('https://cdn.exemplo.com/logo.png');
+      const smallFile = new File([new Uint8Array(10)], 'logo.png', { type: 'image/png' });
+      await expect(await root.insertImage(smallFile)).toBe(true);
+      const imageEl = root.querySelector('img') as HTMLImageElement;
+      await expect(imageEl.getAttribute('src')).toBe('https://cdn.exemplo.com/logo.png');
       // Nada de base64: o arquivo não entrou no documento.
-      await expect(imagem.getAttribute('src')).not.toContain('data:');
+      await expect(imageEl.getAttribute('src')).not.toContain('data:');
     });
 
     await step('Recusar não insere nada — e não é erro', async () => {
-      const grande = new File([new Uint8Array(2048)], 'foto.png', { type: 'image/png' });
-      await expect(await root.insertImage(grande)).toBe(false);
+      const bigFile = new File([new Uint8Array(2048)], 'foto.png', { type: 'image/png' });
+      await expect(await root.insertImage(bigFile)).toBe(false);
       await expect(root.querySelectorAll('img')).toHaveLength(1);
     });
   },
@@ -640,22 +659,22 @@ export const AiImageDescription: Story = {
     const root = canvasElement.querySelector('[data-slot="editor"]') as EditorRoot;
     root.editor.commands.setContent('<p>descrição automática</p>');
 
-    const arquivo = new File([new Uint8Array([1, 2, 3])], 'grafico.png', { type: 'image/png' });
+    const file = new File([new Uint8Array([1, 2, 3])], 'grafico.png', { type: 'image/png' });
 
     await step('A imagem entra NA HORA, com o alt provisório', async () => {
-      await expect(await root.insertImage(arquivo)).toBe(true);
-      const imagem = root.querySelector('img') as HTMLImageElement;
-      // Sem esperar nada: o nome do arquivo segura a vaga. Prender a imagem até
+      await expect(await root.insertImage(file)).toBe(true);
+      const imageEl = root.querySelector('img') as HTMLImageElement;
+      // Sem esperar nada: o name do arquivo segura a vaga. Prender a imagem até
       // a descrição chegar trocaria uma lacuna de acessibilidade por uma de
       // responsividade — e um serviço fora do ar travaria a edição.
-      await expect(imagem.getAttribute('alt')).toBe('grafico.png');
+      await expect(imageEl.getAttribute('alt')).toBe('grafico.png');
     });
 
     await step('A descrição chega depois e substitui o provisório', async () => {
       // Espera de RELÓGIO, não `waitFor`: a condição aqui é leitura pura, mas o
       // laço com prazo é o que distingue "demorou" de "não veio" — `waitFor`
       // que nunca satisfaz pendura a aba sem reprovar.
-      await esperarAlt(root, 'Descrição automática de grafico.png');
+      await waitForAlt(root, 'Descrição automática de grafico.png');
     });
 
     await step('COLAR e ARRASTAR arquivo passam pelo mesmo caminho', async () => {
@@ -665,31 +684,31 @@ export const AiImageDescription: Story = {
       // também não. Quem usa não descobre que há um botão para o que o resto da
       // web resolve arrastando.
       root.editor.commands.setContent('<p>colar</p>');
-      const areaColar = new DataTransfer();
-      areaColar.items.add(new File([new Uint8Array([4, 5, 6])], 'colada.png', { type: 'image/png' }));
+      const pasteData = new DataTransfer();
+      pasteData.items.add(new File([new Uint8Array([4, 5, 6])], 'colada.png', { type: 'image/png' }));
       pm.dispatchEvent(
-        new ClipboardEvent('paste', { clipboardData: areaColar, bubbles: true, cancelable: true }),
+        new ClipboardEvent('paste', { clipboardData: pasteData, bubbles: true, cancelable: true }),
       );
-      await esperarAlt(root, 'Descrição automática de colada.png');
+      await waitForAlt(root, 'Descrição automática de colada.png');
 
       root.editor.commands.setContent('<p>arrastar</p>');
-      const arrasto = new DataTransfer();
-      arrasto.items.add(new File([new Uint8Array([7, 8, 9])], 'solta.png', { type: 'image/png' }));
+      const dragData = new DataTransfer();
+      dragData.items.add(new File([new Uint8Array([7, 8, 9])], 'solta.png', { type: 'image/png' }));
       // COM coordenadas dentro do editor: o ProseMirror abandona o `drop` antes
       // de chamar o gancho quando `posAtCoords` não resolve, e um evento
       // sintético em (0, 0) cai fora da caixa. Medido — sem isto o teste
       // acusaria "arrastar não funciona" com o código certo.
-      const caixaPm = pm.getBoundingClientRect();
+      const contentBox = pm.getBoundingClientRect();
       pm.dispatchEvent(
         new DragEvent('drop', {
-          dataTransfer: arrasto,
+          dataTransfer: dragData,
           bubbles: true,
           cancelable: true,
-          clientX: caixaPm.left + caixaPm.width / 2,
-          clientY: caixaPm.top + 10,
+          clientX: contentBox.left + contentBox.width / 2,
+          clientY: contentBox.top + 10,
         }),
       );
-      await esperarAlt(root, 'Descrição automática de solta.png');
+      await waitForAlt(root, 'Descrição automática de solta.png');
     });
 
     await step('Soltar na MOLDURA, fora do texto, também insere', async () => {
@@ -698,9 +717,9 @@ export const AiImageDescription: Story = {
       // abaixo da última linha é moldura, e soltar ali escapava para o
       // navegador. Aqui a solta é no RODAPÉ da moldura, longe do texto.
       root.editor.commands.setContent('<p>moldura</p>');
-      const caixa = root.getBoundingClientRect();
-      const arrasto = new DataTransfer();
-      arrasto.items.add(new File([new Uint8Array([10, 11])], 'moldura.png', { type: 'image/png' }));
+      const box = root.getBoundingClientRect();
+      const dragData = new DataTransfer();
+      dragData.items.add(new File([new Uint8Array([10, 11])], 'moldura.png', { type: 'image/png' }));
 
       // O `dragover` vem PRIMEIRO, e é ele que decide o caso: só se o padrão
       // for cancelado ali o navegador entrega o `drop` à página — senão ele
@@ -709,35 +728,35 @@ export const AiImageDescription: Story = {
       // Esta asserção existe porque a de baixo NÃO cobre isso: um `drop`
       // sintético é entregue de qualquer jeito, então plantar o defeito no
       // `dragover` deixava o teste verde com o bug de volta. Medido.
-      const sobrevoo = new DragEvent('dragover', {
-        dataTransfer: arrasto,
+      const dragOver = new DragEvent('dragover', {
+        dataTransfer: dragData,
         bubbles: true,
         cancelable: true,
       });
-      root.dispatchEvent(sobrevoo);
-      await expect(sobrevoo.defaultPrevented).toBe(true);
+      root.dispatchEvent(dragOver);
+      await expect(dragOver.defaultPrevented).toBe(true);
 
-      const solta = new DragEvent('drop', {
-        dataTransfer: arrasto,
+      const dropEvent = new DragEvent('drop', {
+        dataTransfer: dragData,
         bubbles: true,
         cancelable: true,
-        clientX: caixa.left + caixa.width / 2,
-        clientY: caixa.bottom - 4,
+        clientX: box.left + box.width / 2,
+        clientY: box.bottom - 4,
       });
-      root.dispatchEvent(solta);
+      root.dispatchEvent(dropEvent);
       // O padrão PRECISA ser cancelado: é ele que faz o navegador abrir o
       // arquivo. Asserção separada porque a imagem entrar não prova isso.
-      await expect(solta.defaultPrevented).toBe(true);
-      await esperarAlt(root, 'Descrição automática de moldura.png');
+      await expect(dropEvent.defaultPrevented).toBe(true);
+      await waitForAlt(root, 'Descrição automática de moldura.png');
     });
 
     await step('A barra QUEBRA em linhas, e nada fica fora da vista', async () => {
-      const barra = root.querySelector('[data-slot="editor-toolbar"]') as HTMLElement;
-      await expect(getComputedStyle(barra).flexWrap).toBe('wrap');
+      const toolbarEl = root.querySelector('[data-slot="editor-toolbar"]') as HTMLElement;
+      await expect(getComputedStyle(toolbarEl).flexWrap).toBe('wrap');
       // Sem rolagem horizontal: com ela, o botão contextual que acabou de
       // aparecer nascia além da borda, e a única pista de que existia era
       // arrastar a barra para o lado.
-      await expect(barra.scrollWidth).toBe(barra.clientWidth);
+      await expect(toolbarEl.scrollWidth).toBe(toolbarEl.clientWidth);
     });
 
     await step('Imagem COLADA de outra página também é descrita', async () => {
@@ -747,29 +766,29 @@ export const AiImageDescription: Story = {
       // que o alcança, e ali não há arquivo: só o endereço.
       root.editor.commands.setContent('<p>colada de fora</p>');
       const pm = root.querySelector('.ProseMirror') as HTMLElement;
-      const area = new DataTransfer();
-      area.setData('text/html', '<img src="https://exemplo.com/diagrama.png">');
+      const clipboard = new DataTransfer();
+      clipboard.setData('text/html', '<img src="https://exemplo.com/diagrama.png">');
       pm.dispatchEvent(
-        new ClipboardEvent('paste', { clipboardData: area, bubbles: true, cancelable: true }),
+        new ClipboardEvent('paste', { clipboardData: clipboard, bubbles: true, cancelable: true }),
       );
-      await esperarAlt(root, 'Descrição automática de diagrama.png');
+      await waitForAlt(root, 'Descrição automática de diagrama.png');
     });
 
     await step('A imagem se redimensiona por teclado E por arraste', async () => {
       root.editor.commands.setContent('<p>tamanho</p>');
-      await expect(await root.insertImage(arquivo)).toBe(true);
-      selecionarImagem(root);
+      await expect(await root.insertImage(file)).toBe(true);
+      selectImage(root);
 
       // Tudo que é de imagem fica JUNTO, sem nada de outro assunto no meio.
       // Antes, "linha divisória", "desfazer" e o botão de tabela caíam entre o
       // de inserir e os de editar — e a leitura da barra sugeria que aqueles
       // quatro pertenciam à tabela.
-      const barra = root.querySelector('[data-slot="editor-toolbar"]') as HTMLElement;
-      const acoes = Array.from(barra.querySelectorAll<HTMLElement>('[data-action]')).map(
+      const toolbarEl = root.querySelector('[data-slot="editor-toolbar"]') as HTMLElement;
+      const actions = Array.from(toolbarEl.querySelectorAll<HTMLElement>('[data-action]')).map(
         (b) => b.dataset.action,
       );
-      const daImagem = acoes.indexOf('image');
-      await expect(acoes.slice(daImagem, daImagem + 5)).toEqual([
+      const imageIndex = actions.indexOf('image');
+      await expect(actions.slice(imageIndex, imageIndex + 5)).toEqual([
         'image',
         'imageAlt',
         'imageSmaller',
@@ -778,66 +797,66 @@ export const AiImageDescription: Story = {
       ]);
 
       const img = root.querySelector('img') as HTMLImageElement;
-      const partida = Math.round(img.getBoundingClientRect().width);
+      const startingWidth = Math.round(img.getBoundingClientRect().width);
 
       // ─ Teclado: o caminho que existe porque arrastar não pode ser o único
       // (WCAG 2.5.7, Movimentos de arrasto).
-      const diminuir = canvas.getByRole('button', { name: LABELS.actions.imageSmaller });
-      await userEvent.click(diminuir);
-      selecionarImagem(root);
-      await expect(Number(root.querySelector('img')?.getAttribute('width'))).toBe(partida - 40);
+      const smallerButton = canvas.getByRole('button', { name: LABELS.actions.imageSmaller });
+      await userEvent.click(smallerButton);
+      selectImage(root);
+      await expect(Number(root.querySelector('img')?.getAttribute('width'))).toBe(startingWidth - 40);
 
-      const aumentar = canvas.getByRole('button', { name: LABELS.actions.imageLarger });
-      await userEvent.click(aumentar);
-      selecionarImagem(root);
-      await expect(Number(root.querySelector('img')?.getAttribute('width'))).toBe(partida);
+      const largerButton = canvas.getByRole('button', { name: LABELS.actions.imageLarger });
+      await userEvent.click(largerButton);
+      selectImage(root);
+      await expect(Number(root.querySelector('img')?.getAttribute('width'))).toBe(startingWidth);
 
       // ─ Piso: cliques demais não podem reduzir a imagem a um ponto.
       for (let i = 0; i < 40; i++) {
-        const botao = canvas.queryByRole('button', { name: LABELS.actions.imageSmaller });
-        if (!botao || (botao as HTMLButtonElement).disabled) break;
-        await userEvent.click(botao);
-        selecionarImagem(root);
+        const button = canvas.queryByRole('button', { name: LABELS.actions.imageSmaller });
+        if (!button || (button as HTMLButtonElement).disabled) break;
+        await userEvent.click(button);
+        selectImage(root);
       }
-      const noPiso = Number(root.querySelector('img')?.getAttribute('width'));
-      await expect(noPiso).toBe(48);
+      const atFloor = Number(root.querySelector('img')?.getAttribute('width'));
+      await expect(atFloor).toBe(48);
 
       // ─ Volta ao natural: APAGA o atributo, não grava a medida de hoje. Com a
       // medida gravada, a folha perderia o direito de encolher a imagem numa
       // moldura estreita.
       await userEvent.click(canvas.getByRole('button', { name: LABELS.actions.imageNatural }));
-      selecionarImagem(root);
+      selectImage(root);
       await expect(root.querySelector('img')?.hasAttribute('width')).toBe(false);
 
       // ─ Arraste: a alça existe só com a imagem selecionada, e move a largura.
-      const alca = root.querySelector('.nds-editor-image-handle') as HTMLElement;
-      await expect(getComputedStyle(alca).opacity).toBe('1');
+      const handle = root.querySelector('.nds-editor-image-handle') as HTMLElement;
+      await expect(getComputedStyle(handle).opacity).toBe('1');
       // O ícone é DECORAÇÃO, e quem carrega o `aria-hidden` é a alça inteira —
       // um segundo, aninhado, só repetiria o que o pai já diz. E ele não pode
       // receber ponteiro: o gesto tem de nascer na alça, senão o
       // `setPointerCapture` captura num alvo que o `pointermove` não escuta.
-      const iconeDaAlca = alca.querySelector('svg') as SVGElement;
-      await expect(iconeDaAlca).not.toBeNull();
-      await expect(alca).toHaveAttribute('aria-hidden', 'true');
-      await expect(getComputedStyle(iconeDaAlca).pointerEvents).toBe('none');
-      const antes = Math.round(
+      const handleIcon = handle.querySelector('svg') as SVGElement;
+      await expect(handleIcon).not.toBeNull();
+      await expect(handle).toHaveAttribute('aria-hidden', 'true');
+      await expect(getComputedStyle(handleIcon).pointerEvents).toBe('none');
+      const before = Math.round(
         (root.querySelector('img') as HTMLElement).getBoundingClientRect().width,
       );
-      const caixaAlca = alca.getBoundingClientRect();
-      const ponteiro = { pointerId: 1, bubbles: true, cancelable: true } as const;
-      alca.setPointerCapture = () => {};
-      alca.releasePointerCapture = () => {};
-      alca.dispatchEvent(
-        new PointerEvent('pointerdown', { ...ponteiro, clientX: caixaAlca.left, clientY: caixaAlca.top }),
+      const handleBox = handle.getBoundingClientRect();
+      const pointerInit = { pointerId: 1, bubbles: true, cancelable: true } as const;
+      handle.setPointerCapture = () => {};
+      handle.releasePointerCapture = () => {};
+      handle.dispatchEvent(
+        new PointerEvent('pointerdown', { ...pointerInit, clientX: handleBox.left, clientY: handleBox.top }),
       );
-      alca.dispatchEvent(
+      handle.dispatchEvent(
         new PointerEvent('pointermove', {
-          ...ponteiro,
-          clientX: caixaAlca.left - 30,
-          clientY: caixaAlca.top,
+          ...pointerInit,
+          clientX: handleBox.left - 30,
+          clientY: handleBox.top,
         }),
       );
-      alca.dispatchEvent(new PointerEvent('pointerup', ponteiro));
+      handle.dispatchEvent(new PointerEvent('pointerup', pointerInit));
       // A leitura é do DOCUMENTO, não do `<img>`.
       //
       // Durante o arrasto a largura é escrita direto no DOM de propósito —
@@ -846,37 +865,37 @@ export const AiImageDescription: Story = {
       // asserção sobre o atributo do `<img>` passaria com a gravação removida,
       // porque o arrasto já a escreveu ali: medido, ficou verde com o defeito
       // plantado.
-      let gravada: unknown = null;
+      let stored: unknown = null;
       root.editor.state.doc.descendants((node) => {
-        if (node.type.name === 'image') gravada = node.attrs.width;
+        if (node.type.name === 'image') stored = node.attrs.width;
       });
-      await expect(gravada).toBe(antes - 30);
+      await expect(stored).toBe(before - 30);
     });
 
     await step('E a pessoa corrige o que a IA escreveu', async () => {
       root.editor.commands.setContent('<p>correção</p>');
-      await expect(await root.insertImage(arquivo)).toBe(true);
-      await esperarAlt(root, 'Descrição automática de grafico.png');
+      await expect(await root.insertImage(file)).toBe(true);
+      await waitForAlt(root, 'Descrição automática de grafico.png');
 
       // O botão só existe com a imagem selecionada — é o mesmo desenho dos
       // botões de tabela.
       // A posição do nó vem de uma varredura, não de aritmética sobre o tamanho
       // do documento: um parágrafo a mais ou a menos desloca a conta em silêncio.
-      let posicao = -1;
+      let position = -1;
       root.editor.state.doc.descendants((node, pos) => {
-        if (node.type.name === 'image') posicao = pos;
+        if (node.type.name === 'image') position = pos;
       });
-      root.editor.commands.setNodeSelection(posicao);
+      root.editor.commands.setNodeSelection(position);
 
-      const abrir = canvas.getByRole('button', { name: LABELS.actions.imageAlt });
-      await userEvent.click(abrir);
+      const open = canvas.getByRole('button', { name: LABELS.actions.imageAlt });
+      await openRow(open);
 
-      const campo = canvas.getByRole('textbox', { name: LABELS.fields.alt });
+      const field = canvas.getByRole('textbox', { name: LABELS.fields.alt });
       // Abre com o que está lá: ver o texto é o que permite julgá-lo.
-      await expect(campo).toHaveValue('Descrição automática de grafico.png');
+      await expect(field).toHaveValue('Descrição automática de grafico.png');
 
-      await userEvent.clear(campo);
-      await userEvent.type(campo, 'Gráfico de barras da receita por trimestre{Enter}');
+      await userEvent.clear(field);
+      await userEvent.type(field, 'Gráfico de barras da receita por trimestre{Enter}');
       await expect(root.querySelector('img')).toHaveAttribute(
         'alt',
         'Gráfico de barras da receita por trimestre',

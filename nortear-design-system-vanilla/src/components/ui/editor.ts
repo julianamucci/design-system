@@ -3,7 +3,7 @@
 // Editor de texto rico sobre `@tiptap/core`. NÃO é um componente entregue: é a
 // medição que decide se o Tiptap entra no design system, e o que ele custa.
 //
-// Por que Vanilla primeiro: `EditorOptions.element` do Tiptap aceita um
+// Por que Vanilla firstFocusable: `EditorOptions.element` do Tiptap aceita um
 // `Element` qualquer, então o núcleo monta nas cinco stacks sem binding de
 // framework — `@tiptap/react`, `@tiptap/vue-3` e afins são conveniência de
 // ciclo de vida, não requisito. Provar isso na stack que não tem framework
@@ -215,6 +215,18 @@ export type EditorOptions = {
    * com a imagem selecionada — a IA propõe, a pessoa confere.
    */
   describeImage?: (file: File | null, src: string) => Promise<string | null>;
+  /**
+   * Disparado a cada mudança do DOCUMENTO, com o HTML atual.
+   *
+   * `update` e não `transaction`: mover o cursor gera transação e não muda o
+   * conteúdo, e um formulário que gravasse a cada movimento de cursor
+   * escreveria dezenas de versões idênticas.
+   *
+   * O HTML sai como a lib o serializa. Quem grava decide se sanitiza de novo do
+   * seu lado — o esquema do ProseMirror já descarta o que não conhece, mas
+   * confiar no formato de terceiro é decisão de quem persiste.
+   */
+  onChange?: (html: string) => void;
   labels: EditorLabels;
   class?: string;
 };
@@ -259,185 +271,185 @@ export type EditorRoot = DestroyableElement<HTMLDivElement> & {
 // desenha, se está ligada, se ainda pode. Espalhar isso por `if` de montagem foi
 // o que deixou `data-mark` e `data-value` divergirem na versão anterior.
 
-type Acao = {
+type Action = {
   icon: LucideIconNode[];
   /** Ligada agora? Ausente = ação sem estado (divisória, desfazer). */
-  ativa?: (e: Editor) => boolean;
+  isOn?: (e: Editor) => boolean;
   /** O que fazer no clique. Ausente = a ação abre uma linha de entrada. */
-  executar?: (e: Editor) => void;
+  run?: (e: Editor) => void;
   /** Ainda é possível? Ausente = sempre. */
-  pode?: (e: Editor) => boolean;
+  can?: (e: Editor) => boolean;
 };
 
-const ico = (n: unknown): LucideIconNode[] => n as LucideIconNode[];
+const asIcon = (n: unknown): LucideIconNode[] => n as LucideIconNode[];
 
 /**
  * Largura da imagem selecionada, em pixels.
  *
  * O atributo quando existe; a medida na TELA quando não. A segunda leitura é o
- * que dá um ponto de partida ao primeiro clique — imagem recém-inserida não tem
+ * que dá um ponto de partida ao firstFocusable clique — imagem recém-inserida não tem
  * `width` gravado, e um passo sobre `null` teria de inventar um número.
  */
-function larguraAtual(e: Editor): number {
-  const gravada = e.getAttributes('image').width as number | null | undefined;
-  if (typeof gravada === 'number') return gravada;
+function currentWidth(e: Editor): number {
+  const stored = e.getAttributes('image').width as number | null | undefined;
+  if (typeof stored === 'number') return stored;
   const img = e.view.dom.querySelector('.ProseMirror-selectednode img');
   return img ? Math.round(img.getBoundingClientRect().width) : 0;
 }
 
-function ajustarLargura(e: Editor, passo: number): void {
-  const nova = Math.max(LARGURA_MINIMA, larguraAtual(e) + passo);
-  e.chain().focus().updateAttributes('image', { width: nova }).run();
+function adjustWidth(e: Editor, step: number): void {
+  const nextWidth = Math.max(MIN_WIDTH, currentWidth(e) + step);
+  e.chain().focus().updateAttributes('image', { width: nextWidth }).run();
 }
 
-const ACOES: Record<EditorAction, Acao> = {
+const ACTIONS: Record<EditorAction, Action> = {
   bold: {
-    icon: ico(Bold),
-    ativa: (e) => e.isActive('bold'),
-    executar: (e) => void e.chain().focus().toggleBold().run(),
+    icon: asIcon(Bold),
+    isOn: (e) => e.isActive('bold'),
+    run: (e) => void e.chain().focus().toggleBold().run(),
   },
   italic: {
-    icon: ico(Italic),
-    ativa: (e) => e.isActive('italic'),
-    executar: (e) => void e.chain().focus().toggleItalic().run(),
+    icon: asIcon(Italic),
+    isOn: (e) => e.isActive('italic'),
+    run: (e) => void e.chain().focus().toggleItalic().run(),
   },
   underline: {
-    icon: ico(Underline),
-    ativa: (e) => e.isActive('underline'),
-    executar: (e) => void e.chain().focus().toggleUnderline().run(),
+    icon: asIcon(Underline),
+    isOn: (e) => e.isActive('underline'),
+    run: (e) => void e.chain().focus().toggleUnderline().run(),
   },
   strike: {
-    icon: ico(Strikethrough),
-    ativa: (e) => e.isActive('strike'),
-    executar: (e) => void e.chain().focus().toggleStrike().run(),
+    icon: asIcon(Strikethrough),
+    isOn: (e) => e.isActive('strike'),
+    run: (e) => void e.chain().focus().toggleStrike().run(),
   },
   code: {
-    icon: ico(Code),
-    ativa: (e) => e.isActive('code'),
-    executar: (e) => void e.chain().focus().toggleCode().run(),
+    icon: asIcon(Code),
+    isOn: (e) => e.isActive('code'),
+    run: (e) => void e.chain().focus().toggleCode().run(),
   },
   highlight: {
-    icon: ico(Highlighter),
-    ativa: (e) => e.isActive('highlight'),
-    executar: (e) => void e.chain().focus().toggleHighlight().run(),
+    icon: asIcon(Highlighter),
+    isOn: (e) => e.isActive('highlight'),
+    run: (e) => void e.chain().focus().toggleHighlight().run(),
   },
   // Alinhamento é ATRIBUTO do bloco, não marca: por isso `isActive` recebe
   // `{ textAlign }` e não um nome de nó. O grupo é `single` — um parágrafo tem
   // um alinhamento só.
   alignLeft: {
-    icon: ico(AlignLeft),
-    ativa: (e) => e.isActive({ textAlign: 'left' }),
-    executar: (e) => void e.chain().focus().setTextAlign('left').run(),
+    icon: asIcon(AlignLeft),
+    isOn: (e) => e.isActive({ textAlign: 'left' }),
+    run: (e) => void e.chain().focus().setTextAlign('left').run(),
   },
   alignCenter: {
-    icon: ico(AlignCenter),
-    ativa: (e) => e.isActive({ textAlign: 'center' }),
-    executar: (e) => void e.chain().focus().setTextAlign('center').run(),
+    icon: asIcon(AlignCenter),
+    isOn: (e) => e.isActive({ textAlign: 'center' }),
+    run: (e) => void e.chain().focus().setTextAlign('center').run(),
   },
   alignRight: {
-    icon: ico(AlignRight),
-    ativa: (e) => e.isActive({ textAlign: 'right' }),
-    executar: (e) => void e.chain().focus().setTextAlign('right').run(),
+    icon: asIcon(AlignRight),
+    isOn: (e) => e.isActive({ textAlign: 'right' }),
+    run: (e) => void e.chain().focus().setTextAlign('right').run(),
   },
   alignJustify: {
-    icon: ico(AlignJustify),
-    ativa: (e) => e.isActive({ textAlign: 'justify' }),
-    executar: (e) => void e.chain().focus().setTextAlign('justify').run(),
+    icon: asIcon(AlignJustify),
+    isOn: (e) => e.isActive({ textAlign: 'justify' }),
+    run: (e) => void e.chain().focus().setTextAlign('justify').run(),
   },
   h1: {
-    icon: ico(Heading1),
-    ativa: (e) => e.isActive('heading', { level: 1 }),
-    executar: (e) => void e.chain().focus().toggleHeading({ level: 1 }).run(),
+    icon: asIcon(Heading1),
+    isOn: (e) => e.isActive('heading', { level: 1 }),
+    run: (e) => void e.chain().focus().toggleHeading({ level: 1 }).run(),
   },
   h2: {
-    icon: ico(Heading2),
-    ativa: (e) => e.isActive('heading', { level: 2 }),
-    executar: (e) => void e.chain().focus().toggleHeading({ level: 2 }).run(),
+    icon: asIcon(Heading2),
+    isOn: (e) => e.isActive('heading', { level: 2 }),
+    run: (e) => void e.chain().focus().toggleHeading({ level: 2 }).run(),
   },
   h3: {
-    icon: ico(Heading3),
-    ativa: (e) => e.isActive('heading', { level: 3 }),
-    executar: (e) => void e.chain().focus().toggleHeading({ level: 3 }).run(),
+    icon: asIcon(Heading3),
+    isOn: (e) => e.isActive('heading', { level: 3 }),
+    run: (e) => void e.chain().focus().toggleHeading({ level: 3 }).run(),
   },
   bulletList: {
-    icon: ico(List),
-    ativa: (e) => e.isActive('bulletList'),
-    executar: (e) => void e.chain().focus().toggleBulletList().run(),
+    icon: asIcon(List),
+    isOn: (e) => e.isActive('bulletList'),
+    run: (e) => void e.chain().focus().toggleBulletList().run(),
   },
   orderedList: {
-    icon: ico(ListOrdered),
-    ativa: (e) => e.isActive('orderedList'),
-    executar: (e) => void e.chain().focus().toggleOrderedList().run(),
+    icon: asIcon(ListOrdered),
+    isOn: (e) => e.isActive('orderedList'),
+    run: (e) => void e.chain().focus().toggleOrderedList().run(),
   },
   taskList: {
-    icon: ico(ListTodo),
-    ativa: (e) => e.isActive('taskList'),
-    executar: (e) => void e.chain().focus().toggleTaskList().run(),
+    icon: asIcon(ListTodo),
+    isOn: (e) => e.isActive('taskList'),
+    run: (e) => void e.chain().focus().toggleTaskList().run(),
   },
   blockquote: {
-    icon: ico(Quote),
-    ativa: (e) => e.isActive('blockquote'),
-    executar: (e) => void e.chain().focus().toggleBlockquote().run(),
+    icon: asIcon(Quote),
+    isOn: (e) => e.isActive('blockquote'),
+    run: (e) => void e.chain().focus().toggleBlockquote().run(),
   },
   codeBlock: {
-    icon: ico(SquareCode),
-    ativa: (e) => e.isActive('codeBlock'),
-    executar: (e) => void e.chain().focus().toggleCodeBlock().run(),
+    icon: asIcon(SquareCode),
+    isOn: (e) => e.isActive('codeBlock'),
+    run: (e) => void e.chain().focus().toggleCodeBlock().run(),
   },
   horizontalRule: {
-    icon: ico(Minus),
-    executar: (e) => void e.chain().focus().setHorizontalRule().run(),
+    icon: asIcon(Minus),
+    run: (e) => void e.chain().focus().setHorizontalRule().run(),
   },
   undo: {
-    icon: ico(Undo2),
-    executar: (e) => void e.chain().focus().undo().run(),
-    pode: (e) => e.can().undo(),
+    icon: asIcon(Undo2),
+    run: (e) => void e.chain().focus().undo().run(),
+    can: (e) => e.can().undo(),
   },
   redo: {
-    icon: ico(Redo2),
-    executar: (e) => void e.chain().focus().redo().run(),
-    pode: (e) => e.can().redo(),
+    icon: asIcon(Redo2),
+    run: (e) => void e.chain().focus().redo().run(),
+    can: (e) => e.can().redo(),
   },
   table: {
-    icon: ico(TableIcon),
+    icon: asIcon(TableIcon),
     // 3×3 com cabeçalho: uma tabela de exemplo grande o bastante para mostrar
     // o que ela é, e pequena o bastante para caber no que já está escrito.
-    executar: (e) =>
+    run: (e) =>
       void e.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
   },
 
   // ─── Só com o cursor dentro de uma tabela ───────────────────────────────────
   rowAfter: {
-    icon: ico(Rows3),
-    executar: (e) => void e.chain().focus().addRowAfter().run(),
+    icon: asIcon(Rows3),
+    run: (e) => void e.chain().focus().addRowAfter().run(),
   },
   columnAfter: {
-    icon: ico(Columns3),
-    executar: (e) => void e.chain().focus().addColumnAfter().run(),
+    icon: asIcon(Columns3),
+    run: (e) => void e.chain().focus().addColumnAfter().run(),
   },
   deleteRow: {
-    icon: ico(Minus),
-    executar: (e) => void e.chain().focus().deleteRow().run(),
+    icon: asIcon(Minus),
+    run: (e) => void e.chain().focus().deleteRow().run(),
   },
   deleteColumn: {
-    icon: ico(Minus),
-    executar: (e) => void e.chain().focus().deleteColumn().run(),
+    icon: asIcon(Minus),
+    run: (e) => void e.chain().focus().deleteColumn().run(),
   },
   headerRow: {
-    icon: ico(PanelTop),
-    executar: (e) => void e.chain().focus().toggleHeaderRow().run(),
+    icon: asIcon(PanelTop),
+    run: (e) => void e.chain().focus().toggleHeaderRow().run(),
   },
   deleteTable: {
-    icon: ico(Trash2),
-    executar: (e) => void e.chain().focus().deleteTable().run(),
+    icon: asIcon(Trash2),
+    run: (e) => void e.chain().focus().deleteTable().run(),
   },
 
   // As três que não agem sozinhas: abrem uma linha, um seletor de arquivo, e
   // esperam. `executar` fica de fora porque a ação depende da fábrica — do
   // resolvedor de imagem que quem consome escolheu, ou do texto da linha.
-  link: { icon: ico(LinkIcon), ativa: (e) => e.isActive('link') },
-  image: { icon: ico(ImageIcon) },
-  imageAlt: { icon: ico(Captions) },
+  link: { icon: asIcon(LinkIcon), isOn: (e) => e.isActive('link') },
+  image: { icon: asIcon(ImageIcon) },
+  imageAlt: { icon: asIcon(Captions) },
 
   // ─── Tamanho da imagem, pelo teclado ────────────────────────────────────────
   //
@@ -450,31 +462,31 @@ const ACOES: Record<EditorAction, Acao> = {
   // sem isso, a primeira diminuição saltaria de "o tamanho natural, que pode
   // ser 900px" para um valor arbitrário.
   imageSmaller: {
-    icon: ico(Shrink),
-    executar: (e) => ajustarLargura(e, -PASSO_DE_LARGURA),
-    pode: (e) => larguraAtual(e) > LARGURA_MINIMA,
+    icon: asIcon(Shrink),
+    run: (e) => adjustWidth(e, -WIDTH_STEP),
+    can: (e) => currentWidth(e) > MIN_WIDTH,
   },
   imageLarger: {
-    icon: ico(Expand),
-    executar: (e) => ajustarLargura(e, PASSO_DE_LARGURA),
+    icon: asIcon(Expand),
+    run: (e) => adjustWidth(e, WIDTH_STEP),
   },
   imageNatural: {
-    icon: ico(RotateCcw),
+    icon: asIcon(RotateCcw),
     // Volta ao tamanho natural apagando o atributo, e não gravando a medida
     // original: gravada, ela congelaria a imagem no tamanho de HOJE, e a folha
     // deixaria de poder encolhê-la numa moldura estreita.
-    executar: (e) => void e.chain().focus().updateAttributes('image', { width: null }).run(),
-    pode: (e) => e.getAttributes('image').width != null,
+    run: (e) => void e.chain().focus().updateAttributes('image', { width: null }).run(),
+    can: (e) => e.getAttributes('image').width != null,
   },
-  formula: { icon: ico(Sigma) },
+  formula: { icon: asIcon(Sigma) },
 };
 
 // ─── Composição da barra ─────────────────────────────────────────────────────
 
-type Bloco =
-  | { grupo: EditorGroup; type: 'single' | 'multiple'; acoes: EditorAction[] }
+type Block =
+  | { group: EditorGroup; type: 'single' | 'multiple'; actions: EditorAction[] }
   | {
-      botoes: EditorAction[];
+      buttons: EditorAction[];
       /**
        * Botões que só aparecem com um nó sob o cursor, DENTRO deste mesmo
        * bloco.
@@ -484,7 +496,7 @@ type Bloco =
        * meio do caminho. Como a caixa contextual não traz separador próprio, o
        * bloco continua sendo UM bloco — com ou sem os botões extras.
        */
-      contextual?: { node: string; botoes: EditorAction[] };
+      contextual?: { node: string; buttons: EditorAction[] };
     };
 
 /**
@@ -494,45 +506,45 @@ type Bloco =
  * lista com marcador OU numerada. `multiple` onde acumulam: negrito E itálico
  * no mesmo trecho, citação contendo bloco de código.
  */
-const PRESETS: Record<EditorPreset, Bloco[]> = {
+const PRESETS: Record<EditorPreset, Block[]> = {
   basic: [
-    { grupo: 'marks', type: 'multiple', acoes: ['bold', 'italic', 'strike'] },
-    { grupo: 'lists', type: 'single', acoes: ['bulletList', 'orderedList'] },
-    { botoes: ['link', 'undo', 'redo'] },
+    { group: 'marks', type: 'multiple', actions: ['bold', 'italic', 'strike'] },
+    { group: 'lists', type: 'single', actions: ['bulletList', 'orderedList'] },
+    { buttons: ['link', 'undo', 'redo'] },
   ],
   advanced: [
     {
-      grupo: 'marks',
+      group: 'marks',
       type: 'multiple',
-      acoes: ['bold', 'italic', 'underline', 'strike', 'code', 'highlight'],
+      actions: ['bold', 'italic', 'underline', 'strike', 'code', 'highlight'],
     },
-    { grupo: 'headings', type: 'single', acoes: ['h1', 'h2', 'h3'] },
+    { group: 'headings', type: 'single', actions: ['h1', 'h2', 'h3'] },
     {
-      grupo: 'align',
+      group: 'align',
       type: 'single',
-      acoes: ['alignLeft', 'alignCenter', 'alignRight', 'alignJustify'],
+      actions: ['alignLeft', 'alignCenter', 'alignRight', 'alignJustify'],
     },
-    { grupo: 'lists', type: 'single', acoes: ['bulletList', 'orderedList', 'taskList'] },
-    { grupo: 'blocks', type: 'multiple', acoes: ['blockquote', 'codeBlock'] },
+    { group: 'lists', type: 'single', actions: ['bulletList', 'orderedList', 'taskList'] },
+    { group: 'blocks', type: 'multiple', actions: ['blockquote', 'codeBlock'] },
     // Um bloco por ASSUNTO. Inserir e editar imagem andam juntos, e o mesmo
     // vale para a tabela: antes, "linha divisória", "desfazer" e o próprio
     // botão de tabela caíam ENTRE o de inserir imagem e os de editá-la.
-    { botoes: ['link', 'horizontalRule', 'undo', 'redo'] },
+    { buttons: ['link', 'horizontalRule', 'undo', 'redo'] },
     {
-      botoes: ['image'],
+      buttons: ['image'],
       contextual: {
         node: 'image',
-        botoes: ['imageAlt', 'imageSmaller', 'imageLarger', 'imageNatural'],
+        buttons: ['imageAlt', 'imageSmaller', 'imageLarger', 'imageNatural'],
       },
     },
     // Os seis da tabela só existem dentro de uma: barra com seis botões inertes
     // é ruído permanente para uma capacidade que a maioria dos documentos nunca
     // usa.
     {
-      botoes: ['table'],
+      buttons: ['table'],
       contextual: {
         node: 'table',
-        botoes: ['rowAfter', 'columnAfter', 'deleteRow', 'deleteColumn', 'headerRow', 'deleteTable'],
+        buttons: ['rowAfter', 'columnAfter', 'deleteRow', 'deleteColumn', 'headerRow', 'deleteTable'],
       },
     },
   ],
@@ -546,7 +558,7 @@ const PRESETS: Record<EditorPreset, Bloco[]> = {
  * é o que importa para injeção, mas metade da lista é superfície sem uso num
  * design system. Aqui a lista é a mínima que serve.
  */
-const ESQUEMAS_DE_LINK = ['http', 'https', 'mailto'];
+const LINK_SCHEMES = ['http', 'https', 'mailto'];
 
 /**
  * Menor largura de imagem, em pixels.
@@ -555,10 +567,10 @@ const ESQUEMAS_DE_LINK = ['http', 'https', 'mailto'];
  * mostra mais nada — mas continua ocupando uma linha do documento. Um piso é o
  * que impede o clique acidental que reduz a imagem a um ponto irrecuperável.
  */
-const LARGURA_MINIMA = 48;
+const MIN_WIDTH = 48;
 
 /** Passo do redimensionamento por teclado, em pixels. */
-const PASSO_DE_LARGURA = 40;
+const WIDTH_STEP = 40;
 
 /**
  * Imagem com largura ajustável.
@@ -568,15 +580,15 @@ const PASSO_DE_LARGURA = 40;
  * continua submetido ao `max-width: 100%` da folha — imagem larga demais encolhe
  * na moldura estreita em vez de vazar.
  */
-const ImagemAjustavel = Image.extend({
+const ResizableImage = Image.extend({
   addAttributes() {
     return {
       ...this.parent?.(),
       width: {
         default: null,
         parseHTML: (el) => {
-          const bruto = (el as HTMLElement).getAttribute('width');
-          const n = bruto ? Number.parseInt(bruto, 10) : Number.NaN;
+          const raw = (el as HTMLElement).getAttribute('width');
+          const n = raw ? Number.parseInt(raw, 10) : Number.NaN;
           return Number.isFinite(n) ? n : null;
         },
         renderHTML: (attrs) => (attrs.width ? { width: String(attrs.width) } : {}),
@@ -590,8 +602,8 @@ const ImagemAjustavel = Image.extend({
       dom.className = 'nds-editor-image';
 
       const img = document.createElement('img');
-      const alca = document.createElement('span');
-      alca.className = 'nds-editor-image-handle';
+      const handle = document.createElement('span');
+      handle.className = 'nds-editor-image-handle';
       // A alça é decoração de ponteiro: quem navega por teclado usa os botões
       // da barra, que é o caminho exigido pelo critério de arrasto (WCAG 2.5.7)
       // e o único que existe para quem não usa mouse.
@@ -599,55 +611,55 @@ const ImagemAjustavel = Image.extend({
       // Por ser decoração, o `aria-hidden` vale para a alça INTEIRA — o ícone
       // dentro dela não precisa do seu, e um segundo `aria-hidden` aninhado só
       // repetiria o que o pai já diz.
-      alca.setAttribute('aria-hidden', 'true');
-      alca.appendChild(icone(ico(ArrowDownRightFromSquare)));
-      dom.append(img, alca);
+      handle.setAttribute('aria-hidden', 'true');
+      handle.appendChild(iconSvg(asIcon(ArrowDownRightFromSquare)));
+      dom.append(img, handle);
 
-      const pintar = (n: typeof node): void => {
+      const paint = (n: typeof node): void => {
         img.src = n.attrs.src as string;
         img.alt = (n.attrs.alt as string | null) ?? '';
         if (n.attrs.width) img.setAttribute('width', String(n.attrs.width));
         else img.removeAttribute('width');
       };
-      pintar(node);
+      paint(node);
 
-      alca.addEventListener('pointerdown', (evento) => {
+      handle.addEventListener('pointerdown', (event) => {
         // `preventDefault` mata o arrasto NATIVO do nó: `draggable: true` está no
         // próprio nó de imagem, e sem isto puxar a alça arrastaria a imagem para
         // outro ponto do documento em vez de redimensioná-la.
-        evento.preventDefault();
-        const partiuDe = evento.clientX;
-        const larguraInicial = img.getBoundingClientRect().width;
-        alca.setPointerCapture(evento.pointerId);
+        event.preventDefault();
+        const startX = event.clientX;
+        const startWidth = img.getBoundingClientRect().width;
+        handle.setPointerCapture(event.pointerId);
 
-        const arrastar = (e: PointerEvent): void => {
-          const nova = Math.max(LARGURA_MINIMA, Math.round(larguraInicial + (e.clientX - partiuDe)));
+        const onDrag = (e: PointerEvent): void => {
+          const nextWidth = Math.max(MIN_WIDTH, Math.round(startWidth + (e.clientX - startX)));
           // Durante o arrasto só o DOM muda. Gravar no documento a cada quadro
           // encheria o histórico de passos intermediários, e desfazer teria de
           // ser apertado dezenas de vezes para voltar ao tamanho anterior.
-          img.setAttribute('width', String(nova));
+          img.setAttribute('width', String(nextWidth));
         };
 
-        const soltar = (): void => {
-          alca.removeEventListener('pointermove', arrastar);
-          alca.removeEventListener('pointerup', soltar);
-          alca.removeEventListener('pointercancel', soltar);
-          const posicao = typeof getPos === 'function' ? getPos() : undefined;
-          const largura = Number.parseInt(img.getAttribute('width') ?? '', 10);
-          if (posicao === undefined || !Number.isFinite(largura)) return;
-          editor.view.dispatch(editor.state.tr.setNodeAttribute(posicao, 'width', largura));
+        const onDrop = (): void => {
+          handle.removeEventListener('pointermove', onDrag);
+          handle.removeEventListener('pointerup', onDrop);
+          handle.removeEventListener('pointercancel', onDrop);
+          const position = typeof getPos === 'function' ? getPos() : undefined;
+          const width = Number.parseInt(img.getAttribute('width') ?? '', 10);
+          if (position === undefined || !Number.isFinite(width)) return;
+          editor.view.dispatch(editor.state.tr.setNodeAttribute(position, 'width', width));
         };
 
-        alca.addEventListener('pointermove', arrastar);
-        alca.addEventListener('pointerup', soltar);
-        alca.addEventListener('pointercancel', soltar);
+        handle.addEventListener('pointermove', onDrag);
+        handle.addEventListener('pointerup', onDrop);
+        handle.addEventListener('pointercancel', onDrop);
       });
 
       return {
         dom,
-        update: (novo) => {
-          if (novo.type.name !== 'image') return false;
-          pintar(novo);
+        update: (nextNode) => {
+          if (nextNode.type.name !== 'image') return false;
+          paint(nextNode);
           return true;
         },
         // O `width` que o arrasto escreve no `<img>` é mutação de DOM que a lib
@@ -660,17 +672,17 @@ const ImagemAjustavel = Image.extend({
 });
 
 /** Só os arquivos de imagem de uma área de transferência ou de um arrasto. */
-function imagensDe(dt: DataTransfer | null): File[] {
+function imageFilesOf(dt: DataTransfer | null): File[] {
   if (!dt) return [];
   return Array.from(dt.files).filter((f) => f.type.startsWith("image/"));
 }
 
-function linkPermitido(url: string): boolean {
+function isAllowedLink(url: string): boolean {
   try {
     // Sem base: endereço sem esquema estoura aqui, e é o que se quer — quem
     // chama completa com `https://` ANTES de perguntar. Aceitar relativo neste
     // ponto abriria a porta que a lista de esquemas existe para fechar.
-    return ESQUEMAS_DE_LINK.includes(new URL(url).protocol.replace(':', ''));
+    return LINK_SCHEMES.includes(new URL(url).protocol.replace(':', ''));
   } catch {
     return false;
   }
@@ -679,7 +691,7 @@ function linkPermitido(url: string): boolean {
 // ─── Peças de DOM ────────────────────────────────────────────────────────────
 
 /** Monta um SVG a partir dos nós do lucide — mesma forma do alert e do breadcrumb. */
-function icone(nodes: LucideIconNode[]): SVGSVGElement {
+function iconSvg(nodes: LucideIconNode[]): SVGSVGElement {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -697,11 +709,11 @@ function icone(nodes: LucideIconNode[]): SVGSVGElement {
   return svg;
 }
 
-type LinhaDeEntrada = {
-  linha: HTMLElement;
-  campo: HTMLInputElement;
-  aberta: () => boolean;
-  abrir: (aberta: boolean) => void;
+type FieldRow = {
+  row: HTMLElement;
+  field: HTMLInputElement;
+  isOpen: () => boolean;
+  open: (isOpen: boolean) => void;
 };
 
 /**
@@ -711,13 +723,13 @@ type LinhaDeEntrada = {
  * edição de texto: um modal tiraria o texto de vista justamente enquanto se
  * decide o que a fórmula diz ou para onde o link vai.
  */
-function criarLinhaDeEntrada(
+function createFieldRow(
   slot: string,
   label: string,
   placeholder: string,
   confirmLabel: string,
-  aoConfirmar: () => void,
-  aoFechar: () => void,
+  onConfirm: () => void,
+  onClose: () => void,
   /**
    * O que o campo mostra ao abrir.
    *
@@ -726,55 +738,55 @@ function criarLinhaDeEntrada(
    * e dá para apagar o texto e confirmar, que é como se tira o link. Abrindo em
    * branco, o botão só sabia criar, e nada na tela dizia o que já existia.
    */
-  valorAoAbrir: () => string,
-): LinhaDeEntrada {
-  const linha = document.createElement('div');
-  linha.dataset.slot = slot;
-  linha.className = 'nds-editor-field-row';
-  linha.hidden = true;
-  linha.id = `nds-${slot}-${Math.random().toString(36).slice(2, 9)}`;
+  valueOnOpen: () => string,
+): FieldRow {
+  const row = document.createElement('div');
+  row.dataset.slot = slot;
+  row.className = 'nds-editor-field-row';
+  row.hidden = true;
+  row.id = `nds-${slot}-${Math.random().toString(36).slice(2, 9)}`;
 
-  const campo = createInput({ placeholder });
-  campo.setAttribute('aria-label', label);
-  const confirmar = createButton({ label: confirmLabel, size: 'sm' });
-  linha.append(campo, confirmar);
+  const field = createInput({ placeholder });
+  field.setAttribute('aria-label', label);
+  const confirmButton = createButton({ label: confirmLabel, size: 'sm' });
+  row.append(field, confirmButton);
 
   // `hidden` é `boolean | string` no DOM moderno (`until-found`), então a
   // pergunta é pelo valor de verdade, não pelo booleano.
-  const aberta = (): boolean => !linha.hidden;
+  const isOpen = (): boolean => !row.hidden;
 
-  const abrir = (proxima: boolean): void => {
-    linha.hidden = !proxima;
-    if (!proxima) return;
+  const open = (next: boolean): void => {
+    row.hidden = !next;
+    if (!next) return;
     // O campo é remontado a cada abertura, e não guardado entre uma e outra:
     // texto abandonado por Escape reapareceria na abertura seguinte, aplicado a
     // outro trecho do documento.
-    campo.value = valorAoAbrir();
-    campo.removeAttribute('aria-invalid');
-    campo.focus();
-    campo.select();
+    field.value = valueOnOpen();
+    field.removeAttribute('aria-invalid');
+    field.focus();
+    field.select();
   };
 
-  confirmar.addEventListener('click', aoConfirmar);
-  campo.addEventListener('keydown', (e) => {
+  confirmButton.addEventListener('click', onConfirm);
+  field.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      aoConfirmar();
+      onConfirm();
     } else if (e.key === 'Escape') {
-      abrir(false);
-      aoFechar();
+      open(false);
+      onClose();
     }
   });
 
-  return { linha, campo, aberta, abrir };
+  return { row, field, isOpen, open };
 }
 
 // ─── Fábrica ─────────────────────────────────────────────────────────────────
 
 export function createEditor(options: EditorOptions): EditorRoot {
   const { labels, editable = true, preset = 'advanced' } = options;
-  const resolverImagem = options.resolveImage ?? imageAsDataUrl;
-  const descreverImagem = options.describeImage;
+  const resolveImageFile = options.resolveImage ?? imageAsDataUrl;
+  const describeImageFile = options.describeImage;
 
   const root = document.createElement('div');
   root.dataset.slot = 'editor';
@@ -786,17 +798,17 @@ export function createEditor(options: EditorOptions): EditorRoot {
   toolbar.setAttribute('role', 'toolbar');
   toolbar.setAttribute('aria-label', labels.toolbar);
 
-  const area = document.createElement('div');
-  area.dataset.slot = 'editor-content';
-  area.className = 'nds-editor-content';
+  const clipboard = document.createElement('div');
+  clipboard.dataset.slot = 'editor-content';
+  clipboard.className = 'nds-editor-content';
 
   const editor = new Editor({
-    element: area,
+    element: clipboard,
     editable,
     extensions: [
       StarterKit.configure({
         link: {
-          isAllowedUri: (url) => linkPermitido(url),
+          isAllowedUri: (url) => isAllowedLink(url),
           openOnClick: false,
         },
       }),
@@ -810,7 +822,7 @@ export function createEditor(options: EditorOptions): EditorRoot {
       // releitura do documento: o esquema descarta o `src` que não reconhece.
       // Como o resolvedor padrão devolve `data:`, ligar aqui é o que faz o
       // caminho de demonstração sobreviver a um `setContent`.
-      ImagemAjustavel.configure({ allowBase64: true }),
+      ResizableImage.configure({ allowBase64: true }),
       Highlight,
       // `types` diz em QUE nós o atributo pode pousar. Sem parágrafo e título
       // na lista, os botões de alinhamento não fazem nada — e nada na tela
@@ -827,26 +839,26 @@ export function createEditor(options: EditorOptions): EditorRoot {
       // colar arquivo não fazia nada e arrastar também não. Quem usa não sabe
       // que existe um botão para uma coisa que o resto da web resolve
       // arrastando.
-      handlePaste: (_view, evento) => {
-        const arquivos = imagensDe(evento.clipboardData);
-        if (arquivos.length === 0) return false;
-        for (const arquivo of arquivos) void inserirImagem(arquivo);
+      handlePaste: (_view, event) => {
+        const files = imageFilesOf(event.clipboardData);
+        if (files.length === 0) return false;
+        for (const file of files) void insertImageFile(file);
         return true;
       },
 
-      handleDrop: (view, evento, _slice, movido) => {
+      handleDrop: (view, event, _slice, moved) => {
         // `movido` é arrasto INTERNO — alguém remanejando o que já está no
         // documento. Interceptar isso apagaria o recurso de reordenar.
-        if (movido) return false;
-        const arquivos = imagensDe((evento as DragEvent).dataTransfer);
-        if (arquivos.length === 0) return false;
+        if (moved) return false;
+        const files = imageFilesOf((event as DragEvent).dataTransfer);
+        if (files.length === 0) return false;
         // A imagem entra ONDE se soltou, não onde o cursor estava.
-        const alvo = view.posAtCoords({
-          left: (evento as DragEvent).clientX,
-          top: (evento as DragEvent).clientY,
+        const dropTarget = view.posAtCoords({
+          left: (event as DragEvent).clientX,
+          top: (event as DragEvent).clientY,
         });
-        if (alvo) editor.commands.setTextSelection(alvo.pos);
-        for (const arquivo of arquivos) void inserirImagem(arquivo);
+        if (dropTarget) editor.commands.setTextSelection(dropTarget.pos);
+        for (const file of files) void insertImageFile(file);
         return true;
       },
     },
@@ -858,11 +870,11 @@ export function createEditor(options: EditorOptions): EditorRoot {
   // Um bloco por grupo, separador entre blocos. O separador é decorativo: quem
   // ouve recebe a divisão pelo nome de cada grupo, não por uma barrinha.
 
-  const grupos: Array<{ grupo: ToggleGroupElement; acoes: EditorAction[] }> = [];
-  const simples: Array<{ botao: HTMLButtonElement; acao: EditorAction }> = [];
-  const contextuais: Array<{ caixa: HTMLElement; node: string }> = [];
+  const groups: Array<{ group: ToggleGroupElement; actions: EditorAction[] }> = [];
+  const plain: Array<{ button: HTMLButtonElement; action: EditorAction }> = [];
+  const contextBoxes: Array<{ box: HTMLElement; node: string }> = [];
 
-  function separador(): HTMLElement {
+  function divider(): HTMLElement {
     const s = document.createElement('span');
     s.className = 'nds-editor-toolbar-separator';
     s.setAttribute('aria-hidden', 'true');
@@ -870,96 +882,96 @@ export function createEditor(options: EditorOptions): EditorRoot {
   }
 
   /** Botão que não alterna: divisória, desfazer, refazer, e os dois que abrem linha. */
-  function botaoSimples(acao: EditorAction): HTMLButtonElement {
+  function plainButton(action: EditorAction): HTMLButtonElement {
     const btn = createButton({
       variant: 'ghost',
       size: 'icon-sm',
-      'aria-label': labels.actions[acao],
-      children: icone(ACOES[acao].icon),
+      'aria-label': labels.actions[action],
+      children: iconSvg(ACTIONS[action].icon),
     });
-    btn.dataset.action = acao;
+    btn.dataset.action = action;
     return btn;
   }
 
-  const blocos = [...PRESETS[preset], { botoes: ['formula'] as EditorAction[] }];
+  const blocks = [...PRESETS[preset], { buttons: ['formula'] as EditorAction[] }];
 
-  blocos.forEach((bloco, i) => {
-    if (i > 0) toolbar.appendChild(separador());
-    const destino: HTMLElement = toolbar;
+  blocks.forEach((block, i) => {
+    if (i > 0) toolbar.appendChild(divider());
+    const target: HTMLElement = toolbar;
 
-    if ('grupo' in bloco) {
+    if ('group' in block) {
       // `role: 'group'` porque o grupo está ANINHADO nesta barra, ao lado de
       // botões que não alternam: `toolbar` dentro de `toolbar` seriam duas
       // navegações por seta disputando o mesmo Tab, e quem navega ficaria preso
-      // no primeiro grupo sem alcançar o resto.
-      const grupo = createToggleGroup({
-        type: bloco.type,
+      // no firstFocusable grupo sem alcançar o resto.
+      const group = createToggleGroup({
+        type: block.type,
         role: 'group',
-        'aria-label': labels.groups[bloco.grupo],
-        items: bloco.acoes.map((a) => ({
+        'aria-label': labels.groups[block.group],
+        items: block.actions.map((a) => ({
           value: a,
           'aria-label': labels.actions[a],
-          children: icone(ACOES[a].icon),
+          children: iconSvg(ACTIONS[a].icon),
         })),
       });
-      grupos.push({ grupo, acoes: bloco.acoes });
-      destino.appendChild(grupo);
+      groups.push({ group, actions: block.actions });
+      target.appendChild(group);
       return;
     }
 
-    for (const acao of bloco.botoes) {
-      const btn = botaoSimples(acao);
-      simples.push({ botao: btn, acao });
-      destino.appendChild(btn);
+    for (const action of block.buttons) {
+      const btn = plainButton(action);
+      plain.push({ button: btn, action });
+      target.appendChild(btn);
     }
 
-    if (!bloco.contextual) return;
+    if (!block.contextual) return;
 
     // A caixa contextual entra no MESMO bloco, sem separador próprio: os botões
     // extras pertencem ao assunto que o bloco já trata. Ela existe como caixa,
     // e não como botões soltos com `hidden` cada um, para que aparecer e sumir
     // seja um atributo só — e para que a barra não fique com buracos quando
     // parte do bloco some.
-    const caixa = document.createElement('span');
-    caixa.dataset.slot = 'editor-toolbar-context';
-    caixa.dataset.node = bloco.contextual.node;
-    caixa.className = 'nds-editor-toolbar-context';
-    caixa.hidden = true;
-    for (const acao of bloco.contextual.botoes) {
-      const btn = botaoSimples(acao);
-      simples.push({ botao: btn, acao });
-      caixa.appendChild(btn);
+    const box = document.createElement('span');
+    box.dataset.slot = 'editor-toolbar-context';
+    box.dataset.node = block.contextual.node;
+    box.className = 'nds-editor-toolbar-context';
+    box.hidden = true;
+    for (const action of block.contextual.buttons) {
+      const btn = plainButton(action);
+      plain.push({ button: btn, action });
+      box.appendChild(btn);
     }
-    toolbar.appendChild(caixa);
-    contextuais.push({ caixa, node: bloco.contextual.node });
+    toolbar.appendChild(box);
+    contextBoxes.push({ box, node: block.contextual.node });
   });
 
-  const botaoFormula = simples.find((s) => s.acao === 'formula')!.botao;
-  const alvoLink = simples.find((s) => s.acao === 'link');
-  const botaoLink = alvoLink ? alvoLink.botao : botaoFormula;
-  const botaoAlt = simples.find((s) => s.acao === 'imageAlt')?.botao;
+  const formulaButton = plain.find((s) => s.action === 'formula')!.button;
+  const linkTarget = plain.find((s) => s.action === 'link');
+  const linkButton = linkTarget ? linkTarget.button : formulaButton;
+  const altButton = plain.find((s) => s.action === 'imageAlt')?.button;
 
   // ─── Linhas de entrada ─────────────────────────────────────────────────────
 
-  const formula = criarLinhaDeEntrada(
+  const formula = createFieldRow(
     'editor-formula',
     labels.fields.formula,
     '\\frac{a}{b}',
     labels.fields.formulaConfirm,
-    () => inserirFormula(),
-    () => botaoFormula.focus(),
+    () => insertFormula(),
+    () => formulaButton.focus(),
     // Com o cursor numa fórmula, abrir mostra o LaTeX dela — é o único caminho
     // para corrigir uma: o que se vê na tela é o resultado renderizado.
     () => (editor.isActive('inlineMath') ? (editor.getAttributes('inlineMath').latex ?? '') : ''),
   );
 
-  const link = criarLinhaDeEntrada(
+  const link = createFieldRow(
     'editor-link',
     labels.fields.link,
     'https://exemplo.com',
     labels.fields.linkConfirm,
-    () => aplicarLink(),
-    () => botaoLink.focus(),
+    () => applyLink(),
+    () => linkButton.focus(),
     () => (editor.getAttributes('link').href as string | undefined) ?? '',
   );
 
@@ -969,51 +981,51 @@ export function createEditor(options: EditorOptions): EditorRoot {
    * Abre com o que a imagem tem hoje: o nome do arquivo enquanto a descrição
    * não chegou, a descrição depois. Ver o texto é o que permite julgá-lo.
    */
-  const alt = criarLinhaDeEntrada(
+  const alt = createFieldRow(
     'editor-alt',
     labels.fields.alt,
     labels.fields.alt,
     labels.fields.altConfirm,
-    () => aplicarAlt(),
-    () => botaoAlt?.focus(),
+    () => applyAlt(),
+    () => altButton?.focus(),
     () => (editor.getAttributes('image').alt as string | undefined) ?? '',
   );
 
-  const botaoTirarLink = createButton({
+  const unlinkButton = createButton({
     variant: 'ghost',
     size: 'icon-sm',
     'aria-label': labels.fields.linkRemove,
-    children: icone(ico(Unlink)),
+    children: iconSvg(asIcon(Unlink)),
   });
-  botaoTirarLink.dataset.action = 'unlink';
-  botaoTirarLink.hidden = true;
-  botaoTirarLink.addEventListener('click', () => {
-    // `extendMarkRange` primeiro: o cursor costuma estar NO MEIO do link, e sem
+  unlinkButton.dataset.action = 'unlink';
+  unlinkButton.hidden = true;
+  unlinkButton.addEventListener('click', () => {
+    // `extendMarkRange` firstFocusable: o cursor costuma estar NO MEIO do link, e sem
     // estender o trecho a marca sairia só do pedaço sob o cursor — partindo o
     // link em dois em vez de removê-lo.
     editor.chain().extendMarkRange('link').unsetLink().run();
-    abrirLinha(null);
-    botaoLink.focus();
+    openRow(null);
+    linkButton.focus();
   });
-  link.linha.appendChild(botaoTirarLink);
+  link.row.appendChild(unlinkButton);
 
   /** Só uma linha aberta por vez — as três ocupam o mesmo lugar na moldura. */
-  function abrirLinha(qual: LinhaDeEntrada | null): void {
-    for (const l of [formula, link, alt]) l.abrir(l === qual);
-    sincronizar();
+  function openRow(qual: FieldRow | null): void {
+    for (const l of [formula, link, alt]) l.open(l === qual);
+    sync();
   }
 
-  function aplicarAlt(): void {
+  function applyAlt(): void {
     // Aqui `updateAttributes` é o certo, ao contrário do caminho da IA: a
     // imagem está selecionada AGORA, é ela que se edita, e o texto é de quem
     // está olhando para ela.
-    editor.chain().focus().updateAttributes('image', { alt: alt.campo.value.trim() }).run();
-    abrirLinha(null);
-    botaoAlt?.focus();
+    editor.chain().focus().updateAttributes('image', { alt: alt.field.value.trim() }).run();
+    openRow(null);
+    altButton?.focus();
   }
 
-  function inserirFormula(): void {
-    const latex = formula.campo.value.trim();
+  function insertFormula(): void {
+    const latex = formula.field.value.trim();
     if (!latex) return;
     // `insertInlineMath` guarda o LaTeX num atributo do nó e deixa o KaTeX
     // renderizar. O texto nunca vira HTML: não há caminho de injeção por aqui,
@@ -1021,7 +1033,7 @@ export function createEditor(options: EditorOptions): EditorRoot {
     //
     // SEM `.focus()` na corrente, ao contrário dos botões de marca. O comando de
     // foco da lib chega depois do fim desta função — medido: o `focus()` do
-    // botão rodava primeiro e a lib o tomava de volta em seguida, deixando o
+    // botão rodava firstFocusable e a lib o tomava de volta em seguida, deixando o
     // foco no texto quando a linha acabara de fechar. A inserção não precisa do
     // foco: a seleção guardada no documento é o ponto de entrada.
     // Fórmula sob o cursor se ATUALIZA; fora dela, insere. Sem esta distinção,
@@ -1031,82 +1043,86 @@ export function createEditor(options: EditorOptions): EditorRoot {
     } else {
       editor.chain().insertInlineMath({ latex }).run();
     }
-    abrirLinha(null);
-    botaoFormula.focus();
+    openRow(null);
+    formulaButton.focus();
   }
 
-  function aplicarLink(): void {
-    const bruto = link.campo.value.trim();
+  function applyLink(): void {
+    const raw = link.field.value.trim();
     // Campo vazio TIRA o link do trecho — é o caminho de desfazer, e não há
     // botão separado para ele.
-    if (!bruto) {
+    if (!raw) {
       editor.chain().extendMarkRange('link').unsetLink().run();
     } else {
       // Endereço sem esquema é o que a pessoa digita: `exemplo.com`. Completar
       // com `https://` antes de validar evita reprovar o caso comum.
-      const url = /^[a-z][a-z0-9+.-]*:/i.test(bruto) ? bruto : `https://${bruto}`;
-      if (!linkPermitido(url)) {
-        link.campo.setAttribute('aria-invalid', 'true');
+      const url = /^[a-z][a-z0-9+.-]*:/i.test(raw) ? raw : `https://${raw}`;
+      if (!isAllowedLink(url)) {
+        link.field.setAttribute('aria-invalid', 'true');
         return;
       }
-      link.campo.removeAttribute('aria-invalid');
+      link.field.removeAttribute('aria-invalid');
       editor.chain().extendMarkRange('link').setLink({ href: url }).run();
     }
-    abrirLinha(null);
-    botaoLink.focus();
+    openRow(null);
+    linkButton.focus();
   }
 
-  for (const [botao, linha] of [
-    [botaoFormula, formula],
-    ...(alvoLink ? [[botaoLink, link] as const] : []),
-    ...(botaoAlt ? [[botaoAlt, alt] as const] : []),
-  ] as Array<[HTMLButtonElement, LinhaDeEntrada]>) {
-    botao.setAttribute('aria-expanded', 'false');
-    botao.setAttribute('aria-controls', linha.linha.id);
-    botao.addEventListener('click', () => abrirLinha(linha.aberta() ? null : linha));
+  for (const [button, row] of [
+    [formulaButton, formula],
+    ...(linkTarget ? [[linkButton, link] as const] : []),
+    ...(altButton ? [[altButton, alt] as const] : []),
+  ] as Array<[HTMLButtonElement, FieldRow]>) {
+    button.setAttribute('aria-expanded', 'false');
+    button.setAttribute('aria-controls', row.row.id);
+    button.addEventListener('click', () => openRow(row.isOpen() ? null : row));
   }
 
-  root.append(toolbar, formula.linha, link.linha, alt.linha, area);
+  root.append(toolbar, formula.row, link.row, alt.row, clipboard);
 
   // ─── Estado ────────────────────────────────────────────────────────────────
   //
   // `transaction` cobre o que `update` não cobre: mover o cursor não muda o
   // documento, mas muda a marca ativa. Ligar só em `update` deixava o botão
   // aceso depois de sair de um trecho em negrito.
-  function sincronizar(): void {
-    for (const { grupo, acoes } of grupos) {
-      grupo.setValue(acoes.filter((a) => ACOES[a].ativa?.(editor)));
+  function sync(): void {
+    for (const { group, actions } of groups) {
+      group.setValue(actions.filter((a) => ACTIONS[a].isOn?.(editor)));
     }
-    for (const { botao, acao } of simples) {
-      const { ativa, pode } = ACOES[acao];
-      if (pode) botao.disabled = !pode(editor);
-      if (ativa) botao.dataset.state = ativa(editor) ? 'on' : 'off';
+    for (const { button, action } of plain) {
+      const { isOn, can } = ACTIONS[action];
+      if (can) button.disabled = !can(editor);
+      if (isOn) button.dataset.state = isOn(editor) ? 'on' : 'off';
     }
     // Tirar o link só existe quando há link: botão que não faz nada é ruído, e
     // desabilitado seria pior — anuncia uma ação e nega logo em seguida.
-    botaoTirarLink.hidden = !editor.isActive('link');
-    for (const { caixa, node } of contextuais) caixa.hidden = !editor.isActive(node);
-    botaoFormula.setAttribute('aria-expanded', String(formula.aberta()));
-    if (alvoLink) botaoLink.setAttribute('aria-expanded', String(link.aberta()));
-    botaoAlt?.setAttribute('aria-expanded', String(alt.aberta()));
+    unlinkButton.hidden = !editor.isActive('link');
+    for (const { box, node } of contextBoxes) box.hidden = !editor.isActive(node);
+    formulaButton.setAttribute('aria-expanded', String(formula.isOpen()));
+    if (linkTarget) linkButton.setAttribute('aria-expanded', String(link.isOpen()));
+    altButton?.setAttribute('aria-expanded', String(alt.isOpen()));
   }
-  editor.on('transaction', sincronizar);
+  editor.on('transaction', sync);
   // Imagem colada entra por fora da fábrica, então a varredura é o que a
   // alcança. `update` e não `transaction`: só mudança de DOCUMENTO traz imagem
   // nova, e `transaction` dispara também a cada movimento de cursor.
-  editor.on('update', descreverPendentes);
+  editor.on('update', describePending);
+  if (options.onChange) {
+    const emitChange = options.onChange;
+    editor.on('update', () => emitChange(editor.getHTML()));
+  }
 
-  for (const { grupo, acoes } of grupos) {
-    for (const btn of grupo.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]')) {
+  for (const { group, actions } of groups) {
+    for (const btn of group.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]')) {
       btn.addEventListener('click', () => {
-        const acao = btn.dataset.value as EditorAction;
-        if (acoes.includes(acao)) ACOES[acao].executar?.(editor);
+        const action = btn.dataset.value as EditorAction;
+        if (actions.includes(action)) ACTIONS[action].run?.(editor);
       });
     }
   }
-  for (const { botao, acao } of simples) {
-    const executar = ACOES[acao].executar;
-    if (executar) botao.addEventListener('click', () => executar(editor));
+  for (const { button, action } of plain) {
+    const run = ACTIONS[action].run;
+    if (run) button.addEventListener('click', () => run(editor));
   }
 
   // ─── Imagem ────────────────────────────────────────────────────────────────
@@ -1122,18 +1138,18 @@ export function createEditor(options: EditorOptions): EditorRoot {
    * outra imagem, ou em lugar nenhum. Aqui a imagem é reencontrada pelo `src`.
    * Some do documento nesse meio-tempo? A função não faz nada, que é o certo.
    */
-  function definirAltPorSrc(src: string, alt: string): void {
+  function setAltBySrc(src: string, alt: string): void {
     const { state } = editor;
-    let posicao = -1;
+    let position = -1;
     state.doc.descendants((node, pos) => {
-      if (node.type.name === 'image' && node.attrs.src === src) posicao = pos;
+      if (node.type.name === 'image' && node.attrs.src === src) position = pos;
     });
-    if (posicao < 0) return;
-    editor.view.dispatch(state.tr.setNodeAttribute(posicao, 'alt', alt));
+    if (position < 0) return;
+    editor.view.dispatch(state.tr.setNodeAttribute(position, 'alt', alt));
   }
 
-  async function inserirImagem(arquivo: File): Promise<boolean> {
-    const src = await resolverImagem(arquivo);
+  async function insertImageFile(file: File): Promise<boolean> {
+    const src = await resolveImageFile(file);
     // `null` é recusa de quem consome — envio negado, arquivo grande demais,
     // formato fora da política. Não é erro, e não vira alerta.
     if (!src) return false;
@@ -1142,9 +1158,9 @@ export function createEditor(options: EditorOptions): EditorRoot {
     // É o que segura a vaga até a descrição chegar — e o que fica se ela não
     // vier. Imagem sem `alt` nenhum reprovaria no axe e sumiria do leitor de
     // tela sem deixar rastro.
-    editor.chain().focus().setImage({ src, alt: arquivo.name }).run();
+    editor.chain().focus().setImage({ src, alt: file.name }).run();
 
-    descrever(arquivo, src);
+    describe(file, src);
     return true;
   }
 
@@ -1163,12 +1179,12 @@ export function createEditor(options: EditorOptions): EditorRoot {
    * promessa, a segunda cópia recebe a MESMA descrição sem um segundo pedido —
    * mesma imagem, mesma descrição, uma chamada só ao serviço.
    */
-  const descricoes = new Map<string, Promise<string | null>>();
+  const descriptions = new Map<string, Promise<string | null>>();
 
-  function descrever(arquivo: File | null, src: string): void {
-    if (!descreverImagem) return;
-    let pedido = descricoes.get(src);
-    if (!pedido) {
+  function describe(file: File | null, src: string): void {
+    if (!describeImageFile) return;
+    let request = descriptions.get(src);
+    if (!request) {
       // A descrição é assíncrona e NÃO segura a inserção. Modelo de visão leva
       // segundos e às vezes falha; prender a imagem esperando trocaria uma
       // lacuna de acessibilidade por uma de responsividade.
@@ -1176,25 +1192,25 @@ export function createEditor(options: EditorOptions): EditorRoot {
       // A falha vira `null` aqui, e não uma promessa rejeitada: quem descreve
       // não derruba a edição, e a imagem segue com o `alt` provisório e o botão
       // de texto alternativo à mão.
-      pedido = descreverImagem(arquivo, src).catch(() => null);
-      descricoes.set(src, pedido);
+      request = describeImageFile(file, src).catch(() => null);
+      descriptions.set(src, request);
     }
-    void pedido.then((descricao) => {
-      if (descricao) definirAltPorSrc(src, descricao);
+    void request.then((description) => {
+      if (description) setAltBySrc(src, description);
     });
   }
 
-  function descreverPendentes(): void {
-    if (!descreverImagem) return;
-    const pendentes: string[] = [];
+  function describePending(): void {
+    if (!describeImageFile) return;
+    const pending: string[] = [];
     editor.state.doc.descendants((node) => {
       const { src, alt } = node.attrs as { src?: string; alt?: string };
       // `descricoes.has` corta a reentrada: escrever o `alt` dispara outra
       // atualização, e uma recusa não pode virar pedido a cada tecla digitada.
-      if (node.type.name === 'image' && src && !alt && !descricoes.has(src)) pendentes.push(src);
+      if (node.type.name === 'image' && src && !alt && !descriptions.has(src)) pending.push(src);
     });
     // Sem arquivo: a imagem colada de outra página tem endereço e nada mais.
-    for (const src of pendentes) descrever(null, src);
+    for (const src of pending) describe(null, src);
   }
 
   // ─── Arrastar para QUALQUER lugar da moldura ───────────────────────────────
@@ -1207,12 +1223,12 @@ export function createEditor(options: EditorOptions): EditorRoot {
   // Durante o arrasto o navegador esconde os arquivos por segurança:
   // `dataTransfer.files` vem VAZIO no `dragover`, e só em `drop` é que aparece.
   // Por isso a pergunta aqui é por `types`, e não pela lista.
-  const arrastaArquivo = (dt: DataTransfer | null): boolean =>
+  const isFileDrag = (dt: DataTransfer | null): boolean =>
     !!dt && Array.from(dt.types).includes('Files');
 
-  for (const evento of ['dragenter', 'dragover'] as const) {
-    root.addEventListener(evento, (e) => {
-      if (arrastaArquivo((e as DragEvent).dataTransfer)) e.preventDefault();
+  for (const event of ['dragenter', 'dragover'] as const) {
+    root.addEventListener(event, (e) => {
+      if (isFileDrag((e as DragEvent).dataTransfer)) e.preventDefault();
     });
   }
 
@@ -1220,29 +1236,29 @@ export function createEditor(options: EditorOptions): EditorRoot {
     // Solto DENTRO do editável, quem já tratou foi a lib, pelo `handleDrop`
     // acima — ela previne o padrão, e é essa marca que evita inserir duas vezes.
     if (e.defaultPrevented) return;
-    const arquivos = imagensDe((e as DragEvent).dataTransfer);
-    if (arquivos.length === 0) return;
+    const files = imageFilesOf((e as DragEvent).dataTransfer);
+    if (files.length === 0) return;
     e.preventDefault();
     // Solto fora do texto, a imagem vai para o fim do documento — é o lugar
     // mais próximo do que se apontou, e o único definido.
     editor.commands.focus('end');
-    for (const arquivo of arquivos) void inserirImagem(arquivo);
+    for (const file of files) void insertImageFile(file);
   });
 
-  const alvoImagem = simples.find((s) => s.acao === 'image');
-  if (alvoImagem) {
-    alvoImagem.botao.addEventListener('click', () => {
+  const imageTarget = plain.find((s) => s.action === 'image');
+  if (imageTarget) {
+    imageTarget.button.addEventListener('click', () => {
       // O seletor é criado a cada clique e descartado depois: um input guardado
       // entre usos mantém o arquivo anterior, e escolher o MESMO arquivo duas
       // vezes seguidas não dispara `change`.
-      const escolha = document.createElement('input');
-      escolha.type = 'file';
-      escolha.accept = 'image/*';
-      escolha.addEventListener('change', () => {
-        const arquivo = escolha.files?.[0];
-        if (arquivo) void inserirImagem(arquivo);
+      const picker = document.createElement('input');
+      picker.type = 'file';
+      picker.accept = 'image/*';
+      picker.addEventListener('change', () => {
+        const file = picker.files?.[0];
+        if (file) void insertImageFile(file);
       });
-      escolha.click();
+      picker.click();
     });
   }
 
@@ -1252,7 +1268,7 @@ export function createEditor(options: EditorOptions): EditorRoot {
   // dentro — inclusive atravessando os grupos, que abriram mão do teclado
   // justamente para isto. Sem a navegação, a barra promete um contrato que não
   // cumpre, e o leitor de tela anuncia o papel de qualquer jeito.
-  const foco = (): HTMLButtonElement[] =>
+  const focusables = (): HTMLButtonElement[] =>
     Array.from(toolbar.querySelectorAll<HTMLButtonElement>('button')).filter(
       // `offsetParent` nulo cobre o botão escondido E o bloco contextual
       // fechado em volta dele — perguntar só pelo `hidden` do próprio botão
@@ -1260,42 +1276,42 @@ export function createEditor(options: EditorOptions): EditorRoot {
       (b) => !b.disabled && b.offsetParent !== null,
     );
 
-  function rover(alvo: HTMLButtonElement): void {
+  function setRoving(dropTarget: HTMLButtonElement): void {
     for (const b of toolbar.querySelectorAll<HTMLButtonElement>('button')) {
-      b.tabIndex = b === alvo ? 0 : -1;
+      b.tabIndex = b === dropTarget ? 0 : -1;
     }
   }
 
   toolbar.addEventListener('keydown', (e) => {
-    const lista = foco();
-    const atual = lista.indexOf(document.activeElement as HTMLButtonElement);
-    if (atual < 0) return;
-    let proximo: number;
-    if (e.key === 'ArrowRight') proximo = (atual + 1) % lista.length;
-    else if (e.key === 'ArrowLeft') proximo = (atual - 1 + lista.length) % lista.length;
-    else if (e.key === 'Home') proximo = 0;
-    else if (e.key === 'End') proximo = lista.length - 1;
+    const listEl = focusables();
+    const current = listEl.indexOf(document.activeElement as HTMLButtonElement);
+    if (current < 0) return;
+    let next: number;
+    if (e.key === 'ArrowRight') next = (current + 1) % listEl.length;
+    else if (e.key === 'ArrowLeft') next = (current - 1 + listEl.length) % listEl.length;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = listEl.length - 1;
     else return;
     e.preventDefault();
-    rover(lista[proximo]);
-    lista[proximo].focus();
+    setRoving(listEl[next]);
+    listEl[next].focus();
   });
 
   // Clicar passa a ordem de tabulação para quem foi usado — senão o Tab
   // devolveria o foco a um botão diferente do último tocado.
   toolbar.addEventListener('click', (e) => {
     const btn = (e.target as HTMLElement).closest('button');
-    if (btn && !btn.disabled) rover(btn);
+    if (btn && !btn.disabled) setRoving(btn);
   });
 
-  sincronizar();
-  const primeiro = foco()[0];
-  if (primeiro) rover(primeiro);
+  sync();
+  const firstFocusable = focusables()[0];
+  if (firstFocusable) setRoving(firstFocusable);
 
-  const raiz = tornarDestruivel(root, root, () => {
+  const root2 = tornarDestruivel(root, root, () => {
     editor.destroy();
   }) as EditorRoot;
-  raiz.editor = editor;
-  raiz.insertImage = inserirImagem;
-  return raiz;
+  root2.editor = editor;
+  root2.insertImage = insertImageFile;
+  return root2;
 }
