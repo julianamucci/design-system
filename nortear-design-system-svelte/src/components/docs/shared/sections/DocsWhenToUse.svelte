@@ -6,6 +6,22 @@
   interface Scenario { s: string; u: string; a: string }
   interface UXRow { element: string; do: string; dont: string; rules?: string }
 
+  /**
+   * `guidelines.title` e o bloco `scenarios` são OBRIGATÓRIOS: título de bloco
+   * mais tabela de cenários é a forma que o conteúdo compartilhado pratica.
+   *
+   * Em 2026-08-27 os dois ficaram opcionais por um dia, para acomodar o conteúdo
+   * do editor, que trazia as guidelines como parágrafo solto e os cenários como
+   * frases sem coluna. Quatro dev-agents afrouxaram este mesmo contrato em
+   * paralelo, sem se ver — e o diagnóstico é justamente esse: o desvio estava no
+   * conteúdo, não na leitura de cada um. Afrouxado, o container passava a aceitar
+   * "Quando usar" sem cenário nenhum em qualquer componente NOVO, e nenhum portão
+   * reclamaria. Corrigido o conteúdo (`f5f2ef555`), o contrato volta ao que as
+   * demais páginas já praticam.
+   *
+   * `uxWriting` continua opcional, e sempre foi: é seção que só alguns
+   * componentes têm.
+   */
   const { title, guidelines, scenarios, uxWriting, do: doBlock, dont: dontBlock }: {
     title: string;
     guidelines: { title: string; items: string[] };

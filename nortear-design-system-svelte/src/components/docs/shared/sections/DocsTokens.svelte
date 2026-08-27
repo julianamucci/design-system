@@ -5,6 +5,17 @@
 
   interface DocsTokenItem { token: string; value: string; description: string }
 
+  /**
+   * As três colunas são OBRIGATÓRIAS: token, propriedade CSS que ele alimenta,
+   * uso.
+   *
+   * Em 2026-08-27 `value` ficou opcional por um dia, para acomodar o conteúdo do
+   * editor, que descrevia o token em duas colunas. Era o desvio do conteúdo
+   * virando folga permanente do container: afrouxado, qualquer componente NOVO
+   * podia documentar token sem dizer que propriedade ele alimenta, e nenhum
+   * portão reclamaria. Corrigido o conteúdo (`f5f2ef555`), o contrato volta ao
+   * que as demais páginas já praticam.
+   */
   const { title, cols, items, customizationTitle, customizationCode, language = 'css', copyLabel, copiedLabel }: {
     title: string;
     cols: { token: string; value: string; description: string };

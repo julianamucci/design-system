@@ -1,8 +1,12 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import { Editor } from '@/components/ui/editor';
-  import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-  import { LABELS, NOUN_LABELS, CONTENTS } from '@/components/ui/editor/editor.fixtures';
+  import { Button } from '@/components/ui/button';
+  import {
+    CONTENTS,
+    editorLabelsFor,
+    nounLabelsFor,
+  } from '@/components/ui/editor/editor.fixtures';
   import {
     editorAdvancedSource,
     editorBasicSource,
@@ -94,41 +98,66 @@
     return tNav(priorityKeyMap[raw] ?? 'common.high');
   }
 
-  /**
-   * Cada estado do conteúdo compartilhado vem como uma frase só: o nome, o
-   * travessão e a descrição. A tabela quer as duas metades em colunas, e o
-   * travessão é o separador que os três idiomas usam.
-   */
-  function splitState(raw: string): { label: string; behavior: string } {
-    const at = raw.indexOf(' — ');
-    if (at < 0) return { label: raw, behavior: '' };
-    return { label: raw.slice(0, at), behavior: raw.slice(at + 3) };
-  }
+  /** Estados do conteúdo compartilhado, na ordem em que ele os lista. */
+  const STATE_KEYS = [
+    'editing', 'readOnly', 'imageSelected', 'inTable', 'fieldOpen', 'invalidValue',
+  ] as const;
+
+  /** Chaves da tabela de tokens, na ordem em que o conteúdo as declara. */
+  const TOKEN_KEYS = [
+    'border', 'background', 'muted', 'mutedForeground', 'foreground',
+    'primary', 'accent', 'ring', 'textH1',
+  ] as const;
+
+  // ─── Rótulos da barra ────────────────────────────────────────────────────────
+  //
+  // Os 51 rótulos vêm do conteúdo compartilhado, no idioma da página. Antes
+  // vinham de um objeto local em pt-BR — inclusive `editorField`, o nome
+  // acessível da área editável: a página trocava de idioma e a interface que ela
+  // demonstra continuava em português para quem ouve.
+
+  const barLabels = $derived(editorLabelsFor($locale));
+
+  /** Os mesmos rótulos com o SUBSTANTIVO no lugar do verbo — o par 1 do Do & Don't. */
+  const nounBarLabels = $derived(nounLabelsFor($locale));
 
   // ─── Demonstração ────────────────────────────────────────────────────────────
   //
-  // Os rótulos de cada botão da barra vêm do módulo de fixture, e não de `t()`:
-  // o `translations.json` do editor não declara chaves para eles. Todo botão é
-  // só de ícone, então este é o texto que o leitor de tela anuncia — está
-  // registrado no relatório da tarefa como lacuna de conteúdo.
+  // Dois EIXOS independentes, e não uma escolha de três: o conjunto (básico ou
+  // avançado) e a edição ligada ou desligada são perguntas diferentes. Como
+  // escolha única, "somente leitura" excluía o conjunto escolhido — não dava para
+  // ver o conjunto avançado em leitura, que é justamente o estado que a seção de
+  // estados descreve.
+  //
+  // O evento sai do PRÓPRIO botão, por `data-track`: o observer do
+  // DocsPageLayout resolve por `.closest('[data-track]')`, e sem marcação no
+  // controle ele subia até o container da seção e disparava um segundo
+  // `docs_demo_click` com o rótulo TRADUZIDO no `element_id` — o mesmo clique
+  // contado duas vezes, e a segunda partida em três valores no GA4.
 
-  type DemoMode = 'basic' | 'advanced' | 'readOnly';
+  let demoPreset = $state<'basic' | 'advanced'>('advanced');
+  let demoEditable = $state(true);
 
-  let demoMode = $state<DemoMode>('advanced');
-
-  const demoPreset = $derived(demoMode === 'basic' ? 'basic' : 'advanced');
-  const demoEditable = $derived(demoMode !== 'readOnly');
-
-  function onDemoMode(value: string | string[]): void {
-    // Escolha exclusiva: desmarcar o botão ativo devolveria uma string vazia, e
-    // a demonstração ficaria sem conjunto nenhum.
-    const next = (Array.isArray(value) ? value[0] : value) as DemoMode | '';
-    if (!next) return;
-    demoMode = next;
-    // Só a chave do controle vai no payload. O rótulo é traduzido, e mandá-lo
-    // partiria o mesmo evento em três valores no GA4.
-    track('docs_demo_click', { component: 'editor', element_id: next });
-  }
+  const demoControls = $derived([
+    {
+      key: 'basic',
+      label: $tStore('demonstration.labels.basic'),
+      pressed: demoPreset === 'basic',
+      apply: () => { demoPreset = 'basic'; },
+    },
+    {
+      key: 'advanced',
+      label: $tStore('demonstration.labels.advanced'),
+      pressed: demoPreset === 'advanced',
+      apply: () => { demoPreset = 'advanced'; },
+    },
+    {
+      key: 'readOnly',
+      label: $tStore('demonstration.labels.readOnly'),
+      pressed: !demoEditable,
+      apply: () => { demoEditable = !demoEditable; },
+    },
+  ]);
 
   // ─── Código dos exemplos ─────────────────────────────────────────────────────
   //
@@ -165,22 +194,27 @@
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="editor">
     <div class="nds-stack nds-w-full" data-spacing="md">
-      <ToggleGroup
-        type="single"
-        value={demoMode}
-        onValueChange={onDemoMode}
-        aria-label={$tStore('demonstration.title')}
-      >
-        <ToggleGroupItem value="basic">{$tStore('demonstration.labels.basic')}</ToggleGroupItem>
-        <ToggleGroupItem value="advanced">{$tStore('demonstration.labels.advanced')}</ToggleGroupItem>
-        <ToggleGroupItem value="readOnly">{$tStore('demonstration.labels.readOnly')}</ToggleGroupItem>
-      </ToggleGroup>
+      <div class="nds-cluster" data-spacing="sm" role="group" aria-label={$tStore('demonstration.title')}>
+        {#each demoControls as control (control.key)}
+          <Button
+            variant="outline"
+            size="sm"
+            aria-pressed={control.pressed}
+            data-track="demo"
+            data-track-id={`editor:demonstracao:${control.key}`}
+            data-track-label={control.label}
+            onclick={control.apply}
+          >
+            {control.label}
+          </Button>
+        {/each}
+      </div>
 
       <Editor
         content={CONTENTS.playground}
         preset={demoPreset}
         editable={demoEditable}
-        labels={LABELS}
+        labels={barLabels}
         class="nds-w-full"
       />
     </div>
@@ -207,14 +241,21 @@
   <DocsWhenToUse
     title={$tStore('usage.title')}
     guidelines={{
-      items: [
-        $tStore('usage.guidelines'),
-        $tStore('usage.scenarios.item1'),
-        $tStore('usage.scenarios.item2'),
-        $tStore('usage.scenarios.item3'),
-        $tStore('usage.scenarios.item4'),
-        $tStore('usage.uxWriting'),
-      ],
+      title: $tStore('usage.guidelines.title'),
+      items: [1, 2, 3, 4, 5].map((n) => $tStore(`usage.guidelines.item${n}`)),
+    }}
+    scenarios={{
+      title: $tStore('usage.scenarios.title'),
+      cols: {
+        scenario: $tStore('usage.scenarios.cols.scenario'),
+        use: $tStore('usage.scenarios.cols.use'),
+        alternative: $tStore('usage.scenarios.cols.alternative'),
+      },
+      items: [1, 2, 3, 4, 5, 6].map((n) => ({
+        s: $tStore(`usage.scenarios.item${n}.s`),
+        u: $tStore(`usage.scenarios.item${n}.u`),
+        a: $tStore(`usage.scenarios.item${n}.a`),
+      })),
     }}
     do={{
       title: $tNavStore('common.do'),
@@ -259,25 +300,28 @@
     ]}
   />
 
-  <!-- Os dois editores do par 1 diferem SÓ nos rótulos de link e de tabela: é o
-       que a comparação precisa isolar. -->
+  <!-- Os dois editores do par 1 diferem em UM rótulo, o do botão de link:
+       `labels.actions.link` ("Inserir link") de um lado, `labels.nouns.link`
+       ("Link") do outro, os dois vindos do conteúdo compartilhado. É exatamente
+       o que a legenda deste par contrasta, e um segundo texto diferente daria à
+       comparação uma segunda variável. -->
   {#snippet doPair1()}
-    <Editor content={DO_DONT_CONTENT} preset="basic" labels={LABELS} class="nds-w-full" />
+    <Editor content={DO_DONT_CONTENT} preset="basic" labels={barLabels} class="nds-w-full" />
   {/snippet}
   {#snippet dontPair1()}
     <Editor
       content={DO_DONT_CONTENT}
       preset="basic"
-      labels={NOUN_LABELS}
+      labels={nounBarLabels}
       class="nds-w-full"
     />
   {/snippet}
 
   {#snippet doPair2()}
-    <Editor content={DO_DONT_CONTENT} preset="basic" labels={LABELS} class="nds-w-full" />
+    <Editor content={DO_DONT_CONTENT} preset="basic" labels={barLabels} class="nds-w-full" />
   {/snippet}
   {#snippet dontPair2()}
-    <Editor content={DO_DONT_CONTENT} preset="advanced" labels={LABELS} class="nds-w-full" />
+    <Editor content={DO_DONT_CONTENT} preset="advanced" labels={barLabels} class="nds-w-full" />
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
@@ -302,12 +346,17 @@
     items={[
       {
         name: $tStore('variants.items.basic.name'),
+        // A chave ESTÁVEL, e não o nome traduzido: é ela que vira `snippet_id`
+        // do `docs_code_copy`, e um nome traduzido partiria o mesmo evento em
+        // três valores no GA4.
+        trackId: 'basic',
         description: $tStore('variants.items.basic.description'),
         code: codeBasic,
         preview: variantBasic,
       },
       {
         name: $tStore('variants.items.advanced.name'),
+        trackId: 'advanced',
         description: $tStore('variants.items.advanced.description'),
         code: codeAdvanced,
         preview: variantAdvanced,
@@ -316,10 +365,10 @@
   />
 
   {#snippet variantBasic()}
-    <Editor content={CONTENTS.basic} preset="basic" labels={LABELS} class="nds-w-full" />
+    <Editor content={CONTENTS.basic} preset="basic" labels={barLabels} class="nds-w-full" />
   {/snippet}
   {#snippet variantAdvanced()}
-    <Editor content={CONTENTS.advanced} preset="advanced" labels={LABELS} class="nds-w-full" />
+    <Editor content={CONTENTS.advanced} preset="advanced" labels={barLabels} class="nds-w-full" />
   {/snippet}
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
@@ -327,16 +376,14 @@
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      behavior: $tStore('states.cols.description'),
+      trigger: $tStore('states.cols.trigger'),
+      behavior: $tStore('states.cols.behavior'),
     }}
-    items={[
-      splitState($tStore('states.editing')),
-      splitState($tStore('states.readOnly')),
-      splitState($tStore('states.imageSelected')),
-      splitState($tStore('states.inTable')),
-      splitState($tStore('states.fieldOpen')),
-      splitState($tStore('states.invalidValue')),
-    ]}
+    items={STATE_KEYS.map((key) => ({
+      label: $tStore(`states.${key}.label`),
+      trigger: $tStore(`states.${key}.trigger`),
+      behavior: $tStore(`states.${key}.behavior`),
+    }))}
   />
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
@@ -366,6 +413,7 @@
     interfaceCode={interfaceCode}
     extensibilityTitle={$tStore('props.extensibilityTitle')}
     extensibilityNotes={$tStore('props.extensibility')}
+    extensibilityCode={$tStore('props.extensibilityCode')}
     copyLabel={$tNavStore('common.copy')}
     copiedLabel={$tNavStore('common.copied')}
   />
@@ -375,19 +423,14 @@
     title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
-      description: $tStore('tokens.table.usage'),
+      value: $tStore('tokens.table.value'),
+      description: $tStore('tokens.table.description'),
     }}
-    items={[
-      { token: $tStore('tokens.table.border.name'),          description: $tStore('tokens.table.border.usage') },
-      { token: $tStore('tokens.table.background.name'),      description: $tStore('tokens.table.background.usage') },
-      { token: $tStore('tokens.table.muted.name'),           description: $tStore('tokens.table.muted.usage') },
-      { token: $tStore('tokens.table.mutedForeground.name'), description: $tStore('tokens.table.mutedForeground.usage') },
-      { token: $tStore('tokens.table.foreground.name'),      description: $tStore('tokens.table.foreground.usage') },
-      { token: $tStore('tokens.table.primary.name'),         description: $tStore('tokens.table.primary.usage') },
-      { token: $tStore('tokens.table.accent.name'),          description: $tStore('tokens.table.accent.usage') },
-      { token: $tStore('tokens.table.ring.name'),            description: $tStore('tokens.table.ring.usage') },
-      { token: $tStore('tokens.table.textH1.name'),          description: $tStore('tokens.table.textH1.usage') },
-    ]}
+    items={TOKEN_KEYS.map((key) => ({
+      token: $tStore(`tokens.table.${key}.token`),
+      value: $tStore(`tokens.table.${key}.value`),
+      description: $tStore(`tokens.table.${key}.description`),
+    }))}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}
     copyLabel={$tNavStore('common.copy')}

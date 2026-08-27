@@ -9,7 +9,7 @@ import {
 } from './editor.source';
 import {
   CONTENTS,
-  LABELS,
+  editorLabels,
   contextBox,
   cursorInTable,
   editorRoot,
@@ -55,22 +55,25 @@ export const ReadOnly: Story = {
       content: CONTENTS.advanced,
       editable: false,
       preset: 'advanced',
-      labels: LABELS,
+      labels: editorLabels(),
       class: 'nds-w-full',
     },
   }),
   play: async ({ canvasElement, step }) => {
+    // O idioma CORRENTE, e não pt-BR: o nome que a play procura tem de ser o
+    // mesmo que a barra desenha.
+    const L = editorLabels();
     const canvas = within(canvasElement);
     const root = editorRoot(canvasElement);
 
     await step('O campo deixa de aceitar edição, e continua legível', async () => {
-      const field = canvas.getByRole('textbox', { name: LABELS.editorField });
+      const field = canvas.getByRole('textbox', { name: L.editorField });
       await expect(field).toHaveAttribute('contenteditable', 'false');
       await expect(root.querySelector('h2')?.textContent).toBe('Relatório');
     });
 
     await step('Clicar numa marca não acende o botão nem muda o documento', async () => {
-      const boldButton = canvas.getByRole('button', { name: LABELS.actions.bold });
+      const boldButton = canvas.getByRole('button', { name: L.actions.bold });
       const before = root.editor.getHTML();
       // Clique idempotente por construção: com a edição desligada o comando é
       // no-op, então repetir a play não parte de um estado diferente.
@@ -102,11 +105,14 @@ export const WithTable: Story = {
     props: {
       content: CONTENTS.withTable,
       preset: 'advanced',
-      labels: LABELS,
+      labels: editorLabels(),
       class: 'nds-w-full',
     },
   }),
   play: async ({ canvasElement, step }) => {
+    // O idioma CORRENTE, e não pt-BR: o nome que a play procura tem de ser o
+    // mesmo que a barra desenha.
+    const L = editorLabels();
     const canvas = within(canvasElement);
     const root = editorRoot(canvasElement);
     const box = contextBox(root, 'table');
@@ -127,12 +133,12 @@ export const WithTable: Story = {
         'o bloco de tabela continuou escondido com o cursor dentro dela',
       );
       for (const name of [
-        LABELS.actions.rowAfter,
-        LABELS.actions.columnAfter,
-        LABELS.actions.deleteRow,
-        LABELS.actions.deleteColumn,
-        LABELS.actions.headerRow,
-        LABELS.actions.deleteTable,
+        L.actions.rowAfter,
+        L.actions.columnAfter,
+        L.actions.deleteRow,
+        L.actions.deleteColumn,
+        L.actions.headerRow,
+        L.actions.deleteTable,
       ]) {
         await expect(canvas.getByRole('button', { name })).toBeVisible();
       }
@@ -164,11 +170,14 @@ export const WithImage: Story = {
     props: {
       content: CONTENTS.withImage,
       preset: 'advanced',
-      labels: LABELS,
+      labels: editorLabels(),
       class: 'nds-w-full',
     },
   }),
   play: async ({ canvasElement, step }) => {
+    // O idioma CORRENTE, e não pt-BR: o nome que a play procura tem de ser o
+    // mesmo que a barra desenha.
+    const L = editorLabels();
     const canvas = within(canvasElement);
     const root = editorRoot(canvasElement);
     const box = contextBox(root, 'image');
@@ -192,17 +201,27 @@ export const WithImage: Story = {
         'o bloco de imagem continuou escondido com a imagem selecionada',
       );
       for (const name of [
-        LABELS.actions.imageAlt,
-        LABELS.actions.imageSmaller,
-        LABELS.actions.imageLarger,
-        LABELS.actions.imageNatural,
+        L.actions.imageAlt,
+        L.actions.imageSmaller,
+        L.actions.imageLarger,
+        L.actions.imageNatural,
       ]) {
         await expect(canvas.getByRole('button', { name })).toBeVisible();
       }
     });
 
     await step('visual.item3 — anel de foco na imagem e alça visível no canto', async () => {
+      // A largura é escrita AQUI, e é o último passo: a story fecha no quadro que
+      // o Chromatic fotografa. O exemplo é um ponto de 1×1, e num ponto de 1×1
+      // não se enxerga nem anel nem alça — a foto não mostraria o que
+      // `visual.item3` promete. O valor é fixo, e não uma sequência de cliques em
+      // "aumentar": o painel Interactions reexecuta a play no mesmo DOM, e um
+      // passo relativo fecharia num tamanho diferente a cada rodada.
       selectImage(root);
+      root.editor.chain().updateAttributes('image', { width: 200 }).run();
+      selectImage(root);
+      await expect(root.querySelector('img')?.getAttribute('width')).toBe('200');
+
       const selected = root.querySelector('.nds-editor-image.ProseMirror-selectednode');
       await expect(selected).toBeInTheDocument();
       const handle = root.querySelector('.nds-editor-image-handle') as HTMLElement;

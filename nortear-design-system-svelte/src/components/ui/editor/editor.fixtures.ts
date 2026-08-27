@@ -1,91 +1,67 @@
 // Fixture compartilhada pelas stories do Editor.
 //
 // Módulo à parte porque num `*.stories.ts` TODO export nomeado vira story: um
-// helper exportado apareceria na sidebar como se fosse um exemplo. Os rótulos e
-// os conteúdos iniciais também moram aqui — quatro arquivos de story usam os
-// mesmos, e três cópias de um rótulo são três chances de um deles envelhecer.
+// helper exportado apareceria na sidebar como se fosse um exemplo. Os conteúdos
+// iniciais moram aqui — quatro arquivos de story usam os mesmos, e três cópias
+// de um texto são três chances de um deles envelhecer. Os RÓTULOS não: eles
+// saem do conteúdo compartilhado, e aqui só se resolve o idioma corrente.
 
+import { get } from 'svelte/store';
 import { expect, userEvent } from 'storybook/test';
+import { locale, type Locale } from '@/lib/i18n';
+import editorTranslations from '@shared/content/editor/translations.json';
 import type { EditorLabels, EditorRootElement } from './index';
 
 /**
- * Nome acessível de tudo que a barra expõe.
+ * Os rótulos da barra vêm do CONTEÚDO COMPARTILHADO, nos três idiomas.
  *
- * Todo botão é só de ícone: sem estes textos, o leitor de tela anuncia "botão" e
- * nada mais. O verbo vem antes do nome da marcação — "Inserir tabela" diz o que
- * acontece, "Tabela" não.
+ * Todo botão é só de ícone: o rótulo É o nome acessível — é ele que o leitor de
+ * tela anuncia, e é por ele que a play encontra cada botão. O verbo da ação vem
+ * antes do nome da marcação; "Inserir tabela" diz o que acontece, "Tabela" não.
+ *
+ * Até 2026-08-27 esta fixture era um objeto local em pt-BR, e a barra saía em
+ * português também em en e es: a página trocava de idioma e a interface que ela
+ * demonstra, não.
+ *
+ * A anotação de tipo é o PORTÃO. `labels` é lido como `EditorLabels` em CADA um
+ * dos três idiomas, então rótulo que sumir do JSON — ou idioma que ficar para
+ * trás — reprova no type-check, e não na tela.
  */
-export const LABELS: EditorLabels = {
-  toolbar: 'Formatação',
-  editorField: 'Corpo do texto',
-  groups: {
-    marks: 'Marcas de texto',
-    headings: 'Títulos',
-    align: 'Alinhamento',
-    lists: 'Listas',
-    blocks: 'Blocos',
-    actions: 'Ações',
-    table: 'Tabela',
-  },
-  actions: {
-    bold: 'Negrito',
-    italic: 'Itálico',
-    underline: 'Sublinhado',
-    strike: 'Tachado',
-    code: 'Código',
-    highlight: 'Destaque',
-    h1: 'Título 1',
-    h2: 'Título 2',
-    h3: 'Título 3',
-    alignLeft: 'Alinhar à esquerda',
-    alignCenter: 'Centralizar',
-    alignRight: 'Alinhar à direita',
-    alignJustify: 'Justificar',
-    bulletList: 'Lista com marcadores',
-    orderedList: 'Lista numerada',
-    taskList: 'Lista de tarefas',
-    blockquote: 'Citação',
-    codeBlock: 'Bloco de código',
-    link: 'Link',
-    image: 'Inserir imagem',
-    imageAlt: 'Texto alternativo',
-    imageSmaller: 'Diminuir a imagem',
-    imageLarger: 'Aumentar a imagem',
-    imageNatural: 'Tamanho natural',
-    table: 'Inserir tabela',
-    horizontalRule: 'Linha divisória',
-    undo: 'Desfazer',
-    redo: 'Refazer',
-    formula: 'Inserir fórmula',
-    rowAfter: 'Inserir linha abaixo',
-    columnAfter: 'Inserir coluna à direita',
-    deleteRow: 'Excluir linha',
-    deleteColumn: 'Excluir coluna',
-    headerRow: 'Alternar linha de cabeçalho',
-    deleteTable: 'Excluir tabela',
-  },
-  fields: {
-    formula: 'Fórmula em LaTeX',
-    formulaConfirm: 'Inserir',
-    link: 'Endereço do link',
-    linkConfirm: 'Aplicar',
-    linkRemove: 'Tirar o link',
-    alt: 'Descrição da imagem',
-    altConfirm: 'Salvar descrição',
-  },
+type EditorContentLabels = EditorLabels & {
+  /** O nome da MARCAÇÃO, para o contra-exemplo do Do & Don't. */
+  nouns: Record<'link' | 'image' | 'table', string>;
 };
 
+const CONTENT: Record<Locale, { labels: EditorContentLabels }> = editorTranslations;
+
+/** Os rótulos de um idioma — a forma para quem já tem o locale em mãos. */
+export function editorLabelsFor(l: Locale): EditorLabels {
+  return CONTENT[l].labels;
+}
+
 /**
- * O mesmo conjunto de rótulos com o nome da MARCAÇÃO no lugar do verbo.
+ * Os mesmos rótulos com o SUBSTANTIVO no lugar do verbo — o "não faça" do
+ * primeiro par de Do & Don't.
  *
- * Existe para o par de boas práticas: os dois editores são iguais em tudo menos
- * nestes dois textos, que é o que a comparação precisa isolar.
+ * UMA ação muda, e de propósito: a comparação precisa de uma variável só. Os
+ * dois textos moram no conteúdo (`labels.actions.link` e `labels.nouns.link`),
+ * então o par contrasta em cada idioma o que a legenda dele afirma — e não uma
+ * tradução inventada aqui.
  */
-export const NOUN_LABELS: EditorLabels = {
-  ...LABELS,
-  actions: { ...LABELS.actions, link: 'Link', table: 'Tabela' },
-  fields: { ...LABELS.fields, linkRemove: 'Link' },
-};
+export function nounLabelsFor(l: Locale): EditorLabels {
+  const { nouns, ...base } = CONTENT[l].labels;
+  return { ...base, actions: { ...base.actions, link: nouns.link } };
+}
+
+/**
+ * Os rótulos fora de um componente — `props` de story e `play` não são render.
+ *
+ * Lê a MESMA store de locale que o `useTranslation` da página, então o rótulo
+ * que a play procura é sempre o que a barra desenha.
+ */
+export function editorLabels(): EditorLabels {
+  return editorLabelsFor(get(locale));
+}
 
 /** Um PNG de 1×1 transparente, montado byte a byte — nada baixado. */
 export const DOT_PNG_BASE64 =

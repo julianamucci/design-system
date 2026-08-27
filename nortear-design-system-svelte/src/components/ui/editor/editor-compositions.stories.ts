@@ -8,7 +8,7 @@ import {
 } from './editor.source';
 import {
   CONTENTS,
-  LABELS,
+  editorLabels,
   editorRoot,
   openRow,
   imageFile,
@@ -63,7 +63,7 @@ export const CustomImageStorage: Story = {
     props: {
       content: CONTENTS.customImageStorage,
       preset: 'advanced',
-      labels: LABELS,
+      labels: editorLabels(),
       class: 'nds-w-full',
       onchange: args.onchange,
       resolveImage: async (file: File) => {
@@ -137,7 +137,7 @@ export const AiImageDescription: Story = {
     props: {
       content: CONTENTS.aiImageDescription,
       preset: 'advanced',
-      labels: LABELS,
+      labels: editorLabels(),
       class: 'nds-w-full',
       describeImage: async (file: File | null, src: string) => {
         // O dublê recebe as duas coisas que um serviço real pede: os bytes,
@@ -150,6 +150,9 @@ export const AiImageDescription: Story = {
     },
   }),
   play: async ({ canvasElement, step }) => {
+    // O idioma CORRENTE, e não pt-BR: o nome que a play procura tem de ser o
+    // mesmo que a barra desenha.
+    const L = editorLabels();
     const canvas = within(canvasElement);
     const root = editorRoot(canvasElement);
     root.editor.commands.setContent('<p>descrição automática</p>');
@@ -269,19 +272,19 @@ export const AiImageDescription: Story = {
       const startingWidth = Math.round(img.getBoundingClientRect().width);
 
       // O caminho que existe porque arrastar não pode ser o único (WCAG 2.5.7).
-      await userEvent.click(canvas.getByRole('button', { name: LABELS.actions.imageSmaller }));
+      await userEvent.click(canvas.getByRole('button', { name: L.actions.imageSmaller }));
       selectImage(root);
       await expect(Number(root.querySelector('img')?.getAttribute('width'))).toBe(
         startingWidth - 40,
       );
 
-      await userEvent.click(canvas.getByRole('button', { name: LABELS.actions.imageLarger }));
+      await userEvent.click(canvas.getByRole('button', { name: L.actions.imageLarger }));
       selectImage(root);
       await expect(Number(root.querySelector('img')?.getAttribute('width'))).toBe(startingWidth);
 
       // Piso: cliques demais não podem reduzir a imagem a um ponto.
       for (let i = 0; i < 40; i++) {
-        const button = canvas.queryByRole('button', { name: LABELS.actions.imageSmaller });
+        const button = canvas.queryByRole('button', { name: L.actions.imageSmaller });
         if (!button || (button as HTMLButtonElement).disabled) break;
         await userEvent.click(button);
         selectImage(root);
@@ -292,7 +295,7 @@ export const AiImageDescription: Story = {
       // Voltar ao natural APAGA o atributo, e não grava a medida de hoje: com a
       // medida gravada, a folha perderia o direito de encolher a imagem numa
       // moldura estreita.
-      await userEvent.click(canvas.getByRole('button', { name: LABELS.actions.imageNatural }));
+      await userEvent.click(canvas.getByRole('button', { name: L.actions.imageNatural }));
       selectImage(root);
       await expect(root.querySelector('img')?.hasAttribute('width')).toBe(false);
     });
@@ -304,10 +307,10 @@ export const AiImageDescription: Story = {
       selectImage(root);
       await settle();
 
-      const open = canvas.getByRole('button', { name: LABELS.actions.imageAlt });
+      const open = canvas.getByRole('button', { name: L.actions.imageAlt });
       await openRow(open);
 
-      const field = canvas.getByRole('textbox', { name: LABELS.fields.alt });
+      const field = canvas.getByRole('textbox', { name: L.fields.alt });
       await waitForFocus(field);
       // Abre com o que está lá: ver o texto é o que permite julgá-lo.
       await expect(field).toHaveValue('Descrição automática de grafico.png');

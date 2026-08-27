@@ -4,6 +4,17 @@
 
   interface DocsStateItem { label: string; trigger: string; behavior: string }
 
+  /**
+   * As três colunas são OBRIGATÓRIAS: estado, como ativar, comportamento.
+   *
+   * Em 2026-08-27 `trigger` ficou opcional por um dia, para acomodar o conteúdo
+   * do editor, que descrevia o estado numa coluna só. Quatro dev-agents
+   * afrouxaram este mesmo contrato em paralelo, sem se ver — e o diagnóstico é
+   * justamente esse: o desvio estava no conteúdo, não na leitura de cada um.
+   * Afrouxado, o container passava a aceitar tabela de estados sem gatilho em
+   * qualquer componente NOVO, e nenhum portão reclamaria. Corrigido o conteúdo
+   * (`f5f2ef555`), o contrato volta ao que as demais páginas já praticam.
+   */
   const { title, cols, items }: {
     title: string;
     cols: { state: string; trigger: string; behavior: string };

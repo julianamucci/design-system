@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import { Editor } from './index';
 import { editorAdvancedSource, editorBasicSource } from './editor.source';
-import { CONTENTS, LABELS, editorRoot } from './editor.fixtures';
+import { CONTENTS, editorLabels, editorRoot } from './editor.fixtures';
 
 const meta: Meta<typeof Editor> = {
   title: 'UI/Editor/Variants',
@@ -54,18 +54,21 @@ export const Basic: Story = {
     props: {
       content: CONTENTS.basic,
       preset: 'basic',
-      labels: LABELS,
+      labels: editorLabels(),
       class: 'nds-w-full',
     },
   }),
   play: async ({ canvasElement, step }) => {
+    // O idioma CORRENTE, e não pt-BR: o nome que a play procura tem de ser o
+    // mesmo que a barra desenha.
+    const L = editorLabels();
     const canvas = within(canvasElement);
     const root = editorRoot(canvasElement);
 
     await step('visual.item1 — três blocos e a fórmula, com divisória entre assuntos', async () => {
-      await expect(canvas.getByRole('toolbar', { name: LABELS.toolbar })).toBeInTheDocument();
-      await expect(canvas.getByRole('group', { name: LABELS.groups.marks })).toBeInTheDocument();
-      await expect(canvas.getByRole('group', { name: LABELS.groups.lists })).toBeInTheDocument();
+      await expect(canvas.getByRole('toolbar', { name: L.toolbar })).toBeInTheDocument();
+      await expect(canvas.getByRole('group', { name: L.groups.marks })).toBeInTheDocument();
+      await expect(canvas.getByRole('group', { name: L.groups.lists })).toBeInTheDocument();
       // marcas · listas · (link, desfazer, refazer) · fórmula
       await expect(separators(root)).toBe(3);
       await expect(actionOrder(root)).toEqual(['link', 'undo', 'redo', 'formula']);
@@ -73,10 +76,10 @@ export const Basic: Story = {
 
     await step('O conjunto básico não expõe título, imagem nem tabela', async () => {
       for (const name of [
-        LABELS.actions.h1,
-        LABELS.actions.image,
-        LABELS.actions.table,
-        LABELS.actions.alignCenter,
+        L.actions.h1,
+        L.actions.image,
+        L.actions.table,
+        L.actions.alignCenter,
       ]) {
         await expect(canvas.queryByRole('button', { name })).toBeNull();
       }
@@ -106,21 +109,24 @@ export const Advanced: Story = {
     props: {
       content: CONTENTS.advanced,
       preset: 'advanced',
-      labels: LABELS,
+      labels: editorLabels(),
       class: 'nds-w-full',
     },
   }),
   play: async ({ canvasElement, step }) => {
+    // O idioma CORRENTE, e não pt-BR: o nome que a play procura tem de ser o
+    // mesmo que a barra desenha.
+    const L = editorLabels();
     const canvas = within(canvasElement);
     const root = editorRoot(canvasElement);
 
     await step('visual.item1 — os cinco blocos de alternadores têm nome próprio', async () => {
       for (const name of [
-        LABELS.groups.marks,
-        LABELS.groups.headings,
-        LABELS.groups.align,
-        LABELS.groups.lists,
-        LABELS.groups.blocks,
+        L.groups.marks,
+        L.groups.headings,
+        L.groups.align,
+        L.groups.lists,
+        L.groups.blocks,
       ]) {
         await expect(canvas.getByRole('group', { name })).toBeInTheDocument();
       }
