@@ -37,6 +37,7 @@ const CATEGORY_MAP: Record<string, string> = {
   label: 'form',
   toggle: 'form',
   'toggle-group': 'form',
+  editor: 'form',
 
   // feedback
   alert: 'feedback',
