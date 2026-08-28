@@ -29,5 +29,10 @@
     "./figma/*": "./figma/*",
     "./guidelines/*": "./guidelines/*",
     "./skill-refs/*": "./skill-refs/*"
+  },
+  "dependencies": {
+    "mdast-util-from-markdown": "^2.0.3",
+    "mdast-util-gfm": "^3.1.0",
+    "micromark-extension-gfm": "^3.0.0"
   }
 }
