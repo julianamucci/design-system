@@ -1,28 +1,39 @@
 /**
- * Andaime das demonstrações do MediaPlayer — um construtor, cinco arquivos.
+ * Andaime das demonstrações do MediaPlayer — um módulo, cinco arquivos.
  *
- * Existe porque num `*.stories.ts` todo export nomeado vira story: o andaime
- * não pode morar lá, e a saída fácil é copiar a constante para cada arquivo.
- * Cópia divergida não é variação — é o defeito, porque corrigir uma delas
- * deixa as outras erradas sem nenhum sinal.
+ * Existe porque num `*.stories.ts` todo export nomeado vira story: o andaime não
+ * pode morar lá, e a saída fácil é copiar a constante para cada arquivo. Cópia
+ * divergida não é variação — é o defeito, porque corrigir uma delas deixa as
+ * outras erradas sem nenhum sinal.
  *
  * Aqui os rótulos são o NOME ACESSÍVEL de cada botão — todos são só de ícone —,
  * e é por eles que toda play encontra o que clicar. Um rótulo diferente num
  * arquivo quebraria a busca em vez de mudar a aparência.
  *
- * Nada de `storybook/test` neste módulo, de propósito: a docs page importa
- * daqui os rótulos e a mídia da demonstração, e arrastar o runner de teste
- * para dentro dela levaria o pacote junto.
+ * Nada de `storybook/test` neste módulo, de propósito: a docs page importa daqui
+ * os rótulos e a mídia da demonstração, e arrastar o runner de teste para dentro
+ * dela levaria o pacote junto.
  *
  * TODA mídia daqui é construída em MEMÓRIA. Nada é baixado, nada depende de
  * rede: suíte que fala com serviço externo falha por motivo alheio ao código.
  */
 
-import { createTranslation } from '@/lib/i18n';
+import { useTranslation } from '@/lib/i18n';
 import mediaPlayerTranslations from '@shared/content/media-player/translations.json';
 import type { MediaPlayerLabels, MediaPlayerTrack } from './media-player';
 
-const { t } = createTranslation(mediaPlayerTranslations as Record<string, unknown>);
+const { t } = useTranslation(mediaPlayerTranslations as unknown as Record<string, unknown>);
+
+/**
+ * O conteúdo compartilhado declara os doze rótulos? Perguntado ao COMPILADOR.
+ *
+ * `t()` nunca reprova: chave que não existe volta como a própria chave, e a
+ * barra passaria a anunciar "labels.play" para quem ouve, em silêncio. A leitura
+ * TIPADA do JSON reprova no `ngc` — é o único portão que vê uma chave sumir do
+ * conteúdo, e custa uma linha.
+ */
+const _contentDeclaresEveryLabel: Record<keyof MediaPlayerLabels, string> =
+  mediaPlayerTranslations['pt-BR'].labels;
 
 // A lista é EXAUSTIVA por construção, e é o `satisfies` que garante: um rótulo
 // novo no tipo sem entrada aqui não compila. Uma lista solta, com `as`, deixaria
@@ -37,7 +48,7 @@ const LABEL_KEYS = Object.keys({
  * Monta os rótulos a partir do conteúdo compartilhado, no idioma da página.
  *
  * É função, e não constante, porque `t()` resolve no idioma corrente: a docs
- * page refaz as seções a cada troca de idioma, e a barra troca junto.
+ * page é reconstruída a cada troca de idioma, e a barra troca junto.
  */
 export function mediaPlayerLabels(): MediaPlayerLabels {
   return Object.fromEntries(
@@ -51,7 +62,7 @@ export function mediaPlayerLabels(): MediaPlayerLabels {
  * A story não troca de idioma no meio da execução, e a play precisa do MESMO
  * texto que a barra recebeu para encontrar o botão por nome acessível.
  */
-export const LABELS: MediaPlayerLabels = mediaPlayerLabels();
+export const MEDIA_PLAYER_LABELS: MediaPlayerLabels = mediaPlayerLabels();
 
 /**
  * WAV PCM 8 bits, mono, 8 kHz, silencioso, com a duração pedida.
@@ -65,7 +76,7 @@ export function silentWav(seconds: number): string {
   const samples = Math.round(rate * seconds);
   const bytes = new Uint8Array(44 + samples);
   const view = new DataView(bytes.buffer);
-  const ascii = (offset: number, value: string) => {
+  const ascii = (offset: number, value: string): void => {
     for (let i = 0; i < value.length; i++) view.setUint8(offset + i, value.charCodeAt(i));
   };
   ascii(0, 'RIFF');
@@ -102,12 +113,12 @@ export function canvasStream(): MediaStream {
   const canvas = document.createElement('canvas');
   canvas.width = 320;
   canvas.height = 180;
-  const ctx = canvas.getContext('2d');
-  if (ctx) {
-    ctx.fillStyle = '#22333b';
-    ctx.fillRect(0, 0, 320, 180);
-    ctx.fillStyle = '#8ecae6';
-    ctx.fillRect(20, 20, 120, 60);
+  const context = canvas.getContext('2d');
+  if (context) {
+    context.fillStyle = '#22333b';
+    context.fillRect(0, 0, 320, 180);
+    context.fillStyle = '#8ecae6';
+    context.fillRect(20, 20, 120, 60);
   }
   return canvas.captureStream(10);
 }
@@ -116,9 +127,9 @@ export function canvasStream(): MediaStream {
  * Uma faixa de legenda vazia, em `data:`.
  *
  * Vazia e ainda assim presente: vídeo com áudio SEM legenda reprova em
- * WCAG 1.2.2 (nível A), e uma story não pode ensinar o contrário. O conteúdo
- * é o cabeçalho `WEBVTT` e nada mais — o que se demonstra é a DECLARAÇÃO da
- * faixa, não a tradução de um diálogo que não existe.
+ * WCAG 1.2.2 (nível A), e uma story não pode ensinar o contrário. O conteúdo é o
+ * cabeçalho `WEBVTT` e nada mais — o que se demonstra é a DECLARAÇÃO da faixa,
+ * não a tradução de um diálogo que não existe.
  */
 export const EMPTY_VTT = 'data:text/vtt;base64,V0VCVlRUCgo=';
 

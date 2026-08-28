@@ -9,51 +9,47 @@
 // (1.5 escrito lê de volta 1) e a duração é infinita. Um Playground de vídeo
 // entregaria dois controles que a pessoa mexe e não acontece nada — que é
 // exatamente o defeito que este componente já teve uma vez, no botão de janela
-// flutuante. Vídeo, tela cheia e janela flutuante estão nas Variantes e nas
+// flutuante. Vídeo, tela cheia e janela flutuante estão nas Fontes e nas
 // Composições, onde a fonte ao vivo vem com `rates: []` pelo motivo medido.
 
-import type { Meta, StoryObj } from '@storybook/html-vite';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
-import {
-  createMediaPlayer,
-  formatTime,
-  type MediaPlayerKind,
-  type MediaPlayerLabels,
-  type MediaPlayerRoot,
-} from './media-player';
-import { LABELS, canvasStream, captionTrack, silentWav } from './media-player.fixtures';
-import { clockText, firstControl, until, seekValueTextPattern } from './media-player.play-helpers';
-import { mediaPlayerSource } from './media-player.source';
-import { createMediaPlayerDocs } from '@/components/docs/MediaPlayerDocs';
+import { computed } from 'vue';
+import { MediaPlayer, formatTime, type MediaPlayerApi } from './index';
+import MediaPlayerDocs from '@/components/docs/MediaPlayerDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { mediaPlayerSource } from './media-player.source';
+import { LABELS, canvasStream, captionTrack, silentWav } from './media-player.fixtures';
+import { clockText, firstControl, playerBridge, playerRoot, until, seekValueTextPattern } from './media-player.play-helpers';
 
-// As dez do contrato, e não as três que o Playground controla: a aba API
-// Reference é gerada a partir de `argTypes`, então o que não aparece aqui não
-// existe para quem lê a documentação.
-type MediaPlayerArgs = {
-  kind: MediaPlayerKind;
-  rates: number[];
-  labels: MediaPlayerLabels;
-  src?: string;
-  stream?: MediaStream;
-  embed?: unknown;
-  tracks?: unknown;
-  onPlay: () => void;
-  onPause: (info: { ended: boolean; currentTime: number }) => void;
-  onEnded: () => void;
-};
+/**
+ * A instância montada, alcançada pela story.
+ *
+ * A raiz expõe `media` e `frame`, e UM DOS DOIS É SEMPRE NULO — o tipo obriga a
+ * story a declarar qual motor ela pediu, em vez de presumir. Sem esta ponte a
+ * play só conseguiria clicar botão, e a pergunta "a barra reflete o MOTOR?"
+ * ficaria sem como ser feita.
+ */
+let playerApi: MediaPlayerApi | null = null;
 
-const meta: Meta<MediaPlayerArgs> = {
+/** Guarda a instância recém-montada para a play alcançar. */
+function keepPlayer(instance: MediaPlayerApi | null): void {
+  playerApi = instance;
+}
+
+const meta = {
   title: 'UI/MediaPlayer',
+  component: MediaPlayer,
   tags: ['autodocs', 'display'],
   parameters: {
     // `padded` e não `centered`: o player é `width: 100%`, e sob `centered` a
     // caixa encolhe até o conteúdo — a moldura deixaria de ser o que se vê.
     layout: 'padded',
     docs: {
-      page: withAutoDocsTab(createMediaPlayerDocs),
-      // O painel Code mostra a chamada da fábrica, e não o `outerHTML` da
-      // moldura. A transform cascateia para todas as stories deste arquivo.
+      page: withAutoDocsTab(MediaPlayerDocs),
+      // O painel Code mostra o SFC que quem consome escreve, com os rótulos que
+      // o componente exige. A transform cascateia para todas as stories deste
+      // arquivo.
       source: { transform: mediaPlayerSource },
     },
   },
@@ -103,25 +99,24 @@ const meta: Meta<MediaPlayerArgs> = {
     },
     labels: {
       control: false,
-      type: { name: 'object', value: {}, required: true },
       description:
         'Nome acessível do player, da barra e de cada controle. Todos são só de ícone, '
         + 'então o rótulo é o que o leitor de tela anuncia.',
       table: { type: { summary: 'MediaPlayerLabels' }, defaultValue: { summary: '—' } },
     },
-    // Sem entrada aqui o callback fica fora da aba API Reference, mesmo estando
-    // em args e alimentando a aba Actions.
+    // Sem entrada aqui o evento fica fora da aba API Reference, mesmo estando em
+    // args e alimentando a aba Actions.
     onPlay: {
       control: false,
       description:
-        'Chamado quando a reprodução COMEÇA de fato — ligado a `playing`, não a `play`: '
+        'Emitido quando a reprodução COMEÇA de fato — ligado a `playing`, não a `play`: '
         + 'entre o pedido e o primeiro quadro está o buffer.',
       table: { type: { summary: '() => void' }, defaultValue: { summary: '—' } },
     },
     onPause: {
       control: false,
       description:
-        'Chamado em toda parada, com `ended` para separar pausa de fim — o navegador '
+        'Emitido em toda parada, com `ended` para separar pausa de fim — o navegador '
         + 'dispara `pause` também quando a mídia termina.',
       table: {
         type: { summary: '(info: { ended: boolean; currentTime: number }) => void' },
@@ -130,7 +125,7 @@ const meta: Meta<MediaPlayerArgs> = {
     },
     onEnded: {
       control: false,
-      description: 'Chamado quando a mídia termina.',
+      description: 'Emitido quando a mídia termina.',
       table: { type: { summary: '() => void' }, defaultValue: { summary: '—' } },
     },
   },
@@ -142,33 +137,48 @@ const meta: Meta<MediaPlayerArgs> = {
     onPause: fn(),
     onEnded: fn(),
   },
-};
+} satisfies Meta<typeof MediaPlayer>;
 
 export default meta;
-type Story = StoryObj<MediaPlayerArgs>;
+type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
-  render: (args) =>
-    createMediaPlayer({
-      kind: args.kind,
-      // Vídeo por canvas, áudio por WAV: os dois em memória, nada de rede.
-      ...(args.kind === 'video'
+  render: (args) => ({
+    components: { MediaPlayer },
+    setup() {
+      const playerRef = playerBridge(keepPlayer);
+      // Vídeo por canvas, áudio por WAV: os dois em memória, nada de rede. É
+      // `computed` porque ele só recalcula quando o control muda — uma função
+      // chamada no template abriria um canvas novo a cada repintura.
+      const source = computed(() => (args.kind === 'video'
         ? { stream: canvasStream(), tracks: [captionTrack()] }
-        : { src: silentWav(0.6) }),
-      rates: args.rates,
-      labels: args.labels,
-      onPlay: args.onPlay,
-      onPause: args.onPause,
-      onEnded: args.onEnded,
-    }),
+        : { src: silentWav(0.6) }));
+      return { args, source, playerRef };
+    },
+    template: `
+      <div class="nds-w-full">
+        <MediaPlayer
+          ref="playerRef"
+          :key="args.kind"
+          :kind="args.kind"
+          :rates="args.rates"
+          :labels="args.labels"
+          v-bind="source"
+          @play="args.onPlay"
+          @pause="args.onPause"
+          @ended="args.onEnded"
+        />
+      </div>
+    `,
+  }),
 
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const root = canvasElement.querySelector('[data-slot="media-player"]') as MediaPlayerRoot;
+    const root = playerRoot(canvasElement);
     // A afirmação de não-nulo é a story dizendo que SABE qual motor pediu:
     // `media` é nulo em provedor externo, e o tipo obriga a declarar isso em
     // vez de presumir.
-    const media = root.media!;
+    const media = playerApi!.media!;
     // Silenciada por padrão na suíte: a política de autoplay do navegador é
     // afrouxada por bandeira de lançamento (ver `vite.config.ts`), mas nada
     // garante que quem roda isto na mão tenha a mesma política.
@@ -209,8 +219,10 @@ export const Playground: Story = {
     });
 
     await step('Início é `playing`, e a pausa carrega o discriminador', async () => {
-      (args.onPlay as ReturnType<typeof fn>).mockClear();
-      (args.onPause as ReturnType<typeof fn>).mockClear();
+      const played = args.onPlay as ReturnType<typeof fn>;
+      const paused = args.onPause as ReturnType<typeof fn>;
+      played.mockClear();
+      paused.mockClear();
 
       // A precondição é estabelecida, e não herdada do passo anterior: o painel
       // Interactions reexecuta a play no MESMO DOM, e o que a rodada anterior
@@ -222,21 +234,18 @@ export const Playground: Story = {
       // A espera é PELO QUE SE AFIRMA, e não por um sintoma vizinho.
       //
       // A versão anterior esperava `!media.paused && currentTime > 0` e depois
-      // afirmava sobre `onPlay`. As duas coisas quase sempre chegam juntas, e
-      // quando não chegam a asserção corre antes do evento: reprovou uma vez em
-      // duas rodadas idênticas. É a mesma armadilha da propriedade contra o
-      // evento — `paused` muda de forma síncrona, `pause` e `playing` são
-      // assíncronos —, só que do outro lado da barra.
-      const played = args.onPlay as ReturnType<typeof fn>;
-      const paused = args.onPause as ReturnType<typeof fn>;
-
+      // afirmava sobre o evento de início. As duas coisas quase sempre chegam
+      // juntas, e quando não chegam a asserção corre antes do evento: reprovou
+      // uma vez em duas rodadas idênticas. É a mesma armadilha da propriedade
+      // contra o evento — `paused` muda de forma síncrona, `pause` e `playing`
+      // são assíncronos —, só que do outro lado da barra.
       await userEvent.click(canvas.getByRole('button', { name: LABELS.play }));
       await expect(await until(() => played.mock.calls.length > 0, 5000)).toBe(true);
 
       await userEvent.click(canvas.getByRole('button', { name: LABELS.pause }));
       await expect(await until(() => paused.mock.calls.length > 0, 5000)).toBe(true);
       // Pausa de verdade: `ended` falso.
-      await expect(args.onPause).toHaveBeenCalledWith(expect.objectContaining({ ended: false }));
+      await expect(paused).toHaveBeenCalledWith(expect.objectContaining({ ended: false }));
     });
 
     await step('O relógio anuncia tempo, não um número solto', async () => {

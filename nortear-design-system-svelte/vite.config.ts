@@ -71,7 +71,18 @@ export default defineConfig({
           browser: {
             enabled: true,
             headless: true,
-            provider: playwright({}),
+            // A política de autoplay do navegador recusa `play()` na suíte, e
+            // MEDIDO: recusa mesmo com a mídia silenciada e mesmo com `play()`
+            // chamado de dentro do manipulador de um clique real do driver —
+            // `NotAllowedError` nos três casos. Sem esta bandeira, componente de
+            // mídia é intestável: nenhuma asserção alcança reprodução.
+            //
+            // Ela afrouxa a política SÓ no navegador de teste. A política de
+            // verdade continua valendo para quem usa, e é por isso que o player
+            // não presume que `play()` funciona: ele trata a recusa.
+            provider: playwright({
+              launchOptions: { args: ['--autoplay-policy=no-user-gesture-required'] },
+            }),
             instances: [{ browser: 'chromium' }],
           },
         },

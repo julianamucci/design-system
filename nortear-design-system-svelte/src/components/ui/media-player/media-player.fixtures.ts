@@ -3,55 +3,53 @@
  *
  * Existe porque num `*.stories.ts` todo export nomeado vira story: o andaime
  * não pode morar lá, e a saída fácil é copiar a constante para cada arquivo.
- * Cópia divergida não é variação — é o defeito, porque corrigir uma delas
- * deixa as outras erradas sem nenhum sinal.
+ * Cópia divergida não é variação — é o defeito, porque corrigir uma delas deixa
+ * as outras erradas sem nenhum sinal.
  *
  * Aqui os rótulos são o NOME ACESSÍVEL de cada botão — todos são só de ícone —,
  * e é por eles que toda play encontra o que clicar. Um rótulo diferente num
  * arquivo quebraria a busca em vez de mudar a aparência.
  *
  * Nada de `storybook/test` neste módulo, de propósito: a docs page importa
- * daqui os rótulos e a mídia da demonstração, e arrastar o runner de teste
- * para dentro dela levaria o pacote junto.
+ * daqui os rótulos e a mídia da demonstração, e arrastar o runner de teste para
+ * dentro dela levaria o pacote junto. O que é de teste mora em
+ * `media-player.play-helpers.ts`.
  *
  * TODA mídia daqui é construída em MEMÓRIA. Nada é baixado, nada depende de
  * rede: suíte que fala com serviço externo falha por motivo alheio ao código.
  */
 
-import { createTranslation } from '@/lib/i18n';
+import { get } from 'svelte/store';
+import { locale, type Locale } from '@/lib/i18n';
 import mediaPlayerTranslations from '@shared/content/media-player/translations.json';
-import type { MediaPlayerLabels, MediaPlayerTrack } from './media-player';
-
-const { t } = createTranslation(mediaPlayerTranslations as Record<string, unknown>);
-
-// A lista é EXAUSTIVA por construção, e é o `satisfies` que garante: um rótulo
-// novo no tipo sem entrada aqui não compila. Uma lista solta, com `as`, deixaria
-// o botão novo sair da barra com o nome da própria chave por nome acessível —
-// defeito silencioso, e só visível para quem ouve.
-const LABEL_KEYS = Object.keys({
-  player: 1, controls: 1, play: 1, pause: 1, mute: 1, unmute: 1,
-  seek: 1, seekValueText: 1, rate: 1, enterFullscreen: 1, exitFullscreen: 1, enterPip: 1, exitPip: 1,
-} satisfies Record<keyof MediaPlayerLabels, 1>) as Array<keyof MediaPlayerLabels>;
+import type { MediaPlayerLabels, MediaPlayerRootElement, MediaPlayerTrack } from './index';
 
 /**
- * Monta os rótulos a partir do conteúdo compartilhado, no idioma da página.
+ * Os doze rótulos da barra vêm do CONTEÚDO COMPARTILHADO, nos três idiomas.
  *
- * É função, e não constante, porque `t()` resolve no idioma corrente: a docs
- * page refaz as seções a cada troca de idioma, e a barra troca junto.
+ * A anotação de tipo é o PORTÃO. A seção `labels` é lida como
+ * `MediaPlayerLabels` em CADA um dos três idiomas, então rótulo que sumir do
+ * JSON — ou idioma que ficar para trás — reprova no type-check, e não na tela.
+ * Uma lista solta, com asserção de tipo, deixaria o botão novo sair da barra
+ * com o nome da própria chave por nome acessível: defeito silencioso, e só
+ * visível para quem ouve.
  */
-export function mediaPlayerLabels(): MediaPlayerLabels {
-  return Object.fromEntries(
-    LABEL_KEYS.map((key) => [key, t(`labels.${key}`)]),
-  ) as MediaPlayerLabels;
+const CONTENT: Record<Locale, { labels: MediaPlayerLabels }> = mediaPlayerTranslations;
+
+/** Os rótulos de um idioma — a forma para quem já tem o locale em mãos. */
+export function mediaPlayerLabelsFor(target: Locale): MediaPlayerLabels {
+  return CONTENT[target].labels;
 }
 
 /**
- * Os rótulos das stories, resolvidos uma vez na carga do módulo.
+ * Os rótulos fora de um componente — `props` de story e `play` não são render.
  *
- * A story não troca de idioma no meio da execução, e a play precisa do MESMO
- * texto que a barra recebeu para encontrar o botão por nome acessível.
+ * Lê a MESMA store de locale que o `useTranslation` da página, então o rótulo
+ * que a play procura é sempre o que a barra desenha.
  */
-export const LABELS: MediaPlayerLabels = mediaPlayerLabels();
+export function mediaPlayerLabels(): MediaPlayerLabels {
+  return mediaPlayerLabelsFor(get(locale));
+}
 
 /**
  * WAV PCM 8 bits, mono, 8 kHz, silencioso, com a duração pedida.
@@ -91,9 +89,9 @@ export function silentWav(seconds: number): string {
  * Um vídeo de VERDADE, desenhado num canvas e capturado como MediaStream.
  *
  * Um `<video>` alimentado com o WAV passa por TODA a detecção de capacidade e
- * depois recusa o Picture-in-Picture com `InvalidStateError` — `videoWidth` fica
- * em 0, medido. Era o botão que "não fazia nada" na tela. O canvas dá faixa de
- * vídeo com dimensão, que é o que o PiP exige.
+ * depois recusa o Picture-in-Picture com `InvalidStateError` — `videoWidth`
+ * fica em 0, medido. Era o botão que "não fazia nada" na tela. O canvas dá
+ * faixa de vídeo com dimensão, que é o que a janela flutuante exige.
  *
  * Sendo stream ao vivo, `playbackRate` é ignorado (1.5 escrito lê de volta 1) e
  * a duração é infinita — por isso quem usa esta fonte passa `rates: []`.
@@ -116,8 +114,8 @@ export function canvasStream(): MediaStream {
  * Uma faixa de legenda vazia, em `data:`.
  *
  * Vazia e ainda assim presente: vídeo com áudio SEM legenda reprova em
- * WCAG 1.2.2 (nível A), e uma story não pode ensinar o contrário. O conteúdo
- * é o cabeçalho `WEBVTT` e nada mais — o que se demonstra é a DECLARAÇÃO da
+ * WCAG 1.2.2 (nível A), e uma story não pode ensinar o contrário. O conteúdo é
+ * o cabeçalho `WEBVTT` e nada mais — o que se demonstra é a DECLARAÇÃO da
  * faixa, não a tradução de um diálogo que não existe.
  */
 export const EMPTY_VTT = 'data:text/vtt;base64,V0VCVlRUCgo=';
@@ -128,10 +126,16 @@ export function captionTrack(): MediaPlayerTrack {
 }
 
 /**
- * Identificadores públicos, escolhidos por serem estáveis há mais de uma década.
+ * Identificadores públicos, escolhidos por serem estáveis há mais de uma
+ * década.
  *
  * O quadro NÃO carrega na suíte, e é de propósito — ver a story de provedor.
  * Estão aqui para a demonstração no navegador de quem lê a documentação.
  */
 export const YOUTUBE_VIDEO_ID = 'aqz-KE-bpKQ';
 export const VIMEO_VIDEO_ID = '76979871';
+
+/** A moldura que carrega o motor montado, a partir do canvas da story. */
+export function mediaPlayerRoot(canvasElement: HTMLElement): MediaPlayerRootElement {
+  return canvasElement.querySelector('[data-slot="media-player"]') as MediaPlayerRootElement;
+}

@@ -6,52 +6,31 @@
  * Cópia divergida não é variação — é o defeito, porque corrigir uma delas
  * deixa as outras erradas sem nenhum sinal.
  *
- * Aqui os rótulos são o NOME ACESSÍVEL de cada botão — todos são só de ícone —,
- * e é por eles que toda play encontra o que clicar. Um rótulo diferente num
- * arquivo quebraria a busca em vez de mudar a aparência.
- *
  * Nada de `storybook/test` neste módulo, de propósito: a docs page importa
- * daqui os rótulos e a mídia da demonstração, e arrastar o runner de teste
- * para dentro dela levaria o pacote junto.
+ * daqui a mídia da demonstração, e arrastar o runner de teste para dentro dela
+ * levaria o pacote junto. As esperas e as sondas moram em
+ * `media-player.play-helpers.ts`.
  *
  * TODA mídia daqui é construída em MEMÓRIA. Nada é baixado, nada depende de
  * rede: suíte que fala com serviço externo falha por motivo alheio ao código.
  */
 
-import { createTranslation } from '@/lib/i18n';
-import mediaPlayerTranslations from '@shared/content/media-player/translations.json';
-import type { MediaPlayerLabels, MediaPlayerTrack } from './media-player';
-
-const { t } = createTranslation(mediaPlayerTranslations as Record<string, unknown>);
-
-// A lista é EXAUSTIVA por construção, e é o `satisfies` que garante: um rótulo
-// novo no tipo sem entrada aqui não compila. Uma lista solta, com `as`, deixaria
-// o botão novo sair da barra com o nome da própria chave por nome acessível —
-// defeito silencioso, e só visível para quem ouve.
-const LABEL_KEYS = Object.keys({
-  player: 1, controls: 1, play: 1, pause: 1, mute: 1, unmute: 1,
-  seek: 1, seekValueText: 1, rate: 1, enterFullscreen: 1, exitFullscreen: 1, enterPip: 1, exitPip: 1,
-} satisfies Record<keyof MediaPlayerLabels, 1>) as Array<keyof MediaPlayerLabels>;
+import type { MediaPlayerLabels, MediaPlayerTrack } from './index';
+import { mediaPlayerLabelsFor } from './media-player.labels';
 
 /**
- * Monta os rótulos a partir do conteúdo compartilhado, no idioma da página.
- *
- * É função, e não constante, porque `t()` resolve no idioma corrente: a docs
- * page refaz as seções a cada troca de idioma, e a barra troca junto.
- */
-export function mediaPlayerLabels(): MediaPlayerLabels {
-  return Object.fromEntries(
-    LABEL_KEYS.map((key) => [key, t(`labels.${key}`)]),
-  ) as MediaPlayerLabels;
-}
-
-/**
- * Os rótulos das stories, resolvidos uma vez na carga do módulo.
+ * Os rótulos das stories, resolvidos uma vez na carga do módulo, em pt-BR.
  *
  * A story não troca de idioma no meio da execução, e a play precisa do MESMO
- * texto que a barra recebeu para encontrar o botão por nome acessível.
+ * texto que a barra recebeu para encontrar o botão por nome acessível. A docs
+ * page, que troca de idioma no seletor, chama `mediaPlayerLabelsFor(locale)` a
+ * cada mudança.
+ *
+ * O portão de rótulo ausente — ou de idioma que ficou para trás na tradução —
+ * é a anotação de tipo dentro de `media-player.labels.ts`, e ele reprova no
+ * `vue-tsc`, não na tela.
  */
-export const LABELS: MediaPlayerLabels = mediaPlayerLabels();
+export const LABELS: MediaPlayerLabels = mediaPlayerLabelsFor('pt-BR');
 
 /**
  * WAV PCM 8 bits, mono, 8 kHz, silencioso, com a duração pedida.
@@ -102,12 +81,12 @@ export function canvasStream(): MediaStream {
   const canvas = document.createElement('canvas');
   canvas.width = 320;
   canvas.height = 180;
-  const ctx = canvas.getContext('2d');
-  if (ctx) {
-    ctx.fillStyle = '#22333b';
-    ctx.fillRect(0, 0, 320, 180);
-    ctx.fillStyle = '#8ecae6';
-    ctx.fillRect(20, 20, 120, 60);
+  const context = canvas.getContext('2d');
+  if (context) {
+    context.fillStyle = '#22333b';
+    context.fillRect(0, 0, 320, 180);
+    context.fillStyle = '#8ecae6';
+    context.fillRect(20, 20, 120, 60);
   }
   return canvas.captureStream(10);
 }

@@ -114,11 +114,11 @@
       },
       "withProvider": "Com vídeo hospedado por terceiro:",
       "withProviderCode": {
-        "react": "<MediaPlayer\n  embed={{ provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" }}\n  labels={labels}\n  onPlay={registrarInicio}\n  onPause={({ ended }) => !ended && registrarPausa()}\n/>",
-        "vue": "<MediaPlayer\n  :embed=\"{ provider: 'youtube', videoId: 'aqz-KE-bpKQ' }\"\n  :labels=\"labels\"\n  @play=\"registrarInicio\"\n  @pause=\"({ ended }) => !ended && registrarPausa()\"\n/>",
-        "svelte": "<MediaPlayer\n  embed={{ provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" }}\n  {labels}\n  onplay={registrarInicio}\n  onpause={({ ended }) => !ended && registrarPausa()}\n/>",
-        "vanilla": "const player = createMediaPlayer({\n  embed: { provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" },\n  labels,\n  onPlay: registrarInicio,\n  onPause: ({ ended }) => !ended && registrarPausa(),\n});",
-        "angular": "<nds-media-player\n  [embed]=\"{ provider: 'youtube', videoId: 'aqz-KE-bpKQ' }\"\n  [labels]=\"labels\"\n  (played)=\"registrarInicio()\"\n  (paused)=\"$event.ended || registrarPausa()\"\n/>"
+        "react": "<MediaPlayer\n  embed={{ provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" }}\n  labels={labels}\n  onPlay={trackPlay}\n  onPause={({ ended }) => !ended && trackPause()}\n/>",
+        "vue": "<MediaPlayer\n  :embed=\"{ provider: 'youtube', videoId: 'aqz-KE-bpKQ' }\"\n  :labels=\"labels\"\n  @play=\"trackPlay\"\n  @pause=\"({ ended }) => !ended && trackPause()\"\n/>",
+        "svelte": "<MediaPlayer\n  embed={{ provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" }}\n  {labels}\n  onplay={trackPlay}\n  onpause={({ ended }) => !ended && trackPause()}\n/>",
+        "vanilla": "const player = createMediaPlayer({\n  embed: { provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" },\n  labels,\n  onPlay: trackPlay,\n  onPause: ({ ended }) => !ended && trackPause(),\n});",
+        "angular": "<nds-media-player\n  [embed]=\"{ provider: 'youtube', videoId: 'aqz-KE-bpKQ' }\"\n  [labels]=\"labels\"\n  (played)=\"trackPlay()\"\n  (paused)=\"$event.ended || trackPause()\"\n/>"
       }
     },
     "variants": {
@@ -505,6 +505,7 @@
       "mute": "Silenciar",
       "unmute": "Ativar o som",
       "seek": "Posição da reprodução",
+      "seekValueText": "{current} de {duration}",
       "rate": "Velocidade de reprodução",
       "enterFullscreen": "Tela cheia",
       "exitFullscreen": "Sair da tela cheia",
@@ -1036,6 +1037,7 @@
       "mute": "Mute",
       "unmute": "Unmute",
       "seek": "Playback position",
+      "seekValueText": "{current} of {duration}",
       "rate": "Playback speed",
       "enterFullscreen": "Fullscreen",
       "exitFullscreen": "Exit fullscreen",
@@ -1176,11 +1178,11 @@
       },
       "withProvider": "Con vídeo alojado por terceros:",
       "withProviderCode": {
-        "react": "<MediaPlayer\n  embed={{ provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" }}\n  labels={labels}\n  onPlay={registrarInicio}\n  onPause={({ ended }) => !ended && registrarPausa()}\n/>",
-        "vue": "<MediaPlayer\n  :embed=\"{ provider: 'youtube', videoId: 'aqz-KE-bpKQ' }\"\n  :labels=\"labels\"\n  @play=\"registrarInicio\"\n  @pause=\"({ ended }) => !ended && registrarPausa()\"\n/>",
-        "svelte": "<MediaPlayer\n  embed={{ provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" }}\n  {labels}\n  onplay={registrarInicio}\n  onpause={({ ended }) => !ended && registrarPausa()}\n/>",
-        "vanilla": "const player = createMediaPlayer({\n  embed: { provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" },\n  labels,\n  onPlay: registrarInicio,\n  onPause: ({ ended }) => !ended && registrarPausa(),\n});",
-        "angular": "<nds-media-player\n  [embed]=\"{ provider: 'youtube', videoId: 'aqz-KE-bpKQ' }\"\n  [labels]=\"labels\"\n  (played)=\"registrarInicio()\"\n  (paused)=\"$event.ended || registrarPausa()\"\n/>"
+        "react": "<MediaPlayer\n  embed={{ provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" }}\n  labels={labels}\n  onPlay={trackPlay}\n  onPause={({ ended }) => !ended && trackPause()}\n/>",
+        "vue": "<MediaPlayer\n  :embed=\"{ provider: 'youtube', videoId: 'aqz-KE-bpKQ' }\"\n  :labels=\"labels\"\n  @play=\"trackPlay\"\n  @pause=\"({ ended }) => !ended && trackPause()\"\n/>",
+        "svelte": "<MediaPlayer\n  embed={{ provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" }}\n  {labels}\n  onplay={trackPlay}\n  onpause={({ ended }) => !ended && trackPause()}\n/>",
+        "vanilla": "const player = createMediaPlayer({\n  embed: { provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" },\n  labels,\n  onPlay: trackPlay,\n  onPause: ({ ended }) => !ended && trackPause(),\n});",
+        "angular": "<nds-media-player\n  [embed]=\"{ provider: 'youtube', videoId: 'aqz-KE-bpKQ' }\"\n  [labels]=\"labels\"\n  (played)=\"trackPlay()\"\n  (paused)=\"$event.ended || trackPause()\"\n/>"
       }
     },
     "variants": {
@@ -1567,6 +1569,7 @@
       "mute": "Silenciar",
       "unmute": "Activar el sonido",
       "seek": "Posición de la reproducción",
+      "seekValueText": "{current} de {duration}",
       "rate": "Velocidad de reproducción",
       "enterFullscreen": "Pantalla completa",
       "exitFullscreen": "Salir de pantalla completa",

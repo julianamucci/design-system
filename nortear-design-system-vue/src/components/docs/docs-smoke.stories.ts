@@ -40,6 +40,7 @@ import IconsDocs from '@/components/docs/IconsDocs.vue';
 import InputDocs from '@/components/docs/InputDocs.vue';
 import InputOTPDocs from '@/components/docs/InputOTPDocs.vue';
 import LabelDocs from '@/components/docs/LabelDocs.vue';
+import MediaPlayerDocs from '@/components/docs/MediaPlayerDocs.vue';
 import MenubarDocs from '@/components/docs/MenubarDocs.vue';
 import MotionDocs from '@/components/docs/MotionDocs.vue';
 import NavigationMenuDocs from '@/components/docs/NavigationMenuDocs.vue';
@@ -364,6 +365,11 @@ export const InputOTP: Story = {
 
 export const Label: Story = {
   render: () => ({ components: { LabelDocs }, template: '<LabelDocs />' }),
+  play: smokePlay,
+};
+
+export const MediaPlayer: Story = {
+  render: () => ({ components: { MediaPlayerDocs }, template: '<MediaPlayerDocs />' }),
   play: smokePlay,
 };
 

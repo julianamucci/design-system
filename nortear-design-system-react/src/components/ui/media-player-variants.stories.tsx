@@ -5,22 +5,28 @@
 // `YouTube` e `Vimeo` trocam o motor por um quadro de outra origem sem trocar
 // uma linha da API de quem consome.
 
-import type { Meta, StoryObj } from '@storybook/html-vite';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { within, expect } from 'storybook/test';
-import { createMediaPlayer, type MediaPlayerRoot } from './media-player';
+import { MediaPlayer } from './media-player';
 import {
-  LABELS,
+  CanvasVideoPlayer,
+  MediaPlayerCanvas,
   VIMEO_VIDEO_ID,
   YOUTUBE_VIDEO_ID,
-  canvasStream,
-  captionTrack,
+  mediaPlayerHandle,
+  mediaPlayerLabels,
   silentWav,
 } from './media-player.fixtures';
 import { until } from './media-player.play-helpers';
 import { mediaPlayerSourceWith } from './media-player.source';
 
-const meta: Meta = {
+/** O WAV das stories de áudio, resolvido uma vez: o mesmo texto a cada desenho. */
+const AUDIO_SOURCE = silentWav(0.6);
+
+const meta = {
   title: 'UI/MediaPlayer/Variants',
+  component: MediaPlayer,
+  tags: ['display'],
   // Sem `argTypes` próprios, o painel Controls ficaria vazio e a aba Actions
   // prometeria um evento que nenhum arg alimenta.
   parameters: {
@@ -28,32 +34,27 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-};
+  // `labels` é prop OBRIGATÓRIA e por isso está nos args; quem a resolve na tela
+  // é o canvas, que lê o idioma corrente — args são avaliados na carga do módulo
+  // e não veem troca de idioma.
+  args: { labels: mediaPlayerLabels() },
+} satisfies Meta<typeof MediaPlayer>;
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof meta>;
 
 export const Video: Story = {
   parameters: {
     docs: { source: { transform: mediaPlayerSourceWith({ tracks: true, rates: [] }) } },
   },
-  render: () =>
-    createMediaPlayer({
-      kind: 'video',
-      stream: canvasStream(),
-      // Stream ao vivo ignora `playbackRate` — sem lista, sem seletor. Medido:
-      // 1.5 escrito lê de volta 1.
-      rates: [],
-      // Uma faixa de legenda, ainda que vazia: vídeo com áudio SEM legenda
-      // reprova em WCAG 1.2.2 (nível A), e a story não pode ensinar o contrário.
-      tracks: [captionTrack()],
-      labels: LABELS,
-    }),
+  render: () => <CanvasVideoPlayer />,
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const root = canvasElement.querySelector('[data-slot="media-player"]') as MediaPlayerRoot;
-    const video = root.media! as HTMLVideoElement;
+    const handle = mediaPlayerHandle(canvasElement);
+    const root = handle.root!;
+    const video = handle.media! as HTMLVideoElement;
+    const L = mediaPlayerLabels();
 
     await step('É um <video>, e ele carrega a faixa de legenda', async () => {
       await expect(video.tagName).toBe('VIDEO');
@@ -88,10 +89,10 @@ export const Video: Story = {
     });
 
     await step('A fonte ao vivo não promete velocidade que ela ignora', async () => {
-      // `rates: []` esconde o seletor. Deixá-lo ali daria à pessoa um controle
+      // `rates={[]}` esconde o seletor. Deixá-lo ali daria à pessoa um controle
       // que ela mexe e não acontece nada — o mesmo defeito que a janela
       // flutuante teve uma vez.
-      await expect(canvas.queryByRole('combobox', { name: LABELS.rate })).toBeNull();
+      await expect(canvas.queryByRole('combobox', { name: L.rate })).toBeNull();
     });
 
     await step('A janela flutuante exige FAIXA de vídeo, não só um <video>', async () => {
@@ -115,15 +116,21 @@ export const Video: Story = {
       await expect(hasVideoTrack).toBe(true);
 
       if (document.pictureInPictureEnabled && !video.disablePictureInPicture) {
-        const button = canvas.queryByRole('button', { name: LABELS.enterPip });
         // Com faixa de vídeo, o botão tem de estar visível DE VERDADE — não
         // basta existir no DOM, porque ele NASCE escondido e só é revelado
-        // quando a largura aparece. E a leitura é do `display` computado, não
-        // do atributo: `[hidden]` é regra de agente de usuário, e qualquer
-        // declaração de autor a vence — já aconteceu quatro vezes neste
-        // repositório.
-        await expect(button).not.toBeNull();
-        await expect(getComputedStyle(button as HTMLElement).display).not.toBe('none');
+        // quando a largura aparece. A espera é pelo DOM, e não pela propriedade
+        // do elemento: `videoWidth` já mudou quando o `until` acima devolveu, e
+        // o desenho que revela o botão vem depois do evento.
+        const revealed = await until(
+          () => Boolean(canvas.queryByRole('button', { name: L.enterPip })),
+          5000,
+        );
+        await expect(revealed).toBe(true);
+        const button = canvas.getByRole('button', { name: L.enterPip });
+        // E a leitura é do `display` computado, não do atributo: `[hidden]` é
+        // regra de agente de usuário, e qualquer declaração de autor a vence —
+        // já aconteceu quatro vezes neste repositório.
+        await expect(getComputedStyle(button).display).not.toBe('none');
       }
       video.pause();
     });
@@ -136,8 +143,8 @@ export const Video: Story = {
       const canFullscreen = document.fullscreenEnabled;
       const canPip = document.pictureInPictureEnabled && !video.disablePictureInPicture;
 
-      const fullscreenButton = canvas.queryByRole('button', { name: LABELS.enterFullscreen });
-      const pipButton = canvas.queryByRole('button', { name: LABELS.enterPip });
+      const fullscreenButton = canvas.queryByRole('button', { name: L.enterFullscreen });
+      const pipButton = canvas.queryByRole('button', { name: L.enterPip });
 
       await expect(Boolean(fullscreenButton)).toBe(canFullscreen);
       await expect(Boolean(pipButton)).toBe(canPip);
@@ -165,32 +172,29 @@ export const Video: Story = {
 
 export const Audio: Story = {
   parameters: { docs: { source: { transform: mediaPlayerSourceWith({ kind: 'audio' }) } } },
-  render: () =>
-    createMediaPlayer({
-      kind: 'audio',
-      src: silentWav(0.6),
-      labels: LABELS,
-    }),
+  render: () => <MediaPlayerCanvas kind="audio" src={AUDIO_SOURCE} />,
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const root = canvasElement.querySelector('[data-slot="media-player"]') as MediaPlayerRoot;
+    const handle = mediaPlayerHandle(canvasElement);
+    const root = handle.root!;
+    const L = mediaPlayerLabels();
 
     await step('É um <audio>, e a barra é a mesma do vídeo', async () => {
-      await expect(root.media!.tagName).toBe('AUDIO');
+      await expect(handle.media!.tagName).toBe('AUDIO');
       await expect(root.dataset.kind).toBe('audio');
-      await expect(canvas.getByRole('group', { name: LABELS.controls })).toBeInTheDocument();
-      await expect(canvas.getByRole('slider', { name: LABELS.seek })).toBeInTheDocument();
-      await expect(canvas.getByRole('combobox', { name: LABELS.rate })).toBeInTheDocument();
+      await expect(canvas.getByRole('group', { name: L.controls })).toBeInTheDocument();
+      await expect(canvas.getByRole('slider', { name: L.seek })).toBeInTheDocument();
+      await expect(canvas.getByRole('combobox', { name: L.rate })).toBeInTheDocument();
     });
 
     await step('Áudio não oferece o que é de vídeo', async () => {
-      await expect(canvas.queryByRole('button', { name: LABELS.enterFullscreen })).toBeNull();
-      await expect(canvas.queryByRole('button', { name: LABELS.enterPip })).toBeNull();
+      await expect(canvas.queryByRole('button', { name: L.enterFullscreen })).toBeNull();
+      await expect(canvas.queryByRole('button', { name: L.enterPip })).toBeNull();
     });
 
     await step('A superfície não ocupa espaço — no áudio, a barra é o componente', async () => {
-      const surface = root.media!;
+      const surface = handle.media!;
       // O fundo declarado pela folha prova que a classe alcançou o elemento —
       // sem isto, "não ocupa espaço" também seria o que se veria se o CSS
       // simplesmente não tivesse carregado.
@@ -227,27 +231,27 @@ export const YouTube: Story = {
       },
     },
   },
-  render: () =>
-    createMediaPlayer({
-      embed: { provider: 'youtube', videoId: YOUTUBE_VIDEO_ID },
-      labels: LABELS,
-    }),
+  render: () => (
+    <MediaPlayerCanvas embed={{ provider: 'youtube', videoId: YOUTUBE_VIDEO_ID }} />
+  ),
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const root = canvasElement.querySelector('[data-slot="media-player"]') as MediaPlayerRoot;
-    const frame = root.frame!;
+    const handle = mediaPlayerHandle(canvasElement);
+    const root = handle.root!;
+    const frame = handle.frame!;
+    const L = mediaPlayerLabels();
 
     await step('É um quadro, e não há elemento de mídia', async () => {
       // O tipo já diz isto, e a story confirma em execução: quem escrever
       // `player.media.currentTime` num provedor recebe nulo, não um erro
       // obscuro três telas adiante.
-      await expect(root.media).toBeNull();
+      await expect(handle.media).toBeNull();
       await expect(frame.tagName).toBe('IFRAME');
       await expect(root.dataset.kind).toBe('youtube');
       // Sem `title`, o leitor de tela anuncia só "quadro" — e uma página com
       // três vídeos vira três "quadro".
-      await expect(frame).toHaveAttribute('title', LABELS.player);
+      await expect(frame).toHaveAttribute('title', L.player);
     });
 
     await step('A URL protege quem assiste e habilita a conversa', async () => {
@@ -273,10 +277,10 @@ export const YouTube: Story = {
       // A janela flutuante pede a FAIXA de vídeo, e ela está dentro de um
       // documento de outra origem: não há como pedir daqui. O provedor oferece
       // a dele, dentro do próprio quadro.
-      await expect(canvas.queryByRole('button', { name: LABELS.enterPip })).toBeNull();
+      await expect(canvas.queryByRole('button', { name: L.enterPip })).toBeNull();
       // Tela cheia continua, porque quem entra em tela cheia é a MOLDURA — e
       // ela é nossa.
-      await expect(canvas.queryByRole('button', { name: LABELS.enterFullscreen })).not.toBeNull();
+      await expect(canvas.queryByRole('button', { name: L.enterFullscreen })).not.toBeNull();
     });
   },
 };
@@ -298,34 +302,32 @@ export const Vimeo: Story = {
       },
     },
   },
-  render: () =>
-    createMediaPlayer({
-      embed: { provider: 'vimeo', videoId: VIMEO_VIDEO_ID },
-      labels: LABELS,
-    }),
+  render: () => <MediaPlayerCanvas embed={{ provider: 'vimeo', videoId: VIMEO_VIDEO_ID }} />,
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const root = canvasElement.querySelector('[data-slot="media-player"]') as MediaPlayerRoot;
-    const frame = root.frame!;
+    const handle = mediaPlayerHandle(canvasElement);
+    const root = handle.root!;
+    const frame = handle.frame!;
+    const L = mediaPlayerLabels();
 
     await step('É um quadro do Vimeo, com nome próprio', async () => {
-      await expect(root.media).toBeNull();
+      await expect(handle.media).toBeNull();
       await expect(root.dataset.kind).toBe('vimeo');
       await expect(frame.src).toContain('player.vimeo.com/video/');
       await expect(frame.src).toContain(VIMEO_VIDEO_ID);
       // Sem `api=1` o Vimeo não aceita comando nem envia evento.
       await expect(frame.src).toContain('api=1');
-      await expect(frame).toHaveAttribute('title', LABELS.player);
+      await expect(frame).toHaveAttribute('title', L.player);
     });
 
     await step('A barra é a MESMA do YouTube e a do vídeo nativo', async () => {
       // É o ponto do desenho: quem consome escreve a mesma coisa nos quatro
       // casos. Trocar o motor não redesenha nada.
-      await expect(canvas.getByRole('group', { name: LABELS.controls })).toBeInTheDocument();
-      await expect(canvas.getByRole('button', { name: LABELS.play })).toBeInTheDocument();
-      await expect(canvas.getByRole('slider', { name: LABELS.seek })).toBeInTheDocument();
-      await expect(canvas.queryByRole('button', { name: LABELS.enterPip })).toBeNull();
+      await expect(canvas.getByRole('group', { name: L.controls })).toBeInTheDocument();
+      await expect(canvas.getByRole('button', { name: L.play })).toBeInTheDocument();
+      await expect(canvas.getByRole('slider', { name: L.seek })).toBeInTheDocument();
+      await expect(canvas.queryByRole('button', { name: L.enterPip })).toBeNull();
     });
   },
 };

@@ -43,6 +43,7 @@ import { IconsDocs } from './IconsDocs';
 import { InputDocs } from './InputDocs';
 import { InputOTPDocs } from './InputOTPDocs';
 import { LabelDocs } from './LabelDocs';
+import { MediaPlayerDocs } from './MediaPlayerDocs';
 import { MenubarDocs } from './MenubarDocs';
 import { MotionDocs } from './MotionDocs';
 import { NavigationMenuDocs } from './NavigationMenuDocs';
@@ -335,6 +336,11 @@ export const InputOTP: Story = {
 
 export const Label: Story = {
   render: () => <LabelDocs />,
+  play: mounted,
+};
+
+export const MediaPlayer: Story = {
+  render: () => <MediaPlayerDocs />,
   play: mounted,
 };
 

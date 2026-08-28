@@ -56,6 +56,17 @@ export type MediaPlayerLabels = {
   mute: string;
   unmute: string;
   seek: string;
+  /**
+   * O que o slider ANUNCIA, como molde: `{current}` e `{duration}` viram os
+   * dois relógios.
+   *
+   * É molde, e não um conector solto, porque a ordem dos dois tempos e a
+   * palavra entre eles são decisão de cada idioma — montar a frase no código
+   * daria errado no primeiro idioma que não pusesse as partes nesta ordem.
+   * Antes desta chave o conector estava cravado em pt-BR, e numa página em
+   * inglês quem ouve recebia uma preposição em português entre dois relógios.
+   */
+  seekValueText: string;
   rate: string;
   enterFullscreen: string;
   exitFullscreen: string;
@@ -158,6 +169,13 @@ export function formatTime(seconds: number): string {
   const m = Math.floor(total / 60);
   const s = total % 60;
   return `${m}:${String(s).padStart(2, '0')}`;
+}
+
+/** O molde de `labels.seekValueText`, com os dois relógios no lugar. */
+export function seekValueText(template: string, current: number, duration: number): string {
+  return template
+    .replace('{current}', formatTime(current))
+    .replace('{duration}', formatTime(duration));
 }
 
 function controlButton(label: string, icon: LucideIconNode[]): HTMLButtonElement {
@@ -361,10 +379,11 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
       seek.max = String(state.duration);
       seek.value = String(state.currentTime);
       // O slider anuncia POSIÇÃO, e "37" não é posição para quem ouve. O texto
-      // do valor é o relógio.
+      // do valor é o relógio, e o molde vem do CONTEÚDO: era a única string
+      // falada com palavra cravada em português.
       seek.setAttribute(
         'aria-valuetext',
-        `${formatTime(state.currentTime)} de ${formatTime(state.duration)}`,
+        seekValueText(labels.seekValueText, state.currentTime, state.duration),
       );
     }
   }

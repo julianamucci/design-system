@@ -1,8 +1,8 @@
 /**
  * Auxiliares de play do MediaPlayer.
  *
- * Separados das fixtures porque a docs page importa aquelas, e arrastar o
- * runner de teste para dentro dela levaria o pacote junto.
+ * Separados das fixtures porque a docs page importa aquelas: o que serve só ao
+ * teste não pode entrar no caminho de quem lê a documentação.
  */
 
 /**
@@ -38,9 +38,7 @@ export function messageFromFrame(frame: HTMLIFrameElement, data: unknown): void 
 
 /** O botão de tocar é o primeiro da barra — o único encontrável antes de ter nome. */
 export function firstControl(root: HTMLElement): HTMLButtonElement {
-  return root.querySelector(
-    '[data-slot="media-player-controls"] button',
-  ) as HTMLButtonElement;
+  return root.querySelector('[data-slot="media-player-controls"] button') as HTMLButtonElement;
 }
 
 /** O relógio da barra, como texto. */

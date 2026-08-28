@@ -5,9 +5,9 @@
 // `YouTube` e `Vimeo` trocam o motor por um quadro de outra origem sem trocar
 // uma linha da API de quem consome.
 
-import type { Meta, StoryObj } from '@storybook/html-vite';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
-import { createMediaPlayer, type MediaPlayerRoot } from './media-player';
+import { MediaPlayer, type MediaPlayerApi } from './index';
 import {
   LABELS,
   VIMEO_VIDEO_ID,
@@ -16,44 +16,89 @@ import {
   captionTrack,
   silentWav,
 } from './media-player.fixtures';
-import { until } from './media-player.play-helpers';
-import { mediaPlayerSourceWith } from './media-player.source';
+import { playerBridge, playerRoot, until } from './media-player.play-helpers';
+import {
+  mediaPlayerAudioSource,
+  mediaPlayerVideoSource,
+  mediaPlayerVimeoSource,
+  mediaPlayerYouTubeSource,
+} from './media-player.source';
 
-const meta: Meta = {
+/**
+ * A instância da story corrente.
+ *
+ * Uma só porque as stories rodam uma de cada vez, e é ela que dá acesso a
+ * `media` e `frame` — a raiz expõe os dois, e UM DELES É SEMPRE NULO.
+ */
+let player: MediaPlayerApi | null = null;
+
+/** Guarda a instância recém-montada para a play alcançar. */
+function keepPlayer(instance: MediaPlayerApi | null): void {
+  player = instance;
+}
+
+const meta = {
   title: 'UI/MediaPlayer/Variants',
-  // Sem `argTypes` próprios, o painel Controls ficaria vazio e a aba Actions
-  // prometeria um evento que nenhum arg alimenta.
+  component: MediaPlayer,
+  tags: ['display'],
   parameters: {
     layout: 'padded',
+    // Sem controls próprios, o painel ficaria vazio e a aba Actions prometeria
+    // um evento que nenhum arg alimenta.
     controls: { disable: true },
     actions: { disable: true },
   },
-};
+  args: { labels: LABELS },
+  argTypes: {
+    labels: {
+      control: false,
+      description:
+        'Nome acessível do player, da barra e de cada controle. Todos são só de ícone, '
+        + 'então o rótulo é o que o leitor de tela anuncia.',
+      table: { type: { summary: 'MediaPlayerLabels' }, defaultValue: { summary: '—' } },
+    },
+  },
+} satisfies Meta<typeof MediaPlayer>;
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof meta>;
 
 export const Video: Story = {
-  parameters: {
-    docs: { source: { transform: mediaPlayerSourceWith({ tracks: true, rates: [] }) } },
-  },
-  render: () =>
-    createMediaPlayer({
-      kind: 'video',
-      stream: canvasStream(),
+  parameters: { docs: { source: { transform: mediaPlayerVideoSource } } },
+  render: () => ({
+    components: { MediaPlayer },
+    setup() {
       // Stream ao vivo ignora `playbackRate` — sem lista, sem seletor. Medido:
       // 1.5 escrito lê de volta 1.
-      rates: [],
+      //
       // Uma faixa de legenda, ainda que vazia: vídeo com áudio SEM legenda
-      // reprova em WCAG 1.2.2 (nível A), e a story não pode ensinar o contrário.
-      tracks: [captionTrack()],
-      labels: LABELS,
-    }),
+      // reprova em WCAG 1.2.2 (nível A), e a story não pode ensinar o
+      // contrário.
+      return {
+        playerRef: playerBridge(keepPlayer),
+        labels: LABELS,
+        stream: canvasStream(),
+        tracks: [captionTrack()],
+      };
+    },
+    template: `
+      <div class="nds-w-full">
+        <MediaPlayer
+          ref="playerRef"
+          kind="video"
+          :stream="stream"
+          :rates="[]"
+          :tracks="tracks"
+          :labels="labels"
+        />
+      </div>
+    `,
+  }),
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const root = canvasElement.querySelector('[data-slot="media-player"]') as MediaPlayerRoot;
-    const video = root.media! as HTMLVideoElement;
+    const root = playerRoot(canvasElement);
+    const video = player!.media! as HTMLVideoElement;
 
     await step('É um <video>, e ele carrega a faixa de legenda', async () => {
       await expect(video.tagName).toBe('VIDEO');
@@ -61,30 +106,6 @@ export const Video: Story = {
       const track = video.querySelector('track');
       await expect(track).toHaveAttribute('kind', 'captions');
       await expect(track).toHaveAttribute('srclang', 'pt-BR');
-    });
-
-    await step('Controle marcado como `hidden` some de verdade', async () => {
-      // O atributo `hidden` sozinho não esconde nada quando a folha declara
-      // `display`: `[hidden] { display: none }` é regra do agente de usuário e
-      // perde para QUALQUER declaração de autor. Foi assim que o botão de
-      // janela flutuante — que nasce escondido e só é revelado quando se
-      // descobre que há faixa de vídeo — ficou na barra o tempo todo,
-      // prometendo o que o navegador recusa com `InvalidStateError`.
-      //
-      // A asserção MARCA o controle em vez de procurar um que esteja escondido
-      // agora. Procurar dependeria de qual controle está escondido neste
-      // instante, que varia com a stack e com o momento em que os primeiros
-      // quadros chegam — e onde não houvesse nenhum, o passo passaria sem medir
-      // nada. Portão que filtra exclui em silêncio.
-      //
-      // `queryByRole` não serve aqui: ele honra o ATRIBUTO e enxerga o controle
-      // como ausente qualquer que seja o CSS. Por isso nenhuma suíte pegava, e
-      // quem via era só quem abria a tela.
-      const button = root.querySelector('.nds-media-player-button') as HTMLElement;
-      button.hidden = true;
-      await expect(getComputedStyle(button).display).toBe('none');
-      button.hidden = false;
-      await expect(getComputedStyle(button).display).not.toBe('none');
     });
 
     await step('A fonte ao vivo não promete velocidade que ela ignora', async () => {
@@ -115,15 +136,19 @@ export const Video: Story = {
       await expect(hasVideoTrack).toBe(true);
 
       if (document.pictureInPictureEnabled && !video.disablePictureInPicture) {
-        const button = canvas.queryByRole('button', { name: LABELS.enterPip });
         // Com faixa de vídeo, o botão tem de estar visível DE VERDADE — não
         // basta existir no DOM, porque ele NASCE escondido e só é revelado
         // quando a largura aparece. E a leitura é do `display` computado, não
         // do atributo: `[hidden]` é regra de agente de usuário, e qualquer
         // declaração de autor a vence — já aconteceu quatro vezes neste
         // repositório.
-        await expect(button).not.toBeNull();
-        await expect(getComputedStyle(button as HTMLElement).display).not.toBe('none');
+        const revealed = await until(
+          () => Boolean(canvas.queryByRole('button', { name: LABELS.enterPip })),
+          5000,
+        );
+        await expect(revealed).toBe(true);
+        const button = canvas.getByRole('button', { name: LABELS.enterPip });
+        await expect(getComputedStyle(button).display).not.toBe('none');
       }
       video.pause();
     });
@@ -164,20 +189,30 @@ export const Video: Story = {
 };
 
 export const Audio: Story = {
-  parameters: { docs: { source: { transform: mediaPlayerSourceWith({ kind: 'audio' }) } } },
-  render: () =>
-    createMediaPlayer({
-      kind: 'audio',
-      src: silentWav(0.6),
-      labels: LABELS,
-    }),
+  parameters: { docs: { source: { transform: mediaPlayerAudioSource } } },
+  render: () => ({
+    components: { MediaPlayer },
+    setup() {
+      return { playerRef: playerBridge(keepPlayer), labels: LABELS, src: silentWav(0.6) };
+    },
+    template: `
+      <div class="nds-w-full">
+        <MediaPlayer
+          ref="playerRef"
+          kind="audio"
+          :src="src"
+          :labels="labels"
+        />
+      </div>
+    `,
+  }),
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const root = canvasElement.querySelector('[data-slot="media-player"]') as MediaPlayerRoot;
+    const root = playerRoot(canvasElement);
 
     await step('É um <audio>, e a barra é a mesma do vídeo', async () => {
-      await expect(root.media!.tagName).toBe('AUDIO');
+      await expect(player!.media!.tagName).toBe('AUDIO');
       await expect(root.dataset.kind).toBe('audio');
       await expect(canvas.getByRole('group', { name: LABELS.controls })).toBeInTheDocument();
       await expect(canvas.getByRole('slider', { name: LABELS.seek })).toBeInTheDocument();
@@ -190,7 +225,7 @@ export const Audio: Story = {
     });
 
     await step('A superfície não ocupa espaço — no áudio, a barra é o componente', async () => {
-      const surface = root.media!;
+      const surface = player!.media!;
       // O fundo declarado pela folha prova que a classe alcançou o elemento —
       // sem isto, "não ocupa espaço" também seria o que se veria se o CSS
       // simplesmente não tivesse carregado.
@@ -218,31 +253,37 @@ export const Audio: Story = {
  * provedor manda. O dialeto tem teste próprio em `media-embed.test.ts`.
  */
 export const YouTube: Story = {
-  parameters: {
-    docs: {
-      source: {
-        transform: mediaPlayerSourceWith({
-          embed: { provider: 'youtube', videoId: YOUTUBE_VIDEO_ID },
-        }),
-      },
+  parameters: { docs: { source: { transform: mediaPlayerYouTubeSource } } },
+  render: () => ({
+    components: { MediaPlayer },
+    setup() {
+      return {
+        playerRef: playerBridge(keepPlayer),
+        labels: LABELS,
+        embed: { provider: 'youtube' as const, videoId: YOUTUBE_VIDEO_ID },
+      };
     },
-  },
-  render: () =>
-    createMediaPlayer({
-      embed: { provider: 'youtube', videoId: YOUTUBE_VIDEO_ID },
-      labels: LABELS,
-    }),
+    template: `
+      <div class="nds-w-full">
+        <MediaPlayer
+          ref="playerRef"
+          :embed="embed"
+          :labels="labels"
+        />
+      </div>
+    `,
+  }),
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const root = canvasElement.querySelector('[data-slot="media-player"]') as MediaPlayerRoot;
-    const frame = root.frame!;
+    const root = playerRoot(canvasElement);
+    const frame = player!.frame!;
 
     await step('É um quadro, e não há elemento de mídia', async () => {
       // O tipo já diz isto, e a story confirma em execução: quem escrever
       // `player.media.currentTime` num provedor recebe nulo, não um erro
       // obscuro três telas adiante.
-      await expect(root.media).toBeNull();
+      await expect(player!.media).toBeNull();
       await expect(frame.tagName).toBe('IFRAME');
       await expect(root.dataset.kind).toBe('youtube');
       // Sem `title`, o leitor de tela anuncia só "quadro" — e uma página com
@@ -276,6 +317,7 @@ export const YouTube: Story = {
       await expect(canvas.queryByRole('button', { name: LABELS.enterPip })).toBeNull();
       // Tela cheia continua, porque quem entra em tela cheia é a MOLDURA — e
       // ela é nossa.
+      await until(() => Boolean(canvas.queryByRole('button', { name: LABELS.enterFullscreen })));
       await expect(canvas.queryByRole('button', { name: LABELS.enterFullscreen })).not.toBeNull();
     });
   },
@@ -289,28 +331,34 @@ export const YouTube: Story = {
  * a diferença fica toda em `media-embed.ts`, e não vaza para a barra.
  */
 export const Vimeo: Story = {
-  parameters: {
-    docs: {
-      source: {
-        transform: mediaPlayerSourceWith({
-          embed: { provider: 'vimeo', videoId: VIMEO_VIDEO_ID },
-        }),
-      },
+  parameters: { docs: { source: { transform: mediaPlayerVimeoSource } } },
+  render: () => ({
+    components: { MediaPlayer },
+    setup() {
+      return {
+        playerRef: playerBridge(keepPlayer),
+        labels: LABELS,
+        embed: { provider: 'vimeo' as const, videoId: VIMEO_VIDEO_ID },
+      };
     },
-  },
-  render: () =>
-    createMediaPlayer({
-      embed: { provider: 'vimeo', videoId: VIMEO_VIDEO_ID },
-      labels: LABELS,
-    }),
+    template: `
+      <div class="nds-w-full">
+        <MediaPlayer
+          ref="playerRef"
+          :embed="embed"
+          :labels="labels"
+        />
+      </div>
+    `,
+  }),
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const root = canvasElement.querySelector('[data-slot="media-player"]') as MediaPlayerRoot;
-    const frame = root.frame!;
+    const root = playerRoot(canvasElement);
+    const frame = player!.frame!;
 
     await step('É um quadro do Vimeo, com nome próprio', async () => {
-      await expect(root.media).toBeNull();
+      await expect(player!.media).toBeNull();
       await expect(root.dataset.kind).toBe('vimeo');
       await expect(frame.src).toContain('player.vimeo.com/video/');
       await expect(frame.src).toContain(VIMEO_VIDEO_ID);

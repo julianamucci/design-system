@@ -43,6 +43,7 @@ import I18nDocs from './I18nDocs.svelte';
 import InputDocs from './InputDocs.svelte';
 import InputOTPDocs from './InputOTPDocs.svelte';
 import LabelDocs from './LabelDocs.svelte';
+import MediaPlayerDocs from './MediaPlayerDocs.svelte';
 import MenubarDocs from './MenubarDocs.svelte';
 import MotionDocs from './MotionDocs.svelte';
 import NavigationMenuDocs from './NavigationMenuDocs.svelte';
@@ -235,6 +236,8 @@ export const Label: Story = { render: page(LabelDocs), play: mounted,
     },
   },
 };
+
+export const MediaPlayer: Story = { render: page(MediaPlayerDocs), play: mounted };
 
 export const Menubar: Story = { render: page(MenubarDocs), play: mounted };
 

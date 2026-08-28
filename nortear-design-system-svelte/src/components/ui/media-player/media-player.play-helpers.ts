@@ -38,14 +38,12 @@ export function messageFromFrame(frame: HTMLIFrameElement, data: unknown): void 
 
 /** O botão de tocar é o primeiro da barra — o único encontrável antes de ter nome. */
 export function firstControl(root: HTMLElement): HTMLButtonElement {
-  return root.querySelector(
-    '[data-slot="media-player-controls"] button',
-  ) as HTMLButtonElement;
+  return root.querySelector('[data-slot="media-player-controls"] button') as HTMLButtonElement;
 }
 
 /** O relógio da barra, como texto. */
 export function clockText(root: HTMLElement): string {
-  return root.querySelector('[data-slot="media-player-time"]')?.textContent ?? '';
+  return root.querySelector('[data-slot="media-player-time"]')?.textContent?.trim() ?? '';
 }
 
 /**

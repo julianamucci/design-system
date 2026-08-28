@@ -10,50 +10,38 @@
 // entregaria dois controles que a pessoa mexe e não acontece nada — que é
 // exatamente o defeito que este componente já teve uma vez, no botão de janela
 // flutuante. Vídeo, tela cheia e janela flutuante estão nas Variantes e nas
-// Composições, onde a fonte ao vivo vem com `rates: []` pelo motivo medido.
+// Composições, onde a fonte ao vivo vem com `rates={[]}` pelo motivo medido.
 
-import type { Meta, StoryObj } from '@storybook/html-vite';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
+import { MediaPlayer, formatTime } from './media-player';
 import {
-  createMediaPlayer,
-  formatTime,
-  type MediaPlayerKind,
-  type MediaPlayerLabels,
-  type MediaPlayerRoot,
-} from './media-player';
-import { LABELS, canvasStream, captionTrack, silentWav } from './media-player.fixtures';
+  CanvasVideoPlayer,
+  MediaPlayerCanvas,
+  mediaPlayerHandle,
+  mediaPlayerLabels,
+  silentWav,
+} from './media-player.fixtures';
 import { clockText, firstControl, until, seekValueTextPattern } from './media-player.play-helpers';
 import { mediaPlayerSource } from './media-player.source';
-import { createMediaPlayerDocs } from '@/components/docs/MediaPlayerDocs';
+import { MediaPlayerDocs } from '@/components/docs/MediaPlayerDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-// As dez do contrato, e não as três que o Playground controla: a aba API
-// Reference é gerada a partir de `argTypes`, então o que não aparece aqui não
-// existe para quem lê a documentação.
-type MediaPlayerArgs = {
-  kind: MediaPlayerKind;
-  rates: number[];
-  labels: MediaPlayerLabels;
-  src?: string;
-  stream?: MediaStream;
-  embed?: unknown;
-  tracks?: unknown;
-  onPlay: () => void;
-  onPause: (info: { ended: boolean; currentTime: number }) => void;
-  onEnded: () => void;
-};
+/** O WAV do Playground, resolvido uma vez: o mesmo texto a cada desenho. */
+const AUDIO_SOURCE = silentWav(0.6);
 
-const meta: Meta<MediaPlayerArgs> = {
+const meta = {
   title: 'UI/MediaPlayer',
+  component: MediaPlayer,
   tags: ['autodocs', 'display'],
   parameters: {
     // `padded` e não `centered`: o player é `width: 100%`, e sob `centered` a
     // caixa encolhe até o conteúdo — a moldura deixaria de ser o que se vê.
     layout: 'padded',
     docs: {
-      page: withAutoDocsTab(createMediaPlayerDocs),
-      // O painel Code mostra a chamada da fábrica, e não o `outerHTML` da
-      // moldura. A transform cascateia para todas as stories deste arquivo.
+      page: withAutoDocsTab(MediaPlayerDocs),
+      // O painel Code mostra a chamada do componente, e não a árvore do
+      // andaime. A transform cascateia para todas as stories deste arquivo.
       source: { transform: mediaPlayerSource },
     },
   },
@@ -103,7 +91,6 @@ const meta: Meta<MediaPlayerArgs> = {
     },
     labels: {
       control: false,
-      type: { name: 'object', value: {}, required: true },
       description:
         'Nome acessível do player, da barra e de cada controle. Todos são só de ícone, '
         + 'então o rótulo é o que o leitor de tela anuncia.',
@@ -137,47 +124,61 @@ const meta: Meta<MediaPlayerArgs> = {
   args: {
     kind: 'audio',
     rates: [0.5, 0.75, 1, 1.25, 1.5, 2],
-    labels: LABELS,
+    // `labels` está aqui porque é prop OBRIGATÓRIA, e é a API Reference que a
+    // documenta — não porque o render a consuma. Quem resolve os rótulos é o
+    // canvas, lendo o conteúdo compartilhado no idioma CORRENTE: os args são
+    // avaliados uma vez, na carga do módulo, e não veriam a troca de idioma.
+    labels: mediaPlayerLabels(),
     onPlay: fn(),
     onPause: fn(),
     onEnded: fn(),
   },
-};
+} satisfies Meta<typeof MediaPlayer>;
 
 export default meta;
-type Story = StoryObj<MediaPlayerArgs>;
+type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   render: (args) =>
-    createMediaPlayer({
-      kind: args.kind,
-      // Vídeo por canvas, áudio por WAV: os dois em memória, nada de rede.
-      ...(args.kind === 'video'
-        ? { stream: canvasStream(), tracks: [captionTrack()] }
-        : { src: silentWav(0.6) }),
-      rates: args.rates,
-      labels: args.labels,
-      onPlay: args.onPlay,
-      onPause: args.onPause,
-      onEnded: args.onEnded,
-    }),
+    // Vídeo por canvas, áudio por WAV: os dois em memória, nada de rede.
+    args.kind === 'video' ? (
+      <CanvasVideoPlayer
+        rates={args.rates}
+        onPlay={args.onPlay}
+        onPause={args.onPause}
+        onEnded={args.onEnded}
+      />
+    ) : (
+      <MediaPlayerCanvas
+        kind="audio"
+        src={AUDIO_SOURCE}
+        rates={args.rates}
+        onPlay={args.onPlay}
+        onPause={args.onPause}
+        onEnded={args.onEnded}
+      />
+    ),
 
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const root = canvasElement.querySelector('[data-slot="media-player"]') as MediaPlayerRoot;
+    const handle = mediaPlayerHandle(canvasElement);
+    const root = handle.root!;
     // A afirmação de não-nulo é a story dizendo que SABE qual motor pediu:
     // `media` é nulo em provedor externo, e o tipo obriga a declarar isso em
     // vez de presumir.
-    const media = root.media!;
+    const media = handle.media!;
+    // Do conteúdo compartilhado, no idioma corrente — a mesma leitura que o
+    // canvas faz para desenhar a barra.
+    const L = mediaPlayerLabels();
     // Silenciada por padrão na suíte: a política de autoplay do navegador é
     // afrouxada por bandeira de lançamento (ver `vite.config.ts`), mas nada
     // garante que quem roda isto na mão tenha a mesma política.
     media.muted = true;
 
     await step('O player se anuncia, e os controles têm nome próprio', async () => {
-      await expect(canvas.getByRole('group', { name: LABELS.player })).toBeInTheDocument();
-      await expect(canvas.getByRole('group', { name: LABELS.controls })).toBeInTheDocument();
-      await expect(canvas.getByRole('slider', { name: LABELS.seek })).toBeInTheDocument();
+      await expect(canvas.getByRole('group', { name: L.player })).toBeInTheDocument();
+      await expect(canvas.getByRole('group', { name: L.controls })).toBeInTheDocument();
+      await expect(canvas.getByRole('slider', { name: L.seek })).toBeInTheDocument();
       // O elemento nativo NÃO recebe `controls`: dois conjuntos de controles na
       // mesma caixa seria a plataforma e o design system disputando a mesma
       // função.
@@ -200,12 +201,12 @@ export const Playground: Story = {
       // regra casa pelo NOME do método e não distingue os dois.
       // eslint-disable-next-line storybook/context-in-play-function
       await media.play().catch(() => {});
-      await until(() => label() === LABELS.pause);
-      await expect(canvas.getByRole('button', { name: LABELS.pause })).toBeInTheDocument();
+      await until(() => label() === L.pause);
+      await expect(canvas.getByRole('button', { name: L.pause })).toBeInTheDocument();
 
       media.pause();
-      await until(() => label() === LABELS.play);
-      await expect(canvas.getByRole('button', { name: LABELS.play })).toBeInTheDocument();
+      await until(() => label() === L.play);
+      await expect(canvas.getByRole('button', { name: L.play })).toBeInTheDocument();
     });
 
     await step('Início é `playing`, e a pausa carrega o discriminador', async () => {
@@ -217,7 +218,7 @@ export const Playground: Story = {
       // deixou inverteria o resultado desta.
       media.currentTime = 0;
       if (!media.paused) media.pause();
-      await until(() => firstControl(root).getAttribute('aria-label') === LABELS.play);
+      await until(() => firstControl(root).getAttribute('aria-label') === L.play);
 
       // A espera é PELO QUE SE AFIRMA, e não por um sintoma vizinho.
       //
@@ -230,20 +231,20 @@ export const Playground: Story = {
       const played = args.onPlay as ReturnType<typeof fn>;
       const paused = args.onPause as ReturnType<typeof fn>;
 
-      await userEvent.click(canvas.getByRole('button', { name: LABELS.play }));
+      await userEvent.click(canvas.getByRole('button', { name: L.play }));
       await expect(await until(() => played.mock.calls.length > 0, 5000)).toBe(true);
 
-      await userEvent.click(canvas.getByRole('button', { name: LABELS.pause }));
+      await userEvent.click(canvas.getByRole('button', { name: L.pause }));
       await expect(await until(() => paused.mock.calls.length > 0, 5000)).toBe(true);
       // Pausa de verdade: `ended` falso.
       await expect(args.onPause).toHaveBeenCalledWith(expect.objectContaining({ ended: false }));
     });
 
     await step('O relógio anuncia tempo, não um número solto', async () => {
-      const slider = canvas.getByRole('slider', { name: LABELS.seek });
+      const slider = canvas.getByRole('slider', { name: L.seek });
       const valueText = slider.getAttribute('aria-valuetext') ?? '';
       // "37" não é posição para quem ouve. O texto do valor é o relógio.
-      await expect(valueText).toMatch(seekValueTextPattern(LABELS.seekValueText));
+      await expect(valueText).toMatch(seekValueTextPattern(L.seekValueText));
       await expect(clockText(root)).toMatch(/\d+:\d{2} \/ \d+:\d{2}/);
       await expect(formatTime(83)).toBe('1:23');
       // Duração desconhecida não pode virar `NaN:aN` na tela.
@@ -251,7 +252,7 @@ export const Playground: Story = {
     });
 
     await step('A velocidade é um seletor nativo, e muda a reprodução', async () => {
-      const rateSelect = canvas.getByRole('combobox', { name: LABELS.rate });
+      const rateSelect = canvas.getByRole('combobox', { name: L.rate });
       // `1×`, e não `1`: o número sozinho não diz de que grandeza se fala.
       await expect(rateSelect.textContent).toContain('1×');
 
@@ -269,29 +270,29 @@ export const Playground: Story = {
     await step('O silêncio também é estado, e o par de rótulos o anuncia', async () => {
       // Precondição própria: chega aqui com som, venha de onde vier.
       media.muted = false;
-      await until(() => Boolean(canvas.queryByRole('button', { name: LABELS.mute })));
+      await until(() => Boolean(canvas.queryByRole('button', { name: L.mute })));
 
-      await userEvent.click(canvas.getByRole('button', { name: LABELS.mute }));
+      await userEvent.click(canvas.getByRole('button', { name: L.mute }));
       await until(() => media.muted);
-      await expect(canvas.getByRole('button', { name: LABELS.unmute })).toBeInTheDocument();
+      await expect(canvas.getByRole('button', { name: L.unmute })).toBeInTheDocument();
 
-      await userEvent.click(canvas.getByRole('button', { name: LABELS.unmute }));
+      await userEvent.click(canvas.getByRole('button', { name: L.unmute }));
       await until(() => !media.muted);
-      await expect(canvas.getByRole('button', { name: LABELS.mute })).toBeInTheDocument();
+      await expect(canvas.getByRole('button', { name: L.mute })).toBeInTheDocument();
       media.muted = true;
     });
 
     await step('Áudio não oferece tela cheia nem janela flutuante', async () => {
       // Os dois são de vídeo. Num player de áudio o botão não teria o que
       // mostrar, e botão que não faz nada é ruído.
-      await expect(canvas.queryByRole('button', { name: LABELS.enterFullscreen })).toBeNull();
-      await expect(canvas.queryByRole('button', { name: LABELS.enterPip })).toBeNull();
+      await expect(canvas.queryByRole('button', { name: L.enterFullscreen })).toBeNull();
+      await expect(canvas.queryByRole('button', { name: L.enterPip })).toBeNull();
     });
 
     await step('Os controles alcançam o mínimo de alvo de toque', async () => {
       // A medida sai do `getBoundingClientRect` do PRÓPRIO botão: é o que o axe
       // mede em `target-size`, e um `::after` no pai não conta para ele.
-      for (const name of [LABELS.play, LABELS.mute]) {
+      for (const name of [L.play, L.mute]) {
         const button = canvas.queryByRole('button', { name });
         if (!button) continue;
         const box = button.getBoundingClientRect();

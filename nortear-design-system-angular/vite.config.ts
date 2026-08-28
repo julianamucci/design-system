@@ -25,6 +25,11 @@ export default defineConfig({
       exclude: [
         'src/components/ui/**/*.stories.ts',
         'src/components/ui/**/index.ts',
+        // Snippet do painel Code e o teste dele: infra de documentação, não
+        // produto. Quem os guarda é o projeto `unit` abaixo, não o threshold de
+        // cobertura do primitivo.
+        'src/components/ui/**/*.source.ts',
+        'src/components/ui/**/*.test.ts',
       ],
       thresholds: {
         statements: 90,
@@ -35,6 +40,21 @@ export default defineConfig({
     },
     projects: [
       {
+        // Testes unitários de função pura, em node. Existe pelo mesmo motivo do
+        // projeto homônimo do Vanilla: as transforms do painel Code
+        // (`<slug>.source.ts`) e o protocolo dos provedores de mídia
+        // (`media-embed.ts`) são função pura, e a saída delas não aparece no DOM
+        // durante a `play` — nenhuma suíte de navegador as alcança. Entra o
+        // argumento, sai o valor, e isso se testa aqui, sem compilador de
+        // template no caminho.
+        extends: true,
+        test: {
+          name: 'unit',
+          environment: 'node',
+          include: ['src/**/*.test.ts'],
+        },
+      },
+      {
         extends: true,
         plugins: [storybookTest({ configDir: path.join(dirname, '.storybook') })],
         test: {
@@ -44,7 +64,19 @@ export default defineConfig({
           browser: {
             enabled: true,
             headless: true,
-            provider: playwright({}),
+            // A política de autoplay do navegador recusa `play()` na suíte, e
+            // MEDIDO: recusa mesmo com a mídia silenciada e mesmo com `play()`
+            // chamado de dentro do manipulador de um clique real do driver —
+            // `NotAllowedError` nos três casos, porque o clique sintético não
+            // concede ativação do usuário. Sem esta bandeira, componente de
+            // mídia é intestável: nenhuma asserção alcança reprodução.
+            //
+            // Ela afrouxa a política SÓ no navegador de teste. A política de
+            // verdade continua valendo para quem usa, e é por isso que o player
+            // não presume que `play()` funciona: ele trata a recusa.
+            provider: playwright({
+              launchOptions: { args: ['--autoplay-policy=no-user-gesture-required'] },
+            }),
             instances: [{ browser: 'chromium' }],
           },
         },

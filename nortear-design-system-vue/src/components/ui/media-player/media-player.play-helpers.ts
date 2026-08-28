@@ -1,9 +1,37 @@
 /**
  * Auxiliares de play do MediaPlayer.
  *
- * Separados das fixtures porque a docs page importa aquelas, e arrastar o
- * runner de teste para dentro dela levaria o pacote junto.
+ * Separados das fixtures porque a docs page importa aquelas, e um módulo de
+ * espera de teste dentro dela levaria o andaime da suíte para o pacote da
+ * página.
  */
+import { ref, watch, type Ref } from 'vue';
+import type { MediaPlayerApi } from './index';
+
+/**
+ * A ponte da story para a instância montada.
+ *
+ * A raiz expõe `media` e `frame`, e UM DOS DOIS É SEMPRE NULO — ler o elemento
+ * pelo DOM esconderia justamente a diferença que as stories de provedor
+ * existem para provar.
+ *
+ * É um OBSERVADOR, e não `onMounted`: trocar a fonte troca o motor, e motor não
+ * se troca em voo — o `:key` remonta o componente, e um `onMounted` do
+ * invólucro guardaria a instância morta. Quem recebe a instância é o
+ * `assign`, porque cada arquivo de story guarda a sua (uma só, ou a lista de
+ * duas que a composição compara).
+ *
+ * Mora aqui, e não copiada em cada `*.stories.ts`, porque cópia divergida não é
+ * variação — é o defeito: corrigir uma delas deixa as outras erradas sem
+ * nenhum sinal.
+ */
+export function playerBridge(
+  assign: (player: MediaPlayerApi | null) => void,
+): Ref<MediaPlayerApi | null> {
+  const playerRef = ref<MediaPlayerApi | null>(null);
+  watch(playerRef, (instance) => assign(instance), { flush: 'post' });
+  return playerRef;
+}
 
 /**
  * Espera de RELÓGIO com prazo. Nunca `waitFor`.
@@ -12,6 +40,9 @@
  * DOM e a primeira tentativa falha, a própria tentativa provoca a próxima, o
  * prazo nunca chega e a aba morre sem resultado E sem falha — medido, 420s de
  * CPU sem reportar. Um laço de relógio reprova em segundos.
+ *
+ * O intervalo de 20ms também é o que dá ao Vue a chance de repintar: a barra é
+ * controlada pelo estado, e a pintura vem no ciclo seguinte ao evento do motor.
  *
  * Devolve a condição avaliada uma última vez, para a asserção poder falar sobre
  * ela em vez de sobre o tempo.
@@ -46,6 +77,11 @@ export function firstControl(root: HTMLElement): HTMLButtonElement {
 /** O relógio da barra, como texto. */
 export function clockText(root: HTMLElement): string {
   return root.querySelector('[data-slot="media-player-time"]')?.textContent ?? '';
+}
+
+/** A moldura de um player montado na story. */
+export function playerRoot(canvasElement: HTMLElement): HTMLElement {
+  return canvasElement.querySelector('[data-slot="media-player"]') as HTMLElement;
 }
 
 /**

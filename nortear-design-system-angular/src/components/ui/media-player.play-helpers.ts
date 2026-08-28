@@ -1,8 +1,8 @@
 /**
  * Auxiliares de play do MediaPlayer.
  *
- * Separados das fixtures porque a docs page importa aquelas, e arrastar o
- * runner de teste para dentro dela levaria o pacote junto.
+ * Separados das fixtures porque a docs page importa aquelas, e arrastar o runner
+ * de teste para dentro dela levaria o pacote junto.
  */
 
 /**

@@ -75,7 +75,15 @@ export default defineConfig({
         browser: {
           enabled: true,
           headless: true,
-          provider: playwright({}),
+          // MEDIDO: sem a bandeira, `play()` é recusado com `NotAllowedError`
+          // — mesmo com a mídia silenciada e mesmo chamado de dentro do
+          // manipulador de um clique real do driver, porque o clique sintético
+          // não concede ativação do usuário
+          // (`navigator.userActivation.hasBeenActive` é `false` na suíte). Sem
+          // ela, componente de mídia é intestável.
+          provider: playwright({
+            launchOptions: { args: ['--autoplay-policy=no-user-gesture-required'] },
+          }),
           instances: [{
             browser: 'chromium'
           }]

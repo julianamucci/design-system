@@ -8,12 +8,20 @@
 // memória tem duração finita — que é o que permite chegar ao fim em menos de
 // um segundo em vez de esperar um vídeo inteiro.
 
-import type { Meta, StoryObj } from '@storybook/html-vite';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, fn } from 'storybook/test';
-import { createMediaPlayer, type MediaPlayerRoot } from './media-player';
+import { MediaPlayer, type MediaPlayerApi } from './index';
 import { LABELS, silentWav } from './media-player.fixtures';
-import { clockText, firstControl, until, seekValueTextPattern } from './media-player.play-helpers';
-import { mediaPlayerSourceWith } from './media-player.source';
+import { clockText, firstControl, playerBridge, playerRoot, until, seekValueTextPattern } from './media-player.play-helpers';
+import { mediaPlayerAudioSource } from './media-player.source';
+
+/** A instância da story corrente — as stories rodam uma de cada vez. */
+let player: MediaPlayerApi | null = null;
+
+/** Guarda a instância recém-montada para a play alcançar. */
+function keepPlayer(instance: MediaPlayerApi | null): void {
+  player = instance;
+}
 
 /**
  * Espiões de escopo de MÓDULO.
@@ -26,27 +34,53 @@ const onPlay = fn();
 const onPause = fn();
 const onEnded = fn();
 
-const meta: Meta = {
+const meta = {
   title: 'UI/MediaPlayer/States',
+  component: MediaPlayer,
+  tags: ['display'],
   parameters: {
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
-    docs: { source: { transform: mediaPlayerSourceWith({ kind: 'audio' }) } },
+    docs: { source: { transform: mediaPlayerAudioSource } },
   },
-};
+  args: { labels: LABELS },
+  argTypes: {
+    labels: {
+      control: false,
+      description:
+        'Nome acessível do player, da barra e de cada controle. Todos são só de ícone, '
+        + 'então o rótulo é o que o leitor de tela anuncia.',
+      table: { type: { summary: 'MediaPlayerLabels' }, defaultValue: { summary: '—' } },
+    },
+  },
+} satisfies Meta<typeof MediaPlayer>;
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof meta>;
 
 /** Como o player nasce: parado, no zero, sem duração conhecida ainda. */
 export const Idle: Story = {
-  render: () =>
-    createMediaPlayer({ kind: 'audio', src: silentWav(0.6), labels: LABELS }),
+  render: () => ({
+    components: { MediaPlayer },
+    setup() {
+      return { playerRef: playerBridge(keepPlayer), labels: LABELS, src: silentWav(0.6) };
+    },
+    template: `
+      <div class="nds-w-full">
+        <MediaPlayer
+          ref="playerRef"
+          kind="audio"
+          :src="src"
+          :labels="labels"
+        />
+      </div>
+    `,
+  }),
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const root = canvasElement.querySelector('[data-slot="media-player"]') as MediaPlayerRoot;
+    const root = playerRoot(canvasElement);
 
     await step('O botão oferece tocar, e a posição está no início', async () => {
       await expect(canvas.getByRole('button', { name: LABELS.play })).toBeInTheDocument();
@@ -66,21 +100,31 @@ export const Idle: Story = {
 
 /** Tocando: o botão passa a oferecer pausa, e a posição anda. */
 export const Playing: Story = {
-  render: () =>
-    createMediaPlayer({
-      kind: 'audio',
+  render: () => ({
+    components: { MediaPlayer },
+    setup() {
       // Cinco segundos: tempo de a story fechar TOCANDO, que é o estado que ela
       // nomeia e o que o Chromatic vai fotografar.
-      src: silentWav(5),
-      labels: LABELS,
-      onPlay,
-      onPause,
-    }),
+      return { playerRef: playerBridge(keepPlayer), labels: LABELS, src: silentWav(5), onPlay, onPause };
+    },
+    template: `
+      <div class="nds-w-full">
+        <MediaPlayer
+          ref="playerRef"
+          kind="audio"
+          :src="src"
+          :labels="labels"
+          @play="onPlay"
+          @pause="onPause"
+        />
+      </div>
+    `,
+  }),
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const root = canvasElement.querySelector('[data-slot="media-player"]') as MediaPlayerRoot;
-    const media = root.media!;
+    const root = playerRoot(canvasElement);
+    const media = player!.media!;
     media.muted = true;
     onPlay.mockClear();
 
@@ -95,9 +139,9 @@ export const Playing: Story = {
       // regra casa pelo NOME do método e não distingue os dois.
       // eslint-disable-next-line storybook/context-in-play-function
       await media.play().catch(() => {});
-      // A espera é pelo CALLBACK, e não por `!paused && currentTime > 0`: os
-      // dois quase sempre chegam juntos, e quando não chegam a asserção corre
-      // antes do evento. Medido — reprovou uma vez em duas rodadas idênticas.
+      // A espera é pelo EVENTO, e não por `!paused && currentTime > 0`: os dois
+      // quase sempre chegam juntos, e quando não chegam a asserção corre antes
+      // do evento. Medido — reprovou uma vez em duas rodadas idênticas.
       const started = await until(() => onPlay.mock.calls.length > 0, 5000);
       await expect(started).toBe(true);
     });
@@ -121,19 +165,29 @@ export const Playing: Story = {
 
 /** Terminada: `pause` chega ANTES de `ended`, e só o discriminador os separa. */
 export const Ended: Story = {
-  render: () =>
-    createMediaPlayer({
-      kind: 'audio',
-      src: silentWav(0.4),
-      labels: LABELS,
-      onPause,
-      onEnded,
-    }),
+  render: () => ({
+    components: { MediaPlayer },
+    setup() {
+      return { playerRef: playerBridge(keepPlayer), labels: LABELS, src: silentWav(0.4), onPause, onEnded };
+    },
+    template: `
+      <div class="nds-w-full">
+        <MediaPlayer
+          ref="playerRef"
+          kind="audio"
+          :src="src"
+          :labels="labels"
+          @pause="onPause"
+          @ended="onEnded"
+        />
+      </div>
+    `,
+  }),
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const root = canvasElement.querySelector('[data-slot="media-player"]') as MediaPlayerRoot;
-    const media = root.media!;
+    const root = playerRoot(canvasElement);
+    const media = player!.media!;
     media.muted = true;
 
     await step('A mídia chega ao fim', async () => {
@@ -153,6 +207,7 @@ export const Ended: Story = {
       // com `pause` ANTES do fim. Quem contar `pause` sem olhar `ended` conta
       // toda reprodução completa como uma pausa — e o número continua
       // plausível, que é o que torna o erro caro.
+      await until(() => onEnded.mock.calls.length > 0, 5000);
       await expect(onPause).toHaveBeenCalledWith(expect.objectContaining({ ended: true }));
       await expect(onEnded).toHaveBeenCalled();
     });
