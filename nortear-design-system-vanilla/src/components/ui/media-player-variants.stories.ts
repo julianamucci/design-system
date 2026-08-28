@@ -63,6 +63,26 @@ export const Video: Story = {
       await expect(track).toHaveAttribute('srclang', 'pt-BR');
     });
 
+    await step('A janela flutuante NASCE escondida — e escondida de verdade', async () => {
+      // Antes de qualquer `play()`: em stream ao vivo `videoWidth` só deixa de
+      // ser 0 quando os primeiros quadros chegam, então este é o instante em
+      // que o botão existe no DOM e não pode estar na tela.
+      //
+      // As duas metades são necessárias, e é a segunda que tem dentes. O
+      // atributo `hidden` sozinho não esconde nada quando a folha declara
+      // `display`: `[hidden] { display: none }` é regra do agente de usuário e
+      // perde para qualquer declaração de autor. `queryByRole` honra o atributo
+      // e enxerga o botão como ausente qualquer que seja o CSS — por isso
+      // nenhuma suíte pegava, e quem via era só quem abria a tela.
+      const pipButton = root.querySelector(
+        '[data-slot="media-player-controls"] button[hidden]',
+      ) as HTMLElement | null;
+      if (pipButton) {
+        await expect(video.videoWidth).toBe(0);
+        await expect(getComputedStyle(pipButton).display).toBe('none');
+      }
+    });
+
     await step('A fonte ao vivo não promete velocidade que ela ignora', async () => {
       // `rates: []` esconde o seletor. Deixá-lo ali daria à pessoa um controle
       // que ela mexe e não acontece nada — o mesmo defeito que a janela

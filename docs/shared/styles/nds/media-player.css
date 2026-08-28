@@ -80,6 +80,22 @@
   border-block-start: 0;
 }
 
+/* A guarda de `[hidden]`, pelo motivo de sempre — e esta é a QUINTA vez.
+ *
+ * `[hidden] { display: none }` é regra da folha do AGENTE DE USUÁRIO, e
+ * qualquer declaração de autor a vence. O botão de janela flutuante NASCE
+ * escondido e só é revelado quando se descobre que há faixa de vídeo: sem esta
+ * regra ele fica na barra o tempo todo, prometendo uma função que o navegador
+ * vai recusar com `InvalidStateError`.
+ *
+ * Nenhuma suíte pegava: `queryByRole` honra o ATRIBUTO `hidden` e enxerga o
+ * botão como ausente qualquer que seja o CSS. Quem vê é só quem abre a tela.
+ * Precedentes: `.nds-accordion-content`, `.nds-command-item`,
+ * `.nds-editor-field-row` e `.nds-editor-toolbar-context`. */
+.nds-media-player-controls [hidden] {
+  display: none;
+}
+
 /* Botão de controle.
  *
  * 24px de lado é o mínimo de alvo de toque (WCAG 2.5.8) e vale para o alvo, não

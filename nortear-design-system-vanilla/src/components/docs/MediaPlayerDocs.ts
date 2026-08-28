@@ -41,16 +41,25 @@ import {
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 //
-// Sem overrides: o `translations.json` do MediaPlayer descreve a API em
+// Quase sem overrides: o `translations.json` do MediaPlayer descreve a API em
 // nomenclatura neutra, e nesta stack os nomes coincidem — `kind`, `src`,
-// `stream`, `embed`, `tracks`, `rates`, `labels`. Os três callbacks são a
-// exceção prevista pelo conteúdo, que os nomeia por PROPÓSITO justamente porque
-// o nome real muda de stack para stack; aqui a tabela promete o nome que se
-// digita nesta stack, e ele é o mesmo que o conteúdo já traz.
+// `stream`, `embed`, `tracks`, `rates`, `labels`.
+//
+// A exceção são os três callbacks. O conteúdo compartilhado os nomeia por
+// PROPÓSITO ("callback de início") porque o nome REAL muda de stack para stack,
+// e a tabela desta página promete o nome que se DIGITA aqui. Só o `name` muda:
+// tipo, padrão e descrição valem nos cinco.
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
 const { t, subscribe } = createTranslation(
   mediaPlayerTranslations as Record<string, unknown>,
+  {
+    '*': {
+      'props.table.onPlay.name': 'onPlay',
+      'props.table.onPause.name': 'onPause',
+      'props.table.onEnded.name': 'onEnded',
+    },
+  },
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
