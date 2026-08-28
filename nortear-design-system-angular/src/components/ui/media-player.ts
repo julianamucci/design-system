@@ -52,7 +52,7 @@ import {
   buildEmbedUrl,
   EMBED_ALLOW,
   embedCommand,
-  embedHandshake,
+  createEmbedHandshake,
   isFromFrame,
   parseEmbedMessage,
   type EmbedCommand,
@@ -673,19 +673,35 @@ export class MediaPlayerComponent implements OnDestroy {
       frame.setAttribute('allow', EMBED_ALLOW);
       frame.src = buildEmbedUrl(source, window.location.origin);
 
+      // `start()` INSISTE até o provedor responder. Mandar uma vez, no `load`,
+      // não bastava: o `load` do iframe é o documento do provedor, não o player
+      // dentro dele. Medido contra os quadros reais — com um envio só, o YouTube
+      // devolveu ZERO mensagens e o Vimeo não aceitou nenhuma inscrição.
+      const handshake = createEmbedHandshake(source.provider, (message) => {
+        frame.contentWindow?.postMessage(message, '*');
+      });
+
       const onMessage = (event: MessageEvent): void => {
         // A página recebe `message` de QUALQUER origem — outro embed, uma
         // extensão, um anúncio. Sem conferir a fonte, um segundo player na mesma
         // página pausa o primeiro.
         if (!isFromFrame(event, frame)) return;
-        const parsed = parseEmbedMessage(source.provider, event.data);
-        if (!parsed) return;
-        if (parsed.type === 'playing') this.started();
-        else if (parsed.type === 'paused') this.stopped(false);
-        else if (parsed.type === 'ended') this.finish();
-        else {
-          this.currentTime.set(parsed.currentTime);
-          this.duration.set(parsed.duration);
+        // Qualquer resposta do provedor encerra a insistência do aperto de mão.
+        handshake.observe(event.data);
+        // Lista, e não um evento só: uma mensagem do provedor carrega mais de
+        // uma notícia — o `infoDelivery` do YouTube traz estado e tempo juntos.
+        for (const parsed of parseEmbedMessage(source.provider, event.data)) {
+          if (parsed.type === 'playing') this.started();
+          else if (parsed.type === 'paused') this.stopped(false);
+          else if (parsed.type === 'ended') this.finish();
+          else {
+            // Só o que VEIO. O provedor avisa o que mudou, não o estado
+            // inteiro: sobrescrever com `undefined` apagaria a duração a cada
+            // atualização de posição, e o relógio voltaria a `--:--` no meio
+            // do vídeo.
+            if (parsed.currentTime !== undefined) this.currentTime.set(parsed.currentTime);
+            if (parsed.duration !== undefined) this.duration.set(parsed.duration);
+          }
         }
       };
       window.addEventListener('message', onMessage);
@@ -693,15 +709,14 @@ export class MediaPlayerComponent implements OnDestroy {
       // O aperto de mão: sem ele nenhum dos dois provedores envia evento algum.
       // É o passo que costuma faltar, e o sintoma é "os comandos funcionam mas
       // nada volta".
-      const onLoad = (): void => {
-        for (const message of embedHandshake(source.provider)) {
-          frame.contentWindow?.postMessage(message, '*');
-        }
-      };
+      const onLoad = (): void => handshake.start();
       frame.addEventListener('load', onLoad);
 
       onCleanup(() => {
-        // Os dois ouvintes moram FORA da moldura e sobreviveriam à remoção dela.
+        // Os dois ouvintes moram FORA da moldura e sobreviveriam à remoção dela;
+        // e o aperto de mão insiste por dez segundos, batendo num quadro que já
+        // foi se ninguém o parar.
+        handshake.stop();
         window.removeEventListener('message', onMessage);
         frame.removeEventListener('load', onLoad);
         // Trocar o `src` por vazio é o que de fato para o vídeo do provedor: a

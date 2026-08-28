@@ -34,7 +34,7 @@ import {
   EMBED_ALLOW,
   buildEmbedUrl,
   embedCommand,
-  embedHandshake,
+  createEmbedHandshake,
   isFromFrame,
   parseEmbedMessage,
   type EmbedCommand,
@@ -256,14 +256,21 @@ function onMessage(event: MessageEvent): void {
   // um anúncio. Sem conferir a fonte, um segundo player na mesma página pausa o
   // primeiro.
   if (!frame || !props.embed || !isFromFrame(event, frame)) return;
-  const parsed = parseEmbedMessage(props.embed.provider, event.data);
-  if (!parsed) return;
-  if (parsed.type === 'playing') started();
-  else if (parsed.type === 'paused') stopped(false);
-  else if (parsed.type === 'ended') finished();
-  else {
-    currentTime.value = parsed.currentTime;
-    duration.value = parsed.duration;
+  // Qualquer resposta do provedor encerra a insistência do aperto de mão.
+  handshake?.observe(event.data);
+  // Lista, e não um evento só: uma mensagem do provedor carrega mais de uma
+  // notícia — o `infoDelivery` do YouTube traz estado e tempo juntos.
+  for (const parsed of parseEmbedMessage(props.embed.provider, event.data)) {
+    if (parsed.type === 'playing') started();
+    else if (parsed.type === 'paused') stopped(false);
+    else if (parsed.type === 'ended') finished();
+    else {
+      // Só o que VEIO. O provedor avisa o que mudou, não o estado inteiro:
+      // sobrescrever com `undefined` apagaria a duração a cada atualização de
+      // posição, e o relógio voltaria a `--:--` no meio do vídeo.
+      if (parsed.currentTime !== undefined) currentTime.value = parsed.currentTime;
+      if (parsed.duration !== undefined) duration.value = parsed.duration;
+    }
   }
 }
 
@@ -273,13 +280,23 @@ function onMessage(event: MessageEvent): void {
  * É o passo que costuma faltar, e o sintoma é "os comandos funcionam mas nada
  * volta".
  */
+let handshake: ReturnType<typeof createEmbedHandshake> | null = null;
+
 function onFrameLoad(): void {
   const frame = frameRef.value;
   if (!frame || !props.embed) return;
-  for (const message of embedHandshake(props.embed.provider)) {
+  handshake?.stop();
+  handshake = createEmbedHandshake(props.embed.provider, (message) => {
     frame.contentWindow?.postMessage(message, '*');
-  }
+  });
+  handshake.start();
 }
+
+/**
+ * O aperto de mão insiste por dez segundos: um player desmontado antes de o
+ * provedor responder deixaria um temporizador batendo num quadro que já foi.
+ */
+onBeforeUnmount(() => handshake?.stop());
 
 // ─── Os controles falam com o motor ─────────────────────────────────────────
 

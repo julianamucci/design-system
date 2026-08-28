@@ -1,173 +1,329 @@
-// O protocolo dos provedores externos é função pura, e é aqui que ele se
-// verifica — sem rede, sem serviço de terceiro, sem navegador.
+// O dialeto dos provedores, preso sem rede.
 //
-// O que ESTE arquivo não cobre está declarado na story: o aperto de mão real com
-// o YouTube e com o Vimeo exige rede, e suíte que depende de serviço externo
-// falha por motivo alheio ao código.
-import { describe, it, expect } from 'vitest';
+// As formas testadas aqui não são inventadas: foram CAPTURADAS de quadros reais
+// por uma sonda, e cada bloco diz o que a medição mostrou. É o que separa este
+// arquivo de um teste que confirma o que o autor imaginou.
+
+import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import {
   buildEmbedUrl,
+  createEmbedHandshake,
+  EMBED_ALLOW,
   embedCommand,
   embedHandshake,
+  isFromFrame,
+  isHandshakeAck,
   parseEmbedMessage,
-  EMBED_ALLOW,
 } from './media-embed';
 
 describe('buildEmbedUrl', () => {
-  it('usa o domínio sem cookie por padrão no YouTube', () => {
-    const url = buildEmbedUrl({ provider: 'youtube', videoId: 'abc123' }, 'https://exemplo.com');
-    // O padrão precisa ser o que não surpreende: o domínio comum grava cookie de
-    // perfil antes mesmo de a pessoa dar play.
+  it('YouTube: domínio sem cookie por padrão', () => {
+    const url = buildEmbedUrl({ provider: 'youtube', videoId: 'abc' }, 'https://ds.test');
     expect(url).toContain('www.youtube-nocookie.com');
     expect(url).not.toContain('//www.youtube.com');
   });
 
-  it('só usa o domínio com cookie quando pedido explicitamente', () => {
+  it('YouTube: o domínio comum só entra quando pedido explicitamente', () => {
     const url = buildEmbedUrl(
-      { provider: 'youtube', videoId: 'abc123', noCookie: false },
-      'https://exemplo.com',
+      { provider: 'youtube', videoId: 'abc', noCookie: false },
+      'https://ds.test',
     );
     expect(url).toContain('www.youtube.com');
   });
 
-  it('declara a origem, sem a qual o YouTube recusa comandos', () => {
-    const url = buildEmbedUrl({ provider: 'youtube', videoId: 'abc' }, 'https://exemplo.com');
+  it('YouTube: habilita a conversa e declara a origem', () => {
+    const url = buildEmbedUrl({ provider: 'youtube', videoId: 'abc' }, 'https://ds.test');
+    // Sem `enablejsapi` não há conversa; sem `origin` o YouTube recusa comandos.
     expect(url).toContain('enablejsapi=1');
-    expect(url).toContain(`origin=${encodeURIComponent('https://exemplo.com')}`);
+    expect(url).toContain('origin=https%3A%2F%2Fds.test');
   });
 
-  it('pede reprodução em linha, para o iOS não abrir em tela cheia sozinho', () => {
-    const url = buildEmbedUrl({ provider: 'youtube', videoId: 'abc' }, 'https://exemplo.com');
+  it('YouTube: não deixa o iOS sequestrar a tela cheia', () => {
+    const url = buildEmbedUrl({ provider: 'youtube', videoId: 'abc' }, 'https://ds.test');
     expect(url).toContain('playsinline=1');
   });
 
-  it('leva a chave de vídeo não listado do Vimeo', () => {
-    const url = buildEmbedUrl(
-      { provider: 'vimeo', videoId: '76979871', hash: 'a1b2c3' },
-      'https://exemplo.com',
-    );
-    expect(url).toContain('player.vimeo.com/video/76979871');
-    expect(url).toContain('h=a1b2c3');
+  it('YouTube: esconde a barra do PROVEDOR, porque a nossa cobre tudo', () => {
+    // Duas barras na mesma caixa foi o que a dona viu na tela. Só se pode
+    // esconder a do provedor porque a nossa faz tudo que ela fazia.
+    const url = buildEmbedUrl({ provider: 'youtube', videoId: 'abc' }, 'https://ds.test');
+    expect(url).toContain('controls=0');
+    expect(url).toContain('iv_load_policy=3');
   });
 
-  it('escapa o identificador do vídeo', () => {
-    // Identificador vem de fora; concatenar sem escapar deixaria injetar
-    // parâmetro na URL do quadro.
+  it('YouTube: o segundo de partida entra inteiro', () => {
     const url = buildEmbedUrl(
-      { provider: 'youtube', videoId: 'a b&autoplay=1' },
-      'https://exemplo.com',
+      { provider: 'youtube', videoId: 'abc', startAt: 42.7 },
+      'https://ds.test',
     );
-    expect(url).toContain('a%20b%26autoplay%3D1');
-    expect(url).not.toContain('&autoplay=1&enablejsapi');
+    expect(url).toContain('start=42');
   });
 
-  it('respeita o segundo inicial em cada dialeto', () => {
-    expect(
-      buildEmbedUrl({ provider: 'youtube', videoId: 'a', startAt: 42.7 }, 'https://x.com'),
-    ).toContain('start=42');
-    expect(
-      buildEmbedUrl({ provider: 'vimeo', videoId: '1', startAt: 42.7 }, 'https://x.com'),
-    ).toContain('t=42s');
+  it('YouTube: o identificador é escapado, e não concatenado cru', () => {
+    const url = buildEmbedUrl({ provider: 'youtube', videoId: 'a/b?c' }, 'https://ds.test');
+    expect(url).toContain('/embed/a%2Fb%3Fc?');
+  });
+
+  it('Vimeo: habilita a conversa e apaga o excesso do provedor', () => {
+    const url = buildEmbedUrl({ provider: 'vimeo', videoId: '123' }, 'https://ds.test');
+    expect(url).toContain('player.vimeo.com/video/123');
+    expect(url).toContain('api=1');
+    // Além dos controles, o Vimeo desenha título, autor e avatar por cima.
+    expect(url).toContain('controls=0');
+    expect(url).toContain('title=0');
+    expect(url).toContain('byline=0');
+    expect(url).toContain('portrait=0');
+  });
+
+  it('Vimeo: a chave de vídeo não listado entra como `h`', () => {
+    const url = buildEmbedUrl(
+      { provider: 'vimeo', videoId: '123', hash: 'segredo' },
+      'https://ds.test',
+    );
+    // Sem ela, vídeo privado responde 404 dentro do quadro.
+    expect(url).toContain('h=segredo');
+  });
+
+  it('Vimeo: o tempo de partida vai em segundos, com sufixo', () => {
+    const url = buildEmbedUrl(
+      { provider: 'vimeo', videoId: '123', startAt: 90.4 },
+      'https://ds.test',
+    );
+    expect(url).toContain('t=90s');
   });
 });
 
 describe('EMBED_ALLOW', () => {
-  it('pede as permissões que os controles precisam delegar', () => {
-    for (const p of ['autoplay', 'fullscreen', 'picture-in-picture']) {
-      expect(EMBED_ALLOW).toContain(p);
+  it('delega as quatro permissões que os controles precisam', () => {
+    for (const permission of ['autoplay', 'fullscreen', 'picture-in-picture', 'encrypted-media']) {
+      expect(EMBED_ALLOW).toContain(permission);
     }
   });
 });
 
 describe('embedHandshake', () => {
-  it('YouTube abre a conversa com uma escuta', () => {
-    const [msg] = embedHandshake('youtube');
-    expect(JSON.parse(msg)).toMatchObject({ event: 'listening' });
+  it('YouTube: uma mensagem de escuta, no canal de widget', () => {
+    const [message] = embedHandshake('youtube');
+    expect(JSON.parse(message)).toEqual({ event: 'listening', id: 1, channel: 'widget' });
   });
 
-  it('Vimeo assina um evento por vez, e assina os quatro que a barra usa', () => {
-    const subscribed = embedHandshake('vimeo').map((m) => JSON.parse(m).value);
-    expect(subscribed).toEqual(['play', 'pause', 'ended', 'timeupdate']);
+  it('Vimeo: uma inscrição por evento, que é como ele assina', () => {
+    const values = embedHandshake('vimeo').map((m) => JSON.parse(m).value);
+    expect(values).toEqual(['play', 'pause', 'ended', 'timeupdate']);
+  });
+});
+
+describe('isHandshakeAck', () => {
+  it('YouTube: `onReady` e `infoDelivery` confirmam a inscrição', () => {
+    expect(isHandshakeAck('youtube', JSON.stringify({ event: 'onReady', info: null }))).toBe(true);
+    expect(isHandshakeAck('youtube', JSON.stringify({ event: 'infoDelivery', info: {} }))).toBe(true);
+  });
+
+  it('Vimeo: o ECO da inscrição confirma; o `ready` NÃO', () => {
+    // Medido: com a inscrição descartada, o `ready` chega do mesmo jeito. Usar
+    // o `ready` como confirmação faria a insistência parar cedo demais — que é
+    // exatamente o estado em que o componente estava.
+    expect(isHandshakeAck('vimeo', JSON.stringify({ method: 'addEventListener', value: 'play' })))
+      .toBe(true);
+    expect(isHandshakeAck('vimeo', JSON.stringify({ event: 'ready' }))).toBe(false);
+  });
+
+  it('lixo não confirma nada', () => {
+    expect(isHandshakeAck('youtube', 'não é json')).toBe(false);
+    expect(isHandshakeAck('vimeo', null)).toBe(false);
+  });
+});
+
+describe('createEmbedHandshake', () => {
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => vi.useRealTimers());
+
+  it('INSISTE, porque um envio só não é aceito', () => {
+    // MEDIDO contra os quadros reais: mandando uma vez no `load`, o YouTube
+    // devolveu ZERO mensagens e o Vimeo não aceitou nenhuma inscrição. O `load`
+    // do iframe é o documento do provedor, não o player dentro dele.
+    const sent: string[] = [];
+    const handshake = createEmbedHandshake('youtube', (m) => sent.push(m));
+
+    handshake.start();
+    expect(sent).toHaveLength(1);
+
+    vi.advanceTimersByTime(1500);
+    expect(sent.length).toBeGreaterThan(1);
+    handshake.stop();
+  });
+
+  it('para no primeiro sinal de vida', () => {
+    const sent: string[] = [];
+    const handshake = createEmbedHandshake('youtube', (m) => sent.push(m));
+
+    handshake.start();
+    vi.advanceTimersByTime(600);
+    const beforeAck = sent.length;
+
+    handshake.observe(JSON.stringify({ event: 'onReady', info: null }));
+    vi.advanceTimersByTime(5000);
+    expect(sent).toHaveLength(beforeAck);
+  });
+
+  it('não insiste para sempre num quadro que nunca responde', () => {
+    const sent: string[] = [];
+    const handshake = createEmbedHandshake('youtube', (m) => sent.push(m));
+
+    handshake.start();
+    vi.advanceTimersByTime(60_000);
+    const afterGivingUp = sent.length;
+    vi.advanceTimersByTime(60_000);
+    expect(sent).toHaveLength(afterGivingUp);
+    expect(afterGivingUp).toBeLessThan(25);
+  });
+
+  it('`stop` solta o temporizador, para um player removido não bater num quadro que já foi', () => {
+    const sent: string[] = [];
+    const handshake = createEmbedHandshake('vimeo', (m) => sent.push(m));
+    handshake.start();
+    const atStop = sent.length;
+    handshake.stop();
+    vi.advanceTimersByTime(10_000);
+    expect(sent).toHaveLength(atStop);
   });
 });
 
 describe('embedCommand', () => {
-  it('traduz tocar e pausar para cada dialeto', () => {
-    expect(JSON.parse(embedCommand('youtube', { kind: 'play' }))).toMatchObject({
-      event: 'command',
-      func: 'playVideo',
-    });
-    expect(JSON.parse(embedCommand('vimeo', { kind: 'pause' }))).toMatchObject({ method: 'pause' });
+  it('YouTube: comando é `event: command` com nome de função', () => {
+    expect(JSON.parse(embedCommand('youtube', { kind: 'play' })))
+      .toEqual({ event: 'command', func: 'playVideo', args: [] });
+    expect(JSON.parse(embedCommand('youtube', { kind: 'pause' })).func).toBe('pauseVideo');
   });
 
-  it('o Vimeo não tem mudo: tem volume, e zero é o mudo', () => {
-    expect(JSON.parse(embedCommand('vimeo', { kind: 'mute', value: true }))).toMatchObject({
-      method: 'setVolume',
-      value: 0,
-    });
-    expect(JSON.parse(embedCommand('vimeo', { kind: 'mute', value: false }))).toMatchObject({
-      value: 1,
-    });
-  });
-
-  it('o YouTube tem dois comandos diferentes para o mudo', () => {
+  it('YouTube: mudo e som são funções DIFERENTES, não um argumento', () => {
     expect(JSON.parse(embedCommand('youtube', { kind: 'mute', value: true })).func).toBe('mute');
     expect(JSON.parse(embedCommand('youtube', { kind: 'mute', value: false })).func).toBe('unMute');
   });
 
-  it('o segundo argumento do seekTo do YouTube pede a busca imediata', () => {
-    const cmd = JSON.parse(embedCommand('youtube', { kind: 'seek', value: 12.5 }));
-    expect(cmd.func).toBe('seekTo');
-    expect(cmd.args).toEqual([12.5, true]);
+  it('YouTube: a posição leva o segundo argumento que manda buscar já', () => {
+    expect(JSON.parse(embedCommand('youtube', { kind: 'seek', value: 30 })).args).toEqual([30, true]);
+  });
+
+  it('Vimeo: comando é `method`, com `value` quando há valor', () => {
+    expect(JSON.parse(embedCommand('vimeo', { kind: 'play' }))).toEqual({ method: 'play' });
+    expect(JSON.parse(embedCommand('vimeo', { kind: 'seek', value: 30 })))
+      .toEqual({ method: 'setCurrentTime', value: 30 });
+  });
+
+  it('Vimeo: não tem mudo, tem VOLUME — e a perda é conhecida', () => {
+    // Zero é o mudo e um é o retorno: a barra não guarda o volume anterior.
+    expect(JSON.parse(embedCommand('vimeo', { kind: 'mute', value: true })))
+      .toEqual({ method: 'setVolume', value: 0 });
+    expect(JSON.parse(embedCommand('vimeo', { kind: 'mute', value: false })).value).toBe(1);
   });
 });
 
 describe('parseEmbedMessage', () => {
-  it('lê o estado numérico do YouTube', () => {
-    const t = (info: number) => parseEmbedMessage('youtube', { event: 'onStateChange', info });
-    expect(t(1)).toEqual({ type: 'playing' });
-    expect(t(2)).toEqual({ type: 'paused' });
-    expect(t(0)).toEqual({ type: 'ended' });
-    // 3 é "carregando" e -1 é "não iniciado": nenhum dos dois é mudança de
-    // reprodução, e tratá-los como tal inventaria evento que não houve.
-    expect(t(3)).toBeNull();
-    expect(t(-1)).toBeNull();
+  it('aceita objeto E texto — o Vimeo manda ora um, ora outro', () => {
+    // Tratar só um dos dois formatos é a causa mais comum de "às vezes funciona".
+    expect(parseEmbedMessage('vimeo', { event: 'play' })).toEqual([{ type: 'playing' }]);
+    expect(parseEmbedMessage('vimeo', JSON.stringify({ event: 'play' })))
+      .toEqual([{ type: 'playing' }]);
   });
 
-  it('lê o tempo do YouTube', () => {
-    expect(
-      parseEmbedMessage('youtube', {
-        event: 'infoDelivery',
-        info: { currentTime: 12.5, duration: 60 },
-      }),
-    ).toEqual({ type: 'time', currentTime: 12.5, duration: 60 });
+  it('descarta o que não é mensagem', () => {
+    expect(parseEmbedMessage('youtube', 'não é json')).toEqual([]);
+    expect(parseEmbedMessage('youtube', null)).toEqual([]);
+    expect(parseEmbedMessage('youtube', 42)).toEqual([]);
+    expect(parseEmbedMessage('vimeo', { event: 'algumaCoisa' })).toEqual([]);
   });
 
-  it('lê os eventos nomeados do Vimeo', () => {
-    expect(parseEmbedMessage('vimeo', { event: 'play' })).toEqual({ type: 'playing' });
-    expect(parseEmbedMessage('vimeo', { event: 'ended' })).toEqual({ type: 'ended' });
-    expect(
-      parseEmbedMessage('vimeo', { event: 'timeupdate', data: { seconds: 3, duration: 9 } }),
-    ).toEqual({ type: 'time', currentTime: 3, duration: 9 });
+  it('YouTube: os três estados que importam, e só eles', () => {
+    const state = (info: number) =>
+      parseEmbedMessage('youtube', JSON.stringify({ event: 'onStateChange', info }));
+    expect(state(1)).toEqual([{ type: 'playing' }]);
+    expect(state(2)).toEqual([{ type: 'paused' }]);
+    expect(state(0)).toEqual([{ type: 'ended' }]);
+    // Armazenando, na fila e não iniciado não são começo nem parada: tratá-los
+    // faria o botão piscar a cada engasgo da rede.
+    expect(state(3)).toEqual([]);
+    expect(state(5)).toEqual([]);
+    expect(state(-1)).toEqual([]);
   });
 
-  it('aceita a carga como TEXTO e como objeto', () => {
-    // O YouTube manda string JSON; o Vimeo manda ora string, ora objeto,
-    // conforme a versão do player. Tratar só um formato é a causa mais comum de
-    // "às vezes funciona".
-    const fromString = parseEmbedMessage('youtube', JSON.stringify({ event: 'onStateChange', info: 1 }));
-    expect(fromString).toEqual({ type: 'playing' });
-    expect(parseEmbedMessage('vimeo', JSON.stringify({ event: 'play' }))).toEqual({
-      type: 'playing',
-    });
+  it('YouTube: o estado chega TAMBÉM por `infoDelivery`', () => {
+    // Ler só o `onStateChange` deixava o botão preso em "Reproduzir" com o
+    // vídeo tocando — o defeito que a dona viu na tela.
+    expect(parseEmbedMessage('youtube', JSON.stringify({
+      event: 'infoDelivery', info: { playerState: 1 },
+    }))).toEqual([{ type: 'playing' }]);
   });
 
-  it('ignora ruído sem estourar', () => {
-    // A página recebe `message` de qualquer origem — extensão, anúncio, outro
-    // embed. Nada disso pode derrubar a barra.
-    for (const noise of ['nao é json', '', null, undefined, 42, { event: 'outro' }, {}]) {
-      expect(parseEmbedMessage('youtube', noise)).toBeNull();
-      expect(parseEmbedMessage('vimeo', noise)).toBeNull();
-    }
+  it('YouTube: `infoDelivery` PARCIAL vale, e é a maioria delas', () => {
+    // MEDIDO na sonda: `{"info":{"muted":false,"volume":100}}` e
+    // `{"info":{"playbackQuality":"large",…}}`. Cada mensagem traz só o que
+    // mudou. Exigir `currentTime` E `duration` juntos descartava toda
+    // atualização de posição, e o relógio congelava em `0:00` com a duração
+    // certa ao lado.
+    expect(parseEmbedMessage('youtube', JSON.stringify({
+      event: 'infoDelivery', info: { currentTime: 30 },
+    }))).toEqual([{ type: 'time', currentTime: 30 }]);
+
+    expect(parseEmbedMessage('youtube', JSON.stringify({
+      event: 'infoDelivery', info: { duration: 120 },
+    }))).toEqual([{ type: 'time', duration: 120 }]);
+
+    // E a que não traz tempo nenhum não vira evento de tempo.
+    expect(parseEmbedMessage('youtube', JSON.stringify({
+      event: 'infoDelivery', info: { muted: false, volume: 100 },
+    }))).toEqual([]);
+  });
+
+  it('YouTube: uma mensagem pode trazer DUAS notícias', () => {
+    expect(parseEmbedMessage('youtube', JSON.stringify({
+      event: 'infoDelivery', info: { playerState: 1, currentTime: 5, duration: 60 },
+    }))).toEqual([{ type: 'playing' }, { type: 'time', currentTime: 5, duration: 60 }]);
+  });
+
+  it('YouTube: duração zero não é duração', () => {
+    // Um vídeo ainda não carregado responde `duration: 0`, e aceitá-lo faria o
+    // relógio prometer um fim que não existe.
+    expect(parseEmbedMessage('youtube', JSON.stringify({
+      event: 'infoDelivery', info: { duration: 0 },
+    }))).toEqual([]);
+  });
+
+  it('Vimeo: o ECO da própria inscrição não é notícia do vídeo', () => {
+    // Sem descartar, a barra reagiria à própria inscrição.
+    expect(parseEmbedMessage('vimeo', JSON.stringify({
+      method: 'addEventListener', value: 'play',
+    }))).toEqual([]);
+  });
+
+  it('Vimeo: o tempo vem junto de `play`, `pause` e `ended`', () => {
+    // É o que faz a duração aparecer no primeiro play, e não só depois da
+    // primeira atualização de posição.
+    expect(parseEmbedMessage('vimeo', JSON.stringify({
+      event: 'play', data: { seconds: 3, duration: 90 },
+    }))).toEqual([{ type: 'playing' }, { type: 'time', currentTime: 3, duration: 90 }]);
+  });
+
+  it('Vimeo: `timeupdate` move o relógio', () => {
+    expect(parseEmbedMessage('vimeo', JSON.stringify({
+      event: 'timeupdate', data: { seconds: 12.5, duration: 90 },
+    }))).toEqual([{ type: 'time', currentTime: 12.5, duration: 90 }]);
+  });
+
+  it('Vimeo: `finish` é o nome antigo do fim, e players velhos ainda o mandam', () => {
+    expect(parseEmbedMessage('vimeo', JSON.stringify({ event: 'finish' })))
+      .toEqual([{ type: 'ended' }]);
+  });
+});
+
+describe('isFromFrame', () => {
+  it('só aceita mensagem do quadro que a barra dirige', () => {
+    // Sem conferir a fonte, um segundo player na mesma página pausa o primeiro,
+    // e uma extensão qualquer mexe na reprodução.
+    const contentWindow = {} as Window;
+    const frame = { contentWindow } as HTMLIFrameElement;
+    expect(isFromFrame({ source: contentWindow } as MessageEvent, frame)).toBe(true);
+    expect(isFromFrame({ source: {} as Window } as MessageEvent, frame)).toBe(false);
+    expect(isFromFrame({ source: null } as MessageEvent, frame)).toBe(false);
   });
 });

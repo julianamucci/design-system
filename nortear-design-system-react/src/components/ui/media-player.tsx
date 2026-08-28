@@ -36,7 +36,7 @@ import {
   buildEmbedUrl,
   EMBED_ALLOW,
   embedCommand,
-  embedHandshake,
+  createEmbedHandshake,
   isFromFrame,
   parseEmbedMessage,
   type EmbedCommand,
@@ -472,6 +472,9 @@ export function MediaPlayer({
 
   // ─── Motor B: as mensagens do quadro alimentam o mesmo estado ──────────────
 
+  /** O aperto de mão em curso — guardado para observar e para parar. */
+  const handshakeRef = useRef<ReturnType<typeof createEmbedHandshake> | null>(null);
+
   useEffect(() => {
     const frame = frameRef.current;
     if (!frame || !provider) return;
@@ -481,20 +484,33 @@ export function MediaPlayer({
       // extensão, um anúncio. Sem conferir a fonte, um segundo player na mesma
       // página pausa o primeiro.
       if (!isFromFrame(event, frame)) return;
-      const parsed = parseEmbedMessage(provider, event.data);
-      if (!parsed) return;
-      if (parsed.type === 'playing') {
-        patch({ playing: true, ended: false });
-        callbacks.current.onPlay?.();
-      } else if (parsed.type === 'paused') {
-        patch({ playing: false, ended: false });
-        callbacks.current.onPause?.({ ended: false, currentTime: currentTimeRef.current });
-      } else if (parsed.type === 'ended') {
-        patch({ playing: false, ended: true });
-        callbacks.current.onEnded?.();
-      } else {
-        currentTimeRef.current = parsed.currentTime;
-        patch({ currentTime: parsed.currentTime, duration: parsed.duration });
+      // Qualquer resposta do provedor encerra a insistência do aperto de mão.
+      handshakeRef.current?.observe(event.data);
+      // Lista, e não um evento só: uma mensagem do provedor carrega mais de uma
+      // notícia — o `infoDelivery` do YouTube traz estado e tempo juntos.
+      for (const parsed of parseEmbedMessage(provider, event.data)) {
+        if (parsed.type === 'playing') {
+          patch({ playing: true, ended: false });
+          callbacks.current.onPlay?.();
+        } else if (parsed.type === 'paused') {
+          patch({ playing: false, ended: false });
+          callbacks.current.onPause?.({ ended: false, currentTime: currentTimeRef.current });
+        } else if (parsed.type === 'ended') {
+          patch({ playing: false, ended: true });
+          callbacks.current.onEnded?.();
+        } else {
+          // Só o que VEIO. O provedor avisa o que mudou, não o estado
+          // inteiro: sobrescrever com `undefined` apagaria a duração a cada
+          // atualização de posição, e o relógio voltaria a `--:--` no meio do
+          // vídeo.
+          const next: { currentTime?: number; duration?: number } = {};
+          if (parsed.currentTime !== undefined) {
+            currentTimeRef.current = parsed.currentTime;
+            next.currentTime = parsed.currentTime;
+          }
+          if (parsed.duration !== undefined) next.duration = parsed.duration;
+          patch(next);
+        }
       }
     };
 
@@ -508,15 +524,29 @@ export function MediaPlayer({
    * O aperto de mão: sem ele nenhum dos dois provedores envia evento algum.
    *
    * É o passo que costuma faltar, e o sintoma é "os comandos funcionam mas nada
-   * volta". Vai no `onLoad` do quadro porque é só depois de carregado que existe
-   * um `contentWindow` para ouvir.
+   * volta" — que foi exatamente o que se viu na tela.
+   *
+   * `start()` INSISTE até o provedor responder. Mandar uma vez, no `onLoad`,
+   * não bastava: o `load` do iframe é o documento do provedor, não o player
+   * dentro dele. Medido contra os quadros reais — com um envio só, o YouTube
+   * devolveu ZERO mensagens e o Vimeo não aceitou nenhuma inscrição.
+   *
+   * Mora numa ref, e não num `useMemo`: o objeto tem VIDA — um temporizador que
+   * precisa ser parado —, e memo é para valor derivado. Foi o que o compilador
+   * apontou ao ver `frameRef` sendo lida ali dentro.
    */
-  const handshake = useCallback(() => {
+  const startHandshake = useCallback(() => {
     if (!provider) return;
-    for (const message of embedHandshake(provider)) {
+    handshakeRef.current?.stop();
+    handshakeRef.current = createEmbedHandshake(provider, (message) => {
       frameRef.current?.contentWindow?.postMessage(message, '*');
-    }
+    });
+    handshakeRef.current.start();
   }, [provider]);
+
+  // Insiste por dez segundos: um player desmontado antes de o provedor responder
+  // deixaria um temporizador batendo num quadro que já foi.
+  useEffect(() => () => handshakeRef.current?.stop(), []);
 
   // ─── Tela cheia ────────────────────────────────────────────────────────────
 
@@ -668,7 +698,7 @@ export function MediaPlayer({
           title={labels.player}
           frameBorder="0"
           loading="lazy"
-          onLoad={handshake}
+          onLoad={startHandshake}
           // `sandbox` NÃO entra, e a ausência é decisão: os dois provedores
           // precisam de scripts e de mesma origem consigo mesmos, e um sandbox
           // que os permita não restringe nada — seria teatro. O que de fato

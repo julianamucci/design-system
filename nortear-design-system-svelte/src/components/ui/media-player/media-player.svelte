@@ -150,7 +150,7 @@
     buildEmbedUrl,
     EMBED_ALLOW,
     embedCommand,
-    embedHandshake,
+    createEmbedHandshake,
     isFromFrame,
     parseEmbedMessage,
     type EmbedCommand,
@@ -305,14 +305,23 @@
     frameEl.contentWindow?.postMessage(embedCommand(embed.provider, command), '*');
   }
 
+  let handshake: ReturnType<typeof createEmbedHandshake> | null = null;
+
   function onFrameLoad(): void {
     // O aperto de mão: sem ele nenhum dos dois provedores envia evento algum.
     // É o passo que costuma faltar, e o sintoma é "os comandos funcionam mas
-    // nada volta".
-    if (!frameEl || !embed) return;
-    for (const message of embedHandshake(embed.provider)) {
-      frameEl.contentWindow?.postMessage(message, '*');
-    }
+    // nada volta" — que foi exatamente o que se viu na tela.
+    //
+    // `start()` INSISTE até o provedor responder. Mandar uma vez não bastava: o
+    // `load` do iframe é o documento do provedor, não o player dentro dele.
+    // Medido — com um envio só, o YouTube devolveu ZERO mensagens.
+    const frame = frameEl;
+    if (!frame || !embed) return;
+    handshake?.stop();
+    handshake = createEmbedHandshake(embed.provider, (message) => {
+      frame.contentWindow?.postMessage(message, '*');
+    });
+    handshake.start();
   }
 
   $effect(() => {
@@ -325,20 +334,32 @@
       // extensão, um anúncio. Sem conferir a fonte, um segundo player na mesma
       // página pausa o primeiro.
       if (!isFromFrame(event, frame)) return;
-      const parsed = parseEmbedMessage(source.provider, event.data);
-      if (!parsed) return;
-      if (parsed.type === 'playing') started();
-      else if (parsed.type === 'paused') stopped(false);
-      else if (parsed.type === 'ended') finish();
-      else {
-        currentTime = parsed.currentTime;
-        duration = parsed.duration;
+      // Qualquer resposta do provedor encerra a insistência do aperto de mão.
+      handshake?.observe(event.data);
+      // Lista, e não um evento só: uma mensagem do provedor carrega mais de uma
+      // notícia — o `infoDelivery` do YouTube traz estado e tempo juntos.
+      for (const parsed of parseEmbedMessage(source.provider, event.data)) {
+        if (parsed.type === 'playing') started();
+        else if (parsed.type === 'paused') stopped(false);
+        else if (parsed.type === 'ended') finish();
+        else {
+          // Só o que VEIO. O provedor avisa o que mudou, não o estado
+          // inteiro: sobrescrever com `undefined` apagaria a duração a cada
+          // atualização de posição, e o relógio voltaria a `--:--` no meio do
+          // vídeo.
+          if (parsed.currentTime !== undefined) currentTime = parsed.currentTime;
+          if (parsed.duration !== undefined) duration = parsed.duration;
+        }
       }
     };
 
     window.addEventListener('message', onMessage);
-    // O ouvinte mora na `window` e sobrevive à remoção da moldura.
-    return () => window.removeEventListener('message', onMessage);
+    // O ouvinte mora na `window` e sobrevive à remoção da moldura; o aperto de
+    // mão insiste por dez segundos e bateria num quadro que já foi.
+    return () => {
+      window.removeEventListener('message', onMessage);
+      handshake?.stop();
+    };
   });
 
   // ─── A fonte ao vivo se liga pelo objeto, não pelo atributo ────────────────

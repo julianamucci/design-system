@@ -14,8 +14,20 @@
 //
 // Tudo aqui é FUNÇÃO PURA de propósito: a conversa com o provedor exige rede, e
 // suíte que depende de serviço externo é lenta e falha por motivo alheio. Assim
-// o protocolo inteiro é verificável sem sair da máquina, e o que sobra sem
-// cobertura é só o aperto de mão real — que está declarado na story.
+// o protocolo inteiro é verificável sem sair da máquina.
+//
+// O QUE A SONDA MEDIU, e que a versão anterior deste arquivo errava. As formas
+// abaixo foram capturadas de quadros reais, com rede:
+//
+//   {"event":"onReady","info":null,"channel":"widget","id":1}
+//   {"event":"infoDelivery","info":{"muted":false,"volume":100},…}
+//   {"event":"infoDelivery","info":{"playbackQuality":"large",…},…}
+//
+// O YouTube manda `infoDelivery` PARCIAL: cada mensagem traz o subconjunto de
+// campos que mudou. A versão anterior só aceitava a mensagem que trouxesse
+// `currentTime` E `duration` juntos — o que acontece uma vez, no começo. Daí o
+// defeito que a dona viu: a duração aparecia (`10:35`) e a posição ficava
+// congelada em `0:00` para sempre.
 
 export type EmbedProvider = 'youtube' | 'vimeo';
 
@@ -40,12 +52,18 @@ export type EmbedSource = {
   startAt?: number;
 };
 
-/** O que a barra precisa saber, normalizado entre os dois provedores. */
+/**
+ * O que a barra precisa saber, normalizado entre os dois provedores.
+ *
+ * Os dois tempos são OPCIONAIS, e é o ponto: o YouTube avisa o que mudou, não o
+ * estado inteiro. Exigir os dois juntos descartava toda atualização de posição.
+ * Quem consome aplica só o que veio.
+ */
 export type EmbedEvent =
   | { type: 'playing' }
   | { type: 'paused' }
   | { type: 'ended' }
-  | { type: 'time'; currentTime: number; duration: number };
+  | { type: 'time'; currentTime?: number; duration?: number };
 
 /**
  * A URL do quadro.
@@ -63,12 +81,30 @@ export function buildEmbedUrl(source: EmbedSource, origin: string): string {
       // barra do design system some no exato momento em que seria usada.
       playsinline: '1',
       rel: '0',
+      // A barra do PROVEDOR sai de cena. Sem isto ficam duas barras na mesma
+      // caixa, uma por cima da outra, e a de baixo é a que o design system
+      // desenhou: quem assiste vê dois conjuntos de controles disputando a
+      // mesma função. Só se pode esconder a do provedor porque a nossa cobre
+      // tudo que ela fazia — tocar, pausar, posição, som, velocidade e tela
+      // cheia.
+      controls: '0',
+      // Anotações e cartões sobrepostos ao vídeo, que a nossa barra não
+      // controla e que ninguém pediu.
+      iv_load_policy: '3',
     });
     if (source.startAt) params.set('start', String(Math.floor(source.startAt)));
     return `https://${host}/embed/${encodeURIComponent(source.videoId)}?${params}`;
   }
 
-  const params = new URLSearchParams({ api: '1' });
+  const params = new URLSearchParams({
+    api: '1',
+    // Mesmo motivo do YouTube: a barra é nossa. No Vimeo o excesso é maior —
+    // além dos controles, ele desenha título, autor e avatar por cima do vídeo.
+    controls: '0',
+    title: '0',
+    byline: '0',
+    portrait: '0',
+  });
   if (source.hash) params.set('h', source.hash);
   if (source.startAt) params.set('t', `${Math.floor(source.startAt)}s`);
   return `https://player.vimeo.com/video/${encodeURIComponent(source.videoId)}?${params}`;
@@ -90,6 +126,11 @@ export const EMBED_ALLOW = 'autoplay; fullscreen; picture-in-picture; encrypted-
  * Sem ela nenhum dos dois envia evento: os provedores só falam depois de a
  * página pedir. É o passo que costuma faltar em integração feita às pressas, e o
  * sintoma é "os comandos funcionam mas nada volta".
+ *
+ * MEDIDO: o Vimeo ECOA cada `addEventListener` de volta, com a mesma forma
+ * (`{"method":"addEventListener","value":"play"}`). O eco é a confirmação da
+ * assinatura, e não um evento — `parseEmbedMessage` precisa descartá-lo, senão
+ * a barra reage à própria inscrição.
  */
 export function embedHandshake(provider: EmbedProvider): string[] {
   if (provider === 'youtube') {
@@ -99,6 +140,87 @@ export function embedHandshake(provider: EmbedProvider): string[] {
   return ['play', 'pause', 'ended', 'timeupdate'].map((value) =>
     JSON.stringify({ method: 'addEventListener', value }),
   );
+}
+
+/**
+ * A mensagem que veio do quadro é a CONFIRMAÇÃO da inscrição?
+ *
+ * Existe porque o aperto de mão pode ser recusado em silêncio, e o único jeito
+ * de saber se ele pegou é o provedor responder.
+ *
+ *   YouTube  responde `onReady` — e passa a mandar `infoDelivery`. Antes da
+ *            inscrição ele não manda absolutamente nada.
+ *   Vimeo    ECOA cada `addEventListener` de volta. O `ready` dele NÃO serve de
+ *            confirmação: ele chega mesmo quando a inscrição foi descartada —
+ *            medido, e é o que faria a espera parar cedo demais.
+ */
+export function isHandshakeAck(provider: EmbedProvider, data: unknown): boolean {
+  const payload = asPayload(data);
+  if (!payload) return false;
+  if (provider === 'youtube') {
+    return payload.event === 'onReady' || payload.event === 'infoDelivery';
+  }
+  return payload.method === 'addEventListener';
+}
+
+/** De quanto em quanto tempo insistir, e por quanto tempo no máximo. */
+const HANDSHAKE_INTERVAL_MS = 500;
+const HANDSHAKE_ATTEMPTS = 20;
+
+/**
+ * O aperto de mão que INSISTE até o provedor responder.
+ *
+ * MEDIDO, e é o defeito que a dona encontrou clicando: mandar a inscrição uma
+ * vez, no `load` do quadro, não funciona. O `load` do iframe dispara quando o
+ * DOCUMENTO do provedor carregou, e não quando o player dentro dele está pronto
+ * para conversar — a mensagem chega cedo e é descartada sem aviso.
+ *
+ * Com um envio só: o YouTube devolveu ZERO mensagens, e o Vimeo devolveu o
+ * `ready` mas nenhum eco de inscrição. Com um segundo envio 1,5s depois: 28
+ * mensagens do YouTube e as quatro inscrições do Vimeo confirmadas. O sintoma
+ * na tela era o vídeo tocando com a nossa barra parada — e, no Vimeo, a posição
+ * congelada porque `timeupdate` nunca fora assinado.
+ *
+ * Insiste, e não espera um tempo fixo: quanto o player demora para ficar pronto
+ * depende da rede de quem assiste, e prazo fixo é a mesma aposta com outro
+ * número. Para no primeiro sinal de vida, e desiste depois de dez segundos para
+ * não bater num quadro que nunca vai responder.
+ */
+export function createEmbedHandshake(
+  provider: EmbedProvider,
+  post: (message: string) => void,
+): { start(): void; observe(data: unknown): void; stop(): void } {
+  let timer: ReturnType<typeof setInterval> | null = null;
+  let attempts = 0;
+
+  const send = (): void => {
+    for (const message of embedHandshake(provider)) post(message);
+  };
+
+  const stop = (): void => {
+    if (timer !== null) clearInterval(timer);
+    timer = null;
+  };
+
+  return {
+    start() {
+      stop();
+      attempts = 0;
+      send();
+      timer = setInterval(() => {
+        attempts += 1;
+        if (attempts >= HANDSHAKE_ATTEMPTS) {
+          stop();
+          return;
+        }
+        send();
+      }, HANDSHAKE_INTERVAL_MS);
+    },
+    observe(data: unknown) {
+      if (isHandshakeAck(provider, data)) stop();
+    },
+    stop,
+  };
 }
 
 export type EmbedCommand =
@@ -137,57 +259,104 @@ export function embedCommand(provider: EmbedProvider, command: EmbedCommand): st
   }
 }
 
-/** Os estados que o YouTube emite em `onStateChange`. */
-const YOUTUBE_STATE: Record<number, EmbedEvent['type'] | undefined> = {
+/**
+ * Os estados que o YouTube emite — em `onStateChange` e em `info.playerState`.
+ *
+ * `-1` (não iniciado), `3` (armazenando) e `5` (na fila) ficam de fora de
+ * propósito: nenhum deles é começo nem parada de reprodução, e tratá-los faria
+ * o botão piscar entre tocar e pausar a cada engasgo da rede.
+ */
+const YOUTUBE_STATE: Record<number, 'playing' | 'paused' | 'ended' | undefined> = {
   0: 'ended',
   1: 'playing',
   2: 'paused',
 };
 
+function asPayload(data: unknown): Record<string, unknown> | null {
+  if (typeof data === 'string') {
+    try {
+      const parsed: unknown = JSON.parse(data);
+      return parsed && typeof parsed === 'object' ? (parsed as Record<string, unknown>) : null;
+    } catch {
+      return null;
+    }
+  }
+  return data && typeof data === 'object' ? (data as Record<string, unknown>) : null;
+}
+
+/** Só entra no evento o que veio como número — o resto fica de fora. */
+function timeEvent(
+  currentTime: unknown,
+  duration: unknown,
+): Extract<EmbedEvent, { type: 'time' }> | null {
+  const event: Extract<EmbedEvent, { type: 'time' }> = { type: 'time' };
+  if (typeof currentTime === 'number' && Number.isFinite(currentTime)) {
+    event.currentTime = currentTime;
+  }
+  if (typeof duration === 'number' && Number.isFinite(duration) && duration > 0) {
+    event.duration = duration;
+  }
+  return event.currentTime === undefined && event.duration === undefined ? null : event;
+}
+
 /**
- * Traduz o que veio do quadro. Devolve `null` para o que não interessa.
+ * Traduz o que veio do quadro. Devolve LISTA, e vazia para o que não interessa.
+ *
+ * Lista porque uma mensagem só carrega mais de uma notícia: o `infoDelivery` do
+ * YouTube traz estado e tempo juntos, e o `play` do Vimeo vem com a duração
+ * dentro. A versão anterior devolvia um evento só e escolhia um dos dois —
+ * perdia o outro em silêncio.
  *
  * Aceita `data` como objeto OU como texto: o YouTube manda string JSON e o Vimeo
  * manda ora string, ora objeto, conforme a versão do player. Tratar só um dos
  * dois formatos é a causa mais comum de "às vezes funciona".
  */
-export function parseEmbedMessage(provider: EmbedProvider, data: unknown): EmbedEvent | null {
-  let payload: Record<string, unknown>;
-  if (typeof data === 'string') {
-    try {
-      payload = JSON.parse(data) as Record<string, unknown>;
-    } catch {
-      return null;
-    }
-  } else if (data && typeof data === 'object') {
-    payload = data as Record<string, unknown>;
-  } else {
-    return null;
-  }
+export function parseEmbedMessage(provider: EmbedProvider, data: unknown): EmbedEvent[] {
+  const payload = asPayload(data);
+  if (!payload) return [];
+
+  // O eco da própria inscrição, que o Vimeo devolve. Não é notícia do vídeo.
+  if (payload.method === 'addEventListener') return [];
+
+  const events: EmbedEvent[] = [];
 
   if (provider === 'youtube') {
     if (payload.event === 'onStateChange') {
-      const tipo = YOUTUBE_STATE[Number(payload.info)];
-      return tipo ? ({ type: tipo } as EmbedEvent) : null;
+      const state = YOUTUBE_STATE[Number(payload.info)];
+      if (state) events.push({ type: state } as EmbedEvent);
+      return events;
     }
+
     if (payload.event === 'infoDelivery') {
-      const info = payload.info as { currentTime?: number; duration?: number } | undefined;
-      if (info && typeof info.currentTime === 'number' && typeof info.duration === 'number') {
-        return { type: 'time', currentTime: info.currentTime, duration: info.duration };
-      }
+      const info = payload.info as Record<string, unknown> | null | undefined;
+      if (!info) return events;
+      // O estado chega TAMBÉM por aqui, e não só por `onStateChange` — medido.
+      // Ler só o `onStateChange` deixava o botão preso em "Reproduzir" com o
+      // vídeo tocando.
+      const state = YOUTUBE_STATE[Number(info.playerState)];
+      if (state) events.push({ type: state } as EmbedEvent);
+      const time = timeEvent(info.currentTime, info.duration);
+      if (time) events.push(time);
     }
-    return null;
+    return events;
   }
 
-  const evento = payload.event;
-  const dados = payload.data as { seconds?: number; duration?: number } | undefined;
-  if (evento === 'play') return { type: 'playing' };
-  if (evento === 'pause') return { type: 'paused' };
-  if (evento === 'ended') return { type: 'ended' };
-  if (evento === 'timeupdate' && dados && typeof dados.seconds === 'number') {
-    return { type: 'time', currentTime: dados.seconds, duration: dados.duration ?? 0 };
+  const name = payload.event;
+  const info = (payload.data ?? {}) as Record<string, unknown>;
+  if (name === 'play') events.push({ type: 'playing' });
+  else if (name === 'pause') events.push({ type: 'paused' });
+  // `finish` é o nome antigo do fim no Vimeo, e players mais velhos ainda o
+  // mandam.
+  else if (name === 'ended' || name === 'finish') events.push({ type: 'ended' });
+
+  // O tempo vem junto de `play`, `pause` e `ended`, além do `timeupdate`
+  // próprio: aproveitar os quatro é o que faz a duração aparecer no primeiro
+  // play, e não só depois da primeira atualização de posição.
+  if (name === 'play' || name === 'pause' || name === 'ended' || name === 'timeupdate') {
+    const time = timeEvent(info.seconds, info.duration);
+    if (time) events.push(time);
   }
-  return null;
+  return events;
 }
 
 /**
