@@ -135,7 +135,7 @@
   };
 
   /** Estados descritos pelo conteúdo compartilhado, na ordem em que ele os lista. */
-  const STATE_KEYS = ['idle', 'playing', 'ended', 'refused', 'unavailable'] as const;
+  const STATE_KEYS = ['idle', 'playing', 'live', 'ended', 'refused', 'unavailable'] as const;
 
   /** Chaves da tabela de tokens, na ordem em que o conteúdo as declara. */
   const TOKEN_KEYS = [

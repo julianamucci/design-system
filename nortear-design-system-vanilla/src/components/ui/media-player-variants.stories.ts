@@ -17,7 +17,7 @@ import {
   captionTrack,
   silentWav,
 } from './media-player.fixtures';
-import { until } from './media-player.play-helpers';
+import { clockText, until } from './media-player.play-helpers';
 import { mediaPlayerSourceWith } from './media-player.source';
 
 const meta: Meta = {
@@ -86,6 +86,24 @@ export const Video: Story = {
       await expect(getComputedStyle(button).display).toBe('none');
       button.hidden = false;
       await expect(getComputedStyle(button).display).not.toBe('none');
+    });
+
+    await step('Fonte ao vivo se ANUNCIA, em vez de fingir um relógio', async () => {
+      // Transmissão não tem duração — o navegador reporta `Infinity`, e é o que
+      // um canal ao vivo de verdade também reporta. `0:00 / --:--` ao lado de
+      // uma barra que não anda se lê como componente quebrado; foi assim que a
+      // dona viu. O que separa "não sei a duração" de "não existe duração" é
+      // este aviso.
+      await until(() => root.dataset.live === 'true', 5000);
+      await expect(root.dataset.live).toBe('true');
+      await expect(clockText(root)).toBe(LABELS.live);
+      await expect(clockText(root)).not.toContain('--:--');
+
+      // E a barra de progresso sai de cena, de verdade: não há posição para
+      // onde arrastar, e slider parado é o "controle que não faz nada".
+      const slider = root.querySelector('.nds-media-player-seek') as HTMLElement;
+      await expect(slider.hasAttribute('hidden')).toBe(true);
+      await expect(getComputedStyle(slider).display).toBe('none');
     });
 
     await step('A fonte ao vivo não promete velocidade que ela ignora', async () => {

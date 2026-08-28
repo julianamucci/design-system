@@ -41,7 +41,7 @@ const _contentDeclaresEveryLabel: Record<keyof MediaPlayerLabels, string> =
 // defeito silencioso, e só visível para quem ouve.
 const LABEL_KEYS = Object.keys({
   player: 1, controls: 1, play: 1, pause: 1, mute: 1, unmute: 1,
-  seek: 1, seekValueText: 1, rate: 1, enterFullscreen: 1, exitFullscreen: 1, enterPip: 1, exitPip: 1,
+  seek: 1, seekValueText: 1, live: 1, rate: 1, enterFullscreen: 1, exitFullscreen: 1, enterPip: 1, exitPip: 1,
 } satisfies Record<keyof MediaPlayerLabels, 1>) as Array<keyof MediaPlayerLabels>;
 
 /**

@@ -88,6 +88,13 @@ export type MediaPlayerLabels = {
    * ouve recebia uma preposição em português entre dois relógios.
    */
   seekValueText: string;
+  /**
+   * O que a barra diz no lugar do relógio quando a fonte é AO VIVO.
+   *
+   * Transmissão não tem duração, e `--:--` ao lado de uma barra parada se lê
+   * como defeito. Este rótulo é o que separa "não sei" de "não existe".
+   */
+  live: string;
   rate: string;
   enterFullscreen: string;
   exitFullscreen: string;
@@ -222,6 +229,7 @@ const DEFAULT_RATES = [0.5, 0.75, 1, 1.25, 1.5, 2];
     class: 'nds-media-player',
     '[attr.data-slot]': '"media-player"',
     '[attr.data-kind]': 'dataKind()',
+    '[attr.data-live]': 'live()',
     // `group` e não `region`: o player é um agrupamento de controles, e `region`
     // entraria na lista de marcos da página — um player por artigo poluiria a
     // navegação por marco de quem usa leitor de tela.
@@ -306,6 +314,7 @@ const DEFAULT_RATES = [0.5, 0.75, 1, 1.25, 1.5, 2];
         max="100"
         step="0.1"
         value="0"
+        [hidden]="live()"
         [attr.aria-label]="labels().seek"
         (input)="onSeek($event)"
       />
@@ -534,8 +543,19 @@ export class MediaPlayerComponent implements OnDestroy {
     this.pipOn() ? this.labels().exitPip : this.labels().enterPip,
   );
 
-  protected readonly clock = computed(
-    () => `${formatTime(this.currentTime())} / ${formatTime(this.duration())}`,
+  /**
+   * Fonte AO VIVO: duração infinita não é duração desconhecida, é ausência de
+   * fim. A diferença importa na tela — `0:00 / --:--` com uma barra que não
+   * anda se lê como componente quebrado, e foi assim que a transmissão
+   * apareceu. `Infinity` é o que o navegador reporta em `MediaStream`, e também
+   * o que um canal ao vivo de verdade reporta.
+   */
+  protected readonly live = computed(() => this.duration() === Number.POSITIVE_INFINITY);
+
+  protected readonly clock = computed(() =>
+    this.live()
+      ? this.labels().live
+      : `${formatTime(this.currentTime())} / ${formatTime(this.duration())}`,
   );
 
   /**

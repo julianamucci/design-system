@@ -47,6 +47,13 @@
      * ouve recebia uma preposição em português entre dois relógios.
      */
     seekValueText: string;
+    /**
+     * O que a barra diz no lugar do relógio quando a fonte é AO VIVO.
+     *
+     * Transmissão não tem duração, e `--:--` ao lado de uma barra parada se lê
+     * como defeito. Este rótulo é o que separa "não sei" de "não existe".
+     */
+    live: string;
     rate: string;
     enterFullscreen: string;
     exitFullscreen: string;
@@ -195,6 +202,12 @@
 
   const isVideo = $derived(kind === 'video' || Boolean(embed));
   const isPlaying = $derived(playing && !ended);
+  // Fonte AO VIVO: duração infinita não é duração desconhecida, é ausência de
+  // fim. A diferença importa na tela — `0:00 / --:--` com uma barra que não
+  // anda se lê como componente quebrado, e foi assim que a transmissão
+  // apareceu. `Infinity` é o que o navegador reporta em `MediaStream`, e
+  // também o que um canal ao vivo de verdade reporta.
+  const live = $derived(duration === Number.POSITIVE_INFINITY);
   const hasDuration = $derived(Number.isFinite(duration) && duration > 0);
 
   // O slider anuncia POSIÇÃO, e "37" não é posição para quem ouve. O texto do
@@ -560,6 +573,7 @@
   bind:this={rootEl}
   data-slot="media-player"
   data-kind={embed ? embed.provider : kind}
+  data-live={String(live)}
   class={cn('nds-media-player', className)}
   role="group"
   aria-label={labels.player}
@@ -681,6 +695,7 @@
       type="range"
       class="nds-media-player-seek"
       min="0"
+      hidden={live}
       max={hasDuration ? String(duration) : '100'}
       step="0.1"
       value={hasDuration ? String(currentTime) : '0'}
@@ -690,7 +705,7 @@
     />
 
     <span class="nds-media-player-time" data-slot="media-player-time"
-      >{formatTime(currentTime)} / {formatTime(duration)}</span
+      >{live ? labels.live : `${formatTime(currentTime)} / ${formatTime(duration)}`}</span
     >
 
     <!--

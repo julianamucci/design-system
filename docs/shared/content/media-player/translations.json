@@ -161,6 +161,11 @@
         "trigger": "Reprodução começou de fato, depois do carregamento",
         "behavior": "O botão oferece pausar, e a barra de progresso acompanha o tempo."
       },
+      "live": {
+        "label": "Ao vivo",
+        "trigger": "A fonte é uma transmissão — câmera, tela compartilhada ou canal ao vivo.",
+        "behavior": "A barra de progresso sai de cena e o relógio dá lugar ao aviso de transmissão: não há duração para representar nem posição para onde arrastar."
+      },
       "ended": {
         "label": "Terminado",
         "trigger": "A mídia chegou ao fim",
@@ -506,6 +511,7 @@
       "unmute": "Ativar o som",
       "seek": "Posição da reprodução",
       "seekValueText": "{current} de {duration}",
+      "live": "Ao vivo",
       "rate": "Velocidade de reprodução",
       "enterFullscreen": "Tela cheia",
       "exitFullscreen": "Sair da tela cheia",
@@ -692,6 +698,11 @@
         "label": "Playing",
         "trigger": "Playback actually started, after loading",
         "behavior": "The button offers pause, and the progress bar follows the time."
+      },
+      "live": {
+        "label": "Live",
+        "trigger": "The source is a broadcast — camera, shared screen or live channel.",
+        "behavior": "The progress bar leaves and the clock gives way to the live notice: there is no duration to represent and no position to drag to."
       },
       "ended": {
         "label": "Ended",
@@ -1038,6 +1049,7 @@
       "unmute": "Unmute",
       "seek": "Playback position",
       "seekValueText": "{current} of {duration}",
+      "live": "Live",
       "rate": "Playback speed",
       "enterFullscreen": "Fullscreen",
       "exitFullscreen": "Exit fullscreen",
@@ -1224,6 +1236,11 @@
         "label": "Reproduciendo",
         "trigger": "La reproducción empezó de hecho, tras la carga",
         "behavior": "El botón ofrece pausar, y la barra de progreso acompaña el tiempo."
+      },
+      "live": {
+        "label": "En vivo",
+        "trigger": "La fuente es una transmisión — cámara, pantalla compartida o canal en vivo.",
+        "behavior": "La barra de progreso se retira y el reloj cede su lugar al aviso de transmisión: no hay duración que representar ni posición a la que arrastrar."
       },
       "ended": {
         "label": "Terminado",
@@ -1570,6 +1587,7 @@
       "unmute": "Activar el sonido",
       "seek": "Posición de la reproducción",
       "seekValueText": "{current} de {duration}",
+      "live": "En vivo",
       "rate": "Velocidad de reproducción",
       "enterFullscreen": "Pantalla completa",
       "exitFullscreen": "Salir de pantalla completa",

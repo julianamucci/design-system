@@ -99,7 +99,7 @@ const TOKEN_KEYS = [
 ];
 
 /** Estados descritos pelo conteúdo compartilhado, na ordem em que ele os lista. */
-const STATE_KEYS = ["idle", "playing", "ended", "refused", "unavailable"];
+const STATE_KEYS = ["idle", "playing", "live", "ended", "refused", "unavailable"];
 
 const INTERFACE_CODE = `// <MediaPlayer {...props} />
 export type MediaPlayerProps = {

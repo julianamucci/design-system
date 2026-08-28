@@ -26,6 +26,13 @@ export type MediaPlayerLabels = {
    * ouve recebia uma preposição em português entre dois relógios.
    */
   seekValueText: string;
+  /**
+   * O que a barra diz no lugar do relógio quando a fonte é AO VIVO.
+   *
+   * Transmissão não tem duração, e `--:--` ao lado de uma barra parada se lê
+   * como defeito. Este rótulo é o que separa "não sei" de "não existe".
+   */
+  live: string;
   rate: string;
   enterFullscreen: string;
   exitFullscreen: string;

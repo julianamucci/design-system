@@ -147,8 +147,18 @@ const canFullscreen = ref(false);
 const canPip = ref(false);
 
 const playingNow = computed(() => playing.value && !ended.value);
+// Fonte AO VIVO: duração infinita não é duração desconhecida, é ausência de
+// fim. A diferença importa na tela — `0:00 / --:--` com uma barra que não
+// anda se lê como componente quebrado, e foi assim que a transmissão
+// apareceu. `Infinity` é o que o navegador reporta em `MediaStream`, e
+// também o que um canal ao vivo de verdade reporta.
+const live = computed(() => duration.value === Number.POSITIVE_INFINITY);
 const knownDuration = computed(() => Number.isFinite(duration.value) && duration.value > 0);
-const clock = computed(() => `${formatTime(currentTime.value)} / ${formatTime(duration.value)}`);
+const clock = computed(() =>
+  live.value
+    ? props.labels.live
+    : `${formatTime(currentTime.value)} / ${formatTime(duration.value)}`,
+);
 const seekMax = computed(() => (knownDuration.value ? String(duration.value) : '100'));
 const seekValue = computed(() => (knownDuration.value ? String(currentTime.value) : '0'));
 /**
@@ -531,6 +541,7 @@ defineExpose({ media: mediaRef, frame: frameRef });
     ref="rootRef"
     data-slot="media-player"
     :data-kind="kindAttr"
+    :data-live="String(live)"
     role="group"
     :aria-label="props.labels.player"
     :class="cn('nds-media-player', props.class)"
@@ -634,6 +645,7 @@ defineExpose({ media: mediaRef, frame: frameRef });
       <input
         type="range"
         class="nds-media-player-seek"
+        :hidden="live"
         min="0"
         step="0.1"
         :max="seekMax"

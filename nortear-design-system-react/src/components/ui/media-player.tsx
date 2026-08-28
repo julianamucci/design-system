@@ -70,6 +70,13 @@ export type MediaPlayerLabels = {
    * ouve recebia uma preposição em português entre dois relógios.
    */
   seekValueText: string;
+  /**
+   * O que a barra diz no lugar do relógio quando a fonte é AO VIVO.
+   *
+   * Transmissão não tem duração, e `--:--` ao lado de uma barra parada se lê
+   * como defeito. Este rótulo é o que separa "não sei" de "não existe".
+   */
+  live: string;
   rate: string;
   enterFullscreen: string;
   exitFullscreen: string;
@@ -673,8 +680,16 @@ export function MediaPlayer({
   // ─── A pintura lê o ESTADO, nunca o motor ──────────────────────────────────
 
   const playing = state.playing && !state.ended;
+  // Fonte AO VIVO: duração infinita não é duração desconhecida, é ausência de
+  // fim. A diferença importa na tela — `0:00 / --:--` com uma barra que não
+  // anda se lê como componente quebrado, e foi assim que a transmissão
+  // apareceu. `Infinity` é o que o navegador reporta em `MediaStream`, e
+  // também o que um canal ao vivo de verdade reporta.
+  const live = state.duration === Number.POSITIVE_INFINITY;
   const hasDuration = Number.isFinite(state.duration) && state.duration > 0;
-  const clock = `${formatTime(state.currentTime)} / ${formatTime(state.duration)}`;
+  const clock = live
+    ? labels.live
+    : `${formatTime(state.currentTime)} / ${formatTime(state.duration)}`;
 
   const trackNodes = tracks.map((track) => (
     <track
@@ -701,6 +716,7 @@ export function MediaPlayer({
       ref={rootRef}
       data-slot="media-player"
       data-kind={embed ? embed.provider : kind}
+      data-live={live ? 'true' : 'false'}
       className={cn('nds-media-player', className)}
       // `group` e não `region`: o player é um agrupamento de controles, e
       // `region` entraria na lista de marcos da página — um player por artigo
@@ -767,6 +783,10 @@ export function MediaPlayer({
         <input
           type="range"
           className="nds-media-player-seek"
+          // Ao vivo a barra sai de cena: não há duração para representar nem
+          // posição para onde arrastar, e slider parado é o "controle que não
+          // faz nada".
+          hidden={live}
           min={0}
           // Sem duração conhecida a barra não tem o que representar: fica na
           // escala de partida, no zero, em vez de fingir uma posição.

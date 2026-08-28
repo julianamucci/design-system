@@ -68,6 +68,13 @@ export type MediaPlayerLabels = {
    * inglês quem ouve recebia uma preposição em português entre dois relógios.
    */
   seekValueText: string;
+  /**
+   * O que a barra diz no lugar do relógio quando a fonte é AO VIVO.
+   *
+   * Transmissão não tem duração, e `--:--` ao lado de uma barra parada se
+   * lê como defeito. Este rótulo é o que separa "não sei" de "não existe".
+   */
+  live: string;
   rate: string;
   enterFullscreen: string;
   exitFullscreen: string;
@@ -375,6 +382,25 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
   }
 
   function paintTime(): void {
+    // Fonte AO VIVO: duração infinita não é duração desconhecida, é ausência de
+    // fim. A diferença importa na tela — `0:00 / --:--` com uma barra que não
+    // anda se lê como componente quebrado, e foi assim que a transmissão
+    // apareceu. Quem assiste precisa saber que é transmissão.
+    //
+    // `Infinity` é o que o navegador reporta em `MediaStream`, e é também o que
+    // um canal ao vivo de verdade reporta: o mesmo caminho serve os dois.
+    const live = state.duration === Number.POSITIVE_INFINITY;
+    root.dataset.live = live ? 'true' : 'false';
+    // A barra de progresso sai de cena: não há duração para representar nem
+    // posição para onde arrastar, e slider que não move é o "controle que não
+    // faz nada" de novo.
+    seek.hidden = live;
+
+    if (live) {
+      time.textContent = labels.live;
+      return;
+    }
+
     time.textContent = `${formatTime(state.currentTime)} / ${formatTime(state.duration)}`;
     if (Number.isFinite(state.duration) && state.duration > 0) {
       seek.max = String(state.duration);
