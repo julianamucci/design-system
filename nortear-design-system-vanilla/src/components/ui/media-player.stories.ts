@@ -106,7 +106,10 @@ export const Audio: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const root = canvasElement.querySelector('[data-slot="media-player"]') as MediaPlayerRoot;
-    const media = root.media;
+    // A afirmação de não-nulo é a story dizendo que SABE qual motor pediu:
+    // `media` é nulo em provedor externo, e o tipo obriga a declarar isso em
+    // vez de presumir.
+    const media = root.media!;
     const playButton = () =>
       root.querySelector('[data-slot="media-player-controls"] button') as HTMLButtonElement;
     // Silenciada por padrão na suíte: a política de autoplay do navegador é
@@ -290,22 +293,22 @@ export const Video: Story = {
     const root = canvasElement.querySelector('[data-slot="media-player"]') as MediaPlayerRoot;
 
     await step('É um <video>, e ele carrega a faixa de legenda', async () => {
-      await expect(root.media.tagName).toBe('VIDEO');
-      const track = root.media.querySelector('track');
+      await expect(root.media!.tagName).toBe('VIDEO');
+      const track = root.media!.querySelector('track');
       await expect(track).toBeInTheDocument();
       await expect(track).toHaveAttribute('kind', 'captions');
       await expect(track).toHaveAttribute('srclang', 'pt-BR');
     });
 
     await step('A superfície ocupa a largura e não deforma', async () => {
-      const estilo = getComputedStyle(root.media);
+      const estilo = getComputedStyle(root.media!);
       await expect(estilo.display).toBe('block');
       await expect(root.dataset.kind).toBe('video');
     });
 
     await step('A janela flutuante exige FAIXA de vídeo, não só um <video>', async () => {
       const canvas = within(canvasElement);
-      const video = root.media as HTMLVideoElement;
+      const video = root.media! as HTMLVideoElement;
 
       // Este é o defeito que a dona encontrou clicando: a story alimentava um
       // `<video>` com o WAV. O elemento passava por TODA a detecção de
@@ -316,6 +319,13 @@ export const Video: Story = {
       // Medido, os dois casos se distinguem pelo nome do erro:
       //   videoWidth=0   → InvalidStateError (sem faixa de vídeo)
       //   videoWidth=160 → NotAllowedError   (só falta ativação do usuário)
+      // Em stream ao vivo a largura só aparece com os primeiros quadros, e eles
+      // só chegam tocando — por isso a story toca antes de medir.
+      video.muted = true;
+      // Este `play` é o do HTMLMediaElement, e não a `play` de outra story: a
+      // regra casa pelo NOME do método e não distingue os dois.
+      // eslint-disable-next-line storybook/context-in-play-function
+      await video.play().catch(() => {});
       const temQuadro = await until(() => video.videoWidth > 0, 5000);
       await expect(temQuadro).toBe(true);
 
@@ -337,7 +347,7 @@ export const Video: Story = {
       // ambos verdadeiros, e o iframe do Storybook com `allowfullscreen`.
       const podeTela = document.fullscreenEnabled;
       const podeJanela =
-        document.pictureInPictureEnabled && !(root.media as HTMLVideoElement)
+        document.pictureInPictureEnabled && !(root.media! as HTMLVideoElement)
           .disablePictureInPicture;
 
       const botaoTela = canvas.queryByRole('button', { name: LABELS.enterFullscreen });
@@ -378,6 +388,141 @@ export const Video: Story = {
         // Continua dizendo "entrar", porque não entrou.
         await expect(botaoTela).toHaveAttribute('aria-label', LABELS.enterFullscreen);
       }
+    });
+  },
+};
+
+/**
+ * Vídeo hospedado no YouTube — mesma barra, mesma API, outro motor.
+ *
+ * O quadro NÃO carrega nesta suíte, e é de propósito: depender de serviço
+ * externo faria a rodada falhar por motivo alheio ao código. O que a story
+ * exercita é tudo que não precisa de rede — a URL construída, as permissões
+ * delegadas, e o CAMINHO DO EVENTO, encenado com mensagens iguais às que o
+ * provedor manda.
+ *
+ * O que fica sem cobertura está dito em voz alta no último passo: o aperto de
+ * mão real com o YouTube.
+ */
+export const YouTube: Story = {
+  parameters: { controls: { disable: true }, actions: { disable: true } },
+  render: (args) =>
+    createMediaPlayer({
+      embed: { provider: 'youtube', videoId: 'aqz-KE-bpKQ' },
+      labels: LABELS,
+      onPlay: args.onPlay,
+      onPause: args.onPause,
+      onEnded: args.onEnded,
+    }),
+
+  play: async ({ canvasElement, step, args }) => {
+    const canvas = within(canvasElement);
+    const root = canvasElement.querySelector('[data-slot="media-player"]') as MediaPlayerRoot;
+    const frame = root.frame!;
+
+    await step('É um quadro, e não há elemento de mídia', async () => {
+      // O tipo já diz isto, e a story confirma em execução: quem escrever
+      // `player.media.currentTime` num provedor recebe nulo, não um erro
+      // obscuro três telas adiante.
+      await expect(root.media).toBeNull();
+      await expect(frame.tagName).toBe('IFRAME');
+      // Sem `title`, o leitor de tela anuncia só "quadro" — e uma página com
+      // três vídeos vira três "quadro".
+      await expect(frame).toHaveAttribute('title', LABELS.player);
+    });
+
+    await step('A URL protege quem assiste e habilita a conversa', async () => {
+      // Domínio sem cookie por padrão: o domínio comum grava perfil de quem
+      // assiste antes mesmo do play.
+      await expect(frame.src).toContain('youtube-nocookie.com');
+      await expect(frame.src).toContain('enablejsapi=1');
+      // Sem `origin` o YouTube recusa comandos — é a proteção dele contra
+      // terceiro dirigindo a reprodução.
+      await expect(frame.src).toContain('origin=');
+      // Sem isto o iOS abre em tela cheia sozinho ao dar play, e a barra some
+      // no momento em que seria usada.
+      await expect(frame.src).toContain('playsinline=1');
+    });
+
+    await step('As permissões que os controles precisam são delegadas', async () => {
+      for (const permissao of ['autoplay', 'fullscreen', 'picture-in-picture']) {
+        await expect(frame.allow).toContain(permissao);
+      }
+    });
+
+    await step('A barra não oferece o que o provedor não entrega', async () => {
+      // Picture-in-Picture pede a FAIXA de vídeo, e ela está dentro de um
+      // documento de outra origem: não há como pedir daqui. O provedor oferece
+      // o dele, dentro do próprio quadro.
+      await expect(canvas.queryByRole('button', { name: LABELS.enterPip })).toBeNull();
+      // Tela cheia continua, porque quem entra em tela cheia é a MOLDURA — e
+      // ela é nossa.
+      await expect(canvas.queryByRole('button', { name: LABELS.enterFullscreen })).not.toBeNull();
+    });
+
+    await step('O caminho do evento, encenado com as mensagens do provedor', async () => {
+      (args.onPlay as ReturnType<typeof fn>).mockClear();
+      (args.onPause as ReturnType<typeof fn>).mockClear();
+      (args.onEnded as ReturnType<typeof fn>).mockClear();
+
+      // As cargas são as MESMAS que o YouTube envia: `onStateChange` com estado
+      // numérico. Encenar o provedor é o que permite cobrir o caminho inteiro
+      // sem rede — e o dialeto está preso em `media-embed.test.ts`.
+      const doQuadro = (data: unknown) =>
+        window.dispatchEvent(
+          new MessageEvent('message', { data, source: frame.contentWindow }),
+        );
+
+      doQuadro(JSON.stringify({ event: 'onStateChange', info: 1 }));
+      await until(() => (args.onPlay as ReturnType<typeof fn>).mock.calls.length > 0);
+      await expect(args.onPlay).toHaveBeenCalled();
+      // E a barra segue o estado: o botão passou a oferecer pausa sem ninguém
+      // ter clicado nele.
+      await expect(canvas.getByRole('button', { name: LABELS.pause })).toBeInTheDocument();
+
+      doQuadro(JSON.stringify({ event: 'onStateChange', info: 2 }));
+      await until(() => (args.onPause as ReturnType<typeof fn>).mock.calls.length > 0);
+      // Pausa de verdade num provedor: `ended` falso, mesma forma do motor
+      // nativo. É o ponto do desenho — uma API, dois motores.
+      await expect(args.onPause).toHaveBeenCalledWith(
+        expect.objectContaining({ ended: false }),
+      );
+
+      doQuadro(JSON.stringify({ event: 'infoDelivery', info: { currentTime: 30, duration: 120 } }));
+      await until(() => (root.querySelector('[data-slot="media-player-time"]')?.textContent ?? '')
+        .includes('0:30'));
+      await expect(root.querySelector('[data-slot="media-player-time"]')?.textContent)
+        .toBe('0:30 / 2:00');
+
+      doQuadro(JSON.stringify({ event: 'onStateChange', info: 0 }));
+      await until(() => (args.onEnded as ReturnType<typeof fn>).mock.calls.length > 0);
+      await expect(args.onEnded).toHaveBeenCalled();
+    });
+
+    await step('Mensagem de OUTRA origem é ignorada', async () => {
+      (args.onPause as ReturnType<typeof fn>).mockClear();
+      // A página recebe `message` de qualquer um — outro embed, uma extensão,
+      // um anúncio. Sem conferir a fonte, um segundo player pausa o primeiro, e
+      // uma extensão qualquer mexe na reprodução.
+      window.dispatchEvent(
+        new MessageEvent('message', {
+          data: JSON.stringify({ event: 'onStateChange', info: 2 }),
+          source: window,
+        }),
+      );
+      await new Promise((r) => setTimeout(r, 60));
+      await expect(args.onPause).not.toHaveBeenCalled();
+    });
+
+    await step('O que esta suíte NÃO prova', async () => {
+      // O aperto de mão real com o YouTube exige rede, e suíte que depende de
+      // serviço externo falha por motivo alheio ao código. O quadro nem carrega
+      // aqui. Coberto: URL, permissões, dialeto (em `media-embed.test.ts`) e o
+      // caminho do evento. Não coberto: a conversa de verdade.
+      //
+      // Registrado como asserção para ninguém ler o verde como prova do que ele
+      // não mede.
+      await expect(frame.src.startsWith('https://')).toBe(true);
     });
   },
 };

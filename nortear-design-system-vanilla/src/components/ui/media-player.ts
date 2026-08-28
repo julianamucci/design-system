@@ -1,18 +1,18 @@
 // ─── Media Player — protótipo Vanilla ────────────────────────────────────────
 //
-// Vídeo e áudio sobre o elemento NATIVO. Não é componente entregue: é a medição
-// que decide se o design system constrói o player em vez de adotar uma lib.
+// Um player, DOIS motores, uma API.
 //
-// Por que o elemento nativo. Ele já entrega, de graça: legenda por `<track>`,
-// teclado, Media Session (o controle da tela de bloqueio e do fone),
-// Picture-in-Picture, tela cheia e TODOS os eventos de reprodução. O que falta é
-// a aparência — e aparência é o que um design system tem. É a mesma divisão do
-// editor: a lib é o motor, a barra é nossa.
+//   nativo     `<video>` / `<audio>` — propriedade e evento de DOM
+//   provedor   `<iframe>` do YouTube ou do Vimeo — conversa por `postMessage`
 //
-// A consequência boa dessa divisão é que o motor fica substituível. Se o
-// `@videojs/core` (hoje em beta, GA prevista para meados de 2026) amadurecer e
-// resolver qualidade adaptativa melhor que o elemento nativo, troca-se o motor
-// sem redesenhar a barra.
+// Quem consome passa os mesmos `labels`, `onPlay`, `onPause` e `onEnded` nos
+// dois casos, e vê a mesma barra. Isso só é possível porque a barra ficou do
+// nosso lado desde o começo: ela fala com um ESTADO, e cada motor alimenta esse
+// estado do jeito que sabe. Trocar o motor não redesenha nada.
+//
+// Por que o elemento nativo é o padrão: ele já entrega legenda por `<track>`,
+// teclado, Media Session, Picture-in-Picture, tela cheia e todos os eventos.
+// Por que o provedor existe: nem todo vídeo é nosso para hospedar.
 
 import {
   Maximize,
@@ -25,6 +25,16 @@ import {
 } from 'lucide';
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
+import {
+  buildEmbedUrl,
+  EMBED_ALLOW,
+  embedCommand,
+  embedHandshake,
+  isFromFrame,
+  parseEmbedMessage,
+  type EmbedCommand,
+  type EmbedSource,
+} from './media-embed';
 
 type LucideIconNode = [string, Record<string, string>];
 
@@ -33,25 +43,19 @@ export type MediaPlayerKind = 'video' | 'audio';
 /** Faixa de legenda. Vídeo com áudio EXIGE ao menos uma — WCAG 1.2.2, nível A. */
 export type MediaPlayerTrack = {
   src: string;
-  /** Código de idioma da faixa, como `pt-BR`. */
   srclang: string;
-  /** Nome que aparece no menu de legendas do navegador. */
   label: string;
   default?: boolean;
 };
 
 export type MediaPlayerLabels = {
-  /** Nome acessível do player inteiro. */
   player: string;
-  /** Nome acessível do grupo de controles. */
   controls: string;
   play: string;
   pause: string;
   mute: string;
   unmute: string;
-  /** Rótulo da barra de progresso. */
   seek: string;
-  /** Rótulo do seletor de velocidade. */
   rate: string;
   enterFullscreen: string;
   exitFullscreen: string;
@@ -63,57 +67,49 @@ export type MediaPlayerLabels = {
  * O que se sabe quando a reprodução para.
  *
  * `ended` existe porque MEDIDO: o navegador dispara `pause` também quando a
- * mídia TERMINA, e antes do `ended`. A sequência real, cronometrada num WAV de
- * 0,4s: `play@0.00 > playing@0.00 > pause@0.40 > ended@0.40`. Quem contar
- * `pause` sem olhar isto conta toda reprodução completa como uma pausa — e o
- * erro é silencioso, porque o número continua plausível.
+ * mídia TERMINA, e antes do `ended` — `play > playing > pause > ended`. Quem
+ * contar `pause` sem olhar isto conta toda reprodução completa como uma pausa, e
+ * o erro é silencioso porque o número continua plausível.
  */
 export type MediaPauseInfo = {
-  /** A parada foi o fim da mídia, não uma pausa de quem assiste. */
   ended: boolean;
   currentTime: number;
 };
 
 export type MediaPlayerOptions = {
   kind?: MediaPlayerKind;
-  /** Endereço da mídia. Use `stream` no lugar quando a fonte for ao vivo. */
+  /** Endereço da mídia. */
   src?: string;
   /**
    * Fonte ao vivo — câmera, compartilhamento de tela, canvas.
    *
-   * Não é conveniência de teste: stream é caso real, e muda o comportamento de
-   * duas coisas. `playbackRate` é ignorado (medido: 1.5 escrito lê de volta 1),
-   * e `duration` é infinita, então a barra de progresso não tem o que
-   * representar.
+   * MEDIDO: `playbackRate` é ignorado em stream (1.5 escrito lê de volta 1) e a
+   * duração é infinita, então a barra de progresso não tem o que representar.
    */
   stream?: MediaStream;
-  /** Imagem de capa. Só o vídeo a usa. */
+  /**
+   * Vídeo hospedado no YouTube ou no Vimeo.
+   *
+   * Muda o MOTOR, não a API. O que muda por baixo é que não existe elemento de
+   * mídia: existe um `<iframe>` de outra origem, e a conversa é por
+   * `postMessage`.
+   *
+   * O que fica FORA do alcance, e não é contornável: legenda, faixa de áudio e
+   * qualidade pertencem ao provedor; a política de privacidade de quem assiste
+   * é do provedor; e o Picture-in-Picture depende de a página que hospeda já ter
+   * a permissão para delegar ao quadro.
+   */
+  embed?: EmbedSource;
   poster?: string;
-  /**
-   * Faixas de legenda.
-   *
-   * Vídeo com áudio SEM legenda reprova em WCAG 1.2.2 (nível A). O componente
-   * não pode gerar legenda, mas pode recusar-se a esconder a falta: quando é
-   * vídeo e a lista vem vazia, ele avisa no console em desenvolvimento.
-   */
   tracks?: MediaPlayerTrack[];
-  /**
-   * Velocidades oferecidas, na ordem em que aparecem.
-   *
-   * MEDIDO: `playbackRate` vale para mídia de ARQUIVO e é IGNORADO em stream ao
-   * vivo — escrever 1.5 num `srcObject` de `MediaStream` lê de volta 1. Quem
-   * montar o player sobre stream deve passar lista vazia para o seletor sumir:
-   * controle que não faz nada é pior que controle ausente.
-   */
   rates?: number[];
   labels: MediaPlayerLabels;
   /**
    * Disparado quando a reprodução COMEÇA de fato.
    *
-   * Ligado a `playing`, e não a `play`: `play` avisa que a reprodução foi
-   * PEDIDA, e entre o pedido e o primeiro quadro há o buffer. Numa mídia grande
-   * os dois se separam por segundos, e contar `play` como início infla a
-   * métrica com tentativas que nunca saíram do lugar.
+   * No motor nativo é `playing`, não `play`: `play` avisa que a reprodução foi
+   * PEDIDA, e entre o pedido e o primeiro quadro há o buffer. Contar `play`
+   * infla a métrica com tentativas que nunca saíram do lugar.
    */
   onPlay?: () => void;
   /** Disparado em toda parada — inclusive no fim. Ver `MediaPauseInfo.ended`. */
@@ -123,13 +119,20 @@ export type MediaPlayerOptions = {
 };
 
 export type MediaPlayerRoot = DestroyableElement<HTMLDivElement> & {
-  /** O elemento nativo. Quem consome precisa dele para volume, faixas, taxa. */
-  media: HTMLMediaElement;
+  /**
+   * O elemento nativo — `null` quando a fonte é provedor externo.
+   *
+   * O tipo diz a diferença de propósito: em provedor não há mídia, há um quadro
+   * de outra origem. Sem isso alguém escreve `player.media.currentTime` e
+   * descobre em produção que ali não existe mídia nenhuma.
+   */
+  media: HTMLMediaElement | null;
+  /** O quadro — `null` quando a fonte é nativa. */
+  frame: HTMLIFrameElement | null;
 };
 
 const ico = (n: unknown): LucideIconNode[] => n as LucideIconNode[];
 
-/** Monta um SVG a partir dos nós do lucide — mesma forma do editor e do alert. */
 function iconSvg(nodes: LucideIconNode[]): SVGSVGElement {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
@@ -166,13 +169,33 @@ function controlButton(label: string, icon: LucideIconNode[]): HTMLButtonElement
   return btn;
 }
 
+/**
+ * O que a barra sabe, independentemente de quem informou.
+ *
+ * Existe porque os dois motores contam a mesma história em línguas diferentes: o
+ * nativo por propriedade lida na hora, o provedor por mensagem que chega quando
+ * chega. Sem este intermediário, cada função de pintura precisaria saber qual
+ * motor está por baixo — e a barra deixaria de ser uma só.
+ */
+type PlayerState = {
+  playing: boolean;
+  ended: boolean;
+  muted: boolean;
+  currentTime: number;
+  duration: number;
+  rate: number;
+  /** Há faixa de vídeo? Só o nativo sabe responder; no quadro é uma aposta. */
+  hasVideoTrack: boolean;
+};
+
 export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot {
   const { kind = 'video', labels, tracks = [] } = options;
-  const isVideo = kind === 'video';
+  const embed = options.embed;
+  const isVideo = kind === 'video' || Boolean(embed);
 
   const root = document.createElement('div');
   root.dataset.slot = 'media-player';
-  root.dataset.kind = kind;
+  root.dataset.kind = embed ? embed.provider : kind;
   root.className = cn('nds-media-player', options.class);
   // `group` e não `region`: o player é um agrupamento de controles, e `region`
   // entraria na lista de marcos da página — um player por artigo poluiria a
@@ -180,43 +203,75 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
   root.setAttribute('role', 'group');
   root.setAttribute('aria-label', labels.player);
 
-  // ─── O motor ───────────────────────────────────────────────────────────────
-  const media = document.createElement(kind) as HTMLMediaElement;
-  media.className = 'nds-media-player-surface';
-  if (options.stream) media.srcObject = options.stream;
-  else if (options.src) media.src = options.src;
-  media.preload = 'metadata';
-  // SEM `controls`: os controles nativos apareceriam junto dos nossos. O
-  // elemento continua acessível porque quem o opera é a barra abaixo, e ele
-  // segue fora da ordem de tabulação por não ter `controls`.
-  if (isVideo && options.poster) (media as HTMLVideoElement).poster = options.poster;
+  const state: PlayerState = {
+    playing: false,
+    ended: false,
+    muted: false,
+    currentTime: 0,
+    duration: Number.NaN,
+    rate: 1,
+    hasVideoTrack: false,
+  };
 
-  for (const t of tracks) {
-    const track = document.createElement('track');
-    track.kind = 'captions';
-    track.src = t.src;
-    track.srclang = t.srclang;
-    track.label = t.label;
-    if (t.default) track.default = true;
-    media.appendChild(track);
+  // ─── Motor A: o elemento nativo ────────────────────────────────────────────
+  const media = embed ? null : (document.createElement(kind) as HTMLMediaElement);
+  if (media) {
+    media.className = 'nds-media-player-surface';
+    if (options.stream) media.srcObject = options.stream;
+    else if (options.src) media.src = options.src;
+    media.preload = 'metadata';
+    // SEM `controls`: os controles nativos apareceriam junto dos nossos.
+    if (kind === 'video' && options.poster) (media as HTMLVideoElement).poster = options.poster;
+
+    for (const t of tracks) {
+      const track = document.createElement('track');
+      track.kind = 'captions';
+      track.src = t.src;
+      track.srclang = t.srclang;
+      track.label = t.label;
+      if (t.default) track.default = true;
+      media.appendChild(track);
+    }
+
+    if (kind === 'video' && tracks.length === 0 && import.meta.env?.DEV) {
+      // Aviso, não exceção: quebrar a página por falta de legenda esconderia o
+      // conteúdo de todo mundo para punir a falta de acesso de alguns.
+      console.warn(
+        '[nds-media-player] vídeo sem faixa de legenda. WCAG 1.2.2 (nível A) exige '
+          + 'legenda para vídeo com áudio — passe `tracks`.',
+      );
+    }
   }
 
-  if (isVideo && tracks.length === 0 && import.meta.env?.DEV) {
-    // Aviso, não exceção: quebrar a página por falta de legenda esconderia o
-    // conteúdo de todo mundo para punir a falta de acesso de alguns.
-    console.warn(
-      '[nds-media-player] vídeo sem faixa de legenda. WCAG 1.2.2 (nível A) exige '
-        + 'legenda para vídeo com áudio — passe `tracks`.',
-    );
+  // ─── Motor B: o quadro do provedor ─────────────────────────────────────────
+  const frame = embed ? document.createElement('iframe') : null;
+  if (frame && embed) {
+    frame.className = 'nds-media-player-surface';
+    frame.src = buildEmbedUrl(embed, window.location.origin);
+    frame.allow = EMBED_ALLOW;
+    // O quadro tem nome próprio: sem `title` o leitor de tela anuncia apenas
+    // "quadro", e uma página com três vídeos vira três "quadro".
+    frame.title = labels.player;
+    frame.setAttribute('frameborder', '0');
+    frame.setAttribute('loading', 'lazy');
+    // `sandbox` NÃO entra, e a ausência é decisão: os dois provedores precisam
+    // de scripts e de mesma origem consigo mesmos, e um sandbox que os permita
+    // não restringe nada — seria teatro. O que de fato limita é o `allow`.
   }
+
+  const surface: HTMLElement = media ?? frame!;
+
+  const post = (command: EmbedCommand): void => {
+    if (!frame || !embed) return;
+    frame.contentWindow?.postMessage(embedCommand(embed.provider, command), '*');
+  };
 
   // ─── A barra ───────────────────────────────────────────────────────────────
   const controls = document.createElement('div');
   controls.dataset.slot = 'media-player-controls';
   controls.className = 'nds-media-player-controls';
-  // `group`, e não `toolbar`: barra de ferramentas promete navegação por seta
-  // entre os controles, e aqui a seta pertence à barra de progresso, que a usa
-  // para avançar a mídia. Prometer o que não se cumpre é pior que não prometer.
+  // `group`, e não `toolbar`: barra de ferramentas promete navegação por seta, e
+  // aqui a seta pertence à barra de progresso, que a usa para avançar a mídia.
   controls.setAttribute('role', 'group');
   controls.setAttribute('aria-label', labels.controls);
 
@@ -236,12 +291,8 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
   time.dataset.slot = 'media-player-time';
   time.textContent = '--:-- / --:--';
 
-  // ─── Velocidade ────────────────────────────────────────────────────────────
-  //
-  // Um `<select>` nativo, e não um menu desenhado: ele já é operável por
-  // teclado, já anuncia opção e valor, e já se comporta como a plataforma manda
-  // em toque. Um menu próprio significaria reimplementar tudo isso à mão — a
-  // mesma razão que fez a barra de progresso ser um `<input type="range">`.
+  // Um `<select>` nativo, e não um menu desenhado: já é operável por teclado, já
+  // anuncia opção e valor, já se comporta como a plataforma manda no toque.
   const rates = options.rates ?? [0.5, 0.75, 1, 1.25, 1.5, 2];
   const rateSelect = document.createElement('select');
   rateSelect.className = 'nds-media-player-rate';
@@ -258,73 +309,68 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
   }
 
   const muteButton = controlButton(labels.mute, ico(Volume2));
-
   controls.append(playButton, seek, time, rateSelect, muteButton);
 
-  // ─── Tela cheia e Picture-in-Picture ───────────────────────────────────────
+  // Tela cheia e PiP: detecção em tempo de EXECUÇÃO, porque a resposta muda com
+  // o navegador, com a permissão do iframe que hospeda a página e com o próprio
+  // elemento. Botão que não faz nada é ruído.
   //
-  // Só existem em vídeo, e só quando o navegador de fato os oferece. A detecção
-  // é em tempo de EXECUÇÃO porque a resposta muda com o navegador, com a
-  // política de permissão do iframe que hospeda a página e com o próprio
-  // elemento (`disablePictureInPicture`). Botão que não faz nada é ruído.
+  // No provedor, o PiP fica de fora: quem tem a faixa de vídeo é o documento
+  // dentro do quadro, e ele é de outra origem — não há como pedir daqui. O
+  // provedor oferece o dele, dentro do próprio quadro.
   const canFullscreen =
     isVideo && document.fullscreenEnabled && typeof root.requestFullscreen === 'function';
   const canPip =
-    isVideo
+    !embed
+    && kind === 'video'
     && document.pictureInPictureEnabled
-    && typeof (media as HTMLVideoElement).requestPictureInPicture === 'function'
-    && !(media as HTMLVideoElement).disablePictureInPicture;
+    && typeof (media as HTMLVideoElement | null)?.requestPictureInPicture === 'function'
+    && !(media as HTMLVideoElement | null)?.disablePictureInPicture;
 
   const pipButton = canPip ? controlButton(labels.enterPip, ico(PictureInPicture2)) : null;
   if (pipButton) {
-    // Nasce escondido, e aparece quando se souber que HÁ faixa de vídeo.
-    //
-    // A detecção de capacidade não basta: `pictureInPictureEnabled` responde
-    // pelo documento, não pelo conteúdo. Um `<video>` alimentado com áudio passa
-    // por toda a detecção e recusa o pedido com `InvalidStateError` — medido,
-    // `videoWidth=0`. Era o botão que "não fazia nada".
-    //
+    // Nasce escondido e é revelado quando se souber que HÁ faixa de vídeo. A
+    // detecção de capacidade não basta: `pictureInPictureEnabled` responde pelo
+    // DOCUMENTO, não pelo conteúdo — um `<video>` alimentado com áudio passa por
+    // ela e recusa o pedido com `InvalidStateError` (medido, `videoWidth=0`).
     // Escondido primeiro e revelado depois, e não o contrário: mostrar para
-    // depois esconder faria a barra saltar assim que os metadados chegassem.
+    // depois esconder faria a barra saltar quando os metadados chegassem.
     pipButton.hidden = true;
   }
   const fsButton = canFullscreen ? controlButton(labels.enterFullscreen, ico(Maximize)) : null;
   if (pipButton) controls.appendChild(pipButton);
   if (fsButton) controls.appendChild(fsButton);
 
-  root.append(media, controls);
+  root.append(surface, controls);
 
-  // ─── Estado: a BARRA reflete o elemento, nunca o próprio clique ────────────
-  //
-  // É a mesma regra da barra do editor, e aqui vale ainda mais: a reprodução
-  // muda por caminhos que não passam por botão nenhum — tecla de mídia do
-  // teclado, Picture-in-Picture, a Media Session do sistema, outra aba tomando
-  // o áudio, a política de autoplay recusando o início.
+  // ─── Pintura: lê o ESTADO, nunca o motor ───────────────────────────────────
   function paintPlay(): void {
-    const playing = !media.paused && !media.ended;
+    const playing = state.playing && !state.ended;
     playButton.setAttribute('aria-label', playing ? labels.pause : labels.play);
     playButton.replaceChildren(iconSvg(ico(playing ? Pause : Play)));
   }
 
   function paintMute(): void {
-    muteButton.setAttribute('aria-label', media.muted ? labels.unmute : labels.mute);
-    muteButton.replaceChildren(iconSvg(ico(media.muted ? VolumeX : Volume2)));
+    muteButton.setAttribute('aria-label', state.muted ? labels.unmute : labels.mute);
+    muteButton.replaceChildren(iconSvg(ico(state.muted ? VolumeX : Volume2)));
   }
 
   function paintTime(): void {
-    const { currentTime, duration } = media;
-    time.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
-    if (Number.isFinite(duration) && duration > 0) {
-      seek.max = String(duration);
-      seek.value = String(currentTime);
+    time.textContent = `${formatTime(state.currentTime)} / ${formatTime(state.duration)}`;
+    if (Number.isFinite(state.duration) && state.duration > 0) {
+      seek.max = String(state.duration);
+      seek.value = String(state.currentTime);
       // O slider anuncia POSIÇÃO, e "37" não é posição para quem ouve. O texto
-      // do valor é o relógio, que é o que a pessoa quer saber.
-      seek.setAttribute('aria-valuetext', `${formatTime(currentTime)} de ${formatTime(duration)}`);
+      // do valor é o relógio.
+      seek.setAttribute(
+        'aria-valuetext',
+        `${formatTime(state.currentTime)} de ${formatTime(state.duration)}`,
+      );
     }
   }
 
   function paintRate(): void {
-    rateSelect.value = String(media.playbackRate);
+    rateSelect.value = String(state.rate);
   }
 
   function paintFullscreen(): void {
@@ -336,75 +382,161 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
 
   function paintPip(): void {
     if (!pipButton) return;
-    // `videoWidth` só é confiável depois dos metadados; antes disso vale 0 e o
-    // botão fica escondido, que é o certo — ainda não se sabe se há vídeo.
-    pipButton.hidden = (media as HTMLVideoElement).videoWidth === 0;
+    // A largura é lida NA HORA de pintar, e não guardada por um evento
+    // específico. Em stream ao vivo ela só aparece quando os primeiros quadros
+    // chegam, e isso pode vir por loadedmetadata, loadeddata, resize ou
+    // playing, conforme a fonte — depender de um deles deixa o botão escondido
+    // para sempre no caso em que ele veio por outro.
+    if (media) state.hasVideoTrack = (media as HTMLVideoElement).videoWidth > 0;
+    pipButton.hidden = !state.hasVideoTrack;
     const on = document.pictureInPictureElement === media;
     pipButton.setAttribute('aria-label', on ? labels.exitPip : labels.enterPip);
   }
 
-  media.addEventListener('playing', () => {
+  function paintAll(): void {
+    paintPlay();
+    paintMute();
+    paintTime();
+    paintRate();
+    paintFullscreen();
+    paintPip();
+  }
+
+  // ─── Os motores alimentam o estado ─────────────────────────────────────────
+  function started(): void {
+    state.playing = true;
+    state.ended = false;
     paintPlay();
     options.onPlay?.();
-  });
+  }
 
-  media.addEventListener('pause', () => {
+  function stopped(ended: boolean): void {
+    state.playing = false;
+    state.ended = ended;
     paintPlay();
-    // `ended` viaja junto porque `pause` dispara TAMBÉM no fim da mídia, e
-    // antes do `ended` — medido. Sem este campo, quem consome não tem como
-    // separar "alguém pausou" de "acabou".
-    options.onPause?.({ ended: media.ended, currentTime: media.currentTime });
-  });
+    options.onPause?.({ ended, currentTime: state.currentTime });
+  }
 
-  media.addEventListener('ended', () => {
+  function finished(): void {
+    state.ended = true;
+    state.playing = false;
     paintPlay();
     options.onEnded?.();
-  });
+  }
 
-  media.addEventListener('timeupdate', paintTime);
-  // `loadedmetadata` é quando o conteúdo passa a ser conhecido — é ali que
-  // `videoWidth` deixa de ser 0 e se descobre se HÁ faixa de vídeo. Sem
-  // repintar o PiP aqui, o botão nasce escondido e nunca mais é revisto: foi
-  // exatamente o que fez o botão sumir depois da primeira metade da correção.
-  media.addEventListener('loadedmetadata', () => {
-    paintTime();
-    paintPip();
-  });
-  // Stream ao vivo pode trocar de dimensão sem novo `loadedmetadata` — a
-  // câmera que gira, a janela compartilhada que muda de tamanho.
-  media.addEventListener('resize', paintPip);
-  media.addEventListener('volumechange', paintMute);
-  media.addEventListener('ratechange', paintRate);
+  if (media) {
+    media.addEventListener('playing', started);
+    media.addEventListener('pause', () => stopped(media.ended));
+    media.addEventListener('ended', finished);
+    media.addEventListener('timeupdate', () => {
+      state.currentTime = media.currentTime;
+      state.duration = media.duration;
+      paintTime();
+    });
+    // `loadedmetadata` é quando o conteúdo passa a ser conhecido: é ali que
+    // `videoWidth` deixa de ser 0 e se descobre se HÁ faixa de vídeo.
+    media.addEventListener('loadedmetadata', () => {
+      state.duration = media.duration;
+      state.hasVideoTrack = (media as HTMLVideoElement).videoWidth > 0;
+      paintTime();
+      paintPip();
+    });
+    // Stream ao vivo troca de dimensão sem novo `loadedmetadata` — a câmera que
+    // gira, a janela compartilhada que muda de tamanho.
+    media.addEventListener('resize', paintPip);
+    media.addEventListener('loadeddata', paintPip);
+    media.addEventListener('playing', paintPip);
+    media.addEventListener('volumechange', () => {
+      state.muted = media.muted;
+      paintMute();
+    });
+    media.addEventListener('ratechange', () => {
+      state.rate = media.playbackRate;
+      paintRate();
+    });
+  }
 
+  /** Só existe no motor de quadro; guardado para soltar na limpeza. */
+  let onMessage: ((e: MessageEvent) => void) | null = null;
+
+  if (frame && embed) {
+    onMessage = (event: MessageEvent) => {
+      // A página recebe `message` de QUALQUER origem — outro embed, uma
+      // extensão, um anúncio. Sem conferir a fonte, um segundo player na mesma
+      // página pausa o primeiro.
+      if (!isFromFrame(event, frame)) return;
+      const parsed = parseEmbedMessage(embed.provider, event.data);
+      if (!parsed) return;
+      if (parsed.type === 'playing') started();
+      else if (parsed.type === 'paused') stopped(false);
+      else if (parsed.type === 'ended') finished();
+      else {
+        state.currentTime = parsed.currentTime;
+        state.duration = parsed.duration;
+        paintTime();
+      }
+    };
+    window.addEventListener('message', onMessage);
+
+    // O aperto de mão: sem ele nenhum dos dois provedores envia evento algum.
+    // É o passo que costuma faltar, e o sintoma é "os comandos funcionam mas
+    // nada volta".
+    frame.addEventListener('load', () => {
+      for (const msg of embedHandshake(embed.provider)) {
+        frame.contentWindow?.postMessage(msg, '*');
+      }
+    });
+  }
+
+  // ─── Os controles falam com o motor ────────────────────────────────────────
   playButton.addEventListener('click', () => {
-    if (media.paused || media.ended) {
+    const tocar = !state.playing || state.ended;
+    if (media) {
       // A promessa PODE ser recusada — a política de autoplay nega `play()` sem
-      // ativação do usuário. Engolir a recusa em silêncio deixaria o botão
-      // mentindo; repintar devolve o estado verdadeiro.
-      void media.play().catch(paintPlay);
-    } else {
-      media.pause();
+      // ativação do usuário. Engolir a recusa deixaria o botão mentindo.
+      if (tocar) void media.play().catch(paintPlay);
+      else media.pause();
+      return;
     }
+    post({ kind: tocar ? 'play' : 'pause' });
+    // No quadro não há resposta síncrona: o estado só muda quando a mensagem do
+    // provedor voltar. Repintar aqui seria adivinhar.
   });
 
   seek.addEventListener('input', () => {
-    media.currentTime = Number(seek.value);
+    const value = Number(seek.value);
+    if (media) media.currentTime = value;
+    else post({ kind: 'seek', value });
   });
 
   muteButton.addEventListener('click', () => {
-    media.muted = !media.muted;
+    const next = !state.muted;
+    if (media) {
+      media.muted = next;
+      return;
+    }
+    // O provedor não avisa mudança de volume: o estado é nosso para manter.
+    state.muted = next;
+    post({ kind: 'mute', value: next });
+    paintMute();
   });
 
   rateSelect.addEventListener('change', () => {
-    media.playbackRate = Number(rateSelect.value);
+    const value = Number(rateSelect.value);
+    if (media) media.playbackRate = value;
+    else {
+      state.rate = value;
+      post({ kind: 'rate', value });
+    }
   });
 
   if (fsButton) {
-    // A tela cheia é da MOLDURA, não do vídeo.
+    // A tela cheia é da MOLDURA, não do vídeo nem do quadro.
     //
     // Pedindo no `<video>`, o navegador passa a desenhar os controles dele — ou
-    // nenhum — e a nossa barra desaparece justamente quando a tela é maior. Na
-    // moldura, vídeo e controles crescem juntos.
+    // nenhum — e a nossa barra desaparece justamente quando a tela é maior. No
+    // quadro seria pior: entraria em tela cheia o player do provedor, com a
+    // aparência dele. Na moldura, superfície e controles crescem juntos.
     fsButton.addEventListener('click', () => {
       if (document.fullscreenElement === root) void document.exitFullscreen().catch(paintFullscreen);
       else void root.requestFullscreen().catch(paintFullscreen);
@@ -412,60 +544,59 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
     document.addEventListener('fullscreenchange', paintFullscreen);
   }
 
-  if (pipButton) {
+  if (pipButton && media) {
     const video = media as HTMLVideoElement;
-    // A recusa não pode ser SILENCIOSA.
-    //
-    // Engolir o erro é o que transforma um pedido negado em "clico e nada
-    // acontece" — e o nome do erro diz exatamente o que houve:
-    //   InvalidStateError → o elemento não tem faixa de vídeo
-    //   NotAllowedError   → faltou ativação do usuário
-    // Repintar devolve a verdade ao botão; o aviso em desenvolvimento devolve a
-    // causa a quem está construindo.
-    const recusou = (erro: unknown): void => {
+    // A recusa não pode ser SILENCIOSA: engolir o erro transforma um pedido
+    // negado em "clico e nada acontece", e o nome do erro diz o que houve —
+    // `InvalidStateError` é falta de faixa de vídeo, `NotAllowedError` é falta
+    // de ativação do usuário.
+    const refused = (error: unknown): void => {
       paintPip();
       if (import.meta.env?.DEV) {
-        console.warn(`[nds-media-player] Picture-in-Picture recusado: ${(erro as Error).name}`);
+        console.warn(`[nds-media-player] Picture-in-Picture recusado: ${(error as Error).name}`);
       }
     };
-
     pipButton.addEventListener('click', () => {
       if (document.pictureInPictureElement === video) {
-        void document.exitPictureInPicture().catch(recusou);
+        void document.exitPictureInPicture().catch(refused);
       } else {
-        void video.requestPictureInPicture().catch(recusou);
+        void video.requestPictureInPicture().catch(refused);
       }
     });
     media.addEventListener('enterpictureinpicture', paintPip);
     media.addEventListener('leavepictureinpicture', paintPip);
   }
 
-  paintPlay();
-  paintMute();
-  paintTime();
-  paintRate();
-  paintFullscreen();
-  paintPip();
+  paintAll();
 
   const raiz = tornarDestruivel(root, root, () => {
-    // Parar e soltar a fonte: um elemento removido do documento continua
-    // baixando, e um áudio removido continua TOCANDO.
-    media.pause();
-    // Fonte ao vivo se solta pelo `srcObject`, e as trilhas param uma a uma:
-    // `removeAttribute('src')` não alcança stream, e uma câmera aberta
-    // continuaria gravando com o player já fora da tela.
-    const stream = media.srcObject as MediaStream | null;
-    if (stream) {
-      for (const trilha of stream.getTracks()) trilha.stop();
-      media.srcObject = null;
+    if (media) {
+      // Parar e soltar a fonte: um elemento removido do documento continua
+      // baixando, e um áudio removido continua TOCANDO.
+      media.pause();
+      // Fonte ao vivo se solta pelo `srcObject`, e as trilhas param uma a uma:
+      // `removeAttribute('src')` não alcança stream, e uma câmera aberta
+      // continuaria gravando com o player já fora da tela.
+      const stream = media.srcObject as MediaStream | null;
+      if (stream) {
+        for (const trilha of stream.getTracks()) trilha.stop();
+        media.srcObject = null;
+      }
+      media.removeAttribute('src');
+      media.load();
     }
-    media.removeAttribute('src');
-    media.load();
-    // `fullscreenchange` mora no DOCUMENTO, e sobrevive à remoção da moldura:
-    // sem soltar aqui, cada player montado e descartado deixa um ouvinte para
-    // trás, e o fecho dele segura a moldura inteira na memória.
+    if (frame) {
+      // Trocar o `src` por vazio é o que de fato para o vídeo do provedor: a
+      // remoção do nó não garante que o documento de dentro pare, e vídeo
+      // tocando em quadro invisível é o defeito clássico de embed.
+      frame.src = 'about:blank';
+    }
+    // Os dois ouvintes moram fora da moldura e sobrevivem à remoção dela.
     document.removeEventListener('fullscreenchange', paintFullscreen);
+    if (onMessage) window.removeEventListener('message', onMessage);
   }) as MediaPlayerRoot;
+
   raiz.media = media;
+  raiz.frame = frame;
   return raiz;
 }
