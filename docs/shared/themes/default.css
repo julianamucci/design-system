@@ -96,15 +96,27 @@
  * Pares mais apertados, todos sobre `--muted`, que é a pior das duas:
  *   claro  — destructive  4.84:1  (min 4.5)
  *   claro  — success      5.32:1  (min 4.5)
- *   claro  — warning      3.59:1  (min 3)
+ *   claro  — warning      3.62:1  (min 3)
  *   claro  — info         3.62:1  (min 3)
  *   escuro — destructive  4.67:1  (min 4.5)
  *   escuro — success      4.65:1  (min 4.5)
- *   escuro — warning      3.87:1  (min 3)
+ *   escuro — warning      6.22:1  (min 3)
  *   escuro — info         4.05:1  (min 3)
  *
- * `warning` e `info` do modo escuro são os valores originais do brand book:
- * eu os havia clareado para alcançar 4.5, que não se aplicava a eles.
+ * `info` do modo escuro é o valor original do brand book: eu o havia clareado
+ * para alcançar 4.5, que não se aplicava a ele.
+ *
+ * `warning` saiu do brand book DE PROPÓSITO, e é a única cor de feedback que
+ * saiu. Ele era um laranja no matiz 22 — o mesmo do laranja da marca — e ficava
+ * a 30 graus do `destructive` no claro e a 24 no escuro, com 1,41:1 e 1,24:1 de
+ * razão entre os dois. Na prática eram a mesma cor com dois nomes, e um badge
+ * "Alta" ao lado de um "Média" mostrava isso.
+ *
+ * A razão de luminância entre eles NÃO melhora, e o motivo é estrutural: as
+ * duas precisam limpar o mesmo piso contra o mesmo fundo, então as duas têm de
+ * ser escuras no claro e claras no escuro. O ganho tinha de vir do MATIZ, e a
+ * marca não tinha um amarelo para dar — daí um ouro desvinculado dela, no matiz
+ * 52. A distância virou 60 graus no claro e 54 no escuro.
  *
  * A borda `hsl(var(--cor) / 0.3)` NÃO entra na conta: é linha de 1px e não
  * compõe o fundo do texto. Incluí-la empurrava o escuro para quase branco.
@@ -168,7 +180,7 @@
   --destructive-foreground: var(--foreground);
   --success: 155 37% 28%;
   --success-foreground: var(--foreground);
-  --warning: 22 75% 42%;
+  --warning: 52 70% 30%;
   --warning-foreground: var(--foreground);
   --info: 190 55% 36%;
   --info-foreground: var(--foreground);
@@ -254,7 +266,7 @@
   --destructive-foreground: var(--foreground);
   --success: 155 45% 60%;
   --success-foreground: var(--foreground);
-  --warning: 22 75% 62%;
+  --warning: 52 80% 62%;
   --warning-foreground: var(--foreground);
   --info: 190 50% 56%;
   --info-foreground: var(--foreground);
