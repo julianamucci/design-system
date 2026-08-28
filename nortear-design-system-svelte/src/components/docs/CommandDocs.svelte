@@ -2,8 +2,6 @@
   import { untrack } from 'svelte';
   import * as Command from '@/components/ui/command';
   import { Button } from '@/components/ui/button';
-  import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
-  import CheckIcon from '@lucide/svelte/icons/check';
   import Search from '@lucide/svelte/icons/search';
   import FileText from '@lucide/svelte/icons/file-text';
   import Settings from '@lucide/svelte/icons/settings';
