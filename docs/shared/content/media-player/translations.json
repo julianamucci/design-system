@@ -1,0 +1,1595 @@
+{
+  "pt-BR": {
+    "title": "MediaPlayer",
+    "category": "Display",
+    "type": "Componente",
+    "description": "Reprodutor de vídeo e áudio com barra de controles do design system. Funciona sobre o elemento nativo ou sobre vídeo hospedado no YouTube e no Vimeo, com a mesma interface e os mesmos eventos.",
+    "seo": {
+      "title": "MediaPlayer — Display",
+      "description": "Documentação do MediaPlayer: vídeo e áudio com controles acessíveis, velocidade, tela cheia, janela flutuante e eventos de reprodução.",
+      "aiSummary": "O MediaPlayer reproduz vídeo e áudio com a barra de controles do design system. O elemento nativo é o motor no caso comum; para vídeo hospedado no YouTube ou no Vimeo o motor é um quadro embutido, e a interface não muda. Os eventos de reprodução saem do motor, nunca dos botões, porque a reprodução muda por caminhos que não passam por eles.",
+      "aiEntities": "reprodutor de vídeo, reprodutor de áudio, controles acessíveis, velocidade de reprodução, tela cheia, picture-in-picture, legenda, YouTube, Vimeo"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "video": "Vídeo",
+        "audio": "Áudio",
+        "youtube": "YouTube",
+        "vimeo": "Vimeo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "Moldura — desenha a borda, recebe o anel de foco e é ela que entra em tela cheia, para que a superfície e os controles cresçam juntos.",
+      "item2": "Superfície — o elemento de mídia nativo, ou o quadro do provedor externo. Nunca recebe os controles do navegador: quem controla é a barra abaixo.",
+      "item3": "Barra de controles — anunciada como grupo, com nome próprio. Não é barra de ferramentas: as setas pertencem à barra de progresso.",
+      "item4": "Botão de reprodução — reflete o estado do motor, não o próprio clique.",
+      "item5": "Barra de progresso — um controle deslizante nativo, operável por teclado, que anuncia o tempo em vez de um número solto.",
+      "item6": "Relógio e velocidade — o tempo decorrido sobre o total, e a lista de velocidades. Nenhum dos dois é região viva.",
+      "item7": "Ações de janela — tela cheia e janela flutuante, presentes apenas quando o navegador e a fonte de fato as oferecem.",
+      "structureLabel": "Estrutura",
+      "structureCode": {
+        "web": "<div class=\"nds-media-player\" role=\"group\" data-kind=\"video\">\n  <video class=\"nds-media-player-surface\"></video>\n  <div class=\"nds-media-player-controls\" role=\"group\">\n    <button class=\"nds-media-player-button\"></button>\n    <input class=\"nds-media-player-seek\" type=\"range\">\n    <span class=\"nds-media-player-time\"></span>\n    <select class=\"nds-media-player-rate\"></select>\n    <button class=\"nds-media-player-button\"></button>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Quando usar",
+      "guidelines": {
+        "title": "Guidelines obrigatórias",
+        "item1": "Vídeo com áudio exige faixa de legenda. O componente não gera legenda, e vídeo sem ela reprova em critério de nível A.",
+        "item2": "Escute os eventos do componente, nunca o clique nos botões: a reprodução muda por tecla de mídia, janela flutuante, controle do sistema e política do navegador — caminhos que não tocam em botão nenhum.",
+        "item3": "Ao contar pausas, separe a pausa de quem assiste do fim da mídia. O navegador emite parada nos dois casos.",
+        "item4": "Nada deve começar a tocar sozinho. Se começar, é preciso haver um jeito visível de parar nos primeiros segundos.",
+        "item5": "Em vídeo hospedado por terceiro, avise que a reprodução envia dados ao provedor — a política de privacidade de quem assiste deixa de ser sua."
+      },
+      "scenarios": {
+        "title": "Tabela de cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Vídeo ou áudio hospedado por você",
+          "u": "Sim",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Vídeo no YouTube ou no Vimeo",
+          "u": "Sim, com a fonte de provedor",
+          "a": "—"
+        },
+        "item3": {
+          "s": "Câmera, tela compartilhada ou outra fonte ao vivo",
+          "u": "Sim, com a fonte de transmissão",
+          "a": "—"
+        },
+        "item4": {
+          "s": "Imagem estática ou animação curta sem som",
+          "u": "Não",
+          "a": "AspectRatio"
+        },
+        "item5": {
+          "s": "Áudio de aviso curto, sem controle nenhum",
+          "u": "Não",
+          "a": "Sonner"
+        }
+      },
+      "do": {
+        "item1": "Ofereça legenda em todo vídeo com fala.",
+        "item2": "Use a fonte de provedor quando o vídeo não é seu para hospedar.",
+        "item3": "Trate a recusa de reprodução: o navegador pode negar, e o botão não pode mentir.",
+        "item4": "Some o tempo assistido a partir dos eventos do componente, não do clique."
+      },
+      "dont": {
+        "item1": "Não deixe os controles do navegador junto dos do design system: dois conjuntos disputando a mesma função.",
+        "item2": "Não conte cada parada como uma pausa — a mídia que termina também para.",
+        "item3": "Não ofereça janela flutuante em áudio nem em vídeo de terceiro: nos dois casos não há o que colocar na janela.",
+        "item4": "Não use o relógio como região viva: anunciar o tempo a cada segundo torna o reprodutor inutilizável."
+      }
+    },
+    "doDont": {
+      "title": "Boas práticas",
+      "countLabel": "Reproduções contadas",
+      "outsideLabel": "Tocar por fora da barra",
+      "pair1": {
+        "do": "Escutar o motor: o estado do botão vem da mídia, então tecla de mídia e controle do sistema também são registrados.",
+        "dont": "Escutar o clique no botão: perde início e pausa vindos de teclado, de janela flutuante e do sistema, e a contagem fica menor do que a realidade sem que ninguém perceba."
+      },
+      "pair2": {
+        "do": "Vídeo com faixa de legenda, e a legenda ligada por padrão quando o idioma bate com o da página.",
+        "dont": "Vídeo com fala e sem legenda nenhuma: o conteúdo simplesmente não existe para parte de quem assiste."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import básico:",
+      "basicCode": {
+        "react": "import { MediaPlayer } from \"@/components/ui/media-player\";",
+        "vue": "import { MediaPlayer } from \"@/components/ui/media-player\";",
+        "svelte": "import { MediaPlayer } from \"@/components/ui/media-player\";",
+        "vanilla": "import { createMediaPlayer } from \"@/components/ui/media-player\";",
+        "angular": "import { MediaPlayerComponent } from \"@/components/ui/media-player\";"
+      },
+      "withProvider": "Com vídeo hospedado por terceiro:",
+      "withProviderCode": {
+        "react": "<MediaPlayer\n  embed={{ provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" }}\n  labels={labels}\n  onPlay={registrarInicio}\n  onPause={({ ended }) => !ended && registrarPausa()}\n/>",
+        "vue": "<MediaPlayer\n  :embed=\"{ provider: 'youtube', videoId: 'aqz-KE-bpKQ' }\"\n  :labels=\"labels\"\n  @play=\"registrarInicio\"\n  @pause=\"({ ended }) => !ended && registrarPausa()\"\n/>",
+        "svelte": "<MediaPlayer\n  embed={{ provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" }}\n  {labels}\n  onplay={registrarInicio}\n  onpause={({ ended }) => !ended && registrarPausa()}\n/>",
+        "vanilla": "const player = createMediaPlayer({\n  embed: { provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" },\n  labels,\n  onPlay: registrarInicio,\n  onPause: ({ ended }) => !ended && registrarPausa(),\n});",
+        "angular": "<nds-media-player\n  [embed]=\"{ provider: 'youtube', videoId: 'aqz-KE-bpKQ' }\"\n  [labels]=\"labels\"\n  (played)=\"registrarInicio()\"\n  (paused)=\"$event.ended || registrarPausa()\"\n/>"
+      }
+    },
+    "variants": {
+      "title": "Fontes",
+      "visualTitle": "Exemplos visuais",
+      "note": "A fonte troca o motor por baixo, e não a interface: a barra, os eventos e os rótulos são os mesmos nos quatro casos. O que muda é o que o motor consegue oferecer.",
+      "items": {
+        "video": {
+          "name": "video",
+          "description": "Vídeo hospedado por você. O caso mais completo: legenda, velocidade, tela cheia e janela flutuante."
+        },
+        "audio": {
+          "name": "audio",
+          "description": "Áudio hospedado por você. Sem superfície visual, sem tela cheia e sem janela flutuante."
+        },
+        "youtube": {
+          "name": "youtube",
+          "description": "Vídeo no YouTube, por quadro embutido. Sem janela flutuante, e legenda e qualidade passam a ser do provedor."
+        },
+        "vimeo": {
+          "name": "vimeo",
+          "description": "Vídeo no Vimeo, por quadro embutido. Mesmas limitações do YouTube, com dialeto próprio de comando."
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "idle": {
+        "label": "Parado",
+        "trigger": "Estado inicial, ou depois de pausar",
+        "behavior": "O botão oferece reproduzir, e o relógio mostra a posição atual sobre a duração."
+      },
+      "playing": {
+        "label": "Reproduzindo",
+        "trigger": "Reprodução começou de fato, depois do carregamento",
+        "behavior": "O botão oferece pausar, e a barra de progresso acompanha o tempo."
+      },
+      "ended": {
+        "label": "Terminado",
+        "trigger": "A mídia chegou ao fim",
+        "behavior": "O botão volta a oferecer reproduzir. O motor emite parada também aqui, e o evento carrega a marca de fim."
+      },
+      "refused": {
+        "label": "Reprodução recusada",
+        "trigger": "O navegador nega a reprodução por falta de interação da pessoa",
+        "behavior": "O botão continua oferecendo reproduzir, em vez de mostrar um estado que não aconteceu."
+      },
+      "unavailable": {
+        "label": "Recurso indisponível",
+        "trigger": "O navegador ou a fonte não oferece tela cheia ou janela flutuante",
+        "behavior": "O controle correspondente não aparece, em vez de aparecer sem efeito."
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "interface": "Contrato",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "kind": {
+          "name": "kind",
+          "type": "\"video\" | \"audio\"",
+          "default": "\"video\"",
+          "required": "Não",
+          "description": "Tipo de mídia da fonte própria. Ignorado quando a fonte é de provedor externo."
+        },
+        "src": {
+          "name": "src",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Endereço da mídia hospedada por você."
+        },
+        "stream": {
+          "name": "stream",
+          "type": "MediaStream",
+          "default": "—",
+          "required": "Não",
+          "description": "Fonte ao vivo, como câmera ou tela compartilhada. Nela a velocidade não se aplica e a duração é indefinida."
+        },
+        "embed": {
+          "name": "embed",
+          "type": "objeto de provedor",
+          "default": "—",
+          "required": "Não",
+          "description": "Vídeo hospedado por terceiro: provedor, identificador do vídeo e opções de privacidade."
+        },
+        "tracks": {
+          "name": "tracks",
+          "type": "lista de faixas",
+          "default": "[]",
+          "required": "Não",
+          "description": "Faixas de legenda da mídia própria. Vídeo com fala e sem faixa reprova em critério de nível A."
+        },
+        "rates": {
+          "name": "rates",
+          "type": "number[]",
+          "default": "[0.5, 0.75, 1, 1.25, 1.5, 2]",
+          "required": "Não",
+          "description": "Velocidades oferecidas. Lista vazia esconde o seletor — é o certo em fonte ao vivo, onde a velocidade não tem efeito."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "objeto",
+          "default": "—",
+          "required": "Sim",
+          "description": "Nome acessível do reprodutor, do grupo de controles e de cada botão. Não há texto visível de onde deduzi-los."
+        },
+        "onPlay": {
+          "name": "callback de início",
+          "type": "() => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Chamado quando a reprodução começa de fato, e não quando ela é pedida."
+        },
+        "onPause": {
+          "name": "callback de parada",
+          "type": "(info) => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Chamado em toda parada, com a marca que separa a pausa de quem assiste do fim da mídia."
+        },
+        "onEnded": {
+          "name": "callback de fim",
+          "type": "() => void",
+          "default": "—",
+          "required": "Não",
+          "description": "Chamado quando a mídia termina."
+        }
+      },
+      "extensibilityTitle": "Acesso ao motor",
+      "extensibility": "A raiz devolvida expõe o elemento de mídia quando a fonte é própria, e o quadro quando é de provedor. Um dos dois é sempre nulo, e o tipo obriga a declarar qual se espera.",
+      "extensibilityCode": {
+        "react": "const media = playerRef.current?.media;   // nulo em provedor externo",
+        "vue": "const media = playerRef.value?.media;     // nulo em provedor externo",
+        "svelte": "const media = player.media;               // nulo em provedor externo",
+        "vanilla": "const media = player.media;               // nulo em provedor externo",
+        "angular": "const media = this.player().media;        // nulo em provedor externo"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Propriedade CSS",
+        "description": "Uso",
+        "border": {
+          "token": "--border",
+          "value": "border-color",
+          "description": "Borda da moldura, divisória da barra e pista do progresso"
+        },
+        "background": {
+          "token": "--background",
+          "value": "background-color",
+          "description": "Fundo da moldura e do seletor de velocidade"
+        },
+        "muted": {
+          "token": "--muted",
+          "value": "background-color",
+          "description": "Fundo da barra de controles"
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": "color",
+          "description": "Texto do relógio"
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": "color",
+          "description": "Ícones dos controles e fundo da superfície de vídeo"
+        },
+        "primary": {
+          "token": "--primary",
+          "value": "background-color",
+          "description": "Marcador da barra de progresso"
+        },
+        "accent": {
+          "token": "--accent",
+          "value": "background-color",
+          "description": "Realce do controle sob o ponteiro"
+        },
+        "ring": {
+          "token": "--ring",
+          "value": "outline-color",
+          "description": "Anel de foco da moldura e de cada controle"
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": "inline-size, block-size",
+          "description": "Lado dos botões — é o mínimo de alvo de toque"
+        }
+      },
+      "customizationTitle": "Personalização",
+      "customizationCode": {
+        "web": ".tema-marca {\n  --primary: 210 90% 40%;   /* marcador do progresso */\n  --muted: 210 20% 96%;     /* fundo da barra */\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "summary": "Os controles são elementos nativos sempre que existe um que sirva, e o que a fonte não oferece não vira botão.",
+      "item1": "A barra de progresso é um controle deslizante nativo: já é operável por teclado e já anuncia posição. O texto do valor é o relógio, porque um número solto não é posição para quem ouve.",
+      "item2": "A velocidade é uma lista nativa, pelo mesmo motivo: teclado, anúncio de opção e comportamento de toque vêm prontos.",
+      "item3": "A barra é anunciada como grupo, e não como barra de ferramentas — barra de ferramentas promete navegação por seta, e aqui a seta pertence à barra de progresso.",
+      "item4": "Cada botão é só de ícone e carrega nome acessível próprio, que muda junto com o estado: o mesmo botão anuncia reproduzir ou pausar conforme o motor.",
+      "item5": "Os botões medem ao menos o mínimo de alvo de toque exigido, e o ícone dentro deles é menor que o alvo.",
+      "item6": "Vídeo com fala exige faixa de legenda. O componente avisa em desenvolvimento quando ela falta, em vez de esconder a ausência.",
+      "item7": "O relógio não é região viva: anunciar o tempo a cada segundo tornaria o reprodutor inutilizável para quem usa leitor de tela.",
+      "item8": "O quadro do provedor externo recebe nome próprio, senão o leitor de tela anuncia apenas \"quadro\" — e uma página com três vídeos vira três \"quadro\".",
+      "keyboardTitle": "Teclado",
+      "keyboard": {
+        "key": "Tecla",
+        "action": "Ação",
+        "tab": {
+          "key": "Tab",
+          "action": "Percorre os controles, um a um"
+        },
+        "space": {
+          "key": "Espaço ou Enter",
+          "action": "Aciona o controle em foco"
+        },
+        "arrows": {
+          "key": "Setas",
+          "action": "Avança e retrocede na barra de progresso, quando ela está em foco"
+        },
+        "homeEnd": {
+          "key": "Home / End",
+          "action": "Início e fim da mídia, com a barra de progresso em foco"
+        },
+        "escape": {
+          "key": "Esc",
+          "action": "Sai da tela cheia"
+        }
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Usado com",
+      "aspectRatio": "Proporção fixa, para quando basta reservar o espaço da mídia.",
+      "sonner": "Aviso efêmero, para som curto sem controle nenhum.",
+      "button": "Botão, que é o que forma cada controle da barra.",
+      "card": "Cartão, quando o reprodutor entra numa lista de conteúdo."
+    },
+    "notes": {
+      "title": "Notas",
+      "tip1": "O navegador emite parada também quando a mídia termina, e antes do evento de fim. Contar parada sem olhar a marca de fim faz toda reprodução completa virar uma pausa — e o número continua plausível, que é o que torna o erro caro.",
+      "tip2": "Início e pedido de início são coisas diferentes: entre pedir e o primeiro quadro está o carregamento. O componente avisa o início de fato.",
+      "tip3": "A janela flutuante exige faixa de vídeo, e não apenas um elemento de vídeo: mídia só de áudio dentro de um elemento de vídeo passa em toda detecção e recusa o pedido.",
+      "tip4": "A tela cheia é pedida na moldura, e não na superfície: pedindo na superfície, o navegador desenha os controles dele e a barra do design system desaparece justamente quando a tela é maior.",
+      "tip5": "Em provedor externo não existe elemento de mídia — existe um quadro de outra origem. Legenda, faixa de áudio e qualidade passam a ser do provedor.",
+      "tip6": "O componente não carrega a biblioteca dos provedores: a conversa é pelo canal de mensagens do próprio quadro. Isso evita script de terceiro no pacote e uma entrada a mais na política de segurança."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos que a docs page do reprodutor dispara.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload adicional",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar de idioma",
+        "pageViewPayload": "{ component, locale }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Seção visível por dois segundos contínuos",
+        "sectionViewedPayload": "{ component, section }",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Troca da fonte na demonstração",
+        "demoClickPayload": "{ component, element_id }"
+      }
+    },
+    "testes": {
+      "title": "Testes",
+      "functional": {
+        "title": "Comportamento funcional",
+        "description": "O que deve acontecer em cada caminho do reprodutor.",
+        "item1": {
+          "action": "Iniciar a reprodução por fora dos botões",
+          "result": "O botão passa a oferecer pausar, sem ninguém tê-lo clicado",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pausar no meio da mídia",
+          "result": "O callback de parada recebe a marca de fim como falsa",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Deixar a mídia chegar ao fim",
+          "result": "O callback de parada recebe a marca de fim como verdadeira, e o de fim é chamado",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Trocar a velocidade pela lista",
+          "result": "A reprodução muda de velocidade, e a lista acompanha mudança feita por fora",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Abrir um reprodutor de áudio",
+          "result": "Tela cheia e janela flutuante não aparecem",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Abrir vídeo sem faixa de vídeo",
+          "result": "A janela flutuante não é oferecida",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Abrir uma fonte de provedor externo",
+          "result": "É um quadro, o elemento de mídia é nulo, e a janela flutuante não é oferecida",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Receber mensagem do quadro do provedor",
+          "result": "Os callbacks de início, parada e fim são chamados, e o relógio acompanha",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Receber mensagem de outra origem",
+          "result": "Nada acontece — a mensagem é descartada",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Descartar o reprodutor",
+          "result": "A mídia para, a fonte é solta e os ouvintes de documento e de janela são removidos",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "O que a verificação automática e o teclado precisam encontrar.",
+        "item1": {
+          "action": "Inspecionar o reprodutor",
+          "result": "Grupo com nome, e a barra de controles com nome próprio",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Inspecionar a barra de progresso",
+          "result": "Papel de controle deslizante, com o tempo no texto do valor",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Medir os botões",
+          "result": "Cada um alcança o mínimo de alvo de toque",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Inspecionar o quadro do provedor",
+          "result": "O quadro tem nome próprio",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Rodar a verificação automática",
+          "result": "Nenhuma violação, em vídeo, em áudio e em provedor",
+          "priority": "high"
+        }
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "O que a comparação de imagem precisa cobrir.",
+        "item1": {
+          "action": "Vídeo, áudio e provedor lado a lado",
+          "result": "A mesma barra nos três, com os controles que cada fonte permite",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Reprodutor em foco",
+          "result": "Anel de foco na moldura, e não em cada controle",
+          "priority": "medium"
+        }
+      }
+    },
+    "labels": {
+      "player": "Reprodutor",
+      "controls": "Controles de reprodução",
+      "play": "Reproduzir",
+      "pause": "Pausar",
+      "mute": "Silenciar",
+      "unmute": "Ativar o som",
+      "seek": "Posição da reprodução",
+      "rate": "Velocidade de reprodução",
+      "enterFullscreen": "Tela cheia",
+      "exitFullscreen": "Sair da tela cheia",
+      "enterPip": "Janela flutuante",
+      "exitPip": "Sair da janela flutuante"
+    },
+    "nav": {
+      "overview": "Visão geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando usar",
+      "doDont": "Boas práticas",
+      "techRef": "Referência técnica",
+      "import": "Importação",
+      "variants": "Fontes",
+      "states": "Estados",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "MediaPlayer",
+    "category": "Display",
+    "type": "Component",
+    "description": "Video and audio player with the design system's control bar. Runs on the native element or on video hosted at YouTube and Vimeo, with the same interface and the same events.",
+    "seo": {
+      "title": "MediaPlayer — Display",
+      "description": "Documentation for MediaPlayer: video and audio with accessible controls, speed, fullscreen, picture-in-picture and playback events.",
+      "aiSummary": "MediaPlayer plays video and audio with the design system's control bar. The native element is the engine in the common case; for video hosted at YouTube or Vimeo the engine is an embedded frame, and the interface does not change. Playback events come from the engine, never from the buttons, because playback changes through paths that never touch them.",
+      "aiEntities": "video player, audio player, accessible controls, playback speed, fullscreen, picture-in-picture, captions, YouTube, Vimeo"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "video": "Video",
+        "audio": "Audio",
+        "youtube": "YouTube",
+        "vimeo": "Vimeo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "Frame — draws the border, receives the focus ring, and is the element that goes fullscreen, so surface and controls grow together.",
+      "item2": "Surface — the native media element, or the external provider's frame. It never gets the browser's controls: the bar below is what controls it.",
+      "item3": "Control bar — announced as a group, with its own name. Not a toolbar: the arrows belong to the progress bar.",
+      "item4": "Play button — reflects the engine's state, not its own click.",
+      "item5": "Progress bar — a native slider, keyboard operable, announcing the time rather than a bare number.",
+      "item6": "Clock and speed — elapsed over total, and the list of speeds. Neither is a live region.",
+      "item7": "Window actions — fullscreen and picture-in-picture, present only when the browser and the source actually offer them.",
+      "structureLabel": "Structure",
+      "structureCode": {
+        "web": "<div class=\"nds-media-player\" role=\"group\" data-kind=\"video\">\n  <video class=\"nds-media-player-surface\"></video>\n  <div class=\"nds-media-player-controls\" role=\"group\">\n    <button class=\"nds-media-player-button\"></button>\n    <input class=\"nds-media-player-seek\" type=\"range\">\n    <span class=\"nds-media-player-time\"></span>\n    <select class=\"nds-media-player-rate\"></select>\n    <button class=\"nds-media-player-button\"></button>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "When to use",
+      "guidelines": {
+        "title": "Required guidelines",
+        "item1": "Video with audio requires a caption track. The component cannot generate captions, and video without them fails a level A criterion.",
+        "item2": "Listen to the component's events, never to button clicks: playback changes through media keys, picture-in-picture, system controls and browser policy — paths that touch no button at all.",
+        "item3": "When counting pauses, separate the viewer's pause from the end of the media. The browser reports a stop in both cases.",
+        "item4": "Nothing should start playing on its own. If it does, there must be a visible way to stop it within the first seconds.",
+        "item5": "For third-party hosted video, say that playback sends data to the provider — the viewer's privacy stops being yours to define."
+      },
+      "scenarios": {
+        "title": "Scenario table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Video or audio you host",
+          "u": "Yes",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Video on YouTube or Vimeo",
+          "u": "Yes, with the provider source",
+          "a": "—"
+        },
+        "item3": {
+          "s": "Camera, shared screen or another live source",
+          "u": "Yes, with the stream source",
+          "a": "—"
+        },
+        "item4": {
+          "s": "Still image or short silent animation",
+          "u": "No",
+          "a": "AspectRatio"
+        },
+        "item5": {
+          "s": "Short alert sound, with no controls at all",
+          "u": "No",
+          "a": "Sonner"
+        }
+      },
+      "do": {
+        "item1": "Provide captions for every video with speech.",
+        "item2": "Use the provider source when the video is not yours to host.",
+        "item3": "Handle a refused playback: the browser may deny it, and the button must not lie.",
+        "item4": "Add up watch time from the component's events, not from clicks."
+      },
+      "dont": {
+        "item1": "Do not leave the browser's controls alongside the design system's: two sets competing for the same job.",
+        "item2": "Do not count every stop as a pause — media that ends also stops.",
+        "item3": "Do not offer picture-in-picture for audio or third-party video: in both cases there is nothing to put in the window.",
+        "item4": "Do not make the clock a live region: announcing the time every second makes the player unusable."
+      }
+    },
+    "doDont": {
+      "title": "Best practices",
+      "countLabel": "Plays counted",
+      "outsideLabel": "Play from outside the bar",
+      "pair1": {
+        "do": "Listen to the engine: the button's state comes from the media, so media keys and system controls are recorded too.",
+        "dont": "Listen to the button click: it misses starts and pauses coming from the keyboard, picture-in-picture and the system, and the count ends up lower than reality without anyone noticing."
+      },
+      "pair2": {
+        "do": "Video with a caption track, on by default when the language matches the page.",
+        "dont": "Video with speech and no captions at all: the content simply does not exist for part of the audience."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic import:",
+      "basicCode": {
+        "react": "import { MediaPlayer } from \"@/components/ui/media-player\";",
+        "vue": "import { MediaPlayer } from \"@/components/ui/media-player\";",
+        "svelte": "import { MediaPlayer } from \"@/components/ui/media-player\";",
+        "vanilla": "import { createMediaPlayer } from \"@/components/ui/media-player\";",
+        "angular": "import { MediaPlayerComponent } from \"@/components/ui/media-player\";"
+      },
+      "withProvider": "With third-party hosted video:",
+      "withProviderCode": {
+        "react": "<MediaPlayer\n  embed={{ provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" }}\n  labels={labels}\n  onPlay={trackStart}\n  onPause={({ ended }) => !ended && trackPause()}\n/>",
+        "vue": "<MediaPlayer\n  :embed=\"{ provider: 'youtube', videoId: 'aqz-KE-bpKQ' }\"\n  :labels=\"labels\"\n  @play=\"trackStart\"\n  @pause=\"({ ended }) => !ended && trackPause()\"\n/>",
+        "svelte": "<MediaPlayer\n  embed={{ provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" }}\n  {labels}\n  onplay={trackStart}\n  onpause={({ ended }) => !ended && trackPause()}\n/>",
+        "vanilla": "const player = createMediaPlayer({\n  embed: { provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" },\n  labels,\n  onPlay: trackStart,\n  onPause: ({ ended }) => !ended && trackPause(),\n});",
+        "angular": "<nds-media-player\n  [embed]=\"{ provider: 'youtube', videoId: 'aqz-KE-bpKQ' }\"\n  [labels]=\"labels\"\n  (played)=\"trackStart()\"\n  (paused)=\"$event.ended || trackPause()\"\n/>"
+      }
+    },
+    "variants": {
+      "title": "Sources",
+      "visualTitle": "Visual examples",
+      "note": "The source swaps the engine underneath, not the interface: the bar, the events and the labels are the same in all four cases. What changes is what the engine can offer.",
+      "items": {
+        "video": {
+          "name": "video",
+          "description": "Video you host. The most complete case: captions, speed, fullscreen and picture-in-picture."
+        },
+        "audio": {
+          "name": "audio",
+          "description": "Audio you host. No visual surface, no fullscreen and no picture-in-picture."
+        },
+        "youtube": {
+          "name": "youtube",
+          "description": "Video on YouTube, through an embedded frame. No picture-in-picture, and captions and quality become the provider's."
+        },
+        "vimeo": {
+          "name": "vimeo",
+          "description": "Video on Vimeo, through an embedded frame. Same limits as YouTube, with its own command dialect."
+        }
+      }
+    },
+    "states": {
+      "title": "States",
+      "cols": {
+        "state": "State",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
+      },
+      "idle": {
+        "label": "Stopped",
+        "trigger": "Initial state, or after pausing",
+        "behavior": "The button offers play, and the clock shows the current position over the duration."
+      },
+      "playing": {
+        "label": "Playing",
+        "trigger": "Playback actually started, after loading",
+        "behavior": "The button offers pause, and the progress bar follows the time."
+      },
+      "ended": {
+        "label": "Ended",
+        "trigger": "The media reached its end",
+        "behavior": "The button offers play again. The engine reports a stop here too, and the event carries the end marker."
+      },
+      "refused": {
+        "label": "Playback refused",
+        "trigger": "The browser denies playback for lack of interaction",
+        "behavior": "The button keeps offering play, rather than showing a state that did not happen."
+      },
+      "unavailable": {
+        "label": "Feature unavailable",
+        "trigger": "The browser or the source does not offer fullscreen or picture-in-picture",
+        "behavior": "The matching control does not appear, rather than appearing with no effect."
+      }
+    },
+    "props": {
+      "title": "Props",
+      "interface": "Contract",
+      "table": {
+        "prop": "Prop",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "kind": {
+          "name": "kind",
+          "type": "\"video\" | \"audio\"",
+          "default": "\"video\"",
+          "required": "No",
+          "description": "Media type of the own source. Ignored when the source is an external provider."
+        },
+        "src": {
+          "name": "src",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Address of the media you host."
+        },
+        "stream": {
+          "name": "stream",
+          "type": "MediaStream",
+          "default": "—",
+          "required": "No",
+          "description": "Live source, such as a camera or a shared screen. Speed does not apply there and duration is undefined."
+        },
+        "embed": {
+          "name": "embed",
+          "type": "provider object",
+          "default": "—",
+          "required": "No",
+          "description": "Third-party hosted video: provider, video identifier and privacy options."
+        },
+        "tracks": {
+          "name": "tracks",
+          "type": "track list",
+          "default": "[]",
+          "required": "No",
+          "description": "Caption tracks of your own media. Video with speech and no track fails a level A criterion."
+        },
+        "rates": {
+          "name": "rates",
+          "type": "number[]",
+          "default": "[0.5, 0.75, 1, 1.25, 1.5, 2]",
+          "required": "No",
+          "description": "Speeds offered. An empty list hides the selector — the right thing for a live source, where speed has no effect."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "object",
+          "default": "—",
+          "required": "Yes",
+          "description": "Accessible name for the player, the control group and each button. There is no visible text to derive them from."
+        },
+        "onPlay": {
+          "name": "start callback",
+          "type": "() => void",
+          "default": "—",
+          "required": "No",
+          "description": "Called when playback actually starts, not when it is requested."
+        },
+        "onPause": {
+          "name": "stop callback",
+          "type": "(info) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Called on every stop, with the marker that separates the viewer's pause from the end of the media."
+        },
+        "onEnded": {
+          "name": "end callback",
+          "type": "() => void",
+          "default": "—",
+          "required": "No",
+          "description": "Called when the media ends."
+        }
+      },
+      "extensibilityTitle": "Engine access",
+      "extensibility": "The returned root exposes the media element when the source is your own, and the frame when it is a provider. One of the two is always null, and the type forces you to state which one you expect.",
+      "extensibilityCode": {
+        "react": "const media = playerRef.current?.media;   // null for external providers",
+        "vue": "const media = playerRef.value?.media;     // null for external providers",
+        "svelte": "const media = player.media;               // null for external providers",
+        "vanilla": "const media = player.media;               // null for external providers",
+        "angular": "const media = this.player().media;        // null for external providers"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "CSS property",
+        "description": "Usage",
+        "border": {
+          "token": "--border",
+          "value": "border-color",
+          "description": "Frame border, bar divider and progress track"
+        },
+        "background": {
+          "token": "--background",
+          "value": "background-color",
+          "description": "Frame and speed selector background"
+        },
+        "muted": {
+          "token": "--muted",
+          "value": "background-color",
+          "description": "Control bar background"
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": "color",
+          "description": "Clock text"
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": "color",
+          "description": "Control icons and video surface background"
+        },
+        "primary": {
+          "token": "--primary",
+          "value": "background-color",
+          "description": "Progress bar thumb"
+        },
+        "accent": {
+          "token": "--accent",
+          "value": "background-color",
+          "description": "Highlight of the hovered control"
+        },
+        "ring": {
+          "token": "--ring",
+          "value": "outline-color",
+          "description": "Focus ring of the frame and of each control"
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": "inline-size, block-size",
+          "description": "Button side — the minimum target size"
+        }
+      },
+      "customizationTitle": "Customisation",
+      "customizationCode": {
+        "web": ".tema-marca {\n  --primary: 210 90% 40%;   /* progress thumb */\n  --muted: 210 20% 96%;     /* bar background */\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "summary": "Controls are native elements whenever one fits, and whatever the source does not offer never becomes a button.",
+      "item1": "The progress bar is a native slider: already keyboard operable and already announcing position. Its value text is the clock, because a bare number is not a position for someone listening.",
+      "item2": "Speed is a native list, for the same reason: keyboard, option announcement and touch behaviour come for free.",
+      "item3": "The bar is announced as a group, not a toolbar — a toolbar promises arrow navigation, and here the arrows belong to the progress bar.",
+      "item4": "Every button is icon-only and carries its own accessible name, which changes with the state: the same button announces play or pause according to the engine.",
+      "item5": "Buttons meet at least the required minimum target size, and the icon inside is smaller than the target.",
+      "item6": "Video with speech requires a caption track. The component warns in development when it is missing, instead of hiding the absence.",
+      "item7": "The clock is not a live region: announcing the time every second would make the player unusable with a screen reader.",
+      "item8": "The external provider's frame gets its own name, otherwise the screen reader announces just \"frame\" — and a page with three videos becomes three \"frame\".",
+      "keyboardTitle": "Keyboard",
+      "keyboard": {
+        "key": "Key",
+        "action": "Action",
+        "tab": {
+          "key": "Tab",
+          "action": "Moves through the controls, one by one"
+        },
+        "space": {
+          "key": "Space or Enter",
+          "action": "Activates the focused control"
+        },
+        "arrows": {
+          "key": "Arrows",
+          "action": "Moves forward and back on the progress bar, when it has focus"
+        },
+        "homeEnd": {
+          "key": "Home / End",
+          "action": "Start and end of the media, with the progress bar focused"
+        },
+        "escape": {
+          "key": "Esc",
+          "action": "Leaves fullscreen"
+        }
+      }
+    },
+    "related": {
+      "title": "Related",
+      "alternatives": "Alternatives",
+      "usedWith": "Used with",
+      "aspectRatio": "Fixed ratio, when reserving the media's space is enough.",
+      "sonner": "Ephemeral notice, for a short sound with no controls at all.",
+      "button": "Button, which is what each control in the bar is made of.",
+      "card": "Card, when the player sits in a content list."
+    },
+    "notes": {
+      "title": "Notes",
+      "tip1": "The browser reports a stop when the media ends too, and before the end event. Counting stops without checking the end marker turns every complete playback into a pause — and the number stays plausible, which is what makes the mistake expensive.",
+      "tip2": "Starting and requesting a start are different things: between the request and the first frame sits the loading. The component reports the actual start.",
+      "tip3": "Picture-in-picture requires a video track, not merely a video element: audio-only media inside a video element passes every detection and then refuses the request.",
+      "tip4": "Fullscreen is requested on the frame, not on the surface: requesting it on the surface makes the browser draw its own controls and the design system's bar disappears exactly when the screen is bigger.",
+      "tip5": "With an external provider there is no media element — there is a frame from another origin. Captions, audio tracks and quality become the provider's.",
+      "tip6": "The component does not load the providers' library: the conversation goes through the frame's own message channel. That avoids third-party script in the bundle and one more entry in the security policy."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Events fired by the player's docs page.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional payload",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On opening the docs page or switching language",
+        "pageViewPayload": "{ component, locale }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Section visible for two continuous seconds",
+        "sectionViewedPayload": "{ component, section }",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Switching the source in the demonstration",
+        "demoClickPayload": "{ component, element_id }"
+      }
+    },
+    "testes": {
+      "title": "Tests",
+      "functional": {
+        "title": "Functional behaviour",
+        "description": "What must happen on each path through the player.",
+        "item1": {
+          "action": "Start playback from outside the buttons",
+          "result": "The button starts offering pause, with nobody having clicked it",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pause in the middle of the media",
+          "result": "The stop callback receives the end marker as false",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Let the media reach its end",
+          "result": "The stop callback receives the end marker as true, and the end callback is called",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Change the speed from the list",
+          "result": "Playback changes speed, and the list follows a change made elsewhere",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Open an audio player",
+          "result": "Fullscreen and picture-in-picture do not appear",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Open a video with no video track",
+          "result": "Picture-in-picture is not offered",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Open an external provider source",
+          "result": "It is a frame, the media element is null, and picture-in-picture is not offered",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Receive a message from the provider's frame",
+          "result": "The start, stop and end callbacks are called, and the clock follows",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Receive a message from another origin",
+          "result": "Nothing happens — the message is discarded",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Discard the player",
+          "result": "The media stops, the source is released and the document and window listeners are removed",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "What the automated check and the keyboard must find.",
+        "item1": {
+          "action": "Inspect the player",
+          "result": "Group with a name, and the control bar with its own name",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Inspect the progress bar",
+          "result": "Slider role, with the time in the value text",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Measure the buttons",
+          "result": "Each one meets the minimum target size",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Inspect the provider's frame",
+          "result": "The frame has its own name",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Run the automated check",
+          "result": "No violations, in video, audio and provider",
+          "priority": "high"
+        }
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "What image comparison must cover.",
+        "item1": {
+          "action": "Video, audio and provider side by side",
+          "result": "The same bar in all three, with the controls each source allows",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Focused player",
+          "result": "Focus ring on the frame, not on each control",
+          "priority": "medium"
+        }
+      }
+    },
+    "labels": {
+      "player": "Player",
+      "controls": "Playback controls",
+      "play": "Play",
+      "pause": "Pause",
+      "mute": "Mute",
+      "unmute": "Unmute",
+      "seek": "Playback position",
+      "rate": "Playback speed",
+      "enterFullscreen": "Fullscreen",
+      "exitFullscreen": "Exit fullscreen",
+      "enterPip": "Picture-in-picture",
+      "exitPip": "Exit picture-in-picture"
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to use",
+      "doDont": "Best practices",
+      "techRef": "Technical reference",
+      "import": "Import",
+      "variants": "Sources",
+      "states": "States",
+      "props": "Props",
+      "tokens": "Tokens",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "MediaPlayer",
+    "category": "Display",
+    "type": "Componente",
+    "description": "Reproductor de vídeo y audio con la barra de controles del sistema de diseño. Funciona sobre el elemento nativo o sobre vídeo alojado en YouTube y Vimeo, con la misma interfaz y los mismos eventos.",
+    "seo": {
+      "title": "MediaPlayer — Display",
+      "description": "Documentación del MediaPlayer: vídeo y audio con controles accesibles, velocidad, pantalla completa, ventana flotante y eventos de reproducción.",
+      "aiSummary": "El MediaPlayer reproduce vídeo y audio con la barra de controles del sistema de diseño. El elemento nativo es el motor en el caso común; para vídeo alojado en YouTube o Vimeo el motor es un marco incrustado, y la interfaz no cambia. Los eventos de reproducción salen del motor, nunca de los botones, porque la reproducción cambia por caminos que no pasan por ellos.",
+      "aiEntities": "reproductor de vídeo, reproductor de audio, controles accesibles, velocidad de reproducción, pantalla completa, picture-in-picture, subtítulos, YouTube, Vimeo"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "video": "Vídeo",
+        "audio": "Audio",
+        "youtube": "YouTube",
+        "vimeo": "Vimeo"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "Marco — dibuja el borde, recibe el anillo de foco y es el que entra en pantalla completa, para que la superficie y los controles crezcan juntos.",
+      "item2": "Superficie — el elemento de medios nativo, o el marco del proveedor externo. Nunca recibe los controles del navegador: quien controla es la barra de abajo.",
+      "item3": "Barra de controles — se anuncia como grupo, con nombre propio. No es barra de herramientas: las flechas pertenecen a la barra de progreso.",
+      "item4": "Botón de reproducción — refleja el estado del motor, no el propio clic.",
+      "item5": "Barra de progreso — un control deslizante nativo, operable por teclado, que anuncia el tiempo en vez de un número suelto.",
+      "item6": "Reloj y velocidad — el tiempo transcurrido sobre el total, y la lista de velocidades. Ninguno de los dos es región viva.",
+      "item7": "Acciones de ventana — pantalla completa y ventana flotante, presentes solo cuando el navegador y la fuente de hecho las ofrecen.",
+      "structureLabel": "Estructura",
+      "structureCode": {
+        "web": "<div class=\"nds-media-player\" role=\"group\" data-kind=\"video\">\n  <video class=\"nds-media-player-surface\"></video>\n  <div class=\"nds-media-player-controls\" role=\"group\">\n    <button class=\"nds-media-player-button\"></button>\n    <input class=\"nds-media-player-seek\" type=\"range\">\n    <span class=\"nds-media-player-time\"></span>\n    <select class=\"nds-media-player-rate\"></select>\n    <button class=\"nds-media-player-button\"></button>\n  </div>\n</div>"
+      }
+    },
+    "usage": {
+      "title": "Cuándo usar",
+      "guidelines": {
+        "title": "Guidelines obligatorias",
+        "item1": "El vídeo con audio exige pista de subtítulos. El componente no genera subtítulos, y el vídeo sin ellos incumple un criterio de nivel A.",
+        "item2": "Escucha los eventos del componente, nunca el clic en los botones: la reproducción cambia por teclas de medios, ventana flotante, controles del sistema y política del navegador — caminos que no tocan ningún botón.",
+        "item3": "Al contar pausas, separa la pausa de quien mira del final del contenido. El navegador informa una parada en ambos casos.",
+        "item4": "Nada debe empezar a sonar solo. Si empieza, tiene que haber una forma visible de pararlo en los primeros segundos.",
+        "item5": "En vídeo alojado por terceros, avisa de que la reproducción envía datos al proveedor — la privacidad de quien mira deja de ser tuya."
+      },
+      "scenarios": {
+        "title": "Tabla de escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Vídeo o audio alojado por ti",
+          "u": "Sí",
+          "a": "—"
+        },
+        "item2": {
+          "s": "Vídeo en YouTube o Vimeo",
+          "u": "Sí, con la fuente de proveedor",
+          "a": "—"
+        },
+        "item3": {
+          "s": "Cámara, pantalla compartida u otra fuente en directo",
+          "u": "Sí, con la fuente de transmisión",
+          "a": "—"
+        },
+        "item4": {
+          "s": "Imagen fija o animación corta sin sonido",
+          "u": "No",
+          "a": "AspectRatio"
+        },
+        "item5": {
+          "s": "Sonido de aviso corto, sin ningún control",
+          "u": "No",
+          "a": "Sonner"
+        }
+      },
+      "do": {
+        "item1": "Ofrece subtítulos en todo vídeo con habla.",
+        "item2": "Usa la fuente de proveedor cuando el vídeo no es tuyo para alojar.",
+        "item3": "Trata la reproducción rechazada: el navegador puede negarla, y el botón no puede mentir.",
+        "item4": "Suma el tiempo visto a partir de los eventos del componente, no del clic."
+      },
+      "dont": {
+        "item1": "No dejes los controles del navegador junto a los del sistema de diseño: dos conjuntos disputando la misma función.",
+        "item2": "No cuentes cada parada como una pausa — el contenido que termina también para.",
+        "item3": "No ofrezcas ventana flotante en audio ni en vídeo de terceros: en ambos casos no hay qué poner en la ventana.",
+        "item4": "No uses el reloj como región viva: anunciar el tiempo cada segundo vuelve el reproductor inutilizable."
+      }
+    },
+    "doDont": {
+      "title": "Buenas prácticas",
+      "countLabel": "Reproducciones contadas",
+      "outsideLabel": "Reproducir fuera de la barra",
+      "pair1": {
+        "do": "Escuchar el motor: el estado del botón viene del contenido, así que las teclas de medios y los controles del sistema también se registran.",
+        "dont": "Escuchar el clic en el botón: pierde inicios y pausas venidos del teclado, de la ventana flotante y del sistema, y el recuento queda por debajo de la realidad sin que nadie lo note."
+      },
+      "pair2": {
+        "do": "Vídeo con pista de subtítulos, activada por defecto cuando el idioma coincide con el de la página.",
+        "dont": "Vídeo con habla y sin subtítulos: el contenido sencillamente no existe para parte de quien mira."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Import básico:",
+      "basicCode": {
+        "react": "import { MediaPlayer } from \"@/components/ui/media-player\";",
+        "vue": "import { MediaPlayer } from \"@/components/ui/media-player\";",
+        "svelte": "import { MediaPlayer } from \"@/components/ui/media-player\";",
+        "vanilla": "import { createMediaPlayer } from \"@/components/ui/media-player\";",
+        "angular": "import { MediaPlayerComponent } from \"@/components/ui/media-player\";"
+      },
+      "withProvider": "Con vídeo alojado por terceros:",
+      "withProviderCode": {
+        "react": "<MediaPlayer\n  embed={{ provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" }}\n  labels={labels}\n  onPlay={registrarInicio}\n  onPause={({ ended }) => !ended && registrarPausa()}\n/>",
+        "vue": "<MediaPlayer\n  :embed=\"{ provider: 'youtube', videoId: 'aqz-KE-bpKQ' }\"\n  :labels=\"labels\"\n  @play=\"registrarInicio\"\n  @pause=\"({ ended }) => !ended && registrarPausa()\"\n/>",
+        "svelte": "<MediaPlayer\n  embed={{ provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" }}\n  {labels}\n  onplay={registrarInicio}\n  onpause={({ ended }) => !ended && registrarPausa()}\n/>",
+        "vanilla": "const player = createMediaPlayer({\n  embed: { provider: \"youtube\", videoId: \"aqz-KE-bpKQ\" },\n  labels,\n  onPlay: registrarInicio,\n  onPause: ({ ended }) => !ended && registrarPausa(),\n});",
+        "angular": "<nds-media-player\n  [embed]=\"{ provider: 'youtube', videoId: 'aqz-KE-bpKQ' }\"\n  [labels]=\"labels\"\n  (played)=\"registrarInicio()\"\n  (paused)=\"$event.ended || registrarPausa()\"\n/>"
+      }
+    },
+    "variants": {
+      "title": "Fuentes",
+      "visualTitle": "Ejemplos visuales",
+      "note": "La fuente cambia el motor por debajo, no la interfaz: la barra, los eventos y las etiquetas son los mismos en los cuatro casos. Lo que cambia es lo que el motor puede ofrecer.",
+      "items": {
+        "video": {
+          "name": "video",
+          "description": "Vídeo alojado por ti. El caso más completo: subtítulos, velocidad, pantalla completa y ventana flotante."
+        },
+        "audio": {
+          "name": "audio",
+          "description": "Audio alojado por ti. Sin superficie visual, sin pantalla completa y sin ventana flotante."
+        },
+        "youtube": {
+          "name": "youtube",
+          "description": "Vídeo en YouTube, por marco incrustado. Sin ventana flotante, y los subtítulos y la calidad pasan a ser del proveedor."
+        },
+        "vimeo": {
+          "name": "vimeo",
+          "description": "Vídeo en Vimeo, por marco incrustado. Mismas limitaciones que YouTube, con dialecto propio de comandos."
+        }
+      }
+    },
+    "states": {
+      "title": "Estados",
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "idle": {
+        "label": "Parado",
+        "trigger": "Estado inicial, o después de pausar",
+        "behavior": "El botón ofrece reproducir, y el reloj muestra la posición actual sobre la duración."
+      },
+      "playing": {
+        "label": "Reproduciendo",
+        "trigger": "La reproducción empezó de hecho, tras la carga",
+        "behavior": "El botón ofrece pausar, y la barra de progreso acompaña el tiempo."
+      },
+      "ended": {
+        "label": "Terminado",
+        "trigger": "El contenido llegó al final",
+        "behavior": "El botón vuelve a ofrecer reproducir. El motor informa una parada también aquí, y el evento lleva la marca de final."
+      },
+      "refused": {
+        "label": "Reproducción rechazada",
+        "trigger": "El navegador niega la reproducción por falta de interacción",
+        "behavior": "El botón sigue ofreciendo reproducir, en vez de mostrar un estado que no ocurrió."
+      },
+      "unavailable": {
+        "label": "Recurso no disponible",
+        "trigger": "El navegador o la fuente no ofrece pantalla completa o ventana flotante",
+        "behavior": "El control correspondiente no aparece, en vez de aparecer sin efecto."
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "interface": "Contrato",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "kind": {
+          "name": "kind",
+          "type": "\"video\" | \"audio\"",
+          "default": "\"video\"",
+          "required": "No",
+          "description": "Tipo de contenido de la fuente propia. Se ignora cuando la fuente es un proveedor externo."
+        },
+        "src": {
+          "name": "src",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Dirección del contenido alojado por ti."
+        },
+        "stream": {
+          "name": "stream",
+          "type": "MediaStream",
+          "default": "—",
+          "required": "No",
+          "description": "Fuente en directo, como cámara o pantalla compartida. Allí la velocidad no se aplica y la duración es indefinida."
+        },
+        "embed": {
+          "name": "embed",
+          "type": "objeto de proveedor",
+          "default": "—",
+          "required": "No",
+          "description": "Vídeo alojado por terceros: proveedor, identificador del vídeo y opciones de privacidad."
+        },
+        "tracks": {
+          "name": "tracks",
+          "type": "lista de pistas",
+          "default": "[]",
+          "required": "No",
+          "description": "Pistas de subtítulos del contenido propio. Vídeo con habla y sin pista incumple un criterio de nivel A."
+        },
+        "rates": {
+          "name": "rates",
+          "type": "number[]",
+          "default": "[0.5, 0.75, 1, 1.25, 1.5, 2]",
+          "required": "No",
+          "description": "Velocidades ofrecidas. Una lista vacía oculta el selector — es lo correcto en fuente en directo, donde la velocidad no tiene efecto."
+        },
+        "labels": {
+          "name": "labels",
+          "type": "objeto",
+          "default": "—",
+          "required": "Sí",
+          "description": "Nombre accesible del reproductor, del grupo de controles y de cada botón. No hay texto visible del que deducirlos."
+        },
+        "onPlay": {
+          "name": "callback de inicio",
+          "type": "() => void",
+          "default": "—",
+          "required": "No",
+          "description": "Se llama cuando la reproducción empieza de hecho, no cuando se pide."
+        },
+        "onPause": {
+          "name": "callback de parada",
+          "type": "(info) => void",
+          "default": "—",
+          "required": "No",
+          "description": "Se llama en toda parada, con la marca que separa la pausa de quien mira del final del contenido."
+        },
+        "onEnded": {
+          "name": "callback de final",
+          "type": "() => void",
+          "default": "—",
+          "required": "No",
+          "description": "Se llama cuando el contenido termina."
+        }
+      },
+      "extensibilityTitle": "Acceso al motor",
+      "extensibility": "La raíz devuelta expone el elemento de medios cuando la fuente es propia, y el marco cuando es de proveedor. Uno de los dos siempre es nulo, y el tipo obliga a declarar cuál se espera.",
+      "extensibilityCode": {
+        "react": "const media = playerRef.current?.media;   // nulo en proveedores externos",
+        "vue": "const media = playerRef.value?.media;     // nulo en proveedores externos",
+        "svelte": "const media = player.media;               // nulo en proveedores externos",
+        "vanilla": "const media = player.media;               // nulo en proveedores externos",
+        "angular": "const media = this.player().media;        // nulo en proveedores externos"
+      }
+    },
+    "tokens": {
+      "title": "Tokens",
+      "table": {
+        "token": "Token",
+        "value": "Propiedad CSS",
+        "description": "Uso",
+        "border": {
+          "token": "--border",
+          "value": "border-color",
+          "description": "Borde del marco, divisoria de la barra y pista del progreso"
+        },
+        "background": {
+          "token": "--background",
+          "value": "background-color",
+          "description": "Fondo del marco y del selector de velocidad"
+        },
+        "muted": {
+          "token": "--muted",
+          "value": "background-color",
+          "description": "Fondo de la barra de controles"
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "value": "color",
+          "description": "Texto del reloj"
+        },
+        "foreground": {
+          "token": "--foreground",
+          "value": "color",
+          "description": "Iconos de los controles y fondo de la superficie de vídeo"
+        },
+        "primary": {
+          "token": "--primary",
+          "value": "background-color",
+          "description": "Marcador de la barra de progreso"
+        },
+        "accent": {
+          "token": "--accent",
+          "value": "background-color",
+          "description": "Resalte del control bajo el puntero"
+        },
+        "ring": {
+          "token": "--ring",
+          "value": "outline-color",
+          "description": "Anillo de foco del marco y de cada control"
+        },
+        "spacing6": {
+          "token": "--spacing-6",
+          "value": "inline-size, block-size",
+          "description": "Lado de los botones — es el mínimo de tamaño de objetivo"
+        }
+      },
+      "customizationTitle": "Personalización",
+      "customizationCode": {
+        "web": ".tema-marca {\n  --primary: 210 90% 40%;   /* marcador del progreso */\n  --muted: 210 20% 96%;     /* fondo de la barra */\n}"
+      }
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "summary": "Los controles son elementos nativos siempre que existe uno que sirva, y lo que la fuente no ofrece nunca se convierte en botón.",
+      "item1": "La barra de progreso es un control deslizante nativo: ya es operable por teclado y ya anuncia posición. El texto de su valor es el reloj, porque un número suelto no es una posición para quien escucha.",
+      "item2": "La velocidad es una lista nativa, por el mismo motivo: teclado, anuncio de opción y comportamiento táctil vienen hechos.",
+      "item3": "La barra se anuncia como grupo, y no como barra de herramientas — una barra de herramientas promete navegación por flechas, y aquí las flechas pertenecen a la barra de progreso.",
+      "item4": "Cada botón es solo de icono y lleva nombre accesible propio, que cambia con el estado: el mismo botón anuncia reproducir o pausar según el motor.",
+      "item5": "Los botones alcanzan al menos el mínimo exigido de tamaño de objetivo, y el icono dentro es menor que el objetivo.",
+      "item6": "El vídeo con habla exige pista de subtítulos. El componente avisa en desarrollo cuando falta, en vez de ocultar la ausencia.",
+      "item7": "El reloj no es región viva: anunciar el tiempo cada segundo volvería el reproductor inutilizable con lector de pantalla.",
+      "item8": "El marco del proveedor externo recibe nombre propio, si no el lector de pantalla anuncia solo \"marco\" — y una página con tres vídeos se vuelve tres \"marco\".",
+      "keyboardTitle": "Teclado",
+      "keyboard": {
+        "key": "Tecla",
+        "action": "Acción",
+        "tab": {
+          "key": "Tab",
+          "action": "Recorre los controles, uno a uno"
+        },
+        "space": {
+          "key": "Espacio o Enter",
+          "action": "Acciona el control enfocado"
+        },
+        "arrows": {
+          "key": "Flechas",
+          "action": "Avanza y retrocede en la barra de progreso, cuando tiene el foco"
+        },
+        "homeEnd": {
+          "key": "Inicio / Fin",
+          "action": "Principio y final del contenido, con la barra de progreso enfocada"
+        },
+        "escape": {
+          "key": "Esc",
+          "action": "Sale de pantalla completa"
+        }
+      }
+    },
+    "related": {
+      "title": "Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Usado con",
+      "aspectRatio": "Proporción fija, cuando basta con reservar el espacio del contenido.",
+      "sonner": "Aviso efímero, para un sonido corto sin ningún control.",
+      "button": "Botón, que es de lo que está hecho cada control de la barra.",
+      "card": "Tarjeta, cuando el reproductor entra en una lista de contenido."
+    },
+    "notes": {
+      "title": "Notas",
+      "tip1": "El navegador informa una parada también cuando el contenido termina, y antes del evento de final. Contar paradas sin mirar la marca de final convierte toda reproducción completa en una pausa — y el número sigue siendo plausible, que es lo que encarece el error.",
+      "tip2": "Empezar y pedir empezar son cosas distintas: entre la petición y el primer fotograma está la carga. El componente informa el inicio real.",
+      "tip3": "La ventana flotante exige pista de vídeo, y no solo un elemento de vídeo: contenido solo de audio dentro de un elemento de vídeo pasa toda la detección y luego rechaza la petición.",
+      "tip4": "La pantalla completa se pide en el marco, y no en la superficie: pidiéndola en la superficie, el navegador dibuja sus propios controles y la barra del sistema de diseño desaparece justo cuando la pantalla es mayor.",
+      "tip5": "Con proveedor externo no existe elemento de medios — existe un marco de otro origen. Subtítulos, pistas de audio y calidad pasan a ser del proveedor.",
+      "tip6": "El componente no carga la biblioteca de los proveedores: la conversación va por el canal de mensajes del propio marco. Eso evita script de terceros en el paquete y una entrada más en la política de seguridad."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Eventos que dispara la docs page del reproductor.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload adicional",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar de idioma",
+        "pageViewPayload": "{ component, locale }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Sección visible durante dos segundos continuos",
+        "sectionViewedPayload": "{ component, section }",
+        "demoClick": "docs_demo_click",
+        "demoClickTrigger": "Cambio de la fuente en la demostración",
+        "demoClickPayload": "{ component, element_id }"
+      }
+    },
+    "testes": {
+      "title": "Pruebas",
+      "functional": {
+        "title": "Comportamiento funcional",
+        "description": "Qué debe ocurrir en cada camino del reproductor.",
+        "item1": {
+          "action": "Iniciar la reproducción fuera de los botones",
+          "result": "El botón pasa a ofrecer pausar, sin que nadie lo haya pulsado",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pausar a mitad del contenido",
+          "result": "El callback de parada recibe la marca de final como falsa",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Dejar que el contenido llegue al final",
+          "result": "El callback de parada recibe la marca de final como verdadera, y se llama al de final",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Cambiar la velocidad desde la lista",
+          "result": "La reproducción cambia de velocidad, y la lista sigue un cambio hecho por fuera",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Abrir un reproductor de audio",
+          "result": "Pantalla completa y ventana flotante no aparecen",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Abrir vídeo sin pista de vídeo",
+          "result": "La ventana flotante no se ofrece",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Abrir una fuente de proveedor externo",
+          "result": "Es un marco, el elemento de medios es nulo, y la ventana flotante no se ofrece",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Recibir mensaje del marco del proveedor",
+          "result": "Se llaman los callbacks de inicio, parada y final, y el reloj acompaña",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Recibir mensaje de otro origen",
+          "result": "No pasa nada — el mensaje se descarta",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Descartar el reproductor",
+          "result": "El contenido para, la fuente se libera y se quitan los oyentes de documento y de ventana",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Qué deben encontrar la verificación automática y el teclado.",
+        "item1": {
+          "action": "Inspeccionar el reproductor",
+          "result": "Grupo con nombre, y la barra de controles con nombre propio",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Inspeccionar la barra de progreso",
+          "result": "Rol de control deslizante, con el tiempo en el texto del valor",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Medir los botones",
+          "result": "Cada uno alcanza el mínimo de tamaño de objetivo",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Inspeccionar el marco del proveedor",
+          "result": "El marco tiene nombre propio",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Ejecutar la verificación automática",
+          "result": "Ninguna violación, en vídeo, audio y proveedor",
+          "priority": "high"
+        }
+      },
+      "visual": {
+        "title": "Visual",
+        "description": "Qué debe cubrir la comparación de imagen.",
+        "item1": {
+          "action": "Vídeo, audio y proveedor uno al lado del otro",
+          "result": "La misma barra en los tres, con los controles que cada fuente permite",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Reproductor enfocado",
+          "result": "Anillo de foco en el marco, no en cada control",
+          "priority": "medium"
+        }
+      }
+    },
+    "labels": {
+      "player": "Reproductor",
+      "controls": "Controles de reproducción",
+      "play": "Reproducir",
+      "pause": "Pausar",
+      "mute": "Silenciar",
+      "unmute": "Activar el sonido",
+      "seek": "Posición de la reproducción",
+      "rate": "Velocidad de reproducción",
+      "enterFullscreen": "Pantalla completa",
+      "exitFullscreen": "Salir de pantalla completa",
+      "enterPip": "Ventana flotante",
+      "exitPip": "Salir de la ventana flotante"
+    },
+    "nav": {
+      "overview": "Visión general",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo usar",
+      "doDont": "Buenas prácticas",
+      "techRef": "Referencia técnica",
+      "import": "Importación",
+      "variants": "Fuentes",
+      "states": "Estados",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}

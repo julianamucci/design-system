@@ -45,6 +45,7 @@ import { createIconsDocs } from './IconsDocs';
 import { createInputDocs } from './InputDocs';
 import { createInputOTPDocs } from './InputOTPDocs';
 import { createLabelDocs } from './LabelDocs';
+import { createMediaPlayerDocs } from './MediaPlayerDocs';
 import { createMenubarDocs } from './MenubarDocs';
 import { createMotionDocs } from './MotionDocs';
 import { createNavigationMenuDocs } from './NavigationMenuDocs';
@@ -246,6 +247,7 @@ export const Input: Story = {
 export const InputOTP: Story = { render: () => createInputOTPDocs(), play };
 export const Label: Story = { render: () => createLabelDocs(), play };
 // axe: aria-required-parent — catalogado no FIXES-NEEDED
+export const MediaPlayer: Story = { render: () => createMediaPlayerDocs(), play };
 export const Menubar: Story = {
   render: () => createMenubarDocs(),
   play,

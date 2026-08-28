@@ -569,7 +569,7 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
 
   paintAll();
 
-  const raiz = tornarDestruivel(root, root, () => {
+  const playerRoot = tornarDestruivel(root, root, () => {
     if (media) {
       // Parar e soltar a fonte: um elemento removido do documento continua
       // baixando, e um áudio removido continua TOCANDO.
@@ -596,7 +596,7 @@ export function createMediaPlayer(options: MediaPlayerOptions): MediaPlayerRoot 
     if (onMessage) window.removeEventListener('message', onMessage);
   }) as MediaPlayerRoot;
 
-  raiz.media = media;
-  raiz.frame = frame;
-  return raiz;
+  playerRoot.media = media;
+  playerRoot.frame = frame;
+  return playerRoot;
 }

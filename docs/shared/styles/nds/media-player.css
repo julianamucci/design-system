@@ -50,9 +50,16 @@
 }
 
 /* No áudio não há o que mostrar: o elemento fica no fluxo mas sem caixa, e a
- * barra é o componente inteiro. `display: none` também serviria, e foi
- * descartado — a lib de legenda de alguns navegadores para de expor faixas em
- * mídia não renderizada. */
+ * barra é o componente inteiro.
+ *
+ * MEDIDO: no Chromium esta regra é INERTE, porque a folha de agente de usuário
+ * traz `audio:not([controls]) { display: none !important }` — e `!important` de
+ * agente de usuário é a única origem que declaração de autor não vence, o que
+ * derruba junto o `display: block` da regra acima. Ela não sai daqui porque o
+ * mesmo não vale em todo navegador: onde a regra de agente de usuário vem sem
+ * `!important`, é este `block-size` que impede o elemento de reservar a caixa
+ * de mídia padrão. O invariante — altura zero — é o que a story afirma, e ele
+ * vale pelos dois caminhos. */
 .nds-media-player[data-kind="audio"] .nds-media-player-surface {
   block-size: 0;
 }
